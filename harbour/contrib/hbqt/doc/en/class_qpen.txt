@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QPen()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQPen.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QPen.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qpen.html
+ *  $ONELINER$
+ *     Creates a new QPen object.
+ *  $INHERITS$
+ *     
  *  $SYNTAX$
  *     QPen():new( ... )
  *     QPen():from( pPtr_OR_oObj_of_type_QPen )
  *     QPen():configure( pPtr_OR_oObj_of_type_QPen )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QPen
  *  $METHODS$
  *     :brush()                                            -> pQBrush
  *     :capStyle()                                         -> nQt::PenCapStyle
@@ -40,14 +48,8 @@
  *     :width()                                            -> nInt
  *     :widthF()                                           -> nQreal
  * 
- *  $RETURNS$
- *     An instance of the object of type QPen
- *  $SEEALSO$
- *     
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
+ *  $DESCRIPTION$
+ * 
  *  $EXAMPLES$
  *     oPen := QPen():new()
  *     oPen := QPen():new( pQPen_other )
@@ -60,23 +62,21 @@
  *      * oPen := QPen():new( pQPen )
  *      */
  * 
- *  $INHERITS$
- *     
- *  $ONELINER$
- *     Creates a new QPen object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
+ *  $TESTS$
  * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
+ *  $STATUS$
+ *     R
  *  $COMPLIANCE$
  *     Not Clipper compatible
- *  $DESCRIPTION$
- * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qpen.html
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQPen.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QPen.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     
  *  $END$
  */

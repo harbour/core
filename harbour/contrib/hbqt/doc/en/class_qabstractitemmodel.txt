@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QAbstractItemModel()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtcore/TQAbstractItemModel.prg
- *     C++ wrappers  : contrib/hbqt/qtcore/QAbstractItemModel.cpp
- *     Library       : hbqtcore
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qabstractitemmodel.html
+ *  $ONELINER$
+ *     Creates a new QAbstractItemModel object.
+ *  $INHERITS$
+ *     QObject
  *  $SYNTAX$
  *     QAbstractItemModel():new( ... )
  *     QAbstractItemModel():from( pPtr_OR_oObj_of_type_QAbstractItemModel )
  *     QAbstractItemModel():configure( pPtr_OR_oObj_of_type_QAbstractItemModel )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QAbstractItemModel
  *  $METHODS$
  *     :buddy( pIndex )                                    -> pQModelIndex
  *     :canFetchMore( pParent )                            -> lBool
@@ -51,33 +59,25 @@
  *     :revert()                                           -> NIL
  *     :submit()                                           -> lBool
  * 
- *  $RETURNS$
- *     An instance of the object of type QAbstractItemModel
- *  $SEEALSO$
- *     QObject
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QObject
- *  $ONELINER$
- *     Creates a new QAbstractItemModel object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qabstractitemmodel.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/TQAbstractItemModel.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/QAbstractItemModel.cpp
+ *     Library       : hbqtcore
+ *  $SEEALSO$
+ *     QObject
  *  $END$
  */

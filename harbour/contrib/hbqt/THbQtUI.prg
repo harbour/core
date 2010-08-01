@@ -67,6 +67,7 @@
 
 #include "hbclass.ch"
 #include "common.ch"
+#include "error.ch"
 #include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
@@ -311,6 +312,7 @@ METHOD HbQtUI:loadUI( cUiFull, qParent )
 
 METHOD HbQtUI:OnError( ... )
    LOCAL cMsg, xReturn
+   LOCAL oError
 
    cMsg := __GetMessage()
    IF SubStr( cMsg, 1, 1 ) == "_"
@@ -321,7 +323,19 @@ METHOD HbQtUI:OnError( ... )
       IF hb_hHasKey( ::qObj, substr( cMsg, 3 ) )
          xReturn := ::qObj[ substr( cMsg, 3 ) ]
       ELSE
-         hbqt_showError( "Control < " + substr( cMsg, 3 ) + " > does not exists!" )
+         oError := ErrorNew()
+
+         oError:severity    := ES_ERROR
+         oError:genCode     := EG_ARG
+         oError:subSystem   := "HBQT"
+         oError:subCode     := 1001
+         oError:canRetry    := .F.
+         oError:canDefault  := .F.
+         oError:Args        := hb_AParams()
+         oError:operation   := ProcName()
+         oError:Description := "Control <" + substr( cMsg, 3 ) + "> does not exist"
+
+         Eval( ErrorBlock(), oError )
       ENDIF
    ELSE
       xReturn := ::oWidget:&cMsg( ... )

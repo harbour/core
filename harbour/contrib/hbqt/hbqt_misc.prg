@@ -52,6 +52,7 @@
 
 #include "hbclass.ch"
 #include "common.ch"
+#include "error.ch"
 #include "hbqt.ch"
 
 /*----------------------------------------------------------------------*/
@@ -80,7 +81,29 @@ METHOD HbQtObjectHandler:configure( xObject )
 /*----------------------------------------------------------------------*/
 
 METHOD HbQtObjectHandler:onError()
-   RETURN hbqt_showError( __GetMessage() )
+   LOCAL cMsg := __GetMessage()
+   LOCAL oError
+
+   IF SubStr( cMsg, 1, 1 ) == "_"
+      cMsg := SubStr( cMsg, 2 )
+   ENDIF
+   cMsg := "Message not found :" + cMsg
+
+   oError := ErrorNew()
+
+   oError:severity    := ES_ERROR
+   oError:genCode     := EG_NOMETHOD
+   oError:subSystem   := "HBQT"
+   oError:subCode     := 1000
+   oError:canRetry    := .F.
+   oError:canDefault  := .F.
+   oError:Args        := hb_AParams()
+   oError:operation   := ProcName()
+   oError:Description := cMsg
+
+   Eval( ErrorBlock(), oError )
+
+   RETURN nil
 
 /*----------------------------------------------------------------------*/
 
@@ -102,45 +125,5 @@ FUNCTION hbqt_ptr( xParam )
    ENDIF
 
    RETURN xParam
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION hbqt_messageBox( cMsg, cInfo, cTitle, nIcon )
-   LOCAL oMB
-
-   DEFAULT cTitle TO "Information"
-   DEFAULT nIcon  TO QMessageBox_Information
-
-   oMB := QMessageBox():new()
-   oMB:setText( cMsg )
-   IF !empty( cInfo )
-      oMB:setInformativeText( cInfo )
-   ENDIF
-   oMB:setIcon( nIcon )
-   oMB:setWindowTitle( cTitle )
-
-   oMB:exec()
-
-   RETURN nil
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION hbqt_showError( cMsg )
-   LOCAL s
-
-   IF hb_isArray( cMsg )
-      s := ""
-      aeval( cMsg, {|e| s += e + chr( 13 ) } )
-      hbqt_messageBox( s, NIL, "Run-time Error!", QMessageBox_Critical )
-   ELSE
-      IF SubStr( cMsg, 1, 1 ) == "_"
-         s := SubStr( cMsg, 2 )
-      ELSE
-         s := cMsg
-      ENDIF
-      hbqt_messageBox( ":" + s, "Message not found - " + ProcName( 2 ) + ":" + hb_ntos( ProcLine( 2 ) ) )
-   ENDIF
-
-   RETURN nil
 
 /*----------------------------------------------------------------------*/

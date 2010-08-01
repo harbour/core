@@ -3,51 +3,51 @@
  */
 
 /*  $DOC$
- *  $NAME$
- *     QFocusFrame()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQFocusFrame.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QFocusFrame.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
- *  $SYNTAX$
- *     QFocusFrame():new( ... )
- *     QFocusFrame():from( pPtr_OR_oObj_of_type_QFocusFrame )
- *     QFocusFrame():configure( pPtr_OR_oObj_of_type_QFocusFrame )
- *  $METHODS$
- *     :setWidget( pWidget )                               -> NIL
- *     :widget()                                           -> pQWidget
- * 
- *  $RETURNS$
- *     An instance of the object of type QFocusFrame
- *  $SEEALSO$
- *     QWidget
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QWidget
- *  $ONELINER$
- *     Creates a new QFocusFrame object.
  *  $TEMPLATE$
  *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
- *  $DESCRIPTION$
- * 
+ *  $NAME$
+ *     QFocusFrame()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
  *  $SUBCATEGORY$
  *     GUI
  *  $EXTERNALLINK$
  *     http://doc.trolltech.com/4.5/qfocusframe.html
+ *  $ONELINER$
+ *     Creates a new QFocusFrame object.
+ *  $INHERITS$
+ *     QWidget
+ *  $SYNTAX$
+ *     QFocusFrame():new( ... )
+ *     QFocusFrame():from( pPtr_OR_oObj_of_type_QFocusFrame )
+ *     QFocusFrame():configure( pPtr_OR_oObj_of_type_QFocusFrame )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QFocusFrame
+ *  $METHODS$
+ *     :setWidget( pWidget )                               -> NIL
+ *     :widget()                                           -> pQWidget
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQFocusFrame.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QFocusFrame.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QWidget
  *  $END$
  */

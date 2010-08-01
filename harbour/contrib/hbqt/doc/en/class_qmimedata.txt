@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QMimeData()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtcore/TQMimeData.prg
- *     C++ wrappers  : contrib/hbqt/qtcore/QMimeData.cpp
- *     Library       : hbqtcore
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qmimedata.html
+ *  $ONELINER$
+ *     Creates a new QMimeData object.
+ *  $INHERITS$
+ *     QObject
  *  $SYNTAX$
  *     QMimeData():new( ... )
  *     QMimeData():from( pPtr_OR_oObj_of_type_QMimeData )
  *     QMimeData():configure( pPtr_OR_oObj_of_type_QMimeData )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QMimeData
  *  $METHODS$
  *     :clear()                                            -> NIL
  *     :colorData()                                        -> pQVariant
@@ -40,33 +48,25 @@
  *     :urls()                                             -> pQList<QUrl>
  *     :hbUrlList()                                        -> pQStringList
  * 
- *  $RETURNS$
- *     An instance of the object of type QMimeData
- *  $SEEALSO$
- *     QObject
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QObject
- *  $ONELINER$
- *     Creates a new QMimeData object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qmimedata.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/TQMimeData.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/QMimeData.cpp
+ *     Library       : hbqtcore
+ *  $SEEALSO$
+ *     QObject
  *  $END$
  */

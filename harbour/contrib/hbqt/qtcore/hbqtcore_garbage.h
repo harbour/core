@@ -11,7 +11,6 @@
 #include "../hbqt.h"
 
 extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_HBEvents );
-extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_HBQAbstractItemModel );
 extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_HBSlots );
 extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_QAbstractItemModel );
 extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_QAbstractListModel );
@@ -64,7 +63,6 @@ extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_QUrl );
 extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_QVariant );
 
 extern HB_EXPORT void * hbqt_gcAllocate_HBEvents( void * pObj, bool bNew );
-extern HB_EXPORT void * hbqt_gcAllocate_HBQAbstractItemModel( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_HBSlots( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QAbstractItemModel( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QAbstractListModel( void * pObj, bool bNew );

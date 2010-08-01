@@ -3,53 +3,53 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QWidgetAction()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQWidgetAction.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QWidgetAction.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qwidgetaction.html
+ *  $ONELINER$
+ *     Creates a new QWidgetAction object.
+ *  $INHERITS$
+ *     QAction
  *  $SYNTAX$
  *     QWidgetAction():new( ... )
  *     QWidgetAction():from( pPtr_OR_oObj_of_type_QWidgetAction )
  *     QWidgetAction():configure( pPtr_OR_oObj_of_type_QWidgetAction )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QWidgetAction
  *  $METHODS$
  *     :defaultWidget()                                    -> pQWidget
  *     :releaseWidget( pWidget )                           -> NIL
  *     :requestWidget( pParent )                           -> pQWidget
  *     :setDefaultWidget( pWidget )                        -> NIL
  * 
- *  $RETURNS$
- *     An instance of the object of type QWidgetAction
- *  $SEEALSO$
- *     QAction
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QAction
- *  $ONELINER$
- *     Creates a new QWidgetAction object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qwidgetaction.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQWidgetAction.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QWidgetAction.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QAction
  *  $END$
  */

@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QPalette()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQPalette.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QPalette.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qpalette.html
+ *  $ONELINER$
+ *     Creates a new QPalette object.
+ *  $INHERITS$
+ *     
  *  $SYNTAX$
  *     QPalette():new( ... )
  *     QPalette():from( pPtr_OR_oObj_of_type_QPalette )
  *     QPalette():configure( pPtr_OR_oObj_of_type_QPalette )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QPalette
  *  $METHODS$
  *     :alternateBase()                                    -> pQBrush
  *     :base()                                             -> pQBrush
@@ -53,14 +61,8 @@
  *     :window()                                           -> pQBrush
  *     :windowText()                                       -> pQBrush
  * 
- *  $RETURNS$
- *     An instance of the object of type QPalette
- *  $SEEALSO$
- *     
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
+ *  $DESCRIPTION$
+ * 
  *  $EXAMPLES$
  *     oPalette := QPalette():new()
  *     oPalette := QPalette():new( nQt_color )
@@ -72,23 +74,21 @@
  *      *                             pQBrush_window )
  *      */
  * 
- *  $INHERITS$
- *     
- *  $ONELINER$
- *     Creates a new QPalette object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
+ *  $TESTS$
  * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
+ *  $STATUS$
+ *     R
  *  $COMPLIANCE$
  *     Not Clipper compatible
- *  $DESCRIPTION$
- * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qpalette.html
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQPalette.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QPalette.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     
  *  $END$
  */

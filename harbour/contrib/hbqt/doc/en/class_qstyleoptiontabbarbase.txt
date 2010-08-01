@@ -3,52 +3,52 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QStyleOptionTabBarBase()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionTabBarBase.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionTabBarBase.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qstyleoptiontabbarbase.html
+ *  $ONELINER$
+ *     Creates a new QStyleOptionTabBarBase object.
+ *  $INHERITS$
+ *     QStyleOption
  *  $SYNTAX$
  *     QStyleOptionTabBarBase():new( ... )
  *     QStyleOptionTabBarBase():from( pPtr_OR_oObj_of_type_QStyleOptionTabBarBase )
  *     QStyleOptionTabBarBase():configure( pPtr_OR_oObj_of_type_QStyleOptionTabBarBase )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QStyleOptionTabBarBase
  *  $METHODS$
  *     :selectedTabRect()                                  -> pQRect
  *     :shape()                                            -> nQTabBar::Shape
  *     :tabBarRect()                                       -> pQRect
  * 
- *  $RETURNS$
- *     An instance of the object of type QStyleOptionTabBarBase
- *  $SEEALSO$
- *     QStyleOption
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QStyleOption
- *  $ONELINER$
- *     Creates a new QStyleOptionTabBarBase object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qstyleoptiontabbarbase.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionTabBarBase.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionTabBarBase.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QStyleOption
  *  $END$
  */

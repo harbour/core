@@ -3,51 +3,51 @@
  */
 
 /*  $DOC$
- *  $NAME$
- *     QStyleOptionComplex()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionComplex.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionComplex.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
- *  $SYNTAX$
- *     QStyleOptionComplex():new( ... )
- *     QStyleOptionComplex():from( pPtr_OR_oObj_of_type_QStyleOptionComplex )
- *     QStyleOptionComplex():configure( pPtr_OR_oObj_of_type_QStyleOptionComplex )
- *  $METHODS$
- *     :activeSubControls()                                -> nQStyle::SubControls
- *     :subControls()                                      -> nQStyle::SubControls
- * 
- *  $RETURNS$
- *     An instance of the object of type QStyleOptionComplex
- *  $SEEALSO$
- *     QStyleOption
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QStyleOption
- *  $ONELINER$
- *     Creates a new QStyleOptionComplex object.
  *  $TEMPLATE$
  *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
- *  $DESCRIPTION$
- * 
+ *  $NAME$
+ *     QStyleOptionComplex()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
  *  $SUBCATEGORY$
  *     GUI
  *  $EXTERNALLINK$
  *     http://doc.trolltech.com/4.5/qstyleoptioncomplex.html
+ *  $ONELINER$
+ *     Creates a new QStyleOptionComplex object.
+ *  $INHERITS$
+ *     QStyleOption
+ *  $SYNTAX$
+ *     QStyleOptionComplex():new( ... )
+ *     QStyleOptionComplex():from( pPtr_OR_oObj_of_type_QStyleOptionComplex )
+ *     QStyleOptionComplex():configure( pPtr_OR_oObj_of_type_QStyleOptionComplex )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QStyleOptionComplex
+ *  $METHODS$
+ *     :activeSubControls()                                -> nQStyle::SubControls
+ *     :subControls()                                      -> nQStyle::SubControls
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionComplex.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionComplex.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QStyleOption
  *  $END$
  */

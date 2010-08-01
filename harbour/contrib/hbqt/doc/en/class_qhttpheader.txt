@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QHttpHeader()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtnetwork/TQHttpHeader.prg
- *     C++ wrappers  : contrib/hbqt/qtnetwork/QHttpHeader.cpp
- *     Library       : hbqtnetwork
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qhttpheader.html
+ *  $ONELINER$
+ *     Creates a new QHttpHeader object.
+ *  $INHERITS$
+ *     
  *  $SYNTAX$
  *     QHttpHeader():new( ... )
  *     QHttpHeader():from( pPtr_OR_oObj_of_type_QHttpHeader )
  *     QHttpHeader():configure( pPtr_OR_oObj_of_type_QHttpHeader )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QHttpHeader
  *  $METHODS$
  *     :addValue( cKey, cValue )                           -> NIL
  *     :allValues( cKey )                                  -> pQStringList
@@ -37,33 +45,25 @@
  *     :toString()                                         -> cQString
  *     :value( cKey )                                      -> cQString
  * 
- *  $RETURNS$
- *     An instance of the object of type QHttpHeader
- *  $SEEALSO$
- *     
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     
- *  $ONELINER$
- *     Creates a new QHttpHeader object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qhttpheader.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtnetwork/TQHttpHeader.prg
+ *     C++ wrappers  : contrib/hbqt/qtnetwork/QHttpHeader.cpp
+ *     Library       : hbqtnetwork
+ *  $SEEALSO$
+ *     
  *  $END$
  */

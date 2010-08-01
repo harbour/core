@@ -6,6 +6,7 @@
 -O=../qtgui
 -D=../doc
 
+HBQAbstractItemModel.qth
 HBQMainWindow.qth
 HBQPlainTextEdit.qth
 HBQSyntaxHighlighter.qth

@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QMenu()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQMenu.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QMenu.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qmenu.html
+ *  $ONELINER$
+ *     Creates a new QMenu object.
+ *  $INHERITS$
+ *     QWidget
  *  $SYNTAX$
  *     QMenu():new( ... )
  *     QMenu():from( pPtr_OR_oObj_of_type_QMenu )
  *     QMenu():configure( pPtr_OR_oObj_of_type_QMenu )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QMenu
  *  $METHODS$
  *     :actionAt( pPt )                                    -> pQAction
  *     :actionGeometry( pAct )                             -> pQRect
@@ -50,33 +58,25 @@
  *     :setTitle( cTitle )                                 -> NIL
  *     :title()                                            -> cQString
  * 
- *  $RETURNS$
- *     An instance of the object of type QMenu
- *  $SEEALSO$
- *     QWidget
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QWidget
- *  $ONELINER$
- *     Creates a new QMenu object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qmenu.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQMenu.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QMenu.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QWidget
  *  $END$
  */

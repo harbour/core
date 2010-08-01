@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QWizard()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQWizard.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QWizard.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qwizard.html
+ *  $ONELINER$
+ *     Creates a new QWizard object.
+ *  $INHERITS$
+ *     QDialog
  *  $SYNTAX$
  *     QWizard():new( ... )
  *     QWizard():from( pPtr_OR_oObj_of_type_QWizard )
  *     QWizard():configure( pPtr_OR_oObj_of_type_QWizard )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QWizard
  *  $METHODS$
  *     :addPage( pPage )                                   -> nInt
  *     :button( nWhich )                                   -> pQAbstractButton
@@ -54,33 +62,25 @@
  *     :next()                                             -> NIL
  *     :restart()                                          -> NIL
  * 
- *  $RETURNS$
- *     An instance of the object of type QWizard
- *  $SEEALSO$
- *     QDialog
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QDialog
- *  $ONELINER$
- *     Creates a new QWizard object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qwizard.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQWizard.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QWizard.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QDialog
  *  $END$
  */

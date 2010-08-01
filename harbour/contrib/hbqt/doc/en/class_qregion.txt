@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QRegion()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQRegion.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QRegion.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qregion.html
+ *  $ONELINER$
+ *     Creates a new QRegion object.
+ *  $INHERITS$
+ *     
  *  $SYNTAX$
  *     QRegion():new( ... )
  *     QRegion():from( pPtr_OR_oObj_of_type_QRegion )
  *     QRegion():configure( pPtr_OR_oObj_of_type_QRegion )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QRegion
  *  $METHODS$
  *     :boundingRect()                                     -> pQRect
  *     :contains( pP )                                     -> lBool
@@ -29,14 +37,8 @@
  *     :translate( nDx, nDy )                              -> NIL
  *     :translate_1( pPoint )                              -> NIL
  * 
- *  $RETURNS$
- *     An instance of the object of type QRegion
- *  $SEEALSO$
- *     
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
+ *  $DESCRIPTION$
+ * 
  *  $EXAMPLES$
  *     oRegion := QRegion():new()
  *     oRegion := QRegion():new( pQRegion_other )
@@ -46,23 +48,21 @@
  *     oRegion := QRegion():new( "QRect"   , pQRect, [ nQRegion_RegionType = QRegion_Rectangle ] ) )
  *     oRegion := QRegion():new( pQRect, nQRegion_RegionType )
  * 
- *  $INHERITS$
- *     
- *  $ONELINER$
- *     Creates a new QRegion object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
+ *  $TESTS$
  * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
+ *  $STATUS$
+ *     R
  *  $COMPLIANCE$
  *     Not Clipper compatible
- *  $DESCRIPTION$
- * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qregion.html
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQRegion.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QRegion.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     
  *  $END$
  */

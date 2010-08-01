@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QAbstractItemView()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQAbstractItemView.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QAbstractItemView.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qabstractitemview.html
+ *  $ONELINER$
+ *     Creates a new QAbstractItemView object.
+ *  $INHERITS$
+ *     QAbstractScrollArea
  *  $SYNTAX$
  *     QAbstractItemView():new( ... )
  *     QAbstractItemView():from( pPtr_OR_oObj_of_type_QAbstractItemView )
  *     QAbstractItemView():configure( pPtr_OR_oObj_of_type_QAbstractItemView )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QAbstractItemView
  *  $METHODS$
  *     :alternatingRowColors()                             -> lBool
  *     :autoScrollMargin()                                 -> nInt
@@ -82,33 +90,25 @@
  *     :setRootIndex( pIndex )                             -> NIL
  *     :update( pIndex )                                   -> NIL
  * 
- *  $RETURNS$
- *     An instance of the object of type QAbstractItemView
- *  $SEEALSO$
- *     QAbstractScrollArea
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QAbstractScrollArea
- *  $ONELINER$
- *     Creates a new QAbstractItemView object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qabstractitemview.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQAbstractItemView.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QAbstractItemView.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QAbstractScrollArea
  *  $END$
  */

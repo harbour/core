@@ -7,7 +7,6 @@
 -D=../doc
 
 HBEvents.qth
-HBQAbstractItemModel.qth
 HBSlots.qth
 
 QAbstractItemModel.qth

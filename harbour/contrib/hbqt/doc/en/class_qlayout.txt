@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QLayout()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQLayout.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QLayout.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qlayout.html
+ *  $ONELINER$
+ *     Creates a new QLayout object.
+ *  $INHERITS$
+ *     QObject, QLayoutItem
  *  $SYNTAX$
  *     QLayout():new( ... )
  *     QLayout():from( pPtr_OR_oObj_of_type_QLayout )
  *     QLayout():configure( pPtr_OR_oObj_of_type_QLayout )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QLayout
  *  $METHODS$
  *     :activate()                                         -> lBool
  *     :addItem( pItem )                                   -> NIL
@@ -48,33 +56,25 @@
  *     :update()                                           -> NIL
  *     :closestAcceptableSize( pWidget, pSize )            -> pQSize
  * 
- *  $RETURNS$
- *     An instance of the object of type QLayout
- *  $SEEALSO$
- *     QObject, QLayoutItem
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QObject, QLayoutItem
- *  $ONELINER$
- *     Creates a new QLayout object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qlayout.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQLayout.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QLayout.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QObject, QLayoutItem
  *  $END$
  */

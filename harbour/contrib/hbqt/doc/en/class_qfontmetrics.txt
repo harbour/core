@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QFontMetrics()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQFontMetrics.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QFontMetrics.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qfontmetrics.html
+ *  $ONELINER$
+ *     Creates a new QFontMetrics object.
+ *  $INHERITS$
+ *     
  *  $SYNTAX$
  *     QFontMetrics():new( ... )
  *     QFontMetrics():from( pPtr_OR_oObj_of_type_QFontMetrics )
  *     QFontMetrics():configure( pPtr_OR_oObj_of_type_QFontMetrics )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QFontMetrics
  *  $METHODS$
  *     :ascent()                                           -> nInt
  *     :averageCharWidth()                                 -> nInt
@@ -45,36 +53,28 @@
  *     :width_1( pCh )                                     -> nInt
  *     :xHeight()                                          -> nInt
  * 
- *  $RETURNS$
- *     An instance of the object of type QFontMetrics
- *  $SEEALSO$
- *     
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
+ *  $DESCRIPTION$
+ * 
  *  $EXAMPLES$
  *     oFontMetrics := QFontMetrics():new( pQFontMetrics )
  *     oFontMetrics := QFontMetrics():new( "QFont", pQFont )
  *     oFontMetrics := QFontMetrics():new( pQFont, pQPaintDevice )
  * 
- *  $INHERITS$
- *     
- *  $ONELINER$
- *     Creates a new QFontMetrics object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
+ *  $TESTS$
  * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
+ *  $STATUS$
+ *     R
  *  $COMPLIANCE$
  *     Not Clipper compatible
- *  $DESCRIPTION$
- * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qfontmetrics.html
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQFontMetrics.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QFontMetrics.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     
  *  $END$
  */

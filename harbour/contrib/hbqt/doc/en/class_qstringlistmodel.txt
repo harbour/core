@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QStringListModel()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQStringListModel.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QStringListModel.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qstringlistmodel.html
+ *  $ONELINER$
+ *     Creates a new QStringListModel object.
+ *  $INHERITS$
+ *     QAbstractListModel
  *  $SYNTAX$
  *     QStringListModel():new( ... )
  *     QStringListModel():from( pPtr_OR_oObj_of_type_QStringListModel )
  *     QStringListModel():configure( pPtr_OR_oObj_of_type_QStringListModel )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QStringListModel
  *  $METHODS$
  *     :data( pIndex, nRole )                              -> pQVariant
  *     :flags( pIndex )                                    -> nQt::ItemFlags
@@ -27,33 +35,25 @@
  *     :setStringList( pStrings )                          -> NIL
  *     :stringList()                                       -> pQStringList
  * 
- *  $RETURNS$
- *     An instance of the object of type QStringListModel
- *  $SEEALSO$
- *     QAbstractListModel
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QAbstractListModel
- *  $ONELINER$
- *     Creates a new QStringListModel object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qstringlistmodel.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQStringListModel.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QStringListModel.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QAbstractListModel
  *  $END$
  */

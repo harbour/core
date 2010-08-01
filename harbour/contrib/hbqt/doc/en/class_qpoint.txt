@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QPoint()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtcore/TQPoint.prg
- *     C++ wrappers  : contrib/hbqt/qtcore/QPoint.cpp
- *     Library       : hbqtcore
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qpoint.html
+ *  $ONELINER$
+ *     Creates a new QPoint object.
+ *  $INHERITS$
+ *     
  *  $SYNTAX$
  *     QPoint():new( ... )
  *     QPoint():from( pPtr_OR_oObj_of_type_QPoint )
  *     QPoint():configure( pPtr_OR_oObj_of_type_QPoint )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QPoint
  *  $METHODS$
  *     :isNull()                                           -> lBool
  *     :manhattanLength()                                  -> nInt
@@ -27,36 +35,28 @@
  *     :x()                                                -> nInt
  *     :y()                                                -> nInt
  * 
- *  $RETURNS$
- *     An instance of the object of type QPoint
- *  $SEEALSO$
- *     
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
+ *  $DESCRIPTION$
+ * 
  *  $EXAMPLES$
  *     oPoint := QPoint():new()
  *     oPoint := QPoint():new( nX, nY )
  *     oPoint := QPoint():new( pQPoint )
  * 
- *  $INHERITS$
- *     
- *  $ONELINER$
- *     Creates a new QPoint object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
+ *  $TESTS$
  * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
+ *  $STATUS$
+ *     R
  *  $COMPLIANCE$
  *     Not Clipper compatible
- *  $DESCRIPTION$
- * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qpoint.html
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/TQPoint.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/QPoint.cpp
+ *     Library       : hbqtcore
+ *  $SEEALSO$
+ *     
  *  $END$
  */

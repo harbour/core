@@ -3,51 +3,51 @@
  */
 
 /*  $DOC$
- *  $NAME$
- *     QWidgetItem()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQWidgetItem.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QWidgetItem.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
- *  $SYNTAX$
- *     QWidgetItem():new( ... )
- *     QWidgetItem():from( pPtr_OR_oObj_of_type_QWidgetItem )
- *     QWidgetItem():configure( pPtr_OR_oObj_of_type_QWidgetItem )
- *  $METHODS$
- *     :isEmpty()                                          -> lBool
- *     :widget()                                           -> pQWidget
- * 
- *  $RETURNS$
- *     An instance of the object of type QWidgetItem
- *  $SEEALSO$
- *     QLayoutItem
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QLayoutItem
- *  $ONELINER$
- *     Creates a new QWidgetItem object.
  *  $TEMPLATE$
  *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
- *  $DESCRIPTION$
- * 
+ *  $NAME$
+ *     QWidgetItem()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
  *  $SUBCATEGORY$
  *     GUI
  *  $EXTERNALLINK$
  *     http://doc.trolltech.com/4.5/qwidgetitem.html
+ *  $ONELINER$
+ *     Creates a new QWidgetItem object.
+ *  $INHERITS$
+ *     QLayoutItem
+ *  $SYNTAX$
+ *     QWidgetItem():new( ... )
+ *     QWidgetItem():from( pPtr_OR_oObj_of_type_QWidgetItem )
+ *     QWidgetItem():configure( pPtr_OR_oObj_of_type_QWidgetItem )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QWidgetItem
+ *  $METHODS$
+ *     :isEmpty()                                          -> lBool
+ *     :widget()                                           -> pQWidget
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQWidgetItem.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QWidgetItem.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QLayoutItem
  *  $END$
  */

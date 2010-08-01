@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QSpinBox()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQSpinBox.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QSpinBox.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qspinbox.html
+ *  $ONELINER$
+ *     Creates a new QSpinBox object.
+ *  $INHERITS$
+ *     QAbstractSpinBox
  *  $SYNTAX$
  *     QSpinBox():new( ... )
  *     QSpinBox():from( pPtr_OR_oObj_of_type_QSpinBox )
  *     QSpinBox():configure( pPtr_OR_oObj_of_type_QSpinBox )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QSpinBox
  *  $METHODS$
  *     :cleanText()                                        -> cQString
  *     :maximum()                                          -> nInt
@@ -33,33 +41,25 @@
  *     :value()                                            -> nInt
  *     :setValue( nVal )                                   -> NIL
  * 
- *  $RETURNS$
- *     An instance of the object of type QSpinBox
- *  $SEEALSO$
- *     QAbstractSpinBox
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QAbstractSpinBox
- *  $ONELINER$
- *     Creates a new QSpinBox object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qspinbox.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQSpinBox.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QSpinBox.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QAbstractSpinBox
  *  $END$
  */

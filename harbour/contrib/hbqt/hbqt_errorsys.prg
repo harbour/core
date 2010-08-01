@@ -53,6 +53,8 @@
 #include "common.ch"
 #include "error.ch"
 
+#include "hbqt.ch"
+
 PROCEDURE hbqt_ErrorSys()
 
    ErrorBlock( { | oError | DefError( oError ) } )
@@ -65,7 +67,7 @@ STATIC FUNCTION DefError( oError )
    LOCAL aOptions
    LOCAL nChoice
    LOCAL n
-   LOCAL aMsg := {}
+   LOCAL cMsg := ""
 
    // By default, division by zero results in zero
    IF oError:genCode == EG_ZERODIV .AND. ;
@@ -146,19 +148,19 @@ STATIC FUNCTION DefError( oError )
       cMessage += " " + cDOSError
    ENDIF
 
-   aadd( aMsg, hb_eol() )
-   aadd( aMsg, cMessage )
+   cMsg += hb_eol()
+   cMsg += cMessage
 
    n := 1
    DO WHILE ! Empty( ProcName( ++n ) )
 
-      aadd( aMsg, hb_eol() )
-      aadd( aMsg, "Called from " + ProcName( n ) + ;
-                     "(" + hb_NToS( ProcLine( n ) ) + ")  " )
+      cMsg += hb_eol()
+      cMsg += "Called from " + ProcName( n ) + ;
+                 "(" + hb_NToS( ProcLine( n ) ) + ")"
 
    ENDDO
 
-   hbqt_showError( aMsg )
+   hbqt_messageBox( cMsg, NIL, "HBQT Runtime Error", QMessageBox_Critical )
 
    ErrorLevel( 1 )
    QUIT
@@ -198,3 +200,25 @@ STATIC FUNCTION ErrorMessage( oError )
    ENDCASE
 
    RETURN cMessage
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbqt_messageBox( cMsg, cInfo, cTitle, nIcon )
+   LOCAL oMB
+
+   DEFAULT cTitle TO "Information"
+   DEFAULT nIcon  TO QMessageBox_Information
+
+   oMB := QMessageBox():new()
+   oMB:setText( cMsg )
+   IF !empty( cInfo )
+      oMB:setInformativeText( cInfo )
+   ENDIF
+   oMB:setIcon( nIcon )
+   oMB:setWindowTitle( cTitle )
+
+   oMB:exec()
+
+   RETURN nil
+
+/*----------------------------------------------------------------------*/

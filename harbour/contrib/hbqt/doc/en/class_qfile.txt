@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QFile()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtcore/TQFile.prg
- *     C++ wrappers  : contrib/hbqt/qtcore/QFile.cpp
- *     Library       : hbqtcore
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qfile.html
+ *  $ONELINER$
+ *     Creates a new QFile object.
+ *  $INHERITS$
+ *     QIODevice
  *  $SYNTAX$
  *     QFile():new( ... )
  *     QFile():from( pPtr_OR_oObj_of_type_QFile )
  *     QFile():configure( pPtr_OR_oObj_of_type_QFile )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QFile
  *  $METHODS$
  *     :atEnd()                                            -> lBool
  *     :close()                                            -> NIL
@@ -53,33 +61,25 @@
  *     :setPermissions_1( cFileName, nPermissions )        -> lBool
  *     :symLinkTarget_1( cFileName )                       -> cQString
  * 
- *  $RETURNS$
- *     An instance of the object of type QFile
- *  $SEEALSO$
- *     QIODevice
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QIODevice
- *  $ONELINER$
- *     Creates a new QFile object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qfile.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/TQFile.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/QFile.cpp
+ *     Library       : hbqtcore
+ *  $SEEALSO$
+ *     QIODevice
  *  $END$
  */

@@ -2,6 +2,11 @@
 # $Id$
 #
 
+# ---------------------------------------------------------------
+# Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
+# See COPYING for licensing terms.
+# ---------------------------------------------------------------
+
 # Common settings for all hbqt subcomponents
 
 -hblib

@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QColor()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQColor.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QColor.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qcolor.html
+ *  $ONELINER$
+ *     Creates a new QColor object.
+ *  $INHERITS$
+ *     
  *  $SYNTAX$
  *     QColor():new( ... )
  *     QColor():from( pPtr_OR_oObj_of_type_QColor )
  *     QColor():configure( pPtr_OR_oObj_of_type_QColor )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QColor
  *  $METHODS$
  *     :alpha()                                            -> nInt
  *     :alphaF()                                           -> nQreal
@@ -70,14 +78,8 @@
  *     :yellowF()                                          -> nQreal
  *     :colorNames()                                       -> pQStringList
  * 
- *  $RETURNS$
- *     An instance of the object of type QColor
- *  $SEEALSO$
- *     
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
+ *  $DESCRIPTION$
+ * 
  *  $EXAMPLES$
  *     oColor := QColor():new()                       // You will supply other parameter later
  *     oColor := QColor():new( nQt_Color )            // R: hbqt.ch
@@ -87,23 +89,21 @@
  *     oColor := QColor():new( nR, nG, nB )           // Red Green Blue values
  *     oColor := QColor():new( nR, nG, nB, nAlpha )   // Red Green Blue values with Alpha Channel
  * 
- *  $INHERITS$
- *     
- *  $ONELINER$
- *     Creates a new QColor object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
+ *  $TESTS$
  * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
+ *  $STATUS$
+ *     R
  *  $COMPLIANCE$
  *     Not Clipper compatible
- *  $DESCRIPTION$
- * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qcolor.html
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQColor.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QColor.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     
  *  $END$
  */

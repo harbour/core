@@ -2,6 +2,11 @@
 # $Id$
 #
 
+# ---------------------------------------------------------------
+# Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
+# See COPYING for licensing terms.
+# ---------------------------------------------------------------
+
 stop={dos|watcom|bcc|pocc|pocc64|poccarm|msvcia64}'hbqt' doesn't support this platform/compiler (${hb_plat}/${hb_comp}).
 
 incpaths=.
@@ -12,6 +17,7 @@ plugins=hbmk2_plugin_qt.hbs
 
 {allwin|os2}libpaths=${HB_WITH_QT}\..\lib
 
+# TOFIX: QtGui is needed by hbqt_hbslots.cpp. This dependency should be removed.
 {!HB_STATIC_QT}libs=hbqtcore${__HB_DYN__}
 {!HB_STATIC_QT&(allwin|os2)}libs=QtCore4 QtGui4
 {!HB_STATIC_QT&linux}libs=QtCore QtGui

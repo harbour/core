@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QStyleOptionViewItem()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionViewItem.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionViewItem.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qstyleoptionviewitem.html
+ *  $ONELINER$
+ *     Creates a new QStyleOptionViewItem object.
+ *  $INHERITS$
+ *     QStyleOption
  *  $SYNTAX$
  *     QStyleOptionViewItem():new( ... )
  *     QStyleOptionViewItem():from( pPtr_OR_oObj_of_type_QStyleOptionViewItem )
  *     QStyleOptionViewItem():configure( pPtr_OR_oObj_of_type_QStyleOptionViewItem )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QStyleOptionViewItem
  *  $METHODS$
  *     :decorationAlignment()                              -> nQt::Alignment
  *     :decorationPosition()                               -> nPosition
@@ -26,33 +34,25 @@
  *     :showDecorationSelected()                           -> lBool
  *     :textElideMode()                                    -> nQt::TextElideMode
  * 
- *  $RETURNS$
- *     An instance of the object of type QStyleOptionViewItem
- *  $SEEALSO$
- *     QStyleOption
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QStyleOption
- *  $ONELINER$
- *     Creates a new QStyleOptionViewItem object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qstyleoptionviewitem.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionViewItem.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionViewItem.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QStyleOption
  *  $END$
  */

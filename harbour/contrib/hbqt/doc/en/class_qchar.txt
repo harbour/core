@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QChar()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtcore/TQChar.prg
- *     C++ wrappers  : contrib/hbqt/qtcore/QChar.cpp
- *     Library       : hbqtcore
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qchar.html
+ *  $ONELINER$
+ *     Creates a new QChar object.
+ *  $INHERITS$
+ *     
  *  $SYNTAX$
  *     QChar():new( ... )
  *     QChar():from( pPtr_OR_oObj_of_type_QChar )
  *     QChar():configure( pPtr_OR_oObj_of_type_QChar )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QChar
  *  $METHODS$
  *     :category()                                         -> nCategory
  *     :combiningClass()                                   -> nUnsigned
@@ -47,33 +55,25 @@
  *     :unicode_1()                                        -> nUshort
  *     :unicodeVersion()                                   -> nUnicodeVersion
  * 
- *  $RETURNS$
- *     An instance of the object of type QChar
- *  $SEEALSO$
- *     
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     
- *  $ONELINER$
- *     Creates a new QChar object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qchar.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/TQChar.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/QChar.cpp
+ *     Library       : hbqtcore
+ *  $SEEALSO$
+ *     
  *  $END$
  */

@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QLine()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtcore/TQLine.prg
- *     C++ wrappers  : contrib/hbqt/qtcore/QLine.cpp
- *     Library       : hbqtcore
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qline.html
+ *  $ONELINER$
+ *     Creates a new QLine object.
+ *  $INHERITS$
+ *     
  *  $SYNTAX$
  *     QLine():new( ... )
  *     QLine():from( pPtr_OR_oObj_of_type_QLine )
  *     QLine():configure( pPtr_OR_oObj_of_type_QLine )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QLine
  *  $METHODS$
  *     :p1()                                               -> pQPoint
  *     :p2()                                               -> pQPoint
@@ -34,37 +42,29 @@
  *     :translate( pOffset )                               -> NIL
  *     :translate_1( nDx, nDy )                            -> NIL
  * 
- *  $RETURNS$
- *     An instance of the object of type QLine
- *  $SEEALSO$
- *     
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
+ *  $DESCRIPTION$
+ * 
  *  $EXAMPLES$
  *     oLine := QLine():new()
  *     oLine := QLine():new( pQLine )
  *     oLine := QLine():new( pQPoint_p1, pQPoint_p2 )
  *     oLine := QLine():new( nX1, nY1, nX2, nY2 )
  * 
- *  $INHERITS$
- *     
- *  $ONELINER$
- *     Creates a new QLine object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
+ *  $TESTS$
  * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
+ *  $STATUS$
+ *     R
  *  $COMPLIANCE$
  *     Not Clipper compatible
- *  $DESCRIPTION$
- * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qline.html
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/TQLine.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/QLine.cpp
+ *     Library       : hbqtcore
+ *  $SEEALSO$
+ *     
  *  $END$
  */

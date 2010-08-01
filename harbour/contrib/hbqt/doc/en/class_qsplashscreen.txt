@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QSplashScreen()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQSplashScreen.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QSplashScreen.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qsplashscreen.html
+ *  $ONELINER$
+ *     Creates a new QSplashScreen object.
+ *  $INHERITS$
+ *     QWidget
  *  $SYNTAX$
  *     QSplashScreen():new( ... )
  *     QSplashScreen():from( pPtr_OR_oObj_of_type_QSplashScreen )
  *     QSplashScreen():configure( pPtr_OR_oObj_of_type_QSplashScreen )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QSplashScreen
  *  $METHODS$
  *     :finish( pMainWin )                                 -> NIL
  *     :pixmap()                                           -> pQPixmap
@@ -25,33 +33,25 @@
  *     :clearMessage()                                     -> NIL
  *     :showMessage( cMessage, nAlignment, pColor )        -> NIL
  * 
- *  $RETURNS$
- *     An instance of the object of type QSplashScreen
- *  $SEEALSO$
- *     QWidget
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QWidget
- *  $ONELINER$
- *     Creates a new QSplashScreen object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qsplashscreen.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQSplashScreen.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QSplashScreen.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QWidget
  *  $END$
  */

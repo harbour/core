@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QImage()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQImage.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QImage.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qimage.html
+ *  $ONELINER$
+ *     Creates a new QImage object.
+ *  $INHERITS$
+ *     
  *  $SYNTAX$
  *     QImage():new( ... )
  *     QImage():from( pPtr_OR_oObj_of_type_QImage )
  *     QImage():configure( pPtr_OR_oObj_of_type_QImage )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QImage
  *  $METHODS$
  *     :allGray()                                          -> lBool
  *     :bits()                                             -> pUchar
@@ -64,14 +72,8 @@
  *     :valid_1( nX, nY )                                  -> lBool
  *     :width()                                            -> nInt
  * 
- *  $RETURNS$
- *     An instance of the object of type QImage
- *  $SEEALSO$
- *     
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
+ *  $DESCRIPTION$
+ * 
  *  $EXAMPLES$
  *     oImage := QImage():new()
  *     oImage := QImage():new( pQSize, cFormat )
@@ -83,23 +85,21 @@
  *     oImage := QImage():new( cFileName [, cFormat ] )
  *     oImage := QImage():new( pQImage )
  * 
- *  $INHERITS$
- *     
- *  $ONELINER$
- *     Creates a new QImage object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
+ *  $TESTS$
  * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
+ *  $STATUS$
+ *     R
  *  $COMPLIANCE$
  *     Not Clipper compatible
- *  $DESCRIPTION$
- * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qimage.html
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQImage.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QImage.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     
  *  $END$
  */

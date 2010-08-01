@@ -9,7 +9,6 @@
 # --------------------------------------------------------------------
 
 HBEvents.cpp
-HBQAbstractItemModel.cpp
 HBSlots.cpp
 QAbstractItemModel.cpp
 QAbstractListModel.cpp
@@ -62,7 +61,6 @@ QUrl.cpp
 QVariant.cpp
 
 THBEvents.prg
-THBQAbstractItemModel.prg
 THBSlots.prg
 TQAbstractItemModel.prg
 TQAbstractListModel.prg

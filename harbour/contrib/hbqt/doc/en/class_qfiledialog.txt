@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QFileDialog()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQFileDialog.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QFileDialog.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qfiledialog.html
+ *  $ONELINER$
+ *     Creates a new QFileDialog object.
+ *  $INHERITS$
+ *     QDialog
  *  $SYNTAX$
  *     QFileDialog():new( ... )
  *     QFileDialog():from( pPtr_OR_oObj_of_type_QFileDialog )
  *     QFileDialog():configure( pPtr_OR_oObj_of_type_QFileDialog )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QFileDialog
  *  $METHODS$
  *     :acceptMode()                                       -> nAcceptMode
  *     :confirmOverwrite()                                 -> lBool
@@ -65,33 +73,25 @@
  *     :viewMode()                                         -> nViewMode
  *     :getExistingDirectory( pParent, cCaption, cDir, nOptions )  -> cQString
  * 
- *  $RETURNS$
- *     An instance of the object of type QFileDialog
- *  $SEEALSO$
- *     QDialog
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QDialog
- *  $ONELINER$
- *     Creates a new QFileDialog object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qfiledialog.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQFileDialog.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QFileDialog.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QDialog
  *  $END$
  */

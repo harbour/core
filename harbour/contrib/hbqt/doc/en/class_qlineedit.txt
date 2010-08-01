@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QLineEdit()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQLineEdit.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QLineEdit.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qlineedit.html
+ *  $ONELINER$
+ *     Creates a new QLineEdit object.
+ *  $INHERITS$
+ *     QWidget
  *  $SYNTAX$
  *     QLineEdit():new( ... )
  *     QLineEdit():from( pPtr_OR_oObj_of_type_QLineEdit )
  *     QLineEdit():configure( pPtr_OR_oObj_of_type_QLineEdit )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QLineEdit
  *  $METHODS$
  *     :alignment()                                        -> nQt::Alignment
  *     :backspace()                                        -> NIL
@@ -74,33 +82,25 @@
  *     :setText( cQString )                                -> NIL
  *     :undo()                                             -> NIL
  * 
- *  $RETURNS$
- *     An instance of the object of type QLineEdit
- *  $SEEALSO$
- *     QWidget
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QWidget
- *  $ONELINER$
- *     Creates a new QLineEdit object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qlineedit.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQLineEdit.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QLineEdit.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QWidget
  *  $END$
  */

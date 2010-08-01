@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QTextCursor()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQTextCursor.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QTextCursor.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qtextcursor.html
+ *  $ONELINER$
+ *     Creates a new QTextCursor object.
+ *  $INHERITS$
+ *     
  *  $SYNTAX$
  *     QTextCursor():new( ... )
  *     QTextCursor():from( pPtr_OR_oObj_of_type_QTextCursor )
  *     QTextCursor():configure( pPtr_OR_oObj_of_type_QTextCursor )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QTextCursor
  *  $METHODS$
  *     :anchor()                                           -> nInt
  *     :atBlockEnd()                                       -> lBool
@@ -77,14 +85,8 @@
  *     :setVisualNavigation( lB )                          -> NIL
  *     :visualNavigation()                                 -> lBool
  * 
- *  $RETURNS$
- *     An instance of the object of type QTextCursor
- *  $SEEALSO$
- *     
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
+ *  $DESCRIPTION$
+ * 
  *  $EXAMPLES$
  *     oTextCursor := QTextCursor():new()
  *     oTextCursor := QTextCursor():new( pQTextCursor )
@@ -92,23 +94,21 @@
  *     oTextCursor := QTextCursor():new( "QTextBlock"   , pQTextBlock    )
  *     oTextCursor := QTextCursor():new( "QTextFrame"   , pQTextFrame    )
  * 
- *  $INHERITS$
- *     
- *  $ONELINER$
- *     Creates a new QTextCursor object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
+ *  $TESTS$
  * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
+ *  $STATUS$
+ *     R
  *  $COMPLIANCE$
  *     Not Clipper compatible
- *  $DESCRIPTION$
- * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qtextcursor.html
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQTextCursor.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QTextCursor.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     
  *  $END$
  */

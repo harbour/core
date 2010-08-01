@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QStyleOptionToolButton()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionToolButton.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionToolButton.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qstyleoptiontoolbutton.html
+ *  $ONELINER$
+ *     Creates a new QStyleOptionToolButton object.
+ *  $INHERITS$
+ *     QStyleOptionComplex
  *  $SYNTAX$
  *     QStyleOptionToolButton():new( ... )
  *     QStyleOptionToolButton():from( pPtr_OR_oObj_of_type_QStyleOptionToolButton )
  *     QStyleOptionToolButton():configure( pPtr_OR_oObj_of_type_QStyleOptionToolButton )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QStyleOptionToolButton
  *  $METHODS$
  *     :arrowType()                                        -> nQt::ArrowType
  *     :features()                                         -> nToolButtonFeatures
@@ -27,33 +35,25 @@
  *     :text()                                             -> cQString
  *     :toolButtonStyle()                                  -> nQt::ToolButtonStyle
  * 
- *  $RETURNS$
- *     An instance of the object of type QStyleOptionToolButton
- *  $SEEALSO$
- *     QStyleOptionComplex
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QStyleOptionComplex
- *  $ONELINER$
- *     Creates a new QStyleOptionToolButton object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qstyleoptiontoolbutton.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionToolButton.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionToolButton.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QStyleOptionComplex
  *  $END$
  */

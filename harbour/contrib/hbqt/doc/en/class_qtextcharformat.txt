@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QTextCharFormat()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQTextCharFormat.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QTextCharFormat.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qtextcharformat.html
+ *  $ONELINER$
+ *     Creates a new QTextCharFormat object.
+ *  $INHERITS$
+ *     QTextFormat
  *  $SYNTAX$
  *     QTextCharFormat():new( ... )
  *     QTextCharFormat():from( pPtr_OR_oObj_of_type_QTextCharFormat )
  *     QTextCharFormat():configure( pPtr_OR_oObj_of_type_QTextCharFormat )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QTextCharFormat
  *  $METHODS$
  *     :anchorHref()                                       -> cQString
  *     :anchorNames()                                      -> pQStringList
@@ -66,33 +74,25 @@
  *     :underlineStyle()                                   -> nUnderlineStyle
  *     :verticalAlignment()                                -> nVerticalAlignment
  * 
- *  $RETURNS$
- *     An instance of the object of type QTextCharFormat
- *  $SEEALSO$
- *     QTextFormat
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QTextFormat
- *  $ONELINER$
- *     Creates a new QTextCharFormat object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qtextcharformat.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQTextCharFormat.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QTextCharFormat.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QTextFormat
  *  $END$
  */

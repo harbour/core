@@ -178,15 +178,6 @@ STATIC FUNCTION ManageProject( cProFile, cPathIn, cPathOut, cPathDoc )
 
    LOCAL aWidgetList := {}
 
-#if 0
-   hb_fNameSplit( cProFile, @cPath, @cFile, @cExt )
-
-   IF empty( cPath )
-      cFile := cPathIn + hb_ps() + cProFile
-   ELSE
-      cFile := cProFile
-   ENDIF
-#endif
    cFile := cProFile
    IF ! hb_fileExists( cFile )
       RETURN nil
@@ -1679,21 +1670,6 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
    aadd( txt_, "   ::pPtr := Qt_" + cWidget + "( ... )"            )
    aadd( txt_, "   RETURN Self"                                    )
    aadd( txt_, "   "                                               )
-   #if 0
-   aadd( txt_, "   "                                               )
-   aadd( txt_, "METHOD " + cWidget + ":configure( xObject )"       )
-   aadd( txt_, "   IF hb_isObject( xObject )"                      )
-   aadd( txt_, "      ::pPtr := xObject:pPtr"                      )
-   aadd( txt_, "   ELSEIF hb_isPointer( xObject )"                 )
-   aadd( txt_, "      ::pPtr := xObject"                           )
-   aadd( txt_, "   ENDIF"                                          )
-   aadd( txt_, "   RETURN Self"                                    )
-   aadd( txt_, "   "                                               )
-   aadd( txt_, "   "                                               )
-   aadd( txt_, "METHOD " + cWidget + ":onError()"                  )
-   aadd( txt_, "   RETURN hbqt_showError( __GetMessage() )"        )
-   aadd( txt_, "   "                                               )
-   #endif
    /* Define methods */
    FOR i := 1 TO len( mth_ )
       aadd( txt_, ""                                               )

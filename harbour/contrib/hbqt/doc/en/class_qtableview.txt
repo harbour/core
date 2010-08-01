@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QTableView()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQTableView.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QTableView.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qtableview.html
+ *  $ONELINER$
+ *     Creates a new QTableView object.
+ *  $INHERITS$
+ *     QAbstractItemView
  *  $SYNTAX$
  *     QTableView():new( ... )
  *     QTableView():from( pPtr_OR_oObj_of_type_QTableView )
  *     QTableView():configure( pPtr_OR_oObj_of_type_QTableView )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QTableView
  *  $METHODS$
  *     :clearSpans()                                       -> NIL
  *     :columnAt( nX )                                     -> nInt
@@ -61,33 +69,25 @@
  *     :showColumn( nColumn )                              -> NIL
  *     :showRow( nRow )                                    -> NIL
  * 
- *  $RETURNS$
- *     An instance of the object of type QTableView
- *  $SEEALSO$
- *     QAbstractItemView
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QAbstractItemView
- *  $ONELINER$
- *     Creates a new QTableView object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qtableview.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQTableView.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QTableView.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QAbstractItemView
  *  $END$
  */

@@ -10,6 +10,7 @@
 
 #include "../hbqt.h"
 
+extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_HBQAbstractItemModel );
 extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_HBQMainWindow );
 extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_HBQPlainTextEdit );
 extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_HBQSyntaxHighlighter );
@@ -234,6 +235,7 @@ extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_QWizard );
 extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_QWizardPage );
 extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_QUiLoader );
 
+extern HB_EXPORT void * hbqt_gcAllocate_HBQAbstractItemModel( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_HBQMainWindow( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_HBQPlainTextEdit( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_HBQSyntaxHighlighter( void * pObj, bool bNew );

@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QDirModel()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQDirModel.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QDirModel.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qdirmodel.html
+ *  $ONELINER$
+ *     Creates a new QDirModel object.
+ *  $INHERITS$
+ *     QAbstractItemModel
  *  $SYNTAX$
  *     QDirModel():new( ... )
  *     QDirModel():from( pPtr_OR_oObj_of_type_QDirModel )
  *     QDirModel():configure( pPtr_OR_oObj_of_type_QDirModel )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QDirModel
  *  $METHODS$
  *     :columnCount( pParent )                             -> nInt
  *     :data( pIndex, nRole )                              -> pQVariant
@@ -56,33 +64,25 @@
  *     :supportedDropActions()                             -> nQt::DropActions
  *     :refresh( pParent )                                 -> NIL
  * 
- *  $RETURNS$
- *     An instance of the object of type QDirModel
- *  $SEEALSO$
- *     QAbstractItemModel
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QAbstractItemModel
- *  $ONELINER$
- *     Creates a new QDirModel object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qdirmodel.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQDirModel.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QDirModel.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QAbstractItemModel
  *  $END$
  */

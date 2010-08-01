@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QVariant()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtcore/TQVariant.prg
- *     C++ wrappers  : contrib/hbqt/qtcore/QVariant.cpp
- *     Library       : hbqtcore
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qvariant.html
+ *  $ONELINER$
+ *     Creates a new QVariant object.
+ *  $INHERITS$
+ *     
  *  $SYNTAX$
  *     QVariant():new( ... )
  *     QVariant():from( pPtr_OR_oObj_of_type_QVariant )
  *     QVariant():configure( pPtr_OR_oObj_of_type_QVariant )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QVariant
  *  $METHODS$
  *     :canConvert( nT )                                   -> lBool
  *     :canConvert_1( nT )                                 -> lBool
@@ -56,33 +64,25 @@
  *     :nameToType( pName )                                -> nType
  *     :typeToName( nTyp )                                 -> cChar
  * 
- *  $RETURNS$
- *     An instance of the object of type QVariant
- *  $SEEALSO$
- *     
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     
- *  $ONELINER$
- *     Creates a new QVariant object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qvariant.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/TQVariant.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/QVariant.cpp
+ *     Library       : hbqtcore
+ *  $SEEALSO$
+ *     
  *  $END$
  */

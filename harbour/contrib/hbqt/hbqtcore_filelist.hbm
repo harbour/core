@@ -4,13 +4,10 @@
 
 hbqt_base.cpp
 hbqt_destruct.cpp
-hbqt_hbqabstractitemmodel.cpp
 hbqt_hbevents.cpp
 hbqt_hbslots.cpp
 hbqt_utils.cpp
 hbqt_misc.prg
-hbqt_errorsys.prg
 
-hbqt_hbqabstractitemmodel.h
 hbqt_hbevents.h
 hbqt_hbslots.h

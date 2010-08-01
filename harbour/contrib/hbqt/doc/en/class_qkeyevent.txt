@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QKeyEvent()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQKeyEvent.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QKeyEvent.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qkeyevent.html
+ *  $ONELINER$
+ *     Creates a new QKeyEvent object.
+ *  $INHERITS$
+ *     QInputEvent
  *  $SYNTAX$
  *     QKeyEvent():new( ... )
  *     QKeyEvent():from( pPtr_OR_oObj_of_type_QKeyEvent )
  *     QKeyEvent():configure( pPtr_OR_oObj_of_type_QKeyEvent )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QKeyEvent
  *  $METHODS$
  *     :count()                                            -> nInt
  *     :isAutoRepeat()                                     -> lBool
@@ -28,33 +36,25 @@
  *     :nativeVirtualKey()                                 -> nQuint32
  *     :text()                                             -> cQString
  * 
- *  $RETURNS$
- *     An instance of the object of type QKeyEvent
- *  $SEEALSO$
- *     QInputEvent
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QInputEvent
- *  $ONELINER$
- *     Creates a new QKeyEvent object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qkeyevent.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQKeyEvent.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QKeyEvent.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QInputEvent
  *  $END$
  */

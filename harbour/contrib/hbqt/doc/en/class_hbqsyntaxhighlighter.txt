@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     HBQSyntaxHighlighter()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/THBQSyntaxHighlighter.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/HBQSyntaxHighlighter.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/hbqsyntaxhighlighter.html
+ *  $ONELINER$
+ *     Creates a new HBQSyntaxHighlighter object.
+ *  $INHERITS$
+ *     QSyntaxHighlighter
  *  $SYNTAX$
  *     HBQSyntaxHighlighter():new( ... )
  *     HBQSyntaxHighlighter():from( pPtr_OR_oObj_of_type_HBQSyntaxHighlighter )
  *     HBQSyntaxHighlighter():configure( pPtr_OR_oObj_of_type_HBQSyntaxHighlighter )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type HBQSyntaxHighlighter
  *  $METHODS$
  *     :hbSetMultiLineCommentFormat( pFormat )             -> NIL
  *     :hbSetSingleLineCommentFormat( pFormat )            -> NIL
@@ -25,33 +33,25 @@
  *     :hbSetFormatColumnSelection( nStart, nCount, pColor )  -> NIL
  *     :hbSetRuleWithRegExp( cName, pReg, pFormat )        -> NIL
  * 
- *  $RETURNS$
- *     An instance of the object of type HBQSyntaxHighlighter
- *  $SEEALSO$
- *     QSyntaxHighlighter
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QSyntaxHighlighter
- *  $ONELINER$
- *     Creates a new HBQSyntaxHighlighter object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/hbqsyntaxhighlighter.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/THBQSyntaxHighlighter.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/HBQSyntaxHighlighter.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QSyntaxHighlighter
  *  $END$
  */

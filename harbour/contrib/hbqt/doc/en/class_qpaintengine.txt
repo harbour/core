@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QPaintEngine()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQPaintEngine.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QPaintEngine.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qpaintengine.html
+ *  $ONELINER$
+ *     Creates a new QPaintEngine object.
+ *  $INHERITS$
+ *     
  *  $SYNTAX$
  *     QPaintEngine():new( ... )
  *     QPaintEngine():from( pPtr_OR_oObj_of_type_QPaintEngine )
  *     QPaintEngine():configure( pPtr_OR_oObj_of_type_QPaintEngine )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QPaintEngine
  *  $METHODS$
  *     :begin( pPdev )                                     -> lBool
  *     :drawEllipse( pRect )                               -> NIL
@@ -43,33 +51,25 @@
  *     :type()                                             -> nType
  *     :updateState( pState )                              -> NIL
  * 
- *  $RETURNS$
- *     An instance of the object of type QPaintEngine
- *  $SEEALSO$
- *     
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     
- *  $ONELINER$
- *     Creates a new QPaintEngine object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qpaintengine.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQPaintEngine.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QPaintEngine.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     
  *  $END$
  */

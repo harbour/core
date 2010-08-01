@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QTextCodec()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtcore/TQTextCodec.prg
- *     C++ wrappers  : contrib/hbqt/qtcore/QTextCodec.cpp
- *     Library       : hbqtcore
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qtextcodec.html
+ *  $ONELINER$
+ *     Creates a new QTextCodec object.
+ *  $INHERITS$
+ *     
  *  $SYNTAX$
  *     QTextCodec():new( ... )
  *     QTextCodec():from( pPtr_OR_oObj_of_type_QTextCodec )
  *     QTextCodec():configure( pPtr_OR_oObj_of_type_QTextCodec )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QTextCodec
  *  $METHODS$
  *     :aliases()                                          -> pQList<QByteArray>
  *     :canEncode( pCh )                                   -> lBool
@@ -32,33 +40,25 @@
  *     :setCodecForLocale( pC )                            -> NIL
  *     :setCodecForTr( pC )                                -> NIL
  * 
- *  $RETURNS$
- *     An instance of the object of type QTextCodec
- *  $SEEALSO$
- *     
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     
- *  $ONELINER$
- *     Creates a new QTextCodec object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qtextcodec.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/TQTextCodec.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/QTextCodec.cpp
+ *     Library       : hbqtcore
+ *  $SEEALSO$
+ *     
  *  $END$
  */

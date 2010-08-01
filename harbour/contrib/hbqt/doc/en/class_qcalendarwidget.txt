@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QCalendarWidget()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQCalendarWidget.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QCalendarWidget.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qcalendarwidget.html
+ *  $ONELINER$
+ *     Creates a new QCalendarWidget object.
+ *  $INHERITS$
+ *     QWidget
  *  $SYNTAX$
  *     QCalendarWidget():new( ... )
  *     QCalendarWidget():from( pPtr_OR_oObj_of_type_QCalendarWidget )
  *     QCalendarWidget():configure( pPtr_OR_oObj_of_type_QCalendarWidget )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QCalendarWidget
  *  $METHODS$
  *     :dateEditAcceptDelay()                              -> nInt
  *     :dateTextFormat( pDate )                            -> pQTextCharFormat
@@ -57,33 +65,25 @@
  *     :showSelectedDate()                                 -> NIL
  *     :showToday()                                        -> NIL
  * 
- *  $RETURNS$
- *     An instance of the object of type QCalendarWidget
- *  $SEEALSO$
- *     QWidget
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QWidget
- *  $ONELINER$
- *     Creates a new QCalendarWidget object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qcalendarwidget.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQCalendarWidget.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QCalendarWidget.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QWidget
  *  $END$
  */

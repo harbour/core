@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QInputDialog()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQInputDialog.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QInputDialog.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qinputdialog.html
+ *  $ONELINER$
+ *     Creates a new QInputDialog object.
+ *  $INHERITS$
+ *     QDialog
  *  $SYNTAX$
  *     QInputDialog():new( ... )
  *     QInputDialog():from( pPtr_OR_oObj_of_type_QInputDialog )
  *     QInputDialog():configure( pPtr_OR_oObj_of_type_QInputDialog )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QInputDialog
  *  $METHODS$
  *     :cancelButtonText()                                 -> cQString
  *     :comboBoxItems()                                    -> pQStringList
@@ -63,33 +71,25 @@
  *     :getItem( pParent, cTitle, cLabel, pItems, nCurrent, lEditable, @lOk, nFlags )  -> cQString
  *     :getText( pParent, cTitle, cLabel, nMode, cText, @lOk, nFlags )  -> cQString
  * 
- *  $RETURNS$
- *     An instance of the object of type QInputDialog
- *  $SEEALSO$
- *     QDialog
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QDialog
- *  $ONELINER$
- *     Creates a new QInputDialog object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qinputdialog.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQInputDialog.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QInputDialog.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QDialog
  *  $END$
  */

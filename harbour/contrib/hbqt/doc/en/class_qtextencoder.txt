@@ -3,51 +3,51 @@
  */
 
 /*  $DOC$
- *  $NAME$
- *     QTextEncoder()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtcore/TQTextEncoder.prg
- *     C++ wrappers  : contrib/hbqt/qtcore/QTextEncoder.cpp
- *     Library       : hbqtcore
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
- *  $SYNTAX$
- *     QTextEncoder():new( ... )
- *     QTextEncoder():from( pPtr_OR_oObj_of_type_QTextEncoder )
- *     QTextEncoder():configure( pPtr_OR_oObj_of_type_QTextEncoder )
- *  $METHODS$
- *     :fromUnicode( cStr )                                -> pQByteArray
- *     :fromUnicode_1( pUc, nLen )                         -> pQByteArray
- * 
- *  $RETURNS$
- *     An instance of the object of type QTextEncoder
- *  $SEEALSO$
- *     
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     
- *  $ONELINER$
- *     Creates a new QTextEncoder object.
  *  $TEMPLATE$
  *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
- *  $DESCRIPTION$
- * 
+ *  $NAME$
+ *     QTextEncoder()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
  *  $SUBCATEGORY$
  *     GUI
  *  $EXTERNALLINK$
  *     http://doc.trolltech.com/4.5/qtextencoder.html
+ *  $ONELINER$
+ *     Creates a new QTextEncoder object.
+ *  $INHERITS$
+ *     
+ *  $SYNTAX$
+ *     QTextEncoder():new( ... )
+ *     QTextEncoder():from( pPtr_OR_oObj_of_type_QTextEncoder )
+ *     QTextEncoder():configure( pPtr_OR_oObj_of_type_QTextEncoder )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QTextEncoder
+ *  $METHODS$
+ *     :fromUnicode( cStr )                                -> pQByteArray
+ *     :fromUnicode_1( pUc, nLen )                         -> pQByteArray
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/TQTextEncoder.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/QTextEncoder.cpp
+ *     Library       : hbqtcore
+ *  $SEEALSO$
+ *     
  *  $END$
  */

@@ -8,6 +8,7 @@
 #          or the generator tool itself, and run regenarate.
 # --------------------------------------------------------------------
 
+HBQAbstractItemModel.cpp
 HBQMainWindow.cpp
 HBQPlainTextEdit.cpp
 HBQSyntaxHighlighter.cpp
@@ -232,6 +233,7 @@ QWizard.cpp
 QWizardPage.cpp
 QUiLoader.cpp
 
+THBQAbstractItemModel.prg
 THBQMainWindow.prg
 THBQPlainTextEdit.prg
 THBQSyntaxHighlighter.prg

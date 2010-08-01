@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QEventLoop()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtcore/TQEventLoop.prg
- *     C++ wrappers  : contrib/hbqt/qtcore/QEventLoop.cpp
- *     Library       : hbqtcore
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qeventloop.html
+ *  $ONELINER$
+ *     Creates a new QEventLoop object.
+ *  $INHERITS$
+ *     QObject
  *  $SYNTAX$
  *     QEventLoop():new( ... )
  *     QEventLoop():from( pPtr_OR_oObj_of_type_QEventLoop )
  *     QEventLoop():configure( pPtr_OR_oObj_of_type_QEventLoop )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QEventLoop
  *  $METHODS$
  *     :exec( nFlags )                                     -> nInt
  *     :exit( nReturnCode )                                -> NIL
@@ -25,33 +33,25 @@
  *     :processEvents_1( nFlags, nMaxTime )                -> NIL
  *     :wakeUp()                                           -> NIL
  * 
- *  $RETURNS$
- *     An instance of the object of type QEventLoop
- *  $SEEALSO$
- *     QObject
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QObject
- *  $ONELINER$
- *     Creates a new QEventLoop object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qeventloop.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/TQEventLoop.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/QEventLoop.cpp
+ *     Library       : hbqtcore
+ *  $SEEALSO$
+ *     QObject
  *  $END$
  */

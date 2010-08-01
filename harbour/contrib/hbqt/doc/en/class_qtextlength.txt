@@ -3,52 +3,52 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QTextLength()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQTextLength.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QTextLength.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qtextlength.html
+ *  $ONELINER$
+ *     Creates a new QTextLength object.
+ *  $INHERITS$
+ *     
  *  $SYNTAX$
  *     QTextLength():new( ... )
  *     QTextLength():from( pPtr_OR_oObj_of_type_QTextLength )
  *     QTextLength():configure( pPtr_OR_oObj_of_type_QTextLength )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QTextLength
  *  $METHODS$
  *     :rawValue()                                         -> nQreal
  *     :type()                                             -> nType
  *     :value( nMaximumLength )                            -> nQreal
  * 
- *  $RETURNS$
- *     An instance of the object of type QTextLength
- *  $SEEALSO$
- *     
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     
- *  $ONELINER$
- *     Creates a new QTextLength object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qtextlength.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQTextLength.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QTextLength.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     
  *  $END$
  */

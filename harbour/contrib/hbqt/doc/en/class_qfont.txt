@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QFont()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQFont.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QFont.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qfont.html
+ *  $ONELINER$
+ *     Creates a new QFont object.
+ *  $INHERITS$
+ *     
  *  $SYNTAX$
  *     QFont():new( ... )
  *     QFont():from( pPtr_OR_oObj_of_type_QFont )
  *     QFont():configure( pPtr_OR_oObj_of_type_QFont )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QFont
  *  $METHODS$
  *     :bold()                                             -> lBool
  *     :capitalization()                                   -> nCapitalization
@@ -77,14 +85,8 @@
  *     :substitutes( cFamilyName )                         -> pQStringList
  *     :substitutions()                                    -> pQStringList
  * 
- *  $RETURNS$
- *     An instance of the object of type QFont
- *  $SEEALSO$
- *     
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
+ *  $DESCRIPTION$
+ * 
  *  $EXAMPLES$
  *     oFont := QFont():new()
  *     oFont := QFont():new( cFontName )
@@ -94,23 +96,21 @@
  *     oFont := QFont():new( pFont )
  *     oFont := QFont():new( pFont, pPaintDevice )
  * 
- *  $INHERITS$
- *     
- *  $ONELINER$
- *     Creates a new QFont object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
+ *  $TESTS$
  * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
+ *  $STATUS$
+ *     R
  *  $COMPLIANCE$
  *     Not Clipper compatible
- *  $DESCRIPTION$
- * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qfont.html
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQFont.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QFont.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     
  *  $END$
  */

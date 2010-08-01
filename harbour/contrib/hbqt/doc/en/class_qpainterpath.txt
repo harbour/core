@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QPainterPath()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQPainterPath.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QPainterPath.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qpainterpath.html
+ *  $ONELINER$
+ *     Creates a new QPainterPath object.
+ *  $INHERITS$
+ *     
  *  $SYNTAX$
  *     QPainterPath():new( ... )
  *     QPainterPath():from( pPtr_OR_oObj_of_type_QPainterPath )
  *     QPainterPath():configure( pPtr_OR_oObj_of_type_QPainterPath )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QPainterPath
  *  $METHODS$
  *     :addEllipse( pBoundingRectangle )                   -> NIL
  *     :addEllipse_1( nX, nY, nWidth, nHeight )            -> NIL
@@ -69,33 +77,25 @@
  *     :toSubpathPolygons( pMatrix )                       -> pQList<QPolygonF>
  *     :toSubpathPolygons_1( pMatrix )                     -> pQList<QPolygonF>
  * 
- *  $RETURNS$
- *     An instance of the object of type QPainterPath
- *  $SEEALSO$
- *     
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     
- *  $ONELINER$
- *     Creates a new QPainterPath object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qpainterpath.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQPainterPath.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QPainterPath.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     
  *  $END$
  */

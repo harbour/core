@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QPainter()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQPainter.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QPainter.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qpainter.html
+ *  $ONELINER$
+ *     Creates a new QPainter object.
+ *  $INHERITS$
+ *     
  *  $SYNTAX$
  *     QPainter():new( ... )
  *     QPainter():from( pPtr_OR_oObj_of_type_QPainter )
  *     QPainter():configure( pPtr_OR_oObj_of_type_QPainter )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QPainter
  *  $METHODS$
  *     :background()                                       -> pQBrush
  *     :backgroundMode()                                   -> nQt::BGMode
@@ -201,33 +209,25 @@
  *     :restoreRedirected( pDevice )                       -> NIL
  *     :setRedirected( pDevice, pReplacement, pOffset )    -> NIL
  * 
- *  $RETURNS$
- *     An instance of the object of type QPainter
- *  $SEEALSO$
- *     
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     
- *  $ONELINER$
- *     Creates a new QPainter object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qpainter.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQPainter.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QPainter.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     
  *  $END$
  */

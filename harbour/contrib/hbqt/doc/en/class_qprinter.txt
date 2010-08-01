@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QPrinter()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQPrinter.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QPrinter.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qprinter.html
+ *  $ONELINER$
+ *     Creates a new QPrinter object.
+ *  $INHERITS$
+ *     QPaintDevice
  *  $SYNTAX$
  *     QPrinter():new( ... )
  *     QPrinter():from( pPtr_OR_oObj_of_type_QPrinter )
  *     QPrinter():configure( pPtr_OR_oObj_of_type_QPrinter )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QPrinter
  *  $METHODS$
  *     :abort()                                            -> lBool
  *     :collateCopies()                                    -> lBool
@@ -75,33 +83,25 @@
  *     :supportedResolutions()                             -> pQList<int>
  *     :toPage()                                           -> nInt
  * 
- *  $RETURNS$
- *     An instance of the object of type QPrinter
- *  $SEEALSO$
- *     QPaintDevice
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QPaintDevice
- *  $ONELINER$
- *     Creates a new QPrinter object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qprinter.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQPrinter.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QPrinter.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QPaintDevice
  *  $END$
  */

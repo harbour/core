@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QBrush()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQBrush.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QBrush.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qbrush.html
+ *  $ONELINER$
+ *     Creates a new QBrush object.
+ *  $INHERITS$
+ *     
  *  $SYNTAX$
  *     QBrush():new( ... )
  *     QBrush():from( pPtr_OR_oObj_of_type_QBrush )
  *     QBrush():configure( pPtr_OR_oObj_of_type_QBrush )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QBrush
  *  $METHODS$
  *     :color()                                            -> pQColor
  *     :isOpaque()                                         -> lBool
@@ -33,14 +41,8 @@
  *     :textureImage()                                     -> pQImage
  *     :transform()                                        -> pQTransform
  * 
- *  $RETURNS$
- *     An instance of the object of type QBrush
- *  $SEEALSO$
- *     
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
+ *  $DESCRIPTION$
+ * 
  *  $EXAMPLES$
  *     oBrush := QBrush():new()
  *     oBrush := QBrush():new( pQBrush )
@@ -54,23 +56,21 @@
  *     oBrush := QBrush():new( "QGradient", pQGradient )
  *     oBrush := QBrush():new( "QColor"   , pQColor, [ nQt_BrushStyle = Qt_SolidPattern ] )
  * 
- *  $INHERITS$
- *     
- *  $ONELINER$
- *     Creates a new QBrush object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
+ *  $TESTS$
  * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
+ *  $STATUS$
+ *     R
  *  $COMPLIANCE$
  *     Not Clipper compatible
- *  $DESCRIPTION$
- * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qbrush.html
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQBrush.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QBrush.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     
  *  $END$
  */

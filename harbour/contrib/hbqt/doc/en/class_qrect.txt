@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QRect()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtcore/TQRect.prg
- *     C++ wrappers  : contrib/hbqt/qtcore/QRect.cpp
- *     Library       : hbqtcore
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qrect.html
+ *  $ONELINER$
+ *     Creates a new QRect object.
+ *  $INHERITS$
+ *     
  *  $SYNTAX$
  *     QRect():new( ... )
  *     QRect():from( pPtr_OR_oObj_of_type_QRect )
  *     QRect():configure( pPtr_OR_oObj_of_type_QRect )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QRect
  *  $METHODS$
  *     :adjust( nDx1, nDy1, nDx2, nDy2 )                   -> NIL
  *     :bottom()                                           -> nInt
@@ -72,14 +80,8 @@
  *     :x()                                                -> nInt
  *     :y()                                                -> nInt
  * 
- *  $RETURNS$
- *     An instance of the object of type QRect
- *  $SEEALSO$
- *     
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
+ *  $DESCRIPTION$
+ * 
  *  $EXAMPLES$
  *     oRect := QRect():new()
  *     oRect := QRect():new( pQRect_other )
@@ -90,23 +92,21 @@
  *      * oRect := QRect():new( pQPoint_topLeft, pQSize_size )
  *      */
  * 
- *  $INHERITS$
- *     
- *  $ONELINER$
- *     Creates a new QRect object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
+ *  $TESTS$
  * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
+ *  $STATUS$
+ *     R
  *  $COMPLIANCE$
  *     Not Clipper compatible
- *  $DESCRIPTION$
- * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qrect.html
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/TQRect.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/QRect.cpp
+ *     Library       : hbqtcore
+ *  $SEEALSO$
+ *     
  *  $END$
  */

@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QPushButton()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQPushButton.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QPushButton.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qpushbutton.html
+ *  $ONELINER$
+ *     Creates a new QPushButton object.
+ *  $INHERITS$
+ *     QAbstractButton
  *  $SYNTAX$
  *     QPushButton():new( ... )
  *     QPushButton():from( pPtr_OR_oObj_of_type_QPushButton )
  *     QPushButton():configure( pPtr_OR_oObj_of_type_QPushButton )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QPushButton
  *  $METHODS$
  *     :autoDefault()                                      -> lBool
  *     :isDefault()                                        -> lBool
@@ -28,33 +36,25 @@
  *     :setMenu( pMenu )                                   -> NIL
  *     :showMenu()                                         -> NIL
  * 
- *  $RETURNS$
- *     An instance of the object of type QPushButton
- *  $SEEALSO$
- *     QAbstractButton
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QAbstractButton
- *  $ONELINER$
- *     Creates a new QPushButton object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qpushbutton.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQPushButton.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QPushButton.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QAbstractButton
  *  $END$
  */

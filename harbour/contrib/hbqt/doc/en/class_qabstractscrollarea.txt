@@ -3,20 +3,28 @@
  */
 
 /*  $DOC$
+ *  $TEMPLATE$
+ *     Class
  *  $NAME$
  *     QAbstractScrollArea()
- *  $FILES$
- *     Harbour source: contrib/hbqt/qtgui/TQAbstractScrollArea.prg
- *     C++ wrappers  : contrib/hbqt/qtgui/QAbstractScrollArea.cpp
- *     Library       : hbqtgui
- *  $TESTS$
- * 
- *  $STATUS$
- *     R
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qabstractscrollarea.html
+ *  $ONELINER$
+ *     Creates a new QAbstractScrollArea object.
+ *  $INHERITS$
+ *     QFrame
  *  $SYNTAX$
  *     QAbstractScrollArea():new( ... )
  *     QAbstractScrollArea():from( pPtr_OR_oObj_of_type_QAbstractScrollArea )
  *     QAbstractScrollArea():configure( pPtr_OR_oObj_of_type_QAbstractScrollArea )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QAbstractScrollArea
  *  $METHODS$
  *     :addScrollBarWidget( pWidget, nAlignment )          -> NIL
  *     :cornerWidget()                                     -> pQWidget
@@ -33,33 +41,25 @@
  *     :verticalScrollBarPolicy()                          -> nQt::ScrollBarPolicy
  *     :viewport()                                         -> pQWidget
  * 
- *  $RETURNS$
- *     An instance of the object of type QAbstractScrollArea
- *  $SEEALSO$
- *     QFrame
- *  $VERSION$
- *     4.5 or upper
- *  $CATEGORY$
- *     Harbour Bindings for Qt
- *  $EXAMPLES$
- * 
- *  $INHERITS$
- *     QFrame
- *  $ONELINER$
- *     Creates a new QAbstractScrollArea object.
- *  $TEMPLATE$
- *     Class
- *  $ARGUMENTS$
- * 
- *  $PLATFORMS$
- *     Windows, Linux, Mac OS X, OS/2
- *  $COMPLIANCE$
- *     Not Clipper compatible
  *  $DESCRIPTION$
  * 
- *  $SUBCATEGORY$
- *     GUI
- *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/qabstractscrollarea.html
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQAbstractScrollArea.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QAbstractScrollArea.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QFrame
  *  $END$
  */
