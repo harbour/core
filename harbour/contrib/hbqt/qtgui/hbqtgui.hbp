@@ -1,0 +1,12 @@
+#
+# $Id$
+#
+
+../hbqt_common.hbm
+
+filelist.hbm
+hbqtgui.hbm
+
+../qtcore/hbqtcore.hbc
+
+hbqtguis.hbp

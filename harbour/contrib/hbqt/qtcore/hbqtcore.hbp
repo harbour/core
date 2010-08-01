@@ -1,0 +1,10 @@
+#
+# $Id$
+#
+
+../hbqt_common.hbm
+
+filelist.hbm
+hbqtcore.hbm
+
+hbqtcores.hbp

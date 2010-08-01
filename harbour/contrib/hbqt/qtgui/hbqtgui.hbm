@@ -1,0 +1,18 @@
+#
+# $Id$
+#
+
+../hbqt_hbqabstractitemmodel.cpp
+../hbqt_hbqmainwindow.cpp
+../hbqt_hbqplaintextedit.cpp
+../hbqt_hbqsyntaxhighlighter.cpp
+../hbqt_hbqtableview.cpp
+
+../hbqt_hbqabstractitemmodel.h
+../hbqt_hbqmainwindow.h
+../hbqt_hbqplaintextedit.h
+../hbqt_hbqsyntaxhighlighter.h
+../hbqt_hbqtableview.h
+
+../hbqt_errorsys.prg
+../THbQtUI.prg
