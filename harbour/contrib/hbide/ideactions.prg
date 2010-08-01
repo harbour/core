@@ -323,11 +323,10 @@ METHOD IdeActions:buildToolBar()
    LOCAL nSep := XBPTOOLBAR_BUTTON_SEPARATOR
 
    oTBar := XbpToolBar():new( ::oDlg )
-   oTBar:imageWidth  := 22
-   oTBar:imageHeight := 22
+   oTBar:imageWidth  := 20
+   oTBar:imageHeight := 20
    oTBar:create( , , { 0, ::oDlg:currentSize()[ 2 ]-60 }, { ::oDlg:currentSize()[ 1 ], 60 } )
    oTBar:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
-   //oTBar:oWidget:setMaximumHeight( 28 )
    oTBar:oWidget:setAllowedAreas( Qt_LeftToolBarArea + Qt_RightToolBarArea + Qt_TopToolBarArea + Qt_BottomToolBarArea )
    oTBar:oWidget:setFocusPolicy( Qt_NoFocus )
 
@@ -351,6 +350,7 @@ METHOD IdeActions:buildToolBar()
    oTBar:addItem( ::getAction( "TB_Rebuild"           ), , , , , , "Rebuild"           )
    oTBar:addItem( ::getAction( "TB_RebuildLaunch"     ), , , , , , "RebuildLaunch"     )
    oTBar:addItem( , , , , , nSep )
+   IF ! ::oIde:lCurEditsMdi
    oTBar:addItem( ::getAction( "TB_Undo"              ), , , , , , "Undo"              )
    oTBar:addItem( ::getAction( "TB_Redo"              ), , , , , , "Redo"              )
    oTBar:addItem( , , , , , nSep )
@@ -367,11 +367,13 @@ METHOD IdeActions:buildToolBar()
    oTBar:addItem( ::getAction( "ZoomIn"               ), , , , , , "ZoomIn"            )
    oTBar:addItem( ::getAction( "ZoomOut"              ), , , , , , "ZoomOut"           )
    oTBar:addItem( , , , , , nSep )
-
+   ENDIF
    oTBar:oWidget:addWidget( ::oIde:oTM:buildToolsButton() )
 
-   /* Candidate for separate class - though */
-   oTBar:oWidget:addWidget( ::oIde:oTM:buildPanelsButton() )
+   IF ! ::oIde:lCurEditsMdi
+      /* Candidate for separate class - though */
+      oTBar:oWidget:addWidget( ::oIde:oTM:buildPanelsButton() )
+   ENDIF
 
    ::oIde:oMainToolbar := oTBar
 
@@ -531,8 +533,10 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu:addItem( { "Toggle Animation", {|| oIde:execAction( "Animate" ) } }         )
    oSubMenu:oWidget:addSeparator()
    oSubMenu:oWidget:addAction_4( ::oIde:oMainToolbar:oWidget:toggleViewAction()         )
+   IF ! ::oIde:lCurEditsMdi
    oSubMenu:oWidget:addAction_4( ::qTBarPanels:toggleViewAction()                       )
    oSubMenu:oWidget:addAction_4( ::qTBarLines:toggleViewAction()                        )
+   ENDIF
    oSubMenu:oWidget:addAction_4( ::qTBarDocks:toggleViewAction()                        )
    oSubMenu:addItem( { "Toggle Statusbar", {|| oIde:execAction( "ToggleStatusBar" ) } } )
    oSubMenu:oWidget:addSeparator()

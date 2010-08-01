@@ -397,6 +397,19 @@
         <string>Style:</string>
        </property>
       </widget>
+      <widget class="QCheckBox" name="checkEditsMdi">
+       <property name="geometry">
+        <rect>
+         <x>258</x>
+         <y>58</y>
+         <width>59</width>
+         <height>19</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Edit MDI</string>
+       </property>
+      </widget>
      </widget>
     </widget>
    </widget>

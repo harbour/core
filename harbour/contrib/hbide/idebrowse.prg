@@ -231,7 +231,7 @@ METHOD IdeBrowseManager:getPanelsInfo()
                                      hb_ntos( aSub[ SUB_GEOMETRY ]:width() ) + " " + hb_ntos( aSub[ SUB_GEOMETRY ]:height() )
             aAttr[ TBL_ROWPOS   ] := hb_ntos( oBrw:oBrw:rowPos() )
             aAttr[ TBL_COLPOS   ] := hb_ntos( oBrw:oBrw:colPos() )
-            aAttr[ TBL_HZSCROLL ] := "" //hb_ntos( oBrw:
+            aAttr[ TBL_HZSCROLL ] := ""
             aAttr[ TBL_CONXN    ] := oBrw:cConxnFull
             aAttr[ TBL_NEXT     ] := ""
 
@@ -317,12 +317,12 @@ METHOD IdeBrowseManager:create( oIde )
 
    /* Stacked widget */
    ::qStack := QStackedWidget():new()
-   ::qLayout:addWidget_1( ::qStack, 1, 1, 1, 1 )
+   ::qLayout:addWidget_1( ::qStack   , 1, 1, 1, 1 )
 
    /* StatusBar */
    ::qStatus := QStatusBar():new()
    ::qStatus:setSizeGripEnabled( .f. )
-   ::qLayout:addWidget_1( ::qStatus, 2, 0, 1, 2 )
+   ::qLayout:addWidget_1( ::qStatus  , 2, 0, 1, 2 )
 
    /* */
    ::buildStatusPanels()

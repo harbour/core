@@ -1845,12 +1845,17 @@ FUNCTION hbide_string2nArray( s )
    b_:= hb_atokens( s, " " )
    FOR EACH s IN b_
       s := alltrim( s )
-      IF val( s ) > 0
+      IF len( s ) > 0
          aadd( a_, val( s ) )
       ENDIF
    NEXT
 
    RETURN a_
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_array2rect( a_ )
+   RETURN QRect():new( a_[ 1 ], a_[ 2 ], a_[ 3 ], a_[ 4 ] )
 
 /*----------------------------------------------------------------------*/
 

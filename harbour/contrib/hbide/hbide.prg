@@ -160,6 +160,7 @@ CLASS HbIde
 
    DATA   aTabs                                   INIT   {}
    DATA   aViews                                  INIT   {}
+   DATA   aMdies                                  INIT   {}
    DATA   aProjData                               INIT   {}
    DATA   aPrpObjs                                INIT   {}
    DATA   aEditorPath                             INIT   {}
@@ -249,6 +250,7 @@ CLASS HbIde
    DATA   lLineNumbersVisible                     INIT   .t.
    DATA   lHorzRulerVisible                       INIT   .t.
    DATA   lCurrentLineHighlightEnabled            INIT   .t.
+   DATA   lCurEditsMdi                            INIT   .t.
 
    DATA   cWrkFolderLast                          INIT   ""
    DATA   cWrkProject                             INIT   ""
@@ -352,7 +354,7 @@ METHOD HbIde:new( aParams )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:create( aParams )
-   LOCAL qPixmap, qSplash, cView, cV
+   LOCAL qPixmap, qSplash, cView
 
    #ifdef __VIA_UIC__
    ::nModeUI := 0
@@ -433,13 +435,15 @@ METHOD HbIde:create( aParams )
    ::oTH := IdeThemes():new( Self, ::oINI:getThemesFile() ):create()
 
    /* DOCKing windows and ancilliary windows */
-   ::oDK := IdeDocks():new():create( Self )
+   ::oDK := IdeDocks():new( Self ):create()
+
+   /* Tools Manager */
+   ::oTM := IdeToolsManager():new( Self ):create()
+
    /* IDE's Main Window */
    ::oDK:buildDialog()
    /* Actions */
-   ::oAC := IdeActions():new():create( Self )
-   /* Tools Manager */
-   ::oTM := IdeToolsManager():new( Self ):create()
+   ::oAC := IdeActions():new( Self ):create()
 
    /* Docking Widgets */
    ::oDK:buildDockWidgets()
@@ -514,10 +518,7 @@ METHOD HbIde:create( aParams )
    ::oDK:animateComponents( val( ::oINI:cIdeAnimated ) )
    ::oSetup:setSystemStyle( ::oINI:cIdeTheme )
 
-   ::oDK:setViewInitials( "Main" )
-   FOR EACH cV IN ::oINI:aViews
-      ::oDK:setViewInitials( cV )
-   NEXT
+   ::oDK:setViewInitials()
 
    /* Refresh Stylesheet for all components at once */
    ::oDK:animateComponents( ::nAnimantionMode )
@@ -705,7 +706,7 @@ METHOD HbIde:execAction( cKey )
       EXIT
    CASE "Home"
       ::oDK:setView( "Stats" )
-      EXIT
+      RETURN Self
    CASE "Animate"
       ::oDK:animateComponents() // ::nAnimantionMode )
       EXIT

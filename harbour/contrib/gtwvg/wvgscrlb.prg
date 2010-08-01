@@ -81,18 +81,6 @@
 #include "cstruct.ch"
 #include "wintypes.ch"
 
-typedef struct tagPOINT {;
-    LONG x;
-    LONG y;
-} POINT
-
-typedef struct tagRECT { ;
-    LONG left;
-    LONG top;
-    LONG right;
-    LONG bottom;
-} RECT
-
 typedef struct tagSCROLLBARINFO {;
     DWORD cbSize;
     RECT  rcScrollBar;
@@ -112,6 +100,18 @@ typedef struct tagSCROLLINFO {;
     int  nPos;
     int  nTrackPos;
 }   SCROLLINFO
+
+typedef struct tagPOINT {;
+    LONG x;
+    LONG y;
+} POINT
+
+typedef struct tagRECT { ;
+    LONG left;
+    LONG top;
+    LONG right;
+    LONG bottom;
+} RECT
 
 #endif
 /*----------------------------------------------------------------------*/

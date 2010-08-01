@@ -141,14 +141,9 @@ METHOD IdeToolsManager:setStyleSheet( cCSS )
 /*------------------------------------------------------------------------*/
 
 METHOD IdeToolsManager:create( oIde )
-   LOCAL oAct
 
    DEFAULT oIde TO ::oIde
    ::oIde := oIde
-
-   IF !empty( oAct := ::oAC:getAction( "TB_Tools" ) )
-      oAct:setMenu( QMenu():new() )
-   ENDIF
 
    IF empty( ::oINI:aUserToolbars )
       asize( ::oINI:aUserToolbars, 5 )
@@ -669,13 +664,13 @@ METHOD IdeToolsManager:buildToolsButton()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeToolsManager:buildPanelsButton()
-   LOCAL cView
+   LOCAL s, a_
 
    ::qPanelsMenu := QMenu():new()
    ::qPanelsMenu:setStyleSheet( GetStyleSheet( "QMenuPop", ::nAnimantionMode ) )
-   ::addPanelsMenu( "Main" )
-   FOR EACH cView IN ::oINI:aViews
-      ::addPanelsMenu( cView )
+   FOR EACH s IN ::oINI:aViews
+      a_:= hb_atokens( s, "," )
+      ::addPanelsMenu( a_[ 1 ] )
    NEXT
    ::qPanelsButton := QToolButton():new()
    ::qPanelsButton:setTooltip( "Panels" )
@@ -714,7 +709,6 @@ METHOD IdeToolsManager:execToolByParams( cCmd, cParams, cStartIn, lCapture, lOpe
    IF empty( cCmd )
       cCmd := hbide_getShellCommand()
       cArg := iif( hbide_getOS() == "nix", "", "/C " )
-      //cArg := ""
    ELSE
       cArg := ""
    ENDIF

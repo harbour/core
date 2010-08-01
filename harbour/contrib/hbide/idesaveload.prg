@@ -157,6 +157,7 @@ CLASS IdeINI INHERIT IdeObject
    DATA   lCompleteArgumented                     INIT  .f.
 
    DATA   aAppThemes                              INIT  {}
+   DATA   lEditsMdi                               INIT  .t.
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -328,6 +329,7 @@ METHOD IdeINI:save( cHbideIni )
    aadd( txt_, "BkpSuffix"                 + "=" +   ::cBkpSuffix                                       )
    aadd( txt_, "CodeListWithArgs"          + "=" +   iif( ::lCompletionWithArgs     , "YES", "NO" )     )
    aadd( txt_, "CompletionWithArgs"        + "=" +   iif( ::lCompleteArgumented     , "YES", "NO" )     )
+   aadd( txt_, "EditsMdi"                  + "=" +   iif( ::lEditsMdi               , "YES", "NO" )     )
 
    aadd( txt_, "[PROJECTS]" )
    aadd( txt_, " " )
@@ -405,8 +407,8 @@ METHOD IdeINI:save( cHbideIni )
 
    aadd( txt_, "[VIEWS]" )
    aadd( txt_, " " )
-   FOR n := 1 TO len( ::aViews )
-      aadd( txt_, "view_" + hb_ntos( n ) + "=" + ::aViews[ n ] )
+   FOR EACH s IN ::oDK:getEditorPanelsInfo()
+      aadd( txt_, "view_" + hb_ntos( s:__enumIndex() ) + "=" + s )
    NEXT
    aadd( txt_, " " )
 
@@ -612,6 +614,7 @@ METHOD IdeINI:load( cHbideIni )
                      CASE "BkpSuffix"                   ; ::oINI:cBkpSuffix                   := cVal ; EXIT
                      CASE "CodeListWithArgs"            ; ::oINI:lCompletionWithArgs          := cVal != "NO" ; EXIT
                      CASE "CompletionWithArgs"          ; ::oINI:lCompleteArgumented          := cVal != "NO" ; EXIT
+                     CASE "EditsMdi"                    ; ::lEditsMdi                         := cVal != "NO" ; EXIT
 
                      ENDSWITCH
                   ENDIF
@@ -715,6 +718,8 @@ METHOD IdeINI:load( cHbideIni )
          ENDIF
       NEXT
    ENDIF
+
+   ::oIde:lCurEditsMdi := ::lEditsMdi
 
    RETURN Self
 
@@ -1172,6 +1177,7 @@ METHOD IdeSetup:retrieve()
    ::oINI:lSmartIndent             := ::oUI:q_checkSmartIndent             : isChecked()
    ::oIde:nTabSpaces               := val( ::oUI:q_editTabSpaces           : text() )
    ::oINI:nIndentSpaces            := val( ::oUI:q_editIndentSpaces        : text() )
+   ::oINI:lEditsMdi                := ::oUI:q_checkEditsMdi                : isChecked()
 
    ::oINI:aKeywords := {}
    FOR EACH a_ IN ::aKeyItems
@@ -1236,6 +1242,7 @@ METHOD IdeSetup:populate()
    ::oUI:q_checkSmartIndent             : setChecked( ::oINI:lSmartIndent                 )
    ::oUI:q_editTabSpaces                : setText( hb_ntos( ::oIde:nTabSpaces    )        )
    ::oUI:q_editIndentSpaces             : setText( hb_ntos( ::oINI:nIndentSpaces )        )
+   ::oUI:q_checkEditsMdi                : setChecked( ::oINI:lEditsMdi                    )
 
    /* Paths */
    ::oUI:q_editPathIni                  : setText( ::oIde:cProjIni       )
