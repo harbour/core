@@ -2410,3 +2410,5 @@ FUNCTION hbide_request()
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION UR_SUPER_WRITEBHEADER(); RETURN NIL

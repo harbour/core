@@ -227,7 +227,7 @@ METHOD IdeDocks:getEditorPanelsInfo()
 /*------------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildDialog()
-   LOCAL s, aSize, a_
+   LOCAL s, aSize, a_, lTiled := .t.
 
    ::oIde:oDlg := XbpDialog():new()
    ::oDlg:icon := hbide_image( "hbide" )
@@ -266,19 +266,19 @@ METHOD IdeDocks:buildDialog()
    ::oDa:oWidget:setLayout( ::qLayout )
 
    IF ::oIde:lCurEditsMdi
-   ::buildMdiToolbar()
-   ::qLayout:addWidget_1( ::qMdiToolbar           , 0, 0, 1, 2 )
-   ::buildMdiToolbarLeft()
-   ::qLayout:addWidget_1( ::qMdiToolbarL          , 1, 0, 1, 1 )
-   ::buildStackedWidget()
-   ::qLayout:addWidget_1( ::oStackedWidget:oWidget, 1, 1, 1, 1 )
-   ::buildSearchReplaceWidget()
-   ::qLayout:addWidget_1( ::oSearchReplace:oUI    , 2, 0, 1, 2 )
+      ::buildMdiToolbar()
+      ::qLayout:addWidget_1( ::qMdiToolbar           , 0, 0, 1, 2 )
+      ::buildMdiToolbarLeft()
+      ::qLayout:addWidget_1( ::qMdiToolbarL          , 1, 0, 1, 1 )
+      ::buildStackedWidget()
+      ::qLayout:addWidget_1( ::oStackedWidget:oWidget, 1, 1, 1, 1 )
+      ::buildSearchReplaceWidget()
+      ::qLayout:addWidget_1( ::oSearchReplace:oUI    , 2, 0, 1, 2 )
    ELSE
-   ::buildStackedWidget()
-   ::qLayout:addWidget_1( ::oStackedWidget:oWidget, 0, 0, 1, 1 )
-   ::buildSearchReplaceWidget()
-   ::qLayout:addWidget_1( ::oSearchReplace:oUI    , 1, 0, 1, 1 )
+      ::buildStackedWidget()
+      ::qLayout:addWidget_1( ::oStackedWidget:oWidget, 0, 0, 1, 1 )
+      ::buildSearchReplaceWidget()
+      ::qLayout:addWidget_1( ::oSearchReplace:oUI    , 1, 0, 1, 1 )
    ENDIF
 
    /* Normalize Views */
@@ -287,6 +287,7 @@ METHOD IdeDocks:buildDialog()
       asize( a_, 2 )
       IF ! empty( a_[ 2 ] )
          a_[ 2 ] := hbide_array2Rect( hbide_string2nArray( a_[ 2 ] ) )
+         lTiled := .f.
       ENDIF
       aadd( ::aViewsInfo, a_ )
    NEXT
@@ -301,7 +302,9 @@ METHOD IdeDocks:buildDialog()
    FOR EACH a_ IN ::aViewsInfo
       ::buildViewWidget( a_[ 1 ] )
    NEXT
-
+   IF ::oIde:lCurEditsMdi .AND. lTiled
+      ::oStackedWidget:oWidget:tileSubWindows()
+   ENDIF
    ::setView( "Stats" )                  /* Always call with name */
 
    ::oDlg:connectEvent( ::oDlg:oWidget, QEvent_WindowStateChange, {|e| ::execEvent( "QEvent_WindowStateChange", e ) } )
@@ -711,7 +714,9 @@ METHOD IdeDocks:setView( cView )
             aadd( ::aViewsInfo, { cView, NIL } )
             ::oTM:addPanelsMenu( cView )
             ::buildViewWidget( cView )
-            ::addPanelButton( cView )
+            IF ! ::oIde:lCurEditsMdi
+               ::addPanelButton( cView )
+            ENDIF
             ::setView( cView )
          ENDIF
       ENDIF
@@ -720,39 +725,24 @@ METHOD IdeDocks:setView( cView )
    OTHERWISE
       IF ( n := ascan( ::aViews, {|o| o:oWidget:objectName() == cView } ) ) > 0
          ::oIde:cWrkView := cView
+         IF !( cView == "Stats" )
+            ::oIde:qTabWidget := ::aViews[ n ]:oTabWidget:oWidget
+            ::oIde:oTabParent := ::aViews[ n ]
 
-         IF ::oIde:lCurEditsMdi
-            IF !( cView == "Stats" )
-               ::oIde:qTabWidget := ::aViews[ n ]:oTabWidget:oWidget
-               ::oIde:oTabParent := ::aViews[ n ]
-
-               nIndex := ::oIde:qTabWidget:currentIndex()
-               IF nIndex + 1 == ::oIde:qTabWidget:count()
-                  IF !( ::oIde:lClosing )
-                     ::oIde:qTabWidget:setCurrentIndex( 0 )
-                     ::oIde:qTabWidget:setCurrentIndex( nIndex )  /* TODO: Must be last saved */
-                  ENDIF
+            nIndex := ::oIde:qTabWidget:currentIndex()
+            IF nIndex + 1 == ::oIde:qTabWidget:count()
+               IF !( ::oIde:lClosing )
+                  ::oIde:qTabWidget:setCurrentIndex( 0 )
+                  ::oIde:qTabWidget:setCurrentIndex( nIndex )  /* TODO: Must be last saved */
                ENDIF
             ENDIF
-            ::oStackedWidget:oWidget:setActiveSubWindow( ::oIde:aMdies[ n ] )
-            ::setStatusText( SB_PNL_VIEW, ::cWrkView )
-
-         ELSE
-            IF !( cView == "Stats" )
-               ::oIde:qTabWidget := ::aViews[ n ]:oTabWidget:oWidget
-               ::oIde:oTabParent := ::aViews[ n ]
-
-               nIndex := ::oIde:qTabWidget:currentIndex()
-               IF nIndex + 1 == ::oIde:qTabWidget:count()
-                  IF !( ::oIde:lClosing )
-                     ::oIde:qTabWidget:setCurrentIndex( 0 )
-                     ::oIde:qTabWidget:setCurrentIndex( nIndex )  /* TODO: Must be last saved */
-                  ENDIF
-               ENDIF
-            ENDIF
-            ::oStackedWidget:oWidget:setCurrentIndex( n - 1 )
-            ::setStatusText( SB_PNL_VIEW, ::cWrkView )
          ENDIF
+         IF ::oIde:lCurEditsMdi
+            ::oStackedWidget:oWidget:setActiveSubWindow( ::oIde:aMdies[ n ] )
+         ELSE
+            ::oStackedWidget:oWidget:setCurrentIndex( n - 1 )
+         ENDIF
+         ::setStatusText( SB_PNL_VIEW, ::cWrkView )
       ENDIF
       EXIT
 
@@ -890,7 +880,11 @@ METHOD IdeDocks:buildStackedWidget()
       ::oStackedWidget:oWidget := QMdiArea():new( ::oDa:oWidget )
       ::oStackedWidget:oWidget:setObjectName( "editMdiArea" )
       ::oStackedWidget:oWidget:setDocumentMode( .t. )
+      ::oStackedWidget:oWidget:setTabShape( QTabWidget_Triangular )
       ::oStackedWidget:oWidget:setOption( QMdiArea_DontMaximizeSubWindowOnActivation, .t. )
+      ::oStackedWidget:oWidget:setVerticalScrollBarPolicy( Qt_ScrollBarAsNeeded )
+      ::oStackedWidget:oWidget:setHorizontalScrollBarPolicy( Qt_ScrollBarAsNeeded )
+
       ::oDa:addChild( ::oStackedWidget )
 
       ::connect( ::oStackedWidget:oWidget, "subWindowActivated(QMdiSubWindow)", {|p| ::execEvent( "mdiArea_subWindowActivated", p ) } )
@@ -917,7 +911,6 @@ METHOD IdeDocks:buildViewWidget( cView )
       qMdi:setWindowTitle( cView )
       qMdi:setObjectName( cView )
       IF cView != "Stats"
-         HB_TRACE( HB_TR_ALWAYS, ::getPanelIcon( cView ) )
          qMdi:setWindowIcon( ::getPanelIcon( cView ) )
       ENDIF
 
@@ -960,10 +953,12 @@ METHOD IdeDocks:buildViewWidget( cView )
       IF ( n := ascan( ::aViewsInfo, {|e_| e_[ 1 ] == cView } ) ) > 0
          IF !empty( ::aViewsInfo[ n, 2 ] )
             qMdi:setGeometry( ::aViewsInfo[ n, 2 ] )
+         ELSE
+            qMdi:resize( 300, 200 )
          ENDIF
       ENDIF
-
       qMdi:setWidget( oFrame:oWidget )
+      qMdi:show()
       ::oStackedWidget:oWidget:addSubWindow( qMdi )
       ::setView( cView )
 
