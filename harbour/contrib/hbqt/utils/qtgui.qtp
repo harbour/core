@@ -3,7 +3,7 @@
 ;
 
 -I=../qtgui/qth
--O=../qtgui
+-O=../qtgui/g
 -D=../qtgui/doc
 
 HBQAbstractItemModel.qth

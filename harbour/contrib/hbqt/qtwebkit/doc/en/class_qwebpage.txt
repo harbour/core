@@ -1,84 +1,82 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5.3+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QWebPage()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qwebpage.html
-    $ONELINER$
-        Creates a new QWebPage object.
-    $INHERITS$
-        QObject
-    $SYNTAX$
-        QWebPage():new( ... )
-        QWebPage():from( pPtr_OR_oObj_of_type_QWebPage )
-        QWebPage():configure( pPtr_OR_oObj_of_type_QWebPage )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QWebPage
-    $METHODS$
-        :action( nAction )                                  -> pQAction
-        :bytesReceived()                                    -> nQuint64
-        :createStandardContextMenu()                        -> pQMenu
-        :currentFrame()                                     -> pQWebFrame
-        :findText( cSubString, nOptions )                   -> lBool
-        :focusNextPrevChild( lNext )                        -> lBool
-        :forwardUnsupportedContent()                        -> lBool
-        :history()                                          -> pQWebHistory
-        :inputMethodQuery( nProperty )                      -> pQVariant
-        :isContentEditable()                                -> lBool
-        :isModified()                                       -> lBool
-        :linkDelegationPolicy()                             -> nLinkDelegationPolicy
-        :mainFrame()                                        -> pQWebFrame
-        :palette()                                          -> pQPalette
-        :pluginFactory()                                    -> pQWebPluginFactory
-        :selectedText()                                     -> cQString
-        :setContentEditable( lEditable )                    -> NIL
-        :setForwardUnsupportedContent( lForward )           -> NIL
-        :setLinkDelegationPolicy( nPolicy )                 -> NIL
-        :setPalette( pPalette )                             -> NIL
-        :setPluginFactory( pFactory )                       -> NIL
-        :setView( pView )                                   -> NIL
-        :setViewportSize( pSize )                           -> NIL
-        :settings()                                         -> pQWebSettings
-        :supportsExtension( nExtension )                    -> lBool
-        :swallowContextMenuEvent( pEvent )                  -> lBool
-        :totalBytes()                                       -> nQuint64
-        :triggerAction( nAction, lChecked )                 -> NIL
-        :updatePositionDependentActions( pPos )             -> NIL
-        :view()                                             -> pQWidget
-        :viewportSize()                                     -> pQSize
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper Compatible
-    $PLATFORMS$
-        Windows, Linux, MacOS, OS2
-    $VERSION$
-        4.5.3
-    $FILES$
-        Prg Source   : contrib/hbqt/TQWebPage.prg
-        C++ Wrappers : contrib/hbqt/QWebPage.cpp
-        Library      : hb
-    $SEEALSO$
-        QObject
-    $END$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QWebPage()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qwebpage.html
+ *  $ONELINER$
+ *     Creates a new QWebPage object.
+ *  $INHERITS$
+ *     QObject
+ *  $SYNTAX$
+ *     QWebPage():new( ... )
+ *     QWebPage():from( pPtr_OR_oObj_of_type_QWebPage )
+ *     QWebPage():configure( pPtr_OR_oObj_of_type_QWebPage )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QWebPage
+ *  $METHODS$
+ *     :action( nAction )                                  -> pQAction
+ *     :bytesReceived()                                    -> nQuint64
+ *     :createStandardContextMenu()                        -> pQMenu
+ *     :currentFrame()                                     -> pQWebFrame
+ *     :findText( cSubString, nOptions )                   -> lBool
+ *     :focusNextPrevChild( lNext )                        -> lBool
+ *     :forwardUnsupportedContent()                        -> lBool
+ *     :history()                                          -> pQWebHistory
+ *     :inputMethodQuery( nProperty )                      -> pQVariant
+ *     :isContentEditable()                                -> lBool
+ *     :isModified()                                       -> lBool
+ *     :linkDelegationPolicy()                             -> nLinkDelegationPolicy
+ *     :mainFrame()                                        -> pQWebFrame
+ *     :palette()                                          -> pQPalette
+ *     :pluginFactory()                                    -> pQWebPluginFactory
+ *     :selectedText()                                     -> cQString
+ *     :setContentEditable( lEditable )                    -> NIL
+ *     :setForwardUnsupportedContent( lForward )           -> NIL
+ *     :setLinkDelegationPolicy( nPolicy )                 -> NIL
+ *     :setPalette( pPalette )                             -> NIL
+ *     :setPluginFactory( pFactory )                       -> NIL
+ *     :setView( pView )                                   -> NIL
+ *     :setViewportSize( pSize )                           -> NIL
+ *     :settings()                                         -> pQWebSettings
+ *     :supportsExtension( nExtension )                    -> lBool
+ *     :swallowContextMenuEvent( pEvent )                  -> lBool
+ *     :totalBytes()                                       -> nQuint64
+ *     :triggerAction( nAction, lChecked )                 -> NIL
+ *     :updatePositionDependentActions( pPos )             -> NIL
+ *     :view()                                             -> pQWidget
+ *     :viewportSize()                                     -> pQSize
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtwebkit/TQWebPage.prg
+ *     C++ wrappers  : contrib/hbqt/qtwebkit/QWebPage.cpp
+ *     Library       : hbqtwebkit
+ *  $SEEALSO$
+ *     QObject
+ *  $END$
  */

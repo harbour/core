@@ -3,7 +3,7 @@
 ;
 
 -I=../qtnetwork/qth
--O=../qtnetwork
+-O=../qtnetwork/g
 -D=../qtnetwork/doc
 
 QFtp.qth

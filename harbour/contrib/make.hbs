@@ -378,11 +378,23 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
 
    aSortedList := TopoSort( aPairList )
 
+   /* Add referenced project not present on our list and featuring an .hbp file */
+   FOR EACH cProject IN aSortedList
+      IF !( cProject $ hProjectList )
+         IF hb_FileExists( s_cBase + s_cHome + cProject )
+            AddProject( hProjectList, cProject )
+            call_hbmk2_hbinfo( s_cBase + s_cHome + cProject, hProjectList[ cProject ] )
+         ENDIF
+      ENDIF
+   NEXT
+
    /* Load project information for dependencies too
       (we need "cType" to decide about dynamic build) */
    IF GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "yes"
       FOR EACH cProject IN aSortedList
-         IF !( cProject $ hProjectReqList )
+         IF !( cProject $ hProjectReqList ) .AND. ;
+            cProject $ hProjectList .AND. ;
+            !( "lChecked" $ hProjectList[ cProject ] )
             call_hbmk2_hbinfo( s_cBase + s_cHome + cProject, hProjectList[ cProject ] )
          ENDIF
       NEXT
@@ -406,20 +418,22 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
    /* Build the dependencies and primary targets in sorted order */
 
    FOR EACH cProject IN aSortedList DESCEND
+      IF cProject $ hProjectList
 
-      cProjectPath := s_cBase + s_cHome + cProject
-      lPrimary := cProject $ hProjectReqList
+         cProjectPath := s_cBase + s_cHome + cProject
+         lPrimary := cProject $ hProjectReqList
 
-      call_hbmk2( cProjectPath, iif( lPrimary, cOptions + cOptionsUser, " -inc" ), .F. )
+         call_hbmk2( cProjectPath, iif( lPrimary, cOptions + cOptionsUser, " -inc" ), .F. )
 
-      /* Build dynamic lib */
-      IF GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "yes" .AND. hProjectList[ cProject ][ "cType" ] == "hblib"
-         call_hbmk2( cProjectPath, iif( lPrimary, cOptions + cOptionsUser, " -inc" ), .T. )
-      ENDIF
+         /* Build dynamic lib */
+         IF GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "yes" .AND. hProjectList[ cProject ][ "cType" ] == "hblib"
+            call_hbmk2( cProjectPath, iif( lPrimary, cOptions + cOptionsUser, " -inc" ), .T. )
+         ENDIF
 
-      /* Compile documentation */
-      IF lPrimary .AND. lInstall
-         mk_hbd( PathSepToSelf( cProjectPath ) )
+         /* Compile documentation */
+         IF lPrimary .AND. lInstall
+            mk_hbd( PathSepToSelf( cProjectPath ) )
+         ENDIF
       ENDIF
    NEXT
 
@@ -446,6 +460,8 @@ STATIC FUNCTION call_hbmk2_hbinfo( cProjectPath, hProject )
    hProject[ "aDept" ] := {}
 
    clear_hbmk2_envvars()
+
+   hProject[ "lChecked" ] := NIL
 
    IF hb_processRun( s_cBinDir + "hbmk2 --hbinfo " + StrTran( cProjectPath, "\", "/" ),, @cStdOut  ) == 0
 
@@ -515,7 +531,7 @@ STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, lLibDyn )
    ENDIF
 
    nErrorLevel := mk_hb_processRun( s_cBinDir + "hbmk2" +;
-                                    " -quiet -width=0" +;
+                                    " -quiet -width=0 -shl" +;
                                     " @" + StrTran( s_cHome + "hbpre", "\", "/" ) +;
                                     cOptionsPre +;
                                     " " + StrTran( cProjectPath, "\", "/" ) +;

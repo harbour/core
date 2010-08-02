@@ -1,0 +1,16 @@
+;
+; $Id$
+;
+
+-I=../qdesigner/qth
+-O=../qdesigner/g
+-D=../qdesigner/doc
+
+QDesignerActionEditorInterface.qth
+QDesignerFormEditorInterface.qth
+QDesignerFormWindowCursorInterface.qth
+QDesignerFormWindowInterface.qth
+QDesignerFormWindowManagerInterface.qth
+QDesignerObjectInspectorInterface.qth
+QDesignerPropertyEditorInterface.qth
+QDesignerWidgetBoxInterface.qth

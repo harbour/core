@@ -1,0 +1,18 @@
+;
+; $Id$
+;
+
+-I=../qtwebkit/qth
+-O=../qtwebkit/g
+-D=../qtwebkit/doc
+
+QWebFrame.qth
+QWebHistory.qth
+QWebHistoryInterface.qth
+QWebHistoryItem.qth
+QWebHitTestResult.qth
+QWebPage.qth
+QWebPluginFactory.qth
+QWebSecurityOrigin.qth
+QWebSettings.qth
+QWebView.qth

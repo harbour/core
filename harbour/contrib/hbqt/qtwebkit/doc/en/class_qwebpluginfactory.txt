@@ -1,56 +1,55 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5.3+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QWebPluginFactory()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qwebpluginfactory.html
-    $ONELINER$
-        Creates a new QWebPluginFactory object.
-    $INHERITS$
-        QObject
-    $SYNTAX$
-        QWebPluginFactory():new( ... )
-        QWebPluginFactory():from( pPtr_OR_oObj_of_type_QWebPluginFactory )
-        QWebPluginFactory():configure( pPtr_OR_oObj_of_type_QWebPluginFactory )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QWebPluginFactory
-    $METHODS$
-        :create( cMimeType, pUrl, pArgumentNames, pArgumentValues )  -> pQObject
-        :refreshPlugins()                                   -> NIL
-        :supportsExtension( nExtension )                    -> lBool
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper Compatible
-    $PLATFORMS$
-        Windows, Linux, MacOS, OS2
-    $VERSION$
-        4.5.3
-    $FILES$
-        Prg Source   : contrib/hbqt/TQWebPluginFactory.prg
-        C++ Wrappers : contrib/hbqt/QWebPluginFactory.cpp
-        Library      : hb
-    $SEEALSO$
-        QObject
-    $END$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QWebPluginFactory()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qwebpluginfactory.html
+ *  $ONELINER$
+ *     Creates a new QWebPluginFactory object.
+ *  $INHERITS$
+ *     QObject
+ *  $SYNTAX$
+ *     QWebPluginFactory():new( ... )
+ *     QWebPluginFactory():from( pPtr_OR_oObj_of_type_QWebPluginFactory )
+ *     QWebPluginFactory():configure( pPtr_OR_oObj_of_type_QWebPluginFactory )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QWebPluginFactory
+ *  $METHODS$
+ *     :create( cMimeType, pUrl, pArgumentNames, pArgumentValues )  -> pQObject
+ *     :plugins()                                          -> pQList<Plugin>
+ *     :refreshPlugins()                                   -> NIL
+ *     :supportsExtension( nExtension )                    -> lBool
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtwebkit/TQWebPluginFactory.prg
+ *     C++ wrappers  : contrib/hbqt/qtwebkit/QWebPluginFactory.cpp
+ *     Library       : hbqtwebkit
+ *  $SEEALSO$
+ *     QObject
+ *  $END$
  */

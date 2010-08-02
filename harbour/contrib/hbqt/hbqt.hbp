@@ -7,6 +7,8 @@
 # See COPYING for licensing terms.
 # ---------------------------------------------------------------
 
-qtcore/hbqtcore.hbp
-qtgui/hbqtgui.hbp
-qtnetwork/hbqtnetwork.hbp
+-hbcontainer
+
+hbqtcore.hbc
+hbqtgui.hbc
+hbqtnetwork.hbc

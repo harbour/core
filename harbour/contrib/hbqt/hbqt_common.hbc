@@ -11,7 +11,7 @@ stop={dos|watcom|bcc|pocc|pocc64|poccarm|msvcia64}'hbqt' doesn't support this pl
 
 incpaths=.
 
-plugins=hbmk2_plugin_qt.hbs
+plugins=hbqt_hbmk2_plugin.hbs
 
 {msvc}ldflags=-nodefaultlib:msvcrt.lib -defaultlib:libcmt.lib
 
@@ -20,6 +20,3 @@ plugins=hbmk2_plugin_qt.hbs
 {allgcc}libs=supc++
 
 {win|os2}hbcppmm=yes
-
-gui=yes
-gt=gtnul

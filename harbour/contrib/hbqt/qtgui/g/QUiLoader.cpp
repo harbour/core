@@ -1,0 +1,361 @@
+/*
+ * $Id$
+ */
+
+/* -------------------------------------------------------------------- */
+/* WARNING: Automatically generated source file. DO NOT EDIT!           */
+/*          Instead, edit corresponding .qth file,                      */
+/*          or the generator tool itself, and run regenarate.           */
+/* -------------------------------------------------------------------- */
+
+/*
+ * Harbour Project source code:
+ * QT wrapper main header
+ *
+ * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * www - http://harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ *
+ */
+/*----------------------------------------------------------------------*/
+
+#include "hbqt.h"
+#include "hbqtgui_garbage.h"
+#include "hbqtcore_garbage.h"
+
+/*----------------------------------------------------------------------*/
+#if QT_VERSION >= 0x040500
+/*----------------------------------------------------------------------*/
+
+#include <QtCore/QPointer>
+
+#include <QtUiTools/QUiLoader>
+#include <QtCore/QDir>
+#include <QtCore/QStringList>
+
+/*
+ * QUiLoader ( QObject * parent = 0 )
+ * virtual ~QUiLoader ()
+ */
+
+typedef struct
+{
+   QPointer< QUiLoader > ph;
+   bool bNew;
+   QT_G_FUNC_PTR func;
+   int type;
+} QGC_POINTER_QUiLoader;
+
+QT_G_FUNC( hbqt_gcRelease_QUiLoader )
+{
+   QUiLoader  * ph = NULL ;
+   QGC_POINTER_QUiLoader * p = ( QGC_POINTER_QUiLoader * ) Cargo;
+
+   if( p && p->bNew && p->ph )
+   {
+      ph = p->ph;
+      if( ph )
+      {
+         const QMetaObject * m = ( ph )->metaObject();
+         if( ( QString ) m->className() != ( QString ) "QObject" )
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QUiLoader   /.\\   ", (void*) ph, (void*) p->ph ) );
+            delete ( p->ph );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_QUiLoader   \\./   ", (void*) ph, (void*) p->ph ) );
+            p->ph = NULL;
+         }
+         else
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_QUiLoader          ", ph ) );
+            p->ph = NULL;
+         }
+      }
+      else
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_QUiLoader    :     Object already deleted!", ph ) );
+         p->ph = NULL;
+      }
+   }
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_QUiLoader    :    Object not created with new=true", ph ) );
+      p->ph = NULL;
+   }
+}
+
+void * hbqt_gcAllocate_QUiLoader( void * pObj, bool bNew )
+{
+   QGC_POINTER_QUiLoader * p = ( QGC_POINTER_QUiLoader * ) hb_gcAllocate( sizeof( QGC_POINTER_QUiLoader ), hbqt_gcFuncs() );
+
+   new( & p->ph ) QPointer< QUiLoader >( ( QUiLoader * ) pObj );
+   p->bNew = bNew;
+   p->func = hbqt_gcRelease_QUiLoader;
+   p->type = HBQT_TYPE_QUiLoader;
+
+   if( bNew )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_QUiLoader  under p->pq", pObj ) );
+   }
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_QUiLoader", pObj ) );
+   }
+   return p;
+}
+
+HB_FUNC( QT_QUILOADER )
+{
+   QUiLoader * pObj = NULL;
+
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      pObj = new QUiLoader( hbqt_par_QObject( 1 ) ) ;
+   }
+   else
+   {
+      pObj = new QUiLoader() ;
+   }
+
+   hb_retptrGC( hbqt_gcAllocate_QUiLoader( ( void * ) pObj, true ) );
+}
+
+/*
+ * void addPluginPath ( const QString & path )
+ */
+HB_FUNC( QT_QUILOADER_ADDPLUGINPATH )
+{
+   QUiLoader * p = hbqt_par_QUiLoader( 1 );
+   if( p )
+      ( p )->addPluginPath( QUiLoader::tr( hb_parc( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_ADDPLUGINPATH FP=( p )->addPluginPath( QUiLoader::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QStringList availableLayouts () const
+ */
+HB_FUNC( QT_QUILOADER_AVAILABLELAYOUTS )
+{
+   QUiLoader * p = hbqt_par_QUiLoader( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->availableLayouts() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_AVAILABLELAYOUTS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->availableLayouts() ), true ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QStringList availableWidgets () const
+ */
+HB_FUNC( QT_QUILOADER_AVAILABLEWIDGETS )
+{
+   QUiLoader * p = hbqt_par_QUiLoader( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->availableWidgets() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_AVAILABLEWIDGETS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->availableWidgets() ), true ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * void clearPluginPaths ()
+ */
+HB_FUNC( QT_QUILOADER_CLEARPLUGINPATHS )
+{
+   QUiLoader * p = hbqt_par_QUiLoader( 1 );
+   if( p )
+      ( p )->clearPluginPaths();
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_CLEARPLUGINPATHS FP=( p )->clearPluginPaths(); p is NULL" ) );
+   }
+}
+
+/*
+ * virtual QAction * createAction ( QObject * parent = 0, const QString & name = QString() )
+ */
+HB_FUNC( QT_QUILOADER_CREATEACTION )
+{
+   QUiLoader * p = hbqt_par_QUiLoader( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->createAction( hbqt_par_QObject( 2 ), QUiLoader::tr( hb_parc( 3 ) ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_CREATEACTION FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->createAction( hbqt_par_QObject( 2 ), QUiLoader::tr( hb_parc( 3 ) ) ), false ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * virtual QActionGroup * createActionGroup ( QObject * parent = 0, const QString & name = QString() )
+ */
+HB_FUNC( QT_QUILOADER_CREATEACTIONGROUP )
+{
+   QUiLoader * p = hbqt_par_QUiLoader( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QActionGroup( ( p )->createActionGroup( hbqt_par_QObject( 2 ), QUiLoader::tr( hb_parc( 3 ) ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_CREATEACTIONGROUP FP=hb_retptrGC( hbqt_gcAllocate_QActionGroup( ( p )->createActionGroup( hbqt_par_QObject( 2 ), QUiLoader::tr( hb_parc( 3 ) ) ), false ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * virtual QLayout * createLayout ( const QString & className, QObject * parent = 0, const QString & name = QString() )
+ */
+HB_FUNC( QT_QUILOADER_CREATELAYOUT )
+{
+   QUiLoader * p = hbqt_par_QUiLoader( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QLayout( ( p )->createLayout( QUiLoader::tr( hb_parc( 2 ) ), hbqt_par_QObject( 3 ), QUiLoader::tr( hb_parc( 4 ) ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_CREATELAYOUT FP=hb_retptrGC( hbqt_gcAllocate_QLayout( ( p )->createLayout( QUiLoader::tr( hb_parc( 2 ) ), hbqt_par_QObject( 3 ), QUiLoader::tr( hb_parc( 4 ) ) ), false ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * virtual QWidget * createWidget ( const QString & className, QWidget * parent = 0, const QString & name = QString() )
+ */
+HB_FUNC( QT_QUILOADER_CREATEWIDGET )
+{
+   QUiLoader * p = hbqt_par_QUiLoader( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->createWidget( QUiLoader::tr( hb_parc( 2 ) ), hbqt_par_QWidget( 3 ), QUiLoader::tr( hb_parc( 4 ) ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_CREATEWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->createWidget( QUiLoader::tr( hb_parc( 2 ) ), hbqt_par_QWidget( 3 ), QUiLoader::tr( hb_parc( 4 ) ) ), false ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * bool isLanguageChangeEnabled () const
+ */
+HB_FUNC( QT_QUILOADER_ISLANGUAGECHANGEENABLED )
+{
+   QUiLoader * p = hbqt_par_QUiLoader( 1 );
+   if( p )
+      hb_retl( ( p )->isLanguageChangeEnabled() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_ISLANGUAGECHANGEENABLED FP=hb_retl( ( p )->isLanguageChangeEnabled() ); p is NULL" ) );
+   }
+}
+
+/*
+ * QWidget * load ( QIODevice * device, QWidget * parentWidget = 0 )
+ */
+HB_FUNC( QT_QUILOADER_LOAD )
+{
+   QUiLoader * p = hbqt_par_QUiLoader( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->load( hbqt_par_QIODevice( 2 ), hbqt_par_QWidget( 3 ) ), false ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_LOAD FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->load( hbqt_par_QIODevice( 2 ), hbqt_par_QWidget( 3 ) ), false ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QStringList pluginPaths () const
+ */
+HB_FUNC( QT_QUILOADER_PLUGINPATHS )
+{
+   QUiLoader * p = hbqt_par_QUiLoader( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->pluginPaths() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_PLUGINPATHS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->pluginPaths() ), true ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * void setLanguageChangeEnabled ( bool enabled )
+ */
+HB_FUNC( QT_QUILOADER_SETLANGUAGECHANGEENABLED )
+{
+   QUiLoader * p = hbqt_par_QUiLoader( 1 );
+   if( p )
+      ( p )->setLanguageChangeEnabled( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_SETLANGUAGECHANGEENABLED FP=( p )->setLanguageChangeEnabled( hb_parl( 2 ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * void setWorkingDirectory ( const QDir & dir )
+ */
+HB_FUNC( QT_QUILOADER_SETWORKINGDIRECTORY )
+{
+   QUiLoader * p = hbqt_par_QUiLoader( 1 );
+   if( p )
+      ( p )->setWorkingDirectory( *hbqt_par_QDir( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_SETWORKINGDIRECTORY FP=( p )->setWorkingDirectory( *hbqt_par_QDir( 2 ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QDir workingDirectory () const
+ */
+HB_FUNC( QT_QUILOADER_WORKINGDIRECTORY )
+{
+   QUiLoader * p = hbqt_par_QUiLoader( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( ( p )->workingDirectory() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_WORKINGDIRECTORY FP=hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( ( p )->workingDirectory() ), true ) ); p is NULL" ) );
+   }
+}
+
+
+/*----------------------------------------------------------------------*/
+#endif             /* #if QT_VERSION >= 0x040500 */
+/*----------------------------------------------------------------------*/

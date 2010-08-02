@@ -1,67 +1,68 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5.3+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QWebHistory()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qwebhistory.html
-    $ONELINER$
-        Creates a new QWebHistory object.
-    $INHERITS$
-
-    $SYNTAX$
-        QWebHistory():new( ... )
-        QWebHistory():from( pPtr_OR_oObj_of_type_QWebHistory )
-        QWebHistory():configure( pPtr_OR_oObj_of_type_QWebHistory )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QWebHistory
-    $METHODS$
-        :back()                                             -> NIL
-        :backItem()                                         -> Item
-        :canGoBack()                                        -> lBool
-        :canGoForward()                                     -> lBool
-        :clear()                                            -> NIL
-        :count()                                            -> nInt
-        :currentItem()                                      -> Item
-        :currentItemIndex()                                 -> nInt
-        :forward()                                          -> NIL
-        :forwardItem()                                      -> Item
-        :goToItem( pItem )                                  -> NIL
-        :itemAt( nI )                                       -> Item
-        :maximumItemCount()                                 -> nInt
-        :setMaximumItemCount( nCount )                      -> NIL
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper Compatible
-    $PLATFORMS$
-        Windows, Linux, MacOS, OS2
-    $VERSION$
-        4.5.3
-    $FILES$
-        Prg Source   : contrib/hbqt/TQWebHistory.prg
-        C++ Wrappers : contrib/hbqt/QWebHistory.cpp
-        Library      : hb
-    $SEEALSO$
-
-    $END$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QWebHistory()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qwebhistory.html
+ *  $ONELINER$
+ *     Creates a new QWebHistory object.
+ *  $INHERITS$
+ *     
+ *  $SYNTAX$
+ *     QWebHistory():new( ... )
+ *     QWebHistory():from( pPtr_OR_oObj_of_type_QWebHistory )
+ *     QWebHistory():configure( pPtr_OR_oObj_of_type_QWebHistory )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QWebHistory
+ *  $METHODS$
+ *     :back()                                             -> NIL
+ *     :backItem()                                         -> Item
+ *     :backItems( nMaxItems )                             -> pQList<QWebHistoryItem>
+ *     :canGoBack()                                        -> lBool
+ *     :canGoForward()                                     -> lBool
+ *     :clear()                                            -> NIL
+ *     :count()                                            -> nInt
+ *     :currentItem()                                      -> Item
+ *     :currentItemIndex()                                 -> nInt
+ *     :forward()                                          -> NIL
+ *     :forwardItem()                                      -> Item
+ *     :forwardItems( nMaxItems )                          -> pQList<QWebHistoryItem>
+ *     :goToItem( pItem )                                  -> NIL
+ *     :itemAt( nI )                                       -> Item
+ *     :items()                                            -> pQList<QWebHistoryItem>
+ *     :maximumItemCount()                                 -> nInt
+ *     :setMaximumItemCount( nCount )                      -> NIL
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtwebkit/TQWebHistory.prg
+ *     C++ wrappers  : contrib/hbqt/qtwebkit/QWebHistory.cpp
+ *     Library       : hbqtwebkit
+ *  $SEEALSO$
+ *     
+ *  $END$
  */

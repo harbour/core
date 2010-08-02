@@ -4,7 +4,9 @@
 
 ../hbqt_common.hbm
 
-filelist.hbm
+g/filelist.hbm
 hbqtcore.hbm
+
+-ig
 
 hbqtcores.hbp

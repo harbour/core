@@ -1513,7 +1513,7 @@ STATIC FUNCTION BuildHeader( txt_, nMode, cProFile )
    aadd( txt_, "/*----------------------------------------------------------------------*/"    )
    aadd( txt_, ""                                                                              )
    IF nMode == 0
-   aadd( txt_, '#include "../hbqt.h"'                                                          )
+   aadd( txt_, '#include "hbqt.h"'                                                             )
    aadd( txt_, '#include "hb' + FNameGetName( cProFile ) + '_garbage.h"'                       )
    IF !( FNameGetName( cProFile ) == "qtcore" )
       aadd( txt_, '#include "hbqtcore_garbage.h"'                                              )
@@ -1791,7 +1791,7 @@ STATIC FUNCTION Build_GarbageFile( cpp_, cPathOut, cProFile )
    aadd( hdr_, "/*          or the generator tool itself, and run regenarate.           */"    )
    aadd( hdr_, "/* -------------------------------------------------------------------- */"    )
    aadd( hdr_, " " )
-   aadd( hdr_, '#include "../hbqt.h"' )
+   aadd( hdr_, '#include "hbqt.h"' )
    aadd( hdr_, " " )
 
    txt_ := {}

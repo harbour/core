@@ -369,55 +369,56 @@ REQUEST hbmk_KEYW
 #define _HBMK_aLNG              86
 #define _HBMK_cPO               87
 
-#define _HBMK_aPLUGIN           88
-#define _HBMK_hPLUGINHRB        89
-#define _HBMK_hPLUGINVars       90
-#define _HBMK_aPLUGINPars       91
-#define _HBMK_hPLUGINExt        92
+#define _HBMK_hPLUGINHRB        88
+#define _HBMK_hPLUGINVars       89
+#define _HBMK_aPLUGINPars       90
+#define _HBMK_hPLUGINExt        91
 
-#define _HBMK_lDEBUGTIME        93
-#define _HBMK_lDEBUGINC         94
-#define _HBMK_lDEBUGSTUB        95
-#define _HBMK_lDEBUGI18N        96
-#define _HBMK_lDEBUGDEPD        97
-#define _HBMK_lDEBUGPARS        98
+#define _HBMK_lDEBUGTIME        92
+#define _HBMK_lDEBUGINC         93
+#define _HBMK_lDEBUGSTUB        94
+#define _HBMK_lDEBUGI18N        95
+#define _HBMK_lDEBUGDEPD        96
+#define _HBMK_lDEBUGPARS        97
 
-#define _HBMK_cCCPATH           99
-#define _HBMK_cCCPREFIX         100
-#define _HBMK_cCCPOSTFIX        101
-#define _HBMK_cCCEXT            102
+#define _HBMK_cCCPATH           98
+#define _HBMK_cCCPREFIX         99
+#define _HBMK_cCCPOSTFIX        100
+#define _HBMK_cCCEXT            101
 
-#define _HBMK_cWorkDir          103
-#define _HBMK_cWorkDirDynSub    104
-#define _HBMK_nCmd_Esc          105
-#define _HBMK_nScr_Esc          106
-#define _HBMK_nCmd_FNF          107
-#define _HBMK_nScr_FNF          108
-#define _HBMK_nErrorLevel       109
+#define _HBMK_cWorkDir          102
+#define _HBMK_cWorkDirDynSub    103
+#define _HBMK_nCmd_Esc          104
+#define _HBMK_nScr_Esc          105
+#define _HBMK_nCmd_FNF          106
+#define _HBMK_nScr_FNF          107
+#define _HBMK_nErrorLevel       108
 
-#define _HBMK_cPROGDIR          110
-#define _HBMK_cPROGNAME         111
+#define _HBMK_cPROGDIR          109
+#define _HBMK_cPROGNAME         110
 
-#define _HBMK_hAUTOHBC          112 /* trigger header => .hbc associations */
-#define _HBMK_hAUTOHBCFOUND     113 /* trigger headers found */
+#define _HBMK_hAUTOHBC          111 /* trigger header => .hbc associations */
+#define _HBMK_hAUTOHBCFOUND     112 /* trigger headers found */
 
-#define _HBMK_aDEPTHBC          114 /* .hbc references found */
-#define _HBMK_hDEPTSDIR         115 /* Header dirs found for dependencies */
+#define _HBMK_aDEPTHBC          113 /* .hbc references found */
+#define _HBMK_hDEPTSDIR         114 /* Header dirs found for dependencies */
 
-#define _HBMK_lStopAfterInit    116
-#define _HBMK_lStopAfterHarbour 117
+#define _HBMK_lStopAfterInit    115
+#define _HBMK_lStopAfterHarbour 116
 
-#define _HBMK_nCOMPVer          118
-#define _HBMK_lDEPIMPLIB        119 /* Generate import libs configured in dependecy specification */
-#define _HBMK_lInstForce        120 /* Force to install target even if was up to date */
-#define _HBMK_lAutoHBM          121 /* Toggles processing of hbmk.hbm file in current directory */
+#define _HBMK_nCOMPVer          117
+#define _HBMK_lDEPIMPLIB        118 /* Generate import libs configured in dependecy specification */
+#define _HBMK_lInstForce        119 /* Force to install target even if was up to date */
+#define _HBMK_lAutoHBM          120 /* Toggles processing of hbmk.hbm file in current directory */
+#define _HBMK_lContainer        121 /* Target type: container */
+#define _HBMK_lShowLevel        122 /* Show project nesting level in all output lines */
 
-#define _HBMK_aArgs             122
-#define _HBMK_nArgTarget        123
-#define _HBMK_lPause            124
-#define _HBMK_nLevel            125
+#define _HBMK_aArgs             123
+#define _HBMK_nArgTarget        124
+#define _HBMK_lPause            125
+#define _HBMK_nLevel            126
 
-#define _HBMK_MAX_              125
+#define _HBMK_MAX_              126
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -892,7 +893,6 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    hbmk[ _HBMK_lBLDFLGC ] := .F.
    hbmk[ _HBMK_lBLDFLGL ] := .F.
 
-   hbmk[ _HBMK_aPLUGIN ] := {}
    hbmk[ _HBMK_hPLUGINHRB ] := { => }
    hbmk[ _HBMK_hPLUGINVars ] := { => }
    hbmk[ _HBMK_aPLUGINPars ] := {}
@@ -915,6 +915,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    hbmk[ _HBMK_lInstForce ] := .F.
    hbmk[ _HBMK_lAutoHBM ] := .T.
+   hbmk[ _HBMK_lContainer ] := .F.
+   hbmk[ _HBMK_lShowLevel ] := .F.
 
    hbmk[ _HBMK_aArgs ] := aArgs
    hbmk[ _HBMK_nArgTarget ] := nArgTarget
@@ -980,6 +982,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE Left( cParamL, 7 )  == "-build="    ; hbmk[ _HBMK_cBUILD ] := SubStr( cParam, 8 )
       CASE Left( cParamL, 6 )  == "-build"     ; hbmk[ _HBMK_lStopAfterHarbour ] := .T.
       CASE Left( cParamL, 6 )  == "-lang="     ; hbmk[ _HBMK_cUILNG ] := SubStr( cParam, 7 ) ; SetUILang( hbmk )
+      CASE Left( cParamL, 4 )  == "-shl"       ; hbmk[ _HBMK_lShowLevel ] := .T.
       CASE Left( cParamL, 7 )  == "-width="
 
          tmp := Val( SubStr( cParam, 8 ) )
@@ -1873,6 +1876,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
            Left( cParamL, 5 )  == "-cpu=" .OR. ;
            Left( cParamL, 7 )  == "-build=" .OR. ;
            Left( cParamL, 6 )  == "-lang=" .OR. ;
+           Left( cParamL, 4 )  == "-shl" .OR. ;
            Left( cParamL, 7 )  == "-width=" .OR. ;
            Left( cParamL, 5 )  == "-env:" .OR. ;
            cParamL             == "-autohbm" .OR. ;
@@ -1898,10 +1902,11 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE cParamL == "-quiet-"          ; hbmk[ _HBMK_lQuiet ] := .F.
       CASE cParamL == "-info"            ; hbmk[ _HBMK_lInfo ] := .T.
       CASE cParamL == "-pause"           ; lPause := .T.
-      CASE cParamL == "-hbexe"           ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .F. ; hbmk[ _HBMK_lCreateLib ] := .F. ; Set_lCreateDyn( hbmk, .F. )
-      CASE cParamL == "-hblib"           ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .T. ; Set_lCreateDyn( hbmk, .F. )
-      CASE cParamL == "-hbdyn"           ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; Set_lCreateDyn( hbmk, .T. ) ; hbmk[ _HBMK_lDynVM ] := .F. ; l_lNOHBLIB := .T.
-      CASE cParamL == "-hbdynvm"         ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; Set_lCreateDyn( hbmk, .T. ) ; hbmk[ _HBMK_lDynVM ] := .T. ; l_lNOHBLIB := .F.
+      CASE cParamL == "-hbexe"           ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .F. ; hbmk[ _HBMK_lCreateLib ] := .F. ; Set_lCreateDyn( hbmk, .F. ) ; hbmk[ _HBMK_lCreateImpLib ] := .F.
+      CASE cParamL == "-hblib"           ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .T. ; Set_lCreateDyn( hbmk, .F. ) ; hbmk[ _HBMK_lCreateImpLib ] := .F.
+      CASE cParamL == "-hbdyn"           ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; Set_lCreateDyn( hbmk, .T. ) ; hbmk[ _HBMK_lCreateImpLib ] := .F. ; hbmk[ _HBMK_lDynVM ] := .F. ; l_lNOHBLIB := .T.
+      CASE cParamL == "-hbdynvm"         ; hbmk[ _HBMK_lStopAfterHarbour ] := .F. ; lStopAfterCComp := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; Set_lCreateDyn( hbmk, .T. ) ; hbmk[ _HBMK_lCreateImpLib ] := .F. ; hbmk[ _HBMK_lDynVM ] := .T. ; l_lNOHBLIB := .F.
+      CASE cParamL == "-hbcontainer"     ; hbmk[ _HBMK_lContainer ] := .T. ; hbmk[ _HBMK_lStopAfterInit ] := .T. ; hbmk[ _HBMK_lCreateLib ] := .F. ; Set_lCreateDyn( hbmk, .F. ) ; hbmk[ _HBMK_lCreateImpLib ] := .F.
       CASE cParamL == "-hbimplib"        ; hbmk[ _HBMK_lCreateImpLib ] := .T. ; lAcceptIFlag := .T.
       CASE cParamL == "-gui" .OR. ;
            cParamL == "-mwindows"        ; hbmk[ _HBMK_lGUI ]       := .T. /* Compatibility */
@@ -2363,7 +2368,6 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          cParam := PathMakeAbsolute( PathSepToSelf( MacroProc( hbmk, SubStr( cParam, Len( "-plugin=" ) + 1 ), aParam[ _PAR_cFileName ] ) ), aParam[ _PAR_cFileName ] )
          IF ( tmp := FindInPathPlugIn( cParam ) ) != NIL
-            AAdd( hbmk[ _HBMK_aPLUGIN ], tmp )
             PlugIn_Load( hbmk, tmp )
          ELSE
             IF hbmk[ _HBMK_lInfo ]
@@ -2538,6 +2542,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             NEXT
          ENDIF
 
+         cParam := PathNormalize( cParam )
+
          IF hbmk[ _HBMK_lInfo ]
             hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing: %1$s" ), cParam ) )
          ENDIF
@@ -2548,7 +2554,6 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          cParam := PathMakeAbsolute( PathSepToSelf( MacroProc( hbmk, cParam, aParam[ _PAR_cFileName ] ) ), aParam[ _PAR_cFileName ] )
          IF ( tmp := FindInPathPlugIn( cParam ) ) != NIL
-            AAdd( hbmk[ _HBMK_aPLUGIN ], tmp )
             PlugIn_Load( hbmk, tmp )
          ELSE
             IF hbmk[ _HBMK_lInfo ]
@@ -2704,7 +2709,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    ENDIF
 
    /* Start doing the make process. */
-   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lCreateImpLib ] .AND. ( Len( hbmk[ _HBMK_aPLUGINPars ] ) + Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) + Len( hbmk[ _HBMK_aCPP ] ) + Len( hbmk[ _HBMK_aOBJUSER ] ) + Len( l_aOBJA ) ) == 0
+   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lCreateImpLib ] .AND. ( Len( hbmk[ _HBMK_aPLUGINPars ] ) + Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) + Len( hbmk[ _HBMK_aCPP ] ) + Len( hbmk[ _HBMK_aOBJUSER ] ) + Len( l_aOBJA ) ) == 0 .AND. ! hbmk[ _HBMK_lContainer ]
       hbmk_OutErr( hbmk, I_( "Warning: No source files were specified." ) )
       RETURN 0
    ENDIF
@@ -7253,49 +7258,54 @@ STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
    LOCAL cExt
    LOCAL lOK
    LOCAL cType
-   LOCAL hrb := NIL
+   LOCAL hrb
 
-   hb_FNameSplit( cFileName, NIL, NIL, @cExt )
+   cFileName := PathNormalize( cFileName )
 
-   cFile := hb_MemoRead( cFileName )
+   IF !( cFileName $ hbmk[ _HBMK_hPLUGINHRB ] )
 
-   IF ! Empty( cFile )
-      lOK := .F.
-      /* Optimization: Don't try to load it as .hrb if the extension is .prg or .hbs (Harbour script) */
-      IF !( Lower( cExt ) == ".prg" ) .AND. ;
-         !( Lower( cExt ) == ".hbs" )
-         BEGIN SEQUENCE WITH {| oError | Break( oError ) }
-            hrb := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
-            cType := I_( "(compiled)" )
-            lOK := .T.
-         END SEQUENCE
-      ENDIF
-      IF ! lOK .AND. !( Lower( cExt ) == ".hrb" ) /* Optimization: Don't try to load it as .prg if the extension is .hrb */
-         cType := I_( "(source)" )
-         cFile := hb_compileFromBuf( cFile, "-n2", "-w3", "-es2", "-q0", "-D" + _HBMK_SCRIPT )
-         IF ! Empty( cFile )
-            hrb := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
+      hrb := NIL
+
+      hb_FNameSplit( cFileName, NIL, NIL, @cExt )
+
+      cFile := hb_MemoRead( cFileName )
+
+      IF ! Empty( cFile )
+         lOK := .F.
+         /* Optimization: Don't try to load it as .hrb if the extension is .prg or .hbs (Harbour script) */
+         IF !( Lower( cExt ) == ".prg" ) .AND. ;
+            !( Lower( cExt ) == ".hbs" )
+            BEGIN SEQUENCE WITH {| oError | Break( oError ) }
+               hrb := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
+               cType := I_( "(compiled)" )
+               lOK := .T.
+            END SEQUENCE
+         ENDIF
+         IF ! lOK .AND. !( Lower( cExt ) == ".hrb" ) /* Optimization: Don't try to load it as .prg if the extension is .hrb */
+            cType := I_( "(source)" )
+            cFile := hb_compileFromBuf( cFile, "-n2", "-w3", "-es2", "-q0", "-D" + _HBMK_SCRIPT )
+            IF ! Empty( cFile )
+               hrb := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
+            ENDIF
          ENDIF
       ENDIF
-   ENDIF
 
-   IF ! Empty( hrb )
-      hbmk[ _HBMK_hPLUGINHRB ][ cFileName ] := hrb
-
-      IF ! PlugIn_call_low( hbmk, cFileName, hrb, PlugIn_make_ctx( hbmk, "init" ) )
-         /* Don't call plugin any further if initialization returned error */
-         hb_HDel( hbmk[ _HBMK_hPLUGINHRB ], cFileName )
-         IF hbmk[ _HBMK_lInfo ]
-            hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Initializing plugin: %1$s" ), cFileName ) )
+      IF ! Empty( hrb )
+         IF ! PlugIn_call_low( hbmk, cFileName, hrb, PlugIn_make_ctx( hbmk, "init" ) )
+            /* Don't call plugin any further if initialization returned error */
+            IF hbmk[ _HBMK_lInfo ]
+               hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Initializing plugin: %1$s" ), cFileName ) )
+            ENDIF
+         ELSE
+            hbmk[ _HBMK_hPLUGINHRB ][ cFileName ] := hrb
+            IF hbmk[ _HBMK_lTRACE ]
+               hbmk_OutStd( hbmk, hb_StrFormat( I_( "Loaded plugin: %1$s %2$s" ), cFileName, cType ) )
+            ENDIF
          ENDIF
       ELSE
-         IF hbmk[ _HBMK_lTRACE ]
-            hbmk_OutStd( hbmk, hb_StrFormat( I_( "Loaded plugin: %1$s %2$s" ), cFileName, cType ) )
+         IF hbmk[ _HBMK_lInfo ]
+            hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Loading plugin: %1$s" ), cFileName ) )
          ENDIF
-      ENDIF
-   ELSE
-      IF hbmk[ _HBMK_lInfo ]
-         hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Loading plugin: %1$s" ), cFileName ) )
       ENDIF
    ENDIF
 
@@ -8468,6 +8478,8 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                      NEXT
                   ENDIF
 
+                  cItem := PathNormalize( cItem )
+
                   IF hbmk[ _HBMK_lInfo ]
                      hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing: %1$s" ), cItem ) )
                   ENDIF
@@ -8509,6 +8521,8 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                      ENDIF
                   NEXT
                ENDIF
+
+               cItem := PathNormalize( cItem )
 
                IF hbmk[ _HBMK_lInfo ]
                   hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing: %1$s" ), cItem ) )
@@ -8755,7 +8769,6 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
          cLine := PathNormalize( PathMakeAbsolute( PathSepToSelf( MacroProc( hbmk, cLine, cFileName ) ), FNameDirGet( cFileName ) ) )
          IF ( tmp := FindInPathPlugIn( cLine ) ) != NIL
-            AAdd( hbmk[ _HBMK_aPLUGIN ], tmp )
             PlugIn_Load( hbmk, tmp )
          ELSE
             IF hbmk[ _HBMK_lInfo ]
@@ -10333,7 +10346,8 @@ STATIC FUNCTION hbmk_TARGETNAME( hbmk )
 
 STATIC FUNCTION hbmk_TARGETTYPE( hbmk )
 
-   IF hbmk[ _HBMK_lCreateLib ]                                           ; RETURN "hblib"
+   IF hbmk[ _HBMK_lContainer ]                                           ; RETURN "hbcontainer"
+   ELSEIF hbmk[ _HBMK_lCreateLib ]                                       ; RETURN "hblib"
    ELSEIF hbmk[ _HBMK_lCreateDyn ] .AND. ! hbmk[ _HBMK_lDynVM ]          ; RETURN "hbdyn"
    ELSEIF hbmk[ _HBMK_lCreateDyn ] .AND. hbmk[ _HBMK_lDynVM ]            ; RETURN "hbdynvm"
    ELSEIF hbmk[ _HBMK_lCreateImpLib ]                                    ; RETURN "hbimplib"
@@ -11121,6 +11135,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-build=<name>"      , I_( "use a specific build name" ) },;
       { "-lang=<lang>"       , I_( "override default language. Similar to HB_LANG envvar." ) },;
       { "-width=<n>"         , I_( "set output width to <n> characters (0=unlimited)." ) },;
+      { "-shl"               , I_( "show sub-project level in output lines" ) },;
       { "--version"          , I_( "display version header only" ) } }
 
    LOCAL aText_Notes := {;
@@ -11202,18 +11217,23 @@ STATIC PROCEDURE OutNote( hbmk, cText )
 STATIC PROCEDURE hbmk_OutStd( hbmk, cText )
    LOCAL nLine
    LOCAL nLines
+   LOCAL nWidth
+   LOCAL cPrefix
    LOCAL tmp
 
+   IF hbmk[ _HBMK_lShowLevel ]
+      nWidth := 10
+      cPrefix := hb_StrFormat( "hbmk2 #%1$s:", hb_ntos( hbmk[ _HBMK_nLevel ] ) )
+   ELSE
+      nWidth := 7
+      cPrefix := "hbmk2:"
+   ENDIF
+
    cText := StrTran( cText, "\n", hb_eol() )
-   nLines := MLCount( cText, hbmk[ _HBMK_nMaxCol ] - 7 )
+   nLines := MLCount( cText, hbmk[ _HBMK_nMaxCol ] - nWidth )
    FOR nLine := 1 TO nLines
-      IF ! Empty( tmp := RTrim( MemoLine( cText, hbmk[ _HBMK_nMaxCol ] - 7, nLine ) ) )
-         IF nLine == 1
-            OutStd( PadR( "hbmk2:", 7 ) )
-         ELSE
-            OutStd( Space( 7 ) )
-         ENDIF
-         OutStd( tmp + _OUT_EOL )
+      IF ! Empty( tmp := RTrim( MemoLine( cText, hbmk[ _HBMK_nMaxCol ] - nWidth, nLine ) ) )
+         OutStd( iif( nLine == 1, PadR( cPrefix, nWidth ), Space( nWidth ) ) + tmp + _OUT_EOL )
       ENDIF
    NEXT
 
@@ -11222,18 +11242,23 @@ STATIC PROCEDURE hbmk_OutStd( hbmk, cText )
 STATIC PROCEDURE hbmk_OutErr( hbmk, cText )
    LOCAL nLine
    LOCAL nLines
+   LOCAL nWidth
+   LOCAL cPrefix
    LOCAL tmp
 
+   IF hbmk[ _HBMK_lShowLevel ]
+      nWidth := 10
+      cPrefix := hb_StrFormat( "hbmk2 #%1$s:", hb_ntos( hbmk[ _HBMK_nLevel ] ) )
+   ELSE
+      nWidth := 7
+      cPrefix := "hbmk2:"
+   ENDIF
+
    cText := StrTran( cText, "\n", hb_eol() )
-   nLines := MLCount( cText, hbmk[ _HBMK_nMaxCol ] - 7 )
+   nLines := MLCount( cText, hbmk[ _HBMK_nMaxCol ] - nWidth )
    FOR nLine := 1 TO nLines
-      IF ! Empty( tmp := RTrim( MemoLine( cText, hbmk[ _HBMK_nMaxCol ] - 7, nLine ) ) )
-         IF nLine == 1
-            OutErr( PadR( "hbmk2:", 7 ) )
-         ELSE
-            OutErr( Space( 7 ) )
-         ENDIF
-         OutErr( tmp + _OUT_EOL )
+      IF ! Empty( tmp := RTrim( MemoLine( cText, hbmk[ _HBMK_nMaxCol ] - nWidth, nLine ) ) )
+         OutErr( iif( nLine == 1, PadR( cPrefix, nWidth ), Space( nWidth ) ) + tmp + _OUT_EOL )
       ENDIF
    NEXT
 
