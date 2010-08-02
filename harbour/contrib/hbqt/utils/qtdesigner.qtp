@@ -2,9 +2,9 @@
 ; $Id$
 ;
 
--I=../qdesigner/qth
--O=../qdesigner/g
--D=../qdesigner/doc
+-I=../qtdesigner/qth
+-O=../qtdesigner/g
+-D=../qtdesigner/doc
 
 QDesignerActionEditorInterface.qth
 QDesignerFormEditorInterface.qth

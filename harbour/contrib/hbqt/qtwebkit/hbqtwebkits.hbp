@@ -2,10 +2,10 @@
 # $Id$
 #
 
-../hbqt_common.hbm
+../hbqt_commons.hbm
 
-filelist.hbm
+g/filelist.hbm
 
--stop{!HB_QT_BUILD_STATIC|!allwin}
+-ig
 
--cflag=-DQT_NODLL
+../qtcore/hbqtcore.hbc

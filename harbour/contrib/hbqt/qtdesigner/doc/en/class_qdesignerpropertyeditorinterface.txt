@@ -1,60 +1,58 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5.3+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QDesignerPropertyEditorInterface()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qdesignerpropertyeditorinterface.html
-    $ONELINER$
-        Creates a new QDesignerPropertyEditorInterface object.
-    $INHERITS$
-        QWidget
-    $SYNTAX$
-        QDesignerPropertyEditorInterface():new( ... )
-        QDesignerPropertyEditorInterface():from( pPtr_OR_oObj_of_type_QDesignerPropertyEditorInterface )
-        QDesignerPropertyEditorInterface():configure( pPtr_OR_oObj_of_type_QDesignerPropertyEditorInterface )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QDesignerPropertyEditorInterface
-    $METHODS$
-        :core()                                             -> pQDesignerFormEditorInterface
-        :currentPropertyName()                              -> cQString
-        :isReadOnly()                                       -> lBool
-        :object()                                           -> pQObject
-        :setObject( pObject )                               -> NIL
-        :setPropertyValue( cName, pValue, lChanged )        -> NIL
-        :setReadOnly( lReadOnly )                           -> NIL
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper Compatible
-    $PLATFORMS$
-        Windows, Linux, MacOS, OS2
-    $VERSION$
-        4.5.3
-    $FILES$
-        Prg Source   : contrib/hbqt/TQDesignerPropertyEditorInterface.prg
-        C++ Wrappers : contrib/hbqt/QDesignerPropertyEditorInterface.cpp
-        Library      : hb
-    $SEEALSO$
-        QWidget
-    $END$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QDesignerPropertyEditorInterface()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qdesignerpropertyeditorinterface.html
+ *  $ONELINER$
+ *     Creates a new QDesignerPropertyEditorInterface object.
+ *  $INHERITS$
+ *     QWidget
+ *  $SYNTAX$
+ *     QDesignerPropertyEditorInterface():new( ... )
+ *     QDesignerPropertyEditorInterface():from( pPtr_OR_oObj_of_type_QDesignerPropertyEditorInterface )
+ *     QDesignerPropertyEditorInterface():configure( pPtr_OR_oObj_of_type_QDesignerPropertyEditorInterface )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QDesignerPropertyEditorInterface
+ *  $METHODS$
+ *     :core()                                             -> pQDesignerFormEditorInterface
+ *     :currentPropertyName()                              -> cQString
+ *     :isReadOnly()                                       -> lBool
+ *     :object()                                           -> pQObject
+ *     :setObject( pObject )                               -> NIL
+ *     :setPropertyValue( cName, pValue, lChanged )        -> NIL
+ *     :setReadOnly( lReadOnly )                           -> NIL
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtdesigner/TQDesignerPropertyEditorInterface.prg
+ *     C++ wrappers  : contrib/hbqt/qtdesigner/QDesignerPropertyEditorInterface.cpp
+ *     Library       : hbqtdesigner
+ *  $SEEALSO$
+ *     QWidget
+ *  $END$
  */

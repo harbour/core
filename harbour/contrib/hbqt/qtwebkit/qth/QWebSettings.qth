@@ -56,9 +56,9 @@
 
 <CLASS>
 QObject    = no
-Inherits   = 
+Inherits   =
 Type       = Core
-New        = 
+New        =
 Destructor = no
 folder     = qtwebkit
 </CLASS>
@@ -66,12 +66,11 @@ folder     = qtwebkit
 <CODE>
 #include <QtWebKit/QWebSettings>
 #include <QtCore/QUrl>
-#include "hbqt_garbage.h"
-#include "hbqt_local.h"
+#include "../hbqt_local.h"
 
 
 /*
- * 
+ *
  */
 HB_FUNC( QT_QWEBSETTINGS )
 {
@@ -120,7 +119,3 @@ QPixmap webGraphic ( WebGraphic type )
 
 <SIGNALS>
 </SIGNALS>
-
-
-
-

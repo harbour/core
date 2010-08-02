@@ -1,55 +1,53 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5.3+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QDesignerObjectInspectorInterface()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qdesignerobjectinspectorinterface.html
-    $ONELINER$
-        Creates a new QDesignerObjectInspectorInterface object.
-    $INHERITS$
-        QWidget
-    $SYNTAX$
-        QDesignerObjectInspectorInterface():new( ... )
-        QDesignerObjectInspectorInterface():from( pPtr_OR_oObj_of_type_QDesignerObjectInspectorInterface )
-        QDesignerObjectInspectorInterface():configure( pPtr_OR_oObj_of_type_QDesignerObjectInspectorInterface )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QDesignerObjectInspectorInterface
-    $METHODS$
-        :core()                                             -> pQDesignerFormEditorInterface
-        :setFormWindow( pFormWindow )                       -> NIL
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper Compatible
-    $PLATFORMS$
-        Windows, Linux, MacOS, OS2
-    $VERSION$
-        4.5.3
-    $FILES$
-        Prg Source   : contrib/hbqt/TQDesignerObjectInspectorInterface.prg
-        C++ Wrappers : contrib/hbqt/QDesignerObjectInspectorInterface.cpp
-        Library      : hb
-    $SEEALSO$
-        QWidget
-    $END$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QDesignerObjectInspectorInterface()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qdesignerobjectinspectorinterface.html
+ *  $ONELINER$
+ *     Creates a new QDesignerObjectInspectorInterface object.
+ *  $INHERITS$
+ *     QWidget
+ *  $SYNTAX$
+ *     QDesignerObjectInspectorInterface():new( ... )
+ *     QDesignerObjectInspectorInterface():from( pPtr_OR_oObj_of_type_QDesignerObjectInspectorInterface )
+ *     QDesignerObjectInspectorInterface():configure( pPtr_OR_oObj_of_type_QDesignerObjectInspectorInterface )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QDesignerObjectInspectorInterface
+ *  $METHODS$
+ *     :core()                                             -> pQDesignerFormEditorInterface
+ *     :setFormWindow( pFormWindow )                       -> NIL
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtdesigner/TQDesignerObjectInspectorInterface.prg
+ *     C++ wrappers  : contrib/hbqt/qtdesigner/QDesignerObjectInspectorInterface.cpp
+ *     Library       : hbqtdesigner
+ *  $SEEALSO$
+ *     QWidget
+ *  $END$
  */

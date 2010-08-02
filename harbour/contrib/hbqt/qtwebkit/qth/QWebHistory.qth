@@ -56,21 +56,20 @@
 
 <CLASS>
 QObject  = no
-Inherits = 
+Inherits =
 Type     = Core
-New      = 
+New      =
 Destructor = no
 folder   = qtwebkit
 </CLASS>
 
 <CODE>
 #include <QtWebKit/QWebHistory>
-#include "hbqt_garbage.h"
-#include "hbqt_local.h"
+#include "../hbqt_local.h"
 
 
 /*
- * 
+ *
  */
 HB_FUNC( QT_QWEBHISTORY )
 {
@@ -106,7 +105,3 @@ void setMaximumItemCount ( int count )
 
 <SIGNALS>
 </SIGNALS>
-
-
-
-

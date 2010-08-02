@@ -1,67 +1,65 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5.3+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QDesignerFormWindowCursorInterface()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qdesignerformwindowcursorinterface.html
-    $ONELINER$
-        Creates a new QDesignerFormWindowCursorInterface object.
-    $INHERITS$
-
-    $SYNTAX$
-        QDesignerFormWindowCursorInterface():new( ... )
-        QDesignerFormWindowCursorInterface():from( pPtr_OR_oObj_of_type_QDesignerFormWindowCursorInterface )
-        QDesignerFormWindowCursorInterface():configure( pPtr_OR_oObj_of_type_QDesignerFormWindowCursorInterface )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QDesignerFormWindowCursorInterface
-    $METHODS$
-        :current()                                          -> pQWidget
-        :formWindow()                                       -> pQDesignerFormWindowInterface
-        :hasSelection()                                     -> lBool
-        :isWidgetSelected( pWidget )                        -> lBool
-        :movePosition( nOperation, nMode )                  -> lBool
-        :position()                                         -> nInt
-        :resetWidgetProperty( pWidget, cName )              -> NIL
-        :selectedWidget( nIndex )                           -> pQWidget
-        :selectedWidgetCount()                              -> nInt
-        :setPosition( nPosition, nMode )                    -> NIL
-        :setProperty( cName, pValue )                       -> NIL
-        :setWidgetProperty( pWidget, cName, pValue )        -> NIL
-        :widget( nIndex )                                   -> pQWidget
-        :widgetCount()                                      -> nInt
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper Compatible
-    $PLATFORMS$
-        Windows, Linux, MacOS, OS2
-    $VERSION$
-        4.5.3
-    $FILES$
-        Prg Source   : contrib/hbqt/TQDesignerFormWindowCursorInterface.prg
-        C++ Wrappers : contrib/hbqt/QDesignerFormWindowCursorInterface.cpp
-        Library      : hb
-    $SEEALSO$
-
-    $END$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QDesignerFormWindowCursorInterface()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qdesignerformwindowcursorinterface.html
+ *  $ONELINER$
+ *     Creates a new QDesignerFormWindowCursorInterface object.
+ *  $INHERITS$
+ *     
+ *  $SYNTAX$
+ *     QDesignerFormWindowCursorInterface():new( ... )
+ *     QDesignerFormWindowCursorInterface():from( pPtr_OR_oObj_of_type_QDesignerFormWindowCursorInterface )
+ *     QDesignerFormWindowCursorInterface():configure( pPtr_OR_oObj_of_type_QDesignerFormWindowCursorInterface )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QDesignerFormWindowCursorInterface
+ *  $METHODS$
+ *     :current()                                          -> pQWidget
+ *     :formWindow()                                       -> pQDesignerFormWindowInterface
+ *     :hasSelection()                                     -> lBool
+ *     :isWidgetSelected( pWidget )                        -> lBool
+ *     :movePosition( nOperation, nMode )                  -> lBool
+ *     :position()                                         -> nInt
+ *     :resetWidgetProperty( pWidget, cName )              -> NIL
+ *     :selectedWidget( nIndex )                           -> pQWidget
+ *     :selectedWidgetCount()                              -> nInt
+ *     :setPosition( nPosition, nMode )                    -> NIL
+ *     :setProperty( cName, pValue )                       -> NIL
+ *     :setWidgetProperty( pWidget, cName, pValue )        -> NIL
+ *     :widget( nIndex )                                   -> pQWidget
+ *     :widgetCount()                                      -> nInt
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtdesigner/TQDesignerFormWindowCursorInterface.prg
+ *     C++ wrappers  : contrib/hbqt/qtdesigner/QDesignerFormWindowCursorInterface.cpp
+ *     Library       : hbqtdesigner
+ *  $SEEALSO$
+ *     
+ *  $END$
  */

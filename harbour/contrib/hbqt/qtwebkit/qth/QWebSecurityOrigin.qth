@@ -56,16 +56,15 @@
 
 <CLASS>
 QObject  = no
-Inherits = 
+Inherits =
 Type     = Core
-New      = 
+New      =
 folder   = qtwebkit
 </CLASS>
 
 <CODE>
 #include <QtWebKit/QWebSecurityOrigin>
-#include "hbqt_garbage.h"
-#include "hbqt_local.h"
+#include "../hbqt_local.h"
 
 
 /*
@@ -101,7 +100,3 @@ QList<QWebSecurityOrigin> allOrigins ()
 
 <SIGNALS>
 </SIGNALS>
-
-
-
-

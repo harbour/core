@@ -57,14 +57,13 @@
 <CLASS>
 Inherits = QObject
 Type     = Core
-New      = 
+New      =
 folder   = qtwebkit
 </CLASS>
 
 <CODE>
 #include <QtWebKit/QWebHistoryInterface>
-#include "hbqt_garbage.h"
-#include "hbqt_local.h"
+#include "../hbqt_local.h"
 
 
 /*
@@ -93,7 +92,3 @@ void setDefaultInterface ( QWebHistoryInterface * defaultInterface )
 
 <SIGNALS>
 </SIGNALS>
-
-
-
-

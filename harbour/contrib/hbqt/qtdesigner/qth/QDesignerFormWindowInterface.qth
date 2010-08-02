@@ -70,8 +70,7 @@ folder   = hbqtdesigner
 
 <CODE>
 #include <QtDesigner/QDesignerFormWindowInterface>
-#include "hbqt_garbage.h"
-#include "hbqt_local.h"
+#include "../hbqt_local.h"
 
 
 /*
@@ -154,4 +153,3 @@ void widgetManaged ( QWidget * widget )
 void widgetRemoved ( QWidget * widget )
 void widgetUnmanaged ( QWidget * widget )
 </SIGNALS>
-

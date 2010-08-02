@@ -57,14 +57,13 @@
 <CLASS>
 Inherits = QObject
 Type     = Core
-New      = 
+New      =
 folder   = qtwebkit
 </CLASS>
 
 <CODE>
 #include <QtWebKit/QWebPluginFactory>
-#include "hbqt_garbage.h"
-#include "hbqt_local.h"
+#include "../hbqt_local.h"
 
 
 /*
@@ -95,7 +94,3 @@ virtual bool supportsExtension ( Extension extension ) const
 
 <SIGNALS>
 </SIGNALS>
-
-
-
-

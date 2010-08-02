@@ -4,6 +4,10 @@
 
 ../hbqt_common.hbm
 
-filelist.hbm
+g/filelist.hbm
+
+-ig
+
+../qtcore/hbqtcore.hbc
 
 hbqtdesigners.hbp

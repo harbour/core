@@ -57,7 +57,7 @@
 <CLASS>
 Inherits = QObject
 Type     = Core
-New      = 
+New      =
 Destructor = no
 folder   = qtwebkit
 </CLASS>
@@ -65,11 +65,10 @@ folder   = qtwebkit
 <CODE>
 #include <QtWebKit/QWebFrame>
 #include <QtWebKit/QWebSecurityOrigin>
-#include "hbqt_garbage.h"
-#include "hbqt_local.h"
+#include "../hbqt_local.h"
 
 /*
- * 
+ *
  */
 HB_FUNC( QT_QWEBFRAME )
 {
@@ -133,7 +132,3 @@ void javaScriptWindowObjectCleared ()
 void titleChanged ( const QString & title )
 void urlChanged ( const QUrl & url )
 </SIGNALS>
-
-
-
-

@@ -59,6 +59,7 @@
 
 #include "hbqtcore_garbage.h"
 
+/* TOFIX: QtGui components should not be accessed from this component */
 #include <QtCore/QProcess>
 #include <QtCore/QUrl>
 #include <QtGui/QTextCursor>

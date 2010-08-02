@@ -63,8 +63,7 @@ folder   = qtwebkit
 <CODE>
 #include <QtWebKit/QWebPage>
 #include <QtCore/QVariant>
-#include "hbqt_garbage.h"
-#include "hbqt_local.h"
+#include "../hbqt_local.h"
 
 
 /*
@@ -150,5 +149,3 @@ void toolBarVisibilityChangeRequested ( bool visible )
 void unsupportedContent ( QNetworkReply * reply )
 void windowCloseRequested ()
 </SIGNALS>
-
-

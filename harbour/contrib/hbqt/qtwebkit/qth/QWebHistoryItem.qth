@@ -65,8 +65,7 @@ folder   = qtwebkit
 <CODE>
 #include <QtWebKit/QWebHistoryItem>
 #include <QtCore/QVariant>
-#include "hbqt_garbage.h"
-#include "hbqt_local.h"
+#include "../hbqt_local.h"
 
 
 /*

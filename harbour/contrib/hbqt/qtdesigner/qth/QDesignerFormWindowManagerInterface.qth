@@ -70,8 +70,7 @@ folder   = hbqtdesigner
 
 <CODE>
 #include <QtDesigner/QDesignerFormWindowManagerInterface>
-#include "hbqt_garbage.h"
-#include "hbqt_local.h"
+#include "../hbqt_local.h"
 
 
 /*
@@ -125,4 +124,3 @@ void activeFormWindowChanged ( QDesignerFormWindowInterface * formWindow )
 void formWindowAdded ( QDesignerFormWindowInterface * formWindow )
 void formWindowRemoved ( QDesignerFormWindowInterface * formWindow )
 </SIGNALS>
-
