@@ -55,6 +55,8 @@
 #ifndef HBQT_HBQTABLEVIEW_H
 #define HBQT_HBQTABLEVIEW_H
 
+#include "hbqtgui.h"
+
 #include <QtGui/QTableView>
 
 /*----------------------------------------------------------------------*/

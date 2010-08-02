@@ -53,7 +53,7 @@
 #ifndef HBQT_HBQMAINWINDOW_H
 #define HBQT_HBQMAINWINDOW_H
 
-#include "hbapiitm.h"
+#include "hbqt.h"
 
 /*----------------------------------------------------------------------*/
 

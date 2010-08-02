@@ -254,7 +254,7 @@ STATIC FUNCTION ManageProject( cProFile, cPathIn, cPathOut, cPathDoc )
 
    IF !empty( cpp_ )
       Build_Makefile( cPOut, aWidgetList )
-      Build_GarbageFile( cpp_, cPOut, cProFile )
+      Build_HeaderFile( cpp_, cPOut, cProFile )
    ENDIF
 
    RETURN NIL
@@ -1513,14 +1513,10 @@ STATIC FUNCTION BuildHeader( txt_, nMode, cProFile )
    aadd( txt_, "/*----------------------------------------------------------------------*/"    )
    aadd( txt_, ""                                                                              )
    IF nMode == 0
-   aadd( txt_, '#include "hbqt.h"'                                                             )
-   aadd( txt_, '#include "hb' + FNameGetName( cProFile ) + '_garbage.h"'                       )
+      IF !( FNameGetName( cProFile ) == "qtcore" )
+         aadd( txt_, '#include "hbqtcore.h"'                                                   )
+      ENDIF
    aadd( txt_, '#include "hb' + FNameGetName( cProFile ) + '.h"'                               )
-   IF !( FNameGetName( cProFile ) == "qtcore" )
-      aadd( txt_, '#include "hbqtcore_garbage.h"'                                              )
-      aadd( txt_, '#include "hbqtcore.h"'                                                      )
-   ENDIF
-// aadd( txt_, '#include "hbqt_local.h"'                                                       )
    aadd( txt_, ""                                                                              )
    aadd( txt_, "/*----------------------------------------------------------------------*/"    )
    aadd( txt_, "#if QT_VERSION >= 0x040500"                                                    )
@@ -1777,28 +1773,27 @@ STATIC FUNCTION Build_Document( cProFile, cWidget, cls_, doc_, cPathDoc, subCls_
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION Build_GarbageFile( cpp_, cPathOut, cProFile )
+STATIC FUNCTION Build_HeaderFile( cpp_, cPathOut, cProFile )
    LOCAL cFile := iif( empty( cPathOut ), "", cPathOut + hb_ps() )
-   LOCAL hdr_:= {}
    LOCAL txt_ := {}
    LOCAL s
    LOCAL tmp
 
-   aadd( hdr_, "/*"                                                                            )
-   aadd( hdr_, " * $" + "Id" + "$"                                                             )
-   aadd( hdr_, " */"                                                                           )
-   aadd( hdr_, ""                                                                              )
-   aadd( hdr_, "/* -------------------------------------------------------------------- */"    )
-   aadd( hdr_, "/* WARNING: Automatically generated source file. DO NOT EDIT!           */"    )
-   aadd( hdr_, "/*          Instead, edit corresponding .qth file,                      */"    )
-   aadd( hdr_, "/*          or the generator tool itself, and run regenarate.           */"    )
-   aadd( hdr_, "/* -------------------------------------------------------------------- */"    )
-   aadd( hdr_, " " )
-   aadd( hdr_, '#include "hbqt.h"' )
-   aadd( hdr_, " " )
-
-   txt_ := {}
-   aeval( hdr_, {|e| aadd( txt_, e ) } )
+   aadd( txt_, "/*"                                                                            )
+   aadd( txt_, " * $" + "Id" + "$"                                                             )
+   aadd( txt_, " */"                                                                           )
+   aadd( txt_, ""                                                                              )
+   aadd( txt_, "/* -------------------------------------------------------------------- */"    )
+   aadd( txt_, "/* WARNING: Automatically generated source file. DO NOT EDIT!           */"    )
+   aadd( txt_, "/*          Instead, edit corresponding .qth file,                      */"    )
+   aadd( txt_, "/*          or the generator tool itself, and run regenarate.           */"    )
+   aadd( txt_, "/* -------------------------------------------------------------------- */"    )
+   aadd( txt_, "" )
+   aadd( txt_, "#ifndef __HB" + Upper( FNameGetName( cProFile ) ) + "_H" )
+   aadd( txt_, "#define __HB" + Upper( FNameGetName( cProFile ) ) + "_H" )
+   aadd( txt_, "" )
+   aadd( txt_, '#include "hbqt.h"' )
+   aadd( txt_, "" )
 
    FOR EACH s IN cpp_
       aadd( txt_, "extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_" + s + " );" )
@@ -1812,15 +1807,6 @@ STATIC FUNCTION Build_GarbageFile( cpp_, cPathOut, cProFile )
       aadd( txt_, "" )
    ENDIF
 
-   CreateTarget( cFile + "hb" + FNameGetName( cProFile ) + "_garbage.h", txt_ )
-
-   txt_ := {}
-   aeval( hdr_, {|e| aadd( txt_, e ) } )
-
-   aadd( txt_, "#ifndef __HB" + Upper( FNameGetName( cProFile ) ) + "_H" )
-   aadd( txt_, "#define __HB" + Upper( FNameGetName( cProFile ) ) + "_H" )
-   aadd( txt_, "" )
-
    FOR EACH s IN cpp_
       IF s == "QList" /* TOFIX: Ugly hack */
          tmp := s + "< void * >"
@@ -1832,7 +1818,6 @@ STATIC FUNCTION Build_GarbageFile( cpp_, cPathOut, cProFile )
    aadd( txt_, "" )
 
    aadd( txt_, "#endif /* __HB" + Upper( FNameGetName( cProFile ) ) + "_H */" )
-
 
    CreateTarget( cFile + "hb" + FNameGetName( cProFile ) + ".h", txt_ )
 

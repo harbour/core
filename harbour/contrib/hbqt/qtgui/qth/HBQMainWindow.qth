@@ -68,6 +68,8 @@ New      =
 </DOC>
 
 <CODE>
+#include "hbapiitm.h"
+
 #include <QtGui/QMainWindow>
 #include "hbqt_hbqmainwindow.h"
 

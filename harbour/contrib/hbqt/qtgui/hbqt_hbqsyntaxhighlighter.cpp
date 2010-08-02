@@ -51,8 +51,6 @@
  */
 /*----------------------------------------------------------------------*/
 
-#include "hbqt.h"
-
 #if QT_VERSION >= 0x040500
 
 #include "hbqt_hbqsyntaxhighlighter.h"

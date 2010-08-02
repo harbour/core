@@ -53,12 +53,11 @@
  */
 /*----------------------------------------------------------------------*/
 
-#include "hbqt.h"
-
 #if QT_VERSION >= 0x040500
 
-#include <QtCore/QPointer>
 #include "hbqt_hbqtableview.h"
+
+#include <QtCore/QPointer>
 
 HBQTableView::HBQTableView( QWidget * parent ) : QTableView( parent )
 {

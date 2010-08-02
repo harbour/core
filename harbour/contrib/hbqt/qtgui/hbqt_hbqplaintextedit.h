@@ -51,9 +51,9 @@
  */
 
 #ifndef HBQT_HBQPLAINTEXTEDIT_H
-   #define HBQT_HBQPLAINTEXTEDIT_H
+#define HBQT_HBQPLAINTEXTEDIT_H
 
-#include "hbapiitm.h"
+#include "hbqtgui.h"
 
 #include <QtCore/QPointer>
 

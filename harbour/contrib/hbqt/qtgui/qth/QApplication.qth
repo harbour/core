@@ -61,14 +61,9 @@ New      =
 
 <CODE>
 #include "hbapi.h"
-#include "hbinit.h"
-#include "hbdefs.h"
-#include "hbapifs.h"
-#include "hbapiitm.h"
-#include "hbstack.h"
-#include "hbvm.h"
-#include "hbdate.h"
 #include "hbapierr.h"
+#include "hbvm.h"
+#include "hbinit.h"
 
 #include <QtGui/QFont>
 #include <QtGui/QFontMetrics>

@@ -59,11 +59,8 @@
  */
 /*----------------------------------------------------------------------*/
 
-#include "hbqt.h"
-#include "hbqtgui_garbage.h"
-#include "hbqtgui.h"
-#include "hbqtcore_garbage.h"
 #include "hbqtcore.h"
+#include "hbqtgui.h"
 
 /*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
@@ -77,14 +74,9 @@
 #include <QtCore/QPointer>
 
 #include "hbapi.h"
-#include "hbinit.h"
-#include "hbdefs.h"
-#include "hbapifs.h"
-#include "hbapiitm.h"
-#include "hbstack.h"
-#include "hbvm.h"
-#include "hbdate.h"
 #include "hbapierr.h"
+#include "hbvm.h"
+#include "hbinit.h"
 
 #include <QtGui/QFont>
 #include <QtGui/QFontMetrics>

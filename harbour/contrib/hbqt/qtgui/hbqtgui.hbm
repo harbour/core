@@ -7,6 +7,7 @@ hbqt_hbqmainwindow.cpp
 hbqt_hbqplaintextedit.cpp
 hbqt_hbqsyntaxhighlighter.cpp
 hbqt_hbqtableview.cpp
+hbqt_utils.cpp
 
 hbqt_hbqabstractitemmodel.h
 hbqt_hbqmainwindow.h

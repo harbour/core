@@ -54,7 +54,7 @@
 #ifndef HBQT_HBQAbstractItemModel_H
 #define HBQT_HBQAbstractItemModel_H
 
-#include "hbapi.h"
+#include "hbqt.h"
 
 /*----------------------------------------------------------------------*/
 

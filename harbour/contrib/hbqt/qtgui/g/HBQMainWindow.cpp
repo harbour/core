@@ -59,17 +59,16 @@
  */
 /*----------------------------------------------------------------------*/
 
-#include "hbqt.h"
-#include "hbqtgui_garbage.h"
-#include "hbqtgui.h"
-#include "hbqtcore_garbage.h"
 #include "hbqtcore.h"
+#include "hbqtgui.h"
 
 /*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
 #include <QtCore/QPointer>
+
+#include "hbapiitm.h"
 
 #include <QtGui/QMainWindow>
 #include "hbqt_hbqmainwindow.h"

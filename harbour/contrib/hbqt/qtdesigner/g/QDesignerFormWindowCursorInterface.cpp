@@ -59,11 +59,8 @@
  */
 /*----------------------------------------------------------------------*/
 
-#include "hbqt.h"
-#include "hbqtdesigner_garbage.h"
-#include "hbqtdesigner.h"
-#include "hbqtcore_garbage.h"
 #include "hbqtcore.h"
+#include "hbqtdesigner.h"
 
 /*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500

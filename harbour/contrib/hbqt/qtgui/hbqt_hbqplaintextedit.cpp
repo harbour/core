@@ -65,15 +65,13 @@
 */
 /*----------------------------------------------------------------------*/
 
-#include "hbqt.h"
-
 #include "hbapiitm.h"
-#include "hbthread.h"
 #include "hbvm.h"
 
 #if QT_VERSION >= 0x040500
 
 #include "hbqt_hbqplaintextedit.h"
+
 #include <QtGui/QApplication>
 
 #define selectionState_off                        0

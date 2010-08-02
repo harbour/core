@@ -55,11 +55,8 @@
 #ifndef HBQT_EVENTS_H
 #define HBQT_EVENTS_H
 
-#include "hbapi.h"
-
 /*----------------------------------------------------------------------*/
 
-#include "hbqtcore_garbage.h"
 #include "hbqtcore.h"
 
 #include <QtCore/QObject>
