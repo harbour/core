@@ -393,7 +393,7 @@ HB_FUNC( DBFIELDINFO )
       {
          PHB_ITEM pInfo = hb_itemNew( hb_param( 3, HB_IT_ANY ) );
 
-         SELF_FIELDINFO( pArea, ( HB_USHORT ) uiIndex, ( HB_USHORT ) hb_itemGetNI( pType ), pInfo );
+         SELF_FIELDINFO( pArea, uiIndex, ( HB_USHORT ) hb_itemGetNI( pType ), pInfo );
          hb_itemReturnRelease( pInfo );
       }
       else

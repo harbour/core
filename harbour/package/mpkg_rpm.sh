@@ -173,7 +173,7 @@ then
          RPMDIR=`get_rpmmacro "_topdir"`
       fi
 
-      cp ${hb_filename} ${RPMDIR}/SOURCES/
+      mv -f ${hb_filename} ${RPMDIR}/SOURCES/
       cp harbour.spec ${RPMDIR}/SPECS/
 
       if which rpmbuild >/dev/null 2>&1

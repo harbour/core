@@ -29,6 +29,7 @@ if [ -f mpkg_ver.sh ]; then
    hb_rootdir=".."
 else
    hb_rootdir=`dirname $0`
+   hb_rootdir=`dirname ${hb_rootdir}`
 fi
 . ${hb_rootdir}/package/mpkg_ver.sh
 
