@@ -1,0 +1,12 @@
+#
+# $Id$
+#
+
+-i.
+-ig
+
+../qtcore/hbqtcore.hbc
+../qtgui/hbqtgui.hbc
+
+hbqt_hbqsciscintilla.cpp
+hbqt_hbqsciscintilla.h

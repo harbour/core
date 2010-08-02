@@ -9,6 +9,7 @@
 
 libs=../hbqt_common.hbc
 
+incpaths=.
 incpaths=g
 
 # TOFIX: QtGui is needed by hbqt_hbslots.cpp. This dependency should be removed.

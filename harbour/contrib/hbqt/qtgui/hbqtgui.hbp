@@ -7,9 +7,4 @@
 g/filelist.hbm
 hbqtgui.hbm
 
--i.
--ig
-
-../qtcore/hbqtcore.hbc
-
 hbqtguis.hbp

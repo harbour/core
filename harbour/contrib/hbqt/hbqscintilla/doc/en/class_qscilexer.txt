@@ -1,97 +1,95 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5.3+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QsciLexer()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qscilexer.html
-    $ONELINER$
-        Creates a new QsciLexer object.
-    $INHERITS$
-
-    $SYNTAX$
-        QsciLexer():new( ... )
-        QsciLexer():from( pPtr_OR_oObj_of_type_QsciLexer )
-        QsciLexer():configure( pPtr_OR_oObj_of_type_QsciLexer )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QsciLexer
-    $METHODS$
-        :language()                                         -> cChar
-        :lexer()                                            -> cChar
-        :lexerId()                                          -> nInt
-        :apis()                                             -> pQsciAbstractAPIs
-        :autoCompletionFillups()                            -> cChar
-        :autoCompletionWordSeparators()                     -> pQStringList
-        :autoIndentStyle()                                  -> nInt
-        :blockEnd( @nStyle )                                -> cChar
-        :blockLookback()                                    -> nInt
-        :blockStart( @nStyle )                              -> cChar
-        :blockStartKeyword( @nStyle )                       -> cChar
-        :braceStyle()                                       -> nInt
-        :caseSensitive()                                    -> lBool
-        :color( nStyle )                                    -> pQColor
-        :eolFill( nStyle )                                  -> lBool
-        :font( nStyle )                                     -> pQFont
-        :indentationGuideView()                             -> nInt
-        :keywords( nSet )                                   -> cChar
-        :defaultStyle()                                     -> nInt
-        :description( nStyle )                              -> cQString
-        :paper( nStyle )                                    -> pQColor
-        :defaultColor()                                     -> pQColor
-        :defaultColor_1( nStyle )                           -> pQColor
-        :defaultEolFill( nStyle )                           -> lBool
-        :defaultFont()                                      -> pQFont
-        :defaultFont_1( nStyle )                            -> pQFont
-        :defaultPaper()                                     -> pQColor
-        :defaultPaper_1( nStyle )                           -> pQColor
-        :editor()                                           -> pQsciScintilla
-        :setEditor( pEditor )                               -> NIL
-        :readSettings( pQs, pPrefix )                       -> lBool
-        :refreshProperties()                                -> NIL
-        :styleBitsNeeded()                                  -> nInt
-        :wordCharacters()                                   -> cChar
-        :writeSettings( pQs, pPrefix )                      -> lBool
-        :setAPIs( pApis )                                   -> NIL
-        :setDefaultColor( pC )                              -> NIL
-        :setDefaultFont( pF )                               -> NIL
-        :setDefaultPaper( pC )                              -> NIL
-        :setAutoIndentStyle( nAutoindentstyle )             -> NIL
-        :setColor( pC, nStyle )                             -> NIL
-        :setEolFill( lEoffill, nStyle )                     -> NIL
-        :setFont( pF, nStyle )                              -> NIL
-        :setPaper( pC, nStyle )                             -> NIL
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper Compatible
-    $PLATFORMS$
-        Windows, Linux, MacOS, OS2
-    $VERSION$
-        4.5.3
-    $FILES$
-        Prg Source   : contrib/hbqt/TQsciLexer.prg
-        C++ Wrappers : contrib/hbqt/QsciLexer.cpp
-        Library      : hb
-    $SEEALSO$
-
-    $END$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QsciLexer()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qscilexer.html
+ *  $ONELINER$
+ *     Creates a new QsciLexer object.
+ *  $INHERITS$
+ *     
+ *  $SYNTAX$
+ *     QsciLexer():new( ... )
+ *     QsciLexer():from( pPtr_OR_oObj_of_type_QsciLexer )
+ *     QsciLexer():configure( pPtr_OR_oObj_of_type_QsciLexer )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QsciLexer
+ *  $METHODS$
+ *     :language()                                         -> cChar
+ *     :lexer()                                            -> cChar
+ *     :lexerId()                                          -> nInt
+ *     :apis()                                             -> pQsciAbstractAPIs
+ *     :autoCompletionFillups()                            -> cChar
+ *     :autoCompletionWordSeparators()                     -> pQStringList
+ *     :autoIndentStyle()                                  -> nInt
+ *     :blockEnd( @nStyle )                                -> cChar
+ *     :blockLookback()                                    -> nInt
+ *     :blockStart( @nStyle )                              -> cChar
+ *     :blockStartKeyword( @nStyle )                       -> cChar
+ *     :braceStyle()                                       -> nInt
+ *     :caseSensitive()                                    -> lBool
+ *     :color( nStyle )                                    -> pQColor
+ *     :eolFill( nStyle )                                  -> lBool
+ *     :font( nStyle )                                     -> pQFont
+ *     :indentationGuideView()                             -> nInt
+ *     :keywords( nSet )                                   -> cChar
+ *     :defaultStyle()                                     -> nInt
+ *     :description( nStyle )                              -> cQString
+ *     :paper( nStyle )                                    -> pQColor
+ *     :defaultColor()                                     -> pQColor
+ *     :defaultColor_1( nStyle )                           -> pQColor
+ *     :defaultEolFill( nStyle )                           -> lBool
+ *     :defaultFont()                                      -> pQFont
+ *     :defaultFont_1( nStyle )                            -> pQFont
+ *     :defaultPaper()                                     -> pQColor
+ *     :defaultPaper_1( nStyle )                           -> pQColor
+ *     :editor()                                           -> pQsciScintilla
+ *     :setEditor( pEditor )                               -> NIL
+ *     :readSettings( pQs, pPrefix )                       -> lBool
+ *     :refreshProperties()                                -> NIL
+ *     :styleBitsNeeded()                                  -> nInt
+ *     :wordCharacters()                                   -> cChar
+ *     :writeSettings( pQs, pPrefix )                      -> lBool
+ *     :setAPIs( pApis )                                   -> NIL
+ *     :setDefaultColor( pC )                              -> NIL
+ *     :setDefaultFont( pF )                               -> NIL
+ *     :setDefaultPaper( pC )                              -> NIL
+ *     :setAutoIndentStyle( nAutoindentstyle )             -> NIL
+ *     :setColor( pC, nStyle )                             -> NIL
+ *     :setEolFill( lEoffill, nStyle )                     -> NIL
+ *     :setFont( pF, nStyle )                              -> NIL
+ *     :setPaper( pC, nStyle )                             -> NIL
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qscintilla/TQsciLexer.prg
+ *     C++ wrappers  : contrib/hbqt/qscintilla/QsciLexer.cpp
+ *     Library       : hbqscintilla
+ *  $SEEALSO$
+ *     
+ *  $END$
  */

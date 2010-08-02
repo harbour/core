@@ -2,18 +2,9 @@
 # $Id$
 #
 
-{allwin|os2}libpaths=${HB_WITH_QT}\..\lib
-
-{!HB_QT_STATIC&(allwin|os2)}libs=QtCore4 QtGui4
-{!HB_QT_STATIC&linux}libs=QtCore QtGui
-{!HB_QT_STATIC&darwin}libs=/Library/Frameworks/QtCore.framework/QtCore
-{!HB_QT_STATIC&darwin}libs=/Library/Frameworks/QtGui.framework/QtGui
-{HB_QT_STATIC}libs=QtCore QtGui
-{allgcc}libs=supc++
-
-{win|os2}hbcppmm=yes
-
-gui=yes
+../hbqt_common.hbc
+../hbqtcore.hbc
+../hbqtgui.hbc
 
 {!HB_QT_STATIC}gt=${hb_name}
 {HB_QT_STATIC}gt=${hb_name}s

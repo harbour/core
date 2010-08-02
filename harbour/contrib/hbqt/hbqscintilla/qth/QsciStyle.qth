@@ -55,10 +55,10 @@
 ;
 
 <CLASS>
-QObject  = 
-Inherits = 
-Type     = 
-New      = 
+QObject  =
+Inherits =
+Type     =
+New      =
 Folder   = hbqscintilla
 </CLASS>
 
@@ -70,13 +70,11 @@ Folder   = hbqscintilla
 
 <CODE>
 #include <qscistyle.h>
-#include "hbqt_garbage.h"
-#include "hbqt_local.h"
 
 /*
- * QsciStyle (int style=-1) 
- * QsciStyle (int style, const QString &description, const QColor &color, const QColor &paper, const QFont &font, bool eol_fill=false) 
- * 
+ * QsciStyle (int style=-1)
+ * QsciStyle (int style, const QString &description, const QColor &color, const QColor &paper, const QFont &font, bool eol_fill=false)
+ *
  */
 HB_FUNC( QT_QSCISTYLE )
 {
@@ -96,30 +94,30 @@ HB_FUNC( QT_QSCISTYLE )
 </CODE>
 
 <ENUMS>
-enum TextCase { OriginalCase = 0, UpperCase = 1, LowerCase = 2 } 
+enum TextCase { OriginalCase = 0, UpperCase = 1, LowerCase = 2 }
 </ENUMS>
 
 <PROTOS>
-int style () const 
-void setDescription (const QString &description) 
-QString description () const 
-void setColor (const QColor &color) 
-QColor color () const 
-void setPaper (const QColor &paper) 
-QColor paper () const 
-void setFont (const QFont &font) 
-QFont font () const 
-void setEolFill (bool fill) 
-bool eolFill () const 
-void setTextCase (TextCase text_case) 
-TextCase textCase () const 
-void setVisible (bool visible) 
-bool visible () const 
-void setChangeable (bool changeable) 
-bool changeable () const 
-void setHotspot (bool hotspot) 
-bool hotspot () const 
-void refresh () 
+int style () const
+void setDescription (const QString &description)
+QString description () const
+void setColor (const QColor &color)
+QColor color () const
+void setPaper (const QColor &paper)
+QColor paper () const
+void setFont (const QFont &font)
+QFont font () const
+void setEolFill (bool fill)
+bool eolFill () const
+void setTextCase (TextCase text_case)
+TextCase textCase () const
+void setVisible (bool visible)
+bool visible () const
+void setChangeable (bool changeable)
+bool changeable () const
+void setHotspot (bool hotspot)
+bool hotspot () const
+void refresh ()
 </PROTOS>
 
 <SLOTS>

@@ -2,6 +2,11 @@
 # $Id$
 #
 
+-i.
+-ig
+
+../qtcore/hbqtcore.hbc
+
 hbqt_hbqabstractitemmodel.cpp
 hbqt_hbqmainwindow.cpp
 hbqt_hbqplaintextedit.cpp

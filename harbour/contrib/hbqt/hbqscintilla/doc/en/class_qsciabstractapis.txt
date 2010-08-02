@@ -1,56 +1,54 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5.3+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QsciAbstractAPIs()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qsciabstractapis.html
-    $ONELINER$
-        Creates a new QsciAbstractAPIs object.
-    $INHERITS$
-
-    $SYNTAX$
-        QsciAbstractAPIs():new( ... )
-        QsciAbstractAPIs():from( pPtr_OR_oObj_of_type_QsciAbstractAPIs )
-        QsciAbstractAPIs():configure( pPtr_OR_oObj_of_type_QsciAbstractAPIs )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QsciAbstractAPIs
-    $METHODS$
-        :lexer()                                            -> pQsciLexer
-        :updateAutoCompletionList( pContext, pList )        -> NIL
-        :autoCompletionSelected( cSelection )               -> NIL
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper Compatible
-    $PLATFORMS$
-        Windows, Linux, MacOS, OS2
-    $VERSION$
-        4.5.3
-    $FILES$
-        Prg Source   : contrib/hbqt/TQsciAbstractAPIs.prg
-        C++ Wrappers : contrib/hbqt/QsciAbstractAPIs.cpp
-        Library      : hb
-    $SEEALSO$
-
-    $END$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QsciAbstractAPIs()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qsciabstractapis.html
+ *  $ONELINER$
+ *     Creates a new QsciAbstractAPIs object.
+ *  $INHERITS$
+ *     
+ *  $SYNTAX$
+ *     QsciAbstractAPIs():new( ... )
+ *     QsciAbstractAPIs():from( pPtr_OR_oObj_of_type_QsciAbstractAPIs )
+ *     QsciAbstractAPIs():configure( pPtr_OR_oObj_of_type_QsciAbstractAPIs )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QsciAbstractAPIs
+ *  $METHODS$
+ *     :lexer()                                            -> pQsciLexer
+ *     :updateAutoCompletionList( pContext, pList )        -> NIL
+ *     :autoCompletionSelected( cSelection )               -> NIL
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qscintilla/TQsciAbstractAPIs.prg
+ *     C++ wrappers  : contrib/hbqt/qscintilla/QsciAbstractAPIs.cpp
+ *     Library       : hbqscintilla
+ *  $SEEALSO$
+ *     
+ *  $END$
  */

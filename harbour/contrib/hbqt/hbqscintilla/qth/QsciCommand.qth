@@ -56,9 +56,9 @@
 
 <CLASS>
 QObject  = no
-Inherits = 
-Type     = 
-New      = 
+Inherits =
+Type     =
+New      =
 Folder   = hbqscintilla
 </CLASS>
 
@@ -70,13 +70,11 @@ Folder   = hbqscintilla
 
 <CODE>
 #include <qscicommand.h>
-#include "hbqt_garbage.h"
-#include "hbqt_local.h"
 
 
 /*
- * 
- * 
+ *
+ *
  */
 HB_FUNC( QT_QSCICOMMAND )
 {
@@ -88,12 +86,12 @@ HB_FUNC( QT_QSCICOMMAND )
 </ENUMS>
 
 <PROTOS>
-void setKey (int key) 
-void setAlternateKey (int altkey) 
-int key () const 
-int alternateKey () const 
-QString description () const 
-bool validKey (int key) 
+void setKey (int key)
+void setAlternateKey (int altkey)
+int key () const
+int alternateKey () const
+QString description () const
+bool validKey (int key)
 </PROTOS>
 
 <SLOTS>

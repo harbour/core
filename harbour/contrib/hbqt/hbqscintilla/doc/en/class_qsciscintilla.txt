@@ -1,248 +1,246 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5.3+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QsciScintilla()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qsciscintilla.html
-    $ONELINER$
-        Creates a new QsciScintilla object.
-    $INHERITS$
-
-    $SYNTAX$
-        QsciScintilla():new( ... )
-        QsciScintilla():from( pPtr_OR_oObj_of_type_QsciScintilla )
-        QsciScintilla():configure( pPtr_OR_oObj_of_type_QsciScintilla )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QsciScintilla
-    $METHODS$
-        :annotate( nLine, cText, nStyle )                   -> NIL
-        :annotate_1( nLine, cText, pStyle )                 -> NIL
-        :annotate_2( nLine, pText )                         -> NIL
-        :annotation( nLine )                                -> cQString
-        :annotationDisplay()                                -> nAnnotationDisplay
-        :clearAnnotations( nLine )                          -> NIL
-        :autoCompletionCaseSensitivity()                    -> lBool
-        :autoCompletionFillupsEnabled()                     -> lBool
-        :autoCompletionReplaceWord()                        -> lBool
-        :autoCompletionShowSingle()                         -> lBool
-        :autoCompletionSource()                             -> nAutoCompletionSource
-        :autoCompletionThreshold()                          -> nInt
-        :autoIndent()                                       -> lBool
-        :backspaceUnindents()                               -> lBool
-        :beginUndoAction()                                  -> NIL
-        :braceMatching()                                    -> nBraceMatch
-        :callTipsStyle()                                    -> nCallTipsStyle
-        :callTipsVisible()                                  -> nInt
-        :cancelList()                                       -> NIL
-        :caseSensitive()                                    -> lBool
-        :clearFolds()                                       -> NIL
-        :clearRegisteredImages()                            -> NIL
-        :color()                                            -> pQColor
-        :convertEols( nMode )                               -> NIL
-        :document()                                         -> pQsciDocument
-        :endUndoAction()                                    -> NIL
-        :edgeColor()                                        -> pQColor
-        :edgeColumn()                                       -> nInt
-        :edgeMode()                                         -> nEdgeMode
-        :setFont( pF )                                      -> NIL
-        :eolMode()                                          -> nEolMode
-        :eolVisibility()                                    -> lBool
-        :findFirst( cExpr, lRe, lCs, lWo, lWrap, lForward, nLine, nIndex, lShow )  -> lBool
-        :findNext()                                         -> lBool
-        :firstVisibleLine()                                 -> nInt
-        :folding()                                          -> nFoldStyle
-        :getCursorPosition( @nLine, @nIndex )               -> NIL
-        :getSelection( @nLineFrom, @nIndexFrom, @nLineTo, @nIndexTo )  -> NIL
-        :hasSelectedText()                                  -> lBool
-        :indentation( nLine )                               -> nInt
-        :indentationGuides()                                -> lBool
-        :indentationsUseTabs()                              -> lBool
-        :indentationWidth()                                 -> nInt
-        :isCallTipActive()                                  -> lBool
-        :isListActive()                                     -> lBool
-        :isModified()                                       -> lBool
-        :isReadOnly()                                       -> lBool
-        :isRedoAvailable()                                  -> lBool
-        :isUndoAvailable()                                  -> lBool
-        :isUtf8()                                           -> lBool
-        :isWordCharacter( cCh )                             -> lBool
-        :lineAt( pPos )                                     -> nInt
-        :lineIndexFromPosition( nPosition, @nLine, @nIndex )  -> NIL
-        :lineLength( nLine )                                -> nInt
-        :lines()                                            -> nInt
-        :length()                                           -> nInt
-        :lexer()                                            -> pQsciLexer
-        :marginLineNumbers( nMargin )                       -> lBool
-        :marginMarkerMask( nMargin )                        -> nInt
-        :marginSensitivity( nMargin )                       -> lBool
-        :marginType( nMargin )                              -> nMarginType
-        :marginWidth( nMargin )                             -> nInt
-        :markerDefine( nSym, nMnr )                         -> nInt
-        :markerDefine_1( cCh, nMnr )                        -> nInt
-        :markerDefine_2( pPm, nMnr )                        -> nInt
-        :markerAdd( nLinenr, nMnr )                         -> nInt
-        :markersAtLine( nLinenr )                           -> nUnsigned
-        :markerDelete( nLinenr, nMnr )                      -> NIL
-        :markerDeleteAll( nMnr )                            -> NIL
-        :markerDeleteHandle( nMhandle )                     -> NIL
-        :markerLine( nMhandle )                             -> nInt
-        :markerFindNext( nLinenr, nMask )                   -> nInt
-        :markerFindPrevious( nLinenr, nMask )               -> nInt
-        :paper()                                            -> pQColor
-        :positionFromLineIndex( nLine, nIndex )             -> nInt
-        :read( pIo )                                        -> lBool
-        :recolor( nStart, nEnd )                            -> NIL
-        :registerImage( nId, pPm )                          -> NIL
-        :replace( cReplaceStr )                             -> NIL
-        :resetFoldMarginColors()                            -> NIL
-        :setFoldMarginColors( pFore, pBack )                -> NIL
-        :setAnnotationDisplay( nDisplay )                   -> NIL
-        :setAutoCompletionFillupsEnabled( lEnabled )        -> NIL
-        :setAutoCompletionFillups( pFillups )               -> NIL
-        :setAutoCompletionWordSeparators( pSeparators )     -> NIL
-        :setCallTipsBackgroundColor( pCol )                 -> NIL
-        :setCallTipsForegroundColor( pCol )                 -> NIL
-        :setCallTipsHighlightColor( pCol )                  -> NIL
-        :setCallTipsStyle( nStyle )                         -> NIL
-        :setCallTipsVisible( nNr )                          -> NIL
-        :setDocument( pDocument )                           -> NIL
-        :setEdgeColor( pCol )                               -> NIL
-        :setEdgeColumn( nColnr )                            -> NIL
-        :setEdgeMode( nMode )                               -> NIL
-        :setMarginText( nLine, cText, nStyle )              -> NIL
-        :setMarginText_1( nLine, cText, pStyle )            -> NIL
-        :setMarginText_2( nLine, pText )                    -> NIL
-        :setMarginType( nMargin, nType )                    -> NIL
-        :clearMarginText( nLine )                           -> NIL
-        :setMarkerBackgroundColor( pCol, nMnr )             -> NIL
-        :setMarkerForegroundColor( pCol, nMnr )             -> NIL
-        :setMatchedBraceBackgroundColor( pCol )             -> NIL
-        :setMatchedBraceForegroundColor( pCol )             -> NIL
-        :setUnmatchedBraceBackgroundColor( pCol )           -> NIL
-        :setUnmatchedBraceForegroundColor( pCol )           -> NIL
-        :setWrapVisualFlags( nEflag, nSflag, nSindent )     -> NIL
-        :selectedText()                                     -> cQString
-        :selectionToEol()                                   -> lBool
-        :setSelectionToEol( lFilled )                       -> NIL
-        :showUserList( nId, pList )                         -> NIL
-        :standardCommands()                                 -> pQsciCommandSet
-        :tabIndents()                                       -> lBool
-        :tabWidth()                                         -> nInt
-        :text()                                             -> cQString
-        :text_1( nLine )                                    -> cQString
-        :textHeight( nLinenr )                              -> nInt
-        :whitespaceVisibility()                             -> nWhitespaceVisibility
-        :wordAtPoint( pPoint )                              -> cQString
-        :wordCharacters()                                   -> cChar
-        :wrapMode()                                         -> nWrapMode
-        :write( pIo )                                       -> lBool
-        :append( cText )                                    -> NIL
-        :autoCompleteFromAll()                              -> NIL
-        :autoCompleteFromAPIs()                             -> NIL
-        :autoCompleteFromDocument()                         -> NIL
-        :callTip()                                          -> NIL
-        :clear()                                            -> NIL
-        :copy()                                             -> NIL
-        :cut()                                              -> NIL
-        :ensureCursorVisible()                              -> NIL
-        :ensureLineVisible( nLine )                         -> NIL
-        :foldAll( lChildren )                               -> NIL
-        :foldLine( nLine )                                  -> NIL
-        :indent( nLine )                                    -> NIL
-        :insert( cText )                                    -> NIL
-        :insertAt( cText, nLine, nIndex )                   -> NIL
-        :moveToMatchingBrace()                              -> NIL
-        :paste()                                            -> NIL
-        :redo()                                             -> NIL
-        :removeSelectedText()                               -> NIL
-        :resetSelectionBackgroundColor()                    -> NIL
-        :resetSelectionForegroundColor()                    -> NIL
-        :selectAll( lSelect )                               -> NIL
-        :selectToMatchingBrace()                            -> NIL
-        :setAutoCompletionCaseSensitivity( lCs )            -> NIL
-        :setAutoCompletionReplaceWord( lReplace )           -> NIL
-        :setAutoCompletionShowSingle( lSingle )             -> NIL
-        :setAutoCompletionSource( nSource )                 -> NIL
-        :setAutoCompletionThreshold( nThresh )              -> NIL
-        :setAutoIndent( lAutoindent )                       -> NIL
-        :setBraceMatching( nBm )                            -> NIL
-        :setBackspaceUnindents( lUnindent )                 -> NIL
-        :setCaretForegroundColor( pCol )                    -> NIL
-        :setCaretLineBackgroundColor( pCol )                -> NIL
-        :setCaretLineVisible( lEnable )                     -> NIL
-        :setCaretWidth( nWidth )                            -> NIL
-        :setColor( pC )                                     -> NIL
-        :setCursorPosition( nLine, nIndex )                 -> NIL
-        :setEolMode( nMode )                                -> NIL
-        :setEolVisibility( lVisible )                       -> NIL
-        :setFolding( nFold, nMargin )                       -> NIL
-        :setIndentation( nLine, nIndentation )              -> NIL
-        :setIndentationGuides( lEnable )                    -> NIL
-        :setIndentationGuidesBackgroundColor( pCol )        -> NIL
-        :setIndentationGuidesForegroundColor( pCol )        -> NIL
-        :setIndentationsUseTabs( lTabs )                    -> NIL
-        :setIndentationWidth( nWidth )                      -> NIL
-        :setLexer( pLexer )                                 -> NIL
-        :setMarginsBackgroundColor( pCol )                  -> NIL
-        :setMarginsFont( pF )                               -> NIL
-        :setMarginsForegroundColor( pCol )                  -> NIL
-        :setMarginLineNumbers( nMargin, lLnrs )             -> NIL
-        :setMarginMarkerMask( nMargin, nMask )              -> NIL
-        :setMarginSensitivity( nMargin, lSens )             -> NIL
-        :setMarginWidth( nMargin, nWidth )                  -> NIL
-        :setMarginWidth_1( nMargin, cS )                    -> NIL
-        :setModified( lM )                                  -> NIL
-        :setPaper( pC )                                     -> NIL
-        :setReadOnly( lRo )                                 -> NIL
-        :setSelection( nLineFrom, nIndexFrom, nLineTo, nIndexTo )  -> NIL
-        :setSelectionBackgroundColor( pCol )                -> NIL
-        :setSelectionForegroundColor( pCol )                -> NIL
-        :setTabIndents( lIndent )                           -> NIL
-        :setTabWidth( nWidth )                              -> NIL
-        :setText( cText )                                   -> NIL
-        :setUtf8( lCp )                                     -> NIL
-        :setWhitespaceVisibility( nMode )                   -> NIL
-        :setWrapMode( nMode )                               -> NIL
-        :undo()                                             -> NIL
-        :unindent( nLine )                                  -> NIL
-        :zoomIn( nRange )                                   -> NIL
-        :zoomIn_1()                                         -> NIL
-        :zoomOut( nRange )                                  -> NIL
-        :zoomOut_1()                                        -> NIL
-        :zoomTo( nSize )                                    -> NIL
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper Compatible
-    $PLATFORMS$
-        Windows, Linux, MacOS, OS2
-    $VERSION$
-        4.5.3
-    $FILES$
-        Prg Source   : contrib/hbqt/TQsciScintilla.prg
-        C++ Wrappers : contrib/hbqt/QsciScintilla.cpp
-        Library      : hb
-    $SEEALSO$
-
-    $END$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QsciScintilla()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qsciscintilla.html
+ *  $ONELINER$
+ *     Creates a new QsciScintilla object.
+ *  $INHERITS$
+ *     
+ *  $SYNTAX$
+ *     QsciScintilla():new( ... )
+ *     QsciScintilla():from( pPtr_OR_oObj_of_type_QsciScintilla )
+ *     QsciScintilla():configure( pPtr_OR_oObj_of_type_QsciScintilla )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QsciScintilla
+ *  $METHODS$
+ *     :annotate( nLine, cText, nStyle )                   -> NIL
+ *     :annotate_1( nLine, cText, pStyle )                 -> NIL
+ *     :annotate_2( nLine, pText )                         -> NIL
+ *     :annotation( nLine )                                -> cQString
+ *     :annotationDisplay()                                -> nAnnotationDisplay
+ *     :clearAnnotations( nLine )                          -> NIL
+ *     :autoCompletionCaseSensitivity()                    -> lBool
+ *     :autoCompletionFillupsEnabled()                     -> lBool
+ *     :autoCompletionReplaceWord()                        -> lBool
+ *     :autoCompletionShowSingle()                         -> lBool
+ *     :autoCompletionSource()                             -> nAutoCompletionSource
+ *     :autoCompletionThreshold()                          -> nInt
+ *     :autoIndent()                                       -> lBool
+ *     :backspaceUnindents()                               -> lBool
+ *     :beginUndoAction()                                  -> NIL
+ *     :braceMatching()                                    -> nBraceMatch
+ *     :callTipsStyle()                                    -> nCallTipsStyle
+ *     :callTipsVisible()                                  -> nInt
+ *     :cancelList()                                       -> NIL
+ *     :caseSensitive()                                    -> lBool
+ *     :clearFolds()                                       -> NIL
+ *     :clearRegisteredImages()                            -> NIL
+ *     :color()                                            -> pQColor
+ *     :convertEols( nMode )                               -> NIL
+ *     :document()                                         -> pQsciDocument
+ *     :endUndoAction()                                    -> NIL
+ *     :edgeColor()                                        -> pQColor
+ *     :edgeColumn()                                       -> nInt
+ *     :edgeMode()                                         -> nEdgeMode
+ *     :setFont( pF )                                      -> NIL
+ *     :eolMode()                                          -> nEolMode
+ *     :eolVisibility()                                    -> lBool
+ *     :findFirst( cExpr, lRe, lCs, lWo, lWrap, lForward, nLine, nIndex, lShow )  -> lBool
+ *     :findNext()                                         -> lBool
+ *     :firstVisibleLine()                                 -> nInt
+ *     :folding()                                          -> nFoldStyle
+ *     :getCursorPosition( @nLine, @nIndex )               -> NIL
+ *     :getSelection( @nLineFrom, @nIndexFrom, @nLineTo, @nIndexTo )  -> NIL
+ *     :hasSelectedText()                                  -> lBool
+ *     :indentation( nLine )                               -> nInt
+ *     :indentationGuides()                                -> lBool
+ *     :indentationsUseTabs()                              -> lBool
+ *     :indentationWidth()                                 -> nInt
+ *     :isCallTipActive()                                  -> lBool
+ *     :isListActive()                                     -> lBool
+ *     :isModified()                                       -> lBool
+ *     :isReadOnly()                                       -> lBool
+ *     :isRedoAvailable()                                  -> lBool
+ *     :isUndoAvailable()                                  -> lBool
+ *     :isUtf8()                                           -> lBool
+ *     :isWordCharacter( cCh )                             -> lBool
+ *     :lineAt( pPos )                                     -> nInt
+ *     :lineIndexFromPosition( nPosition, @nLine, @nIndex )  -> NIL
+ *     :lineLength( nLine )                                -> nInt
+ *     :lines()                                            -> nInt
+ *     :length()                                           -> nInt
+ *     :lexer()                                            -> pQsciLexer
+ *     :marginLineNumbers( nMargin )                       -> lBool
+ *     :marginMarkerMask( nMargin )                        -> nInt
+ *     :marginSensitivity( nMargin )                       -> lBool
+ *     :marginType( nMargin )                              -> nMarginType
+ *     :marginWidth( nMargin )                             -> nInt
+ *     :markerDefine( nSym, nMnr )                         -> nInt
+ *     :markerDefine_1( cCh, nMnr )                        -> nInt
+ *     :markerDefine_2( pPm, nMnr )                        -> nInt
+ *     :markerAdd( nLinenr, nMnr )                         -> nInt
+ *     :markersAtLine( nLinenr )                           -> nUnsigned
+ *     :markerDelete( nLinenr, nMnr )                      -> NIL
+ *     :markerDeleteAll( nMnr )                            -> NIL
+ *     :markerDeleteHandle( nMhandle )                     -> NIL
+ *     :markerLine( nMhandle )                             -> nInt
+ *     :markerFindNext( nLinenr, nMask )                   -> nInt
+ *     :markerFindPrevious( nLinenr, nMask )               -> nInt
+ *     :paper()                                            -> pQColor
+ *     :positionFromLineIndex( nLine, nIndex )             -> nInt
+ *     :read( pIo )                                        -> lBool
+ *     :recolor( nStart, nEnd )                            -> NIL
+ *     :registerImage( nId, pPm )                          -> NIL
+ *     :replace( cReplaceStr )                             -> NIL
+ *     :resetFoldMarginColors()                            -> NIL
+ *     :setFoldMarginColors( pFore, pBack )                -> NIL
+ *     :setAnnotationDisplay( nDisplay )                   -> NIL
+ *     :setAutoCompletionFillupsEnabled( lEnabled )        -> NIL
+ *     :setAutoCompletionFillups( pFillups )               -> NIL
+ *     :setAutoCompletionWordSeparators( pSeparators )     -> NIL
+ *     :setCallTipsBackgroundColor( pCol )                 -> NIL
+ *     :setCallTipsForegroundColor( pCol )                 -> NIL
+ *     :setCallTipsHighlightColor( pCol )                  -> NIL
+ *     :setCallTipsStyle( nStyle )                         -> NIL
+ *     :setCallTipsVisible( nNr )                          -> NIL
+ *     :setDocument( pDocument )                           -> NIL
+ *     :setEdgeColor( pCol )                               -> NIL
+ *     :setEdgeColumn( nColnr )                            -> NIL
+ *     :setEdgeMode( nMode )                               -> NIL
+ *     :setMarginText( nLine, cText, nStyle )              -> NIL
+ *     :setMarginText_1( nLine, cText, pStyle )            -> NIL
+ *     :setMarginText_2( nLine, pText )                    -> NIL
+ *     :setMarginType( nMargin, nType )                    -> NIL
+ *     :clearMarginText( nLine )                           -> NIL
+ *     :setMarkerBackgroundColor( pCol, nMnr )             -> NIL
+ *     :setMarkerForegroundColor( pCol, nMnr )             -> NIL
+ *     :setMatchedBraceBackgroundColor( pCol )             -> NIL
+ *     :setMatchedBraceForegroundColor( pCol )             -> NIL
+ *     :setUnmatchedBraceBackgroundColor( pCol )           -> NIL
+ *     :setUnmatchedBraceForegroundColor( pCol )           -> NIL
+ *     :setWrapVisualFlags( nEflag, nSflag, nSindent )     -> NIL
+ *     :selectedText()                                     -> cQString
+ *     :selectionToEol()                                   -> lBool
+ *     :setSelectionToEol( lFilled )                       -> NIL
+ *     :showUserList( nId, pList )                         -> NIL
+ *     :standardCommands()                                 -> pQsciCommandSet
+ *     :tabIndents()                                       -> lBool
+ *     :tabWidth()                                         -> nInt
+ *     :text()                                             -> cQString
+ *     :text_1( nLine )                                    -> cQString
+ *     :textHeight( nLinenr )                              -> nInt
+ *     :whitespaceVisibility()                             -> nWhitespaceVisibility
+ *     :wordAtPoint( pPoint )                              -> cQString
+ *     :wordCharacters()                                   -> cChar
+ *     :wrapMode()                                         -> nWrapMode
+ *     :write( pIo )                                       -> lBool
+ *     :append( cText )                                    -> NIL
+ *     :autoCompleteFromAll()                              -> NIL
+ *     :autoCompleteFromAPIs()                             -> NIL
+ *     :autoCompleteFromDocument()                         -> NIL
+ *     :callTip()                                          -> NIL
+ *     :clear()                                            -> NIL
+ *     :copy()                                             -> NIL
+ *     :cut()                                              -> NIL
+ *     :ensureCursorVisible()                              -> NIL
+ *     :ensureLineVisible( nLine )                         -> NIL
+ *     :foldAll( lChildren )                               -> NIL
+ *     :foldLine( nLine )                                  -> NIL
+ *     :indent( nLine )                                    -> NIL
+ *     :insert( cText )                                    -> NIL
+ *     :insertAt( cText, nLine, nIndex )                   -> NIL
+ *     :moveToMatchingBrace()                              -> NIL
+ *     :paste()                                            -> NIL
+ *     :redo()                                             -> NIL
+ *     :removeSelectedText()                               -> NIL
+ *     :resetSelectionBackgroundColor()                    -> NIL
+ *     :resetSelectionForegroundColor()                    -> NIL
+ *     :selectAll( lSelect )                               -> NIL
+ *     :selectToMatchingBrace()                            -> NIL
+ *     :setAutoCompletionCaseSensitivity( lCs )            -> NIL
+ *     :setAutoCompletionReplaceWord( lReplace )           -> NIL
+ *     :setAutoCompletionShowSingle( lSingle )             -> NIL
+ *     :setAutoCompletionSource( nSource )                 -> NIL
+ *     :setAutoCompletionThreshold( nThresh )              -> NIL
+ *     :setAutoIndent( lAutoindent )                       -> NIL
+ *     :setBraceMatching( nBm )                            -> NIL
+ *     :setBackspaceUnindents( lUnindent )                 -> NIL
+ *     :setCaretForegroundColor( pCol )                    -> NIL
+ *     :setCaretLineBackgroundColor( pCol )                -> NIL
+ *     :setCaretLineVisible( lEnable )                     -> NIL
+ *     :setCaretWidth( nWidth )                            -> NIL
+ *     :setColor( pC )                                     -> NIL
+ *     :setCursorPosition( nLine, nIndex )                 -> NIL
+ *     :setEolMode( nMode )                                -> NIL
+ *     :setEolVisibility( lVisible )                       -> NIL
+ *     :setFolding( nFold, nMargin )                       -> NIL
+ *     :setIndentation( nLine, nIndentation )              -> NIL
+ *     :setIndentationGuides( lEnable )                    -> NIL
+ *     :setIndentationGuidesBackgroundColor( pCol )        -> NIL
+ *     :setIndentationGuidesForegroundColor( pCol )        -> NIL
+ *     :setIndentationsUseTabs( lTabs )                    -> NIL
+ *     :setIndentationWidth( nWidth )                      -> NIL
+ *     :setLexer( pLexer )                                 -> NIL
+ *     :setMarginsBackgroundColor( pCol )                  -> NIL
+ *     :setMarginsFont( pF )                               -> NIL
+ *     :setMarginsForegroundColor( pCol )                  -> NIL
+ *     :setMarginLineNumbers( nMargin, lLnrs )             -> NIL
+ *     :setMarginMarkerMask( nMargin, nMask )              -> NIL
+ *     :setMarginSensitivity( nMargin, lSens )             -> NIL
+ *     :setMarginWidth( nMargin, nWidth )                  -> NIL
+ *     :setMarginWidth_1( nMargin, cS )                    -> NIL
+ *     :setModified( lM )                                  -> NIL
+ *     :setPaper( pC )                                     -> NIL
+ *     :setReadOnly( lRo )                                 -> NIL
+ *     :setSelection( nLineFrom, nIndexFrom, nLineTo, nIndexTo )  -> NIL
+ *     :setSelectionBackgroundColor( pCol )                -> NIL
+ *     :setSelectionForegroundColor( pCol )                -> NIL
+ *     :setTabIndents( lIndent )                           -> NIL
+ *     :setTabWidth( nWidth )                              -> NIL
+ *     :setText( cText )                                   -> NIL
+ *     :setUtf8( lCp )                                     -> NIL
+ *     :setWhitespaceVisibility( nMode )                   -> NIL
+ *     :setWrapMode( nMode )                               -> NIL
+ *     :undo()                                             -> NIL
+ *     :unindent( nLine )                                  -> NIL
+ *     :zoomIn( nRange )                                   -> NIL
+ *     :zoomIn_1()                                         -> NIL
+ *     :zoomOut( nRange )                                  -> NIL
+ *     :zoomOut_1()                                        -> NIL
+ *     :zoomTo( nSize )                                    -> NIL
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qscintilla/TQsciScintilla.prg
+ *     C++ wrappers  : contrib/hbqt/qscintilla/QsciScintilla.cpp
+ *     Library       : hbqscintilla
+ *  $SEEALSO$
+ *     
+ *  $END$
  */

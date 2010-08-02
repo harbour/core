@@ -2,6 +2,9 @@
 # $Id$
 #
 
+-i.
+-ig
+
 hbqt_base.cpp
 hbqt_destruct.cpp
 hbqt_hbevents.cpp

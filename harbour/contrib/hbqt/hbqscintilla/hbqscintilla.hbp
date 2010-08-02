@@ -4,32 +4,7 @@
 
 ../hbqt_common.hbm
 
--incpath=${HB_WITH_QSCINTILLA}/qt
+g/filelist.hbm
+hbqscintilla.hbm
 
-hbqt_hbqsciscintilla.h
-hbqt_hbqsciscintilla.cpp
-
-HBQsciScintilla.cpp
-QsciScintilla.cpp
-QsciLexer.cpp
-QsciLexerCPP.cpp
-QsciLexerFlagship.cpp
-QsciAbstractAPIs.cpp
-QsciAPIs.cpp
-QsciDocument.cpp
-QsciStyledText.cpp
-QsciCommand.cpp
-QsciCommandSet.cpp
-
-THBQsciScintilla.prg
-TQsciScintilla.prg
-TQsciLexer.prg
-TQsciLexerCPP.prg
-TQsciLexerFlagship.prg
-TQsciAbstractAPIs.prg
-TQsciAPIs.prg
-TQsciDocument.prg
-TQsciStyle.prg
-TQsciStyledText.prg
-TQsciCommand.prg
-TQsciCommandSet.prg
+hbqscintillas.hbp

@@ -514,7 +514,7 @@
 //
 #define Qt_TabFocus                               0x1   // the widget accepts focus by tabbing.
 #define Qt_ClickFocus                             0x2   // the widget accepts focus by clicking.
-#define Qt_StrongFocus                            hb_bitOR( hb_bitOR( Qt_TabFocus, Qt_ClickFocus ), 0x8 )  // the widget accepts focus by both tabbing and clicking. On Mac OS X this will also be indicate that the widget accepts tab focus when in 'Text/List focus mode'.
+#define Qt_StrongFocus                            hb_bitOR( Qt_TabFocus, Qt_ClickFocus, 0x8 )  // the widget accepts focus by both tabbing and clicking. On Mac OS X this will also be indicate that the widget accepts tab focus when in 'Text/List focus mode'.
 #define Qt_WheelFocus                             hb_bitOR( Qt_StrongFocus, 0x4 )            // like #define Qt_StrongFocus plus the widget accepts focus by using the mouse wheel.
 #define Qt_NoFocus                                0     // the widget does not accept focus.
 
@@ -1167,8 +1167,8 @@
 #define Qt_LinksAccessibleByMouse                 4     // Links can be highlighted and activated with the mouse.
 #define Qt_LinksAccessibleByKeyboard              8     // Links can be focused using tab and activated with enter.
 #define Qt_TextEditable                           16    // The text is fully editable.
-#define Qt_TextEditorInteraction                  hb_bitOR( hb_bitOR( Qt_TextSelectableByMouse, Qt_TextSelectableByKeyboard ), Qt_TextEditable )             // The default for a text editor.
-#define Qt_TextBrowserInteraction                 hb_bitOR( hb_bitOR( Qt_TextSelectableByMouse, Qt_LinksAccessibleByMouse ), Qt_LinksAccessibleByKeyboard )  // The default for QTextBrowser.
+#define Qt_TextEditorInteraction                  hb_bitOR( Qt_TextSelectableByMouse, Qt_TextSelectableByKeyboard, Qt_TextEditable )             // The default for a text editor.
+#define Qt_TextBrowserInteraction                 hb_bitOR( Qt_TextSelectableByMouse, Qt_LinksAccessibleByMouse, Qt_LinksAccessibleByKeyboard )  // The default for QTextBrowser.
 // The TextInteractionFlags type is a typedef for QFlags<TextInteractionFlag>. It stores an OR combination of TextInteractionFlag values.
 
 // enum #define Qt_TimeSpec
@@ -2112,9 +2112,9 @@
 #define QSizePolicy_Minimum                       QSizePolicy_GrowFlag                                                     // The sizeHint() is minimal, and sufficient. The widget can be expanded, but there is no advantage to it being larger (e.g. the horizontal direction of a push button). It cannot be smaller than the size provided by sizeHint().
 #define QSizePolicy_Maximum                       QSizePolicy_ShrinkFlag                                                   // The sizeHint() is a maximum. The widget can be shrunk any amount without detriment if other widgets need the space (e.g. a separator line). It cannot be larger than the size provided by sizeHint().
 #define QSizePolicy_Preferred                     hb_bitOR( QSizePolicy_GrowFlag, QSizePolicy_ShrinkFlag )                 // The sizeHint() is best, but the widget can be shrunk and still be useful. The widget can be expanded, but there is no advantage to it being larger than sizeHint() (the default QWidget policy).
-#define QSizePolicy_Expanding                     hb_bitOR( hb_bitOR( QSizePolicy_GrowFlag, QSizePolicy_ShrinkFlag ), QSizePolicy_ExpandFlag )  // The sizeHint() is a sensible size, but the widget can be shrunk and still be useful. The widget can make use of extra space, so it should get as much space as possible (e.g. the horizontal direction of a horizontal slider).
+#define QSizePolicy_Expanding                     hb_bitOR( QSizePolicy_GrowFlag, QSizePolicy_ShrinkFlag, QSizePolicy_ExpandFlag )  // The sizeHint() is a sensible size, but the widget can be shrunk and still be useful. The widget can make use of extra space, so it should get as much space as possible (e.g. the horizontal direction of a horizontal slider).
 #define QSizePolicy_MinimumExpanding              hb_bitOR( QSizePolicy_GrowFlag, QSizePolicy_ExpandFlag )                 // The sizeHint() is minimal, and sufficient. The widget can make use of extra space, so it should get as much space as possible (e.g. the horizontal direction of a horizontal slider).
-#define QSizePolicy_Ignored                       hb_bitOR( hb_bitOR( QSizePolicy_ShrinkFlag, QSizePolicy_GrowFlag ), QSizePolicy_IgnoreFlag )  // The sizeHint() is ignored. The widget will get as much space as possible.
+#define QSizePolicy_Ignored                       hb_bitOR( QSizePolicy_ShrinkFlag, QSizePolicy_GrowFlag, QSizePolicy_IgnoreFlag )  // The sizeHint() is ignored. The widget will get as much space as possible.
 
 // enum QSizePolicy::PolicyFlag
 // These flags are combined together to form the various Policy values:

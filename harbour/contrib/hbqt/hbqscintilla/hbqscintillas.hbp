@@ -1,0 +1,8 @@
+#
+# $Id$
+#
+
+../hbqt_commons.hbm
+
+g/filelist.hbm
+hbqscintilla.hbm

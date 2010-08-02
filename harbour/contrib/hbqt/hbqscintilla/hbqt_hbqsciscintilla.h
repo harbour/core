@@ -51,12 +51,12 @@
  */
 
 #ifndef HBQT_HBQSCISCINTILLA_H
-   #define HBQT_HBQSCISCINTILLA_H
+#define HBQT_HBQSCISCINTILLA_H
 
 #include "hbapiitm.h"
 
-#include <QPointer>
-#include <QKeyEvent>
+#include <QtCore/QPointer>
+#include <QtGui/QKeyEvent>
 
 #include <qsciscintilla.h>
 

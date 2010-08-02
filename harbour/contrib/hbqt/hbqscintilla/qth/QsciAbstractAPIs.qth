@@ -55,10 +55,10 @@
 ;
 
 <CLASS>
-QObject  = 
-Inherits = 
-Type     = 
-New      = 
+QObject  =
+Inherits =
+Type     =
+New      =
 Folder   = hbqscintilla
 </CLASS>
 
@@ -70,14 +70,12 @@ Folder   = hbqscintilla
 
 <CODE>
 #include <qsciabstractapis.h>
-#include "hbqt_garbage.h"
-#include "hbqt_local.h"
 
 
 /*
- * QsciAbstractAPIs (QsciLexer *lexer) 
- * virtual ~QsciAbstractAPIs () 
- * 
+ * QsciAbstractAPIs (QsciLexer *lexer)
+ * virtual ~QsciAbstractAPIs ()
+ *
  */
 HB_FUNC( QT_QSCIABSTRACTAPIS )
 {
@@ -89,10 +87,10 @@ HB_FUNC( QT_QSCIABSTRACTAPIS )
 </ENUMS>
 
 <PROTOS>
-QsciLexer * lexer () const 
-virtual void updateAutoCompletionList (const QStringList &context, QStringList &list)=0 
-virtual void autoCompletionSelected (const QString &selection) 
-virtual QStringList callTips (const QStringList &context, int commas, QsciScintilla::CallTipsStyle style, QList< int > &shifts)=0 
+QsciLexer * lexer () const
+virtual void updateAutoCompletionList (const QStringList &context, QStringList &list)=0
+virtual void autoCompletionSelected (const QString &selection)
+virtual QStringList callTips (const QStringList &context, int commas, QsciScintilla::CallTipsStyle style, QList< int > &shifts)=0
 </PROTOS>
 
 <SLOTS>

@@ -1001,6 +1001,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_BOXCP:
+#if 0
          pInfo->pResult = hb_itemPutC( pInfo->pResult,
                                        pWVT->boxCDP ? pWVT->boxCDP->id : NULL );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
@@ -1009,6 +1010,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             if( cdpBox )
                pWVT->boxCDP = cdpBox;
          }
+#endif
          break;
 
       case HB_GTI_ICONFILE:

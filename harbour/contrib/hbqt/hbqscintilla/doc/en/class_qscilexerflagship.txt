@@ -1,80 +1,78 @@
 /*
- *  hbQTgen v1.0 - Harbour Callable Wrappers Generator for Qt v4.5.3+
- *  Please do not modify this document as it is subject to change in future.
- *  Pritpal Bedi <bedipritpal@hotmail.com>
+ * $Id$
  */
 
 /*  $DOC$
-    $TEMPLATE$
-        Class
-    $NAME$
-        QsciLexerFlagship()
-    $CATEGORY$
-        Harbour Bindings for Qt
-    $SUBCATEGORY$
-        GUI
-    $EXTERNALLINK$
-        http://doc.trolltech.com/4.5/qscilexerflagship.html
-    $ONELINER$
-        Creates a new QsciLexerFlagship object.
-    $INHERITS$
-        QsciLexer
-    $SYNTAX$
-        QsciLexerFlagship():new( ... )
-        QsciLexerFlagship():from( pPtr_OR_oObj_of_type_QsciLexerFlagship )
-        QsciLexerFlagship():configure( pPtr_OR_oObj_of_type_QsciLexerFlagship )
-    $ARGUMENTS$
-
-    $RETURNS$
-        An instance of the object of type QsciLexerFlagship
-    $METHODS$
-        :language()                                         -> cChar
-        :lexer()                                            -> cChar
-        :autoCompletionWordSeparators()                     -> pQStringList
-        :blockEnd( @nStyle )                                -> cChar
-        :blockStart( @nStyle )                              -> cChar
-        :blockStartKeyword( @nStyle )                       -> cChar
-        :braceStyle()                                       -> nInt
-        :wordCharacters()                                   -> cChar
-        :defaultColor( nStyle )                             -> pQColor
-        :defaultEolFill( nStyle )                           -> lBool
-        :defaultFont( nStyle )                              -> pQFont
-        :defaultPaper( nStyle )                             -> pQColor
-        :keywords( nSet )                                   -> cChar
-        :description( nStyle )                              -> cQString
-        :refreshProperties()                                -> NIL
-        :foldAtElse()                                       -> lBool
-        :foldComments()                                     -> lBool
-        :foldCompact()                                      -> lBool
-        :foldPreprocessor()                                 -> lBool
-        :stylePreprocessor()                                -> lBool
-        :setDollarsAllowed( lAllowed )                      -> NIL
-        :dollarsAllowed()                                   -> lBool
-        :setFoldAtElse( lFold )                             -> NIL
-        :setFoldComments( lFold )                           -> NIL
-        :setFoldCompact( lFold )                            -> NIL
-        :setFoldPreprocessor( lFold )                       -> NIL
-        :setStylePreprocessor( lStyle )                     -> NIL
-
-    $DESCRIPTION$
-
-    $EXAMPLES$
-
-    $TESTS$
-
-    $STATUS$
-        R
-    $COMPLIANCE$
-        Not Clipper Compatible
-    $PLATFORMS$
-        Windows, Linux, MacOS, OS2
-    $VERSION$
-        4.5.3
-    $FILES$
-        Prg Source   : contrib/hbqt/TQsciLexerFlagship.prg
-        C++ Wrappers : contrib/hbqt/QsciLexerFlagship.cpp
-        Library      : hb
-    $SEEALSO$
-        QsciLexer
-    $END$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QsciLexerFlagship()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qscilexerflagship.html
+ *  $ONELINER$
+ *     Creates a new QsciLexerFlagship object.
+ *  $INHERITS$
+ *     QsciLexer
+ *  $SYNTAX$
+ *     QsciLexerFlagship():new( ... )
+ *     QsciLexerFlagship():from( pPtr_OR_oObj_of_type_QsciLexerFlagship )
+ *     QsciLexerFlagship():configure( pPtr_OR_oObj_of_type_QsciLexerFlagship )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QsciLexerFlagship
+ *  $METHODS$
+ *     :language()                                         -> cChar
+ *     :lexer()                                            -> cChar
+ *     :autoCompletionWordSeparators()                     -> pQStringList
+ *     :blockEnd( @nStyle )                                -> cChar
+ *     :blockStart( @nStyle )                              -> cChar
+ *     :blockStartKeyword( @nStyle )                       -> cChar
+ *     :braceStyle()                                       -> nInt
+ *     :wordCharacters()                                   -> cChar
+ *     :defaultColor( nStyle )                             -> pQColor
+ *     :defaultEolFill( nStyle )                           -> lBool
+ *     :defaultFont( nStyle )                              -> pQFont
+ *     :defaultPaper( nStyle )                             -> pQColor
+ *     :keywords( nSet )                                   -> cChar
+ *     :description( nStyle )                              -> cQString
+ *     :refreshProperties()                                -> NIL
+ *     :foldAtElse()                                       -> lBool
+ *     :foldComments()                                     -> lBool
+ *     :foldCompact()                                      -> lBool
+ *     :foldPreprocessor()                                 -> lBool
+ *     :stylePreprocessor()                                -> lBool
+ *     :setDollarsAllowed( lAllowed )                      -> NIL
+ *     :dollarsAllowed()                                   -> lBool
+ *     :setFoldAtElse( lFold )                             -> NIL
+ *     :setFoldComments( lFold )                           -> NIL
+ *     :setFoldCompact( lFold )                            -> NIL
+ *     :setFoldPreprocessor( lFold )                       -> NIL
+ *     :setStylePreprocessor( lStyle )                     -> NIL
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qscintilla/TQsciLexerFlagship.prg
+ *     C++ wrappers  : contrib/hbqt/qscintilla/QsciLexerFlagship.cpp
+ *     Library       : hbqscintilla
+ *  $SEEALSO$
+ *     QsciLexer
+ *  $END$
  */

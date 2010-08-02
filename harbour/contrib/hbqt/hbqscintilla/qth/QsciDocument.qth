@@ -56,9 +56,9 @@
 
 <CLASS>
 QObject  = no
-Inherits = 
-Type     = 
-New      = 
+Inherits =
+Type     =
+New      =
 Folder   = hbqscintilla
 </CLASS>
 
@@ -70,14 +70,12 @@ Folder   = hbqscintilla
 
 <CODE>
 #include <qscidocument.h>
-#include "hbqt_garbage.h"
-#include "hbqt_local.h"
 
 
 /*
- * QsciDocument () 
- * QsciDocument (const QsciDocument &) 
- * 
+ * QsciDocument ()
+ * QsciDocument (const QsciDocument &)
+ *
  */
 HB_FUNC( QT_QSCIDOCUMENT )
 {

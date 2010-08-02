@@ -56,9 +56,9 @@
 
 <CLASS>
 QObject  = no
-Inherits = 
-Type     = 
-New      = 
+Inherits =
+Type     =
+New      =
 Folder   = hbqscintilla
 </CLASS>
 
@@ -70,14 +70,12 @@ Folder   = hbqscintilla
 
 <CODE>
 #include <qscistyledtext.h>
-#include "hbqt_garbage.h"
-#include "hbqt_local.h"
 
 
 /*
- * QsciStyledText (const QString &text, int style) 
- * QsciStyledText (const QString &text, const QsciStyle &style) 
- * 
+ * QsciStyledText (const QString &text, int style)
+ * QsciStyledText (const QString &text, const QsciStyle &style)
+ *
  */
 HB_FUNC( QT_QSCISTYLEDTEXT )
 {
@@ -96,8 +94,8 @@ HB_FUNC( QT_QSCISTYLEDTEXT )
 </ENUMS>
 
 <PROTOS>
-const QString & text () const 
-int style () const 
+const QString & text () const
+int style () const
 </PROTOS>
 
 <SLOTS>

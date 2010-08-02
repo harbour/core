@@ -1,0 +1,21 @@
+;
+; $Id$
+;
+
+-I=../hbqscintilla/qth
+-O=../hbqscintilla/g
+-D=../hbqscintilla/doc
+
+HBQsciScintilla.qth
+
+QsciAbstractAPIs.qth
+QsciAPIs.qth
+QsciCommand.qth
+QsciCommandSet.qth
+QsciDocument.qth
+QsciLexer.qth
+QsciLexerCPP.qth
+QsciLexerFlagship.qth
+QsciScintilla.qth
+QsciStyle.qth
+QsciStyledText.qth

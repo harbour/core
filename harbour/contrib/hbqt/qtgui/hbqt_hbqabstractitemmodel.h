@@ -57,6 +57,19 @@
 #include "hbqtcore.h"
 #include "hbqtgui.h"
 
+/*
+ * DEFINES HBQt CODEBLOCKs
+ *
+ * Format:
+ * HBQT_(Qt class initials)_(Qt overloaded member)
+ */
+
+#define HBQT_QAIM_data                              1001
+#define HBQT_QAIM_flags                             1003
+#define HBQT_QAIM_headerData                        2001
+#define HBQT_QAIM_rowCount                          3001
+#define HBQT_QAIM_columnCount                       3002
+
 /*----------------------------------------------------------------------*/
 
 #include <QtCore/QAbstractItemModel>

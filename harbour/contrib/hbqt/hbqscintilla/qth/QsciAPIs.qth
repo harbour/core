@@ -55,10 +55,10 @@
 ;
 
 <CLASS>
-QObject  = 
+QObject  =
 Inherits = QsciAbstractAPIs
-Type     = 
-New      = 
+Type     =
+New      =
 Folder   = hbqscintilla
 </CLASS>
 
@@ -70,14 +70,12 @@ Folder   = hbqscintilla
 
 <CODE>
 #include <qsciapis.h>
-#include "hbqt_garbage.h"
-#include "hbqt_local.h"
 
 
 /*
- * QsciAPIs (QsciLexer *lexer) 
- * virtual ~QsciAPIs () 
- * 
+ * QsciAPIs (QsciLexer *lexer)
+ * virtual ~QsciAPIs ()
+ *
  */
 HB_FUNC( QT_QSCIAPIS )
 {
@@ -89,28 +87,28 @@ HB_FUNC( QT_QSCIAPIS )
 </ENUMS>
 
 <PROTOS>
-void     add (const QString &entry) 
-void     clear () 
-bool     load (const QString &fname) 
-void     remove (const QString &entry) 
-void     prepare () 
-void     cancelPreparation () 
-QString  defaultPreparedName () const 
-bool     isPrepared (const QString &fname=QString()) const 
-bool     loadPrepared (const QString &fname=QString()) 
-bool     savePrepared (const QString &fname=QString()) const 
-virtual void updateAutoCompletionList (const QStringList &context, QStringList &list) 
-virtual void autoCompletionSelected (const QString &sel) 
-virtual QStringList callTips (const QStringList &context, int commas, QsciScintilla::CallTipsStyle style, QList< int > &shifts) 
-virtual bool event (QEvent *e) 
-QStringList installedAPIFiles () const 
+void     add (const QString &entry)
+void     clear ()
+bool     load (const QString &fname)
+void     remove (const QString &entry)
+void     prepare ()
+void     cancelPreparation ()
+QString  defaultPreparedName () const
+bool     isPrepared (const QString &fname=QString()) const
+bool     loadPrepared (const QString &fname=QString())
+bool     savePrepared (const QString &fname=QString()) const
+virtual void updateAutoCompletionList (const QStringList &context, QStringList &list)
+virtual void autoCompletionSelected (const QString &sel)
+virtual QStringList callTips (const QStringList &context, int commas, QsciScintilla::CallTipsStyle style, QList< int > &shifts)
+virtual bool event (QEvent *e)
+QStringList installedAPIFiles () const
 </PROTOS>
 
 <SLOTS>
 </SLOTS>
 
 <SIGNALS>
-void apiPreparationCancelled () 
-void apiPreparationStarted () 
-void apiPreparationFinished () 
+void apiPreparationCancelled ()
+void apiPreparationStarted ()
+void apiPreparationFinished ()
 </SIGNALS>

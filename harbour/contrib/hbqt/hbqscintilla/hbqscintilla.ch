@@ -66,6 +66,7 @@
 /*----------------------------------------------------------------------*/
 
 #ifndef _QSCINTILLA_CH
+#define _QSCINTILLA_CH
 
 #define INVALID_POSITION                                 -1
 #define SCI_START                                        2000
@@ -949,5 +950,4 @@
 #define SCE_FS_STRINGEOL_C                               31
 #define SCE_FS_BRACE                                     32
 
-   #define _QSCINTILLA_CH
 #endif
