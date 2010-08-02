@@ -94,14 +94,14 @@ typedef struct
 {
    QPointer< QGridLayout > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QGridLayout;
+} HBQT_GC_T_QGridLayout;
 
-QT_G_FUNC( hbqt_gcRelease_QGridLayout )
+HBQT_GC_FUNC( hbqt_gcRelease_QGridLayout )
 {
    QGridLayout  * ph = NULL ;
-   QGC_POINTER_QGridLayout * p = ( QGC_POINTER_QGridLayout * ) Cargo;
+   HBQT_GC_T_QGridLayout * p = ( HBQT_GC_T_QGridLayout * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -137,7 +137,7 @@ QT_G_FUNC( hbqt_gcRelease_QGridLayout )
 
 void * hbqt_gcAllocate_QGridLayout( void * pObj, bool bNew )
 {
-   QGC_POINTER_QGridLayout * p = ( QGC_POINTER_QGridLayout * ) hb_gcAllocate( sizeof( QGC_POINTER_QGridLayout ), hbqt_gcFuncs() );
+   HBQT_GC_T_QGridLayout * p = ( HBQT_GC_T_QGridLayout * ) hb_gcAllocate( sizeof( HBQT_GC_T_QGridLayout ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QGridLayout >( ( QGridLayout * ) pObj );
    p->bNew = bNew;
@@ -169,8 +169,8 @@ HB_FUNC( QT_QGRIDLAYOUT )
  */
 HB_FUNC( QT_QGRIDLAYOUT_ADDITEM )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QGRIDLAYOUT_ADDITEM()" ) );
    if( p && p->ph && q && q->ph )
    {
@@ -185,8 +185,8 @@ HB_FUNC( QT_QGRIDLAYOUT_ADDITEM )
  */
 HB_FUNC( QT_QGRIDLAYOUT_ADDLAYOUT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QGRIDLAYOUT_ADDLAYOUT()" ) );
    if( p && p->ph && q && q->ph )
    {
@@ -201,8 +201,8 @@ HB_FUNC( QT_QGRIDLAYOUT_ADDLAYOUT )
  */
 HB_FUNC( QT_QGRIDLAYOUT_ADDLAYOUT_1 )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QGRIDLAYOUT_ADDLAYOUT_1()" ) );
    if( p && p->ph && q && q->ph )
    {
@@ -217,8 +217,8 @@ HB_FUNC( QT_QGRIDLAYOUT_ADDLAYOUT_1 )
  */
 HB_FUNC( QT_QGRIDLAYOUT_ADDWIDGET )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_GRIDQLAYOUT_ADDWIDGET()" ) );
    if( p && p->ph && q && q->ph )
    {
@@ -233,8 +233,8 @@ HB_FUNC( QT_QGRIDLAYOUT_ADDWIDGET )
  */
 HB_FUNC( QT_QGRIDLAYOUT_ADDWIDGET_1 )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_GRIDQLAYOUT_ADDWIDGET_1()" ) );
    if( p && p->ph && q && q->ph )
    {

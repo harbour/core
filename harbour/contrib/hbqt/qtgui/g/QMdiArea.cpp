@@ -88,14 +88,14 @@ typedef struct
 {
    QPointer< QMdiArea > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QMdiArea;
+} HBQT_GC_T_QMdiArea;
 
-QT_G_FUNC( hbqt_gcRelease_QMdiArea )
+HBQT_GC_FUNC( hbqt_gcRelease_QMdiArea )
 {
    QMdiArea  * ph = NULL ;
-   QGC_POINTER_QMdiArea * p = ( QGC_POINTER_QMdiArea * ) Cargo;
+   HBQT_GC_T_QMdiArea * p = ( HBQT_GC_T_QMdiArea * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -131,7 +131,7 @@ QT_G_FUNC( hbqt_gcRelease_QMdiArea )
 
 void * hbqt_gcAllocate_QMdiArea( void * pObj, bool bNew )
 {
-   QGC_POINTER_QMdiArea * p = ( QGC_POINTER_QMdiArea * ) hb_gcAllocate( sizeof( QGC_POINTER_QMdiArea ), hbqt_gcFuncs() );
+   HBQT_GC_T_QMdiArea * p = ( HBQT_GC_T_QMdiArea * ) hb_gcAllocate( sizeof( HBQT_GC_T_QMdiArea ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QMdiArea >( ( QMdiArea * ) pObj );
    p->bNew = bNew;

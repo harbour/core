@@ -64,7 +64,7 @@
 
 HB_GARBAGE_FUNC( Q_release )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->ph )
       p->func( p );
@@ -83,11 +83,11 @@ const HB_GC_FUNCS * hbqt_gcFuncs( void )
 
 void * hbqt_gcpointerFromItem( PHB_ITEM pObj )
 {
-   QGC_POINTER * p;
+   HBQT_GC_T * p;
 
    HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcpointerFromItem( %p )", pObj ) );
 
-   p = ( QGC_POINTER * ) hb_itemGetPtrGC( pObj, hbqt_gcFuncs() );
+   p = ( HBQT_GC_T * ) hb_itemGetPtrGC( pObj, hbqt_gcFuncs() );
 
    if( p && p->ph )
       return p->ph;
@@ -105,11 +105,11 @@ void * hbqt_gcpointerFromItem( PHB_ITEM pObj )
 
 void * hbqt_gcpointer( int iParam )
 {
-   QGC_POINTER * p;
+   HBQT_GC_T * p;
 
    HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcpointer( %d )", iParam ) );
 
-   p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), iParam );
+   p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), iParam );
 
    if( p && p->ph )
       return p->ph;

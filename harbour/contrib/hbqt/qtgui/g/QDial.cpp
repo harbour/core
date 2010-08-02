@@ -80,14 +80,14 @@ typedef struct
 {
    QPointer< QDial > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QDial;
+} HBQT_GC_T_QDial;
 
-QT_G_FUNC( hbqt_gcRelease_QDial )
+HBQT_GC_FUNC( hbqt_gcRelease_QDial )
 {
    QDial  * ph = NULL ;
-   QGC_POINTER_QDial * p = ( QGC_POINTER_QDial * ) Cargo;
+   HBQT_GC_T_QDial * p = ( HBQT_GC_T_QDial * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -123,7 +123,7 @@ QT_G_FUNC( hbqt_gcRelease_QDial )
 
 void * hbqt_gcAllocate_QDial( void * pObj, bool bNew )
 {
-   QGC_POINTER_QDial * p = ( QGC_POINTER_QDial * ) hb_gcAllocate( sizeof( QGC_POINTER_QDial ), hbqt_gcFuncs() );
+   HBQT_GC_T_QDial * p = ( HBQT_GC_T_QDial * ) hb_gcAllocate( sizeof( HBQT_GC_T_QDial ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QDial >( ( QDial * ) pObj );
    p->bNew = bNew;

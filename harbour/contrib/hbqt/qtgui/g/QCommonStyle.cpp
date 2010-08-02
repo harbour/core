@@ -79,14 +79,14 @@ typedef struct
 {
    QPointer< QCommonStyle > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QCommonStyle;
+} HBQT_GC_T_QCommonStyle;
 
-QT_G_FUNC( hbqt_gcRelease_QCommonStyle )
+HBQT_GC_FUNC( hbqt_gcRelease_QCommonStyle )
 {
    QCommonStyle  * ph = NULL ;
-   QGC_POINTER_QCommonStyle * p = ( QGC_POINTER_QCommonStyle * ) Cargo;
+   HBQT_GC_T_QCommonStyle * p = ( HBQT_GC_T_QCommonStyle * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -122,7 +122,7 @@ QT_G_FUNC( hbqt_gcRelease_QCommonStyle )
 
 void * hbqt_gcAllocate_QCommonStyle( void * pObj, bool bNew )
 {
-   QGC_POINTER_QCommonStyle * p = ( QGC_POINTER_QCommonStyle * ) hb_gcAllocate( sizeof( QGC_POINTER_QCommonStyle ), hbqt_gcFuncs() );
+   HBQT_GC_T_QCommonStyle * p = ( HBQT_GC_T_QCommonStyle * ) hb_gcAllocate( sizeof( HBQT_GC_T_QCommonStyle ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QCommonStyle >( ( QCommonStyle * ) pObj );
    p->bNew = bNew;

@@ -80,14 +80,14 @@ typedef struct
 {
    QPointer< QToolBox > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QToolBox;
+} HBQT_GC_T_QToolBox;
 
-QT_G_FUNC( hbqt_gcRelease_QToolBox )
+HBQT_GC_FUNC( hbqt_gcRelease_QToolBox )
 {
    QToolBox  * ph = NULL ;
-   QGC_POINTER_QToolBox * p = ( QGC_POINTER_QToolBox * ) Cargo;
+   HBQT_GC_T_QToolBox * p = ( HBQT_GC_T_QToolBox * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -123,7 +123,7 @@ QT_G_FUNC( hbqt_gcRelease_QToolBox )
 
 void * hbqt_gcAllocate_QToolBox( void * pObj, bool bNew )
 {
-   QGC_POINTER_QToolBox * p = ( QGC_POINTER_QToolBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QToolBox ), hbqt_gcFuncs() );
+   HBQT_GC_T_QToolBox * p = ( HBQT_GC_T_QToolBox * ) hb_gcAllocate( sizeof( HBQT_GC_T_QToolBox ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QToolBox >( ( QToolBox * ) pObj );
    p->bNew = bNew;

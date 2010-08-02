@@ -85,14 +85,14 @@ typedef struct
 {
    QPointer< QFontDialog > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QFontDialog;
+} HBQT_GC_T_QFontDialog;
 
-QT_G_FUNC( hbqt_gcRelease_QFontDialog )
+HBQT_GC_FUNC( hbqt_gcRelease_QFontDialog )
 {
    QFontDialog  * ph = NULL ;
-   QGC_POINTER_QFontDialog * p = ( QGC_POINTER_QFontDialog * ) Cargo;
+   HBQT_GC_T_QFontDialog * p = ( HBQT_GC_T_QFontDialog * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -128,7 +128,7 @@ QT_G_FUNC( hbqt_gcRelease_QFontDialog )
 
 void * hbqt_gcAllocate_QFontDialog( void * pObj, bool bNew )
 {
-   QGC_POINTER_QFontDialog * p = ( QGC_POINTER_QFontDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QFontDialog ), hbqt_gcFuncs() );
+   HBQT_GC_T_QFontDialog * p = ( HBQT_GC_T_QFontDialog * ) hb_gcAllocate( sizeof( HBQT_GC_T_QFontDialog ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QFontDialog >( ( QFontDialog * ) pObj );
    p->bNew = bNew;

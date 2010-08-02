@@ -80,14 +80,14 @@ typedef struct
 {
    QPointer< QSound > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QSound;
+} HBQT_GC_T_QSound;
 
-QT_G_FUNC( hbqt_gcRelease_QSound )
+HBQT_GC_FUNC( hbqt_gcRelease_QSound )
 {
    QSound  * ph = NULL ;
-   QGC_POINTER_QSound * p = ( QGC_POINTER_QSound * ) Cargo;
+   HBQT_GC_T_QSound * p = ( HBQT_GC_T_QSound * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -123,7 +123,7 @@ QT_G_FUNC( hbqt_gcRelease_QSound )
 
 void * hbqt_gcAllocate_QSound( void * pObj, bool bNew )
 {
-   QGC_POINTER_QSound * p = ( QGC_POINTER_QSound * ) hb_gcAllocate( sizeof( QGC_POINTER_QSound ), hbqt_gcFuncs() );
+   HBQT_GC_T_QSound * p = ( HBQT_GC_T_QSound * ) hb_gcAllocate( sizeof( HBQT_GC_T_QSound ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QSound >( ( QSound * ) pObj );
    p->bNew = bNew;

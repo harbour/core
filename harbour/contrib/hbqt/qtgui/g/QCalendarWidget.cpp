@@ -95,14 +95,14 @@ typedef struct
 {
    QPointer< QCalendarWidget > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QCalendarWidget;
+} HBQT_GC_T_QCalendarWidget;
 
-QT_G_FUNC( hbqt_gcRelease_QCalendarWidget )
+HBQT_GC_FUNC( hbqt_gcRelease_QCalendarWidget )
 {
    QCalendarWidget  * ph = NULL ;
-   QGC_POINTER_QCalendarWidget * p = ( QGC_POINTER_QCalendarWidget * ) Cargo;
+   HBQT_GC_T_QCalendarWidget * p = ( HBQT_GC_T_QCalendarWidget * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -138,7 +138,7 @@ QT_G_FUNC( hbqt_gcRelease_QCalendarWidget )
 
 void * hbqt_gcAllocate_QCalendarWidget( void * pObj, bool bNew )
 {
-   QGC_POINTER_QCalendarWidget * p = ( QGC_POINTER_QCalendarWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QCalendarWidget ), hbqt_gcFuncs() );
+   HBQT_GC_T_QCalendarWidget * p = ( HBQT_GC_T_QCalendarWidget * ) hb_gcAllocate( sizeof( HBQT_GC_T_QCalendarWidget ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QCalendarWidget >( ( QCalendarWidget * ) pObj );
    p->bNew = bNew;

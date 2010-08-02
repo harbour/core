@@ -85,14 +85,14 @@ typedef struct
 {
    QPointer< QDirModel > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QDirModel;
+} HBQT_GC_T_QDirModel;
 
-QT_G_FUNC( hbqt_gcRelease_QDirModel )
+HBQT_GC_FUNC( hbqt_gcRelease_QDirModel )
 {
    QDirModel  * ph = NULL ;
-   QGC_POINTER_QDirModel * p = ( QGC_POINTER_QDirModel * ) Cargo;
+   HBQT_GC_T_QDirModel * p = ( HBQT_GC_T_QDirModel * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -128,7 +128,7 @@ QT_G_FUNC( hbqt_gcRelease_QDirModel )
 
 void * hbqt_gcAllocate_QDirModel( void * pObj, bool bNew )
 {
-   QGC_POINTER_QDirModel * p = ( QGC_POINTER_QDirModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QDirModel ), hbqt_gcFuncs() );
+   HBQT_GC_T_QDirModel * p = ( HBQT_GC_T_QDirModel * ) hb_gcAllocate( sizeof( HBQT_GC_T_QDirModel ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QDirModel >( ( QDirModel * ) pObj );
    p->bNew = bNew;

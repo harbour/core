@@ -80,14 +80,14 @@ typedef struct
 {
    QPointer< QWebHistoryInterface > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QWebHistoryInterface;
+} HBQT_GC_T_QWebHistoryInterface;
 
-QT_G_FUNC( hbqt_gcRelease_QWebHistoryInterface )
+HBQT_GC_FUNC( hbqt_gcRelease_QWebHistoryInterface )
 {
    HB_SYMBOL_UNUSED( Cargo );
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -97,7 +97,7 @@ QT_G_FUNC( hbqt_gcRelease_QWebHistoryInterface )
 
 void * hbqt_gcAllocate_QWebHistoryInterface( void * pObj, bool bNew )
 {
-   QGC_POINTER_QWebHistoryInterface * p = ( QGC_POINTER_QWebHistoryInterface * ) hb_gcAllocate( sizeof( QGC_POINTER_QWebHistoryInterface ), hbqt_gcFuncs() );
+   HBQT_GC_T_QWebHistoryInterface * p = ( HBQT_GC_T_QWebHistoryInterface * ) hb_gcAllocate( sizeof( HBQT_GC_T_QWebHistoryInterface ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QWebHistoryInterface >( ( QWebHistoryInterface * ) pObj );
    p->bNew = bNew;

@@ -81,14 +81,14 @@ typedef struct
 {
    QPointer< QPrintPreviewDialog > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QPrintPreviewDialog;
+} HBQT_GC_T_QPrintPreviewDialog;
 
-QT_G_FUNC( hbqt_gcRelease_QPrintPreviewDialog )
+HBQT_GC_FUNC( hbqt_gcRelease_QPrintPreviewDialog )
 {
    QPrintPreviewDialog  * ph = NULL ;
-   QGC_POINTER_QPrintPreviewDialog * p = ( QGC_POINTER_QPrintPreviewDialog * ) Cargo;
+   HBQT_GC_T_QPrintPreviewDialog * p = ( HBQT_GC_T_QPrintPreviewDialog * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -124,7 +124,7 @@ QT_G_FUNC( hbqt_gcRelease_QPrintPreviewDialog )
 
 void * hbqt_gcAllocate_QPrintPreviewDialog( void * pObj, bool bNew )
 {
-   QGC_POINTER_QPrintPreviewDialog * p = ( QGC_POINTER_QPrintPreviewDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QPrintPreviewDialog ), hbqt_gcFuncs() );
+   HBQT_GC_T_QPrintPreviewDialog * p = ( HBQT_GC_T_QPrintPreviewDialog * ) hb_gcAllocate( sizeof( HBQT_GC_T_QPrintPreviewDialog ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QPrintPreviewDialog >( ( QPrintPreviewDialog * ) pObj );
    p->bNew = bNew;

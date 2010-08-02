@@ -85,14 +85,14 @@ typedef struct
 {
    QPointer< QIODevice > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QIODevice;
+} HBQT_GC_T_QIODevice;
 
-QT_G_FUNC( hbqt_gcRelease_QIODevice )
+HBQT_GC_FUNC( hbqt_gcRelease_QIODevice )
 {
    HB_SYMBOL_UNUSED( Cargo );
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -102,7 +102,7 @@ QT_G_FUNC( hbqt_gcRelease_QIODevice )
 
 void * hbqt_gcAllocate_QIODevice( void * pObj, bool bNew )
 {
-   QGC_POINTER_QIODevice * p = ( QGC_POINTER_QIODevice * ) hb_gcAllocate( sizeof( QGC_POINTER_QIODevice ), hbqt_gcFuncs() );
+   HBQT_GC_T_QIODevice * p = ( HBQT_GC_T_QIODevice * ) hb_gcAllocate( sizeof( HBQT_GC_T_QIODevice ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QIODevice >( ( QIODevice * ) pObj );
    p->bNew = bNew;

@@ -13,18 +13,18 @@
 
 #include "hbqt.h"
 
-extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_HBQsciScintilla );
-extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_QsciAbstractAPIs );
-extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_QsciAPIs );
-extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_QsciCommand );
-extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_QsciCommandSet );
-extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_QsciDocument );
-extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_QsciLexer );
-extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_QsciLexerCPP );
-extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_QsciLexerFlagship );
-extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_QsciScintilla );
-extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_QsciStyle );
-extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_QsciStyledText );
+extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_HBQsciScintilla );
+extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QsciAbstractAPIs );
+extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QsciAPIs );
+extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QsciCommand );
+extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QsciCommandSet );
+extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QsciDocument );
+extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QsciLexer );
+extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QsciLexerCPP );
+extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QsciLexerFlagship );
+extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QsciScintilla );
+extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QsciStyle );
+extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QsciStyledText );
 
 extern HB_EXPORT void * hbqt_gcAllocate_HBQsciScintilla( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QsciAbstractAPIs( void * pObj, bool bNew );

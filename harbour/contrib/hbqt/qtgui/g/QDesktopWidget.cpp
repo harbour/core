@@ -80,14 +80,14 @@ typedef struct
 {
    QPointer< QDesktopWidget > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QDesktopWidget;
+} HBQT_GC_T_QDesktopWidget;
 
-QT_G_FUNC( hbqt_gcRelease_QDesktopWidget )
+HBQT_GC_FUNC( hbqt_gcRelease_QDesktopWidget )
 {
    QDesktopWidget  * ph = NULL ;
-   QGC_POINTER_QDesktopWidget * p = ( QGC_POINTER_QDesktopWidget * ) Cargo;
+   HBQT_GC_T_QDesktopWidget * p = ( HBQT_GC_T_QDesktopWidget * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -123,7 +123,7 @@ QT_G_FUNC( hbqt_gcRelease_QDesktopWidget )
 
 void * hbqt_gcAllocate_QDesktopWidget( void * pObj, bool bNew )
 {
-   QGC_POINTER_QDesktopWidget * p = ( QGC_POINTER_QDesktopWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QDesktopWidget ), hbqt_gcFuncs() );
+   HBQT_GC_T_QDesktopWidget * p = ( HBQT_GC_T_QDesktopWidget * ) hb_gcAllocate( sizeof( HBQT_GC_T_QDesktopWidget ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QDesktopWidget >( ( QDesktopWidget * ) pObj );
    p->bNew = bNew;

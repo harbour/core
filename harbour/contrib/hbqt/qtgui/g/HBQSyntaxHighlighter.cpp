@@ -80,14 +80,14 @@ typedef struct
 {
    QPointer< HBQSyntaxHighlighter > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_HBQSyntaxHighlighter;
+} HBQT_GC_T_HBQSyntaxHighlighter;
 
-QT_G_FUNC( hbqt_gcRelease_HBQSyntaxHighlighter )
+HBQT_GC_FUNC( hbqt_gcRelease_HBQSyntaxHighlighter )
 {
    HBQSyntaxHighlighter  * ph = NULL ;
-   QGC_POINTER_HBQSyntaxHighlighter * p = ( QGC_POINTER_HBQSyntaxHighlighter * ) Cargo;
+   HBQT_GC_T_HBQSyntaxHighlighter * p = ( HBQT_GC_T_HBQSyntaxHighlighter * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -123,7 +123,7 @@ QT_G_FUNC( hbqt_gcRelease_HBQSyntaxHighlighter )
 
 void * hbqt_gcAllocate_HBQSyntaxHighlighter( void * pObj, bool bNew )
 {
-   QGC_POINTER_HBQSyntaxHighlighter * p = ( QGC_POINTER_HBQSyntaxHighlighter * ) hb_gcAllocate( sizeof( QGC_POINTER_HBQSyntaxHighlighter ), hbqt_gcFuncs() );
+   HBQT_GC_T_HBQSyntaxHighlighter * p = ( HBQT_GC_T_HBQSyntaxHighlighter * ) hb_gcAllocate( sizeof( HBQT_GC_T_HBQSyntaxHighlighter ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< HBQSyntaxHighlighter >( ( HBQSyntaxHighlighter * ) pObj );
    p->bNew = bNew;

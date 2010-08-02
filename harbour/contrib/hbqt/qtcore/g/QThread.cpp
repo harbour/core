@@ -82,14 +82,14 @@ typedef struct
 {
    QPointer< QThread > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QThread;
+} HBQT_GC_T_QThread;
 
-QT_G_FUNC( hbqt_gcRelease_QThread )
+HBQT_GC_FUNC( hbqt_gcRelease_QThread )
 {
    QThread  * ph = NULL ;
-   QGC_POINTER_QThread * p = ( QGC_POINTER_QThread * ) Cargo;
+   HBQT_GC_T_QThread * p = ( HBQT_GC_T_QThread * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -125,7 +125,7 @@ QT_G_FUNC( hbqt_gcRelease_QThread )
 
 void * hbqt_gcAllocate_QThread( void * pObj, bool bNew )
 {
-   QGC_POINTER_QThread * p = ( QGC_POINTER_QThread * ) hb_gcAllocate( sizeof( QGC_POINTER_QThread ), hbqt_gcFuncs() );
+   HBQT_GC_T_QThread * p = ( HBQT_GC_T_QThread * ) hb_gcAllocate( sizeof( HBQT_GC_T_QThread ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QThread >( ( QThread * ) pObj );
    p->bNew = bNew;

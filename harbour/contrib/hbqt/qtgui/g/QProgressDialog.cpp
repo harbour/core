@@ -81,14 +81,14 @@ typedef struct
 {
    QPointer< QProgressDialog > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QProgressDialog;
+} HBQT_GC_T_QProgressDialog;
 
-QT_G_FUNC( hbqt_gcRelease_QProgressDialog )
+HBQT_GC_FUNC( hbqt_gcRelease_QProgressDialog )
 {
    QProgressDialog  * ph = NULL ;
-   QGC_POINTER_QProgressDialog * p = ( QGC_POINTER_QProgressDialog * ) Cargo;
+   HBQT_GC_T_QProgressDialog * p = ( HBQT_GC_T_QProgressDialog * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -124,7 +124,7 @@ QT_G_FUNC( hbqt_gcRelease_QProgressDialog )
 
 void * hbqt_gcAllocate_QProgressDialog( void * pObj, bool bNew )
 {
-   QGC_POINTER_QProgressDialog * p = ( QGC_POINTER_QProgressDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QProgressDialog ), hbqt_gcFuncs() );
+   HBQT_GC_T_QProgressDialog * p = ( HBQT_GC_T_QProgressDialog * ) hb_gcAllocate( sizeof( HBQT_GC_T_QProgressDialog ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QProgressDialog >( ( QProgressDialog * ) pObj );
    p->bNew = bNew;

@@ -95,14 +95,14 @@ typedef struct
 {
    QPointer< QBoxLayout > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QBoxLayout;
+} HBQT_GC_T_QBoxLayout;
 
-QT_G_FUNC( hbqt_gcRelease_QBoxLayout )
+HBQT_GC_FUNC( hbqt_gcRelease_QBoxLayout )
 {
    QBoxLayout  * ph = NULL ;
-   QGC_POINTER_QBoxLayout * p = ( QGC_POINTER_QBoxLayout * ) Cargo;
+   HBQT_GC_T_QBoxLayout * p = ( HBQT_GC_T_QBoxLayout * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -138,7 +138,7 @@ QT_G_FUNC( hbqt_gcRelease_QBoxLayout )
 
 void * hbqt_gcAllocate_QBoxLayout( void * pObj, bool bNew )
 {
-   QGC_POINTER_QBoxLayout * p = ( QGC_POINTER_QBoxLayout * ) hb_gcAllocate( sizeof( QGC_POINTER_QBoxLayout ), hbqt_gcFuncs() );
+   HBQT_GC_T_QBoxLayout * p = ( HBQT_GC_T_QBoxLayout * ) hb_gcAllocate( sizeof( HBQT_GC_T_QBoxLayout ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QBoxLayout >( ( QBoxLayout * ) pObj );
    p->bNew = bNew;
@@ -170,8 +170,8 @@ HB_FUNC( QT_QBOXLAYOUT )
  */
 HB_FUNC( QT_QBOXLAYOUT_ADDLAYOUT )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QBOXLAYOUT_ADDLAYOUT()" ) );
    if( p && p->ph && q && q->ph )
    {
@@ -186,8 +186,8 @@ HB_FUNC( QT_QBOXLAYOUT_ADDLAYOUT )
  */
 HB_FUNC( QT_QBOXLAYOUT_ADDSPACERITEM )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QBOXLAYOUT_ADDSPACERITEM()" ) );
    if( p && p->ph && q && q->ph )
    {
@@ -244,8 +244,8 @@ HB_FUNC( QT_QBOXLAYOUT_ADDSTRUT )
  */
 HB_FUNC( QT_QBOXLAYOUT_ADDWIDGET )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QBOXLAYOUT_ADDWIDGET()" ) );
    if( p && p->ph && q && q->ph )
    {

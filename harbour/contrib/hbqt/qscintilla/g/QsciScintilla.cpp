@@ -127,14 +127,14 @@ typedef struct
 {
    QPointer< QsciScintilla > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QsciScintilla;
+} HBQT_GC_T_QsciScintilla;
 
-QT_G_FUNC( hbqt_gcRelease_QsciScintilla )
+HBQT_GC_FUNC( hbqt_gcRelease_QsciScintilla )
 {
    QsciScintilla  * ph = NULL ;
-   QGC_POINTER_QsciScintilla * p = ( QGC_POINTER_QsciScintilla * ) Cargo;
+   HBQT_GC_T_QsciScintilla * p = ( HBQT_GC_T_QsciScintilla * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -170,7 +170,7 @@ QT_G_FUNC( hbqt_gcRelease_QsciScintilla )
 
 void * hbqt_gcAllocate_QsciScintilla( void * pObj, bool bNew )
 {
-   QGC_POINTER_QsciScintilla * p = ( QGC_POINTER_QsciScintilla * ) hb_gcAllocate( sizeof( QGC_POINTER_QsciScintilla ), hbqt_gcFuncs() );
+   HBQT_GC_T_QsciScintilla * p = ( HBQT_GC_T_QsciScintilla * ) hb_gcAllocate( sizeof( HBQT_GC_T_QsciScintilla ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QsciScintilla >( ( QsciScintilla * ) pObj );
    p->bNew = bNew;

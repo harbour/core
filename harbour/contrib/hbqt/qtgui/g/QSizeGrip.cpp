@@ -80,14 +80,14 @@ typedef struct
 {
    QPointer< QSizeGrip > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QSizeGrip;
+} HBQT_GC_T_QSizeGrip;
 
-QT_G_FUNC( hbqt_gcRelease_QSizeGrip )
+HBQT_GC_FUNC( hbqt_gcRelease_QSizeGrip )
 {
    QSizeGrip  * ph = NULL ;
-   QGC_POINTER_QSizeGrip * p = ( QGC_POINTER_QSizeGrip * ) Cargo;
+   HBQT_GC_T_QSizeGrip * p = ( HBQT_GC_T_QSizeGrip * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -123,7 +123,7 @@ QT_G_FUNC( hbqt_gcRelease_QSizeGrip )
 
 void * hbqt_gcAllocate_QSizeGrip( void * pObj, bool bNew )
 {
-   QGC_POINTER_QSizeGrip * p = ( QGC_POINTER_QSizeGrip * ) hb_gcAllocate( sizeof( QGC_POINTER_QSizeGrip ), hbqt_gcFuncs() );
+   HBQT_GC_T_QSizeGrip * p = ( HBQT_GC_T_QSizeGrip * ) hb_gcAllocate( sizeof( HBQT_GC_T_QSizeGrip ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QSizeGrip >( ( QSizeGrip * ) pObj );
    p->bNew = bNew;

@@ -95,14 +95,14 @@ typedef struct
 {
    QPointer< QTreeWidget > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QTreeWidget;
+} HBQT_GC_T_QTreeWidget;
 
-QT_G_FUNC( hbqt_gcRelease_QTreeWidget )
+HBQT_GC_FUNC( hbqt_gcRelease_QTreeWidget )
 {
    QTreeWidget  * ph = NULL ;
-   QGC_POINTER_QTreeWidget * p = ( QGC_POINTER_QTreeWidget * ) Cargo;
+   HBQT_GC_T_QTreeWidget * p = ( HBQT_GC_T_QTreeWidget * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -138,7 +138,7 @@ QT_G_FUNC( hbqt_gcRelease_QTreeWidget )
 
 void * hbqt_gcAllocate_QTreeWidget( void * pObj, bool bNew )
 {
-   QGC_POINTER_QTreeWidget * p = ( QGC_POINTER_QTreeWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QTreeWidget ), hbqt_gcFuncs() );
+   HBQT_GC_T_QTreeWidget * p = ( HBQT_GC_T_QTreeWidget * ) hb_gcAllocate( sizeof( HBQT_GC_T_QTreeWidget ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QTreeWidget >( ( QTreeWidget * ) pObj );
    p->bNew = bNew;
@@ -170,8 +170,8 @@ HB_FUNC( QT_QTREEWIDGET )
  */
 HB_FUNC( QT_QTREEWIDGET_ADDTOPLEVELITEM )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTREEWIDGET_ADDTOPLEVELITEM()" ) );
    if( p && p->ph && q && q->ph )
    {
@@ -466,8 +466,8 @@ HB_FUNC( QT_QTREEWIDGET_SETCOLUMNCOUNT )
  */
 HB_FUNC( QT_QTREEWIDGET_SETCURRENTITEM )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTREEWIDGET_SETCURRENTITEM()" ) );
    if( p && p->ph && q && q->ph )
    {
@@ -482,8 +482,8 @@ HB_FUNC( QT_QTREEWIDGET_SETCURRENTITEM )
  */
 HB_FUNC( QT_QTREEWIDGET_SETCURRENTITEM_1 )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTREEWIDGET_SETCURRENTITEM_1()" ) );
    if( p && p->ph && q && q->ph )
    {
@@ -498,8 +498,8 @@ HB_FUNC( QT_QTREEWIDGET_SETCURRENTITEM_1 )
  */
 HB_FUNC( QT_QTREEWIDGET_SETCURRENTITEM_2 )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTREEWIDGET_SETCURRENTITEM_2()" ) );
    if( p && p->ph && q && q->ph )
    {
@@ -528,8 +528,8 @@ HB_FUNC( QT_QTREEWIDGET_SETFIRSTITEMCOLUMNSPANNED )
  */
 HB_FUNC( QT_QTREEWIDGET_SETHEADERITEM )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTREEWIDGET_SETHEADERITEM()" ) );
    if( p && p->ph && q && q->ph )
    {

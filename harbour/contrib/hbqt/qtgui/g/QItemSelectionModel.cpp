@@ -85,14 +85,14 @@ typedef struct
 {
    QPointer< QItemSelectionModel > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QItemSelectionModel;
+} HBQT_GC_T_QItemSelectionModel;
 
-QT_G_FUNC( hbqt_gcRelease_QItemSelectionModel )
+HBQT_GC_FUNC( hbqt_gcRelease_QItemSelectionModel )
 {
    QItemSelectionModel  * ph = NULL ;
-   QGC_POINTER_QItemSelectionModel * p = ( QGC_POINTER_QItemSelectionModel * ) Cargo;
+   HBQT_GC_T_QItemSelectionModel * p = ( HBQT_GC_T_QItemSelectionModel * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -128,7 +128,7 @@ QT_G_FUNC( hbqt_gcRelease_QItemSelectionModel )
 
 void * hbqt_gcAllocate_QItemSelectionModel( void * pObj, bool bNew )
 {
-   QGC_POINTER_QItemSelectionModel * p = ( QGC_POINTER_QItemSelectionModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QItemSelectionModel ), hbqt_gcFuncs() );
+   HBQT_GC_T_QItemSelectionModel * p = ( HBQT_GC_T_QItemSelectionModel * ) hb_gcAllocate( sizeof( HBQT_GC_T_QItemSelectionModel ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QItemSelectionModel >( ( QItemSelectionModel * ) pObj );
    p->bNew = bNew;

@@ -78,14 +78,14 @@ typedef struct
 {
    QPointer< QWizardPage > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QWizardPage;
+} HBQT_GC_T_QWizardPage;
 
-QT_G_FUNC( hbqt_gcRelease_QWizardPage )
+HBQT_GC_FUNC( hbqt_gcRelease_QWizardPage )
 {
    QWizardPage  * ph = NULL ;
-   QGC_POINTER_QWizardPage * p = ( QGC_POINTER_QWizardPage * ) Cargo;
+   HBQT_GC_T_QWizardPage * p = ( HBQT_GC_T_QWizardPage * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -121,7 +121,7 @@ QT_G_FUNC( hbqt_gcRelease_QWizardPage )
 
 void * hbqt_gcAllocate_QWizardPage( void * pObj, bool bNew )
 {
-   QGC_POINTER_QWizardPage * p = ( QGC_POINTER_QWizardPage * ) hb_gcAllocate( sizeof( QGC_POINTER_QWizardPage ), hbqt_gcFuncs() );
+   HBQT_GC_T_QWizardPage * p = ( HBQT_GC_T_QWizardPage * ) hb_gcAllocate( sizeof( HBQT_GC_T_QWizardPage ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QWizardPage >( ( QWizardPage * ) pObj );
    p->bNew = bNew;

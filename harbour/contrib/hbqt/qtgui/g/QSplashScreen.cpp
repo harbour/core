@@ -81,14 +81,14 @@ typedef struct
 {
    QPointer< QSplashScreen > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QSplashScreen;
+} HBQT_GC_T_QSplashScreen;
 
-QT_G_FUNC( hbqt_gcRelease_QSplashScreen )
+HBQT_GC_FUNC( hbqt_gcRelease_QSplashScreen )
 {
    QSplashScreen  * ph = NULL ;
-   QGC_POINTER_QSplashScreen * p = ( QGC_POINTER_QSplashScreen * ) Cargo;
+   HBQT_GC_T_QSplashScreen * p = ( HBQT_GC_T_QSplashScreen * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -124,7 +124,7 @@ QT_G_FUNC( hbqt_gcRelease_QSplashScreen )
 
 void * hbqt_gcAllocate_QSplashScreen( void * pObj, bool bNew )
 {
-   QGC_POINTER_QSplashScreen * p = ( QGC_POINTER_QSplashScreen * ) hb_gcAllocate( sizeof( QGC_POINTER_QSplashScreen ), hbqt_gcFuncs() );
+   HBQT_GC_T_QSplashScreen * p = ( HBQT_GC_T_QSplashScreen * ) hb_gcAllocate( sizeof( HBQT_GC_T_QSplashScreen ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QSplashScreen >( ( QSplashScreen * ) pObj );
    p->bNew = bNew;

@@ -88,14 +88,14 @@ typedef struct
 {
    QPointer< QListView > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QListView;
+} HBQT_GC_T_QListView;
 
-QT_G_FUNC( hbqt_gcRelease_QListView )
+HBQT_GC_FUNC( hbqt_gcRelease_QListView )
 {
    QListView  * ph = NULL ;
-   QGC_POINTER_QListView * p = ( QGC_POINTER_QListView * ) Cargo;
+   HBQT_GC_T_QListView * p = ( HBQT_GC_T_QListView * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -131,7 +131,7 @@ QT_G_FUNC( hbqt_gcRelease_QListView )
 
 void * hbqt_gcAllocate_QListView( void * pObj, bool bNew )
 {
-   QGC_POINTER_QListView * p = ( QGC_POINTER_QListView * ) hb_gcAllocate( sizeof( QGC_POINTER_QListView ), hbqt_gcFuncs() );
+   HBQT_GC_T_QListView * p = ( HBQT_GC_T_QListView * ) hb_gcAllocate( sizeof( HBQT_GC_T_QListView ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QListView >( ( QListView * ) pObj );
    p->bNew = bNew;

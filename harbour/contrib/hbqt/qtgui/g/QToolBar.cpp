@@ -91,14 +91,14 @@ typedef struct
 {
    QPointer< QToolBar > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QToolBar;
+} HBQT_GC_T_QToolBar;
 
-QT_G_FUNC( hbqt_gcRelease_QToolBar )
+HBQT_GC_FUNC( hbqt_gcRelease_QToolBar )
 {
    QToolBar  * ph = NULL ;
-   QGC_POINTER_QToolBar * p = ( QGC_POINTER_QToolBar * ) Cargo;
+   HBQT_GC_T_QToolBar * p = ( HBQT_GC_T_QToolBar * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -134,7 +134,7 @@ QT_G_FUNC( hbqt_gcRelease_QToolBar )
 
 void * hbqt_gcAllocate_QToolBar( void * pObj, bool bNew )
 {
-   QGC_POINTER_QToolBar * p = ( QGC_POINTER_QToolBar * ) hb_gcAllocate( sizeof( QGC_POINTER_QToolBar ), hbqt_gcFuncs() );
+   HBQT_GC_T_QToolBar * p = ( HBQT_GC_T_QToolBar * ) hb_gcAllocate( sizeof( HBQT_GC_T_QToolBar ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QToolBar >( ( QToolBar * ) pObj );
    p->bNew = bNew;
@@ -197,8 +197,8 @@ HB_FUNC( QT_QTOOLBAR_ACTIONAT_1 )
  */
 HB_FUNC( QT_QTOOLBAR_ADDACTION )
 {
-   QGC_POINTER_QToolBar * q = ( QGC_POINTER_QToolBar * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T_QToolBar * q = ( HBQT_GC_T_QToolBar * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
 
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTOOLBAR_ADDACTION()" ) );
    if( p && p->ph && q && q->ph )
@@ -256,8 +256,8 @@ HB_FUNC( QT_QTOOLBAR_ADDACTION_3 )
  */
 HB_FUNC( QT_QTOOLBAR_ADDACTION_4 )
 {
-   QGC_POINTER_QToolBar * q = ( QGC_POINTER_QToolBar * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 4 );
+   HBQT_GC_T_QToolBar * q = ( HBQT_GC_T_QToolBar * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 4 );
 
    HB_TRACE( HB_TR_DEBUG, ("QTOOLBAR_ADDACTION_4" ) );
    if ( p && p->ph && q && q->ph )

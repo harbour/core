@@ -80,14 +80,14 @@ typedef struct
 {
    QPointer< QPlainTextDocumentLayout > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QPlainTextDocumentLayout;
+} HBQT_GC_T_QPlainTextDocumentLayout;
 
-QT_G_FUNC( hbqt_gcRelease_QPlainTextDocumentLayout )
+HBQT_GC_FUNC( hbqt_gcRelease_QPlainTextDocumentLayout )
 {
    QPlainTextDocumentLayout  * ph = NULL ;
-   QGC_POINTER_QPlainTextDocumentLayout * p = ( QGC_POINTER_QPlainTextDocumentLayout * ) Cargo;
+   HBQT_GC_T_QPlainTextDocumentLayout * p = ( HBQT_GC_T_QPlainTextDocumentLayout * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -123,7 +123,7 @@ QT_G_FUNC( hbqt_gcRelease_QPlainTextDocumentLayout )
 
 void * hbqt_gcAllocate_QPlainTextDocumentLayout( void * pObj, bool bNew )
 {
-   QGC_POINTER_QPlainTextDocumentLayout * p = ( QGC_POINTER_QPlainTextDocumentLayout * ) hb_gcAllocate( sizeof( QGC_POINTER_QPlainTextDocumentLayout ), hbqt_gcFuncs() );
+   HBQT_GC_T_QPlainTextDocumentLayout * p = ( HBQT_GC_T_QPlainTextDocumentLayout * ) hb_gcAllocate( sizeof( HBQT_GC_T_QPlainTextDocumentLayout ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QPlainTextDocumentLayout >( ( QPlainTextDocumentLayout * ) pObj );
    p->bNew = bNew;

@@ -80,14 +80,14 @@ typedef struct
 {
    QPointer< HBQsciScintilla > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_HBQsciScintilla;
+} HBQT_GC_T_HBQsciScintilla;
 
-QT_G_FUNC( hbqt_gcRelease_HBQsciScintilla )
+HBQT_GC_FUNC( hbqt_gcRelease_HBQsciScintilla )
 {
    HBQsciScintilla  * ph = NULL ;
-   QGC_POINTER_HBQsciScintilla * p = ( QGC_POINTER_HBQsciScintilla * ) Cargo;
+   HBQT_GC_T_HBQsciScintilla * p = ( HBQT_GC_T_HBQsciScintilla * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -123,7 +123,7 @@ QT_G_FUNC( hbqt_gcRelease_HBQsciScintilla )
 
 void * hbqt_gcAllocate_HBQsciScintilla( void * pObj, bool bNew )
 {
-   QGC_POINTER_HBQsciScintilla * p = ( QGC_POINTER_HBQsciScintilla * ) hb_gcAllocate( sizeof( QGC_POINTER_HBQsciScintilla ), hbqt_gcFuncs() );
+   HBQT_GC_T_HBQsciScintilla * p = ( HBQT_GC_T_HBQsciScintilla * ) hb_gcAllocate( sizeof( HBQT_GC_T_HBQsciScintilla ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< HBQsciScintilla >( ( HBQsciScintilla * ) pObj );
    p->bNew = bNew;

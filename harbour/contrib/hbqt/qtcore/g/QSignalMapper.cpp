@@ -79,14 +79,14 @@ typedef struct
 {
    QPointer< QSignalMapper > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QSignalMapper;
+} HBQT_GC_T_QSignalMapper;
 
-QT_G_FUNC( hbqt_gcRelease_QSignalMapper )
+HBQT_GC_FUNC( hbqt_gcRelease_QSignalMapper )
 {
    QSignalMapper  * ph = NULL ;
-   QGC_POINTER_QSignalMapper * p = ( QGC_POINTER_QSignalMapper * ) Cargo;
+   HBQT_GC_T_QSignalMapper * p = ( HBQT_GC_T_QSignalMapper * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -122,7 +122,7 @@ QT_G_FUNC( hbqt_gcRelease_QSignalMapper )
 
 void * hbqt_gcAllocate_QSignalMapper( void * pObj, bool bNew )
 {
-   QGC_POINTER_QSignalMapper * p = ( QGC_POINTER_QSignalMapper * ) hb_gcAllocate( sizeof( QGC_POINTER_QSignalMapper ), hbqt_gcFuncs() );
+   HBQT_GC_T_QSignalMapper * p = ( HBQT_GC_T_QSignalMapper * ) hb_gcAllocate( sizeof( HBQT_GC_T_QSignalMapper ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QSignalMapper >( ( QSignalMapper * ) pObj );
    p->bNew = bNew;

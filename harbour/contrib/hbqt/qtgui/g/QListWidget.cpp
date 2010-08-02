@@ -90,14 +90,14 @@ typedef struct
 {
    QPointer< QListWidget > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QListWidget;
+} HBQT_GC_T_QListWidget;
 
-QT_G_FUNC( hbqt_gcRelease_QListWidget )
+HBQT_GC_FUNC( hbqt_gcRelease_QListWidget )
 {
    QListWidget  * ph = NULL ;
-   QGC_POINTER_QListWidget * p = ( QGC_POINTER_QListWidget * ) Cargo;
+   HBQT_GC_T_QListWidget * p = ( HBQT_GC_T_QListWidget * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -133,7 +133,7 @@ QT_G_FUNC( hbqt_gcRelease_QListWidget )
 
 void * hbqt_gcAllocate_QListWidget( void * pObj, bool bNew )
 {
-   QGC_POINTER_QListWidget * p = ( QGC_POINTER_QListWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QListWidget ), hbqt_gcFuncs() );
+   HBQT_GC_T_QListWidget * p = ( HBQT_GC_T_QListWidget * ) hb_gcAllocate( sizeof( HBQT_GC_T_QListWidget ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QListWidget >( ( QListWidget * ) pObj );
    p->bNew = bNew;
@@ -179,8 +179,8 @@ HB_FUNC( QT_QLISTWIDGET_ADDITEM )
  */
 HB_FUNC( QT_QLISTWIDGET_ADDITEM_1 )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QLISTWIDGET_ADDITEM()" ) );
    if( p && p->ph && q && q->ph )
    {
@@ -293,8 +293,8 @@ HB_FUNC( QT_QLISTWIDGET_FINDITEMS )
  */
 HB_FUNC( QT_QLISTWIDGET_INSERTITEM )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 3 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 3 );
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QLISTWIDGET_INSERTITEM()" ) );
    if( p && p->ph && q && q->ph )
    {

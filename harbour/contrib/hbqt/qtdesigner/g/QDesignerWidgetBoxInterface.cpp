@@ -83,14 +83,14 @@ typedef struct
 {
    QPointer< QDesignerWidgetBoxInterface > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QDesignerWidgetBoxInterface;
+} HBQT_GC_T_QDesignerWidgetBoxInterface;
 
-QT_G_FUNC( hbqt_gcRelease_QDesignerWidgetBoxInterface )
+HBQT_GC_FUNC( hbqt_gcRelease_QDesignerWidgetBoxInterface )
 {
    HB_SYMBOL_UNUSED( Cargo );
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -100,7 +100,7 @@ QT_G_FUNC( hbqt_gcRelease_QDesignerWidgetBoxInterface )
 
 void * hbqt_gcAllocate_QDesignerWidgetBoxInterface( void * pObj, bool bNew )
 {
-   QGC_POINTER_QDesignerWidgetBoxInterface * p = ( QGC_POINTER_QDesignerWidgetBoxInterface * ) hb_gcAllocate( sizeof( QGC_POINTER_QDesignerWidgetBoxInterface ), hbqt_gcFuncs() );
+   HBQT_GC_T_QDesignerWidgetBoxInterface * p = ( HBQT_GC_T_QDesignerWidgetBoxInterface * ) hb_gcAllocate( sizeof( HBQT_GC_T_QDesignerWidgetBoxInterface ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QDesignerWidgetBoxInterface >( ( QDesignerWidgetBoxInterface * ) pObj );
    p->bNew = bNew;

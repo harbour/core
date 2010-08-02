@@ -97,14 +97,14 @@ typedef struct
 {
    QPointer< QStandardItemModel > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QStandardItemModel;
+} HBQT_GC_T_QStandardItemModel;
 
-QT_G_FUNC( hbqt_gcRelease_QStandardItemModel )
+HBQT_GC_FUNC( hbqt_gcRelease_QStandardItemModel )
 {
    QStandardItemModel  * ph = NULL ;
-   QGC_POINTER_QStandardItemModel * p = ( QGC_POINTER_QStandardItemModel * ) Cargo;
+   HBQT_GC_T_QStandardItemModel * p = ( HBQT_GC_T_QStandardItemModel * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -140,7 +140,7 @@ QT_G_FUNC( hbqt_gcRelease_QStandardItemModel )
 
 void * hbqt_gcAllocate_QStandardItemModel( void * pObj, bool bNew )
 {
-   QGC_POINTER_QStandardItemModel * p = ( QGC_POINTER_QStandardItemModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QStandardItemModel ), hbqt_gcFuncs() );
+   HBQT_GC_T_QStandardItemModel * p = ( HBQT_GC_T_QStandardItemModel * ) hb_gcAllocate( sizeof( HBQT_GC_T_QStandardItemModel ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QStandardItemModel >( ( QStandardItemModel * ) pObj );
    p->bNew = bNew;

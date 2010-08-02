@@ -157,14 +157,14 @@ typedef struct
 {
    QPointer< QApplication > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QApplication;
+} HBQT_GC_T_QApplication;
 
-QT_G_FUNC( hbqt_gcRelease_QApplication )
+HBQT_GC_FUNC( hbqt_gcRelease_QApplication )
 {
    HB_SYMBOL_UNUSED( Cargo );
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -174,7 +174,7 @@ QT_G_FUNC( hbqt_gcRelease_QApplication )
 
 void * hbqt_gcAllocate_QApplication( void * pObj, bool bNew )
 {
-   QGC_POINTER_QApplication * p = ( QGC_POINTER_QApplication * ) hb_gcAllocate( sizeof( QGC_POINTER_QApplication ), hbqt_gcFuncs() );
+   HBQT_GC_T_QApplication * p = ( HBQT_GC_T_QApplication * ) hb_gcAllocate( sizeof( HBQT_GC_T_QApplication ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QApplication >( ( QApplication * ) pObj );
    p->bNew = bNew;

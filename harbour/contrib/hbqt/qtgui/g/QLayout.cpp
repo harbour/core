@@ -94,14 +94,14 @@ typedef struct
 {
    QPointer< QLayout > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QLayout;
+} HBQT_GC_T_QLayout;
 
-QT_G_FUNC( hbqt_gcRelease_QLayout )
+HBQT_GC_FUNC( hbqt_gcRelease_QLayout )
 {
    HB_SYMBOL_UNUSED( Cargo );
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -111,7 +111,7 @@ QT_G_FUNC( hbqt_gcRelease_QLayout )
 
 void * hbqt_gcAllocate_QLayout( void * pObj, bool bNew )
 {
-   QGC_POINTER_QLayout * p = ( QGC_POINTER_QLayout * ) hb_gcAllocate( sizeof( QGC_POINTER_QLayout ), hbqt_gcFuncs() );
+   HBQT_GC_T_QLayout * p = ( HBQT_GC_T_QLayout * ) hb_gcAllocate( sizeof( HBQT_GC_T_QLayout ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QLayout >( ( QLayout * ) pObj );
    p->bNew = bNew;
@@ -153,8 +153,8 @@ HB_FUNC( QT_QLAYOUT_ACTIVATE )
  */
 HB_FUNC( QT_QLAYOUT_ADDITEM )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QLAYOUT_ADDITEM()" ) );
    if( p && p->ph && q && q->ph )
    {
@@ -169,8 +169,8 @@ HB_FUNC( QT_QLAYOUT_ADDITEM )
  */
 HB_FUNC( QT_QLAYOUT_ADDWIDGET )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QLAYOUT_ADDWIDGET()" ) );
    if( p && p->ph && q && q->ph )
    {

@@ -564,17 +564,17 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc, aWidgetList, c
          ENDIF
       ENDIF
       aadd( cpp_, "   bool bNew;"                    )
-      aadd( cpp_, "   QT_G_FUNC_PTR func;"           )
+      aadd( cpp_, "   PHBQT_GC_FUNC func;"           )
       aadd( cpp_, "   int type;"           )
-      aadd( cpp_, "} QGC_POINTER_" + cWidget + ";"  )
+      aadd( cpp_, "} HBQT_GC_T_" + cWidget + ";"  )
       aadd( cpp_, " "                               )
 
-      aadd( cpp_, "QT_G_FUNC( hbqt_gcRelease_" + cWidget + " )"  )
+      aadd( cpp_, "HBQT_GC_FUNC( hbqt_gcRelease_" + cWidget + " )"  )
       aadd( cpp_, "{"                                     )
       IF ( lDestructor ) .AND. ( lConst )
          IF lObject
             aadd( cpp_, "   " + cWidget + " " + iif( lList, "< void * >", "" )+" * ph = NULL ;" )
-            aadd( cpp_, "   QGC_POINTER_" + cWidget + " * p = ( QGC_POINTER_" + cWidget + " * ) Cargo; " )
+            aadd( cpp_, "   HBQT_GC_T_" + cWidget + " * p = ( HBQT_GC_T_" + cWidget + " * ) Cargo; " )
             aadd( cpp_, "   " )
             aadd( cpp_, "   if( p && p->bNew && p->ph )" )
             aadd( cpp_, "   {" )
@@ -609,7 +609,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc, aWidgetList, c
             aadd( cpp_, "      p->ph = NULL;" )
             aadd( cpp_, "   }" )
          ELSE
-            aadd( cpp_, "   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;" )
+            aadd( cpp_, "   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;" )
             aadd( cpp_, "   " )
             aadd( cpp_, "   if( p && p->bNew )" )
             aadd( cpp_, "   {" )
@@ -634,7 +634,7 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc, aWidgetList, c
          ENDIF
       ELSE
          aadd( cpp_, "   HB_SYMBOL_UNUSED( Cargo );" )
-         aadd( cpp_, "   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;" )
+         aadd( cpp_, "   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;" )
          aadd( cpp_, "   " )
          aadd( cpp_, "   if( p && p->bNew )" )
          aadd( cpp_, "   {" )
@@ -648,9 +648,9 @@ STATIC FUNCTION GenSource( cProFile, cPathIn, cPathOut, cPathDoc, aWidgetList, c
       aadd( cpp_, "void * hbqt_gcAllocate_" + cWidget + "( void * pObj, bool bNew )" )
       aadd( cpp_, "{                                      " )
       IF lObject
-         aadd( cpp_, "   QGC_POINTER_" + cWidget + " * p = ( QGC_POINTER_" + cWidget + " * ) hb_gcAllocate( sizeof( QGC_POINTER_" + cWidget + " ), hbqt_gcFuncs() );" )
+         aadd( cpp_, "   HBQT_GC_T_" + cWidget + " * p = ( HBQT_GC_T_" + cWidget + " * ) hb_gcAllocate( sizeof( HBQT_GC_T_" + cWidget + " ), hbqt_gcFuncs() );" )
       ELSE
-         aadd( cpp_, "   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );" )
+         aadd( cpp_, "   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_gcAllocate( sizeof( HBQT_GC_T ), hbqt_gcFuncs() );" )
       ENDIF
       aadd( cpp_, "" )
       IF lObject
@@ -1797,7 +1797,7 @@ STATIC FUNCTION Build_HeaderFile( cpp_, cPathOut, cProFile )
    aadd( txt_, "" )
 
    FOR EACH s IN cpp_
-      aadd( txt_, "extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_" + s + " );" )
+      aadd( txt_, "extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_" + s + " );" )
    NEXT
    aadd( txt_, "" )
 

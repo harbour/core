@@ -95,14 +95,14 @@ typedef struct
 {
    QPointer< QPlainTextEdit > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QPlainTextEdit;
+} HBQT_GC_T_QPlainTextEdit;
 
-QT_G_FUNC( hbqt_gcRelease_QPlainTextEdit )
+HBQT_GC_FUNC( hbqt_gcRelease_QPlainTextEdit )
 {
    QPlainTextEdit  * ph = NULL ;
-   QGC_POINTER_QPlainTextEdit * p = ( QGC_POINTER_QPlainTextEdit * ) Cargo;
+   HBQT_GC_T_QPlainTextEdit * p = ( HBQT_GC_T_QPlainTextEdit * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -138,7 +138,7 @@ QT_G_FUNC( hbqt_gcRelease_QPlainTextEdit )
 
 void * hbqt_gcAllocate_QPlainTextEdit( void * pObj, bool bNew )
 {
-   QGC_POINTER_QPlainTextEdit * p = ( QGC_POINTER_QPlainTextEdit * ) hb_gcAllocate( sizeof( QGC_POINTER_QPlainTextEdit ), hbqt_gcFuncs() );
+   HBQT_GC_T_QPlainTextEdit * p = ( HBQT_GC_T_QPlainTextEdit * ) hb_gcAllocate( sizeof( HBQT_GC_T_QPlainTextEdit ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QPlainTextEdit >( ( QPlainTextEdit * ) pObj );
    p->bNew = bNew;

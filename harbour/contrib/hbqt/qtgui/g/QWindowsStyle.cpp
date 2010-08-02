@@ -81,14 +81,14 @@ typedef struct
 {
    QPointer< QWindowsStyle > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QWindowsStyle;
+} HBQT_GC_T_QWindowsStyle;
 
-QT_G_FUNC( hbqt_gcRelease_QWindowsStyle )
+HBQT_GC_FUNC( hbqt_gcRelease_QWindowsStyle )
 {
    QWindowsStyle  * ph = NULL ;
-   QGC_POINTER_QWindowsStyle * p = ( QGC_POINTER_QWindowsStyle * ) Cargo;
+   HBQT_GC_T_QWindowsStyle * p = ( HBQT_GC_T_QWindowsStyle * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -124,7 +124,7 @@ QT_G_FUNC( hbqt_gcRelease_QWindowsStyle )
 
 void * hbqt_gcAllocate_QWindowsStyle( void * pObj, bool bNew )
 {
-   QGC_POINTER_QWindowsStyle * p = ( QGC_POINTER_QWindowsStyle * ) hb_gcAllocate( sizeof( QGC_POINTER_QWindowsStyle ), hbqt_gcFuncs() );
+   HBQT_GC_T_QWindowsStyle * p = ( HBQT_GC_T_QWindowsStyle * ) hb_gcAllocate( sizeof( HBQT_GC_T_QWindowsStyle ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QWindowsStyle >( ( QWindowsStyle * ) pObj );
    p->bNew = bNew;

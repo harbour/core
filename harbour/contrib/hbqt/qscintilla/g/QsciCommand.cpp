@@ -80,14 +80,14 @@ typedef struct
 {
    QsciCommand * ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QsciCommand;
+} HBQT_GC_T_QsciCommand;
 
-QT_G_FUNC( hbqt_gcRelease_QsciCommand )
+HBQT_GC_FUNC( hbqt_gcRelease_QsciCommand )
 {
    HB_SYMBOL_UNUSED( Cargo );
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -97,7 +97,7 @@ QT_G_FUNC( hbqt_gcRelease_QsciCommand )
 
 void * hbqt_gcAllocate_QsciCommand( void * pObj, bool bNew )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_gcAllocate( sizeof( HBQT_GC_T ), hbqt_gcFuncs() );
 
    p->ph = ( QsciCommand * ) pObj;
    p->bNew = bNew;

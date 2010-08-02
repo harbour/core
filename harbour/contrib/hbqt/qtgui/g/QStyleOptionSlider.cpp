@@ -85,13 +85,13 @@ typedef struct
 {
    QStyleOptionSlider * ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QStyleOptionSlider;
+} HBQT_GC_T_QStyleOptionSlider;
 
-QT_G_FUNC( hbqt_gcRelease_QStyleOptionSlider )
+HBQT_GC_FUNC( hbqt_gcRelease_QStyleOptionSlider )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -117,7 +117,7 @@ QT_G_FUNC( hbqt_gcRelease_QStyleOptionSlider )
 
 void * hbqt_gcAllocate_QStyleOptionSlider( void * pObj, bool bNew )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_gcAllocate( sizeof( HBQT_GC_T ), hbqt_gcFuncs() );
 
    p->ph = ( QStyleOptionSlider * ) pObj;
    p->bNew = bNew;

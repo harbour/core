@@ -86,14 +86,14 @@ typedef struct
 {
    QPointer< QCompleter > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QCompleter;
+} HBQT_GC_T_QCompleter;
 
-QT_G_FUNC( hbqt_gcRelease_QCompleter )
+HBQT_GC_FUNC( hbqt_gcRelease_QCompleter )
 {
    QCompleter  * ph = NULL ;
-   QGC_POINTER_QCompleter * p = ( QGC_POINTER_QCompleter * ) Cargo;
+   HBQT_GC_T_QCompleter * p = ( HBQT_GC_T_QCompleter * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -129,7 +129,7 @@ QT_G_FUNC( hbqt_gcRelease_QCompleter )
 
 void * hbqt_gcAllocate_QCompleter( void * pObj, bool bNew )
 {
-   QGC_POINTER_QCompleter * p = ( QGC_POINTER_QCompleter * ) hb_gcAllocate( sizeof( QGC_POINTER_QCompleter ), hbqt_gcFuncs() );
+   HBQT_GC_T_QCompleter * p = ( HBQT_GC_T_QCompleter * ) hb_gcAllocate( sizeof( HBQT_GC_T_QCompleter ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QCompleter >( ( QCompleter * ) pObj );
    p->bNew = bNew;

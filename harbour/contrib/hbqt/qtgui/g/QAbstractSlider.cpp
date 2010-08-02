@@ -84,14 +84,14 @@ typedef struct
 {
    QPointer< QAbstractSlider > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QAbstractSlider;
+} HBQT_GC_T_QAbstractSlider;
 
-QT_G_FUNC( hbqt_gcRelease_QAbstractSlider )
+HBQT_GC_FUNC( hbqt_gcRelease_QAbstractSlider )
 {
    HB_SYMBOL_UNUSED( Cargo );
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -101,7 +101,7 @@ QT_G_FUNC( hbqt_gcRelease_QAbstractSlider )
 
 void * hbqt_gcAllocate_QAbstractSlider( void * pObj, bool bNew )
 {
-   QGC_POINTER_QAbstractSlider * p = ( QGC_POINTER_QAbstractSlider * ) hb_gcAllocate( sizeof( QGC_POINTER_QAbstractSlider ), hbqt_gcFuncs() );
+   HBQT_GC_T_QAbstractSlider * p = ( HBQT_GC_T_QAbstractSlider * ) hb_gcAllocate( sizeof( HBQT_GC_T_QAbstractSlider ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QAbstractSlider >( ( QAbstractSlider * ) pObj );
    p->bNew = bNew;

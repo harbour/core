@@ -85,14 +85,14 @@ typedef struct
 {
    QPointer< QFontComboBox > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QFontComboBox;
+} HBQT_GC_T_QFontComboBox;
 
-QT_G_FUNC( hbqt_gcRelease_QFontComboBox )
+HBQT_GC_FUNC( hbqt_gcRelease_QFontComboBox )
 {
    QFontComboBox  * ph = NULL ;
-   QGC_POINTER_QFontComboBox * p = ( QGC_POINTER_QFontComboBox * ) Cargo;
+   HBQT_GC_T_QFontComboBox * p = ( HBQT_GC_T_QFontComboBox * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -128,7 +128,7 @@ QT_G_FUNC( hbqt_gcRelease_QFontComboBox )
 
 void * hbqt_gcAllocate_QFontComboBox( void * pObj, bool bNew )
 {
-   QGC_POINTER_QFontComboBox * p = ( QGC_POINTER_QFontComboBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QFontComboBox ), hbqt_gcFuncs() );
+   HBQT_GC_T_QFontComboBox * p = ( HBQT_GC_T_QFontComboBox * ) hb_gcAllocate( sizeof( HBQT_GC_T_QFontComboBox ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QFontComboBox >( ( QFontComboBox * ) pObj );
    p->bNew = bNew;

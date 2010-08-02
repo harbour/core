@@ -104,13 +104,13 @@ typedef struct
 {
    QTreeWidgetItem * ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QTreeWidgetItem;
+} HBQT_GC_T_QTreeWidgetItem;
 
-QT_G_FUNC( hbqt_gcRelease_QTreeWidgetItem )
+HBQT_GC_FUNC( hbqt_gcRelease_QTreeWidgetItem )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -136,7 +136,7 @@ QT_G_FUNC( hbqt_gcRelease_QTreeWidgetItem )
 
 void * hbqt_gcAllocate_QTreeWidgetItem( void * pObj, bool bNew )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_gcAllocate( sizeof( HBQT_GC_T ), hbqt_gcFuncs() );
 
    p->ph = ( QTreeWidgetItem * ) pObj;
    p->bNew = bNew;
@@ -175,8 +175,8 @@ HB_FUNC( QT_QTREEWIDGETITEM )
  */
 HB_FUNC( QT_QTREEWIDGETITEM_ADDCHILD )
 {
-   QGC_POINTER_QTreeWidgetItem * q = ( QGC_POINTER_QTreeWidgetItem * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T_QTreeWidgetItem * q = ( HBQT_GC_T_QTreeWidgetItem * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
 
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTREEWIDGETITEM_ADDCHILD()" ) );
    if( p && p->ph && q && q->ph )

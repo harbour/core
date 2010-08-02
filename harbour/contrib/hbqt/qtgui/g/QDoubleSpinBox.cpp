@@ -79,14 +79,14 @@ typedef struct
 {
    QPointer< QDoubleSpinBox > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QDoubleSpinBox;
+} HBQT_GC_T_QDoubleSpinBox;
 
-QT_G_FUNC( hbqt_gcRelease_QDoubleSpinBox )
+HBQT_GC_FUNC( hbqt_gcRelease_QDoubleSpinBox )
 {
    QDoubleSpinBox  * ph = NULL ;
-   QGC_POINTER_QDoubleSpinBox * p = ( QGC_POINTER_QDoubleSpinBox * ) Cargo;
+   HBQT_GC_T_QDoubleSpinBox * p = ( HBQT_GC_T_QDoubleSpinBox * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -122,7 +122,7 @@ QT_G_FUNC( hbqt_gcRelease_QDoubleSpinBox )
 
 void * hbqt_gcAllocate_QDoubleSpinBox( void * pObj, bool bNew )
 {
-   QGC_POINTER_QDoubleSpinBox * p = ( QGC_POINTER_QDoubleSpinBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QDoubleSpinBox ), hbqt_gcFuncs() );
+   HBQT_GC_T_QDoubleSpinBox * p = ( HBQT_GC_T_QDoubleSpinBox * ) hb_gcAllocate( sizeof( HBQT_GC_T_QDoubleSpinBox ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QDoubleSpinBox >( ( QDoubleSpinBox * ) pObj );
    p->bNew = bNew;

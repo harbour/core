@@ -88,14 +88,14 @@ typedef struct
 {
    QPointer< QDesignerFormWindowInterface > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QDesignerFormWindowInterface;
+} HBQT_GC_T_QDesignerFormWindowInterface;
 
-QT_G_FUNC( hbqt_gcRelease_QDesignerFormWindowInterface )
+HBQT_GC_FUNC( hbqt_gcRelease_QDesignerFormWindowInterface )
 {
    HB_SYMBOL_UNUSED( Cargo );
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -105,7 +105,7 @@ QT_G_FUNC( hbqt_gcRelease_QDesignerFormWindowInterface )
 
 void * hbqt_gcAllocate_QDesignerFormWindowInterface( void * pObj, bool bNew )
 {
-   QGC_POINTER_QDesignerFormWindowInterface * p = ( QGC_POINTER_QDesignerFormWindowInterface * ) hb_gcAllocate( sizeof( QGC_POINTER_QDesignerFormWindowInterface ), hbqt_gcFuncs() );
+   HBQT_GC_T_QDesignerFormWindowInterface * p = ( HBQT_GC_T_QDesignerFormWindowInterface * ) hb_gcAllocate( sizeof( HBQT_GC_T_QDesignerFormWindowInterface ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QDesignerFormWindowInterface >( ( QDesignerFormWindowInterface * ) pObj );
    p->bNew = bNew;

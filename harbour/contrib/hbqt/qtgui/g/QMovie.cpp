@@ -88,14 +88,14 @@ typedef struct
 {
    QPointer< QMovie > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QMovie;
+} HBQT_GC_T_QMovie;
 
-QT_G_FUNC( hbqt_gcRelease_QMovie )
+HBQT_GC_FUNC( hbqt_gcRelease_QMovie )
 {
    QMovie  * ph = NULL ;
-   QGC_POINTER_QMovie * p = ( QGC_POINTER_QMovie * ) Cargo;
+   HBQT_GC_T_QMovie * p = ( HBQT_GC_T_QMovie * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -131,7 +131,7 @@ QT_G_FUNC( hbqt_gcRelease_QMovie )
 
 void * hbqt_gcAllocate_QMovie( void * pObj, bool bNew )
 {
-   QGC_POINTER_QMovie * p = ( QGC_POINTER_QMovie * ) hb_gcAllocate( sizeof( QGC_POINTER_QMovie ), hbqt_gcFuncs() );
+   HBQT_GC_T_QMovie * p = ( HBQT_GC_T_QMovie * ) hb_gcAllocate( sizeof( HBQT_GC_T_QMovie ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QMovie >( ( QMovie * ) pObj );
    p->bNew = bNew;

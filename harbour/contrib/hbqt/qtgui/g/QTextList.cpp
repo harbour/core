@@ -80,14 +80,14 @@ typedef struct
 {
    QPointer< QTextList > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QTextList;
+} HBQT_GC_T_QTextList;
 
-QT_G_FUNC( hbqt_gcRelease_QTextList )
+HBQT_GC_FUNC( hbqt_gcRelease_QTextList )
 {
    HB_SYMBOL_UNUSED( Cargo );
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -97,7 +97,7 @@ QT_G_FUNC( hbqt_gcRelease_QTextList )
 
 void * hbqt_gcAllocate_QTextList( void * pObj, bool bNew )
 {
-   QGC_POINTER_QTextList * p = ( QGC_POINTER_QTextList * ) hb_gcAllocate( sizeof( QGC_POINTER_QTextList ), hbqt_gcFuncs() );
+   HBQT_GC_T_QTextList * p = ( HBQT_GC_T_QTextList * ) hb_gcAllocate( sizeof( HBQT_GC_T_QTextList ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QTextList >( ( QTextList * ) pObj );
    p->bNew = bNew;

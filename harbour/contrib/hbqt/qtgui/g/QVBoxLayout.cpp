@@ -81,14 +81,14 @@ typedef struct
 {
    QPointer< QVBoxLayout > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QVBoxLayout;
+} HBQT_GC_T_QVBoxLayout;
 
-QT_G_FUNC( hbqt_gcRelease_QVBoxLayout )
+HBQT_GC_FUNC( hbqt_gcRelease_QVBoxLayout )
 {
    QVBoxLayout  * ph = NULL ;
-   QGC_POINTER_QVBoxLayout * p = ( QGC_POINTER_QVBoxLayout * ) Cargo;
+   HBQT_GC_T_QVBoxLayout * p = ( HBQT_GC_T_QVBoxLayout * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -124,7 +124,7 @@ QT_G_FUNC( hbqt_gcRelease_QVBoxLayout )
 
 void * hbqt_gcAllocate_QVBoxLayout( void * pObj, bool bNew )
 {
-   QGC_POINTER_QVBoxLayout * p = ( QGC_POINTER_QVBoxLayout * ) hb_gcAllocate( sizeof( QGC_POINTER_QVBoxLayout ), hbqt_gcFuncs() );
+   HBQT_GC_T_QVBoxLayout * p = ( HBQT_GC_T_QVBoxLayout * ) hb_gcAllocate( sizeof( HBQT_GC_T_QVBoxLayout ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QVBoxLayout >( ( QVBoxLayout * ) pObj );
    p->bNew = bNew;

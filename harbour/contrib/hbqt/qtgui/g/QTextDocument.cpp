@@ -99,14 +99,14 @@ typedef struct
 {
    QPointer< QTextDocument > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QTextDocument;
+} HBQT_GC_T_QTextDocument;
 
-QT_G_FUNC( hbqt_gcRelease_QTextDocument )
+HBQT_GC_FUNC( hbqt_gcRelease_QTextDocument )
 {
    QTextDocument  * ph = NULL ;
-   QGC_POINTER_QTextDocument * p = ( QGC_POINTER_QTextDocument * ) Cargo;
+   HBQT_GC_T_QTextDocument * p = ( HBQT_GC_T_QTextDocument * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -142,7 +142,7 @@ QT_G_FUNC( hbqt_gcRelease_QTextDocument )
 
 void * hbqt_gcAllocate_QTextDocument( void * pObj, bool bNew )
 {
-   QGC_POINTER_QTextDocument * p = ( QGC_POINTER_QTextDocument * ) hb_gcAllocate( sizeof( QGC_POINTER_QTextDocument ), hbqt_gcFuncs() );
+   HBQT_GC_T_QTextDocument * p = ( HBQT_GC_T_QTextDocument * ) hb_gcAllocate( sizeof( HBQT_GC_T_QTextDocument ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QTextDocument >( ( QTextDocument * ) pObj );
    p->bNew = bNew;

@@ -90,14 +90,14 @@ typedef struct
 {
    QPointer< QsciAPIs > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QsciAPIs;
+} HBQT_GC_T_QsciAPIs;
 
-QT_G_FUNC( hbqt_gcRelease_QsciAPIs )
+HBQT_GC_FUNC( hbqt_gcRelease_QsciAPIs )
 {
    QsciAPIs  * ph = NULL ;
-   QGC_POINTER_QsciAPIs * p = ( QGC_POINTER_QsciAPIs * ) Cargo;
+   HBQT_GC_T_QsciAPIs * p = ( HBQT_GC_T_QsciAPIs * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -133,7 +133,7 @@ QT_G_FUNC( hbqt_gcRelease_QsciAPIs )
 
 void * hbqt_gcAllocate_QsciAPIs( void * pObj, bool bNew )
 {
-   QGC_POINTER_QsciAPIs * p = ( QGC_POINTER_QsciAPIs * ) hb_gcAllocate( sizeof( QGC_POINTER_QsciAPIs ), hbqt_gcFuncs() );
+   HBQT_GC_T_QsciAPIs * p = ( HBQT_GC_T_QsciAPIs * ) hb_gcAllocate( sizeof( HBQT_GC_T_QsciAPIs ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QsciAPIs >( ( QsciAPIs * ) pObj );
    p->bNew = bNew;

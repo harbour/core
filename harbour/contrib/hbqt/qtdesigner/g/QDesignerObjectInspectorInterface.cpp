@@ -83,14 +83,14 @@ typedef struct
 {
    QPointer< QDesignerObjectInspectorInterface > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QDesignerObjectInspectorInterface;
+} HBQT_GC_T_QDesignerObjectInspectorInterface;
 
-QT_G_FUNC( hbqt_gcRelease_QDesignerObjectInspectorInterface )
+HBQT_GC_FUNC( hbqt_gcRelease_QDesignerObjectInspectorInterface )
 {
    HB_SYMBOL_UNUSED( Cargo );
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -100,7 +100,7 @@ QT_G_FUNC( hbqt_gcRelease_QDesignerObjectInspectorInterface )
 
 void * hbqt_gcAllocate_QDesignerObjectInspectorInterface( void * pObj, bool bNew )
 {
-   QGC_POINTER_QDesignerObjectInspectorInterface * p = ( QGC_POINTER_QDesignerObjectInspectorInterface * ) hb_gcAllocate( sizeof( QGC_POINTER_QDesignerObjectInspectorInterface ), hbqt_gcFuncs() );
+   HBQT_GC_T_QDesignerObjectInspectorInterface * p = ( HBQT_GC_T_QDesignerObjectInspectorInterface * ) hb_gcAllocate( sizeof( HBQT_GC_T_QDesignerObjectInspectorInterface ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QDesignerObjectInspectorInterface >( ( QDesignerObjectInspectorInterface * ) pObj );
    p->bNew = bNew;

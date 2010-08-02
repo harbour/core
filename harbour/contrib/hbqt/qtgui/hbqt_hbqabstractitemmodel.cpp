@@ -109,7 +109,7 @@ QVariant hbqt_fetchData( PHB_ITEM block, int type, int role, int par1, int par2 
          hb_vmPushSymbol( hb_dynsymSymbol( hb_dynsymFindName( "PPTR" ) ) );
          hb_vmPush( ret );
          hb_vmSend( 0 );
-         QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), -1 );
+         HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), -1 );
          if( p->type == HBQT_TYPE_QBrush )
             vv = * ( ( QBrush * ) ( p->ph ) );
          else if( p->type == HBQT_TYPE_QColor )

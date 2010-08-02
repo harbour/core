@@ -83,14 +83,14 @@ typedef struct
 {
    QPointer< QDesignerFormEditorInterface > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QDesignerFormEditorInterface;
+} HBQT_GC_T_QDesignerFormEditorInterface;
 
-QT_G_FUNC( hbqt_gcRelease_QDesignerFormEditorInterface )
+HBQT_GC_FUNC( hbqt_gcRelease_QDesignerFormEditorInterface )
 {
    QDesignerFormEditorInterface  * ph = NULL ;
-   QGC_POINTER_QDesignerFormEditorInterface * p = ( QGC_POINTER_QDesignerFormEditorInterface * ) Cargo;
+   HBQT_GC_T_QDesignerFormEditorInterface * p = ( HBQT_GC_T_QDesignerFormEditorInterface * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -126,7 +126,7 @@ QT_G_FUNC( hbqt_gcRelease_QDesignerFormEditorInterface )
 
 void * hbqt_gcAllocate_QDesignerFormEditorInterface( void * pObj, bool bNew )
 {
-   QGC_POINTER_QDesignerFormEditorInterface * p = ( QGC_POINTER_QDesignerFormEditorInterface * ) hb_gcAllocate( sizeof( QGC_POINTER_QDesignerFormEditorInterface ), hbqt_gcFuncs() );
+   HBQT_GC_T_QDesignerFormEditorInterface * p = ( HBQT_GC_T_QDesignerFormEditorInterface * ) hb_gcAllocate( sizeof( HBQT_GC_T_QDesignerFormEditorInterface ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QDesignerFormEditorInterface >( ( QDesignerFormEditorInterface * ) pObj );
    p->bNew = bNew;

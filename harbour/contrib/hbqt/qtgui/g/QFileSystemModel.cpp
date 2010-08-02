@@ -84,14 +84,14 @@ typedef struct
 {
    QPointer< QFileSystemModel > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QFileSystemModel;
+} HBQT_GC_T_QFileSystemModel;
 
-QT_G_FUNC( hbqt_gcRelease_QFileSystemModel )
+HBQT_GC_FUNC( hbqt_gcRelease_QFileSystemModel )
 {
    QFileSystemModel  * ph = NULL ;
-   QGC_POINTER_QFileSystemModel * p = ( QGC_POINTER_QFileSystemModel * ) Cargo;
+   HBQT_GC_T_QFileSystemModel * p = ( HBQT_GC_T_QFileSystemModel * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -127,7 +127,7 @@ QT_G_FUNC( hbqt_gcRelease_QFileSystemModel )
 
 void * hbqt_gcAllocate_QFileSystemModel( void * pObj, bool bNew )
 {
-   QGC_POINTER_QFileSystemModel * p = ( QGC_POINTER_QFileSystemModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QFileSystemModel ), hbqt_gcFuncs() );
+   HBQT_GC_T_QFileSystemModel * p = ( HBQT_GC_T_QFileSystemModel * ) hb_gcAllocate( sizeof( HBQT_GC_T_QFileSystemModel ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QFileSystemModel >( ( QFileSystemModel * ) pObj );
    p->bNew = bNew;

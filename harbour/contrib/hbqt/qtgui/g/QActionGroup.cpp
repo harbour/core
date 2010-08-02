@@ -79,14 +79,14 @@ typedef struct
 {
    QPointer< QActionGroup > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QActionGroup;
+} HBQT_GC_T_QActionGroup;
 
-QT_G_FUNC( hbqt_gcRelease_QActionGroup )
+HBQT_GC_FUNC( hbqt_gcRelease_QActionGroup )
 {
    QActionGroup  * ph = NULL ;
-   QGC_POINTER_QActionGroup * p = ( QGC_POINTER_QActionGroup * ) Cargo;
+   HBQT_GC_T_QActionGroup * p = ( HBQT_GC_T_QActionGroup * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -122,7 +122,7 @@ QT_G_FUNC( hbqt_gcRelease_QActionGroup )
 
 void * hbqt_gcAllocate_QActionGroup( void * pObj, bool bNew )
 {
-   QGC_POINTER_QActionGroup * p = ( QGC_POINTER_QActionGroup * ) hb_gcAllocate( sizeof( QGC_POINTER_QActionGroup ), hbqt_gcFuncs() );
+   HBQT_GC_T_QActionGroup * p = ( HBQT_GC_T_QActionGroup * ) hb_gcAllocate( sizeof( HBQT_GC_T_QActionGroup ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QActionGroup >( ( QActionGroup * ) pObj );
    p->bNew = bNew;

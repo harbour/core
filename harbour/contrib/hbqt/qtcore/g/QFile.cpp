@@ -89,14 +89,14 @@ typedef struct
 {
    QPointer< QFile > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QFile;
+} HBQT_GC_T_QFile;
 
-QT_G_FUNC( hbqt_gcRelease_QFile )
+HBQT_GC_FUNC( hbqt_gcRelease_QFile )
 {
    QFile  * ph = NULL ;
-   QGC_POINTER_QFile * p = ( QGC_POINTER_QFile * ) Cargo;
+   HBQT_GC_T_QFile * p = ( HBQT_GC_T_QFile * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -132,7 +132,7 @@ QT_G_FUNC( hbqt_gcRelease_QFile )
 
 void * hbqt_gcAllocate_QFile( void * pObj, bool bNew )
 {
-   QGC_POINTER_QFile * p = ( QGC_POINTER_QFile * ) hb_gcAllocate( sizeof( QGC_POINTER_QFile ), hbqt_gcFuncs() );
+   HBQT_GC_T_QFile * p = ( HBQT_GC_T_QFile * ) hb_gcAllocate( sizeof( HBQT_GC_T_QFile ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QFile >( ( QFile * ) pObj );
    p->bNew = bNew;

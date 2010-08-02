@@ -106,14 +106,14 @@ typedef struct
 {
    QPointer< QFileDialog > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QFileDialog;
+} HBQT_GC_T_QFileDialog;
 
-QT_G_FUNC( hbqt_gcRelease_QFileDialog )
+HBQT_GC_FUNC( hbqt_gcRelease_QFileDialog )
 {
    QFileDialog  * ph = NULL ;
-   QGC_POINTER_QFileDialog * p = ( QGC_POINTER_QFileDialog * ) Cargo;
+   HBQT_GC_T_QFileDialog * p = ( HBQT_GC_T_QFileDialog * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -149,7 +149,7 @@ QT_G_FUNC( hbqt_gcRelease_QFileDialog )
 
 void * hbqt_gcAllocate_QFileDialog( void * pObj, bool bNew )
 {
-   QGC_POINTER_QFileDialog * p = ( QGC_POINTER_QFileDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QFileDialog ), hbqt_gcFuncs() );
+   HBQT_GC_T_QFileDialog * p = ( HBQT_GC_T_QFileDialog * ) hb_gcAllocate( sizeof( HBQT_GC_T_QFileDialog ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QFileDialog >( ( QFileDialog * ) pObj );
    p->bNew = bNew;

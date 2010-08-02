@@ -84,14 +84,14 @@ typedef struct
 {
    QPointer< QHeaderView > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QHeaderView;
+} HBQT_GC_T_QHeaderView;
 
-QT_G_FUNC( hbqt_gcRelease_QHeaderView )
+HBQT_GC_FUNC( hbqt_gcRelease_QHeaderView )
 {
    QHeaderView  * ph = NULL ;
-   QGC_POINTER_QHeaderView * p = ( QGC_POINTER_QHeaderView * ) Cargo;
+   HBQT_GC_T_QHeaderView * p = ( HBQT_GC_T_QHeaderView * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -127,7 +127,7 @@ QT_G_FUNC( hbqt_gcRelease_QHeaderView )
 
 void * hbqt_gcAllocate_QHeaderView( void * pObj, bool bNew )
 {
-   QGC_POINTER_QHeaderView * p = ( QGC_POINTER_QHeaderView * ) hb_gcAllocate( sizeof( QGC_POINTER_QHeaderView ), hbqt_gcFuncs() );
+   HBQT_GC_T_QHeaderView * p = ( HBQT_GC_T_QHeaderView * ) hb_gcAllocate( sizeof( HBQT_GC_T_QHeaderView ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QHeaderView >( ( QHeaderView * ) pObj );
    p->bNew = bNew;

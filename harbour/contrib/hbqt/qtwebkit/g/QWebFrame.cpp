@@ -94,14 +94,14 @@ typedef struct
 {
    QPointer< QWebFrame > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QWebFrame;
+} HBQT_GC_T_QWebFrame;
 
-QT_G_FUNC( hbqt_gcRelease_QWebFrame )
+HBQT_GC_FUNC( hbqt_gcRelease_QWebFrame )
 {
    HB_SYMBOL_UNUSED( Cargo );
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -111,7 +111,7 @@ QT_G_FUNC( hbqt_gcRelease_QWebFrame )
 
 void * hbqt_gcAllocate_QWebFrame( void * pObj, bool bNew )
 {
-   QGC_POINTER_QWebFrame * p = ( QGC_POINTER_QWebFrame * ) hb_gcAllocate( sizeof( QGC_POINTER_QWebFrame ), hbqt_gcFuncs() );
+   HBQT_GC_T_QWebFrame * p = ( HBQT_GC_T_QWebFrame * ) hb_gcAllocate( sizeof( HBQT_GC_T_QWebFrame ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QWebFrame >( ( QWebFrame * ) pObj );
    p->bNew = bNew;

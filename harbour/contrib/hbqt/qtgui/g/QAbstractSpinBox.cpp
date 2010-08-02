@@ -87,14 +87,14 @@ typedef struct
 {
    QPointer< QAbstractSpinBox > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QAbstractSpinBox;
+} HBQT_GC_T_QAbstractSpinBox;
 
-QT_G_FUNC( hbqt_gcRelease_QAbstractSpinBox )
+HBQT_GC_FUNC( hbqt_gcRelease_QAbstractSpinBox )
 {
    HB_SYMBOL_UNUSED( Cargo );
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -104,7 +104,7 @@ QT_G_FUNC( hbqt_gcRelease_QAbstractSpinBox )
 
 void * hbqt_gcAllocate_QAbstractSpinBox( void * pObj, bool bNew )
 {
-   QGC_POINTER_QAbstractSpinBox * p = ( QGC_POINTER_QAbstractSpinBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QAbstractSpinBox ), hbqt_gcFuncs() );
+   HBQT_GC_T_QAbstractSpinBox * p = ( HBQT_GC_T_QAbstractSpinBox * ) hb_gcAllocate( sizeof( HBQT_GC_T_QAbstractSpinBox ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QAbstractSpinBox >( ( QAbstractSpinBox * ) pObj );
    p->bNew = bNew;

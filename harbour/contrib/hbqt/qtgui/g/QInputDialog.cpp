@@ -86,14 +86,14 @@ typedef struct
 {
    QPointer< QInputDialog > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QInputDialog;
+} HBQT_GC_T_QInputDialog;
 
-QT_G_FUNC( hbqt_gcRelease_QInputDialog )
+HBQT_GC_FUNC( hbqt_gcRelease_QInputDialog )
 {
    QInputDialog  * ph = NULL ;
-   QGC_POINTER_QInputDialog * p = ( QGC_POINTER_QInputDialog * ) Cargo;
+   HBQT_GC_T_QInputDialog * p = ( HBQT_GC_T_QInputDialog * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -129,7 +129,7 @@ QT_G_FUNC( hbqt_gcRelease_QInputDialog )
 
 void * hbqt_gcAllocate_QInputDialog( void * pObj, bool bNew )
 {
-   QGC_POINTER_QInputDialog * p = ( QGC_POINTER_QInputDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QInputDialog ), hbqt_gcFuncs() );
+   HBQT_GC_T_QInputDialog * p = ( HBQT_GC_T_QInputDialog * ) hb_gcAllocate( sizeof( HBQT_GC_T_QInputDialog ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QInputDialog >( ( QInputDialog * ) pObj );
    p->bNew = bNew;

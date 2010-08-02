@@ -82,14 +82,14 @@ typedef struct
 {
    QPointer< QSyntaxHighlighter > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QSyntaxHighlighter;
+} HBQT_GC_T_QSyntaxHighlighter;
 
-QT_G_FUNC( hbqt_gcRelease_QSyntaxHighlighter )
+HBQT_GC_FUNC( hbqt_gcRelease_QSyntaxHighlighter )
 {
    HB_SYMBOL_UNUSED( Cargo );
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -99,7 +99,7 @@ QT_G_FUNC( hbqt_gcRelease_QSyntaxHighlighter )
 
 void * hbqt_gcAllocate_QSyntaxHighlighter( void * pObj, bool bNew )
 {
-   QGC_POINTER_QSyntaxHighlighter * p = ( QGC_POINTER_QSyntaxHighlighter * ) hb_gcAllocate( sizeof( QGC_POINTER_QSyntaxHighlighter ), hbqt_gcFuncs() );
+   HBQT_GC_T_QSyntaxHighlighter * p = ( HBQT_GC_T_QSyntaxHighlighter * ) hb_gcAllocate( sizeof( HBQT_GC_T_QSyntaxHighlighter ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QSyntaxHighlighter >( ( QSyntaxHighlighter * ) pObj );
    p->bNew = bNew;

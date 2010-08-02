@@ -80,14 +80,14 @@ typedef struct
 {
    QPointer< QCheckBox > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QCheckBox;
+} HBQT_GC_T_QCheckBox;
 
-QT_G_FUNC( hbqt_gcRelease_QCheckBox )
+HBQT_GC_FUNC( hbqt_gcRelease_QCheckBox )
 {
    QCheckBox  * ph = NULL ;
-   QGC_POINTER_QCheckBox * p = ( QGC_POINTER_QCheckBox * ) Cargo;
+   HBQT_GC_T_QCheckBox * p = ( HBQT_GC_T_QCheckBox * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -123,7 +123,7 @@ QT_G_FUNC( hbqt_gcRelease_QCheckBox )
 
 void * hbqt_gcAllocate_QCheckBox( void * pObj, bool bNew )
 {
-   QGC_POINTER_QCheckBox * p = ( QGC_POINTER_QCheckBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QCheckBox ), hbqt_gcFuncs() );
+   HBQT_GC_T_QCheckBox * p = ( HBQT_GC_T_QCheckBox * ) hb_gcAllocate( sizeof( HBQT_GC_T_QCheckBox ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QCheckBox >( ( QCheckBox * ) pObj );
    p->bNew = bNew;

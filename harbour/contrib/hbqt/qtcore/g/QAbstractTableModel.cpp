@@ -79,14 +79,14 @@ typedef struct
 {
    QPointer< QAbstractTableModel > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QAbstractTableModel;
+} HBQT_GC_T_QAbstractTableModel;
 
-QT_G_FUNC( hbqt_gcRelease_QAbstractTableModel )
+HBQT_GC_FUNC( hbqt_gcRelease_QAbstractTableModel )
 {
    HB_SYMBOL_UNUSED( Cargo );
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -96,7 +96,7 @@ QT_G_FUNC( hbqt_gcRelease_QAbstractTableModel )
 
 void * hbqt_gcAllocate_QAbstractTableModel( void * pObj, bool bNew )
 {
-   QGC_POINTER_QAbstractTableModel * p = ( QGC_POINTER_QAbstractTableModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QAbstractTableModel ), hbqt_gcFuncs() );
+   HBQT_GC_T_QAbstractTableModel * p = ( HBQT_GC_T_QAbstractTableModel * ) hb_gcAllocate( sizeof( HBQT_GC_T_QAbstractTableModel ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QAbstractTableModel >( ( QAbstractTableModel * ) pObj );
    p->bNew = bNew;

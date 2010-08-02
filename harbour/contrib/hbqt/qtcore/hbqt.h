@@ -70,17 +70,17 @@
 #  error QT library version 4.5.0 or upper is required for hbqt.
 #endif
 
-#define QT_G_FUNC( hbfunc )   void hbfunc( void * Cargo ) /* callback function for cleaning garbage memory pointer */
-typedef QT_G_FUNC( QT_G_FUNC_ );
-typedef QT_G_FUNC_ * QT_G_FUNC_PTR;
+#define HBQT_GC_FUNC( hbfunc )   void hbfunc( void * Cargo ) /* callback function for cleaning garbage memory pointer */
+typedef HBQT_GC_FUNC( HBQT_GC_FUNC_ );
+typedef HBQT_GC_FUNC_ * PHBQT_GC_FUNC;
 
 typedef struct
 {
    void * ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER;
+} HBQT_GC_T;
 
 HB_GARBAGE_FUNC( Q_release );
 

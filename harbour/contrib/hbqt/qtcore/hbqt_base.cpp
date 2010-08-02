@@ -86,7 +86,7 @@ HB_FUNC( QT_FINDCHILD )
 
 HB_FUNC( HBQT_ISEMPTYQTPOINTER )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
 
    if( p && p->ph )
       hb_retl( HB_FALSE );
@@ -96,8 +96,8 @@ HB_FUNC( HBQT_ISEMPTYQTPOINTER )
 
 HB_FUNC( HBQT_ISEQUALGCQTPOINTER )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
 
    if( p && q )
    {

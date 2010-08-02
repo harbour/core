@@ -80,14 +80,14 @@ typedef struct
 {
    QPointer< QStyledItemDelegate > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QStyledItemDelegate;
+} HBQT_GC_T_QStyledItemDelegate;
 
-QT_G_FUNC( hbqt_gcRelease_QStyledItemDelegate )
+HBQT_GC_FUNC( hbqt_gcRelease_QStyledItemDelegate )
 {
    QStyledItemDelegate  * ph = NULL ;
-   QGC_POINTER_QStyledItemDelegate * p = ( QGC_POINTER_QStyledItemDelegate * ) Cargo;
+   HBQT_GC_T_QStyledItemDelegate * p = ( HBQT_GC_T_QStyledItemDelegate * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -123,7 +123,7 @@ QT_G_FUNC( hbqt_gcRelease_QStyledItemDelegate )
 
 void * hbqt_gcAllocate_QStyledItemDelegate( void * pObj, bool bNew )
 {
-   QGC_POINTER_QStyledItemDelegate * p = ( QGC_POINTER_QStyledItemDelegate * ) hb_gcAllocate( sizeof( QGC_POINTER_QStyledItemDelegate ), hbqt_gcFuncs() );
+   HBQT_GC_T_QStyledItemDelegate * p = ( HBQT_GC_T_QStyledItemDelegate * ) hb_gcAllocate( sizeof( HBQT_GC_T_QStyledItemDelegate ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QStyledItemDelegate >( ( QStyledItemDelegate * ) pObj );
    p->bNew = bNew;

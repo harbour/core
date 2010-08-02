@@ -79,14 +79,14 @@ typedef struct
 {
    QPointer< QAbstractProxyModel > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QAbstractProxyModel;
+} HBQT_GC_T_QAbstractProxyModel;
 
-QT_G_FUNC( hbqt_gcRelease_QAbstractProxyModel )
+HBQT_GC_FUNC( hbqt_gcRelease_QAbstractProxyModel )
 {
    HB_SYMBOL_UNUSED( Cargo );
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -96,7 +96,7 @@ QT_G_FUNC( hbqt_gcRelease_QAbstractProxyModel )
 
 void * hbqt_gcAllocate_QAbstractProxyModel( void * pObj, bool bNew )
 {
-   QGC_POINTER_QAbstractProxyModel * p = ( QGC_POINTER_QAbstractProxyModel * ) hb_gcAllocate( sizeof( QGC_POINTER_QAbstractProxyModel ), hbqt_gcFuncs() );
+   HBQT_GC_T_QAbstractProxyModel * p = ( HBQT_GC_T_QAbstractProxyModel * ) hb_gcAllocate( sizeof( HBQT_GC_T_QAbstractProxyModel ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QAbstractProxyModel >( ( QAbstractProxyModel * ) pObj );
    p->bNew = bNew;

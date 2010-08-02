@@ -88,13 +88,13 @@ typedef struct
 {
    QStyleOptionToolBar * ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QStyleOptionToolBar;
+} HBQT_GC_T_QStyleOptionToolBar;
 
-QT_G_FUNC( hbqt_gcRelease_QStyleOptionToolBar )
+HBQT_GC_FUNC( hbqt_gcRelease_QStyleOptionToolBar )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -120,7 +120,7 @@ QT_G_FUNC( hbqt_gcRelease_QStyleOptionToolBar )
 
 void * hbqt_gcAllocate_QStyleOptionToolBar( void * pObj, bool bNew )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_gcAllocate( sizeof( HBQT_GC_T ), hbqt_gcFuncs() );
 
    p->ph = ( QStyleOptionToolBar * ) pObj;
    p->bNew = bNew;

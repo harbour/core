@@ -81,14 +81,14 @@ typedef struct
 {
    QPointer< HBQTableView > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_HBQTableView;
+} HBQT_GC_T_HBQTableView;
 
-QT_G_FUNC( hbqt_gcRelease_HBQTableView )
+HBQT_GC_FUNC( hbqt_gcRelease_HBQTableView )
 {
    HBQTableView  * ph = NULL ;
-   QGC_POINTER_HBQTableView * p = ( QGC_POINTER_HBQTableView * ) Cargo;
+   HBQT_GC_T_HBQTableView * p = ( HBQT_GC_T_HBQTableView * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -124,7 +124,7 @@ QT_G_FUNC( hbqt_gcRelease_HBQTableView )
 
 void * hbqt_gcAllocate_HBQTableView( void * pObj, bool bNew )
 {
-   QGC_POINTER_HBQTableView * p = ( QGC_POINTER_HBQTableView * ) hb_gcAllocate( sizeof( QGC_POINTER_HBQTableView ), hbqt_gcFuncs() );
+   HBQT_GC_T_HBQTableView * p = ( HBQT_GC_T_HBQTableView * ) hb_gcAllocate( sizeof( HBQT_GC_T_HBQTableView ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< HBQTableView >( ( HBQTableView * ) pObj );
    p->bNew = bNew;

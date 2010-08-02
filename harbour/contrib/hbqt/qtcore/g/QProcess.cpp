@@ -90,14 +90,14 @@ typedef struct
 {
    QPointer< QProcess > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QProcess;
+} HBQT_GC_T_QProcess;
 
-QT_G_FUNC( hbqt_gcRelease_QProcess )
+HBQT_GC_FUNC( hbqt_gcRelease_QProcess )
 {
    QProcess  * ph = NULL ;
-   QGC_POINTER_QProcess * p = ( QGC_POINTER_QProcess * ) Cargo;
+   HBQT_GC_T_QProcess * p = ( HBQT_GC_T_QProcess * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -133,7 +133,7 @@ QT_G_FUNC( hbqt_gcRelease_QProcess )
 
 void * hbqt_gcAllocate_QProcess( void * pObj, bool bNew )
 {
-   QGC_POINTER_QProcess * p = ( QGC_POINTER_QProcess * ) hb_gcAllocate( sizeof( QGC_POINTER_QProcess ), hbqt_gcFuncs() );
+   HBQT_GC_T_QProcess * p = ( HBQT_GC_T_QProcess * ) hb_gcAllocate( sizeof( HBQT_GC_T_QProcess ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QProcess >( ( QProcess * ) pObj );
    p->bNew = bNew;

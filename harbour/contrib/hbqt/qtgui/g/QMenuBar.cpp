@@ -80,14 +80,14 @@ typedef struct
 {
    QPointer< QMenuBar > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QMenuBar;
+} HBQT_GC_T_QMenuBar;
 
-QT_G_FUNC( hbqt_gcRelease_QMenuBar )
+HBQT_GC_FUNC( hbqt_gcRelease_QMenuBar )
 {
    QMenuBar  * ph = NULL ;
-   QGC_POINTER_QMenuBar * p = ( QGC_POINTER_QMenuBar * ) Cargo;
+   HBQT_GC_T_QMenuBar * p = ( HBQT_GC_T_QMenuBar * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -123,7 +123,7 @@ QT_G_FUNC( hbqt_gcRelease_QMenuBar )
 
 void * hbqt_gcAllocate_QMenuBar( void * pObj, bool bNew )
 {
-   QGC_POINTER_QMenuBar * p = ( QGC_POINTER_QMenuBar * ) hb_gcAllocate( sizeof( QGC_POINTER_QMenuBar ), hbqt_gcFuncs() );
+   HBQT_GC_T_QMenuBar * p = ( HBQT_GC_T_QMenuBar * ) hb_gcAllocate( sizeof( HBQT_GC_T_QMenuBar ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QMenuBar >( ( QMenuBar * ) pObj );
    p->bNew = bNew;

@@ -80,8 +80,8 @@ enum TabShape { Rounded, Triangular }
 
 <PROTOS>
 int addTab ( QWidget * page, const QString & label ){
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
 
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTABWIDGET_ADDTAB()" ) );
    if( p && p->ph && q && q->ph )

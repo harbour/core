@@ -83,13 +83,13 @@ typedef struct
 {
    QEvent * ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QEvent;
+} HBQT_GC_T_QEvent;
 
-QT_G_FUNC( hbqt_gcRelease_QEvent )
+HBQT_GC_FUNC( hbqt_gcRelease_QEvent )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -115,7 +115,7 @@ QT_G_FUNC( hbqt_gcRelease_QEvent )
 
 void * hbqt_gcAllocate_QEvent( void * pObj, bool bNew )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_gcAllocate( sizeof( QGC_POINTER ), hbqt_gcFuncs() );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_gcAllocate( sizeof( HBQT_GC_T ), hbqt_gcFuncs() );
 
    p->ph = ( QEvent * ) pObj;
    p->bNew = bNew;

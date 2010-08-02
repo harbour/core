@@ -80,14 +80,14 @@ typedef struct
 {
    QPointer< QAbstractButton > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QAbstractButton;
+} HBQT_GC_T_QAbstractButton;
 
-QT_G_FUNC( hbqt_gcRelease_QAbstractButton )
+HBQT_GC_FUNC( hbqt_gcRelease_QAbstractButton )
 {
    HB_SYMBOL_UNUSED( Cargo );
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -97,7 +97,7 @@ QT_G_FUNC( hbqt_gcRelease_QAbstractButton )
 
 void * hbqt_gcAllocate_QAbstractButton( void * pObj, bool bNew )
 {
-   QGC_POINTER_QAbstractButton * p = ( QGC_POINTER_QAbstractButton * ) hb_gcAllocate( sizeof( QGC_POINTER_QAbstractButton ), hbqt_gcFuncs() );
+   HBQT_GC_T_QAbstractButton * p = ( HBQT_GC_T_QAbstractButton * ) hb_gcAllocate( sizeof( HBQT_GC_T_QAbstractButton ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QAbstractButton >( ( QAbstractButton * ) pObj );
    p->bNew = bNew;

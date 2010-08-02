@@ -87,14 +87,14 @@ typedef struct
 {
    QPointer< QDateTimeEdit > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QDateTimeEdit;
+} HBQT_GC_T_QDateTimeEdit;
 
-QT_G_FUNC( hbqt_gcRelease_QDateTimeEdit )
+HBQT_GC_FUNC( hbqt_gcRelease_QDateTimeEdit )
 {
    QDateTimeEdit  * ph = NULL ;
-   QGC_POINTER_QDateTimeEdit * p = ( QGC_POINTER_QDateTimeEdit * ) Cargo;
+   HBQT_GC_T_QDateTimeEdit * p = ( HBQT_GC_T_QDateTimeEdit * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -130,7 +130,7 @@ QT_G_FUNC( hbqt_gcRelease_QDateTimeEdit )
 
 void * hbqt_gcAllocate_QDateTimeEdit( void * pObj, bool bNew )
 {
-   QGC_POINTER_QDateTimeEdit * p = ( QGC_POINTER_QDateTimeEdit * ) hb_gcAllocate( sizeof( QGC_POINTER_QDateTimeEdit ), hbqt_gcFuncs() );
+   HBQT_GC_T_QDateTimeEdit * p = ( HBQT_GC_T_QDateTimeEdit * ) hb_gcAllocate( sizeof( HBQT_GC_T_QDateTimeEdit ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QDateTimeEdit >( ( QDateTimeEdit * ) pObj );
    p->bNew = bNew;

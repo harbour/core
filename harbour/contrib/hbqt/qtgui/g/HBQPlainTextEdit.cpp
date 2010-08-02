@@ -82,14 +82,14 @@ typedef struct
 {
    QPointer< HBQPlainTextEdit > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_HBQPlainTextEdit;
+} HBQT_GC_T_HBQPlainTextEdit;
 
-QT_G_FUNC( hbqt_gcRelease_HBQPlainTextEdit )
+HBQT_GC_FUNC( hbqt_gcRelease_HBQPlainTextEdit )
 {
    HBQPlainTextEdit  * ph = NULL ;
-   QGC_POINTER_HBQPlainTextEdit * p = ( QGC_POINTER_HBQPlainTextEdit * ) Cargo;
+   HBQT_GC_T_HBQPlainTextEdit * p = ( HBQT_GC_T_HBQPlainTextEdit * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -125,7 +125,7 @@ QT_G_FUNC( hbqt_gcRelease_HBQPlainTextEdit )
 
 void * hbqt_gcAllocate_HBQPlainTextEdit( void * pObj, bool bNew )
 {
-   QGC_POINTER_HBQPlainTextEdit * p = ( QGC_POINTER_HBQPlainTextEdit * ) hb_gcAllocate( sizeof( QGC_POINTER_HBQPlainTextEdit ), hbqt_gcFuncs() );
+   HBQT_GC_T_HBQPlainTextEdit * p = ( HBQT_GC_T_HBQPlainTextEdit * ) hb_gcAllocate( sizeof( HBQT_GC_T_HBQPlainTextEdit ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< HBQPlainTextEdit >( ( HBQPlainTextEdit * ) pObj );
    p->bNew = bNew;

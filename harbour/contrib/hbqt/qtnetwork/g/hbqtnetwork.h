@@ -13,12 +13,12 @@
 
 #include "hbqt.h"
 
-extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_QFtp );
-extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_QHttp );
-extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_QHttpHeader );
-extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_QHttpRequestHeader );
-extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_QHttpResponseHeader );
-extern HB_EXPORT QT_G_FUNC( hbqt_gcRelease_QNetworkRequest );
+extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QFtp );
+extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QHttp );
+extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QHttpHeader );
+extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QHttpRequestHeader );
+extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QHttpResponseHeader );
+extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QNetworkRequest );
 
 extern HB_EXPORT void * hbqt_gcAllocate_QFtp( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QHttp( void * pObj, bool bNew );

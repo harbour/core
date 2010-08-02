@@ -124,14 +124,14 @@ typedef struct
 {
    QPointer< QWidget > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QWidget;
+} HBQT_GC_T_QWidget;
 
-QT_G_FUNC( hbqt_gcRelease_QWidget )
+HBQT_GC_FUNC( hbqt_gcRelease_QWidget )
 {
    QWidget  * ph = NULL ;
-   QGC_POINTER_QWidget * p = ( QGC_POINTER_QWidget * ) Cargo;
+   HBQT_GC_T_QWidget * p = ( HBQT_GC_T_QWidget * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -167,7 +167,7 @@ QT_G_FUNC( hbqt_gcRelease_QWidget )
 
 void * hbqt_gcAllocate_QWidget( void * pObj, bool bNew )
 {
-   QGC_POINTER_QWidget * p = ( QGC_POINTER_QWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QWidget ), hbqt_gcFuncs() );
+   HBQT_GC_T_QWidget * p = ( HBQT_GC_T_QWidget * ) hb_gcAllocate( sizeof( HBQT_GC_T_QWidget ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QWidget >( ( QWidget * ) pObj );
    p->bNew = bNew;
@@ -241,8 +241,8 @@ HB_FUNC( QT_QWIDGET_ACTIVATEWINDOW )
  */
 HB_FUNC( QT_QWIDGET_ADDACTION )
 {
-   QGC_POINTER_QWidget * q =  (QGC_POINTER_QWidget *)hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * p =  (QGC_POINTER *)hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T_QWidget * q =  (HBQT_GC_T_QWidget *)hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * p =  (HBQT_GC_T *)hb_parptrGC( hbqt_gcFuncs(), 2 );
 
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QWIDGET_ADDACTION()" ) );
    if( p && p->ph && q && q->ph )

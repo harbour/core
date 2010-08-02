@@ -93,14 +93,14 @@ typedef struct
 {
    QPointer< QsciLexerFlagship > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QsciLexerFlagship;
+} HBQT_GC_T_QsciLexerFlagship;
 
-QT_G_FUNC( hbqt_gcRelease_QsciLexerFlagship )
+HBQT_GC_FUNC( hbqt_gcRelease_QsciLexerFlagship )
 {
    QsciLexerFlagship  * ph = NULL ;
-   QGC_POINTER_QsciLexerFlagship * p = ( QGC_POINTER_QsciLexerFlagship * ) Cargo;
+   HBQT_GC_T_QsciLexerFlagship * p = ( HBQT_GC_T_QsciLexerFlagship * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -136,7 +136,7 @@ QT_G_FUNC( hbqt_gcRelease_QsciLexerFlagship )
 
 void * hbqt_gcAllocate_QsciLexerFlagship( void * pObj, bool bNew )
 {
-   QGC_POINTER_QsciLexerFlagship * p = ( QGC_POINTER_QsciLexerFlagship * ) hb_gcAllocate( sizeof( QGC_POINTER_QsciLexerFlagship ), hbqt_gcFuncs() );
+   HBQT_GC_T_QsciLexerFlagship * p = ( HBQT_GC_T_QsciLexerFlagship * ) hb_gcAllocate( sizeof( HBQT_GC_T_QsciLexerFlagship ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QsciLexerFlagship >( ( QsciLexerFlagship * ) pObj );
    p->bNew = bNew;

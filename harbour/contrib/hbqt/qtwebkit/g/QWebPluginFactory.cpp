@@ -87,14 +87,14 @@ typedef struct
 {
    QPointer< QWebPluginFactory > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QWebPluginFactory;
+} HBQT_GC_T_QWebPluginFactory;
 
-QT_G_FUNC( hbqt_gcRelease_QWebPluginFactory )
+HBQT_GC_FUNC( hbqt_gcRelease_QWebPluginFactory )
 {
    HB_SYMBOL_UNUSED( Cargo );
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -104,7 +104,7 @@ QT_G_FUNC( hbqt_gcRelease_QWebPluginFactory )
 
 void * hbqt_gcAllocate_QWebPluginFactory( void * pObj, bool bNew )
 {
-   QGC_POINTER_QWebPluginFactory * p = ( QGC_POINTER_QWebPluginFactory * ) hb_gcAllocate( sizeof( QGC_POINTER_QWebPluginFactory ), hbqt_gcFuncs() );
+   HBQT_GC_T_QWebPluginFactory * p = ( HBQT_GC_T_QWebPluginFactory * ) hb_gcAllocate( sizeof( HBQT_GC_T_QWebPluginFactory ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QWebPluginFactory >( ( QWebPluginFactory * ) pObj );
    p->bNew = bNew;

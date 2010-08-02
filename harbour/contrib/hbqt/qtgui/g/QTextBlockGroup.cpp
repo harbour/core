@@ -79,14 +79,14 @@ typedef struct
 {
    QPointer< QTextBlockGroup > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QTextBlockGroup;
+} HBQT_GC_T_QTextBlockGroup;
 
-QT_G_FUNC( hbqt_gcRelease_QTextBlockGroup )
+HBQT_GC_FUNC( hbqt_gcRelease_QTextBlockGroup )
 {
    HB_SYMBOL_UNUSED( Cargo );
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -96,7 +96,7 @@ QT_G_FUNC( hbqt_gcRelease_QTextBlockGroup )
 
 void * hbqt_gcAllocate_QTextBlockGroup( void * pObj, bool bNew )
 {
-   QGC_POINTER_QTextBlockGroup * p = ( QGC_POINTER_QTextBlockGroup * ) hb_gcAllocate( sizeof( QGC_POINTER_QTextBlockGroup ), hbqt_gcFuncs() );
+   HBQT_GC_T_QTextBlockGroup * p = ( HBQT_GC_T_QTextBlockGroup * ) hb_gcAllocate( sizeof( HBQT_GC_T_QTextBlockGroup ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QTextBlockGroup >( ( QTextBlockGroup * ) pObj );
    p->bNew = bNew;

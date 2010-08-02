@@ -80,14 +80,14 @@ typedef struct
 {
    QPointer< QErrorMessage > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QErrorMessage;
+} HBQT_GC_T_QErrorMessage;
 
-QT_G_FUNC( hbqt_gcRelease_QErrorMessage )
+HBQT_GC_FUNC( hbqt_gcRelease_QErrorMessage )
 {
    QErrorMessage  * ph = NULL ;
-   QGC_POINTER_QErrorMessage * p = ( QGC_POINTER_QErrorMessage * ) Cargo;
+   HBQT_GC_T_QErrorMessage * p = ( HBQT_GC_T_QErrorMessage * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -123,7 +123,7 @@ QT_G_FUNC( hbqt_gcRelease_QErrorMessage )
 
 void * hbqt_gcAllocate_QErrorMessage( void * pObj, bool bNew )
 {
-   QGC_POINTER_QErrorMessage * p = ( QGC_POINTER_QErrorMessage * ) hb_gcAllocate( sizeof( QGC_POINTER_QErrorMessage ), hbqt_gcFuncs() );
+   HBQT_GC_T_QErrorMessage * p = ( HBQT_GC_T_QErrorMessage * ) hb_gcAllocate( sizeof( HBQT_GC_T_QErrorMessage ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QErrorMessage >( ( QErrorMessage * ) pObj );
    p->bNew = bNew;

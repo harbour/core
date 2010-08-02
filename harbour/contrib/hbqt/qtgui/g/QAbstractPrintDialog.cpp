@@ -94,14 +94,14 @@ typedef struct
 {
    QPointer< QAbstractPrintDialog > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QAbstractPrintDialog;
+} HBQT_GC_T_QAbstractPrintDialog;
 
-QT_G_FUNC( hbqt_gcRelease_QAbstractPrintDialog )
+HBQT_GC_FUNC( hbqt_gcRelease_QAbstractPrintDialog )
 {
    HB_SYMBOL_UNUSED( Cargo );
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -111,7 +111,7 @@ QT_G_FUNC( hbqt_gcRelease_QAbstractPrintDialog )
 
 void * hbqt_gcAllocate_QAbstractPrintDialog( void * pObj, bool bNew )
 {
-   QGC_POINTER_QAbstractPrintDialog * p = ( QGC_POINTER_QAbstractPrintDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QAbstractPrintDialog ), hbqt_gcFuncs() );
+   HBQT_GC_T_QAbstractPrintDialog * p = ( HBQT_GC_T_QAbstractPrintDialog * ) hb_gcAllocate( sizeof( HBQT_GC_T_QAbstractPrintDialog ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QAbstractPrintDialog >( ( QAbstractPrintDialog * ) pObj );
    p->bNew = bNew;

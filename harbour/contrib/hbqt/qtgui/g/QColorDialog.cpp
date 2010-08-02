@@ -85,14 +85,14 @@ typedef struct
 {
    QPointer< QColorDialog > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QColorDialog;
+} HBQT_GC_T_QColorDialog;
 
-QT_G_FUNC( hbqt_gcRelease_QColorDialog )
+HBQT_GC_FUNC( hbqt_gcRelease_QColorDialog )
 {
    QColorDialog  * ph = NULL ;
-   QGC_POINTER_QColorDialog * p = ( QGC_POINTER_QColorDialog * ) Cargo;
+   HBQT_GC_T_QColorDialog * p = ( HBQT_GC_T_QColorDialog * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -128,7 +128,7 @@ QT_G_FUNC( hbqt_gcRelease_QColorDialog )
 
 void * hbqt_gcAllocate_QColorDialog( void * pObj, bool bNew )
 {
-   QGC_POINTER_QColorDialog * p = ( QGC_POINTER_QColorDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QColorDialog ), hbqt_gcFuncs() );
+   HBQT_GC_T_QColorDialog * p = ( HBQT_GC_T_QColorDialog * ) hb_gcAllocate( sizeof( HBQT_GC_T_QColorDialog ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QColorDialog >( ( QColorDialog * ) pObj );
    p->bNew = bNew;

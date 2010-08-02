@@ -81,14 +81,14 @@ typedef struct
 {
    QPointer< QScrollBar > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QScrollBar;
+} HBQT_GC_T_QScrollBar;
 
-QT_G_FUNC( hbqt_gcRelease_QScrollBar )
+HBQT_GC_FUNC( hbqt_gcRelease_QScrollBar )
 {
    QScrollBar  * ph = NULL ;
-   QGC_POINTER_QScrollBar * p = ( QGC_POINTER_QScrollBar * ) Cargo;
+   HBQT_GC_T_QScrollBar * p = ( HBQT_GC_T_QScrollBar * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -124,7 +124,7 @@ QT_G_FUNC( hbqt_gcRelease_QScrollBar )
 
 void * hbqt_gcAllocate_QScrollBar( void * pObj, bool bNew )
 {
-   QGC_POINTER_QScrollBar * p = ( QGC_POINTER_QScrollBar * ) hb_gcAllocate( sizeof( QGC_POINTER_QScrollBar ), hbqt_gcFuncs() );
+   HBQT_GC_T_QScrollBar * p = ( HBQT_GC_T_QScrollBar * ) hb_gcAllocate( sizeof( HBQT_GC_T_QScrollBar ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QScrollBar >( ( QScrollBar * ) pObj );
    p->bNew = bNew;

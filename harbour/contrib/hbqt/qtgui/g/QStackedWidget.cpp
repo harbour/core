@@ -81,14 +81,14 @@ typedef struct
 {
    QPointer< QStackedWidget > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QStackedWidget;
+} HBQT_GC_T_QStackedWidget;
 
-QT_G_FUNC( hbqt_gcRelease_QStackedWidget )
+HBQT_GC_FUNC( hbqt_gcRelease_QStackedWidget )
 {
    QStackedWidget  * ph = NULL ;
-   QGC_POINTER_QStackedWidget * p = ( QGC_POINTER_QStackedWidget * ) Cargo;
+   HBQT_GC_T_QStackedWidget * p = ( HBQT_GC_T_QStackedWidget * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -124,7 +124,7 @@ QT_G_FUNC( hbqt_gcRelease_QStackedWidget )
 
 void * hbqt_gcAllocate_QStackedWidget( void * pObj, bool bNew )
 {
-   QGC_POINTER_QStackedWidget * p = ( QGC_POINTER_QStackedWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QStackedWidget ), hbqt_gcFuncs() );
+   HBQT_GC_T_QStackedWidget * p = ( HBQT_GC_T_QStackedWidget * ) hb_gcAllocate( sizeof( HBQT_GC_T_QStackedWidget ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QStackedWidget >( ( QStackedWidget * ) pObj );
    p->bNew = bNew;

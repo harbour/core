@@ -83,14 +83,14 @@ typedef struct
 {
    QPointer< QDesignerActionEditorInterface > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QDesignerActionEditorInterface;
+} HBQT_GC_T_QDesignerActionEditorInterface;
 
-QT_G_FUNC( hbqt_gcRelease_QDesignerActionEditorInterface )
+HBQT_GC_FUNC( hbqt_gcRelease_QDesignerActionEditorInterface )
 {
    HB_SYMBOL_UNUSED( Cargo );
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -100,7 +100,7 @@ QT_G_FUNC( hbqt_gcRelease_QDesignerActionEditorInterface )
 
 void * hbqt_gcAllocate_QDesignerActionEditorInterface( void * pObj, bool bNew )
 {
-   QGC_POINTER_QDesignerActionEditorInterface * p = ( QGC_POINTER_QDesignerActionEditorInterface * ) hb_gcAllocate( sizeof( QGC_POINTER_QDesignerActionEditorInterface ), hbqt_gcFuncs() );
+   HBQT_GC_T_QDesignerActionEditorInterface * p = ( HBQT_GC_T_QDesignerActionEditorInterface * ) hb_gcAllocate( sizeof( HBQT_GC_T_QDesignerActionEditorInterface ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QDesignerActionEditorInterface >( ( QDesignerActionEditorInterface * ) pObj );
    p->bNew = bNew;

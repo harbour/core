@@ -94,14 +94,14 @@ typedef struct
 {
    QPointer< QSplitter > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QSplitter;
+} HBQT_GC_T_QSplitter;
 
-QT_G_FUNC( hbqt_gcRelease_QSplitter )
+HBQT_GC_FUNC( hbqt_gcRelease_QSplitter )
 {
    QSplitter  * ph = NULL ;
-   QGC_POINTER_QSplitter * p = ( QGC_POINTER_QSplitter * ) Cargo;
+   HBQT_GC_T_QSplitter * p = ( HBQT_GC_T_QSplitter * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -137,7 +137,7 @@ QT_G_FUNC( hbqt_gcRelease_QSplitter )
 
 void * hbqt_gcAllocate_QSplitter( void * pObj, bool bNew )
 {
-   QGC_POINTER_QSplitter * p = ( QGC_POINTER_QSplitter * ) hb_gcAllocate( sizeof( QGC_POINTER_QSplitter ), hbqt_gcFuncs() );
+   HBQT_GC_T_QSplitter * p = ( HBQT_GC_T_QSplitter * ) hb_gcAllocate( sizeof( HBQT_GC_T_QSplitter ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QSplitter >( ( QSplitter * ) pObj );
    p->bNew = bNew;

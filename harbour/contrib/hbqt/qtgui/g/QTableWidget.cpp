@@ -94,14 +94,14 @@ typedef struct
 {
    QPointer< QTableWidget > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QTableWidget;
+} HBQT_GC_T_QTableWidget;
 
-QT_G_FUNC( hbqt_gcRelease_QTableWidget )
+HBQT_GC_FUNC( hbqt_gcRelease_QTableWidget )
 {
    QTableWidget  * ph = NULL ;
-   QGC_POINTER_QTableWidget * p = ( QGC_POINTER_QTableWidget * ) Cargo;
+   HBQT_GC_T_QTableWidget * p = ( HBQT_GC_T_QTableWidget * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -137,7 +137,7 @@ QT_G_FUNC( hbqt_gcRelease_QTableWidget )
 
 void * hbqt_gcAllocate_QTableWidget( void * pObj, bool bNew )
 {
-   QGC_POINTER_QTableWidget * p = ( QGC_POINTER_QTableWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QTableWidget ), hbqt_gcFuncs() );
+   HBQT_GC_T_QTableWidget * p = ( HBQT_GC_T_QTableWidget * ) hb_gcAllocate( sizeof( HBQT_GC_T_QTableWidget ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QTableWidget >( ( QTableWidget * ) pObj );
    p->bNew = bNew;
@@ -508,8 +508,8 @@ HB_FUNC( QT_QTABLEWIDGET_SETCURRENTCELL_1 )
  */
 HB_FUNC( QT_QTABLEWIDGET_SETCURRENTITEM )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTABLEWIDGET_SETCURRENTITEM()" ) );
    if( p && p->ph && q && q->ph )
    {
@@ -524,8 +524,8 @@ HB_FUNC( QT_QTABLEWIDGET_SETCURRENTITEM )
  */
 HB_FUNC( QT_QTABLEWIDGET_SETCURRENTITEM_1 )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTABLEWIDGET_SETCURRENTITEM_1()" ) );
    if( p && p->ph && q && q->ph )
    {
@@ -540,8 +540,8 @@ HB_FUNC( QT_QTABLEWIDGET_SETCURRENTITEM_1 )
  */
 HB_FUNC( QT_QTABLEWIDGET_SETHORIZONTALHEADERITEM )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 3 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 3 );
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTABLEWIDGET_SETHORIZONTALHEADERITEM()" ) );
    if( p && p->ph && q && q->ph )
    {
@@ -570,8 +570,8 @@ HB_FUNC( QT_QTABLEWIDGET_SETHORIZONTALHEADERLABELS )
  */
 HB_FUNC( QT_QTABLEWIDGET_SETITEM )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 4 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 4 );
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTABLEWIDGET_SETITEM()" ) );
    if( p && p->ph && q && q->ph )
    {
@@ -628,8 +628,8 @@ HB_FUNC( QT_QTABLEWIDGET_SETROWCOUNT )
  */
 HB_FUNC( QT_QTABLEWIDGET_SETVERTICALHEADERITEM )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 3 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 3 );
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTABLEWIDGET_SETVERTICALHEADERITEM()" ) );
    if( p && p->ph && q && q->ph )
    {

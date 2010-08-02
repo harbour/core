@@ -88,14 +88,14 @@ typedef struct
 {
    QPointer< QMessageBox > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QMessageBox;
+} HBQT_GC_T_QMessageBox;
 
-QT_G_FUNC( hbqt_gcRelease_QMessageBox )
+HBQT_GC_FUNC( hbqt_gcRelease_QMessageBox )
 {
    QMessageBox  * ph = NULL ;
-   QGC_POINTER_QMessageBox * p = ( QGC_POINTER_QMessageBox * ) Cargo;
+   HBQT_GC_T_QMessageBox * p = ( HBQT_GC_T_QMessageBox * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -131,7 +131,7 @@ QT_G_FUNC( hbqt_gcRelease_QMessageBox )
 
 void * hbqt_gcAllocate_QMessageBox( void * pObj, bool bNew )
 {
-   QGC_POINTER_QMessageBox * p = ( QGC_POINTER_QMessageBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QMessageBox ), hbqt_gcFuncs() );
+   HBQT_GC_T_QMessageBox * p = ( HBQT_GC_T_QMessageBox * ) hb_gcAllocate( sizeof( HBQT_GC_T_QMessageBox ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QMessageBox >( ( QMessageBox * ) pObj );
    p->bNew = bNew;

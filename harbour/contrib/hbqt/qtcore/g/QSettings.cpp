@@ -89,14 +89,14 @@ typedef struct
 {
    QPointer< QSettings > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QSettings;
+} HBQT_GC_T_QSettings;
 
-QT_G_FUNC( hbqt_gcRelease_QSettings )
+HBQT_GC_FUNC( hbqt_gcRelease_QSettings )
 {
    QSettings  * ph = NULL ;
-   QGC_POINTER_QSettings * p = ( QGC_POINTER_QSettings * ) Cargo;
+   HBQT_GC_T_QSettings * p = ( HBQT_GC_T_QSettings * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -132,7 +132,7 @@ QT_G_FUNC( hbqt_gcRelease_QSettings )
 
 void * hbqt_gcAllocate_QSettings( void * pObj, bool bNew )
 {
-   QGC_POINTER_QSettings * p = ( QGC_POINTER_QSettings * ) hb_gcAllocate( sizeof( QGC_POINTER_QSettings ), hbqt_gcFuncs() );
+   HBQT_GC_T_QSettings * p = ( HBQT_GC_T_QSettings * ) hb_gcAllocate( sizeof( HBQT_GC_T_QSettings ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QSettings >( ( QSettings * ) pObj );
    p->bNew = bNew;

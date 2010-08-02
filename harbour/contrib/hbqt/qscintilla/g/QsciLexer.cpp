@@ -81,14 +81,14 @@ typedef struct
 {
    QPointer< QsciLexer > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QsciLexer;
+} HBQT_GC_T_QsciLexer;
 
-QT_G_FUNC( hbqt_gcRelease_QsciLexer )
+HBQT_GC_FUNC( hbqt_gcRelease_QsciLexer )
 {
    HB_SYMBOL_UNUSED( Cargo );
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -98,7 +98,7 @@ QT_G_FUNC( hbqt_gcRelease_QsciLexer )
 
 void * hbqt_gcAllocate_QsciLexer( void * pObj, bool bNew )
 {
-   QGC_POINTER_QsciLexer * p = ( QGC_POINTER_QsciLexer * ) hb_gcAllocate( sizeof( QGC_POINTER_QsciLexer ), hbqt_gcFuncs() );
+   HBQT_GC_T_QsciLexer * p = ( HBQT_GC_T_QsciLexer * ) hb_gcAllocate( sizeof( HBQT_GC_T_QsciLexer ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QsciLexer >( ( QsciLexer * ) pObj );
    p->bNew = bNew;

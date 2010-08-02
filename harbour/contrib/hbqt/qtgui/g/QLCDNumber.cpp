@@ -86,14 +86,14 @@ typedef struct
 {
    QPointer< QLCDNumber > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QLCDNumber;
+} HBQT_GC_T_QLCDNumber;
 
-QT_G_FUNC( hbqt_gcRelease_QLCDNumber )
+HBQT_GC_FUNC( hbqt_gcRelease_QLCDNumber )
 {
    QLCDNumber  * ph = NULL ;
-   QGC_POINTER_QLCDNumber * p = ( QGC_POINTER_QLCDNumber * ) Cargo;
+   HBQT_GC_T_QLCDNumber * p = ( HBQT_GC_T_QLCDNumber * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -129,7 +129,7 @@ QT_G_FUNC( hbqt_gcRelease_QLCDNumber )
 
 void * hbqt_gcAllocate_QLCDNumber( void * pObj, bool bNew )
 {
-   QGC_POINTER_QLCDNumber * p = ( QGC_POINTER_QLCDNumber * ) hb_gcAllocate( sizeof( QGC_POINTER_QLCDNumber ), hbqt_gcFuncs() );
+   HBQT_GC_T_QLCDNumber * p = ( HBQT_GC_T_QLCDNumber * ) hb_gcAllocate( sizeof( HBQT_GC_T_QLCDNumber ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QLCDNumber >( ( QLCDNumber * ) pObj );
    p->bNew = bNew;

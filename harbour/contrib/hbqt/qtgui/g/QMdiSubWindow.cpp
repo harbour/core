@@ -86,14 +86,14 @@ typedef struct
 {
    QPointer< QMdiSubWindow > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QMdiSubWindow;
+} HBQT_GC_T_QMdiSubWindow;
 
-QT_G_FUNC( hbqt_gcRelease_QMdiSubWindow )
+HBQT_GC_FUNC( hbqt_gcRelease_QMdiSubWindow )
 {
    QMdiSubWindow  * ph = NULL ;
-   QGC_POINTER_QMdiSubWindow * p = ( QGC_POINTER_QMdiSubWindow * ) Cargo;
+   HBQT_GC_T_QMdiSubWindow * p = ( HBQT_GC_T_QMdiSubWindow * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -129,7 +129,7 @@ QT_G_FUNC( hbqt_gcRelease_QMdiSubWindow )
 
 void * hbqt_gcAllocate_QMdiSubWindow( void * pObj, bool bNew )
 {
-   QGC_POINTER_QMdiSubWindow * p = ( QGC_POINTER_QMdiSubWindow * ) hb_gcAllocate( sizeof( QGC_POINTER_QMdiSubWindow ), hbqt_gcFuncs() );
+   HBQT_GC_T_QMdiSubWindow * p = ( HBQT_GC_T_QMdiSubWindow * ) hb_gcAllocate( sizeof( HBQT_GC_T_QMdiSubWindow ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QMdiSubWindow >( ( QMdiSubWindow * ) pObj );
    p->bNew = bNew;

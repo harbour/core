@@ -81,14 +81,14 @@ typedef struct
 {
    QPointer< HBQAbstractItemModel > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_HBQAbstractItemModel;
+} HBQT_GC_T_HBQAbstractItemModel;
 
-QT_G_FUNC( hbqt_gcRelease_HBQAbstractItemModel )
+HBQT_GC_FUNC( hbqt_gcRelease_HBQAbstractItemModel )
 {
    HBQAbstractItemModel  * ph = NULL ;
-   QGC_POINTER_HBQAbstractItemModel * p = ( QGC_POINTER_HBQAbstractItemModel * ) Cargo;
+   HBQT_GC_T_HBQAbstractItemModel * p = ( HBQT_GC_T_HBQAbstractItemModel * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -124,7 +124,7 @@ QT_G_FUNC( hbqt_gcRelease_HBQAbstractItemModel )
 
 void * hbqt_gcAllocate_HBQAbstractItemModel( void * pObj, bool bNew )
 {
-   QGC_POINTER_HBQAbstractItemModel * p = ( QGC_POINTER_HBQAbstractItemModel * ) hb_gcAllocate( sizeof( QGC_POINTER_HBQAbstractItemModel ), hbqt_gcFuncs() );
+   HBQT_GC_T_HBQAbstractItemModel * p = ( HBQT_GC_T_HBQAbstractItemModel * ) hb_gcAllocate( sizeof( HBQT_GC_T_HBQAbstractItemModel ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< HBQAbstractItemModel >( ( HBQAbstractItemModel * ) pObj );
    p->bNew = bNew;

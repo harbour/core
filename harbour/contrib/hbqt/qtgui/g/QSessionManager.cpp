@@ -83,14 +83,14 @@ typedef struct
 {
    QPointer< QSessionManager > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QSessionManager;
+} HBQT_GC_T_QSessionManager;
 
-QT_G_FUNC( hbqt_gcRelease_QSessionManager )
+HBQT_GC_FUNC( hbqt_gcRelease_QSessionManager )
 {
    HB_SYMBOL_UNUSED( Cargo );
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -100,7 +100,7 @@ QT_G_FUNC( hbqt_gcRelease_QSessionManager )
 
 void * hbqt_gcAllocate_QSessionManager( void * pObj, bool bNew )
 {
-   QGC_POINTER_QSessionManager * p = ( QGC_POINTER_QSessionManager * ) hb_gcAllocate( sizeof( QGC_POINTER_QSessionManager ), hbqt_gcFuncs() );
+   HBQT_GC_T_QSessionManager * p = ( HBQT_GC_T_QSessionManager * ) hb_gcAllocate( sizeof( HBQT_GC_T_QSessionManager ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QSessionManager >( ( QSessionManager * ) pObj );
    p->bNew = bNew;

@@ -94,14 +94,14 @@ typedef struct
 {
    QPointer< QTabWidget > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QTabWidget;
+} HBQT_GC_T_QTabWidget;
 
-QT_G_FUNC( hbqt_gcRelease_QTabWidget )
+HBQT_GC_FUNC( hbqt_gcRelease_QTabWidget )
 {
    QTabWidget  * ph = NULL ;
-   QGC_POINTER_QTabWidget * p = ( QGC_POINTER_QTabWidget * ) Cargo;
+   HBQT_GC_T_QTabWidget * p = ( HBQT_GC_T_QTabWidget * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -137,7 +137,7 @@ QT_G_FUNC( hbqt_gcRelease_QTabWidget )
 
 void * hbqt_gcAllocate_QTabWidget( void * pObj, bool bNew )
 {
-   QGC_POINTER_QTabWidget * p = ( QGC_POINTER_QTabWidget * ) hb_gcAllocate( sizeof( QGC_POINTER_QTabWidget ), hbqt_gcFuncs() );
+   HBQT_GC_T_QTabWidget * p = ( HBQT_GC_T_QTabWidget * ) hb_gcAllocate( sizeof( HBQT_GC_T_QTabWidget ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QTabWidget >( ( QTabWidget * ) pObj );
    p->bNew = bNew;
@@ -169,8 +169,8 @@ HB_FUNC( QT_QTABWIDGET )
  */
 HB_FUNC( QT_QTABWIDGET_ADDTAB )
 {
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
 
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTABWIDGET_ADDTAB()" ) );
    if( p && p->ph && q && q->ph )

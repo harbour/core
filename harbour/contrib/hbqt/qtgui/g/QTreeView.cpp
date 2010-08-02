@@ -92,14 +92,14 @@ typedef struct
 {
    QPointer< QTreeView > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QTreeView;
+} HBQT_GC_T_QTreeView;
 
-QT_G_FUNC( hbqt_gcRelease_QTreeView )
+HBQT_GC_FUNC( hbqt_gcRelease_QTreeView )
 {
    QTreeView  * ph = NULL ;
-   QGC_POINTER_QTreeView * p = ( QGC_POINTER_QTreeView * ) Cargo;
+   HBQT_GC_T_QTreeView * p = ( HBQT_GC_T_QTreeView * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -135,7 +135,7 @@ QT_G_FUNC( hbqt_gcRelease_QTreeView )
 
 void * hbqt_gcAllocate_QTreeView( void * pObj, bool bNew )
 {
-   QGC_POINTER_QTreeView * p = ( QGC_POINTER_QTreeView * ) hb_gcAllocate( sizeof( QGC_POINTER_QTreeView ), hbqt_gcFuncs() );
+   HBQT_GC_T_QTreeView * p = ( HBQT_GC_T_QTreeView * ) hb_gcAllocate( sizeof( HBQT_GC_T_QTreeView ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QTreeView >( ( QTreeView * ) pObj );
    p->bNew = bNew;

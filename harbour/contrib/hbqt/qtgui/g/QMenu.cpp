@@ -95,14 +95,14 @@ typedef struct
 {
    QPointer< QMenu > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QMenu;
+} HBQT_GC_T_QMenu;
 
-QT_G_FUNC( hbqt_gcRelease_QMenu )
+HBQT_GC_FUNC( hbqt_gcRelease_QMenu )
 {
    QMenu  * ph = NULL ;
-   QGC_POINTER_QMenu * p = ( QGC_POINTER_QMenu * ) Cargo;
+   HBQT_GC_T_QMenu * p = ( HBQT_GC_T_QMenu * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -138,7 +138,7 @@ QT_G_FUNC( hbqt_gcRelease_QMenu )
 
 void * hbqt_gcAllocate_QMenu( void * pObj, bool bNew )
 {
-   QGC_POINTER_QMenu * p = ( QGC_POINTER_QMenu * ) hb_gcAllocate( sizeof( QGC_POINTER_QMenu ), hbqt_gcFuncs() );
+   HBQT_GC_T_QMenu * p = ( HBQT_GC_T_QMenu * ) hb_gcAllocate( sizeof( HBQT_GC_T_QMenu ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QMenu >( ( QMenu * ) pObj );
    p->bNew = bNew;
@@ -275,8 +275,8 @@ HB_FUNC( QT_QMENU_ADDACTION_3 )
  */
 HB_FUNC( QT_QMENU_ADDACTION_4 )
 {
-  QGC_POINTER_QMenu * q = ( QGC_POINTER_QMenu * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-  QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+  HBQT_GC_T_QMenu * q = ( HBQT_GC_T_QMenu * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+  HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
 
   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QMENU_ADDACTION()" ) );
   if( p && p->ph && q && q->ph )

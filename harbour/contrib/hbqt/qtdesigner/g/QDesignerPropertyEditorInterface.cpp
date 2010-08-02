@@ -83,14 +83,14 @@ typedef struct
 {
    QPointer< QDesignerPropertyEditorInterface > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QDesignerPropertyEditorInterface;
+} HBQT_GC_T_QDesignerPropertyEditorInterface;
 
-QT_G_FUNC( hbqt_gcRelease_QDesignerPropertyEditorInterface )
+HBQT_GC_FUNC( hbqt_gcRelease_QDesignerPropertyEditorInterface )
 {
    HB_SYMBOL_UNUSED( Cargo );
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -100,7 +100,7 @@ QT_G_FUNC( hbqt_gcRelease_QDesignerPropertyEditorInterface )
 
 void * hbqt_gcAllocate_QDesignerPropertyEditorInterface( void * pObj, bool bNew )
 {
-   QGC_POINTER_QDesignerPropertyEditorInterface * p = ( QGC_POINTER_QDesignerPropertyEditorInterface * ) hb_gcAllocate( sizeof( QGC_POINTER_QDesignerPropertyEditorInterface ), hbqt_gcFuncs() );
+   HBQT_GC_T_QDesignerPropertyEditorInterface * p = ( HBQT_GC_T_QDesignerPropertyEditorInterface * ) hb_gcAllocate( sizeof( HBQT_GC_T_QDesignerPropertyEditorInterface ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QDesignerPropertyEditorInterface >( ( QDesignerPropertyEditorInterface * ) pObj );
    p->bNew = bNew;

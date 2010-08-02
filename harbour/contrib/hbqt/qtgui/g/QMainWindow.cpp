@@ -109,14 +109,14 @@ typedef struct
 {
    QPointer< QMainWindow > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QMainWindow;
+} HBQT_GC_T_QMainWindow;
 
-QT_G_FUNC( hbqt_gcRelease_QMainWindow )
+HBQT_GC_FUNC( hbqt_gcRelease_QMainWindow )
 {
    QMainWindow  * ph = NULL ;
-   QGC_POINTER_QMainWindow * p = ( QGC_POINTER_QMainWindow * ) Cargo;
+   HBQT_GC_T_QMainWindow * p = ( HBQT_GC_T_QMainWindow * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -152,7 +152,7 @@ QT_G_FUNC( hbqt_gcRelease_QMainWindow )
 
 void * hbqt_gcAllocate_QMainWindow( void * pObj, bool bNew )
 {
-   QGC_POINTER_QMainWindow * p = ( QGC_POINTER_QMainWindow * ) hb_gcAllocate( sizeof( QGC_POINTER_QMainWindow ), hbqt_gcFuncs() );
+   HBQT_GC_T_QMainWindow * p = ( HBQT_GC_T_QMainWindow * ) hb_gcAllocate( sizeof( HBQT_GC_T_QMainWindow ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QMainWindow >( ( QMainWindow * ) pObj );
    p->bNew = bNew;
@@ -212,8 +212,8 @@ HB_FUNC( QT_QMAINWINDOW_ADDDOCKWIDGET_1 )
  */
 HB_FUNC( QT_QMAINWINDOW_ADDTOOLBAR )
 {
-   QGC_POINTER_QMainWindow * q = ( QGC_POINTER_QMainWindow * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 3 );
+   HBQT_GC_T_QMainWindow * q = ( HBQT_GC_T_QMainWindow * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 3 );
 
    HB_TRACE( HB_TR_DEBUG, ("QMAINWINDOW_ADDTOOLBAR" ) );
    HB_TRACE( HB_TR_DEBUG, ( "QT_QMAINWINDOW_ADDTOOLBAR() Qt object: %p  to: %p", (void *) p, (void *) q) );

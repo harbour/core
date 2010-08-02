@@ -75,8 +75,8 @@ HB_FUNC( QT_QTREEWIDGET )
 
 <PROTOS>
 void addTopLevelItem ( QTreeWidgetItem * item ){
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTREEWIDGET_ADDTOPLEVELITEM()" ) );
    if( p && p->ph && q && q->ph )
    {
@@ -110,8 +110,8 @@ QList<QTreeWidgetItem *> selectedItems () const
 void setColumnCount ( int columns )
 
 void setCurrentItem ( QTreeWidgetItem * item ){
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTREEWIDGET_SETCURRENTITEM()" ) );
    if( p && p->ph && q && q->ph )
    {
@@ -122,8 +122,8 @@ void setCurrentItem ( QTreeWidgetItem * item ){
 }
 
 void setCurrentItem ( QTreeWidgetItem * item, int column ){
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTREEWIDGET_SETCURRENTITEM_1()" ) );
    if( p && p->ph && q && q->ph )
    {
@@ -134,8 +134,8 @@ void setCurrentItem ( QTreeWidgetItem * item, int column ){
 }
 
 void setCurrentItem ( QTreeWidgetItem * item, int column, QItemSelectionModel::SelectionFlags command ){
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTREEWIDGET_SETCURRENTITEM_2()" ) );
    if( p && p->ph && q && q->ph )
    {
@@ -148,8 +148,8 @@ void setCurrentItem ( QTreeWidgetItem * item, int column, QItemSelectionModel::S
 void setFirstItemColumnSpanned ( const QTreeWidgetItem * item, bool span )
 
 void setHeaderItem ( QTreeWidgetItem * item ){
-   QGC_POINTER * p = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   QGC_POINTER * q = ( QGC_POINTER * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
    HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTREEWIDGET_SETHEADERITEM()" ) );
    if( p && p->ph && q && q->ph )
    {

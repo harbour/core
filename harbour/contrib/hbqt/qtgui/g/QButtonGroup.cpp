@@ -80,14 +80,14 @@ typedef struct
 {
    QPointer< QButtonGroup > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QButtonGroup;
+} HBQT_GC_T_QButtonGroup;
 
-QT_G_FUNC( hbqt_gcRelease_QButtonGroup )
+HBQT_GC_FUNC( hbqt_gcRelease_QButtonGroup )
 {
    QButtonGroup  * ph = NULL ;
-   QGC_POINTER_QButtonGroup * p = ( QGC_POINTER_QButtonGroup * ) Cargo;
+   HBQT_GC_T_QButtonGroup * p = ( HBQT_GC_T_QButtonGroup * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -123,7 +123,7 @@ QT_G_FUNC( hbqt_gcRelease_QButtonGroup )
 
 void * hbqt_gcAllocate_QButtonGroup( void * pObj, bool bNew )
 {
-   QGC_POINTER_QButtonGroup * p = ( QGC_POINTER_QButtonGroup * ) hb_gcAllocate( sizeof( QGC_POINTER_QButtonGroup ), hbqt_gcFuncs() );
+   HBQT_GC_T_QButtonGroup * p = ( HBQT_GC_T_QButtonGroup * ) hb_gcAllocate( sizeof( HBQT_GC_T_QButtonGroup ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QButtonGroup >( ( QButtonGroup * ) pObj );
    p->bNew = bNew;

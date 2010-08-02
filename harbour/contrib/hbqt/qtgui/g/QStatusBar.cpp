@@ -80,14 +80,14 @@ typedef struct
 {
    QPointer< QStatusBar > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QStatusBar;
+} HBQT_GC_T_QStatusBar;
 
-QT_G_FUNC( hbqt_gcRelease_QStatusBar )
+HBQT_GC_FUNC( hbqt_gcRelease_QStatusBar )
 {
    QStatusBar  * ph = NULL ;
-   QGC_POINTER_QStatusBar * p = ( QGC_POINTER_QStatusBar * ) Cargo;
+   HBQT_GC_T_QStatusBar * p = ( HBQT_GC_T_QStatusBar * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -123,7 +123,7 @@ QT_G_FUNC( hbqt_gcRelease_QStatusBar )
 
 void * hbqt_gcAllocate_QStatusBar( void * pObj, bool bNew )
 {
-   QGC_POINTER_QStatusBar * p = ( QGC_POINTER_QStatusBar * ) hb_gcAllocate( sizeof( QGC_POINTER_QStatusBar ), hbqt_gcFuncs() );
+   HBQT_GC_T_QStatusBar * p = ( HBQT_GC_T_QStatusBar * ) hb_gcAllocate( sizeof( HBQT_GC_T_QStatusBar ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QStatusBar >( ( QStatusBar * ) pObj );
    p->bNew = bNew;

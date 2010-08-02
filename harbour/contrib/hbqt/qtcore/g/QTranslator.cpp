@@ -78,14 +78,14 @@ typedef struct
 {
    QPointer< QTranslator > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QTranslator;
+} HBQT_GC_T_QTranslator;
 
-QT_G_FUNC( hbqt_gcRelease_QTranslator )
+HBQT_GC_FUNC( hbqt_gcRelease_QTranslator )
 {
    QTranslator  * ph = NULL ;
-   QGC_POINTER_QTranslator * p = ( QGC_POINTER_QTranslator * ) Cargo;
+   HBQT_GC_T_QTranslator * p = ( HBQT_GC_T_QTranslator * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -121,7 +121,7 @@ QT_G_FUNC( hbqt_gcRelease_QTranslator )
 
 void * hbqt_gcAllocate_QTranslator( void * pObj, bool bNew )
 {
-   QGC_POINTER_QTranslator * p = ( QGC_POINTER_QTranslator * ) hb_gcAllocate( sizeof( QGC_POINTER_QTranslator ), hbqt_gcFuncs() );
+   HBQT_GC_T_QTranslator * p = ( HBQT_GC_T_QTranslator * ) hb_gcAllocate( sizeof( HBQT_GC_T_QTranslator ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QTranslator >( ( QTranslator * ) pObj );
    p->bNew = bNew;

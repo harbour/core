@@ -86,14 +86,14 @@ typedef struct
 {
    QPointer< QSystemTrayIcon > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QSystemTrayIcon;
+} HBQT_GC_T_QSystemTrayIcon;
 
-QT_G_FUNC( hbqt_gcRelease_QSystemTrayIcon )
+HBQT_GC_FUNC( hbqt_gcRelease_QSystemTrayIcon )
 {
    QSystemTrayIcon  * ph = NULL ;
-   QGC_POINTER_QSystemTrayIcon * p = ( QGC_POINTER_QSystemTrayIcon * ) Cargo;
+   HBQT_GC_T_QSystemTrayIcon * p = ( HBQT_GC_T_QSystemTrayIcon * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -129,7 +129,7 @@ QT_G_FUNC( hbqt_gcRelease_QSystemTrayIcon )
 
 void * hbqt_gcAllocate_QSystemTrayIcon( void * pObj, bool bNew )
 {
-   QGC_POINTER_QSystemTrayIcon * p = ( QGC_POINTER_QSystemTrayIcon * ) hb_gcAllocate( sizeof( QGC_POINTER_QSystemTrayIcon ), hbqt_gcFuncs() );
+   HBQT_GC_T_QSystemTrayIcon * p = ( HBQT_GC_T_QSystemTrayIcon * ) hb_gcAllocate( sizeof( HBQT_GC_T_QSystemTrayIcon ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QSystemTrayIcon >( ( QSystemTrayIcon * ) pObj );
    p->bNew = bNew;

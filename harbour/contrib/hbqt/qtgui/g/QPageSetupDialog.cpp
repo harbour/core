@@ -85,14 +85,14 @@ typedef struct
 {
    QPointer< QPageSetupDialog > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QPageSetupDialog;
+} HBQT_GC_T_QPageSetupDialog;
 
-QT_G_FUNC( hbqt_gcRelease_QPageSetupDialog )
+HBQT_GC_FUNC( hbqt_gcRelease_QPageSetupDialog )
 {
    QPageSetupDialog  * ph = NULL ;
-   QGC_POINTER_QPageSetupDialog * p = ( QGC_POINTER_QPageSetupDialog * ) Cargo;
+   HBQT_GC_T_QPageSetupDialog * p = ( HBQT_GC_T_QPageSetupDialog * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -128,7 +128,7 @@ QT_G_FUNC( hbqt_gcRelease_QPageSetupDialog )
 
 void * hbqt_gcAllocate_QPageSetupDialog( void * pObj, bool bNew )
 {
-   QGC_POINTER_QPageSetupDialog * p = ( QGC_POINTER_QPageSetupDialog * ) hb_gcAllocate( sizeof( QGC_POINTER_QPageSetupDialog ), hbqt_gcFuncs() );
+   HBQT_GC_T_QPageSetupDialog * p = ( HBQT_GC_T_QPageSetupDialog * ) hb_gcAllocate( sizeof( HBQT_GC_T_QPageSetupDialog ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QPageSetupDialog >( ( QPageSetupDialog * ) pObj );
    p->bNew = bNew;

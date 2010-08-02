@@ -85,14 +85,14 @@ typedef struct
 {
    QPointer< QComboBox > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QComboBox;
+} HBQT_GC_T_QComboBox;
 
-QT_G_FUNC( hbqt_gcRelease_QComboBox )
+HBQT_GC_FUNC( hbqt_gcRelease_QComboBox )
 {
    QComboBox  * ph = NULL ;
-   QGC_POINTER_QComboBox * p = ( QGC_POINTER_QComboBox * ) Cargo;
+   HBQT_GC_T_QComboBox * p = ( HBQT_GC_T_QComboBox * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -128,7 +128,7 @@ QT_G_FUNC( hbqt_gcRelease_QComboBox )
 
 void * hbqt_gcAllocate_QComboBox( void * pObj, bool bNew )
 {
-   QGC_POINTER_QComboBox * p = ( QGC_POINTER_QComboBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QComboBox ), hbqt_gcFuncs() );
+   HBQT_GC_T_QComboBox * p = ( HBQT_GC_T_QComboBox * ) hb_gcAllocate( sizeof( HBQT_GC_T_QComboBox ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QComboBox >( ( QComboBox * ) pObj );
    p->bNew = bNew;

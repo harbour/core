@@ -86,14 +86,14 @@ typedef struct
 {
    QPointer< QFormLayout > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QFormLayout;
+} HBQT_GC_T_QFormLayout;
 
-QT_G_FUNC( hbqt_gcRelease_QFormLayout )
+HBQT_GC_FUNC( hbqt_gcRelease_QFormLayout )
 {
    QFormLayout  * ph = NULL ;
-   QGC_POINTER_QFormLayout * p = ( QGC_POINTER_QFormLayout * ) Cargo;
+   HBQT_GC_T_QFormLayout * p = ( HBQT_GC_T_QFormLayout * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -129,7 +129,7 @@ QT_G_FUNC( hbqt_gcRelease_QFormLayout )
 
 void * hbqt_gcAllocate_QFormLayout( void * pObj, bool bNew )
 {
-   QGC_POINTER_QFormLayout * p = ( QGC_POINTER_QFormLayout * ) hb_gcAllocate( sizeof( QGC_POINTER_QFormLayout ), hbqt_gcFuncs() );
+   HBQT_GC_T_QFormLayout * p = ( HBQT_GC_T_QFormLayout * ) hb_gcAllocate( sizeof( HBQT_GC_T_QFormLayout ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QFormLayout >( ( QFormLayout * ) pObj );
    p->bNew = bNew;

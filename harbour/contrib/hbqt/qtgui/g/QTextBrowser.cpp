@@ -79,14 +79,14 @@ typedef struct
 {
    QPointer< QTextBrowser > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QTextBrowser;
+} HBQT_GC_T_QTextBrowser;
 
-QT_G_FUNC( hbqt_gcRelease_QTextBrowser )
+HBQT_GC_FUNC( hbqt_gcRelease_QTextBrowser )
 {
    QTextBrowser  * ph = NULL ;
-   QGC_POINTER_QTextBrowser * p = ( QGC_POINTER_QTextBrowser * ) Cargo;
+   HBQT_GC_T_QTextBrowser * p = ( HBQT_GC_T_QTextBrowser * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -122,7 +122,7 @@ QT_G_FUNC( hbqt_gcRelease_QTextBrowser )
 
 void * hbqt_gcAllocate_QTextBrowser( void * pObj, bool bNew )
 {
-   QGC_POINTER_QTextBrowser * p = ( QGC_POINTER_QTextBrowser * ) hb_gcAllocate( sizeof( QGC_POINTER_QTextBrowser ), hbqt_gcFuncs() );
+   HBQT_GC_T_QTextBrowser * p = ( HBQT_GC_T_QTextBrowser * ) hb_gcAllocate( sizeof( HBQT_GC_T_QTextBrowser ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QTextBrowser >( ( QTextBrowser * ) pObj );
    p->bNew = bNew;

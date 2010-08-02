@@ -83,14 +83,14 @@ typedef struct
 {
    QPointer< QDesignerFormWindowManagerInterface > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QDesignerFormWindowManagerInterface;
+} HBQT_GC_T_QDesignerFormWindowManagerInterface;
 
-QT_G_FUNC( hbqt_gcRelease_QDesignerFormWindowManagerInterface )
+HBQT_GC_FUNC( hbqt_gcRelease_QDesignerFormWindowManagerInterface )
 {
    HB_SYMBOL_UNUSED( Cargo );
-   QGC_POINTER * p = ( QGC_POINTER * ) Cargo;
+   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
    if( p && p->bNew )
    {
@@ -100,7 +100,7 @@ QT_G_FUNC( hbqt_gcRelease_QDesignerFormWindowManagerInterface )
 
 void * hbqt_gcAllocate_QDesignerFormWindowManagerInterface( void * pObj, bool bNew )
 {
-   QGC_POINTER_QDesignerFormWindowManagerInterface * p = ( QGC_POINTER_QDesignerFormWindowManagerInterface * ) hb_gcAllocate( sizeof( QGC_POINTER_QDesignerFormWindowManagerInterface ), hbqt_gcFuncs() );
+   HBQT_GC_T_QDesignerFormWindowManagerInterface * p = ( HBQT_GC_T_QDesignerFormWindowManagerInterface * ) hb_gcAllocate( sizeof( HBQT_GC_T_QDesignerFormWindowManagerInterface ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QDesignerFormWindowManagerInterface >( ( QDesignerFormWindowManagerInterface * ) pObj );
    p->bNew = bNew;

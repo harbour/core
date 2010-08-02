@@ -93,14 +93,14 @@ typedef struct
 {
    QPointer< QWebPage > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QWebPage;
+} HBQT_GC_T_QWebPage;
 
-QT_G_FUNC( hbqt_gcRelease_QWebPage )
+HBQT_GC_FUNC( hbqt_gcRelease_QWebPage )
 {
    QWebPage  * ph = NULL ;
-   QGC_POINTER_QWebPage * p = ( QGC_POINTER_QWebPage * ) Cargo;
+   HBQT_GC_T_QWebPage * p = ( HBQT_GC_T_QWebPage * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -136,7 +136,7 @@ QT_G_FUNC( hbqt_gcRelease_QWebPage )
 
 void * hbqt_gcAllocate_QWebPage( void * pObj, bool bNew )
 {
-   QGC_POINTER_QWebPage * p = ( QGC_POINTER_QWebPage * ) hb_gcAllocate( sizeof( QGC_POINTER_QWebPage ), hbqt_gcFuncs() );
+   HBQT_GC_T_QWebPage * p = ( HBQT_GC_T_QWebPage * ) hb_gcAllocate( sizeof( HBQT_GC_T_QWebPage ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QWebPage >( ( QWebPage * ) pObj );
    p->bNew = bNew;

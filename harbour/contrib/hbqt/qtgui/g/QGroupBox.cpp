@@ -81,14 +81,14 @@ typedef struct
 {
    QPointer< QGroupBox > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QGroupBox;
+} HBQT_GC_T_QGroupBox;
 
-QT_G_FUNC( hbqt_gcRelease_QGroupBox )
+HBQT_GC_FUNC( hbqt_gcRelease_QGroupBox )
 {
    QGroupBox  * ph = NULL ;
-   QGC_POINTER_QGroupBox * p = ( QGC_POINTER_QGroupBox * ) Cargo;
+   HBQT_GC_T_QGroupBox * p = ( HBQT_GC_T_QGroupBox * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -124,7 +124,7 @@ QT_G_FUNC( hbqt_gcRelease_QGroupBox )
 
 void * hbqt_gcAllocate_QGroupBox( void * pObj, bool bNew )
 {
-   QGC_POINTER_QGroupBox * p = ( QGC_POINTER_QGroupBox * ) hb_gcAllocate( sizeof( QGC_POINTER_QGroupBox ), hbqt_gcFuncs() );
+   HBQT_GC_T_QGroupBox * p = ( HBQT_GC_T_QGroupBox * ) hb_gcAllocate( sizeof( HBQT_GC_T_QGroupBox ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QGroupBox >( ( QGroupBox * ) pObj );
    p->bNew = bNew;

@@ -86,14 +86,14 @@ typedef struct
 {
    QPointer< QLineEdit > ph;
    bool bNew;
-   QT_G_FUNC_PTR func;
+   PHBQT_GC_FUNC func;
    int type;
-} QGC_POINTER_QLineEdit;
+} HBQT_GC_T_QLineEdit;
 
-QT_G_FUNC( hbqt_gcRelease_QLineEdit )
+HBQT_GC_FUNC( hbqt_gcRelease_QLineEdit )
 {
    QLineEdit  * ph = NULL ;
-   QGC_POINTER_QLineEdit * p = ( QGC_POINTER_QLineEdit * ) Cargo;
+   HBQT_GC_T_QLineEdit * p = ( HBQT_GC_T_QLineEdit * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -129,7 +129,7 @@ QT_G_FUNC( hbqt_gcRelease_QLineEdit )
 
 void * hbqt_gcAllocate_QLineEdit( void * pObj, bool bNew )
 {
-   QGC_POINTER_QLineEdit * p = ( QGC_POINTER_QLineEdit * ) hb_gcAllocate( sizeof( QGC_POINTER_QLineEdit ), hbqt_gcFuncs() );
+   HBQT_GC_T_QLineEdit * p = ( HBQT_GC_T_QLineEdit * ) hb_gcAllocate( sizeof( HBQT_GC_T_QLineEdit ), hbqt_gcFuncs() );
 
    new( & p->ph ) QPointer< QLineEdit >( ( QLineEdit * ) pObj );
    p->bNew = bNew;
