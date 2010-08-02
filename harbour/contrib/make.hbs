@@ -474,7 +474,6 @@ STATIC FUNCTION call_hbmk2_hbinfo( cProjectPath, hProject )
          IF ! Empty( tmp )
             hb_FNameSplit( LTrim( tmp ), @cDir, @cName )
             AAdd( hProject[ "aDept" ], { "nDepth" => Len( tmp ) - Len( LTrim( tmp ) ),;
-                                         "cFileName_HBC" => LTrim( tmp ),;
                                          "cFileName_HBP" => StrTran( PathNormalize( PathMakeAbsolute( FNameExtSet( PathSepToSelf( LTrim( tmp ) ), ".hbp" ), s_cRebase ) ), "\", "/" ) } )
          ENDIF
       NEXT
@@ -503,16 +502,6 @@ STATIC FUNCTION hbmk2_hbinfo_getitem( cString, cItem, lAll )
    ENDDO
 
    RETURN cRetVal
-
-STATIC FUNCTION DepListToStr( aDeptHBC )
-   LOCAL cOptionsLibDyn := ""
-   LOCAL hDept
-
-   FOR EACH hDept IN aDeptHBC
-      cOptionsLibDyn += " " + hDept[ "cFileName_HBC" ]
-   NEXT
-
-   RETURN cOptionsLibDyn
 
 STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, lLibDyn )
    LOCAL nErrorLevel
@@ -548,11 +537,11 @@ STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, lLibDyn )
 
    RETURN .T.
 
-STATIC FUNCTION mk_hb_processRun( cCommand )
+STATIC FUNCTION mk_hb_processRun( cCommand, ... )
 
    OutStd( cCommand + hb_eol() )
 
-   RETURN hb_processRun( cCommand )
+   RETURN hb_processRun( cCommand, ... )
 
 STATIC FUNCTION mk_hbd( cDir )
    LOCAL cName

@@ -9,7 +9,8 @@
 
 -w3 -es2
 
-../hbqt/hbqt.hbc
+../hbqt/hbqtcore.hbc
+../hbqt/hbqtgui.hbc
 
 -instfile=inc:appevent.ch
 -instfile=inc:gra.ch
