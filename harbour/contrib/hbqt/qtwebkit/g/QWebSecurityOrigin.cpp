@@ -171,20 +171,6 @@ HB_FUNC( QT_QWEBSECURITYORIGIN_DATABASEUSAGE )
 }
 
 /*
- * QList<QWebDatabase> databases () const
- */
-HB_FUNC( QT_QWEBSECURITYORIGIN_DATABASES )
-{
-   QWebSecurityOrigin * p = hbqt_par_QWebSecurityOrigin( 1 );
-   if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QWebDatabase>( ( p )->databases() ), true ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSECURITYORIGIN_DATABASES FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QWebDatabase>( ( p )->databases() ), true ) ); p is NULL" ) );
-   }
-}
-
-/*
  * QString host () const
  */
 HB_FUNC( QT_QWEBSECURITYORIGIN_HOST )

@@ -27,7 +27,6 @@
  *     An instance of the object of type QWebPluginFactory
  *  $METHODS$
  *     :create( cMimeType, pUrl, pArgumentNames, pArgumentValues )  -> pQObject
- *     :plugins()                                          -> pQList<Plugin>
  *     :refreshPlugins()                                   -> NIL
  *     :supportsExtension( nExtension )                    -> lBool
  * 

@@ -63,6 +63,8 @@ folder   = qtwebkit
 </CLASS>
 
 <CODE>
+#include "hbqtgui.h"
+
 #include <QtWebKit/QWebHistoryItem>
 #include <QtCore/QVariant>
 

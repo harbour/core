@@ -10,5 +10,7 @@
 -hbcontainer
 
 hbqtcore.hbc
+hbqtdesigner.hbc
 hbqtgui.hbc
 hbqtnetwork.hbc
+hbqtwebkit.hbc

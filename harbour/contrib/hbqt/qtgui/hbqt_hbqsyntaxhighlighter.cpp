@@ -49,7 +49,8 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*----------------------------------------------------------------------*/
+
+#include "hbqt.h"
 
 #if QT_VERSION >= 0x040500
 

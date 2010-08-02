@@ -1778,6 +1778,7 @@ STATIC FUNCTION Build_HeaderFile( cpp_, cPathOut, cProFile )
    LOCAL txt_ := {}
    LOCAL s
    LOCAL tmp
+   LOCAL cName := FNameGetName( cProFile )
 
    aadd( txt_, "/*"                                                                            )
    aadd( txt_, " * $" + "Id" + "$"                                                             )
@@ -1789,8 +1790,8 @@ STATIC FUNCTION Build_HeaderFile( cpp_, cPathOut, cProFile )
    aadd( txt_, "/*          or the generator tool itself, and run regenarate.           */"    )
    aadd( txt_, "/* -------------------------------------------------------------------- */"    )
    aadd( txt_, "" )
-   aadd( txt_, "#ifndef __HB" + Upper( FNameGetName( cProFile ) ) + "_H" )
-   aadd( txt_, "#define __HB" + Upper( FNameGetName( cProFile ) ) + "_H" )
+   aadd( txt_, "#ifndef __HB" + Upper( cName ) + "_H" )
+   aadd( txt_, "#define __HB" + Upper( cName ) + "_H" )
    aadd( txt_, "" )
    aadd( txt_, '#include "hbqt.h"' )
    aadd( txt_, "" )
@@ -1813,13 +1814,20 @@ STATIC FUNCTION Build_HeaderFile( cpp_, cPathOut, cProFile )
       ELSE
          tmp := s
       ENDIF
-      aadd( txt_, PadR( "#define hbqt_par_" + s + "( n )", 52 ) + PadR( "( ( " + tmp, 32 ) + "* ) hbqt_gcpointer( n ) )" )
+      aadd( txt_, PadR( "#define hbqt_par_" + s + "( n )", 64 ) + PadR( "( ( " + tmp, 48 ) + "* ) hbqt_gcpointer( n ) )" )
    NEXT
    aadd( txt_, "" )
 
-   aadd( txt_, "#endif /* __HB" + Upper( FNameGetName( cProFile ) ) + "_H */" )
+   aadd( txt_, PadR( "#define HBQT_TYPE_" + Upper( cName ) + "_BASE", 64 ) + hb_ntos( Round( hb_crc16( Upper( cName ) ), -3 ) ) )
+   aadd( txt_, "" )
+   FOR EACH s IN cpp_
+      aadd( txt_, PadR( "#define HBQT_TYPE_" + s, 64 ) + "( HBQT_TYPE_" + Upper( cName ) + "_BASE + " + hb_ntos( s:__enumIndex() ) + " )" )
+   NEXT
+   aadd( txt_, "" )
 
-   CreateTarget( cFile + "hb" + FNameGetName( cProFile ) + ".h", txt_ )
+   aadd( txt_, "#endif /* __HB" + Upper( cName ) + "_H */" )
+
+   CreateTarget( cFile + "hb" + cName + ".h", txt_ )
 
    RETURN NIL
 

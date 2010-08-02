@@ -78,6 +78,8 @@
 
 #include <QtCore/QPointer>
 
+#include "hbqtgui.h"
+
 #include <QtWebKit/QWebPage>
 #include <QtCore/QVariant>
 

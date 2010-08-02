@@ -8,6 +8,9 @@
 # ---------------------------------------------------------------
 
 libs=../qtcore/hbqtcore.hbc
+libs=../qtgui/hbqtgui.hbc
+
+incpaths=g
 
 {!HB_STATIC_QT&!hbdyn}libs=hbqtdesigner${__HB_DYN__}
 {!HB_STATIC_QT&(allwin|os2)}libs=QtDesigner4

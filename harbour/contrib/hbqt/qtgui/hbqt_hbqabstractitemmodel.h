@@ -54,7 +54,8 @@
 #ifndef HBQT_HBQAbstractItemModel_H
 #define HBQT_HBQAbstractItemModel_H
 
-#include "hbqt.h"
+#include "hbqtcore.h"
+#include "hbqtgui.h"
 
 /*----------------------------------------------------------------------*/
 

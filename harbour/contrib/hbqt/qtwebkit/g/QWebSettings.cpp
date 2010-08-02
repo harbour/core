@@ -75,6 +75,8 @@
 
 #include <QtCore/QPointer>
 
+#include "hbqtgui.h"
+
 #include <QtWebKit/QWebSettings>
 #include <QtCore/QUrl>
 

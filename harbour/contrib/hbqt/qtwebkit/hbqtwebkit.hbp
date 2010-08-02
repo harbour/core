@@ -9,5 +9,7 @@ g/filelist.hbm
 -ig
 
 ../qtcore/hbqtcore.hbc
+../qtgui/hbqtgui.hbc
+../qtnetwork/hbqtnetwork.hbc
 
 hbqtwebkits.hbp

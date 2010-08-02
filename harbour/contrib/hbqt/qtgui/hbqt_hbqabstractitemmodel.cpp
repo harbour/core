@@ -51,6 +51,8 @@
  *
  */
 
+#include "hbqt.h"
+
 #include "hbapiitm.h"
 #include "hbvm.h"
 

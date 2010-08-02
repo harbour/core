@@ -69,6 +69,8 @@ folder   = hbqtdesigner
 </DOC>
 
 <CODE>
+#include "hbqtgui.h"
+
 #include <QtDesigner/QDesignerFormWindowInterface>
 
 

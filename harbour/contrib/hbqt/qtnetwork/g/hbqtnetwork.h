@@ -27,11 +27,20 @@ extern HB_EXPORT void * hbqt_gcAllocate_QHttpRequestHeader( void * pObj, bool bN
 extern HB_EXPORT void * hbqt_gcAllocate_QHttpResponseHeader( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QNetworkRequest( void * pObj, bool bNew );
 
-#define hbqt_par_QFtp( n )                          ( ( QFtp                        * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QHttp( n )                         ( ( QHttp                       * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QHttpHeader( n )                   ( ( QHttpHeader                 * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QHttpRequestHeader( n )            ( ( QHttpRequestHeader          * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QHttpResponseHeader( n )           ( ( QHttpResponseHeader         * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QNetworkRequest( n )               ( ( QNetworkRequest             * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QFtp( n )                                      ( ( QFtp                                        * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QHttp( n )                                     ( ( QHttp                                       * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QHttpHeader( n )                               ( ( QHttpHeader                                 * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QHttpRequestHeader( n )                        ( ( QHttpRequestHeader                          * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QHttpResponseHeader( n )                       ( ( QHttpResponseHeader                         * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QNetworkRequest( n )                           ( ( QNetworkRequest                             * ) hbqt_gcpointer( n ) )
+
+#define HBQT_TYPE_QTNETWORK_BASE                                64000
+
+#define HBQT_TYPE_QFtp                                          ( HBQT_TYPE_QTNETWORK_BASE + 1 )
+#define HBQT_TYPE_QHttp                                         ( HBQT_TYPE_QTNETWORK_BASE + 2 )
+#define HBQT_TYPE_QHttpHeader                                   ( HBQT_TYPE_QTNETWORK_BASE + 3 )
+#define HBQT_TYPE_QHttpRequestHeader                            ( HBQT_TYPE_QTNETWORK_BASE + 4 )
+#define HBQT_TYPE_QHttpResponseHeader                           ( HBQT_TYPE_QTNETWORK_BASE + 5 )
+#define HBQT_TYPE_QNetworkRequest                               ( HBQT_TYPE_QTNETWORK_BASE + 6 )
 
 #endif /* __HBQTNETWORK_H */

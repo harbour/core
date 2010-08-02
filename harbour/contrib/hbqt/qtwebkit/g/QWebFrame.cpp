@@ -81,6 +81,8 @@
 
 #include <QtCore/QPointer>
 
+#include "hbqtgui.h"
+
 #include <QtWebKit/QWebFrame>
 #include <QtWebKit/QWebSecurityOrigin>
 

@@ -31,13 +31,24 @@ extern HB_EXPORT void * hbqt_gcAllocate_QDesignerObjectInspectorInterface( void 
 extern HB_EXPORT void * hbqt_gcAllocate_QDesignerPropertyEditorInterface( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QDesignerWidgetBoxInterface( void * pObj, bool bNew );
 
-#define hbqt_par_QDesignerActionEditorInterface( n )( ( QDesignerActionEditorInterfa* ) hbqt_gcpointer( n ) )
-#define hbqt_par_QDesignerFormEditorInterface( n )  ( ( QDesignerFormEditorInterface* ) hbqt_gcpointer( n ) )
-#define hbqt_par_QDesignerFormWindowCursorInterface(( ( QDesignerFormWindowCursorInt* ) hbqt_gcpointer( n ) )
-#define hbqt_par_QDesignerFormWindowInterface( n )  ( ( QDesignerFormWindowInterface* ) hbqt_gcpointer( n ) )
-#define hbqt_par_QDesignerFormWindowManagerInterface( ( QDesignerFormWindowManagerIn* ) hbqt_gcpointer( n ) )
-#define hbqt_par_QDesignerObjectInspectorInterface( ( ( QDesignerObjectInspectorInte* ) hbqt_gcpointer( n ) )
-#define hbqt_par_QDesignerPropertyEditorInterface( n( ( QDesignerPropertyEditorInter* ) hbqt_gcpointer( n ) )
-#define hbqt_par_QDesignerWidgetBoxInterface( n )   ( ( QDesignerWidgetBoxInterface * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QDesignerActionEditorInterface( n )            ( ( QDesignerActionEditorInterface              * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QDesignerFormEditorInterface( n )              ( ( QDesignerFormEditorInterface                * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QDesignerFormWindowCursorInterface( n )        ( ( QDesignerFormWindowCursorInterface          * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QDesignerFormWindowInterface( n )              ( ( QDesignerFormWindowInterface                * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QDesignerFormWindowManagerInterface( n )       ( ( QDesignerFormWindowManagerInterface         * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QDesignerObjectInspectorInterface( n )         ( ( QDesignerObjectInspectorInterface           * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QDesignerPropertyEditorInterface( n )          ( ( QDesignerPropertyEditorInterface            * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QDesignerWidgetBoxInterface( n )               ( ( QDesignerWidgetBoxInterface                 * ) hbqt_gcpointer( n ) )
+
+#define HBQT_TYPE_QTDESIGNER_BASE                               56000
+
+#define HBQT_TYPE_QDesignerActionEditorInterface                ( HBQT_TYPE_QTDESIGNER_BASE + 1 )
+#define HBQT_TYPE_QDesignerFormEditorInterface                  ( HBQT_TYPE_QTDESIGNER_BASE + 2 )
+#define HBQT_TYPE_QDesignerFormWindowCursorInterface            ( HBQT_TYPE_QTDESIGNER_BASE + 3 )
+#define HBQT_TYPE_QDesignerFormWindowInterface                  ( HBQT_TYPE_QTDESIGNER_BASE + 4 )
+#define HBQT_TYPE_QDesignerFormWindowManagerInterface           ( HBQT_TYPE_QTDESIGNER_BASE + 5 )
+#define HBQT_TYPE_QDesignerObjectInspectorInterface             ( HBQT_TYPE_QTDESIGNER_BASE + 6 )
+#define HBQT_TYPE_QDesignerPropertyEditorInterface              ( HBQT_TYPE_QTDESIGNER_BASE + 7 )
+#define HBQT_TYPE_QDesignerWidgetBoxInterface                   ( HBQT_TYPE_QTDESIGNER_BASE + 8 )
 
 #endif /* __HBQTDESIGNER_H */

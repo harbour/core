@@ -9,5 +9,6 @@ g/filelist.hbm
 -ig
 
 ../qtcore/hbqtcore.hbc
+../qtgui/hbqtgui.hbc
 
 hbqtdesigners.hbp

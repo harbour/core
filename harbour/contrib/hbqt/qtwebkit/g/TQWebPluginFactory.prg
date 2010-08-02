@@ -68,7 +68,6 @@ CREATE CLASS QWebPluginFactory INHERIT HbQtObjectHandler, QObject
    METHOD  new( ... )
 
    METHOD  create( cMimeType, pUrl, pArgumentNames, pArgumentValues )
-   METHOD  plugins()
    METHOD  refreshPlugins()
    METHOD  supportsExtension( nExtension )
 
@@ -86,10 +85,6 @@ METHOD QWebPluginFactory:new( ... )
 
 METHOD QWebPluginFactory:create( cMimeType, pUrl, pArgumentNames, pArgumentValues )
    RETURN Qt_QWebPluginFactory_create( ::pPtr, cMimeType, hbqt_ptr( pUrl ), hbqt_ptr( pArgumentNames ), hbqt_ptr( pArgumentValues ) )
-
-
-METHOD QWebPluginFactory:plugins()
-   RETURN Qt_QWebPluginFactory_plugins( ::pPtr )
 
 
 METHOD QWebPluginFactory:refreshPlugins()

@@ -9,6 +9,8 @@
 
 libs=../qtcore/hbqtcore.hbc
 
+incpaths=g
+
 {!HB_STATIC_QT&!hbdyn}libs=hbqtgui${__HB_DYN__}
 {!HB_STATIC_QT&(allwin|os2)}libs=QtGui4
 {!HB_STATIC_QT&linux}libs=QtGui

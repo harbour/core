@@ -9,6 +9,8 @@
 
 libs=../hbqt_common.hbc
 
+incpaths=g
+
 # TOFIX: QtGui is needed by hbqt_hbslots.cpp. This dependency should be removed.
 {!HB_STATIC_QT&!hbdyn}libs=hbqtcore${__HB_DYN__}
 {!HB_STATIC_QT&(allwin|os2)}libs=QtCore4 QtGui4

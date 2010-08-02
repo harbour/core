@@ -28,7 +28,6 @@
  *  $METHODS$
  *     :databaseQuota()                                    -> nQint64
  *     :databaseUsage()                                    -> nQint64
- *     :databases()                                        -> pQList<QWebDatabase>
  *     :host()                                             -> cQString
  *     :port()                                             -> nInt
  *     :scheme()                                           -> cQString

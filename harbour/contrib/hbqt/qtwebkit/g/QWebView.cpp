@@ -68,6 +68,9 @@
 
 #include <QtCore/QPointer>
 
+#include "hbqtgui.h"
+#include "hbqtnetwork.h"
+
 #include <QtWebKit/QWebView>
 
 

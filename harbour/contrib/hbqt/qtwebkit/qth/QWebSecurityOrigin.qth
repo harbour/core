@@ -85,7 +85,7 @@ HB_FUNC( QT_QWEBSECURITYORIGIN )
 <PROTOS>
 qint64 databaseQuota () const
 qint64 databaseUsage () const
-QList<QWebDatabase> databases () const
+// QList<QWebDatabase> databases () const
 QString host () const
 int port () const
 QString scheme () const

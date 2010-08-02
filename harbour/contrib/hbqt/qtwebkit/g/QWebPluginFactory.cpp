@@ -73,6 +73,8 @@
 
 #include <QtCore/QPointer>
 
+#include "hbqtgui.h"
+
 #include <QtWebKit/QWebPluginFactory>
 
 
@@ -136,20 +138,6 @@ HB_FUNC( QT_QWEBPLUGINFACTORY_CREATE )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBPLUGINFACTORY_CREATE FP=hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->create( QWebPluginFactory::tr( hb_parc( 2 ) ), *hbqt_par_QUrl( 3 ), *hbqt_par_QStringList( 4 ), *hbqt_par_QStringList( 5 ) ), false ) ); p is NULL" ) );
-   }
-}
-
-/*
- * virtual QList<Plugin> plugins () const = 0
- */
-HB_FUNC( QT_QWEBPLUGINFACTORY_PLUGINS )
-{
-   QWebPluginFactory * p = hbqt_par_QWebPluginFactory( 1 );
-   if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<Plugin>( ( p )->plugins() ), true ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBPLUGINFACTORY_PLUGINS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<Plugin>( ( p )->plugins() ), true ) ); p is NULL" ) );
    }
 }
 
