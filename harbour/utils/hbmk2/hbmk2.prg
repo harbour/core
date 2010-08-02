@@ -96,6 +96,10 @@
          autodetection of watcom cross-build setups, poccarm/pocc64 setups,
          clang, etc. */
 
+/* TODO: Use hashes instead of arrays for input files, options */
+
+/* TOFIX: -autohbc with -inc mode */
+
 /* TODO: Next gen compiler autodetection:
          1. Gather supported compilers by Harbour installation
             (look for lib/<plat>/*[/<name>] subdirs)
@@ -4461,6 +4465,12 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       ENDIF
    ENDIF
 
+   /* Header paths */
+
+   IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ]
+      convert_incpaths_to_options( hbmk, cOptIncMask, lCHD_Comp )
+   ENDIF
+
    /* Do header detection and create incremental file list for .c files */
 
    IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. ! lDumpInfo
@@ -4556,12 +4566,16 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          l_aPRG_TODO := hbmk[ _HBMK_aPRG ]
       ENDIF
 
-      FOR EACH tmp IN hbmk[ _HBMK_hAUTOHBCFOUND ]
-         IF hbmk[ _HBMK_lInfo ]
-            hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing (triggered by '%1$s' header): %2$s" ), tmp:__enumKey(), tmp ) )
-         ENDIF
-         HBC_ProcessOne( hbmk, tmp, 1 )
-      NEXT
+      IF ! Empty( hbmk[ _HBMK_hAUTOHBCFOUND ] )
+         FOR EACH tmp IN hbmk[ _HBMK_hAUTOHBCFOUND ]
+            IF hbmk[ _HBMK_lInfo ]
+               hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing (triggered by '%1$s' header): %2$s" ), tmp:__enumKey(), tmp ) )
+            ENDIF
+            HBC_ProcessOne( hbmk, tmp, 1 )
+         NEXT
+
+         convert_incpaths_to_options( hbmk, cOptIncMask, lCHD_Comp )
+      ENDIF
    ELSE
       l_aPRG_TODO := hbmk[ _HBMK_aPRG ]
    ENDIF
@@ -4583,33 +4597,6 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       OutStd( "}}}" + hb_eol() )
 
       RETURN 0
-   ENDIF
-
-   /* Header paths */
-
-   IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ]
-      IF lCHD_Comp
-         tmp2 := DirAddPathSep( PathMakeRelative( PathNormalize( PathMakeAbsolute( hbmk[ _HBMK_cWorkDir ], hb_pwd() ) ), hb_pwd(), .T. ) )
-      ENDIF
-      FOR EACH tmp IN hbmk[ _HBMK_aINCPATH ]
-         IF ! Empty( tmp )
-            /* Different escaping for internal and external compiler. */
-            IF hbmk[ _HBMK_nHBMODE ] == _HBMODE_NATIVE
-               AAdd( hbmk[ _HBMK_aOPTPRG ], "-i" + tmp )
-            ELSE
-               AAdd( hbmk[ _HBMK_aOPTPRG ], "-i" + FNameEscape( tmp, hbmk[ _HBMK_nCmd_Esc ] ) )
-            ENDIF
-            IF ! hbmk[ _HBMK_lStopAfterHarbour ]
-               IF lCHD_Comp
-                  /* Rebase source dirs relative to the target dir */
-                  AAdd( hbmk[ _HBMK_aOPTC ], StrTran( cOptIncMask, "{DI}", FNameEscape( PathNormalize( PathMakeAbsolute( tmp, tmp2 ) ), hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) ) )
-               ELSE
-                  AAdd( hbmk[ _HBMK_aOPTC ], StrTran( cOptIncMask, "{DI}", FNameEscape( tmp, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) ) )
-               ENDIF
-               AAdd( hbmk[ _HBMK_aOPTRES ], StrTran( cOptIncMask, "{DI}", FNameEscape( tmp, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) ) )
-            ENDIF
-         ENDIF
-      NEXT
    ENDIF
 
    /* Check if we've found all dependencies */
@@ -6026,6 +6013,33 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    ENDIF
 
    RETURN hbmk[ _HBMK_nErrorLevel ]
+
+STATIC PROCEDURE convert_incpaths_to_options( hbmk, cOptIncMask, lCHD_Comp )
+   LOCAL cBaseDir
+   LOCAL cINCPATH
+
+   IF lCHD_Comp
+      cBaseDir := DirAddPathSep( PathMakeRelative( PathNormalize( PathMakeAbsolute( hbmk[ _HBMK_cWorkDir ], hb_pwd() ) ), hb_pwd(), .T. ) )
+   ENDIF
+
+   FOR EACH cINCPATH IN hbmk[ _HBMK_aINCPATH ]
+      IF ! Empty( cINCPATH )
+         /* Different escaping for internal and external compiler. */
+         AAddNew( hbmk[ _HBMK_aOPTPRG ], "-i" + iif( hbmk[ _HBMK_nHBMODE ] == _HBMODE_NATIVE, cINCPATH, FNameEscape( cINCPATH, hbmk[ _HBMK_nCmd_Esc ] ) ) )
+         IF ! hbmk[ _HBMK_lStopAfterHarbour ]
+            IF lCHD_Comp
+               /* Rebase source dirs relative to the target dir */
+               AAddNew( hbmk[ _HBMK_aOPTC ], StrTran( cOptIncMask, "{DI}", FNameEscape( PathNormalize( PathMakeAbsolute( cINCPATH, cBaseDir ) ), hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) ) )
+            ELSE
+               AAddNew( hbmk[ _HBMK_aOPTC ], StrTran( cOptIncMask, "{DI}", FNameEscape( cINCPATH, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) ) )
+            ENDIF
+            AAddNew( hbmk[ _HBMK_aOPTRES ], StrTran( cOptIncMask, "{DI}", FNameEscape( cINCPATH, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) ) )
+         ENDIF
+      ENDIF
+   NEXT
+
+   RETURN
+
 
 /* NOTE: We store -hbdyn objects in different dirs by default as - for Windows
          platforms - they're always built using different compilation options
