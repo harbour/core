@@ -61,7 +61,9 @@
 
 #include "hbqt.h"
 #include "hbqtnetwork_garbage.h"
+#include "hbqtnetwork.h"
 #include "hbqtcore_garbage.h"
+#include "hbqtcore.h"
 
 /*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500

@@ -61,7 +61,9 @@
 
 #include "hbqt.h"
 #include "hbqtgui_garbage.h"
+#include "hbqtgui.h"
 #include "hbqtcore_garbage.h"
+#include "hbqtcore.h"
 
 /*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
@@ -71,7 +73,7 @@
 
 #include <QtGui/QTextBlock>
 #include <QtGui/QTextDocument>
-#include "../hbqt_hbqsyntaxhighlighter.h"
+#include "hbqt_hbqsyntaxhighlighter.h"
 
 /*
  * QTextBlock ( const QTextBlock & other )

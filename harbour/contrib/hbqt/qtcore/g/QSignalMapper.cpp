@@ -61,6 +61,7 @@
 
 #include "hbqt.h"
 #include "hbqtcore_garbage.h"
+#include "hbqtcore.h"
 
 /*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
@@ -179,30 +180,16 @@ HB_FUNC( QT_QSIGNALMAPPER_MAPPING_1 )
 }
 
 /*
- * QObject * mapping ( QWidget * widget ) const
- */
-HB_FUNC( QT_QSIGNALMAPPER_MAPPING_2 )
-{
-   QSignalMapper * p = hbqt_par_QSignalMapper( 1 );
-   if( p )
-      hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->mapping( hbqt_par_QWidget( 2 ) ), false ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIGNALMAPPER_MAPPING_2 FP=hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->mapping( hbqt_par_QWidget( 2 ) ), false ) ); p is NULL" ) );
-   }
-}
-
-/*
  * QObject * mapping ( QObject * object ) const
  */
-HB_FUNC( QT_QSIGNALMAPPER_MAPPING_3 )
+HB_FUNC( QT_QSIGNALMAPPER_MAPPING_2 )
 {
    QSignalMapper * p = hbqt_par_QSignalMapper( 1 );
    if( p )
       hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->mapping( hbqt_par_QObject( 2 ) ), false ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIGNALMAPPER_MAPPING_3 FP=hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->mapping( hbqt_par_QObject( 2 ) ), false ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIGNALMAPPER_MAPPING_2 FP=hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->mapping( hbqt_par_QObject( 2 ) ), false ) ); p is NULL" ) );
    }
 }
 
@@ -249,30 +236,16 @@ HB_FUNC( QT_QSIGNALMAPPER_SETMAPPING_1 )
 }
 
 /*
- * void setMapping ( QObject * sender, QWidget * widget )
- */
-HB_FUNC( QT_QSIGNALMAPPER_SETMAPPING_2 )
-{
-   QSignalMapper * p = hbqt_par_QSignalMapper( 1 );
-   if( p )
-      ( p )->setMapping( hbqt_par_QObject( 2 ), hbqt_par_QWidget( 3 ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIGNALMAPPER_SETMAPPING_2 FP=( p )->setMapping( hbqt_par_QObject( 2 ), hbqt_par_QWidget( 3 ) ); p is NULL" ) );
-   }
-}
-
-/*
  * void setMapping ( QObject * sender, QObject * object )
  */
-HB_FUNC( QT_QSIGNALMAPPER_SETMAPPING_3 )
+HB_FUNC( QT_QSIGNALMAPPER_SETMAPPING_2 )
 {
    QSignalMapper * p = hbqt_par_QSignalMapper( 1 );
    if( p )
       ( p )->setMapping( hbqt_par_QObject( 2 ), hbqt_par_QObject( 3 ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIGNALMAPPER_SETMAPPING_3 FP=( p )->setMapping( hbqt_par_QObject( 2 ), hbqt_par_QObject( 3 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIGNALMAPPER_SETMAPPING_2 FP=( p )->setMapping( hbqt_par_QObject( 2 ), hbqt_par_QObject( 3 ) ); p is NULL" ) );
    }
 }
 

@@ -90,7 +90,6 @@ CREATE CLASS QPaintEngine INHERIT HbQtObjectHandler
    METHOD  painter()
    METHOD  setActive( lState )
    METHOD  type()
-   METHOD  updateState( pState )
 
    ENDCLASS
 
@@ -194,8 +193,4 @@ METHOD QPaintEngine:setActive( lState )
 
 METHOD QPaintEngine:type()
    RETURN Qt_QPaintEngine_type( ::pPtr )
-
-
-METHOD QPaintEngine:updateState( pState )
-   RETURN Qt_QPaintEngine_updateState( ::pPtr, hbqt_ptr( pState ) )
 

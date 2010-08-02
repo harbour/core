@@ -55,9 +55,9 @@
 ;
 
 <CLASS>
-QObject  = 
+QObject  =
 Inherits = QSyntaxHighlighter
-Type     = 
+Type     =
 New      =
 </CLASS>
 
@@ -69,11 +69,11 @@ New      =
 
 <CODE>
 #include <QtGui/QSyntaxHighlighter>
-#include "../hbqt_hbqsyntaxhighlighter.h"
+#include "hbqt_hbqsyntaxhighlighter.h"
 
 /*
- * 
- * 
+ *
+ *
  */
 HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER )
 {

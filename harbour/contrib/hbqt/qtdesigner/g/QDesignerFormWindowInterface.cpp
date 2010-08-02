@@ -61,7 +61,9 @@
 
 #include "hbqt.h"
 #include "hbqtdesigner_garbage.h"
+#include "hbqtdesigner.h"
 #include "hbqtcore_garbage.h"
+#include "hbqtcore.h"
 
 /*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
@@ -75,7 +77,6 @@
 #include <QtCore/QPointer>
 
 #include <QtDesigner/QDesignerFormWindowInterface>
-#include "../hbqt_local.h"
 
 
 /*

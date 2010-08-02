@@ -57,7 +57,7 @@
 <CLASS>
 QObject  = no
 Inherits =
-Type     = 
+Type     =
 New      =
 </CLASS>
 
@@ -114,7 +114,7 @@ QPaintDevice * paintDevice () const
 QPainter * painter () const
 void setActive ( bool state )
 virtual Type type () const = 0
-virtual void updateState ( const QPaintEngineState & state ) = 0
+// virtual void updateState ( const QPaintEngineState & state ) = 0
 </PROTOS>
 
 <SLOTS>

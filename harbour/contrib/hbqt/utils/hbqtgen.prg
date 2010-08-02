@@ -1515,8 +1515,10 @@ STATIC FUNCTION BuildHeader( txt_, nMode, cProFile )
    IF nMode == 0
    aadd( txt_, '#include "hbqt.h"'                                                             )
    aadd( txt_, '#include "hb' + FNameGetName( cProFile ) + '_garbage.h"'                       )
+   aadd( txt_, '#include "hb' + FNameGetName( cProFile ) + '.h"'                               )
    IF !( FNameGetName( cProFile ) == "qtcore" )
       aadd( txt_, '#include "hbqtcore_garbage.h"'                                              )
+      aadd( txt_, '#include "hbqtcore.h"'                                                      )
    ENDIF
 // aadd( txt_, '#include "hbqt_local.h"'                                                       )
    aadd( txt_, ""                                                                              )
@@ -1776,10 +1778,11 @@ STATIC FUNCTION Build_Document( cProFile, cWidget, cls_, doc_, cPathDoc, subCls_
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_GarbageFile( cpp_, cPathOut, cProFile )
-   LOCAL cFile
+   LOCAL cFile := iif( empty( cPathOut ), "", cPathOut + hb_ps() )
    LOCAL hdr_:= {}
    LOCAL txt_ := {}
    LOCAL s
+   LOCAL tmp
 
    aadd( hdr_, "/*"                                                                            )
    aadd( hdr_, " * $" + "Id" + "$"                                                             )
@@ -1809,8 +1812,29 @@ STATIC FUNCTION Build_GarbageFile( cpp_, cPathOut, cProFile )
       aadd( txt_, "" )
    ENDIF
 
-   cFile := iif( empty( cPathOut ), "", cPathOut + hb_ps() + hb_ps() )
    CreateTarget( cFile + "hb" + FNameGetName( cProFile ) + "_garbage.h", txt_ )
+
+   txt_ := {}
+   aeval( hdr_, {|e| aadd( txt_, e ) } )
+
+   aadd( txt_, "#ifndef __HB" + Upper( FNameGetName( cProFile ) ) + "_H" )
+   aadd( txt_, "#define __HB" + Upper( FNameGetName( cProFile ) ) + "_H" )
+   aadd( txt_, "" )
+
+   FOR EACH s IN cpp_
+      IF s == "QList" /* TOFIX: Ugly hack */
+         tmp := s + "< void * >"
+      ELSE
+         tmp := s
+      ENDIF
+      aadd( txt_, PadR( "#define hbqt_par_" + s + "( n )", 52 ) + PadR( "( ( " + tmp, 32 ) + "* ) hbqt_gcpointer( n ) )" )
+   NEXT
+   aadd( txt_, "" )
+
+   aadd( txt_, "#endif /* __HB" + Upper( FNameGetName( cProFile ) ) + "_H */" )
+
+
+   CreateTarget( cFile + "hb" + FNameGetName( cProFile ) + ".h", txt_ )
 
    RETURN NIL
 
@@ -1847,178 +1871,6 @@ STATIC FUNCTION Build_MakeFile( cPathOut, aWidgetList )
    CreateTarget( cFile + "filelist.hbm", hbm_ )
 
    RETURN NIL
-
-/*----------------------------------------------------------------------*/
-
-#define  CRLF   chr( 13 )+chr( 10 )
-
-FUNCTION Build_HTML( cWidget, aHM_, aHF_, cPathOut, docum_ )
-   LOCAL cFile := cPathOut + hb_ps() + "html" + hb_ps() + cWidget + ".htm"
-   LOCAL i, j, s, nCounter := 0, cPara
-   LOCAL nCols, aHTML
-   LOCAL setColorBG, setColorText, setColorTable
-   LOCAL aColumns, cCell, uColData
-
-   HB_SYMBOL_UNUSED( aHM_ )
-
-   setColorText  := "#000000"
-   SetColorBG    := "#FFFFFF"
-   SetColorTable := "#D0D0D0"
-   aColumns      := { { 1,"Function", "C", 100 },;
-                      { 2,"Returns" , "C",  20 } }
-
-   aHTML  := {}
-   nCols  := len( aColumns )
-
-   aadd( aHtml, "<HTML>" )
-   Build_HtmlHeader( @aHTML )
-
-   s := '<BODY BGCOLOR="' + SetColorBG + '" TEXT="' + SetColorText + '"' + '>'
-   aadd( aHtml, s )
-
-   Build_HtmlTable( @aHTML, , SetColorTable )
-   aadd( aHtml, "<TBODY>" )
-
-   /*       Class Documentation */
-   s := "<TR><TD colspan=" + hb_ntos( nCols ) + " align=CENTER bgcolor=#ffff80><B>" + "CLASS REFERENCE" + "</B></TD></TR>"
-   aadd( aHtml, s )
-   s := "<TR><TD colspan=" + hb_ntos( nCols ) + " align=CENTER bgcolor=#ffff80><B>" + "Source: /contrib/hbqt/T" + cWidget + ".prg" + "</B></TD></TR>"
-   aadd( aHtml, s )
-   s := QT_WEB + QT_VER + "/" + lower( cWidget ) + ".htm"
-   s := "<TR><TD colspan=" + hb_ntos( nCols ) + ' align=CENTER bgcolor=#CFBFA1><B><a href="' + s + '">' + s + "</a></B></TD></TR>"
-   aadd( aHtml, s )
-   //
-   IF !empty( docum_ )
-      s := "<TR>"
-
-      cPara := "pr" + hb_ntos( ++nCounter )
-
-      s += '<TD  class="only" ' + 'colspan=' + hb_ntos( nCols ) + '>'
-      s += '<PRE id="' + cPara + '">'
-      s += CRLF
-      s += CRLF
-      s += "IMPORTANT:  Call the constructor with exact number of parameter. "+ CRLF
-      s += "            No defaults, otherwise application will GPF" + CRLF
-      for i := 1 to len( docum_ )
-         s += docum_[ i ] + CRLF
-      next
-      s += "</PRE>"
-
-      aadd( aHtml, s + "</TR>" )
-   ENDIF
-   //
-   FOR j := 1 TO len( aHM_ )
-      s := "<TR>"
-
-      FOR i := 1 TO nCols
-         uColData := aHM_[ j, i ]
-         if Empty( uColData )
-            cCell := "&nbsp"
-         else
-            cCell := uColData
-         endif
-         s += "<TD>" + cCell
-      next
-
-      aadd( aHtml, s + "</TR>" )
-   NEXT
-
-   /* Function Documentation */
-   s := "<TR><TD colspan=" + hb_ntos( nCols ) + " align=CENTER bgcolor=#ffff80><B>" + "FUNCTIONS REFERENCE" + "</B></TD></TR>"
-   aadd( aHtml, s )
-   s := "<TR><TD colspan=" + hb_ntos( nCols ) + " align=CENTER bgcolor=#ffff80><B>" + "Source: /contrib/hbqt/" + cWidget + ".cpp" + "</B></TD></TR>"
-   aadd( aHtml, s )
-   FOR j := 1 TO len( aHF_ )
-      s := "<TR>"
-
-      FOR i := 1 TO nCols
-         uColData := aHF_[ j, i ]
-         if Empty( uColData )
-            cCell := "&nbsp"
-         else
-            cCell := uColData
-         endif
-         s += "<TD>" + cCell
-      next
-
-      aadd( aHtml, s + "</TR>" )
-   NEXT
-
-   aadd( aHtml, "</TABLE>"  )
-   aadd( aHtml, "</CENTER>" )
-   aadd( aHtml, "</BODY>"   )
-   aadd( aHtml, "</HTML>"   )
-
-   Return CreateTarget( cFile, aHTML )
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION Build_HtmlTable( aHTML, cTitle, SetColorTable )
-   Local s
-   LOCAL nBorder       := 1
-   LOCAL nCellSpacing  := 0
-   LOCAL nCellPadding  := 4
-   LOCAL nCols         := 2
-
-   aadd( aHtml, "<CENTER>" )
-
-   s := "<TABLE " +;
-        'BGCOLOR="'    + SetColorTable + '" ' +;
-        "BORDER="      + hb_ntos( nBorder ) + " " +;
-        "FRAME=ALL "   +;
-        "CellPadding=" + hb_ntos( nCellPadding ) + " " +;
-        "CellSpacing=" + hb_ntos( nCellSpacing ) + " " +;
-        "COLS="        + hb_ntos( nCols ) + " " +;
-        "WIDTH=90% "   +;
-        ">"
-   aadd( aHtml, s )
-
-   if !Empty( cTitle )
-      aadd( aHtml, "<CAPTION ALIGN=top><B>" + cTitle + "</B></CAPTION>" )
-   endif
-
-   Return NIL
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION Build_HtmlHeader( aHTML )
-
-   aadd( aHtml, "<head>                                                              " )
-   aadd( aHtml, '  <meta name="Author" CONTENT="Pritpal Bedi [pritpal@vouchcac.com]">' )
-   aadd( aHtml, '  <meta http-equiv="content-style-type" content="text/css" >        ' )
-   aadd( aHtml, '  <meta http-equiv="content-script-type" content="text/javascript"> ' )
-   aadd( aHtml, "                                                                    " )
-   aadd( aHtml, '  <style type="text/css">                                           ' )
-   aadd( aHtml, "    th                                                              " )
-   aadd( aHtml, "    {                                                               " )
-   aadd( aHtml, "      colspan          : 1;                                         " )
-   aadd( aHtml, "      text-align       : center;                                    " )
-   aadd( aHtml, "      vertical-align   : baseline;                                  " )
-   aadd( aHtml, "      horizontal-align : left;                                      " )
-   aadd( aHtml, "    }                                                               " )
-   aadd( aHtml, "    td                                                              " )
-   aadd( aHtml, "    {                                                               " )
-   aadd( aHtml, "      vertical-align   : top;                                       " )
-   aadd( aHtml, "      horizontal-align : left;                                      " )
-   aadd( aHtml, "    }                                                               " )
-   aadd( aHtml, "    td.only                                                         " )
-   aadd( aHtml, "    {                                                               " )
-   aadd( aHtml, "      cursor           : hand;                                      " )
-   aadd( aHtml, "      vertical-align   : top;                                       " )
-   aadd( aHtml, "      horizontal-align : left;                                      " )
-   aadd( aHtml, "    }                                                               " )
-   aadd( aHtml, "    pre                                                             " )
-   aadd( aHtml, "    {                                                               " )
-   aadd( aHtml, "      font-family      : Courier New;                               " )
-   aadd( aHtml, "      font-size        : .7em;                                      " )
-   aadd( aHtml, "      color            : black;                                     " )
-   aadd( aHtml, "      cursor           : text;                                      " )
-   aadd( aHtml, "    }                                                               " )
-   aadd( aHtml, "  </style>                                                          " )
-   aadd( aHtml, "                                                                    " )
-   aadd( aHtml, "</head>                                                             " )
-
-   RETURN Nil
 
 /*----------------------------------------------------------------------*/
 

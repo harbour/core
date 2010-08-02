@@ -70,7 +70,6 @@ folder   = hbqtdesigner
 
 <CODE>
 #include <QtDesigner/QDesignerObjectInspectorInterface>
-#include "../hbqt_local.h"
 
 
 /*

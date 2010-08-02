@@ -55,9 +55,9 @@
 ;
 
 <CLASS>
-QObject  = 
+QObject  =
 Inherits = QTableView
-Type     = 
+Type     =
 New      =
 </CLASS>
 
@@ -69,12 +69,12 @@ New      =
 
 <CODE>
 #include <QtGui/QTableView>
-#include "../hbqt_hbqtableview.h"
+#include "hbqt_hbqtableview.h"
 
 
 /*
- * 
- * 
+ *
+ *
  */
 HB_FUNC( QT_HBQTABLEVIEW )
 {

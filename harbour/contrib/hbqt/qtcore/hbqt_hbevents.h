@@ -60,6 +60,7 @@
 /*----------------------------------------------------------------------*/
 
 #include "hbqtcore_garbage.h"
+#include "hbqtcore.h"
 
 #include <QtCore/QObject>
 #include <QtCore/QEvent>

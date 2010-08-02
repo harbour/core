@@ -55,9 +55,9 @@
 ;
 
 <CLASS>
-QObject  = 
+QObject  =
 Inherits = QObject
-Type     = 
+Type     =
 New      =
 </CLASS>
 
@@ -69,7 +69,7 @@ New      =
 
 <CODE>
 #include <QtCore/QObject>
-#include "../hbqt_hbslots.h"
+#include "hbqt_hbslots.h"
 
 
 /*

@@ -28,13 +28,11 @@
  *  $METHODS$
  *     :mapping( nId )                                     -> pQObject
  *     :mapping_1( cId )                                   -> pQObject
- *     :mapping_2( pWidget )                               -> pQObject
- *     :mapping_3( pObject )                               -> pQObject
+ *     :mapping_2( pObject )                               -> pQObject
  *     :removeMappings( pSender )                          -> NIL
  *     :setMapping( pSender, nId )                         -> NIL
  *     :setMapping_1( pSender, cText )                     -> NIL
- *     :setMapping_2( pSender, pWidget )                   -> NIL
- *     :setMapping_3( pSender, pObject )                   -> NIL
+ *     :setMapping_2( pSender, pObject )                   -> NIL
  *     :map()                                              -> NIL
  *     :map_1( pSender )                                   -> NIL
  * 

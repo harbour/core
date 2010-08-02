@@ -49,7 +49,6 @@
  *     :painter()                                          -> pQPainter
  *     :setActive( lState )                                -> NIL
  *     :type()                                             -> nType
- *     :updateState( pState )                              -> NIL
  * 
  *  $DESCRIPTION$
  * 

@@ -67,7 +67,7 @@ New      =
 <CODE>
 #include <QtGui/QPlainTextEdit>
 
-#include "../hbqt_hbqplaintextedit.h"
+#include "hbqt_hbqplaintextedit.h"
 
 /*
  * HBQPlainTextEdit ( QWidget * parent = 0 )
@@ -154,7 +154,7 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT )
    void           hbSetFieldsListActive( bool active )
    void           hbToggleCodeCompetion()
    void           hbToggleCompetionTips()
- 
+
 </SLOTS>
 
 <SIGNALS>

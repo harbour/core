@@ -65,7 +65,6 @@ folder   = qtwebkit
 <CODE>
 #include <QtWebKit/QWebFrame>
 #include <QtWebKit/QWebSecurityOrigin>
-#include "../hbqt_local.h"
 
 /*
  *

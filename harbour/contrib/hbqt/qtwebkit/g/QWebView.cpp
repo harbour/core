@@ -61,7 +61,9 @@
 
 #include "hbqt.h"
 #include "hbqtwebkit_garbage.h"
+#include "hbqtwebkit.h"
 #include "hbqtcore_garbage.h"
+#include "hbqtcore.h"
 
 /*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
@@ -70,7 +72,6 @@
 #include <QtCore/QPointer>
 
 #include <QtWebKit/QWebView>
-#include "../hbqt_local.h"
 
 
 /*

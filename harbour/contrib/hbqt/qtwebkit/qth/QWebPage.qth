@@ -63,7 +63,6 @@ folder   = qtwebkit
 <CODE>
 #include <QtWebKit/QWebPage>
 #include <QtCore/QVariant>
-#include "../hbqt_local.h"
 
 
 /*

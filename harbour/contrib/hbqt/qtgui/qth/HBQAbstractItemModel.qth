@@ -55,9 +55,9 @@
 ;
 
 <CLASS>
-QObject  = 
+QObject  =
 Inherits = QAbstractItemModel
-Type     = 
+Type     =
 New      =
 </CLASS>
 
@@ -69,12 +69,12 @@ New      =
 
 <CODE>
 #include <QtCore/QAbstractItemModel>
-#include "../hbqt_hbqabstractitemmodel.h"
+#include "hbqt_hbqabstractitemmodel.h"
 
 
 /*
- * 
- * 
+ *
+ *
  */
 HB_FUNC( QT_HBQABSTRACTITEMMODEL )
 {

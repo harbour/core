@@ -70,7 +70,6 @@ folder   = hbqtdesigner
 
 <CODE>
 #include <QtDesigner/QDesignerActionEditorInterface>
-#include "../hbqt_local.h"
 
 
 /*

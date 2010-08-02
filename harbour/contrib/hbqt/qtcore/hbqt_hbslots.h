@@ -58,6 +58,7 @@
 #include "hbapiitm.h"
 
 #include "hbqtcore_garbage.h"
+#include "hbqtcore.h"
 
 /* TOFIX: QtGui components should not be accessed from this component */
 #include <QtCore/QProcess>

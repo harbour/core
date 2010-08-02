@@ -56,15 +56,15 @@
 
 <CLASS>
 QObject  = no
-Inherits = 
+Inherits =
 Type     = Core
-New      = 
+New      =
 </CLASS>
 
 <CODE>
 #include <QtGui/QTextBlock>
 #include <QtGui/QTextDocument>
-#include "../hbqt_hbqsyntaxhighlighter.h"
+#include "hbqt_hbqsyntaxhighlighter.h"
 
 /*
  * QTextBlock ( const QTextBlock & other )
@@ -128,7 +128,3 @@ int userState () const
 
 <SIGNALS>
 </SIGNALS>
-
-
-
-

@@ -69,13 +69,11 @@ CREATE CLASS QSignalMapper INHERIT HbQtObjectHandler, QObject
 
    METHOD  mapping( nId )
    METHOD  mapping_1( cId )
-   METHOD  mapping_2( pWidget )
-   METHOD  mapping_3( pObject )
+   METHOD  mapping_2( pObject )
    METHOD  removeMappings( pSender )
    METHOD  setMapping( pSender, nId )
    METHOD  setMapping_1( pSender, cText )
-   METHOD  setMapping_2( pSender, pWidget )
-   METHOD  setMapping_3( pSender, pObject )
+   METHOD  setMapping_2( pSender, pObject )
    METHOD  map()
    METHOD  map_1( pSender )
 
@@ -99,12 +97,8 @@ METHOD QSignalMapper:mapping_1( cId )
    RETURN Qt_QSignalMapper_mapping_1( ::pPtr, cId )
 
 
-METHOD QSignalMapper:mapping_2( pWidget )
-   RETURN Qt_QSignalMapper_mapping_2( ::pPtr, hbqt_ptr( pWidget ) )
-
-
-METHOD QSignalMapper:mapping_3( pObject )
-   RETURN Qt_QSignalMapper_mapping_3( ::pPtr, hbqt_ptr( pObject ) )
+METHOD QSignalMapper:mapping_2( pObject )
+   RETURN Qt_QSignalMapper_mapping_2( ::pPtr, hbqt_ptr( pObject ) )
 
 
 METHOD QSignalMapper:removeMappings( pSender )
@@ -119,12 +113,8 @@ METHOD QSignalMapper:setMapping_1( pSender, cText )
    RETURN Qt_QSignalMapper_setMapping_1( ::pPtr, hbqt_ptr( pSender ), cText )
 
 
-METHOD QSignalMapper:setMapping_2( pSender, pWidget )
-   RETURN Qt_QSignalMapper_setMapping_2( ::pPtr, hbqt_ptr( pSender ), hbqt_ptr( pWidget ) )
-
-
-METHOD QSignalMapper:setMapping_3( pSender, pObject )
-   RETURN Qt_QSignalMapper_setMapping_3( ::pPtr, hbqt_ptr( pSender ), hbqt_ptr( pObject ) )
+METHOD QSignalMapper:setMapping_2( pSender, pObject )
+   RETURN Qt_QSignalMapper_setMapping_2( ::pPtr, hbqt_ptr( pSender ), hbqt_ptr( pObject ) )
 
 
 METHOD QSignalMapper:map()

@@ -61,7 +61,9 @@
 
 #include "hbqt.h"
 #include "hbqtgui_garbage.h"
+#include "hbqtgui.h"
 #include "hbqtcore_garbage.h"
+#include "hbqtcore.h"
 
 /*----------------------------------------------------------------------*/
 #if QT_VERSION >= 0x040500
@@ -449,20 +451,6 @@ HB_FUNC( QT_QPAINTENGINE_TYPE )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTENGINE_TYPE FP=hb_retni( ( QPaintEngine::Type ) ( p )->type() ); p is NULL" ) );
-   }
-}
-
-/*
- * virtual void updateState ( const QPaintEngineState & state ) = 0
- */
-HB_FUNC( QT_QPAINTENGINE_UPDATESTATE )
-{
-   QPaintEngine * p = hbqt_par_QPaintEngine( 1 );
-   if( p )
-      ( p )->updateState( *hbqt_par_QPaintEngineState( 2 ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTENGINE_UPDATESTATE FP=( p )->updateState( *hbqt_par_QPaintEngineState( 2 ) ); p is NULL" ) );
    }
 }
 

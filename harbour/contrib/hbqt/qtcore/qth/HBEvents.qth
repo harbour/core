@@ -55,9 +55,9 @@
 ;
 
 <CLASS>
-QObject  = 
+QObject  =
 Inherits = QObject
-Type     = 
+Type     =
 New      =
 </CLASS>
 
@@ -69,11 +69,11 @@ New      =
 
 <CODE>
 #include <QtCore/QObject>
-#include "../hbqt_hbevents.h"
+#include "hbqt_hbevents.h"
 
 
 /*
- * HBEvents() 
+ * HBEvents()
  * ~HBEvents()
  *
  */
