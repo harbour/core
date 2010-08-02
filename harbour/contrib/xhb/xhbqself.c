@@ -52,6 +52,7 @@
 
 #include "hbvmint.h"
 #include "hbapi.h"
+#include "hbvm.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbstack.h"
@@ -64,11 +65,23 @@ HB_FUNC( HB_QSELF )
    {
       PHB_ITEM pSelf = hb_stackItem( nOffset + 1 );
 
-      if( nOffset > 0 && HB_IS_BLOCK( pSelf ) &&
-         hb_itemGetSymbol( hb_stackItem( nOffset ) ) == &hb_symEval )
+      if( nOffset > 0 && HB_IS_BLOCK( pSelf ) )
       {
-         pSelf = hb_stackItem( hb_stackItem( nOffset )->
-                               item.asSymbol.stackstate->nBaseItem + 1 );
+         static PHB_SYMB s_pSymEval = NULL;
+
+         if( s_pSymEval == NULL )
+         {
+            hb_vmPushEvalSym();
+            s_pSymEval = hb_itemGetSymbol( hb_stackItemFromTop( -1 ) );
+            hb_stackPop();
+         }
+
+         if( s_pSymEval &&
+             hb_itemGetSymbol( hb_stackItem( nOffset ) ) == s_pSymEval )
+         {
+            pSelf = hb_stackItem( hb_stackItem( nOffset )->
+                                  item.asSymbol.stackstate->nBaseItem + 1 );
+         }
       }
       hb_itemReturn( pSelf );
    }
