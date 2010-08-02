@@ -358,11 +358,11 @@ STATIC FUNCTION mk_hbd_core( cDir )
 
    RETURN .F.
 
-STATIC FUNCTION mk_hb_processRun( cCommand )
+STATIC FUNCTION mk_hb_processRun( cCommand, ... )
 
    OutStd( cCommand + hb_eol() )
 
-   RETURN hb_processRun( cCommand )
+   RETURN hb_processRun( cCommand, ... )
 
 STATIC FUNCTION FNameEscape( cFN )
    RETURN Chr( 34 ) + cFN + Chr( 34 )
