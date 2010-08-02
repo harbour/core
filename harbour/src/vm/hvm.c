@@ -217,7 +217,7 @@ static void    hb_vmLocalName( HB_USHORT uiLocal, const char * szLocalName ); /*
 static void    hb_vmStaticName( HB_BYTE bIsGlobal, HB_USHORT uiStatic, const char * szStaticName ); /* statics vars information for the debugger */
 static void    hb_vmModuleName( const char * szModuleName ); /* PRG and function name information for the debugger */
 
-static void    hb_vmDebugEntry( int nMode, int nLine, const char *szName, int nIndex, PHB_ITEM pFrame );
+static void    hb_vmDebugEntry( int nMode, int nLine, const char * szName, int nIndex, PHB_ITEM pFrame );
 static void    hb_vmDebuggerExit( HB_BOOL fRemove );      /* shuts down the debugger */
 static void    hb_vmDebuggerShowLine( HB_USHORT uiLine ); /* makes the debugger shows a specific source code line */
 static void    hb_vmDebuggerEndProc( void );     /* notifies the debugger for an endproc */
