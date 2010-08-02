@@ -12,14 +12,14 @@ libs=../qtgui/hbqtgui.hbc
 
 incpaths=g
 
-# TODO: dependency detection
--incpath=${HB_WITH_QSCINTILLA}/qt
+-depkeyhead=qscintilla:qsciglobal.h
+-depcontrol=qscintilla:${HB_WITH_QSCINTILLA}
 
-# TODO: lib name of dependency
+# NOTE: untested
 {!HB_STATIC_QT&!hbdyn}libs=hbqscintilla${__HB_DYN__}
-{!HB_STATIC_QT&(allwin|os2)}libs=QScintilla_XXXXXX
-{!HB_STATIC_QT&linux}libs=QScintilla_XXXXXX
-{!HB_STATIC_QT&darwin}libs=/Library/Frameworks/QScintilla_XXXXXX.framework/QScintilla_XXXXXX
+{!HB_STATIC_QT&(allwin|os2)}libs=qscintilla2
+{!HB_STATIC_QT&linux}libs=qscintilla2
+{!HB_STATIC_QT&darwin}libs=/Library/Frameworks/qscintilla2.framework/qscintilla2
 {HB_STATIC_QT&allwin&!hbdyn}libs=hbqscintillas${__HB_DYN__}
 {HB_STATIC_QT&linux}libs=hbqscintilla
-{HB_STATIC_QT&(allwin|linux)}libs=QScintilla_XXXXXX
+{HB_STATIC_QT&(allwin|linux)}libs=qscintilla2
