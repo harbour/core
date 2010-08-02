@@ -2,9 +2,9 @@
 ; $Id$
 ;
 
--I=../hbqscintilla/qth
--O=../hbqscintilla/g
--D=../hbqscintilla/doc
+-I=../qscintilla/qth
+-O=../qscintilla/g
+-D=../qscintilla/doc
 
 HBQsciScintilla.qth
 
