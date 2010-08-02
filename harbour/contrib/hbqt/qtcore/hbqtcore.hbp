@@ -7,4 +7,6 @@
 g/filelist.hbm
 hbqtcore.hbm
 
+-instfile=inc:g/hbqtcore_extern.ch
+
 hbqtcores.hbp

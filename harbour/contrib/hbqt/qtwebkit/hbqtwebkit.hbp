@@ -12,4 +12,6 @@ g/filelist.hbm
 ../qtgui/hbqtgui.hbc
 ../qtnetwork/hbqtnetwork.hbc
 
+-instfile=inc:g/hbqtwebkit_extern.ch
+
 hbqtwebkits.hbp

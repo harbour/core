@@ -11,4 +11,6 @@ g/filelist.hbm
 ../qtcore/hbqtcore.hbc
 ../qtgui/hbqtgui.hbc
 
+-instfile=inc:g/hbqtdesigner_extern.ch
+
 hbqtdesigners.hbp

@@ -1775,21 +1775,26 @@ STATIC FUNCTION Build_Document( cProFile, cWidget, cls_, doc_, cPathDoc, subCls_
 
 STATIC FUNCTION Build_HeaderFile( cpp_, cPathOut, cProFile )
    LOCAL cFile := iif( empty( cPathOut ), "", cPathOut + hb_ps() )
-   LOCAL txt_ := {}
+   LOCAL hdr_ := {}
+   LOCAL txt_
    LOCAL s
    LOCAL tmp
    LOCAL cName := FNameGetName( cProFile )
 
-   aadd( txt_, "/*"                                                                            )
-   aadd( txt_, " * $" + "Id" + "$"                                                             )
-   aadd( txt_, " */"                                                                           )
-   aadd( txt_, ""                                                                              )
-   aadd( txt_, "/* -------------------------------------------------------------------- */"    )
-   aadd( txt_, "/* WARNING: Automatically generated source file. DO NOT EDIT!           */"    )
-   aadd( txt_, "/*          Instead, edit corresponding .qth file,                      */"    )
-   aadd( txt_, "/*          or the generator tool itself, and run regenarate.           */"    )
-   aadd( txt_, "/* -------------------------------------------------------------------- */"    )
-   aadd( txt_, "" )
+   aadd( hdr_, "/*"                                                                            )
+   aadd( hdr_, " * $" + "Id" + "$"                                                             )
+   aadd( hdr_, " */"                                                                           )
+   aadd( hdr_, ""                                                                              )
+   aadd( hdr_, "/* -------------------------------------------------------------------- */"    )
+   aadd( hdr_, "/* WARNING: Automatically generated source file. DO NOT EDIT!           */"    )
+   aadd( hdr_, "/*          Instead, edit corresponding .qth file,                      */"    )
+   aadd( hdr_, "/*          or the generator tool itself, and run regenarate.           */"    )
+   aadd( hdr_, "/* -------------------------------------------------------------------- */"    )
+   aadd( hdr_, "" )
+
+   txt_ := {}
+   AEval( hdr_, {| tmp | AAdd( txt_, tmp ) } )
+
    aadd( txt_, "#ifndef __HB" + Upper( cName ) + "_H" )
    aadd( txt_, "#define __HB" + Upper( cName ) + "_H" )
    aadd( txt_, "" )
@@ -1828,6 +1833,23 @@ STATIC FUNCTION Build_HeaderFile( cpp_, cPathOut, cProFile )
    aadd( txt_, "#endif /* __HB" + Upper( cName ) + "_H */" )
 
    CreateTarget( cFile + "hb" + cName + ".h", txt_ )
+
+   /* Create extern.ch file */
+
+   txt_ := {}
+   AEval( hdr_, {| tmp | AAdd( txt_, tmp ) } )
+
+   aadd( txt_, "#ifndef __HB" + Upper( cName ) + "_EXTERN_CH" )
+   aadd( txt_, "#define __HB" + Upper( cName ) + "_EXTERN_CH" )
+   aadd( txt_, "" )
+   FOR EACH s IN cpp_
+      aadd( txt_, "REQUEST " + s )
+   NEXT
+   aadd( txt_, "" )
+
+   aadd( txt_, "#endif /* __HB" + Upper( cName ) + "_EXTERN_CH */" )
+
+   CreateTarget( cFile + "hb" + cName + "_extern.ch", txt_ )
 
    RETURN NIL
 

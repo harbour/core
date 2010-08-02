@@ -7,4 +7,6 @@
 g/filelist.hbm
 hbqscintilla.hbm
 
+-instfile=inc:g/hbqscintilla_extern.ch
+
 hbqscintillas.hbp

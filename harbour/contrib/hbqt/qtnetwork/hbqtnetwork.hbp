@@ -10,4 +10,6 @@ g/filelist.hbm
 
 ../qtcore/hbqtcore.hbc
 
+-instfile=inc:g/hbqtnetwork_extern.ch
+
 hbqtnetworks.hbp
