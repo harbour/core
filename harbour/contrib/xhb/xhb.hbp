@@ -52,6 +52,7 @@ xhbmsgs.c
 xhbmtc.c
 xhbqself.c
 xhbproc.c
+xhbpval.c
 xhbregx.c
 xhbsave.c
 xhbscr.c

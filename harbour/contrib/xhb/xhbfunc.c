@@ -318,7 +318,6 @@ HB_FUNC( XHB_MEMOWRIT )
       HB_FUNC_EXEC( MEMOWRIT )
 }
 
-HB_FUNC_EXTERN( HB_PVALUE             ) ; HB_FUNC( PVALUE                   ) { HB_FUNC_EXEC( HB_PVALUE             ); }
 HB_FUNC_EXTERN( HB_METHODNAME         ) ; HB_FUNC( METHODNAME               ) { HB_FUNC_EXEC( HB_METHODNAME         ); }
 HB_FUNC_EXTERN( HB_LIBLOAD            ) ; HB_FUNC( LIBLOAD                  ) { HB_FUNC_EXEC( HB_LIBLOAD            ); }
 HB_FUNC_EXTERN( HB_LIBFREE            ) ; HB_FUNC( LIBFREE                  ) { HB_FUNC_EXEC( HB_LIBFREE            ); }
