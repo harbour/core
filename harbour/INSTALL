@@ -301,8 +301,8 @@ HARBOUR
 
    Certain Harbour parts (typically contrib packages) depend on 3rd
    party components. To make these Harbour parts built, you need
-   to tell Harbour where to find the required 3rd party components
-   (typically headers).
+   to tell Harbour where to find the headers for these 3rd party
+   components.
 
    On *nix systems most of these 3rd party components will
    automatically be picked up if installed on well-known standard
@@ -310,7 +310,7 @@ HARBOUR
 
    You only need to use manual setup if the dependency isn't available
    on your platform on a system location, or you wish to use
-   a non-standard location. Typically you need to do that on non-*nix
+   a non-standard location. Typically you need to do this on non-*nix
    (Windows, MS-DOS, OS/2) systems for all packages and for a few packages
    on *nix which aren't available through official package managers
    (ADS Client f.e.).

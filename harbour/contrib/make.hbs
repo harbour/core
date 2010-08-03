@@ -507,6 +507,7 @@ STATIC FUNCTION DepListToStr( aDeptHBC )
 STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, lLibDyn, cStdErr, cStdOut )
    LOCAL nErrorLevel
    LOCAL cOptionsLibDyn := ""
+   LOCAL cCommand
 
    /* Making sure that user settings do not interfere with the std build process. */
    hb_setenv( "HBMK_OPTIONS" )
@@ -527,13 +528,19 @@ STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, lLibDyn, cStdErr, cStdOut
       hb_setenv( "_HB_BUILD_LIBDYN" )
    ENDIF
 
-   nErrorLevel := mk_hb_processRun( s_cBinDir + "hbmk2" +;
-                                    " -quiet -width=0 -shl" +;
-                                    " @" + StrTran( s_cHome + "hbpre", "\", "/" ) +;
-                                    cOptionsPre +;
-                                    " " + StrTran( cProjectPath, "\", "/" ) +;
-                                    " @" + StrTran( s_cHome, "\", "/" ) + "hbpost" +;
-                                    cOptionsLibDyn, @cStdErr, @cStdOut )
+   cCommand := s_cBinDir + "hbmk2" +;
+               " -quiet -width=0 -shl" +;
+               " @" + StrTran( s_cHome + "hbpre", "\", "/" ) +;
+               cOptionsPre +;
+               " " + StrTran( cProjectPath, "\", "/" ) +;
+               " @" + StrTran( s_cHome, "\", "/" ) + "hbpost" +;
+               cOptionsLibDyn
+
+   IF PCount() >= 4
+      nErrorLevel := hb_processRun( cCommand, @cStdErr, @cStdOut )
+   ELSE
+      nErrorLevel := mk_hb_processRun( cCommand )
+   ENDIF
 
    IF nErrorLevel != 0
       OutStd( hb_StrFormat( "! '%1$s' returned status: %2$s", cProjectPath, hb_ntos( nErrorLevel ) ) + hb_eol() )
