@@ -5839,6 +5839,12 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
       IF hbmk[ _HBMK_lCLEAN ]
          FErase( hbmk[ _HBMK_cPROGNAME ] )
+         IF hbmk[ _HBMK_lIMPLIB ] .AND. hbmk[ _HBMK_cPLAT ] $ "win|os2|dos" .AND. l_cIMPLIBNAME != NIL
+            FErase( l_cIMPLIBNAME )
+         ENDIF
+         IF hbmk[ _HBMK_lMAP ]
+            FErase( FNameExtSet( hbmk[ _HBMK_cPROGNAME ], ".map" ) )
+         ENDIF
          IF lStopAfterCComp .AND. hbmk[ _HBMK_lCreateLib ]
             /* bcc is known to create it for static libs */
             FErase( FNameExtSet( hbmk[ _HBMK_cPROGNAME ], ".bak" ) )
@@ -5858,10 +5864,6 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       ENDIF
       IF ! hbmk[ _HBMK_lINC ] .OR. hbmk[ _HBMK_lCLEAN ]
          AEval( ListDirExt( hbmk[ _HBMK_aPRG ], hbmk[ _HBMK_cWorkDir ], ".c", .T. ), {| tmp | FErase( tmp ) } )
-      ENDIF
-      IF hbmk[ _HBMK_lCLEAN ] .AND. ;
-         hbmk[ _HBMK_lIMPLIB ] .AND. hbmk[ _HBMK_cPLAT ] $ "win|os2|dos" .AND. l_cIMPLIBNAME != NIL
-         FErase( l_cIMPLIBNAME )
       ENDIF
       IF ! lStopAfterCComp .OR. hbmk[ _HBMK_lCreateLib ] .OR. hbmk[ _HBMK_lCreateDyn ]
          IF ! hbmk[ _HBMK_lINC ] .OR. hbmk[ _HBMK_lCLEAN ]
