@@ -577,7 +577,8 @@ STATIC FUNCTION mk_extern( cLibName, cOutputName )
                cExtern += "ANNOUNCE " + "__" + Upper( FNameNameGet( cOutputName ) ) + "_EXTERN__" + hb_eol()
                cExtern += hb_eol()
                FOR EACH tmp IN aResult
-                  IF ! hb_WildMatch( "HB_GT_*_DEFAULT", tmp[ 2 ] )
+                  IF ! hb_WildMatch( "HB_GT_*_DEFAULT", tmp[ 2 ] ) .AND. ;
+                     ! hb_WildMatch( "__*_EXTERN__", tmp[ 2 ] )
                      cExtern += "EXTERNAL " + tmp[ 2 ] + hb_eol()
                   ENDIF
                NEXT
