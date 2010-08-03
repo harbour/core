@@ -2021,6 +2021,9 @@ FUNCTION hbide_getUI( cUI, qParent )
    CASE "updown"
       oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_UpDown( qParent ), NIL )
       EXIT
+   CASE "updown_v"
+      oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_UpDown_v( qParent ), NIL )
+      EXIT
    CASE "searchreplace"
       oUI := iif( nModeUI == UI_MODE_FUNC, hbqtui_SearchReplace( qParent ), NIL )
       EXIT

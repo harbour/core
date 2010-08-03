@@ -76,5 +76,6 @@ updown.ui
 dbstruct.ui
 fetchdate.ui
 tables.ui
+updown_v.ui
 
 hbide.qrc

@@ -115,13 +115,21 @@ METHOD IdeUpDown:show()
    LOCAL oEdit
 
    IF !empty( oEdit := ::oEM:getEditObjectCurrent() )
-      ::position()
-
-      oEdit:qEdit:hbGetSelectionInfo()
-      IF oEdit:aSelectionInfo[ 1 ] > -1
-         ::oUI:show()
+      IF ::oIde:lCurEditsMdi
+         oEdit:qEdit:hbGetSelectionInfo()
+         IF oEdit:aSelectionInfo[ 1 ] > -1
+            ::oUI:setEnabled( .t. )
+         ELSE
+            ::oUI:setEnabled( .f. )
+         ENDIF
       ELSE
-         ::oUI:hide()
+         ::position()
+         oEdit:qEdit:hbGetSelectionInfo()
+         IF oEdit:aSelectionInfo[ 1 ] > -1
+            ::oUI:show()
+         ELSE
+            ::oUI:hide()
+         ENDIF
       ENDIF
    ENDIF
 
@@ -135,12 +143,14 @@ METHOD IdeUpDown:create( oIde )
 
    ::oIde := oIde
 
-   ::oUI := hbide_getUI( "updown", ::oIde:oDlg:oWidget )
+   IF ::oIde:lCurEditsMdi
+      ::oUI := hbide_getUI( "updown_v" )
+   ELSE
+      ::oUI := hbide_getUI( "updown", ::oIde:oDlg:oWidget )
+   ENDIF
 
    ::oUI:setWindowFlags( hb_bitOr( Qt_Tool, Qt_FramelessWindowHint ) )
    ::oUI:setFocusPolicy( Qt_NoFocus )
-   //::oUI:setMaximumWidth( 75 )
-   //::oUI:setMaximumHeight( 25 )
 
    ::oUI:q_buttonPrev:setIcon( hbide_image( "go-prev" ) )
    ::oUI:q_buttonPrev:setToolTip( "Find Previous" )
