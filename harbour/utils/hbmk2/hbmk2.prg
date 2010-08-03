@@ -4592,7 +4592,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    IF lDumpInfo
 
       OutStd( "{{{" + hb_eol() )
-      OutStd( "outputname{{" + PathSepToForward( hbmk[ _HBMK_cPROGNAME ] ) + "}}" + hb_eol() )
+      IF ! Empty( hbmk[ _HBMK_cPROGNAME ] )
+         OutStd( "outputname{{" + PathSepToForward( hbmk[ _HBMK_cPROGNAME ] ) + "}}" + hb_eol() )
+      ENDIF
       OutStd( "targetname{{" + hbmk_TARGETNAME( hbmk ) + "}}" + hb_eol() )
       OutStd( "targettype{{" + hbmk_TARGETTYPE( hbmk ) + "}}" + hb_eol() )
       OutStd( "inc{{" + iif( hbmk[ _HBMK_lINC ], "yes", "no" ) + "}}" + hb_eol() )
