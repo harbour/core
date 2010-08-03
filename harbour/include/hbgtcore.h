@@ -343,8 +343,8 @@ typedef struct _HB_GT_BASE
 
 extern HB_EXPORT PHB_GT hb_gt_Base( void );
 extern HB_EXPORT void hb_gt_BaseFree( PHB_GT pGT );
-extern PHB_GT hb_gt_ItemBase( PHB_ITEM pItemGT );
-extern void hb_gt_gcMark( void );
+extern HB_EXPORT PHB_GT hb_gt_ItemBase( PHB_ITEM pItemGT );
+extern HB_EXPORT void hb_gt_gcMark( void );
 
 #define HB_GTLOCAL(g)   (g)->pGTData[*HB_GTID_PTR]
 
@@ -600,11 +600,11 @@ extern int  hb_gt_chrmapinit( int * piTransTbl, const char * pszTerm, HB_BOOL fS
 extern HB_BOOL hb_gt_setClipboard( const char * szClipData, HB_SIZE nLen );
 extern HB_BOOL hb_gt_getClipboard( char ** pszClipData, HB_SIZE * pnLen );
 #if defined( HB_OS_WIN )
-extern HB_BOOL hb_gt_winapi_setClipboard( HB_UINT uFormat, PHB_ITEM pItem );
-extern HB_BOOL hb_gt_winapi_getClipboard( HB_UINT uFormat, PHB_ITEM pItem );
-extern int     hb_gt_winapi_getKbdState( void );
-extern void    hb_gt_winapi_setKbdState( int kbdShifts );
-extern void    hb_gt_winapi_tone( double dFrequency, double dDuration );
+extern HB_EXPORT HB_BOOL hb_gt_winapi_setClipboard( HB_UINT uFormat, PHB_ITEM pItem );
+extern HB_EXPORT HB_BOOL hb_gt_winapi_getClipboard( HB_UINT uFormat, PHB_ITEM pItem );
+extern HB_EXPORT int     hb_gt_winapi_getKbdState( void );
+extern HB_EXPORT void    hb_gt_winapi_setKbdState( int kbdShifts );
+extern HB_EXPORT void    hb_gt_winapi_tone( double dFrequency, double dDuration );
 #endif /* HB_OS_WIN */
 #if defined( HB_OS_DOS ) || defined( HB_OS_WIN ) || defined( HB_OS_OS2 )
 extern int hb_gt_dos_keyCodeTranslate( int iKey );

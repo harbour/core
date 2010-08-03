@@ -612,8 +612,8 @@ extern HB_COUNTER hb_gcRefCount( void * pAlloc );  /* return number of reference
 #endif
 
 #endif /* _HB_API_INTERNAL_ */
-extern void       hb_gcCollect( void ); /* checks if a single memory block can be released */
-extern void       hb_gcCollectAll( HB_BOOL fForce ); /* checks if all memory blocks can be released */
+extern HB_EXPORT void         hb_gcCollect( void ); /* checks if a single memory block can be released */
+extern HB_EXPORT void         hb_gcCollectAll( HB_BOOL fForce ); /* checks if all memory blocks can be released */
 
 /* Extend API */
 extern HB_EXPORT HB_ULONG     hb_parinfo( int iParam ); /* Determine the param count or data type */

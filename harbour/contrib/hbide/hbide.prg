@@ -100,8 +100,6 @@ PROCEDURE Main( ... )
    LOCAL oIde
    LOCAL oResource
 
-   hbide_request()
-
    #ifdef HB_IDE_DISTRO
       LOCAL cBse := hb_dirBase() + ".."
 

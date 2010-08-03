@@ -18,5 +18,7 @@
 -depincpath=allegro:/opt/local/include
 -depimplibs=allegro:../bin/alleg42.dll
 
+-iflag={bcc}-a
+
 gtalleg.c
 ssf.c

@@ -313,10 +313,10 @@ extern HB_EXPORT int        hb_fsProcessValue( HB_FHANDLE hProcess, HB_BOOL fWai
 extern HB_EXPORT HB_BOOL    hb_fsProcessClose( HB_FHANDLE hProcess, HB_BOOL fGentle );
 
 /* Misc helper functions */
-extern HB_FATTR            hb_fsAttrFromRaw( HB_FATTR raw_attr );
-extern HB_FATTR            hb_fsAttrToRaw( HB_FATTR ulAttr );
-extern HB_FATTR            hb_fsAttrEncode( const char * szAttr );
-extern char *              hb_fsAttrDecode( HB_FATTR ulAttr, char * szAttr );
+extern HB_EXPORT HB_FATTR   hb_fsAttrFromRaw( HB_FATTR raw_attr );
+extern HB_EXPORT HB_FATTR   hb_fsAttrToRaw( HB_FATTR ulAttr );
+extern HB_EXPORT HB_FATTR   hb_fsAttrEncode( const char * szAttr );
+extern HB_EXPORT char *     hb_fsAttrDecode( HB_FATTR ulAttr, char * szAttr );
 
 extern HB_EXPORT HB_BOOL      hb_fsMaxFilesError( void );
 extern HB_EXPORT const char * hb_fsNameConv( const char * szFileName, char ** pszFree );
@@ -379,7 +379,7 @@ extern HB_EXPORT void         hb_fileCommit( PHB_FILE pFile );
 extern HB_EXPORT HB_FHANDLE   hb_fileHandle( PHB_FILE pFile );
 
 /* wrapper to fopen() which calls hb_fsNameConv() */
-extern FILE * hb_fopen( const char *path, const char *mode );
+extern HB_EXPORT FILE *       hb_fopen( const char *path, const char *mode );
 
 HB_EXTERN_END
 
