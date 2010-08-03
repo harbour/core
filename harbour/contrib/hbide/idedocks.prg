@@ -220,11 +220,19 @@ METHOD IdeDocks:destroy()
 METHOD IdeDocks:getEditorPanelsInfo()
    LOCAL b_, a_:= {}
    FOR EACH b_ IN ::aViewsInfo
-      aadd( a_, b_[ 1 ] + "," + ;
-                iif( empty( b_[ 2 ] ), "",  hbide_nArray2String( { b_[ 2 ]:x(), b_[ 2 ]:y(), b_[ 2 ]:width(), b_[ 2 ]:height() } ) ) + "," + ;
-                hb_ntos( b_[ 3 ] ) + "," + hb_ntos( b_[ 4 ] ) + "," + ;
-                hb_ntos( ::oStackedWidget:oWidget:viewMode() ) + "," + hb_ntos( ::nViewStyle ) + ","   ;
-          )
+      IF ::oIde:lCurEditsMdi
+         aadd( a_, b_[ 1 ] + "," + ;
+                   iif( empty( b_[ 2 ] ), "",  hbide_nArray2String( { b_[ 2 ]:x(), b_[ 2 ]:y(), b_[ 2 ]:width(), b_[ 2 ]:height() } ) ) + "," + ;
+                   hb_ntos( b_[ 3 ] ) + "," + hb_ntos( b_[ 4 ] ) + "," + ;
+                   hb_ntos( ::oStackedWidget:oWidget:viewMode() ) + "," + hb_ntos( ::nViewStyle ) + ","   ;
+             )
+      ELSE
+         aadd( a_, b_[ 1 ] + "," + ;
+                   iif( empty( b_[ 2 ] ), "",  hbide_nArray2String( { b_[ 2 ]:x(), b_[ 2 ]:y(), b_[ 2 ]:width(), b_[ 2 ]:height() } ) ) + "," + ;
+                   hb_ntos( b_[ 3 ] ) + "," + hb_ntos( b_[ 4 ] ) + "," + ;
+                   hb_ntos( b_[ 5 ] ) + "," + hb_ntos( b_[ 6 ] ) + ","   ;
+             )
+      ENDIF
    NEXT
    RETURN a_
 
@@ -322,16 +330,18 @@ METHOD IdeDocks:buildDialog()
    ENDIF
    ::setView( "Stats" )                  /* Always call with name */
 
-   IF x_[ 1,5 ] == QMdiArea_TabbedView
-      ::oStackedWidget:oWidget:setViewMode( QMdiArea_TabbedView )
-   ENDIF
-   FOR EACH a_ IN x_
-      ::oIde:aMdies[ a_:__enumIndex() ]:setWindowState( a_[ 4 ] )
-   NEXT
-   IF x_[ 1,6 ] == 1
-      ::oStackedWidget:oWidget:tileSubWindows()
-   ELSEIF x_[ 1,6 ] == 2
-      ::oStackedWidget:oWidget:cascadeSubWindows()
+   IF ::oIde:lCurEditsMdi
+      IF x_[ 1,5 ] == QMdiArea_TabbedView
+         ::oStackedWidget:oWidget:setViewMode( QMdiArea_TabbedView )
+      ENDIF
+      FOR EACH a_ IN x_
+         ::oIde:aMdies[ a_:__enumIndex() ]:setWindowState( a_[ 4 ] )
+      NEXT
+      IF x_[ 1,6 ] == 1
+         ::oStackedWidget:oWidget:tileSubWindows()
+      ELSEIF x_[ 1,6 ] == 2
+         ::oStackedWidget:oWidget:cascadeSubWindows()
+      ENDIF
    ENDIF
 
    ::oDlg:connectEvent( ::oDlg:oWidget, QEvent_WindowStateChange, {|e| ::execEvent( "QEvent_WindowStateChange", e ) } )

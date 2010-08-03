@@ -425,7 +425,7 @@ METHOD IdeEdit:connectEditSignals( oEdit )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
-   LOCAL pAct, qAct, n, qEdit, oo, qCursor, cProto, nRows, nCols
+   LOCAL pAct, qAct, n, qEdit, oo, qCursor, cProto, nRows, nCols, cAct
 
    HB_SYMBOL_UNUSED( p1 )
 
@@ -447,12 +447,16 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
       pAct := ::oEM:qContextMenu:exec_1( qEdit:mapToGlobal( p ) )
       IF !hbqt_isEmptyQtPointer( pAct )
          qAct := QAction():configure( pAct )
-         DO CASE
-         CASE qAct:text() == "Split Horizontally"
+         cAct := strtran( qAct:text(), "&", "" )
+HB_TRACE( HB_TR_ALWAYS, cAct )
+         SWITCH cAct
+         CASE "Split Horizontally"
             ::oEditor:split( 1, oEdit )
-         CASE qAct:text() == "Split Vertically"
+            EXIT
+         CASE "Split Vertically"
             ::oEditor:split( 2, oEdit )
-         CASE qAct:text() == "Close Split Window"
+            EXIT
+         CASE "Close Split Window"
             IF n > 0  /* 1 == Main Edit */
                ::oUpDn:oUI:setParent( ::oEditor:oEdit:qEdit )
                oo := ::oEditor:aEdits[ n ]
@@ -462,13 +466,42 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
                ::oEditor:qCoEdit := ::oEditor:oEdit
                ::oIde:manageFocusInEditor()
             ENDIF
-         CASE qAct:text() == "Save as Skeleton..."
+            EXIT
+         CASE "Save as Skeleton..."
             ::oSK:saveAs( ::getSelectedText() )
-         CASE qAct:text() == "Apply Theme"
+            EXIT
+         CASE "Apply Theme"
             ::oEditor:applyTheme()
-         CASE qAct:text() == "Goto Function"
+            EXIT
+         CASE "Goto Function"
             ::gotoFunction()
-         ENDCASE
+            EXIT
+         CASE "Cut"
+            IF ::oIde:lCurEditsMdi
+               ::cut()
+            ENDIF
+            EXIT
+         CASE "Copy"
+            IF ::oIde:lCurEditsMdi
+               ::copy()
+            ENDIF
+            EXIT
+         CASE "Paste"
+            IF ::oIde:lCurEditsMdi
+               ::paste()
+            ENDIF
+            EXIT
+         CASE "Undo"
+            IF ::oIde:lCurEditsMdi
+               ::undo()
+            ENDIF
+            EXIT
+         CASE "Redo"
+            IF ::oIde:lCurEditsMdi
+               ::redo()
+            ENDIF
+            EXIT
+         ENDSWITCH
       ENDIF
       EXIT
 
