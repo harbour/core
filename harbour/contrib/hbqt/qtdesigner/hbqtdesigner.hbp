@@ -4,12 +4,7 @@
 
 ../hbqt_common.hbm
 
-g/filelist.hbm
-
--ig
-
-../qtcore/hbqtcore.hbc
-../qtgui/hbqtgui.hbc
+hbqtdesigner.hbm
 
 -instfile=inc:g/hbqtdesigner_extern.ch
 

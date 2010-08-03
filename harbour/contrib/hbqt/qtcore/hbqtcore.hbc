@@ -7,10 +7,9 @@
 # See COPYING for licensing terms.
 # ---------------------------------------------------------------
 
-libs=../hbqt_common.hbc
+incpaths=. g
 
-incpaths=.
-incpaths=g
+libs=../hbqt_common.hbc
 
 # TOFIX: QtGui is needed by hbqt_hbslots.cpp. This dependency should be removed.
 {!HB_STATIC_QT}libs=hbqtcore${__HB_DYN__}

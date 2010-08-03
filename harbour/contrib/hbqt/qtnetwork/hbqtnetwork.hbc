@@ -7,9 +7,9 @@
 # See COPYING for licensing terms.
 # ---------------------------------------------------------------
 
-libs=../qtcore/hbqtcore.hbc
-
 incpaths=g
+
+libs=../qtcore/hbqtcore.hbc
 
 {!HB_STATIC_QT}libs=hbqtnetwork${__HB_DYN__}
 {!HB_STATIC_QT&(allwin|os2)}libs=QtNetwork4

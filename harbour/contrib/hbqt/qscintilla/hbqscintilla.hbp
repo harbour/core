@@ -4,7 +4,6 @@
 
 ../hbqt_common.hbm
 
-g/filelist.hbm
 hbqscintilla.hbm
 
 -instfile=inc:g/hbqscintilla_extern.ch

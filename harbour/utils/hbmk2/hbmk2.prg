@@ -97,8 +97,17 @@
          clang, etc. */
 
 /* TODO: Use hashes instead of arrays for input files, options */
+/* TODO: Avoid adding certain options and input files twice */
 
 /* TOFIX: -autohbc with -inc mode */
+
+/* Extracting list of Harbour functions from binaries (using GCC toolchain):
+
+   From .a library:
+      nm libhbct.a |grep " T HB_FUN_"|sed "s/.*HB_FUN_\(.*\)/EXTERNAL \1/g"
+   From .o files:
+      nm *.o |grep " T HB_FUN_"|sed "s/.*HB_FUN_\(.*\)/EXTERNAL \1/g"
+ */
 
 /* TODO: Next gen compiler autodetection:
          1. Gather supported compilers by Harbour installation

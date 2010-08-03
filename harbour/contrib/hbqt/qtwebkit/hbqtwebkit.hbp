@@ -4,13 +4,7 @@
 
 ../hbqt_common.hbm
 
-g/filelist.hbm
-
--ig
-
-../qtcore/hbqtcore.hbc
-../qtgui/hbqtgui.hbc
-../qtnetwork/hbqtnetwork.hbc
+hbqtwebkit.hbm
 
 -instfile=inc:g/hbqtwebkit_extern.ch
 

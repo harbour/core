@@ -4,10 +4,4 @@
 
 ../hbqt_commons.hbm
 
-g/filelist.hbm
-
--ig
-
-../qtcore/hbqtcore.hbc
-../qtgui/hbqtgui.hbc
-../qtnetwork/hbqtnetwork.hbc
+hbqtwebkit.hbm

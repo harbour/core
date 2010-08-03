@@ -1,0 +1,19 @@
+#
+# $Id$
+#
+
+-ig
+
+g/filelist.hbm
+
+../qtcore/hbqtcore.hbc
+../qtgui/hbqtgui.hbc
+../qtnetwork/hbqtnetwork.hbc
+
+-depkeyhead=qtwebkit:QtWebKit/QWebView
+-depcontrol=qtwebkit:${HB_WITH_QT}
+{!darwin}-depincpath=qtwebkit:/usr/include/qt4
+{!darwin}-depincpath=qtwebkit:/usr/lib/qt4/include
+{!darwin}-depincpath=qtwebkit:/usr/include
+{darwin}-depincpath=qtwebkit:/Developer/qt/include
+{darwin}-depincpath=qtwebkit:/Library/Frameworks

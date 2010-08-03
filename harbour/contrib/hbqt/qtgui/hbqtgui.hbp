@@ -4,7 +4,6 @@
 
 ../hbqt_common.hbm
 
-g/filelist.hbm
 hbqtgui.hbm
 
 -instfile=inc:g/hbqtgui_extern.ch

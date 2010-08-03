@@ -4,11 +4,7 @@
 
 ../hbqt_common.hbm
 
-g/filelist.hbm
-
--ig
-
-../qtcore/hbqtcore.hbc
+hbqtnetwork.hbm
 
 -instfile=inc:g/hbqtnetwork_extern.ch
 

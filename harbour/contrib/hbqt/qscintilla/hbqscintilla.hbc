@@ -7,10 +7,10 @@
 # See COPYING for licensing terms.
 # ---------------------------------------------------------------
 
+incpaths=g
+
 libs=../qtcore/hbqtcore.hbc
 libs=../qtgui/hbqtgui.hbc
-
-incpaths=g
 
 -depkeyhead=qscintilla:qsciglobal.h
 -depcontrol=qscintilla:${HB_WITH_QSCINTILLA}

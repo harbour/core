@@ -1,0 +1,10 @@
+#
+# $Id$
+#
+
+-ig
+
+g/filelist.hbm
+
+../qtcore/hbqtcore.hbc
+../qtgui/hbqtgui.hbc

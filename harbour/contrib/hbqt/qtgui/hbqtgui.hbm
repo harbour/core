@@ -5,7 +5,7 @@
 -i.
 -ig
 
-../qtcore/hbqtcore.hbc
+g/filelist.hbm
 
 hbqt_hbqabstractitemmodel.cpp
 hbqt_hbqmainwindow.cpp
@@ -22,3 +22,5 @@ hbqt_hbqtableview.h
 
 hbqt_errorsys.prg
 THbQtUI.prg
+
+../qtcore/hbqtcore.hbc

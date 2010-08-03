@@ -7,11 +7,11 @@
 # See COPYING for licensing terms.
 # ---------------------------------------------------------------
 
+incpaths=g
+
 libs=../qtcore/hbqtcore.hbc
 libs=../qtgui/hbqtgui.hbc
 libs=../qtnetwork/hbqtnetwork.hbc
-
-incpaths=g
 
 {!HB_STATIC_QT}libs=hbqtwebkit${__HB_DYN__}
 {!HB_STATIC_QT&(allwin|os2)}libs=QtWebKit4

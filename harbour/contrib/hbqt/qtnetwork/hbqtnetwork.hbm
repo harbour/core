@@ -1,0 +1,9 @@
+#
+# $Id$
+#
+
+-ig
+
+g/filelist.hbm
+
+../qtcore/hbqtcore.hbc

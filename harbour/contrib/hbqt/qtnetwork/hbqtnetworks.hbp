@@ -4,8 +4,4 @@
 
 ../hbqt_commons.hbm
 
-g/filelist.hbm
-
--ig
-
-../qtcore/hbqtcore.hbc
+hbqtnetwork.hbm
