@@ -706,6 +706,10 @@ HARBOUR
                                  may fail, like detection of 3rd party libraries with
                                  locally hosted sources.
                                  With newer make versions, this variable is ignored.
+   - HB_REBUILD_EXTERN=yes       Rebuild extern headers. Requires GCC compiler.
+                                 This is typically used by developers after code
+                                 modifications or before release.
+                                 Default: no
    - HB_REBUILD_PARSER=yes       Rebuild language parser sources. Typically
                                  you only need this if your are Harbour core
                                  developer modifying grammar rules (.y).

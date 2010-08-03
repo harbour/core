@@ -101,14 +101,6 @@
 
 /* TOFIX: -autohbc with -inc mode */
 
-/* Extracting list of Harbour functions from binaries (using GCC toolchain):
-
-   From .a library:
-      nm libhbct.a |grep " T HB_FUN_"|sed "s/.*HB_FUN_\(.*\)/EXTERNAL \1/g"
-   From .o files:
-      nm *.o |grep " T HB_FUN_"|sed "s/.*HB_FUN_\(.*\)/EXTERNAL \1/g"
- */
-
 /* TODO: Next gen compiler autodetection:
          1. Gather supported compilers by Harbour installation
             (look for lib/<plat>/*[/<name>] subdirs)
@@ -4600,6 +4592,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    IF lDumpInfo
 
       OutStd( "{{{" + hb_eol() )
+      OutStd( "outputname{{" + PathSepToForward( hbmk[ _HBMK_cPROGNAME ] ) + "}}" + hb_eol() )
       OutStd( "targetname{{" + hbmk_TARGETNAME( hbmk ) + "}}" + hb_eol() )
       OutStd( "targettype{{" + hbmk_TARGETTYPE( hbmk ) + "}}" + hb_eol() )
       OutStd( "inc{{" + iif( hbmk[ _HBMK_lINC ], "yes", "no" ) + "}}" + hb_eol() )

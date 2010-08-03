@@ -435,19 +435,13 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
          IF lInstall .AND. lPrimary
             mk_hbd( FNameDirGet( PathSepToSelf( cProjectPath ) ) )
          ENDIF
+
+         /* Create EXTERN list */
+         IF lPrimary
+            mk_extern( hProjectList[ cProject ][ "cOutputName" ], FNameExtSet( cProjectPath, ".hbx" ) )
+         ENDIF
       ENDIF
    NEXT
-
-   RETURN
-
-STATIC PROCEDURE clear_hbmk2_envvars()
-
-   /* Making sure that user settings do not interfere with the std build process. */
-   hb_setenv( "HBMK_OPTIONS" )
-   hb_setenv( "HARBOUR" )
-   hb_setenv( "HARBOURCMD" )
-   hb_setenv( "CLIPPER" )
-   hb_setenv( "CLIPPERCMD" )
 
    RETURN
 
@@ -459,14 +453,12 @@ STATIC FUNCTION call_hbmk2_hbinfo( cProjectPath, hProject )
 
    hProject[ "cType" ] := ""
    hProject[ "aDept" ] := {}
-
-   clear_hbmk2_envvars()
-
    hProject[ "lChecked" ] := NIL
 
-   IF hb_processRun( s_cBinDir + "hbmk2 --hbinfo " + StrTran( cProjectPath, "\", "/" ),, @cStdOut  ) == 0
+   IF call_hbmk2( cProjectPath, " --hbinfo", .F.,, @cStdOut )
 
       hProject[ "cType" ] := hbmk2_hbinfo_getitem( cStdOut, "targettype" )
+      hProject[ "cOutputName" ] := hbmk2_hbinfo_getitem( cStdOut, "outputname" )
 
       FOR EACH tmp IN hb_ATokens( hbmk2_hbinfo_getitem( cStdOut, "hbctree", .T. ), Chr( 10 ) )
          IF ! Empty( tmp )
@@ -512,11 +504,16 @@ STATIC FUNCTION DepListToStr( aDeptHBC )
 
    RETURN cOptionsLibDyn
 
-STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, lLibDyn )
+STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, lLibDyn, cStdErr, cStdOut )
    LOCAL nErrorLevel
    LOCAL cOptionsLibDyn := ""
 
-   clear_hbmk2_envvars()
+   /* Making sure that user settings do not interfere with the std build process. */
+   hb_setenv( "HBMK_OPTIONS" )
+   hb_setenv( "HARBOUR" )
+   hb_setenv( "HARBOURCMD" )
+   hb_setenv( "CLIPPER" )
+   hb_setenv( "CLIPPERCMD" )
 
    IF lLibDyn
       hb_setenv( "__HB_DYN__", "_dll" ) /* Request dll version of Harbour contrib dependencies (the implibs) to be linked (experimental) */
@@ -536,7 +533,7 @@ STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, lLibDyn )
                                     cOptionsPre +;
                                     " " + StrTran( cProjectPath, "\", "/" ) +;
                                     " @" + StrTran( s_cHome, "\", "/" ) + "hbpost" +;
-                                    cOptionsLibDyn )
+                                    cOptionsLibDyn, @cStdErr, @cStdOut )
 
    IF nErrorLevel != 0
       OutStd( hb_StrFormat( "! '%1$s' returned status: %2$s", cProjectPath, hb_ntos( nErrorLevel ) ) + hb_eol() )
@@ -550,6 +547,42 @@ STATIC FUNCTION mk_hb_processRun( cCommand, ... )
    OutStd( cCommand + hb_eol() )
 
    RETURN hb_processRun( cCommand, ... )
+
+STATIC FUNCTION mk_extern( cLibName, cOutputName )
+   LOCAL cExtern
+   LOCAL cStdOut
+   LOCAL hRegex, tmp
+   LOCAL aResult
+
+   IF GetEnv( "HB_REBUILD_EXTERN" ) == "yes" .AND. ;
+      GetEnv( "HB_COMPILER" ) $ "gcc|mingw|mingw64|cygwin"
+
+      IF hb_processRun( "nm -g --defined-only -C " + cLibName,, @cStdOut ) == 0
+         IF ! Empty( hRegex := hb_regexComp( '[[:blank:]]HB_FUN_(.*)[[:space:]]', .T., .T. ) )
+            IF ! Empty( aResult := hb_regexAll( hRegex, StrTran( cStdOut, Chr( 13 ) ),,,,, .T. ) )
+               ASort( aResult,,, {| tmp, tmp1 | tmp[ 2 ] < tmp1[ 2 ] } )
+               cExtern := "/*" + hb_eol()
+               cExtern += " * $" + "Id" + "$" + hb_eol()
+               cExtern += " */" + hb_eol()
+               cExtern += hb_eol()
+               cExtern += "/* -------------------------------------------------------------------- */" + hb_eol()
+               cExtern += "/* WARNING: Automatically generated code. DO NOT EDIT!                  */" + hb_eol()
+               cExtern += "/*          Regenerate with HB_REBUILD_EXTERN=yes while using GCC       */" + hb_eol()
+               cExtern += "/*          compiler family.                                            */" + hb_eol()
+               cExtern += "/* -------------------------------------------------------------------- */" + hb_eol()
+               cExtern += hb_eol()
+               cExtern += "ANNOUNCE " + "__" + Upper( FNameNameGet( cOutputName ) ) + "_EXTERN__" + hb_eol()
+               cExtern += hb_eol()
+               FOR EACH tmp IN aResult
+                  cExtern += "EXTERNAL " + tmp[ 2 ] + hb_eol()
+               NEXT
+               RETURN hb_MemoWrit( cOutputName, cExtern )
+            ENDIF
+         ENDIF
+      ENDIF
+   ENDIF
+
+   RETURN .F.
 
 STATIC FUNCTION mk_hbd( cDir )
    LOCAL cName
@@ -587,6 +620,13 @@ STATIC FUNCTION mk_hbd( cDir )
 
 STATIC FUNCTION AScanL( aArray, cString )
    RETURN AScan( aArray, {| tmp | Lower( tmp ) == cString } )
+
+STATIC FUNCTION FNameNameGet( cFileName )
+   LOCAL cName
+
+   hb_FNameSplit( cFileName,, @cName )
+
+   RETURN cName
 
 STATIC FUNCTION FNameDirGet( cFileName )
    LOCAL cDir
@@ -826,10 +866,9 @@ PROCEDURE AddProject( hProjectList, cFileName )
    RETURN
 
 PROCEDURE LoadProjectListFromFile( hProjectList, cFileName )
-   LOCAL cFile := StrTran( MemoRead( cFileName ), Chr( 13 ) )
    LOCAL cItem
 
-   FOR EACH cItem IN hb_ATokens( cFile, Chr( 10 ) )
+   FOR EACH cItem IN hb_ATokens( StrTran( MemoRead( cFileName ), Chr( 13 ) ), Chr( 10 ) )
       IF "#" $ cItem
          cItem := Left( cItem, At( "#", cItem ) - 1 )
       ENDIF
