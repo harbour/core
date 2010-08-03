@@ -308,7 +308,7 @@ PROCEDURE GNUMake( aParams, hProjectList )
       FOR EACH cProject IN aFilter
          FOR EACH tmp IN hProjectList
             IF hb_FileMatch( cProject, tmp:__enumKey() ) .OR. ;
-               hb_FileMatch( cProject, FNameDirGet( PathSepToSelf( tmp:__enumKey() ) ) )
+               hb_FileMatch( cProject, DirDelPathSep( FNameDirGet( PathSepToSelf( tmp:__enumKey() ) ) ) )
                IF lFilterNegative
                   IF tmp:__enumKey() $ hProjectReqList
                      hb_HDel( hProjectReqList, tmp:__enumKey() )
@@ -474,6 +474,7 @@ STATIC FUNCTION call_hbmk2_hbinfo( cProjectPath, hProject )
          IF ! Empty( tmp )
             hb_FNameSplit( LTrim( tmp ), @cDir, @cName )
             AAdd( hProject[ "aDept" ], { "nDepth" => Len( tmp ) - Len( LTrim( tmp ) ),;
+                                         "cFileName_HBC" => LTrim( tmp ),;
                                          "cFileName_HBP" => StrTran( PathNormalize( PathMakeAbsolute( FNameExtSet( PathSepToSelf( LTrim( tmp ) ), ".hbp" ), s_cRebase ) ), "\", "/" ) } )
          ENDIF
       NEXT
@@ -503,6 +504,16 @@ STATIC FUNCTION hbmk2_hbinfo_getitem( cString, cItem, lAll )
 
    RETURN cRetVal
 
+STATIC FUNCTION DepListToStr( aDeptHBC )
+   LOCAL cOptionsLibDyn := ""
+   LOCAL hDept
+
+   FOR EACH hDept IN aDeptHBC
+      cOptionsLibDyn += " " + hDept[ "cFileName_HBC" ]
+   NEXT
+
+   RETURN cOptionsLibDyn
+
 STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, lLibDyn )
    LOCAL nErrorLevel
    LOCAL cOptionsLibDyn := ""
@@ -514,10 +525,9 @@ STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, lLibDyn )
       hb_setenv( "_HB_BUILD_LIBDYN", "yes" )
 
       IF hb_FileExists( FNameExtSet( cProjectPath, ".hbc" ) )
-         cOptionsLibDyn := " " + FNameExtSet( cProjectPath, ".hbc" )
+         cOptionsLibDyn += " " + FNameExtSet( cProjectPath, ".hbc" )
       ENDIF
    ELSE
-      cOptionsLibDyn := ""
       hb_setenv( "__HB_DYN__" )
       hb_setenv( "_HB_BUILD_LIBDYN" )
    ENDIF

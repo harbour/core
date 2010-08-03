@@ -2097,17 +2097,3 @@ FUNCTION hbide_getUI( cUI, qParent )
    RETURN oUI
 
 /*----------------------------------------------------------------------*/
-
-FUNCTION hbide_request()
-
-   #include "hbqtcore_extern.ch"
-   #include "hbqtgui_extern.ch"
-   #include "hbqtnetwork_extern.ch"
-
-   #include "hbxbp_extern.ch"
-
-   #include "hbextern.ch"   /* Link all Harbour Functions : needed to run auto scripts */
-
-   RETURN NIL
-
-/*----------------------------------------------------------------------*/

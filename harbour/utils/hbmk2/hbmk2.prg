@@ -704,6 +704,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL l_aLIBSYSMISC := {}
    LOCAL l_aLIBSTATICPOST := {}
    LOCAL l_aOPTRUN
+   LOCAL l_cLIBSELF
    LOCAL l_cIMPLIBDIR
    LOCAL l_cIMPLIBNAME
    LOCAL l_lIMPLIBToProcess := .F.
@@ -1792,6 +1793,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    l_aOBJA := {}
    hbmk[ _HBMK_cPROGDIR ] := NIL
    hbmk[ _HBMK_cPROGNAME ] := NIL
+   l_cLIBSELF := NIL
    l_cIMPLIBDIR := NIL
    l_cIMPLIBNAME := NIL
    hbmk[ _HBMK_cFIRST ] := NIL
@@ -4428,8 +4430,12 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                with the same name. */
             l_cIMPLIBNAME := cName + _HBMK_IMPLIB_DLL_POST
          ENDIF
+         IF hbmk[ _HBMK_lIMPLIB ] .AND. hbmk[ _HBMK_cPLAT ] $ "win|os2|dos"
+            l_cLIBSELF := l_cIMPLIBNAME
+         ENDIF
          l_cIMPLIBNAME := hb_FNameMerge( l_cIMPLIBDIR, cLibLibPrefix + l_cIMPLIBNAME, cImpLibExt )
       CASE lStopAfterCComp .AND. hbmk[ _HBMK_lCreateLib ]
+         l_cLIBSELF := cName
          hbmk[ _HBMK_cPROGNAME ] := hb_FNameMerge( cDir, cLibLibPrefix + cName, iif( Empty( cLibLibExt ), cExt, cLibLibExt ) )
       ENDCASE
    ENDIF
@@ -5074,6 +5080,21 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          l_aLIBHB := {}
          l_aLIBSHARED := {}
          hbmk[ _HBMK_aPRG ] := {}
+      ENDIF
+
+      /* NOTE: Temporary trick to remove our own implib output name and
+               lib output name from lib list.
+               This is to avoid adding self-reference when building a
+               -hbdyn or -hblib and including both project .hbp + .hbc.
+               The downside is that one cannot have a lib dependency
+               with the same name as the output.
+               [vszakats] */
+      IF l_cLIBSELF != NIL
+         FOR EACH tmp IN hbmk[ _HBMK_aLIBUSER ] DESCEND
+            IF Lower( tmp ) == Lower( l_cLIBSELF )
+               hb_ADel( hbmk[ _HBMK_aLIBUSER ], tmp:__enumIndex(), .T. )
+            ENDIF
+         NEXT
       ENDIF
 
       /* Merge lib lists. */

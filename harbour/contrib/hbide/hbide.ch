@@ -48,10 +48,9 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*----------------------------------------------------------------------*/
 
 #ifndef __HBIDE_CH
-   #define __HBIDE_CH
+#define __HBIDE_CH
 
 #include "hbtrace.ch"
 

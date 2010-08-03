@@ -1018,18 +1018,18 @@ extern           HB_LONG   hb_dynsymCount( void ); /* number of dynamic symbols 
 extern HB_EXPORT PHB_SYMB  hb_symbolNew( const char * szName ); /* create a new symbol */
 
 /* Command line and environment argument management */
-extern HB_EXPORT void hb_cmdargInit( int argc, char * argv[] ); /* initialize command line argument API's */
-extern void          hb_cmdargUpdate( void ); /* update arguments after HVM initialization */
-extern int           hb_cmdargARGC( void ); /* retrieve command line argument count */
-extern char **       hb_cmdargARGV( void ); /* retrieve command line argument buffer pointer */
-extern const char *  hb_cmdargARGVN( int argc ); /* retrieve given command line argument */
-extern HB_BOOL       hb_cmdargIsInternal( const char * szArg, int * piLen ); /* determine if a string is an internal setting */
-extern HB_BOOL       hb_cmdargCheck( const char * pszName ); /* Check if a given internal switch (like //INFO) was set */
-extern char *        hb_cmdargString( const char * pszName ); /* Returns the string value of an internal switch (like //TEMPPATH:"C:\") */
-extern int           hb_cmdargNum( const char * pszName ); /* Returns the numeric value of an internal switch (like //F:90) */
-extern HB_U32        hb_cmdargProcessVM( int * pCancelKey, int * pCancelKeyEx ); /* Check for command line internal arguments */
+extern HB_EXPORT void          hb_cmdargInit( int argc, char * argv[] ); /* initialize command line argument API's */
+extern HB_EXPORT int           hb_cmdargARGC( void ); /* retrieve command line argument count */
+extern HB_EXPORT char **       hb_cmdargARGV( void ); /* retrieve command line argument buffer pointer */
+extern HB_EXPORT const char *  hb_cmdargARGVN( int argc ); /* retrieve given command line argument */
+extern HB_EXPORT HB_BOOL       hb_cmdargIsInternal( const char * szArg, int * piLen ); /* determine if a string is an internal setting */
+extern           void          hb_cmdargUpdate( void ); /* update arguments after HVM initialization */
+extern           HB_BOOL       hb_cmdargCheck( const char * pszName ); /* Check if a given internal switch (like //INFO) was set */
+extern           char *        hb_cmdargString( const char * pszName ); /* Returns the string value of an internal switch (like //TEMPPATH:"C:\") */
+extern           int           hb_cmdargNum( const char * pszName ); /* Returns the numeric value of an internal switch (like //F:90) */
+extern           HB_U32        hb_cmdargProcessVM( int * pCancelKey, int * pCancelKeyEx ); /* Check for command line internal arguments */
 #if defined( HB_OS_WIN )
-extern HB_EXPORT HB_BOOL hb_winmainArgGet( void * phInstance, void * phPrevInstance, int * piCmdShow ); /* Retrieve WinMain() parameters */
+extern HB_EXPORT HB_BOOL       hb_winmainArgGet( void * phInstance, void * phPrevInstance, int * piCmdShow ); /* Retrieve WinMain() parameters */
 #endif
 
 /* Codeblock management */
@@ -1106,10 +1106,10 @@ extern void   hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, in
 extern const char * hb_macroGetType( HB_ITEM_PTR pItem ); /* determine the type of an expression */
 
 /* idle states */
-extern void   hb_releaseCPU( void );
-extern void   hb_idleState( void ); /* services a single idle state */
-extern void   hb_idleReset( void ); /* services a single idle state */
-extern void   hb_idleSleep( double dSeconds ); /* sleep for a given time serving idle task */
+extern HB_EXPORT void hb_releaseCPU( void );
+extern HB_EXPORT void hb_idleState( void ); /* services a single idle state */
+extern HB_EXPORT void hb_idleReset( void ); /* services a single idle state */
+extern HB_EXPORT void hb_idleSleep( double dSeconds ); /* sleep for a given time serving idle task */
 
 /* I18N public API */
 extern PHB_ITEM hb_i18n_ngettext( PHB_ITEM pNum, PHB_ITEM pMsgID, PHB_ITEM pContext );

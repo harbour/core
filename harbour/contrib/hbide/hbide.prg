@@ -79,7 +79,12 @@
 #include "hbclass.ch"
 #include "hbver.ch"
 
-#define UNU( x ) HB_SYMBOL_UNUSED( x )
+/* Link all Harbour Functions : needed to run auto scripts */
+#include "hbextern.ch"
+#include "hbxbp_extern.ch"
+#include "hbqtcore_extern.ch"
+#include "hbqtgui_extern.ch"
+#include "hbqtnetwork_extern.ch"
 
 /*----------------------------------------------------------------------*/
 
