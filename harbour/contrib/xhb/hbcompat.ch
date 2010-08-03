@@ -87,7 +87,6 @@
    #xtranslate hb_processClose([<x,...>])  => hb_closeProcess(<x>)
 
    #xtranslate hb_isregex([<x>])           => hb_isregexstring(<x>)
-   #xtranslate hb_pvalue([<x,...>])        => pvalue(<x>)
    #xtranslate hb_methodName([<x,...>])    => methodName(<x>)
    #xtranslate hb_libLoad([<x,...>])       => libLoad(<x>)
    #xtranslate hb_libFree([<x,...>])       => libFree(<x>)
@@ -353,7 +352,6 @@
    #xtranslate hb_closeProcess([<x,...>])      => hb_processClose(<x>)
 
    #xtranslate hb_isregexstring([<x>])         => hb_isregex(<x>)
-   #xtranslate pvalue([<x,...>])               => hb_pvalue(<x>)
    #xtranslate methodName([<x,...>])           => hb_methodName(<x>)
    #xtranslate libLoad([<x,...>])              => hb_libLoad(<x>)
    #xtranslate libFree([<x,...>])              => hb_libFree(<x>)

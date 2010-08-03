@@ -52,4 +52,17 @@
 
 #include "hbapi.h"
 
+/* NOTE: This function is a new Harbour functions implemented in the
+         original CA-Cl*pper namespace. It should have been marked as
+         HB_EXTENSION, but it's not, because it's commonly used extension
+         in other xbase dialects, like Xbase++ and FlagShip.
+         Nevertheless this function must be kept in a separate
+         source file to avoid linking errors when a 3rd party
+         library or user code would also define this function.
+         [vszakats] */
+
+#ifndef HB_CLP_STRICT
+
 HB_FUNC_TRANSLATE( PVALUE, HB_PVALUE )
+
+#endif

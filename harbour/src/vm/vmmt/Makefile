@@ -70,6 +70,7 @@ C_SOURCES += \
    memvclip.c \
    pcount.c \
    pvalue.c \
+   pvaluehb.c \
    proc.c \
    procaddr.c \
    runner.c \
