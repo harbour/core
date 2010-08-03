@@ -60,26 +60,28 @@
 #include "hbapigt.h"
 
 #if defined( HB_OS_DOS )
-
 #  if defined( __DJGPP__ )
 #     include <dpmi.h>
 #     include <go32.h>
 #     include <pc.h>
 #     include <sys/farptr.h>
 #  endif
+#endif /* HB_OS_DOS */
 
 #  include "ctvideo.ch"
 
 HB_FUNC( CHARPIX )
 {
-#   ifdef __DJGPP__
+#if defined( __DJGPP__ )
    hb_retni( _farpeekw( _dos_ds, 0x485 ) );
-#   endif
+#else
+   hb_retni( 0 );
+#endif
 }
 
 HB_FUNC( VGAPALETTE )
 {
-   const char *color_string;
+   const char * color_string;
    char red, green, blue;
    int attr;
 
@@ -109,7 +111,7 @@ HB_FUNC( VGAPALETTE )
    green = hb_parni( 3 );
    blue = hb_parni( 4 );
 
-#   ifdef __DJGPP__
+#if defined( __DJGPP__ )
    {
       __dpmi_regs r;
       int iflag;
@@ -135,14 +137,19 @@ HB_FUNC( VGAPALETTE )
          __dpmi_get_and_enable_virtual_interrupt_state();
    }
    hb_retl( HB_TRUE );
-#   else
-   hb_retl( HB_FALSE );
-#   endif
+#else
+   {
+      HB_SYMBOL_UNUSED( blue );
+      HB_SYMBOL_UNUSED( green );
+      HB_SYMBOL_UNUSED( red );
+      hb_retl( HB_FALSE );
+   }
+#endif
 }
 
 HB_FUNC( VIDEOTYPE )
 {
-#   if defined( __DJGPP__ )
+#if defined( __DJGPP__ )
    __dpmi_regs r;
 
    r.h.ah = 0x12;               /* Alternate Select */
@@ -163,12 +170,12 @@ HB_FUNC( VIDEOTYPE )
       else
          hb_retni( VCARD_EGA );
    }
-#   endif
+#endif
 }
 
 HB_FUNC( SETFONT )
 {
-   const char *font = hb_parcx( 1 );
+   const char * font = hb_parcx( 1 );
    unsigned len = ( unsigned ) hb_parclen( 1 );
    int area = hb_parni( 2 );
    int offset = 0;
@@ -184,7 +191,7 @@ HB_FUNC( SETFONT )
    if( HB_ISLOG( 3 ) && hb_parl( 3 ) && count != 0 )
       height = len / count;
 
-#   ifdef __DJGPP__
+#if defined( __DJGPP__ )
    {
       __dpmi_regs r;
 
@@ -199,12 +206,13 @@ HB_FUNC( SETFONT )
       __dpmi_int( 0x10, &r );
       hb_retni( 0 );
    }
-#   else
+#else
    {
       HB_SYMBOL_UNUSED( font );
+      HB_SYMBOL_UNUSED( height );
+      HB_SYMBOL_UNUSED( offset );
+      HB_SYMBOL_UNUSED( area );
       hb_retni( -2 );
    }
-#   endif
+#endif
 }
-
-#endif /* HB_OS_DOS */

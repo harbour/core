@@ -384,7 +384,7 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
          IF hb_FileExists( s_cBase + s_cHome + cProject )
             AddProject( hProjectList, cProject )
             call_hbmk2_hbinfo( s_cBase + s_cHome + cProject, hProjectList[ cProject ] )
-            hProjectList[ cProject ][ "lOrphan" ] := NIL
+            hProjectList[ cProject ][ "lFromContainer" ] := NIL
          ENDIF
       ENDIF
    NEXT
@@ -422,7 +422,7 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
       IF cProject $ hProjectList
 
          cProjectPath := s_cBase + s_cHome + cProject
-         lPrimary := cProject $ hProjectReqList
+         lPrimary := cProject $ hProjectReqList .OR. "lFromContainer" $ hProjectList[ cProject ]
 
          call_hbmk2( cProjectPath, iif( lPrimary, cOptions + cOptionsUser, " -inc" ), .F. )
 
@@ -432,10 +432,8 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
          ENDIF
 
          /* Compile documentation */
-         IF lInstall
-            IF lPrimary .OR. "lOrphan" $ hProjectList[ cProject ]
-               mk_hbd( FNameDirGet( PathSepToSelf( cProjectPath ) ) )
-            ENDIF
+         IF lInstall .AND. lPrimary
+            mk_hbd( FNameDirGet( PathSepToSelf( cProjectPath ) ) )
          ENDIF
       ENDIF
    NEXT

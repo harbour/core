@@ -11,17 +11,17 @@
 #ifndef __HBQSCINTILLA_EXTERN_CH
 #define __HBQSCINTILLA_EXTERN_CH
 
-REQUEST HBQsciScintilla
-REQUEST QsciAbstractAPIs
-REQUEST QsciAPIs
-REQUEST QsciCommand
-REQUEST QsciCommandSet
-REQUEST QsciDocument
-REQUEST QsciLexer
-REQUEST QsciLexerCPP
-REQUEST QsciLexerFlagship
-REQUEST QsciScintilla
-REQUEST QsciStyle
-REQUEST QsciStyledText
+EXTERNAL HBQsciScintilla
+EXTERNAL QsciAbstractAPIs
+EXTERNAL QsciAPIs
+EXTERNAL QsciCommand
+EXTERNAL QsciCommandSet
+EXTERNAL QsciDocument
+EXTERNAL QsciLexer
+EXTERNAL QsciLexerCPP
+EXTERNAL QsciLexerFlagship
+EXTERNAL QsciScintilla
+EXTERNAL QsciStyle
+EXTERNAL QsciStyledText
 
 #endif /* __HBQSCINTILLA_EXTERN_CH */

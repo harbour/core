@@ -11,15 +11,15 @@
 #ifndef __HBQTWEBKIT_EXTERN_CH
 #define __HBQTWEBKIT_EXTERN_CH
 
-REQUEST QWebFrame
-REQUEST QWebHistory
-REQUEST QWebHistoryInterface
-REQUEST QWebHistoryItem
-REQUEST QWebHitTestResult
-REQUEST QWebPage
-REQUEST QWebPluginFactory
-REQUEST QWebSecurityOrigin
-REQUEST QWebSettings
-REQUEST QWebView
+EXTERNAL QWebFrame
+EXTERNAL QWebHistory
+EXTERNAL QWebHistoryInterface
+EXTERNAL QWebHistoryItem
+EXTERNAL QWebHitTestResult
+EXTERNAL QWebPage
+EXTERNAL QWebPluginFactory
+EXTERNAL QWebSecurityOrigin
+EXTERNAL QWebSettings
+EXTERNAL QWebView
 
 #endif /* __HBQTWEBKIT_EXTERN_CH */

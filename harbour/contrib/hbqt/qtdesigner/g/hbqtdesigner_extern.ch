@@ -11,13 +11,13 @@
 #ifndef __HBQTDESIGNER_EXTERN_CH
 #define __HBQTDESIGNER_EXTERN_CH
 
-REQUEST QDesignerActionEditorInterface
-REQUEST QDesignerFormEditorInterface
-REQUEST QDesignerFormWindowCursorInterface
-REQUEST QDesignerFormWindowInterface
-REQUEST QDesignerFormWindowManagerInterface
-REQUEST QDesignerObjectInspectorInterface
-REQUEST QDesignerPropertyEditorInterface
-REQUEST QDesignerWidgetBoxInterface
+EXTERNAL QDesignerActionEditorInterface
+EXTERNAL QDesignerFormEditorInterface
+EXTERNAL QDesignerFormWindowCursorInterface
+EXTERNAL QDesignerFormWindowInterface
+EXTERNAL QDesignerFormWindowManagerInterface
+EXTERNAL QDesignerObjectInspectorInterface
+EXTERNAL QDesignerPropertyEditorInterface
+EXTERNAL QDesignerWidgetBoxInterface
 
 #endif /* __HBQTDESIGNER_EXTERN_CH */

@@ -1843,7 +1843,7 @@ STATIC FUNCTION Build_HeaderFile( cpp_, cPathOut, cProFile )
    aadd( txt_, "#define __HB" + Upper( cName ) + "_EXTERN_CH" )
    aadd( txt_, "" )
    FOR EACH s IN cpp_
-      aadd( txt_, "REQUEST " + s )
+      aadd( txt_, "EXTERNAL " + s )
    NEXT
    aadd( txt_, "" )
 

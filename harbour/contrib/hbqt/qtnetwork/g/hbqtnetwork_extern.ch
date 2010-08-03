@@ -11,11 +11,11 @@
 #ifndef __HBQTNETWORK_EXTERN_CH
 #define __HBQTNETWORK_EXTERN_CH
 
-REQUEST QFtp
-REQUEST QHttp
-REQUEST QHttpHeader
-REQUEST QHttpRequestHeader
-REQUEST QHttpResponseHeader
-REQUEST QNetworkRequest
+EXTERNAL QFtp
+EXTERNAL QHttp
+EXTERNAL QHttpHeader
+EXTERNAL QHttpRequestHeader
+EXTERNAL QHttpResponseHeader
+EXTERNAL QNetworkRequest
 
 #endif /* __HBQTNETWORK_EXTERN_CH */

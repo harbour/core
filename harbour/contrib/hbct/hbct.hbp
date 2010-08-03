@@ -107,6 +107,7 @@ wordtoch.c
 
 ct.prg
 ctdummy.prg
+ctextern.prg
 ctmisc.prg
 ctrand.prg
 cttime.prg
