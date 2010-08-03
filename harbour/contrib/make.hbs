@@ -437,7 +437,7 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
          ENDIF
 
          /* Create EXTERN list */
-         IF lPrimary
+         IF lPrimary .AND. "cOutputName" $ hProjectList[ cProject ]
             mk_extern( hProjectList[ cProject ][ "cOutputName" ], FNameExtSet( cProjectPath, ".hbx" ) )
          ENDIF
       ENDIF
@@ -571,11 +571,18 @@ STATIC FUNCTION mk_extern( cLibName, cOutputName )
                cExtern += "/*          compiler family.                                            */" + hb_eol()
                cExtern += "/* -------------------------------------------------------------------- */" + hb_eol()
                cExtern += hb_eol()
+               cExtern += "#ifndef " + "__HBEXTERN__" + Upper( FNameNameGet( cOutputName ) ) + "__" + hb_eol()
+               cExtern += "#define " + "__HBEXTERN__" + Upper( FNameNameGet( cOutputName ) ) + "__" + hb_eol()
+               cExtern += hb_eol()
                cExtern += "ANNOUNCE " + "__" + Upper( FNameNameGet( cOutputName ) ) + "_EXTERN__" + hb_eol()
                cExtern += hb_eol()
                FOR EACH tmp IN aResult
-                  cExtern += "EXTERNAL " + tmp[ 2 ] + hb_eol()
+                  IF ! hb_WildMatch( "HB_GT_*_DEFAULT", tmp[ 2 ] )
+                     cExtern += "EXTERNAL " + tmp[ 2 ] + hb_eol()
+                  ENDIF
                NEXT
+               cExtern += hb_eol()
+               cExtern += "#endif" + hb_eol()
                RETURN hb_MemoWrit( cOutputName, cExtern )
             ENDIF
          ENDIF

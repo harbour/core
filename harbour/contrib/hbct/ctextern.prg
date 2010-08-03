@@ -50,5 +50,4 @@
  *
  */
 
-ANNOUNCE __HBCT_EXTERN__
-#include "ctextern.ch"
+#include "hbct.hbx"
