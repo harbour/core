@@ -12,10 +12,10 @@ libs=../qtgui/hbqtgui.hbc
 
 incpaths=g
 
-{!HB_STATIC_QT&!hbdyn}libs=hbqtdesigner${__HB_DYN__}
+{!HB_STATIC_QT}libs=hbqtdesigner${__HB_DYN__}
 {!HB_STATIC_QT&(allwin|os2)}libs=QtDesigner4
 {!HB_STATIC_QT&linux}libs=QtDesigner
 {!HB_STATIC_QT&darwin}libs=/Library/Frameworks/QtDesigner.framework/QtDesigner
-{HB_STATIC_QT&allwin&!hbdyn}libs=hbqtdesigners${__HB_DYN__}
+{HB_STATIC_QT&allwin}libs=hbqtdesigners${__HB_DYN__}
 {HB_STATIC_QT&linux}libs=hbqtdesigner
 {HB_STATIC_QT&(allwin|linux)}libs=QtDesigner

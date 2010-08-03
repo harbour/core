@@ -11,10 +11,10 @@ libs=../qtcore/hbqtcore.hbc
 
 incpaths=g
 
-{!HB_STATIC_QT&!hbdyn}libs=hbqtnetwork${__HB_DYN__}
+{!HB_STATIC_QT}libs=hbqtnetwork${__HB_DYN__}
 {!HB_STATIC_QT&(allwin|os2)}libs=QtNetwork4
 {!HB_STATIC_QT&linux}libs=QtNetwork
 {!HB_STATIC_QT&darwin}libs=/Library/Frameworks/QtNetwork.framework/QtNetwork
-{HB_STATIC_QT&allwin&!hbdyn}libs=hbqtnetworks${__HB_DYN__}
+{HB_STATIC_QT&allwin}libs=hbqtnetworks${__HB_DYN__}
 {HB_STATIC_QT&linux}libs=hbqtnetwork
 {HB_STATIC_QT&(allwin|linux)}libs=QtNetwork

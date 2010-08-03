@@ -13,10 +13,10 @@ incpaths=.
 incpaths=g
 
 # TOFIX: QtGui is needed by hbqt_hbslots.cpp. This dependency should be removed.
-{!HB_STATIC_QT&!hbdyn}libs=hbqtcore${__HB_DYN__}
+{!HB_STATIC_QT}libs=hbqtcore${__HB_DYN__}
 {!HB_STATIC_QT&(allwin|os2)}libs=QtCore4 QtGui4
 {!HB_STATIC_QT&linux}libs=QtCore QtGui
 {!HB_STATIC_QT&darwin}libs=/Library/Frameworks/QtCore.framework/QtCore /Library/Frameworks/QtGui.framework/QtGui
-{HB_STATIC_QT&allwin&!hbdyn}libs=hbqtcores${__HB_DYN__}
+{HB_STATIC_QT&allwin}libs=hbqtcores${__HB_DYN__}
 {HB_STATIC_QT&linux}libs=hbqtcore
 {HB_STATIC_QT&(allwin|linux)}libs=QtCore QtGui
