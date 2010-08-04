@@ -354,7 +354,9 @@ METHOD IdeDocks:buildDialog()
 #endif
       ELSE
          FOR EACH a_ IN x_
-            ::oIde:aMdies[ a_:__enumIndex() ]:setGeometry( a_[ 2 ] )
+            IF !empty( a_[ 2 ] )
+               ::oIde:aMdies[ a_:__enumIndex() ]:setGeometry( a_[ 2 ] )
+            ENDIF
             ::oIde:aMdies[ a_:__enumIndex() ]:setWindowState( a_[ 4 ] )
          NEXT
       ENDIF
