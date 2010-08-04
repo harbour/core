@@ -3305,18 +3305,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             /* NOTE: Newer xhb version use "-x.y.z" version numbers. */
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "xharbourmt",;
                                                       "xharbour" ) }
-         CASE hbmk[ _HBMK_cCOMP ] == "mingw64"
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-x64",;
-                                                      "harbour" + cDL_Version_Alter + "-x64" ) }
-         CASE hbmk[ _HBMK_cCOMP ] == "mingwarm"
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-wce-arm",;
-                                                      "harbour" + cDL_Version_Alter + "-wce-arm" ) }
-         CASE hbmk[ _HBMK_cCOMP ] == "mingw" .AND. hbmk[ _HBMK_cPLAT ] = "wce"
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-wce-x86",;
-                                                      "harbour" + cDL_Version_Alter + "-wce-x86" ) }
          OTHERWISE
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter,;
-                                                      "harbour" + cDL_Version_Alter ) }
+            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + hbmk_DYNSUFFIX( hbmk ),;
+                                                      "harbour" + cDL_Version_Alter + hbmk_DYNSUFFIX( hbmk ) ) }
          ENDCASE
 
          IF _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] )
@@ -3975,24 +3966,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             ENDIF
          ENDIF
          l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
-         DO CASE
-         CASE hbmk[ _HBMK_cCOMP ] == "msvc" .AND. hbmk[ _HBMK_cPLAT ] = "wce"
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-wce-x86" + cLibExt,;
-                                                      "harbour" + cDL_Version_Alter + "-wce-x86" + cLibExt ) }
-         CASE hbmk[ _HBMK_cCOMP ] == "msvcarm"
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-wce-arm" + cLibExt,;
-                                                      "harbour" + cDL_Version_Alter + "-wce-arm" + cLibExt ) }
-         CASE hbmk[ _HBMK_cCOMP ] $ "msvc|icc"
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + cLibExt,;
-                                                      "harbour" + cDL_Version_Alter + cLibExt ) }
-         CASE hbmk[ _HBMK_cCOMP ] == "msvc64"
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-x64" + cLibExt,;
-                                                      "harbour" + cDL_Version_Alter + "-x64" + cLibExt ) }
-         CASE hbmk[ _HBMK_cCOMP ] $ "msvcia64|iccia64"
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-ia64" + cLibExt,;
-                                                      "harbour" + cDL_Version_Alter + "-ia64" + cLibExt ) }
-         ENDCASE
-
+         l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + hbmk_DYNSUFFIX( hbmk ) + cLibExt,;
+                                                   "harbour" + cDL_Version_Alter + hbmk_DYNSUFFIX( hbmk ) + cLibExt ) }
          l_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
 
          IF !( hbmk[ _HBMK_cCOMP ] $ "icc|iccia64" )
@@ -4102,19 +4077,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          IF hbmk[ _HBMK_lDEBUG ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-debug" )
          ENDIF
-         l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
-         DO CASE
-         CASE hbmk[ _HBMK_cCOMP ] == "pocc64"
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-x64" + cLibExt,;
-                                                      "harbour" + cDL_Version_Alter + "-x64" + cLibExt ) }
-         CASE hbmk[ _HBMK_cCOMP ] == "poccarm"
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + "-wce-arm" + cLibExt,;
-                                                      "harbour" + cDL_Version_Alter + "-wce-arm" + cLibExt ) }
-         OTHERWISE
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + cLibExt,;
-                                                      "harbour" + cDL_Version_Alter + cLibExt ) }
-         ENDCASE
-
+         l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + hbmk_DYNSUFFIX( hbmk ) + cLibExt,;
+                                                   "harbour" + cDL_Version_Alter + hbmk_DYNSUFFIX( hbmk ) + cLibExt ) }
          l_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
 
       CASE ( hbmk[ _HBMK_cPLAT ] == "sunos" .AND. hbmk[ _HBMK_cCOMP ] == "sunpro" ) .OR. ;
@@ -9151,7 +9115,7 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, cMacroPrefix )
    DO WHILE ( nStart := At( cStart, cString ) ) > 0 .AND. ;
             ( nEnd := hb_At( _MACRO_CLOSE, cString, nStart + Len( cStart ) ) ) > 0
 
-      cMacro := MacroGet( hbmk, Upper( SubStr( cString, nStart + Len( cStart ), nEnd - nStart - Len( cStart ) ) ), cFileName )
+      cMacro := MacroGet( hbmk, SubStr( cString, nStart + Len( cStart ), nEnd - nStart - Len( cStart ) ), cFileName )
 
       cString := Left( cString, nStart - 1 ) + cMacro + SubStr( cString, nEnd + Len( _MACRO_CLOSE ) )
    ENDDO
@@ -9170,7 +9134,7 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, cMacroPrefix )
 
 STATIC FUNCTION MacroGet( hbmk, cMacro, cFileName )
 
-   SWITCH cMacro
+   SWITCH Upper( cMacro )
    CASE "HB_ROOT"
       cMacro := DirAddPathSep( hb_DirBase() ) ; EXIT
    CASE "HB_DIR"
@@ -9206,6 +9170,8 @@ STATIC FUNCTION MacroGet( hbmk, cMacro, cFileName )
       cMacro := _WORKDIR_BASE_ ; EXIT
    CASE "HB_WORKDYNSUB"
       cMacro := hbmk[ _HBMK_cWorkDirDynSub ] ; EXIT
+   CASE "HB_DYNSUFFIX"
+      cMacro := hbmk_DYNSUFFIX( hbmk ) ; EXIT
    CASE "HB_MAJOR"
       cMacro := hb_ntos( hb_Version( HB_VERSION_MAJOR ) ) ; EXIT
    CASE "HB_MINOR"
@@ -10417,6 +10383,26 @@ STATIC FUNCTION hbmk_CPU( hbmk )
    CASE hbmk[ _HBMK_cCOMP ] == "msvcsh"
       RETURN "sh"
    ENDCASE
+
+   RETURN ""
+
+/* Return standard dynamic lib name suffix used by Harbour */
+STATIC FUNCTION hbmk_DYNSUFFIX( hbmk )
+
+   SWITCH hbmk[ _HBMK_cPLAT ]
+   CASE "wce"
+      RETURN "-wce-" + hbmk[ _HBMK_cCPU ]
+   CASE "win"
+      DO CASE
+      CASE hbmk[ _HBMK_cCOMP ] == "bcc"
+         RETURN "-bcc"
+      CASE hbmk[ _HBMK_cCPU ] == "x86_64"
+         RETURN "-x64"
+      CASE !( hbmk[ _HBMK_cCPU ] == "x86" )
+         RETURN "-" + hbmk[ _HBMK_cCPU ]
+      ENDCASE
+      EXIT
+   ENDSWITCH
 
    RETURN ""
 

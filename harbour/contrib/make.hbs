@@ -561,10 +561,8 @@ STATIC FUNCTION mk_extern_lib( cInputName, cOutputName )
    LOCAL aExtern
 
    IF GetEnv( "HB_REBUILD_EXTERN" ) == "yes"
-
-      OutStd( hb_StrFormat( "! Generating extern header: %1$s", cOutputName ) + hb_eol() )
-
       IF ( aExtern := __hb_extern_get_list( cInputName ) ) != NIL
+         OutStd( hb_StrFormat( "! Generating extern header: %1$s", cOutputName ) + hb_eol() )
          RETURN __hb_extern_gen( aExtern, cOutputName )
       ENDIF
    ENDIF

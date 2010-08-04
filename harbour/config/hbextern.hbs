@@ -44,15 +44,17 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
    LOCAL tmp
 
    IF GetEnv( "HB_COMPILER" ) $ "gcc|mingw|mingw64|cygwin"
-      IF hb_processRun( "nm -g --defined-only -C " + cInputName,, @cStdOut ) == 0
-         IF ! Empty( hRegex := hb_regexComp( "[[:blank:]]HB_FUN_(.*)[[:space:]]", .T., .T. ) )
-            aResult := hb_regexAll( hRegex, StrTran( cStdOut, Chr( 13 ) ),,,,, .T. )
-            aExtern := {}
-            FOR EACH tmp IN aResult
-               AAdd( aExtern, tmp[ 2 ] )
-            NEXT
-            ASort( aExtern,,, {| tmp, tmp1 | tmp < tmp1 } )
-            RETURN aExtern
+      IF hb_FileExists( cInputName )
+         IF hb_processRun( "nm -g --defined-only -C " + cInputName,, @cStdOut ) == 0
+            IF ! Empty( hRegex := hb_regexComp( "[[:blank:]]HB_FUN_(.*)[[:space:]]", .T., .T. ) )
+               aResult := hb_regexAll( hRegex, StrTran( cStdOut, Chr( 13 ) ),,,,, .T. )
+               aExtern := {}
+               FOR EACH tmp IN aResult
+                  AAdd( aExtern, tmp[ 2 ] )
+               NEXT
+               ASort( aExtern,,, {| tmp, tmp1 | tmp < tmp1 } )
+               RETURN aExtern
+            ENDIF
          ENDIF
       ENDIF
    ENDIF
