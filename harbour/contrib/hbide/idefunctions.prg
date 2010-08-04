@@ -353,7 +353,7 @@ METHOD IdeFunctions:openFunction( lCheckDuplicates )
             oEdit:centerCursor()
             lOpened := .t.
          ELSE
-            HB_TRACE( HB_TR_ALWAYS, "IdeFunctions:openFunction()", "It should not happen." )
+            HB_TRACE( HB_TR_DEBUG, "IdeFunctions:openFunction()", "It should not happen." )
          ENDIF
       ENDIF
    ENDIF

@@ -96,7 +96,8 @@ PRG_HEADERS := \
    hbextcdp.ch \
    hbextern.ch \
    hbextlng.ch \
-   hbexturs.ch \
+   hbextsca.ch \
+   hbextudd.ch \
    hbgfx.ch \
    hbgfxdef.ch \
    hbgtinfo.ch \

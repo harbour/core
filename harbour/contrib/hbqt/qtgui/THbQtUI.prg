@@ -215,7 +215,7 @@ METHOD HbQtUI:signal( cWidget, cSignal, bBlock )
       IF Qt_Slots_Connect( ::pSlots, ::qObj[ cWidget ], cSignal, bBlock )
          aadd( ::aSignals, { ::qObj[ cWidget ], cSignal } )
       ELSE
-         HB_TRACE( HB_TR_ALWAYS, "Failed:", cSignal )
+         HB_TRACE( HB_TR_DEBUG, "Failed:", cSignal )
       ENDIF
    ENDIF
 
@@ -386,7 +386,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
    hbq_stripFront( @cMCls, "(" )
    hbq_stripRear( @cMNam, ")" )
    //
-   //   HB_TRACE( HB_TR_ALWAYS, "Widget   ", pad( cMNam, 20 ), pad( cMCls, 20 ), cMCls+"():new()" )
+   //   HB_TRACE( HB_TR_DEBUG, "Widget   ", pad( cMNam, 20 ), pad( cMCls, 20 ), cMCls+"():new()" )
    //                               Validator   Constructor
    aadd( ::widgets, { cMCls, cMNam, cMCls+"()", cMCls+"():new()" } )
 
@@ -426,12 +426,12 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
             cNam := substr( s, 1, n - 1 )
             aadd( ::widgets, { cCls, cNam, cCls+"()", cCls+"():new"+substr( s, n ) } )
             //
-         *  HB_TRACE( HB_TR_ALWAYS, "Object   ", pad( cNam, 20 ), pad( cCls, 20 ), cCls+"():new"+substr( s, n ) )
+         *  HB_TRACE( HB_TR_DEBUG, "Object   ", pad( cNam, 20 ), pad( cCls, 20 ), cCls+"():new"+substr( s, n ) )
          ELSE
             cNam := s
             aadd( ::widgets, { cCls, cNam, cCls+"()", cCls+"():new()" } )
             //
-         *  HB_TRACE( HB_TR_ALWAYS, "Object   ", pad( cNam, 20 ), pad( cCls,20 ), cCls+"():new()" )
+         *  HB_TRACE( HB_TR_DEBUG, "Object   ", pad( cNam, 20 ), pad( cCls,20 ), cCls+"():new()" )
          ENDIF
 
       ELSEIF hbq_isObjectNameSet( s )
@@ -443,7 +443,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
          cCmd := ::formatCommand( substr( cText, n + 2 ), .t. )
          aadd( aCommands, { cNam, cCmd } )
          //
-      *  HB_TRACE( HB_TR_ALWAYS, "Command  ", pad( cNam, 20 ), cCmd )
+      *  HB_TRACE( HB_TR_DEBUG, "Command  ", pad( cNam, 20 ), cCmd )
 
       ELSEIF !empty( cText := hbq_pullText( ::org, s:__enumIndex() ) )
          n := at( "->", cText )
@@ -451,7 +451,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
          cCmd := ::formatCommand( substr( cText, n + 2 ), .t. )
          aadd( aCommands, { cNam, cCmd } )
          //
-      *  HB_TRACE( HB_TR_ALWAYS, "Command  ", pad( cNam, 20 ), cCmd )
+      *  HB_TRACE( HB_TR_DEBUG, "Command  ", pad( cNam, 20 ), cCmd )
 
       ELSEIF hbq_isValidCmdLine( s ) .AND. !( "->" $ s ) .AND. ( ( n := at( ".", s ) ) > 0  )  /* Assignment to objects on stack */
          cNam := substr( s, 1, n - 1 )
@@ -461,7 +461,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
          cCmd := hbq_setObjects( cCmd, ::widgets )
          aadd( aCommands, { cNam, cCmd } )
          //
-      *  HB_TRACE( HB_TR_ALWAYS, "Command  ", pad( cNam, 20 ), cCmd )
+      *  HB_TRACE( HB_TR_DEBUG, "Command  ", pad( cNam, 20 ), cCmd )
 
       ELSEIF !( left( s, 1 ) $ '#/*"' ) .AND. ;          /* Assignment with properties from objects */
                      ( ( n := at( ".", s ) ) > 0  ) .AND. ;
@@ -473,7 +473,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
          cCmd := hbq_setObjects( cCmd, ::widgets )
          aadd( aCommands, { cNam, cCmd } )
          //
-      *  HB_TRACE( HB_TR_ALWAYS, "Command  ", pad( cNam, 20 ), cCmd )
+      *  HB_TRACE( HB_TR_DEBUG, "Command  ", pad( cNam, 20 ), cCmd )
 
       ELSEIF ( n := at( "->", s ) ) > 0                  /* Assignments or calls to objects on heap */
          cNam := substr( s, 1, n - 1 )
@@ -481,7 +481,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
          cCmd := hbq_setObjects( cCmd, ::widgets )
          aadd( aCommands, { cNam, cCmd } )
          //
-      *  HB_TRACE( HB_TR_ALWAYS, "Command  ", pad( cNam, 20 ), cCmd )
+      *  HB_TRACE( HB_TR_DEBUG, "Command  ", pad( cNam, 20 ), cCmd )
 
       ELSEIF ( n := at( "= new", s ) ) > 0
          IF ( n1 := at( "*", s ) ) > 0 .AND. n1 < n
@@ -494,7 +494,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
          n := at( "(", cCmd )
          cCls := substr( cCmd, 1, n - 1 )
          aadd( ::widgets, { cCls, cNam, cCls+"()", cCls+"():new"+substr(cCmd,n) } )
-      *  HB_TRACE( HB_TR_ALWAYS, "new      ", pad( cNam, 20 ), cCmd )
+      *  HB_TRACE( HB_TR_DEBUG, "new      ", pad( cNam, 20 ), cCmd )
 
       ENDIF
    NEXT
@@ -582,7 +582,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
 
          ELSE
             cBlock := "{|o,v| o[v]:" + cCmd + "}"
-            *  HB_TRACE( HB_TR_ALWAYS, pad( a_[ 1 ], 20 ), cBlock, 0, cNam )
+            *  HB_TRACE( HB_TR_DEBUG, pad( a_[ 1 ], 20 ), cBlock, 0, cNam )
             bBlock := &( cBlock )
             eval( bBlock, ::qObj, cNam )
 

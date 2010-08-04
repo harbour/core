@@ -1490,7 +1490,7 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
 
    CASE "tableVar_keyPress"
       IF ( nRow := ::oUI:q_tableVar:currentRow() ) >= 0
-         HB_TRACE( HB_TR_ALWAYS, "RECEIVING ENTER KEY" )
+         HB_TRACE( HB_TR_DEBUG, "RECEIVING ENTER KEY" )
          ::oUI:q_tableVar:editItem( p )
          hbide_justACall( nRow )
          #if 0

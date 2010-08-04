@@ -774,7 +774,7 @@ HBSlots::~HBSlots()
    {
       if( listBlock[ i ] != NULL )
       {
-//HB_TRACE( HB_TR_ALWAYS, ( "......HBSlots::~HBSlots()...... [ Un-disConnected Slot ]" ) );
+//HB_TRACE( HB_TR_DEBUG, ( "......HBSlots::~HBSlots()...... [ Un-disConnected Slot ]" ) );
          hb_itemRelease( listBlock.at( i ) );
          listBlock[ i ] = NULL;
       }
@@ -822,13 +822,13 @@ bool HBSlots::hbConnect( PHB_ITEM pObj, const char * slot, PHB_ITEM bBlock )
    {
       if( !isConnected( object, slot ) )
       {
-HB_TRACE( HB_TR_ALWAYS, ( "AAA 3 %s  %p", slot, object ) );
+HB_TRACE( HB_TR_DEBUG, ( "AAA 3 %s  %p", slot, object ) );
          bool bConnected = connect_signal( ( QString ) slot, object, this );
-HB_TRACE( HB_TR_ALWAYS, ( "AAA 4" ) );
+HB_TRACE( HB_TR_DEBUG, ( "AAA 4" ) );
          if( bConnected )
          {
             PHB_ITEM pBlock = hb_itemNew( bBlock );                        /* get codeblock */
-HB_TRACE( HB_TR_ALWAYS, ( "AAA 5" ) );
+HB_TRACE( HB_TR_DEBUG, ( "AAA 5" ) );
             listBlock << pBlock;
             listObj   << object;
 

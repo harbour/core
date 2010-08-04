@@ -236,7 +236,7 @@ void HBQMainWindow::resizeEvent( QResizeEvent * event )
 
 void HBQMainWindow::closeEvent( QCloseEvent * event )
 {
-   HB_TRACE( HB_TR_ALWAYS, ( "HBQMainWindow::closeEvent: ThreadID: %i", threadID ) );
+   HB_TRACE( HB_TR_DEBUG, ( "HBQMainWindow::closeEvent: ThreadID: %i", threadID ) );
 
    if( hb_vmRequestReenter() )
    {

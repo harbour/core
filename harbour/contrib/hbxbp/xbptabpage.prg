@@ -324,7 +324,7 @@ METHOD XbpTabWidget:execSlot( cSlot, p )
       qApp    := QApplication():new()
       pWidget := QWidget():from( qApp:widgetAt( qPoint ) )
       iIndex  := ascan( ::aChildren, {|o| hbqt_IsEqualGcQtPointer( o:oWidget:pPtr, pWidget:pPtr ) } ) - 1
-HB_TRACE( HB_TR_ALWAYS, "iIndex", iIndex, pWidget:objectName() )
+HB_TRACE( HB_TR_DEBUG, "iIndex", iIndex, pWidget:objectName() )
    ELSE
       iIndex := p
    ENDIF

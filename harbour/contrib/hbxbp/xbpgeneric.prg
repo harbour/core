@@ -105,7 +105,7 @@ INIT PROCEDURE hbxbp_Start()
 /*----------------------------------------------------------------------*/
 
 EXIT PROCEDURE hbxbp_End()
-   HB_TRACE( HB_TR_ALWAYS, "................................... EXIT PROCEDURE hbxbp_End()    begin " )
+   HB_TRACE( HB_TR_DEBUG, "................................... EXIT PROCEDURE hbxbp_End()    begin " )
 
    t_oAppWindow := NIL
 
@@ -116,7 +116,7 @@ EXIT PROCEDURE hbxbp_End()
    t_qtEvents := NIL
    t_qtSlots  := NIL
 
-   HB_TRACE( HB_TR_ALWAYS, "................................... EXIT PROCEDURE hbxbp_End()    end   " )
+   HB_TRACE( HB_TR_DEBUG, "................................... EXIT PROCEDURE hbxbp_End()    end   " )
    RETURN
 
 /*----------------------------------------------------------------------*/

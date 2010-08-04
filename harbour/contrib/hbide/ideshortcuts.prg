@@ -749,7 +749,7 @@ METHOD IdeShortcuts:evalMacro( cString )
    LOCAL oErr, bBlock, cBlock
    LOCAL lEvaluated := .f.
 
-   cBlock := ::buildBlock( cString ) ; HB_TRACE( HB_TR_ALWAYS, cString, cBlock )
+   cBlock := ::buildBlock( cString ) ; HB_TRACE( HB_TR_DEBUG, cString, cBlock )
 
    bBlock := &( cBlock )
 
@@ -757,7 +757,7 @@ METHOD IdeShortcuts:evalMacro( cString )
       eval( bBlock, self )
       lEvaluated := .t.
    RECOVER USING oErr
-      HB_TRACE( HB_TR_ALWAYS, valtype( oErr ), oErr:description )
+      HB_TRACE( HB_TR_DEBUG, valtype( oErr ), oErr:description )
    END SEQUENCE
 
    ErrorBlock( bError )
@@ -781,7 +781,7 @@ METHOD IdeShortcuts:execKey( oEdit, nKey, lAlt, lCtrl, lShift )
                                      e_[ 5 ] == iif( lShift, "YES", "NO" )  } )
       IF n > 0
          IF ! empty( ::aDftSCuts[ n, 7 ] )
-            HB_TRACE( HB_TR_ALWAYS, nKey, lAlt, lCtrl, lShift, cKey )
+            HB_TRACE( HB_TR_DEBUG, nKey, lAlt, lCtrl, lShift, cKey )
 
             lExecuted := ::evalMacro( ::aDftSCuts[ n, 7 ] )
          ENDIF

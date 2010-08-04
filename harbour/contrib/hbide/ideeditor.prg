@@ -1586,7 +1586,7 @@ METHOD IdeEditor:execEvent( cEvent, p )
       EXIT
 
    CASE "qTab_contextMenu"
-HB_TRACE( HB_TR_ALWAYS, "IdeEditor:execEvent( cMode, p )" )
+HB_TRACE( HB_TR_DEBUG, "IdeEditor:execEvent( cMode, p )" )
       aadd( aPops, { "Close", {|| MsgBox( "closing" ) } } )
       hbide_ExecPopup( aPops, p, ::oTab:oWidget )
 
@@ -1824,10 +1824,10 @@ METHOD IdeEditor:qscintilla()
       oSci:setAutoCompletionShowSingle( .t. )
       oSci:setAutoCompletionFillupsEnabled( .t. )
 
-      HB_TRACE( HB_TR_ALWAYS, time() )
+      HB_TRACE( HB_TR_DEBUG, time() )
       oSci:setText( hb_memoread( "c:\harbour\contrib\hbide\idemisc.prg" ) )
    // oSci:setText( hb_memoread( "c:\harbour\contrib\hbide\ideparseexpr.c" ) )
-      HB_TRACE( HB_TR_ALWAYS, time(), "after" )
+      HB_TRACE( HB_TR_DEBUG, time(), "after" )
 
       c1 := QColor():new( 0,0,255 )
       c2 := QColor():new( 0,12,133 )
@@ -1887,15 +1887,15 @@ STATIC FUNCTION hbide_qtDesigner()
    STATIC oEdt, oWM
 
    oEdt := QDesignerFormEditorInterface():new( ::oDlg:oWidget )
-   HB_TRACE( HB_TR_ALWAYS, 1 )
+   HB_TRACE( HB_TR_DEBUG, 1 )
    oWM := QDesignerFormWindowManagerInterface():from( oEdt:formWindowManager() )
-   HB_TRACE( HB_TR_ALWAYS, 2 )
+   HB_TRACE( HB_TR_DEBUG, 2 )
    oWM:createFormWindow( ::oQScintillaDock:oWidget )
-   HB_TRACE( HB_TR_ALWAYS, 3 )
+   HB_TRACE( HB_TR_DEBUG, 3 )
    ::oQScintillaDock:oWidget:show()
-   HB_TRACE( HB_TR_ALWAYS, 4 )
+   HB_TRACE( HB_TR_DEBUG, 4 )
    n := oWM:formWindowCount()
-   HB_TRACE( HB_TR_ALWAYS, n )
+   HB_TRACE( HB_TR_DEBUG, n )
 
    /*
    QDesignerActionEditorInterface * actionEditor () const

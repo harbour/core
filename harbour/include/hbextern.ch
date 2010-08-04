@@ -55,7 +55,7 @@
 
 #include "hbextcdp.ch"
 #include "hbextlng.ch"
-#include "hbexturs.ch"
+#include "hbextudd.ch"
 
 /* CA-Cl*pper compatible standard functions */
 
@@ -1314,15 +1314,5 @@ EXTERNAL HBSCALAR
 EXTERNAL GET
 EXTERNAL TBROWSE
 EXTERNAL TBCOLUMN
-#ifdef HB_REQUEST_SCALAR
-EXTERNAL HBARRAY
-EXTERNAL HBBLOCK
-EXTERNAL HBCHARACTER
-EXTERNAL HBDATE
-EXTERNAL HBTIMESTAMP
-EXTERNAL HBLOGICAL
-EXTERNAL HBNIL
-EXTERNAL HBNUMERIC
-#endif /* HB_REQUEST_SCALAR */
 
 #endif /* HB_EXTERN_CH_ */

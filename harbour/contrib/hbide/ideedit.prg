@@ -506,12 +506,12 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
 
 
    CASE textChanged
-      //HB_TRACE( HB_TR_ALWAYS, "textChanged()" )
+      //HB_TRACE( HB_TR_DEBUG, "textChanged()" )
       ::oEditor:setTabImage( qEdit )
       EXIT
 
    CASE selectionChanged
-      //HB_TRACE( HB_TR_ALWAYS, "selectionChanged()" )
+      //HB_TRACE( HB_TR_DEBUG, "selectionChanged()" )
       ::oEditor:qCqEdit := qEdit
       ::oEditor:qCoEdit := oEdit
 
@@ -536,7 +536,7 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
       EXIT
 
    CASE cursorPositionChanged
-      //HB_TRACE( HB_TR_ALWAYS, "cursorPositionChanged()", ::nProtoLine, ::nProtoCol, ::isSuspended, ::getLineNo(), ::getColumnNo(), ::cProto )
+      //HB_TRACE( HB_TR_DEBUG, "cursorPositionChanged()", ::nProtoLine, ::nProtoCol, ::isSuspended, ::getLineNo(), ::getColumnNo(), ::cProto )
       ::oEditor:dispEditInfo( qEdit )
       ::handlePreviousWord( ::lUpdatePrevWord )
       ::handleCurrentIndent()
@@ -572,13 +572,13 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
 
    #if 0
    CASE modificationChanged
-      //HB_TRACE( HB_TR_ALWAYS, "modificationChanged(bool)", p )
+      //HB_TRACE( HB_TR_DEBUG, "modificationChanged(bool)", p )
       EXIT
    CASE redoAvailable
-      //HB_TRACE( HB_TR_ALWAYS, "redoAvailable(bool)", p )
+      //HB_TRACE( HB_TR_DEBUG, "redoAvailable(bool)", p )
       EXIT
    CASE undoAvailable
-      //HB_TRACE( HB_TR_ALWAYS, "undoAvailable(bool)", p )
+      //HB_TRACE( HB_TR_DEBUG, "undoAvailable(bool)", p )
       EXIT
    CASE updateRequest
       EXIT
@@ -884,7 +884,7 @@ METHOD IdeEdit:copyBlockContents( aCord )
       cClip += cLine + iif( i < nB, hb_eol(), iif( cLine == oLine, hb_eol(), "" ) )
    NEXT
 
- * HB_TRACE( HB_TR_ALWAYS, "copyBlockContents", cClip )
+ * HB_TRACE( HB_TR_DEBUG, "copyBlockContents", cClip )
 
    hbide_blockContents( { nMode, ::aBlockCopyContents } )
 

@@ -154,7 +154,7 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
    if( data )
    {
       iState = data->state;
-      HB_TRACE( HB_TR_ALWAYS, ( "iState = %i", iState ) );
+      HB_TRACE( HB_TR_DEBUG, ( "iState = %i", iState ) );
 
       switch( iState )
       {
@@ -164,7 +164,7 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
       }
    }
    #endif
-//HB_TRACE( HB_TR_ALWAYS, ( "SYNTSX HIGHLIGHTING" ) );
+//HB_TRACE( HB_TR_DEBUG, ( "SYNTSX HIGHLIGHTING" ) );
 
    int index = 0;
 

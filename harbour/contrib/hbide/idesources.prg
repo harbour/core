@@ -510,7 +510,7 @@ METHOD IdeSourcesManager:selectSource( cMode, cFile, cTitle, cDftPath )
       oDlg:quit        := {|| MsgBox( "Quitting the Dialog" ), 1 }
       cFile := oDlg:saveAs( "myfile.dbf" )
       IF !empty( cFile )
-         HB_TRACE( HB_TR_ALWAYS, cFile )
+         HB_TRACE( HB_TR_DEBUG, cFile )
       ENDIF
 
    ENDIF

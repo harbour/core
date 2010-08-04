@@ -486,7 +486,7 @@ METHOD IdeProjManager:pullHbpData( cHbp )
 
    /* PRJ_PRP_FLAGS */
    FOR EACH s IN aOptns
-//HB_TRACE( HB_TR_ALWAYS, "FLAGS   ", s )
+//HB_TRACE( HB_TR_DEBUG, "FLAGS   ", s )
       IF !empty( s )
          aadd( a2_0, s )
       ENDIF
@@ -494,7 +494,7 @@ METHOD IdeProjManager:pullHbpData( cHbp )
 
    /* PRJ_PRP_SOURCES */
    FOR EACH s IN aFiles
-//HB_TRACE( HB_TR_ALWAYS, "SOURCE  ", s )
+//HB_TRACE( HB_TR_DEBUG, "SOURCE  ", s )
       aadd( a3_0, s )
    NEXT
 

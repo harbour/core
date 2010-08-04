@@ -239,8 +239,8 @@ METHOD XbpDialog:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, l
 METHOD XbpDialog:destroy()
    LOCAL qtObj
 
-   HB_TRACE( HB_TR_ALWAYS,  ". " )
-   HB_TRACE( HB_TR_ALWAYS,  "<<<<<<<<<<                        XbpDialog:destroy    B                      >>>>>>>>>>" )
+   HB_TRACE( HB_TR_DEBUG,  ". " )
+   HB_TRACE( HB_TR_DEBUG,  "<<<<<<<<<<                        XbpDialog:destroy    B                      >>>>>>>>>>" )
 
    ::oWidget:removeEventFilter( ::pEvents )
 
@@ -258,8 +258,8 @@ METHOD XbpDialog:destroy()
       qtObj:destroy()
    ENDIF
 
-   HB_TRACE( HB_TR_ALWAYS,  "<<<<<<<<<<                        XbpDialog:destroy    E                      >>>>>>>>>>" )
-   HB_TRACE( HB_TR_ALWAYS,  ". " )
+   HB_TRACE( HB_TR_DEBUG,  "<<<<<<<<<<                        XbpDialog:destroy    E                      >>>>>>>>>>" )
+   HB_TRACE( HB_TR_DEBUG,  ". " )
 
    RETURN Self
 

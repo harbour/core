@@ -547,12 +547,12 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
       EXIT
 
    CASE "projectTree_dragEnterEvent"
-HB_TRACE( HB_TR_ALWAYS, "projectTree_dragEnterEvent" )
+HB_TRACE( HB_TR_DEBUG, "projectTree_dragEnterEvent" )
       QDragEnterEvent():from( p ):acceptProposedAction()
       EXIT
 
    CASE "projectTree_dropEvent"
-HB_TRACE( HB_TR_ALWAYS, "projectTree_dropEvent" )
+HB_TRACE( HB_TR_DEBUG, "projectTree_dropEvent" )
       qEvent := QDropEvent():from( p )
       qMime := QMimeData():from( qEvent:mimeData() )
       IF qMime:hasUrls()

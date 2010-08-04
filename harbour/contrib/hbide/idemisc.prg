@@ -1676,7 +1676,7 @@ FUNCTION hbide_syncRoot( cRoot, cPath )
 
    hb_fNameSplit( cPath, @cPth, @cFile, @cExt )
 
-//HB_TRACE( HB_TR_ALWAYS, "hbide_syncRoot( cRoot, cPath )", cPathProc, hbide_pathToOSpath( cPathProc + "/" + cFile + cExt ) )
+//HB_TRACE( HB_TR_DEBUG, "hbide_syncRoot( cRoot, cPath )", cPathProc, hbide_pathToOSpath( cPathProc + "/" + cFile + cExt ) )
 
    RETURN hbide_pathToOSpath( cPathProc + "/" + cFile + cExt )
 

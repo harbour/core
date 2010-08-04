@@ -591,9 +591,9 @@ METHOD HbIde:create( aParams )
 #if 0
 
    /* Very important - destroy resources */
-   HB_TRACE( HB_TR_ALWAYS, "======================================================" )
-   HB_TRACE( HB_TR_ALWAYS, "Before    ::oDlg:destroy()", memory( 1001 )             )
-   HB_TRACE( HB_TR_ALWAYS, "                                                      " )
+   HB_TRACE( HB_TR_DEBUG, "======================================================" )
+   HB_TRACE( HB_TR_DEBUG, "Before    ::oDlg:destroy()", memory( 1001 )             )
+   HB_TRACE( HB_TR_DEBUG, "                                                      " )
 
    ::oSetup:destroy()
    ::oUpdn:destroy()
@@ -618,9 +618,9 @@ METHOD HbIde:create( aParams )
    ::oFont := NIL
    qSplash := NIL
 
-   HB_TRACE( HB_TR_ALWAYS, "                                                      " )
-   HB_TRACE( HB_TR_ALWAYS, "After     ::oDlg:destroy()", memory( 1001 )             )
-   HB_TRACE( HB_TR_ALWAYS, "======================================================" )
+   HB_TRACE( HB_TR_DEBUG, "                                                      " )
+   HB_TRACE( HB_TR_DEBUG, "After     ::oDlg:destroy()", memory( 1001 )             )
+   HB_TRACE( HB_TR_DEBUG, "======================================================" )
 #endif
 
    RETURN self
@@ -1441,7 +1441,7 @@ METHOD HbIde:setCodec( cCodec )
 METHOD HbIde:testPainter( qPainter )
    LOCAL qP := QPainter():from( qPainter )
 
-   HB_TRACE( HB_TR_ALWAYS, "qPainter:isActive()", qP:isActive() )
+   HB_TRACE( HB_TR_DEBUG, "qPainter:isActive()", qP:isActive() )
 
    qP:setPen_2( Qt_red )
    qP:drawEllipse_2( 100,300,100,150 )

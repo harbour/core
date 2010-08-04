@@ -171,7 +171,7 @@ METHOD IdeDictionary:load( cDict )
          IF hb_isArray( q_ ) .AND. len( q_ ) == 3
             ::qBgColor := QColor():new( q_[ 1 ], q_[ 2 ], q_[ 3 ] )
          ENDIF
-HB_TRACE( HB_TR_ALWAYS, ::cBgColor, valtype( q_ ) )
+HB_TRACE( HB_TR_DEBUG, ::cBgColor, valtype( q_ ) )
       ENDIF
 
       IF !empty( a_[ DIC_FILENAME ] ) .AND. hb_fileExists( a_[ DIC_FILENAME ] )

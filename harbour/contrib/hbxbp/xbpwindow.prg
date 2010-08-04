@@ -388,7 +388,7 @@ METHOD XbpWindow:connect( pWidget, cSignal, bBlock )
    IF ( lSuccess := Qt_Slots_Connect( ::pSlots, pWidget, cSignal, bBlock ) )
       aadd( ::aConnections, { pWidget, cSignal } )
    ELSE
-      HB_TRACE( HB_TR_ALWAYS, ( "                " + cSignal + " : Failed!" ) )
+      HB_TRACE( HB_TR_DEBUG, ( "                " + cSignal + " : Failed!" ) )
    ENDIF
 
    RETURN lSuccess
@@ -415,7 +415,7 @@ METHOD XbpWindow:connectEvent( pWidget, nEvent, bBlock )
    IF ( lSuccess := Qt_Events_Connect( ::pEvents, pWidget, nEvent, bBlock ) )
       aadd( ::aEConnections, { pWidget, nEvent } )
    ELSE
-      HB_TRACE( HB_TR_ALWAYS,  "XbpWindow:connectEvent", nEvent, "Failed" )
+      HB_TRACE( HB_TR_DEBUG,  "XbpWindow:connectEvent", nEvent, "Failed" )
    ENDIF
 
    RETURN lSuccess
@@ -467,11 +467,11 @@ METHOD XbpWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 METHOD XbpWindow:destroy()
    LOCAL e_
 #if 0
-HB_TRACE( HB_TR_ALWAYS,  ".   " )
-HB_TRACE( HB_TR_ALWAYS,  hb_threadId(),"Destroy[ B ] "+pad(cCls,12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ) )
+HB_TRACE( HB_TR_DEBUG,  ".   " )
+HB_TRACE( HB_TR_DEBUG,  hb_threadId(),"Destroy[ B ] "+pad(cCls,12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ) )
    LOCAL cCls := __ObjGetClsName( self ), cMsg
 cMsg := iif( cCls == "XBPWINDOW", ::oWidget:objectName(), IF( empty(::cargo),'',str(::cargo) ) )
-HB_TRACE( HB_TR_ALWAYS,  hb_threadId(),"Destroy[ B ] "+pad(cCls,12)+ cMsg, memory( 1001 ) )
+HB_TRACE( HB_TR_DEBUG,  hb_threadId(),"Destroy[ B ] "+pad(cCls,12)+ cMsg, memory( 1001 ) )
 #endif
    ::oParent := NIL
    ::oOwner  := NIL
@@ -505,9 +505,9 @@ HB_TRACE( HB_TR_ALWAYS,  hb_threadId(),"Destroy[ B ] "+pad(cCls,12)+ cMsg, memor
 
    ::oWidget := NIL
 #if 0
-HB_TRACE( HB_TR_ALWAYS,  hb_threadId(),"Destroy[ E ] "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ) )
-HB_TRACE( HB_TR_ALWAYS,  ".   " )
-HB_TRACE( HB_TR_ALWAYS,  hb_threadId(),"Destroy[ E ] "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ) )
+HB_TRACE( HB_TR_DEBUG,  hb_threadId(),"Destroy[ E ] "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ) )
+HB_TRACE( HB_TR_DEBUG,  ".   " )
+HB_TRACE( HB_TR_DEBUG,  hb_threadId(),"Destroy[ E ] "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ) )
 #endif
    RETURN NIL
 

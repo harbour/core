@@ -1761,8 +1761,6 @@ ifeq ($(HB_INIT_DONE),)
    endif
 endif
 
-HB_DYN_COMPILE := no
-
 CXX :=
 CC_DIRSEPFROM :=
 CC_DIRSEPTO :=
@@ -1788,5 +1786,8 @@ export HB_INIT_DONE := yes
 
 include $(TOP)$(ROOT)config/$(HB_PLATFORM)/global.mk
 include $(TOP)$(ROOT)config/globsh.mk
+
+export HB_DYNLIB_EXT := $(DYN_EXT)
+export HB_DYNLIB_DIR := $(DYN_DIR)
 
 endif # GLOBAL_MK_
