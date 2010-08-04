@@ -91,7 +91,7 @@
 #include "hbmemory.ch"
 #include "hbgtinfo.ch"
 
-#include "hbextern.ch"   // need this to use with HRB
+REQUEST __HB_EXTERN__
 
 #include "hbsocket.ch"
 

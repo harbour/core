@@ -50,8 +50,9 @@
  *
  */
 
-#include "hbextern.ch"
 #include "cgi.ch"
+
+REQUEST __HB_EXTERN__
 
 #define IF_BUFFER 65535
 
