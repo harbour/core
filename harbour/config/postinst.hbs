@@ -31,7 +31,7 @@
 #define HB_FA_WOTH            0x00020000     /* 0002 write by others */
 #define HB_FA_XOTH            0x00010000     /* 0001 execute/search by others */
 
-PROCEDURE Main()
+PROCEDURE Main( ... )
    LOCAL nErrorLevel := 0
    LOCAL aFile
 
@@ -57,257 +57,262 @@ PROCEDURE Main()
       RETURN
    ENDIF
 
-   /* Regenerating extern headers */
+   /* Detect install build phase */
 
-   mk_extern_core()
+   IF AScan( hb_AParams(), {| tmp | Lower( tmp ) == "install" } ) > 0
 
-   /* Installing some misc files */
-
-   IF GetEnv( "HB_PLATFORM" ) $ "win|wce|os2|dos"
-      tmp := GetEnv( "HB_INSTALL_PREFIX" )
-   ELSE
-      tmp := GetEnv( "HB_INSTALL_DOC" )
-   ENDIF
-   IF ! Empty( tmp )
-
-      OutStd( "! Copying root documents..." + hb_eol() )
-
-      FOR EACH aFile IN Directory( "Change*" )
-         mk_hb_FCopy( aFile[ F_NAME ], tmp + hb_ps() + iif( GetEnv( "HB_PLATFORM" ) == "dos", "CHANGES", "" ) )
-      NEXT
-
-      mk_hb_FCopy( "COPYING", tmp + hb_ps() )
-      mk_hb_FCopy( "INSTALL", tmp + hb_ps() )
-      mk_hb_FCopy( "NEWS"   , tmp + hb_ps() )
-      mk_hb_FCopy( "TODO"   , tmp + hb_ps() )
-   ENDIF
-
-   IF ! Empty( GetEnv( "HB_INSTALL_BIN" ) )
-
-      OutStd( "! Copying Harbour script (.hbs) files..." + hb_eol() )
-
-      /* public Harbour scripts */
-      FOR EACH tmp IN { "bin/hbmk2l2d.hbs" ,;
-                        "bin/hbxpatch.hbs" }
-         mk_hb_FCopy( tmp, GetEnv( "HB_INSTALL_BIN" ) + hb_ps() )
-      NEXT
-   ENDIF
-
-   IF ! Empty( GetEnv( "HB_INSTALL_ETC" ) )
-
-      OutStd( "! Copying *nix config files..." + hb_eol() )
-
-      IF DirBuild( GetEnv( "HB_INSTALL_ETC" ) )
-         mk_hb_FCopy( "src/rtl/gtcrs/hb-charmap.def", GetEnv( "HB_INSTALL_ETC" ) + hb_ps(), .T. )
-      ELSE
-         OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", GetEnv( "HB_INSTALL_ETC" ) ) + hb_eol() )
-      ENDIF
-
-      IF ! Empty( GetEnv( "HB_INSTALL_LIB" ) )
-
-         OutStd( "! Creating *nix ld config file..." + hb_eol() )
-
-         tmp := GetEnv( "HB_INSTALL_ETC" ) + hb_ps() + ".." + hb_ps() + "ld.so.conf.d"
-         IF DirBuild( tmp )
-            /* TOFIX: Put HB_INSTALL_LIB without build sandbox prefix */
-            hb_MemoWrit( tmp + hb_ps() + "harbour.conf", GetEnv( "HB_INSTALL_LIB" ) + hb_eol() )
-         ELSE
-            OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", tmp ) + hb_eol() )
-         ENDIF
-      ENDIF
-   ENDIF
-
-   IF ! Empty( GetEnv( "HB_INSTALL_MAN" ) )
-
-      OutStd( "! Copying *nix man files..." + hb_eol() )
-
-      IF DirBuild( GetEnv( "HB_INSTALL_MAN" ) + hb_ps() + "man1" )
-         FOR EACH tmp IN { "src/main/harbour.1"    ,;
-                           "src/pp/hbpp.1"         ,;
-                           "utils/hbmk2/hbmk2.1"   ,;
-                           "utils/hbrun/hbrun.1"   ,;
-                           "utils/hbtest/hbtest.1" }
-            mk_hb_FCopy( tmp, GetEnv( "HB_INSTALL_MAN" ) + hb_ps() + "man1" + hb_ps(), .T. )
-         NEXT
-      ELSE
-         OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", GetEnv( "HB_INSTALL_MAN" ) ) + hb_eol() )
-      ENDIF
-   ENDIF
-
-   /* TOFIX: Rewrite this in .prg */
-#if 0
-   FOR EACH tmp IN { GetEnv( "HB_DYNLIB_ST" ), GetEnv( "HB_DYNLIB_MT" ) }
-
-      OutStd( GetEnv( "HB_INSTALL_DYN" + hb_ps() + tmp + hb_eol() )
-
-         ll="` echo $l | sed 's!'${lib_suff}'$!!' `${lib_ext}"
-         ln -sf $l $ll
-
-         IF !( GetEnv( "HB_PLATFORM" ) $ "win|wce" )
-            DO CASE
-            CASE GetEnv( "HB_INSTALL_LIB" ) $ "/usr/lib/harbour|/usr/lib64/harbour|/usr/local/lib/harbour|/usr/local/lib64/harbour"
-                  ln -sf harbour/$l ../$ll
-                  ln -sf harbour/$l ../$l
-                  ;;
-            CASE GetEnv( "HB_INSTALL_LIB" ) $ "/usr/local/harbour/lib"
-                  ld="/usr/lib"
-                  if [ -n "${HB_INST_PKGPREF}" ] || [ -w $ld ]
-                  then
-                     mkdir -p ${HB_INST_PKGPREF}$ld
-                     ln -sf ../local/harbour/lib/$l ${HB_INST_PKGPREF}$ld/$ll
-                     ln -sf ../local/harbour/lib/$l ${HB_INST_PKGPREF}$ld/$l
-                  fi
-                  ;;
-               *)
-                  ;;
-            ENDCASE
-         ENDIF
-      fi
-   done
-#endif
-
-   /* Creating language files */
-
-   IF ! Empty( GetEnv( "HB_INSTALL_BIN" ) )
-
-      OutStd( "! Making core translation (.hbl) files..." + hb_eol() )
-
-      FOR EACH tmp IN Directory( "utils" + hb_ps() + hb_osFileMask(), "D" )
-         IF "D" $ tmp[ F_ATTR ] .AND. !( tmp[ F_NAME ] == "." ) .AND. !( tmp[ F_NAME ] == ".." )
-            FOR EACH aFile IN Directory( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + "*.po" )
-               mk_hbl( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + aFile[ F_NAME ],;
-                       PathSepToSelf( GetEnv( "HB_INSTALL_BIN" ) ) + hb_ps() + FNameExtSet( aFile[ F_NAME ], ".hbl" ) )
-            NEXT
-         ENDIF
-      NEXT
-   ENDIF
-
-   /* Creating docs for core */
-
-   IF ! Empty( GetEnv( "HB_INSTALL_DOC" ) )
-
-      OutStd( "! Compiling core documentation (.hbd)..." + hb_eol() )
-
-      mk_hbd_core( "." + hb_ps() )
-   ENDIF
-
-   /* Creating install packages */
-
-   IF GetEnv( "HB_BUILD_PKG" ) == "yes" .AND. ;
-      ! Empty( GetEnv( "HB_TOP" ) )
+      /* Installing some misc files */
 
       IF GetEnv( "HB_PLATFORM" ) $ "win|wce|os2|dos"
-
-         tmp := GetEnv( "HB_TOP" ) + hb_ps() + GetEnv( "HB_PKGNAME" ) + ".zip"
-
-         OutStd( "! Making Harbour .zip install package: '" + tmp + "'" + hb_eol() )
-
-         FErase( tmp )
-
-         /* NOTE: Believe it or not this is the official method to zip a different dir with subdirs
-                  without including the whole root path in filenames; you have to 'cd' into it.
-                  Even with zip 3.0. For this reason we need absolute path in HB_TOP. There is also
-                  no zip 2.x compatible way to force creation of a new .zip, so we have to delete it
-                  first to avoid mixing in an existing .zip file. [vszakats] */
-
-         cOldDir := hb_ps() + CurDir()
-         DirChange( GetEnv( "HB_INSTALL_PKG_TOP" ) )
-
-         mk_hb_processRun( PathSepToSelf( GetEnv( "HB_DIR_ZIP" ) ) + "zip" +;
-                           " -q -9 -X -r -o" +;
-                           " " + FNameEscape( tmp ) +;
-                           " . -i " + FNameEscape( GetEnv( "HB_PKGNAME" ) + hb_ps() + "*" ) +;
-                           " -x *.tds -x *.exp" )
-
-         DirChange( cOldDir )
-
-         IF GetEnv( "HB_PLATFORM" ) $ "win|wce"
-
-            tmp := GetEnv( "HB_TOP" ) + hb_ps() + GetEnv( "HB_PKGNAME" ) + ".exe"
-
-            OutStd( "! Making Harbour .exe install package: '" + tmp + "'" + hb_eol() )
-
-            mk_hb_processRun( PathSepToSelf( GetEnv( "HB_DIR_NSIS" ) ) + "makensis.exe" +;
-                              " -V2" +;
-                              " " + FNameEscape( StrTran( "package/mpkg_win.nsi", "/", hb_ps() ) ) )
-         ENDIF
+         tmp := GetEnv( "HB_INSTALL_PREFIX" )
       ELSE
-         cBin_Tar := "tar"
-         lGNU_Tar := .T.
-         IF ! Empty( query_stdout( "gtar --version" ) )
-            cBin_Tar := "gtar"
-         ELSEIF Empty( query_stdout( "tar --version" ) )
-            cBin_Tar := ""
-         ELSEIF "bsdtar" $ query_stdout( "tar --version" )
-            /* tar is mapped to bsdtar starting OS X 10.6 */
-            lGNU_Tar := .F.
+         tmp := GetEnv( "HB_INSTALL_DOC" )
+      ENDIF
+      IF ! Empty( tmp )
+
+         OutStd( "! Copying root documents..." + hb_eol() )
+
+         FOR EACH aFile IN Directory( "Change*" )
+            mk_hb_FCopy( aFile[ F_NAME ], tmp + hb_ps() + iif( GetEnv( "HB_PLATFORM" ) == "dos", "CHANGES", "" ) )
+         NEXT
+
+         mk_hb_FCopy( "COPYING", tmp + hb_ps() )
+         mk_hb_FCopy( "INSTALL", tmp + hb_ps() )
+         mk_hb_FCopy( "NEWS"   , tmp + hb_ps() )
+         mk_hb_FCopy( "TODO"   , tmp + hb_ps() )
+      ENDIF
+
+      IF ! Empty( GetEnv( "HB_INSTALL_BIN" ) )
+
+         OutStd( "! Copying Harbour script (.hbs) files..." + hb_eol() )
+
+         /* public Harbour scripts */
+         FOR EACH tmp IN { "bin/hbmk2l2d.hbs" ,;
+                           "bin/hbxpatch.hbs" }
+            mk_hb_FCopy( tmp, GetEnv( "HB_INSTALL_BIN" ) + hb_ps() )
+         NEXT
+      ENDIF
+
+      IF ! Empty( GetEnv( "HB_INSTALL_ETC" ) )
+
+         OutStd( "! Copying *nix config files..." + hb_eol() )
+
+         IF DirBuild( GetEnv( "HB_INSTALL_ETC" ) )
+            mk_hb_FCopy( "src/rtl/gtcrs/hb-charmap.def", GetEnv( "HB_INSTALL_ETC" ) + hb_ps(), .T. )
+         ELSE
+            OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", GetEnv( "HB_INSTALL_ETC" ) ) + hb_eol() )
          ENDIF
 
-         IF ! Empty( cBin_Tar )
+         IF ! Empty( GetEnv( "HB_INSTALL_LIB" ) )
 
-            cTar_Name := GetEnv( "HB_PKGNAME" )
-            IF ! Empty( tmp := unix_name() )
-               cTar_Name += "-" + tmp
+            OutStd( "! Creating *nix ld config file..." + hb_eol() )
+
+            tmp := GetEnv( "HB_INSTALL_ETC" ) + hb_ps() + ".." + hb_ps() + "ld.so.conf.d"
+            IF DirBuild( tmp )
+               /* TOFIX: Put HB_INSTALL_LIB without build sandbox prefix */
+               hb_MemoWrit( tmp + hb_ps() + "harbour.conf", GetEnv( "HB_INSTALL_LIB" ) + hb_eol() )
+            ELSE
+               OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", tmp ) + hb_eol() )
             ENDIF
-            cTar_NameExt := cTar_Name + iif( GetEnv( "HB_PLATFORM" ) == "dos", ".tgz", ".bin.tar.gz" )
-            cTar_Path := GetEnv( "HB_TOP" ) + hb_ps() + cTar_NameExt
+         ENDIF
+      ENDIF
 
-            OutStd( "! Making Harbour tar install package: '" + cTar_Path + "'" + hb_eol() )
+      IF ! Empty( GetEnv( "HB_INSTALL_MAN" ) )
 
-            FErase( cTar_Path )
+         OutStd( "! Copying *nix man files..." + hb_eol() )
 
-            cOwner := "root"
-            cGroup := iif( GetEnv( "HB_PLATFORM" ) == "darwin" .OR. ;
-                           GetEnv( "HB_PLATFORM" ) == "bsd", "wheel", "root" )
+         IF DirBuild( GetEnv( "HB_INSTALL_MAN" ) + hb_ps() + "man1" )
+            FOR EACH tmp IN { "src/main/harbour.1"    ,;
+                              "src/pp/hbpp.1"         ,;
+                              "utils/hbmk2/hbmk2.1"   ,;
+                              "utils/hbrun/hbrun.1"   ,;
+                              "utils/hbtest/hbtest.1" }
+               mk_hb_FCopy( tmp, GetEnv( "HB_INSTALL_MAN" ) + hb_ps() + "man1" + hb_ps(), .T. )
+            NEXT
+         ELSE
+            OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", GetEnv( "HB_INSTALL_MAN" ) ) + hb_eol() )
+         ENDIF
+      ENDIF
+
+      /* TOFIX: Rewrite this in .prg */
+      #if 0
+      FOR EACH tmp IN { GetEnv( "HB_DYNLIB_ST" ), GetEnv( "HB_DYNLIB_MT" ) }
+
+         OutStd( GetEnv( "HB_INSTALL_DYN" + hb_ps() + tmp + hb_eol() )
+
+            ll="` echo $l | sed 's!'${lib_suff}'$!!' `${lib_ext}"
+            ln -sf $l $ll
+
+            IF !( GetEnv( "HB_PLATFORM" ) $ "win|wce" )
+               DO CASE
+               CASE GetEnv( "HB_INSTALL_LIB" ) $ "/usr/lib/harbour|/usr/lib64/harbour|/usr/local/lib/harbour|/usr/local/lib64/harbour"
+                     ln -sf harbour/$l ../$ll
+                     ln -sf harbour/$l ../$l
+                     ;;
+               CASE GetEnv( "HB_INSTALL_LIB" ) $ "/usr/local/harbour/lib"
+                     ld="/usr/lib"
+                     if [ -n "${HB_INST_PKGPREF}" ] || [ -w $ld ]
+                     then
+                        mkdir -p ${HB_INST_PKGPREF}$ld
+                        ln -sf ../local/harbour/lib/$l ${HB_INST_PKGPREF}$ld/$ll
+                        ln -sf ../local/harbour/lib/$l ${HB_INST_PKGPREF}$ld/$l
+                     fi
+                     ;;
+                  *)
+                     ;;
+               ENDCASE
+            ENDIF
+         fi
+      done
+      #endif
+
+      /* Creating language files */
+
+      IF ! Empty( GetEnv( "HB_INSTALL_BIN" ) )
+
+         OutStd( "! Making core translation (.hbl) files..." + hb_eol() )
+
+         FOR EACH tmp IN Directory( "utils" + hb_ps() + hb_osFileMask(), "D" )
+            IF "D" $ tmp[ F_ATTR ] .AND. !( tmp[ F_NAME ] == "." ) .AND. !( tmp[ F_NAME ] == ".." )
+               FOR EACH aFile IN Directory( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + "*.po" )
+                  mk_hbl( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + aFile[ F_NAME ],;
+                          PathSepToSelf( GetEnv( "HB_INSTALL_BIN" ) ) + hb_ps() + FNameExtSet( aFile[ F_NAME ], ".hbl" ) )
+               NEXT
+            ENDIF
+         NEXT
+      ENDIF
+
+      /* Creating docs for core */
+
+      IF ! Empty( GetEnv( "HB_INSTALL_DOC" ) )
+
+         OutStd( "! Compiling core documentation (.hbd)..." + hb_eol() )
+
+         mk_hbd_core( "." + hb_ps(), GetEnv( "HB_INSTALL_DOC" ) )
+      ENDIF
+
+      /* Creating install packages */
+
+      IF GetEnv( "HB_BUILD_PKG" ) == "yes" .AND. ;
+         ! Empty( GetEnv( "HB_TOP" ) )
+
+         IF GetEnv( "HB_PLATFORM" ) $ "win|wce|os2|dos"
+
+            tmp := GetEnv( "HB_TOP" ) + hb_ps() + GetEnv( "HB_PKGNAME" ) + ".zip"
+
+            OutStd( "! Making Harbour .zip install package: '" + tmp + "'" + hb_eol() )
+
+            FErase( tmp )
+
+            /* NOTE: Believe it or not this is the official method to zip a different dir with subdirs
+                     without including the whole root path in filenames; you have to 'cd' into it.
+                     Even with zip 3.0. For this reason we need absolute path in HB_TOP. There is also
+                     no zip 2.x compatible way to force creation of a new .zip, so we have to delete it
+                     first to avoid mixing in an existing .zip file. [vszakats] */
 
             cOldDir := hb_ps() + CurDir()
             DirChange( GetEnv( "HB_INSTALL_PKG_TOP" ) )
 
-            /* TODO: Add support for non-GNU non-BSD tar (which gets the data from stdio) */
-
-            mk_hb_processRun( cBin_Tar +;
-                              " czvf" +;
-                              " " + FNameEscape( cTar_Path ) +;
-                              iif( lGNU_Tar, " --owner=" + cOwner + " --group=" + cGroup, "" ) +;
-                              " ." )
+            mk_hb_processRun( PathSepToSelf( GetEnv( "HB_DIR_ZIP" ) ) + "zip" +;
+                              " -q -9 -X -r -o" +;
+                              " " + FNameEscape( tmp ) +;
+                              " . -i " + FNameEscape( GetEnv( "HB_PKGNAME" ) + hb_ps() + "*" ) +;
+                              " -x *.tds -x *.exp" )
 
             DirChange( cOldDir )
 
-            IF !( GetEnv( "HB_PLATFORM" ) == "dos" )
+            IF GetEnv( "HB_PLATFORM" ) $ "win|wce"
 
-               tmp := GetEnv( "HB_TOP" ) + hb_ps() + cTar_Name + ".inst.sh"
+               tmp := GetEnv( "HB_TOP" ) + hb_ps() + GetEnv( "HB_PKGNAME" ) + ".exe"
 
-               OutStd( "! Making Harbour tar installer package: '" + tmp + "'" + hb_eol() )
+               OutStd( "! Making Harbour .exe install package: '" + tmp + "'" + hb_eol() )
 
-               /* In the generated script always use tar because we can't be sure
-                  if cBin_Tar exists in the installation environment */
-               cSH_Script := '#!/bin/sh' + Chr( 10 )
-               cSH_Script += 'if [ "\$1" = "--extract" ]; then' + Chr( 10 )
-               cSH_Script += '   tail -c ' + hb_ntos( hb_FSize( cTar_Path ) ) + ' "\$0" > "' + cTar_NameExt + '"' + Chr( 10 )
-               cSH_Script += '   exit' + Chr( 10 )
-               cSH_Script += 'fi' + Chr( 10 )
-               cSH_Script += 'if [ \`id -u\` != 0 ]; then' + Chr( 10 )
-               cSH_Script += '   echo "This package has to be installed from root account."' + Chr( 10 )
-               cSH_Script += '   exit 1' + Chr( 10 )
-               cSH_Script += 'fi' + Chr( 10 )
-               cSH_Script += 'echo "Do you want to install Harbour (y/n)"' + Chr( 10 )
-               cSH_Script += 'read ASK' + Chr( 10 )
-               cSH_Script += 'if [ "\${ASK}" != "y" ] && [ "\${ASK}" != "Y" ]; then' + Chr( 10 )
-               cSH_Script += '   exit 1' + Chr( 10 )
-               cSH_Script += 'fi' + Chr( 10 )
-               cSH_Script += '(tail -c ' + hb_ntos( hb_FSize( cTar_Path ) ) + ' "\$0" | gzip -cd | (cd /;tar xvpf -)) ' + iif( GetEnv( "HB_PLATFORM" ) == "linux", "&& ldconfig", "" ) + Chr( 10 )
-               cSH_Script += 'exit \$?' + Chr( 10 )
-               cSH_Script += 'HB_INST_EOF' + Chr( 10 )
-
-               hb_MemoWrit( tmp, cSH_Script + hb_MemoRead( cTar_Path ) )
-
-               hb_FGetAttr( tmp, @nAttr )
-               hb_FSetAttr( tmp, hb_bitOr( nAttr, HB_FA_XOTH ) )
+               mk_hb_processRun( PathSepToSelf( GetEnv( "HB_DIR_NSIS" ) ) + "makensis.exe" +;
+                                 " -V2" +;
+                                 " " + FNameEscape( StrTran( "package/mpkg_win.nsi", "/", hb_ps() ) ) )
             ENDIF
          ELSE
-            OutStd( "! Error: Cannot find 'tar' tool" + hb_eol() )
+            cBin_Tar := "tar"
+            lGNU_Tar := .T.
+            IF ! Empty( query_stdout( "gtar --version" ) )
+               cBin_Tar := "gtar"
+            ELSEIF Empty( query_stdout( "tar --version" ) )
+               cBin_Tar := ""
+            ELSEIF "bsdtar" $ query_stdout( "tar --version" )
+               /* tar is mapped to bsdtar starting OS X 10.6 */
+               lGNU_Tar := .F.
+            ENDIF
+
+            IF ! Empty( cBin_Tar )
+
+               cTar_Name := GetEnv( "HB_PKGNAME" )
+               IF ! Empty( tmp := unix_name() )
+                  cTar_Name += "-" + tmp
+               ENDIF
+               cTar_NameExt := cTar_Name + iif( GetEnv( "HB_PLATFORM" ) == "dos", ".tgz", ".bin.tar.gz" )
+               cTar_Path := GetEnv( "HB_TOP" ) + hb_ps() + cTar_NameExt
+
+               OutStd( "! Making Harbour tar install package: '" + cTar_Path + "'" + hb_eol() )
+
+               FErase( cTar_Path )
+
+               cOwner := "root"
+               cGroup := iif( GetEnv( "HB_PLATFORM" ) == "darwin" .OR. ;
+                              GetEnv( "HB_PLATFORM" ) == "bsd", "wheel", "root" )
+
+               cOldDir := hb_ps() + CurDir()
+               DirChange( GetEnv( "HB_INSTALL_PKG_TOP" ) )
+
+               /* TODO: Add support for non-GNU non-BSD tar (which gets the data from stdio) */
+
+               mk_hb_processRun( cBin_Tar +;
+                                 " czvf" +;
+                                 " " + FNameEscape( cTar_Path ) +;
+                                 iif( lGNU_Tar, " --owner=" + cOwner + " --group=" + cGroup, "" ) +;
+                                 " ." )
+
+               DirChange( cOldDir )
+
+               IF !( GetEnv( "HB_PLATFORM" ) == "dos" )
+
+                  tmp := GetEnv( "HB_TOP" ) + hb_ps() + cTar_Name + ".inst.sh"
+
+                  OutStd( "! Making Harbour tar installer package: '" + tmp + "'" + hb_eol() )
+
+                  /* In the generated script always use tar because we can't be sure
+                     if cBin_Tar exists in the installation environment */
+                  cSH_Script := '#!/bin/sh' + Chr( 10 )
+                  cSH_Script += 'if [ "\$1" = "--extract" ]; then' + Chr( 10 )
+                  cSH_Script += '   tail -c ' + hb_ntos( hb_FSize( cTar_Path ) ) + ' "\$0" > "' + cTar_NameExt + '"' + Chr( 10 )
+                  cSH_Script += '   exit' + Chr( 10 )
+                  cSH_Script += 'fi' + Chr( 10 )
+                  cSH_Script += 'if [ \`id -u\` != 0 ]; then' + Chr( 10 )
+                  cSH_Script += '   echo "This package has to be installed from root account."' + Chr( 10 )
+                  cSH_Script += '   exit 1' + Chr( 10 )
+                  cSH_Script += 'fi' + Chr( 10 )
+                  cSH_Script += 'echo "Do you want to install Harbour (y/n)"' + Chr( 10 )
+                  cSH_Script += 'read ASK' + Chr( 10 )
+                  cSH_Script += 'if [ "\${ASK}" != "y" ] && [ "\${ASK}" != "Y" ]; then' + Chr( 10 )
+                  cSH_Script += '   exit 1' + Chr( 10 )
+                  cSH_Script += 'fi' + Chr( 10 )
+                  cSH_Script += '(tail -c ' + hb_ntos( hb_FSize( cTar_Path ) ) + ' "\$0" | gzip -cd | (cd /;tar xvpf -)) ' + iif( GetEnv( "HB_PLATFORM" ) == "linux", "&& ldconfig", "" ) + Chr( 10 )
+                  cSH_Script += 'exit \$?' + Chr( 10 )
+                  cSH_Script += 'HB_INST_EOF' + Chr( 10 )
+
+                  hb_MemoWrit( tmp, cSH_Script + hb_MemoRead( cTar_Path ) )
+
+                  hb_FGetAttr( tmp, @nAttr )
+                  hb_FSetAttr( tmp, hb_bitOr( nAttr, HB_FA_XOTH ) )
+               ENDIF
+            ELSE
+               OutStd( "! Error: Cannot find 'tar' tool" + hb_eol() )
+            ENDIF
          ENDIF
       ENDIF
+   ELSE
+      /* Regenerating extern headers */
+
+      mk_extern_core()
    ENDIF
 
    ErrorLevel( nErrorLevel )
@@ -332,21 +337,21 @@ STATIC FUNCTION mk_hbl( cIn, cOut )
 
    RETURN .F.
 
-STATIC FUNCTION mk_hbd_core( cDir )
+STATIC FUNCTION mk_hbd_core( cDirSource, cDirDest )
    LOCAL cName := "harbour"
    LOCAL tmp
 
    LOCAL aErrMsg := {}
-   LOCAL aEntry := __hbdoc_LoadDir( cDir, cName, aErrMsg )
+   LOCAL aEntry := __hbdoc_LoadDir( cDirSource, cName, aErrMsg )
 
    FOR EACH tmp IN aErrMsg
       OutErr( hb_StrFormat( "! %1$s", tmp ) + hb_eol() )
    NEXT
 
    IF ! Empty( aEntry )
-      cName := PathSepToSelf( GetEnv( "HB_INSTALL_DOC" ) ) + hb_ps() + cName + ".hbd"
+      cName := PathSepToSelf( cDirDest ) + hb_ps() + cName + ".hbd"
       IF __hbdoc_SaveHBD( cName, aEntry )
-         OutStd( "! Created " + cName + " <= " + cDir + hb_eol() )
+         OutStd( "! Created " + cName + " <= " + cDirSource + hb_eol() )
          RETURN .T.
       ELSE
          OutErr( hb_StrFormat( "! Error: Saving '%1$s'", cName ) + hb_eol() )
