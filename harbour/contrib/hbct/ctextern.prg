@@ -50,4 +50,6 @@
  *
  */
 
+#define __HBEXTERN__HBCT__ANNOUNCE
+#define __HBEXTERN__HBCT__REQUEST
 #include "hbct.hbx"
