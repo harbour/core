@@ -556,11 +556,13 @@ STATIC FUNCTION mk_extern_core()
 
          FOR EACH tmp IN aExtern
             DO CASE
-            CASE "|" + tmp $ "|HBARRAY|HBBLOCK|HBCHARACTER|HBDATE|HBTIMESTAMP|HBLOGICAL|HBNIL|HBNUMERIC" ; AAdd( aSCALAR, tmp )
+            CASE "|" + tmp $ "|HBARRAY|HBBLOCK|HBCHARACTER|HBDATE|HBTIMESTAMP|HBLOGICAL|HBNIL|HBNUMERIC|HBSYMBOL" ; AAdd( aSCALAR, tmp )
             CASE Left( tmp, Len( "HB_CODEPAGE_" ) ) == "HB_CODEPAGE_" ; AAdd( aCODEPAGE, tmp )
             CASE Left( tmp, Len( "HB_LANG_"     ) ) == "HB_LANG_"     ; AAdd( aLANG    , tmp )
-            CASE Left( tmp, Len( "UR_SUPER_"    ) ) == "UR_SUPER_"    ; AAdd( aUSRRDD  , tmp )
-            OTHERWISE                                                 ; AAdd( aMain    , tmp )
+            CASE Left( tmp, Len( "UR_SUPER_"    ) ) == "UR_SUPER_" .OR. ;
+                 Left( tmp, Len( "USRRDD_"      ) ) == "USRRDD_"      ; AAdd( aUSRRDD  , tmp )
+            CASE !( Left( tmp, Len( "HB_GT_" ) ) == "HB_GT_" )        ; AAdd( aMain    , tmp )
+            OTHERWISE
             ENDCASE
          NEXT
 
