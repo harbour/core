@@ -5,6 +5,16 @@
 ROOT := ../
 
 C_HEADERS := \
+   error.api \
+   extend.api \
+   filesys.api \
+   fm.api \
+   gt.api \
+   hbundoc.api \
+   item.api \
+   rdd.api \
+   vm.api \
+   \
    clipdefs.h \
    extend.h \
    hbapi.h \
@@ -74,6 +84,12 @@ C_HEADERS := \
    hb_io.h \
 
 PRG_HEADERS := \
+   harbour.hbx \
+   hbcpage.hbx \
+   hblang.hbx \
+   hbscalar.hbx \
+   hbusrrdd.hbx \
+   \
    achoice.ch \
    assert.ch \
    blob.ch \
@@ -96,8 +112,6 @@ PRG_HEADERS := \
    hbextcdp.ch \
    hbextern.ch \
    hbextlng.ch \
-   hbextsca.ch \
-   hbextudd.ch \
    hbgfx.ch \
    hbgfxdef.ch \
    hbgtinfo.ch \
@@ -130,16 +144,5 @@ PRG_HEADERS := \
    simpleio.ch \
    std.ch \
    tbrowse.ch \
-
-API_HEADERS := \
-   error.api \
-   extend.api \
-   filesys.api \
-   fm.api \
-   gt.api \
-   hbundoc.api \
-   item.api \
-   rdd.api \
-   vm.api \
 
 include $(TOP)$(ROOT)config/header.mk

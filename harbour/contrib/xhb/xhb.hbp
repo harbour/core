@@ -13,6 +13,7 @@
 -instfile=inc:xhb.h
 -instfile=inc:hbcompat.ch
 -instfile=inc:xhb.ch
+-instfile=inc:xhb.hbx
 
 ../hbct/hbct.hbc
 ../hbtip/hbtip.hbc

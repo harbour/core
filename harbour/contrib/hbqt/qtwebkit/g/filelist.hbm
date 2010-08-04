@@ -8,6 +8,7 @@
 #          or the generator tool itself, and run regenarate.
 # --------------------------------------------------------------------
 
+hbqtwebkit_extern.prg
 QWebFrame.cpp
 QWebHistory.cpp
 QWebHistoryInterface.cpp

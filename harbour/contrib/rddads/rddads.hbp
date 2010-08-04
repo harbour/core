@@ -21,6 +21,7 @@
 
 -instfile=inc:ads.ch
 -instfile=inc:adsextrn.ch
+-instfile=inc:rddads.hbx
 
 ads1.c
 adsfunc.c

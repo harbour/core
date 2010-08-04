@@ -253,7 +253,7 @@ STATIC FUNCTION ManageProject( cProFile, cPathIn, cPathOut, cPathDoc )
    NEXT
 
    IF !empty( cpp_ )
-      Build_Makefile( cPOut, aWidgetList )
+      Build_Makefile( cPOut, aWidgetList, cProFile )
       Build_HeaderFile( cpp_, cPOut, cProFile )
    ENDIF
 
@@ -1834,7 +1834,7 @@ STATIC FUNCTION Build_HeaderFile( cpp_, cPathOut, cProFile )
 
    CreateTarget( cFile + "hb" + cName + ".h", txt_ )
 
-   /* Create extern.ch file */
+   /* Create extern puller file */
 
    txt_ := {}
    AEval( hdr_, {| tmp | AAdd( txt_, tmp ) } )
@@ -1842,21 +1842,22 @@ STATIC FUNCTION Build_HeaderFile( cpp_, cPathOut, cProFile )
    aadd( txt_, "#ifndef __HB" + Upper( cName ) + "_EXTERN_CH" )
    aadd( txt_, "#define __HB" + Upper( cName ) + "_EXTERN_CH" )
    aadd( txt_, "" )
-   FOR EACH s IN cpp_
-      aadd( txt_, "EXTERNAL " + s )
-   NEXT
+   aadd( txt_, "#define __HBEXTERN__HB" + Upper( cName ) + "__ANNOUNCE" )
+   aadd( txt_, "#define __HBEXTERN__HB" + Upper( cName ) + "__REQUEST" )
+   aadd( txt_, '#include "hb' + cName + '.hbx"' )
    aadd( txt_, "" )
 
    aadd( txt_, "#endif /* __HB" + Upper( cName ) + "_EXTERN_CH */" )
 
-   CreateTarget( cFile + "hb" + cName + "_extern.ch", txt_ )
+   CreateTarget( cFile + "hb" + cName + "_extern.prg", txt_ )
 
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION Build_MakeFile( cPathOut, aWidgetList )
-   LOCAL cFile, s
+STATIC FUNCTION Build_MakeFile( cPathOut, aWidgetList, cProFile )
+   LOCAL cFile := iif( empty( cPathOut ), "", cPathOut + hb_ps() )
+   LOCAL s
    LOCAL hdr_:= {}
    LOCAL hbm_ := {}
 
@@ -1874,6 +1875,7 @@ STATIC FUNCTION Build_MakeFile( cPathOut, aWidgetList )
    hbm_ := {}
    aeval( hdr_, {|e| aadd( hbm_, e ) } )
    //
+   aadd( hbm_, "hb" + FNameGetName( cProFile ) + "_extern.prg" )
    FOR EACH s IN aWidgetList
       aadd( hbm_, + s + ".cpp" )
    NEXT
@@ -1882,7 +1884,6 @@ STATIC FUNCTION Build_MakeFile( cPathOut, aWidgetList )
       aadd( hbm_, + "T" + s + ".prg" )
    NEXT
    //
-   cFile := iif( empty( cPathOut ), "", cPathOut + hb_ps() )
    CreateTarget( cFile + "filelist.hbm", hbm_ )
 
    RETURN NIL

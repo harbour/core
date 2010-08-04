@@ -6,6 +6,6 @@
 
 hbqtdesigner.hbm
 
--instfile=inc:g/hbqtdesigner_extern.ch
+-instfile=inc:hbqtdesigner.hbx
 
 hbqtdesigners.hbp

@@ -6,6 +6,6 @@
 
 hbqscintilla.hbm
 
--instfile=inc:g/hbqscintilla_extern.ch
+-instfile=inc:hbqscintilla.hbx
 
 hbqscintillas.hbp

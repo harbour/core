@@ -21,6 +21,7 @@
 -instfile=inc:cterror.ch
 -instfile=inc:ctextern.ch
 -instfile=inc:ctvideo.ch
+-instfile=inc:hbct.hbx
 
 addascii.c
 asciisum.c

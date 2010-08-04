@@ -6,6 +6,6 @@
 
 hbqtgui.hbm
 
--instfile=inc:g/hbqtgui_extern.ch
+-instfile=inc:hbqtgui.hbx
 
 hbqtguis.hbp

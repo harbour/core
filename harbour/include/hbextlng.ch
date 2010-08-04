@@ -1,100 +1,60 @@
 /*
  * $Id$
+*/
+
+/*
+ * Harbour Project source code:
+ * All HB_LANG_* externals.
+ * (Compatibility header)
+ *
+ * Copyright 2009 April White <april users.sourceforge.net>
+ * www - http://harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ *
  */
 
-/* -------------------------------------------------------------------- */
-/* NOTE: Following comments are control commands for the generator.     */
-/*       Do not edit them unless you know what you are doing.           */
-/*          Syntax: // HB_FUNC_INCLUDE <func>                           */
-/*                  // HB_FUNC_EXCLUDE <func>                           */
-/* -------------------------------------------------------------------- */
+#ifndef HB_EXTLNG_CH_
+#define HB_EXTLNG_CH_
 
-// HB_FUNC_INCLUDE HB_LANG_*
+#define __HBEXTERN__HBLANG__REQUEST
+#include "hblang.hbx"
 
-/* -------------------------------------------------------------------- */
-/* WARNING: Automatically generated code below. DO NOT EDIT!            */
-/*          Regenerate with HB_REBUILD_EXTERN=yes while using GCC       */
-/*          compiler family. [vszakats]                                 */
-/* -------------------------------------------------------------------- */
-
-#ifndef __HBEXTERN_CH__HBEXTLNG__
-#define __HBEXTERN_CH__HBEXTLNG__
-
-#ifdef __HBEXTERN__HBEXTLNG__REQUEST
-   ANNOUNCE __HBEXTERN__HBEXTLNG__
-   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
-#endif
-
-DYNAMIC HB_LANG_BE866
-DYNAMIC HB_LANG_BEWIN
-DYNAMIC HB_LANG_BG866
-DYNAMIC HB_LANG_BGISO
-DYNAMIC HB_LANG_BGMIK
-DYNAMIC HB_LANG_BGWIN
-DYNAMIC HB_LANG_CA
-DYNAMIC HB_LANG_CS852
-DYNAMIC HB_LANG_CSISO
-DYNAMIC HB_LANG_CSKAM
-DYNAMIC HB_LANG_CSWIN
-DYNAMIC HB_LANG_DE
-DYNAMIC HB_LANG_DEWIN
-DYNAMIC HB_LANG_EL
-DYNAMIC HB_LANG_ELWIN
-DYNAMIC HB_LANG_EN
-DYNAMIC HB_LANG_EO
-DYNAMIC HB_LANG_ES
-DYNAMIC HB_LANG_ESWIN
-DYNAMIC HB_LANG_EU
-DYNAMIC HB_LANG_FR
-DYNAMIC HB_LANG_GL
-DYNAMIC HB_LANG_HE862
-DYNAMIC HB_LANG_HEWIN
-DYNAMIC HB_LANG_HR646
-DYNAMIC HB_LANG_HR852
-DYNAMIC HB_LANG_HRISO
-DYNAMIC HB_LANG_HRWIN
-DYNAMIC HB_LANG_HU852
-DYNAMIC HB_LANG_HUCWI
-DYNAMIC HB_LANG_HUISO
-DYNAMIC HB_LANG_HUWIN
-DYNAMIC HB_LANG_ID
-DYNAMIC HB_LANG_IS850
-DYNAMIC HB_LANG_IT
-DYNAMIC HB_LANG_KO
-DYNAMIC HB_LANG_LTWIN
-DYNAMIC HB_LANG_NL
-DYNAMIC HB_LANG_PL852
-DYNAMIC HB_LANG_PLISO
-DYNAMIC HB_LANG_PLMAZ
-DYNAMIC HB_LANG_PLWIN
-DYNAMIC HB_LANG_PT
-DYNAMIC HB_LANG_PTISO
-DYNAMIC HB_LANG_RO
-DYNAMIC HB_LANG_RU866
-DYNAMIC HB_LANG_RUKOI8
-DYNAMIC HB_LANG_RUWIN
-DYNAMIC HB_LANG_SK852
-DYNAMIC HB_LANG_SKISO
-DYNAMIC HB_LANG_SKKAM
-DYNAMIC HB_LANG_SKWIN
-DYNAMIC HB_LANG_SL646
-DYNAMIC HB_LANG_SL852
-DYNAMIC HB_LANG_SLISO
-DYNAMIC HB_LANG_SLWIN
-DYNAMIC HB_LANG_SR852
-DYNAMIC HB_LANG_SRISO
-DYNAMIC HB_LANG_SRWIN
-DYNAMIC HB_LANG_TR857
-DYNAMIC HB_LANG_TRWIN
-DYNAMIC HB_LANG_UA866
-DYNAMIC HB_LANG_UADOS
-DYNAMIC HB_LANG_UAKOI8
-DYNAMIC HB_LANG_UAWIN
-DYNAMIC HB_LANG_ZHB5
-DYNAMIC HB_LANG_ZHGB
-
-#ifdef __HBEXTERN__HBEXTLNG__REQUEST
-   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
-#endif
-
-#endif
+#endif /* HB_EXTLNG_CH_ */

@@ -1,0 +1,82 @@
+/*
+ * $Id$
+ */
+
+/* -------------------------------------------------------------------- */
+/* NOTE: You can add manual override which functions to include or      */
+/*       exclude from automatically generated EXTERNAL/DYNAMIC list.    */
+/*          Syntax: // HB_FUNC_INCLUDE <func>                           */
+/*                  // HB_FUNC_EXCLUDE <func>                           */
+/* -------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------- */
+/* WARNING: Automatically generated code below. DO NOT EDIT!            */
+/*          Regenerate with HB_REBUILD_EXTERN=yes while using GCC       */
+/*          compiler family. [vszakats]                                 */
+/* -------------------------------------------------------------------- */
+
+#ifndef __HBEXTERN_CH__HBXPP__
+#define __HBEXTERN_CH__HBXPP__
+
+#ifdef __HBEXTERN__HBXPP__ANNOUNCE
+   ANNOUNCE __HBEXTERN__HBXPP__
+#endif
+
+#ifdef __HBEXTERN__HBXPP__REQUEST
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC BIN2F
+DYNAMIC BIN2U
+DYNAMIC CONVTOANSICP
+DYNAMIC CONVTOOEMCP
+DYNAMIC CURDRIVE
+DYNAMIC DBCOPYEXTSTRUCT
+DYNAMIC DBCOPYSTRUCT
+DYNAMIC DBJOIN
+DYNAMIC DBLIST
+DYNAMIC DBPACK
+DYNAMIC DBRELEASE
+DYNAMIC DBREQUEST
+DYNAMIC DBSKIPPER
+DYNAMIC DBSORT
+DYNAMIC DBTOTAL
+DYNAMIC DBUPDATE
+DYNAMIC DBZAP
+DYNAMIC DLLCALL
+DYNAMIC DLLEXECUTECALL
+DYNAMIC DLLLOAD
+DYNAMIC DLLPREPARECALL
+DYNAMIC DLLUNLOAD
+DYNAMIC F2BIN
+DYNAMIC NUMBUTTONS
+DYNAMIC PVALUE
+DYNAMIC RUNSHELL
+DYNAMIC SETMOUSE
+DYNAMIC SIGNAL
+DYNAMIC SLEEP
+DYNAMIC THREAD
+DYNAMIC THREADID
+DYNAMIC THREADOBJECT
+DYNAMIC THREADWAIT
+DYNAMIC THREADWAITALL
+DYNAMIC U2BIN
+DYNAMIC W2BIN
+DYNAMIC WORKSPACELIST
+DYNAMIC XPP_GET
+DYNAMIC XPP_INCLUDE
+DYNAMIC XPP_INDEX
+DYNAMIC XPP_OP_ARRAY
+DYNAMIC XPP_OP_CHARACTER
+DYNAMIC XPP_OP_OVERLOAD
+DYNAMIC XPP_TBCOLUMN
+DYNAMIC XPP_TBROWSE
+DYNAMIC XPP_TBROWSEDB
+DYNAMIC _DBEXPORT
+DYNAMIC _TYPEFILE
+
+#ifdef __HBEXTERN__HBXPP__REQUEST
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

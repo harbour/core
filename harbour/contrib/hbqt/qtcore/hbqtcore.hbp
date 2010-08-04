@@ -6,6 +6,6 @@
 
 hbqtcore.hbm
 
--instfile=inc:g/hbqtcore_extern.ch
+-instfile=inc:hbqtcore.hbx
 
 hbqtcores.hbp

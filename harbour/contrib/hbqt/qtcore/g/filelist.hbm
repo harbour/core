@@ -8,6 +8,7 @@
 #          or the generator tool itself, and run regenarate.
 # --------------------------------------------------------------------
 
+hbqtcore_extern.prg
 HBEvents.cpp
 HBSlots.cpp
 QAbstractItemModel.cpp

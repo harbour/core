@@ -6,6 +6,6 @@
 
 hbqtwebkit.hbm
 
--instfile=inc:g/hbqtwebkit_extern.ch
+-instfile=inc:hbqtwebkit.hbx
 
 hbqtwebkits.hbp

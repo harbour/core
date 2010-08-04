@@ -6,6 +6,6 @@
 
 hbqtnetwork.hbm
 
--instfile=inc:g/hbqtnetwork_extern.ch
+-instfile=inc:hbqtnetwork.hbx
 
 hbqtnetworks.hbp

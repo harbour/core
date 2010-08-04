@@ -33,6 +33,9 @@
 #define _HB_FUNC_INCLUDE_ "HB_FUNC_INCLUDE"
 #define _HB_FUNC_EXCLUDE_ "HB_FUNC_EXCLUDE"
 
+#define _HB_SELF_PREFIX   "__HBEXTERN__"
+#define _HB_SELF_SUFFIX   "__"
+
 STATIC FUNCTION __hb_extern_get_list( cInputName )
    LOCAL cStdOut
    LOCAL hRegex
@@ -87,7 +90,7 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
    LOCAL aInclude
    LOCAL aExclude
 
-   LOCAL cSelfName := "__HBEXTERN__" + Upper( __FNameNameGet( cOutputName ) ) + "__"
+   LOCAL cSelfName := _HB_SELF_PREFIX + Upper( __FNameNameGet( cOutputName ) ) + _HB_SELF_SUFFIX
 
    LOCAL cLine := "/* -------------------------------------------------------------------- */" + hb_eol()
    LOCAL cHelp := "/*          Syntax: // HB_FUNC_INCLUDE <func>                           */" + hb_eol() +;
@@ -103,7 +106,7 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
       cExtern += hb_eol()
       cExtern += cLine
       cExtern += "/* NOTE: You can add manual override which functions to include or      */" + hb_eol()
-      cExtern += "/*       exclude from automatically generated EXTERNAL list.            */" + hb_eol()
+      cExtern += "/*       exclude from automatically generated EXTERNAL/DYNAMIC list.    */" + hb_eol()
       cExtern += cHelp
       cExtern += cLine
    ELSE
@@ -136,8 +139,11 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
    cExtern += "#ifndef " + "__HBEXTERN_CH__" + Upper( __FNameNameGet( cOutputName ) ) + "__" + hb_eol()
    cExtern += "#define " + "__HBEXTERN_CH__" + Upper( __FNameNameGet( cOutputName ) ) + "__" + hb_eol()
    cExtern += hb_eol()
-   cExtern += "#ifdef " + cSelfName + "REQUEST" + hb_eol()
+   cExtern += "#ifdef " + cSelfName + "ANNOUNCE" + hb_eol()
    cExtern += "   ANNOUNCE " + cSelfName + hb_eol()
+   cExtern += "#endif" + hb_eol()
+   cExtern += hb_eol()
+   cExtern += "#ifdef " + cSelfName + "REQUEST" + hb_eol()
    cExtern += "   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>" + hb_eol()
    cExtern += "#endif" + hb_eol()
    cExtern += hb_eol()
@@ -153,7 +159,7 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
    ENDIF
    FOR EACH tmp IN aExtern
       IF ! hb_WildMatch( "HB_GT_*_DEFAULT", tmp ) .AND. ;
-         ! hb_WildMatch( "__*_EXTERN__", tmp ) .AND. ;
+         ! hb_WildMatch( _HB_SELF_PREFIX + "*" + _HB_SELF_SUFFIX, tmp ) .AND. ;
          AScan( aExclude, {| flt | hb_WildMatch( flt, tmp ) } ) == 0
          cExtern += "DYNAMIC " + tmp + hb_eol()
       ENDIF

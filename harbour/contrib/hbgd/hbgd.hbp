@@ -21,6 +21,7 @@
 
 -instfile=inc:gd.ch
 -instfile=inc:gdextern.ch
+-instfile=inc:hbgd.hbx
 
 gdwrp.c
 

@@ -2,116 +2,59 @@
  * $Id$
  */
 
-/* -------------------------------------------------------------------- */
-/* NOTE: Following comments are control commands for the generator.     */
-/*       Do not edit them unless you know what you are doing.           */
-/*          Syntax: // HB_FUNC_INCLUDE <func>                           */
-/*                  // HB_FUNC_EXCLUDE <func>                           */
-/* -------------------------------------------------------------------- */
+/*
+ * Harbour Project source code:
+ * All HB_CODEPAGE_* externals.
+ * (Compatibility header)
+ *
+ * Copyright 2009 Viktor Szakats (harbour.01 syenar.hu)
+ * www - http://harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ *
+ */
 
-// HB_FUNC_INCLUDE HB_CODEPAGE_*
+#ifndef HB_EXTCDP_CH_
+#define HB_EXTCDP_CH_
 
-/* -------------------------------------------------------------------- */
-/* WARNING: Automatically generated code below. DO NOT EDIT!            */
-/*          Regenerate with HB_REBUILD_EXTERN=yes while using GCC       */
-/*          compiler family. [vszakats]                                 */
-/* -------------------------------------------------------------------- */
+#define __HBEXTERN__HBCPAGE__REQUEST
+#include "hbcpage.hbx"
 
-#ifndef __HBEXTERN_CH__HBEXTCDP__
-#define __HBEXTERN_CH__HBEXTCDP__
-
-#ifdef __HBEXTERN__HBEXTCDP__REQUEST
-   ANNOUNCE __HBEXTERN__HBEXTCDP__
-   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
-#endif
-
-DYNAMIC HB_CODEPAGE_BG866
-DYNAMIC HB_CODEPAGE_BGISO
-DYNAMIC HB_CODEPAGE_BGMIK
-DYNAMIC HB_CODEPAGE_BGWIN
-DYNAMIC HB_CODEPAGE_CS852
-DYNAMIC HB_CODEPAGE_CSISO
-DYNAMIC HB_CODEPAGE_CSKAM
-DYNAMIC HB_CODEPAGE_CSWIN
-DYNAMIC HB_CODEPAGE_DE850
-DYNAMIC HB_CODEPAGE_DE850M
-DYNAMIC HB_CODEPAGE_DEISO
-DYNAMIC HB_CODEPAGE_DEWIN
-DYNAMIC HB_CODEPAGE_DK865
-DYNAMIC HB_CODEPAGE_EL437
-DYNAMIC HB_CODEPAGE_EL737
-DYNAMIC HB_CODEPAGE_ELISO
-DYNAMIC HB_CODEPAGE_ELWIN
-DYNAMIC HB_CODEPAGE_EN
-DYNAMIC HB_CODEPAGE_ES850
-DYNAMIC HB_CODEPAGE_ES850C
-DYNAMIC HB_CODEPAGE_ES850M
-DYNAMIC HB_CODEPAGE_ESISO
-DYNAMIC HB_CODEPAGE_ESMWIN
-DYNAMIC HB_CODEPAGE_ESWIN
-DYNAMIC HB_CODEPAGE_FI850
-DYNAMIC HB_CODEPAGE_FR850
-DYNAMIC HB_CODEPAGE_FR850M
-DYNAMIC HB_CODEPAGE_FRISO
-DYNAMIC HB_CODEPAGE_FRWIN
-DYNAMIC HB_CODEPAGE_HR646
-DYNAMIC HB_CODEPAGE_HR852
-DYNAMIC HB_CODEPAGE_HRISO
-DYNAMIC HB_CODEPAGE_HRWIN
-DYNAMIC HB_CODEPAGE_HU852
-DYNAMIC HB_CODEPAGE_HU852C
-DYNAMIC HB_CODEPAGE_HUISO
-DYNAMIC HB_CODEPAGE_HUWIN
-DYNAMIC HB_CODEPAGE_IS850
-DYNAMIC HB_CODEPAGE_IS861
-DYNAMIC HB_CODEPAGE_IT437
-DYNAMIC HB_CODEPAGE_IT850
-DYNAMIC HB_CODEPAGE_IT850M
-DYNAMIC HB_CODEPAGE_ITISB
-DYNAMIC HB_CODEPAGE_ITISO
-DYNAMIC HB_CODEPAGE_ITWIN
-DYNAMIC HB_CODEPAGE_LTWIN
-DYNAMIC HB_CODEPAGE_NL850
-DYNAMIC HB_CODEPAGE_NL850M
-DYNAMIC HB_CODEPAGE_NO865
-DYNAMIC HB_CODEPAGE_PL852
-DYNAMIC HB_CODEPAGE_PLISO
-DYNAMIC HB_CODEPAGE_PLMAZ
-DYNAMIC HB_CODEPAGE_PLWIN
-DYNAMIC HB_CODEPAGE_PT850
-DYNAMIC HB_CODEPAGE_PT860
-DYNAMIC HB_CODEPAGE_PTISO
-DYNAMIC HB_CODEPAGE_RO852
-DYNAMIC HB_CODEPAGE_ROISO
-DYNAMIC HB_CODEPAGE_ROWIN
-DYNAMIC HB_CODEPAGE_RU1251
-DYNAMIC HB_CODEPAGE_RU866
-DYNAMIC HB_CODEPAGE_RUISO
-DYNAMIC HB_CODEPAGE_RUKOI8
-DYNAMIC HB_CODEPAGE_SK852
-DYNAMIC HB_CODEPAGE_SKISO
-DYNAMIC HB_CODEPAGE_SKKAM
-DYNAMIC HB_CODEPAGE_SKWIN
-DYNAMIC HB_CODEPAGE_SL646
-DYNAMIC HB_CODEPAGE_SL852
-DYNAMIC HB_CODEPAGE_SLISO
-DYNAMIC HB_CODEPAGE_SLWIN
-DYNAMIC HB_CODEPAGE_SRWIN
-DYNAMIC HB_CODEPAGE_SV437C
-DYNAMIC HB_CODEPAGE_SV850
-DYNAMIC HB_CODEPAGE_SV850M
-DYNAMIC HB_CODEPAGE_SVISO
-DYNAMIC HB_CODEPAGE_SVWIN
-DYNAMIC HB_CODEPAGE_TR857
-DYNAMIC HB_CODEPAGE_TRISO
-DYNAMIC HB_CODEPAGE_TRWIN
-DYNAMIC HB_CODEPAGE_UA1125
-DYNAMIC HB_CODEPAGE_UA1251
-DYNAMIC HB_CODEPAGE_UA866
-DYNAMIC HB_CODEPAGE_UAKOI8
-
-#ifdef __HBEXTERN__HBEXTCDP__REQUEST
-   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
-#endif
-
-#endif
+#endif /* HB_EXTCDP_CH_ */

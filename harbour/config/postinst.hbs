@@ -547,11 +547,11 @@ STATIC FUNCTION mk_extern_core()
 
       IF ( aExtern := __hb_extern_get_list( GetEnv( "HB_DYNLIB_DIR" ) + hb_ps() + GetEnv( "HB_DYNLIB_ST" ) + GetEnv( "HB_DYNLIB_EXT" ) ) ) != NIL
 
-         __hb_extern_gen( aExtern, "include" + hb_ps() + "hbextsca.ch" )
-         __hb_extern_gen( aExtern, "include" + hb_ps() + "hbextcdp.ch" )
-         __hb_extern_gen( aExtern, "include" + hb_ps() + "hbextlng.ch" )
-         __hb_extern_gen( aExtern, "include" + hb_ps() + "hbextudd.ch" )
-         __hb_extern_gen( aExtern, "include" + hb_ps() + "hbextern.ch" )
+         __hb_extern_gen( aExtern, "include" + hb_ps() + "hbscalar.hbx" )
+         __hb_extern_gen( aExtern, "include" + hb_ps() + "hbcpage.hbx"  )
+         __hb_extern_gen( aExtern, "include" + hb_ps() + "hblang.hbx"   )
+         __hb_extern_gen( aExtern, "include" + hb_ps() + "hbusrrdd.hbx" )
+         __hb_extern_gen( aExtern, "include" + hb_ps() + "harbour.hbx"  )
 
          RETURN .T.
       ENDIF

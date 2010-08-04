@@ -16,8 +16,9 @@
 -instfile=inc:gra.ch
 -instfile=inc:xbp.ch
 -instfile=inc:xbpdev.ch
--instfile=inc:hbxbp_extern.ch
+-instfile=inc:hbxbp.hbx
 
+hbxbpext.prg
 hbpprocess.prg
 xbp3state.prg
 xbpappevent.prg

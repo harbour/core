@@ -80,11 +80,11 @@
 #include "hbver.ch"
 
 /* Link all Harbour Functions : needed to run auto scripts */
-#include "hbextern.ch"
-#include "hbxbp_extern.ch"
-#include "hbqtcore_extern.ch"
-#include "hbqtgui_extern.ch"
-#include "hbqtnetwork_extern.ch"
+REQUEST __HB_EXTERN__
+REQUEST __HBEXTERN__HBXBP__
+REQUEST __HBEXTERN__HBQTCORE__
+REQUEST __HBEXTERN__HBQTGUI__
+REQUEST __HBEXTERN__HBQTNETWORK__
 
 /*----------------------------------------------------------------------*/
 
