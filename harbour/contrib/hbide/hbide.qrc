@@ -206,6 +206,10 @@
 <file>resources/view_organized.png</file>
 <file>resources/view_tabbed.png</file>
 <file>resources/view_tiled.png</file>
+<file>resources/view_vertstacked.png</file>
+<file>resources/view_horzstacked.png</file>
+<file>resources/view_zoomin.png</file>
+<file>resources/view_zoomout.png</file>
 <file>resources/vr-16x16.png</file>
 <file>resources/vr.png</file>
 <file>resources/xmate.png</file>
