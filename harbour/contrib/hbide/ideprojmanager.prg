@@ -1019,6 +1019,7 @@ METHOD IdeProjManager:setCurrentProject( cProjectName )
             //hbide_expandChildren( ::oIDE, oItem )
             ::oProjTree:oWidget:setCurrentItem( oItem:oWidget )
          ENDIF
+         ::loadProperties( ::getProjectFileNameFromTitle( ::cWrkProject ), .f., .t., .f. )
       ENDIF
    ENDIF
 
