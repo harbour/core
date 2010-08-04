@@ -12,6 +12,8 @@
  */
 
 #pragma warninglevel=3
+#pragma -km+
+#pragma -ko+
 
 /* TOFIX: Ugly hack to avoid #include "directry.ch" */
 #define F_NAME                1              /* File name */
@@ -538,14 +540,6 @@ STATIC FUNCTION unix_name()
 STATIC FUNCTION mk_extern_core()
    LOCAL aExtern
 
-   LOCAL aSCALAR
-   LOCAL aCODEPAGE
-   LOCAL aLANG
-   LOCAL aUSRRDD
-   LOCAL aMain
-
-   LOCAL tmp
-
    IF GetEnv( "HB_REBUILD_EXTERN" ) == "yes" .AND. ;
       ! Empty( GetEnv( "HB_DYNLIB_ST" ) )
 
@@ -553,29 +547,11 @@ STATIC FUNCTION mk_extern_core()
 
       IF ( aExtern := __hb_extern_get_list( GetEnv( "HB_DYNLIB_DIR" ) + hb_ps() + GetEnv( "HB_DYNLIB_ST" ) + GetEnv( "HB_DYNLIB_EXT" ) ) ) != NIL
 
-         aSCALAR   := {}
-         aCODEPAGE := {}
-         aLANG     := {}
-         aUSRRDD   := {}
-         aMain     := {}
-
-         FOR EACH tmp IN aExtern
-            DO CASE
-            CASE "|" + tmp $ "|HBARRAY|HBBLOCK|HBCHARACTER|HBDATE|HBTIMESTAMP|HBLOGICAL|HBNIL|HBNUMERIC|HBSYMBOL" ; AAdd( aSCALAR, tmp )
-            CASE Left( tmp, Len( "HB_CODEPAGE_" ) ) == "HB_CODEPAGE_" ; AAdd( aCODEPAGE, tmp )
-            CASE Left( tmp, Len( "HB_LANG_"     ) ) == "HB_LANG_"     ; AAdd( aLANG    , tmp )
-            CASE Left( tmp, Len( "UR_SUPER_"    ) ) == "UR_SUPER_" .OR. ;
-                 Left( tmp, Len( "USRRDD_"      ) ) == "USRRDD_"      ; AAdd( aUSRRDD  , tmp )
-            CASE !( Left( tmp, Len( "HB_GT_" ) ) == "HB_GT_" )        ; AAdd( aMain    , tmp )
-            OTHERWISE
-            ENDCASE
-         NEXT
-
-         __hb_extern_gen( aSCALAR  , "include" + hb_ps() + "hbextsca.ch", .F. )
-         __hb_extern_gen( aCODEPAGE, "include" + hb_ps() + "hbextcdp.ch", .F. )
-         __hb_extern_gen( aLANG    , "include" + hb_ps() + "hbextlng.ch", .F. )
-         __hb_extern_gen( aUSRRDD  , "include" + hb_ps() + "hbextudd.ch", .F. )
-         __hb_extern_gen( aMain    , "include" + hb_ps() + "hbextern.ch", .F. )
+         __hb_extern_gen( aExtern, "include" + hb_ps() + "hbextsca.ch" )
+         __hb_extern_gen( aExtern, "include" + hb_ps() + "hbextcdp.ch" )
+         __hb_extern_gen( aExtern, "include" + hb_ps() + "hbextlng.ch" )
+         __hb_extern_gen( aExtern, "include" + hb_ps() + "hbextudd.ch" )
+         __hb_extern_gen( aExtern, "include" + hb_ps() + "hbextern.ch" )
 
          RETURN .T.
       ENDIF

@@ -27,6 +27,11 @@
  */
 
 #pragma warninglevel=3
+#pragma -km+
+#pragma -ko+
+
+#define _HB_FUNC_INCLUDE_ "HB_FUNC_INCLUDE"
+#define _HB_FUNC_EXCLUDE_ "HB_FUNC_EXCLUDE"
 
 STATIC FUNCTION __hb_extern_get_list( cInputName )
    LOCAL cStdOut
@@ -37,7 +42,7 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
 
    IF GetEnv( "HB_COMPILER" ) $ "gcc|mingw|mingw64|cygwin"
       IF hb_processRun( "nm -g --defined-only -C " + cInputName,, @cStdOut ) == 0
-         IF ! Empty( hRegex := hb_regexComp( '[[:blank:]]HB_FUN_(.*)[[:space:]]', .T., .T. ) )
+         IF ! Empty( hRegex := hb_regexComp( "[[:blank:]]HB_FUN_(.*)[[:space:]]", .T., .T. ) )
             aResult := hb_regexAll( hRegex, StrTran( cStdOut, Chr( 13 ) ),,,,, .T. )
             aExtern := {}
             FOR EACH tmp IN aResult
@@ -51,33 +56,112 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
 
    RETURN NIL
 
-STATIC FUNCTION __hb_extern_gen( aExtern, cOutputName, lANNOUNCE )
+STATIC PROCEDURE __hb_extern_get_neg_list( cInputName, /* @ */ aInclude, /* @ */ aExclude )
+   LOCAL cFile
+   LOCAL hRegex
+   LOCAL tmp
+
+   aInclude := {}
+   aExclude := {}
+
+   IF ! Empty( cFile := MemoRead( cInputName ) )
+      IF ! Empty( hRegex := hb_regexComp( "[[:space:]]" + _HB_FUNC_INCLUDE_ + "[[:space:]]([a-zA-z0-9_].[^ \t\n\r]*)", .T., .T. ) )
+         FOR EACH tmp IN hb_regexAll( hRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
+            AAdd( aInclude, Upper( tmp[ 2 ] ) )
+         NEXT
+      ENDIF
+      IF ! Empty( hRegex := hb_regexComp( "[[:space:]]" + _HB_FUNC_EXCLUDE_ + "[[:space:]]([a-zA-z0-9_].[^ \t\n\r]*)", .T., .T. ) )
+         FOR EACH tmp IN hb_regexAll( hRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
+            AAdd( aExclude, Upper( tmp[ 2 ] ) )
+         NEXT
+      ENDIF
+   ENDIF
+
+   RETURN
+
+STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
+   LOCAL aExtern
    LOCAL cExtern
    LOCAL tmp
+
+   LOCAL aInclude
+   LOCAL aExclude
+
+   LOCAL cSelfName := "__HBEXTERN__" + Upper( __FNameNameGet( cOutputName ) ) + "__"
+
+   LOCAL cLine := "/* -------------------------------------------------------------------- */" + hb_eol()
+   LOCAL cHelp := "/*          Syntax: // HB_FUNC_INCLUDE <func>                           */" + hb_eol() +;
+                  "/*                  // HB_FUNC_EXCLUDE <func>                           */" + hb_eol()
+
+   __hb_extern_get_neg_list( cOutputName, @aInclude, @aExclude )
 
    cExtern := "/*" + hb_eol()
    cExtern += " * $" + "Id" + "$" + hb_eol()
    cExtern += " */" + hb_eol()
-   cExtern += hb_eol()
-   cExtern += "/* -------------------------------------------------------------------- */" + hb_eol()
-   cExtern += "/* WARNING: Automatically generated code. DO NOT EDIT!                  */" + hb_eol()
-   cExtern += "/*          Regenerate with HB_REBUILD_EXTERN=yes while using GCC       */" + hb_eol()
-   cExtern += "/*          compiler family.                                            */" + hb_eol()
-   cExtern += "/* -------------------------------------------------------------------- */" + hb_eol()
-   cExtern += hb_eol()
-   cExtern += "#ifndef " + "__HBEXTERN__" + Upper( __FNameNameGet( cOutputName ) ) + "__" + hb_eol()
-   cExtern += "#define " + "__HBEXTERN__" + Upper( __FNameNameGet( cOutputName ) ) + "__" + hb_eol()
-   IF lANNOUNCE
+   IF Empty( aInclude ) .AND. ;
+      Empty( aExclude )
       cExtern += hb_eol()
-      cExtern += "ANNOUNCE " + "__" + Upper( __FNameNameGet( cOutputName ) ) + "_EXTERN__" + hb_eol()
+      cExtern += cLine
+      cExtern += "/* NOTE: You can add manual override which functions to include or      */" + hb_eol()
+      cExtern += "/*       exclude from automatically generated EXTERNAL list.            */" + hb_eol()
+      cExtern += cHelp
+      cExtern += cLine
+   ELSE
+      cExtern += hb_eol()
+      cExtern += cLine
+      cExtern += "/* NOTE: Following comments are control commands for the generator.     */" + hb_eol()
+      cExtern += "/*       Do not edit them unless you know what you are doing.           */" + hb_eol()
+      cExtern += cHelp
+      cExtern += cLine
+      IF ! Empty( aInclude )
+         cExtern += hb_eol()
+         FOR EACH tmp IN aInclude
+            cExtern += "// " + _HB_FUNC_INCLUDE_ + " " + tmp + hb_eol()
+         NEXT
+      ENDIF
+      IF ! Empty( aExclude )
+         cExtern += hb_eol()
+         FOR EACH tmp IN aExclude
+            cExtern += "// " + _HB_FUNC_EXCLUDE_ + " " + tmp + hb_eol()
+         NEXT
+      ENDIF
    ENDIF
    cExtern += hb_eol()
+   cExtern += cLine
+   cExtern += "/* WARNING: Automatically generated code below. DO NOT EDIT!            */" + hb_eol()
+   cExtern += "/*          Regenerate with HB_REBUILD_EXTERN=yes while using GCC       */" + hb_eol()
+   cExtern += "/*          compiler family. [vszakats]                                 */" + hb_eol()
+   cExtern += cLine
+   cExtern += hb_eol()
+   cExtern += "#ifndef " + "__HBEXTERN_CH__" + Upper( __FNameNameGet( cOutputName ) ) + "__" + hb_eol()
+   cExtern += "#define " + "__HBEXTERN_CH__" + Upper( __FNameNameGet( cOutputName ) ) + "__" + hb_eol()
+   cExtern += hb_eol()
+   cExtern += "#ifdef " + cSelfName + "REQUEST" + hb_eol()
+   cExtern += "   ANNOUNCE " + cSelfName + hb_eol()
+   cExtern += "   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>" + hb_eol()
+   cExtern += "#endif" + hb_eol()
+   cExtern += hb_eol()
+   IF Empty( aInclude )
+      aExtern := aFuncList
+   ELSE
+      aExtern := {}
+      FOR EACH tmp IN aFuncList
+         IF AScan( aInclude, {| flt | hb_WildMatch( flt, tmp ) } ) > 0
+            AAdd( aExtern, tmp )
+         ENDIF
+      NEXT
+   ENDIF
    FOR EACH tmp IN aExtern
       IF ! hb_WildMatch( "HB_GT_*_DEFAULT", tmp ) .AND. ;
-         ! hb_WildMatch( "__*_EXTERN__", tmp )
-         cExtern += "EXTERNAL " + tmp + hb_eol()
+         ! hb_WildMatch( "__*_EXTERN__", tmp ) .AND. ;
+         AScan( aExclude, {| flt | hb_WildMatch( flt, tmp ) } ) == 0
+         cExtern += "DYNAMIC " + tmp + hb_eol()
       ENDIF
    NEXT
+   cExtern += hb_eol()
+   cExtern += "#ifdef " + cSelfName + "REQUEST" + hb_eol()
+   cExtern += "   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>" + hb_eol()
+   cExtern += "#endif" + hb_eol()
    cExtern += hb_eol()
    cExtern += "#endif" + hb_eol()
 

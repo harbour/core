@@ -43,6 +43,8 @@
  */
 
 #pragma warninglevel=3
+#pragma -km+
+#pragma -ko+
 
 /* TOFIX: Ugly hack to avoid #include "directry.ch" */
 #define F_NAME                  1       /* File name */
@@ -563,7 +565,7 @@ STATIC FUNCTION mk_extern_lib( cInputName, cOutputName )
       OutStd( hb_StrFormat( "! Generating extern header: %1$s", cOutputName ) + hb_eol() )
 
       IF ( aExtern := __hb_extern_get_list( cInputName ) ) != NIL
-         RETURN __hb_extern_gen( aExtern, cOutputName, .T. )
+         RETURN __hb_extern_gen( aExtern, cOutputName )
       ENDIF
    ENDIF
 
