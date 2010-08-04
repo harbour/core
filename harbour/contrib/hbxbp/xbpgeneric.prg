@@ -417,11 +417,6 @@ FUNCTION hbxbp_ConvertAFactFromXBP( cMode, xValue )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbxbp_Just()
-   RETURN nil
-
-/*----------------------------------------------------------------------*/
-
 FUNCTION HbXbp_SetCodec( cCodec )
    IF !empty( cCodec )
       hbqt_SetCodecForCStrings( cCodec )

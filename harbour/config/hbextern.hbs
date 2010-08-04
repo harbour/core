@@ -1,0 +1,91 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Project source code:
+ * extern generator functions (low-level)
+ *
+ * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
+ * www - http://harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
+ * their web site at http://www.gnu.org/).
+ *
+ */
+
+#pragma warninglevel=3
+
+STATIC FUNCTION __hb_extern_get_list( cInputName )
+   LOCAL cStdOut
+   LOCAL hRegex
+   LOCAL aResult
+   LOCAL aExtern
+   LOCAL tmp
+
+   IF GetEnv( "HB_COMPILER" ) $ "gcc|mingw|mingw64|cygwin"
+      IF hb_processRun( "nm -g --defined-only -C " + cInputName,, @cStdOut ) == 0
+         IF ! Empty( hRegex := hb_regexComp( '[[:blank:]]HB_FUN_(.*)[[:space:]]', .T., .T. ) )
+            aResult := hb_regexAll( hRegex, StrTran( cStdOut, Chr( 13 ) ),,,,, .T. )
+            aExtern := {}
+            FOR EACH tmp IN aResult
+               AAdd( aExtern, tmp[ 2 ] )
+            NEXT
+            ASort( aExtern,,, {| tmp, tmp1 | tmp < tmp1 } )
+            RETURN aExtern
+         ENDIF
+      ENDIF
+   ENDIF
+
+   RETURN NIL
+
+STATIC FUNCTION __hb_extern_gen( aExtern, cOutputName, lANNOUNCE )
+   LOCAL cExtern
+   LOCAL tmp
+
+   cExtern := "/*" + hb_eol()
+   cExtern += " * $" + "Id" + "$" + hb_eol()
+   cExtern += " */" + hb_eol()
+   cExtern += hb_eol()
+   cExtern += "/* -------------------------------------------------------------------- */" + hb_eol()
+   cExtern += "/* WARNING: Automatically generated code. DO NOT EDIT!                  */" + hb_eol()
+   cExtern += "/*          Regenerate with HB_REBUILD_EXTERN=yes while using GCC       */" + hb_eol()
+   cExtern += "/*          compiler family.                                            */" + hb_eol()
+   cExtern += "/* -------------------------------------------------------------------- */" + hb_eol()
+   cExtern += hb_eol()
+   cExtern += "#ifndef " + "__HBEXTERN__" + Upper( __FNameNameGet( cOutputName ) ) + "__" + hb_eol()
+   cExtern += "#define " + "__HBEXTERN__" + Upper( __FNameNameGet( cOutputName ) ) + "__" + hb_eol()
+   IF lANNOUNCE
+      cExtern += hb_eol()
+      cExtern += "ANNOUNCE " + "__" + Upper( __FNameNameGet( cOutputName ) ) + "_EXTERN__" + hb_eol()
+   ENDIF
+   cExtern += hb_eol()
+   FOR EACH tmp IN aExtern
+      IF ! hb_WildMatch( "HB_GT_*_DEFAULT", tmp ) .AND. ;
+         ! hb_WildMatch( "__*_EXTERN__", tmp )
+         cExtern += "EXTERNAL " + tmp + hb_eol()
+      ENDIF
+   NEXT
+   cExtern += hb_eol()
+   cExtern += "#endif" + hb_eol()
+
+   RETURN hb_MemoWrit( cOutputName, cExtern )
+
+STATIC FUNCTION __FNameNameGet( cFileName )
+   LOCAL cName
+
+   hb_FNameSplit( cFileName,, @cName )
+
+   RETURN cName

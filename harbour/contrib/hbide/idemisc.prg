@@ -93,11 +93,6 @@ PROCEDURE AppSys()
 
 /*----------------------------------------------------------------------*/
 
-PROCEDURE hbide_justACall()
-   RETURN
-
-/*----------------------------------------------------------------------*/
-
 FUNCTION hbide_setIde( oIde )
    LOCAL oldIde
    STATIC ide
@@ -169,7 +164,7 @@ FUNCTION hbide_execPopup( aPops, aqPos, qParent )
    ENDIF
 
    qPop := NIL
-   hbide_justACall( xRet )
+   HB_SYMBOL_UNUSED( xRet )
    RETURN cAct
 
 /*----------------------------------------------------------------------*/

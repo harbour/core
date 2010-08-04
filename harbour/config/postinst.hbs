@@ -57,6 +57,10 @@ PROCEDURE Main()
       RETURN
    ENDIF
 
+   /* Regenerating extern headers */
+
+   mk_extern_core()
+
    /* Installing some misc files */
 
    IF GetEnv( "HB_PLATFORM" ) $ "win|wce|os2|dos"
@@ -180,9 +184,12 @@ PROCEDURE Main()
 
    /* Creating docs for core */
 
-   OutStd( "! Compiling core documentation (.hbd)..." + hb_eol() )
+   IF ! Empty( GetEnv( "HB_INSTALL_DOC" ) )
 
-   mk_hbd_core( "." + hb_ps() )
+      OutStd( "! Compiling core documentation (.hbd)..." + hb_eol() )
+
+      mk_hbd_core( "." + hb_ps() )
+   ENDIF
 
    /* Creating install packages */
 
@@ -326,34 +333,24 @@ STATIC FUNCTION mk_hbl( cIn, cOut )
    RETURN .F.
 
 STATIC FUNCTION mk_hbd_core( cDir )
-   LOCAL cName
+   LOCAL cName := "harbour"
    LOCAL tmp
 
-   LOCAL aErrMsg
-   LOCAL aEntry
+   LOCAL aErrMsg := {}
+   LOCAL aEntry := __hbdoc_LoadDir( cDir, cName, aErrMsg )
 
-   IF ! Empty( GetEnv( "HB_INSTALL_DOC" ) )
+   FOR EACH tmp IN aErrMsg
+      OutErr( hb_StrFormat( "! %1$s", tmp ) + hb_eol() )
+   NEXT
 
-      cName := "harbour"
-
-      aErrMsg := {}
-      aEntry := __hbdoc_LoadDir( cDir, cName, aErrMsg )
-
-      FOR EACH tmp IN aErrMsg
-         OutErr( hb_StrFormat( "! %1$s", tmp ) + hb_eol() )
-      NEXT
-
-      IF ! Empty( aEntry )
-         cName := PathSepToSelf( GetEnv( "HB_INSTALL_DOC" ) ) + hb_ps() + cName + ".hbd"
-         IF __hbdoc_SaveHBD( cName, aEntry )
-            OutStd( "! Created " + cName + " <= " + cDir + hb_eol() )
-            RETURN .T.
-         ELSE
-            OutErr( hb_StrFormat( "! Error: Saving '%1$s'", cName ) + hb_eol() )
-         ENDIF
+   IF ! Empty( aEntry )
+      cName := PathSepToSelf( GetEnv( "HB_INSTALL_DOC" ) ) + hb_ps() + cName + ".hbd"
+      IF __hbdoc_SaveHBD( cName, aEntry )
+         OutStd( "! Created " + cName + " <= " + cDir + hb_eol() )
+         RETURN .T.
+      ELSE
+         OutErr( hb_StrFormat( "! Error: Saving '%1$s'", cName ) + hb_eol() )
       ENDIF
-   ELSE
-      OutErr( "! Warning: HB_INSTALL_DOC not set, core documentation not compiled." + hb_eol() )
    ENDIF
 
    RETURN .F.
@@ -532,3 +529,51 @@ STATIC FUNCTION unix_name()
    ENDCASE
 
    RETURN StrTran( Lower( query_stdout( "uname -s" ) ), " ", "_" )
+
+STATIC FUNCTION mk_extern_core()
+   LOCAL aExtern
+
+   LOCAL aSCALAR
+   LOCAL aCODEPAGE
+   LOCAL aLANG
+   LOCAL aUSRRDD
+   LOCAL aMain
+
+   LOCAL tmp
+
+   IF GetEnv( "HB_REBUILD_EXTERN" ) == "yes" .AND. ;
+      ! Empty( GetEnv( "HB_DYNLIB_ST" ) )
+
+      OutStd( "! Generating core extern headers..." + hb_eol() )
+
+      IF ( aExtern := __hb_extern_get_list( GetEnv( "HB_DYNLIB_DIR" ) + hb_ps() + GetEnv( "HB_DYNLIB_ST" ) + GetEnv( "HB_DYNLIB_EXT" ) ) ) != NIL
+
+         aSCALAR   := {}
+         aCODEPAGE := {}
+         aLANG     := {}
+         aUSRRDD   := {}
+         aMain     := {}
+
+         FOR EACH tmp IN aExtern
+            DO CASE
+            CASE "|" + tmp $ "|HBARRAY|HBBLOCK|HBCHARACTER|HBDATE|HBTIMESTAMP|HBLOGICAL|HBNIL|HBNUMERIC" ; AAdd( aSCALAR, tmp )
+            CASE Left( tmp, Len( "HB_CODEPAGE_" ) ) == "HB_CODEPAGE_" ; AAdd( aCODEPAGE, tmp )
+            CASE Left( tmp, Len( "HB_LANG_"     ) ) == "HB_LANG_"     ; AAdd( aLANG    , tmp )
+            CASE Left( tmp, Len( "UR_SUPER_"    ) ) == "UR_SUPER_"    ; AAdd( aUSRRDD  , tmp )
+            OTHERWISE                                                 ; AAdd( aMain    , tmp )
+            ENDCASE
+         NEXT
+
+         __hb_extern_gen( aSCALAR  , "include" + hb_ps() + "hbextsca.ch", .F. )
+         __hb_extern_gen( aCODEPAGE, "include" + hb_ps() + "hbextcdp.ch", .F. )
+         __hb_extern_gen( aLANG    , "include" + hb_ps() + "hbextlng.ch", .F. )
+         __hb_extern_gen( aUSRRDD  , "include" + hb_ps() + "hbextudd.ch", .F. )
+         __hb_extern_gen( aMain    , "include" + hb_ps() + "hbextern.ch", .F. )
+
+         RETURN .T.
+      ENDIF
+   ENDIF
+
+   RETURN .F.
+
+#include "hbextern.hbs"

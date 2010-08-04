@@ -757,7 +757,7 @@ METHOD IdeShortcuts:evalMacro( cString )
       eval( bBlock, self )
       lEvaluated := .t.
    RECOVER USING oErr
-      hbide_justACall( oErr:description )
+      HB_SYMBOL_UNUSED( oErr )
    END SEQUENCE
 
    ErrorBlock( bError )

@@ -1492,7 +1492,7 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       IF ( nRow := ::oUI:q_tableVar:currentRow() ) >= 0
          HB_TRACE( HB_TR_DEBUG, "RECEIVING ENTER KEY" )
          ::oUI:q_tableVar:editItem( p )
-         hbide_justACall( nRow )
+         HB_SYMBOL_UNUSED( nRow )
          #if 0
          IF ::oUI:q_tableVar:currentColumn() == 0
             ::oUI:q_tableVar:setCurrentCell( ::oUI:q_tableVar:currentRow(), 1 )

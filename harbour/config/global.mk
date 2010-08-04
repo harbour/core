@@ -303,6 +303,9 @@ ifeq ($(HB_INIT_DONE),)
    ifneq ($(HB_EXTERNAL_ADDONS),)
       $(info ! HB_EXTERNAL_ADDONS: $(HB_EXTERNAL_ADDONS))
    endif
+   ifneq ($(HB_REBUILD_EXTERN),)
+      $(info ! HB_REBUILD_EXTERN: $(HB_REBUILD_EXTERN))
+   endif
    ifneq ($(HB_REBUILD_PARSER),)
       $(info ! HB_REBUILD_PARSER: $(HB_REBUILD_PARSER))
    endif

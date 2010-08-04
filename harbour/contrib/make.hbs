@@ -86,8 +86,6 @@ PROCEDURE Main( ... )
       s_cBinDir := hb_DirBase()
    #endif
 
-// mk_extern_core()
-
    /* Load list of projects */
 
    hProjectList := { => }
@@ -440,7 +438,7 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
 
          /* Create EXTERN list */
          IF lPrimary .AND. hProjectList[ cProject ][ "cType" ] $ "hblib|hbdyn"
-            mk_extern_lib( hProjectList[ cProject ][ "cOutputName" ], FNameExtSet( cProjectPath, ".hbx" ) )
+            mk_extern_lib( hProjectList[ cProject ][ "cOutputName" ], FNameExtSet( PathSepToSelf( cProjectPath ), ".hbx" ) )
          ENDIF
       ENDIF
    NEXT
@@ -557,119 +555,19 @@ STATIC FUNCTION mk_hb_processRun( cCommand, ... )
 
    RETURN hb_processRun( cCommand, ... )
 
-STATIC FUNCTION mk_extern_core()
-   LOCAL aExtern
-
-   LOCAL aSCALAR
-   LOCAL aCODEPAGE
-   LOCAL aLANG
-   LOCAL aUSRRDD
-   LOCAL aMain
-
-   LOCAL tmp
-
-   IF GetEnv( "HB_REBUILD_EXTERN" ) == "yes" .AND. ;
-      ! Empty( GetEnv( "HB_DYNLIB_ST" ) )
-
-      IF ( aExtern := __hb_extern_get_list( GetEnv( "HB_DYNLIB_DIR" ) + hb_ps() + GetEnv( "HB_DYNLIB_ST" ) + GetEnv( "HB_DYNLIB_EXT" ) ) ) != NIL
-
-         aSCALAR   := {}
-         aCODEPAGE := {}
-         aLANG     := {}
-         aUSRRDD   := {}
-         aMain     := {}
-
-         FOR EACH tmp IN aExtern
-            DO CASE
-            CASE "|" + tmp $ "|HBARRAY|HBBLOCK|HBCHARACTER|HBDATE|HBTIMESTAMP|HBLOGICAL|HBNIL|HBNUMERIC" ; AAdd( aSCALAR, tmp )
-            CASE Left( tmp, Len( "HB_CODEPAGE_" ) ) == "HB_CODEPAGE_" ; AAdd( aCODEPAGE, tmp )
-            CASE Left( tmp, Len( "HB_LANG_"     ) ) == "HB_LANG_"     ; AAdd( aLANG    , tmp )
-            CASE Left( tmp, Len( "UR_SUPER_"    ) ) == "UR_SUPER_"    ; AAdd( aUSRRDD  , tmp )
-            OTHERWISE                                                 ; AAdd( aMain    , tmp )
-            ENDCASE
-         NEXT
-
-         __hb_extern_gen( aSCALAR  , "hbextsca.ch", .F. )
-         __hb_extern_gen( aCODEPAGE, "hbextcdp.ch", .F. )
-         __hb_extern_gen( aLANG    , "hbextlng.ch", .F. )
-         __hb_extern_gen( aUSRRDD  , "hbextudd.ch", .F. )
-         __hb_extern_gen( aMain    , "hbextern.ch", .F. )
-
-         RETURN .T.
-      ENDIF
-   ENDIF
-
-   RETURN .F.
-
 STATIC FUNCTION mk_extern_lib( cInputName, cOutputName )
    LOCAL aExtern
 
    IF GetEnv( "HB_REBUILD_EXTERN" ) == "yes"
+
+      OutStd( hb_StrFormat( "! Generating extern header: %1$s", cOutputName ) + hb_eol() )
+
       IF ( aExtern := __hb_extern_get_list( cInputName ) ) != NIL
          RETURN __hb_extern_gen( aExtern, cOutputName, .T. )
       ENDIF
    ENDIF
 
    RETURN .F.
-
-STATIC FUNCTION __hb_extern_get_list( cInputName )
-   LOCAL cStdOut
-   LOCAL hRegex
-   LOCAL aResult
-   LOCAL aExtern
-   LOCAL tmp
-
-   IF GetEnv( "HB_COMPILER" ) $ "gcc|mingw|mingw64|cygwin"
-      IF hb_processRun( "nm -g --defined-only -C " + cInputName,, @cStdOut ) == 0
-         IF ! Empty( hRegex := hb_regexComp( '[[:blank:]]HB_FUN_(.*)[[:space:]]', .T., .T. ) )
-            aResult := hb_regexAll( hRegex, StrTran( cStdOut, Chr( 13 ) ),,,,, .T. )
-            aExtern := {}
-            FOR EACH tmp IN aResult
-               AAdd( aExtern, tmp[ 2 ] )
-            NEXT
-            ASort( aExtern,,, {| tmp, tmp1 | tmp < tmp1 } )
-            RETURN aExtern
-         ENDIF
-      ENDIF
-   ENDIF
-
-   RETURN NIL
-
-STATIC FUNCTION __hb_extern_gen( aExtern, cOutputName, lANNOUNCE )
-   LOCAL cExtern
-   LOCAL tmp
-
-   IF Empty( aExtern )
-      RETURN FErase( cOutputName ) == 0
-   ENDIF
-
-   cExtern := "/*" + hb_eol()
-   cExtern += " * $" + "Id" + "$" + hb_eol()
-   cExtern += " */" + hb_eol()
-   cExtern += hb_eol()
-   cExtern += "/* -------------------------------------------------------------------- */" + hb_eol()
-   cExtern += "/* WARNING: Automatically generated code. DO NOT EDIT!                  */" + hb_eol()
-   cExtern += "/*          Regenerate with HB_REBUILD_EXTERN=yes while using GCC       */" + hb_eol()
-   cExtern += "/*          compiler family.                                            */" + hb_eol()
-   cExtern += "/* -------------------------------------------------------------------- */" + hb_eol()
-   cExtern += hb_eol()
-   cExtern += "#ifndef " + "__HBEXTERN__" + Upper( FNameNameGet( cOutputName ) ) + "__" + hb_eol()
-   cExtern += "#define " + "__HBEXTERN__" + Upper( FNameNameGet( cOutputName ) ) + "__" + hb_eol()
-   IF lANNOUNCE
-      cExtern += hb_eol()
-      cExtern += "ANNOUNCE " + "__" + Upper( FNameNameGet( cOutputName ) ) + "_EXTERN__" + hb_eol()
-   ENDIF
-   cExtern += hb_eol()
-   FOR EACH tmp IN aExtern
-      IF ! hb_WildMatch( "HB_GT_*_DEFAULT", tmp ) .AND. ;
-         ! hb_WildMatch( "__*_EXTERN__", tmp )
-         cExtern += "EXTERNAL " + tmp + hb_eol()
-      ENDIF
-   NEXT
-   cExtern += hb_eol()
-   cExtern += "#endif" + hb_eol()
-
-   RETURN hb_MemoWrit( cOutputName, cExtern )
 
 STATIC FUNCTION mk_hbd( cDir )
    LOCAL cName
@@ -707,13 +605,6 @@ STATIC FUNCTION mk_hbd( cDir )
 
 STATIC FUNCTION AScanL( aArray, cString )
    RETURN AScan( aArray, {| tmp | Lower( tmp ) == cString } )
-
-STATIC FUNCTION FNameNameGet( cFileName )
-   LOCAL cName
-
-   hb_FNameSplit( cFileName,, @cName )
-
-   RETURN cName
 
 STATIC FUNCTION FNameDirGet( cFileName )
    LOCAL cDir
@@ -972,3 +863,5 @@ PROCEDURE LoadProjectListFromString( hProjectList, cString )
    NEXT
 
    RETURN
+
+#include "../config/hbextern.hbs"

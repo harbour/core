@@ -1474,7 +1474,8 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
 
 METHOD IdeProjManager:showOutput( cOutput, mp2, oProcess )
 
-   hbide_justACall( mp2, oProcess )
+   HB_SYMBOL_UNUSED( mp2 )
+   HB_SYMBOL_UNUSED( oProcess )
 
    hbide_convertBuildStatusMsgToHtml( cOutput, ::oOutputResult:oWidget )
 
@@ -1485,7 +1486,7 @@ METHOD IdeProjManager:showOutput( cOutput, mp2, oProcess )
 METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
    LOCAL cTmp, n, n1, cTkn, cExe
 
-   hbide_justACall( oProcess )
+   HB_SYMBOL_UNUSED( oProcess )
 
    ::outputText( hbide_outputLine() )
    cTmp := "Exit Code [ " + hb_ntos( nExitCode ) + " ]    Exit Status [ " + hb_ntos( nExitStatus ) + " ]    " +;
