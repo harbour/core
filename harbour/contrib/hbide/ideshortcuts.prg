@@ -749,7 +749,7 @@ METHOD IdeShortcuts:evalMacro( cString )
    LOCAL oErr, bBlock, cBlock
    LOCAL lEvaluated := .f.
 
-   cBlock := ::buildBlock( cString ) ; HB_TRACE( HB_TR_DEBUG, cString, cBlock )
+   cBlock := ::buildBlock( cString )
 
    bBlock := &( cBlock )
 
@@ -757,7 +757,7 @@ METHOD IdeShortcuts:evalMacro( cString )
       eval( bBlock, self )
       lEvaluated := .t.
    RECOVER USING oErr
-      HB_TRACE( HB_TR_DEBUG, valtype( oErr ), oErr:description )
+      hbide_justACall( oErr:description )
    END SEQUENCE
 
    ErrorBlock( bError )
