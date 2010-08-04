@@ -147,6 +147,11 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD getEditorPanelsInfo()
    METHOD restPanelsGeometry()
    METHOD savePanelsGeometry()
+   METHOD stackVertically()
+   METHOD stackHorizontally()
+   METHOD stackMaximized()
+   METHOD stackZoom( nMode )
+   METHOD restState( nMode )
 
    ENDCLASS
 
@@ -334,13 +339,24 @@ METHOD IdeDocks:buildDialog()
       IF x_[ 1,5 ] == QMdiArea_TabbedView
          ::oStackedWidget:oWidget:setViewMode( QMdiArea_TabbedView )
       ENDIF
-      FOR EACH a_ IN x_
-         ::oIde:aMdies[ a_:__enumIndex() ]:setWindowState( a_[ 4 ] )
-      NEXT
-      IF x_[ 1,6 ] == 1
+
+      IF     x_[ 1,6 ] == 1
          ::oStackedWidget:oWidget:tileSubWindows()
       ELSEIF x_[ 1,6 ] == 2
          ::oStackedWidget:oWidget:cascadeSubWindows()
+      ELSEIF x_[ 1,6 ] == 3
+         ::stackMaximized()
+#if 0  /* At this point size of the viewport is not determined */
+      ELSEIF x_[ 1,6 ] == 4
+         ::stackVertically()
+      ELSEIF x_[ 1,6 ] == 5
+         ::stackHorizontally()
+#endif
+      ELSE
+         FOR EACH a_ IN x_
+            ::oIde:aMdies[ a_:__enumIndex() ]:setGeometry( a_[ 2 ] )
+            ::oIde:aMdies[ a_:__enumIndex() ]:setWindowState( a_[ 4 ] )
+         NEXT
       ENDIF
    ENDIF
 
@@ -572,7 +588,7 @@ HB_TRACE( HB_TR_ALWAYS, "projectTree_dropEvent" )
 
    CASE "buttonViewOrganized_clicked"
       ::nViewStyle  := 0
-      ::restPanelsGeometry()
+      ::restState()
       EXIT
 
    CASE "buttonViewTiled_clicked"
@@ -583,6 +599,29 @@ HB_TRACE( HB_TR_ALWAYS, "projectTree_dropEvent" )
    CASE "buttonViewCascaded_clicked"
       ::oStackedWidget:oWidget:cascadeSubWindows()
       ::nViewStyle  := 2
+      EXIT
+
+   CASE "buttonViewMaximized_clicked"
+      ::nViewStyle  := 3
+      ::stackMaximized()
+      EXIT
+
+   CASE "buttonViewStackedVert_clicked"
+      ::nViewStyle  := 4
+      ::stackVertically()
+      EXIT
+
+   CASE "buttonViewStackedHorz_clicked"
+      ::nViewStyle  := 5
+      ::stackHorizontally()
+      EXIT
+
+   CASE "buttonViewZoomedIn_clicked"
+      ::stackZoom( +1 )
+      EXIT
+
+   CASE "buttonViewZoomedOut_clicked"
+      ::stackZoom( -1 )
       EXIT
 
    CASE "buttonViewTabbed_clicked"
@@ -606,6 +645,116 @@ HB_TRACE( HB_TR_ALWAYS, "projectTree_dropEvent" )
 
    ENDSWITCH
 
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:restState( nMode )
+   LOCAL qMdi
+
+   HB_SYMBOL_UNUSED( nMode )
+   FOR EACH qMdi IN ::oIde:aMdies
+      qMdi:setWindowState( 0 )
+   NEXT
+   ::restPanelsGeometry()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:stackMaximized()
+   LOCAL qObj, qMdi
+
+   qObj := QMdiSubWindow():from( ::oStackedWidget:oWidget:activeSubWindow() )
+   FOR EACH qMdi IN ::oIde:aMdies
+      qMdi:setWindowState( Qt_WindowMaximized )
+   NEXT
+   ::oStackedWidget:oWidget:setActiveSubWindow( qObj )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:stackZoom( nMode )
+   LOCAL qMdi, nT, nL, nH, nW, qRect
+
+   HB_SYMBOL_UNUSED( nMode )
+
+   IF ::nViewStyle == 4 .OR. ::nViewStyle == 5
+      IF ::nViewStyle == 4
+         nT := 0
+         FOR EACH qMdi IN ::oIde:aMdies
+            IF ::aViewsInfo[ qMdi:__enumIndex(), 1 ] != "Stats"
+               qRect := QRect():from( qMdi:geometry() )
+               nH := qRect:height() + ( nMode * ( qRect:height() / 4 ) )
+               qMdi:setGeometry( QRect():new( 0, nT, qRect:width(), nH ) )
+               nT += nH
+            ENDIF
+         NEXT
+      ELSE
+         nL := 0
+         FOR EACH qMdi IN ::oIde:aMdies
+            IF ::aViewsInfo[ qMdi:__enumIndex(), 1 ] != "Stats"
+               qRect := QRect():from( qMdi:geometry() )
+               nW := qRect:width() + ( nMode * ( qRect:width() / 4 ) )
+               qMdi:setGeometry( QRect():new( nL, 0, nW, qRect:height() ) )
+               nL += nW
+            ENDIF
+         NEXT
+      ENDIF
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:stackHorizontally()
+   LOCAL qArea, qObj, qVPort, nH, nT, nW, qMdi, nL
+
+   ::restState( 0 )
+
+   qArea  := ::oStackedWidget:oWidget
+
+   qObj   := QMdiSubWindow():from( qArea:activeSubWindow() )
+
+   qVPort := QWidget():from( qArea:viewport() )
+   nH     := qVPort:height()
+   nW     := qVPort:width() / ( len( ::oIde:aMdies ) - 1 )
+   nT     := 0
+   nL     := 0
+
+   FOR EACH qMdi IN ::oIde:aMdies
+      IF ::aViewsInfo[ qMdi:__enumIndex(), 1 ] != "Stats"
+         qMdi:setGeometry( QRect():new( nL, nT, nW, nH ) )
+         nL += nW
+      ENDIF
+   NEXT
+
+   ::oStackedWidget:oWidget:setActiveSubWindow( qObj )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:stackVertically()
+   LOCAL qArea, qObj, qVPort, nH, nT, nW, qMdi
+
+   ::restState()
+
+   qArea  := ::oStackedWidget:oWidget
+
+   qObj   := QMdiSubWindow():from( qArea:activeSubWindow() )
+
+   qVPort := QWidget():from( qArea:viewport() )
+   nH     := qVPort:height() / ( len( ::oIde:aMdies ) - 1 )
+   nW     := qVPort:width()
+   nT     := 0
+
+   FOR EACH qMdi IN ::oIde:aMdies
+      IF ::aViewsInfo[ qMdi:__enumIndex(), 1 ] != "Stats"
+         qMdi:setGeometry( QRect():new( 0, nT, nW, nH ) )
+         nT += nH
+      ENDIF
+   NEXT
+
+   ::oStackedWidget:oWidget:setActiveSubWindow( qObj )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -821,6 +970,11 @@ METHOD IdeDocks:buildMdiToolbarLeft()
    aadd( aBtn, ::buildToolButton( qTBar, { "View as arranged"           , "view_organized"  , {|| ::execEvent( "buttonViewOrganized_clicked" ) }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "View as cascaded"           , "view_cascaded"   , {|| ::execEvent( "buttonViewCascaded_clicked"  ) }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "View as tiled"              , "view_tiled"      , {|| ::execEvent( "buttonViewTiled_clicked"     ) }, .f. } ) )
+   aadd( aBtn, ::buildToolButton( qTBar, { "View Maximized"             , "fullscreen"      , {|| ::execEvent( "buttonViewMaximized_clicked" ) }, .f. } ) )
+   aadd( aBtn, ::buildToolButton( qTBar, { "View Vertically Tiled"      , "view_tiled"      , {|| ::execEvent( "buttonViewStackedVert_clicked" ) }, .f. } ) )
+   aadd( aBtn, ::buildToolButton( qTBar, { "View Horizontally Tiled"    , "view_tiled"      , {|| ::execEvent( "buttonViewStackedHorz_clicked" ) }, .f. } ) )
+   aadd( aBtn, ::buildToolButton( qTBar, { "View Zoom In"               , "zoomin"          , {|| ::execEvent( "buttonViewZoomedIn_clicked"  ) }, .f. } ) )
+   aadd( aBtn, ::buildToolButton( qTBar, { "View Zoom Out"              , "zoomout"         , {|| ::execEvent( "buttonViewZoomedOut_clicked" ) }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, {} )                                                                                                             )
    aadd( aBtn, ::buildToolButton( qTBar, { "Save layout"                , "save"            , {|| ::execEvent( "buttonSaveLayout_clicked"    ) }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, {} )                                                                                                             )
@@ -984,8 +1138,9 @@ METHOD IdeDocks:buildStackedWidget()
       ::oStackedWidget:oWidget:setDocumentMode( .t. )
       ::oStackedWidget:oWidget:setTabShape( QTabWidget_Triangular )
       ::oStackedWidget:oWidget:setOption( QMdiArea_DontMaximizeSubWindowOnActivation, .t. )
-      ::oStackedWidget:oWidget:setVerticalScrollBarPolicy( Qt_ScrollBarAsNeeded )
-      ::oStackedWidget:oWidget:setHorizontalScrollBarPolicy( Qt_ScrollBarAsNeeded )
+      ::oStackedWidget:oWidget:setVerticalScrollBarPolicy( Qt_ScrollBarAlwaysOn )
+      ::oStackedWidget:oWidget:setHorizontalScrollBarPolicy( Qt_ScrollBarAlwaysOn )
+      ::oStackedWidget:oWidget:setActivationOrder( QMdiArea_CreationOrder )
 
       ::oDa:addChild( ::oStackedWidget )
 

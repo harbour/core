@@ -448,7 +448,6 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
       IF !hbqt_isEmptyQtPointer( pAct )
          qAct := QAction():configure( pAct )
          cAct := strtran( qAct:text(), "&", "" )
-HB_TRACE( HB_TR_ALWAYS, cAct )
          SWITCH cAct
          CASE "Split Horizontally"
             ::oEditor:split( 1, oEdit )

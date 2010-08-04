@@ -94,6 +94,8 @@ CLASS IdeSource
 METHOD IdeSource:new( cSource )
    LOCAL cFilt, cPathFile, cPath, cFile, cExt
 
+   cSource := hbide_pathToOSPath( cSource )
+
    hbide_parseHbpFilter( cSource, @cFilt, @cPathFile )
    hb_fNameSplit( cPathFile, @cPath, @cFile, @cExt )
 
@@ -102,7 +104,8 @@ METHOD IdeSource:new( cSource )
    ::filter     := cFilt
    ::path       := hbide_pathNormalized( cPath, .t. )
    ::file       := cFile
-   ::ext        := lower( cExt )
+   //::ext        := lower( cExt )
+   ::ext        := cExt
 
    RETURN Self
 
