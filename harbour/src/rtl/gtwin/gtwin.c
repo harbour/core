@@ -90,10 +90,6 @@
 #undef _WIN32_WINNT
 #define _WIN32_WINNT 0x0600 /* for hb_gt_win_SetPalette_Vista() */
 
-#ifndef HB_GTWIN_USE_SETCONSOLEMENUCLOSE_OFF
-#  define HB_GTWIN_USE_SETCONSOLEMENUCLOSE /* Enable undocumented Windows API function call */
-#endif
-
 #include <windows.h>
 #if defined( HB_OS_WIN_CE )
 #  include "hbwince.h"
@@ -105,6 +101,16 @@
 
 #if defined( _MSC_VER ) || defined( __WATCOMC__ )
 #  include <conio.h>
+#endif
+
+#ifndef HB_GTWIN_USE_SETCONSOLEMENUCLOSE_OFF
+#  define HB_GTWIN_USE_SETCONSOLEMENUCLOSE /* Enable undocumented Windows API function call */
+#endif
+
+#if ( defined( NTDDI_VERSION ) && defined( NTDDI_VISTA ) && NTDDI_VERSION >= NTDDI_VISTA ) && ! defined( __POCC__ )
+#  if !defined( HB_GTWIN_USE_PCONSOLEINFOEX )
+#     define HB_GTWIN_USE_PCONSOLEINFOEX
+#  endif
 #endif
 
 #ifndef MOUSE_WHEELED
@@ -689,7 +695,7 @@ static void hb_gt_win_xInitScreenParam( PHB_GT pGT )
    }
 }
 
-#if defined( NTDDI_VERSION ) && defined( NTDDI_VISTA ) && NTDDI_VERSION >= NTDDI_VISTA
+#if defined( HB_GTWIN_USE_PCONSOLEINFOEX )
 
 static void hb_gt_win_SetPalette_Vista( HB_BOOL bSet, COLORREF * colors )
 {
@@ -734,7 +740,7 @@ static void hb_gt_win_SetPalette_Vista( HB_BOOL bSet, COLORREF * colors )
 
 static void hb_gt_win_SetPalette( HB_BOOL bSet, COLORREF * colors )
 {
-#if defined( NTDDI_VERSION ) && defined( NTDDI_VISTA ) && NTDDI_VERSION >= NTDDI_VISTA
+#if defined( HB_GTWIN_USE_PCONSOLEINFOEX )
    hb_gt_win_SetPalette_Vista( bSet, colors );
 #else
    if( ! bSet )
