@@ -4076,6 +4076,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          IF hbmk[ _HBMK_lDEBUG ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-debug" )
          ENDIF
+         l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
          l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version_Alter + hbmk_DYNSUFFIX( hbmk ) + cLibExt,;
                                                    "harbour" + cDL_Version_Alter + hbmk_DYNSUFFIX( hbmk ) + cLibExt ) }
          l_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
