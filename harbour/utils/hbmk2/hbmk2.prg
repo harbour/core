@@ -37,6 +37,7 @@
  *    rtlink/blinker link script parsers.
  *    POTMerge(), LoadPOTFilesAsHash(), GenHBL() and AutoTrans().
  *       (with local modifications by hbmk2 author)
+ *    optimized header time scan algorithm
  *
  * See COPYING for licensing terms.
  *
@@ -98,8 +99,6 @@
 
 /* TODO: Use hashes instead of arrays for input files, options */
 /* TODO: Avoid adding certain options and input files twice */
-
-/* TOFIX: -autohbc with -inc mode */
 
 /* TODO: Next gen compiler autodetection:
          1. Gather supported compilers by Harbour installation
@@ -416,13 +415,14 @@ REQUEST hbmk_KEYW
 #define _HBMK_lAutoHBM          120 /* Toggles processing of hbmk.hbm file in current directory */
 #define _HBMK_lContainer        121 /* Target type: container */
 #define _HBMK_lShowLevel        122 /* Show project nesting level in all output lines */
+#define _HBMK_hFiles            123 /* Cache for the header parser (common for C and Harbour) */
 
-#define _HBMK_aArgs             123
-#define _HBMK_nArgTarget        124
-#define _HBMK_lPause            125
-#define _HBMK_nLevel            126
+#define _HBMK_aArgs             124
+#define _HBMK_nArgTarget        125
+#define _HBMK_lPause            126
+#define _HBMK_nLevel            127
 
-#define _HBMK_MAX_              126
+#define _HBMK_MAX_              127
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -817,7 +817,6 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL lTargetUpToDate
 
    LOCAL cDir, cName, cExt
-   LOCAL headstate
 
    LOCAL cDL_Version_Alter
    LOCAL cDL_Version
@@ -4446,8 +4445,6 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. ! lDumpInfo
 
-      headstate := NIL
-
       IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ]
          l_aC_TODO := {}
          FOR EACH tmp IN hbmk[ _HBMK_aC ]
@@ -4457,7 +4454,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             IF ! hb_FGetDateTime( FNameDirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cObjExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, .F., tmp2, .T., cBin_CompC, @headstate ) )
+               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, tmp2, .T., cBin_CompC ) )
                AAdd( l_aC_TODO, tmp )
             ENDIF
          NEXT
@@ -4470,8 +4467,6 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. ! lDumpInfo
 
-      headstate := NIL
-
       IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ]
          l_aCPP_TODO := {}
          FOR EACH tmp IN hbmk[ _HBMK_aCPP ]
@@ -4481,7 +4476,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             IF ! hb_FGetDateTime( FNameDirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cObjExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, .F., tmp2, .T., cBin_CompCPP, @headstate ) )
+               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, tmp2, .T., cBin_CompCPP ) )
                AAdd( l_aCPP_TODO, tmp )
             ENDIF
          NEXT
@@ -4523,14 +4518,14 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             IF ! hb_FGetDateTime( FNameDirExtSet( tmp3, cHarbourOutputDir, cHarbourOutputExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp3, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, .F., tmp2, .F., cBin_CompC, @headstate ) )
+               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, tmp2, .F., cBin_CompC ) )
                AAdd( l_aPRG_TODO, tmp )
             ENDIF
          NEXT
       ELSE
          IF ! Empty( hbmk[ _HBMK_hAUTOHBC ] )
             FOR EACH tmp IN hbmk[ _HBMK_aPRG ]
-               FindNewerHeaders( hbmk, tmp, NIL, .F., NIL, .F., cBin_CompC, @headstate )
+               FindNewerHeaders( hbmk, tmp, NIL, .F., cBin_CompC )
             NEXT
          ENDIF
 
@@ -5099,7 +5094,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             IF ! hb_FGetDateTime( FNameDirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cResExt ), @tmp2 ) .OR. ;
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
-               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, NIL, .F., tmp2, .T., cBin_CompC, @headstate ) )
+               ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, tmp2, .T., cBin_CompC ) )
                AAdd( l_aRESSRC_TODO, tmp )
             ENDIF
          NEXT
@@ -6328,17 +6323,11 @@ STATIC FUNCTION SetupForGT( cGT_New, /* @ */ cGT, /* @ */ lGUI )
    feel free to update the code.
    [vszakats] */
 
-#define _HEADSTATE_hFiles       1
-#define _HEADSTATE_lAnyNewer    2
-#define _HEADSTATE_MAX_         2
-
-STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tTimeParent, lCMode, cBin_CompC, /* @ */ headstate, nNestingLevel )
-   LOCAL cFile
+STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_CompC )
    LOCAL tTimeSelf
    LOCAL tTimeDependency
    LOCAL tmp
    LOCAL cExt
-   LOCAL cHeader
    LOCAL cModule
    LOCAL cDependency
    LOCAL aCommand
@@ -6346,142 +6335,11 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
    STATIC s_hRegexInclude := NIL
    STATIC s_hExclStd := NIL
 
-   DEFAULT nNestingLevel TO 1
-   DEFAULT cParentDir TO FNameDirGet( cFileName )
-
-   IF nNestingLevel == 1
-      headstate := Array( _HEADSTATE_MAX_ )
-      headstate[ _HEADSTATE_hFiles ] := { => }
-      headstate[ _HEADSTATE_lAnyNewer ] := .F.
-   ENDIF
-
    IF hbmk[ _HBMK_nHEAD ] == _HEAD_OFF
       RETURN .F.
    ENDIF
 
-   IF nNestingLevel > _HBMK_HEAD_NEST_MAX
-      RETURN .F.
-   ENDIF
-
-   /* Don't spend time on known system headers */
-   IF lSystemHeader
-
-      IF s_hExclStd == NIL
-         s_hExclStd := {;
-            "assert.h"       => NIL ,; /* Standard C */
-            "ctype.h"        => NIL ,;
-            "errno.h"        => NIL ,;
-            "float.h"        => NIL ,;
-            "limits.h"       => NIL ,;
-            "locale.h"       => NIL ,;
-            "math.h"         => NIL ,;
-            "setjmp.h"       => NIL ,;
-            "signal.h"       => NIL ,;
-            "stdarg.h"       => NIL ,;
-            "stddef.h"       => NIL ,;
-            "stdio.h"        => NIL ,;
-            "stdlib.h"       => NIL ,;
-            "string.h"       => NIL ,;
-            "time.h"         => NIL ,;
-            "iso646.h"       => NIL ,; /* ISO C NA1 */
-            "wchar.h"        => NIL ,;
-            "wctype.h"       => NIL ,;
-            "complex.h"      => NIL ,; /* ISO C C99 */
-            "fenv.h"         => NIL ,;
-            "inttypes.h"     => NIL ,;
-            "stdbool.h"      => NIL ,;
-            "stdint.h"       => NIL ,;
-            "tgmath.h"       => NIL ,;
-            "unistd.h"       => NIL ,; /* Standard C POSIX */
-            "aio.h"          => NIL ,;
-            "arpa/inet.h"    => NIL ,;
-            "cpio.h"         => NIL ,;
-            "dirent.h"       => NIL ,;
-            "dlfcn.h"        => NIL ,;
-            "fcntl.h"        => NIL ,;
-            "fmtmsg.h"       => NIL ,;
-            "fnmatch.h"      => NIL ,;
-            "ftw.h"          => NIL ,;
-            "glob.h"         => NIL ,;
-            "grp.h"          => NIL ,;
-            "iconv.h"        => NIL ,;
-            "langinfo.h"     => NIL ,;
-            "libgen.h"       => NIL ,;
-            "monetary.h"     => NIL ,;
-            "mqueue.h"       => NIL ,;
-            "ndbm.h"         => NIL ,;
-            "net/if.h"       => NIL ,;
-            "netdb.h"        => NIL ,;
-            "netinet/in.h"   => NIL ,;
-            "netinet/tcp.h"  => NIL ,;
-            "nl_types.h"     => NIL ,;
-            "poll.h"         => NIL ,;
-            "pthread.h"      => NIL ,;
-            "pwd.h"          => NIL ,;
-            "regex.h"        => NIL ,;
-            "sched.h"        => NIL ,;
-            "search.h"       => NIL ,;
-            "semaphore.h"    => NIL ,;
-            "spawn.h"        => NIL ,;
-            "strings.h"      => NIL ,;
-            "stropts.h"      => NIL ,;
-            "sys/ipc.h"      => NIL ,;
-            "sys/mman.h"     => NIL ,;
-            "sys/msg.h"      => NIL ,;
-            "sys/resource.h" => NIL ,;
-            "sys/select.h"   => NIL ,;
-            "sys/sem.h"      => NIL ,;
-            "sys/shm.h"      => NIL ,;
-            "sys/socket.h"   => NIL ,;
-            "sys/stat.h"     => NIL ,;
-            "sys/statvfs.h"  => NIL ,;
-            "sys/time.h"     => NIL ,;
-            "sys/times.h"    => NIL ,;
-            "sys/types.h"    => NIL ,;
-            "sys/uio.h"      => NIL ,;
-            "sys/un.h"       => NIL ,;
-            "sys/utsname.h"  => NIL ,;
-            "sys/wait.h"     => NIL ,;
-            "syslog.h"       => NIL ,;
-            "tar.h"          => NIL ,;
-            "termios.h"      => NIL ,;
-            "trace.h"        => NIL ,;
-            "ulimit.h"       => NIL ,;
-            "unistd.h"       => NIL ,;
-            "utime.h"        => NIL ,;
-            "utmpx.h"        => NIL ,;
-            "wordexp.h"      => NIL ,;
-            "windows.h"      => NIL ,; /* OS (win) */
-            "winspool.h"     => NIL ,;
-            "shellapi.h"     => NIL ,;
-            "ole2.h"         => NIL ,;
-            "dos.h"          => NIL ,; /* OS (dos) */
-            "os2.h"          => NIL }  /* OS (os2) */
-      ENDIF
-
-      IF StrTran( Lower( cFileName ), "\", "/" ) $ s_hExclStd
-         RETURN .F.
-      ENDIF
-   ENDIF
-
-   IF nNestingLevel > 1
-      cFileName := FindHeader( hbmk, cFileName, cParentDir, lSystemHeader, lSystemHeader )
-      IF Empty( cFileName )
-         RETURN .F.
-      ENDIF
-   ENDIF
-
-   IF cFileName $ headstate[ _HEADSTATE_hFiles ]
-      RETURN .F.
-   ENDIF
-   headstate[ _HEADSTATE_hFiles ][ cFileName ] := .T.
-
-   IF hbmk[ _HBMK_lDEBUGINC ]
-      hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: HEADER %1$s", cFileName ) )
-   ENDIF
-
    IF tTimeParent != NIL .AND. hb_FGetDateTime( cFileName, @tTimeSelf ) .AND. tTimeSelf > tTimeParent
-      headstate[ _HEADSTATE_lAnyNewer ] := .T.
       RETURN .T.
    ENDIF
 
@@ -6490,18 +6348,6 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
    /* Filter out non-source format inputs for MinGW / windres */
    IF hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|cygwin" .AND. hbmk[ _HBMK_cPLAT ] $ "win|wce" .AND. cExt == ".res"
       RETURN .F.
-   ENDIF
-
-   IF cFileName $ hbmk[ _HBMK_hDEPTS ]
-
-      FOR EACH cDependency IN hbmk[ _HBMK_hDEPTS ][ cFileName ]
-         IF hb_FGetDateTime( cDependency, @tTimeDependency ) .AND. tTimeDependency > tTimeParent
-            headstate[ _HEADSTATE_lAnyNewer ] := .T.
-            RETURN .T.
-         ENDIF
-      NEXT
-
-      RETURN headstate[ _HEADSTATE_lAnyNewer ]
    ENDIF
 
    IF ! lCMode .AND. hbmk[ _HBMK_nHEAD ] == _HEAD_NATIVE .AND. hbmk[ _HBMK_nHBMODE ] == _HBMODE_NATIVE
@@ -6532,7 +6378,6 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
                      hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: HEADER (NATIVE) %1$s", cDependency ) )
                   ENDIF
                   IF hb_FGetDateTime( cDependency, @tTimeDependency ) .AND. tTimeDependency > tTimeParent
-                     headstate[ _HEADSTATE_lAnyNewer ] := .T.
                      IF Empty( hbmk[ _HBMK_hAUTOHBC ] )
                         RETURN .T.
                      ENDIF
@@ -6554,7 +6399,6 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
                hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: HEADER (CLP) %1$s", cDependency ) )
             ENDIF
             IF hb_FGetDateTime( cDependency, @tTimeDependency ) .AND. tTimeDependency > tTimeParent
-               headstate[ _HEADSTATE_lAnyNewer ] := .T.
                RETURN .T.
             ENDIF
          ENDIF
@@ -6585,61 +6429,298 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, cParentDir, lSystemHeader, tT
                      hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: C HEADER (NATIVE) %1$s", cDependency ) )
                   ENDIF
                   IF hb_FGetDateTime( cDependency, @tTimeDependency ) .AND. tTimeDependency > tTimeParent
-                     headstate[ _HEADSTATE_lAnyNewer ] := .T.
-                    RETURN .T.
+                     RETURN .T.
                   ENDIF
                ENDIF
             NEXT
          ENDIF
       NEXT
-
    ELSE
-
-      /* TODO: Add filter based on extension to avoid binary files */
-
-      /* NOTE: Beef up this section if you need a more intelligent source
-               parser. Notice that this code is meant to process both
-               .prg, .c and .res sources. Please try to keep it simple,
-               as speed and maintainability is also important. [vszakats] */
-
-      cFile := MemoRead( cFileName )
-
-      /* NOTE:
-            http://en.wikipedia.org/wiki/PCRE
-            http://www.pcre.org/pcre.txt */
-
-      IF s_hRegexInclude == NIL
-         /* NOTE: #import is Objective C specific directive */
-         s_hRegexInclude := hb_regexComp( '^[[:blank:]]*#[[:blank:]]*(include|import)[[:blank:]]*(\".+?\"|<.+?>)', .F. /* lCaseSensitive */, .T. /* lNewLine */ )
-         IF Empty( s_hRegexInclude )
-            hbmk_OutErr( hbmk, I_( "Internal Error: Regular expression engine missing or unsupported. Please check your Harbour build settings." ) )
-            s_hRegexInclude := {} /* To show the error only once by setting to non-NIL empty value */
-         ENDIF
+      IF getNewestTime( hbmk, cFileName, @hbmk[ _HBMK_hFiles ], lCMode ) > tTimeParent
+         RETURN .T.
       ENDIF
+   ENDIF
 
-      IF ! Empty( s_hRegexInclude )
+   RETURN .F.
 
-         FOR EACH tmp IN hb_regexAll( s_hRegexInclude, cFile, NIL /* lCaseSensitive */, NIL /* lNewLine */, NIL, NIL /* nGetMatch */, .T. /* lOnlyMatch */ )
+#define _HBMK_HEADER_cHeader        1
+#define _HBMK_HEADER_lSystemHeader  2
+#define _HBMK_HEADER_LEN_           2
 
+STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
+   STATIC s_hRegexInclude
+   STATIC s_hExclStd
+
+   LOCAL aDeps
+   LOCAL cFileBody
+   LOCAL lSystemHeader
+   LOCAL cHeader
+   LOCAL aDep
+   LOCAL tmp
+
+   /* NOTE:
+         http://en.wikipedia.org/wiki/PCRE
+         http://www.pcre.org/pcre.txt */
+
+   IF s_hRegexInclude == NIL
+      s_hRegexInclude := hb_regexComp( '^[[:blank:]]*#[[:blank:]]*(include|import)[[:blank:]]*(\".+?\"|<.+?>'+"|'.+?'|`.+?'"+')',;
+         .F. /* lCaseSensitive */,;
+         .T. /* lNewLine */ )
+      IF Empty( s_hRegexInclude )
+         hbmk_OutErr( hbmk, I_( "Internal Error: Regular expression engine missing or unsupported. Please check your Harbour build settings." ) )
+         s_hRegexInclude := {} /* To show the error only once by setting to non-NIL empty value */
+      ENDIF
+   ENDIF
+
+   aDeps := {}
+   IF ! Empty( s_hRegexInclude )
+
+      cFileBody := MemoRead( cFile )
+
+      IF ! Empty( cFileBody )
+         FOR EACH tmp IN hb_regexAll( s_hRegexInclude, cFileBody, ;
+                                      NIL /* lCaseSensitive */, ;
+                                      NIL /* lNewLine */, NIL, ;
+                                      NIL /* nGetMatch */, ;
+                                      .T. /* lOnlyMatch */ )
             cHeader := tmp[ 3 ] /* First match marker */
             lSystemHeader := ( Left( cHeader, 1 ) == "<" )
             cHeader := SubStr( cHeader, 2, Len( cHeader ) - 2 )
 
-            IF FindNewerHeaders( hbmk, cHeader, iif( lCMode, FNameDirGet( cFileName ), cParentDir ), lSystemHeader, tTimeParent, lCMode, cBin_CompC, @headstate, nNestingLevel + 1 )
-               headstate[ _HEADSTATE_lAnyNewer ] := .T.
-               IF lCMode .OR. Empty( hbmk[ _HBMK_hAUTOHBC ] )
-                  RETURN .T.
+            /* Don't spend time on known system headers */
+            IF lSystemHeader
+
+               IF s_hExclStd == NIL
+                  s_hExclStd := {;
+                     "assert.h"       => NIL ,; /* Standard C */
+                     "ctype.h"        => NIL ,;
+                     "errno.h"        => NIL ,;
+                     "float.h"        => NIL ,;
+                     "limits.h"       => NIL ,;
+                     "locale.h"       => NIL ,;
+                     "math.h"         => NIL ,;
+                     "setjmp.h"       => NIL ,;
+                     "signal.h"       => NIL ,;
+                     "stdarg.h"       => NIL ,;
+                     "stddef.h"       => NIL ,;
+                     "stdio.h"        => NIL ,;
+                     "stdlib.h"       => NIL ,;
+                     "string.h"       => NIL ,;
+                     "time.h"         => NIL ,;
+                     "iso646.h"       => NIL ,; /* ISO C NA1 */
+                     "wchar.h"        => NIL ,;
+                     "wctype.h"       => NIL ,;
+                     "complex.h"      => NIL ,; /* ISO C C99 */
+                     "fenv.h"         => NIL ,;
+                     "inttypes.h"     => NIL ,;
+                     "stdbool.h"      => NIL ,;
+                     "stdint.h"       => NIL ,;
+                     "tgmath.h"       => NIL ,;
+                     "unistd.h"       => NIL ,; /* Standard C POSIX */
+                     "aio.h"          => NIL ,;
+                     "arpa/inet.h"    => NIL ,;
+                     "cpio.h"         => NIL ,;
+                     "dirent.h"       => NIL ,;
+                     "dlfcn.h"        => NIL ,;
+                     "fcntl.h"        => NIL ,;
+                     "fmtmsg.h"       => NIL ,;
+                     "fnmatch.h"      => NIL ,;
+                     "ftw.h"          => NIL ,;
+                     "glob.h"         => NIL ,;
+                     "grp.h"          => NIL ,;
+                     "iconv.h"        => NIL ,;
+                     "langinfo.h"     => NIL ,;
+                     "libgen.h"       => NIL ,;
+                     "monetary.h"     => NIL ,;
+                     "mqueue.h"       => NIL ,;
+                     "ndbm.h"         => NIL ,;
+                     "net/if.h"       => NIL ,;
+                     "netdb.h"        => NIL ,;
+                     "netinet/in.h"   => NIL ,;
+                     "netinet/tcp.h"  => NIL ,;
+                     "nl_types.h"     => NIL ,;
+                     "poll.h"         => NIL ,;
+                     "pthread.h"      => NIL ,;
+                     "pwd.h"          => NIL ,;
+                     "regex.h"        => NIL ,;
+                     "sched.h"        => NIL ,;
+                     "search.h"       => NIL ,;
+                     "semaphore.h"    => NIL ,;
+                     "spawn.h"        => NIL ,;
+                     "strings.h"      => NIL ,;
+                     "stropts.h"      => NIL ,;
+                     "sys/ipc.h"      => NIL ,;
+                     "sys/mman.h"     => NIL ,;
+                     "sys/msg.h"      => NIL ,;
+                     "sys/resource.h" => NIL ,;
+                     "sys/select.h"   => NIL ,;
+                     "sys/sem.h"      => NIL ,;
+                     "sys/shm.h"      => NIL ,;
+                     "sys/socket.h"   => NIL ,;
+                     "sys/stat.h"     => NIL ,;
+                     "sys/statvfs.h"  => NIL ,;
+                     "sys/time.h"     => NIL ,;
+                     "sys/times.h"    => NIL ,;
+                     "sys/types.h"    => NIL ,;
+                     "sys/uio.h"      => NIL ,;
+                     "sys/un.h"       => NIL ,;
+                     "sys/utsname.h"  => NIL ,;
+                     "sys/wait.h"     => NIL ,;
+                     "syslog.h"       => NIL ,;
+                     "tar.h"          => NIL ,;
+                     "termios.h"      => NIL ,;
+                     "trace.h"        => NIL ,;
+                     "ulimit.h"       => NIL ,;
+                     "unistd.h"       => NIL ,;
+                     "utime.h"        => NIL ,;
+                     "utmpx.h"        => NIL ,;
+                     "wordexp.h"      => NIL ,;
+                     "windows.h"      => NIL ,; /* OS (win) */
+                     "winspool.h"     => NIL ,;
+                     "shellapi.h"     => NIL ,;
+                     "ole2.h"         => NIL ,;
+                     "dos.h"          => NIL ,; /* OS (dos) */
+                     "os2.h"          => NIL }  /* OS (os2) */
+               ENDIF
+
+               IF StrTran( Lower( cHeader ), "\", "/" ) $ s_hExclStd
+                  LOOP
                ENDIF
             ENDIF
+
             IF ! lCMode .AND. cHeader $ hbmk[ _HBMK_hAUTOHBC ]
                hbmk[ _HBMK_hAUTOHBCFOUND ][ cHeader ] := hbmk[ _HBMK_hAUTOHBC ][ cHeader ]
                hb_HDel( hbmk[ _HBMK_hAUTOHBC ], cHeader )
+            ENDIF
+
+            IF ( cHeader := FindHeader( hbmk, cHeader, cParentDir, lSystemHeader, lSystemHeader ) ) != NIL
+
+               IF hbmk[ _HBMK_lDEBUGINC ]
+                  hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: HEADER %1$s %2$s", cHeader, iif( lSystemHeader, "(system)", "" ) ) )
+               ENDIF
+
+               aDep := Array( _HBMK_HEADER_LEN_ )
+               aDep[ _HBMK_HEADER_cHeader ]       := cHeader
+               aDep[ _HBMK_HEADER_lSystemHeader ] := lSystemHeader
+               AAdd( aDeps, aDep )
             ENDIF
          NEXT
       ENDIF
    ENDIF
 
-   RETURN headstate[ _HEADSTATE_lAnyNewer ]
+   RETURN aDeps
+
+/* optimized time scan algorithm */
+
+#define _HBMK_FILEDEF_aINCFILES     1
+#define _HBMK_FILEDEF_tFILETIME     2
+#define _HBMK_FILEDEF_tNEWESTTIME   3
+#define _HBMK_FILEDEF_lCANSCAN      4
+#define _HBMK_FILEDEF_LEN_          4
+
+STATIC PROCEDURE s_getFilesDep( hbmk, cFile, hFiles, cParentDir, lSystemHeader, lCMode )
+   LOCAL aDep, tTime, aDeps, aFile
+
+   IF ! cFile $ hFiles
+
+      IF lSystemHeader
+         /* Don't scan into system headers */
+         aDeps := {}
+      ELSE
+         aDeps := s_getIncludedFiles( hbmk, cFile, iif( lCMode, FNameDirGet( cFile ), cParentDir ), lCMode )
+      ENDIF
+
+      IF ! hb_FGetDateTime( cFile, @tTime )
+         tTime := t"00:00"
+      ENDIF
+
+      aFile := Array( _HBMK_FILEDEF_LEN_ )
+      aFile[ _HBMK_FILEDEF_aINCFILES ]   := aDeps
+      aFile[ _HBMK_FILEDEF_tFILETIME ]   := tTime
+      aFile[ _HBMK_FILEDEF_tNEWESTTIME ] := NIL
+      aFile[ _HBMK_FILEDEF_lCANSCAN ]    := .T.
+      hFiles[ cFile ] := aFile
+
+      FOR EACH aDep IN aDeps
+         s_getFilesDep( hbmk, aDep[ _HBMK_HEADER_cHeader ],;
+                              hFiles,;
+                              cParentDir,;
+                              aDep[ _HBMK_HEADER_lSystemHeader ],;
+                              lCMode )
+      NEXT
+   ENDIF
+
+   RETURN
+
+static function s_getNewestTime( cFile, hFiles, lFileReq )
+   local aFile, tTime, aDep, tDep, lReq
+
+   tTime := t"00:00"
+   if cFile $ hFiles
+      aFile := hFiles[ cFile ]
+      if aFile[ _HBMK_FILEDEF_tNEWESTTIME ] != NIL
+         /* this file does not have any cross references other then to self
+          * and the time of the newest included file is already calculated
+          * so we can simply use it
+          */
+         tTime := aFile[ _HBMK_FILEDEF_tNEWESTTIME ]
+      elseif aFile[ _HBMK_FILEDEF_lCANSCAN ]
+         lReq := .f.
+         aFile[ _HBMK_FILEDEF_lCANSCAN ] := .f.
+         tTime := aFile[ _HBMK_FILEDEF_tFILETIME ]
+         for each aDep in aFile[ _HBMK_FILEDEF_aINCFILES ]
+            tDep := s_getNewestTime( aDep[ _HBMK_HEADER_cHeader ], hFiles, @lReq )
+            if tDep > tTime
+               tTime := tDep
+            endif
+         next
+         if lReq
+            /* This file has references to some other files already
+             * scanned. It's possible that these are circular references
+             * and the time of files with such references is not fully
+             * calculated yet (they are now process on higher recursion
+             * levels) so we cannot store calculated time as the final
+             * newest time of this file
+             */
+            lFileReq := .t.
+         else
+            /* we do not have any circular references to files with
+             * undefined yet time so we can safely set the time of the
+             * newest included file to not repeat the scan when this
+             * file is reused
+             */
+            aFile[ _HBMK_FILEDEF_lCANSCAN ] := .t.
+            aFile[ _HBMK_FILEDEF_tNEWESTTIME ] := tTime
+         endif
+      else
+         lFileReq := .t.
+      endif
+   endif
+   return tTime
+
+static function getNewestTime( hbmk, cFile, hFiles, lCMode )
+   local aFile, tTime
+
+   if hFiles == NIL
+      hFiles := { => }
+      /* for easier visualization the scan steps in debug mode */
+      /* hb_hKeepOrder( hFiles, .t. ) */
+   endif
+   s_getFilesDep( hbmk, cFile, hFiles, FNameDirGet( cFile ), .F., lCMode )
+   tTime := s_getNewestTime( cFile, hFiles )
+   /* we calculated the newest time of this file and all included files
+    * so we can set it for future reuse if this file included also by
+    * some other ones.
+    */
+   hFiles[ cFile, _HBMK_FILEDEF_tNEWESTTIME ] := tTime
+   /* mark all files with cross references as scanable so we can
+    * repeat the scan process for other files
+    */
+   for each aFile in hFiles
+      aFile[ _HBMK_FILEDEF_lCANSCAN ] := .t.
+   next
+
+   return tTime
 
 STATIC FUNCTION clpfile_read( cFileName )
    LOCAL cFileBody := MemoRead( cFileName )
@@ -7087,17 +7168,18 @@ STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, lSystemHeader, lSkipDep
    LOCAL cDir
    LOCAL tmp
 
-   /* Check in current dir */
-   IF ! lSystemHeader .AND. hb_FileExists( PathSepToSelf( cFileName ) )
-      RETURN PathSepToSelf( cFileName )
-   ENDIF
-
-   /* Check in parent dir */
-
    IF ! lSystemHeader
-      tmp := DirAddPathSep( PathSepToSelf( cParentDir ) ) + PathSepToSelf( cFileName )
-      IF hb_FileExists( tmp )
-         RETURN tmp
+      IF Empty( cParentDir )
+         /* Check in current dir */
+         IF hb_FileExists( PathSepToSelf( cFileName ) )
+            RETURN PathSepToSelf( cFileName )
+         ENDIF
+      ELSE
+         /* Check in parent dir */
+         tmp := DirAddPathSep( PathSepToSelf( cParentDir ) ) + PathSepToSelf( cFileName )
+         IF hb_FileExists( tmp )
+            RETURN tmp
+         ENDIF
       ENDIF
    ENDIF
 

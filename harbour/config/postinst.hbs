@@ -544,7 +544,7 @@ STATIC FUNCTION mk_extern_core()
       ! Empty( GetEnv( "HB_DYNLIB_ST" ) )
 
       /* TOFIX: Use list of libs instead of dynamic lib */
-      IF ( aExtern := __hb_extern_get_list( PathToSelf( GetEnv( "HB_DYNLIB_DIR" ) ) + hb_ps() + GetEnv( "HB_DYNLIB_ST" ) + GetEnv( "HB_DYNLIB_EXT" ) ) ) != NIL
+      IF ( aExtern := __hb_extern_get_list( PathSepToSelf( GetEnv( "HB_DYNLIB_DIR" ) ) + hb_ps() + GetEnv( "HB_DYNLIB_ST" ) + GetEnv( "HB_DYNLIB_EXT" ) ) ) != NIL
 
          OutStd( "! Generating core extern headers..." + hb_eol() )
 
