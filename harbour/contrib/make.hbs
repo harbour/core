@@ -440,7 +440,8 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
 
          /* Create EXTERN list */
          IF lPrimary .AND. hProjectList[ cProject ][ "cType" ] $ "hblib|hbdyn"
-            mk_extern_lib( hProjectList[ cProject ][ "cOutputName" ], FNameExtSet( PathSepToSelf( cProjectPath ), ".hbx" ) )
+            mk_extern_lib( PathSepToSelf( hProjectList[ cProject ][ "cOutputName" ] ),;
+                           FNameExtSet( PathSepToSelf( cProjectPath ), ".hbx" ) )
          ENDIF
       ENDIF
    NEXT
