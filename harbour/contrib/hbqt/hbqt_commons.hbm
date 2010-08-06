@@ -9,8 +9,8 @@
 
 # Common settings for all hbqt subcomponents (static mode)
 
-hbqt_common.hbm
-
 -stop{!HB_QT_BUILD_STATIC|!allwin}
+
+hbqt_common.hbm
 
 -cflag=-DQT_NODLL

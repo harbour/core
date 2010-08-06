@@ -1863,7 +1863,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             ENDIF
          ELSE
             tmp := HBM_Load( hbmk, aParams, PathSepToSelf( cParam ), 1, .T. ) /* Load parameters from script file */
-            IF tmp != 0
+            IF tmp != _ERRLEV_OK .AND. ;
+               tmp != _ERRLEV_STOP
                RETURN tmp
             ENDIF
          ENDIF
@@ -1871,7 +1872,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
            ( Lower( FNameExtGet( cParam ) ) == ".hbm" .OR. ;
              Lower( FNameExtGet( cParam ) ) == ".hbp" )
          tmp := HBM_Load( hbmk, aParams, PathSepToSelf( cParam ), 1, .T. ) /* Load parameters from script file */
-         IF tmp != 0
+         IF tmp != _ERRLEV_OK .AND. ;
+            tmp != _ERRLEV_STOP
             RETURN tmp
          ENDIF
       OTHERWISE
@@ -2286,6 +2288,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                OutStd( hb_StrFormat( I_( "%1$s" ), cParam ) + _OUT_EOL )
             ENDIF
          ENDIF
+         EXIT
 
       CASE Left( cParamL, Len( "-echo=" ) ) == "-echo="
 
@@ -9043,7 +9046,8 @@ STATIC FUNCTION HBM_Load( hbmk, aParams, cFileName, nNestingLevel, lProcHBP )
                         ENDIF
                         /* TODO: Modify '@script.ext' (@ prefixes) inclusion to not inherit path from parent */
                         nResult := HBM_Load( hbmk, aParams, PathMakeAbsolute( PathSepToSelf( cParam ), cFileName ), nNestingLevel + 1, .T. ) /* Load parameters from script file */
-                        IF nResult != 0
+                        IF nResult != _ERRLEV_OK .AND. ;
+                           nResult != _ERRLEV_STOP
                            RETURN nResult
                         ENDIF
                      ELSE
@@ -9053,7 +9057,8 @@ STATIC FUNCTION HBM_Load( hbmk, aParams, cFileName, nNestingLevel, lProcHBP )
                        Lower( FNameExtGet( cParam ) ) == ".hbm"
                      IF nNestingLevel < _HBMK_NEST_MAX
                         nResult := HBM_Load( hbmk, aParams, PathMakeAbsolute( PathSepToSelf( cParam ), cFileName ), nNestingLevel + 1, .T. ) /* Load parameters from script file */
-                        IF nResult != 0
+                        IF nResult != _ERRLEV_OK .AND. ;
+                           nResult != _ERRLEV_STOP
                            RETURN nResult
                         ENDIF
                      ELSE
@@ -9193,8 +9198,10 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem )
             bFilter := NIL
          END SEQUENCE
 
-         IF ISBLOCK( bFilter ) .AND. ISLOGICAL( xResult := Eval( bFilter, hbmk ) ) .AND. xResult
-            RETURN cItem
+         IF ISBLOCK( bFilter ) .AND. ISLOGICAL( xResult := Eval( bFilter, hbmk ) )
+            IF xResult
+               RETURN cItem
+            ENDIF
          ENDIF
 
          RETURN ""

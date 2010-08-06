@@ -181,6 +181,8 @@ ifeq ($(HB_INIT_DONE),)
       export HB_BUILD_DEBUG := no
       export HB_BUILD_SHARED := no
       export HB_INSTALL_IMPLIB := no
+      export HB_REBUILD_EXTERN := no
+      export HB_REBUILD_PARSER := no
    endif
 
    # Can't build shared tools if we don't create dlls
