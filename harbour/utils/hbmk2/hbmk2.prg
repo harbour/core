@@ -1244,7 +1244,11 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       OTHERWISE
          aCOMPSUP := { "gcc" }
       ENDCASE
-      cDynLibNamePrefix := "lib"
+      IF hbmk[ _HBMK_cPLAT ] == "symbian"
+         cDynLibNamePrefix := ""
+      ELSE
+         cDynLibNamePrefix := "lib"
+      ENDIF
       DO CASE
       CASE hbmk[ _HBMK_cPLAT ] == "vxworks"
          l_aLIBHBGT := {}
