@@ -1536,7 +1536,8 @@ HARBOUR
             http://sourceforge.net/projects/mingw/files/MinGW/make/
             http://sourceforge.net/projects/mingw/files/MinGW/make/make-3.81-20090914-mingw32/make-3.81-20090914-mingw32-bin.tar.gz/download
             http://sourceforge.net/projects/mingw/files/MinGW/make/make-3.81-20090914-mingw32/make-3.81-20090914-mingw32-src.tar.gz/download
-            (included in Harbour as win-make.exe)
+            cvs -z3 -d:pserver:anonymous@cvs.savannah.gnu.org:/sources/make co make
+            (included in Harbour as win-make.exe and w64-make.exe)
          MS-DOS binary + source:
             ftp://ftp.delorie.com/pub/djgpp/beta/v2gnu/
             ftp://ftp.delorie.com/pub/djgpp/beta/v2gnu/mak381b.zip

@@ -40,9 +40,8 @@
 {_HB_BUILD_LIBDYN}-hbdyn
 {_HB_BUILD_LIBDYN}-shared
 {_HB_BUILD_LIBDYN}-implib=../lib/${hb_plat}/${hb_comp}${hb_build}/
-{_HB_BUILD_LIBDYN&hbdyn&hb_dynsuffix}-implib=${hb_outputname}${hb_dynsuffix}
-{_HB_BUILD_LIBDYN&hbdyn&!hb_dynsuffix}-implib=${hb_outputname}_dll
-{_HB_BUILD_LIBDYN&hbexe}-implib=${hb_outputname}_exe
+{_HB_BUILD_LIBDYN&hb_dynsuffix}-implib=${hb_outputname}${hb_dynsuffix}
+{_HB_BUILD_LIBDYN&!hb_dynsuffix}-implib=${hb_outputname}_dll
 {_HB_BUILD_LIBDYN&allwin}-lhbmaindllp
 {_HB_BUILD_LIBDYN}-depimplib-
 
