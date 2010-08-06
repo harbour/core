@@ -1369,6 +1369,10 @@ ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_PLATFORM)$(HB_CPU))
       else
       ifeq ($(HB_PLATFORM),vxworks)
          HB_PRGFLAGS += -D__PLATFORM__VXWORKS -D__PLATFORM__UNIX
+      else
+      ifeq ($(HB_PLATFORM),symbian)
+         HB_PRGFLAGS += -D__PLATFORM__SYMBIAN -D__PLATFORM__UNIX
+      endif
       endif
       endif
       endif

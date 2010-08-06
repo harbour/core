@@ -1,0 +1,7 @@
+#
+# $Id$
+#
+
+# F:/SYMBIAN/CSLARM~1/LIB
+SYSLIBPATHS :=
+SYSLIBS +=

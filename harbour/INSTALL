@@ -504,6 +504,7 @@ HARBOUR
    sunos    - Sun Solaris / OpenSolaris
    qnx      - QNX
    vxworks  - VxWorks
+   symbian  - Symbian OS (experimental)
    win      - MS Windows (all flavors)
               (see LINKS section for Win9x requirements)
    wce      - MS Windows CE
@@ -550,6 +551,10 @@ HARBOUR
    -------
    gcc      - GNU C
    diab     - Wind River Compiler
+
+   symbian
+   -------
+   gcc      - GNU C
 
    sunos
    -----
@@ -983,6 +988,15 @@ HARBOUR
       win-make
       ---
 
+      --- Symbian OS (requires preceding build for Windows target)
+      set PATH=F:\Symbian\CSL Arm Toolchain\bin;%PATH%
+      set HB_PLATFORM=symbian
+      set HB_COMPILER=gcc
+      set HB_CCPREFIX=arm-none-symbianelf-
+      set HB_USER_CFLAGS=-IF:\Symbian\SDK\S60\devices\S60_5th_Edition_SDK_v1.0\epoc32\include\stdapis -IF:\Symbian\SDK\S60\devices\S60_5th_Edition_SDK_v1.0\epoc32\include -D__GCC32__ -D__SYMBIAN32__
+      win-make
+      ---
+
       --8<--
       rem ; Add these *before* above sample scripts to configure 3rd party dependencies.
       rem   When using MSYS or Cygwin shell you'll have to use forward slashes and
@@ -1320,6 +1334,7 @@ HARBOUR
    x win    -> linux/watcom  x86
    x win    -> vxworks/gcc   (CPU cross-builds possible: x86, arm, mips, ppc)
    x win    -> vxworks/diab  (CPU cross-builds possible: x86, arm, mips, ppc, sparc)
+   x win    -> symbian/gcc   arm
      dos    -> dos/djgpp     x86
      dos    -> dos/watcom    x86
    x dos    -> win/watcom    x86

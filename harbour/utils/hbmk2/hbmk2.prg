@@ -137,7 +137,7 @@ REQUEST HB_GT_CGI_DEFAULT
    REQUEST HB_GT_DOS
 #elif defined( __PLATFORM__OS2 )
    REQUEST HB_GT_OS2
-#elif defined( __PLATFORM__UNIX ) .AND. ! defined( __PLATFORM__VXWORKS )
+#elif defined( __PLATFORM__UNIX ) .AND. ! defined( __PLATFORM__VXWORKS ) .AND. ! defined( __PLATFORM__SYMBIAN )
    REQUEST HB_GT_TRM
 #endif
 
@@ -1227,7 +1227,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    cBin_CompPRG := "harbour" + l_cHBPOSTFIX
 
    DO CASE
-   CASE hbmk[ _HBMK_cPLAT ] $ "bsd|hpux|sunos|beos|qnx|vxworks|linux" .OR. hbmk[ _HBMK_cPLAT ] == "darwin" /* Separated to avoid match with 'win' */
+   CASE hbmk[ _HBMK_cPLAT ] $ "bsd|hpux|sunos|beos|qnx|vxworks|symbian|linux" .OR. hbmk[ _HBMK_cPLAT ] == "darwin" /* Separated to avoid match with 'win' */
       DO CASE
       CASE hbmk[ _HBMK_cPLAT ] == "linux"
          aCOMPSUP := { "gcc", "clang", "icc", "watcom", "sunpro", "open64" }
@@ -2934,6 +2934,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
            ( hbmk[ _HBMK_cPLAT ] == "beos"    .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "qnx"     .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "vxworks" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
+           ( hbmk[ _HBMK_cPLAT ] == "symbian" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "linux"   .AND. hbmk[ _HBMK_cCOMP ] == "open64" )
 
          #if defined( __PLATFORM__UNIX )
@@ -3080,11 +3081,14 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
          IF hbmk[ _HBMK_lSTRIP ]
             IF hbmk[ _HBMK_lCreateLib ] .OR. hbmk[ _HBMK_cPLAT ] $ "darwin|sunos"
-               IF hbmk[ _HBMK_cPLAT ] == "vxworks"
+               DO CASE
+               CASE hbmk[ _HBMK_cPLAT ] == "vxworks"
                   cBin_Post := "strip" + hbmk[ _HBMK_cCCPOSTFIX ]
-               ELSE
+               CASE hbmk[ _HBMK_cPLAT ] == "symbian"
+                  cBin_Post := hbmk[ _HBMK_cCCPREFIX ] + "strip"
+               OTHERWISE
                   cBin_Post := "strip"
-               ENDIF
+               ENDCASE
                IF hbmk[ _HBMK_lCreateDyn ] .OR. hbmk[ _HBMK_lCreateLib ]
                   cOpt_Post := "-S {OB}"
                ELSE
@@ -9509,6 +9513,9 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
       CASE hbmk[ _HBMK_cPLAT ] == "vxworks"
          AAdd( aDf, "__PLATFORM__VXWORKS" )
          AAdd( aDf, "__PLATFORM__UNIX" )
+      CASE hbmk[ _HBMK_cPLAT ] == "symbian"
+         AAdd( aDf, "__PLATFORM__SYMBIAN" )
+         AAdd( aDf, "__PLATFORM__UNIX" )
       ENDCASE
 
       /* Setup those CPU flags which we can be sure about.
@@ -10536,7 +10543,7 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword, cValue, cOperator )
    CASE "static"   ; RETURN ! hbmk[ _HBMK_lSHARED ]
    CASE "unicode"  ; RETURN hbmk[ _HBMK_lUNICODE ]
    CASE "ascii"    ; RETURN ! hbmk[ _HBMK_lUNICODE ]
-   CASE "unix"     ; RETURN "|" + hbmk[ _HBMK_cPLAT ] + "|" $ "|bsd|hpux|sunos|beos|qnx|vxworks|linux|darwin|"
+   CASE "unix"     ; RETURN "|" + hbmk[ _HBMK_cPLAT ] + "|" $ "|bsd|hpux|sunos|beos|qnx|vxworks|symbian|linux|darwin|"
    CASE "allwin"   ; RETURN "|" + hbmk[ _HBMK_cPLAT ] + "|" $ "|win|wce|"
    CASE "allgcc"   ; RETURN "|" + hbmk[ _HBMK_cCOMP ] + "|" $ "|gcc|mingw|mingw64|mingwarm|cygwin|djgpp|gccomf|clang|open64|"
    CASE "allmingw" ; RETURN "|" + hbmk[ _HBMK_cCOMP ] + "|" $ "|mingw|mingw64|mingwarm|"
@@ -10557,7 +10564,7 @@ FUNCTION hbmk_KEYW( hbmk, cKeyword, cValue, cOperator )
    ENDIF
 
    IF ! ( "|" + cKeyword + "|" $ "|win|wce|dos|os2" + ;
-                                 "|bsd|hpux|sunos|beos|qnx|vxworks|linux|darwin" + ;
+                                 "|bsd|hpux|sunos|beos|qnx|vxworks|symbian|linux|darwin" + ;
                                  "|msvc|msvc64|msvcia64|msvcarm" + ;
                                  "|pocc|pocc64|poccarm|xcc" + ;
                                  "|mingw|mingw64|mingwarm|cygwin|bcc|watcom" + ;
@@ -11131,6 +11138,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       "  - beos    : gcc",;
       "  - qnx     : gcc",;
       "  - vxworks : gcc, diab",;
+      "  - symbian : gcc",;
       "  - sunos   : gcc, sunpro" }
 
    LOCAL aOpt_Basic := {;

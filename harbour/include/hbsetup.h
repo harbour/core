@@ -404,6 +404,12 @@
    #endif
 #endif
 
+#ifndef HB_OS_SYMBIAN
+   #if defined( __symbian__ )
+      #define HB_OS_SYMBIAN
+   #endif
+#endif
+
 #ifndef HB_OS_UNIX
    #if defined( HB_OS_LINUX ) || \
        defined( HB_OS_DARWIN ) || \
@@ -412,7 +418,8 @@
        defined( HB_OS_HPUX ) || \
        defined( HB_OS_QNX ) || \
        defined( HB_OS_VXWORKS ) || \
-       defined( HB_OS_BEOS )
+       defined( HB_OS_BEOS ) || \
+       defined( HB_OS_SYMBIAN )
       #define HB_OS_UNIX
    #endif
 #endif
@@ -422,6 +429,8 @@
    #define HB_USE_SHARELOCKS_OFF
    /* NOTE: Needed to avoid 'implicit bzero() declaration' warnings */
    extern void bzero( char * buffer, int nbytes );
+#elif defined( HB_OS_SYMBIAN )
+   #define HB_NO_FNMATCH
 #endif
 
 /* ***********************************************************************

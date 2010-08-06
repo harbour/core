@@ -63,7 +63,10 @@
 
 #if defined( HB_OS_WIN )
    #include <windows.h>
-#elif defined( HB_OS_UNIX ) && ! defined( __WATCOMC__ ) && ! defined( HB_OS_VXWORKS )
+#elif defined( HB_OS_UNIX ) && \
+      ! defined( __WATCOMC__ ) && \
+      ! defined( HB_OS_VXWORKS ) && \
+      ! defined( HB_OS_SYMBIAN )
    #include <syslog.h>
 #endif
 
@@ -213,7 +216,10 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
    if( s_sysout )
    {
 #if ( defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE ) ) || \
-    ( defined( HB_OS_UNIX ) && ! defined( __WATCOMC__ ) && ! defined( HB_OS_VXWORKS ) )
+    ( defined( HB_OS_UNIX ) && \
+      ! defined( __WATCOMC__ ) && \
+      ! defined( HB_OS_VXWORKS ) && \
+      ! defined( HB_OS_SYMBIAN ) )
 
       char message[ 1024 ];
 

@@ -58,7 +58,7 @@
    #include <sys/param.h>
    #include <sys/mount.h>
 #elif defined( HB_OS_UNIX ) && !( defined( __WATCOMC__ ) || defined( __CEGCC__ ) )
-   #if defined( HB_OS_VXWORKS )
+   #if defined( HB_OS_VXWORKS ) || defined( HB_OS_SYMBIAN )
       #include <sys/stat.h>
    #else
       #include <sys/statvfs.h>
@@ -357,7 +357,7 @@ HB_FUNC( HB_DISKSPACE )
       else
          hb_fsSetIOError( HB_FALSE, 0 );
    }
-#elif defined( HB_OS_UNIX ) && !( defined( __WATCOMC__ ) || defined( __CEGCC__ ) )
+#elif defined( HB_OS_UNIX ) && !( defined( __WATCOMC__ ) || defined( __CEGCC__ ) || defined( HB_OS_SYMBIAN ) )
    {
 #if defined( HB_OS_DARWIN ) || defined( HB_OS_VXWORKS )
       struct statfs sf;

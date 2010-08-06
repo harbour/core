@@ -33,6 +33,9 @@ endif
 ifeq ($(HB_PLATFORM),vxworks)
    HB_SUPPORTED := no
 endif
+ifeq ($(HB_PLATFORM),symbian)
+   HB_SUPPORTED := no
+endif
 
 ifeq ($(HB_SUPPORTED),yes)
 

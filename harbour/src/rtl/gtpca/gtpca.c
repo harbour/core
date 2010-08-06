@@ -70,7 +70,7 @@
 
 #include <string.h>
 
-#if ( defined( HB_OS_UNIX ) && !defined( HB_OS_VXWORKS ) ) || defined( __DJGPP__ )
+#if ( defined( HB_OS_UNIX ) && !defined( HB_OS_VXWORKS ) && !defined( HB_OS_SYMBIAN ) ) || defined( __DJGPP__ )
 #  if !defined( HB_HAS_TERMIOS )
 #     define HB_HAS_TERMIOS
 #  endif

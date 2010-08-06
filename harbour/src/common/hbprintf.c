@@ -112,7 +112,7 @@ optimized.
 
 #if ( defined( __BORLANDC__ ) && __BORLANDC__ < 1410 ) || \
     ( defined( __WATCOMC__ ) && __WATCOMC__ < 1270 ) || \
-    defined( HB_OS_QNX ) || \
+    defined( HB_OS_QNX ) || defined( HB_OS_SYMBIAN ) || \
     defined( __DCC__ ) || \
     ( defined( __DJGPP__ ) && \
       ( __DJGPP__ < 2 || ( __DJGPP__ == 2 && __DJGPP_MINOR__ <= 3 ) ) ) || \
@@ -164,7 +164,7 @@ optimized.
 #  else
 #     define _x_long_dbl      long double
 #     if defined( __WATCOMC__ ) || defined( __MINGW32CE__ ) || defined( __CYGWIN__ ) || \
-         defined( HB_OS_BEOS ) || defined( HB_OS_IPHONE ) || \
+         defined( HB_OS_BEOS ) || defined( HB_OS_IPHONE ) || defined( HB_OS_SYMBIAN ) || \
          defined( __OpenBSD__ ) || defined( __NetBSD__ ) || defined( __DragonFly__ ) || \
          ( defined( HB_OS_WIN_CE ) && defined( __POCC__ ) )
 #        define _HB_WRAP_MODFL_

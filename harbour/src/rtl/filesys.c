@@ -598,7 +598,7 @@ HB_FHANDLE hb_fsPOpen( const char * pFilename, const char * pMode )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsPOpen(%p, %s)", pFilename, pMode));
 
-#if defined( HB_OS_UNIX ) && !defined( HB_OS_VXWORKS )
+#if defined( HB_OS_UNIX ) && !defined( HB_OS_VXWORKS ) && !defined( HB_OS_SYMBIAN )
    {
       HB_FHANDLE hPipeHandle[ 2 ], hNullHandle;
       pid_t pid;
@@ -1722,7 +1722,7 @@ HB_SIZE hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FO
 
    hb_vmUnlock();
 
-#if defined( HB_OS_UNIX ) && !defined( __WATCOMC__ ) && !defined( HB_OS_VXWORKS )
+#if defined( HB_OS_UNIX ) && !defined( __WATCOMC__ ) && !defined( HB_OS_VXWORKS ) && !defined( HB_OS_SYMBIAN )
 #  if defined( HB_USE_LARGEFILE64 )
    nRead = pread64( hFileHandle, pBuff, nCount, nOffset );
 #  else
@@ -1853,7 +1853,7 @@ HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount
 
    hb_vmUnlock();
 
-#if defined( HB_OS_UNIX ) && !defined( __WATCOMC__ ) && !defined( HB_OS_VXWORKS )
+#if defined( HB_OS_UNIX ) && !defined( __WATCOMC__ ) && !defined( HB_OS_VXWORKS ) && !defined( HB_OS_SYMBIAN )
 #  if defined( HB_USE_LARGEFILE64 )
    nWritten = pwrite64( hFileHandle, pBuff, nCount, nOffset );
 #  else

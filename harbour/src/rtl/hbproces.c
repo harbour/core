@@ -306,7 +306,7 @@ static int hb_fsProcessExec( const char * pszFilename,
       iStdErr = dup( 2 );
       dup2( hStderr, 2 );
    }
-#if defined( HB_OS_UNIX ) && !defined( HB_OS_VXWORKS )
+#if defined( HB_OS_UNIX ) && !defined( HB_OS_VXWORKS ) && !defined( HB_OS_SYMBIAN )
    {
       pid_t pid = fork();
       if( pid == 0 )
@@ -506,7 +506,7 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
          CloseHandle( hPipes[ i ] );
    }
 }
-#elif defined( HB_OS_UNIX ) && !defined( HB_OS_VXWORKS )
+#elif defined( HB_OS_UNIX ) && !defined( HB_OS_VXWORKS ) && !defined( HB_OS_SYMBIAN )
 {
    HB_BOOL fError = HB_FALSE;
    HB_FHANDLE hPipeIn [ 2 ] = { FS_ERROR, FS_ERROR },
@@ -906,7 +906,7 @@ HB_BOOL hb_fsProcessClose( HB_FHANDLE hProcess, HB_BOOL fGentle )
    else
       hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
 }
-#elif defined( HB_OS_UNIX ) || ( defined( HB_OS_OS2 ) && defined( __GNUC__ ) )
+#elif ( defined( HB_OS_UNIX ) && !defined( HB_OS_SYMBIAN ) ) || ( defined( HB_OS_OS2 ) && defined( __GNUC__ ) )
 {
    pid_t pid = ( pid_t ) hProcess;
    if( pid > 0 )
@@ -1140,7 +1140,7 @@ int hb_fsProcessRun( const char * pszFilename,
       if( hStderr != FS_ERROR )
          hb_fsClose( hStderr );
 
-#elif defined( HB_OS_UNIX )
+#elif defined( HB_OS_UNIX ) && !defined( HB_OS_SYMBIAN )
 
       fd_set rfds, wfds, *prfds, *pwfds;
       HB_FHANDLE fdMax;
