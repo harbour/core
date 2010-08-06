@@ -4,6 +4,7 @@
 <file>resources/blockcomment.png</file>
 <file>resources/blockindentl.png</file>
 <file>resources/blockindentr.png</file>
+<file>resources/bookmark.png</file>
 <file>resources/browser.png</file>
 <file>resources/build.png</file>
 <file>resources/builderror.png</file>
@@ -14,6 +15,7 @@
 <file>resources/clean.png</file>
 <file>resources/cleanrun.png</file>
 <file>resources/close.png</file>
+<file>resources/close3.png</file>
 <file>resources/closeall.png</file>
 <file>resources/closeexcept.png</file>
 <file>resources/closetab.png</file>
@@ -108,6 +110,8 @@
 <file>resources/horzruler.png</file>
 <file>resources/idepreferences.png</file>
 <file>resources/increaseindent.png</file>
+<file>resources/indent-more.png</file>
+<file>resources/indent-less.png</file>
 <file>resources/info.png</file>
 <file>resources/infotips.png</file>
 <file>resources/insert-datetime.png</file>
@@ -135,6 +139,7 @@
 <file>resources/notepad.png</file>
 <file>resources/open.png</file>
 <file>resources/open2.png</file>
+<file>resources/open3.png</file>
 <file>resources/panel_1.png</file>
 <file>resources/panel_2.png</file>
 <file>resources/panel_3.png</file>
@@ -163,6 +168,7 @@
 <file>resources/runscript.png</file>
 <file>resources/runnodebug.png</file>
 <file>resources/save.png</file>
+<file>resources/save3.png</file>
 <file>resources/saveall.png</file>
 <file>resources/saveas.png</file>
 <file>resources/search.png</file>

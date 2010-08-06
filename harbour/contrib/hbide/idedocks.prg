@@ -152,6 +152,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD stackMaximized()
    METHOD stackZoom( nMode )
    METHOD restState( nMode )
+   METHOD setButtonState( cAlias, lChecked )
 
    ENDCLASS
 
@@ -958,7 +959,7 @@ METHOD IdeDocks:buildMdiToolbarLeft()
    LOCAL aBtn, qTBar
 
    ::qMdiToolbarL := QToolBar():new()
-   ::qMdiToolbarL:setStyleSheet( GetStyleSheet( "qMdiToolbarLR5", ::nAnimantionMode ) )
+   ::qMdiToolbarL:setStyleSheet( GetStyleSheet( "QToolBarLR5", ::nAnimantionMode ) )
    ::qMdiToolbarL:setObjectName( "ToolBarL_Lines" )
    ::qMdiToolbarL:setIconSize( QSize():new( 16,16 ) )
    ::qMdiToolbarL:setOrientation( Qt_Vertical )
@@ -968,10 +969,10 @@ METHOD IdeDocks:buildMdiToolbarLeft()
    aBtn := {}
 #if 1
    aadd( aBtn, ::buildToolButton( qTBar, { "Toggle tabbed view"         , "view_tabbed"     , {|| ::execEvent( "buttonViewTabbed_clicked"    ) }, .f. } ) )
-   aadd( aBtn, ::buildToolButton( qTBar, {} )                                                                                                             )
+   ::buildToolButton( qTBar, {} )
    aadd( aBtn, ::buildToolButton( qTBar, { "View as arranged"           , "view_organized"  , {|| ::execEvent( "buttonViewOrganized_clicked" ) }, .f. } ) )
-   aadd( aBtn, ::buildToolButton( qTBar, { "Save layout"                , "save"            , {|| ::execEvent( "buttonSaveLayout_clicked"    ) }, .f. } ) )
-   aadd( aBtn, ::buildToolButton( qTBar, {} )                                                                                                             )
+   aadd( aBtn, ::buildToolButton( qTBar, { "Save layout"                , "save3"           , {|| ::execEvent( "buttonSaveLayout_clicked"    ) }, .f. } ) )
+   ::buildToolButton( qTBar, {} )
    aadd( aBtn, ::buildToolButton( qTBar, { "View as cascaded"           , "view_cascaded"   , {|| ::execEvent( "buttonViewCascaded_clicked"  ) }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "View as tiled"              , "view_tiled"      , {|| ::execEvent( "buttonViewTiled_clicked"     ) }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "View Maximized"             , "fullscreen"      , {|| ::execEvent( "buttonViewMaximized_clicked" ) }, .f. } ) )
@@ -979,36 +980,36 @@ METHOD IdeDocks:buildMdiToolbarLeft()
    aadd( aBtn, ::buildToolButton( qTBar, { "View Horizontally Tiled"    , "view_horzstacked", {|| ::execEvent( "buttonViewStackedHorz_clicked" ) }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "View Zoom In"               , "view_zoomin"     , {|| ::execEvent( "buttonViewZoomedIn_clicked"  ) }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "View Zoom Out"              , "view_zoomout"    , {|| ::execEvent( "buttonViewZoomedOut_clicked" ) }, .f. } ) )
-   aadd( aBtn, ::buildToolButton( qTBar, {} )                                                                                                             )
+   ::buildToolButton( qTBar, {} )
    aadd( aBtn, ::buildToolButton( qTBar, { "Toggle Line Numbers"        , "togglelinenumber", {|| ::oEM:toggleLineNumbers()                    }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Toggle Horizontal Ruler"    , "horzruler"       , {|| ::oEM:toggleHorzRuler()                      }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Toggle Current Line Hilight", "curlinehilight"  , {|| ::oEM:toggleCurrentLineHighlightMode()       }, .f. } ) )
-   aadd( aBtn, ::buildToolButton( qTBar, {} )                                                                                                             )
+   ::buildToolButton( qTBar, {} )
    aadd( aBtn, ::buildToolButton( qTBar, { "Toggle Code Completion"     , "help1"           , {|| ::oEM:toggleCodeCompetion()                  }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Toggle Completion Tips"     , "infotips"        , {|| ::oEM:toggleCompetionTips()                  }, .f. } ) )
-   aadd( aBtn, ::buildToolButton( qTBar, {} )                                                                                                             )
+   ::buildToolButton( qTBar, {} )
    aadd( aBtn, ::buildToolButton( qTBar, { "Zoom In"                    , "zoomin"          , {|| ::oEM:zoom( +1 )                             }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Zoom Out"                   , "zoomout"         , {|| ::oEM:zoom( -1 )                             }, .f. } ) )
-   aadd( aBtn, ::buildToolButton( qTBar, {} )                                                                                                             )
+   ::buildToolButton( qTBar, {} )
 #else
    aadd( aBtn, ::buildToolButton( qTBar, { "Undo"                       , "undo"            , {|| ::oEM:undo()                                 }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Redo"                       , "redo"            , {|| ::oEM:redo()                                 }, .f. } ) )
-   aadd( aBtn, ::buildToolButton( qTBar, {} )                                                                                                             )
+   ::buildToolButton( qTBar, {} )
    aadd( aBtn, ::buildToolButton( qTBar, { "Cut"                        , "cut"             , {|| ::oEM:cut()                                  }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Copy"                       , "copy"            , {|| ::oEM:copy()                                 }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Paste"                      , "paste"           , {|| ::oEM:paste()                                }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Select all"                 , "selectall"       , {|| ::oEM:seletAll()                             }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Selection mode"             , "stream"          , {|| ::oEM:toggleSelectionMode()                  }, .f. } ) )
-   aadd( aBtn, ::buildToolButton( qTBar, {} )                                                                                                             )
+   ::buildToolButton( qTBar, {} )
    aadd( aBtn, ::buildToolButton( qTBar, { "Find / Replace"             , "find"            , {|| ::oEM:find()                                 }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Toggle Mark"                , "placeremovemark" , {|| ::oEM:setMark()                              }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Goto Line"                  , "gotoline"        , {|| ::oEM:goTo()                                 }, .f. } ) )
-   aadd( aBtn, ::buildToolButton( qTBar, {} )                                                                                                  )
+   ::buildToolButton( qTBar, {} )
    aadd( aBtn, ::buildToolButton( qTBar, { "Move Current Line Up"       , "movelineup"      , {|| ::oEM:moveLine( -1 )                         }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Move Current Line Down"     , "movelinedown"    , {|| ::oEM:moveLine(  1 )                         }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Delete Current Line"        , "deleteline"      , {|| ::oEM:deleteLine()                           }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Duplicate Current Line"     , "duplicateline"   , {|| ::oEM:duplicateLine()                        }, .f. } ) )
-   aadd( aBtn, ::buildToolButton( qTBar, {} )                                                                                                             )
+   ::buildToolButton( qTBar, {} )
    aadd( aBtn, ::buildToolButton( qTBar, { "To Upper"                   , "toupper"         , {|| ::oEM:convertSelection( "ToUpper" )          }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "To Lower"                   , "tolower"         , {|| ::oEM:convertSelection( "ToLower" )          }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Invert Case"                , "invertcase"      , {|| ::oEM:convertSelection( "Invert"  )          }, .f. } ) )
@@ -1051,56 +1052,55 @@ METHOD IdeDocks:buildMdiToolbar()
 #if 1
    aadd( aBtn, ::buildToolButton( qTBar, { "Undo"                       , "undo"            , {|| ::oEM:undo()                                 }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Redo"                       , "redo"            , {|| ::oEM:redo()                                 }, .f. } ) )
-   aadd( aBtn, ::buildToolButton( qTBar, {} )                                                                                                             )
+   ::buildToolButton( qTBar, {} )
    aadd( aBtn, ::buildToolButton( qTBar, { "Cut"                        , "cut"             , {|| ::oEM:cut()                                  }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Copy"                       , "copy"            , {|| ::oEM:copy()                                 }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Paste"                      , "paste"           , {|| ::oEM:paste()                                }, .f. } ) )
-   aadd( aBtn, ::buildToolButton( qTBar, { "Select all"                 , "selectall"       , {|| ::oEM:seletAll()                             }, .f. } ) )
-   aadd( aBtn, ::buildToolButton( qTBar, { "Selection mode"             , "stream"          , {|| ::oEM:toggleSelectionMode()                  }, .f. } ) )
+   aadd( aBtn, ::buildToolButton( qTBar, { "Select all"                 , "selectall"       , {|| ::oEM:selectAll()                            }, .f. } ) )
+   aadd( aBtn, ::buildToolButton( qTBar, { "Selection mode"             , "stream"          , {|| ::oEM:toggleSelectionMode()                  }, .t. } ) )
    ::qMdiToolbar:addWidget( sp1 )
-//   aadd( aBtn, ::buildToolButton( qTBar, {} )                                                                                                             )
    aadd( aBtn, ::buildToolButton( qTBar, { "Find / Replace"             , "find"            , {|| ::oEM:find()                                 }, .f. } ) )
-   aadd( aBtn, ::buildToolButton( qTBar, { "Toggle Mark"                , "placeremovemark" , {|| ::oEM:setMark()                              }, .f. } ) )
+   aadd( aBtn, ::buildToolButton( qTBar, { "Toggle Mark"                , "bookmark"        , {|| ::oEM:setMark()                              }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Goto Line"                  , "gotoline"        , {|| ::oEM:goTo()                                 }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Reload Source"              , "view_refresh"    , {|| ::oEM:reload()                               }, .f. } ) )
-//   aadd( aBtn, ::buildToolButton( qTBar, {} )                                                                                                  )
    ::qMdiToolbar:addWidget( sp2 )
    aadd( aBtn, ::buildToolButton( qTBar, { "Move Current Line Up"       , "movelineup"      , {|| ::oEM:moveLine( -1 )                         }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Move Current Line Down"     , "movelinedown"    , {|| ::oEM:moveLine(  1 )                         }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Delete Current Line"        , "deleteline"      , {|| ::oEM:deleteLine()                           }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Duplicate Current Line"     , "duplicateline"   , {|| ::oEM:duplicateLine()                        }, .f. } ) )
    ::qMdiToolbar:addWidget( sp3 )
-//   aadd( aBtn, ::buildToolButton( qTBar, {} )                                                                                                             )
    aadd( aBtn, ::buildToolButton( qTBar, { "To Upper"                   , "toupper"         , {|| ::oEM:convertSelection( "ToUpper" )          }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "To Lower"                   , "tolower"         , {|| ::oEM:convertSelection( "ToLower" )          }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Invert Case"                , "invertcase"      , {|| ::oEM:convertSelection( "Invert"  )          }, .f. } ) )
-   aadd( aBtn, ::buildToolButton( qTBar, {} )                                                                                                  )
+   ::buildToolButton( qTBar, {} )
    aadd( aBtn, ::buildToolButton( qTBar, { "Block Comment"              , "blockcomment"    , {|| ::oEM:blockComment()                         }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Stream Comment"             , "streamcomment"   , {|| ::oEM:streamComment()                        }, .f. } ) )
-   aadd( aBtn, ::buildToolButton( qTBar, {} )                                                                                                  )
+   ::buildToolButton( qTBar, {} )
    aadd( aBtn, ::buildToolButton( qTBar, { "Indent Right"               , "blockindentr"    , {|| ::oEM:indent(  1 )                           }, .f. } ) )
+   //aadd( aBtn, ::buildToolButton( qTBar, { "Indent Right"               , "indent-more"     , {|| ::oEM:indent(  1 )                           }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Indent Left"                , "blockindentl"    , {|| ::oEM:indent( -1 )                           }, .f. } ) )
-   aadd( aBtn, ::buildToolButton( qTBar, {} )                                                                                                  )
+   //aadd( aBtn, ::buildToolButton( qTBar, { "Indent Left"                , "indent-less"     , {|| ::oEM:indent( -1 )                           }, .f. } ) )
+   ::buildToolButton( qTBar, {} )
    aadd( aBtn, ::buildToolButton( qTBar, { "Single to Double Quotes"    , "sgl2dblquote"    , {|| ::oEM:convertDQuotes()                       }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Double to Single Quotes"    , "dbl2sglquote"    , {|| ::oEM:convertQuotes()                        }, .f. } ) )
 #else
    aadd( aBtn, ::buildToolButton( qTBar, { "Toggle tabbed view"         , "view_tabbed"     , {|| ::execEvent( "buttonViewTabbed_clicked"    ) }, .f. } ) )
-   aadd( aBtn, ::buildToolButton( qTBar, {} )                                                                                                             )
+   ::buildToolButton( qTBar, {} )
    aadd( aBtn, ::buildToolButton( qTBar, { "View as arranged"           , "view_organized"  , {|| ::execEvent( "buttonViewOrganized_clicked" ) }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "View as cascaded"           , "view_cascaded"   , {|| ::execEvent( "buttonViewCascaded_clicked"  ) }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "View as tiled"              , "view_tiled"      , {|| ::execEvent( "buttonViewTiled_clicked"     ) }, .f. } ) )
-   aadd( aBtn, ::buildToolButton( qTBar, {} )                                                                                                             )
+   ::buildToolButton( qTBar, {} )
    aadd( aBtn, ::buildToolButton( qTBar, { "Save layout"                , "save"            , {|| ::execEvent( "buttonSaveLayout_clicked"    ) }, .f. } ) )
    ::qMdiToolbar:addWidget( sp1 )
    aadd( aBtn, ::buildToolButton( qTBar, { "Toggle Line Numbers"        , "togglelinenumber", {|| ::oEM:toggleLineNumbers()                    }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Toggle Horizontal Ruler"    , "horzruler"       , {|| ::oEM:toggleHorzRuler()                      }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Toggle Current Line Hilight", "curlinehilight"  , {|| ::oEM:toggleCurrentLineHighlightMode()       }, .f. } ) )
-   aadd( aBtn, ::buildToolButton( qTBar, {} )                                                                                                             )
+   ::buildToolButton( qTBar, {} )
    aadd( aBtn, ::buildToolButton( qTBar, { "Toggle Code Completion"     , "help1"           , {|| ::oEM:toggleCodeCompetion()                  }, .f. } ) )
    aadd( aBtn, ::buildToolButton( qTBar, { "Toggle Completion Tips"     , "infotips"        , {|| ::oEM:toggleCompetionTips()                  }, .f. } ) )
    ::qMdiToolbar:addWidget( sp2 )
    aadd( aBtn, ::buildToolButton( qTBar, { "Zoom In"                    , "zoomin"          , {|| ::oEM:zoom( +1 )                             }, .f. } ) )
-   aadd( aBtn, ::buildToolButton( qTBar, {} )                                                                                                             )
+   ::buildToolButton( qTBar, {} )
    aadd( aBtn, ::buildToolButton( qTBar, { "Zoom Out"                   , "zoomout"         , {|| ::oEM:zoom( -1 )                             }, .f. } ) )
 #endif
 
@@ -1131,6 +1131,30 @@ METHOD IdeDocks:buildToolButton( qToolbar, aBtn )
    RETURN qBtn
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:setButtonState( cAlias, lChecked )
+   LOCAL n, lOldChecked, qBtn
+
+   cAlias := lower( cAlias )
+
+   IF ( n := ascan( ::aMdiToolBtns, {|q| q:objectName() == cAlias } ) ) > 0
+      qBtn := ::aMdiToolBtns[ n ]
+
+   ELSEIF ( n := ascan( ::aBtnLines, {|q| q:objectName() == cAlias } ) ) > 0
+      qBtn := ::aBtnLines[ n ]
+
+   ENDIF
+
+   IF !empty( qBtn )
+      lOldChecked := qBtn:isChecked()
+      IF hb_isLogical( lChecked )
+         qBtn:setChecked( lChecked )
+      ENDIF
+   ENDIF
+
+   RETURN lOldChecked
+
+/*------------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildStackedWidget()
 
@@ -1946,13 +1970,17 @@ METHOD IdeDocks:animateComponents( nMode )
    ::oDlg:menubar():setStyleSheet( GetStyleSheet( "QMenuBar", nMode ), GetStyleSheet( "QMenuPop", nMode ) )
 
    /* Toolbars */
-   ::oMainToolbar:setStyleSheet( GetStyleSheet( "QToolBar"   , nMode ) )
+   ::oMainToolbar:oWidget:setStyleSheet( GetStyleSheet( "QToolBar", nMode ) )
    IF ! ::oIde:lCurEditsMdi
       ::qTBarPanels :setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
       ::qTBarLines  :setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
    ENDIF
    ::qTBarDocks  :setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
 
+   IF ::oIde:lCurEditsMdi
+      ::qMdiToolbar:setStyleSheet( GetStyleSheet( "QToolBar", nMode ) )
+      ::qMdiToolbarL:setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
+   ENDIF
    /* User defined toolbars */
    ::oTM:setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
 

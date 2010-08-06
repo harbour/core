@@ -719,11 +719,14 @@ METHOD IdeEdit:dispStatusInfo()
    ::qEdit:hbGetSelectionInfo()
    nMode := ::aSelectionInfo[ 5 ]
 
-   ::oAC:getAction( "TB_SelectionMode" ):setIcon( hbide_image( iif( nMode == 3, "selectionline", "stream" ) ) )
-   ::oAC:getAction( "TB_SelectionMode" ):setChecked( nMode > 1 )
+   IF ::oIde:lCurEditsMdi
+      ::oDK:setButtonState( "stream", nMode > 1 )
+   ELSE
+      ::oAC:getAction( "TB_SelectionMode" ):setIcon( hbide_image( iif( nMode == 3, "selectionline", "stream" ) ) )
+      ::oAC:getAction( "TB_SelectionMode" ):setChecked( nMode > 1 )
+   ENDIF
 
    ::oDK:setStatusText( SB_PNL_STREAM, iif( nMode == 2, "Column", iif( nMode == 3, "Line", "Stream" ) ) )
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1387,7 +1390,11 @@ METHOD IdeEdit:toggleHorzRuler()
 /* Fired by icon */
 
 METHOD IdeEdit:toggleSelectionMode()
-   ::qEdit:hbSetSelectionMode( iif( ::oAC:getAction( "TB_SelectionMode" ):isChecked(), 2, 1 ), .f. )
+   IF ::oIde:lCurEditsMdi
+      ::qEdit:hbSetSelectionMode( iif( ::oDK:setButtonState( "stream" ), 2, 1 ), .f. )
+   ELSE
+      ::qEdit:hbSetSelectionMode( iif( ::oAC:getAction( "TB_SelectionMode" ):isChecked(), 2, 1 ), .f. )
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
