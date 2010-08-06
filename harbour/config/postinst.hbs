@@ -116,8 +116,8 @@ PROCEDURE Main( ... )
             tmp := GetEnv( "HB_INSTALL_ETC" ) + hb_ps() + ".." + hb_ps() + "ld.so.conf.d"
             IF DirBuild( tmp )
                tmp1 := GetEnv( "HB_INSTALL_DYN" )
-               IF Left( tmp1, Len( GetEnv( "HB_INSTALL_PKG_TOP" ) ) ) == GetEnv( "HB_INSTALL_PKG_TOP" )
-                  tmp1 := SubStr( tmp1, Len( GetEnv( "HB_INSTALL_PKG_TOP" ) ) + 1 )
+               IF Left( tmp1, Len( GetEnv( "HB_INSTALL_PKG_ROOT" ) ) ) == GetEnv( "HB_INSTALL_PKG_ROOT" )
+                  tmp1 := SubStr( tmp1, Len( GetEnv( "HB_INSTALL_PKG_ROOT" ) ) + 1 )
                ENDIF
                hb_MemoWrit( tmp + hb_ps() + "harbour.conf", tmp1 + hb_eol() )
             ELSE
@@ -154,11 +154,11 @@ PROCEDURE Main( ... )
 
             IF !( GetEnv( "HB_PLATFORM" ) $ "win|wce" )
                DO CASE
-               CASE GetEnv( "HB_INSTALL_LIB" ) $ "/usr/lib/harbour|/usr/lib64/harbour|/usr/local/lib/harbour|/usr/local/lib64/harbour"
+               CASE GetEnv( "HB_INSTALL_DYN" ) $ "/usr/lib/harbour|/usr/lib64/harbour|/usr/local/lib/harbour|/usr/local/lib64/harbour"
                      ln -sf harbour/$l ../$ll
                      ln -sf harbour/$l ../$l
                      ;;
-               CASE GetEnv( "HB_INSTALL_LIB" ) $ "/usr/local/harbour/lib"
+               CASE GetEnv( "HB_INSTALL_DYN" ) $ "/usr/local/harbour/lib"
                      ld="/usr/lib"
                      if [ -n "${HB_INST_PKGPREF}" ] || [ -w $ld ]
                      then
@@ -220,7 +220,7 @@ PROCEDURE Main( ... )
                      first to avoid mixing in an existing .zip file. [vszakats] */
 
             cOldDir := hb_ps() + CurDir()
-            DirChange( GetEnv( "HB_INSTALL_PKG_TOP" ) )
+            DirChange( GetEnv( "HB_INSTALL_PKG_ROOT" ) )
 
             mk_hb_processRun( PathSepToSelf( GetEnv( "HB_DIR_ZIP" ) ) + "zip" +;
                               " -q -9 -X -r -o" +;
@@ -270,7 +270,7 @@ PROCEDURE Main( ... )
                               GetEnv( "HB_PLATFORM" ) == "bsd", "wheel", "root" )
 
                cOldDir := hb_ps() + CurDir()
-               DirChange( GetEnv( "HB_INSTALL_PKG_TOP" ) )
+               DirChange( GetEnv( "HB_INSTALL_PKG_ROOT" ) )
 
                /* TODO: Add support for non-GNU non-BSD tar (which gets the data from stdio) */
 

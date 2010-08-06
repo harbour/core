@@ -6,13 +6,14 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE := 1
 
-export HB_INSTALL_PKG_TOP := $(CURDIR)/debian/harbour
-export HB_INSTALL_BIN := $(CURDIR)/debian/harbour/usr/bin
-export HB_INSTALL_LIB := $(CURDIR)/debian/harbour/usr/lib/harbour
-export HB_INSTALL_INC := $(CURDIR)/debian/harbour/usr/include/harbour
-export HB_INSTALL_DOC := $(CURDIR)/debian/harbour/usr/share/doc/harbour
-export HB_INSTALL_MAN := $(CURDIR)/debian/harbour/usr/share/man
-export HB_INSTALL_ETC := $(CURDIR)/debian/harbour/etc/harbour
+export HB_INSTALL_PKG_ROOT := $(CURDIR)/debian/harbour
+export HB_INSTALL_BIN := $(HB_INSTALL_PKG_ROOT)/usr/bin
+export HB_INSTALL_LIB := $(HB_INSTALL_PKG_ROOT)/usr/lib/harbour
+export HB_INSTALL_DYN := $(HB_INSTALL_LIB)
+export HB_INSTALL_INC := $(HB_INSTALL_PKG_ROOT)/usr/include/harbour
+export HB_INSTALL_DOC := $(HB_INSTALL_PKG_ROOT)/usr/share/doc/harbour
+export HB_INSTALL_MAN := $(HB_INSTALL_PKG_ROOT)/usr/share/man
+export HB_INSTALL_ETC := $(HB_INSTALL_PKG_ROOT)/etc/harbour
 
 export HB_BUILD_PKG := no
 export HB_BUILD_SHARED := yes

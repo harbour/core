@@ -1471,14 +1471,14 @@ ifeq ($(HB_BUILD_PKG),yes)
       endif
       endif
 
-      # HB_TOP             - dir where packages will be created (root of Harbour source tree)
-      # HB_INSTALL_PKG_TOP - dir which has to be packed
-      # HB_PKGNAME         - name of the install package
-      # HB_INSTALL_PREFIX  - dir where Harbour dirs will be created
+      # HB_TOP              - dir where packages will be created (root of Harbour source tree)
+      # HB_INSTALL_PKG_ROOT - dir which has to be packed
+      # HB_PKGNAME          - name of the install package
+      # HB_INSTALL_PREFIX   - dir where Harbour dirs will be created
       #
-      #   <HB_TOP><plat/comp ><HB_BUILD_PKG_PREFIX>
-      #   <HB_INSTALL_PKG_TOP>
-      #   <HB_INSTALL_PREFIX                      >/bin
+      #   <HB_TOP><plat/comp  ><HB_BUILD_PKG_PREFIX>
+      #   <HB_INSTALL_PKG_ROOT>
+      #   <HB_INSTALL_PREFIX                       >/bin
       #
 
       ifneq ($(HB_SRC_ROOTPATH),)
@@ -1491,7 +1491,7 @@ ifeq ($(HB_BUILD_PKG),yes)
 
       HB_INSTALL_PREFIX := $(subst /,$(DIRSEP),$(HB_INSTALL_PREFIX))
 
-      export HB_INSTALL_PKG_TOP := $(HB_INSTALL_PREFIX)
+      export HB_INSTALL_PKG_ROOT := $(HB_INSTALL_PREFIX)
 
       HB_INSTALL_BIN :=
       HB_INSTALL_INC :=
