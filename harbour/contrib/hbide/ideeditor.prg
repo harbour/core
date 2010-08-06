@@ -568,10 +568,16 @@ METHOD IdeEditsManager:getEditorBySource( cSource )
 METHOD IdeEditsManager:reLoad( cSource )
    LOCAL oEdit
 
-   IF hb_fileExists( cSource ) .AND. hbide_isValidText( cSource )
-      IF !empty( oEdit := ::getEditorBySource( cSource ) )
-         oEdit:qEdit:clear()
-         oEdit:qEdit:setPlainText( hb_memoread( hbide_pathToOSPath( cSource ) ) )
+   IF empty( cSource )
+      IF ! empty( oEdit := ::getEditObjectCurrent() )
+         oEdit:reload()
+      ENDIF
+   ELSE
+      IF hb_fileExists( cSource ) .AND. hbide_isValidText( cSource )
+         IF !empty( oEdit := ::getEditorBySource( cSource ) )
+            oEdit:qEdit:clear()
+            oEdit:qEdit:setPlainText( hb_memoread( hbide_pathToOSPath( cSource ) ) )
+         ENDIF
       ENDIF
    ENDIF
 
@@ -1168,7 +1174,11 @@ METHOD IdeEditsManager:changeThumbnail()
 METHOD IdeEditsManager:find( cString, nPosFrom )
    LOCAL oEdit
    IF !empty( oEdit := ::getEditObjectCurrent() )
-      oEdit:find( cString, nPosFrom )
+      IF empty( cString )
+         ::oFR:show()
+      ELSE
+         oEdit:find( cString, nPosFrom )
+      ENDIF
    ENDIF
    RETURN Self
 /*----------------------------------------------------------------------*/
@@ -1251,6 +1261,7 @@ CLASS IdeEditor INHERIT IdeObject
    METHOD qscintilla()
    METHOD prepareBufferToLoad( cBuffer )
    METHOD prepareBufferToSave( cBuffer )
+   METHOD reload()
 
    ENDCLASS
 
@@ -1523,6 +1534,15 @@ METHOD IdeEditor:prepareBufferToLoad( cBuffer )
    ENDIF
 
    RETURN cBuffer
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditor:reload()
+
+   ::qEdit:clear()
+   ::qEdit:setPlainText( ::prepareBufferToLoad( hb_memoread( ::sourceFile ) ) )
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 

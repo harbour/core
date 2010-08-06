@@ -145,6 +145,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD connectEditSignals( oEdit )
    METHOD disconnectEditSignals( oEdit )
 
+   METHOD reload()
    METHOD redo()
    METHOD undo()
    METHOD cut()
@@ -440,8 +441,8 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
 
       n := ascan( ::oEditor:aEdits, {|o| o == oEdit } )
 
-      QAction():from( ::oEM:aActions[ 18, 2 ] ):setEnabled( ::oEditor:nSplOrient == -1 .OR. ::oEditor:nSplOrient == 1 )
-      QAction():from( ::oEM:aActions[ 19, 2 ] ):setEnabled( ::oEditor:nSplOrient == -1 .OR. ::oEditor:nSplOrient == 2 )
+      QAction():from( ::oEM:aActions[ 18, 2 ] ):setEnabled( len( ::oEditor:aEdits ) == 0 .OR. ::oEditor:nSplOrient == -1 .OR. ::oEditor:nSplOrient == 1 )
+      QAction():from( ::oEM:aActions[ 19, 2 ] ):setEnabled( len( ::oEditor:aEdits ) == 0 .OR. ::oEditor:nSplOrient == -1 .OR. ::oEditor:nSplOrient == 2 )
       QAction():from( ::oEM:aActions[ 21, 2 ] ):setEnabled( n > 0 )
 
       pAct := ::oEM:qContextMenu:exec_1( qEdit:mapToGlobal( p ) )
@@ -1433,6 +1434,19 @@ METHOD IdeEdit:toggleCompetionTips()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEdit:reload()
+   LOCAL lLoad := .t.
+
+   IF ::oEditor:qDocument:isModified()
+      lLoad := hbide_getYesNo( "Source is in modified state", "Reload it anyway?", "Reload" )
+   ENDIF
+   IF lLoad
+      ::oEditor:reload()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEdit:redo()
    ::qEdit:redo()
    RETURN Self
@@ -1946,6 +1960,7 @@ METHOD IdeEdit:goto( nLine )
       qGo:exec()
       ::oIde:oINI:cGotoDialogGeometry := hbide_posAndSize( qGo )
       nLine := qGo:intValue()
+      ::qEdit:setFocus()
    ENDIF
 
    qCursor:movePosition( QTextCursor_Start )

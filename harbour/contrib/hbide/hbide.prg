@@ -865,9 +865,7 @@ METHOD HbIde:execEditorAction( cKey )
       ::oEM:switchToReadOnly()
       EXIT
    CASE "Find"
-      IF !Empty( ::qCurEdit )
-         ::oFR:show()
-      ENDIF
+      ::oEM:find()
       EXIT
    CASE "FindEx"
       IF !Empty( ::qCurEdit )
