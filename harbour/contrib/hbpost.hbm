@@ -34,7 +34,8 @@
 {HB_BUILD_DEBUG}-debug
 {HB_BUILD_DEBUG}-cflag=-DHB_TR_LEVEL_DEBUG
 
-{(hbdyn|hbexe)&HB_BUILD_SHARED='yes'}-shared
+{(hbdyn|hbexe)&HB_BUILD_SHARED='yes'&!(HB_SYSLOC='yes')}-shared
+{(hbdyn|hbexe)&HB_BUILD_SHARED='yes'&HB_SYSLOC='yes'}-fullshared
 
 # Experimental
 {_HB_BUILD_LIBDYN}-hbdyn
