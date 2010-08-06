@@ -100,6 +100,7 @@ export HB_BUILD_PARTS=lib
 export HB_PLATFORM=win
 export HB_HOST_BIN="$(pwd)/bin/linux/gcc"
 
+export HB_INSTALL_PKG_TOP=$RPM_BUILD_ROOT
 export HB_INSTALL_BIN=$RPM_BUILD_ROOT/%{_bindir}
 export HB_INSTALL_INC=$RPM_BUILD_ROOT/%{_includedir}/%{name}
 export HB_INSTALL_LIB=$RPM_BUILD_ROOT/%{_libdir}/%{name}

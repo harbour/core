@@ -222,7 +222,7 @@ HARBOUR
    Source .tgz on *nixes
    ---------------------
 
-      $ ./mpkg_src.sh
+      $ package/mpkg_src.sh
 
    Binary .tgz on *nixes
    ---------------------
@@ -1212,9 +1212,6 @@ HARBOUR
    8. Try to do no or only small modifications at once to command examples
       included in this document. If it doesn't work, fall back to documented
       examples as is.
-   9. GNU Make 3.81.90 has known bug which prevents autodetection to work
-      in certain situations: http://savannah.gnu.org/bugs/?27591
-      Use 3.81 if in doubt.
 
 
 11. QUICK START TO BUILD YOUR OWN HARBOUR APPLICATIONS

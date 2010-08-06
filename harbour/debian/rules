@@ -6,6 +6,7 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE := 1
 
+export HB_INSTALL_PKG_TOP := $(CURDIR)/debian/harbour
 export HB_INSTALL_BIN := $(CURDIR)/debian/harbour/usr/bin
 export HB_INSTALL_LIB := $(CURDIR)/debian/harbour/usr/lib/harbour
 export HB_INSTALL_INC := $(CURDIR)/debian/harbour/usr/include/harbour

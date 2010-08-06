@@ -52,7 +52,7 @@
 
 #include "hbapi.h"
 
-/* NOTE: This function is a new Harbour functions implemented in the
+/* NOTE: This function is a new Harbour function implemented in the
          original CA-Cl*pper namespace. It should have been marked as
          HB_EXTENSION, but it's not, because it's commonly used extension
          in other xbase dialects, like Xbase++ and FlagShip.

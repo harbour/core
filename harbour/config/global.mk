@@ -1141,7 +1141,7 @@ else
    IMP_DIR :=
    ifeq ($(HB_LD_PATH_SET),)
       ifneq ($(HB_SRC_ROOTPATH),)
-         export LD_LIBRARY_PATH := $(HB_SRC_ROOTPATH)$(PLAT_COMP):$(LD_LIBRARY_PATH)
+         export LD_LIBRARY_PATH := $(HB_SRC_ROOTPATH)lib/$(PLAT_COMP):$(LD_LIBRARY_PATH)
       else
          export LD_LIBRARY_PATH := $(realpath $(DYN_DIR)):$(LD_LIBRARY_PATH)
       endif
@@ -1443,21 +1443,27 @@ export HB_VERSION
 export HB_PKGNAME
 export HB_PKGNAMI
 
+HB_SYSLOC :=
+
 HB_INSTALL_PREFIX_ORI := $(HB_INSTALL_PREFIX)
 ifeq ($(HB_BUILD_PKG),yes)
    ifeq ($(HB_INIT_DONE),)
 
       ifeq ($(HB_PLATFORM),darwin)
          HB_BUILD_PKG_PREFIX := /usr/local
+         HB_SYSLOC := yes
       else
       ifeq ($(HB_PLATFORM),sunos)
          HB_BUILD_PKG_PREFIX := /opt
+         HB_SYSLOC := yes
       else
       ifeq ($(HB_PLATFORM),beos)
          HB_BUILD_PKG_PREFIX := /boot/common
+         HB_SYSLOC := yes
       else
       ifneq ($(HB_PLATFORM_UNIX),)
          HB_BUILD_PKG_PREFIX := /usr/local
+         HB_SYSLOC := yes
       else
          HB_BUILD_PKG_PREFIX := /$(HB_PKGNAME)
       endif
@@ -1472,7 +1478,7 @@ ifeq ($(HB_BUILD_PKG),yes)
       #
       #   <HB_TOP><plat/comp ><HB_BUILD_PKG_PREFIX>
       #   <HB_INSTALL_PKG_TOP>
-      #   <HB_INSTALL_PREFIX                      >
+      #   <HB_INSTALL_PREFIX                      >/bin
       #
 
       ifneq ($(HB_SRC_ROOTPATH),)
@@ -1571,18 +1577,20 @@ ifeq ($(HB_INIT_DONE),)
    endif
 endif
 
-HB_SYSLOC :=
-ifeq ($(HB_PLATFORM),beos)
-   ifneq ($(strip $(foreach dir,/boot/common /boot/system /boot/home/config $(subst :, ,$(LIBRARY_PATH)),$(findstring |$(dir),|$(HB_INSTALL_PREFIX)))),)
-      HB_SYSLOC := yes
+ifeq ($(HB_SYSLOC),)
+   ifeq ($(HB_PLATFORM),beos)
+      ifneq ($(strip $(foreach dir,/boot/common /boot/system /boot/home/config $(subst :, ,$(LIBRARY_PATH)),$(findstring |$(dir),|$(HB_INSTALL_PREFIX)))),)
+         HB_SYSLOC := yes
+      endif
+   else
+   ifneq ($(HB_PLATFORM_UNIX),)
+      ifneq ($(strip $(foreach dir,/usr/local/bin /usr/bin $(subst :, ,$(LD_LIBRARY_PATH)),$(findstring |$(dir),|$(HB_INSTALL_PREFIX)))),)
+         HB_SYSLOC := yes
+      endif
    endif
-else
-ifneq ($(HB_PLATFORM_UNIX),)
-   ifneq ($(strip $(foreach dir,/usr/local/bin /usr/bin $(subst :, ,$(LD_LIBRARY_PATH)),$(findstring |$(dir),|$(HB_INSTALL_PREFIX)))),)
-      HB_SYSLOC := yes
    endif
 endif
-endif
+
 export HB_SYSLOC
 
 ifneq ($(HB_INSTALL_PREFIX),)
@@ -1651,9 +1659,10 @@ ifneq ($(HB_INSTALL_PREFIX),)
    endif
    # Standard name: DOCDIR
    ifeq ($(HB_INSTALL_DOC),)
-      # Do not set doc dir for *nix targets
       ifeq ($(HB_PLATFORM_UNIX),)
          export HB_INSTALL_DOC := $(HB_INSTALL_PREFIX)$(DIRSEP)doc
+      else
+         export HB_INSTALL_DOC := $(HB_INSTALL_PREFIX)$(DIRSEP)share$(DIRSEP)doc$(DIRSEP)harbour
       endif
    endif
    # Standard name: MANDIR
@@ -1661,7 +1670,7 @@ ifneq ($(HB_INSTALL_PREFIX),)
       # Do not set doc dir for non-*nix targets
       ifneq ($(HB_PLATFORM_UNIX),)
          ifeq ($(HB_SYSLOC),yes)
-            export HB_INSTALL_MAN := $(HB_INSTALL_PREFIX)$(DIRSEP)man$(INCPOSTFIX)
+            export HB_INSTALL_MAN := $(HB_INSTALL_PREFIX)$(DIRSEP)share$(DIRSEP)man
          endif
       endif
    endif

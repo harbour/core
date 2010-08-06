@@ -426,22 +426,23 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
          cProjectPath := s_cBase + s_cHome + cProject
          lPrimary := cProject $ hProjectReqList .OR. "lFromContainer" $ hProjectList[ cProject ]
 
-         call_hbmk2( cProjectPath, iif( lPrimary, cOptions + cOptionsUser, " -inc" ), .F. )
+         IF call_hbmk2( cProjectPath, iif( lPrimary, cOptions + cOptionsUser, " -inc" ), .F. )
 
-         /* Build dynamic lib */
-         IF GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "yes" .AND. hProjectList[ cProject ][ "cType" ] == "hblib"
-            call_hbmk2( cProjectPath, iif( lPrimary, cOptions + cOptionsUser, " -inc" ), .T. )
-         ENDIF
+            /* Build dynamic lib */
+            IF GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "yes" .AND. hProjectList[ cProject ][ "cType" ] == "hblib"
+               call_hbmk2( cProjectPath, iif( lPrimary, cOptions + cOptionsUser, " -inc" ), .T. )
+            ENDIF
 
-         /* Compile documentation */
-         IF lInstall .AND. lPrimary
-            mk_hbd( FNameDirGet( PathSepToSelf( cProjectPath ) ) )
-         ENDIF
+            /* Compile documentation */
+            IF lInstall .AND. lPrimary
+               mk_hbd( FNameDirGet( PathSepToSelf( cProjectPath ) ) )
+            ENDIF
 
-         /* Create EXTERN list */
-         IF lPrimary .AND. hProjectList[ cProject ][ "cType" ] $ "hblib|hbdyn"
-            mk_extern_lib( PathSepToSelf( hProjectList[ cProject ][ "cOutputName" ] ),;
-                           FNameExtSet( PathSepToSelf( cProjectPath ), ".hbx" ) )
+            /* Create EXTERN list */
+            IF lPrimary .AND. hProjectList[ cProject ][ "cType" ] $ "hblib|hbdyn"
+               mk_extern_lib( PathSepToSelf( hProjectList[ cProject ][ "cOutputName" ] ),;
+                              FNameExtSet( PathSepToSelf( cProjectPath ), ".hbx" ) )
+            ENDIF
          ENDIF
       ENDIF
    NEXT

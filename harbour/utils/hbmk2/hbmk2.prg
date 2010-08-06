@@ -444,6 +444,24 @@ REQUEST hbmk_KEYW
 
 #ifndef _HBMK_EMBEDDED_
 
+#define _ERRLEV_OK              0
+#define _ERRLEV_UNKNPLAT        1
+#define _ERRLEV_UNKNCOMP        2
+#define _ERRLEV_FAILHBDETECT    3
+#define _ERRLEV_STUBCREATE      5
+#define _ERRLEV_COMPPRG         6
+#define _ERRLEV_RUNRES          6
+#define _ERRLEV_COMPC           6
+#define _ERRLEV_RUNLINKER       7
+#define _ERRLEV_RUNLIB          7
+#define _ERRLEV_UNSUPPORTED     8
+#define _ERRLEV_WORKDIRCREATE   9
+#define _ERRLEV_HELP            19
+#define _ERRLEV_MISSDEPT        10
+#define _ERRLEV_PLUGINPREALL    20
+#define _ERRLEV_DEEPPROJNESTING 30
+#define _ERRLEV_STOP            50
+
 #define hb_DirCreate( d )       MakeDir( d )
 #define hb_DirDelete( d )       DirRemove( d )
 
@@ -839,7 +857,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    hbmk[ _HBMK_lStopAfterInit ] := .F.
    hbmk[ _HBMK_lStopAfterHarbour ] := .F.
 
-   hbmk[ _HBMK_nErrorLevel ] := 0
+   hbmk[ _HBMK_nErrorLevel ] := _ERRLEV_OK
 
    hbmk[ _HBMK_cWorkDir ] := NIL
 
@@ -933,7 +951,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    IF Empty( aArgs )
       ShowHeader( hbmk )
       ShowHelp( hbmk )
-      RETURN 19
+      RETURN _ERRLEV_HELP
    ENDIF
 
    /* Process environment */
@@ -1036,34 +1054,34 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          ShowHeader( hbmk )
          ShowHelp( hbmk, .T. )
-         RETURN 19
+         RETURN _ERRLEV_HELP
 
       CASE Left( cParamL, 8 ) == "-hbmake="
 
          convert_hbmake_to_hbp( hbmk, SubStr( cParam, 9 ) )
-         RETURN 0
+         RETURN _ERRLEV_OK
 
       CASE Left( cParamL, 5 ) == "-xbp="
 
          convert_xbp_to_hbp( hbmk, SubStr( cParam, 6 ) )
-         RETURN 0
+         RETURN _ERRLEV_OK
 
       CASE Left( cParamL, 5 ) == "-xhp="
 
          convert_xhp_to_hbp( hbmk, SubStr( cParam, 6 ) )
-         RETURN 0
+         RETURN _ERRLEV_OK
 
       CASE cParamL == "--version"
 
          ShowHeader( hbmk )
-         RETURN 0
+         RETURN _ERRLEV_OK
 
       ENDCASE
    NEXT
 
    IF nLevel > _HBMK_NEST_MAX
       hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Cannot nest projects deeper than %1$s levels" ), hb_ntos( _HBMK_NEST_MAX ) ) )
-      RETURN 30
+      RETURN _ERRLEV_DEEPPROJNESTING
    ENDIF
 
    IF nLevel > 1
@@ -1325,7 +1343,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       l_aLIBSYSMISC := { "ceshell", "uuid", "ole32", "oleaut32", "wininet", "commdlg", "commctrl" }
    OTHERWISE
       hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Platform value unknown: %1$s" ), hbmk[ _HBMK_cPLAT ] ) )
-      RETURN 1
+      RETURN _ERRLEV_UNKNPLAT
    ENDCASE
 
    hbmk[ _HBMK_aLIBCOREGT ] := ArrayJoin( aLIB_BASE_GT, l_aLIBHBGT )
@@ -1354,7 +1372,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             l_cHB_INSTALL_PREFIX := DirAddPathSep( hb_DirBase() ) + ".." + hb_ps() + ".." + hb_ps() + ".."
          OTHERWISE
             hbmk_OutErr( hbmk, I_( "Error: HB_INSTALL_PREFIX not set, failed to autodetect.\nPlease run this tool from its original location inside the Harbour installation or set HB_INSTALL_PREFIX environment variable to Harbour's root directory." ) )
-            RETURN 3
+            RETURN _ERRLEV_FAILHBDETECT
          ENDCASE
       ENDIF
 
@@ -1563,12 +1581,12 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             ELSE
                hbmk_OutErr( hbmk, hb_StrFormat( I_( "Could not detect any supported C compiler in your PATH.\nPlease setup one or set -compiler= option to one of these values: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
             ENDIF
-            RETURN 2
+            RETURN _ERRLEV_UNKNCOMP
          ENDIF
       ELSE
          IF AScan( aCOMPSUP, {| tmp | tmp == hbmk[ _HBMK_cCOMP ] } ) == 0
             hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Compiler value unknown: %1$s" ), hbmk[ _HBMK_cCOMP ] ) )
-            RETURN 2
+            RETURN _ERRLEV_UNKNCOMP
          ENDIF
          /* Detect cross platform CCPREFIX and CCPATH if embedded installation is detected */
          FOR tmp := 1 TO Len( aCOMPDET_EMBED )
@@ -2260,6 +2278,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          hbmk[ _HBMK_lStopAfterInit ] := .T.
          hbmk[ _HBMK_lRUN ] := .F.
+         hbmk[ _HBMK_nErrorLevel ] := _ERRLEV_STOP
 
          IF Left( cParamL, Len( "-stop=" ) ) == "-stop="
             cParam := MacroProc( hbmk, SubStr( cParam, Len( "-stop=" ) + 1 ), aParam[ _PAR_cFileName ] )
@@ -2693,7 +2712,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                      iif( ! Empty( hbmk[ _HBMK_aOPTPRG ] ), " " + ArrayToList( hbmk[ _HBMK_aOPTPRG ] ), "" )
          hb_processRun( AllTrim( cCommand ) )
       ENDIF
-      RETURN 0
+      RETURN _ERRLEV_OK
    ENDIF
 
    /* Strip leading @ char of .clp files */
@@ -2716,7 +2735,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    /* Start doing the make process. */
    IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lCreateImpLib ] .AND. ( Len( hbmk[ _HBMK_aPLUGINPars ] ) + Len( hbmk[ _HBMK_aPRG ] ) + Len( hbmk[ _HBMK_aC ] ) + Len( hbmk[ _HBMK_aCPP ] ) + Len( hbmk[ _HBMK_aOBJUSER ] ) + Len( l_aOBJA ) ) == 0 .AND. ! hbmk[ _HBMK_lContainer ]
       hbmk_OutErr( hbmk, I_( "Warning: No source files were specified." ) )
-      RETURN 0
+      RETURN _ERRLEV_OK
    ENDIF
 
    /* Decide about output name */
@@ -2743,7 +2762,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                IF hbmk[ _HBMK_lBEEP ]
                   DoBeep( .F. )
                ENDIF
-               RETURN 9
+               RETURN _ERRLEV_WORKDIRCREATE
             ENDIF
          ENDIF
       ELSE
@@ -2761,7 +2780,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   IF hbmk[ _HBMK_lBEEP ]
                      DoBeep( .F. )
                   ENDIF
-                  RETURN 9
+                  RETURN _ERRLEV_WORKDIRCREATE
                ENDIF
                lDeleteWorkDir := .T.
             ENDIF
@@ -4339,7 +4358,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       IF hbmk[ _HBMK_lBEEP ]
          DoBeep( .F. )
       ENDIF
-      RETURN 20
+      RETURN _ERRLEV_PLUGINPREALL
    ENDIF
 
    /* ; */
@@ -4566,7 +4585,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       OutStd( "}}" + hb_eol() )
       OutStd( "}}}" + hb_eol() )
 
-      RETURN 0
+      RETURN _ERRLEV_OK
    ENDIF
 
    /* Check if we've found all dependencies */
@@ -4576,7 +4595,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          IF hbmk[ _HBMK_lBEEP ]
             DoBeep( .F. )
          ENDIF
-         RETURN 10
+         RETURN _ERRLEV_MISSDEPT
       ENDIF
    ENDIF
 
@@ -4645,7 +4664,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                         IF hbmk[ _HBMK_lBEEP ]
                            DoBeep( .F. )
                         ENDIF
-                        RETURN 6
+                        RETURN _ERRLEV_COMPPRG
                      ENDIF
                   ENDIF
                ENDIF
@@ -4671,7 +4690,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                      IF hbmk[ _HBMK_lBEEP ]
                         DoBeep( .F. )
                      ENDIF
-                     RETURN 6
+                     RETURN _ERRLEV_COMPPRG
                   ENDIF
                ENDIF
             NEXT
@@ -4707,7 +4726,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                IF hbmk[ _HBMK_lBEEP ]
                   DoBeep( .F. )
                ENDIF
-               RETURN 6
+               RETURN _ERRLEV_COMPPRG
             ENDIF
          ENDIF
       ENDIF
@@ -4889,7 +4908,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   IF hbmk[ _HBMK_lBEEP ]
                      DoBeep( .F. )
                   ENDIF
-                  RETURN 5
+                  RETURN _ERRLEV_STUBCREATE
                ENDIF
                /* Don't delete stub in workdir in incremental mode. */
                IF hbmk[ _HBMK_lINC ]
@@ -4993,7 +5012,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   IF hbmk[ _HBMK_lBEEP ]
                      DoBeep( .F. )
                   ENDIF
-                  RETURN 5
+                  RETURN _ERRLEV_STUBCREATE
                ENDIF
                /* Don't delete stub in workdir in incremental mode. */
                IF hbmk[ _HBMK_lINC ]
@@ -5222,7 +5241,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                      OutErr( cCommand + _OUT_EOL )
                   ENDIF
                   IF ! hbmk[ _HBMK_lIGNOREERROR ]
-                     hbmk[ _HBMK_nErrorLevel ] := 6
+                     hbmk[ _HBMK_nErrorLevel ] := _ERRLEV_RUNRES
                      EXIT
                   ENDIF
                ENDIF
@@ -5264,7 +5283,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   OutErr( cCommand + _OUT_EOL )
                ENDIF
                IF ! hbmk[ _HBMK_lIGNOREERROR ]
-                  hbmk[ _HBMK_nErrorLevel ] := 6
+                  hbmk[ _HBMK_nErrorLevel ] := _ERRLEV_RUNRES
                ENDIF
             ENDIF
 
@@ -5274,7 +5293,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
       ENDIF
 
-      IF hbmk[ _HBMK_nErrorLevel ] == 0
+      IF hbmk[ _HBMK_nErrorLevel ] == _ERRLEV_OK
 
          IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ]
             l_aPRG_TODO := {}
@@ -5315,7 +5334,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                cBin_CompCGEN := cBin_CompCPP
             ENDIF
 
-            IF hbmk[ _HBMK_nErrorLevel ] == 0 .AND. Len( l_aCGEN_TODO ) > 0
+            IF hbmk[ _HBMK_nErrorLevel ] == _ERRLEV_OK .AND. Len( l_aCGEN_TODO ) > 0
 
                IF ! Empty( cBin_CompCGEN )
 
@@ -5347,7 +5366,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                         ELSE
                            IF ! CompileCLoop( hbmk, aTODO, cBin_CompCGEN, cOpt_CompC, cObjExt, nOpt_Esc, nOpt_FNF, 0, 0 )
                               IF ! hbmk[ _HBMK_lIGNOREERROR ]
-                                 hbmk[ _HBMK_nErrorLevel ] := 6
+                                 hbmk[ _HBMK_nErrorLevel ] := _ERRLEV_COMPC
                                  EXIT
                               ENDIF
                            ENDIF
@@ -5359,7 +5378,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                            hb_threadJoin( thread, @tmp )
                            IF ! tmp
                               IF ! hbmk[ _HBMK_lIGNOREERROR ]
-                                 hbmk[ _HBMK_nErrorLevel ] := 6
+                                 hbmk[ _HBMK_nErrorLevel ] := _ERRLEV_COMPC
                               ENDIF
                            ENDIF
                         NEXT
@@ -5435,7 +5454,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                                     OutErr( cCommand + _OUT_EOL )
                                  ENDIF
                                  IF ! hbmk[ _HBMK_lIGNOREERROR ]
-                                    hbmk[ _HBMK_nErrorLevel ] := 6
+                                    hbmk[ _HBMK_nErrorLevel ] := _ERRLEV_COMPC
                                     EXIT
                                  ENDIF
                               ENDIF
@@ -5460,7 +5479,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                                  OutErr( thread[ 2 ] + _OUT_EOL )
                               ENDIF
                               IF ! hbmk[ _HBMK_lIGNOREERROR ]
-                                 hbmk[ _HBMK_nErrorLevel ] := 6
+                                 hbmk[ _HBMK_nErrorLevel ] := _ERRLEV_COMPC
                               ENDIF
                            ENDIF
                         NEXT
@@ -5475,13 +5494,13 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   ENDIF
                ELSE
                   hbmk_OutErr( hbmk, I_( "Error: C/C++ command is not implemented for this platform/compiler." ) )
-                  hbmk[ _HBMK_nErrorLevel ] := 8
+                  hbmk[ _HBMK_nErrorLevel ] := _ERRLEV_UNSUPPORTED
                ENDIF
             ENDIF
          NEXT
       ENDIF
 
-      IF hbmk[ _HBMK_nErrorLevel ] == 0
+      IF hbmk[ _HBMK_nErrorLevel ] == _ERRLEV_OK
 
          lTargetUpToDate := .F.
 
@@ -5523,7 +5542,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
       ENDIF
 
-      IF hbmk[ _HBMK_nErrorLevel ] == 0 .AND. ( Len( l_aOBJ ) + Len( hbmk[ _HBMK_aOBJUSER ] ) + Len( l_aOBJA ) ) > 0 .AND. ! hbmk[ _HBMK_lCLEAN ]
+      IF hbmk[ _HBMK_nErrorLevel ] == _ERRLEV_OK .AND. ( Len( l_aOBJ ) + Len( hbmk[ _HBMK_aOBJUSER ] ) + Len( l_aOBJA ) ) > 0 .AND. ! hbmk[ _HBMK_lCLEAN ]
 
          IF lTargetUpToDate
             hbmk_OutStd( hbmk, hb_StrFormat( I_( "Target up to date: %1$s" ), hbmk[ _HBMK_cPROGNAME ] ) )
@@ -5609,7 +5628,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                      OutErr( cCommand + _OUT_EOL )
                   ENDIF
                   IF ! hbmk[ _HBMK_lIGNOREERROR ]
-                     hbmk[ _HBMK_nErrorLevel ] := 7
+                     hbmk[ _HBMK_nErrorLevel ] := _ERRLEV_RUNLINKER
                   ENDIF
                ENDIF
 
@@ -5617,11 +5636,11 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   FErase( cScriptFile )
                ENDIF
 
-               IF hbmk[ _HBMK_nErrorLevel ] == 0
+               IF hbmk[ _HBMK_nErrorLevel ] == _ERRLEV_OK
                   l_lIMPLIBToProcess := .T.
                ENDIF
 
-               IF hbmk[ _HBMK_nErrorLevel ] == 0 .AND. hbmk[ _HBMK_lGUI ] .AND. hbmk[ _HBMK_cPLAT ] == "darwin"
+               IF hbmk[ _HBMK_nErrorLevel ] == _ERRLEV_OK .AND. hbmk[ _HBMK_lGUI ] .AND. hbmk[ _HBMK_cPLAT ] == "darwin"
                   /* Build app bundle for OS X GUI apps. (experimental) */
                   tmp := FNameDirGet( hbmk[ _HBMK_cPROGNAME ] )
                   IF ! Empty( tmp )
@@ -5706,7 +5725,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                      OutErr( cCommand + _OUT_EOL )
                   ENDIF
                   IF ! hbmk[ _HBMK_lIGNOREERROR ]
-                     hbmk[ _HBMK_nErrorLevel ] := 7
+                     hbmk[ _HBMK_nErrorLevel ] := _ERRLEV_RUNLINKER
                   ENDIF
                ENDIF
 
@@ -5714,7 +5733,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   FErase( cScriptFile )
                ENDIF
 
-               IF hbmk[ _HBMK_nErrorLevel ] == 0
+               IF hbmk[ _HBMK_nErrorLevel ] == _ERRLEV_OK
                   l_lIMPLIBToProcess := .T.
                ENDIF
 
@@ -5774,7 +5793,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                      OutErr( cCommand + _OUT_EOL )
                   ENDIF
                   IF ! hbmk[ _HBMK_lIGNOREERROR ]
-                     hbmk[ _HBMK_nErrorLevel ] := 7
+                     hbmk[ _HBMK_nErrorLevel ] := _ERRLEV_RUNLIB
                   ENDIF
                ENDIF
 
@@ -5845,7 +5864,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          DirUnbuild( hbmk[ _HBMK_cWorkDir ] )
       ENDIF
 
-      IF hbmk[ _HBMK_nErrorLevel ] == 0 .AND. ! hbmk[ _HBMK_lCLEAN ] .AND. ! lTargetUpToDate .AND. ;
+      IF hbmk[ _HBMK_nErrorLevel ] == _ERRLEV_OK .AND. ! hbmk[ _HBMK_lCLEAN ] .AND. ! lTargetUpToDate .AND. ;
          ( ! lStopAfterCComp .OR. hbmk[ _HBMK_lCreateLib ] .OR. hbmk[ _HBMK_lCreateDyn ] )
 
          IF ! Empty( cBin_Post )
@@ -5944,7 +5963,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
       ENDIF
 
-      IF hbmk[ _HBMK_nErrorLevel ] == 0 .AND. ! hbmk[ _HBMK_lCLEAN ] .AND. ;
+      IF hbmk[ _HBMK_nErrorLevel ] == _ERRLEV_OK .AND. ! hbmk[ _HBMK_lCLEAN ] .AND. ;
          ( ! lStopAfterCComp .OR. hbmk[ _HBMK_lCreateLib ] .OR. hbmk[ _HBMK_lCreateDyn ] )
 
          DoInstCopy( hbmk )
@@ -5960,12 +5979,12 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    ENDIF
 
    IF ! lSkipBuild .AND. hbmk[ _HBMK_lBEEP ]
-      DoBeep( hbmk[ _HBMK_nErrorLevel ] == 0 )
+      DoBeep( hbmk[ _HBMK_nErrorLevel ] == _ERRLEV_OK )
    ENDIF
 
    IF ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. ! lStopAfterCComp .AND. ;
       ! hbmk[ _HBMK_lCreateLib ] .AND. ! hbmk[ _HBMK_lCreateDyn ] .AND. ;
-      hbmk[ _HBMK_nErrorLevel ] == 0 .AND. ! hbmk[ _HBMK_lCLEAN ] .AND. hbmk[ _HBMK_lRUN ]
+      hbmk[ _HBMK_nErrorLevel ] == _ERRLEV_OK .AND. ! hbmk[ _HBMK_lCLEAN ] .AND. hbmk[ _HBMK_lRUN ]
       cCommand := hbmk[ _HBMK_cPROGNAME ]
       #if defined( __PLATFORM__UNIX )
          IF Empty( FNameDirGet( hbmk[ _HBMK_cPROGNAME ] ) )
@@ -8691,6 +8710,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
          hbmk[ _HBMK_lStopAfterInit ] := .T.
          hbmk[ _HBMK_lRUN ] := .F.
+         hbmk[ _HBMK_nErrorLevel ] := _ERRLEV_STOP
          EXIT
 
       CASE Lower( Left( cLine, Len( "prgflags="     ) ) ) == "prgflags="     ; cLine := SubStr( cLine, Len( "prgflags="     ) + 1 )

@@ -94,7 +94,7 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
 
    RETURN aExtern
 
-STATIC PROCEDURE __hb_extern_get_neg_list( cInputName, /* @ */ aInclude, /* @ */ aExclude )
+STATIC PROCEDURE __hb_extern_get_exception_list( cInputName, /* @ */ aInclude, /* @ */ aExclude )
    LOCAL cFile
    LOCAL hRegex
    LOCAL tmp
@@ -131,7 +131,7 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
    LOCAL cHelp := "/*          Syntax: // HB_FUNC_INCLUDE <func>                           */" + hb_eol() +;
                   "/*                  // HB_FUNC_EXCLUDE <func>                           */" + hb_eol()
 
-   __hb_extern_get_neg_list( cOutputName, @aInclude, @aExclude )
+   __hb_extern_get_exception_list( cOutputName, @aInclude, @aExclude )
 
    cExtern := "/*" + hb_eol()
    cExtern += " * $" + "Id" + "$" + hb_eol()
