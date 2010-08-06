@@ -753,7 +753,7 @@ PVAR hb_compVariableFind( HB_COMP_DECL, const char * szVarName, int * piPos, int
                   /* Use negative order to signal that we are accessing a local
                    * variable from a codeblock
                    */
-                  *piPos = -hb_compVarListAdd( &pOutBlock->pDetached, pVar );
+                  *piPos = - hb_compVarListAdd( &pOutBlock->pDetached, pVar );
                }
                *piScope = HB_VS_CBLOCAL_VAR;
             }
@@ -2558,7 +2558,7 @@ static void hb_compCheckEarlyMacroEval( HB_COMP_DECL, const char *szVarName )
    int iScope = hb_compVariableScope( HB_COMP_PARAM, szVarName );
 
    if( iScope == HB_VS_CBLOCAL_VAR ||
-       iScope == HB_VS_LOCAL_VAR ||
+       /* iScope == HB_VS_LOCAL_VAR || */
        iScope == HB_VS_STATIC_VAR ||
        iScope == HB_VS_GLOBAL_STATIC ||
        iScope == HB_VS_LOCAL_FIELD ||

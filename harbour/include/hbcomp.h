@@ -106,13 +106,13 @@ extern void hb_compParserRun( HB_COMP_DECL );
 extern int hb_compVariableScope( HB_COMP_DECL, const char * );
 #define HB_VS_UNDECLARED      0
 /* variables declared in a current codeblock/function/procedure */
-#define HB_VS_CBLOCAL_VAR     1     /* local parameter of a codeblock */
-#define HB_VS_LOCAL_VAR       2
+#define HB_VS_CBLOCAL_VAR     1     /* func/proc local variables and parameters used in codeblock (detached) */
+#define HB_VS_LOCAL_VAR       2     /* local variables and parameters */
 #define HB_VS_LOCAL_MEMVAR    4
 #define HB_VS_LOCAL_FIELD     8
 #define HB_VS_STATIC_VAR     16
-#define HB_VS_FILEWIDE       32
 /* variables declared outside of a current function/procedure */
+#define HB_VS_FILEWIDE       32
 #define HB_VS_GLOBAL_MEMVAR   ( HB_VS_FILEWIDE | HB_VS_LOCAL_MEMVAR )
 #define HB_VS_GLOBAL_FIELD    ( HB_VS_FILEWIDE | HB_VS_LOCAL_FIELD )
 #define HB_VS_GLOBAL_STATIC   ( HB_VS_FILEWIDE | HB_VS_STATIC_VAR )
