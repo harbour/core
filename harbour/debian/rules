@@ -15,6 +15,13 @@ export HB_INSTALL_DOC := $(HB_INSTALL_PKG_ROOT)/usr/share/doc/harbour
 export HB_INSTALL_MAN := $(HB_INSTALL_PKG_ROOT)/usr/share/man
 export HB_INSTALL_ETC := $(HB_INSTALL_PKG_ROOT)/etc/harbour
 
+ifeq ($(LD_LIBRARY_PATH),)
+   export LD_LIBRARY_PATH := $(HB_INSTALL_DYN)
+else
+   export LD_LIBRARY_PATH := $(LD_LIBRARY_PATH):$(HB_INSTALL_DYN)
+endif
+
+export HB_SYSLOC := yes
 export HB_BUILD_PKG := no
 export HB_BUILD_SHARED := yes
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))

@@ -50,6 +50,11 @@ PROCEDURE Main( ... )
    LOCAL cSH_Script
    LOCAL nAttr
 
+   LOCAL cST_Versioned
+   LOCAL cST_Versionless
+   LOCAL cMT_Versioned
+   LOCAL cMT_Versionless
+
    IF Empty( GetEnv( "HB_PLATFORM" ) ) .OR. ;
       Empty( GetEnv( "HB_COMPILER" ) ) .OR. ;
       Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
@@ -143,37 +148,41 @@ PROCEDURE Main( ... )
          ENDIF
       ENDIF
 
-      /* TOFIX: Rewrite this in .prg */
-      #if 0
-      FOR EACH tmp IN { GetEnv( "HB_DYNLIB_ST" ), GetEnv( "HB_DYNLIB_MT" ) }
+      IF ! Empty( GetEnv( "HB_INSTALL_DYN" ) )
+         OutStd( "! Creating dynamic lib symlinks..." + hb_eol() )
 
-         OutStd( GetEnv( "HB_INSTALL_DYN" + hb_ps() + tmp + hb_eol() )
+         cST_Versioned   := GetEnv( "HB_DYNLIB_PREF" ) + GetEnv( "HB_DYNLIB_ST" )      + GetEnv( "HB_DYNLIB_EXT" )
+         cST_Versionless := GetEnv( "HB_DYNLIB_PREF" ) + GetEnv( "HB_DYNLIB_BASE_ST" ) + GetEnv( "HB_DYNLIB_EXT" )
+         cMT_Versioned   := GetEnv( "HB_DYNLIB_PREF" ) + GetEnv( "HB_DYNLIB_MT" )      + GetEnv( "HB_DYNLIB_EXT" )
+         cMT_Versionless := GetEnv( "HB_DYNLIB_PREF" ) + GetEnv( "HB_DYNLIB_BASE_MT" ) + GetEnv( "HB_DYNLIB_EXT" )
 
-            ll="` echo $l | sed 's!'${lib_suff}'$!!' `${lib_ext}"
-            ln -sf $l $ll
+         mk_hb_FLinkSym( cST_Versioned, PathSepToSelf( GetEnv( "HB_INSTALL_DYN" ) ) + hb_ps() + cST_Versionless )
+         mk_hb_FLinkSym( cMT_Versioned, PathSepToSelf( GetEnv( "HB_INSTALL_DYN" ) ) + hb_ps() + cMT_Versionless )
 
-            IF !( GetEnv( "HB_PLATFORM" ) $ "win|wce" )
-               DO CASE
-               CASE GetEnv( "HB_INSTALL_DYN" ) $ "/usr/lib/harbour|/usr/lib64/harbour|/usr/local/lib/harbour|/usr/local/lib64/harbour"
-                     ln -sf harbour/$l ../$ll
-                     ln -sf harbour/$l ../$l
-                     ;;
-               CASE GetEnv( "HB_INSTALL_DYN" ) $ "/usr/local/harbour/lib"
-                     ld="/usr/lib"
-                     if [ -n "${HB_INST_PKGPREF}" ] || [ -w $ld ]
-                     then
-                        mkdir -p ${HB_INST_PKGPREF}$ld
-                        ln -sf ../local/harbour/lib/$l ${HB_INST_PKGPREF}$ld/$ll
-                        ln -sf ../local/harbour/lib/$l ${HB_INST_PKGPREF}$ld/$l
-                     fi
-                     ;;
-                  *)
-                     ;;
-               ENDCASE
-            ENDIF
-         fi
-      done
-      #endif
+         DO CASE
+         CASE EndsWith( GetEnv( "HB_INSTALL_DYN" ), "/usr/lib/harbour" ) .OR. ;
+              EndsWith( GetEnv( "HB_INSTALL_DYN" ), "/usr/lib64/harbour" ) .OR. ;
+              EndsWith( GetEnv( "HB_INSTALL_DYN" ), "/usr/local/lib/harbour" ) .OR. ;
+              EndsWith( GetEnv( "HB_INSTALL_DYN" ), "/usr/local/lib64/harbour" )
+
+            mk_hb_FLinkSym( "harbour" + hb_ps() + cST_Versioned, PathSepToSelf( GetEnv( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cST_Versionless )
+            mk_hb_FLinkSym( "harbour" + hb_ps() + cST_Versioned, PathSepToSelf( GetEnv( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cST_Versioned )
+            mk_hb_FLinkSym( "harbour" + hb_ps() + cMT_Versioned, PathSepToSelf( GetEnv( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cMT_Versionless )
+            mk_hb_FLinkSym( "harbour" + hb_ps() + cMT_Versioned, PathSepToSelf( GetEnv( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cMT_Versioned )
+
+         CASE GetEnv( "HB_INSTALL_DYN" ) == "/usr/local/harbour/lib"
+            /* TOFIX: Rewrite this in .prg */
+            #if 0
+               ld="/usr/lib"
+               if [ -n "${HB_INST_PKGPREF}" ] || [ -w $ld ]
+                  then
+                     mkdir -p ${HB_INST_PKGPREF}$ld
+                     ln -sf ../local/harbour/lib/$l ${HB_INST_PKGPREF}$ld/$ll
+                     ln -sf ../local/harbour/lib/$l ${HB_INST_PKGPREF}$ld/$l
+                  fi
+            #endif
+         ENDCASE
+      ENDIF
 
       /* Creating language files */
 
@@ -509,6 +518,20 @@ STATIC PROCEDURE mk_hb_FCopy( cSrc, cDst, l644 )
 
    RETURN
 
+/* Like hb_FLinkSym(), but with feedback */
+STATIC PROCEDURE mk_hb_FLinkSym( cDst, cSrc )
+
+   IF hb_FLinkSym( cDst, cSrc ) == 0
+      OutStd( hb_StrFormat( "! Symlink: %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
+   ELSE
+      OutStd( hb_StrFormat( "! Error: Creating symlink %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
+   ENDIF
+
+   RETURN
+
+STATIC FUNCTION EndsWith( cString, cEnd )
+   RETURN Right( cString, Len( cEnd ) ) == cEnd
+
 STATIC FUNCTION query_stdout( cName )
    LOCAL cStdOut
    LOCAL cStdErr
@@ -551,7 +574,7 @@ STATIC FUNCTION mk_extern_core()
       ! Empty( GetEnv( "HB_DYNLIB_ST" ) )
 
       /* TOFIX: Use list of libs instead of dynamic lib */
-      IF ( aExtern := __hb_extern_get_list( PathSepToSelf( GetEnv( "HB_DYNLIB_DIR" ) ) + hb_ps() + GetEnv( "HB_DYNLIB_ST" ) + GetEnv( "HB_DYNLIB_EXT" ) ) ) != NIL
+      IF ( aExtern := __hb_extern_get_list( PathSepToSelf( GetEnv( "HB_DYNLIB_DIR" ) ) + hb_ps() + GetEnv( "HB_DYNLIB_PREF" ) + GetEnv( "HB_DYNLIB_ST" ) + GetEnv( "HB_DYNLIB_EXT" ) ) ) != NIL
 
          OutStd( "! Generating core extern headers..." + hb_eol() )
 

@@ -1148,6 +1148,9 @@ else
          export LD_LIBRARY_PATH := $(realpath $(DYN_DIR)):$(LD_LIBRARY_PATH)
       endif
       export HB_LD_PATH_SET := yes
+      ifneq ($(LD_LIBRARY_PATH),)
+         $(info ! LD_LIBRARY_PATH: $(LD_LIBRARY_PATH))
+      endif
    endif
 endif
 DYN_PREF :=
@@ -1448,8 +1451,6 @@ endif
 export HB_VERSION
 export HB_PKGNAME
 export HB_PKGNAMI
-
-HB_SYSLOC :=
 
 HB_INSTALL_PREFIX_ORI := $(HB_INSTALL_PREFIX)
 ifeq ($(HB_BUILD_PKG),yes)
@@ -1807,5 +1808,6 @@ include $(TOP)$(ROOT)config/globsh.mk
 
 export HB_DYNLIB_EXT := $(DYN_EXT)
 export HB_DYNLIB_DIR := $(DYN_DIR)
+export HB_DYNLIB_PREF := $(DYN_PREF)
 
 endif # GLOBAL_MK_
