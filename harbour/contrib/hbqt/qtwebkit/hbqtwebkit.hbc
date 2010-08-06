@@ -15,7 +15,7 @@ libs=../qtnetwork/hbqtnetwork.hbc
 
 {!HB_STATIC_QT}libs=hbqtwebkit${__HB_DYN__}
 {!HB_STATIC_QT&(allwin|os2)}libs=QtWebKit4
-{!HB_STATIC_QT&linux}libs=QtWebKit
+{!HB_STATIC_QT&(linux|symbian)}libs=QtWebKit
 {!HB_STATIC_QT&darwin}libs=/Library/Frameworks/QtWebKit.framework/QtWebKit
 {HB_STATIC_QT&allwin}libs=hbqtwebkits${__HB_DYN__}
 {HB_STATIC_QT&linux}libs=hbqtwebkit

@@ -1245,20 +1245,26 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          aCOMPSUP := { "gcc" }
       ENDCASE
       cDynLibNamePrefix := "lib"
-      IF hbmk[ _HBMK_cPLAT ] == "vxworks"
+      DO CASE
+      CASE hbmk[ _HBMK_cPLAT ] == "vxworks"
          l_aLIBHBGT := {}
          hbmk[ _HBMK_cGTDEFAULT ] := "gtstd"
          cBinExt := ".vxe"
-      ELSE
+      CASE hbmk[ _HBMK_cPLAT ] == "symbian"
+         l_aLIBHBGT := {}
+         hbmk[ _HBMK_cGTDEFAULT ] := "gtstd"
+         cBinExt := ".exe"
+      OTHERWISE
          l_aLIBHBGT := { "gttrm" }
          hbmk[ _HBMK_cGTDEFAULT ] := "gttrm"
          cBinExt := ""
-      ENDIF
+      ENDCASE
       cOptPrefix := "-"
       SWITCH hbmk[ _HBMK_cPLAT ]
-      CASE "darwin" ; cDynLibExt := ".dylib" ; EXIT
-      CASE "hpux"   ; cDynLibExt := ".sl" ; EXIT
-      OTHERWISE     ; cDynLibExt := ".so"
+      CASE "darwin"  ; cDynLibExt := ".dylib" ; EXIT
+      CASE "hpux"    ; cDynLibExt := ".sl" ; EXIT
+      CASE "symbian" ; cDynLibExt := ".dll" ; EXIT
+      OTHERWISE      ; cDynLibExt := ".so"
       ENDSWITCH
    CASE hbmk[ _HBMK_cPLAT ] == "dos"
 #if ! defined( __PLATFORM__UNIX )
@@ -2945,10 +2951,15 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          IF hbmk[ _HBMK_lDEBUG ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-g" )
          ENDIF
+         /* TODO: Symbian cross-tools on Windows better "likes" forward slashes. [vszakats] */
          IF hbmk[ _HBMK_cPLAT ] == "vxworks"
             vxworks_env_init( hbmk )
          ENDIF
-         cLibLibPrefix := "lib"
+         IF hbmk[ _HBMK_cPLAT ] == "symbian"
+            cLibLibPrefix := ""
+         ELSE
+            cLibLibPrefix := "lib"
+         ENDIF
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
@@ -3017,7 +3028,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
          cOpt_CompC += " {FC}"
          IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
-            IF .T. /* EXPERIMENTAL */
+            /* Symbian gcc cross-compiler (on Windows) crashes if compiling multiple files at once */
+            IF !( hbmk[ _HBMK_cPLAT ] == "symbian" ) /* EXPERIMENTAL */
                lCHD_Comp := .T.
                cOpt_CompC += " {LC}"
             ELSE
@@ -3040,7 +3052,11 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          cOpt_Link := "{LO} {LA} {FL} {DL}"
          cLibPathPrefix := "-L"
          cLibPathSep := " "
-         cLibLibExt := ".a"
+         IF hbmk[ _HBMK_cPLAT ] == "symbian"
+            cLibLibExt := ".lib"
+         ELSE
+            cLibLibExt := ".a"
+         ENDIF
          IF l_lLIBGROUPING .AND. ;
             ( hbmk[ _HBMK_cPLAT ] == "linux" .OR. ;
               hbmk[ _HBMK_cPLAT ] == "beos" .OR. ;

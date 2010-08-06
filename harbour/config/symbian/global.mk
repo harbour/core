@@ -4,10 +4,9 @@
 
 all : first
 
-BIN_EXT :=
-# ?
-DYN_EXT := .so
-DYN_PREF := lib
+BIN_EXT := .exe
+DYN_EXT := .dll
+DYN_PREF :=
 
 ifneq ($(filter $(HB_BUILD_STRIP),all lib),)
    ARSTRIP = && $(HB_CCPREFIX)strip -S $(LIB_DIR)/$@

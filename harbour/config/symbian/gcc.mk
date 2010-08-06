@@ -11,8 +11,8 @@ ifeq ($(HB_CMP),)
 endif
 
 OBJ_EXT := .o
-LIB_PREF := lib
-LIB_EXT := .a
+LIB_PREF :=
+LIB_EXT := .lib
 
 HB_DYN_COPT := -DHB_DYNLIB -fpic
 
