@@ -13,6 +13,8 @@
 
 #include "hbqt.h"
 
+HB_EXTERN_BEGIN
+
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_HBEvents );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_HBSlots );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QAbstractItemModel );
@@ -116,6 +118,8 @@ extern HB_EXPORT void * hbqt_gcAllocate_QTimer( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QTranslator( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QUrl( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QVariant( void * pObj, bool bNew );
+
+HB_EXTERN_END
 
 #define hbqt_par_HBEvents( n )                                  ( ( HBEvents                                    * ) hbqt_gcpointer( n ) )
 #define hbqt_par_HBSlots( n )                                   ( ( HBSlots                                     * ) hbqt_gcpointer( n ) )

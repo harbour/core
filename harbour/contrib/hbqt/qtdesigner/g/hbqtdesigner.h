@@ -13,6 +13,8 @@
 
 #include "hbqt.h"
 
+HB_EXTERN_BEGIN
+
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QDesignerActionEditorInterface );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QDesignerFormEditorInterface );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QDesignerFormWindowCursorInterface );
@@ -30,6 +32,8 @@ extern HB_EXPORT void * hbqt_gcAllocate_QDesignerFormWindowManagerInterface( voi
 extern HB_EXPORT void * hbqt_gcAllocate_QDesignerObjectInspectorInterface( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QDesignerPropertyEditorInterface( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QDesignerWidgetBoxInterface( void * pObj, bool bNew );
+
+HB_EXTERN_END
 
 #define hbqt_par_QDesignerActionEditorInterface( n )            ( ( QDesignerActionEditorInterface              * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QDesignerFormEditorInterface( n )              ( ( QDesignerFormEditorInterface                * ) hbqt_gcpointer( n ) )

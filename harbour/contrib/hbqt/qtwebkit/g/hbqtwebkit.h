@@ -13,6 +13,8 @@
 
 #include "hbqt.h"
 
+HB_EXTERN_BEGIN
+
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QWebFrame );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QWebHistory );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QWebHistoryInterface );
@@ -34,6 +36,8 @@ extern HB_EXPORT void * hbqt_gcAllocate_QWebPluginFactory( void * pObj, bool bNe
 extern HB_EXPORT void * hbqt_gcAllocate_QWebSecurityOrigin( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QWebSettings( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QWebView( void * pObj, bool bNew );
+
+HB_EXTERN_END
 
 #define hbqt_par_QWebFrame( n )                                 ( ( QWebFrame                                   * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QWebHistory( n )                               ( ( QWebHistory                                 * ) hbqt_gcpointer( n ) )

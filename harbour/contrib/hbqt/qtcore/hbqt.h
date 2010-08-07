@@ -82,12 +82,14 @@ typedef struct
    int type;
 } HBQT_GC_T;
 
-HB_GARBAGE_FUNC( Q_release );
+HB_EXTERN_BEGIN
 
 extern HB_EXPORT void * hbqt_gcpointer( int iParam );
 extern HB_EXPORT const HB_GC_FUNCS * hbqt_gcFuncs( void );
 extern HB_EXPORT void * hbqt_pPtrFromObj( int iParam );
 extern HB_EXPORT void * hbqt_pPtrFromItem( PHB_ITEM pObj );
+
+HB_EXTERN_END
 
 #define hbqt_par_QString( n )                       ( ( QString ) hb_parcx( n ) )
 #define hbqt_par_uchar( n )                         ( ( uchar * ) hb_parcx( n ) )

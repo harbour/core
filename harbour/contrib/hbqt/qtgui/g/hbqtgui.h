@@ -13,6 +13,8 @@
 
 #include "hbqt.h"
 
+HB_EXTERN_BEGIN
+
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_HBQAbstractItemModel );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_HBQMainWindow );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_HBQPlainTextEdit );
@@ -462,6 +464,8 @@ extern HB_EXPORT void * hbqt_gcAllocate_QWindowStateChangeEvent( void * pObj, bo
 extern HB_EXPORT void * hbqt_gcAllocate_QWizard( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QWizardPage( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QUiLoader( void * pObj, bool bNew );
+
+HB_EXTERN_END
 
 #define hbqt_par_HBQAbstractItemModel( n )                      ( ( HBQAbstractItemModel                        * ) hbqt_gcpointer( n ) )
 #define hbqt_par_HBQMainWindow( n )                             ( ( HBQMainWindow                               * ) hbqt_gcpointer( n ) )

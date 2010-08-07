@@ -1800,6 +1800,8 @@ STATIC FUNCTION Build_HeaderFile( cpp_, cPathOut, cProFile )
    aadd( txt_, "" )
    aadd( txt_, '#include "hbqt.h"' )
    aadd( txt_, "" )
+   aadd( txt_, "HB_EXTERN_BEGIN" )
+   aadd( txt_, "" )
 
    FOR EACH s IN cpp_
       aadd( txt_, "extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_" + s + " );" )
@@ -1812,6 +1814,9 @@ STATIC FUNCTION Build_HeaderFile( cpp_, cPathOut, cProFile )
       NEXT
       aadd( txt_, "" )
    ENDIF
+
+   aadd( txt_, "HB_EXTERN_END" )
+   aadd( txt_, "" )
 
    FOR EACH s IN cpp_
       IF s == "QList" /* TOFIX: Ugly hack */

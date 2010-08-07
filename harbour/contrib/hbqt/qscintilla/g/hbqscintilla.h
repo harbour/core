@@ -13,6 +13,8 @@
 
 #include "hbqt.h"
 
+HB_EXTERN_BEGIN
+
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_HBQsciScintilla );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QsciAbstractAPIs );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QsciAPIs );
@@ -38,6 +40,8 @@ extern HB_EXPORT void * hbqt_gcAllocate_QsciLexerFlagship( void * pObj, bool bNe
 extern HB_EXPORT void * hbqt_gcAllocate_QsciScintilla( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QsciStyle( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QsciStyledText( void * pObj, bool bNew );
+
+HB_EXTERN_END
 
 #define hbqt_par_HBQsciScintilla( n )                           ( ( HBQsciScintilla                             * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QsciAbstractAPIs( n )                          ( ( QsciAbstractAPIs                            * ) hbqt_gcpointer( n ) )

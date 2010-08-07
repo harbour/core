@@ -13,6 +13,8 @@
 
 #include "hbqt.h"
 
+HB_EXTERN_BEGIN
+
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QFtp );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QHttp );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QHttpHeader );
@@ -26,6 +28,8 @@ extern HB_EXPORT void * hbqt_gcAllocate_QHttpHeader( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QHttpRequestHeader( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QHttpResponseHeader( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QNetworkRequest( void * pObj, bool bNew );
+
+HB_EXTERN_END
 
 #define hbqt_par_QFtp( n )                                      ( ( QFtp                                        * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QHttp( n )                                     ( ( QHttp                                       * ) hbqt_gcpointer( n ) )

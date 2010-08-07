@@ -62,7 +62,7 @@
 
 /*----------------------------------------------------------------------*/
 
-HB_GARBAGE_FUNC( Q_release )
+static HB_GARBAGE_FUNC( Q_release )
 {
    HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;
 
@@ -70,7 +70,7 @@ HB_GARBAGE_FUNC( Q_release )
       p->func( p );
 }
 
-const HB_GC_FUNCS QT_gcFuncs =
+static const HB_GC_FUNCS QT_gcFuncs =
 {
    Q_release,
    hb_gcDummyMark
