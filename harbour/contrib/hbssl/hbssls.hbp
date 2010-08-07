@@ -4,6 +4,6 @@
 
 hbssl.hbm
 
--stop{!(win|wce)}
+-stop{!allwin}
 
-{win|wce}-cflag=-DHB_OPENSSL_STATIC
+{allwin}-cflag=-DHB_OPENSSL_STATIC

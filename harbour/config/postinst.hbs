@@ -148,7 +148,9 @@ PROCEDURE Main( ... )
          ENDIF
       ENDIF
 
-      IF ! Empty( GetEnv( "HB_INSTALL_DYN" ) )
+      IF !( GetEnv( "HB_PLATFORM" ) $ "win|wce|os2|dos" ) .AND. ;
+         ! Empty( GetEnv( "HB_INSTALL_DYN" ) )
+
          OutStd( "! Creating dynamic lib symlinks..." + hb_eol() )
 
          cST_Versioned   := GetEnv( "HB_DYNLIB_PREF" ) + GetEnv( "HB_DYNLIB_ST" )      + GetEnv( "HB_DYNLIB_EXT" )

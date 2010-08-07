@@ -7105,6 +7105,8 @@ STATIC FUNCTION dep_try_pkg_detection( hbmk, dep )
                   cVersion := "unknown version"
                ENDIF
 
+               cStdOut := StrTran( cStdOut, Chr( 10 ), " " )
+
                FOR EACH cItem IN hb_ATokens( cStdOut,, .T. )
                   IF Left( cItem, Len( "-I" ) ) == "-I"
                      dep[ _HBMKDEP_lFound ] := .T.
@@ -7922,6 +7924,7 @@ STATIC FUNCTION ListCookLib( hbmk, aLIB, aLIBA, array, cPrefix, cExtNew )
    LOCAL cDir
    LOCAL cLibName
    LOCAL cLibNameCooked
+   LOCAL cName, cExt
 
    IF hbmk[ _HBMK_cCOMP ] $ "gcc|mingw|mingw64|mingwarm|djgpp|cygwin|gccomf|clang|open64"
       FOR EACH cLibName IN array
@@ -7938,7 +7941,13 @@ STATIC FUNCTION ListCookLib( hbmk, aLIB, aLIBA, array, cPrefix, cExtNew )
                cLibNameCooked := cPrefix + cLibNameCooked
             ENDIF
             IF cExtNew != NIL
-               cLibNameCooked := FNameExtSet( cLibNameCooked, cExtNew )
+               hb_FNameSplit( cLibNameCooked,, @cName, @cExt )
+               /* Do not strip version number postfixes */
+               IF IsDigit( SubStr( cExt, 2, 1 ) )
+                  cLibNameCooked += cExtNew
+               ELSE
+                  cLibNameCooked := hb_FNameMerge(, cName, cExtNew )
+               ENDIF
             ENDIF
             AAdd( aLIB, cLibNameCooked )
          ELSE

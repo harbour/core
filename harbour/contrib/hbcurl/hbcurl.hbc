@@ -7,7 +7,8 @@ incpaths=.
 {!HB_STATIC_CURL}libs=${hb_name}${__HB_DYN__}
 {HB_STATIC_CURL}libs=${hb_name}s${__HB_DYN__}
 
-{!mingw}libs=libcurl
+{allwin&!mingw}libs=libcurl
+{!allwin}libs=curl
 {!HB_STATIC_CURL&mingw}libs=curldll
 {HB_STATIC_CURL&mingw}libs=curl
 
