@@ -40,6 +40,16 @@
 <file>resources/database_search.png</file>
 <file>resources/dbl2sglquote.png</file>
 <file>resources/dbstruct.png</file>
+<file>resources/dbf_p1.png</file>
+<file>resources/dbf_p2.png</file>
+<file>resources/dbf_p3.png</file>
+<file>resources/dbf_p4.png</file>
+<file>resources/dbf_p5.png</file>
+<file>resources/dbf_p6.png</file>
+<file>resources/dbf_p7.png</file>
+<file>resources/dbf_p8.png</file>
+<file>resources/dbf_p9.png</file>
+<file>resources/dbf_p10.png</file>
 <file>resources/dc_delete.png</file>
 <file>resources/dc_down.png</file>
 <file>resources/dc_folder.png</file>
@@ -103,6 +113,7 @@
 <file>resources/hb-16x16.png</file>
 <file>resources/hb-32x32.png</file>
 <file>resources/hbide.png</file>
+<file>resources/hbide3.png</file>
 <file>resources/hbidesplash.png</file>
 <file>resources/hbidesplashwatermark.png</file>
 <file>resources/help.png</file>
@@ -189,6 +200,7 @@
 <file>resources/source_res.png</file>
 <file>resources/source_txt.png</file>
 <file>resources/source_unknown.png</file>
+<file>resources/statistics.png</file>
 <file>resources/spacestotabs.png</file>
 <file>resources/stream.png</file>
 <file>resources/streamcomment.png</file>
@@ -225,5 +237,7 @@
 <file>resources/xmate.png</file>
 <file>resources/zoomin.png</file>
 <file>resources/zoomout.png</file>
+<file>resources/zoomin3.png</file>
+<file>resources/zoomout3.png</file>
 </qresource>
 </RCC>

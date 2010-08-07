@@ -558,34 +558,39 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
       ENDIF
       EXIT
 
-   CASE "buttonViewOrganized_clicked"
-      ::oCurPanel:nViewStyle  := 0
-      ::oCurPanel:restGeometry()
-      ::oCurPanel:prepare()
-      EXIT
-
-   CASE "buttonSaveLayout_clicked"
-      ::oCurPanel:saveGeometry()
-      EXIT
-
-   CASE "buttonViewTiled_clicked"
-      ::oCurPanel:saveGeometry()
-      ::oCurPanel:tileSubWindows()
-      ::oCurPanel:nViewStyle  := 1
-      ::oCurPanel:prepare()
-      EXIT
-
-   CASE "buttonViewCascaded_clicked"
-      ::oCurPanel:saveGeometry()
-      ::oCurPanel:cascadeSubWindows()
-      ::oCurPanel:nViewStyle  := 2
-      ::oCurPanel:prepare()
-      EXIT
-
+   /* Left-toolbar actions */
    CASE "buttonViewTabbed_clicked"
       ::oCurPanel:setViewMode( iif( ::oCurPanel:viewMode() == QMdiArea_TabbedView, QMdiArea_SubWindowView, QMdiArea_TabbedView ) )
       EXIT
+   CASE "buttonViewOrganized_clicked"
+      ::oCurPanel:setViewStyle( HBPMDI_STYLE_ORGANIZED )
+      EXIT
+   CASE "buttonSaveLayout_clicked"
+      ::oCurPanel:saveGeometry()
+      EXIT
+   CASE "buttonViewCascaded_clicked"
+      ::oCurPanel:setViewStyle( HBPMDI_STYLE_CASCADED )
+      EXIT
+   CASE "buttonViewTiled_clicked"
+      ::oCurPanel:setViewStyle( HBPMDI_STYLE_TILED )
+      EXIT
+   CASE "buttonViewMaximized_clicked"
+      ::oCurPanel:setViewStyle( HBPMDI_STYLE_MAXIMIZED )
+      EXIT
+   CASE "buttonViewStackedVert_clicked"
+      ::oCurPanel:setViewStyle( HBPMDI_STYLE_TILEDVERT )
+      EXIT
+   CASE "buttonViewStackedHorz_clicked"
+      ::oCurPanel:setViewStyle( HBPMDI_STYLE_TILEDHORZ )
+      EXIT
+   CASE "buttonViewZoomedIn_clicked"
+      ::oCurPanel:tilesZoom( +1 )
+      EXIT
+   CASE "buttonViewZoomedOut_clicked"
+      ::oCurPanel:tilesZoom( -1 )
+      EXIT
 
+   /* Left-toolbar Table Manipulation Actions */
    CASE "buttonDbStruct_clicked"
       IF !empty( ::oCurBrw )
          ::showStruct()
@@ -663,6 +668,7 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
       EXIT
    CASE "buttonZaptable_clicked"
       EXIT
+   /*  End - left-toolbar actions */
 
    ENDSWITCH
 
@@ -909,7 +915,7 @@ METHOD IdeBrowseManager:buildToolbar()
    ::buildToolButton( ::qToolbar, {} )
    ::buildIndexButton()
    ::buildToolButton( ::qToolbar, { "Search in table"    , "find"          , {|| ::execEvent( "buttonFind_clicked"          ) }, .f. } )
-   ::buildToolButton( ::qToolbar, { "Goto record"        , "gotoline"      , {|| ::execEvent( "buttonGoto_clicked"          ) }, .f. } )
+   ::buildToolButton( ::qToolbar, { "Goto record"        , "gotoline3"     , {|| ::execEvent( "buttonGoto_clicked"          ) }, .f. } )
    ::buildToolButton( ::qToolbar, {} )
    ::buildToolButton( ::qToolbar, { "Close current table", "dc_delete"     , {|| ::execEvent( "buttonClose_clicked"         ) }, .f. } )
    ::qToolbar:addWidget( sp3 )
@@ -931,23 +937,22 @@ METHOD IdeBrowseManager:buildLeftToolbar()
    qTBar := ::qToolbarL
    aBtn := {}
 
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Toggle tabbed view"         , "view_tabbed"     , {|| ::execEvent( "buttonViewTabbed_clicked"    ) }, .f. } ) )
+   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Toggle tabbed view"         , "view_tabbed"     , {|| ::execEvent( "buttonViewTabbed_clicked"      ) }, .f. } ) )
    hbide_buildToolbarButton( qTBar, {} )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View as arranged"           , "view_organized"  , {|| ::execEvent( "buttonViewOrganized_clicked" ) }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Save layout"                , "save3"           , {|| ::execEvent( "buttonSaveLayout_clicked"    ) }, .f. } ) )
+   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View as arranged"           , "view_organized"  , {|| ::execEvent( "buttonViewOrganized_clicked"   ) }, .f. } ) )
+   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Save layout"                , "save3"           , {|| ::execEvent( "buttonSaveLayout_clicked"      ) }, .f. } ) )
    hbide_buildToolbarButton( qTBar, {} )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View as cascaded"           , "view_cascaded"   , {|| ::execEvent( "buttonViewCascaded_clicked"  ) }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View as tiled"              , "view_tiled"      , {|| ::execEvent( "buttonViewTiled_clicked"     ) }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View Maximized"             , "fullscreen"      , {|| ::execEvent( "buttonViewMaximized_clicked" ) }, .f. } ) )
+   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View as cascaded"           , "view_cascaded"   , {|| ::execEvent( "buttonViewCascaded_clicked"    ) }, .f. } ) )
+   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View as tiled"              , "view_tiled"      , {|| ::execEvent( "buttonViewTiled_clicked"       ) }, .f. } ) )
+   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View Maximized"             , "fullscreen"      , {|| ::execEvent( "buttonViewMaximized_clicked"   ) }, .f. } ) )
    aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View Vertically Tiled"      , "view_vertstacked", {|| ::execEvent( "buttonViewStackedVert_clicked" ) }, .f. } ) )
    aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View Horizontally Tiled"    , "view_horzstacked", {|| ::execEvent( "buttonViewStackedHorz_clicked" ) }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View Zoom In"               , "view_zoomin"     , {|| ::execEvent( "buttonViewZoomedIn_clicked"  ) }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View Zoom Out"              , "view_zoomout"    , {|| ::execEvent( "buttonViewZoomedOut_clicked" ) }, .f. } ) )
+   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View Zoom In"               , "view_zoomin"     , {|| ::execEvent( "buttonViewZoomedIn_clicked"    ) }, .f. } ) )
+   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View Zoom Out"              , "view_zoomout"    , {|| ::execEvent( "buttonViewZoomedOut_clicked"   ) }, .f. } ) )
    hbide_buildToolbarButton( qTBar, {} )
 
    aeval( aBtn, {|q| aadd( ::aToolBtns, q ) } )
 
-#if 1
    ::buildToolButton( ::qToolbarL, { "Append a record"       , "database_add"     , {|| ::execEvent( "buttonAppendRecord_clicked"  ) }, .f. } )
    ::buildToolButton( ::qToolbarL, { "Delete a record"       , "database_remove"  , {|| ::execEvent( "buttonDelRecord_clicked"     ) }, .f. } )
    ::buildToolButton( ::qToolbarL, { "Lock/Unlock Record"    , "database_lock"    , {|| ::execEvent( "buttonLockRecord_clicked"    ) }, .f. } )
@@ -960,7 +965,6 @@ METHOD IdeBrowseManager:buildLeftToolbar()
    ::buildToolButton( ::qToolbarL, { "Search in Table"       , "database_search"  , {|| ::execEvent( "buttonSearchInTable_clicked" ) }, .f. } )
    ::buildToolButton( ::qToolbarL, {} )
    ::buildToolButton( ::qToolbarL, { "Zap Table"             , "database_process" , {|| ::execEvent( "buttonZaptable_clicked"      ) }, .f. } )
-#endif
 
    RETURN Self
 
@@ -1156,19 +1160,12 @@ CLASS IdeBrowsePanel INHERIT IdeObject
    METHOD saveGeometry()
    METHOD restGeometry()
    METHOD activateBrowser()
+   METHOD setViewStyle( nStyle )
+   METHOD tileVertically()
+   METHOD tileHorizontally()
+   METHOD tilesZoom( nMode )
 
-   METHOD viewMode()                              INLINE ::qWidget:viewMode()
-   METHOD setViewMode( nMode )                    INLINE ::qWidget:setViewMode( nMode )
-   METHOD tileSubWindows()                        INLINE ::qWidget:tileSubWindows()
-   METHOD cascadeSubWindows()                     INLINE ::qWidget:cascadeSubWindows()
-   METHOD activateNextSubWindow()                 INLINE ::qWidget:activateNextSubWindow()
-   METHOD activatePreviousSubWindow()             INLINE ::qWidget:activatePreviousSubWindow()
-
-   #if 0
-   closeActiveSubWindow()
-   closeAllSubWindows()
-   setActiveSubWindow( QMdiSubWindow )
-   #endif
+   ERROR HANDLER OnError( ... )
 
    ENDCLASS
 
@@ -1184,6 +1181,11 @@ METHOD IdeBrowsePanel:new( oIde, cPanel, oManager )
    ::qWidget:setObjectName( ::cPanel )
    ::qWidget:setDocumentMode( .t. )
    ::qWidget:setOption( QMdiArea_DontMaximizeSubWindowOnActivation, .t. )
+   ::qWidget:setVerticalScrollBarPolicy( Qt_ScrollBarAsNeeded )
+   ::qWidget:setHorizontalScrollBarPolicy( Qt_ScrollBarAsNeeded )
+   ::qWidget:setDocumentMode( .t. )
+   ::qWidget:setTabShape( QTabWidget_Triangular )
+   ::qWidget:setViewMode( QMdiArea_TabbedView )
 
    ::connect( ::qWidget, "subWindowActivated(QMdiSubWindow)", {|p| ::execEvent( "mdiArea_subWindowActivated", p ) } )
 
@@ -1201,6 +1203,156 @@ METHOD IdeBrowsePanel:destroy()
       oSub := NIL
    NEXT
 
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowsePanel:onError( ... )
+   LOCAL cMsg
+
+   cMsg := __GetMessage()
+   IF SubStr( cMsg, 1, 1 ) == "_"
+      cMsg := SubStr( cMsg, 2 )
+   ENDIF
+
+   RETURN ::qWidget:&cMsg( ... )
+
+/*------------------------------------------------------------------------*/
+
+METHOD IdeBrowsePanel:setViewStyle( nStyle )
+   LOCAL qObj, a_
+   LOCAL nOldStyle := ::nViewStyle
+
+   IF hb_isNumeric( nStyle )
+      IF nStyle != ::nViewStyle
+         IF ::nViewStyle == HBPMDI_STYLE_ORGANIZED
+            ::saveGeometry()
+         ENDIF
+
+         IF ::nViewStyle == HBPMDI_STYLE_MAXIMIZED
+            qObj := QMdiSubWindow():from( ::activeSubWindow() )
+            FOR EACH a_ IN ::aBrowsers
+               a_[ 2 ]:setWindowState( Qt_WindowNoState )
+            NEXT
+            ::setActiveSubWindow( qObj )
+         ENDIF
+
+         SWITCH nStyle
+         CASE HBPMDI_STYLE_ORGANIZED
+            ::restGeometry()
+            EXIT
+         CASE HBPMDI_STYLE_CASCADED
+            ::qWidget:cascadeSubWindows()
+            EXIT
+         CASE HBPMDI_STYLE_TILED
+            ::qWidget:tileSubWindows()
+            EXIT
+         CASE HBPMDI_STYLE_MAXIMIZED
+            qObj := QMdiSubWindow():from( ::activeSubWindow() )
+            FOR EACH a_ IN ::aBrowsers
+               a_[ 2 ]:setWindowState( Qt_WindowMaximized )
+            NEXT
+            ::setActiveSubWindow( qObj )
+            EXIT
+         CASE HBPMDI_STYLE_TILEDVERT
+            ::tileVertically()
+            EXIT
+         CASE HBPMDI_STYLE_TILEDHORZ
+            ::tileHorizontally()
+            EXIT
+         ENDSWITCH
+
+         ::nViewStyle := nStyle
+         ::prepare()
+      ENDIF
+   ENDIF
+   RETURN nOldStyle
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowsePanel:tileVertically()
+   LOCAL qObj, qVPort, nH, nT, nW, a_
+
+   qObj   := ::activeSubWindow()
+   qVPort := QWidget():from( ::viewport() )
+   nH     := qVPort:height() / len( ::aBrowsers )
+   nW     := qVPort:width()
+   nT     := 0
+   FOR EACH a_ IN ::aBrowsers
+      a_[ 2 ]:setGeometry( QRect():new( 0, nT, nW, nH ) )
+      nT += nH
+   NEXT
+   ::setActiveSubWindow( qObj )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowsePanel:tileHorizontally()
+   LOCAL qObj, qVPort, nH, nT, nW, nL, a_
+
+   qObj   := ::activeSubWindow()
+   qVPort := QWidget():from( ::viewport() )
+   nH     := qVPort:height()
+   nW     := qVPort:width() / len( ::aBrowsers )
+   nT     := 0
+   nL     := 0
+   FOR EACH a_ IN ::aBrowsers
+      a_[ 2 ]:setGeometry( QRect():new( nL, nT, nW, nH ) )
+      nL += nW
+   NEXT
+   ::setActiveSubWindow( qObj )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowsePanel:tilesZoom( nMode )
+   LOCAL qMdi, nT, nL, nH, nW, qRect, a_
+
+   IF ::nViewStyle == HBPMDI_STYLE_TILEDVERT .OR. ::nViewStyle == HBPMDI_STYLE_TILEDHORZ
+      IF ::nViewStyle == HBPMDI_STYLE_TILEDVERT
+         nT := 0
+         FOR EACH a_ IN ::aBrowsers
+            qMdi  := a_[ 2 ]
+            qRect := QRect():from( qMdi:geometry() )
+            nH    := qRect:height() + ( nMode * ( qRect:height() / 4 ) )
+            qMdi:setGeometry( QRect():new( 0, nT, qRect:width(), nH ) )
+            nT    += nH
+         NEXT
+      ELSE
+         nL := 0
+         FOR EACH a_ IN ::aBrowsers
+            qMdi  := a_[ 2 ]
+            qRect := QRect():from( qMdi:geometry() )
+            nW    := qRect:width() + ( nMode * ( qRect:width() / 4 ) )
+            qMdi:setGeometry( QRect():new( nL, 0, nW, qRect:height() ) )
+            nL    += nW
+         NEXT
+      ENDIF
+
+      ::prepare()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowsePanel:saveGeometry()
+   LOCAL a_
+   IF ::nViewStyle == HBPMDI_STYLE_ORGANIZED
+      FOR EACH a_ IN ::aBrowsers
+         a_[ SUB_GEOMETRY ] := QRect():from( a_[ SUB_WINDOW ]:geometry() )
+      NEXT
+   ENDIF
+   RETURN Self
+
+/*------------------------------------------------------------------------*/
+
+METHOD IdeBrowsePanel:restGeometry()
+   LOCAL a_
+   FOR EACH a_ IN ::aBrowsers
+      IF hb_isObject( a_[ SUB_GEOMETRY ] )
+         a_[ SUB_WINDOW ]:setGeometry( a_[ SUB_GEOMETRY ] )
+      ENDIF
+   NEXT
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1297,30 +1449,6 @@ METHOD IdeBrowsePanel:activateBrowser()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
-METHOD IdeBrowsePanel:saveGeometry()
-   LOCAL a_
-   IF ::nViewStyle == 0                 /* Only if in self organized mode */
-      FOR EACH a_ IN ::aBrowsers
-         a_[ SUB_GEOMETRY ] := QRect():from( a_[ SUB_WINDOW ]:geometry() )
-      NEXT
-   ENDIF
-   RETURN Self
-
-/*------------------------------------------------------------------------*/
-
-METHOD IdeBrowsePanel:restGeometry()
-   LOCAL a_
-   IF ::nViewStyle == 0
-      FOR EACH a_ IN ::aBrowsers
-         IF hb_isObject( a_[ SUB_GEOMETRY ] )
-            a_[ SUB_WINDOW ]:setGeometry( a_[ SUB_GEOMETRY ] )
-         ENDIF
-      NEXT
-   ENDIF
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
 //
 //                            Class IdeBrowse
 //
@@ -1375,6 +1503,8 @@ CLASS IdeBrowse INHERIT IdeObject
    DATA   aFlds                                   INIT  {}
    DATA   aSeek                                   INIT  {}
    DATA   aToFld                                  INIT  {}
+
+   CLASSDATA  nIdentity                           INIT  0
 
    METHOD new( oIde, oManager, oPanel, aInfo )
    METHOD create( oIde, oManager, oPanel, aInfo )
@@ -1702,6 +1832,7 @@ METHOD IdeBrowse:buildMdiWindow()
 
    ::qMdi:setWindowTitle( ::cTable )
    ::qMdi:setObjectName( hb_ntos( nID ) )
+   ::qMdi:setWindowIcon( hbide_image( "dbf_p" + hb_ntos( ::nID ) ) )
 
    IF ! empty( ::aInfo[ TBL_GEOMETRY ] )
       qRect := hb_aTokens( ::aInfo[ TBL_GEOMETRY ], " " )

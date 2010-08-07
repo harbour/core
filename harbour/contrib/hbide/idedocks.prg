@@ -246,20 +246,20 @@ METHOD IdeDocks:getEditorPanelsInfo()
 METHOD IdeDocks:buildDialog()
    LOCAL s, aSize, a_, lTiled := .t., x_
 
-   ::oIde:oDlg := XbpDialog():new()
-   ::oDlg:icon := hbide_image( "hbide" )
-   ::oDlg:title := "Harbour IDE"
+   ::oIde:oDlg     := XbpDialog():new()
+   ::oDlg:icon     := hbide_image( "hbide" )
+   ::oDlg:title    := "Harbour IDE"
    ::oDlg:qtObject := hbide_getUI( "mainwindow" )
    ::oDlg:create( , , , , , .f. )
 
    ::oDlg:setStyleSheet( GetStyleSheet( "QMainWindow", ::nAnimantionMode ) )
 
    ::oDlg:close := {|| hbide_getYesNo( "hbIDE is about to be closed!", "Are you sure?" ) }
-   ::oDlg:oWidget:setDockOptions( QMainWindow_AllowTabbedDocks + QMainWindow_ForceTabbedDocks )
-   ::oDlg:oWidget:setTabPosition( Qt_BottomDockWidgetArea, QTabWidget_South )
-   ::oDlg:oWidget:setCorner( Qt_BottomLeftCorner, Qt_LeftDockWidgetArea )
-   ::oDlg:oWidget:setCorner( Qt_BottomRightCorner, Qt_RightDockWidgetArea )
-   ::oDlg:oWidget:resize( 900,470 )
+   ::oDlg:setDockOptions( QMainWindow_AllowTabbedDocks + QMainWindow_ForceTabbedDocks )
+   ::oDlg:setTabPosition( Qt_BottomDockWidgetArea, QTabWidget_South )
+   ::oDlg:setCorner( Qt_BottomLeftCorner, Qt_LeftDockWidgetArea )
+   ::oDlg:setCorner( Qt_BottomRightCorner, Qt_RightDockWidgetArea )
+   ::oDlg:resize( 900,470 )
 
    ::oIde:oDa := ::oDlg:drawingArea
 
@@ -280,7 +280,7 @@ METHOD IdeDocks:buildDialog()
    ::oIde:qLayout:setHorizontalSpacing( 0 )
    ::oIde:qLayout:setVerticalSpacing( 0 )
    //
-   ::oDa:oWidget:setLayout( ::qLayout )
+   ::oDa:setLayout( ::qLayout )
 
    IF ::oIde:lCurEditsMdi
       ::buildMdiToolbar()
@@ -308,7 +308,7 @@ METHOD IdeDocks:buildDialog()
       ENDIF
       DEFAULT a_[ 3 ] TO "0"
       DEFAULT a_[ 4 ] TO "0"
-      DEFAULT a_[ 5 ] TO "0"
+      DEFAULT a_[ 5 ] TO hb_ntos( QMdiArea_TabbedView )
       DEFAULT a_[ 6 ] TO "0"
       a_[ 3 ] := val( a_[ 3 ] )
       a_[ 4 ] := val( a_[ 4 ] )
@@ -330,20 +330,20 @@ METHOD IdeDocks:buildDialog()
    NEXT
    IF ::oIde:lCurEditsMdi
       IF lTiled
-         ::oStackedWidget:oWidget:tileSubWindows()
+         ::oStackedWidget:tileSubWindows()
       ENDIF
    ENDIF
    ::setView( "Stats" )                  /* Always call with name */
 
    IF ::oIde:lCurEditsMdi
       IF x_[ 1,5 ] == QMdiArea_TabbedView
-         ::oStackedWidget:oWidget:setViewMode( QMdiArea_TabbedView )
+         ::oStackedWidget:setViewMode( QMdiArea_TabbedView )
       ENDIF
 
       IF     x_[ 1,6 ] == 1
-         ::oStackedWidget:oWidget:tileSubWindows()
+         ::oStackedWidget:tileSubWindows()
       ELSEIF x_[ 1,6 ] == 2
-         ::oStackedWidget:oWidget:cascadeSubWindows()
+         ::oStackedWidget:cascadeSubWindows()
       ELSEIF x_[ 1,6 ] == 3
          ::stackMaximized()
 #if 0  /* At this point size of the viewport is not determined */
@@ -588,53 +588,46 @@ HB_TRACE( HB_TR_DEBUG, "projectTree_dropEvent" )
       ENDIF
       EXIT
 
+   /* Left-toolbar actions */
+   CASE "buttonViewTabbed_clicked"
+      ::oStackedWidget:setViewMode( iif( ::oStackedWidget:viewMode() == QMdiArea_TabbedView, QMdiArea_SubWindowView, QMdiArea_TabbedView ) )
+      EXIT
    CASE "buttonViewOrganized_clicked"
-      ::nViewStyle  := 0
+      ::nViewStyle  := HBPMDI_STYLE_ORGANIZED
       ::restState()
       EXIT
-
-   CASE "buttonViewTiled_clicked"
-      ::oStackedWidget:oWidget:tileSubWindows()
-      ::nViewStyle  := 1
-      EXIT
-
-   CASE "buttonViewCascaded_clicked"
-      ::oStackedWidget:oWidget:cascadeSubWindows()
-      ::nViewStyle  := 2
-      EXIT
-
-   CASE "buttonViewMaximized_clicked"
-      ::nViewStyle  := 3
-      ::stackMaximized()
-      EXIT
-
-   CASE "buttonViewStackedVert_clicked"
-      ::nViewStyle  := 4
-      ::stackVertically()
-      EXIT
-
-   CASE "buttonViewStackedHorz_clicked"
-      ::nViewStyle  := 5
-      ::stackHorizontally()
-      EXIT
-
-   CASE "buttonViewZoomedIn_clicked"
-      ::stackZoom( +1 )
-      EXIT
-
-   CASE "buttonViewZoomedOut_clicked"
-      ::stackZoom( -1 )
-      EXIT
-
-   CASE "buttonViewTabbed_clicked"
-      ::oStackedWidget:oWidget:setViewMode( iif( ::oStackedWidget:oWidget:viewMode() == QMdiArea_TabbedView, QMdiArea_SubWindowView, QMdiArea_TabbedView ) )
-      EXIT
-
    CASE "buttonSaveLayout_clicked"
-      IF ::nViewStyle == 0
+      IF ::nViewStyle == HBPMDI_STYLE_ORGANIZED
          ::savePanelsGeometry()
       ENDIF
       EXIT
+   CASE "buttonViewTiled_clicked"
+      ::oStackedWidget:tileSubWindows()
+      ::nViewStyle  := HBPMDI_STYLE_TILED
+      EXIT
+   CASE "buttonViewCascaded_clicked"
+      ::oStackedWidget:cascadeSubWindows()
+      ::nViewStyle  := HBPMDI_STYLE_CASCADED
+      EXIT
+   CASE "buttonViewMaximized_clicked"
+      ::nViewStyle  := HBPMDI_STYLE_MAXIMIZED
+      ::stackMaximized()
+      EXIT
+   CASE "buttonViewStackedVert_clicked"
+      ::nViewStyle  := HBPMDI_STYLE_TILEDVERT
+      ::stackVertically()
+      EXIT
+   CASE "buttonViewStackedHorz_clicked"
+      ::nViewStyle  := HBPMDI_STYLE_TILEDHORZ
+      ::stackHorizontally()
+      EXIT
+   CASE "buttonViewZoomedIn_clicked"
+      ::stackZoom( +1 )
+      EXIT
+   CASE "buttonViewZoomedOut_clicked"
+      ::stackZoom( -1 )
+      EXIT
+   /* Ends: MDI actions */
 
    CASE "mdiSubWindow_windowStateChanged"
       IF ! empty( ::oIde:aMdies )
@@ -653,25 +646,22 @@ HB_TRACE( HB_TR_DEBUG, "projectTree_dropEvent" )
 
 METHOD IdeDocks:restState( nMode )
    LOCAL qMdi
-
    HB_SYMBOL_UNUSED( nMode )
    FOR EACH qMdi IN ::oIde:aMdies
-      qMdi:setWindowState( 0 )
+      qMdi:setWindowState( Qt_WindowNoState )
    NEXT
    ::restPanelsGeometry()
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:stackMaximized()
    LOCAL qObj, qMdi
-
-   qObj := QMdiSubWindow():from( ::oStackedWidget:oWidget:activeSubWindow() )
+   qObj := QMdiSubWindow():from( ::oStackedWidget:activeSubWindow() )
    FOR EACH qMdi IN ::oIde:aMdies
       qMdi:setWindowState( Qt_WindowMaximized )
    NEXT
-   ::oStackedWidget:oWidget:setActiveSubWindow( qObj )
+   ::oStackedWidget:setActiveSubWindow( qObj )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -713,10 +703,8 @@ METHOD IdeDocks:stackHorizontally()
 
    ::restState( 0 )
 
-   qArea  := ::oStackedWidget:oWidget
-
+   qArea  := ::oStackedWidget
    qObj   := QMdiSubWindow():from( qArea:activeSubWindow() )
-
    qVPort := QWidget():from( qArea:viewport() )
    nH     := qVPort:height()
    nW     := qVPort:width() / ( len( ::oIde:aMdies ) - 1 )
@@ -730,7 +718,7 @@ METHOD IdeDocks:stackHorizontally()
       ENDIF
    NEXT
 
-   ::oStackedWidget:oWidget:setActiveSubWindow( qObj )
+   ::oStackedWidget:setActiveSubWindow( qObj )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -738,12 +726,10 @@ METHOD IdeDocks:stackHorizontally()
 METHOD IdeDocks:stackVertically()
    LOCAL qArea, qObj, qVPort, nH, nT, nW, qMdi
 
-   ::restState()
+   ::restState( 0 )
 
-   qArea  := ::oStackedWidget:oWidget
-
+   qArea  := ::oStackedWidget
    qObj   := QMdiSubWindow():from( qArea:activeSubWindow() )
-
    qVPort := QWidget():from( qArea:viewport() )
    nH     := qVPort:height() / ( len( ::oIde:aMdies ) - 1 )
    nW     := qVPort:width()
@@ -756,7 +742,7 @@ METHOD IdeDocks:stackVertically()
       ENDIF
    NEXT
 
-   ::oStackedWidget:oWidget:setActiveSubWindow( qObj )
+   ::oStackedWidget:setActiveSubWindow( qObj )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -987,8 +973,8 @@ METHOD IdeDocks:buildMdiToolbarLeft()
    aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Toggle Code Completion"     , "help1"           , {|| ::oEM:toggleCodeCompetion()                  }, .f. } ) )
    aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Toggle Completion Tips"     , "infotips"        , {|| ::oEM:toggleCompetionTips()                  }, .f. } ) )
    hbide_buildToolbarButton( qTBar, {} )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Zoom In"                    , "zoomin"          , {|| ::oEM:zoom( +1 )                             }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Zoom Out"                   , "zoomout"         , {|| ::oEM:zoom( -1 )                             }, .f. } ) )
+   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Zoom In"                    , "zoomin3"         , {|| ::oEM:zoom( +1 )                             }, .f. } ) )
+   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Zoom Out"                   , "zoomout3"        , {|| ::oEM:zoom( -1 )                             }, .f. } ) )
    hbide_buildToolbarButton( qTBar, {} )
 
    aeval( aBtn, {|q| aadd( ::aMdiBtns, q ) } )
@@ -1114,7 +1100,9 @@ METHOD IdeDocks:buildViewWidget( cView )
       qMdi := QMdiSubWindow():new( ::oStackedWidget:oWidget )
       qMdi:setWindowTitle( cView )
       qMdi:setObjectName( cView )
-      IF cView != "Stats"
+      IF cView == "Stats"
+         qMdi:setWindowIcon( hbide_image( "statistics" ) )
+      ELSE
          qMdi:setWindowIcon( ::getPanelIcon( cView ) )
       ENDIF
 
