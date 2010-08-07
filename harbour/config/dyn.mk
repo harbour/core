@@ -80,7 +80,7 @@ endif
 DYN_FILE :=
 IMP_FILE :=
 
-ifneq ($(HB_BUILD_DLL),no)
+ifneq ($(HB_BUILD_DYN),no)
 ifneq ($(DY_RULE),)
 
 DYN_NAME := $(DYN_PREF)$(DYNNAME)$(DYN_EXT)

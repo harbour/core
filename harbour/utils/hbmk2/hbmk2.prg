@@ -854,6 +854,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       s_cSecToken := StrZero( hb_Random( 1, 4294967294 ), 10, 0 )
    ENDIF
 
+   hbmk[ _HBMK_cBUILD ] := ""
+
    hbmk[ _HBMK_lStopAfterInit ] := .F.
    hbmk[ _HBMK_lStopAfterHarbour ] := .F.
 
@@ -1537,7 +1539,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                         hb_DirExists( PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) ) + "lib" +;
                                                      hb_ps() + hbmk[ _HBMK_cPLAT ] +;
                                                      hb_ps() + aCOMPDET[ tmp ][ _COMPDET_cCOMP ] +;
-                                                     iif( Empty( hbmk[ _HBMK_cBUILD ] ), "", PathSepToSelf( hbmk[ _HBMK_cBUILD ] ) ) )
+                                                     PathSepToSelf( hbmk[ _HBMK_cBUILD ] ) )
                         hbmk[ _HBMK_cCOMP ] := aCOMPDET[ tmp ][ _COMPDET_cCOMP ]
                         IF Len( aCOMPDET[ tmp ] ) >= _COMPDET_cCCPREFIX
                            hbmk[ _HBMK_cCCPREFIX ] := aCOMPDET[ tmp ][ _COMPDET_cCCPREFIX ]
@@ -1725,7 +1727,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       IF hb_DirExists( tmp := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) ) + "bin" +;
                                              hb_ps() + hbmk[ _HBMK_cPLAT ] +;
                                              hb_ps() + hbmk[ _HBMK_cCOMP ] +;
-                                             iif( Empty( hbmk[ _HBMK_cBUILD ] ), "", PathSepToSelf( hbmk[ _HBMK_cBUILD ] ) ) )
+                                             PathSepToSelf( hbmk[ _HBMK_cBUILD ] ) )
          l_cHB_INSTALL_BIN := tmp
       ELSE
          l_cHB_INSTALL_BIN := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "bin" )
@@ -1736,7 +1738,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       IF hb_DirExists( tmp := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) ) + "lib" +;
                                              hb_ps() + hbmk[ _HBMK_cPLAT ] +;
                                              hb_ps() + hbmk[ _HBMK_cCOMP ] +;
-                                             iif( Empty( hbmk[ _HBMK_cBUILD ] ), "", PathSepToSelf( hbmk[ _HBMK_cBUILD ] ) ) )
+                                             PathSepToSelf( hbmk[ _HBMK_cBUILD ] ) )
          l_cHB_INSTALL_LIB := tmp
       ELSE
          l_cHB_INSTALL_LIB := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + "lib" )
@@ -4598,11 +4600,16 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    IF lDumpInfo
 
       OutStd( "{{{" + hb_eol() )
+      OutStd( "platform{{" + hbmk[ _HBMK_cPLAT ] + "}}" + hb_eol() )
+      OutStd( "compiler{{" + hbmk[ _HBMK_cCOMP ] + "}}" + hb_eol() )
+      OutStd( "cpu{{" + hbmk[ _HBMK_cCPU ] + "}}" + hb_eol() )
+      OutStd( "buildname{{" + hbmk[ _HBMK_cBUILD ] + "}}" + hb_eol() )
       IF ! Empty( hbmk[ _HBMK_cPROGNAME ] )
          OutStd( "outputname{{" + PathSepToForward( hbmk[ _HBMK_cPROGNAME ] ) + "}}" + hb_eol() )
       ENDIF
       OutStd( "targetname{{" + hbmk_TARGETNAME( hbmk ) + "}}" + hb_eol() )
       OutStd( "targettype{{" + hbmk_TARGETTYPE( hbmk ) + "}}" + hb_eol() )
+      OutStd( "dynsuffix{{" + hbmk_DYNSUFFIX( hbmk ) + "}}" + hb_eol() )
       OutStd( "inc{{" + iif( hbmk[ _HBMK_lINC ], "yes", "no" ) + "}}" + hb_eol() )
 
       OutStd( "hbctree{{" + hb_eol() )

@@ -15,7 +15,7 @@ PRG_MAIN := hbformat.prg
 LIBS = $(HB_LIBS_ST_NORDD)
 
 ifneq ($(filter $(HB_PLATFORM),win wce os2),)
-   ifneq ($(HB_BUILD_DLL),no)
+   ifneq ($(HB_BUILD_DYN),no)
       HB_BUILD_SHARED := yes
    endif
 endif

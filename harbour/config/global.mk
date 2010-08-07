@@ -176,7 +176,7 @@ ifeq ($(HB_INIT_DONE),)
       endif
 
       # Enforce some basic settings for release packages
-      export HB_BUILD_DLL := yes
+      export HB_BUILD_DYN := yes
       export HB_BUILD_OPTIM := yes
       export HB_BUILD_DEBUG := no
       export HB_BUILD_SHARED := no
@@ -186,7 +186,7 @@ ifeq ($(HB_INIT_DONE),)
    endif
 
    # Can't build shared tools if we don't create dlls
-   ifeq ($(HB_BUILD_DLL),no)
+   ifeq ($(HB_BUILD_DYN),no)
       export HB_BUILD_SHARED := no
    endif
 
@@ -272,8 +272,8 @@ ifeq ($(HB_INIT_DONE),)
    ifneq ($(HB_BUILD_PKG),)
       $(info ! HB_BUILD_PKG: $(HB_BUILD_PKG))
    endif
-   ifneq ($(HB_BUILD_DLL),)
-      $(info ! HB_BUILD_DLL: $(HB_BUILD_DLL))
+   ifneq ($(HB_BUILD_DYN),)
+      $(info ! HB_BUILD_DYN: $(HB_BUILD_DYN))
    endif
    ifneq ($(HB_BUILD_SHARED),)
       $(info ! HB_BUILD_SHARED: $(HB_BUILD_SHARED))
@@ -1707,7 +1707,7 @@ ifeq ($(HB_HOST_INC),)
 endif
 
 ifeq ($(HB_INIT_DONE),)
-   ifneq ($(HB_BUILD_DLL),no)
+   ifneq ($(HB_BUILD_DYN),no)
 
       ifeq ($(HB_PLATFORM_UNIX),)
          HB_DYN_VER := $(HB_VER_MAJOR)$(HB_VER_MINOR)

@@ -108,7 +108,7 @@ AR_RULE = $(create_library)
 
 LD_RULE = $(link_exe_file)
 
-ifeq ($(HB_BUILD_DLL),dostest)
+ifeq ($(HB_BUILD_DYN),dostest)
 
    DY := dxe3gen
    DFLAGS += $(LIBPATHS)
@@ -136,6 +136,6 @@ ifeq ($(HB_BUILD_DLL),dostest)
 
    DY_RULE = $(create_dynlib)
 
-endif # HB_BUILD_DLL
+endif # HB_BUILD_DYN
 
 include $(TOP)$(ROOT)config/rules.mk

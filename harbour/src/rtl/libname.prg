@@ -53,31 +53,7 @@
 FUNCTION hb_LibName( cLibName, cLibDir )
    LOCAL cDir, cName, cExt
 
-   LOCAL cLibPrefix
-   LOCAL cLibExt
-
    IF hb_isString( cLibName )
-
-      #if defined( __PLATFORM__WINDOWS ) .OR. ;
-          defined( __PLATFORM__OS2 ) .OR. ;
-          defined( __PLATFORM__SYMBIAN )
-         cLibExt := ".dll"
-      #elif defined( __PLATFORM__DOS )
-         cLibExt := ""
-      #elif defined( __PLATFORM__DARWIN )
-         cLibExt := ".dylib"
-      #elif defined( __PLATFORM__HPUX )
-         cLibExt := ".sl"
-      #else
-         cLibExt := ".so"
-      #endif
-
-      #if ! defined( __PLATFORM__UNIX ) .OR. ;
-         defined( __PLATFORM__SYMBIAN )
-         cLibPrefix := ""
-      #else
-         cLibPrefix := "lib"
-      #endif
 
       hb_FNameSplit( cLibName, @cDir, @cName, @cExt )
 
@@ -85,10 +61,10 @@ FUNCTION hb_LibName( cLibName, cLibDir )
          cDir := cLibDir
       ENDIF
       IF Empty( cExt )
-         cExt := cLibExt
+         cExt := hb_libExt()
       ENDIF
 
-      RETURN hb_FNameMerge( cDir, cLibPrefix + cName, cExt )
+      RETURN hb_FNameMerge( cDir, hb_libPrefix() + cName, cExt )
    ENDIF
 
    RETURN ""

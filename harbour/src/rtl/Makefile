@@ -118,6 +118,7 @@ C_SOURCES := \
    left.c \
    len.c \
    lennum.c \
+   libnamec.c \
    math.c \
    maxrow.c \
    memofile.c \

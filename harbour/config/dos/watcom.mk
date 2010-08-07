@@ -71,7 +71,7 @@ ifneq ($(HB_LINKING_RTL),)
    endif
 endif
 
-ifeq ($(HB_BUILD_DLL),dostest)
+ifeq ($(HB_BUILD_DYN),dostest)
 
    DY := $(LD)
    DFLAGS += OP quiet SYS cwdllr
@@ -101,6 +101,6 @@ ifeq ($(HB_BUILD_DLL),dostest)
 
    DY_RULE = $(create_dynlib)
 
-endif # HB_BUILD_DLL
+endif # HB_BUILD_DYN
 
 include $(TOP)$(ROOT)config/common/watcom.mk

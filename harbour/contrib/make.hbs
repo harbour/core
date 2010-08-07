@@ -337,7 +337,7 @@ PROCEDURE GNUMake( aParams, hProjectList )
    hb_setenv( "_HB_INSTALL_MAN", GetEnv( "HB_INSTALL_MAN" ) )
    hb_setenv( "_HB_INSTALL_ETC", GetEnv( "HB_INSTALL_ETC" ) )
 
-   /* Override hbmk2 autodetection */
+   /* Override hbmk2 autodetection. WARNING: Must be in sync with global.mk logic */
    hb_setenv( "HB_INSTALL_PREFIX", s_cRoot )
    hb_setenv( "HB_INSTALL_BIN", s_cRoot + "bin/" + GetEnv( "HB_PLATFORM" ) + "/" + GetEnv( "HB_COMPILER" ) + GetEnv( "HB_BUILD_NAME" ) )
    hb_setenv( "HB_INSTALL_LIB", s_cRoot + "lib/" + GetEnv( "HB_PLATFORM" ) + "/" + GetEnv( "HB_COMPILER" ) + GetEnv( "HB_BUILD_NAME" ) )
@@ -364,6 +364,8 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
    LOCAL cProject
    LOCAL cProjectPath
    LOCAL lPrimary
+
+   LOCAL cDynSuffix
 
    /* Preprocessing */
 
@@ -426,11 +428,21 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
          cProjectPath := s_cBase + s_cHome + cProject
          lPrimary := cProject $ hProjectReqList .OR. "lFromContainer" $ hProjectList[ cProject ]
 
-         IF call_hbmk2( cProjectPath, iif( lPrimary, cOptions + cOptionsUser, " -inc" ), .F. )
+         IF call_hbmk2( cProjectPath, iif( lPrimary, cOptions + cOptionsUser, " -inc" ), NIL )
 
             /* Build dynamic lib */
             IF GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "yes" .AND. hProjectList[ cProject ][ "cType" ] == "hblib"
-               call_hbmk2( cProjectPath, iif( lPrimary, cOptions + cOptionsUser, " -inc" ), .T. )
+               /* Is this a platform where import libs are used? */
+               IF "|" + hProjectList[ cProject ][ "cPlatform" ] + "|" $ "|win|dos|os2|"
+                  IF Empty( hProjectList[ cProject ][ "cDynSuffix" ] )
+                     cDynSuffix := "_dll"
+                  ELSE
+                     cDynSuffix := hProjectList[ cProject ][ "cDynSuffix" ]
+                  ENDIF
+               ELSE
+                  cDynSuffix := hb_libExt()
+               ENDIF
+               call_hbmk2( cProjectPath, iif( lPrimary, cOptions + cOptionsUser, " -inc" ), cDynSuffix )
             ENDIF
 
             /* Compile documentation */
@@ -459,10 +471,12 @@ STATIC FUNCTION call_hbmk2_hbinfo( cProjectPath, hProject )
    hProject[ "aDept" ] := {}
    hProject[ "lChecked" ] := NIL
 
-   IF call_hbmk2( cProjectPath, " --hbinfo", .F.,, @cStdOut )
+   IF call_hbmk2( cProjectPath, " --hbinfo", NIL,, @cStdOut )
 
       hProject[ "cType" ] := hbmk2_hbinfo_getitem( cStdOut, "targettype" )
       hProject[ "cOutputName" ] := hbmk2_hbinfo_getitem( cStdOut, "outputname" )
+      hProject[ "cDynSuffix" ] := hbmk2_hbinfo_getitem( cStdOut, "dynsuffix" )
+      hProject[ "cPlatform" ] := hbmk2_hbinfo_getitem( cStdOut, "platform" )
 
       FOR EACH tmp IN hb_ATokens( hbmk2_hbinfo_getitem( cStdOut, "hbctree", .T. ), Chr( 10 ) )
          IF ! Empty( tmp )
@@ -497,7 +511,7 @@ STATIC FUNCTION hbmk2_hbinfo_getitem( cString, cItem, lAll )
 
    RETURN cRetVal
 
-STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, lLibDyn, cStdErr, cStdOut )
+STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, cDynSuffix, cStdErr, cStdOut )
    LOCAL nErrorLevel
    LOCAL cOptionsLibDyn := ""
    LOCAL cCommand
@@ -509,8 +523,8 @@ STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, lLibDyn, cStdErr, cStdOut
    hb_setenv( "CLIPPER" )
    hb_setenv( "CLIPPERCMD" )
 
-   IF lLibDyn
-      hb_setenv( "__HB_DYN__", "_dll" ) /* Request dll version of Harbour contrib dependencies (the implibs) to be linked (experimental) */
+   IF cDynSuffix != NIL
+      hb_setenv( "__HB_DYN__", cDynSuffix ) /* Request dll version of Harbour contrib dependencies (the implibs) to be linked (experimental) */
       hb_setenv( "_HB_BUILD_LIBDYN", "yes" )
 
       IF hb_FileExists( FNameExtSet( cProjectPath, ".hbc" ) )
