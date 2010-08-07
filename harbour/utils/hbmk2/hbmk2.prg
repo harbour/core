@@ -3735,8 +3735,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             ENDIF
          CASE hbmk[ _HBMK_cPLAT ] == "linux"
             l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cDL_Version + cDynLibExt,;
-                                                      "harbour" + cDL_Version + cDynLibExt ) }
+            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], cDynLibNamePrefix + "harbourmt" + cDL_Version + cDynLibExt,;
+                                                      cDynLibNamePrefix + "harbour" + cDL_Version + cDynLibExt ) }
          ENDCASE
          IF hbmk[ _HBMK_cPLAT ] $ "win|os2"
             cBin_Res := "wrc" + hbmk[ _HBMK_cCCEXT ]
@@ -4435,6 +4435,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
          l_cIMPLIBNAME := hb_FNameMerge( l_cIMPLIBDIR, cLibLibPrefix + l_cIMPLIBNAME, cImpLibExt )
       CASE lStopAfterCComp .AND. hbmk[ _HBMK_lCreateDyn ]
+         cName := cDynLibNamePrefix + cName
          IF Empty( cExt ) .AND. ! Empty( cDynLibExt )
             hbmk[ _HBMK_cPROGNAME ] := hb_FNameMerge( cDir, cName, cDynLibExt )
          ENDIF
