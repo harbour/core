@@ -426,7 +426,7 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
       IF cProject $ hProjectList
 
          cProjectPath := s_cBase + s_cHome + cProject
-         lPrimary := cProject $ hProjectReqList .OR. "lFromContainer" $ hProjectList[ cProject ]
+         lPrimary := cProject $ hProjectReqList
 
          IF call_hbmk2( cProjectPath, iif( lPrimary, cOptions + cOptionsUser, " -inc" ), NIL )
 
@@ -445,15 +445,18 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
                call_hbmk2( cProjectPath, iif( lPrimary, cOptions + cOptionsUser, " -inc" ), cDynSuffix )
             ENDIF
 
-            /* Compile documentation */
-            IF lInstall .AND. lPrimary
-               mk_hbd( FNameDirGet( PathSepToSelf( cProjectPath ) ) )
-            ENDIF
+            IF lPrimary .OR. "lFromContainer" $ hProjectList[ cProject ]
 
-            /* Create EXTERN list */
-            IF lPrimary .AND. hProjectList[ cProject ][ "cType" ] $ "hblib|hbdyn"
-               mk_extern_lib( PathSepToSelf( hProjectList[ cProject ][ "cOutputName" ] ),;
-                              FNameExtSet( PathSepToSelf( cProjectPath ), ".hbx" ) )
+               /* Compile documentation */
+               IF lInstall
+                  mk_hbd( FNameDirGet( PathSepToSelf( cProjectPath ) ) )
+               ENDIF
+
+               /* Create EXTERN list */
+               IF hProjectList[ cProject ][ "cType" ] $ "hblib|hbdyn"
+                  mk_extern_lib( PathSepToSelf( hProjectList[ cProject ][ "cOutputName" ] ),;
+                                 FNameExtSet( PathSepToSelf( cProjectPath ), ".hbx" ) )
+               ENDIF
             ENDIF
          ENDIF
       ENDIF
@@ -536,7 +539,7 @@ STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, cDynSuffix, cStdErr, cStd
    ENDIF
 
    cCommand := s_cBinDir + "hbmk2" +;
-               " -quiet -width=0 -shl" +;
+               " -quiet -width=0" +;
                " @" + StrTran( s_cHome + "hbpre", "\", "/" ) +;
                cOptionsPre +;
                " " + StrTran( cProjectPath, "\", "/" ) +;

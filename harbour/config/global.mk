@@ -1145,7 +1145,7 @@ else
       ifneq ($(HB_SRC_ROOTPATH),)
          export LD_LIBRARY_PATH := $(HB_SRC_ROOTPATH)lib/$(PLAT_COMP):$(LD_LIBRARY_PATH)
       else
-         export LD_LIBRARY_PATH := $(realpath $(DYN_DIR)):$(LD_LIBRARY_PATH)
+         export LD_LIBRARY_PATH := $(abspath $(DYN_DIR)):$(LD_LIBRARY_PATH)
       endif
       export HB_LD_PATH_SET := yes
       ifneq ($(LD_LIBRARY_PATH),)
