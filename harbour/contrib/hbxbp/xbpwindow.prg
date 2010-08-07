@@ -77,7 +77,7 @@
 CLASS XbpWindow  INHERIT  XbpPartHandler
 
    CLASSDATA nProperty                            INIT  0
-   
+
    DATA     qtProperty                            INIT  ""
    DATA     qtObject
    DATA     isViaQtObject                         INIT  .f.
@@ -167,7 +167,7 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    DATA     aPP
    DATA     qLayout
    DATA     nLayout
-   
+
    METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   setQtProperty( cProperty )
@@ -178,7 +178,6 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    METHOD   handleEvent( nEvent, mp1, mp2 )
    METHOD   captureMouse( lCapture )
    METHOD   invalidateRect( aRect )
-   METHOD   setStyleSheet( cNewSheet )
    METHOD   setFont( oFont )
    METHOD   setFontCompoundName( xFont )
    METHOD   setModalState( nState )
@@ -189,6 +188,7 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    METHOD   setSize( aSize, lPaint )
    METHOD   isDerivedFrom( cClassORoObject )
    METHOD   setPresParam( aPPNew )
+   METHOD   setStyleSheet( cCSS )                 INLINE  ::oWidget:setStyleSheet( ::oWidget:styleSheet() + " " + cCSS )
 
    METHOD   enter( ... )                          SETGET
    METHOD   leave( ... )                          SETGET
@@ -223,6 +223,8 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    METHOD   dragDrop( ... )                       SETGET
    METHOD   hbContextMenu( ... )                  SETGET
 
+   ERROR    HANDLER OnError( ... )
+
    METHOD   Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   isEnabled()                           INLINE ::is_enabled
    METHOD   isVisible()                           INLINE !( ::is_hidden )
@@ -256,7 +258,6 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    /* After object is physically created, set unique property to 1 */
 *  METHOD   setQtProperty()
 
-*  METHOD   setStyleSheet()
    METHOD   setStyle()                            INLINE NIL
    METHOD   className()                           INLINE __objGetClsName( Self )
 
@@ -848,6 +849,15 @@ METHOD XbpWindow:handleEvent( nEvent, mp1, mp2 )
 
 /*----------------------------------------------------------------------*/
 
+METHOD XbpWindow:onError( ... )
+   LOCAL cMsg := __GetMessage()
+   IF SubStr( cMsg, 1, 1 ) == "_"
+      cMsg := SubStr( cMsg, 2 )
+   ENDIF
+   RETURN ::oWidget:&cMsg( ... )
+
+/*----------------------------------------------------------------------*/
+
 METHOD XbpWindow:captureMouse( lCapture )
    LOCAL lSuccess := .f.
 
@@ -913,15 +923,6 @@ METHOD XbpWindow:lockPS()
 METHOD XbpWindow:lockUpdate()
 
    // TODO:
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpWindow:setStyleSheet( cNewSheet )
-   LOCAL cSheet := ::oWidget:styleSheet()
-
-   ::oWidget:setStyleSheet( cSheet + " " + cNewSheet )
 
    RETURN Self
 
@@ -1363,20 +1364,20 @@ METHOD XbpWindow:enter( ... )
       ::sl_enter := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_enter )
       eval( ::sl_enter, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
-   
+
 /*----------------------------------------------------------------------*/
-   
+
 METHOD XbpWindow:leave( ... )
    LOCAL a_:= hb_aParams()
    IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
       ::sl_leave := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_leave )
       eval( ::sl_leave, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
-   
+
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:lbClick( ... )
@@ -1385,7 +1386,7 @@ METHOD XbpWindow:lbClick( ... )
       ::sl_lbClick := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_lbClick )
       eval( ::sl_lbClick, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1396,7 +1397,7 @@ METHOD XbpWindow:lbDblClick( ... )
       ::sl_lbDblClick := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_lbDblClick )
       eval( ::sl_lbDblClick, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1407,7 +1408,7 @@ METHOD XbpWindow:lbDown( ... )
       ::sl_lbDown := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_lbDown )
       eval( ::sl_lbDown, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1418,7 +1419,7 @@ METHOD XbpWindow:lbUp( ... )
       ::sl_lbUp := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_lbUp )
       eval( ::sl_lbUp, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1429,7 +1430,7 @@ METHOD XbpWindow:mbClick( ... )
       ::sl_mbClick := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_mbClick )
       eval( ::sl_mbClick, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1440,7 +1441,7 @@ METHOD XbpWindow:mbDblClick( ... )
       ::sl_mbDblClick := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_mbDblClick )
       eval( ::sl_mbDblClick, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1451,7 +1452,7 @@ METHOD XbpWindow:mbDown( ... )
       ::sl_mbDown := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_mbDown )
       eval( ::sl_mbDown, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1462,7 +1463,7 @@ METHOD XbpWindow:mbUp( ... )
       ::sl_mbUp := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_mbUp )
       eval( ::sl_mbUp, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1473,7 +1474,7 @@ METHOD XbpWindow:motion( ... )
       ::sl_motion := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_motion )
       eval( ::sl_motion, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1484,7 +1485,7 @@ METHOD XbpWindow:rbClick( ... )
       ::sl_rbClick := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_rbClick )
       eval( ::sl_rbClick, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1495,7 +1496,7 @@ METHOD XbpWindow:rbDblClick( ... )
       ::sl_rbDblClick := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_rbDblClick )
       eval( ::sl_rbDblClick, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1506,7 +1507,7 @@ METHOD XbpWindow:rbDown( ... )
       ::sl_rbDown := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_rbDown )
       eval( ::sl_rbDown, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1517,7 +1518,7 @@ METHOD XbpWindow:rbUp( ... )
       ::sl_rbUp := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_rbUp )
       eval( ::sl_rbUp, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1528,7 +1529,7 @@ METHOD XbpWindow:wheel( ... )
       ::sl_wheel := a_[ 1 ]
    ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_wheel )
       eval( ::sl_wheel, a_[ 1 ], a_[ 2 ], Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1541,7 +1542,7 @@ METHOD XbpWindow:close( ... )
       ::sl_close := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_close )
       eval( ::sl_close, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1552,7 +1553,7 @@ METHOD XbpWindow:helpRequest( ... )
       ::sl_helpRequest := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_helpRequest )
       eval( ::sl_helpRequest, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1563,7 +1564,7 @@ METHOD XbpWindow:keyboard( ... )
       ::sl_keyboard := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_keyboard )
       eval( ::sl_keyboard, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1574,7 +1575,7 @@ METHOD XbpWindow:killDisplayFocus( ... )
       ::sl_killDisplayFocus := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_killDisplayFocus )
       eval( ::sl_killDisplayFocus, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1585,7 +1586,7 @@ METHOD XbpWindow:killInputFocus( ... )
       ::sl_killInputFocus := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_killInputFocus )
       eval( ::sl_killInputFocus, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1596,7 +1597,7 @@ METHOD XbpWindow:move( ... )
       ::sl_move := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_move )
       eval( ::sl_move, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1607,7 +1608,7 @@ METHOD XbpWindow:paint( ... )
       ::sl_paint := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_paint )
       eval( ::sl_paint, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1618,7 +1619,7 @@ METHOD XbpWindow:quit( ... )
       ::sl_quit := a_[ 1 ]
    ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_quit )
       eval( ::sl_quit, a_[ 1 ], a_[ 2 ], Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1629,7 +1630,7 @@ METHOD XbpWindow:resize( ... )
       ::sl_resize := a_[ 1 ]
    ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_resize )
       eval( ::sl_resize, a_[ 1 ], a_[ 2 ], Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1640,7 +1641,7 @@ METHOD XbpWindow:setDisplayFocus( ... )
       ::sl_setDisplayFocus := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_setDisplayFocus )
       eval( ::sl_setDisplayFocus, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1651,7 +1652,7 @@ METHOD XbpWindow:setInputFocus( ... )
       ::sl_setInputFocus := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_setInputFocus )
       eval( ::sl_setInputFocus, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1662,7 +1663,7 @@ METHOD XbpWindow:dragEnter( ... )
       ::sl_dragEnter := a_[ 1 ]
    ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_dragEnter )
       eval( ::sl_dragEnter, a_[ 1 ], a_[ 2 ], Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1673,7 +1674,7 @@ METHOD XbpWindow:dragMotion( ... )
       ::sl_dragMotion := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_dragMotion )
       eval( ::sl_dragMotion, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1684,7 +1685,7 @@ METHOD XbpWindow:dragLeave( ... )
       ::sl_dragLeave := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_dragLeave )
       eval( ::sl_dragLeave, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1695,7 +1696,7 @@ METHOD XbpWindow:dragDrop( ... )
       ::sl_dragDrop := a_[ 1 ]
    ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_dragDrop )
       eval( ::sl_dragDrop, a_[ 1 ], a_[ 2 ], Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1706,7 +1707,7 @@ METHOD XbpWindow:hbContextMenu( ... )
       ::hb_contextMenu := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::hb_contextMenu )
       eval( ::hb_contextMenu, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/

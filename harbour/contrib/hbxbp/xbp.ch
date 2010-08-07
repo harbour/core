@@ -439,8 +439,14 @@
 #define XBP_ORIGIN_TOPLEFT                        1
 #define XBP_ORIGIN_BOTTOMLEFT                     2
 
+#define XBPCLPBRD_TEXT                            1
+#define XBPCLPBRD_BITMAP                          2
+
+#define APPTYPE_PM                                3
+
 /*----------------------------------------------------------------------*/
-/* Harbour Specific Constants */
+/*                      Harbour Parts Constants                         */
+/*----------------------------------------------------------------------*/
 
 #define HBPLAYOUT_TYPE_HORZBOX                    1
 #define HBPLAYOUT_TYPE_VERTBOX                    2
@@ -449,12 +455,21 @@
 
 #define HBPLAYOUT_TYPE_MAX                        4
 
+/*----------------------------------------------------------------------*/
+/*                             HbpMdiArea()                             */
+/*----------------------------------------------------------------------*/
 
-#define XBPCLPBRD_TEXT                            1
-#define XBPCLPBRD_BITMAP                          2
+#define HBPMDI_MODE_SUBWINDOWS                    0
+#define HBPMDI_MODE_TABBED                        1
 
-#define APPTYPE_PM                                3
+#define HBPMDI_STYLE_ORGANIZED                    0
+#define HBPMDI_STYLE_CASCADED                     1
+#define HBPMDI_STYLE_TILED                        2
+#define HBPMDI_STYLE_MAXIMIZED                    3
+#define HBPMDI_STYLE_TILEDVERT                    4
+#define HBPMDI_STYLE_TILEDHORZ                    5
 
 /*----------------------------------------------------------------------*/
+
 #define _XBP_CH
 #endif
