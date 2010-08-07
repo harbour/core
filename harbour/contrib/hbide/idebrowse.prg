@@ -901,16 +901,8 @@ METHOD IdeBrowseManager:buildToolbar()
    ::qToolbar:addWidget( sp0 )
    ::buildRddsCombo()
    ::buildConxnCombo()
-   ::buildToolButton( ::qToolbar, { "Open a table"       , "open"          , {|| ::execEvent( "buttonOpen_clicked"          ) }, .f. } )
+   ::buildToolButton( ::qToolbar, { "Open a table"       , "open3"         , {|| ::execEvent( "buttonOpen_clicked"          ) }, .f. } )
    ::qToolbar:addWidget( sp1 )
-   ::buildToolButton( ::qToolbar, { "Toggle tabbed view" , "view_tabbed"   , {|| ::execEvent( "buttonViewTabbed_clicked"    ) }, .f. } )
-   ::buildToolButton( ::qToolbar, {} )
-   ::buildToolButton( ::qToolbar, { "View as arranged"   , "view_organized", {|| ::execEvent( "buttonViewOrganized_clicked" ) }, .f. } )
-   ::buildToolButton( ::qToolbar, { "View as cascaded"   , "view_cascaded" , {|| ::execEvent( "buttonViewCascaded_clicked"  ) }, .f. } )
-   ::buildToolButton( ::qToolbar, { "View as tiled"      , "view_tiled"    , {|| ::execEvent( "buttonViewTiled_clicked"     ) }, .f. } )
-   ::buildToolButton( ::qToolbar, {} )
-   ::buildToolButton( ::qToolbar, { "Save layout"        , "save"          , {|| ::execEvent( "buttonSaveLayout_clicked"    ) }, .f. } )
-   ::qToolbar:addWidget( sp2 )
    ::buildToolButton( ::qToolbar, { "Show/hide form view", "formview"      , {|| ::execEvent( "buttonShowForm_clicked"      ) }, .t. } )
    ::buildToolButton( ::qToolbar, {} )
    ::buildToolButton( ::qToolbar, { "Table Structure"    , "dbstruct"      , {|| ::execEvent( "buttonDbStruct_clicked"      ) }, .f. } )
@@ -928,18 +920,34 @@ METHOD IdeBrowseManager:buildToolbar()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeBrowseManager:buildLeftToolbar()
-
-   STATIC qSize
-
-   //qSize := QSize():new( 20,20 )
-   qSize := QSize():new( 16,16 )
+   LOCAL qTBar, aBtn
 
    ::qToolBarL := QToolbar():new()
    ::qToolBarL:setOrientation( Qt_Vertical )
-   ::qToolbarL:setIconSize( qSize )
+   ::qToolbarL:setIconSize( QSize():new( 16,16 ) )
    ::qToolbarL:setMaximumWidth( 24 )
    ::qToolbarL:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
 
+   qTBar := ::qToolbarL
+   aBtn := {}
+
+   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Toggle tabbed view"         , "view_tabbed"     , {|| ::execEvent( "buttonViewTabbed_clicked"    ) }, .f. } ) )
+   hbide_buildToolbarButton( qTBar, {} )
+   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View as arranged"           , "view_organized"  , {|| ::execEvent( "buttonViewOrganized_clicked" ) }, .f. } ) )
+   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Save layout"                , "save3"           , {|| ::execEvent( "buttonSaveLayout_clicked"    ) }, .f. } ) )
+   hbide_buildToolbarButton( qTBar, {} )
+   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View as cascaded"           , "view_cascaded"   , {|| ::execEvent( "buttonViewCascaded_clicked"  ) }, .f. } ) )
+   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View as tiled"              , "view_tiled"      , {|| ::execEvent( "buttonViewTiled_clicked"     ) }, .f. } ) )
+   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View Maximized"             , "fullscreen"      , {|| ::execEvent( "buttonViewMaximized_clicked" ) }, .f. } ) )
+   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View Vertically Tiled"      , "view_vertstacked", {|| ::execEvent( "buttonViewStackedVert_clicked" ) }, .f. } ) )
+   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View Horizontally Tiled"    , "view_horzstacked", {|| ::execEvent( "buttonViewStackedHorz_clicked" ) }, .f. } ) )
+   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View Zoom In"               , "view_zoomin"     , {|| ::execEvent( "buttonViewZoomedIn_clicked"  ) }, .f. } ) )
+   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View Zoom Out"              , "view_zoomout"    , {|| ::execEvent( "buttonViewZoomedOut_clicked" ) }, .f. } ) )
+   hbide_buildToolbarButton( qTBar, {} )
+
+   aeval( aBtn, {|q| aadd( ::aToolBtns, q ) } )
+
+#if 1
    ::buildToolButton( ::qToolbarL, { "Append a record"       , "database_add"     , {|| ::execEvent( "buttonAppendRecord_clicked"  ) }, .f. } )
    ::buildToolButton( ::qToolbarL, { "Delete a record"       , "database_remove"  , {|| ::execEvent( "buttonDelRecord_clicked"     ) }, .f. } )
    ::buildToolButton( ::qToolbarL, { "Lock/Unlock Record"    , "database_lock"    , {|| ::execEvent( "buttonLockRecord_clicked"    ) }, .f. } )
@@ -952,6 +960,7 @@ METHOD IdeBrowseManager:buildLeftToolbar()
    ::buildToolButton( ::qToolbarL, { "Search in Table"       , "database_search"  , {|| ::execEvent( "buttonSearchInTable_clicked" ) }, .f. } )
    ::buildToolButton( ::qToolbarL, {} )
    ::buildToolButton( ::qToolbarL, { "Zap Table"             , "database_process" , {|| ::execEvent( "buttonZaptable_clicked"      ) }, .f. } )
+#endif
 
    RETURN Self
 

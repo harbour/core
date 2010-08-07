@@ -67,6 +67,7 @@
 <file>resources/envconfig.png</file>
 <file>resources/example.png</file>
 <file>resources/exit.png</file>
+<file>resources/exit3.png</file>
 <file>resources/exporthtml.png</file>
 <file>resources/ffn.png</file>
 <file>resources/filec.png</file>
@@ -95,6 +96,7 @@
 <file>resources/go-top.png</file>
 <file>resources/go-up.png</file>
 <file>resources/gotoline.png</file>
+<file>resources/gotoline3.png</file>
 <file>resources/gotomark.png</file>
 <file>resources/harbour.png</file>
 <file>resources/harbourhelp.png</file>
@@ -107,6 +109,7 @@
 <file>resources/help1.png</file>
 <file>resources/helpdoc.png</file>
 <file>resources/hilight-all.png</file>
+<file>resources/home3.png</file>
 <file>resources/horzruler.png</file>
 <file>resources/idepreferences.png</file>
 <file>resources/increaseindent.png</file>

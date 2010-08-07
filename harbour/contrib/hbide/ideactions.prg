@@ -175,11 +175,11 @@ METHOD IdeActions:loadActions()
    //
    //            Name                     Text                             Image             Shortcut  Checkable  IconVisInMenu
    //
-   aadd( aAct, { "TB_Exit"              , "E~xit"                        , "exit"           , ""     , "No", "Yes" } )
-   aadd( aAct, { "TB_Home"              , "~Home"                        , "dc_home"        , ""     , "No", "Yes" } )
+   aadd( aAct, { "TB_Exit"              , "E~xit"                        , "exit3"          , ""     , "No", "Yes" } )
+   aadd( aAct, { "TB_Home"              , "~Home"                        , "home3"/*"dc_home"*/, ""     , "No", "Yes" } )
    aadd( aAct, { "TB_New"               , "~Source"                      , "new"            , ""     , "No", "Yes" } )
    aadd( aAct, { "TB_Open"              , "~Open"                        , "open3"          , ""     , "No", "Yes" } )
-   aadd( aAct, { "TB_Save"              , "~Save"                        , "save"           , ""     , "No", "Yes" } )
+   aadd( aAct, { "TB_Save"              , "~Save"                        , "save3"          , ""     , "No", "Yes" } )
    aadd( aAct, { "TB_Close"             , "~Close"                       , "close3"         , ""     , "No", "Yes" } )
    aadd( aAct, { "TB_Print"             , "~Print"                       , "print"          , ""     , "No", "Yes" } )
    aadd( aAct, { "TB_Script"            , "Run as script"                , "runscript"      , ""     , "No", "Yes" } )
