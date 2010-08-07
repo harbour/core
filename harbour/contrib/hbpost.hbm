@@ -49,10 +49,12 @@
 {hbdyn}-o${hb_outputname}${hb_dynsuffix}
 
 {hblib}-o../lib/${hb_plat}/${hb_comp}${hb_build}/
-{hbexe|hbdyn}-o../bin/${hb_plat}/${hb_comp}${hb_build}/
+{(hbexe|hbdyn)&unix}-o../lib/${hb_plat}/${hb_comp}${hb_build}/
+{(hbexe|hbdyn)&!unix}-o../bin/${hb_plat}/${hb_comp}${hb_build}/
 
 {hblib}-workdir=../lib/${hb_plat}/${hb_comp}${hb_build}/${hb_work}/${hb_outputname}${hb_workdynsub}
-{hbexe|hbdyn}-workdir=../bin/${hb_plat}/${hb_comp}${hb_build}/${hb_work}/${hb_outputname}${hb_workdynsub}
+{(hbexe|hbdyn)&unix}-workdir=../lib/${hb_plat}/${hb_comp}${hb_build}/${hb_work}/${hb_outputname}${hb_workdynsub}
+{(hbexe|hbdyn)&!unix}-workdir=../bin/${hb_plat}/${hb_comp}${hb_build}/${hb_work}/${hb_outputname}${hb_workdynsub}
 
 {_HB_BUILD_INSTALL&_HB_INSTALL_LIB&hblib}-instpath=${_HB_INSTALL_LIB}/
 {_HB_BUILD_INSTALL&_HB_INSTALL_BIN&hbexe}-instpath=${_HB_INSTALL_BIN}/
