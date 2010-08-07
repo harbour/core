@@ -4439,7 +4439,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          IF Empty( cExt ) .AND. ! Empty( hbmk[ _HBMK_cDynLibExt ] )
             cExt := hbmk[ _HBMK_cDynLibExt ]
          ENDIF
-         hbmk[ _HBMK_cPROGNAME ] := hb_FNameMerge( cDir, cName, hbmk[ _HBMK_cDynLibExt ] )
+         hbmk[ _HBMK_cPROGNAME ] := hb_FNameMerge( cDir, cName, cExt )
          IF l_cIMPLIBNAME == NIL
             /* By default add default postfix to avoid collision with static lib
                with the same name. */
