@@ -46,7 +46,9 @@
 {_HB_BUILD_LIBDYN&allwin}-lhbmaindllp
 {_HB_BUILD_LIBDYN}-depimplib-
 
-{hbdyn}-o${hb_outputname}${hb_dynsuffix}
+{hbdyn&unix&!darwin}-o${hb_outputname}${hb_dynext}.${hb_major}.${hb_minor}.${hb_release}
+{hbdyn&unix&darwin}-o${hb_outputname}.${hb_major}.${hb_minor}.${hb_release}${hb_dynext}
+{hbdyn&!unix}-o${hb_outputname}${hb_dynsuffix}
 {hblib}-o../lib/${hb_plat}/${hb_comp}${hb_build}/
 {hbexe}-o../bin/${hb_plat}/${hb_comp}${hb_build}/
 {hbdyn&unix}-o../lib/${hb_plat}/${hb_comp}${hb_build}/

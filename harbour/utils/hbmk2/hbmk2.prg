@@ -416,13 +416,14 @@ REQUEST hbmk_KEYW
 #define _HBMK_lContainer        121 /* Target type: container */
 #define _HBMK_lShowLevel        122 /* Show project nesting level in all output lines */
 #define _HBMK_hFiles            123 /* Cache for the header parser (common for C and Harbour) */
+#define _HBMK_cDynLibExt        124
 
-#define _HBMK_aArgs             124
-#define _HBMK_nArgTarget        125
-#define _HBMK_lPause            126
-#define _HBMK_nLevel            127
+#define _HBMK_aArgs             125
+#define _HBMK_nArgTarget        126
+#define _HBMK_lPause            127
+#define _HBMK_nLevel            128
 
-#define _HBMK_MAX_              127
+#define _HBMK_MAX_              128
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -766,7 +767,6 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL cLibPathPrefix
    LOCAL cLibPathSep
    LOCAL cDynLibNamePrefix
-   LOCAL cDynLibExt
    LOCAL cImpLibExt := ""
    LOCAL cResPrefix
    LOCAL cResExt
@@ -1267,10 +1267,10 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       ENDCASE
       cOptPrefix := "-"
       SWITCH hbmk[ _HBMK_cPLAT ]
-      CASE "darwin"  ; cDynLibExt := ".dylib" ; EXIT
-      CASE "hpux"    ; cDynLibExt := ".sl" ; EXIT
-      CASE "symbian" ; cDynLibExt := ".dll" ; EXIT
-      OTHERWISE      ; cDynLibExt := ".so"
+      CASE "darwin"  ; hbmk[ _HBMK_cDynLibExt ] := ".dylib" ; EXIT
+      CASE "hpux"    ; hbmk[ _HBMK_cDynLibExt ] := ".sl" ; EXIT
+      CASE "symbian" ; hbmk[ _HBMK_cDynLibExt ] := ".dll" ; EXIT
+      OTHERWISE      ; hbmk[ _HBMK_cDynLibExt ] := ".so"
       ENDSWITCH
    CASE hbmk[ _HBMK_cPLAT ] == "dos"
 #if ! defined( __PLATFORM__UNIX )
@@ -1281,7 +1281,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       l_aLIBHBGT := { "gtdos" }
       hbmk[ _HBMK_cGTDEFAULT ] := "gtdos"
       cDynLibNamePrefix := ""
-      cDynLibExt := "" /* NOTE: This will be reset later if djgpp is detected. */
+      hbmk[ _HBMK_cDynLibExt ] := "" /* NOTE: This will be reset later if djgpp is detected. */
       cBinExt := ".exe"
       cOptPrefix := "-/"
    CASE hbmk[ _HBMK_cPLAT ] == "os2"
@@ -1293,7 +1293,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       l_aLIBHBGT := { "gtos2" }
       hbmk[ _HBMK_cGTDEFAULT ] := "gtos2"
       cDynLibNamePrefix := ""
-      cDynLibExt := ".dll"
+      hbmk[ _HBMK_cDynLibExt ] := ".dll"
       cBinExt := ".exe"
       cOptPrefix := "-/"
    CASE hbmk[ _HBMK_cPLAT ] == "win"
@@ -1328,7 +1328,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       l_aLIBHBGT := { "gtwin", "gtwvt", "gtgui" }
       hbmk[ _HBMK_cGTDEFAULT ] := "gtwin"
       cDynLibNamePrefix := ""
-      cDynLibExt := ".dll"
+      hbmk[ _HBMK_cDynLibExt ] := ".dll"
       cBinExt := ".exe"
       cOptPrefix := "-/"
       /* NOTE: Some targets (watcom, pocc/xcc) need kernel32 explicitly. */
@@ -1348,7 +1348,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       l_aLIBHBGT := { "gtwvt", "gtgui" }
       hbmk[ _HBMK_cGTDEFAULT ] := "gtwvt"
       cDynLibNamePrefix := ""
-      cDynLibExt := ".dll"
+      hbmk[ _HBMK_cDynLibExt ] := ".dll"
       cBinExt := ".exe"
       cOptPrefix := "-/"
       l_aLIBSYSCORE := { "coredll", "ws2" }
@@ -1659,7 +1659,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    /* Tweaks to compiler setup */
 
    IF hbmk[ _HBMK_cCOMP ] == "djgpp"
-      cDynLibExt := ".dxe"
+      hbmk[ _HBMK_cDynLibExt ] := ".dxe"
    ENDIF
 
    /* Detect compiler version (where applicable) */
@@ -2560,7 +2560,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
 
       CASE FNameExtGet( cParamL ) == ".lib" .OR. ;
-           ( ! Empty( cDynLibExt ) .AND. FNameExtGet( cParamL ) == cDynLibExt )
+           ( ! Empty( hbmk[ _HBMK_cDynLibExt ] ) .AND. FNameExtGet( cParamL ) == hbmk[ _HBMK_cDynLibExt ] )
 
          cParam := PathSepToSelf( cParam )
          IF _IS_AUTOLIBSYSPRE( cParam )
@@ -2859,8 +2859,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cPostfix,;
                                                       "harbour"   + cPostfix ) }
          ELSE
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], cPrefix + cDynLibNamePrefix + "harbourmt" + cPostfix + cDynLibExt,;
-                                                      cPrefix + cDynLibNamePrefix + "harbour"   + cPostfix + cDynLibExt ) }
+            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], cPrefix + cDynLibNamePrefix + "harbourmt" + cPostfix + hbmk[ _HBMK_cDynLibExt ],;
+                                                      cPrefix + cDynLibNamePrefix + "harbour"   + cPostfix + hbmk[ _HBMK_cDynLibExt ] ) }
          ENDIF
       CASE hbmk[ _HBMK_cPLAT ] $ "os2|win|wce"
          l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], cDynLibNamePrefix + "harbourmt",;
@@ -3735,8 +3735,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             ENDIF
          CASE hbmk[ _HBMK_cPLAT ] == "linux"
             l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], cDynLibNamePrefix + "harbourmt" + cDL_Version + cDynLibExt,;
-                                                      cDynLibNamePrefix + "harbour" + cDL_Version + cDynLibExt ) }
+            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], cDynLibNamePrefix + "harbourmt" + cDL_Version + hbmk[ _HBMK_cDynLibExt ],;
+                                                      cDynLibNamePrefix + "harbour" + cDL_Version + hbmk[ _HBMK_cDynLibExt ] ) }
          ENDCASE
          IF hbmk[ _HBMK_cPLAT ] $ "win|os2"
             cBin_Res := "wrc" + hbmk[ _HBMK_cCCEXT ]
@@ -4436,8 +4436,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          l_cIMPLIBNAME := hb_FNameMerge( l_cIMPLIBDIR, cLibLibPrefix + l_cIMPLIBNAME, cImpLibExt )
       CASE lStopAfterCComp .AND. hbmk[ _HBMK_lCreateDyn ]
          cName := cDynLibNamePrefix + cName
-         IF Empty( cExt ) .AND. ! Empty( cDynLibExt )
-            hbmk[ _HBMK_cPROGNAME ] := hb_FNameMerge( cDir, cName, cDynLibExt )
+         IF Empty( cExt ) .AND. ! Empty( hbmk[ _HBMK_cDynLibExt ] )
+            hbmk[ _HBMK_cPROGNAME ] := hb_FNameMerge( cDir, cName, hbmk[ _HBMK_cDynLibExt ] )
          ENDIF
          IF l_cIMPLIBNAME == NIL
             /* By default add default postfix to avoid collision with static lib
@@ -9314,6 +9314,8 @@ STATIC FUNCTION MacroGet( hbmk, cMacro, cFileName )
       cMacro := hbmk[ _HBMK_cWorkDirDynSub ] ; EXIT
    CASE "HB_DYNSUFFIX"
       cMacro := hbmk_DYNSUFFIX( hbmk ) ; EXIT
+   CASE "HB_DYNEXT"
+      cMacro := hbmk[ _HBMK_cDynLibExt ] ; EXIT
    CASE "HB_MAJOR"
       cMacro := hb_ntos( hb_Version( HB_VERSION_MAJOR ) ) ; EXIT
    CASE "HB_MINOR"
