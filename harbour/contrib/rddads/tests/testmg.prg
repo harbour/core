@@ -50,17 +50,28 @@
  *
  */
 
-
 #include "ord.ch"
 #include "set.ch"
 #include "ads.ch"
 
 REQUEST ADS
 
+#if defined( __HBDYNLOAD__RDDADS__ )
+#  include "rddads.hbx"
+#endif
+
 function Main()
 
    local i
    local aRay
+
+#if defined( __HBDYNLOAD__RDDADS__ )
+   local l := hb_libLoad( hb_libName( "rddads" ) )
+
+   hb_rddadsRegister()
+
+   HB_SYMBOL_UNUSED( l )
+#endif
 
    rddsetdefault( "ADS" )
    SET SERVER LOCAL    // REMOTE

@@ -5250,6 +5250,11 @@ static void hb_adsRddInit( void * cargo )
    }
 }
 
+HB_FUNC( HB_RDDADSREGISTER )
+{
+   hb_adsRddInit( NULL );
+}
+
 HB_INIT_SYMBOLS_BEGIN( ads1__InitSymbols )
 { "ADS",                 {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADS )}, NULL },
 { "ADS_GETFUNCTABLE",    {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADS_GETFUNCTABLE )}, NULL },

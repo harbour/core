@@ -2,10 +2,16 @@
 # $Id$
 #
 
+# Enable dynamic loading with:
+#    -env:HB_DYNLOAD_RDDADS=yes
+
 skip={!(linux|win)}
 
 incpaths=.
 
-libs=${hb_name}${__HB_DYN__}
-{win}libs=ace32
-{linux}libs=ace
+{HB_DYNLOAD_RDDADS}prgflags=-D__HBDYNLOAD__RDDADS__
+{HB_DYNLOAD_RDDADS}shared=yes
+
+{!HB_DYNLOAD_RDDADS}libs=${hb_name}${__HB_DYN__}
+{!HB_DYNLOAD_RDDADS&win}libs=ace32
+{!HB_DYNLOAD_RDDADS&linux}libs=ace
