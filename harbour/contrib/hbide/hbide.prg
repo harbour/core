@@ -149,6 +149,7 @@ CLASS HbIde
    DATA   oSC                                            /* Shortcuts Manager              */
    DATA   oTM                                            /* Plugin Tools Manager           */
    DATA   oTH                                            /* Themes Manager                 */
+   DATA   oRM                                            /* Reports Manager                */
    DATA   oSetup                                         /* Setup Manager                  */
    DATA   oINI                                           /* INI Manager                    */
 
@@ -244,6 +245,7 @@ CLASS HbIde
    DATA   oSourceThumbnailDock
    DATA   oQScintillaDock
    DATA   oUpDn
+   DATA   oReportsManagerDock
 
    DATA   lProjTreeVisible                        INIT   .t.
    DATA   lDockRVisible                           INIT   .f.
@@ -452,6 +454,8 @@ METHOD HbIde:create( aParams )
    ::oDK:buildDockWidgets()
    /* Toolbar */
    ::oAC:buildToolBar()
+   /* Build additional Toolbars */
+   ::oDK:buildToolBarPanels()
    /* Main Menu */
    ::oAC:buildMainMenu()
 
@@ -480,6 +484,9 @@ METHOD HbIde:create( aParams )
    /* Browser Manager */
    ::oBM := IdeBrowseManager():new():create( Self )
 
+   /* Reports Manager */
+   ::oRM := IdeReportsManager():new():create( Self )
+
    /* Fill various elements of the IDE */
    ::oPM:populate()
    ::oSM:loadSources()
@@ -491,8 +498,6 @@ METHOD HbIde:create( aParams )
    /* Restore Settings */
    hbide_restSettings( Self )
    /* Again to be displayed in Statusbar */
-   //HbXbp_SetCodec( ::cWrkCodec )
-   //::oDK:setStatusText( SB_PNL_CODEC, ::cWrkCodec )
    ::setCodec( ::cWrkCodec )
    ::oDK:setStatusText( SB_PNL_THEME, ::cWrkTheme )
 

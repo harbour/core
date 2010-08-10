@@ -138,6 +138,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD buildSourceThumbnail()
    METHOD buildQScintilla()
    METHOD buildUpDownWidget()
+   METHOD buildReportsDesignerWidget()
    METHOD buildSystemTray()
    METHOD showDlgBySystemTrayIconCommand()
    METHOD setViewInitials()
@@ -177,32 +178,33 @@ METHOD IdeDocks:destroy()
    ::oIde:oProjRoot      := NIL
    ::oIde:oOpenedSources := NIL
 
-   ::disconnect( ::oOutputResult:oWidget  , "copyAvailable(bool)"     )
+   ::disconnect( ::oOutputResult:oWidget       , "copyAvailable(bool)"     )
 
-   ::disconnect( ::oEnvironDock:oWidget   , "visibilityChanged(bool)" )
-   ::disconnect( ::oPropertiesDock:oWidget, "visibilityChanged(bool)" )
-   ::disconnect( ::oThemesDock:oWidget    , "visibilityChanged(bool)" )
-   ::disconnect( ::oDocViewDock:oWidget   , "visibilityChanged(bool)" )
-   ::disconnect( ::oDocWriteDock:oWidget  , "visibilityChanged(bool)" )
-   ::disconnect( ::oFindDock:oWidget      , "visibilityChanged(bool)" )
-   ::disconnect( ::oFunctionsDock:oWidget , "visibilityChanged(bool)" )
-   ::disconnect( ::oSkeltnDock:oWidget    , "visibilityChanged(bool)" )
-   ::disconnect( ::oHelpDock:oWidget      , "visibilityChanged(bool)" )
-   ::disconnect( ::oFuncDock:oWidget      , "visibilityChanged(bool)" )
+   ::disconnect( ::oEnvironDock:oWidget        , "visibilityChanged(bool)" )
+   ::disconnect( ::oPropertiesDock:oWidget     , "visibilityChanged(bool)" )
+   ::disconnect( ::oThemesDock:oWidget         , "visibilityChanged(bool)" )
+   ::disconnect( ::oDocViewDock:oWidget        , "visibilityChanged(bool)" )
+   ::disconnect( ::oDocWriteDock:oWidget       , "visibilityChanged(bool)" )
+   ::disconnect( ::oFindDock:oWidget           , "visibilityChanged(bool)" )
+   ::disconnect( ::oFunctionsDock:oWidget      , "visibilityChanged(bool)" )
+   ::disconnect( ::oSkeltnDock:oWidget         , "visibilityChanged(bool)" )
+   ::disconnect( ::oHelpDock:oWidget           , "visibilityChanged(bool)" )
+   ::disconnect( ::oFuncDock:oWidget           , "visibilityChanged(bool)" )
 
    ::disconnect( ::oSourceThumbnailDock:oWidget, "visibilityChanged(bool)" )
-   ::disconnect( ::oQScintillaDock:oWidget, "visibilityChanged(bool)" )
+   ::disconnect( ::oQScintillaDock:oWidget     , "visibilityChanged(bool)" )
+   ::disconnect( ::oReportsManagerDock:oWidget , "visibilityChanged(bool)" )
 
    #if 0  /* Not Implemented */
-   ::disconnect( ::oDockPT:oWidget        , "visibilityChanged(bool)" )
-   ::disconnect( ::oDockED:oWidget        , "visibilityChanged(bool)" )
-   ::disconnect( ::oDockB2:oWidget        , "visibilityChanged(bool)" )
+   ::disconnect( ::oDockPT:oWidget             , "visibilityChanged(bool)" )
+   ::disconnect( ::oDockED:oWidget             , "visibilityChanged(bool)" )
+   ::disconnect( ::oDockB2:oWidget             , "visibilityChanged(bool)" )
    #endif
 
    IF !empty( ::oSys )
-      ::disconnect( ::oSys                , "activated(QSystemTrayIcon::ActivationReason)" )
-      ::disconnect( ::qAct1               , "triggered(bool)"         )
-      ::disconnect( ::qAct2               , "triggered(bool)"         )
+      ::disconnect( ::oSys                     , "activated(QSystemTrayIcon::ActivationReason)" )
+      ::disconnect( ::qAct1                    , "triggered(bool)"         )
+      ::disconnect( ::qAct2                    , "triggered(bool)"         )
    ENDIF
 
    FOR EACH qTBtn IN ::aPanels
@@ -259,7 +261,7 @@ METHOD IdeDocks:buildDialog()
    ::oDlg:setTabPosition( Qt_BottomDockWidgetArea, QTabWidget_South )
    ::oDlg:setCorner( Qt_BottomLeftCorner, Qt_LeftDockWidgetArea )
    ::oDlg:setCorner( Qt_BottomRightCorner, Qt_RightDockWidgetArea )
-   ::oDlg:resize( 900,470 )
+   ::oDlg:oWidget:resize( 950,520 )
 
    ::oIde:oDa := ::oDlg:drawingArea
 
@@ -317,10 +319,10 @@ METHOD IdeDocks:buildDialog()
       aadd( ::aViewsInfo, a_ )
    NEXT
    IF ascan( ::aViewsInfo, {|e_| e_[ 1 ] == "Main" } ) == 0
-      hb_ains( ::aViewsInfo, 1, { "Main", NIL, 0, 0, 0, 0 }, .t. )
+      hb_ains( ::aViewsInfo, 1, { "Main", NIL, 0, 0, QMdiArea_TabbedView, 0 }, .t. )
    ENDIF
    IF ascan( ::aViewsInfo, {|e_| e_[ 1 ] == "Stats" } ) == 0
-      hb_ains( ::aViewsInfo, 1, { "Stats", NIL, 0, 0, 0, 0 }, .t. )
+      hb_ains( ::aViewsInfo, 1, { "Stats", NIL, 0, 0, QMdiArea_TabbedView, 0 }, .t. )
    ENDIF
 
    /* View Panels */
@@ -371,6 +373,54 @@ METHOD IdeDocks:buildDialog()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeDocks:buildDockWidgets()
+
+   ::buildProjectTree()
+   ::buildEditorTree()
+
+   ::buildFuncList()
+   ::buildSkeletonsTree()
+
+   ::buildHelpWidget()
+   ::buildSkeletonWidget()
+   ::buildFindInFiles()
+   ::buildThemesDock()
+   ::buildPropertiesDock()
+   ::buildEnvironDock()
+
+   ::buildCompileResults()
+   ::buildLinkResults()
+   ::buildOutputResults()
+   ::buildDocViewer()
+   ::buildDocWriter()
+   ::buildFunctionsDock()
+   ::buildSourceThumbnail()
+   ::buildQScintilla()
+   ::buildUpDownWidget()
+   ::buildReportsDesignerWidget()
+
+   /* Bottom Docks */
+   ::oDlg:oWidget:tabifyDockWidget( ::oDockB:oWidget              , ::oDockB1:oWidget              )
+   ::oDlg:oWidget:tabifyDockWidget( ::oDockB1:oWidget             , ::oDockB2:oWidget              )
+
+   /* Right Docks */
+   ::oDlg:oWidget:tabifyDockWidget( ::oHelpDock:oWidget           , ::oDocViewDock:oWidget         )
+   ::oDlg:oWidget:tabifyDockWidget( ::oDocViewDock:oWidget        , ::oFuncDock:oWidget            )
+   ::oDlg:oWidget:tabifyDockWidget( ::oFuncDock:oWidget           , ::oFunctionsDock:oWidget       )
+   ::oDlg:oWidget:tabifyDockWidget( ::oFunctionsDock:oWidget      , ::oPropertiesDock:oWidget      )
+   ::oDlg:oWidget:tabifyDockWidget( ::oPropertiesDock:oWidget     , ::oEnvironDock:oWidget         )
+   ::oDlg:oWidget:tabifyDockWidget( ::oEnvironDock:oWidget        , ::oSkeltnDock:oWidget          )
+   ::oDlg:oWidget:tabifyDockWidget( ::oSkeltnDock:oWidget         , ::oThemesDock:oWidget          )
+   ::oDlg:oWidget:tabifyDockWidget( ::oThemesDock:oWidget         , ::oFindDock:oWidget            )
+   ::oDlg:oWidget:tabifyDockWidget( ::oFindDock:oWidget           , ::oDocWriteDock:oWidget        )
+   ::oDlg:oWidget:tabifyDockWidget( ::oDocWriteDock:oWidget       , ::oSourceThumbnailDock:oWidget )
+   ::oDlg:oWidget:tabifyDockWidget( ::oSourceThumbnailDock:oWidget, ::oQScintillaDock:oWidget      )
+   ::oDlg:oWidget:tabifyDockWidget( ::oQScintillaDock:oWidget     , ::oReportsManagerDock:oWidget  )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeDocks:buildSystemTray()
 
    IF empty( ::oSys )
@@ -401,6 +451,12 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
    LOCAL qEvent, qMime, qList, qUrl, i, n, oEdit
 
    SWITCH cEvent
+   CASE "dockReportsManager_visibilityChanged"
+      IF p; ::oRM:show() ; ENDIF
+      IF ! p .AND. ! p1:isVisible()
+         p1:raise()
+      ENDIF
+      EXIT
    CASE "dockQScintilla_visibilityChanged"
       IF p; ::oBM:show() ; ENDIF
       IF ! p .AND. ! p1:isVisible()
@@ -783,54 +839,6 @@ METHOD IdeDocks:showDlgBySystemTrayIconCommand()()
 
    ::oDlg:oWidget:raise()
    ::oDlg:oWidget:activateWindow()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeDocks:buildDockWidgets()
-
-   ::buildProjectTree()
-   ::buildEditorTree()
-
-   ::buildFuncList()
-   ::buildSkeletonsTree()
-
-   ::buildHelpWidget()
-   ::buildSkeletonWidget()
-   ::buildFindInFiles()
-   ::buildThemesDock()
-   ::buildPropertiesDock()
-   ::buildEnvironDock()
-
-   ::buildCompileResults()
-   ::buildLinkResults()
-   ::buildOutputResults()
-   ::buildDocViewer()
-   ::buildDocWriter()
-   ::buildFunctionsDock()
-   ::buildSourceThumbnail()
-   ::buildQScintilla()
-   ::buildUpDownWidget()
-
-   /* Bottom Docks */
-   ::oDlg:oWidget:tabifyDockWidget( ::oDockB:oWidget              , ::oDockB1:oWidget              )
-   ::oDlg:oWidget:tabifyDockWidget( ::oDockB1:oWidget             , ::oDockB2:oWidget              )
-
-   /* Right Docks */
-   ::oDlg:oWidget:tabifyDockWidget( ::oHelpDock:oWidget           , ::oDocViewDock:oWidget         )
-   ::oDlg:oWidget:tabifyDockWidget( ::oDocViewDock:oWidget        , ::oFuncDock:oWidget            )
-   ::oDlg:oWidget:tabifyDockWidget( ::oFuncDock:oWidget           , ::oFunctionsDock:oWidget       )
-   ::oDlg:oWidget:tabifyDockWidget( ::oFunctionsDock:oWidget      , ::oPropertiesDock:oWidget      )
-   ::oDlg:oWidget:tabifyDockWidget( ::oPropertiesDock:oWidget     , ::oEnvironDock:oWidget         )
-   ::oDlg:oWidget:tabifyDockWidget( ::oEnvironDock:oWidget        , ::oSkeltnDock:oWidget          )
-   ::oDlg:oWidget:tabifyDockWidget( ::oSkeltnDock:oWidget         , ::oThemesDock:oWidget          )
-   ::oDlg:oWidget:tabifyDockWidget( ::oThemesDock:oWidget         , ::oFindDock:oWidget            )
-   ::oDlg:oWidget:tabifyDockWidget( ::oFindDock:oWidget           , ::oDocWriteDock:oWidget        )
-   ::oDlg:oWidget:tabifyDockWidget( ::oDocWriteDock:oWidget       , ::oSourceThumbnailDock:oWidget )
-   ::oDlg:oWidget:tabifyDockWidget( ::oSourceThumbnailDock:oWidget, ::oQScintillaDock:oWidget      )
-
-   ::buildToolBarPanels()
 
    RETURN Self
 
@@ -1345,6 +1353,7 @@ METHOD IdeDocks:buildToolBarPanels()
    aadd( aBtns, { ::oFindDock           , "search"        } )
    aadd( aBtns, { ::oSourceThumbnailDock, "thumbnail"     } )
    aadd( aBtns, { ::oQScintillaDock     , "browser"       } )
+   aadd( aBtns, { ::oReportsManagerDock  , "designer"      } )
    aadd( aBtns, {} )
    aadd( aBtns, { ::oDockB2             , "builderror"    } )
 
@@ -1359,7 +1368,11 @@ METHOD IdeDocks:buildToolBarPanels()
       ENDIF
    NEXT
 
-   ::oDlg:oWidget:addToolBar( Qt_RightToolBarArea, ::qTBarDocks )
+   IF ::oIde:lCurEditsMdi
+      ::oDlg:oWidget:addToolBar( Qt_TopToolBarArea, ::qTBarDocks )
+   ELSE
+      ::oDlg:oWidget:addToolBar( Qt_RightToolBarArea, ::qTBarDocks )
+   ENDIF
 
    /* User defined toolbars via Tools & Utilities */
    ::oTM:buildUserToolbars()
@@ -1777,6 +1790,17 @@ METHOD IdeDocks:buildQScintilla()
    ::oIde:oQScintillaDock := ::getADockWidget( nAreas, "dockQScintilla", "ideDBU", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oQScintillaDock:oWidget, Qt_Horizontal )
    ::connect( ::oQScintillaDock:oWidget, "visibilityChanged(bool)"  , {|p| ::execEvent( "dockQScintilla_visibilityChanged", p, ::oQScintillaDock:oWidget ) } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildReportsDesignerWidget()
+   LOCAL nAreas := Qt_LeftDockWidgetArea + Qt_RightDockWidgetArea + Qt_TopDockWidgetArea + Qt_BottomDockWidgetArea
+
+   ::oIde:oReportsManagerDock := ::getADockWidget( nAreas, "dockReportDesigner", "ideReports Designer", QDockWidget_DockWidgetFloatable )
+   ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oReportsManagerDock:oWidget, Qt_Horizontal )
+   ::connect( ::oReportsManagerDock:oWidget, "visibilityChanged(bool)", {|p| ::execEvent( "dockReportsManager_visibilityChanged", p, ::oReportsManagerDock:oWidget ) } )
 
    RETURN Self
 

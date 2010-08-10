@@ -2249,10 +2249,29 @@
 #define QAbstractItemDelegate_EditNextItem        1   // The view should use the delegate to open an editor on the next item in the view.
 #define QAbstractItemDelegate_EditPreviousItem    2   // The view should use the delegate to open an editor on the previous item in the view.
 
-// The following hints are most useful when models are used that cache data, such as those that manipulate data locally in order to increase performance or conserve network bandwidth.
+//The following hints are most useful when models are used that cache data, such as those that manipulate data locally in order to increase performance or conserve network bandwidth.
 #define QAbstractItemDelegate_SubmitModelCache    3   // If the model caches data, it should write out cached data to the underlying data store.
 #define QAbstractItemDelegate_RevertModelCache    4   // If the model caches data, it should discard cached data and replace it with data from the underlying data store.
 
+#define QTabBar_LeftSide                          0   // Left side of the tab.
+#define QTabBar_RightSide                         1   // Right side of the tab.
+//This enum was introduced in Qt 4.5.
+
+#define QTabBar_SelectLeftTab                     0   // Select the tab to the left of the one being removed.
+#define QTabBar_SelectRightTab                    1   // Select the tab to the right of the one being removed.
+#define QTabBar_SelectPreviousTab                 2   // Select the previously selected tab.
+//This enum was introduced in Qt 4.5.
+
+//enum QTabBar::Shape
+//This enum type lists the built-in shapes supported by QTabBar. Treat these as hints as some styles may not render some of the shapes. However, position should be honored.
+#define QTabBar_RoundedNorth                      0   // The normal rounded look above the pages
+#define QTabBar_RoundedSouth                      1   // The normal rounded look below the pages
+#define QTabBar_RoundedWest                       2   // The normal rounded look on the left side of the pages
+#define QTabBar_RoundedEast                       3   // The normal rounded look on the right side the pages
+#define QTabBar_TriangularNorth                   4   // Triangular tabs above the pages.
+#define QTabBar_TriangularSouth                   5   // Triangular tabs similar to those used in the Excel spreadsheet, for example
+#define QTabBar_TriangularWest                    6   // Triangular tabs on the left of the pages.
+#define QTabBar_TriangularEast                    7   // Triangular tabs on the right of the pages.
 
 /*----------------------------------------------------------------------*/
 

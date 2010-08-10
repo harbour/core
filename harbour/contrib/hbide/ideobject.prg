@@ -100,6 +100,7 @@ CLASS IdeObject
    ACCESS oTM                                     INLINE ::oIde:oTM
    ACCESS oTH                                     INLINE ::oIde:oTH
    ACCESS oFF                                     INLINE ::oIde:oFF
+   ACCESS oRM                                     INLINE ::oIde:oRM
    ACCESS oSetup                                  INLINE ::oIde:oSetup
    ACCESS oINI                                    INLINE ::oIde:oINI
 
@@ -197,6 +198,7 @@ CLASS IdeObject
    ACCESS oQScintillaDock                         INLINE ::oIde:oQScintillaDock
    ACCESS oMainToolbar                            INLINE ::oIde:oMainToolbar
    ACCESS oUpDn                                   INLINE ::oIde:oUpDn
+   ACCESS oReportsManagerDock                     INLINE ::oIde:oReportsManagerDock
    ACCESS oSys                                    INLINE ::oIde:oSys
    ACCESS oSysMenu                                INLINE ::oIde:oSysMenu
 
