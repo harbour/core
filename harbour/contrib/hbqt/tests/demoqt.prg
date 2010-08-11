@@ -85,6 +85,7 @@
 
 #include "common.ch"
 
+
 REQUEST HB_QT
 
 STATIC s_qApp
@@ -160,7 +161,8 @@ HB_TRACE( HB_TR_ALWAYS, ( "-----------------b-----------------" ) )
    aList  := Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
 
    oWnd:installEventFilter( s_events )
-   QT_EVENTS_CONNECT( s_events, oWnd, 6, {|e| My_Events( e ) } )
+   QT_EVENTS_CONNECT( s_events, oWnd,  6, {|e| My_Events( e ) } )
+   QT_EVENTS_CONNECT( s_events, oWnd, 19, {|| s_qApp:quit() } )
 
    oWnd:Show()
 
@@ -199,7 +201,7 @@ PROCEDURE ExecOneMore()
    Local oLabel, oBtn, oDA, oWnd, oProg, oSBar
    LOCAL aMenu, aTool, aGrid, aTabs, aList, oEventLoop
    LOCAL lExit := .f.
-
+   
    oWnd := QMainWindow():new()
 
    oWnd:setMouseTracking( .t. )
@@ -258,7 +260,7 @@ STATIC FUNCTION Build_MenuBar( oWnd )
    oMenu1:addSeparator()
    QT_SLOTS_CONNECT( s_slots,  oMenu1:addAction_1( "save.png", "&Save" ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Save", w, l ) } )
    oMenu1:addSeparator()
-   QT_SLOTS_CONNECT( s_slots,  oMenu1:addAction( "E&xit" ), QT_EVE_TRIGGERED_B, {|w,l| w := w, l := l, MsgInfo( "Exit ?" ) } )
+   QT_SLOTS_CONNECT( s_slots,  oMenu1:addAction( "E&xit" ), QT_EVE_TRIGGERED_B, {|| s_qApp:quit() } )
    oMenuBar:addMenu( oMenu1 )
 
    oMenu2 := QMenu():new()
