@@ -172,21 +172,19 @@ STATIC FUNCTION New( cClassName, xSuper, sClassFunc, lModuleFriendly )
 
    DEFAULT lModuleFriendly TO .F.
 
-   IF Empty( xSuper )
+   IF hb_isSymbol( xSuper )
+      ::asSuper := { xSuper }
+   ELSEIF Empty( xSuper )
       ::asSuper := {}
    ELSEIF ISCHARACTER( xSuper )
       ::asSuper := { __DynsN2Sym( xSuper ) }
-   ELSEIF hb_isSymbol( xSuper )
-      ::asSuper := { xSuper }
    ELSEIF ISARRAY( xSuper )
       ::asSuper := {}
       FOR EACH i IN xSuper
-         IF ! Empty( i )
-            IF ISCHARACTER( i )
-               AAdd( ::asSuper, __DynsN2Sym( i ) )
-            ELSEIF hb_isSymbol( i )
-               AAdd( ::asSuper, i )
-            ENDIF
+         IF hb_isSymbol( i )
+            AAdd( ::asSuper, i )
+         ELSEIF ISCHARACTER( i ) .AND. ! Empty( i )
+            AAdd( ::asSuper, __DynsN2Sym( i ) )
          ENDIF
       NEXT
    ENDIF

@@ -3751,6 +3751,7 @@ HB_FUNC( __CLSINSTSUPER )
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING | HB_IT_SYMBOL );
    HB_USHORT uiClassH = 0, uiClass;
    PHB_SYMB pClassFuncSym = NULL;
+   char szDesc[ 128 ];
 
    if( pItem )
    {
@@ -3809,12 +3810,28 @@ HB_FUNC( __CLSINSTSUPER )
             if( uiClassH && HB_IS_OBJECT( pObject ) )
                pObject->item.asArray.value->uiClass = 0;
             else if( hb_vmRequestQuery() == 0 )
+            {
+               hb_snprintf( szDesc, sizeof( szDesc ), 
+                            "Super class '%s' does not return an object",
+                            pClassFuncSym->szName );
                hb_errRT_BASE( EG_ARG, 3002, "Super class does not return an object", HB_ERR_FUNCNAME, 0 );
+            }
          }
       }
    }
    else
-      hb_errRT_BASE( EG_ARG, 3003, "Cannot find super class", HB_ERR_FUNCNAME, 0 );
+   {
+      const char * pszName = NULL;
+
+      pClassFuncSym = hb_itemGetSymbol( pItem );
+      if( pClassFuncSym )
+         pszName = pClassFuncSym->szName;
+      else
+         pszName = hb_itemGetCPtr( pItem );
+      hb_snprintf( szDesc, sizeof( szDesc ),
+                   "Cannot find super class '%s'", pszName );
+      hb_errRT_BASE( EG_ARG, 3003, szDesc, HB_ERR_FUNCNAME, 0 );
+   }
 
    hb_retni( uiClassH );
 }
