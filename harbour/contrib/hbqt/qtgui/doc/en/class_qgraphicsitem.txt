@@ -1,0 +1,198 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QGraphicsItem()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qgraphicsitem.html
+ *  $ONELINER$
+ *     Creates a new QGraphicsItem object.
+ *  $INHERITS$
+ *     
+ *  $SYNTAX$
+ *     QGraphicsItem():new( ... )
+ *     QGraphicsItem():from( pPtr_OR_oObj_of_type_QGraphicsItem )
+ *     QGraphicsItem():configure( pPtr_OR_oObj_of_type_QGraphicsItem )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QGraphicsItem
+ *  $METHODS$
+ *     :acceptDrops()                                      -> lBool
+ *     :acceptHoverEvents()                                -> lBool
+ *     :acceptedMouseButtons()                             -> nQt::MouseButtons
+ *     :advance( nPhase )                                  -> NIL
+ *     :boundingRect()                                     -> pQRectF
+ *     :boundingRegion( pItemToDeviceTransform )           -> pQRegion
+ *     :boundingRegionGranularity()                        -> nQreal
+ *     :cacheMode()                                        -> nCacheMode
+ *     :childItems()                                       -> pQList<QGraphicsItem *>
+ *     :childrenBoundingRect()                             -> pQRectF
+ *     :clearFocus()                                       -> NIL
+ *     :clipPath()                                         -> pQPainterPath
+ *     :collidesWithItem( pOther, nMode )                  -> lBool
+ *     :collidesWithPath( pPath, nMode )                   -> lBool
+ *     :collidingItems( nMode )                            -> pQList<QGraphicsItem *>
+ *     :contains( pPoint )                                 -> lBool
+ *     :cursor()                                           -> pQCursor
+ *     :data( nKey )                                       -> pQVariant
+ *     :deviceTransform( pViewportTransform )              -> pQTransform
+ *     :effectiveOpacity()                                 -> nQreal
+ *     :ensureVisible( pRect, nXmargin, nYmargin )         -> NIL
+ *     :ensureVisible_1( nX, nY, nW, nH, nXmargin, nYmargin )  -> NIL
+ *     :flags()                                            -> nGraphicsItemFlags
+ *     :grabKeyboard()                                     -> NIL
+ *     :grabMouse()                                        -> NIL
+ *     :group()                                            -> Group
+ *     :handlesChildEvents()                               -> lBool
+ *     :hasCursor()                                        -> lBool
+ *     :hasFocus()                                         -> lBool
+ *     :hide()                                             -> NIL
+ *     :installSceneEventFilter( pFilterItem )             -> NIL
+ *     :isAncestorOf( pChild )                             -> lBool
+ *     :isClipped()                                        -> lBool
+ *     :isEnabled()                                        -> lBool
+ *     :isObscured()                                       -> lBool
+ *     :isObscured_1( nX, nY, nW, nH )                     -> lBool
+ *     :isObscured_2( pRect )                              -> lBool
+ *     :isObscuredBy( pItem )                              -> lBool
+ *     :isSelected()                                       -> lBool
+ *     :isUnderMouse()                                     -> lBool
+ *     :isVisible()                                        -> lBool
+ *     :isVisibleTo( pParent )                             -> lBool
+ *     :isWidget()                                         -> lBool
+ *     :isWindow()                                         -> lBool
+ *     :itemTransform( pOther, @lOk )                      -> pQTransform
+ *     :mapFromItem( pItem, pPoint )                       -> pQPointF
+ *     :mapFromItem_1( pItem, pRect )                      -> pQPolygonF
+ *     :mapFromItem_2( pItem, pPolygon )                   -> pQPolygonF
+ *     :mapFromItem_3( pItem, pPath )                      -> pQPainterPath
+ *     :mapFromItem_4( pItem, nX, nY, nW, nH )             -> pQPolygonF
+ *     :mapFromItem_5( pItem, nX, nY )                     -> pQPointF
+ *     :mapFromParent( pPoint )                            -> pQPointF
+ *     :mapFromParent_1( pRect )                           -> pQPolygonF
+ *     :mapFromParent_2( pPolygon )                        -> pQPolygonF
+ *     :mapFromParent_3( pPath )                           -> pQPainterPath
+ *     :mapFromParent_4( nX, nY, nW, nH )                  -> pQPolygonF
+ *     :mapFromParent_5( nX, nY )                          -> pQPointF
+ *     :mapFromScene( pPoint )                             -> pQPointF
+ *     :mapFromScene_1( pRect )                            -> pQPolygonF
+ *     :mapFromScene_2( pPolygon )                         -> pQPolygonF
+ *     :mapFromScene_3( pPath )                            -> pQPainterPath
+ *     :mapFromScene_4( nX, nY, nW, nH )                   -> pQPolygonF
+ *     :mapFromScene_5( nX, nY )                           -> pQPointF
+ *     :mapRectFromItem( pItem, pRect )                    -> pQRectF
+ *     :mapRectFromItem_1( pItem, nX, nY, nW, nH )         -> pQRectF
+ *     :mapRectFromParent( pRect )                         -> pQRectF
+ *     :mapRectFromParent_1( nX, nY, nW, nH )              -> pQRectF
+ *     :mapRectFromScene( pRect )                          -> pQRectF
+ *     :mapRectFromScene_1( nX, nY, nW, nH )               -> pQRectF
+ *     :mapRectToItem( pItem, pRect )                      -> pQRectF
+ *     :mapRectToItem_1( pItem, nX, nY, nW, nH )           -> pQRectF
+ *     :mapRectToParent( pRect )                           -> pQRectF
+ *     :mapRectToParent_1( nX, nY, nW, nH )                -> pQRectF
+ *     :mapRectToScene( pRect )                            -> pQRectF
+ *     :mapRectToScene_1( nX, nY, nW, nH )                 -> pQRectF
+ *     :mapToItem( pItem, pPoint )                         -> pQPointF
+ *     :mapToItem_1( pItem, pRect )                        -> pQPolygonF
+ *     :mapToItem_2( pItem, pPolygon )                     -> pQPolygonF
+ *     :mapToItem_3( pItem, pPath )                        -> pQPainterPath
+ *     :mapToItem_4( pItem, nX, nY, nW, nH )               -> pQPolygonF
+ *     :mapToItem_5( pItem, nX, nY )                       -> pQPointF
+ *     :mapToParent( pPoint )                              -> pQPointF
+ *     :mapToParent_1( pRect )                             -> pQPolygonF
+ *     :mapToParent_2( pPolygon )                          -> pQPolygonF
+ *     :mapToParent_3( pPath )                             -> pQPainterPath
+ *     :mapToParent_4( nX, nY, nW, nH )                    -> pQPolygonF
+ *     :mapToParent_5( nX, nY )                            -> pQPointF
+ *     :mapToScene( pPoint )                               -> pQPointF
+ *     :mapToScene_1( pRect )                              -> pQPolygonF
+ *     :mapToScene_2( pPolygon )                           -> pQPolygonF
+ *     :mapToScene_3( pPath )                              -> pQPainterPath
+ *     :mapToScene_4( nX, nY, nW, nH )                     -> pQPolygonF
+ *     :mapToScene_5( nX, nY )                             -> pQPointF
+ *     :moveBy( nDx, nDy )                                 -> NIL
+ *     :opacity()                                          -> nQreal
+ *     :opaqueArea()                                       -> pQPainterPath
+ *     :paint( pPainter, pOption, pWidget )                -> NIL
+ *     :parentWidget()                                     -> pQGraphicsWidget
+ *     :pos()                                              -> pQPointF
+ *     :removeSceneEventFilter( pFilterItem )              -> NIL
+ *     :resetTransform()                                   -> NIL
+ *     :rotate( nAngle )                                   -> NIL
+ *     :scale( nSx, nSy )                                  -> NIL
+ *     :scene()                                            -> pQGraphicsScene
+ *     :sceneBoundingRect()                                -> pQRectF
+ *     :scenePos()                                         -> pQPointF
+ *     :sceneTransform()                                   -> pQTransform
+ *     :scroll( nDx, nDy, pRect )                          -> NIL
+ *     :setAcceptDrops( lOn )                              -> NIL
+ *     :setAcceptHoverEvents( lEnabled )                   -> NIL
+ *     :setAcceptedMouseButtons( nButtons )                -> NIL
+ *     :setBoundingRegionGranularity( nGranularity )       -> NIL
+ *     :setCacheMode( nMode, pLogicalCacheSize )           -> NIL
+ *     :setCursor( pCursor )                               -> NIL
+ *     :setData( nKey, pValue )                            -> NIL
+ *     :setEnabled( lEnabled )                             -> NIL
+ *     :setFlag( nFlag, lEnabled )                         -> NIL
+ *     :setFlags( nFlags )                                 -> NIL
+ *     :setFocus( nFocusReason )                           -> NIL
+ *     :setGroup( pGroup )                                 -> NIL
+ *     :setHandlesChildEvents( lEnabled )                  -> NIL
+ *     :setOpacity( nOpacity )                             -> NIL
+ *     :setParentItem( pParent )                           -> NIL
+ *     :setPos( pPos )                                     -> NIL
+ *     :setPos_1( nX, nY )                                 -> NIL
+ *     :setSelected( lSelected )                           -> NIL
+ *     :setToolTip( cToolTip )                             -> NIL
+ *     :setTransform( pMatrix, lCombine )                  -> NIL
+ *     :setVisible( lVisible )                             -> NIL
+ *     :setZValue( nZ )                                    -> NIL
+ *     :shape()                                            -> pQPainterPath
+ *     :shear( nSh, nSv )                                  -> NIL
+ *     :show()                                             -> NIL
+ *     :toolTip()                                          -> cQString
+ *     :topLevelWidget()                                   -> pQGraphicsWidget
+ *     :transform()                                        -> pQTransform
+ *     :translate( nDx, nDy )                              -> NIL
+ *     :type()                                             -> nInt
+ *     :ungrabKeyboard()                                   -> NIL
+ *     :ungrabMouse()                                      -> NIL
+ *     :unsetCursor()                                      -> NIL
+ *     :update( pRect )                                    -> NIL
+ *     :update_1( nX, nY, nWidth, nHeight )                -> NIL
+ *     :window()                                           -> pQGraphicsWidget
+ *     :x()                                                -> nQreal
+ *     :y()                                                -> nQreal
+ *     :zValue()                                           -> nQreal
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQGraphicsItem.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsItem.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     
+ *  $END$
+ */

@@ -62,6 +62,7 @@ extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QTextEncoder );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QTextStream );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QThread );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QTime );
+extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QTimeLine );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QTimer );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QTranslator );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QUrl );
@@ -114,6 +115,7 @@ extern HB_EXPORT void * hbqt_gcAllocate_QTextEncoder( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QTextStream( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QThread( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QTime( void * pObj, bool bNew );
+extern HB_EXPORT void * hbqt_gcAllocate_QTimeLine( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QTimer( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QTranslator( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QUrl( void * pObj, bool bNew );
@@ -168,6 +170,7 @@ HB_EXTERN_END
 #define hbqt_par_QTextStream( n )                               ( ( QTextStream                                 * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QThread( n )                                   ( ( QThread                                     * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QTime( n )                                     ( ( QTime                                       * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QTimeLine( n )                                 ( ( QTimeLine                                   * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QTimer( n )                                    ( ( QTimer                                      * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QTranslator( n )                               ( ( QTranslator                                 * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QUrl( n )                                      ( ( QUrl                                        * ) hbqt_gcpointer( n ) )
@@ -222,9 +225,10 @@ HB_EXTERN_END
 #define HBQT_TYPE_QTextStream                                   ( HBQT_TYPE_QTCORE_BASE + 45 )
 #define HBQT_TYPE_QThread                                       ( HBQT_TYPE_QTCORE_BASE + 46 )
 #define HBQT_TYPE_QTime                                         ( HBQT_TYPE_QTCORE_BASE + 47 )
-#define HBQT_TYPE_QTimer                                        ( HBQT_TYPE_QTCORE_BASE + 48 )
-#define HBQT_TYPE_QTranslator                                   ( HBQT_TYPE_QTCORE_BASE + 49 )
-#define HBQT_TYPE_QUrl                                          ( HBQT_TYPE_QTCORE_BASE + 50 )
-#define HBQT_TYPE_QVariant                                      ( HBQT_TYPE_QTCORE_BASE + 51 )
+#define HBQT_TYPE_QTimeLine                                     ( HBQT_TYPE_QTCORE_BASE + 48 )
+#define HBQT_TYPE_QTimer                                        ( HBQT_TYPE_QTCORE_BASE + 49 )
+#define HBQT_TYPE_QTranslator                                   ( HBQT_TYPE_QTCORE_BASE + 50 )
+#define HBQT_TYPE_QUrl                                          ( HBQT_TYPE_QTCORE_BASE + 51 )
+#define HBQT_TYPE_QVariant                                      ( HBQT_TYPE_QTCORE_BASE + 52 )
 
 #endif /* __HBQTCORE_H */

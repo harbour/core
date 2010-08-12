@@ -2288,4 +2288,82 @@
 #define HBQT_QAIM_rowCount                        3001
 #define HBQT_QAIM_columnCount                     3002
 
+/*----------------------------------------------------------------------*/
+
+#define QGraphicsScene_BspTreeIndex                          0
+#define QGraphicsScene_NoIndex                               -1
+
+#define QGraphicsScene_ItemLayer                             0x1
+#define QGraphicsScene_BackgroundLayer                       0x2
+#define QGraphicsScene_ForegroundLayer                       0x4
+#define QGraphicsScene_AllLayers                             0xffff
+
+#define QGraphicsView_CacheNone                              0x0
+#define QGraphicsView_CacheBackground                        0x1
+
+#define QGraphicsView_NoDrag                                 0
+#define QGraphicsView_ScrollHandDrag                         1
+#define QGraphicsView_RubberBandDrag                         2
+
+#define QGraphicsView_DontClipPainter                        0x1
+#define QGraphicsView_DontSavePainterState                   0x2
+#define QGraphicsView_DontAdjustForAntialiasing              0x4
+
+#define QGraphicsView_NoAnchor                               0
+#define QGraphicsView_AnchorViewCenter                       1
+#define QGraphicsView_AnchorUnderMouse                       2
+
+#define QGraphicsView_FullViewportUpdate                     0
+#define QGraphicsView_MinimalViewportUpdate                  1
+#define QGraphicsView_SmartViewportUpdate                    2
+#define QGraphicsView_BoundingRectViewportUpdate             4
+#define QGraphicsView_NoViewportUpdate                       3
+
+#define QGraphicsItem_NoCache                                0
+#define QGraphicsItem_ItemCoordinateCache                    1
+#define QGraphicsItem_DeviceCoordinateCache                  2
+#define QGraphicsItem_ItemEnabledChange                      3
+#define QGraphicsItem_ItemEnabledHasChanged                  13
+#define QGraphicsItem_ItemMatrixChange                       1
+#define QGraphicsItem_ItemPositionChange                     0
+#define QGraphicsItem_ItemPositionHasChanged                 9
+#define QGraphicsItem_ItemTransformChange                    8
+#define QGraphicsItem_ItemTransformHasChanged                10
+#define QGraphicsItem_ItemSelectedChange                     4
+#define QGraphicsItem_ItemSelectedHasChanged                 14
+#define QGraphicsItem_ItemVisibleChange                      2
+#define QGraphicsItem_ItemVisibleHasChanged                  12
+#define QGraphicsItem_ItemParentChange                       5
+#define QGraphicsItem_ItemParentHasChanged                   15
+#define QGraphicsItem_ItemChildAddedChange                   6
+#define QGraphicsItem_ItemChildRemovedChange                 7
+#define QGraphicsItem_ItemSceneChange                        11
+#define QGraphicsItem_ItemSceneHasChanged                    16
+#define QGraphicsItem_ItemCursorChange                       17
+#define QGraphicsItem_ItemCursorHasChanged                   18
+#define QGraphicsItem_ItemToolTipChange                      19
+#define QGraphicsItem_ItemToolTipHasChanged                  20
+#define QGraphicsItem_ItemFlagsChange                        21
+#define QGraphicsItem_ItemFlagsHaveChanged                   22
+#define QGraphicsItem_ItemZValueChange                       23
+#define QGraphicsItem_ItemZValueHasChanged                   24
+#define QGraphicsItem_ItemOpacityChange                      25
+#define QGraphicsItem_ItemOpacityHasChanged                  26
+#define QGraphicsItem_ItemIsMovable                          0x1
+#define QGraphicsItem_ItemIsSelectable                       0x2
+#define QGraphicsItem_ItemIsFocusable                        0x4
+#define QGraphicsItem_ItemClipsToShape                       0x8
+#define QGraphicsItem_ItemClipsChildrenToShape               0x10
+#define QGraphicsItem_ItemIgnoresTransformations             0x20
+#define QGraphicsItem_ItemIgnoresParentOpacity               0x40
+#define QGraphicsItem_ItemDoesntPropagateOpacityToChildren   0x80
+#define QGraphicsItem_ItemStacksBehindParent                 0x100
+
+#define QGraphicsPixmapItem_MaskShape                        0
+#define QGraphicsPixmapItem_BoundingRectShape                1
+#define QGraphicsPixmapItem_HeuristicMaskShape               2
+
+/*----------------------------------------------------------------------*/
+
 #endif
+

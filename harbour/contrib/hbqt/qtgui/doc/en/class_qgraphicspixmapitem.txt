@@ -1,0 +1,60 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QGraphicsPixmapItem()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qgraphicspixmapitem.html
+ *  $ONELINER$
+ *     Creates a new QGraphicsPixmapItem object.
+ *  $INHERITS$
+ *     QGraphicsItem
+ *  $SYNTAX$
+ *     QGraphicsPixmapItem():new( ... )
+ *     QGraphicsPixmapItem():from( pPtr_OR_oObj_of_type_QGraphicsPixmapItem )
+ *     QGraphicsPixmapItem():configure( pPtr_OR_oObj_of_type_QGraphicsPixmapItem )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QGraphicsPixmapItem
+ *  $METHODS$
+ *     :offset()                                           -> pQPointF
+ *     :pixmap()                                           -> pQPixmap
+ *     :setOffset( pOffset )                               -> NIL
+ *     :setOffset_1( nX, nY )                              -> NIL
+ *     :setPixmap( pPixmap )                               -> NIL
+ *     :setShapeMode( nMode )                              -> NIL
+ *     :setTransformationMode( nMode )                     -> NIL
+ *     :shapeMode()                                        -> nShapeMode
+ *     :transformationMode()                               -> nQt::TransformationMode
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQGraphicsPixmapItem.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsPixmapItem.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QGraphicsItem
+ *  $END$
+ */

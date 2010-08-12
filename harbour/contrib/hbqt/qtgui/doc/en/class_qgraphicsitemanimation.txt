@@ -1,0 +1,71 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QGraphicsItemAnimation()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qgraphicsitemanimation.html
+ *  $ONELINER$
+ *     Creates a new QGraphicsItemAnimation object.
+ *  $INHERITS$
+ *     QObject
+ *  $SYNTAX$
+ *     QGraphicsItemAnimation():new( ... )
+ *     QGraphicsItemAnimation():from( pPtr_OR_oObj_of_type_QGraphicsItemAnimation )
+ *     QGraphicsItemAnimation():configure( pPtr_OR_oObj_of_type_QGraphicsItemAnimation )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QGraphicsItemAnimation
+ *  $METHODS$
+ *     :clear()                                            -> NIL
+ *     :horizontalScaleAt( nStep )                         -> nQreal
+ *     :horizontalShearAt( nStep )                         -> nQreal
+ *     :item()                                             -> pQGraphicsItem
+ *     :matrixAt( nStep )                                  -> pQMatrix
+ *     :posAt( nStep )                                     -> pQPointF
+ *     :rotationAt( nStep )                                -> nQreal
+ *     :setItem( pItem )                                   -> NIL
+ *     :setPosAt( nStep, pPoint )                          -> NIL
+ *     :setRotationAt( nStep, nAngle )                     -> NIL
+ *     :setScaleAt( nStep, nSx, nSy )                      -> NIL
+ *     :setShearAt( nStep, nSh, nSv )                      -> NIL
+ *     :setTimeLine( pTimeLine )                           -> NIL
+ *     :setTranslationAt( nStep, nDx, nDy )                -> NIL
+ *     :timeLine()                                         -> pQTimeLine
+ *     :verticalScaleAt( nStep )                           -> nQreal
+ *     :verticalShearAt( nStep )                           -> nQreal
+ *     :xTranslationAt( nStep )                            -> nQreal
+ *     :yTranslationAt( nStep )                            -> nQreal
+ *     :setStep( nStep )                                   -> NIL
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQGraphicsItemAnimation.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsItemAnimation.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QObject
+ *  $END$
+ */

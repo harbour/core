@@ -55,6 +55,7 @@ QTextEncoder.qth
 QTextStream.qth
 QThread.qth
 QTime.qth
+QTimeLine.qth
 QTimer.qth
 QTranslator.qth
 QUrl.qth

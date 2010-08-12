@@ -1,0 +1,127 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QGraphicsView()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qgraphicsview.html
+ *  $ONELINER$
+ *     Creates a new QGraphicsView object.
+ *  $INHERITS$
+ *     QAbstractScrollArea
+ *  $SYNTAX$
+ *     QGraphicsView():new( ... )
+ *     QGraphicsView():from( pPtr_OR_oObj_of_type_QGraphicsView )
+ *     QGraphicsView():configure( pPtr_OR_oObj_of_type_QGraphicsView )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QGraphicsView
+ *  $METHODS$
+ *     :alignment()                                        -> nQt::Alignment
+ *     :backgroundBrush()                                  -> pQBrush
+ *     :cacheMode()                                        -> nCacheMode
+ *     :centerOn( pPos )                                   -> NIL
+ *     :centerOn_1( nX, nY )                               -> NIL
+ *     :centerOn_2( pItem )                                -> NIL
+ *     :dragMode()                                         -> nDragMode
+ *     :ensureVisible( pRect, nXmargin, nYmargin )         -> NIL
+ *     :ensureVisible_1( nX, nY, nW, nH, nXmargin, nYmargin )  -> NIL
+ *     :ensureVisible_2( pItem, nXmargin, nYmargin )       -> NIL
+ *     :fitInView( pRect, nAspectRatioMode )               -> NIL
+ *     :fitInView_1( nX, nY, nW, nH, nAspectRatioMode )    -> NIL
+ *     :fitInView_2( pItem, nAspectRatioMode )             -> NIL
+ *     :foregroundBrush()                                  -> pQBrush
+ *     :isInteractive()                                    -> lBool
+ *     :itemAt( pPos )                                     -> pQGraphicsItem
+ *     :itemAt_1( nX, nY )                                 -> pQGraphicsItem
+ *     :items()                                            -> pQList<QGraphicsItem *>
+ *     :items_1( pPos )                                    -> pQList<QGraphicsItem *>
+ *     :items_2( nX, nY )                                  -> pQList<QGraphicsItem *>
+ *     :items_3( nX, nY, nW, nH, nMode )                   -> pQList<QGraphicsItem *>
+ *     :items_4( pRect, nMode )                            -> pQList<QGraphicsItem *>
+ *     :items_5( pPolygon, nMode )                         -> pQList<QGraphicsItem *>
+ *     :items_6( pPath, nMode )                            -> pQList<QGraphicsItem *>
+ *     :mapFromScene( pPoint )                             -> pQPoint
+ *     :mapFromScene_1( pRect )                            -> pQPolygon
+ *     :mapFromScene_2( pPolygon )                         -> pQPolygon
+ *     :mapFromScene_3( pPath )                            -> pQPainterPath
+ *     :mapFromScene_4( nX, nY )                           -> pQPoint
+ *     :mapFromScene_5( nX, nY, nW, nH )                   -> pQPolygon
+ *     :mapToScene( pPoint )                               -> pQPointF
+ *     :mapToScene_1( pRect )                              -> pQPolygonF
+ *     :mapToScene_2( pPolygon )                           -> pQPolygonF
+ *     :mapToScene_3( pPath )                              -> pQPainterPath
+ *     :mapToScene_4( nX, nY )                             -> pQPointF
+ *     :mapToScene_5( nX, nY, nW, nH )                     -> pQPolygonF
+ *     :matrix()                                           -> pQMatrix
+ *     :optimizationFlags()                                -> nOptimizationFlags
+ *     :render( pPainter, pTarget, pSource, nAspectRatioMode )  -> NIL
+ *     :renderHints()                                      -> nQPainter::RenderHints
+ *     :resetCachedContent()                               -> NIL
+ *     :resetMatrix()                                      -> NIL
+ *     :resetTransform()                                   -> NIL
+ *     :resizeAnchor()                                     -> nViewportAnchor
+ *     :rotate( nAngle )                                   -> NIL
+ *     :rubberBandSelectionMode()                          -> nQt::ItemSelectionMode
+ *     :scale( nSx, nSy )                                  -> NIL
+ *     :scene()                                            -> pQGraphicsScene
+ *     :sceneRect()                                        -> pQRectF
+ *     :setAlignment( nAlignment )                         -> NIL
+ *     :setBackgroundBrush( pBrush )                       -> NIL
+ *     :setCacheMode( nMode )                              -> NIL
+ *     :setDragMode( nMode )                               -> NIL
+ *     :setForegroundBrush( pBrush )                       -> NIL
+ *     :setInteractive( lAllowed )                         -> NIL
+ *     :setMatrix( pMatrix, lCombine )                     -> NIL
+ *     :setOptimizationFlag( nFlag, lEnabled )             -> NIL
+ *     :setOptimizationFlags( nFlags )                     -> NIL
+ *     :setRenderHint( nHint, lEnabled )                   -> NIL
+ *     :setRenderHints( nHints )                           -> NIL
+ *     :setResizeAnchor( nAnchor )                         -> NIL
+ *     :setRubberBandSelectionMode( nMode )                -> NIL
+ *     :setScene( pScene )                                 -> NIL
+ *     :setSceneRect( pRect )                              -> NIL
+ *     :setSceneRect_1( nX, nY, nW, nH )                   -> NIL
+ *     :setTransform( pMatrix, lCombine )                  -> NIL
+ *     :setTransformationAnchor( nAnchor )                 -> NIL
+ *     :setViewportUpdateMode( nMode )                     -> NIL
+ *     :shear( nSh, nSv )                                  -> NIL
+ *     :transform()                                        -> pQTransform
+ *     :transformationAnchor()                             -> nViewportAnchor
+ *     :translate( nDx, nDy )                              -> NIL
+ *     :viewportTransform()                                -> pQTransform
+ *     :viewportUpdateMode()                               -> nViewportUpdateMode
+ *     :invalidateScene( pRect, nLayers )                  -> NIL
+ *     :updateSceneRect( pRect )                           -> NIL
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQGraphicsView.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsView.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QAbstractScrollArea
+ *  $END$
+ */

@@ -1,0 +1,121 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Project source code:
+ * QT Source Generator for Harbour
+ *
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ *
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
+ *
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
+ *
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
+ *
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
+ *
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ *
+ */
+/*----------------------------------------------------------------------*/
+;
+;              Header File to Generate QT Wrapper Sources
+;
+
+<CLASS>
+QObject  = 
+Inherit  = QObject
+Type     = 
+New      = 
+</CLASS>
+
+<CODE>
+#include <QtGui/QGraphicsItemAnimation>
+#include <QtGui/QMatrix>
+#include <QtCore/QPointF>
+
+
+/*
+ * QGraphicsItemAnimation ( QObject * parent = 0 )
+ * virtual ~QGraphicsItemAnimation ()
+ */
+HB_FUNC( QT_QGRAPHICSITEMANIMATION )
+{
+   hb_retptr( new QGraphicsItemAnimation() );
+}
+</CODE>
+
+<ENUMS>
+</ENUMS>
+
+<PROTOS>
+void clear ()
+qreal horizontalScaleAt ( qreal step ) const
+qreal horizontalShearAt ( qreal step ) const
+QGraphicsItem * item () const
+QMatrix matrixAt ( qreal step ) const
+QPointF posAt ( qreal step ) const
+QList<QPair<qreal, QPointF> > posList () const
+qreal rotationAt ( qreal step ) const
+QList<QPair<qreal, qreal> > rotationList () const
+QList<QPair<qreal, QPointF> > scaleList () const
+void setItem ( QGraphicsItem * item )
+void setPosAt ( qreal step, const QPointF & point )
+void setRotationAt ( qreal step, qreal angle )
+void setScaleAt ( qreal step, qreal sx, qreal sy )
+void setShearAt ( qreal step, qreal sh, qreal sv )
+void setTimeLine ( QTimeLine * timeLine )
+void setTranslationAt ( qreal step, qreal dx, qreal dy )
+QList<QPair<qreal, QPointF> > shearList () const
+QTimeLine * timeLine () const
+QList<QPair<qreal, QPointF> > translationList () const
+qreal verticalScaleAt ( qreal step ) const
+qreal verticalShearAt ( qreal step ) const
+qreal xTranslationAt ( qreal step ) const
+qreal yTranslationAt ( qreal step ) const
+</PROTOS>
+
+<SLOTS>
+void setStep ( qreal step )
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>
+
+<VARIABLES>
+</VARIABLES>
+
+
+

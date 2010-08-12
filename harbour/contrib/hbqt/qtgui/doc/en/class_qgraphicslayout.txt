@@ -1,0 +1,59 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QGraphicsLayout()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qgraphicslayout.html
+ *  $ONELINER$
+ *     Creates a new QGraphicsLayout object.
+ *  $INHERITS$
+ *     QGraphicsLayoutItem
+ *  $SYNTAX$
+ *     QGraphicsLayout():new( ... )
+ *     QGraphicsLayout():from( pPtr_OR_oObj_of_type_QGraphicsLayout )
+ *     QGraphicsLayout():configure( pPtr_OR_oObj_of_type_QGraphicsLayout )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QGraphicsLayout
+ *  $METHODS$
+ *     :activate()                                         -> NIL
+ *     :count()                                            -> nInt
+ *     :invalidate()                                       -> NIL
+ *     :isActivated()                                      -> lBool
+ *     :itemAt( nI )                                       -> Item
+ *     :removeAt( nIndex )                                 -> NIL
+ *     :setContentsMargins( nLeft, nTop, nRight, nBottom )  -> NIL
+ *     :widgetEvent( pE )                                  -> NIL
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQGraphicsLayout.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsLayout.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QGraphicsLayoutItem
+ *  $END$
+ */

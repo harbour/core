@@ -1,0 +1,56 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QGraphicsLineItem()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qgraphicslineitem.html
+ *  $ONELINER$
+ *     Creates a new QGraphicsLineItem object.
+ *  $INHERITS$
+ *     QGraphicsItem
+ *  $SYNTAX$
+ *     QGraphicsLineItem():new( ... )
+ *     QGraphicsLineItem():from( pPtr_OR_oObj_of_type_QGraphicsLineItem )
+ *     QGraphicsLineItem():configure( pPtr_OR_oObj_of_type_QGraphicsLineItem )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QGraphicsLineItem
+ *  $METHODS$
+ *     :line()                                             -> pQLineF
+ *     :pen()                                              -> pQPen
+ *     :setLine( pLine )                                   -> NIL
+ *     :setLine_1( nX1, nY1, nX2, nY2 )                    -> NIL
+ *     :setPen( pPen )                                     -> NIL
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQGraphicsLineItem.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsLineItem.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QGraphicsItem
+ *  $END$
+ */

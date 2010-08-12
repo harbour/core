@@ -1,0 +1,85 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QGraphicsLayoutItem()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qgraphicslayoutitem.html
+ *  $ONELINER$
+ *     Creates a new QGraphicsLayoutItem object.
+ *  $INHERITS$
+ *     
+ *  $SYNTAX$
+ *     QGraphicsLayoutItem():new( ... )
+ *     QGraphicsLayoutItem():from( pPtr_OR_oObj_of_type_QGraphicsLayoutItem )
+ *     QGraphicsLayoutItem():configure( pPtr_OR_oObj_of_type_QGraphicsLayoutItem )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QGraphicsLayoutItem
+ *  $METHODS$
+ *     :contentsRect()                                     -> pQRectF
+ *     :effectiveSizeHint( nWhich, pConstraint )           -> pQSizeF
+ *     :geometry()                                         -> pQRectF
+ *     :getContentsMargins( @nLeft, @nTop, @nRight, @nBottom )  -> NIL
+ *     :graphicsItem()                                     -> pQGraphicsItem
+ *     :isLayout()                                         -> lBool
+ *     :maximumHeight()                                    -> nQreal
+ *     :maximumSize()                                      -> pQSizeF
+ *     :maximumWidth()                                     -> nQreal
+ *     :minimumHeight()                                    -> nQreal
+ *     :minimumSize()                                      -> pQSizeF
+ *     :minimumWidth()                                     -> nQreal
+ *     :ownedByLayout()                                    -> lBool
+ *     :preferredHeight()                                  -> nQreal
+ *     :preferredSize()                                    -> pQSizeF
+ *     :preferredWidth()                                   -> nQreal
+ *     :setGeometry( pRect )                               -> NIL
+ *     :setMaximumHeight( nHeight )                        -> NIL
+ *     :setMaximumSize( pSize )                            -> NIL
+ *     :setMaximumSize_1( nW, nH )                         -> NIL
+ *     :setMaximumWidth( nWidth )                          -> NIL
+ *     :setMinimumHeight( nHeight )                        -> NIL
+ *     :setMinimumSize( pSize )                            -> NIL
+ *     :setMinimumSize_1( nW, nH )                         -> NIL
+ *     :setMinimumWidth( nWidth )                          -> NIL
+ *     :setParentLayoutItem( pParent )                     -> NIL
+ *     :setPreferredHeight( nHeight )                      -> NIL
+ *     :setPreferredSize( pSize )                          -> NIL
+ *     :setPreferredSize_1( nW, nH )                       -> NIL
+ *     :setPreferredWidth( nWidth )                        -> NIL
+ *     :setSizePolicy( pPolicy )                           -> NIL
+ *     :setSizePolicy_1( nHPolicy, nVPolicy, nControlType )  -> NIL
+ *     :sizePolicy()                                       -> pQSizePolicy
+ *     :updateGeometry()                                   -> NIL
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQGraphicsLayoutItem.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsLayoutItem.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     
+ *  $END$
+ */

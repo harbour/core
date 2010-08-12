@@ -14,6 +14,7 @@ HBQTableView.qth
 HBQTextBlockUserData.qth
 
 QAbstractButton.qth
+QAbstractGraphicsShapeItem.qth
 QAbstractItemDelegate.qth
 QAbstractItemView.qth
 QAbstractPrintDialog.qth
@@ -69,6 +70,25 @@ QFontMetricsF.qth
 QFormLayout.qth
 QFrame.qth
 QGradient.qth
+QGraphicsEllipseItem.qth
+QGraphicsGridLayout.qth
+QGraphicsItem.qth
+QGraphicsItemAnimation.qth
+QGraphicsItemGroup.qth
+QGraphicsLayout.qth
+QGraphicsLayoutItem.qth
+QGraphicsLinearLayout.qth
+QGraphicsLineItem.qth
+QGraphicsPathItem.qth
+QGraphicsPixmapItem.qth
+QGraphicsPolygonItem.qth
+QGraphicsProxyWidget.qth
+QGraphicsRectItem.qth
+QGraphicsScene.qth
+QGraphicsSimpleTextItem.qth
+QGraphicsTextItem.qth
+QGraphicsView.qth
+QGraphicsWidget.qth
 QGridLayout.qth
 QGroupBox.qth
 QHBoxLayout.qth
@@ -165,6 +185,7 @@ QStyleOptionComplex.qth
 QStyleOptionDockWidget.qth
 QStyleOptionFocusRect.qth
 QStyleOptionFrame.qth
+QStyleOptionGraphicsItem.qth
 QStyleOptionGroupBox.qth
 QStyleOptionHeader.qth
 QStyleOptionMenuItem.qth
@@ -234,3 +255,7 @@ QWizard.qth
 QWizardPage.qth
 
 QUiLoader.qth
+
+
+
+

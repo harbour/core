@@ -1,0 +1,120 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QGraphicsScene()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qgraphicsscene.html
+ *  $ONELINER$
+ *     Creates a new QGraphicsScene object.
+ *  $INHERITS$
+ *     QObject
+ *  $SYNTAX$
+ *     QGraphicsScene():new( ... )
+ *     QGraphicsScene():from( pPtr_OR_oObj_of_type_QGraphicsScene )
+ *     QGraphicsScene():configure( pPtr_OR_oObj_of_type_QGraphicsScene )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QGraphicsScene
+ *  $METHODS$
+ *     :activeWindow()                                     -> pQGraphicsWidget
+ *     :addEllipse( pRect, pPen, pBrush )                  -> pQGraphicsEllipseItem
+ *     :addEllipse_1( nX, nY, nW, nH, pPen, pBrush )       -> pQGraphicsEllipseItem
+ *     :addItem( pItem )                                   -> NIL
+ *     :addLine( pLine, pPen )                             -> pQGraphicsLineItem
+ *     :addLine_1( nX1, nY1, nX2, nY2, pPen )              -> pQGraphicsLineItem
+ *     :addPath( pPath, pPen, pBrush )                     -> pQGraphicsPathItem
+ *     :addPixmap( pPixmap )                               -> pQGraphicsPixmapItem
+ *     :addPolygon( pPolygon, pPen, pBrush )               -> pQGraphicsPolygonItem
+ *     :addRect( pRect, pPen, pBrush )                     -> pQGraphicsRectItem
+ *     :addRect_1( nX, nY, nW, nH, pPen, pBrush )          -> pQGraphicsRectItem
+ *     :addSimpleText( cText, pFont )                      -> pQGraphicsSimpleTextItem
+ *     :addText( cText, pFont )                            -> pQGraphicsTextItem
+ *     :addWidget( pWidget, nWFlags )                      -> pQGraphicsProxyWidget
+ *     :backgroundBrush()                                  -> pQBrush
+ *     :bspTreeDepth()                                     -> nInt
+ *     :clearFocus()                                       -> NIL
+ *     :collidingItems( pItem, nMode )                     -> pQList<QGraphicsItem *>
+ *     :destroyItemGroup( pGroup )                         -> NIL
+ *     :focusItem()                                        -> pQGraphicsItem
+ *     :font()                                             -> pQFont
+ *     :foregroundBrush()                                  -> pQBrush
+ *     :hasFocus()                                         -> lBool
+ *     :height()                                           -> nQreal
+ *     :invalidate( nX, nY, nW, nH, nLayers )              -> NIL
+ *     :isSortCacheEnabled()                               -> lBool
+ *     :itemAt( pPosition )                                -> pQGraphicsItem
+ *     :itemAt_1( nX, nY )                                 -> pQGraphicsItem
+ *     :itemIndexMethod()                                  -> nItemIndexMethod
+ *     :items()                                            -> pQList<QGraphicsItem *>
+ *     :items_1( pPos )                                    -> pQList<QGraphicsItem *>
+ *     :items_2( nX, nY, nW, nH, nMode )                   -> pQList<QGraphicsItem *>
+ *     :items_3( pRectangle, nMode )                       -> pQList<QGraphicsItem *>
+ *     :items_4( pPolygon, nMode )                         -> pQList<QGraphicsItem *>
+ *     :items_5( pPath, nMode )                            -> pQList<QGraphicsItem *>
+ *     :itemsBoundingRect()                                -> pQRectF
+ *     :mouseGrabberItem()                                 -> pQGraphicsItem
+ *     :palette()                                          -> pQPalette
+ *     :removeItem( pItem )                                -> NIL
+ *     :render( pPainter, pTarget, pSource, nAspectRatioMode )  -> NIL
+ *     :sceneRect()                                        -> pQRectF
+ *     :selectedItems()                                    -> pQList<QGraphicsItem *>
+ *     :selectionArea()                                    -> pQPainterPath
+ *     :setActiveWindow( pWidget )                         -> NIL
+ *     :setBackgroundBrush( pBrush )                       -> NIL
+ *     :setBspTreeDepth( nDepth )                          -> NIL
+ *     :setFocus( nFocusReason )                           -> NIL
+ *     :setFocusItem( pItem, nFocusReason )                -> NIL
+ *     :setFont( pFont )                                   -> NIL
+ *     :setForegroundBrush( pBrush )                       -> NIL
+ *     :setItemIndexMethod( nMethod )                      -> NIL
+ *     :setPalette( pPalette )                             -> NIL
+ *     :setSceneRect( pRect )                              -> NIL
+ *     :setSceneRect_1( nX, nY, nW, nH )                   -> NIL
+ *     :setSelectionArea( pPath )                          -> NIL
+ *     :setSelectionArea_1( pPath, nMode )                 -> NIL
+ *     :setSortCacheEnabled( lEnabled )                    -> NIL
+ *     :setStickyFocus( lEnabled )                         -> NIL
+ *     :setStyle( pStyle )                                 -> NIL
+ *     :stickyFocus()                                      -> lBool
+ *     :style()                                            -> pQStyle
+ *     :update( nX, nY, nW, nH )                           -> NIL
+ *     :views()                                            -> pQList<QGraphicsView *>
+ *     :width()                                            -> nQreal
+ *     :advance()                                          -> NIL
+ *     :clear()                                            -> NIL
+ *     :clearSelection()                                   -> NIL
+ *     :invalidate_1( pRect, nLayers )                     -> NIL
+ *     :update_1( pRect )                                  -> NIL
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQGraphicsScene.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsScene.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QObject
+ *  $END$
+ */
