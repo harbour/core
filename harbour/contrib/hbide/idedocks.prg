@@ -152,7 +152,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD stackMaximized()
    METHOD stackZoom( nMode )
    METHOD restState( nMode )
-   METHOD setButtonState( cAlias, lChecked )
+   METHOD setButtonState( cButton, lChecked )
 
    ENDCLASS
 
@@ -286,9 +286,9 @@ METHOD IdeDocks:buildDialog()
 
    IF ::oIde:lCurEditsMdi
       ::buildMdiToolbar()
-      ::qLayout:addWidget_1( ::qMdiToolbar           , 0, 0, 1, 2 )
+      ::qLayout:addWidget_1( ::qMdiToolbar:oWidget   , 0, 0, 1, 2 )
       ::buildMdiToolbarLeft()
-      ::qLayout:addWidget_1( ::qMdiToolbarL          , 1, 0, 1, 1 )
+      ::qLayout:addWidget_1( ::qMdiToolbarL:oWidget  , 1, 0, 1, 1 )
       ::buildStackedWidget()
       ::qLayout:addWidget_1( ::oStackedWidget:oWidget, 1, 1, 1, 1 )
       ::buildSearchReplaceWidget()
@@ -448,7 +448,7 @@ METHOD IdeDocks:buildSystemTray()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:execEvent( cEvent, p, p1 )
-   LOCAL qEvent, qMime, qList, qUrl, i, n, oEdit
+   LOCAL qEvent, qMime, qList, qUrl, i, n, oEdit, aMenu
 
    SWITCH cEvent
    CASE "dockReportsManager_visibilityChanged"
@@ -537,6 +537,15 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
    CASE "qHelpBrw_contextMenuRequested"
       hbide_popupBrwContextMenu( ::qHelpBrw, p )
       EXIT
+   CASE "outputConsole_contextMenuRequested"
+      aMenu := {}
+      aadd( aMenu, { "Clear"     , {|| ::oOutputResult:oWidget:clear()     } } )
+      aadd( aMenu, { "" } )
+      aadd( aMenu, { "Select All", {|| ::oOutputResult:oWidget:selectAll() } } )
+      aadd( aMenu, { "Copy"      , {|| ::oOutputResult:oWidget:copy()      } } )
+      hbide_execPopup( aMenu, p, ::oOutputResult:oWidget )
+      EXIT
+
    CASE "QEvent_WindowStateChange"
       qEvent := QWindowStateChangeEvent():from( p )
       ::nPrevWindowState := qEvent:oldState()
@@ -943,56 +952,42 @@ METHOD IdeDocks:setView( cView )
 
 /*------------------------------------------------------------------------*/
 
-#define BTN_TOOLTIP                               1
-#define BTN_IMAGE                                 2
-#define BTN_ACTIONBLOCK                           3
-#define BTN_CHECKABLE                             4
-
 METHOD IdeDocks:buildMdiToolbarLeft()
-   LOCAL aBtn, qTBar
 
-   ::qMdiToolbarL := QToolBar():new()
-   ::qMdiToolbarL:setStyleSheet( GetStyleSheet( "QToolBarLR5", ::nAnimantionMode ) )
-   ::qMdiToolbarL:setObjectName( "MDI_ToolBarLeft" )
-   ::qMdiToolbarL:setIconSize( QSize():new( 16,16 ) )
-   ::qMdiToolbarL:setOrientation( Qt_Vertical )
+   ::qMdiToolbarL := IdeToolbar():new()
+   ::qMdiToolbarL:orientation := Qt_Vertical
+   ::qMdiToolbarL:create( "EditsManager_Left_Toolbar" )
 
-   qTBar := ::qMdiToolbarL
-
-   aBtn := {}
-
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Toggle tabbed view"         , "view_tabbed"     , {|| ::execEvent( "buttonViewTabbed_clicked"    ) }, .f. } ) )
-   hbide_buildToolbarButton( qTBar, {} )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View as arranged"           , "view_organized"  , {|| ::execEvent( "buttonViewOrganized_clicked" ) }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Save layout"                , "save3"           , {|| ::execEvent( "buttonSaveLayout_clicked"    ) }, .f. } ) )
-   hbide_buildToolbarButton( qTBar, {} )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View as cascaded"           , "view_cascaded"   , {|| ::execEvent( "buttonViewCascaded_clicked"  ) }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View as tiled"              , "view_tiled"      , {|| ::execEvent( "buttonViewTiled_clicked"     ) }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View Maximized"             , "fullscreen"      , {|| ::execEvent( "buttonViewMaximized_clicked" ) }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View Vertically Tiled"      , "view_vertstacked", {|| ::execEvent( "buttonViewStackedVert_clicked" ) }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View Horizontally Tiled"    , "view_horzstacked", {|| ::execEvent( "buttonViewStackedHorz_clicked" ) }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View Zoom In"               , "view_zoomin"     , {|| ::execEvent( "buttonViewZoomedIn_clicked"  ) }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "View Zoom Out"              , "view_zoomout"    , {|| ::execEvent( "buttonViewZoomedOut_clicked" ) }, .f. } ) )
-   hbide_buildToolbarButton( qTBar, {} )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Toggle Line Numbers"        , "togglelinenumber", {|| ::oEM:toggleLineNumbers()                    }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Toggle Horizontal Ruler"    , "horzruler"       , {|| ::oEM:toggleHorzRuler()                      }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Toggle Current Line Hilight", "curlinehilight"  , {|| ::oEM:toggleCurrentLineHighlightMode()       }, .f. } ) )
-   hbide_buildToolbarButton( qTBar, {} )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Toggle Code Completion"     , "help1"           , {|| ::oEM:toggleCodeCompetion()                  }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Toggle Completion Tips"     , "infotips"        , {|| ::oEM:toggleCompetionTips()                  }, .f. } ) )
-   hbide_buildToolbarButton( qTBar, {} )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Zoom In"                    , "zoomin3"         , {|| ::oEM:zoom( +1 )                             }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Zoom Out"                   , "zoomout3"        , {|| ::oEM:zoom( -1 )                             }, .f. } ) )
-   hbide_buildToolbarButton( qTBar, {} )
-
-   aeval( aBtn, {|q| aadd( ::aMdiBtns, q ) } )
+   ::qMdiToolbarL:addToolButton( "ViewTabbed"     , "Toggle tabbed view"         , hbide_image( "view_tabbed"      ), {|| ::execEvent( "buttonViewTabbed_clicked"      ) }, .f. )
+   ::qMdiToolbarL:addSeparator()
+   ::qMdiToolbarL:addToolButton( "ViewArranged"   , "View as arranged"           , hbide_image( "view_organized"   ), {|| ::execEvent( "buttonViewOrganized_clicked"   ) }, .f. )
+   ::qMdiToolbarL:addToolButton( "SaveLayout"     , "Save layout"                , hbide_image( "save3"            ), {|| ::execEvent( "buttonSaveLayout_clicked"      ) }, .f. )
+   ::qMdiToolbarL:addSeparator()
+   ::qMdiToolbarL:addToolButton( "ViewCascaded"   , "View as cascaded"           , hbide_image( "view_cascaded"    ), {|| ::execEvent( "buttonViewCascaded_clicked"    ) }, .f. )
+   ::qMdiToolbarL:addToolButton( "viewTiled"      , "View as tiled"              , hbide_image( "view_tiled"       ), {|| ::execEvent( "buttonViewTiled_clicked"       ) }, .f. )
+   ::qMdiToolbarL:addToolButton( "ViewMaximized"  , "View Maximized"             , hbide_image( "fullscreen"       ), {|| ::execEvent( "buttonViewMaximized_clicked"   ) }, .f. )
+   ::qMdiToolbarL:addToolButton( "ViewTiledVert"  , "View Vertically Tiled"      , hbide_image( "view_vertstacked" ), {|| ::execEvent( "buttonViewStackedVert_clicked" ) }, .f. )
+   ::qMdiToolbarL:addToolButton( "ViewTiledHorz"  , "View Horizontally Tiled"    , hbide_image( "view_horzstacked" ), {|| ::execEvent( "buttonViewStackedHorz_clicked" ) }, .f. )
+   ::qMdiToolbarL:addToolButton( "ViewZoomedIn"   , "View Zoom In"               , hbide_image( "view_zoomin"      ), {|| ::execEvent( "buttonViewZoomedIn_clicked"    ) }, .f. )
+   ::qMdiToolbarL:addToolButton( "ViewZoomedOut"  , "View Zoom Out"              , hbide_image( "view_zoomout"     ), {|| ::execEvent( "buttonViewZoomedOut_clicked"   ) }, .f. )
+   ::qMdiToolbarL:addSeparator()
+   ::qMdiToolbarL:addToolButton( "ToggleLineNos"  , "Toggle Line Numbers"        , hbide_image( "togglelinenumber" ), {|| ::oEM:toggleLineNumbers()                      }, .f. )
+   ::qMdiToolbarL:addToolButton( "ToggleHorzRuler", "Toggle Horizontal Ruler"    , hbide_image( "horzruler"        ), {|| ::oEM:toggleHorzRuler()                        }, .f. )
+   ::qMdiToolbarL:addToolButton( "ToggleCurLine"  , "Toggle Current Line Hilight", hbide_image( "curlinehilight"   ), {|| ::oEM:toggleCurrentLineHighlightMode()         }, .f. )
+   ::qMdiToolbarL:addSeparator()
+   ::qMdiToolbarL:addToolButton( "ToggleCodeComp" , "Toggle Code Completion"     , hbide_image( "help1"            ), {|| ::oEM:toggleCodeCompetion()                    }, .f. )
+   ::qMdiToolbarL:addToolButton( "ToggleCompTips" , "Toggle Completion Tips"     , hbide_image( "infotips"         ), {|| ::oEM:toggleCompetionTips()                    }, .f. )
+   ::qMdiToolbarL:addSeparator()
+   ::qMdiToolbarL:addToolButton( "ZoomIn"         , "Zoom In"                    , hbide_image( "zoomin3"          ), {|| ::oEM:zoom( +1 )                               }, .f. )
+   ::qMdiToolbarL:addToolButton( "ZoomOut"        , "Zoom Out"                   , hbide_image( "zoomout3"         ), {|| ::oEM:zoom( -1 )                               }, .f. )
+   ::qMdiToolbarL:addSeparator()
 
    RETURN Self
 
 /*------------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildMdiToolbar()
-   LOCAL qTBar, aBtn, nW := 25
+   LOCAL qTBar, nW := 25
 
    STATIC sp0,sp1,sp2,sp3
    IF empty( sp0 )
@@ -1002,71 +997,58 @@ METHOD IdeDocks:buildMdiToolbar()
       sp3 := QLabel():new(); sp3:setMinimumWidth( nW )
    ENDIF
 
-   ::qMdiToolbar := QToolbar():new()
-   ::qMdiToolbar:setIconSize( QSize():new( 16,16 ) )
+   ::qMdiToolbar := IdeToolbar():new()
+   ::qMdiToolbar:orientation := Qt_Horizontal
+   ::qMdiToolbar:create( "EditsManager_Top_Toolbar" )
    ::qMdiToolbar:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
 
    qTBar := ::qMdiToolbar
 
-   aBtn := {}
-
-   ::qMdiToolbar:addWidget( ::oIde:oTM:buildPanelsButton() )
-   ::qMdiToolbar:addWidget( sp0 )
-
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Undo"                       , "undo"            , {|| ::oEM:undo()                                 }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Redo"                       , "redo"            , {|| ::oEM:redo()                                 }, .f. } ) )
-   hbide_buildToolbarButton( qTBar, {} )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Cut"                        , "cut"             , {|| ::oEM:cut()                                  }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Copy"                       , "copy"            , {|| ::oEM:copy()                                 }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Paste"                      , "paste"           , {|| ::oEM:paste()                                }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Select all"                 , "selectall"       , {|| ::oEM:selectAll()                            }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Selection mode"             , "stream"          , {|| ::oEM:toggleSelectionMode()                  }, .t. } ) )
-   ::qMdiToolbar:addWidget( sp1 )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Find / Replace"             , "find"            , {|| ::oEM:find()                                 }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Toggle Mark"                , "bookmark"        , {|| ::oEM:setMark()                              }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Goto Line"                  , "gotoline3"       , {|| ::oEM:goTo()                                 }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Reload Source"              , "view_refresh"    , {|| ::oEM:reload()                               }, .f. } ) )
-   ::qMdiToolbar:addWidget( sp2 )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Move Current Line Up"       , "movelineup"      , {|| ::oEM:moveLine( -1 )                         }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Move Current Line Down"     , "movelinedown"    , {|| ::oEM:moveLine(  1 )                         }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Delete Current Line"        , "deleteline"      , {|| ::oEM:deleteLine()                           }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Duplicate Current Line"     , "duplicateline"   , {|| ::oEM:duplicateLine()                        }, .f. } ) )
-   ::qMdiToolbar:addWidget( sp3 )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "To Upper"                   , "toupper"         , {|| ::oEM:convertSelection( "ToUpper" )          }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "To Lower"                   , "tolower"         , {|| ::oEM:convertSelection( "ToLower" )          }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Invert Case"                , "invertcase"      , {|| ::oEM:convertSelection( "Invert"  )          }, .f. } ) )
-   hbide_buildToolbarButton( qTBar, {} )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Block Comment"              , "blockcomment"    , {|| ::oEM:blockComment()                         }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Stream Comment"             , "streamcomment"   , {|| ::oEM:streamComment()                        }, .f. } ) )
-   hbide_buildToolbarButton( qTBar, {} )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Indent Right"               , "blockindentr"    , {|| ::oEM:indent(  1 )                           }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Indent Left"                , "blockindentl"    , {|| ::oEM:indent( -1 )                           }, .f. } ) )
-   hbide_buildToolbarButton( qTBar, {} )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Single to Double Quotes"    , "sgl2dblquote"    , {|| ::oEM:convertDQuotes()                       }, .f. } ) )
-   aadd( aBtn, hbide_buildToolbarButton( qTBar, { "Double to Single Quotes"    , "dbl2sglquote"    , {|| ::oEM:convertQuotes()                        }, .f. } ) )
-
-   aeval( aBtn, {|q| aadd( ::aMdiBtns, q ) } )
+   qTBar:addWidget( "Panels", ::oIde:oTM:buildPanelsButton() )
+   qTBar:addWidget( "Label0", sp0 )
+   qTBar:addToolButton( "Undo"      , "Undo"                       , hbide_image( "undo"          ), {|| ::oEM:undo()                        }, .f. )
+   qTBar:addToolButton( "Redo"      , "Redo"                       , hbide_image( "redo"          ), {|| ::oEM:redo()                        }, .f. )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "Cut"       , "Cut"                        , hbide_image( "cut"           ), {|| ::oEM:cut()                         }, .f. )
+   qTBar:addToolButton( "Copy"      , "Copy"                       , hbide_image( "copy"          ), {|| ::oEM:copy()                        }, .f. )
+   qTBar:addToolButton( "Paste"     , "Paste"                      , hbide_image( "paste"         ), {|| ::oEM:paste()                       }, .f. )
+   qTBar:addToolButton( "SelectAll" , "Select all"                 , hbide_image( "selectall"     ), {|| ::oEM:selectAll()                   }, .f. )
+   qTBar:addToolButton( "SelectionMode", "Selection mode"          , hbide_image( "stream"        ), {|| ::oEM:toggleSelectionMode()         }, .t. )
+   qTBar:addWidget( "Label1", sp1 )
+   qTBar:addToolButton( "Find"      , "Find / Replace"             , hbide_image( "find"          ), {|| ::oEM:find()                        }, .f. )
+   qTBar:addToolButton( "BookMark"  , "Toggle Mark"                , hbide_image( "bookmark"      ), {|| ::oEM:setMark()                     }, .f. )
+   qTBar:addToolButton( "GotoLine"  , "Goto Line"                  , hbide_image( "gotoline3"     ), {|| ::oEM:goTo()                        }, .f. )
+   qTBar:addToolButton( "Reload"    , "Reload Source"              , hbide_image( "view_refresh"  ), {|| ::oEM:reload()                      }, .f. )
+   qTBar:addWidget( "Label2", sp2 )
+   qTBar:addToolButton( "MoveUp"    , "Move Current Line Up"       , hbide_image( "movelineup"    ), {|| ::oEM:moveLine( -1 )                }, .f. )
+   qTBar:addToolButton( "MoveDn"    , "Move Current Line Down"     , hbide_image( "movelinedown"  ), {|| ::oEM:moveLine(  1 )                }, .f. )
+   qTBar:addToolButton( "DelLine"   , "Delete Current Line"        , hbide_image( "deleteline"    ), {|| ::oEM:deleteLine()                  }, .f. )
+   qTBar:addToolButton( "Duplicate" , "Duplicate Current Line"     , hbide_image( "duplicateline" ), {|| ::oEM:duplicateLine()               }, .f. )
+   qTBar:addWidget( "Label3", sp3 )
+   qTBar:addToolButton( "ToUpper"   , "To Upper"                   , hbide_image( "toupper"       ), {|| ::oEM:convertSelection( "ToUpper" ) }, .f. )
+   qTBar:addToolButton( "ToLower"   , "To Lower"                   , hbide_image( "tolower"       ), {|| ::oEM:convertSelection( "ToLower" ) }, .f. )
+   qTBar:addToolButton( "InvertCase", "Invert Case"                , hbide_image( "invertcase"    ), {|| ::oEM:convertSelection( "Invert"  ) }, .f. )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "BlockCmnt" , "Block Comment"              , hbide_image( "blockcomment"  ), {|| ::oEM:blockComment()                }, .f. )
+   qTBar:addToolButton( "StreamCmnt", "Stream Comment"             , hbide_image( "streamcomment" ), {|| ::oEM:streamComment()               }, .f. )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "IndentR"   , "Indent Right"               , hbide_image( "blockindentr"  ), {|| ::oEM:indent(  1 )                  }, .f. )
+   qTBar:addToolButton( "IndentL"   , "Indent Left"                , hbide_image( "blockindentl"  ), {|| ::oEM:indent( -1 )                  }, .f. )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "Sgl2Dbl"   , "Single to Double Quotes"    , hbide_image( "sgl2dblquote"  ), {|| ::oEM:convertDQuotes()              }, .f. )
+   qTBar:addToolButton( "Dbl2Sgl"   , "Double to Single Quotes"    , hbide_image( "dbl2sglquote"  ), {|| ::oEM:convertQuotes()               }, .f. )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeDocks:setButtonState( cAlias, lChecked )
-   LOCAL n, lOldChecked, qBtn
-
-   cAlias := lower( cAlias )
-
-   IF ( n := ascan( ::aMdiBtns, {|q| q:objectName() == cAlias } ) ) > 0
-      qBtn := ::aMdiBtns[ n ]
+METHOD IdeDocks:setButtonState( cButton, lChecked )
+   IF ::qMdiToolbar:contains( cButton )
+      RETURN ::qMdiToolbar:setItemChecked( cButton, lChecked )
+   ELSEIF ::qMdiToolbarL:contains( cButton )
+      RETURN ::qMdiToolbarL:setItemChecked( cButton, lChecked )
    ENDIF
-   IF !empty( qBtn )
-      lOldChecked := qBtn:isChecked()
-      IF hb_isLogical( lChecked )
-         qBtn:setChecked( lChecked )
-      ENDIF
-   ENDIF
-
-   RETURN lOldChecked
+   RETURN .f.
 
 /*------------------------------------------------------------------------*/
 
@@ -1223,10 +1205,11 @@ METHOD IdeDocks:buildUpDownWidget()
 
    ::oIde:oUpDn := IdeUpDown():new( ::oIde ):create()
    ::oUpDn:oUI:hide()
+
    IF ::oIde:lCurEditsMdi
-      ::oUpDn:oUI:setParent( ::qMdiToolbarL )
+      ::oUpDn:oUI:setParent( ::qMdiToolbarL:oWidget )
       ::oUpDn:oUI:show()
-      ::qMdiToolbarL:addWidget( ::oUpDn:oUI:oWidget )
+      ::qMdiToolbarL:addWidget( "UpDown", ::oUpDn:oUI:oWidget )
       ::oUpDn:oUI:hide()
    ENDIF
 
@@ -1615,10 +1598,12 @@ METHOD IdeDocks:buildOutputResults()
    ::oIde:oOutputResult := XbpRtf():new( ::oDockB2 ):create( , , { 0,0 }, { 100, 400 }, , .T. )
    ::oOutputResult:oWidget:setAcceptRichText( .T. )
    ::oOutputResult:oWidget:setReadOnly( .T. )
+   ::oOutputResult:setContextMenuPolicy( Qt_CustomContextMenu )
 
    ::oDockB2:oWidget:setWidget( ::oOutputResult:oWidget )
 
-   ::connect( ::oIde:oOutputResult:oWidget, "copyAvailable(bool)", {|l| ::outputDoubleClicked( l ) } )
+   ::connect( ::oOutputResult:oWidget, "customContextMenuRequested(QPoint)", {|p| ::execEvent( "outputConsole_contextMenuRequested", p ) } )
+   ::connect( ::oOutputResult:oWidget, "copyAvailable(bool)", {|l| ::outputDoubleClicked( l ) } )
 
    RETURN Self
 

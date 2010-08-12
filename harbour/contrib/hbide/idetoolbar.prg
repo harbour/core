@@ -92,6 +92,8 @@ CLASS IdeToolbar INHERIT IdeObject
    METHOD addToolButton( cName, cDesc, cImage, bAction, lCheckable )
    METHOD setItemChecked( cName, lState )
    METHOD setItemEnabled( cName, lEnabled )
+   METHOD addWidget( cName, qWidget )
+   METHOD contains( cName )                       INLINE hb_hHasKey( ::hItems, cName )
 
    ERROR HANDLER onError( ... )
    ENDCLASS
@@ -159,6 +161,23 @@ METHOD IdeToolbar:execEvent( cEvent, p )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeToolbar:addWidget( cName, qWidget )
+   LOCAL qAction
+
+   STATIC nID := 0
+
+   DEFAULT cName TO "IdeToolButtonWidget_" + hb_ntos( ++nID )
+
+   qAction := QWidgetAction():new( ::oWidget )
+   qAction:setDefaultWidget( qWidget )
+   ::oWidget:addAction( qAction )
+
+   ::hItems[ cName ] := qWidget
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeToolbar:addToolButton( cName, cDesc, cImage, bAction, lCheckable )
    LOCAL oButton, qAction
 
@@ -178,7 +197,7 @@ METHOD IdeToolbar:addToolButton( cName, cDesc, cImage, bAction, lCheckable )
       ::connect( oButton, "clicked()", bAction )
    ENDIF
    #if 1
-   qAction := QWidgetAction():new()
+   qAction := QWidgetAction():new( ::oWidget )
    qAction:setDefaultWidget( oButton )
    ::oWidget:addAction( qAction )
    #else

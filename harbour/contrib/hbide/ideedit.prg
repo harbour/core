@@ -1391,7 +1391,7 @@ METHOD IdeEdit:toggleHorzRuler()
 
 METHOD IdeEdit:toggleSelectionMode()
    IF ::oIde:lCurEditsMdi
-      ::qEdit:hbSetSelectionMode( iif( ::oDK:setButtonState( "stream" ), 2, 1 ), .f. )
+      ::qEdit:hbSetSelectionMode( iif( ::oDK:setButtonState( "SelectionMode" ), 2, 1 ), .f. )
    ELSE
       ::qEdit:hbSetSelectionMode( iif( ::oAC:getAction( "TB_SelectionMode" ):isChecked(), 2, 1 ), .f. )
    ENDIF
