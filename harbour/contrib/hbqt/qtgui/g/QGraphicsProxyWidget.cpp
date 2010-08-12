@@ -145,7 +145,14 @@ HB_FUNC( QT_QGRAPHICSPROXYWIDGET )
 {
    QGraphicsProxyWidget * pObj = NULL;
 
-   pObj = new QGraphicsProxyWidget() ;
+   if( hb_pcount() >= 1 && HB_ISPOINTER( 1 ) )
+   {
+      pObj = new QGraphicsProxyWidget( hbqt_par_QGraphicsItem( 1 ), ( Qt::WindowFlags ) ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : 0 ) ) ;
+   }
+   else
+   {
+      pObj = new QGraphicsProxyWidget() ;
+   }
 
    hb_retptrGC( hbqt_gcAllocate_QGraphicsProxyWidget( ( void * ) pObj, true ) );
 }

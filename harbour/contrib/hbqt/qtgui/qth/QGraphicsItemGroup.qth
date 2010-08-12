@@ -71,7 +71,14 @@ New      =
  */
 HB_FUNC( QT_QGRAPHICSITEMGROUP )
 {
-   hb_retptr( new QGraphicsItemGroup() );
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      hb_retptr( new QGraphicsItemGroup( hbqt_par_QGraphicsItem( 1 ) ) );
+   }
+   else
+   {
+      hb_retptr( new QGraphicsItemGroup() );
+   }
 }
 </CODE>
 

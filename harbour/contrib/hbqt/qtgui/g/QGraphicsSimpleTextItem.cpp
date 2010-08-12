@@ -136,7 +136,33 @@ HB_FUNC( QT_QGRAPHICSSIMPLETEXTITEM )
 {
    QGraphicsSimpleTextItem * pObj = NULL;
 
-   pObj = new QGraphicsSimpleTextItem() ;
+   if( hb_pcount() >= 1 )
+   {
+      if( HB_ISCHAR( 1 ) )
+      {
+         pObj = new QGraphicsSimpleTextItem( hbqt_par_QString( 1 ), ( HB_ISPOINTER( 2 ) ? hbqt_par_QGraphicsItem( 1 ) : 0 ) ) ;
+      }
+      else if( HB_ISPOINTER( 1 ) )
+      {
+         HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+         if( p->type == HBQT_TYPE_QGraphicsItem )
+         {
+            pObj = new QGraphicsSimpleTextItem( hbqt_par_QGraphicsItem( 1 ) ) ;
+         }
+         else
+         {
+            pObj = new QGraphicsSimpleTextItem() ;
+         }
+      }
+      else
+      {
+         pObj = new QGraphicsSimpleTextItem() ;
+      }
+   }
+   else
+   {
+      pObj = new QGraphicsSimpleTextItem() ;
+   }
 
    hb_retptrGC( hbqt_gcAllocate_QGraphicsSimpleTextItem( ( void * ) pObj, true ) );
 }

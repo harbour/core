@@ -136,7 +136,30 @@ HB_FUNC( QT_QGRAPHICSELLIPSEITEM )
 {
    QGraphicsEllipseItem * pObj = NULL;
 
-   pObj = new QGraphicsEllipseItem() ;
+   if( hb_pcount() >= 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
+   {
+      pObj = new QGraphicsEllipseItem( hb_parnd( 1 ), hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), ( HB_ISPOINTER( 5 ) ? hbqt_par_QGraphicsItem( 5 ) : 0 ) ) ;
+   }
+   else if( hb_pcount() >= 1 && HB_ISPOINTER( 1 ) )
+   {
+      HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+      if( p->type == HBQT_TYPE_QGraphicsItem )
+      {
+         pObj = new QGraphicsEllipseItem( hbqt_par_QGraphicsItem( 1 ) ) ;
+      }
+      else if( p->type == HBQT_TYPE_QRectF )
+      {
+         pObj = new QGraphicsEllipseItem( *hbqt_par_QRectF( 1 ), ( HB_ISPOINTER( 2 ) ? hbqt_par_QGraphicsItem( 2 ) : 0 ) ) ;
+      }
+      else
+      {
+         pObj = new QGraphicsEllipseItem() ;
+      }
+   }
+   else
+   {
+      pObj = new QGraphicsEllipseItem() ;
+   }
 
    hb_retptrGC( hbqt_gcAllocate_QGraphicsEllipseItem( ( void * ) pObj, true ) );
 }

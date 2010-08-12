@@ -137,7 +137,30 @@ HB_FUNC( QT_QGRAPHICSLINEITEM )
 {
    QGraphicsLineItem * pObj = NULL;
 
-   pObj = new QGraphicsLineItem() ;
+   if( hb_pcount() >= 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
+   {
+      pObj = new QGraphicsLineItem( hb_parnd( 1 ), hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), ( HB_ISPOINTER( 5 ) ? hbqt_par_QGraphicsItem( 5 ) : 0 ) ) ;
+   }
+   else if( hb_pcount() >= 1 && HB_ISPOINTER( 1 ) )
+   {
+      HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+      if( p->type == HBQT_TYPE_QGraphicsItem )
+      {
+         pObj = new QGraphicsLineItem( hbqt_par_QGraphicsItem( 1 ) ) ;
+      }
+      else if( p->type == HBQT_TYPE_QLineF )
+      {
+         pObj = new QGraphicsLineItem( *hbqt_par_QLineF( 1 ), ( HB_ISPOINTER( 2 ) ? hbqt_par_QGraphicsItem( 2 ) : 0 ) ) ;
+      }
+      else
+      {
+         pObj = new QGraphicsLineItem() ;
+      }
+   }
+   else
+   {
+      pObj = new QGraphicsLineItem() ;
+   }
 
    hb_retptrGC( hbqt_gcAllocate_QGraphicsLineItem( ( void * ) pObj, true ) );
 }

@@ -135,7 +135,25 @@ HB_FUNC( QT_QGRAPHICSLINEARLAYOUT )
 {
    QGraphicsLinearLayout * pObj = NULL;
 
-   pObj = new QGraphicsLinearLayout() ;
+   if( hb_pcount() >= 1 )
+   {
+      if( HB_ISNUM( 1 ) )
+      {
+         pObj = new QGraphicsLinearLayout( ( Qt::Orientation ) hb_parni( 1 ), ( HB_ISPOINTER( 2 ) ? hbqt_par_QGraphicsLayoutItem( 2 ) : 0 ) ) ;
+      }
+      else if( HB_ISPOINTER( 1 ) )
+      {
+         pObj = new QGraphicsLinearLayout( hbqt_par_QGraphicsLayoutItem( 1 ) ) ;
+      }
+      else
+      {
+         pObj = new QGraphicsLinearLayout() ;
+      }
+   }
+   else
+   {
+      pObj = new QGraphicsLinearLayout() ;
+   }
 
    hb_retptrGC( hbqt_gcAllocate_QGraphicsLinearLayout( ( void * ) pObj, true ) );
 }

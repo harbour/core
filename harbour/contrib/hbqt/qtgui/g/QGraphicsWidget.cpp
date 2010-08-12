@@ -160,7 +160,14 @@ HB_FUNC( QT_QGRAPHICSWIDGET )
 {
    QGraphicsWidget * pObj = NULL;
 
-   pObj = new QGraphicsWidget() ;
+   if( hb_pcount() >= 1 && HB_ISPOINTER( 1 ) )
+   {
+      pObj = new QGraphicsWidget( hbqt_par_QGraphicsItem( 1 ), ( Qt::WindowFlags ) ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : 0 ) ) ;
+   }
+   else
+   {
+      pObj = new QGraphicsWidget() ;
+   }
 
    hb_retptrGC( hbqt_gcAllocate_QGraphicsWidget( ( void * ) pObj, true ) );
 }

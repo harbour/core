@@ -134,7 +134,14 @@ HB_FUNC( QT_QGRAPHICSITEMGROUP )
 {
    QGraphicsItemGroup * pObj = NULL;
 
-   pObj = new QGraphicsItemGroup() ;
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      pObj = new QGraphicsItemGroup( hbqt_par_QGraphicsItem( 1 ) ) ;
+   }
+   else
+   {
+      pObj = new QGraphicsItemGroup() ;
+   }
 
    hb_retptrGC( hbqt_gcAllocate_QGraphicsItemGroup( ( void * ) pObj, true ) );
 }

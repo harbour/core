@@ -160,7 +160,14 @@ HB_FUNC( QT_QGRAPHICSITEMANIMATION )
 {
    QGraphicsItemAnimation * pObj = NULL;
 
-   pObj = new QGraphicsItemAnimation() ;
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      pObj = new QGraphicsItemAnimation( hbqt_par_QObject( 1 ) ) ;
+   }
+   else
+   {
+      pObj = new QGraphicsItemAnimation() ;
+   }
 
    hb_retptrGC( hbqt_gcAllocate_QGraphicsItemAnimation( ( void * ) pObj, true ) );
 }

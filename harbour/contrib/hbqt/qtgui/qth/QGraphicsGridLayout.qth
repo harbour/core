@@ -71,7 +71,14 @@ New      =
  */
 HB_FUNC( QT_QGRAPHICSGRIDLAYOUT )
 {
-   hb_retptr( new QGraphicsGridLayout() );
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      hb_retptr( new QGraphicsGridLayout( hbqt_par_QGraphicsLayoutItem( 1 ) ) );
+   }
+   else
+   {
+      hb_retptr( new QGraphicsGridLayout() );
+   }
 }
 </CODE>
 

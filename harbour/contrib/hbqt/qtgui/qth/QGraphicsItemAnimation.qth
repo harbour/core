@@ -73,7 +73,14 @@ New      =
  */
 HB_FUNC( QT_QGRAPHICSITEMANIMATION )
 {
-   hb_retptr( new QGraphicsItemAnimation() );
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      hb_retptr( new QGraphicsItemAnimation( hbqt_par_QObject( 1 ) ) );
+   }
+   else
+   {
+      hb_retptr( new QGraphicsItemAnimation() );
+   }
 }
 </CODE>
 

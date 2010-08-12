@@ -71,7 +71,33 @@ New      =
  */
 HB_FUNC( QT_QGRAPHICSSVGITEM )
 {
-   hb_retptr( new QGraphicsSvgItem() );
+   if( hb_pcount() >= 1 )
+   {
+      if( HB_ISCHAR( 1 ) )
+      {
+         hb_retptr( new QGraphicsSvgItem( hbqt_par_QString( 1 ), ( HB_ISPOINTER( 2 ) ? hbqt_par_QGraphicsItem( 1 ) : 0 ) ) ); 
+      }
+      else if( HB_ISPOINTER( 1 ) )
+      {  
+         HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+         if( p->type == HBQT_TYPE_QGraphicsItem )
+         {
+            hb_retptr( new QGraphicsSvgItem( hbqt_par_QGraphicsItem( 1 ) ) ); 
+         }
+         else
+         {
+            hb_retptr( new QGraphicsSvgItem() );
+         }
+      }
+      else
+      {
+         hb_retptr( new QGraphicsSvgItem() );
+      }
+   }
+   else
+   {
+      hb_retptr( new QGraphicsSvgItem() );
+   }   
 }
 </CODE>
 

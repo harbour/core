@@ -134,7 +134,14 @@ HB_FUNC( QT_QGRAPHICSGRIDLAYOUT )
 {
    QGraphicsGridLayout * pObj = NULL;
 
-   pObj = new QGraphicsGridLayout() ;
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   {
+      pObj = new QGraphicsGridLayout( hbqt_par_QGraphicsLayoutItem( 1 ) ) ;
+   }
+   else
+   {
+      pObj = new QGraphicsGridLayout() ;
+   }
 
    hb_retptrGC( hbqt_gcAllocate_QGraphicsGridLayout( ( void * ) pObj, true ) );
 }
