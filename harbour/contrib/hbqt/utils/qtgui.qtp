@@ -85,6 +85,15 @@ QGraphicsPolygonItem.qth
 QGraphicsProxyWidget.qth
 QGraphicsRectItem.qth
 QGraphicsScene.qth
+QGraphicsSceneContextMenuEvent.qth
+QGraphicsSceneDragDropEvent.qth
+QGraphicsSceneEvent.qth
+QGraphicsSceneHelpEvent.qth
+QGraphicsSceneHoverEvent.qth
+QGraphicsSceneMouseEvent.qth
+QGraphicsSceneMoveEvent.qth
+QGraphicsSceneResizeEvent.qth
+QGraphicsSceneWheelEvent.qth
 QGraphicsSimpleTextItem.qth
 QGraphicsTextItem.qth
 QGraphicsView.qth

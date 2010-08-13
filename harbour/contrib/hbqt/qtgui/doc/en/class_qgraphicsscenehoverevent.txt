@@ -1,0 +1,58 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QGraphicsSceneHoverEvent()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qgraphicsscenehoverevent.html
+ *  $ONELINER$
+ *     Creates a new QGraphicsSceneHoverEvent object.
+ *  $INHERITS$
+ *     QGraphicsSceneEvent
+ *  $SYNTAX$
+ *     QGraphicsSceneHoverEvent():new( ... )
+ *     QGraphicsSceneHoverEvent():from( pPtr_OR_oObj_of_type_QGraphicsSceneHoverEvent )
+ *     QGraphicsSceneHoverEvent():configure( pPtr_OR_oObj_of_type_QGraphicsSceneHoverEvent )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QGraphicsSceneHoverEvent
+ *  $METHODS$
+ *     :lastPos()                                          -> pQPointF
+ *     :lastScenePos()                                     -> pQPointF
+ *     :lastScreenPos()                                    -> pQPoint
+ *     :modifiers()                                        -> nQt::KeyboardModifiers
+ *     :pos()                                              -> pQPointF
+ *     :scenePos()                                         -> pQPointF
+ *     :screenPos()                                        -> pQPoint
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQGraphicsSceneHoverEvent.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsSceneHoverEvent.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QGraphicsSceneEvent
+ *  $END$
+ */

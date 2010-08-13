@@ -2363,6 +2363,11 @@
 #define QGraphicsPixmapItem_BoundingRectShape                1
 #define QGraphicsPixmapItem_HeuristicMaskShape               2
 
+
+#define QGraphicsSceneContextMenuEvent_Mouse                 0
+#define QGraphicsSceneContextMenuEvent_Keyboard              1
+#define QGraphicsSceneContextMenuEvent_Other                 2
+
 /*----------------------------------------------------------------------*/
 
 #endif
