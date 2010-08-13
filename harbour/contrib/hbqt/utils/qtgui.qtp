@@ -50,6 +50,7 @@ QDialog.qth
 QDirModel.qth
 QDockWidget.qth
 QDoubleSpinBox.qth
+QDrag.qth
 QDragEnterEvent.qth
 QDragLeaveEvent.qth
 QDragMoveEvent.qth

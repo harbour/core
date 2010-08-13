@@ -1,0 +1,62 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QDrag()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qdrag.html
+ *  $ONELINER$
+ *     Creates a new QDrag object.
+ *  $INHERITS$
+ *     QObject
+ *  $SYNTAX$
+ *     QDrag():new( ... )
+ *     QDrag():from( pPtr_OR_oObj_of_type_QDrag )
+ *     QDrag():configure( pPtr_OR_oObj_of_type_QDrag )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QDrag
+ *  $METHODS$
+ *     :exec( nSupportedActions )                          -> nQt::DropAction
+ *     :exec_1( nSupportedActions, nDefaultDropAction )    -> nQt::DropAction
+ *     :hotSpot()                                          -> pQPoint
+ *     :mimeData()                                         -> pQMimeData
+ *     :pixmap()                                           -> pQPixmap
+ *     :setDragCursor( pCursor, nAction )                  -> NIL
+ *     :setHotSpot( pHotspot )                             -> NIL
+ *     :setMimeData( pData )                               -> NIL
+ *     :setPixmap( pPixmap )                               -> NIL
+ *     :source()                                           -> pQWidget
+ *     :target()                                           -> pQWidget
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQDrag.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QDrag.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QObject
+ *  $END$
+ */

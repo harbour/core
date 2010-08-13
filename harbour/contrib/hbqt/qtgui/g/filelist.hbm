@@ -52,6 +52,7 @@ QDialog.cpp
 QDirModel.cpp
 QDockWidget.cpp
 QDoubleSpinBox.cpp
+QDrag.cpp
 QDragEnterEvent.cpp
 QDragLeaveEvent.cpp
 QDragMoveEvent.cpp
@@ -307,6 +308,7 @@ TQDialog.prg
 TQDirModel.prg
 TQDockWidget.prg
 TQDoubleSpinBox.prg
+TQDrag.prg
 TQDragEnterEvent.prg
 TQDragLeaveEvent.prg
 TQDragMoveEvent.prg
