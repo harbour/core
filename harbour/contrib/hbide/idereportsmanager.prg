@@ -121,8 +121,12 @@ CLASS IdeReportsManager INHERIT IdeObject
    DATA   qHRuler
    DATA   qVRuler
    DATA   qPort
+   DATA   qView
+   DATA   qScene
 
    DATA   aStatusPnls                             INIT {}
+   DATA   aItems                                  INIT {}
+
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -350,11 +354,19 @@ METHOD IdeReportsManager:buildDesignReport()
    ::qVRuler := QFrame():new( ::qDesign )
    ::qVRuler:setStyleSheet( "background-color: rgb(240,240,240);" )
    ::qVRuler:setGeometry( QRect():new( 0, 30, 15, ::qDesign:height() ) )
-
+#if 0
    ::qPort := QFrame():new( ::qDesign )
    ::qPort:setStyleSheet( "background-color: white;" )
    ::qPort:setGeometry( QRect():new( 30, 30, ::qDesign:width() - 45, ::qDesign:height() - 45 ) )
+#else
+   ::qView := QGraphicsView():new( ::qDesign )
+   ::qScene := QGraphicsScene():new( 10,10,200,200 )
+   ::qView:setGeometry( QRect():new( 30, 30, ::qDesign:width() - 45, ::qDesign:height() - 45 ) )
+   ::qView:setScene( ::qScene )
 
+   //aadd( ::aItems, { "Band1", ::qScene:addRect( QRectF():new( 20.0,20.0,40.0,60.0 ), QPen():new( QColor():new( Qt_red ) ) ) } )
+   aadd( ::aItems, { "Band1", ::qScene:addRect( QRectF():new( 20.0,20.0,40.0,60.0 ) ) } )
+#endif
 
    ::qWidget1:show()
    ::qWidget2:show()

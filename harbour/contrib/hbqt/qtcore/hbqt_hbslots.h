@@ -297,6 +297,8 @@ public slots:
    void closeEditor( QWidget * editor, QAbstractItemDelegate::EndEditHint hint );
    void commitData( QWidget * editor );
    void sizeHintChanged( const QModelIndex & index );
+   /* QGraphicsScene */
+   void sceneRectChanged( const QRectF & rect );
    /* Latest */
 };
 

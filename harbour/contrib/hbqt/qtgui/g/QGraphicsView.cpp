@@ -165,16 +165,15 @@ HB_FUNC( QT_QGRAPHICSVIEW )
 {
    QGraphicsView * pObj = NULL;
 
-   if( hb_pcount() >= 1 )
+   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-      if( p->type == HBQT_TYPE_QWidget )
+      pObj = new QGraphicsView( hbqt_par_QWidget( 1 ) ) ;
+   }
+   else if( hb_pcount() >= 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
+   {
+      if( ( QString ) "QGraphicsScene" == hbqt_par_QString( 1 ) )
       {
-         pObj = new QGraphicsView( hbqt_par_QWidget( 1 ) ) ;
-      }
-      else if( p->type == HBQT_TYPE_QGraphicsScene )
-      {
-         pObj = new QGraphicsView( hbqt_par_QGraphicsScene( 1 ), ( HB_ISPOINTER( 2 ) ? hbqt_par_QWidget( 2 ) : 0 ) ) ;
+         pObj = new QGraphicsView( hbqt_par_QGraphicsScene( 2 ), ( HB_ISPOINTER( 3 ) ? hbqt_par_QWidget( 3 ) : 0 ) ) ;
       }
       else
       {

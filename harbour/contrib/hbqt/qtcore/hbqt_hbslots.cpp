@@ -244,6 +244,8 @@ static bool connect_signal( QString signal, QObject * object, HBSlots * t_slots 
    if( signal == ( QString ) "commitData(QWidget)"                            ) return object->connect( object, SIGNAL( commitData( QWidget * )                                           ), t_slots, SLOT( commitData( QWidget * )                                            ), Qt::AutoConnection );
    if( signal == ( QString ) "sizeHintChanged(QModelIndex)"                   ) return object->connect( object, SIGNAL( sizeHintChanged( const QModelIndex & )                            ), t_slots, SLOT( sizeHintChanged( const QModelIndex & )                             ), Qt::AutoConnection );
    /* New */
+   if( signal == ( QString ) "sceneRectChanged(QRectF)"                       ) return object->connect( object, SIGNAL( sceneRectChanged( const QRectF & )                            ), t_slots, SLOT( sizeHintChanged( const QModelIndex & )                                 ), Qt::AutoConnection );
+   /* New */
    return false;
 }
 
@@ -423,6 +425,8 @@ static bool disconnect_signal( QObject * object, const char * signal )
    if( signal == ( QString ) "closeEditor(QWidget,int)"                       ) return object->disconnect( SIGNAL( closeEditor( QWidget *, QAbstractItemDelegate::EndEditHint )      ) );
    if( signal == ( QString ) "commitData(QWidget)"                            ) return object->disconnect( SIGNAL( commitData( QWidget * )                                           ) );
    if( signal == ( QString ) "sizeHintChanged(QModelIndex)"                   ) return object->disconnect( SIGNAL( sizeHintChanged( const QModelIndex & )                            ) );
+   /* QGraphicsScene */
+   if( signal == ( QString ) "sceneRectChanged(QRectF)"                       ) return object->disconnect( SIGNAL( sceneRectChanged( const QRectF & )                                ) );
    /* new */
 
    return false;
@@ -746,6 +750,22 @@ static void hbqt_SlotsExecQPoint( HBSlots * t_slots, QObject * object, const cha
    }
 }
 
+static void hbqt_SlotsExecQRectF( HBSlots * t_slots, QObject * object, const char * pszEvent, const QRectF & rect )
+{
+   if( object )
+   {
+      int i = object->property( pszEvent ).toInt();
+      if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
+      {
+         PHB_ITEM p1 = hb_itemPutPtr( NULL, new QRectF( rect ) );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, p1 );
+         delete ( ( QRectF * ) hb_itemGetPtr( p1 ) );
+         hb_itemRelease( p1 );
+         hb_vmRequestRestore();
+      }
+   }
+}
+
 static void hbqt_SlotsExecQUrl( HBSlots * t_slots, QObject * object, const char * pszEvent, const QUrl & link )
 {
    if( object )
@@ -1057,6 +1077,8 @@ void HBSlots::windowStateChanged( Qt::WindowStates oldState, Qt::WindowStates ne
 void HBSlots::closeEditor( QWidget * editor, QAbstractItemDelegate::EndEditHint hint )                     { hbqt_SlotsExecPointerInt(     this, qobject_cast<QObject *>( sender() ), "closeEditor(QWidget,int)", editor, hint                          ); }
 void HBSlots::commitData( QWidget * editor )                                                               { hbqt_SlotsExecPointer(        this, qobject_cast<QObject *>( sender() ), "commitData(QWidget)", editor                                     ); }
 void HBSlots::sizeHintChanged( const QModelIndex & index )                                                 { hbqt_SlotsExecModel(          this, qobject_cast<QObject *>( sender() ), "sizeHintChanged(QModelIndex)", index                             ); }
+/* Latest */
+void HBSlots::sceneRectChanged( const QRectF & rect )                                                      { hbqt_SlotsExecQRectF(         this, qobject_cast<QObject *>( sender() ), "sceneRectChanged(QRectF)", rect                                  ); }
 /* Latest */
 
 /*----------------------------------------------------------------------*/
