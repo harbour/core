@@ -2150,11 +2150,15 @@ static void hb_pp_pragmaStreamFile( PHB_PP_STATE pState, const char * szFileName
       nSize = ftell( pFile->file_in );
       (void) fseek( pFile->file_in, 0L, SEEK_SET );
 
-      if( nSize <= MAX_STREAM_SIZE )
+      if( nSize > MAX_STREAM_SIZE )
+         hb_pp_error( pState, 'F', HB_PP_ERR_FILE_TOO_LONG, szFileName );
+      else if( pState->pFuncOut || pState->pFuncEnd )
       {
          char * pBuffer = ( char * ) hb_xgrab( nSize );
+         PHB_PP_TOKEN pToken;
+         HB_BOOL fEOL = HB_FALSE;
+
          nSize = ( HB_SIZE ) fread( pBuffer, sizeof( char ), nSize, pFile->file_in );
-         hb_pp_FileFree( pState, pFile, pState->pCloseFunc );
 
          if( pState->iStreamDump == HB_PP_STREAM_C )
             hb_strRemEscSeq( pBuffer, &nSize );
@@ -2163,6 +2167,26 @@ static void hb_pp_pragmaStreamFile( PHB_PP_STATE pState, const char * szFileName
             pState->pStreamBuffer = hb_membufNew();
          hb_membufAddData( pState->pStreamBuffer, pBuffer, nSize );
          hb_xfree( pBuffer );
+
+         /* insert new tokens into incoming buffer
+          * so they can be preprocessed
+          */
+         pState->pNextTokenPtr = &pState->pFile->pTokenList;
+         while( ! HB_PP_TOKEN_ISEOS( * pState->pNextTokenPtr ) )
+            pState->pNextTokenPtr = &( * pState->pNextTokenPtr )->pNext;
+         if( * pState->pNextTokenPtr == NULL )
+         {
+            hb_pp_tokenAdd( &pState->pNextTokenPtr, "\n", 1, 0, HB_PP_TOKEN_EOL | HB_PP_TOKEN_STATIC );
+            pState->pFile->iTokens++;
+         }
+         else if( HB_PP_TOKEN_TYPE( ( * pState->pNextTokenPtr )->type ) == HB_PP_TOKEN_EOL )
+         {
+            hb_pp_tokenSetValue( * pState->pNextTokenPtr, ";", 1 );
+            HB_PP_TOKEN_SETTYPE( * pState->pNextTokenPtr, HB_PP_TOKEN_EOC );
+            fEOL = HB_TRUE;
+         }
+         pState->pNextTokenPtr = &( * pState->pNextTokenPtr )->pNext;
+         pToken = * pState->pNextTokenPtr;
 
          if( pState->pFuncOut )
             hb_pp_tokenAddStreamFunc( pState, pState->pFuncOut,
@@ -2176,16 +2200,16 @@ static void hb_pp_pragmaStreamFile( PHB_PP_STATE pState, const char * szFileName
                                       hb_membufPtr( pState->pStreamBuffer ),
                                       hb_membufLen( pState->pStreamBuffer ) );
          }
-         if( pState->pFuncOut || pState->pFuncEnd )
-         {
+         if( fEOL )
             hb_pp_tokenAdd( &pState->pNextTokenPtr, "\n", 1, 0, HB_PP_TOKEN_EOL | HB_PP_TOKEN_STATIC );
-            pState->pFile->iTokens++;
-            pState->fNewStatement = HB_TRUE;
-         }
+         else
+            hb_pp_tokenAdd( &pState->pNextTokenPtr, ";", 1, 0, HB_PP_TOKEN_EOC | HB_PP_TOKEN_STATIC );
+         pState->pFile->iTokens++;
+         pState->fNewStatement = HB_TRUE;
+         * pState->pNextTokenPtr = pToken;
          hb_membufFlush( pState->pStreamBuffer );
       }
-      else
-         hb_pp_error( pState, 'F', HB_PP_ERR_FILE_TOO_LONG, szFileName );
+      hb_pp_FileFree( pState, pFile, pState->pCloseFunc );
    }
    else
       hb_pp_error( pState, 'F', HB_PP_ERR_CANNOT_OPEN_FILE, szFileName );
@@ -2473,7 +2497,7 @@ static void hb_pp_pragmaNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
          if( pToken->pNext && HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_STRING )
          {
             fError = hb_pp_pragmaStream( pState, pToken->pNext->pNext );
-            if( !fError )
+            if( !fError && !pState->iCondCompile )
             {
                pState->iStreamDump = HB_PP_STREAM_PRG;
                hb_pp_pragmaStreamFile( pState, pToken->pNext->value, HB_FALSE );
@@ -2488,7 +2512,7 @@ static void hb_pp_pragmaNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
          if( pToken->pNext && HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_STRING )
          {
             fError = hb_pp_pragmaStream( pState, pToken->pNext->pNext );
-            if( !fError )
+            if( !fError && !pState->iCondCompile )
             {
                pState->iStreamDump = HB_PP_STREAM_C;
                hb_pp_pragmaStreamFile( pState, pToken->pNext->value, HB_FALSE );
@@ -2503,7 +2527,7 @@ static void hb_pp_pragmaNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
          if( pToken->pNext && HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_STRING )
          {
             fError = hb_pp_pragmaStream( pState, pToken->pNext->pNext );
-            if( !fError )
+            if( !fError && !pState->iCondCompile )
             {
                pState->iStreamDump = HB_PP_STREAM_BINARY;
                hb_pp_pragmaStreamFile( pState, pToken->pNext->value, HB_TRUE );
@@ -5007,8 +5031,6 @@ static void hb_pp_preprocessToken( PHB_PP_STATE pState )
 {
    while( !pState->pTokenOut && pState->pFile )
    {
-      PHB_PP_TOKEN pToken;
-
       if( !pState->pFile->pTokenList )
       {
          while( pState->pFile->pLineBuf ? pState->pFile->nLineBufLen != 0 :
@@ -5036,9 +5058,10 @@ static void hb_pp_preprocessToken( PHB_PP_STATE pState )
          HB_BOOL fError = HB_FALSE, fDirect;
          /* Store it here to avoid possible problems after #INCLUDE */
          PHB_PP_TOKEN * pFreePtr = &pState->pFile->pTokenList;
+         PHB_PP_TOKEN pToken = * pFreePtr;
 
-         pToken = pState->pFile->pTokenList;
          fDirect = HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_DIRECTIVE;
+
          pToken = pToken->pNext;
          if( !pToken )
          {

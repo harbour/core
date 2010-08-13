@@ -246,13 +246,13 @@ typedef HB_PP_INC_FUNC * PHB_PP_INC_FUNC;
 #  define HB_PP_TOKEN_ISEOP(t,l) HB_PP_TOKEN_ISEOL(t)
 #else
 /* End Of Subst - define how many tokens in line should be translated,
-                  Clipper translate whole line */
+                  Clipper translates whole line */
 #  define HB_PP_TOKEN_ISEOS(t)   ( HB_PP_TOKEN_ISEOL(t) || \
                                    ( HB_PP_TOKEN_TYPE((t)->type) == HB_PP_TOKEN_EOC && \
                                      (t)->pNext && \
                                      ( HB_PP_TOKEN_TYPE((t)->pNext->type) == HB_PP_TOKEN_HASH || \
                                        HB_PP_TOKEN_TYPE((t)->pNext->type) == HB_PP_TOKEN_DIRECTIVE ) ) )
-/* End Of Pattern - the second paramter define if it's direct or indirect
+/* End Of Pattern - the second parameter define if it's direct or indirect
                     pattern */
 #  define HB_PP_TOKEN_ISEOP(t,l) ( (l) ? HB_PP_TOKEN_ISEOL(t) : HB_PP_TOKEN_ISEOC(t) )
 #endif
