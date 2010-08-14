@@ -7,6 +7,7 @@
 -D=../qtgui/doc
 
 HBQAbstractItemModel.qth
+HBQGraphicsItem.qth
 HBQMainWindow.qth
 HBQPlainTextEdit.qth
 HBQSyntaxHighlighter.qth
