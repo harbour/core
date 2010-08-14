@@ -262,8 +262,8 @@ REQUEST hbmk_KEYW
 #define LEFTEQUAL( l, r )       ( l = r ) /* NOTE: This requires Set( _SET_EXACT, .F. ) */
 
 /* Logic (hack) to automatically add some libs to their
-   place in the liblist. In case of 'unicows' lib, this
-   should be after all app lib and before any Windows
+   right place in the liblist. In case of 'unicows' lib,
+   this should be after all app lib and before any Windows
    system libs. [vszakats] */
 #define _IS_AUTOLIBSYSPRE( c )  ( hbmk[ _HBMK_cPLAT ] == "win" .AND. Lower( FNameNameGet( c ) ) == "unicows" )
 
@@ -416,14 +416,16 @@ REQUEST hbmk_KEYW
 #define _HBMK_lContainer        121 /* Target type: container */
 #define _HBMK_lShowLevel        122 /* Show project nesting level in all output lines */
 #define _HBMK_hFiles            123 /* Cache for the header parser (common for C and Harbour) */
-#define _HBMK_cDynLibExt        124
+#define _HBMK_cDynLibPrefix     124 /* Dynamic lib filename prefix */
+#define _HBMK_cDynLibExt        125 /* Dynamic lib filename extension */
+#define _HBMK_aLINK             126 /* Links to be created and pointing to the target */
 
-#define _HBMK_aArgs             125
-#define _HBMK_nArgTarget        126
-#define _HBMK_lPause            127
-#define _HBMK_nLevel            128
+#define _HBMK_aArgs             127
+#define _HBMK_nArgTarget        128
+#define _HBMK_lPause            129
+#define _HBMK_nLevel            130
 
-#define _HBMK_MAX_              128
+#define _HBMK_MAX_              130
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -766,7 +768,6 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL cDynDefPrefix := NIL
    LOCAL cLibPathPrefix
    LOCAL cLibPathSep
-   LOCAL cDynLibNamePrefix
    LOCAL cImpLibExt := ""
    LOCAL cResPrefix
    LOCAL cResExt
@@ -941,6 +942,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    hbmk[ _HBMK_lAutoHBM ] := .T.
    hbmk[ _HBMK_lContainer ] := .F.
    hbmk[ _HBMK_lShowLevel ] := .F.
+
+   hbmk[ _HBMK_aLINK ] := {}
 
    hbmk[ _HBMK_aArgs ] := aArgs
    hbmk[ _HBMK_nArgTarget ] := nArgTarget
@@ -1247,9 +1250,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          aCOMPSUP := { "gcc" }
       ENDCASE
       IF hbmk[ _HBMK_cPLAT ] == "symbian"
-         cDynLibNamePrefix := ""
+         hbmk[ _HBMK_cDynLibPrefix ] := ""
       ELSE
-         cDynLibNamePrefix := "lib"
+         hbmk[ _HBMK_cDynLibPrefix ] := "lib"
       ENDIF
       DO CASE
       CASE hbmk[ _HBMK_cPLAT ] == "vxworks"
@@ -1280,7 +1283,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       aCOMPSUP := { "djgpp", "gcc", "watcom" }
       l_aLIBHBGT := { "gtdos" }
       hbmk[ _HBMK_cGTDEFAULT ] := "gtdos"
-      cDynLibNamePrefix := ""
+      hbmk[ _HBMK_cDynLibPrefix ] := ""
       hbmk[ _HBMK_cDynLibExt ] := "" /* NOTE: This will be reset later if djgpp is detected. */
       cBinExt := ".exe"
       cOptPrefix := "-/"
@@ -1292,7 +1295,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       aCOMPSUP := { "gcc", "gccomf", "watcom" }
       l_aLIBHBGT := { "gtos2" }
       hbmk[ _HBMK_cGTDEFAULT ] := "gtos2"
-      cDynLibNamePrefix := ""
+      hbmk[ _HBMK_cDynLibPrefix ] := ""
       hbmk[ _HBMK_cDynLibExt ] := ".dll"
       cBinExt := ".exe"
       cOptPrefix := "-/"
@@ -1327,7 +1330,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                     "mingw64", "msvc64", "msvcia64", "iccia64", "pocc64" }
       l_aLIBHBGT := { "gtwin", "gtwvt", "gtgui" }
       hbmk[ _HBMK_cGTDEFAULT ] := "gtwin"
-      cDynLibNamePrefix := ""
+      hbmk[ _HBMK_cDynLibPrefix ] := ""
       hbmk[ _HBMK_cDynLibExt ] := ".dll"
       cBinExt := ".exe"
       cOptPrefix := "-/"
@@ -1347,7 +1350,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       aCOMPSUP := { "mingwarm", "msvcarm", "poccarm" }
       l_aLIBHBGT := { "gtwvt", "gtgui" }
       hbmk[ _HBMK_cGTDEFAULT ] := "gtwvt"
-      cDynLibNamePrefix := ""
+      hbmk[ _HBMK_cDynLibPrefix ] := ""
       hbmk[ _HBMK_cDynLibExt ] := ".dll"
       cBinExt := ".exe"
       cOptPrefix := "-/"
@@ -1840,15 +1843,19 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    /* Process build-time configuration */
 
    #if defined( HB_HAS_GPM )
-      AAdd( hbmk[ _HBMK_aLIBUSERSYS ], "gpm" )
+      IF hbmk[ _HBMK_cPLAT ] == "linux"
+         AAdd( hbmk[ _HBMK_aLIBUSERSYS ], "gpm" )
+      ENDIF
    #endif
 
    #if defined( HB_HAS_WATT )
-      SWITCH hbmk[ _HBMK_cCOMP ]
-      CASE "djgpp"  ; AAdd( hbmk[ _HBMK_aLIBUSERSYS ], "watt" ) ; EXIT
-      CASE "watcom" ; AAdd( hbmk[ _HBMK_aLIBUSERSYS ], "wattcpwf" ) ; EXIT
-      ENDSWITCH
-      AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToSelf( GetEnv( "WATT_ROOT" ) ) + hb_ps() + "lib" )
+      IF hbmk[ _HBMK_cPLAT ] == "dos"
+         SWITCH hbmk[ _HBMK_cCOMP ]
+         CASE "djgpp"  ; AAdd( hbmk[ _HBMK_aLIBUSERSYS ], "watt" ) ; EXIT
+         CASE "watcom" ; AAdd( hbmk[ _HBMK_aLIBUSERSYS ], "wattcpwf" ) ; EXIT
+         ENDSWITCH
+         AAdd( hbmk[ _HBMK_aLIBPATH ], PathSepToSelf( GetEnv( "WATT_ROOT" ) ) + hb_ps() + "lib" )
+      ENDIF
    #endif
 
    /* Process automatic make files in current dir. */
@@ -2231,6 +2238,13 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ELSE
             l_cIMPLIBDIR := NIL
             l_cIMPLIBNAME := NIL
+         ENDIF
+
+      CASE Left( cParamL, Len( "-ln=" ) ) == "-ln="
+
+         cParam := MacroProc( hbmk, SubStr( cParam, Len( "-ln=" ) + 1 ), aParam[ _PAR_cFileName ] )
+         IF ! Empty( cParam )
+            AAddNewNotEmpty( hbmk[ _HBMK_aLINK ], PathSepToSelf( cParam ) )
          ENDIF
 
       CASE Left( cParam, 2 ) == "-L" .AND. ;
@@ -2859,12 +2873,12 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "harbourmt" + cPostfix,;
                                                       "harbour"   + cPostfix ) }
          ELSE
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], cPrefix + cDynLibNamePrefix + "harbourmt" + cPostfix + hbmk[ _HBMK_cDynLibExt ],;
-                                                      cPrefix + cDynLibNamePrefix + "harbour"   + cPostfix + hbmk[ _HBMK_cDynLibExt ] ) }
+            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], cPrefix + hbmk[ _HBMK_cDynLibPrefix ] + "harbourmt" + cPostfix + hbmk[ _HBMK_cDynLibExt ],;
+                                                      cPrefix + hbmk[ _HBMK_cDynLibPrefix ] + "harbour"   + cPostfix + hbmk[ _HBMK_cDynLibExt ] ) }
          ENDIF
       CASE hbmk[ _HBMK_cPLAT ] $ "os2|win|wce"
-         l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], cDynLibNamePrefix + "harbourmt",;
-                                                   cDynLibNamePrefix + "harbour" ) }
+         l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], hbmk[ _HBMK_cDynLibPrefix ] + "harbourmt",;
+                                                   hbmk[ _HBMK_cDynLibPrefix ] + "harbour" ) }
       OTHERWISE
          l_aLIBSHARED := NIL
       ENDCASE
@@ -3735,8 +3749,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             ENDIF
          CASE hbmk[ _HBMK_cPLAT ] == "linux"
             l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], cDynLibNamePrefix + "harbourmt" + cDL_Version + hbmk[ _HBMK_cDynLibExt ],;
-                                                      cDynLibNamePrefix + "harbour" + cDL_Version + hbmk[ _HBMK_cDynLibExt ] ) }
+            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], hbmk[ _HBMK_cDynLibPrefix ] + "harbourmt" + cDL_Version + hbmk[ _HBMK_cDynLibExt ],;
+                                                      hbmk[ _HBMK_cDynLibPrefix ] + "harbour" + cDL_Version + hbmk[ _HBMK_cDynLibExt ] ) }
          ENDCASE
          IF hbmk[ _HBMK_cPLAT ] $ "win|os2"
             cBin_Res := "wrc" + hbmk[ _HBMK_cCCEXT ]
@@ -4393,6 +4407,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    /* ; */
 
    IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. hbmk[ _HBMK_lCreateImpLib ] .AND. ! lDumpInfo
+      /* OBSOLETE functionality */
       IF DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, hbmk[ _HBMK_aIMPLIBSRC ], hbmk[ _HBMK_cPROGNAME ], "" )
          DoInstCopy( hbmk )
       ENDIF
@@ -4435,7 +4450,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
          l_cIMPLIBNAME := hb_FNameMerge( l_cIMPLIBDIR, cLibLibPrefix + l_cIMPLIBNAME, cImpLibExt )
       CASE lStopAfterCComp .AND. hbmk[ _HBMK_lCreateDyn ]
-         cName := cDynLibNamePrefix + cName
+         cName := hbmk[ _HBMK_cDynLibPrefix ] + cName
          IF Empty( cExt ) .AND. ! Empty( hbmk[ _HBMK_cDynLibExt ] )
             cExt := hbmk[ _HBMK_cDynLibExt ]
          ENDIF
@@ -4454,6 +4469,8 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          hbmk[ _HBMK_cPROGNAME ] := hb_FNameMerge( cDir, cLibLibPrefix + cName, iif( Empty( cLibLibExt ), cExt, cLibLibExt ) )
       ENDCASE
    ENDIF
+
+   DoLinkCalc( hbmk )
 
    /* Generate header with repository ID information */
 
@@ -5580,6 +5597,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
       IF hbmk[ _HBMK_nErrorLevel ] == _ERRLEV_OK .AND. ( Len( l_aOBJ ) + Len( hbmk[ _HBMK_aOBJUSER ] ) + Len( l_aOBJA ) ) > 0 .AND. ! hbmk[ _HBMK_lCLEAN ]
 
+         /* Must be called before target creation to avoid errors. */
+         DoLinkDelete( hbmk )
+
          IF lTargetUpToDate
             hbmk_OutStd( hbmk, hb_StrFormat( I_( "Target up to date: %1$s" ), hbmk[ _HBMK_cPROGNAME ] ) )
 
@@ -5840,6 +5860,15 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             ENDCASE
          ENDIF
 
+         IF lTargetUpToDate .OR. hbmk[ _HBMK_nErrorLevel ] == _ERRLEV_OK
+            DoLink( hbmk )
+            IF ! lTargetUpToDate .OR. hbmk[ _HBMK_lInstForce ]
+               FOR EACH tmp IN hbmk[ _HBMK_aLINK ]
+                  hb_AIns( hbmk[ _HBMK_aINSTFILE ], 1, { "", tmp }, .T. )
+               NEXT
+            ENDIF
+         ENDIF
+
          IF ! lTargetUpToDate .OR. hbmk[ _HBMK_lInstForce ]
             /* For win/bcc and os2/gcc the implib is not created at this point yet,
                so there will be a copy failure in case the implib generation
@@ -5868,6 +5897,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             /* bcc is known to create it for static libs */
             FErase( FNameExtSet( hbmk[ _HBMK_cPROGNAME ], ".bak" ) )
          ENDIF
+         DoLinkDelete( hbmk )
       ENDIF
       IF ! Empty( l_cCSTUB )
          FErase( l_cCSTUB )
@@ -6145,6 +6175,49 @@ STATIC PROCEDURE vxworks_env_init( hbmk )
 
    RETURN
 
+STATIC PROCEDURE DoLinkCalc( hbmk )
+   LOCAL tmp
+
+   FOR EACH tmp IN hbmk[ _HBMK_aLINK ]
+      tmp := PathNormalize( PathMakeAbsolute( tmp, hbmk[ _HBMK_cPROGNAME ] ) )
+   NEXT
+
+   RETURN
+
+STATIC FUNCTION DoLinkDelete( hbmk )
+   LOCAL tmp
+
+   FOR EACH tmp IN hbmk[ _HBMK_aLINK ]
+      FErase( tmp )
+   NEXT
+
+   RETURN .T.
+
+STATIC FUNCTION DoLink( hbmk )
+   LOCAL cDir, cName, cExt
+   LOCAL tmp
+   LOCAL tmp1
+
+   FOR EACH tmp IN hbmk[ _HBMK_aLINK ]
+      tmp1 := DirAddPathSep( PathMakeRelative( FNameDirGet( tmp ), FNameDirGet( hbmk[ _HBMK_cPROGNAME ] ), .T. ) ) + FNameNameExtGet( hbmk[ _HBMK_cPROGNAME ] )
+
+      hb_FNameSplit( tmp1, @cDir, @cName, @cExt )
+      /* Cheap hack */
+      IF cDir == "." + hb_ps() .OR. ;
+         cDir == hb_ps()
+         cDir := ""
+      ENDIF
+      tmp1 := hb_FNameMerge( cDir, cName, cExt )
+
+      IF hb_FLinkSym( tmp1, tmp ) == F_ERROR
+         hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Failed creating symbolic link %1$s to %2$s" ), tmp, tmp1 ) )
+      ELSE
+         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created symbolic link %1$s to %2$s" ), tmp, tmp1 ) )
+      ENDIF
+   NEXT
+
+   RETURN .T.
+
 STATIC FUNCTION DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, aIMPLIBSRC, cPROGNAME, cInstCat )
    LOCAL cMakeImpLibDLL
    LOCAL tmp, tmp1
@@ -6216,6 +6289,8 @@ STATIC PROCEDURE DoInstCopy( hbmk )
 
    LOCAL tSrc, tDst
 
+   LOCAL cLink
+
    IF ! Empty( hbmk[ _HBMK_aINSTPATH ] )
 
       FOR EACH aInstPath IN hbmk[ _HBMK_aINSTPATH ]
@@ -6250,10 +6325,18 @@ STATIC PROCEDURE DoInstCopy( hbmk )
 
                   IF DirBuild( FNameDirGet( cDestFileName ) )
                      ++nCopied
-                     IF hb_FCopy( cInstFile, cDestFileName ) == F_ERROR
-                        hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Copying %1$s to %2$s failed with %3$s." ), cInstFile, cDestFileName, hb_ntos( FError() ) ) )
-                     ELSEIF hbmk[ _HBMK_lInfo ]
-                        hbmk_OutStd( hbmk, hb_StrFormat( I_( "Copied %1$s to %2$s" ), cInstFile, cDestFileName ) )
+                     IF ! Empty( cLink := hb_FLinkRead( cInstFile ) )
+                        IF hb_FLinkSym( cLink, cDestFileName ) == F_ERROR
+                           hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Copying symbolic link %1$s to %2$s failed with %3$s." ), cInstFile, cDestFileName, hb_ntos( FError() ) ) )
+                        ELSEIF hbmk[ _HBMK_lInfo ]
+                           hbmk_OutStd( hbmk, hb_StrFormat( I_( "Copied symbolic link %1$s to %2$s" ), cInstFile, cDestFileName ) )
+                        ENDIF
+                     ELSE
+                        IF hb_FCopy( cInstFile, cDestFileName ) == F_ERROR
+                           hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Copying %1$s to %2$s failed with %3$s." ), cInstFile, cDestFileName, hb_ntos( FError() ) ) )
+                        ELSEIF hbmk[ _HBMK_lInfo ]
+                           hbmk_OutStd( hbmk, hb_StrFormat( I_( "Copied %1$s to %2$s" ), cInstFile, cDestFileName ) )
+                        ENDIF
                      ENDIF
                   ELSE
                      hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot create install directory for install target %1$s." ), cDestFileName ) )
@@ -9322,6 +9405,8 @@ STATIC FUNCTION MacroGet( hbmk, cMacro, cFileName )
       cMacro := _WORKDIR_BASE_ ; EXIT
    CASE "HB_WORKDYNSUB"
       cMacro := hbmk[ _HBMK_cWorkDirDynSub ] ; EXIT
+   CASE "HB_DYNPREFIX"
+      cMacro := hbmk[ _HBMK_cDynLibPrefix ] ; EXIT
    CASE "HB_DYNSUFFIX"
       cMacro := hbmk_DYNSUFFIX( hbmk ) ; EXIT
    CASE "HB_DYNEXT"
@@ -11211,6 +11296,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-[no]map"           , I_( "create (or not) a map file" ) },;
       { "-[no]implib"        , I_( "create (or not) an import library (in -hbdyn/-hbexe mode). The name will have a postfix added." ) },;
       { "-implib=<output>"   , I_( "create import library (in -hbdyn/-hbexe mode) name to <output> (default: same as output)" ) },;
+      { "-ln=<link>"         , I_( "create symbolic link pointing to <output> (<link> is considered relative to <output>)" ) },;
       { "-[no]strip"         , I_( "strip (no strip) binaries" ) },;
       { "-[no]trace"         , I_( "show commands executed" ) },;
       { "-[no]beep"          , I_( "enable (or disable) single beep on successful exit, double beep on failure" ) },;

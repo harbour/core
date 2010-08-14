@@ -56,49 +56,83 @@
 #define _FILEIO_CH
 
 /* File create flags */
-#define FC_NORMAL     0        /* No file attributes are set      */
-#define FC_READONLY   1        /* Read-only file attribute is set */
-#define FC_HIDDEN     2        /* Hidden file attribute is set    */
-#define FC_SYSTEM     4        /* System file attribute is set    */
+#define FC_NORMAL          0           /* No file attributes are set      */
+#define FC_READONLY        1           /* Read-only file attribute is set */
+#define FC_HIDDEN          2           /* Hidden file attribute is set    */
+#define FC_SYSTEM          4           /* System file attribute is set    */
+
+/* File attributes flags */
+#define HB_FA_ALL          0x00000000
+
+#define HB_FA_READONLY     0x00000001  /* R */
+#define HB_FA_HIDDEN       0x00000002  /* H */
+#define HB_FA_SYSTEM       0x00000004  /* S */
+#define HB_FA_LABEL        0x00000008  /* V */
+#define HB_FA_DIRECTORY    0x00000010  /* D | S_ISDIR() */
+#define HB_FA_ARCHIVE      0x00000020  /* A | S_ISREG() */
+#define HB_FA_DEVICE       0x00000040  /* I | S_ISBLK() */
+#define HB_FA_NORMAL       0x00000080  /*   */
+
+#define HB_FA_TEMPORARY    0x00000100  /* T | S_ISFIFO()??? */
+#define HB_FA_SPARSE       0x00000200  /* P | S_ISSOCK()??? */
+#define HB_FA_REPARSE      0x00000400  /* L | S_ISLNK() */
+#define HB_FA_COMPRESSED   0x00000800  /* C | S_ISCHR()??? */
+#define HB_FA_OFFLINE      0x00001000  /* O */
+#define HB_FA_NOTINDEXED   0x00002000  /* X */
+#define HB_FA_ENCRYPTED    0x00004000  /* E */
+#define HB_FA_VOLCOMP      0x00008000  /* M volume supports compression. */
+
+/* POSIX file permission */
+#define HB_FA_SUID         0x08000000  /* 4000 set user ID on execution */
+#define HB_FA_SGID         0x04000000  /* 2000 set group ID on execution */
+#define HB_FA_SVTX         0x02000000  /* 1000 sticky bit */
+#define HB_FA_RUSR         0x01000000  /* 0400 read by owner */
+#define HB_FA_WUSR         0x00800000  /* 0200 write by owner */
+#define HB_FA_XUSR         0x00400000  /* 0100 execute/search by owner */
+#define HB_FA_RGRP         0x00200000  /* 0040 read by group */
+#define HB_FA_WGRP         0x00100000  /* 0020 write by group */
+#define HB_FA_XGRP         0x00080000  /* 0010 execute/search by group */
+#define HB_FA_ROTH         0x00040000  /* 0004 read by others */
+#define HB_FA_WOTH         0x00020000  /* 0002 write by others */
+#define HB_FA_XOTH         0x00010000  /* 0001 execute/search by others */
 
 /* File access flags */
-#define FO_READ       0        /* File is opened for reading             */
-#define FO_WRITE      1        /* File is opened for writing             */
-#define FO_READWRITE  2        /* File is opened for reading and writing */
+#define FO_READ            0           /* File is opened for reading             */
+#define FO_WRITE           1           /* File is opened for writing             */
+#define FO_READWRITE       2           /* File is opened for reading and writing */
 
 /* File open flags */
-#define FO_CREAT      0x0100   /* create and open file */
-#define FO_TRUNC      0x0200   /* open with truncation */
-#define FO_EXCL       0x0400   /* create and open only if file doesn't exist */
+#define FO_CREAT           0x0100      /* create and open file */
+#define FO_TRUNC           0x0200      /* open with truncation */
+#define FO_EXCL            0x0400      /* create and open only if file doesn't exist */
 
 /* File sharing flags */
-#define FO_COMPAT     0        /* No sharing specified                               */
-#define FO_EXCLUSIVE  16       /* Deny further attempts to open the file             */
-#define FO_DENYWRITE  32       /* Deny further attempts to open the file for writing */
-#define FO_DENYREAD   48       /* Deny further attempts to open the file for reading */
-#define FO_DENYNONE   64       /* Do not deny any further attempts to open the file  */
-#define FO_SHARED     FO_DENYNONE
+#define FO_COMPAT          0           /* No sharing specified                               */
+#define FO_EXCLUSIVE       16          /* Deny further attempts to open the file             */
+#define FO_DENYWRITE       32          /* Deny further attempts to open the file for writing */
+#define FO_DENYREAD        48          /* Deny further attempts to open the file for reading */
+#define FO_DENYNONE        64          /* Do not deny any further attempts to open the file  */
+#define FO_SHARED          FO_DENYNONE
 
 /* File seek mode flags */
-#define FS_SET        0        /* Seek from beginning of file    */
-#define FS_RELATIVE   1        /* Seek from current file pointer */
-#define FS_END        2        /* Seek from end of file          */
+#define FS_SET             0           /* Seek from beginning of file    */
+#define FS_RELATIVE        1           /* Seek from current file pointer */
+#define FS_END             2           /* Seek from end of file          */
 
 /* File mode flags */
-#define FD_BINARY     1        /* Binary mode (raw)  */
-#define FD_RAW        FD_BINARY
-#define FD_TEXT       2        /* Text mode (cooked) */
-#define FD_COOKED     FD_TEXT
-#define FD_ASCII      FD_TEXT
+#define FD_BINARY          1           /* Binary mode (raw)  */
+#define FD_RAW             FD_BINARY
+#define FD_TEXT            2           /* Text mode (cooked) */
+#define FD_COOKED          FD_TEXT
+#define FD_ASCII           FD_TEXT
 
 /* File system error codes */
-#define F_ERROR       ( -1 )   /* Unspecified error */
+#define F_ERROR            ( -1 )      /* Unspecified error */
 
 /* HB_DISKSPACE() types */
-#define HB_DISK_AVAIL 0
-#define HB_DISK_FREE  1
-#define HB_DISK_USED  2
-#define HB_DISK_TOTAL 3
+#define HB_DISK_AVAIL      0
+#define HB_DISK_FREE       1
+#define HB_DISK_USED       2
+#define HB_DISK_TOTAL      3
 
 #endif /* _FILEIO_CH */
-

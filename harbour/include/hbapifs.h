@@ -85,27 +85,6 @@ HB_EXTERN_BEGIN
 #define FXO_SHARELOCK 0x4000   /* emulate DOS SH_DENY* mode in POSIX OS */
 #define FXO_COPYNAME  0x8000   /* copy final szPath into pFilename */
 
-/* File attributes flags */
-#define HB_FA_ALL             0x00000000
-
-#define HB_FA_READONLY        0x00000001     /* R */
-#define HB_FA_HIDDEN          0x00000002     /* H */
-#define HB_FA_SYSTEM          0x00000004     /* S */
-#define HB_FA_LABEL           0x00000008     /* V */
-#define HB_FA_DIRECTORY       0x00000010     /* D | S_ISDIR() */
-#define HB_FA_ARCHIVE         0x00000020     /* A | S_ISREG() */
-#define HB_FA_DEVICE          0x00000040     /* I | S_ISBLK() */
-#define HB_FA_NORMAL          0x00000080     /*   */
-
-#define HB_FA_TEMPORARY       0x00000100     /* T | S_ISFIFO()??? */
-#define HB_FA_SPARSE          0x00000200     /* P | S_ISSOCK()??? */
-#define HB_FA_REPARSE         0x00000400     /* L | S_ISLNK() */
-#define HB_FA_COMPRESSED      0x00000800     /* C | S_ISCHR()??? */
-#define HB_FA_OFFLINE         0x00001000     /* O */
-#define HB_FA_NOTINDEXED      0x00002000     /* X */
-#define HB_FA_ENCRYPTED       0x00004000     /* E */
-#define HB_FA_VOLCOMP         0x00008000     /* M volume supports compression. */
-
 /* these definitions should be cleared,
  * now they only help to clean lower level code
  */
@@ -115,20 +94,6 @@ HB_EXTERN_BEGIN
 #define HB_FA_CHRDEVICE       HB_FA_COMPRESSED  /* S_ISCHR() */
 #define HB_FA_SOCKET          HB_FA_SPARSE      /* S_ISSOCK() */
 #define HB_FA_LINK            HB_FA_REPARSE     /* S_ISLNK() */
-
-/* POSIX file permission */
-#define HB_FA_SUID            0x08000000     /* set user ID on execution */
-#define HB_FA_SGID            0x04000000     /* set group ID on execution */
-#define HB_FA_SVTX            0x02000000     /* sticky bit */
-#define HB_FA_RUSR            0x01000000     /* read by owner */
-#define HB_FA_WUSR            0x00800000     /* write by owner */
-#define HB_FA_XUSR            0x00400000     /* execute/search by owner */
-#define HB_FA_RGRP            0x00200000     /* read by group */
-#define HB_FA_WGRP            0x00100000     /* write by group */
-#define HB_FA_XGRP            0x00080000     /* execute/search by group */
-#define HB_FA_ROTH            0x00040000     /* read by others */
-#define HB_FA_WOTH            0x00020000     /* write by others */
-#define HB_FA_XOTH            0x00010000     /* execute/search by others */
 
 #define HB_FA_UGVS            ( HB_FA_SUID | HB_FA_SGID | HB_FA_SVTX )
 #define HB_FA_RWXU            ( HB_FA_RUSR | HB_FA_WUSR | HB_FA_XUSR )
@@ -218,6 +183,7 @@ extern HB_EXPORT HB_BOOL    hb_fsDirExists   ( const char * pszDirName ); /* che
 extern HB_EXPORT HB_BOOL    hb_fsCopy        ( const char * pszSource, const char * pszDest ); /* copy file */
 extern HB_EXPORT HB_BOOL    hb_fsLink        ( const char * pszExisting, const char * pszNewFile ); /* create hard link */
 extern HB_EXPORT HB_BOOL    hb_fsLinkSym     ( const char * pszTarget, const char * pszNewFile ); /* create symbolic (soft) link */
+extern HB_EXPORT char *     hb_fsLinkRead    ( const char * pszFileName ); /* returns the link pointed to */
 
 #define hb_fsFLock( h, s, l )   hb_fsLock( h, s, l, FL_LOCK )
 #define hb_fsFUnlock( h, s, l ) hb_fsLock( h, s, l, FL_UNLOCK )

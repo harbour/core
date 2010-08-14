@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * hb_fsLink(), hb_fsLinkSym(), HB_FLINK, HB_FLINKSYM() functions
+ * hb_fsLink*(), HB_FLINK*() functions
  *
  * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://harbour-project.org
@@ -183,6 +183,108 @@ HB_BOOL hb_fsLinkSym( const char * pszTarget, const char * pszNewFile )
    return fResult;
 }
 
+/* NOTE: Caller must free the pointer, if not NULL */
+char * hb_fsLinkRead( const char * pszFile )
+{
+   char * pszLink;
+
+   if( pszFile )
+   {
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+      {
+         typedef BOOL ( WINAPI * _HB_GETFINALPATHNAMEBYHANDLE )( HANDLE, LPTSTR, DWORD, DWORD );
+
+         static _HB_GETFINALPATHNAMEBYHANDLE s_pGetFinalPathNameByHandle = NULL;
+
+         #ifndef VOLUME_NAME_DOS
+         #define VOLUME_NAME_DOS 0x0
+         #endif
+
+         if( ! s_pGetFinalPathNameByHandle )
+            s_pGetFinalPathNameByHandle = ( _HB_GETFINALPATHNAMEBYHANDLE ) GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
+#if defined( UNICODE )
+               "GetFinalPathNameByHandleW" );
+#else
+               "GetFinalPathNameByHandleA" );
+#endif
+
+         if( s_pGetFinalPathNameByHandle )
+         {
+            LPTSTR lpFileName = HB_TCHAR_CONVTO( pszFile );
+            HANDLE hFile;
+
+            hFile = CreateFile( lpFileName,
+                                GENERIC_READ,
+                                FILE_SHARE_READ,
+                                NULL,
+                                OPEN_EXISTING,
+                                FILE_ATTRIBUTE_NORMAL,
+                                NULL );
+
+            if( hFile == INVALID_HANDLE_VALUE )
+            {
+               hb_fsSetIOError( HB_FALSE, 0 );
+               hb_fsSetFError( hb_fsError() );
+               pszLink = NULL;
+            }
+            else
+            {
+               DWORD size;
+               TCHAR lpLink[ HB_PATH_MAX ];
+               size = s_pGetFinalPathNameByHandle( lpFileName, lpLink, HB_PATH_MAX, VOLUME_NAME_DOS );
+               if( size < HB_PATH_MAX )
+               {
+                  pszLink = ( char * ) hb_xgrab( size );
+                  hb_wcntombcpy( pszLink, lpLink, ( HB_SIZE ) size );
+                  hb_fsSetIOError( HB_TRUE, 0 );
+                  hb_fsSetFError( hb_fsError() );
+               }
+               else
+               {
+                  hb_fsSetFError( 1 );
+                  pszLink = NULL;
+               }
+            }
+
+            HB_TCHAR_FREE( lpFileName );
+         }
+         else
+         {
+            hb_fsSetFError( 1 );
+            pszLink = NULL;
+         }
+      }
+#elif defined( HB_OS_UNIX )
+      {
+         size_t size;
+         pszLink = ( char * ) hb_xgrab( HB_PATH_MAX + 1 );
+         size = readlink( pszFile, pszLink, HB_PATH_MAX );
+         hb_fsSetIOError( size != ( size_t ) -1, 0 );
+         hb_fsSetFError( hb_fsError() );
+         if( size == ( size_t ) -1 )
+         {
+            hb_xfree( pszLink );
+            pszLink = NULL;
+         }
+         else
+            pszLink[ size ] = '\0';
+      }
+#else
+      {
+         hb_fsSetFError( 1 );
+         pszLink = NULL;
+      }
+#endif
+   }
+   else
+   {
+      hb_fsSetFError( 2 );
+      pszLink = NULL;
+   }
+
+   return pszLink;
+}
+
 HB_FUNC( HB_FLINK )
 {
    const char * pszExisting = hb_parc( 1 ), * pszNewFile = hb_parc( 2 );
@@ -206,5 +308,18 @@ HB_FUNC( HB_FLINKSYM )
    {
       hb_fsSetFError( 2 );
       hb_retni( F_ERROR );
+   }
+}
+
+HB_FUNC( HB_FLINKREAD )
+{
+   const char * pszFile = hb_parc( 1 );
+
+   if( pszFile )
+      hb_retc_buffer( hb_fsLinkRead( pszFile ) );
+   else
+   {
+      hb_fsSetFError( 2 );
+      hb_retc_null();
    }
 }

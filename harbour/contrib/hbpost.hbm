@@ -37,28 +37,38 @@
 {(hbdyn|hbexe)&HB_BUILD_SHARED='yes'&!(HB_SYSLOC='yes')}-shared
 {(hbdyn|hbexe)&HB_BUILD_SHARED='yes'&HB_SYSLOC='yes'}-fullshared
 
-# Experimental
+# dynamic lib creation settings
 {_HB_BUILD_LIBDYN}-hbdyn
 {_HB_BUILD_LIBDYN}-shared
 {_HB_BUILD_LIBDYN}-implib=../lib/${hb_plat}/${hb_comp}${hb_build}/
 {_HB_BUILD_LIBDYN&hb_dynsuffix}-implib=${hb_outputname}${hb_dynsuffix}
 {_HB_BUILD_LIBDYN&!hb_dynsuffix}-implib=${hb_outputname}_dll
+{_HB_BUILD_LIBDYN&unix}-ln=${hb_dynprefix}${hb_outputname}${hb_dynext}
+{_HB_BUILD_LIBDYN&unix&!darwin}-ln=${hb_dynprefix}${hb_outputname}${hb_dynext}.${hb_major}.${hb_minor}
+{_HB_BUILD_LIBDYN&unix&darwin}-ln=${hb_dynprefix}${hb_outputname}.${hb_major}.${hb_minor}${hb_dynext}
 {_HB_BUILD_LIBDYN&allwin}-lhbmaindllp
 {_HB_BUILD_LIBDYN}-depimplib-
 
+# output name tweaks for dynamic libs
+# NOTE: We're altering previously set output name value here
 {hbdyn&unix&!darwin}-o${hb_outputname}${hb_dynext}.${hb_major}.${hb_minor}.${hb_release}
 {hbdyn&unix&darwin}-o${hb_outputname}.${hb_major}.${hb_minor}.${hb_release}${hb_dynext}
-{hbdyn&!unix}-o${hb_outputname}${hb_dynsuffix}
+{hbdyn&!unix&allwin}-o${hb_outputname}-${hb_major}${hb_minor}${hb_dynsuffix}
+{hbdyn&!unix&!allwin}-o${hb_outputname}${hb_dynsuffix}
+
+# output dir (in sync with GNU Make)
 {hblib}-o../lib/${hb_plat}/${hb_comp}${hb_build}/
 {hbexe}-o../bin/${hb_plat}/${hb_comp}${hb_build}/
 {hbdyn&unix}-o../lib/${hb_plat}/${hb_comp}${hb_build}/
 {hbdyn&!unix}-o../bin/${hb_plat}/${hb_comp}${hb_build}/
 
+# workdir (in sync with GNU Make)
 {hblib}-workdir=../lib/${hb_plat}/${hb_comp}${hb_build}/${hb_work}/${hb_outputname}${hb_workdynsub}
 {hbexe}-workdir=../bin/${hb_plat}/${hb_comp}${hb_build}/${hb_work}/${hb_outputname}${hb_workdynsub}
 {hbdyn&unix}-workdir=../lib/${hb_plat}/${hb_comp}${hb_build}/${hb_work}/${hb_outputname}${hb_workdynsub}
 {hbdyn&!unix}-workdir=../bin/${hb_plat}/${hb_comp}${hb_build}/${hb_work}/${hb_outputname}${hb_workdynsub}
 
+# install
 {_HB_BUILD_INSTALL&_HB_INSTALL_LIB&hblib}-instpath=${_HB_INSTALL_LIB}/
 {_HB_BUILD_INSTALL&_HB_INSTALL_BIN&hbexe}-instpath=${_HB_INSTALL_BIN}/
 {_HB_BUILD_INSTALL&_HB_INSTALL_DYN&hbdyn}-instpath=${_HB_INSTALL_DYN}/

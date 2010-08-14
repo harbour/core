@@ -364,6 +364,7 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
    LOCAL cProject
    LOCAL cProjectPath
    LOCAL lPrimary
+   LOCAL lContainer
 
    LOCAL cDynSuffix
 
@@ -427,8 +428,9 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
 
          cProjectPath := s_cBase + s_cHome + cProject
          lPrimary := cProject $ hProjectReqList
+         lContainer := "lFromContainer" $ hProjectList[ cProject ]
 
-         IF call_hbmk2( cProjectPath, iif( lPrimary, cOptions + cOptionsUser, " -inc" ), NIL )
+         IF call_hbmk2( cProjectPath, iif( lPrimary .OR. lContainer, iif( lContainer, cOptions, cOptions + cOptionsUser ), " -inc" ), NIL )
 
             /* Build dynamic lib */
             IF GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "yes" .AND. hProjectList[ cProject ][ "cType" ] == "hblib"
@@ -442,10 +444,10 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
                ELSE
                   cDynSuffix := hb_libExt()
                ENDIF
-               call_hbmk2( cProjectPath, iif( lPrimary, cOptions + cOptionsUser, " -inc" ), cDynSuffix )
+               call_hbmk2( cProjectPath, iif( lPrimary .OR. lContainer, iif( lContainer, cOptions, cOptions + cOptionsUser ), " -inc" ), cDynSuffix )
             ENDIF
 
-            IF lPrimary .OR. "lFromContainer" $ hProjectList[ cProject ]
+            IF lPrimary .OR. lContainer
 
                /* Compile documentation */
                IF lInstall
