@@ -248,12 +248,12 @@ METHOD IdeObject:connect( qWidget, cSlot, bBlock )
 
    IF hb_isNumeric( cSlot )
       IF !( Qt_Events_Connect( ::pEvents, qWidget, cSlot, bBlock ) )
-         HB_TRACE( HB_TR_DEBUG, "Connection FAILED:", cSlot )
+         HB_TRACE( HB_TR_ALWAYS, "Connection FAILED:", cSlot )
          RETURN .f.
       ENDIF
    ELSE
       IF !( Qt_Slots_Connect( ::pSlots, qWidget, cSlot, bBlock ) )
-         HB_TRACE( HB_TR_DEBUG, "Connection FAILED:", cSlot )
+         HB_TRACE( HB_TR_ALWAYS, "Connection FAILED:", cSlot )
          RETURN .f.
       ENDIF
    ENDIF

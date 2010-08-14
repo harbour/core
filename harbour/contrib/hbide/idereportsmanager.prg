@@ -123,6 +123,8 @@ CLASS IdeReportsManager INHERIT IdeObject
    DATA   qPort
    DATA   qView
    DATA   qScene
+   DATA   qDrag
+   DATA   qMime
 
    DATA   aStatusPnls                             INIT {}
    DATA   aItems                                  INIT {}
@@ -216,8 +218,7 @@ METHOD IdeReportsManager:show()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeReportsManager:execEvent( cEvent, p )
-
-   HB_SYMBOL_UNUSED( p )
+   LOCAL qEvent, qMime
 
    SWITCH cEvent
    CASE "tabBar_currentChanged"
@@ -235,13 +236,23 @@ METHOD IdeReportsManager:execEvent( cEvent, p )
       EXIT
    CASE "buttonPrint_clicked"
       EXIT
+   CASE "viewWidget_dropEvent"
+      qEvent := QDropEvent():from( p )
+      qMime := QMimeData():from( qEvent:mimeData() )
+HB_TRACE( HB_TR_ALWAYS,  "viewWidget_dropEvent", qMime:hasText(), qMime:hasImage(), qMime:hasColor() )
+      EXIT
+   CASE "viewWidget_dragEnterEvent"
+      qEvent := QDragEnterEvent():from( p )
+      qEvent:acceptProposedAction()
+      EXIT
    ENDSWITCH
 
-   RETURN NIL
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeReportsManager:buildDesignReport()
+   STATIC qItem
 
    ::qLayoutD := QHBoxLayout():new()
    ::qLayoutD:setContentsMargins( 0,0,0,0 )
@@ -342,6 +353,16 @@ METHOD IdeReportsManager:buildDesignReport()
    ::qTreeData := QTreeWidget():new()
    ::qPageR11Lay:addWidget( ::qTreeData )
    ::qTreeData:setHeaderHidden( .t. )
+   //
+   qItem := QTreeWidgetItem():new()
+   qItem:setText( 0, "Rect" )
+   ::qTreeData:addTopLevelItem( qItem )
+   qItem := QTreeWidgetItem():new()
+   qItem:setText( 0, "Circle" )
+   //
+   ::qTreeData:addTopLevelItem( qItem )
+   //
+   ::qTreeData:setDragEnabled( .t. )
 
    ::qDesign := QFrame():new()
    ::qScroll:setWidget( ::qDesign )
@@ -360,12 +381,24 @@ METHOD IdeReportsManager:buildDesignReport()
    ::qPort:setGeometry( QRect():new( 30, 30, ::qDesign:width() - 45, ::qDesign:height() - 45 ) )
 #else
    ::qView := QGraphicsView():new( ::qDesign )
-   ::qScene := QGraphicsScene():new( 10,10,200,200 )
    ::qView:setGeometry( QRect():new( 30, 30, ::qDesign:width() - 45, ::qDesign:height() - 45 ) )
-   ::qView:setScene( ::qScene )
 
-   //aadd( ::aItems, { "Band1", ::qScene:addRect( QRectF():new( 20.0,20.0,40.0,60.0 ), QPen():new( QColor():new( Qt_red ) ) ) } )
-   aadd( ::aItems, { "Band1", ::qScene:addRect( QRectF():new( 20.0,20.0,40.0,60.0 ) ) } )
+   ::qScene := QGraphicsScene():new()
+   ::qView:setScene( ::qScene )
+   ::qScene:setSceneRect_1( 10, 10, 200, 400 )
+#if 1
+   ::qView:setAcceptDrops( .t. )
+   ::qView:installEventFilter( ::pEvents )
+   //::connect( ::qView, QEvent_DragEnter, {|p| ::execEvent( "viewWidget_dragEnterEvent", p ) } )
+   ::connect( ::qView, QEvent_GraphicsSceneDragEnter, {|p| ::execEvent( "viewWidget_dragEnterEvent", p ) } )
+   //::connect( ::qView, QEvent_Drop     , {|p| ::execEvent( "viewWidget_dropEvent"     , p ) } )
+   ::connect( ::qView, QEvent_GraphicsSceneDrop     , {|p| ::execEvent( "viewWidget_dropEvent"     , p ) } )
+#else
+   ::qScene:installEventFilter( ::pEvents )
+   ::connect( ::qScene, QEvent_GraphicsSceneDragEnter, {|p| ::execEvent( "viewWidget_dragEnterEvent", p ) } )
+   ::connect( ::qScene, QEvent_Drop     , {|p| ::execEvent( "viewWidget_dropEvent"     , p ) } )
+#endif
+   aadd( ::aItems, IdeGraphicsItem():new( "Rect_1", "rect", ::qScene, { 10.0, 10.0, 200.0, 200.0 }, /*qPen*/, /*qBrush*/ ) )
 #endif
 
    ::qWidget1:show()
@@ -502,5 +535,99 @@ METHOD IdeReportsManager:buildStatusBar()
 
    RETURN Self
 
-/*------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
+//
+//                      Class IdeReportItem()
+//
+/*----------------------------------------------------------------------*/
+
+CLASS IdeGraphicsItem INHERIT IdeObject
+
+   DATA   oWidget
+
+   DATA   cName                                   INIT ""
+   DATA   cType
+   DATA   qScene
+   DATA   qPen
+   DATA   qBrush
+   DATA   aRect                                   //INIT { 20,20,60,20 }
+   DATA   isMovable                               INIT .t.
+   DATA   isSelectable                            INIT .f.
+   DATA   isFocusable                             INIT .f.
+
+   METHOD new( cName, cType, qScene, aRect, qPen, qBrush )
+   METHOD execEvent( cEvent, p )
+
+   ERROR  HANDLER onError( ... )
+
+   ENDCLASS
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeGraphicsItem:new( cName, cType, qScene, aRect, qPen, qBrush )
+
+   ::cName  := cName
+   ::cType  := lower( cType )
+   ::qScene := qScene
+
+   SWITCH ::cType
+   CASE "band"
+      EXIT
+   CASE "rect"
+      DEFAULT aRect  TO { 20, 20, 100, 100 }
+      DEFAULT qPen   TO QPen():new( "QColor", QColor():new( 0,0,255 ) )
+      DEFAULT qBrush TO QBrush():new( Qt_yellow )
+
+      ::qPen   := qPen
+      ::qBrush := qBrush
+
+      ::oWidget := QGraphicsItem():from( ::qScene:addRect_1( aRect[ 1 ], aRect[ 2 ], aRect[ 3 ], aRect[ 4 ], qPen, qBrush ) )
+
+      ::oWidget:setFlag( QGraphicsItem_ItemIsMovable, .t. )
+      ::oWidget:setAcceptDrops( .t. )
+      ::oWidget:setAcceptHoverEvents( .t. )
+
+      //::oWidget:installEventFilter( ::pEvents )
+      //::connect( ::oWidget, QEvent_GraphicsSceneDragEnter, {|p| ::execEvent( "viewWidget_dragEnterEvent", p ) } )
+
+      EXIT
+   CASE "field"
+      EXIT
+   CASE "barcode"
+      EXIT
+   CASE "image"
+      EXIT
+   CASE "textbox"
+      EXIT
+   CASE "textline"
+      EXIT
+   CASE "gradient"
+      EXIT
+   CASE "chart"
+      EXIT
+   ENDSWITCH
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeGraphicsItem:execEvent( cEvent, p )
+   HB_SYMBOL_UNUSED( p )
+   SWITCH cEvent
+   CASE "viewWidget_dragEnterEvent"
+HB_TRACE( HB_TR_ALWAYS, "viewWidget_dragEnterEvent", "........." )
+      EXIT
+   ENDSWITCH
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeGraphicsItem:onError( ... )
+   LOCAL cMsg := __GetMessage()
+   IF SubStr( cMsg, 1, 1 ) == "_"
+      cMsg := SubStr( cMsg, 2 )
+   ENDIF
+   RETURN ::oWidget:&cMsg( ... )
+
+/*----------------------------------------------------------------------*/
 
