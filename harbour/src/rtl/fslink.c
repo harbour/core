@@ -234,8 +234,14 @@ char * hb_fsLinkRead( const char * pszFile )
                size = s_pGetFinalPathNameByHandle( lpFileName, lpLink, HB_PATH_MAX, VOLUME_NAME_DOS );
                if( size < HB_PATH_MAX )
                {
-                  pszLink = ( char * ) hb_xgrab( size );
-                  hb_wcntombcpy( pszLink, lpLink, ( HB_SIZE ) size );
+                  if( size > 0 )
+                  {
+                     pszLink = ( char * ) hb_xgrab( size + 1 );
+                     hb_wcntombcpy( pszLink, lpLink, ( HB_SIZE ) size );
+                  }
+                  else
+                     pszLink = NULL;
+
                   hb_fsSetIOError( HB_TRUE, 0 );
                   hb_fsSetFError( hb_fsError() );
                }
