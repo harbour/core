@@ -192,12 +192,27 @@ char * hb_fsLinkRead( const char * pszFile )
    {
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
       {
-         typedef BOOL ( WINAPI * _HB_GETFINALPATHNAMEBYHANDLE )( HANDLE, LPTSTR, DWORD, DWORD );
+         typedef DWORD ( WINAPI * _HB_GETFINALPATHNAMEBYHANDLE )( HANDLE, LPTSTR, DWORD, DWORD );
 
          static _HB_GETFINALPATHNAMEBYHANDLE s_pGetFinalPathNameByHandle = NULL;
 
          #ifndef VOLUME_NAME_DOS
          #define VOLUME_NAME_DOS 0x0
+         #endif
+         #ifndef VOLUME_NAME_GUID
+         #define VOLUME_NAME_GUID 0x1
+         #endif
+         #ifndef VOLUME_NAME_NT
+         #define VOLUME_NAME_NT 0x2
+         #endif
+         #ifndef VOLUME_NAME_NONE
+         #define VOLUME_NAME_NONE 0x4
+         #endif
+         #ifndef FILE_NAME_NORMALIZED
+         #define FILE_NAME_NORMALIZED 0x0
+         #endif
+         #ifndef FILE_NAME_OPENED
+         #define FILE_NAME_OPENED 0x8
          #endif
 
          if( ! s_pGetFinalPathNameByHandle )
@@ -231,13 +246,17 @@ char * hb_fsLinkRead( const char * pszFile )
             {
                DWORD size;
                TCHAR lpLink[ HB_PATH_MAX ];
-               size = s_pGetFinalPathNameByHandle( lpFileName, lpLink, HB_PATH_MAX, VOLUME_NAME_DOS );
+               size = s_pGetFinalPathNameByHandle( hFile, lpLink, HB_PATH_MAX, VOLUME_NAME_DOS );
                if( size < HB_PATH_MAX )
                {
                   if( size > 0 )
                   {
                      pszLink = ( char * ) hb_xgrab( size + 1 );
+#if defined( UNICODE )
                      hb_wcntombcpy( pszLink, lpLink, ( HB_SIZE ) size );
+#else
+                     hb_strncpy( pszLink, lpLink, ( HB_SIZE ) size );
+#endif
                   }
                   else
                      pszLink = NULL;

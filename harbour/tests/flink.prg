@@ -19,6 +19,12 @@ PROCEDURE Main()
    ? HB_FLINK()
    ? FERROR()
 
+   ? HB_FLINKREAD()
+   ? FERROR()
+
+   ? HB_FLINKREAD( "_hb_h.tmp" )
+   ? FERROR()
+
    ? HB_FLINK( "_hb_h.tmp", "_hb_hlnk.tmp" )
    ? FERROR()
 
@@ -33,9 +39,15 @@ PROCEDURE Main()
    ? HB_FLINKSYM( "_hb_s.tmp", "_hb_slnk.tmp" )
    ? FERROR()
 
+   ? HB_FLINKREAD( "_hb_slnk.tmp" )
+   ? FERROR()
+
    MakeDir( "_hb_d" )
 
    ? HB_FLINKSYM( "_hb_d.tmp", "_hb_dlnk.tmp" )
+   ? FERROR()
+
+   ? HB_FLINKREAD( "_hb_dlnk.tmp" )
    ? FERROR()
 
    RETURN
