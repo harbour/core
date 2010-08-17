@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Windows API functions (winnetwk.h - mpr.dll)
+ * Extern puller
  *
  * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://harbour-project.org

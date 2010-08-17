@@ -389,7 +389,7 @@ HARBOUR
 
       For contrib/rddads lib:
          Download and install 'Advantage Client Engine API for Linux' package
-         (f.e. aceapi-9.10.0.0.tar.gz)
+         (f.e. aceapi-10.00.0.3.tar.gz)
 
       For contrib/hbhpdf lib, if you don't wish to use locally hosted version:
          Download libharu from http://libharu.org/ -> './configure' -> 'make install'
