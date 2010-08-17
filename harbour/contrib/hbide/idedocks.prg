@@ -1880,6 +1880,8 @@ METHOD IdeDocks:animateComponents( nMode )
    ::oIde:nAnimantionMode := nMode
    ::oIde:oINI:cIdeAnimated := hb_ntos( ::nAnimantionMode )
 
+   ::qAnimateAction:setChecked( ::nAnimantionMode != HBIDE_ANIMATION_NONE )
+
    /* Main Window */
    ::oDlg:setStyleSheet( GetStyleSheet( "QMainWindow", ::nAnimantionMode ) )
 

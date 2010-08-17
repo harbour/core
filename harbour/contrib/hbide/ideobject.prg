@@ -122,6 +122,8 @@ CLASS IdeObject
    ACCESS qBrushWrkProject                        INLINE ::oIde:qBrushWrkProject
    ACCESS qViewsCombo                             INLINE ::oIde:qViewsCombo
    ACCESS qHelpBrw                                INLINE ::oIde:qHelpBrw
+   ACCESS qAnimateAction                          INLINE ::oIde:qAnimateAction
+   ACCESS qStatusBarAction                        INLINE ::oIde:qStatusBarAction
 
    ACCESS qTBarLines                              INLINE ::oIde:qTBarLines
    ACCESS qTBarPanels                             INLINE ::oIde:qTBarPanels

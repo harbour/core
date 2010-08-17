@@ -67,7 +67,10 @@ HBQGraphicsItem::HBQGraphicsItem( QGraphicsItem * parent ) : QGraphicsItem( pare
 HBQGraphicsItem::~HBQGraphicsItem()
 {
    if( block )
+   {
       hb_itemRelease( block );
+      block = NULL;
+   }
 }
 
 void HBQGraphicsItem::hbSetBlock( PHB_ITEM b )
@@ -75,25 +78,33 @@ void HBQGraphicsItem::hbSetBlock( PHB_ITEM b )
    if( b )
    {
       block = hb_itemNew( b );
-      block = NULL;
    }
 }
 
 void HBQGraphicsItem::dragEnterEvent( QGraphicsSceneDragDropEvent * event )
 {
-   QGraphicsItem::dragEnterEvent( event );
+HB_TRACE( HB_TR_ALWAYS, ( "dragEnterEvent( QGraphicsSceneDragDropEvent * event )" ) );
+   if( block )
+   {
+      PHB_ITEM p1 = hb_itemPutNI( NULL, 11001 );
+      PHB_ITEM p2 = hb_itemPutNI( NULL, 301 );
+      hb_vmEvalBlockV( block, 1, p1, p2 );
+      hb_itemRelease( p1 );
+      hb_itemRelease( p2 );
+   }
+   //QGraphicsItem::dragEnterEvent( event );
 }
 void HBQGraphicsItem::dragLeaveEvent( QGraphicsSceneDragDropEvent * event )
 {
-   QGraphicsItem::dragLeaveEvent( event );
+   //QGraphicsItem::dragLeaveEvent( event );
 }
 void HBQGraphicsItem::dragMoveEvent( QGraphicsSceneDragDropEvent * event )
 {
-   QGraphicsItem::dragMoveEvent( event );
+   //QGraphicsItem::dragMoveEvent( event );
 }
 void HBQGraphicsItem::dropEvent( QGraphicsSceneDragDropEvent * event )
 {
-   QGraphicsItem::dropEvent( event );
+   //QGraphicsItem::dropEvent( event );
 }
 
 #endif

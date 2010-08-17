@@ -528,17 +528,26 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu := XbpMenu():new( oMenuBar ):create()
    oSubMenu:title := "~View"
    oMenuBar:addItem( { oSubMenu, NIL } )
-   //oSubMenu:oWidget:setStyleSheet( GetStyleSheet( cTheme ) )
 
-   oSubMenu:addItem( { "Toggle Animation", {|| oIde:execAction( "Animate" ) } }         )
+   ::oIde:qAnimateAction := QAction():new( oSubMenu:oWidget )
+   ::qAnimateAction:setText( "Toggle Animation" )
+   ::qAnimateAction:setCheckable( .t. )
+   oSubMenu:addItem( { ::qAnimateAction, {|| oIde:execAction( "Animate" ) } }           )
+
    oSubMenu:oWidget:addSeparator()
    oSubMenu:oWidget:addAction_4( ::oIde:oMainToolbar:oWidget:toggleViewAction()         )
    IF ! ::oIde:lCurEditsMdi
-   oSubMenu:oWidget:addAction_4( ::qTBarPanels:toggleViewAction()                       )
-   oSubMenu:oWidget:addAction_4( ::qTBarLines:toggleViewAction()                        )
+      oSubMenu:oWidget:addAction_4( ::qTBarPanels:toggleViewAction()                    )
+      oSubMenu:oWidget:addAction_4( ::qTBarLines:toggleViewAction()                     )
    ENDIF
    oSubMenu:oWidget:addAction_4( ::qTBarDocks:toggleViewAction()                        )
-   oSubMenu:addItem( { "Toggle Statusbar", {|| oIde:execAction( "ToggleStatusBar" ) } } )
+
+   ::oIde:qStatusBarAction := QAction():new( oSubMenu:oWidget )
+   ::qStatusBarAction:setText( "Toggle Statusbar" )
+   ::qStatusBarAction:setCheckable( .t. )
+   oSubMenu:addItem( { ::qStatusBarAction, {|| oIde:execAction( "ToggleStatusBar" ) } } )
+   ::qStatusBarAction:setChecked( ::lStatusBarVisible )
+
    oSubMenu:oWidget:addSeparator()
    oSubMenu:oWidget:addAction_4( ::oDockPT:oWidget:toggleViewAction()                   )
    oSubMenu:oWidget:addAction_4( ::oDockED:oWidget:toggleViewAction()                   )

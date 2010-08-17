@@ -136,7 +136,14 @@ HB_FUNC( QT_QBYTEARRAY )
 {
    QByteArray * pObj = NULL;
 
-   pObj = new QByteArray() ;
+   if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
+   {
+      pObj = new QByteArray( hb_parc( 1 ) ) ;
+   }
+   else
+   {
+      pObj = new QByteArray() ;
+   }
 
    hb_retptrGC( hbqt_gcAllocate_QByteArray( ( void * ) pObj, true ) );
 }

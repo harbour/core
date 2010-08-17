@@ -76,10 +76,15 @@ HB_FUNC( QT_QMOUSEEVENT )
    {
       hb_retptr( new QMouseEvent( *hbqt_par_QMouseEvent( 1 ) ) );
    }
+   else if( hb_pcount() == 5 )
+   {
+      hb_retptr( new QMouseEvent( ( QEvent::Type ) hb_parni( 1 ), *hbqt_par_QPoint( 2 ), ( Qt::MouseButton ) hb_parni( 3 ), ( Qt::MouseButtons ) hb_parni( 4 ), ( Qt::KeyboardModifiers ) hb_parni( 5 ) ) );  
+   }
 }
 </CODE>
 
 <ENUMS>
+enum Type { None, AccessibilityDescription, AccessibilityHelp, AccessibilityPrepare, ..., MaxUser }
 </ENUMS>
 
 <PROTOS>

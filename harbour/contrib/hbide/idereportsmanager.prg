@@ -142,6 +142,7 @@ CLASS IdeReportsManager INHERIT IdeObject
    METHOD buildStatusBar()
    METHOD buildTabBar()
    METHOD buildDesignReport()
+   METHOD addRect()
 
    ENDCLASS
 
@@ -252,7 +253,7 @@ HB_TRACE( HB_TR_ALWAYS,  "viewWidget_dropEvent", qMime:hasText(), qMime:hasImage
 /*----------------------------------------------------------------------*/
 
 METHOD IdeReportsManager:buildDesignReport()
-   STATIC qItem
+   STATIC qItem, qItmC
 
    ::qLayoutD := QHBoxLayout():new()
    ::qLayoutD:setContentsMargins( 0,0,0,0 )
@@ -353,10 +354,16 @@ METHOD IdeReportsManager:buildDesignReport()
    ::qTreeData := QTreeWidget():new()
    ::qPageR11Lay:addWidget( ::qTreeData )
    ::qTreeData:setHeaderHidden( .t. )
+   ::qTreeData:setObjectName( "TreeData" )
    //
    qItem := QTreeWidgetItem():new()
    qItem:setText( 0, "Rect" )
    ::qTreeData:addTopLevelItem( qItem )
+   qItmC := QTreeWidgetItem():new()
+   qItmC:setText( 0, "Rounded Rect" )
+   qItem:addChild( qItmC )
+   qItem:setExpanded( .t. )
+   //
    qItem := QTreeWidgetItem():new()
    qItem:setText( 0, "Circle" )
    //
@@ -375,11 +382,7 @@ METHOD IdeReportsManager:buildDesignReport()
    ::qVRuler := QFrame():new( ::qDesign )
    ::qVRuler:setStyleSheet( "background-color: rgb(240,240,240);" )
    ::qVRuler:setGeometry( QRect():new( 0, 30, 15, ::qDesign:height() ) )
-#if 0
-   ::qPort := QFrame():new( ::qDesign )
-   ::qPort:setStyleSheet( "background-color: white;" )
-   ::qPort:setGeometry( QRect():new( 30, 30, ::qDesign:width() - 45, ::qDesign:height() - 45 ) )
-#else
+
    ::qView := QGraphicsView():new( ::qDesign )
    ::qView:setGeometry( QRect():new( 30, 30, ::qDesign:width() - 45, ::qDesign:height() - 45 ) )
 
@@ -396,15 +399,20 @@ METHOD IdeReportsManager:buildDesignReport()
 #else
    ::qScene:installEventFilter( ::pEvents )
    ::connect( ::qScene, QEvent_GraphicsSceneDragEnter, {|p| ::execEvent( "viewWidget_dragEnterEvent", p ) } )
-   ::connect( ::qScene, QEvent_Drop     , {|p| ::execEvent( "viewWidget_dropEvent"     , p ) } )
+   ::connect( ::qScene, QEvent_Drop                  , {|p| ::execEvent( "viewWidget_dropEvent"     , p ) } )
 #endif
-   aadd( ::aItems, IdeGraphicsItem():new( "Rect_1", "rect", ::qScene, { 10.0, 10.0, 200.0, 200.0 }, /*qPen*/, /*qBrush*/ ) )
-#endif
+   ::addRect()
 
    ::qWidget1:show()
    ::qWidget2:show()
    ::qWidget3:show()
 
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeReportsManager:addRect()
+   aadd( ::aItems, IdeGraphicsItem():new( Self, "Rect_1", "rect", ::qScene, { 10.0, 10.0, 200.0, 200.0 }, /*qPen*/, /*qBrush*/ ) )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -465,7 +473,7 @@ METHOD IdeReportsManager:buildToolbarAlign()
    ::qToolbarAlign:orientation := Qt_Horizontal
    ::qToolbarAlign:create( "ReportManager_Top_Toolbar_Align" )
 
-   ::qToolbarAlign:addToolButton( "FontG"  , "Font", hbide_image( "f-generic"       ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addToolButton( "FontG"  , "Font"              , hbide_image( "f-generic"       ), {|| ::execEvent( "button_clicked" ) }, .f., .f. )
    ::qToolbarAlign:addSeparator()
    ::qToolbarAlign:addToolButton( "FontB"  , "Text Bold"         , hbide_image( "f-bold-1"        ), {|| ::execEvent( "button_clicked" ) } )
    ::qToolbarAlign:addToolButton( "FontI"  , "Text Italic"       , hbide_image( "f-italic-1"      ), {|| ::execEvent( "button_clicked" ) } )
@@ -501,10 +509,10 @@ METHOD IdeReportsManager:buildToolbarLeft()
    ::qToolbarL:orientation := Qt_Vertical
    ::qToolbarL:create( "ReportManager_Left_Toolbar" )
 
-   ::qToolbarL:addToolButton( "Image"   , "Image"   , hbide_image( "f-image"    ), {|| ::execEvent( "buttonNew_clicked"   ) } )
-   ::qToolbarL:addToolButton( "Chart"   , "Chart"   , hbide_image( "f_chart"    ), {|| ::execEvent( "buttonNew_clicked"   ) } )
-   ::qToolbarL:addToolButton( "Gradient", "Gradient", hbide_image( "f_gradient" ), {|| ::execEvent( "buttonNew_clicked"   ) } )
-   ::qToolbarL:addToolButton( "Barcode" , "Barcode" , hbide_image( "f_barcode"  ), {|| ::execEvent( "buttonNew_clicked"   ) } )
+   ::qToolbarL:addToolButton( "Image"   , "Image"   , hbide_image( "f-image"    ), {|| ::execEvent( "buttonNew_clicked"   ) }, .f., .t. )
+   ::qToolbarL:addToolButton( "Chart"   , "Chart"   , hbide_image( "f_chart"    ), {|| ::execEvent( "buttonNew_clicked"   ) }, .f., .t. )
+   ::qToolbarL:addToolButton( "Gradient", "Gradient", hbide_image( "f_gradient" ), {|| ::execEvent( "buttonNew_clicked"   ) }, .f., .t. )
+   ::qToolbarL:addToolButton( "Barcode" , "Barcode" , hbide_image( "f_barcode"  ), {|| ::execEvent( "buttonNew_clicked"   ) }, .f., .t. )
 
    RETURN Self
 
@@ -543,6 +551,7 @@ METHOD IdeReportsManager:buildStatusBar()
 
 CLASS IdeGraphicsItem INHERIT IdeObject
 
+   DATA   oRM
    DATA   oWidget
 
    DATA   cName                                   INIT ""
@@ -555,8 +564,9 @@ CLASS IdeGraphicsItem INHERIT IdeObject
    DATA   isSelectable                            INIT .f.
    DATA   isFocusable                             INIT .f.
 
-   METHOD new( cName, cType, qScene, aRect, qPen, qBrush )
-   METHOD execEvent( cEvent, p )
+   METHOD new( oRM, cName, cType, qScene, aRect, qPen, qBrush )
+   METHOD execEvent( cEvent, p, p1, p2 )
+   METHOD addRect()
 
    ERROR  HANDLER onError( ... )
 
@@ -564,8 +574,9 @@ CLASS IdeGraphicsItem INHERIT IdeObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeGraphicsItem:new( cName, cType, qScene, aRect, qPen, qBrush )
+METHOD IdeGraphicsItem:new( oRM, cName, cType, qScene, aRect, qPen, qBrush )
 
+   ::oRM    := oRM
    ::cName  := cName
    ::cType  := lower( cType )
    ::qScene := qScene
@@ -578,17 +589,11 @@ METHOD IdeGraphicsItem:new( cName, cType, qScene, aRect, qPen, qBrush )
       DEFAULT qPen   TO QPen():new( "QColor", QColor():new( 0,0,255 ) )
       DEFAULT qBrush TO QBrush():new( Qt_yellow )
 
+      ::aRect  := aRect
       ::qPen   := qPen
       ::qBrush := qBrush
 
-      ::oWidget := QGraphicsItem():from( ::qScene:addRect_1( aRect[ 1 ], aRect[ 2 ], aRect[ 3 ], aRect[ 4 ], qPen, qBrush ) )
-
-      ::oWidget:setFlag( QGraphicsItem_ItemIsMovable, .t. )
-      ::oWidget:setAcceptDrops( .t. )
-      ::oWidget:setAcceptHoverEvents( .t. )
-
-      //::oWidget:installEventFilter( ::pEvents )
-      //::connect( ::oWidget, QEvent_GraphicsSceneDragEnter, {|p| ::execEvent( "viewWidget_dragEnterEvent", p ) } )
+      ::addRect()
 
       EXIT
    CASE "field"
@@ -611,11 +616,38 @@ METHOD IdeGraphicsItem:new( cName, cType, qScene, aRect, qPen, qBrush )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeGraphicsItem:execEvent( cEvent, p )
-   HB_SYMBOL_UNUSED( p )
+METHOD IdeGraphicsItem:execEvent( cEvent, p, p1, p2 )
+   LOCAL qEvent, qMime
+
    SWITCH cEvent
+   CASE "graphicsItem_block"
+      qEvent := QGraphicsSceneDragDropEvent():from( p1 )
+
+      DO CASE
+      CASE p == QEvent_GraphicsSceneDragEnter
+         qEvent:acceptProposedAction()
+
+      CASE p == QEvent_GraphicsSceneDragMove
+
+      CASE p == QEvent_GraphicsSceneDragLeave
+
+      CASE p == QEvent_GraphicsSceneDrop
+         qMime := QMimeData():from( qEvent:mimeData() )
+         IF qMime:hasFormat( "application/x-qabstractitemmodeldatalist" )
+HB_TRACE( HB_TR_ALWAYS, "application/x-toolbaricon", p2[ 1 ], p2[ 2 ], p2[ 3 ] )
+            p2[ 2 ] := lower( p2[ 2 ] )
+            IF p2[ 2 ] == "rect"
+               ::oRM:addRect()
+            ENDIF
+
+         ELSEIF qMime:hasFormat( "application/x-toolbaricon"  )
+HB_TRACE( HB_TR_ALWAYS, "application/x-toolbaricon", qMime:data(), qMime:html() )
+         ELSE
+         ENDIF
+      ENDCASE
+      EXIT
    CASE "viewWidget_dragEnterEvent"
-HB_TRACE( HB_TR_ALWAYS, "viewWidget_dragEnterEvent", "........." )
+
       EXIT
    ENDSWITCH
    RETURN Self
@@ -628,6 +660,24 @@ METHOD IdeGraphicsItem:onError( ... )
       cMsg := SubStr( cMsg, 2 )
    ENDIF
    RETURN ::oWidget:&cMsg( ... )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeGraphicsItem:addRect()
+
+   ::oWidget := HBQGraphicsRectItem():new()
+   ::oWidget:hbSetBlock( {|p,p1,p2| ::execEvent( "graphicsItem_block", p, p1, p2 ) } )
+   ::oWidget:setFlag( QGraphicsItem_ItemIsMovable, .t. )
+   ::oWidget:setFlag( QGraphicsItem_ItemIsSelectable, .t. )
+   ::oWidget:setAcceptDrops( .t. )
+   ::oWidget:setAcceptHoverEvents( .t. )
+   ::oWidget:setRect_1( ::aRect[ 1 ], ::aRect[ 2 ], ::aRect[ 3 ], ::aRect[ 4 ] )
+   ::oWidget:setPen( ::qPen )
+   ::oWidget:setBrush( ::qBrush )
+
+   ::qScene:addItem( ::oWidget )
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 

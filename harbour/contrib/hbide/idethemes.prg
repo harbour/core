@@ -851,7 +851,7 @@ METHOD IdeThemes:parseINI( lAppend )
             DO CASE
             CASE nPart == 1 /* Controls */
                IF hbide_parseKeyValPair( s, @cKey, @cVal )
-                  IF ( n := ascan( ::aControls, cKey ) ) > 0
+                  IF ( n := ascan( ::aControls, {|e_| e_[ 1 ] == cKey } ) ) > 0
                      ::aControls[ n, 2 ] := cVal
                   ELSE
                      aadd( ::aControls, { cKey, cVal } )
@@ -859,8 +859,8 @@ METHOD IdeThemes:parseINI( lAppend )
                ENDIF
             CASE nPart == 2 /* Items   */
                IF hbide_parseKeyValPair( s, @cKey, @cVal )
-                  IF ( n := ascan( ::aThemes, cKey ) ) > 0
-                     ::aThemes[ n, 2 ] := cVal
+                  IF ( n := ascan( ::aItems, {|e_| e_[ 1 ] == cKey } ) ) > 0
+                     ::aItems[ n, 2 ] := cVal
                   ELSE
                      aadd( ::aItems, { cKey, cVal } )
                   ENDIF

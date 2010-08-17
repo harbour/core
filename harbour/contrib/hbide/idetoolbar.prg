@@ -85,11 +85,19 @@ CLASS IdeToolbar INHERIT IdeObject
    DATA   moveable                                INIT   .f.
    DATA   floatable                               INIT   .f.
 
+   DATA   lPressed                                INIT   .f.
+   DATA   qPos
+   DATA   qDrag
+   DATA   qMime
+   DATA   qDropAction
+   DATA   qPix
+   DATA   qByte
+
    METHOD new( cName, oParent )
    METHOD create( cName, oParent )
    METHOD destroy()
-   METHOD execEvent( cEvent, p )
-   METHOD addToolButton( cName, cDesc, cImage, bAction, lCheckable )
+   METHOD execEvent( cEvent, p, p1 )
+   METHOD addToolButton( cName, cDesc, cImage, bAction, lCheckable, lDragEnabled )
    METHOD setItemChecked( cName, lState )
    METHOD setItemEnabled( cName, lEnabled )
    METHOD addWidget( cName, qWidget )
@@ -147,11 +155,46 @@ METHOD IdeToolbar:destroy()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeToolbar:execEvent( cEvent, p )
+METHOD IdeToolbar:execEvent( cEvent, p, p1 )
+   LOCAL qEvent
 
    HB_SYMBOL_UNUSED( p )
 
    SWITCH cEvent
+   CASE "QEvent_MouseLeave"
+      EXIT
+   CASE "QEvent_MouseMove"
+      ::qByte := QByteArray():new( ::hItems[ p1 ]:objectName() )
+
+      ::qMime := QMimeData():new()
+      ::qMime:setData( "application/x-toolbaricon", ::qByte )
+      //::qMime:setText( ::hItems[ p1 ]:objectName() )
+      ::qMime:setHtml( ::hItems[ p1 ]:objectName() )
+
+      //::qPix  := QPixmap():new( hbide_image( "f-generic" ) )
+      ::qPix  := QPixmap():from( QIcon():from( ::hItems[ p1 ]:icon ):pixmap_1( 16,16 ) )
+
+      ::qDrag := QDrag():new( hbide_setIde():oDlg:oWidget )
+      ::qDrag:setMimeData( ::qMime )
+      ::qDrag:setPixmap( ::qPix )
+      ::qDrag:setHotSpot( QPoint():new( 5,5 ) )
+      ::qDrag:setDragCursor( ::qPix, Qt_MoveAction )
+
+      ::qDropAction := ::qDrag:exec( Qt_MoveAction )
+      ::qDrag := NIL
+
+      qEvent := QMouseEvent():new( QEvent_MouseButtonDblClick, QPoint():new( 1,1 ), Qt_LeftButton, Qt_LeftButton, 0 )
+      QApplication():new():postEvent( ::hItems[ p1 ], qEvent )
+
+      EXIT
+   CASE "QEvent_MouseRelease"
+HB_TRACE( HB_TR_ALWAYS, "QEvent_MouseRelease" )
+      ::qDrag := NIL
+      EXIT
+
+   CASE "QEvent_MousePress"
+      EXIT
+
    CASE "buttonNew_clicked"
       EXIT
 
@@ -178,20 +221,30 @@ METHOD IdeToolbar:addWidget( cName, qWidget )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeToolbar:addToolButton( cName, cDesc, cImage, bAction, lCheckable )
+METHOD IdeToolbar:addToolButton( cName, cDesc, cImage, bAction, lCheckable, lDragEnabled )
    LOCAL oButton, qAction
 
    STATIC nID := 0
 
-   DEFAULT cName      TO "IdeToolButton_" + hb_ntos( ++nID )
-   DEFAULT cDesc      TO ""
-   DEFAULT lCheckable TO .f.
+   DEFAULT cName        TO "IdeToolButton_" + hb_ntos( ++nID )
+   DEFAULT cDesc        TO ""
+   DEFAULT lCheckable   TO .f.
+   DEFAULT lDragEnabled TO .f.
 
    oButton := QToolButton():new( ::oWidget )
    oButton:setObjectName( cName )
    oButton:setTooltip( cDesc )
    oButton:setIcon( cImage )
    oButton:setCheckable( lCheckable )
+
+   IF lDragEnabled
+      oButton:installEventFilter( ::pEvents )
+      //
+      ::connect( oButton, QEvent_MouseButtonPress  , {|p| ::execEvent( "QEvent_MousePress"  , p, cName ) } )
+      ::connect( oButton, QEvent_MouseButtonRelease, {|p| ::execEvent( "QEvent_MouseRelease", p, cName ) } )
+      ::connect( oButton, QEvent_MouseMove         , {|p| ::execEvent( "QEvent_MouseMove"   , p, cName ) } )
+      ::connect( oButton, QEvent_Enter             , {|p| ::execEvent( "QEvent_MouseEnter"  , p, cName ) } )
+   ENDIF
 
    IF hb_isBlock( bAction )
       ::connect( oButton, "clicked()", bAction )

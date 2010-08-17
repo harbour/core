@@ -8,6 +8,7 @@
 
 HBQAbstractItemModel.qth
 HBQGraphicsItem.qth
+HBQGraphicsRectItem.qth
 HBQMainWindow.qth
 HBQPlainTextEdit.qth
 HBQSyntaxHighlighter.qth

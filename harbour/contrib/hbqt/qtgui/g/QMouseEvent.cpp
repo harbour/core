@@ -66,6 +66,10 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  enum Type { None, AccessibilityDescription, AccessibilityHelp, AccessibilityPrepare, ..., MaxUser }
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QMouseEvent>
@@ -138,6 +142,10 @@ HB_FUNC( QT_QMOUSEEVENT )
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
       pObj = new QMouseEvent( *hbqt_par_QMouseEvent( 1 ) ) ;
+   }
+   else if( hb_pcount() == 5 )
+   {
+      pObj = new QMouseEvent( ( QEvent::Type ) hb_parni( 1 ), *hbqt_par_QPoint( 2 ), ( Qt::MouseButton ) hb_parni( 3 ), ( Qt::MouseButtons ) hb_parni( 4 ), ( Qt::KeyboardModifiers ) hb_parni( 5 ) ) ;
    }
 
    hb_retptrGC( hbqt_gcAllocate_QMouseEvent( ( void * ) pObj, true ) );

@@ -11,6 +11,7 @@
 hbqtgui_extern.prg
 HBQAbstractItemModel.cpp
 HBQGraphicsItem.cpp
+HBQGraphicsRectItem.cpp
 HBQMainWindow.cpp
 HBQPlainTextEdit.cpp
 HBQSyntaxHighlighter.cpp
@@ -268,6 +269,7 @@ QUiLoader.cpp
 
 THBQAbstractItemModel.prg
 THBQGraphicsItem.prg
+THBQGraphicsRectItem.prg
 THBQMainWindow.prg
 THBQPlainTextEdit.prg
 THBQSyntaxHighlighter.prg

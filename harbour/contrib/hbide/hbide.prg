@@ -247,6 +247,9 @@ CLASS HbIde
    DATA   oUpDn
    DATA   oReportsManagerDock
 
+   DATA   qAnimateAction
+   DATA   qStatusBarAction
+
    DATA   lProjTreeVisible                        INIT   .t.
    DATA   lDockRVisible                           INIT   .f.
    DATA   lDockBVisible                           INIT   .f.
@@ -701,6 +704,7 @@ METHOD HbIde:execAction( cKey )
          ::oSBar:oWidget:show()
       ENDIF
       ::lStatusBarVisible := ! ::lStatusBarVisible
+      ::qStatusBarAction:setChecked( ::lStatusBarVisible )
       EXIT
 
    CASE "Tools"
@@ -716,7 +720,7 @@ METHOD HbIde:execAction( cKey )
       ::oDK:setView( "Stats" )
       RETURN Self
    CASE "Animate"
-      ::oDK:animateComponents() // ::nAnimantionMode )
+      ::oDK:animateComponents()
       EXIT
    CASE "Setup"
       ::oSetup:show()
