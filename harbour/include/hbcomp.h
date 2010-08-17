@@ -87,7 +87,7 @@ extern void hb_compChkFileSwitches( int argc, char * argv[] );
 extern void hb_compInitPP( HB_COMP_DECL, int argc, const char * const argv[] );
 extern void hb_compCompileEnd( HB_COMP_DECL );
 
-extern int  hb_compparse( HB_COMP_DECL );
+extern int  hb_comp_yyparse( HB_COMP_DECL );
 extern void hb_compParserStop( HB_COMP_DECL );
 extern void hb_compParserRun( HB_COMP_DECL );
 

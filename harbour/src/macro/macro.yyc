@@ -59,13 +59,13 @@
 #define YYLSP_NEEDED 0
 
 /* Substitute the variable and function names.  */
-#define yyparse hb_macroparse
-#define yylex   hb_macrolex
-#define yyerror hb_macroerror
-#define yylval  hb_macrolval
-#define yychar  hb_macrochar
-#define yydebug hb_macrodebug
-#define yynerrs hb_macronerrs
+#define yyparse hb_macro_yyparse
+#define yylex   hb_macro_yylex
+#define yyerror hb_macro_yyerror
+#define yylval  hb_macro_yylval
+#define yychar  hb_macro_yychar
+#define yydebug hb_macro_yydebug
+#define yynerrs hb_macro_yynerrs
 
 
 /* Tokens.  */
@@ -3252,7 +3252,7 @@ void hb_macroLexDelete( HB_MACRO_PTR pMacro )
    }
 }
 
-int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
+int hb_macro_yylex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
 {
    PHB_PP_TOKEN pToken = hb_pp_lexGet( ( PHB_PP_STATE ) pMacro->pLex );
 

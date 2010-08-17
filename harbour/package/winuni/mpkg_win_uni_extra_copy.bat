@@ -5,6 +5,7 @@
 @echo off
 
 @rem - Adjust target dir, mingw dirs, set HB_DIR_UPX, create required packages beforehand.
+@rem - Requires BCC in PATH or HB_DIR_BCC_IMPLIB (for implib).
 @rem - Run this from vanilla official source tree only.
 
 xcopy /y       RELNOTES                                                            F:\hb\hb21\
@@ -36,6 +37,13 @@ xcopy /y /s    ..\..\pkg\win\watcom\harbour-2.1.0-win-watcom\lib                
 xcopy /y       ..\..\pkg\wce\mingwarm\harbour-2.1.0-wce-mingwarm\bin\*.dll         F:\hb\hb21\bin\
 xcopy /y       ..\..\pkg\win\bcc\harbour-2.1.0-win-bcc\bin\*.dll                   F:\hb\hb21\bin\
 xcopy /y       ..\..\pkg\win\msvc64\harbour-2.1.0-win-msvc64\bin\*.dll             F:\hb\hb21\bin\
+
+rem ; Create special implibs for Borland (requires BCC in PATH)
+"%HB_DIR_BCC_IMPLIB%implib.exe" -c -a F:\hb\hb21\lib\win\bcc\harbour-21-bcc.lib   F:\hb\hb21\bin\harbour-21.dll
+"%HB_DIR_BCC_IMPLIB%implib.exe" -c -a F:\hb\hb21\lib\win\bcc\harbourmt-21-bcc.lib F:\hb\hb21\bin\harbourmt-21.dll
+
+del F:\hb\hb21\bin\harbour-21-bcc.dll
+del F:\hb\hb21\bin\harbourmt-21-bcc.dll
 
 rem ; Using msvc64 because mingw64 .dll handling is broken.
  copy /y       ..\..\pkg\win\msvc64\harbour-2.1.0-win-msvc64\bin\harbour.exe       F:\hb\hb21\bin\harbour-x64.exe

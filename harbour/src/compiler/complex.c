@@ -474,7 +474,7 @@ static int hb_comp_dayTimeDecode( PHB_COMP_LEX pLex, PHB_PP_TOKEN pToken,
 }
 #endif
 
-int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
+int hb_comp_yylex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
 {
    PHB_COMP_LEX pLex = HB_COMP_PARAM->pLex;
    PHB_PP_TOKEN pToken = hb_pp_tokenGet( pLex->pPP );
@@ -1407,14 +1407,14 @@ void hb_compParserRun( HB_COMP_DECL )
       }
       else
       {
-         iToken = hb_complex( &yylval, HB_COMP_PARAM );
+         iToken = hb_comp_yylex( &yylval, HB_COMP_PARAM );
          if( iToken == 0 )
             break;
          if( iToken == DOIDENT )
             hb_compModuleAdd( HB_COMP_PARAM, yylval.string, HB_FALSE );
          else if( iToken == PROCREQ )
          {
-            iToken = hb_complex( &yylval, HB_COMP_PARAM );
+            iToken = hb_comp_yylex( &yylval, HB_COMP_PARAM );
             if( iToken == LITERAL )
             {
                const char * szFile, * szExt = NULL;
@@ -1423,10 +1423,10 @@ void hb_compParserRun( HB_COMP_DECL )
                   szFile = hb_compIdentifierNew( HB_COMP_PARAM, yylval.valChar.string, HB_IDENT_FREE );
                else
                   szFile = yylval.valChar.string;
-               iToken = hb_complex( &yylval, HB_COMP_PARAM );
+               iToken = hb_comp_yylex( &yylval, HB_COMP_PARAM );
                if( iToken == '+' )
                {
-                  iToken = hb_complex( &yylval, HB_COMP_PARAM );
+                  iToken = hb_comp_yylex( &yylval, HB_COMP_PARAM );
                   if( iToken == LITERAL )
                   {
                      if( yylval.valChar.dealloc )
@@ -1434,7 +1434,7 @@ void hb_compParserRun( HB_COMP_DECL )
                      else
                         szExt = yylval.valChar.string;
                   }
-                  iToken = hb_complex( &yylval, HB_COMP_PARAM );
+                  iToken = hb_comp_yylex( &yylval, HB_COMP_PARAM );
                }
                if( iToken == ')' )
                {

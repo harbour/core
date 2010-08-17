@@ -4182,7 +4182,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
             if( HB_COMP_PARAM->iSyntaxCheckOnly >= 2 )
                hb_compParserRun( HB_COMP_PARAM );
             else
-               hb_compparse( HB_COMP_PARAM );
+               hb_comp_yyparse( HB_COMP_PARAM );
             HB_COMP_PARAM->iExitLevel = HB_MAX( iExitLevel, HB_COMP_PARAM->iExitLevel );
          }
       }

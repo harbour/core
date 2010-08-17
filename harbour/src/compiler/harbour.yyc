@@ -59,13 +59,13 @@
 #define YYLSP_NEEDED 0
 
 /* Substitute the variable and function names.  */
-#define yyparse hb_compparse
-#define yylex   hb_complex
-#define yyerror hb_comperror
-#define yylval  hb_complval
-#define yychar  hb_compchar
-#define yydebug hb_compdebug
-#define yynerrs hb_compnerrs
+#define yyparse hb_comp_yyparse
+#define yylex   hb_comp_yylex
+#define yyerror hb_comp_yyerror
+#define yylval  hb_comp_yylval
+#define yychar  hb_comp_yychar
+#define yydebug hb_comp_yydebug
+#define yynerrs hb_comp_yynerrs
 
 
 /* Tokens.  */

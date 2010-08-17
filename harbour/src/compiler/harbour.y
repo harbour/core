@@ -1,7 +1,7 @@
 %pure-parser
 %parse-param { HB_COMP_PTR pComp }
 %lex-param   { HB_COMP_PTR pComp }
-%name-prefix = "hb_comp"
+%name-prefix = "hb_comp_yy"
 %{
 /*
  * $Id$

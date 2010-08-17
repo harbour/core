@@ -1,7 +1,7 @@
 %pure-parser
 %parse-param { HB_MACRO_PTR pMacro }
 %lex-param   { HB_MACRO_PTR pMacro }
-%name-prefix = "hb_macro"
+%name-prefix = "hb_macro_yy"
 
 %{
 /*
@@ -907,7 +907,7 @@ void hb_macroLexDelete( HB_MACRO_PTR pMacro )
    }
 }
 
-int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
+int hb_macro_yylex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
 {
    PHB_PP_TOKEN pToken = hb_pp_lexGet( ( PHB_PP_STATE ) pMacro->pLex );
 
