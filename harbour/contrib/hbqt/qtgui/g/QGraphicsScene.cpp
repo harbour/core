@@ -73,11 +73,12 @@
  */
 
 /*
- *  Constructed[ 69/71 [ 97.18% ] ]
+ *  Constructed[ 69/72 [ 95.83% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
+ *  }
  *  QGraphicsItemGroup * createItemGroup ( const QList<QGraphicsItem *> & items )
  *
  *  *** Commented out protos which construct fine but do not compile ***
@@ -241,12 +242,14 @@ HB_FUNC( QT_QGRAPHICSSCENE_ADDELLIPSE_1 )
  */
 HB_FUNC( QT_QGRAPHICSSCENE_ADDITEM )
 {
-   QGraphicsScene * p = hbqt_par_QGraphicsScene( 1 );
-   if( p )
-      ( p )->addItem( hbqt_par_QGraphicsItem( 2 ) );
-   else
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QGRAPHICSSCENE_ADDITEM()" ) );
+   if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENE_ADDITEM FP=( p )->addItem( hbqt_par_QGraphicsItem( 2 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QGRAPHICSSCENE_ADDITEM() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QGraphicsScene( 1 )->addItem( hbqt_par_QGraphicsItem( 2 ) );
    }
 }
 
