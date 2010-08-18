@@ -1487,6 +1487,7 @@ HARBOUR
          http://www.oracle.com/technology/tech/oci/instantclient/index.html
       HB_WITH_OPENSSL - OpenSSL [multiplatform, free, open-source]
          http://www.openssl.org/
+         http://www.openssl.org/related/binaries.html
       HB_WITH_PCRE - Perl Compatible Regular Expressions [multiplatform, free, open-source]
          http://www.pcre.org/
       HB_WITH_PGSQL - PostgreSQL [multiplatform, free, open-source]

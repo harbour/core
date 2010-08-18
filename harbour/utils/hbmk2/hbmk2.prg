@@ -6176,27 +6176,8 @@ STATIC PROCEDURE vxworks_env_init( hbmk )
    RETURN
 
 STATIC PROCEDURE DoLinkCalc( hbmk )
-   LOCAL tmp
-
-   FOR EACH tmp IN hbmk[ _HBMK_aLINK ]
-      tmp := PathNormalize( PathMakeAbsolute( tmp, hbmk[ _HBMK_cPROGNAME ] ) )
-   NEXT
-
-   RETURN
-
-STATIC FUNCTION DoLinkDelete( hbmk )
-   LOCAL tmp
-
-   FOR EACH tmp IN hbmk[ _HBMK_aLINK ]
-      FErase( tmp )
-   NEXT
-
-   RETURN .T.
-
-STATIC FUNCTION DoLink( hbmk )
    LOCAL cDir, cName, cExt
-   LOCAL tmp
-   LOCAL tmp1
+   LOCAL tmp, tmp1
 
    FOR EACH tmp IN hbmk[ _HBMK_aLINK ]
       tmp1 := DirAddPathSep( PathMakeRelative( FNameDirGet( tmp ), FNameDirGet( hbmk[ _HBMK_cPROGNAME ] ), .T. ) ) + FNameNameExtGet( hbmk[ _HBMK_cPROGNAME ] )
@@ -6208,11 +6189,30 @@ STATIC FUNCTION DoLink( hbmk )
          cDir := ""
       ENDIF
       tmp1 := hb_FNameMerge( cDir, cName, cExt )
+      
+      tmp := { PathNormalize( PathMakeAbsolute( tmp, hbmk[ _HBMK_cPROGNAME ] ) ),;
+               tmp1 }
+   NEXT
 
-      IF hb_FLinkSym( tmp1, tmp ) == F_ERROR
-         hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Failed creating symbolic link %1$s to %2$s" ), tmp, tmp1 ) )
+   RETURN
+
+STATIC FUNCTION DoLinkDelete( hbmk )
+   LOCAL tmp
+
+   FOR EACH tmp IN hbmk[ _HBMK_aLINK ]
+      FErase( tmp[ 1 ] )
+   NEXT
+
+   RETURN .T.
+
+STATIC FUNCTION DoLink( hbmk )
+   LOCAL tmp
+
+   FOR EACH tmp IN hbmk[ _HBMK_aLINK ]
+      IF hb_FLinkSym( tmp[ 2 ], tmp[ 1 ] ) == F_ERROR
+         hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Failed creating symbolic link %1$s to %2$s" ), tmp[ 1 ], tmp[ 2 ] ) )
       ELSE
-         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created symbolic link %1$s to %2$s" ), tmp, tmp1 ) )
+         hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created symbolic link %1$s to %2$s" ), tmp[ 1 ], tmp[ 2 ] ) )
       ENDIF
    NEXT
 
@@ -6300,7 +6300,13 @@ STATIC PROCEDURE DoInstCopy( hbmk )
          nCopied := 0 /* files copied */
          FOR EACH aInstFile IN hbmk[ _HBMK_aINSTFILE ]
 
-            cInstFile := aInstFile[ _INST_cData ]
+            IF ISARRAY( aInstFile[ _INST_cData ] )
+               cInstFile := aInstFile[ _INST_cData ][ 1 ]
+               cLink := aInstFile[ _INST_cData ][ 2 ]
+            ELSE
+               cInstFile := aInstFile[ _INST_cData ]
+               cLink := NIL
+            ENDIF
 
             IF aInstPath[ _INST_cGroup ] == aInstFile[ _INST_cGroup ]
                IF Empty( FNameNameExtGet( cInstPath ) )
@@ -6325,7 +6331,8 @@ STATIC PROCEDURE DoInstCopy( hbmk )
 
                   IF DirBuild( FNameDirGet( cDestFileName ) )
                      ++nCopied
-                     IF ! Empty( cLink := hb_FLinkRead( cInstFile ) )
+                     IF cLink != NIL
+                        FErase( cDestFileName )
                         IF hb_FLinkSym( cLink, cDestFileName ) == F_ERROR
                            hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Copying symbolic link %1$s to %2$s failed with %3$s." ), cInstFile, cDestFileName, hb_ntos( FError() ) ) )
                         ELSEIF hbmk[ _HBMK_lInfo ]
