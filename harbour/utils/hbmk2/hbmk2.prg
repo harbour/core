@@ -24,6 +24,20 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
  * their web site at http://www.gnu.org/).
  *
+ * License extensions:
+ *   - This source code must be kept and distributed as part
+ *     of the Harbour package and/or the placement of the tool sources
+ *     and files must reflect that it is part of Harbour Project.
+ *   - hbmk2 copyright information must always be presented by
+ *     projects including this tool or help text.
+ *   - Modified versions of the tool must clearly state this
+ *     fact on the copyright screen.
+ *   - Source code modifications shall always be made available
+ *     along with binaries.
+ *   - Help text and documentation is licensed under
+ *     Creative Commons Attribution-ShareAlike 3.0:
+ *     http://creativecommons.org/licenses/by-sa/3.0/
+ *
  */
 
 /*

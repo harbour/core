@@ -92,9 +92,9 @@ else
       echo Uploading packages to sf.net file release area...
 
       desthost=",harbour-project@frs.sourceforge.net:"
-      scp -i $HB_SFNET_FRS_PRIVATE_KEY harbour-nightly-src.zip $HB_SFNET_USER,$desthost$destdir
-      scp -i $HB_SFNET_FRS_PRIVATE_KEY harbour-nightly.tar.bz2 $HB_SFNET_USER,$desthost$destdir
-      scp -i $HB_SFNET_FRS_PRIVATE_KEY harbour-nightly.tar.gz  $HB_SFNET_USER,$desthost$destdir
+      scp -i $HB_SFNET_FRS_PRIVATE_KEY harbour-nightly-src.zip $HB_SFNET_USER$desthost$destdir
+      scp -i $HB_SFNET_FRS_PRIVATE_KEY harbour-nightly.tar.bz2 $HB_SFNET_USER$desthost$destdir
+      scp -i $HB_SFNET_FRS_PRIVATE_KEY harbour-nightly.tar.gz  $HB_SFNET_USER$desthost$destdir
    fi
 fi
 

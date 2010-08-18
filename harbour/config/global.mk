@@ -1422,15 +1422,16 @@ ifneq ($(HB_HAS_X11),)
 endif
 
 ifneq ($(HB_PLATFORM),dos)
+   HB_PKGNAME := harbour
    ifneq ($(HB_PLATFORM_UNIX),)
       HB_VERSION := $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)
       ifneq ($(HB_VER_STATUS),)
          HB_VERSION := $(HB_VERSION)-$(HB_VER_STATUS)
       endif
-      HB_PKGNAME := harbour-$(HB_VERSION)
+      HB_PKGNAME := $(HB_PKGNAME)-$(HB_VERSION)
    else
       HB_VERSION := $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)$(HB_VER_STATUS)
-      HB_PKGNAME := harbour-$(HB_VERSION)-$(HB_PLATFORM)-$(HB_COMPILER)
+      HB_PKGNAME := $(HB_PKGNAME)-$(HB_VERSION)-$(HB_PLATFORM)-$(HB_COMPILER)
    endif
    HB_PKGNAMI := $(HB_PKGNAME)
 else
