@@ -32,8 +32,8 @@ set HB_BUILD_PKG=yes
 
 set HB_DIR_NSIS=%_HB_DIR_TOOL%nsis\
 set HB_OPT_NSIS=/DPKG_NO_COMP_MSVC /DPKG_NO_COMP_MSVC64 /DPKG_NO_COMP_MINGW64 /DPKG_NO_COMP_MINGWARM /DPKG_NO_PLAT_LINUX /DPKG_NO_PLAT_OS2 /DPKG_NO_PLAT_DOS /DPKG_NO_COMP_WATCOM
-set HB_DIR_ZIP=%_HB_DIR_TOOL%misc\
-set HB_DIR_7Z=%_HB_DIR_TOOL%misc\
+set HB_DIR_ZIP=%_HB_DIR_TOOL%
+set HB_DIR_7Z=%_HB_DIR_TOOL%
 set HB_DIR_UPX=%_HB_DIR_TOOL%upx\
 set HB_DIR_BCC_IMPLIB=%_HB_DIR_COMP%bcc\Bin\
 set HB_DIR_MINGW=%_HB_DIR_COMP%mingw
@@ -76,12 +76,12 @@ rem endlocal
 
 rem echo ! Uploading Harbour Windows binaries...
 rem
-rem %_HB_DIR_TOOL%misc\pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-mingw.exe  %HB_SFNET_USER%%_HB_SFNET_URL%
-rem %_HB_DIR_TOOL%misc\pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-mingw.zip  %HB_SFNET_USER%%_HB_SFNET_URL%
-rem %_HB_DIR_TOOL%misc\pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-bcc.exe    %HB_SFNET_USER%%_HB_SFNET_URL%
-rem %_HB_DIR_TOOL%misc\pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-bcc.zip    %HB_SFNET_USER%%_HB_SFNET_URL%
-rem %_HB_DIR_TOOL%misc\pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-watcom.exe %HB_SFNET_USER%%_HB_SFNET_URL%
-rem %_HB_DIR_TOOL%misc\pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-watcom.zip %HB_SFNET_USER%%_HB_SFNET_URL%
+rem %_HB_DIR_TOOL%pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-mingw.exe  %HB_SFNET_USER%%_HB_SFNET_URL%
+rem %_HB_DIR_TOOL%pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-mingw.zip  %HB_SFNET_USER%%_HB_SFNET_URL%
+rem %_HB_DIR_TOOL%pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-bcc.exe    %HB_SFNET_USER%%_HB_SFNET_URL%
+rem %_HB_DIR_TOOL%pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-bcc.zip    %HB_SFNET_USER%%_HB_SFNET_URL%
+rem %_HB_DIR_TOOL%pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-watcom.exe %HB_SFNET_USER%%_HB_SFNET_URL%
+rem %_HB_DIR_TOOL%pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-watcom.zip %HB_SFNET_USER%%_HB_SFNET_URL%
 
 echo ! Creating unified Windows package...
 
@@ -89,11 +89,11 @@ call package\winuni\mpkg_win_uni.bat
 
 echo ! Uploading Harbour unified Windows package...
 
-%_HB_DIR_TOOL%misc\pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win.exe        %HB_SFNET_USER%%_HB_SFNET_URL%
-%_HB_DIR_TOOL%misc\pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win.7z         %HB_SFNET_USER%%_HB_SFNET_URL%
-%_HB_DIR_TOOL%misc\pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-log.txt    %HB_SFNET_USER%%_HB_SFNET_URL%
-%_HB_DIR_TOOL%misc\pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-mingw.txt  %HB_SFNET_USER%%_HB_SFNET_URL%
-%_HB_DIR_TOOL%misc\pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-bcc.txt    %HB_SFNET_USER%%_HB_SFNET_URL%
-rem %_HB_DIR_TOOL%misc\pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-watcom.txt %HB_SFNET_USER%%_HB_SFNET_URL%
+%_HB_DIR_TOOL%pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win.exe        %HB_SFNET_USER%%_HB_SFNET_URL%
+%_HB_DIR_TOOL%pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win.7z         %HB_SFNET_USER%%_HB_SFNET_URL%
+%_HB_DIR_TOOL%pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-log.txt    %HB_SFNET_USER%%_HB_SFNET_URL%
+%_HB_DIR_TOOL%pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-mingw.txt  %HB_SFNET_USER%%_HB_SFNET_URL%
+%_HB_DIR_TOOL%pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-bcc.txt    %HB_SFNET_USER%%_HB_SFNET_URL%
+rem %_HB_DIR_TOOL%pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-watcom.txt %HB_SFNET_USER%%_HB_SFNET_URL%
 
 echo ! Finished.
