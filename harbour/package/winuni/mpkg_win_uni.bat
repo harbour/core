@@ -72,13 +72,13 @@ xcopy /y       "%HB_DIR_UPX%upx.exe"                                            
 xcopy /y /s /e "%HB_DIR_MINGW%"                                                           %HB_ABSROOT%comp\mingw\
 rem del %HB_ABSROOT%comp\mingw\tdm-mingw-1.908.0-4.4.1-2.exe
 
-xcopy /y       "%HB_WITH_QT%/../bin/libgcc_s_dw2-1.dll"                                   %HB_ABSROOT%bin\
-xcopy /y       "%HB_WITH_QT%/../bin/mingwm10.dll"                                         %HB_ABSROOT%bin\
-xcopy /y       "%HB_WITH_QT%/../bin/QtCore4.dll"                                          %HB_ABSROOT%bin\
-xcopy /y       "%HB_WITH_QT%/../bin/QtGui4.dll"                                           %HB_ABSROOT%bin\
-xcopy /y       "%HB_WITH_QT%/../bin/QtNetwork4.dll"                                       %HB_ABSROOT%bin\
- copy /y       "%HB_WITH_QT%/../LICENSE.LGPL"                                             %HB_ABSROOT%bin\Qt_LICENSE.txt
- copy /y       "%HB_WITH_QT%/../LGPL_EXCEPTION.txt"                                       %HB_ABSROOT%bin\Qt_LICENSE_EXCEPTION.txt
+xcopy /y       "%HB_WITH_QT%\..\bin\libgcc_s_dw2-1.dll"                                   %HB_ABSROOT%bin\
+xcopy /y       "%HB_WITH_QT%\..\bin\mingwm10.dll"                                         %HB_ABSROOT%bin\
+xcopy /y       "%HB_WITH_QT%\..\bin\QtCore4.dll"                                          %HB_ABSROOT%bin\
+xcopy /y       "%HB_WITH_QT%\..\bin\QtGui4.dll"                                           %HB_ABSROOT%bin\
+xcopy /y       "%HB_WITH_QT%\..\bin\QtNetwork4.dll"                                       %HB_ABSROOT%bin\
+ copy /y       "%HB_WITH_QT%\..\LICENSE.LGPL"                                             %HB_ABSROOT%bin\Qt_LICENSE.txt
+ copy /y       "%HB_WITH_QT%\..\LGPL_EXCEPTION.txt"                                       %HB_ABSROOT%bin\Qt_LICENSE_EXCEPTION.txt
 
 pushd
 
