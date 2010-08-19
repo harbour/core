@@ -141,6 +141,20 @@ Section /o "x64 tools" hb_main_x64
 SectionEnd
 !endif
 
+!ifndef PKG_NO_IDE
+Section /o "IDE" hb_ide
+  SetOutPath $INSTDIR\bin
+  File "$%HB_ABSROOT%bin\hbide.exe"
+  File "$%HB_ABSROOT%bin\libgcc_s_dw2-1.dll"
+  File "$%HB_ABSROOT%bin\mingwm10.dll"
+  File "$%HB_ABSROOT%bin\QtCore4.dll"
+  File "$%HB_ABSROOT%bin\QtGui4.dll"
+  File "$%HB_ABSROOT%bin\QtNetwork4.dll"
+  File "$%HB_ABSROOT%bin\Qt_LICENSE.txt"
+  File "$%HB_ABSROOT%bin\Qt_LICENSE_EXCEPTION.txt"
+SectionEnd
+!endif
+
 !ifndef PKG_NO_CC_MINGW
 Section "MinGW compiler" hb_mingw
   SetOutPath $INSTDIR\comp\mingw
@@ -358,6 +372,9 @@ SectionEnd
   LangString DESC_hb_main_x64     ${LANG_ENGLISH} "Harbour x64 tools"
   LangString DESC_hb_dlls_x64     ${LANG_ENGLISH} "Harbour dlls for x64"
 !endif
+!ifndef PKG_NO_IDE
+  LangString DESC_hb_ide          ${LANG_ENGLISH} "Harbour IDE"
+!endif
 !ifndef PKG_NO_COMP_MINGWARM
   LangString DESC_hb_dlls_arm     ${LANG_ENGLISH} "Harbour dlls for WinCE/ARM"
 !endif
@@ -427,6 +444,9 @@ SectionEnd
 !ifndef PKG_NO_COMP_MINGW64
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_main_x64}     $(DESC_hb_main_x64)
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_dlls_x64}     $(DESC_hb_dlls_x64)
+!endif
+!ifndef PKG_NO_IDE
+    !insertmacro MUI_DESCRIPTION_TEXT ${hb_ide}          $(DESC_hb_ide)
 !endif
 !ifndef PKG_NO_COMP_MINGWARM
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_dlls_arm}     $(DESC_hb_dlls_arm)

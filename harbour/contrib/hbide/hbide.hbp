@@ -7,6 +7,7 @@
 
 -inc
 -o${hb_name}
+-strip
 
 -w3 -es2
 
@@ -21,7 +22,6 @@
 ../hbxbp/hbxbp.hbc
 ../hbqt/hbqtnetwork.hbc
 
-ideparseexpr.c
 hbide.prg
 ideobject.prg
 idestylesheets.prg
@@ -50,6 +50,7 @@ idedict.prg
 idebrowse.prg
 idereportsmanager.prg
 idetoolbar.prg
+ideparseexpr.c
 
 docviewgenerator.ui
 docwriter.ui

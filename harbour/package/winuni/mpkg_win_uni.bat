@@ -32,8 +32,6 @@ xcopy /y       %~dp0HARBOUR_README_MINGWARM                                     
 xcopy /y       %~dp0HARBOUR_README_POCC                                                   %HB_ABSROOT%comp\pocc\
 xcopy /y       %~dp0HARBOUR_README_WATCOM                                                 %HB_ABSROOT%comp\watcom\
 
-xcopy /y /s    %~dp0..\..\contrib\hbide\*.*                                               %HB_ABSROOT%contrib\hbide\
-
 xcopy /y /s    %~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw                         %HB_ABSROOT%
 
 xcopy /y /s    %~dp0..\..\pkg\linux\watcom\harbour-%HB_VF%-linux-watcom\lib               %HB_ABSROOT%lib\linux\watcom\
@@ -71,8 +69,16 @@ rem ; Using msvc64 because mingw64 .dll handling is broken.
 xcopy /y       "%HB_DIR_UPX%upx.exe"                                                      %HB_ABSROOT%bin\
  copy /y       "%HB_DIR_UPX%LICENSE"                                                      %HB_ABSROOT%bin\upx_LICENSE.txt
 
-xcopy /y /s /e %HB_DIR_MINGW%                                                             %HB_ABSROOT%comp\mingw\
+xcopy /y /s /e "%HB_DIR_MINGW%"                                                           %HB_ABSROOT%comp\mingw\
 rem del %HB_ABSROOT%comp\mingw\tdm-mingw-1.908.0-4.4.1-2.exe
+
+xcopy /y       "%HB_WITH_QT%/../bin/libgcc_s_dw2-1.dll"                                   %HB_ABSROOT%bin\
+xcopy /y       "%HB_WITH_QT%/../bin/mingwm10.dll"                                         %HB_ABSROOT%bin\
+xcopy /y       "%HB_WITH_QT%/../bin/QtCore4.dll"                                          %HB_ABSROOT%bin\
+xcopy /y       "%HB_WITH_QT%/../bin/QtGui4.dll"                                           %HB_ABSROOT%bin\
+xcopy /y       "%HB_WITH_QT%/../bin/QtNetwork4.dll"                                       %HB_ABSROOT%bin\
+ copy /y       "%HB_WITH_QT%/../LICENSE.LGPL"                                             %HB_ABSROOT%bin\Qt_LICENSE.txt
+ copy /y       "%HB_WITH_QT%/../LGPL_EXCEPTION.txt"                                       %HB_ABSROOT%bin\Qt_LICENSE_EXCEPTION.txt
 
 pushd
 
@@ -118,7 +124,15 @@ echo "%HB_DR%bin\hbrun.exe"                         >> _hbfiles
 echo "%HB_DR%bin\hbtest.exe"                        >> _hbfiles
 echo "%HB_DR%bin\hbformat.exe"                      >> _hbfiles
 echo "%HB_DR%bin\hbnetio.exe"                       >> _hbfiles
-if exist "%HB_DR%bin\hbmk.hbc" echo "%HB_DR%bin\hbmk.hbc" >> _hbfiles
+if exist "%HB_DR%bin\hbide.exe"                 echo "%HB_DR%bin\hbide.exe"                >> _hbfiles
+if exist "%HB_DR%bin\libgcc_s_dw2-1.dll"        echo "%HB_DR%bin\libgcc_s_dw2-1.dll"       >> _hbfiles
+if exist "%HB_DR%bin\mingwm10.dll"              echo "%HB_DR%bin\mingwm10.dll"             >> _hbfiles
+if exist "%HB_DR%bin\QtCore4.dll"               echo "%HB_DR%bin\QtCore4.dll"              >> _hbfiles
+if exist "%HB_DR%bin\QtGui4.dll"                echo "%HB_DR%bin\QtGui4.dll"               >> _hbfiles
+if exist "%HB_DR%bin\QtNetwork4.dll"            echo "%HB_DR%bin\QtNetwork4.dll"           >> _hbfiles
+if exist "%HB_DR%bin\Qt_LICENSE.txt"            echo "%HB_DR%bin\Qt_LICENSE.txt"           >> _hbfiles
+if exist "%HB_DR%bin\Qt_LICENSE_EXCEPTION.txt"  echo "%HB_DR%bin\Qt_LICENSE_EXCEPTION.txt" >> _hbfiles
+if exist "%HB_DR%bin\hbmk.hbc"                  echo "%HB_DR%bin\hbmk.hbc"                 >> _hbfiles
 echo "%HB_DR%bin\upx*.*"                            >> _hbfiles
 echo "%HB_DR%include\*.*"                           >> _hbfiles
 echo "%HB_DR%bin\harbour-x64.exe"                   >> _hbfiles
