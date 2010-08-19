@@ -641,6 +641,10 @@ STATIC PROCEDURE hbmk_COMP_Setup( cARCH, cCOMP, cBasePath )
       hb_SetEnv( "DJGPP", cBasePath + hb_ps() + "djgpp.env" )
       hb_SetEnv( "PATH", cBasePath + hb_ps() + "bin" + hb_osPathListSeparator() + hb_GetEnv( "PATH" ) )
 
+   CASE cARCH == "win" .AND. cCOMP == "mingw"
+
+      hb_SetEnv( "PATH", cBasePath + hb_ps() + "bin" + hb_osPathListSeparator() + hb_GetEnv( "PATH" ) )
+
    CASE cARCH == "win" .AND. cCOMP == "pocc"
 
       hb_SetEnv( "PATH", cBasePath + hb_ps() + "Bin" + hb_osPathListSeparator() + hb_GetEnv( "PATH" ) )
@@ -1466,7 +1470,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          tmp3 := NIL; HB_SYMBOL_UNUSED( tmp3 )
 
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingw"    + hb_ps() + "bin"   ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "win"  , "mingw"   , ""                    , NIL, NIL } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingw"    + hb_ps() + "bin"   ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "win"  , "mingw"   , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
          AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingw64"  + hb_ps() + "bin"   ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "win"  , "mingw64" , "i686-w64-mingw32-"   , NIL, NIL } )
          AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingw64"  + hb_ps() + "bin"   ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "win"  , "mingw64" , "x86_64-w64-mingw32-" , NIL, NIL } )
          AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingwarm" + hb_ps() + "bin"   ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "wce"  , "mingwarm", "arm-mingw32ce-"      , NIL, NIL } )
@@ -6203,7 +6207,7 @@ STATIC PROCEDURE DoLinkCalc( hbmk )
          cDir := ""
       ENDIF
       tmp1 := hb_FNameMerge( cDir, cName, cExt )
-      
+
       tmp := { PathNormalize( PathMakeAbsolute( tmp, hbmk[ _HBMK_cPROGNAME ] ) ),;
                tmp1 }
    NEXT
