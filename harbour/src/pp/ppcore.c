@@ -3179,11 +3179,24 @@ static HB_BOOL hb_pp_resultMarkerNew( PHB_PP_STATE pState,
             }
          }
       }
+      else if( rtype == HB_PP_TOKEN_REFERENCE )
+      {
+         /* <@> */
+         if( hb_pp_tokenUnQuotedGet( &pTokenPtr, &fQuoted, HB_TRUE ) && !fQuoted &&
+             HB_PP_TOKEN_TYPE( ( * pTokenPtr )->type ) == HB_PP_TOKEN_GT )
+            type = HB_PP_RMARKER_REFERENCE;
+      }
    }
 
    if( type == HB_PP_TOKEN_NUL )
    {
       hb_pp_error( pState, 'E', HB_PP_ERR_WRONG_LABEL, NULL );
+   }
+   else if( type == HB_PP_RMARKER_REFERENCE )
+   {
+      hb_pp_tokenSetValue( * pTokenPtr, "~", 1 );
+      HB_PP_TOKEN_SETTYPE( * pTokenPtr, type );
+      return HB_TRUE;
    }
    else
    {
@@ -4207,7 +4220,8 @@ static PHB_PP_TOKEN *  hb_pp_patternStuff( PHB_PP_STATE pState,
       {
          if( hb_pp_tokenValueCmp( pResultPattern, "__FILE__", HB_PP_CMP_CASE ) )
          {
-            const char * szFileName = pState->pFile ? pState->pFile->szFileName : NULL;
+            const char * szFileName = pState->pFile ?
+                                      pState->pFile->szFileName : NULL;
             if( !szFileName )
                szFileName = "";
             * pResultPtr = hb_pp_tokenNew( szFileName, strlen( szFileName ), 0,
@@ -4217,11 +4231,19 @@ static PHB_PP_TOKEN *  hb_pp_patternStuff( PHB_PP_STATE pState,
          else if( hb_pp_tokenValueCmp( pResultPattern, "__LINE__", HB_PP_CMP_CASE ) )
          {
             char line[ 16 ];
-            hb_snprintf( line, sizeof( line ), "%d", pState->pFile ? pState->pFile->iCurrentLine : 0 );
+            hb_snprintf( line, sizeof( line ), "%d",
+                         pState->pFile ? pState->pFile->iCurrentLine : 0 );
             * pResultPtr = hb_pp_tokenNew( line, strlen( line ), 0,
                                            HB_PP_TOKEN_NUMBER );
             pResultPtr = &( * pResultPtr )->pNext;
          }
+      }
+      else if( HB_PP_TOKEN_TYPE( pResultPattern->type ) == HB_PP_RMARKER_REFERENCE )
+      {
+         PHB_PP_TOKEN * pTokenPtr = pResultPtr;
+         hb_pp_tokenAdd( &pResultPtr, "<@>", 3, pResultPattern->spaces,
+                         HB_PP_RMARKER_REFERENCE | HB_PP_TOKEN_STATIC );
+         ( * pTokenPtr )->pMTokens = pRule->pMatch;
       }
       else
       {
@@ -4467,7 +4489,7 @@ static HB_BOOL hb_pp_processCommand( PHB_PP_STATE pState, PHB_PP_TOKEN * pFirstP
    int iCycle = 0;
 
    while( fRepeat && !HB_PP_TOKEN_ISEOC( * pFirstPtr ) &&
-          pState->pMap[ HB_PP_HASHID( * pFirstPtr ) ] & HB_PP_COMMAND )
+          ( pState->pMap[ HB_PP_HASHID( * pFirstPtr ) ] & HB_PP_COMMAND ) )
    {
       fRepeat = HB_FALSE;
       pRule = pState->pCommands;
@@ -5341,8 +5363,25 @@ PHB_PP_TOKEN hb_pp_tokenGet( PHB_PP_STATE pState )
       hb_pp_tokenFree( pToken );
    }
 
-   if( !pState->pTokenOut )
-      hb_pp_preprocessToken( pState );
+   for( ;; )
+   {
+      if( !pState->pTokenOut )
+      {
+         hb_pp_preprocessToken( pState );
+         if( !pState->pTokenOut )
+            break;
+      }
+      while( pState->pTokenOut &&
+             HB_PP_TOKEN_TYPE( pState->pTokenOut->type ) ==
+                                                   HB_PP_RMARKER_REFERENCE )
+      {
+         PHB_PP_TOKEN pToken = pState->pTokenOut;
+         pState->pTokenOut = pToken->pNext;
+         hb_pp_tokenFree( pToken );
+      }
+      if( pState->pTokenOut )
+         break;
+   }
 
    if( pState->fWritePreprocesed && pState->pTokenOut )
    {

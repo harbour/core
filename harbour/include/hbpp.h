@@ -144,6 +144,7 @@ typedef HB_PP_INC_FUNC * PHB_PP_INC_FUNC;
 #define HB_PP_RMARKER_NUL        17
 #define HB_PP_RMARKER_OPTIONAL   18
 #define HB_PP_RMARKER_DYNVAL     19
+#define HB_PP_RMARKER_REFERENCE  20
 
 /* keywords, pseudo keywords and PP only tokens */
 #define HB_PP_TOKEN_KEYWORD      21
