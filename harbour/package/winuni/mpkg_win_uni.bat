@@ -4,81 +4,168 @@
 
 @echo off
 
+@rem - Adjust target dir, mingw dirs, set HB_DIR_UPX, HB_DIR_MINGW, create required packages beforehand.
+@rem - Requires BCC in PATH or HB_DIR_BCC_IMPLIB (for implib).
+@rem - Run this from vanilla official source tree only.
+
+if "%HB_VS%" == "" set HB_VS=21
+if "%HB_VL%" == "" set HB_VL=210
+if "%HB_VM%" == "" set HB_VM=2.1
+if "%HB_VF%" == "" set HB_VF=2.1.0
+if "%HB_RT%" == "" set HB_RT=F:\hb\
+
+set HB_DR=hb%HB_VS%\
+set HB_ABSROOT=%HB_RT%%HB_DR%
+
+rem ; Assemble unified package from per-target builds
+
+if exist %HB_ABSROOT% rd /q /s %HB_ABSROOT%
+
+xcopy /y       %~dp0RELNOTES                                                              %HB_ABSROOT%
+xcopy /y /s    %~dp0..\..\examples\*.*                                                    %HB_ABSROOT%examples\
+xcopy /y /s    %~dp0..\..\tests\*.*                                                       %HB_ABSROOT%tests\
+xcopy /y       %~dp0HARBOUR_README_ADDONS                                                 %HB_ABSROOT%addons\
+xcopy /y       %~dp0HARBOUR_README_DJGPP                                                  %HB_ABSROOT%comp\djgpp\
+xcopy /y       %~dp0HARBOUR_README_MINGW                                                  %HB_ABSROOT%comp\mingw\
+xcopy /y       %~dp0HARBOUR_README_MINGW64                                                %HB_ABSROOT%comp\mingw64\
+xcopy /y       %~dp0HARBOUR_README_MINGWARM                                               %HB_ABSROOT%comp\mingwarm\
+xcopy /y       %~dp0HARBOUR_README_POCC                                                   %HB_ABSROOT%comp\pocc\
+xcopy /y       %~dp0HARBOUR_README_WATCOM                                                 %HB_ABSROOT%comp\watcom\
+
+xcopy /y /s    %~dp0..\..\contrib\hbide\*.*                                               %HB_ABSROOT%contrib\hbide\
+
+xcopy /y /s    %~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw                         %HB_ABSROOT%
+
+xcopy /y /s    %~dp0..\..\pkg\linux\watcom\harbour-%HB_VF%-linux-watcom\lib               %HB_ABSROOT%lib\linux\watcom\
+xcopy /y /s    %~dp0..\..\pkg\dos\watcom\hb%HB_VL%wa\lib                                  %HB_ABSROOT%lib\
+xcopy /y /s    %~dp0..\..\pkg\os2\watcom\harbour-%HB_VF%-os2-watcom\lib                   %HB_ABSROOT%lib\
+xcopy /y /s    %~dp0..\..\pkg\wce\mingwarm\harbour-%HB_VF%-wce-mingwarm\lib               %HB_ABSROOT%lib\
+xcopy /y /s    %~dp0..\..\pkg\win\bcc\harbour-%HB_VF%-win-bcc\lib                         %HB_ABSROOT%lib\
+xcopy /y /s    %~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw\lib                     %HB_ABSROOT%lib\
+xcopy /y /s    %~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\lib                 %HB_ABSROOT%lib\
+xcopy /y /s    %~dp0..\..\pkg\win\msvc\harbour-%HB_VF%-win-msvc\lib                       %HB_ABSROOT%lib\
+xcopy /y /s    %~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\lib                   %HB_ABSROOT%lib\
+xcopy /y /s    %~dp0..\..\pkg\win\watcom\harbour-%HB_VF%-win-watcom\lib                   %HB_ABSROOT%lib\
+
+xcopy /y       %~dp0..\..\pkg\wce\mingwarm\harbour-%HB_VF%-wce-mingwarm\bin\*.dll         %HB_ABSROOT%bin\
+xcopy /y       %~dp0..\..\pkg\win\bcc\harbour-%HB_VF%-win-bcc\bin\*.dll                   %HB_ABSROOT%bin\
+xcopy /y       %~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\bin\*.dll             %HB_ABSROOT%bin\
+
+rem ; Create special implibs for Borland (requires BCC in PATH)
+"%HB_DIR_BCC_IMPLIB%implib.exe" -c -a %HB_ABSROOT%lib\win\bcc\harbour-%HB_VS%-bcc.lib   %HB_ABSROOT%bin\harbour-%HB_VS%.dll
+"%HB_DIR_BCC_IMPLIB%implib.exe" -c -a %HB_ABSROOT%lib\win\bcc\harbourmt-%HB_VS%-bcc.lib %HB_ABSROOT%bin\harbourmt-%HB_VS%.dll
+
+del %HB_ABSROOT%bin\harbour-%HB_VS%-bcc.dll
+del %HB_ABSROOT%bin\harbourmt-%HB_VS%-bcc.dll
+
+rem ; Using msvc64 because mingw64 .dll handling is broken.
+ copy /y       %~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\bin\harbour.exe       %HB_ABSROOT%bin\harbour-x64.exe
+ copy /y       %~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\bin\hbpp.exe          %HB_ABSROOT%bin\hbpp-x64.exe
+ copy /y       %~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\bin\hbformat.exe      %HB_ABSROOT%bin\hbformat-x64.exe
+ copy /y       %~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\bin\hbi18n.exe        %HB_ABSROOT%bin\hbi18n-x64.exe
+ copy /y       %~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\bin\hbmk2.exe         %HB_ABSROOT%bin\hbmk2-x64.exe
+ copy /y       %~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\bin\hbrun.exe         %HB_ABSROOT%bin\hbrun-x64.exe
+ copy /y       %~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\bin\hbtest.exe        %HB_ABSROOT%bin\hbtest-x64.exe
+ copy /y       %~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\bin\hbnetio.exe       %HB_ABSROOT%bin\hbnetio-x64.exe
+
+xcopy /y       "%HB_DIR_UPX%upx.exe"                                                      %HB_ABSROOT%bin\
+ copy /y       "%HB_DIR_UPX%LICENSE"                                                      %HB_ABSROOT%bin\upx_LICENSE.txt
+
+xcopy /y /s /e %HB_DIR_MINGW%                                                             %HB_ABSROOT%comp\mingw\
+rem del %HB_ABSROOT%comp\mingw\tdm-mingw-1.908.0-4.4.1-2.exe
+
 pushd
 
-cd F:\hb\hb21\..
+cd %~dp0..\..\contrib
 
-if exist %~dp0harbour-2.1.0-win-log.txt del %~dp0harbour-2.1.0-win-log.txt
+for /F %%a in ( 'dir /b /ad' ) do (
+   echo %%a
+   xcopy /y /s %%a\*.hbc     %HB_ABSROOT%contrib\%%a\
+   xcopy /y /s %%a\*.def     %HB_ABSROOT%contrib\%%a\
+   xcopy /y /s %%a\tests\*.* %HB_ABSROOT%contrib\%%a\tests\
+)
 
-set HB_ROOT=F:\hb\
-"%HB_DIR_NSIS%makensis.exe" %~dp0mpkg_win_uni.nsi >> %~dp0harbour-2.1.0-win-log.txt
+popd
+
+rem ; Create unified installer
+
+pushd
+
+cd %HB_RT%
+
+if exist %HB_RT%harbour-%HB_VF%-win-log.txt del %HB_RT%harbour-%HB_VF%-win-log.txt
+if exist %HB_RT%harbour-%HB_VF%-win.exe del %HB_RT%harbour-%HB_VF%-win.exe
+
+"%HB_DIR_NSIS%makensis.exe" %HB_OPT_NSIS% %~dp0mpkg_win_uni.nsi >> %HB_RT%harbour-%HB_VF%-win-log.txt
+
+rem ; Create unified archive
 
 echo.> _hbfiles
-echo "hb21\RELNOTES"                              >> _hbfiles
-echo "hb21\INSTALL"                               >> _hbfiles
-echo "hb21\COPYING"                               >> _hbfiles
-echo "hb21\NEWS"                                  >> _hbfiles
-echo "hb21\TODO"                                  >> _hbfiles
-echo "hb21\ChangeLog*"                            >> _hbfiles
-echo "hb21\bin\harbour-20.dll"                    >> _hbfiles
-echo "hb21\bin\harbourmt-20.dll"                  >> _hbfiles
-echo "hb21\bin\harbour.exe"                       >> _hbfiles
-echo "hb21\bin\hbi18n.exe"                        >> _hbfiles
-echo "hb21\bin\hbmk2.exe"                         >> _hbfiles
-echo "hb21\bin\hbmk2.*.hbl"                       >> _hbfiles
-echo "hb21\bin\hbpp.exe"                          >> _hbfiles
-echo "hb21\bin\hbrun.exe"                         >> _hbfiles
-echo "hb21\bin\hbtest.exe"                        >> _hbfiles
-echo "hb21\bin\hbformat.exe"                      >> _hbfiles
-echo "hb21\bin\hbnetio.exe"                       >> _hbfiles
-if exist "hb21\bin\hbmk.hbc" echo "hb21\bin\hbmk.hbc" >> _hbfiles
-echo "hb21\bin\upx*.*"                            >> _hbfiles
-echo "hb21\include\*.*"                           >> _hbfiles
-echo "hb21\bin\harbour-x64.exe"                   >> _hbfiles
-echo "hb21\bin\hbi18n-x64.exe"                    >> _hbfiles
-echo "hb21\bin\hbmk2-x64.exe"                     >> _hbfiles
-echo "hb21\bin\hbpp-x64.exe"                      >> _hbfiles
-echo "hb21\bin\hbrun-x64.exe"                     >> _hbfiles
-echo "hb21\bin\hbtest-x64.exe"                    >> _hbfiles
-echo "hb21\bin\hbformat-x64.exe"                  >> _hbfiles
-echo "hb21\bin\hbnetio-x64.exe"                   >> _hbfiles
-echo "hb21\lib\win\mingw\*.*"                     >> _hbfiles
-echo "hb21\lib\win\mingw64\*.*"                   >> _hbfiles
-echo "hb21\lib\wce\mingwarm\*.*"                  >> _hbfiles
-echo "hb21\addons\HARBOUR_README_ADDONS"          >> _hbfiles
-rem echo "hb21\comp\djgpp\HARBOUR_README_DJGPP"       >> _hbfiles
-echo "hb21\comp\watcom\HARBOUR_README_WATCOM"     >> _hbfiles
-echo "hb21\comp\pocc\HARBOUR_README_POCC"         >> _hbfiles
-echo "hb21\comp\mingw\HARBOUR_README_MINGW"       >> _hbfiles
-echo "hb21\comp\mingw64\HARBOUR_README_MINGW64"   >> _hbfiles
-echo "hb21\comp\mingwarm\HARBOUR_README_MINGWARM" >> _hbfiles
-rem echo "hb21\lib\dos\djgpp\*.*"                     >> _hbfiles
-echo "hb21\lib\dos\watcom\*.*"                    >> _hbfiles
-echo "hb21\lib\linux\watcom\*.*"                  >> _hbfiles
-echo "hb21\lib\os2\watcom\*.*"                    >> _hbfiles
-echo "hb21\lib\win\msvc\*.*"                      >> _hbfiles
-echo "hb21\lib\win\msvc64\*.*"                    >> _hbfiles
-echo "hb21\bin\harbour-20-bcc.dll"                >> _hbfiles
-echo "hb21\bin\harbourmt-20-bcc.dll"              >> _hbfiles
-echo "hb21\lib\win\bcc\*.*"                       >> _hbfiles
-echo "hb21\lib\win\watcom\*.*"                    >> _hbfiles
-rem echo "hb21\lib\win\pocc\*.*"                      >> _hbfiles
-rem echo "hb21\lib\win\pocc64\*.*"                    >> _hbfiles
-rem echo "hb21\lib\wce\poccarm\*.*"                   >> _hbfiles
-echo "hb21\bin\harbour-20-x64.dll"                >> _hbfiles
-echo "hb21\bin\harbourmt-20-x64.dll"              >> _hbfiles
-echo "hb21\bin\harbour-20-wce-arm.dll"            >> _hbfiles
-echo "hb21\bin\harbourmt-20-wce-arm.dll"          >> _hbfiles
-rem echo "hb21\bin\harbour-20-os2.dll"                >> _hbfiles
-rem echo "hb21\bin\harbourmt-20-os2.dll"              >> _hbfiles
-echo "hb21\tests\*.*"                             >> _hbfiles
-echo "hb21\doc\*.*"                               >> _hbfiles
-echo "hb21\comp\mingw\*"                          >> _hbfiles
-echo "hb21\examples\*.*"                          >> _hbfiles
-echo "hb21\contrib\*.*"                           >> _hbfiles
+echo "%HB_DR%RELNOTES"                              >> _hbfiles
+echo "%HB_DR%INSTALL"                               >> _hbfiles
+echo "%HB_DR%COPYING"                               >> _hbfiles
+echo "%HB_DR%NEWS"                                  >> _hbfiles
+echo "%HB_DR%TODO"                                  >> _hbfiles
+echo "%HB_DR%ChangeLog*"                            >> _hbfiles
+echo "%HB_DR%bin\harbour-%HB_VS%.dll"               >> _hbfiles
+echo "%HB_DR%bin\harbourmt-%HB_VS%.dll"             >> _hbfiles
+echo "%HB_DR%bin\harbour.exe"                       >> _hbfiles
+echo "%HB_DR%bin\hbi18n.exe"                        >> _hbfiles
+echo "%HB_DR%bin\hbmk2.exe"                         >> _hbfiles
+echo "%HB_DR%bin\hbmk2.*.hbl"                       >> _hbfiles
+echo "%HB_DR%bin\hbpp.exe"                          >> _hbfiles
+echo "%HB_DR%bin\hbrun.exe"                         >> _hbfiles
+echo "%HB_DR%bin\hbtest.exe"                        >> _hbfiles
+echo "%HB_DR%bin\hbformat.exe"                      >> _hbfiles
+echo "%HB_DR%bin\hbnetio.exe"                       >> _hbfiles
+if exist "%HB_DR%bin\hbmk.hbc" echo "%HB_DR%bin\hbmk.hbc" >> _hbfiles
+echo "%HB_DR%bin\upx*.*"                            >> _hbfiles
+echo "%HB_DR%include\*.*"                           >> _hbfiles
+echo "%HB_DR%bin\harbour-x64.exe"                   >> _hbfiles
+echo "%HB_DR%bin\hbi18n-x64.exe"                    >> _hbfiles
+echo "%HB_DR%bin\hbmk2-x64.exe"                     >> _hbfiles
+echo "%HB_DR%bin\hbpp-x64.exe"                      >> _hbfiles
+echo "%HB_DR%bin\hbrun-x64.exe"                     >> _hbfiles
+echo "%HB_DR%bin\hbtest-x64.exe"                    >> _hbfiles
+echo "%HB_DR%bin\hbformat-x64.exe"                  >> _hbfiles
+echo "%HB_DR%bin\hbnetio-x64.exe"                   >> _hbfiles
+echo "%HB_DR%lib\win\mingw\*.*"                     >> _hbfiles
+echo "%HB_DR%lib\win\mingw64\*.*"                   >> _hbfiles
+echo "%HB_DR%lib\wce\mingwarm\*.*"                  >> _hbfiles
+echo "%HB_DR%addons\HARBOUR_README_ADDONS"          >> _hbfiles
+rem echo "%HB_DR%comp\djgpp\HARBOUR_README_DJGPP"       >> _hbfiles
+echo "%HB_DR%comp\watcom\HARBOUR_README_WATCOM"     >> _hbfiles
+echo "%HB_DR%comp\pocc\HARBOUR_README_POCC"         >> _hbfiles
+echo "%HB_DR%comp\mingw\HARBOUR_README_MINGW"       >> _hbfiles
+echo "%HB_DR%comp\mingw64\HARBOUR_README_MINGW64"   >> _hbfiles
+echo "%HB_DR%comp\mingwarm\HARBOUR_README_MINGWARM" >> _hbfiles
+rem echo "%HB_DR%lib\dos\djgpp\*.*"                     >> _hbfiles
+echo "%HB_DR%lib\dos\watcom\*.*"                    >> _hbfiles
+echo "%HB_DR%lib\linux\watcom\*.*"                  >> _hbfiles
+echo "%HB_DR%lib\os2\watcom\*.*"                    >> _hbfiles
+echo "%HB_DR%lib\win\msvc\*.*"                      >> _hbfiles
+echo "%HB_DR%lib\win\msvc64\*.*"                    >> _hbfiles
+rem echo "%HB_DR%bin\harbour-20-bcc.dll"                >> _hbfiles
+rem echo "%HB_DR%bin\harbourmt-20-bcc.dll"              >> _hbfiles
+echo "%HB_DR%lib\win\bcc\*.*"                       >> _hbfiles
+echo "%HB_DR%lib\win\watcom\*.*"                    >> _hbfiles
+rem echo "%HB_DR%lib\win\pocc\*.*"                      >> _hbfiles
+rem echo "%HB_DR%lib\win\pocc64\*.*"                    >> _hbfiles
+rem echo "%HB_DR%lib\wce\poccarm\*.*"                   >> _hbfiles
+echo "%HB_DR%bin\harbour-%HB_VS%-x64.dll"                >> _hbfiles
+echo "%HB_DR%bin\harbourmt-%HB_VS%-x64.dll"              >> _hbfiles
+echo "%HB_DR%bin\harbour-%HB_VS%-wce-arm.dll"            >> _hbfiles
+echo "%HB_DR%bin\harbourmt-%HB_VS%-wce-arm.dll"          >> _hbfiles
+rem echo "%HB_DR%bin\harbour-%HB_VS%-os2.dll"                >> _hbfiles
+rem echo "%HB_DR%bin\harbourmt-%HB_VS%-os2.dll"              >> _hbfiles
+echo "%HB_DR%tests\*.*"                             >> _hbfiles
+echo "%HB_DR%doc\*.*"                               >> _hbfiles
+echo "%HB_DR%comp\mingw\*"                          >> _hbfiles
+echo "%HB_DR%examples\*.*"                          >> _hbfiles
+echo "%HB_DR%contrib\*.*"                           >> _hbfiles
 
-if exist %~dp0harbour-2.1.0-win.7z del %~dp0harbour-2.1.0-win.7z
-7za a -r %~dp0harbour-2.1.0-win.7z @_hbfiles >> %~dp0harbour-2.1.0-win-log.txt
+if exist %HB_RT%harbour-%HB_VF%-win.7z del %HB_RT%harbour-%HB_VF%-win.7z
+"%HB_DIR_7Z%7za.exe" a -r %HB_RT%harbour-%HB_VF%-win.7z @_hbfiles >> %HB_RT%harbour-%HB_VF%-win-log.txt
 
 del _hbfiles
 
