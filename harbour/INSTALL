@@ -292,8 +292,10 @@ HARBOUR
    Unified .7z + .exe installer for Windows
    ----------------------------------------
 
-      [ To be completed. All required files and scripts reside in package/winuni.
-        This is a semi-manual process yet. ]
+      > package\winuni\mpkg_win_uni.bat
+
+      NOTE: Please read instructions in file and do the necessary
+            steps before calling the script.
 
 
 4. HOW TO ENABLE OPTIONAL COMPONENTS BEFORE BUILD
@@ -1182,7 +1184,13 @@ HARBOUR
           http://sourceforge.net/projects/harbour-project/files/source/nightly/harbour-nightly.tar.gz/download
           http://sourceforge.net/projects/harbour-project/files/source/nightly/harbour-nightly.tar.bz2/download
 
-   4.) Harbour source download (stable)
+   4.) Harbour nightly binaries (updated once a day from source repository)
+
+       Windows (unified):
+          https://sourceforge.net/projects/harbour-project/files/binaries-windows/nightly/harbour-nightly-win.exe/download
+          https://sourceforge.net/projects/harbour-project/files/binaries-windows/nightly/harbour-nightly-win.7z/download
+
+   5.) Harbour source download (stable)
 
        Download source archive from this page and unpack:
           http://sourceforge.net/project/showfiles.php?group_id=681&package_id=192305

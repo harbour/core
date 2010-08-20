@@ -9,22 +9,46 @@ rem Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
 rem See COPYING for licensing terms.
 rem ---------------------------------------------------------------
 
+rem ---------------------------------------------------------------
+rem REQUIREMENTS FOR BUILD MACHINE:
+rem   - Online 24/7
+rem   - Windows XP or higher
+rem   - 8GB disk space
+rem   - downstream internet traffic 100MB per day
+rem   - upstream internet traffic 100MB per day
+rem   - 1-5hours CPU time per day
+rem   - Multicore CPU recommended
+rem   - admin rights for MSVC setup
+rem   - admin rights for Scheduled Task setup
+rem   - Subversion installed
+rem
+rem NOTES:
+rem   - The first run under a new (or reinstalled) user account
+rem     must be done interactively to confirm server identity
+rem     when doing SCP uploads.
+rem ---------------------------------------------------------------
+
+pushd
+
+cd %~dp0
+
+set _HB_DIR_3RD=%~dp03rd\
+set _HB_DIR_COMP=%~dp0comp\
+set _HB_DIR_TOOL=%~dp0tool\
+
 echo ! Downloading Harbour sources...
 
 if exist harbour rd /q /s harbour
-svn export http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
+%_HB_DIR_TOOL%svn\bin\svn export http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
+if errorlevel 1 goto _EXIT
+cd harbour
 
 echo ! Setting up generic build parameters...
-
-cd harbour
 
 set HB_VF=nightly
 set HB_VL=%HB_VF%
 set HB_RT=%~dp0
 
-set _HB_DIR_3RD=%~dp03rd\
-set _HB_DIR_COMP=%~dp0comp\
-set _HB_DIR_TOOL=%~dp0tool\
 set _HB_MAKE_OPTION=HB_VERSION=%HB_VF%
 set _HB_SFNET_URL=,harbour-project@frs.sourceforge.net:/home/frs/project/h/ha/harbour-project/binaries-windows/nightly/
 
@@ -56,13 +80,15 @@ echo ! Building Harbour...
 setlocal
 echo ! Setting environment for using MinGW GCC
 set PATH=%_HB_DIR_COMP%mingw\bin
-win-make clean install %_HB_MAKE_OPTION% > "%~dp0harbour-nightly-win-mingw.txt" 2>&1
+win-make clean install %_HB_MAKE_OPTION% > "%~dp0harbour-nightly-win-mingw-log.txt" 2>&1
+if errorlevel 1 goto _EXIT
 endlocal
 
 setlocal
 echo ! Setting environment for using Borland C++
 set PATH=%_HB_DIR_COMP%bcc\Bin
-win-make clean install %_HB_MAKE_OPTION% > "%~dp0harbour-nightly-win-bcc.txt" 2>&1
+win-make clean install %_HB_MAKE_OPTION% > "%~dp0harbour-nightly-win-bcc-log.txt" 2>&1
+if errorlevel 1 goto _EXIT
 endlocal
 
 rem setlocal
@@ -71,17 +97,17 @@ rem SET WATCOM=%_HB_DIR_COMP%watcom
 rem SET PATH=%WATCOM%\BINNT;%WATCOM%\BINW
 rem SET EDPATH=%WATCOM%\EDDAT
 rem SET INCLUDE=%WATCOM%\H;%WATCOM%\H\NT
-rem win-make clean install %_HB_MAKE_OPTION% > "%~dp0harbour-nightly-win-watcom.txt" 2>&1
+rem win-make clean install %_HB_MAKE_OPTION% > "%~dp0harbour-nightly-win-watcom-log.txt" 2>&1
 rem endlocal
 
 rem echo ! Uploading Harbour Windows binaries...
 rem
-rem %_HB_DIR_TOOL%pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-mingw.exe  %HB_SFNET_USER%%_HB_SFNET_URL%
-rem %_HB_DIR_TOOL%pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-mingw.zip  %HB_SFNET_USER%%_HB_SFNET_URL%
-rem %_HB_DIR_TOOL%pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-bcc.exe    %HB_SFNET_USER%%_HB_SFNET_URL%
-rem %_HB_DIR_TOOL%pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-bcc.zip    %HB_SFNET_USER%%_HB_SFNET_URL%
-rem %_HB_DIR_TOOL%pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-watcom.exe %HB_SFNET_USER%%_HB_SFNET_URL%
-rem %_HB_DIR_TOOL%pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-watcom.zip %HB_SFNET_USER%%_HB_SFNET_URL%
+rem %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-mingw.exe  %HB_SFNET_USER%%_HB_SFNET_URL%
+rem %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-mingw.zip  %HB_SFNET_USER%%_HB_SFNET_URL%
+rem %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-bcc.exe    %HB_SFNET_USER%%_HB_SFNET_URL%
+rem %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-bcc.zip    %HB_SFNET_USER%%_HB_SFNET_URL%
+rem %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-watcom.exe %HB_SFNET_USER%%_HB_SFNET_URL%
+rem %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-watcom.zip %HB_SFNET_USER%%_HB_SFNET_URL%
 
 echo ! Creating unified Windows package...
 
@@ -89,11 +115,15 @@ call package\winuni\mpkg_win_uni.bat
 
 echo ! Uploading Harbour unified Windows package...
 
-%_HB_DIR_TOOL%pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win.exe        %HB_SFNET_USER%%_HB_SFNET_URL%
-%_HB_DIR_TOOL%pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win.7z         %HB_SFNET_USER%%_HB_SFNET_URL%
-%_HB_DIR_TOOL%pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-log.txt    %HB_SFNET_USER%%_HB_SFNET_URL%
-%_HB_DIR_TOOL%pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-mingw.txt  %HB_SFNET_USER%%_HB_SFNET_URL%
-%_HB_DIR_TOOL%pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-bcc.txt    %HB_SFNET_USER%%_HB_SFNET_URL%
-rem %_HB_DIR_TOOL%pscp.exe -batch -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-watcom.txt %HB_SFNET_USER%%_HB_SFNET_URL%
+%_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win.exe            %HB_SFNET_USER%%_HB_SFNET_URL%
+%_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win.7z             %HB_SFNET_USER%%_HB_SFNET_URL%
+%_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-log.txt        %HB_SFNET_USER%%_HB_SFNET_URL%
+%_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-mingw-log.txt  %HB_SFNET_USER%%_HB_SFNET_URL%
+%_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-bcc-log.txt    %HB_SFNET_USER%%_HB_SFNET_URL%
+rem %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-watcom-log.txt %HB_SFNET_USER%%_HB_SFNET_URL%
+
+:_EXIT
 
 echo ! Finished.
+
+popd
