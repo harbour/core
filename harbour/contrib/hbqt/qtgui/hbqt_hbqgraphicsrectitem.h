@@ -56,12 +56,19 @@
 #include "hbqtgui.h"
 
 #include <QtGui/QGraphicsRectItem>
+#include <QtGui/QGraphicsScene>
 #include <QtGui/QGraphicsSceneDragDropEvent>
 #include <QtGui/QTreeWidget>
+#include <QtGui/QDesktopWidget>
 #include <QtCore/QModelIndex>
 #include <QtCore/QEvent>
 #include <QtCore/QMimeData>
 
+#define RESIZE_MODE_NONE                          0
+#define RESIZE_MODE_LEFT                          1
+#define RESIZE_MODE_TOP                           2
+#define RESIZE_MODE_RIGHT                         4
+#define RESIZE_MODE_BOTTOM                        8
 
 class HBQGraphicsRectItem : public QGraphicsRectItem
 {
@@ -73,18 +80,33 @@ public:
    ~HBQGraphicsRectItem();
 
    PHB_ITEM       block;
+   int            determineResizeMode( const QPointF & pos );
 
 private:
    bool           bYes;
+   int            resizeMode;
+   QRectF         oGeometry;
+   qreal          iWidth;
+   qreal          iHeight;
 
 protected:
    void           dragEnterEvent( QGraphicsSceneDragDropEvent * event );
    void           dragLeaveEvent( QGraphicsSceneDragDropEvent * event );
    void           dragMoveEvent( QGraphicsSceneDragDropEvent * event );
    void           dropEvent( QGraphicsSceneDragDropEvent * event );
+   //
+   void           mousePressEvent( QGraphicsSceneMouseEvent * event );
+   void           mouseReleaseEvent( QGraphicsSceneMouseEvent * event );
+   void           mouseMoveEvent( QGraphicsSceneMouseEvent * event );
 
 public slots:
    void           hbSetBlock( PHB_ITEM block );
+   QRectF         geometry();
+   void           setGeometry( const QRectF & rect );
+   qreal          width() const;
+   void           setWidth( qreal width );
+   qreal          height() const;
+   void           setHeight( qreal height );
 
 };
 

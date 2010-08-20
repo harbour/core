@@ -61,16 +61,19 @@
 HBQGraphicsRectItem::HBQGraphicsRectItem( QGraphicsItem * parent ) : QGraphicsRectItem( parent )
 {
    block = NULL;
+   resizeMode = RESIZE_MODE_NONE;
 }
 
 HBQGraphicsRectItem::HBQGraphicsRectItem( const QRectF & rect, QGraphicsItem * parent ) : QGraphicsRectItem( rect, parent )
 {
    block = NULL;
+   resizeMode = RESIZE_MODE_NONE;
 }
 
 HBQGraphicsRectItem::HBQGraphicsRectItem( qreal x, qreal y, qreal width, qreal height, QGraphicsItem * parent  ) : QGraphicsRectItem( x, y, width, height, parent )
 {
    block = NULL;
+   resizeMode = RESIZE_MODE_NONE;
 }
 
 HBQGraphicsRectItem::~HBQGraphicsRectItem()
@@ -87,6 +90,16 @@ void HBQGraphicsRectItem::hbSetBlock( PHB_ITEM b )
    if( b )
    {
       block = hb_itemNew( b );
+
+      QDesktopWidget * qWid = new QDesktopWidget();
+
+      PHB_ITEM p1 = hb_itemPutNI( NULL, 21001 );
+      PHB_ITEM p2 = hb_itemPutNI( NULL, qWid->screen()->physicalDpiX() );
+      PHB_ITEM p3 = hb_itemPutNI( NULL, qWid->screen()->physicalDpiY() );
+      hb_vmEvalBlockV( block, 3, p1, p2, p3 );
+      hb_itemRelease( p1 );
+      hb_itemRelease( p2 );
+      hb_itemRelease( p3 );
    }
 }
 
@@ -171,6 +184,143 @@ void HBQGraphicsRectItem::dropEvent( QGraphicsSceneDragDropEvent * event )
       }
    }
    QGraphicsItem::dropEvent( event );
+}
+
+void HBQGraphicsRectItem::mousePressEvent( QGraphicsSceneMouseEvent * event )
+{
+   oGeometry = geometry();
+
+   foreach( QGraphicsItem * item, scene()->items() )
+   {
+      if( item->zValue() == 1 ){
+         item->setZValue( 0 );
+      }
+   }
+   setZValue( 1 );
+
+   if( event->buttons() == Qt::LeftButton ){
+      resizeMode = determineResizeMode( event->pos() );
+   }
+   else {
+      resizeMode = RESIZE_MODE_NONE;
+   }
+
+   if( resizeMode == RESIZE_MODE_NONE ){
+      setCursor( QCursor( Qt::ClosedHandCursor ) );
+   }
+
+   QGraphicsItem::mousePressEvent( event );
+
+   if( event->buttons() == Qt::LeftButton ){
+      // emit( itemSelected( this, event->pos() ) );
+   }
+}
+
+void HBQGraphicsRectItem::mouseReleaseEvent( QGraphicsSceneMouseEvent * event )
+{
+   QGraphicsItem::mouseReleaseEvent( event );
+   resizeMode = RESIZE_MODE_NONE;
+
+   QRectF nGeometry = geometry();
+   if( nGeometry != oGeometry ){
+      // emit( geometryChanged( this, nGeometry, oGeometry ) );
+   }
+}
+
+void HBQGraphicsRectItem::mouseMoveEvent( QGraphicsSceneMouseEvent * event )
+{
+   if( event->buttons() == Qt::LeftButton )
+   {
+      if( resizeMode == RESIZE_MODE_NONE ){
+         setPos( pos() + QPoint( ( int ) ( event->scenePos().x() - event->lastScenePos().x() ),
+                                         ( int ) ( event->scenePos().y() - event->lastScenePos().y() ) ) );
+      }
+      else
+      {
+         if( resizeMode & RESIZE_MODE_LEFT ){
+            setPos( pos().x() + event->scenePos().x() - event->lastScenePos().x(), pos().y() );
+            setWidth( width() + event->lastScenePos().x() - event->scenePos().x() );
+         }
+         if( resizeMode & RESIZE_MODE_TOP ){
+            setPos( pos().x(), pos().y() + event->scenePos().y() - event->lastScenePos().y() );
+            setHeight( height() + event->lastScenePos().y() - event->scenePos().y() );
+         }
+         if( resizeMode & RESIZE_MODE_RIGHT ){
+            setWidth( ( int ) ( width() + event->scenePos().x() - event->lastScenePos().x() ) );
+         }
+         if( resizeMode & RESIZE_MODE_BOTTOM ){
+            setHeight( ( int ) ( height() + event->scenePos().y() - event->lastScenePos().y() ) );
+         }
+         if( width() < 5 ){
+            setWidth( 5 );
+         }
+         if( height() < 5 ){
+            setHeight( 5 );
+         }
+      }
+   }
+   QGraphicsItem::mouseMoveEvent( event );
+}
+
+int HBQGraphicsRectItem::determineResizeMode( const QPointF & pos )
+{
+   int resizeModes = RESIZE_MODE_LEFT | RESIZE_MODE_TOP | RESIZE_MODE_RIGHT | RESIZE_MODE_BOTTOM ;
+   int mode = RESIZE_MODE_NONE;
+
+   QRectF topRect( 0, 0, width(), 2 );
+   QRectF leftRect( 0, 0, 2, height() );
+   QRectF bottomRect( 0, height() - 2, width(), 2 );
+   QRectF rightRect( width() - 2, 0, width(), height() );
+
+   if( resizeModes & RESIZE_MODE_LEFT && leftRect.contains( pos ) ){
+      mode |= RESIZE_MODE_LEFT;
+   }
+   if( resizeModes & RESIZE_MODE_TOP && topRect.contains( pos ) ){
+      mode |= RESIZE_MODE_TOP;
+   }
+   if( resizeModes & RESIZE_MODE_RIGHT && rightRect.contains( pos ) ){
+      mode |= RESIZE_MODE_RIGHT;
+   }
+   if( resizeModes & RESIZE_MODE_BOTTOM && bottomRect.contains( pos ) ){
+      mode |= RESIZE_MODE_BOTTOM;
+   }
+   return mode;
+}
+
+QRectF HBQGraphicsRectItem::geometry()
+{
+   return QRectF( pos().x(), pos().y(), width(), height() );
+}
+
+void HBQGraphicsRectItem::setGeometry( const QRectF & rect )
+{
+   setPos( rect.x(), rect.y() );
+   setWidth( rect.width() );
+   setHeight( rect.height() );
+}
+
+void HBQGraphicsRectItem::setWidth( qreal width )
+{
+   // prepareGeometryChange();
+   iWidth = width;
+   //emit( geometryChanged( geometry() ) );
+}
+
+void HBQGraphicsRectItem::setHeight( qreal height )
+{
+   // prepareGeometryChange();
+   iHeight = height;
+   //emit( geometryChanged( geometry() ) );
+}
+
+qreal HBQGraphicsRectItem::width() const
+{
+   return iWidth;
+}
+
+qreal HBQGraphicsRectItem::height() const
+{
+   return iHeight;
 }
 
 #endif

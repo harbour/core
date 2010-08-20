@@ -156,43 +156,48 @@ METHOD IdeToolbar:destroy()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeToolbar:execEvent( cEvent, p, p1 )
-   LOCAL qEvent
+   LOCAL qEvent, qRC
 
-   HB_SYMBOL_UNUSED( p )
+   qEvent := QMouseEvent():from( p )
 
    SWITCH cEvent
    CASE "QEvent_MouseLeave"
       EXIT
+
    CASE "QEvent_MouseMove"
-      ::qByte := QByteArray():new( ::hItems[ p1 ]:objectName() )
+      qRC := QRect():from( ( QRect():new( ::qPos:x() - 5, ::qPos:y() - 5, 10, 10 ) ):normalized() )
 
-      ::qMime := QMimeData():new()
-      ::qMime:setData( "application/x-toolbaricon", ::qByte )
-      //::qMime:setText( ::hItems[ p1 ]:objectName() )
-      ::qMime:setHtml( ::hItems[ p1 ]:objectName() )
+      IF qRC:contains( qEvent:pos() )
+         ::qByte := QByteArray():new( ::hItems[ p1 ]:objectName() )
 
-      //::qPix  := QPixmap():new( hbide_image( "f-generic" ) )
-      ::qPix  := QPixmap():from( QIcon():from( ::hItems[ p1 ]:icon ):pixmap_1( 16,16 ) )
+         ::qMime := QMimeData():new()
+         ::qMime:setData( "application/x-toolbaricon", ::qByte )
+         ::qMime:setHtml( ::hItems[ p1 ]:objectName() )
 
-      ::qDrag := QDrag():new( hbide_setIde():oDlg:oWidget )
-      ::qDrag:setMimeData( ::qMime )
-      ::qDrag:setPixmap( ::qPix )
-      ::qDrag:setHotSpot( QPoint():new( 5,5 ) )
-      ::qDrag:setDragCursor( ::qPix, Qt_MoveAction )
+         ::qPix  := QPixmap():from( QIcon():from( ::hItems[ p1 ]:icon ):pixmap_1( 16,16 ) )
 
-      ::qDropAction := ::qDrag:exec( Qt_MoveAction )
-      ::qDrag := NIL
+         ::qDrag := QDrag():new( hbide_setIde():oDlg:oWidget )
+         ::qDrag:setMimeData( ::qMime )
+         ::qDrag:setPixmap( ::qPix )
+         ::qDrag:setHotSpot( QPoint():new( 15,15 ) )
+         ::qDrag:setDragCursor( ::qPix, Qt_MoveAction )
 
-      qEvent := QMouseEvent():new( QEvent_MouseButtonDblClick, QPoint():new( 1,1 ), Qt_LeftButton, Qt_LeftButton, 0 )
-      QApplication():new():postEvent( ::hItems[ p1 ], qEvent )
+         ::qDropAction := ::qDrag:exec( Qt_MoveAction )
 
+         ::qDrag := NIL
+         ::qPos  := NIL
+         ::hItems[ p1 ]:setChecked( .f. )
+         ::hItems[ p1 ]:setWindowState( 0 )
+      ENDIF
       EXIT
+
    CASE "QEvent_MouseRelease"
 HB_TRACE( HB_TR_ALWAYS, "QEvent_MouseRelease" )
       ::qDrag := NIL
       EXIT
 
    CASE "QEvent_MousePress"
+      ::qPos := QPoint():from( qEvent:pos() )
       EXIT
 
    CASE "buttonNew_clicked"
