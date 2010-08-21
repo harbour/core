@@ -2120,3 +2120,14 @@ FUNCTION hbide_buildToolbarButton( qToolbar, aBtn )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_getNextID( cType )
+
+   STATIC hIDs := {=>}
+
+   IF ! hb_hHasKey( hIDs, cType )
+      hIDs[ cType ] := 0
+   ENDIF
+
+   RETURN ++hIDs[ cType ]
+
+/*----------------------------------------------------------------------*/

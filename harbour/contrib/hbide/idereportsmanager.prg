@@ -155,7 +155,9 @@ CLASS IdeReportsManager INHERIT IdeObject
    METHOD buildDesignReport()
    METHOD setPageSize()
    METHOD setPaper()
-   METHOD addRect( qPos, cType, cName )
+   METHOD addRect( qPos, cType )
+   METHOD addField( qPos, cAlias, cField )
+   METHOD addObject( qPos, cType )
 
    ENDCLASS
 
@@ -438,11 +440,25 @@ METHOD IdeReportsManager:execEvent( cEvent, p, p1, p2 )
 HB_TRACE( HB_TR_ALWAYS, "application/x-toolbaricon", p2[ 1 ], p2[ 2 ], p2[ 3 ] )
             p2[ 2 ] := lower( p2[ 2 ] )
             IF p2[ 2 ] == "rect"
-               ::addRect( QPoint():from( qEvent:scenePos() ), "field" )
+               ::addRect( QPoint():from( qEvent:scenePos() ), "Band" )
             ENDIF
 
          ELSEIF qMime:hasFormat( "application/x-toolbaricon"  )
 HB_TRACE( HB_TR_ALWAYS, "application/x-toolbaricon", qMime:data(), qMime:html() )
+            SWITCH qMime:html()
+            CASE "Image"
+               ::addObject( QPoint():from( qEvent:scenePos() ), "Image"    )
+               EXIT
+            CASE "Chart"
+               ::addObject( QPoint():from( qEvent:scenePos() ), "Chart"    )
+               EXIT
+            CASE "Gradient"
+               ::addObject( QPoint():from( qEvent:scenePos() ), "Gradient" )
+               EXIT
+            CASE "Barcode"
+               ::addObject( QPoint():from( qEvent:scenePos() ), "Barcode"  )
+               EXIT
+            ENDSWITCH
          ELSE
          ENDIF
       ENDCASE
@@ -477,7 +493,7 @@ METHOD IdeReportsManager:setPaper()
 
    ::qPaper := HBQGraphicsRectItem():new()
    ::qPaper:hbSetBlock( {|p,p1,p2| ::execEvent( "graphicsPaper_block", p, p1, p2 ) } )
-   ::qPaper:setFlag( QGraphicsItem_ItemIsMovable, .f. )
+   ::qPaper:setFlag( QGraphicsItem_ItemIsMovable   , .f. )
    ::qPaper:setFlag( QGraphicsItem_ItemIsSelectable, .f. )
    ::qPaper:setAcceptDrops( .t. )
 
@@ -495,22 +511,16 @@ METHOD IdeReportsManager:setPaper()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeReportsManager:addRect( qPos, cType, cName )
-   LOCAL oWidget
-
-   STATIC nID := 0
+METHOD IdeReportsManager:addRect( qPos, cType )
+   LOCAL oWidget, cName
 
    STATIC nW  := 400
    STATIC nH  := 300
 
-   HB_SYMBOL_UNUSED( qPos  )
-   HB_SYMBOL_UNUSED( cType )
-
    nW -= 30
    nH -= 30
 
-   DEFAULT cName TO "Rect_"
-   cName += hb_ntos( ++nID )
+   cName := cType + "_" + hb_ntos( hbide_getNextID( cType ) )
 
    oWidget := HBQGraphicsRectItem():new()
    oWidget:hbSetBlock( {|p,p1,p2| ::execEvent( "graphicsPaper_block", p, p1, p2 ) } )
@@ -530,6 +540,56 @@ METHOD IdeReportsManager:addRect( qPos, cType, cName )
    ENDIF
 
    ::hItems[ cName ] := oWidget
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeReportsManager:addObject( qPos, cType )
+   LOCAL oWidget, cName
+   LOCAL nW := 50
+   LOCAL nH := 30
+
+   cName := cType + "_" + hb_ntos( hbide_getNextID( cType ) )
+
+   oWidget := HBQGraphicsRectItem():new()
+   oWidget:hbSetBlock( {|p,p1,p2| ::execEvent( "graphicsPaper_block", p, p1, p2 ) } )
+   oWidget:setFlag( QGraphicsItem_ItemIsMovable   , .t. )
+   oWidget:setFlag( QGraphicsItem_ItemIsSelectable, .t. )
+   oWidget:setPen( QPen():new( Qt_NoPen ) )
+
+   SWITCH cType
+   CASE "Barcode"
+      oWidget:setBrush( QBrush():new( "QColor", QColor():new( 120,200,245 ) ) )
+      EXIT
+   CASE "Chart"
+      nW := 100 ;  nH := 40
+      oWidget:setBrush( QBrush():new( "QColor", QColor():new( 200,14,127  ) ) )
+      EXIT
+   CASE "Image"
+      nW := 120 ;  nH := 100
+      oWidget:setBrush( QBrush():new( "QColor", QColor():new( 255,180,112 ) ) )
+      EXIT
+   CASE "Gradient"
+      nW := 90 ;  nH := 70
+      oWidget:setBrush( QBrush():new( "QColor", QColor():new( 120,255,145 ) ) )
+      EXIT
+   ENDSWITCH
+
+   ::qScene:addItem( oWidget )
+
+   oWidget:setRect_1( 0, 0, nW, nH )
+   IF !empty( qPos )
+      oWidget:setPos( qPos )
+   ENDIF
+   ::hItems[ cName ] := oWidget
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeReportsManager:addField( qPos, cAlias, cField )
+   HB_SYMBOL_UNUSED( qPos   )
+   HB_SYMBOL_UNUSED( cAlias )
+   HB_SYMBOL_UNUSED( cField )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
