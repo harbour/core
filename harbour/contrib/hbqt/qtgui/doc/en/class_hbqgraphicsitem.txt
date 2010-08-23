@@ -27,6 +27,52 @@
  *     An instance of the object of type HBQGraphicsItem
  *  $METHODS$
  *     :hbSetBlock( xBlock )                               -> NIL
+ *     :pen()                                              -> pQPen
+ *     :setPen( pPen )                                     -> NIL
+ *     :brush()                                            -> pQBrush
+ *     :setBrush( pBrush )                                 -> NIL
+ *     :backgroundBrush()                                  -> pQBrush
+ *     :setBackgroundBrush( pBrush )                       -> NIL
+ *     :font()                                             -> pQFont
+ *     :setFont( pFont )                                   -> NIL
+ *     :lineStyle()                                        -> nInt
+ *     :setLineStyle( nLineStyle )                         -> NIL
+ *     :startAngle()                                       -> nInt
+ *     :setStartAngle( nStartAngle )                       -> NIL
+ *     :spanAngle()                                        -> nInt
+ *     :setSpanAngle( nSpanAngle )                         -> NIL
+ *     :width()                                            -> nQreal
+ *     :setWidth( nWidth )                                 -> NIL
+ *     :height()                                           -> nQreal
+ *     :setHeight( nHeight )                               -> NIL
+ *     :opacity()                                          -> nInt
+ *     :setOpacity( nOpacity )                             -> NIL
+ *     :geometry()                                         -> pQRectF
+ *     :setGeometry( pRect )                               -> NIL
+ *     :objectType()                                       -> cQString
+ *     :setObjectType( cType )                             -> NIL
+ *     :text()                                             -> cQString
+ *     :setText( cType )                                   -> NIL
+ *     :paintType()                                        -> nInt
+ *     :setPaintType( nPaintType )                         -> NIL
+ *     :frameType()                                        -> nInt
+ *     :setFrameType( nFrameType )                         -> NIL
+ *     :drawTextType()                                     -> nInt
+ *     :setDrawTextType( nDrawTextType )                   -> NIL
+ *     :pixmap()                                           -> pQPixmap
+ *     :setPixmap( pPixmap )                               -> NIL
+ *     :textColor()                                        -> pQColor
+ *     :setTextColor( pColor )                             -> NIL
+ *     :borderWidth()                                      -> nInt
+ *     :setBorderWidth( nBWidth )                          -> NIL
+ *     :borderColor()                                      -> pQColor
+ *     :setBorderColor( pColor )                           -> NIL
+ *     :sizePolicy()                                       -> nInt
+ *     :setSizePolicy( nSizePolicy )                       -> NIL
+ *     :textFlags()                                        -> nInt
+ *     :setTextFlags( nTextFlags )                         -> NIL
+ *     :resizeFlags()                                      -> nInt
+ *     :setResizeFlags( nResizeFlags )                     -> NIL
  * 
  *  $DESCRIPTION$
  * 

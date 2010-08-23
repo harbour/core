@@ -68,6 +68,52 @@ CREATE CLASS HBQGraphicsItem INHERIT HbQtObjectHandler, QGraphicsItem
    METHOD  new( ... )
 
    METHOD  hbSetBlock( xBlock )
+   METHOD  pen()
+   METHOD  setPen( pPen )
+   METHOD  brush()
+   METHOD  setBrush( pBrush )
+   METHOD  backgroundBrush()
+   METHOD  setBackgroundBrush( pBrush )
+   METHOD  font()
+   METHOD  setFont( pFont )
+   METHOD  lineStyle()
+   METHOD  setLineStyle( nLineStyle )
+   METHOD  startAngle()
+   METHOD  setStartAngle( nStartAngle )
+   METHOD  spanAngle()
+   METHOD  setSpanAngle( nSpanAngle )
+   METHOD  width()
+   METHOD  setWidth( nWidth )
+   METHOD  height()
+   METHOD  setHeight( nHeight )
+   METHOD  opacity()
+   METHOD  setOpacity( nOpacity )
+   METHOD  geometry()
+   METHOD  setGeometry( pRect )
+   METHOD  objectType()
+   METHOD  setObjectType( cType )
+   METHOD  text()
+   METHOD  setText( cType )
+   METHOD  paintType()
+   METHOD  setPaintType( nPaintType )
+   METHOD  frameType()
+   METHOD  setFrameType( nFrameType )
+   METHOD  drawTextType()
+   METHOD  setDrawTextType( nDrawTextType )
+   METHOD  pixmap()
+   METHOD  setPixmap( pPixmap )
+   METHOD  textColor()
+   METHOD  setTextColor( pColor )
+   METHOD  borderWidth()
+   METHOD  setBorderWidth( nBWidth )
+   METHOD  borderColor()
+   METHOD  setBorderColor( pColor )
+   METHOD  sizePolicy()
+   METHOD  setSizePolicy( nSizePolicy )
+   METHOD  textFlags()
+   METHOD  setTextFlags( nTextFlags )
+   METHOD  resizeFlags()
+   METHOD  setResizeFlags( nResizeFlags )
 
    ENDCLASS
 
@@ -83,4 +129,188 @@ METHOD HBQGraphicsItem:new( ... )
 
 METHOD HBQGraphicsItem:hbSetBlock( xBlock )
    RETURN Qt_HBQGraphicsItem_hbSetBlock( ::pPtr, xBlock )
+
+
+METHOD HBQGraphicsItem:pen()
+   RETURN Qt_HBQGraphicsItem_pen( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setPen( pPen )
+   RETURN Qt_HBQGraphicsItem_setPen( ::pPtr, hbqt_ptr( pPen ) )
+
+
+METHOD HBQGraphicsItem:brush()
+   RETURN Qt_HBQGraphicsItem_brush( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setBrush( pBrush )
+   RETURN Qt_HBQGraphicsItem_setBrush( ::pPtr, hbqt_ptr( pBrush ) )
+
+
+METHOD HBQGraphicsItem:backgroundBrush()
+   RETURN Qt_HBQGraphicsItem_backgroundBrush( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setBackgroundBrush( pBrush )
+   RETURN Qt_HBQGraphicsItem_setBackgroundBrush( ::pPtr, hbqt_ptr( pBrush ) )
+
+
+METHOD HBQGraphicsItem:font()
+   RETURN Qt_HBQGraphicsItem_font( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setFont( pFont )
+   RETURN Qt_HBQGraphicsItem_setFont( ::pPtr, hbqt_ptr( pFont ) )
+
+
+METHOD HBQGraphicsItem:lineStyle()
+   RETURN Qt_HBQGraphicsItem_lineStyle( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setLineStyle( nLineStyle )
+   RETURN Qt_HBQGraphicsItem_setLineStyle( ::pPtr, nLineStyle )
+
+
+METHOD HBQGraphicsItem:startAngle()
+   RETURN Qt_HBQGraphicsItem_startAngle( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setStartAngle( nStartAngle )
+   RETURN Qt_HBQGraphicsItem_setStartAngle( ::pPtr, nStartAngle )
+
+
+METHOD HBQGraphicsItem:spanAngle()
+   RETURN Qt_HBQGraphicsItem_spanAngle( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setSpanAngle( nSpanAngle )
+   RETURN Qt_HBQGraphicsItem_setSpanAngle( ::pPtr, nSpanAngle )
+
+
+METHOD HBQGraphicsItem:width()
+   RETURN Qt_HBQGraphicsItem_width( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setWidth( nWidth )
+   RETURN Qt_HBQGraphicsItem_setWidth( ::pPtr, nWidth )
+
+
+METHOD HBQGraphicsItem:height()
+   RETURN Qt_HBQGraphicsItem_height( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setHeight( nHeight )
+   RETURN Qt_HBQGraphicsItem_setHeight( ::pPtr, nHeight )
+
+
+METHOD HBQGraphicsItem:opacity()
+   RETURN Qt_HBQGraphicsItem_opacity( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setOpacity( nOpacity )
+   RETURN Qt_HBQGraphicsItem_setOpacity( ::pPtr, nOpacity )
+
+
+METHOD HBQGraphicsItem:geometry()
+   RETURN Qt_HBQGraphicsItem_geometry( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setGeometry( pRect )
+   RETURN Qt_HBQGraphicsItem_setGeometry( ::pPtr, hbqt_ptr( pRect ) )
+
+
+METHOD HBQGraphicsItem:objectType()
+   RETURN Qt_HBQGraphicsItem_objectType( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setObjectType( cType )
+   RETURN Qt_HBQGraphicsItem_setObjectType( ::pPtr, cType )
+
+
+METHOD HBQGraphicsItem:text()
+   RETURN Qt_HBQGraphicsItem_text( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setText( cType )
+   RETURN Qt_HBQGraphicsItem_setText( ::pPtr, cType )
+
+
+METHOD HBQGraphicsItem:paintType()
+   RETURN Qt_HBQGraphicsItem_paintType( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setPaintType( nPaintType )
+   RETURN Qt_HBQGraphicsItem_setPaintType( ::pPtr, nPaintType )
+
+
+METHOD HBQGraphicsItem:frameType()
+   RETURN Qt_HBQGraphicsItem_frameType( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setFrameType( nFrameType )
+   RETURN Qt_HBQGraphicsItem_setFrameType( ::pPtr, nFrameType )
+
+
+METHOD HBQGraphicsItem:drawTextType()
+   RETURN Qt_HBQGraphicsItem_drawTextType( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setDrawTextType( nDrawTextType )
+   RETURN Qt_HBQGraphicsItem_setDrawTextType( ::pPtr, nDrawTextType )
+
+
+METHOD HBQGraphicsItem:pixmap()
+   RETURN Qt_HBQGraphicsItem_pixmap( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setPixmap( pPixmap )
+   RETURN Qt_HBQGraphicsItem_setPixmap( ::pPtr, hbqt_ptr( pPixmap ) )
+
+
+METHOD HBQGraphicsItem:textColor()
+   RETURN Qt_HBQGraphicsItem_textColor( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setTextColor( pColor )
+   RETURN Qt_HBQGraphicsItem_setTextColor( ::pPtr, hbqt_ptr( pColor ) )
+
+
+METHOD HBQGraphicsItem:borderWidth()
+   RETURN Qt_HBQGraphicsItem_borderWidth( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setBorderWidth( nBWidth )
+   RETURN Qt_HBQGraphicsItem_setBorderWidth( ::pPtr, nBWidth )
+
+
+METHOD HBQGraphicsItem:borderColor()
+   RETURN Qt_HBQGraphicsItem_borderColor( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setBorderColor( pColor )
+   RETURN Qt_HBQGraphicsItem_setBorderColor( ::pPtr, hbqt_ptr( pColor ) )
+
+
+METHOD HBQGraphicsItem:sizePolicy()
+   RETURN Qt_HBQGraphicsItem_sizePolicy( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setSizePolicy( nSizePolicy )
+   RETURN Qt_HBQGraphicsItem_setSizePolicy( ::pPtr, nSizePolicy )
+
+
+METHOD HBQGraphicsItem:textFlags()
+   RETURN Qt_HBQGraphicsItem_textFlags( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setTextFlags( nTextFlags )
+   RETURN Qt_HBQGraphicsItem_setTextFlags( ::pPtr, nTextFlags )
+
+
+METHOD HBQGraphicsItem:resizeFlags()
+   RETURN Qt_HBQGraphicsItem_resizeFlags( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setResizeFlags( nResizeFlags )
+   RETURN Qt_HBQGraphicsItem_setResizeFlags( ::pPtr, nResizeFlags )
 

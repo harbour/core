@@ -10,6 +10,7 @@ g/filelist.hbm
 hbqt_hbqabstractitemmodel.cpp
 hbqt_hbqgraphicsitem.cpp
 hbqt_hbqgraphicsrectitem.cpp
+hbqt_hbqgraphicsscene.cpp
 hbqt_hbqmainwindow.cpp
 hbqt_hbqplaintextedit.cpp
 hbqt_hbqsyntaxhighlighter.cpp
@@ -17,6 +18,7 @@ hbqt_hbqtableview.cpp
 hbqt_utils.cpp
 
 hbqt_hbqabstractitemmodel.h
+hbqt_hbqgraphicsscene.h
 hbqt_hbqmainwindow.h
 hbqt_hbqplaintextedit.h
 hbqt_hbqsyntaxhighlighter.h

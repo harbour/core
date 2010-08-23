@@ -57,8 +57,8 @@
 <CLASS>
 QObject  = no
 Inherit  = QGraphicsItem
-Type     = 
-New      = 
+Type     =
+New      =
 </CLASS>
 
 <CODE>
@@ -72,7 +72,17 @@ New      =
  */
 HB_FUNC( QT_HBQGRAPHICSITEM )
 {
-  // hb_retptr( new HBQGraphicsItem() );
+   if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
+   {
+      hb_retptr( new HBQGraphicsItem( hb_parni( 1 ) ) );
+   }
+   else if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISPOINTER( 2 ) )
+   {
+      hb_retptr( new HBQGraphicsItem( hb_parni( 1 ), hbqt_par_QGraphicsItem( 2 ) ) );
+   }
+   else                                                                          {
+      hb_retptr( new HBQGraphicsItem() );
+   }
 }
 </CODE>
 
@@ -80,7 +90,56 @@ HB_FUNC( QT_HBQGRAPHICSITEM )
 </ENUMS>
 
 <PROTOS>
-void hbSetBlock( PHB_ITEM block )
+   void           hbSetBlock( PHB_ITEM block )
+
+   QPen           pen()
+   void           setPen( const QPen & pen )
+   QBrush         brush()
+   void           setBrush( const QBrush & brush )
+   QBrush         backgroundBrush()
+   void           setBackgroundBrush( const QBrush & brush )
+   QFont          font()
+   void           setFont( const QFont & font )
+   int            lineStyle()
+   void           setLineStyle( int lineStyle )
+   int            startAngle()
+   void           setStartAngle( int startAngle )
+   int            spanAngle()
+   void           setSpanAngle( int spanAngle )
+   qreal          width() const
+   void           setWidth( qreal width )
+   qreal          height() const
+   void           setHeight( qreal height )
+   int            opacity()
+   void           setOpacity( const int opacity )
+   QRectF         geometry()
+   void           setGeometry( const QRectF & rect )
+   QString        objectType()
+   void           setObjectType( const QString & type )
+   QString        text()
+   void           setText( const QString & type )
+
+   int            paintType()
+   void           setPaintType( int paintType )
+   int            frameType()
+   void           setFrameType( int frameType )
+   int            drawTextType()
+   void           setDrawTextType( int drawTextType )
+   QPixmap        pixmap()
+   void           setPixmap( const QPixmap & pixmap )
+   QColor         textColor()
+   void           setTextColor( const QColor & color )
+   int            borderWidth()
+   void           setBorderWidth( int bWidth )
+   QColor         borderColor()
+   void           setBorderColor( const QColor & color )
+   int            sizePolicy()
+   void           setSizePolicy( int sizePolicy )
+   int            textFlags()
+   void           setTextFlags( int textFlags )
+   int            resizeFlags()
+   void           setResizeFlags( int resizeFlags )
+
 </PROTOS>
 
 <SLOTS>

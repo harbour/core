@@ -56,19 +56,130 @@
 #include "hbqtgui.h"
 
 #include <QtGui/QGraphicsItem>
+#include <QtGui/QStyleOptionGraphicsItem>
+#include <QtGui/QGraphicsScene>
+#include <QtGui/QGraphicsSceneMouseEvent>
+#include <QtGui/QPainter>
+#include <QtGui/QWidget>
+#include <QtGui/QTreeWidget>
+#include <QtGui/QDesktopWidget>
+#include <QtCore/QModelIndex>
+#include <QtCore/QEvent>
+#include <QtCore/QMimeData>
+
+#define UNIT                                      0.1
+
+#define RESIZE_MODE_FIXED                         0
+#define RESIZE_MODE_LEFT                          1
+#define RESIZE_MODE_TOP                           2
+#define RESIZE_MODE_RIGHT                         4
+#define RESIZE_MODE_BOTTOM                        8
+#define RESIZE_MODE_FIXEDPOS                      16
+
+#define HBQT_GRAPHICSITEM_NONE                    0
+#define HBQT_GRAPHICSITEM_RECT                    1
+#define HBQT_GRAPHICSITEM_LINE                    2
+#define HBQT_GRAPHICSITEM_ELLIPSE                 3
+#define HBQT_GRAPHICSITEM_ARC                     4
+#define HBQT_GRAPHICSITEM_CHORD                   5
+#define HBQT_GRAPHICSITEM_POLYGON                 6
+#define HBQT_GRAPHICSITEM_PIE                     7
+#define HBQT_GRAPHICSITEM_PATH                    8
+#define HBQT_GRAPHICSITEM_CHART                   9
+#define HBQT_GRAPHICSITEM_GRADIENT                10
+#define HBQT_GRAPHICSITEM_PICTURE                 11
+#define HBQT_GRAPHICSITEM_BARCODE                 12
+#define HBQT_GRAPHICSITEM_TEXT                    13
+#define HBQT_GRAPHICSITEM_SIMPLETEXT              14
+
+#define HBQT_GRAPHICSITEM_LINE_HORIZONTAL         0
+#define HBQT_GRAPHICSITEM_LINE_VERTICAL           1
+#define HBQT_GRAPHICSITEM_LINE_BACKWARDDIAGONAL   2
+#define HBQT_GRAPHICSITEM_LINE_FORWARDDIAGONAL    3
+
+#define HBQT_GRAPHICSITEM_TEXT_DRAW_NONE          0
+#define HBQT_GRAPHICSITEM_TEXT_DRAW_TOP           1
+#define HBQT_GRAPHICSITEM_TEXT_DRAW_BOTTOM        2
+#define HBQT_GRAPHICSITEM_TEXT_DRAW_ABOVE         3
+#define HBQT_GRAPHICSITEM_TEXT_DRAW_BELOW         4
+
+#define HBQT_GRAPHICSITEM_TEXT_SIZEPOLICY_NONE    0
+#define HBQT_GRAPHICSITEM_TEXT_SIZEPOLICY_AUTO    1
+#define HBQT_GRAPHICSITEM_TEXT_SIZEPOLICY_STRETCH 2
+
+#define HBQT_GRAPHICSITEM_IMAGE_NO_FRAME          0
+#define HBQT_GRAPHICSITEM_IMAGE_PICTURE_BIND      1
+#define HBQT_GRAPHICSITEM_IMAGE_PICTURE_BOX       2
+
+#define HBQT_GRAPHICSITEM_RESIZE_ITEM_TO_PICTURE  1
+#define HBQT_GRAPHICSITEM_CENTER_PICTURE_TO_ITEM  2
+#define HBQT_GRAPHICSITEM_RESIZE_PICTURE_TO_ITEM_KEEP_ASPECT_RATIO     3
+#define HBQT_GRAPHICSITEM_RESIZE_PICTURE_TO_ITEM_IGNORE_ASPECT_RATIO   4
+
+#define hbqt_screen_heightMM (((double)QDesktopWidget().screen()->height() / (double)QDesktopWidget().screen()->physicalDpiY() )*25.4)
+#define hbqt_screen_widthMM  (((double)QDesktopWidget().screen()->width()  / (double)QDesktopWidget().screen()->physicalDpiX() )*25.4)
 
 
 class HBQGraphicsItem : public QGraphicsItem
 {
 
 public:
-   HBQGraphicsItem( QGraphicsItem * parent = 0 );
+   HBQGraphicsItem( int type = 0, QGraphicsItem * parent = 0 );
    ~HBQGraphicsItem();
+
+   QRectF         boundingRect() const;
+   virtual void   paint( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
 
    PHB_ITEM       block;
 
+   int            determineResizeMode( const QPointF & pos );
+   QRectF         adjustRect( QRectF & rect );
+   virtual void   prepare( QPainter * painter );
+   void           drawSelection( QPainter * painter, QRectF rect );
+   void           setupPainter( QPainter * painter );
+
 private:
+   int            iType;
    bool           bYes;
+
+   QBrush         QBrush_brush, QBrush_bgBrush;
+   QPen           QPen_pen;
+   QFont          QFont_font;
+   qreal          dWidth, dHeight;
+   QRectF         QRectF_geometry;
+   int            iOpacity;
+   int            iResizeMode;
+   int            iResizeFlags;
+   bool           bDrawSelectionBorder;
+   int            iResizeHandle;
+   int            iBGMode;
+   int            iLineStyle;
+   int            iStartAngle;
+   int            iSpanAngle;
+   QString        QString_objectType;
+   QString        QString_text;
+
+   /* Image */
+   int            m_paintType;
+   int            m_frameType;
+   int            m_drawTextType;
+   QImage         m_image;
+   QColor         m_textColor;
+   QColor         m_borderColor;
+   int            m_borderWidth;
+   int            m_sizePolicy;
+   int            m_textFlags;
+
+   QRectF         adjustOption( QPainter * painter, const QStyleOptionGraphicsItem * option );
+   //
+   void           drawRect( QPainter * painter, const QStyleOptionGraphicsItem * option );
+   void           drawEllipse( QPainter * painter, const QStyleOptionGraphicsItem * option );
+   void           drawLine( QPainter * painter, const QStyleOptionGraphicsItem * option );
+   void           drawPie( QPainter * painter, const QStyleOptionGraphicsItem * option );
+   void           drawArc( QPainter * painter, const QStyleOptionGraphicsItem * option );
+   void           drawChord( QPainter * painter, const QStyleOptionGraphicsItem * option );
+   void           drawPicture( QPainter * painter, const QStyleOptionGraphicsItem * option );
+   void           drawText( QPainter * painter, const QStyleOptionGraphicsItem * option );
 
 protected:
    void           dragEnterEvent( QGraphicsSceneDragDropEvent * event );
@@ -76,8 +187,63 @@ protected:
    void           dragMoveEvent( QGraphicsSceneDragDropEvent * event );
    void           dropEvent( QGraphicsSceneDragDropEvent * event );
 
+   void           hoverEnterEvent( QGraphicsSceneHoverEvent * event );
+
+   void           mousePressEvent( QGraphicsSceneMouseEvent * event );
+   void           mouseReleaseEvent( QGraphicsSceneMouseEvent * event );
+   void           mouseMoveEvent( QGraphicsSceneMouseEvent * event );
+
+
 public slots:
    void           hbSetBlock( PHB_ITEM block );
+
+   QPen           pen();
+   void           setPen( const QPen & pen );
+   QBrush         brush();
+   void           setBrush( const QBrush & brush );
+   QBrush         backgroundBrush();
+   void           setBackgroundBrush( const QBrush & brush );
+   QFont          font();
+   void           setFont( const QFont & font );
+   int            lineStyle();
+   void           setLineStyle( int lineStyle );
+   int            startAngle();
+   void           setStartAngle( int startAngle );
+   int            spanAngle();
+   void           setSpanAngle( int spanAngle );
+   qreal          width() const;
+   void           setWidth( qreal width );
+   qreal          height() const;
+   void           setHeight( qreal height );
+   int            opacity();
+   void           setOpacity( const int opacity );
+   QRectF         geometry();
+   void           setGeometry( const QRectF & rect );
+   QString        objectType();
+   void           setObjectType( const QString & type );
+   QString        text();
+   void           setText( const QString & text );
+
+   int            paintType();
+   void           setPaintType( int paintType );
+   int            frameType();
+   void           setFrameType( int frameType );
+   int            drawTextType();
+   void           setDrawTextType( int drawTextType );
+   QPixmap        pixmap();
+   void           setPixmap( const QPixmap & pixmap );
+   QColor         textColor();
+   void           setTextColor( const QColor & color );
+   int            borderWidth();
+   void           setBorderWidth( int bWidth );
+   QColor         borderColor();
+   void           setBorderColor( const QColor & color );
+   int            sizePolicy();
+   void           setSizePolicy( int sizePolicy );
+   int            textFlags();
+   void           setTextFlags( int textFlags );
+   int            resizeFlags();
+   void           setResizeFlags( int resizeFlags );
 
 };
 

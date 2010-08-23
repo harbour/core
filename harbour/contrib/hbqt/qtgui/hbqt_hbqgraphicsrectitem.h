@@ -99,6 +99,8 @@ protected:
    void           mouseReleaseEvent( QGraphicsSceneMouseEvent * event );
    void           mouseMoveEvent( QGraphicsSceneMouseEvent * event );
 
+   void           hoverEnterEvent( QGraphicsSceneHoverEvent * event );
+
 public slots:
    void           hbSetBlock( PHB_ITEM block );
    QRectF         geometry();

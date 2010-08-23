@@ -153,11 +153,11 @@ CLASS IdeReportsManager INHERIT IdeObject
    METHOD buildStatusBar()
    METHOD buildTabBar()
    METHOD buildDesignReport()
-   METHOD setPageSize()
-   METHOD setPaper()
-   METHOD addRect( qPos, cType )
    METHOD addField( qPos, cAlias, cField )
    METHOD addObject( qPos, cType )
+   METHOD loadReport( cName )
+   METHOD saveReport()
+   METHOD prepareReport()
 
    ENDCLASS
 
@@ -234,7 +234,6 @@ METHOD IdeReportsManager:show()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeReportsManager:buildDesignReport()
-   STATIC qItem, qItmC
 
    ::qLayoutD := QHBoxLayout():new()
    ::qLayoutD:setContentsMargins( 0,0,0,0 )
@@ -249,13 +248,14 @@ METHOD IdeReportsManager:buildDesignReport()
    ::qFrameL := QFrame():new()
    ::qSpliter:addWidget( ::qFrameL )
 
-   ::qScroll := QScrollArea():new()
-   ::qScroll:setVerticalScrollBarPolicy( Qt_ScrollBarAsNeeded )
-   ::qScroll:setHorizontalScrollBarPolicy( Qt_ScrollBarAsNeeded )
-   ::qScroll:setWidgetResizable( .f. )
-   ::qScroll:setMinimumWidth( 400 )
-   ::qScroll:setBackgroundRole( QPalette_Dark )
-   ::qSpliter:addWidget( ::qScroll )
+   ::qScene := HBQGraphicsScene():new()
+   ::qScene:hbSetBlock( {|p,p1,p2| ::execEvent( "graphicsScene_block", p, p1, p2 ) } )
+
+   ::qView := QGraphicsView():new( ::qDesign )
+   ::qView:setMouseTracking( .t. )
+   ::qView:setScene( ::qScene )
+   //
+   ::qSpliter:addWidget( ::qView )
 
    ::qFrameR := QFrame():new()
    ::qSpliter:addWidget( ::qFrameR )
@@ -335,45 +335,12 @@ METHOD IdeReportsManager:buildDesignReport()
    ::qTreeData := QTreeWidget():new()
    ::qPageR11Lay:addWidget( ::qTreeData )
    ::qTreeData:setHeaderHidden( .t. )
-   ::qTreeData:setObjectName( "TreeData" )
-   //
-   qItem := QTreeWidgetItem():new()
-   qItem:setText( 0, "Rect" )
-   ::qTreeData:addTopLevelItem( qItem )
-   qItmC := QTreeWidgetItem():new()
-   qItmC:setText( 0, "Rounded Rect" )
-   qItem:addChild( qItmC )
-   qItem:setExpanded( .t. )
-   //
-   qItem := QTreeWidgetItem():new()
-   qItem:setText( 0, "Circle" )
-   //
-   ::qTreeData:addTopLevelItem( qItem )
-   //
+   ::qTreeData:setObjectName( "DataTree" )
    ::qTreeData:setDragEnabled( .t. )
 
-   ::setPageSize()
+   ::loadReport()
 
-   ::qDesign := QFrame():new()
-   ::qScroll:setWidget( ::qDesign )
-   ::qDesign:setBackgroundRole( QPalette_Dark )
-   ::qDesign:setGeometry( QRect():new( 0, 0, ::nPgWidth + 60, ::nPgHeight + 60 ) )
-
-   ::qHRuler := QFrame():new( ::qDesign )
-   ::qHRuler:setGeometry( QRect():new( 30, 0, ::qDesign:width(), 15 ) )
-   ::qHRuler:setStyleSheet( "background-color: rgb(240,240,240);" )
-   ::qVRuler := QFrame():new( ::qDesign )
-   ::qVRuler:setStyleSheet( "background-color: rgb(240,240,240);" )
-   ::qVRuler:setGeometry( QRect():new( 0, 30, 15, ::qDesign:height() ) )
-
-   ::qView := QGraphicsView():new( ::qDesign )
-   ::qView:setGeometry( QRect():new( 30, 30, ::nPgWidth+5, ::nPgHeight+5 ) )
-
-   ::qScene := QGraphicsScene():new( ::qView )
-
-   ::qView:setScene( ::qScene )
-   ::qScene:setSceneRect_1( 0, 0, ::nPgWidth, ::nPgHeight )
-   ::setPaper()
+   ::qScene:zoomWYSIWYG()
 
    ::qWidget1:show()
    ::qWidget2:show()
@@ -383,30 +350,43 @@ METHOD IdeReportsManager:buildDesignReport()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeReportsManager:setPageSize()
-   LOCAL p, r, o
+METHOD IdeReportsManager:loadReport( cName )
+   LOCAL aSource, qItem, qItmC, aFld, a_, i, b_
 
-   o := HBQGraphicsRectItem():new()
-   o:hbSetBlock( {|p,p1,p2| ::execEvent( "graphicsPaper_block", p, p1, p2 ) } )
-   o := NIL
+   HB_SYMBOL_UNUSED( cName )
 
-   p := QPrinter():new()
+   /* All data must be requested from Application based on report definition */
+   aSource := {}
+   aadd( aSource, { "Customer", { { "Title" ,"C",35,0 }, { "Street","C",20,0 }, { "Revenue","N",12,2 } }, {} } )
+   aadd( aSource, { "Invoice" , { { "Number","C",10,0 }, { "Date"  ,"D",08,0 }, { "Amount" ,"N",12,2 } }, {} } )
 
-   p:setPaperSize( QPrinter_A4 )
-   p:setOutputFormat( QPrinter_PdfFormat )
-   p:setOrientation( QPrinter_Portrait )
+   FOR i := 1 TO len( aSource )
+      a_:= aSource[ i ]
 
-   p:setFullPage( .t. )
-   r := QRectF():from( p:paperRect_1( QPrinter_Millimeter ) )
+      qItem := QTreeWidgetItem():new()
+      qItem:setText( 0, a_[ 1 ] )    // Source Name
+      ::qTreeData:addTopLevelItem( qItem )
 
-   ::nPgWidth  := r:width()  * ::nHPxMM
-   ::nPgHeight := r:height() * ::nVPxMM
+      aFld := a_[ 2 ]
+      FOR EACH b_ IN aFld
+         qItmC := QTreeWidgetItem():new()
+         qItmC:setText( 0, b_[ 1 ] )
+         qItem:addChild( qItmC )
+         qItem:setExpanded( .t. )
+      NEXT
+   NEXT
 
-   p:setFullPage( .f. )
-   r := QRectF():from( p:paperRect_1( QPrinter_Millimeter ) )
+   RETURN Self
 
-   ::nPgWidthP  := r:width()  * ::nHPxMM
-   ::nPgHeightP := r:height() * ::nVPxMM
+/*----------------------------------------------------------------------*/
+
+METHOD IdeReportsManager:saveReport()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeReportsManager:prepareReport()
 
    RETURN Self
 
@@ -416,13 +396,7 @@ METHOD IdeReportsManager:execEvent( cEvent, p, p1, p2 )
    LOCAL qEvent, qMime
 
    SWITCH cEvent
-   CASE "graphicsPaper_block"
-      IF p == 21001
-         ::nHPxMM := p1 / 25.4
-         ::nVPxMM := p2 / 25.4
-         RETURN Self
-      ENDIF
-
+   CASE "graphicsScene_block"
       qEvent := QGraphicsSceneDragDropEvent():from( p1 )
 
       DO CASE
@@ -437,14 +411,13 @@ METHOD IdeReportsManager:execEvent( cEvent, p, p1, p2 )
       CASE p == QEvent_GraphicsSceneDrop
          qMime := QMimeData():from( qEvent:mimeData() )
          IF qMime:hasFormat( "application/x-qabstractitemmodeldatalist" )
-HB_TRACE( HB_TR_ALWAYS, "application/x-toolbaricon", p2[ 1 ], p2[ 2 ], p2[ 3 ] )
-            p2[ 2 ] := lower( p2[ 2 ] )
-            IF p2[ 2 ] == "rect"
-               ::addRect( QPoint():from( qEvent:scenePos() ), "Band" )
+            IF p2[ 1 ] == "DataTree"
+               IF p2[ 2 ] != p2[ 3 ]
+                  ::addField( QPoint():from( qEvent:scenePos() ), p2[ 2 ], p2[ 3 ] )
+               ENDIF
             ENDIF
 
          ELSEIF qMime:hasFormat( "application/x-toolbaricon"  )
-HB_TRACE( HB_TR_ALWAYS, "application/x-toolbaricon", qMime:data(), qMime:html() )
             SWITCH qMime:html()
             CASE "Image"
                ::addObject( QPoint():from( qEvent:scenePos() ), "Image"    )
@@ -458,12 +431,16 @@ HB_TRACE( HB_TR_ALWAYS, "application/x-toolbaricon", qMime:data(), qMime:html() 
             CASE "Barcode"
                ::addObject( QPoint():from( qEvent:scenePos() ), "Barcode"  )
                EXIT
+            CASE "Text"
+               ::addObject( QPoint():from( qEvent:scenePos() ), "Text"     )
+               EXIT
             ENDSWITCH
          ELSE
          ENDIF
       ENDCASE
 
       EXIT
+
    CASE "tabBar_currentChanged"
       IF !empty( ::qStack ) .AND. p < ::qStack:count()
          ::qStack:setCurrentIndex( p )
@@ -479,105 +456,72 @@ HB_TRACE( HB_TR_ALWAYS, "application/x-toolbaricon", qMime:data(), qMime:html() 
       EXIT
    CASE "buttonPrint_clicked"
       EXIT
-
+   CASE "buttonGrid_clicked"
+      ::qScene:setShowGrid( ::qToolbarAlign:setItemChecked( "Grid" ) )
+      EXIT
+   CASE "buttonZoom_clicked"
+      DO CASE
+      CASE p == 1
+         ::qScene:zoomIn()
+      CASE p == 2
+         ::qScene:zoomOut()
+      CASE p == 3
+         ::qScene:zoomWYSIWYG()
+      CASE p == 4
+         ::qScene:zoomOriginal()
+      ENDCASE
+      EXIT
    ENDSWITCH
 
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeReportsManager:setPaper()
-   LOCAL qPen   := QPen():new( "QColor", QColor():new( 0,240,255 ) )
-   LOCAL qBrush := QBrush():new( "QColor", QColor():new( 245,245,245 ) )
-   LOCAL nOffW, nOffH
-
-   ::qPaper := HBQGraphicsRectItem():new()
-   ::qPaper:hbSetBlock( {|p,p1,p2| ::execEvent( "graphicsPaper_block", p, p1, p2 ) } )
-   ::qPaper:setFlag( QGraphicsItem_ItemIsMovable   , .f. )
-   ::qPaper:setFlag( QGraphicsItem_ItemIsSelectable, .f. )
-   ::qPaper:setAcceptDrops( .t. )
-
-   ::qPaper:setPen( qPen )
-   ::qPaper:setBrush( qBrush )
-
-   nOffW := ::nHPxMM * 10 // 10 mm
-   nOffH := ::nVPxMM * 10 // 10 MM
-
-   ::qPaper:setRect_1( nOffW, nOffH, ::nPgWidth - nOffW * 2, ::nPgHeight - nOffH * 2 )
-
-   ::qScene:addItem( ::qPaper )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeReportsManager:addRect( qPos, cType )
-   LOCAL oWidget, cName
-
-   STATIC nW  := 400
-   STATIC nH  := 300
-
-   nW -= 30
-   nH -= 30
-
-   cName := cType + "_" + hb_ntos( hbide_getNextID( cType ) )
-
-   oWidget := HBQGraphicsRectItem():new()
-   oWidget:hbSetBlock( {|p,p1,p2| ::execEvent( "graphicsPaper_block", p, p1, p2 ) } )
-   oWidget:setFlag( QGraphicsItem_ItemIsMovable   , .t. )
-   oWidget:setFlag( QGraphicsItem_ItemIsSelectable, .t. )
- * oWidget:setFlag( QGraphicsItem_ItemClipsChildrenToShape, .t. )
- * oWidget:setAcceptDrops( .t. )
- * oWidget:setAcceptHoverEvents( .t. )
- * oWidget:setPen( ::qPen )
- * oWidget:setBrush( ::qBrush )
-
-   ::qScene:addItem( oWidget )
-
-   oWidget:setRect_1( 0, 0, nW, nH )
-   IF !empty( qPos )
-      oWidget:setPos( qPos )
-   ENDIF
-
-   ::hItems[ cName ] := oWidget
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeReportsManager:addObject( qPos, cType )
-   LOCAL oWidget, cName
-   LOCAL nW := 50
-   LOCAL nH := 30
+   LOCAL oWidget, cName, nW, nH, qGrad
 
    cName := cType + "_" + hb_ntos( hbide_getNextID( cType ) )
 
-   oWidget := HBQGraphicsRectItem():new()
-   oWidget:hbSetBlock( {|p,p1,p2| ::execEvent( "graphicsPaper_block", p, p1, p2 ) } )
-   oWidget:setFlag( QGraphicsItem_ItemIsMovable   , .t. )
-   oWidget:setFlag( QGraphicsItem_ItemIsSelectable, .t. )
-   oWidget:setPen( QPen():new( Qt_NoPen ) )
-
    SWITCH cType
-   CASE "Barcode"
-      oWidget:setBrush( QBrush():new( "QColor", QColor():new( 120,200,245 ) ) )
+   CASE "Image"
+      oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_PICTURE )
+      nW := 300 ;  nH := 300
+      oWidget:setBrush( QBrush():new( "QColor", QColor():new( 255,180,112 ) ) )
+      oWidget:setPixmap( QPixmap():new( hbide_image( "hbide" ) ) )
       EXIT
    CASE "Chart"
-      nW := 100 ;  nH := 40
-      oWidget:setBrush( QBrush():new( "QColor", QColor():new( 200,14,127  ) ) )
-      EXIT
-   CASE "Image"
-      nW := 120 ;  nH := 100
-      oWidget:setBrush( QBrush():new( "QColor", QColor():new( 255,180,112 ) ) )
+      oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_ELLIPSE )
+      nW := 300 ;  nH := 200
+      oWidget:setBrush( QBrush():new( "QColor", QColor():new( 200,114,127  ) ) )
       EXIT
    CASE "Gradient"
-      nW := 90 ;  nH := 70
-      oWidget:setBrush( QBrush():new( "QColor", QColor():new( 120,255,145 ) ) )
+      qGrad := QLinearGradient():new( 0, 0, 100, 100 )
+      qGrad:setColorAt( 0, QColor():new( 195,225,255 ) )
+      qGrad:setColorAt( 1, QColor():new( Qt_black    ) )
+
+      oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_RECT )
+      nW := 300 ;  nH := 50
+      oWidget:setBrush( QBrush():new( "QGradient", qGrad ) )
+      oWidget:setPen( QPen():new( Qt_NoPen ) )
+      EXIT
+   CASE "Barcode"
+      oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_RECT )
+      nW := 300 ;  nH := 200
+      oWidget:setBrush( QBrush():new( "QColor", QColor():new( 120,200,245 ) ) )
+      EXIT
+   CASE "Text"
+      oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_SIMPLETEXT )
+      nW := 300 ;  nH := 50
+      oWidget:setBrush( QBrush():new( "QColor", QColor():new( 200,200,245 ) ) )
+      oWidget:setText( "Harbour" )
       EXIT
    ENDSWITCH
 
+   oWidget:hbSetBlock( {|p,p1,p2| ::execEvent( "graphicsPaper_block", p, p1, p2 ) } )
+
    ::qScene:addItem( oWidget )
 
-   oWidget:setRect_1( 0, 0, nW, nH )
+   oWidget:setGeometry( QRectF():new( 0, 0, nW, nH ) )
    IF !empty( qPos )
       oWidget:setPos( qPos )
    ENDIF
@@ -587,9 +531,21 @@ METHOD IdeReportsManager:addObject( qPos, cType )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeReportsManager:addField( qPos, cAlias, cField )
-   HB_SYMBOL_UNUSED( qPos   )
-   HB_SYMBOL_UNUSED( cAlias )
-   HB_SYMBOL_UNUSED( cField )
+   LOCAL oWidget, nW := 300, nH := 50
+   LOCAL cName := cAlias + "..." + cField
+
+   oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_SIMPLETEXT )
+   oWidget:setText( cName )
+   oWidget:hbSetBlock( {|p,p1,p2| ::execEvent( "graphicsPaper_block", p, p1, p2 ) } )
+   oWidget:setGeometry( QRectF():new( 0, 0, nW, nH ) )
+
+   ::qScene:addItem( oWidget )
+
+   IF !empty( qPos )
+      oWidget:setPos( qPos )
+   ENDIF
+   ::hItems[ cName ] := oWidget
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -675,6 +631,15 @@ METHOD IdeReportsManager:buildToolbarAlign()
    ::qToolbarAlign:addToolButton( "BoxP"   , "No box-frame"      , hbide_image( "f_box_plain"     ), {|| ::execEvent( "button_clicked" ) } )
    ::qToolbarAlign:addToolButton( "BoxS"   , "Box shadowed"      , hbide_image( "f_box_shadow"    ), {|| ::execEvent( "button_clicked" ) } )
    ::qToolbarAlign:addSeparator()
+   ::qToolbarAlign:addToolButton( "ZoomIn" , "Zoom In"           , hbide_image( "zoomin3"         ), {|| ::execEvent( "buttonZoom_clicked", 1 ) } )
+   ::qToolbarAlign:addToolButton( "ZoomOut", "Zoom Out"          , hbide_image( "zoomout3"        ), {|| ::execEvent( "buttonZoom_clicked", 2 ) } )
+   ::qToolbarAlign:addToolButton( "ZoomWYS", "Zoom WYSIWYG"      , hbide_image( "zoomin"          ), {|| ::execEvent( "buttonZoom_clicked", 3 ) } )
+   ::qToolbarAlign:addToolButton( "ZoomOrg", "Zoom Original"     , hbide_image( "zoomout"         ), {|| ::execEvent( "buttonZoom_clicked", 4 ) } )
+   ::qToolbarAlign:addSeparator()
+   ::qToolbarAlign:addToolButton( "Grid"   , "Show Grid"         , hbide_image( "grid"            ), {|| ::execEvent( "buttonGrid_clicked", 4 ) }, .t., .f. )
+   ::qToolbarAlign:addSeparator()
+
+   ::qToolbarAlign:setItemChecked( "Grid", .t. )
 
    RETURN Self
 
@@ -690,6 +655,7 @@ METHOD IdeReportsManager:buildToolbarLeft()
    ::qToolbarL:addToolButton( "Chart"   , "Chart"   , hbide_image( "f_chart"    ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
    ::qToolbarL:addToolButton( "Gradient", "Gradient", hbide_image( "f_gradient" ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
    ::qToolbarL:addToolButton( "Barcode" , "Barcode" , hbide_image( "f_barcode"  ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
+   ::qToolbarL:addToolButton( "Text"    , "Text"    , hbide_image( "text"       ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
 
    RETURN Self
 
@@ -721,4 +687,5 @@ METHOD IdeReportsManager:buildStatusBar()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
 

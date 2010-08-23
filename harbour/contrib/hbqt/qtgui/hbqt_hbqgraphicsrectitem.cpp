@@ -233,7 +233,7 @@ void HBQGraphicsRectItem::mouseMoveEvent( QGraphicsSceneMouseEvent * event )
    {
       if( resizeMode == RESIZE_MODE_NONE ){
          setPos( pos() + QPoint( ( int ) ( event->scenePos().x() - event->lastScenePos().x() ),
-                                         ( int ) ( event->scenePos().y() - event->lastScenePos().y() ) ) );
+                                 ( int ) ( event->scenePos().y() - event->lastScenePos().y() ) ) );
       }
       else
       {
@@ -262,6 +262,13 @@ void HBQGraphicsRectItem::mouseMoveEvent( QGraphicsSceneMouseEvent * event )
    QGraphicsItem::mouseMoveEvent( event );
 }
 
+void HBQGraphicsRectItem::hoverEnterEvent( QGraphicsSceneHoverEvent * event )
+{
+HB_TRACE( HB_TR_ALWAYS, ( "hoverEnter" ) );
+   determineResizeMode( event->pos() );
+   QGraphicsItem::hoverEnterEvent( event );
+}
+
 int HBQGraphicsRectItem::determineResizeMode( const QPointF & pos )
 {
    int resizeModes = RESIZE_MODE_LEFT | RESIZE_MODE_TOP | RESIZE_MODE_RIGHT | RESIZE_MODE_BOTTOM ;
@@ -274,6 +281,7 @@ int HBQGraphicsRectItem::determineResizeMode( const QPointF & pos )
 
    if( resizeModes & RESIZE_MODE_LEFT && leftRect.contains( pos ) ){
       mode |= RESIZE_MODE_LEFT;
+      setCursor( QCursor( Qt::SizeHorCursor ) );
    }
    if( resizeModes & RESIZE_MODE_TOP && topRect.contains( pos ) ){
       mode |= RESIZE_MODE_TOP;
