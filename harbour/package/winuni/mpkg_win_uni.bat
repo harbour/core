@@ -47,15 +47,10 @@ xcopy /y /s    %~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\lib         
 xcopy /y /s    %~dp0..\..\pkg\win\watcom\harbour-%HB_VF%-win-watcom\lib                   %HB_ABSROOT%lib\
 
 xcopy /y       %~dp0..\..\pkg\wce\mingwarm\harbour-%HB_VF%-wce-mingwarm\bin\*.dll         %HB_ABSROOT%bin\
-xcopy /y       %~dp0..\..\pkg\win\bcc\harbour-%HB_VF%-win-bcc\bin\*.dll                   %HB_ABSROOT%bin\
 xcopy /y       %~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\bin\*.dll             %HB_ABSROOT%bin\
 
 rem ; Create special implibs for Borland (requires BCC in PATH)
-"%HB_DIR_BCC_IMPLIB%implib.exe" -c -a %HB_ABSROOT%lib\win\bcc\harbour-%HB_VS%-bcc.lib   %HB_ABSROOT%bin\harbour-%HB_VS%.dll
-"%HB_DIR_BCC_IMPLIB%implib.exe" -c -a %HB_ABSROOT%lib\win\bcc\harbourmt-%HB_VS%-bcc.lib %HB_ABSROOT%bin\harbourmt-%HB_VS%.dll
-
-del %HB_ABSROOT%bin\harbour-%HB_VS%-bcc.dll
-del %HB_ABSROOT%bin\harbourmt-%HB_VS%-bcc.dll
+for %%a in ( %HB_ABSROOT%bin\*-%HB_VS%.dll ) do "%HB_DIR_BCC_IMPLIB%implib.exe" -c -a %HB_ABSROOT%lib\win\bcc\%~na-bcc.lib %%a
 
 rem ; Using msvc64 because mingw64 .dll handling is broken.
  copy /y       %~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\bin\harbour.exe       %HB_ABSROOT%bin\harbour-x64.exe

@@ -21,6 +21,7 @@ rem   - Multicore CPU recommended
 rem   - admin rights for MSVC setup
 rem   - admin rights for Scheduled Task setup
 rem   - Subversion installed
+rem   - remote admin (via RDC or VNC protocol)
 rem
 rem NOTES:
 rem   - The first run under a new (or reinstalled) user account
