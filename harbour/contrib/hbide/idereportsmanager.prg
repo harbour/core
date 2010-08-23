@@ -133,13 +133,7 @@ CLASS IdeReportsManager INHERIT IdeObject
    DATA   aStatusPnls                             INIT {}
    DATA   aItems                                  INIT {}
    DATA   hItems                                  INIT {=>}
-
-   DATA   nHPxMM                                  INIT 96 / 25.4
-   DATA   nVPxMM                                  INIT 96 / 25.4
-   DATA   nPgWidth
-   DATA   nPgWidthP
-   DATA   nPgHeight
-   DATA   nPgHeightP
+   DATA   hObjTree                                INIT {=>}
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -158,6 +152,7 @@ CLASS IdeReportsManager INHERIT IdeObject
    METHOD loadReport( cName )
    METHOD saveReport()
    METHOD prepareReport()
+   METHOD updateObjectsTree( cType, cParent, cName )
 
    ENDCLASS
 
@@ -295,6 +290,7 @@ METHOD IdeReportsManager:buildDesignReport()
    ::qTreeObjects := QTreeWidget():new()
    ::qPageL01Lay:addWidget( ::qTreeObjects )
    ::qTreeObjects:setHeaderHidden( .t. )
+   ::qTreeObjects:setObjectName( "ObjectsTree" )
 
 
    ::qTabL1 := QTabWidget():new()
@@ -312,6 +308,7 @@ METHOD IdeReportsManager:buildDesignReport()
    ::qTreeProp := QTreeWidget():new()
    ::qPageL11Lay:addWidget( ::qTreeProp )
    ::qTreeProp:setHeaderHidden( .t. )
+   ::qTreeProp:setObjectName( "PropertiesTree" )
 
 
    ::qEditDesc := QTextEdit():new()
@@ -350,10 +347,45 @@ METHOD IdeReportsManager:buildDesignReport()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeReportsManager:updateObjectsTree( cType, cParent, cName )
+   LOCAL qParent, qItem
+
+   DO CASE
+   CASE cType == "ReportName"
+      qItem := QTreeWidgetItem():new() ; qItem:setText( 0, cName )
+      ::qTreeObjects:addTopLevelItem( qItem )
+      ::hObjTree[ cName ] := qItem
+      qItem:setExpanded( .t. )
+
+   CASE cType == "Page" .OR. cType == "Object" .OR. cType == "Field"
+      IF hb_hHasKey( ::hObjTree, cParent )
+         qParent := ::hObjTree[ cParent ]
+      ENDIF
+      IF !empty( qParent )
+         IF hb_hHasKey( ::hObjTree, cName )
+            //
+         ENDIF
+         qItem := QTreeWidgetItem():new() ; qItem:setText( 0, cName )
+         qParent:addChild( qItem )
+         ::hObjTree[ cName ] := qItem
+
+         qParent:setExpanded( .t. )
+      ENDIF
+
+
+   ENDCASE
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeReportsManager:loadReport( cName )
    LOCAL aSource, qItem, qItmC, aFld, a_, i, b_
 
-   HB_SYMBOL_UNUSED( cName )
+   DEFAULT cName TO "Report"
+
+   ::updateObjectsTree( "ReportName", NIL, cName )
+   ::updateObjectsTree( "Page", cName, "Page_1" )
 
    /* All data must be requested from Application based on report definition */
    aSource := {}
@@ -517,6 +549,7 @@ METHOD IdeReportsManager:addObject( qPos, cType )
       EXIT
    ENDSWITCH
 
+   oWidget:setTooltip( cName )
    oWidget:hbSetBlock( {|p,p1,p2| ::execEvent( "graphicsPaper_block", p, p1, p2 ) } )
 
    ::qScene:addItem( oWidget )
@@ -526,6 +559,8 @@ METHOD IdeReportsManager:addObject( qPos, cType )
       oWidget:setPos( qPos )
    ENDIF
    ::hItems[ cName ] := oWidget
+   ::updateObjectsTree( "Object", "Page_1", cName )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -534,10 +569,13 @@ METHOD IdeReportsManager:addField( qPos, cAlias, cField )
    LOCAL oWidget, nW := 300, nH := 50
    LOCAL cName := cAlias + "..." + cField
 
+   cName := cName + "_" + hb_ntos( hbide_getNextID( cName ) )
+
    oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_SIMPLETEXT )
    oWidget:setText( cName )
    oWidget:hbSetBlock( {|p,p1,p2| ::execEvent( "graphicsPaper_block", p, p1, p2 ) } )
    oWidget:setGeometry( QRectF():new( 0, 0, nW, nH ) )
+   oWidget:setTooltip( cName )
 
    ::qScene:addItem( oWidget )
 
@@ -545,6 +583,8 @@ METHOD IdeReportsManager:addField( qPos, cAlias, cField )
       oWidget:setPos( qPos )
    ENDIF
    ::hItems[ cName ] := oWidget
+
+   ::updateObjectsTree( "Field", "Page_1", cName )
 
    RETURN Self
 
@@ -558,7 +598,7 @@ METHOD IdeReportsManager:buildTabBar()
 
    ::qTabBar:addTab( "Code"    )
    ::qTabBar:addTab( "Dialogs" )
-   ::qTabBar:addTab( "Page1"   )
+   ::qTabBar:addTab( "Page_1"  )
 
    ::connect( ::qTabBar, "currentChanged(int)", {|p| ::execEvent( "tabBar_currentChanged", p ) } )
 
