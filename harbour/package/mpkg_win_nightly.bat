@@ -64,6 +64,7 @@ set HB_DIR_BCC_IMPLIB=%_HB_DIR_COMP%bcc\Bin\
 set HB_DIR_MINGW=%_HB_DIR_COMP%mingw
 
 set HB_WITH_ADS=%_HB_DIR_3RD%ads\acesdk
+set HB_WITH_ALLEGRO=%_HB_DIR_3RD%allegro\include
 set HB_WITH_BLAT=%_HB_DIR_3RD%blat\full\source
 set HB_WITH_CAIRO=%_HB_DIR_3RD%cairo\include\cairo
 set HB_WITH_CURL=%_HB_DIR_3RD%curl\include
