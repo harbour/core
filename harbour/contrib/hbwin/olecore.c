@@ -1326,7 +1326,10 @@ HB_FUNC( __OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
          lOleError = GetActiveObject( HB_ID_REF( ClassID ), NULL, &pUnk );
 
          if ( lOleError == S_OK )
+         {
             lOleError = HB_VTBL( pUnk )->QueryInterface( HB_THIS_( pUnk ) HB_ID_REF( iid ), ( void** ) ( void * ) &pDisp );
+            HB_VTBL( pUnk )->Release( HB_THIS( pUnk ) );
+         }
       }
    }
    else
