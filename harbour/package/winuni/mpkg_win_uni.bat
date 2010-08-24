@@ -50,7 +50,7 @@ xcopy /y       %~dp0..\..\pkg\wce\mingwarm\harbour-%HB_VF%-wce-mingwarm\bin\*.dl
 xcopy /y       %~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\bin\*.dll             %HB_ABSROOT%bin\
 
 rem ; Create special implibs for Borland (requires BCC in PATH)
-for %%a in ( %HB_ABSROOT%bin\*-%HB_VS%.dll ) do "%HB_DIR_BCC_IMPLIB%implib.exe" -c -a %HB_ABSROOT%lib\win\bcc\%~na-bcc.lib %%a
+for %%a in ( %HB_ABSROOT%bin\*-%HB_VS%.dll ) do "%HB_DIR_BCC_IMPLIB%implib.exe" -c -a %HB_ABSROOT%lib\win\bcc\%%~na-bcc.lib %%a
 
 rem ; Using msvc64 because mingw64 .dll handling is broken.
  copy /y       %~dp0..\..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\bin\harbour.exe       %HB_ABSROOT%bin\harbour-x64.exe
