@@ -77,6 +77,17 @@
  *     :setResizeFlags( nResizeFlags )                     -> NIL
  *     :resizeHandle()                                     -> nInt
  *     :setResizeHandle( nResizeHandle )                   -> NIL
+ *     :barsIdentation()                                   -> nInt
+ *     :setBarsIdentation( nBarsIdentation )               -> NIL
+ *     :drawBorder()                                       -> lBool
+ *     :setDrawBorder( lDrawBorder )                       -> NIL
+ *     :showGrid()                                         -> lBool
+ *     :setShowGrid( lShowGrid )                           -> NIL
+ *     :showLabels()                                       -> lBool
+ *     :setShowLabels( lShowLabels )                       -> NIL
+ *     :toColorFactor()                                    -> nQreal
+ *     :setToColorFactor( nToColorFactor )                 -> NIL
+ *     :setBarValues( pList )                              -> NIL
  * 
  *  $DESCRIPTION$
  * 

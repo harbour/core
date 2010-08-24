@@ -864,6 +864,160 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETRESIZEHANDLE )
    }
 }
 
+/*
+ * int            barsIdentation()
+ */
+HB_FUNC( QT_HBQGRAPHICSITEM_BARSIDENTATION )
+{
+   HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
+   if( p )
+      hb_retni( ( p )->barsIdentation() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_BARSIDENTATION FP=hb_retni( ( p )->barsIdentation() ); p is NULL" ) );
+   }
+}
+
+/*
+ * void           setBarsIdentation( int barsIdentation )
+ */
+HB_FUNC( QT_HBQGRAPHICSITEM_SETBARSIDENTATION )
+{
+   HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
+   if( p )
+      ( p )->setBarsIdentation( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETBARSIDENTATION FP=( p )->setBarsIdentation( hb_parni( 2 ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * bool           drawBorder()
+ */
+HB_FUNC( QT_HBQGRAPHICSITEM_DRAWBORDER )
+{
+   HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
+   if( p )
+      hb_retl( ( p )->drawBorder() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_DRAWBORDER FP=hb_retl( ( p )->drawBorder() ); p is NULL" ) );
+   }
+}
+
+/*
+ * void           setDrawBorder( bool drawBorder )
+ */
+HB_FUNC( QT_HBQGRAPHICSITEM_SETDRAWBORDER )
+{
+   HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
+   if( p )
+      ( p )->setDrawBorder( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETDRAWBORDER FP=( p )->setDrawBorder( hb_parl( 2 ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * bool           showGrid()
+ */
+HB_FUNC( QT_HBQGRAPHICSITEM_SHOWGRID )
+{
+   HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
+   if( p )
+      hb_retl( ( p )->showGrid() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SHOWGRID FP=hb_retl( ( p )->showGrid() ); p is NULL" ) );
+   }
+}
+
+/*
+ * void           setShowGrid( bool showGrid )
+ */
+HB_FUNC( QT_HBQGRAPHICSITEM_SETSHOWGRID )
+{
+   HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
+   if( p )
+      ( p )->setShowGrid( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETSHOWGRID FP=( p )->setShowGrid( hb_parl( 2 ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * bool           showLabels()
+ */
+HB_FUNC( QT_HBQGRAPHICSITEM_SHOWLABELS )
+{
+   HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
+   if( p )
+      hb_retl( ( p )->showLabels() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SHOWLABELS FP=hb_retl( ( p )->showLabels() ); p is NULL" ) );
+   }
+}
+
+/*
+ * void           setShowLabels( bool showLabels )
+ */
+HB_FUNC( QT_HBQGRAPHICSITEM_SETSHOWLABELS )
+{
+   HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
+   if( p )
+      ( p )->setShowLabels( hb_parl( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETSHOWLABELS FP=( p )->setShowLabels( hb_parl( 2 ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * qreal          toColorFactor()
+ */
+HB_FUNC( QT_HBQGRAPHICSITEM_TOCOLORFACTOR )
+{
+   HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
+   if( p )
+      hb_retnd( ( p )->toColorFactor() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_TOCOLORFACTOR FP=hb_retnd( ( p )->toColorFactor() ); p is NULL" ) );
+   }
+}
+
+/*
+ * void           setToColorFactor( qreal toColorFactor )
+ */
+HB_FUNC( QT_HBQGRAPHICSITEM_SETTOCOLORFACTOR )
+{
+   HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
+   if( p )
+      ( p )->setToColorFactor( hb_parnd( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETTOCOLORFACTOR FP=( p )->setToColorFactor( hb_parnd( 2 ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * void           setBarValues( const QStringList & list )
+ */
+HB_FUNC( QT_HBQGRAPHICSITEM_SETBARVALUES )
+{
+   HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
+   if( p )
+      ( p )->setBarValues( *hbqt_par_QStringList( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETBARVALUES FP=( p )->setBarValues( *hbqt_par_QStringList( 2 ) ); p is NULL" ) );
+   }
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

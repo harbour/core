@@ -171,6 +171,14 @@ private:
    int            m_sizePolicy;
    int            m_textFlags;
 
+   int            m_barsIdentation;
+   bool           m_showLabels;
+   qreal          m_toColorFactor;
+   bool           m_drawBorder;
+   bool           m_showGrid;
+   QStringList    m_barValues;
+
+   QColor         generateNextColor();
    QRectF         adjustOption( QPainter * painter, const QStyleOptionGraphicsItem * option );
    //
    void           drawRect( QPainter * painter, const QStyleOptionGraphicsItem * option );
@@ -181,6 +189,8 @@ private:
    void           drawChord( QPainter * painter, const QStyleOptionGraphicsItem * option );
    void           drawPicture( QPainter * painter, const QStyleOptionGraphicsItem * option );
    void           drawText( QPainter * painter, const QStyleOptionGraphicsItem * option );
+   void           drawBarChart( QPainter * painter, const QStyleOptionGraphicsItem * option );
+   void           drawBarcode39( QPainter * painter, const QStyleOptionGraphicsItem * option );
 
 protected:
    void           dragEnterEvent( QGraphicsSceneDragDropEvent * event );
@@ -250,6 +260,24 @@ public slots:
    int            resizeHandle();
    void           setResizeHandle( int resizeHandle );
 
+   int            barsIdentation();
+   void           setBarsIdentation( int barsIdentation );
+   bool           drawBorder();
+   void           setDrawBorder( bool drawBorder );
+   bool           showGrid();
+   void           setShowGrid( bool showGrid );
+   bool           showLabels();
+   void           setShowLabels( bool showLabels );
+   qreal          toColorFactor();
+   void           setToColorFactor( qreal toColorFactor );
+   void           setBarValues( const QStringList & list );
+
+   struct _chartValue
+   {
+      QString key;
+      qreal value;
+      QColor color;
+   };
 };
 
 #endif

@@ -118,6 +118,17 @@ CREATE CLASS HBQGraphicsItem INHERIT HbQtObjectHandler, QGraphicsItem
    METHOD  setResizeFlags( nResizeFlags )
    METHOD  resizeHandle()
    METHOD  setResizeHandle( nResizeHandle )
+   METHOD  barsIdentation()
+   METHOD  setBarsIdentation( nBarsIdentation )
+   METHOD  drawBorder()
+   METHOD  setDrawBorder( lDrawBorder )
+   METHOD  showGrid()
+   METHOD  setShowGrid( lShowGrid )
+   METHOD  showLabels()
+   METHOD  setShowLabels( lShowLabels )
+   METHOD  toColorFactor()
+   METHOD  setToColorFactor( nToColorFactor )
+   METHOD  setBarValues( pList )
 
    ENDCLASS
 
@@ -333,4 +344,48 @@ METHOD HBQGraphicsItem:resizeHandle()
 
 METHOD HBQGraphicsItem:setResizeHandle( nResizeHandle )
    RETURN Qt_HBQGraphicsItem_setResizeHandle( ::pPtr, nResizeHandle )
+
+
+METHOD HBQGraphicsItem:barsIdentation()
+   RETURN Qt_HBQGraphicsItem_barsIdentation( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setBarsIdentation( nBarsIdentation )
+   RETURN Qt_HBQGraphicsItem_setBarsIdentation( ::pPtr, nBarsIdentation )
+
+
+METHOD HBQGraphicsItem:drawBorder()
+   RETURN Qt_HBQGraphicsItem_drawBorder( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setDrawBorder( lDrawBorder )
+   RETURN Qt_HBQGraphicsItem_setDrawBorder( ::pPtr, lDrawBorder )
+
+
+METHOD HBQGraphicsItem:showGrid()
+   RETURN Qt_HBQGraphicsItem_showGrid( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setShowGrid( lShowGrid )
+   RETURN Qt_HBQGraphicsItem_setShowGrid( ::pPtr, lShowGrid )
+
+
+METHOD HBQGraphicsItem:showLabels()
+   RETURN Qt_HBQGraphicsItem_showLabels( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setShowLabels( lShowLabels )
+   RETURN Qt_HBQGraphicsItem_setShowLabels( ::pPtr, lShowLabels )
+
+
+METHOD HBQGraphicsItem:toColorFactor()
+   RETURN Qt_HBQGraphicsItem_toColorFactor( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setToColorFactor( nToColorFactor )
+   RETURN Qt_HBQGraphicsItem_setToColorFactor( ::pPtr, nToColorFactor )
+
+
+METHOD HBQGraphicsItem:setBarValues( pList )
+   RETURN Qt_HBQGraphicsItem_setBarValues( ::pPtr, hbqt_ptr( pList ) )
 

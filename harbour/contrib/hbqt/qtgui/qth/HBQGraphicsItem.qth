@@ -144,6 +144,18 @@ HB_FUNC( QT_HBQGRAPHICSITEM )
    int            resizeHandle()
    void           setResizeHandle( int resizeHandle )
 
+   int            barsIdentation()
+   void           setBarsIdentation( int barsIdentation )
+   bool           drawBorder()
+   void           setDrawBorder( bool drawBorder )
+   bool           showGrid()
+   void           setShowGrid( bool showGrid )
+   bool           showLabels()
+   void           setShowLabels( bool showLabels )
+   qreal          toColorFactor()
+   void           setToColorFactor( qreal toColorFactor )
+   void           setBarValues( const QStringList & list )
+
 </PROTOS>
 
 <SLOTS>

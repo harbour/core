@@ -63,6 +63,8 @@
 
 #include "hbqt_hbqgraphicsitem.h"
 
+#include <math.h>
+
 HBQGraphicsItem::HBQGraphicsItem( int type, QGraphicsItem * parent ) : QGraphicsItem( parent )
 {
    iType = type;
@@ -105,6 +107,14 @@ HBQGraphicsItem::HBQGraphicsItem( int type, QGraphicsItem * parent ) : QGraphics
    m_borderColor        = Qt::black;
    m_borderWidth        = 0;
    m_drawTextType       = HBQT_GRAPHICSITEM_TEXT_DRAW_NONE;
+
+   m_barsIdentation     = 1 / UNIT;
+   m_showLabels         = true;
+   m_toColorFactor      = 2;
+   m_drawBorder         = true;
+   m_showGrid           = true;
+
+//   m_barValues          = NULL;
 }
 
 HBQGraphicsItem::~HBQGraphicsItem()
@@ -392,13 +402,79 @@ void HBQGraphicsItem::setResizeHandle( int resizeHandle )
 {
    iResizeHandle = resizeHandle;
 #if 0
-   if( m_minWidth < m_resizeHandle * 2 + 1 )
-      m_minWidth = m_resizeHandle * 2 + 1;
+   if( m_minWidth < iResizeHandle * 2 + 1 )
+      m_minWidth = iResizeHandle * 2 + 1;
 
-   if( m_minHeight < m_resizeHandle * 2 + 1 )
-      m_minHeight = m_resizeHandle * 2 + 1;
+   if( m_minHeight < iResizeHandle * 2 + 1 )
+      m_minHeight = iResizeHandle * 2 + 1;
 #endif
    update( boundingRect() );
+}
+
+int HBQGraphicsItem::barsIdentation()
+{
+   return m_barsIdentation;
+}
+void HBQGraphicsItem::setBarsIdentation(int barsIdentation)
+{
+   if( barsIdentation < 1 )
+      barsIdentation = 1;
+   m_barsIdentation = barsIdentation;
+   update();
+}
+
+bool HBQGraphicsItem::showLabels()
+{
+   return m_showLabels;
+}
+void HBQGraphicsItem::setShowLabels( bool showLabels )
+{
+   m_showLabels = showLabels;
+   update();
+}
+
+bool HBQGraphicsItem::showGrid()
+{
+   return m_showGrid;
+}
+void HBQGraphicsItem::setShowGrid( bool showGrid )
+{
+   m_showGrid = showGrid;
+   update();
+}
+
+qreal HBQGraphicsItem::toColorFactor()
+{
+   return m_toColorFactor;
+}
+void HBQGraphicsItem::setToColorFactor( qreal toColorFactor )
+{
+   if( toColorFactor > 10 )
+      toColorFactor = 10;
+   if( toColorFactor < 0.1 )
+      toColorFactor = 0.1;
+   m_toColorFactor = toColorFactor;
+   update();
+}
+
+bool HBQGraphicsItem::drawBorder()
+{
+   return m_drawBorder;
+}
+void HBQGraphicsItem::setDrawBorder( bool drawBorder )
+{
+   m_drawBorder = drawBorder;
+   update();
+}
+
+QColor HBQGraphicsItem::generateNextColor()
+{
+   return QColor( qrand() % 255, qrand() % 255, qrand() % 255, 255 );
+}
+
+void HBQGraphicsItem::setBarValues( const QStringList & barValues )
+{
+   m_barValues = barValues;
 }
 
 /*----------------------------------------------------------------------*/
@@ -720,6 +796,7 @@ void HBQGraphicsItem::paint( QPainter * painter, const QStyleOptionGraphicsItem 
    case HBQT_GRAPHICSITEM_PATH       :
       break;
    case HBQT_GRAPHICSITEM_CHART      :
+      drawBarChart( painter, option );
       break;
    case HBQT_GRAPHICSITEM_GRADIENT   :
       break;
@@ -727,6 +804,7 @@ void HBQGraphicsItem::paint( QPainter * painter, const QStyleOptionGraphicsItem 
       drawPicture( painter, option );
       break;
    case HBQT_GRAPHICSITEM_BARCODE    :
+      drawBarcode39( painter, option );
       break;
    case HBQT_GRAPHICSITEM_TEXT       :
       break;
@@ -1020,5 +1098,167 @@ void HBQGraphicsItem::drawText( QPainter * painter, const QStyleOptionGraphicsIt
    painter->drawText( rect, textFlags(), QString_text );
 }
 /*----------------------------------------------------------------------*/
+
+void HBQGraphicsItem::drawBarChart( QPainter * painter, const QStyleOptionGraphicsItem * option )
+{
+   QList< _chartValue > val;
+
+   PHB_ITEM values = NULL;
+   if( block )
+   {
+      // Get Values from Application
+   }
+   if( values == NULL )
+   {
+      _chartValue v;
+
+      v.key   = "Bananas";
+      v.value = 120.0;
+      v.color = generateNextColor();
+      val << v;
+
+      v.key   = "Oranges";
+      v.value = 150.0;
+      v.color = generateNextColor();
+      val << v;
+
+      v.key   = "Mangoes";
+      v.value = 40.0;
+      v.color = generateNextColor();
+      val << v;
+   }
+
+   if( ! val.size() ){
+      return;
+   }
+
+   QRectF rect = adjustOption( painter, option );
+
+   qreal maxpv = 0;
+   qreal minnv = 0;
+   foreach( _chartValue cv, val )
+   {
+      if( cv.value > 0 && cv.value > maxpv )
+         maxpv = cv.value;
+
+      if( cv.value < 0 && cv.value < minnv )
+         minnv = cv.value;
+   }
+
+   qreal absMaxVal = maxpv - minnv;
+   qreal powVal = ( absMaxVal < 1 ) ? pow( 10.0, QString::number( absMaxVal ).right( QString::number( absMaxVal ).indexOf( '.' ) ).length() + 1 ) : 1;
+   maxpv *= powVal;
+   minnv *= powVal;
+
+   maxpv = ( quint64 ) maxpv;
+   minnv = ( quint64 )( -minnv );
+   minnv = -minnv;
+
+   painter->fillRect( rect,brush() );
+
+   if( m_drawBorder )
+      painter->drawRect( rect );
+
+   int pw = abs( pen().widthF() ) ? abs( pen().widthF() ) : 1;
+   QRectF rc = rect.adjusted( pw / 2, pw / 2, -pw, -pw );
+
+   qreal f = 2;
+
+   qreal chartStep = pow( 10.0, ( QString::number( absMaxVal ).left( QString::number( absMaxVal ).indexOf( '.' ) ).length() ) - 1 ) / f;
+   qreal powStep = ( chartStep < 1 ) ? 10 : 1;
+   chartStep *= powStep;
+   maxpv *= powStep;
+   minnv *= powStep;
+   powVal *= powStep;
+
+   maxpv = maxpv + ( ( (  ( quint64 ) maxpv % ( quint64 ) chartStep ) ? ( ( quint64 ) chartStep - (  ( quint64 ) maxpv % ( quint64 ) chartStep ) ) : 0 ) ) / powVal;
+   minnv = minnv - ( ( ( -( quint64 ) minnv % ( quint64 ) chartStep ) ? ( ( quint64 ) chartStep - ( -( quint64 ) minnv % ( quint64 ) chartStep ) ) : 0 ) ) / powVal;
+   quint64 maxVal = maxpv - minnv;
+
+   qreal maxHeight = rc.height() - painter->fontMetrics().height();
+   qreal valstep = maxHeight / ( maxVal / chartStep );
+
+   if( valstep < painter->fontMetrics().height() )
+   {
+      chartStep *= ( ( ( quint64 ) ( painter->fontMetrics().height() / valstep ) ) + 1 );
+      valstep = ( ( ( quint64 ) ( painter->fontMetrics().height() / valstep ) ) + 1 ) * valstep;
+   }
+
+   if( m_showLabels )
+   {
+      qreal maxLabelWidth = 0;
+      for( int i = 0; i < maxVal / chartStep + 1 + ( ( quint64 ) maxVal % ( quint64 ) chartStep ? 1 : 0 ); i++ )
+      {
+         if( maxLabelWidth < painter->fontMetrics().width( QString::number( ( maxVal * i - chartStep * i ) / powVal ) ) ){
+            maxLabelWidth = painter->fontMetrics().width( QString::number( ( maxVal * i - chartStep * i ) / powVal ) );
+         }
+      }
+      int y = 0;
+      for( int i = 0; i < maxVal / chartStep + 1 + ( ( quint64 ) maxVal % ( quint64 ) chartStep ? 1 : 0 ); i++ )
+      {
+         painter->drawText( QRectF( rc.x(), rc.y() + y, maxLabelWidth, painter->fontMetrics().height() ),
+                         Qt::AlignRight | Qt::AlignVCenter, QString::number( ( maxpv - chartStep * i ) / powVal ) );
+         y += valstep;
+      }
+
+      painter->drawLine( rc.x() + maxLabelWidth + 1 / UNIT / 4, rc.y(), rc.x() + maxLabelWidth + 1 / UNIT / 4, rc.y() + rect.height() );
+      rc = rc.adjusted( maxLabelWidth + 1 / UNIT / 4, 0, 0, 0 );
+   }
+
+   if( m_showGrid )
+   {
+      int y = ( double ) painter->fontMetrics().height() / 2;
+      for( int i = 0; i < maxVal / chartStep + 1 + ( ( quint64 ) maxVal % ( quint64 ) chartStep ? 1 : 0 ); i++ )
+      {
+         painter->drawLine( rc.x(), rc.y() + y, rc.x() + rc.width(), rc.y() + y );
+         y += valstep;
+      }
+   }
+
+   rc = rc.adjusted( 0, ( double ) painter->fontMetrics().height() / 2, 0, 0 );
+   int x = m_barsIdentation;
+   qreal barWidth = ( rc.width() - m_barsIdentation * ( val.size() + 1 ) ) / val.size();
+   qreal py = maxHeight / maxVal;
+
+   foreach( _chartValue cv, val )
+   {
+      QLinearGradient lg( QPointF( x + barWidth / 2, 0 ), QPointF( x + barWidth , 0 ) );
+      lg.setSpread( QGradient::ReflectSpread );
+      lg.setColorAt( 0, cv.color );
+      lg.setColorAt( 1, QColor( cv.color.red() * m_toColorFactor, cv.color.green() * m_toColorFactor, cv.color.blue() * m_toColorFactor, cv.color.alpha() ) );
+      painter->fillRect( QRectF( rc.x() + x, rc.y() + py * maxpv - py * cv.value * powVal, barWidth, py * cv.value * powVal ), QBrush( lg ) );
+      if( m_showLabels ){
+         painter->drawText( QRectF( rc.x() + x - m_barsIdentation / 2, rc.y() + py * maxpv - ( ( cv.value >= 0 ) ? painter->fontMetrics().height() : 0 ),
+                                      barWidth + m_barsIdentation, painter->fontMetrics().height() ), Qt::AlignCenter, QString( "%1" ).arg( cv.value ) );
+      }
+      x += barWidth + m_barsIdentation;
+   }
+}
+/*----------------------------------------------------------------------*/
+
+void HBQGraphicsItem::drawBarcode39( QPainter * painter, const QStyleOptionGraphicsItem * option )
+{
+   if( ! m_barValues.size() )
+   {
+      return;
+   }
+   QRectF rect = adjustOption( painter, option );
+   QRectF rc = rect.adjusted( 5, 5, -10, -10 );
+
+   QColor clr( Qt::black );
+   int iBars = m_barValues.size();
+   qreal w = rc.width() / iBars;
+   qreal x = 0.0;
+   for( int i = 0; i < iBars; i++ )
+   {
+      if( m_barValues.at( i ) == "-" )
+      {
+         painter->fillRect( QRectF( rc.x() + x, rc.y(), w, rc.height() ), clr );
+      }
+      x += w;
+   }
+}
+/*----------------------------------------------------------------------*/
+
 
 #endif

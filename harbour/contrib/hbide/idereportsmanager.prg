@@ -150,6 +150,7 @@ CLASS IdeReportsManager INHERIT IdeObject
    METHOD buildDesignReport()
    METHOD addField( qPos, cAlias, cField )
    METHOD addObject( qPos, cType )
+   METHOD fetchBarString( cCode, lCheck )
    METHOD loadReport( cName )
    METHOD saveReport()
    METHOD prepareReport()
@@ -540,23 +541,23 @@ METHOD IdeReportsManager:execEvent( cEvent, p, p1, p2 )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeReportsManager:addObject( qPos, cType )
-   LOCAL oWidget, cName, nW, nH, qGrad
+   LOCAL oWidget, cName, nW, nH, qGrad, cCode, qStrList, i
 
    cName := cType + "_" + hb_ntos( hbide_getNextID( cType ) )
 
    SWITCH cType
    CASE "Image"
-      oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_PICTURE )
       nW := 300 ;  nH := 300
+      oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_PICTURE )
       oWidget:setPixmap( QPixmap():new( hbide_image( "hbide" ) ) )
       oWidget:setBorderWidth( 2 )
       EXIT
    CASE "Chart"
-      oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_ELLIPSE )
-      nW := 300 ;  nH := 200
-      oWidget:setBrush( QBrush():new( "QColor", QColor():new( 200,114,127  ) ) )
+      nW := 400 ;  nH := 250
+      oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_CHART )
       EXIT
    CASE "Gradient"
+      nW := 300 ;  nH := 50
       qGrad := QLinearGradient():new()// 0, 0, 1, 1 )
       qGrad:setColorAt( 0, QColor():new( 195,225,255 ) )
       //qGrad:setColorAt( 1, ( QColor():new( 195,225,255 ) ):darker( 150 ) )
@@ -564,18 +565,26 @@ METHOD IdeReportsManager:addObject( qPos, cType )
       qGrad:setCoordinateMode( QGradient_StretchToDeviceMode )
 
       oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_RECT )
-      nW := 300 ;  nH := 50
       oWidget:setBrush( QBrush():new( "QGradient", qGrad ) )
       oWidget:setPen( QPen():new( Qt_NoPen ) )
       EXIT
    CASE "Barcode"
-      oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_RECT )
       nW := 300 ;  nH := 200
-      oWidget:setBrush( QBrush():new( "QColor", QColor():new( 120,200,245 ) ) )
+      cCode := ::fetchBarString( "Harbour" )
+      qStrList := QStringList():new()
+      FOR i := 1 TO len( cCode )
+         IF substr( cCode, i, 1 ) == "1"
+            qStrList:append( "-" )
+         ELSE
+            qStrList:append( "." )
+         ENDIF
+      NEXT
+      oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_BARCODE )
+      oWidget:setBarValues( qStrList )
       EXIT
    CASE "Text"
-      oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_SIMPLETEXT )
       nW := 300 ;  nH := 50
+      oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_SIMPLETEXT )
       oWidget:setBrush( QBrush():new( "QColor", QColor():new( 200,200,245 ) ) )
       oWidget:setText( "Harbour" )
       EXIT
@@ -766,3 +775,84 @@ METHOD IdeReportsManager:buildStatusBar()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+/*                                                                      */
+/*   NOTE: the code below is works of someone else I do not remmeber    */
+/*         the name. Please let me know who that is so due credits be   */
+/*         given to him. I had downloaded this code many years back     */
+/*         and adopted to Vouch32 library and Vouch32 Active-X Server.  */
+
+METHOD IdeReportsManager:fetchBarString( cCode, lCheck )
+   STATIC cCars   := '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ-. *$/+%'
+   STATIC aBarras := {  '1110100010101110',;  // 1
+                        '1011100010101110',;  // 2
+                        '1110111000101010',;  // 3
+                        '1010001110101110',;  // 4
+                        '1110100011101010',;  // 5
+                        '1011100011101010',;  // 6
+                        '1010001011101110',;  // 7
+                        '1110100010111010',;  // 8
+                        '1011100010111010',;  // 9
+                        '1010001110111010',;  // 0
+                        '1110101000101110',;  // A
+                        '1011101000101110',;  // B
+                        '1110111010001010',;  // C
+                        '1010111000101110',;  // D
+                        '1110101110001010',;  // E
+                        '1011101110001010',;
+                        '1010100011101110',;
+                        '1110101000111010',;
+                        '1011101000111010',;
+                        '1010111000111010',;
+                        '1110101010001110',;  // K
+                        '1011101010001110',;
+                        '1110111010100010',;
+                        '1010111010001110',;
+                        '1110101110100010',;
+                        '1011101110100010',;  // p
+                        '1010101110001110',;
+                        '1110101011100010',;
+                        '1011101011100010',;
+                        '1010111011100010',;
+                        '1110001010101110',;
+                        '1000111010101110',;
+                        '1110001110101010',;
+                        '1000101110101110',;
+                        '1110001011101010',;
+                        '1000111011101010',;  // Z
+                        '1000101011101110',;  // -
+                        '1110001010111010',;  // .
+                        '1000111010111010',;  // ' '
+                        '1000101110111010',;  // *
+                        '1000100010100010',;
+                        '1000100010100010',;
+                        '1000101000100010',;
+                        '1010001000100010' }
+
+
+   LOCAL cCar, m, n, cBarra := '',  nCheck := 0
+
+   DEFAULT lCheck TO .f.
+
+   cCode := upper( cCode )
+   IF len( cCode ) > 32
+      cCode := left( cCode,32 )
+   ENDIF
+
+   cCode := '*' + cCode + '*'
+   FOR n := 1 TO len( cCode )
+      cCar := substr( cCode,n,1 )
+      m    := at( cCar, cCars )
+      IF m > 0
+         cBarra := cBarra + aBarras[ m ]
+         nCheck += ( m-1 )
+      ENDIF
+   NEXT
+
+   IF lCheck
+      cBarra += aBarras[ nCheck % 43 + 1 ]
+   ENDIF
+
+   RETURN cBarra
+
+/*----------------------------------------------------------------------*/
+
