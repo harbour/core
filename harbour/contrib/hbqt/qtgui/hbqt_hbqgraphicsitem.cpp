@@ -49,6 +49,11 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+ /***************************************************************************
+ *   The parts of this source are borrowed and adopted from eXaro project   *
+ *                 Copyright (C) 2008 by BogDan Vatra                       *
+ *                         bog_dan_ro@yahoo.com                             *
+ ***************************************************************************/
 
 #include "hbqt.h"
 #include "hbapiitm.h"
@@ -92,6 +97,8 @@ HBQGraphicsItem::HBQGraphicsItem( int type, QGraphicsItem * parent ) : QGraphics
    setFlags( QGraphicsItem::ItemIsSelectable );
 
    /* Picture */
+   m_textFlags          = Qt::AlignCenter;
+
    m_paintType          = HBQT_GRAPHICSITEM_RESIZE_PICTURE_TO_ITEM_KEEP_ASPECT_RATIO;
    m_frameType          = HBQT_GRAPHICSITEM_IMAGE_NO_FRAME;
    m_textColor          = Qt::black;
@@ -132,6 +139,15 @@ QString HBQGraphicsItem::objectType()
 void  HBQGraphicsItem::setObjectType( const QString & type )
 {
    QString_objectType = type;
+}
+
+QString HBQGraphicsItem::objectName()
+{
+   return QString_objectName;
+}
+void  HBQGraphicsItem::setObjectName( const QString & name )
+{
+   QString_objectName = name;
 }
 
 QBrush HBQGraphicsItem::brush()
@@ -368,6 +384,23 @@ void HBQGraphicsItem::setResizeFlags( int resizeFlags )
    iResizeFlags = resizeFlags;
 }
 
+int HBQGraphicsItem::resizeHandle()
+{
+   return iResizeHandle;
+}
+void HBQGraphicsItem::setResizeHandle( int resizeHandle )
+{
+   iResizeHandle = resizeHandle;
+#if 0
+   if( m_minWidth < m_resizeHandle * 2 + 1 )
+      m_minWidth = m_resizeHandle * 2 + 1;
+
+   if( m_minHeight < m_resizeHandle * 2 + 1 )
+      m_minHeight = m_resizeHandle * 2 + 1;
+#endif
+   update( boundingRect() );
+}
+
 /*----------------------------------------------------------------------*/
 //                            Mouse Events
 /*----------------------------------------------------------------------*/
@@ -375,7 +408,7 @@ void HBQGraphicsItem::setResizeFlags( int resizeFlags )
 void HBQGraphicsItem::mousePressEvent( QGraphicsSceneMouseEvent * event )
 {
    QRectF_geometry = geometry();
-
+#if 0  /* Control via user interaction - bring to front - push to back */
    foreach( QGraphicsItem * item, scene()->items() )
    {
       if( item->zValue() == 1 ){
@@ -386,6 +419,7 @@ void HBQGraphicsItem::mousePressEvent( QGraphicsSceneMouseEvent * event )
    if( objectType() == ( QString ) "Page" ){
       setZValue( 0 );
    }
+#endif
 
    if( event->buttons() == Qt::LeftButton ){
       iResizeMode = determineResizeMode( event->pos() );
@@ -404,8 +438,13 @@ void HBQGraphicsItem::mousePressEvent( QGraphicsSceneMouseEvent * event )
    QGraphicsItem::mousePressEvent( event );
 
    if( event->buttons() == Qt::LeftButton ){
+      // emit( itemSelected( this, event->pos() ) );
       if( block ){
-         // Inform if selection is made etc. Try to keep it simple.
+         PHB_ITEM p1 = hb_itemPutNI( NULL, 21101 );
+         PHB_ITEM p2 = hb_itemPutC( NULL, objectName().toLatin1().data() );
+         hb_vmEvalBlockV( block, 2, p1, p2 );
+         hb_itemRelease( p1 );
+         hb_itemRelease( p2 );
       }
    }
 }
@@ -417,7 +456,10 @@ void HBQGraphicsItem::mouseReleaseEvent( QGraphicsSceneMouseEvent * event )
 
    QRectF nGeometry = geometry();
    if( nGeometry != QRectF_geometry ){
-      // emit( geometryChanged( this, nGeometry, oGeometry ) );
+      // emit( geometryChanged( this, nGeometry, QRectF_geometry ) );
+      if( block ){
+         // Inform geometry is changed
+      }
    }
 }
 
@@ -440,9 +482,11 @@ void HBQGraphicsItem::mouseMoveEvent( QGraphicsSceneMouseEvent * event )
             setHeight( height() + event->lastScenePos().y() - event->scenePos().y() );
          }
          if( iResizeMode & RESIZE_MODE_RIGHT ){
+            scene()->invalidate( geometry() );
             setWidth( ( int ) ( width() + event->scenePos().x() - event->lastScenePos().x() ) );
          }
          if( iResizeMode & RESIZE_MODE_BOTTOM ){
+            scene()->invalidate( geometry() );
             setHeight( ( int ) ( height() + event->scenePos().y() - event->lastScenePos().y() ) );
          }
          if( width() < 5 ){
@@ -469,10 +513,10 @@ int HBQGraphicsItem::determineResizeMode( const QPointF & pos )
    int resizeModes = resizeFlags();
    int mode = RESIZE_MODE_FIXED;
 
-   QRectF topRect( 0, 0, width(), 2 );
-   QRectF leftRect( 0, 0, 2, height() );
-   QRectF bottomRect( 0, height() - 2, width(), 2 );
-   QRectF rightRect( width() - 2, 0, width(), height() );
+   QRectF topRect( 0, 0, width(), iResizeHandle );
+   QRectF leftRect( 0, 0, iResizeHandle, height() );
+   QRectF bottomRect( 0, height() - iResizeHandle, width(), iResizeHandle );
+   QRectF rightRect( width() - iResizeHandle, 0, width(), height() );
 
    if( resizeModes & RESIZE_MODE_LEFT && leftRect.contains( pos ) ){
       mode |= RESIZE_MODE_LEFT;
@@ -710,11 +754,12 @@ void HBQGraphicsItem::drawSelection( QPainter * painter, QRectF rect )
    if( isSelected() )
    {
       QBrush a;
-      a.setColor( QColor( 200,0,0,150 ) );
+      //a.setColor( QColor( 200,0,0,150 ) );
+      a.setColor( QColor( 255,0,0 ) );
       a.setStyle( Qt::SolidPattern );
       if( bDrawSelectionBorder )
       {
-         QPen p( Qt::DashDotDotLine );
+         QPen p( Qt::DashLine );
          p.setBrush( a );
          painter->setPen( p );
          painter->drawRect( rect );

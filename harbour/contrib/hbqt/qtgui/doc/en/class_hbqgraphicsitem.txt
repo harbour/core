@@ -51,6 +51,8 @@
  *     :setGeometry( pRect )                               -> NIL
  *     :objectType()                                       -> cQString
  *     :setObjectType( cType )                             -> NIL
+ *     :objectName()                                       -> cQString
+ *     :setObjectName( cName )                             -> NIL
  *     :text()                                             -> cQString
  *     :setText( cType )                                   -> NIL
  *     :paintType()                                        -> nInt
@@ -73,6 +75,8 @@
  *     :setTextFlags( nTextFlags )                         -> NIL
  *     :resizeFlags()                                      -> nInt
  *     :setResizeFlags( nResizeFlags )                     -> NIL
+ *     :resizeHandle()                                     -> nInt
+ *     :setResizeHandle( nResizeHandle )                   -> NIL
  * 
  *  $DESCRIPTION$
  * 

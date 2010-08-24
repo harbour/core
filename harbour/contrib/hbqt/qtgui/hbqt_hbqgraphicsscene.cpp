@@ -50,6 +50,12 @@
  *
  */
 
+ /***************************************************************************
+ *   The parts of this source are borrowed and adopted from eXaro project   *
+ *                 Copyright (C) 2008 by BogDan Vatra                       *
+ *                         bog_dan_ro@yahoo.com                             *
+ ***************************************************************************/
+
 #include "hbqt.h"
 #include "hbapiitm.h"
 #include "hbvm.h"
@@ -595,18 +601,16 @@ void HBQGraphicsScene::drawMagnets( HBQGraphicsItem * item )
    if ( ! m_magnets )
       return;
 
-   item->setToolTip( tr( "Press Ctrl key to ignore magnets when dragging the object" ) );
-
    QPen p;
    p.setWidth( 3 );
-   p.setColor( Qt::red );
+   p.setColor( Qt::cyan );
    p.setStyle( Qt::DotLine );
 
    foreach( QGraphicsItem * it, items() )
    {
       HBQGraphicsItem * ite = dynamic_cast< HBQGraphicsItem * >( it );
 
-      if( ! ite || ! item->parentItem() || ite == item )
+      if( ! ite || ite == item )
          continue;
 
       if( ( m_magnets & Left ) && abs( item->mapToScene( QPointF( 0, 0 ) ).x() - ite->mapToScene( QPointF( 0, 0 ) ).x() ) <= m_magnetArea )

@@ -501,6 +501,34 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETOBJECTTYPE )
 }
 
 /*
+ * QString        objectName()
+ */
+HB_FUNC( QT_HBQGRAPHICSITEM_OBJECTNAME )
+{
+   HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
+   if( p )
+      hb_retc( ( p )->objectName().toAscii().data() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_OBJECTNAME FP=hb_retc( ( p )->objectName().toAscii().data() ); p is NULL" ) );
+   }
+}
+
+/*
+ * void           setObjectName( const QString & name )
+ */
+HB_FUNC( QT_HBQGRAPHICSITEM_SETOBJECTNAME )
+{
+   HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
+   if( p )
+      ( p )->setObjectName( hbqt_par_QString( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETOBJECTNAME FP=( p )->setObjectName( hbqt_par_QString( 2 ) ); p is NULL" ) );
+   }
+}
+
+/*
  * QString        text()
  */
 HB_FUNC( QT_HBQGRAPHICSITEM_TEXT )
@@ -805,6 +833,34 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETRESIZEFLAGS )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETRESIZEFLAGS FP=( p )->setResizeFlags( hb_parni( 2 ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * int            resizeHandle()
+ */
+HB_FUNC( QT_HBQGRAPHICSITEM_RESIZEHANDLE )
+{
+   HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
+   if( p )
+      hb_retni( ( p )->resizeHandle() );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_RESIZEHANDLE FP=hb_retni( ( p )->resizeHandle() ); p is NULL" ) );
+   }
+}
+
+/*
+ * void           setResizeHandle( int resizeHandle )
+ */
+HB_FUNC( QT_HBQGRAPHICSITEM_SETRESIZEHANDLE )
+{
+   HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
+   if( p )
+      ( p )->setResizeHandle( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETRESIZEHANDLE FP=( p )->setResizeHandle( hb_parni( 2 ) ); p is NULL" ) );
    }
 }
 

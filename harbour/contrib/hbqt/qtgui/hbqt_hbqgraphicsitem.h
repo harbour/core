@@ -157,6 +157,7 @@ private:
    int            iStartAngle;
    int            iSpanAngle;
    QString        QString_objectType;
+   QString        QString_objectName;
    QString        QString_text;
 
    /* Image */
@@ -221,6 +222,8 @@ public slots:
    void           setGeometry( const QRectF & rect );
    QString        objectType();
    void           setObjectType( const QString & type );
+   QString        objectName();
+   void           setObjectName( const QString & name );
    QString        text();
    void           setText( const QString & text );
 
@@ -244,6 +247,8 @@ public slots:
    void           setTextFlags( int textFlags );
    int            resizeFlags();
    void           setResizeFlags( int resizeFlags );
+   int            resizeHandle();
+   void           setResizeHandle( int resizeHandle );
 
 };
 

@@ -2409,6 +2409,20 @@
 #define QGraphicsSceneContextMenuEvent_Keyboard              1
 #define QGraphicsSceneContextMenuEvent_Other                 2
 
+#define QGradient_LogicalMode                                0   // This is the default mode. The gradient coordinates are specified logical space just like the object coordinates.
+#define QGradient_StretchToDeviceMode                        1   // In this mode the gradient coordinates are relative to the bounding rectangle of the paint device, with (0,0) in the top left corner, and (1,1) in the bottom right corner of the paint device.
+#define QGradient_ObjectBoundingMode                         2   // In this mode the gradient coordinates are relative to the bounding rectangle of the object being drawn, with (0,0) in the top left corner, and (1,1) in the bottom right corner of the object's bounding rectangle.
+
+#define QGradient_PadSpread                                  0   // The area is filled with the closest stop color. This is the default.
+#define QGradient_RepeatSpread                               2   // The gradient is repeated outside the gradient area.
+#define QGradient_ReflectSpread                              1   // The gradient is reflected outside the gradient area.
+
+#define QGradient_LinearGradient                             0   // Interpolates colors between start and end points (QLinearGradient).
+#define QGradient_RadialGradient                             1   // Interpolate colors between a focal point and end points on a circle surrounding it (QRadialGradient).
+#define QGradient_ConicalGradient                            2   // Interpolate colors around a center point (QConicalGradient).
+#define QGradient_NoGradient                                 3   // No gradient is used.
+
+
 /*----------------------------------------------------------------------*/
 
 #endif

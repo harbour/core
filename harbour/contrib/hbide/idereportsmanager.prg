@@ -134,6 +134,7 @@ CLASS IdeReportsManager INHERIT IdeObject
    DATA   aItems                                  INIT {}
    DATA   hItems                                  INIT {=>}
    DATA   hObjTree                                INIT {=>}
+   DATA   qCurGraphicsItem
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -291,7 +292,7 @@ METHOD IdeReportsManager:buildDesignReport()
    ::qPageL01Lay:addWidget( ::qTreeObjects )
    ::qTreeObjects:setHeaderHidden( .t. )
    ::qTreeObjects:setObjectName( "ObjectsTree" )
-
+   ::connect( ::qTreeObjects, "itemClicked(QTWItem)", {|p,p1| ::execEvent( "treeObjects_clicked", p, p1 ) } )
 
    ::qTabL1 := QTabWidget():new()
    ::qSplL:addWidget( ::qTabL1 )
@@ -338,6 +339,11 @@ METHOD IdeReportsManager:buildDesignReport()
    ::loadReport()
 
    ::qScene:zoomWYSIWYG()
+   //
+   ::qScene:setLeftMagnet( .t. )
+   ::qScene:setTopMagnet( .t. )
+   ::qScene:setRightMagnet( .t. )
+   ::qScene:setBottomMagnet( .t. )
 
    ::qWidget1:show()
    ::qWidget2:show()
@@ -425,7 +431,7 @@ METHOD IdeReportsManager:prepareReport()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeReportsManager:execEvent( cEvent, p, p1, p2 )
-   LOCAL qEvent, qMime
+   LOCAL qEvent, qMime, qItem
 
    SWITCH cEvent
    CASE "graphicsScene_block"
@@ -473,10 +479,34 @@ METHOD IdeReportsManager:execEvent( cEvent, p, p1, p2 )
 
       EXIT
 
+   CASE "graphicsItem_block"
+      DO CASE
+      CASE p == 21101 // Object selected
+         IF hb_hHasKey( ::hObjTree, p1 )
+            ::qCurGraphicsItem := ::hObjTree[ p1 ]
+            ::qTreeObjects:setCurrentItem( ::qCurGraphicsItem )
+         ENDIF
+
+      ENDCASE
+      EXIT
+
+   CASE "treeObjects_clicked"
+      qItem := QTreeWidgetItem():from( p )
+      IF hb_hHasKey( ::hItems, qItem:text( 0 ) )
+         ::qScene:clearSelection()
+         ::hItems[ qItem:text( 0 ) ]:setSelected( .t. )
+      ENDIF
+      EXIT
+
    CASE "tabBar_currentChanged"
       IF !empty( ::qStack ) .AND. p < ::qStack:count()
          ::qStack:setCurrentIndex( p )
       ENDIF
+      EXIT
+
+   CASE "buttonToBack_clicked"
+      EXIT
+   CASE "buttonToFront_clicked"
       EXIT
    CASE "buttonNew_clicked"
       EXIT
@@ -518,8 +548,8 @@ METHOD IdeReportsManager:addObject( qPos, cType )
    CASE "Image"
       oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_PICTURE )
       nW := 300 ;  nH := 300
-      oWidget:setBrush( QBrush():new( "QColor", QColor():new( 255,180,112 ) ) )
       oWidget:setPixmap( QPixmap():new( hbide_image( "hbide" ) ) )
+      oWidget:setBorderWidth( 2 )
       EXIT
    CASE "Chart"
       oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_ELLIPSE )
@@ -527,9 +557,11 @@ METHOD IdeReportsManager:addObject( qPos, cType )
       oWidget:setBrush( QBrush():new( "QColor", QColor():new( 200,114,127  ) ) )
       EXIT
    CASE "Gradient"
-      qGrad := QLinearGradient():new( 0, 0, 100, 100 )
+      qGrad := QLinearGradient():new()// 0, 0, 1, 1 )
       qGrad:setColorAt( 0, QColor():new( 195,225,255 ) )
-      qGrad:setColorAt( 1, QColor():new( Qt_black    ) )
+      //qGrad:setColorAt( 1, ( QColor():new( 195,225,255 ) ):darker( 150 ) )
+      qGrad:setColorAt( 1, ( QColor():new( Qt_darkBlue ) ):darker( 150 ) )
+      qGrad:setCoordinateMode( QGradient_StretchToDeviceMode )
 
       oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_RECT )
       nW := 300 ;  nH := 50
@@ -549,8 +581,10 @@ METHOD IdeReportsManager:addObject( qPos, cType )
       EXIT
    ENDSWITCH
 
+   oWidget:setObjectType( cType )
+   oWidget:setObjectName( cName )
    oWidget:setTooltip( cName )
-   oWidget:hbSetBlock( {|p,p1,p2| ::execEvent( "graphicsPaper_block", p, p1, p2 ) } )
+   oWidget:hbSetBlock( {|p,p1,p2| ::execEvent( "graphicsItem_block", p, p1, p2 ) } )
 
    ::qScene:addItem( oWidget )
 
@@ -573,9 +607,11 @@ METHOD IdeReportsManager:addField( qPos, cAlias, cField )
 
    oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_SIMPLETEXT )
    oWidget:setText( cName )
-   oWidget:hbSetBlock( {|p,p1,p2| ::execEvent( "graphicsPaper_block", p, p1, p2 ) } )
+   oWidget:hbSetBlock( {|p,p1,p2| ::execEvent( "graphicsItem_block", p, p1, p2 ) } )
    oWidget:setGeometry( QRectF():new( 0, 0, nW, nH ) )
    oWidget:setTooltip( cName )
+   oWidget:setObjectType( "Field" )
+   oWidget:setObjectName( cName )
 
    ::qScene:addItem( oWidget )
 
@@ -635,6 +671,9 @@ METHOD IdeReportsManager:buildToolbar()
    ::qToolbar:addToolButton( "Close", "Close Report", hbide_image( "close3" ), {|| ::execEvent( "buttonClose_clicked" ) } )
    ::qToolbar:addToolButton( "Print", "Print Report", hbide_image( "print"  ), {|| ::execEvent( "buttonPrint_clicked" ) } )
    ::qToolbar:addSeparator()
+   ::qToolbar:addToolButton( "ToBack" , "Push to back"  , hbide_image( "toback" ), {|| ::execEvent( "buttonToBack_clicked"  ) }, .f., .f. )
+   ::qToolbar:addToolButton( "ToFront", "Bring to front", hbide_image( "tofront"), {|| ::execEvent( "buttonToFront_clicked" ) }, .f., .f. )
+   ::qToolbar:addSeparator()
 
    RETURN Self
 
@@ -662,10 +701,10 @@ METHOD IdeReportsManager:buildToolbarAlign()
    ::qToolbarAlign:addToolButton( "JustM"  , "Align middle"      , hbide_image( "f_align_middle"  ), {|| ::execEvent( "button_clicked" ) } )
    ::qToolbarAlign:addToolButton( "JustB"  , "Align bottom"      , hbide_image( "f_align_bottom"  ), {|| ::execEvent( "button_clicked" ) } )
    ::qToolbarAlign:addSeparator()
-   ::qToolbarAlign:addToolButton( "BoxT"   , "Box-frame top"     , hbide_image( "f_box_top"       ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "BoxL"   , "Box-frame left"    , hbide_image( "f_box_left"      ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "BoxB"   , "Box-frame bottom"  , hbide_image( "f_box_bottom"    ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "BoxR"   , "Box-frame right"   , hbide_image( "f_box_right"     ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addToolButton( "BoxT"   , "Box-frame top"     , hbide_image( "f_box_top"       ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
+   ::qToolbarAlign:addToolButton( "BoxL"   , "Box-frame left"    , hbide_image( "f_box_left"      ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
+   ::qToolbarAlign:addToolButton( "BoxB"   , "Box-frame bottom"  , hbide_image( "f_box_bottom"    ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
+   ::qToolbarAlign:addToolButton( "BoxR"   , "Box-frame right"   , hbide_image( "f_box_right"     ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
    ::qToolbarAlign:addSeparator()
    ::qToolbarAlign:addToolButton( "BoxA"   , "Box-frame all"     , hbide_image( "f_box_all"       ), {|| ::execEvent( "button_clicked" ) } )
    ::qToolbarAlign:addToolButton( "BoxP"   , "No box-frame"      , hbide_image( "f_box_plain"     ), {|| ::execEvent( "button_clicked" ) } )
@@ -727,5 +766,3 @@ METHOD IdeReportsManager:buildStatusBar()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
-

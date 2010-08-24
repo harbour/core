@@ -116,6 +116,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM )
    void           setGeometry( const QRectF & rect )
    QString        objectType()
    void           setObjectType( const QString & type )
+   QString        objectName()
+   void           setObjectName( const QString & name )
    QString        text()
    void           setText( const QString & type )
 
@@ -139,6 +141,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM )
    void           setTextFlags( int textFlags )
    int            resizeFlags()
    void           setResizeFlags( int resizeFlags )
+   int            resizeHandle()
+   void           setResizeHandle( int resizeHandle )
 
 </PROTOS>
 

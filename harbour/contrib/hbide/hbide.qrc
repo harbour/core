@@ -263,6 +263,8 @@
 <file>resources/f-italic-1.png</file>
 <file>resources/f-underline-1.png</file>
 <file>resources/f-strike-1.png</file>
+<file>resources/toback.png</file>
+<file>resources/tofront.png</file>
 </qresource>
 </RCC>
 

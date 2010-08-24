@@ -92,6 +92,8 @@ CREATE CLASS HBQGraphicsItem INHERIT HbQtObjectHandler, QGraphicsItem
    METHOD  setGeometry( pRect )
    METHOD  objectType()
    METHOD  setObjectType( cType )
+   METHOD  objectName()
+   METHOD  setObjectName( cName )
    METHOD  text()
    METHOD  setText( cType )
    METHOD  paintType()
@@ -114,6 +116,8 @@ CREATE CLASS HBQGraphicsItem INHERIT HbQtObjectHandler, QGraphicsItem
    METHOD  setTextFlags( nTextFlags )
    METHOD  resizeFlags()
    METHOD  setResizeFlags( nResizeFlags )
+   METHOD  resizeHandle()
+   METHOD  setResizeHandle( nResizeHandle )
 
    ENDCLASS
 
@@ -227,6 +231,14 @@ METHOD HBQGraphicsItem:setObjectType( cType )
    RETURN Qt_HBQGraphicsItem_setObjectType( ::pPtr, cType )
 
 
+METHOD HBQGraphicsItem:objectName()
+   RETURN Qt_HBQGraphicsItem_objectName( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setObjectName( cName )
+   RETURN Qt_HBQGraphicsItem_setObjectName( ::pPtr, cName )
+
+
 METHOD HBQGraphicsItem:text()
    RETURN Qt_HBQGraphicsItem_text( ::pPtr )
 
@@ -313,4 +325,12 @@ METHOD HBQGraphicsItem:resizeFlags()
 
 METHOD HBQGraphicsItem:setResizeFlags( nResizeFlags )
    RETURN Qt_HBQGraphicsItem_setResizeFlags( ::pPtr, nResizeFlags )
+
+
+METHOD HBQGraphicsItem:resizeHandle()
+   RETURN Qt_HBQGraphicsItem_resizeHandle( ::pPtr )
+
+
+METHOD HBQGraphicsItem:setResizeHandle( nResizeHandle )
+   RETURN Qt_HBQGraphicsItem_setResizeHandle( ::pPtr, nResizeHandle )
 
