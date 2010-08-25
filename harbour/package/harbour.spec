@@ -74,11 +74,12 @@
 %define hb_ddir   export HB_INSTALL_DYN=${RPM_BUILD_ROOT}%{_libdir}/%{name}
 %define hb_edir   export HB_INSTALL_ETC=${RPM_BUILD_ROOT}%{hb_etcdir}
 %define hb_mdir   export HB_INSTALL_MAN=${RPM_BUILD_ROOT}%{_mandir}
+%define hb_tdir   export HB_INSTALL_DOC=${RPM_BUILD_ROOT}%{_docdir}
 %define hb_blds   export HB_BUILD_STRIP=all
 %define hb_bldsh  export HB_BUILD_SHARED=%{!?_with_static:yes}
 %define hb_cmrc   export HB_BUILD_NOGPLLIB=%{?_without_gpllib:yes}
 %define hb_ctrb   export HB_BUILD_CONTRIBS="hbblink hbclipsm hbct hbgt hbmisc hbmzip hbnetio hbtip hbtpathy hbhpdf hbziparc hbfoxpro hbsms hbfship hbxpp xhb rddbmcdx rddsql sddsqlt3 hbnf %{?_with_allegro:gtalleg} %{?_with_cairo:hbcairo} %{?_with_cups:hbcups} %{?_with_curl:hbcurl} %{?_with_firebird:hbfbird sddfb} %{?_with_freeimage:hbfimage} %{?_with_gd:hbgd} %{?_with_mysql:hbmysql sddmy} %{?_with_odbc:hbodbc sddodbc} %{?_with_pgsql:hbpgsql sddpg} %{?_with_qt:hbqt hbxbp} %{?_with_ads:rddads}"
-%define hb_env    %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_dflag} ; %{shl_path} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_local} ; %{hb_proot} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_ddir} ; %{hb_edir} ; %{hb_mdir} ; %{hb_ctrb} ; %{hb_cmrc} ; %{hb_blds} ; %{hb_bldsh}
+%define hb_env    %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_dflag} ; %{shl_path} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_local} ; %{hb_proot} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_ddir} ; %{hb_edir} ; %{hb_mdir} ; %{hb_tdir} ; %{hb_ctrb} ; %{hb_cmrc} ; %{hb_blds} ; %{hb_bldsh}
 ######################################################################
 ## Preamble.
 ######################################################################
@@ -412,7 +413,8 @@ make install %{?_smp_mflags}
 
 %{?_without_curses:rm -f $HB_INSTALL_LIB/libgtcrs.a}
 %{?_without_slang:rm -f $HB_INSTALL_LIB/libgtsln.a}
-%{!?hb_ldconf:rm -fR $RPM_BUILD_ROOT/etc/ld.so.conf.d}
+rm -fR %{!?hb_ldconf:$HB_INSTALL_ETC/ld.so.conf.d}
+rm -f %{?hb_ldconf:$RPM_BUILD_ROOT/%{_libdir}/*.so}
 rm -f $HB_INSTALL_LIB/libbz2.a \
       $HB_INSTALL_LIB/libjpeg.a \
       $HB_INSTALL_LIB/liblibhpdf.a \
@@ -444,8 +446,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,755)
-%doc ChangeLog*
-%doc doc/*
+%{_docdir}/*
 
 %dir %{hb_etcdir}
 %verify(not md5 mtime) %config %{hb_etcdir}/hb-charmap.def
@@ -474,7 +475,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/librddcdx.a
 %{_libdir}/%{name}/librddntx.a
 %{_libdir}/%{name}/librddnsx.a
-%{_libdir}/%{name}/libgt*.a
+%{_libdir}/%{name}/libgt[^a]*.a
 %{_libdir}/%{name}/libhblang.a
 %{_libdir}/%{name}/libhbmacro.a
 %{_libdir}/%{name}/libhbextern.a
@@ -496,8 +497,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(755,root,root,755)
 %dir %{_libdir}/%{name}
 %{_libdir}/%{name}/*.so
-# Temporarily commented
-#%{_libdir}/*.so
+%{!?hb_ldconf:%{_libdir}/*.so}
 %{?hb_ldconf:%{hb_ldconf}/%{name}.conf}
 
 %files contrib
@@ -524,6 +524,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/librddsql.a
 %{_libdir}/%{name}/libsddsqlt3.a
 %{_libdir}/%{name}/libhbsms.a
+%([ -f %{_libdir}/%{name}/libhbssl.a ] && echo %{_libdir}/%{name}/libhbssl.a)
 
 %{?_with_ads:%files ads}
 %{?_with_ads:%defattr(644,root,root,755)}
