@@ -155,10 +155,17 @@ static HB_USHORT hb_errRT_MySQLDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
 static HB_ERRCODE mysqlConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
    MYSQL * pMySql;
+   PHB_ITEM pItemUnixSocket = hb_arrayGetItemPtr( pItem, 7 );
 
    pMySql = mysql_init( NULL );
-   if ( ! mysql_real_connect( pMySql, hb_arrayGetCPtr( pItem, 2 ), hb_arrayGetCPtr( pItem, 3 ), hb_arrayGetCPtr( pItem, 4 ),
-                              hb_arrayGetCPtr( pItem, 5 ), 0 /* port */, NULL /* pipe */, 0 /* flags*/ ) )
+   if ( ! mysql_real_connect( pMySql, 
+                              hb_arrayGetCPtr( pItem, 2 ) /* host */, 
+                              hb_arrayGetCPtr( pItem, 3 ) /* user */, 
+                              hb_arrayGetCPtr( pItem, 4 ) /* password */,
+                              hb_arrayGetCPtr( pItem, 5 ) /* db */, 
+                              hb_arrayGetNI( pItem, 6 ) /* port */, 
+                              pItemUnixSocket && HB_IS_STRING( pItemUnixSocket ) ? hb_itemGetCPtr( pItemUnixSocket ) : NULL, 
+                              hb_arrayGetNI( pItem, 8 ) /* flags*/ ) )
    {
       hb_rddsqlSetError( mysql_errno( pMySql ), mysql_error( pMySql ), NULL, NULL, 0 );
       mysql_close( pMySql );
