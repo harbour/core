@@ -452,7 +452,7 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
 
    SWITCH cEvent
    CASE "dockReportsManager_visibilityChanged"
-      IF p; ::oRM:show() ; ENDIF
+      IF p; p1:raise() ; ENDIF
       IF ! p .AND. ! p1:isVisible()
          p1:raise()
       ENDIF

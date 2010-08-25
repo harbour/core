@@ -73,7 +73,9 @@
 
 /*----------------------------------------------------------------------*/
 
-CLASS IdeReportsManager INHERIT IdeObject
+CLASS HbpReportsManager
+
+   DATA   qParent
 
    DATA   oWidget
    DATA   qLayout
@@ -136,10 +138,11 @@ CLASS IdeReportsManager INHERIT IdeObject
    DATA   hObjTree                                INIT {=>}
    DATA   qCurGraphicsItem
 
-   METHOD new( oIde )
-   METHOD create( oIde )
+   DATA   nVersion                                INIT 0.1
+
+   METHOD new( qParent )
+   METHOD create( qParent )
    METHOD destroy()
-   METHOD show()
    METHOD execEvent( cEvent, p, p1, p2 )
    METHOD buildToolbar()
    METHOD buildToolbarAlign()
@@ -164,25 +167,18 @@ CLASS IdeReportsManager INHERIT IdeObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeReportsManager:new( oIde )
-
-   ::oIde := oIde
-
+METHOD HbpReportsManager:new( qParent )
+   ::qParent := qParent
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeReportsManager:create( oIde )
-   LOCAL qDock
+METHOD HbpReportsManager:create( qParent )
 
-   DEFAULT oIde TO ::oIde
-   ::oIde := oIde
+   DEFAULT qParent TO ::qParent
+   ::qParent := qParent
 
-   qDock := ::oIde:oReportsManagerDock:oWidget
-
-   ::oWidget := QWidget():new()
-
-   qDock:setWidget( ::oWidget )
+   ::oWidget := QWidget():new( ::qParent )
 
    /* Layout applied to RM widget */
    ::qLayout := QGridLayout():new()
@@ -223,20 +219,12 @@ METHOD IdeReportsManager:create( oIde )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeReportsManager:destroy()
+METHOD HbpReportsManager:destroy()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeReportsManager:show()
-
-   ::oReportsManagerDock:raise()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeReportsManager:buildDesignReport()
+METHOD HbpReportsManager:buildDesignReport()
 
    ::qLayoutD := QHBoxLayout():new()
    ::qLayoutD:setContentsMargins( 0,0,0,0 )
@@ -301,7 +289,7 @@ METHOD IdeReportsManager:buildDesignReport()
    ::qTreeObjects:setObjectName( "ObjectsTree" )
    ::qTreeObjects:setIconSize( QSize():new( 12,12 ) )
    ::qTreeObjects:setIndentation( 12 )
-   ::connect( ::qTreeObjects, "itemClicked(QTWItem)", {|p,p1| ::execEvent( "treeObjects_clicked", p, p1 ) } )
+   ::qTreeObjects:connect( "itemClicked(QTWItem)", {|p,p1| ::execEvent( "treeObjects_clicked", p, p1 ) } )
 
    ::qTabL1 := QTabWidget():new()
    ::qSplL:addWidget( ::qTabL1 )
@@ -344,6 +332,13 @@ METHOD IdeReportsManager:buildDesignReport()
    ::qTreeData:setHeaderHidden( .t. )
    ::qTreeData:setObjectName( "DataTree" )
    ::qTreeData:setDragEnabled( .t. )
+   ::qTreeData:setAcceptDrops( .t. )
+   //qDrop:installEventFilter( ::pEvents )
+   //::connect( qDrop, QEvent_DragEnter, {|p| ::execEvent( "projectTree_dragEnterEvent", p ) } )
+   ::qTreeData:connect( QEvent_DragEnter, {|p| ::execEvent( "dataTree_dragEnterEvent", p ) } )
+   //::connect( qDrop, QEvent_Drop     , {|p| ::execEvent( "projectTree_dropEvent"     , p ) } )
+   ::qTreeData:connect( QEvent_Drop     , {|p| ::execEvent( "dataTree_dropEvent"     , p ) } )
+
 
    ::loadReport()
 
@@ -364,7 +359,7 @@ METHOD IdeReportsManager:buildDesignReport()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeReportsManager:loadReport( cName )
+METHOD HbpReportsManager:loadReport( cName )
    LOCAL aSource, qItem, qItmC, aFld, a_, i, b_
 
    DEFAULT cName TO "Report"
@@ -397,19 +392,30 @@ METHOD IdeReportsManager:loadReport( cName )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeReportsManager:saveReport()
+METHOD HbpReportsManager:saveReport()
+   LOCAL hDoc    := {=>}
+   LOCAL hPage_1 := {=>}
+
+   hDoc[ "Symposis"     ] := "hbIDE Report Designer"
+   hDoc[ "Version"      ] := ::rptVersion
+   hDoc[ "Author"       ] := ::rptAuthor
+   hDoc[ "DateCreated"  ] := ::rptDateCreated
+   hDoc[ "DateModified" ] := ::rptDateModified
+
+   // Pages
+   hDoc[ "Page_1" ] := hPage_1
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeReportsManager:prepareReport()
+METHOD HbpReportsManager:prepareReport()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeReportsManager:execEvent( cEvent, p, p1, p2 )
+METHOD HbpReportsManager:execEvent( cEvent, p, p1, p2 )
    LOCAL qEvent, qMime, qItem
 
    SWITCH cEvent
@@ -438,23 +444,8 @@ METHOD IdeReportsManager:execEvent( cEvent, p, p1, p2 )
             ENDIF
 
          ELSEIF qMime:hasFormat( "application/x-toolbaricon"  )
-            SWITCH qMime:html()
-            CASE "Image"
-               ::addObject( QPoint():from( qEvent:scenePos() ), "Image"    )
-               EXIT
-            CASE "Chart"
-               ::addObject( QPoint():from( qEvent:scenePos() ), "Chart"    )
-               EXIT
-            CASE "Gradient"
-               ::addObject( QPoint():from( qEvent:scenePos() ), "Gradient" )
-               EXIT
-            CASE "Barcode"
-               ::addObject( QPoint():from( qEvent:scenePos() ), "Barcode"  )
-               EXIT
-            CASE "Text"
-               ::addObject( QPoint():from( qEvent:scenePos() ), "Text"     )
-               EXIT
-            ENDSWITCH
+            ::addObject( QPoint():from( qEvent:scenePos() ), qMime:html() )
+
          ELSE
          ENDIF
       ENDCASE
@@ -488,6 +479,14 @@ METHOD IdeReportsManager:execEvent( cEvent, p, p1, p2 )
       IF !empty( ::qStack ) .AND. p < ::qStack:count()
          ::qStack:setCurrentIndex( p )
       ENDIF
+      EXIT
+
+   CASE "dataTree_dropEvent"
+
+      EXIT
+
+   CASE "dataTree_dragEnterEvent"
+      QDragEnterEvent():from( p ):acceptProposedAction()
       EXIT
 
    CASE "buttonLandscape_clicked"
@@ -541,7 +540,7 @@ METHOD IdeReportsManager:execEvent( cEvent, p, p1, p2 )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeReportsManager:contextMenuScene( p1 )
+METHOD HbpReportsManager:contextMenuScene( p1 )
    LOCAL qMenu, qEvent, pAct
 
    qEvent := QGraphicsSceneContextMenuEvent():from( p1 )
@@ -564,7 +563,7 @@ METHOD IdeReportsManager:contextMenuScene( p1 )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeReportsManager:contextMenuItem( p1, p2 )
+METHOD HbpReportsManager:contextMenuItem( p1, p2 )
    LOCAL qMenu, qEvent, pAct
 
    HB_SYMBOL_UNUSED( p2 )
@@ -589,7 +588,7 @@ METHOD IdeReportsManager:contextMenuItem( p1, p2 )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeReportsManager:addObject( qPos, cType )
+METHOD HbpReportsManager:addObject( qPos, cType )
    LOCAL oWidget, cName, nW, nH, qGrad, cCode, qStrList, i
 
    cName := cType + "_" + hb_ntos( ::getNextID( cType ) )
@@ -657,7 +656,7 @@ METHOD IdeReportsManager:addObject( qPos, cType )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeReportsManager:addField( qPos, cAlias, cField )
+METHOD HbpReportsManager:addField( qPos, cAlias, cField )
    LOCAL oWidget, nW := 300, nH := 50
    LOCAL cName := cAlias + "..." + cField
 
@@ -684,7 +683,7 @@ METHOD IdeReportsManager:addField( qPos, cAlias, cField )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeReportsManager:updateObjectsTree( cType, cParent, cName, cSubType )
+METHOD HbpReportsManager:updateObjectsTree( cType, cParent, cName, cSubType )
    LOCAL qParent, qItem
 
    DO CASE
@@ -725,23 +724,22 @@ METHOD IdeReportsManager:updateObjectsTree( cType, cParent, cName, cSubType )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeReportsManager:buildTabBar()
+METHOD HbpReportsManager:buildTabBar()
 
    ::qTabBar := QTabBar():new()
-   //::qTabBar:setDocumentMode( .t. )
    ::qTabBar:setShape( QTabBar_TriangularNorth )
 
    ::qTabBar:addTab( "Code"    )
    ::qTabBar:addTab( "Dialogs" )
    ::qTabBar:addTab( "Page_1"  )
 
-   ::connect( ::qTabBar, "currentChanged(int)", {|p| ::execEvent( "tabBar_currentChanged", p ) } )
+   ::qTabBar:connect( "currentChanged(int)", {|p| ::execEvent( "tabBar_currentChanged", p ) } )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeReportsManager:buildStacks()
+METHOD HbpReportsManager:buildStacks()
 
    ::qStack := QStackedWidget():new()
 
@@ -758,7 +756,7 @@ METHOD IdeReportsManager:buildStacks()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeReportsManager:buildStatusBar()
+METHOD HbpReportsManager:buildStatusBar()
    LOCAL qLabel
 
    ::qStatus := QStatusBar():new()
@@ -785,7 +783,7 @@ METHOD IdeReportsManager:buildStatusBar()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeReportsManager:getImageOfType( cType )
+METHOD HbpReportsManager:getImageOfType( cType )
    LOCAL cImage
 
    DO CASE
@@ -807,7 +805,7 @@ METHOD IdeReportsManager:getImageOfType( cType )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeReportsManager:getNextID( cType )
+METHOD HbpReportsManager:getNextID( cType )
 
    STATIC hIDs := {=>}
 
@@ -824,7 +822,7 @@ METHOD IdeReportsManager:getNextID( cType )
 /*         given to him. I had downloaded this code many years back     */
 /*         and adopted to Vouch32 library and Vouch32 Active-X Server.  */
 
-METHOD IdeReportsManager:fetchBarString( cCode, lCheck )
+METHOD HbpReportsManager:fetchBarString( cCode, lCheck )
    STATIC cCars   := '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ-. *$/+%'
    STATIC aBarras := {  '1110100010101110',;  // 1
                         '1011100010101110',;  // 2
@@ -899,7 +897,7 @@ METHOD IdeReportsManager:fetchBarString( cCode, lCheck )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeReportsManager:buildToolbar()
+METHOD HbpReportsManager:buildToolbar()
 
    ::qToolbar := IdeToolbar():new()
    ::qToolbar:orientation := Qt_Horizontal
@@ -925,7 +923,7 @@ METHOD IdeReportsManager:buildToolbar()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeReportsManager:buildToolbarAlign()
+METHOD HbpReportsManager:buildToolbarAlign()
 
    ::qToolbarAlign := IdeToolbar():new()
    ::qToolbarAlign:orientation := Qt_Horizontal
@@ -970,7 +968,7 @@ METHOD IdeReportsManager:buildToolbarAlign()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeReportsManager:buildToolbarLeft()
+METHOD HbpReportsManager:buildToolbarLeft()
 
    ::qToolbarL := IdeToolbar():new()
    ::qToolbarL:orientation := Qt_Vertical

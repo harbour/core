@@ -60,9 +60,14 @@
 CLASS HbQtObjectHandler
 
    VAR    pPtr
+   VAR    pSlots
+   VAR    pEvents
 
    METHOD configure( xObject )
    METHOD from( xObject )                         INLINE ::configure( xObject )
+
+   METHOD connect( cnEvent, bBlock )
+   METHOD disconnect( cnEvent )
 
    ERROR HANDLER onError()
 
@@ -104,6 +109,44 @@ METHOD HbQtObjectHandler:onError()
    Eval( ErrorBlock(), oError )
 
    RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
+   LOCAL cType := valtype( cnEvent )
+
+   IF cType == "C"
+      IF empty( ::pSlots )
+         ::pSlots := Qt_Slots_New()
+      ENDIF
+      RETURN Qt_Slots_Connect( ::pSlots, ::pPtr, cnEvent, bBlock )
+
+   ELSEIF cType == "N"
+      IF empty( ::pEvents )
+         ::pEvents := Qt_Events_New()
+         ::installEventFilter( ::pEvents )
+      ENDIF
+      RETURN Qt_Events_Connect( ::pEvents, ::pPtr, cnEvent, bBlock )
+
+   ENDIF
+   RETURN .f.
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbQtObjectHandler:disconnect( cnEvent )
+   LOCAL cType := valtype( cnEvent )
+   IF cType == "C"
+      IF ! empty( ::pSlots )
+         RETURN Qt_Slots_DisConnect( ::pSlots, ::pPtr, cnEvent )
+      ENDIF
+
+   ELSEIF cType == "N"
+      IF ! empty( ::pEvents )
+         RETURN Qt_Events_DisConnect( ::pEvents, ::pPtr, cnEvent )
+      ENDIF
+
+   ENDIF
+   RETURN .f.
 
 /*----------------------------------------------------------------------*/
 

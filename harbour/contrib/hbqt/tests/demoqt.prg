@@ -109,30 +109,19 @@ EXIT PROCEDURE Qt_End()
 /*----------------------------------------------------------------------*/
 
 FUNCTION My_Events()
-
    HB_TRACE( HB_TR_ALWAYS, "Key Pressed" )
-
    RETURN nil
 
 /*----------------------------------------------------------------------*/
 
 PROCEDURE Main()
-   Local oLabel, oBtn, oDA, oWnd, oProg, oSBar, i
+   Local oLabel, oBtn, oDA, oWnd, oProg, oSBar
    LOCAL aMenu, aTool, aGrid, aTabs, aList
-   //LOCAL oStyle, oSize, n, aObj := array( nLoops )
-   //LOCAL nLoops := 500
 
    s_events := QT_EVENTS_NEW()
    s_slots := QT_SLOTS_NEW()
 
-HB_TRACE( HB_TR_ALWAYS, ( "  " ) )
-HB_TRACE( HB_TR_ALWAYS, ( "-----------------b-----------------" ) )
-
-   FOR i := 1 TO 1
-      oWnd := QMainWindow():new()
-      // hb_idleSleep( 1 )
-   NEXT
-
+   oWnd := QMainWindow():new()
    oWnd:show()
 
    oWnd:setMouseTracking( .t. )
@@ -160,19 +149,13 @@ HB_TRACE( HB_TR_ALWAYS, ( "-----------------b-----------------" ) )
    oProg  := Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
    aList  := Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
 
-   oWnd:installEventFilter( s_events )
-   QT_EVENTS_CONNECT( s_events, oWnd,  6, {|e| My_Events( e ) } )
-   QT_EVENTS_CONNECT( s_events, oWnd, 19, {|| s_qApp:quit() } )
-
+   oWnd:connect(  6, {|e| My_Events( e ) } )
+   oWnd:connect( 19, {|| s_qApp:quit() } )
    oWnd:Show()
 
    s_qApp:exec()
 
-HB_TRACE( HB_TR_ALWAYS, ( "----------------- qApp:exec -----------------" ) )
-
    xReleaseMemory( { oBtn, oLabel, oProg, oSBar, aGrid, aList, aMenu, aTool, aTabs, oDA, oWnd } )
-
-HB_TRACE( HB_TR_ALWAYS, ( "-------------------- exit -------------------" ) )
 
    RETURN
 
@@ -181,7 +164,6 @@ HB_TRACE( HB_TR_ALWAYS, ( "-------------------- exit -------------------" ) )
 FUNCTION xReleaseMemory( aObj )
    #if 1
    LOCAL i
-HB_TRACE( HB_TR_ALWAYS, ( "-----------------  Releasing Memory  -----------------" ) )
    FOR i := 1 TO len( aObj )
       IF hb_isObject( aObj[ i ] )
          aObj[ i ]:pPtr := 1
@@ -189,7 +171,6 @@ HB_TRACE( HB_TR_ALWAYS, ( "-----------------  Releasing Memory  ----------------
          xReleaseMemory( aObj[ i ] )
       ENDIF
    NEXT
-HB_TRACE( HB_TR_ALWAYS, ( "------------------  Memory Released ------------------" ) )
    #else
       HB_SYMBOL_UNUSED( aObj )
    #endif
@@ -201,7 +182,7 @@ PROCEDURE ExecOneMore()
    Local oLabel, oBtn, oDA, oWnd, oProg, oSBar
    LOCAL aMenu, aTool, aGrid, aTabs, aList, oEventLoop
    LOCAL lExit := .f.
-   
+
    oWnd := QMainWindow():new()
 
    oWnd:setMouseTracking( .t. )
@@ -217,8 +198,7 @@ PROCEDURE ExecOneMore()
    aMenu  := Build_MenuBar( oWnd )
    aTool  := Build_ToolBar( oWnd )
    oLabel := Build_Label( oDA, { 30,190 }, { 300, 30 } )
-   oBtn   := Build_PushButton( oDA, { 30,240 }, { 100,50 }, ;
-                                   "CLOSE", "This dialog will be closed now!", @lExit )
+   oBtn   := Build_PushButton( oDA, { 30,240 }, { 100,50 }, "CLOSE", "This dialog will be closed now!", @lExit )
    aGrid  := Build_Grid( oDA, { 30, 30 }, { 450,150 } )
    aTabs  := Build_Tabs( oDA, { 510, 5 }, { 360, 400 } )
    oProg  := Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
@@ -294,8 +274,8 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oActNew:setText( "&New" )
    oActNew:setIcon( "new.png" )
    oActNew:setToolTip( "A New File" )
-   /* Attach codeblock to be triggered */
-   QT_SLOTS_CONNECT( s_slots, oActNew, QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "New" , w, l ) } )
+   oActNew:connect( QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "New" , w, l ) } )
+
    /* Attach Action with Toolbar */
    oTB:addAction( oActNew )
 
@@ -304,8 +284,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oActOpen:setText( "&Open" )
    oActOpen:setIcon( "open.png" )
    oActOpen:setToolTip( "Select a file to be opened!" )
-   /* Attach codeblock to be triggered */
-   QT_SLOTS_CONNECT( s_slots, oActOpen, QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Open" , w, l ) } )
+   oActOpen:connect( QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Open" , w, l ) } )
    /* Attach Action with Toolbar */
    oTB:addAction( oActOpen )
 
@@ -316,68 +295,13 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oActSave:setText( "&Save" )
    oActSave:setIcon( "save.png" )
    oActSave:setToolTip( "Save this file!" )
-   /* Attach codeblock to be triggered */
-   QT_SLOTS_CONNECT( s_slots, oActSave, QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Save" , w, l ) } )
+   oActSave:connect( oActSave, QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Save" , w, l ) } )
    /* Attach Action with Toolbar */
    oTB:addAction( oActSave )
 
    /* Add this toolbar with main window */
    oWnd:addToolBar_1( oTB )
 
-   ///////////////////////////////////////////////////////////
-#if 0
-   /* Build another toolbar - we will have two toolbats now */
-   oTB := QToolBar():new( oWnd )
-
-   oAct := QAction():new( oWnd )
-   oAct:setText( "&Colors" )
-   oAct:setToolTip( "Colors Dialog" )
-   QT_SLOTS_CONNECT( s_slots, oAct, QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Colors", w, l ) } )
-   oTB:addAction( oAct )
-
-   oAct := QAction():new( oWnd )
-   oAct:setText( "&Fonts" )
-   oAct:setToolTip( "Fonts Dialog" )
-   QT_SLOTS_CONNECT( s_slots, oAct, QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Fonts", w, l ) } )
-   oTB:addAction( oAct )
-
-   oTB:addSeparator()
-
-   oAct := QAction():new( oWnd )
-   oAct:setText( "&PgSetup" )
-   oAct:setToolTip( "Page Setup Dialog" )
-   QT_SLOTS_CONNECT( s_slots, oAct, QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "PageSetup", w, l ) } )
-   oTB:addAction( oAct )
-
-   oAct := QAction():new( oWnd )
-   oAct:setText( "&Preview" )
-   oAct:setToolTip( "Page Preview Dialog" )
-   QT_SLOTS_CONNECT( s_slots, oAct, QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Preview", w, l ) } )
-   oTB:addAction( oAct )
-
-   oTB:addSeparator()
-
-   oAct := QAction():new( oWnd )
-   oAct:setText( "&Webpage" )
-   oAct:setToolTip( "Web Browser Dialog" )
-   QT_SLOTS_CONNECT( s_slots, oAct, QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "WebPage", w, l ) } )
-   oTB:addAction( oAct )
-
-   oAct := QAction():new( oWnd )
-   oAct:setText( "&Wizard" )
-   oAct:setToolTip( "Generic Wizard Dialog" )
-   QT_SLOTS_CONNECT( s_slots, oAct, QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Wizard", w, l ) } )
-   oTB:addAction( oAct )
-
-   oAct := QAction():new( oWnd )
-   oAct:setText( "&SystemTray" )
-   oAct:setToolTip( "Show in System Tray!" )
-   QT_SLOTS_CONNECT( s_slots, oAct, QT_EVE_TRIGGERED_B, {|w,l| ShowInSystemTray( oWnd, w, l ) } )
-   oTB:addAction( oAct )
-
-   /* Add this toolbar with main window */
-   oWnd:addToolBar_1( oTB )
-#endif
    RETURN { oActNew, oActOpen, oActSave, oTB }
 
 /*----------------------------------------------------------------------*/
@@ -394,9 +318,9 @@ STATIC FUNCTION Build_PushButton( oWnd, aPos, aSize, cLabel, cMsg, lExit )
    oBtn:resize( aSize[ 1 ],aSize[ 2 ] )
    oBtn:show()
    IF hb_isLogical( lExit )
-      QT_SLOTS_CONNECT( s_slots, oBtn, QT_EVE_CLICKED, {|| lExit := .t. } )
+      oBtn:connect( QT_EVE_CLICKED, {|| lExit := .t. } )
    ELSE
-      QT_SLOTS_CONNECT( s_slots, oBtn, QT_EVE_CLICKED, {|| MsgInfo( cMsg ), lExit := .t. } )
+      oBtn:connect( QT_EVE_CLICKED, {|| MsgInfo( cMsg ), lExit := .t. } )
    ENDIF
 
    RETURN oBtn
@@ -466,7 +390,7 @@ STATIC FUNCTION Build_TreeView( oWnd )
 
    oTV := QTreeView():new( oWnd )
    oTV:setMouseTracking( .t. )
-*  QT_SLOTS_CONNECT( s_slots, oTV, QT_EVE_HOVERED, {|i| HB_TRACE( HB_TR_ALWAYS, ( "oTV:hovered" ) } )
+*  oTV:connect( QT_EVE_HOVERED, {|i| HB_TRACE( HB_TR_ALWAYS, ( "oTV:hovered" ) } )
    oDirModel := QDirModel():new()
    oTV:setModel( oDirModel )
    oTV:move( 5, 7 )
@@ -482,7 +406,7 @@ STATIC FUNCTION Build_ListBox( oWnd, aPos, aSize )
 
    oListBox := QListView():New( oWnd )
    oListBox:setMouseTracking( .t. )
-*  QT_SLOTS_CONNECT( s_slots, oListBox, QT_EVE_HOVERED, {|i| HB_TRACE( HB_TR_ALWAYS, ( "oListBox:hovered" ) } )
+*  oListBox:connect( QT_EVE_HOVERED, {|i| HB_TRACE( HB_TR_ALWAYS, ( "oListBox:hovered" ) } )
 
    oStrList := QStringList():new()
 
@@ -525,7 +449,7 @@ STATIC FUNCTION Build_Controls( oWnd )
    LOCAL oEdit, oCheckBox, oComboBox, oSpinBox, oRadioButton
 
    oEdit := QLineEdit():new( oWnd )
-   QT_SLOTS_CONNECT( s_slots, oEdit, QT_EVE_RETURNPRESSED, {|i| i := i, MsgInfo( oEdit:text() ) } )
+   oEdit:connect( QT_EVE_RETURNPRESSED, {|i| i := i, MsgInfo( oEdit:text() ) } )
    oEdit:move( 5, 10 )
    oEdit:resize( 345, 30 )
    oEdit:setMaxLength( 40 )
@@ -537,13 +461,13 @@ STATIC FUNCTION Build_Controls( oWnd )
    oComboBox:addItem( "First"  )
    oComboBox:addItem( "Second" )
    oComboBox:addItem( "Third"  )
-   QT_SLOTS_CONNECT( s_slots, oComboBox, QT_EVE_CURRENTINDEXCHANGED_I, {|i| i := i, MsgInfo( oComboBox:itemText( i ) ) } )
+   oComboBox:connect( QT_EVE_CURRENTINDEXCHANGED_I, {|i| i := i, MsgInfo( oComboBox:itemText( i ) ) } )
    oComboBox:move( 5, 60 )
    oComboBox:resize( 345, 30 )
    oComboBox:show()
 
    oCheckBox := QCheckBox():New( oWnd )
-   QT_SLOTS_CONNECT( s_slots, oCheckBox, QT_EVE_STATECHANGED_I, {|i| i := i, MsgInfo( IF( i == 0,"Uncheckd","Checked" ) ) } )
+   oCheckBox:connect( QT_EVE_STATECHANGED_I, {|i| i := i, MsgInfo( IF( i == 0,"Uncheckd","Checked" ) ) } )
    oCheckBox:setText( "Testing CheckBox HbQt" )
    oCheckBox:move( 5, 110 )
    oCheckBox:resize( 345, 30 )
@@ -555,7 +479,7 @@ STATIC FUNCTION Build_Controls( oWnd )
    oSpinBox:Show()
 
    oRadioButton := QRadioButton():New( oWnd )
-   QT_SLOTS_CONNECT( s_slots, oRadioButton, QT_EVE_CLICKED, {|i| i := i, MsgInfo( "Checked" ) } )
+   oRadioButton:connect( QT_EVE_CLICKED, {|i| i := i, MsgInfo( "Checked" ) } )
    oRadioButton:Move( 5, 210 )
    oRadioButton:ReSize( 345, 30 )
    oRadioButton:Show()
@@ -668,245 +592,6 @@ PROCEDURE hb_GtSys()
    HB_GT_GUI_DEFAULT()
    RETURN
 #endif
-
-/*----------------------------------------------------------------------*/
-/*
- * Just to Link Every New Widget
- */
-STATIC FUNCTION Dummies()
-   #if 0
-   LOCAL oSome
-
-   HB_SYMBOL_UNUSED( oSome )
-
-   oSome := QAbstractButton():new()
-   oSome := QAbstractItemModel():new()
-   oSome := QAbstractItemView():new()
-   oSome := QAbstractListModel():new()
-   oSome := QAbstractPrintDialog():new()
-   oSome := QAbstractScrollArea():new()
-   oSome := QAbstractSlider():new()
-   oSome := QAbstractSpinBox():new()
-   oSome := QAbstractTableModel():new()
-   oSome := QAction():new()
-   oSome := QApplication():new()
-   oSome := QBitmap():new()
-   oSome := QBoxLayout():new()
-   oSome := QBrush():new()
-   oSome := QButtonGroup():new()
-   oSome := QCalendarWidget():new()
-   oSome := QCheckBox():new()
-   oSome := QClipboard():new()
-   oSome := QColor():new()
-   oSome := QColorDialog():new()
-   oSome := QComboBox():new()
-   oSome := QCommandLinkButton():new()
-   oSome := QCommonStyle():new()
-   oSome := QConicalGradient():new()
-   oSome := QCoreApplication():new()
-   oSome := QCursor():new()
-   oSome := QDateEdit():new()
-   oSome := QDateTime():new()
-   oSome := QDateTimeEdit():new()
-   oSome := QDesktopWidget():new()
-   oSome := QDial():new()
-   oSome := QDialog():new()
-   oSome := QDir():new()
-   oSome := QDirModel():new()
-   oSome := QDockWidget():new()
-   oSome := QDoubleSpinBox():new()
-   oSome := QDropEvent():new()
-   oSome := QDragMoveEvent():new()
-   oSome := QDragEnterEvent():new()
-   oSome := QDragLeaveEvent():new()
-   oSome := QErrorMessage():new()
-   oSome := QEvent():new()
-   oSome := QEventLoop():new()
-   oSome := QFileDialog():new()
-   oSome := QFileSystemModel():new()
-   oSome := QFocusEvent():new()
-   oSome := QFocusFrame():new()
-   oSome := QFont():new()
-   oSome := QFontComboBox():new()
-   oSome := QFontDatabase():new()
-   oSome := QFontDialog():new()
-   oSome := QFontInfo():new()
-   oSome := QFontMetrics():new()
-   oSome := QFontMetricsF():new()
-   oSome := QFormLayout():new()
-   oSome := QFrame():new()
-   oSome := QFtp():new()
-   oSome := QGradient():new()
-   oSome := QGridLayout():new()
-   oSome := QGroupBox():new()
-   oSome := QHBoxLayout():new()
-   oSome := QHeaderView():new()
-   oSome := QHttp():new()
-   oSome := QIcon():new()
-   oSome := QImage():new()
-   oSome := QImageReader():new()
-   oSome := QImageWriter():new()
-   oSome := QInputDialog():new()
-   oSome := QInputEvent():new()
-   oSome := QIODevice():new()
-   oSome := QKeyEvent():new()
-   oSome := QKeySequence():new()
-   oSome := QLabel():new()
-   oSome := QLatin1Char():new()
-   oSome := QLatin1String():new()
-   oSome := QLayout():new()
-   oSome := QLayoutItem():new()
-   oSome := QLCDNumber():new()
-   oSome := QLine():new()
-   oSome := QLinearGradient():new()
-   oSome := QLineEdit():new()
-   oSome := QList():new()
-   oSome := QListView():new()
-   oSome := QListWidget():new()
-   oSome := QListWidgetItem():new()
-   oSome := QMainWindow():new()
-   oSome := QMenu():new()
-   oSome := QMenuBar():new()
-   oSome := QMessageBox():new()
-   oSome := QModelIndex():new()
-   oSome := QMouseEvent():new()
-   oSome := QMoveEvent():new()
-   oSome := QObject():new()
-   oSome := QPaintDevice():new()
-   oSome := QPageSetupDialog():new()
-   oSome := QPainter():new()
-   oSome := QPaintEvent():new()
-   oSome := QPalette():new()
-   oSome := QPen():new()
-   oSome := QPicture():new()
-   oSome := QPixmap():new()
-   oSome := QPoint():new()
-   oSome := QPointF():new()
-   oSome := QPrintDialog():new()
-   oSome := QPrintEngine():new()
-   oSome := QPrinter():new()
-   oSome := QPrintPreviewDialog():new()
-   oSome := QProcess():new()
-   oSome := QProgressBar():new()
-   oSome := QProgressDialog():new()
-   oSome := QPushButton():new()
-   oSome := QRadialGradient():new()
-   oSome := QRadioButton():new()
-   oSome := QRect():new()
-   oSome := QRectF():new()
-   oSome := QRegion():new()
-   oSome := QResizeEvent():new()
-   oSome := QResource():new()
-   oSome := QScrollArea():new()
-   oSome := QScrollBar():new()
-   oSome := QSignalMapper():new()
-   oSome := QSize():new()
-   oSome := QSizeF():new()
-   oSome := QSizeGrip():new()
-   oSome := QSizePolicy():new()
-   oSome := QSlider():new()
-   oSome := QSound():new()
-   oSome := QSpinBox():new()
-   oSome := QSplashScreen():new()
-   oSome := QSplitter():new()
-   oSome := QStandardItem():new()
-   oSome := QStandardItemModel():new()
-   oSome := QStatusBar():new()
-   oSome := QStringList():new()
-   oSome := QStringListModel():new()
-   oSome := QStyle():new()
-   oSome := QStyledItemDelegate():new()
-   oSome := QStyleFactory():new()
-   oSome := QStyleHintReturn():new()
-   oSome := QStyleHintReturnMask():new()
-   oSome := QStyleHintReturnVariant():new()
-   oSome := QStyleOption():new()
-   oSome := QStyleOptionButton():new()
-   oSome := QStyleOptionComboBox():new()
-   oSome := QStyleOptionComplex():new()
-   oSome := QStyleOptionDockWidget():new()
-   oSome := QStyleOptionFocusRect():new()
-   oSome := QStyleOptionFrame():new()
-   oSome := QStyleOptionGroupBox():new()
-   oSome := QStyleOptionHeader():new()
-   oSome := QStyleOptionMenuItem():new()
-   oSome := QStyleOptionProgressBar():new()
-   oSome := QStyleOptionSizeGrip():new()
-   oSome := QStyleOptionSlider():new()
-   oSome := QStyleOptionSpinBox():new()
-   oSome := QStyleOptionTab():new()
-   oSome := QStyleOptionTabBarBase():new()
-   oSome := QStyleOptionTabWidgetFrame():new()
-   oSome := QStyleOptionTitleBar():new()
-   oSome := QStyleOptionToolBar():new()
-   oSome := QStyleOptionToolBox():new()
-   oSome := QStyleOptionToolButton():new()
-   oSome := QStyleOptionViewItem():new()
-   oSome := QStylePainter():new()
-   oSome := QSystemTrayIcon():new()
-   oSome := QTabBar():new()
-   oSome := QTableView():new()
-   oSome := QTableWidget():new()
-   oSome := QTableWidgetItem():new()
-   oSome := QTabWidget():new()
-   oSome := QTextBlock():new()
-   oSome := QTextBlockFormat():new()
-   oSome := QTextBlockGroup():new()
-   oSome := QTextBrowser():new()
-   oSome := QTextBoundaryFinder():new()
-   oSome := QTextCharFormat():new()
-   oSome := QTextCodec():new()
-   oSome := QTextCursor():new()
-   oSome := QTextDecoder():new()
-   oSome := QTextDocument():new()
-   oSome := QTextDocumentFragment():new()
-   oSome := QTextDocumentWriter():new()
-   oSome := QTextEdit():new()
-   oSome := QTextEncoder():new()
-   oSome := QTextFormat():new()
-   oSome := QTextFragment():new()
-   oSome := QTextFrame():new()
-   oSome := QTextFrameFormat():new()
-   oSome := QTextImageFormat():new()
-   oSome := QTextInlineObject():new()
-   oSome := QTextItem():new()
-   oSome := QTextLayout():new()
-   oSome := QTextLength():new()
-   oSome := QTextLine():new()
-   oSome := QTextObject():new()
-   oSome := QTextStream():new()
-   oSome := QTimeEdit():new()
-   oSome := QTimer():new()
-   oSome := QToolBar():new()
-   oSome := QToolBox():new()
-   oSome := QToolButton():new()
-   oSome := QTreeView():new()
-   oSome := QTreeWidget():new()
-   oSome := QTreeWidgetItem():new()
-   oSome := QUrl():new()
-   oSome := QVariant():new()
-   oSome := QVBoxLayout():new()
-   oSome := QWebFrame():new()
-   oSome := QWebHistory():new()
-   oSome := QWebHistoryInterface():new()
-   oSome := QWebHistoryItem():new()
-   oSome := QWebHitTestResult():new()
-   oSome := QWebPage():new()
-   oSome := QWebPluginFactory():new()
-   oSome := QWebSecurityOrigin():new()
-   oSome := QWebSettings():new()
-   oSome := QWebView():new()
-   oSome := QWheelEvent():new()
-   oSome := QWidget():new()
-   oSome := QWidgetAction():new()
-   oSome := QWidgetItem():new()
-   oSome := QWindowsStyle():new()
-   oSome := QWindowsXPStyle():new()
-   oSome := QWizard():new()
-
-   oSome := 1
-   #endif
-   RETURN nil
 
 /*----------------------------------------------------------------------*/
 

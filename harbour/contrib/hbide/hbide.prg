@@ -489,7 +489,8 @@ METHOD HbIde:create( aParams )
    ::oBM := IdeBrowseManager():new():create( Self )
 
    /* Reports Manager */
-   ::oRM := IdeReportsManager():new():create( Self )
+   ::oRM := HbpReportsManager():new():create( ::oReportsManagerDock:oWidget )
+   ::oReportsManagerDock:oWidget:setWidget( ::oRM:oWidget )
 
    /* Fill various elements of the IDE */
    ::oPM:populate()
