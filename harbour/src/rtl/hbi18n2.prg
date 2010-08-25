@@ -120,6 +120,10 @@ FUNCTION __I18N_POTARRAYLOAD( cFile, cErrorMsg )
       cErrorMsg := "cannot read from file: " + cFile
       RETURN NIL
    ENDIF
+   /* Strip UTF-8 BOM */
+   IF Left( cValue, 3 ) == e"\xEF\xBB\xBF"
+      cValue := SubStr( cValue, 4 )
+   ENDIF
    IF !hb_eol() == _I18N_EOL
       cValue := strtran( cValue, hb_eol(), _I18N_EOL )
    ENDIF
