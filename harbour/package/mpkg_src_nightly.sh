@@ -44,7 +44,7 @@
 
 echo Starting Harbour Project nightly source package creation...
 
-rm -f harbour-nightly-src.zip harbour-nightly.tar.bz2 harbour-nightly.tar.gz
+rm -f harbour-nightly-src.zip harbour-nightly.tar.bz2 harbour-nightly.tar.gz harbour-nightly.tar.xz
 
 rm -f -r _hb_mpkg_src
 mkdir _hb_mpkg_src || {
@@ -62,6 +62,7 @@ echo Creating bz2, gz packages...
 tar -c harbour/* > harbour-nightly.tar
 bzip2 -c -z harbour-nightly.tar > ../harbour-nightly.tar.bz2
 gzip -c harbour-nightly.tar > ../harbour-nightly.tar.gz
+xz -c harbour-nightly.tar > ../harbour-nightly.tar.xz
 rm harbour-nightly.tar
 
 echo Downloading sources with CRLF line ending...
@@ -85,6 +86,7 @@ then
    cp harbour-nightly-src.zip $destdir
    cp harbour-nightly.tar.bz2 $destdir
    cp harbour-nightly.tar.gz  $destdir
+   cp harbour-nightly.tar.xz  $destdir
 else
    if [ "$HB_SFNET_FRS_PRIVATE_KEY" -a "$HB_SFNET_USER" ]
    then
@@ -95,9 +97,10 @@ else
       scp -i $HB_SFNET_FRS_PRIVATE_KEY harbour-nightly-src.zip $HB_SFNET_USER$desthost$destdir
       scp -i $HB_SFNET_FRS_PRIVATE_KEY harbour-nightly.tar.bz2 $HB_SFNET_USER$desthost$destdir
       scp -i $HB_SFNET_FRS_PRIVATE_KEY harbour-nightly.tar.gz  $HB_SFNET_USER$desthost$destdir
+      scp -i $HB_SFNET_FRS_PRIVATE_KEY harbour-nightly.tar.xz  $HB_SFNET_USER$desthost$destdir
    fi
 fi
 
-rm -f harbour-nightly-src.zip harbour-nightly.tar.bz2 harbour-nightly.tar.gz
+rm -f harbour-nightly-src.zip harbour-nightly.tar.bz2 harbour-nightly.tar.gz harbour-nightly.tar.xz
 
 echo Ended Harbour Project nightly source package creation.
