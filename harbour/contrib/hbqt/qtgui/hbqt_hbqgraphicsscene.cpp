@@ -375,6 +375,20 @@ void HBQGraphicsScene::keyPressEvent( QKeyEvent * keyEvent )
 //                             Drag & Drop
 /*----------------------------------------------------------------------*/
 
+void HBQGraphicsScene::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
+{
+   #if 0
+   if( block ){
+      PHB_ITEM p1 = hb_itemPutNI( NULL, 21105 );
+      PHB_ITEM p2 = hb_itemPutPtr( NULL, event );
+      hb_vmEvalBlockV( block, 2, p1, p2 );
+      hb_itemRelease( p1 );
+      hb_itemRelease( p2 );
+   }
+   #endif
+   QGraphicsScene::contextMenuEvent( event );
+}
+
 void HBQGraphicsScene::dragEnterEvent( QGraphicsSceneDragDropEvent * event )
 {
    if( block )

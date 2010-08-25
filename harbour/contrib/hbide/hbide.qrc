@@ -267,6 +267,8 @@
 <file>resources/tofront.png</file>
 <file>resources/r-page.png</file>
 <file>resources/r-report.png</file>
+<file>resources/r-landscape.png</file>
+<file>resources/r-portrait.png</file>
 </qresource>
 </RCC>
 

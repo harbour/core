@@ -113,8 +113,8 @@ HBQGraphicsItem::HBQGraphicsItem( int type, QGraphicsItem * parent ) : QGraphics
    m_toColorFactor      = 1.5;
    m_drawBorder         = true;
    m_showGrid           = true;
+   m_legendColorRectWidth = 5 / UNIT;
 
-//   m_barValues          = NULL;
 }
 
 HBQGraphicsItem::~HBQGraphicsItem()
@@ -477,9 +477,31 @@ void HBQGraphicsItem::setBarValues( const QStringList & barValues )
    m_barValues = barValues;
 }
 
+void HBQGraphicsItem::setLegendColorRectWidth( int legendColorRectWidth )
+{
+   if( legendColorRectWidth < 1 )
+      legendColorRectWidth = 1;
+   m_legendColorRectWidth = legendColorRectWidth;
+   update();
+}
+
 /*----------------------------------------------------------------------*/
 //                            Mouse Events
 /*----------------------------------------------------------------------*/
+
+void HBQGraphicsItem::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
+{
+   if( block ){
+      PHB_ITEM p1 = hb_itemPutNI( NULL, 21105 );
+      PHB_ITEM p2 = hb_itemPutPtr( NULL, event );
+      PHB_ITEM p3 = hb_itemPutC( NULL, objectName().toLatin1().data() );
+      hb_vmEvalBlockV( block, 3, p1, p2, p3 );
+      hb_itemRelease( p1 );
+      hb_itemRelease( p2 );
+      hb_itemRelease( p3 );
+   }
+   QGraphicsItem::contextMenuEvent( event );
+}
 
 void HBQGraphicsItem::mousePressEvent( QGraphicsSceneMouseEvent * event )
 {
@@ -1233,6 +1255,21 @@ void HBQGraphicsItem::drawBarChart( QPainter * painter, const QStyleOptionGraphi
       }
       x += barWidth + m_barsIdentation;
    }
+   #if 0  /* Legend */
+   painter->fillRect( rect, brush() );
+   painter->drawRect( rect );
+   painter->translate( rect.topLeft() );
+   qreal y = 1 / UNIT;
+   qreal vstep = ( rect.height() - y - 1 / UNIT * val.size() ) / val.size();
+   foreach( _chartValue cv, val )
+   {
+      painter->fillRect( QRectF( 1 / UNIT / 2, y, m_legendColorRectWidth, vstep ), QBrush( cv.color ) );
+      painter->drawText( QRectF( 1 / UNIT + m_legendColorRectWidth, y, rect.width() - ( 1 / UNIT + m_legendColorRectWidth ), vstep ),
+                                                                            Qt::AlignVCenter | Qt::AlignLeft, cv.key );
+      y += vstep + 1 / UNIT;
+   }
+   #endif
+
 }
 /*----------------------------------------------------------------------*/
 

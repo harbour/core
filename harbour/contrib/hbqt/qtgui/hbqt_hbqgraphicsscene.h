@@ -123,6 +123,7 @@ public slots:
    virtual void             setVerticalMagnet( bool magneted );
 
 protected:
+   virtual void             contextMenuEvent( QGraphicsSceneContextMenuEvent * event );
    virtual void             mouseMoveEvent( QGraphicsSceneMouseEvent * mouseEvent );
    virtual void             mousePressEvent( QGraphicsSceneMouseEvent *event );
    virtual void             mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent );

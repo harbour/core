@@ -88,6 +88,7 @@
  *     :toColorFactor()                                    -> nQreal
  *     :setToColorFactor( nToColorFactor )                 -> NIL
  *     :setBarValues( pList )                              -> NIL
+ *     :setLegendColorRectWidth( nLegendColorRectWidth )   -> NIL
  * 
  *  $DESCRIPTION$
  * 

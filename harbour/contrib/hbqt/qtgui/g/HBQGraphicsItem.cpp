@@ -1018,6 +1018,20 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETBARVALUES )
    }
 }
 
+/*
+ * void           setLegendColorRectWidth( int legendColorRectWidth )
+ */
+HB_FUNC( QT_HBQGRAPHICSITEM_SETLEGENDCOLORRECTWIDTH )
+{
+   HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
+   if( p )
+      ( p )->setLegendColorRectWidth( hb_parni( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETLEGENDCOLORRECTWIDTH FP=( p )->setLegendColorRectWidth( hb_parni( 2 ) ); p is NULL" ) );
+   }
+}
+
 
 /*----------------------------------------------------------------------*/
 #endif             /* #if QT_VERSION >= 0x040500 */

@@ -177,6 +177,7 @@ private:
    bool           m_drawBorder;
    bool           m_showGrid;
    QStringList    m_barValues;
+   int            m_legendColorRectWidth;
 
    QColor         generateNextColor();
    QRectF         adjustOption( QPainter * painter, const QStyleOptionGraphicsItem * option );
@@ -203,6 +204,7 @@ protected:
    void           mousePressEvent( QGraphicsSceneMouseEvent * event );
    void           mouseReleaseEvent( QGraphicsSceneMouseEvent * event );
    void           mouseMoveEvent( QGraphicsSceneMouseEvent * event );
+   void           contextMenuEvent( QGraphicsSceneContextMenuEvent * event );
 
 
 public slots:
@@ -271,6 +273,7 @@ public slots:
    qreal          toColorFactor();
    void           setToColorFactor( qreal toColorFactor );
    void           setBarValues( const QStringList & list );
+   void           setLegendColorRectWidth( int legendColorRectWidth );
 
    struct _chartValue
    {

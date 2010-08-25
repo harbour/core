@@ -129,6 +129,7 @@ CREATE CLASS HBQGraphicsItem INHERIT HbQtObjectHandler, QGraphicsItem
    METHOD  toColorFactor()
    METHOD  setToColorFactor( nToColorFactor )
    METHOD  setBarValues( pList )
+   METHOD  setLegendColorRectWidth( nLegendColorRectWidth )
 
    ENDCLASS
 
@@ -388,4 +389,8 @@ METHOD HBQGraphicsItem:setToColorFactor( nToColorFactor )
 
 METHOD HBQGraphicsItem:setBarValues( pList )
    RETURN Qt_HBQGraphicsItem_setBarValues( ::pPtr, hbqt_ptr( pList ) )
+
+
+METHOD HBQGraphicsItem:setLegendColorRectWidth( nLegendColorRectWidth )
+   RETURN Qt_HBQGraphicsItem_setLegendColorRectWidth( ::pPtr, nLegendColorRectWidth )
 

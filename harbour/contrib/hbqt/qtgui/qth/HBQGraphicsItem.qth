@@ -155,6 +155,7 @@ HB_FUNC( QT_HBQGRAPHICSITEM )
    qreal          toColorFactor()
    void           setToColorFactor( qreal toColorFactor )
    void           setBarValues( const QStringList & list )
+   void           setLegendColorRectWidth( int legendColorRectWidth )
 
 </PROTOS>
 

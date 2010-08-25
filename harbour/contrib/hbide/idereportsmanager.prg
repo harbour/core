@@ -157,6 +157,8 @@ CLASS IdeReportsManager INHERIT IdeObject
    METHOD getNextID( cType )
    METHOD getImageOfType( cType )
    METHOD updateObjectsTree( cType, cParent, cName, cSubType )
+   METHOD contextMenuItem( p1, p2 )
+   METHOD contextMenuScene( p1 )
 
    ENDCLASS
 
@@ -227,7 +229,9 @@ METHOD IdeReportsManager:destroy()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeReportsManager:show()
+
    ::oReportsManagerDock:raise()
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -350,6 +354,8 @@ METHOD IdeReportsManager:buildDesignReport()
    ::qScene:setRightMagnet( .t. )
    ::qScene:setBottomMagnet( .t. )
 
+   ::qLayoutD:setStretch( 1,1 )
+
    ::qWidget1:show()
    ::qWidget2:show()
    ::qWidget3:show()
@@ -411,6 +417,9 @@ METHOD IdeReportsManager:execEvent( cEvent, p, p1, p2 )
       qEvent := QGraphicsSceneDragDropEvent():from( p1 )
 
       DO CASE
+      CASE p == 21105    // Context Menu Event
+         ::contextMenuScene( p1 )
+
       CASE p == QEvent_GraphicsSceneDragEnter
          qEvent:acceptProposedAction()
 
@@ -461,6 +470,8 @@ METHOD IdeReportsManager:execEvent( cEvent, p, p1, p2 )
          ELSE
             ::qCurGraphicsItem := NIL
          ENDIF
+      CASE p == 21105 // Context Menu Event
+         ::contextMenuItem( p1, p2 )
 
       ENDCASE
       EXIT
@@ -479,6 +490,12 @@ METHOD IdeReportsManager:execEvent( cEvent, p, p1, p2 )
       ENDIF
       EXIT
 
+   CASE "buttonLandscape_clicked"
+      ::qScene:setOrientation( QPrinter_Landscape )
+      EXIT
+   CASE "buttonPortrait_clicked"
+      ::qScene:setOrientation( QPrinter_Portrait )
+      EXIT
    CASE "buttonRotateL_clicked"
       IF !empty( ::qCurGraphicsItem )
          ::qCurGraphicsItem:rotate( -10 )
@@ -519,6 +536,54 @@ METHOD IdeReportsManager:execEvent( cEvent, p, p1, p2 )
       ENDCASE
       EXIT
    ENDSWITCH
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeReportsManager:contextMenuScene( p1 )
+   LOCAL qMenu, qEvent, pAct
+
+   qEvent := QGraphicsSceneContextMenuEvent():from( p1 )
+
+   qMenu := QMenu():new( ::qView )
+   qMenu:addAction( "Refresh"  )
+   qMenu:addAction( "Zoom+" )
+
+   pAct := qMenu:exec_1( qEvent:screenPos() )
+   IF ! hbqt_isEmptyQtPointer( pAct )
+      SWITCH ( QAction():configure( pAct ) ):text()
+      CASE "Refresh"
+         EXIT
+      CASE "Zoom+"
+         EXIT
+      ENDSWITCH
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeReportsManager:contextMenuItem( p1, p2 )
+   LOCAL qMenu, qEvent, pAct
+
+   HB_SYMBOL_UNUSED( p2 )
+
+   qEvent := QGraphicsSceneContextMenuEvent():from( p1 )
+
+   qMenu := QMenu():new()
+   qMenu:addAction( "Cut"  )
+   qMenu:addAction( "Copy" )
+
+   pAct := qMenu:exec_1( qEvent:screenPos() )
+   IF ! hbqt_isEmptyQtPointer( pAct )
+      SWITCH ( QAction():configure( pAct ) ):text()
+      CASE "Cut"
+         EXIT
+      CASE "Copy"
+         EXIT
+      ENDSWITCH
+   ENDIF
 
    RETURN Self
 
@@ -693,90 +758,6 @@ METHOD IdeReportsManager:buildStacks()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeReportsManager:buildToolbar()
-
-   ::qToolbar := IdeToolbar():new()
-   ::qToolbar:orientation := Qt_Horizontal
-   ::qToolbar:create( "ReportManager_Top_Toolbar" )
-
-   ::qToolbar:addToolButton( "New"    , "New Report"    , app_image( "new"      ), {|| ::execEvent( "buttonNew_clicked"     ) } )
-   ::qToolbar:addToolButton( "Open"   , "Open Report"   , app_image( "open3"    ), {|| ::execEvent( "buttonOpen_clicked"    ) } )
-   ::qToolbar:addToolButton( "Save"   , "Save Report"   , app_image( "save3"    ), {|| ::execEvent( "buttonSave_clicked"    ) } )
-   ::qToolbar:addToolButton( "Close"  , "Close Report"  , app_image( "close3"   ), {|| ::execEvent( "buttonClose_clicked"   ) } )
-   ::qToolbar:addToolButton( "Print"  , "Print Report"  , app_image( "print"    ), {|| ::execEvent( "buttonPrint_clicked"   ) } )
-   ::qToolbar:addSeparator()
-   ::qToolbar:addToolButton( "ToBack" , "Push to back"  , app_image( "toback"   ), {|| ::execEvent( "buttonToBack_clicked"  ) }, .f., .f. )
-   ::qToolbar:addToolButton( "ToFront", "Bring to front", app_image( "tofront"  ), {|| ::execEvent( "buttonToFront_clicked" ) }, .f., .f. )
-   ::qToolbar:addSeparator()
-   ::qToolbar:addToolButton( "RotateL", "Rotate anti-clock wise", app_image( "unload_1" ), {|| ::execEvent( "buttonRotateL_clicked" ) }, .f., .f. )
-   ::qToolbar:addToolButton( "RotateR", "Rotate clock wise"     , app_image( "load_1"   ), {|| ::execEvent( "buttonRotateR_clicked" ) }, .f., .f. )
-   ::qToolbar:addSeparator()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeReportsManager:buildToolbarAlign()
-
-   ::qToolbarAlign := IdeToolbar():new()
-   ::qToolbarAlign:orientation := Qt_Horizontal
-   ::qToolbarAlign:create( "ReportManager_Top_Toolbar_Align" )
-
-   ::qToolbarAlign:addToolButton( "FontG"  , "Font"              , app_image( "f-generic"       ), {|| ::execEvent( "button_clicked" ) }, .f., .f. )
-   ::qToolbarAlign:addSeparator()
-   ::qToolbarAlign:addToolButton( "FontB"  , "Text Bold"         , app_image( "f-bold-1"        ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "FontI"  , "Text Italic"       , app_image( "f-italic-1"      ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "FontU"  , "Text Underlined"   , app_image( "f-underline-1"   ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "FontS"  , "Text Strikethrough", app_image( "f-strike-1"      ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addSeparator()
-   ::qToolbarAlign:addToolButton( "JustL"  , "Align left"        , app_image( "f_align_left"    ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "JustC"  , "Align center"      , app_image( "f_align_center"  ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "JustR"  , "Align right"       , app_image( "f_align_right"   ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "JustJ"  , "Align justify"     , app_image( "f_align_justify" ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addSeparator()
-   ::qToolbarAlign:addToolButton( "JustT"  , "Align top"         , app_image( "f_align_top"     ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "JustM"  , "Align middle"      , app_image( "f_align_middle"  ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "JustB"  , "Align bottom"      , app_image( "f_align_bottom"  ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addSeparator()
-   ::qToolbarAlign:addToolButton( "BoxT"   , "Box-frame top"     , app_image( "f_box_top"       ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
-   ::qToolbarAlign:addToolButton( "BoxL"   , "Box-frame left"    , app_image( "f_box_left"      ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
-   ::qToolbarAlign:addToolButton( "BoxB"   , "Box-frame bottom"  , app_image( "f_box_bottom"    ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
-   ::qToolbarAlign:addToolButton( "BoxR"   , "Box-frame right"   , app_image( "f_box_right"     ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
-   ::qToolbarAlign:addSeparator()
-   ::qToolbarAlign:addToolButton( "BoxA"   , "Box-frame all"     , app_image( "f_box_all"       ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "BoxP"   , "No box-frame"      , app_image( "f_box_plain"     ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "BoxS"   , "Box shadowed"      , app_image( "f_box_shadow"    ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addSeparator()
-   ::qToolbarAlign:addToolButton( "ZoomIn" , "Zoom In"           , app_image( "zoomin3"         ), {|| ::execEvent( "buttonZoom_clicked", 1 ) } )
-   ::qToolbarAlign:addToolButton( "ZoomOut", "Zoom Out"          , app_image( "zoomout3"        ), {|| ::execEvent( "buttonZoom_clicked", 2 ) } )
-   ::qToolbarAlign:addToolButton( "ZoomWYS", "Zoom WYSIWYG"      , app_image( "zoomin"          ), {|| ::execEvent( "buttonZoom_clicked", 3 ) } )
-   ::qToolbarAlign:addToolButton( "ZoomOrg", "Zoom Original"     , app_image( "zoomout"         ), {|| ::execEvent( "buttonZoom_clicked", 4 ) } )
-   ::qToolbarAlign:addSeparator()
-   ::qToolbarAlign:addToolButton( "Grid"   , "Show Grid"         , app_image( "grid"            ), {|| ::execEvent( "buttonGrid_clicked", 4 ) }, .t., .f. )
-   ::qToolbarAlign:addSeparator()
-
-   ::qToolbarAlign:setItemChecked( "Grid", .t. )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeReportsManager:buildToolbarLeft()
-
-   ::qToolbarL := IdeToolbar():new()
-   ::qToolbarL:orientation := Qt_Vertical
-   ::qToolbarL:create( "ReportManager_Left_Toolbar" )
-
-   ::qToolbarL:addToolButton( "Image"   , "Image"   , app_image( "f-image"    ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
-   ::qToolbarL:addToolButton( "Chart"   , "Chart"   , app_image( "f_chart"    ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
-   ::qToolbarL:addToolButton( "Gradient", "Gradient", app_image( "f_gradient" ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
-   ::qToolbarL:addToolButton( "Barcode" , "Barcode" , app_image( "f_barcode"  ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
-   ::qToolbarL:addToolButton( "Text"    , "Text"    , app_image( "text"       ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD IdeReportsManager:buildStatusBar()
    LOCAL qLabel
 
@@ -915,6 +896,93 @@ METHOD IdeReportsManager:fetchBarString( cCode, lCheck )
    ENDIF
 
    RETURN cBarra
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeReportsManager:buildToolbar()
+
+   ::qToolbar := IdeToolbar():new()
+   ::qToolbar:orientation := Qt_Horizontal
+   ::qToolbar:create( "ReportManager_Top_Toolbar" )
+
+   ::qToolbar:addToolButton( "New"    , "New Report"    , app_image( "new"      ), {|| ::execEvent( "buttonNew_clicked"     ) } )
+   ::qToolbar:addToolButton( "Open"   , "Open Report"   , app_image( "open3"    ), {|| ::execEvent( "buttonOpen_clicked"    ) } )
+   ::qToolbar:addToolButton( "Save"   , "Save Report"   , app_image( "save3"    ), {|| ::execEvent( "buttonSave_clicked"    ) } )
+   ::qToolbar:addToolButton( "Close"  , "Close Report"  , app_image( "close3"   ), {|| ::execEvent( "buttonClose_clicked"   ) } )
+   ::qToolbar:addToolButton( "Print"  , "Print Report"  , app_image( "print"    ), {|| ::execEvent( "buttonPrint_clicked"   ) } )
+   ::qToolbar:addSeparator()
+   ::qToolbar:addToolButton( "ToBack" , "Push to back"  , app_image( "toback"   ), {|| ::execEvent( "buttonToBack_clicked"  ) }, .f., .f. )
+   ::qToolbar:addToolButton( "ToFront", "Bring to front", app_image( "tofront"  ), {|| ::execEvent( "buttonToFront_clicked" ) }, .f., .f. )
+   ::qToolbar:addSeparator()
+   ::qToolbar:addToolButton( "RotateL", "Rotate anti-clock wise", app_image( "unload_1" ), {|| ::execEvent( "buttonRotateL_clicked" ) }, .f., .f. )
+   ::qToolbar:addToolButton( "RotateR", "Rotate clock wise"     , app_image( "load_1"   ), {|| ::execEvent( "buttonRotateR_clicked" ) }, .f., .f. )
+   ::qToolbar:addSeparator()
+   ::qToolbar:addToolButton( "Portrait" , "Portrait orientation" , app_image( "r-portrait"  ), {|| ::execEvent( "buttonPortrait_clicked" ) }, .f., .f. )
+   ::qToolbar:addToolButton( "Landscape", "Landscape orientation", app_image( "r-landscape" ), {|| ::execEvent( "buttonLandscape_clicked" ) }, .f., .f. )
+   ::qToolbar:addSeparator()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeReportsManager:buildToolbarAlign()
+
+   ::qToolbarAlign := IdeToolbar():new()
+   ::qToolbarAlign:orientation := Qt_Horizontal
+   ::qToolbarAlign:create( "ReportManager_Top_Toolbar_Align" )
+
+   ::qToolbarAlign:addToolButton( "FontG"  , "Font"              , app_image( "f-generic"       ), {|| ::execEvent( "button_clicked" ) }, .f., .f. )
+   ::qToolbarAlign:addSeparator()
+   ::qToolbarAlign:addToolButton( "FontB"  , "Text Bold"         , app_image( "f-bold-1"        ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addToolButton( "FontI"  , "Text Italic"       , app_image( "f-italic-1"      ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addToolButton( "FontU"  , "Text Underlined"   , app_image( "f-underline-1"   ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addToolButton( "FontS"  , "Text Strikethrough", app_image( "f-strike-1"      ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addSeparator()
+   ::qToolbarAlign:addToolButton( "JustL"  , "Align left"        , app_image( "f_align_left"    ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addToolButton( "JustC"  , "Align center"      , app_image( "f_align_center"  ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addToolButton( "JustR"  , "Align right"       , app_image( "f_align_right"   ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addToolButton( "JustJ"  , "Align justify"     , app_image( "f_align_justify" ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addSeparator()
+   ::qToolbarAlign:addToolButton( "JustT"  , "Align top"         , app_image( "f_align_top"     ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addToolButton( "JustM"  , "Align middle"      , app_image( "f_align_middle"  ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addToolButton( "JustB"  , "Align bottom"      , app_image( "f_align_bottom"  ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addSeparator()
+   ::qToolbarAlign:addToolButton( "BoxT"   , "Box-frame top"     , app_image( "f_box_top"       ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
+   ::qToolbarAlign:addToolButton( "BoxL"   , "Box-frame left"    , app_image( "f_box_left"      ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
+   ::qToolbarAlign:addToolButton( "BoxB"   , "Box-frame bottom"  , app_image( "f_box_bottom"    ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
+   ::qToolbarAlign:addToolButton( "BoxR"   , "Box-frame right"   , app_image( "f_box_right"     ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
+   ::qToolbarAlign:addSeparator()
+   ::qToolbarAlign:addToolButton( "BoxA"   , "Box-frame all"     , app_image( "f_box_all"       ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addToolButton( "BoxP"   , "No box-frame"      , app_image( "f_box_plain"     ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addToolButton( "BoxS"   , "Box shadowed"      , app_image( "f_box_shadow"    ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addSeparator()
+   ::qToolbarAlign:addToolButton( "ZoomIn" , "Zoom In"           , app_image( "zoomin3"         ), {|| ::execEvent( "buttonZoom_clicked", 1 ) } )
+   ::qToolbarAlign:addToolButton( "ZoomOut", "Zoom Out"          , app_image( "zoomout3"        ), {|| ::execEvent( "buttonZoom_clicked", 2 ) } )
+   ::qToolbarAlign:addToolButton( "ZoomWYS", "Zoom WYSIWYG"      , app_image( "zoomin"          ), {|| ::execEvent( "buttonZoom_clicked", 3 ) } )
+   ::qToolbarAlign:addToolButton( "ZoomOrg", "Zoom Original"     , app_image( "zoomout"         ), {|| ::execEvent( "buttonZoom_clicked", 4 ) } )
+   ::qToolbarAlign:addSeparator()
+   ::qToolbarAlign:addToolButton( "Grid"   , "Show Grid"         , app_image( "grid"            ), {|| ::execEvent( "buttonGrid_clicked", 4 ) }, .t., .f. )
+   ::qToolbarAlign:addSeparator()
+
+   ::qToolbarAlign:setItemChecked( "Grid", .t. )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeReportsManager:buildToolbarLeft()
+
+   ::qToolbarL := IdeToolbar():new()
+   ::qToolbarL:orientation := Qt_Vertical
+   ::qToolbarL:create( "ReportManager_Left_Toolbar" )
+
+   ::qToolbarL:addToolButton( "Image"   , "Image"   , app_image( "f-image"    ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
+   ::qToolbarL:addToolButton( "Chart"   , "Chart"   , app_image( "f_chart"    ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
+   ::qToolbarL:addToolButton( "Gradient", "Gradient", app_image( "f_gradient" ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
+   ::qToolbarL:addToolButton( "Barcode" , "Barcode" , app_image( "f_barcode"  ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
+   ::qToolbarL:addToolButton( "Text"    , "Text"    , app_image( "text"       ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
