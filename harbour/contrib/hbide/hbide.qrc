@@ -265,6 +265,8 @@
 <file>resources/f-strike-1.png</file>
 <file>resources/toback.png</file>
 <file>resources/tofront.png</file>
+<file>resources/r-page.png</file>
+<file>resources/r-report.png</file>
 </qresource>
 </RCC>
 

@@ -2119,15 +2119,11 @@ FUNCTION hbide_buildToolbarButton( qToolbar, aBtn )
    RETURN qBtn
 
 /*----------------------------------------------------------------------*/
+/* An interface component function which will be called by Reports Manager
+   whenever a request is made. Application will supply the required info
+   in this case it is hbIDE. */
 
-FUNCTION hbide_getNextID( cType )
-
-   STATIC hIDs := {=>}
-
-   IF ! hb_hHasKey( hIDs, cType )
-      hIDs[ cType ] := 0
-   ENDIF
-
-   RETURN ++hIDs[ cType ]
+FUNCTION app_image( cName )
+   RETURN hbide_image( cName )
 
 /*----------------------------------------------------------------------*/

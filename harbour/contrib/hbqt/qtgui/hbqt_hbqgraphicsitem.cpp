@@ -110,7 +110,7 @@ HBQGraphicsItem::HBQGraphicsItem( int type, QGraphicsItem * parent ) : QGraphics
 
    m_barsIdentation     = 1 / UNIT;
    m_showLabels         = true;
-   m_toColorFactor      = 2;
+   m_toColorFactor      = 1.5;
    m_drawBorder         = true;
    m_showGrid           = true;
 
@@ -1245,6 +1245,7 @@ void HBQGraphicsItem::drawBarcode39( QPainter * painter, const QStyleOptionGraph
    QRectF rect = adjustOption( painter, option );
    QRectF rc = rect.adjusted( 5, 5, -10, -10 );
 
+   QColor fl( Qt::white );
    QColor clr( Qt::black );
    int iBars = m_barValues.size();
    qreal w = rc.width() / iBars;
@@ -1254,6 +1255,10 @@ void HBQGraphicsItem::drawBarcode39( QPainter * painter, const QStyleOptionGraph
       if( m_barValues.at( i ) == "-" )
       {
          painter->fillRect( QRectF( rc.x() + x, rc.y(), w, rc.height() ), clr );
+      }
+      else
+      {
+         painter->fillRect( QRectF( rc.x() + x, rc.y(), w, rc.height() ), fl );
       }
       x += w;
    }

@@ -154,7 +154,9 @@ CLASS IdeReportsManager INHERIT IdeObject
    METHOD loadReport( cName )
    METHOD saveReport()
    METHOD prepareReport()
-   METHOD updateObjectsTree( cType, cParent, cName )
+   METHOD getNextID( cType )
+   METHOD getImageOfType( cType )
+   METHOD updateObjectsTree( cType, cParent, cName, cSubType )
 
    ENDCLASS
 
@@ -293,6 +295,8 @@ METHOD IdeReportsManager:buildDesignReport()
    ::qPageL01Lay:addWidget( ::qTreeObjects )
    ::qTreeObjects:setHeaderHidden( .t. )
    ::qTreeObjects:setObjectName( "ObjectsTree" )
+   ::qTreeObjects:setIconSize( QSize():new( 12,12 ) )
+   ::qTreeObjects:setIndentation( 12 )
    ::connect( ::qTreeObjects, "itemClicked(QTWItem)", {|p,p1| ::execEvent( "treeObjects_clicked", p, p1 ) } )
 
    ::qTabL1 := QTabWidget():new()
@@ -349,38 +353,6 @@ METHOD IdeReportsManager:buildDesignReport()
    ::qWidget1:show()
    ::qWidget2:show()
    ::qWidget3:show()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeReportsManager:updateObjectsTree( cType, cParent, cName )
-   LOCAL qParent, qItem
-
-   DO CASE
-   CASE cType == "ReportName"
-      qItem := QTreeWidgetItem():new() ; qItem:setText( 0, cName )
-      ::qTreeObjects:addTopLevelItem( qItem )
-      ::hObjTree[ cName ] := qItem
-      qItem:setExpanded( .t. )
-
-   CASE cType == "Page" .OR. cType == "Object" .OR. cType == "Field"
-      IF hb_hHasKey( ::hObjTree, cParent )
-         qParent := ::hObjTree[ cParent ]
-      ENDIF
-      IF !empty( qParent )
-         IF hb_hHasKey( ::hObjTree, cName )
-            //
-         ENDIF
-         qItem := QTreeWidgetItem():new() ; qItem:setText( 0, cName )
-         qParent:addChild( qItem )
-         ::hObjTree[ cName ] := qItem
-
-         qParent:setExpanded( .t. )
-      ENDIF
-
-
-   ENDCASE
 
    RETURN Self
 
@@ -484,8 +456,10 @@ METHOD IdeReportsManager:execEvent( cEvent, p, p1, p2 )
       DO CASE
       CASE p == 21101 // Object selected
          IF hb_hHasKey( ::hObjTree, p1 )
-            ::qCurGraphicsItem := ::hObjTree[ p1 ]
-            ::qTreeObjects:setCurrentItem( ::qCurGraphicsItem )
+            ::qCurGraphicsItem := ::hItems[ p1 ]
+            ::qTreeObjects:setCurrentItem( ::hObjTree[ p1 ] )
+         ELSE
+            ::qCurGraphicsItem := NIL
          ENDIF
 
       ENDCASE
@@ -505,6 +479,16 @@ METHOD IdeReportsManager:execEvent( cEvent, p, p1, p2 )
       ENDIF
       EXIT
 
+   CASE "buttonRotateL_clicked"
+      IF !empty( ::qCurGraphicsItem )
+         ::qCurGraphicsItem:rotate( -10 )
+      ENDIF
+      EXIT
+   CASE "buttonRotateR_clicked"
+      IF !empty( ::qCurGraphicsItem )
+         ::qCurGraphicsItem:rotate( 10 )
+      ENDIF
+      EXIT
    CASE "buttonToBack_clicked"
       EXIT
    CASE "buttonToFront_clicked"
@@ -543,13 +527,13 @@ METHOD IdeReportsManager:execEvent( cEvent, p, p1, p2 )
 METHOD IdeReportsManager:addObject( qPos, cType )
    LOCAL oWidget, cName, nW, nH, qGrad, cCode, qStrList, i
 
-   cName := cType + "_" + hb_ntos( hbide_getNextID( cType ) )
+   cName := cType + "_" + hb_ntos( ::getNextID( cType ) )
 
    SWITCH cType
    CASE "Image"
       nW := 300 ;  nH := 300
       oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_PICTURE )
-      oWidget:setPixmap( QPixmap():new( hbide_image( "hbide" ) ) )
+      oWidget:setPixmap( QPixmap():new( app_image( "hbide" ) ) )
       oWidget:setBorderWidth( 2 )
       EXIT
    CASE "Chart"
@@ -570,7 +554,7 @@ METHOD IdeReportsManager:addObject( qPos, cType )
       EXIT
    CASE "Barcode"
       nW := 300 ;  nH := 200
-      cCode := ::fetchBarString( "Harbour" )
+      cCode := ::fetchBarString( "51550621" )
       qStrList := QStringList():new()
       FOR i := 1 TO len( cCode )
          IF substr( cCode, i, 1 ) == "1"
@@ -602,7 +586,7 @@ METHOD IdeReportsManager:addObject( qPos, cType )
       oWidget:setPos( qPos )
    ENDIF
    ::hItems[ cName ] := oWidget
-   ::updateObjectsTree( "Object", "Page_1", cName )
+   ::updateObjectsTree( "Object", "Page_1", cName, cType )
 
    RETURN Self
 
@@ -612,7 +596,7 @@ METHOD IdeReportsManager:addField( qPos, cAlias, cField )
    LOCAL oWidget, nW := 300, nH := 50
    LOCAL cName := cAlias + "..." + cField
 
-   cName := cName + "_" + hb_ntos( hbide_getNextID( cName ) )
+   cName := cName + "_" + hb_ntos( ::getNextID( cName ) )
 
    oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_SIMPLETEXT )
    oWidget:setText( cName )
@@ -629,7 +613,48 @@ METHOD IdeReportsManager:addField( qPos, cAlias, cField )
    ENDIF
    ::hItems[ cName ] := oWidget
 
-   ::updateObjectsTree( "Field", "Page_1", cName )
+   ::updateObjectsTree( "Field", "Page_1", cName, NIL )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeReportsManager:updateObjectsTree( cType, cParent, cName, cSubType )
+   LOCAL qParent, qItem
+
+   DO CASE
+   CASE cType == "ReportName"
+      qItem := QTreeWidgetItem():new() ; qItem:setText( 0, cName )
+      qItem:setIcon( 0, app_image( "r-report" ) )
+      ::qTreeObjects:addTopLevelItem( qItem )
+      ::hObjTree[ cName ] := qItem
+      qItem:setExpanded( .t. )
+
+   CASE cType == "Page" .OR. cType == "Object" .OR. cType == "Field"
+      IF hb_hHasKey( ::hObjTree, cParent )
+         qParent := ::hObjTree[ cParent ]
+      ENDIF
+      IF !empty( qParent )
+         IF hb_hHasKey( ::hObjTree, cName )
+            //
+         ENDIF
+         qItem := QTreeWidgetItem():new() ; qItem:setText( 0, cName )
+         qParent:addChild( qItem )
+         ::hObjTree[ cName ] := qItem
+
+         IF cType == "Page"
+            qItem:setIcon( 0, app_image( "r-page" ) )
+         ELSEIF cType == "Object"
+            qItem:setIcon( 0, ::getImageOfType( cSubType ) )
+         ELSEIF cType == "Field"
+            qItem:setIcon( 0, ::getImageOfType( "Field" ) )
+         ENDIF
+
+         qParent:setExpanded( .t. )
+      ENDIF
+
+
+   ENDCASE
 
    RETURN Self
 
@@ -674,14 +699,17 @@ METHOD IdeReportsManager:buildToolbar()
    ::qToolbar:orientation := Qt_Horizontal
    ::qToolbar:create( "ReportManager_Top_Toolbar" )
 
-   ::qToolbar:addToolButton( "New"  , "New Report"  , hbide_image( "new"    ), {|| ::execEvent( "buttonNew_clicked"   ) } )
-   ::qToolbar:addToolButton( "Open" , "Open Report" , hbide_image( "open3"  ), {|| ::execEvent( "buttonOpen_clicked"  ) } )
-   ::qToolbar:addToolButton( "Save" , "Save Report" , hbide_image( "save3"  ), {|| ::execEvent( "buttonSave_clicked"  ) } )
-   ::qToolbar:addToolButton( "Close", "Close Report", hbide_image( "close3" ), {|| ::execEvent( "buttonClose_clicked" ) } )
-   ::qToolbar:addToolButton( "Print", "Print Report", hbide_image( "print"  ), {|| ::execEvent( "buttonPrint_clicked" ) } )
+   ::qToolbar:addToolButton( "New"    , "New Report"    , app_image( "new"      ), {|| ::execEvent( "buttonNew_clicked"     ) } )
+   ::qToolbar:addToolButton( "Open"   , "Open Report"   , app_image( "open3"    ), {|| ::execEvent( "buttonOpen_clicked"    ) } )
+   ::qToolbar:addToolButton( "Save"   , "Save Report"   , app_image( "save3"    ), {|| ::execEvent( "buttonSave_clicked"    ) } )
+   ::qToolbar:addToolButton( "Close"  , "Close Report"  , app_image( "close3"   ), {|| ::execEvent( "buttonClose_clicked"   ) } )
+   ::qToolbar:addToolButton( "Print"  , "Print Report"  , app_image( "print"    ), {|| ::execEvent( "buttonPrint_clicked"   ) } )
    ::qToolbar:addSeparator()
-   ::qToolbar:addToolButton( "ToBack" , "Push to back"  , hbide_image( "toback" ), {|| ::execEvent( "buttonToBack_clicked"  ) }, .f., .f. )
-   ::qToolbar:addToolButton( "ToFront", "Bring to front", hbide_image( "tofront"), {|| ::execEvent( "buttonToFront_clicked" ) }, .f., .f. )
+   ::qToolbar:addToolButton( "ToBack" , "Push to back"  , app_image( "toback"   ), {|| ::execEvent( "buttonToBack_clicked"  ) }, .f., .f. )
+   ::qToolbar:addToolButton( "ToFront", "Bring to front", app_image( "tofront"  ), {|| ::execEvent( "buttonToFront_clicked" ) }, .f., .f. )
+   ::qToolbar:addSeparator()
+   ::qToolbar:addToolButton( "RotateL", "Rotate anti-clock wise", app_image( "unload_1" ), {|| ::execEvent( "buttonRotateL_clicked" ) }, .f., .f. )
+   ::qToolbar:addToolButton( "RotateR", "Rotate clock wise"     , app_image( "load_1"   ), {|| ::execEvent( "buttonRotateR_clicked" ) }, .f., .f. )
    ::qToolbar:addSeparator()
 
    RETURN Self
@@ -694,37 +722,37 @@ METHOD IdeReportsManager:buildToolbarAlign()
    ::qToolbarAlign:orientation := Qt_Horizontal
    ::qToolbarAlign:create( "ReportManager_Top_Toolbar_Align" )
 
-   ::qToolbarAlign:addToolButton( "FontG"  , "Font"              , hbide_image( "f-generic"       ), {|| ::execEvent( "button_clicked" ) }, .f., .f. )
+   ::qToolbarAlign:addToolButton( "FontG"  , "Font"              , app_image( "f-generic"       ), {|| ::execEvent( "button_clicked" ) }, .f., .f. )
    ::qToolbarAlign:addSeparator()
-   ::qToolbarAlign:addToolButton( "FontB"  , "Text Bold"         , hbide_image( "f-bold-1"        ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "FontI"  , "Text Italic"       , hbide_image( "f-italic-1"      ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "FontU"  , "Text Underlined"   , hbide_image( "f-underline-1"   ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "FontS"  , "Text Strikethrough", hbide_image( "f-strike-1"      ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addToolButton( "FontB"  , "Text Bold"         , app_image( "f-bold-1"        ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addToolButton( "FontI"  , "Text Italic"       , app_image( "f-italic-1"      ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addToolButton( "FontU"  , "Text Underlined"   , app_image( "f-underline-1"   ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addToolButton( "FontS"  , "Text Strikethrough", app_image( "f-strike-1"      ), {|| ::execEvent( "button_clicked" ) } )
    ::qToolbarAlign:addSeparator()
-   ::qToolbarAlign:addToolButton( "JustL"  , "Align left"        , hbide_image( "f_align_left"    ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "JustC"  , "Align center"      , hbide_image( "f_align_center"  ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "JustR"  , "Align right"       , hbide_image( "f_align_right"   ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "JustJ"  , "Align justify"     , hbide_image( "f_align_justify" ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addToolButton( "JustL"  , "Align left"        , app_image( "f_align_left"    ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addToolButton( "JustC"  , "Align center"      , app_image( "f_align_center"  ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addToolButton( "JustR"  , "Align right"       , app_image( "f_align_right"   ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addToolButton( "JustJ"  , "Align justify"     , app_image( "f_align_justify" ), {|| ::execEvent( "button_clicked" ) } )
    ::qToolbarAlign:addSeparator()
-   ::qToolbarAlign:addToolButton( "JustT"  , "Align top"         , hbide_image( "f_align_top"     ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "JustM"  , "Align middle"      , hbide_image( "f_align_middle"  ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "JustB"  , "Align bottom"      , hbide_image( "f_align_bottom"  ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addToolButton( "JustT"  , "Align top"         , app_image( "f_align_top"     ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addToolButton( "JustM"  , "Align middle"      , app_image( "f_align_middle"  ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addToolButton( "JustB"  , "Align bottom"      , app_image( "f_align_bottom"  ), {|| ::execEvent( "button_clicked" ) } )
    ::qToolbarAlign:addSeparator()
-   ::qToolbarAlign:addToolButton( "BoxT"   , "Box-frame top"     , hbide_image( "f_box_top"       ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
-   ::qToolbarAlign:addToolButton( "BoxL"   , "Box-frame left"    , hbide_image( "f_box_left"      ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
-   ::qToolbarAlign:addToolButton( "BoxB"   , "Box-frame bottom"  , hbide_image( "f_box_bottom"    ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
-   ::qToolbarAlign:addToolButton( "BoxR"   , "Box-frame right"   , hbide_image( "f_box_right"     ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
+   ::qToolbarAlign:addToolButton( "BoxT"   , "Box-frame top"     , app_image( "f_box_top"       ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
+   ::qToolbarAlign:addToolButton( "BoxL"   , "Box-frame left"    , app_image( "f_box_left"      ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
+   ::qToolbarAlign:addToolButton( "BoxB"   , "Box-frame bottom"  , app_image( "f_box_bottom"    ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
+   ::qToolbarAlign:addToolButton( "BoxR"   , "Box-frame right"   , app_image( "f_box_right"     ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
    ::qToolbarAlign:addSeparator()
-   ::qToolbarAlign:addToolButton( "BoxA"   , "Box-frame all"     , hbide_image( "f_box_all"       ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "BoxP"   , "No box-frame"      , hbide_image( "f_box_plain"     ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "BoxS"   , "Box shadowed"      , hbide_image( "f_box_shadow"    ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addToolButton( "BoxA"   , "Box-frame all"     , app_image( "f_box_all"       ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addToolButton( "BoxP"   , "No box-frame"      , app_image( "f_box_plain"     ), {|| ::execEvent( "button_clicked" ) } )
+   ::qToolbarAlign:addToolButton( "BoxS"   , "Box shadowed"      , app_image( "f_box_shadow"    ), {|| ::execEvent( "button_clicked" ) } )
    ::qToolbarAlign:addSeparator()
-   ::qToolbarAlign:addToolButton( "ZoomIn" , "Zoom In"           , hbide_image( "zoomin3"         ), {|| ::execEvent( "buttonZoom_clicked", 1 ) } )
-   ::qToolbarAlign:addToolButton( "ZoomOut", "Zoom Out"          , hbide_image( "zoomout3"        ), {|| ::execEvent( "buttonZoom_clicked", 2 ) } )
-   ::qToolbarAlign:addToolButton( "ZoomWYS", "Zoom WYSIWYG"      , hbide_image( "zoomin"          ), {|| ::execEvent( "buttonZoom_clicked", 3 ) } )
-   ::qToolbarAlign:addToolButton( "ZoomOrg", "Zoom Original"     , hbide_image( "zoomout"         ), {|| ::execEvent( "buttonZoom_clicked", 4 ) } )
+   ::qToolbarAlign:addToolButton( "ZoomIn" , "Zoom In"           , app_image( "zoomin3"         ), {|| ::execEvent( "buttonZoom_clicked", 1 ) } )
+   ::qToolbarAlign:addToolButton( "ZoomOut", "Zoom Out"          , app_image( "zoomout3"        ), {|| ::execEvent( "buttonZoom_clicked", 2 ) } )
+   ::qToolbarAlign:addToolButton( "ZoomWYS", "Zoom WYSIWYG"      , app_image( "zoomin"          ), {|| ::execEvent( "buttonZoom_clicked", 3 ) } )
+   ::qToolbarAlign:addToolButton( "ZoomOrg", "Zoom Original"     , app_image( "zoomout"         ), {|| ::execEvent( "buttonZoom_clicked", 4 ) } )
    ::qToolbarAlign:addSeparator()
-   ::qToolbarAlign:addToolButton( "Grid"   , "Show Grid"         , hbide_image( "grid"            ), {|| ::execEvent( "buttonGrid_clicked", 4 ) }, .t., .f. )
+   ::qToolbarAlign:addToolButton( "Grid"   , "Show Grid"         , app_image( "grid"            ), {|| ::execEvent( "buttonGrid_clicked", 4 ) }, .t., .f. )
    ::qToolbarAlign:addSeparator()
 
    ::qToolbarAlign:setItemChecked( "Grid", .t. )
@@ -739,11 +767,11 @@ METHOD IdeReportsManager:buildToolbarLeft()
    ::qToolbarL:orientation := Qt_Vertical
    ::qToolbarL:create( "ReportManager_Left_Toolbar" )
 
-   ::qToolbarL:addToolButton( "Image"   , "Image"   , hbide_image( "f-image"    ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
-   ::qToolbarL:addToolButton( "Chart"   , "Chart"   , hbide_image( "f_chart"    ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
-   ::qToolbarL:addToolButton( "Gradient", "Gradient", hbide_image( "f_gradient" ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
-   ::qToolbarL:addToolButton( "Barcode" , "Barcode" , hbide_image( "f_barcode"  ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
-   ::qToolbarL:addToolButton( "Text"    , "Text"    , hbide_image( "text"       ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
+   ::qToolbarL:addToolButton( "Image"   , "Image"   , app_image( "f-image"    ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
+   ::qToolbarL:addToolButton( "Chart"   , "Chart"   , app_image( "f_chart"    ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
+   ::qToolbarL:addToolButton( "Gradient", "Gradient", app_image( "f_gradient" ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
+   ::qToolbarL:addToolButton( "Barcode" , "Barcode" , app_image( "f_barcode"  ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
+   ::qToolbarL:addToolButton( "Text"    , "Text"    , app_image( "text"       ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
 
    RETURN Self
 
@@ -773,6 +801,40 @@ METHOD IdeReportsManager:buildStatusBar()
    aadd( ::aStatusPnls, qLabel )
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeReportsManager:getImageOfType( cType )
+   LOCAL cImage
+
+   DO CASE
+   CASE cType == "Image"
+      cImage := "f-image"
+   CASE cType == "Barcode"
+      cImage := "f_barcode"
+   CASE cType == "Chart"
+      cImage := "f_chart"
+   CASE cType == "Gradient"
+      cImage := "f_gradient"
+   CASE cType == "Text"
+      cImage := "text"
+   CASE cType == "Field"
+      cImage := "text"
+   ENDCASE
+
+   RETURN app_image( cImage )
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeReportsManager:getNextID( cType )
+
+   STATIC hIDs := {=>}
+
+   IF ! hb_hHasKey( hIDs, cType )
+      hIDs[ cType ] := 0
+   ENDIF
+
+   RETURN ++hIDs[ cType ]
 
 /*----------------------------------------------------------------------*/
 /*                                                                      */
