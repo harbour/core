@@ -119,12 +119,13 @@ echo ! Uploading Harbour unified Windows package...
 
 %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win.exe            %HB_SFNET_USER%%_HB_SFNET_URL%
 %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win.7z             %HB_SFNET_USER%%_HB_SFNET_URL%
+
+:_EXIT
+
 %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-log.txt        %HB_SFNET_USER%%_HB_SFNET_URL%
 %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-mingw-log.txt  %HB_SFNET_USER%%_HB_SFNET_URL%
 %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-bcc-log.txt    %HB_SFNET_USER%%_HB_SFNET_URL%
 rem %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-watcom-log.txt %HB_SFNET_USER%%_HB_SFNET_URL%
-
-:_EXIT
 
 echo ! Finished.
 

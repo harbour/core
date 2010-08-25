@@ -1162,11 +1162,11 @@ HARBOUR
       gmake OR make HB_PLATFORM=wce
       ---
 
-9. HOW TO GET THE HARBOUR SOURCES
-=================================
+9. HOW TO GET HARBOUR
+=====================
 
    1.) It's possible you're reading this document as part of the Harbour
-       source code package. If not, read along.
+       distribution package. If not, read along.
 
    2.) Harbour source repository
 
@@ -1206,7 +1206,7 @@ HARBOUR
    2. Make sure to do a 'make clean' before doing a build after refreshing
       the sources.
    3. If that still fails, make sure to install fresh source tree in a new
-      local directory and start over. See HOW TO GET THE HARBOUR SOURCES
+      local directory and start over. See HOW TO GET HARBOUR
       section for instructions to get the source.
    4. If you are doing a cross-build, make sure to have rebuilt the native
       Harbour executables for your host platform. See 'HB_HOST_BIN'

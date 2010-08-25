@@ -111,6 +111,7 @@ PROCEDURE Main( ... )
       hb_setEnv( "HB_IDE_INSTALL", cBse )
    #endif
 
+   SET DATE TO ANSI
    SET CENTURY ON
    SET EPOCH TO 1970
 
