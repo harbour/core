@@ -138,7 +138,15 @@ CLASS HbpReportsManager
    DATA   hObjTree                                INIT {=>}
    DATA   qCurGraphicsItem
 
-   DATA   nVersion                                INIT 0.1
+   DATA   symposis                                INIT "hbReports Designer"
+   DATA   version                                 INIT 0.1
+   DATA   author                                  INIT ""
+   DATA   dateCreated                             INIT date()
+   DATA   dateModified                            INIT date()
+   DATA   aPages                                  INIT {}
+   DATA   aSources                                INIT {}
+
+   DATA   hDoc                                    INIT {=>}
 
    METHOD new( qParent )
    METHOD create( qParent )
@@ -154,7 +162,7 @@ CLASS HbpReportsManager
    METHOD addField( qPos, cAlias, cField )
    METHOD addObject( qPos, cType )
    METHOD fetchBarString( cCode, lCheck )
-   METHOD loadReport( cName )
+   METHOD loadReport( xData )
    METHOD saveReport()
    METHOD prepareReport()
    METHOD getNextID( cType )
@@ -162,6 +170,8 @@ CLASS HbpReportsManager
    METHOD updateObjectsTree( cType, cParent, cName, cSubType )
    METHOD contextMenuItem( p1, p2 )
    METHOD contextMenuScene( p1 )
+   METHOD addSource( cAlias, aStruct )
+   METHOD clear()
 
    ENDCLASS
 
@@ -331,14 +341,12 @@ METHOD HbpReportsManager:buildDesignReport()
    ::qPageR11Lay:addWidget( ::qTreeData )
    ::qTreeData:setHeaderHidden( .t. )
    ::qTreeData:setObjectName( "DataTree" )
+   ::qTreeData:setDragDropMode( QAbstractItemView_DragDrop )
    ::qTreeData:setDragEnabled( .t. )
    ::qTreeData:setAcceptDrops( .t. )
-   //qDrop:installEventFilter( ::pEvents )
-   //::connect( qDrop, QEvent_DragEnter, {|p| ::execEvent( "projectTree_dragEnterEvent", p ) } )
-   ::qTreeData:connect( QEvent_DragEnter, {|p| ::execEvent( "dataTree_dragEnterEvent", p ) } )
-   //::connect( qDrop, QEvent_Drop     , {|p| ::execEvent( "projectTree_dropEvent"     , p ) } )
    ::qTreeData:connect( QEvent_Drop     , {|p| ::execEvent( "dataTree_dropEvent"     , p ) } )
-
+   ::qTreeData:connect( QEvent_DragMove , {|p| ::execEvent( "dataTree_dragMoveEvent" , p ) } )
+   ::qTreeData:connect( QEvent_DragEnter, {|p| ::execEvent( "dataTree_dragEnterEvent", p ) } )
 
    ::loadReport()
 
@@ -359,53 +367,71 @@ METHOD HbpReportsManager:buildDesignReport()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpReportsManager:loadReport( cName )
-   LOCAL aSource, qItem, qItmC, aFld, a_, i, b_
+METHOD HbpReportsManager:clear()
 
-   DEFAULT cName TO "Report"
+   /* Cleanup the environments */
 
-   ::updateObjectsTree( "ReportName", NIL, cName )
-   ::updateObjectsTree( "Page", cName, "Page_1" )
+   RETURN Self
 
-   /* All data must be requested from Application based on report definition */
-   aSource := {}
-   aadd( aSource, { "Customer", { { "Title" ,"C",35,0 }, { "Street","C",20,0 }, { "Revenue","N",12,2 } }, {} } )
-   aadd( aSource, { "Invoice" , { { "Number","C",10,0 }, { "Date"  ,"D",08,0 }, { "Amount" ,"N",12,2 } }, {} } )
+/*----------------------------------------------------------------------*/
 
-   FOR i := 1 TO len( aSource )
-      a_:= aSource[ i ]
+METHOD HbpReportsManager:loadReport( xData )
 
-      qItem := QTreeWidgetItem():new()
-      qItem:setText( 0, a_[ 1 ] )    // Source Name
-      ::qTreeData:addTopLevelItem( qItem )
+   ::clear()
 
-      aFld := a_[ 2 ]
-      FOR EACH b_ IN aFld
-         qItmC := QTreeWidgetItem():new()
-         qItmC:setText( 0, b_[ 1 ] )
-         qItem:addChild( qItmC )
-         qItem:setExpanded( .t. )
-      NEXT
+   IF empty( xData )
+      ::updateObjectsTree( "ReportName", NIL, "Report" )
+      ::updateObjectsTree( "Page", "Report", "Page_1" )
+
+      ::addSource( "Customer", { { "Title" ,"C",35,0 }, { "Street","C",20,0 }, { "Revenue","N",12,2 } } )
+      ::addSource( "Invoice" , { { "Number","C",10,0 }, { "Date"  ,"D",08,0 }, { "Amount" ,"N",12,2 } } )
+
+   ELSE
+      // read from - buffer, file
+
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbpReportsManager:addSource( cAlias, aStruct )
+   LOCAL qItem, qItmC, b_
+
+   qItem := QTreeWidgetItem():new()
+   qItem:setText( 0, cAlias )
+   ::qTreeData:addTopLevelItem( qItem )
+
+   FOR EACH b_ IN aStruct
+      qItmC := QTreeWidgetItem():new()
+      qItmC:setText( 0, b_[ 1 ] )
+      qItem:addChild( qItmC )
+      qItem:setExpanded( .t. )
    NEXT
+
+   aadd( ::aSources, { cAlias, aStruct } )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD HbpReportsManager:saveReport()
-   LOCAL hDoc    := {=>}
-   LOCAL hPage_1 := {=>}
+   LOCAL hDoc     := {=>}
+   //LOCAL hPages   := {=>}
+   //LOCAL hSources := {=>}
 
-   hDoc[ "Symposis"     ] := "hbIDE Report Designer"
-   hDoc[ "Version"      ] := ::rptVersion
-   hDoc[ "Author"       ] := ::rptAuthor
-   hDoc[ "DateCreated"  ] := ::rptDateCreated
-   hDoc[ "DateModified" ] := ::rptDateModified
+
+   hDoc[ "Symposis"         ] := "hbIDE Report Designer - (C) Harbour-Project <http://www.harbour-project.org>  (C) 2010 Pritpal Bedi <bedipritpal@hotmail.com>"
+   hDoc[ "Version"          ] := ::rptVersion
+   hDoc[ "Title"            ] := ::rptTitle
+   hDoc[ "Author"           ] := ::rptAuthor
+   hDoc[ "DateCreated"      ] := ::rptDateCreated
+   hDoc[ "DateModified"     ] := ::rptDateModified
+   hDoc[ "ReportProperties" ] := {}
 
    // Pages
-   hDoc[ "Page_1" ] := hPage_1
 
-   RETURN Self
+   RETURN hDoc
 
 /*----------------------------------------------------------------------*/
 
@@ -416,7 +442,7 @@ METHOD HbpReportsManager:prepareReport()
 /*----------------------------------------------------------------------*/
 
 METHOD HbpReportsManager:execEvent( cEvent, p, p1, p2 )
-   LOCAL qEvent, qMime, qItem
+   LOCAL qEvent, qMime, qItem, i, qList, cFile, nArea, aStruct, cAlias
 
    SWITCH cEvent
    CASE "graphicsScene_block"
@@ -482,10 +508,34 @@ METHOD HbpReportsManager:execEvent( cEvent, p, p1, p2 )
       EXIT
 
    CASE "dataTree_dropEvent"
-
+HB_TRACE( HB_TR_ALWAYS, "dataTree_dropEvent" )
+      qEvent := QDropEvent():from( p )
+      qMime := QMimeData():from( qEvent:mimeData() )
+      IF qMime:hasUrls()
+         qList := QStringList():from( qMime:hbUrlList() )
+         FOR i := 0 TO qList:size() - 1
+            cFile := ( QUrl():new( qList:at( i ) ) ):toLocalFile()
+HB_TRACE( HB_TR_ALWAYS, cFile )
+            IF ".dbf" == right( lower( cFile ), 4 )
+               BEGIN SEQUENCE
+                  nArea := select()
+                  USE ( cFile ) NEW SHARED VIA "DBFCDX"
+                  IF ! neterr()
+                     aStruct := DbStruct()
+                     DbUseArea()
+                     hb_fNameSplit( cFile, , @cAlias )
+                     ::addSource( upper( substr( cAlias, 1 ) ) + lower( substr( cAlias, 2 ) ), aStruct )
+                  ENDIF
+                  select( nArea )
+               END SEQUENCE
+            ENDIF
+         NEXT
+      ENDIF
       EXIT
 
+   CASE "dataTree_dragMoveEvent"
    CASE "dataTree_dragEnterEvent"
+HB_TRACE( HB_TR_ALWAYS, cEvent )
       QDragEnterEvent():from( p ):acceptProposedAction()
       EXIT
 
@@ -535,54 +585,6 @@ METHOD HbpReportsManager:execEvent( cEvent, p, p1, p2 )
       ENDCASE
       EXIT
    ENDSWITCH
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbpReportsManager:contextMenuScene( p1 )
-   LOCAL qMenu, qEvent, pAct
-
-   qEvent := QGraphicsSceneContextMenuEvent():from( p1 )
-
-   qMenu := QMenu():new( ::qView )
-   qMenu:addAction( "Refresh"  )
-   qMenu:addAction( "Zoom+" )
-
-   pAct := qMenu:exec_1( qEvent:screenPos() )
-   IF ! hbqt_isEmptyQtPointer( pAct )
-      SWITCH ( QAction():configure( pAct ) ):text()
-      CASE "Refresh"
-         EXIT
-      CASE "Zoom+"
-         EXIT
-      ENDSWITCH
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbpReportsManager:contextMenuItem( p1, p2 )
-   LOCAL qMenu, qEvent, pAct
-
-   HB_SYMBOL_UNUSED( p2 )
-
-   qEvent := QGraphicsSceneContextMenuEvent():from( p1 )
-
-   qMenu := QMenu():new()
-   qMenu:addAction( "Cut"  )
-   qMenu:addAction( "Copy" )
-
-   pAct := qMenu:exec_1( qEvent:screenPos() )
-   IF ! hbqt_isEmptyQtPointer( pAct )
-      SWITCH ( QAction():configure( pAct ) ):text()
-      CASE "Cut"
-         EXIT
-      CASE "Copy"
-         EXIT
-      ENDSWITCH
-   ENDIF
 
    RETURN Self
 
@@ -719,6 +721,54 @@ METHOD HbpReportsManager:updateObjectsTree( cType, cParent, cName, cSubType )
 
 
    ENDCASE
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbpReportsManager:contextMenuScene( p1 )
+   LOCAL qMenu, qEvent, pAct
+
+   qEvent := QGraphicsSceneContextMenuEvent():from( p1 )
+
+   qMenu := QMenu():new( ::qView )
+   qMenu:addAction( "Refresh"  )
+   qMenu:addAction( "Zoom+" )
+
+   pAct := qMenu:exec_1( qEvent:screenPos() )
+   IF ! hbqt_isEmptyQtPointer( pAct )
+      SWITCH ( QAction():configure( pAct ) ):text()
+      CASE "Refresh"
+         EXIT
+      CASE "Zoom+"
+         EXIT
+      ENDSWITCH
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbpReportsManager:contextMenuItem( p1, p2 )
+   LOCAL qMenu, qEvent, pAct
+
+   HB_SYMBOL_UNUSED( p2 )
+
+   qEvent := QGraphicsSceneContextMenuEvent():from( p1 )
+
+   qMenu := QMenu():new()
+   qMenu:addAction( "Cut"  )
+   qMenu:addAction( "Copy" )
+
+   pAct := qMenu:exec_1( qEvent:screenPos() )
+   IF ! hbqt_isEmptyQtPointer( pAct )
+      SWITCH ( QAction():configure( pAct ) ):text()
+      CASE "Cut"
+         EXIT
+      CASE "Copy"
+         EXIT
+      ENDSWITCH
+   ENDIF
 
    RETURN Self
 
