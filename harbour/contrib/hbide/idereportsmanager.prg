@@ -145,8 +145,11 @@ CLASS HbpReportsManager
    DATA   dateModified                            INIT date()
    DATA   aPages                                  INIT {}
    DATA   aSources                                INIT {}
+   DATA   aObjects                                INIT {}
 
    DATA   hDoc                                    INIT {=>}
+   DATA   lNew                                    INIT .t.
+   DATA   cSaved                                  INIT ""
 
    METHOD new( qParent )
    METHOD create( qParent )
@@ -163,7 +166,7 @@ CLASS HbpReportsManager
    METHOD addObject( qPos, cType )
    METHOD fetchBarString( cCode, lCheck )
    METHOD loadReport( xData )
-   METHOD saveReport()
+   METHOD saveReport( lSaveAs )
    METHOD prepareReport()
    METHOD getNextID( cType )
    METHOD getImageOfType( cType )
@@ -172,6 +175,8 @@ CLASS HbpReportsManager
    METHOD contextMenuScene( p1 )
    METHOD addSource( cAlias, aStruct )
    METHOD clear()
+   METHOD buildReportStream()
+   METHOD toString()
 
    ENDCLASS
 
@@ -341,12 +346,7 @@ METHOD HbpReportsManager:buildDesignReport()
    ::qPageR11Lay:addWidget( ::qTreeData )
    ::qTreeData:setHeaderHidden( .t. )
    ::qTreeData:setObjectName( "DataTree" )
-   ::qTreeData:setDragDropMode( QAbstractItemView_DragDrop )
    ::qTreeData:setDragEnabled( .t. )
-   ::qTreeData:setAcceptDrops( .t. )
-   ::qTreeData:connect( QEvent_Drop     , {|p| ::execEvent( "dataTree_dropEvent"     , p ) } )
-   ::qTreeData:connect( QEvent_DragMove , {|p| ::execEvent( "dataTree_dragMoveEvent" , p ) } )
-   ::qTreeData:connect( QEvent_DragEnter, {|p| ::execEvent( "dataTree_dragEnterEvent", p ) } )
 
    ::loadReport()
 
@@ -380,6 +380,10 @@ METHOD HbpReportsManager:loadReport( xData )
    ::clear()
 
    IF empty( xData )
+      IF empty( ::aPages )
+         aadd( ::aPages, { "Page_1" } )
+      ENDIF
+
       ::updateObjectsTree( "ReportName", NIL, "Report" )
       ::updateObjectsTree( "Page", "Report", "Page_1" )
 
@@ -415,23 +419,149 @@ METHOD HbpReportsManager:addSource( cAlias, aStruct )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpReportsManager:saveReport()
-   LOCAL hDoc     := {=>}
-   //LOCAL hPages   := {=>}
-   //LOCAL hSources := {=>}
+#define INI_KEY( cKey, n )    cKey + "_" + hb_ntos( n ) + "="
 
+STATIC FUNCTION rmgr_iniKey( cKey, n )
+   RETURN cKey + "_" + hb_ntos( n ) + "="
 
-   hDoc[ "Symposis"         ] := "hbIDE Report Designer - (C) Harbour-Project <http://www.harbour-project.org>  (C) 2010 Pritpal Bedi <bedipritpal@hotmail.com>"
-   hDoc[ "Version"          ] := ::rptVersion
-   hDoc[ "Title"            ] := ::rptTitle
-   hDoc[ "Author"           ] := ::rptAuthor
-   hDoc[ "DateCreated"      ] := ::rptDateCreated
-   hDoc[ "DateModified"     ] := ::rptDateModified
-   hDoc[ "ReportProperties" ] := {}
+STATIC FUNCTION rmgr_xtos( x )
+   SWITCH valtype( x )
+   CASE "C" ; RETURN x
+   CASE "D" ; RETURN dtos( x )
+   CASE "L" ; RETURN iif( x, "YES", "NO" )
+   CASE "N" ; RETURN hb_ntos( x )
+   ENDSWITCH
+   RETURN ""
 
-   // Pages
+STATIC FUNCTION rmgr_array2String( aArray )
+   LOCAL a_, s, x
 
-   RETURN hDoc
+   s := ""
+   FOR EACH a_ IN aArray
+      FOR EACH x IN a_
+         s += rmgr_xtos( x ) + " "
+      NEXT
+      s := trim( s ) + ","
+   NEXT
+
+   RETURN s
+
+STATIC FUNCTION rmgr_a2arrayStr( aArray )
+   LOCAL s, x
+
+   s := "{"
+   FOR EACH x IN aArray
+      SWITCH valtype( x )
+      CASE "C"
+         s += '"' + x + '"'
+         EXIT
+      CASE "N"
+         s += hb_ntos( x )
+         EXIT
+      CASE "D"
+         s += "stod(" + dtos( x ) + ")"
+         EXIT
+      CASE "L"
+         s += iif( x, ".t.", ".f." )
+         EXIT
+      CASE "A"
+         s += rmgr_a2arrayStr( x )
+         EXIT
+      OTHERWISE
+         s += "NIL"
+      ENDSWITCH
+      s += ","
+   NEXT
+   s := iif( len( s ) == 1, s, substr( s, 1, len( s ) - 1 ) ) + "}"
+
+   RETURN s
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbpReportsManager:saveReport( lSaveAs )
+   LOCAL cFile, cBuffer, qFileDlg, qList, cExt
+   LOCAL lSave := .t.
+
+   DEFAULT lSaveAs TO .f.
+
+   IF lSaveAs .OR. ::lNew .OR. empty( ::cSaved )
+      qFileDlg := QFileDialog():new( ::oWidget )
+
+      qFileDlg:setAcceptMode( QFileDialog_AcceptSave )
+      qFileDlg:setFileMode( QFileDialog_AnyFile )
+      qFileDlg:setViewMode( QFileDialog_List )
+      qFileDlg:setNameFilter( "HB Reports (*.hrp)" )
+
+      IF qFileDlg:exec() == 1
+         qList := QStringList():from( qFileDlg:selectedFiles() )
+         cFile := qList:at( 0 )
+         hb_fNameSplit( cFile, , , @cExt )
+         IF empty( cExt )
+            cFile += ".hrp"
+         ENDIF
+
+         ::cSaved := cFile
+      ELSE
+         lSave := .f.
+      ENDIF
+   ENDIF
+
+   IF lSave .AND. !empty( ::cSaved )
+      cBuffer  := ::buildReportStream()
+      hb_memowrit( ::cSaved, cBuffer )
+
+      RETURN hb_fileExists( ::cSaved )
+   ENDIF
+
+   RETURN .f.
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbpReportsManager:toString()
+
+   RETURN ::buildReportStream()
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbpReportsManager:buildReportStream()
+   LOCAL txt_:= {}, n, a_, s
+
+   aadd( txt_, "[GENERAL]" )
+   aadd( txt_, "" )
+   aadd( txt_, "Symposis"     + "=" + "HBReportDesigner - (C) Harbour-Project <http://www.harbour-project.org>  (C) 2010 Pritpal Bedi <bedipritpal@hotmail.com>" )
+   aadd( txt_, "Version"      + "=" + "0.1"            )
+   aadd( txt_, "Title"        + "=" + "Report"         )
+   aadd( txt_, "Author"       + "=" + "hbIDE"          )
+   aadd( txt_, "DateCreated"  + "=" + dtos( date() )   )
+   aadd( txt_, "DateModified" + "=" + dtos( date() )   )
+   aadd( txt_, "Properties"   + "=" + ""               )
+   aadd( txt_, "" )
+   aadd( txt_, "[SOURCES]" )
+   aadd( txt_, "" )
+   FOR EACH a_ IN ::aSources
+      n := a_:__enumIndex()
+      aadd( txt_, INI_KEY( "source", n ) + a_[ 1 ] + "," + rmgr_a2arrayStr( a_[ 2 ] ) )
+   NEXT
+   aadd( txt_, "" )
+   aadd( txt_, "[PAGES]" )
+   aadd( txt_, "" )
+   FOR EACH a_ IN ::aPages
+      n := a_:__enumIndex()
+      aadd( txt_, INI_KEY( "page", n ) + rmgr_a2arrayStr( a_ ) )
+   NEXT
+   aadd( txt_, "" )
+   aadd( txt_, "[OBJECTS]" )
+   aadd( txt_, "" )
+   FOR EACH a_ IN ::aObjects
+      n := a_:__enumIndex()
+      aadd( txt_, INI_KEY( "object", n ) + rmgr_a2arrayStr( a_ ) )
+   NEXT
+   aadd( txt_, "" )
+
+   s := ""
+   aeval( txt_, {|e| s += e + chr( 13 ) + chr( 10 ) } )
+
+   RETURN s
 
 /*----------------------------------------------------------------------*/
 
@@ -442,7 +572,7 @@ METHOD HbpReportsManager:prepareReport()
 /*----------------------------------------------------------------------*/
 
 METHOD HbpReportsManager:execEvent( cEvent, p, p1, p2 )
-   LOCAL qEvent, qMime, qItem, i, qList, cFile, nArea, aStruct, cAlias
+   LOCAL qEvent, qMime, qItem, i, qList, cFile, nArea, aStruct, cAlias, cPath
 
    SWITCH cEvent
    CASE "graphicsScene_block"
@@ -472,7 +602,26 @@ METHOD HbpReportsManager:execEvent( cEvent, p, p1, p2 )
          ELSEIF qMime:hasFormat( "application/x-toolbaricon"  )
             ::addObject( QPoint():from( qEvent:scenePos() ), qMime:html() )
 
-         ELSE
+         ELSEIF qMime:hasUrls()
+            qList := QStringList():from( qMime:hbUrlList() )
+            FOR i := 0 TO qList:size() - 1
+               cFile := ( QUrl():new( qList:at( i ) ) ):toLocalFile()
+
+               IF ".dbf" == right( lower( cFile ), 4 )
+                  hb_fNameSplit( cFile, @cPath, @cAlias )
+
+                  BEGIN SEQUENCE
+                     nArea := select()
+                     USE ( cFile ) ALIAS "RPTDUMMY" NEW SHARED VIA "DBFCDX"
+                     IF ! neterr()
+                        aStruct := DbStruct()
+                        DbCloseArea()
+                        ::addSource( upper( substr( cAlias, 1, 1 ) ) + lower( substr( cAlias, 2 ) ), aStruct )
+                     ENDIF
+                     select( nArea )
+                  END SEQUENCE
+               ENDIF
+            NEXT
          ENDIF
       ENDCASE
 
@@ -508,35 +657,9 @@ METHOD HbpReportsManager:execEvent( cEvent, p, p1, p2 )
       EXIT
 
    CASE "dataTree_dropEvent"
-HB_TRACE( HB_TR_ALWAYS, "dataTree_dropEvent" )
-      qEvent := QDropEvent():from( p )
-      qMime := QMimeData():from( qEvent:mimeData() )
-      IF qMime:hasUrls()
-         qList := QStringList():from( qMime:hbUrlList() )
-         FOR i := 0 TO qList:size() - 1
-            cFile := ( QUrl():new( qList:at( i ) ) ):toLocalFile()
-HB_TRACE( HB_TR_ALWAYS, cFile )
-            IF ".dbf" == right( lower( cFile ), 4 )
-               BEGIN SEQUENCE
-                  nArea := select()
-                  USE ( cFile ) NEW SHARED VIA "DBFCDX"
-                  IF ! neterr()
-                     aStruct := DbStruct()
-                     DbUseArea()
-                     hb_fNameSplit( cFile, , @cAlias )
-                     ::addSource( upper( substr( cAlias, 1 ) ) + lower( substr( cAlias, 2 ) ), aStruct )
-                  ENDIF
-                  select( nArea )
-               END SEQUENCE
-            ENDIF
-         NEXT
-      ENDIF
-      EXIT
-
+   CASE "dataTree_mouseReleseEvent"
    CASE "dataTree_dragMoveEvent"
    CASE "dataTree_dragEnterEvent"
-HB_TRACE( HB_TR_ALWAYS, cEvent )
-      QDragEnterEvent():from( p ):acceptProposedAction()
       EXIT
 
    CASE "buttonLandscape_clicked"
@@ -564,6 +687,7 @@ HB_TRACE( HB_TR_ALWAYS, cEvent )
    CASE "buttonOpen_clicked"
       EXIT
    CASE "buttonSave_clicked"
+      ::saveReport()
       EXIT
    CASE "buttonClose_clicked"
       EXIT
@@ -653,6 +777,7 @@ METHOD HbpReportsManager:addObject( qPos, cType )
    ENDIF
    ::hItems[ cName ] := oWidget
    ::updateObjectsTree( "Object", "Page_1", cName, cType )
+   aadd( ::aObjects, { "Object", "Page_1", cName, cType, {} } )
 
    RETURN Self
 
@@ -678,8 +803,8 @@ METHOD HbpReportsManager:addField( qPos, cAlias, cField )
       oWidget:setPos( qPos )
    ENDIF
    ::hItems[ cName ] := oWidget
-
    ::updateObjectsTree( "Field", "Page_1", cName, NIL )
+   aadd( ::aObjects, { "Field", "Page_1", cName, NIL, {} } )
 
    RETURN Self
 
