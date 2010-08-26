@@ -528,7 +528,7 @@ METHOD HbpReportsManager:buildReportStream()
 
    aadd( txt_, "[GENERAL]" )
    aadd( txt_, "" )
-   aadd( txt_, "Symposis"     + "=" + "HBReportDesigner - (C) Harbour-Project <http://www.harbour-project.org>  (C) 2010 Pritpal Bedi <bedipritpal@hotmail.com>" )
+   aadd( txt_, "Symposis"     + "=" + "HBReportDesigner - (C) Harbour-Project <http://harbour-project.org>  (C) 2010 Pritpal Bedi <bedipritpal@hotmail.com>" )
    aadd( txt_, "Version"      + "=" + "0.1"            )
    aadd( txt_, "Title"        + "=" + "Report"         )
    aadd( txt_, "Author"       + "=" + "hbIDE"          )
