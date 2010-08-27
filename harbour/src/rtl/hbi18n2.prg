@@ -313,7 +313,7 @@ FUNCTION __I18N_POTARRAYSAVE( cFile, aTrans, cErrorMsg, lVersionNo, lSourceRef, 
       lSourceRef := .T.
    ENDIF
    IF ! ISLOGICAL( lUTF8BOM )
-      lUTF8BOM := .T.
+      lUTF8BOM := .F.
    ENDIF
 
    lRet := .F.
