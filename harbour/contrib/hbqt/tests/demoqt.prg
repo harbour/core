@@ -90,8 +90,7 @@ REQUEST HB_QT
 
 STATIC s_qApp
 
-STATIC s_events
-STATIC s_slots
+STATIC oSys, oMenuSys, oActShow, oActHide
 
 /*----------------------------------------------------------------------*/
 
@@ -117,9 +116,6 @@ FUNCTION My_Events()
 PROCEDURE Main()
    Local oLabel, oBtn, oDA, oWnd, oProg, oSBar
    LOCAL aMenu, aTool, aGrid, aTabs, aList
-
-   s_events := QT_EVENTS_NEW()
-   s_slots := QT_SLOTS_NEW()
 
    oWnd := QMainWindow():new()
    oWnd:show()
@@ -229,37 +225,69 @@ PROCEDURE ExecOneMore()
 
 STATIC FUNCTION Build_MenuBar( oWnd )
    LOCAL oMenuBar, oMenu1, oMenu2
+   LOCAL oActNew, oActOpen, oActSave, oActExit
+   LOCAL oActColors, oActFonts, oActPgSetup, oActPreview, oActWiz, oActWeb, oActOther
 
    oMenuBar := QMenuBar():new()
    oMenuBar:resize( oWnd:width(), 25 )
 
    oMenu1 := QMenu():new()
    oMenu1:setTitle( "&File" )
-   QT_SLOTS_CONNECT( s_slots,  oMenu1:addAction_1( "new.png" , "&New"  ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "New" , w, l ) } )
-   QT_SLOTS_CONNECT( s_slots,  oMenu1:addAction_1( "open.png", "&Open" ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Open", w, l ) } )
+
+   oActNew := QAction():from( oMenu1:addAction_1( "new.png" , "&New"  ) )
+   oActNew:connect( QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "New" , w, l ) } )
+
+   oActOpen := QAction():from( oMenu1:addAction_1( "open.png", "&Open" ) )
+   oActOpen:connect( QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Open" , w, l ) } )
+
    oMenu1:addSeparator()
-   QT_SLOTS_CONNECT( s_slots,  oMenu1:addAction_1( "save.png", "&Save" ), QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Save", w, l ) } )
+
+   oActSave := QAction():from( oMenu1:addAction_1(  "save.png", "&Save" ) )
+   oActSave:connect( QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Save" , w, l ) } )
+
    oMenu1:addSeparator()
-   QT_SLOTS_CONNECT( s_slots,  oMenu1:addAction( "E&xit" ), QT_EVE_TRIGGERED_B, {|| s_qApp:quit() } )
+
+   oActExit := QAction():from( oMenu1:addAction( "E&xit" ) )
+   oActExit:connect( QT_EVE_TRIGGERED_B, {|| s_qApp:quit() } )
+
    oMenuBar:addMenu( oMenu1 )
 
    oMenu2 := QMenu():new()
    oMenu2:setTitle( "&Dialogs" )
-   QT_SLOTS_CONNECT( s_slots,  oMenu2:addAction( "&Colors"    ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Colors"   , w, l ) } )
-   QT_SLOTS_CONNECT( s_slots,  oMenu2:addAction( "&Fonts"     ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Fonts"    , w, l ) } )
+
+   oActColors := QAction():from( oMenu2:addAction( "&Colors" ) )
+   oActColors:connect( QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Colors", w, l ) } )
+
+   oActFonts := QAction():from( oMenu2:addAction( "&Fonts" ) )
+   oActFonts:connect( QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Fonts", w, l ) } )
+
    oMenu2:addSeparator()
-   QT_SLOTS_CONNECT( s_slots,  oMenu2:addAction( "&PageSetup" ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "PageSetup", w, l ) } )
-   QT_SLOTS_CONNECT( s_slots,  oMenu2:addAction( "P&review"   ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Preview"  , w, l ) } )
+
+   oActPgSetup := QAction():from( oMenu2:addAction( "&PageSetup" ) )
+   oActPgSetup:connect( QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "PageSetup", w, l ) } )
+
+   oActPreview := QAction():from( oMenu2:addAction( "P&review" ) )
+   oActPreview:connect( QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Preview", w, l ) } )
+
    oMenu2:addSeparator()
-   QT_SLOTS_CONNECT( s_slots,  oMenu2:addAction( "&Wizard"    ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Wizard"   , w, l ) } )
-   QT_SLOTS_CONNECT( s_slots,  oMenu2:addAction( "W&ebPage"   ), QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "WebPage"  , w, l ) } )
+
+   oActWiz := QAction():from( oMenu2:addAction( "&Wizard" ) )
+   oActWiz:connect( QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Wizard", w, l ) } )
+
+   oActWeb := QAction():from( oMenu2:addAction( "W&ebPage" ) )
+   oActWeb:connect( QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "WebPage", w, l ) } )
+
    oMenu2:addSeparator()
-   QT_SLOTS_CONNECT( s_slots,  oMenu2:addAction( "&Another Dialog" ), QT_EVE_TRIGGERED_B, {|w,l| w := w, l := l, ExecOneMore() } )
+
+   oActOther := QAction():from( oMenu2:addAction( "&Another Dialog" ) )
+   oActOther:connect( QT_EVE_TRIGGERED_B, {|| ExecOneMore() } )
+
    oMenuBar:addMenu( oMenu2 )
 
    oWnd:setMenuBar( oMenuBar )
 
-   RETURN { oMenu1, oMenu2, oMenuBar }
+   RETURN { oMenu1, oMenu2, oMenuBar, oActNew, oActOpen, oActSave, oActExit, ;
+            oActColors, oActFonts, oActPgSetup, oActPreview, oActWiz, oActWeb, oActOther }
 
 /*----------------------------------------------------------------------*/
 
@@ -596,18 +624,21 @@ PROCEDURE hb_GtSys()
 /*----------------------------------------------------------------------*/
 
 FUNCTION ShowInSystemTray( oWnd )
-   LOCAL oSys
-   LOCAL oMenu
 
-   oMenu := QMenu():new( oWnd )
-   oMenu:setTitle( "&File" )
-   QT_SLOTS_CONNECT( s_slots, oMenu:addAction_1( "new.png" , "&Show" ), QT_EVE_TRIGGERED_B, {|| oWnd:show() } )
-   oMenu:addSeparator()
-   QT_SLOTS_CONNECT( s_slots, oMenu:addAction_1( "save.png", "&Hide" ), QT_EVE_TRIGGERED_B, {|| oWnd:hide() } )
+   oMenuSys := QMenu():new( oWnd )
+   oMenuSys:setTitle( "&File" )
+
+   oActShow := QAction():from( oMenuSys:addAction_1( "new.png" , "&Show" ) )
+   oActShow:connect( QT_EVE_TRIGGERED_B, {|| oWnd:show() } )
+
+   oMenuSys:addSeparator()
+
+   oActHide := QAction():from( oMenuSys:addAction_1( "new.png" , "&Show" ) )
+   oActHide:connect( QT_EVE_TRIGGERED_B, {|| oWnd:hide() } )
 
    oSys := QSystemTrayIcon():new( oWnd )
    oSys:setIcon( 'new.png' )
-   oSys:setContextMenu( oMenu )
+   oSys:setContextMenu( oMenuSys )
    oSys:showMessage( "Harbour-QT", "This is Harbour-QT System Tray" )
    oSys:show()
    oWnd:hide()
