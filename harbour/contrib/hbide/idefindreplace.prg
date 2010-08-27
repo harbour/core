@@ -282,8 +282,8 @@ METHOD IdeSearchReplace:create( oIde )
    ::qFindLineEdit := QLineEdit():from( ::oUI:q_comboFind:lineEdit() )
    ::qFindLineEdit:setFocusPolicy( Qt_StrongFocus )
    ::qFindLineEdit:setStyleSheet( "background-color: white;" )
-   ::connect( ::qFindLineEdit, "textChanged(QString)", {|cText| ::setFindString( cText ) } )
-   ::connect( ::qFindLineEdit, "returnPressed()"     , {|| ::find( ::cFind ) } )
+   ::qFindLineEdit:connect( "textChanged(QString)", {|cText| ::setFindString( cText ) } )
+   ::qFindLineEdit:connect( "returnPressed()"     , {|| ::find( ::cFind ) } )
 
    ::qReplLineEdit := QLineEdit():from( ::oUI:q_comboReplace:lineEdit() )
    ::qReplLineEdit:setFocusPolicy( Qt_StrongFocus )
@@ -300,8 +300,8 @@ METHOD IdeSearchReplace:destroy()
 
    IF hb_isObject( ::oUI )
 
-      ::disconnect( ::qFindLineEdit, "textChanged(QString)" )
-      ::disconnect( ::qFindLineEdit, "returnPressed()"      )
+      ::qFindLineEdit:disconnect( "textChanged(QString)" )
+      ::qFindLineEdit:disconnect( "returnPressed()"      )
 
       ::oUI:destroy()
    ENDIF
@@ -454,7 +454,7 @@ METHOD IdeFindReplace:new( oIde )
 METHOD IdeFindReplace:destroy()
 
    IF !empty( ::oUI )
-      ::disConnect( ::qLineEdit, "returnPressed()" )
+      ::qLineEdit:disConnect( "returnPressed()" )
       ::oUI:destroy()
    ENDIF
 
@@ -765,7 +765,7 @@ METHOD IdeFindInFiles:destroy()
    LOCAL qItem
 
    IF !empty( ::oUI )
-      ::disConnect( ::qEditFind, "returnPressed()" )
+      ::qEditFind:disConnect( "returnPressed()" )
 
       FOR EACH qItem IN ::aItems
          qItem := NIL
@@ -858,7 +858,7 @@ METHOD IdeFindInFiles:buildUI()
    ::oUI:signal( "editResults"  , "customContextMenuRequested(QPoint)", {|p| ::execEvent( "editResults-contextMenu", p ) } )
 
    ::qEditFind := QLineEdit():from( ::oUI:q_comboExpr:lineEdit() )
-   ::connect( ::qEditFind, "returnPressed()", {|| ::execEvent( "buttonFind" ) } )
+   ::qEditFind:connect( "returnPressed()", {|| ::execEvent( "buttonFind" ) } )
 
    RETURN Self
 
@@ -1403,9 +1403,9 @@ METHOD IdeFindInFiles:print()
 
    qDlg := QPrintPreviewDialog():new( ::oUI )
    qDlg:setWindowTitle( "Harbour-QT Preview Dialog" )
-   Qt_Slots_Connect( ::pSlots, qDlg, "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
+   qDlg:connect( "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
    qDlg:exec()
-   Qt_Slots_disConnect( ::pSlots, qDlg, "paintRequested(QPrinter)" )
+   qDlg:disconnect( "paintRequested(QPrinter)" )
 
    RETURN self
 

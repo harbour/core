@@ -212,9 +212,9 @@ METHOD IdeThemes:create( oIde, cThemesFile )
 METHOD IdeThemes:destroy()
 
    IF !empty( ::oSL )
-      ::disConnect( ::oSL:qObj[ "listOptions"  ], "doubleClicked(QModelIndex)" )
-      ::disConnect( ::oSL:qObj[ "buttonOk"     ], "clicked()" )
-      ::disConnect( ::oSL:qObj[ "buttonCancel" ], "clicked()" )
+      ::oSL:qObj[ "listOptions"  ]:disConnect( "doubleClicked(QModelIndex)" )
+      ::oSL:qObj[ "buttonOk"     ]:disConnect( "clicked()" )
+      ::oSL:qObj[ "buttonCancel" ]:disConnect( "clicked()" )
       ::oSL:destroy()
    ENDIF
 
@@ -728,9 +728,9 @@ METHOD IdeThemes:selectTheme()
 
       ::oSL:setWindowTitle( "Available Themes" )
 
-      ::connect( ::oSL:qObj[ "listOptions"  ], "doubleClicked(QModelIndex)", {|p| ::selectThemeProc( 1, p ) } )
-      ::connect( ::oSL:qObj[ "buttonOk"     ], "clicked()"                 , {|p| ::selectThemeProc( 2, p ) } )
-      ::connect( ::oSL:qObj[ "buttonCancel" ], "clicked()"                 , {|p| ::selectThemeProc( 3, p ) } )
+      ::oSL:qObj[ "listOptions"  ]:connect( "doubleClicked(QModelIndex)", {|p| ::selectThemeProc( 1, p ) } )
+      ::oSL:qObj[ "buttonOk"     ]:connect( "clicked()"                 , {|p| ::selectThemeProc( 2, p ) } )
+      ::oSL:qObj[ "buttonCancel" ]:connect( "clicked()"                 , {|p| ::selectThemeProc( 3, p ) } )
    ENDIF
 
    oStrList := QStringList():new()

@@ -156,13 +156,13 @@ METHOD IdeHome:create( oIde )
 METHOD IdeHome:destroy()
 
    IF !empty( ::qPrnDlg )
-      Qt_Slots_disConnect( ::pSlots, ::qPrnDlg, "paintRequested(QPrinter)" )
+      ::qPrnDlg:disconnect( "paintRequested(QPrinter)" )
       ::qPrnDlg := NIL
    ENDIF
 
-   ::disconnect( ::qWelcomeBrowser, "anchorClicked(QUrl)"                )
-   ::disconnect( ::qWelcomeBrowser, "customContextMenuRequested(QPoint)" )
-   ::disconnect( ::qFaqBrowser    , "customContextMenuRequested(QPoint)" )
+   ::qWelcomeBrowser:disconnect( "anchorClicked(QUrl)"                )
+   ::qWelcomeBrowser:disconnect( "customContextMenuRequested(QPoint)" )
+   ::qFaqBrowser:disconnect( "customContextMenuRequested(QPoint)" )
 
    ::qWelcomeBrowser := NIL
 
@@ -240,7 +240,7 @@ METHOD IdeHome:print()
       ::qPrnDlg := QPrintPreviewDialog():new()
       ::qPrnDlg:setWindowTitle( "Welcome::Projects" )
       ::qPrnDlg:setWindowIcon( hbide_image( "hbide" ) )
-      Qt_Slots_Connect( ::pSlots, ::qPrnDlg, "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
+      ::qPrnDlg:connect( "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
    ENDIF
 
    ::qPrnDlg:exec()
@@ -289,8 +289,8 @@ METHOD IdeHome:buildWelcomeTab()
    ::qWelcomeBrowser := qBrw
    ::qCurBrowser     := qBrw
 
-   ::connect( qBrw, "anchorClicked(QUrl)"               , {|p| ::execEvent( browserStat_anchorClicked, p ) } )
-   ::connect( qBrw, "customContextMenuRequested(QPoint)", {|p| ::execEvent( browserWelcome_contextMenuRequested, p ) } )
+   qBrw:connect( "anchorClicked(QUrl)"               , {|p| ::execEvent( browserStat_anchorClicked, p ) } )
+   qBrw:connect( "customContextMenuRequested(QPoint)", {|p| ::execEvent( browserWelcome_contextMenuRequested, p ) } )
 
    qSList := QStringList():new()
    qSList:append( "docs" )
@@ -488,7 +488,7 @@ METHOD IdeHome:buildFaqTab()
    qBrw:setContextMenuPolicy( Qt_CustomContextMenu )
    ::setStyleSheetTextBrowser( qBrw )
 
-   ::connect( qBrw, "customContextMenuRequested(QPoint)", {|p| ::execEvent( browserFaq_contextMenuRequested, p  ) } )
+   qBrw:connect( "customContextMenuRequested(QPoint)", {|p| ::execEvent( browserFaq_contextMenuRequested, p  ) } )
 
    ::oFaqTab     := oTab
    ::qFaqBrowser := qBrw

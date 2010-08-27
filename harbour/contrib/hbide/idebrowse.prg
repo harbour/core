@@ -296,9 +296,8 @@ METHOD IdeBrowseManager:create( oIde )
    qDock:setWidget( ::qDbu )
 
    qDock:setAcceptDrops( .t. )
-   qDock:installEventFilter( ::pEvents )
-   ::connect( qDock, QEvent_DragEnter, {|p| ::execEvent( "dockDbu_dragEnterEvent", p ) } )
-   ::connect( qDock, QEvent_Drop     , {|p| ::execEvent( "dockDbu_dropEvent"     , p ) } )
+   qDock:connect( QEvent_DragEnter, {|p| ::execEvent( "dockDbu_dragEnterEvent", p ) } )
+   qDock:connect( QEvent_Drop     , {|p| ::execEvent( "dockDbu_dropEvent"     , p ) } )
 
    /* Layout applied to dbu widget */
    ::qLayout := QGridLayout():new()
@@ -339,7 +338,7 @@ METHOD IdeBrowseManager:create( oIde )
    /* Timer to update ststus bar */
    ::qTimer := QTimer():new()
    ::qTimer:setInterval( 2000 )
-   ::connect( ::qTimer, "timeout()", {|| ::dispStatusInfo() } )
+   ::qTimer:connect( "timeout()", {|| ::dispStatusInfo() } )
    ::qTimer:start()
 
    RETURN Self
@@ -460,7 +459,7 @@ METHOD IdeBrowseManager:addPanelsMenu( cPanel )
    LOCAL qAct
 
    ( qAct := QAction():from( ::qPanelsMenu:addAction( cPanel ) ) ):setIcon( hbide_image( "panel_7" ) )
-   ::connect( qAct, "triggered(bool)", {|| ::setPanel( cPanel ) } )
+   qAct:connect( "triggered(bool)", {|| ::setPanel( cPanel ) } )
    aadd( ::aPanelsAct, qAct )
 
    RETURN Self
@@ -717,9 +716,9 @@ METHOD IdeBrowseManager:showTablesTree()
       qParent:setExpanded( .t. )
    NEXT
    ::oIde:setPosAndSizeByIniEx( oUI:oWidget, ::oINI:cTablesDialogGeometry )
-   ::connect( oUI:q_buttonOk, "clicked()", {|| oUI:done( 1 ) } )
+   oUI:q_buttonOk:connect( "clicked()", {|| oUI:done( 1 ) } )
    oUI:exec()
-   ::disconnect( oUI:q_buttonOk, "clicked()" )
+   oUI:q_buttonOk:disconnect( "clicked()" )
    ::oIde:oINI:cTablesDialogGeometry := hbide_posAndSize( oUI:oWidget )
 
    RETURN Self
@@ -832,8 +831,7 @@ METHOD IdeBrowseManager:buildUiStruct()
    ::qStruct:setMinimumWidth( ::qStruct:width() )
    ::qStruct:setMaximumWidth( ::qStruct:width() )
 
-   ::qStruct:installEventFilter( ::pEvents )
-   ::connect( ::qStruct, QEvent_Close, {|| ::execEvent( "dbStruct_closeEvent" ) } )
+   ::qStruct:connect( QEvent_Close, {|| ::execEvent( "dbStruct_closeEvent" ) } )
 
    oTbl := ::qStruct:q_tableFields
    QHeaderView():from( oTbl:verticalHeader() ):hide()
@@ -855,7 +853,7 @@ METHOD IdeBrowseManager:buildUiStruct()
    ::qStruct:q_comboType:addItem( "Date"      )
    ::qStruct:q_comboType:addItem( "Logical"   )
 
-   ::connect( oTbl, "itemSelectionChanged()", {|| ::execEvent( "fieldsTable_itemSelectionChanged" ) } )
+   oTbl:connect( "itemSelectionChanged()", {|| ::execEvent( "fieldsTable_itemSelectionChanged" ) } )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -983,7 +981,7 @@ METHOD IdeBrowseManager:buildToolButton( qToolbar, aBtn )
       IF aBtn[ 4 ]
          qBtn:setCheckable( .t. )
       ENDIF
-      ::connect( qBtn, "clicked()",  aBtn[ 3 ] )
+      qBtn:connect( "clicked()",  aBtn[ 3 ] )
       qToolBar:addWidget( qBtn )
       aadd( ::aToolBtns, qBtn )
    ENDIF
@@ -1038,7 +1036,7 @@ METHOD IdeBrowseManager:buildRddsCombo()
    NEXT
    ::qToolBar:addWidget( ::qRddCombo )
 
-   ::connect( ::qRddCombo, "currentIndexChanged(QString)", {|p| ::loadConxnCombo( p ) } )
+   ::qRddCombo:connect( "currentIndexChanged(QString)", {|p| ::loadConxnCombo( p ) } )
 
    RETURN Self
 
@@ -1055,7 +1053,7 @@ METHOD IdeBrowseManager:buildTablesButton()
    ::qTablesButton:setPopupMode( QToolButton_MenuButtonPopup )
    ::qTablesButton:setMenu( ::qTablesMenu )
 
-   ::connect( ::qTablesButton, "clicked()", {|| ::execEvent( "buttonTables_clicked" ) } )
+   ::qTablesButton:connect( "clicked()", {|| ::execEvent( "buttonTables_clicked" ) } )
 
    ::qToolbar:addWidget( ::qTablesButton )
 
@@ -1074,7 +1072,7 @@ METHOD IdeBrowseManager:buildIndexButton()
    ::qIndexButton:setPopupMode( QToolButton_MenuButtonPopup )
    ::qIndexButton:setMenu( ::qIndexMenu )
 
-   ::connect( ::qIndexButton, "clicked()", {|| ::execEvent( "buttonIndex_clicked" ) } )
+   ::qIndexButton:connect( "clicked()", {|| ::execEvent( "buttonIndex_clicked" ) } )
 
    ::qToolbar:addWidget( ::qIndexButton )
 
@@ -1091,7 +1089,7 @@ METHOD IdeBrowseManager:updateIndexMenu( oBrw )
    LOCAL qAct, aIndex, cIndex
 
    FOR EACH qAct IN ::aIndexAct
-      ::disconnect( qAct, "triggered(bool)" )
+      qAct:disconnect( "triggered(bool)" )
       qAct := NIL
    NEXT
    ::aIndexAct := {}
@@ -1101,7 +1099,7 @@ METHOD IdeBrowseManager:updateIndexMenu( oBrw )
    aIndex := ::oCurPanel:getIndexInfo( oBrw )
    FOR EACH cIndex IN aIndex
       qAct := QAction():from( ::qIndexMenu:addAction( cIndex ) )
-      ::connect( qAct, "triggered(bool)", hbide_getMenuBlock( ::oCurPanel, oBrw, cIndex ) )
+      qAct:connect( "triggered(bool)", hbide_getMenuBlock( ::oCurPanel, oBrw, cIndex ) )
       aadd( ::aIndexAct, qAct )
    NEXT
 
@@ -1120,7 +1118,7 @@ METHOD IdeBrowseManager:buildPanelsButton()
    ::qPanelsButton:setPopupMode( QToolButton_MenuButtonPopup )
    ::qPanelsButton:setMenu( ::qPanelsMenu )
 
-   ::connect( ::qPanelsButton, "clicked()", {|| ::execEvent( "qPanelsButton_clicked" ) } )
+   ::qPanelsButton:connect( "clicked()", {|| ::execEvent( "qPanelsButton_clicked" ) } )
 
    ::qToolbar:addWidget( ::qPanelsButton )
 
@@ -1187,7 +1185,7 @@ METHOD IdeBrowsePanel:new( oIde, cPanel, oManager )
    ::qWidget:setTabShape( QTabWidget_Triangular )
    ::qWidget:setViewMode( QMdiArea_TabbedView )
 
-   ::connect( ::qWidget, "subWindowActivated(QMdiSubWindow)", {|p| ::execEvent( "mdiArea_subWindowActivated", p ) } )
+   ::qWidget:connect( "subWindowActivated(QMdiSubWindow)", {|p| ::execEvent( "mdiArea_subWindowActivated", p ) } )
 
    RETURN Self
 
@@ -1672,7 +1670,7 @@ METHOD IdeBrowse:create( oIde, oManager, oPanel, aInfo )
 
    ::qTimer := QTimer():new()
    ::qTimer:setInterval( 5 )
-   ::connect( ::qTimer, "timeout()",  {|| ::execEvent( "timer_timeout" ) } )
+   ::qTimer:connect( "timeout()",  {|| ::execEvent( "timer_timeout" ) } )
 
    RETURN Self
 
@@ -1681,9 +1679,9 @@ METHOD IdeBrowse:create( oIde, oManager, oPanel, aInfo )
 METHOD IdeBrowse:destroy()
 
    IF ! empty( ::qMdi )
-   *  ::disconnect( ::qMdi, "aboutToActivate()" )
-      ::disconnect( ::qMdi, "windowStateChanged(Qt::WindowStates,Qt::WindowStates)" )
-      ::disconnect( ::qMdi, QEvent_Close )
+   *  ::qMdi:disconnect( "aboutToActivate()" )
+      ::qMdi:disconnect( "windowStateChanged(Qt::WindowStates,Qt::WindowStates)" )
+      ::qMdi:disconnect( QEvent_Close )
    ENDIF
 
    IF ! empty( ::oWnd )
@@ -1848,11 +1846,10 @@ METHOD IdeBrowse:buildMdiWindow()
    ENDIF
    ::dispInfo()
 
- * ::connect( ::qMdi, "aboutToActivate()", {|| ::execEvent( "mdiSubWindow_aboutToActivate" ) } )
-   ::connect( ::qMdi, "windowStateChanged(Qt::WindowStates,Qt::WindowStates)", ;
+ * ::qMdi:connect( "aboutToActivate()", {|| ::execEvent( "mdiSubWindow_aboutToActivate" ) } )
+   ::qMdi:connect( "windowStateChanged(Qt::WindowStates,Qt::WindowStates)", ;
                                  {|p,p1| ::execEvent( "mdiSubWindow_windowStateChanged", p, p1 ) } )
-   ::qMdi:installEventFilter( ::pEvents )
-   ::connect( ::qMdi, QEvent_Close, {|| ::execEvent( "mdiSubWindow_buttonXclicked" ) } )
+   ::qMdi:connect( QEvent_Close, {|| ::execEvent( "mdiSubWindow_buttonXclicked" ) } )
 
    RETURN Self
 

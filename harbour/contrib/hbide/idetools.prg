@@ -163,32 +163,31 @@ METHOD IdeToolsManager:destroy()
 
    IF !empty( ::oUI )
       FOR EACH qAct IN ::aAct
-         ::disconnect( qAct, "triggered(bool)" )
+         qAct:disconnect( "triggered(bool)" )
          qAct := NIL
       NEXT
       FOR EACH qAct IN ::aPanelsAct
-         ::disconnect( qAct, "triggered(bool)" )
+         qAct:disconnect( "triggered(bool)" )
          qAct := NIL
       NEXT
-      ::disconnect( ::qToolsButton, "clicked()" )
+      ::qToolsButton:disconnect( "clicked()" )
       ::qToolsButton := NIL
       ::clearList()
 
-      ::disconnect( ::qPanelsButton, "clicked()" )
-
-      ::disconnect( ::oUI:q_buttonAdd           , "clicked()" )
-      ::disconnect( ::oUI:q_buttonDelete        , "clicked()" )
-      ::disconnect( ::oUI:q_buttonUp            , "clicked()" )
-      ::disconnect( ::oUI:q_buttonDown          , "clicked()" )
-      ::disconnect( ::oUI:q_buttonExec          , "clicked()" )
-      ::disconnect( ::oUI:q_buttonBrowse        , "clicked()" )
-      ::disconnect( ::oUI:q_buttonUpdate        , "clicked()" )
-      ::disconnect( ::oUI:q_buttonClose         , "clicked()" )
-      ::disconnect( ::oUI:q_buttonSetImage      , "clicked()" )
-      ::disconnect( ::oUI:q_buttonUserToolbarUpd, "clicked()" )
-      ::disconnect( ::oUI:q_comboToolbarAsgnd   , "currentIndexChanged(int)" )
-      ::disconnect( ::oUI:q_listToolbars        , "itemSelectionChanged()"   )
-      ::disconnect( ::oUI:q_listNames           , "itemSelectionChanged()"   )
+      ::qPanelsButton             :disconnect( "clicked()" )
+      ::oUI:q_buttonAdd           :disconnect( "clicked()" )
+      ::oUI:q_buttonDelete        :disconnect( "clicked()" )
+      ::oUI:q_buttonUp            :disconnect( "clicked()" )
+      ::oUI:q_buttonDown          :disconnect( "clicked()" )
+      ::oUI:q_buttonExec          :disconnect( "clicked()" )
+      ::oUI:q_buttonBrowse        :disconnect( "clicked()" )
+      ::oUI:q_buttonUpdate        :disconnect( "clicked()" )
+      ::oUI:q_buttonClose         :disconnect( "clicked()" )
+      ::oUI:q_buttonSetImage      :disconnect( "clicked()" )
+      ::oUI:q_buttonUserToolbarUpd:disconnect( "clicked()" )
+      ::oUI:q_comboToolbarAsgnd   :disconnect( "currentIndexChanged(int)" )
+      ::oUI:q_listToolbars        :disconnect( "itemSelectionChanged()"   )
+      ::oUI:q_listNames           :disconnect( "itemSelectionChanged()"   )
 
       ::oUI:destroy()
    ENDIF
@@ -211,24 +210,24 @@ METHOD IdeToolsManager:show()
       ::oUI:setMaximumHeight( ::oUI:height() )
       ::oUI:setMinimumHeight( ::oUI:height() )
 
-      ::connect( ::oUI:q_buttonAdd   , "clicked()", {|| ::execEvent( "buttonAdd_clicked"    ) } )
-      ::connect( ::oUI:q_buttonDelete, "clicked()", {|| ::execEvent( "buttonDelete_clicked" ) } )
-      ::connect( ::oUI:q_buttonUp    , "clicked()", {|| ::execEvent( "buttonUp_clicked"     ) } )
-      ::connect( ::oUI:q_buttonDown  , "clicked()", {|| ::execEvent( "buttonDown_clicked"   ) } )
-      ::connect( ::oUI:q_buttonExec  , "clicked()", {|| ::execEvent( "buttonExec_clicked"   ) } )
-      ::connect( ::oUI:q_buttonBrowse, "clicked()", {|| ::execEvent( "buttonBrowse_clicked" ) } )
-      ::connect( ::oUI:q_buttonUpdate, "clicked()", {|| ::execEvent( "buttonUpdate_clicked" ) } )
-      ::connect( ::oUI:q_buttonClose , "clicked()", {|| ::execEvent( "buttonClose_clicked"  ) } )
+      ::oUI:q_buttonAdd   :connect( "clicked()", {|| ::execEvent( "buttonAdd_clicked"    ) } )
+      ::oUI:q_buttonDelete:connect( "clicked()", {|| ::execEvent( "buttonDelete_clicked" ) } )
+      ::oUI:q_buttonUp    :connect( "clicked()", {|| ::execEvent( "buttonUp_clicked"     ) } )
+      ::oUI:q_buttonDown  :connect( "clicked()", {|| ::execEvent( "buttonDown_clicked"   ) } )
+      ::oUI:q_buttonExec  :connect( "clicked()", {|| ::execEvent( "buttonExec_clicked"   ) } )
+      ::oUI:q_buttonBrowse:connect( "clicked()", {|| ::execEvent( "buttonBrowse_clicked" ) } )
+      ::oUI:q_buttonUpdate:connect( "clicked()", {|| ::execEvent( "buttonUpdate_clicked" ) } )
+      ::oUI:q_buttonClose :connect( "clicked()", {|| ::execEvent( "buttonClose_clicked"  ) } )
 
-      ::connect( ::oUI:q_listNames   , "itemSelectionChanged()", {|| ::execEvent( "listNames_itemSelectionChanged" ) } )
+      ::oUI:q_listNames   :connect( "itemSelectionChanged()", {|| ::execEvent( "listNames_itemSelectionChanged" ) } )
 
       ::oUI:q_buttonBtnDown :setIcon( hbide_image( "dc_down" ) )
       ::oUI:q_buttonBtnUp   :setIcon( hbide_image( "dc_up"   ) )
 
       ::oUI:q_buttonSetImage:setIcon( hbide_image( "open"    ) )
-      ::connect( ::oUI:q_buttonSetImage, "clicked()", {|| ::execEvent( "buttonSetImage_clicked" ) } )
+      ::oUI:q_buttonSetImage:connect( "clicked()", {|| ::execEvent( "buttonSetImage_clicked" ) } )
 
-      ::connect( ::oUI:q_buttonUserToolbarUpd, "clicked()", {|| ::execEvent( "buttonUserToolbarUpd_clicked" ) } )
+      ::oUI:q_buttonUserToolbarUpd:connect( "clicked()", {|| ::execEvent( "buttonUserToolbarUpd_clicked" ) } )
 
       ::oUI:q_comboToolbarAsgnd:addItem( "User_Toolbar_1" )
       ::oUI:q_comboToolbarAsgnd:addItem( "User_Toolbar_2" )
@@ -236,14 +235,14 @@ METHOD IdeToolsManager:show()
       ::oUI:q_comboToolbarAsgnd:addItem( "User_Toolbar_4" )
       ::oUI:q_comboToolbarAsgnd:addItem( "User_Toolbar_5" )
       ::oUI:q_comboToolbarAsgnd:setCurrentIndex( -1 )
-      ::connect( ::oUI:q_comboToolbarAsgnd, "currentIndexChanged(int)", {|p| ::execEvent( "comboToolbarAsgnd_currentIndexChanged", p ) } )
+      ::oUI:q_comboToolbarAsgnd:connect( "currentIndexChanged(int)", {|p| ::execEvent( "comboToolbarAsgnd_currentIndexChanged", p ) } )
 
       ::oUI:q_listToolbars:addItem( "User_Toolbar_1" )
       ::oUI:q_listToolbars:addItem( "User_Toolbar_2" )
       ::oUI:q_listToolbars:addItem( "User_Toolbar_3" )
       ::oUI:q_listToolbars:addItem( "User_Toolbar_4" )
       ::oUI:q_listToolbars:addItem( "User_Toolbar_5" )
-      ::connect( ::oUI:q_listToolbars, "itemSelectionChanged()", {|| ::execEvent( "listToolbars_itemSelectionChanged" ) } )
+      ::oUI:q_listToolbars:connect( "itemSelectionChanged()", {|| ::execEvent( "listToolbars_itemSelectionChanged" ) } )
 
       ::oUI:q_comboInitPos:addItem( "Left"   )
       ::oUI:q_comboInitPos:addItem( "Top"    )
@@ -259,11 +258,11 @@ METHOD IdeToolsManager:show()
 
       ::oUI:q_checkToolActive:setChecked( .t. )
       #if 0
-      ::connect( ::oUI:q_checkToolActive, "stateChanged(int)", {|i| ::execEvent( "checkToolActive_stateChanged", i ) } )
+      ::oUI:q_checkToolActive:connect( "stateChanged(int)", {|i| ::execEvent( "checkToolActive_stateChanged", i ) } )
       #endif
 
       #if 1
-      ::connect( ::oUI:q_checkInactive, "stateChanged(int)", {|i| ::execEvent( "checkToolActive_stateChanged", i ) } )
+      ::oUI:q_checkInactive:connect( "stateChanged(int)", {|i| ::execEvent( "checkToolActive_stateChanged", i ) } )
       #endif
 
       hdr_:= { { "Img", 30 }, { "Tool", 218 } }
@@ -445,7 +444,7 @@ METHOD IdeToolsManager:buildUserToolbars()
             qTBtn:setIcon( hbide_pathToOSPath( b_[ 9 ] ) )
             qTBtn:setMaximumWidth( 20 )
             qTBtn:setMaximumHeight( 20 )
-            ::connect( qTBtn, "clicked()", hbide_toolBlock( Self, b_ ) )
+            qTBtn:connect( "clicked()", hbide_toolBlock( Self, b_ ) )
             qTBar:addWidget( qTBtn )
             IF b_[ 8 ] != "YES"
                qTBtn:setEnabled( .f. )
@@ -647,8 +646,8 @@ METHOD IdeToolsManager:buildToolsButton()
    ::qToolsMenu := QMenu():new()
    ::qToolsMenu:setStyleSheet( GetStyleSheet( "QMenuPop", ::nAnimantionMode ) )
    FOR EACH a_ IN ::aTools
-      qAct := ::qToolsMenu:addAction( a_[ 1 ] )
-      ::connect( qAct, "triggered(bool)", {|| ::execTool( a_[ 1 ] ) } )
+      qAct := QAction():from( ::qToolsMenu:addAction( a_[ 1 ] ) )
+      qAct:connect( "triggered(bool)", {|| ::execTool( a_[ 1 ] ) } )
       aadd( ::aAct, qAct )
    NEXT
    ::qToolsButton := QToolButton():new()
@@ -657,7 +656,7 @@ METHOD IdeToolsManager:buildToolsButton()
    ::qToolsButton:setPopupMode( QToolButton_MenuButtonPopup )
    ::qToolsButton:setMenu( ::qToolsMenu )
 
-   ::connect( ::qToolsButton, "clicked()", {|| ::show() } )
+   ::qToolsButton:connect( "clicked()", {|| ::show() } )
 
    RETURN ::qToolsButton
 
@@ -678,7 +677,7 @@ METHOD IdeToolsManager:buildPanelsButton()
    ::qPanelsButton:setPopupMode( QToolButton_MenuButtonPopup )
    ::qPanelsButton:setMenu( ::qPanelsMenu )
 
-   ::connect( ::qPanelsButton, "clicked()", {|| ::oDK:setView( "New..." ) } )
+   ::qPanelsButton:connect( "clicked()", {|| ::oDK:setView( "New..." ) } )
 
    RETURN ::qPanelsButton
 
@@ -687,9 +686,9 @@ METHOD IdeToolsManager:buildPanelsButton()
 METHOD IdeToolsManager:addPanelsMenu( cPrompt )
    LOCAL qAct
 
-   qAct := ::qPanelsMenu:addAction( cPrompt )
-   QAction():from( qAct ):setIcon( ::oDK:getPanelIcon( cPrompt ) )
-   ::connect( qAct, "triggered(bool)", {|| ::oDK:setView( cPrompt ) } )
+   qAct := QAction():from( ::qPanelsMenu:addAction( cPrompt ) )
+   qAct:setIcon( ::oDK:getPanelIcon( cPrompt ) )
+   qAct:connect( "triggered(bool)", {|| ::oDK:setView( cPrompt ) } )
    aadd( ::aPanelsAct, qAct )
 
    RETURN Self

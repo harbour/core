@@ -237,7 +237,7 @@ METHOD IdeEditsManager:create( oIde )
    ::oIde:qCompModel := QStringListModel():new()
    ::oIde:qCompleter := QCompleter():new()
    //
-   ::connect( ::qCompleter, "activated(QString)", {|p| ::execEvent( "qcompleter_activated", p ) } )
+   ::qCompleter:connect( "activated(QString)", {|p| ::execEvent( "qcompleter_activated", p ) } )
 
    /* Define fields completer */
    ::qFldsStrList   := QStringList():new()
@@ -278,7 +278,7 @@ METHOD IdeEditsManager:updateCompleter()
    aHrb := ::oHL:getFunctionPrototypes()
    aUsr := hbide_getUserPrototypes()
 
-   ::disconnect( ::qCompleter, "activated(QString)", {|p| ::execEvent( "qcompleter_activated", p ) } )
+   ::qCompleter:disconnect( "activated(QString)", {|p| ::execEvent( "qcompleter_activated", p ) } )
 
    ::aProtos := {}
    aeval( aHrb, {|e| aadd( ::aProtos, e ) } )
@@ -319,7 +319,7 @@ METHOD IdeEditsManager:updateCompleter()
    ( QListView():from( ::qCompleter:popup() ) ):setAlternatingRowColors( .t. )
    ( QListView():from( ::qCompleter:popup() ) ):setFont( QFont():new( "Courier New", 8 ) )
 
-   ::connect( ::qCompleter, "activated(QString)", {|p| ::execEvent( "qcompleter_activated", p ) } )
+   ::qCompleter:connect( "activated(QString)", {|p| ::execEvent( "qcompleter_activated", p ) } )
 
    RETURN Self
 
@@ -343,7 +343,7 @@ METHOD IdeEditsManager:getProto( cWord )
 METHOD IdeEditsManager:destroy()
    LOCAL a_
 
-   ::disconnect( ::qCompleter, "activated(QString)" )
+   ::qCompleter:disconnect( "activated(QString)" )
    ::oIde:qCompModel := NIL
    ::oIde:qProtoList := NIL
    ::oIde:qCompleter := NIL
@@ -1355,7 +1355,7 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
 
    ::qLayout:addWidget( ::oEdit:qEdit )
 
-   ::connect( ::oEdit:qEdit, "updateRequest(QRect,int)", {|| ::scrollThumbnail() } )
+   ::oEdit:qEdit:connect( "updateRequest(QRect,int)", {|| ::scrollThumbnail() } )
 
    ::qDocument  := QTextDocument():configure( ::qEdit:document() )
 
@@ -1437,10 +1437,10 @@ METHOD IdeEditor:split( nOrient, oEditP )
 METHOD IdeEditor:destroy()
    LOCAL n, oEdit
 
-   ::disconnect( ::oEdit:qEdit, "updateRequest(QRect,int)" )
+   ::oEdit:qEdit:disconnect( "updateRequest(QRect,int)" )
 
    IF !empty( ::qTimerSave )
-      ::disconnect( ::qTimerSave, "timeout()" )
+      ::qTimerSave:disconnect( "timeout()" )
       ::qTimerSave:stop()
       ::qTimerSave := NIL
    ENDIF
@@ -1568,7 +1568,7 @@ METHOD IdeEditor:setDocumentProperties()
       IF ::cType $ "PRG,C,CPP,H,CH,HBS"
          ::qTimerSave := QTimer():New()
          ::qTimerSave:setInterval( max( 30000, ::oINI:nTmpBkpPrd * 1000 ) )
-         ::connect( ::qTimerSave, "timeout()", {|| ::execEvent( "qTimeSave_timeout" ) } )
+         ::qTimerSave:connect( "timeout()", {|| ::execEvent( "qTimeSave_timeout" ) } )
          ::qTimerSave:start()
       ENDIF
 

@@ -48,8 +48,8 @@ ideedit.prg
 ideplugins.prg
 idedict.prg
 idebrowse.prg
-idereportsmanager.prg
-idetoolbar.prg
+hbqreportsmanager.prg
+hbqtoolbar.prg
 ideparseexpr.c
 
 docviewgenerator.ui

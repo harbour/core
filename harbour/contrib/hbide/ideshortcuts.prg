@@ -258,8 +258,7 @@ METHOD IdeShortcuts:destroy()
    LOCAL a_, qItm
 
    IF !empty( ::oUI )
-      Qt_Events_disConnect( ::pEvents, ::oUI:oWidget, QEvent_Close )
-      ::oUI:oWidget:removeEventFilter( ::pEvents )
+      ::oUI:oWidget:disconnect( QEvent_Close )
 
       ::qHiliter := NIL
 
@@ -555,9 +554,7 @@ METHOD IdeShortcuts:buildUI()
    ::oUI:setParent( ::oDlg:oWidget )
    ::oUI:setWindowFlags( Qt_Sheet )
 
-   ::oUI:oWidget:installEventFilter( ::pEvents )
-
-   Qt_Events_Connect( ::pEvents, ::oUI:oWidget, QEvent_Close, {|| ::oIde:oINI:cShortcutsDialogGeometry := hbide_posAndSize( ::oUI:oWidget ) } )
+   ::oUI:oWidget:connect( QEvent_Close, {|| ::oIde:oINI:cShortcutsDialogGeometry := hbide_posAndSize( ::oUI:oWidget ) } )
 
    oTbl := ::oUI:q_tableMacros                              /* Build Table Header */
    QHeaderView():from( oTbl:verticalHeader() ):hide()

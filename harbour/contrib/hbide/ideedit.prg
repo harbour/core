@@ -277,7 +277,7 @@ METHOD IdeEdit:create( oIde, oEditor, nMode )
    ::qEdit:setLineWrapMode( QTextEdit_NoWrap )
    ::qEdit:ensureCursorVisible()
    ::qEdit:setContextMenuPolicy( Qt_CustomContextMenu )
-   ::qEdit:installEventFilter( ::pEvents )
+//   ::qEdit:installEventFilter( ::pEvents )
    ::qEdit:setTabChangesFocus( .f. )
 
    ::setFont()
@@ -296,18 +296,18 @@ METHOD IdeEdit:create( oIde, oEditor, nMode )
 
    ::connectEditSignals( Self )
 
-   Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_KeyPress           , {|p| ::execKeyEvent( 101, QEvent_KeyPress, p ) } )
-   Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_Wheel              , {|p| ::execKeyEvent( 102, QEvent_Wheel   , p ) } )
-   Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_FocusIn            , {| | ::execKeyEvent( 104, QEvent_FocusIn     ) } )
-   Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_Resize             , {| | ::execKeyEvent( 106, QEvent_Resize      ) } )
-   Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_FocusOut           , {| | ::execKeyEvent( 105, QEvent_FocusOut    ) } )
-   Qt_Events_Connect( ::pEvents, ::qEdit, QEvent_MouseButtonDblClick, {|p| ::execKeyEvent( 103, QEvent_MouseButtonDblClick, p ) } )
+   ::qEdit:connect( QEvent_KeyPress           , {|p| ::execKeyEvent( 101, QEvent_KeyPress, p ) } )
+   ::qEdit:connect( QEvent_Wheel              , {|p| ::execKeyEvent( 102, QEvent_Wheel   , p ) } )
+   ::qEdit:connect( QEvent_FocusIn            , {| | ::execKeyEvent( 104, QEvent_FocusIn     ) } )
+   ::qEdit:connect( QEvent_Resize             , {| | ::execKeyEvent( 106, QEvent_Resize      ) } )
+   ::qEdit:connect( QEvent_FocusOut           , {| | ::execKeyEvent( 105, QEvent_FocusOut    ) } )
+   ::qEdit:connect( QEvent_MouseButtonDblClick, {|p| ::execKeyEvent( 103, QEvent_MouseButtonDblClick, p ) } )
 
    ::qEdit:hbSetEventBlock( {|p,p1| ::execKeyEvent( 115, 1001, p, p1 ) } )
 
    ::qTimer := QTimer():new()
    ::qTimer:setInterval( 2000 )
-   ::connect( ::qTimer, "timeout()",  {|| ::execEvent( timerTimeout, Self ) } )
+   ::qTimer:connect( "timeout()",  {|| ::execEvent( timerTimeout, Self ) } )
 
    RETURN Self
 
@@ -364,17 +364,17 @@ METHOD IdeEdit:destroy()
       ::oSourceThumbnailDock:oWidget:hide()
    ENDIF
 
-   ::disconnect( ::qTimer, "timeout()" )
+   ::qTimer:disconnect( "timeout()" )
    IF ::qTimer:isActive()
       ::qTimer:stop()
    ENDIF
    ::qTimer := NIL
 
-   Qt_Events_DisConnect( ::pEvents, ::qEdit, QEvent_KeyPress            )
-   Qt_Events_DisConnect( ::pEvents, ::qEdit, QEvent_Wheel               )
-   Qt_Events_DisConnect( ::pEvents, ::qEdit, QEvent_FocusIn             )
-   Qt_Events_DisConnect( ::pEvents, ::qEdit, QEvent_FocusOut            )
-   Qt_Events_DisConnect( ::pEvents, ::qEdit, QEvent_MouseButtonDblClick )
+   ::qEdit:disconnect( QEvent_KeyPress            )
+   ::qEdit:disconnect( QEvent_Wheel               )
+   ::qEdit:disconnect( QEvent_FocusIn             )
+   ::qEdit:disconnect( QEvent_FocusOut            )
+   ::qEdit:disconnect( QEvent_MouseButtonDblClick )
 
    ::disconnectEditSignals( Self )
 
@@ -388,17 +388,17 @@ METHOD IdeEdit:destroy()
 METHOD IdeEdit:disconnectEditSignals( oEdit )
    HB_SYMBOL_UNUSED( oEdit )
 
-   ::disConnect( oEdit:qEdit, "customContextMenuRequested(QPoint)" )
-   ::disConnect( oEdit:qEdit, "textChanged()"                      )
-   ::disConnect( oEdit:qEdit, "selectionChanged()"                 )
-   ::disConnect( oEdit:qEdit, "cursorPositionChanged()"            )
-   ::disConnect( oEdit:qEdit, "copyAvailable(bool)"                )
+   oEdit:qEdit:disConnect( "customContextMenuRequested(QPoint)" )
+   oEdit:qEdit:disConnect( "textChanged()"                      )
+   oEdit:qEdit:disConnect( "selectionChanged()"                 )
+   oEdit:qEdit:disConnect( "cursorPositionChanged()"            )
+   oEdit:qEdit:disConnect( "copyAvailable(bool)"                )
 
    #if 0
-   ::disConnect( oEdit:qEdit, "modificationChanged(bool)"          )
-   ::disConnect( oEdit:qEdit, "updateRequest(QRect,int)"           )
-   ::disConnect( oEdit:qEdit, "redoAvailable(bool)"                )
-   ::disConnect( oEdit:qEdit, "undoAvailable(bool)"                )
+   oEdit:qEdit:disConnect( "modificationChanged(bool)"          )
+   oEdit:qEdit:disConnect( "updateRequest(QRect,int)"           )
+   oEdit:qEdit:disConnect( "redoAvailable(bool)"                )
+   oEdit:qEdit:disConnect( "undoAvailable(bool)"                )
    #endif
 
    RETURN Self
@@ -408,17 +408,17 @@ METHOD IdeEdit:disconnectEditSignals( oEdit )
 METHOD IdeEdit:connectEditSignals( oEdit )
    HB_SYMBOL_UNUSED( oEdit )
 
-   ::connect( oEdit:qEdit, "customContextMenuRequested(QPoint)", {|p   | ::execEvent( 1, oEdit, p     ) } )
-   ::Connect( oEdit:qEdit, "textChanged()"                     , {|    | ::execEvent( 2, oEdit,       ) } )
-   ::Connect( oEdit:qEdit, "selectionChanged()"                , {|p   | ::execEvent( 6, oEdit, p     ) } )
-   ::Connect( oEdit:qEdit, "cursorPositionChanged()"           , {|    | ::execEvent( 9, oEdit,       ) } )
-   ::Connect( oEdit:qEdit, "copyAvailable(bool)"               , {|p   | ::execEvent( 3, oEdit, p     ) } )
+   oEdit:qEdit:connect( "customContextMenuRequested(QPoint)", {|p   | ::execEvent( 1, oEdit, p     ) } )
+   oEdit:qEdit:Connect( "textChanged()"                     , {|    | ::execEvent( 2, oEdit,       ) } )
+   oEdit:qEdit:Connect( "selectionChanged()"                , {|p   | ::execEvent( 6, oEdit, p     ) } )
+   oEdit:qEdit:Connect( "cursorPositionChanged()"           , {|    | ::execEvent( 9, oEdit,       ) } )
+   oEdit:qEdit:Connect( "copyAvailable(bool)"               , {|p   | ::execEvent( 3, oEdit, p     ) } )
 
    #if 0
-   ::Connect( oEdit:qEdit, "modificationChanged(bool)"         , {|p   | ::execEvent( 4, oEdit, p     ) } )
-   ::Connect( oEdit:qEdit, "updateRequest(QRect,int)"          , {|p,p1| ::execEvent( 8, oEdit, p, p1 ) } )
-   ::Connect( oEdit:qEdit, "redoAvailable(bool)"               , {|p   | ::execEvent( 5, oEdit, p     ) } )
-   ::Connect( oEdit:qEdit, "undoAvailable(bool)"               , {|p   | ::execEvent( 7, oEdit, p     ) } )
+   oEdit:qEdit:connect( "modificationChanged(bool)"         , {|p   | ::execEvent( 4, oEdit, p     ) } )
+   oEdit:qEdit:connect( "updateRequest(QRect,int)"          , {|p,p1| ::execEvent( 8, oEdit, p, p1 ) } )
+   oEdit:qEdit:connect( "redoAvailable(bool)"               , {|p   | ::execEvent( 5, oEdit, p     ) } )
+   oEdit:qEdit:connect( "undoAvailable(bool)"               , {|p   | ::execEvent( 7, oEdit, p     ) } )
    #endif
 
    RETURN Self
@@ -1788,9 +1788,9 @@ METHOD IdeEdit:printPreview()
    LOCAL qDlg := QPrintPreviewDialog():new( ::oDlg:oWidget )
 
    qDlg:setWindowTitle( "hbIDE Preview Dialog" )
-   Qt_Slots_Connect( ::pSlots, qDlg, "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
+   qDlg:connect( "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
    qDlg:exec()
-   Qt_Slots_disConnect( ::pSlots, qDlg, "paintRequested(QPrinter)" )
+   qDlg:disconnect( "paintRequested(QPrinter)" )
 
    RETURN self
 

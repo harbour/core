@@ -385,6 +385,7 @@ METHOD IdeHarbourHelp:setParameters()
 
 METHOD IdeHarbourHelp:installSignals()
 
+   #if 0
    ::oUI:signal( "buttonInstall" , "clicked()"                 , {| | ::execEvent( "buttonInstall_clicked"               ) } )
    ::oUI:signal( "buttonHome"    , "clicked()"                 , {| | ::execEvent( "buttonHome_clicked"                  ) } )
    ::oUI:signal( "buttonBackward", "clicked()"                 , {| | ::execEvent( "buttonBackward_clicked"              ) } )
@@ -401,9 +402,27 @@ METHOD IdeHarbourHelp:installSignals()
    ::oUI:signal( "editIndex"     , "textChanged(QString)"      , {|p| ::execEvent( "editIndex_textChanged"           , p ) } )
    ::oUI:signal( "editIndex"     , "returnPressed()"           , {| | ::execEvent( "editIndex_returnPressed"             ) } )
    ::oUI:signal( "listIndex"     , "itemDoubleClicked(QLWItem)", {|p| ::execEvent( "listIndex_ItemDoubleClicked"     , p ) } )
+   #endif
 
-   ::connect( ::oUI:q_treeDoc     , "itemSelectionChanged()"   , {| | ::execEvent( "treeDoc_itemSelectionChanged"        ) } )
-   ::connect( ::oUI:q_treeCategory, "itemSelectionChanged()"   , {| | ::execEvent( "treeCategory_itemSelectionChanged"   ) } )
+   ::oUI:q_buttonInstall    :connect( "clicked()"                 , {| | ::execEvent( "buttonInstall_clicked"               ) } )
+   ::oUI:q_buttonHome       :connect( "clicked()"                 , {| | ::execEvent( "buttonHome_clicked"                  ) } )
+   ::oUI:q_buttonBackward   :connect( "clicked()"                 , {| | ::execEvent( "buttonBackward_clicked"              ) } )
+   ::oUI:q_buttonForward    :connect( "clicked()"                 , {| | ::execEvent( "buttonForward_clicked"               ) } )
+   ::oUI:q_buttonUp         :connect( "clicked()"                 , {| | ::execEvent( "buttonUp_clicked"                    ) } )
+   ::oUI:q_buttonRefresh    :connect( "clicked()"                 , {| | ::execEvent( "buttonRefresh_clicked"               ) } )
+   ::oUI:q_buttonPrint      :connect( "clicked()"                 , {| | ::execEvent( "buttonPrint_clicked"                 ) } )
+   ::oUI:q_buttonPdf        :connect( "clicked()"                 , {| | ::execEvent( "buttonPdf_clicked"                   ) } )
+
+   ::oUI:q_browserView      :connect( "anchorClicked(QUrl)"       , {|p| ::execEvent( "browserView_anchorClicked"       , p ) } )
+   ::oUI:q_tabWidgetContents:connect( "currentChanged(int)"       , {|p| ::execEvent( "tabWidgetContents_currentChanged", p ) } )
+
+   ::oUI:q_editInstall      :connect( "textChanged(QString)"      , {|p| ::execEvent( "editInstall_textChanged"         , p ) } )
+   ::oUI:q_editIndex        :connect( "textChanged(QString)"      , {|p| ::execEvent( "editIndex_textChanged"           , p ) } )
+   ::oUI:q_editIndex        :connect( "returnPressed()"           , {| | ::execEvent( "editIndex_returnPressed"             ) } )
+   ::oUI:q_listIndex        :connect( "itemDoubleClicked(QLWItem)", {|p| ::execEvent( "listIndex_ItemDoubleClicked"     , p ) } )
+
+   ::oUI:q_treeDoc          :connect( "itemSelectionChanged()"    , {| | ::execEvent( "treeDoc_itemSelectionChanged"        ) } )
+   ::oUI:q_treeCategory     :connect( "itemSelectionChanged()"    , {| | ::execEvent( "treeCategory_itemSelectionChanged"   ) } )
 
    RETURN Self
 
@@ -590,8 +609,8 @@ METHOD IdeHarbourHelp:refreshDocTree()
       RETURN Self
    ENDIF
 
-   ::disconnect( ::oUI:q_treeDoc     , "itemSelectionChanged()" )
-   ::disconnect( ::oUI:q_treeCategory, "itemSelectionChanged()" )
+   ::oUI:q_treeDoc:disconnect( "itemSelectionChanged()" )
+   ::oUI:q_treeCategory:disconnect( "itemSelectionChanged()" )
    ::showApplicationCursor( Qt_BusyCursor )
 
    /* Clean Environment */
@@ -653,8 +672,8 @@ METHOD IdeHarbourHelp:refreshDocTree()
    ::oUI:q_treeDoc:expandItem( oRoot )
 
    ::showApplicationCursor()
-   ::connect( ::oUI:q_treeDoc     , "itemSelectionChanged()"   , {|| ::execEvent( "treeDoc_itemSelectionChanged"      ) } )
-   ::connect( ::oUI:q_treeCategory, "itemSelectionChanged()"   , {|| ::execEvent( "treeCategory_itemSelectionChanged" ) } )
+   ::oUI:q_treeDoc:connect( "itemSelectionChanged()"   , {|| ::execEvent( "treeDoc_itemSelectionChanged"      ) } )
+   ::oUI:q_treeCategory:connect( "itemSelectionChanged()"   , {|| ::execEvent( "treeCategory_itemSelectionChanged" ) } )
 
    RETURN Self
 
@@ -1284,9 +1303,9 @@ METHOD IdeHarbourHelp:print()
 
    qDlg := QPrintPreviewDialog():new( ::oUI )
    qDlg:setWindowTitle( "Harbour Help Document" )
-   Qt_Slots_Connect( ::pSlots, qDlg, "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
+   qDlg:connect( "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
    qDlg:exec()
-   Qt_Slots_disConnect( ::pSlots, qDlg, "paintRequested(QPrinter)" )
+   qDlg:disconnect( "paintRequested(QPrinter)" )
 
    RETURN self
 

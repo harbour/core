@@ -71,9 +71,11 @@
 
 #define  UNIT  0.1
 
+#define  INI_KEY( cKey, n )     cKey + "_" + hb_ntos( n ) + "="
+
 /*----------------------------------------------------------------------*/
 
-CLASS HbpReportsManager
+CLASS HbqReportsManager
 
    DATA   qParent
 
@@ -138,18 +140,20 @@ CLASS HbpReportsManager
    DATA   hObjTree                                INIT {=>}
    DATA   qCurGraphicsItem
 
-   DATA   symposis                                INIT "hbReports Designer"
-   DATA   version                                 INIT 0.1
-   DATA   author                                  INIT ""
-   DATA   dateCreated                             INIT date()
-   DATA   dateModified                            INIT date()
    DATA   aPages                                  INIT {}
    DATA   aSources                                INIT {}
    DATA   aObjects                                INIT {}
 
-   DATA   hDoc                                    INIT {=>}
    DATA   lNew                                    INIT .t.
    DATA   cSaved                                  INIT ""
+
+   /* Report's Properties */
+   DATA   symposis                                INIT "HBReports Designer"
+   DATA   version                                 INIT 0.1
+   DATA   title                                   INIT "Report"
+   DATA   author                                  INIT "hbIDE"
+   DATA   created                                 INIT date()
+   DATA   modified                                INIT date()
 
    METHOD new( qParent )
    METHOD create( qParent )
@@ -182,13 +186,13 @@ CLASS HbpReportsManager
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpReportsManager:new( qParent )
+METHOD HbqReportsManager:new( qParent )
    ::qParent := qParent
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpReportsManager:create( qParent )
+METHOD HbqReportsManager:create( qParent )
 
    DEFAULT qParent TO ::qParent
    ::qParent := qParent
@@ -234,12 +238,12 @@ METHOD HbpReportsManager:create( qParent )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpReportsManager:destroy()
+METHOD HbqReportsManager:destroy()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpReportsManager:buildDesignReport()
+METHOD HbqReportsManager:buildDesignReport()
 
    ::qLayoutD := QHBoxLayout():new()
    ::qLayoutD:setContentsMargins( 0,0,0,0 )
@@ -367,211 +371,7 @@ METHOD HbpReportsManager:buildDesignReport()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpReportsManager:clear()
-
-   /* Cleanup the environments */
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbpReportsManager:loadReport( xData )
-
-   ::clear()
-
-   IF empty( xData )
-      IF empty( ::aPages )
-         aadd( ::aPages, { "Page_1" } )
-      ENDIF
-
-      ::updateObjectsTree( "ReportName", NIL, "Report" )
-      ::updateObjectsTree( "Page", "Report", "Page_1" )
-
-      ::addSource( "Customer", { { "Title" ,"C",35,0 }, { "Street","C",20,0 }, { "Revenue","N",12,2 } } )
-      ::addSource( "Invoice" , { { "Number","C",10,0 }, { "Date"  ,"D",08,0 }, { "Amount" ,"N",12,2 } } )
-
-   ELSE
-      // read from - buffer, file
-
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbpReportsManager:addSource( cAlias, aStruct )
-   LOCAL qItem, qItmC, b_
-
-   qItem := QTreeWidgetItem():new()
-   qItem:setText( 0, cAlias )
-   ::qTreeData:addTopLevelItem( qItem )
-
-   FOR EACH b_ IN aStruct
-      qItmC := QTreeWidgetItem():new()
-      qItmC:setText( 0, b_[ 1 ] )
-      qItem:addChild( qItmC )
-      qItem:setExpanded( .t. )
-   NEXT
-
-   aadd( ::aSources, { cAlias, aStruct } )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-#define INI_KEY( cKey, n )    cKey + "_" + hb_ntos( n ) + "="
-
-STATIC FUNCTION rmgr_iniKey( cKey, n )
-   RETURN cKey + "_" + hb_ntos( n ) + "="
-
-STATIC FUNCTION rmgr_xtos( x )
-   SWITCH valtype( x )
-   CASE "C" ; RETURN x
-   CASE "D" ; RETURN dtos( x )
-   CASE "L" ; RETURN iif( x, "YES", "NO" )
-   CASE "N" ; RETURN hb_ntos( x )
-   ENDSWITCH
-   RETURN ""
-
-STATIC FUNCTION rmgr_array2String( aArray )
-   LOCAL a_, s, x
-
-   s := ""
-   FOR EACH a_ IN aArray
-      FOR EACH x IN a_
-         s += rmgr_xtos( x ) + " "
-      NEXT
-      s := trim( s ) + ","
-   NEXT
-
-   RETURN s
-
-STATIC FUNCTION rmgr_a2arrayStr( aArray )
-   LOCAL s, x
-
-   s := "{"
-   FOR EACH x IN aArray
-      SWITCH valtype( x )
-      CASE "C"
-         s += '"' + x + '"'
-         EXIT
-      CASE "N"
-         s += hb_ntos( x )
-         EXIT
-      CASE "D"
-         s += "stod(" + dtos( x ) + ")"
-         EXIT
-      CASE "L"
-         s += iif( x, ".t.", ".f." )
-         EXIT
-      CASE "A"
-         s += rmgr_a2arrayStr( x )
-         EXIT
-      OTHERWISE
-         s += "NIL"
-      ENDSWITCH
-      s += ","
-   NEXT
-   s := iif( len( s ) == 1, s, substr( s, 1, len( s ) - 1 ) ) + "}"
-
-   RETURN s
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbpReportsManager:saveReport( lSaveAs )
-   LOCAL cFile, cBuffer, qFileDlg, qList, cExt
-   LOCAL lSave := .t.
-
-   DEFAULT lSaveAs TO .f.
-
-   IF lSaveAs .OR. ::lNew .OR. empty( ::cSaved )
-      qFileDlg := QFileDialog():new( ::oWidget )
-
-      qFileDlg:setAcceptMode( QFileDialog_AcceptSave )
-      qFileDlg:setFileMode( QFileDialog_AnyFile )
-      qFileDlg:setViewMode( QFileDialog_List )
-      qFileDlg:setNameFilter( "HB Reports (*.hrp)" )
-
-      IF qFileDlg:exec() == 1
-         qList := QStringList():from( qFileDlg:selectedFiles() )
-         cFile := qList:at( 0 )
-         hb_fNameSplit( cFile, , , @cExt )
-         IF empty( cExt )
-            cFile += ".hrp"
-         ENDIF
-
-         ::cSaved := cFile
-      ELSE
-         lSave := .f.
-      ENDIF
-   ENDIF
-
-   IF lSave .AND. !empty( ::cSaved )
-      cBuffer  := ::buildReportStream()
-      hb_memowrit( ::cSaved, cBuffer )
-
-      RETURN hb_fileExists( ::cSaved )
-   ENDIF
-
-   RETURN .f.
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbpReportsManager:toString()
-
-   RETURN ::buildReportStream()
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbpReportsManager:buildReportStream()
-   LOCAL txt_:= {}, n, a_, s
-
-   aadd( txt_, "[GENERAL]" )
-   aadd( txt_, "" )
-   aadd( txt_, "Symposis"     + "=" + "HBReportDesigner - (C) Harbour-Project <http://harbour-project.org>  (C) 2010 Pritpal Bedi <bedipritpal@hotmail.com>" )
-   aadd( txt_, "Version"      + "=" + "0.1"            )
-   aadd( txt_, "Title"        + "=" + "Report"         )
-   aadd( txt_, "Author"       + "=" + "hbIDE"          )
-   aadd( txt_, "DateCreated"  + "=" + dtos( date() )   )
-   aadd( txt_, "DateModified" + "=" + dtos( date() )   )
-   aadd( txt_, "Properties"   + "=" + ""               )
-   aadd( txt_, "" )
-   aadd( txt_, "[SOURCES]" )
-   aadd( txt_, "" )
-   FOR EACH a_ IN ::aSources
-      n := a_:__enumIndex()
-      aadd( txt_, INI_KEY( "source", n ) + a_[ 1 ] + "," + rmgr_a2arrayStr( a_[ 2 ] ) )
-   NEXT
-   aadd( txt_, "" )
-   aadd( txt_, "[PAGES]" )
-   aadd( txt_, "" )
-   FOR EACH a_ IN ::aPages
-      n := a_:__enumIndex()
-      aadd( txt_, INI_KEY( "page", n ) + rmgr_a2arrayStr( a_ ) )
-   NEXT
-   aadd( txt_, "" )
-   aadd( txt_, "[OBJECTS]" )
-   aadd( txt_, "" )
-   FOR EACH a_ IN ::aObjects
-      n := a_:__enumIndex()
-      aadd( txt_, INI_KEY( "object", n ) + rmgr_a2arrayStr( a_ ) )
-   NEXT
-   aadd( txt_, "" )
-
-   s := ""
-   aeval( txt_, {|e| s += e + chr( 13 ) + chr( 10 ) } )
-
-   RETURN s
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbpReportsManager:prepareReport()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbpReportsManager:execEvent( cEvent, p, p1, p2 )
+METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
    LOCAL qEvent, qMime, qItem, i, qList, cFile, nArea, aStruct, cAlias, cPath
 
    SWITCH cEvent
@@ -714,7 +514,158 @@ METHOD HbpReportsManager:execEvent( cEvent, p, p1, p2 )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpReportsManager:addObject( qPos, cType )
+METHOD HbqReportsManager:clear()
+
+   /* Cleanup the environments */
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbqReportsManager:loadReport( xData )
+
+   ::clear()
+
+   IF empty( xData )
+      IF empty( ::aPages )
+         aadd( ::aPages, { "Page_1" } )
+      ENDIF
+
+      ::updateObjectsTree( "ReportName", NIL, "Report" )
+      ::updateObjectsTree( "Page", "Report", "Page_1" )
+
+      ::addSource( "Customer", { { "Title" ,"C",35,0 }, { "Street","C",20,0 }, { "Revenue","N",12,2 } } )
+      ::addSource( "Invoice" , { { "Number","C",10,0 }, { "Date"  ,"D",08,0 }, { "Amount" ,"N",12,2 } } )
+
+   ELSE
+      // read from - buffer, file
+      hb_utf8tostr( hb_memoread( "name" ) )
+
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbqReportsManager:addSource( cAlias, aStruct )
+   LOCAL qItem, qItmC, b_
+
+   qItem := QTreeWidgetItem():new()
+   qItem:setText( 0, cAlias )
+   ::qTreeData:addTopLevelItem( qItem )
+
+   FOR EACH b_ IN aStruct
+      qItmC := QTreeWidgetItem():new()
+      qItmC:setText( 0, b_[ 1 ] )
+      qItem:addChild( qItmC )
+      qItem:setExpanded( .t. )
+   NEXT
+
+   aadd( ::aSources, { cAlias, aStruct } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbqReportsManager:saveReport( lSaveAs )
+   LOCAL cFile, cBuffer, qFileDlg, qList, cExt
+   LOCAL lSave := .t.
+
+   DEFAULT lSaveAs TO .f.
+
+   IF lSaveAs .OR. ::lNew .OR. empty( ::cSaved )
+      qFileDlg := QFileDialog():new( ::oWidget )
+
+      qFileDlg:setAcceptMode( QFileDialog_AcceptSave )
+      qFileDlg:setFileMode( QFileDialog_AnyFile )
+      qFileDlg:setViewMode( QFileDialog_List )
+      qFileDlg:setNameFilter( "HB Reports (*.hqr)" )
+
+      IF qFileDlg:exec() == 1
+         qList := QStringList():from( qFileDlg:selectedFiles() )
+         cFile := qList:at( 0 )
+         hb_fNameSplit( cFile, , , @cExt )
+         IF empty( cExt )
+            cFile += ".hqr"
+         ENDIF
+
+         ::cSaved := cFile
+      ELSE
+         lSave := .f.
+      ENDIF
+   ENDIF
+
+   IF lSave .AND. !empty( ::cSaved )
+      cBuffer  := ::buildReportStream()
+      hb_memowrit( ::cSaved, hb_strtoutf8( cBuffer ) )
+
+      RETURN hb_fileExists( ::cSaved )
+   ENDIF
+
+   RETURN .f.
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbqReportsManager:prepareReport()
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbqReportsManager:toString()
+   RETURN ::buildReportStream()
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbqReportsManager:buildReportStream()
+   LOCAL txt_:= {}, n, a_, s, oWidget, qPos
+
+   aadd( txt_, "[GENERAL]" )
+   aadd( txt_, "" )
+   aadd( txt_, "Symposis"     + "=" + "HBReportDesigner"   )
+   aadd( txt_, "Version"      + "=" + hb_ntos( ::version ) )
+   aadd( txt_, "Title"        + "=" + ::title              )
+   aadd( txt_, "Author"       + "=" + ::author             )
+   aadd( txt_, "DateCreated"  + "=" + dtos( ::created )    )
+   aadd( txt_, "DateModified" + "=" + dtos( ::modified )   )
+   aadd( txt_, "Properties"   + "=" + ""                   )
+   aadd( txt_, "" )
+   aadd( txt_, "[SOURCES]" )
+   aadd( txt_, "" )
+   FOR EACH a_ IN ::aSources
+      n := a_:__enumIndex()
+      aadd( txt_, INI_KEY( "source", n ) + a_[ 1 ] + "," + rmgr_a2arrayStr( a_[ 2 ] ) )
+   NEXT
+   aadd( txt_, "" )
+   aadd( txt_, "[PAGES]" )
+   aadd( txt_, "" )
+   FOR EACH a_ IN ::aPages
+      n := a_:__enumIndex()
+      aadd( txt_, INI_KEY( "page", n ) + rmgr_a2arrayStr( a_ ) )
+   NEXT
+   aadd( txt_, "" )
+   aadd( txt_, "[OBJECTS]" )
+   aadd( txt_, "" )
+   FOR EACH a_ IN ::aObjects
+      n := a_:__enumIndex()
+      IF hb_hHasKey( ::hItems, a_[ 3 ] )
+         oWidget := ::hItems[ a_[ 3 ] ]
+         qPos := QPointF():from( oWidget:scenePos() )
+
+         a_[ 5 ] := { { 0, 0, oWidget:width(), oWidget:height() }, { qPos:x(), qPos:y() } }
+
+         aadd( txt_, INI_KEY( "object", n ) + rmgr_a2arrayStr( a_ ) )
+      ENDIF
+   NEXT
+   aadd( txt_, "" )
+
+   s := ""
+   aeval( txt_, {|e| s += e + chr( 13 ) + chr( 10 ) } )
+
+   RETURN s
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbqReportsManager:addObject( qPos, cType )
    LOCAL oWidget, cName, nW, nH, qGrad, cCode, qStrList, i
 
    cName := cType + "_" + hb_ntos( ::getNextID( cType ) )
@@ -783,7 +734,7 @@ METHOD HbpReportsManager:addObject( qPos, cType )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpReportsManager:addField( qPos, cAlias, cField )
+METHOD HbqReportsManager:addField( qPos, cAlias, cField )
    LOCAL oWidget, nW := 300, nH := 50
    LOCAL cName := cAlias + "..." + cField
 
@@ -810,7 +761,7 @@ METHOD HbpReportsManager:addField( qPos, cAlias, cField )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpReportsManager:updateObjectsTree( cType, cParent, cName, cSubType )
+METHOD HbqReportsManager:updateObjectsTree( cType, cParent, cName, cSubType )
    LOCAL qParent, qItem
 
    DO CASE
@@ -851,7 +802,7 @@ METHOD HbpReportsManager:updateObjectsTree( cType, cParent, cName, cSubType )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpReportsManager:contextMenuScene( p1 )
+METHOD HbqReportsManager:contextMenuScene( p1 )
    LOCAL qMenu, qEvent, pAct
 
    qEvent := QGraphicsSceneContextMenuEvent():from( p1 )
@@ -874,7 +825,7 @@ METHOD HbpReportsManager:contextMenuScene( p1 )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpReportsManager:contextMenuItem( p1, p2 )
+METHOD HbqReportsManager:contextMenuItem( p1, p2 )
    LOCAL qMenu, qEvent, pAct
 
    HB_SYMBOL_UNUSED( p2 )
@@ -899,7 +850,7 @@ METHOD HbpReportsManager:contextMenuItem( p1, p2 )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpReportsManager:buildTabBar()
+METHOD HbqReportsManager:buildTabBar()
 
    ::qTabBar := QTabBar():new()
    ::qTabBar:setShape( QTabBar_TriangularNorth )
@@ -914,7 +865,7 @@ METHOD HbpReportsManager:buildTabBar()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpReportsManager:buildStacks()
+METHOD HbqReportsManager:buildStacks()
 
    ::qStack := QStackedWidget():new()
 
@@ -931,7 +882,7 @@ METHOD HbpReportsManager:buildStacks()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpReportsManager:buildStatusBar()
+METHOD HbqReportsManager:buildStatusBar()
    LOCAL qLabel
 
    ::qStatus := QStatusBar():new()
@@ -958,7 +909,7 @@ METHOD HbpReportsManager:buildStatusBar()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpReportsManager:getImageOfType( cType )
+METHOD HbqReportsManager:getImageOfType( cType )
    LOCAL cImage
 
    DO CASE
@@ -980,7 +931,7 @@ METHOD HbpReportsManager:getImageOfType( cType )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpReportsManager:getNextID( cType )
+METHOD HbqReportsManager:getNextID( cType )
 
    STATIC hIDs := {=>}
 
@@ -997,7 +948,7 @@ METHOD HbpReportsManager:getNextID( cType )
 /*         given to him. I had downloaded this code many years back     */
 /*         and adopted to Vouch32 library and Vouch32 Active-X Server.  */
 
-METHOD HbpReportsManager:fetchBarString( cCode, lCheck )
+METHOD HbqReportsManager:fetchBarString( cCode, lCheck )
    STATIC cCars   := '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ-. *$/+%'
    STATIC aBarras := {  '1110100010101110',;  // 1
                         '1011100010101110',;  // 2
@@ -1072,9 +1023,9 @@ METHOD HbpReportsManager:fetchBarString( cCode, lCheck )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpReportsManager:buildToolbar()
+METHOD HbqReportsManager:buildToolbar()
 
-   ::qToolbar := IdeToolbar():new()
+   ::qToolbar := HbqToolbar():new()
    ::qToolbar:orientation := Qt_Horizontal
    ::qToolbar:create( "ReportManager_Top_Toolbar" )
 
@@ -1098,9 +1049,9 @@ METHOD HbpReportsManager:buildToolbar()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpReportsManager:buildToolbarAlign()
+METHOD HbqReportsManager:buildToolbarAlign()
 
-   ::qToolbarAlign := IdeToolbar():new()
+   ::qToolbarAlign := HbqToolbar():new()
    ::qToolbarAlign:orientation := Qt_Horizontal
    ::qToolbarAlign:create( "ReportManager_Top_Toolbar_Align" )
 
@@ -1143,9 +1094,9 @@ METHOD HbpReportsManager:buildToolbarAlign()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpReportsManager:buildToolbarLeft()
+METHOD HbqReportsManager:buildToolbarLeft()
 
-   ::qToolbarL := IdeToolbar():new()
+   ::qToolbarL := HbqToolbar():new()
    ::qToolbarL:orientation := Qt_Vertical
    ::qToolbarL:create( "ReportManager_Left_Toolbar" )
 
@@ -1156,6 +1107,60 @@ METHOD HbpReportsManager:buildToolbarLeft()
    ::qToolbarL:addToolButton( "Text"    , "Text"    , app_image( "text"       ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION rmgr_xtos( x )
+   SWITCH valtype( x )
+   CASE "C" ; RETURN x
+   CASE "D" ; RETURN dtos( x )
+   CASE "L" ; RETURN iif( x, "YES", "NO" )
+   CASE "N" ; RETURN hb_ntos( x )
+   ENDSWITCH
+   RETURN ""
+
+STATIC FUNCTION rmgr_array2String( aArray )
+   LOCAL a_, s, x
+
+   s := ""
+   FOR EACH a_ IN aArray
+      FOR EACH x IN a_
+         s += rmgr_xtos( x ) + " "
+      NEXT
+      s := trim( s ) + ","
+   NEXT
+
+   RETURN s
+
+STATIC FUNCTION rmgr_a2arrayStr( aArray )
+   LOCAL s, x
+
+   s := "{"
+   FOR EACH x IN aArray
+      SWITCH valtype( x )
+      CASE "C"
+         s += '"' + x + '"'
+         EXIT
+      CASE "N"
+         s += hb_ntos( x )
+         EXIT
+      CASE "D"
+         s += "stod(" + dtos( x ) + ")"
+         EXIT
+      CASE "L"
+         s += iif( x, ".t.", ".f." )
+         EXIT
+      CASE "A"
+         s += rmgr_a2arrayStr( x )
+         EXIT
+      OTHERWISE
+         s += "NIL"
+      ENDSWITCH
+      s += ","
+   NEXT
+   s := iif( len( s ) == 1, s, substr( s, 1, len( s ) - 1 ) ) + "}"
+
+   RETURN s
 
 /*----------------------------------------------------------------------*/
 

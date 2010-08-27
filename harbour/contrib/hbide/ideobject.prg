@@ -72,9 +72,6 @@
 
 CLASS IdeObject
 
-   ACCESS pSlots                                  INLINE hbxbp_getSlotsPtr()
-   ACCESS pEvents                                 INLINE hbxbp_getEventsPtr()
-
    DATA   xD
    DATA   xD1
    DATA   xD2
@@ -218,8 +215,6 @@ CLASS IdeObject
 
    DATA   aSlots                                  INIT   {}
    DATA   aEvents                                 INIT   {}
-   METHOD connect( qWidget, cSlot, bBlock )
-   METHOD disConnect( qWidget, cSlot )
 
    METHOD createTags( ... )                       INLINE ::oIde:createTags( ... )
    METHOD addSourceInTree( ... )                  INLINE ::oIde:addSourceInTree( ... )
@@ -243,41 +238,5 @@ CLASS IdeObject
    METHOD getEditorByIndex( ... )                 INLINE ::oSM:getEditorByIndex( ... )
 
    ENDCLASS
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeObject:connect( qWidget, cSlot, bBlock )
-
-   IF hb_isNumeric( cSlot )
-      IF !( Qt_Events_Connect( ::pEvents, qWidget, cSlot, bBlock ) )
-         HB_TRACE( HB_TR_ALWAYS, "Connection FAILED:", cSlot )
-         RETURN .f.
-      ENDIF
-   ELSE
-      IF !( Qt_Slots_Connect( ::pSlots, qWidget, cSlot, bBlock ) )
-         HB_TRACE( HB_TR_ALWAYS, "Connection FAILED:", cSlot )
-         RETURN .f.
-      ENDIF
-   ENDIF
-
-   RETURN .t.
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeObject:disConnect( qWidget, cSlot )
-
-   IF hb_isNumeric( cSlot )
-      IF !( Qt_Events_disConnect( ::pSlots, qWidget, cSlot ) )
-         HB_TRACE( HB_TR_DEBUG, "Dis-Connection FAILED:", cSlot )
-         RETURN .f.
-      ENDIF
-   ELSE
-      IF !( Qt_Slots_disConnect( ::pSlots, qWidget, cSlot ) )
-         HB_TRACE( HB_TR_DEBUG, "Dis-Connection FAILED:", cSlot )
-         RETURN .f.
-      ENDIF
-   ENDIF
-
-   RETURN .t.
 
 /*----------------------------------------------------------------------*/

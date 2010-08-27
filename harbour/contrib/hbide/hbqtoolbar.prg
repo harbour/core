@@ -71,7 +71,7 @@
 
 /*----------------------------------------------------------------------*/
 
-CLASS IdeToolbar INHERIT IdeObject
+CLASS HbqToolbar
 
    DATA   oWidget
    DATA   cName
@@ -108,7 +108,7 @@ CLASS IdeToolbar INHERIT IdeObject
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeToolbar:new( cName, oParent )
+METHOD HbqToolbar:new( cName, oParent )
 
    ::cName   := cName
    ::oParent := oParent
@@ -117,7 +117,7 @@ METHOD IdeToolbar:new( cName, oParent )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeToolbar:create( cName, oParent )
+METHOD HbqToolbar:create( cName, oParent )
 
    STATIC nID := 0
 
@@ -126,7 +126,7 @@ METHOD IdeToolbar:create( cName, oParent )
    ::cName   := cName
    ::oParent := oParent
 
-   DEFAULT ::cName TO "IdeToolbar_" + hb_ntos( ++nID )
+   DEFAULT ::cName TO "HbqToolbar_" + hb_ntos( ++nID )
 
    ::oWidget := QToolbar():new()
    ::oWidget:setObjectName( ::cName )
@@ -140,7 +140,7 @@ METHOD IdeToolbar:create( cName, oParent )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeToolbar:onError( ... )
+METHOD HbqToolbar:onError( ... )
    LOCAL cMsg := __GetMessage()
    IF SubStr( cMsg, 1, 1 ) == "_"
       cMsg := SubStr( cMsg, 2 )
@@ -149,13 +149,13 @@ METHOD IdeToolbar:onError( ... )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeToolbar:destroy()
+METHOD HbqToolbar:destroy()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeToolbar:execEvent( cEvent, p, p1 )
+METHOD HbqToolbar:execEvent( cEvent, p, p1 )
    LOCAL qEvent, qRC
 
    qEvent := QMouseEvent():from( p )
@@ -209,7 +209,7 @@ HB_TRACE( HB_TR_ALWAYS, "QEvent_MouseRelease" )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeToolbar:addWidget( cName, qWidget )
+METHOD HbqToolbar:addWidget( cName, qWidget )
    LOCAL qAction
 
    STATIC nID := 0
@@ -226,7 +226,7 @@ METHOD IdeToolbar:addWidget( cName, qWidget )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeToolbar:addToolButton( cName, cDesc, cImage, bAction, lCheckable, lDragEnabled )
+METHOD HbqToolbar:addToolButton( cName, cDesc, cImage, bAction, lCheckable, lDragEnabled )
    LOCAL oButton, qAction
 
    STATIC nID := 0
@@ -243,16 +243,14 @@ METHOD IdeToolbar:addToolButton( cName, cDesc, cImage, bAction, lCheckable, lDra
    oButton:setCheckable( lCheckable )
 
    IF lDragEnabled
-      oButton:installEventFilter( ::pEvents )
-      //
-      ::connect( oButton, QEvent_MouseButtonPress  , {|p| ::execEvent( "QEvent_MousePress"  , p, cName ) } )
-      ::connect( oButton, QEvent_MouseButtonRelease, {|p| ::execEvent( "QEvent_MouseRelease", p, cName ) } )
-      ::connect( oButton, QEvent_MouseMove         , {|p| ::execEvent( "QEvent_MouseMove"   , p, cName ) } )
-      ::connect( oButton, QEvent_Enter             , {|p| ::execEvent( "QEvent_MouseEnter"  , p, cName ) } )
+      oButton:connect( QEvent_MouseButtonPress  , {|p| ::execEvent( "QEvent_MousePress"  , p, cName ) } )
+      oButton:connect( QEvent_MouseButtonRelease, {|p| ::execEvent( "QEvent_MouseRelease", p, cName ) } )
+      oButton:connect( QEvent_MouseMove         , {|p| ::execEvent( "QEvent_MouseMove"   , p, cName ) } )
+      oButton:connect( QEvent_Enter             , {|p| ::execEvent( "QEvent_MouseEnter"  , p, cName ) } )
    ENDIF
 
    IF hb_isBlock( bAction )
-      ::connect( oButton, "clicked()", bAction )
+      oButton:connect( "clicked()", bAction )
    ENDIF
    #if 1
    qAction := QWidgetAction():new( ::oWidget )
@@ -267,7 +265,7 @@ METHOD IdeToolbar:addToolButton( cName, cDesc, cImage, bAction, lCheckable, lDra
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeToolbar:setItemChecked( cName, lState )
+METHOD HbqToolbar:setItemChecked( cName, lState )
    LOCAL lOldState
 
    IF hb_hHasKey( ::hItems, cName )
@@ -283,7 +281,7 @@ METHOD IdeToolbar:setItemChecked( cName, lState )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeToolbar:setItemEnabled( cName, lEnabled )
+METHOD HbqToolbar:setItemEnabled( cName, lEnabled )
    LOCAL lOldEnabled
 
    IF hb_hHasKey( ::hItems, cName )

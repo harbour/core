@@ -127,9 +127,6 @@ PROCEDURE Main( ... )
 
 CLASS HbIde
 
-   ACCESS pSlots                                  INLINE hbxbp_getSlotsPtr()
-   ACCESS pEvents                                 INLINE hbxbp_getEventsPtr()
-
    DATA   aParams
    DATA   cProjIni
 
@@ -489,7 +486,7 @@ METHOD HbIde:create( aParams )
    ::oBM := IdeBrowseManager():new():create( Self )
 
    /* Reports Manager */
-   ::oRM := HbpReportsManager():new():create( ::oReportsManagerDock:oWidget )
+   ::oRM := HbqReportsManager():new():create( ::oReportsManagerDock:oWidget )
    ::oReportsManagerDock:oWidget:setWidget( ::oRM:oWidget )
 
    /* Fill various elements of the IDE */
@@ -1462,3 +1459,4 @@ METHOD HbIde:testPainter( qPainter )
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
+

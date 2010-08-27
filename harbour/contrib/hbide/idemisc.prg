@@ -1184,12 +1184,12 @@ FUNCTION hbide_getOS()
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_fetchADate( qParent, cTitle, cPrompt, dDefault )
-   LOCAL qDate, oUI, pSlots, nRet
+   LOCAL qDate, oUI, nRet
 
    DEFAULT cTitle  TO "A Date Value"
    DEFAULT cPrompt TO "What"
 
-   pSlots := hbxbp_getSlotsPtr()
+   //pSlots := hbxbp_getSlotsPtr()
 
    oUI := hbide_getUI( "fetchdate", qParent )
 
@@ -1203,13 +1203,17 @@ FUNCTION hbide_fetchADate( qParent, cTitle, cPrompt, dDefault )
       oUI:q_editDate:setDate( qDate )
    ENDIF
 
-   Qt_Slots_connect( pSlots, oUI:q_buttonOk    , "clicked()", {|| oUI:done( 1 ) } )
-   Qt_Slots_connect( pSlots, oUI:q_buttonCancel, "clicked()", {|| oUI:done( 0 ) } )
+   //Qt_Slots_connect( pSlots, oUI:q_buttonOk    , "clicked()", {|| oUI:done( 1 ) } )
+   oUI:q_buttonOk:connect( "clicked()", {|| oUI:done( 1 ) } )
+   //Qt_Slots_connect( pSlots, oUI:q_buttonOk    , "clicked()", {|| oUI:done( 1 ) } )
+   oUI:q_buttonCancel:connect( "clicked()", {|| oUI:done( 0 ) } )
 
    nRet := oUI:exec()
 
-   Qt_Slots_disconnect( pSlots, oUI:q_buttonOk     )
-   Qt_Slots_disconnect( pSlots, oUI:q_buttonCancel )
+   //Qt_Slots_disconnect( pSlots, oUI:q_buttonOk     )
+   oUI:q_buttonOk:disconnect( "clicked()" )
+   //Qt_Slots_disconnect( pSlots, oUI:q_buttonCancel )
+   oUI:q_buttonCancel:disconnect( "clicked()" )
 
    IF nRet == 1
       qDate := QDate():from( oUI:q_editDate:date() )
@@ -2112,7 +2116,8 @@ FUNCTION hbide_buildToolbarButton( qToolbar, aBtn )
       IF aBtn[ BTN_CHECKABLE ]
          qBtn:setCheckable( .t. )
       ENDIF
-      hbide_setIde():oDK:connect( qBtn, "clicked()",  aBtn[ BTN_ACTIONBLOCK ] )
+      //hbide_setIde():oDK:connect( qBtn, "clicked()",  aBtn[ BTN_ACTIONBLOCK ] )
+      qBtn:connect( "clicked()",  aBtn[ BTN_ACTIONBLOCK ] )
       qToolBar:addWidget( qBtn )
    ENDIF
 
