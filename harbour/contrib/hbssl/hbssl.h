@@ -65,6 +65,12 @@
 
 #include "hbssl.ch"
 
+#if OPENSSL_VERSION_NUMBER < 0x0090806fL
+   #ifndef OPENSSL_NO_SEED
+      #define OPENSSL_NO_SEED
+   #endif
+#endif
+
 HB_EXTERN_BEGIN
 
 extern const SSL_METHOD * hb_ssl_method_id_to_ptr( int n );
