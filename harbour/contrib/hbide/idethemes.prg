@@ -520,22 +520,19 @@ METHOD IdeThemes:show()
 
       ::oThemesDock:oWidget:setWidget( ::oUI )
 
-      ::oUI:signal( "listThemes"   , "currentRowChanged(int)"   , {|i| ::execEvent( "listThemes_currentRowChanged", i ) } )
-      ::oUI:signal( "listItems"    , "currentRowChanged(int)"   , {|i| ::execEvent( "listItems_currentRowChanged", i )  } )
-
-      ::oUI:signal( "buttonColor"   , "clicked()"               , {| | ::updateColor() } )
-      ::oUI:signal( "buttonSave"    , "clicked()"               , {| | ::save( .f. )   } )
-      ::oUI:signal( "buttonSaveAs"  , "clicked()"               , {| | ::save( .t. )   } )
-      ::oUI:signal( "buttonCopy"    , "clicked()"               , {| | ::copy( .t. )   } )
-      ::oUI:signal( "buttonApply"   , "clicked()"               , {| | ::execEvent( "applyMenu_triggered_applyToCurrentTab" ) } )
-      ::oUI:signal( "buttonApplyAll", "clicked()"               , {| | ::execEvent( "applyMenu_triggered_applyToAllTabs"    ) } )
-      ::oUI:signal( "buttonDefault" , "clicked()"               , {| | ::execEvent( "applyMenu_triggered_setAsDefault"      ) } )
-
-      ::oUI:signal( "checkItalic"   , "stateChanged(int)"       , {|i| ::updateAttribute( THM_ATR_ITALIC, i ) } )
-      ::oUI:signal( "checkBold"     , "stateChanged(int)"       , {|i| ::updateAttribute( THM_ATR_BOLD  , i ) } )
-      ::oUI:signal( "checkUnderline", "stateChanged(int)"       , {|i| ::updateAttribute( THM_ATR_ULINE , i ) } )
-
-      ::oUI:signal( "buttonClose"   , "clicked()"               , {| | ::oThemesDock:hide() } )
+      ::oUI:q_listThemes    :connect( "currentRowChanged(int)"  , {|i| ::execEvent( "listThemes_currentRowChanged", i ) } )
+      ::oUI:q_listItems     :connect( "currentRowChanged(int)"  , {|i| ::execEvent( "listItems_currentRowChanged", i )  } )
+      ::oUI:q_buttonColor   :connect( "clicked()"               , {| | ::updateColor() } )
+      ::oUI:q_buttonSave    :connect( "clicked()"               , {| | ::save( .f. )   } )
+      ::oUI:q_buttonSaveAs  :connect( "clicked()"               , {| | ::save( .t. )   } )
+      ::oUI:q_buttonCopy    :connect( "clicked()"               , {| | ::copy( .t. )   } )
+      ::oUI:q_buttonApply   :connect( "clicked()"               , {| | ::execEvent( "applyMenu_triggered_applyToCurrentTab" ) } )
+      ::oUI:q_buttonApplyAll:connect( "clicked()"               , {| | ::execEvent( "applyMenu_triggered_applyToAllTabs"    ) } )
+      ::oUI:q_buttonDefault :connect( "clicked()"               , {| | ::execEvent( "applyMenu_triggered_setAsDefault"      ) } )
+      ::oUI:q_checkItalic   :connect( "stateChanged(int)"       , {|i| ::updateAttribute( THM_ATR_ITALIC, i ) } )
+      ::oUI:q_checkBold     :connect( "stateChanged(int)"       , {|i| ::updateAttribute( THM_ATR_BOLD  , i ) } )
+      ::oUI:q_checkUnderline:connect( "stateChanged(int)"       , {|i| ::updateAttribute( THM_ATR_ULINE , i ) } )
+      ::oUI:q_buttonClose   :connect( "clicked()"               , {| | ::oThemesDock:hide() } )
 
       /* Fill Themes Dialog Values */
       ::oUI:setWindowTitle( GetKeyValue( ::aControls, "dialogTitle" ) )

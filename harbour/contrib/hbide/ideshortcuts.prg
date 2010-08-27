@@ -584,20 +584,18 @@ METHOD IdeShortcuts:buildUI()
 
 METHOD IdeShortcuts:buildSignals()
 
-   ::oUI:signal( "buttonNew"   , "clicked()"                   , {| | ::execEvent( buttonNew_clicked    ) } )
-   ::oUI:signal( "buttonSet"   , "clicked()"                   , {| | ::execEvent( buttonSet_clicked    ) } )
-   ::oUI:signal( "buttonTest"  , "clicked()"                   , {| | ::execEvent( buttonTest_clicked   ) } )
-   ::oUI:signal( "buttonLoad"  , "clicked()"                   , {| | ::execEvent( buttonLoad_clicked   ) } )
-   ::oUI:signal( "buttonSave"  , "clicked()"                   , {| | ::execEvent( buttonSave_clicked   ) } )
-   ::oUI:signal( "buttonSaveAs", "clicked()"                   , {| | ::execEvent( buttonSaveAs_clicked ) } )
-   ::oUI:signal( "buttonAssign", "clicked()"                   , {| | ::execEvent( buttonAssign_clicked ) } )
-   ::oUI:signal( "buttonDelete", "clicked()"                   , {| | ::execEvent( buttonDelete_clicked ) } )
-
-   ::oUI:signal( "listMethods" , "itemDoubleClicked(QLWItem)"  , {|p| ::execEvent( listMethods_itemDoubleClicked, p ) } )
-   ::oUI:signal( "listMethods" , "currentRowChanged(int)"      , {|p| ::execEvent( listMethods_currentRowChanged, p ) } )
-
-   ::oUI:signal( "tableMacros" , "itemSelectionChanged()"      , {| | ::execEvent( tableMacros_itemSelectionChanged ) } )
-   ::oUI:signal( "tableMacros" , "itemDoubleClicked(QTblWItem)", {|p| ::execEvent( tableMacros_itemDoubleClicked, p ) } )
+   ::oUI:q_buttonNew   :connect( "clicked()"                   , {| | ::execEvent( buttonNew_clicked    ) } )
+   ::oUI:q_buttonSet   :connect( "clicked()"                   , {| | ::execEvent( buttonSet_clicked    ) } )
+   ::oUI:q_buttonTest  :connect( "clicked()"                   , {| | ::execEvent( buttonTest_clicked   ) } )
+   ::oUI:q_buttonLoad  :connect( "clicked()"                   , {| | ::execEvent( buttonLoad_clicked   ) } )
+   ::oUI:q_buttonSave  :connect( "clicked()"                   , {| | ::execEvent( buttonSave_clicked   ) } )
+   ::oUI:q_buttonSaveAs:connect( "clicked()"                   , {| | ::execEvent( buttonSaveAs_clicked ) } )
+   ::oUI:q_buttonAssign:connect( "clicked()"                   , {| | ::execEvent( buttonAssign_clicked ) } )
+   ::oUI:q_buttonDelete:connect( "clicked()"                   , {| | ::execEvent( buttonDelete_clicked ) } )
+   ::oUI:q_listMethods :connect( "itemDoubleClicked(QLWItem)"  , {|p| ::execEvent( listMethods_itemDoubleClicked, p ) } )
+   ::oUI:q_listMethods :connect( "currentRowChanged(int)"      , {|p| ::execEvent( listMethods_currentRowChanged, p ) } )
+   ::oUI:q_tableMacros :connect( "itemSelectionChanged()"      , {| | ::execEvent( tableMacros_itemSelectionChanged ) } )
+   ::oUI:q_tableMacros :connect( "itemDoubleClicked(QTblWItem)", {|p| ::execEvent( tableMacros_itemDoubleClicked, p ) } )
 
    RETURN Self
 

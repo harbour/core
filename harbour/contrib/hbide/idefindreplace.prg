@@ -154,23 +154,23 @@ METHOD IdeUpDown:create( oIde )
 
    ::oUI:q_buttonPrev:setIcon( hbide_image( "go-prev" ) )
    ::oUI:q_buttonPrev:setToolTip( "Find Previous" )
-   ::oUI:signal( "buttonPrev", "clicked()", {|| ::execEvent( "buttonPrev_clicked" ) } )
+   ::oUI:q_buttonPrev:connect( "clicked()", {|| ::execEvent( "buttonPrev_clicked" ) } )
    //
    ::oUI:q_buttonNext:setIcon( hbide_image( "go-next" ) )
    ::oUI:q_buttonNext:setToolTip( "Find Next" )
-   ::oUI:signal( "buttonNext", "clicked()", {|| ::execEvent( "buttonNext_clicked" ) } )
+   ::oUI:q_buttonNext:connect( "clicked()", {|| ::execEvent( "buttonNext_clicked" ) } )
    //
    ::oUI:q_buttonFirst:setIcon( hbide_image( "go-first" ) )
    ::oUI:q_buttonFirst:setToolTip( "Find First" )
-   ::oUI:signal( "buttonFirst", "clicked()", {|| ::execEvent( "buttonFirst_clicked" ) } )
+   ::oUI:q_buttonFirst:connect( "clicked()", {|| ::execEvent( "buttonFirst_clicked" ) } )
    //
    ::oUI:q_buttonLast:setIcon( hbide_image( "go-last" ) )
    ::oUI:q_buttonLast:setToolTip( "Find Last" )
-   ::oUI:signal( "buttonLast", "clicked()", {|| ::execEvent( "buttonLast_clicked" ) } )
+   ::oUI:q_buttonLast:connect( "clicked()", {|| ::execEvent( "buttonLast_clicked" ) } )
    //
    ::oUI:q_buttonAll:setIcon( hbide_image( "hilight-all" ) )
    ::oUI:q_buttonAll:setToolTip( "Highlight All" )
-   ::oUI:signal( "buttonAll", "clicked()", {|| ::execEvent( "buttonAll_clicked" ) } )
+   ::oUI:q_buttonAll:connect( "clicked()", {|| ::execEvent( "buttonAll_clicked" ) } )
 
    RETURN Self
 
@@ -263,18 +263,18 @@ METHOD IdeSearchReplace:create( oIde )
 
    ::oUI:q_buttonClose:setIcon( hbide_image( "closetab" ) )
    ::oUI:q_buttonClose:setToolTip( "Close" )
-   ::oUI:signal( "buttonClose", "clicked()", {|| ::oUI:hide() } )
+   ::oUI:q_buttonClose:connect( "clicked()", {|| ::oUI:hide() } )
 
    ::oUI:q_buttonNext:setIcon( hbide_image( "next" ) )
    ::oUI:q_buttonNext:setToolTip( "Find Next" )
-   ::oUI:signal( "buttonNext", "clicked()", {|| ::find( ::cFind ), ::oIde:manageFocusInEditor() } )
+   ::oUI:q_buttonNext:connect( "clicked()", {|| ::find( ::cFind ), ::oIde:manageFocusInEditor() } )
 
    ::oUI:q_buttonPrev:setIcon( hbide_image( "previous" ) )
    ::oUI:q_buttonPrev:setToolTip( "Find Previous" )
-   ::oUI:signal( "buttonPrev", "clicked()", {|| ::find( ::cFind, .t. ), ::oIde:manageFocusInEditor() } )
+   ::oUI:q_buttonPrev:connect( "clicked()", {|| ::find( ::cFind, .t. ), ::oIde:manageFocusInEditor() } )
 
    ::oUI:q_checkReplace:setChecked( 0 )
-   ::oUI:signal( "checkReplace", "stateChanged(int)", {|i| ;
+   ::oUI:q_checkReplace:connect( "stateChanged(int)", {|i| ;
                                ::oUI:q_comboReplace:setEnabled( i == 2 ), ;
                                ::oUI:q_buttonReplace:setEnabled( i == 2 ), ;
                                iif( i == 2, ::oUI:q_frameReplace:show(), ::oUI:q_frameReplace:hide() ) } )
@@ -478,17 +478,12 @@ METHOD IdeFindReplace:create( oIde )
    ::oUI:q_radioFromCursor:setChecked( .t. )
    ::oUI:q_radioDown:setChecked( .t. )
 
-   ::oUI:signal( "buttonFind"   , "clicked()", {|| ::onClickFind() } )
-   ::oUI:signal( "buttonReplace", "clicked()", {|| ::onClickReplace() } )
-   ::oUI:signal( "buttonClose"  , "clicked()", ;
-         {|| ::oIde:oINI:cFindDialogGeometry := hbide_posAndSize( ::oUI:oWidget ), ::oUI:hide() } )
-
-   ::oUI:signal( "comboFindWhat", "editTextChanged(QString)", {|| ::oUI:q_radioEntire:setChecked( .t. ) } )
-
-   ::oUI:signal( "comboFindWhat", "currentIndexChanged(QString)", ;
-                               {|p| ::oIde:oSBar:getItem( SB_PNL_SEARCH ):caption := "FIND: " + p } )
-
-   ::oUI:signal( "checkListOnly", "stateChanged(int)", {|p| ;
+   ::oUI:q_buttonFind   :connect( "clicked()", {|| ::onClickFind()    } )
+   ::oUI:q_buttonReplace:connect( "clicked()", {|| ::onClickReplace() } )
+   ::oUI:q_buttonClose  :connect( "clicked()", {|| ::oIde:oINI:cFindDialogGeometry := hbide_posAndSize( ::oUI:oWidget ), ::oUI:hide() } )
+   ::oUI:q_comboFindWhat:connect( "editTextChanged(QString)", {|| ::oUI:q_radioEntire:setChecked( .t. ) } )
+   ::oUI:q_comboFindWhat:connect( "currentIndexChanged(QString)", {|p| ::oIde:oSBar:getItem( SB_PNL_SEARCH ):caption := "FIND: " + p } )
+   ::oUI:q_checkListOnly:connect( "stateChanged(int)", {|p| ;
                                         ::oUI:q_comboReplaceWith:setEnabled( p == 0 ), ;
                                    iif( p == 1, ::oUI:q_buttonReplace:setEnabled( .f. ), NIL ) } )
 
@@ -845,17 +840,17 @@ METHOD IdeFindInFiles:buildUI()
 
    /* Attach all signals */
    //
-   ::oUI:signal( "buttonClose"  , "clicked()"                   , {| | ::execEvent( "buttonClose"      ) } )
-   ::oUI:signal( "buttonFolder" , "clicked()"                   , {| | ::execEvent( "buttonFolder"     ) } )
-   ::oUI:signal( "buttonFind"   , "clicked()"                   , {| | ::execEvent( "buttonFind"       ) } )
-   ::oUI:signal( "buttonRepl"   , "clicked()"                   , {| | ::execEvent( "buttonRepl"       ) } )
-   ::oUI:signal( "buttonStop"   , "clicked()"                   , {| | ::execEvent( "buttonStop"       ) } )
-   ::oUI:signal( "checkAll"     , "stateChanged(int)"           , {|p| ::execEvent( "checkAll", p      ) } )
-   ::oUI:signal( "comboExpr"    , "currentIndexChanged(QString)", {|p| ::execEvent( "comboFind", p     ) } )
-   ::oUI:signal( "checkListOnly", "stateChanged(int)"           , {|p| ::execEvent( "checkListOnly", p ) } )
-   ::oUI:signal( "checkFolders" , "stateChanged(int)"           , {|p| ::execEvent( "checkFolders", p  ) } )
-   ::oUI:signal( "editResults"  , "copyAvailable(bool)"         , {|l| ::execEvent( "editResults", l   ) } )
-   ::oUI:signal( "editResults"  , "customContextMenuRequested(QPoint)", {|p| ::execEvent( "editResults-contextMenu", p ) } )
+   ::oUI:q_buttonClose  :connect( "clicked()"                   , {| | ::execEvent( "buttonClose"      ) } )
+   ::oUI:q_buttonFolder :connect( "clicked()"                   , {| | ::execEvent( "buttonFolder"     ) } )
+   ::oUI:q_buttonFind   :connect( "clicked()"                   , {| | ::execEvent( "buttonFind"       ) } )
+   ::oUI:q_buttonRepl   :connect( "clicked()"                   , {| | ::execEvent( "buttonRepl"       ) } )
+   ::oUI:q_buttonStop   :connect( "clicked()"                   , {| | ::execEvent( "buttonStop"       ) } )
+   ::oUI:q_checkAll     :connect( "stateChanged(int)"           , {|p| ::execEvent( "checkAll", p      ) } )
+   ::oUI:q_comboExpr    :connect( "currentIndexChanged(QString)", {|p| ::execEvent( "comboFind", p     ) } )
+   ::oUI:q_checkListOnly:connect( "stateChanged(int)"           , {|p| ::execEvent( "checkListOnly", p ) } )
+   ::oUI:q_checkFolders :connect( "stateChanged(int)"           , {|p| ::execEvent( "checkFolders", p  ) } )
+   ::oUI:q_editResults  :connect( "copyAvailable(bool)"         , {|l| ::execEvent( "editResults", l   ) } )
+   ::oUI:q_editResults  :connect( "customContextMenuRequested(QPoint)", {|p| ::execEvent( "editResults-contextMenu", p ) } )
 
    ::qEditFind := QLineEdit():from( ::oUI:q_comboExpr:lineEdit() )
    ::qEditFind:connect( "returnPressed()", {|| ::execEvent( "buttonFind" ) } )

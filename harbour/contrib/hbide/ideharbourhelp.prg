@@ -385,25 +385,6 @@ METHOD IdeHarbourHelp:setParameters()
 
 METHOD IdeHarbourHelp:installSignals()
 
-   #if 0
-   ::oUI:signal( "buttonInstall" , "clicked()"                 , {| | ::execEvent( "buttonInstall_clicked"               ) } )
-   ::oUI:signal( "buttonHome"    , "clicked()"                 , {| | ::execEvent( "buttonHome_clicked"                  ) } )
-   ::oUI:signal( "buttonBackward", "clicked()"                 , {| | ::execEvent( "buttonBackward_clicked"              ) } )
-   ::oUI:signal( "buttonForward" , "clicked()"                 , {| | ::execEvent( "buttonForward_clicked"               ) } )
-   ::oUI:signal( "buttonUp"      , "clicked()"                 , {| | ::execEvent( "buttonUp_clicked"                    ) } )
-   ::oUI:signal( "buttonRefresh" , "clicked()"                 , {| | ::execEvent( "buttonRefresh_clicked"               ) } )
-   ::oUI:signal( "buttonPrint"   , "clicked()"                 , {| | ::execEvent( "buttonPrint_clicked"                 ) } )
-   ::oUI:signal( "buttonPdf"     , "clicked()"                 , {| | ::execEvent( "buttonPdf_clicked"                   ) } )
-
-   ::oUI:signal( "browserView"   , "anchorClicked(QUrl)"       , {|p| ::execEvent( "browserView_anchorClicked"       , p ) } )
-   ::oUI:signal( "tabWidgetContents", "currentChanged(int)"    , {|p| ::execEvent( "tabWidgetContents_currentChanged", p ) } )
-
-   ::oUI:signal( "editInstall"   , "textChanged(QString)"      , {|p| ::execEvent( "editInstall_textChanged"         , p ) } )
-   ::oUI:signal( "editIndex"     , "textChanged(QString)"      , {|p| ::execEvent( "editIndex_textChanged"           , p ) } )
-   ::oUI:signal( "editIndex"     , "returnPressed()"           , {| | ::execEvent( "editIndex_returnPressed"             ) } )
-   ::oUI:signal( "listIndex"     , "itemDoubleClicked(QLWItem)", {|p| ::execEvent( "listIndex_ItemDoubleClicked"     , p ) } )
-   #endif
-
    ::oUI:q_buttonInstall    :connect( "clicked()"                 , {| | ::execEvent( "buttonInstall_clicked"               ) } )
    ::oUI:q_buttonHome       :connect( "clicked()"                 , {| | ::execEvent( "buttonHome_clicked"                  ) } )
    ::oUI:q_buttonBackward   :connect( "clicked()"                 , {| | ::execEvent( "buttonBackward_clicked"              ) } )

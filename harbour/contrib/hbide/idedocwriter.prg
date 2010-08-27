@@ -253,21 +253,18 @@ METHOD IdeDocWriter:setImages()
 
 METHOD IdeDocWriter:installSignals()
 
-   ::oUI:signal( "buttonArgs"           , "toggled(bool)", {|p| ::execEvent( buttonArgs_clicked        , p ) } )
-   ::oUI:signal( "buttonDesc"           , "toggled(bool)", {|p| ::execEvent( buttonDesc_clicked        , p ) } )
-   ::oUI:signal( "buttonExamples"       , "toggled(bool)", {|p| ::execEvent( buttonExample_clicked     , p ) } )
-   ::oUI:signal( "buttonTests"          , "toggled(bool)", {|p| ::execEvent( buttonTests_clicked       , p ) } )
-
-   ::oUI:signal( "buttonCloseArgs"      , "clicked()"    , {| | ::execEvent( buttonCloseArgs_clicked       ) } )
-   ::oUI:signal( "buttonCloseDesc"      , "clicked()"    , {| | ::execEvent( buttonCloseDesc_clicked       ) } )
-   ::oUI:signal( "buttonCloseExamples"  , "clicked()"    , {| | ::execEvent( buttonCloseExample_clicked    ) } )
-   ::oUI:signal( "buttonCloseTests"     , "clicked()"    , {| | ::execEvent( buttonCloseTests_clicked      ) } )
-
-   ::oUI:signal( "buttonClear"          , "clicked()"    , {| | ::execEvent( buttonClear_clicked           ) } )
-   ::oUI:signal( "buttonSaveInFunc"     , "clicked()"    , {| | ::execEvent( buttonSaveInFunc_clicked      ) } )
-   ::oUI:signal( "buttonSave"           , "clicked()"    , {| | ::execEvent( buttonSave_clicked            ) } )
-
-   ::oUI:signal( "buttonLoadFromCurFunc", "clicked()"    , {|| ::execEvent( buttonLoadFromCurFunc_clicked  ) } )
+   ::oUI:q_buttonArgs           :connect( "toggled(bool)", {|p| ::execEvent( buttonArgs_clicked        , p ) } )
+   ::oUI:q_buttonDesc           :connect( "toggled(bool)", {|p| ::execEvent( buttonDesc_clicked        , p ) } )
+   ::oUI:q_buttonExamples       :connect( "toggled(bool)", {|p| ::execEvent( buttonExample_clicked     , p ) } )
+   ::oUI:q_buttonTests          :connect( "toggled(bool)", {|p| ::execEvent( buttonTests_clicked       , p ) } )
+   ::oUI:q_buttonCloseArgs      :connect( "clicked()"    , {| | ::execEvent( buttonCloseArgs_clicked       ) } )
+   ::oUI:q_buttonCloseDesc      :connect( "clicked()"    , {| | ::execEvent( buttonCloseDesc_clicked       ) } )
+   ::oUI:q_buttonCloseExamples  :connect( "clicked()"    , {| | ::execEvent( buttonCloseExample_clicked    ) } )
+   ::oUI:q_buttonCloseTests     :connect( "clicked()"    , {| | ::execEvent( buttonCloseTests_clicked      ) } )
+   ::oUI:q_buttonClear          :connect( "clicked()"    , {| | ::execEvent( buttonClear_clicked           ) } )
+   ::oUI:q_buttonSaveInFunc     :connect( "clicked()"    , {| | ::execEvent( buttonSaveInFunc_clicked      ) } )
+   ::oUI:q_buttonSave           :connect( "clicked()"    , {| | ::execEvent( buttonSave_clicked            ) } )
+   ::oUI:q_buttonLoadFromCurFunc:connect( "clicked()"    , {|| ::execEvent( buttonLoadFromCurFunc_clicked  ) } )
 
    RETURN Self
 

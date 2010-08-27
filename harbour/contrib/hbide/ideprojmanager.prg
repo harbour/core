@@ -753,23 +753,19 @@ METHOD IdeProjManager:buildInterface()
    ::oUI:q_buttonSortZA :setIcon( hbide_image( "sortdescend" ) )
    ::oUI:q_buttonSortOrg:setIcon( hbide_image( "invertcase"  ) )
 
-   ::oUI:signal( "buttonCn"          , "clicked()", {|| ::lSaveOK := .f., ::oPropertiesDock:hide() } )
-   ::oUI:signal( "buttonSave"        , "clicked()", {|| ::lSaveOK := .t., ::save( .F. )          } )
-   ::oUI:signal( "buttonSaveExit"    , "clicked()", {|| ::lSaveOK := .t., ::save( .T. )          } )
-   //
-   ::oUI:signal( "buttonSelect"      , "clicked()", {|| ::addSources()         } )
-   ::oUI:signal( "buttonSort"        , "clicked()", {|| ::sortSources( "az"  ) } )
-   ::oUI:signal( "buttonSortZA"      , "clicked()", {|| ::sortSources( "za"  ) } )
-   ::oUI:signal( "buttonSortOrg"     , "clicked()", {|| ::sortSources( "org" ) } )
-   //
-   ::oUI:signal( "tabWidget"         , "currentChanged(int)", {|p| ::updateHbp( p ) } )
-
-   ::oUI:signal( "buttonChoosePrjLoc", "clicked()", {|| ::PromptForPath( 'editPrjLoctn' , 'Choose Project Location...'   ) } )
-   ::oUI:signal( "buttonChooseWd"    , "clicked()", {|| ::PromptForPath( 'editWrkFolder', 'Choose Working Folder...'     ) } )
-   ::oUI:signal( "buttonChooseDest"  , "clicked()", {|| ::PromptForPath( 'editDstFolder', 'Choose Destination Folder...' ) } )
-   ::oUI:signal( "buttonBackup"      , "clicked()", {|| ::PromptForPath( 'editBackup'   , 'Choose Backup Folder...'      ) } )
-
-   ::oUI:signal( "editPrjLoctn"      , "textChanged(QString)", {|cPath| ::setProjectLocation( cPath ) } )
+   ::oUI:q_buttonCn          :connect( "clicked()", {|| ::lSaveOK := .f., ::oPropertiesDock:hide() } )
+   ::oUI:q_buttonSave        :connect( "clicked()", {|| ::lSaveOK := .t., ::save( .F. )          } )
+   ::oUI:q_buttonSaveExit    :connect( "clicked()", {|| ::lSaveOK := .t., ::save( .T. )          } )
+   ::oUI:q_buttonSelect      :connect( "clicked()", {|| ::addSources()         } )
+   ::oUI:q_buttonSort        :connect( "clicked()", {|| ::sortSources( "az"  ) } )
+   ::oUI:q_buttonSortZA      :connect( "clicked()", {|| ::sortSources( "za"  ) } )
+   ::oUI:q_buttonSortOrg     :connect( "clicked()", {|| ::sortSources( "org" ) } )
+   ::oUI:q_tabWidget         :connect( "currentChanged(int)", {|p| ::updateHbp( p ) } )
+   ::oUI:q_buttonChoosePrjLoc:connect( "clicked()", {|| ::PromptForPath( 'editPrjLoctn' , 'Choose Project Location...'   ) } )
+   ::oUI:q_buttonChooseWd    :connect( "clicked()", {|| ::PromptForPath( 'editWrkFolder', 'Choose Working Folder...'     ) } )
+   ::oUI:q_buttonChooseDest  :connect( "clicked()", {|| ::PromptForPath( 'editDstFolder', 'Choose Destination Folder...' ) } )
+   ::oUI:q_buttonBackup      :connect( "clicked()", {|| ::PromptForPath( 'editBackup'   , 'Choose Backup Folder...'      ) } )
+   ::oUI:q_editPrjLoctn      :connect( "textChanged(QString)", {|cPath| ::setProjectLocation( cPath ) } )
 
    /* Set monospaced fonts */
    ::oUI:q_editFlags       :setFont( ::oFont:oWidget )
@@ -1067,8 +1063,8 @@ METHOD IdeProjManager:selectCurrentProject()
       ENDIF
    NEXT
 
-   oDlg:signal( "btnCancel", "clicked()", {|| oDlg:oWidget:done( 1 ) } )
-   oDlg:signal( "btnOk"    , "clicked()", {|| ::setCurrentProject( oDlg:qObj[ "cbProjects" ]:currentText() ), ;
+   oDlg:q_btnCancel:connect( "clicked()", {|| oDlg:oWidget:done( 1 ) } )
+   oDlg:q_btnOk    :connect( "clicked()", {|| ::setCurrentProject( oDlg:qObj[ "cbProjects" ]:currentText() ), ;
                                                                                              oDlg:done( 1 ) } )
    oDlg:exec()
    oDlg:destroy()

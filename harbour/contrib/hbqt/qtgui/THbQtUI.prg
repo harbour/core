@@ -88,9 +88,6 @@ CLASS HbQtUI
    DATA     widgets                               INIT {}
    DATA     aCommands                             INIT {}
 
-   DATA     aSignals                              INIT {}
-   DATA     aEvents                               INIT {}
-
    DATA     org
    DATA     ui_                                   INIT {=>}
 
@@ -98,8 +95,6 @@ CLASS HbQtUI
    METHOD   create( cFile, qParent )
    METHOD   destroy()
 
-   METHOD   event( cWidget, nEvent, bBlock )
-   METHOD   signal( cWidget, cSignal, bBlock )
    METHOD   loadWidgets()
    METHOD   loadContents( cUiFull )
    METHOD   loadUI( cUiFull, qParent )
@@ -161,14 +156,7 @@ METHOD HbQtUI:destroy()
 
    ::oWidget:hide()
 
-   FOR EACH a_ IN ::aSignals
-      i := Qt_Slots_disConnect( ::pSlots, a_[ 1 ], a_[ 2 ] )
-      a_:= NIL
-   NEXT
    ::pSlots := NIL
-   FOR EACH a_ IN ::aEvents
-      Qt_Events_disConnect( ::pEvents, a_[ 1 ], a_[ 2 ] )
-   NEXT
    ::pEvents := NIL
 
    FOR EACH a_ IN ::widgets DESCEND
@@ -184,35 +172,6 @@ METHOD HbQtUI:destroy()
    ::oWidget := NIL
 
    RETURN i
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbQtUI:event( cWidget, nEvent, bBlock )
-
-   IF hb_hHasKey( ::qObj, cWidget )
-      IF Qt_Events_Connect( ::pEvents, ::qObj[ cWidget ], nEvent, bBlock )
-         aadd( ::aEvents, { ::qObj[ cWidget ], nEvent } )
-      ENDIF
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbQtUI:signal( cWidget, cSignal, bBlock )
-
-   IF hb_hHasKey( ::qObj, cWidget )
-      IF empty( ::pSlots )
-         ::pSlots := QT_SLOTS_NEW()
-      ENDIF
-      IF Qt_Slots_Connect( ::pSlots, ::qObj[ cWidget ], cSignal, bBlock )
-         aadd( ::aSignals, { ::qObj[ cWidget ], cSignal } )
-      ELSE
-         HB_TRACE( HB_TR_DEBUG, "Failed:", cSignal )
-      ENDIF
-   ENDIF
-
-   RETURN Self
 
 /*----------------------------------------------------------------------*/
 

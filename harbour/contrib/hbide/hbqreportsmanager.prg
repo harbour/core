@@ -621,7 +621,7 @@ METHOD HbqReportsManager:buildReportStream()
 
    aadd( txt_, "[GENERAL]" )
    aadd( txt_, "" )
-   aadd( txt_, "Symposis"     + "=" + "HBReportDesigner"   )
+   aadd( txt_, "Symposis"     + "=" + "HBReportsManager"   )
    aadd( txt_, "Version"      + "=" + hb_ntos( ::version ) )
    aadd( txt_, "Title"        + "=" + ::title              )
    aadd( txt_, "Author"       + "=" + ::author             )
@@ -1029,20 +1029,20 @@ METHOD HbqReportsManager:buildToolbar()
    ::qToolbar:orientation := Qt_Horizontal
    ::qToolbar:create( "ReportManager_Top_Toolbar" )
 
-   ::qToolbar:addToolButton( "New"    , "New Report"    , app_image( "new"      ), {|| ::execEvent( "buttonNew_clicked"     ) } )
-   ::qToolbar:addToolButton( "Open"   , "Open Report"   , app_image( "open3"    ), {|| ::execEvent( "buttonOpen_clicked"    ) } )
-   ::qToolbar:addToolButton( "Save"   , "Save Report"   , app_image( "save3"    ), {|| ::execEvent( "buttonSave_clicked"    ) } )
-   ::qToolbar:addToolButton( "Close"  , "Close Report"  , app_image( "close3"   ), {|| ::execEvent( "buttonClose_clicked"   ) } )
-   ::qToolbar:addToolButton( "Print"  , "Print Report"  , app_image( "print"    ), {|| ::execEvent( "buttonPrint_clicked"   ) } )
+   ::qToolbar:addToolButton( "New"      , "New Report"            , app_image( "new"         ), {|| ::execEvent( "buttonNew_clicked"     ) } )
+   ::qToolbar:addToolButton( "Open"     , "Open Report"           , app_image( "open3"       ), {|| ::execEvent( "buttonOpen_clicked"    ) } )
+   ::qToolbar:addToolButton( "Save"     , "Save Report"           , app_image( "save3"       ), {|| ::execEvent( "buttonSave_clicked"    ) } )
+   ::qToolbar:addToolButton( "Close"    , "Close Report"          , app_image( "close3"      ), {|| ::execEvent( "buttonClose_clicked"   ) } )
+   ::qToolbar:addToolButton( "Print"    , "Print Report"          , app_image( "print"       ), {|| ::execEvent( "buttonPrint_clicked"   ) } )
    ::qToolbar:addSeparator()
-   ::qToolbar:addToolButton( "ToBack" , "Push to back"  , app_image( "toback"   ), {|| ::execEvent( "buttonToBack_clicked"  ) }, .f., .f. )
-   ::qToolbar:addToolButton( "ToFront", "Bring to front", app_image( "tofront"  ), {|| ::execEvent( "buttonToFront_clicked" ) }, .f., .f. )
+   ::qToolbar:addToolButton( "ToBack"   , "Push to back"          , app_image( "toback"      ), {|| ::execEvent( "buttonToBack_clicked"  ) }, .f., .f. )
+   ::qToolbar:addToolButton( "ToFront"  , "Bring to front"        , app_image( "tofront"     ), {|| ::execEvent( "buttonToFront_clicked" ) }, .f., .f. )
    ::qToolbar:addSeparator()
-   ::qToolbar:addToolButton( "RotateL", "Rotate anti-clock wise", app_image( "unload_1" ), {|| ::execEvent( "buttonRotateL_clicked" ) }, .f., .f. )
-   ::qToolbar:addToolButton( "RotateR", "Rotate clock wise"     , app_image( "load_1"   ), {|| ::execEvent( "buttonRotateR_clicked" ) }, .f., .f. )
+   ::qToolbar:addToolButton( "RotateL"  , "Rotate anti-clock wise", app_image( "unload_1"    ), {|| ::execEvent( "buttonRotateL_clicked" ) }, .f., .f. )
+   ::qToolbar:addToolButton( "RotateR"  , "Rotate clock wise"     , app_image( "load_1"      ), {|| ::execEvent( "buttonRotateR_clicked" ) }, .f., .f. )
    ::qToolbar:addSeparator()
-   ::qToolbar:addToolButton( "Portrait" , "Portrait orientation" , app_image( "r-portrait"  ), {|| ::execEvent( "buttonPortrait_clicked" ) }, .f., .f. )
-   ::qToolbar:addToolButton( "Landscape", "Landscape orientation", app_image( "r-landscape" ), {|| ::execEvent( "buttonLandscape_clicked" ) }, .f., .f. )
+   ::qToolbar:addToolButton( "Portrait" , "Portrait orientation"  , app_image( "r-portrait"  ), {|| ::execEvent( "buttonPortrait_clicked" ) }, .f., .f. )
+   ::qToolbar:addToolButton( "Landscape", "Landscape orientation" , app_image( "r-landscape" ), {|| ::execEvent( "buttonLandscape_clicked" ) }, .f., .f. )
    ::qToolbar:addSeparator()
 
    RETURN Self
@@ -1139,22 +1139,17 @@ STATIC FUNCTION rmgr_a2arrayStr( aArray )
    FOR EACH x IN aArray
       SWITCH valtype( x )
       CASE "C"
-         s += '"' + x + '"'
-         EXIT
+         s += '"' + x + '"'               ; EXIT
       CASE "N"
-         s += hb_ntos( x )
-         EXIT
+         s += hb_ntos( x )                ; EXIT
       CASE "D"
-         s += "stod(" + dtos( x ) + ")"
-         EXIT
+         s += "stod(" + dtos( x ) + ")"   ; EXIT
       CASE "L"
-         s += iif( x, ".t.", ".f." )
-         EXIT
+         s += iif( x, ".t.", ".f." )      ; EXIT
       CASE "A"
-         s += rmgr_a2arrayStr( x )
-         EXIT
+         s += rmgr_a2arrayStr( x )        ; EXIT
       OTHERWISE
-         s += "NIL"
+         s += "NIL"                       ; EXIT
       ENDSWITCH
       s += ","
    NEXT

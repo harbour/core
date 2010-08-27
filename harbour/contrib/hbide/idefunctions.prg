@@ -135,16 +135,14 @@ METHOD IdeFunctions:create( oIde )
 
    ::buildHeader()
 
-   ::oUI:signal( "editFunction" , "textChanged(QString)"        , {|p| ::execEvent( "editFunc_textChanged", p   ) } )
-   ::oUI:signal( "editFunction" , "returnPressed()"             , {| | ::execEvent( "editFunc_returnPressed"    ) } )
-   //
-   ::oUI:signal( "buttonMark"   , "clicked()"                   , {| | ::execEvent( "buttonMark_clicked"        ) } )
-   ::oUI:signal( "buttonLoad"   , "clicked()"                   , {| | ::execEvent( "buttonLoad_clicked"        ) } )
-   ::oUI:signal( "buttonTag"    , "clicked()"                   , {| | ::execEvent( "buttonTag_clicked"         ) } )
-   ::oUI:signal( "buttonClose"  , "clicked()"                   , {| | ::execEvent( "buttonClose_clicked"       ) } )
-   //
-   ::oUI:signal( "tableFuncList", "itemSelectionChanged()"      , {| | ::execEvent( "tableFuncList_itemSelectionChanged" ) } )
-   ::oUI:signal( "tableFuncList", "itemDoubleClicked(QTblWItem)", {|p| ::execEvent( "tableFuncList_itemDoubleClicked", p ) } )
+   ::oUI:q_editFunction :connect( "textChanged(QString)"        , {|p| ::execEvent( "editFunc_textChanged", p   ) } )
+   ::oUI:q_editFunction :connect( "returnPressed()"             , {| | ::execEvent( "editFunc_returnPressed"    ) } )
+   ::oUI:q_buttonMark   :connect( "clicked()"                   , {| | ::execEvent( "buttonMark_clicked"        ) } )
+   ::oUI:q_buttonLoad   :connect( "clicked()"                   , {| | ::execEvent( "buttonLoad_clicked"        ) } )
+   ::oUI:q_buttonTag    :connect( "clicked()"                   , {| | ::execEvent( "buttonTag_clicked"         ) } )
+   ::oUI:q_buttonClose  :connect( "clicked()"                   , {| | ::execEvent( "buttonClose_clicked"       ) } )
+   ::oUI:q_tableFuncList:connect( "itemSelectionChanged()"      , {| | ::execEvent( "tableFuncList_itemSelectionChanged" ) } )
+   ::oUI:q_tableFuncList:connect( "itemDoubleClicked(QTblWItem)", {|p| ::execEvent( "tableFuncList_itemDoubleClicked", p ) } )
 
    RETURN Self
 

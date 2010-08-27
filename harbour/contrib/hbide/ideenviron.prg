@@ -218,9 +218,9 @@ METHOD IdeEnvironments:show()
 
       ::oEnvironDock:oWidget:setWidget( ::oUI )
 
-      ::oUI:signal( "buttonCn"      , "clicked()", {|| ::oEnvironDock:hide() } )
-      ::oUI:signal( "buttonSave"    , "clicked()", {|| ::saveEnv()    } )
-      ::oUI:signal( "buttonSaveExit", "clicked()", {|| ::saveEnv(), ::oEnvironDock:hide() } )
+      ::oUI:q_buttonCn      :connect( "clicked()", {|| ::oEnvironDock:hide() } )
+      ::oUI:q_buttonSave    :connect( "clicked()", {|| ::saveEnv()    } )
+      ::oUI:q_buttonSaveExit:connect( "clicked()", {|| ::saveEnv(), ::oEnvironDock:hide() } )
 
       ::oUI:q_editCompilers:setFont( ::oFont:oWidget )
    ENDIF
