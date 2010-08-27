@@ -719,11 +719,11 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    /* .DBF Manipulation Model */
    ::oDbfModel := HBQAbstractItemModel():new( {|t,role,x,y| ::supplyInfo( 141, t, role, x, y ) } )
-HB_TRACE( HB_TR_ALWAYS, "20000 9" )
+HB_TRACE( HB_TR_DEBUG, "20000 9" )
 
    /*  Attach Model with the View */
    ::oTableView:setModel( ::oDbfModel )
-HB_TRACE( HB_TR_ALWAYS, "20000 10" )
+HB_TRACE( HB_TR_DEBUG, "20000 10" )
    /*  Horizontal Footer */
    ::oFooterView := QHeaderView():new( Qt_Horizontal )
    //

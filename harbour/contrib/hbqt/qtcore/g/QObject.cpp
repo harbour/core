@@ -66,7 +66,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 29/35 [ 82.86% ] ]
+ *  Constructed[ 24/35 [ 68.57% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -78,8 +78,13 @@
  *  *** Commented out protos which construct fine but do not compile ***
  *
  *  // const QObjectList & children () const
+ *  // bool connect ( const QObject * sender, const char * signal, const char * method, Qt::ConnectionType type = Qt::AutoConnection ) const
+ *  // bool disconnect ( const char * signal = 0, const QObject * receiver = 0, const char * method = 0 )
+ *  // bool disconnect ( const QObject * receiver, const char * method = 0 )
  *  //T findChild ( const QString & name = QString() ) const
  *  //virtual const QMetaObject * metaObject () const
+ *  // bool connect ( const QObject * sender, const char * signal, const QObject * receiver, const char * method, Qt::ConnectionType type = Qt::AutoConnection )
+ *  // bool disconnect ( const QObject * sender, const char * signal, const QObject * receiver, const char * method )
  */
 
 #include <QtCore/QPointer>
@@ -177,48 +182,6 @@ HB_FUNC( QT_QOBJECT_BLOCKSIGNALS )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_BLOCKSIGNALS FP=hb_retl( ( p )->blockSignals( hb_parl( 2 ) ) ); p is NULL" ) );
-   }
-}
-
-/*
- * bool connect ( const QObject * sender, const char * signal, const char * method, Qt::ConnectionType type = Qt::AutoConnection ) const
- */
-HB_FUNC( QT_QOBJECT_CONNECT )
-{
-   QObject * p = hbqt_par_QObject( 1 );
-   if( p )
-      hb_retl( ( p )->connect( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), ( HB_ISNUM( 5 ) ? ( Qt::ConnectionType ) hb_parni( 5 ) : ( Qt::ConnectionType ) Qt::AutoConnection ) ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_CONNECT FP=hb_retl( ( p )->connect( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), ( HB_ISNUM( 5 ) ? ( Qt::ConnectionType ) hb_parni( 5 ) : ( Qt::ConnectionType ) Qt::AutoConnection ) ) ); p is NULL" ) );
-   }
-}
-
-/*
- * bool disconnect ( const char * signal = 0, const QObject * receiver = 0, const char * method = 0 )
- */
-HB_FUNC( QT_QOBJECT_DISCONNECT )
-{
-   QObject * p = hbqt_par_QObject( 1 );
-   if( p )
-      hb_retl( ( p )->disconnect( hbqt_par_char( 2 ), hbqt_par_QObject( 3 ), hbqt_par_char( 4 ) ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_DISCONNECT FP=hb_retl( ( p )->disconnect( hbqt_par_char( 2 ), hbqt_par_QObject( 3 ), hbqt_par_char( 4 ) ) ); p is NULL" ) );
-   }
-}
-
-/*
- * bool disconnect ( const QObject * receiver, const char * method = 0 )
- */
-HB_FUNC( QT_QOBJECT_DISCONNECT_1 )
-{
-   QObject * p = hbqt_par_QObject( 1 );
-   if( p )
-      hb_retl( ( p )->disconnect( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_DISCONNECT_1 FP=hb_retl( ( p )->disconnect( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) ) ); p is NULL" ) );
    }
 }
 
@@ -499,34 +462,6 @@ HB_FUNC( QT_QOBJECT_THREAD )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_THREAD FP=hb_retptrGC( hbqt_gcAllocate_QThread( ( p )->thread(), false ) ); p is NULL" ) );
-   }
-}
-
-/*
- * bool connect ( const QObject * sender, const char * signal, const QObject * receiver, const char * method, Qt::ConnectionType type = Qt::AutoConnection )
- */
-HB_FUNC( QT_QOBJECT_CONNECT_1 )
-{
-   QObject * p = hbqt_par_QObject( 1 );
-   if( p )
-      hb_retl( ( p )->connect( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ), hbqt_par_QObject( 4 ), hbqt_par_char( 5 ), ( HB_ISNUM( 6 ) ? ( Qt::ConnectionType ) hb_parni( 6 ) : ( Qt::ConnectionType ) Qt::AutoConnection ) ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_CONNECT_1 FP=hb_retl( ( p )->connect( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ), hbqt_par_QObject( 4 ), hbqt_par_char( 5 ), ( HB_ISNUM( 6 ) ? ( Qt::ConnectionType ) hb_parni( 6 ) : ( Qt::ConnectionType ) Qt::AutoConnection ) ) ); p is NULL" ) );
-   }
-}
-
-/*
- * bool disconnect ( const QObject * sender, const char * signal, const QObject * receiver, const char * method )
- */
-HB_FUNC( QT_QOBJECT_DISCONNECT_2 )
-{
-   QObject * p = hbqt_par_QObject( 1 );
-   if( p )
-      hb_retl( ( p )->disconnect( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ), hbqt_par_QObject( 4 ), hbqt_par_char( 5 ) ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QOBJECT_DISCONNECT_2 FP=hb_retl( ( p )->disconnect( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ), hbqt_par_QObject( 4 ), hbqt_par_char( 5 ) ) ); p is NULL" ) );
    }
 }
 

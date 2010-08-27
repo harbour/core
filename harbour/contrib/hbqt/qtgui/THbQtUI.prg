@@ -100,7 +100,6 @@ CLASS HbQtUI
 
    METHOD   event( cWidget, nEvent, bBlock )
    METHOD   signal( cWidget, cSignal, bBlock )
-   METHOD   connect( cWidget, cSignal, bBlock )
    METHOD   loadWidgets()
    METHOD   loadContents( cUiFull )
    METHOD   loadUI( cUiFull, qParent )
@@ -197,12 +196,6 @@ METHOD HbQtUI:event( cWidget, nEvent, bBlock )
    ENDIF
 
    RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbQtUI:connect( cWidget, cSignal, bBlock )
-
-   RETURN ::signal( cWidget, cSignal, bBlock )
 
 /*----------------------------------------------------------------------*/
 

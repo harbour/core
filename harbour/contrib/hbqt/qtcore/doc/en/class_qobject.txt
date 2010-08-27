@@ -27,9 +27,6 @@
  *     An instance of the object of type QObject
  *  $METHODS$
  *     :blockSignals( lBlock )                             -> lBool
- *     :connect( pSender, pSignal, pMethod, nType )        -> lBool
- *     :disconnect( pSignal, pReceiver, pMethod )          -> lBool
- *     :disconnect_1( pReceiver, pMethod )                 -> lBool
  *     :dumpObjectInfo()                                   -> NIL
  *     :dumpObjectTree()                                   -> NIL
  *     :dynamicPropertyNames()                             -> pQList<QByteArray>
@@ -49,8 +46,6 @@
  *     :signalsBlocked()                                   -> lBool
  *     :startTimer( nInterval )                            -> nInt
  *     :thread()                                           -> pQThread
- *     :connect_1( pSender, pSignal, pReceiver, pMethod, nType )  -> lBool
- *     :disconnect_2( pSender, pSignal, pReceiver, pMethod )  -> lBool
  *     :tr( pSourceText, pDisambiguation, nN )             -> cQString
  *     :trUtf8( pSourceText, pDisambiguation, nN )         -> cQString
  *     :deleteLater()                                      -> NIL

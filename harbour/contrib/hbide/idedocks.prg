@@ -364,13 +364,8 @@ METHOD IdeDocks:buildDialog()
       ENDIF
    ENDIF
 
-   #if 1
    ::oDlg:oWidget:connect( QEvent_WindowStateChange, {|e| ::execEvent( "QEvent_WindowStateChange", e ) } )
    ::oDlg:oWidget:connect( QEvent_Hide             , {|e| ::execEvent( "QEvent_Hide"             , e ) } )
-   #else
-   ::oDlg:oWidget:connect( QEvent_WindowStateChange, {|e| ::execEvent( "QEvent_WindowStateChange", e ) } )
-   ::oDlg:oWidget:connect( QEvent_Hide             , {|e| ::execEvent( "QEvent_Hide"             , e ) } )
-   #endif
 
    ::buildSystemTray()
 
@@ -825,7 +820,9 @@ METHOD IdeDocks:restPanelsGeometry()
    LOCAL a_, n
    FOR EACH a_ IN ::aViewsInfo
       IF ( n := ascan( ::oIde:aMdies, {|o| o:objectName() == a_[ 1 ] } ) ) > 0
-         ::oIde:aMdies[ n ]:setGeometry( a_[ 2 ] )
+         IF hb_isObject( a_[ 2 ] )
+            ::oIde:aMdies[ n ]:setGeometry( a_[ 2 ] )
+         ENDIF
       ENDIF
    NEXT
    RETURN Self

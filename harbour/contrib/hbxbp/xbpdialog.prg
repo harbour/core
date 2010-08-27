@@ -156,7 +156,7 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ENDIF
       ::oWidget:setMouseTracking( .t. )
    ELSE
-      //#define __QMAINWINDOW__
+      #define __QMAINWINDOW__
       #ifdef __QMAINWINDOW__
       ::oWidget := QMainWindow():new()
       #else

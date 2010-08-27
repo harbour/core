@@ -68,9 +68,6 @@ CREATE CLASS QObject INHERIT HbQtObjectHandler
    METHOD  new( ... )
 
    METHOD  blockSignals( lBlock )
-   METHOD  connect( pSender, pSignal, pMethod, nType )
-   METHOD  disconnect( pSignal, pReceiver, pMethod )
-   METHOD  disconnect_1( pReceiver, pMethod )
    METHOD  dumpObjectInfo()
    METHOD  dumpObjectTree()
    METHOD  dynamicPropertyNames()
@@ -91,8 +88,6 @@ CREATE CLASS QObject INHERIT HbQtObjectHandler
    METHOD  signalsBlocked()
    METHOD  startTimer( nInterval )
    METHOD  thread()
-   METHOD  connect_1( pSender, pSignal, pReceiver, pMethod, nType )
-   METHOD  disconnect_2( pSender, pSignal, pReceiver, pMethod )
    METHOD  tr( pSourceText, pDisambiguation, nN )
    METHOD  trUtf8( pSourceText, pDisambiguation, nN )
    METHOD  deleteLater()
@@ -111,18 +106,6 @@ METHOD QObject:new( ... )
 
 METHOD QObject:blockSignals( lBlock )
    RETURN Qt_QObject_blockSignals( ::pPtr, lBlock )
-
-
-METHOD QObject:connect( pSender, pSignal, pMethod, nType )
-   RETURN Qt_QObject_connect( ::pPtr, hbqt_ptr( pSender ), hbqt_ptr( pSignal ), hbqt_ptr( pMethod ), nType )
-
-
-METHOD QObject:disconnect( pSignal, pReceiver, pMethod )
-   RETURN Qt_QObject_disconnect( ::pPtr, hbqt_ptr( pSignal ), hbqt_ptr( pReceiver ), hbqt_ptr( pMethod ) )
-
-
-METHOD QObject:disconnect_1( pReceiver, pMethod )
-   RETURN Qt_QObject_disconnect_1( ::pPtr, hbqt_ptr( pReceiver ), hbqt_ptr( pMethod ) )
 
 
 METHOD QObject:dumpObjectInfo()
@@ -203,14 +186,6 @@ METHOD QObject:startTimer( nInterval )
 
 METHOD QObject:thread()
    RETURN Qt_QObject_thread( ::pPtr )
-
-
-METHOD QObject:connect_1( pSender, pSignal, pReceiver, pMethod, nType )
-   RETURN Qt_QObject_connect_1( ::pPtr, hbqt_ptr( pSender ), hbqt_ptr( pSignal ), hbqt_ptr( pReceiver ), hbqt_ptr( pMethod ), nType )
-
-
-METHOD QObject:disconnect_2( pSender, pSignal, pReceiver, pMethod )
-   RETURN Qt_QObject_disconnect_2( ::pPtr, hbqt_ptr( pSender ), hbqt_ptr( pSignal ), hbqt_ptr( pReceiver ), hbqt_ptr( pMethod ) )
 
 
 METHOD QObject:tr( pSourceText, pDisambiguation, nN )
