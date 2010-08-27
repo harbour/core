@@ -117,7 +117,7 @@ METHOD XbpScrollBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
    ::oWidget:setOrientation( IF( ::type == XBPSCROLL_VERTICAL, 2, 1 ) )
    ::oWidget:setTracking( ::autoTrack )
 
-   ::connect( ::pWidget, "actionTriggered(int)", {|i| ::execSlot( "actionTriggered(int)", i ) } )
+   ::oWidget:connect( "actionTriggered(int)", {|i| ::execSlot( "actionTriggered(int)", i ) } )
 
    ::setPosAndSize()
    ::setRange( ::range )
@@ -149,7 +149,7 @@ METHOD XbpScrollBar:execSlot( cSlot, p )
    LOCAL nCommand
 
    HB_SYMBOL_UNUSED( cSlot )
-   
+
    IF !hb_isBlock( ::sl_xbeSB_Scroll )
       RETURN NIL
    ENDIF
@@ -211,7 +211,7 @@ METHOD XbpScrollBar:scroll( ... )
       ::sl_xbeSB_Scroll := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_xbeSB_Scroll )
       eval( ::sl_xbeSB_Scroll, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN self
 
 /*----------------------------------------------------------------------*/

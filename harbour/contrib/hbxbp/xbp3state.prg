@@ -88,7 +88,7 @@ CLASS Xbp3State  INHERIT  XbpWindow, XbpDataRef
    METHOD   handleEvent( nEvent, mp1, mp2 )
    METHOD   setCaption( xCaption )
 
-   METHOD   selected( ... )                       SETGET 
+   METHOD   selected( ... )                       SETGET
    METHOD   execSlot( cSlot, p )
 
    ENDCLASS
@@ -109,7 +109,7 @@ METHOD Xbp3State:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget := QCheckBox():New( ::oParent:oWidget )
 
-   ::Connect( ::pWidget, "stateChanged(int)", {|i| ::execSlot( "stateChanged(int)", i ) } )
+   ::oWidget:connect( "stateChanged(int)", {|i| ::execSlot( "stateChanged(int)", i ) } )
 
    ::oWidget:setTriState( .t. )
 
@@ -152,12 +152,12 @@ METHOD Xbp3State:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, l
 METHOD Xbp3State:execSlot( cSlot, p )
 
    SWITCH cSlot
-   CASE "stateChanged(int)"  
+   CASE "stateChanged(int)"
       ::sl_editBuffer := iif( p == 2, 1, iif( p == 1, 2, p ) )
       ::selected( ::sl_editBuffer )
       EXIT
-   ENDSWITCH   
-    
+   ENDSWITCH
+
    RETURN nil
 
 /*----------------------------------------------------------------------*/
@@ -205,8 +205,8 @@ METHOD Xbp3State:selected( ... )
       ::sl_lbClick := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_lbClick )
       eval( ::sl_lbClick, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
-   
+
 /*----------------------------------------------------------------------*/
-     
+

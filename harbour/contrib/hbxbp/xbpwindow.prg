@@ -171,8 +171,6 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   setQtProperty( cProperty )
-   METHOD   connect( pWidget, cSignal, bBlock )
-   METHOD   connectEvent( pWidget, nEvent, bBlock )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   grabEvent( nEvent, pEvent )
    METHOD   handleEvent( nEvent, mp1, mp2 )
@@ -250,13 +248,10 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    METHOD   setFocus()
    METHOD   sendMessage()
    METHOD   connectWindowEvents()
-   METHOD   disConnect()
    METHOD   clearSlots()
 
    /* Called in the initializer - Unique in the application */
    METHOD   getProperty()                         INLINE "PROP" + hb_ntos( ++::nProperty )
-   /* After object is physically created, set unique property to 1 */
-*  METHOD   setQtProperty()
 
    METHOD   setStyle()                            INLINE NIL
    METHOD   className()                           INLINE __objGetClsName( Self )
@@ -266,8 +261,6 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
 
    ACCESS   pWidget                               INLINE iif( empty( ::oWidget ), NIL, ::oWidget:pPtr )
    ACCESS   pParent                               INLINE iif( empty( ::oParent ), NIL, ::oParent:oWidget:pPtr )
-   ACCESS   pSlots                                INLINE hbxbp_getSlotsPtr()
-   ACCESS   pEvents                               INLINE hbxbp_GetEventsPtr()
 
    ENDCLASS
 
@@ -369,84 +362,31 @@ METHOD XbpWindow:setQtProperty( cProperty )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-#if 0
-METHOD XbpWindow:setQtProperty( cProperty )
-   LOCAL oVariant := QVariant():new()
-
-   DEFAULT cProperty TO "YES"
-
-   oVariant:setValue( cProperty )
-
-   ::oWidget:setProperty( ::qtProperty, oVariant )
-
-   RETURN Self
-#endif
-/*----------------------------------------------------------------------*/
-
-METHOD XbpWindow:connect( pWidget, cSignal, bBlock )
-   LOCAL lSuccess
-
-   IF ( lSuccess := Qt_Slots_Connect( ::pSlots, pWidget, cSignal, bBlock ) )
-      aadd( ::aConnections, { pWidget, cSignal } )
-   ELSE
-      HB_TRACE( HB_TR_DEBUG, ( "                " + cSignal + " : Failed!" ) )
-   ENDIF
-
-   RETURN lSuccess
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpWindow:disconnect()
-   LOCAL e_
-
-   IF len( ::aConnections ) > 0
-      FOR EACH e_ IN ::aConnections
-         ::xDummy := Qt_Slots_DisConnect( ::pSlots, e_[ 1 ], e_[ 2 ] )
-      NEXT
-      ::aConnections := {}
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpWindow:connectEvent( pWidget, nEvent, bBlock )
-   LOCAL lSuccess
-
-   IF ( lSuccess := Qt_Events_Connect( ::pEvents, pWidget, nEvent, bBlock ) )
-      aadd( ::aEConnections, { pWidget, nEvent } )
-   ELSE
-      HB_TRACE( HB_TR_DEBUG,  "XbpWindow:connectEvent", nEvent, "Failed" )
-   ENDIF
-
-   RETURN lSuccess
-
-/*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:connectWindowEvents()
 
-   ::connectEvent( ::pWidget, QEvent_MouseButtonPress   , {|e| ::grabEvent( QEvent_MouseButtonPress   , e ) } )
-   ::connectEvent( ::pWidget, QEvent_MouseButtonRelease , {|e| ::grabEvent( QEvent_MouseButtonRelease , e ) } )
-   ::connectEvent( ::pWidget, QEvent_MouseMove          , {|e| ::grabEvent( QEvent_MouseMove          , e ) } )
-   ::connectEvent( ::pWidget, QEvent_MouseButtonDblClick, {|e| ::grabEvent( QEvent_MouseButtonDblClick, e ) } )
-   ::connectEvent( ::pWidget, QEvent_Enter              , {|e| ::grabEvent( QEvent_Enter              , e ) } )
-   ::connectEvent( ::pWidget, QEvent_Leave              , {|e| ::grabEvent( QEvent_Leave              , e ) } )
-   ::connectEvent( ::pWidget, QEvent_Wheel              , {|e| ::grabEvent( QEvent_Wheel              , e ) } )
-   //
-   ::connectEvent( ::pWidget, QEvent_FocusIn            , {|e| ::grabEvent( QEvent_FocusIn            , e ) } )
-   ::connectEvent( ::pWidget, QEvent_FocusOut           , {|e| ::grabEvent( QEvent_FocusOut           , e ) } )
-   ::connectEvent( ::pWidget, QEvent_DragEnter          , {|e| ::grabEvent( QEvent_DragEnter          , e ) } )
-   ::connectEvent( ::pWidget, QEvent_DragLeave          , {|e| ::grabEvent( QEvent_DragLeave          , e ) } )
-   ::connectEvent( ::pWidget, QEvent_DragMove           , {|e| ::grabEvent( QEvent_DragMove           , e ) } )
-   ::connectEvent( ::pWidget, QEvent_Drop               , {|e| ::grabEvent( QEvent_Drop               , e ) } )
-   ::connectEvent( ::pWidget, QEvent_WhatsThis          , {|e| ::grabEvent( QEvent_WhatsThis          , e ) } )
-   ::connectEvent( ::pWidget, QEvent_KeyPress           , {|e| ::grabEvent( QEvent_KeyPress           , e ) } )
-   //
-   ::connectEvent( ::pWidget, QEvent_ContextMenu        , {|e| ::grabEvent( QEvent_ContextMenu        , e ) } )
-   //
-   ::connectEvent( ::pWidget, QEvent_Move               , {|e| ::grabEvent( QEvent_Move               , e ) } )
-*  ::connectEvent( ::pWidget, QEvent_Paint              , {|e| ::grabEvent( QEvent_Paint              , e ) } )
-*  ::connectEvent( ::pWidget, QEvent_Resize             , {|e| ::grabEvent( QEvent_Resize             , e ) } )
+   ::oWidget:connect( QEvent_MouseButtonPress   , {|e| ::grabEvent( QEvent_MouseButtonPress   , e ) } )
+   ::oWidget:connect( QEvent_MouseButtonRelease , {|e| ::grabEvent( QEvent_MouseButtonRelease , e ) } )
+   ::oWidget:connect( QEvent_MouseMove          , {|e| ::grabEvent( QEvent_MouseMove          , e ) } )
+   ::oWidget:connect( QEvent_MouseButtonDblClick, {|e| ::grabEvent( QEvent_MouseButtonDblClick, e ) } )
+   ::oWidget:connect( QEvent_Enter              , {|e| ::grabEvent( QEvent_Enter              , e ) } )
+   ::oWidget:connect( QEvent_Leave              , {|e| ::grabEvent( QEvent_Leave              , e ) } )
+   ::oWidget:connect( QEvent_Wheel              , {|e| ::grabEvent( QEvent_Wheel              , e ) } )
+
+   ::oWidget:connect( QEvent_FocusIn            , {|e| ::grabEvent( QEvent_FocusIn            , e ) } )
+   ::oWidget:connect( QEvent_FocusOut           , {|e| ::grabEvent( QEvent_FocusOut           , e ) } )
+   ::oWidget:connect( QEvent_DragEnter          , {|e| ::grabEvent( QEvent_DragEnter          , e ) } )
+   ::oWidget:connect( QEvent_DragLeave          , {|e| ::grabEvent( QEvent_DragLeave          , e ) } )
+   ::oWidget:connect( QEvent_DragMove           , {|e| ::grabEvent( QEvent_DragMove           , e ) } )
+   ::oWidget:connect( QEvent_Drop               , {|e| ::grabEvent( QEvent_Drop               , e ) } )
+   ::oWidget:connect( QEvent_WhatsThis          , {|e| ::grabEvent( QEvent_WhatsThis          , e ) } )
+   ::oWidget:connect( QEvent_KeyPress           , {|e| ::grabEvent( QEvent_KeyPress           , e ) } )
+
+   ::oWidget:connect( QEvent_ContextMenu        , {|e| ::grabEvent( QEvent_ContextMenu        , e ) } )
+
+   ::oWidget:connect( QEvent_Move               , {|e| ::grabEvent( QEvent_Move               , e ) } )
+*  ::oWidget:connect( QEvent_Paint              , {|e| ::grabEvent( QEvent_Paint              , e ) } )
+*  ::oWidget:connect( QEvent_Resize             , {|e| ::grabEvent( QEvent_Resize             , e ) } )
 
       RETURN Self
 
@@ -466,7 +406,7 @@ METHOD XbpWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:destroy()
-   LOCAL e_
+
 #if 0
 HB_TRACE( HB_TR_DEBUG,  ".   " )
 HB_TRACE( HB_TR_DEBUG,  hb_threadId(),"Destroy[ B ] "+pad(cCls,12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ) )
@@ -480,11 +420,13 @@ HB_TRACE( HB_TR_DEBUG,  hb_threadId(),"Destroy[ B ] "+pad(cCls,12)+ cMsg, memory
    ::disconnect()
 
    IF len( ::aEConnections ) > 0
+      #if 0
       FOR EACH e_ IN ::aEConnections
-         ::xDummy := Qt_Events_DisConnect( ::pEvents, e_[ 1 ], e_[ 2 ] )
+//         ::xDummy := Qt_Events_DisConnect( ::pEvents, e_[ 1 ], e_[ 2 ] )
       NEXT
       ::aEConnections := {}
-      ::oWidget:removeEventFilter( ::pEvents )
+//      ::oWidget:removeEventFilter( ::pEvents )
+      #endif
    ENDIF
 
    IF Len( ::aChildren ) > 0

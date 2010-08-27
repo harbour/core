@@ -156,11 +156,14 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ENDIF
       ::oWidget:setMouseTracking( .t. )
    ELSE
+      //#define __QMAINWINDOW__
       #ifdef __QMAINWINDOW__
       ::oWidget := QMainWindow():new()
       #else
       ::oWidget := QMainWindow():configure( QT_HBQMainWindow( {|n,p| ::grabEvent( n,p ) }, hb_threadId() ) )
       #endif
+      ::oWidget:setMouseTracking( .t. )
+      ::oWidget:setObjectName( "mainWindow" )
    ENDIF
 
    IF !empty( ::title )
@@ -214,13 +217,11 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    hbxbp_SetEventLoop( ::oEventLoop )
 
    /* Instal Event Filter */
-   ::oWidget:installEventFilter( ::pEvents )
-
    ::connectWindowEvents()
    //
-   ::connectEvent( ::pWidget, QEvent_Close            , {|e| ::execEvent( QEvent_Close            , e ) } )
-   ::connectEvent( ::pWidget, QEvent_WindowActivate   , {|e| ::execEvent( QEvent_WindowActivate   , e ) } )
-   ::connectEvent( ::pWidget, QEvent_WindowDeactivate , {|e| ::execEvent( QEvent_WindowDeactivate , e ) } )
+   ::oWidget:connect( QEvent_Close            , {|e| ::execEvent( QEvent_Close            , e ) } )
+   ::oWidget:connect( QEvent_WindowActivate   , {|e| ::execEvent( QEvent_WindowActivate   , e ) } )
+   ::oWidget:connect( QEvent_WindowDeactivate , {|e| ::execEvent( QEvent_WindowDeactivate , e ) } )
 
    RETURN Self
 
@@ -242,12 +243,11 @@ METHOD XbpDialog:destroy()
    HB_TRACE( HB_TR_DEBUG,  ". " )
    HB_TRACE( HB_TR_DEBUG,  "<<<<<<<<<<                        XbpDialog:destroy    B                      >>>>>>>>>>" )
 
-   ::oWidget:removeEventFilter( ::pEvents )
+//   ::oWidget:removeEventFilter( ::pEvents )
 
    hbxbp_SetEventLoop( NIL )
    ::oEventLoop:exit( 0 )
    ::oEventLoop:pPtr := NIL
-   //SetAppWindow( XbpObject():new() )      /* Can play havoc on */
    ::oMenu := NIL
 
    IF ::isViaQtObject
@@ -423,7 +423,7 @@ METHOD XbpDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
       ::oWidget := QWidget()
       ::oWidget:pPtr := hbqt_ptr( ::qtObject )
    ELSE
-      ::oWidget := QWidget():new()
+      ::oWidget := QWidget():new()// ::oParent:oWidget )
    ENDIF
 
    ::oWidget:setMouseTracking( .T. )

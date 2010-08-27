@@ -125,8 +125,6 @@ CLASS HbpProcess
    METHOD outputMe( cLine )
    METHOD finish()
 
-   ACCESS pSlots                                  INLINE hbxbp_getSlotsPtr()
-
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -199,18 +197,18 @@ METHOD HbpProcess:start( cShellCmd )
    ::qProcess:setReadChannel( 1 )
 
    #if 0
-      Qt_Slots_Connect( ::pSlots, ::qProcess, "readyRead()"              , {|i| ::read( CHN_REA, i ) } )
-      Qt_Slots_Connect( ::pSlots, ::qProcess, "readChannelFinished()"    , {|i| ::read( CHN_RCF, i ) } )
-      Qt_Slots_Connect( ::pSlots, ::qProcess, "aboutToClose()"           , {|i| ::read( CHN_CLO, i ) } )
-      Qt_Slots_Connect( ::pSlots, ::qProcess, "bytesWritten(int)"        , {|i| ::read( CHN_BYT, i ) } )
-      Qt_Slots_Connect( ::pSlots, ::qProcess, "stateChanged(int)"        , {|i| ::read( CHN_STT, i ) } )
-      Qt_Slots_Connect( ::pSlots, ::qProcess, "error(int)"               , {|i| ::read( CHN_ERE, i ) } )
+      ::qProcess:connect( "readyRead()"              , {|i| ::read( CHN_REA, i ) } )
+      ::qProcess:connect( "readChannelFinished()"    , {|i| ::read( CHN_RCF, i ) } )
+      ::qProcess:connect( "aboutToClose()"           , {|i| ::read( CHN_CLO, i ) } )
+      ::qProcess:connect( "bytesWritten(int)"        , {|i| ::read( CHN_BYT, i ) } )
+      ::qProcess:connect( "stateChanged(int)"        , {|i| ::read( CHN_STT, i ) } )
+      ::qProcess:connect( "error(int)"               , {|i| ::read( CHN_ERE, i ) } )
    #else
    IF !( ::lDetached )
-      Qt_Slots_Connect( ::pSlots, ::qProcess, "started()"                , {|i| ::read( CHN_BGN, i ) } )
-      Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardOutput()", {|i| ::read( CHN_OUT, i ) } )
-      Qt_Slots_Connect( ::pSlots, ::qProcess, "readyReadStandardError()" , {|i| ::read( CHN_ERR, i ) } )
-      Qt_Slots_Connect( ::pSlots, ::qProcess, "finished(int,int)"        , {|i,ii| ::read( CHN_FIN, i, ii ) } )
+      ::qProcess:connect( "started()"                , {|i| ::read( CHN_BGN, i ) } )
+      ::qProcess:connect( "readyReadStandardOutput()", {|i| ::read( CHN_OUT, i ) } )
+      ::qProcess:connect( "readyReadStandardError()" , {|i| ::read( CHN_ERR, i ) } )
+      ::qProcess:connect( "finished(int,int)"        , {|i,ii| ::read( CHN_FIN, i, ii ) } )
    ENDIF
    #endif
 
@@ -284,17 +282,17 @@ METHOD HbpProcess:outputMe( cLine )
 METHOD HbpProcess:finish()
 
    #if 0
-   Qt_Slots_disConnect( ::pSlots, ::qProcess, "readyRead()"               )
-   Qt_Slots_disConnect( ::pSlots, ::qProcess, "readChannelFinished()"     )
-   Qt_Slots_disConnect( ::pSlots, ::qProcess, "aboutToClose()"            )
-   Qt_Slots_disConnect( ::pSlots, ::qProcess, "bytesWritten(int)"         )
-   Qt_Slots_disConnect( ::pSlots, ::qProcess, "stateChanged(int)"         )
-   Qt_Slots_disConnect( ::pSlots, ::qProcess, "error(int)"                )
+   ::qProcess:disconnect( "readyRead()"               )
+   ::qProcess:disconnect( "readChannelFinished()"     )
+   ::qProcess:disconnect( "aboutToClose()"            )
+   ::qProcess:disconnect( "bytesWritten(int)"         )
+   ::qProcess:disconnect( "stateChanged(int)"         )
+   ::qProcess:disconnect( "error(int)"                )
    #endif
-   Qt_Slots_disConnect( ::pSlots, ::qProcess, "started()"                 )
-   Qt_Slots_disConnect( ::pSlots, ::qProcess, "readyReadStandardOutput()" )
-   Qt_Slots_disConnect( ::pSlots, ::qProcess, "readyReadStandardError()"  )
-   Qt_Slots_disConnect( ::pSlots, ::qProcess, "finished(int,int)"         )
+   ::qProcess:disconnect( "started()"                 )
+   ::qProcess:disconnect( "readyReadStandardOutput()" )
+   ::qProcess:disconnect( "readyReadStandardError()"  )
+   ::qProcess:disconnect( "finished(int,int)"         )
 
    IF hb_isBlock( ::bFinish )
       eval( ::bFinish, ::nExitCode, ::nExitStatus, Self )

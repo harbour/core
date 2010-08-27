@@ -113,10 +113,10 @@ CLASS XbpComboBox  INHERIT  XbpWindow
    DATA     sl_itemMarked
    DATA     sl_itemSelected
    DATA     sl_drawItem
-   
-   METHOD   itemMarked( ... )                     SETGET    
-   METHOD   itemSelected( ... )                   SETGET    
-   METHOD   drawItem( ... )                       SETGET    
+
+   METHOD   itemMarked( ... )                     SETGET
+   METHOD   itemSelected( ... )                   SETGET
+   METHOD   drawItem( ... )                       SETGET
 
    ENDCLASS
 
@@ -143,9 +143,9 @@ METHOD XbpComboBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oWidget:setEditable( ::XbpSLE:editable )
    ::oWidget:setFrame( ::XbpSLE:border )
 
-   ::connect( ::pWidget, "highlighted(int)"        , {|i| ::execSlot( "highlighted(int)"        , i ) } )
-   ::connect( ::pWidget, "activated(int)"          , {|i| ::execSlot( "activated(int)"          , i ) } )
-*  ::connect( ::pWidget, "currentIndexChanged(int)", {|i| ::execSlot( "currentIndexChanged(int)", i ) } )
+   ::oWidget:connect( "highlighted(int)"        , {|i| ::execSlot( "highlighted(int)"        , i ) } )
+   ::oWidget:connect( "activated(int)"          , {|i| ::execSlot( "activated(int)"          , i ) } )
+*  ::oWidget:connect( "currentIndexChanged(int)", {|i| ::execSlot( "currentIndexChanged(int)", i ) } )
 
    ::setPosAndSize()
    IF ::visible
@@ -179,9 +179,9 @@ METHOD XbpComboBox:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams,
 
    ENDIF
 
-   ::connect( ::oWidget, "highlighted(int)"        , {|i| ::execSlot( "highlighted(int)"        , i ) } )
-   ::connect( ::oWidget, "activated(int)"          , {|i| ::execSlot( "activated(int)"          , i ) } )
-*  ::connect( ::oWidget, "currentIndexChanged(int)", {|i| ::execSlot( "currentIndexChanged(int)", i ) } )
+   ::oWidget:connect( "highlighted(int)"        , {|i| ::execSlot( "highlighted(int)"        , i ) } )
+   ::oWidget:connect( "activated(int)"          , {|i| ::execSlot( "activated(int)"          , i ) } )
+*  ::oWidget:connect( "currentIndexChanged(int)", {|i| ::execSlot( "currentIndexChanged(int)", i ) } )
 
    ::AddAsChild( SELF )
    RETURN Self
@@ -203,7 +203,7 @@ METHOD XbpComboBox:execSlot( cSlot, p )
    DO CASE
    CASE cSlot == "highlighted(int)"
       ::itemMarked()
-   CASE cSlot == "activated(int)" 
+   CASE cSlot == "activated(int)"
       ::itemSelected()
    CASE cSlot == "currentIndexChanged(int)"
    ENDCASE
@@ -218,29 +218,29 @@ METHOD XbpComboBox:itemMarked( ... )
       ::sl_itemMarked := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_itemMarked )
       eval( ::sl_itemMarked, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
-   
+
 /*----------------------------------------------------------------------*/
-   
+
 METHOD XbpComboBox:itemSelected( ... )
    LOCAL a_:= hb_aParams()
    IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
       ::sl_itemSelected := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_itemSelected )
       eval( ::sl_itemSelected, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
-   
+
 /*----------------------------------------------------------------------*/
-   
+
 METHOD XbpComboBox:drawItem( ... )
    LOCAL a_:= hb_aParams()
    IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
       ::sl_xbePDrawItem := a_[ 1 ]
    ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_xbePDrawItem )
       eval( ::sl_xbePDrawItem, a_[ 1 ], a_[ 2 ], Self )
-   ENDIF 
+   ENDIF
    RETURN Self
-   
+
 /*----------------------------------------------------------------------*/

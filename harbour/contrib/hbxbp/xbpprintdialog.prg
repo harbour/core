@@ -112,7 +112,7 @@ METHOD XbpPrintDialog:create( oParent, oOwner )
 
    ::oWidget := QPrintDialog():new()
 
-   ::connect( ::pWidget, "accepted(QPrinter)", {|p| ::pPrinter := p } )
+   ::oWidget:connect( "accepted(QPrinter)", {|p| ::pPrinter := p } )
 
    RETURN Self
 
@@ -121,7 +121,6 @@ METHOD XbpPrintDialog:create( oParent, oOwner )
 METHOD XbpPrintDialog:destroy()
 
    IF len( ::aConnections ) > 0
-      aeval( ::aConnections, {|e_| Qt_Slots_DisConnect( ::pSlots, e_[ 1 ], e_[ 2 ] ), e_[ 1 ] := NIL, e_[ 2 ] := NIL } )
       ::aConnections := {}
    ENDIF
 

@@ -143,7 +143,7 @@ METHOD XbpDataRef:setData( xValue, mp2 )
 //HB_TRACE( HB_TR_DEBUG, cClass +' '+ ::cargo +"..."+ IF(empty(xValue)," empty ",valtype(xValue)) )
 
    IF hb_isBlock( ::dataLink )
-      ::sl_editBuffer := eval( ::dataLink, xValue  )
+      ::sl_editBuffer := eval( ::dataLink, xValue )
 
    ELSEIF xValue <> NIL
       ::sl_editBuffer := xValue

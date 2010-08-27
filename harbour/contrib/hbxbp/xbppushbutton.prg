@@ -85,7 +85,7 @@ CLASS XbpPushButton  INHERIT  XbpWindow
    DATA     drawMode                              INIT XBP_DRAW_NORMAL
    DATA     default                               INIT .F.
    DATA     cancel                                INIT .F.
-   
+
    DATA     sl_draw
 
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -99,7 +99,7 @@ CLASS XbpPushButton  INHERIT  XbpWindow
 
    METHOD   setFocus()
    METHOD   setCaption( xCaption, cDll )
-   
+
    METHOD   activate( ... )                       SETGET
    METHOD   draw( ... )                           SETGET
 
@@ -133,8 +133,8 @@ METHOD XbpPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
       ::oWidget:setDefault( .t. )
    ENDIF
 
-   ::Connect( ::pWidget, "clicked()", {|| ::execSlot( "clicked()" ) } )
-   ::Connect( ::pWidget, "pressed()", {|| ::execSlot( "pressed()" ) } )
+   ::oWidget:connect( "clicked()", {|| ::execSlot( "clicked()" ) } )
+   ::oWidget:connect( "pressed()", {|| ::execSlot( "pressed()" ) } )
 
    ::oParent:AddChild( SELF )
    RETURN Self
@@ -164,7 +164,7 @@ METHOD XbpPushButton:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParam
 
    ENDIF
 
-   ::Connect( ::pWidget, "clicked()", {|| ::execSlot( "clicked()" ) } )
+   ::oWidget:connect( "clicked()", {|| ::execSlot( "clicked()" ) } )
 
    ::addAsChild()
    RETURN Self
@@ -174,9 +174,9 @@ METHOD XbpPushButton:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParam
 METHOD XbpPushButton:execSlot( cSlot, p )
 
    DO CASE
-   CASE cSlot == "clicked()" .OR. cSlot == "pressed()" 
+   CASE cSlot == "clicked()" .OR. cSlot == "pressed()"
       ::activate()
-   CASE cSlot == "keyPressed()" 
+   CASE cSlot == "keyPressed()"
       IF XbpQKeyEventToAppEvent( p ) == xbeK_ENTER
          ::oWidget:click()
       ENDIF
@@ -247,7 +247,7 @@ METHOD XbpPushButton:activate( ... )
       ::sl_lbClick := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_lbClick )
       eval( ::sl_lbClick, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -258,7 +258,7 @@ METHOD XbpPushButton:draw( ... )
       ::sl_draw := a_[ 1 ]
    ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_draw )
       eval( ::sl_draw, a_[ 1 ], a_[ 2 ], Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/

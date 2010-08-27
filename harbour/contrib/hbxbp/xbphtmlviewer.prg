@@ -157,15 +157,15 @@ METHOD XbpHTMLViewer:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
    #if 0  /* Discontinued till QWebKit is integrated separately - Pritpal */
    ::oWidget := QWebView():new( ::pParent )
 
-   ::Connect( ::oWidget, "iconChanged()"            , {|p| ::execSlot( "iconChanged()"            , p ) } )
-   ::Connect( ::oWidget, "linkClicked(QUrl)"        , {|p| ::execSlot( "linkClicked(QUrl)"        , p ) } )
-   ::Connect( ::oWidget, "loadFinished(bool)"       , {|p| ::execSlot( "loadFinished(bool)"       , p ) } )
-   ::Connect( ::oWidget, "loadProgress(int)"        , {|p| ::execSlot( "loadProgress(int)"        , p ) } )
-   ::Connect( ::oWidget, "loadStarted()"            , {|p| ::execSlot( "loadStarted()"            , p ) } )
-   ::Connect( ::oWidget, "titleChanged(QString)"    , {|p| ::execSlot( "titleChanged(QString)"    , p ) } )
-   ::Connect( ::oWidget, "urlChanged(QUrl)"         , {|p| ::execSlot( "urlChanged(QUrl)"         , p ) } )
-   ::Connect( ::oWidget, "selectionChanged()"       , {|p| ::execSlot( "selectionChanged()"       , p ) } )
-   ::Connect( ::oWidget, "statusBarMessage(QString)", {|p| ::execSlot( "statusBarMessage(QString)", p ) } )
+   ::oWidget:connect( "iconChanged()"            , {|p| ::execSlot( "iconChanged()"            , p ) } )
+   ::oWidget:connect( "linkClicked(QUrl)"        , {|p| ::execSlot( "linkClicked(QUrl)"        , p ) } )
+   ::oWidget:connect( "loadFinished(bool)"       , {|p| ::execSlot( "loadFinished(bool)"       , p ) } )
+   ::oWidget:connect( "loadProgress(int)"        , {|p| ::execSlot( "loadProgress(int)"        , p ) } )
+   ::oWidget:connect( "loadStarted()"            , {|p| ::execSlot( "loadStarted()"            , p ) } )
+   ::oWidget:connect( "titleChanged(QString)"    , {|p| ::execSlot( "titleChanged(QString)"    , p ) } )
+   ::oWidget:connect( "urlChanged(QUrl)"         , {|p| ::execSlot( "urlChanged(QUrl)"         , p ) } )
+   ::oWidget:connect( "selectionChanged()"       , {|p| ::execSlot( "selectionChanged()"       , p ) } )
+   ::oWidget:connect( "statusBarMessage(QString)", {|p| ::execSlot( "statusBarMessage(QString)", p ) } )
    #if 0
    ::mapEvent( evNavigateComplete, {| cURL | ::xNavigateComplete( cURL ) } )
    #endif
@@ -206,12 +206,12 @@ METHOD XbpHTMLViewer:destroy()
 METHOD XbpHTMLViewer:execSlot( cSlot, p )
 
    DO CASE
-   CASE cSlot == "iconChanged()" 
+   CASE cSlot == "iconChanged()"
       IF hb_isBlock( ::sl_beforeNavigate )
          eval( ::sl_beforeNavigate, /*cURL*/, NIL, Self )
       ENDIF
    CASE cSlot == "linkClicked(QUrl)"
-   CASE cSlot == "loadFinished(bool)" 
+   CASE cSlot == "loadFinished(bool)"
       IF hb_isBlock( ::sl_documentComplete )
          eval( ::sl_documentComplete, /*cURI*/, p, Self )
       ENDIF
@@ -219,12 +219,12 @@ METHOD XbpHTMLViewer:execSlot( cSlot, p )
       IF hb_isBlock( ::sl_progressChange )
          eval( ::sl_progressChange, p, 100, Self )
       ENDIF
-   CASE cSlot == "loadStarted()" 
+   CASE cSlot == "loadStarted()"
    CASE cSlot == "titleChanged(QString)"
       IF hb_isBlock( ::sl_titleChange )
          eval( ::sl_titleChange, p, NIL, Self )
       ENDIF
-   CASE cSlot == "urlChanged(QUrl)" 
+   CASE cSlot == "urlChanged(QUrl)"
    CASE cSlot == "selectionChanged()"
       ::cSelectedText := ::oWidget:selectedText()
 HB_TRACE( HB_TR_DEBUG, ::cSelectedText )
@@ -235,7 +235,7 @@ HB_TRACE( HB_TR_DEBUG, ::cSelectedText )
    ENDCASE
 
    RETURN Self
-   
+
 /*----------------------------------------------------------------------*/
 
 METHOD XbpHTMLViewer:navigate( cURL )

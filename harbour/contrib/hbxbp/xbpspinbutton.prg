@@ -89,7 +89,7 @@ CLASS XbpSpinButton INHERIT XbpWindow, XbpDataRef
    DATA     changed                               INIT    .F.
 
    DATA     nOldValue                             INIT    0
-   
+
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
@@ -116,10 +116,10 @@ CLASS XbpSpinButton INHERIT XbpWindow, XbpDataRef
    DATA     sl_xbeSpinDown
    DATA     sl_xbeSpinUp
    DATA     sl_xbeSpinEndSpin
-   
-   METHOD   down( ... )                           SETGET 
-   METHOD   up( ... )                             SETGET 
-   METHOD   endSpin( ... )                        SETGET 
+
+   METHOD   down( ... )                           SETGET
+   METHOD   up( ... )                             SETGET
+   METHOD   endSpin( ... )                        SETGET
 
    ENDCLASS
 
@@ -147,14 +147,13 @@ METHOD XbpSpinButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
    ::oWidget:setFrame( ::border )
    ::oWidget:setAlignment( es_[ ::align ] )
 
-   #if 0  
-   ::oWidget:installEventFilter( ::pEvents )
-   ::connectEvent( ::oWidget, QEvent_FocusIn , {|| ::execSlot( "QEvent_FocusIn"  ) } )
-   ::connectEvent( ::oWidget, QEvent_FocusOut, {|| ::execSlot( "QEvent_FocusOut" ) } )
-   ::connectEvent( ::oWidget, QEvent_KeyPress, {|| ::execSlot( "QEvent_KeyPress" ) } )
+   #if 0
+   ::oWidget:connect( QEvent_FocusIn , {|| ::execSlot( "QEvent_FocusIn"  ) } )
+   ::oWidget:connect( QEvent_FocusOut, {|| ::execSlot( "QEvent_FocusOut" ) } )
+   ::oWidget:connect( QEvent_KeyPress, {|| ::execSlot( "QEvent_KeyPress" ) } )
    #endif
 
-   ::connect( ::oWidget, "valueChanged(int)" , {|i| ::execSlot( "valueChanged(int)", i ) } )
+   ::oWidget:connect( "valueChanged(int)" , {|i| ::execSlot( "valueChanged(int)", i ) } )
 
    ::setPosAndSize()
    IF ::visible
@@ -192,9 +191,9 @@ METHOD XbpSpinButton:execSlot( cSlot, p )
          ::down()
       ELSEIF p > ::nOldValue
          ::up()
-      ENDIF 
-      ::nOldValue := ::sl_editBuffer 
-            
+      ENDIF
+      ::nOldValue := ::sl_editBuffer
+
    CASE cSlot == "QEvent_KeyPress"
       ::keyboard()
 
@@ -234,9 +233,9 @@ METHOD XbpSpinButton:down( ... )
       ::sl_xbeSpinDown := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_xbeSpinDown )
       eval( ::sl_xbeSpinDown, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
-   
+
 /*----------------------------------------------------------------------*/
 
 METHOD XbpSpinButton:up( ... )
@@ -245,9 +244,9 @@ METHOD XbpSpinButton:up( ... )
       ::sl_xbeSpinUp := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_xbeSpinUp )
       eval( ::sl_xbeSpinUp, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
-   
+
 /*----------------------------------------------------------------------*/
 
 METHOD XbpSpinButton:endSpin( ... )
@@ -256,8 +255,8 @@ METHOD XbpSpinButton:endSpin( ... )
       ::sl_xbeSpinEndSpin := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_xbeSpinEndSpin )
       eval( ::sl_xbeSpinEndSpin, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
-   
+
 /*----------------------------------------------------------------------*/
-   
+

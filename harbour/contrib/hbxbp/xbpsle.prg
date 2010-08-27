@@ -110,7 +110,7 @@ CLASS XbpSLE INHERIT XbpWindow, XbpDataRef
    DATA     sl_typeOut
    DATA     sl_hScroll
    DATA     sl_returnPressed
-      
+
    METHOD   typeOut( ... )                        SETGET
    METHOD   hScroll( ... )                        SETGET
    METHOD   returnPressed( ... )                  SETGET
@@ -161,18 +161,16 @@ METHOD XbpSLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oWidget:setMaxLength( ::bufferLength )
 
    #if 0
-   ::oWidget:installEventFilter( ::pEvents )
-
-   ::connectEvent( ::pWidget, QEvent_FocusIn , {|e| ::execSlot( "QEvent_FocusIn" , e ) } )
-   ::connectEvent( ::pWidget, QEvent_FocusOut, {|e| ::execSlot( "QEvent_FocusOut", e ) } )
+   ::oWidget:connect( QEvent_FocusIn , {|e| ::execSlot( "QEvent_FocusIn" , e ) } )
+   ::oWidget:connect( QEvent_FocusOut, {|e| ::execSlot( "QEvent_FocusOut", e ) } )
    #endif
 
-   ::connect( ::oWidget, "cursorPositionChanged(int,int)" , {|i,ii| ::execSlot( "cursorPositionChanged(int,int)", i, ii ) } )
-*  ::connect( ::oWidget, "editingFinished()"              , {|    | ::execSlot( "editingFinished()"       ) } )
-   ::connect( ::oWidget, "returnPressed()"                , {|    | ::execSlot( "returnPressed()"         ) } )
-*  ::connect( ::oWidget, "selectionChanged()"             , {|    | ::execSlot( "selectionChanged()"      ) } )
-   ::connect( ::oWidget, "textChanged(QString)"           , {|s   | ::execSlot( "textChanged(QString)", s ) } )
-   ::connect( ::oWidget, "textEdited(QString)"            , {|s   | ::execSlot( "textEdited(QString)" , s ) } )
+   ::oWidget:connect( "cursorPositionChanged(int,int)" , {|i,ii| ::execSlot( "cursorPositionChanged(int,int)", i, ii ) } )
+*  ::oWidget:connect( "editingFinished()"              , {|    | ::execSlot( "editingFinished()"       ) } )
+   ::oWidget:connect( "returnPressed()"                , {|    | ::execSlot( "returnPressed()"         ) } )
+*  ::oWidget:connect( "selectionChanged()"             , {|    | ::execSlot( "selectionChanged()"      ) } )
+   ::oWidget:connect( "textChanged(QString)"           , {|s   | ::execSlot( "textChanged(QString)", s ) } )
+   ::oWidget:connect( "textEdited(QString)"            , {|s   | ::execSlot( "textEdited(QString)" , s ) } )
 
    ::setPosAndSize()
    IF ::visible
@@ -249,7 +247,7 @@ METHOD XbpSLE:returnPressed( ... )
       ::sl_returnPressed := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_returnPressed )
       eval( ::sl_returnPressed, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -260,9 +258,9 @@ METHOD XbpSLE:hScroll( ... )
       ::sl_hScroll := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_hScroll )
       eval( ::sl_hScroll, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
-   
+
 /*----------------------------------------------------------------------*/
 
 METHOD XbpSLE:typeOut( ... )
@@ -271,7 +269,7 @@ METHOD XbpSLE:typeOut( ... )
       ::sl_typeOut := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_typeOut )
       eval( ::sl_typeOut, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
-   
+
 /*----------------------------------------------------------------------*/

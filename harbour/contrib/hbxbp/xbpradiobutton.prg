@@ -90,7 +90,7 @@ CLASS XbpRadioButton  INHERIT  XbpWindow, XbpDataRef
 
    METHOD   setCaption( xCaption )
 
-   METHOD   selected( ... )                       SETGET 
+   METHOD   selected( ... )                       SETGET
 
    ENDCLASS
 /*----------------------------------------------------------------------*/
@@ -109,7 +109,7 @@ METHOD XbpRadioButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
 
    ::oWidget := QRadioButton():New( ::oParent:oWidget )
 
-   ::connect( ::pWidget, "clicked()", {|| ::execSlot( "clicked()" ) } )
+   ::oWidget:connect( "clicked()", {|| ::execSlot( "clicked()" ) } )
 
    ::setPosAndSize()
    IF ::visible
@@ -146,8 +146,8 @@ METHOD XbpRadioButton:execSlot( cSlot, p )
    IF cSlot == "clicked()"
       ::sl_editBuffer := .t.
       ::selected( ::sl_editBuffer )
-   ENDIF 
-   
+   ENDIF
+
    RETURN nil
 
 /*----------------------------------------------------------------------*/
@@ -195,7 +195,7 @@ METHOD XbpRadioButton:selected( ... )
       ::sl_lbClick := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_lbClick )
       eval( ::sl_lbClick, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
-   
+
 /*----------------------------------------------------------------------*/

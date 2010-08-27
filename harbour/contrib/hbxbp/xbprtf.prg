@@ -171,13 +171,13 @@ METHOD XbpRtf:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget := QTextEdit():new( ::pParent )
 
-*  ::connect( ::oWidget, "copyAvailable(bool)"                      , {|p| ::execSlot( "copyAvailable(bool)"    , p ) } )
-   ::connect( ::oWidget, "currentCharFormatChanged(QTextCharFormat)", {|p| ::execSlot( "currentCharFormatChanged(QTextCharFormat)", p ) } )
-   ::connect( ::oWidget, "cursorPositionChanged()"                  , {|p| ::execSlot( "cursorPositionChanged()", p ) } )
-   ::connect( ::oWidget, "redoAvailable(bool)"                      , {|p| ::execSlot( "redoAvailable(bool)"    , p ) } )
-   ::connect( ::oWidget, "undoAvailable(bool)"                      , {|p| ::execSlot( "undoAvailable(bool)"    , p ) } )
-   ::connect( ::oWidget, "textChanged()"                            , {|p| ::execSlot( "textChanged()"          , p ) } )
-   ::connect( ::oWidget, "selectionChanged()"                       , {|p| ::execSlot( "selectionChanged()"     , p ) } )
+*  ::oWidget:connect( "copyAvailable(bool)"                      , {|p| ::execSlot( "copyAvailable(bool)"    , p ) } )
+   ::oWidget:connect( "currentCharFormatChanged(QTextCharFormat)", {|p| ::execSlot( "currentCharFormatChanged(QTextCharFormat)", p ) } )
+   ::oWidget:connect( "cursorPositionChanged()"                  , {|p| ::execSlot( "cursorPositionChanged()", p ) } )
+   ::oWidget:connect( "redoAvailable(bool)"                      , {|p| ::execSlot( "redoAvailable(bool)"    , p ) } )
+   ::oWidget:connect( "undoAvailable(bool)"                      , {|p| ::execSlot( "undoAvailable(bool)"    , p ) } )
+   ::oWidget:connect( "textChanged()"                            , {|p| ::execSlot( "textChanged()"          , p ) } )
+   ::oWidget:connect( "selectionChanged()"                       , {|p| ::execSlot( "selectionChanged()"     , p ) } )
 
    ::setPosAndSize()
    IF ::visible
@@ -215,7 +215,7 @@ METHOD XbpRtf:execSlot( cSlot, p )
    CASE cSlot == "copyAvailable(bool)"
    CASE cSlot == "currentCharFormatChanged(QTextCharFormat)"
 
-   CASE cSlot == "cursorPositionChanged()" 
+   CASE cSlot == "cursorPositionChanged()"
       ::oTextCursor:configure( ::oWidget:textCursor() )
       ::oCurCursor := ::oTextCursor
    CASE cSlot == "redoAvailable(bool)"

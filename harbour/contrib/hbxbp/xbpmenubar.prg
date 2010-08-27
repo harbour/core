@@ -304,8 +304,8 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
          oAction:setShortcut( oKey )
       ENDIF
 
-      ::Connect( oAction, "triggered(bool)", {|| ::execSlot( "triggered(bool)", nMenuItemID ) } )
-      ::Connect( oAction, "hovered()"      , {|| ::execSlot( "hovered()"      , nMenuItemID ) } )
+      oAction:connect( "triggered(bool)", {|| ::execSlot( "triggered(bool)", nMenuItemID ) } )
+      oAction:connect( "hovered()"      , {|| ::execSlot( "hovered()"      , nMenuItemID ) } )
 
       DO CASE
       CASE nAttrb == XBPMENUBAR_MIA_CHECKED
@@ -338,8 +338,8 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
 
       oAction := xCaption
 
-      ::Connect( oAction, "triggered(bool)", {|| ::execSlot( "triggered(bool)", nMenuItemID ) } )
-      ::Connect( oAction, "hovered()"      , {|| ::execSlot( "hovered()"      , nMenuItemID ) } )
+      oAction:connect( "triggered(bool)", {|| ::execSlot( "triggered(bool)", nMenuItemID ) } )
+      oAction:connect( "hovered()"      , {|| ::execSlot( "hovered()"      , nMenuItemID ) } )
 
       DO CASE
       CASE nAttrb == XBPMENUBAR_MIA_CHECKED

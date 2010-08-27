@@ -116,14 +116,14 @@ METHOD XbpFileDialog:create( oParent, oOwner, aPos )
    //::setColorBG( GraMakeRGBColor( { 255,255,255 } ) )
    //::setColorFG( GraMakeRGBColor( { 0,0,0 } ) )
 
-   ::connect( ::oWidget, "accepted()"                , {|p| ::execSlot( "accepted()"                , p ) } )
-   ::connect( ::oWidget, "finished(int)"             , {|p| ::execSlot( "finished(int)"             , p ) } )
-   ::connect( ::oWidget, "rejected()"                , {|p| ::execSlot( "rejected()"                , p ) } )
-   ::connect( ::oWidget, "currentChanged(QString)"   , {|p| ::execSlot( "currentChanged(QString)"   , p ) } )
-   ::connect( ::oWidget, "directoryEntered(QString)" , {|p| ::execSlot( "directoryEntered(QString)" , p ) } )
-   ::connect( ::oWidget, "fileSelected(QString)"     , {|p| ::execSlot( "fileSelected(QString)"     , p ) } )
-   ::connect( ::oWidget, "filesSelected(QStringList)", {|p| ::execSlot( "filesSelected(QStringList)", p ) } )
-   ::connect( ::oWidget, "filterSelected(QString)"   , {|p| ::execSlot( "filterSelected(QString)"   , p ) } )
+   ::oWidget:connect( "accepted()"                , {|p| ::execSlot( "accepted()"                , p ) } )
+   ::oWidget:connect( "finished(int)"             , {|p| ::execSlot( "finished(int)"             , p ) } )
+   ::oWidget:connect( "rejected()"                , {|p| ::execSlot( "rejected()"                , p ) } )
+   ::oWidget:connect( "currentChanged(QString)"   , {|p| ::execSlot( "currentChanged(QString)"   , p ) } )
+   ::oWidget:connect( "directoryEntered(QString)" , {|p| ::execSlot( "directoryEntered(QString)" , p ) } )
+   ::oWidget:connect( "fileSelected(QString)"     , {|p| ::execSlot( "fileSelected(QString)"     , p ) } )
+   ::oWidget:connect( "filesSelected(QStringList)", {|p| ::execSlot( "filesSelected(QStringList)", p ) } )
+   ::oWidget:connect( "filterSelected(QString)"   , {|p| ::execSlot( "filterSelected(QString)"   , p ) } )
 
    RETURN Self
 
@@ -135,7 +135,7 @@ METHOD XbpFileDialog:execSlot( cSlot, p )
    HB_SYMBOL_UNUSED( p )
 
    DO CASE
-   CASE cSlot == "rejected()" 
+   CASE cSlot == "rejected()"
       IF hb_isBlock( ::sl_quit )
          nRet := eval( ::sl_quit, 0, 0, Self )
       ENDIF

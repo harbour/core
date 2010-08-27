@@ -285,9 +285,9 @@ METHOD XbpTabWidget:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
    ::oWidget:setContextMenuPolicy( Qt_CustomContextMenu )
    ::oWidget:setObjectName( "Tab_Widget" )
 
-   ::Connect( ::oWidget, "currentChanged(int)"               , {|i| ::execSlot( "currentChanged(int)"   , i ) } )
-   ::Connect( ::oWidget, "tabCloseRequested(int)"            , {|i| ::execSlot( "tabCloseRequested(int)", i ) } )
-   ::connect( ::oWidget, "customContextMenuRequested(QPoint)", {|p| ::execSlot( "customContextMenuRequested(QPoint)", p ) } )
+   ::oWidget:connect( "currentChanged(int)"               , {|i| ::execSlot( "currentChanged(int)"   , i ) } )
+   ::oWidget:connect( "tabCloseRequested(int)"            , {|i| ::execSlot( "tabCloseRequested(int)", i ) } )
+   ::oWidget:connect( "customContextMenuRequested(QPoint)", {|p| ::execSlot( "customContextMenuRequested(QPoint)", p ) } )
 
    ::setPosAndSize()
    IF ::visible

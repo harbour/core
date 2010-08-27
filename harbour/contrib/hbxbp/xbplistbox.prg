@@ -181,8 +181,7 @@ METHOD XbpListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::sl_editBuffer := {}
 
    /* Window Events */
-   ::oWidget:installEventFilter( ::pEvents )
-   ::connectEvent( ::pWidget, QEvent_ContextMenu, {|e| ::grabEvent( QEvent_ContextMenu, e ) } )
+   ::oWidget:connect( QEvent_ContextMenu, {|e| ::grabEvent( QEvent_ContextMenu, e ) } )
 
    ::connectAll()
 
@@ -197,16 +196,16 @@ METHOD XbpListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 METHOD XbpListBox:connectAll()
 
-   ::connect( ::oWidget, "currentItemChanged(QLWItem,QLWItem)", {|p,p1| ::execSlot( "currentItemChanged(QLWItem,QLWItem)", p, p1 ) } )
-   ::connect( ::oWidget, "currentRowChanged(int)"             , {|p,p1| ::execSlot( "currentRowChanged(int)"             , p, p1 ) } )
-   ::connect( ::oWidget, "currentTextChanged(QString)"        , {|p,p1| ::execSlot( "currentTextChanged(QString)"        , p, p1 ) } )
-   ::connect( ::oWidget, "itemActivated(QLWItem)"             , {|p,p1| ::execSlot( "itemActivated(QLWItem)"             , p, p1 ) } )
-   ::connect( ::oWidget, "itemChanged(QLWItem)"               , {|p,p1| ::execSlot( "itemChanged(QLWItem)"               , p, p1 ) } )
-   ::connect( ::oWidget, "itemClicked(QLWItem)"               , {|p,p1| ::execSlot( "itemClicked(QLWItem)"               , p, p1 ) } )
-   ::connect( ::oWidget, "itemDoubleClicked(QLWItem)"         , {|p,p1| ::execSlot( "itemDoubleClicked(QLWItem)"         , p, p1 ) } )
-   ::connect( ::oWidget, "itemEntered(QLWItem)"               , {|p,p1| ::execSlot( "itemEntered(QLWItem)"               , p, p1 ) } )
-   ::connect( ::oWidget, "itemPressed(QLWItem)"               , {|p,p1| ::execSlot( "itemPressed(QLWItem)"               , p, p1 ) } )
-   ::connect( ::oWidget, "itemSelectionChanged()"             , {|p,p1| ::execSlot( "itemSelectionChanged()"             , p, p1 ) } )
+   ::oWidget:connect( "currentItemChanged(QLWItem,QLWItem)", {|p,p1| ::execSlot( "currentItemChanged(QLWItem,QLWItem)", p, p1 ) } )
+   ::oWidget:connect( "currentRowChanged(int)"             , {|p,p1| ::execSlot( "currentRowChanged(int)"             , p, p1 ) } )
+   ::oWidget:connect( "currentTextChanged(QString)"        , {|p,p1| ::execSlot( "currentTextChanged(QString)"        , p, p1 ) } )
+   ::oWidget:connect( "itemActivated(QLWItem)"             , {|p,p1| ::execSlot( "itemActivated(QLWItem)"             , p, p1 ) } )
+   ::oWidget:connect( "itemChanged(QLWItem)"               , {|p,p1| ::execSlot( "itemChanged(QLWItem)"               , p, p1 ) } )
+   ::oWidget:connect( "itemClicked(QLWItem)"               , {|p,p1| ::execSlot( "itemClicked(QLWItem)"               , p, p1 ) } )
+   ::oWidget:connect( "itemDoubleClicked(QLWItem)"         , {|p,p1| ::execSlot( "itemDoubleClicked(QLWItem)"         , p, p1 ) } )
+   ::oWidget:connect( "itemEntered(QLWItem)"               , {|p,p1| ::execSlot( "itemEntered(QLWItem)"               , p, p1 ) } )
+   ::oWidget:connect( "itemPressed(QLWItem)"               , {|p,p1| ::execSlot( "itemPressed(QLWItem)"               , p, p1 ) } )
+   ::oWidget:connect( "itemSelectionChanged()"             , {|p,p1| ::execSlot( "itemSelectionChanged()"             , p, p1 ) } )
 
    RETURN Self
 
@@ -214,16 +213,16 @@ METHOD XbpListBox:connectAll()
 
 METHOD XbpListBox:disConnectAll()
 
-   ::disConnect( ::oWidget, "currentItemChanged(QLWItem,QLWItem)" )
-   ::disConnect( ::oWidget, "currentRowChanged(int)"              )
-   ::disConnect( ::oWidget, "currentTextChanged(QString)"         )
-   ::disConnect( ::oWidget, "itemActivated(QLWItem)"              )
-   ::disConnect( ::oWidget, "itemChanged(QLWItem)"                )
-   ::disConnect( ::oWidget, "itemClicked(QLWItem)"                )
-   ::disConnect( ::oWidget, "itemDoubleClicked(QLWItem)"          )
-   ::disConnect( ::oWidget, "itemEntered(QLWItem)"                )
-   ::disConnect( ::oWidget, "itemPressed(QLWItem)"                )
-   ::disConnect( ::oWidget, "itemSelectionChanged()"              )
+   ::oWidget:disConnect( "currentItemChanged(QLWItem,QLWItem)" )
+   ::oWidget:disConnect( "currentRowChanged(int)"              )
+   ::oWidget:disConnect( "currentTextChanged(QString)"         )
+   ::oWidget:disConnect( "itemActivated(QLWItem)"              )
+   ::oWidget:disConnect( "itemChanged(QLWItem)"                )
+   ::oWidget:disConnect( "itemClicked(QLWItem)"                )
+   ::oWidget:disConnect( "itemDoubleClicked(QLWItem)"          )
+   ::oWidget:disConnect( "itemEntered(QLWItem)"                )
+   ::oWidget:disConnect( "itemPressed(QLWItem)"                )
+   ::oWidget:disConnect( "itemSelectionChanged()"              )
 
    RETURN Self
 

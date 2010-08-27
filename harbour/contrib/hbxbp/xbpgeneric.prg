@@ -89,9 +89,6 @@ THREAD STATIC t_oAppWindow
 
 THREAD STATIC t_oEventLoop
 
-THREAD STATIC t_qtSlots
-THREAD STATIC t_qtEvents
-
 THREAD STATIC t_oXbpInFocus
 
 /*----------------------------------------------------------------------*/
@@ -113,21 +110,8 @@ EXIT PROCEDURE hbxbp_End()
       s_oDeskTop:oWidget := NIL
    ENDIF
 
-   t_qtEvents := NIL
-   t_qtSlots  := NIL
-
    HB_TRACE( HB_TR_DEBUG, "................................... EXIT PROCEDURE hbxbp_End()    end   " )
    RETURN
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION hbxbp_getSlotsPtr()
-   RETURN t_qtSlots
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION hbxbp_getEventsPtr()
-   RETURN t_qtEvents
 
 /*----------------------------------------------------------------------*/
 /*
@@ -135,20 +119,22 @@ FUNCTION hbxbp_getEventsPtr()
  */
 FUNCTION hbxbp_InitializeEventBuffer()
 
-   IF empty( t_qtSlots )
-      t_qtSlots := Qt_Slots_New()
-   ENDIF
-
-   IF empty( t_qtEvents )
-      t_qtEvents := Qt_Events_New()
-   ENDIF
-
    IF empty( t_events )
       t_events := array( EVENT_BUFFER )
       aeval( t_events, {|e,i| HB_SYMBOL_UNUSED( e ), t_events[ i ] := { 0, NIL, NIL, NIL } } )
    ENDIF
 
    RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbxbp_getSlotsPtr()
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbxbp_getEventsPtr()
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 

@@ -111,9 +111,8 @@ FUNCTION _BuildADialog()
 /*----------------------------------------------------------------------*/
 
 PROCEDURE DispMem( cMessage )
-
    HB_SYMBOL_UNUSED( cMessage )
-
+   HB_TRACE( HB_TR_DEBUG, cMessage )
    RETURN
 
 /*----------------------------------------------------------------------*/
