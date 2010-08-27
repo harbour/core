@@ -143,6 +143,9 @@ CLASS HbqReportsManager
    DATA   aPages                                  INIT {}
    DATA   aSources                                INIT {}
    DATA   aObjects                                INIT {}
+   DATA   aRptPages                               INIT {}
+   DATA   aRptSources                             INIT {}
+   DATA   aRptObjects                             INIT {}
 
    DATA   lNew                                    INIT .t.
    DATA   cSaved                                  INIT ""
@@ -166,8 +169,8 @@ CLASS HbqReportsManager
    METHOD buildStatusBar()
    METHOD buildTabBar()
    METHOD buildDesignReport()
-   METHOD addField( qPos, cAlias, cField )
-   METHOD addObject( qPos, cType )
+   METHOD addField( cAlias, cField, qGeo, qPos )
+   METHOD addObject( cType, qGeo, qPos )
    METHOD fetchBarString( cCode, lCheck )
    METHOD loadReport( xData )
    METHOD saveReport( lSaveAs )
@@ -181,6 +184,9 @@ CLASS HbqReportsManager
    METHOD clear()
    METHOD buildReportStream()
    METHOD toString()
+   METHOD openReport()
+   METHOD parseBuffer( cBuffer )
+   METHOD presentBlankPage()
 
    ENDCLASS
 
@@ -395,12 +401,12 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
          IF qMime:hasFormat( "application/x-qabstractitemmodeldatalist" )
             IF p2[ 1 ] == "DataTree"
                IF p2[ 2 ] != p2[ 3 ]
-                  ::addField( QPoint():from( qEvent:scenePos() ), p2[ 2 ], p2[ 3 ] )
+                  ::addField( p2[ 2 ], p2[ 3 ], NIL, QPoint():from( qEvent:scenePos() ) )
                ENDIF
             ENDIF
 
          ELSEIF qMime:hasFormat( "application/x-toolbaricon"  )
-            ::addObject( QPoint():from( qEvent:scenePos() ), qMime:html() )
+            ::addObject( qMime:html(), NIL, QPoint():from( qEvent:scenePos() ) )
 
          ELSEIF qMime:hasUrls()
             qList := QStringList():from( qMime:hbUrlList() )
@@ -485,6 +491,7 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
    CASE "buttonNew_clicked"
       EXIT
    CASE "buttonOpen_clicked"
+      ::openReport()
       EXIT
    CASE "buttonSave_clicked"
       ::saveReport()
@@ -514,54 +521,40 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:clear()
+METHOD HbqReportsManager:presentBlankPage()
 
-   /* Cleanup the environments */
+   aadd( ::aPages, { "Page_1" } )
+
+   ::qScene:setPageSize( QPrinter_A4 )
+   ::qScene:setOrientation( QPrinter_Portrait )
+
+   ::updateObjectsTree( "ReportName", NIL, "Report" )
+   ::updateObjectsTree( "Page", "Report", "Page_1" )
+
+   ::addSource( "Customer", { { "Title" ,"C",35,0 }, { "Street","C",20,0 }, { "Revenue","N",12,2 } } )
+   ::addSource( "Invoice" , { { "Number","C",10,0 }, { "Date"  ,"D",08,0 }, { "Amount" ,"N",12,2 } } )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:loadReport( xData )
+METHOD HbqReportsManager:openReport()
+   LOCAL qFileDlg, qList, cFile
 
-   ::clear()
+   qFileDlg := QFileDialog():new( ::oWidget )
 
-   IF empty( xData )
-      IF empty( ::aPages )
-         aadd( ::aPages, { "Page_1" } )
+   qFileDlg:setAcceptMode( QFileDialog_AcceptOpen )
+   qFileDlg:setFileMode( QFileDialog_AnyFile )
+   qFileDlg:setViewMode( QFileDialog_List )
+   qFileDlg:setNameFilter( "HB Reports (*.hqr)" )
+
+   IF qFileDlg:exec() == 1
+      qList := QStringList():from( qFileDlg:selectedFiles() )
+      cFile := qList:at( 0 )
+      IF !empty( cFile ) .AND. lower( right( cFile, 4 ) ) == ".hqr"
+         ::loadReport( cFile )
       ENDIF
-
-      ::updateObjectsTree( "ReportName", NIL, "Report" )
-      ::updateObjectsTree( "Page", "Report", "Page_1" )
-
-      ::addSource( "Customer", { { "Title" ,"C",35,0 }, { "Street","C",20,0 }, { "Revenue","N",12,2 } } )
-      ::addSource( "Invoice" , { { "Number","C",10,0 }, { "Date"  ,"D",08,0 }, { "Amount" ,"N",12,2 } } )
-
-   ELSE
-      // read from - buffer, file
-      hb_utf8tostr( hb_memoread( "name" ) )
-
    ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbqReportsManager:addSource( cAlias, aStruct )
-   LOCAL qItem, qItmC, b_
-
-   qItem := QTreeWidgetItem():new()
-   qItem:setText( 0, cAlias )
-   ::qTreeData:addTopLevelItem( qItem )
-
-   FOR EACH b_ IN aStruct
-      qItmC := QTreeWidgetItem():new()
-      qItmC:setText( 0, b_[ 1 ] )
-      qItem:addChild( qItmC )
-      qItem:setExpanded( .t. )
-   NEXT
-
-   aadd( ::aSources, { cAlias, aStruct } )
 
    RETURN Self
 
@@ -665,7 +658,95 @@ METHOD HbqReportsManager:buildReportStream()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:addObject( qPos, cType )
+METHOD HbqReportsManager:parseBuffer( cBuffer )
+   LOCAL aTxt, s, nPart, cKey, cVal
+
+   aTxt := hb_ATokens( StrTran( cBuffer, Chr( 13 ) ), Chr( 10 ) )
+
+   FOR EACH s IN aTxt
+      s := alltrim( s )
+      IF empty( s )
+         LOOP
+      ENDIF
+
+      SWITCH Upper( s )
+      CASE "[GENERAL]" ; nPart := "HQR_GENERAL" ; EXIT
+      CASE "[SOURCES]" ; nPart := "HQR_SOURCES" ; EXIT
+      CASE "[PAGES]"   ; nPart := "HQR_PAGES"   ; EXIT
+      CASE "[OBJECTS]" ; nPart := "HQR_OBJECTS" ; EXIT
+      OTHERWISE
+         DO CASE
+         CASE nPart == "HQR_GENERAL"
+         CASE nPart == "HQR_SOURCES"
+            IF rmgr_keyValuePair( s, @cKey, @cVal, "=" )
+               IF rmgr_keyValuePair( cVal, @cKey, @cVal, "," )
+                  aadd( ::aRptSources, { "Source", rmgr_evalAsArray( cVal ) } )
+               ENDIF
+            ENDIF
+         CASE nPart == "HQR_PAGES"
+            IF rmgr_keyValuePair( s, @cKey, @cVal, "=" )
+               aadd( ::aRptPages, { "Page", rmgr_evalAsArray( cVal ) } )
+            ENDIF
+         CASE nPart == "HQR_OBJECTS"
+            IF rmgr_keyValuePair( s, @cKey, @cVal, "=" )
+               aadd( ::aRptObjects, rmgr_evalAsArray( cVal ) )
+            ENDIF
+         ENDCASE
+      ENDSWITCH
+   NEXT
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbqReportsManager:loadReport( xData )
+   LOCAL cBuffer, a_, d_, n, cName, cAlias, cField
+
+   ::clear()
+
+   IF empty( xData )
+      ::presentBlankPage()
+
+   ELSE
+      IF len( xData ) <= 300 .AND. hb_fileExists( xData )
+         cBuffer := hb_utf8tostr( hb_memoread( xData ) )
+      ELSE
+         cBuffer := xData
+      ENDIF
+
+      ::parseBuffer( cBuffer )
+
+      ::qScene:setPageSize( QPrinter_A4 )
+      ::qScene:setOrientation( QPrinter_Portrait )
+
+      ::updateObjectsTree( "ReportName", NIL, "Report" )
+      ::updateObjectsTree( "Page", "Report", "Page_1" )
+
+      FOR EACH a_ IN ::aRptSources
+         ::addSource( a_[ 1 ], a_[ 2 ] )
+      NEXT
+
+      FOR EACH a_ IN ::aRptObjects
+         SWITCH a_[ 1 ]
+         CASE "Object"
+            d_:= a_[ 5 ]
+            ::addObject( a_[ 4 ], QRectF():new( d_[ 1,1 ], d_[ 1,2 ], d_[ 1,3 ], d_[ 1,4 ] ), QPointF():new( d_[ 2,1 ], d_[ 2,2 ] ) )
+            EXIT
+         CASE "Field"
+            d_:= a_[ 5 ]
+            cName := a_[ 3 ] ; n := at( "...", cName ) ; cAlias := substr( cName, 1, n-1 )
+            cField := substr( cName, n + 3 ) ; n := at( "_", cField ) ; cField := substr( cField, 1, n-1 )
+            ::addField( cAlias, cField, QRectF():new( d_[ 1,1 ], d_[ 1,2 ], d_[ 1,3 ], d_[ 1,4 ] ), QPointF():new( d_[ 2,1 ], d_[ 2,2 ] ) )
+            EXIT
+         ENDSWITCH
+      NEXT
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbqReportsManager:addObject( cType, qGeo, qPos )
    LOCAL oWidget, cName, nW, nH, qGrad, cCode, qStrList, i
 
    cName := cType + "_" + hb_ntos( ::getNextID( cType ) )
@@ -722,7 +803,7 @@ METHOD HbqReportsManager:addObject( qPos, cType )
 
    ::qScene:addItem( oWidget )
 
-   oWidget:setGeometry( QRectF():new( 0, 0, nW, nH ) )
+   oWidget:setGeometry( iif( empty( qGeo ), QRectF():new( 0, 0, nW, nH ), qGeo ) )
    IF !empty( qPos )
       oWidget:setPos( qPos )
    ENDIF
@@ -734,7 +815,7 @@ METHOD HbqReportsManager:addObject( qPos, cType )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:addField( qPos, cAlias, cField )
+METHOD HbqReportsManager:addField( cAlias, cField, qGeo, qPos )
    LOCAL oWidget, nW := 300, nH := 50
    LOCAL cName := cAlias + "..." + cField
 
@@ -743,19 +824,63 @@ METHOD HbqReportsManager:addField( qPos, cAlias, cField )
    oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_SIMPLETEXT )
    oWidget:setText( cName )
    oWidget:hbSetBlock( {|p,p1,p2| ::execEvent( "graphicsItem_block", p, p1, p2 ) } )
-   oWidget:setGeometry( QRectF():new( 0, 0, nW, nH ) )
    oWidget:setTooltip( cName )
    oWidget:setObjectType( "Field" )
    oWidget:setObjectName( cName )
 
    ::qScene:addItem( oWidget )
 
+   oWidget:setGeometry( iif( empty( qGeo ), QRectF():new( 0, 0, nW, nH ), qGeo ) )
    IF !empty( qPos )
       oWidget:setPos( qPos )
    ENDIF
    ::hItems[ cName ] := oWidget
    ::updateObjectsTree( "Field", "Page_1", cName, NIL )
    aadd( ::aObjects, { "Field", "Page_1", cName, NIL, {} } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbqReportsManager:addSource( cAlias, aStruct )
+   LOCAL qItem, qItmC, b_
+
+   qItem := QTreeWidgetItem():new()
+   qItem:setText( 0, cAlias )
+   ::qTreeData:addTopLevelItem( qItem )
+
+   FOR EACH b_ IN aStruct
+      qItmC := QTreeWidgetItem():new()
+      qItmC:setText( 0, b_[ 1 ] )
+      qItem:addChild( qItmC )
+      qItem:setExpanded( .t. )
+   NEXT
+
+   aadd( ::aSources, { cAlias, aStruct } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbqReportsManager:clear()
+   LOCAL qObj
+
+   FOR EACH qObj IN ::hItems
+      ::qScene:removeItem( qObj )
+      qObj := NIL
+   NEXT
+   ::hItems   := {=>}
+
+   ::qTreeObjects:clear()
+   ::qTreeData:clear()
+
+   ::aObjects := {}
+   ::aPages   := {}
+   ::aSources := {}
+
+   ::aRptObjects := {}
+   ::aRptPages   := {}
+   ::aRptSources := {}
 
    RETURN Self
 
@@ -794,8 +919,6 @@ METHOD HbqReportsManager:updateObjectsTree( cType, cParent, cName, cSubType )
 
          qParent:setExpanded( .t. )
       ENDIF
-
-
    ENDCASE
 
    RETURN Self
@@ -1159,3 +1282,30 @@ STATIC FUNCTION rmgr_a2arrayStr( aArray )
 
 /*----------------------------------------------------------------------*/
 
+STATIC FUNCTION rmgr_keyValuePair( s, cKey, cVal, cDlm )
+   LOCAL n
+
+   DEFAULT cDlm TO "="
+
+   IF ( n := at( cDlm, s ) ) > 0
+      cKey := alltrim( substr( s, 1, n - 1 ) )
+      cVal := alltrim( substr( s, n + 1 ) )
+      RETURN .t.
+   ENDIF
+   RETURN .f.
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION rmgr_evalAsArray( cStr )
+   LOCAL a_, bErr := ErrorBlock( {|| break() } )
+
+   BEGIN SEQUENCE
+      a_:= eval( &( "{|| " + cStr + "}" ) )
+   RECOVER
+      a_:= {}
+   ENDSEQUENCE
+
+   ErrorBlock( bErr )
+   RETURN a_
+
+/*----------------------------------------------------------------------*/

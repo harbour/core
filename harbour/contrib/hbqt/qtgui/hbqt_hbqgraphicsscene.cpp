@@ -113,6 +113,16 @@ void HBQGraphicsScene::setGeometry( QRectF rect )
    emit geometryChanged( m_geometry );
 }
 
+void HBQGraphicsScene::updatePageRect()
+{
+   QPrinter p;
+   p.setOutputFormat( QPrinter::PdfFormat );
+   p.setOrientation( ( QPrinter::Orientation ) orientation() );
+   p.setPageSize( ( QPrinter::PageSize ) pageSize() );
+   p.setFullPage( true );
+   setSceneRect( 0, 0, p.paperRect( QPrinter::Millimeter ).width() / UNIT, p.paperRect( QPrinter::Millimeter ).height() / UNIT );
+}
+
 int HBQGraphicsScene::pageSize()
 {
    return m_pageSize;
@@ -123,6 +133,7 @@ void HBQGraphicsScene::setPageSize( int pageSize )
    updatePageRect();
    m_paperRect = sceneRect();
    setGeometry( QRect( 10 / UNIT, 10 / UNIT, sceneRect().width() - 10 / UNIT * 2, sceneRect().height()- 10 / UNIT * 2 ) );
+
 }
 
 QRectF HBQGraphicsScene::paperRect()
@@ -155,16 +166,9 @@ void HBQGraphicsScene::setMagnetArea( int magnetArea )
    m_magnetArea = magnetArea;
 }
 
-void HBQGraphicsScene::updatePageRect()
-{
-   QPrinter p;
-   p.setOutputFormat( QPrinter::PdfFormat );
-   p.setOrientation( ( QPrinter::Orientation ) orientation() );
-   p.setPageSize( ( QPrinter::PageSize ) pageSize() );
-   p.setFullPage( true );
-   setSceneRect( 0, 0, p.paperRect( QPrinter::Millimeter ).width() / UNIT, p.paperRect( QPrinter::Millimeter ).height() / UNIT );
-}
-
+/*----------------------------------------------------------------------*/
+//                            Mouse Events
+/*----------------------------------------------------------------------*/
 
 void HBQGraphicsScene::mouseMoveEvent( QGraphicsSceneMouseEvent * mouseEvent )
 {
