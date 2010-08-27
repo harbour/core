@@ -10164,11 +10164,9 @@ STATIC PROCEDURE POTMerge( hbmk, aFiles, cFileBase, cFileOut )
 STATIC PROCEDURE AutoTrans( hbmk, cFileIn, aFiles, cFileOut )
    LOCAL cErrorMsg
 
-   LOCAL lUTF8BOM := IsBOM_UTF8( cFileOut )
-
    IF ! __i18n_potArraySave( cFileOut, ;
           __i18n_potArrayTrans( LoadPOTFiles( hbmk, {}, cFileIn, .F. ), ;
-                                LoadPOTFilesAsHash( hbmk, aFiles ) ), @cErrorMsg, ! hbmk[ _HBMK_lMINIPO ], ! hbmk[ _HBMK_lMINIPO ], lUTF8BOM )
+                                LoadPOTFilesAsHash( hbmk, aFiles ) ), @cErrorMsg, ! hbmk[ _HBMK_lMINIPO ], ! hbmk[ _HBMK_lMINIPO ] )
       hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: %1$s" ), cErrorMsg ) )
    ENDIF
 
@@ -10191,23 +10189,6 @@ STATIC FUNCTION GenHBL( hbmk, aFiles, cFileOut, lEmpty )
    ENDIF
 
    RETURN lRetVal
-
-#define _UTF8_BOM e"\xEF\xBB\xBF"
-
-STATIC FUNCTION IsBOM_UTF8( cFileName )
-   LOCAL fhnd := FOpen( cFileName, FO_READ )
-   LOCAL cBuffer
-
-   IF fhnd != F_ERROR
-      cBuffer := Space( Len( _UTF8_BOM ) )
-      FRead( fhnd, @cBuffer, Len( cBuffer ) )
-      FClose( fhnd )
-      IF cBuffer == _UTF8_BOM
-         RETURN .T.
-      ENDIF
-   ENDIF
-
-   RETURN .F.
 
 STATIC FUNCTION win_implib_command( hbmk, cCommand, cSourceDLL, cTargetLib, cFlags )
 
