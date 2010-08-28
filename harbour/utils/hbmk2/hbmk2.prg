@@ -159,7 +159,7 @@ REQUEST HB_GT_CGI_DEFAULT
 
 REQUEST hbmk_KEYW
 
-#define I_( x )                 hb_i18n_gettext( x )
+#define I_( x )                 hb_UTF8ToStr( hb_i18n_gettext( x ) )
 
 #define _TARG_PLAT              1
 #define _TARG_COMP              2

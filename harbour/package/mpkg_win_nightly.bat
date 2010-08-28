@@ -20,7 +20,6 @@ rem   - 1-5hours CPU time per day
 rem   - Multicore CPU recommended
 rem   - admin rights for MSVC setup
 rem   - admin rights for Scheduled Task setup
-rem   - Subversion installed
 rem   - remote admin (via RDC or VNC protocol, RDC preferred)
 rem
 rem NOTES:
