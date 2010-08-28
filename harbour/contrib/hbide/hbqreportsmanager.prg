@@ -73,6 +73,8 @@
 
 #define  INI_KEY( cKey, n )     cKey + "_" + hb_ntos( n ) + "="
 
+STATIC hIDs := {=>}
+
 /*----------------------------------------------------------------------*/
 
 CLASS HbqReportsManager
@@ -388,6 +390,12 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
       CASE p == 21105    // Context Menu Event
          ::contextMenuScene( p1 )
 
+      CASE p == 21107    // Left button pressed nowhere on an item
+         IF ! empty( ::qCurGraphicsItem )
+            ::qCurGraphicsItem := NIL
+            ::qTreeObjects:setCurrentItem( QTreeWidgetItem():new() )
+         ENDIF
+
       CASE p == QEvent_GraphicsSceneDragEnter
          qEvent:acceptProposedAction()
 
@@ -610,7 +618,7 @@ METHOD HbqReportsManager:toString()
 /*----------------------------------------------------------------------*/
 
 METHOD HbqReportsManager:buildReportStream()
-   LOCAL txt_:= {}, n, a_, s, oWidget, qPos
+   LOCAL txt_:= {}, n, a_, s, oWidget, qPos, qTran
 
    aadd( txt_, "[GENERAL]" )
    aadd( txt_, "" )
@@ -642,9 +650,13 @@ METHOD HbqReportsManager:buildReportStream()
       n := a_:__enumIndex()
       IF hb_hHasKey( ::hItems, a_[ 3 ] )
          oWidget := ::hItems[ a_[ 3 ] ]
-         qPos := QPointF():from( oWidget:scenePos() )
+         qPos    := QPointF():from( oWidget:scenePos() )
+         qTran   := QTransform():from( oWidget:transform() )
 
-         a_[ 5 ] := { { 0, 0, oWidget:width(), oWidget:height() }, { qPos:x(), qPos:y() } }
+         a_[ 5 ] := { { 0, 0, oWidget:width(), oWidget:height() }, ;
+                      { qPos:x(), qPos:y() }, ;
+                      { qTran:m11(), qTran:m12(), qTran:m13(), qTran:m21(), qTran:m22(), qTran:m23(), qTran:m31(), qTran:m32(), qTran:m33() }, ;
+                    }
 
          aadd( txt_, INI_KEY( "object", n ) + rmgr_a2arrayStr( a_ ) )
       ENDIF
@@ -700,7 +712,7 @@ METHOD HbqReportsManager:parseBuffer( cBuffer )
 /*----------------------------------------------------------------------*/
 
 METHOD HbqReportsManager:loadReport( xData )
-   LOCAL cBuffer, a_, d_, n, cName, cAlias, cField
+   LOCAL cBuffer, a_, d_, n, cName, cAlias, cField, oWidget, qTran
 
    ::clear()
 
@@ -729,16 +741,19 @@ METHOD HbqReportsManager:loadReport( xData )
       FOR EACH a_ IN ::aRptObjects
          SWITCH a_[ 1 ]
          CASE "Object"
-            d_:= a_[ 5 ]
-            ::addObject( a_[ 4 ], QRectF():new( d_[ 1,1 ], d_[ 1,2 ], d_[ 1,3 ], d_[ 1,4 ] ), QPointF():new( d_[ 2,1 ], d_[ 2,2 ] ) )
+            d_      := a_[ 5 ]
+            oWidget := ::addObject( a_[ 4 ], QRectF():new( d_[ 1,1 ], d_[ 1,2 ], d_[ 1,3 ], d_[ 1,4 ] ), QPointF():new( d_[ 2,1 ], d_[ 2,2 ] ) )
             EXIT
          CASE "Field"
-            d_:= a_[ 5 ]
-            cName := a_[ 3 ] ; n := at( "...", cName ) ; cAlias := substr( cName, 1, n-1 )
-            cField := substr( cName, n + 3 ) ; n := at( "_", cField ) ; cField := substr( cField, 1, n-1 )
-            ::addField( cAlias, cField, QRectF():new( d_[ 1,1 ], d_[ 1,2 ], d_[ 1,3 ], d_[ 1,4 ] ), QPointF():new( d_[ 2,1 ], d_[ 2,2 ] ) )
+            d_      := a_[ 5 ]
+            cName   := a_[ 3 ] ; n := at( "...", cName ) ; cAlias := substr( cName, 1, n-1 )
+            cField  := substr( cName, n + 3 ) ; n := at( "_", cField ) ; cField := substr( cField, 1, n-1 )
+            oWidget := ::addField( cAlias, cField, QRectF():new( d_[ 1,1 ], d_[ 1,2 ], d_[ 1,3 ], d_[ 1,4 ] ), QPointF():new( d_[ 2,1 ], d_[ 2,2 ] ) )
             EXIT
          ENDSWITCH
+         qTran   := QTransform():new()
+         qTran   :  setMatrix( d_[ 3,1 ], d_[ 3,2 ], d_[ 3,3 ], d_[ 3,4 ], d_[ 3,5 ], d_[ 3,6 ], d_[ 3,7 ], d_[ 3,8 ], d_[ 3,9 ] )
+         oWidget :  setTransform( qTran )
       NEXT
    ENDIF
 
@@ -811,7 +826,7 @@ METHOD HbqReportsManager:addObject( cType, qGeo, qPos )
    ::updateObjectsTree( "Object", "Page_1", cName, cType )
    aadd( ::aObjects, { "Object", "Page_1", cName, cType, {} } )
 
-   RETURN Self
+   RETURN oWidget
 
 /*----------------------------------------------------------------------*/
 
@@ -838,7 +853,7 @@ METHOD HbqReportsManager:addField( cAlias, cField, qGeo, qPos )
    ::updateObjectsTree( "Field", "Page_1", cName, NIL )
    aadd( ::aObjects, { "Field", "Page_1", cName, NIL, {} } )
 
-   RETURN Self
+   RETURN oWidget
 
 /*----------------------------------------------------------------------*/
 
@@ -881,6 +896,10 @@ METHOD HbqReportsManager:clear()
    ::aRptObjects := {}
    ::aRptPages   := {}
    ::aRptSources := {}
+
+   hIDs := {=>}
+
+   ::qScene:invalidate()
 
    RETURN Self
 
@@ -1055,8 +1074,6 @@ METHOD HbqReportsManager:getImageOfType( cType )
 /*----------------------------------------------------------------------*/
 
 METHOD HbqReportsManager:getNextID( cType )
-
-   STATIC hIDs := {=>}
 
    IF ! hb_hHasKey( hIDs, cType )
       hIDs[ cType ] := 0

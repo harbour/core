@@ -133,7 +133,6 @@ void HBQGraphicsScene::setPageSize( int pageSize )
    updatePageRect();
    m_paperRect = sceneRect();
    setGeometry( QRect( 10 / UNIT, 10 / UNIT, sceneRect().width() - 10 / UNIT * 2, sceneRect().height()- 10 / UNIT * 2 ) );
-
 }
 
 QRectF HBQGraphicsScene::paperRect()
@@ -236,6 +235,7 @@ void HBQGraphicsScene::mousePressEvent( QGraphicsSceneMouseEvent * event )
       mouseOldPos = movingItem->pos();
 
    QGraphicsScene::mousePressEvent( event );
+
    if( event->buttons() == Qt::LeftButton )
    {
       if( ! itemAt( event->scenePos() ) ){
@@ -244,6 +244,15 @@ void HBQGraphicsScene::mousePressEvent( QGraphicsSceneMouseEvent * event )
       else {
          if( itemAt( event->scenePos()) == m_paperBorder || itemAt( event->scenePos() ) == m_pageBorder ){
             emit itemSelected( this, event->scenePos() );
+         }
+      }
+
+      HBQGraphicsItem * item = dynamic_cast< HBQGraphicsItem * >( itemAt( event->scenePos() ) );
+      if( ! item ){
+         if( block ){
+            PHB_ITEM p1 = hb_itemPutNI( NULL, 21107 );
+            hb_vmEvalBlockV( block, 1, p1 );
+            hb_itemRelease( p1 );
          }
       }
    }
@@ -264,7 +273,24 @@ void HBQGraphicsScene::mouseReleaseEvent( QGraphicsSceneMouseEvent * event )
       movingItem = 0;
    }
    QGraphicsScene::mouseReleaseEvent( event );
+
+   if( event->button() == Qt::RightButton )
+   {
+      HBQGraphicsItem * item = dynamic_cast< HBQGraphicsItem * >( itemAt( event->scenePos() ) );
+      if( ! item ){
+         if( block ){
+            PHB_ITEM p1 = hb_itemPutNI( NULL, 21105 );
+            PHB_ITEM p2 = hb_itemPutPtr( NULL, event );
+            hb_vmEvalBlockV( block, 2, p1, p2 );
+            hb_itemRelease( p1 );
+            hb_itemRelease( p2 );
+         }
+      }
+   }
 }
+/*----------------------------------------------------------------------*/
+//                             Key Events
+/*----------------------------------------------------------------------*/
 
 void HBQGraphicsScene::keyReleaseEvent( QKeyEvent * keyEvent )
 {
@@ -381,15 +407,6 @@ void HBQGraphicsScene::keyPressEvent( QKeyEvent * keyEvent )
 
 void HBQGraphicsScene::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
 {
-   #if 0
-   if( block ){
-      PHB_ITEM p1 = hb_itemPutNI( NULL, 21105 );
-      PHB_ITEM p2 = hb_itemPutPtr( NULL, event );
-      hb_vmEvalBlockV( block, 2, p1, p2 );
-      hb_itemRelease( p1 );
-      hb_itemRelease( p2 );
-   }
-   #endif
    QGraphicsScene::contextMenuEvent( event );
 }
 

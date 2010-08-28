@@ -110,7 +110,7 @@ HBQGraphicsItem::HBQGraphicsItem( int type, QGraphicsItem * parent ) : QGraphics
 
    m_barsIdentation     = 1 / UNIT;
    m_showLabels         = true;
-   m_toColorFactor      = 1.5;
+   m_toColorFactor      = 2.0;
    m_drawBorder         = true;
    m_showGrid           = true;
    m_legendColorRectWidth = 5 / UNIT;
