@@ -461,7 +461,7 @@ PROCEDURE Main( ... )
    IF cDiffFile != NIL
 
       IF ! lRediff /* If we have a local diff, and are not to re-create it, apply */
-         cCommand := hb_strFormat( "%s -d %s -p 1 -i %s",                                 ;
+         cCommand := hb_strFormat( "%s --no-backup-if-mismatch -d %s -p 1 -i %s",         ;
                      s_aTools[ "patch" ],                                                 ;
                      CombinePath( s_cTempDir, cThisComponent ),                           ;
                      CombinePath( cCWD, cDiffFile ) )

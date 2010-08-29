@@ -1,7 +1,7 @@
 diff -urN sqlite3.orig/sqlite3.c sqlite3/sqlite3.c
---- sqlite3.orig/sqlite3.c	2010-08-22 08:56:16.207563072 +0200
-+++ sqlite3/sqlite3.c	2010-08-22 08:56:16.307562085 +0200
-@@ -27225,7 +27225,7 @@
+--- sqlite3.orig/sqlite3.c	2010-08-28 22:25:08.587561330 +0200
++++ sqlite3/sqlite3.c	2010-08-28 22:25:08.667562098 +0200
+@@ -27458,7 +27458,7 @@
  ** error message.
  */
  static void unixDlError(sqlite3_vfs *NotUsed, int nBuf, char *zBufOut){
