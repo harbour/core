@@ -273,20 +273,6 @@ void HBQGraphicsScene::mouseReleaseEvent( QGraphicsSceneMouseEvent * event )
       movingItem = 0;
    }
    QGraphicsScene::mouseReleaseEvent( event );
-
-   if( event->button() == Qt::RightButton )
-   {
-      HBQGraphicsItem * item = dynamic_cast< HBQGraphicsItem * >( itemAt( event->scenePos() ) );
-      if( ! item ){
-         if( block ){
-            PHB_ITEM p1 = hb_itemPutNI( NULL, 21105 );
-            PHB_ITEM p2 = hb_itemPutPtr( NULL, event );
-            hb_vmEvalBlockV( block, 2, p1, p2 );
-            hb_itemRelease( p1 );
-            hb_itemRelease( p2 );
-         }
-      }
-   }
 }
 /*----------------------------------------------------------------------*/
 //                             Key Events
@@ -407,6 +393,16 @@ void HBQGraphicsScene::keyPressEvent( QKeyEvent * keyEvent )
 
 void HBQGraphicsScene::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
 {
+   HBQGraphicsItem * item = dynamic_cast< HBQGraphicsItem * >( itemAt( event->scenePos() ) );
+   if( ! item ){
+      if( block ){
+         PHB_ITEM p1 = hb_itemPutNI( NULL, QEvent::GraphicsSceneContextMenu );
+         PHB_ITEM p2 = hb_itemPutPtr( NULL, event );
+         hb_vmEvalBlockV( block, 2, p1, p2 );
+         hb_itemRelease( p1 );
+         hb_itemRelease( p2 );
+      }
+   }
    QGraphicsScene::contextMenuEvent( event );
 }
 
@@ -540,13 +536,13 @@ void HBQGraphicsScene::drawBorder()
       }
       for( int i = 0; i < width(); i += ( 5.0 / UNIT ) )
       {
-         QGraphicsLineItem * line= new QGraphicsLineItem( m_paperBorder );
+         QGraphicsLineItem * line = new QGraphicsLineItem( m_paperBorder );
          line->setPen( p );
          line->setLine( i, 0, i, height() );
       }
       for( int i = 0; i < height(); i += ( 5.0 / UNIT ) )
       {
-         QGraphicsLineItem * line= new QGraphicsLineItem( m_paperBorder );
+         QGraphicsLineItem * line = new QGraphicsLineItem( m_paperBorder );
          line->setPen( p );
          line->setLine( 0, i, width(), i );
       }

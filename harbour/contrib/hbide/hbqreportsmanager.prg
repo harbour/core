@@ -73,6 +73,14 @@
 
 #define  INI_KEY( cKey, n )     cKey + "_" + hb_ntos( n ) + "="
 
+#define hbqt_screen_heightMM ( QDesktopWidget():new():height() / QDesktopWidget():new():physicalDpiY() * 25.4 )
+#define hbqt_screen_widthMM  ( QDesktopWidget():new():width()  / QDesktopWidget():new():physicalDpiX() * 25.4 )
+
+#define HBQT_GRAPHICSVIEW_ZOOM_IN                 1
+#define HBQT_GRAPHICSVIEW_ZOOM_OUT                2
+#define HBQT_GRAPHICSVIEW_ZOOM_WYSIWYG            3
+#define HBQT_GRAPHICSVIEW_ZOOM_ORIGINAL           4
+
 STATIC hIDs := {=>}
 
 /*----------------------------------------------------------------------*/
@@ -189,6 +197,10 @@ CLASS HbqReportsManager
    METHOD openReport()
    METHOD parseBuffer( cBuffer )
    METHOD presentBlankPage()
+   METHOD printReport( qPrinter )
+   METHOD printPreview( qPrinter )
+   METHOD paintRequested( pPrinter )
+   METHOD zoom( nMode )
 
    ENDCLASS
 
@@ -387,7 +399,7 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
       qEvent := QGraphicsSceneDragDropEvent():from( p1 )
 
       DO CASE
-      CASE p == 21105    // Context Menu Event
+      CASE p == QEvent_GraphicsSceneContextMenu
          ::contextMenuScene( p1 )
 
       CASE p == 21107    // Left button pressed nowhere on an item
@@ -450,7 +462,7 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
          ELSE
             ::qCurGraphicsItem := NIL
          ENDIF
-      CASE p == 21105 // Context Menu Event
+      CASE p == QEvent_GraphicsSceneContextMenu
          ::contextMenuItem( p1, p2 )
 
       ENDCASE
@@ -507,6 +519,8 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
    CASE "buttonClose_clicked"
       EXIT
    CASE "buttonPrint_clicked"
+      ::printPreview()
+      //::printReport()
       EXIT
    CASE "buttonGrid_clicked"
       ::qScene:setShowGrid( ::qToolbarAlign:setItemChecked( "Grid" ) )
@@ -514,13 +528,17 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
    CASE "buttonZoom_clicked"
       DO CASE
       CASE p == 1
-         ::qScene:zoomIn()
+         //::qScene:zoomIn()
+         ::zoom( HBQT_GRAPHICSVIEW_ZOOM_IN )
       CASE p == 2
-         ::qScene:zoomOut()
+         //::qScene:zoomOut()
+         ::zoom( HBQT_GRAPHICSVIEW_ZOOM_OUT )
       CASE p == 3
          ::qScene:zoomWYSIWYG()
+         //::zoom( HBQT_GRAPHICSVIEW_ZOOM_WYSIWYG )
       CASE p == 4
          ::qScene:zoomOriginal()
+         //::zoom( HBQT_GRAPHICSVIEW_ZOOM_ORIGINAL )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -712,18 +730,29 @@ METHOD HbqReportsManager:parseBuffer( cBuffer )
 /*----------------------------------------------------------------------*/
 
 METHOD HbqReportsManager:loadReport( xData )
-   LOCAL cBuffer, a_, d_, n, cName, cAlias, cField, oWidget, qTran
+   LOCAL cBuffer, a_, d_, n, cName, cAlias, cField, oWidget
+   LOCAL aGeo, aPt, aTran
+   LOCAL qGeo, qPt, qTran
 
    ::clear()
 
    IF empty( xData )
       ::presentBlankPage()
+      ::lNew := .t.
 
    ELSE
+      ::lNew := .f.
+
       IF len( xData ) <= 300 .AND. hb_fileExists( xData )
-         cBuffer := hb_utf8tostr( hb_memoread( xData ) )
+         ::cSaved := xData
+         cBuffer  := hb_utf8tostr( hb_memoread( xData ) )
+
+         IF !empty( ::qParent )
+            ::qParent:setWindowTitle( "HBReportsManager : " + ::cSaved )
+         ENDIF
       ELSE
-         cBuffer := xData
+         ::cSaved := ""
+         cBuffer  := xData
       ENDIF
 
       ::parseBuffer( cBuffer )
@@ -739,20 +768,24 @@ METHOD HbqReportsManager:loadReport( xData )
       NEXT
 
       FOR EACH a_ IN ::aRptObjects
+         d_:= a_[ 5 ] ; aGeo := d_[ 1 ] ; aPt := d_[ 2 ] ; aTran := d_[ 3 ]
+
+         qGeo := QRectF():new( aGeo[ 1 ], aGeo[ 2 ], aGeo[ 3 ], aGeo[ 4 ] )
+         qPt  := QPointF():new( aPt[ 1 ], aPt[ 2 ] )
+
          SWITCH a_[ 1 ]
          CASE "Object"
-            d_      := a_[ 5 ]
-            oWidget := ::addObject( a_[ 4 ], QRectF():new( d_[ 1,1 ], d_[ 1,2 ], d_[ 1,3 ], d_[ 1,4 ] ), QPointF():new( d_[ 2,1 ], d_[ 2,2 ] ) )
+            oWidget := ::addObject( a_[ 4 ], qGeo, qPt )
             EXIT
          CASE "Field"
-            d_      := a_[ 5 ]
             cName   := a_[ 3 ] ; n := at( "...", cName ) ; cAlias := substr( cName, 1, n-1 )
             cField  := substr( cName, n + 3 ) ; n := at( "_", cField ) ; cField := substr( cField, 1, n-1 )
-            oWidget := ::addField( cAlias, cField, QRectF():new( d_[ 1,1 ], d_[ 1,2 ], d_[ 1,3 ], d_[ 1,4 ] ), QPointF():new( d_[ 2,1 ], d_[ 2,2 ] ) )
+            oWidget := ::addField( cAlias, cField, qGeo, qPt )
             EXIT
          ENDSWITCH
+
          qTran   := QTransform():new()
-         qTran   :  setMatrix( d_[ 3,1 ], d_[ 3,2 ], d_[ 3,3 ], d_[ 3,4 ], d_[ 3,5 ], d_[ 3,6 ], d_[ 3,7 ], d_[ 3,8 ], d_[ 3,9 ] )
+         qTran   :  setMatrix( aTran[ 1 ], aTran[ 2 ], aTran[ 3 ], aTran[ 4 ], aTran[ 5 ], aTran[ 6 ], aTran[ 7 ], aTran[ 8 ], aTran[ 9 ] )
          oWidget :  setTransform( qTran )
       NEXT
    ENDIF
@@ -850,8 +883,8 @@ METHOD HbqReportsManager:addField( cAlias, cField, qGeo, qPos )
       oWidget:setPos( qPos )
    ENDIF
    ::hItems[ cName ] := oWidget
-   ::updateObjectsTree( "Field", "Page_1", cName, NIL )
-   aadd( ::aObjects, { "Field", "Page_1", cName, NIL, {} } )
+   ::updateObjectsTree( "Field", "Page_1", cName, "Field" )
+   aadd( ::aObjects, { "Field", "Page_1", cName, "Field", {} } )
 
    RETURN oWidget
 
@@ -941,6 +974,36 @@ METHOD HbqReportsManager:updateObjectsTree( cType, cParent, cName, cSubType )
    ENDCASE
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbqReportsManager:zoom( nMode )
+   LOCAL qWidget
+
+   SWITCH nMode
+   CASE HBQT_GRAPHICSVIEW_ZOOM_IN
+      ::qView:scale( 1.1, 1.1 )
+      EXIT
+   CASE HBQT_GRAPHICSVIEW_ZOOM_OUT
+      ::qView:scale( 0.9, 0.9 )
+      EXIT
+   CASE HBQT_GRAPHICSVIEW_ZOOM_WYSIWYG
+      qWidget := QDesktopWidget():new()
+      //qWidget := QWidget():from( qWidget:screen() )
+
+HB_TRACE( HB_TR_ALWAYS, qWidget:width(), qWidget:physicalDpiX(), hbqt_screen_widthMM, qWidget:height(), hbqt_screen_heightMM  )
+
+      ::qView:resetMatrix()
+      ::qView:scale( qWidget:width() / hbqt_screen_widthMM  * 10, qWidget:height() / hbqt_screen_heightMM * 10 )
+      ::qView:centerOn( 0, 0 )
+      EXIT
+   CASE HBQT_GRAPHICSVIEW_ZOOM_ORIGINAL
+      ::qView:resetMatrix()
+      ::qView:scale( 0,0 )
+      EXIT
+   ENDSWITCH
+
+   RETURN sELF
 
 /*----------------------------------------------------------------------*/
 
@@ -1326,3 +1389,89 @@ STATIC FUNCTION rmgr_evalAsArray( cStr )
    RETURN a_
 
 /*----------------------------------------------------------------------*/
+
+METHOD HbqReportsManager:printReport( qPrinter )
+   LOCAL qPainter, qObj, qOption, a_, qRectF
+
+   DEFAULT qPrinter TO QPrinter():new()
+
+   qPrinter:setOutputFormat( QPrinter_PdfFormat )
+   qPrinter:setOrientation( ::qScene:orientation() )
+   //qPrinter:setPaperSize( ::qScene:pageSize() )
+   //m_printer->setPaperSize(dynamic_cast<PageInterface*>(obj)->paperRect().size());
+
+   qPrinter:setPaperSize( QRectF():from( ::qScene:paperRect() ):size() )
+   // qPrinter:setFullPage( .t. )
+
+   qPainter := QPainter():new()
+
+   qOption := QStyleOptionGraphicsItem():new()
+   //qOption:type := 17
+
+   qPainter:begin( qPrinter )
+   //
+   FOR EACH a_ IN ::aObjects
+      IF hb_hHasKey( ::hItems, a_[ 3 ] )
+         qObj   := ::hItems[ a_[ 3 ] ]
+         qRectF := QRectF():from( qObj:geometry() )
+         qRectF := QRectF():new( qRectF:x()*10/25.4, qRectF:y()*10/25.4, qRectF:width()*10/25.4, qRectF:height()*10/25.4 )
+         SWITCH a_[ 4 ]
+         CASE "Image"
+            //qPainter:drawPixmap_6( qRectF:x(), qRectF:y(), qObj:pixmap() )
+            //qPainter:drawPixmap_7( qRectF, qObj:pixmap() )
+            qPainter:drawPixmap_8( qRectF:x(), qRectF:y(), qRectF:width(), qRectF:height(), qObj:pixmap() )
+            EXIT
+         CASE "Barcode"
+            qPainter:drawRect( qRectF )
+            //qPainter:drawRect( qObj:boundingRect() )
+            EXIT
+         CASE "Gradient"
+            EXIT
+         CASE "Chart"
+            EXIT
+         OTHERWISE
+            IF a_[ 1 ] == "Field"
+
+            ENDIF
+         ENDSWITCH
+      ENDIF
+   NEXT
+   //
+   qPainter:end()
+   qPainter := NIL
+   IF empty( qPrinter )
+      ::printPreview( qPrinter )
+   ENDIF
+
+   RETURN qOption
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbqReportsManager:printPreview( qPrinter )
+   LOCAL qDlg
+
+   IF !empty( qPrinter )
+      qDlg := QPrintPreviewDialog():new( qPrinter, ::qView )
+   ELSE
+      qDlg := QPrintPreviewDialog():new( ::qView )
+      qDlg:connect( "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
+   ENDIF
+
+   qDlg:setWindowTitle( "HBReportGenerator : " + iif( !empty( ::cSaved ), ::cSaved, "Untitled" ) )
+   qDlg:move( 20, 20 )
+   qDlg:resize( 300, 400 )
+   qDlg:exec()
+
+   RETURN self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbqReportsManager:paintRequested( pPrinter )
+   LOCAL qPrinter := QPrinter():from( pPrinter )
+
+   ::printReport( qPrinter )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+

@@ -8,9 +8,7 @@
 
 HBQAbstractItemModel.qth
 HBQGraphicsItem.qth
-HBQGraphicsRectItem.qth
 HBQGraphicsScene.qth
-HBQMainWindow.qth
 HBQPlainTextEdit.qth
 HBQSyntaxHighlighter.qth
 HBQTableView.qth

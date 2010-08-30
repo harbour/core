@@ -143,7 +143,7 @@ HB_FUNC( QT_HBQGRAPHICSITEM )
    {
       pObj = new HBQGraphicsItem( hb_parni( 1 ), hbqt_par_QGraphicsItem( 2 ) ) ;
    }
-   else                                                                          {
+   else {
       pObj = new HBQGraphicsItem() ;
    }
 
@@ -161,6 +161,104 @@ HB_FUNC( QT_HBQGRAPHICSITEM_HBSETBLOCK )
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_HBSETBLOCK FP=( p )->hbSetBlock( hb_param( 2, HB_IT_ANY ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QRectF         boundingRect() const
+ */
+HB_FUNC( QT_HBQGRAPHICSITEM_BOUNDINGRECT )
+{
+   HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->boundingRect() ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_BOUNDINGRECT FP=hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->boundingRect() ), true ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * virtual void   paint( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 )
+ */
+HB_FUNC( QT_HBQGRAPHICSITEM_PAINT )
+{
+   HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
+   if( p )
+      ( p )->paint( hbqt_par_QPainter( 2 ), hbqt_par_QStyleOptionGraphicsItem( 3 ), hbqt_par_QWidget( 4 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_PAINT FP=( p )->paint( hbqt_par_QPainter( 2 ), hbqt_par_QStyleOptionGraphicsItem( 3 ), hbqt_par_QWidget( 4 ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * int            determineResizeMode( const QPointF & pos )
+ */
+HB_FUNC( QT_HBQGRAPHICSITEM_DETERMINERESIZEMODE )
+{
+   HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
+   if( p )
+      hb_retni( ( p )->determineResizeMode( *hbqt_par_QPointF( 2 ) ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_DETERMINERESIZEMODE FP=hb_retni( ( p )->determineResizeMode( *hbqt_par_QPointF( 2 ) ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * QRectF         adjustRect( QRectF & rect )
+ */
+HB_FUNC( QT_HBQGRAPHICSITEM_ADJUSTRECT )
+{
+   HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
+   if( p )
+      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->adjustRect( *hbqt_par_QRectF( 2 ) ) ), true ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_ADJUSTRECT FP=hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->adjustRect( *hbqt_par_QRectF( 2 ) ) ), true ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * virtual void   prepare( QPainter * painter )
+ */
+HB_FUNC( QT_HBQGRAPHICSITEM_PREPARE )
+{
+   HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
+   if( p )
+      ( p )->prepare( hbqt_par_QPainter( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_PREPARE FP=( p )->prepare( hbqt_par_QPainter( 2 ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * void           drawSelection( QPainter * painter, const QRectF & rect )
+ */
+HB_FUNC( QT_HBQGRAPHICSITEM_DRAWSELECTION )
+{
+   HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
+   if( p )
+      ( p )->drawSelection( hbqt_par_QPainter( 2 ), *hbqt_par_QRectF( 3 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_DRAWSELECTION FP=( p )->drawSelection( hbqt_par_QPainter( 2 ), *hbqt_par_QRectF( 3 ) ); p is NULL" ) );
+   }
+}
+
+/*
+ * void           setupPainter( QPainter * painter )
+ */
+HB_FUNC( QT_HBQGRAPHICSITEM_SETUPPAINTER )
+{
+   HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
+   if( p )
+      ( p )->setupPainter( hbqt_par_QPainter( 2 ) );
+   else
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETUPPAINTER FP=( p )->setupPainter( hbqt_par_QPainter( 2 ) ); p is NULL" ) );
    }
 }
 

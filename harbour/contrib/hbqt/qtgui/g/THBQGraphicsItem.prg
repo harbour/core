@@ -68,6 +68,13 @@ CREATE CLASS HBQGraphicsItem INHERIT HbQtObjectHandler, QGraphicsItem
    METHOD  new( ... )
 
    METHOD  hbSetBlock( xBlock )
+   METHOD  boundingRect()
+   METHOD  paint( pPainter, pOption, pWidget )
+   METHOD  determineResizeMode( pPos )
+   METHOD  adjustRect( pRect )
+   METHOD  prepare( pPainter )
+   METHOD  drawSelection( pPainter, pRect )
+   METHOD  setupPainter( pPainter )
    METHOD  pen()
    METHOD  setPen( pPen )
    METHOD  brush()
@@ -145,6 +152,34 @@ METHOD HBQGraphicsItem:new( ... )
 
 METHOD HBQGraphicsItem:hbSetBlock( xBlock )
    RETURN Qt_HBQGraphicsItem_hbSetBlock( ::pPtr, xBlock )
+
+
+METHOD HBQGraphicsItem:boundingRect()
+   RETURN Qt_HBQGraphicsItem_boundingRect( ::pPtr )
+
+
+METHOD HBQGraphicsItem:paint( pPainter, pOption, pWidget )
+   RETURN Qt_HBQGraphicsItem_paint( ::pPtr, hbqt_ptr( pPainter ), hbqt_ptr( pOption ), hbqt_ptr( pWidget ) )
+
+
+METHOD HBQGraphicsItem:determineResizeMode( pPos )
+   RETURN Qt_HBQGraphicsItem_determineResizeMode( ::pPtr, hbqt_ptr( pPos ) )
+
+
+METHOD HBQGraphicsItem:adjustRect( pRect )
+   RETURN Qt_HBQGraphicsItem_adjustRect( ::pPtr, hbqt_ptr( pRect ) )
+
+
+METHOD HBQGraphicsItem:prepare( pPainter )
+   RETURN Qt_HBQGraphicsItem_prepare( ::pPtr, hbqt_ptr( pPainter ) )
+
+
+METHOD HBQGraphicsItem:drawSelection( pPainter, pRect )
+   RETURN Qt_HBQGraphicsItem_drawSelection( ::pPtr, hbqt_ptr( pPainter ), hbqt_ptr( pRect ) )
+
+
+METHOD HBQGraphicsItem:setupPainter( pPainter )
+   RETURN Qt_HBQGraphicsItem_setupPainter( ::pPtr, hbqt_ptr( pPainter ) )
 
 
 METHOD HBQGraphicsItem:pen()

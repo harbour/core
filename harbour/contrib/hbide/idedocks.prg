@@ -1788,7 +1788,7 @@ METHOD IdeDocks:buildQScintilla()
 METHOD IdeDocks:buildReportsDesignerWidget()
    LOCAL nAreas := Qt_LeftDockWidgetArea + Qt_RightDockWidgetArea + Qt_TopDockWidgetArea + Qt_BottomDockWidgetArea
 
-   ::oIde:oReportsManagerDock := ::getADockWidget( nAreas, "dockReportDesigner", "ideReports Designer", QDockWidget_DockWidgetFloatable )
+   ::oIde:oReportsManagerDock := ::getADockWidget( nAreas, "dockReportDesigner", "HBReportsManager", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oReportsManagerDock:oWidget, Qt_Horizontal )
    ::oReportsManagerDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( "dockReportsManager_visibilityChanged", p, ::oReportsManagerDock:oWidget ) } )
 

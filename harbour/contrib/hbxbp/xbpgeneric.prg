@@ -128,16 +128,6 @@ FUNCTION hbxbp_InitializeEventBuffer()
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbxbp_getSlotsPtr()
-   RETURN NIL
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION hbxbp_getEventsPtr()
-   RETURN NIL
-
-/*----------------------------------------------------------------------*/
-
 FUNCTION hbxbp_ClearEventBuffer()
 
    IF !empty( t_events )

@@ -82,8 +82,7 @@
 #define buttonLoad_clicked                        108
 #define buttonSave_clicked                        109
 #define buttonSaveAs_clicked                      110
-#define buttonAssign_clicked                      111
-#define buttonDelete_clicked                      112
+#define buttonDelete_clicked                      111
 
 /*----------------------------------------------------------------------*/
 
@@ -590,7 +589,6 @@ METHOD IdeShortcuts:buildSignals()
    ::oUI:q_buttonLoad  :connect( "clicked()"                   , {| | ::execEvent( buttonLoad_clicked   ) } )
    ::oUI:q_buttonSave  :connect( "clicked()"                   , {| | ::execEvent( buttonSave_clicked   ) } )
    ::oUI:q_buttonSaveAs:connect( "clicked()"                   , {| | ::execEvent( buttonSaveAs_clicked ) } )
-   ::oUI:q_buttonAssign:connect( "clicked()"                   , {| | ::execEvent( buttonAssign_clicked ) } )
    ::oUI:q_buttonDelete:connect( "clicked()"                   , {| | ::execEvent( buttonDelete_clicked ) } )
    ::oUI:q_listMethods :connect( "itemDoubleClicked(QLWItem)"  , {|p| ::execEvent( listMethods_itemDoubleClicked, p ) } )
    ::oUI:q_listMethods :connect( "currentRowChanged(int)"      , {|p| ::execEvent( listMethods_currentRowChanged, p ) } )

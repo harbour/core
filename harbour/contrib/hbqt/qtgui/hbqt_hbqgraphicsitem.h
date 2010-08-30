@@ -135,7 +135,7 @@ public:
    int            determineResizeMode( const QPointF & pos );
    QRectF         adjustRect( QRectF & rect );
    virtual void   prepare( QPainter * painter );
-   void           drawSelection( QPainter * painter, QRectF rect );
+   void           drawSelection( QPainter * painter, const QRectF & rect );
    void           setupPainter( QPainter * painter );
 
 private:

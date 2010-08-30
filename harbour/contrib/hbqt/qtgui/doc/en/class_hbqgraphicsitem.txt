@@ -27,6 +27,13 @@
  *     An instance of the object of type HBQGraphicsItem
  *  $METHODS$
  *     :hbSetBlock( xBlock )                               -> NIL
+ *     :boundingRect()                                     -> pQRectF
+ *     :paint( pPainter, pOption, pWidget )                -> NIL
+ *     :determineResizeMode( pPos )                        -> nInt
+ *     :adjustRect( pRect )                                -> pQRectF
+ *     :prepare( pPainter )                                -> NIL
+ *     :drawSelection( pPainter, pRect )                   -> NIL
+ *     :setupPainter( pPainter )                           -> NIL
  *     :pen()                                              -> pQPen
  *     :setPen( pPen )                                     -> NIL
  *     :brush()                                            -> pQBrush

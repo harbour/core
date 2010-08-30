@@ -492,7 +492,7 @@ void HBQGraphicsItem::setLegendColorRectWidth( int legendColorRectWidth )
 void HBQGraphicsItem::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
 {
    if( block ){
-      PHB_ITEM p1 = hb_itemPutNI( NULL, 21105 );
+      PHB_ITEM p1 = hb_itemPutNI( NULL, QEvent::GraphicsSceneContextMenu );
       PHB_ITEM p2 = hb_itemPutPtr( NULL, event );
       PHB_ITEM p3 = hb_itemPutC( NULL, objectName().toLatin1().data() );
       hb_vmEvalBlockV( block, 3, p1, p2, p3 );
@@ -847,7 +847,7 @@ void HBQGraphicsItem::paint( QPainter * painter, const QStyleOptionGraphicsItem 
 }
 /*----------------------------------------------------------------------*/
 
-void HBQGraphicsItem::drawSelection( QPainter * painter, QRectF rect )
+void HBQGraphicsItem::drawSelection( QPainter * painter, const QRectF & rect )
 {
    painter->save();
 

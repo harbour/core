@@ -156,12 +156,7 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ENDIF
       ::oWidget:setMouseTracking( .t. )
    ELSE
-      #define __QMAINWINDOW__
-      #ifdef __QMAINWINDOW__
       ::oWidget := QMainWindow():new()
-      #else
-      ::oWidget := QMainWindow():configure( QT_HBQMainWindow( {|n,p| ::grabEvent( n,p ) }, hb_threadId() ) )
-      #endif
       ::oWidget:setMouseTracking( .t. )
       ::oWidget:setObjectName( "mainWindow" )
    ENDIF
