@@ -73,7 +73,7 @@ HBQGraphicsScene::HBQGraphicsScene( QObject * parent ) : QGraphicsScene( parent 
    m_magnetArea  = 1;
    m_paperBorder = 0;
    m_pageBorder  = 0;
-   m_showGrid    = true;
+   m_showGrid    = false;
    m_pageSize    = QPrinter::A4;
    m_orientation = QPrinter::Portrait;
 
@@ -512,12 +512,12 @@ void HBQGraphicsScene::setShowGrid( bool showGrid )
 void HBQGraphicsScene::drawBorder()
 {
    QPen p;
-   p.setStyle( Qt::DashDotDotLine );
 
    delete m_paperBorder;
    delete m_pageBorder;
 
    m_paperBorder = addRect( m_paperRect );
+
    p.setStyle( Qt::SolidLine );
    p.setColor( QColor( 0,0,255 ) );
    p.setWidth( 4 );
@@ -526,24 +526,29 @@ void HBQGraphicsScene::drawBorder()
 
    if( m_showGrid )
    {
-      QPen p;
+      QPen p, p1;
       p.setColor( QColor( 225,225,225 ) );
       p.setWidth( 1 );
       p.setStyle( Qt::DotLine );
+
+      p1.setColor( QColor( 210,210,210 ) );
+      p1.setWidth( 1 );
+      p1.setStyle( Qt::DotLine );
+
       if( views().size() )
       {
          p.setWidth( 1 + 1 / views()[ 0 ]->transform().m11() );
       }
-      for( int i = 0; i < width(); i += ( 5.0 / UNIT ) )
+      for( int i = 0, n = 0; i < width(); i += ( 5.0 / UNIT ), n++ )
       {
          QGraphicsLineItem * line = new QGraphicsLineItem( m_paperBorder );
-         line->setPen( p );
+         line->setPen( n%2 == 0 ? p : p1 );
          line->setLine( i, 0, i, height() );
       }
-      for( int i = 0; i < height(); i += ( 5.0 / UNIT ) )
+      for( int i = 0, n = 0; i < height(); i += ( 5.0 / UNIT ), n++ )
       {
          QGraphicsLineItem * line = new QGraphicsLineItem( m_paperBorder );
-         line->setPen( p );
+         line->setPen( n%2 == 0 ? p : p1 );
          line->setLine( 0, i, width(), i );
       }
    }

@@ -826,7 +826,7 @@ void HBQGraphicsItem::paint( QPainter * painter, const QStyleOptionGraphicsItem 
       drawPicture( painter, option );
       break;
    case HBQT_GRAPHICSITEM_BARCODE    :
-      drawBarcode39( painter, option );
+      //drawBarcode39( painter, option );
       break;
    case HBQT_GRAPHICSITEM_TEXT       :
       break;
@@ -836,9 +836,17 @@ void HBQGraphicsItem::paint( QPainter * painter, const QStyleOptionGraphicsItem 
    }
 
    if( block ){
-      PHB_ITEM p1 = hb_itemPutNI( NULL, 11017 );
+      QRectF rect = ( option->type == QStyleOption::SO_GraphicsItem ) ? boundingRect() : option->exposedRect;
+
+      PHB_ITEM p1 = hb_itemPutNI( NULL, 21017 );
       PHB_ITEM p2 = hb_itemPutPtr( NULL, painter );
-      PHB_ITEM p3 = hb_itemPutPtr( NULL, &option );
+      PHB_ITEM p3 = hb_itemNew( NULL );
+
+      hb_arrayNew( p3, 2 );
+
+      hb_arraySetPtr( p3, 1, &rect );
+      hb_arraySetC( p3, 2, objectName().toLatin1().data() );
+
       hb_vmEvalBlockV( block, 3, p1, p2, p3 );
       hb_itemRelease( p1 );
       hb_itemRelease( p2 );
