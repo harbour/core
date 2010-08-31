@@ -131,6 +131,7 @@ METHOD Xbp3State:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::editBuffer := ::oWidget:checkState()
 
    ::oParent:AddChild( SELF )
+   ::postCreate()
    RETURN Self
 
 /*----------------------------------------------------------------------*/

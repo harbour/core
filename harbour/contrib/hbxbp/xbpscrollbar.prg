@@ -127,6 +127,7 @@ METHOD XbpScrollBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
    ENDIF
 
    ::oParent:AddChild( SELF )
+   ::postCreate()
    RETURN Self
 
 /*----------------------------------------------------------------------*/

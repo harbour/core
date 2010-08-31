@@ -92,7 +92,7 @@ CLASS XbpStatusBar  INHERIT  XbpWindow
    METHOD   delItem( nItemORcKey )
    METHOD   getItem( nItemORcKey )
    METHOD   clear()
-   
+
    METHOD   panelClick( ... )                     SETGET
    METHOD   panelDblClick( ... )                  SETGET
 
@@ -134,7 +134,7 @@ METHOD XbpStatusBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
       ::show()
    ENDIF
    ::oParent:AddChild( SELF )
-
+   ::postCreate()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -283,7 +283,7 @@ METHOD XbpStatusBar:panelClick( ... )
       ::sl_lbClick := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_lbClick )
       eval( ::sl_lbClick, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -294,7 +294,7 @@ METHOD XbpStatusBar:panelDblClick( ... )
       ::sl_lbDblClick := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_lbDblClick )
       eval( ::sl_lbDblClick, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/

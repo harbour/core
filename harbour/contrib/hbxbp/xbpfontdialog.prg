@@ -199,6 +199,7 @@ METHOD XbpFontDialog:create( oParent, oOwner, oScreenPS, oPrinterPS, aPos )
    ::oWidget:connect( "currentFontChanged(QFont)", {|p| ::execSlot( "currentFontChanged(QFont)", p ) } )
    ::oWidget:connect( "fontSelected(QFont)"      , {|p| ::execSlot( "fontSelected(QFont)"      , p ) } )
 
+   ::postCreate()
    RETURN Self
 
 /*----------------------------------------------------------------------*/

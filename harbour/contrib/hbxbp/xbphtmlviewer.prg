@@ -177,7 +177,7 @@ METHOD XbpHTMLViewer:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
    ::oParent:addChild( SELF )
 
    #endif
-
+   ::postCreate()
    RETURN Self
 
 /*----------------------------------------------------------------------*/

@@ -243,6 +243,7 @@ METHOD XbpStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::show()
    ENDIF
    ::oParent:addChild( SELF )
+   ::postCreate()
    RETURN Self
 
 /*----------------------------------------------------------------------*/

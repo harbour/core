@@ -122,6 +122,7 @@ METHOD XbpRadioButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
    ENDIF
 
    ::oParent:AddChild( SELF )
+   ::postCreate()
    RETURN Self
 
 /*----------------------------------------------------------------------*/

@@ -218,6 +218,8 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oWidget:connect( QEvent_WindowActivate   , {|e| ::execEvent( QEvent_WindowActivate   , e ) } )
    ::oWidget:connect( QEvent_WindowDeactivate , {|e| ::execEvent( QEvent_WindowDeactivate , e ) } )
 
+   ::postCreate()
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

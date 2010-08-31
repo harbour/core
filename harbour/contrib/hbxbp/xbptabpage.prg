@@ -293,9 +293,8 @@ METHOD XbpTabWidget:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
    IF ::visible
       ::show()
    ENDIF
-
    ::oParent:addChild( SELF )
-
+   ::postCreate()
    RETURN Self
 
 /*----------------------------------------------------------------------*/

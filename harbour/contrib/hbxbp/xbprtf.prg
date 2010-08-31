@@ -189,6 +189,7 @@ METHOD XbpRtf:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oTextCursor:pPtr     := ::oWidget:textCursor()
    ::oTextCharFormat:pPtr := ::oTextCursor:charFormat()
 
+   ::postCreate()
    RETURN Self
 
 /*----------------------------------------------------------------------*/

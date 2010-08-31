@@ -93,32 +93,32 @@ CLASS XbpMLE INHERIT XbpWindow, XbpDataRef
    METHOD   execSlot( cSlot, p )
    METHOD   setStyle()
 
-   METHOD   clear()                              
-   METHOD   copyMarked()                          
-   METHOD   cutMarked()                           
-   METHOD   deleteMarked()                   
+   METHOD   clear()
+   METHOD   copyMarked()
+   METHOD   cutMarked()
+   METHOD   deleteMarked()
    METHOD   delete( nPos, nChars )
-   METHOD   pasteMarked()         
-   METHOD   queryFirstChar()           
-   METHOD   queryMarked()              
-   METHOD   setFirstChar( nBufferPos )             
-   METHOD   setMarked( aStartEnd )                
-   METHOD   insert( nPos, cString )                   
-   METHOD   charFromLine( nLine )             
-   METHOD   lineFromChar( nPos )             
-   METHOD   pos()                      
+   METHOD   pasteMarked()
+   METHOD   queryFirstChar()
+   METHOD   queryMarked()
+   METHOD   setFirstChar( nBufferPos )
+   METHOD   setMarked( aStartEnd )
+   METHOD   insert( nPos, cString )
+   METHOD   charFromLine( nLine )
+   METHOD   lineFromChar( nPos )
+   METHOD   pos()
 
    DATA     sl_undo                               INIT    .T.
    DATA     sl_hScroll
    DATA     sl_vScroll
 
-   METHOD   undo( ... )                           SETGET 
-   METHOD   hScroll( ... )                        SETGET 
-   METHOD   vScroll( ... )                        SETGET 
+   METHOD   undo( ... )                           SETGET
+   METHOD   hScroll( ... )                        SETGET
+   METHOD   vScroll( ... )                        SETGET
 
-   METHOD   setEditable( lYes )                   
-   METHOD   setWrap( lWrap )      
-   
+   METHOD   setEditable( lYes )
+   METHOD   setWrap( lWrap )
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -181,6 +181,7 @@ METHOD XbpMLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::setStyle()
    ::oParent:addChild( Self )
+   ::postCreate()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -203,14 +204,14 @@ METHOD XbpMLE:execSlot( cSlot, p )
 
    HB_SYMBOL_UNUSED( cSlot )
    HB_SYMBOL_UNUSED( p )
-   
+
    RETURN .t.
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpMLE:clear()
    LOCAL nChars := len( ::oWidget:toPlainText() )
-   
+
    ::oWidget:clear()
 
    RETURN nChars
@@ -219,10 +220,10 @@ METHOD XbpMLE:clear()
 
 METHOD XbpMLE:copyMarked()
    LOCAL qCursor, cText
-   
+
    qCursor := QTextCursor():from( ::oWidget:textCursor() )
    cText   := qCursor:selectedText()
-   
+
    ::oWidget:copy()
 
    RETURN len( cText )
@@ -231,10 +232,10 @@ METHOD XbpMLE:copyMarked()
 
 METHOD XbpMLE:cutMarked()
    LOCAL qCursor, cText
-   
+
    qCursor := QTextCursor():from( ::oWidget:textCursor() )
    cText   := qCursor:selectedText()
-   
+
    ::oWidget:cut()
 
    RETURN len( cText )
@@ -243,7 +244,7 @@ METHOD XbpMLE:cutMarked()
 
 METHOD XbpMLE:deleteMarked()
    LOCAL qCursor, cText
-   
+
    qCursor := QTextCursor():from( ::oWidget:textCursor() )
    cText   := qCursor:selectedText()
    qCursor:removeSelectedText()
@@ -255,59 +256,59 @@ METHOD XbpMLE:deleteMarked()
 
 METHOD XbpMLE:delete( nPos, nChars )
    LOCAL qCursor, cText
-   
+
    qCursor := QTextCursor():from( ::oWidget:textCursor() )
    qCursor:setPosition( nPos )
    qCursor:movePosition( QTextCursor_Right, QTextCursor_KeepAnchor, nChars )
    cText   := qCursor:selectedText()
    qCursor:removeSelectedText()
-    
+
    ::oWidget:setTextCursor( qCursor )
 
    RETURN len( cText )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpMLE:pasteMarked()   
+METHOD XbpMLE:pasteMarked()
    LOCAL cText2
    LOCAL cText1 := ::oWidget:toPlainText()
-   
+
    ::oWidget:paste() ; cText2 := ::oWidget:toPlainText()
-   
+
    RETURN len( cText2 ) - len( cText1 )
-   
+
 /*----------------------------------------------------------------------*/
-         
+
 METHOD XbpMLE:queryFirstChar()
    RETURN 0  /* Cannot be calculated until it is subclassed */
-   
+
 /*----------------------------------------------------------------------*/
-   
+
 METHOD XbpMLE:queryMarked()
    LOCAL qCursor, a_
-   
+
    qCursor := QTextCursor():from( ::oWidget:textCursor() )
    IF qCursor:hasSelection()
       a_:= { qCursor:selectionStart(), qCursor:selectionEnd() }
-   ELSE 
+   ELSE
       a_:= { 0,0 }
-   ENDIF 
-   
+   ENDIF
+
    RETURN a_
-   
+
 /*----------------------------------------------------------------------*/
-     
+
 METHOD XbpMLE:setFirstChar( nBufferPos )
 
    HB_SYMBOL_UNUSED( nBufferPos )
-   
+
    RETURN .f. /* Cannot be achieved unless it is subclassed*/
-   
+
 /*----------------------------------------------------------------------*/
 
 METHOD XbpMLE:setMarked( aStartEnd )
    LOCAL qCursor, cText
-   
+
    IF hb_isArray( aStartEnd ) .AND. len( aStartEnd ) == 2 .AND. aStartEnd[ 1 ] >= 0 .AND. aStartEnd[ 2 ] > aStartEnd[ 1 ]
       qCursor := QTextCursor():from( ::oWidget:textCursor() )
       qCursor:setPosition( aStartEnd[ 1 ] )
@@ -316,30 +317,30 @@ METHOD XbpMLE:setMarked( aStartEnd )
       IF len( cText ) > 0
          ::oWidget:setTextCursor( qCursor )
          RETURN .t.
-      ENDIF    
+      ENDIF
    ENDIF
-   
+
    RETURN .f.
-   
+
 /*----------------------------------------------------------------------*/
-      
-METHOD XbpMLE:insert( nPos, cString )  
+
+METHOD XbpMLE:insert( nPos, cString )
    LOCAL qCursor
-   
+
    IF hb_isChar( cString )
       qCursor := QTextCursor():from( ::oWidget:textCursor() )
       IF hb_isNumeric( nPos ) .AND. nPos >= 0
          qCursor:setPosition( nPos )
-      ENDIF    
+      ENDIF
       qCursor:insertText( cString )
       ::oWidget:setTextCursor( qCursor )
       RETURN .t.
-   ENDIF 
-   
+   ENDIF
+
    RETURN .f.
-   
+
 /*----------------------------------------------------------------------*/
-                   
+
 METHOD XbpMLE:charFromLine( nLine )
    LOCAL qCursor, nPos
 
@@ -351,41 +352,41 @@ METHOD XbpMLE:charFromLine( nLine )
    ELSE
       qCursor:movePosition( QTextCursor_StartOfLine )
       nPos := qCursor:position()
-   ENDIF 
-   
+   ENDIF
+
    RETURN nPos
-   
+
 /*----------------------------------------------------------------------*/
-         
+
 METHOD XbpMLE:lineFromChar( nPos )
    LOCAL qCursor, nLine
-   
+
    qCursor := QTextCursor():from( ::oWidget:textCursor() )
    IF hb_isNumeric( nPos )
       qCursor:setPosition( nPos )
       nLine := qCursor:blockNumber()
    ELSE
       nLine := qCursor:blockNumber()
-   ENDIF       
-   
-   RETURN nLine 
-   
+   ENDIF
+
+   RETURN nLine
+
 /*----------------------------------------------------------------------*/
-   
+
 METHOD XbpMLE:pos()
    RETURN QTextCursor():from( ::oWidget:textCursor() ):position()
-   
+
 /*----------------------------------------------------------------------*/
-      
+
 METHOD XbpMLE:hScroll( ... )
    LOCAL a_:= hb_aParams()
    IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
       ::sl_hScroll := a_[ 1 ]
    ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_hScroll )
       eval( ::sl_hScroll, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
-   
+
 /*----------------------------------------------------------------------*/
 
 METHOD XbpMLE:vScroll( ... )
@@ -394,9 +395,9 @@ METHOD XbpMLE:vScroll( ... )
       ::sl_vScroll := a_[ 1 ]
    ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_vScroll )
       eval( ::sl_vScroll, NIL, NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
-   
+
 /*----------------------------------------------------------------------*/
 
 METHOD XbpMLE:undo( ... )
@@ -405,9 +406,9 @@ METHOD XbpMLE:undo( ... )
       ::sl_undo := a_[ 1 ]
    ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_undo )
       eval( ::sl_undo, a_[ 1 ], NIL, Self )
-   ENDIF 
+   ENDIF
    RETURN Self
-   
+
 /*----------------------------------------------------------------------*/
 
 METHOD XbpMLE:setWrap( lWrap )
@@ -416,14 +417,14 @@ METHOD XbpMLE:setWrap( lWrap )
    RETURN ::xDummy == 1
 
 /*----------------------------------------------------------------------*/
-   
+
 METHOD XbpMLE:setEditable( lYes )
    ::xDummy := ::oWidget:readOnly()
    ::oWidget:setReadOnly( !lYes )
    RETURN ! ::xDummy
-   
+
 /*----------------------------------------------------------------------*/
-   
+
 METHOD XbpMLE:handleEvent( nEvent, mp1, mp2 )
 
    HB_SYMBOL_UNUSED( nEvent )

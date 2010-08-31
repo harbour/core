@@ -262,6 +262,8 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    ACCESS   pWidget                               INLINE iif( empty( ::oWidget ), NIL, ::oWidget:pPtr )
    ACCESS   pParent                               INLINE iif( empty( ::oParent ), NIL, ::oParent:oWidget:pPtr )
 
+   METHOD   postCreate()
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -363,6 +365,14 @@ METHOD XbpWindow:setQtProperty( cProperty )
 
 /*----------------------------------------------------------------------*/
 
+METHOD XbpWindow:postCreate()
+
+   ::status := iif( hbqt_isEmptyQtPointer( ::oWidget:pPtr ), XBP_STAT_FAILURE, XBP_STAT_CREATE )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD XbpWindow:connectWindowEvents()
 
    ::oWidget:connect( QEvent_MouseButtonPress   , {|e| ::grabEvent( QEvent_MouseButtonPress   , e ) } )
@@ -416,18 +426,6 @@ HB_TRACE( HB_TR_DEBUG,  hb_threadId(),"Destroy[ B ] "+pad(cCls,12)+ cMsg, memory
 #endif
    ::oParent := NIL
    ::oOwner  := NIL
-
-   //::oWidget:disconnect()
-
-   IF len( ::aEConnections ) > 0
-      #if 0
-      FOR EACH e_ IN ::aEConnections
-//         ::xDummy := Qt_Events_DisConnect( ::pEvents, e_[ 1 ], e_[ 2 ] )
-      NEXT
-      ::aEConnections := {}
-//      ::oWidget:removeEventFilter( ::pEvents )
-      #endif
-   ENDIF
 
    IF Len( ::aChildren ) > 0
       aeval( ::aChildren, {|o| o:destroy() } )

@@ -122,6 +122,7 @@ METHOD XbpCheckBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::editBuffer := ::oWidget:isChecked()
 
    ::oParent:AddChild( SELF )
+   ::postCreate()
    RETURN Self
 
 /*----------------------------------------------------------------------*/

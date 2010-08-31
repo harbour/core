@@ -83,7 +83,7 @@ CLASS XbpPartHandler
    METHOD   configure( oParent, oOwner )
    METHOD   destroy()
    METHOD   handleEvent( hEvent, mp1, mp2 )
-   METHOD   status()
+   METHOD   status( nStatus )                     SETGET
 
    METHOD   addChild( oXbp )
    METHOD   addAsChild()
@@ -100,7 +100,7 @@ CLASS XbpPartHandler
    DATA     nNameId
    DATA     oParent
    DATA     oOwner
-   DATA     nStatus                               INIT    0
+   DATA     nStatus                               INIT    XBP_STAT_INIT
 
    ENDCLASS
 
@@ -161,9 +161,14 @@ METHOD handleEvent( hEvent, mp1, mp2 ) CLASS XbpPartHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD status() CLASS XbpPartHandler
+METHOD status( nStatus ) CLASS XbpPartHandler
+   LOCAL nOldStatus := ::nStatus
 
-   RETURN ::nStatus
+   IF hb_isNumeric( nStatus )
+      ::nStatus := nStatus
+   ENDIF
+
+   RETURN nOldStatus
 
 /*----------------------------------------------------------------------*/
 

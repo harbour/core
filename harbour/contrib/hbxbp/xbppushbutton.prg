@@ -167,6 +167,7 @@ METHOD XbpPushButton:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParam
    ::oWidget:connect( "clicked()", {|| ::execSlot( "clicked()" ) } )
 
    ::addAsChild()
+   ::postCreate()
    RETURN Self
 
 /*----------------------------------------------------------------------*/

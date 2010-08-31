@@ -163,6 +163,7 @@ METHOD XbpSpinButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
    ::setData()
 
    ::oParent:addChild( Self )
+   ::postCreate()
    RETURN Self
 
 /*----------------------------------------------------------------------*/

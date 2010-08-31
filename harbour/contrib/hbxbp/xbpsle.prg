@@ -182,6 +182,7 @@ METHOD XbpSLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
 
    ::oParent:addChild( Self )
+   ::postCreate()
    RETURN Self
 
 /*----------------------------------------------------------------------*/

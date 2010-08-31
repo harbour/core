@@ -190,6 +190,7 @@ METHOD xbpMenuBar:create( oParent, aPresParams, lVisible )
    endif
 
    ::oParent:addChild( self )
+   ::postCreate()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -745,6 +746,7 @@ METHOD xbpMenu:create( oParent, aPresParams, lVisible )
    ::oParent:oWidget:addMenu( ::oWidget )
 
    ::oParent:addChild( self )
+   ::postCreate()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
