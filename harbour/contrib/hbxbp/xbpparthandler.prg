@@ -100,7 +100,7 @@ CLASS XbpPartHandler
    DATA     nNameId
    DATA     oParent
    DATA     oOwner
-   DATA     nStatus                               INIT    XBP_STAT_INIT
+   DATA     nStatus                               INIT    NIL
 
    ENDCLASS
 
@@ -110,6 +110,7 @@ METHOD init( oParent, oOwner ) CLASS XbpPartHandler
 
    ::oParent := oParent
    ::oOwner  := oOwner
+   ::status  := XBP_STAT_INIT
 
    RETURN Self
 
@@ -146,6 +147,7 @@ METHOD destroy() CLASS XbpPartHandler
    ::oParent    := NIL
    ::oOwner     := NIL
    ::nStatus    := NIL
+   ::status     := XBP_STAT_FAILURE
 
    RETURN NIL
 

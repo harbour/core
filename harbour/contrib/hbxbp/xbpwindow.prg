@@ -417,13 +417,6 @@ METHOD XbpWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
 METHOD XbpWindow:destroy()
 
-#if 0
-HB_TRACE( HB_TR_DEBUG,  ".   " )
-HB_TRACE( HB_TR_DEBUG,  hb_threadId(),"Destroy[ B ] "+pad(cCls,12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ) )
-   LOCAL cCls := __ObjGetClsName( self ), cMsg
-cMsg := iif( cCls == "XBPWINDOW", ::oWidget:objectName(), IF( empty(::cargo),'',str(::cargo) ) )
-HB_TRACE( HB_TR_DEBUG,  hb_threadId(),"Destroy[ B ] "+pad(cCls,12)+ cMsg, memory( 1001 ) )
-#endif
    ::oParent := NIL
    ::oOwner  := NIL
 
@@ -437,7 +430,6 @@ HB_TRACE( HB_TR_DEBUG,  hb_threadId(),"Destroy[ B ] "+pad(cCls,12)+ cMsg, memory
 
    IF !empty( ::qtObject )
       ::qtObject:destroy()
-//      ::qtObject := NIL
    ENDIF
 
    IF !empty( ::qLayout )
@@ -445,11 +437,7 @@ HB_TRACE( HB_TR_DEBUG,  hb_threadId(),"Destroy[ B ] "+pad(cCls,12)+ cMsg, memory
    ENDIF
 
    ::oWidget := NIL
-#if 0
-HB_TRACE( HB_TR_DEBUG,  hb_threadId(),"Destroy[ E ] "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ) )
-HB_TRACE( HB_TR_DEBUG,  ".   " )
-HB_TRACE( HB_TR_DEBUG,  hb_threadId(),"Destroy[ E ] "+pad(__ObjGetClsName( self ),12)+ IF(empty(::cargo),'',str(::cargo) ), memory( 1001 ) )
-#endif
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
