@@ -1881,7 +1881,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       IF ! hbmk[ _HBMK_lQuiet ]
          hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing local make script: %1$s" ), _HBMK_AUTOHBM_NAME ) )
       ENDIF
-      HBM_Load( hbmk, aParams, _HBMK_AUTOHBM_NAME, 1, .F. ) /* Do not allow subprojects in automatic make file */
+      HBM_Load( hbmk, aParams, _HBMK_AUTOHBM_NAME, 1, .F. ) /* Do not allow sub-projects in automatic make file */
    ENDIF
 
    /* Collect all command line parameters */
@@ -2017,7 +2017,18 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE cParamL == "-beep"            ; hbmk[ _HBMK_lBEEP ]        := .T.
       CASE cParamL == "-beep-" .OR. ;
            cParamL == "-nobeep"          ; hbmk[ _HBMK_lBEEP ]        := .F.
-      CASE cParamL == "-rebuild"         ; hbmk[ _HBMK_lINC ]         := .T. ; hbmk[ _HBMK_lREBUILD ] := .T.
+      CASE cParamL == "-rebuild"
+      
+         hbmk[ _HBMK_lINC ] := .T.
+         IF nLevel == 1
+            hbmk[ _HBMK_lREBUILD ] := .T.
+         ENDIF
+
+      CASE cParamL == "-rebuildall"
+      
+         hbmk[ _HBMK_lINC ] := .T.
+         hbmk[ _HBMK_lREBUILD ] := .T.
+
       CASE cParamL == "-rebuildpo"       ; hbmk[ _HBMK_lREBUILDPO ]   := .T.
       CASE cParamL == "-minipo"          ; hbmk[ _HBMK_lMINIPO ]      := .T.
       CASE cParamL == "-minipo-" .OR. ;
@@ -11361,7 +11372,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-jobs=<n>"          , I_( "start n compilation threads (multiprocess platforms only)" ) },;
       { "-inc"               , I_( "enable incremental build mode" ) },;
       { "-[no]head[=<m>]"    , I_( "control source header parsing (in incremental build mode)\n<m> can be: native (uses compiler to extract dependencies), full (default, uses simple text parser on the whole file), off" ) },;
-      { "-rebuild"           , I_( "rebuild all (in incremental build mode)" ) },;
+      { "-rebuild"           , I_( "rebuild (in incremental build mode)" ) },;
+      { "-rebuildall"        , I_( "rebuild with sub-projects (in incremental build mode)" ) },;
       { "-clean"             , I_( "clean (in incremental build mode)" ) },;
       { "-workdir=<dir>"     , hb_StrFormat( I_( "working directory\n(default: %1$s/plat/comp in incremental mode, OS temp directory otherwise)" ), _WORKDIR_BASE_ ) },;
       NIL,;

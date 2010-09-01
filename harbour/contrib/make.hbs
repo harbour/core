@@ -111,9 +111,9 @@ PROCEDURE Main( ... )
    -- -------------- -------------- ---------------------- -------------------------
    #1 clean          clean          _ACT_INC_CLEAN         -inc -clean
    #2                               _ACT_INC               -inc
-   #3 clean all      clean all      _ACT_INC_REBUILD       -inc -rebuild
+   #3 clean all      clean all      _ACT_INC_REBUILD       -inc -rebuildall
    #4 install        install        _ACT_INC_INST          -inc -instpath=
-   #5 clean install  clean install  _ACT_INC_REBUILD_INST  -inc -rebuild -instpath=
+   #5 clean install  clean install  _ACT_INC_REBUILD_INST  -inc -rebuildall -instpath=
  */
 PROCEDURE Standalone( aParams, hProjectList )
    LOCAL hProjectReqList
@@ -211,9 +211,9 @@ PROCEDURE Standalone( aParams, hProjectList )
    #2                all                         _ACT_INC               -inc
    #3 install        install    install          _ACT_INC_INST          -inc -instpath=
    #4 clean all      clean      clean all        _ACT_INC_CLEAN         -inc -clean
-                     first      clean all        _ACT_INC_REBUILD       -inc -rebuild
+                     first      clean all        _ACT_INC_REBUILD       -inc -rebuildall
    #5 clean install  clean      clean install    _ACT_INC_CLEAN         -inc -clean
-                     install    clean install    _ACT_INC_REBUILD_INST  -inc -rebuild -instpath=
+                     install    clean install    _ACT_INC_REBUILD_INST  -inc -rebuildall -instpath=
    #6 install clean  install    install clean    _ACT_INC_INST          -inc -instpath=
                      clean      install clean    _ACT_INC_CLEAN         -inc -clean
  */
@@ -257,7 +257,7 @@ PROCEDURE GNUMake( aParams, hProjectList )
          AScanL( aGNUMakeParams, "install" ) > AScanL( aGNUMakeParams, "clean" )
          /* Use rebuild mode. This is needed because the clean phase
             might not have been called previously by GNU Make, f.e.
-            because hbrun or hbmk2 wasn't available. -rebuild is
+            because hbrun or hbmk2 wasn't available. -rebuildall is
             costless, so we do it to make sure to build cleanly.
             [vszakats] */
          nAction := _ACT_INC_REBUILD_INST
@@ -413,7 +413,7 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
       cOptions += " -clean"
    ELSEIF nAction == _ACT_INC_REBUILD .OR. ;
           nAction == _ACT_INC_REBUILD_INST
-      cOptions += " -rebuild"
+      cOptions += " -rebuildall"
    ENDIF
 
    lInstall := nAction == _ACT_INC_INST .OR. ;

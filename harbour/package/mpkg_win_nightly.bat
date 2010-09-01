@@ -11,8 +11,8 @@ rem ---------------------------------------------------------------
 
 rem ---------------------------------------------------------------
 rem REQUIREMENTS FOR BUILD MACHINE:
-rem   - Online 24/7
-rem   - Windows XP or higher
+rem   - Online 24/7 (reliable)
+rem   - Windows XP or higher (server preferred)
 rem   - 8GB disk space
 rem   - downstream internet traffic 100MB per day
 rem   - upstream internet traffic 100MB per day
