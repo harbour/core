@@ -1,0 +1,53 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QRegExpValidator()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qregexpvalidator.html
+ *  $ONELINER$
+ *     Creates a new QRegExpValidator object.
+ *  $INHERITS$
+ *     QValidator
+ *  $SYNTAX$
+ *     QRegExpValidator():new( ... )
+ *     QRegExpValidator():from( pPtr_OR_oObj_of_type_QRegExpValidator )
+ *     QRegExpValidator():configure( pPtr_OR_oObj_of_type_QRegExpValidator )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QRegExpValidator
+ *  $METHODS$
+ *     :regExp()                                           -> pQRegExp
+ *     :setRegExp( pRx )                                   -> NIL
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQRegExpValidator.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QRegExpValidator.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QValidator
+ *  $END$
+ */

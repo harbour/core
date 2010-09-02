@@ -1,0 +1,56 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QIntValidator()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qintvalidator.html
+ *  $ONELINER$
+ *     Creates a new QIntValidator object.
+ *  $INHERITS$
+ *     QValidator
+ *  $SYNTAX$
+ *     QIntValidator():new( ... )
+ *     QIntValidator():from( pPtr_OR_oObj_of_type_QIntValidator )
+ *     QIntValidator():configure( pPtr_OR_oObj_of_type_QIntValidator )
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QIntValidator
+ *  $METHODS$
+ *     :bottom()                                           -> nInt
+ *     :setBottom( nInt )                                  -> NIL
+ *     :setRange( nBottom, nTop )                          -> NIL
+ *     :setTop( nInt )                                     -> NIL
+ *     :top()                                              -> nInt
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQIntValidator.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QIntValidator.cpp
+ *     Library       : hbqtgui
+ *  $SEEALSO$
+ *     QValidator
+ *  $END$
+ */

@@ -53,6 +53,7 @@ QDialog.cpp
 QDirModel.cpp
 QDockWidget.cpp
 QDoubleSpinBox.cpp
+QDoubleValidator.cpp
 QDrag.cpp
 QDragEnterEvent.cpp
 QDragLeaveEvent.cpp
@@ -115,6 +116,7 @@ QImageWriter.cpp
 QInputDialog.cpp
 QInputEvent.cpp
 QInputMethodEvent.cpp
+QIntValidator.cpp
 QItemDelegate.cpp
 QItemEditorCreatorBase.cpp
 QItemEditorFactory.cpp
@@ -164,6 +166,7 @@ QProgressDialog.cpp
 QPushButton.cpp
 QRadialGradient.cpp
 QRadioButton.cpp
+QRegExpValidator.cpp
 QRegion.cpp
 QResizeEvent.cpp
 QScrollArea.cpp
@@ -310,6 +313,7 @@ TQDialog.prg
 TQDirModel.prg
 TQDockWidget.prg
 TQDoubleSpinBox.prg
+TQDoubleValidator.prg
 TQDrag.prg
 TQDragEnterEvent.prg
 TQDragLeaveEvent.prg
@@ -372,6 +376,7 @@ TQImageWriter.prg
 TQInputDialog.prg
 TQInputEvent.prg
 TQInputMethodEvent.prg
+TQIntValidator.prg
 TQItemDelegate.prg
 TQItemEditorCreatorBase.prg
 TQItemEditorFactory.prg
@@ -421,6 +426,7 @@ TQProgressDialog.prg
 TQPushButton.prg
 TQRadialGradient.prg
 TQRadioButton.prg
+TQRegExpValidator.prg
 TQRegion.prg
 TQResizeEvent.prg
 TQScrollArea.prg

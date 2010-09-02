@@ -51,6 +51,7 @@ QDialog.qth
 QDirModel.qth
 QDockWidget.qth
 QDoubleSpinBox.qth
+QDoubleValidator.qth
 QDrag.qth
 QDragEnterEvent.qth
 QDragLeaveEvent.qth
@@ -114,6 +115,7 @@ QImageWriter.qth
 QInputDialog.qth
 QInputEvent.qth
 QInputMethodEvent.qth
+QIntValidator.qth
 QItemDelegate.qth
 ; QItemEditorCreator.qth
 QItemEditorCreatorBase.qth
@@ -164,6 +166,7 @@ QProgressDialog.qth
 QPushButton.qth
 QRadialGradient.qth
 QRadioButton.qth
+QRegExpValidator.qth
 QRegion.qth
 QResizeEvent.qth
 QScrollArea.qth
