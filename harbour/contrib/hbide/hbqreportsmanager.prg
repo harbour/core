@@ -1368,6 +1368,11 @@ STATIC FUNCTION rmgr_a2arrayStr( aArray )
 
 /*----------------------------------------------------------------------*/
 
+STATIC FUNCTION rmgr_generateNextColor()
+   RETURN QColor():new( hb_random( 0,255 ), hb_random( 0,255 ), hb_random( 0,255 ), 255 )
+
+/*----------------------------------------------------------------------*/
+
 STATIC FUNCTION rmgr_keyValuePair( s, cKey, cVal, cDlm )
    LOCAL n
 
@@ -1660,16 +1665,16 @@ CLASS HqrGraphicsItem
    DATA   aPos                                    INIT {}
    DATA   aGeometry                               INIT {}
 
-   DATA   data                                    INIT NIL
+   DATA   xData                                   INIT NIL
 
    METHOD new( oRM, cParent, cType, cName, aPos, aGeometry )
- * METHOD create( oRM, cParent, cType, cName )
 
    METHOD text( ... )                             SETGET
    METHOD pen( ... )                              SETGET
    METHOD brush( ... )                            SETGET
    METHOD bgBrush( ... )                          SETGET
    METHOD draw( ... )
+   METHOD drawBarChart( qPainter, qRect )
 
    ENDCLASS
 
@@ -1733,6 +1738,136 @@ METHOD HqrGraphicsItem:draw( ... )
    ENDIF
 
    RETURN Self
+/*----------------------------------------------------------------------*/
+
+METHOD HqrGraphicsItem:drawBarChart( qPainter, qRect )
+   LOCAL qFMetrix, maxpv, minnv, absMaxVal, powVal, chartStep, powStep, maxHeight, valstep, maxLabelWidth, minpv
+   LOCAL pw, rc, maxval, y, i, x, cv, barWidth, lg, py, f, cMaxVal, nDec
+   LOCAL m_drawBorder      := .t.
+   LOCAL m_showLabels      := .t.
+   LOCAL m_barsIdentation  := 1
+   LOCAL m_showGrid        := .t.
+   LOCAL m_toColorFactor   := 1.7
+
+   HB_SYMBOL_UNUSED( qPainter )
+   HB_SYMBOL_UNUSED( qRect )
+
+   qFMetrix := QFontMetrics():from( qPainter:fontMetrics() )
+
+   IF empty( ::xData )
+      ::xData := {}
+
+      aadd( ::xData, { "Bananas", 040.0, rmgr_generateNextColor() } )
+      aadd( ::xData, { "Oranges", 150.0, rmgr_generateNextColor() } )
+      aadd( ::xData, { "Mangoes", 120.0, rmgr_generateNextColor() } )
+   ENDIF
+
+   maxpv := 0
+   minnv := 0
+   aeval( ::xData, {|e_| iif( e_[ 2 ] < 0, minpv := min( minpv, e_[ 2 ] ), NIL ), iif( e_[ 2 ] < 0, maxpv := max( maxpv, e_[ 2 ] ), NIL ) } )
+
+   absMaxVal := maxpv - minnv
+   cMaxVal   := hb_ntos( absMaxVal )
+   nDec      := at( ".", cMaxVal )
+
+   powVal    := iif( absMaxVal < 1,  10.0^( len( substr( cMaxVal, nDec + 1 ) ) + 1 ), 1 )
+   maxpv     *= powVal
+   minnv     *= powVal
+
+   maxpv := maxpv
+   minnv := -minnv
+   minnv := -minnv
+
+   qPainter:fillRect( qRect, ::brush() )
+
+   IF m_drawBorder
+      qPainter:drawqRect( qRect )
+   ENDIF
+
+   pw := iif( abs( ::pen():widthF() ) > 0, abs( ::pen():widthF() ), 1 )
+   rc := QRectF():from( qRect:adjusted( pw / 2, pw / 2, -pw, -pw ) )
+
+   f  := 2
+   chartStep := ( 10.0 ^ ( len( substr( cMaxval, 1, nDec - 1 ) ) - 1 ) ) / f
+   powStep   := iif( chartStep < 1, 10, 1 )
+   chartStep *= powStep
+   maxpv     *= powStep
+   minnv     *= powStep
+   powVal    *= powStep
+
+   maxpv  := maxpv + ( iif( (   maxpv % chartStep ) != 0, ( chartStep - (   maxpv % chartStep ) ), 0 ) ) / powVal
+   minnv  := minnv - ( iif( ( - minnv % chartStep ) != 0, ( chartStep - ( - minnv % chartStep ) ), 0 ) ) / powVal
+   maxVal := maxpv - minnv
+
+   maxHeight := rc:height() - qFMetrix:height()
+   valstep := maxHeight / ( maxVal / chartStep )
+
+   IF ( valstep < qFMetrix:height() )
+      chartStep *= ( (  ( qFMetrix:height() / valstep ) ) + 1 )
+      valstep := ( (  ( qFMetrix:height() / valstep ) ) + 1 ) * valstep
+   ENDIF
+
+   IF m_showLabels
+      maxLabelWidth := 0
+      FOR i := 0 TO maxVal / chartStep + 1 + iif( ( maxVal %  chartStep ) != 0, 1, 0 )
+         IF ( maxLabelWidth < qFMetrix:width( hb_ntos( ( maxVal * i - chartStep * i ) / powVal ) ) )
+            maxLabelWidth := qFMetrix:width( hb_ntos( ( maxVal * i - chartStep * i ) / powVal ) )
+         ENDIF
+      NEXT
+      y := 0
+      FOR i := 0 TO maxVal / chartStep + 1 + iif( ( maxVal % chartStep ) != 0, 1, 0 )
+         qPainter:drawText( QRectF( rc:x(), rc:y() + y, maxLabelWidth, qFMetrix:height() ), ;
+                         Qt_AlignRight + Qt_AlignVCenter, hb_ntos( ( maxpv - chartStep * i ) / powVal ) )
+         y += valstep
+      NEXT
+
+      qPainter:drawLine( rc:x() + maxLabelWidth + 1 / UNIT / 4, rc:y(), rc:x() + maxLabelWidth + 1 / UNIT / 4, rc:y() + qRect:height() )
+      rc := QRectF():from( rc:adjusted( maxLabelWidth + 1 / UNIT / 4, 0, 0, 0 ) )
+   ENDIF
+
+   IF ( m_showGrid )
+      y :=  qFMetrix:height() / 2
+      FOR i := 0 TO maxVal / chartStep + 1 + ( iif( maxVal %  chartStep !=0, 1, 0 ) )
+         qPainter:drawLine( rc:x(), rc:y() + y, rc:x() + rc:width(), rc:y() + y )
+         y += valstep
+      NEXT
+   ENDIF
+
+   rc := rc:adjusted( 0,  qFMetrix:height() / 2, 0, 0 )
+   x := m_barsIdentation
+   barWidth := ( rc:width() - m_barsIdentation * ( len( ::aData ) + 1 ) ) / len( ::aData )
+   py := maxHeight / maxVal
+
+   FOR EACH cv IN ::xData
+      lg := QLinearGradient():new( QPointF():new( x + barWidth / 2, 0 ), QPointF():new( x + barWidth , 0 ) )
+      lg:setSpread( QGradient_ReflectSpread )
+      lg:setColorAt( 0, cv[ 3 ] )
+      lg:setColorAt( 1, QColor( cv[ 3 ]:red() * m_toColorFactor, cv[ 3 ]:green() * m_toColorFactor, cv[ 3 ]:blue() * m_toColorFactor, cv[ 3 ]:alpha() ) )
+      qPainter:fillqRect( QRectF( rc:x() + x, rc:y() + py * maxpv - py * cv[ 2 ] * powVal, barWidth, py * cv[ 2 ] * powVal ), QBrush():new( "QGradient", lg ) )
+      IF ( m_showLabels )
+         qPainter:drawText( QRectF( rc:x() + x - m_barsIdentation / 2, rc:y() + py * maxpv - iif( cv[ 2 ] >= 0, qFMetrix:height(), 0 ), ;
+                                      barWidth + m_barsIdentation, qFMetrix:height() ), Qt_AlignCenter, hb_ntos( cv[ 2 ] ) )
+      ENDIF
+      x += barWidth + m_barsIdentation
+   NEXT
+
+   #if 0  /* Legend */
+   qPainter:fillqRect( qRect, ::brush() )
+   qPainter:drawqRect( qRect )
+   qPainter:translate( qRect:topLeft() )
+   qreal y := 1 / UNIT
+   qreal vstep := ( qRect:height() - y - 1 / UNIT * val:size() ) / len( ::aData )
+   FOR EACH cv IN ::aData
+   {
+      qPainter:fillqRect( QRectF( 1 / UNIT / 2, y, m_legendColorqRectWidth, vstep ), QBrush():new( cv[ 3 ] ) )
+      qPainter:drawText( QRectF( 1 / UNIT + m_legendColorqRectWidth, y, qRect:width() - ( 1 / UNIT + m_legendColorqRectWidth ), vstep ),
+                                                                            Qt_AlignVCenter + Qt_AlignLeft, cv[ 1 ] )
+      y += vstep + 1 / UNIT
+   }
+   #endif
+
+   RETURN Self
+
 /*----------------------------------------------------------------------*/
 
 
