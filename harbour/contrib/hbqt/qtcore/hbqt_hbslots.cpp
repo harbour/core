@@ -243,8 +243,12 @@ static bool connect_signal( QString signal, QObject * object, HBSlots * t_slots 
    if( signal == ( QString ) "closeEditor(QWidget,int)"                       ) return object->connect( object, SIGNAL( closeEditor( QWidget *, QAbstractItemDelegate::EndEditHint )      ), t_slots, SLOT( closeEditor( QWidget *, QAbstractItemDelegate::EndEditHint )       ), Qt::AutoConnection );
    if( signal == ( QString ) "commitData(QWidget)"                            ) return object->connect( object, SIGNAL( commitData( QWidget * )                                           ), t_slots, SLOT( commitData( QWidget * )                                            ), Qt::AutoConnection );
    if( signal == ( QString ) "sizeHintChanged(QModelIndex)"                   ) return object->connect( object, SIGNAL( sizeHintChanged( const QModelIndex & )                            ), t_slots, SLOT( sizeHintChanged( const QModelIndex & )                             ), Qt::AutoConnection );
-   /* New */
-   if( signal == ( QString ) "sceneRectChanged(QRectF)"                       ) return object->connect( object, SIGNAL( sceneRectChanged( const QRectF & )                            ), t_slots, SLOT( sizeHintChanged( const QModelIndex & )                                 ), Qt::AutoConnection );
+   /* QGraphicsScene */
+   if( signal == ( QString ) "sceneRectChanged(QRectF)"                       ) return object->connect( object, SIGNAL( sceneRectChanged( const QRectF & )                                ), t_slots, SLOT( sizeHintChanged( const QModelIndex & )                             ), Qt::AutoConnection );
+   /* QDateTimeEdit */
+   if( signal == ( QString ) "dateChanged(QDate)"                             ) return object->connect( object, SIGNAL( dateChanged( const QDate & )                                      ), t_slots, SLOT( dateChanged( const QDate & )                                       ), Qt::AutoConnection );
+   if( signal == ( QString ) "dateTimeChanged(QDateTime)"                     ) return object->connect( object, SIGNAL( dateTimeChanged( const QDateTime & )                              ), t_slots, SLOT( dateTimeChanged( const QDateTime & )                               ), Qt::AutoConnection );
+   if( signal == ( QString ) "timeChanged(QTime)"                             ) return object->connect( object, SIGNAL( timeChanged( const QTime & )                                      ), t_slots, SLOT( dateTimeChanged( const QDateTime & )                               ), Qt::AutoConnection );
    /* New */
    return false;
 }
@@ -427,6 +431,10 @@ static bool disconnect_signal( QObject * object, const char * signal )
    if( signal == ( QString ) "sizeHintChanged(QModelIndex)"                   ) return object->disconnect( SIGNAL( sizeHintChanged( const QModelIndex & )                            ) );
    /* QGraphicsScene */
    if( signal == ( QString ) "sceneRectChanged(QRectF)"                       ) return object->disconnect( SIGNAL( sceneRectChanged( const QRectF & )                                ) );
+   /* QDateTimeEdit */
+   if( signal == ( QString ) "dateChanged(QDate)"                             ) return object->disconnect( SIGNAL( dateChanged( const QDate & )                                      ) );
+   if( signal == ( QString ) "dateTimeChanged(QDateTime)"                     ) return object->disconnect( SIGNAL( dateTimeChanged( const QDateTime & )                              ) );
+   if( signal == ( QString ) "timeChanged(QTime)"                             ) return object->disconnect( SIGNAL( timeChanged( const QTime & )                                      ) );
    /* new */
 
    return false;
@@ -782,6 +790,54 @@ static void hbqt_SlotsExecQUrl( HBSlots * t_slots, QObject * object, const char 
    }
 }
 
+static void hbqt_SlotsExecQDate( HBSlots * t_slots, QObject * object, const char * pszEvent, const QDate & date )
+{
+   if( object )
+   {
+      int i = object->property( pszEvent ).toInt();
+      if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
+      {
+         PHB_ITEM p1 = hb_itemPutPtr( NULL, ( QDate * ) new QDate( date ) );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, p1 );
+         delete ( ( QDate * ) hb_itemGetPtr( p1 ) );
+         hb_itemRelease( p1 );
+         hb_vmRequestRestore();
+      }
+   }
+}
+
+static void hbqt_SlotsExecQDateTime( HBSlots * t_slots, QObject * object, const char * pszEvent, const QDateTime & datetime )
+{
+   if( object )
+   {
+      int i = object->property( pszEvent ).toInt();
+      if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
+      {
+         PHB_ITEM p1 = hb_itemPutPtr( NULL, ( QDateTime * ) new QDateTime( datetime ) );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, p1 );
+         delete ( ( QDateTime * ) hb_itemGetPtr( p1 ) );
+         hb_itemRelease( p1 );
+         hb_vmRequestRestore();
+      }
+   }
+}
+
+static void hbqt_SlotsExecQTime( HBSlots * t_slots, QObject * object, const char * pszEvent, const QTime & time )
+{
+   if( object )
+   {
+      int i = object->property( pszEvent ).toInt();
+      if( i > 0 && i <= t_slots->listBlock.size() && hb_vmRequestReenter() )
+      {
+         PHB_ITEM p1 = hb_itemPutPtr( NULL, ( QTime * ) new QTime( time ) );
+         hb_vmEvalBlockV( t_slots->listBlock.at( i - 1 ), 1, p1 );
+         delete ( ( QTime * ) hb_itemGetPtr( p1 ) );
+         hb_itemRelease( p1 );
+         hb_vmRequestRestore();
+      }
+   }
+}
+
 HBSlots::HBSlots( QObject* parent ) : QObject( parent )
 {
 }
@@ -1077,8 +1133,12 @@ void HBSlots::windowStateChanged( Qt::WindowStates oldState, Qt::WindowStates ne
 void HBSlots::closeEditor( QWidget * editor, QAbstractItemDelegate::EndEditHint hint )                     { hbqt_SlotsExecPointerInt(     this, qobject_cast<QObject *>( sender() ), "closeEditor(QWidget,int)", editor, hint                          ); }
 void HBSlots::commitData( QWidget * editor )                                                               { hbqt_SlotsExecPointer(        this, qobject_cast<QObject *>( sender() ), "commitData(QWidget)", editor                                     ); }
 void HBSlots::sizeHintChanged( const QModelIndex & index )                                                 { hbqt_SlotsExecModel(          this, qobject_cast<QObject *>( sender() ), "sizeHintChanged(QModelIndex)", index                             ); }
-/* Latest */
+/* QGraphicsScene */
 void HBSlots::sceneRectChanged( const QRectF & rect )                                                      { hbqt_SlotsExecQRectF(         this, qobject_cast<QObject *>( sender() ), "sceneRectChanged(QRectF)", rect                                  ); }
+/* QDateTimeEdit */
+void HBSlots::dateChanged( const QDate & date )                                                            { hbqt_SlotsExecQDate(          this, qobject_cast<QObject *>( sender() ), "dateChanged(QDate)", date                                        ); }
+void HBSlots::dateTimeChanged( const QDateTime & datetime )                                                { hbqt_SlotsExecQDateTime(      this, qobject_cast<QObject *>( sender() ), "dateTimeChanged(QDate)", datetime                                ); }
+void HBSlots::timeChanged( const QTime & time )                                                            { hbqt_SlotsExecQTime(          this, qobject_cast<QObject *>( sender() ), "timeChanged(QTime)", time                                        ); }
 /* Latest */
 
 /*----------------------------------------------------------------------*/

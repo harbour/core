@@ -62,6 +62,9 @@
 /* TOFIX: QtGui components should not be accessed from this component */
 #include <QtCore/QProcess>
 #include <QtCore/QUrl>
+#include <QtCore/QDate>
+#include <QtCore/QDateTime>
+#include <QtCore/QTime>
 #include <QtGui/QTextCursor>
 #include <QtGui/QTextCharFormat>
 #include <QtGui/QTreeWidgetItem>
@@ -299,6 +302,10 @@ public slots:
    void sizeHintChanged( const QModelIndex & index );
    /* QGraphicsScene */
    void sceneRectChanged( const QRectF & rect );
+   /* QDateTimeEdit */
+   void dateChanged( const QDate & date );
+   void dateTimeChanged( const QDateTime & datetime );
+   void timeChanged( const QTime & time );
    /* Latest */
 };
 
