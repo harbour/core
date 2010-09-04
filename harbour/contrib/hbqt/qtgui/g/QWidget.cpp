@@ -2216,10 +2216,10 @@ HB_FUNC( QT_QWIDGET_SETWINDOWICON )
 {
    QWidget * p = hbqt_par_QWidget( 1 );
    if( p )
-      ( p )->setWindowIcon( QIcon( hbqt_par_QString( 2 ) ) );
+      ( p )->setWindowIcon( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QIcon( 2 ) : QIcon( hbqt_par_QString( 2 ) ) ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIDGET_SETWINDOWICON FP=( p )->setWindowIcon( QIcon( hbqt_par_QString( 2 ) ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIDGET_SETWINDOWICON FP=( p )->setWindowIcon( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QIcon( 2 ) : QIcon( hbqt_par_QString( 2 ) ) ) ); p is NULL" ) );
    }
 }
 

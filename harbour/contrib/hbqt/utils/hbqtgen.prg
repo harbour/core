@@ -1022,7 +1022,8 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
                aA[ PRT_DOC  ] := "c" + cDocNM
 
             CASE aA[ PRT_CAST ] == "QIcon"
-               aA[ PRT_BODY ] := "QIcon( hbqt_par_QString( " + cHBIdx + " ) )"
+               s := "*hbqt_par_QIcon( " + cHBIdx + " )"
+               aA[ PRT_BODY ] := "( HB_ISPOINTER( " + cHBIdx + " ) ? " + s + " : " + "QIcon( hbqt_par_QString( " + cHBIdx + " ) ) )"
                aA[ PRT_DOC  ] := "c" + cDocNM
 
             CASE aA[ PRT_L_FAR ]

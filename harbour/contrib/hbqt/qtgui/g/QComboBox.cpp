@@ -176,10 +176,10 @@ HB_FUNC( QT_QCOMBOBOX_ADDITEM_1 )
 {
    QComboBox * p = hbqt_par_QComboBox( 1 );
    if( p )
-      ( p )->addItem( QIcon( hbqt_par_QString( 2 ) ), QComboBox::tr( hb_parc( 3 ) ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QVariant( 4 ) : QVariant() ) );
+      ( p )->addItem( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QIcon( 2 ) : QIcon( hbqt_par_QString( 2 ) ) ), QComboBox::tr( hb_parc( 3 ) ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QVariant( 4 ) : QVariant() ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMBOBOX_ADDITEM_1 FP=( p )->addItem( QIcon( hbqt_par_QString( 2 ) ), QComboBox::tr( hb_parc( 3 ) ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QVariant( 4 ) : QVariant() ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMBOBOX_ADDITEM_1 FP=( p )->addItem( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QIcon( 2 ) : QIcon( hbqt_par_QString( 2 ) ) ), QComboBox::tr( hb_parc( 3 ) ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QVariant( 4 ) : QVariant() ) ); p is NULL" ) );
    }
 }
 
@@ -358,10 +358,10 @@ HB_FUNC( QT_QCOMBOBOX_INSERTITEM_1 )
 {
    QComboBox * p = hbqt_par_QComboBox( 1 );
    if( p )
-      ( p )->insertItem( hb_parni( 2 ), QIcon( hbqt_par_QString( 3 ) ), QComboBox::tr( hb_parc( 4 ) ), ( HB_ISPOINTER( 5 ) ? *hbqt_par_QVariant( 5 ) : QVariant() ) );
+      ( p )->insertItem( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QIcon( 3 ) : QIcon( hbqt_par_QString( 3 ) ) ), QComboBox::tr( hb_parc( 4 ) ), ( HB_ISPOINTER( 5 ) ? *hbqt_par_QVariant( 5 ) : QVariant() ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMBOBOX_INSERTITEM_1 FP=( p )->insertItem( hb_parni( 2 ), QIcon( hbqt_par_QString( 3 ) ), QComboBox::tr( hb_parc( 4 ) ), ( HB_ISPOINTER( 5 ) ? *hbqt_par_QVariant( 5 ) : QVariant() ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMBOBOX_INSERTITEM_1 FP=( p )->insertItem( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QIcon( 3 ) : QIcon( hbqt_par_QString( 3 ) ) ), QComboBox::tr( hb_parc( 4 ) ), ( HB_ISPOINTER( 5 ) ? *hbqt_par_QVariant( 5 ) : QVariant() ) ); p is NULL" ) );
    }
 }
 
@@ -708,10 +708,10 @@ HB_FUNC( QT_QCOMBOBOX_SETITEMICON )
 {
    QComboBox * p = hbqt_par_QComboBox( 1 );
    if( p )
-      ( p )->setItemIcon( hb_parni( 2 ), QIcon( hbqt_par_QString( 3 ) ) );
+      ( p )->setItemIcon( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QIcon( 3 ) : QIcon( hbqt_par_QString( 3 ) ) ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMBOBOX_SETITEMICON FP=( p )->setItemIcon( hb_parni( 2 ), QIcon( hbqt_par_QString( 3 ) ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMBOBOX_SETITEMICON FP=( p )->setItemIcon( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QIcon( 3 ) : QIcon( hbqt_par_QString( 3 ) ) ) ); p is NULL" ) );
    }
 }
 

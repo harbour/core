@@ -241,10 +241,10 @@ HB_FUNC( QT_QMENUBAR_ADDMENU_2 )
 {
    QMenuBar * p = hbqt_par_QMenuBar( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QMenu( ( p )->addMenu( QIcon( hbqt_par_QString( 2 ) ), QMenuBar::tr( hb_parc( 3 ) ) ), false ) );
+      hb_retptrGC( hbqt_gcAllocate_QMenu( ( p )->addMenu( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QIcon( 2 ) : QIcon( hbqt_par_QString( 2 ) ) ), QMenuBar::tr( hb_parc( 3 ) ) ), false ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMENUBAR_ADDMENU_2 FP=hb_retptrGC( hbqt_gcAllocate_QMenu( ( p )->addMenu( QIcon( hbqt_par_QString( 2 ) ), QMenuBar::tr( hb_parc( 3 ) ) ), false ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMENUBAR_ADDMENU_2 FP=hb_retptrGC( hbqt_gcAllocate_QMenu( ( p )->addMenu( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QIcon( 2 ) : QIcon( hbqt_par_QString( 2 ) ) ), QMenuBar::tr( hb_parc( 3 ) ) ), false ) ); p is NULL" ) );
    }
 }
 

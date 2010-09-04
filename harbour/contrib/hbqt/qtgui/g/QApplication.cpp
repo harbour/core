@@ -1031,10 +1031,10 @@ HB_FUNC( QT_QAPPLICATION_SETWINDOWICON )
 {
    QApplication * p = hbqt_par_QApplication( 1 );
    if( p )
-      ( p )->setWindowIcon( QIcon( hbqt_par_QString( 2 ) ) );
+      ( p )->setWindowIcon( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QIcon( 2 ) : QIcon( hbqt_par_QString( 2 ) ) ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QAPPLICATION_SETWINDOWICON FP=( p )->setWindowIcon( QIcon( hbqt_par_QString( 2 ) ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QAPPLICATION_SETWINDOWICON FP=( p )->setWindowIcon( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QIcon( 2 ) : QIcon( hbqt_par_QString( 2 ) ) ) ); p is NULL" ) );
    }
 }
 

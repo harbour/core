@@ -656,10 +656,10 @@ HB_FUNC( QT_QTREEWIDGETITEM_SETICON )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      ( p )->setIcon( hb_parni( 2 ), QIcon( hbqt_par_QString( 3 ) ) );
+      ( p )->setIcon( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QIcon( 3 ) : QIcon( hbqt_par_QString( 3 ) ) ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_SETICON FP=( p )->setIcon( hb_parni( 2 ), QIcon( hbqt_par_QString( 3 ) ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_SETICON FP=( p )->setIcon( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QIcon( 3 ) : QIcon( hbqt_par_QString( 3 ) ) ) ); p is NULL" ) );
    }
 }
 

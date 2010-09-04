@@ -190,10 +190,10 @@ HB_FUNC( QT_QTABWIDGET_ADDTAB_1 )
 {
    QTabWidget * p = hbqt_par_QTabWidget( 1 );
    if( p )
-      hb_retni( ( p )->addTab( hbqt_par_QWidget( 2 ), QIcon( hbqt_par_QString( 3 ) ), QTabWidget::tr( hb_parc( 4 ) ) ) );
+      hb_retni( ( p )->addTab( hbqt_par_QWidget( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QIcon( 3 ) : QIcon( hbqt_par_QString( 3 ) ) ), QTabWidget::tr( hb_parc( 4 ) ) ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_ADDTAB_1 FP=hb_retni( ( p )->addTab( hbqt_par_QWidget( 2 ), QIcon( hbqt_par_QString( 3 ) ), QTabWidget::tr( hb_parc( 4 ) ) ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_ADDTAB_1 FP=hb_retni( ( p )->addTab( hbqt_par_QWidget( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QIcon( 3 ) : QIcon( hbqt_par_QString( 3 ) ) ), QTabWidget::tr( hb_parc( 4 ) ) ) ); p is NULL" ) );
    }
 }
 
@@ -344,10 +344,10 @@ HB_FUNC( QT_QTABWIDGET_INSERTTAB_1 )
 {
    QTabWidget * p = hbqt_par_QTabWidget( 1 );
    if( p )
-      hb_retni( ( p )->insertTab( hb_parni( 2 ), hbqt_par_QWidget( 3 ), QIcon( hbqt_par_QString( 4 ) ), QTabWidget::tr( hb_parc( 5 ) ) ) );
+      hb_retni( ( p )->insertTab( hb_parni( 2 ), hbqt_par_QWidget( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QIcon( 4 ) : QIcon( hbqt_par_QString( 4 ) ) ), QTabWidget::tr( hb_parc( 5 ) ) ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_INSERTTAB_1 FP=hb_retni( ( p )->insertTab( hb_parni( 2 ), hbqt_par_QWidget( 3 ), QIcon( hbqt_par_QString( 4 ) ), QTabWidget::tr( hb_parc( 5 ) ) ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_INSERTTAB_1 FP=hb_retni( ( p )->insertTab( hb_parni( 2 ), hbqt_par_QWidget( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QIcon( 4 ) : QIcon( hbqt_par_QString( 4 ) ) ), QTabWidget::tr( hb_parc( 5 ) ) ) ); p is NULL" ) );
    }
 }
 
@@ -484,10 +484,10 @@ HB_FUNC( QT_QTABWIDGET_SETTABICON )
 {
    QTabWidget * p = hbqt_par_QTabWidget( 1 );
    if( p )
-      ( p )->setTabIcon( hb_parni( 2 ), QIcon( hbqt_par_QString( 3 ) ) );
+      ( p )->setTabIcon( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QIcon( 3 ) : QIcon( hbqt_par_QString( 3 ) ) ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_SETTABICON FP=( p )->setTabIcon( hb_parni( 2 ), QIcon( hbqt_par_QString( 3 ) ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABWIDGET_SETTABICON FP=( p )->setTabIcon( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QIcon( 3 ) : QIcon( hbqt_par_QString( 3 ) ) ) ); p is NULL" ) );
    }
 }
 

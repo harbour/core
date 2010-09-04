@@ -201,10 +201,10 @@ HB_FUNC( QT_QACTIONGROUP_ADDACTION_2 )
 {
    QActionGroup * p = hbqt_par_QActionGroup( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( QIcon( hbqt_par_QString( 2 ) ), QActionGroup::tr( hb_parc( 3 ) ) ), false ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QIcon( 2 ) : QIcon( hbqt_par_QString( 2 ) ) ), QActionGroup::tr( hb_parc( 3 ) ) ), false ) );
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_ADDACTION_2 FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( QIcon( hbqt_par_QString( 2 ) ), QActionGroup::tr( hb_parc( 3 ) ) ), false ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_ADDACTION_2 FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QIcon( 2 ) : QIcon( hbqt_par_QString( 2 ) ) ), QActionGroup::tr( hb_parc( 3 ) ) ), false ) ); p is NULL" ) );
    }
 }
 
