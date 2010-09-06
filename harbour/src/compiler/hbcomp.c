@@ -307,10 +307,10 @@ void hb_compOutStd( HB_COMP_DECL, const char * szMessage )
       if( HB_COMP_PARAM->outStdFunc )
          HB_COMP_PARAM->outStdFunc( HB_COMP_PARAM->cargo, szMessage );
       else
-#if defined( HB_OS_UNIX )
-         fprintf( stdout, "%s", szMessage ); fflush( stdout );
-#else
+#if defined( HB_OS_DOS )
          fprintf( stderr, "%s", szMessage ); fflush( stderr );
+#else
+         fprintf( stdout, "%s", szMessage ); fflush( stdout );
 #endif
    }
 }
@@ -322,10 +322,10 @@ void hb_compOutErr( HB_COMP_DECL, const char * szMessage )
       if( HB_COMP_PARAM->outErrFunc )
          HB_COMP_PARAM->outErrFunc( HB_COMP_PARAM->cargo, szMessage );
       else
-#if defined( HB_OS_UNIX )
-         fprintf( stderr, "%s", szMessage ); fflush( stderr );
-#else
+#if defined( HB_OS_DOS )
          fprintf( stdout, "%s", szMessage ); fflush( stdout );
+#else
+         fprintf( stderr, "%s", szMessage ); fflush( stderr );
 #endif
    }
 }
