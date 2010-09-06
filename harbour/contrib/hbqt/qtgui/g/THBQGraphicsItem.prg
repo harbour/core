@@ -73,8 +73,6 @@ CREATE CLASS HBQGraphicsItem INHERIT HbQtObjectHandler, QGraphicsItem
    METHOD  determineResizeMode( pPos )
    METHOD  adjustRect( pRect )
    METHOD  prepare( pPainter )
-   METHOD  drawSelection( pPainter, pRect )
-   METHOD  setupPainter( pPainter )
    METHOD  pen()
    METHOD  setPen( pPen )
    METHOD  brush()
@@ -172,14 +170,6 @@ METHOD HBQGraphicsItem:adjustRect( pRect )
 
 METHOD HBQGraphicsItem:prepare( pPainter )
    RETURN Qt_HBQGraphicsItem_prepare( ::pPtr, hbqt_ptr( pPainter ) )
-
-
-METHOD HBQGraphicsItem:drawSelection( pPainter, pRect )
-   RETURN Qt_HBQGraphicsItem_drawSelection( ::pPtr, hbqt_ptr( pPainter ), hbqt_ptr( pRect ) )
-
-
-METHOD HBQGraphicsItem:setupPainter( pPainter )
-   RETURN Qt_HBQGraphicsItem_setupPainter( ::pPtr, hbqt_ptr( pPainter ) )
 
 
 METHOD HBQGraphicsItem:pen()

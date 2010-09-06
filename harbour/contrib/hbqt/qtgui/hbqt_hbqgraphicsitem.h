@@ -135,8 +135,6 @@ public:
    int            determineResizeMode( const QPointF & pos );
    QRectF         adjustRect( QRectF & rect );
    virtual void   prepare( QPainter * painter );
-   void           drawSelection( QPainter * painter, const QRectF & rect );
-   void           setupPainter( QPainter * painter );
 
 private:
    int            iType;
@@ -181,17 +179,6 @@ private:
 
    QColor         generateNextColor();
    QRectF         adjustOption( QPainter * painter, const QStyleOptionGraphicsItem * option );
-   //
-   void           drawRect( QPainter * painter, const QStyleOptionGraphicsItem * option );
-   void           drawEllipse( QPainter * painter, const QStyleOptionGraphicsItem * option );
-   void           drawLine( QPainter * painter, const QStyleOptionGraphicsItem * option );
-   void           drawPie( QPainter * painter, const QStyleOptionGraphicsItem * option );
-   void           drawArc( QPainter * painter, const QStyleOptionGraphicsItem * option );
-   void           drawChord( QPainter * painter, const QStyleOptionGraphicsItem * option );
-   void           drawPicture( QPainter * painter, const QStyleOptionGraphicsItem * option );
-   void           drawText( QPainter * painter, const QStyleOptionGraphicsItem * option );
-   void           drawBarChart( QPainter * painter, const QStyleOptionGraphicsItem * option );
-   void           drawBarcode39( QPainter * painter, const QStyleOptionGraphicsItem * option );
 
 protected:
    void           dragEnterEvent( QGraphicsSceneDragDropEvent * event );

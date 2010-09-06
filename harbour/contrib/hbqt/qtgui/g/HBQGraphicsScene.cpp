@@ -345,62 +345,6 @@ HB_FUNC( QT_HBQGRAPHICSSCENE_SETSHOWGRID )
 }
 
 /*
- * virtual void             zoomWYSIWYG();
- */
-HB_FUNC( QT_HBQGRAPHICSSCENE_ZOOMWYSIWYG )
-{
-   HBQGraphicsScene * p = hbqt_par_HBQGraphicsScene( 1 );
-   if( p )
-      ( p )->zoomWYSIWYG();
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSSCENE_ZOOMWYSIWYG FP=( p )->zoomWYSIWYG(); p is NULL" ) );
-   }
-}
-
-/*
- * virtual void             zoomIn();
- */
-HB_FUNC( QT_HBQGRAPHICSSCENE_ZOOMIN )
-{
-   HBQGraphicsScene * p = hbqt_par_HBQGraphicsScene( 1 );
-   if( p )
-      ( p )->zoomIn();
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSSCENE_ZOOMIN FP=( p )->zoomIn(); p is NULL" ) );
-   }
-}
-
-/*
- * virtual void             zoomOut();
- */
-HB_FUNC( QT_HBQGRAPHICSSCENE_ZOOMOUT )
-{
-   HBQGraphicsScene * p = hbqt_par_HBQGraphicsScene( 1 );
-   if( p )
-      ( p )->zoomOut();
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSSCENE_ZOOMOUT FP=( p )->zoomOut(); p is NULL" ) );
-   }
-}
-
-/*
- * virtual void             zoomOriginal();
- */
-HB_FUNC( QT_HBQGRAPHICSSCENE_ZOOMORIGINAL )
-{
-   HBQGraphicsScene * p = hbqt_par_HBQGraphicsScene( 1 );
-   if( p )
-      ( p )->zoomOriginal();
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSSCENE_ZOOMORIGINAL FP=( p )->zoomOriginal(); p is NULL" ) );
-   }
-}
-
-/*
  * virtual void             setLeftMagnet( bool magneted )
  */
 HB_FUNC( QT_HBQGRAPHICSSCENE_SETLEFTMAGNET )

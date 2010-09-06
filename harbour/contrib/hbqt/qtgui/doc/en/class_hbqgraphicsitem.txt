@@ -32,8 +32,6 @@
  *     :determineResizeMode( pPos )                        -> nInt
  *     :adjustRect( pRect )                                -> pQRectF
  *     :prepare( pPainter )                                -> NIL
- *     :drawSelection( pPainter, pRect )                   -> NIL
- *     :setupPainter( pPainter )                           -> NIL
  *     :pen()                                              -> pQPen
  *     :setPen( pPen )                                     -> NIL
  *     :brush()                                            -> pQBrush

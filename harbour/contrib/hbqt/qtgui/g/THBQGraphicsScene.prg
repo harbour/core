@@ -80,10 +80,6 @@ CREATE CLASS HBQGraphicsScene INHERIT HbQtObjectHandler, QGraphicsScene
    METHOD  setMagnetArea( nMagnetArea )
    METHOD  showGrid()
    METHOD  setShowGrid( lShowGrid )
-   METHOD  zoomWYSIWYG()
-   METHOD  zoomIn()
-   METHOD  zoomOut()
-   METHOD  zoomOriginal()
    METHOD  setLeftMagnet( lMagneted )
    METHOD  setRightMagnet( lMagneted )
    METHOD  setTopMagnet( lMagneted )
@@ -153,22 +149,6 @@ METHOD HBQGraphicsScene:showGrid()
 
 METHOD HBQGraphicsScene:setShowGrid( lShowGrid )
    RETURN Qt_HBQGraphicsScene_setShowGrid( ::pPtr, lShowGrid )
-
-
-METHOD HBQGraphicsScene:zoomWYSIWYG()
-   RETURN Qt_HBQGraphicsScene_zoomWYSIWYG( ::pPtr )
-
-
-METHOD HBQGraphicsScene:zoomIn()
-   RETURN Qt_HBQGraphicsScene_zoomIn( ::pPtr )
-
-
-METHOD HBQGraphicsScene:zoomOut()
-   RETURN Qt_HBQGraphicsScene_zoomOut( ::pPtr )
-
-
-METHOD HBQGraphicsScene:zoomOriginal()
-   RETURN Qt_HBQGraphicsScene_zoomOriginal( ::pPtr )
 
 
 METHOD HBQGraphicsScene:setLeftMagnet( lMagneted )

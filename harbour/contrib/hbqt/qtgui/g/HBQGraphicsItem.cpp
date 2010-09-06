@@ -235,34 +235,6 @@ HB_FUNC( QT_HBQGRAPHICSITEM_PREPARE )
 }
 
 /*
- * void           drawSelection( QPainter * painter, const QRectF & rect )
- */
-HB_FUNC( QT_HBQGRAPHICSITEM_DRAWSELECTION )
-{
-   HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
-   if( p )
-      ( p )->drawSelection( hbqt_par_QPainter( 2 ), *hbqt_par_QRectF( 3 ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_DRAWSELECTION FP=( p )->drawSelection( hbqt_par_QPainter( 2 ), *hbqt_par_QRectF( 3 ) ); p is NULL" ) );
-   }
-}
-
-/*
- * void           setupPainter( QPainter * painter )
- */
-HB_FUNC( QT_HBQGRAPHICSITEM_SETUPPAINTER )
-{
-   HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
-   if( p )
-      ( p )->setupPainter( hbqt_par_QPainter( 2 ) );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETUPPAINTER FP=( p )->setupPainter( hbqt_par_QPainter( 2 ) ); p is NULL" ) );
-   }
-}
-
-/*
  * QPen           pen()
  */
 HB_FUNC( QT_HBQGRAPHICSITEM_PEN )

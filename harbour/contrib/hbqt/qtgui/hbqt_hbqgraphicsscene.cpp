@@ -99,6 +99,16 @@ void HBQGraphicsScene::hbSetBlock( PHB_ITEM b )
 {
    if( b ){
       block = hb_itemNew( b );
+
+      QDesktopWidget * qWid = new QDesktopWidget();
+
+      PHB_ITEM p1 = hb_itemPutNI( NULL, 21001 );
+      PHB_ITEM p2 = hb_itemPutNI( NULL, qWid->screen()->physicalDpiX() );
+      PHB_ITEM p3 = hb_itemPutNI( NULL, qWid->screen()->physicalDpiY() );
+      hb_vmEvalBlockV( block, 3, p1, p2, p3 );
+      hb_itemRelease( p1 );
+      hb_itemRelease( p2 );
+      hb_itemRelease( p3 );
    }
 }
 
@@ -724,45 +734,6 @@ void HBQGraphicsScene::drawMagnets( HBQGraphicsItem * item )
          item->setGeometry(QRectF(ite->mapToItem(item->parentItem(), QPointF(ite->geometry().width() / 2, 0)).x() - item->geometry().width() / 2, item->geometry().y(), item->geometry().width(), item->geometry().height()));
          m_gideLines.push_back(addLine(item->mapToScene(item->geometry().width() / 2, 0).x(), item->mapToScene(0, 0).y(), item->mapToScene(item->geometry().width() / 2, 0).x(), ite->mapToScene(0, ite->geometry().height()).y(), p));
       }
-   }
-}
-/*----------------------------------------------------------------------*/
-//                                Zooming
-/*----------------------------------------------------------------------*/
-
-void HBQGraphicsScene::zoomIn()
-{
-   if( views().size() )
-   {
-      views()[ 0 ]->scale( 1.1, 1.1 );
-   }
-}
-
-void HBQGraphicsScene::zoomOut()
-{
-   if( views().size() )
-   {
-      views()[ 0 ]->scale( 0.9, 0.9 );
-   }
-}
-
-void HBQGraphicsScene::zoomWYSIWYG()
-{
-   if( views().size() )
-   {
-      views()[ 0 ]->resetMatrix();
-      views()[ 0 ]->scale( ( double ) QDesktopWidget().screen()->width()  / ( hbqt_screen_widthMM  * 10 ),
-                           ( double ) QDesktopWidget().screen()->height() / ( hbqt_screen_heightMM * 10 ) );
-      views()[ 0 ]->centerOn( 0, 0 );
-   }
-}
-
-void HBQGraphicsScene::zoomOriginal()
-{
-   if( views().size() )
-   {
-      views()[ 0 ]->resetMatrix();
-      views()[ 0 ]->centerOn( 0, 0 );
    }
 }
 /*----------------------------------------------------------------------*/

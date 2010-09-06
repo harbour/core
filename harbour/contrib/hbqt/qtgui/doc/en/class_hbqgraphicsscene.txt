@@ -39,10 +39,6 @@
  *     :setMagnetArea( nMagnetArea )                       -> NIL
  *     :showGrid()                                         -> lBool
  *     :setShowGrid( lShowGrid )                           -> NIL
- *     :zoomWYSIWYG()                                      -> NIL
- *     :zoomIn()                                           -> NIL
- *     :zoomOut()                                          -> NIL
- *     :zoomOriginal()                                     -> NIL
  *     :setLeftMagnet( lMagneted )                         -> NIL
  *     :setRightMagnet( lMagneted )                        -> NIL
  *     :setTopMagnet( lMagneted )                          -> NIL

@@ -85,7 +85,7 @@ HB_FUNC( QT_QLINEARGRADIENT )
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
    {
-      hb_retptr( ( QLinearGradient* ) new QLinearGradient( *hbqt_par_QPoint( 1 ), *hbqt_par_QPoint( 2 ) ) );
+      hb_retptr( ( QLinearGradient* ) new QLinearGradient( *hbqt_par_QPointF( 1 ), *hbqt_par_QPointF( 2 ) ) );
    }
    else if( hb_pcount() == 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
    {

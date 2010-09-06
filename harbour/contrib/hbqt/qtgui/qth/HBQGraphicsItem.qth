@@ -98,8 +98,6 @@ HB_FUNC( QT_HBQGRAPHICSITEM )
    int            determineResizeMode( const QPointF & pos )
    QRectF         adjustRect( QRectF & rect )
    virtual void   prepare( QPainter * painter )
-   void           drawSelection( QPainter * painter, const QRectF & rect )
-   void           setupPainter( QPainter * painter )
 
    QPen           pen()
    void           setPen( const QPen & pen )

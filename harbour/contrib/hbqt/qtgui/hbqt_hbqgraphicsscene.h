@@ -109,10 +109,6 @@ public:
    void                     setMagnetArea( int magnetArea );
    virtual bool             showGrid();
    virtual void             setShowGrid( bool showGrid );
-   virtual void             zoomWYSIWYG();
-   virtual void             zoomIn();
-   virtual void             zoomOut();
-   virtual void             zoomOriginal();
 
 public slots:
    virtual void             setLeftMagnet( bool magneted );

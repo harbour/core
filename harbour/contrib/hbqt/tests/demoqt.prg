@@ -234,8 +234,11 @@ STATIC FUNCTION Build_MenuBar( oWnd )
    oMenu1 := QMenu():new()
    oMenu1:setTitle( "&File" )
 
-   oActNew := QAction():from( oMenu1:addAction_1( "new.png" , "&New"  ) )
-   oActNew:connect( QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "New" , w, l ) } )
+   oActNew := QAction():new( oMenu1 )
+   oActNew:setText( "&New" )
+   oActNew:setIcon( "new.png" )
+   oActNew:connect( "triggered(bool)", {|w,l| FileDialog( "New" , w, l ) } )
+   oMenu1:addAction_4( oActNew )
 
    oActOpen := QAction():from( oMenu1:addAction_1( "open.png", "&Open" ) )
    oActOpen:connect( QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Open" , w, l ) } )
