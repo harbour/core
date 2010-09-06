@@ -4356,7 +4356,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             AAdd( hbmk[ _HBMK_aOPTD ], "-Wl, -Xdynamic" )
          ENDIF
          IF hbmk[ _HBMK_lSHARED ]
-            /* TOFIX: .so is referred by it's full link time search path,
+            /* TOFIX: .so is referred by its full link time search path,
                       there is even a backslash present in the dir formed by
                       the linker */
             AAdd( hbmk[ _HBMK_aOPTL ], "-Wl, -Xdynamic" )
