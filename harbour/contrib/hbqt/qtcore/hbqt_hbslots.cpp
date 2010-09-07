@@ -248,7 +248,7 @@ static bool connect_signal( QString signal, QObject * object, HBSlots * t_slots 
    /* QDateTimeEdit */
    if( signal == ( QString ) "dateChanged(QDate)"                             ) return object->connect( object, SIGNAL( dateChanged( const QDate & )                                      ), t_slots, SLOT( dateChanged( const QDate & )                                       ), Qt::AutoConnection );
    if( signal == ( QString ) "dateTimeChanged(QDateTime)"                     ) return object->connect( object, SIGNAL( dateTimeChanged( const QDateTime & )                              ), t_slots, SLOT( dateTimeChanged( const QDateTime & )                               ), Qt::AutoConnection );
-   if( signal == ( QString ) "timeChanged(QTime)"                             ) return object->connect( object, SIGNAL( timeChanged( const QTime & )                                      ), t_slots, SLOT( dateTimeChanged( const QDateTime & )                               ), Qt::AutoConnection );
+   if( signal == ( QString ) "timeChanged(QTime)"                             ) return object->connect( object, SIGNAL( timeChanged( const QTime & )                                      ), t_slots, SLOT( timeChanged( const QTime & )                                       ), Qt::AutoConnection );
    /* New */
    return false;
 }
