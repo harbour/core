@@ -59,7 +59,7 @@ HB_FUNC( HB_SHA224 )
    unsigned char digest[ SHA224_DIGEST_SIZE ];
    sha224_ctx ctx;
 
-   sha224_init( &ctx );
+   hb_sha224_init( &ctx );
    #if HB_SIZE_MAX > UINT_MAX
    {
       const char * buffer = hb_parcx( 1 );
@@ -81,15 +81,15 @@ HB_FUNC( HB_SHA224 )
             nCount = 0;
          }
 
-         sha224_update( &ctx, buffer + nDone, uiChunk );
+         hb_sha224_update( &ctx, buffer + nDone, uiChunk );
 
          nDone += ( HB_SIZE ) uiChunk;
       }
    }
    #else
-      sha224_update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
+      hb_sha224_update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
    #endif
-   sha224_final( &ctx, digest );
+   hb_sha224_final( &ctx, digest );
 
    if( ! hb_parl( 2 ) )
    {
@@ -106,7 +106,7 @@ HB_FUNC( HB_SHA256 )
    unsigned char digest[ SHA256_DIGEST_SIZE ];
    sha256_ctx ctx;
 
-   sha256_init( &ctx );
+   hb_sha256_init( &ctx );
    #if HB_SIZE_MAX > UINT_MAX
    {
       const char * buffer = hb_parcx( 1 );
@@ -128,15 +128,15 @@ HB_FUNC( HB_SHA256 )
             nCount = 0;
          }
 
-         sha256_update( &ctx, buffer + nDone, uiChunk );
+         hb_sha256_update( &ctx, buffer + nDone, uiChunk );
 
          nDone += ( HB_SIZE ) uiChunk;
       }
    }
    #else
-      sha256_update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
+      hb_sha256_update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
    #endif
-   sha256_final( &ctx, digest );
+   hb_sha256_final( &ctx, digest );
 
    if( ! hb_parl( 2 ) )
    {
@@ -153,7 +153,7 @@ HB_FUNC( HB_SHA384 )
    unsigned char digest[ SHA384_DIGEST_SIZE ];
    sha384_ctx ctx;
 
-   sha384_init( &ctx );
+   hb_sha384_init( &ctx );
    #if HB_SIZE_MAX > UINT_MAX
    {
       const char * buffer = hb_parcx( 1 );
@@ -175,15 +175,15 @@ HB_FUNC( HB_SHA384 )
             nCount = 0;
          }
 
-         sha384_update( &ctx, buffer + nDone, uiChunk );
+         hb_sha384_update( &ctx, buffer + nDone, uiChunk );
 
          nDone += ( HB_SIZE ) uiChunk;
       }
    }
    #else
-      sha384_update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
+      hb_sha384_update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
    #endif
-   sha384_final( &ctx, digest );
+   hb_sha384_final( &ctx, digest );
 
    if( ! hb_parl( 2 ) )
    {
@@ -200,7 +200,7 @@ HB_FUNC( HB_SHA512 )
    unsigned char digest[ SHA512_DIGEST_SIZE ];
    sha512_ctx ctx;
 
-   sha512_init( &ctx );
+   hb_sha512_init( &ctx );
    #if HB_SIZE_MAX > UINT_MAX
    {
       const char * buffer = hb_parcx( 1 );
@@ -222,15 +222,15 @@ HB_FUNC( HB_SHA512 )
             nCount = 0;
          }
 
-         sha512_update( &ctx, buffer + nDone, uiChunk );
+         hb_sha512_update( &ctx, buffer + nDone, uiChunk );
 
          nDone += ( HB_SIZE ) uiChunk;
       }
    }
    #else
-      sha512_update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
+      hb_sha512_update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
    #endif
-   sha512_final( &ctx, digest );
+   hb_sha512_final( &ctx, digest );
 
    if( ! hb_parl( 2 ) )
    {

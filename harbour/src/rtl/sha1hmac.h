@@ -72,21 +72,21 @@ typedef struct _HMAC_SHA1_CTX {
 } HMAC_SHA1_CTX;
 
 #ifndef NOPROTO
-void HMAC_SHA1_Init(HMAC_SHA1_CTX *ctx);
-void HMAC_SHA1_UpdateKey(HMAC_SHA1_CTX *ctx, const void *key, unsigned int keylen);
-void HMAC_SHA1_EndKey(HMAC_SHA1_CTX *ctx);
-void HMAC_SHA1_StartMessage(HMAC_SHA1_CTX *ctx);
-void HMAC_SHA1_UpdateMessage(HMAC_SHA1_CTX *ctx, const void *data, unsigned int datalen);
-void HMAC_SHA1_EndMessage(unsigned char *out, HMAC_SHA1_CTX *ctx);
-void HMAC_SHA1_Done(HMAC_SHA1_CTX *ctx);
+void hb_HMAC_SHA1_Init(HMAC_SHA1_CTX *ctx);
+void hb_HMAC_SHA1_UpdateKey(HMAC_SHA1_CTX *ctx, const void *key, unsigned int keylen);
+void hb_HMAC_SHA1_EndKey(HMAC_SHA1_CTX *ctx);
+void hb_HMAC_SHA1_StartMessage(HMAC_SHA1_CTX *ctx);
+void hb_HMAC_SHA1_UpdateMessage(HMAC_SHA1_CTX *ctx, const void *data, unsigned int datalen);
+void hb_HMAC_SHA1_EndMessage(unsigned char *out, HMAC_SHA1_CTX *ctx);
+void hb_HMAC_SHA1_Done(HMAC_SHA1_CTX *ctx);
 #else
-void HMAC_SHA1_Init();
-void HMAC_SHA1_UpdateKey();
-void HMAC_SHA1_EndKey();
-void HMAC_SHA1_StartMessage();
-void HMAC_SHA1_UpdateMessage();
-void HMAC_SHA1_EndMessage();
-void HMAC_SHA1_Done();
+void hb_HMAC_SHA1_Init();
+void hb_HMAC_SHA1_UpdateKey();
+void hb_HMAC_SHA1_EndKey();
+void hb_HMAC_SHA1_StartMessage();
+void hb_HMAC_SHA1_UpdateMessage();
+void hb_HMAC_SHA1_EndMessage();
+void hb_HMAC_SHA1_Done();
 #endif
 
 #ifdef  __cplusplus

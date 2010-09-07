@@ -59,7 +59,7 @@ HB_FUNC( HB_SHA1 )
    sha1_byte digest[ SHA1_DIGEST_LENGTH ];
    SHA_CTX ctx;
 
-   SHA1_Init( &ctx );
+   hb_SHA1_Init( &ctx );
 
    #if HB_SIZE_MAX > UINT_MAX
    {
@@ -82,16 +82,16 @@ HB_FUNC( HB_SHA1 )
             nCount = 0;
          }
 
-         SHA1_Update( &ctx, buffer + nDone, uiChunk );
+         hb_SHA1_Update( &ctx, buffer + nDone, uiChunk );
 
          nDone += ( HB_SIZE ) uiChunk;
       }
    }
    #else
-      SHA1_Update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
+      hb_SHA1_Update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
    #endif
 
-   SHA1_Final( digest, &ctx );
+   hb_SHA1_Final( digest, &ctx );
 
    if( ! hb_parl( 2 ) )
    {

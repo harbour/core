@@ -7137,7 +7137,7 @@ STATIC FUNCTION dep_evaluate( hbmk )
          ELSE
             /* Don't issue a missing dependency error (just warning) for non-*nix
                platforms if no manual dependency location and no local dir were
-               given. This assumes that one these platforms dependencies can never
+               specified. This assumes that on these platforms dependencies can never
                be found on locations known in advance and specified in make
                files. [vszakats] */
             IF hbmk[ _HBMK_cPLAT ] $ "win|wce|os2|dos" .AND. ;

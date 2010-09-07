@@ -66,13 +66,13 @@ typedef struct _SHA_CTX {
 } SHA_CTX;
 
 #ifndef NOPROTO
-void SHA1_Init(SHA_CTX *context);
-void SHA1_Update(SHA_CTX *context, const void *data, unsigned int len);
-void SHA1_Final(sha1_byte digest[SHA1_DIGEST_LENGTH], SHA_CTX* context);
+void hb_SHA1_Init(SHA_CTX *context);
+void hb_SHA1_Update(SHA_CTX *context, const void *data, unsigned int len);
+void hb_SHA1_Final(sha1_byte digest[SHA1_DIGEST_LENGTH], SHA_CTX* context);
 #else
-void SHA1_Init();
-void SHA1_Update();
-void SHA1_Final();
+void hb_SHA1_Init();
+void hb_SHA1_Update();
+void hb_SHA1_Final();
 #endif
 
 #ifdef  __cplusplus

@@ -72,7 +72,7 @@ extern "C" {
 #define OPAD_BYTE   0x5c
 #define ZERO_BYTE   0x00
 
-void HMAC_SHA1_Init(HMAC_SHA1_CTX *ctx) {
+void hb_HMAC_SHA1_Init(HMAC_SHA1_CTX *ctx) {
     memset(&(ctx->key[0]), ZERO_BYTE, HMAC_SHA1_BLOCK_LENGTH);
     memset(&(ctx->ipad[0]), IPAD_BYTE, HMAC_SHA1_BLOCK_LENGTH);
     memset(&(ctx->opad[0]), OPAD_BYTE, HMAC_SHA1_BLOCK_LENGTH);
@@ -80,7 +80,7 @@ void HMAC_SHA1_Init(HMAC_SHA1_CTX *ctx) {
     ctx->hashkey = 0;
 }
 
-void HMAC_SHA1_UpdateKey(HMAC_SHA1_CTX *ctx, const void *key, unsigned int keylen) {
+void hb_HMAC_SHA1_UpdateKey(HMAC_SHA1_CTX *ctx, const void *key, unsigned int keylen) {
 
     /* Do we have anything to work with?  If not, return right away. */
     if (keylen < 1)
@@ -107,11 +107,11 @@ void HMAC_SHA1_UpdateKey(HMAC_SHA1_CTX *ctx, const void *key, unsigned int keyle
             ctx->hashkey = 1;
 
             /* Init. the hash beastie... */
-            SHA1_Init(&ctx->shactx);
+            hb_SHA1_Init(&ctx->shactx);
 
             /* If there's any previous key data, use it */
             if (ctx->keylen > 0) {
-                SHA1_Update(&ctx->shactx, &(ctx->key[0]), ctx->keylen);
+                hb_SHA1_Update(&ctx->shactx, &(ctx->key[0]), ctx->keylen);
             }
 
             /*
@@ -121,7 +121,7 @@ void HMAC_SHA1_UpdateKey(HMAC_SHA1_CTX *ctx, const void *key, unsigned int keyle
             ctx->keylen = HMAC_SHA1_DIGEST_LENGTH;
         }
         /* Now feed the latest key data to the has monster */
-        SHA1_Update(&ctx->shactx, key, keylen);
+        hb_SHA1_Update(&ctx->shactx, key, keylen);
     } else {
         /*
          * Key data length hasn't yet exceeded the hash
@@ -134,7 +134,7 @@ void HMAC_SHA1_UpdateKey(HMAC_SHA1_CTX *ctx, const void *key, unsigned int keyle
     }
 }
 
-void HMAC_SHA1_EndKey(HMAC_SHA1_CTX *ctx) {
+void hb_HMAC_SHA1_EndKey(HMAC_SHA1_CTX *ctx) {
     unsigned char   *ipad, *opad, *key;
     unsigned int     i;
 
@@ -142,7 +142,7 @@ void HMAC_SHA1_EndKey(HMAC_SHA1_CTX *ctx) {
     if (ctx->hashkey) {
         memset(&(ctx->key[0]), ZERO_BYTE, HMAC_SHA1_BLOCK_LENGTH);
         /* Yes, so finish up and copy the key data */
-        SHA1_Final(&(ctx->key[0]), &ctx->shactx);
+        hb_SHA1_Final(&(ctx->key[0]), &ctx->shactx);
         /* ctx->keylen was already set correctly */
     }
     /* Pad the key if necessary with zero bytes */
@@ -162,27 +162,27 @@ void HMAC_SHA1_EndKey(HMAC_SHA1_CTX *ctx) {
     }
 }
 
-void HMAC_SHA1_StartMessage(HMAC_SHA1_CTX *ctx) {
-    SHA1_Init(&ctx->shactx);
-    SHA1_Update(&ctx->shactx, &(ctx->ipad[0]), HMAC_SHA1_BLOCK_LENGTH);
+void hb_HMAC_SHA1_StartMessage(HMAC_SHA1_CTX *ctx) {
+    hb_SHA1_Init(&ctx->shactx);
+    hb_SHA1_Update(&ctx->shactx, &(ctx->ipad[0]), HMAC_SHA1_BLOCK_LENGTH);
 }
 
-void HMAC_SHA1_UpdateMessage(HMAC_SHA1_CTX *ctx, const void *data, unsigned int datalen) {
-    SHA1_Update(&ctx->shactx, data, datalen);
+void hb_HMAC_SHA1_UpdateMessage(HMAC_SHA1_CTX *ctx, const void *data, unsigned int datalen) {
+    hb_SHA1_Update(&ctx->shactx, data, datalen);
 }
 
-void HMAC_SHA1_EndMessage(unsigned char *out, HMAC_SHA1_CTX *ctx) {
+void hb_HMAC_SHA1_EndMessage(unsigned char *out, HMAC_SHA1_CTX *ctx) {
     unsigned char   buf[HMAC_SHA1_DIGEST_LENGTH];
     SHA_CTX     *c = &ctx->shactx;
 
-    SHA1_Final(&(buf[0]), c);
-    SHA1_Init(c);
-    SHA1_Update(c, &(ctx->opad[0]), HMAC_SHA1_BLOCK_LENGTH);
-    SHA1_Update(c, buf, HMAC_SHA1_DIGEST_LENGTH);
-    SHA1_Final(out, c);
+    hb_SHA1_Final(&(buf[0]), c);
+    hb_SHA1_Init(c);
+    hb_SHA1_Update(c, &(ctx->opad[0]), HMAC_SHA1_BLOCK_LENGTH);
+    hb_SHA1_Update(c, buf, HMAC_SHA1_DIGEST_LENGTH);
+    hb_SHA1_Final(out, c);
 }
 
-void HMAC_SHA1_Done(HMAC_SHA1_CTX *ctx) {
+void hb_HMAC_SHA1_Done(HMAC_SHA1_CTX *ctx) {
     /* Just to be safe, toast all context data */
     memset(&(ctx->ipad[0]), ZERO_BYTE, HMAC_SHA1_BLOCK_LENGTH);
     memset(&(ctx->ipad[0]), ZERO_BYTE, HMAC_SHA1_BLOCK_LENGTH);
