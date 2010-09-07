@@ -56,6 +56,15 @@ ifeq ($(CC_RULE),)
    endif
 endif
 
+ifeq ($(S_RULE),)
+   # the hack with .s => .S translation is workaround for
+   # some filesystems which can change filename to lowercase
+   S_RULE = $(CC) $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.s=$(OBJ_EXT)) $(HB_CFLAGS_STA) $(CC_IN) $(<:.s=.S))
+endif
+ifeq ($(SS_RULE),)
+   SS_RULE = $(CC) $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.S=$(OBJ_EXT)) $(HB_CFLAGS_STA) $(CC_IN) $<)
+endif
+
 # The rule to compile a C++ source file.
 ifeq ($(CPP_RULE),)
    ifeq ($(CXX),)
@@ -97,6 +106,20 @@ endif
 # Rules for resource files
 %$(RES_EXT) : $(GRANDP)%.rc
 	$(RC_RULE)
+
+# Rule to generate an object file from a assembler .s file.
+%$(OBJ_EXT) : $(GRANDP)%.s
+	$(S_RULE)
+
+%$(OBJ_EXT) : %.s
+	$(S_RULE)
+
+# Rule to generate an object file from a assembler .S file.
+%$(OBJ_EXT) : $(GRANDP)%.S
+	$(SS_RULE)
+
+%$(OBJ_EXT) : %.S
+	$(SS_RULE)
 
 %$(RES_EXT) : %.rc
 	$(RC_RULE)

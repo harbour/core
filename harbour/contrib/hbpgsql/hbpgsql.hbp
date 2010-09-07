@@ -10,6 +10,7 @@
 -w3 -es2
 
 -depkeyhead=pgsql:libpq-fe.h
+-depcontrol=pgsql:no{HB_BUILD_EXTDEF='no'}
 -depcontrol=pgsql:${HB_WITH_PGSQL}
 -depincpath=pgsql:/usr/include
 -depincpath=pgsql:/usr/local/pgsql/include

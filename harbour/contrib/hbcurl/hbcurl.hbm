@@ -11,6 +11,7 @@
 -w3 -es2
 
 -depkeyhead=curl:curl/curl.h
+-depcontrol=curl:no{HB_BUILD_EXTDEF='no'}
 -depcontrol=curl:${HB_WITH_CURL}
 -depincpath=curl:/usr/include
 

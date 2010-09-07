@@ -13,6 +13,7 @@
 -w3 -es2
 
 -depkeyhead=openssl:openssl/ssl.h
+-depcontrol=openssl:no{HB_BUILD_EXTDEF='no'}
 -depcontrol=openssl:${HB_WITH_OPENSSL}
 -depincpath=openssl:/usr/include
 -depincpath=openssl:/usr/local/include

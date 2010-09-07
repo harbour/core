@@ -10,6 +10,7 @@
 -w3 -es2
 
 -depkeyhead=libharu:hpdf.h
+-depcontrol=libharu:local{HB_BUILD_EXTDEF='no'}
 -depcontrol=libharu:${HB_WITH_LIBHARU}
 -depincpath=libharu:/usr/include
 -depincpath=libharu:/usr/local/include

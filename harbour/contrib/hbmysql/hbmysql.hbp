@@ -10,6 +10,7 @@
 -w3 -es2
 
 -depkeyhead=mysql:mysql.h
+-depcontrol=mysql:no{HB_BUILD_EXTDEF='no'}
 -depcontrol=mysql:${HB_WITH_MYSQL}
 -depincpath=mysql:/usr/include/mysql
 -depincpath=mysql:/opt/local/include/mysql5/mysql

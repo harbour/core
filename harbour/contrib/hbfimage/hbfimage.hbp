@@ -12,6 +12,7 @@
 -stop{dos|os2}
 
 -depkeyhead=freeimage:FreeImage.h
+-depcontrol=freeimage:no{HB_BUILD_EXTDEF='no'}
 -depcontrol=freeimage:${HB_WITH_FREEIMAGE}
 -depincpath=freeimage:/usr/include
 -depincpath=freeimage:/opt/local/include

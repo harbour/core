@@ -10,6 +10,7 @@
 -w3 -es2
 
 -depkeyhead=cairo:cairo.h
+-depcontrol=cairo:no{HB_BUILD_EXTDEF='no'}
 -depcontrol=cairo:${HB_WITH_CAIRO}
 -depincpath=cairo:/usr/include/cairo
 -depincpath=cairo:/opt/local/include/cairo

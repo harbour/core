@@ -3,6 +3,7 @@
 #
 
 C_OBJS := $(C_SOURCES:.c=$(OBJ_EXT)) $(CPP_SOURCES:.cpp=$(OBJ_EXT))
+S_OBJS := $(S_SOURCES:.s=$(OBJ_EXT)) $(SS_SOURCES:.S=$(OBJ_EXT))
 
 C_MAIN_OBJ := $(C_MAIN:.c=$(OBJ_EXT))
 
@@ -19,7 +20,7 @@ ifdef YACC_SOURCE
    endif
 endif
 
-ALL_C_OBJS := $(YACC_OBJ) $(C_OBJS) $(C_MAIN_OBJ)
+ALL_C_OBJS := $(YACC_OBJ) $(C_OBJS) $(C_MAIN_OBJ) $(S_OBJS)
 
 $(YACC_OBJ) : $(YACC_C)
 

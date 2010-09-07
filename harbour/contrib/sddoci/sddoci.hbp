@@ -14,6 +14,7 @@
 -stop{dos|os2|wce}
 
 -depkeyhead=ocilib:ocilib.h
+-depcontrol=ocilib:no{HB_BUILD_EXTDEF='no'}
 -depcontrol=ocilib:${HB_WITH_OCILIB}
 -depincpath=ocilib:/usr/include
 -depincpath=ocilib:/usr/local/include
