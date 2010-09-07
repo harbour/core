@@ -243,6 +243,7 @@ CLASS IdeProjManager INHERIT IdeObject
    METHOD selectCurrentProject()
 
    METHOD getCurrentProject( lAlert )
+   METHOD getCurrentProjectTitle()
    METHOD getProjectProperties( cProjectTitle )
 
    METHOD getProjectByFile( cProjectFile )
@@ -1025,6 +1026,23 @@ METHOD IdeProjManager:setCurrentProject( cProjectName )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeProjManager:getCurrentProjectTitle()
+
+   IF Empty( ::aProjects )
+      RETURN ""
+   ENDIF
+   IF ! Empty( ::cWrkProject )
+      RETURN ::cWrkProject
+   ENDIF
+   IF Len( ::aProjects ) == 1
+      ::setCurrentProject( ::aProjects[ 1, 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] )
+      RETURN ::aProjects[ 1, 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ]
+   ENDIF
+
+   RETURN ""
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeProjManager:getCurrentProject( lAlert )
 
    DEFAULT lAlert TO .t.
@@ -1363,6 +1381,9 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
       lRebuild := .t.
    ENDIF
 
+   /* Make Macros happy */
+   hbide_setProjectTitle( cProject )
+
    ::oProject := ::getProjectByTitle( cProject )
    // attempt to save the sources if are open in editors       should it be controlled by some option ?
    IF ::oINI:lSaveSourceWhenComp
@@ -1513,30 +1534,35 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
       NEXT
    ENDIF
 
+   cTmp := ::oOutputResult:oWidget:toPlainText()
+   cExe := ""
+   IF empty( cExe )
+      cTkn := "hbmk2: Linking... "
+      IF ( n := at( cTkn, cTmp ) ) > 0
+         n1   := hb_at( Chr( 10 ), cTmp, n + len( cTkn ) )
+         cExe := StrTran( substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) ), Chr( 13 ) )
+      ENDIF
+   ENDIF
+   IF empty( cExe )
+      cTkn := "hbmk2: Target up to date: "
+      IF ( n := at( cTkn, cTmp ) ) > 0
+         n1   := hb_at( Chr( 10 ), cTmp, n + len( cTkn ) )
+         cExe := StrTran( substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) ), Chr( 13 ) )
+      ENDIF
+   ENDIF
+
+   IF hb_isObject( ::cargo )
+      cExe := hbide_PathProc( cExe, hbide_pathToOSPath( ::cargo:cPath ) )
+   ELSE
+      cExe := hbide_PathProc( cExe, hbide_pathToOSPath( ::oProject:location ) )
+   ENDIF
+
+   IF !empty( cExe )
+      hb_fNameSplit( cExe, @cTmp )
+      hbide_setProjectOutputPath( cTmp )
+   ENDIF
+
    IF ::lLaunch
-      cTmp := ::oOutputResult:oWidget:toPlainText()
-      cExe := ""
-      IF empty( cExe )
-         cTkn := "hbmk2: Linking... "
-         IF ( n := at( cTkn, cTmp ) ) > 0
-            n1   := hb_at( Chr( 10 ), cTmp, n + len( cTkn ) )
-            cExe := StrTran( substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) ), Chr( 13 ) )
-         ENDIF
-      ENDIF
-      IF empty( cExe )
-         cTkn := "hbmk2: Target up to date: "
-         IF ( n := at( cTkn, cTmp ) ) > 0
-            n1   := hb_at( Chr( 10 ), cTmp, n + len( cTkn ) )
-            cExe := StrTran( substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) ), Chr( 13 ) )
-         ENDIF
-      ENDIF
-
-      IF hb_isObject( ::cargo )
-         cExe := hbide_PathProc( cExe, hbide_pathToOSPath( ::cargo:cPath ) )
-      ELSE
-         cExe := hbide_PathProc( cExe, hbide_pathToOSPath( ::oProject:location ) )
-      ENDIF
-
       ::outputText( " " )
       IF empty( cExe )
          ::outputText( "<font color=red>" + "Executable could not been detected from linker output!" + "</font>" )

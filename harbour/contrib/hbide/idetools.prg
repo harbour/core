@@ -856,8 +856,20 @@ METHOD IdeToolsManager:macro2value( cMacro )
    CASE cMacroL == "source_name"
       cVal := cFile + cExt
 
+   CASE cMacroL == "source_name_less_ext"
+      cVal := cFile
+
    CASE cMacroL == "source_ext"
       cVal := cExt
+
+   CASE cMacroL == "project_title"
+      cVal := hbide_setProjectTitle()
+
+   CASE cMacroL == "project_path"
+      cVal := ::oPM:getProjectPathFromTitle( hbide_setProjectTitle() )
+
+   CASE cMacroL == "project_output_path"
+      cVal := hbide_setProjectOutputPath()
 
    OTHERWISE
       cVal := hb_GetEnv( cMacro )

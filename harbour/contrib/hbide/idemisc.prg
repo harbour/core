@@ -104,6 +104,39 @@ FUNCTION hbide_setIde( oIde )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_setProjectOutputPath( cPath )
+   LOCAL oldProjPath
+
+   STATIC cProjPath := ""
+
+   oldProjPath := cProjPath
+
+   IF hb_isChar( cPath )
+      cProjPath := cPath
+   ENDIF
+
+   RETURN oldProjPath
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_setProjectTitle( cTitle )
+   LOCAL oldProjTitle
+
+   STATIC cProjTitle
+
+   IF empty( cProjTitle )
+      cProjTitle := hbide_setIde():oPM:getCurrentProjectTitle()
+   ENDIF
+   oldProjTitle := cProjTitle
+
+   IF hb_isChar( cTitle )
+      cProjTitle := cTitle
+   ENDIF
+
+   RETURN oldProjTitle
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION hbide_execPopup( aPops, aqPos, qParent )
    LOCAL i, qPop, qPoint, qAct, cAct, xRet, pAct, a_, qSub, b_
    LOCAL qSub_:={}
