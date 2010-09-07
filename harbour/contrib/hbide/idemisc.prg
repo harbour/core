@@ -761,9 +761,7 @@ FUNCTION hbide_parseFNfromStatusMsg( cText, cFileName, nLine, lValidText )
  */
 FUNCTION hbide_convertBuildStatusMsgToHtml( cText, oWidget )
    LOCAL aColors  := { CLR_MSG_ERR, CLR_MSG_INFO, CLR_MSG_WARN }
-   LOCAL aLines
-   LOCAL cLine
-   LOCAL nPos
+   LOCAL aLines, cIfError, cLine, nPos
 
    IF aRegList == NIL
       aRegList := {}
@@ -773,6 +771,7 @@ FUNCTION hbide_convertBuildStatusMsgToHtml( cText, oWidget )
    cText := StrTran( cText, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
    cText := StrTran( cText, Chr( 13 )            , Chr( 10 ) )
    cText := StrTran( cText, Chr( 10 ) + Chr( 10 ), Chr( 10 ) )
+   cText := StrTran( cText, "  ", " " )
 
    /* Convert some chars to valid HTML chars */
    DO WHILE "<" $ cText
@@ -787,18 +786,21 @@ FUNCTION hbide_convertBuildStatusMsgToHtml( cText, oWidget )
 
       IF !Empty( cLine )
          IF ( nPos := aScan( aRegList, {| reg | !Empty( hb_RegEx( reg[ 2 ], cLine ) ) } ) ) > 0
+            IF aRegList[ nPos,1 ] == MSG_TYPE_ERR
+               cIfError := cLine
+            ENDIF
             cLine := '<font color=' + aColors[ aRegList[nPos,1] ] + '>' + cLine + '</font>'
          ELSEIF "XBT" $ cLine
             cLine := '<font color=' + aColors[ aRegList[nPos,1] ] + '>' + cLine + '</font>'
          ELSE
-            cLine := "<font color = black>" + cLine + "</font>"
+            cLine := "<font color=black>" + cLine + "</font>"
          ENDIF
       ENDIF
 
       oWidget:append( cLine )
    NEXT
 
-   RETURN cText
+   RETURN cIfError
 
 /*----------------------------------------------------------------------*/
 

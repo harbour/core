@@ -122,7 +122,7 @@ CLASS HbpProcess
    DATA   bOutput
 
    METHOD read( nMode, i, ii )
-   METHOD outputMe( cLine )
+   METHOD outputMe( cLine, nMode )
    METHOD finish()
 
    ENDCLASS
@@ -243,19 +243,19 @@ METHOD HbpProcess:read( nMode, i, ii )
 
    DO CASE
    CASE nMode == CHN_BGN
-      ::outputMe( "CurDir() => " + CurDir() + "   Starting in => " + ::qProcess:workingDirectory() )
+      ::outputMe( "CurDir() => " + CurDir() + "   Starting in => " + ::qProcess:workingDirectory(), CHN_BGN )
 
    CASE nMode == CHN_OUT
       ::qProcess:setReadChannel( 0 )
       cLine := space( nSize )
       ::qProcess:read( @cLine, nSize )
-      ::outputMe( cLine )
+      ::outputMe( cLine, CHN_OUT )
 
    CASE nMode == CHN_ERR
       ::qProcess:setReadChannel( 1 )
       cLine := space( nSize )
       ::qProcess:read( @cLine, nSize )
-      ::outputMe( cLine )
+      ::outputMe( cLine, CHN_ERR )
 
    CASE nMode == CHN_FIN
       ::nExitCode   := i
@@ -269,7 +269,9 @@ METHOD HbpProcess:read( nMode, i, ii )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpProcess:outputMe( cLine )
+METHOD HbpProcess:outputMe( cLine, nMode )
+
+   HB_SYMBOL_UNUSED( nMode )
 
    IF hb_isBlock( ::bOutput ) .AND. !empty( cLine )
       eval( ::bOutput, trim( cLine ), NIL, Self )

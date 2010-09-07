@@ -224,6 +224,8 @@ CLASS IdeProjManager INHERIT IdeObject
    DATA   lFetch                                  INIT .T.
    DATA   lUpdateTree                             INIT .F.
 
+   DATA   cIfError                                INIT NIL
+
    METHOD new( oIDE )
    METHOD create( oIDE )
    METHOD destroy()
@@ -1469,18 +1471,22 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeProjManager:showOutput( cOutput, mp2, oProcess )
+   LOCAL cIfError
 
    HB_SYMBOL_UNUSED( mp2 )
    HB_SYMBOL_UNUSED( oProcess )
 
-   hbide_convertBuildStatusMsgToHtml( cOutput, ::oOutputResult:oWidget )
+   cIfError := hbide_convertBuildStatusMsgToHtml( cOutput, ::oOutputResult:oWidget )
+   IF ! empty( cIfError ) .AND. empty( ::cIfError )
+      ::cIfError := cIfError
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
-   LOCAL cTmp, n, n1, cTkn, cExe
+   LOCAL cTmp, n, n1, cTkn, cExe, qDoc, qCursor
 
    HB_SYMBOL_UNUSED( oProcess )
 
@@ -1491,6 +1497,21 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
    ::outputText( hbide_outputLine() )
 
    ferase( ::cBatch )
+
+   IF ! empty( ::cIfError )
+      ::oOutputResult:SelStart := 0
+      ::oOutputResult:find( ::cIfError )
+      ::oOutputResult:SelBold  := .T.
+
+      qDoc := QTextDocument():from( ::oOutputResult:document() )
+      FOR n := 0 TO qDoc:blockCount() - 1
+         IF ::cIfError == QTextBlock():from( qDoc:findBlockByNumber( n ) ):text()
+            qCursor := QTextCursor():from( qDoc:find_2( ::cIfError ) )
+            ::oOutputResult:setTextCursor( qCursor )
+            EXIT
+         ENDIF
+      NEXT
+   ENDIF
 
    IF ::lLaunch
       cTmp := ::oOutputResult:oWidget:toPlainText()
@@ -1535,6 +1556,12 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
       ::editSource( ::cPPO )
    ENDIF
 
+   ::cIfError := NIL
+   ::oOutputResult:ensureCursorVisible()
+   IF !empty( qCursor )
+      qCursor:clearSelection()
+      ::oOutputResult:setTextCursor( qCursor )
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1620,8 +1647,9 @@ METHOD IdeProjManager:runAsScript()
 
 METHOD IdeProjManager:outputText( cText )
 
-   ::oOutputResult:oWidget:append( cText )
+   ::oOutputResult:oWidget:append( "<font color=black>" + cText + "</font>" )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+

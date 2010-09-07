@@ -308,6 +308,7 @@ METHOD XbpRtf:find( cSearchString, nStart, nEnd, nOptions )
       ::oTextDocument:pPtr := ::oWidget:document()
       ::oTextCursor:pPtr   := ::oTextDocument:find_2( cSearchString )
       ::oCurCursor         := ::oTextCursor
+      nPos := ::oTextCursor:position()
    ENDIF
    RETURN nPos
 
