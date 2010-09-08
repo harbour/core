@@ -160,6 +160,7 @@ QPolygonF.qth
 QPrintDialog.qth
 QPrintEngine.qth
 QPrinter.qth
+QPrinterInfo.qth
 QPrintPreviewDialog.qth
 QProgressBar.qth
 QProgressDialog.qth

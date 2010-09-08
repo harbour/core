@@ -160,6 +160,7 @@ QPolygonF.cpp
 QPrintDialog.cpp
 QPrintEngine.cpp
 QPrinter.cpp
+QPrinterInfo.cpp
 QPrintPreviewDialog.cpp
 QProgressBar.cpp
 QProgressDialog.cpp
@@ -420,6 +421,7 @@ TQPolygonF.prg
 TQPrintDialog.prg
 TQPrintEngine.prg
 TQPrinter.prg
+TQPrinterInfo.prg
 TQPrintPreviewDialog.prg
 TQProgressBar.prg
 TQProgressDialog.prg
