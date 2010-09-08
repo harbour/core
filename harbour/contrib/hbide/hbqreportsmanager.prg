@@ -521,7 +521,6 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
       EXIT
    CASE "buttonPrint_clicked"
       ::printPreview()
-      //::printReport()
       EXIT
    CASE "buttonGrid_clicked"
       ::qScene:setShowGrid( ::qToolbarAlign:setItemChecked( "Grid" ) )
@@ -1370,58 +1369,27 @@ STATIC FUNCTION fetchBarString( cCode, lCheck, nType )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:printReport( qPrinter )
-   LOCAL qPainter, qOption, a_, qRectF, oHqrObject
-
-   DEFAULT qPrinter TO QPrinter():new()
-
-   qPrinter:setOutputFormat( QPrinter_PdfFormat )
-   qPrinter:setOrientation( ::qScene:orientation() )
-   //qPrinter:setPaperSize( ::qScene:pageSize() )
-   //m_printer->setPaperSize(dynamic_cast<PageInterface*>(obj)->paperRect().size());
-
-   qPrinter:setPaperSize( QRectF():from( ::qScene:paperRect() ):size() )
-   // qPrinter:setFullPage( .t. )
-
-   qPainter := QPainter():new()
-
-   qOption := QStyleOptionGraphicsItem():new()
-   //qOption:type := 17
-
-   qPainter:begin( qPrinter )
-   //
-   FOR EACH a_ IN ::aObjects
-      IF hb_hHasKey( ::hItems, a_[ 3 ] )
-         oHqrObject := ::hItems[ a_[ 3 ] ]
-         qRectF     := QRectF():from( oHqrObject:geometry() )
-         qRectF     := QRectF():new( qRectF:x()*10/25.4, qRectF:y()*10/25.4, qRectF:width()*10/25.4, qRectF:height()*10/25.4 )
-         oHqrObject:draw( qPainter, qRectF )
-      ENDIF
-   NEXT
-   //
-   qPainter:end()
-   qPainter := NIL
-   IF empty( qPrinter )
-      ::printPreview( qPrinter )
-   ENDIF
-
-   RETURN qOption
-
-/*----------------------------------------------------------------------*/
-
 METHOD HbqReportsManager:printPreview( qPrinter )
    LOCAL qDlg
+
+   qPrinter := QPrinter():new()
+   qPrinter:setOutputFormat( QPrinter_PdfFormat )
+   qPrinter:setOrientation( ::qScene:orientation() )
+   // qPrinter:setPaperSize( ::qScene:pageSize() )
+   qPrinter:setPaperSize( QRectF():from( ::qScene:paperRect() ):size() )
+   // qPrinter:setFullPage( .t. )
 
    IF !empty( qPrinter )
       qDlg := QPrintPreviewDialog():new( qPrinter, ::qView )
    ELSE
       qDlg := QPrintPreviewDialog():new( ::qView )
-      qDlg:connect( "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
    ENDIF
+
+   qDlg:connect( "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
 
    qDlg:setWindowTitle( "HBReportGenerator : " + iif( !empty( ::cSaved ), ::cSaved, "Untitled" ) )
    qDlg:move( 20, 20 )
-   qDlg:resize( 300, 400 )
+   qDlg:resize( 400, 600 )
    qDlg:exec()
 
    RETURN self
@@ -1436,6 +1404,32 @@ METHOD HbqReportsManager:paintRequested( pPrinter )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
+METHOD HbqReportsManager:printReport( qPrinter )
+   LOCAL qPainter, a_, qRectF, oHqrObject
+
+   //DEFAULT qPrinter TO QPrinter():new()
+
+   qPainter := QPainter():new()
+
+   qPainter:begin( qPrinter )
+   //
+   FOR EACH a_ IN ::aObjects
+      IF hb_hHasKey( ::hItems, a_[ 3 ] )
+         oHqrObject := ::hItems[ a_[ 3 ] ]
+         qRectF     := QRectF():from( oHqrObject:geometry() )
+         qRectF     := QRectF():new( qRectF:x()*10/25.4, qRectF:y()*10/25.4, qRectF:width()*10/25.4, qRectF:height()*10/25.4 )
+         qPainter:setTransform( oHqrObject:oWidget:transform() )
+         oHqrObject:draw( qPainter, qRectF, .f. )
+      ENDIF
+   NEXT
+   //
+   qPainter:end()
+
+   IF empty( qPrinter )
+      ::printPreview( qPrinter )
+   ENDIF
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 //                       HqrGraphicsItem() Class
@@ -1525,7 +1519,9 @@ CLASS HqrGraphicsItem
    METHOD setGeometry( ... )                      SETGET
    METHOD setPos( ... )                           SETGET
 
-   METHOD draw( qPainter, qRect )
+   METHOD rotate( nDeg )
+
+   METHOD draw( qPainter, qRect, lDrawSelection )
    METHOD setupPainter( qPainter )
    METHOD drawBarcode( qPainter, qRect )
    METHOD drawImage( qPainter, qRect )
@@ -1618,6 +1614,14 @@ METHOD HqrGraphicsItem:execEvent( cEvent, p, p1, p2 )
 
       ENDCASE
    ENDCASE
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HqrGraphicsItem:rotate( nDeg )
+
+   ::oWidget:rotate( nDeg )
 
    RETURN Self
 
@@ -1977,6 +1981,7 @@ METHOD HqrGraphicsItem:setupPainter( qPainter )
    qPainter:setBrush( ::brush() )
 
    qFont := ::font()
+
    qFont:setPixelSize( qFont:pointSizeF() / UNIT )
    qPainter:setFont( qFont )
 
@@ -2062,7 +2067,9 @@ METHOD HqrGraphicsItem:drawSelection( qPainter, qRect )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HqrGraphicsItem:draw( qPainter, qRect )
+METHOD HqrGraphicsItem:draw( qPainter, qRect, lDrawSelection )
+
+   DEFAULT lDrawSelection TO .t.
 
    ::setupPainter( qPainter )
 
@@ -2087,7 +2094,9 @@ METHOD HqrGraphicsItem:draw( qPainter, qRect )
       EXIT
    ENDSWITCH
 
-   ::drawSelection( qPainter, qRect )
+   IF lDrawSelection
+      ::drawSelection( qPainter, qRect )
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -2290,7 +2299,7 @@ METHOD HqrGraphicsItem:drawImage( qPainter, qRect )
 
 METHOD HqrGraphicsItem:drawChart( qPainter, qRect )
    LOCAL qFMetrix, maxpv, minnv, absMaxVal, powVal, chartStep, powStep, maxHeight, valstep, maxLabelWidth
-   LOCAL pw, rc, maxval, y, i, x, cv, barWidth, lg, py, f, cMaxVal, nDec, nFHeight, nLabelWidth, br
+   LOCAL pw, rc, maxval, y, i, x, cv, barWidth, lg, py, f, cMaxVal, nDec, nFHeight, nLabelWidth, br, nPlanes
    LOCAL m_drawBorder      := .t.
    LOCAL m_showLabels      := .t.
    LOCAL m_showGrid        := .t.
@@ -2352,18 +2361,20 @@ METHOD HqrGraphicsItem:drawChart( qPainter, qRect )
       valstep := ( (  ( nFHeight / valstep ) ) + 1 ) * valstep
    ENDIF
 
+   nPlanes := maxVal / chartStep + 1 + iif( maxVal % chartStep != 0, 1, 0 )
+
    IF m_showLabels
       maxLabelWidth := 0
-      FOR i := 0 TO maxVal / chartStep + 1 + iif( ( maxVal %  chartStep ) != 0, 1, 0 )
+      FOR i := 1 TO nPlanes
          nLabelWidth := qFMetrix:width( hb_ntos( Int( ( maxVal * i - chartStep * i ) / powVal ) ) )
          IF maxLabelWidth < nLabelWidth
             maxLabelWidth := nLabelWidth
          ENDIF
       NEXT
       y := 0
-      FOR i := 0 TO maxVal / chartStep + 1 + iif( ( maxVal % chartStep ) != 0, 1, 0 )
+      FOR i := 1 TO nPlanes
          qPainter:drawText_2( QRectF():new( rc:x(), rc:y() + y, maxLabelWidth, nFHeight ), ;
-                         Qt_AlignRight + Qt_AlignVCenter, hb_ntos( Int( ( maxpv - chartStep * i ) / powVal ) ) )
+                         Qt_AlignRight + Qt_AlignVCenter, hb_ntos( Int( ( maxpv - chartStep * ( i - 1 ) ) / powVal ) ) )
          y += valstep
       NEXT
 
@@ -2373,7 +2384,7 @@ METHOD HqrGraphicsItem:drawChart( qPainter, qRect )
 
    IF m_showGrid
       y :=  nFHeight / 2
-      FOR i := 0 TO maxVal / chartStep + 1 + iif( maxVal % chartStep != 0, 1, 0 )
+      FOR i := 1 TO nPlanes
          qPainter:drawLine_4( rc:x(), rc:y() + y, rc:x() + rc:width(), rc:y() + y )
          y += valstep
       NEXT
