@@ -55,38 +55,38 @@
 #include "hbapiitm.h"
 #include "hbapistr.h"
 
-/* 
+/*
    The application/json Media Type for JavaScript Object Notation (JSON)
-   http://www.ietf.org/rfc/rfc4627.txt 
+   http://www.ietf.org/rfc/rfc4627.txt
 
       C level functions:
         char * hb_jsonEncode( PHB_ITEM pValue, HB_SIZE * pnLen );
            pValue  - value to encode;
-           pnLen   - if pnLen is not NULL, length of returned buffer is 
+           pnLen   - if pnLen is not NULL, length of returned buffer is
                      stored to *pnLen;
-           returns pointer to encoded JSON buffer. buffer must be fried 
+           returns pointer to encoded JSON buffer. buffer must be fried
               by the caller.
-      
+
         HB_SIZE hb_jsonDecode( const char * szSource, PHB_ITEM pValue );
            szSource - JSON source;
-           pValue   - item to store decoded value. Item value is 
+           pValue   - item to store decoded value. Item value is
                       undetermined in case of error;
-           returns number of bytes decoded from the buffer. This allows 
-              to use the remaining part of the buffer for some other 
+           returns number of bytes decoded from the buffer. This allows
+              to use the remaining part of the buffer for some other
               purposes. Returns 0 on error.
-    
+
       Harbour level functions:
         hb_jsonDecode( cJSON, @xValue ) --> nLengthDecoded
         hb_jsonEncode( xValue ) --> cJSON
-    
+
       Note:
-        - Harbour types unsupported by JSON (date, timestamp, etc.) are 
+        - Harbour types unsupported by JSON (date, timestamp, etc.) are
           encoded as null values;
         - strings are encoded in UTF-8;
-        - JSON encode functions are safe for recursive arrays and hashes. 
-          Recursive part of array or hash will be stored as null. JSON 
-          encoder still allows to use same structure in the leaves, in 
-          this case content will be duplicate. 
+        - JSON encode functions are safe for recursive arrays and hashes.
+          Recursive part of array or hash will be stored as null. JSON
+          encoder still allows to use same structure in the leaves, in
+          this case content will be duplicate.
           I.e.:
              xI := {1, NIL}
              xI[2] := xI
@@ -162,7 +162,7 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx, HB_SIZE n
       while( nPos < nLen )
       {
          nPos2 = nPos;
-         while( * ( ( unsigned char * ) szString + nPos2 ) >= ' ' && 
+         while( * ( ( unsigned char * ) szString + nPos2 ) >= ' ' &&
                 szString[ nPos2 ] != '\\' && szString[ nPos2 ] != '\"' )
             nPos2++;
          if( nPos2 > nPos )
@@ -338,8 +338,8 @@ static const char * _hb_jsonDecode( const char * szSource, PHB_ITEM pValue )
                   int i, val = 0;
 
                   szSource++;
-                  for( i = 0; i < 4 && ( ( *szSource >= '0' && *szSource <= '9' ) || 
-                                         ( *szSource >= 'A' && *szSource <= 'F' ) || 
+                  for( i = 0; i < 4 && ( ( *szSource >= '0' && *szSource <= '9' ) ||
+                                         ( *szSource >= 'A' && *szSource <= 'F' ) ||
                                          ( *szSource >= 'a' && *szSource <= 'f' ) ); i++ )
                   {
                      if( szSource[ i ] <= '9' )
@@ -382,7 +382,7 @@ static const char * _hb_jsonDecode( const char * szSource, PHB_ITEM pValue )
    }
    else if( *szSource == '-' || ( *szSource >= '0' && *szSource <= '9' ) )
    {
-      /* NOTE: this function is much less strict to number format than 
+      /* NOTE: this function is much less strict to number format than
                JSON syntax definition. This is allowed behaviour [Mindaugas] */
       HB_MAXINT nValue = 0;
       double dblValue = 0;
@@ -401,7 +401,7 @@ static const char * _hb_jsonDecode( const char * szSource, PHB_ITEM pValue )
       {
          double mult = 1;
 
-         dblValue = nValue; 
+         dblValue = nValue;
          fDbl = HB_TRUE;
          szSource++;
          while( *szSource >= '0' && *szSource <= '9' )
@@ -464,7 +464,7 @@ static const char * _hb_jsonDecode( const char * szSource, PHB_ITEM pValue )
       {
          PHB_ITEM pItem = hb_itemNew( NULL );
 
-         while( 1 )
+         for( ;; )
          {
             szSource = _hb_jsonDecode( szSource, pItem );
             if( ! szSource )
@@ -473,7 +473,7 @@ static const char * _hb_jsonDecode( const char * szSource, PHB_ITEM pValue )
                return NULL;
             }
             hb_arrayAddForward( pValue, pItem );
-            
+
             szSource = _skipws( szSource );
             if( *szSource == ',' )
             {
@@ -487,7 +487,7 @@ static const char * _hb_jsonDecode( const char * szSource, PHB_ITEM pValue )
                hb_itemRelease( pItem );
                return NULL;
             }
-         } 
+         }
          hb_itemRelease( pItem );
       }
       return szSource + 1;
@@ -501,10 +501,10 @@ static const char * _hb_jsonDecode( const char * szSource, PHB_ITEM pValue )
          PHB_ITEM pItemKey = hb_itemNew( NULL );
          PHB_ITEM pItemValue = hb_itemNew( NULL );
 
-         while( 1 )
+         for( ;; )
          {
-            if( ( szSource = _hb_jsonDecode( szSource, pItemKey ) ) == NULL || 
-                ! HB_IS_STRING( pItemKey ) || 
+            if( ( szSource = _hb_jsonDecode( szSource, pItemKey ) ) == NULL ||
+                ! HB_IS_STRING( pItemKey ) ||
                 * ( szSource = _skipws( szSource ) ) != ':' ||
                 ( szSource = _hb_jsonDecode( _skipws( szSource + 1 ), pItemValue ) ) == NULL)
             /* Do we need to check if key does not exist yet? */
@@ -529,7 +529,7 @@ static const char * _hb_jsonDecode( const char * szSource, PHB_ITEM pValue )
                hb_itemRelease( pItemValue );
                return NULL;
             }
-         } 
+         }
          hb_itemRelease( pItemKey );
          hb_itemRelease( pItemValue );
       }
