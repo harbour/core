@@ -66,6 +66,8 @@ CREATE CLASS TOPBARMENU FUNCTION HBTopBarMenu
 
    EXPORTED:
 
+   VAR cargo
+
    METHOD addItem( oItem )
    METHOD delItem( nPos )
    METHOD display()
