@@ -80,15 +80,16 @@ C_SOURCES := \
    hbcrc.c \
    hbdyn.c \
    hbdynhb.c \
-   hbhex.c \
    hbfeof.c \
-   hbmd5.c \
-   hbntos.c \
    hbfile.c \
    hbgtcore.c \
+   hbhex.c \
    hbi18n1.c \
    hbinet.c \
    hbinetz.c \
+   hbjson.c \
+   hbmd5.c \
+   hbntos.c \
    hbproces.c \
    hbprocfn.c \
    hbrandom.c \
