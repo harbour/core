@@ -1158,6 +1158,81 @@ FUNCTION hbide_buildLinesLabel( nFrom, nTo, nW, nMax )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_parseMacros( cP )
+   LOCAL lHas, n, n1, cMacro
+
+   IF !empty( cP )
+      DO WHILE .t.
+         lHas := .f.
+
+         IF ( n := at( "${" , cP ) ) > 0
+            IF ( n1 := at( "}" , cP ) ) > 0
+               lHas    := .t.
+               cMacro  := substr( cP, n + 2, n1 - n - 2 )
+               cP      := substr( cP, 1, n - 1 ) + hbide_macro2value( cMacro ) + substr( cP, n1 + 1 )
+            ENDIF
+         ENDIF
+         IF ! lHas
+            EXIT
+         ENDIF
+      ENDDO
+   ENDIF
+
+   RETURN cP
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_macro2value( cMacro )
+   LOCAL cVal, cMacroL, oEdit, cFile, cPath, cExt
+   LOCAL oIde := hbide_setIDE()
+
+   cMacro  := alltrim( cMacro )
+   cMacroL := lower( cMacro )
+
+   oEdit   := oIde:oEM:getEditorCurrent()
+   IF !empty( oEdit )
+      hb_fNameSplit( oEdit:sourceFile, @cPath, @cFile, @cExt )
+   ELSE
+      cPath := ""; cFile := ""; cExt := ""
+   ENDIF
+
+   DO CASE
+   CASE cMacroL == "source_fullname"
+      cVal := hbide_pathToOSPath( cPath + cFile + cExt )
+
+   CASE cMacroL == "source_path"
+      cVal := hbide_pathToOSPath( cPath )
+
+   CASE cMacroL == "source_fullname_less_ext"
+      cVal := hbide_pathToOSPath( cPath + cFile )
+
+   CASE cMacroL == "source_name"
+      cVal := cFile + cExt
+
+   CASE cMacroL == "source_name_less_ext"
+      cVal := cFile
+
+   CASE cMacroL == "source_ext"
+      cVal := cExt
+
+   CASE cMacroL == "project_title"
+      cVal := hbide_setProjectTitle()
+
+   CASE cMacroL == "project_path"
+      cVal := oIde:oPM:getProjectPathFromTitle( hbide_setProjectTitle() )
+
+   CASE cMacroL == "project_output_path"
+      cVal := hbide_setProjectOutputPath()
+
+   OTHERWISE
+      cVal := hb_GetEnv( cMacro )
+
+   ENDCASE
+
+   RETURN cVal
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION hbide_getShellCommandsTempFile( aCmd )
    LOCAL cExt
    LOCAL fhnd
@@ -1177,6 +1252,7 @@ FUNCTION hbide_getShellCommandsTempFile( aCmd )
 
       cCmdFile := ""
       FOR EACH tmp IN aCmd
+         tmp := hbide_parseMacros( tmp )
          cCmdFile += tmp + hb_eol()
       NEXT
 

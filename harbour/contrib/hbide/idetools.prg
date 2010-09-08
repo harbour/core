@@ -105,8 +105,6 @@ CLASS IdeToolsManager INHERIT IdeObject
    METHOD addPanelsMenu( cPrompt )
    METHOD showOutput( cOut, mp2, oHbp )
    METHOD finished( nEC, nES, oHbp )
-   METHOD parseParams( cP )
-   METHOD macro2value( cMacro )
    METHOD ini2toolbarControls( nIndex, nMode )
    METHOD populateButtonsTable( nIndex )
    METHOD buildUserToolbars()
@@ -711,7 +709,8 @@ METHOD IdeToolsManager:execToolByParams( cCmd, cParams, cStartIn, lCapture, lOpe
    ELSE
       cArg := ""
    ENDIF
-   cArg += ::parseParams( cParams )
+
+   cArg += hbide_parseMacros( cParams )
 
    IF lCapture
       IF lOpen
@@ -740,7 +739,7 @@ METHOD IdeToolsManager:execTool( ... )
          cCmd     := hbide_pathToOSPath( ::aTools[ nIndex, 2 ] )
          cParams  := ::aTools[ nIndex, 3 ]
          cParams  := iif( "http://" $ lower( cParams ) .OR. !empty( cPlugin ), cParams, hbide_pathToOSPath( cParams ) )
-         cParams  := ::parseParams( cParams )
+         cParams  := hbide_parseMacros( cParams )
          cStayIn  := hbide_pathToOSPath( ::aTools[ nIndex, 4 ] )
          lCapture := ::aTools[ nIndex, 5 ] == "YES"
          lOpen    := ::aTools[ nIndex, 6 ] == "YES"
@@ -759,7 +758,7 @@ METHOD IdeToolsManager:execTool( ... )
       cCmd     := hbide_pathToOSPath( aParam[ 1 ] )
       cParams  := aParam[ 2 ]
       cParams  := iif( "http://" $ lower( cParams ), cParams, hbide_pathToOSPath( cParams ) )
-      cParams  := ::parseParams( cParams )
+      cParams  := hbide_parseMacros( cParams )
       cStayIn  := hbide_pathToOSPath( aParam[ 3 ] )
       lCapture := iif( hb_isLogical( aParam[ 4 ] ), aParam[ 4 ], aParam[ 4 ] == "YES" )
       lOpen    := iif( hb_isLogical( aParam[ 5 ] ), aParam[ 5 ], aParam[ 5 ] == "YES" )
@@ -803,79 +802,5 @@ METHOD IdeToolsManager:finished( nEC, nES, oHbp )
    ::oOutputResult:oWidget:append( "Finished: Exit Code = " + hb_ntos( nEC ) + " Status = " + hb_ntos( nES ) )
 
    RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeToolsManager:parseParams( cP )
-   LOCAL lHas, n, n1, cMacro
-
-   IF !empty( cP )
-      DO WHILE .t.
-         lHas := .f.
-
-         IF ( n := at( "${" , cP ) ) > 0
-            IF ( n1 := at( "}" , cP ) ) > 0
-               lHas    := .t.
-               cMacro  := substr( cP, n + 2, n1 - n - 2 )
-               cP      := substr( cP, 1, n - 1 ) + ::macro2value( cMacro ) + substr( cP, n1 + 1 )
-            ENDIF
-         ENDIF
-         IF ! lHas
-            EXIT
-         ENDIF
-      ENDDO
-   ENDIF
-
-   RETURN cP
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeToolsManager:macro2value( cMacro )
-   LOCAL cVal, cMacroL, oEdit, cFile, cPath, cExt
-
-   cMacro  := alltrim( cMacro )
-   cMacroL := lower( cMacro )
-
-   oEdit   := ::oEM:getEditorCurrent()
-   IF !empty( oEdit )
-      hb_fNameSplit( oEdit:sourceFile, @cPath, @cFile, @cExt )
-   ELSE
-      cPath := ""; cFile := ""; cExt := ""
-   ENDIF
-
-   DO CASE
-   CASE cMacroL == "source_fullname"
-      cVal := hbide_pathToOSPath( cPath + cFile + cExt )
-
-   CASE cMacroL == "source_path"
-      cVal := hbide_pathToOSPath( cPath )
-
-   CASE cMacroL == "source_fullname_less_ext"
-      cVal := hbide_pathToOSPath( cPath + cFile )
-
-   CASE cMacroL == "source_name"
-      cVal := cFile + cExt
-
-   CASE cMacroL == "source_name_less_ext"
-      cVal := cFile
-
-   CASE cMacroL == "source_ext"
-      cVal := cExt
-
-   CASE cMacroL == "project_title"
-      cVal := hbide_setProjectTitle()
-
-   CASE cMacroL == "project_path"
-      cVal := ::oPM:getProjectPathFromTitle( hbide_setProjectTitle() )
-
-   CASE cMacroL == "project_output_path"
-      cVal := hbide_setProjectOutputPath()
-
-   OTHERWISE
-      cVal := hb_GetEnv( cMacro )
-
-   ENDCASE
-
-   RETURN cVal
 
 /*----------------------------------------------------------------------*/

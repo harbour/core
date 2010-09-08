@@ -351,7 +351,6 @@ METHOD IdeProjManager:loadProperties( cProjFileName, lNew, lFetch, lUpdateTree )
                                                                          { "xMate Projects"  , "*.xhp" } , ;
                                                                          { "xBuild Projects" , "*.xbp" } } )
          cProjFileName := ::synchronizeAlienProject( cProjFileName )
-
          ::oDockPT:show()
       ENDIF
       IF empty( cProjFileName )
@@ -987,7 +986,6 @@ METHOD IdeProjManager:setCurrentProject( cProjectName )
       ::oIDE:cWrkProject := aPrjProps[ PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ]
 
    ELSE
-    * MsgBox( 'Invalid project selected: "' + cProjectName + '"' )
       lValid := .F.
 
    ENDIF
@@ -998,27 +996,20 @@ METHOD IdeProjManager:setCurrentProject( cProjectName )
       ENDIF
 
       ::oIDE:updateTitleBar()
-      #if 0  /* It must not be as there are more actions attached */
-      ::oIDE:updateProjectMenu()
-      #endif
 
       /* Reset Old Color */
       IF !empty( cOldProject )
          IF !empty( oItem := hbide_findProjTreeItem( ::oIDE, cOldProject, "Project Name" ) )
             oItem:oWidget:setForeground( 0, QBrush():new( "QColor", QColor():new( 0,0,0 ) ) )
-            //oItem:oWidget:setBackground( 0, QBrush():new( "QColor", QColor():new( 255,255,255 ) ) )
          ENDIF
       ENDIF
       /* Set New Color */
       IF !empty( ::cWrkProject )
          IF !empty( oItem := hbide_findProjTreeItem( ::oIDE, ::cWrkProject, "Project Name" ) )
-            //oItem:oWidget:setForeground( 0, ::qBrushWrkProject )
             oItem:oWidget:setForeground( 0, QBrush():new( "QColor", QColor():new( 255,0,0 ) ) )
-            //oItem:oWidget:setBackground( 0, ::qBrushWrkProject )
-            //hbide_expandChildren( ::oIDE, oItem )
             ::oProjTree:oWidget:setCurrentItem( oItem:oWidget )
          ENDIF
-         ::loadProperties( ::getProjectFileNameFromTitle( ::cWrkProject ), .f., .t., .f. )
+         ::loadProperties( ::getProjectFileNameFromTitle( ::cWrkProject ), .f., .f., .f. )
       ENDIF
    ENDIF
 
@@ -1380,6 +1371,9 @@ METHOD IdeProjManager:buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
    IF ::lPPO
       lRebuild := .t.
    ENDIF
+
+   /* Set it as current project */
+   ::setCurrentProject( cProject )
 
    /* Make Macros happy */
    hbide_setProjectTitle( cProject )
