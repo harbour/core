@@ -96,7 +96,7 @@
    #endif
 #endif
 
-#if !defined( HB_OS_WIN ) && !defined( HB_OS_DOS )
+#if !defined( HB_OS_WIN )
 static HB_BOOL fsGetTempDirByCase( char * pszName, const char * pszTempDir )
 {
    HB_BOOL fOK = HB_FALSE;
@@ -353,7 +353,8 @@ HB_ERRCODE hb_fsTempDir( char * pszTempDir )
 #endif
          {
             pszTempDir[ 0 ] = '.';
-            pszTempDir[ 1 ] = '\0';
+            pszTempDir[ 1 ] = HB_OS_PATH_DELIM_CHR;
+            pszTempDir[ 2 ] = '\0';
          }
          else
             nResult = 0;
@@ -385,40 +386,12 @@ HB_ERRCODE hb_fsTempDir( char * pszTempDir )
          HB_TCHAR_COPYFROM( pszTempDir, lpDir, HB_PATH_MAX - 1 );
       }
    }
-
-#elif defined( HB_OS_OS2 )
-   {
-      char * pszTempDirEnv = hb_getenv( "TEMP" );
-
-      if( ! fsGetTempDirByCase( pszTempDir, pszTempDirEnv ) )
-      {
-         pszTempDir[ 0 ] = '.';
-         pszTempDir[ 1 ] = '\0';
-      }
-      else
-         nResult = 0;
-
-      if( pszTempDirEnv )
-         hb_xfree( pszTempDirEnv );
-
-      if( pszTempDir[ 0 ] != '\0' )
-      {
-         int len = ( int ) strlen( pszTempDir );
-         if( pszTempDir[ len - 1 ] != HB_OS_PATH_DELIM_CHR )
-         {
-            pszTempDir[ len ] = HB_OS_PATH_DELIM_CHR;
-            pszTempDir[ len + 1 ] = '\0';
-         }
-      }
-   }
 #else
    {
       char szBuffer[ L_tmpnam ];
 
       if( tmpnam( szBuffer ) != NULL )
       {
-         nResult = 0;
-
 #        if defined( __DJGPP__ )
          {
             /* convert '/' to '\' */
@@ -432,6 +405,42 @@ HB_ERRCODE hb_fsTempDir( char * pszTempDir )
             PHB_FNAME pTempName = hb_fsFNameSplit( szBuffer );
             hb_strncpy( pszTempDir, pTempName->szPath, HB_PATH_MAX - 1 );
             hb_xfree( pTempName );
+
+            if( hb_fsDirExists( pszTempDir ) )
+               nResult = 0;
+         }
+      }
+      if( nResult != 0 )
+      {
+         static const char * env_tmp[] = { "TEMP", "TMP", "TMPDIR", NULL };
+
+         const char ** tmp = env_tmp;
+
+         while( *tmp && nResult != 0 )
+         {
+            char * pszTempDirEnv = hb_getenv( *tmp++ );
+
+            if( pszTempDirEnv )
+            {
+               if( fsGetTempDirByCase( pszTempDir, pszTempDirEnv ) )
+                  nResult = 0;
+               hb_xfree( pszTempDirEnv );
+            }
+         }
+         if( pszTempDir[ 0 ] != '\0' )
+         {
+            int len = ( int ) strlen( pszTempDir );
+            if( pszTempDir[ len - 1 ] != HB_OS_PATH_DELIM_CHR )
+            {
+               pszTempDir[ len ] = HB_OS_PATH_DELIM_CHR;
+               pszTempDir[ len + 1 ] = '\0';
+            }
+         }
+         else
+         {
+            pszTempDir[ 0 ] = '.';
+            pszTempDir[ 1 ] = HB_OS_PATH_DELIM_CHR;
+            pszTempDir[ 2 ] = '\0';
          }
       }
    }
