@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Header file for debugger 
+ * Header file for debugger
  *
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
  * www - http://harbour-project.org

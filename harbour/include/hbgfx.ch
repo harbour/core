@@ -65,7 +65,7 @@
  *       screen, so this is under user choice.
  *       (the user just needs to know that it is not the same to aquire the screen, draw 100 lines, then
  *       release screen, than simply drawing 100 lines -as the GT will be acquiring/releasing the screen
- *       100 times, which will slow down things a lot-) [Mauricio] 
+ *       100 times, which will slow down things a lot-) [Mauricio]
  */
 
 #xtranslate hb_gfxAcquireScreen() => hb_gfxPrimitive( HB_GFX_ACQUIRESCREEN )

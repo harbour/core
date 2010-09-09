@@ -114,6 +114,7 @@ extern void       hb_mthAddTime( HB_ULONG ulClockTicks );       /* profiler from
 extern HB_EXPORT const char * hb_clsName( HB_USHORT uiClass );
 extern HB_EXPORT const char * hb_clsFuncName( HB_USHORT uiClass );
 extern HB_EXPORT const char * hb_clsMethodName( HB_USHORT uiClass, HB_USHORT uiMethod );
+extern HB_EXPORT PHB_SYMB   hb_clsFuncSym( HB_USHORT uiClass );
 extern HB_EXPORT HB_BOOL    hb_clsIsParent( HB_USHORT uiClass, const char * szParentName ); /* is a class handle inherited from szParentName Class ? */
 extern HB_EXPORT HB_USHORT  hb_clsFindClass( const char * szClass, const char * szFunc );
 

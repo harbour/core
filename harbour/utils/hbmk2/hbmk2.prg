@@ -2018,14 +2018,14 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE cParamL == "-beep-" .OR. ;
            cParamL == "-nobeep"          ; hbmk[ _HBMK_lBEEP ]        := .F.
       CASE cParamL == "-rebuild"
-      
+
          hbmk[ _HBMK_lINC ] := .T.
          IF nLevel == 1
             hbmk[ _HBMK_lREBUILD ] := .T.
          ENDIF
 
       CASE cParamL == "-rebuildall"
-      
+
          hbmk[ _HBMK_lINC ] := .T.
          hbmk[ _HBMK_lREBUILD ] := .T.
 

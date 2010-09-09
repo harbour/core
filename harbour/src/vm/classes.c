@@ -1384,6 +1384,14 @@ const char * hb_clsFuncName( HB_USHORT uiClass )
       return NULL;
 }
 
+PHB_SYMB hb_clsFuncSym( HB_USHORT uiClass )
+{
+   if( uiClass && uiClass <= s_uiClasses )
+      return s_pClasses[ uiClass ]->pClassFuncSym;
+   else
+      return NULL;
+}
+
 const char * hb_clsMethodName( HB_USHORT uiClass, HB_USHORT uiMethod )
 {
    if( uiClass && uiClass <= s_uiClasses &&
@@ -3811,7 +3819,7 @@ HB_FUNC( __CLSINSTSUPER )
                pObject->item.asArray.value->uiClass = 0;
             else if( hb_vmRequestQuery() == 0 )
             {
-               hb_snprintf( szDesc, sizeof( szDesc ), 
+               hb_snprintf( szDesc, sizeof( szDesc ),
                             "Super class '%s' does not return an object",
                             pClassFuncSym->szName );
                hb_errRT_BASE( EG_ARG, 3002, "Super class does not return an object", HB_ERR_FUNCNAME, 0 );

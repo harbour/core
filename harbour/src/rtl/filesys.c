@@ -2433,7 +2433,11 @@ HB_ULONG hb_fsSeek( HB_FHANDLE hFileHandle, HB_LONG lOffset, HB_USHORT uiFlags )
    }
 
    if( ulPos == ( ULONG ) INVALID_SET_FILE_POINTER )
+   {
       ulPos = ( ULONG ) SetFilePointer( DosToWinHandle( hFileHandle ), 0, NULL, SEEK_CUR );
+      if( ulPos == ( ULONG ) INVALID_SET_FILE_POINTER )
+         ulPos = 0;
+   }
 
 #else
    /* This DOS hack creates 2GB file size limit, Druzus */
@@ -2494,6 +2498,8 @@ HB_FOFFSET hb_fsSeekLarge( HB_FHANDLE hFileHandle, HB_FOFFSET nOffset, HB_USHORT
          ulOffsetLow = SetFilePointer( DosToWinHandle( hFileHandle ),
                                        0, ( PLONG ) &ulOffsetHigh, SEEK_CUR );
          nPos = ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow;
+         if( nPos == ( ULONG ) INVALID_SET_FILE_POINTER )
+            nPos = 0;
       }
       hb_vmLock();
    }
@@ -2516,6 +2522,8 @@ HB_FOFFSET hb_fsSeekLarge( HB_FHANDLE hFileHandle, HB_FOFFSET nOffset, HB_USHORT
       if( nPos == ( HB_FOFFSET ) -1 )
       {
          nPos = lseek64( hFileHandle, 0L, SEEK_CUR );
+         if( nPos == ( HB_FOFFSET ) -1 )
+            nPos = 0;
       }
       hb_vmLock();
    }

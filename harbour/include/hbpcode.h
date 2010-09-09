@@ -205,7 +205,7 @@ typedef enum
    HB_P_ENUMEND,               /* 132 End of FOR EACH loop */
    HB_P_SWITCH,                /* 133 SWITCH using long values */
    HB_P_PUSHDATE,              /* 134 places a data constant value on the virtual machine stack */
-/* optimalization of inlined math operations */   
+/* optimalization of inlined math operations */
    HB_P_PLUSEQPOP,             /* 135 adds a value to the variable reference */
    HB_P_MINUSEQPOP,            /* 136 subs a value from the variable reference */
    HB_P_MULTEQPOP,             /* 137 multiplies a variable reference by a value */
