@@ -261,7 +261,6 @@ METHOD HbqReportsManager:create( qParent )
    ::buildDesignReport()
 
    ::qTabBar:setCurrentIndex( 2 )
-   ::oWidget:show()
 
    RETURN Self
 
@@ -393,10 +392,6 @@ METHOD HbqReportsManager:buildDesignReport()
    ::qScene:setBottomMagnet( .t. )
 
    ::qLayoutD:setStretch( 1,1 )
-
-   ::qWidget1:show()
-   ::qWidget2:show()
-   ::qWidget3:show()
 
    RETURN Self
 
@@ -1370,20 +1365,22 @@ STATIC FUNCTION fetchBarString( cCode, lCheck, nType )
 /*----------------------------------------------------------------------*/
 
 METHOD HbqReportsManager:printPreview( qPrinter )
-   LOCAL qDlg
+   LOCAL qDlg, qInfo, qList, i, qStr
 
    qPrinter := QPrinter():new()
+
+   qInfo := QPrinterInfo():new( "QPrinter", qPrinter )
+   qList := QList():from( qInfo:availablePrinters() )
+   FOR i := 0 TO qList:size() - 1
+      qStr := QPrinterInfo():from( qList:at( i ) )
+HB_TRACE( HB_TR_ALWAYS, qList:at( i ), valtype( qList:at( i ) ), qStr:printerName() )
+   NEXT
    qPrinter:setOutputFormat( QPrinter_PdfFormat )
    qPrinter:setOrientation( ::qScene:orientation() )
-   // qPrinter:setPaperSize( ::qScene:pageSize() )
    qPrinter:setPaperSize( QRectF():from( ::qScene:paperRect() ):size() )
    // qPrinter:setFullPage( .t. )
 
-   IF !empty( qPrinter )
-      qDlg := QPrintPreviewDialog():new( qPrinter, ::qView )
-   ELSE
-      qDlg := QPrintPreviewDialog():new( ::qView )
-   ENDIF
+   qDlg := QPrintPreviewDialog():new( qPrinter, ::qView )
 
    qDlg:connect( "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
 

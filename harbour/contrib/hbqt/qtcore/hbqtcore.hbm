@@ -11,6 +11,7 @@ hbqt_base.cpp
 hbqt_destruct.cpp
 hbqt_hbevents.cpp
 hbqt_hbslots.cpp
+hbqt_hbqstring.cpp
 
 hbqt_misc.prg
 

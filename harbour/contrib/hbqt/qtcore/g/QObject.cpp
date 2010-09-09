@@ -71,8 +71,6 @@
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
- *  QList<T> findChildren ( const QString & name = QString() ) const
- *  QList<T> findChildren ( const QRegExp & regExp ) const
  *  const QMetaObject staticMetaObject
  *
  *  *** Commented out protos which construct fine but do not compile ***
@@ -82,6 +80,8 @@
  *  // bool disconnect ( const char * signal = 0, const QObject * receiver = 0, const char * method = 0 )
  *  // bool disconnect ( const QObject * receiver, const char * method = 0 )
  *  //T findChild ( const QString & name = QString() ) const
+ *  //QList<T> findChildren ( const QString & name = QString() ) const
+ *  //QList<T> findChildren ( const QRegExp & regExp ) const
  *  //virtual const QMetaObject * metaObject () const
  *  // bool connect ( const QObject * sender, const char * signal, const QObject * receiver, const char * method, Qt::ConnectionType type = Qt::AutoConnection )
  *  // bool disconnect ( const QObject * sender, const char * signal, const QObject * receiver, const char * method )

@@ -1085,11 +1085,15 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
                   cCmd := ""
                   cPrgRet := ""
 
-               CASE "<T>" $ aA[ PRT_CAST ]
+               CASE "QPair" $ aA[ PRT_CAST ]
                   cCmd := ""
                   cPrgRet := ""
-
-               CASE "QPair" $ aA[ PRT_CAST ]
+               #if 0
+               CASE "<T>" $ aA[ PRT_CAST ] .AND. "QList" $ aA[ PRT_CAST ]
+                  cCmd := "hb_retptrGC( hbqt_gcAllocate_QList( new QList< void * >( " + cCmn + " ), true ) )"
+                  cPrgRet := "p" + cDocNM
+               #endif
+               CASE "<T>" $ aA[ PRT_CAST ]
                   cCmd := ""
                   cPrgRet := ""
 
@@ -1148,13 +1152,10 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
                cPrgRet := "c" + cDocNM
 
             CASE aA[ PRT_L_FAR ] .AND. ( aA[ PRT_CAST ] $ "uchar" )
-               //cCmd := "hb_retptr( ( " + aA[ PRT_CAST ] + "* ) " + cCmn + " )"
                cCmd := "hb_retc( ( const char * ) " + cCmn + " )"
                cPrgRet := "p" + cDocNM
 
-//            CASE aA[ PRT_L_FAR ]
             CASE aA[ PRT_L_FAR ] .AND. !( aA[ PRT_L_CONST ] )
-               //cCmd := "hb_retptr( ( " + aA[ PRT_CAST ] + "* ) " + cCmn + " )"
                IF ( isAqtObject( aA[ PRT_CAST ] ) )
                   cCmd := Get_Command( aA[ PRT_CAST ], cCmn, .F. )
                ELSE
@@ -1162,23 +1163,21 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
                ENDIF
                cPrgRet := "p" + cDocNM
 
-            CASE ( isAqtObject( aA[ PRT_CAST ] ) )        .AND. ;
+            CASE ( isAqtObject( aA[ PRT_CAST ] ) )      .AND. ;
                                       aA[ PRT_L_FAR ]   .AND. ;
                                       aA[ PRT_L_CONST ] .AND. ;
                                       ( "Abstract" $ aA[ PRT_CAST ] )
-               //cCmd := "hb_retptr( ( " + aA[ PRT_CAST ] + "* ) " + cCmn + " )"
                cCmd := "hb_retptrGC( hbqt_gcAllocate_" + aA[ PRT_CAST ] + "( ( void * ) " + cCmn + ", false ) )"
                cPrgRet := "p" + cDocNM
 
-            CASE ( isAqtObject( aA[ PRT_CAST ] ) )        .AND. ;
+            CASE ( isAqtObject( aA[ PRT_CAST ] ) )      .AND. ;
                                       aA[ PRT_L_FAR   ] .AND. ;
                                       aA[ PRT_L_CONST ] .AND. ;
                                       aA[ PRT_L_VIRT  ]
-               //cCmd := "hb_retptr( ( " + aA[ PRT_CAST ] + "* ) " + cCmn + " )"
                cCmd := "hb_retptrGC( hbqt_gcAllocate_" + aA[ PRT_CAST ] + "( ( void * ) " + cCmn + ", false ) )"
                cPrgRet := "p" + cDocNM
 
-            CASE ( isAqtObject( aA[ PRT_CAST ] ) )        .AND. ;
+            CASE ( isAqtObject( aA[ PRT_CAST ] ) )      .AND. ;
                                       aA[ PRT_L_FAR   ] .AND. ;
                                       aA[ PRT_L_CONST ] .AND. ;
                                       aA[ PRT_L_CONST_LAST ]

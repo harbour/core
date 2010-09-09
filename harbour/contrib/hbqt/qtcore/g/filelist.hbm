@@ -11,6 +11,7 @@
 hbqtcore_extern.prg
 HBEvents.cpp
 HBSlots.cpp
+HBQString.cpp
 QAbstractItemModel.cpp
 QAbstractListModel.cpp
 QAbstractTableModel.cpp
@@ -49,6 +50,7 @@ QSignalMapper.cpp
 QSize.cpp
 QSizeF.cpp
 QStringList.cpp
+QStringRef.cpp
 QTextBoundaryFinder.cpp
 QTextCodec.cpp
 QTextDecoder.cpp
@@ -64,6 +66,7 @@ QVariant.cpp
 
 THBEvents.prg
 THBSlots.prg
+THBQString.prg
 TQAbstractItemModel.prg
 TQAbstractListModel.prg
 TQAbstractTableModel.prg
@@ -102,6 +105,7 @@ TQSignalMapper.prg
 TQSize.prg
 TQSizeF.prg
 TQStringList.prg
+TQStringRef.prg
 TQTextBoundaryFinder.prg
 TQTextCodec.prg
 TQTextDecoder.prg

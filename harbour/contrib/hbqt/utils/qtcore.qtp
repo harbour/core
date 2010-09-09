@@ -8,6 +8,7 @@
 
 HBEvents.qth
 HBSlots.qth
+HBQString.qth
 
 ; QAbstractEventDispatcher.qth
 QAbstractItemModel.qth
@@ -48,6 +49,7 @@ QSignalMapper.qth
 QSize.qth
 QSizeF.qth
 QStringList.qth
+QStringRef.qth
 QTextBoundaryFinder.qth
 QTextCodec.qth
 QTextDecoder.qth

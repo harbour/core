@@ -85,8 +85,8 @@ QList<QByteArray> dynamicPropertyNames () const
 virtual bool event ( QEvent * e )
 virtual bool eventFilter ( QObject * watched, QEvent * event )
 //T findChild ( const QString & name = QString() ) const
-QList<T> findChildren ( const QString & name = QString() ) const
-QList<T> findChildren ( const QRegExp & regExp ) const
+//QList<T> findChildren ( const QString & name = QString() ) const
+//QList<T> findChildren ( const QRegExp & regExp ) const
 bool inherits ( const char * className ) const
 void installEventFilter ( QObject * filterObj )
 bool isWidgetType () const
