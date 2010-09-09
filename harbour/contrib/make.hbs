@@ -309,8 +309,8 @@ PROCEDURE GNUMake( aParams, hProjectList )
       ENDIF
       FOR EACH cProject IN aFilter
          FOR EACH tmp IN hProjectList
-            IF hb_FileMatch( cProject, tmp:__enumKey() ) .OR. ;
-               hb_FileMatch( cProject, DirDelPathSep( FNameDirGet( PathSepToSelf( tmp:__enumKey() ) ) ) )
+            IF hb_FileMatch( PathSepToSelf( cProject ), PathSepToSelf( tmp:__enumKey() ) ) .OR. ;
+               hb_FileMatch( PathSepToSelf( cProject ), DirDelPathSep( FNameDirGet( PathSepToSelf( tmp:__enumKey() ) ) ) )
                IF lFilterNegative
                   IF tmp:__enumKey() $ hProjectReqList
                      hb_HDel( hProjectReqList, tmp:__enumKey() )
