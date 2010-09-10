@@ -1162,7 +1162,7 @@ HB_BOOL hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, PHB_ITEM pParam,
 
 /* IDispatch parameters, return value handling */
 
-static void GetParams( DISPPARAMS * dispparam )
+static void GetParams( DISPPARAMS * dispparam, HB_BOOL fUseRef )
 {
    VARIANTARG   *pArgs = NULL, *pRefs;
    UINT         uiArgCount, uiArg, uiRefs;
@@ -1172,10 +1172,13 @@ static void GetParams( DISPPARAMS * dispparam )
    if( uiArgCount > 0 )
    {
       uiRefs = 0;
-      for( uiArg = 1; uiArg <= uiArgCount; uiArg++ )
+      if( fUseRef )
       {
-         if( HB_ISBYREF( uiArg ) )
-            uiRefs++;
+         for( uiArg = 1; uiArg <= uiArgCount; uiArg++ )
+         {
+            if( HB_ISBYREF( uiArg ) )
+               uiRefs++;
+         }
       }
 
       pArgs = ( VARIANTARG* ) hb_xgrab( sizeof( VARIANTARG ) * ( uiArgCount + uiRefs ) );
@@ -1184,7 +1187,7 @@ static void GetParams( DISPPARAMS * dispparam )
       for( uiArg = 0; uiArg < uiArgCount; uiArg++ )
       {
          VariantInit( &pArgs[ uiArg ] );
-         if( HB_ISBYREF( uiArgCount - uiArg ) )
+         if( fUseRef && HB_ISBYREF( uiArgCount - uiArg ) )
          {
             VariantInit( pRefs );
             hb_oleItemToVariantRef( pRefs, hb_param( uiArgCount - uiArg, HB_IT_ANY ),
@@ -1512,7 +1515,7 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
          DISPID     lPropPut = DISPID_PROPERTYPUT;
 
          memset( &excep, 0, sizeof( excep ) );
-         GetParams( &dispparam );
+         GetParams( &dispparam, HB_FALSE );
          dispparam.rgdispidNamedArgs = &lPropPut;
          dispparam.cNamedArgs = 1;
 
@@ -1542,7 +1545,7 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
    {
       memset( &excep, 0, sizeof( excep ) );
       VariantInit( &variant );
-      GetParams( &dispparam );
+      GetParams( &dispparam, HB_TRUE );
 
       lOleError = HB_VTBL( pDisp )->Invoke( HB_THIS_( pDisp ) dispid, HB_ID_REF( IID_NULL ),
                                             LOCALE_USER_DEFAULT,
@@ -1590,7 +1593,7 @@ HB_FUNC( WIN_OLEAUTO___OPINDEX )
    if( !pDisp )
       return;
 
-   fAssign = hb_pcount() != 1;
+   fAssign = hb_pcount() > 1;
 
    if( fAssign )
    {
@@ -1598,7 +1601,7 @@ HB_FUNC( WIN_OLEAUTO___OPINDEX )
       DISPID     lPropPut = DISPID_PROPERTYPUT;
 
       memset( &excep, 0, sizeof( excep ) );
-      GetParams( &dispparam );
+      GetParams( &dispparam, HB_FALSE );
       dispparam.rgdispidNamedArgs = &lPropPut;
       dispparam.cNamedArgs = 1;
 
@@ -1609,14 +1612,14 @@ HB_FUNC( WIN_OLEAUTO___OPINDEX )
       FreeParams( &dispparam );
 
       /* assign method should return assigned value */
-      hb_itemReturn( hb_param( 1, HB_IT_ANY ) );
+      hb_itemReturn( hb_param( hb_pcount(), HB_IT_ANY ) );
    }
    else
    {
      /* Access */
       memset( &excep, 0, sizeof( excep ) );
       VariantInit( &variant );
-      GetParams( &dispparam );
+      GetParams( &dispparam, HB_TRUE );
 
       lOleError = HB_VTBL( pDisp )->Invoke( HB_THIS_( pDisp ) DISPID_VALUE, HB_ID_REF( IID_NULL ),
                                             LOCALE_USER_DEFAULT,
@@ -1635,7 +1638,7 @@ HB_FUNC( WIN_OLEAUTO___OPINDEX )
    if( lOleError != S_OK )
    {
       /* Try to detect if object is a collection */
-    
+
       memset( &excep, 0, sizeof( excep ) );
       memset( &dispparam, 0, sizeof( dispparam ) );
       VariantInit( &variant );
@@ -1644,8 +1647,8 @@ HB_FUNC( WIN_OLEAUTO___OPINDEX )
                                                 DISPATCH_PROPERTYGET,
                                                 &dispparam, &variant, &excep, &uiArgErr );
       VariantClear( &variant );
-    
-      hb_errRT_OLE( lOleErrorEnum == S_OK ? EG_BOUND : EG_ARG, 1016, ( HB_ERRCODE ) lOleError, NULL, 
+
+      hb_errRT_OLE( lOleErrorEnum == S_OK ? EG_BOUND : EG_ARG, 1016, ( HB_ERRCODE ) lOleError, NULL,
                     hb_langDGetErrorDesc( fAssign ? EG_ARRASSIGN : EG_ARRACCESS ) );
    }
 }
