@@ -1694,8 +1694,13 @@ ifneq ($(HB_INSTALL_PREFIX),)
       endif
    endif
 else
-   ifeq ($(HB_PLATFORM_UNIX),)
-      $(error ! Please set HB_INSTALL_PREFIX and try again.)
+   # Require HB_INSTALL_PREFIX on non-*nix when install is used,
+   # so that obligatory supplement files (like COPYING) are always
+   # copied to install destination.
+   ifneq ($(filter install,$(HB_MAKECMDGOALS)),)
+      ifeq ($(HB_PLATFORM_UNIX),)
+         $(error ! Please set HB_INSTALL_PREFIX and try again.)
+      endif
    endif
 endif
 
