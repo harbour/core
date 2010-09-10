@@ -149,7 +149,14 @@ HB_FUNC( QT_QPRINTER )
 {
    QPrinter * pObj = NULL;
 
-   pObj =  new QPrinter() ;
+   if( hb_pcount() >= 1 && HB_ISPOINTER( 1 ) )
+   {
+      pObj = new QPrinter( *hbqt_par_QPrinterInfo( 1 ), ( QPrinter::PrinterMode ) ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : QPrinter::ScreenResolution ) ) ;
+   }
+   else
+   {
+      pObj = new QPrinter() ;
+   }
 
    hb_retptrGC( hbqt_gcAllocate_QPrinter( ( void * ) pObj, true ) );
 }

@@ -219,6 +219,9 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD blockConvert( cMode )
    METHOD dispStatusInfo()
    METHOD toggleCurrentLineHighlightMode()
+   METHOD currentFunctionIndex()
+   METHOD toPreviousFunction()
+   METHOD toNextFunction()
 
    METHOD home()
    METHOD end()
@@ -638,6 +641,16 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
       CASE Qt_Key_ParenRight
          IF ! lCtrl .AND. ! lAlt
             ::hidePrototype()
+         ENDIF
+         EXIT
+      CASE Qt_Key_PageUp
+         IF lAlt
+            ::toPreviousFunction()
+         ENDIF
+         EXIT
+      CASE Qt_Key_PageDown
+         IF lAlt
+            ::toNextFunction()
          ENDIF
          EXIT
       ENDSWITCH
@@ -1339,25 +1352,61 @@ METHOD IdeEdit:convertDQuotes()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEdit:currentFunctionIndex()
+   LOCAL n := -1, nCurLine
+
+   IF !empty( ::aTags )
+      nCurLine := ::getLineNo()
+      IF len( ::aTags ) == 1
+         n := 1
+      ELSEIF ( n := ascan( ::aTags, {|e_| e_[ 3 ] >= nCurLine } ) ) == 0
+         n := len( ::aTags )
+      ELSEIF n > 0
+         n--
+      ENDIF
+   ENDIF
+
+   RETURN n
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:toNextFunction()
+   LOCAL n
+
+   IF ( n := ::currentFunctionIndex() ) >= 0
+      IF n < len( ::aTags )
+         IF ::find( ::aTags[ n+1, 8 ], QTextDocument_FindCaseSensitively )
+            ::qEdit:centerCursor()
+         ENDIF
+      ENDIF
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:toPreviousFunction()
+   LOCAL n
+
+   IF ( n := ::currentFunctionIndex() ) > 1
+      IF ::find( ::aTags[ n-1, 8 ], QTextDocument_FindCaseSensitively )
+         ::qEdit:centerCursor()
+      ENDIF
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEdit:markCurrentFunction()
-   LOCAL n, nCurLine
+   LOCAL n
 
    IF ::nPrevLineNo1 != ::getLineNo()
       ::nPrevLineNo1 := ::getLineNo()
 
-      IF !empty( ::aTags )
-         nCurLine := ::getLineNo()
-         IF len( ::aTags ) == 1
-            n := 1
-         ELSEIF ( n := ascan( ::aTags, {|e_| e_[ 3 ] >= nCurLine } ) ) == 0
-            n := len( ::aTags )
-         ELSEIF n > 0
-            n--
-         ENDIF
-         IF n > 0
-            ::oIde:oFuncList:setItemColorFG( ::aTags[ n,7 ], { 255,0,0 } )
-            ::oIde:oFuncList:setVisible( ::aTags[ n,7 ] )
-         ENDIF
+      IF ( n := ::currentFunctionIndex() ) > 0
+         ::oIde:oFuncList:setItemColorFG( ::aTags[ n,7 ], { 255,0,0 } )
+         ::oIde:oFuncList:setVisible( ::aTags[ n,7 ] )
       ENDIF
    ENDIF
    RETURN Self
