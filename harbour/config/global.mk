@@ -1693,6 +1693,10 @@ ifneq ($(HB_INSTALL_PREFIX),)
          endif
       endif
    endif
+else
+   ifeq ($(HB_PLATFORM_UNIX),)
+      $(error ! Please set HB_INSTALL_PREFIX and try again.)
+   endif
 endif
 
 export HB_OBJ_DIR := $(subst /,$(DIRSEP),$(OBJ_DIR))

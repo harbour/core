@@ -648,6 +648,8 @@ HARBOUR
    - HB_INSTALL_DOC              Override directory to install documentation
    - HB_INSTALL_MAN              Override directory to install *nix man files
    - HB_INSTALL_ETC              Override directory to install *nix config files
+                                 NOTE: These setting are deprecated. Please use
+                                       HB_INSTALL_PREFIX to set install destination.
 
    Special
    -------
