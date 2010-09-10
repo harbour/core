@@ -83,6 +83,8 @@
 
 #define HQR_BARCODE_3OF9                          1
 
+#define TO_MMS( n )   ( ( n ) * 10 / 25.4 )
+
 STATIC hIDs := {=>}
 
 /*----------------------------------------------------------------------*/
@@ -382,7 +384,7 @@ METHOD HbqReportsManager:buildDesignReport()
 
    ::loadReport()
 
-   ::qScene:setPageSize( QPrinter_Letter )
+   ::qScene:setPageSize( QPrinter_A4 )
    ::zoom( HBQT_GRAPHICSVIEW_ZOOM_WYSIWYG )
    ::qToolbarAlign:setItemChecked( "Grid", ::qScene:showGrid() )
    //
@@ -1373,7 +1375,7 @@ METHOD HbqReportsManager:printPreview( qPrinter )
    qList := QList():from( qInfo:availablePrinters() )
    FOR i := 0 TO qList:size() - 1
       qStr := QPrinterInfo():from( qList:at( i ) )
-HB_TRACE( HB_TR_ALWAYS, qList:at( i ), valtype( qList:at( i ) ), qStr:printerName() )
+//HB_TRACE( HB_TR_ALWAYS, qList:at( i ), valtype( qList:at( i ) ), qStr:printerName() )
    NEXT
    qPrinter:setOutputFormat( QPrinter_PdfFormat )
    qPrinter:setOrientation( ::qScene:orientation() )
@@ -1389,7 +1391,7 @@ HB_TRACE( HB_TR_ALWAYS, qList:at( i ), valtype( qList:at( i ) ), qStr:printerNam
    qDlg:resize( 400, 600 )
    qDlg:exec()
 
-   RETURN self
+   RETURN qStr
 
 /*----------------------------------------------------------------------*/
 
@@ -1403,29 +1405,29 @@ METHOD HbqReportsManager:paintRequested( pPrinter )
 /*----------------------------------------------------------------------*/
 
 METHOD HbqReportsManager:printReport( qPrinter )
-   LOCAL qPainter, a_, qRectF, oHqrObject
-
-   //DEFAULT qPrinter TO QPrinter():new()
+   LOCAL qPainter, a_, qRectF, oHqrObject, qT
 
    qPainter := QPainter():new()
-
    qPainter:begin( qPrinter )
-   //
+
+   qPainter:setWindow( QRectF():from( ::qScene:paperRect() ) )
+   qPainter:setViewPort_1( 0, 0, qPrinter:width(), qPrinter:height() )
    FOR EACH a_ IN ::aObjects
       IF hb_hHasKey( ::hItems, a_[ 3 ] )
          oHqrObject := ::hItems[ a_[ 3 ] ]
          qRectF     := QRectF():from( oHqrObject:geometry() )
-         qRectF     := QRectF():new( qRectF:x()*10/25.4, qRectF:y()*10/25.4, qRectF:width()*10/25.4, qRectF:height()*10/25.4 )
-         qPainter:setTransform( oHqrObject:oWidget:transform() )
+         qRectF     := QRectF():new( TO_MMS( qRectF:x() ), TO_MMS( qRectF:y() ), TO_MMS( qRectF:width() ), TO_MMS( qRectF:height() ) )
+
+         qT := QTransform():from( oHqrObject:transform() )
+         qT:translate( 0,0 )
+         qPainter:resetMatrix()
+         qPainter:setWorldTransform( qT )
+
          oHqrObject:draw( qPainter, qRectF, .f. )
       ENDIF
    NEXT
-   //
    qPainter:end()
 
-   IF empty( qPrinter )
-      ::printPreview( qPrinter )
-   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1438,8 +1440,6 @@ CLASS HqrGraphicsItem
    DATA   oWidget
    DATA   cParent
 
-   DATA   nOperation
-
    /* Constructor data */
    DATA   cType                                   INIT ""
    DATA   cName                                   INIT ""
@@ -1448,7 +1448,6 @@ CLASS HqrGraphicsItem
    DATA   nY                                      INIT 0
    DATA   aPos                                    INIT {}
    DATA   aGeometry                               INIT {}
-
 
    /* Runtime data */
    DATA   cText                                   INIT ""
@@ -1472,8 +1471,7 @@ CLASS HqrGraphicsItem
    DATA   nStartAngle                             INIT 30
    DATA   nSpanAngle                              INIT 120
 
-   DATA   nScreenDpiX                             INIT 96
-   DATA   nScreenDpiY                             INIT 96
+   DATA   nPointSize                              INIT 3.5
 
    METHOD new( oRM, cParent, cType, cName, aPos, aGeometry )
    METHOD execEvent( cEvent, p, p1, p2 )
@@ -1516,10 +1514,8 @@ CLASS HqrGraphicsItem
    METHOD setGeometry( ... )                      SETGET
    METHOD setPos( ... )                           SETGET
 
-   METHOD rotate( nDeg )
-
    METHOD draw( qPainter, qRect, lDrawSelection )
-   METHOD setupPainter( qPainter )
+   METHOD setupPainter( qPainter, lDrawSelection )
    METHOD drawBarcode( qPainter, qRect )
    METHOD drawImage( qPainter, qRect )
    METHOD drawChart( qPainter, qRect )
@@ -1534,6 +1530,7 @@ CLASS HqrGraphicsItem
    METHOD drawChord( qPainter, qRect )
    METHOD drawSelection( qPainter, qRect )
 
+   ERROR  HANDLER OnError( ... )
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -1592,6 +1589,15 @@ METHOD HqrGraphicsItem:new( oRM, cParent, cType, cName, aPos, aGeometry )
 
 /*----------------------------------------------------------------------*/
 
+METHOD HqrGraphicsItem:onError( ... )
+   LOCAL cMsg := __GetMessage()
+   IF SubStr( cMsg, 1, 1 ) == "_"
+      cMsg := SubStr( cMsg, 2 )
+   ENDIF
+   RETURN ::oWidget:&cMsg( ... )
+
+/*----------------------------------------------------------------------*/
+
 METHOD HqrGraphicsItem:execEvent( cEvent, p, p1, p2 )
    LOCAL qPainter, qRect
 
@@ -1611,14 +1617,6 @@ METHOD HqrGraphicsItem:execEvent( cEvent, p, p1, p2 )
 
       ENDCASE
    ENDCASE
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HqrGraphicsItem:rotate( nDeg )
-
-   ::oWidget:rotate( nDeg )
 
    RETURN Self
 
@@ -1751,7 +1749,7 @@ METHOD HqrGraphicsItem:setFont( ... )
    CASE 0
       IF empty( ::qFont )
          ::qFont := QFont():new( "Serif" )
-         ::qFont:setPointSizeF( 3.5 )
+         ::qFont:setPointSizeF( ::nPointSize )
          ::qFont:setStyleStrategy( QFont_PreferMatch )
          ::qFont:setStyleStrategy( QFont_ForceOutline )
       ENDIF
@@ -1762,6 +1760,7 @@ METHOD HqrGraphicsItem:setFont( ... )
       ELSE
          ::qFont := QFont():new( ... )
       ENDIF
+      ::nPointSize := ::qFont:pointSize()
       ::update()
       EXIT
    ENDSWITCH
@@ -1971,7 +1970,7 @@ METHOD HqrGraphicsItem:setOpacity( ... )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HqrGraphicsItem:setupPainter( qPainter )
+METHOD HqrGraphicsItem:setupPainter( qPainter, lDrawSelection )
    LOCAL qFont
 
    qPainter:setPen( ::pen() )
@@ -1979,7 +1978,7 @@ METHOD HqrGraphicsItem:setupPainter( qPainter )
 
    qFont := ::font()
 
-   qFont:setPixelSize( qFont:pointSizeF() / UNIT )
+   qFont:setPixelSize( iif( lDrawSelection, ::nPointSize / UNIT, TO_MMS( ::nPointSize / UNIT ) ) )
    qPainter:setFont( qFont )
 
    qPainter:setBackgroundMode( ::backgroundMode() )
@@ -2068,7 +2067,7 @@ METHOD HqrGraphicsItem:draw( qPainter, qRect, lDrawSelection )
 
    DEFAULT lDrawSelection TO .t.
 
-   ::setupPainter( qPainter )
+   ::setupPainter( qPainter, lDrawSelection )
 
    SWITCH ::cType
    CASE "Barcode"
