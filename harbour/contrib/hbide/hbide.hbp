@@ -22,7 +22,7 @@
 ../hbxbp/hbxbp.hbc
 ../hbqt/hbqtnetwork.hbc
 
-hbide.prg
+idemain.prg
 ideobject.prg
 idestylesheets.prg
 idetags.prg
