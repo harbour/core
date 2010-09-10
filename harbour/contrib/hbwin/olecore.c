@@ -52,6 +52,7 @@
  */
 
 #include "hbwinole.h"
+#include "hbapilng.h"
 #include "hbinit.h"
 
 /* enable workaround for wrong OLE variant structure definition */
@@ -1382,6 +1383,7 @@ HB_FUNC( __OLEENUMCREATE ) /* ( __hObj ) */
                             HB_ID_REF( IID_IEnumVARIANT ), ( void** ) ( void * ) &pEnum );
       else
       {
+         VariantClear( &variant );
          hb_oleSetError( lOleError );
          hb_errRT_OLE( EG_ARG, 1004, ( HB_ERRCODE ) lOleError, NULL, HB_ERR_FUNCNAME );
          return;
@@ -1566,6 +1568,86 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
       hb_errRT_OLE( EG_NOVARMETHOD, 1008, ( HB_ERRCODE ) lOleError, NULL, szMethod + 1 );
    else
       hb_errRT_OLE( EG_NOMETHOD, 1009, ( HB_ERRCODE ) lOleError, NULL, szMethod );
+}
+
+
+HB_FUNC( WIN_OLEAUTO___OPINDEX )
+{
+   IDispatch*  pDisp;
+   DISPPARAMS  dispparam;
+   VARIANTARG  variant;
+   EXCEPINFO   excep;
+   UINT        uiArgErr;
+   HRESULT     lOleError, lOleErrorEnum;
+   HB_BOOL     fAssign;
+
+   /* Get object handle */
+   hb_vmPushDynSym( s_pDyns_hObjAccess );
+   hb_vmPush( hb_stackSelfItem() );
+   hb_vmSend( 0 );
+
+   pDisp = hb_oleParam( -1 );
+   if( !pDisp )
+      return;
+
+   fAssign = hb_pcount() != 1;
+
+   if( fAssign )
+   {
+      /* Assign */
+      DISPID     lPropPut = DISPID_PROPERTYPUT;
+
+      memset( &excep, 0, sizeof( excep ) );
+      GetParams( &dispparam );
+      dispparam.rgdispidNamedArgs = &lPropPut;
+      dispparam.cNamedArgs = 1;
+
+      lOleError = HB_VTBL( pDisp )->Invoke( HB_THIS_( pDisp ) DISPID_VALUE, HB_ID_REF( IID_NULL ),
+                                            LOCALE_USER_DEFAULT,
+                                            DISPATCH_PROPERTYPUT, &dispparam,
+                                            NULL, &excep, &uiArgErr );
+      FreeParams( &dispparam );
+
+      /* assign method should return assigned value */
+      hb_itemReturn( hb_param( 1, HB_IT_ANY ) );
+   }
+   else
+   {
+     /* Access */
+      memset( &excep, 0, sizeof( excep ) );
+      VariantInit( &variant );
+      GetParams( &dispparam );
+
+      lOleError = HB_VTBL( pDisp )->Invoke( HB_THIS_( pDisp ) DISPID_VALUE, HB_ID_REF( IID_NULL ),
+                                            LOCALE_USER_DEFAULT,
+                                            DISPATCH_PROPERTYGET | DISPATCH_METHOD,
+                                            &dispparam, &variant, &excep, &uiArgErr );
+
+      PutParams( &dispparam );
+      FreeParams( &dispparam );
+
+      hb_oleVariantToItem( hb_stackReturnItem(), &variant );
+      VariantClear( &variant );
+   }
+
+   hb_oleSetError( lOleError );
+
+   if( lOleError != S_OK )
+   {
+      /* Try to detect if object is a collection */
+    
+      memset( &excep, 0, sizeof( excep ) );
+      memset( &dispparam, 0, sizeof( dispparam ) );
+      VariantInit( &variant );
+      lOleErrorEnum = HB_VTBL( pDisp )->Invoke( HB_THIS_( pDisp ) DISPID_NEWENUM, HB_ID_REF( IID_NULL ),
+                                                LOCALE_USER_DEFAULT,
+                                                DISPATCH_PROPERTYGET,
+                                                &dispparam, &variant, &excep, &uiArgErr );
+      VariantClear( &variant );
+    
+      hb_errRT_OLE( lOleErrorEnum == S_OK ? EG_BOUND : EG_ARG, 1016, ( HB_ERRCODE ) lOleError, NULL, 
+                    hb_langDGetErrorDesc( fAssign ? EG_ARRASSIGN : EG_ARRACCESS ) );
+   }
 }
 
 

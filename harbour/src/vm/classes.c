@@ -3829,7 +3829,7 @@ HB_FUNC( __CLSINSTSUPER )
    }
    else
    {
-      const char * pszName = NULL;
+      const char * pszName;
 
       pClassFuncSym = hb_itemGetSymbol( pItem );
       if( pClassFuncSym )

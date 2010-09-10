@@ -64,6 +64,8 @@ CREATE CLASS WIN_OLEAUTO
    METHOD __enumSkip( enum, lDescend )
    METHOD __enumStop()
 
+   METHOD __OpIndex( xIndex, xValue ) OPERATOR "[]"
+
    ERROR HANDLER __OnError()
 ENDCLASS
 
