@@ -1996,6 +1996,7 @@ static void hb_nsxIndexFree( LPNSXINDEX pIndex )
       hb_xfree( pIndex->IndexName );
    if( pIndex->RealName )
       hb_xfree( pIndex->RealName );
+   pIndex->pArea->fSetTagNumbers = HB_TRUE;
    hb_xfree( pIndex );
 }
 
@@ -6853,7 +6854,6 @@ static HB_ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderI
          hb_vmDestroyBlockOrMacro( pKeyExp );
          if( pForExp != NULL )
             hb_vmDestroyBlockOrMacro( pForExp );
-         /* hb_nsxSetTagNumbers() */
          return HB_FAILURE;
       }
 
@@ -6886,7 +6886,6 @@ static HB_ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderI
             hb_vmDestroyBlockOrMacro( pKeyExp );
             if( pForExp != NULL )
                hb_vmDestroyBlockOrMacro( pForExp );
-            /* hb_nsxSetTagNumbers() */
             hb_nsxErrorRT( pArea, EG_CORRUPTION, EDBF_CORRUPT, szFileName, 0, 0, NULL );
             return errCode;
          }
@@ -6914,7 +6913,6 @@ static HB_ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderI
       hb_vmDestroyBlockOrMacro( pKeyExp );
       if( pForExp != NULL )
          hb_vmDestroyBlockOrMacro( pForExp );
-      /* hb_nsxSetTagNumbers() */
       hb_nsxErrorRT( pArea, EG_LIMIT, EDBF_LIMITEXCEEDED, pIndex->IndexName, 0, 0, NULL );
       errCode = HB_FAILURE;
    }
@@ -6947,6 +6945,7 @@ static HB_ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderI
          }
          else
          {
+            pTag->uiNumber = pIndex->lpTags[ iTag - 1 ]->uiNumber;
             hb_nsxTagFree( pIndex->lpTags[ iTag - 1 ] );
             pIndex->lpTags[ iTag - 1 ] = pTag;
          }
@@ -6978,7 +6977,6 @@ static HB_ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderI
       /* TODO: free only new indexes */
       *pIndexPtr = pIndex->pNext;
       hb_nsxIndexFree( pIndex );
-      /* hb_nsxSetTagNumbers() */
       return errCode;
    }
 
@@ -6991,6 +6989,7 @@ static HB_ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderI
       while( *pIndexPtr )
          pIndexPtr = &(*pIndexPtr)->pNext;
       *pIndexPtr = pIndex;
+      pArea->fSetTagNumbers = HB_TRUE;
    }
    if( pIndex->Production && !pArea->dbfarea.fHasTags &&
        ( DBFAREA_DATA( &pArea->dbfarea )->fStrictStruct || hb_setGetAutOpen() ) )
@@ -6999,7 +6998,6 @@ static HB_ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderI
       if( !pArea->dbfarea.fReadonly && ( pArea->dbfarea.dbfHeader.bHasTags & 0x01 ) == 0 )
          SELF_WRITEDBHEADER( ( AREAP ) pArea );
    }
-   /* hb_nsxSetTagNumbers() */
    pArea->lpCurTag = pTag;
    SELF_ORDSETCOND( ( AREAP ) pArea, NULL );
    return SELF_GOTOP( ( AREAP ) pArea );
@@ -7068,7 +7066,6 @@ static HB_ERRCODE hb_nsxOrderDestroy( NSXAREAP pArea, LPDBORDERINFO pOrderInfo )
             errCode = hb_nsxTagSpaceFree( pTag );
             hb_nsxIndexUnLockWrite( pIndex );
          }
-         /* hb_nsxSetTagNumbers() */
       }
    }
 
@@ -7836,7 +7833,6 @@ static HB_ERRCODE hb_nsxOrderListAdd( NSXAREAP pArea, LPDBORDERINFO pOrderInfo )
       while( *pIndexPtr )
          pIndexPtr = &(*pIndexPtr)->pNext;
       *pIndexPtr = pIndex;
-      /* hb_nsxSetTagNumbers() */
    }
 
    if( !pArea->lpCurTag && pIndex->iTags )
@@ -7872,7 +7868,6 @@ static HB_ERRCODE hb_nsxOrderListClear( NSXAREAP pArea )
          hb_nsxIndexFree( pIndex );
       }
    }
-   /* hb_nsxSetTagNumbers() */
    return HB_SUCCESS;
 }
 
@@ -7903,7 +7898,6 @@ static HB_ERRCODE hb_nsxOrderListDelete( NSXAREAP pArea, LPDBORDERINFO pOrderInf
          {
             *pIndexPtr = pIndex->pNext;
             hb_nsxIndexFree( pIndex );
-            /* hb_nsxSetTagNumbers() */
             break;
          }
          pIndexPtr = &(*pIndexPtr)->pNext;

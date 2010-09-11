@@ -1817,6 +1817,7 @@ static void hb_ntxIndexFree( LPNTXINDEX pIndex )
       hb_xfree( pIndex->IndexName );
    if( pIndex->RealName )
       hb_xfree( pIndex->RealName );
+   pIndex->Owner->fSetTagNumbers = HB_TRUE;
    hb_xfree( pIndex );
 }
 
@@ -6443,7 +6444,6 @@ static HB_ERRCODE hb_ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderI
          hb_vmDestroyBlockOrMacro( pKeyExp );
          if( pForExp != NULL )
             hb_vmDestroyBlockOrMacro( pForExp );
-         /* hb_ntxSetTagNumbers() */
          return HB_FAILURE;
       }
 
@@ -6462,6 +6462,7 @@ static HB_ERRCODE hb_ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderI
       while( *pIndexPtr )
          pIndexPtr = &(*pIndexPtr)->pNext;
       *pIndexPtr = pIndex;
+      pArea->fSetTagNumbers = HB_TRUE;
       if( fOld )
       {
          if( !hb_ntxIndexLockWrite( pIndex, HB_TRUE ) )
@@ -6481,7 +6482,6 @@ static HB_ERRCODE hb_ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderI
             hb_vmDestroyBlockOrMacro( pKeyExp );
             if( pForExp != NULL )
                hb_vmDestroyBlockOrMacro( pForExp );
-            /* hb_ntxSetTagNumbers() */
             hb_ntxErrorRT( pArea, EG_CORRUPTION, EDBF_CORRUPT, szFileName, 0, 0, NULL );
             return errCode;
          }
@@ -6502,7 +6502,6 @@ static HB_ERRCODE hb_ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderI
       hb_vmDestroyBlockOrMacro( pKeyExp );
       if( pForExp != NULL )
          hb_vmDestroyBlockOrMacro( pForExp );
-      /* hb_ntxSetTagNumbers() */
       hb_ntxErrorRT( pArea, EG_LIMIT, EDBF_LIMITEXCEEDED, pIndex->IndexName, 0, 0, NULL );
       return HB_FAILURE;
    }
@@ -6556,6 +6555,7 @@ static HB_ERRCODE hb_ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderI
          }
          else
          {
+            pTag->uiNumber = pIndex->lpTags[ iTag - 1 ]->uiNumber;
             hb_ntxTagFree( pIndex->lpTags[ iTag - 1 ] );
             pIndex->lpTags[ iTag - 1 ] = pTag;
          }
@@ -6587,7 +6587,6 @@ static HB_ERRCODE hb_ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderI
    {
       *pIndexPtr = pIndex->pNext;
       hb_ntxIndexFree( pIndex );
-      /* hb_ntxSetTagNumbers() */
       return errCode;
    }
 
@@ -6608,7 +6607,6 @@ static HB_ERRCODE hb_ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderI
       if( !pArea->dbfarea.fReadonly && ( pArea->dbfarea.dbfHeader.bHasTags & 0x01 ) == 0 )
          SELF_WRITEDBHEADER( ( AREAP ) pArea );
    }
-   /* hb_ntxSetTagNumbers() */
    pArea->lpCurTag = pTag;
    SELF_ORDSETCOND( ( AREAP ) pArea, NULL );
    return SELF_GOTOP( ( AREAP ) pArea );
@@ -6678,7 +6676,6 @@ static HB_ERRCODE hb_ntxOrderDestroy( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
             errCode = hb_ntxTagSpaceFree( pTag );
             hb_ntxIndexUnLockWrite( pIndex );
          }
-         /* hb_ntxSetTagNumbers() */
       }
    }
 
@@ -7444,7 +7441,6 @@ static HB_ERRCODE hb_ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
          hb_ntxErrorRT( pArea, EG_CORRUPTION, EDBF_CORRUPT, szFileName, 0, 0, NULL );
          return errCode;
       }
-      /* hb_ntxSetTagNumbers() */
    }
 
    if( !pArea->lpCurTag && pIndex->iTags )
@@ -7481,7 +7477,6 @@ static HB_ERRCODE hb_ntxOrderListClear( NTXAREAP pArea )
          hb_ntxIndexFree( pIndex );
       }
    }
-   /* hb_ntxSetTagNumbers() */
    return HB_SUCCESS;
 }
 
@@ -7512,7 +7507,6 @@ static HB_ERRCODE hb_ntxOrderListDelete( NTXAREAP pArea, LPDBORDERINFO pOrderInf
          {
             *pIndexPtr = pIndex->pNext;
             hb_ntxIndexFree( pIndex );
-            /* hb_ntxSetTagNumbers() */
             break;
          }
          pIndexPtr = &(*pIndexPtr)->pNext;

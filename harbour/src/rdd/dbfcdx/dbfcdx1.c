@@ -7722,8 +7722,10 @@ static HB_ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderI
    hb_cdxIndexLockWrite( pIndex );
    if( !fNewFile )
    {
+      pTag = hb_cdxGetTagByNumber( pArea, pArea->uiTag );
       /* Delete new tag if exist */
       hb_cdxIndexDelTag( pIndex, szTagName );
+      pArea->uiTag = hb_cdxGetTagNumber( pArea, pTag );
       fNewFile = ( pIndex->TagList == NULL );
    }
 
