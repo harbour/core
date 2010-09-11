@@ -228,6 +228,9 @@ CLASS IdeShortcuts INHERIT IdeObject
    METHOD pageDown()
    METHOD find( cString, nPosFrom )
 
+   METHOD toNextFunction()
+   METHOD toPrevFunction()
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -1233,6 +1236,12 @@ METHOD IdeShortcuts:toggleStatusBar()
 METHOD IdeShortcuts:execPlugin( cPlugin, ... )
    RETURN hbide_execPlugin( cPlugin, ::oIde, ... )
 /*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:toNextFunction()
+   RETURN ::oEdit:toNextFunction()
+/*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:toPrevFunction()
+   RETURN ::oEdit:toPreviousFunction()
+/*----------------------------------------------------------------------*/
 //                       Public API Definitions
 /*----------------------------------------------------------------------*/
 
@@ -1273,6 +1282,12 @@ METHOD IdeShortcuts:loadMethods()
    aadd( ::aMethods, { 'gotoFunction()', ;
                        'gotoFunction()', ;
                        'Takes under-cursor word and attempts to open the source containing that function in a new tab.' } )
+   aadd( ::aMethods, { 'toNextFunction()', ;
+                       'toNextFunction()', ;
+                       'Attempts to position the cursor at next available function body. Cursor is positioned centered in the editor.' } )
+   aadd( ::aMethods, { 'toPrevFunction()', ;
+                       'toPrevFunction()', ;
+                       'Attempts to position the cursor at previous function body. Cursor is positioned centered in the editor.' } )
 
    aadd( ::aMethods, { '          Navigation', ;
                        '', ;
@@ -1595,6 +1610,8 @@ METHOD IdeShortcuts:loadDftSCuts()
       aadd( b_, { "Clear Selection" , "F11"    , "NO", "NO" , "YES", "", '::clearSelection()'    , ""                , "", "" } )
       aadd( b_, { "Present Snippets", "K"      , "NO", "YES", "NO" , "", '::presentSkeletons()'  , ""                , "", "" } )
       aadd( b_, { "Goto Function"   , "T"      , "NO", "YES", "NO" , "", '::gotoFunction()'      , ""                , "", "" } )
+      aadd( b_, { "Next Function"   , "PageDown", "YES", "NO", "NO", "", '::toNextFunction()'    , ""                , "", "" } )
+      aadd( b_, { "Prev Function"   , "PageUp" , "YES", "NO", "NO" , "", '::toPrevFunction()'    , ""                , "", "" } )
 
       ::aDftSCuts := b_
    ENDIF

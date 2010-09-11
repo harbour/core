@@ -1377,6 +1377,7 @@ METHOD IdeEdit:toNextFunction()
       IF n < len( ::aTags )
          IF ::find( ::aTags[ n+1, 8 ], QTextDocument_FindCaseSensitively )
             ::qEdit:centerCursor()
+            ::down()
          ENDIF
       ENDIF
    ENDIF
@@ -1391,6 +1392,7 @@ METHOD IdeEdit:toPreviousFunction()
    IF ( n := ::currentFunctionIndex() ) > 1
       IF ::find( ::aTags[ n-1, 8 ], QTextDocument_FindCaseSensitively )
          ::qEdit:centerCursor()
+         ::down()
       ENDIF
    ENDIF
 
