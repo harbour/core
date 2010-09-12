@@ -2305,6 +2305,7 @@
 #define HBQT_GRAPHICSITEM_BARCODE                 12
 #define HBQT_GRAPHICSITEM_TEXT                    13
 #define HBQT_GRAPHICSITEM_SIMPLETEXT              14
+#define HBQT_GRAPHICSITEM_ROUNDRECT               15
 
 #define HBQT_GRAPHICSITEM_LINE_HORIZONTAL         0
 #define HBQT_GRAPHICSITEM_LINE_VERTICAL           1

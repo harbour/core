@@ -102,6 +102,7 @@ CLASS HbqToolbar
    METHOD setItemEnabled( cName, lEnabled )
    METHOD addWidget( cName, qWidget )
    METHOD contains( cName )                       INLINE hb_hHasKey( ::hItems, cName )
+   METHOD getItem( cName )                        INLINE iif( hb_hHasKey( ::hItems, cName ), ::hItems[ cName ], NIL )
 
    ERROR HANDLER onError( ... )
    ENDCLASS

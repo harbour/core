@@ -269,6 +269,18 @@
 <file>resources/r-report.png</file>
 <file>resources/r-landscape.png</file>
 <file>resources/r-portrait.png</file>
+<file>resources/rp_arc.png</file>
+<file>resources/rp_chord.png</file>
+<file>resources/rp_diamond.png</file>
+<file>resources/rp_triangle.png</file>
+<file>resources/rp_rectangle.png</file>
+<file>resources/rp_roundrectangle.png</file>
+<file>resources/rp_linevert.png</file>
+<file>resources/rp_linehorz.png</file>
+<file>resources/rp_linediagright.png</file>
+<file>resources/rp_linediagleft.png</file>
+<file>resources/rp_ellipse.png</file>
+<file>resources/rp_shapes.png</file>
 </qresource>
 </RCC>
 

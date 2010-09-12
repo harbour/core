@@ -85,6 +85,22 @@
 
 #define TO_MMS( n )   ( ( n ) * 10 / 25.4 )
 
+#define SHP_ACT_RECTANGLE                         1
+#define SHP_ACT_ROUNDRECT                         2
+#define SHP_ACT_ELLIPSE                           3
+#define SHP_ACT_LINEVERT                          4
+#define SHP_ACT_LINEHORZ                          5
+#define SHP_ACT_LINEDIAGRIGHT                     6
+#define SHP_ACT_LINEDIAGLEFT                      7
+#define SHP_ACT_ARC                               8
+#define SHP_ACT_CHORD                             9
+#define SHP_ACT_DIAMOND                           10
+#define SHP_ACT_TRIANGLE                          11
+
+#define NUM_SHAPES                                11
+
+/*----------------------------------------------------------------------*/
+
 STATIC hIDs := {=>}
 
 /*----------------------------------------------------------------------*/
@@ -145,8 +161,6 @@ CLASS HbqReportsManager
    DATA   qPort
    DATA   qView
    DATA   qScene
-   DATA   qDrag
-   DATA   qMime
 
    DATA   aStatusPnls                             INIT {}
    DATA   aItems                                  INIT {}
@@ -177,6 +191,15 @@ CLASS HbqReportsManager
    DATA   modified                                INIT date()
 
    DATA   xData
+   DATA   qPos                                    INIT QPoint():new( -1,-1 )
+   DATA   qDrag
+   DATA   qDropAction
+   DATA   qByte
+   DATA   qMime
+   DATA   qPix
+   DATA   pAct
+   DATA   qShapesMenu
+   DATA   aShapesAct                              INIT array( NUM_SHAPES )
 
    METHOD new( qParent )
    METHOD create( qParent )
@@ -212,6 +235,7 @@ CLASS HbqReportsManager
    METHOD zoom( nMode )
 
    METHOD objectSelected( hqrObject )
+   METHOD execMenuShapes()
 
    ENDCLASS
 
@@ -400,7 +424,7 @@ METHOD HbqReportsManager:buildDesignReport()
 /*----------------------------------------------------------------------*/
 
 METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
-   LOCAL qEvent, qMime, qItem, i, qList, cFile, nArea, aStruct, cAlias, cPath
+   LOCAL qEvent, qMime, qItem, i, qList, cFile, nArea, aStruct, cAlias, cPath, qRC, qAct, qIcon, cType
 
    SWITCH cEvent
    CASE "graphicsScene_block"
@@ -439,6 +463,23 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
 
          ELSEIF qMime:hasFormat( "application/x-toolbaricon"  )
             ::addObject( qMime:html(), QPointF():from( qEvent:scenePos() ), NIL )
+
+         ELSEIF qMime:hasFormat( "application/x-menuitem" )
+            cType := qMime:html()
+            SWITCH cType
+            CASE "Rectangle"          ;                        EXIT
+            CASE "Ellipse"            ;                        EXIT
+            CASE "Arc"                ;                        EXIT
+            CASE "Chord"              ;                        EXIT
+            CASE "Triangle"           ;                        EXIT
+            CASE "Diamond"            ;                        EXIT
+            CASE "Rounded Rectangle"  ; cType := "RoundRect" ; EXIT
+            CASE "Horizontal Line"    ; cType := "LineH"     ; EXIT
+            CASE "Vertical Line"      ; cType := "LineV"     ; EXIT
+            CASE "Diagonal Line Right"; cType := "LineDR"    ; EXIT
+            CASE "Diagonal Line Left" ; cType := "LineDL"    ; EXIT
+            ENDSWITCH
+            ::addObject( cType, QPointF():from( qEvent:scenePos() ), NIL )
 
          ELSEIF qMime:hasUrls()
             qList := QStringList():from( qMime:hbUrlList() )
@@ -486,6 +527,52 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
    CASE "dataTree_dragEnterEvent"
       EXIT
 
+   CASE "QEvent_MouseMoveMenu"
+      IF empty( ::qPos ) .OR. empty( ::pAct ) .OR. hbqt_isEmptyQtPointer( ::pAct )
+         EXIT
+      ENDIF
+
+      qEvent := QMouseEvent():from( p )
+      qRC := QRect():from( ( QRect():new( ::qPos:x() - 5, ::qPos:y() - 5, 10, 10 ) ):normalized() )
+
+      IF qRC:contains( qEvent:pos() )
+         qAct := QAction():from( ::pAct )
+         qIcon := QIcon():from( qAct:icon() )
+
+         ::qByte := QByteArray():new( qAct:text() )
+
+         ::qMime := QMimeData():new()
+         ::qMime:setData( "application/x-menuitem", ::qByte )
+         ::qMime:setHtml( qAct:text() )
+
+         ::qPix  := QPixmap():from( qIcon:pixmap_1( 16,16 ) )
+
+         ::qDrag := QDrag():new( hbide_setIde():oDlg:oWidget )
+         ::qDrag:setMimeData( ::qMime )
+         ::qDrag:setPixmap( ::qPix )
+         ::qDrag:setHotSpot( QPoint():new( 15,15 ) )
+         ::qDrag:setDragCursor( ::qPix, Qt_MoveAction )
+
+         ::qDropAction := ::qDrag:exec( Qt_MoveAction )
+      ENDIF
+      ::qDrag := NIL
+      ::qPos  := NIL
+      ::pAct  := NIL
+      EXIT
+   CASE "QEvent_MouseReleaseMenu"
+      ::qDrag := NIL
+      ::qPos  := NIL
+      ::pAct  := NIL
+      EXIT
+   CASE "QEvent_MousePressMenu"
+      qEvent := QMouseEvent():from( p )
+      ::qPos := QPoint():from( qEvent:pos() )
+      ::pAct := ::qShapesMenu:actionAt( qEvent:pos() )
+      EXIT
+
+   CASE "buttonShapes_clicked"
+      ::execMenuShapes()
+      EXIT
    CASE "buttonLandscape_clicked"
       ::qScene:setOrientation( QPrinter_Landscape )
       EXIT
@@ -1088,18 +1175,22 @@ METHOD HbqReportsManager:getImageOfType( cType )
    LOCAL cImage
 
    DO CASE
-   CASE cType == "Image"
-      cImage := "f-image"
-   CASE cType == "Barcode"
-      cImage := "f_barcode"
-   CASE cType == "Chart"
-      cImage := "f_chart"
-   CASE cType == "Gradient"
-      cImage := "f_gradient"
-   CASE cType == "Text"
-      cImage := "text"
-   CASE cType == "Field"
-      cImage := "text"
+   CASE cType == "Image"     ;   cImage := "f-image"
+   CASE cType == "Barcode"   ;   cImage := "f_barcode"
+   CASE cType == "Chart"     ;   cImage := "f_chart"
+   CASE cType == "Gradient"  ;   cImage := "f_gradient"
+   CASE cType == "Text"      ;   cImage := "text"
+   CASE cType == "Field"     ;   cImage := "text"
+   CASE cType == "Rectangle" ;   cImage := "rp_rectangle"
+   CASE cType == "Ellipse"   ;   cImage := "rp_ellipse"
+   CASE cType == "Arc"       ;   cImage := "rp_arc"
+   CASE cType == "Chord"     ;   cImage := "rp_chord"
+   CASE cType == "Diamond"   ;   cImage := "rp_diamond"
+   CASE cType == "RoundRect" ;   cImage := "rp_roundrectangle"
+   CASE cType == "LineH"     ;   cImage := "rp_linehorz"
+   CASE cType == "LineV"     ;   cImage := "rp_linevert"
+   CASE cType == "LineDR"    ;   cImage := "rp_linediagright"
+   CASE cType == "LineDL"    ;   cImage := "rp_linediagleft"
    ENDCASE
 
    RETURN app_image( cImage )
@@ -1117,86 +1208,133 @@ METHOD HbqReportsManager:getNextID( cType )
 /*----------------------------------------------------------------------*/
 
 METHOD HbqReportsManager:buildToolbar()
+   LOCAL qTBar
 
-   ::qToolbar := HbqToolbar():new()
-   ::qToolbar:orientation := Qt_Horizontal
-   ::qToolbar:create( "ReportManager_Top_Toolbar" )
+   qTBar := HbqToolbar():new()
+   qTBar:orientation := Qt_Horizontal
+   qTBar:create( "ReportManager_Top_Toolbar" )
 
-   ::qToolbar:addToolButton( "New"      , "New Report"            , app_image( "new"         ), {|| ::execEvent( "buttonNew_clicked"     ) } )
-   ::qToolbar:addToolButton( "Open"     , "Open Report"           , app_image( "open3"       ), {|| ::execEvent( "buttonOpen_clicked"    ) } )
-   ::qToolbar:addToolButton( "Save"     , "Save Report"           , app_image( "save3"       ), {|| ::execEvent( "buttonSave_clicked"    ) } )
-   ::qToolbar:addToolButton( "Close"    , "Close Report"          , app_image( "close3"      ), {|| ::execEvent( "buttonClose_clicked"   ) } )
-   ::qToolbar:addToolButton( "Print"    , "Print Report"          , app_image( "print"       ), {|| ::execEvent( "buttonPrint_clicked"   ) } )
-   ::qToolbar:addSeparator()
-   ::qToolbar:addToolButton( "ToBack"   , "Push to back"          , app_image( "toback"      ), {|| ::execEvent( "buttonToBack_clicked"  ) }, .f., .f. )
-   ::qToolbar:addToolButton( "ToFront"  , "Bring to front"        , app_image( "tofront"     ), {|| ::execEvent( "buttonToFront_clicked" ) }, .f., .f. )
-   ::qToolbar:addSeparator()
-   ::qToolbar:addToolButton( "RotateL"  , "Rotate anti-clock wise", app_image( "unload_1"    ), {|| ::execEvent( "buttonRotateL_clicked" ) }, .f., .f. )
-   ::qToolbar:addToolButton( "RotateR"  , "Rotate clock wise"     , app_image( "load_1"      ), {|| ::execEvent( "buttonRotateR_clicked" ) }, .f., .f. )
-   ::qToolbar:addSeparator()
-   ::qToolbar:addToolButton( "Portrait" , "Portrait orientation"  , app_image( "r-portrait"  ), {|| ::execEvent( "buttonPortrait_clicked" ) }, .f., .f. )
-   ::qToolbar:addToolButton( "Landscape", "Landscape orientation" , app_image( "r-landscape" ), {|| ::execEvent( "buttonLandscape_clicked" ) }, .f., .f. )
-   ::qToolbar:addSeparator()
+   qTBar:addToolButton( "New"      , "New Report"            , app_image( "new"         ), {|| ::execEvent( "buttonNew_clicked"     ) } )
+   qTBar:addToolButton( "Open"     , "Open Report"           , app_image( "open3"       ), {|| ::execEvent( "buttonOpen_clicked"    ) } )
+   qTBar:addToolButton( "Save"     , "Save Report"           , app_image( "save3"       ), {|| ::execEvent( "buttonSave_clicked"    ) } )
+   qTBar:addToolButton( "Close"    , "Close Report"          , app_image( "close3"      ), {|| ::execEvent( "buttonClose_clicked"   ) } )
+   qTBar:addToolButton( "Print"    , "Print Report"          , app_image( "print"       ), {|| ::execEvent( "buttonPrint_clicked"   ) } )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "ToBack"   , "Push to back"          , app_image( "toback"      ), {|| ::execEvent( "buttonToBack_clicked"  ) }, .f., .f. )
+   qTBar:addToolButton( "ToFront"  , "Bring to front"        , app_image( "tofront"     ), {|| ::execEvent( "buttonToFront_clicked" ) }, .f., .f. )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "RotateL"  , "Rotate anti-clock wise", app_image( "unload_1"    ), {|| ::execEvent( "buttonRotateL_clicked" ) }, .f., .f. )
+   qTBar:addToolButton( "RotateR"  , "Rotate clock wise"     , app_image( "load_1"      ), {|| ::execEvent( "buttonRotateR_clicked" ) }, .f., .f. )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "Portrait" , "Portrait orientation"  , app_image( "r-portrait"  ), {|| ::execEvent( "buttonPortrait_clicked" ) }, .f., .f. )
+   qTBar:addToolButton( "Landscape", "Landscape orientation" , app_image( "r-landscape" ), {|| ::execEvent( "buttonLandscape_clicked" ) }, .f., .f. )
+   qTBar:addSeparator()
+
+   ::qToolbar := qTBar
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD HbqReportsManager:buildToolbarAlign()
+   LOCAL qTBar
 
-   ::qToolbarAlign := HbqToolbar():new()
-   ::qToolbarAlign:orientation := Qt_Horizontal
-   ::qToolbarAlign:create( "ReportManager_Top_Toolbar_Align" )
+   qTBar := HbqToolbar():new()
+   qTBar:orientation := Qt_Horizontal
+   qTBar:create( "ReportManager_Top_Toolbar_Align" )
 
-   ::qToolbarAlign:addToolButton( "FontG"  , "Font"              , app_image( "f-generic"       ), {|| ::execEvent( "button_clicked" ) }, .f., .f. )
-   ::qToolbarAlign:addSeparator()
-   ::qToolbarAlign:addToolButton( "FontB"  , "Text Bold"         , app_image( "f-bold-1"        ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "FontI"  , "Text Italic"       , app_image( "f-italic-1"      ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "FontU"  , "Text Underlined"   , app_image( "f-underline-1"   ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "FontS"  , "Text Strikethrough", app_image( "f-strike-1"      ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addSeparator()
-   ::qToolbarAlign:addToolButton( "JustL"  , "Align left"        , app_image( "f_align_left"    ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "JustC"  , "Align center"      , app_image( "f_align_center"  ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "JustR"  , "Align right"       , app_image( "f_align_right"   ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "JustJ"  , "Align justify"     , app_image( "f_align_justify" ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addSeparator()
-   ::qToolbarAlign:addToolButton( "JustT"  , "Align top"         , app_image( "f_align_top"     ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "JustM"  , "Align middle"      , app_image( "f_align_middle"  ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "JustB"  , "Align bottom"      , app_image( "f_align_bottom"  ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addSeparator()
-   ::qToolbarAlign:addToolButton( "BoxT"   , "Box-frame top"     , app_image( "f_box_top"       ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
-   ::qToolbarAlign:addToolButton( "BoxL"   , "Box-frame left"    , app_image( "f_box_left"      ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
-   ::qToolbarAlign:addToolButton( "BoxB"   , "Box-frame bottom"  , app_image( "f_box_bottom"    ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
-   ::qToolbarAlign:addToolButton( "BoxR"   , "Box-frame right"   , app_image( "f_box_right"     ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
-   ::qToolbarAlign:addSeparator()
-   ::qToolbarAlign:addToolButton( "BoxA"   , "Box-frame all"     , app_image( "f_box_all"       ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "BoxP"   , "No box-frame"      , app_image( "f_box_plain"     ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addToolButton( "BoxS"   , "Box shadowed"      , app_image( "f_box_shadow"    ), {|| ::execEvent( "button_clicked" ) } )
-   ::qToolbarAlign:addSeparator()
-   ::qToolbarAlign:addToolButton( "ZoomIn" , "Zoom In"           , app_image( "zoomin3"         ), {|| ::execEvent( "buttonZoom_clicked", 1 ) } )
-   ::qToolbarAlign:addToolButton( "ZoomOut", "Zoom Out"          , app_image( "zoomout3"        ), {|| ::execEvent( "buttonZoom_clicked", 2 ) } )
-   ::qToolbarAlign:addToolButton( "ZoomWYS", "Zoom WYSIWYG"      , app_image( "zoomin"          ), {|| ::execEvent( "buttonZoom_clicked", 3 ) } )
-   ::qToolbarAlign:addToolButton( "ZoomOrg", "Zoom Original"     , app_image( "zoomout"         ), {|| ::execEvent( "buttonZoom_clicked", 4 ) } )
-   ::qToolbarAlign:addSeparator()
-   ::qToolbarAlign:addToolButton( "Grid"   , "Show Grid"         , app_image( "grid"            ), {|| ::execEvent( "buttonGrid_clicked", 4 ) }, .t., .f. )
-   ::qToolbarAlign:addSeparator()
+   qTBar:addToolButton( "FontG"  , "Font"              , app_image( "f-generic"       ), {|| ::execEvent( "button_clicked" ) }, .f., .f. )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "FontB"  , "Text Bold"         , app_image( "f-bold-1"        ), {|| ::execEvent( "button_clicked" ) } )
+   qTBar:addToolButton( "FontI"  , "Text Italic"       , app_image( "f-italic-1"      ), {|| ::execEvent( "button_clicked" ) } )
+   qTBar:addToolButton( "FontU"  , "Text Underlined"   , app_image( "f-underline-1"   ), {|| ::execEvent( "button_clicked" ) } )
+   qTBar:addToolButton( "FontS"  , "Text Strikethrough", app_image( "f-strike-1"      ), {|| ::execEvent( "button_clicked" ) } )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "JustL"  , "Align left"        , app_image( "f_align_left"    ), {|| ::execEvent( "button_clicked" ) } )
+   qTBar:addToolButton( "JustC"  , "Align center"      , app_image( "f_align_center"  ), {|| ::execEvent( "button_clicked" ) } )
+   qTBar:addToolButton( "JustR"  , "Align right"       , app_image( "f_align_right"   ), {|| ::execEvent( "button_clicked" ) } )
+   qTBar:addToolButton( "JustJ"  , "Align justify"     , app_image( "f_align_justify" ), {|| ::execEvent( "button_clicked" ) } )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "JustT"  , "Align top"         , app_image( "f_align_top"     ), {|| ::execEvent( "button_clicked" ) } )
+   qTBar:addToolButton( "JustM"  , "Align middle"      , app_image( "f_align_middle"  ), {|| ::execEvent( "button_clicked" ) } )
+   qTBar:addToolButton( "JustB"  , "Align bottom"      , app_image( "f_align_bottom"  ), {|| ::execEvent( "button_clicked" ) } )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "BoxT"   , "Box-frame top"     , app_image( "f_box_top"       ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
+   qTBar:addToolButton( "BoxL"   , "Box-frame left"    , app_image( "f_box_left"      ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
+   qTBar:addToolButton( "BoxB"   , "Box-frame bottom"  , app_image( "f_box_bottom"    ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
+   qTBar:addToolButton( "BoxR"   , "Box-frame right"   , app_image( "f_box_right"     ), {|| ::execEvent( "button_clicked" ) }, .t., .f. )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "BoxA"   , "Box-frame all"     , app_image( "f_box_all"       ), {|| ::execEvent( "button_clicked" ) } )
+   qTBar:addToolButton( "BoxP"   , "No box-frame"      , app_image( "f_box_plain"     ), {|| ::execEvent( "button_clicked" ) } )
+   qTBar:addToolButton( "BoxS"   , "Box shadowed"      , app_image( "f_box_shadow"    ), {|| ::execEvent( "button_clicked" ) } )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "ZoomIn" , "Zoom In"           , app_image( "zoomin3"         ), {|| ::execEvent( "buttonZoom_clicked", 1 ) } )
+   qTBar:addToolButton( "ZoomOut", "Zoom Out"          , app_image( "zoomout3"        ), {|| ::execEvent( "buttonZoom_clicked", 2 ) } )
+   qTBar:addToolButton( "ZoomWYS", "Zoom WYSIWYG"      , app_image( "zoomin"          ), {|| ::execEvent( "buttonZoom_clicked", 3 ) } )
+   qTBar:addToolButton( "ZoomOrg", "Zoom Original"     , app_image( "zoomout"         ), {|| ::execEvent( "buttonZoom_clicked", 4 ) } )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "Grid"   , "Show Grid"         , app_image( "grid"            ), {|| ::execEvent( "buttonGrid_clicked", 4 ) }, .t., .f. )
+   qTBar:addSeparator()
+
+   ::qToolbarAlign := qTBar
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD HbqReportsManager:buildToolbarLeft()
+   LOCAL qTBar
 
-   ::qToolbarL := HbqToolbar():new()
-   ::qToolbarL:orientation := Qt_Vertical
-   ::qToolbarL:create( "ReportManager_Left_Toolbar" )
+   qTBar := HbqToolbar():new()
+   qTBar:orientation := Qt_Vertical
+   qTBar:create( "ReportManager_Left_Toolbar" )
 
-   ::qToolbarL:addToolButton( "Image"   , "Image"   , app_image( "f-image"    ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
-   ::qToolbarL:addToolButton( "Chart"   , "Chart"   , app_image( "f_chart"    ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
-   ::qToolbarL:addToolButton( "Gradient", "Gradient", app_image( "f_gradient" ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
-   ::qToolbarL:addToolButton( "Barcode" , "Barcode" , app_image( "f_barcode"  ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
-   ::qToolbarL:addToolButton( "Text"    , "Text"    , app_image( "text"       ), {|| ::execEvent( "buttonNew_clicked"   ) }, .t., .t. )
+   qTBar:addToolButton( "Image"   , "Image"   , app_image( "f-image"    ), {|| ::execEvent( "buttonNew_clicked"    ) }, .t., .t. )
+   qTBar:addToolButton( "Chart"   , "Chart"   , app_image( "f_chart"    ), {|| ::execEvent( "buttonNew_clicked"    ) }, .t., .t. )
+   qTBar:addToolButton( "Gradient", "Gradient", app_image( "f_gradient" ), {|| ::execEvent( "buttonNew_clicked"    ) }, .t., .t. )
+   qTBar:addToolButton( "Barcode" , "Barcode" , app_image( "f_barcode"  ), {|| ::execEvent( "buttonNew_clicked"    ) }, .t., .t. )
+   qTBar:addToolButton( "Text"    , "Text"    , app_image( "text"       ), {|| ::execEvent( "buttonNew_clicked"    ) }, .t., .t. )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "Shapes"  , "Shapes"  , app_image( "rp_shapes"  ), {|| ::execEvent( "buttonShapes_clicked" ) }, .t., .f. )
 
+   ::qToolbarL := qTBar
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbqReportsManager:execMenuShapes()
+   LOCAL qPos, qBtn
+
+   IF empty( ::qShapesMenu )
+      ::qShapesMenu := QMenu():new()
+
+      ::aShapesAct[ SHP_ACT_RECTANGLE     ] := ::qShapesMenu:addAction_1( app_image( "rp_rectangle"     ), "Rectangle"           )
+      ::aShapesAct[ SHP_ACT_ROUNDRECT     ] := ::qShapesMenu:addAction_1( app_image( "rp_roundrectangle"), "Rounded Rectangle"   )
+      ::aShapesAct[ SHP_ACT_ELLIPSE       ] := ::qShapesMenu:addAction_1( app_image( "rp_ellipse"       ), "Ellipse"             )
+      ::aShapesAct[ SHP_ACT_LINEHORZ      ] := ::qShapesMenu:addAction_1( app_image( "rp_linehorz"      ), "Horizontal Line"     )
+      ::aShapesAct[ SHP_ACT_LINEVERT      ] := ::qShapesMenu:addAction_1( app_image( "rp_linevert"      ), "Vertical Line"       )
+      ::aShapesAct[ SHP_ACT_LINEDIAGRIGHT ] := ::qShapesMenu:addAction_1( app_image( "rp_linediagright" ), "Diagonal Line Right" )
+      ::aShapesAct[ SHP_ACT_LINEDIAGLEFT  ] := ::qShapesMenu:addAction_1( app_image( "rp_linediagleft"  ), "Diagonal Line Left"  )
+      ::aShapesAct[ SHP_ACT_ARC           ] := ::qShapesMenu:addAction_1( app_image( "rp_arc"           ), "Arc"                 )
+      ::aShapesAct[ SHP_ACT_CHORD         ] := ::qShapesMenu:addAction_1( app_image( "rp_chord"         ), "Chord"               )
+      ::aShapesAct[ SHP_ACT_DIAMOND       ] := ::qShapesMenu:addAction_1( app_image( "rp_diamond"       ), "Diamond"             )
+      ::aShapesAct[ SHP_ACT_TRIANGLE      ] := ::qShapesMenu:addAction_1( app_image( "rp_triangle"      ), "Triangle"            )
+
+      ::qShapesMenu:connect( QEvent_MouseButtonPress  , {|p| ::execEvent( "QEvent_MousePressMenu"  , p ) } )
+      ::qShapesMenu:connect( QEvent_MouseMove         , {|p| ::execEvent( "QEvent_MouseMoveMenu"   , p ) } )
+      ::qShapesMenu:connect( QEvent_MouseButtonRelease, {|p| ::execEvent( "QEvent_MouseReleaseMenu", p ) } )
+   ENDIF
+
+   qBtn := ::qToolbarL:getItem( "Shapes" )
+   //
+   qPos := QPoint():from( ::qToolbarL:mapToGlobal( qBtn:pos() ) )
+   qPos:setX( qPos:x() + qBtn:width()  / 2 )
+   qPos:setY( qPos:y() + qBtn:height() / 2 )
+
+   ::qShapesMenu:exec_1( qPos )
+
+   qBtn:setChecked( .f. )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1419,6 +1557,7 @@ METHOD HbqReportsManager:printReport( qPrinter )
          qRectF     := QRectF():new( TO_MMS( qRectF:x() ), TO_MMS( qRectF:y() ), TO_MMS( qRectF:width() ), TO_MMS( qRectF:height() ) )
 
          qT := QTransform():from( oHqrObject:transform() )
+//HB_TRACE( HB_TR_ALWAYS, qT:m11(), qT:m12(), qT:m13(), qT:m21(), qT:m22(), qT:m23(), qT:m31(), qT:m32(), qT:m33() )
          qT:translate( 0,0 )
          qPainter:resetMatrix()
          qPainter:setWorldTransform( qT )
@@ -1470,6 +1609,7 @@ CLASS HqrGraphicsItem
    DATA   nHeight                                 INIT 100
    DATA   nStartAngle                             INIT 30
    DATA   nSpanAngle                              INIT 120
+   DATA   nLineType                               INIT HBQT_GRAPHICSITEM_LINE_HORIZONTAL
 
    DATA   nPointSize                              INIT 3.5
 
@@ -1495,6 +1635,7 @@ CLASS HqrGraphicsItem
    ACCESS height()                                INLINE ::setHeight()
    ACCESS geometry()                              INLINE ::setGeometry()
    ACCESS pos()                                   INLINE ::setPos()
+   ACCESS lineType()                              INLINE ::setLineType()
 
    METHOD setText( ... )                          SETGET
    METHOD setPen( ... )                           SETGET
@@ -1513,6 +1654,7 @@ CLASS HqrGraphicsItem
    METHOD setHeight( ... )                        SETGET
    METHOD setGeometry( ... )                      SETGET
    METHOD setPos( ... )                           SETGET
+   METHOD setLineType( ... )                      SETGET
 
    METHOD draw( qPainter, qRect, lDrawSelection )
    METHOD setupPainter( qPainter, lDrawSelection )
@@ -1524,10 +1666,13 @@ CLASS HqrGraphicsItem
    METHOD drawGradient( qPainter, qRect )
    METHOD drawLine( qPainter, qRect )
    METHOD drawRect( qPainter, qRect )
+   METHOD drawRoundRect( qPainter, qRect )
    METHOD drawEllipse( qPainter, qRect )
    METHOD drawPie( qPainter, qRect )
    METHOD drawArc( qPainter, qRect )
    METHOD drawChord( qPainter, qRect )
+   METHOD drawDiamond( qPainter, qRect )
+   METHOD drawTriangle( qPainter, qRect )
    METHOD drawSelection( qPainter, qRect )
 
    ERROR  HANDLER OnError( ... )
@@ -1568,6 +1713,55 @@ METHOD HqrGraphicsItem:new( oRM, cParent, cType, cName, aPos, aGeometry )
    CASE "Field"
       ::nWidth := 300 ;  ::nHeight := 50
       ::oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_SIMPLETEXT )
+      EXIT
+   //
+   CASE "Rectangle"
+      ::nWidth := 300 ;  ::nHeight := 300
+      ::oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_RECT )
+      EXIT
+   CASE "RoundRect"
+      ::nWidth := 300 ;  ::nHeight := 300
+      ::oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_ROUNDRECT )
+      EXIT
+   CASE "Ellipse"
+      ::nWidth := 300 ;  ::nHeight := 300
+      ::oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_ELLIPSE )
+      EXIT
+   CASE "Arc"
+      ::nWidth := 300 ;  ::nHeight := 300
+      ::oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_ARC )
+      EXIT
+   CASE "Chord"
+      ::nWidth := 300 ;  ::nHeight := 300
+      ::oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_CHORD )
+      EXIT
+   CASE "LineH"
+      ::nWidth := 300 ;  ::nHeight := 50
+      ::oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_LINE )
+      ::nLineType := HBQT_GRAPHICSITEM_LINE_HORIZONTAL
+      EXIT
+   CASE "LineV"
+      ::nWidth := 50  ;  ::nHeight := 300
+      ::oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_LINE )
+      ::nLineType := HBQT_GRAPHICSITEM_LINE_VERTICAL
+      EXIT
+   CASE "LineDR"
+      ::nWidth := 300 ;  ::nHeight := 300
+      ::oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_LINE )
+      ::nLineType := HBQT_GRAPHICSITEM_LINE_BACKWARDDIAGONAL
+      EXIT
+   CASE "LineDL"
+      ::nWidth := 300 ;  ::nHeight := 300
+      ::oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_LINE )
+      ::nLineType := HBQT_GRAPHICSITEM_LINE_FORWARDDIAGONAL
+      EXIT
+   CASE "Diamond"
+      ::nWidth := 300 ;  ::nHeight := 300
+      ::oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_ROUNDRECT )
+      EXIT
+   CASE "Triangle"
+      ::nWidth := 300 ;  ::nHeight := 300
+      ::oWidget := HBQGraphicsItem():new( HBQT_GRAPHICSITEM_ROUNDRECT )
       EXIT
    ENDSWITCH
 
@@ -1687,6 +1881,7 @@ METHOD HqrGraphicsItem:setPen( ... )
    CASE 0
       IF empty( ::qPen )
          ::qPen := QPen():new( Qt_black )
+         ::qPen:setStyle( Qt_SolidLine )
       ENDIF
       RETURN ::qPen
    OTHERWISE
@@ -1970,6 +2165,22 @@ METHOD HqrGraphicsItem:setOpacity( ... )
 
 /*----------------------------------------------------------------------*/
 
+METHOD HqrGraphicsItem:setLineType( ... )
+   LOCAL a_:= hb_aParams()
+   SWITCH len( a_ )
+   CASE 0
+      EXIT
+   OTHERWISE
+      IF hb_isNumeric( a_[ 1 ] )
+         ::nLineType := a_[ 1 ]
+      ENDIF
+      ::update()
+      EXIT
+   ENDSWITCH
+   RETURN ::nLineType
+
+/*----------------------------------------------------------------------*/
+
 METHOD HqrGraphicsItem:setupPainter( qPainter, lDrawSelection )
    LOCAL qFont
 
@@ -2070,24 +2281,23 @@ METHOD HqrGraphicsItem:draw( qPainter, qRect, lDrawSelection )
    ::setupPainter( qPainter, lDrawSelection )
 
    SWITCH ::cType
-   CASE "Barcode"
-      ::drawBarcode( qPainter, qRect )
-      EXIT
-   CASE "Image"
-      ::drawImage( qPainter, qRect )
-      EXIT
-   CASE "Chart"
-      ::drawChart( qPainter, qRect )
-      EXIT
-   CASE "Gradient"
-      ::drawGradient( qPainter, qRect )
-      EXIT
-   CASE "Text"
-      ::drawText( qPainter, qRect )
-      EXIT
-   CASE "Field"
-      ::drawField( qPainter, qRect )
-      EXIT
+   CASE "Barcode"    ;   ::drawBarcode( qPainter, qRect )      ;    EXIT
+   CASE "Image"      ;   ::drawImage( qPainter, qRect )        ;    EXIT
+   CASE "Chart"      ;   ::drawChart( qPainter, qRect )        ;    EXIT
+   CASE "Gradient"   ;   ::drawGradient( qPainter, qRect )     ;    EXIT
+   CASE "Text"       ;   ::drawText( qPainter, qRect )         ;    EXIT
+   CASE "Field"      ;   ::drawField( qPainter, qRect )        ;    EXIT
+   CASE "Rectangle"  ;   ::drawRect( qPainter, qRect )         ;    EXIT
+   CASE "RoundRect"  ;   ::drawRoundRect( qPainter, qRect )    ;    EXIT
+   CASE "Ellipse"    ;   ::drawEllipse( qPainter, qRect )      ;    EXIT
+   CASE "LineH"      ;   ::drawLine( qPainter, qRect )         ;    EXIT
+   CASE "LineV"      ;   ::drawLine( qPainter, qRect )         ;    EXIT
+   CASE "LineDR"     ;   ::drawLine( qPainter, qRect )         ;    EXIT
+   CASE "LineDL"     ;   ::drawLine( qPainter, qRect )         ;    EXIT
+   CASE "Arc"        ;   ::drawArc( qPainter, qRect )          ;    EXIT
+   CASE "Chord"      ;   ::drawChord( qPainter, qRect )        ;    EXIT
+   CASE "Diamond"    ;   ::drawDiamond( qPainter, qRect )      ;    EXIT
+   CASE "Triangle"   ;   ::drawTriangle( qPainter, qRect )     ;    EXIT
    ENDSWITCH
 
    IF lDrawSelection
@@ -2103,6 +2313,12 @@ METHOD HqrGraphicsItem:drawRect( qPainter, qRect )
 
 /*----------------------------------------------------------------------*/
 
+METHOD HqrGraphicsItem:drawRoundRect( qPainter, qRect )
+   qPainter:drawRoundedRect( qRect, 10/UNIT, 10/UNIT )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD HqrGraphicsItem:drawEllipse( qPainter, qRect )
    qPainter:drawEllipse( qRect )
    RETURN Self
@@ -2111,18 +2327,18 @@ METHOD HqrGraphicsItem:drawEllipse( qPainter, qRect )
 
 METHOD HqrGraphicsItem:drawLine( qPainter, qRect )
 
-   SWITCH ::lineStyle()
+   SWITCH ::lineType()
    CASE HBQT_GRAPHICSITEM_LINE_VERTICAL
-      qPainter:drawLine( qRect:x() + qRect:width() / 2, qRect:y(), qRect:x() +  qRect:width() / 2, qRect:y() + qRect:height() )
+      qPainter:drawLine_4( qRect:x() + qRect:width() / 2, qRect:y(), qRect:x() +  qRect:width() / 2, qRect:y() + qRect:height() )
       EXIT
    case HBQT_GRAPHICSITEM_LINE_HORIZONTAL
-      qPainter:drawLine( qRect:x(), qRect:y() + qRect:height() / 2, qRect:x() + qRect:width(), qRect:y() + qRect:height() / 2 )
+      qPainter:drawLine_4( qRect:x(), qRect:y() + qRect:height() / 2, qRect:x() + qRect:width(), qRect:y() + qRect:height() / 2 )
       EXIT
    case HBQT_GRAPHICSITEM_LINE_BACKWARDDIAGONAL
-      qPainter:drawLine( qRect:right(), qRect:y(), qRect:x(), qRect:bottom() )
+      qPainter:drawLine_4( qRect:right(), qRect:y(), qRect:x(), qRect:bottom() )
       EXIT
    case HBQT_GRAPHICSITEM_LINE_FORWARDDIAGONAL
-      qPainter:drawLine( qRect:x(), qRect:y(), qRect:right(), qRect:bottom() )
+      qPainter:drawLine_4( qRect:x(), qRect:y(), qRect:right(), qRect:bottom() )
       EXIT
    ENDSWITCH
    RETURN Self
@@ -2131,6 +2347,36 @@ METHOD HqrGraphicsItem:drawLine( qPainter, qRect )
 
 METHOD HqrGraphicsItem:drawPie( qPainter, qRect )
    qPainter:drawPie( qRect, ::nStartAngle * 16, ::nSpanAngle * 16 )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HqrGraphicsItem:drawDiamond( qPainter, qRect )
+   LOCAL p := QPainterPath():new()
+   LOCAL x := qRect:x(), y := qRect:y(), w := qRect:width(), h := qRect:height()
+
+   p:moveTo_1( x, y + h / 2 )
+   p:lineTo_1( x + w / 2, y )
+   p:lineTo_1( x + w, y + h / 2 )
+   p:lineTo_1( x + w / 2, y + h )
+   p:lineTo_1( x, y + h / 2 )
+
+   qPainter:drawPath( p )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HqrGraphicsItem:drawTriangle( qPainter, qRect )
+   LOCAL p := QPainterPath():new()
+
+   p:moveTo_1( qRect:x(), qRect:y() + qRect:height() )
+   p:lineTo_1( qRect:x() + qRect:width() / 2, qRect:y() )
+   p:lineTo_1( qRect:x() + qRect:width(), qRect:y() + qRect:height() )
+   p:lineTo_1( qRect:x(), qRect:y() + qRect:height() )
+
+   qPainter:drawPath( p )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
