@@ -209,7 +209,7 @@ HARBOUR
       cd src/rtl
       <make> [clean] [install]
 
-   If you want to rebuild one specific contrib packages, use this:
+   If you want to rebuild one specific contrib package, use this:
 
       cd contrib/<name>
       hbrun ..\make.hbs [clean] [install] [custom hbmk2 options]
