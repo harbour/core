@@ -29,7 +29,7 @@
 ######################################################################
 
 Summary:        Free software Clipper compatible compiler
-Summary(pl):    Darmowy kompilator kompatybilny z jêzykiem Clipper.
+Summary(pl):    Darmowy kompilator kompatybilny z jezykiem Clipper.
 Name:           %{name}
 Version:        %{version}
 Release:        %{releasen}
@@ -51,10 +51,10 @@ and libraries for creating MS-Windows application in Linux box using MinGW
 GCC port.
 
 %description -l pl
-Harbour to kompatybilny z jêzykiem CA-Cl*pper kompilator rozwijany na
-wielu ró¿nych platformach. Ten pakiet zawiera kompilator, preprocesor,
-zbiory nag³ówkowe, wirtualn+ maszynê oraz biblioteki pozwalaj+ce na
-tworzenie aplikacji dla MS-Windows przy u¿yciu MinGW GCC.
+Harbour to kompatybilny z jezykiem CA-Cl*pper kompilator rozwijany na
+wielu ró?nych platformach. Ten pakiet zawiera kompilator, preprocesor,
+zbiory nag3ówkowe, wirtualn+ maszyne oraz biblioteki pozwalaj+ce na
+tworzenie aplikacji dla MS-Windows przy u?yciu MinGW GCC.
 
 
 ######################################################################
@@ -101,6 +101,7 @@ export HB_PLATFORM=win
 export HB_HOST_BIN="$(pwd)/bin/linux/gcc"
 
 export HB_INSTALL_PKG_ROOT=${RPM_BUILD_ROOT}
+export HB_INSTALL_PREFIX=${RPM_BUILD_ROOT}
 export HB_INSTALL_BIN=${RPM_BUILD_ROOT}/%{_bindir}
 export HB_INSTALL_INC=${RPM_BUILD_ROOT}/%{_includedir}/%{name}
 export HB_INSTALL_LIB=${RPM_BUILD_ROOT}/%{_libdir}/%{name}
