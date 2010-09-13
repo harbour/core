@@ -11,9 +11,9 @@ LIB_EXT := .lib
 HB_DYN_COPT := -DHB_DYNLIB
 
 ifeq ($(HB_BUILD_MODE),cpp)
-   CC := wpp386.exe
+   CC := wpp386
 else
-   CC := wcc386.exe
+   CC := wcc386
 endif
 CC_IN :=
 CC_OUT := -fo=
@@ -36,7 +36,7 @@ ifneq ($(HB_BUILD_OPTIM),no)
    # -oxaht
    CFLAGS += -onaehtr -s -ei -zp4 -zt0
    #CFLAGS += -obl+m
-   ifeq ($(CC),wpp386.exe)
+   ifeq ($(CC),wpp386)
       CFLAGS += -oi+
    else
       CFLAGS += -oi
@@ -51,11 +51,11 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -d2
 endif
 
-RC := wrc.exe
+RC := wrc
 RC_OUT := -fo=
 RCFLAGS += -q -r -zm -bt=nt
 
-LD := wlink.exe
+LD := wlink
 ifeq ($(HB_BUILD_DEBUG),yes)
    LDFLAGS += DEBUG ALL
 endif
