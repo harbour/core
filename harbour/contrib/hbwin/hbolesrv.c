@@ -368,6 +368,7 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
 {
    PHB_DYNS pDynSym;
    PHB_ITEM pAction;
+   HB_USHORT uiClass = 0;
 
    HB_SYMBOL_UNUSED( lcid );
    HB_SYMBOL_UNUSED( pExcepInfo );
@@ -392,7 +393,7 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
          {
             fResult = hb_oleDispInvoke( NULL, pAction,
                                         hb_hashGetKeyAt( s_pMsgHash, ( HB_SIZE ) dispid ),
-                                        pParams, pVarResult, s_objItemToVariant );
+                                        pParams, pVarResult, s_objItemToVariant, uiClass );
          }
       }
       else if( HB_IS_HASH( pAction ) )
@@ -416,7 +417,8 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
                {
                   PHB_SYMB pSym = hb_itemGetSymbol( pItem );
                   fResult = hb_oleDispInvoke( pSym, pSym ? pAction : pItem, NULL,
-                                              pParams, pVarResult, s_objItemToVariant );
+                                              pParams, pVarResult,
+                                              s_objItemToVariant, uiClass );
                }
             }
             else if( ( wFlags & DISPATCH_PROPERTYGET ) != 0 &&
@@ -429,7 +431,7 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
             else if( ( wFlags & DISPATCH_PROPERTYPUT ) != 0 &&
                      pParams->cArgs == 1 )
             {
-               hb_oleVariantToItem( pItem, &pParams->rgvarg[ 0 ] );
+               hb_oleVariantToItemEx( pItem, &pParams->rgvarg[ 0 ], uiClass );
                fResult = HB_TRUE;
             }
          }
@@ -451,8 +453,9 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
          }
          if( pDynSym && hb_objHasMessage( pAction, pDynSym ) )
          {
-            fResult = hb_oleDispInvoke( hb_dynsymSymbol( pDynSym ), pAction, NULL,
-                                        pParams, pVarResult, s_objItemToVariant );
+            fResult = hb_oleDispInvoke( hb_dynsymSymbol( pDynSym ),
+                                        pAction, NULL, pParams, pVarResult,
+                                        s_objItemToVariant, uiClass );
          }
       }
       if( !fResult )
@@ -470,7 +473,7 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
          {
             PHB_ITEM pItem = hb_stackAllocItem();
 
-            hb_oleVariantToItem( pItem, &pParams->rgvarg[ 0 ] );
+            hb_oleVariantToItemEx( pItem, &pParams->rgvarg[ 0 ], uiClass );
             hb_memvarSetValue( hb_dynsymSymbol( pDynSym ), pItem );
             hb_stackPop();
             return S_OK;
@@ -493,8 +496,9 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
       else if( ( wFlags & DISPATCH_METHOD ) == 0 ||
                !hb_dynsymIsFunction( pDynSym ) )
          return DISP_E_MEMBERNOTFOUND;
-      else if( !hb_oleDispInvoke( hb_dynsymSymbol( pDynSym ), NULL, NULL,
-                                  pParams, pVarResult, s_objItemToVariant ) )
+      else if( !hb_oleDispInvoke( hb_dynsymSymbol( pDynSym ),
+                                  NULL, NULL, pParams, pVarResult,
+                                  s_objItemToVariant, uiClass ) )
          return DISP_E_MEMBERNOTFOUND;
    }
 

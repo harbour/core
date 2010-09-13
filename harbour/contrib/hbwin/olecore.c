@@ -1100,7 +1100,7 @@ HB_OLE_PARAM_REF;
 
 HB_BOOL hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, PHB_ITEM pParam,
                           DISPPARAMS* pParams, VARIANT* pVarResult,
-                          HB_OLEOBJ_FUNC pObjFunc )
+                          HB_OLEOBJ_FUNC pObjFunc, HB_USHORT uiClass )
 {
    if( !pSym && HB_IS_SYMBOL( pObject ) )
    {
@@ -1143,12 +1143,13 @@ HB_BOOL hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, PHB_ITEM pParam,
              ( ii < iRefs ) )
          {
             refArray[ ii ].variant = &pParams->rgvarg[ iCount - i ];
-            hb_oleVariantToItem( refArray[ ii ].item, refArray[ ii ].variant );
+            hb_oleVariantToItemEx( refArray[ ii ].item,
+                                   refArray[ ii ].variant, uiClass );
             hb_vmPushItemRef( refArray[ ii++ ].item );
          }
          else
-            hb_oleVariantToItem( hb_stackAllocItem(),
-                                 &pParams->rgvarg[ iCount - i ] );
+            hb_oleVariantToItemEx( hb_stackAllocItem(),
+                                   &pParams->rgvarg[ iCount - i ], uiClass );
       }
 
       if( pObject && !HB_IS_HASH( pObject ) )

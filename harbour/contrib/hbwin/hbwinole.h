@@ -158,7 +158,7 @@ extern HB_EXPORT PHB_ITEM   hb_oleItemGetCallBack( PHB_ITEM pItem );
 extern HB_EXPORT void       hb_oleItemSetCallBack( PHB_ITEM pItem, PHB_ITEM * pCallBack );
 extern HB_EXPORT HB_BOOL    hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, PHB_ITEM pParam,
                                               DISPPARAMS * pParams, VARIANT* pVarResult,
-                                              HB_OLEOBJ_FUNC pObjFunc );
+                                              HB_OLEOBJ_FUNC pObjFunc, HB_USHORT uiClass );
 
 /* activex control */
 extern HB_EXPORT HB_BOOL    hb_oleAxInit( void );

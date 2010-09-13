@@ -241,6 +241,7 @@ typedef struct {
    DWORD                dwCookie;
    IID                  rriid;
    PHB_ITEM             pItemHandler;
+   HB_USHORT            uiClass;
 } ISink;
 
 
@@ -350,7 +351,8 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch* lpThis, DISPID dispid, REFII
       }
 
       if( pAction &&  hb_oleDispInvoke( NULL, pAction, pKey,
-                                        pParams, pVarResult, NULL ) )
+                                        pParams, pVarResult, NULL,
+                                        ( ( ISink* ) lpThis )->uiClass ) )
          hr = S_OK;
 
       hb_stackPop();
@@ -414,6 +416,7 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler [, cID] ) --> pSink */
                   hb_oleItemSetCallBack( hb_param( 1, HB_IT_POINTER ),
                                          &pSink->pItemHandler );
                   pSink->rriid = rriid;
+                  pSink->uiClass = 0;
                   lOleError = HB_VTBL( pCP )->Advise( HB_THIS_( pCP ) ( IUnknown* ) pSink, &dwCookie );
                   pSink->pConnectionPoint = pCP;
                   pSink->dwCookie = dwCookie;
