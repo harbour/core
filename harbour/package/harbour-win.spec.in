@@ -83,6 +83,7 @@ unset HB_BUILD_CONTRIBS
 export HB_BUILD_PARTS=lib
 export HB_PLATFORM=win
 export HB_HOST_BIN="$(pwd)/bin/linux/gcc"
+export HB_BUILD_EXTDEF=no
 
 make %{?_smp_mflags}
 
@@ -99,6 +100,7 @@ unset HB_COMPILER
 export HB_BUILD_PARTS=lib
 export HB_PLATFORM=win
 export HB_HOST_BIN="$(pwd)/bin/linux/gcc"
+export HB_BUILD_EXTDEF=no
 
 export HB_INSTALL_PKG_ROOT=${RPM_BUILD_ROOT}
 export HB_INSTALL_BIN=${RPM_BUILD_ROOT}/%{_bindir}

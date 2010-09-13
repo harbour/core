@@ -343,7 +343,7 @@ HB_FUNC( XHB_INDEX )
                {
                   char * pszText;
                   if( hb_itemGetWriteCL( pSelf, &pszText, &nLen ) &&
-                      nIndex < nLen )
+                      nIndex > 0 && nIndex <= nLen )
                      pszText[ nIndex - 1 ] = cValue;
                }
             }

@@ -588,10 +588,7 @@ rm -rf $RPM_BUILD_ROOT
 %{?_with_qt:%files qt}
 %{?_with_qt:%defattr(644,root,root,755)}
 %{?_with_qt:%dir %{_libdir}/%{name}}
-%{?_with_qt:%{_libdir}/%{name}/libhbqt.a}
-%{?_with_qt:%{_libdir}/%{name}/libhbqtcore.a}
-%{?_with_qt:%{_libdir}/%{name}/libhbqtgui.a}
-%{?_with_qt:%{_libdir}/%{name}/libhbqtnetwork.a}
+%{?_with_qt:%{_libdir}/%{name}/libhbqt*.a}
 %{?_with_qt:%{_libdir}/%{name}/libhbxbp.a}
 
 ######################################################################
