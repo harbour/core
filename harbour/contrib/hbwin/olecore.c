@@ -318,7 +318,7 @@ static IDispatch * hb_oleItemGetDispatch( PHB_ITEM pItem )
 {
    if( HB_IS_OBJECT( pItem ) )
    {
-      if( hb_clsIsParent( hb_objGetClass( pItem ), "WIN_OLEAUTO" ) )
+      if( hb_objHasMessage( pItem, s_pDyns_hObjAccess ) )
       {
          hb_vmPushDynSym( s_pDyns_hObjAccess );
          hb_vmPush( pItem );
@@ -600,15 +600,20 @@ static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray,
 }
 
 
-static void hb_oleDispatchToItem( PHB_ITEM pItem, IDispatch* pdispVal )
+static void hb_oleDispatchToItem( PHB_ITEM pItem, IDispatch* pdispVal, HB_USHORT uiClass )
 {
    if( pdispVal )
    {
       if( hb_vmRequestReenter() )
       {
+         PHB_SYMB pClassFunc;
          PHB_ITEM pObject, pPtrGC;
 
-         hb_vmPushDynSym( s_pDyns_hb_oleauto );
+         pClassFunc = hb_clsFuncSym( uiClass );
+         if( ! pClassFunc )
+            pClassFunc = hb_dynsymSymbol( s_pDyns_hb_oleauto );
+
+         hb_vmPushSymbol( pClassFunc );
          hb_vmPushNil();
          hb_vmDo( 0 );
 
@@ -634,8 +639,7 @@ static void hb_oleDispatchToItem( PHB_ITEM pItem, IDispatch* pdispVal )
    }
 }
 
-
-void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
+void hb_oleVariantToItemEx( PHB_ITEM pItem, VARIANT* pVariant, HB_USHORT uiClass )
 {
    if( V_VT( pVariant ) == ( VT_VARIANT | VT_BYREF ) )
       pVariant = V_VARIANTREF( pVariant );
@@ -654,7 +658,7 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
                               HB_THIS_( punkVal ) HB_ID_REF( IID_IDispatch ),
                               ( void** ) ( void * ) &pdispVal ) == S_OK )
          {
-            hb_oleDispatchToItem( pItem, pdispVal );
+            hb_oleDispatchToItem( pItem, pdispVal, uiClass );
             HB_VTBL( pdispVal )->Release( HB_THIS( pdispVal ) );
          }
          break;
@@ -665,7 +669,7 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
          hb_itemClear( pItem );
          hb_oleDispatchToItem( pItem, V_VT( pVariant ) == VT_DISPATCH ?
                                       V_DISPATCH( pVariant ) :
-                                      *V_DISPATCHREF( pVariant ) );
+                                      *V_DISPATCHREF( pVariant ), uiClass );
          break;
 
       case VT_BSTR:
@@ -898,6 +902,12 @@ void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
          /* possible RT error - unsupported variant */
          hb_itemClear( pItem );
    }
+}
+
+
+void hb_oleVariantToItem( PHB_ITEM pItem, VARIANT* pVariant )
+{
+   hb_oleVariantToItemEx( pItem, pVariant, 0 );
 }
 
 

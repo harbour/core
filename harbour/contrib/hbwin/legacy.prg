@@ -98,7 +98,6 @@ CREATE CLASS TOLEAUTO FROM WIN_OLEAUTO
    METHOD New( xOle, cClass )
    METHOD hObj( xOle )
 
-   METHOD OleCollection( xIndex, xValue ) OPERATOR "[]"
    METHOD OleValuePlus( xArg )            OPERATOR "+"
    METHOD OleValueMinus( xArg )           OPERATOR "-"
    METHOD OleValueMultiply( xArg )        OPERATOR "*"
@@ -206,21 +205,6 @@ FUNCTION GetActiveObject( xOle, cClass )
    ENDIF
 
    RETURN o
-
-METHOD OleCollection( xIndex, xValue ) CLASS TOLEAUTO
-   LOCAL xRet
-
-   IF PCount() == 1
-      RETURN ::Item( xIndex )
-   ENDIF
-
-   BEGIN SEQUENCE WITH s_bBreak
-      xRet := ::_Item( xIndex, xValue ) /* ASP Collection syntax. */
-   RECOVER
-      xRet := ::SetItem( xIndex, xValue )
-   END SEQUENCE
-
-   RETURN xRet
 
 METHOD OleValuePlus( xArg ) CLASS TOLEAUTO
    LOCAL xRet

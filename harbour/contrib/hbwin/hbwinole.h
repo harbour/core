@@ -147,6 +147,7 @@ extern HB_EXPORT HB_BOOL    hb_oleInit( void );
 extern HB_EXPORT HRESULT    hb_oleGetError( void );
 extern HB_EXPORT void       hb_oleSetError( HRESULT lOleError );
 extern HB_EXPORT void       hb_oleVariantToItem( PHB_ITEM pItem, VARIANT * pVariant );
+extern HB_EXPORT void       hb_oleVariantToItemEx( PHB_ITEM pItem, VARIANT* pVariant, HB_USHORT uiClass );
 extern HB_EXPORT void       hb_oleItemToVariant( VARIANT * pVariant, PHB_ITEM pItem );
 extern HB_EXPORT void       hb_oleItemToVariantEx( VARIANT* pVariant, PHB_ITEM pItem, HB_OLEOBJ_FUNC pObjFunc );
 extern HB_EXPORT void       hb_oleVariantUpdate( VARIANT * pVariant, PHB_ITEM pItem, HB_OLEOBJ_FUNC pObjFunc );
