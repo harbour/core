@@ -78,12 +78,12 @@ QVariant hbqt_fetchData( PHB_ITEM block, int type, int role, int par1, int par2 
       PHB_ITEM p3  = hb_itemPutNI( NULL, par2 );
 
       PHB_ITEM ret = hb_vmEvalBlockV( block, 4, p0, p1, p2, p3 );
-#if 0
+
       hb_itemRelease( p0 );
       hb_itemRelease( p1 );
       hb_itemRelease( p2 );
       hb_itemRelease( p3 );
-#endif
+
       if( hb_itemType( ret ) & HB_IT_STRING )
       {
          vv = hb_itemGetCPtr( ret );
@@ -126,12 +126,6 @@ QVariant hbqt_fetchData( PHB_ITEM block, int type, int role, int par1, int par2 
       }
 
       hb_vmRequestRestore();
-
-      hb_itemRelease( ret );
-      hb_itemRelease( p0 );
-      hb_itemRelease( p1 );
-      hb_itemRelease( p2 );
-      hb_itemRelease( p3 );
    }
 
    return vv;
