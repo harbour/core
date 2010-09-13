@@ -57,8 +57,10 @@
 #include <zlib.h>
 
 /* Try to figure if we have this function. Z_RLE was introduced in 1.2.0.1,
-   while compressBound() was added in 1.2.0. This means we have to miss
-   compressBound() when using zlib 1.2.0. [vszakats] */
+   while compressBound() and deflateBound() were added in 1.2.0. This means
+   we have to miss compressBound() when using zlib 1.2.0. [vszakats] */
+/* ZLIB_VERNUM were added in version 1.2.0.2 so it cannot be used for older
+   zlib libraries */
 #if defined( Z_RLE )
    #define _HB_Z_COMPRESSBOUND
 #endif
@@ -68,6 +70,9 @@ static uLong hb_zlibCompressBound( uLong ulLen )
 {
    return ulLen + ( ulLen >> 12 ) + ( ulLen >> 14 ) + ( ulLen >> 25 ) + 13;
 }
+#define compressBound( n )    ( hb_zlibCompressBound( n )
+/* additional 12 bytes is for GZIP compression which uses bigger header */
+#define deflateBound( s, n )  ( hb_zlibCompressBound( n ) + 12 )
 #endif
 
 static HB_SIZE hb_zlibUncompressedSize( const char * szSrc, HB_SIZE nLen,
@@ -151,7 +156,7 @@ static int hb_gz_compress( char ** pDstPtr, HB_SIZE * pnDst,
    memset( &stream, 0, sizeof( z_stream ) );
    stream.next_in   = ( Bytef* ) pSrc;
    stream.avail_in  = ( uInt ) nSrc;
-   iResult = deflateInit2( &stream, level, Z_DEFLATED, 31, 8,
+   iResult = deflateInit2( &stream, level, Z_DEFLATED, 15 + 16, 8,
                            Z_DEFAULT_STRATEGY );
    if( iResult == Z_OK )
    {
@@ -209,17 +214,9 @@ HB_FUNC( HB_ZLIBVERSION )
 HB_FUNC( HB_ZCOMPRESSBOUND )
 {
    if( HB_ISCHAR( 1 ) )
-#if defined( _HB_Z_COMPRESSBOUND )
       hb_retnint( compressBound( ( uLong ) hb_parclen( 1 ) ) );
-#else
-      hb_retnint( hb_zlibCompressBound( ( uLong ) hb_parclen( 1 ) ) );
-#endif
    else if( HB_ISNUM( 1 ) )
-#if defined( _HB_Z_COMPRESSBOUND )
       hb_retnint( compressBound( ( uLong ) hb_parns( 1 ) ) );
-#else
-      hb_retnint( hb_zlibCompressBound( ( uLong ) hb_parns( 1 ) ) );
-#endif
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -279,11 +276,7 @@ HB_FUNC( HB_ZCOMPRESS )
          else
          {
             ulDstLen = HB_ISNUM( 2 ) ? ( uLong ) hb_parns( 2 ) :
-#if defined( _HB_Z_COMPRESSBOUND )
-                                    compressBound( ( uLong ) nLen );
-#else
-                                    hb_zlibCompressBound( ( uLong ) nLen );
-#endif
+                                       compressBound( ( uLong ) nLen );
             pDest = ( char * ) hb_xalloc( ulDstLen + 1 );
          }
 
@@ -377,6 +370,19 @@ HB_FUNC( HB_ZUNCOMPRESS )
          hb_storni( Z_OK, 3 );
       }
    }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+/*
+ * HB_GZCOMPRESSBOUND( <cData> | <nDataLen> ) -> <nMaxCompressLen>
+ */
+HB_FUNC( HB_GZCOMPRESSBOUND )
+{
+   if( HB_ISCHAR( 1 ) )
+      hb_retnint( compressBound( ( uLong ) hb_parclen( 1 ) ) + 12 );
+   else if( HB_ISNUM( 1 ) )
+      hb_retnint( compressBound( ( uLong ) hb_parns( 1 ) ) + 12 );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
