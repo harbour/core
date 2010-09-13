@@ -25,6 +25,7 @@
 -plugin=hbqt_hbmk2_plugin.hbs
 
 -depkeyhead=qt:QtCore/qglobal.h
+-depcontrol=qt:no{HB_BUILD_EXTDEF='no'}
 -depcontrol=qt:${HB_WITH_QT}
 {!darwin}-depincpath=qt:/usr/include/qt4
 {!darwin}-depincpath=qt:/usr/lib/qt4/include
