@@ -98,7 +98,19 @@ int row ( const QTableWidgetItem * item ) const
 int rowCount () const
 QList<QTableWidgetItem *> selectedItems ()
 QList<QTableWidgetSelectionRange> selectedRanges () const
-void setCellWidget ( int row, int column, QWidget * widget )
+
+void setCellWidget ( int row, int column, QWidget * widget ){
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 4 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTABLEWIDGET_SETCELLWIDGET()" ) );
+   if( p && p->ph && q && q->ph )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QTABLEWIDGET_SETCELLWIDGET() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QTableWidget( 1 )->setCellWidget( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_QWidget( 4 ) );
+   }
+}
+
 void setColumnCount ( int columns )
 void setCurrentCell ( int row, int column )
 void setCurrentCell ( int row, int column, QItemSelectionModel::SelectionFlags command )

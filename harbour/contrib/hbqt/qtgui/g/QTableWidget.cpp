@@ -67,11 +67,12 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 49/54 [ 90.74% ] ]
+ *  Constructed[ 49/55 [ 89.09% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
+ *  }
  *  }
  *  }
  *  }
@@ -452,12 +453,14 @@ HB_FUNC( QT_QTABLEWIDGET_SELECTEDRANGES )
  */
 HB_FUNC( QT_QTABLEWIDGET_SETCELLWIDGET )
 {
-   QTableWidget * p = hbqt_par_QTableWidget( 1 );
-   if( p )
-      ( p )->setCellWidget( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_QWidget( 4 ) );
-   else
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 4 );
+   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTABLEWIDGET_SETCELLWIDGET()" ) );
+   if( p && p->ph && q && q->ph )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETCELLWIDGET FP=( p )->setCellWidget( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_QWidget( 4 ) ); p is NULL" ) );
+      HB_TRACE( HB_TR_DEBUG, ( "QT_QTABLEWIDGET_SETCELLWIDGET() Qt object: %p is attached to: %p", p->ph, q->ph ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QTableWidget( 1 )->setCellWidget( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_QWidget( 4 ) );
    }
 }
 
