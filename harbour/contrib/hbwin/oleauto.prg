@@ -93,7 +93,7 @@ METHOD __enumSkip( enum, lDescend ) CLASS WIN_OLEAUTO
 
    HB_SYMBOL_UNUSED( lDescend )
 
-   xValue := __OleEnumNext( ::__hObjEnum, @lContinue )
+   xValue := __OleEnumNext( ::__hObjEnum, @lContinue, ::classH )
    /* set enumerator value */
    (@enum):__enumValue( xValue )
 

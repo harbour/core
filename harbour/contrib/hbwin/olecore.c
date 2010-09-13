@@ -547,7 +547,8 @@ void hb_oleItemToVariantEx( VARIANT* pVariant, PHB_ITEM pItem,
 
 
 static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray,
-                                   int iDim, long * plIndex, VARTYPE vt )
+                                   int iDim, long * plIndex, VARTYPE vt,
+                                   HB_USHORT uiClass )
 {
    long lFrom, lTo;
 
@@ -578,7 +579,7 @@ static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray,
             {
                if( vt != VT_VARIANT )
                   V_VT( &vItem ) = vt; /* it's reserved in VT_DECIMAL structure */
-               hb_oleVariantToItem( hb_arrayGetItemPtr( pItem, ++ul ), &vItem );
+               hb_oleVariantToItemEx( hb_arrayGetItemPtr( pItem, ++ul ), &vItem, uiClass );
                VariantClear( &vItem );
             }
          }
@@ -590,7 +591,7 @@ static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray,
          {
             plIndex[ iDim ] = lFrom;
             hb_oleSafeArrayToItem( hb_arrayGetItemPtr( pItem, ++ul ),
-                                   pSafeArray, iDim, plIndex, vt );
+                                   pSafeArray, iDim, plIndex, vt, uiClass );
          }
          while( ++lFrom <= lTo );
       }
@@ -891,7 +892,8 @@ void hb_oleVariantToItemEx( PHB_ITEM pItem, VARIANT* pVariant, HB_USHORT uiClass
                   long * plIndex = ( long * ) hb_xgrab( iDim * sizeof( long ) );
 
                   hb_oleSafeArrayToItem( pItem, pSafeArray, iDim, plIndex,
-                           ( V_VT( pVariant ) & ~( VT_ARRAY | VT_BYREF ) ) );
+                           ( V_VT( pVariant ) & ~( VT_ARRAY | VT_BYREF ) ),
+                           uiClass );
                   hb_xfree( plIndex );
                }
                else
@@ -1215,7 +1217,7 @@ static void GetParams( DISPPARAMS * dispparam, HB_BOOL fUseRef )
    dispparam->cNamedArgs = 0;
 }
 
-static void PutParams( DISPPARAMS * dispparam )
+static void PutParams( DISPPARAMS * dispparam, HB_USHORT uiClass )
 {
    VARIANTARG* pRefs = &dispparam->rgvarg[ dispparam->cArgs ];
    PHB_ITEM pItem = NULL;
@@ -1227,7 +1229,7 @@ static void PutParams( DISPPARAMS * dispparam )
       {
          if( !pItem )
             pItem = hb_itemNew( NULL );
-         hb_oleVariantToItem( pItem, &dispparam->rgvarg[ uiArg ] );
+         hb_oleVariantToItemEx( pItem, &dispparam->rgvarg[ uiArg ], uiClass );
          hb_itemParamStoreForward( ( HB_USHORT ) ( dispparam->cArgs - uiArg ), pItem );
          VariantClear( pRefs );
          pRefs++;
@@ -1429,7 +1431,8 @@ HB_FUNC( __OLEENUMNEXT )
    VariantInit( &variant );
    if( HB_VTBL( pEnum )->Next( HB_THIS_( pEnum ) 1, &variant, NULL ) == S_OK )
    {
-      hb_oleVariantToItem( hb_stackReturnItem(), &variant );
+      hb_oleVariantToItemEx( hb_stackReturnItem(), &variant,
+                             ( HB_USHORT ) hb_parni( 3 ) );
       VariantClear( &variant );
       hb_storl( HB_TRUE, 2 );
    }
@@ -1499,6 +1502,9 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
    EXCEPINFO   excep;
    UINT        uiArgErr;
    HRESULT     lOleError;
+   HB_USHORT   uiClass;
+
+   uiClass = hb_objGetClass( hb_stackSelfItem() );
 
    /* Get object handle */
    hb_vmPushDynSym( s_pDyns_hObjAccess );
@@ -1562,10 +1568,10 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
                                             DISPATCH_PROPERTYGET | DISPATCH_METHOD,
                                             &dispparam, &variant, &excep, &uiArgErr );
 
-      PutParams( &dispparam );
+      PutParams( &dispparam, uiClass );
       FreeParams( &dispparam );
 
-      hb_oleVariantToItem( hb_stackReturnItem(), &variant );
+      hb_oleVariantToItemEx( hb_stackReturnItem(), &variant, uiClass );
       VariantClear( &variant );
 
       hb_oleSetError( lOleError );
@@ -1593,6 +1599,9 @@ HB_FUNC( WIN_OLEAUTO___OPINDEX )
    UINT        uiArgErr;
    HRESULT     lOleError, lOleErrorEnum;
    HB_BOOL     fAssign;
+   HB_USHORT   uiClass;
+
+   uiClass = hb_objGetClass( hb_stackSelfItem() );
 
    /* Get object handle */
    hb_vmPushDynSym( s_pDyns_hObjAccess );
@@ -1636,10 +1645,10 @@ HB_FUNC( WIN_OLEAUTO___OPINDEX )
                                             DISPATCH_PROPERTYGET | DISPATCH_METHOD,
                                             &dispparam, &variant, &excep, &uiArgErr );
 
-      PutParams( &dispparam );
+      PutParams( &dispparam, uiClass );
       FreeParams( &dispparam );
 
-      hb_oleVariantToItem( hb_stackReturnItem(), &variant );
+      hb_oleVariantToItemEx( hb_stackReturnItem(), &variant, uiClass );
       VariantClear( &variant );
    }
 
