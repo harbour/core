@@ -471,27 +471,27 @@ METHOD IdeShortcuts:array2table( nRow, a_ )
    LOCAL oTbl := ::oUI:q_tableMacros
    LOCAL n := nRow - 1
 
-   q0 := QTableWidgetItem():new()
+   q0 := QTableWidgetItem()
    q0:setIcon( hbide_image( a_[ 8 ] ) )
    oTbl:setItem( n, 0, q0 )
 
-   q1 := QTableWidgetItem():new()
+   q1 := QTableWidgetItem()
    q1:setText( a_[ 1 ] )
    oTbl:setItem( n, 1, q1 )
 
-   q2 := QTableWidgetItem():new()
+   q2 := QTableWidgetItem()
    q2:setText( a_[ 2 ] )
    oTbl:setItem( n, 2, q2 )
 
-   q3 := QTableWidgetItem():new()
+   q3 := QTableWidgetItem()
    q3:setIcon( iif( a_[ 3 ] == "YES", hbide_image( "check" ), "" ) )
    oTbl:setItem( n, 3, q3 )
 
-   q4 := QTableWidgetItem():new()
+   q4 := QTableWidgetItem()
    q4:setIcon( iif( a_[ 4 ] == "YES", hbide_image( "check" ), "" ) )
    oTbl:setItem( n, 4, q4 )
 
-   q5 := QTableWidgetItem():new()
+   q5 := QTableWidgetItem()
    q5:setIcon( iif( a_[ 5 ] == "YES", hbide_image( "check" ), "" ) )
    oTbl:setItem( n, 5, q5 )
 
@@ -567,7 +567,7 @@ METHOD IdeShortcuts:buildUI()
    oTbl:setSelectionMode( QAbstractItemView_SingleSelection )
    oTbl:setSelectionBehavior( QAbstractItemView_SelectRows )
    FOR n := 1 TO len( hdr_ )
-      qItm := QTableWidgetItem():new()
+      qItm := QTableWidgetItem()
       qItm:setText( hdr_[ n,1 ] )
       oTbl:setHorizontalHeaderItem( n-1, qItm )
       oTbl:setColumnWidth( n-1, hdr_[ n,2 ] )
@@ -642,7 +642,7 @@ METHOD IdeShortcuts:populateDftSCuts()
       nRow++
       aadd( ::aDftSCutsItms, array( 6 ) )
       ::array2table( nRow, a_ )
-      QApplication():new():processEvents()
+      QApplication():processEvents()
    NEXT
    oTbl:setCurrentCell( 0,0 )
 
@@ -658,12 +658,12 @@ METHOD IdeShortcuts:populateMethods()
 
    FOR EACH a_ IN ::aMethods
       IF !empty( a_[ 1 ] )
-         qItem := QListWidgetItem():new()
+         qItem := QListWidgetItem()
 
          IF left( a_[ 1 ], 1 ) == " "
             qItem:setText( alltrim( a_[ 1 ] ) )
-            qItem:setForeground( QBrush():new( "QColor", QColor():new( 255,0,0 ) ) )
-            qItem:setBackground( QBrush():new( "QColor", QColor():new( 255,255,200 ) ) )
+            qItem:setForeground( QBrush( "QColor", QColor( 255,0,0 ) ) )
+            qItem:setBackground( QBrush( "QColor", QColor( 255,255,200 ) ) )
             qItem:setTextAlignment( Qt_AlignHCenter )
          ELSE
             qItem:setText( a_[ 1 ] )

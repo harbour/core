@@ -141,7 +141,7 @@ FUNCTION hbide_execPopup( aPops, aqPos, qParent )
    LOCAL i, qPop, qPoint, qAct, cAct, xRet, pAct, a_, qSub, b_
    LOCAL qSub_:={}
 
-   qPop := QMenu():new( iif( hb_isObject( qParent ), qParent, NIL ) )
+   qPop := QMenu( iif( hb_isObject( qParent ), qParent, NIL ) )
    qPop:setStyleSheet( GetStyleSheet( "QMenuPop", hbide_setIde():nAnimantionMode ) )
 
    FOR i := 1 TO len( aPops )
@@ -151,7 +151,7 @@ FUNCTION hbide_execPopup( aPops, aqPos, qParent )
          IF hb_isObject( aPops[ i, 1 ] )
             qPop:addAction_4( aPops[ i, 1 ] )
          ELSEIF hb_isArray( aPops[ i, 1 ] )     /* Sub-menu */
-            qSub := QMenu():new( qPop )
+            qSub := QMenu( qPop )
             qSub:setStyleSheet( GetStyleSheet( "QMenuPop", hbide_setIde():nAnimantionMode ) )
             FOR EACH a_ IN aPops[ i, 1 ]
                qSub:addAction( a_[ 1 ] )
@@ -166,7 +166,7 @@ FUNCTION hbide_execPopup( aPops, aqPos, qParent )
    NEXT
 
    IF hb_isArray( aqPos )
-      qPoint := QPoint():new( aqPos[ 1 ], aqPos[ 2 ] )
+      qPoint := QPoint( aqPos[ 1 ], aqPos[ 2 ] )
    ELSE
       qPoint := QPoint():configure( qParent:mapToGlobal( aqPos ) )
    ENDIF
@@ -236,7 +236,7 @@ FUNCTION hbide_showWarning( cMsg, cInfo, cTitle, qParent )
    DEFAULT cTitle  TO "Information"
    DEFAULT qParent TO SetAppWindow():pWidget
 
-   oMB := QMessageBox():new()
+   oMB := QMessageBox()
    oMB:setText( cMsg )
    IF !empty( cInfo )
       oMB:setInformativeText( cInfo )
@@ -255,7 +255,7 @@ FUNCTION hbide_getYesNo( cMsg, cInfo, cTitle )
 
    DEFAULT cTitle TO "Option Please!"
 
-   oMB := QMessageBox():new()
+   oMB := QMessageBox()
    oMB:setText( "<b>"+ cMsg +"</b>" )
    IF !empty( cInfo )
       oMB:setInformativeText( cInfo )
@@ -275,7 +275,7 @@ FUNCTION hbide_getYesNoCancel( cMsg, cInfo, cTitle )
 
    DEFAULT cTitle TO "Option Please!"
 
-   oMB := QMessageBox():new()
+   oMB := QMessageBox()
    oMB:setText( "<b>"+ cMsg +"</b>" )
    IF !empty( cInfo )
       oMB:setInformativeText( cInfo )
@@ -993,7 +993,8 @@ function hbide_toString( x, lLineFeed, lInherited, lType, cFile, lForceLineFeed 
          // s := iif( lType, "[O]=", "" ) + hb_dumpvar( x ) + iif( lLineFeed, hb_eol(), "" )
          s := '' + iif( lLineFeed, hb_eol(), "" )
       ELSE
-         s := iif( lType, "[O]=", "" ) + x:ClassName()+'():New()' + iif( lLineFeed, hb_eol(), "" )
+//         s := iif( lType, "[O]=", "" ) + x:ClassName()+'():New()' + iif( lLineFeed, hb_eol(), "" )
+         s := iif( lType, "[O]=", "" ) + x:ClassName() + iif( lLineFeed, hb_eol(), "" )
       ENDIF
    ENDCASE
 
@@ -1307,7 +1308,7 @@ FUNCTION hbide_fetchADate( qParent, cTitle, cPrompt, dDefault )
    oUI:setWindowTitle( cTitle )
    oUI:q_labelPrompt:setText( cPrompt )
    IF dDefault != NIL
-      qDate := QDate():new()
+      qDate := QDate()
       qDate:setYear( year( dDefault ) )
       qDate:setMonth( month( dDefault ) )
       qDate:setDay( day( dDefault ) )
@@ -1342,7 +1343,7 @@ FUNCTION hbide_fetchAString( qParent, cDefault, cWhat, cTitle )
    DEFAULT cWhat    TO ""
    DEFAULT cTitle   TO "A String Value"
 
-   qGo := QInputDialog():new( qParent )
+   qGo := QInputDialog( qParent )
    qGo:setTextValue( cDefault )
    qGo:setLabelText( cWhat )
    qGo:setWindowTitle( cTitle )
@@ -1965,7 +1966,7 @@ FUNCTION hbide_string2nArray( s )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_array2rect( a_ )
-   RETURN QRect():new( a_[ 1 ], a_[ 2 ], a_[ 3 ], a_[ 4 ] )
+   RETURN QRect( a_[ 1 ], a_[ 2 ], a_[ 3 ], a_[ 4 ] )
 
 /*----------------------------------------------------------------------*/
 
@@ -2219,7 +2220,7 @@ FUNCTION hbide_buildToolbarButton( qToolbar, aBtn )
    IF empty( aBtn )
       qToolbar:addSeparator()
    ELSE
-      qBtn := QToolButton():new()
+      qBtn := QToolButton()
       qBtn:setTooltip( aBtn[ BTN_TOOLTIP ] )
       qBtn:setAutoRaise( .t. )
       qBtn:setIcon( hbide_image( aBtn[ BTN_IMAGE ] ) )

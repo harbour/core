@@ -113,7 +113,7 @@ METHOD IdeWizard:create( oIde )
    DEFAULT oIde TO ::oIde
    ::oIde := oIde
 
-   ::oUI := QWizard():new()
+   ::oUI := QWizard()
    ::oUI:setWindowTitle( "Open" )
    ::oUI:setWindowIcon( hbide_image( "hbide" ) )
 
@@ -154,14 +154,14 @@ METHOD IdeWizard:execEvent( nMode, p )
 METHOD IdeWizard:addIntroPage()
    LOCAL page, label, layout
 
-   page := QWizardPage():new()
+   page := QWizardPage()
    page:setTitle( "Introduction" )
 
-   label := QLabel():new( "This wizard will help you register your copy " + ;
+   label := QLabel( "This wizard will help you register your copy " + ;
                                                    "of Super Product Two." )
    label:setWordWrap( .t. )
 
-   layout := QVBoxLayout():new()
+   layout := QVBoxLayout()
    layout:addWidget( label )
    page:setLayout( layout )
    page:setTitle( "This is waizard" )

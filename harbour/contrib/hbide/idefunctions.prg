@@ -198,7 +198,7 @@ METHOD IdeFunctions:buildHeader()
 
    oTbl := ::oUI:q_tableFuncList
 
-   qFnt := QFont():new( "Courier New" )
+   qFnt := QFont( "Courier New" )
    oTbl:setFont( qFnt )
 
    QHeaderView():from( oTbl:verticalHeader() ):hide()
@@ -211,7 +211,7 @@ METHOD IdeFunctions:buildHeader()
    cHdr := pad( "Name", ::nPNm ) + cDH + "Typ " + cDH + "  Line" + cDH + ;
                             pad( "Project", ::nPPr ) + cDH + pad( "Source", ::nPSr )
 
-   qItm := QTableWidgetItem():new()
+   qItm := QTableWidgetItem()
    qItm:setText( cHdr )
    qItm:setFont( qFnt )
    qItm:setTextAlignment( Qt_AlignLeft )
@@ -381,7 +381,7 @@ METHOD IdeFunctions:listProjects()
    ::clearProjects()
 
    FOR EACH s IN ::oPM:getProjectsTitleList()
-      qItm := QListWidgetItem():new()
+      qItm := QListWidgetItem()
       qItm:setText( s )
       qItm:setCheckState( Qt_Unchecked )
       oLst:addItem_1( qItm )
@@ -452,7 +452,7 @@ METHOD IdeFunctions:loadTags( aProjects )
             ENDIF
          ENDIF
 
-         QApplication():new():processEvents()
+         QApplication():processEvents()
       NEXT
 
       IF lPopulate
@@ -522,7 +522,7 @@ METHOD IdeFunctions:tagProject( cProjectTitle )
             ENDIF
          ENDIF
 
-         QApplication():new():processEvents()
+         QApplication():processEvents()
       NEXT
 
       FOR EACH a_ IN aCTags
@@ -581,7 +581,7 @@ METHOD IdeFunctions:consolidateList()
 
 METHOD IdeFunctions:populateTable()
    LOCAL oTbl, qItm, a_, n
-   LOCAL qApp := QApplication():new()
+   LOCAL qApp := QApplication()
 
    ::clear( .t. )
    ::buildHeader()
@@ -591,7 +591,7 @@ METHOD IdeFunctions:populateTable()
 
    n := 0
    FOR EACH a_ IN ::aList
-      qItm := QTableWidgetItem():new()
+      qItm := QTableWidgetItem()
 
       qItm:setText( a_[ 3 ] )
       qItm:setTooltip( a_[ 2 ] )

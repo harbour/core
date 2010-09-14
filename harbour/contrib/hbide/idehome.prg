@@ -237,7 +237,7 @@ METHOD IdeHome:print()
 
    ::qPrnDlg := NIL
    IF empty( ::qPrnDlg )
-      ::qPrnDlg := QPrintPreviewDialog():new()
+      ::qPrnDlg := QPrintPreviewDialog()
       ::qPrnDlg:setWindowTitle( "Welcome::Projects" )
       ::qPrnDlg:setWindowIcon( hbide_image( "hbide" ) )
       ::qPrnDlg:connect( "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
@@ -280,7 +280,7 @@ METHOD IdeHome:buildWelcomeTab()
    oTab:hbLayout    := HBPLAYOUT_TYPE_VERTBOX
    oTab:qLayout:setContentsMargins( 0,0,0,0 )
 
-   qBrw := QTextBrowser():new()
+   qBrw := QTextBrowser()
    oTab:qLayout:addWidget( qBrw )
    qBrw:setContextMenuPolicy( Qt_CustomContextMenu )
    ::setStyleSheetTextBrowser( qBrw )
@@ -292,7 +292,7 @@ METHOD IdeHome:buildWelcomeTab()
    qBrw:connect( "anchorClicked(QUrl)"               , {|p| ::execEvent( browserStat_anchorClicked, p ) } )
    qBrw:connect( "customContextMenuRequested(QPoint)", {|p| ::execEvent( browserWelcome_contextMenuRequested, p ) } )
 
-   qSList := QStringList():new()
+   qSList := QStringList()
    qSList:append( "docs" )
    qBrw:setSearchPaths( qSList )
 
@@ -483,7 +483,7 @@ METHOD IdeHome:buildFaqTab()
    oTab:hbLayout  := HBPLAYOUT_TYPE_VERTBOX
    oTab:qLayout:setContentsMargins( 0,0,0,0 )
 
-   qBrw := QTextBrowser():new()
+   qBrw := QTextBrowser()
    oTab:qLayout:addWidget( qBrw )
    qBrw:setContextMenuPolicy( Qt_CustomContextMenu )
    ::setStyleSheetTextBrowser( qBrw )

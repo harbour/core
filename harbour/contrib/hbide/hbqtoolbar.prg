@@ -81,7 +81,7 @@ CLASS HbqToolbar
    DATA   allowedAreas                            INIT   Qt_TopToolBarArea
    DATA   initialArea                             INIT   Qt_TopToolBarArea
    DATA   orientation                             INIT   Qt_Horizontal
-   DATA   size                                    INIT   QSize():new( 16,16 )
+   DATA   size                                    INIT   QSize( 16,16 )
    DATA   moveable                                INIT   .f.
    DATA   floatable                               INIT   .f.
 
@@ -129,7 +129,7 @@ METHOD HbqToolbar:create( cName, oParent )
 
    DEFAULT ::cName TO "HbqToolbar_" + hb_ntos( ++nID )
 
-   ::oWidget := QToolbar():new()
+   ::oWidget := QToolbar()
    ::oWidget:setObjectName( ::cName )
    ::oWidget:setAllowedAreas( ::allowedAreas )
    ::oWidget:setOrientation( ::orientation )
@@ -166,21 +166,21 @@ METHOD HbqToolbar:execEvent( cEvent, p, p1 )
       EXIT
 
    CASE "QEvent_MouseMove"
-      qRC := QRect():from( ( QRect():new( ::qPos:x() - 5, ::qPos:y() - 5, 10, 10 ) ):normalized() )
+      qRC := QRect():from( ( QRect( ::qPos:x() - 5, ::qPos:y() - 5, 10, 10 ) ):normalized() )
 
       IF qRC:contains( qEvent:pos() )
-         ::qByte := QByteArray():new( ::hItems[ p1 ]:objectName() )
+         ::qByte := QByteArray( ::hItems[ p1 ]:objectName() )
 
-         ::qMime := QMimeData():new()
+         ::qMime := QMimeData()
          ::qMime:setData( "application/x-toolbaricon", ::qByte )
          ::qMime:setHtml( ::hItems[ p1 ]:objectName() )
 
          ::qPix  := QPixmap():from( QIcon():from( ::hItems[ p1 ]:icon ):pixmap_1( 16,16 ) )
 
-         ::qDrag := QDrag():new( hbide_setIde():oDlg:oWidget )
+         ::qDrag := QDrag( hbide_setIde():oDlg:oWidget )
          ::qDrag:setMimeData( ::qMime )
          ::qDrag:setPixmap( ::qPix )
-         ::qDrag:setHotSpot( QPoint():new( 15,15 ) )
+         ::qDrag:setHotSpot( QPoint( 15,15 ) )
          ::qDrag:setDragCursor( ::qPix, Qt_MoveAction )
 
          ::qDropAction := ::qDrag:exec( Qt_MoveAction )
@@ -217,7 +217,7 @@ METHOD HbqToolbar:addWidget( cName, qWidget )
 
    DEFAULT cName TO "IdeToolButtonWidget_" + hb_ntos( ++nID )
 
-   qAction := QWidgetAction():new( ::oWidget )
+   qAction := QWidgetAction( ::oWidget )
    qAction:setDefaultWidget( qWidget )
    ::oWidget:addAction( qAction )
 
@@ -237,7 +237,7 @@ METHOD HbqToolbar:addToolButton( cName, cDesc, cImage, bAction, lCheckable, lDra
    DEFAULT lCheckable   TO .f.
    DEFAULT lDragEnabled TO .f.
 
-   oButton := QToolButton():new( ::oWidget )
+   oButton := QToolButton( ::oWidget )
    oButton:setObjectName( cName )
    oButton:setTooltip( cDesc )
    oButton:setIcon( cImage )
@@ -254,7 +254,7 @@ METHOD HbqToolbar:addToolButton( cName, cDesc, cImage, bAction, lCheckable, lDra
       oButton:connect( "clicked()", bAction )
    ENDIF
    #if 1
-   qAction := QWidgetAction():new( ::oWidget )
+   qAction := QWidgetAction( ::oWidget )
    qAction:setDefaultWidget( oButton )
    ::oWidget:addAction( qAction )
    #else

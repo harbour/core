@@ -115,7 +115,7 @@ PROCEDURE Main( ... )
    SET CENTURY ON
    SET EPOCH TO 1970
 
-   oResource := QResource():New()
+   oResource := QResource()
    oResource:registerResource_1( hbqtres_HbIde(), ":/resource" )
 
    oIde := HbIde():new( hb_aParams() ):create()
@@ -372,13 +372,13 @@ METHOD HbIde:create( aParams )
    ::nModeUI := UI_MODE_UI
    #endif
 
-   qPixmap := QPixmap():new( ":/resources" + hb_ps() + "hbidesplash.png" )
-   qSplash := QSplashScreen():new()
+   qPixmap := QPixmap( ":/resources" + hb_ps() + "hbidesplash.png" )
+   qSplash := QSplashScreen()
  * qSplash:setWindowFlags( hb_bitOr( Qt_WindowStaysOnTopHint, qSplash:windowFlags() ) )
    qSplash:setPixmap( qPixmap )
    qSplash:show()
    ::showApplicationCursor( Qt_BusyCursor )
-   QApplication():new():processEvents()
+   QApplication():processEvents()
 
    DEFAULT aParams TO ::aParams
    ::aParams := aParams
@@ -512,7 +512,7 @@ METHOD HbIde:create( aParams )
       IF seconds() > n + 10
          EXIT
       ENDIF
-      QApplication():new():processEvents()
+      QApplication():processEvents()
    ENDDO
    #endif
 
@@ -683,10 +683,10 @@ METHOD HbIde:showApplicationCursor( nCursor )
    LOCAL qCrs
 
    IF empty( nCursor )
-      QApplication():new():restoreOverrideCursor()
+      QApplication():restoreOverrideCursor()
    ELSE
-      qCrs := QCursor():new( nCursor )
-      QApplication():new():setOverrideCursor( qCrs )
+      qCrs := QCursor( nCursor )
+      QApplication():setOverrideCursor( qCrs )
    ENDIF
 
    RETURN Self
@@ -1454,7 +1454,7 @@ METHOD HbIde:testPainter( qPainter )
    qP:setFont( ::oFont:oWidget )
    qP:drawText_4( 100,300,"Harbour" )
 
-   //qPainter:fillRect_8( 100, 100, 500, 500, QColor():new( 175, 175, 255 ) )
+   //qPainter:fillRect_8( 100, 100, 500, 500, QColor( 175, 175, 255 ) )
 
    RETURN NIL
 

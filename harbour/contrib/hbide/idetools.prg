@@ -274,7 +274,7 @@ METHOD IdeToolsManager:show()
       oTbl:setSelectionMode( QAbstractItemView_SingleSelection )
       oTbl:setSelectionBehavior( QAbstractItemView_SelectRows )
       FOR n := 1 TO len( hdr_ )
-         qItm := QTableWidgetItem():new()
+         qItm := QTableWidgetItem()
          qItm:setText( hdr_[ n,1 ] )
          oTbl:setHorizontalHeaderItem( n-1, qItm )
          oTbl:setColumnWidth( n-1, hdr_[ n,2 ] )
@@ -424,11 +424,11 @@ METHOD IdeToolsManager:buildUserToolbars()
          ENDIF
       NEXT
       IF !empty( a_ )
-         qTBar := QToolBar():new()
+         qTBar := QToolBar()
          qTBar:setStyleSheet( GetStyleSheet( "QToolBarLR5", ::nAnimantionMode ) )
          qTBar:setObjectName( "User_Toolbar_" + hb_ntos( nIndex ) )
          qTBar:setWindowTitle( "User Toolbar : " + hb_ntos( nIndex ) )
-         qTBar:setIconSize( QSize():new( 16,16 ) )
+         qTBar:setIconSize( QSize( 16,16 ) )
          qTBar:setToolButtonStyle( Qt_ToolButtonIconOnly )
          qTBar:setAllowedAreas( iif( ::aUserToolbars[ nn,4 ] == "YES", Qt_TopToolBarArea   , 0 ) + ;
                                 iif( ::aUserToolbars[ nn,5 ] == "YES", Qt_LeftToolBarArea  , 0 ) + ;
@@ -436,7 +436,7 @@ METHOD IdeToolsManager:buildUserToolbars()
                                 iif( ::aUserToolbars[ nn,7 ] == "YES", Qt_RightToolBarArea , 0 ) )
 
          FOR EACH b_ IN a_
-            qTBtn := QToolButton():new()
+            qTBtn := QToolButton()
             qTBtn:setText( b_[ 1 ] )
             qTBtn:setTooltip( b_[ 10 ] )
             qTBtn:setIcon( hbide_pathToOSPath( b_[ 9 ] ) )
@@ -482,12 +482,12 @@ METHOD IdeToolsManager:populateButtonsTable( nIndex )
          FOR EACH b_ IN a_
             nRow := b_:__enumIndex()-1
 
-            q0 := QTableWidgetItem():new()
+            q0 := QTableWidgetItem()
             q0:setIcon( hbide_pathToOSPath( b_[ 9 ] ) )
             q0:setTooltip( b_[ 10 ] )
             oTbl:setItem( nRow, 0, q0 )
 
-            q1 := QTableWidgetItem():new()
+            q1 := QTableWidgetItem()
             q1:setText( b_[ 1 ] )
             oTbl:setItem( nRow, 1, q1 )
 
@@ -641,14 +641,14 @@ METHOD IdeToolsManager:populatePlugins( lClear )
 METHOD IdeToolsManager:buildToolsButton()
    LOCAL a_, qAct
 
-   ::qToolsMenu := QMenu():new()
+   ::qToolsMenu := QMenu()
    ::qToolsMenu:setStyleSheet( GetStyleSheet( "QMenuPop", ::nAnimantionMode ) )
    FOR EACH a_ IN ::aTools
       qAct := QAction():from( ::qToolsMenu:addAction( a_[ 1 ] ) )
       qAct:connect( "triggered(bool)", {|| ::execTool( a_[ 1 ] ) } )
       aadd( ::aAct, qAct )
    NEXT
-   ::qToolsButton := QToolButton():new()
+   ::qToolsButton := QToolButton()
    ::qToolsButton:setTooltip( "Tools & Utilities" )
    ::qToolsButton:setIcon( hbide_image( "tools" ) )
    ::qToolsButton:setPopupMode( QToolButton_MenuButtonPopup )
@@ -663,13 +663,13 @@ METHOD IdeToolsManager:buildToolsButton()
 METHOD IdeToolsManager:buildPanelsButton()
    LOCAL s, a_
 
-   ::qPanelsMenu := QMenu():new()
+   ::qPanelsMenu := QMenu()
    ::qPanelsMenu:setStyleSheet( GetStyleSheet( "QMenuPop", ::nAnimantionMode ) )
    FOR EACH s IN ::oINI:aViews
       a_:= hb_atokens( s, "," )
       ::addPanelsMenu( a_[ 1 ] )
    NEXT
-   ::qPanelsButton := QToolButton():new()
+   ::qPanelsButton := QToolButton()
    ::qPanelsButton:setTooltip( "Panels" )
    ::qPanelsButton:setIcon( hbide_image( "panel_8" ) )
    ::qPanelsButton:setPopupMode( QToolButton_MenuButtonPopup )

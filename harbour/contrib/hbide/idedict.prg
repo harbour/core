@@ -169,7 +169,7 @@ METHOD IdeDictionary:load( cDict )
       IF ::cBgColor != "NONE"
          q_:= hbide_evalAsIs( ::cBgColor )
          IF hb_isArray( q_ ) .AND. len( q_ ) == 3
-            ::qBgColor := QColor():new( q_[ 1 ], q_[ 2 ], q_[ 3 ] )
+            ::qBgColor := QColor( q_[ 1 ], q_[ 2 ], q_[ 3 ] )
          ENDIF
 HB_TRACE( HB_TR_DEBUG, ::cBgColor, valtype( q_ ) )
       ENDIF

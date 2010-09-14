@@ -344,12 +344,12 @@ METHOD IdeSkeletons:selectByMenuAndPostText( qEdit )
       ELSE
          qRect := QRect():from( qEdit:cursorRect( qCursor ) )
 
-         qMenu := QMenu():new( qEdit )
+         qMenu := QMenu( qEdit )
          FOR EACH a_ IN ::aSkltns
             qMenu:addAction( a_[ 1 ] )
          NEXT
 
-         pAct := qMenu:exec_1( qEdit:mapToGlobal( QPoint():new( qRect:x(), qRect:y() ) ) )
+         pAct := qMenu:exec_1( qEdit:mapToGlobal( QPoint( qRect:x(), qRect:y() ) ) )
          IF !hbqt_isEmptyQtPointer( pAct )
             qAct  := QAction():from( pAct )
 
@@ -498,7 +498,7 @@ METHOD IdeSkeletons:showTree()
 
       ::oTree:oWidget:setMinimumWidth( 100 )
       ::oTree:oWidget:setSizePolicy_1( QSizePolicy_MinimumExpanding, QSizePolicy_Preferred )
-      ::oTree:oWidget:setIconSize( QSize():new( 12,12 ) )
+      ::oTree:oWidget:setIconSize( QSize( 12,12 ) )
       ::oTree:oWidget:setIndentation( 12 )
 
       ::oTree:itemSelected  := {|oItem         | ::execEvent( "oTree_itemSelected", oItem ) }

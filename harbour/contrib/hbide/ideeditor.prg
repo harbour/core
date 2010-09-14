@@ -205,7 +205,7 @@ METHOD IdeEditsManager:create( oIde )
 
    ::oIde := oIde
 
-   ::qContextMenu := QMenu():new()
+   ::qContextMenu := QMenu()
 
    aadd( ::aActions, { "GotoFunc"     , ::qContextMenu:addAction_4( ::oAC:getAction( "GotoFunc"      ) ) } )
    aadd( ::aActions, { ""             , ::qContextMenu:addSeparator() } )
@@ -233,15 +233,15 @@ METHOD IdeEditsManager:create( oIde )
    aadd( ::aActions, { "Close Split"  , ::qContextSub:addAction( "Close Split Window" ) } )
 
    /* Define code completer */
-   ::oIde:qProtoList := QStringList():new()
-   ::oIde:qCompModel := QStringListModel():new()
-   ::oIde:qCompleter := QCompleter():new()
+   ::oIde:qProtoList := QStringList()
+   ::oIde:qCompModel := QStringListModel()
+   ::oIde:qCompleter := QCompleter()
    //
    ::qCompleter:connect( "activated(QString)", {|p| ::execEvent( "qcompleter_activated", p ) } )
 
    /* Define fields completer */
-   ::qFldsStrList   := QStringList():new()
-   ::qFldsModel     := QStringListModel():new()
+   ::qFldsStrList   := QStringList()
+   ::qFldsModel     := QStringListModel()
 
    RETURN Self
 
@@ -317,7 +317,7 @@ METHOD IdeEditsManager:updateCompleter()
    ::qCompleter:setModel( ::qCompModel )
    ::qCompleter:setCompletionMode( QCompleter_PopupCompletion )
    ( QListView():from( ::qCompleter:popup() ) ):setAlternatingRowColors( .t. )
-   ( QListView():from( ::qCompleter:popup() ) ):setFont( QFont():new( "Courier New", 8 ) )
+   ( QListView():from( ::qCompleter:popup() ) ):setFont( QFont( "Courier New", 8 ) )
 
    ::qCompleter:connect( "activated(QString)", {|p| ::execEvent( "qcompleter_activated", p ) } )
 
@@ -1335,15 +1335,15 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
 
    ::buildTabPage( ::sourceFile )
 
-   ::qLayout := QBoxLayout():new()
+   ::qLayout := QBoxLayout()
    ::qLayout:setContentsMargins( 0,0,0,0 )
    //
    ::oTab:oWidget:setLayout( ::qLayout )
 
-   ::qHSpltr := QSplitter():new()
+   ::qHSpltr := QSplitter()
    ::qHSpltr:setOrientation( Qt_Horizontal )
 
-   ::qVSpltr := QSplitter():new()
+   ::qVSpltr := QSplitter()
    ::qVSpltr:setOrientation( Qt_Vertical )
 
    ::oEdit   := IdeEdit():new( ::oIde, Self, 0 )
@@ -1400,9 +1400,9 @@ METHOD IdeEditor:relay( oEdit )
       ::nSplOrient := oEdit:nOrient
 
       IF oEdit:nOrient == 1
-         ::qSplitter := QSplitter():new( Qt_Horizontal )
+         ::qSplitter := QSplitter( Qt_Horizontal )
       ELSE
-         ::qSplitter := QSplitter():new( Qt_Vertical )
+         ::qSplitter := QSplitter( Qt_Vertical )
       ENDIF
 
       ::qLayout:removeWidget( ::oEdit:qEdit )
@@ -1566,7 +1566,7 @@ METHOD IdeEditor:setDocumentProperties()
       ::lLoaded := .T.
 
       IF ::cType $ "PRG,C,CPP,H,CH,HBS"
-         ::qTimerSave := QTimer():New()
+         ::qTimerSave := QTimer()
          ::qTimerSave:setInterval( max( 30000, ::oINI:nTmpBkpPrd * 1000 ) )
          ::qTimerSave:connect( "timeout()", {|| ::execEvent( "qTimeSave_timeout" ) } )
          ::qTimerSave:start()
@@ -1827,15 +1827,15 @@ METHOD IdeEditor:qscintilla()
       oSci:setTabWidth( 3 )
       oSci:setMarginLineNumbers( 0,.t. )
       oSci:setMarginWidth( 0,30 )
-      oSci:setSelectionBackgroundColor( QColor():new( 255,0,0 ) )
+      oSci:setSelectionBackgroundColor( QColor( 255,0,0 ) )
       oSci:setEdgeColumn( 40 )
       oSci:setCallTipsVisible( 3 )
       oSci:setFont( ::oFont:oWidget )
-      oSci:setEdgeColor( QColor():new( 0,0,255 ) )
+      oSci:setEdgeColor( QColor( 0,0,255 ) )
       oSci:setMarginsFont( ::oFont:oWidget )
       oSci:setIndentationGuides( .t. )
 
-      oSci:setCallTipsHighlightColor( QColor():new( 255,127,0 ) )
+      oSci:setCallTipsHighlightColor( QColor( 255,127,0 ) )
 
       /* Auto Completion */
       oSci:setAutoCompletionSource( QsciScintilla_AcsAll )
@@ -1849,9 +1849,9 @@ METHOD IdeEditor:qscintilla()
    // oSci:setText( hb_memoread( "c:\harbour\contrib\hbide\ideparseexpr.c" ) )
       HB_TRACE( HB_TR_DEBUG, time(), "after" )
 
-      c1 := QColor():new( 0,0,255 )
-      c2 := QColor():new( 0,12,133 )
-      c3 := QColor():new( 20,122,144 )
+      c1 := QColor( 0,0,255 )
+      c2 := QColor( 0,12,133 )
+      c3 := QColor( 20,122,144 )
       oSci:setBraceMatching( QsciScintilla_StrictBraceMatch )
       oSci:setMatchedBraceForegroundColor( c1 )
       oSci:setMatchedBraceBackgroundColor( c2 )
@@ -1862,16 +1862,16 @@ METHOD IdeEditor:qscintilla()
       qLexer:setDefaultFont( ::oFont:oWidget )
       qLexer:setFoldAtElse( .f. )
 
-      fontBold := QFont():new()
+      fontBold := QFont()
       fontBold:setFamily( "Courier New" )
       fontBold:setPointSize(10)
       fontBold:setWeight(100)
 
-      fontNormal := QFont():new()
+      fontNormal := QFont()
       fontNormal:setFamily( "Courier New" )
       fontNormal:setPointSize(10)
 
-      fontItalic := QFont():new()
+      fontItalic := QFont()
       fontItalic:setFamily( "Courier New" )
       fontItalic:setPointSize( 10 )
       fontItalic:setItalic( .t. )
@@ -1880,10 +1880,10 @@ METHOD IdeEditor:qscintilla()
       qLexer:setFont( fontBold, SCE_FS_COMMENTDOCKEYWORD )
       qLexer:setFont( fontBold, SCE_FS_NUMBER )
 
-      qLexer:setColor( QColor():new( 255, 127,  67 ), SCE_FS_KEYWORD  )
-      qLexer:setColor( QColor():new( 255,   0, 127 ), SCE_FS_KEYWORD2 )
-      qLexer:setColor( QColor():new( 127,  67, 255 ), SCE_FS_OPERATOR )
-      qLexer:setColor( QColor():new( 255,   0,   0 ), SCE_FS_BRACE    )
+      qLexer:setColor( QColor( 255, 127,  67 ), SCE_FS_KEYWORD  )
+      qLexer:setColor( QColor( 255,   0, 127 ), SCE_FS_KEYWORD2 )
+      qLexer:setColor( QColor( 127,  67, 255 ), SCE_FS_OPERATOR )
+      qLexer:setColor( QColor( 255,   0,   0 ), SCE_FS_BRACE    )
 
       qApis := QsciAPIs():new( qLexer )
       qApis:load( "c:/temp/cpp.api" )
@@ -1906,7 +1906,7 @@ STATIC FUNCTION hbide_qtDesigner()
    LOCAL n
    STATIC oEdt, oWM
 
-   oEdt := QDesignerFormEditorInterface():new( ::oDlg:oWidget )
+   oEdt := QDesignerFormEditorInterface( ::oDlg:oWidget )
    HB_TRACE( HB_TR_DEBUG, 1 )
    oWM := QDesignerFormWindowManagerInterface():from( oEdt:formWindowManager() )
    HB_TRACE( HB_TR_DEBUG, 2 )

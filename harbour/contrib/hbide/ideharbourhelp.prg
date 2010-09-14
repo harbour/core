@@ -616,7 +616,7 @@ METHOD IdeHarbourHelp:refreshDocTree()
       ENDIF
    NEXT
 
-   oRoot := QTreeWidgetItem():new()
+   oRoot := QTreeWidgetItem()
    oRoot:setText( 0, aPaths[ 1 ] )
    oRoot:setIcon( 0, hbide_image( "dc_home" ) )
    oRoot:setToolTip( 0, aPaths[ 1 ] )
@@ -636,7 +636,7 @@ METHOD IdeHarbourHelp:refreshDocTree()
          FOR EACH a_ IN aDir
             IF a_[ 5 ] != "D"
                cTextFile := cFolder + a_[ 1 ]
-               oChild := QTreeWidgetItem():new()
+               oChild := QTreeWidgetItem()
                oChild:setText( 0, a_[ 1 ]  )
                oChild:setIcon( 0, ::resPath + "dc_textdoc.png" )
                oChild:setToolTip( 0, cTextFile )
@@ -686,7 +686,7 @@ STATIC FUNCTION hbide_buildFoldersTree( aNodes, aPaths )
 
                cOSPath := hbide_pathToOSPath( cRoot + cCPath )
 
-               oChild  := QTreeWidgetItem():new()
+               oChild  := QTreeWidgetItem()
                oChild:setText( 0, aSubs[ i ] )
                oChild:setIcon( 0, cIcon )
                oChild:setToolTip( 0, cOSPath )
@@ -725,7 +725,7 @@ METHOD IdeHarbourHelp:populateIndex()
 
    FOR EACH a_ IN ::aFunctions
       IF !empty( a_[ 2 ] )
-         qItem := QListWidgetItem():new()
+         qItem := QListWidgetItem()
          qItem:setText( a_[ 2 ] )
          a_[ 5 ] := qItem
          ::oUI:q_listIndex:addItem_1( qItem )
@@ -747,7 +747,7 @@ METHOD IdeHarbourHelp:populateIndex()
       asort( ::aCategory, , , {|e_, f_| e_[ 1 ] < f_[ 1 ] } )
    ENDIF
    FOR EACH a_ IN aUnq
-      qItem := QTreeWidgetItem():new()
+      qItem := QTreeWidgetItem()
       qItem:setText( 0, a_[ 1 ] )
       ::oUI:q_treeCategory:addTopLevelItem( qItem )
       a_[ 2 ] := qItem
@@ -756,7 +756,7 @@ METHOD IdeHarbourHelp:populateIndex()
       IF ( n := ascan( aUnq, {|e_| e_[ 1 ] == a_[ 1 ] } ) ) > 0
          oParent := aUnq[ n, 2 ]
 
-         qItem := QTreeWidgetItem():new()
+         qItem := QTreeWidgetItem()
          qItem:setText( 0, a_[ 3 ]:cName )
 
          oParent:addChild( qItem )
@@ -928,7 +928,7 @@ METHOD IdeHarbourHelp:parseTextFile( cTextFile, oParent )
    IF nParsed == 0
       IF !empty( aFn := ::pullDefinitions( cTextFile ) )
          FOR EACH oFunc IN aFn
-            oTWItem   := QTreeWidgetItem():new()
+            oTWItem   := QTreeWidgetItem()
             oTWItem:setText( 0, oFunc:cName )
             oTWItem:setIcon( 0, cIcon )
             oTWItem:setTooltip( 0, oFunc:cName )
@@ -1270,7 +1270,7 @@ METHOD IdeHarbourHelp:exportAsPdf()
       IF empty( cExt ) .OR. lower( cExt ) != ".pdf"
          cPdf := cPath + cFile + ".pdf"
       ENDIF
-      qPrinter := QPrinter():new()
+      qPrinter := QPrinter()
       qPrinter:setOutputFileName( cPdf )
       ::oUI:q_browserView:print( qPrinter )
    ENDIF
@@ -1282,7 +1282,7 @@ METHOD IdeHarbourHelp:exportAsPdf()
 METHOD IdeHarbourHelp:print()
    LOCAL qDlg
 
-   qDlg := QPrintPreviewDialog():new( ::oUI )
+   qDlg := QPrintPreviewDialog( ::oUI )
    qDlg:setWindowTitle( "Harbour Help Document" )
    qDlg:connect( "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
    qDlg:exec()

@@ -141,7 +141,7 @@ METHOD IdeActions:buildActions()
    FOR EACH a_ IN aAct
       IF !( hb_hHasKey( ::hActions, a_[ ACT_NAME ] ) )
 
-         qAction := QAction():new( ::qDlg )
+         qAction := QAction( ::qDlg )
          qAction:setCheckable( iif( empty( a_[ ACT_CHECKABLE ] ), .F., upper( a_[ ACT_CHECKABLE ] ) == "YES" ) )
          qAction:setText( strtran( a_[ ACT_TEXT ], "~", "&" ) )
          IF !empty( a_[ ACT_IMAGE ] )
@@ -154,7 +154,7 @@ METHOD IdeActions:buildActions()
             k := strtran( k, "Sh+", "Shift+" )
             k := strtran( k, "SH+", "Shift+" )
             k := strtran( k, "^"  , "Ctrl+"  )
-            qAction:setShortcut( QKeySequence():new( k ) )
+            qAction:setShortcut( QKeySequence( k ) )
          ENDIF
          #endif
          qAction:setTooltip( strtran( a_[ ACT_TEXT ], "~", "" ) )
@@ -529,7 +529,7 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu:title := "~View"
    oMenuBar:addItem( { oSubMenu, NIL } )
 
-   ::oIde:qAnimateAction := QAction():new( oSubMenu:oWidget )
+   ::oIde:qAnimateAction := QAction( oSubMenu:oWidget )
    ::qAnimateAction:setText( "Toggle Animation" )
    ::qAnimateAction:setCheckable( .t. )
    oSubMenu:addItem( { ::qAnimateAction, {|| oIde:execAction( "Animate" ) } }           )
@@ -542,7 +542,7 @@ METHOD IdeActions:buildMainMenu()
    ENDIF
    oSubMenu:oWidget:addAction_4( ::qTBarDocks:toggleViewAction()                        )
 
-   ::oIde:qStatusBarAction := QAction():new( oSubMenu:oWidget )
+   ::oIde:qStatusBarAction := QAction( oSubMenu:oWidget )
    ::qStatusBarAction:setText( "Toggle Statusbar" )
    ::qStatusBarAction:setCheckable( .t. )
    oSubMenu:addItem( { ::qStatusBarAction, {|| oIde:execAction( "ToggleStatusBar" ) } } )

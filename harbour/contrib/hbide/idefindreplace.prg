@@ -324,7 +324,7 @@ METHOD IdeSearchReplace:find( cText, lBackward )
 
       IF ::oUI:q_checkRegEx:isChecked()
          qDoc := QTextDocument():from( ::qCurEdit:document() )
-         qReg := QRegExp():new()
+         qReg := QRegExp()
          qReg:setPattern( cText )
          qReg:setCaseSensitivity( iif( ::oUI:q_checkMatchCase:isChecked(), Qt_CaseSensitive, Qt_CaseInsensitive ) )
 
@@ -819,7 +819,7 @@ METHOD IdeFindInFiles:buildUI()
       aProjList := ::oPM:getProjectsTitleList()
       FOR EACH cProj IN aProjList
          IF !empty( cProj )
-            qItem := QListWidgetItem():new()
+            qItem := QListWidgetItem()
             qItem:setFlags( Qt_ItemIsUserCheckable + Qt_ItemIsEnabled + Qt_ItemIsSelectable )
             qItem:setText( cProj )
             qItem:setCheckState( 0 )
@@ -955,7 +955,7 @@ METHOD IdeFindInFiles:execContextMenu( p )
    nLine := qCursor:blockNumber() + 1
 
    IF nLine <= len( ::aInfo )
-      qMenu := QMenu():new( ::oUI:q_editResults )
+      qMenu := QMenu( ::oUI:q_editResults )
       qMenu:addAction( "Copy"       )
       qMenu:addAction( "Select All" )
       qMenu:addAction( "Clear"      )
@@ -1370,7 +1370,7 @@ METHOD IdeFindInFiles:showLog( nType, cMsg, aLines )
    qCursor:movePosition( QTextCursor_Down )
    ::oUI:q_editResults:setTextCursor( qCursor )
 
-   QApplication():new():processEvents()
+   QApplication():processEvents()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1396,7 +1396,7 @@ STATIC FUNCTION hbide_buildResultLine( cLine, aM )
 METHOD IdeFindInFiles:print()
    LOCAL qDlg
 
-   qDlg := QPrintPreviewDialog():new( ::oUI )
+   qDlg := QPrintPreviewDialog( ::oUI )
    qDlg:setWindowTitle( "Harbour-QT Preview Dialog" )
    qDlg:connect( "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
    qDlg:exec()

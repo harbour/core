@@ -1351,9 +1351,9 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
    SWITCH cEvent
 
    CASE "buttonSelFont_clicked"
-      qFont := QFont():new( ::oINI:cFontName, ::oINI:nPointSize )
+      qFont := QFont( ::oINI:cFontName, ::oINI:nPointSize )
       qFont:setFixedPitch( .t. )
-      qFontDlg := QFontDialog():new( ::oUI )
+      qFontDlg := QFontDialog( ::oUI )
       qFontDlg:setCurrentFont( qFont )
       nOK := qFontDlg:exec()
       IF nOK == 1
@@ -1440,12 +1440,12 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
          nCol := ::oUI:q_tableVar:currentColumn()
 
          b_ := ::aKeyItems[ nRow+1 ]
-         q0 := QTableWidgetItem():new(); q0:setText( b_[ 1 ]:text() )
-         q1 := QTableWidgetItem():new(); q1:setText( b_[ 2 ]:text() )
+         q0 := QTableWidgetItem(); q0:setText( b_[ 1 ]:text() )
+         q1 := QTableWidgetItem(); q1:setText( b_[ 2 ]:text() )
 
          b_ := ::aKeyItems[ nRow+0 ]
-         w0 := QTableWidgetItem():new(); w0:setText( b_[ 1 ]:text() )
-         w1 := QTableWidgetItem():new(); w1:setText( b_[ 2 ]:text() )
+         w0 := QTableWidgetItem(); w0:setText( b_[ 1 ]:text() )
+         w1 := QTableWidgetItem(); w1:setText( b_[ 2 ]:text() )
 
          ::oUI:q_tableVar:setItem( nRow-0, 0, w0 )
          ::oUI:q_tableVar:setItem( nRow-0, 1, w1 )
@@ -1467,12 +1467,12 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
          nCol := ::oUI:q_tableVar:currentColumn()
 
          b_ := ::aKeyItems[ nRow + 1 ]
-         q0 := QTableWidgetItem():new(); q0:setText( b_[ 1 ]:text() )
-         q1 := QTableWidgetItem():new(); q1:setText( b_[ 2 ]:text() )
+         q0 := QTableWidgetItem(); q0:setText( b_[ 1 ]:text() )
+         q1 := QTableWidgetItem(); q1:setText( b_[ 2 ]:text() )
 
          b_ := ::aKeyItems[ nRow + 2 ]
-         w0 := QTableWidgetItem():new(); w0:setText( b_[ 1 ]:text() )
-         w1 := QTableWidgetItem():new(); w1:setText( b_[ 2 ]:text() )
+         w0 := QTableWidgetItem(); w0:setText( b_[ 1 ]:text() )
+         w1 := QTableWidgetItem(); w1:setText( b_[ 2 ]:text() )
 
          ::oUI:q_tableVar:setItem( nRow, 0, w0 )
          ::oUI:q_tableVar:setItem( nRow, 1, w1 )
@@ -1541,7 +1541,7 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
    CASE "buttonThmAdd_clicked"
       IF !empty( cTheme := hbide_fetchAString( ::oDlg:oWidget, cTheme, "Name the Theme", "New Theme" ) )
          aadd( ::oINI:aAppThemes, cTheme + "," + ::fetchThemeColorsString() )
-         qItem := QListWidgetItem():new()
+         qItem := QListWidgetItem()
          qItem:setText( cTheme )
          ::oUI:q_listThemes:addItem_1( qItem )
          ::oUI:q_listThemes:setCurrentRow( len( ::oINI:aAppThemes ) - 1 )
@@ -1693,7 +1693,7 @@ METHOD IdeSetup:pushThemesData()
    IF ::nCurThemeSlot == 0
       FOR EACH s IN ::oINI:aAppThemes
          a_:= hb_aTokens( s, "," )
-         qItem := QListWidgetItem():new()
+         qItem := QListWidgetItem()
          qItem:setText( a_[ 1 ] )
          ::oUI:q_listThemes:addItem_1( qItem )
          ::pushThemeColors( s:__enumIndex() )
@@ -1814,11 +1814,11 @@ METHOD IdeSetup:populateKeyTableRow( nRow, cTxtCol1, cTxtCol2 )
    IF lAppend
       ::oUI:q_tableVar:setRowCount( nRow )
 
-      q0 := QTableWidgetItem():new()
+      q0 := QTableWidgetItem()
       q0:setText( cTxtCol1 )
       ::oUI:q_tableVar:setItem( nRow-1, 0, q0 )
 
-      q1 := QTableWidgetItem():new()
+      q1 := QTableWidgetItem()
       q1:setText( cTxtCol2 )
       ::oUI:q_tableVar:setItem( nRow-1, 1, q1 )
 
@@ -1849,7 +1849,7 @@ METHOD IdeSetup:buildKeywords()
    oTbl:setColumnCount( len( hdr_ ) )
    oTbl:setShowGrid( .t. )
    FOR n := 1 TO len( hdr_ )
-      qItm := QTableWidgetItem():new()
+      qItm := QTableWidgetItem()
       qItm:setText( hdr_[ n,1 ] )
       oTbl:setHorizontalHeaderItem( n-1, qItm )
       oTbl:setColumnWidth( n-1, hdr_[ n,2 ] )
@@ -1863,10 +1863,10 @@ METHOD IdeSetup:buildTree()
    LOCAL oRoot, oChild, s
 
    ::oUI:q_treeWidget:setHeaderHidden( .t. )
-   ::oUI:q_treeWidget:setIconSize( QSize():new( 12,12 ) )
+   ::oUI:q_treeWidget:setIconSize( QSize( 12,12 ) )
    ::oUI:q_treeWidget:setIndentation( 12 )
 
-   oRoot := QTreeWidgetItem():new()
+   oRoot := QTreeWidgetItem()
    oRoot:setText( 0, "Parts" )
    oRoot:setToolTip( 0, "Parts" )
 
@@ -1875,7 +1875,7 @@ METHOD IdeSetup:buildTree()
    aadd( ::aItems, oRoot )
 
    FOR EACH s IN ::aTree
-      oChild := QTreeWidgetItem():new()
+      oChild := QTreeWidgetItem()
       oChild:setText( 0, s )
       oChild:setToolTip( 0, s )
       oRoot:addChild( oChild )
@@ -1893,8 +1893,8 @@ METHOD IdeSetup:setSystemStyle( cStyle )
    LOCAL oApp, qFactory
 
    IF !empty( cStyle )
-      oApp     := QApplication():new()
-      qFactory := QStyleFactory():new()
+      oApp     := QApplication()
+      qFactory := QStyleFactory()
       oApp:setStyle( qFactory:create( cStyle ) )
    ENDIF
 
@@ -1906,12 +1906,12 @@ METHOD IdeSetup:setBaseColor()
    #if 0
    LOCAL qPalette, oApp, qBrush, qColor
 
-   oApp := QApplication():new()
+   oApp := QApplication()
 
    ::qOrgPalette := QPalette():from( oApp:palette() )
 
-   qColor := QColor():new( Qt_red )
-   qBrush := QBrush():new( "QColor", qColor )
+   qColor := QColor( Qt_red )
+   qBrush := QBrush( "QColor", qColor )
 
    qPalette := QPalette():from( oApp:palette() )
    qPalette:setBrush( QPalette_Window, qBrush )

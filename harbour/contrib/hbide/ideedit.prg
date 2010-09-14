@@ -275,7 +275,7 @@ METHOD IdeEdit:create( oIde, oEditor, nMode )
    ::oEditor := oEditor
    ::nMode   := nMode
 
-   ::qEdit   := HBQPlainTextEdit():new()
+   ::qEdit   := HBQPlainTextEdit()
    //
    ::qEdit:setLineWrapMode( QTextEdit_NoWrap )
    ::qEdit:ensureCursorVisible()
@@ -308,7 +308,7 @@ METHOD IdeEdit:create( oIde, oEditor, nMode )
 
    ::qEdit:hbSetEventBlock( {|p,p1| ::execKeyEvent( 115, 1001, p, p1 ) } )
 
-   ::qTimer := QTimer():new()
+   ::qTimer := QTimer()
    ::qTimer:setInterval( 2000 )
    ::qTimer:connect( "timeout()",  {|| ::execEvent( timerTimeout, Self ) } )
 
@@ -349,7 +349,7 @@ METHOD IdeEdit:zoom( nKey )
 
 METHOD IdeEdit:setFont()
 
-   ::qFont := QFont():new()
+   ::qFont := QFont()
    ::qFont:setFamily( ::fontFamily )
    ::qFont:setFixedPitch( .t. )
    ::qFont:setPointSize( ::currentPointSize )
@@ -905,7 +905,7 @@ METHOD IdeEdit:copyBlockContents( aCord )
 
    hbide_blockContents( { nMode, ::aBlockCopyContents } )
 
-   qClip := QClipboard():new()
+   qClip := QClipboard()
    qClip:clear()
    qClip:setText( cClip )
 
@@ -920,8 +920,8 @@ METHOD IdeEdit:pasteBlockContents( nMode )
       RETURN Self
    ENDIF
 
-// aCopy := hbide_memoToArray( QClipboard():new():text() )
-   aCopy := hb_ATokens( StrTran( RTrim( QClipboard():new():text() ), Chr( 13 ) + Chr( 10 ), _EOL ), _EOL )
+// aCopy := hbide_memoToArray( QClipboard():text() )
+   aCopy := hb_ATokens( StrTran( RTrim( QClipboard():text() ), Chr( 13 ) + Chr( 10 ), _EOL ), _EOL )
    IF empty( aCopy[ len( aCopy ) ] )
       hb_adel( aCopy, len( aCopy ), .t. )
    ENDIF
@@ -1608,13 +1608,13 @@ METHOD IdeEdit:setNewMark()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:setLineNumbersBkColor( nR, nG, nB )
-   ::qEdit:hbSetLineAreaBkColor( QColor():new( nR, nG, nB ) )
+   ::qEdit:hbSetLineAreaBkColor( QColor( nR, nG, nB ) )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:setCurrentLineColor( nR, nG, nB )
-   ::qEdit:hbSetCurrentLineColor( QColor():new( nR, nG, nB ) )
+   ::qEdit:hbSetCurrentLineColor( QColor( nR, nG, nB ) )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1715,10 +1715,10 @@ METHOD IdeEdit:highlightAll( cText )
    qCur := ::getCursor()
    qCur:beginEditBlock()
 
-   qCursor   := QTextCursor():new( "QTextDocument", qDoc )
+   qCursor   := QTextCursor( "QTextDocument", qDoc )
    qFormat   := QTextCharFormat():from( qCursor:charFormat() )
    qFormatHL := qFormat
-   qFormatHL:setBackground( QBrush():new( "QColor", QColor():new( Qt_yellow ) ) )
+   qFormatHL:setBackground( QBrush( "QColor", QColor( Qt_yellow ) ) )
 
    DO WHILE .t.
       qCursor := QTextCursor():from( qDoc:find( cText, qCursor, 0 ) )
@@ -1836,7 +1836,7 @@ METHOD IdeEdit:pageDown()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:printPreview()
-   LOCAL qDlg := QPrintPreviewDialog():new( ::oDlg:oWidget )
+   LOCAL qDlg := QPrintPreviewDialog( ::oDlg:oWidget )
 
    qDlg:setWindowTitle( "hbIDE Preview Dialog" )
    qDlg:connect( "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
@@ -2006,7 +2006,7 @@ METHOD IdeEdit:goto( nLine )
       nRows := ::qEdit:blockCount()
       nLine := qCursor:blockNumber()
 
-      qGo := QInputDialog():new( ::oDlg:oWidget )
+      qGo := QInputDialog( ::oDlg:oWidget )
       qGo:setInputMode( 1 )
       qGo:setIntMinimum( 1 )
       qGo:setIntMaximum( nRows )

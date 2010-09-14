@@ -277,7 +277,7 @@ METHOD IdeDocks:buildDialog()
    ::buildStatusBar()
 
    /* Attach GRID Layout to Editor Area - Futuristic */
-   ::oIde:qLayout := QGridLayout():new()
+   ::oIde:qLayout := QGridLayout()
    ::oIde:qLayout:setContentsMargins( 0,0,0,0 )
    ::oIde:qLayout:setHorizontalSpacing( 0 )
    ::oIde:qLayout:setVerticalSpacing( 0 )
@@ -424,13 +424,13 @@ METHOD IdeDocks:buildDockWidgets()
 METHOD IdeDocks:buildSystemTray()
 
    IF empty( ::oSys )
-      ::oIde:oSys := QSystemTrayIcon():new( ::oDlg:oWidget )
+      ::oIde:oSys := QSystemTrayIcon( ::oDlg:oWidget )
       IF ( ::lSystemTrayAvailable := ::oSys:isSystemTrayAvailable() ) .AND. ::lMinimizeInSystemTray
          ::oSys:setIcon( hbide_image( "hbide" ) )
          //::connect( ::oSys, "activated(QSystemTrayIcon::ActivationReason)", {|p| ::execEvent( "qSystemTrayIcon_activated", p ) } )
          ::oSys:connect( "activated(QSystemTrayIcon::ActivationReason)", {|p| ::execEvent( "qSystemTrayIcon_activated", p ) } )
 
-         ::oIde:oSysMenu := QMenu():new( ::oDlg:oWidget )
+         ::oIde:oSysMenu := QMenu( ::oDlg:oWidget )
          ::qAct1 := QAction():from( ::oSysMenu:addAction_1( hbide_image( "fullscreen" ), "&Show" ) )
          ::oSysMenu:addSeparator()
          ::qAct2 := QAction():from( ::oSysMenu:addAction_1( hbide_image( "exit" ), "&Exit" ) )
@@ -561,7 +561,7 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
             ::lChanging := .t.
             IF qEvent:spontaneous()
                IF empty( ::qTimer )
-                  ::qTimer := QTimer():New()
+                  ::qTimer := QTimer()
                   ::qTimer:setSingleShot( .t. )
                   ::qTimer:setInterval( 250 )
                   //::connect( ::qTimer, "timeout()", {|| ::execEvent( "qTimer_timeOut" ) } )
@@ -609,7 +609,7 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
       IF qMime:hasUrls()
          qList := QStringList():from( qMime:hbUrlList() )
          FOR i := 0 TO qList:size() - 1
-            qUrl := QUrl():new( qList:at( i ) )
+            qUrl := QUrl( qList:at( i ) )
             IF hbide_isValidText( qUrl:toLocalFile() )
                ::oSM:editSource( hbide_pathToOSPath( qUrl:toLocalFile() ) )
             ENDIF
@@ -629,7 +629,7 @@ HB_TRACE( HB_TR_DEBUG, "projectTree_dropEvent" )
       IF qMime:hasUrls()
          qList := QStringList():from( qMime:hbUrlList() )
          FOR i := 0 TO qList:size() - 1
-            qUrl := QUrl():new( qList:at( i ) )
+            qUrl := QUrl( qList:at( i ) )
             IF hbide_sourceType( qUrl:toLocalFile() ) == ".hbp"
                ::oPM:loadProperties( qUrl:toLocalFile(), .f., .f., .t. )
             ENDIF
@@ -747,7 +747,7 @@ METHOD IdeDocks:stackZoom( nMode )
             IF ::aViewsInfo[ qMdi:__enumIndex(), 1 ] != "Stats"
                qRect := QRect():from( qMdi:geometry() )
                nH := qRect:height() + ( nMode * ( qRect:height() / 4 ) )
-               qMdi:setGeometry( QRect():new( 0, nT, qRect:width(), nH ) )
+               qMdi:setGeometry( QRect( 0, nT, qRect:width(), nH ) )
                nT += nH
             ENDIF
          NEXT
@@ -757,7 +757,7 @@ METHOD IdeDocks:stackZoom( nMode )
             IF ::aViewsInfo[ qMdi:__enumIndex(), 1 ] != "Stats"
                qRect := QRect():from( qMdi:geometry() )
                nW := qRect:width() + ( nMode * ( qRect:width() / 4 ) )
-               qMdi:setGeometry( QRect():new( nL, 0, nW, qRect:height() ) )
+               qMdi:setGeometry( QRect( nL, 0, nW, qRect:height() ) )
                nL += nW
             ENDIF
          NEXT
@@ -782,7 +782,7 @@ METHOD IdeDocks:stackHorizontally()
 
    FOR EACH qMdi IN ::oIde:aMdies
       IF ::aViewsInfo[ qMdi:__enumIndex(), 1 ] != "Stats"
-         qMdi:setGeometry( QRect():new( nL, nT, nW, nH ) )
+         qMdi:setGeometry( QRect( nL, nT, nW, nH ) )
          nL += nW
       ENDIF
    NEXT
@@ -806,7 +806,7 @@ METHOD IdeDocks:stackVertically()
 
    FOR EACH qMdi IN ::oIde:aMdies
       IF ::aViewsInfo[ qMdi:__enumIndex(), 1 ] != "Stats"
-         qMdi:setGeometry( QRect():new( 0, nT, nW, nH ) )
+         qMdi:setGeometry( QRect( 0, nT, nW, nH ) )
          nT += nH
       ENDIF
    NEXT
@@ -867,7 +867,7 @@ METHOD IdeDocks:getADockWidget( nAreas, cObjectName, cWindowTitle, nFlags, cEven
    nBasic := hb_bitOR( QDockWidget_DockWidgetClosable, nFlags )
 
    oDock := XbpWindow():new()
-   oDock:oWidget := QDockWidget():new( ::oDlg:oWidget )
+   oDock:oWidget := QDockWidget( ::oDlg:oWidget )
    oDock:oWidget:setObjectName( cObjectName )
    ::oDlg:addChild( oDock )
    oDock:oWidget:setFeatures( nBasic )
@@ -998,10 +998,10 @@ METHOD IdeDocks:buildMdiToolbar()
 
    STATIC sp0,sp1,sp2,sp3
    IF empty( sp0 )
-      sp0 := QLabel():new(); sp0:setMinimumWidth( nW )
-      sp1 := QLabel():new(); sp1:setMinimumWidth( nW )
-      sp2 := QLabel():new(); sp2:setMinimumWidth( nW )
-      sp3 := QLabel():new(); sp3:setMinimumWidth( nW )
+      sp0 := QLabel(); sp0:setMinimumWidth( nW )
+      sp1 := QLabel(); sp1:setMinimumWidth( nW )
+      sp2 := QLabel(); sp2:setMinimumWidth( nW )
+      sp3 := QLabel(); sp3:setMinimumWidth( nW )
    ENDIF
 
    ::qMdiToolbar := HbqToolbar():new()
@@ -1063,7 +1063,7 @@ METHOD IdeDocks:buildStackedWidget()
 
    IF ::oIde:lCurEditsMdi
       ::oIde:oStackedWidget := XbpWindow():new( ::oDa )
-      ::oStackedWidget:oWidget := QMdiArea():new( ::oDa:oWidget )
+      ::oStackedWidget:oWidget := QMdiArea( ::oDa:oWidget )
       ::oStackedWidget:oWidget:setObjectName( "editMdiArea" )
       ::oStackedWidget:oWidget:setDocumentMode( .t. )
       ::oStackedWidget:oWidget:setTabShape( QTabWidget_Triangular )
@@ -1080,7 +1080,7 @@ METHOD IdeDocks:buildStackedWidget()
       /* Its parent will be drawing area and pages will be XbpTabWidgets() */
 
       ::oIde:oStackedWidget := XbpWindow():new( ::oDa )
-      ::oStackedWidget:oWidget := QStackedWidget():new( ::oDa:oWidget )
+      ::oStackedWidget:oWidget := QStackedWidget( ::oDa:oWidget )
       ::oStackedWidget:oWidget:setObjectName( "myStackedWidget" )
       ::oDa:addChild( ::oStackedWidget )
    ENDIF
@@ -1094,7 +1094,7 @@ METHOD IdeDocks:buildViewWidget( cView )
 
    IF ::oIde:lCurEditsMdi
 
-      qMdi := QMdiSubWindow():new( ::oStackedWidget:oWidget )
+      qMdi := QMdiSubWindow( ::oStackedWidget:oWidget )
       qMdi:setWindowTitle( cView )
       qMdi:setObjectName( cView )
       IF cView == "Stats"
@@ -1104,7 +1104,7 @@ METHOD IdeDocks:buildViewWidget( cView )
       ENDIF
 
       oFrame := XbpWindow():new( ::oStackedWidget )
-      oFrame:oWidget := QWidget():new( ::oStackedWidget:oWidget )
+      oFrame:oWidget := QWidget( ::oStackedWidget:oWidget )
       oFrame:oWidget:setObjectName( cView )       /* This will form the basis of showing at top */
       ::oStackedWidget:addChild( oFrame )
 
@@ -1114,7 +1114,7 @@ METHOD IdeDocks:buildViewWidget( cView )
       oFrame:oTabWidget := XbpTabWidget():new():create( oFrame, , {0,0}, {200,200}, , .t. )
 
       IF !( cView == "Stats" )
-         qTBtnClose := QToolButton():new()
+         qTBtnClose := QToolButton()
          qTBtnClose:setTooltip( "Close Tab" )
          qTBtnClose:setAutoRaise( .t. )
          qTBtnClose:setIcon( hbide_image( "closetab" ) )
@@ -1155,7 +1155,7 @@ METHOD IdeDocks:buildViewWidget( cView )
    ELSE
 
       oFrame := XbpWindow():new( ::oStackedWidget )
-      oFrame:oWidget := QWidget():new( ::oStackedWidget:oWidget )
+      oFrame:oWidget := QWidget( ::oStackedWidget:oWidget )
       oFrame:oWidget:setObjectName( cView )       /* This will form the basis of showing at top */
       ::oStackedWidget:addChild( oFrame )
 
@@ -1166,7 +1166,7 @@ METHOD IdeDocks:buildViewWidget( cView )
       oFrame:oTabWidget:oWidget:setDocumentMode( .t. )
 
       IF !( cView == "Stats" )
-         qTBtnClose := QToolButton():new()
+         qTBtnClose := QToolButton()
          qTBtnClose:setTooltip( "Close Tab" )
          qTBtnClose:setAutoRaise( .t. )
          qTBtnClose:setIcon( hbide_image( "closetab" ) )
@@ -1224,11 +1224,11 @@ METHOD IdeDocks:buildUpDownWidget()
 
 METHOD IdeDocks:buildToolBarPanels()
    LOCAL a_, aBtns, qAct, qTBtn
-   LOCAL qSize := QSize():new( 20,20 )
+   LOCAL qSize := QSize( 20,20 )
 
    IF ! ::oIde:lCurEditsMdi
       /* Toolbar Panels */
-      ::oIde:qTBarPanels := QToolBar():new()
+      ::oIde:qTBarPanels := QToolBar()
       ::qTBarPanels:setStyleSheet( GetStyleSheet( "QToolBarLR5", ::nAnimantionMode ) )
       ::qTBarPanels:setObjectName( "ToolBar_Panels" )
       ::qTBarPanels:setWindowTitle( "ToolBar: Editor Panels" )
@@ -1245,7 +1245,7 @@ METHOD IdeDocks:buildToolBarPanels()
 
       /* Toolbar Line Actions */
 
-      ::oIde:qTBarLines := QToolBar():new()
+      ::oIde:qTBarLines := QToolBar()
       ::qTBarLines:setStyleSheet( GetStyleSheet( "QToolBarLR5", ::nAnimantionMode ) )
       ::qTBarLines:setObjectName( "ToolBar_Lines" )
       ::qTBarLines:setWindowTitle( "ToolBar: Lines and Blocks" )
@@ -1270,7 +1270,7 @@ METHOD IdeDocks:buildToolBarPanels()
          IF empty( a_ )
             ::qTBarLines:addSeparator()
          ELSE
-            qTBtn := QToolButton():new()
+            qTBtn := QToolButton()
             qTBtn:setTooltip( a_[ 2 ] )
             qTBtn:setIcon( hbide_image( a_[ 1 ] ) )
             qTBtn:setMaximumWidth( 20 )
@@ -1302,7 +1302,7 @@ METHOD IdeDocks:buildToolBarPanels()
          IF empty( a_ )
             ::qTBarLines:addSeparator()
          ELSE
-            qTBtn := QToolButton():new()
+            qTBtn := QToolButton()
             qTBtn:setTooltip( a_[ 2 ] )
             qTBtn:setIcon( hbide_image( a_[ 1 ] ) )
             qTBtn:setMaximumWidth( 20 )
@@ -1316,7 +1316,7 @@ METHOD IdeDocks:buildToolBarPanels()
    ENDIF
 
    /* Right-hand docks toolbar */
-   ::oIde:qTBarDocks := QToolBar():new()
+   ::oIde:qTBarDocks := QToolBar()
    ::qTBarDocks:setStyleSheet( GetStyleSheet( "QToolBarLR5", ::nAnimantionMode ) )
    ::qTBarDocks:setObjectName( "ToolBar_Docks" )
    ::qTBarDocks:setWindowTitle( "ToolBar: Dockable Widgets" )
@@ -1399,7 +1399,7 @@ METHOD IdeDocks:addPanelButton( cPanel )
    STATIC nIndex := 0
    nIndex++
 
-   qTBtn := QToolButton():new()
+   qTBtn := QToolButton()
    qTBtn:setMaximumHeight( 20 )
    qTBtn:setMaximumWidth( 20 )
    qTBtn:setText( cPanel )
@@ -1434,7 +1434,7 @@ METHOD IdeDocks:buildProjectTree()
    ::oProjTree:setStyleSheet( GetStyleSheet( "QTreeWidgetHB", ::nAnimantionMode ) )
    ::oProjTree:oWidget:setMinimumWidth( 100 )
    ::oProjTree:oWidget:setSizePolicy_1( QSizePolicy_MinimumExpanding, QSizePolicy_Preferred )
-   ::oProjTree:oWidget:setIconSize( QSize():new( 12,12 ) )
+   ::oProjTree:oWidget:setIconSize( QSize( 12,12 ) )
    ::oProjTree:oWidget:setIndentation( 12 )
 
  * ::oProjTree:itemMarked    := {|oItem| ::manageItemSelected( 0, oItem ), ::oCurProjItem := oItem }
@@ -1488,7 +1488,7 @@ METHOD IdeDocks:buildEditorTree()
 
    ::oEditTree:oWidget:setSizePolicy_1( QSizePolicy_MinimumExpanding, QSizePolicy_Preferred )
    ::oEditTree:oWidget:setMinimumWidth( 100 )
-   ::oEditTree:oWidget:setIconSize( QSize():new( 12,12 ) )
+   ::oEditTree:oWidget:setIconSize( QSize( 12,12 ) )
    ::oEditTree:oWidget:setIndentation( 12 )
  * ::oEditTree:oWidget:setRootIsDecorated( .f. )
 
@@ -1547,13 +1547,13 @@ METHOD IdeDocks:buildHelpWidget()
    ::oIde:oHelpDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockHelp", "hbIDE Help", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget_1( Qt_RightDockWidgetArea, ::oHelpDock:oWidget, Qt_Horizontal )
 
-   ::oIde:qHelpBrw := QTextBrowser():new( ::oHelpDock:oWidget )
+   ::oIde:qHelpBrw := QTextBrowser( ::oHelpDock:oWidget )
    ::qHelpBrw:show()
    ::qHelpBrw:setContextMenuPolicy( Qt_CustomContextMenu )
    ::qHelpBrw:setOpenExternalLinks( .t. )
 
-   qUrl := QUrl():new( "idemainpage.html" )
-   qStr := QStringList():new()
+   qUrl := QUrl( "idemainpage.html" )
+   qStr := QStringList()
    qStr:append( hb_dirBase() + "docs" )
 
    ::qHelpBrw:setSearchPaths( qStr )
@@ -1862,7 +1862,7 @@ METHOD IdeDocks:getMarkWidget( nIndex )
    LOCAL aColors  := { "rgb( 255,255,127 )", "rgb( 175,175,255 )", "rgb( 255,175,175 )", ;
                        "rgb( 175,255,175 )", "rgb( 255,190,125 )", "rgb( 175,255,255 )"  }
 
-   ::oIde:aMarkTBtns[ nIndex ] := QToolButton():new()
+   ::oIde:aMarkTBtns[ nIndex ] := QToolButton()
 
    ::oIde:aMarkTBtns[ nIndex ]:setMaximumHeight( 12 )
    ::oIde:aMarkTBtns[ nIndex ]:setMaximumWidth( 12 )

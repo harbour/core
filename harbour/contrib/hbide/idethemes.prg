@@ -222,7 +222,7 @@ METHOD IdeThemes:destroy()
       ::qHiliter := NIL
       ::qEdit    := NIL
 
-      //::oThemesDock:oWidget:setWidget( QWidget():new() )
+      //::oThemesDock:oWidget:setWidget( QWidget() )
       IF !empty( ::oUI )
          ::oUI:destroy()
       ENDIF
@@ -340,7 +340,7 @@ METHOD IdeThemes:getThemeAttribute( cAttr, cTheme )
 METHOD IdeThemes:buildSyntaxFormat( aAttr )
    LOCAL qFormat
 
-   qFormat := QTextCharFormat():new()
+   qFormat := QTextCharFormat()
 
    qFormat:setFontItalic( aAttr[ THM_ATR_ITALIC ] )
    IF aAttr[ THM_ATR_BOLD ]
@@ -348,7 +348,7 @@ METHOD IdeThemes:buildSyntaxFormat( aAttr )
    ENDIF
    qFormat:setFontUnderline( aAttr[ THM_ATR_ULINE ] )
    //
-   qFormat:setForeground( QBrush():new( "QColor", QColor():new( aAttr[ THM_ATR_R ], aAttr[ THM_ATR_G ], aAttr[ THM_ATR_B ] ) ) )
+   qFormat:setForeground( QBrush( "QColor", QColor( aAttr[ THM_ATR_R ], aAttr[ THM_ATR_G ], aAttr[ THM_ATR_B ] ) ) )
 
    RETURN qFormat
 
@@ -407,7 +407,7 @@ METHOD IdeThemes:setMultiLineCommentRule( qHiliter, cTheme )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeThemes:setSyntaxRule( qHiliter, cName, cPattern, lCaseSensitive, aAttr )
-   LOCAL qRegExp := QRegExp():new()
+   LOCAL qRegExp := QRegExp()
 
    qRegExp:setCaseSensitivity( lCaseSensitive )
    qRegExp:setPattern( cPattern )
@@ -441,7 +441,7 @@ METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew )
 
    ::setForeBackGround( qEdit, cTheme )
 
-   qHiliter := HBQSyntaxHighlighter():new()
+   qHiliter := HBQSyntaxHighlighter()
 
    FOR EACH a_ IN ::aPatterns
       IF !empty( aAttr := ::getThemeAttribute( a_[ 1 ], cTheme ) )
@@ -457,13 +457,13 @@ METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew )
 
    IF __ObjGetClsName( qEdit ) == "HBQPLAINTEXTEDIT"
       aAttr := ::getThemeAttribute( "CurrentLineBackground", cTheme )
-      qEdit:hbSetCurrentLineColor( QColor():new( aAttr[ THM_ATR_R ], aAttr[ THM_ATR_G ], aAttr[ THM_ATR_B ] ) )
+      qEdit:hbSetCurrentLineColor( QColor( aAttr[ THM_ATR_R ], aAttr[ THM_ATR_G ], aAttr[ THM_ATR_B ] ) )
 
       aAttr := ::getThemeAttribute( "LineNumbersBkColor", cTheme )
-      qEdit:hbSetLineAreaBkColor( QColor():new( aAttr[ THM_ATR_R ], aAttr[ THM_ATR_G ], aAttr[ THM_ATR_B ] ) )
+      qEdit:hbSetLineAreaBkColor( QColor( aAttr[ THM_ATR_R ], aAttr[ THM_ATR_G ], aAttr[ THM_ATR_B ] ) )
 
       aAttr := ::getThemeAttribute( "SelectionBackground", cTheme )
-      qEdit:hbSetSelectionColor( QColor():new( aAttr[ THM_ATR_R ], aAttr[ THM_ATR_G ], aAttr[ THM_ATR_B ] ) )
+      qEdit:hbSetSelectionColor( QColor( aAttr[ THM_ATR_R ], aAttr[ THM_ATR_G ], aAttr[ THM_ATR_B ] ) )
    ENDIF
 
    qHiliter:setDocument( qEdit:document() )
@@ -486,21 +486,21 @@ METHOD IdeThemes:mergeUserDictionaries( qHiliter, cTheme )
          NEXT
          s := substr( s, 1, len( s ) - 1 )
 
-         qRegExp := QRegExp():new()
+         qRegExp := QRegExp()
          qRegExp:setCaseSensitivity( oDict:lCaseSensitive )
          qRegExp:setPattern( s )
 
          aAttr := ::getThemeAttribute( "UserDictionary", cTheme )  // cName after slots are implemented
 
-         qFormat := QTextCharFormat():new()
+         qFormat := QTextCharFormat()
          qFormat:setFontItalic( aAttr[ THM_ATR_ITALIC ] )
          IF aAttr[ THM_ATR_BOLD ]
             qFormat:setFontWeight( 1000 )
          ENDIF
          qFormat:setFontUnderline( aAttr[ THM_ATR_ULINE ] )
-         qFormat:setForeground( QBrush():new( "QColor", QColor():new( aAttr[ THM_ATR_R ], aAttr[ THM_ATR_G ], aAttr[ THM_ATR_B ] ) ) )
+         qFormat:setForeground( QBrush( "QColor", QColor( aAttr[ THM_ATR_R ], aAttr[ THM_ATR_G ], aAttr[ THM_ATR_B ] ) ) )
          IF !empty( oDict:qBgColor )
-            qFormat:setBackground( QBrush():new( "QColor", oDict:qBgColor ) )
+            qFormat:setBackground( QBrush( "QColor", oDict:qBgColor ) )
          ENDIF
 
          qHiliter:hbSetRuleWithRegExp( cName, qRegExp, qFormat )
@@ -575,7 +575,7 @@ METHOD IdeThemes:show()
 METHOD IdeThemes:copy()
    LOCAL aItems, qGo, cTheme
 
-   qGo := QInputDialog():new( ::oUI )
+   qGo := QInputDialog( ::oUI )
    qGo:setTextValue( ::aThemes[ ::nCurTheme, 1 ] )
    qGo:setLabelText( "Name of new Theme?" )
    qGo:setWindowTitle( "Harbour-Qt [ Get a Value ]" )
@@ -657,9 +657,9 @@ METHOD IdeThemes:updateColor()
 
    aAttr := ::aThemes[ ::nCurTheme, 2, ::nCurItem ]
 
-   qColor := QColor():new( aAttr[ 2, THM_ATR_R ], aAttr[ 2, THM_ATR_G ], aAttr[ 2, THM_ATR_B ] )
+   qColor := QColor( aAttr[ 2, THM_ATR_R ], aAttr[ 2, THM_ATR_G ], aAttr[ 2, THM_ATR_B ] )
 
-   oDlg := QColorDialog():new( ::oUI:oWidget )
+   oDlg := QColorDialog( ::oUI:oWidget )
    oDlg:setWindowTitle( "Select a Color" )
    oDlg:setCurrentColor( qColor )
    oDlg:exec()
@@ -730,12 +730,12 @@ METHOD IdeThemes:selectTheme()
       ::oSL:qObj[ "buttonCancel" ]:connect( "clicked()"                 , {|p| ::selectThemeProc( 3, p ) } )
    ENDIF
 
-   oStrList := QStringList():new()
+   oStrList := QStringList()
    FOR EACH a_ IN ::aThemes
       oStrList:append( a_[ 1 ] )
    NEXT
 
-   oStrModel := QStringListModel():new()
+   oStrModel := QStringListModel()
    oStrModel:setStringList( oStrList )
 
    ::oSL:qObj[ "listOptions" ]:setModel( oStrModel )
@@ -984,7 +984,7 @@ STATIC FUNCTION GetSource()
 STATIC FUNCTION hbide_setSyntaxAttrbs( qHiliter, cPattern, cName, nR, nG, nB, lItalic, lBold, lUnderline )
    LOCAL qFormat
 
-   qFormat  := QTextCharFormat():new()
+   qFormat  := QTextCharFormat()
 
    IF hb_isLogical( lItalic )
       qFormat:setFontItalic( lItalic )
@@ -995,7 +995,7 @@ STATIC FUNCTION hbide_setSyntaxAttrbs( qHiliter, cPattern, cName, nR, nG, nB, lI
    IF hb_isLogical( lUnderline )
       qFormat:setFontUnderline( lUnderline )
    ENDIF
-   qFormat:setForeGround( QBrush():new( "QColor", QColor():new( nR, nG, nB ) ) )
+   qFormat:setForeGround( QBrush( "QColor", QColor( nR, nG, nB ) ) )
 
    qHiliter:hbSetRule( cName, cPattern, qFormat )
 

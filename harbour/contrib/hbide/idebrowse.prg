@@ -291,7 +291,7 @@ METHOD IdeBrowseManager:create( oIde )
 
    qDock := ::oIde:oEM:oQScintillaDock:oWidget
 
-   ::qDbu := QWidget():new()
+   ::qDbu := QWidget()
 
    qDock:setWidget( ::qDbu )
 
@@ -300,7 +300,7 @@ METHOD IdeBrowseManager:create( oIde )
    qDock:connect( QEvent_Drop     , {|p| ::execEvent( "dockDbu_dropEvent"     , p ) } )
 
    /* Layout applied to dbu widget */
-   ::qLayout := QGridLayout():new()
+   ::qLayout := QGridLayout()
    ::qLayout:setContentsMargins( 0,0,0,0 )
    ::qLayout:setSpacing( 0 )
 
@@ -315,11 +315,11 @@ METHOD IdeBrowseManager:create( oIde )
    ::qLayout:addWidget_1( ::qToolbarL, 1, 0, 1, 1 )
 
    /* Stacked widget */
-   ::qStack := QStackedWidget():new()
+   ::qStack := QStackedWidget()
    ::qLayout:addWidget_1( ::qStack   , 1, 1, 1, 1 )
 
    /* StatusBar */
-   ::qStatus := QStatusBar():new()
+   ::qStatus := QStatusBar()
    ::qStatus:setSizeGripEnabled( .f. )
    ::qLayout:addWidget_1( ::qStatus  , 2, 0, 1, 2 )
 
@@ -336,7 +336,7 @@ METHOD IdeBrowseManager:create( oIde )
    ::setPanel( "Main" )
 
    /* Timer to update ststus bar */
-   ::qTimer := QTimer():new()
+   ::qTimer := QTimer()
    ::qTimer:setInterval( 2000 )
    ::qTimer:connect( "timeout()", {|| ::dispStatusInfo() } )
    ::qTimer:start()
@@ -403,19 +403,19 @@ METHOD IdeBrowseManager:dispStatusInfo()
 METHOD IdeBrowseManager:buildStatusPanels()
    LOCAL qLabel
 
-   qLabel := QLabel():new(); qLabel:setMinimumWidth( 40 )
+   qLabel := QLabel(); qLabel:setMinimumWidth( 40 )
    ::qStatus:addPermanentWidget( qLabel, 0 )
    aadd( ::aStatusPnls, qLabel )
 
-   qLabel := QLabel():new(); qLabel:setMinimumWidth( 40 )
+   qLabel := QLabel(); qLabel:setMinimumWidth( 40 )
    ::qStatus:addPermanentWidget( qLabel, 0 )
    aadd( ::aStatusPnls, qLabel )
 
-   qLabel := QLabel():new(); qLabel:setMinimumWidth( 40 )
+   qLabel := QLabel(); qLabel:setMinimumWidth( 40 )
    ::qStatus:addPermanentWidget( qLabel, 0 )
    aadd( ::aStatusPnls, qLabel )
 
-   qLabel := QLabel():new(); qLabel:setMinimumWidth( 40 )
+   qLabel := QLabel(); qLabel:setMinimumWidth( 40 )
    ::qStatus:addPermanentWidget( qLabel, 1 )
    aadd( ::aStatusPnls, qLabel )
 
@@ -503,7 +503,7 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
       IF qMime:hasUrls()
          qList := QStringList():from( qMime:hbUrlList() )
          FOR i := 0 TO qList:size() - 1
-            qUrl := QUrl():new( qList:at( i ) )
+            qUrl := QUrl( qList:at( i ) )
             hb_fNameSplit( qUrl:toLocalFile(), @cPath, @cTable, @cExt )
             IF lower( cExt ) == ".dbf"
                ::oCurPanel:addBrowser( { NIL, hbide_pathToOSPath( cPath + cTable + cExt ), NIL, ;
@@ -681,19 +681,19 @@ METHOD IdeBrowseManager:showTablesTree()
 
    oUI := hbide_getUI( "tables", ::oCurPanel:qWidget )
 
-   qFont := QFont():new( "Courier New", 8 )
+   qFont := QFont( "Courier New", 8 )
    qTree := oUI:q_treeTables
    qTree:setFont( qFont )
 
    FOR EACH oPanel IN ::aPanels
-      qParent := QTreeWidgetItem():new()
+      qParent := QTreeWidgetItem()
       qParent:setText( 0, oPanel:cPanel )
       qTree:addTopLevelItem( qParent )
       aadd( a_, qParent )
       FOR EACH aBrowser IN oPanel:aBrowsers
          oBrw := aBrowser[ SUB_BROWSER ]
 
-         qItm := QTreeWidgetItem():new()
+         qItm := QTreeWidgetItem()
          qItm:setText( 0, oBrw:cTable )
 
          qItm:setToolTip( 0, oBrw:cTableOnly + " [ " + oBrw:cDriver + "  " + ;
@@ -704,12 +704,12 @@ METHOD IdeBrowseManager:showTablesTree()
          nSz := 0 ; aeval( aBrowser[ SUB_BROWSER ]:aStruct, {|e_| nSz += e_[ 3 ] } )
          nMax := 12
          FOR EACH aFld IN aBrowser[ SUB_BROWSER ]:aStruct
-            q := QTreeWidgetItem():new()
+            q := QTreeWidgetItem()
             q:setText( 0, pad( aFld[ 1 ], nMax ) + aFld[ 2 ] + str( aFld[ 3 ], 4, 0 ) + str( aFld[ 4 ], 2, 0 ) )
             q:setToolTip( 0, "" )
             qItm:addChild( q )
          NEXT
-         q := QTreeWidgetItem():new()
+         q := QTreeWidgetItem()
          q:setText( 0, pad( "T", nMax - 2 ) + str( nSz, 7, 0 ) )
          qItm:addChild( q )
      NEXT
@@ -784,23 +784,23 @@ METHOD IdeBrowseManager:populateUiStruct()
 
    n := 0
    FOR EACH fld_ IN aStruct
-      qItm := QTableWidgetItem():new()
+      qItm := QTableWidgetItem()
       qItm:setText( hb_ntos( n+1 ) )
       oTbl:setItem( n, 0, qItm )
 
-      qItm := QTableWidgetItem():new()
+      qItm := QTableWidgetItem()
       qItm:setText( fld_[ 1 ] )
       oTbl:setItem( n, 1, qItm )
 
-      qItm := QTableWidgetItem():new()
+      qItm := QTableWidgetItem()
       qItm:setText( hbide_fldType2Desc( fld_[ 2 ] )  )
       oTbl:setItem( n, 2, qItm )
 
-      qItm := QTableWidgetItem():new()
+      qItm := QTableWidgetItem()
       qItm:setText( hb_ntos( fld_[ 3 ] ) )
       oTbl:setItem( n, 3, qItm )
 
-      qItm := QTableWidgetItem():new()
+      qItm := QTableWidgetItem()
       qItm:setText( hb_ntos( fld_[ 4 ] ) )
       oTbl:setItem( n, 4, qItm )
 
@@ -842,7 +842,7 @@ METHOD IdeBrowseManager:buildUiStruct()
    oTbl:setSelectionMode( QAbstractItemView_SingleSelection )
    oTbl:setSelectionBehavior( QAbstractItemView_SelectRows )
    FOR n := 1 TO len( hdr_ )
-      qItm := QTableWidgetItem():new()
+      qItm := QTableWidgetItem()
       qItm:setText( hdr_[ n,1 ] )
       oTbl:setHorizontalHeaderItem( n-1, qItm )
       oTbl:setColumnWidth( n-1, hdr_[ n,2 ] )
@@ -891,14 +891,14 @@ METHOD IdeBrowseManager:buildToolbar()
    STATIC sp0,sp1,sp2,sp3
 
    IF empty( sp0 )
-      sp0 := QLabel():new(); sp0:setMinimumWidth( nW )
-      sp1 := QLabel():new(); sp1:setMinimumWidth( nW )
-      sp2 := QLabel():new(); sp2:setMinimumWidth( nW )
-      sp3 := QLabel():new(); sp3:setMinimumWidth( nW )
+      sp0 := QLabel(); sp0:setMinimumWidth( nW )
+      sp1 := QLabel(); sp1:setMinimumWidth( nW )
+      sp2 := QLabel(); sp2:setMinimumWidth( nW )
+      sp3 := QLabel(); sp3:setMinimumWidth( nW )
    ENDIF
 
-   ::qToolbar := QToolbar():new()
-   ::qToolbar:setIconSize( QSize():new( 16,16 ) )
+   ::qToolbar := QToolbar()
+   ::qToolbar:setIconSize( QSize( 16,16 ) )
    ::qToolbar:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
 
    ::buildPanelsButton()
@@ -926,9 +926,9 @@ METHOD IdeBrowseManager:buildToolbar()
 METHOD IdeBrowseManager:buildLeftToolbar()
    LOCAL qTBar, aBtn
 
-   ::qToolBarL := QToolbar():new()
+   ::qToolBarL := QToolbar()
    ::qToolBarL:setOrientation( Qt_Vertical )
-   ::qToolbarL:setIconSize( QSize():new( 16,16 ) )
+   ::qToolbarL:setIconSize( QSize( 16,16 ) )
    ::qToolbarL:setMaximumWidth( 24 )
    ::qToolbarL:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
 
@@ -974,7 +974,7 @@ METHOD IdeBrowseManager:buildToolButton( qToolbar, aBtn )
    IF empty( aBtn )
       qToolbar:addSeparator()
    ELSE
-      qBtn := QToolButton():new()
+      qBtn := QToolButton()
       qBtn:setTooltip( aBtn[ 1 ] )
       qBtn:setAutoRaise( .t. )
       qBtn:setIcon( hbide_image( aBtn[ 2 ] ) )
@@ -992,7 +992,7 @@ METHOD IdeBrowseManager:buildToolButton( qToolbar, aBtn )
 
 METHOD IdeBrowseManager:buildConxnCombo()
 
-   ::qConxnCombo := QComboBox():new()
+   ::qConxnCombo := QComboBox()
    ::qConxnCombo:setToolTip( "Connection to open next table" )
    ::qToolBar:addWidget( ::qConxnCombo )
 
@@ -1028,7 +1028,7 @@ METHOD IdeBrowseManager:buildRddsCombo()
       aeval( aRdds, {|e| aadd( ::aRdds, e ) } )
    ENDIF
 
-   ::qRddCombo := QComboBox():new()
+   ::qRddCombo := QComboBox()
    ::qRddCombo:setToolTip( "Rdd to open next table" )
    FOR EACH cRdd IN ::aRdds
       cRdd := alltrim( cRdd )
@@ -1044,10 +1044,10 @@ METHOD IdeBrowseManager:buildRddsCombo()
 
 METHOD IdeBrowseManager:buildTablesButton()
 
-   ::qTablesMenu := QMenu():new()
+   ::qTablesMenu := QMenu()
    ::qTablesMenu:setStyleSheet( GetStyleSheet( "QMenuPop", ::nAnimantionMode ) )
 
-   ::qTablesButton := QToolButton():new()
+   ::qTablesButton := QToolButton()
    ::qTablesButton:setTooltip( "Tables" )
    ::qTablesButton:setIcon( hbide_image( "database" ) )
    ::qTablesButton:setPopupMode( QToolButton_MenuButtonPopup )
@@ -1063,10 +1063,10 @@ METHOD IdeBrowseManager:buildTablesButton()
 
 METHOD IdeBrowseManager:buildIndexButton()
 
-   ::qIndexMenu := QMenu():new()
+   ::qIndexMenu := QMenu()
    ::qIndexMenu:setStyleSheet( GetStyleSheet( "QMenuPop", ::nAnimantionMode ) )
 
-   ::qIndexButton := QToolButton():new()
+   ::qIndexButton := QToolButton()
    ::qIndexButton:setTooltip( "Indexes" )
    ::qIndexButton:setIcon( hbide_image( "sort" ) )
    ::qIndexButton:setPopupMode( QToolButton_MenuButtonPopup )
@@ -1109,10 +1109,10 @@ METHOD IdeBrowseManager:updateIndexMenu( oBrw )
 
 METHOD IdeBrowseManager:buildPanelsButton()
 
-   ::qPanelsMenu := QMenu():new()
+   ::qPanelsMenu := QMenu()
    ::qPanelsMenu:setStyleSheet( GetStyleSheet( "QMenuPop", ::nAnimantionMode ) )
 
-   ::qPanelsButton := QToolButton():new()
+   ::qPanelsButton := QToolButton()
    ::qPanelsButton:setTooltip( "ideDBU Panels" )
    ::qPanelsButton:setIcon( hbide_image( "panel_8" ) )
    ::qPanelsButton:setPopupMode( QToolButton_MenuButtonPopup )
@@ -1175,7 +1175,7 @@ METHOD IdeBrowsePanel:new( oIde, cPanel, oManager )
    ::cPanel := cPanel
    ::oManager := oManager
 
-   ::qWidget := QMdiArea():new()
+   ::qWidget := QMdiArea()
    ::qWidget:setObjectName( ::cPanel )
    ::qWidget:setDocumentMode( .t. )
    ::qWidget:setOption( QMdiArea_DontMaximizeSubWindowOnActivation, .t. )
@@ -1277,7 +1277,7 @@ METHOD IdeBrowsePanel:tileVertically()
    nW     := qVPort:width()
    nT     := 0
    FOR EACH a_ IN ::aBrowsers
-      a_[ 2 ]:setGeometry( QRect():new( 0, nT, nW, nH ) )
+      a_[ 2 ]:setGeometry( QRect( 0, nT, nW, nH ) )
       nT += nH
    NEXT
    ::setActiveSubWindow( qObj )
@@ -1295,7 +1295,7 @@ METHOD IdeBrowsePanel:tileHorizontally()
    nT     := 0
    nL     := 0
    FOR EACH a_ IN ::aBrowsers
-      a_[ 2 ]:setGeometry( QRect():new( nL, nT, nW, nH ) )
+      a_[ 2 ]:setGeometry( QRect( nL, nT, nW, nH ) )
       nL += nW
    NEXT
    ::setActiveSubWindow( qObj )
@@ -1313,7 +1313,7 @@ METHOD IdeBrowsePanel:tilesZoom( nMode )
             qMdi  := a_[ 2 ]
             qRect := QRect():from( qMdi:geometry() )
             nH    := qRect:height() + ( nMode * ( qRect:height() / 4 ) )
-            qMdi:setGeometry( QRect():new( 0, nT, qRect:width(), nH ) )
+            qMdi:setGeometry( QRect( 0, nT, qRect:width(), nH ) )
             nT    += nH
          NEXT
       ELSE
@@ -1322,7 +1322,7 @@ METHOD IdeBrowsePanel:tilesZoom( nMode )
             qMdi  := a_[ 2 ]
             qRect := QRect():from( qMdi:geometry() )
             nW    := qRect:width() + ( nMode * ( qRect:width() / 4 ) )
-            qMdi:setGeometry( QRect():new( nL, 0, nW, qRect:height() ) )
+            qMdi:setGeometry( QRect( nL, 0, nW, qRect:height() ) )
             nL    += nW
          NEXT
       ENDIF
@@ -1668,7 +1668,7 @@ METHOD IdeBrowse:create( oIde, oManager, oPanel, aInfo )
    ::oBrw:navigate := {|mp1,mp2| ::execEvent( "browse_navigate", mp1, mp2 ) }
    ::oBrw:keyboard := {|mp1,mp2| ::execEvent( "browse_keyboard", mp1, mp2 ) }
 
-   ::qTimer := QTimer():new()
+   ::qTimer := QTimer()
    ::qTimer:setInterval( 5 )
    ::qTimer:connect( "timeout()",  {|| ::execEvent( "timer_timeout" ) } )
 
@@ -1701,14 +1701,14 @@ METHOD IdeBrowse:buildBrowser()
    LOCAL qLayout, oWnd, oXbpBrowse
 
    oWnd := XbpWindow():new()
-   oWnd:oWidget := QWidget():new()
+   oWnd:oWidget := QWidget()
 
-   qLayout := QHBoxLayout():new()
+   qLayout := QHBoxLayout()
    oWnd:oWidget:setLayout( qLayout )
    qLayout:setContentsMargins( 0,0,0,0 )
    qLayout:setSpacing( 2 )
 
-   ::qSplitter := QSplitter():new()
+   ::qSplitter := QSplitter()
    ::qSplitter:setOrientation( Qt_Horizontal )
 
    qLayout:addWidget( ::qSplitter )
@@ -1735,14 +1735,14 @@ METHOD IdeBrowse:buildBrowser()
    oXbpBrowse:hbContextMenu := {|mp1| ::execEvent( "browser_contextMenu", mp1 ) }
 
    /* Form View */
-   ::qForm := QWidget():new()
-   ::qForm:setMinimumSize( QSize():new( 300  , len( ::aStruct ) * 34 ) )
-   ::qForm:setMaximumSize( QSize():new( 12000, 48000 ) )
+   ::qForm := QWidget()
+   ::qForm:setMinimumSize( QSize( 300  , len( ::aStruct ) * 34 ) )
+   ::qForm:setMaximumSize( QSize( 12000, 48000 ) )
 
-   ::qFLayout := QFormLayout():new()
+   ::qFLayout := QFormLayout()
    ::qForm:setLayout( ::qFLayout )
 
-   ::qScrollArea := QScrollArea():new()
+   ::qScrollArea := QScrollArea()
    ::qScrollArea:setWidget( ::qForm )
    ::qScrollArea:hide()
 
@@ -1753,12 +1753,12 @@ METHOD IdeBrowse:buildBrowser()
    ::oBrw    := oXbpBrowse
 
 #if 0
-   ::qVerSpl := QSplitter():new( Qt_Vertical )
+   ::qVerSpl := QSplitter( Qt_Vertical )
    ::qSplitter:addWidget( ::qVerSpl )
 
    ::qVerSpl:addWidget( ::qForm )
 
-   ::qClose := QToolButton():new()
+   ::qClose := QToolButton()
    ::qClose:setIcon( hbide_image( "closetab" ) )
    ::qClose:hide()
 
@@ -1802,8 +1802,8 @@ METHOD IdeBrowse:buildForm()
 
    IF ::nType == BRW_TYPE_DBF
       FOR EACH a_ IN ::aStruct
-         qLbl := QLabel():new(); qLbl:setText( a_[ 1 ] )
-         qEdit := QLineEdit():new()
+         qLbl := QLabel(); qLbl:setText( a_[ 1 ] )
+         qEdit := QLineEdit()
          ::qFLayout:addRow( qLbl, qEdit )
          aadd( ::aForm, { qLbl, qEdit } )
       NEXT
@@ -1820,7 +1820,7 @@ METHOD IdeBrowse:buildMdiWindow()
 
    ::nID := ++nID
 
-   ::qMdi := QMdiSubWindow():new( ::oDlg:oWidget )
+   ::qMdi := QMdiSubWindow( ::oDlg:oWidget )
    //
    ::qMdi:setWidget( ::oWnd:oWidget )
    ::oPanel:qWidget:addSubWindow( ::qMdi )
@@ -1837,7 +1837,7 @@ METHOD IdeBrowse:buildMdiWindow()
       FOR EACH cR IN qRect
          cR := val( cR )
       NEXT
-      qRect := QRect():new( qRect[ 1 ], qRect[ 2 ], qRect[ 3 ], qRect[ 4 ] )
+      qRect := QRect( qRect[ 1 ], qRect[ 2 ], qRect[ 3 ], qRect[ 4 ] )
       ::qMdi:setGeometry( qRect )
       ::qMdi:resize( ::qMdi:width()+1, ::qMdi:height()+1 )
       ::qMdi:resize( ::qMdi:width()-1, ::qMdi:height()-1 )
@@ -1984,7 +1984,7 @@ METHOD IdeBrowse:buildContextMenu()
       aadd( ::aFlds, hbide_fieldsArray( Self, cPmt, a_:__enumIndex() ) )
    NEXT
    aadd( ::aMenu, { ::aFlds, "Scroll to Column" } )
-   aadd( ::aMenu, { "Scroll to ...", {|v| v := ( QInputDialog():new() ):getText( , "Field Name" ), ::toColumn( v ) } } )
+   aadd( ::aMenu, { "Scroll to ...", {|v| v := ( QInputDialog() ):getText( , "Field Name" ), ::toColumn( v ) } } )
    aadd( ::aMenu, { "" } )
 
    /* Seeks */
@@ -2203,12 +2203,12 @@ METHOD IdeBrowse:getSome( cType, cFor )
 
    SWITCH cType
    CASE "N"
-      RETURN ( QInputDialog():new() ):getDouble( ::oWnd:oWidget, "Search for?", cFor, ;
+      RETURN ( QInputDialog() ):getDouble( ::oWnd:oWidget, "Search for?", cFor, ;
                          0, -2147483647, 2147483647, iif( nOrd > 0, 3, ::aStruct[ ::oBrw:colPos, 4 ] ) )
    CASE "D"
       RETURN hbide_fetchADate( ::oWnd:oWidget, "Search for?", cFor )
    CASE "C"
-      RETURN ( QInputDialog():new() ):getText( ::oWnd:oWidget, "Search for?", cFor )
+      RETURN ( QInputDialog() ):getText( ::oWnd:oWidget, "Search for?", cFor )
    ENDSWITCH
 
    RETURN ""
@@ -2340,7 +2340,7 @@ METHOD IdeBrowse:lock()
 METHOD IdeBrowse:goToAsk()
    LOCAL nRec
 
-   IF ! empty( nRec := ( QInputDialog():new() ):getInt( , "Goto", "Record_# ?", ::recno(), 1, ::lastrec() ) )
+   IF ! empty( nRec := ( QInputDialog() ):getInt( , "Goto", "Record_# ?", ::recno(), 1, ::lastrec() ) )
       ::goto( nRec )
       ::refreshAll()
    ENDIF
