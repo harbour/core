@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QListWidget INHERIT HbQtObjectHandler, QListView
+FUNCTION QListWidget( ... )
+   RETURN HB_QListWidget():new( ... )
+
+
+CREATE CLASS QListWidget INHERIT HbQtObjectHandler, HB_QListView FUNCTION HB_QListWidget
 
    METHOD  new( ... )
 

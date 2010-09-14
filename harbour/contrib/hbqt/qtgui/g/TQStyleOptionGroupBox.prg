@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionGroupBox INHERIT HbQtObjectHandler, QStyleOptionComplex
+FUNCTION QStyleOptionGroupBox( ... )
+   RETURN HB_QStyleOptionGroupBox():new( ... )
+
+
+CREATE CLASS QStyleOptionGroupBox INHERIT HbQtObjectHandler, HB_QStyleOptionComplex FUNCTION HB_QStyleOptionGroupBox
 
    METHOD  new( ... )
 

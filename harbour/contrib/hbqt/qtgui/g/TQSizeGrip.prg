@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSizeGrip INHERIT HbQtObjectHandler, QWidget
+FUNCTION QSizeGrip( ... )
+   RETURN HB_QSizeGrip():new( ... )
+
+
+CREATE CLASS QSizeGrip INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QSizeGrip
 
    METHOD  new( ... )
 

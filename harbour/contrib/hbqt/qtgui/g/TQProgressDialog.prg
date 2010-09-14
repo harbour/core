@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QProgressDialog INHERIT HbQtObjectHandler, QDialog
+FUNCTION QProgressDialog( ... )
+   RETURN HB_QProgressDialog():new( ... )
+
+
+CREATE CLASS QProgressDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QProgressDialog
 
    METHOD  new( ... )
 

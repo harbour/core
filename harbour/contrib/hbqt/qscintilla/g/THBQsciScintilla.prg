@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS HBQsciScintilla INHERIT HbQtObjectHandler, QsciScintilla
+FUNCTION HBQsciScintilla( ... )
+   RETURN HB_HBQsciScintilla():new( ... )
+
+
+CREATE CLASS HBQsciScintilla INHERIT HbQtObjectHandler, HB_QsciScintilla FUNCTION HB_HBQsciScintilla
 
    METHOD  new( ... )
 

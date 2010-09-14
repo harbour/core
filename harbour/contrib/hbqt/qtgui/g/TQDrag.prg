@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDrag INHERIT HbQtObjectHandler, QObject
+FUNCTION QDrag( ... )
+   RETURN HB_QDrag():new( ... )
+
+
+CREATE CLASS QDrag INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QDrag
 
    METHOD  new( ... )
 

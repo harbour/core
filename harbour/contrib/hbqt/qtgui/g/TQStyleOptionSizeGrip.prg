@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionSizeGrip INHERIT HbQtObjectHandler, QStyleOptionComplex
+FUNCTION QStyleOptionSizeGrip( ... )
+   RETURN HB_QStyleOptionSizeGrip():new( ... )
+
+
+CREATE CLASS QStyleOptionSizeGrip INHERIT HbQtObjectHandler, HB_QStyleOptionComplex FUNCTION HB_QStyleOptionSizeGrip
 
    METHOD  new( ... )
 

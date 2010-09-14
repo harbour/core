@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTimeEdit INHERIT HbQtObjectHandler, QDateTimeEdit
+FUNCTION QTimeEdit( ... )
+   RETURN HB_QTimeEdit():new( ... )
+
+
+CREATE CLASS QTimeEdit INHERIT HbQtObjectHandler, HB_QDateTimeEdit FUNCTION HB_QTimeEdit
 
    METHOD  new( ... )
 

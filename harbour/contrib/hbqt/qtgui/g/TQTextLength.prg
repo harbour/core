@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextLength INHERIT HbQtObjectHandler
+FUNCTION QTextLength( ... )
+   RETURN HB_QTextLength():new( ... )
+
+
+CREATE CLASS QTextLength INHERIT HbQtObjectHandler FUNCTION HB_QTextLength
 
    METHOD  new( ... )
 

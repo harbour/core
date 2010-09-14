@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QCheckBox INHERIT HbQtObjectHandler, QAbstractButton
+FUNCTION QCheckBox( ... )
+   RETURN HB_QCheckBox():new( ... )
+
+
+CREATE CLASS QCheckBox INHERIT HbQtObjectHandler, HB_QAbstractButton FUNCTION HB_QCheckBox
 
    METHOD  new( ... )
 

@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDesignerObjectInspectorInterface INHERIT HbQtObjectHandler, QWidget
+FUNCTION QDesignerObjectInspectorInterface( ... )
+   RETURN HB_QDesignerObjectInspectorInterface():new( ... )
+
+
+CREATE CLASS QDesignerObjectInspectorInterface INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QDesignerObjectInspectorInterface
 
    METHOD  new( ... )
 

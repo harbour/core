@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionComboBox INHERIT HbQtObjectHandler, QStyleOption
+FUNCTION QStyleOptionComboBox( ... )
+   RETURN HB_QStyleOptionComboBox():new( ... )
+
+
+CREATE CLASS QStyleOptionComboBox INHERIT HbQtObjectHandler, HB_QStyleOption FUNCTION HB_QStyleOptionComboBox
 
    METHOD  new( ... )
 

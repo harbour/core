@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextEdit INHERIT HbQtObjectHandler, QAbstractScrollArea
+FUNCTION QTextEdit( ... )
+   RETURN HB_QTextEdit():new( ... )
+
+
+CREATE CLASS QTextEdit INHERIT HbQtObjectHandler, HB_QAbstractScrollArea FUNCTION HB_QTextEdit
 
    METHOD  new( ... )
 

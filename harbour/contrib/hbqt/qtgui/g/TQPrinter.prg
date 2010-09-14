@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPrinter INHERIT HbQtObjectHandler, QPaintDevice
+FUNCTION QPrinter( ... )
+   RETURN HB_QPrinter():new( ... )
+
+
+CREATE CLASS QPrinter INHERIT HbQtObjectHandler, HB_QPaintDevice FUNCTION HB_QPrinter
 
    METHOD  new( ... )
 

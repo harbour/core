@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QAbstractProxyModel INHERIT HbQtObjectHandler, QAbstractItemModel
+FUNCTION QAbstractProxyModel( ... )
+   RETURN HB_QAbstractProxyModel():new( ... )
+
+
+CREATE CLASS QAbstractProxyModel INHERIT HbQtObjectHandler, HB_QAbstractItemModel FUNCTION HB_QAbstractProxyModel
 
    METHOD  new( ... )
 

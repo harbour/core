@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextTableFormat INHERIT HbQtObjectHandler, QTextFrameFormat
+FUNCTION QTextTableFormat( ... )
+   RETURN HB_QTextTableFormat():new( ... )
+
+
+CREATE CLASS QTextTableFormat INHERIT HbQtObjectHandler, HB_QTextFrameFormat FUNCTION HB_QTextTableFormat
 
    METHOD  new( ... )
 

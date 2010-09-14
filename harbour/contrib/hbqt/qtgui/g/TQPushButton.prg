@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPushButton INHERIT HbQtObjectHandler, QAbstractButton
+FUNCTION QPushButton( ... )
+   RETURN HB_QPushButton():new( ... )
+
+
+CREATE CLASS QPushButton INHERIT HbQtObjectHandler, HB_QAbstractButton FUNCTION HB_QPushButton
 
    METHOD  new( ... )
 

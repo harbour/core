@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSplitter INHERIT HbQtObjectHandler, QFrame
+FUNCTION QSplitter( ... )
+   RETURN HB_QSplitter():new( ... )
+
+
+CREATE CLASS QSplitter INHERIT HbQtObjectHandler, HB_QFrame FUNCTION HB_QSplitter
 
    METHOD  new( ... )
 

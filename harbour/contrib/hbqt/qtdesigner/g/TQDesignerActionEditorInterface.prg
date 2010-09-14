@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDesignerActionEditorInterface INHERIT HbQtObjectHandler, QWidget
+FUNCTION QDesignerActionEditorInterface( ... )
+   RETURN HB_QDesignerActionEditorInterface():new( ... )
+
+
+CREATE CLASS QDesignerActionEditorInterface INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QDesignerActionEditorInterface
 
    METHOD  new( ... )
 

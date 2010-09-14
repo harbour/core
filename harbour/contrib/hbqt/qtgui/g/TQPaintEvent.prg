@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPaintEvent INHERIT HbQtObjectHandler, QEvent
+FUNCTION QPaintEvent( ... )
+   RETURN HB_QPaintEvent():new( ... )
+
+
+CREATE CLASS QPaintEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_QPaintEvent
 
    METHOD  new( ... )
 

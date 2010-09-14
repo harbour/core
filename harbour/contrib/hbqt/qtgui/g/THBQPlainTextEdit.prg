@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS HBQPlainTextEdit INHERIT HbQtObjectHandler, QPlainTextEdit
+FUNCTION HBQPlainTextEdit( ... )
+   RETURN HB_HBQPlainTextEdit():new( ... )
+
+
+CREATE CLASS HBQPlainTextEdit INHERIT HbQtObjectHandler, HB_QPlainTextEdit FUNCTION HB_HBQPlainTextEdit
 
    METHOD  new( ... )
 

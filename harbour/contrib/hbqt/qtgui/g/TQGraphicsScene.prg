@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QGraphicsScene INHERIT HbQtObjectHandler, QObject
+FUNCTION QGraphicsScene( ... )
+   RETURN HB_QGraphicsScene():new( ... )
+
+
+CREATE CLASS QGraphicsScene INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QGraphicsScene
 
    METHOD  new( ... )
 

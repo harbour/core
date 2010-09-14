@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionSpinBox INHERIT HbQtObjectHandler, QStyleOptionComplex
+FUNCTION QStyleOptionSpinBox( ... )
+   RETURN HB_QStyleOptionSpinBox():new( ... )
+
+
+CREATE CLASS QStyleOptionSpinBox INHERIT HbQtObjectHandler, HB_QStyleOptionComplex FUNCTION HB_QStyleOptionSpinBox
 
    METHOD  new( ... )
 

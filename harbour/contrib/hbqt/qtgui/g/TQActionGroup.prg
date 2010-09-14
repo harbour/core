@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QActionGroup INHERIT HbQtObjectHandler, QObject
+FUNCTION QActionGroup( ... )
+   RETURN HB_QActionGroup():new( ... )
+
+
+CREATE CLASS QActionGroup INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QActionGroup
 
    METHOD  new( ... )
 

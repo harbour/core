@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QGraphicsView INHERIT HbQtObjectHandler, QAbstractScrollArea
+FUNCTION QGraphicsView( ... )
+   RETURN HB_QGraphicsView():new( ... )
+
+
+CREATE CLASS QGraphicsView INHERIT HbQtObjectHandler, HB_QAbstractScrollArea FUNCTION HB_QGraphicsView
 
    METHOD  new( ... )
 

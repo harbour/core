@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QChar INHERIT HbQtObjectHandler
+FUNCTION QChar( ... )
+   RETURN HB_QChar():new( ... )
+
+
+CREATE CLASS QChar INHERIT HbQtObjectHandler FUNCTION HB_QChar
 
    METHOD  new( ... )
 

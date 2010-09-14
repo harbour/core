@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QItemEditorCreatorBase INHERIT HbQtObjectHandler
+FUNCTION QItemEditorCreatorBase( ... )
+   RETURN HB_QItemEditorCreatorBase():new( ... )
+
+
+CREATE CLASS QItemEditorCreatorBase INHERIT HbQtObjectHandler FUNCTION HB_QItemEditorCreatorBase
 
    METHOD  new( ... )
 

@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QFtp INHERIT HbQtObjectHandler, QObject
+FUNCTION QFtp( ... )
+   RETURN HB_QFtp():new( ... )
+
+
+CREATE CLASS QFtp INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QFtp
 
    METHOD  new( ... )
 

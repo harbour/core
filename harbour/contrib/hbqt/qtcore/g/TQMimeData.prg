@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QMimeData INHERIT HbQtObjectHandler, QObject
+FUNCTION QMimeData( ... )
+   RETURN HB_QMimeData():new( ... )
+
+
+CREATE CLASS QMimeData INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QMimeData
 
    METHOD  new( ... )
 

@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QLocale INHERIT HbQtObjectHandler
+FUNCTION QLocale( ... )
+   RETURN HB_QLocale():new( ... )
+
+
+CREATE CLASS QLocale INHERIT HbQtObjectHandler FUNCTION HB_QLocale
 
    METHOD  new( ... )
 

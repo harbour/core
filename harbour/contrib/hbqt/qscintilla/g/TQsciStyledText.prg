@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QsciStyledText INHERIT HbQtObjectHandler
+FUNCTION QsciStyledText( ... )
+   RETURN HB_QsciStyledText():new( ... )
+
+
+CREATE CLASS QsciStyledText INHERIT HbQtObjectHandler FUNCTION HB_QsciStyledText
 
    METHOD  new( ... )
 

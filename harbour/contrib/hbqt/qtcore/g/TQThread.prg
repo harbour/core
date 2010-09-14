@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QThread INHERIT HbQtObjectHandler, QObject
+FUNCTION QThread( ... )
+   RETURN HB_QThread():new( ... )
+
+
+CREATE CLASS QThread INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QThread
 
    METHOD  new( ... )
 

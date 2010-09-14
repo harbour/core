@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDragEnterEvent INHERIT HbQtObjectHandler, QDragMoveEvent
+FUNCTION QDragEnterEvent( ... )
+   RETURN HB_QDragEnterEvent():new( ... )
+
+
+CREATE CLASS QDragEnterEvent INHERIT HbQtObjectHandler, HB_QDragMoveEvent FUNCTION HB_QDragEnterEvent
 
    METHOD  new( ... )
 

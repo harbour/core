@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSound INHERIT HbQtObjectHandler
+FUNCTION QSound( ... )
+   RETURN HB_QSound():new( ... )
+
+
+CREATE CLASS QSound INHERIT HbQtObjectHandler FUNCTION HB_QSound
 
    METHOD  new( ... )
 

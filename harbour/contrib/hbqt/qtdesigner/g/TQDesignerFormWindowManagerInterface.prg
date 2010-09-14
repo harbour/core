@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDesignerFormWindowManagerInterface INHERIT HbQtObjectHandler, QObject
+FUNCTION QDesignerFormWindowManagerInterface( ... )
+   RETURN HB_QDesignerFormWindowManagerInterface():new( ... )
+
+
+CREATE CLASS QDesignerFormWindowManagerInterface INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QDesignerFormWindowManagerInterface
 
    METHOD  new( ... )
 

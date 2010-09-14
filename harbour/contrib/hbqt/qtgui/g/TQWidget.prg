@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QWidget INHERIT HbQtObjectHandler, QObject, QPaintDevice
+FUNCTION QWidget( ... )
+   RETURN HB_QWidget():new( ... )
+
+
+CREATE CLASS QWidget INHERIT HbQtObjectHandler, HB_QObject, HB_QPaintDevice FUNCTION HB_QWidget
 
    METHOD  new( ... )
 

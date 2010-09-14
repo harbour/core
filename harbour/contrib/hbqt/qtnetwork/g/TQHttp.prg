@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QHttp INHERIT HbQtObjectHandler, QObject
+FUNCTION QHttp( ... )
+   RETURN HB_QHttp():new( ... )
+
+
+CREATE CLASS QHttp INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QHttp
 
    METHOD  new( ... )
 

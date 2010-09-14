@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QBitmap INHERIT HbQtObjectHandler, QPixmap
+FUNCTION QBitmap( ... )
+   RETURN HB_QBitmap():new( ... )
+
+
+CREATE CLASS QBitmap INHERIT HbQtObjectHandler, HB_QPixmap FUNCTION HB_QBitmap
 
    METHOD  new( ... )
 

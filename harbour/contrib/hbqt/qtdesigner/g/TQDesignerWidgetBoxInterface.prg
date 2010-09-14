@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDesignerWidgetBoxInterface INHERIT HbQtObjectHandler, QWidget
+FUNCTION QDesignerWidgetBoxInterface( ... )
+   RETURN HB_QDesignerWidgetBoxInterface():new( ... )
+
+
+CREATE CLASS QDesignerWidgetBoxInterface INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QDesignerWidgetBoxInterface
 
    METHOD  new( ... )
 

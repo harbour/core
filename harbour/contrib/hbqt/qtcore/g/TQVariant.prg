@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QVariant INHERIT HbQtObjectHandler
+FUNCTION QVariant( ... )
+   RETURN HB_QVariant():new( ... )
+
+
+CREATE CLASS QVariant INHERIT HbQtObjectHandler FUNCTION HB_QVariant
 
    METHOD  new( ... )
 

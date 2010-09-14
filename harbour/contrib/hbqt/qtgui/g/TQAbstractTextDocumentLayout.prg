@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QAbstractTextDocumentLayout INHERIT HbQtObjectHandler, QObject
+FUNCTION QAbstractTextDocumentLayout( ... )
+   RETURN HB_QAbstractTextDocumentLayout():new( ... )
+
+
+CREATE CLASS QAbstractTextDocumentLayout INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QAbstractTextDocumentLayout
 
    METHOD  new( ... )
 

@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QResource INHERIT HbQtObjectHandler
+FUNCTION QResource( ... )
+   RETURN HB_QResource():new( ... )
+
+
+CREATE CLASS QResource INHERIT HbQtObjectHandler FUNCTION HB_QResource
 
    METHOD  new( ... )
 

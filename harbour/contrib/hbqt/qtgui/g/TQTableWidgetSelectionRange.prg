@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTableWidgetSelectionRange INHERIT HbQtObjectHandler
+FUNCTION QTableWidgetSelectionRange( ... )
+   RETURN HB_QTableWidgetSelectionRange():new( ... )
+
+
+CREATE CLASS QTableWidgetSelectionRange INHERIT HbQtObjectHandler FUNCTION HB_QTableWidgetSelectionRange
 
    METHOD  new( ... )
 

@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QMovie INHERIT HbQtObjectHandler, QObject
+FUNCTION QMovie( ... )
+   RETURN HB_QMovie():new( ... )
+
+
+CREATE CLASS QMovie INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QMovie
 
    METHOD  new( ... )
 

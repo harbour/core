@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QGraphicsSceneResizeEvent INHERIT HbQtObjectHandler, QGraphicsSceneEvent
+FUNCTION QGraphicsSceneResizeEvent( ... )
+   RETURN HB_QGraphicsSceneResizeEvent():new( ... )
+
+
+CREATE CLASS QGraphicsSceneResizeEvent INHERIT HbQtObjectHandler, HB_QGraphicsSceneEvent FUNCTION HB_QGraphicsSceneResizeEvent
 
    METHOD  new( ... )
 

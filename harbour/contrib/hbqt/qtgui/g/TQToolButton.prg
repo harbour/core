@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QToolButton INHERIT HbQtObjectHandler, QAbstractButton
+FUNCTION QToolButton( ... )
+   RETURN HB_QToolButton():new( ... )
+
+
+CREATE CLASS QToolButton INHERIT HbQtObjectHandler, HB_QAbstractButton FUNCTION HB_QToolButton
 
    METHOD  new( ... )
 

@@ -1613,21 +1613,19 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
    BuildHeader( @txt_, 1 )
 
    aadd( txt_, "" )
+   aadd( txt_, "FUNCTION " + cWidget + "( ... )")
+   aadd( txt_, "   RETURN HB_" + cWidget + "():new( ... )" )
+   aadd( txt_, "" )
+   aadd( txt_, "" )
 
    n := ascan( cls_, {|e_| left( lower( e_[ 1 ] ), 7 ) == "inherit" .and. !empty( e_[ 2 ] ) } )
-   //s := "CREATE CLASS " + cWidget + iif( n > 0, " INHERIT HbQtObjectHandler" + iif( empty( cls_[ n, 2 ] ), "" , ", " + cls_[ n, 2 ] ), "" )
-   s := "CREATE CLASS " + cWidget + " INHERIT HbQtObjectHandler" + iif( n > 0, ", " + cls_[ n, 2 ], "" )
+//   s := "CREATE CLASS " + cWidget + " INHERIT HbQtObjectHandler" + iif( n > 0, ", " + cls_[ n, 2 ], "" )
+   s := "CREATE CLASS " + cWidget + " INHERIT HbQtObjectHandler" + iif( n > 0, ", " + strtran( cls_[ n, 2 ], "Q", "HB_Q" ), "" ) + " FUNCTION HB_" + cWidget
 
    aadd( txt_, s                                 )
    aadd( txt_, "   "                             )
-   #if 0
-   aadd( txt_, "   VAR     pPtr"                 )
-   aadd( txt_, "   "                             )
-   aadd( txt_, "   ERROR HANDLER onError()"      )
-   aadd( txt_, "   "                             )
-   #endif
    aadd( txt_, "   METHOD  new( ... )"           )
-   //aadd( txt_, "   METHOD  configure( xObject )" )
+//   aadd( txt_, "   METHOD  initClass( ... )"     )
    aadd( txt_, "   "                             )
 
    /* Populate METHODS */
@@ -1661,11 +1659,13 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
    aadd( txt_, "   "                                               )
    aadd( txt_, "   "                                               )
    aadd( txt_, "METHOD " + cWidget + ":new( ... )"                 )
+ * aadd( txt_, "METHOD " + cWidget + ":initClass( ... )"           )
    aadd( txt_, "   LOCAL p"                                        )
    aadd( txt_, "   FOR EACH p IN { ... }"                          )
    aadd( txt_, "      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )" )
    aadd( txt_, "   NEXT"                                           )
    aadd( txt_, "   ::pPtr := Qt_" + cWidget + "( ... )"            )
+ * aadd( txt_, "HB_TRACE( HB_TR_ALWAYS, ::pPtr )"                  )
    aadd( txt_, "   RETURN Self"                                    )
    aadd( txt_, "   "                                               )
    /* Define methods */

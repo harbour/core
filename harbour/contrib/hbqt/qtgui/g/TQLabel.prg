@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QLabel INHERIT HbQtObjectHandler, QFrame
+FUNCTION QLabel( ... )
+   RETURN HB_QLabel():new( ... )
+
+
+CREATE CLASS QLabel INHERIT HbQtObjectHandler, HB_QFrame FUNCTION HB_QLabel
 
    METHOD  new( ... )
 

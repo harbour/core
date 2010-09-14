@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionProgressBar INHERIT HbQtObjectHandler, QStyleOption
+FUNCTION QStyleOptionProgressBar( ... )
+   RETURN HB_QStyleOptionProgressBar():new( ... )
+
+
+CREATE CLASS QStyleOptionProgressBar INHERIT HbQtObjectHandler, HB_QStyleOption FUNCTION HB_QStyleOptionProgressBar
 
    METHOD  new( ... )
 

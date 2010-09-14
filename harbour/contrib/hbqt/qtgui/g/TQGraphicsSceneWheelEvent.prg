@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QGraphicsSceneWheelEvent INHERIT HbQtObjectHandler, QGraphicsSceneEvent
+FUNCTION QGraphicsSceneWheelEvent( ... )
+   RETURN HB_QGraphicsSceneWheelEvent():new( ... )
+
+
+CREATE CLASS QGraphicsSceneWheelEvent INHERIT HbQtObjectHandler, HB_QGraphicsSceneEvent FUNCTION HB_QGraphicsSceneWheelEvent
 
    METHOD  new( ... )
 

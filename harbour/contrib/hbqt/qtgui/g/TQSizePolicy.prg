@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSizePolicy INHERIT HbQtObjectHandler
+FUNCTION QSizePolicy( ... )
+   RETURN HB_QSizePolicy():new( ... )
+
+
+CREATE CLASS QSizePolicy INHERIT HbQtObjectHandler FUNCTION HB_QSizePolicy
 
    METHOD  new( ... )
 

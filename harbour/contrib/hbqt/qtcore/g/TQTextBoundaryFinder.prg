@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextBoundaryFinder INHERIT HbQtObjectHandler
+FUNCTION QTextBoundaryFinder( ... )
+   RETURN HB_QTextBoundaryFinder():new( ... )
+
+
+CREATE CLASS QTextBoundaryFinder INHERIT HbQtObjectHandler FUNCTION HB_QTextBoundaryFinder
 
    METHOD  new( ... )
 

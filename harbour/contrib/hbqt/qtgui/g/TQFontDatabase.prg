@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QFontDatabase INHERIT HbQtObjectHandler
+FUNCTION QFontDatabase( ... )
+   RETURN HB_QFontDatabase():new( ... )
+
+
+CREATE CLASS QFontDatabase INHERIT HbQtObjectHandler FUNCTION HB_QFontDatabase
 
    METHOD  new( ... )
 

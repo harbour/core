@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QCoreApplication INHERIT HbQtObjectHandler, QObject
+FUNCTION QCoreApplication( ... )
+   RETURN HB_QCoreApplication():new( ... )
+
+
+CREATE CLASS QCoreApplication INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QCoreApplication
 
    METHOD  new( ... )
 

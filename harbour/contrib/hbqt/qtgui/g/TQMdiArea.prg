@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QMdiArea INHERIT HbQtObjectHandler, QAbstractScrollArea
+FUNCTION QMdiArea( ... )
+   RETURN HB_QMdiArea():new( ... )
+
+
+CREATE CLASS QMdiArea INHERIT HbQtObjectHandler, HB_QAbstractScrollArea FUNCTION HB_QMdiArea
 
    METHOD  new( ... )
 

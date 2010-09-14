@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPainterPath INHERIT HbQtObjectHandler
+FUNCTION QPainterPath( ... )
+   RETURN HB_QPainterPath():new( ... )
+
+
+CREATE CLASS QPainterPath INHERIT HbQtObjectHandler FUNCTION HB_QPainterPath
 
    METHOD  new( ... )
 

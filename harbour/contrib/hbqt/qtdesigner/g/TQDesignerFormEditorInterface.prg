@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDesignerFormEditorInterface INHERIT HbQtObjectHandler, QObject
+FUNCTION QDesignerFormEditorInterface( ... )
+   RETURN HB_QDesignerFormEditorInterface():new( ... )
+
+
+CREATE CLASS QDesignerFormEditorInterface INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QDesignerFormEditorInterface
 
    METHOD  new( ... )
 

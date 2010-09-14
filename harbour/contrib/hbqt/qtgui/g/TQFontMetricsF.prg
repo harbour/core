@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QFontMetricsF INHERIT HbQtObjectHandler
+FUNCTION QFontMetricsF( ... )
+   RETURN HB_QFontMetricsF():new( ... )
+
+
+CREATE CLASS QFontMetricsF INHERIT HbQtObjectHandler FUNCTION HB_QFontMetricsF
 
    METHOD  new( ... )
 

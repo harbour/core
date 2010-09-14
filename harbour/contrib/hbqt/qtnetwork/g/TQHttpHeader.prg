@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QHttpHeader INHERIT HbQtObjectHandler
+FUNCTION QHttpHeader( ... )
+   RETURN HB_QHttpHeader():new( ... )
+
+
+CREATE CLASS QHttpHeader INHERIT HbQtObjectHandler FUNCTION HB_QHttpHeader
 
    METHOD  new( ... )
 

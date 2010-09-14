@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStringRef INHERIT HbQtObjectHandler
+FUNCTION QStringRef( ... )
+   RETURN HB_QStringRef():new( ... )
+
+
+CREATE CLASS QStringRef INHERIT HbQtObjectHandler FUNCTION HB_QStringRef
 
    METHOD  new( ... )
 

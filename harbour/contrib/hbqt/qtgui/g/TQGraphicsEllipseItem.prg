@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QGraphicsEllipseItem INHERIT HbQtObjectHandler, QAbstractGraphicsShapeItem
+FUNCTION QGraphicsEllipseItem( ... )
+   RETURN HB_QGraphicsEllipseItem():new( ... )
+
+
+CREATE CLASS QGraphicsEllipseItem INHERIT HbQtObjectHandler, HB_QAbstractGraphicsShapeItem FUNCTION HB_QGraphicsEllipseItem
 
    METHOD  new( ... )
 

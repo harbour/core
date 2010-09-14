@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QProgressBar INHERIT HbQtObjectHandler, QWidget
+FUNCTION QProgressBar( ... )
+   RETURN HB_QProgressBar():new( ... )
+
+
+CREATE CLASS QProgressBar INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QProgressBar
 
    METHOD  new( ... )
 

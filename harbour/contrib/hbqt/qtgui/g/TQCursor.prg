@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QCursor INHERIT HbQtObjectHandler
+FUNCTION QCursor( ... )
+   RETURN HB_QCursor():new( ... )
+
+
+CREATE CLASS QCursor INHERIT HbQtObjectHandler FUNCTION HB_QCursor
 
    METHOD  new( ... )
 

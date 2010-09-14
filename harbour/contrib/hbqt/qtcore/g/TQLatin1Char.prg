@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QLatin1Char INHERIT HbQtObjectHandler
+FUNCTION QLatin1Char( ... )
+   RETURN HB_QLatin1Char():new( ... )
+
+
+CREATE CLASS QLatin1Char INHERIT HbQtObjectHandler FUNCTION HB_QLatin1Char
 
    METHOD  new( ... )
 

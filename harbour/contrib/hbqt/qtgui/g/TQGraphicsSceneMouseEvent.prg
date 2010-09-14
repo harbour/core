@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QGraphicsSceneMouseEvent INHERIT HbQtObjectHandler, QGraphicsSceneEvent
+FUNCTION QGraphicsSceneMouseEvent( ... )
+   RETURN HB_QGraphicsSceneMouseEvent():new( ... )
+
+
+CREATE CLASS QGraphicsSceneMouseEvent INHERIT HbQtObjectHandler, HB_QGraphicsSceneEvent FUNCTION HB_QGraphicsSceneMouseEvent
 
    METHOD  new( ... )
 

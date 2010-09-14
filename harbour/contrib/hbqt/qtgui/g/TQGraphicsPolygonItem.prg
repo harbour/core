@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QGraphicsPolygonItem INHERIT HbQtObjectHandler, QAbstractGraphicsShapeItem
+FUNCTION QGraphicsPolygonItem( ... )
+   RETURN HB_QGraphicsPolygonItem():new( ... )
+
+
+CREATE CLASS QGraphicsPolygonItem INHERIT HbQtObjectHandler, HB_QAbstractGraphicsShapeItem FUNCTION HB_QGraphicsPolygonItem
 
    METHOD  new( ... )
 

@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPlainTextDocumentLayout INHERIT HbQtObjectHandler, QAbstractTextDocumentLayout
+FUNCTION QPlainTextDocumentLayout( ... )
+   RETURN HB_QPlainTextDocumentLayout():new( ... )
+
+
+CREATE CLASS QPlainTextDocumentLayout INHERIT HbQtObjectHandler, HB_QAbstractTextDocumentLayout FUNCTION HB_QPlainTextDocumentLayout
 
    METHOD  new( ... )
 

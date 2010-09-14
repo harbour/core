@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDateTime INHERIT HbQtObjectHandler
+FUNCTION QDateTime( ... )
+   RETURN HB_QDateTime():new( ... )
+
+
+CREATE CLASS QDateTime INHERIT HbQtObjectHandler FUNCTION HB_QDateTime
 
    METHOD  new( ... )
 

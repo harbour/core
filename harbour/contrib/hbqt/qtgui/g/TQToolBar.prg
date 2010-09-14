@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QToolBar INHERIT HbQtObjectHandler, QWidget
+FUNCTION QToolBar( ... )
+   RETURN HB_QToolBar():new( ... )
+
+
+CREATE CLASS QToolBar INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QToolBar
 
    METHOD  new( ... )
 

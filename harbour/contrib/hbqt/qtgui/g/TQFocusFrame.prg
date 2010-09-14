@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QFocusFrame INHERIT HbQtObjectHandler, QWidget
+FUNCTION QFocusFrame( ... )
+   RETURN HB_QFocusFrame():new( ... )
+
+
+CREATE CLASS QFocusFrame INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QFocusFrame
 
    METHOD  new( ... )
 

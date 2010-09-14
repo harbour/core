@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QConicalGradient INHERIT HbQtObjectHandler, QGradient
+FUNCTION QConicalGradient( ... )
+   RETURN HB_QConicalGradient():new( ... )
+
+
+CREATE CLASS QConicalGradient INHERIT HbQtObjectHandler, HB_QGradient FUNCTION HB_QConicalGradient
 
    METHOD  new( ... )
 

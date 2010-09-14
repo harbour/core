@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTableWidgetItem INHERIT HbQtObjectHandler
+FUNCTION QTableWidgetItem( ... )
+   RETURN HB_QTableWidgetItem():new( ... )
+
+
+CREATE CLASS QTableWidgetItem INHERIT HbQtObjectHandler FUNCTION HB_QTableWidgetItem
 
    METHOD  new( ... )
 

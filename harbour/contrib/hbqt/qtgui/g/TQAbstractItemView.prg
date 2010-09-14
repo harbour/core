@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QAbstractItemView INHERIT HbQtObjectHandler, QAbstractScrollArea
+FUNCTION QAbstractItemView( ... )
+   RETURN HB_QAbstractItemView():new( ... )
+
+
+CREATE CLASS QAbstractItemView INHERIT HbQtObjectHandler, HB_QAbstractScrollArea FUNCTION HB_QAbstractItemView
 
    METHOD  new( ... )
 

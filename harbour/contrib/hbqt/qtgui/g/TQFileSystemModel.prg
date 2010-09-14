@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QFileSystemModel INHERIT HbQtObjectHandler, QAbstractItemModel
+FUNCTION QFileSystemModel( ... )
+   RETURN HB_QFileSystemModel():new( ... )
+
+
+CREATE CLASS QFileSystemModel INHERIT HbQtObjectHandler, HB_QAbstractItemModel FUNCTION HB_QFileSystemModel
 
    METHOD  new( ... )
 

@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDesignerPropertyEditorInterface INHERIT HbQtObjectHandler, QWidget
+FUNCTION QDesignerPropertyEditorInterface( ... )
+   RETURN HB_QDesignerPropertyEditorInterface():new( ... )
+
+
+CREATE CLASS QDesignerPropertyEditorInterface INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QDesignerPropertyEditorInterface
 
    METHOD  new( ... )
 

@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QBuffer INHERIT HbQtObjectHandler, QIODevice
+FUNCTION QBuffer( ... )
+   RETURN HB_QBuffer():new( ... )
+
+
+CREATE CLASS QBuffer INHERIT HbQtObjectHandler, HB_QIODevice FUNCTION HB_QBuffer
 
    METHOD  new( ... )
 

@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QIcon INHERIT HbQtObjectHandler
+FUNCTION QIcon( ... )
+   RETURN HB_QIcon():new( ... )
+
+
+CREATE CLASS QIcon INHERIT HbQtObjectHandler FUNCTION HB_QIcon
 
    METHOD  new( ... )
 

@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QWidgetItem INHERIT HbQtObjectHandler, QLayoutItem
+FUNCTION QWidgetItem( ... )
+   RETURN HB_QWidgetItem():new( ... )
+
+
+CREATE CLASS QWidgetItem INHERIT HbQtObjectHandler, HB_QLayoutItem FUNCTION HB_QWidgetItem
 
    METHOD  new( ... )
 

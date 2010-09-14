@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPrinterInfo INHERIT HbQtObjectHandler
+FUNCTION QPrinterInfo( ... )
+   RETURN HB_QPrinterInfo():new( ... )
+
+
+CREATE CLASS QPrinterInfo INHERIT HbQtObjectHandler FUNCTION HB_QPrinterInfo
 
    METHOD  new( ... )
 

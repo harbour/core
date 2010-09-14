@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPrintDialog INHERIT HbQtObjectHandler, QAbstractPrintDialog
+FUNCTION QPrintDialog( ... )
+   RETURN HB_QPrintDialog():new( ... )
+
+
+CREATE CLASS QPrintDialog INHERIT HbQtObjectHandler, HB_QAbstractPrintDialog FUNCTION HB_QPrintDialog
 
    METHOD  new( ... )
 

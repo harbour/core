@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPrintEngine INHERIT HbQtObjectHandler
+FUNCTION QPrintEngine( ... )
+   RETURN HB_QPrintEngine():new( ... )
+
+
+CREATE CLASS QPrintEngine INHERIT HbQtObjectHandler FUNCTION HB_QPrintEngine
 
    METHOD  new( ... )
 

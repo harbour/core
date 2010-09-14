@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPaintDevice INHERIT HbQtObjectHandler
+FUNCTION QPaintDevice( ... )
+   RETURN HB_QPaintDevice():new( ... )
+
+
+CREATE CLASS QPaintDevice INHERIT HbQtObjectHandler FUNCTION HB_QPaintDevice
 
    METHOD  new( ... )
 

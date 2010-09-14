@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QLCDNumber INHERIT HbQtObjectHandler, QFrame
+FUNCTION QLCDNumber( ... )
+   RETURN HB_QLCDNumber():new( ... )
+
+
+CREATE CLASS QLCDNumber INHERIT HbQtObjectHandler, HB_QFrame FUNCTION HB_QLCDNumber
 
    METHOD  new( ... )
 

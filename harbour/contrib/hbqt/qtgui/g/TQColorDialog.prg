@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QColorDialog INHERIT HbQtObjectHandler, QDialog
+FUNCTION QColorDialog( ... )
+   RETURN HB_QColorDialog():new( ... )
+
+
+CREATE CLASS QColorDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QColorDialog
 
    METHOD  new( ... )
 

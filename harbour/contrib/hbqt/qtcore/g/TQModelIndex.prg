@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QModelIndex INHERIT HbQtObjectHandler
+FUNCTION QModelIndex( ... )
+   RETURN HB_QModelIndex():new( ... )
+
+
+CREATE CLASS QModelIndex INHERIT HbQtObjectHandler FUNCTION HB_QModelIndex
 
    METHOD  new( ... )
 

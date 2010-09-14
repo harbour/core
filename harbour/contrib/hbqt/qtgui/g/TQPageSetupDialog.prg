@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPageSetupDialog INHERIT HbQtObjectHandler, QDialog
+FUNCTION QPageSetupDialog( ... )
+   RETURN HB_QPageSetupDialog():new( ... )
+
+
+CREATE CLASS QPageSetupDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QPageSetupDialog
 
    METHOD  new( ... )
 

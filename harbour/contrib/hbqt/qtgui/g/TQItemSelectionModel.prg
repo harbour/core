@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QItemSelectionModel INHERIT HbQtObjectHandler, QObject
+FUNCTION QItemSelectionModel( ... )
+   RETURN HB_QItemSelectionModel():new( ... )
+
+
+CREATE CLASS QItemSelectionModel INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QItemSelectionModel
 
    METHOD  new( ... )
 

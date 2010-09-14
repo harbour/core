@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSize INHERIT HbQtObjectHandler
+FUNCTION QSize( ... )
+   RETURN HB_QSize():new( ... )
+
+
+CREATE CLASS QSize INHERIT HbQtObjectHandler FUNCTION HB_QSize
 
    METHOD  new( ... )
 

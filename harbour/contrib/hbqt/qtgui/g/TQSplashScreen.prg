@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSplashScreen INHERIT HbQtObjectHandler, QWidget
+FUNCTION QSplashScreen( ... )
+   RETURN HB_QSplashScreen():new( ... )
+
+
+CREATE CLASS QSplashScreen INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QSplashScreen
 
    METHOD  new( ... )
 

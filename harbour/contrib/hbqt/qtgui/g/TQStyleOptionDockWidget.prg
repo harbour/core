@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionDockWidget INHERIT HbQtObjectHandler, QStyleOption
+FUNCTION QStyleOptionDockWidget( ... )
+   RETURN HB_QStyleOptionDockWidget():new( ... )
+
+
+CREATE CLASS QStyleOptionDockWidget INHERIT HbQtObjectHandler, HB_QStyleOption FUNCTION HB_QStyleOptionDockWidget
 
    METHOD  new( ... )
 

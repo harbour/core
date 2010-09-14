@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextStream INHERIT HbQtObjectHandler
+FUNCTION QTextStream( ... )
+   RETURN HB_QTextStream():new( ... )
+
+
+CREATE CLASS QTextStream INHERIT HbQtObjectHandler FUNCTION HB_QTextStream
 
    METHOD  new( ... )
 

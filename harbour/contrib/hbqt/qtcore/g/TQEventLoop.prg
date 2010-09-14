@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QEventLoop INHERIT HbQtObjectHandler, QObject
+FUNCTION QEventLoop( ... )
+   RETURN HB_QEventLoop():new( ... )
+
+
+CREATE CLASS QEventLoop INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QEventLoop
 
    METHOD  new( ... )
 

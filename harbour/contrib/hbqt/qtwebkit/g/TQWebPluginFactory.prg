@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QWebPluginFactory INHERIT HbQtObjectHandler, QObject
+FUNCTION QWebPluginFactory( ... )
+   RETURN HB_QWebPluginFactory():new( ... )
+
+
+CREATE CLASS QWebPluginFactory INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QWebPluginFactory
 
    METHOD  new( ... )
 

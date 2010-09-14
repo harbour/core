@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextListFormat INHERIT HbQtObjectHandler, QTextFormat
+FUNCTION QTextListFormat( ... )
+   RETURN HB_QTextListFormat():new( ... )
+
+
+CREATE CLASS QTextListFormat INHERIT HbQtObjectHandler, HB_QTextFormat FUNCTION HB_QTextListFormat
 
    METHOD  new( ... )
 

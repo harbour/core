@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSettings INHERIT HbQtObjectHandler, QObject
+FUNCTION QSettings( ... )
+   RETURN HB_QSettings():new( ... )
+
+
+CREATE CLASS QSettings INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QSettings
 
    METHOD  new( ... )
 

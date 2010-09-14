@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionFocusRect INHERIT HbQtObjectHandler, QStyleOption
+FUNCTION QStyleOptionFocusRect( ... )
+   RETURN HB_QStyleOptionFocusRect():new( ... )
+
+
+CREATE CLASS QStyleOptionFocusRect INHERIT HbQtObjectHandler, HB_QStyleOption FUNCTION HB_QStyleOptionFocusRect
 
    METHOD  new( ... )
 

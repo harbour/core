@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QMdiSubWindow INHERIT HbQtObjectHandler, QWidget
+FUNCTION QMdiSubWindow( ... )
+   RETURN HB_QMdiSubWindow():new( ... )
+
+
+CREATE CLASS QMdiSubWindow INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QMdiSubWindow
 
    METHOD  new( ... )
 

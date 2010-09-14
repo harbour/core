@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextCursor INHERIT HbQtObjectHandler
+FUNCTION QTextCursor( ... )
+   RETURN HB_QTextCursor():new( ... )
+
+
+CREATE CLASS QTextCursor INHERIT HbQtObjectHandler FUNCTION HB_QTextCursor
 
    METHOD  new( ... )
 

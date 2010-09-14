@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS HBQTextBlockUserData INHERIT HbQtObjectHandler
+FUNCTION HBQTextBlockUserData( ... )
+   RETURN HB_HBQTextBlockUserData():new( ... )
+
+
+CREATE CLASS HBQTextBlockUserData INHERIT HbQtObjectHandler FUNCTION HB_HBQTextBlockUserData
 
    METHOD  new( ... )
 

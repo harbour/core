@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QGroupBox INHERIT HbQtObjectHandler, QWidget
+FUNCTION QGroupBox( ... )
+   RETURN HB_QGroupBox():new( ... )
+
+
+CREATE CLASS QGroupBox INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QGroupBox
 
    METHOD  new( ... )
 

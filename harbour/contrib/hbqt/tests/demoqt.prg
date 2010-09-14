@@ -98,7 +98,7 @@ INIT PROCEDURE Qt_Start()
 
    hbqt_errorsys()
 
-   s_qApp := QApplication():new()
+   s_qApp := QApplication()
    RETURN
 
 EXIT PROCEDURE Qt_End()
@@ -117,28 +117,26 @@ PROCEDURE Main()
    Local oLabel, oBtn, oDA, oWnd, oProg, oSBar
    LOCAL aMenu, aTool, aGrid, aTabs, aList
 
-   oWnd := QMainWindow():new()
+   oWnd := QMainWindow()
    oWnd:show()
 
    oWnd:setMouseTracking( .t. )
    oWnd:setWindowTitle( "Harbour-Qt Implementation Test Dialog" )
    oWnd:setWindowIcon( "test" )
-
    oWnd:resize( 900, 500 )
 
-   oDA    := QWidget():new( oWnd )
+   oDA    := QWidget( oWnd )
    oWnd:setCentralWidget( oDA )
 
    aMenu  := Build_MenuBar( oWnd )
    aTool  := Build_ToolBar( oWnd )
 
-   oSBar  := QStatusBar():new( oWnd )
+   oSBar  := QStatusBar( oWnd )
    oWnd:setStatusBar( oSBar )
    oSBar:showMessage( "Harbour-QT Statusbar Ready!" )
 
    oLabel := Build_Label( oDA, { 30,190 }, { 300, 30 } )
    oBtn   := Build_PushButton( oDA, { 30,240 }, { 100,50 } )
-
    aGrid  := Build_Grid( oDA, { 30, 30 }, { 450,150 } )
    aTabs  := Build_Tabs( oDA, { 510, 5 }, { 360, 400 } )
 
@@ -179,14 +177,14 @@ PROCEDURE ExecOneMore()
    LOCAL aMenu, aTool, aGrid, aTabs, aList, oEventLoop
    LOCAL lExit := .f.
 
-   oWnd := QMainWindow():new()
+   oWnd := QMainWindow()
 
    oWnd:setMouseTracking( .t. )
    oWnd:setWindowTitle( "Harbour-Qt Implementation Test Dialog" )
    oWnd:setWindowIcon( "test" )
    oWnd:resize( 900, 500 )
 
-   oDA    := QWidget():new( oWnd )
+   oDA    := QWidget( oWnd )
    oWnd:setCentralWidget( oDA )
 
    oWnd:show()
@@ -200,11 +198,11 @@ PROCEDURE ExecOneMore()
    oProg  := Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
    aList  := Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
 
-   oSBar  := QStatusBar():new( oWnd )
+   oSBar  := QStatusBar( oWnd )
    oWnd:setStatusBar( oSBar )
    oSBar:showMessage( "Harbour-QT Statusbar Ready!" )
 
-   oEventLoop := QEventLoop():new( oWnd )
+   oEventLoop := QEventLoop( oWnd )
 
    DO WHILE .t.
       oEventLoop:processEvents()
@@ -228,13 +226,13 @@ STATIC FUNCTION Build_MenuBar( oWnd )
    LOCAL oActNew, oActOpen, oActSave, oActExit
    LOCAL oActColors, oActFonts, oActPgSetup, oActPreview, oActWiz, oActWeb, oActOther
 
-   oMenuBar := QMenuBar():new()
+   oMenuBar := QMenuBar()
    oMenuBar:resize( oWnd:width(), 25 )
 
-   oMenu1 := QMenu():new()
+   oMenu1 := QMenu()
    oMenu1:setTitle( "&File" )
 
-   oActNew := QAction():new( oMenu1 )
+   oActNew := QAction( oMenu1 )
    oActNew:setText( "&New" )
    oActNew:setIcon( "new.png" )
    oActNew:connect( "triggered(bool)", {|w,l| FileDialog( "New" , w, l ) } )
@@ -255,7 +253,7 @@ STATIC FUNCTION Build_MenuBar( oWnd )
 
    oMenuBar:addMenu( oMenu1 )
 
-   oMenu2 := QMenu():new()
+   oMenu2 := QMenu()
    oMenu2:setTitle( "&Dialogs" )
 
    oActColors := QAction():from( oMenu2:addAction( "&Colors" ) )
@@ -298,10 +296,10 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    LOCAL oTB, oActNew, oActOpen, oActSave
 
    /* Create a Toolbar Object */
-   oTB := QToolBar():new()
+   oTB := QToolBar()
 
    /* Create an action */
-   oActNew := QAction():new( oWnd )
+   oActNew := QAction( oWnd )
    oActNew:setText( "&New" )
    oActNew:setIcon( "new.png" )
    oActNew:setToolTip( "A New File" )
@@ -311,7 +309,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oTB:addAction( oActNew )
 
    /* Create another action */
-   oActOpen := QAction():new( oWnd )
+   oActOpen := QAction( oWnd )
    oActOpen:setText( "&Open" )
    oActOpen:setIcon( "open.png" )
    oActOpen:setToolTip( "Select a file to be opened!" )
@@ -322,7 +320,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oTB:addSeparator()
 
    /* Create another action */
-   oActSave := QAction():new( oWnd )
+   oActSave := QAction( oWnd )
    oActSave:setText( "&Save" )
    oActSave:setIcon( "save.png" )
    oActSave:setToolTip( "Save this file!" )
@@ -343,7 +341,7 @@ STATIC FUNCTION Build_PushButton( oWnd, aPos, aSize, cLabel, cMsg, lExit )
    DEFAULT cLabel TO "Push Button"
    DEFAULT cMsg   TO "Push Button Pressed"
 
-   oBtn := QPushButton():new( oWnd )
+   oBtn := QPushButton( oWnd )
    oBtn:setText( cLabel )
    oBtn:move( aPos[ 1 ],aPos[ 2 ] )
    oBtn:resize( aSize[ 1 ],aSize[ 2 ] )
@@ -361,18 +359,18 @@ STATIC FUNCTION Build_PushButton( oWnd, aPos, aSize, cLabel, cMsg, lExit )
 STATIC FUNCTION Build_Grid( oWnd, aPos, aSize )
    LOCAL oGrid, oBrushBackItem0x0, oBrushForeItem0x0, oGridItem0x0
 
-   oGrid := QTableWidget():new( oWnd )
+   oGrid := QTableWidget( oWnd )
    oGrid:setRowCount( 2 )
    oGrid:setColumnCount( 4 )
    //
-   oBrushBackItem0x0 := QBrush():new()
+   oBrushBackItem0x0 := QBrush()
    oBrushBackItem0x0:setStyle( 1 )        // Solid Color
    oBrushBackItem0x0:setColor_1( 10 )     // http://doc.qtsoftware.com/4.5/qt.html#GlobalColor-enum
    //
-   oBrushForeItem0x0 := QBrush():new()
+   oBrushForeItem0x0 := QBrush()
    oBrushForeItem0x0:setColor_1( 7 )
    //
-   oGridItem0x0 := QTableWidgetItem():new()
+   oGridItem0x0 := QTableWidgetItem()
    oGridItem0x0:setBackground( oBrushBackItem0x0 )
    oGridItem0x0:setForeground( oBrushForeItem0x0 )
    oGridItem0x0:setText( "Item 0x0" )
@@ -391,11 +389,11 @@ STATIC FUNCTION Build_Grid( oWnd, aPos, aSize )
 STATIC FUNCTION Build_Tabs( oWnd, aPos, aSize )
    LOCAL oTabWidget, oTab1, oTab2, oTab3, aTree, aCntl, aText
 
-   oTabWidget := QTabWidget():new( oWnd )
+   oTabWidget := QTabWidget( oWnd )
 
-   oTab1 := QWidget():new()
-   oTab2 := QWidget():new()
-   oTab3 := QWidget():new()
+   oTab1 := QWidget()
+   oTab2 := QWidget()
+   oTab3 := QWidget()
 
    oTabWidget:addTab( oTab1, "Folders"  )
    oTabWidget:addTab( oTab2, "Controls" )
@@ -419,10 +417,10 @@ STATIC FUNCTION Build_Tabs( oWnd, aPos, aSize )
 STATIC FUNCTION Build_TreeView( oWnd )
    LOCAL oTV, oDirModel
 
-   oTV := QTreeView():new( oWnd )
+   oTV := QTreeView( oWnd )
    oTV:setMouseTracking( .t. )
 *  oTV:connect( QT_EVE_HOVERED, {|i| HB_TRACE( HB_TR_ALWAYS, ( "oTV:hovered" ) } )
-   oDirModel := QDirModel():new()
+   oDirModel := QDirModel()
    oTV:setModel( oDirModel )
    oTV:move( 5, 7 )
    oTV:resize( 345, 365 )
@@ -435,11 +433,11 @@ STATIC FUNCTION Build_TreeView( oWnd )
 STATIC FUNCTION Build_ListBox( oWnd, aPos, aSize )
    LOCAL oListBox, oStrList, oStrModel
 
-   oListBox := QListView():New( oWnd )
+   oListBox := QListView( oWnd )
    oListBox:setMouseTracking( .t. )
 *  oListBox:connect( QT_EVE_HOVERED, {|i| HB_TRACE( HB_TR_ALWAYS, ( "oListBox:hovered" ) } )
 
-   oStrList := QStringList():new()
+   oStrList := QStringList()
 
    oStrList:append( "India"          )
    oStrList:append( "United States"  )
@@ -450,7 +448,7 @@ STATIC FUNCTION Build_ListBox( oWnd, aPos, aSize )
    oStrList:append( "China"          )
    oStrList:sort()
 
-   oStrModel := QStringListModel():new()
+   oStrModel := QStringListModel()
    oStrModel:setStringList( oStrList )
 
    oListBox:setModel( oStrModel )
@@ -465,7 +463,7 @@ STATIC FUNCTION Build_ListBox( oWnd, aPos, aSize )
 STATIC FUNCTION Build_TextBox( oWnd )
    LOCAL oTextBox
 
-   oTextBox := QTextEdit():new( oWnd )
+   oTextBox := QTextEdit( oWnd )
    oTextBox:Move( 5, 7 )
    oTextBox:Resize( 345,365 )
    oTextBox:setAcceptRichText( .t. )
@@ -479,7 +477,7 @@ STATIC FUNCTION Build_TextBox( oWnd )
 STATIC FUNCTION Build_Controls( oWnd )
    LOCAL oEdit, oCheckBox, oComboBox, oSpinBox, oRadioButton
 
-   oEdit := QLineEdit():new( oWnd )
+   oEdit := QLineEdit( oWnd )
    oEdit:connect( QT_EVE_RETURNPRESSED, {|i| i := i, MsgInfo( oEdit:text() ) } )
    oEdit:move( 5, 10 )
    oEdit:resize( 345, 30 )
@@ -488,7 +486,7 @@ STATIC FUNCTION Build_Controls( oWnd )
    oEdit:setAlignment( 1 )   // 1: Left  2: Right  4: center 8: use all textbox length
    oEdit:show()
 
-   oComboBox := QComboBox():New( oWnd )
+   oComboBox := QComboBox( oWnd )
    oComboBox:addItem( "First"  )
    oComboBox:addItem( "Second" )
    oComboBox:addItem( "Third"  )
@@ -497,19 +495,19 @@ STATIC FUNCTION Build_Controls( oWnd )
    oComboBox:resize( 345, 30 )
    oComboBox:show()
 
-   oCheckBox := QCheckBox():New( oWnd )
+   oCheckBox := QCheckBox( oWnd )
    oCheckBox:connect( QT_EVE_STATECHANGED_I, {|i| i := i, MsgInfo( IF( i == 0,"Uncheckd","Checked" ) ) } )
    oCheckBox:setText( "Testing CheckBox HbQt" )
    oCheckBox:move( 5, 110 )
    oCheckBox:resize( 345, 30 )
    oCheckBox:show()
 
-   oSpinBox := QSpinBox():New( oWnd )
+   oSpinBox := QSpinBox( oWnd )
    oSpinBox:Move( 5, 160 )
    oSpinBox:ReSize( 345, 30 )
    oSpinBox:Show()
 
-   oRadioButton := QRadioButton():New( oWnd )
+   oRadioButton := QRadioButton( oWnd )
    oRadioButton:connect( QT_EVE_CLICKED, {|i| i := i, MsgInfo( "Checked" ) } )
    oRadioButton:Move( 5, 210 )
    oRadioButton:ReSize( 345, 30 )
@@ -522,7 +520,7 @@ STATIC FUNCTION Build_Controls( oWnd )
 STATIC FUNCTION Build_ProgressBar( oWnd, aPos, aSize )
    LOCAL oProgressBar
 
-   oProgressBar := QProgressBar():New( oWnd )
+   oProgressBar := QProgressBar( oWnd )
    oProgressBar:SetRange( 1, 1500 )
    oProgressBar:Setvalue( 500 )
    oProgressBar:Move( aPos[ 1 ], aPos[ 2 ] )
@@ -536,7 +534,7 @@ STATIC FUNCTION Build_ProgressBar( oWnd, aPos, aSize )
 STATIC FUNCTION Build_Label( oWnd, aPos, aSize )
    LOCAL oLabel
 
-   oLabel := QLabel():New( oWnd )
+   oLabel := QLabel( oWnd )
    oLabel:SetTextFormat( 1 )  // 0 text plain  1 RichText
    oLabel:SetText( [<font color="Blue" size=6 ><u>This is a</u> <i>Label</i> in <b>Harbour QT</b></font>] )
    oLabel:Move( aPos[ 1 ], aPos[ 2 ] )
@@ -550,7 +548,7 @@ STATIC FUNCTION Build_Label( oWnd, aPos, aSize )
 STATIC FUNCTION MsgInfo( cMsg )
    LOCAL oMB
 
-   oMB := QMessageBox():new()
+   oMB := QMessageBox()
    oMB:setInformativeText( cMsg )
    oMB:setWindowTitle( "Harbour-QT" )
    oMB:exec()
@@ -565,7 +563,7 @@ STATIC FUNCTION MsgInfo( cMsg )
 STATIC FUNCTION FileDialog()
    LOCAL oFD
 
-   oFD := QFileDialog():new()
+   oFD := QFileDialog()
    oFD:setWindowTitle( "Select a File" )
    oFD:exec()
 
@@ -581,32 +579,32 @@ STATIC FUNCTION Dialogs( cType )
 
    DO CASE
    CASE cType == "PageSetup"
-      oDlg := QPageSetupDialog():new()
+      oDlg := QPageSetupDialog()
       oDlg:setWindowTitle( "Harbour-QT PageSetup Dialog" )
       oDlg:exec()
    CASE cType == "Preview"
-      oDlg := QPrintPreviewDialog():new()
+      oDlg := QPrintPreviewDialog()
       oDlg:setWindowTitle( "Harbour-QT Preview Dialog" )
       oDlg:exec()
    CASE cType == "Wizard"
-      oDlg := QWizard():new()
+      oDlg := QWizard()
       oDlg:setWindowTitle( "Harbour-QT Wizard to Show Slides etc." )
       oDlg:exec()
    CASE cType == "Colors"
-      oDlg := QColorDialog():new()
+      oDlg := QColorDialog()
       oDlg:setWindowTitle( "Harbour-QT Color Selection Dialog" )
       oDlg:exec()
    CASE cType == "WebPage"
       #if 0    // Till we resolve for oDlg:show()
-      oDlg := QWebView():new()
-      oUrl := QUrl():new()
+      oDlg := QWebView()
+      oUrl := QUrl()
       oUrl:setUrl( "http://www.harbour.vouch.info" )
       QT_QWebView_SetUrl( oDlg:pPtr, oUrl:pPtr )
       oDlg:setWindowTitle( "Harbour-QT Web Page Navigator" )
       oDlg:exec()
       #endif
    CASE cType == "Fonts"
-      oDlg := QFontDialog():new()
+      oDlg := QFontDialog()
       oDlg:setWindowTitle( "Harbour-QT Font Selector" )
       oDlg:exec()
    ENDCASE
@@ -628,7 +626,7 @@ PROCEDURE hb_GtSys()
 
 FUNCTION ShowInSystemTray( oWnd )
 
-   oMenuSys := QMenu():new( oWnd )
+   oMenuSys := QMenu( oWnd )
    oMenuSys:setTitle( "&File" )
 
    oActShow := QAction():from( oMenuSys:addAction_1( "new.png" , "&Show" ) )
@@ -639,7 +637,7 @@ FUNCTION ShowInSystemTray( oWnd )
    oActHide := QAction():from( oMenuSys:addAction_1( "new.png" , "&Show" ) )
    oActHide:connect( QT_EVE_TRIGGERED_B, {|| oWnd:hide() } )
 
-   oSys := QSystemTrayIcon():new( oWnd )
+   oSys := QSystemTrayIcon( oWnd )
    oSys:setIcon( 'new.png' )
    oSys:setContextMenu( oMenuSys )
    oSys:showMessage( "Harbour-QT", "This is Harbour-QT System Tray" )

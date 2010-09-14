@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QRadioButton INHERIT HbQtObjectHandler, QAbstractButton
+FUNCTION QRadioButton( ... )
+   RETURN HB_QRadioButton():new( ... )
+
+
+CREATE CLASS QRadioButton INHERIT HbQtObjectHandler, HB_QAbstractButton FUNCTION HB_QRadioButton
 
    METHOD  new( ... )
 

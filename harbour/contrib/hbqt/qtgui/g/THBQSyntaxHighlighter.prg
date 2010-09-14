@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS HBQSyntaxHighlighter INHERIT HbQtObjectHandler, QSyntaxHighlighter
+FUNCTION HBQSyntaxHighlighter( ... )
+   RETURN HB_HBQSyntaxHighlighter():new( ... )
+
+
+CREATE CLASS HBQSyntaxHighlighter INHERIT HbQtObjectHandler, HB_QSyntaxHighlighter FUNCTION HB_HBQSyntaxHighlighter
 
    METHOD  new( ... )
 

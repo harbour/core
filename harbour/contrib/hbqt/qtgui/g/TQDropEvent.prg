@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDropEvent INHERIT HbQtObjectHandler, QEvent
+FUNCTION QDropEvent( ... )
+   RETURN HB_QDropEvent():new( ... )
+
+
+CREATE CLASS QDropEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_QDropEvent
 
    METHOD  new( ... )
 

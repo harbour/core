@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QButtonGroup INHERIT HbQtObjectHandler, QObject
+FUNCTION QButtonGroup( ... )
+   RETURN HB_QButtonGroup():new( ... )
+
+
+CREATE CLASS QButtonGroup INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QButtonGroup
 
    METHOD  new( ... )
 

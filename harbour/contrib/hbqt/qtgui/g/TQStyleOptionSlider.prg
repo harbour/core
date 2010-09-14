@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionSlider INHERIT HbQtObjectHandler, QStyleOptionComplex
+FUNCTION QStyleOptionSlider( ... )
+   RETURN HB_QStyleOptionSlider():new( ... )
+
+
+CREATE CLASS QStyleOptionSlider INHERIT HbQtObjectHandler, HB_QStyleOptionComplex FUNCTION HB_QStyleOptionSlider
 
    METHOD  new( ... )
 

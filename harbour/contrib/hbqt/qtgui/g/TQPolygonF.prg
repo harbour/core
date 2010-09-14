@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPolygonF INHERIT HbQtObjectHandler
+FUNCTION QPolygonF( ... )
+   RETURN HB_QPolygonF():new( ... )
+
+
+CREATE CLASS QPolygonF INHERIT HbQtObjectHandler FUNCTION HB_QPolygonF
 
    METHOD  new( ... )
 

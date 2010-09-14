@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QWizardPage INHERIT HbQtObjectHandler, QWidget
+FUNCTION QWizardPage( ... )
+   RETURN HB_QWizardPage():new( ... )
+
+
+CREATE CLASS QWizardPage INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QWizardPage
 
    METHOD  new( ... )
 

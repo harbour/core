@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QKeySequence INHERIT HbQtObjectHandler
+FUNCTION QKeySequence( ... )
+   RETURN HB_QKeySequence():new( ... )
+
+
+CREATE CLASS QKeySequence INHERIT HbQtObjectHandler FUNCTION HB_QKeySequence
 
    METHOD  new( ... )
 

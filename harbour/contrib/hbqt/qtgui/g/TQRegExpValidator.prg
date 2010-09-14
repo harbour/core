@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QRegExpValidator INHERIT HbQtObjectHandler, QValidator
+FUNCTION QRegExpValidator( ... )
+   RETURN HB_QRegExpValidator():new( ... )
+
+
+CREATE CLASS QRegExpValidator INHERIT HbQtObjectHandler, HB_QValidator FUNCTION HB_QRegExpValidator
 
    METHOD  new( ... )
 

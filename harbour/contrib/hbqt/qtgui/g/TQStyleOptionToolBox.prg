@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionToolBox INHERIT HbQtObjectHandler, QStyleOption
+FUNCTION QStyleOptionToolBox( ... )
+   RETURN HB_QStyleOptionToolBox():new( ... )
+
+
+CREATE CLASS QStyleOptionToolBox INHERIT HbQtObjectHandler, HB_QStyleOption FUNCTION HB_QStyleOptionToolBox
 
    METHOD  new( ... )
 

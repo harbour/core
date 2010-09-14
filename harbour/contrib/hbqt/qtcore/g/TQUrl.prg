@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QUrl INHERIT HbQtObjectHandler, QObject
+FUNCTION QUrl( ... )
+   RETURN HB_QUrl():new( ... )
+
+
+CREATE CLASS QUrl INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QUrl
 
    METHOD  new( ... )
 

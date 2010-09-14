@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QProcess INHERIT HbQtObjectHandler, QIODevice
+FUNCTION QProcess( ... )
+   RETURN HB_QProcess():new( ... )
+
+
+CREATE CLASS QProcess INHERIT HbQtObjectHandler, HB_QIODevice FUNCTION HB_QProcess
 
    METHOD  new( ... )
 

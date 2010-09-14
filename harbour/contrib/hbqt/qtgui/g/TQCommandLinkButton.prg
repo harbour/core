@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QCommandLinkButton INHERIT HbQtObjectHandler, QPushButton
+FUNCTION QCommandLinkButton( ... )
+   RETURN HB_QCommandLinkButton():new( ... )
+
+
+CREATE CLASS QCommandLinkButton INHERIT HbQtObjectHandler, HB_QPushButton FUNCTION HB_QCommandLinkButton
 
    METHOD  new( ... )
 

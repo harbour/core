@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDoubleSpinBox INHERIT HbQtObjectHandler, QAbstractSpinBox
+FUNCTION QDoubleSpinBox( ... )
+   RETURN HB_QDoubleSpinBox():new( ... )
+
+
+CREATE CLASS QDoubleSpinBox INHERIT HbQtObjectHandler, HB_QAbstractSpinBox FUNCTION HB_QDoubleSpinBox
 
    METHOD  new( ... )
 

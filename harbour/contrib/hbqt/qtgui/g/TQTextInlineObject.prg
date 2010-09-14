@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextInlineObject INHERIT HbQtObjectHandler
+FUNCTION QTextInlineObject( ... )
+   RETURN HB_QTextInlineObject():new( ... )
+
+
+CREATE CLASS QTextInlineObject INHERIT HbQtObjectHandler FUNCTION HB_QTextInlineObject
 
    METHOD  new( ... )
 

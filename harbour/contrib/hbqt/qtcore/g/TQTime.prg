@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTime INHERIT HbQtObjectHandler
+FUNCTION QTime( ... )
+   RETURN HB_QTime():new( ... )
+
+
+CREATE CLASS QTime INHERIT HbQtObjectHandler FUNCTION HB_QTime
 
    METHOD  new( ... )
 

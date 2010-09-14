@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QLineEdit INHERIT HbQtObjectHandler, QWidget
+FUNCTION QLineEdit( ... )
+   RETURN HB_QLineEdit():new( ... )
+
+
+CREATE CLASS QLineEdit INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QLineEdit
 
    METHOD  new( ... )
 

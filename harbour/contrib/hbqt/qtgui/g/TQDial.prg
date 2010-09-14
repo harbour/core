@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDial INHERIT HbQtObjectHandler, QAbstractSlider
+FUNCTION QDial( ... )
+   RETURN HB_QDial():new( ... )
+
+
+CREATE CLASS QDial INHERIT HbQtObjectHandler, HB_QAbstractSlider FUNCTION HB_QDial
 
    METHOD  new( ... )
 

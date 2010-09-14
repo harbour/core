@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QColor INHERIT HbQtObjectHandler
+FUNCTION QColor( ... )
+   RETURN HB_QColor():new( ... )
+
+
+CREATE CLASS QColor INHERIT HbQtObjectHandler FUNCTION HB_QColor
 
    METHOD  new( ... )
 

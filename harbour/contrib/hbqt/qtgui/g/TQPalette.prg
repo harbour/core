@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPalette INHERIT HbQtObjectHandler
+FUNCTION QPalette( ... )
+   RETURN HB_QPalette():new( ... )
+
+
+CREATE CLASS QPalette INHERIT HbQtObjectHandler FUNCTION HB_QPalette
 
    METHOD  new( ... )
 

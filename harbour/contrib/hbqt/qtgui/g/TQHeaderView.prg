@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QHeaderView INHERIT HbQtObjectHandler, QAbstractItemView
+FUNCTION QHeaderView( ... )
+   RETURN HB_QHeaderView():new( ... )
+
+
+CREATE CLASS QHeaderView INHERIT HbQtObjectHandler, HB_QAbstractItemView FUNCTION HB_QHeaderView
 
    METHOD  new( ... )
 

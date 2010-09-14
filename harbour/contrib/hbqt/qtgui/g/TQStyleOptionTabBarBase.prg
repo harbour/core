@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionTabBarBase INHERIT HbQtObjectHandler, QStyleOption
+FUNCTION QStyleOptionTabBarBase( ... )
+   RETURN HB_QStyleOptionTabBarBase():new( ... )
+
+
+CREATE CLASS QStyleOptionTabBarBase INHERIT HbQtObjectHandler, HB_QStyleOption FUNCTION HB_QStyleOptionTabBarBase
 
    METHOD  new( ... )
 

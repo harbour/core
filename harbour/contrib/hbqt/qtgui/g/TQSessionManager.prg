@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSessionManager INHERIT HbQtObjectHandler, QObject
+FUNCTION QSessionManager( ... )
+   RETURN HB_QSessionManager():new( ... )
+
+
+CREATE CLASS QSessionManager INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QSessionManager
 
    METHOD  new( ... )
 

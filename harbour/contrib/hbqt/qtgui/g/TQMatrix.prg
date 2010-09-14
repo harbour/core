@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QMatrix INHERIT HbQtObjectHandler
+FUNCTION QMatrix( ... )
+   RETURN HB_QMatrix():new( ... )
+
+
+CREATE CLASS QMatrix INHERIT HbQtObjectHandler FUNCTION HB_QMatrix
 
    METHOD  new( ... )
 

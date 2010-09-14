@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QFileInfo INHERIT HbQtObjectHandler
+FUNCTION QFileInfo( ... )
+   RETURN HB_QFileInfo():new( ... )
+
+
+CREATE CLASS QFileInfo INHERIT HbQtObjectHandler FUNCTION HB_QFileInfo
 
    METHOD  new( ... )
 

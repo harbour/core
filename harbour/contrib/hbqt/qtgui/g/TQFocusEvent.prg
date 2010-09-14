@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QFocusEvent INHERIT HbQtObjectHandler, QEvent
+FUNCTION QFocusEvent( ... )
+   RETURN HB_QFocusEvent():new( ... )
+
+
+CREATE CLASS QFocusEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_QFocusEvent
 
    METHOD  new( ... )
 

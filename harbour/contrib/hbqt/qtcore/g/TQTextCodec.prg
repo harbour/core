@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextCodec INHERIT HbQtObjectHandler
+FUNCTION QTextCodec( ... )
+   RETURN HB_QTextCodec():new( ... )
+
+
+CREATE CLASS QTextCodec INHERIT HbQtObjectHandler FUNCTION HB_QTextCodec
 
    METHOD  new( ... )
 

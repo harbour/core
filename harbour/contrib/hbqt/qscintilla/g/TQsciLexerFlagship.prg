@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QsciLexerFlagship INHERIT HbQtObjectHandler, QsciLexer
+FUNCTION QsciLexerFlagship( ... )
+   RETURN HB_QsciLexerFlagship():new( ... )
+
+
+CREATE CLASS QsciLexerFlagship INHERIT HbQtObjectHandler, HB_QsciLexer FUNCTION HB_QsciLexerFlagship
 
    METHOD  new( ... )
 

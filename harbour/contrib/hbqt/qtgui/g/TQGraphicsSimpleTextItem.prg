@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QGraphicsSimpleTextItem INHERIT HbQtObjectHandler, QAbstractGraphicsShapeItem
+FUNCTION QGraphicsSimpleTextItem( ... )
+   RETURN HB_QGraphicsSimpleTextItem():new( ... )
+
+
+CREATE CLASS QGraphicsSimpleTextItem INHERIT HbQtObjectHandler, HB_QAbstractGraphicsShapeItem FUNCTION HB_QGraphicsSimpleTextItem
 
    METHOD  new( ... )
 

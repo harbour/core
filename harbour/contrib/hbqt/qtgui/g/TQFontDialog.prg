@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QFontDialog INHERIT HbQtObjectHandler, QDialog
+FUNCTION QFontDialog( ... )
+   RETURN HB_QFontDialog():new( ... )
+
+
+CREATE CLASS QFontDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QFontDialog
 
    METHOD  new( ... )
 

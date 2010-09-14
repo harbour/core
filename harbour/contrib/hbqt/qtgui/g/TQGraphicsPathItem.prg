@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QGraphicsPathItem INHERIT HbQtObjectHandler, QAbstractGraphicsShapeItem
+FUNCTION QGraphicsPathItem( ... )
+   RETURN HB_QGraphicsPathItem():new( ... )
+
+
+CREATE CLASS QGraphicsPathItem INHERIT HbQtObjectHandler, HB_QAbstractGraphicsShapeItem FUNCTION HB_QGraphicsPathItem
 
    METHOD  new( ... )
 

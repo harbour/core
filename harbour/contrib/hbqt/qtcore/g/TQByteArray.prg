@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QByteArray INHERIT HbQtObjectHandler
+FUNCTION QByteArray( ... )
+   RETURN HB_QByteArray():new( ... )
+
+
+CREATE CLASS QByteArray INHERIT HbQtObjectHandler FUNCTION HB_QByteArray
 
    METHOD  new( ... )
 

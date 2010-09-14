@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QScrollBar INHERIT HbQtObjectHandler, QAbstractSlider
+FUNCTION QScrollBar( ... )
+   RETURN HB_QScrollBar():new( ... )
+
+
+CREATE CLASS QScrollBar INHERIT HbQtObjectHandler, HB_QAbstractSlider FUNCTION HB_QScrollBar
 
    METHOD  new( ... )
 

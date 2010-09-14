@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QUiLoader INHERIT HbQtObjectHandler, QObject
+FUNCTION QUiLoader( ... )
+   RETURN HB_QUiLoader():new( ... )
+
+
+CREATE CLASS QUiLoader INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QUiLoader
 
    METHOD  new( ... )
 

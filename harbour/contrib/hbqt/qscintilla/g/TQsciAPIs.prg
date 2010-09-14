@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QsciAPIs INHERIT HbQtObjectHandler, QsciAbstractAPIs
+FUNCTION QsciAPIs( ... )
+   RETURN HB_QsciAPIs():new( ... )
+
+
+CREATE CLASS QsciAPIs INHERIT HbQtObjectHandler, HB_QsciAbstractAPIs FUNCTION HB_QsciAPIs
 
    METHOD  new( ... )
 

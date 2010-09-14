@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QFile INHERIT HbQtObjectHandler, QIODevice
+FUNCTION QFile( ... )
+   RETURN HB_QFile():new( ... )
+
+
+CREATE CLASS QFile INHERIT HbQtObjectHandler, HB_QIODevice FUNCTION HB_QFile
 
    METHOD  new( ... )
 

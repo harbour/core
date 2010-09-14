@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPoint INHERIT HbQtObjectHandler
+FUNCTION QPoint( ... )
+   RETURN HB_QPoint():new( ... )
+
+
+CREATE CLASS QPoint INHERIT HbQtObjectHandler FUNCTION HB_QPoint
 
    METHOD  new( ... )
 

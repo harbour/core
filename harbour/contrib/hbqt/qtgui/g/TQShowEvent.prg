@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QShowEvent INHERIT HbQtObjectHandler, QEvent
+FUNCTION QShowEvent( ... )
+   RETURN HB_QShowEvent():new( ... )
+
+
+CREATE CLASS QShowEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_QShowEvent
 
    METHOD  new( ... )
 

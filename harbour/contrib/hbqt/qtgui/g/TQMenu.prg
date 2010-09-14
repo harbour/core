@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QMenu INHERIT HbQtObjectHandler, QWidget
+FUNCTION QMenu( ... )
+   RETURN HB_QMenu():new( ... )
+
+
+CREATE CLASS QMenu INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QMenu
 
    METHOD  new( ... )
 

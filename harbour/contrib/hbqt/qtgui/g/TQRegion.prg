@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QRegion INHERIT HbQtObjectHandler
+FUNCTION QRegion( ... )
+   RETURN HB_QRegion():new( ... )
+
+
+CREATE CLASS QRegion INHERIT HbQtObjectHandler FUNCTION HB_QRegion
 
    METHOD  new( ... )
 

@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTabWidget INHERIT HbQtObjectHandler, QWidget
+FUNCTION QTabWidget( ... )
+   RETURN HB_QTabWidget():new( ... )
+
+
+CREATE CLASS QTabWidget INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QTabWidget
 
    METHOD  new( ... )
 

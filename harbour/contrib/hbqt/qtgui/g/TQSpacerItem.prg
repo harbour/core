@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSpacerItem INHERIT HbQtObjectHandler, QLayoutItem
+FUNCTION QSpacerItem( ... )
+   RETURN HB_QSpacerItem():new( ... )
+
+
+CREATE CLASS QSpacerItem INHERIT HbQtObjectHandler, HB_QLayoutItem FUNCTION HB_QSpacerItem
 
    METHOD  new( ... )
 

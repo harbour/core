@@ -233,13 +233,13 @@ METHOD HbQtUI:loadUI( cUiFull, qParent )
     * database or embedded into sources as a text file stream
     */
    cBuffer := hb_memoRead( cUiFull )
-   qFile := QBuffer():new()
+   qFile := QBuffer()
    qFile:setData( cBuffer, len( cBuffer ) )
    #else
-   qFile := QFile():new( cUiFull )
+   qFile := QFile( cUiFull )
    #endif
    IF qFile:open( 1 )
-      qUiLoader  := QUiLoader():new()
+      qUiLoader  := QUiLoader()
       pWidget    := qUiLoader:load( qFile, qParent )
       DO CASE
       CASE ::widgets[ 1,1 ] == "QWidget"
@@ -338,9 +338,10 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
    hbq_stripFront( @cMCls, "(" )
    hbq_stripRear( @cMNam, ")" )
    //
-   //   HB_TRACE( HB_TR_DEBUG, "Widget   ", pad( cMNam, 20 ), pad( cMCls, 20 ), cMCls+"():new()" )
+   //   HB_TRACE( HB_TR_DEBUG, "Widget   ", pad( cMNam, 20 ), pad( cMCls, 20 ), cMCls+"()" )
    //                               Validator   Constructor
-   aadd( ::widgets, { cMCls, cMNam, cMCls+"()", cMCls+"():new()" } )
+//   aadd( ::widgets, { cMCls, cMNam, cMCls+"()", cMCls+"():new()" } )
+   aadd( ::widgets, { cMCls, cMNam, cMCls+"()", cMCls+"()" } )
 
    /* Replace Qt #define constants with values */
    aConst := hbq_getConstants()
@@ -381,7 +382,8 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
          *  HB_TRACE( HB_TR_DEBUG, "Object   ", pad( cNam, 20 ), pad( cCls, 20 ), cCls+"():new"+substr( s, n ) )
          ELSE
             cNam := s
-            aadd( ::widgets, { cCls, cNam, cCls+"()", cCls+"():new()" } )
+//            aadd( ::widgets, { cCls, cNam, cCls+"()", cCls+"():new()" } )
+            aadd( ::widgets, { cCls, cNam, cCls+"()", cCls+"()" } )
             //
          *  HB_TRACE( HB_TR_DEBUG, "Object   ", pad( cNam, 20 ), pad( cCls,20 ), cCls+"():new()" )
          ENDIF
@@ -459,13 +461,13 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
 
    SWITCH cMCls
    CASE "QDialog"
-      ::oWidget := QDialog():new( ::qParent )
+      ::oWidget := QDialog( ::qParent )
       EXIT
    CASE "QWidget"
-      ::oWidget := QWidget():new( ::qParent )
+      ::oWidget := QWidget( ::qParent )
       EXIT
    CASE "QMainWindow"
-      ::oWidget := QMainWindow():new( ::qParent )
+      ::oWidget := QMainWindow( ::qParent )
       EXIT
    ENDSWITCH
    ::oWidget:setObjectName( cMNam )
@@ -556,8 +558,8 @@ METHOD HbQtUI:formatCommand( cCmd, lText )
    cCmd := strtran( cCmd, "QApplication::translate"  , "q__tr"        )
    cCmd := strtran( cCmd, "QApplication::UnicodeUTF8", '"UTF8"'       )
    cCmd := strtran( cCmd, "QString()"                , '""'           )
-   cCmd := strtran( cCmd, "QSize("                   , "QSize():new(" )
-   cCmd := strtran( cCmd, "QRect("                   , "QRect():new(" )
+   cCmd := strtran( cCmd, "QSize("                   , "QSize(" )
+   cCmd := strtran( cCmd, "QRect("                   , "QRect(" )
 
    IF ( "::" $ cCmd )
       regDefine := hb_RegexComp( "\b[A-Za-z_]+\:\:[A-Za-z_]+\b" )

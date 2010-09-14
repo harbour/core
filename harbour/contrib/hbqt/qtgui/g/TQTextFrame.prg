@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextFrame INHERIT HbQtObjectHandler, QTextObject
+FUNCTION QTextFrame( ... )
+   RETURN HB_QTextFrame():new( ... )
+
+
+CREATE CLASS QTextFrame INHERIT HbQtObjectHandler, HB_QTextObject FUNCTION HB_QTextFrame
 
    METHOD  new( ... )
 

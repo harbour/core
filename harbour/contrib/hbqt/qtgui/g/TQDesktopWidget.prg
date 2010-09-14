@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDesktopWidget INHERIT HbQtObjectHandler, QWidget
+FUNCTION QDesktopWidget( ... )
+   RETURN HB_QDesktopWidget():new( ... )
+
+
+CREATE CLASS QDesktopWidget INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QDesktopWidget
 
    METHOD  new( ... )
 

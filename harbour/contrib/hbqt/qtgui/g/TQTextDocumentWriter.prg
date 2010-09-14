@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextDocumentWriter INHERIT HbQtObjectHandler
+FUNCTION QTextDocumentWriter( ... )
+   RETURN HB_QTextDocumentWriter():new( ... )
+
+
+CREATE CLASS QTextDocumentWriter INHERIT HbQtObjectHandler FUNCTION HB_QTextDocumentWriter
 
    METHOD  new( ... )
 

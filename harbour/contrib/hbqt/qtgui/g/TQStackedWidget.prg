@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStackedWidget INHERIT HbQtObjectHandler, QFrame
+FUNCTION QStackedWidget( ... )
+   RETURN HB_QStackedWidget():new( ... )
+
+
+CREATE CLASS QStackedWidget INHERIT HbQtObjectHandler, HB_QFrame FUNCTION HB_QStackedWidget
 
    METHOD  new( ... )
 

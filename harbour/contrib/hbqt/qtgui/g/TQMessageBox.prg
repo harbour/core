@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QMessageBox INHERIT HbQtObjectHandler, QDialog
+FUNCTION QMessageBox( ... )
+   RETURN HB_QMessageBox():new( ... )
+
+
+CREATE CLASS QMessageBox INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QMessageBox
 
    METHOD  new( ... )
 

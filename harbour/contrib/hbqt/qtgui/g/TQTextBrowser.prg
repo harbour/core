@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextBrowser INHERIT HbQtObjectHandler, QTextEdit
+FUNCTION QTextBrowser( ... )
+   RETURN HB_QTextBrowser():new( ... )
+
+
+CREATE CLASS QTextBrowser INHERIT HbQtObjectHandler, HB_QTextEdit FUNCTION HB_QTextBrowser
 
    METHOD  new( ... )
 

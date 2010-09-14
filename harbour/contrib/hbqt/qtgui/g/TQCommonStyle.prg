@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QCommonStyle INHERIT HbQtObjectHandler, QStyle
+FUNCTION QCommonStyle( ... )
+   RETURN HB_QCommonStyle():new( ... )
+
+
+CREATE CLASS QCommonStyle INHERIT HbQtObjectHandler, HB_QStyle FUNCTION HB_QCommonStyle
 
    METHOD  new( ... )
 

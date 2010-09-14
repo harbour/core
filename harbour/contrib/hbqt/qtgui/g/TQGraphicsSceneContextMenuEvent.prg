@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QGraphicsSceneContextMenuEvent INHERIT HbQtObjectHandler, QGraphicsSceneEvent
+FUNCTION QGraphicsSceneContextMenuEvent( ... )
+   RETURN HB_QGraphicsSceneContextMenuEvent():new( ... )
+
+
+CREATE CLASS QGraphicsSceneContextMenuEvent INHERIT HbQtObjectHandler, HB_QGraphicsSceneEvent FUNCTION HB_QGraphicsSceneContextMenuEvent
 
    METHOD  new( ... )
 

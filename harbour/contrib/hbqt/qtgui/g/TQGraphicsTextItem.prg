@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QGraphicsTextItem INHERIT HbQtObjectHandler, QObject, QGraphicsItem
+FUNCTION QGraphicsTextItem( ... )
+   RETURN HB_QGraphicsTextItem():new( ... )
+
+
+CREATE CLASS QGraphicsTextItem INHERIT HbQtObjectHandler, HB_QObject, HB_QGraphicsItem FUNCTION HB_QGraphicsTextItem
 
    METHOD  new( ... )
 

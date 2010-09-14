@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTimer INHERIT HbQtObjectHandler, QObject
+FUNCTION QTimer( ... )
+   RETURN HB_QTimer():new( ... )
+
+
+CREATE CLASS QTimer INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QTimer
 
    METHOD  new( ... )
 

@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTableView INHERIT HbQtObjectHandler, QAbstractItemView
+FUNCTION QTableView( ... )
+   RETURN HB_QTableView():new( ... )
+
+
+CREATE CLASS QTableView INHERIT HbQtObjectHandler, HB_QAbstractItemView FUNCTION HB_QTableView
 
    METHOD  new( ... )
 

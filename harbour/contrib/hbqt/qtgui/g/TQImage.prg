@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QImage INHERIT HbQtObjectHandler
+FUNCTION QImage( ... )
+   RETURN HB_QImage():new( ... )
+
+
+CREATE CLASS QImage INHERIT HbQtObjectHandler FUNCTION HB_QImage
 
    METHOD  new( ... )
 

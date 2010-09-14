@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QBrush INHERIT HbQtObjectHandler
+FUNCTION QBrush( ... )
+   RETURN HB_QBrush():new( ... )
+
+
+CREATE CLASS QBrush INHERIT HbQtObjectHandler FUNCTION HB_QBrush
 
    METHOD  new( ... )
 

@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QImageWriter INHERIT HbQtObjectHandler
+FUNCTION QImageWriter( ... )
+   RETURN HB_QImageWriter():new( ... )
+
+
+CREATE CLASS QImageWriter INHERIT HbQtObjectHandler FUNCTION HB_QImageWriter
 
    METHOD  new( ... )
 

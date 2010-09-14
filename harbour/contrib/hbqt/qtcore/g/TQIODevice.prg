@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QIODevice INHERIT HbQtObjectHandler, QObject
+FUNCTION QIODevice( ... )
+   RETURN HB_QIODevice():new( ... )
+
+
+CREATE CLASS QIODevice INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QIODevice
 
    METHOD  new( ... )
 

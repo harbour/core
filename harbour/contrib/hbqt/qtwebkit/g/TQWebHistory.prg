@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QWebHistory INHERIT HbQtObjectHandler
+FUNCTION QWebHistory( ... )
+   RETURN HB_QWebHistory():new( ... )
+
+
+CREATE CLASS QWebHistory INHERIT HbQtObjectHandler FUNCTION HB_QWebHistory
 
    METHOD  new( ... )
 

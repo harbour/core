@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS HBSlots INHERIT HbQtObjectHandler, QObject
+FUNCTION HBSlots( ... )
+   RETURN HB_HBSlots():new( ... )
+
+
+CREATE CLASS HBSlots INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_HBSlots
 
    METHOD  new( ... )
 

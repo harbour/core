@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QRect INHERIT HbQtObjectHandler
+FUNCTION QRect( ... )
+   RETURN HB_QRect():new( ... )
+
+
+CREATE CLASS QRect INHERIT HbQtObjectHandler FUNCTION HB_QRect
 
    METHOD  new( ... )
 

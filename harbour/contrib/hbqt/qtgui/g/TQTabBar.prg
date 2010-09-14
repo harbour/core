@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTabBar INHERIT HbQtObjectHandler, QWidget
+FUNCTION QTabBar( ... )
+   RETURN HB_QTabBar():new( ... )
+
+
+CREATE CLASS QTabBar INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QTabBar
 
    METHOD  new( ... )
 

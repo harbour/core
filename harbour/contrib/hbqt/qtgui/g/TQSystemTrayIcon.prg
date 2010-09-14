@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSystemTrayIcon INHERIT HbQtObjectHandler, QObject
+FUNCTION QSystemTrayIcon( ... )
+   RETURN HB_QSystemTrayIcon():new( ... )
+
+
+CREATE CLASS QSystemTrayIcon INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QSystemTrayIcon
 
    METHOD  new( ... )
 

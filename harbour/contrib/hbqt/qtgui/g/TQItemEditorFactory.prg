@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QItemEditorFactory INHERIT HbQtObjectHandler
+FUNCTION QItemEditorFactory( ... )
+   RETURN HB_QItemEditorFactory():new( ... )
+
+
+CREATE CLASS QItemEditorFactory INHERIT HbQtObjectHandler FUNCTION HB_QItemEditorFactory
 
    METHOD  new( ... )
 

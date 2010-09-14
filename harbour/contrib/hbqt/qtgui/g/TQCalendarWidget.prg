@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QCalendarWidget INHERIT HbQtObjectHandler, QWidget
+FUNCTION QCalendarWidget( ... )
+   RETURN HB_QCalendarWidget():new( ... )
+
+
+CREATE CLASS QCalendarWidget INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QCalendarWidget
 
    METHOD  new( ... )
 

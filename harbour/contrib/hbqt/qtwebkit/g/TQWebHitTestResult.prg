@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QWebHitTestResult INHERIT HbQtObjectHandler
+FUNCTION QWebHitTestResult( ... )
+   RETURN HB_QWebHitTestResult():new( ... )
+
+
+CREATE CLASS QWebHitTestResult INHERIT HbQtObjectHandler FUNCTION HB_QWebHitTestResult
 
    METHOD  new( ... )
 

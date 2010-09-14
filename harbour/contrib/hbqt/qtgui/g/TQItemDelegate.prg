@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QItemDelegate INHERIT HbQtObjectHandler, QAbstractItemDelegate
+FUNCTION QItemDelegate( ... )
+   RETURN HB_QItemDelegate():new( ... )
+
+
+CREATE CLASS QItemDelegate INHERIT HbQtObjectHandler, HB_QAbstractItemDelegate FUNCTION HB_QItemDelegate
 
    METHOD  new( ... )
 

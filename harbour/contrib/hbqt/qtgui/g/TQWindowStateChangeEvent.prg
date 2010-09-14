@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QWindowStateChangeEvent INHERIT HbQtObjectHandler, QEvent
+FUNCTION QWindowStateChangeEvent( ... )
+   RETURN HB_QWindowStateChangeEvent():new( ... )
+
+
+CREATE CLASS QWindowStateChangeEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_QWindowStateChangeEvent
 
    METHOD  new( ... )
 

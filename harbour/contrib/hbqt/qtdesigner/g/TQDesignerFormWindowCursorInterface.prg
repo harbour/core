@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDesignerFormWindowCursorInterface INHERIT HbQtObjectHandler
+FUNCTION QDesignerFormWindowCursorInterface( ... )
+   RETURN HB_QDesignerFormWindowCursorInterface():new( ... )
+
+
+CREATE CLASS QDesignerFormWindowCursorInterface INHERIT HbQtObjectHandler FUNCTION HB_QDesignerFormWindowCursorInterface
 
    METHOD  new( ... )
 

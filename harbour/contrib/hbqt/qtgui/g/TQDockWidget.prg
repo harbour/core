@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDockWidget INHERIT HbQtObjectHandler, QWidget
+FUNCTION QDockWidget( ... )
+   RETURN HB_QDockWidget():new( ... )
+
+
+CREATE CLASS QDockWidget INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QDockWidget
 
    METHOD  new( ... )
 

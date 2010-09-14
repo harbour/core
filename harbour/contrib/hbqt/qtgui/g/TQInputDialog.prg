@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QInputDialog INHERIT HbQtObjectHandler, QDialog
+FUNCTION QInputDialog( ... )
+   RETURN HB_QInputDialog():new( ... )
+
+
+CREATE CLASS QInputDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QInputDialog
 
    METHOD  new( ... )
 

@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTranslator INHERIT HbQtObjectHandler, QObject
+FUNCTION QTranslator( ... )
+   RETURN HB_QTranslator():new( ... )
+
+
+CREATE CLASS QTranslator INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QTranslator
 
    METHOD  new( ... )
 

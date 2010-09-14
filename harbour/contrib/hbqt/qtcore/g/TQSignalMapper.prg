@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSignalMapper INHERIT HbQtObjectHandler, QObject
+FUNCTION QSignalMapper( ... )
+   RETURN HB_QSignalMapper():new( ... )
+
+
+CREATE CLASS QSignalMapper INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QSignalMapper
 
    METHOD  new( ... )
 

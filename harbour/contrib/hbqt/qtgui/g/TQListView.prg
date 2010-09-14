@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QListView INHERIT HbQtObjectHandler, QAbstractItemView
+FUNCTION QListView( ... )
+   RETURN HB_QListView():new( ... )
+
+
+CREATE CLASS QListView INHERIT HbQtObjectHandler, HB_QAbstractItemView FUNCTION HB_QListView
 
    METHOD  new( ... )
 

@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QRadialGradient INHERIT HbQtObjectHandler, QGradient
+FUNCTION QRadialGradient( ... )
+   RETURN HB_QRadialGradient():new( ... )
+
+
+CREATE CLASS QRadialGradient INHERIT HbQtObjectHandler, HB_QGradient FUNCTION HB_QRadialGradient
 
    METHOD  new( ... )
 

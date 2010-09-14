@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QWebFrame INHERIT HbQtObjectHandler, QObject
+FUNCTION QWebFrame( ... )
+   RETURN HB_QWebFrame():new( ... )
+
+
+CREATE CLASS QWebFrame INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QWebFrame
 
    METHOD  new( ... )
 

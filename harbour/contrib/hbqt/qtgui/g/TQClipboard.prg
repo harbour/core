@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QClipboard INHERIT HbQtObjectHandler, QObject
+FUNCTION QClipboard( ... )
+   RETURN HB_QClipboard():new( ... )
+
+
+CREATE CLASS QClipboard INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QClipboard
 
    METHOD  new( ... )
 

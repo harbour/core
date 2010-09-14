@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextLayout INHERIT HbQtObjectHandler
+FUNCTION QTextLayout( ... )
+   RETURN HB_QTextLayout():new( ... )
+
+
+CREATE CLASS QTextLayout INHERIT HbQtObjectHandler FUNCTION HB_QTextLayout
 
    METHOD  new( ... )
 

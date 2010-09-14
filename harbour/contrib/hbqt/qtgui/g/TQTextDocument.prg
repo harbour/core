@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextDocument INHERIT HbQtObjectHandler, QObject
+FUNCTION QTextDocument( ... )
+   RETURN HB_QTextDocument():new( ... )
+
+
+CREATE CLASS QTextDocument INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QTextDocument
 
    METHOD  new( ... )
 

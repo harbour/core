@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QFileIconProvider INHERIT HbQtObjectHandler
+FUNCTION QFileIconProvider( ... )
+   RETURN HB_QFileIconProvider():new( ... )
+
+
+CREATE CLASS QFileIconProvider INHERIT HbQtObjectHandler FUNCTION HB_QFileIconProvider
 
    METHOD  new( ... )
 

@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDateTimeEdit INHERIT HbQtObjectHandler, QAbstractSpinBox
+FUNCTION QDateTimeEdit( ... )
+   RETURN HB_QDateTimeEdit():new( ... )
+
+
+CREATE CLASS QDateTimeEdit INHERIT HbQtObjectHandler, HB_QAbstractSpinBox FUNCTION HB_QDateTimeEdit
 
    METHOD  new( ... )
 

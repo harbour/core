@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStatusBar INHERIT HbQtObjectHandler, QWidget
+FUNCTION QStatusBar( ... )
+   RETURN HB_QStatusBar():new( ... )
+
+
+CREATE CLASS QStatusBar INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QStatusBar
 
    METHOD  new( ... )
 

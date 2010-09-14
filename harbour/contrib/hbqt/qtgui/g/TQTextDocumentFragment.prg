@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextDocumentFragment INHERIT HbQtObjectHandler
+FUNCTION QTextDocumentFragment( ... )
+   RETURN HB_QTextDocumentFragment():new( ... )
+
+
+CREATE CLASS QTextDocumentFragment INHERIT HbQtObjectHandler FUNCTION HB_QTextDocumentFragment
 
    METHOD  new( ... )
 

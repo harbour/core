@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QWebSettings INHERIT HbQtObjectHandler
+FUNCTION QWebSettings( ... )
+   RETURN HB_QWebSettings():new( ... )
+
+
+CREATE CLASS QWebSettings INHERIT HbQtObjectHandler FUNCTION HB_QWebSettings
 
    METHOD  new( ... )
 

@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS HBQString INHERIT HbQtObjectHandler
+FUNCTION HBQString( ... )
+   RETURN HB_HBQString():new( ... )
+
+
+CREATE CLASS HBQString INHERIT HbQtObjectHandler FUNCTION HB_HBQString
 
    METHOD  new( ... )
 

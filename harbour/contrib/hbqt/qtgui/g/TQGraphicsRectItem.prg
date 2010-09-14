@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QGraphicsRectItem INHERIT HbQtObjectHandler, QAbstractGraphicsShapeItem
+FUNCTION QGraphicsRectItem( ... )
+   RETURN HB_QGraphicsRectItem():new( ... )
+
+
+CREATE CLASS QGraphicsRectItem INHERIT HbQtObjectHandler, HB_QAbstractGraphicsShapeItem FUNCTION HB_QGraphicsRectItem
 
    METHOD  new( ... )
 

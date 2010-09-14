@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QIntValidator INHERIT HbQtObjectHandler, QValidator
+FUNCTION QIntValidator( ... )
+   RETURN HB_QIntValidator():new( ... )
+
+
+CREATE CLASS QIntValidator INHERIT HbQtObjectHandler, HB_QValidator FUNCTION HB_QIntValidator
 
    METHOD  new( ... )
 

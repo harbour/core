@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QWheelEvent INHERIT HbQtObjectHandler, QInputEvent
+FUNCTION QWheelEvent( ... )
+   RETURN HB_QWheelEvent():new( ... )
+
+
+CREATE CLASS QWheelEvent INHERIT HbQtObjectHandler, HB_QInputEvent FUNCTION HB_QWheelEvent
 
    METHOD  new( ... )
 

@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextLine INHERIT HbQtObjectHandler
+FUNCTION QTextLine( ... )
+   RETURN HB_QTextLine():new( ... )
+
+
+CREATE CLASS QTextLine INHERIT HbQtObjectHandler FUNCTION HB_QTextLine
 
    METHOD  new( ... )
 

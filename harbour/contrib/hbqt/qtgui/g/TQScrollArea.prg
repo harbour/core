@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QScrollArea INHERIT HbQtObjectHandler, QAbstractScrollArea
+FUNCTION QScrollArea( ... )
+   RETURN HB_QScrollArea():new( ... )
+
+
+CREATE CLASS QScrollArea INHERIT HbQtObjectHandler, HB_QAbstractScrollArea FUNCTION HB_QScrollArea
 
    METHOD  new( ... )
 

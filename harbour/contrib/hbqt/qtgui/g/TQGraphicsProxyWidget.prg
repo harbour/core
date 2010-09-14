@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QGraphicsProxyWidget INHERIT HbQtObjectHandler, QGraphicsWidget
+FUNCTION QGraphicsProxyWidget( ... )
+   RETURN HB_QGraphicsProxyWidget():new( ... )
+
+
+CREATE CLASS QGraphicsProxyWidget INHERIT HbQtObjectHandler, HB_QGraphicsWidget FUNCTION HB_QGraphicsProxyWidget
 
    METHOD  new( ... )
 

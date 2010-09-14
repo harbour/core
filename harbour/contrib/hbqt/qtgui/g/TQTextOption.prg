@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextOption INHERIT HbQtObjectHandler
+FUNCTION QTextOption( ... )
+   RETURN HB_QTextOption():new( ... )
+
+
+CREATE CLASS QTextOption INHERIT HbQtObjectHandler FUNCTION HB_QTextOption
 
    METHOD  new( ... )
 

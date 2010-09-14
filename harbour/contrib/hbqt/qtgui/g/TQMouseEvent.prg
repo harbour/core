@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QMouseEvent INHERIT HbQtObjectHandler, QInputEvent
+FUNCTION QMouseEvent( ... )
+   RETURN HB_QMouseEvent():new( ... )
+
+
+CREATE CLASS QMouseEvent INHERIT HbQtObjectHandler, HB_QInputEvent FUNCTION HB_QMouseEvent
 
    METHOD  new( ... )
 

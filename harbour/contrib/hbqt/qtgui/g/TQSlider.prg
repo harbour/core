@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QSlider INHERIT HbQtObjectHandler, QAbstractSlider
+FUNCTION QSlider( ... )
+   RETURN HB_QSlider():new( ... )
+
+
+CREATE CLASS QSlider INHERIT HbQtObjectHandler, HB_QAbstractSlider FUNCTION HB_QSlider
 
    METHOD  new( ... )
 

@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QGraphicsLayout INHERIT HbQtObjectHandler, QGraphicsLayoutItem
+FUNCTION QGraphicsLayout( ... )
+   RETURN HB_QGraphicsLayout():new( ... )
+
+
+CREATE CLASS QGraphicsLayout INHERIT HbQtObjectHandler, HB_QGraphicsLayoutItem FUNCTION HB_QGraphicsLayout
 
    METHOD  new( ... )
 

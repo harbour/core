@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QFontComboBox INHERIT HbQtObjectHandler, QComboBox
+FUNCTION QFontComboBox( ... )
+   RETURN HB_QFontComboBox():new( ... )
+
+
+CREATE CLASS QFontComboBox INHERIT HbQtObjectHandler, HB_QComboBox FUNCTION HB_QFontComboBox
 
    METHOD  new( ... )
 

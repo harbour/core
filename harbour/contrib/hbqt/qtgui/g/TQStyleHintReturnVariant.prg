@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleHintReturnVariant INHERIT HbQtObjectHandler, QStyleHintReturn
+FUNCTION QStyleHintReturnVariant( ... )
+   RETURN HB_QStyleHintReturnVariant():new( ... )
+
+
+CREATE CLASS QStyleHintReturnVariant INHERIT HbQtObjectHandler, HB_QStyleHintReturn FUNCTION HB_QStyleHintReturnVariant
 
    METHOD  new( ... )
 

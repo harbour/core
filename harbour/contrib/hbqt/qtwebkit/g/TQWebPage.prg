@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QWebPage INHERIT HbQtObjectHandler, QObject
+FUNCTION QWebPage( ... )
+   RETURN HB_QWebPage():new( ... )
+
+
+CREATE CLASS QWebPage INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QWebPage
 
    METHOD  new( ... )
 

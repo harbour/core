@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QGraphicsItemAnimation INHERIT HbQtObjectHandler, QObject
+FUNCTION QGraphicsItemAnimation( ... )
+   RETURN HB_QGraphicsItemAnimation():new( ... )
+
+
+CREATE CLASS QGraphicsItemAnimation INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QGraphicsItemAnimation
 
    METHOD  new( ... )
 

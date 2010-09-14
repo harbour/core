@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QErrorMessage INHERIT HbQtObjectHandler, QDialog
+FUNCTION QErrorMessage( ... )
+   RETURN HB_QErrorMessage():new( ... )
+
+
+CREATE CLASS QErrorMessage INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QErrorMessage
 
    METHOD  new( ... )
 

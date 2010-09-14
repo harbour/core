@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTextBlockGroup INHERIT HbQtObjectHandler, QTextObject
+FUNCTION QTextBlockGroup( ... )
+   RETURN HB_QTextBlockGroup():new( ... )
+
+
+CREATE CLASS QTextBlockGroup INHERIT HbQtObjectHandler, HB_QTextObject FUNCTION HB_QTextBlockGroup
 
    METHOD  new( ... )
 

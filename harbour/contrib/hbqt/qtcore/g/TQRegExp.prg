@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QRegExp INHERIT HbQtObjectHandler
+FUNCTION QRegExp( ... )
+   RETURN HB_QRegExp():new( ... )
+
+
+CREATE CLASS QRegExp INHERIT HbQtObjectHandler FUNCTION HB_QRegExp
 
    METHOD  new( ... )
 

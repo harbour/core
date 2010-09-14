@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QAbstractTableModel INHERIT HbQtObjectHandler, QAbstractItemModel
+FUNCTION QAbstractTableModel( ... )
+   RETURN HB_QAbstractTableModel():new( ... )
+
+
+CREATE CLASS QAbstractTableModel INHERIT HbQtObjectHandler, HB_QAbstractItemModel FUNCTION HB_QAbstractTableModel
 
    METHOD  new( ... )
 

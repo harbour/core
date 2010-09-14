@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QMainWindow INHERIT HbQtObjectHandler, QWidget
+FUNCTION QMainWindow( ... )
+   RETURN HB_QMainWindow():new( ... )
+
+
+CREATE CLASS QMainWindow INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QMainWindow
 
    METHOD  new( ... )
 

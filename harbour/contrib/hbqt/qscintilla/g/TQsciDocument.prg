@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QsciDocument INHERIT HbQtObjectHandler
+FUNCTION QsciDocument( ... )
+   RETURN HB_QsciDocument():new( ... )
+
+
+CREATE CLASS QsciDocument INHERIT HbQtObjectHandler FUNCTION HB_QsciDocument
 
    METHOD  new( ... )
 

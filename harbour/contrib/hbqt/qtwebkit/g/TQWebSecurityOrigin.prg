@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QWebSecurityOrigin INHERIT HbQtObjectHandler
+FUNCTION QWebSecurityOrigin( ... )
+   RETURN HB_QWebSecurityOrigin():new( ... )
+
+
+CREATE CLASS QWebSecurityOrigin INHERIT HbQtObjectHandler FUNCTION HB_QWebSecurityOrigin
 
    METHOD  new( ... )
 

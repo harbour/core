@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QCompleter INHERIT HbQtObjectHandler, QObject
+FUNCTION QCompleter( ... )
+   RETURN HB_QCompleter():new( ... )
+
+
+CREATE CLASS QCompleter INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QCompleter
 
    METHOD  new( ... )
 

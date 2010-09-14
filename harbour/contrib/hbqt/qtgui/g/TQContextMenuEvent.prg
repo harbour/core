@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QContextMenuEvent INHERIT HbQtObjectHandler, QInputEvent
+FUNCTION QContextMenuEvent( ... )
+   RETURN HB_QContextMenuEvent():new( ... )
+
+
+CREATE CLASS QContextMenuEvent INHERIT HbQtObjectHandler, HB_QInputEvent FUNCTION HB_QContextMenuEvent
 
    METHOD  new( ... )
 

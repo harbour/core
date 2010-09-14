@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionGraphicsItem INHERIT HbQtObjectHandler, QStyleOption
+FUNCTION QStyleOptionGraphicsItem( ... )
+   RETURN HB_QStyleOptionGraphicsItem():new( ... )
+
+
+CREATE CLASS QStyleOptionGraphicsItem INHERIT HbQtObjectHandler, HB_QStyleOption FUNCTION HB_QStyleOptionGraphicsItem
 
    METHOD  new( ... )
 

@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTransform INHERIT HbQtObjectHandler
+FUNCTION QTransform( ... )
+   RETURN HB_QTransform():new( ... )
+
+
+CREATE CLASS QTransform INHERIT HbQtObjectHandler FUNCTION HB_QTransform
 
    METHOD  new( ... )
 

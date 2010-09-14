@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPaintEngine INHERIT HbQtObjectHandler
+FUNCTION QPaintEngine( ... )
+   RETURN HB_QPaintEngine():new( ... )
+
+
+CREATE CLASS QPaintEngine INHERIT HbQtObjectHandler FUNCTION HB_QPaintEngine
 
    METHOD  new( ... )
 

@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QNetworkRequest INHERIT HbQtObjectHandler
+FUNCTION QNetworkRequest( ... )
+   RETURN HB_QNetworkRequest():new( ... )
+
+
+CREATE CLASS QNetworkRequest INHERIT HbQtObjectHandler FUNCTION HB_QNetworkRequest
 
    METHOD  new( ... )
 

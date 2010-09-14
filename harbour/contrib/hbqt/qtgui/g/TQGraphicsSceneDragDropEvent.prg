@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QGraphicsSceneDragDropEvent INHERIT HbQtObjectHandler, QGraphicsSceneEvent
+FUNCTION QGraphicsSceneDragDropEvent( ... )
+   RETURN HB_QGraphicsSceneDragDropEvent():new( ... )
+
+
+CREATE CLASS QGraphicsSceneDragDropEvent INHERIT HbQtObjectHandler, HB_QGraphicsSceneEvent FUNCTION HB_QGraphicsSceneDragDropEvent
 
    METHOD  new( ... )
 

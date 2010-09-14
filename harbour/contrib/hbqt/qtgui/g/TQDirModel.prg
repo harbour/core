@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDirModel INHERIT HbQtObjectHandler, QAbstractItemModel
+FUNCTION QDirModel( ... )
+   RETURN HB_QDirModel():new( ... )
+
+
+CREATE CLASS QDirModel INHERIT HbQtObjectHandler, HB_QAbstractItemModel FUNCTION HB_QDirModel
 
    METHOD  new( ... )
 

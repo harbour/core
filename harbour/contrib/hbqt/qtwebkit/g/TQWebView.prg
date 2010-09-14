@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QWebView INHERIT HbQtObjectHandler, QWidget
+FUNCTION QWebView( ... )
+   RETURN HB_QWebView():new( ... )
+
+
+CREATE CLASS QWebView INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QWebView
 
    METHOD  new( ... )
 

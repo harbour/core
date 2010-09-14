@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QToolBox INHERIT HbQtObjectHandler, QFrame
+FUNCTION QToolBox( ... )
+   RETURN HB_QToolBox():new( ... )
+
+
+CREATE CLASS QToolBox INHERIT HbQtObjectHandler, HB_QFrame FUNCTION HB_QToolBox
 
    METHOD  new( ... )
 

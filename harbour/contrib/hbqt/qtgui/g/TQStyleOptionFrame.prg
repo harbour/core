@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionFrame INHERIT HbQtObjectHandler, qStyleOption
+FUNCTION QStyleOptionFrame( ... )
+   RETURN HB_QStyleOptionFrame():new( ... )
+
+
+CREATE CLASS QStyleOptionFrame INHERIT HbQtObjectHandler, qStyleOption FUNCTION HB_QStyleOptionFrame
 
    METHOD  new( ... )
 

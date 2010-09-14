@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QWindowsStyle INHERIT HbQtObjectHandler, QCommonStyle
+FUNCTION QWindowsStyle( ... )
+   RETURN HB_QWindowsStyle():new( ... )
+
+
+CREATE CLASS QWindowsStyle INHERIT HbQtObjectHandler, HB_QCommonStyle FUNCTION HB_QWindowsStyle
 
    METHOD  new( ... )
 

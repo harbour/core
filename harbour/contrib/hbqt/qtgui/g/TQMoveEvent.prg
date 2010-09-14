@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QMoveEvent INHERIT HbQtObjectHandler, QEvent
+FUNCTION QMoveEvent( ... )
+   RETURN HB_QMoveEvent():new( ... )
+
+
+CREATE CLASS QMoveEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_QMoveEvent
 
    METHOD  new( ... )
 

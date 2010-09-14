@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QBoxLayout INHERIT HbQtObjectHandler, QLayout
+FUNCTION QBoxLayout( ... )
+   RETURN HB_QBoxLayout():new( ... )
+
+
+CREATE CLASS QBoxLayout INHERIT HbQtObjectHandler, HB_QLayout FUNCTION HB_QBoxLayout
 
    METHOD  new( ... )
 

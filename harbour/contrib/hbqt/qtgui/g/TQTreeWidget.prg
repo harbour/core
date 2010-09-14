@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QTreeWidget INHERIT HbQtObjectHandler, QTreeView
+FUNCTION QTreeWidget( ... )
+   RETURN HB_QTreeWidget():new( ... )
+
+
+CREATE CLASS QTreeWidget INHERIT HbQtObjectHandler, HB_QTreeView FUNCTION HB_QTreeWidget
 
    METHOD  new( ... )
 

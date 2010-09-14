@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QStyleOptionTitleBar INHERIT HbQtObjectHandler, QStyleOptionComplex
+FUNCTION QStyleOptionTitleBar( ... )
+   RETURN HB_QStyleOptionTitleBar():new( ... )
+
+
+CREATE CLASS QStyleOptionTitleBar INHERIT HbQtObjectHandler, HB_QStyleOptionComplex FUNCTION HB_QStyleOptionTitleBar
 
    METHOD  new( ... )
 

@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QResizeEvent INHERIT HbQtObjectHandler, QEvent
+FUNCTION QResizeEvent( ... )
+   RETURN HB_QResizeEvent():new( ... )
+
+
+CREATE CLASS QResizeEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_QResizeEvent
 
    METHOD  new( ... )
 

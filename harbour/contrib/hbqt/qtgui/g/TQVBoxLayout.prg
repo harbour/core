@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QVBoxLayout INHERIT HbQtObjectHandler, QBoxLayout
+FUNCTION QVBoxLayout( ... )
+   RETURN HB_QVBoxLayout():new( ... )
+
+
+CREATE CLASS QVBoxLayout INHERIT HbQtObjectHandler, HB_QBoxLayout FUNCTION HB_QVBoxLayout
 
    METHOD  new( ... )
 

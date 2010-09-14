@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QDir INHERIT HbQtObjectHandler
+FUNCTION QDir( ... )
+   RETURN HB_QDir():new( ... )
+
+
+CREATE CLASS QDir INHERIT HbQtObjectHandler FUNCTION HB_QDir
 
    METHOD  new( ... )
 

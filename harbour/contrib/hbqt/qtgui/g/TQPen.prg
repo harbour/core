@@ -63,7 +63,11 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS QPen INHERIT HbQtObjectHandler
+FUNCTION QPen( ... )
+   RETURN HB_QPen():new( ... )
+
+
+CREATE CLASS QPen INHERIT HbQtObjectHandler FUNCTION HB_QPen
 
    METHOD  new( ... )
 
