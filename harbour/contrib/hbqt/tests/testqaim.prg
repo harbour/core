@@ -22,7 +22,7 @@ STATIC oDA, oForeColor, oAlphaColor, oBackBrush, oSize, oPixmap, oIcon, oFont
 REQUEST HB_QT
 
 INIT PROCEDURE Qt_Start()
-   qApp := QApplication():new()
+   qApp := QApplication()
    RETURN
 
 EXIT PROCEDURE Qt_End()
@@ -32,39 +32,39 @@ EXIT PROCEDURE Qt_End()
 PROCEDURE Main()
    LOCAL tb1, mo1, lay1, lay2, bt1, bt2, bt3
 
-   oWnd := QMainWindow():new()
+   oWnd := QMainWindow()
    oWnd:resize(600,400 )
 
-   oDA := QWidget():new()
+   oDA := QWidget()
    oWnd:setCentralWidget( oDA )
-   lay1 := QVBoxLayout():new( oDA )
+   lay1 := QVBoxLayout( oDA )
 
    /* Here we define some HBQt objects to use in the callback */
-   oForeColor := QColor():new( 0, 50, 100 )                              // Solid blue
-   oAlphaColor := QColor():new( 255, 0, 0 )                              // Transparent Red
+   oForeColor := QColor( 0, 50, 100 )                              // Solid blue
+   oAlphaColor := QColor( 255, 0, 0 )                              // Transparent Red
    oAlphaColor:setAlpha( 128 )
-   oBackBrush := QBrush():new( QColor():new( 255, 255, 100 ), Qt_BDiagPattern ) // Yellow Diagonal lines
-   oSize := QSize():new( 80, 30 )                                        // Default header sizes
-   oPixmap := QPixMap():new( "harbour-icon.png" )                        // Image
-   oIcon := QIcon():new( oPixMap )                                       // Icon (reusing the image)
-   oFont := QFont():new()                                                // Bold Italic font
+   oBackBrush := QBrush( QColor( 255, 255, 100 ), Qt_BDiagPattern ) // Yellow Diagonal lines
+   oSize := QSize( 80, 30 )                                        // Default header sizes
+   oPixmap := QPixMap( "harbour-icon.png" )                        // Image
+   oIcon := QIcon( oPixMap )                                       // Icon (reusing the image)
+   oFont := QFont()                                                // Bold Italic font
    oFont:setBold( .T. )
    oFont:setItalic( .T. )
    /* ------------------------------------------------------- */
 
-   tb1 := QTableView():new()
+   tb1 := QTableView()
 
-   mo1 := HBQAbstractItemModel():New( {| t, r, x, y| my_aim( t, r, x, y ) } )
+   mo1 := HBQAbstractItemModel( {| t, r, x, y| my_aim( t, r, x, y ) } )
    tb1:setModel( mo1 )
 
    lay1:addWidget( tb1 )
 
-   lay2 := QHBoxLayout():new()
+   lay2 := QHBoxLayout()
    lay1:addlayout( lay2 )
 
-   ( bt1 := QPushButton():new() ):SetText( "Dummy 1" )
-   ( bt2 := QPushButton():new() ):SetText( "Dummy 2" )
-   ( bt3 := QPushButton():new() ):SetText( "Dummy 3" )
+   ( bt1 := QPushButton() ):SetText( "Dummy 1" )
+   ( bt2 := QPushButton() ):SetText( "Dummy 2" )
+   ( bt3 := QPushButton() ):SetText( "Dummy 3" )
 
    lay2:addWidget( bt1 )
    lay2:addStretch()

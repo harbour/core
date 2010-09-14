@@ -19,8 +19,8 @@ STATIC s_qApp
 STATIC s_re1
 
 INIT PROCEDURE Qt_Start()
-   s_qApp := QApplication():new()
-   s_re1 := QResource():new()
+   s_qApp := QApplication()
+   s_re1 := QResource()
    s_re1:registerResource_1( HBQTRES_TESTRES() )
    RETURN
 
@@ -35,17 +35,17 @@ PROCEDURE Main()
    LOCAL lb1
    LOCAL ly1
 
-   oWnd := QMainWindow():new()
+   oWnd := QMainWindow()
    oWnd:setWindowIcon( ":harbour-icon.png" )
 
-   oDA := QWidget():new()
+   oDA := QWidget()
    oWnd:setCentralWidget( oDA )
 
-   lb1 := Qlabel():new()
+   lb1 := Qlabel()
    lb1:setAlignment( hb_bitOr( Qt_AlignHCenter, Qt_AlignVCenter ) )
-   lb1:setPixMap( QPixMap():new( ":harbour-logo.png" ) )
+   lb1:setPixMap( QPixMap( ":harbour-logo.png" ) )
 
-   ly1 := QVBoxLayout():new( oDA )
+   ly1 := QVBoxLayout( oDA )
    ly1:addWidget( lb1 )
 
    oWnd:Show()

@@ -33,7 +33,7 @@ STATIC oColorLN
 REQUEST HB_QT
 
 INIT PROCEDURE Qt_Start()
-   qApp := QApplication():new()
+   qApp := QApplication()
    qSlots := QT_SLOTS_NEW()
    RETURN
 
@@ -47,24 +47,24 @@ PROCEDURE Main()
    SET DATE ANSI
    SET CENTURY ON
 
-   oColorN := QColor():New( 100,   0,100 )
-   oColorD := QColor():New( 150, 100,  0 )
-   oColorLY:= QColor():New(   0, 150,  0 )
-   oColorLN:= QColor():New( 200,   0,  0 )
+   oColorN := QColor( 100,   0,100 )
+   oColorD := QColor( 150, 100,  0 )
+   oColorLY:= QColor(   0, 150,  0 )
+   oColorLN:= QColor( 200,   0,  0 )
 
-   oWnd := QMainWindow():new()
+   oWnd := QMainWindow()
    oWnd:resize(640,460 )
 
-   oDA := QWidget():new()
+   oDA := QWidget()
    oWnd:setCentralWidget( oDA )
-   lay1 := QVBoxLayout():new( oDA )
+   lay1 := QVBoxLayout( oDA )
 
    DBUseArea( .T., NIL, "../../../tests/test.dbf", "T1", .F., .F. )
    aStru1 := DBStruct()
    nCX1 := 0
    nCY1 := 0
-   tb1 := QTableView():new()
-   mo1 := HBQAbstractItemModel():New( {| t, r, x, y| my_browse( 1, aStru1, t, r, x, y ) } )
+   tb1 := QTableView()
+   mo1 := HBQAbstractItemModel( {| t, r, x, y| my_browse( 1, aStru1, t, r, x, y ) } )
    tb1:setModel( mo1 )
 
    QT_SLOTS_CONNECT( qSlots, tb1:itemDelegate(), "commitData(QWidget)", {| w | my_save( w, 1, aStru1, @nCX1, @nCY1 ) } )
@@ -76,16 +76,16 @@ PROCEDURE Main()
    NEXT
    QHeaderView():from( tb1:verticalHeader() ):setDefaultSectionSize( 24 )
 
-   oSize := QSize():new(50,24)
+   oSize := QSize(50,24)
 
    lay1:addWidget( tb1 )
 
-   lay2 := QHBoxLayout():new()
+   lay2 := QHBoxLayout()
    lay1:addlayout( lay2 )
 
-   ( bt1 := QPushButton():new() ):SetText( "Dummy 1" )
-   ( bt2 := QPushButton():new() ):SetText( "Dummy 2" )
-   ( bt3 := QPushButton():new() ):SetText( "Dummy 3" )
+   ( bt1 := QPushButton() ):SetText( "Dummy 1" )
+   ( bt2 := QPushButton() ):SetText( "Dummy 2" )
+   ( bt3 := QPushButton() ):SetText( "Dummy 3" )
 
    lay2:addWidget( bt1 )
    lay2:addStretch()
