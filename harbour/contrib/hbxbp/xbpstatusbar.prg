@@ -123,7 +123,7 @@ METHOD XbpStatusBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
    ENDIF
    ::oParent := oPar
 
-   ::oWidget := QStatusBar():new()
+   ::oWidget := QStatusBar()
    ::oParent:oWidget:setStatusBar( ::oWidget )
 
    ::oWidget:setSizeGripEnabled( ::sizeGrip )
@@ -359,7 +359,7 @@ METHOD XbpStatusBarPanel:create( cCaption, nStyle, cKey )
    ::key            := cKey
 
    // take care of nStyle - later - label right now
-   ::oWidget := QLabel():new()
+   ::oWidget := QLabel()
 
    RETURN Self
 

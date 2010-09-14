@@ -107,7 +107,7 @@ METHOD XbpRadioButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::oWidget := QRadioButton():New( ::oParent:oWidget )
+   ::oWidget := QRadioButton( ::oParent:oWidget )
 
    ::oWidget:connect( "clicked()", {|| ::execSlot( "clicked()" ) } )
 

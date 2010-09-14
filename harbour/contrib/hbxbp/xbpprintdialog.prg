@@ -110,7 +110,7 @@ METHOD XbpPrintDialog:create( oParent, oOwner )
 
    ::xbpWindow:create( oParent, oOwner )
 
-   ::oWidget := QPrintDialog():new()
+   ::oWidget := QPrintDialog()
 
    ::oWidget:connect( "accepted(QPrinter)", {|p| ::pPrinter := p } )
 

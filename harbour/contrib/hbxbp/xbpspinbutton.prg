@@ -138,7 +138,7 @@ METHOD XbpSpinButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::oWidget := QSpinBox():new( ::pParent )
+   ::oWidget := QSpinBox( ::pParent )
    ::oWidget:setKeyboardTracking( .t. )
    IF ::fastSpin
       ::oWidget:setAccelerated( .t. )

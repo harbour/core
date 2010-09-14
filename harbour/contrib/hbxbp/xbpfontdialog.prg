@@ -187,7 +187,7 @@ METHOD XbpFontDialog:create( oParent, oOwner, oScreenPS, oPrinterPS, aPos )
 
    ::xbpWindow:create( oParent, oOwner )
 
-   ::oWidget := QFontDialog():new()
+   ::oWidget := QFontDialog()
 
    if !empty( ::title )
       ::oWidget:setWindowTitle( ::title )
@@ -241,7 +241,7 @@ METHOD XbpFontDialog:display( nMode )
 
    /* Before Display Initialize the Variables
     */
-   ::oFont := QFont():new()
+   ::oFont := QFont()
 
    ::oFont:setFamily( ::familyName )
    IF ::nominalPointSize > 0
@@ -393,10 +393,11 @@ CLASS XbpFont
    METHOD   new( oPS )
    METHOD   create( cFontName )
    METHOD   configure( cFontName )
+   METHOD   destroy()
    METHOD   list()
    METHOD   createFont()
 
-   DESTRUCTOR destroy()
+   DESTRUCTOR _destroy()
 
    ENDCLASS
 
@@ -430,7 +431,7 @@ METHOD XbpFont:create( cFontName )
       nPtSize := 12
    ENDIF
 
-   ::oWidget := QFont():new( cFont, nPtSize )
+   ::oWidget := QFont( cFont, nPtSize )
 
    ::oWidget:setBold( ::bold )
    ::oWidget:setItalic( ::italic )
@@ -463,7 +464,7 @@ METHOD XbpFont:create( cFontName )
    //::oWidget:initialize()
 
    /* Call the final step - beyond that any changes to properties above will have NO effect */
-   ::oFontInfo := QFontInfo():new( ::oWidget )
+   ::oFontInfo := QFontInfo( ::oWidget )
 
    /* Reassign actual properties */
    ::bold        := ::oFontInfo:bold()
@@ -494,6 +495,15 @@ METHOD XbpFont:configure( cFontName )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpFont:destroy()
+
+   ::oFontInfo:pPtr := NIL
+   ::oWidget:pPtr   := 0
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpFont:_destroy()
 
    ::oFontInfo:pPtr := NIL
    ::oWidget:pPtr   := 0

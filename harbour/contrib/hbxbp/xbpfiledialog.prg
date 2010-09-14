@@ -110,7 +110,7 @@ METHOD XbpFileDialog:create( oParent, oOwner, aPos )
 
    ::xbpWindow:create( oParent, oOwner, aPos )
 
-   ::oWidget := QFileDialog():new( ::pParent )
+   ::oWidget := QFileDialog( ::pParent )
    //::oWidget:setStyle( AppDesktop():style() )
    //::setStyle()
    //::setColorBG( GraMakeRGBColor( { 255,255,255 } ) )
@@ -203,7 +203,7 @@ METHOD XbpFileDialog:open( cDefaultFile, lCenter, lAllowMultiple, lCreateNewFile
       IF len( ::fileFilters ) == 1
          ::oWidget:setNameFilter( Xbp_ArrayToFileFilter( ::fileFilters[ 1 ] ) )
       ELSE
-         oList := QStringList():new()
+         oList := QStringList()
          FOR i := 1 TO len( ::fileFilters )
             oList:append( Xbp_ArrayToFileFilter( ::fileFilters[ i ] ) )
          NEXT
@@ -254,7 +254,7 @@ METHOD XbpFileDialog:saveAs( cDefaultFile, lFileList, lCenter )
       IF len( ::fileFilters ) == 1
          ::oWidget:setNameFilter( Xbp_ArrayToFileFilter( ::fileFilters[ 1 ] ) )
       ELSE
-         oList := QStringList():new()
+         oList := QStringList()
          FOR i := 1 TO len( ::fileFilters )
             oList:append( Xbp_ArrayToFileFilter( ::fileFilters[ i ] ) )
          NEXT

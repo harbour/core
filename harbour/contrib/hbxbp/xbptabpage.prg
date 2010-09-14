@@ -135,7 +135,7 @@ METHOD XbpTabPage:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    oPar := ::oParent:oTabWidget
 
-   ::oWidget := QWidget():new()
+   ::oWidget := QWidget()
    ::oWidget:setContextMenuPolicy( Qt_CustomContextMenu )
    ::oWidget:setObjectName( "Tab_Page" )
 
@@ -281,7 +281,7 @@ METHOD XbpTabWidget:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::oWidget := QTabWidget():new( ::pParent )
+   ::oWidget := QTabWidget( ::pParent )
    ::oWidget:setContextMenuPolicy( Qt_CustomContextMenu )
    ::oWidget:setObjectName( "Tab_Widget" )
 
@@ -320,7 +320,7 @@ METHOD XbpTabWidget:execSlot( cSlot, p )
 
    IF hb_isPointer( p )
       qPoint  := QPoint():from( ::oWidget:mapToGlobal( p ) )
-      qApp    := QApplication():new()
+      qApp    := QApplication()
       pWidget := QWidget():from( qApp:widgetAt( qPoint ) )
       iIndex  := ascan( ::aChildren, {|o| hbqt_IsEqualGcQtPointer( o:oWidget:pPtr, pWidget:pPtr ) } ) - 1
 HB_TRACE( HB_TR_DEBUG, "iIndex", iIndex, pWidget:objectName() )

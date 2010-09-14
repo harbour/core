@@ -156,7 +156,7 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ENDIF
       ::oWidget:setMouseTracking( .t. )
    ELSE
-      ::oWidget := QMainWindow():new()
+      ::oWidget := QMainWindow()
       ::oWidget:setMouseTracking( .t. )
       ::oWidget:setObjectName( "mainWindow" )
    ENDIF
@@ -208,7 +208,7 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
 
    /* Install Event Loop per Dialog Basis */
-   ::oEventLoop := QEventLoop():new( ::pWidget )
+   ::oEventLoop := QEventLoop( ::pWidget )
    hbxbp_SetEventLoop( ::oEventLoop )
 
    /* Instal Event Filter */
@@ -420,7 +420,7 @@ METHOD XbpDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
       ::oWidget := QWidget()
       ::oWidget:pPtr := hbqt_ptr( ::qtObject )
    ELSE
-      ::oWidget := QWidget():new()// ::oParent:oWidget )
+      ::oWidget := QWidget()
    ENDIF
 
    ::oWidget:setMouseTracking( .T. )

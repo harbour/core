@@ -544,7 +544,7 @@ METHOD new( nTop, nLeft, nBottom, nRight ) CLASS XbpBrowse
 
    ::colorSpec := SetColor()
 
-   ::oDefaultCellSize := QSize():New(20,::nCellHeight)
+   ::oDefaultCellSize := QSize(20,::nCellHeight)
 
    RETURN Self
 
@@ -561,7 +561,7 @@ METHOD XbpBrowse:openPersistentEditor()
 METHOD XbpBrowse:buildLeftFreeze()
 
    /*  Left Freeze */
-   ::oLeftView := HBQTableView():new()
+   ::oLeftView := HBQTableView()
    //
    ::oLeftView:setHorizontalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
    ::oLeftView:setVerticalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
@@ -580,14 +580,14 @@ METHOD XbpBrowse:buildLeftFreeze()
    ::oLeftHeaderView:configure( ::oLeftView:horizontalHeader() )
    ::oLeftHeaderView:setHighlightSections( .F. )
 
-   ::oLeftDbfModel := HBQAbstractItemModel():new( {|t,role,x,y| ::supplyInfo( 151, t, role, x, y ) } )
+   ::oLeftDbfModel := HBQAbstractItemModel( {|t,role,x,y| ::supplyInfo( 151, t, role, x, y ) } )
 
    ::oLeftView:setModel( ::oLeftDbfModel )
    //
    //::oLeftView:hide()
 
    /*  Horizontal Footer */
-   ::oLeftFooterView := QHeaderView():new( Qt_Horizontal )
+   ::oLeftFooterView := QHeaderView( Qt_Horizontal )
    //
    ::oLeftFooterView:setHighlightSections( .F. )
    ::oLeftFooterView:setMinimumHeight( 20 )
@@ -595,7 +595,7 @@ METHOD XbpBrowse:buildLeftFreeze()
    ::oLeftFooterView:setResizeMode( QHeaderView_Fixed )
    ::oLeftFooterView:setFocusPolicy( Qt_NoFocus )
    //
-   ::oLeftFooterModel := HBQAbstractItemModel():new( {|t,role,x,y| ::supplyInfo( 152, t, role, x, y ) } )
+   ::oLeftFooterModel := HBQAbstractItemModel( {|t,role,x,y| ::supplyInfo( 152, t, role, x, y ) } )
 
    ::oLeftFooterView:setModel( ::oLeftFooterModel )
    //
@@ -613,7 +613,7 @@ METHOD XbpBrowse:buildRightFreeze()
    LOCAL oVHdr
 
    /*  Left Freeze */
-   ::oRightView := HBQTableView():new()
+   ::oRightView := HBQTableView()
    //
    ::oRightView:setHorizontalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
    ::oRightView:setVerticalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
@@ -632,12 +632,12 @@ METHOD XbpBrowse:buildRightFreeze()
    ::oRightHeaderView:configure( ::oRightView:horizontalHeader() )
    ::oRightHeaderView:setHighlightSections( .F. )
 
-   ::oRightDbfModel := HBQAbstractItemModel():new( {|t,role,x,y| ::supplyInfo( 161, t, role, x, y ) } )
+   ::oRightDbfModel := HBQAbstractItemModel( {|t,role,x,y| ::supplyInfo( 161, t, role, x, y ) } )
 
    ::oRightView:setModel( ::oRightDbfModel )
 
    /*  Horizontal Footer */
-   ::oRightFooterView := QHeaderView():new( Qt_Horizontal )
+   ::oRightFooterView := QHeaderView( Qt_Horizontal )
    //
    ::oRightFooterView:setHighlightSections( .F. )
    ::oRightFooterView:setMinimumHeight( 20 )
@@ -645,7 +645,7 @@ METHOD XbpBrowse:buildRightFreeze()
    ::oRightFooterView:setResizeMode( QHeaderView_Fixed )
    ::oRightFooterView:setFocusPolicy( Qt_NoFocus )
    //
-   ::oRightFooterModel := HBQAbstractItemModel():new( {|t,role,x,y| ::supplyInfo( 162, t, role, x, y ) } )
+   ::oRightFooterModel := HBQAbstractItemModel( {|t,role,x,y| ::supplyInfo( 162, t, role, x, y ) } )
 
    ::oRightFooterView:setModel( ::oRightFooterModel )
 
@@ -662,14 +662,14 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::oWidget := QFrame():new( ::pParent )
+   ::oWidget := QFrame( ::pParent )
    ::oWidget:setFrameStyle( QFrame_Panel + QFrame_Plain )
 
    /* Important here as other parts will be based on it*/
    ::setPosAndSize()
 
    /* Subclass of QTableView */
-   ::oTableView := HBQTableView():new()
+   ::oTableView := HBQTableView()
 
    /* Some parameters */
    ::oTableView:setTabKeyNavigation( .t. )
@@ -691,7 +691,7 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    /* Finetune Horizontal Scrollbar */
    ::oTableView:setHorizontalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
    //
-   ::oHScrollBar := QScrollBar():new()
+   ::oHScrollBar := QScrollBar()
    ::oHScrollBar:setOrientation( Qt_Horizontal )
    ::oHScrollBar:connect( "actionTriggered(int)"             , {|i| ::execSlot( __ev_horzscroll_slidermoved__   , i ) } )
    ::oHScrollBar:connect( "sliderReleased()"                 , {|i| ::execSlot( __ev_horzscroll_sliderreleased__, i ) } )
@@ -699,7 +699,7 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    /*  Replace Vertical Scrollbar with our own */
    ::oTableView:setVerticalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
    //
-   ::oVScrollBar := QScrollBar():new()
+   ::oVScrollBar := QScrollBar()
    ::oVScrollBar:setOrientation( Qt_Vertical )
    ::oVScrollBar:connect( "actionTriggered(int)"             , {|i| ::execSlot( __ev_vertscroll_via_user__      , i ) } )
    ::oVScrollBar:connect( "sliderReleased()"                 , {|i| ::execSlot( __ev_vertscroll_sliderreleased__, i ) } )
@@ -718,13 +718,13 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oHeaderView:connect( "sectionResized(int,int,int)"      , {|i,i1,i2| ::execSlot( __ev_headersec_resized__   , i, i1, i2 ) } )
 
    /* .DBF Manipulation Model */
-   ::oDbfModel := HBQAbstractItemModel():new( {|t,role,x,y| ::supplyInfo( 141, t, role, x, y ) } )
+   ::oDbfModel := HBQAbstractItemModel( {|t,role,x,y| ::supplyInfo( 141, t, role, x, y ) } )
 
    /*  Attach Model with the View */
    ::oTableView:setModel( ::oDbfModel )
 
    /*  Horizontal Footer */
-   ::oFooterView := QHeaderView():new( Qt_Horizontal )
+   ::oFooterView := QHeaderView( Qt_Horizontal )
    //
    ::oFooterView:setHighlightSections( .F. )
 
@@ -733,7 +733,7 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oFooterView:setResizeMode( QHeaderView_Fixed )
    ::oFooterView:setFocusPolicy( Qt_NoFocus )
    //
-   ::oFooterModel := HBQAbstractItemModel():new( {|t,role,x,y| ::supplyInfo( 142, t, role, x, y ) } )
+   ::oFooterModel := HBQAbstractItemModel( {|t,role,x,y| ::supplyInfo( 142, t, role, x, y ) } )
 
    ::oFooterView:setModel( ::oFooterModel )
    ::oFooterView:setFocusPolicy( Qt_NoFocus )
@@ -744,7 +744,7 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::buildRightFreeze()
 
    /* Place all widgets in a Grid Layout */
-   ::oGridLayout := QGridLayout():new( ::pWidget )
+   ::oGridLayout := QGridLayout( ::pWidget )
    ::oGridLayout:setContentsMargins( 0,0,0,0 )
    ::oGridLayout:setHorizontalSpacing( 0 )
    ::oGridLayout:setVerticalSpacing( 0 )
@@ -778,7 +778,7 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oWidget:setGeometry( qRect )
 
    /* Handle the delegate */
-   ::qDelegate := QItemDelegate():new()
+   ::qDelegate := QItemDelegate()
    ::oTableView:setItemDelegate( ::qDelegate )
 
    ::qDelegate:connect( "closeEditor(QWidget,int)", {|p,p1| ::execSlot( __editor_closeEditor__, p, p1 ) } )
@@ -856,7 +856,7 @@ METHOD XbpBrowse:execSlot( nEvent, p1, p2, p3 )
    CASE nEvent == __ev_mousepress__
       oMouseEvent := QMouseEvent():configure( p1 )
 
-      oPoint := QPoint():new( oMouseEvent:x(), oMouseEvent:y() )
+      oPoint := QPoint( oMouseEvent:x(), oMouseEvent:y() )
       ::oModelIndex:configure( ::oTableView:indexAt( oPoint ) )
       IF ::oModelIndex:isValid()      /* Reposition the record pointer */
          SetAppEvent( xbeBRW_Navigate, XBPBRW_Navigate_Skip, ( ::oModelIndex:row() + 1 ) - ::rowPos, Self )
@@ -1342,12 +1342,12 @@ METHOD fetchColumnInfo( nCall, nRole, nArea, nRow, nCol ) CLASS XbpBrowse
 //   Implementation choice will depend on planned HBQt evolution of pseudo casts and bypass functions (non GC QColor, QIcon, etc)
 
 METHOD compatColor( nColor )
-   RETURN QColor():new( nColor )
+   RETURN QColor( nColor )
 
 /*----------------------------------------------------------------------*/
 
 METHOD compatIcon( cIcon )
-   RETURN QIcon():new( QPixmap():new( Trim( cIcon ) ) )
+   RETURN QIcon( QPixmap( Trim( cIcon ) ) )
 
 /*----------------------------------------------------------------------*/
 
@@ -1728,7 +1728,7 @@ METHOD doConfigure() CLASS XbpBrowse
       ::oRightFooterView:setResizeMode( QHeaderView_Fixed )
 
       /* Set column widths */
-      oFontMetrics := QFontMetrics():new( "QFont", ::oTableView:font() )
+      oFontMetrics := QFontMetrics( "QFont", ::oTableView:font() )
       //
       FOR i := 1 TO len( ::columns )
          IF ::columns[ i ]:nColWidth != NIL

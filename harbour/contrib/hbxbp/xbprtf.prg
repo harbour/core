@@ -169,7 +169,7 @@ METHOD XbpRtf:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::oWidget := QTextEdit():new( ::pParent )
+   ::oWidget := QTextEdit( ::pParent )
 
 *  ::oWidget:connect( "copyAvailable(bool)"                      , {|p| ::execSlot( "copyAvailable(bool)"    , p ) } )
    ::oWidget:connect( "currentCharFormatChanged(QTextCharFormat)", {|p| ::execSlot( "currentCharFormatChanged(QTextCharFormat)", p ) } )
@@ -490,8 +490,8 @@ METHOD XbpRtf:selColor( ... )
       IF ::oTextCharFormat:isValid()
          xRet   := ::oTextCharFormat:foreground()
          nColor := hbxbp_ConvertAFactFromXBP( "COLOR", aP[ 1 ] )
-         oColor := QColor():new( nColor )
-         oBrush := QBrush():new( "QColor", oColor )
+         oColor := QColor( nColor )
+         oBrush := QBrush( "QColor", oColor )
          ::oTextCharFormat:setForeground( oBrush )
          ::oCurCursor:setCharFormat( ::oTextCharFormat )
       ENDIF

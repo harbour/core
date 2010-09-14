@@ -104,7 +104,7 @@ METHOD XbpClipBoard:new()
 
 METHOD XbpClipBoard:create()
 
-   ::oWidget := QClipBoard():new()
+   ::oWidget := QClipBoard()
 
    RETURN Self
 

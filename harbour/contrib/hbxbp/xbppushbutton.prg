@@ -119,7 +119,7 @@ METHOD XbpPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::oWidget := QPushButton():new( ::oParent:oWidget )
+   ::oWidget := QPushButton( ::oParent:oWidget )
    ::oWidget:setFocusPolicy( Qt_StrongFocus )
 
    ::setPosAndSize()
@@ -150,7 +150,7 @@ METHOD XbpPushButton:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParam
       ::oWidget:pPtr := pQtObject
 
    ELSE
-      ::oWidget := QPushButton():new( ::oParent:oWidget )
+      ::oWidget := QPushButton( ::oParent:oWidget )
       ::setPosAndSize()
       IF ::visible
          ::oWidget:show()

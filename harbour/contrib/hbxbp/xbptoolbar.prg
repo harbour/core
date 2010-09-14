@@ -152,13 +152,13 @@ METHOD XbpToolbar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
    ::oParent := oPar
 
-   ::oWidget := QToolBar():new( ::oParent:oWidget )
+   ::oWidget := QToolBar( ::oParent:oWidget )
    ::oWidget:setObjectName( "XBPTOOLBARMAIN" )
    ::oWidget:setWindowTitle( "Toolbar: Main" )
    ::oParent:oWidget:addToolBar_1( ::oWidget )
 
    IF ::imageWidth > 0 .and. ::imageHeight > 0
-      ::oWidget:setIconSize( QSize():new( ::imageWidth, ::imageHeight ) )
+      ::oWidget:setIconSize( QSize( ::imageWidth, ::imageHeight ) )
    ENDIF
 
    #if 0
@@ -269,7 +269,7 @@ METHOD XbpToolbar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
 
       ELSE
          /* Create an action */
-         oBtn:oAction := QAction():new( ::oWidget )
+         oBtn:oAction := QAction( ::oWidget )
          oBtn:oAction:setText( cCaption )
 
          IF valtype( xImage ) == "C" .and. hb_FileExists( xImage )

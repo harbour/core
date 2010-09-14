@@ -179,7 +179,7 @@ METHOD HbpProcess:output( bBlock )
 METHOD HbpProcess:addArg( cArg )
 
    IF empty( ::qStrList )
-      ::qStrList := QStringList():new()
+      ::qStrList := QStringList()
    ENDIF
    ::qStrList:append( cArg )
 
@@ -193,7 +193,7 @@ METHOD HbpProcess:start( cShellCmd )
 
    ::cShellCmd := cShellCmd
 
-   ::qProcess := QProcess():new()
+   ::qProcess := QProcess()
    ::qProcess:setReadChannel( 1 )
 
    #if 0

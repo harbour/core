@@ -155,7 +155,7 @@ METHOD XbpHTMLViewer:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    #if 0  /* Discontinued till QWebKit is integrated separately - Pritpal */
-   ::oWidget := QWebView():new( ::pParent )
+   ::oWidget := QWebView( ::pParent )
 
    ::oWidget:connect( "iconChanged()"            , {|p| ::execSlot( "iconChanged()"            , p ) } )
    ::oWidget:connect( "linkClicked(QUrl)"        , {|p| ::execSlot( "linkClicked(QUrl)"        , p ) } )
@@ -241,7 +241,7 @@ HB_TRACE( HB_TR_DEBUG, ::cSelectedText )
 METHOD XbpHTMLViewer:navigate( cURL )
 
    IF empty( ::oURL )
-      ::oURL := QUrl():new()
+      ::oURL := QUrl()
    ENDIF
 
    ::oURL:setURL( cURL )

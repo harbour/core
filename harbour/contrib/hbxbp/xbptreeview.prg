@@ -135,7 +135,7 @@ METHOD XbpTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::oWidget := QTreeWidget():new( ::pParent )
+   ::oWidget := QTreeWidget( ::pParent )
    ::oWidget:setMouseTracking( .t. )
    ::oWidget:setColumnCount( 1 )
    ::oWidget:setHeaderHidden( .t. )
@@ -390,7 +390,7 @@ METHOD XbpTreeViewItem:addItem( xItem, xNormalImage, xMarkedImage, xExpandedImag
    IF valtype( xItem ) == 'C'
       oItem := XbpTreeViewItem():New()
       oItem:caption := xItem
-      oItem:oWidget := QTreeWidgetItem():new()
+      oItem:oWidget := QTreeWidgetItem()
       oItem:oWidget:setText( 0, oItem:caption )
    ELSE
       oItem := xItem   // aNode
@@ -430,7 +430,7 @@ METHOD XbpTreeViewItem:new()
 
 METHOD XbpTreeViewItem:create()
 
-   ::oWidget := QTreeWidgetItem():new()
+   ::oWidget := QTreeWidgetItem()
    ::oWidget:setText( 0,::caption )
 
    RETURN Self

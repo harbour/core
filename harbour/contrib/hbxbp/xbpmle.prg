@@ -135,7 +135,7 @@ METHOD XbpMLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::oWidget := QPlainTextEdit():new( ::pParent )
+   ::oWidget := QPlainTextEdit( ::pParent )
 
    IF !( ::editable )
       ::oWidget:setReadOnly( .t. )

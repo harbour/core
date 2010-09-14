@@ -162,9 +162,9 @@ FUNCTION PostAppEvent( nEvent, mp1, mp2, oXbp )
 
    IF nEvent == xbeP_Keyboard
       IF mp1 == xbeK_TAB
-         qEvent := QEvent():new( QEvent_KeyPress )
+         qEvent := QEvent( QEvent_KeyPress )
          //s_oApp:postEvent( oXbp:oWidget, qEvent )
-         QApplication():new():postEvent( oXbp:oWidget, qEvent )
+         QApplication():postEvent( oXbp:oWidget, qEvent )
       ENDIF
    ENDIF
 
@@ -292,7 +292,7 @@ FUNCTION AppDesktop()
 
    IF s_oDeskTop == NIL
       s_oDeskTop := XbpWindow():new()
-      s_oDeskTop:oWidget := QDesktopWidget():new()
+      s_oDeskTop:oWidget := QDesktopWidget()
    ENDIF
 
    RETURN s_oDeskTop
@@ -308,7 +308,7 @@ FUNCTION MsgBox( cMsg, cTitle )
    cMsg := strtran( cMsg, chr( 13 ), "<br />" )
    cMsg := strtran( cMsg, chr( 10 ), "<br />" )
 
-   oMB := QMessageBox():new()
+   oMB := QMessageBox()
    oMB:setText( /* "<b>" + */ cMsg /* + "</b>" */ )
    oMB:setIcon( QMessageBox_Information )
    IF hb_isObject( SetAppWindow() )

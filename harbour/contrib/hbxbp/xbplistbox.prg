@@ -163,7 +163,7 @@ METHOD XbpListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
    #endif
 
-   ::oWidget  := QListWidget():New( ::pParent )
+   ::oWidget  := QListWidget( ::pParent )
    ::oWidget:setMouseTracking( .t. )
    IF ::markMode == XBPLISTBOX_MM_MULTIPLE
       ::oWidget:setSelectionMode( QAbstractItemView_MultiSelection )
@@ -336,7 +336,7 @@ METHOD XbpListBox:destroy()
 /*----------------------------------------------------------------------*/
 
 METHOD XbpListBox:addItem( cItem )
-   LOCAL qItm := QListWidgetItem():new()
+   LOCAL qItm := QListWidgetItem()
 
    qItm:setText( cItem ) ; ::oWidget:addItem_1( qItm )
    aadd( ::aItems, qItm )
@@ -384,7 +384,7 @@ METHOD XbpListBox:getItem( nIndex )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpListBox:insItem( nIndex, cItem )
-   LOCAL qItm := QListWidgetItem():new()
+   LOCAL qItm := QListWidgetItem()
 
    qItm:setText( cItem )
 
@@ -427,17 +427,17 @@ METHOD XbpListBox:setItemColorFG( nIndex, aRGB )
 
    IF hb_isNumeric( nIndex ) .AND. nIndex > 0 .AND. nIndex <= len( ::aItems )
       IF ::nOldIndex > 0  .AND. ::nOldIndex <= len( ::aItems )
-         ::aItems[ ::nOldIndex ]:setForeGround( QBrush():new( "QColor", QColor():new( 0,0,0 ) ) )
+         ::aItems[ ::nOldIndex ]:setForeGround( QBrush( "QColor", QColor( 0,0,0 ) ) )
       ENDIF
-      ::aItems[ nIndex ]:setForeGround( QBrush():new( "QColor", QColor():new( aRGB[ 1 ], aRGB[ 2 ], aRGB[ 3 ] ) ) )
+      ::aItems[ nIndex ]:setForeGround( QBrush( "QColor", QColor( aRGB[ 1 ], aRGB[ 2 ], aRGB[ 3 ] ) ) )
       ::nOldIndex := nIndex
 
    ELSEIF hb_isChar( nIndex )
       IF ( nIndex := ascan( ::aItems, {|o| o:text() == nIndex } ) ) > 0
          IF ::nOldIndex > 0  .AND. ::nOldIndex <= len( ::aItems )
-            ::aItems[ ::nOldIndex ]:setForeGround( QBrush():new( "QColor", QColor():new( 0,0,0 ) ) )
+            ::aItems[ ::nOldIndex ]:setForeGround( QBrush( "QColor", QColor( 0,0,0 ) ) )
          ENDIF
-         ::aItems[ nIndex ]:setForeGround( QBrush():new( "QColor", QColor():new( aRGB[ 1 ], aRGB[ 2 ], aRGB[ 3 ] ) ) )
+         ::aItems[ nIndex ]:setForeGround( QBrush( "QColor", QColor( aRGB[ 1 ], aRGB[ 2 ], aRGB[ 3 ] ) ) )
          ::nOldIndex := nIndex
       ENDIF
    ENDIF

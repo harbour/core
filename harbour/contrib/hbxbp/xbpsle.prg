@@ -145,7 +145,7 @@ METHOD XbpSLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::oWidget := QLineEdit():new( ::pParent )
+   ::oWidget := QLineEdit( ::pParent )
    ::oWidget:setFocusPolicy( Qt_StrongFocus )
 
    ::oWidget:setAlignment( es_[ ::align ] )

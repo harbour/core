@@ -148,7 +148,7 @@ METHOD XbpPrinter:create( cDeviceName, nSpoolFormat, cDeviceParams )
    HB_SYMBOL_UNUSED( nSpoolFormat )
    HB_SYMBOL_UNUSED( cDeviceParams )
 
-   ::oWidget := QPrinter():new()
+   ::oWidget := QPrinter()
 
    IF hb_isChar( cDeviceName )
       ::oWidget:setPrinterName( cDeviceName )

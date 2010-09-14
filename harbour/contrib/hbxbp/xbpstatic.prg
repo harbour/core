@@ -112,7 +112,7 @@ METHOD XbpStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    DO CASE
    // OK
    CASE ::type == XBPSTATIC_TYPE_TEXT
-      ::oWidget := QLabel():new( ::pParent )
+      ::oWidget := QLabel( ::pParent )
 
       IF ( hb_bitAnd( ::options, XBPSTATIC_TEXT_LEFT ) == XBPSTATIC_TEXT_LEFT )
          ::oWidget:setAlignment( Qt_AlignLeft )
@@ -137,11 +137,11 @@ METHOD XbpStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ENDIF
    // OK
    CASE ::type == XBPSTATIC_TYPE_GROUPBOX
-      ::oWidget := QGroupBox():new( ::pParent )
+      ::oWidget := QGroupBox( ::pParent )
 
    // OK
    CASE ::type == XBPSTATIC_TYPE_RAISEDBOX
-      ::oWidget := QFrame():new( ::pParent )
+      ::oWidget := QFrame( ::pParent )
       ::oWidget:setFrameStyle( QFrame_Panel + QFrame_Raised )
       ::setColorBG( GraMakeRGBColor( { 198, 198, 198 } ) )
       IF lThick
@@ -149,7 +149,7 @@ METHOD XbpStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ENDIF
    // OK
    CASE ::type == XBPSTATIC_TYPE_RECESSEDBOX
-      ::oWidget := QFrame():new( ::pParent )
+      ::oWidget := QFrame( ::pParent )
       ::oWidget:setFrameStyle( QFrame_Panel + QFrame_Sunken )
       ::setColorBG( GraMakeRGBColor( { 198, 198, 198 } ) )
       IF lThick
@@ -157,48 +157,48 @@ METHOD XbpStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ENDIF
    // OK
    CASE ::type == XBPSTATIC_TYPE_RAISEDRECT
-      ::oWidget := QFrame():new( ::pParent )
+      ::oWidget := QFrame( ::pParent )
       ::oWidget:setFrameStyle( QFrame_Panel + QFrame_Raised )
       IF lThick
          ::oWidget:setLineWidth( 2 )
       ENDIF
    // OK
    CASE ::type == XBPSTATIC_TYPE_RECESSEDRECT
-      ::oWidget := QFrame():new( ::pParent )
+      ::oWidget := QFrame( ::pParent )
       ::oWidget:setFrameStyle( QFrame_Panel + QFrame_Sunken )
       IF lThick
          ::oWidget:setLineWidth( 2 )
       ENDIF
    // OK
    CASE ::type == XBPSTATIC_TYPE_FGNDFRAME     // rectangle in foreground color, not filled
-      ::oWidget := QFrame():new( ::pParent )
+      ::oWidget := QFrame( ::pParent )
       ::oWidget:setFrameStyle( QFrame_Panel + QFrame_Plain )
       ::setColorFG( GraMakeRGBColor( { 0, 0, 0 } ) )
    // OK
    CASE ::type == XBPSTATIC_TYPE_BGNDFRAME
-      ::oWidget := QFrame():new( ::pParent )
+      ::oWidget := QFrame( ::pParent )
       ::oWidget:setFrameStyle( QFrame_Box + QFrame_Plain )
       ::setColorFG( GraMakeRGBColor( { 127, 127, 127 } ) )
    // OK
    CASE ::type == XBPSTATIC_TYPE_FGNDRECT
-      ::oWidget := QFrame():new( ::pParent )
+      ::oWidget := QFrame( ::pParent )
       ::setColorBG( GraMakeRGBColor( { 0, 0, 0 } ) )
    // OK
    CASE ::type == XBPSTATIC_TYPE_BGNDRECT
-      ::oWidget := QFrame():new( ::pParent )
+      ::oWidget := QFrame( ::pParent )
       ::setColorBG( GraMakeRGBColor( { 127, 127, 127 } ) )
    // OK
    CASE ::type == XBPSTATIC_TYPE_HALFTONERECT
-      ::oWidget := QFrame():new( ::pParent )
+      ::oWidget := QFrame( ::pParent )
       ::setColorBG( GraMakeRGBColor( { 255, 255, 255 } ) )
    // OK
    CASE ::type == XBPSTATIC_TYPE_HALFTONEFRAME
-      ::oWidget := QFrame():new( ::pParent )
+      ::oWidget := QFrame( ::pParent )
       ::oWidget:setFrameStyle( QFrame_Box + QFrame_Plain )
       ::setColorFG( GraMakeRGBColor( { 255, 255, 255 } ) )
    // OK
    CASE ::type == XBPSTATIC_TYPE_RAISEDLINE
-      ::oWidget := QFrame():new( ::pParent )
+      ::oWidget := QFrame( ::pParent )
       //IF ::aPos[ 1 ] + ::aSize[ 1 ] >= ::aPos[ 2 ] + ::aSize[ 2 ]
       IF ::aSize[ 1 ] >= ::aSize[ 2 ]
          ::oWidget:setFrameStyle( QFrame_HLine + QFrame_Raised )
@@ -210,7 +210,7 @@ METHOD XbpStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ENDIF
    // OK
    CASE ::type == XBPSTATIC_TYPE_RECESSEDLINE
-      ::oWidget := QFrame():new( ::pParent )
+      ::oWidget := QFrame( ::pParent )
       //IF ::aPos[ 1 ] + ::aSize[ 1 ] >= ::aPos[ 2 ] + ::aSize[ 2 ]
       IF ::aSize[ 1 ] >= ::aSize[ 2 ]
          ::oWidget:setFrameStyle( QFrame_HLine + QFrame_Sunken )
@@ -222,17 +222,17 @@ METHOD XbpStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ENDIF
 
    CASE ::type == XBPSTATIC_TYPE_ICON
-      ::oWidget := QLabel():new( ::pParent )
+      ::oWidget := QLabel( ::pParent )
 
    CASE ::type == XBPSTATIC_TYPE_SYSICON
-      ::oWidget := QLabel():new( ::pParent )
+      ::oWidget := QLabel( ::pParent )
 
    CASE ::type == XBPSTATIC_TYPE_BITMAP
-      //::oWidget := QFrame():new( ::pParent )
-      ::oWidget := QLabel():new( ::pParent )
+      //::oWidget := QFrame( ::pParent )
+      ::oWidget := QLabel( ::pParent )
 
    OTHERWISE
-      ::oWidget := QFrame():new( ::pParent )
+      ::oWidget := QFrame( ::pParent )
 
    ENDCASE
 
@@ -365,7 +365,7 @@ METHOD XbpStatic:setCaption( xCaption, cDll )
             IF ::options == XBPSTATIC_BITMAP_SCALED
                ::oWidget:setScaledContents( .t. )
             ENDIF
-            ::oWidget:setPixmap( QPixmap():new():fromImage( ::caption:oWidget ) )
+            ::oWidget:setPixmap( QPixmap():fromImage( ::caption:oWidget ) )
 
          ELSEIF hb_isChar( ::caption )               /* $HARBOUR$ */
             IF ::options == XBPSTATIC_BITMAP_SCALED
@@ -376,13 +376,13 @@ METHOD XbpStatic:setCaption( xCaption, cDll )
          ENDIF
 
       CASE ::type == XBPSTATIC_TYPE_ICON
-         ::oWidget:setPixmap( QPixmap():new( ::caption ):scaled( ::aSize[ 1 ], ::aSize[ 2 ] ) )
+         ::oWidget:setPixmap( QPixmap( ::caption ):scaled( ::aSize[ 1 ], ::aSize[ 2 ] ) )
 
       CASE ::type == XBPSTATIC_TYPE_SYSICON
          oPixmap     := QPixmap()
          oIcon       := QIcon()
          oStyle      := QStyle()
-         oStyle:pPtr := QApplication():new():style()
+         oStyle:pPtr := QApplication():style()
 
          DO CASE
          CASE ::caption == XBPSTATIC_SYSICON_ICONINFORMATION

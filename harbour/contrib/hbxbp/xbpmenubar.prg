@@ -182,7 +182,7 @@ METHOD xbpMenuBar:create( oParent, aPresParams, lVisible )
 
    ::xbpWindow:create( ::oParent, , , , ::aPresParams, ::visible )
 
-   ::oWidget := QMenuBar():new()
+   ::oWidget := QMenuBar()
    ::oParent:oWidget:setMenuBar( ::oWidget )
 
    if !empty( ::oWidget )
@@ -286,7 +286,7 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
       aItem := { QMF_SEPARATOR, 0, 0, NIL, oAction }
 
    CASE cType == "C"
-      oAction := QAction():new( ::oWidget )
+      oAction := QAction( ::oWidget )
       cCaption := strtran( xCaption, '~', '&' )
       IF ( n := at( '|', cCaption ) ) > 0
          cIcon := substr( cCaption, 1, n-1 )
@@ -301,7 +301,7 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
          oAction:setIcon( cIcon )
       ENDIF
       IF !empty( cKey )
-         oKey := QKeySequence():new( cKey )
+         oKey := QKeySequence( cKey )
          oAction:setShortcut( oKey )
       ENDIF
 
@@ -742,7 +742,7 @@ METHOD xbpMenu:create( oParent, aPresParams, lVisible )
 
    ::xbpWindow:create( ::oParent, , , , ::aPresParams, ::visible )
 
-   ::oWidget := QMenu():new()
+   ::oWidget := QMenu()
    ::oParent:oWidget:addMenu( ::oWidget )
 
    ::oParent:addChild( self )

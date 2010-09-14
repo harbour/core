@@ -87,7 +87,7 @@ CLASS XbpBitmap
    ACCESS   planes                                INLINE  0
    ACCESS   xSize                                 INLINE  ::oWidget:width()
    ACCESS   ySize                                 INLINE  ::oWidget:height()
-   
+
    METHOD   new()                                 INLINE  Self
    METHOD   create( oPS )
    METHOD   configure()                           VIRTUAL
@@ -114,7 +114,7 @@ METHOD XbpBitmap:create( oPS )
    DEFAULT oPS TO ::oPS
    ::oPS := oPS
 
-   ::oWidget := QImage():new()
+   ::oWidget := QImage()
 
    RETURN Self
 
