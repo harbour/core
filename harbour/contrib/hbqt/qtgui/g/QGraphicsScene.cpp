@@ -174,17 +174,13 @@ HB_FUNC( QT_QGRAPHICSSCENE )
    else if( hb_pcount() >= 1 && HB_ISPOINTER( 1 ) )
    {
       HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-      if( p->type == HBQT_TYPE_QObject )
-      {
-         pObj = new QGraphicsScene( hbqt_par_QObject( 1 ) ) ;
-      }
-      else if( p->type == HBQT_TYPE_QRectF )
+      if( p->type == HBQT_TYPE_QRectF )
       {
          pObj = new QGraphicsScene( *hbqt_par_QRectF( 1 ), ( HB_ISPOINTER( 2 ) ? hbqt_par_QObject( 2 ) : 0 ) ) ;
       }
       else
       {
-         pObj = new QGraphicsScene() ;
+         pObj = new QGraphicsScene( hbqt_par_QObject( 1 ) ) ;
       }
    }
    else

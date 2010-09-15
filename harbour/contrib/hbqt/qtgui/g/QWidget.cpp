@@ -189,7 +189,14 @@ HB_FUNC( QT_QWIDGET )
 {
    QWidget * pObj = NULL;
 
-   pObj = new QWidget( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
+   if( hb_pcount() >= 1 && HB_ISPOINTER( 1 ) )
+   {
+      pObj = new QWidget( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : 0 ) ) ;
+   }
+   else
+   {
+      pObj = new QWidget() ;
+   }
 
    hb_retptrGC( hbqt_gcAllocate_QWidget( ( void * ) pObj, true ) );
 }

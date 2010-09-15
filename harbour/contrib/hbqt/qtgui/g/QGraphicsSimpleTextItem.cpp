@@ -144,15 +144,7 @@ HB_FUNC( QT_QGRAPHICSSIMPLETEXTITEM )
       }
       else if( HB_ISPOINTER( 1 ) )
       {
-         HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-         if( p->type == HBQT_TYPE_QGraphicsItem )
-         {
-            pObj = new QGraphicsSimpleTextItem( hbqt_par_QGraphicsItem( 1 ) ) ;
-         }
-         else
-         {
-            pObj = new QGraphicsSimpleTextItem() ;
-         }
+         pObj = new QGraphicsSimpleTextItem( hbqt_par_QGraphicsItem( 1 ) ) ;
       }
       else
       {

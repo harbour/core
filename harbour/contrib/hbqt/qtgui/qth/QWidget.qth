@@ -72,7 +72,14 @@ New      = pParent, nFlags
  */
 HB_FUNC( QT_QWIDGET )
 {
-   hb_retptr( new QWidget( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+   if( hb_pcount() >= 1 && HB_ISPOINTER( 1 ) )
+   {
+      hb_retptr( new QWidget( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : 0 ) ) );
+   }
+   else
+   {
+      hb_retptr( new QWidget() );
+   }
 }
 </CODE>
 

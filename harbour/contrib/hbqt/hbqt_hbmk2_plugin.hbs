@@ -505,7 +505,7 @@ STATIC FUNCTION hbq_gen_ui_prg( cFile, cFuncName )
    hbq_stripFront( @cMCls, "(" )
    hbq_stripRear( @cMNam, ")" )
 
-   AAdd( aWidgets, { cMCls, cMNam, cMCls + "()", cMCls + "():new()" } )
+   AAdd( aWidgets, { cMCls, cMNam, cMCls + "()", cMCls + "()" } )
 
    /* Normalize */
    FOR EACH s IN aLines
@@ -536,10 +536,10 @@ STATIC FUNCTION hbq_gen_ui_prg( cFile, cFuncName )
             s := AllTrim( StrTran( s, cCls, "",, 1 ) )
             IF ( n := At( "(", s ) ) > 0
                cNam := SubStr( s, 1, n - 1 )
-               AAdd( aWidgets, { cCls, cNam, cCls + "()", cCls + "():new" + SubStr( s, n ) } )
+               AAdd( aWidgets, { cCls, cNam, cCls + "()", cCls + SubStr( s, n ) } )
             ELSE
                cNam := s
-               AAdd( aWidgets, { cCls, cNam, cCls + "()", cCls + "():new()" } )
+               AAdd( aWidgets, { cCls, cNam, cCls + "()", cCls + "()" } )
             ENDIF
 
          ELSEIF hbq_isObjectNameSet( s )
@@ -591,7 +591,7 @@ STATIC FUNCTION hbq_gen_ui_prg( cFile, cFuncName )
             cCmd := hbq_setObjects( cCmd, aWidgets )
             n := At( "(", cCmd )
             cCls := SubStr( cCmd, 1, n - 1 )
-            AAdd( aWidgets, { cCls, cNam, cCls + "()", cCls + "():new" + SubStr( cCmd, n ) } )
+            AAdd( aWidgets, { cCls, cNam, cCls + "()", cCls + SubStr( cCmd, n ) } )
 
          ENDIF
       ENDIF
@@ -614,13 +614,13 @@ STATIC FUNCTION hbq_gen_ui_prg( cFile, cFuncName )
 
    SWITCH cMCls
    CASE "QDialog"
-      AAdd( aLinesPRG, "   oWidget := QDialog():new( qParent )" )
+      AAdd( aLinesPRG, "   oWidget := QDialog( qParent )" )
       EXIT
    CASE "QWidget"
-      AAdd( aLinesPRG, "   oWidget := QWidget():new( qParent )" )
+      AAdd( aLinesPRG, "   oWidget := QWidget( qParent )" )
       EXIT
    CASE "QMainWindow"
-      AAdd( aLinesPRG, "   oWidget := QMainWindow():new( qParent )" )
+      AAdd( aLinesPRG, "   oWidget := QMainWindow( qParent )" )
       EXIT
    ENDSWITCH
    AAdd( aLinesPRG, "  " )
@@ -710,8 +710,8 @@ STATIC FUNCTION hbq_formatCommand( cCmd, lText, widgets )
    cCmd := StrTran( cCmd, "QApplication_translate"   , "q__tr"        )
    cCmd := StrTran( cCmd, "QApplication::UnicodeUTF8", '"UTF8"'       )
    cCmd := StrTran( cCmd, "QString()"                , '""'           )
-   cCmd := StrTran( cCmd, "QSize("                   , "QSize():new(" )
-   cCmd := StrTran( cCmd, "QRect("                   , "QRect():new(" )
+   cCmd := StrTran( cCmd, "QSize("                   , "QSize(" )
+   cCmd := StrTran( cCmd, "QRect("                   , "QRect(" )
 
    IF "::" $ cCmd
       regDefine := hb_regexComp( "\b[A-Za-z_]+\:\:[A-Za-z_]+\b" )
@@ -730,7 +730,7 @@ STATIC FUNCTION hbq_formatCommand( cCmd, lText, widgets )
          n1   := At( ".", cCmd )
          cCmd1 := hbq_setObjects( SubStr( cCmd, n + 1, n1 - n - 1 ), widgets )
          cCmd1 := StrTran( cCmd1, "->", ":" )
-         AAdd( widgets, { "QSizePolicy", cNam, "QSizePolicy()", "QSizePolicy():configure(" + cCmd1 + ")" } )
+         AAdd( widgets, { "QSizePolicy", cNam, "QSizePolicy()", "QSizePolicy():from(" + cCmd1 + ")" } )
          cCmd := 'setHeightForWidth(o[ "' + cNam + '" ]:' + SubStr( cCmd, n1 + 1 )
       ELSE
          cCmd := "pPtr"

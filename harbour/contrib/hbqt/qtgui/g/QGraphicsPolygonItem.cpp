@@ -138,17 +138,13 @@ HB_FUNC( QT_QGRAPHICSPOLYGONITEM )
    if( hb_pcount() >= 1 && HB_ISPOINTER( 1 ) )
    {
       HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-      if( p->type == HBQT_TYPE_QGraphicsItem )
-      {
-         pObj = new QGraphicsPolygonItem( hbqt_par_QGraphicsItem( 1 ) ) ;
-      }
-      else if( p->type == HBQT_TYPE_QPolygonF )
+      if( p->type == HBQT_TYPE_QPolygonF )
       {
          pObj = new QGraphicsPolygonItem( *hbqt_par_QPolygonF( 1 ), ( HB_ISPOINTER( 2 ) ? hbqt_par_QGraphicsItem( 2 ) : 0 ) ) ;
       }
       else
       {
-         pObj = new QGraphicsPolygonItem() ;
+         pObj = new QGraphicsPolygonItem( hbqt_par_QGraphicsItem( 1 ) ) ;
       }
    }
    else
