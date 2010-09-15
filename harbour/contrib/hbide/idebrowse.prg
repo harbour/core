@@ -66,7 +66,7 @@
 
 #include "common.ch"
 #include "hbclass.ch"
-#include "hbqt.ch"
+#include "hbqtgui.ch"
 #include "hbide.ch"
 #include "xbp.ch"
 #include "appevent.ch"
@@ -2616,4 +2616,3 @@ METHOD IdeBrowse:exists()
    RETURN .f.
 
 /*----------------------------------------------------------------------*/
-

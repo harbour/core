@@ -65,7 +65,7 @@
 /*----------------------------------------------------------------------*/
 
 #include "hbide.ch"
-#include "hbqt.ch"
+#include "hbqtgui.ch"
 #include "common.ch"
 #include "hbclass.ch"
 #include "appevent.ch"

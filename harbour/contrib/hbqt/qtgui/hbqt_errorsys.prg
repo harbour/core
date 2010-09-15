@@ -53,7 +53,7 @@
 #include "common.ch"
 #include "error.ch"
 
-#include "hbqt.ch"
+#include "hbqtgui.ch"
 
 PROCEDURE hbqt_ErrorSys()
 

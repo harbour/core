@@ -69,7 +69,7 @@
 #include "hbclass.ch"
 #include "xbp.ch"
 #include "appevent.ch"
-#include "hbqt.ch"
+#include "hbqtgui.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -1943,4 +1943,3 @@ METHOD IdeDocks:animateComponents( nMode )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

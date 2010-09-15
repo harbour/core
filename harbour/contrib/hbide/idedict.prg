@@ -66,7 +66,7 @@
 
 #include "common.ch"
 #include "hbclass.ch"
-#include "hbqt.ch"
+#include "hbqtgui.ch"
 #include "hbide.ch"
 #include "xbp.ch"
 
@@ -206,4 +206,3 @@ HB_TRACE( HB_TR_DEBUG, ::cBgColor, valtype( q_ ) )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

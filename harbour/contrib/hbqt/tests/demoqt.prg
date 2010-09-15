@@ -52,7 +52,9 @@
  */
 /*----------------------------------------------------------------------*/
 
-#include "hbqt.ch"
+#include "hbqtgui.ch"
+
+#include "hbtrace.ch"
 
 #define QT_EVE_TRIGGERED             "triggered()"
 #define QT_EVE_TRIGGERED_B           "triggered(bool)"

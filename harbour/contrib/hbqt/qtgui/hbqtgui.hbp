@@ -6,6 +6,7 @@
 
 hbqtgui.hbm
 
+-instfile=inc:hbqtgui.ch
 -instfile=inc:hbqtgui.hbx
 
 hbqtguis.hbp

@@ -399,7 +399,7 @@ METHOD XbpStatic:setCaption( xCaption, cDll )
 
          OTHERWISE
             /* It is a Harbour Extension - you have 60+ icons to display
-             * Check hbqt.ch : #define QStyle_SP_* constants
+             * Check hbqtgui.ch : #define QStyle_SP_* constants
              */
             oIcon:pPtr := oStyle:standardIcon( ::caption )
 

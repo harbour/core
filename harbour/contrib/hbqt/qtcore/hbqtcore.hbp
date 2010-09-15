@@ -6,6 +6,7 @@
 
 hbqtcore.hbm
 
+-instfile=inc:hbqtcore.ch
 -instfile=inc:hbqtcore.hbx
 
 hbqtcores.hbp

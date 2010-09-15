@@ -67,7 +67,7 @@
 #include "hbide.ch"
 #include "common.ch"
 #include "hbclass.ch"
-#include "hbqt.ch"
+#include "hbqtgui.ch"
 
 #define  UNIT  0.1
 
@@ -2674,4 +2674,3 @@ METHOD HqrGraphicsItem:drawChart( qPainter, qRect )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

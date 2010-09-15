@@ -79,7 +79,7 @@ typedef struct
    void * ph;
    bool bNew;
    PHBQT_GC_FUNC func;
-   int type;
+   unsigned int type;
 } HBQT_GC_T;
 
 HB_EXTERN_BEGIN

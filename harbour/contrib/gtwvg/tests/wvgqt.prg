@@ -1,8 +1,8 @@
 /*
  * $Id$
  */
- 
-/*    
+
+/*
  *    Pritpal Bedi <bedipritpal@hotmail.com>
  */
 /*----------------------------------------------------------------------*/
@@ -12,12 +12,11 @@
 #include "wvtwin.ch"
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
-#include "wvgparts.ch" 
+#include "wvgparts.ch"
 
 /*----------------------------------------------------------------------*/
 
 #ifdef __QT__
-#define QT_PTROF( oObj )  ( oObj:pPtr )
 INIT PROCEDURE Qt_Start()
    qt_qapplication()
    RETURN

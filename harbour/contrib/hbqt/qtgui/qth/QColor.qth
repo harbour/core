@@ -56,14 +56,14 @@
 
 <CLASS>
 QObject  = no
-Inherits = 
-Type     = PlainObject 
-New      = 
+Inherits =
+Type     = PlainObject
+New      =
 </CLASS>
 
 <DOC>
 oColor := QColor():new()                       // You will supply other parameter later
-oColor := QColor():new( nQt_Color )            // R: hbqt.ch
+oColor := QColor():new( nQt_Color )            // R: hbqtgui.ch
 oColor := QColor():new( nRGB )                 // ( nR + ( nG * 256 ) + ( nB * 256 * 256 ) )
 oColor := QColor():new( cColorName )           // #RRGGBB
 oColor := QColor():new( pQColor )              // Pointer to previously obtained QColor
@@ -95,7 +95,7 @@ HB_FUNC( QT_QCOLOR )
       else if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
       {
          hb_retptr( ( QColor* ) new QColor( ( QRgb ) hb_parni( 1 ) ) );
-      } 
+      }
       else if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
       {
          hb_retptr( ( QColor* ) new QColor( hbqt_par_QString( 1 ) ) );
@@ -204,4 +204,3 @@ QColor fromRgbF ( qreal r, qreal g, qreal b, qreal a = 1.0 )
 QColor fromRgba ( QRgb rgba )
 //void setAllowX11ColorNames ( bool enabled )
 </PROTOS>
-

@@ -65,7 +65,7 @@
 /*----------------------------------------------------------------------*/
 
 #include "hbide.ch"
-#include "hbqt.ch"
+#include "hbqtgui.ch"
 #include "common.ch"
 #include "hbclass.ch"
 
@@ -1672,4 +1672,3 @@ METHOD IdeProjManager:outputText( cText )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

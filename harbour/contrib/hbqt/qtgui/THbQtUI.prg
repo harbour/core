@@ -68,7 +68,8 @@
 #include "hbclass.ch"
 #include "common.ch"
 #include "error.ch"
-#include "hbqt.ch"
+
+#include "hbqtgui.ch"
 
 /*----------------------------------------------------------------------*/
 

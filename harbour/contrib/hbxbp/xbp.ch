@@ -6,7 +6,8 @@
 
 /*----------------------------------------------------------------------*/
 
-#include "hbqt.ch"
+#include "hbqtcore.ch"
+#include "hbqtgui.ch"
 
 #include "hbtrace.ch"
 

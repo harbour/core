@@ -10,7 +10,10 @@
  *
  */
 
-#include "hbqt.ch"
+#include "hbqtgui.ch"
+
+#include "hbtrace.ch"
+
 #include "common.ch"
 
 REQUEST HB_QT
