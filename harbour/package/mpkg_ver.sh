@@ -13,7 +13,7 @@
 
 get_hbver()
 {
-   hb_rootdir="${1-.}"
+   hb_rootdir="${1-..}"
    FVER="${hb_rootdir}/include/hbver.h"
    MAJOR=`sed -e '/HB_VER_MAJOR/   !d' -e 's/[^0-9]*\([^ ]*\).*/\1/g' "${FVER}"`
    MINOR=`sed -e '/HB_VER_MINOR/   !d' -e 's/[^0-9]*\([^ ]*\).*/\1/g' "${FVER}"`
@@ -23,7 +23,7 @@ get_hbver()
 
 get_hbverstat()
 {
-   hb_rootdir="${1-.}"
+   hb_rootdir="${1-..}"
    FVER="${hb_rootdir}/include/hbver.h"
    VERSTAT=`sed -e '/HB_VER_STATUS/ !d' -e 's/[^\"]*\"\([^\"]*\).*/\1/g' "${FVER}"`
    echo "${VERSTAT}"

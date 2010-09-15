@@ -279,13 +279,13 @@ DECLARE HBClass ;
 
 #xcommand ENDCLASS [<lck: LOCK, LOCKED>] => ;
             oClass:Create() ; [<-lck-> __clsLock( oClass:hClass ) ] ;;
-            oInstance := oClass:Instance() ;;
-            if __ObjHasMsg( oInstance, "InitClass" ) ;;
-               oInstance:InitClass( HB_CLS_PARAM_LIST ) ;;
-            end ;;
          always ;;
             __clsUnlockDef( @s_oClass, oClass ) ;;
          end sequence ;;
+         oInstance := oClass:Instance() ;;
+         if __ObjHasMsg( oInstance, "InitClass" ) ;;
+            oInstance:InitClass( HB_CLS_PARAM_LIST ) ;;
+         end ;;
          return oInstance ;;
       end ;;
       return s_oClass:Instance() AS CLASS _CLASS_NAME_ ;;

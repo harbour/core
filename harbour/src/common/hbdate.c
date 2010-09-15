@@ -903,12 +903,24 @@ long hb_timeUTCOffset( void ) /* in seconds */
 #if defined( HB_OS_WIN )
    {
       TIME_ZONE_INFORMATION tzInfo;
-      DWORD retval = GetTimeZoneInformation( &tzInfo );
+      DWORD retval;
 
+      memset( &tzInfo, 0, sizeof( tzInfo ) );
+      retval = GetTimeZoneInformation( &tzInfo );
+
+      /* disabled because users reported that in some
+       * countries/windows versions GetTimeZoneInformation()
+       * returns TIME_ZONE_ID_INVALID but sets correct
+       * tzInfo.StandardBias field.
+       */
+#if 0
       if( retval == TIME_ZONE_ID_INVALID )
          return 0;
-      else
-         return -( tzInfo.Bias + ( retval == TIME_ZONE_ID_STANDARD ? tzInfo.StandardBias : tzInfo.DaylightBias ) ) * 60;
+#endif
+
+      return -( tzInfo.Bias +
+            ( retval == TIME_ZONE_ID_DAYLIGHT ? tzInfo.DaylightBias :
+                      /*TIME_ZONE_ID_STANDARD*/ tzInfo.StandardBias ) ) * 60;
    }
 #else
    {
