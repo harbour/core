@@ -478,5 +478,12 @@
 
 /*----------------------------------------------------------------------*/
 
+#define XBP_BEGIN_GROUP                           1
+#define XBP_WITHIN_GROUP                          2
+#define XBP_END_GROUP                             3
+#define XBP_NO_GROUP                              4
+
+/*----------------------------------------------------------------------*/
+
 #define _XBP_CH
 #endif

@@ -87,7 +87,7 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    DATA     clipChildren                          INIT   .F.
    DATA     clipParent                            INIT   .F.
    DATA     clipSiblings                          INIT   .T.
-   DATA     group                                 INIT   0    /* XBP_NO_GROUP */
+   DATA     group                                 INIT   XBP_NO_GROUP
    DATA     sizeRedraw                            INIT   .F.
    DATA     tabStop                               INIT   .F.
    DATA     visible                               INIT   .T.
