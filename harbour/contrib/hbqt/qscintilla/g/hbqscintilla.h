@@ -56,19 +56,17 @@ HB_EXTERN_END
 #define hbqt_par_QsciStyle( n )                                 ( ( QsciStyle                                   * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QsciStyledText( n )                            ( ( QsciStyledText                              * ) hbqt_gcpointer( n ) )
 
-#define HBQT_TYPE_QSCINTILLA_BASE                               14000
-
-#define HBQT_TYPE_HBQsciScintilla                               ( HBQT_TYPE_QSCINTILLA_BASE + 1 )
-#define HBQT_TYPE_QsciAbstractAPIs                              ( HBQT_TYPE_QSCINTILLA_BASE + 2 )
-#define HBQT_TYPE_QsciAPIs                                      ( HBQT_TYPE_QSCINTILLA_BASE + 3 )
-#define HBQT_TYPE_QsciCommand                                   ( HBQT_TYPE_QSCINTILLA_BASE + 4 )
-#define HBQT_TYPE_QsciCommandSet                                ( HBQT_TYPE_QSCINTILLA_BASE + 5 )
-#define HBQT_TYPE_QsciDocument                                  ( HBQT_TYPE_QSCINTILLA_BASE + 6 )
-#define HBQT_TYPE_QsciLexer                                     ( HBQT_TYPE_QSCINTILLA_BASE + 7 )
-#define HBQT_TYPE_QsciLexerCPP                                  ( HBQT_TYPE_QSCINTILLA_BASE + 8 )
-#define HBQT_TYPE_QsciLexerFlagship                             ( HBQT_TYPE_QSCINTILLA_BASE + 9 )
-#define HBQT_TYPE_QsciScintilla                                 ( HBQT_TYPE_QSCINTILLA_BASE + 10 )
-#define HBQT_TYPE_QsciStyle                                     ( HBQT_TYPE_QSCINTILLA_BASE + 11 )
-#define HBQT_TYPE_QsciStyledText                                ( HBQT_TYPE_QSCINTILLA_BASE + 12 )
+#define HBQT_TYPE_HBQsciScintilla                               0x6B60CC0D
+#define HBQT_TYPE_QsciAbstractAPIs                              0xCCADCE94
+#define HBQT_TYPE_QsciAPIs                                      0x9EFA5259
+#define HBQT_TYPE_QsciCommand                                   0x5749A721
+#define HBQT_TYPE_QsciCommandSet                                0x09909CA6
+#define HBQT_TYPE_QsciDocument                                  0x15670FA8
+#define HBQT_TYPE_QsciLexer                                     0x78741ACD
+#define HBQT_TYPE_QsciLexerCPP                                  0x227FACBE
+#define HBQT_TYPE_QsciLexerFlagship                             0x8E1404B7
+#define HBQT_TYPE_QsciScintilla                                 0xC479630B
+#define HBQT_TYPE_QsciStyle                                     0x21B27EDD
+#define HBQT_TYPE_QsciStyledText                                0xA0ADA2AF
 
 #endif /* __HBQSCINTILLA_H */

@@ -57,15 +57,8 @@
  * Copyright 1999-2001 Viktor Szakats (harbour.01 syenar.hu)
  *    HB_KEYPUT()
  *
- * Copyright 2002 Walter Negro <anegro@overnet.com.ar>
- *    hb_inkeySetLast()
- *
  * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
  *    HB_SETLASTKEY()
- *
- * Copyright 2004 Peter Rees <peter@rees.co.nz>
- *    HB_SETINKEYBEFOREBLOCK()
- *    HB_SETINKEYAFTERBLOCK()
  *
  * See COPYING for licensing terms.
  *

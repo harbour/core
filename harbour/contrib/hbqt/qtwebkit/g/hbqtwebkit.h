@@ -50,17 +50,15 @@ HB_EXTERN_END
 #define hbqt_par_QWebSettings( n )                              ( ( QWebSettings                                * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QWebView( n )                                  ( ( QWebView                                    * ) hbqt_gcpointer( n ) )
 
-#define HBQT_TYPE_QTWEBKIT_BASE                                 60000
-
-#define HBQT_TYPE_QWebFrame                                     ( HBQT_TYPE_QTWEBKIT_BASE + 1 )
-#define HBQT_TYPE_QWebHistory                                   ( HBQT_TYPE_QTWEBKIT_BASE + 2 )
-#define HBQT_TYPE_QWebHistoryInterface                          ( HBQT_TYPE_QTWEBKIT_BASE + 3 )
-#define HBQT_TYPE_QWebHistoryItem                               ( HBQT_TYPE_QTWEBKIT_BASE + 4 )
-#define HBQT_TYPE_QWebHitTestResult                             ( HBQT_TYPE_QTWEBKIT_BASE + 5 )
-#define HBQT_TYPE_QWebPage                                      ( HBQT_TYPE_QTWEBKIT_BASE + 6 )
-#define HBQT_TYPE_QWebPluginFactory                             ( HBQT_TYPE_QTWEBKIT_BASE + 7 )
-#define HBQT_TYPE_QWebSecurityOrigin                            ( HBQT_TYPE_QTWEBKIT_BASE + 8 )
-#define HBQT_TYPE_QWebSettings                                  ( HBQT_TYPE_QTWEBKIT_BASE + 9 )
-#define HBQT_TYPE_QWebView                                      ( HBQT_TYPE_QTWEBKIT_BASE + 10 )
+#define HBQT_TYPE_QWebFrame                                     0xC549CCEE
+#define HBQT_TYPE_QWebHistory                                   0x24AE8587
+#define HBQT_TYPE_QWebHistoryInterface                          0x24436755
+#define HBQT_TYPE_QWebHistoryItem                               0x24DEA87F
+#define HBQT_TYPE_QWebHitTestResult                             0xA2B0A23E
+#define HBQT_TYPE_QWebPage                                      0xCF0E1A25
+#define HBQT_TYPE_QWebPluginFactory                             0x8313F829
+#define HBQT_TYPE_QWebSecurityOrigin                            0x76EEBFE7
+#define HBQT_TYPE_QWebSettings                                  0x77943AAB
+#define HBQT_TYPE_QWebView                                      0x25F9078B
 
 #endif /* __HBQTWEBKIT_H */

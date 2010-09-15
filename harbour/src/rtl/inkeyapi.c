@@ -50,6 +50,17 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://harbour-project.org
+ *
+ * Copyright 2002 Walter Negro <anegro@overnet.com.ar>
+ *    hb_inkeySetLast()
+ *
+ * See COPYING for licensing terms.
+ *
+ */
+
 #include "hbgtcore.h"
 
 int hb_inkey( HB_BOOL fWait, double dSeconds, int iEventMask )
@@ -142,7 +153,7 @@ void hb_inkeyPoll( void )
    }
 }
 
-int  hb_inkeySetLast( int iKey )
+int hb_inkeySetLast( int iKey )
 {
    int iLast = 0;
    PHB_GT pGT;

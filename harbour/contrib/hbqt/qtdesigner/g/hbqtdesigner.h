@@ -44,15 +44,13 @@ HB_EXTERN_END
 #define hbqt_par_QDesignerPropertyEditorInterface( n )          ( ( QDesignerPropertyEditorInterface            * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QDesignerWidgetBoxInterface( n )               ( ( QDesignerWidgetBoxInterface                 * ) hbqt_gcpointer( n ) )
 
-#define HBQT_TYPE_QTDESIGNER_BASE                               56000
-
-#define HBQT_TYPE_QDesignerActionEditorInterface                ( HBQT_TYPE_QTDESIGNER_BASE + 1 )
-#define HBQT_TYPE_QDesignerFormEditorInterface                  ( HBQT_TYPE_QTDESIGNER_BASE + 2 )
-#define HBQT_TYPE_QDesignerFormWindowCursorInterface            ( HBQT_TYPE_QTDESIGNER_BASE + 3 )
-#define HBQT_TYPE_QDesignerFormWindowInterface                  ( HBQT_TYPE_QTDESIGNER_BASE + 4 )
-#define HBQT_TYPE_QDesignerFormWindowManagerInterface           ( HBQT_TYPE_QTDESIGNER_BASE + 5 )
-#define HBQT_TYPE_QDesignerObjectInspectorInterface             ( HBQT_TYPE_QTDESIGNER_BASE + 6 )
-#define HBQT_TYPE_QDesignerPropertyEditorInterface              ( HBQT_TYPE_QTDESIGNER_BASE + 7 )
-#define HBQT_TYPE_QDesignerWidgetBoxInterface                   ( HBQT_TYPE_QTDESIGNER_BASE + 8 )
+#define HBQT_TYPE_QDesignerActionEditorInterface                0x8856A3E4
+#define HBQT_TYPE_QDesignerFormEditorInterface                  0x1A537878
+#define HBQT_TYPE_QDesignerFormWindowCursorInterface            0x8A3172B7
+#define HBQT_TYPE_QDesignerFormWindowInterface                  0xD60F061D
+#define HBQT_TYPE_QDesignerFormWindowManagerInterface           0x54FF1CEA
+#define HBQT_TYPE_QDesignerObjectInspectorInterface             0x5D40E5DF
+#define HBQT_TYPE_QDesignerPropertyEditorInterface              0xB7E07056
+#define HBQT_TYPE_QDesignerWidgetBoxInterface                   0xED8D07B6
 
 #endif /* __HBQTDESIGNER_H */

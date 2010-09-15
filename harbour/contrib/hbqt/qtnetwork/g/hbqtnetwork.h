@@ -38,13 +38,11 @@ HB_EXTERN_END
 #define hbqt_par_QHttpResponseHeader( n )                       ( ( QHttpResponseHeader                         * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QNetworkRequest( n )                           ( ( QNetworkRequest                             * ) hbqt_gcpointer( n ) )
 
-#define HBQT_TYPE_QTNETWORK_BASE                                64000
-
-#define HBQT_TYPE_QFtp                                          ( HBQT_TYPE_QTNETWORK_BASE + 1 )
-#define HBQT_TYPE_QHttp                                         ( HBQT_TYPE_QTNETWORK_BASE + 2 )
-#define HBQT_TYPE_QHttpHeader                                   ( HBQT_TYPE_QTNETWORK_BASE + 3 )
-#define HBQT_TYPE_QHttpRequestHeader                            ( HBQT_TYPE_QTNETWORK_BASE + 4 )
-#define HBQT_TYPE_QHttpResponseHeader                           ( HBQT_TYPE_QTNETWORK_BASE + 5 )
-#define HBQT_TYPE_QNetworkRequest                               ( HBQT_TYPE_QTNETWORK_BASE + 6 )
+#define HBQT_TYPE_QFtp                                          0x66CE12A3
+#define HBQT_TYPE_QHttp                                         0x490D10C6
+#define HBQT_TYPE_QHttpHeader                                   0x43AEA94E
+#define HBQT_TYPE_QHttpRequestHeader                            0x15AE514B
+#define HBQT_TYPE_QHttpResponseHeader                           0x83513118
+#define HBQT_TYPE_QNetworkRequest                               0xD26B31CE
 
 #endif /* __HBQTNETWORK_H */

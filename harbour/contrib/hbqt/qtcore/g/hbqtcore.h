@@ -182,61 +182,59 @@ HB_EXTERN_END
 #define hbqt_par_QUrl( n )                                      ( ( QUrl                                        * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QVariant( n )                                  ( ( QVariant                                    * ) hbqt_gcpointer( n ) )
 
-#define HBQT_TYPE_QTCORE_BASE                                   27000
-
-#define HBQT_TYPE_HBEvents                                      ( HBQT_TYPE_QTCORE_BASE + 1 )
-#define HBQT_TYPE_HBSlots                                       ( HBQT_TYPE_QTCORE_BASE + 2 )
-#define HBQT_TYPE_HBQString                                     ( HBQT_TYPE_QTCORE_BASE + 3 )
-#define HBQT_TYPE_QAbstractItemModel                            ( HBQT_TYPE_QTCORE_BASE + 4 )
-#define HBQT_TYPE_QAbstractListModel                            ( HBQT_TYPE_QTCORE_BASE + 5 )
-#define HBQT_TYPE_QAbstractTableModel                           ( HBQT_TYPE_QTCORE_BASE + 6 )
-#define HBQT_TYPE_QBitArray                                     ( HBQT_TYPE_QTCORE_BASE + 7 )
-#define HBQT_TYPE_QBuffer                                       ( HBQT_TYPE_QTCORE_BASE + 8 )
-#define HBQT_TYPE_QByteArray                                    ( HBQT_TYPE_QTCORE_BASE + 9 )
-#define HBQT_TYPE_QChar                                         ( HBQT_TYPE_QTCORE_BASE + 10 )
-#define HBQT_TYPE_QCoreApplication                              ( HBQT_TYPE_QTCORE_BASE + 11 )
-#define HBQT_TYPE_QDataStream                                   ( HBQT_TYPE_QTCORE_BASE + 12 )
-#define HBQT_TYPE_QDate                                         ( HBQT_TYPE_QTCORE_BASE + 13 )
-#define HBQT_TYPE_QDateTime                                     ( HBQT_TYPE_QTCORE_BASE + 14 )
-#define HBQT_TYPE_QDir                                          ( HBQT_TYPE_QTCORE_BASE + 15 )
-#define HBQT_TYPE_QEvent                                        ( HBQT_TYPE_QTCORE_BASE + 16 )
-#define HBQT_TYPE_QEventLoop                                    ( HBQT_TYPE_QTCORE_BASE + 17 )
-#define HBQT_TYPE_QFile                                         ( HBQT_TYPE_QTCORE_BASE + 18 )
-#define HBQT_TYPE_QFileInfo                                     ( HBQT_TYPE_QTCORE_BASE + 19 )
-#define HBQT_TYPE_QIODevice                                     ( HBQT_TYPE_QTCORE_BASE + 20 )
-#define HBQT_TYPE_QLatin1Char                                   ( HBQT_TYPE_QTCORE_BASE + 21 )
-#define HBQT_TYPE_QLatin1String                                 ( HBQT_TYPE_QTCORE_BASE + 22 )
-#define HBQT_TYPE_QLine                                         ( HBQT_TYPE_QTCORE_BASE + 23 )
-#define HBQT_TYPE_QLineF                                        ( HBQT_TYPE_QTCORE_BASE + 24 )
-#define HBQT_TYPE_QList                                         ( HBQT_TYPE_QTCORE_BASE + 25 )
-#define HBQT_TYPE_QLocale                                       ( HBQT_TYPE_QTCORE_BASE + 26 )
-#define HBQT_TYPE_QMimeData                                     ( HBQT_TYPE_QTCORE_BASE + 27 )
-#define HBQT_TYPE_QModelIndex                                   ( HBQT_TYPE_QTCORE_BASE + 28 )
-#define HBQT_TYPE_QObject                                       ( HBQT_TYPE_QTCORE_BASE + 29 )
-#define HBQT_TYPE_QPoint                                        ( HBQT_TYPE_QTCORE_BASE + 30 )
-#define HBQT_TYPE_QPointF                                       ( HBQT_TYPE_QTCORE_BASE + 31 )
-#define HBQT_TYPE_QProcess                                      ( HBQT_TYPE_QTCORE_BASE + 32 )
-#define HBQT_TYPE_QRect                                         ( HBQT_TYPE_QTCORE_BASE + 33 )
-#define HBQT_TYPE_QRectF                                        ( HBQT_TYPE_QTCORE_BASE + 34 )
-#define HBQT_TYPE_QRegExp                                       ( HBQT_TYPE_QTCORE_BASE + 35 )
-#define HBQT_TYPE_QResource                                     ( HBQT_TYPE_QTCORE_BASE + 36 )
-#define HBQT_TYPE_QSettings                                     ( HBQT_TYPE_QTCORE_BASE + 37 )
-#define HBQT_TYPE_QSignalMapper                                 ( HBQT_TYPE_QTCORE_BASE + 38 )
-#define HBQT_TYPE_QSize                                         ( HBQT_TYPE_QTCORE_BASE + 39 )
-#define HBQT_TYPE_QSizeF                                        ( HBQT_TYPE_QTCORE_BASE + 40 )
-#define HBQT_TYPE_QStringList                                   ( HBQT_TYPE_QTCORE_BASE + 41 )
-#define HBQT_TYPE_QStringRef                                    ( HBQT_TYPE_QTCORE_BASE + 42 )
-#define HBQT_TYPE_QTextBoundaryFinder                           ( HBQT_TYPE_QTCORE_BASE + 43 )
-#define HBQT_TYPE_QTextCodec                                    ( HBQT_TYPE_QTCORE_BASE + 44 )
-#define HBQT_TYPE_QTextDecoder                                  ( HBQT_TYPE_QTCORE_BASE + 45 )
-#define HBQT_TYPE_QTextEncoder                                  ( HBQT_TYPE_QTCORE_BASE + 46 )
-#define HBQT_TYPE_QTextStream                                   ( HBQT_TYPE_QTCORE_BASE + 47 )
-#define HBQT_TYPE_QThread                                       ( HBQT_TYPE_QTCORE_BASE + 48 )
-#define HBQT_TYPE_QTime                                         ( HBQT_TYPE_QTCORE_BASE + 49 )
-#define HBQT_TYPE_QTimeLine                                     ( HBQT_TYPE_QTCORE_BASE + 50 )
-#define HBQT_TYPE_QTimer                                        ( HBQT_TYPE_QTCORE_BASE + 51 )
-#define HBQT_TYPE_QTranslator                                   ( HBQT_TYPE_QTCORE_BASE + 52 )
-#define HBQT_TYPE_QUrl                                          ( HBQT_TYPE_QTCORE_BASE + 53 )
-#define HBQT_TYPE_QVariant                                      ( HBQT_TYPE_QTCORE_BASE + 54 )
+#define HBQT_TYPE_HBEvents                                      0x44355450
+#define HBQT_TYPE_HBSlots                                       0xCDC96C4E
+#define HBQT_TYPE_HBQString                                     0x02D659A4
+#define HBQT_TYPE_QAbstractItemModel                            0xA364960B
+#define HBQT_TYPE_QAbstractListModel                            0x2E9A0D19
+#define HBQT_TYPE_QAbstractTableModel                           0xCE3DDD6B
+#define HBQT_TYPE_QBitArray                                     0x87B529FE
+#define HBQT_TYPE_QBuffer                                       0x35BCA79A
+#define HBQT_TYPE_QByteArray                                    0x3B257D0A
+#define HBQT_TYPE_QChar                                         0x251606FA
+#define HBQT_TYPE_QCoreApplication                              0x3E792ED7
+#define HBQT_TYPE_QDataStream                                   0xABEAEC83
+#define HBQT_TYPE_QDate                                         0x0376661F
+#define HBQT_TYPE_QDateTime                                     0x6BEA48EA
+#define HBQT_TYPE_QDir                                          0xEE544CFC
+#define HBQT_TYPE_QEvent                                        0x06DF7721
+#define HBQT_TYPE_QEventLoop                                    0xA79E78BB
+#define HBQT_TYPE_QFile                                         0x25776775
+#define HBQT_TYPE_QFileInfo                                     0x51B82814
+#define HBQT_TYPE_QIODevice                                     0xFFAF526C
+#define HBQT_TYPE_QLatin1Char                                   0x6E622038
+#define HBQT_TYPE_QLatin1String                                 0xB1999E84
+#define HBQT_TYPE_QLine                                         0x78FCE593
+#define HBQT_TYPE_QLineF                                        0x24C33533
+#define HBQT_TYPE_QList                                         0xED20A97D
+#define HBQT_TYPE_QLocale                                       0x456691F0
+#define HBQT_TYPE_QMimeData                                     0xA1F425D3
+#define HBQT_TYPE_QModelIndex                                   0xA9E86353
+#define HBQT_TYPE_QObject                                       0xAC4BFC84
+#define HBQT_TYPE_QPoint                                        0x8AD48EA2
+#define HBQT_TYPE_QPointF                                       0x75EF1D62
+#define HBQT_TYPE_QProcess                                      0xC57017AB
+#define HBQT_TYPE_QRect                                         0x1E3E62E4
+#define HBQT_TYPE_QRectF                                        0xEAC4132B
+#define HBQT_TYPE_QRegExp                                       0xC55FA06F
+#define HBQT_TYPE_QResource                                     0xE4BAD508
+#define HBQT_TYPE_QSettings                                     0xBD6E81DB
+#define HBQT_TYPE_QSignalMapper                                 0xE007D6F8
+#define HBQT_TYPE_QSize                                         0x5E28750F
+#define HBQT_TYPE_QSizeF                                        0xDD5C3ECC
+#define HBQT_TYPE_QStringList                                   0xE79A6108
+#define HBQT_TYPE_QStringRef                                    0xFAF65AC1
+#define HBQT_TYPE_QTextBoundaryFinder                           0x56058F15
+#define HBQT_TYPE_QTextCodec                                    0x99D7E641
+#define HBQT_TYPE_QTextDecoder                                  0xFBBD0ACA
+#define HBQT_TYPE_QTextEncoder                                  0x370DF1BD
+#define HBQT_TYPE_QTextStream                                   0xB3E19A41
+#define HBQT_TYPE_QThread                                       0x35C61BEB
+#define HBQT_TYPE_QTime                                         0xC67CC920
+#define HBQT_TYPE_QTimeLine                                     0xBEE74846
+#define HBQT_TYPE_QTimer                                        0x57A1A39C
+#define HBQT_TYPE_QTranslator                                   0xC0E59441
+#define HBQT_TYPE_QUrl                                          0xA0897342
+#define HBQT_TYPE_QVariant                                      0xB22EB090
 
 #endif /* __HBQTCORE_H */

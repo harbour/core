@@ -1828,10 +1828,8 @@ STATIC FUNCTION Build_HeaderFile( cpp_, cPathOut, cProFile )
    NEXT
    aadd( txt_, "" )
 
-   aadd( txt_, PadR( "#define HBQT_TYPE_" + Upper( cName ) + "_BASE", 64 ) + hb_ntos( Round( hb_crc16( Upper( cName ) ), -3 ) ) )
-   aadd( txt_, "" )
    FOR EACH s IN cpp_
-      aadd( txt_, PadR( "#define HBQT_TYPE_" + s, 64 ) + "( HBQT_TYPE_" + Upper( cName ) + "_BASE + " + hb_ntos( s:__enumIndex() ) + " )" )
+      aadd( txt_, PadR( "#define HBQT_TYPE_" + s, 64 ) + "0x" + hb_NumToHex( hb_crc32( "HBQT_TYPE_" + hb_asciiUpper( cName ) + s ), 8 ) )
    NEXT
    aadd( txt_, "" )
 

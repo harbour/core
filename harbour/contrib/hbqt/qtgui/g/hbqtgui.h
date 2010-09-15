@@ -800,267 +800,265 @@ HB_EXTERN_END
 #define hbqt_par_QWizardPage( n )                               ( ( QWizardPage                                 * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QUiLoader( n )                                 ( ( QUiLoader                                   * ) hbqt_gcpointer( n ) )
 
-#define HBQT_TYPE_QTGUI_BASE                                    45000
-
-#define HBQT_TYPE_HBQAbstractItemModel                          ( HBQT_TYPE_QTGUI_BASE + 1 )
-#define HBQT_TYPE_HBQGraphicsItem                               ( HBQT_TYPE_QTGUI_BASE + 2 )
-#define HBQT_TYPE_HBQGraphicsScene                              ( HBQT_TYPE_QTGUI_BASE + 3 )
-#define HBQT_TYPE_HBQPlainTextEdit                              ( HBQT_TYPE_QTGUI_BASE + 4 )
-#define HBQT_TYPE_HBQSyntaxHighlighter                          ( HBQT_TYPE_QTGUI_BASE + 5 )
-#define HBQT_TYPE_HBQTableView                                  ( HBQT_TYPE_QTGUI_BASE + 6 )
-#define HBQT_TYPE_HBQTextBlockUserData                          ( HBQT_TYPE_QTGUI_BASE + 7 )
-#define HBQT_TYPE_QAbstractButton                               ( HBQT_TYPE_QTGUI_BASE + 8 )
-#define HBQT_TYPE_QAbstractGraphicsShapeItem                    ( HBQT_TYPE_QTGUI_BASE + 9 )
-#define HBQT_TYPE_QAbstractItemDelegate                         ( HBQT_TYPE_QTGUI_BASE + 10 )
-#define HBQT_TYPE_QAbstractItemView                             ( HBQT_TYPE_QTGUI_BASE + 11 )
-#define HBQT_TYPE_QAbstractPrintDialog                          ( HBQT_TYPE_QTGUI_BASE + 12 )
-#define HBQT_TYPE_QAbstractProxyModel                           ( HBQT_TYPE_QTGUI_BASE + 13 )
-#define HBQT_TYPE_QAbstractScrollArea                           ( HBQT_TYPE_QTGUI_BASE + 14 )
-#define HBQT_TYPE_QAbstractSlider                               ( HBQT_TYPE_QTGUI_BASE + 15 )
-#define HBQT_TYPE_QAbstractSpinBox                              ( HBQT_TYPE_QTGUI_BASE + 16 )
-#define HBQT_TYPE_QAbstractTextDocumentLayout                   ( HBQT_TYPE_QTGUI_BASE + 17 )
-#define HBQT_TYPE_QAction                                       ( HBQT_TYPE_QTGUI_BASE + 18 )
-#define HBQT_TYPE_QActionGroup                                  ( HBQT_TYPE_QTGUI_BASE + 19 )
-#define HBQT_TYPE_QApplication                                  ( HBQT_TYPE_QTGUI_BASE + 20 )
-#define HBQT_TYPE_QBitmap                                       ( HBQT_TYPE_QTGUI_BASE + 21 )
-#define HBQT_TYPE_QBoxLayout                                    ( HBQT_TYPE_QTGUI_BASE + 22 )
-#define HBQT_TYPE_QBrush                                        ( HBQT_TYPE_QTGUI_BASE + 23 )
-#define HBQT_TYPE_QButtonGroup                                  ( HBQT_TYPE_QTGUI_BASE + 24 )
-#define HBQT_TYPE_QCalendarWidget                               ( HBQT_TYPE_QTGUI_BASE + 25 )
-#define HBQT_TYPE_QCheckBox                                     ( HBQT_TYPE_QTGUI_BASE + 26 )
-#define HBQT_TYPE_QClipboard                                    ( HBQT_TYPE_QTGUI_BASE + 27 )
-#define HBQT_TYPE_QColor                                        ( HBQT_TYPE_QTGUI_BASE + 28 )
-#define HBQT_TYPE_QColorDialog                                  ( HBQT_TYPE_QTGUI_BASE + 29 )
-#define HBQT_TYPE_QComboBox                                     ( HBQT_TYPE_QTGUI_BASE + 30 )
-#define HBQT_TYPE_QCommandLinkButton                            ( HBQT_TYPE_QTGUI_BASE + 31 )
-#define HBQT_TYPE_QCommonStyle                                  ( HBQT_TYPE_QTGUI_BASE + 32 )
-#define HBQT_TYPE_QCompleter                                    ( HBQT_TYPE_QTGUI_BASE + 33 )
-#define HBQT_TYPE_QConicalGradient                              ( HBQT_TYPE_QTGUI_BASE + 34 )
-#define HBQT_TYPE_QContextMenuEvent                             ( HBQT_TYPE_QTGUI_BASE + 35 )
-#define HBQT_TYPE_QCursor                                       ( HBQT_TYPE_QTGUI_BASE + 36 )
-#define HBQT_TYPE_QDateEdit                                     ( HBQT_TYPE_QTGUI_BASE + 37 )
-#define HBQT_TYPE_QDateTimeEdit                                 ( HBQT_TYPE_QTGUI_BASE + 38 )
-#define HBQT_TYPE_QDesktopWidget                                ( HBQT_TYPE_QTGUI_BASE + 39 )
-#define HBQT_TYPE_QDial                                         ( HBQT_TYPE_QTGUI_BASE + 40 )
-#define HBQT_TYPE_QDialog                                       ( HBQT_TYPE_QTGUI_BASE + 41 )
-#define HBQT_TYPE_QDirModel                                     ( HBQT_TYPE_QTGUI_BASE + 42 )
-#define HBQT_TYPE_QDockWidget                                   ( HBQT_TYPE_QTGUI_BASE + 43 )
-#define HBQT_TYPE_QDoubleSpinBox                                ( HBQT_TYPE_QTGUI_BASE + 44 )
-#define HBQT_TYPE_QDoubleValidator                              ( HBQT_TYPE_QTGUI_BASE + 45 )
-#define HBQT_TYPE_QDrag                                         ( HBQT_TYPE_QTGUI_BASE + 46 )
-#define HBQT_TYPE_QDragEnterEvent                               ( HBQT_TYPE_QTGUI_BASE + 47 )
-#define HBQT_TYPE_QDragLeaveEvent                               ( HBQT_TYPE_QTGUI_BASE + 48 )
-#define HBQT_TYPE_QDragMoveEvent                                ( HBQT_TYPE_QTGUI_BASE + 49 )
-#define HBQT_TYPE_QDropEvent                                    ( HBQT_TYPE_QTGUI_BASE + 50 )
-#define HBQT_TYPE_QErrorMessage                                 ( HBQT_TYPE_QTGUI_BASE + 51 )
-#define HBQT_TYPE_QFileDialog                                   ( HBQT_TYPE_QTGUI_BASE + 52 )
-#define HBQT_TYPE_QFileIconProvider                             ( HBQT_TYPE_QTGUI_BASE + 53 )
-#define HBQT_TYPE_QFileSystemModel                              ( HBQT_TYPE_QTGUI_BASE + 54 )
-#define HBQT_TYPE_QFocusEvent                                   ( HBQT_TYPE_QTGUI_BASE + 55 )
-#define HBQT_TYPE_QFocusFrame                                   ( HBQT_TYPE_QTGUI_BASE + 56 )
-#define HBQT_TYPE_QFont                                         ( HBQT_TYPE_QTGUI_BASE + 57 )
-#define HBQT_TYPE_QFontComboBox                                 ( HBQT_TYPE_QTGUI_BASE + 58 )
-#define HBQT_TYPE_QFontDatabase                                 ( HBQT_TYPE_QTGUI_BASE + 59 )
-#define HBQT_TYPE_QFontDialog                                   ( HBQT_TYPE_QTGUI_BASE + 60 )
-#define HBQT_TYPE_QFontInfo                                     ( HBQT_TYPE_QTGUI_BASE + 61 )
-#define HBQT_TYPE_QFontMetrics                                  ( HBQT_TYPE_QTGUI_BASE + 62 )
-#define HBQT_TYPE_QFontMetricsF                                 ( HBQT_TYPE_QTGUI_BASE + 63 )
-#define HBQT_TYPE_QFormLayout                                   ( HBQT_TYPE_QTGUI_BASE + 64 )
-#define HBQT_TYPE_QFrame                                        ( HBQT_TYPE_QTGUI_BASE + 65 )
-#define HBQT_TYPE_QGradient                                     ( HBQT_TYPE_QTGUI_BASE + 66 )
-#define HBQT_TYPE_QGraphicsEllipseItem                          ( HBQT_TYPE_QTGUI_BASE + 67 )
-#define HBQT_TYPE_QGraphicsGridLayout                           ( HBQT_TYPE_QTGUI_BASE + 68 )
-#define HBQT_TYPE_QGraphicsItem                                 ( HBQT_TYPE_QTGUI_BASE + 69 )
-#define HBQT_TYPE_QGraphicsItemAnimation                        ( HBQT_TYPE_QTGUI_BASE + 70 )
-#define HBQT_TYPE_QGraphicsItemGroup                            ( HBQT_TYPE_QTGUI_BASE + 71 )
-#define HBQT_TYPE_QGraphicsLayout                               ( HBQT_TYPE_QTGUI_BASE + 72 )
-#define HBQT_TYPE_QGraphicsLayoutItem                           ( HBQT_TYPE_QTGUI_BASE + 73 )
-#define HBQT_TYPE_QGraphicsLinearLayout                         ( HBQT_TYPE_QTGUI_BASE + 74 )
-#define HBQT_TYPE_QGraphicsLineItem                             ( HBQT_TYPE_QTGUI_BASE + 75 )
-#define HBQT_TYPE_QGraphicsPathItem                             ( HBQT_TYPE_QTGUI_BASE + 76 )
-#define HBQT_TYPE_QGraphicsPixmapItem                           ( HBQT_TYPE_QTGUI_BASE + 77 )
-#define HBQT_TYPE_QGraphicsPolygonItem                          ( HBQT_TYPE_QTGUI_BASE + 78 )
-#define HBQT_TYPE_QGraphicsProxyWidget                          ( HBQT_TYPE_QTGUI_BASE + 79 )
-#define HBQT_TYPE_QGraphicsRectItem                             ( HBQT_TYPE_QTGUI_BASE + 80 )
-#define HBQT_TYPE_QGraphicsScene                                ( HBQT_TYPE_QTGUI_BASE + 81 )
-#define HBQT_TYPE_QGraphicsSceneContextMenuEvent                ( HBQT_TYPE_QTGUI_BASE + 82 )
-#define HBQT_TYPE_QGraphicsSceneDragDropEvent                   ( HBQT_TYPE_QTGUI_BASE + 83 )
-#define HBQT_TYPE_QGraphicsSceneEvent                           ( HBQT_TYPE_QTGUI_BASE + 84 )
-#define HBQT_TYPE_QGraphicsSceneHelpEvent                       ( HBQT_TYPE_QTGUI_BASE + 85 )
-#define HBQT_TYPE_QGraphicsSceneHoverEvent                      ( HBQT_TYPE_QTGUI_BASE + 86 )
-#define HBQT_TYPE_QGraphicsSceneMouseEvent                      ( HBQT_TYPE_QTGUI_BASE + 87 )
-#define HBQT_TYPE_QGraphicsSceneMoveEvent                       ( HBQT_TYPE_QTGUI_BASE + 88 )
-#define HBQT_TYPE_QGraphicsSceneResizeEvent                     ( HBQT_TYPE_QTGUI_BASE + 89 )
-#define HBQT_TYPE_QGraphicsSceneWheelEvent                      ( HBQT_TYPE_QTGUI_BASE + 90 )
-#define HBQT_TYPE_QGraphicsSimpleTextItem                       ( HBQT_TYPE_QTGUI_BASE + 91 )
-#define HBQT_TYPE_QGraphicsTextItem                             ( HBQT_TYPE_QTGUI_BASE + 92 )
-#define HBQT_TYPE_QGraphicsView                                 ( HBQT_TYPE_QTGUI_BASE + 93 )
-#define HBQT_TYPE_QGraphicsWidget                               ( HBQT_TYPE_QTGUI_BASE + 94 )
-#define HBQT_TYPE_QGridLayout                                   ( HBQT_TYPE_QTGUI_BASE + 95 )
-#define HBQT_TYPE_QGroupBox                                     ( HBQT_TYPE_QTGUI_BASE + 96 )
-#define HBQT_TYPE_QHBoxLayout                                   ( HBQT_TYPE_QTGUI_BASE + 97 )
-#define HBQT_TYPE_QHeaderView                                   ( HBQT_TYPE_QTGUI_BASE + 98 )
-#define HBQT_TYPE_QHelpEvent                                    ( HBQT_TYPE_QTGUI_BASE + 99 )
-#define HBQT_TYPE_QHideEvent                                    ( HBQT_TYPE_QTGUI_BASE + 100 )
-#define HBQT_TYPE_QIcon                                         ( HBQT_TYPE_QTGUI_BASE + 101 )
-#define HBQT_TYPE_QImage                                        ( HBQT_TYPE_QTGUI_BASE + 102 )
-#define HBQT_TYPE_QImageReader                                  ( HBQT_TYPE_QTGUI_BASE + 103 )
-#define HBQT_TYPE_QImageWriter                                  ( HBQT_TYPE_QTGUI_BASE + 104 )
-#define HBQT_TYPE_QInputDialog                                  ( HBQT_TYPE_QTGUI_BASE + 105 )
-#define HBQT_TYPE_QInputEvent                                   ( HBQT_TYPE_QTGUI_BASE + 106 )
-#define HBQT_TYPE_QInputMethodEvent                             ( HBQT_TYPE_QTGUI_BASE + 107 )
-#define HBQT_TYPE_QIntValidator                                 ( HBQT_TYPE_QTGUI_BASE + 108 )
-#define HBQT_TYPE_QItemDelegate                                 ( HBQT_TYPE_QTGUI_BASE + 109 )
-#define HBQT_TYPE_QItemEditorCreatorBase                        ( HBQT_TYPE_QTGUI_BASE + 110 )
-#define HBQT_TYPE_QItemEditorFactory                            ( HBQT_TYPE_QTGUI_BASE + 111 )
-#define HBQT_TYPE_QItemSelection                                ( HBQT_TYPE_QTGUI_BASE + 112 )
-#define HBQT_TYPE_QItemSelectionModel                           ( HBQT_TYPE_QTGUI_BASE + 113 )
-#define HBQT_TYPE_QKeyEvent                                     ( HBQT_TYPE_QTGUI_BASE + 114 )
-#define HBQT_TYPE_QKeySequence                                  ( HBQT_TYPE_QTGUI_BASE + 115 )
-#define HBQT_TYPE_QLabel                                        ( HBQT_TYPE_QTGUI_BASE + 116 )
-#define HBQT_TYPE_QLayout                                       ( HBQT_TYPE_QTGUI_BASE + 117 )
-#define HBQT_TYPE_QLayoutItem                                   ( HBQT_TYPE_QTGUI_BASE + 118 )
-#define HBQT_TYPE_QLCDNumber                                    ( HBQT_TYPE_QTGUI_BASE + 119 )
-#define HBQT_TYPE_QLinearGradient                               ( HBQT_TYPE_QTGUI_BASE + 120 )
-#define HBQT_TYPE_QLineEdit                                     ( HBQT_TYPE_QTGUI_BASE + 121 )
-#define HBQT_TYPE_QListView                                     ( HBQT_TYPE_QTGUI_BASE + 122 )
-#define HBQT_TYPE_QListWidget                                   ( HBQT_TYPE_QTGUI_BASE + 123 )
-#define HBQT_TYPE_QListWidgetItem                               ( HBQT_TYPE_QTGUI_BASE + 124 )
-#define HBQT_TYPE_QMainWindow                                   ( HBQT_TYPE_QTGUI_BASE + 125 )
-#define HBQT_TYPE_QMatrix                                       ( HBQT_TYPE_QTGUI_BASE + 126 )
-#define HBQT_TYPE_QMdiArea                                      ( HBQT_TYPE_QTGUI_BASE + 127 )
-#define HBQT_TYPE_QMdiSubWindow                                 ( HBQT_TYPE_QTGUI_BASE + 128 )
-#define HBQT_TYPE_QMenu                                         ( HBQT_TYPE_QTGUI_BASE + 129 )
-#define HBQT_TYPE_QMenuBar                                      ( HBQT_TYPE_QTGUI_BASE + 130 )
-#define HBQT_TYPE_QMessageBox                                   ( HBQT_TYPE_QTGUI_BASE + 131 )
-#define HBQT_TYPE_QMouseEvent                                   ( HBQT_TYPE_QTGUI_BASE + 132 )
-#define HBQT_TYPE_QMoveEvent                                    ( HBQT_TYPE_QTGUI_BASE + 133 )
-#define HBQT_TYPE_QMovie                                        ( HBQT_TYPE_QTGUI_BASE + 134 )
-#define HBQT_TYPE_QPageSetupDialog                              ( HBQT_TYPE_QTGUI_BASE + 135 )
-#define HBQT_TYPE_QPaintDevice                                  ( HBQT_TYPE_QTGUI_BASE + 136 )
-#define HBQT_TYPE_QPaintEngine                                  ( HBQT_TYPE_QTGUI_BASE + 137 )
-#define HBQT_TYPE_QPainter                                      ( HBQT_TYPE_QTGUI_BASE + 138 )
-#define HBQT_TYPE_QPainterPath                                  ( HBQT_TYPE_QTGUI_BASE + 139 )
-#define HBQT_TYPE_QPaintEvent                                   ( HBQT_TYPE_QTGUI_BASE + 140 )
-#define HBQT_TYPE_QPalette                                      ( HBQT_TYPE_QTGUI_BASE + 141 )
-#define HBQT_TYPE_QPen                                          ( HBQT_TYPE_QTGUI_BASE + 142 )
-#define HBQT_TYPE_QPicture                                      ( HBQT_TYPE_QTGUI_BASE + 143 )
-#define HBQT_TYPE_QPixmap                                       ( HBQT_TYPE_QTGUI_BASE + 144 )
-#define HBQT_TYPE_QPlainTextDocumentLayout                      ( HBQT_TYPE_QTGUI_BASE + 145 )
-#define HBQT_TYPE_QPlainTextEdit                                ( HBQT_TYPE_QTGUI_BASE + 146 )
-#define HBQT_TYPE_QPolygon                                      ( HBQT_TYPE_QTGUI_BASE + 147 )
-#define HBQT_TYPE_QPolygonF                                     ( HBQT_TYPE_QTGUI_BASE + 148 )
-#define HBQT_TYPE_QPrintDialog                                  ( HBQT_TYPE_QTGUI_BASE + 149 )
-#define HBQT_TYPE_QPrintEngine                                  ( HBQT_TYPE_QTGUI_BASE + 150 )
-#define HBQT_TYPE_QPrinter                                      ( HBQT_TYPE_QTGUI_BASE + 151 )
-#define HBQT_TYPE_QPrinterInfo                                  ( HBQT_TYPE_QTGUI_BASE + 152 )
-#define HBQT_TYPE_QPrintPreviewDialog                           ( HBQT_TYPE_QTGUI_BASE + 153 )
-#define HBQT_TYPE_QProgressBar                                  ( HBQT_TYPE_QTGUI_BASE + 154 )
-#define HBQT_TYPE_QProgressDialog                               ( HBQT_TYPE_QTGUI_BASE + 155 )
-#define HBQT_TYPE_QPushButton                                   ( HBQT_TYPE_QTGUI_BASE + 156 )
-#define HBQT_TYPE_QRadialGradient                               ( HBQT_TYPE_QTGUI_BASE + 157 )
-#define HBQT_TYPE_QRadioButton                                  ( HBQT_TYPE_QTGUI_BASE + 158 )
-#define HBQT_TYPE_QRegExpValidator                              ( HBQT_TYPE_QTGUI_BASE + 159 )
-#define HBQT_TYPE_QRegion                                       ( HBQT_TYPE_QTGUI_BASE + 160 )
-#define HBQT_TYPE_QResizeEvent                                  ( HBQT_TYPE_QTGUI_BASE + 161 )
-#define HBQT_TYPE_QScrollArea                                   ( HBQT_TYPE_QTGUI_BASE + 162 )
-#define HBQT_TYPE_QScrollBar                                    ( HBQT_TYPE_QTGUI_BASE + 163 )
-#define HBQT_TYPE_QSessionManager                               ( HBQT_TYPE_QTGUI_BASE + 164 )
-#define HBQT_TYPE_QShowEvent                                    ( HBQT_TYPE_QTGUI_BASE + 165 )
-#define HBQT_TYPE_QSizeGrip                                     ( HBQT_TYPE_QTGUI_BASE + 166 )
-#define HBQT_TYPE_QSizePolicy                                   ( HBQT_TYPE_QTGUI_BASE + 167 )
-#define HBQT_TYPE_QSlider                                       ( HBQT_TYPE_QTGUI_BASE + 168 )
-#define HBQT_TYPE_QSound                                        ( HBQT_TYPE_QTGUI_BASE + 169 )
-#define HBQT_TYPE_QSpacerItem                                   ( HBQT_TYPE_QTGUI_BASE + 170 )
-#define HBQT_TYPE_QSpinBox                                      ( HBQT_TYPE_QTGUI_BASE + 171 )
-#define HBQT_TYPE_QSplashScreen                                 ( HBQT_TYPE_QTGUI_BASE + 172 )
-#define HBQT_TYPE_QSplitter                                     ( HBQT_TYPE_QTGUI_BASE + 173 )
-#define HBQT_TYPE_QStackedWidget                                ( HBQT_TYPE_QTGUI_BASE + 174 )
-#define HBQT_TYPE_QStandardItem                                 ( HBQT_TYPE_QTGUI_BASE + 175 )
-#define HBQT_TYPE_QStandardItemModel                            ( HBQT_TYPE_QTGUI_BASE + 176 )
-#define HBQT_TYPE_QStatusBar                                    ( HBQT_TYPE_QTGUI_BASE + 177 )
-#define HBQT_TYPE_QStringListModel                              ( HBQT_TYPE_QTGUI_BASE + 178 )
-#define HBQT_TYPE_QStyle                                        ( HBQT_TYPE_QTGUI_BASE + 179 )
-#define HBQT_TYPE_QStyledItemDelegate                           ( HBQT_TYPE_QTGUI_BASE + 180 )
-#define HBQT_TYPE_QStyleFactory                                 ( HBQT_TYPE_QTGUI_BASE + 181 )
-#define HBQT_TYPE_QStyleHintReturn                              ( HBQT_TYPE_QTGUI_BASE + 182 )
-#define HBQT_TYPE_QStyleHintReturnMask                          ( HBQT_TYPE_QTGUI_BASE + 183 )
-#define HBQT_TYPE_QStyleHintReturnVariant                       ( HBQT_TYPE_QTGUI_BASE + 184 )
-#define HBQT_TYPE_QStyleOption                                  ( HBQT_TYPE_QTGUI_BASE + 185 )
-#define HBQT_TYPE_QStyleOptionButton                            ( HBQT_TYPE_QTGUI_BASE + 186 )
-#define HBQT_TYPE_QStyleOptionComboBox                          ( HBQT_TYPE_QTGUI_BASE + 187 )
-#define HBQT_TYPE_QStyleOptionComplex                           ( HBQT_TYPE_QTGUI_BASE + 188 )
-#define HBQT_TYPE_QStyleOptionDockWidget                        ( HBQT_TYPE_QTGUI_BASE + 189 )
-#define HBQT_TYPE_QStyleOptionFocusRect                         ( HBQT_TYPE_QTGUI_BASE + 190 )
-#define HBQT_TYPE_QStyleOptionFrame                             ( HBQT_TYPE_QTGUI_BASE + 191 )
-#define HBQT_TYPE_QStyleOptionGraphicsItem                      ( HBQT_TYPE_QTGUI_BASE + 192 )
-#define HBQT_TYPE_QStyleOptionGroupBox                          ( HBQT_TYPE_QTGUI_BASE + 193 )
-#define HBQT_TYPE_QStyleOptionHeader                            ( HBQT_TYPE_QTGUI_BASE + 194 )
-#define HBQT_TYPE_QStyleOptionMenuItem                          ( HBQT_TYPE_QTGUI_BASE + 195 )
-#define HBQT_TYPE_QStyleOptionProgressBar                       ( HBQT_TYPE_QTGUI_BASE + 196 )
-#define HBQT_TYPE_QStyleOptionSizeGrip                          ( HBQT_TYPE_QTGUI_BASE + 197 )
-#define HBQT_TYPE_QStyleOptionSlider                            ( HBQT_TYPE_QTGUI_BASE + 198 )
-#define HBQT_TYPE_QStyleOptionSpinBox                           ( HBQT_TYPE_QTGUI_BASE + 199 )
-#define HBQT_TYPE_QStyleOptionTab                               ( HBQT_TYPE_QTGUI_BASE + 200 )
-#define HBQT_TYPE_QStyleOptionTabBarBase                        ( HBQT_TYPE_QTGUI_BASE + 201 )
-#define HBQT_TYPE_QStyleOptionTabWidgetFrame                    ( HBQT_TYPE_QTGUI_BASE + 202 )
-#define HBQT_TYPE_QStyleOptionTitleBar                          ( HBQT_TYPE_QTGUI_BASE + 203 )
-#define HBQT_TYPE_QStyleOptionToolBar                           ( HBQT_TYPE_QTGUI_BASE + 204 )
-#define HBQT_TYPE_QStyleOptionToolBox                           ( HBQT_TYPE_QTGUI_BASE + 205 )
-#define HBQT_TYPE_QStyleOptionToolButton                        ( HBQT_TYPE_QTGUI_BASE + 206 )
-#define HBQT_TYPE_QStyleOptionViewItem                          ( HBQT_TYPE_QTGUI_BASE + 207 )
-#define HBQT_TYPE_QStylePainter                                 ( HBQT_TYPE_QTGUI_BASE + 208 )
-#define HBQT_TYPE_QSyntaxHighlighter                            ( HBQT_TYPE_QTGUI_BASE + 209 )
-#define HBQT_TYPE_QSystemTrayIcon                               ( HBQT_TYPE_QTGUI_BASE + 210 )
-#define HBQT_TYPE_QTabBar                                       ( HBQT_TYPE_QTGUI_BASE + 211 )
-#define HBQT_TYPE_QTableView                                    ( HBQT_TYPE_QTGUI_BASE + 212 )
-#define HBQT_TYPE_QTableWidget                                  ( HBQT_TYPE_QTGUI_BASE + 213 )
-#define HBQT_TYPE_QTableWidgetItem                              ( HBQT_TYPE_QTGUI_BASE + 214 )
-#define HBQT_TYPE_QTableWidgetSelectionRange                    ( HBQT_TYPE_QTGUI_BASE + 215 )
-#define HBQT_TYPE_QTabWidget                                    ( HBQT_TYPE_QTGUI_BASE + 216 )
-#define HBQT_TYPE_QTextBlock                                    ( HBQT_TYPE_QTGUI_BASE + 217 )
-#define HBQT_TYPE_QTextBlockFormat                              ( HBQT_TYPE_QTGUI_BASE + 218 )
-#define HBQT_TYPE_QTextBlockGroup                               ( HBQT_TYPE_QTGUI_BASE + 219 )
-#define HBQT_TYPE_QTextBrowser                                  ( HBQT_TYPE_QTGUI_BASE + 220 )
-#define HBQT_TYPE_QTextCharFormat                               ( HBQT_TYPE_QTGUI_BASE + 221 )
-#define HBQT_TYPE_QTextCursor                                   ( HBQT_TYPE_QTGUI_BASE + 222 )
-#define HBQT_TYPE_QTextDocument                                 ( HBQT_TYPE_QTGUI_BASE + 223 )
-#define HBQT_TYPE_QTextDocumentFragment                         ( HBQT_TYPE_QTGUI_BASE + 224 )
-#define HBQT_TYPE_QTextDocumentWriter                           ( HBQT_TYPE_QTGUI_BASE + 225 )
-#define HBQT_TYPE_QTextEdit                                     ( HBQT_TYPE_QTGUI_BASE + 226 )
-#define HBQT_TYPE_QTextFormat                                   ( HBQT_TYPE_QTGUI_BASE + 227 )
-#define HBQT_TYPE_QTextFragment                                 ( HBQT_TYPE_QTGUI_BASE + 228 )
-#define HBQT_TYPE_QTextFrame                                    ( HBQT_TYPE_QTGUI_BASE + 229 )
-#define HBQT_TYPE_QTextFrameFormat                              ( HBQT_TYPE_QTGUI_BASE + 230 )
-#define HBQT_TYPE_QTextImageFormat                              ( HBQT_TYPE_QTGUI_BASE + 231 )
-#define HBQT_TYPE_QTextInlineObject                             ( HBQT_TYPE_QTGUI_BASE + 232 )
-#define HBQT_TYPE_QTextItem                                     ( HBQT_TYPE_QTGUI_BASE + 233 )
-#define HBQT_TYPE_QTextLayout                                   ( HBQT_TYPE_QTGUI_BASE + 234 )
-#define HBQT_TYPE_QTextLength                                   ( HBQT_TYPE_QTGUI_BASE + 235 )
-#define HBQT_TYPE_QTextLine                                     ( HBQT_TYPE_QTGUI_BASE + 236 )
-#define HBQT_TYPE_QTextList                                     ( HBQT_TYPE_QTGUI_BASE + 237 )
-#define HBQT_TYPE_QTextListFormat                               ( HBQT_TYPE_QTGUI_BASE + 238 )
-#define HBQT_TYPE_QTextObject                                   ( HBQT_TYPE_QTGUI_BASE + 239 )
-#define HBQT_TYPE_QTextOption                                   ( HBQT_TYPE_QTGUI_BASE + 240 )
-#define HBQT_TYPE_QTextTableFormat                              ( HBQT_TYPE_QTGUI_BASE + 241 )
-#define HBQT_TYPE_QTimeEdit                                     ( HBQT_TYPE_QTGUI_BASE + 242 )
-#define HBQT_TYPE_QToolBar                                      ( HBQT_TYPE_QTGUI_BASE + 243 )
-#define HBQT_TYPE_QToolBox                                      ( HBQT_TYPE_QTGUI_BASE + 244 )
-#define HBQT_TYPE_QToolButton                                   ( HBQT_TYPE_QTGUI_BASE + 245 )
-#define HBQT_TYPE_QTransform                                    ( HBQT_TYPE_QTGUI_BASE + 246 )
-#define HBQT_TYPE_QTreeView                                     ( HBQT_TYPE_QTGUI_BASE + 247 )
-#define HBQT_TYPE_QTreeWidget                                   ( HBQT_TYPE_QTGUI_BASE + 248 )
-#define HBQT_TYPE_QTreeWidgetItem                               ( HBQT_TYPE_QTGUI_BASE + 249 )
-#define HBQT_TYPE_QValidator                                    ( HBQT_TYPE_QTGUI_BASE + 250 )
-#define HBQT_TYPE_QVBoxLayout                                   ( HBQT_TYPE_QTGUI_BASE + 251 )
-#define HBQT_TYPE_QWheelEvent                                   ( HBQT_TYPE_QTGUI_BASE + 252 )
-#define HBQT_TYPE_QWidget                                       ( HBQT_TYPE_QTGUI_BASE + 253 )
-#define HBQT_TYPE_QWidgetAction                                 ( HBQT_TYPE_QTGUI_BASE + 254 )
-#define HBQT_TYPE_QWidgetItem                                   ( HBQT_TYPE_QTGUI_BASE + 255 )
-#define HBQT_TYPE_QWindowsStyle                                 ( HBQT_TYPE_QTGUI_BASE + 256 )
-#define HBQT_TYPE_QWindowStateChangeEvent                       ( HBQT_TYPE_QTGUI_BASE + 257 )
-#define HBQT_TYPE_QWizard                                       ( HBQT_TYPE_QTGUI_BASE + 258 )
-#define HBQT_TYPE_QWizardPage                                   ( HBQT_TYPE_QTGUI_BASE + 259 )
-#define HBQT_TYPE_QUiLoader                                     ( HBQT_TYPE_QTGUI_BASE + 260 )
+#define HBQT_TYPE_HBQAbstractItemModel                          0x4C8E7C31
+#define HBQT_TYPE_HBQGraphicsItem                               0x02AA8AE5
+#define HBQT_TYPE_HBQGraphicsScene                              0xF30B75E1
+#define HBQT_TYPE_HBQPlainTextEdit                              0xB2A36488
+#define HBQT_TYPE_HBQSyntaxHighlighter                          0xFB4379C6
+#define HBQT_TYPE_HBQTableView                                  0xD81CC990
+#define HBQT_TYPE_HBQTextBlockUserData                          0xD4A5CA86
+#define HBQT_TYPE_QAbstractButton                               0x07A45639
+#define HBQT_TYPE_QAbstractGraphicsShapeItem                    0x241752FC
+#define HBQT_TYPE_QAbstractItemDelegate                         0x8B216A26
+#define HBQT_TYPE_QAbstractItemView                             0xCDB585DC
+#define HBQT_TYPE_QAbstractPrintDialog                          0x15DF2AB0
+#define HBQT_TYPE_QAbstractProxyModel                           0x12E92F04
+#define HBQT_TYPE_QAbstractScrollArea                           0x8EEFAA61
+#define HBQT_TYPE_QAbstractSlider                               0xF265EA03
+#define HBQT_TYPE_QAbstractSpinBox                              0xCCE03C2E
+#define HBQT_TYPE_QAbstractTextDocumentLayout                   0xDAACA8C3
+#define HBQT_TYPE_QAction                                       0x8EA7ABFF
+#define HBQT_TYPE_QActionGroup                                  0x8538CC69
+#define HBQT_TYPE_QApplication                                  0xA6A6B17C
+#define HBQT_TYPE_QBitmap                                       0x210679C1
+#define HBQT_TYPE_QBoxLayout                                    0x8E2E0CAF
+#define HBQT_TYPE_QBrush                                        0x96A039B0
+#define HBQT_TYPE_QButtonGroup                                  0xD1D47F3D
+#define HBQT_TYPE_QCalendarWidget                               0xA3FB335F
+#define HBQT_TYPE_QCheckBox                                     0x536F27E7
+#define HBQT_TYPE_QClipboard                                    0xCF719699
+#define HBQT_TYPE_QColor                                        0x0151A39A
+#define HBQT_TYPE_QColorDialog                                  0xBBC40FC7
+#define HBQT_TYPE_QComboBox                                     0xC89925E3
+#define HBQT_TYPE_QCommandLinkButton                            0x10C7747C
+#define HBQT_TYPE_QCommonStyle                                  0x1D3C9359
+#define HBQT_TYPE_QCompleter                                    0x8E86BB30
+#define HBQT_TYPE_QConicalGradient                              0xE02B6507
+#define HBQT_TYPE_QContextMenuEvent                             0xC14D804D
+#define HBQT_TYPE_QCursor                                       0x0C144DE3
+#define HBQT_TYPE_QDateEdit                                     0xA8394641
+#define HBQT_TYPE_QDateTimeEdit                                 0xB7E6B53F
+#define HBQT_TYPE_QDesktopWidget                                0x511C93FC
+#define HBQT_TYPE_QDial                                         0x304587E9
+#define HBQT_TYPE_QDialog                                       0x8C0AFF0F
+#define HBQT_TYPE_QDirModel                                     0xCC6817FE
+#define HBQT_TYPE_QDockWidget                                   0xCCE130C8
+#define HBQT_TYPE_QDoubleSpinBox                                0x6FCDB0F4
+#define HBQT_TYPE_QDoubleValidator                              0xB4F9B269
+#define HBQT_TYPE_QDrag                                         0xB7E412F0
+#define HBQT_TYPE_QDragEnterEvent                               0xF4B9C023
+#define HBQT_TYPE_QDragLeaveEvent                               0xF647FE0B
+#define HBQT_TYPE_QDragMoveEvent                                0x739BBFAA
+#define HBQT_TYPE_QDropEvent                                    0x03C8E397
+#define HBQT_TYPE_QErrorMessage                                 0xA3C75FB8
+#define HBQT_TYPE_QFileDialog                                   0xF289363C
+#define HBQT_TYPE_QFileIconProvider                             0xCF7F3ADC
+#define HBQT_TYPE_QFileSystemModel                              0xE74B60F6
+#define HBQT_TYPE_QFocusEvent                                   0x7D9910F2
+#define HBQT_TYPE_QFocusFrame                                   0xF3CF2698
+#define HBQT_TYPE_QFont                                         0x0A35B749
+#define HBQT_TYPE_QFontComboBox                                 0x89B10808
+#define HBQT_TYPE_QFontDatabase                                 0xFD22422F
+#define HBQT_TYPE_QFontDialog                                   0x021FDFB1
+#define HBQT_TYPE_QFontInfo                                     0x0F524AE3
+#define HBQT_TYPE_QFontMetrics                                  0x3D17578E
+#define HBQT_TYPE_QFontMetricsF                                 0x4780B258
+#define HBQT_TYPE_QFormLayout                                   0xA4169148
+#define HBQT_TYPE_QFrame                                        0xD2FFD7BE
+#define HBQT_TYPE_QGradient                                     0xBA9C911F
+#define HBQT_TYPE_QGraphicsEllipseItem                          0x368D3268
+#define HBQT_TYPE_QGraphicsGridLayout                           0xF4EE0869
+#define HBQT_TYPE_QGraphicsItem                                 0x495A36F3
+#define HBQT_TYPE_QGraphicsItemAnimation                        0x4C884E87
+#define HBQT_TYPE_QGraphicsItemGroup                            0x3645B91B
+#define HBQT_TYPE_QGraphicsLayout                               0x5554F1DC
+#define HBQT_TYPE_QGraphicsLayoutItem                           0xA27BA8CD
+#define HBQT_TYPE_QGraphicsLinearLayout                         0x72984462
+#define HBQT_TYPE_QGraphicsLineItem                             0x5016AEC9
+#define HBQT_TYPE_QGraphicsPathItem                             0x12302186
+#define HBQT_TYPE_QGraphicsPixmapItem                           0x12C39C49
+#define HBQT_TYPE_QGraphicsPolygonItem                          0xDF1D8178
+#define HBQT_TYPE_QGraphicsProxyWidget                          0xBDD1CB32
+#define HBQT_TYPE_QGraphicsRectItem                             0x1F994A48
+#define HBQT_TYPE_QGraphicsScene                                0x0794300C
+#define HBQT_TYPE_QGraphicsSceneContextMenuEvent                0x2A64D5FB
+#define HBQT_TYPE_QGraphicsSceneDragDropEvent                   0x3A4BC5E0
+#define HBQT_TYPE_QGraphicsSceneEvent                           0x7AEFB6E8
+#define HBQT_TYPE_QGraphicsSceneHelpEvent                       0x054A207E
+#define HBQT_TYPE_QGraphicsSceneHoverEvent                      0x7E4B40AF
+#define HBQT_TYPE_QGraphicsSceneMouseEvent                      0x0C3017DF
+#define HBQT_TYPE_QGraphicsSceneMoveEvent                       0x4EA82951
+#define HBQT_TYPE_QGraphicsSceneResizeEvent                     0xA928975B
+#define HBQT_TYPE_QGraphicsSceneWheelEvent                      0x0767A220
+#define HBQT_TYPE_QGraphicsSimpleTextItem                       0xD4ECC485
+#define HBQT_TYPE_QGraphicsTextItem                             0xB0E7B197
+#define HBQT_TYPE_QGraphicsView                                 0xA8BCB863
+#define HBQT_TYPE_QGraphicsWidget                               0xEA9784EE
+#define HBQT_TYPE_QGridLayout                                   0xA21237FE
+#define HBQT_TYPE_QGroupBox                                     0xDDA87B47
+#define HBQT_TYPE_QHBoxLayout                                   0x1B39539C
+#define HBQT_TYPE_QHeaderView                                   0x60A961E3
+#define HBQT_TYPE_QHelpEvent                                    0xA26A322C
+#define HBQT_TYPE_QHideEvent                                    0x9531FA2C
+#define HBQT_TYPE_QIcon                                         0xBF359640
+#define HBQT_TYPE_QImage                                        0xA23AEF2C
+#define HBQT_TYPE_QImageReader                                  0x54138882
+#define HBQT_TYPE_QImageWriter                                  0x0F8CD93C
+#define HBQT_TYPE_QInputDialog                                  0x72F695C1
+#define HBQT_TYPE_QInputEvent                                   0x74D8594C
+#define HBQT_TYPE_QInputMethodEvent                             0x8D3C4429
+#define HBQT_TYPE_QIntValidator                                 0x18A63CB2
+#define HBQT_TYPE_QItemDelegate                                 0x6C37F5DC
+#define HBQT_TYPE_QItemEditorCreatorBase                        0x9CF1E9E9
+#define HBQT_TYPE_QItemEditorFactory                            0x8CEE810A
+#define HBQT_TYPE_QItemSelection                                0x43F6FCA4
+#define HBQT_TYPE_QItemSelectionModel                           0x355EDE30
+#define HBQT_TYPE_QKeyEvent                                     0x5414E79B
+#define HBQT_TYPE_QKeySequence                                  0xBF931C83
+#define HBQT_TYPE_QLabel                                        0x69A0BB9B
+#define HBQT_TYPE_QLayout                                       0xF3514C8F
+#define HBQT_TYPE_QLayoutItem                                   0xF487975A
+#define HBQT_TYPE_QLCDNumber                                    0x2B5C1BB4
+#define HBQT_TYPE_QLinearGradient                               0x6A363485
+#define HBQT_TYPE_QLineEdit                                     0xEA7E326E
+#define HBQT_TYPE_QListView                                     0x777EE88D
+#define HBQT_TYPE_QListWidget                                   0x4101D4BA
+#define HBQT_TYPE_QListWidgetItem                               0x5FA6F975
+#define HBQT_TYPE_QMainWindow                                   0x35D314F2
+#define HBQT_TYPE_QMatrix                                       0x315866A2
+#define HBQT_TYPE_QMdiArea                                      0x156291A3
+#define HBQT_TYPE_QMdiSubWindow                                 0x3BC9B117
+#define HBQT_TYPE_QMenu                                         0xA7A48508
+#define HBQT_TYPE_QMenuBar                                      0xD7EE90AA
+#define HBQT_TYPE_QMessageBox                                   0x95206F00
+#define HBQT_TYPE_QMouseEvent                                   0x89F20715
+#define HBQT_TYPE_QMoveEvent                                    0xE9883B03
+#define HBQT_TYPE_QMovie                                        0x7A59191C
+#define HBQT_TYPE_QPageSetupDialog                              0x62EFFF35
+#define HBQT_TYPE_QPaintDevice                                  0x3BBA83B9
+#define HBQT_TYPE_QPaintEngine                                  0xDA3D2FBA
+#define HBQT_TYPE_QPainter                                      0x3BC47F1A
+#define HBQT_TYPE_QPainterPath                                  0xD5F247C9
+#define HBQT_TYPE_QPaintEvent                                   0x76F7DE8B
+#define HBQT_TYPE_QPalette                                      0xF42FD1BC
+#define HBQT_TYPE_QPen                                          0xD8372994
+#define HBQT_TYPE_QPicture                                      0x2511394B
+#define HBQT_TYPE_QPixmap                                       0x25CE65E9
+#define HBQT_TYPE_QPlainTextDocumentLayout                      0x86F79C4A
+#define HBQT_TYPE_QPlainTextEdit                                0x463C2165
+#define HBQT_TYPE_QPolygon                                      0xF46E57D0
+#define HBQT_TYPE_QPolygonF                                     0xCB9AB7AB
+#define HBQT_TYPE_QPrintDialog                                  0xBB6DD7BE
+#define HBQT_TYPE_QPrintEngine                                  0x16A41551
+#define HBQT_TYPE_QPrinter                                      0xBE860F2F
+#define HBQT_TYPE_QPrinterInfo                                  0xD9B6C77A
+#define HBQT_TYPE_QPrintPreviewDialog                           0x2B52B6CB
+#define HBQT_TYPE_QProgressBar                                  0x69D5E40E
+#define HBQT_TYPE_QProgressDialog                               0xED8F05B8
+#define HBQT_TYPE_QPushButton                                   0x29E640EE
+#define HBQT_TYPE_QRadialGradient                               0x19336D41
+#define HBQT_TYPE_QRadioButton                                  0xCEAC06B1
+#define HBQT_TYPE_QRegExpValidator                              0x670CFF4C
+#define HBQT_TYPE_QRegion                                       0xC609D61B
+#define HBQT_TYPE_QResizeEvent                                  0xD21C7EE5
+#define HBQT_TYPE_QScrollArea                                   0xED78EE89
+#define HBQT_TYPE_QScrollBar                                    0x2F7DA3CB
+#define HBQT_TYPE_QSessionManager                               0x640336B4
+#define HBQT_TYPE_QShowEvent                                    0x3B17D174
+#define HBQT_TYPE_QSizeGrip                                     0x626D8234
+#define HBQT_TYPE_QSizePolicy                                   0x3CC69948
+#define HBQT_TYPE_QSlider                                       0x06AC376A
+#define HBQT_TYPE_QSound                                        0x9F8928F7
+#define HBQT_TYPE_QSpacerItem                                   0x7DF1ACDC
+#define HBQT_TYPE_QSpinBox                                      0xF87A2C0F
+#define HBQT_TYPE_QSplashScreen                                 0x1096D588
+#define HBQT_TYPE_QSplitter                                     0x24FC5273
+#define HBQT_TYPE_QStackedWidget                                0x9BB086A6
+#define HBQT_TYPE_QStandardItem                                 0xB4F97254
+#define HBQT_TYPE_QStandardItemModel                            0x204D7F22
+#define HBQT_TYPE_QStatusBar                                    0x03AE5DC8
+#define HBQT_TYPE_QStringListModel                              0xE6758CF0
+#define HBQT_TYPE_QStyle                                        0x54BA5319
+#define HBQT_TYPE_QStyledItemDelegate                           0x0E9308A7
+#define HBQT_TYPE_QStyleFactory                                 0x52CF0C61
+#define HBQT_TYPE_QStyleHintReturn                              0x525915AC
+#define HBQT_TYPE_QStyleHintReturnMask                          0x2C117DED
+#define HBQT_TYPE_QStyleHintReturnVariant                       0xB9E9C690
+#define HBQT_TYPE_QStyleOption                                  0x1F3ACB5C
+#define HBQT_TYPE_QStyleOptionButton                            0x50CF44C5
+#define HBQT_TYPE_QStyleOptionComboBox                          0xCF74273F
+#define HBQT_TYPE_QStyleOptionComplex                           0x6098C087
+#define HBQT_TYPE_QStyleOptionDockWidget                        0x0F62DC1A
+#define HBQT_TYPE_QStyleOptionFocusRect                         0x66106CD3
+#define HBQT_TYPE_QStyleOptionFrame                             0xCC3036DC
+#define HBQT_TYPE_QStyleOptionGraphicsItem                      0x53E8FCBE
+#define HBQT_TYPE_QStyleOptionGroupBox                          0xDA45799B
+#define HBQT_TYPE_QStyleOptionHeader                            0x04BB4039
+#define HBQT_TYPE_QStyleOptionMenuItem                          0x185736DE
+#define HBQT_TYPE_QStyleOptionProgressBar                       0x01CBD41A
+#define HBQT_TYPE_QStyleOptionSizeGrip                          0x658080E8
+#define HBQT_TYPE_QStyleOptionSlider                            0xA50EF8FF
+#define HBQT_TYPE_QStyleOptionSpinBox                           0x78BCE90B
+#define HBQT_TYPE_QStyleOptionTab                               0xC00A0510
+#define HBQT_TYPE_QStyleOptionTabBarBase                        0x446EA1E7
+#define HBQT_TYPE_QStyleOptionTabWidgetFrame                    0x9020259C
+#define HBQT_TYPE_QStyleOptionTitleBar                          0x50D8E3F1
+#define HBQT_TYPE_QStyleOptionToolBar                           0x14849E70
+#define HBQT_TYPE_QStyleOptionToolBox                           0x6AD25AE0
+#define HBQT_TYPE_QStyleOptionToolButton                        0x053BC4DE
+#define HBQT_TYPE_QStyleOptionViewItem                          0xEE21D274
+#define HBQT_TYPE_QStylePainter                                 0xA1F71B40
+#define HBQT_TYPE_QSyntaxHighlighter                            0xE50E0FD8
+#define HBQT_TYPE_QSystemTrayIcon                               0x43C8BE4A
+#define HBQT_TYPE_QTabBar                                       0x6C94BB34
+#define HBQT_TYPE_QTableView                                    0x5AEBC521
+#define HBQT_TYPE_QTableWidget                                  0x066C56BF
+#define HBQT_TYPE_QTableWidgetItem                              0xB2220770
+#define HBQT_TYPE_QTableWidgetSelectionRange                    0x043ABFB5
+#define HBQT_TYPE_QTabWidget                                    0x381393D4
+#define HBQT_TYPE_QTextBlock                                    0x582BE407
+#define HBQT_TYPE_QTextBlockFormat                              0x0CDB7179
+#define HBQT_TYPE_QTextBlockGroup                               0x01461FE3
+#define HBQT_TYPE_QTextBrowser                                  0xFBEC246B
+#define HBQT_TYPE_QTextCharFormat                               0x078F1596
+#define HBQT_TYPE_QTextCursor                                   0x8EA08EBA
+#define HBQT_TYPE_QTextDocument                                 0xC424143F
+#define HBQT_TYPE_QTextDocumentFragment                         0x7D0F878D
+#define HBQT_TYPE_QTextDocumentWriter                           0x49B65F7B
+#define HBQT_TYPE_QTextEdit                                     0x0A8F2D30
+#define HBQT_TYPE_QTextFormat                                   0x956596EB
+#define HBQT_TYPE_QTextFragment                                 0xD7E08BA5
+#define HBQT_TYPE_QTextFrame                                    0x6EC84FE8
+#define HBQT_TYPE_QTextFrameFormat                              0x0812015D
+#define HBQT_TYPE_QTextImageFormat                              0xDC8F3336
+#define HBQT_TYPE_QTextInlineObject                             0xB5FCCF31
+#define HBQT_TYPE_QTextItem                                     0x94A1D634
+#define HBQT_TYPE_QTextLayout                                   0x71E58FD6
+#define HBQT_TYPE_QTextLength                                   0x4AA27A86
+#define HBQT_TYPE_QTextLine                                     0x5AAE47DC
+#define HBQT_TYPE_QTextList                                     0xCF720B32
+#define HBQT_TYPE_QTextListFormat                               0xBCB15934
+#define HBQT_TYPE_QTextObject                                   0xE3724FD8
+#define HBQT_TYPE_QTextOption                                   0x1159E484
+#define HBQT_TYPE_QTextTableFormat                              0xC7367AE7
+#define HBQT_TYPE_QTimeEdit                                     0xC3B46A5E
+#define HBQT_TYPE_QToolBar                                      0x94425B74
+#define HBQT_TYPE_QToolBox                                      0xEA149FE4
+#define HBQT_TYPE_QToolButton                                   0xC6B8280C
+#define HBQT_TYPE_QTransform                                    0x3718D3A2
+#define HBQT_TYPE_QTreeView                                     0x35F65593
+#define HBQT_TYPE_QTreeWidget                                   0x209066DC
+#define HBQT_TYPE_QTreeWidgetItem                               0xD5DE9141
+#define HBQT_TYPE_QValidator                                    0xBA08C2C7
+#define HBQT_TYPE_QVBoxLayout                                   0x225EE2C7
+#define HBQT_TYPE_QWheelEvent                                   0x82A5B2EA
+#define HBQT_TYPE_QWidget                                       0x4C9239BD
+#define HBQT_TYPE_QWidgetAction                                 0x24CC0E73
+#define HBQT_TYPE_QWidgetItem                                   0x4796275B
+#define HBQT_TYPE_QWindowsStyle                                 0xE2019331
+#define HBQT_TYPE_QWindowStateChangeEvent                       0xFB5C127E
+#define HBQT_TYPE_QWizard                                       0xE0EDF151
+#define HBQT_TYPE_QWizardPage                                   0x385507E7
+#define HBQT_TYPE_QUiLoader                                     0xE3D876A2
 
 #endif /* __HBQTGUI_H */
