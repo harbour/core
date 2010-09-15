@@ -58,6 +58,7 @@ win_prn1.c
 win_prn2.c
 win_prn3.c
 win_regc.c
+win_rpc.c
 win_shell.c
 win_svc.c
 
