@@ -70,7 +70,7 @@ static uLong hb_zlibCompressBound( uLong ulLen )
 {
    return ulLen + ( ulLen >> 12 ) + ( ulLen >> 14 ) + ( ulLen >> 25 ) + 13;
 }
-#define compressBound( n )    ( hb_zlibCompressBound( n )
+#define compressBound( n )    hb_zlibCompressBound( n )
 /* additional 12 bytes is for GZIP compression which uses bigger header */
 #define deflateBound( s, n )  ( hb_zlibCompressBound( n ) + 12 )
 #endif
