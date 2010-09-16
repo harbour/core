@@ -53,6 +53,7 @@
 #include "hbclass.ch"
 #include "common.ch"
 #include "error.ch"
+#include "hbtrace.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -150,6 +151,7 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbqt_ptr( xParam )
+   #if 0
    LOCAL cClsName
 
    IF hb_isObject( xParam )
@@ -165,6 +167,11 @@ FUNCTION hbqt_ptr( xParam )
 
       ENDIF
    ENDIF
+   #else
+   IF hb_isObject( xParam ) .AND. __objHasMsg( xParam, "PPTR" )
+      RETURN xParam:pPtr
+   ENDIF
+   #endif
 
    RETURN xParam
 

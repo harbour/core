@@ -75,6 +75,7 @@
 
 CLASS HbQtUI
 
+   DATA     pPtr
    DATA     cFile
    DATA     qParent
 
@@ -258,6 +259,7 @@ METHOD HbQtUI:loadUI( cUiFull, qParent )
    ENDIF
 
    ::oWidget := oWidget
+   ::pPtr := oWidget:pPtr
 
    RETURN oWidget
 

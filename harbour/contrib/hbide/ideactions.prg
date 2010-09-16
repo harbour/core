@@ -106,9 +106,7 @@ METHOD IdeActions:create( oIde )
 
    DEFAULT oIde TO ::oIde
    ::oIde := oIde
-
    ::buildActions()
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -141,7 +139,7 @@ METHOD IdeActions:buildActions()
    FOR EACH a_ IN aAct
       IF !( hb_hHasKey( ::hActions, a_[ ACT_NAME ] ) )
 
-         qAction := QAction( ::qDlg )
+         qAction := QAction( ::oDlg:oWidget )
          qAction:setCheckable( iif( empty( a_[ ACT_CHECKABLE ] ), .F., upper( a_[ ACT_CHECKABLE ] ) == "YES" ) )
          qAction:setText( strtran( a_[ ACT_TEXT ], "~", "&" ) )
          IF !empty( a_[ ACT_IMAGE ] )

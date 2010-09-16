@@ -107,7 +107,6 @@ CLASS IdeObject
    ACCESS oFont                                   INLINE ::oIde:oFont
    ACCESS oSBar                                   INLINE ::oIde:oSBar
    ACCESS oDlg                                    INLINE ::oIde:oDlg
-   ACCESS qDlg                                    INLINE ::oIde:oDlg:oWidget
    ACCESS oDA                                     INLINE ::oIde:oDA
 
    ACCESS qLayout                                 INLINE ::oIde:qLayout
