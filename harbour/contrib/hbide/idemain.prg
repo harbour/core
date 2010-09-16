@@ -435,6 +435,7 @@ METHOD HbIde:create( aParams )
    hbide_loadSkltns( Self )
 
    /* Set Codec at the Begining - no interface display */
+   ::cWrkCodec := "UTF-8"
    HbXbp_SetCodec( ::cWrkCodec )
 
    /* Load IDE|User defined Themes */
