@@ -139,10 +139,8 @@ HB_FUNC( QT_QGRAPHICSSCENEDRAGDROPEVENT_ACCEPTPROPOSEDACTION )
 {
    QGraphicsSceneDragDropEvent * p = hbqt_par_QGraphicsSceneDragDropEvent( 1 );
    if( p )
-      ( p )->acceptProposedAction();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEDRAGDROPEVENT_ACCEPTPROPOSEDACTION FP=( p )->acceptProposedAction(); p is NULL" ) );
+      ( p )->acceptProposedAction();
    }
 }
 
@@ -153,10 +151,8 @@ HB_FUNC( QT_QGRAPHICSSCENEDRAGDROPEVENT_BUTTONS )
 {
    QGraphicsSceneDragDropEvent * p = hbqt_par_QGraphicsSceneDragDropEvent( 1 );
    if( p )
-      hb_retni( ( Qt::MouseButtons ) ( p )->buttons() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEDRAGDROPEVENT_BUTTONS FP=hb_retni( ( Qt::MouseButtons ) ( p )->buttons() ); p is NULL" ) );
+      hb_retni( ( Qt::MouseButtons ) ( p )->buttons() );
    }
 }
 
@@ -167,10 +163,8 @@ HB_FUNC( QT_QGRAPHICSSCENEDRAGDROPEVENT_DROPACTION )
 {
    QGraphicsSceneDragDropEvent * p = hbqt_par_QGraphicsSceneDragDropEvent( 1 );
    if( p )
-      hb_retni( ( Qt::DropAction ) ( p )->dropAction() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEDRAGDROPEVENT_DROPACTION FP=hb_retni( ( Qt::DropAction ) ( p )->dropAction() ); p is NULL" ) );
+      hb_retni( ( Qt::DropAction ) ( p )->dropAction() );
    }
 }
 
@@ -189,10 +183,8 @@ HB_FUNC( QT_QGRAPHICSSCENEDRAGDROPEVENT_MODIFIERS )
 {
    QGraphicsSceneDragDropEvent * p = hbqt_par_QGraphicsSceneDragDropEvent( 1 );
    if( p )
-      hb_retni( ( Qt::KeyboardModifiers ) ( p )->modifiers() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEDRAGDROPEVENT_MODIFIERS FP=hb_retni( ( Qt::KeyboardModifiers ) ( p )->modifiers() ); p is NULL" ) );
+      hb_retni( ( Qt::KeyboardModifiers ) ( p )->modifiers() );
    }
 }
 
@@ -203,10 +195,8 @@ HB_FUNC( QT_QGRAPHICSSCENEDRAGDROPEVENT_POS )
 {
    QGraphicsSceneDragDropEvent * p = hbqt_par_QGraphicsSceneDragDropEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->pos() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEDRAGDROPEVENT_POS FP=hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->pos() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->pos() ), true ) );
    }
 }
 
@@ -217,10 +207,8 @@ HB_FUNC( QT_QGRAPHICSSCENEDRAGDROPEVENT_POSSIBLEACTIONS )
 {
    QGraphicsSceneDragDropEvent * p = hbqt_par_QGraphicsSceneDragDropEvent( 1 );
    if( p )
-      hb_retni( ( Qt::DropActions ) ( p )->possibleActions() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEDRAGDROPEVENT_POSSIBLEACTIONS FP=hb_retni( ( Qt::DropActions ) ( p )->possibleActions() ); p is NULL" ) );
+      hb_retni( ( Qt::DropActions ) ( p )->possibleActions() );
    }
 }
 
@@ -231,10 +219,8 @@ HB_FUNC( QT_QGRAPHICSSCENEDRAGDROPEVENT_PROPOSEDACTION )
 {
    QGraphicsSceneDragDropEvent * p = hbqt_par_QGraphicsSceneDragDropEvent( 1 );
    if( p )
-      hb_retni( ( Qt::DropAction ) ( p )->proposedAction() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEDRAGDROPEVENT_PROPOSEDACTION FP=hb_retni( ( Qt::DropAction ) ( p )->proposedAction() ); p is NULL" ) );
+      hb_retni( ( Qt::DropAction ) ( p )->proposedAction() );
    }
 }
 
@@ -245,10 +231,8 @@ HB_FUNC( QT_QGRAPHICSSCENEDRAGDROPEVENT_SCENEPOS )
 {
    QGraphicsSceneDragDropEvent * p = hbqt_par_QGraphicsSceneDragDropEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->scenePos() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEDRAGDROPEVENT_SCENEPOS FP=hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->scenePos() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->scenePos() ), true ) );
    }
 }
 
@@ -259,10 +243,8 @@ HB_FUNC( QT_QGRAPHICSSCENEDRAGDROPEVENT_SCREENPOS )
 {
    QGraphicsSceneDragDropEvent * p = hbqt_par_QGraphicsSceneDragDropEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->screenPos() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEDRAGDROPEVENT_SCREENPOS FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->screenPos() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->screenPos() ), true ) );
    }
 }
 
@@ -273,10 +255,8 @@ HB_FUNC( QT_QGRAPHICSSCENEDRAGDROPEVENT_SETDROPACTION )
 {
    QGraphicsSceneDragDropEvent * p = hbqt_par_QGraphicsSceneDragDropEvent( 1 );
    if( p )
-      ( p )->setDropAction( ( Qt::DropAction ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEDRAGDROPEVENT_SETDROPACTION FP=( p )->setDropAction( ( Qt::DropAction ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setDropAction( ( Qt::DropAction ) hb_parni( 2 ) );
    }
 }
 
@@ -287,10 +267,8 @@ HB_FUNC( QT_QGRAPHICSSCENEDRAGDROPEVENT_SOURCE )
 {
    QGraphicsSceneDragDropEvent * p = hbqt_par_QGraphicsSceneDragDropEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->source(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEDRAGDROPEVENT_SOURCE FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->source(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->source(), false ) );
    }
 }
 

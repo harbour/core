@@ -619,9 +619,11 @@ METHOD IdeActions:buildMainMenu()
    hbide_menuAddSep( oSubMenu )
    oSubMenu:addItem( { ::getAction( "TB_Tools"            ), {|| oIde:execAction( "Tools"              ) } } )
    hbide_menuAddSep( oSubMenu )
+   #if 0
    oSubMenu2 := hbide_buildCodecMenu( oIde, oSubMenu )
    oSubMenu2:title := "~Encoding"
    oSubMenu:addItem( { oSubMenu2, NIL } )
+   #endif
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    /*----------------------------------------------------------------------------*/

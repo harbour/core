@@ -137,10 +137,8 @@ HB_FUNC( QT_QCLIPBOARD_CLEAR )
 {
    QClipboard * p = hbqt_par_QClipboard( 1 );
    if( p )
-      ( p )->clear( ( HB_ISNUM( 2 ) ? ( QClipboard::Mode ) hb_parni( 2 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCLIPBOARD_CLEAR FP=( p )->clear( ( HB_ISNUM( 2 ) ? ( QClipboard::Mode ) hb_parni( 2 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ); p is NULL" ) );
+      ( p )->clear( ( HB_ISNUM( 2 ) ? ( QClipboard::Mode ) hb_parni( 2 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) );
    }
 }
 
@@ -151,10 +149,8 @@ HB_FUNC( QT_QCLIPBOARD_IMAGE )
 {
    QClipboard * p = hbqt_par_QClipboard( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( ( p )->image( ( HB_ISNUM( 2 ) ? ( QClipboard::Mode ) hb_parni( 2 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCLIPBOARD_IMAGE FP=hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( ( p )->image( ( HB_ISNUM( 2 ) ? ( QClipboard::Mode ) hb_parni( 2 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( ( p )->image( ( HB_ISNUM( 2 ) ? ( QClipboard::Mode ) hb_parni( 2 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ) ), true ) );
    }
 }
 
@@ -165,10 +161,8 @@ HB_FUNC( QT_QCLIPBOARD_OWNSCLIPBOARD )
 {
    QClipboard * p = hbqt_par_QClipboard( 1 );
    if( p )
-      hb_retl( ( p )->ownsClipboard() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCLIPBOARD_OWNSCLIPBOARD FP=hb_retl( ( p )->ownsClipboard() ); p is NULL" ) );
+      hb_retl( ( p )->ownsClipboard() );
    }
 }
 
@@ -179,10 +173,8 @@ HB_FUNC( QT_QCLIPBOARD_OWNSFINDBUFFER )
 {
    QClipboard * p = hbqt_par_QClipboard( 1 );
    if( p )
-      hb_retl( ( p )->ownsFindBuffer() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCLIPBOARD_OWNSFINDBUFFER FP=hb_retl( ( p )->ownsFindBuffer() ); p is NULL" ) );
+      hb_retl( ( p )->ownsFindBuffer() );
    }
 }
 
@@ -193,10 +185,8 @@ HB_FUNC( QT_QCLIPBOARD_OWNSSELECTION )
 {
    QClipboard * p = hbqt_par_QClipboard( 1 );
    if( p )
-      hb_retl( ( p )->ownsSelection() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCLIPBOARD_OWNSSELECTION FP=hb_retl( ( p )->ownsSelection() ); p is NULL" ) );
+      hb_retl( ( p )->ownsSelection() );
    }
 }
 
@@ -207,10 +197,8 @@ HB_FUNC( QT_QCLIPBOARD_PIXMAP )
 {
    QClipboard * p = hbqt_par_QClipboard( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap( ( HB_ISNUM( 2 ) ? ( QClipboard::Mode ) hb_parni( 2 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCLIPBOARD_PIXMAP FP=hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap( ( HB_ISNUM( 2 ) ? ( QClipboard::Mode ) hb_parni( 2 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap( ( HB_ISNUM( 2 ) ? ( QClipboard::Mode ) hb_parni( 2 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ) ), true ) );
    }
 }
 
@@ -221,10 +209,8 @@ HB_FUNC( QT_QCLIPBOARD_SETIMAGE )
 {
    QClipboard * p = hbqt_par_QClipboard( 1 );
    if( p )
-      ( p )->setImage( *hbqt_par_QImage( 2 ), ( HB_ISNUM( 3 ) ? ( QClipboard::Mode ) hb_parni( 3 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCLIPBOARD_SETIMAGE FP=( p )->setImage( *hbqt_par_QImage( 2 ), ( HB_ISNUM( 3 ) ? ( QClipboard::Mode ) hb_parni( 3 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ); p is NULL" ) );
+      ( p )->setImage( *hbqt_par_QImage( 2 ), ( HB_ISNUM( 3 ) ? ( QClipboard::Mode ) hb_parni( 3 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) );
    }
 }
 
@@ -235,10 +221,8 @@ HB_FUNC( QT_QCLIPBOARD_SETMIMEDATA )
 {
    QClipboard * p = hbqt_par_QClipboard( 1 );
    if( p )
-      ( p )->setMimeData( hbqt_par_QMimeData( 2 ), ( HB_ISNUM( 3 ) ? ( QClipboard::Mode ) hb_parni( 3 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCLIPBOARD_SETMIMEDATA FP=( p )->setMimeData( hbqt_par_QMimeData( 2 ), ( HB_ISNUM( 3 ) ? ( QClipboard::Mode ) hb_parni( 3 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ); p is NULL" ) );
+      ( p )->setMimeData( hbqt_par_QMimeData( 2 ), ( HB_ISNUM( 3 ) ? ( QClipboard::Mode ) hb_parni( 3 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) );
    }
 }
 
@@ -249,10 +233,8 @@ HB_FUNC( QT_QCLIPBOARD_SETPIXMAP )
 {
    QClipboard * p = hbqt_par_QClipboard( 1 );
    if( p )
-      ( p )->setPixmap( *hbqt_par_QPixmap( 2 ), ( HB_ISNUM( 3 ) ? ( QClipboard::Mode ) hb_parni( 3 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCLIPBOARD_SETPIXMAP FP=( p )->setPixmap( *hbqt_par_QPixmap( 2 ), ( HB_ISNUM( 3 ) ? ( QClipboard::Mode ) hb_parni( 3 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ); p is NULL" ) );
+      ( p )->setPixmap( *hbqt_par_QPixmap( 2 ), ( HB_ISNUM( 3 ) ? ( QClipboard::Mode ) hb_parni( 3 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) );
    }
 }
 
@@ -263,10 +245,10 @@ HB_FUNC( QT_QCLIPBOARD_SETTEXT )
 {
    QClipboard * p = hbqt_par_QClipboard( 1 );
    if( p )
-      ( p )->setText( QClipboard::tr( hb_parc( 2 ) ), ( HB_ISNUM( 3 ) ? ( QClipboard::Mode ) hb_parni( 3 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCLIPBOARD_SETTEXT FP=( p )->setText( QClipboard::tr( hb_parc( 2 ) ), ( HB_ISNUM( 3 ) ? ( QClipboard::Mode ) hb_parni( 3 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setText( hb_parstr_utf8( 2, &pText, NULL ), ( HB_ISNUM( 3 ) ? ( QClipboard::Mode ) hb_parni( 3 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) );
+      hb_strfree( pText );
    }
 }
 
@@ -277,10 +259,8 @@ HB_FUNC( QT_QCLIPBOARD_SUPPORTSFINDBUFFER )
 {
    QClipboard * p = hbqt_par_QClipboard( 1 );
    if( p )
-      hb_retl( ( p )->supportsFindBuffer() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCLIPBOARD_SUPPORTSFINDBUFFER FP=hb_retl( ( p )->supportsFindBuffer() ); p is NULL" ) );
+      hb_retl( ( p )->supportsFindBuffer() );
    }
 }
 
@@ -291,10 +271,8 @@ HB_FUNC( QT_QCLIPBOARD_SUPPORTSSELECTION )
 {
    QClipboard * p = hbqt_par_QClipboard( 1 );
    if( p )
-      hb_retl( ( p )->supportsSelection() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCLIPBOARD_SUPPORTSSELECTION FP=hb_retl( ( p )->supportsSelection() ); p is NULL" ) );
+      hb_retl( ( p )->supportsSelection() );
    }
 }
 
@@ -305,10 +283,8 @@ HB_FUNC( QT_QCLIPBOARD_TEXT )
 {
    QClipboard * p = hbqt_par_QClipboard( 1 );
    if( p )
-      hb_retc( ( p )->text( ( HB_ISNUM( 2 ) ? ( QClipboard::Mode ) hb_parni( 2 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCLIPBOARD_TEXT FP=hb_retc( ( p )->text( ( HB_ISNUM( 2 ) ? ( QClipboard::Mode ) hb_parni( 2 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->text( ( HB_ISNUM( 2 ) ? ( QClipboard::Mode ) hb_parni( 2 ) : ( QClipboard::Mode ) QClipboard::Clipboard ) ).toUtf8().data() );
    }
 }
 

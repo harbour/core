@@ -154,10 +154,8 @@ HB_FUNC( QT_QSPACERITEM_CHANGESIZE )
 {
    QSpacerItem * p = hbqt_par_QSpacerItem( 1 );
    if( p )
-      ( p )->changeSize( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNUM( 4 ) ? ( QSizePolicy::Policy ) hb_parni( 4 ) : ( QSizePolicy::Policy ) QSizePolicy::Minimum ), ( HB_ISNUM( 5 ) ? ( QSizePolicy::Policy ) hb_parni( 5 ) : ( QSizePolicy::Policy ) QSizePolicy::Minimum ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPACERITEM_CHANGESIZE FP=( p )->changeSize( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNUM( 4 ) ? ( QSizePolicy::Policy ) hb_parni( 4 ) : ( QSizePolicy::Policy ) QSizePolicy::Minimum ), ( HB_ISNUM( 5 ) ? ( QSizePolicy::Policy ) hb_parni( 5 ) : ( QSizePolicy::Policy ) QSizePolicy::Minimum ) ); p is NULL" ) );
+      ( p )->changeSize( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNUM( 4 ) ? ( QSizePolicy::Policy ) hb_parni( 4 ) : ( QSizePolicy::Policy ) QSizePolicy::Minimum ), ( HB_ISNUM( 5 ) ? ( QSizePolicy::Policy ) hb_parni( 5 ) : ( QSizePolicy::Policy ) QSizePolicy::Minimum ) );
    }
 }
 
@@ -168,10 +166,8 @@ HB_FUNC( QT_QSPACERITEM_ISEMPTY )
 {
    QSpacerItem * p = hbqt_par_QSpacerItem( 1 );
    if( p )
-      hb_retl( ( p )->isEmpty() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPACERITEM_ISEMPTY FP=hb_retl( ( p )->isEmpty() ); p is NULL" ) );
+      hb_retl( ( p )->isEmpty() );
    }
 }
 
@@ -182,10 +178,8 @@ HB_FUNC( QT_QSPACERITEM_SPACERITEM )
 {
    QSpacerItem * p = hbqt_par_QSpacerItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QSpacerItem( ( p )->spacerItem(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPACERITEM_SPACERITEM FP=hb_retptrGC( hbqt_gcAllocate_QSpacerItem( ( p )->spacerItem(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QSpacerItem( ( p )->spacerItem(), false ) );
    }
 }
 

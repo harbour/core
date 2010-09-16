@@ -147,10 +147,8 @@ HB_FUNC( QT_QTABLEWIDGETSELECTIONRANGE_BOTTOMROW )
 {
    QTableWidgetSelectionRange * p = hbqt_par_QTableWidgetSelectionRange( 1 );
    if( p )
-      hb_retni( ( p )->bottomRow() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGETSELECTIONRANGE_BOTTOMROW FP=hb_retni( ( p )->bottomRow() ); p is NULL" ) );
+      hb_retni( ( p )->bottomRow() );
    }
 }
 
@@ -161,10 +159,8 @@ HB_FUNC( QT_QTABLEWIDGETSELECTIONRANGE_COLUMNCOUNT )
 {
    QTableWidgetSelectionRange * p = hbqt_par_QTableWidgetSelectionRange( 1 );
    if( p )
-      hb_retni( ( p )->columnCount() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGETSELECTIONRANGE_COLUMNCOUNT FP=hb_retni( ( p )->columnCount() ); p is NULL" ) );
+      hb_retni( ( p )->columnCount() );
    }
 }
 
@@ -175,10 +171,8 @@ HB_FUNC( QT_QTABLEWIDGETSELECTIONRANGE_LEFTCOLUMN )
 {
    QTableWidgetSelectionRange * p = hbqt_par_QTableWidgetSelectionRange( 1 );
    if( p )
-      hb_retni( ( p )->leftColumn() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGETSELECTIONRANGE_LEFTCOLUMN FP=hb_retni( ( p )->leftColumn() ); p is NULL" ) );
+      hb_retni( ( p )->leftColumn() );
    }
 }
 
@@ -189,10 +183,8 @@ HB_FUNC( QT_QTABLEWIDGETSELECTIONRANGE_RIGHTCOLUMN )
 {
    QTableWidgetSelectionRange * p = hbqt_par_QTableWidgetSelectionRange( 1 );
    if( p )
-      hb_retni( ( p )->rightColumn() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGETSELECTIONRANGE_RIGHTCOLUMN FP=hb_retni( ( p )->rightColumn() ); p is NULL" ) );
+      hb_retni( ( p )->rightColumn() );
    }
 }
 
@@ -203,10 +195,8 @@ HB_FUNC( QT_QTABLEWIDGETSELECTIONRANGE_ROWCOUNT )
 {
    QTableWidgetSelectionRange * p = hbqt_par_QTableWidgetSelectionRange( 1 );
    if( p )
-      hb_retni( ( p )->rowCount() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGETSELECTIONRANGE_ROWCOUNT FP=hb_retni( ( p )->rowCount() ); p is NULL" ) );
+      hb_retni( ( p )->rowCount() );
    }
 }
 
@@ -217,10 +207,8 @@ HB_FUNC( QT_QTABLEWIDGETSELECTIONRANGE_TOPROW )
 {
    QTableWidgetSelectionRange * p = hbqt_par_QTableWidgetSelectionRange( 1 );
    if( p )
-      hb_retni( ( p )->topRow() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGETSELECTIONRANGE_TOPROW FP=hb_retni( ( p )->topRow() ); p is NULL" ) );
+      hb_retni( ( p )->topRow() );
    }
 }
 

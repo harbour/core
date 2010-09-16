@@ -127,10 +127,8 @@ HB_FUNC( QT_QSCICOMMAND_SETKEY )
 {
    QsciCommand * p = hbqt_par_QsciCommand( 1 );
    if( p )
-      ( p )->setKey( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCICOMMAND_SETKEY FP=( p )->setKey( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setKey( hb_parni( 2 ) );
    }
 }
 
@@ -141,10 +139,8 @@ HB_FUNC( QT_QSCICOMMAND_SETALTERNATEKEY )
 {
    QsciCommand * p = hbqt_par_QsciCommand( 1 );
    if( p )
-      ( p )->setAlternateKey( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCICOMMAND_SETALTERNATEKEY FP=( p )->setAlternateKey( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setAlternateKey( hb_parni( 2 ) );
    }
 }
 
@@ -155,10 +151,8 @@ HB_FUNC( QT_QSCICOMMAND_KEY )
 {
    QsciCommand * p = hbqt_par_QsciCommand( 1 );
    if( p )
-      hb_retni( ( p )->key() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCICOMMAND_KEY FP=hb_retni( ( p )->key() ); p is NULL" ) );
+      hb_retni( ( p )->key() );
    }
 }
 
@@ -169,10 +163,8 @@ HB_FUNC( QT_QSCICOMMAND_ALTERNATEKEY )
 {
    QsciCommand * p = hbqt_par_QsciCommand( 1 );
    if( p )
-      hb_retni( ( p )->alternateKey() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCICOMMAND_ALTERNATEKEY FP=hb_retni( ( p )->alternateKey() ); p is NULL" ) );
+      hb_retni( ( p )->alternateKey() );
    }
 }
 
@@ -183,10 +175,8 @@ HB_FUNC( QT_QSCICOMMAND_DESCRIPTION )
 {
    QsciCommand * p = hbqt_par_QsciCommand( 1 );
    if( p )
-      hb_retc( ( p )->description().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCICOMMAND_DESCRIPTION FP=hb_retc( ( p )->description().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->description().toUtf8().data() );
    }
 }
 
@@ -197,10 +187,8 @@ HB_FUNC( QT_QSCICOMMAND_VALIDKEY )
 {
    QsciCommand * p = hbqt_par_QsciCommand( 1 );
    if( p )
-      hb_retl( ( p )->validKey( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCICOMMAND_VALIDKEY FP=hb_retl( ( p )->validKey( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->validKey( hb_parni( 2 ) ) );
    }
 }
 

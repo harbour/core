@@ -151,10 +151,8 @@ HB_FUNC( QT_QREGEXP_CAP )
 {
    QRegExp * p = hbqt_par_QRegExp( 1 );
    if( p )
-      hb_retc( ( p )->cap( hb_parni( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGEXP_CAP FP=hb_retc( ( p )->cap( hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->cap( hb_parni( 2 ) ).toUtf8().data() );
    }
 }
 
@@ -165,10 +163,8 @@ HB_FUNC( QT_QREGEXP_CAPTUREDTEXTS )
 {
    QRegExp * p = hbqt_par_QRegExp( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->capturedTexts() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGEXP_CAPTUREDTEXTS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->capturedTexts() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->capturedTexts() ), true ) );
    }
 }
 
@@ -179,10 +175,8 @@ HB_FUNC( QT_QREGEXP_CASESENSITIVITY )
 {
    QRegExp * p = hbqt_par_QRegExp( 1 );
    if( p )
-      hb_retni( ( Qt::CaseSensitivity ) ( p )->caseSensitivity() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGEXP_CASESENSITIVITY FP=hb_retni( ( Qt::CaseSensitivity ) ( p )->caseSensitivity() ); p is NULL" ) );
+      hb_retni( ( Qt::CaseSensitivity ) ( p )->caseSensitivity() );
    }
 }
 
@@ -193,10 +187,8 @@ HB_FUNC( QT_QREGEXP_ERRORSTRING )
 {
    QRegExp * p = hbqt_par_QRegExp( 1 );
    if( p )
-      hb_retc( ( p )->errorString().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGEXP_ERRORSTRING FP=hb_retc( ( p )->errorString().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->errorString().toUtf8().data() );
    }
 }
 
@@ -207,10 +199,10 @@ HB_FUNC( QT_QREGEXP_EXACTMATCH )
 {
    QRegExp * p = hbqt_par_QRegExp( 1 );
    if( p )
-      hb_retl( ( p )->exactMatch( hbqt_par_QString( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGEXP_EXACTMATCH FP=hb_retl( ( p )->exactMatch( hbqt_par_QString( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->exactMatch( hb_parstr_utf8( 2, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -221,10 +213,10 @@ HB_FUNC( QT_QREGEXP_INDEXIN )
 {
    QRegExp * p = hbqt_par_QRegExp( 1 );
    if( p )
-      hb_retni( ( p )->indexIn( hbqt_par_QString( 2 ), hb_parni( 3 ), ( HB_ISNUM( 4 ) ? ( QRegExp::CaretMode ) hb_parni( 4 ) : ( QRegExp::CaretMode ) QRegExp::CaretAtZero ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGEXP_INDEXIN FP=hb_retni( ( p )->indexIn( hbqt_par_QString( 2 ), hb_parni( 3 ), ( HB_ISNUM( 4 ) ? ( QRegExp::CaretMode ) hb_parni( 4 ) : ( QRegExp::CaretMode ) QRegExp::CaretAtZero ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retni( ( p )->indexIn( hb_parstr_utf8( 2, &pText, NULL ), hb_parni( 3 ), ( HB_ISNUM( 4 ) ? ( QRegExp::CaretMode ) hb_parni( 4 ) : ( QRegExp::CaretMode ) QRegExp::CaretAtZero ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -235,10 +227,8 @@ HB_FUNC( QT_QREGEXP_ISEMPTY )
 {
    QRegExp * p = hbqt_par_QRegExp( 1 );
    if( p )
-      hb_retl( ( p )->isEmpty() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGEXP_ISEMPTY FP=hb_retl( ( p )->isEmpty() ); p is NULL" ) );
+      hb_retl( ( p )->isEmpty() );
    }
 }
 
@@ -249,10 +239,8 @@ HB_FUNC( QT_QREGEXP_ISMINIMAL )
 {
    QRegExp * p = hbqt_par_QRegExp( 1 );
    if( p )
-      hb_retl( ( p )->isMinimal() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGEXP_ISMINIMAL FP=hb_retl( ( p )->isMinimal() ); p is NULL" ) );
+      hb_retl( ( p )->isMinimal() );
    }
 }
 
@@ -263,10 +251,8 @@ HB_FUNC( QT_QREGEXP_ISVALID )
 {
    QRegExp * p = hbqt_par_QRegExp( 1 );
    if( p )
-      hb_retl( ( p )->isValid() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGEXP_ISVALID FP=hb_retl( ( p )->isValid() ); p is NULL" ) );
+      hb_retl( ( p )->isValid() );
    }
 }
 
@@ -277,10 +263,10 @@ HB_FUNC( QT_QREGEXP_LASTINDEXIN )
 {
    QRegExp * p = hbqt_par_QRegExp( 1 );
    if( p )
-      hb_retni( ( p )->lastIndexIn( hbqt_par_QString( 2 ), hb_parnidef( 3, -1 ), ( HB_ISNUM( 4 ) ? ( QRegExp::CaretMode ) hb_parni( 4 ) : ( QRegExp::CaretMode ) QRegExp::CaretAtZero ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGEXP_LASTINDEXIN FP=hb_retni( ( p )->lastIndexIn( hbqt_par_QString( 2 ), hb_parnidef( 3, -1 ), ( HB_ISNUM( 4 ) ? ( QRegExp::CaretMode ) hb_parni( 4 ) : ( QRegExp::CaretMode ) QRegExp::CaretAtZero ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retni( ( p )->lastIndexIn( hb_parstr_utf8( 2, &pText, NULL ), hb_parnidef( 3, -1 ), ( HB_ISNUM( 4 ) ? ( QRegExp::CaretMode ) hb_parni( 4 ) : ( QRegExp::CaretMode ) QRegExp::CaretAtZero ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -291,10 +277,8 @@ HB_FUNC( QT_QREGEXP_MATCHEDLENGTH )
 {
    QRegExp * p = hbqt_par_QRegExp( 1 );
    if( p )
-      hb_retni( ( p )->matchedLength() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGEXP_MATCHEDLENGTH FP=hb_retni( ( p )->matchedLength() ); p is NULL" ) );
+      hb_retni( ( p )->matchedLength() );
    }
 }
 
@@ -305,10 +289,8 @@ HB_FUNC( QT_QREGEXP_NUMCAPTURES )
 {
    QRegExp * p = hbqt_par_QRegExp( 1 );
    if( p )
-      hb_retni( ( p )->numCaptures() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGEXP_NUMCAPTURES FP=hb_retni( ( p )->numCaptures() ); p is NULL" ) );
+      hb_retni( ( p )->numCaptures() );
    }
 }
 
@@ -319,10 +301,8 @@ HB_FUNC( QT_QREGEXP_PATTERN )
 {
    QRegExp * p = hbqt_par_QRegExp( 1 );
    if( p )
-      hb_retc( ( p )->pattern().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGEXP_PATTERN FP=hb_retc( ( p )->pattern().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->pattern().toUtf8().data() );
    }
 }
 
@@ -333,10 +313,8 @@ HB_FUNC( QT_QREGEXP_PATTERNSYNTAX )
 {
    QRegExp * p = hbqt_par_QRegExp( 1 );
    if( p )
-      hb_retni( ( QRegExp::PatternSyntax ) ( p )->patternSyntax() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGEXP_PATTERNSYNTAX FP=hb_retni( ( QRegExp::PatternSyntax ) ( p )->patternSyntax() ); p is NULL" ) );
+      hb_retni( ( QRegExp::PatternSyntax ) ( p )->patternSyntax() );
    }
 }
 
@@ -347,10 +325,8 @@ HB_FUNC( QT_QREGEXP_POS )
 {
    QRegExp * p = hbqt_par_QRegExp( 1 );
    if( p )
-      hb_retni( ( p )->pos( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGEXP_POS FP=hb_retni( ( p )->pos( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->pos( hb_parni( 2 ) ) );
    }
 }
 
@@ -361,10 +337,8 @@ HB_FUNC( QT_QREGEXP_SETCASESENSITIVITY )
 {
    QRegExp * p = hbqt_par_QRegExp( 1 );
    if( p )
-      ( p )->setCaseSensitivity( ( Qt::CaseSensitivity ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGEXP_SETCASESENSITIVITY FP=( p )->setCaseSensitivity( ( Qt::CaseSensitivity ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setCaseSensitivity( ( Qt::CaseSensitivity ) hb_parni( 2 ) );
    }
 }
 
@@ -375,10 +349,8 @@ HB_FUNC( QT_QREGEXP_SETMINIMAL )
 {
    QRegExp * p = hbqt_par_QRegExp( 1 );
    if( p )
-      ( p )->setMinimal( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGEXP_SETMINIMAL FP=( p )->setMinimal( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setMinimal( hb_parl( 2 ) );
    }
 }
 
@@ -389,10 +361,10 @@ HB_FUNC( QT_QREGEXP_SETPATTERN )
 {
    QRegExp * p = hbqt_par_QRegExp( 1 );
    if( p )
-      ( p )->setPattern( hbqt_par_QString( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGEXP_SETPATTERN FP=( p )->setPattern( hbqt_par_QString( 2 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setPattern( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -403,10 +375,8 @@ HB_FUNC( QT_QREGEXP_SETPATTERNSYNTAX )
 {
    QRegExp * p = hbqt_par_QRegExp( 1 );
    if( p )
-      ( p )->setPatternSyntax( ( QRegExp::PatternSyntax ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGEXP_SETPATTERNSYNTAX FP=( p )->setPatternSyntax( ( QRegExp::PatternSyntax ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setPatternSyntax( ( QRegExp::PatternSyntax ) hb_parni( 2 ) );
    }
 }
 

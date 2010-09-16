@@ -168,10 +168,8 @@ HB_FUNC( QT_QPRINTER_ABORT )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retl( ( p )->abort() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_ABORT FP=hb_retl( ( p )->abort() ); p is NULL" ) );
+      hb_retl( ( p )->abort() );
    }
 }
 
@@ -182,10 +180,8 @@ HB_FUNC( QT_QPRINTER_COLLATECOPIES )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retl( ( p )->collateCopies() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_COLLATECOPIES FP=hb_retl( ( p )->collateCopies() ); p is NULL" ) );
+      hb_retl( ( p )->collateCopies() );
    }
 }
 
@@ -196,10 +192,8 @@ HB_FUNC( QT_QPRINTER_COLORMODE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retni( ( QPrinter::ColorMode ) ( p )->colorMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_COLORMODE FP=hb_retni( ( QPrinter::ColorMode ) ( p )->colorMode() ); p is NULL" ) );
+      hb_retni( ( QPrinter::ColorMode ) ( p )->colorMode() );
    }
 }
 
@@ -210,10 +204,8 @@ HB_FUNC( QT_QPRINTER_CREATOR )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retc( ( p )->creator().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_CREATOR FP=hb_retc( ( p )->creator().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->creator().toUtf8().data() );
    }
 }
 
@@ -224,10 +216,8 @@ HB_FUNC( QT_QPRINTER_DOCNAME )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retc( ( p )->docName().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_DOCNAME FP=hb_retc( ( p )->docName().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->docName().toUtf8().data() );
    }
 }
 
@@ -238,10 +228,8 @@ HB_FUNC( QT_QPRINTER_DOUBLESIDEDPRINTING )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retl( ( p )->doubleSidedPrinting() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_DOUBLESIDEDPRINTING FP=hb_retl( ( p )->doubleSidedPrinting() ); p is NULL" ) );
+      hb_retl( ( p )->doubleSidedPrinting() );
    }
 }
 
@@ -252,10 +240,8 @@ HB_FUNC( QT_QPRINTER_DUPLEX )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retni( ( QPrinter::DuplexMode ) ( p )->duplex() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_DUPLEX FP=hb_retni( ( QPrinter::DuplexMode ) ( p )->duplex() ); p is NULL" ) );
+      hb_retni( ( QPrinter::DuplexMode ) ( p )->duplex() );
    }
 }
 
@@ -266,10 +252,8 @@ HB_FUNC( QT_QPRINTER_FONTEMBEDDINGENABLED )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retl( ( p )->fontEmbeddingEnabled() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_FONTEMBEDDINGENABLED FP=hb_retl( ( p )->fontEmbeddingEnabled() ); p is NULL" ) );
+      hb_retl( ( p )->fontEmbeddingEnabled() );
    }
 }
 
@@ -280,10 +264,8 @@ HB_FUNC( QT_QPRINTER_FROMPAGE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retni( ( p )->fromPage() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_FROMPAGE FP=hb_retni( ( p )->fromPage() ); p is NULL" ) );
+      hb_retni( ( p )->fromPage() );
    }
 }
 
@@ -294,10 +276,8 @@ HB_FUNC( QT_QPRINTER_FULLPAGE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retl( ( p )->fullPage() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_FULLPAGE FP=hb_retl( ( p )->fullPage() ); p is NULL" ) );
+      hb_retl( ( p )->fullPage() );
    }
 }
 
@@ -313,10 +293,8 @@ HB_FUNC( QT_QPRINTER_GETPAGEMARGINS )
    qreal qrBottom = 0;
 
    if( p )
-      ( p )->getPageMargins( &qrLeft, &qrTop, &qrRight, &qrBottom, ( QPrinter::Unit ) hb_parni( 6 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_GETPAGEMARGINS FP=( p )->getPageMargins( &qrLeft, &qrTop, &qrRight, &qrBottom, ( QPrinter::Unit ) hb_parni( 6 ) ); p is NULL" ) );
+      ( p )->getPageMargins( &qrLeft, &qrTop, &qrRight, &qrBottom, ( QPrinter::Unit ) hb_parni( 6 ) );
    }
 
    hb_stornd( qrLeft, 2 );
@@ -332,10 +310,8 @@ HB_FUNC( QT_QPRINTER_ISVALID )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retl( ( p )->isValid() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_ISVALID FP=hb_retl( ( p )->isValid() ); p is NULL" ) );
+      hb_retl( ( p )->isValid() );
    }
 }
 
@@ -346,10 +322,8 @@ HB_FUNC( QT_QPRINTER_NEWPAGE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retl( ( p )->newPage() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_NEWPAGE FP=hb_retl( ( p )->newPage() ); p is NULL" ) );
+      hb_retl( ( p )->newPage() );
    }
 }
 
@@ -360,10 +334,8 @@ HB_FUNC( QT_QPRINTER_NUMCOPIES )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retni( ( p )->numCopies() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_NUMCOPIES FP=hb_retni( ( p )->numCopies() ); p is NULL" ) );
+      hb_retni( ( p )->numCopies() );
    }
 }
 
@@ -374,10 +346,8 @@ HB_FUNC( QT_QPRINTER_ORIENTATION )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retni( ( QPrinter::Orientation ) ( p )->orientation() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_ORIENTATION FP=hb_retni( ( QPrinter::Orientation ) ( p )->orientation() ); p is NULL" ) );
+      hb_retni( ( QPrinter::Orientation ) ( p )->orientation() );
    }
 }
 
@@ -388,10 +358,8 @@ HB_FUNC( QT_QPRINTER_OUTPUTFILENAME )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retc( ( p )->outputFileName().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_OUTPUTFILENAME FP=hb_retc( ( p )->outputFileName().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->outputFileName().toUtf8().data() );
    }
 }
 
@@ -402,10 +370,8 @@ HB_FUNC( QT_QPRINTER_OUTPUTFORMAT )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retni( ( QPrinter::OutputFormat ) ( p )->outputFormat() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_OUTPUTFORMAT FP=hb_retni( ( QPrinter::OutputFormat ) ( p )->outputFormat() ); p is NULL" ) );
+      hb_retni( ( QPrinter::OutputFormat ) ( p )->outputFormat() );
    }
 }
 
@@ -416,10 +382,8 @@ HB_FUNC( QT_QPRINTER_PAGEORDER )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retni( ( QPrinter::PageOrder ) ( p )->pageOrder() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_PAGEORDER FP=hb_retni( ( QPrinter::PageOrder ) ( p )->pageOrder() ); p is NULL" ) );
+      hb_retni( ( QPrinter::PageOrder ) ( p )->pageOrder() );
    }
 }
 
@@ -430,10 +394,8 @@ HB_FUNC( QT_QPRINTER_PAGERECT )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->pageRect() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_PAGERECT FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->pageRect() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->pageRect() ), true ) );
    }
 }
 
@@ -444,10 +406,8 @@ HB_FUNC( QT_QPRINTER_PAGERECT_1 )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->pageRect( ( QPrinter::Unit ) hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_PAGERECT_1 FP=hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->pageRect( ( QPrinter::Unit ) hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->pageRect( ( QPrinter::Unit ) hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -458,10 +418,8 @@ HB_FUNC( QT_QPRINTER_PAINTENGINE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPaintEngine( ( p )->paintEngine(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_PAINTENGINE FP=hb_retptrGC( hbqt_gcAllocate_QPaintEngine( ( p )->paintEngine(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPaintEngine( ( p )->paintEngine(), false ) );
    }
 }
 
@@ -472,10 +430,8 @@ HB_FUNC( QT_QPRINTER_PAPERRECT )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->paperRect() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_PAPERRECT FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->paperRect() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->paperRect() ), true ) );
    }
 }
 
@@ -486,10 +442,8 @@ HB_FUNC( QT_QPRINTER_PAPERRECT_1 )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->paperRect( ( QPrinter::Unit ) hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_PAPERRECT_1 FP=hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->paperRect( ( QPrinter::Unit ) hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->paperRect( ( QPrinter::Unit ) hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -500,10 +454,8 @@ HB_FUNC( QT_QPRINTER_PAPERSIZE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retni( ( QPrinter::PaperSize ) ( p )->paperSize() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_PAPERSIZE FP=hb_retni( ( QPrinter::PaperSize ) ( p )->paperSize() ); p is NULL" ) );
+      hb_retni( ( QPrinter::PaperSize ) ( p )->paperSize() );
    }
 }
 
@@ -514,10 +466,8 @@ HB_FUNC( QT_QPRINTER_PAPERSIZE_1 )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( ( p )->paperSize( ( QPrinter::Unit ) hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_PAPERSIZE_1 FP=hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( ( p )->paperSize( ( QPrinter::Unit ) hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( ( p )->paperSize( ( QPrinter::Unit ) hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -528,10 +478,8 @@ HB_FUNC( QT_QPRINTER_PAPERSOURCE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retni( ( QPrinter::PaperSource ) ( p )->paperSource() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_PAPERSOURCE FP=hb_retni( ( QPrinter::PaperSource ) ( p )->paperSource() ); p is NULL" ) );
+      hb_retni( ( QPrinter::PaperSource ) ( p )->paperSource() );
    }
 }
 
@@ -542,10 +490,8 @@ HB_FUNC( QT_QPRINTER_PRINTENGINE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPrintEngine( ( p )->printEngine(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_PRINTENGINE FP=hb_retptrGC( hbqt_gcAllocate_QPrintEngine( ( p )->printEngine(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPrintEngine( ( p )->printEngine(), false ) );
    }
 }
 
@@ -556,10 +502,8 @@ HB_FUNC( QT_QPRINTER_PRINTPROGRAM )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retc( ( p )->printProgram().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_PRINTPROGRAM FP=hb_retc( ( p )->printProgram().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->printProgram().toUtf8().data() );
    }
 }
 
@@ -570,10 +514,8 @@ HB_FUNC( QT_QPRINTER_PRINTRANGE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retni( ( QPrinter::PrintRange ) ( p )->printRange() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_PRINTRANGE FP=hb_retni( ( QPrinter::PrintRange ) ( p )->printRange() ); p is NULL" ) );
+      hb_retni( ( QPrinter::PrintRange ) ( p )->printRange() );
    }
 }
 
@@ -584,10 +526,8 @@ HB_FUNC( QT_QPRINTER_PRINTERNAME )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retc( ( p )->printerName().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_PRINTERNAME FP=hb_retc( ( p )->printerName().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->printerName().toUtf8().data() );
    }
 }
 
@@ -598,10 +538,8 @@ HB_FUNC( QT_QPRINTER_PRINTERSTATE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retni( ( QPrinter::PrinterState ) ( p )->printerState() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_PRINTERSTATE FP=hb_retni( ( QPrinter::PrinterState ) ( p )->printerState() ); p is NULL" ) );
+      hb_retni( ( QPrinter::PrinterState ) ( p )->printerState() );
    }
 }
 
@@ -612,10 +550,8 @@ HB_FUNC( QT_QPRINTER_RESOLUTION )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retni( ( p )->resolution() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_RESOLUTION FP=hb_retni( ( p )->resolution() ); p is NULL" ) );
+      hb_retni( ( p )->resolution() );
    }
 }
 
@@ -626,10 +562,8 @@ HB_FUNC( QT_QPRINTER_SETCOLLATECOPIES )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      ( p )->setCollateCopies( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_SETCOLLATECOPIES FP=( p )->setCollateCopies( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setCollateCopies( hb_parl( 2 ) );
    }
 }
 
@@ -640,10 +574,8 @@ HB_FUNC( QT_QPRINTER_SETCOLORMODE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      ( p )->setColorMode( ( QPrinter::ColorMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_SETCOLORMODE FP=( p )->setColorMode( ( QPrinter::ColorMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setColorMode( ( QPrinter::ColorMode ) hb_parni( 2 ) );
    }
 }
 
@@ -654,10 +586,10 @@ HB_FUNC( QT_QPRINTER_SETCREATOR )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      ( p )->setCreator( hbqt_par_QString( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_SETCREATOR FP=( p )->setCreator( hbqt_par_QString( 2 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setCreator( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -668,10 +600,10 @@ HB_FUNC( QT_QPRINTER_SETDOCNAME )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      ( p )->setDocName( hbqt_par_QString( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_SETDOCNAME FP=( p )->setDocName( hbqt_par_QString( 2 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setDocName( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -682,10 +614,8 @@ HB_FUNC( QT_QPRINTER_SETDOUBLESIDEDPRINTING )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      ( p )->setDoubleSidedPrinting( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_SETDOUBLESIDEDPRINTING FP=( p )->setDoubleSidedPrinting( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setDoubleSidedPrinting( hb_parl( 2 ) );
    }
 }
 
@@ -696,10 +626,8 @@ HB_FUNC( QT_QPRINTER_SETDUPLEX )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      ( p )->setDuplex( ( QPrinter::DuplexMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_SETDUPLEX FP=( p )->setDuplex( ( QPrinter::DuplexMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setDuplex( ( QPrinter::DuplexMode ) hb_parni( 2 ) );
    }
 }
 
@@ -710,10 +638,8 @@ HB_FUNC( QT_QPRINTER_SETFONTEMBEDDINGENABLED )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      ( p )->setFontEmbeddingEnabled( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_SETFONTEMBEDDINGENABLED FP=( p )->setFontEmbeddingEnabled( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setFontEmbeddingEnabled( hb_parl( 2 ) );
    }
 }
 
@@ -724,10 +650,8 @@ HB_FUNC( QT_QPRINTER_SETFROMTO )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      ( p )->setFromTo( hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_SETFROMTO FP=( p )->setFromTo( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setFromTo( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -738,10 +662,8 @@ HB_FUNC( QT_QPRINTER_SETFULLPAGE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      ( p )->setFullPage( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_SETFULLPAGE FP=( p )->setFullPage( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setFullPage( hb_parl( 2 ) );
    }
 }
 
@@ -752,10 +674,8 @@ HB_FUNC( QT_QPRINTER_SETNUMCOPIES )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      ( p )->setNumCopies( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_SETNUMCOPIES FP=( p )->setNumCopies( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setNumCopies( hb_parni( 2 ) );
    }
 }
 
@@ -766,10 +686,8 @@ HB_FUNC( QT_QPRINTER_SETORIENTATION )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      ( p )->setOrientation( ( QPrinter::Orientation ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_SETORIENTATION FP=( p )->setOrientation( ( QPrinter::Orientation ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setOrientation( ( QPrinter::Orientation ) hb_parni( 2 ) );
    }
 }
 
@@ -780,10 +698,10 @@ HB_FUNC( QT_QPRINTER_SETOUTPUTFILENAME )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      ( p )->setOutputFileName( hbqt_par_QString( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_SETOUTPUTFILENAME FP=( p )->setOutputFileName( hbqt_par_QString( 2 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setOutputFileName( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -794,10 +712,8 @@ HB_FUNC( QT_QPRINTER_SETOUTPUTFORMAT )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      ( p )->setOutputFormat( ( QPrinter::OutputFormat ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_SETOUTPUTFORMAT FP=( p )->setOutputFormat( ( QPrinter::OutputFormat ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setOutputFormat( ( QPrinter::OutputFormat ) hb_parni( 2 ) );
    }
 }
 
@@ -808,10 +724,8 @@ HB_FUNC( QT_QPRINTER_SETPAGEMARGINS )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      ( p )->setPageMargins( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), ( QPrinter::Unit ) hb_parni( 6 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_SETPAGEMARGINS FP=( p )->setPageMargins( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), ( QPrinter::Unit ) hb_parni( 6 ) ); p is NULL" ) );
+      ( p )->setPageMargins( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), ( QPrinter::Unit ) hb_parni( 6 ) );
    }
 }
 
@@ -822,10 +736,8 @@ HB_FUNC( QT_QPRINTER_SETPAGEORDER )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      ( p )->setPageOrder( ( QPrinter::PageOrder ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_SETPAGEORDER FP=( p )->setPageOrder( ( QPrinter::PageOrder ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setPageOrder( ( QPrinter::PageOrder ) hb_parni( 2 ) );
    }
 }
 
@@ -836,10 +748,8 @@ HB_FUNC( QT_QPRINTER_SETPAPERSIZE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      ( p )->setPaperSize( ( QPrinter::PaperSize ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_SETPAPERSIZE FP=( p )->setPaperSize( ( QPrinter::PaperSize ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setPaperSize( ( QPrinter::PaperSize ) hb_parni( 2 ) );
    }
 }
 
@@ -850,10 +760,8 @@ HB_FUNC( QT_QPRINTER_SETPAPERSIZE_1 )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      ( p )->setPaperSize( *hbqt_par_QSizeF( 2 ), ( QPrinter::Unit ) hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_SETPAPERSIZE_1 FP=( p )->setPaperSize( *hbqt_par_QSizeF( 2 ), ( QPrinter::Unit ) hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setPaperSize( *hbqt_par_QSizeF( 2 ), ( QPrinter::Unit ) hb_parni( 3 ) );
    }
 }
 
@@ -864,10 +772,8 @@ HB_FUNC( QT_QPRINTER_SETPAPERSOURCE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      ( p )->setPaperSource( ( QPrinter::PaperSource ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_SETPAPERSOURCE FP=( p )->setPaperSource( ( QPrinter::PaperSource ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setPaperSource( ( QPrinter::PaperSource ) hb_parni( 2 ) );
    }
 }
 
@@ -878,10 +784,10 @@ HB_FUNC( QT_QPRINTER_SETPRINTPROGRAM )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      ( p )->setPrintProgram( hbqt_par_QString( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_SETPRINTPROGRAM FP=( p )->setPrintProgram( hbqt_par_QString( 2 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setPrintProgram( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -892,10 +798,8 @@ HB_FUNC( QT_QPRINTER_SETPRINTRANGE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      ( p )->setPrintRange( ( QPrinter::PrintRange ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_SETPRINTRANGE FP=( p )->setPrintRange( ( QPrinter::PrintRange ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setPrintRange( ( QPrinter::PrintRange ) hb_parni( 2 ) );
    }
 }
 
@@ -906,10 +810,10 @@ HB_FUNC( QT_QPRINTER_SETPRINTERNAME )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      ( p )->setPrinterName( hbqt_par_QString( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_SETPRINTERNAME FP=( p )->setPrinterName( hbqt_par_QString( 2 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setPrinterName( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -920,10 +824,8 @@ HB_FUNC( QT_QPRINTER_SETRESOLUTION )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      ( p )->setResolution( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_SETRESOLUTION FP=( p )->setResolution( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setResolution( hb_parni( 2 ) );
    }
 }
 
@@ -934,10 +836,8 @@ HB_FUNC( QT_QPRINTER_SUPPORTEDRESOLUTIONS )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<int>( ( p )->supportedResolutions() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_SUPPORTEDRESOLUTIONS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<int>( ( p )->supportedResolutions() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<int>( ( p )->supportedResolutions() ), true ) );
    }
 }
 
@@ -948,10 +848,8 @@ HB_FUNC( QT_QPRINTER_TOPAGE )
 {
    QPrinter * p = hbqt_par_QPrinter( 1 );
    if( p )
-      hb_retni( ( p )->toPage() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTER_TOPAGE FP=hb_retni( ( p )->toPage() ); p is NULL" ) );
+      hb_retni( ( p )->toPage() );
    }
 }
 

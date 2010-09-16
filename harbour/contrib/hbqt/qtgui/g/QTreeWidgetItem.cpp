@@ -194,10 +194,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_BACKGROUND )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->background( hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_BACKGROUND FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->background( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->background( hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -208,10 +206,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_CHECKSTATE )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retni( ( Qt::CheckState ) ( p )->checkState( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_CHECKSTATE FP=hb_retni( ( Qt::CheckState ) ( p )->checkState( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( Qt::CheckState ) ( p )->checkState( hb_parni( 2 ) ) );
    }
 }
 
@@ -222,10 +218,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_CHILD )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->child( hb_parni( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_CHILD FP=hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->child( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->child( hb_parni( 2 ) ), false ) );
    }
 }
 
@@ -236,10 +230,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_CHILDCOUNT )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retni( ( p )->childCount() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_CHILDCOUNT FP=hb_retni( ( p )->childCount() ); p is NULL" ) );
+      hb_retni( ( p )->childCount() );
    }
 }
 
@@ -250,10 +242,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_CHILDINDICATORPOLICY )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retni( ( QTreeWidgetItem::ChildIndicatorPolicy ) ( p )->childIndicatorPolicy() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_CHILDINDICATORPOLICY FP=hb_retni( ( QTreeWidgetItem::ChildIndicatorPolicy ) ( p )->childIndicatorPolicy() ); p is NULL" ) );
+      hb_retni( ( QTreeWidgetItem::ChildIndicatorPolicy ) ( p )->childIndicatorPolicy() );
    }
 }
 
@@ -264,10 +254,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_CLONE )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->clone(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_CLONE FP=hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->clone(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->clone(), false ) );
    }
 }
 
@@ -278,10 +266,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_COLUMNCOUNT )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retni( ( p )->columnCount() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_COLUMNCOUNT FP=hb_retni( ( p )->columnCount() ); p is NULL" ) );
+      hb_retni( ( p )->columnCount() );
    }
 }
 
@@ -292,10 +278,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_DATA )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->data( hb_parni( 2 ), hb_parni( 3 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_DATA FP=hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->data( hb_parni( 2 ), hb_parni( 3 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->data( hb_parni( 2 ), hb_parni( 3 ) ) ), true ) );
    }
 }
 
@@ -306,10 +290,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_FLAGS )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retni( ( Qt::ItemFlags ) ( p )->flags() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_FLAGS FP=hb_retni( ( Qt::ItemFlags ) ( p )->flags() ); p is NULL" ) );
+      hb_retni( ( Qt::ItemFlags ) ( p )->flags() );
    }
 }
 
@@ -320,10 +302,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_FONT )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font( hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_FONT FP=hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font( hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -334,10 +314,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_FOREGROUND )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->foreground( hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_FOREGROUND FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->foreground( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->foreground( hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -348,10 +326,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_ICON )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon( hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_ICON FP=hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon( hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -362,10 +338,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_INDEXOFCHILD )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retni( ( p )->indexOfChild( hbqt_par_QTreeWidgetItem( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_INDEXOFCHILD FP=hb_retni( ( p )->indexOfChild( hbqt_par_QTreeWidgetItem( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->indexOfChild( hbqt_par_QTreeWidgetItem( 2 ) ) );
    }
 }
 
@@ -376,10 +350,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_INSERTCHILD )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      ( p )->insertChild( hb_parni( 2 ), hbqt_par_QTreeWidgetItem( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_INSERTCHILD FP=( p )->insertChild( hb_parni( 2 ), hbqt_par_QTreeWidgetItem( 3 ) ); p is NULL" ) );
+      ( p )->insertChild( hb_parni( 2 ), hbqt_par_QTreeWidgetItem( 3 ) );
    }
 }
 
@@ -390,10 +362,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_ISDISABLED )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retl( ( p )->isDisabled() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_ISDISABLED FP=hb_retl( ( p )->isDisabled() ); p is NULL" ) );
+      hb_retl( ( p )->isDisabled() );
    }
 }
 
@@ -404,10 +374,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_ISEXPANDED )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retl( ( p )->isExpanded() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_ISEXPANDED FP=hb_retl( ( p )->isExpanded() ); p is NULL" ) );
+      hb_retl( ( p )->isExpanded() );
    }
 }
 
@@ -418,10 +386,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_ISFIRSTCOLUMNSPANNED )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retl( ( p )->isFirstColumnSpanned() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_ISFIRSTCOLUMNSPANNED FP=hb_retl( ( p )->isFirstColumnSpanned() ); p is NULL" ) );
+      hb_retl( ( p )->isFirstColumnSpanned() );
    }
 }
 
@@ -432,10 +398,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_ISHIDDEN )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retl( ( p )->isHidden() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_ISHIDDEN FP=hb_retl( ( p )->isHidden() ); p is NULL" ) );
+      hb_retl( ( p )->isHidden() );
    }
 }
 
@@ -446,10 +410,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_ISSELECTED )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retl( ( p )->isSelected() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_ISSELECTED FP=hb_retl( ( p )->isSelected() ); p is NULL" ) );
+      hb_retl( ( p )->isSelected() );
    }
 }
 
@@ -460,10 +422,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_PARENT )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->parent(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_PARENT FP=hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->parent(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->parent(), false ) );
    }
 }
 
@@ -474,10 +434,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_READ )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      ( p )->read( *hbqt_par_QDataStream( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_READ FP=( p )->read( *hbqt_par_QDataStream( 2 ) ); p is NULL" ) );
+      ( p )->read( *hbqt_par_QDataStream( 2 ) );
    }
 }
 
@@ -488,10 +446,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_REMOVECHILD )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      ( p )->removeChild( hbqt_par_QTreeWidgetItem( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_REMOVECHILD FP=( p )->removeChild( hbqt_par_QTreeWidgetItem( 2 ) ); p is NULL" ) );
+      ( p )->removeChild( hbqt_par_QTreeWidgetItem( 2 ) );
    }
 }
 
@@ -502,10 +458,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_SETBACKGROUND )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      ( p )->setBackground( hb_parni( 2 ), *hbqt_par_QBrush( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_SETBACKGROUND FP=( p )->setBackground( hb_parni( 2 ), *hbqt_par_QBrush( 3 ) ); p is NULL" ) );
+      ( p )->setBackground( hb_parni( 2 ), *hbqt_par_QBrush( 3 ) );
    }
 }
 
@@ -516,10 +470,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_SETCHECKSTATE )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      ( p )->setCheckState( hb_parni( 2 ), ( Qt::CheckState ) hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_SETCHECKSTATE FP=( p )->setCheckState( hb_parni( 2 ), ( Qt::CheckState ) hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setCheckState( hb_parni( 2 ), ( Qt::CheckState ) hb_parni( 3 ) );
    }
 }
 
@@ -530,10 +482,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_SETCHILDINDICATORPOLICY )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      ( p )->setChildIndicatorPolicy( ( QTreeWidgetItem::ChildIndicatorPolicy ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_SETCHILDINDICATORPOLICY FP=( p )->setChildIndicatorPolicy( ( QTreeWidgetItem::ChildIndicatorPolicy ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setChildIndicatorPolicy( ( QTreeWidgetItem::ChildIndicatorPolicy ) hb_parni( 2 ) );
    }
 }
 
@@ -544,10 +494,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_SETDATA )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      ( p )->setData( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QVariant( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_SETDATA FP=( p )->setData( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QVariant( 4 ) ); p is NULL" ) );
+      ( p )->setData( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QVariant( 4 ) );
    }
 }
 
@@ -558,10 +506,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_SETDISABLED )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      ( p )->setDisabled( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_SETDISABLED FP=( p )->setDisabled( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setDisabled( hb_parl( 2 ) );
    }
 }
 
@@ -572,10 +518,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_SETEXPANDED )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      ( p )->setExpanded( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_SETEXPANDED FP=( p )->setExpanded( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setExpanded( hb_parl( 2 ) );
    }
 }
 
@@ -586,10 +530,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_SETFIRSTCOLUMNSPANNED )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      ( p )->setFirstColumnSpanned( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_SETFIRSTCOLUMNSPANNED FP=( p )->setFirstColumnSpanned( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setFirstColumnSpanned( hb_parl( 2 ) );
    }
 }
 
@@ -600,10 +542,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_SETFLAGS )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      ( p )->setFlags( ( Qt::ItemFlags ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_SETFLAGS FP=( p )->setFlags( ( Qt::ItemFlags ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setFlags( ( Qt::ItemFlags ) hb_parni( 2 ) );
    }
 }
 
@@ -614,10 +554,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_SETFONT )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      ( p )->setFont( hb_parni( 2 ), *hbqt_par_QFont( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_SETFONT FP=( p )->setFont( hb_parni( 2 ), *hbqt_par_QFont( 3 ) ); p is NULL" ) );
+      ( p )->setFont( hb_parni( 2 ), *hbqt_par_QFont( 3 ) );
    }
 }
 
@@ -628,10 +566,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_SETFOREGROUND )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      ( p )->setForeground( hb_parni( 2 ), *hbqt_par_QBrush( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_SETFOREGROUND FP=( p )->setForeground( hb_parni( 2 ), *hbqt_par_QBrush( 3 ) ); p is NULL" ) );
+      ( p )->setForeground( hb_parni( 2 ), *hbqt_par_QBrush( 3 ) );
    }
 }
 
@@ -642,10 +578,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_SETHIDDEN )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      ( p )->setHidden( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_SETHIDDEN FP=( p )->setHidden( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setHidden( hb_parl( 2 ) );
    }
 }
 
@@ -656,10 +590,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_SETICON )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      ( p )->setIcon( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QIcon( 3 ) : QIcon( hbqt_par_QString( 3 ) ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_SETICON FP=( p )->setIcon( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QIcon( 3 ) : QIcon( hbqt_par_QString( 3 ) ) ) ); p is NULL" ) );
+      ( p )->setIcon( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QIcon( 3 ) : QIcon( hbqt_par_QString( 3 ) ) ) );
    }
 }
 
@@ -670,10 +602,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_SETSELECTED )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      ( p )->setSelected( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_SETSELECTED FP=( p )->setSelected( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setSelected( hb_parl( 2 ) );
    }
 }
 
@@ -684,10 +614,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_SETSIZEHINT )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      ( p )->setSizeHint( hb_parni( 2 ), *hbqt_par_QSize( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_SETSIZEHINT FP=( p )->setSizeHint( hb_parni( 2 ), *hbqt_par_QSize( 3 ) ); p is NULL" ) );
+      ( p )->setSizeHint( hb_parni( 2 ), *hbqt_par_QSize( 3 ) );
    }
 }
 
@@ -698,10 +626,10 @@ HB_FUNC( QT_QTREEWIDGETITEM_SETSTATUSTIP )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      ( p )->setStatusTip( hb_parni( 2 ), hbqt_par_QString( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_SETSTATUSTIP FP=( p )->setStatusTip( hb_parni( 2 ), hbqt_par_QString( 3 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setStatusTip( hb_parni( 2 ), hb_parstr_utf8( 3, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -712,10 +640,10 @@ HB_FUNC( QT_QTREEWIDGETITEM_SETTEXT )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      ( p )->setText( hb_parni( 2 ), hbqt_par_QString( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_SETTEXT FP=( p )->setText( hb_parni( 2 ), hbqt_par_QString( 3 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setText( hb_parni( 2 ), hb_parstr_utf8( 3, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -726,10 +654,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_SETTEXTALIGNMENT )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      ( p )->setTextAlignment( hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_SETTEXTALIGNMENT FP=( p )->setTextAlignment( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setTextAlignment( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -740,10 +666,10 @@ HB_FUNC( QT_QTREEWIDGETITEM_SETTOOLTIP )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      ( p )->setToolTip( hb_parni( 2 ), hbqt_par_QString( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_SETTOOLTIP FP=( p )->setToolTip( hb_parni( 2 ), hbqt_par_QString( 3 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setToolTip( hb_parni( 2 ), hb_parstr_utf8( 3, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -754,10 +680,10 @@ HB_FUNC( QT_QTREEWIDGETITEM_SETWHATSTHIS )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      ( p )->setWhatsThis( hb_parni( 2 ), hbqt_par_QString( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_SETWHATSTHIS FP=( p )->setWhatsThis( hb_parni( 2 ), hbqt_par_QString( 3 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setWhatsThis( hb_parni( 2 ), hb_parstr_utf8( 3, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -768,10 +694,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_SIZEHINT )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->sizeHint( hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_SIZEHINT FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->sizeHint( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->sizeHint( hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -782,10 +706,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_SORTCHILDREN )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      ( p )->sortChildren( hb_parni( 2 ), ( Qt::SortOrder ) hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_SORTCHILDREN FP=( p )->sortChildren( hb_parni( 2 ), ( Qt::SortOrder ) hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->sortChildren( hb_parni( 2 ), ( Qt::SortOrder ) hb_parni( 3 ) );
    }
 }
 
@@ -796,10 +718,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_STATUSTIP )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retc( ( p )->statusTip( hb_parni( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_STATUSTIP FP=hb_retc( ( p )->statusTip( hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->statusTip( hb_parni( 2 ) ).toUtf8().data() );
    }
 }
 
@@ -810,10 +730,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_TAKECHILD )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->takeChild( hb_parni( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_TAKECHILD FP=hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->takeChild( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->takeChild( hb_parni( 2 ) ), false ) );
    }
 }
 
@@ -824,10 +742,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_TAKECHILDREN )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTreeWidgetItem *>( ( p )->takeChildren() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_TAKECHILDREN FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTreeWidgetItem *>( ( p )->takeChildren() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTreeWidgetItem *>( ( p )->takeChildren() ), true ) );
    }
 }
 
@@ -838,10 +754,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_TEXT )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retc( ( p )->text( hb_parni( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_TEXT FP=hb_retc( ( p )->text( hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->text( hb_parni( 2 ) ).toUtf8().data() );
    }
 }
 
@@ -852,10 +766,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_TEXTALIGNMENT )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retni( ( p )->textAlignment( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_TEXTALIGNMENT FP=hb_retni( ( p )->textAlignment( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->textAlignment( hb_parni( 2 ) ) );
    }
 }
 
@@ -866,10 +778,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_TOOLTIP )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retc( ( p )->toolTip( hb_parni( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_TOOLTIP FP=hb_retc( ( p )->toolTip( hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->toolTip( hb_parni( 2 ) ).toUtf8().data() );
    }
 }
 
@@ -880,10 +790,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_TREEWIDGET )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTreeWidget( ( p )->treeWidget(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_TREEWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QTreeWidget( ( p )->treeWidget(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTreeWidget( ( p )->treeWidget(), false ) );
    }
 }
 
@@ -894,10 +802,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_TYPE )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retni( ( p )->type() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_TYPE FP=hb_retni( ( p )->type() ); p is NULL" ) );
+      hb_retni( ( p )->type() );
    }
 }
 
@@ -908,10 +814,8 @@ HB_FUNC( QT_QTREEWIDGETITEM_WHATSTHIS )
 {
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
-      hb_retc( ( p )->whatsThis( hb_parni( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGETITEM_WHATSTHIS FP=hb_retc( ( p )->whatsThis( hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->whatsThis( hb_parni( 2 ) ).toUtf8().data() );
    }
 }
 

@@ -136,10 +136,8 @@ HB_FUNC( QT_QWEBSETTINGS_FONTFAMILY )
 {
    QWebSettings * p = hbqt_par_QWebSettings( 1 );
    if( p )
-      hb_retc( ( p )->fontFamily( ( QWebSettings::FontFamily ) hb_parni( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSETTINGS_FONTFAMILY FP=hb_retc( ( p )->fontFamily( ( QWebSettings::FontFamily ) hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->fontFamily( ( QWebSettings::FontFamily ) hb_parni( 2 ) ).toUtf8().data() );
    }
 }
 
@@ -150,10 +148,8 @@ HB_FUNC( QT_QWEBSETTINGS_FONTSIZE )
 {
    QWebSettings * p = hbqt_par_QWebSettings( 1 );
    if( p )
-      hb_retni( ( p )->fontSize( ( QWebSettings::FontSize ) hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSETTINGS_FONTSIZE FP=hb_retni( ( p )->fontSize( ( QWebSettings::FontSize ) hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->fontSize( ( QWebSettings::FontSize ) hb_parni( 2 ) ) );
    }
 }
 
@@ -164,10 +160,8 @@ HB_FUNC( QT_QWEBSETTINGS_RESETATTRIBUTE )
 {
    QWebSettings * p = hbqt_par_QWebSettings( 1 );
    if( p )
-      ( p )->resetAttribute( ( QWebSettings::WebAttribute ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSETTINGS_RESETATTRIBUTE FP=( p )->resetAttribute( ( QWebSettings::WebAttribute ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->resetAttribute( ( QWebSettings::WebAttribute ) hb_parni( 2 ) );
    }
 }
 
@@ -178,10 +172,8 @@ HB_FUNC( QT_QWEBSETTINGS_RESETFONTFAMILY )
 {
    QWebSettings * p = hbqt_par_QWebSettings( 1 );
    if( p )
-      ( p )->resetFontFamily( ( QWebSettings::FontFamily ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSETTINGS_RESETFONTFAMILY FP=( p )->resetFontFamily( ( QWebSettings::FontFamily ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->resetFontFamily( ( QWebSettings::FontFamily ) hb_parni( 2 ) );
    }
 }
 
@@ -192,10 +184,8 @@ HB_FUNC( QT_QWEBSETTINGS_RESETFONTSIZE )
 {
    QWebSettings * p = hbqt_par_QWebSettings( 1 );
    if( p )
-      ( p )->resetFontSize( ( QWebSettings::FontSize ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSETTINGS_RESETFONTSIZE FP=( p )->resetFontSize( ( QWebSettings::FontSize ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->resetFontSize( ( QWebSettings::FontSize ) hb_parni( 2 ) );
    }
 }
 
@@ -206,10 +196,8 @@ HB_FUNC( QT_QWEBSETTINGS_SETATTRIBUTE )
 {
    QWebSettings * p = hbqt_par_QWebSettings( 1 );
    if( p )
-      ( p )->setAttribute( ( QWebSettings::WebAttribute ) hb_parni( 2 ), hb_parl( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSETTINGS_SETATTRIBUTE FP=( p )->setAttribute( ( QWebSettings::WebAttribute ) hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+      ( p )->setAttribute( ( QWebSettings::WebAttribute ) hb_parni( 2 ), hb_parl( 3 ) );
    }
 }
 
@@ -220,10 +208,10 @@ HB_FUNC( QT_QWEBSETTINGS_SETFONTFAMILY )
 {
    QWebSettings * p = hbqt_par_QWebSettings( 1 );
    if( p )
-      ( p )->setFontFamily( ( QWebSettings::FontFamily ) hb_parni( 2 ), hbqt_par_QString( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSETTINGS_SETFONTFAMILY FP=( p )->setFontFamily( ( QWebSettings::FontFamily ) hb_parni( 2 ), hbqt_par_QString( 3 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setFontFamily( ( QWebSettings::FontFamily ) hb_parni( 2 ), hb_parstr_utf8( 3, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -234,10 +222,8 @@ HB_FUNC( QT_QWEBSETTINGS_SETFONTSIZE )
 {
    QWebSettings * p = hbqt_par_QWebSettings( 1 );
    if( p )
-      ( p )->setFontSize( ( QWebSettings::FontSize ) hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSETTINGS_SETFONTSIZE FP=( p )->setFontSize( ( QWebSettings::FontSize ) hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setFontSize( ( QWebSettings::FontSize ) hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -248,10 +234,8 @@ HB_FUNC( QT_QWEBSETTINGS_SETUSERSTYLESHEETURL )
 {
    QWebSettings * p = hbqt_par_QWebSettings( 1 );
    if( p )
-      ( p )->setUserStyleSheetUrl( *hbqt_par_QUrl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSETTINGS_SETUSERSTYLESHEETURL FP=( p )->setUserStyleSheetUrl( *hbqt_par_QUrl( 2 ) ); p is NULL" ) );
+      ( p )->setUserStyleSheetUrl( *hbqt_par_QUrl( 2 ) );
    }
 }
 
@@ -262,10 +246,8 @@ HB_FUNC( QT_QWEBSETTINGS_TESTATTRIBUTE )
 {
    QWebSettings * p = hbqt_par_QWebSettings( 1 );
    if( p )
-      hb_retl( ( p )->testAttribute( ( QWebSettings::WebAttribute ) hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSETTINGS_TESTATTRIBUTE FP=hb_retl( ( p )->testAttribute( ( QWebSettings::WebAttribute ) hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->testAttribute( ( QWebSettings::WebAttribute ) hb_parni( 2 ) ) );
    }
 }
 
@@ -276,10 +258,8 @@ HB_FUNC( QT_QWEBSETTINGS_USERSTYLESHEETURL )
 {
    QWebSettings * p = hbqt_par_QWebSettings( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->userStyleSheetUrl() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSETTINGS_USERSTYLESHEETURL FP=hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->userStyleSheetUrl() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->userStyleSheetUrl() ), true ) );
    }
 }
 
@@ -290,10 +270,8 @@ HB_FUNC( QT_QWEBSETTINGS_CLEARICONDATABASE )
 {
    QWebSettings * p = hbqt_par_QWebSettings( 1 );
    if( p )
-      ( p )->clearIconDatabase();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSETTINGS_CLEARICONDATABASE FP=( p )->clearIconDatabase(); p is NULL" ) );
+      ( p )->clearIconDatabase();
    }
 }
 
@@ -304,10 +282,8 @@ HB_FUNC( QT_QWEBSETTINGS_GLOBALSETTINGS )
 {
    QWebSettings * p = hbqt_par_QWebSettings( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWebSettings( ( p )->globalSettings(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSETTINGS_GLOBALSETTINGS FP=hb_retptrGC( hbqt_gcAllocate_QWebSettings( ( p )->globalSettings(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWebSettings( ( p )->globalSettings(), false ) );
    }
 }
 
@@ -318,10 +294,8 @@ HB_FUNC( QT_QWEBSETTINGS_ICONDATABASEPATH )
 {
    QWebSettings * p = hbqt_par_QWebSettings( 1 );
    if( p )
-      hb_retc( ( p )->iconDatabasePath().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSETTINGS_ICONDATABASEPATH FP=hb_retc( ( p )->iconDatabasePath().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->iconDatabasePath().toUtf8().data() );
    }
 }
 
@@ -332,10 +306,8 @@ HB_FUNC( QT_QWEBSETTINGS_ICONFORURL )
 {
    QWebSettings * p = hbqt_par_QWebSettings( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->iconForUrl( *hbqt_par_QUrl( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSETTINGS_ICONFORURL FP=hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->iconForUrl( *hbqt_par_QUrl( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->iconForUrl( *hbqt_par_QUrl( 2 ) ) ), true ) );
    }
 }
 
@@ -346,10 +318,8 @@ HB_FUNC( QT_QWEBSETTINGS_MAXIMUMPAGESINCACHE )
 {
    QWebSettings * p = hbqt_par_QWebSettings( 1 );
    if( p )
-      hb_retni( ( p )->maximumPagesInCache() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSETTINGS_MAXIMUMPAGESINCACHE FP=hb_retni( ( p )->maximumPagesInCache() ); p is NULL" ) );
+      hb_retni( ( p )->maximumPagesInCache() );
    }
 }
 
@@ -360,10 +330,8 @@ HB_FUNC( QT_QWEBSETTINGS_OFFLINESTORAGEDEFAULTQUOTA )
 {
    QWebSettings * p = hbqt_par_QWebSettings( 1 );
    if( p )
-      hb_retnint( ( p )->offlineStorageDefaultQuota() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSETTINGS_OFFLINESTORAGEDEFAULTQUOTA FP=hb_retnint( ( p )->offlineStorageDefaultQuota() ); p is NULL" ) );
+      hb_retnint( ( p )->offlineStorageDefaultQuota() );
    }
 }
 
@@ -374,10 +342,8 @@ HB_FUNC( QT_QWEBSETTINGS_OFFLINESTORAGEPATH )
 {
    QWebSettings * p = hbqt_par_QWebSettings( 1 );
    if( p )
-      hb_retc( ( p )->offlineStoragePath().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSETTINGS_OFFLINESTORAGEPATH FP=hb_retc( ( p )->offlineStoragePath().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->offlineStoragePath().toUtf8().data() );
    }
 }
 
@@ -388,10 +354,10 @@ HB_FUNC( QT_QWEBSETTINGS_SETICONDATABASEPATH )
 {
    QWebSettings * p = hbqt_par_QWebSettings( 1 );
    if( p )
-      ( p )->setIconDatabasePath( hbqt_par_QString( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSETTINGS_SETICONDATABASEPATH FP=( p )->setIconDatabasePath( hbqt_par_QString( 2 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setIconDatabasePath( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -402,10 +368,8 @@ HB_FUNC( QT_QWEBSETTINGS_SETMAXIMUMPAGESINCACHE )
 {
    QWebSettings * p = hbqt_par_QWebSettings( 1 );
    if( p )
-      ( p )->setMaximumPagesInCache( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSETTINGS_SETMAXIMUMPAGESINCACHE FP=( p )->setMaximumPagesInCache( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setMaximumPagesInCache( hb_parni( 2 ) );
    }
 }
 
@@ -416,10 +380,8 @@ HB_FUNC( QT_QWEBSETTINGS_SETOBJECTCACHECAPACITIES )
 {
    QWebSettings * p = hbqt_par_QWebSettings( 1 );
    if( p )
-      ( p )->setObjectCacheCapacities( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSETTINGS_SETOBJECTCACHECAPACITIES FP=( p )->setObjectCacheCapacities( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) ); p is NULL" ) );
+      ( p )->setObjectCacheCapacities( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
    }
 }
 
@@ -430,10 +392,8 @@ HB_FUNC( QT_QWEBSETTINGS_SETOFFLINESTORAGEDEFAULTQUOTA )
 {
    QWebSettings * p = hbqt_par_QWebSettings( 1 );
    if( p )
-      ( p )->setOfflineStorageDefaultQuota( hb_parnint( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSETTINGS_SETOFFLINESTORAGEDEFAULTQUOTA FP=( p )->setOfflineStorageDefaultQuota( hb_parnint( 2 ) ); p is NULL" ) );
+      ( p )->setOfflineStorageDefaultQuota( hb_parnint( 2 ) );
    }
 }
 
@@ -444,10 +404,10 @@ HB_FUNC( QT_QWEBSETTINGS_SETOFFLINESTORAGEPATH )
 {
    QWebSettings * p = hbqt_par_QWebSettings( 1 );
    if( p )
-      ( p )->setOfflineStoragePath( hbqt_par_QString( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSETTINGS_SETOFFLINESTORAGEPATH FP=( p )->setOfflineStoragePath( hbqt_par_QString( 2 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setOfflineStoragePath( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -458,10 +418,8 @@ HB_FUNC( QT_QWEBSETTINGS_SETWEBGRAPHIC )
 {
    QWebSettings * p = hbqt_par_QWebSettings( 1 );
    if( p )
-      ( p )->setWebGraphic( ( QWebSettings::WebGraphic ) hb_parni( 2 ), *hbqt_par_QPixmap( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSETTINGS_SETWEBGRAPHIC FP=( p )->setWebGraphic( ( QWebSettings::WebGraphic ) hb_parni( 2 ), *hbqt_par_QPixmap( 3 ) ); p is NULL" ) );
+      ( p )->setWebGraphic( ( QWebSettings::WebGraphic ) hb_parni( 2 ), *hbqt_par_QPixmap( 3 ) );
    }
 }
 
@@ -472,10 +430,8 @@ HB_FUNC( QT_QWEBSETTINGS_WEBGRAPHIC )
 {
    QWebSettings * p = hbqt_par_QWebSettings( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->webGraphic( ( QWebSettings::WebGraphic ) hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSETTINGS_WEBGRAPHIC FP=hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->webGraphic( ( QWebSettings::WebGraphic ) hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->webGraphic( ( QWebSettings::WebGraphic ) hb_parni( 2 ) ) ), true ) );
    }
 }
 

@@ -127,10 +127,8 @@ HB_FUNC( QT_QMOVEEVENT_OLDPOS )
 {
    QMoveEvent * p = hbqt_par_QMoveEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->oldPos() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVEEVENT_OLDPOS FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->oldPos() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->oldPos() ), true ) );
    }
 }
 
@@ -141,10 +139,8 @@ HB_FUNC( QT_QMOVEEVENT_POS )
 {
    QMoveEvent * p = hbqt_par_QMoveEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVEEVENT_POS FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) );
    }
 }
 

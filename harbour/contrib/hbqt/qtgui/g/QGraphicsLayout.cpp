@@ -127,10 +127,8 @@ HB_FUNC( QT_QGRAPHICSLAYOUT_ACTIVATE )
 {
    QGraphicsLayout * p = hbqt_par_QGraphicsLayout( 1 );
    if( p )
-      ( p )->activate();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLAYOUT_ACTIVATE FP=( p )->activate(); p is NULL" ) );
+      ( p )->activate();
    }
 }
 
@@ -141,10 +139,8 @@ HB_FUNC( QT_QGRAPHICSLAYOUT_COUNT )
 {
    QGraphicsLayout * p = hbqt_par_QGraphicsLayout( 1 );
    if( p )
-      hb_retni( ( p )->count() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLAYOUT_COUNT FP=hb_retni( ( p )->count() ); p is NULL" ) );
+      hb_retni( ( p )->count() );
    }
 }
 
@@ -155,10 +151,8 @@ HB_FUNC( QT_QGRAPHICSLAYOUT_INVALIDATE )
 {
    QGraphicsLayout * p = hbqt_par_QGraphicsLayout( 1 );
    if( p )
-      ( p )->invalidate();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLAYOUT_INVALIDATE FP=( p )->invalidate(); p is NULL" ) );
+      ( p )->invalidate();
    }
 }
 
@@ -169,10 +163,8 @@ HB_FUNC( QT_QGRAPHICSLAYOUT_ISACTIVATED )
 {
    QGraphicsLayout * p = hbqt_par_QGraphicsLayout( 1 );
    if( p )
-      hb_retl( ( p )->isActivated() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLAYOUT_ISACTIVATED FP=hb_retl( ( p )->isActivated() ); p is NULL" ) );
+      hb_retl( ( p )->isActivated() );
    }
 }
 
@@ -183,10 +175,8 @@ HB_FUNC( QT_QGRAPHICSLAYOUT_ITEMAT )
 {
    QGraphicsLayout * p = hbqt_par_QGraphicsLayout( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QGraphicsLayoutItem( ( p )->itemAt( hb_parni( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLAYOUT_ITEMAT FP=hb_retptrGC( hbqt_gcAllocate_QGraphicsLayoutItem( ( p )->itemAt( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QGraphicsLayoutItem( ( p )->itemAt( hb_parni( 2 ) ), false ) );
    }
 }
 
@@ -197,10 +187,8 @@ HB_FUNC( QT_QGRAPHICSLAYOUT_REMOVEAT )
 {
    QGraphicsLayout * p = hbqt_par_QGraphicsLayout( 1 );
    if( p )
-      ( p )->removeAt( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLAYOUT_REMOVEAT FP=( p )->removeAt( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->removeAt( hb_parni( 2 ) );
    }
 }
 
@@ -211,10 +199,8 @@ HB_FUNC( QT_QGRAPHICSLAYOUT_SETCONTENTSMARGINS )
 {
    QGraphicsLayout * p = hbqt_par_QGraphicsLayout( 1 );
    if( p )
-      ( p )->setContentsMargins( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLAYOUT_SETCONTENTSMARGINS FP=( p )->setContentsMargins( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) ); p is NULL" ) );
+      ( p )->setContentsMargins( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
    }
 }
 
@@ -225,10 +211,8 @@ HB_FUNC( QT_QGRAPHICSLAYOUT_WIDGETEVENT )
 {
    QGraphicsLayout * p = hbqt_par_QGraphicsLayout( 1 );
    if( p )
-      ( p )->widgetEvent( hbqt_par_QEvent( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLAYOUT_WIDGETEVENT FP=( p )->widgetEvent( hbqt_par_QEvent( 2 ) ); p is NULL" ) );
+      ( p )->widgetEvent( hbqt_par_QEvent( 2 ) );
    }
 }
 

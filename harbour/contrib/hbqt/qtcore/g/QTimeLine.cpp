@@ -162,10 +162,8 @@ HB_FUNC( QT_QTIMELINE_CURRENTFRAME )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-      hb_retni( ( p )->currentFrame() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMELINE_CURRENTFRAME FP=hb_retni( ( p )->currentFrame() ); p is NULL" ) );
+      hb_retni( ( p )->currentFrame() );
    }
 }
 
@@ -176,10 +174,8 @@ HB_FUNC( QT_QTIMELINE_CURRENTTIME )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-      hb_retni( ( p )->currentTime() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMELINE_CURRENTTIME FP=hb_retni( ( p )->currentTime() ); p is NULL" ) );
+      hb_retni( ( p )->currentTime() );
    }
 }
 
@@ -190,10 +186,8 @@ HB_FUNC( QT_QTIMELINE_CURRENTVALUE )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-      hb_retnd( ( p )->currentValue() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMELINE_CURRENTVALUE FP=hb_retnd( ( p )->currentValue() ); p is NULL" ) );
+      hb_retnd( ( p )->currentValue() );
    }
 }
 
@@ -204,10 +198,8 @@ HB_FUNC( QT_QTIMELINE_CURVESHAPE )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-      hb_retni( ( QTimeLine::CurveShape ) ( p )->curveShape() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMELINE_CURVESHAPE FP=hb_retni( ( QTimeLine::CurveShape ) ( p )->curveShape() ); p is NULL" ) );
+      hb_retni( ( QTimeLine::CurveShape ) ( p )->curveShape() );
    }
 }
 
@@ -218,10 +210,8 @@ HB_FUNC( QT_QTIMELINE_DIRECTION )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-      hb_retni( ( QTimeLine::Direction ) ( p )->direction() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMELINE_DIRECTION FP=hb_retni( ( QTimeLine::Direction ) ( p )->direction() ); p is NULL" ) );
+      hb_retni( ( QTimeLine::Direction ) ( p )->direction() );
    }
 }
 
@@ -232,10 +222,8 @@ HB_FUNC( QT_QTIMELINE_DURATION )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-      hb_retni( ( p )->duration() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMELINE_DURATION FP=hb_retni( ( p )->duration() ); p is NULL" ) );
+      hb_retni( ( p )->duration() );
    }
 }
 
@@ -246,10 +234,8 @@ HB_FUNC( QT_QTIMELINE_ENDFRAME )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-      hb_retni( ( p )->endFrame() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMELINE_ENDFRAME FP=hb_retni( ( p )->endFrame() ); p is NULL" ) );
+      hb_retni( ( p )->endFrame() );
    }
 }
 
@@ -260,10 +246,8 @@ HB_FUNC( QT_QTIMELINE_FRAMEFORTIME )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-      hb_retni( ( p )->frameForTime( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMELINE_FRAMEFORTIME FP=hb_retni( ( p )->frameForTime( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->frameForTime( hb_parni( 2 ) ) );
    }
 }
 
@@ -274,10 +258,8 @@ HB_FUNC( QT_QTIMELINE_LOOPCOUNT )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-      hb_retni( ( p )->loopCount() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMELINE_LOOPCOUNT FP=hb_retni( ( p )->loopCount() ); p is NULL" ) );
+      hb_retni( ( p )->loopCount() );
    }
 }
 
@@ -288,10 +270,8 @@ HB_FUNC( QT_QTIMELINE_SETCURVESHAPE )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-      ( p )->setCurveShape( ( QTimeLine::CurveShape ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMELINE_SETCURVESHAPE FP=( p )->setCurveShape( ( QTimeLine::CurveShape ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setCurveShape( ( QTimeLine::CurveShape ) hb_parni( 2 ) );
    }
 }
 
@@ -302,10 +282,8 @@ HB_FUNC( QT_QTIMELINE_SETDIRECTION )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-      ( p )->setDirection( ( QTimeLine::Direction ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMELINE_SETDIRECTION FP=( p )->setDirection( ( QTimeLine::Direction ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setDirection( ( QTimeLine::Direction ) hb_parni( 2 ) );
    }
 }
 
@@ -316,10 +294,8 @@ HB_FUNC( QT_QTIMELINE_SETDURATION )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-      ( p )->setDuration( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMELINE_SETDURATION FP=( p )->setDuration( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setDuration( hb_parni( 2 ) );
    }
 }
 
@@ -330,10 +306,8 @@ HB_FUNC( QT_QTIMELINE_SETENDFRAME )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-      ( p )->setEndFrame( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMELINE_SETENDFRAME FP=( p )->setEndFrame( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setEndFrame( hb_parni( 2 ) );
    }
 }
 
@@ -344,10 +318,8 @@ HB_FUNC( QT_QTIMELINE_SETFRAMERANGE )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-      ( p )->setFrameRange( hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMELINE_SETFRAMERANGE FP=( p )->setFrameRange( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setFrameRange( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -358,10 +330,8 @@ HB_FUNC( QT_QTIMELINE_SETLOOPCOUNT )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-      ( p )->setLoopCount( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMELINE_SETLOOPCOUNT FP=( p )->setLoopCount( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setLoopCount( hb_parni( 2 ) );
    }
 }
 
@@ -372,10 +342,8 @@ HB_FUNC( QT_QTIMELINE_SETSTARTFRAME )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-      ( p )->setStartFrame( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMELINE_SETSTARTFRAME FP=( p )->setStartFrame( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setStartFrame( hb_parni( 2 ) );
    }
 }
 
@@ -386,10 +354,8 @@ HB_FUNC( QT_QTIMELINE_SETUPDATEINTERVAL )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-      ( p )->setUpdateInterval( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMELINE_SETUPDATEINTERVAL FP=( p )->setUpdateInterval( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setUpdateInterval( hb_parni( 2 ) );
    }
 }
 
@@ -400,10 +366,8 @@ HB_FUNC( QT_QTIMELINE_STARTFRAME )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-      hb_retni( ( p )->startFrame() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMELINE_STARTFRAME FP=hb_retni( ( p )->startFrame() ); p is NULL" ) );
+      hb_retni( ( p )->startFrame() );
    }
 }
 
@@ -414,10 +378,8 @@ HB_FUNC( QT_QTIMELINE_STATE )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-      hb_retni( ( QTimeLine::State ) ( p )->state() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMELINE_STATE FP=hb_retni( ( QTimeLine::State ) ( p )->state() ); p is NULL" ) );
+      hb_retni( ( QTimeLine::State ) ( p )->state() );
    }
 }
 
@@ -428,10 +390,8 @@ HB_FUNC( QT_QTIMELINE_UPDATEINTERVAL )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-      hb_retni( ( p )->updateInterval() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMELINE_UPDATEINTERVAL FP=hb_retni( ( p )->updateInterval() ); p is NULL" ) );
+      hb_retni( ( p )->updateInterval() );
    }
 }
 
@@ -442,10 +402,8 @@ HB_FUNC( QT_QTIMELINE_VALUEFORTIME )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-      hb_retnd( ( p )->valueForTime( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMELINE_VALUEFORTIME FP=hb_retnd( ( p )->valueForTime( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retnd( ( p )->valueForTime( hb_parni( 2 ) ) );
    }
 }
 
@@ -456,10 +414,8 @@ HB_FUNC( QT_QTIMELINE_RESUME )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-      ( p )->resume();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMELINE_RESUME FP=( p )->resume(); p is NULL" ) );
+      ( p )->resume();
    }
 }
 
@@ -470,10 +426,8 @@ HB_FUNC( QT_QTIMELINE_SETCURRENTTIME )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-      ( p )->setCurrentTime( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMELINE_SETCURRENTTIME FP=( p )->setCurrentTime( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setCurrentTime( hb_parni( 2 ) );
    }
 }
 
@@ -484,10 +438,8 @@ HB_FUNC( QT_QTIMELINE_SETPAUSED )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-      ( p )->setPaused( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMELINE_SETPAUSED FP=( p )->setPaused( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setPaused( hb_parl( 2 ) );
    }
 }
 
@@ -498,10 +450,8 @@ HB_FUNC( QT_QTIMELINE_START )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-      ( p )->start();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMELINE_START FP=( p )->start(); p is NULL" ) );
+      ( p )->start();
    }
 }
 
@@ -512,10 +462,8 @@ HB_FUNC( QT_QTIMELINE_STOP )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-      ( p )->stop();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMELINE_STOP FP=( p )->stop(); p is NULL" ) );
+      ( p )->stop();
    }
 }
 
@@ -526,10 +474,8 @@ HB_FUNC( QT_QTIMELINE_TOGGLEDIRECTION )
 {
    QTimeLine * p = hbqt_par_QTimeLine( 1 );
    if( p )
-      ( p )->toggleDirection();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMELINE_TOGGLEDIRECTION FP=( p )->toggleDirection(); p is NULL" ) );
+      ( p )->toggleDirection();
    }
 }
 

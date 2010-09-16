@@ -164,10 +164,8 @@ HB_FUNC( QT_QGRAPHICSPROXYWIDGET_CREATEPROXYFORCHILDWIDGET )
 {
    QGraphicsProxyWidget * p = hbqt_par_QGraphicsProxyWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QGraphicsProxyWidget( ( p )->createProxyForChildWidget( hbqt_par_QWidget( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSPROXYWIDGET_CREATEPROXYFORCHILDWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QGraphicsProxyWidget( ( p )->createProxyForChildWidget( hbqt_par_QWidget( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QGraphicsProxyWidget( ( p )->createProxyForChildWidget( hbqt_par_QWidget( 2 ) ), false ) );
    }
 }
 
@@ -178,10 +176,8 @@ HB_FUNC( QT_QGRAPHICSPROXYWIDGET_SETWIDGET )
 {
    QGraphicsProxyWidget * p = hbqt_par_QGraphicsProxyWidget( 1 );
    if( p )
-      ( p )->setWidget( hbqt_par_QWidget( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSPROXYWIDGET_SETWIDGET FP=( p )->setWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+      ( p )->setWidget( hbqt_par_QWidget( 2 ) );
    }
 }
 
@@ -192,10 +188,8 @@ HB_FUNC( QT_QGRAPHICSPROXYWIDGET_SUBWIDGETRECT )
 {
    QGraphicsProxyWidget * p = hbqt_par_QGraphicsProxyWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->subWidgetRect( hbqt_par_QWidget( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSPROXYWIDGET_SUBWIDGETRECT FP=hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->subWidgetRect( hbqt_par_QWidget( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->subWidgetRect( hbqt_par_QWidget( 2 ) ) ), true ) );
    }
 }
 
@@ -206,10 +200,8 @@ HB_FUNC( QT_QGRAPHICSPROXYWIDGET_WIDGET )
 {
    QGraphicsProxyWidget * p = hbqt_par_QGraphicsProxyWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSPROXYWIDGET_WIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) );
    }
 }
 

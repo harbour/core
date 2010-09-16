@@ -127,10 +127,8 @@ HB_FUNC( QT_QTEXTLIST_ADD )
 {
    QTextList * p = hbqt_par_QTextList( 1 );
    if( p )
-      ( p )->add( *hbqt_par_QTextBlock( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTLIST_ADD FP=( p )->add( *hbqt_par_QTextBlock( 2 ) ); p is NULL" ) );
+      ( p )->add( *hbqt_par_QTextBlock( 2 ) );
    }
 }
 
@@ -141,10 +139,8 @@ HB_FUNC( QT_QTEXTLIST_COUNT )
 {
    QTextList * p = hbqt_par_QTextList( 1 );
    if( p )
-      hb_retni( ( p )->count() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTLIST_COUNT FP=hb_retni( ( p )->count() ); p is NULL" ) );
+      hb_retni( ( p )->count() );
    }
 }
 
@@ -155,10 +151,8 @@ HB_FUNC( QT_QTEXTLIST_FORMAT )
 {
    QTextList * p = hbqt_par_QTextList( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTextListFormat( new QTextListFormat( ( p )->format() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTLIST_FORMAT FP=hb_retptrGC( hbqt_gcAllocate_QTextListFormat( new QTextListFormat( ( p )->format() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTextListFormat( new QTextListFormat( ( p )->format() ), true ) );
    }
 }
 
@@ -169,10 +163,8 @@ HB_FUNC( QT_QTEXTLIST_ITEM )
 {
    QTextList * p = hbqt_par_QTextList( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( ( p )->item( hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTLIST_ITEM FP=hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( ( p )->item( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( ( p )->item( hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -183,10 +175,8 @@ HB_FUNC( QT_QTEXTLIST_ITEMNUMBER )
 {
    QTextList * p = hbqt_par_QTextList( 1 );
    if( p )
-      hb_retni( ( p )->itemNumber( *hbqt_par_QTextBlock( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTLIST_ITEMNUMBER FP=hb_retni( ( p )->itemNumber( *hbqt_par_QTextBlock( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->itemNumber( *hbqt_par_QTextBlock( 2 ) ) );
    }
 }
 
@@ -197,10 +187,8 @@ HB_FUNC( QT_QTEXTLIST_ITEMTEXT )
 {
    QTextList * p = hbqt_par_QTextList( 1 );
    if( p )
-      hb_retc( ( p )->itemText( *hbqt_par_QTextBlock( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTLIST_ITEMTEXT FP=hb_retc( ( p )->itemText( *hbqt_par_QTextBlock( 2 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->itemText( *hbqt_par_QTextBlock( 2 ) ).toUtf8().data() );
    }
 }
 
@@ -211,10 +199,8 @@ HB_FUNC( QT_QTEXTLIST_REMOVE )
 {
    QTextList * p = hbqt_par_QTextList( 1 );
    if( p )
-      ( p )->remove( *hbqt_par_QTextBlock( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTLIST_REMOVE FP=( p )->remove( *hbqt_par_QTextBlock( 2 ) ); p is NULL" ) );
+      ( p )->remove( *hbqt_par_QTextBlock( 2 ) );
    }
 }
 
@@ -225,10 +211,8 @@ HB_FUNC( QT_QTEXTLIST_REMOVEITEM )
 {
    QTextList * p = hbqt_par_QTextList( 1 );
    if( p )
-      ( p )->removeItem( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTLIST_REMOVEITEM FP=( p )->removeItem( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->removeItem( hb_parni( 2 ) );
    }
 }
 
@@ -239,10 +223,8 @@ HB_FUNC( QT_QTEXTLIST_SETFORMAT )
 {
    QTextList * p = hbqt_par_QTextList( 1 );
    if( p )
-      ( p )->setFormat( *hbqt_par_QTextListFormat( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTLIST_SETFORMAT FP=( p )->setFormat( *hbqt_par_QTextListFormat( 2 ) ); p is NULL" ) );
+      ( p )->setFormat( *hbqt_par_QTextListFormat( 2 ) );
    }
 }
 

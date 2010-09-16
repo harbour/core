@@ -157,7 +157,7 @@ HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_CURRENTICON )
  */
 HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_CURRENTTEXT )
 {
-   hb_retc( hbqt_par_QStyleOptionComboBox( 1 )->currentText.toLatin1().data() );
+   hb_retstr_utf8( hbqt_par_QStyleOptionComboBox( 1 )->currentText.toUtf8().data() );
 }
 
 /*

@@ -168,10 +168,8 @@ HB_FUNC( QT_QDRAG_EXEC )
 {
    QDrag * p = hbqt_par_QDrag( 1 );
    if( p )
-      hb_retni( ( Qt::DropAction ) ( p )->exec( ( HB_ISNUM( 2 ) ? ( Qt::DropActions ) hb_parni( 2 ) : ( Qt::DropActions ) Qt::MoveAction ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDRAG_EXEC FP=hb_retni( ( Qt::DropAction ) ( p )->exec( ( HB_ISNUM( 2 ) ? ( Qt::DropActions ) hb_parni( 2 ) : ( Qt::DropActions ) Qt::MoveAction ) ) ); p is NULL" ) );
+      hb_retni( ( Qt::DropAction ) ( p )->exec( ( HB_ISNUM( 2 ) ? ( Qt::DropActions ) hb_parni( 2 ) : ( Qt::DropActions ) Qt::MoveAction ) ) );
    }
 }
 
@@ -182,10 +180,8 @@ HB_FUNC( QT_QDRAG_EXEC_1 )
 {
    QDrag * p = hbqt_par_QDrag( 1 );
    if( p )
-      hb_retni( ( Qt::DropAction ) ( p )->exec( ( Qt::DropActions ) hb_parni( 2 ), ( Qt::DropAction ) hb_parni( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDRAG_EXEC_1 FP=hb_retni( ( Qt::DropAction ) ( p )->exec( ( Qt::DropActions ) hb_parni( 2 ), ( Qt::DropAction ) hb_parni( 3 ) ) ); p is NULL" ) );
+      hb_retni( ( Qt::DropAction ) ( p )->exec( ( Qt::DropActions ) hb_parni( 2 ), ( Qt::DropAction ) hb_parni( 3 ) ) );
    }
 }
 
@@ -196,10 +192,8 @@ HB_FUNC( QT_QDRAG_HOTSPOT )
 {
    QDrag * p = hbqt_par_QDrag( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->hotSpot() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDRAG_HOTSPOT FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->hotSpot() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->hotSpot() ), true ) );
    }
 }
 
@@ -210,10 +204,8 @@ HB_FUNC( QT_QDRAG_MIMEDATA )
 {
    QDrag * p = hbqt_par_QDrag( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QMimeData( ( p )->mimeData(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDRAG_MIMEDATA FP=hb_retptrGC( hbqt_gcAllocate_QMimeData( ( p )->mimeData(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QMimeData( ( p )->mimeData(), false ) );
    }
 }
 
@@ -224,10 +216,8 @@ HB_FUNC( QT_QDRAG_PIXMAP )
 {
    QDrag * p = hbqt_par_QDrag( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDRAG_PIXMAP FP=hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap() ), true ) );
    }
 }
 
@@ -238,10 +228,8 @@ HB_FUNC( QT_QDRAG_SETDRAGCURSOR )
 {
    QDrag * p = hbqt_par_QDrag( 1 );
    if( p )
-      ( p )->setDragCursor( *hbqt_par_QPixmap( 2 ), ( Qt::DropAction ) hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDRAG_SETDRAGCURSOR FP=( p )->setDragCursor( *hbqt_par_QPixmap( 2 ), ( Qt::DropAction ) hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setDragCursor( *hbqt_par_QPixmap( 2 ), ( Qt::DropAction ) hb_parni( 3 ) );
    }
 }
 
@@ -252,10 +240,8 @@ HB_FUNC( QT_QDRAG_SETHOTSPOT )
 {
    QDrag * p = hbqt_par_QDrag( 1 );
    if( p )
-      ( p )->setHotSpot( *hbqt_par_QPoint( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDRAG_SETHOTSPOT FP=( p )->setHotSpot( *hbqt_par_QPoint( 2 ) ); p is NULL" ) );
+      ( p )->setHotSpot( *hbqt_par_QPoint( 2 ) );
    }
 }
 
@@ -282,10 +268,8 @@ HB_FUNC( QT_QDRAG_SETPIXMAP )
 {
    QDrag * p = hbqt_par_QDrag( 1 );
    if( p )
-      ( p )->setPixmap( *hbqt_par_QPixmap( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDRAG_SETPIXMAP FP=( p )->setPixmap( *hbqt_par_QPixmap( 2 ) ); p is NULL" ) );
+      ( p )->setPixmap( *hbqt_par_QPixmap( 2 ) );
    }
 }
 
@@ -296,10 +280,8 @@ HB_FUNC( QT_QDRAG_SOURCE )
 {
    QDrag * p = hbqt_par_QDrag( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->source(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDRAG_SOURCE FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->source(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->source(), false ) );
    }
 }
 
@@ -310,10 +292,8 @@ HB_FUNC( QT_QDRAG_TARGET )
 {
    QDrag * p = hbqt_par_QDrag( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->target(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDRAG_TARGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->target(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->target(), false ) );
    }
 }
 

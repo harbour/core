@@ -134,10 +134,10 @@ HB_FUNC( QT_QWEBPLUGINFACTORY_CREATE )
 {
    QWebPluginFactory * p = hbqt_par_QWebPluginFactory( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->create( QWebPluginFactory::tr( hb_parc( 2 ) ), *hbqt_par_QUrl( 3 ), *hbqt_par_QStringList( 4 ), *hbqt_par_QStringList( 5 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBPLUGINFACTORY_CREATE FP=hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->create( QWebPluginFactory::tr( hb_parc( 2 ) ), *hbqt_par_QUrl( 3 ), *hbqt_par_QStringList( 4 ), *hbqt_par_QStringList( 5 ) ), false ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->create( hb_parstr_utf8( 2, &pText, NULL ), *hbqt_par_QUrl( 3 ), *hbqt_par_QStringList( 4 ), *hbqt_par_QStringList( 5 ) ), false ) );
+      hb_strfree( pText );
    }
 }
 
@@ -148,10 +148,8 @@ HB_FUNC( QT_QWEBPLUGINFACTORY_REFRESHPLUGINS )
 {
    QWebPluginFactory * p = hbqt_par_QWebPluginFactory( 1 );
    if( p )
-      ( p )->refreshPlugins();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBPLUGINFACTORY_REFRESHPLUGINS FP=( p )->refreshPlugins(); p is NULL" ) );
+      ( p )->refreshPlugins();
    }
 }
 
@@ -162,10 +160,8 @@ HB_FUNC( QT_QWEBPLUGINFACTORY_SUPPORTSEXTENSION )
 {
    QWebPluginFactory * p = hbqt_par_QWebPluginFactory( 1 );
    if( p )
-      hb_retl( ( p )->supportsExtension( ( QWebPluginFactory::Extension ) hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBPLUGINFACTORY_SUPPORTSEXTENSION FP=hb_retl( ( p )->supportsExtension( ( QWebPluginFactory::Extension ) hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->supportsExtension( ( QWebPluginFactory::Extension ) hb_parni( 2 ) ) );
    }
 }
 

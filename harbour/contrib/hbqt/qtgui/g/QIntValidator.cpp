@@ -168,10 +168,8 @@ HB_FUNC( QT_QINTVALIDATOR_BOTTOM )
 {
    QIntValidator * p = hbqt_par_QIntValidator( 1 );
    if( p )
-      hb_retni( ( p )->bottom() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINTVALIDATOR_BOTTOM FP=hb_retni( ( p )->bottom() ); p is NULL" ) );
+      hb_retni( ( p )->bottom() );
    }
 }
 
@@ -182,10 +180,8 @@ HB_FUNC( QT_QINTVALIDATOR_SETBOTTOM )
 {
    QIntValidator * p = hbqt_par_QIntValidator( 1 );
    if( p )
-      ( p )->setBottom( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINTVALIDATOR_SETBOTTOM FP=( p )->setBottom( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setBottom( hb_parni( 2 ) );
    }
 }
 
@@ -196,10 +192,8 @@ HB_FUNC( QT_QINTVALIDATOR_SETRANGE )
 {
    QIntValidator * p = hbqt_par_QIntValidator( 1 );
    if( p )
-      ( p )->setRange( hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINTVALIDATOR_SETRANGE FP=( p )->setRange( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setRange( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -210,10 +204,8 @@ HB_FUNC( QT_QINTVALIDATOR_SETTOP )
 {
    QIntValidator * p = hbqt_par_QIntValidator( 1 );
    if( p )
-      ( p )->setTop( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINTVALIDATOR_SETTOP FP=( p )->setTop( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setTop( hb_parni( 2 ) );
    }
 }
 
@@ -224,10 +216,8 @@ HB_FUNC( QT_QINTVALIDATOR_TOP )
 {
    QIntValidator * p = hbqt_par_QIntValidator( 1 );
    if( p )
-      hb_retni( ( p )->top() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINTVALIDATOR_TOP FP=hb_retni( ( p )->top() ); p is NULL" ) );
+      hb_retni( ( p )->top() );
    }
 }
 

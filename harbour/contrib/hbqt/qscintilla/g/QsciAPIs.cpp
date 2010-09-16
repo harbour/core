@@ -167,10 +167,10 @@ HB_FUNC( QT_QSCIAPIS_ADD )
 {
    QsciAPIs * p = hbqt_par_QsciAPIs( 1 );
    if( p )
-      ( p )->add( QsciAPIs::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCIAPIS_ADD FP=( p )->add( QsciAPIs::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->add( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -181,10 +181,8 @@ HB_FUNC( QT_QSCIAPIS_CLEAR )
 {
    QsciAPIs * p = hbqt_par_QsciAPIs( 1 );
    if( p )
-      ( p )->clear();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCIAPIS_CLEAR FP=( p )->clear(); p is NULL" ) );
+      ( p )->clear();
    }
 }
 
@@ -195,10 +193,10 @@ HB_FUNC( QT_QSCIAPIS_LOAD )
 {
    QsciAPIs * p = hbqt_par_QsciAPIs( 1 );
    if( p )
-      hb_retl( ( p )->load( QsciAPIs::tr( hb_parc( 2 ) ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCIAPIS_LOAD FP=hb_retl( ( p )->load( QsciAPIs::tr( hb_parc( 2 ) ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->load( hb_parstr_utf8( 2, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -209,10 +207,10 @@ HB_FUNC( QT_QSCIAPIS_REMOVE )
 {
    QsciAPIs * p = hbqt_par_QsciAPIs( 1 );
    if( p )
-      ( p )->remove( QsciAPIs::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCIAPIS_REMOVE FP=( p )->remove( QsciAPIs::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->remove( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -223,10 +221,8 @@ HB_FUNC( QT_QSCIAPIS_PREPARE )
 {
    QsciAPIs * p = hbqt_par_QsciAPIs( 1 );
    if( p )
-      ( p )->prepare();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCIAPIS_PREPARE FP=( p )->prepare(); p is NULL" ) );
+      ( p )->prepare();
    }
 }
 
@@ -237,10 +233,8 @@ HB_FUNC( QT_QSCIAPIS_CANCELPREPARATION )
 {
    QsciAPIs * p = hbqt_par_QsciAPIs( 1 );
    if( p )
-      ( p )->cancelPreparation();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCIAPIS_CANCELPREPARATION FP=( p )->cancelPreparation(); p is NULL" ) );
+      ( p )->cancelPreparation();
    }
 }
 
@@ -251,10 +245,8 @@ HB_FUNC( QT_QSCIAPIS_DEFAULTPREPAREDNAME )
 {
    QsciAPIs * p = hbqt_par_QsciAPIs( 1 );
    if( p )
-      hb_retc( ( p )->defaultPreparedName().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCIAPIS_DEFAULTPREPAREDNAME FP=hb_retc( ( p )->defaultPreparedName().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->defaultPreparedName().toUtf8().data() );
    }
 }
 
@@ -265,10 +257,10 @@ HB_FUNC( QT_QSCIAPIS_ISPREPARED )
 {
    QsciAPIs * p = hbqt_par_QsciAPIs( 1 );
    if( p )
-      hb_retl( ( p )->isPrepared( QsciAPIs::tr( hb_parc( 2 ) ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCIAPIS_ISPREPARED FP=hb_retl( ( p )->isPrepared( QsciAPIs::tr( hb_parc( 2 ) ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->isPrepared( hb_parstr_utf8( 2, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -279,10 +271,10 @@ HB_FUNC( QT_QSCIAPIS_LOADPREPARED )
 {
    QsciAPIs * p = hbqt_par_QsciAPIs( 1 );
    if( p )
-      hb_retl( ( p )->loadPrepared( QsciAPIs::tr( hb_parc( 2 ) ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCIAPIS_LOADPREPARED FP=hb_retl( ( p )->loadPrepared( QsciAPIs::tr( hb_parc( 2 ) ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->loadPrepared( hb_parstr_utf8( 2, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -293,10 +285,10 @@ HB_FUNC( QT_QSCIAPIS_SAVEPREPARED )
 {
    QsciAPIs * p = hbqt_par_QsciAPIs( 1 );
    if( p )
-      hb_retl( ( p )->savePrepared( QsciAPIs::tr( hb_parc( 2 ) ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCIAPIS_SAVEPREPARED FP=hb_retl( ( p )->savePrepared( QsciAPIs::tr( hb_parc( 2 ) ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->savePrepared( hb_parstr_utf8( 2, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -307,10 +299,8 @@ HB_FUNC( QT_QSCIAPIS_UPDATEAUTOCOMPLETIONLIST )
 {
    QsciAPIs * p = hbqt_par_QsciAPIs( 1 );
    if( p )
-      ( p )->updateAutoCompletionList( *hbqt_par_QStringList( 2 ), *hbqt_par_QStringList( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCIAPIS_UPDATEAUTOCOMPLETIONLIST FP=( p )->updateAutoCompletionList( *hbqt_par_QStringList( 2 ), *hbqt_par_QStringList( 3 ) ); p is NULL" ) );
+      ( p )->updateAutoCompletionList( *hbqt_par_QStringList( 2 ), *hbqt_par_QStringList( 3 ) );
    }
 }
 
@@ -321,10 +311,10 @@ HB_FUNC( QT_QSCIAPIS_AUTOCOMPLETIONSELECTED )
 {
    QsciAPIs * p = hbqt_par_QsciAPIs( 1 );
    if( p )
-      ( p )->autoCompletionSelected( QsciAPIs::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCIAPIS_AUTOCOMPLETIONSELECTED FP=( p )->autoCompletionSelected( QsciAPIs::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->autoCompletionSelected( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -335,10 +325,8 @@ HB_FUNC( QT_QSCIAPIS_EVENT )
 {
    QsciAPIs * p = hbqt_par_QsciAPIs( 1 );
    if( p )
-      hb_retl( ( p )->event( hbqt_par_QEvent( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCIAPIS_EVENT FP=hb_retl( ( p )->event( hbqt_par_QEvent( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->event( hbqt_par_QEvent( 2 ) ) );
    }
 }
 
@@ -349,10 +337,8 @@ HB_FUNC( QT_QSCIAPIS_INSTALLEDAPIFILES )
 {
    QsciAPIs * p = hbqt_par_QsciAPIs( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->installedAPIFiles() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCIAPIS_INSTALLEDAPIFILES FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->installedAPIFiles() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->installedAPIFiles() ), true ) );
    }
 }
 

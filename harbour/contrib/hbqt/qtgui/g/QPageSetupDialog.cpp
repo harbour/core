@@ -165,10 +165,8 @@ HB_FUNC( QT_QPAGESETUPDIALOG_EXEC )
 {
    QPageSetupDialog * p = hbqt_par_QPageSetupDialog( 1 );
    if( p )
-      hb_retni( ( p )->exec() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAGESETUPDIALOG_EXEC FP=hb_retni( ( p )->exec() ); p is NULL" ) );
+      hb_retni( ( p )->exec() );
    }
 }
 
@@ -179,10 +177,8 @@ HB_FUNC( QT_QPAGESETUPDIALOG_OPEN )
 {
    QPageSetupDialog * p = hbqt_par_QPageSetupDialog( 1 );
    if( p )
-      ( p )->open( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAGESETUPDIALOG_OPEN FP=( p )->open( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) ); p is NULL" ) );
+      ( p )->open( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) );
    }
 }
 
@@ -193,10 +189,8 @@ HB_FUNC( QT_QPAGESETUPDIALOG_OPTIONS )
 {
    QPageSetupDialog * p = hbqt_par_QPageSetupDialog( 1 );
    if( p )
-      hb_retni( ( QPageSetupDialog::PageSetupDialogOptions ) ( p )->options() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAGESETUPDIALOG_OPTIONS FP=hb_retni( ( QPageSetupDialog::PageSetupDialogOptions ) ( p )->options() ); p is NULL" ) );
+      hb_retni( ( QPageSetupDialog::PageSetupDialogOptions ) ( p )->options() );
    }
 }
 
@@ -207,10 +201,8 @@ HB_FUNC( QT_QPAGESETUPDIALOG_PRINTER )
 {
    QPageSetupDialog * p = hbqt_par_QPageSetupDialog( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPrinter( ( p )->printer(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAGESETUPDIALOG_PRINTER FP=hb_retptrGC( hbqt_gcAllocate_QPrinter( ( p )->printer(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPrinter( ( p )->printer(), false ) );
    }
 }
 
@@ -221,10 +213,8 @@ HB_FUNC( QT_QPAGESETUPDIALOG_SETOPTION )
 {
    QPageSetupDialog * p = hbqt_par_QPageSetupDialog( 1 );
    if( p )
-      ( p )->setOption( ( QPageSetupDialog::PageSetupDialogOption ) hb_parni( 2 ), hb_parl( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAGESETUPDIALOG_SETOPTION FP=( p )->setOption( ( QPageSetupDialog::PageSetupDialogOption ) hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+      ( p )->setOption( ( QPageSetupDialog::PageSetupDialogOption ) hb_parni( 2 ), hb_parl( 3 ) );
    }
 }
 
@@ -235,10 +225,8 @@ HB_FUNC( QT_QPAGESETUPDIALOG_SETOPTIONS )
 {
    QPageSetupDialog * p = hbqt_par_QPageSetupDialog( 1 );
    if( p )
-      ( p )->setOptions( ( QPageSetupDialog::PageSetupDialogOptions ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAGESETUPDIALOG_SETOPTIONS FP=( p )->setOptions( ( QPageSetupDialog::PageSetupDialogOptions ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setOptions( ( QPageSetupDialog::PageSetupDialogOptions ) hb_parni( 2 ) );
    }
 }
 
@@ -249,10 +237,8 @@ HB_FUNC( QT_QPAGESETUPDIALOG_SETVISIBLE )
 {
    QPageSetupDialog * p = hbqt_par_QPageSetupDialog( 1 );
    if( p )
-      ( p )->setVisible( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAGESETUPDIALOG_SETVISIBLE FP=( p )->setVisible( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setVisible( hb_parl( 2 ) );
    }
 }
 
@@ -263,10 +249,8 @@ HB_FUNC( QT_QPAGESETUPDIALOG_TESTOPTION )
 {
    QPageSetupDialog * p = hbqt_par_QPageSetupDialog( 1 );
    if( p )
-      hb_retl( ( p )->testOption( ( QPageSetupDialog::PageSetupDialogOption ) hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAGESETUPDIALOG_TESTOPTION FP=hb_retl( ( p )->testOption( ( QPageSetupDialog::PageSetupDialogOption ) hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->testOption( ( QPageSetupDialog::PageSetupDialogOption ) hb_parni( 2 ) ) );
    }
 }
 

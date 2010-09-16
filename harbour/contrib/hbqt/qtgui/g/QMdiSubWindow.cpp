@@ -170,10 +170,8 @@ HB_FUNC( QT_QMDISUBWINDOW_ISSHADED )
 {
    QMdiSubWindow * p = hbqt_par_QMdiSubWindow( 1 );
    if( p )
-      hb_retl( ( p )->isShaded() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDISUBWINDOW_ISSHADED FP=hb_retl( ( p )->isShaded() ); p is NULL" ) );
+      hb_retl( ( p )->isShaded() );
    }
 }
 
@@ -184,10 +182,8 @@ HB_FUNC( QT_QMDISUBWINDOW_KEYBOARDPAGESTEP )
 {
    QMdiSubWindow * p = hbqt_par_QMdiSubWindow( 1 );
    if( p )
-      hb_retni( ( p )->keyboardPageStep() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDISUBWINDOW_KEYBOARDPAGESTEP FP=hb_retni( ( p )->keyboardPageStep() ); p is NULL" ) );
+      hb_retni( ( p )->keyboardPageStep() );
    }
 }
 
@@ -198,10 +194,8 @@ HB_FUNC( QT_QMDISUBWINDOW_KEYBOARDSINGLESTEP )
 {
    QMdiSubWindow * p = hbqt_par_QMdiSubWindow( 1 );
    if( p )
-      hb_retni( ( p )->keyboardSingleStep() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDISUBWINDOW_KEYBOARDSINGLESTEP FP=hb_retni( ( p )->keyboardSingleStep() ); p is NULL" ) );
+      hb_retni( ( p )->keyboardSingleStep() );
    }
 }
 
@@ -212,10 +206,8 @@ HB_FUNC( QT_QMDISUBWINDOW_MDIAREA )
 {
    QMdiSubWindow * p = hbqt_par_QMdiSubWindow( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QMdiArea( ( p )->mdiArea(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDISUBWINDOW_MDIAREA FP=hb_retptrGC( hbqt_gcAllocate_QMdiArea( ( p )->mdiArea(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QMdiArea( ( p )->mdiArea(), false ) );
    }
 }
 
@@ -226,10 +218,8 @@ HB_FUNC( QT_QMDISUBWINDOW_SETKEYBOARDPAGESTEP )
 {
    QMdiSubWindow * p = hbqt_par_QMdiSubWindow( 1 );
    if( p )
-      ( p )->setKeyboardPageStep( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDISUBWINDOW_SETKEYBOARDPAGESTEP FP=( p )->setKeyboardPageStep( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setKeyboardPageStep( hb_parni( 2 ) );
    }
 }
 
@@ -240,10 +230,8 @@ HB_FUNC( QT_QMDISUBWINDOW_SETKEYBOARDSINGLESTEP )
 {
    QMdiSubWindow * p = hbqt_par_QMdiSubWindow( 1 );
    if( p )
-      ( p )->setKeyboardSingleStep( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDISUBWINDOW_SETKEYBOARDSINGLESTEP FP=( p )->setKeyboardSingleStep( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setKeyboardSingleStep( hb_parni( 2 ) );
    }
 }
 
@@ -254,10 +242,8 @@ HB_FUNC( QT_QMDISUBWINDOW_SETOPTION )
 {
    QMdiSubWindow * p = hbqt_par_QMdiSubWindow( 1 );
    if( p )
-      ( p )->setOption( ( QMdiSubWindow::SubWindowOption ) hb_parni( 2 ), hb_parl( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDISUBWINDOW_SETOPTION FP=( p )->setOption( ( QMdiSubWindow::SubWindowOption ) hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+      ( p )->setOption( ( QMdiSubWindow::SubWindowOption ) hb_parni( 2 ), hb_parl( 3 ) );
    }
 }
 
@@ -268,10 +254,8 @@ HB_FUNC( QT_QMDISUBWINDOW_SETSYSTEMMENU )
 {
    QMdiSubWindow * p = hbqt_par_QMdiSubWindow( 1 );
    if( p )
-      ( p )->setSystemMenu( hbqt_par_QMenu( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDISUBWINDOW_SETSYSTEMMENU FP=( p )->setSystemMenu( hbqt_par_QMenu( 2 ) ); p is NULL" ) );
+      ( p )->setSystemMenu( hbqt_par_QMenu( 2 ) );
    }
 }
 
@@ -282,10 +266,8 @@ HB_FUNC( QT_QMDISUBWINDOW_SETWIDGET )
 {
    QMdiSubWindow * p = hbqt_par_QMdiSubWindow( 1 );
    if( p )
-      ( p )->setWidget( hbqt_par_QWidget( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDISUBWINDOW_SETWIDGET FP=( p )->setWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+      ( p )->setWidget( hbqt_par_QWidget( 2 ) );
    }
 }
 
@@ -296,10 +278,8 @@ HB_FUNC( QT_QMDISUBWINDOW_SYSTEMMENU )
 {
    QMdiSubWindow * p = hbqt_par_QMdiSubWindow( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QMenu( ( p )->systemMenu(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDISUBWINDOW_SYSTEMMENU FP=hb_retptrGC( hbqt_gcAllocate_QMenu( ( p )->systemMenu(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QMenu( ( p )->systemMenu(), false ) );
    }
 }
 
@@ -310,10 +290,8 @@ HB_FUNC( QT_QMDISUBWINDOW_TESTOPTION )
 {
    QMdiSubWindow * p = hbqt_par_QMdiSubWindow( 1 );
    if( p )
-      hb_retl( ( p )->testOption( ( QMdiSubWindow::SubWindowOption ) hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDISUBWINDOW_TESTOPTION FP=hb_retl( ( p )->testOption( ( QMdiSubWindow::SubWindowOption ) hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->testOption( ( QMdiSubWindow::SubWindowOption ) hb_parni( 2 ) ) );
    }
 }
 
@@ -324,10 +302,8 @@ HB_FUNC( QT_QMDISUBWINDOW_WIDGET )
 {
    QMdiSubWindow * p = hbqt_par_QMdiSubWindow( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDISUBWINDOW_WIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) );
    }
 }
 
@@ -338,10 +314,8 @@ HB_FUNC( QT_QMDISUBWINDOW_SHOWSHADED )
 {
    QMdiSubWindow * p = hbqt_par_QMdiSubWindow( 1 );
    if( p )
-      ( p )->showShaded();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDISUBWINDOW_SHOWSHADED FP=( p )->showShaded(); p is NULL" ) );
+      ( p )->showShaded();
    }
 }
 
@@ -352,10 +326,8 @@ HB_FUNC( QT_QMDISUBWINDOW_SHOWSYSTEMMENU )
 {
    QMdiSubWindow * p = hbqt_par_QMdiSubWindow( 1 );
    if( p )
-      ( p )->showSystemMenu();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDISUBWINDOW_SHOWSYSTEMMENU FP=( p )->showSystemMenu(); p is NULL" ) );
+      ( p )->showSystemMenu();
    }
 }
 

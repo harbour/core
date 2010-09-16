@@ -167,10 +167,8 @@ HB_FUNC( QT_QGRAPHICSELLIPSEITEM_RECT )
 {
    QGraphicsEllipseItem * p = hbqt_par_QGraphicsEllipseItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->rect() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSELLIPSEITEM_RECT FP=hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->rect() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->rect() ), true ) );
    }
 }
 
@@ -181,10 +179,8 @@ HB_FUNC( QT_QGRAPHICSELLIPSEITEM_SETRECT )
 {
    QGraphicsEllipseItem * p = hbqt_par_QGraphicsEllipseItem( 1 );
    if( p )
-      ( p )->setRect( *hbqt_par_QRectF( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSELLIPSEITEM_SETRECT FP=( p )->setRect( *hbqt_par_QRectF( 2 ) ); p is NULL" ) );
+      ( p )->setRect( *hbqt_par_QRectF( 2 ) );
    }
 }
 
@@ -195,10 +191,8 @@ HB_FUNC( QT_QGRAPHICSELLIPSEITEM_SETRECT_1 )
 {
    QGraphicsEllipseItem * p = hbqt_par_QGraphicsEllipseItem( 1 );
    if( p )
-      ( p )->setRect( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSELLIPSEITEM_SETRECT_1 FP=( p )->setRect( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) ); p is NULL" ) );
+      ( p )->setRect( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
    }
 }
 
@@ -209,10 +203,8 @@ HB_FUNC( QT_QGRAPHICSELLIPSEITEM_SETSPANANGLE )
 {
    QGraphicsEllipseItem * p = hbqt_par_QGraphicsEllipseItem( 1 );
    if( p )
-      ( p )->setSpanAngle( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSELLIPSEITEM_SETSPANANGLE FP=( p )->setSpanAngle( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setSpanAngle( hb_parni( 2 ) );
    }
 }
 
@@ -223,10 +215,8 @@ HB_FUNC( QT_QGRAPHICSELLIPSEITEM_SETSTARTANGLE )
 {
    QGraphicsEllipseItem * p = hbqt_par_QGraphicsEllipseItem( 1 );
    if( p )
-      ( p )->setStartAngle( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSELLIPSEITEM_SETSTARTANGLE FP=( p )->setStartAngle( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setStartAngle( hb_parni( 2 ) );
    }
 }
 
@@ -237,10 +227,8 @@ HB_FUNC( QT_QGRAPHICSELLIPSEITEM_SPANANGLE )
 {
    QGraphicsEllipseItem * p = hbqt_par_QGraphicsEllipseItem( 1 );
    if( p )
-      hb_retni( ( p )->spanAngle() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSELLIPSEITEM_SPANANGLE FP=hb_retni( ( p )->spanAngle() ); p is NULL" ) );
+      hb_retni( ( p )->spanAngle() );
    }
 }
 
@@ -251,10 +239,8 @@ HB_FUNC( QT_QGRAPHICSELLIPSEITEM_STARTANGLE )
 {
    QGraphicsEllipseItem * p = hbqt_par_QGraphicsEllipseItem( 1 );
    if( p )
-      hb_retni( ( p )->startAngle() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSELLIPSEITEM_STARTANGLE FP=hb_retni( ( p )->startAngle() ); p is NULL" ) );
+      hb_retni( ( p )->startAngle() );
    }
 }
 

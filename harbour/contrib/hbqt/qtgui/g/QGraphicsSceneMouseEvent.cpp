@@ -128,10 +128,8 @@ HB_FUNC( QT_QGRAPHICSSCENEMOUSEEVENT_BUTTON )
 {
    QGraphicsSceneMouseEvent * p = hbqt_par_QGraphicsSceneMouseEvent( 1 );
    if( p )
-      hb_retni( ( Qt::MouseButton ) ( p )->button() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEMOUSEEVENT_BUTTON FP=hb_retni( ( Qt::MouseButton ) ( p )->button() ); p is NULL" ) );
+      hb_retni( ( Qt::MouseButton ) ( p )->button() );
    }
 }
 
@@ -142,10 +140,8 @@ HB_FUNC( QT_QGRAPHICSSCENEMOUSEEVENT_BUTTONDOWNPOS )
 {
    QGraphicsSceneMouseEvent * p = hbqt_par_QGraphicsSceneMouseEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->buttonDownPos( ( Qt::MouseButton ) hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEMOUSEEVENT_BUTTONDOWNPOS FP=hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->buttonDownPos( ( Qt::MouseButton ) hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->buttonDownPos( ( Qt::MouseButton ) hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -156,10 +152,8 @@ HB_FUNC( QT_QGRAPHICSSCENEMOUSEEVENT_BUTTONDOWNSCENEPOS )
 {
    QGraphicsSceneMouseEvent * p = hbqt_par_QGraphicsSceneMouseEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->buttonDownScenePos( ( Qt::MouseButton ) hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEMOUSEEVENT_BUTTONDOWNSCENEPOS FP=hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->buttonDownScenePos( ( Qt::MouseButton ) hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->buttonDownScenePos( ( Qt::MouseButton ) hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -170,10 +164,8 @@ HB_FUNC( QT_QGRAPHICSSCENEMOUSEEVENT_BUTTONDOWNSCREENPOS )
 {
    QGraphicsSceneMouseEvent * p = hbqt_par_QGraphicsSceneMouseEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->buttonDownScreenPos( ( Qt::MouseButton ) hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEMOUSEEVENT_BUTTONDOWNSCREENPOS FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->buttonDownScreenPos( ( Qt::MouseButton ) hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->buttonDownScreenPos( ( Qt::MouseButton ) hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -184,10 +176,8 @@ HB_FUNC( QT_QGRAPHICSSCENEMOUSEEVENT_BUTTONS )
 {
    QGraphicsSceneMouseEvent * p = hbqt_par_QGraphicsSceneMouseEvent( 1 );
    if( p )
-      hb_retni( ( Qt::MouseButtons ) ( p )->buttons() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEMOUSEEVENT_BUTTONS FP=hb_retni( ( Qt::MouseButtons ) ( p )->buttons() ); p is NULL" ) );
+      hb_retni( ( Qt::MouseButtons ) ( p )->buttons() );
    }
 }
 
@@ -198,10 +188,8 @@ HB_FUNC( QT_QGRAPHICSSCENEMOUSEEVENT_LASTPOS )
 {
    QGraphicsSceneMouseEvent * p = hbqt_par_QGraphicsSceneMouseEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->lastPos() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEMOUSEEVENT_LASTPOS FP=hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->lastPos() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->lastPos() ), true ) );
    }
 }
 
@@ -212,10 +200,8 @@ HB_FUNC( QT_QGRAPHICSSCENEMOUSEEVENT_LASTSCENEPOS )
 {
    QGraphicsSceneMouseEvent * p = hbqt_par_QGraphicsSceneMouseEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->lastScenePos() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEMOUSEEVENT_LASTSCENEPOS FP=hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->lastScenePos() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->lastScenePos() ), true ) );
    }
 }
 
@@ -226,10 +212,8 @@ HB_FUNC( QT_QGRAPHICSSCENEMOUSEEVENT_LASTSCREENPOS )
 {
    QGraphicsSceneMouseEvent * p = hbqt_par_QGraphicsSceneMouseEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->lastScreenPos() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEMOUSEEVENT_LASTSCREENPOS FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->lastScreenPos() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->lastScreenPos() ), true ) );
    }
 }
 
@@ -240,10 +224,8 @@ HB_FUNC( QT_QGRAPHICSSCENEMOUSEEVENT_MODIFIERS )
 {
    QGraphicsSceneMouseEvent * p = hbqt_par_QGraphicsSceneMouseEvent( 1 );
    if( p )
-      hb_retni( ( Qt::KeyboardModifiers ) ( p )->modifiers() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEMOUSEEVENT_MODIFIERS FP=hb_retni( ( Qt::KeyboardModifiers ) ( p )->modifiers() ); p is NULL" ) );
+      hb_retni( ( Qt::KeyboardModifiers ) ( p )->modifiers() );
    }
 }
 
@@ -254,10 +236,8 @@ HB_FUNC( QT_QGRAPHICSSCENEMOUSEEVENT_POS )
 {
    QGraphicsSceneMouseEvent * p = hbqt_par_QGraphicsSceneMouseEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->pos() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEMOUSEEVENT_POS FP=hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->pos() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->pos() ), true ) );
    }
 }
 
@@ -268,10 +248,8 @@ HB_FUNC( QT_QGRAPHICSSCENEMOUSEEVENT_SCENEPOS )
 {
    QGraphicsSceneMouseEvent * p = hbqt_par_QGraphicsSceneMouseEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->scenePos() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEMOUSEEVENT_SCENEPOS FP=hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->scenePos() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->scenePos() ), true ) );
    }
 }
 
@@ -282,10 +260,8 @@ HB_FUNC( QT_QGRAPHICSSCENEMOUSEEVENT_SCREENPOS )
 {
    QGraphicsSceneMouseEvent * p = hbqt_par_QGraphicsSceneMouseEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->screenPos() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEMOUSEEVENT_SCREENPOS FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->screenPos() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->screenPos() ), true ) );
    }
 }
 

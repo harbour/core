@@ -141,10 +141,10 @@ HB_FUNC( QT_QWEBFRAME_ADDTOJAVASCRIPTWINDOWOBJECT )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      ( p )->addToJavaScriptWindowObject( QWebFrame::tr( hb_parc( 2 ) ), hbqt_par_QObject( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_ADDTOJAVASCRIPTWINDOWOBJECT FP=( p )->addToJavaScriptWindowObject( QWebFrame::tr( hb_parc( 2 ) ), hbqt_par_QObject( 3 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->addToJavaScriptWindowObject( hb_parstr_utf8( 2, &pText, NULL ), hbqt_par_QObject( 3 ) );
+      hb_strfree( pText );
    }
 }
 
@@ -155,10 +155,10 @@ HB_FUNC( QT_QWEBFRAME_ADDTOJAVASCRIPTWINDOWOBJECT_1 )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      ( p )->addToJavaScriptWindowObject( QWebFrame::tr( hb_parc( 2 ) ), hbqt_par_QObject( 3 ), ( QScriptEngine::ValueOwnership ) hb_parni( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_ADDTOJAVASCRIPTWINDOWOBJECT_1 FP=( p )->addToJavaScriptWindowObject( QWebFrame::tr( hb_parc( 2 ) ), hbqt_par_QObject( 3 ), ( QScriptEngine::ValueOwnership ) hb_parni( 4 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->addToJavaScriptWindowObject( hb_parstr_utf8( 2, &pText, NULL ), hbqt_par_QObject( 3 ), ( QScriptEngine::ValueOwnership ) hb_parni( 4 ) );
+      hb_strfree( pText );
    }
 }
 
@@ -169,10 +169,8 @@ HB_FUNC( QT_QWEBFRAME_CHILDFRAMES )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QWebFrame *>( ( p )->childFrames() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_CHILDFRAMES FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QWebFrame *>( ( p )->childFrames() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QWebFrame *>( ( p )->childFrames() ), true ) );
    }
 }
 
@@ -183,10 +181,8 @@ HB_FUNC( QT_QWEBFRAME_CONTENTSSIZE )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->contentsSize() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_CONTENTSSIZE FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->contentsSize() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->contentsSize() ), true ) );
    }
 }
 
@@ -197,10 +193,8 @@ HB_FUNC( QT_QWEBFRAME_FRAMENAME )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      hb_retc( ( p )->frameName().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_FRAMENAME FP=hb_retc( ( p )->frameName().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->frameName().toUtf8().data() );
    }
 }
 
@@ -211,10 +205,8 @@ HB_FUNC( QT_QWEBFRAME_GEOMETRY )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->geometry() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_GEOMETRY FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->geometry() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->geometry() ), true ) );
    }
 }
 
@@ -225,10 +217,8 @@ HB_FUNC( QT_QWEBFRAME_HITTESTCONTENT )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWebHitTestResult( new QWebHitTestResult( ( p )->hitTestContent( *hbqt_par_QPoint( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_HITTESTCONTENT FP=hb_retptrGC( hbqt_gcAllocate_QWebHitTestResult( new QWebHitTestResult( ( p )->hitTestContent( *hbqt_par_QPoint( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWebHitTestResult( new QWebHitTestResult( ( p )->hitTestContent( *hbqt_par_QPoint( 2 ) ) ), true ) );
    }
 }
 
@@ -239,10 +229,8 @@ HB_FUNC( QT_QWEBFRAME_ICON )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_ICON FP=hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon() ), true ) );
    }
 }
 
@@ -253,10 +241,8 @@ HB_FUNC( QT_QWEBFRAME_LOAD )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      ( p )->load( *hbqt_par_QUrl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_LOAD FP=( p )->load( *hbqt_par_QUrl( 2 ) ); p is NULL" ) );
+      ( p )->load( *hbqt_par_QUrl( 2 ) );
    }
 }
 
@@ -267,10 +253,8 @@ HB_FUNC( QT_QWEBFRAME_PAGE )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWebPage( ( p )->page(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_PAGE FP=hb_retptrGC( hbqt_gcAllocate_QWebPage( ( p )->page(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWebPage( ( p )->page(), false ) );
    }
 }
 
@@ -281,10 +265,8 @@ HB_FUNC( QT_QWEBFRAME_PARENTFRAME )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWebFrame( ( p )->parentFrame(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_PARENTFRAME FP=hb_retptrGC( hbqt_gcAllocate_QWebFrame( ( p )->parentFrame(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWebFrame( ( p )->parentFrame(), false ) );
    }
 }
 
@@ -295,10 +277,8 @@ HB_FUNC( QT_QWEBFRAME_POS )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_POS FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) );
    }
 }
 
@@ -309,10 +289,8 @@ HB_FUNC( QT_QWEBFRAME_RENDER )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      ( p )->render( hbqt_par_QPainter( 2 ), *hbqt_par_QRegion( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_RENDER FP=( p )->render( hbqt_par_QPainter( 2 ), *hbqt_par_QRegion( 3 ) ); p is NULL" ) );
+      ( p )->render( hbqt_par_QPainter( 2 ), *hbqt_par_QRegion( 3 ) );
    }
 }
 
@@ -323,10 +301,8 @@ HB_FUNC( QT_QWEBFRAME_RENDER_1 )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      ( p )->render( hbqt_par_QPainter( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_RENDER_1 FP=( p )->render( hbqt_par_QPainter( 2 ) ); p is NULL" ) );
+      ( p )->render( hbqt_par_QPainter( 2 ) );
    }
 }
 
@@ -337,10 +313,8 @@ HB_FUNC( QT_QWEBFRAME_RENDERTREEDUMP )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      hb_retc( ( p )->renderTreeDump().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_RENDERTREEDUMP FP=hb_retc( ( p )->renderTreeDump().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->renderTreeDump().toUtf8().data() );
    }
 }
 
@@ -351,10 +325,8 @@ HB_FUNC( QT_QWEBFRAME_SCROLL )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      ( p )->scroll( hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_SCROLL FP=( p )->scroll( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->scroll( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -365,10 +337,8 @@ HB_FUNC( QT_QWEBFRAME_SCROLLBARMAXIMUM )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      hb_retni( ( p )->scrollBarMaximum( ( Qt::Orientation ) hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_SCROLLBARMAXIMUM FP=hb_retni( ( p )->scrollBarMaximum( ( Qt::Orientation ) hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->scrollBarMaximum( ( Qt::Orientation ) hb_parni( 2 ) ) );
    }
 }
 
@@ -379,10 +349,8 @@ HB_FUNC( QT_QWEBFRAME_SCROLLBARMINIMUM )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      hb_retni( ( p )->scrollBarMinimum( ( Qt::Orientation ) hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_SCROLLBARMINIMUM FP=hb_retni( ( p )->scrollBarMinimum( ( Qt::Orientation ) hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->scrollBarMinimum( ( Qt::Orientation ) hb_parni( 2 ) ) );
    }
 }
 
@@ -393,10 +361,8 @@ HB_FUNC( QT_QWEBFRAME_SCROLLBARPOLICY )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      hb_retni( ( Qt::ScrollBarPolicy ) ( p )->scrollBarPolicy( ( Qt::Orientation ) hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_SCROLLBARPOLICY FP=hb_retni( ( Qt::ScrollBarPolicy ) ( p )->scrollBarPolicy( ( Qt::Orientation ) hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( Qt::ScrollBarPolicy ) ( p )->scrollBarPolicy( ( Qt::Orientation ) hb_parni( 2 ) ) );
    }
 }
 
@@ -407,10 +373,8 @@ HB_FUNC( QT_QWEBFRAME_SCROLLBARVALUE )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      hb_retni( ( p )->scrollBarValue( ( Qt::Orientation ) hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_SCROLLBARVALUE FP=hb_retni( ( p )->scrollBarValue( ( Qt::Orientation ) hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->scrollBarValue( ( Qt::Orientation ) hb_parni( 2 ) ) );
    }
 }
 
@@ -421,10 +385,8 @@ HB_FUNC( QT_QWEBFRAME_SCROLLPOSITION )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->scrollPosition() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_SCROLLPOSITION FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->scrollPosition() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->scrollPosition() ), true ) );
    }
 }
 
@@ -435,10 +397,8 @@ HB_FUNC( QT_QWEBFRAME_SECURITYORIGIN )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWebSecurityOrigin( new QWebSecurityOrigin( ( p )->securityOrigin() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_SECURITYORIGIN FP=hb_retptrGC( hbqt_gcAllocate_QWebSecurityOrigin( new QWebSecurityOrigin( ( p )->securityOrigin() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWebSecurityOrigin( new QWebSecurityOrigin( ( p )->securityOrigin() ), true ) );
    }
 }
 
@@ -449,10 +409,10 @@ HB_FUNC( QT_QWEBFRAME_SETCONTENT )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      ( p )->setContent( *hbqt_par_QByteArray( 2 ), QWebFrame::tr( hb_parc( 3 ) ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QUrl( 4 ) : QUrl() ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_SETCONTENT FP=( p )->setContent( *hbqt_par_QByteArray( 2 ), QWebFrame::tr( hb_parc( 3 ) ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QUrl( 4 ) : QUrl() ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setContent( *hbqt_par_QByteArray( 2 ), hb_parstr_utf8( 3, &pText, NULL ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QUrl( 4 ) : QUrl() ) );
+      hb_strfree( pText );
    }
 }
 
@@ -463,10 +423,10 @@ HB_FUNC( QT_QWEBFRAME_SETHTML )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      ( p )->setHtml( QWebFrame::tr( hb_parc( 2 ) ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QUrl( 3 ) : QUrl() ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_SETHTML FP=( p )->setHtml( QWebFrame::tr( hb_parc( 2 ) ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QUrl( 3 ) : QUrl() ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setHtml( hb_parstr_utf8( 2, &pText, NULL ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QUrl( 3 ) : QUrl() ) );
+      hb_strfree( pText );
    }
 }
 
@@ -477,10 +437,8 @@ HB_FUNC( QT_QWEBFRAME_SETSCROLLBARPOLICY )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      ( p )->setScrollBarPolicy( ( Qt::Orientation ) hb_parni( 2 ), ( Qt::ScrollBarPolicy ) hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_SETSCROLLBARPOLICY FP=( p )->setScrollBarPolicy( ( Qt::Orientation ) hb_parni( 2 ), ( Qt::ScrollBarPolicy ) hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setScrollBarPolicy( ( Qt::Orientation ) hb_parni( 2 ), ( Qt::ScrollBarPolicy ) hb_parni( 3 ) );
    }
 }
 
@@ -491,10 +449,8 @@ HB_FUNC( QT_QWEBFRAME_SETSCROLLBARVALUE )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      ( p )->setScrollBarValue( ( Qt::Orientation ) hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_SETSCROLLBARVALUE FP=( p )->setScrollBarValue( ( Qt::Orientation ) hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setScrollBarValue( ( Qt::Orientation ) hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -505,10 +461,8 @@ HB_FUNC( QT_QWEBFRAME_SETSCROLLPOSITION )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      ( p )->setScrollPosition( *hbqt_par_QPoint( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_SETSCROLLPOSITION FP=( p )->setScrollPosition( *hbqt_par_QPoint( 2 ) ); p is NULL" ) );
+      ( p )->setScrollPosition( *hbqt_par_QPoint( 2 ) );
    }
 }
 
@@ -519,10 +473,8 @@ HB_FUNC( QT_QWEBFRAME_SETTEXTSIZEMULTIPLIER )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      ( p )->setTextSizeMultiplier( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_SETTEXTSIZEMULTIPLIER FP=( p )->setTextSizeMultiplier( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setTextSizeMultiplier( hb_parnd( 2 ) );
    }
 }
 
@@ -533,10 +485,8 @@ HB_FUNC( QT_QWEBFRAME_SETURL )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      ( p )->setUrl( *hbqt_par_QUrl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_SETURL FP=( p )->setUrl( *hbqt_par_QUrl( 2 ) ); p is NULL" ) );
+      ( p )->setUrl( *hbqt_par_QUrl( 2 ) );
    }
 }
 
@@ -547,10 +497,8 @@ HB_FUNC( QT_QWEBFRAME_SETZOOMFACTOR )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      ( p )->setZoomFactor( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_SETZOOMFACTOR FP=( p )->setZoomFactor( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setZoomFactor( hb_parnd( 2 ) );
    }
 }
 
@@ -561,10 +509,8 @@ HB_FUNC( QT_QWEBFRAME_TEXTSIZEMULTIPLIER )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      hb_retnd( ( p )->textSizeMultiplier() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_TEXTSIZEMULTIPLIER FP=hb_retnd( ( p )->textSizeMultiplier() ); p is NULL" ) );
+      hb_retnd( ( p )->textSizeMultiplier() );
    }
 }
 
@@ -575,10 +521,8 @@ HB_FUNC( QT_QWEBFRAME_TITLE )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      hb_retc( ( p )->title().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_TITLE FP=hb_retc( ( p )->title().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->title().toUtf8().data() );
    }
 }
 
@@ -589,10 +533,8 @@ HB_FUNC( QT_QWEBFRAME_TOHTML )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      hb_retc( ( p )->toHtml().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_TOHTML FP=hb_retc( ( p )->toHtml().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->toHtml().toUtf8().data() );
    }
 }
 
@@ -603,10 +545,8 @@ HB_FUNC( QT_QWEBFRAME_TOPLAINTEXT )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      hb_retc( ( p )->toPlainText().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_TOPLAINTEXT FP=hb_retc( ( p )->toPlainText().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->toPlainText().toUtf8().data() );
    }
 }
 
@@ -617,10 +557,8 @@ HB_FUNC( QT_QWEBFRAME_URL )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->url() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_URL FP=hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->url() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->url() ), true ) );
    }
 }
 
@@ -631,10 +569,8 @@ HB_FUNC( QT_QWEBFRAME_ZOOMFACTOR )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      hb_retnd( ( p )->zoomFactor() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_ZOOMFACTOR FP=hb_retnd( ( p )->zoomFactor() ); p is NULL" ) );
+      hb_retnd( ( p )->zoomFactor() );
    }
 }
 
@@ -645,10 +581,10 @@ HB_FUNC( QT_QWEBFRAME_EVALUATEJAVASCRIPT )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->evaluateJavaScript( QWebFrame::tr( hb_parc( 2 ) ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_EVALUATEJAVASCRIPT FP=hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->evaluateJavaScript( QWebFrame::tr( hb_parc( 2 ) ) ) ), true ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->evaluateJavaScript( hb_parstr_utf8( 2, &pText, NULL ) ) ), true ) );
+      hb_strfree( pText );
    }
 }
 
@@ -659,10 +595,8 @@ HB_FUNC( QT_QWEBFRAME_PRINT )
 {
    QWebFrame * p = hbqt_par_QWebFrame( 1 );
    if( p )
-      ( p )->print( hbqt_par_QPrinter( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBFRAME_PRINT FP=( p )->print( hbqt_par_QPrinter( 2 ) ); p is NULL" ) );
+      ( p )->print( hbqt_par_QPrinter( 2 ) );
    }
 }
 

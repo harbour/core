@@ -166,10 +166,8 @@ HB_FUNC( QT_QGRAPHICSSIMPLETEXTITEM_FONT )
 {
    QGraphicsSimpleTextItem * p = hbqt_par_QGraphicsSimpleTextItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSIMPLETEXTITEM_FONT FP=hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font() ), true ) );
    }
 }
 
@@ -180,10 +178,8 @@ HB_FUNC( QT_QGRAPHICSSIMPLETEXTITEM_SETFONT )
 {
    QGraphicsSimpleTextItem * p = hbqt_par_QGraphicsSimpleTextItem( 1 );
    if( p )
-      ( p )->setFont( *hbqt_par_QFont( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSIMPLETEXTITEM_SETFONT FP=( p )->setFont( *hbqt_par_QFont( 2 ) ); p is NULL" ) );
+      ( p )->setFont( *hbqt_par_QFont( 2 ) );
    }
 }
 
@@ -194,10 +190,10 @@ HB_FUNC( QT_QGRAPHICSSIMPLETEXTITEM_SETTEXT )
 {
    QGraphicsSimpleTextItem * p = hbqt_par_QGraphicsSimpleTextItem( 1 );
    if( p )
-      ( p )->setText( hbqt_par_QString( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSIMPLETEXTITEM_SETTEXT FP=( p )->setText( hbqt_par_QString( 2 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setText( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -208,10 +204,8 @@ HB_FUNC( QT_QGRAPHICSSIMPLETEXTITEM_TEXT )
 {
    QGraphicsSimpleTextItem * p = hbqt_par_QGraphicsSimpleTextItem( 1 );
    if( p )
-      hb_retc( ( p )->text().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSIMPLETEXTITEM_TEXT FP=hb_retc( ( p )->text().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->text().toUtf8().data() );
    }
 }
 

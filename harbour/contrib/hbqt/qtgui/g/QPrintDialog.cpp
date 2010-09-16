@@ -163,10 +163,8 @@ HB_FUNC( QT_QPRINTDIALOG_DONE )
 {
    QPrintDialog * p = hbqt_par_QPrintDialog( 1 );
    if( p )
-      ( p )->done( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTDIALOG_DONE FP=( p )->done( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->done( hb_parni( 2 ) );
    }
 }
 
@@ -177,10 +175,8 @@ HB_FUNC( QT_QPRINTDIALOG_OPEN )
 {
    QPrintDialog * p = hbqt_par_QPrintDialog( 1 );
    if( p )
-      ( p )->open( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTDIALOG_OPEN FP=( p )->open( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) ); p is NULL" ) );
+      ( p )->open( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) );
    }
 }
 
@@ -191,10 +187,8 @@ HB_FUNC( QT_QPRINTDIALOG_OPTIONS )
 {
    QPrintDialog * p = hbqt_par_QPrintDialog( 1 );
    if( p )
-      hb_retni( ( QPrintDialog::PrintDialogOptions ) ( p )->options() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTDIALOG_OPTIONS FP=hb_retni( ( QPrintDialog::PrintDialogOptions ) ( p )->options() ); p is NULL" ) );
+      hb_retni( ( QPrintDialog::PrintDialogOptions ) ( p )->options() );
    }
 }
 
@@ -205,10 +199,8 @@ HB_FUNC( QT_QPRINTDIALOG_PRINTER )
 {
    QPrintDialog * p = hbqt_par_QPrintDialog( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPrinter( ( p )->printer(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTDIALOG_PRINTER FP=hb_retptrGC( hbqt_gcAllocate_QPrinter( ( p )->printer(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPrinter( ( p )->printer(), false ) );
    }
 }
 
@@ -219,10 +211,8 @@ HB_FUNC( QT_QPRINTDIALOG_PRINTER_1 )
 {
    QPrintDialog * p = hbqt_par_QPrintDialog( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPrinter( ( p )->printer(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTDIALOG_PRINTER_1 FP=hb_retptrGC( hbqt_gcAllocate_QPrinter( ( p )->printer(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPrinter( ( p )->printer(), false ) );
    }
 }
 
@@ -233,10 +223,8 @@ HB_FUNC( QT_QPRINTDIALOG_SETOPTION )
 {
    QPrintDialog * p = hbqt_par_QPrintDialog( 1 );
    if( p )
-      ( p )->setOption( ( QPrintDialog::PrintDialogOption ) hb_parni( 2 ), hb_parl( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTDIALOG_SETOPTION FP=( p )->setOption( ( QPrintDialog::PrintDialogOption ) hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+      ( p )->setOption( ( QPrintDialog::PrintDialogOption ) hb_parni( 2 ), hb_parl( 3 ) );
    }
 }
 
@@ -247,10 +235,8 @@ HB_FUNC( QT_QPRINTDIALOG_SETOPTIONS )
 {
    QPrintDialog * p = hbqt_par_QPrintDialog( 1 );
    if( p )
-      ( p )->setOptions( ( QPrintDialog::PrintDialogOptions ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTDIALOG_SETOPTIONS FP=( p )->setOptions( ( QPrintDialog::PrintDialogOptions ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setOptions( ( QPrintDialog::PrintDialogOptions ) hb_parni( 2 ) );
    }
 }
 
@@ -261,10 +247,8 @@ HB_FUNC( QT_QPRINTDIALOG_SETVISIBLE )
 {
    QPrintDialog * p = hbqt_par_QPrintDialog( 1 );
    if( p )
-      ( p )->setVisible( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTDIALOG_SETVISIBLE FP=( p )->setVisible( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setVisible( hb_parl( 2 ) );
    }
 }
 
@@ -275,10 +259,8 @@ HB_FUNC( QT_QPRINTDIALOG_TESTOPTION )
 {
    QPrintDialog * p = hbqt_par_QPrintDialog( 1 );
    if( p )
-      hb_retl( ( p )->testOption( ( QPrintDialog::PrintDialogOption ) hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTDIALOG_TESTOPTION FP=hb_retl( ( p )->testOption( ( QPrintDialog::PrintDialogOption ) hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->testOption( ( QPrintDialog::PrintDialogOption ) hb_parni( 2 ) ) );
    }
 }
 

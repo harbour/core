@@ -160,10 +160,8 @@ HB_FUNC( QT_QPROGRESSBAR_ALIGNMENT )
 {
    QProgressBar * p = hbqt_par_QProgressBar( 1 );
    if( p )
-      hb_retni( ( Qt::Alignment ) ( p )->alignment() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSBAR_ALIGNMENT FP=hb_retni( ( Qt::Alignment ) ( p )->alignment() ); p is NULL" ) );
+      hb_retni( ( Qt::Alignment ) ( p )->alignment() );
    }
 }
 
@@ -174,10 +172,8 @@ HB_FUNC( QT_QPROGRESSBAR_FORMAT )
 {
    QProgressBar * p = hbqt_par_QProgressBar( 1 );
    if( p )
-      hb_retc( ( p )->format().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSBAR_FORMAT FP=hb_retc( ( p )->format().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->format().toUtf8().data() );
    }
 }
 
@@ -188,10 +184,8 @@ HB_FUNC( QT_QPROGRESSBAR_INVERTEDAPPEARANCE )
 {
    QProgressBar * p = hbqt_par_QProgressBar( 1 );
    if( p )
-      hb_retl( ( p )->invertedAppearance() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSBAR_INVERTEDAPPEARANCE FP=hb_retl( ( p )->invertedAppearance() ); p is NULL" ) );
+      hb_retl( ( p )->invertedAppearance() );
    }
 }
 
@@ -202,10 +196,8 @@ HB_FUNC( QT_QPROGRESSBAR_ISTEXTVISIBLE )
 {
    QProgressBar * p = hbqt_par_QProgressBar( 1 );
    if( p )
-      hb_retl( ( p )->isTextVisible() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSBAR_ISTEXTVISIBLE FP=hb_retl( ( p )->isTextVisible() ); p is NULL" ) );
+      hb_retl( ( p )->isTextVisible() );
    }
 }
 
@@ -216,10 +208,8 @@ HB_FUNC( QT_QPROGRESSBAR_MAXIMUM )
 {
    QProgressBar * p = hbqt_par_QProgressBar( 1 );
    if( p )
-      hb_retni( ( p )->maximum() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSBAR_MAXIMUM FP=hb_retni( ( p )->maximum() ); p is NULL" ) );
+      hb_retni( ( p )->maximum() );
    }
 }
 
@@ -230,10 +220,8 @@ HB_FUNC( QT_QPROGRESSBAR_MINIMUM )
 {
    QProgressBar * p = hbqt_par_QProgressBar( 1 );
    if( p )
-      hb_retni( ( p )->minimum() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSBAR_MINIMUM FP=hb_retni( ( p )->minimum() ); p is NULL" ) );
+      hb_retni( ( p )->minimum() );
    }
 }
 
@@ -244,10 +232,8 @@ HB_FUNC( QT_QPROGRESSBAR_ORIENTATION )
 {
    QProgressBar * p = hbqt_par_QProgressBar( 1 );
    if( p )
-      hb_retni( ( Qt::Orientation ) ( p )->orientation() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSBAR_ORIENTATION FP=hb_retni( ( Qt::Orientation ) ( p )->orientation() ); p is NULL" ) );
+      hb_retni( ( Qt::Orientation ) ( p )->orientation() );
    }
 }
 
@@ -258,10 +244,8 @@ HB_FUNC( QT_QPROGRESSBAR_SETALIGNMENT )
 {
    QProgressBar * p = hbqt_par_QProgressBar( 1 );
    if( p )
-      ( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSBAR_SETALIGNMENT FP=( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
    }
 }
 
@@ -272,10 +256,10 @@ HB_FUNC( QT_QPROGRESSBAR_SETFORMAT )
 {
    QProgressBar * p = hbqt_par_QProgressBar( 1 );
    if( p )
-      ( p )->setFormat( QProgressBar::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSBAR_SETFORMAT FP=( p )->setFormat( QProgressBar::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setFormat( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -286,10 +270,8 @@ HB_FUNC( QT_QPROGRESSBAR_SETINVERTEDAPPEARANCE )
 {
    QProgressBar * p = hbqt_par_QProgressBar( 1 );
    if( p )
-      ( p )->setInvertedAppearance( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSBAR_SETINVERTEDAPPEARANCE FP=( p )->setInvertedAppearance( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setInvertedAppearance( hb_parl( 2 ) );
    }
 }
 
@@ -300,10 +282,8 @@ HB_FUNC( QT_QPROGRESSBAR_SETTEXTDIRECTION )
 {
    QProgressBar * p = hbqt_par_QProgressBar( 1 );
    if( p )
-      ( p )->setTextDirection( ( QProgressBar::Direction ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSBAR_SETTEXTDIRECTION FP=( p )->setTextDirection( ( QProgressBar::Direction ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setTextDirection( ( QProgressBar::Direction ) hb_parni( 2 ) );
    }
 }
 
@@ -314,10 +294,8 @@ HB_FUNC( QT_QPROGRESSBAR_SETTEXTVISIBLE )
 {
    QProgressBar * p = hbqt_par_QProgressBar( 1 );
    if( p )
-      ( p )->setTextVisible( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSBAR_SETTEXTVISIBLE FP=( p )->setTextVisible( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setTextVisible( hb_parl( 2 ) );
    }
 }
 
@@ -328,10 +306,8 @@ HB_FUNC( QT_QPROGRESSBAR_TEXT )
 {
    QProgressBar * p = hbqt_par_QProgressBar( 1 );
    if( p )
-      hb_retc( ( p )->text().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSBAR_TEXT FP=hb_retc( ( p )->text().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->text().toUtf8().data() );
    }
 }
 
@@ -342,10 +318,8 @@ HB_FUNC( QT_QPROGRESSBAR_TEXTDIRECTION )
 {
    QProgressBar * p = hbqt_par_QProgressBar( 1 );
    if( p )
-      hb_retni( ( QProgressBar::Direction ) ( p )->textDirection() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSBAR_TEXTDIRECTION FP=hb_retni( ( QProgressBar::Direction ) ( p )->textDirection() ); p is NULL" ) );
+      hb_retni( ( QProgressBar::Direction ) ( p )->textDirection() );
    }
 }
 
@@ -356,10 +330,8 @@ HB_FUNC( QT_QPROGRESSBAR_VALUE )
 {
    QProgressBar * p = hbqt_par_QProgressBar( 1 );
    if( p )
-      hb_retni( ( p )->value() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSBAR_VALUE FP=hb_retni( ( p )->value() ); p is NULL" ) );
+      hb_retni( ( p )->value() );
    }
 }
 
@@ -370,10 +342,8 @@ HB_FUNC( QT_QPROGRESSBAR_RESET )
 {
    QProgressBar * p = hbqt_par_QProgressBar( 1 );
    if( p )
-      ( p )->reset();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSBAR_RESET FP=( p )->reset(); p is NULL" ) );
+      ( p )->reset();
    }
 }
 
@@ -384,10 +354,8 @@ HB_FUNC( QT_QPROGRESSBAR_SETMAXIMUM )
 {
    QProgressBar * p = hbqt_par_QProgressBar( 1 );
    if( p )
-      ( p )->setMaximum( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSBAR_SETMAXIMUM FP=( p )->setMaximum( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setMaximum( hb_parni( 2 ) );
    }
 }
 
@@ -398,10 +366,8 @@ HB_FUNC( QT_QPROGRESSBAR_SETMINIMUM )
 {
    QProgressBar * p = hbqt_par_QProgressBar( 1 );
    if( p )
-      ( p )->setMinimum( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSBAR_SETMINIMUM FP=( p )->setMinimum( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setMinimum( hb_parni( 2 ) );
    }
 }
 
@@ -412,10 +378,8 @@ HB_FUNC( QT_QPROGRESSBAR_SETORIENTATION )
 {
    QProgressBar * p = hbqt_par_QProgressBar( 1 );
    if( p )
-      ( p )->setOrientation( ( Qt::Orientation ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSBAR_SETORIENTATION FP=( p )->setOrientation( ( Qt::Orientation ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setOrientation( ( Qt::Orientation ) hb_parni( 2 ) );
    }
 }
 
@@ -426,10 +390,8 @@ HB_FUNC( QT_QPROGRESSBAR_SETRANGE )
 {
    QProgressBar * p = hbqt_par_QProgressBar( 1 );
    if( p )
-      ( p )->setRange( hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSBAR_SETRANGE FP=( p )->setRange( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setRange( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -440,10 +402,8 @@ HB_FUNC( QT_QPROGRESSBAR_SETVALUE )
 {
    QProgressBar * p = hbqt_par_QProgressBar( 1 );
    if( p )
-      ( p )->setValue( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPROGRESSBAR_SETVALUE FP=( p )->setValue( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setValue( hb_parni( 2 ) );
    }
 }
 

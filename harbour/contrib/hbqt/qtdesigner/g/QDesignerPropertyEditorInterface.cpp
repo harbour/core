@@ -130,10 +130,8 @@ HB_FUNC( QT_QDESIGNERPROPERTYEDITORINTERFACE_CORE )
 {
    QDesignerPropertyEditorInterface * p = hbqt_par_QDesignerPropertyEditorInterface( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDesignerFormEditorInterface( ( p )->core(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERPROPERTYEDITORINTERFACE_CORE FP=hb_retptrGC( hbqt_gcAllocate_QDesignerFormEditorInterface( ( p )->core(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDesignerFormEditorInterface( ( p )->core(), false ) );
    }
 }
 
@@ -144,10 +142,8 @@ HB_FUNC( QT_QDESIGNERPROPERTYEDITORINTERFACE_CURRENTPROPERTYNAME )
 {
    QDesignerPropertyEditorInterface * p = hbqt_par_QDesignerPropertyEditorInterface( 1 );
    if( p )
-      hb_retc( ( p )->currentPropertyName().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERPROPERTYEDITORINTERFACE_CURRENTPROPERTYNAME FP=hb_retc( ( p )->currentPropertyName().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->currentPropertyName().toUtf8().data() );
    }
 }
 
@@ -158,10 +154,8 @@ HB_FUNC( QT_QDESIGNERPROPERTYEDITORINTERFACE_ISREADONLY )
 {
    QDesignerPropertyEditorInterface * p = hbqt_par_QDesignerPropertyEditorInterface( 1 );
    if( p )
-      hb_retl( ( p )->isReadOnly() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERPROPERTYEDITORINTERFACE_ISREADONLY FP=hb_retl( ( p )->isReadOnly() ); p is NULL" ) );
+      hb_retl( ( p )->isReadOnly() );
    }
 }
 
@@ -172,10 +166,8 @@ HB_FUNC( QT_QDESIGNERPROPERTYEDITORINTERFACE_OBJECT )
 {
    QDesignerPropertyEditorInterface * p = hbqt_par_QDesignerPropertyEditorInterface( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->object(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERPROPERTYEDITORINTERFACE_OBJECT FP=hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->object(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->object(), false ) );
    }
 }
 
@@ -186,10 +178,8 @@ HB_FUNC( QT_QDESIGNERPROPERTYEDITORINTERFACE_SETOBJECT )
 {
    QDesignerPropertyEditorInterface * p = hbqt_par_QDesignerPropertyEditorInterface( 1 );
    if( p )
-      ( p )->setObject( hbqt_par_QObject( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERPROPERTYEDITORINTERFACE_SETOBJECT FP=( p )->setObject( hbqt_par_QObject( 2 ) ); p is NULL" ) );
+      ( p )->setObject( hbqt_par_QObject( 2 ) );
    }
 }
 
@@ -200,10 +190,10 @@ HB_FUNC( QT_QDESIGNERPROPERTYEDITORINTERFACE_SETPROPERTYVALUE )
 {
    QDesignerPropertyEditorInterface * p = hbqt_par_QDesignerPropertyEditorInterface( 1 );
    if( p )
-      ( p )->setPropertyValue( QDesignerPropertyEditorInterface::tr( hb_parc( 2 ) ), *hbqt_par_QVariant( 3 ), hb_parl( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERPROPERTYEDITORINTERFACE_SETPROPERTYVALUE FP=( p )->setPropertyValue( QDesignerPropertyEditorInterface::tr( hb_parc( 2 ) ), *hbqt_par_QVariant( 3 ), hb_parl( 4 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setPropertyValue( hb_parstr_utf8( 2, &pText, NULL ), *hbqt_par_QVariant( 3 ), hb_parl( 4 ) );
+      hb_strfree( pText );
    }
 }
 
@@ -214,10 +204,8 @@ HB_FUNC( QT_QDESIGNERPROPERTYEDITORINTERFACE_SETREADONLY )
 {
    QDesignerPropertyEditorInterface * p = hbqt_par_QDesignerPropertyEditorInterface( 1 );
    if( p )
-      ( p )->setReadOnly( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERPROPERTYEDITORINTERFACE_SETREADONLY FP=( p )->setReadOnly( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setReadOnly( hb_parl( 2 ) );
    }
 }
 

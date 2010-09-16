@@ -130,10 +130,8 @@ HB_FUNC( QT_QDESIGNERACTIONEDITORINTERFACE_CORE )
 {
    QDesignerActionEditorInterface * p = hbqt_par_QDesignerActionEditorInterface( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDesignerFormEditorInterface( ( p )->core(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERACTIONEDITORINTERFACE_CORE FP=hb_retptrGC( hbqt_gcAllocate_QDesignerFormEditorInterface( ( p )->core(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDesignerFormEditorInterface( ( p )->core(), false ) );
    }
 }
 
@@ -144,10 +142,8 @@ HB_FUNC( QT_QDESIGNERACTIONEDITORINTERFACE_MANAGEACTION )
 {
    QDesignerActionEditorInterface * p = hbqt_par_QDesignerActionEditorInterface( 1 );
    if( p )
-      ( p )->manageAction( hbqt_par_QAction( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERACTIONEDITORINTERFACE_MANAGEACTION FP=( p )->manageAction( hbqt_par_QAction( 2 ) ); p is NULL" ) );
+      ( p )->manageAction( hbqt_par_QAction( 2 ) );
    }
 }
 
@@ -158,10 +154,8 @@ HB_FUNC( QT_QDESIGNERACTIONEDITORINTERFACE_UNMANAGEACTION )
 {
    QDesignerActionEditorInterface * p = hbqt_par_QDesignerActionEditorInterface( 1 );
    if( p )
-      ( p )->unmanageAction( hbqt_par_QAction( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERACTIONEDITORINTERFACE_UNMANAGEACTION FP=( p )->unmanageAction( hbqt_par_QAction( 2 ) ); p is NULL" ) );
+      ( p )->unmanageAction( hbqt_par_QAction( 2 ) );
    }
 }
 
@@ -172,10 +166,8 @@ HB_FUNC( QT_QDESIGNERACTIONEDITORINTERFACE_SETFORMWINDOW )
 {
    QDesignerActionEditorInterface * p = hbqt_par_QDesignerActionEditorInterface( 1 );
    if( p )
-      ( p )->setFormWindow( hbqt_par_QDesignerFormWindowInterface( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERACTIONEDITORINTERFACE_SETFORMWINDOW FP=( p )->setFormWindow( hbqt_par_QDesignerFormWindowInterface( 2 ) ); p is NULL" ) );
+      ( p )->setFormWindow( hbqt_par_QDesignerFormWindowInterface( 2 ) );
    }
 }
 

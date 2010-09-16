@@ -169,10 +169,8 @@ HB_FUNC( QT_QDOUBLEVALIDATOR_BOTTOM )
 {
    QDoubleValidator * p = hbqt_par_QDoubleValidator( 1 );
    if( p )
-      hb_retnd( ( p )->bottom() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOUBLEVALIDATOR_BOTTOM FP=hb_retnd( ( p )->bottom() ); p is NULL" ) );
+      hb_retnd( ( p )->bottom() );
    }
 }
 
@@ -183,10 +181,8 @@ HB_FUNC( QT_QDOUBLEVALIDATOR_DECIMALS )
 {
    QDoubleValidator * p = hbqt_par_QDoubleValidator( 1 );
    if( p )
-      hb_retni( ( p )->decimals() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOUBLEVALIDATOR_DECIMALS FP=hb_retni( ( p )->decimals() ); p is NULL" ) );
+      hb_retni( ( p )->decimals() );
    }
 }
 
@@ -197,10 +193,8 @@ HB_FUNC( QT_QDOUBLEVALIDATOR_NOTATION )
 {
    QDoubleValidator * p = hbqt_par_QDoubleValidator( 1 );
    if( p )
-      hb_retni( ( QDoubleValidator::Notation ) ( p )->notation() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOUBLEVALIDATOR_NOTATION FP=hb_retni( ( QDoubleValidator::Notation ) ( p )->notation() ); p is NULL" ) );
+      hb_retni( ( QDoubleValidator::Notation ) ( p )->notation() );
    }
 }
 
@@ -211,10 +205,8 @@ HB_FUNC( QT_QDOUBLEVALIDATOR_SETBOTTOM )
 {
    QDoubleValidator * p = hbqt_par_QDoubleValidator( 1 );
    if( p )
-      ( p )->setBottom( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOUBLEVALIDATOR_SETBOTTOM FP=( p )->setBottom( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setBottom( hb_parnd( 2 ) );
    }
 }
 
@@ -225,10 +217,8 @@ HB_FUNC( QT_QDOUBLEVALIDATOR_SETDECIMALS )
 {
    QDoubleValidator * p = hbqt_par_QDoubleValidator( 1 );
    if( p )
-      ( p )->setDecimals( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOUBLEVALIDATOR_SETDECIMALS FP=( p )->setDecimals( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setDecimals( hb_parni( 2 ) );
    }
 }
 
@@ -239,10 +229,8 @@ HB_FUNC( QT_QDOUBLEVALIDATOR_SETNOTATION )
 {
    QDoubleValidator * p = hbqt_par_QDoubleValidator( 1 );
    if( p )
-      ( p )->setNotation( ( QDoubleValidator::Notation ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOUBLEVALIDATOR_SETNOTATION FP=( p )->setNotation( ( QDoubleValidator::Notation ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setNotation( ( QDoubleValidator::Notation ) hb_parni( 2 ) );
    }
 }
 
@@ -253,10 +241,8 @@ HB_FUNC( QT_QDOUBLEVALIDATOR_SETRANGE )
 {
    QDoubleValidator * p = hbqt_par_QDoubleValidator( 1 );
    if( p )
-      ( p )->setRange( hb_parnd( 2 ), hb_parnd( 3 ), hb_parni( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOUBLEVALIDATOR_SETRANGE FP=( p )->setRange( hb_parnd( 2 ), hb_parnd( 3 ), hb_parni( 4 ) ); p is NULL" ) );
+      ( p )->setRange( hb_parnd( 2 ), hb_parnd( 3 ), hb_parni( 4 ) );
    }
 }
 
@@ -267,10 +253,8 @@ HB_FUNC( QT_QDOUBLEVALIDATOR_SETTOP )
 {
    QDoubleValidator * p = hbqt_par_QDoubleValidator( 1 );
    if( p )
-      ( p )->setTop( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOUBLEVALIDATOR_SETTOP FP=( p )->setTop( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setTop( hb_parnd( 2 ) );
    }
 }
 
@@ -281,10 +265,8 @@ HB_FUNC( QT_QDOUBLEVALIDATOR_TOP )
 {
    QDoubleValidator * p = hbqt_par_QDoubleValidator( 1 );
    if( p )
-      hb_retnd( ( p )->top() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOUBLEVALIDATOR_TOP FP=hb_retnd( ( p )->top() ); p is NULL" ) );
+      hb_retnd( ( p )->top() );
    }
 }
 

@@ -146,10 +146,8 @@ HB_FUNC( QT_QTEXTIMAGEFORMAT_HEIGHT )
 {
    QTextImageFormat * p = hbqt_par_QTextImageFormat( 1 );
    if( p )
-      hb_retnd( ( p )->height() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTIMAGEFORMAT_HEIGHT FP=hb_retnd( ( p )->height() ); p is NULL" ) );
+      hb_retnd( ( p )->height() );
    }
 }
 
@@ -160,10 +158,8 @@ HB_FUNC( QT_QTEXTIMAGEFORMAT_ISVALID )
 {
    QTextImageFormat * p = hbqt_par_QTextImageFormat( 1 );
    if( p )
-      hb_retl( ( p )->isValid() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTIMAGEFORMAT_ISVALID FP=hb_retl( ( p )->isValid() ); p is NULL" ) );
+      hb_retl( ( p )->isValid() );
    }
 }
 
@@ -174,10 +170,8 @@ HB_FUNC( QT_QTEXTIMAGEFORMAT_NAME )
 {
    QTextImageFormat * p = hbqt_par_QTextImageFormat( 1 );
    if( p )
-      hb_retc( ( p )->name().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTIMAGEFORMAT_NAME FP=hb_retc( ( p )->name().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->name().toUtf8().data() );
    }
 }
 
@@ -188,10 +182,8 @@ HB_FUNC( QT_QTEXTIMAGEFORMAT_SETHEIGHT )
 {
    QTextImageFormat * p = hbqt_par_QTextImageFormat( 1 );
    if( p )
-      ( p )->setHeight( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTIMAGEFORMAT_SETHEIGHT FP=( p )->setHeight( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setHeight( hb_parnd( 2 ) );
    }
 }
 
@@ -202,10 +194,10 @@ HB_FUNC( QT_QTEXTIMAGEFORMAT_SETNAME )
 {
    QTextImageFormat * p = hbqt_par_QTextImageFormat( 1 );
    if( p )
-      ( p )->setName( hbqt_par_QString( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTIMAGEFORMAT_SETNAME FP=( p )->setName( hbqt_par_QString( 2 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setName( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -216,10 +208,8 @@ HB_FUNC( QT_QTEXTIMAGEFORMAT_SETWIDTH )
 {
    QTextImageFormat * p = hbqt_par_QTextImageFormat( 1 );
    if( p )
-      ( p )->setWidth( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTIMAGEFORMAT_SETWIDTH FP=( p )->setWidth( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setWidth( hb_parnd( 2 ) );
    }
 }
 
@@ -230,10 +220,8 @@ HB_FUNC( QT_QTEXTIMAGEFORMAT_WIDTH )
 {
    QTextImageFormat * p = hbqt_par_QTextImageFormat( 1 );
    if( p )
-      hb_retnd( ( p )->width() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTIMAGEFORMAT_WIDTH FP=hb_retnd( ( p )->width() ); p is NULL" ) );
+      hb_retnd( ( p )->width() );
    }
 }
 

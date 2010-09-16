@@ -251,10 +251,8 @@ HB_FUNC( QT_QGRIDLAYOUT_CELLRECT )
 {
    QGridLayout * p = hbqt_par_QGridLayout( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->cellRect( hb_parni( 2 ), hb_parni( 3 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRIDLAYOUT_CELLRECT FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->cellRect( hb_parni( 2 ), hb_parni( 3 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->cellRect( hb_parni( 2 ), hb_parni( 3 ) ) ), true ) );
    }
 }
 
@@ -265,10 +263,8 @@ HB_FUNC( QT_QGRIDLAYOUT_COLUMNCOUNT )
 {
    QGridLayout * p = hbqt_par_QGridLayout( 1 );
    if( p )
-      hb_retni( ( p )->columnCount() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRIDLAYOUT_COLUMNCOUNT FP=hb_retni( ( p )->columnCount() ); p is NULL" ) );
+      hb_retni( ( p )->columnCount() );
    }
 }
 
@@ -279,10 +275,8 @@ HB_FUNC( QT_QGRIDLAYOUT_COLUMNMINIMUMWIDTH )
 {
    QGridLayout * p = hbqt_par_QGridLayout( 1 );
    if( p )
-      hb_retni( ( p )->columnMinimumWidth( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRIDLAYOUT_COLUMNMINIMUMWIDTH FP=hb_retni( ( p )->columnMinimumWidth( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->columnMinimumWidth( hb_parni( 2 ) ) );
    }
 }
 
@@ -293,10 +287,8 @@ HB_FUNC( QT_QGRIDLAYOUT_COLUMNSTRETCH )
 {
    QGridLayout * p = hbqt_par_QGridLayout( 1 );
    if( p )
-      hb_retni( ( p )->columnStretch( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRIDLAYOUT_COLUMNSTRETCH FP=hb_retni( ( p )->columnStretch( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->columnStretch( hb_parni( 2 ) ) );
    }
 }
 
@@ -312,10 +304,8 @@ HB_FUNC( QT_QGRIDLAYOUT_GETITEMPOSITION )
    int iColumnSpan = 0;
 
    if( p )
-      ( p )->getItemPosition( hb_parni( 2 ), &iRow, &iColumn, &iRowSpan, &iColumnSpan );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRIDLAYOUT_GETITEMPOSITION FP=( p )->getItemPosition( hb_parni( 2 ), &iRow, &iColumn, &iRowSpan, &iColumnSpan ); p is NULL" ) );
+      ( p )->getItemPosition( hb_parni( 2 ), &iRow, &iColumn, &iRowSpan, &iColumnSpan );
    }
 
    hb_storni( iRow, 3 );
@@ -331,10 +321,8 @@ HB_FUNC( QT_QGRIDLAYOUT_HORIZONTALSPACING )
 {
    QGridLayout * p = hbqt_par_QGridLayout( 1 );
    if( p )
-      hb_retni( ( p )->horizontalSpacing() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRIDLAYOUT_HORIZONTALSPACING FP=hb_retni( ( p )->horizontalSpacing() ); p is NULL" ) );
+      hb_retni( ( p )->horizontalSpacing() );
    }
 }
 
@@ -345,10 +333,8 @@ HB_FUNC( QT_QGRIDLAYOUT_ITEMATPOSITION )
 {
    QGridLayout * p = hbqt_par_QGridLayout( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QLayoutItem( ( p )->itemAtPosition( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRIDLAYOUT_ITEMATPOSITION FP=hb_retptrGC( hbqt_gcAllocate_QLayoutItem( ( p )->itemAtPosition( hb_parni( 2 ), hb_parni( 3 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QLayoutItem( ( p )->itemAtPosition( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
    }
 }
 
@@ -359,10 +345,8 @@ HB_FUNC( QT_QGRIDLAYOUT_ORIGINCORNER )
 {
    QGridLayout * p = hbqt_par_QGridLayout( 1 );
    if( p )
-      hb_retni( ( Qt::Corner ) ( p )->originCorner() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRIDLAYOUT_ORIGINCORNER FP=hb_retni( ( Qt::Corner ) ( p )->originCorner() ); p is NULL" ) );
+      hb_retni( ( Qt::Corner ) ( p )->originCorner() );
    }
 }
 
@@ -373,10 +357,8 @@ HB_FUNC( QT_QGRIDLAYOUT_ROWCOUNT )
 {
    QGridLayout * p = hbqt_par_QGridLayout( 1 );
    if( p )
-      hb_retni( ( p )->rowCount() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRIDLAYOUT_ROWCOUNT FP=hb_retni( ( p )->rowCount() ); p is NULL" ) );
+      hb_retni( ( p )->rowCount() );
    }
 }
 
@@ -387,10 +369,8 @@ HB_FUNC( QT_QGRIDLAYOUT_ROWMINIMUMHEIGHT )
 {
    QGridLayout * p = hbqt_par_QGridLayout( 1 );
    if( p )
-      hb_retni( ( p )->rowMinimumHeight( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRIDLAYOUT_ROWMINIMUMHEIGHT FP=hb_retni( ( p )->rowMinimumHeight( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->rowMinimumHeight( hb_parni( 2 ) ) );
    }
 }
 
@@ -401,10 +381,8 @@ HB_FUNC( QT_QGRIDLAYOUT_ROWSTRETCH )
 {
    QGridLayout * p = hbqt_par_QGridLayout( 1 );
    if( p )
-      hb_retni( ( p )->rowStretch( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRIDLAYOUT_ROWSTRETCH FP=hb_retni( ( p )->rowStretch( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->rowStretch( hb_parni( 2 ) ) );
    }
 }
 
@@ -415,10 +393,8 @@ HB_FUNC( QT_QGRIDLAYOUT_SETCOLUMNMINIMUMWIDTH )
 {
    QGridLayout * p = hbqt_par_QGridLayout( 1 );
    if( p )
-      ( p )->setColumnMinimumWidth( hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRIDLAYOUT_SETCOLUMNMINIMUMWIDTH FP=( p )->setColumnMinimumWidth( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setColumnMinimumWidth( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -429,10 +405,8 @@ HB_FUNC( QT_QGRIDLAYOUT_SETCOLUMNSTRETCH )
 {
    QGridLayout * p = hbqt_par_QGridLayout( 1 );
    if( p )
-      ( p )->setColumnStretch( hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRIDLAYOUT_SETCOLUMNSTRETCH FP=( p )->setColumnStretch( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setColumnStretch( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -443,10 +417,8 @@ HB_FUNC( QT_QGRIDLAYOUT_SETHORIZONTALSPACING )
 {
    QGridLayout * p = hbqt_par_QGridLayout( 1 );
    if( p )
-      ( p )->setHorizontalSpacing( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRIDLAYOUT_SETHORIZONTALSPACING FP=( p )->setHorizontalSpacing( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setHorizontalSpacing( hb_parni( 2 ) );
    }
 }
 
@@ -457,10 +429,8 @@ HB_FUNC( QT_QGRIDLAYOUT_SETORIGINCORNER )
 {
    QGridLayout * p = hbqt_par_QGridLayout( 1 );
    if( p )
-      ( p )->setOriginCorner( ( Qt::Corner ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRIDLAYOUT_SETORIGINCORNER FP=( p )->setOriginCorner( ( Qt::Corner ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setOriginCorner( ( Qt::Corner ) hb_parni( 2 ) );
    }
 }
 
@@ -471,10 +441,8 @@ HB_FUNC( QT_QGRIDLAYOUT_SETROWMINIMUMHEIGHT )
 {
    QGridLayout * p = hbqt_par_QGridLayout( 1 );
    if( p )
-      ( p )->setRowMinimumHeight( hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRIDLAYOUT_SETROWMINIMUMHEIGHT FP=( p )->setRowMinimumHeight( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setRowMinimumHeight( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -485,10 +453,8 @@ HB_FUNC( QT_QGRIDLAYOUT_SETROWSTRETCH )
 {
    QGridLayout * p = hbqt_par_QGridLayout( 1 );
    if( p )
-      ( p )->setRowStretch( hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRIDLAYOUT_SETROWSTRETCH FP=( p )->setRowStretch( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setRowStretch( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -499,10 +465,8 @@ HB_FUNC( QT_QGRIDLAYOUT_SETSPACING )
 {
    QGridLayout * p = hbqt_par_QGridLayout( 1 );
    if( p )
-      ( p )->setSpacing( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRIDLAYOUT_SETSPACING FP=( p )->setSpacing( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setSpacing( hb_parni( 2 ) );
    }
 }
 
@@ -513,10 +477,8 @@ HB_FUNC( QT_QGRIDLAYOUT_SETVERTICALSPACING )
 {
    QGridLayout * p = hbqt_par_QGridLayout( 1 );
    if( p )
-      ( p )->setVerticalSpacing( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRIDLAYOUT_SETVERTICALSPACING FP=( p )->setVerticalSpacing( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setVerticalSpacing( hb_parni( 2 ) );
    }
 }
 
@@ -527,10 +489,8 @@ HB_FUNC( QT_QGRIDLAYOUT_SPACING )
 {
    QGridLayout * p = hbqt_par_QGridLayout( 1 );
    if( p )
-      hb_retni( ( p )->spacing() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRIDLAYOUT_SPACING FP=hb_retni( ( p )->spacing() ); p is NULL" ) );
+      hb_retni( ( p )->spacing() );
    }
 }
 
@@ -541,10 +501,8 @@ HB_FUNC( QT_QGRIDLAYOUT_VERTICALSPACING )
 {
    QGridLayout * p = hbqt_par_QGridLayout( 1 );
    if( p )
-      hb_retni( ( p )->verticalSpacing() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRIDLAYOUT_VERTICALSPACING FP=hb_retni( ( p )->verticalSpacing() ); p is NULL" ) );
+      hb_retni( ( p )->verticalSpacing() );
    }
 }
 

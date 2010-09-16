@@ -168,10 +168,8 @@ HB_FUNC( QT_QLINEARGRADIENT_FINALSTOP )
 {
    QLinearGradient * p = hbqt_par_QLinearGradient( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->finalStop() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEARGRADIENT_FINALSTOP FP=hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->finalStop() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->finalStop() ), true ) );
    }
 }
 
@@ -182,10 +180,8 @@ HB_FUNC( QT_QLINEARGRADIENT_SETFINALSTOP )
 {
    QLinearGradient * p = hbqt_par_QLinearGradient( 1 );
    if( p )
-      ( p )->setFinalStop( *hbqt_par_QPointF( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEARGRADIENT_SETFINALSTOP FP=( p )->setFinalStop( *hbqt_par_QPointF( 2 ) ); p is NULL" ) );
+      ( p )->setFinalStop( *hbqt_par_QPointF( 2 ) );
    }
 }
 
@@ -196,10 +192,8 @@ HB_FUNC( QT_QLINEARGRADIENT_SETFINALSTOP_1 )
 {
    QLinearGradient * p = hbqt_par_QLinearGradient( 1 );
    if( p )
-      ( p )->setFinalStop( hb_parnd( 2 ), hb_parnd( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEARGRADIENT_SETFINALSTOP_1 FP=( p )->setFinalStop( hb_parnd( 2 ), hb_parnd( 3 ) ); p is NULL" ) );
+      ( p )->setFinalStop( hb_parnd( 2 ), hb_parnd( 3 ) );
    }
 }
 
@@ -210,10 +204,8 @@ HB_FUNC( QT_QLINEARGRADIENT_SETSTART )
 {
    QLinearGradient * p = hbqt_par_QLinearGradient( 1 );
    if( p )
-      ( p )->setStart( *hbqt_par_QPointF( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEARGRADIENT_SETSTART FP=( p )->setStart( *hbqt_par_QPointF( 2 ) ); p is NULL" ) );
+      ( p )->setStart( *hbqt_par_QPointF( 2 ) );
    }
 }
 
@@ -224,10 +216,8 @@ HB_FUNC( QT_QLINEARGRADIENT_SETSTART_1 )
 {
    QLinearGradient * p = hbqt_par_QLinearGradient( 1 );
    if( p )
-      ( p )->setStart( hb_parnd( 2 ), hb_parnd( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEARGRADIENT_SETSTART_1 FP=( p )->setStart( hb_parnd( 2 ), hb_parnd( 3 ) ); p is NULL" ) );
+      ( p )->setStart( hb_parnd( 2 ), hb_parnd( 3 ) );
    }
 }
 
@@ -238,10 +228,8 @@ HB_FUNC( QT_QLINEARGRADIENT_START )
 {
    QLinearGradient * p = hbqt_par_QLinearGradient( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->start() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEARGRADIENT_START FP=hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->start() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->start() ), true ) );
    }
 }
 

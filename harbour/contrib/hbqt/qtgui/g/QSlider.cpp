@@ -165,10 +165,8 @@ HB_FUNC( QT_QSLIDER_SETTICKINTERVAL )
 {
    QSlider * p = hbqt_par_QSlider( 1 );
    if( p )
-      ( p )->setTickInterval( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSLIDER_SETTICKINTERVAL FP=( p )->setTickInterval( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setTickInterval( hb_parni( 2 ) );
    }
 }
 
@@ -179,10 +177,8 @@ HB_FUNC( QT_QSLIDER_SETTICKPOSITION )
 {
    QSlider * p = hbqt_par_QSlider( 1 );
    if( p )
-      ( p )->setTickPosition( ( QSlider::TickPosition ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSLIDER_SETTICKPOSITION FP=( p )->setTickPosition( ( QSlider::TickPosition ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setTickPosition( ( QSlider::TickPosition ) hb_parni( 2 ) );
    }
 }
 
@@ -193,10 +189,8 @@ HB_FUNC( QT_QSLIDER_TICKINTERVAL )
 {
    QSlider * p = hbqt_par_QSlider( 1 );
    if( p )
-      hb_retni( ( p )->tickInterval() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSLIDER_TICKINTERVAL FP=hb_retni( ( p )->tickInterval() ); p is NULL" ) );
+      hb_retni( ( p )->tickInterval() );
    }
 }
 
@@ -207,10 +201,8 @@ HB_FUNC( QT_QSLIDER_TICKPOSITION )
 {
    QSlider * p = hbqt_par_QSlider( 1 );
    if( p )
-      hb_retni( ( QSlider::TickPosition ) ( p )->tickPosition() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSLIDER_TICKPOSITION FP=hb_retni( ( QSlider::TickPosition ) ( p )->tickPosition() ); p is NULL" ) );
+      hb_retni( ( QSlider::TickPosition ) ( p )->tickPosition() );
    }
 }
 

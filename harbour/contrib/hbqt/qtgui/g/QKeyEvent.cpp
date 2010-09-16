@@ -127,10 +127,8 @@ HB_FUNC( QT_QKEYEVENT_COUNT )
 {
    QKeyEvent * p = hbqt_par_QKeyEvent( 1 );
    if( p )
-      hb_retni( ( p )->count() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QKEYEVENT_COUNT FP=hb_retni( ( p )->count() ); p is NULL" ) );
+      hb_retni( ( p )->count() );
    }
 }
 
@@ -141,10 +139,8 @@ HB_FUNC( QT_QKEYEVENT_ISAUTOREPEAT )
 {
    QKeyEvent * p = hbqt_par_QKeyEvent( 1 );
    if( p )
-      hb_retl( ( p )->isAutoRepeat() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QKEYEVENT_ISAUTOREPEAT FP=hb_retl( ( p )->isAutoRepeat() ); p is NULL" ) );
+      hb_retl( ( p )->isAutoRepeat() );
    }
 }
 
@@ -155,10 +151,8 @@ HB_FUNC( QT_QKEYEVENT_KEY )
 {
    QKeyEvent * p = hbqt_par_QKeyEvent( 1 );
    if( p )
-      hb_retni( ( p )->key() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QKEYEVENT_KEY FP=hb_retni( ( p )->key() ); p is NULL" ) );
+      hb_retni( ( p )->key() );
    }
 }
 
@@ -169,10 +163,8 @@ HB_FUNC( QT_QKEYEVENT_MATCHES )
 {
    QKeyEvent * p = hbqt_par_QKeyEvent( 1 );
    if( p )
-      hb_retl( ( p )->matches( ( QKeySequence::StandardKey ) hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QKEYEVENT_MATCHES FP=hb_retl( ( p )->matches( ( QKeySequence::StandardKey ) hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->matches( ( QKeySequence::StandardKey ) hb_parni( 2 ) ) );
    }
 }
 
@@ -183,10 +175,8 @@ HB_FUNC( QT_QKEYEVENT_MODIFIERS )
 {
    QKeyEvent * p = hbqt_par_QKeyEvent( 1 );
    if( p )
-      hb_retni( ( Qt::KeyboardModifiers ) ( p )->modifiers() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QKEYEVENT_MODIFIERS FP=hb_retni( ( Qt::KeyboardModifiers ) ( p )->modifiers() ); p is NULL" ) );
+      hb_retni( ( Qt::KeyboardModifiers ) ( p )->modifiers() );
    }
 }
 
@@ -197,10 +187,8 @@ HB_FUNC( QT_QKEYEVENT_NATIVEMODIFIERS )
 {
    QKeyEvent * p = hbqt_par_QKeyEvent( 1 );
    if( p )
-      hb_retnl( ( p )->nativeModifiers() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QKEYEVENT_NATIVEMODIFIERS FP=hb_retnl( ( p )->nativeModifiers() ); p is NULL" ) );
+      hb_retnl( ( p )->nativeModifiers() );
    }
 }
 
@@ -211,10 +199,8 @@ HB_FUNC( QT_QKEYEVENT_NATIVESCANCODE )
 {
    QKeyEvent * p = hbqt_par_QKeyEvent( 1 );
    if( p )
-      hb_retnl( ( p )->nativeScanCode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QKEYEVENT_NATIVESCANCODE FP=hb_retnl( ( p )->nativeScanCode() ); p is NULL" ) );
+      hb_retnl( ( p )->nativeScanCode() );
    }
 }
 
@@ -225,10 +211,8 @@ HB_FUNC( QT_QKEYEVENT_NATIVEVIRTUALKEY )
 {
    QKeyEvent * p = hbqt_par_QKeyEvent( 1 );
    if( p )
-      hb_retnl( ( p )->nativeVirtualKey() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QKEYEVENT_NATIVEVIRTUALKEY FP=hb_retnl( ( p )->nativeVirtualKey() ); p is NULL" ) );
+      hb_retnl( ( p )->nativeVirtualKey() );
    }
 }
 
@@ -239,10 +223,8 @@ HB_FUNC( QT_QKEYEVENT_TEXT )
 {
    QKeyEvent * p = hbqt_par_QKeyEvent( 1 );
    if( p )
-      hb_retc( ( p )->text().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QKEYEVENT_TEXT FP=hb_retc( ( p )->text().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->text().toUtf8().data() );
    }
 }
 

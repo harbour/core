@@ -179,10 +179,8 @@ HB_FUNC( QT_QGRAPHICSTEXTITEM_ADJUSTSIZE )
 {
    QGraphicsTextItem * p = hbqt_par_QGraphicsTextItem( 1 );
    if( p )
-      ( p )->adjustSize();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSTEXTITEM_ADJUSTSIZE FP=( p )->adjustSize(); p is NULL" ) );
+      ( p )->adjustSize();
    }
 }
 
@@ -193,10 +191,8 @@ HB_FUNC( QT_QGRAPHICSTEXTITEM_DEFAULTTEXTCOLOR )
 {
    QGraphicsTextItem * p = hbqt_par_QGraphicsTextItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->defaultTextColor() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSTEXTITEM_DEFAULTTEXTCOLOR FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->defaultTextColor() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->defaultTextColor() ), true ) );
    }
 }
 
@@ -207,10 +203,8 @@ HB_FUNC( QT_QGRAPHICSTEXTITEM_DOCUMENT )
 {
    QGraphicsTextItem * p = hbqt_par_QGraphicsTextItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTextDocument( ( p )->document(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSTEXTITEM_DOCUMENT FP=hb_retptrGC( hbqt_gcAllocate_QTextDocument( ( p )->document(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTextDocument( ( p )->document(), false ) );
    }
 }
 
@@ -221,10 +215,8 @@ HB_FUNC( QT_QGRAPHICSTEXTITEM_FONT )
 {
    QGraphicsTextItem * p = hbqt_par_QGraphicsTextItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSTEXTITEM_FONT FP=hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font() ), true ) );
    }
 }
 
@@ -235,10 +227,8 @@ HB_FUNC( QT_QGRAPHICSTEXTITEM_OPENEXTERNALLINKS )
 {
    QGraphicsTextItem * p = hbqt_par_QGraphicsTextItem( 1 );
    if( p )
-      hb_retl( ( p )->openExternalLinks() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSTEXTITEM_OPENEXTERNALLINKS FP=hb_retl( ( p )->openExternalLinks() ); p is NULL" ) );
+      hb_retl( ( p )->openExternalLinks() );
    }
 }
 
@@ -249,10 +239,8 @@ HB_FUNC( QT_QGRAPHICSTEXTITEM_SETDEFAULTTEXTCOLOR )
 {
    QGraphicsTextItem * p = hbqt_par_QGraphicsTextItem( 1 );
    if( p )
-      ( p )->setDefaultTextColor( *hbqt_par_QColor( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSTEXTITEM_SETDEFAULTTEXTCOLOR FP=( p )->setDefaultTextColor( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+      ( p )->setDefaultTextColor( *hbqt_par_QColor( 2 ) );
    }
 }
 
@@ -263,10 +251,8 @@ HB_FUNC( QT_QGRAPHICSTEXTITEM_SETDOCUMENT )
 {
    QGraphicsTextItem * p = hbqt_par_QGraphicsTextItem( 1 );
    if( p )
-      ( p )->setDocument( hbqt_par_QTextDocument( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSTEXTITEM_SETDOCUMENT FP=( p )->setDocument( hbqt_par_QTextDocument( 2 ) ); p is NULL" ) );
+      ( p )->setDocument( hbqt_par_QTextDocument( 2 ) );
    }
 }
 
@@ -277,10 +263,8 @@ HB_FUNC( QT_QGRAPHICSTEXTITEM_SETFONT )
 {
    QGraphicsTextItem * p = hbqt_par_QGraphicsTextItem( 1 );
    if( p )
-      ( p )->setFont( *hbqt_par_QFont( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSTEXTITEM_SETFONT FP=( p )->setFont( *hbqt_par_QFont( 2 ) ); p is NULL" ) );
+      ( p )->setFont( *hbqt_par_QFont( 2 ) );
    }
 }
 
@@ -291,10 +275,10 @@ HB_FUNC( QT_QGRAPHICSTEXTITEM_SETHTML )
 {
    QGraphicsTextItem * p = hbqt_par_QGraphicsTextItem( 1 );
    if( p )
-      ( p )->setHtml( QGraphicsTextItem::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSTEXTITEM_SETHTML FP=( p )->setHtml( QGraphicsTextItem::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setHtml( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -305,10 +289,8 @@ HB_FUNC( QT_QGRAPHICSTEXTITEM_SETOPENEXTERNALLINKS )
 {
    QGraphicsTextItem * p = hbqt_par_QGraphicsTextItem( 1 );
    if( p )
-      ( p )->setOpenExternalLinks( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSTEXTITEM_SETOPENEXTERNALLINKS FP=( p )->setOpenExternalLinks( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setOpenExternalLinks( hb_parl( 2 ) );
    }
 }
 
@@ -319,10 +301,10 @@ HB_FUNC( QT_QGRAPHICSTEXTITEM_SETPLAINTEXT )
 {
    QGraphicsTextItem * p = hbqt_par_QGraphicsTextItem( 1 );
    if( p )
-      ( p )->setPlainText( QGraphicsTextItem::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSTEXTITEM_SETPLAINTEXT FP=( p )->setPlainText( QGraphicsTextItem::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setPlainText( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -333,10 +315,8 @@ HB_FUNC( QT_QGRAPHICSTEXTITEM_SETTABCHANGESFOCUS )
 {
    QGraphicsTextItem * p = hbqt_par_QGraphicsTextItem( 1 );
    if( p )
-      ( p )->setTabChangesFocus( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSTEXTITEM_SETTABCHANGESFOCUS FP=( p )->setTabChangesFocus( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setTabChangesFocus( hb_parl( 2 ) );
    }
 }
 
@@ -347,10 +327,8 @@ HB_FUNC( QT_QGRAPHICSTEXTITEM_SETTEXTCURSOR )
 {
    QGraphicsTextItem * p = hbqt_par_QGraphicsTextItem( 1 );
    if( p )
-      ( p )->setTextCursor( *hbqt_par_QTextCursor( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSTEXTITEM_SETTEXTCURSOR FP=( p )->setTextCursor( *hbqt_par_QTextCursor( 2 ) ); p is NULL" ) );
+      ( p )->setTextCursor( *hbqt_par_QTextCursor( 2 ) );
    }
 }
 
@@ -361,10 +339,8 @@ HB_FUNC( QT_QGRAPHICSTEXTITEM_SETTEXTINTERACTIONFLAGS )
 {
    QGraphicsTextItem * p = hbqt_par_QGraphicsTextItem( 1 );
    if( p )
-      ( p )->setTextInteractionFlags( ( Qt::TextInteractionFlags ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSTEXTITEM_SETTEXTINTERACTIONFLAGS FP=( p )->setTextInteractionFlags( ( Qt::TextInteractionFlags ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setTextInteractionFlags( ( Qt::TextInteractionFlags ) hb_parni( 2 ) );
    }
 }
 
@@ -375,10 +351,8 @@ HB_FUNC( QT_QGRAPHICSTEXTITEM_SETTEXTWIDTH )
 {
    QGraphicsTextItem * p = hbqt_par_QGraphicsTextItem( 1 );
    if( p )
-      ( p )->setTextWidth( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSTEXTITEM_SETTEXTWIDTH FP=( p )->setTextWidth( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setTextWidth( hb_parnd( 2 ) );
    }
 }
 
@@ -389,10 +363,8 @@ HB_FUNC( QT_QGRAPHICSTEXTITEM_TABCHANGESFOCUS )
 {
    QGraphicsTextItem * p = hbqt_par_QGraphicsTextItem( 1 );
    if( p )
-      hb_retl( ( p )->tabChangesFocus() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSTEXTITEM_TABCHANGESFOCUS FP=hb_retl( ( p )->tabChangesFocus() ); p is NULL" ) );
+      hb_retl( ( p )->tabChangesFocus() );
    }
 }
 
@@ -403,10 +375,8 @@ HB_FUNC( QT_QGRAPHICSTEXTITEM_TEXTCURSOR )
 {
    QGraphicsTextItem * p = hbqt_par_QGraphicsTextItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( ( p )->textCursor() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSTEXTITEM_TEXTCURSOR FP=hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( ( p )->textCursor() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( ( p )->textCursor() ), true ) );
    }
 }
 
@@ -417,10 +387,8 @@ HB_FUNC( QT_QGRAPHICSTEXTITEM_TEXTINTERACTIONFLAGS )
 {
    QGraphicsTextItem * p = hbqt_par_QGraphicsTextItem( 1 );
    if( p )
-      hb_retni( ( Qt::TextInteractionFlags ) ( p )->textInteractionFlags() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSTEXTITEM_TEXTINTERACTIONFLAGS FP=hb_retni( ( Qt::TextInteractionFlags ) ( p )->textInteractionFlags() ); p is NULL" ) );
+      hb_retni( ( Qt::TextInteractionFlags ) ( p )->textInteractionFlags() );
    }
 }
 
@@ -431,10 +399,8 @@ HB_FUNC( QT_QGRAPHICSTEXTITEM_TEXTWIDTH )
 {
    QGraphicsTextItem * p = hbqt_par_QGraphicsTextItem( 1 );
    if( p )
-      hb_retnd( ( p )->textWidth() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSTEXTITEM_TEXTWIDTH FP=hb_retnd( ( p )->textWidth() ); p is NULL" ) );
+      hb_retnd( ( p )->textWidth() );
    }
 }
 
@@ -445,10 +411,8 @@ HB_FUNC( QT_QGRAPHICSTEXTITEM_TOHTML )
 {
    QGraphicsTextItem * p = hbqt_par_QGraphicsTextItem( 1 );
    if( p )
-      hb_retc( ( p )->toHtml().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSTEXTITEM_TOHTML FP=hb_retc( ( p )->toHtml().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->toHtml().toUtf8().data() );
    }
 }
 
@@ -459,10 +423,8 @@ HB_FUNC( QT_QGRAPHICSTEXTITEM_TOPLAINTEXT )
 {
    QGraphicsTextItem * p = hbqt_par_QGraphicsTextItem( 1 );
    if( p )
-      hb_retc( ( p )->toPlainText().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSTEXTITEM_TOPLAINTEXT FP=hb_retc( ( p )->toPlainText().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->toPlainText().toUtf8().data() );
    }
 }
 

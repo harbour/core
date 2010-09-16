@@ -145,10 +145,10 @@ HB_FUNC( QT_QSTYLEFACTORY_CREATE )
 {
    QStyleFactory * p = hbqt_par_QStyleFactory( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStyle( ( p )->create( hbqt_par_QString( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTYLEFACTORY_CREATE FP=hb_retptrGC( hbqt_gcAllocate_QStyle( ( p )->create( hbqt_par_QString( 2 ) ), false ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QStyle( ( p )->create( hb_parstr_utf8( 2, &pText, NULL ) ), false ) );
+      hb_strfree( pText );
    }
 }
 
@@ -159,10 +159,8 @@ HB_FUNC( QT_QSTYLEFACTORY_KEYS )
 {
    QStyleFactory * p = hbqt_par_QStyleFactory( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->keys() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTYLEFACTORY_KEYS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->keys() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->keys() ), true ) );
    }
 }
 

@@ -144,10 +144,8 @@ HB_FUNC( QT_QLATIN1CHAR_TOLATIN1 )
 {
    QLatin1Char * p = hbqt_par_QLatin1Char( 1 );
    if( p )
-      hb_retni( ( p )->toLatin1() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLATIN1CHAR_TOLATIN1 FP=hb_retni( ( p )->toLatin1() ); p is NULL" ) );
+      hb_retni( ( p )->toLatin1() );
    }
 }
 
@@ -158,10 +156,8 @@ HB_FUNC( QT_QLATIN1CHAR_UNICODE )
 {
    QLatin1Char * p = hbqt_par_QLatin1Char( 1 );
    if( p )
-      hb_retni( ( p )->unicode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLATIN1CHAR_UNICODE FP=hb_retni( ( p )->unicode() ); p is NULL" ) );
+      hb_retni( ( p )->unicode() );
    }
 }
 

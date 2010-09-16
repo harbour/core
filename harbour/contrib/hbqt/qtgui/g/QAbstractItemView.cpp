@@ -137,10 +137,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_ALTERNATINGROWCOLORS )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retl( ( p )->alternatingRowColors() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_ALTERNATINGROWCOLORS FP=hb_retl( ( p )->alternatingRowColors() ); p is NULL" ) );
+      hb_retl( ( p )->alternatingRowColors() );
    }
 }
 
@@ -151,10 +149,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_AUTOSCROLLMARGIN )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retni( ( p )->autoScrollMargin() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_AUTOSCROLLMARGIN FP=hb_retni( ( p )->autoScrollMargin() ); p is NULL" ) );
+      hb_retni( ( p )->autoScrollMargin() );
    }
 }
 
@@ -165,10 +161,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_CLOSEPERSISTENTEDITOR )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->closePersistentEditor( *hbqt_par_QModelIndex( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_CLOSEPERSISTENTEDITOR FP=( p )->closePersistentEditor( *hbqt_par_QModelIndex( 2 ) ); p is NULL" ) );
+      ( p )->closePersistentEditor( *hbqt_par_QModelIndex( 2 ) );
    }
 }
 
@@ -179,10 +173,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_CURRENTINDEX )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->currentIndex() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_CURRENTINDEX FP=hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->currentIndex() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->currentIndex() ), true ) );
    }
 }
 
@@ -193,10 +185,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_DRAGDROPMODE )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retni( ( QAbstractItemView::DragDropMode ) ( p )->dragDropMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_DRAGDROPMODE FP=hb_retni( ( QAbstractItemView::DragDropMode ) ( p )->dragDropMode() ); p is NULL" ) );
+      hb_retni( ( QAbstractItemView::DragDropMode ) ( p )->dragDropMode() );
    }
 }
 
@@ -207,10 +197,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_DRAGDROPOVERWRITEMODE )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retl( ( p )->dragDropOverwriteMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_DRAGDROPOVERWRITEMODE FP=hb_retl( ( p )->dragDropOverwriteMode() ); p is NULL" ) );
+      hb_retl( ( p )->dragDropOverwriteMode() );
    }
 }
 
@@ -221,10 +209,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_DRAGENABLED )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retl( ( p )->dragEnabled() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_DRAGENABLED FP=hb_retl( ( p )->dragEnabled() ); p is NULL" ) );
+      hb_retl( ( p )->dragEnabled() );
    }
 }
 
@@ -235,10 +221,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_EDITTRIGGERS )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retni( ( QAbstractItemView::EditTriggers ) ( p )->editTriggers() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_EDITTRIGGERS FP=hb_retni( ( QAbstractItemView::EditTriggers ) ( p )->editTriggers() ); p is NULL" ) );
+      hb_retni( ( QAbstractItemView::EditTriggers ) ( p )->editTriggers() );
    }
 }
 
@@ -249,10 +233,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_HASAUTOSCROLL )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retl( ( p )->hasAutoScroll() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_HASAUTOSCROLL FP=hb_retl( ( p )->hasAutoScroll() ); p is NULL" ) );
+      hb_retl( ( p )->hasAutoScroll() );
    }
 }
 
@@ -263,10 +245,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_HORIZONTALSCROLLMODE )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retni( ( QAbstractItemView::ScrollMode ) ( p )->horizontalScrollMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_HORIZONTALSCROLLMODE FP=hb_retni( ( QAbstractItemView::ScrollMode ) ( p )->horizontalScrollMode() ); p is NULL" ) );
+      hb_retni( ( QAbstractItemView::ScrollMode ) ( p )->horizontalScrollMode() );
    }
 }
 
@@ -277,10 +257,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_ICONSIZE )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->iconSize() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_ICONSIZE FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->iconSize() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->iconSize() ), true ) );
    }
 }
 
@@ -291,10 +269,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_INDEXAT )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->indexAt( *hbqt_par_QPoint( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_INDEXAT FP=hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->indexAt( *hbqt_par_QPoint( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->indexAt( *hbqt_par_QPoint( 2 ) ) ), true ) );
    }
 }
 
@@ -305,10 +281,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_INDEXWIDGET )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->indexWidget( *hbqt_par_QModelIndex( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_INDEXWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->indexWidget( *hbqt_par_QModelIndex( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->indexWidget( *hbqt_par_QModelIndex( 2 ) ), false ) );
    }
 }
 
@@ -319,10 +293,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_ITEMDELEGATE )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAbstractItemDelegate( ( p )->itemDelegate(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_ITEMDELEGATE FP=hb_retptrGC( hbqt_gcAllocate_QAbstractItemDelegate( ( p )->itemDelegate(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAbstractItemDelegate( ( p )->itemDelegate(), false ) );
    }
 }
 
@@ -333,10 +305,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_ITEMDELEGATE_1 )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAbstractItemDelegate( ( p )->itemDelegate( *hbqt_par_QModelIndex( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_ITEMDELEGATE_1 FP=hb_retptrGC( hbqt_gcAllocate_QAbstractItemDelegate( ( p )->itemDelegate( *hbqt_par_QModelIndex( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAbstractItemDelegate( ( p )->itemDelegate( *hbqt_par_QModelIndex( 2 ) ), false ) );
    }
 }
 
@@ -347,10 +317,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_ITEMDELEGATEFORCOLUMN )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAbstractItemDelegate( ( p )->itemDelegateForColumn( hb_parni( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_ITEMDELEGATEFORCOLUMN FP=hb_retptrGC( hbqt_gcAllocate_QAbstractItemDelegate( ( p )->itemDelegateForColumn( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAbstractItemDelegate( ( p )->itemDelegateForColumn( hb_parni( 2 ) ), false ) );
    }
 }
 
@@ -361,10 +329,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_ITEMDELEGATEFORROW )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAbstractItemDelegate( ( p )->itemDelegateForRow( hb_parni( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_ITEMDELEGATEFORROW FP=hb_retptrGC( hbqt_gcAllocate_QAbstractItemDelegate( ( p )->itemDelegateForRow( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAbstractItemDelegate( ( p )->itemDelegateForRow( hb_parni( 2 ) ), false ) );
    }
 }
 
@@ -375,10 +341,10 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_KEYBOARDSEARCH )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->keyboardSearch( QAbstractItemView::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_KEYBOARDSEARCH FP=( p )->keyboardSearch( QAbstractItemView::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->keyboardSearch( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -389,10 +355,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_MODEL )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAbstractItemModel( ( p )->model(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_MODEL FP=hb_retptrGC( hbqt_gcAllocate_QAbstractItemModel( ( p )->model(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAbstractItemModel( ( p )->model(), false ) );
    }
 }
 
@@ -403,10 +367,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_OPENPERSISTENTEDITOR )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->openPersistentEditor( *hbqt_par_QModelIndex( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_OPENPERSISTENTEDITOR FP=( p )->openPersistentEditor( *hbqt_par_QModelIndex( 2 ) ); p is NULL" ) );
+      ( p )->openPersistentEditor( *hbqt_par_QModelIndex( 2 ) );
    }
 }
 
@@ -417,10 +379,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_ROOTINDEX )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->rootIndex() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_ROOTINDEX FP=hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->rootIndex() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->rootIndex() ), true ) );
    }
 }
 
@@ -431,10 +391,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SCROLLTO )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->scrollTo( *hbqt_par_QModelIndex( 2 ), ( HB_ISNUM( 3 ) ? ( QAbstractItemView::ScrollHint ) hb_parni( 3 ) : ( QAbstractItemView::ScrollHint ) QAbstractItemView::EnsureVisible ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SCROLLTO FP=( p )->scrollTo( *hbqt_par_QModelIndex( 2 ), ( HB_ISNUM( 3 ) ? ( QAbstractItemView::ScrollHint ) hb_parni( 3 ) : ( QAbstractItemView::ScrollHint ) QAbstractItemView::EnsureVisible ) ); p is NULL" ) );
+      ( p )->scrollTo( *hbqt_par_QModelIndex( 2 ), ( HB_ISNUM( 3 ) ? ( QAbstractItemView::ScrollHint ) hb_parni( 3 ) : ( QAbstractItemView::ScrollHint ) QAbstractItemView::EnsureVisible ) );
    }
 }
 
@@ -445,10 +403,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SELECTIONBEHAVIOR )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retni( ( QAbstractItemView::SelectionBehavior ) ( p )->selectionBehavior() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SELECTIONBEHAVIOR FP=hb_retni( ( QAbstractItemView::SelectionBehavior ) ( p )->selectionBehavior() ); p is NULL" ) );
+      hb_retni( ( QAbstractItemView::SelectionBehavior ) ( p )->selectionBehavior() );
    }
 }
 
@@ -459,10 +415,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SELECTIONMODE )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retni( ( QAbstractItemView::SelectionMode ) ( p )->selectionMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SELECTIONMODE FP=hb_retni( ( QAbstractItemView::SelectionMode ) ( p )->selectionMode() ); p is NULL" ) );
+      hb_retni( ( QAbstractItemView::SelectionMode ) ( p )->selectionMode() );
    }
 }
 
@@ -473,10 +427,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SELECTIONMODEL )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QItemSelectionModel( ( p )->selectionModel(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SELECTIONMODEL FP=hb_retptrGC( hbqt_gcAllocate_QItemSelectionModel( ( p )->selectionModel(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QItemSelectionModel( ( p )->selectionModel(), false ) );
    }
 }
 
@@ -487,10 +439,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SETALTERNATINGROWCOLORS )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->setAlternatingRowColors( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SETALTERNATINGROWCOLORS FP=( p )->setAlternatingRowColors( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setAlternatingRowColors( hb_parl( 2 ) );
    }
 }
 
@@ -501,10 +451,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SETAUTOSCROLL )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->setAutoScroll( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SETAUTOSCROLL FP=( p )->setAutoScroll( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setAutoScroll( hb_parl( 2 ) );
    }
 }
 
@@ -515,10 +463,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SETAUTOSCROLLMARGIN )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->setAutoScrollMargin( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SETAUTOSCROLLMARGIN FP=( p )->setAutoScrollMargin( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setAutoScrollMargin( hb_parni( 2 ) );
    }
 }
 
@@ -529,10 +475,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SETDRAGDROPMODE )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->setDragDropMode( ( QAbstractItemView::DragDropMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SETDRAGDROPMODE FP=( p )->setDragDropMode( ( QAbstractItemView::DragDropMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setDragDropMode( ( QAbstractItemView::DragDropMode ) hb_parni( 2 ) );
    }
 }
 
@@ -543,10 +487,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SETDRAGDROPOVERWRITEMODE )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->setDragDropOverwriteMode( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SETDRAGDROPOVERWRITEMODE FP=( p )->setDragDropOverwriteMode( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setDragDropOverwriteMode( hb_parl( 2 ) );
    }
 }
 
@@ -557,10 +499,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SETDRAGENABLED )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->setDragEnabled( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SETDRAGENABLED FP=( p )->setDragEnabled( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setDragEnabled( hb_parl( 2 ) );
    }
 }
 
@@ -571,10 +511,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SETDROPINDICATORSHOWN )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->setDropIndicatorShown( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SETDROPINDICATORSHOWN FP=( p )->setDropIndicatorShown( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setDropIndicatorShown( hb_parl( 2 ) );
    }
 }
 
@@ -585,10 +523,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SETEDITTRIGGERS )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->setEditTriggers( ( QAbstractItemView::EditTriggers ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SETEDITTRIGGERS FP=( p )->setEditTriggers( ( QAbstractItemView::EditTriggers ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setEditTriggers( ( QAbstractItemView::EditTriggers ) hb_parni( 2 ) );
    }
 }
 
@@ -599,10 +535,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SETHORIZONTALSCROLLMODE )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->setHorizontalScrollMode( ( QAbstractItemView::ScrollMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SETHORIZONTALSCROLLMODE FP=( p )->setHorizontalScrollMode( ( QAbstractItemView::ScrollMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setHorizontalScrollMode( ( QAbstractItemView::ScrollMode ) hb_parni( 2 ) );
    }
 }
 
@@ -613,10 +547,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SETICONSIZE )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->setIconSize( *hbqt_par_QSize( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SETICONSIZE FP=( p )->setIconSize( *hbqt_par_QSize( 2 ) ); p is NULL" ) );
+      ( p )->setIconSize( *hbqt_par_QSize( 2 ) );
    }
 }
 
@@ -627,10 +559,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SETINDEXWIDGET )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->setIndexWidget( *hbqt_par_QModelIndex( 2 ), hbqt_par_QWidget( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SETINDEXWIDGET FP=( p )->setIndexWidget( *hbqt_par_QModelIndex( 2 ), hbqt_par_QWidget( 3 ) ); p is NULL" ) );
+      ( p )->setIndexWidget( *hbqt_par_QModelIndex( 2 ), hbqt_par_QWidget( 3 ) );
    }
 }
 
@@ -641,10 +571,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SETITEMDELEGATE )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->setItemDelegate( hbqt_par_QAbstractItemDelegate( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SETITEMDELEGATE FP=( p )->setItemDelegate( hbqt_par_QAbstractItemDelegate( 2 ) ); p is NULL" ) );
+      ( p )->setItemDelegate( hbqt_par_QAbstractItemDelegate( 2 ) );
    }
 }
 
@@ -655,10 +583,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SETITEMDELEGATEFORCOLUMN )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->setItemDelegateForColumn( hb_parni( 2 ), hbqt_par_QAbstractItemDelegate( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SETITEMDELEGATEFORCOLUMN FP=( p )->setItemDelegateForColumn( hb_parni( 2 ), hbqt_par_QAbstractItemDelegate( 3 ) ); p is NULL" ) );
+      ( p )->setItemDelegateForColumn( hb_parni( 2 ), hbqt_par_QAbstractItemDelegate( 3 ) );
    }
 }
 
@@ -669,10 +595,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SETITEMDELEGATEFORROW )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->setItemDelegateForRow( hb_parni( 2 ), hbqt_par_QAbstractItemDelegate( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SETITEMDELEGATEFORROW FP=( p )->setItemDelegateForRow( hb_parni( 2 ), hbqt_par_QAbstractItemDelegate( 3 ) ); p is NULL" ) );
+      ( p )->setItemDelegateForRow( hb_parni( 2 ), hbqt_par_QAbstractItemDelegate( 3 ) );
    }
 }
 
@@ -683,10 +607,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SETMODEL )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->setModel( hbqt_par_QAbstractItemModel( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SETMODEL FP=( p )->setModel( hbqt_par_QAbstractItemModel( 2 ) ); p is NULL" ) );
+      ( p )->setModel( hbqt_par_QAbstractItemModel( 2 ) );
    }
 }
 
@@ -697,10 +619,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SETSELECTIONBEHAVIOR )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->setSelectionBehavior( ( QAbstractItemView::SelectionBehavior ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SETSELECTIONBEHAVIOR FP=( p )->setSelectionBehavior( ( QAbstractItemView::SelectionBehavior ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setSelectionBehavior( ( QAbstractItemView::SelectionBehavior ) hb_parni( 2 ) );
    }
 }
 
@@ -711,10 +631,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SETSELECTIONMODE )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->setSelectionMode( ( QAbstractItemView::SelectionMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SETSELECTIONMODE FP=( p )->setSelectionMode( ( QAbstractItemView::SelectionMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setSelectionMode( ( QAbstractItemView::SelectionMode ) hb_parni( 2 ) );
    }
 }
 
@@ -725,10 +643,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SETSELECTIONMODEL )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->setSelectionModel( hbqt_par_QItemSelectionModel( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SETSELECTIONMODEL FP=( p )->setSelectionModel( hbqt_par_QItemSelectionModel( 2 ) ); p is NULL" ) );
+      ( p )->setSelectionModel( hbqt_par_QItemSelectionModel( 2 ) );
    }
 }
 
@@ -739,10 +655,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SETTABKEYNAVIGATION )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->setTabKeyNavigation( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SETTABKEYNAVIGATION FP=( p )->setTabKeyNavigation( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setTabKeyNavigation( hb_parl( 2 ) );
    }
 }
 
@@ -753,10 +667,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SETTEXTELIDEMODE )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->setTextElideMode( ( Qt::TextElideMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SETTEXTELIDEMODE FP=( p )->setTextElideMode( ( Qt::TextElideMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setTextElideMode( ( Qt::TextElideMode ) hb_parni( 2 ) );
    }
 }
 
@@ -767,10 +679,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SETVERTICALSCROLLMODE )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->setVerticalScrollMode( ( QAbstractItemView::ScrollMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SETVERTICALSCROLLMODE FP=( p )->setVerticalScrollMode( ( QAbstractItemView::ScrollMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setVerticalScrollMode( ( QAbstractItemView::ScrollMode ) hb_parni( 2 ) );
    }
 }
 
@@ -781,10 +691,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SHOWDROPINDICATOR )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retl( ( p )->showDropIndicator() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SHOWDROPINDICATOR FP=hb_retl( ( p )->showDropIndicator() ); p is NULL" ) );
+      hb_retl( ( p )->showDropIndicator() );
    }
 }
 
@@ -795,10 +703,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SIZEHINTFORCOLUMN )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retni( ( p )->sizeHintForColumn( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SIZEHINTFORCOLUMN FP=hb_retni( ( p )->sizeHintForColumn( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->sizeHintForColumn( hb_parni( 2 ) ) );
    }
 }
 
@@ -809,10 +715,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SIZEHINTFORINDEX )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->sizeHintForIndex( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SIZEHINTFORINDEX FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->sizeHintForIndex( *hbqt_par_QModelIndex( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->sizeHintForIndex( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
    }
 }
 
@@ -823,10 +727,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SIZEHINTFORROW )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retni( ( p )->sizeHintForRow( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SIZEHINTFORROW FP=hb_retni( ( p )->sizeHintForRow( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->sizeHintForRow( hb_parni( 2 ) ) );
    }
 }
 
@@ -837,10 +739,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_TABKEYNAVIGATION )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retl( ( p )->tabKeyNavigation() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_TABKEYNAVIGATION FP=hb_retl( ( p )->tabKeyNavigation() ); p is NULL" ) );
+      hb_retl( ( p )->tabKeyNavigation() );
    }
 }
 
@@ -851,10 +751,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_TEXTELIDEMODE )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retni( ( Qt::TextElideMode ) ( p )->textElideMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_TEXTELIDEMODE FP=hb_retni( ( Qt::TextElideMode ) ( p )->textElideMode() ); p is NULL" ) );
+      hb_retni( ( Qt::TextElideMode ) ( p )->textElideMode() );
    }
 }
 
@@ -865,10 +763,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_VERTICALSCROLLMODE )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retni( ( QAbstractItemView::ScrollMode ) ( p )->verticalScrollMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_VERTICALSCROLLMODE FP=hb_retni( ( QAbstractItemView::ScrollMode ) ( p )->verticalScrollMode() ); p is NULL" ) );
+      hb_retni( ( QAbstractItemView::ScrollMode ) ( p )->verticalScrollMode() );
    }
 }
 
@@ -879,10 +775,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_VISUALRECT )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->visualRect( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_VISUALRECT FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->visualRect( *hbqt_par_QModelIndex( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->visualRect( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
    }
 }
 
@@ -893,10 +787,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_CLEARSELECTION )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->clearSelection();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_CLEARSELECTION FP=( p )->clearSelection(); p is NULL" ) );
+      ( p )->clearSelection();
    }
 }
 
@@ -907,10 +799,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_EDIT )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->edit( *hbqt_par_QModelIndex( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_EDIT FP=( p )->edit( *hbqt_par_QModelIndex( 2 ) ); p is NULL" ) );
+      ( p )->edit( *hbqt_par_QModelIndex( 2 ) );
    }
 }
 
@@ -921,10 +811,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_RESET )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->reset();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_RESET FP=( p )->reset(); p is NULL" ) );
+      ( p )->reset();
    }
 }
 
@@ -935,10 +823,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SCROLLTOBOTTOM )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->scrollToBottom();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SCROLLTOBOTTOM FP=( p )->scrollToBottom(); p is NULL" ) );
+      ( p )->scrollToBottom();
    }
 }
 
@@ -949,10 +835,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SCROLLTOTOP )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->scrollToTop();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SCROLLTOTOP FP=( p )->scrollToTop(); p is NULL" ) );
+      ( p )->scrollToTop();
    }
 }
 
@@ -963,10 +847,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SELECTALL )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->selectAll();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SELECTALL FP=( p )->selectAll(); p is NULL" ) );
+      ( p )->selectAll();
    }
 }
 
@@ -977,10 +859,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SETCURRENTINDEX )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->setCurrentIndex( *hbqt_par_QModelIndex( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SETCURRENTINDEX FP=( p )->setCurrentIndex( *hbqt_par_QModelIndex( 2 ) ); p is NULL" ) );
+      ( p )->setCurrentIndex( *hbqt_par_QModelIndex( 2 ) );
    }
 }
 
@@ -991,10 +871,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_SETROOTINDEX )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->setRootIndex( *hbqt_par_QModelIndex( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_SETROOTINDEX FP=( p )->setRootIndex( *hbqt_par_QModelIndex( 2 ) ); p is NULL" ) );
+      ( p )->setRootIndex( *hbqt_par_QModelIndex( 2 ) );
    }
 }
 
@@ -1005,10 +883,8 @@ HB_FUNC( QT_QABSTRACTITEMVIEW_UPDATE )
 {
    QAbstractItemView * p = hbqt_par_QAbstractItemView( 1 );
    if( p )
-      ( p )->update( *hbqt_par_QModelIndex( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTITEMVIEW_UPDATE FP=( p )->update( *hbqt_par_QModelIndex( 2 ) ); p is NULL" ) );
+      ( p )->update( *hbqt_par_QModelIndex( 2 ) );
    }
 }
 

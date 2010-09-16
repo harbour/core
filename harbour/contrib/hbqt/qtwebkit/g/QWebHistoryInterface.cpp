@@ -127,10 +127,10 @@ HB_FUNC( QT_QWEBHISTORYINTERFACE_ADDHISTORYENTRY )
 {
    QWebHistoryInterface * p = hbqt_par_QWebHistoryInterface( 1 );
    if( p )
-      ( p )->addHistoryEntry( QWebHistoryInterface::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBHISTORYINTERFACE_ADDHISTORYENTRY FP=( p )->addHistoryEntry( QWebHistoryInterface::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->addHistoryEntry( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -141,10 +141,10 @@ HB_FUNC( QT_QWEBHISTORYINTERFACE_HISTORYCONTAINS )
 {
    QWebHistoryInterface * p = hbqt_par_QWebHistoryInterface( 1 );
    if( p )
-      hb_retl( ( p )->historyContains( QWebHistoryInterface::tr( hb_parc( 2 ) ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBHISTORYINTERFACE_HISTORYCONTAINS FP=hb_retl( ( p )->historyContains( QWebHistoryInterface::tr( hb_parc( 2 ) ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->historyContains( hb_parstr_utf8( 2, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -155,10 +155,8 @@ HB_FUNC( QT_QWEBHISTORYINTERFACE_DEFAULTINTERFACE )
 {
    QWebHistoryInterface * p = hbqt_par_QWebHistoryInterface( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWebHistoryInterface( ( p )->defaultInterface(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBHISTORYINTERFACE_DEFAULTINTERFACE FP=hb_retptrGC( hbqt_gcAllocate_QWebHistoryInterface( ( p )->defaultInterface(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWebHistoryInterface( ( p )->defaultInterface(), false ) );
    }
 }
 
@@ -169,10 +167,8 @@ HB_FUNC( QT_QWEBHISTORYINTERFACE_SETDEFAULTINTERFACE )
 {
    QWebHistoryInterface * p = hbqt_par_QWebHistoryInterface( 1 );
    if( p )
-      ( p )->setDefaultInterface( hbqt_par_QWebHistoryInterface( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBHISTORYINTERFACE_SETDEFAULTINTERFACE FP=( p )->setDefaultInterface( hbqt_par_QWebHistoryInterface( 2 ) ); p is NULL" ) );
+      ( p )->setDefaultInterface( hbqt_par_QWebHistoryInterface( 2 ) );
    }
 }
 

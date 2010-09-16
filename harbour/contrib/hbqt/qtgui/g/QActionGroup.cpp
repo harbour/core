@@ -159,10 +159,8 @@ HB_FUNC( QT_QACTIONGROUP_ACTIONS )
 {
    QActionGroup * p = hbqt_par_QActionGroup( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QAction *>( ( p )->actions() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_ACTIONS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QAction *>( ( p )->actions() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QAction *>( ( p )->actions() ), true ) );
    }
 }
 
@@ -173,10 +171,8 @@ HB_FUNC( QT_QACTIONGROUP_ADDACTION )
 {
    QActionGroup * p = hbqt_par_QActionGroup( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( hbqt_par_QAction( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_ADDACTION FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( hbqt_par_QAction( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( hbqt_par_QAction( 2 ) ), false ) );
    }
 }
 
@@ -187,10 +183,10 @@ HB_FUNC( QT_QACTIONGROUP_ADDACTION_1 )
 {
    QActionGroup * p = hbqt_par_QActionGroup( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( QActionGroup::tr( hb_parc( 2 ) ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_ADDACTION_1 FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( QActionGroup::tr( hb_parc( 2 ) ) ), false ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( hb_parstr_utf8( 2, &pText, NULL ) ), false ) );
+      hb_strfree( pText );
    }
 }
 
@@ -201,10 +197,10 @@ HB_FUNC( QT_QACTIONGROUP_ADDACTION_2 )
 {
    QActionGroup * p = hbqt_par_QActionGroup( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QIcon( 2 ) : QIcon( hbqt_par_QString( 2 ) ) ), QActionGroup::tr( hb_parc( 3 ) ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_ADDACTION_2 FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QIcon( 2 ) : QIcon( hbqt_par_QString( 2 ) ) ), QActionGroup::tr( hb_parc( 3 ) ) ), false ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QIcon( 2 ) : QIcon( hbqt_par_QString( 2 ) ) ), hb_parstr_utf8( 3, &pText, NULL ) ), false ) );
+      hb_strfree( pText );
    }
 }
 
@@ -215,10 +211,8 @@ HB_FUNC( QT_QACTIONGROUP_CHECKEDACTION )
 {
    QActionGroup * p = hbqt_par_QActionGroup( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->checkedAction(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_CHECKEDACTION FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->checkedAction(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->checkedAction(), false ) );
    }
 }
 
@@ -229,10 +223,8 @@ HB_FUNC( QT_QACTIONGROUP_ISENABLED )
 {
    QActionGroup * p = hbqt_par_QActionGroup( 1 );
    if( p )
-      hb_retl( ( p )->isEnabled() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_ISENABLED FP=hb_retl( ( p )->isEnabled() ); p is NULL" ) );
+      hb_retl( ( p )->isEnabled() );
    }
 }
 
@@ -243,10 +235,8 @@ HB_FUNC( QT_QACTIONGROUP_ISEXCLUSIVE )
 {
    QActionGroup * p = hbqt_par_QActionGroup( 1 );
    if( p )
-      hb_retl( ( p )->isExclusive() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_ISEXCLUSIVE FP=hb_retl( ( p )->isExclusive() ); p is NULL" ) );
+      hb_retl( ( p )->isExclusive() );
    }
 }
 
@@ -257,10 +247,8 @@ HB_FUNC( QT_QACTIONGROUP_ISVISIBLE )
 {
    QActionGroup * p = hbqt_par_QActionGroup( 1 );
    if( p )
-      hb_retl( ( p )->isVisible() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_ISVISIBLE FP=hb_retl( ( p )->isVisible() ); p is NULL" ) );
+      hb_retl( ( p )->isVisible() );
    }
 }
 
@@ -271,10 +259,8 @@ HB_FUNC( QT_QACTIONGROUP_REMOVEACTION )
 {
    QActionGroup * p = hbqt_par_QActionGroup( 1 );
    if( p )
-      ( p )->removeAction( hbqt_par_QAction( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_REMOVEACTION FP=( p )->removeAction( hbqt_par_QAction( 2 ) ); p is NULL" ) );
+      ( p )->removeAction( hbqt_par_QAction( 2 ) );
    }
 }
 
@@ -285,10 +271,8 @@ HB_FUNC( QT_QACTIONGROUP_SETDISABLED )
 {
    QActionGroup * p = hbqt_par_QActionGroup( 1 );
    if( p )
-      ( p )->setDisabled( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_SETDISABLED FP=( p )->setDisabled( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setDisabled( hb_parl( 2 ) );
    }
 }
 
@@ -299,10 +283,8 @@ HB_FUNC( QT_QACTIONGROUP_SETENABLED )
 {
    QActionGroup * p = hbqt_par_QActionGroup( 1 );
    if( p )
-      ( p )->setEnabled( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_SETENABLED FP=( p )->setEnabled( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setEnabled( hb_parl( 2 ) );
    }
 }
 
@@ -313,10 +295,8 @@ HB_FUNC( QT_QACTIONGROUP_SETEXCLUSIVE )
 {
    QActionGroup * p = hbqt_par_QActionGroup( 1 );
    if( p )
-      ( p )->setExclusive( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_SETEXCLUSIVE FP=( p )->setExclusive( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setExclusive( hb_parl( 2 ) );
    }
 }
 
@@ -327,10 +307,8 @@ HB_FUNC( QT_QACTIONGROUP_SETVISIBLE )
 {
    QActionGroup * p = hbqt_par_QActionGroup( 1 );
    if( p )
-      ( p )->setVisible( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QACTIONGROUP_SETVISIBLE FP=( p )->setVisible( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setVisible( hb_parl( 2 ) );
    }
 }
 

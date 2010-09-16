@@ -130,10 +130,8 @@ HB_FUNC( QT_QDESIGNEROBJECTINSPECTORINTERFACE_CORE )
 {
    QDesignerObjectInspectorInterface * p = hbqt_par_QDesignerObjectInspectorInterface( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDesignerFormEditorInterface( ( p )->core(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNEROBJECTINSPECTORINTERFACE_CORE FP=hb_retptrGC( hbqt_gcAllocate_QDesignerFormEditorInterface( ( p )->core(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDesignerFormEditorInterface( ( p )->core(), false ) );
    }
 }
 
@@ -144,10 +142,8 @@ HB_FUNC( QT_QDESIGNEROBJECTINSPECTORINTERFACE_SETFORMWINDOW )
 {
    QDesignerObjectInspectorInterface * p = hbqt_par_QDesignerObjectInspectorInterface( 1 );
    if( p )
-      ( p )->setFormWindow( hbqt_par_QDesignerFormWindowInterface( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNEROBJECTINSPECTORINTERFACE_SETFORMWINDOW FP=( p )->setFormWindow( hbqt_par_QDesignerFormWindowInterface( 2 ) ); p is NULL" ) );
+      ( p )->setFormWindow( hbqt_par_QDesignerFormWindowInterface( 2 ) );
    }
 }
 

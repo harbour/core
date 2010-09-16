@@ -168,10 +168,8 @@ HB_FUNC( QT_QREGEXPVALIDATOR_REGEXP )
 {
    QRegExpValidator * p = hbqt_par_QRegExpValidator( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRegExp( new QRegExp( ( p )->regExp() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGEXPVALIDATOR_REGEXP FP=hb_retptrGC( hbqt_gcAllocate_QRegExp( new QRegExp( ( p )->regExp() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRegExp( new QRegExp( ( p )->regExp() ), true ) );
    }
 }
 
@@ -182,10 +180,8 @@ HB_FUNC( QT_QREGEXPVALIDATOR_SETREGEXP )
 {
    QRegExpValidator * p = hbqt_par_QRegExpValidator( 1 );
    if( p )
-      ( p )->setRegExp( *hbqt_par_QRegExp( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QREGEXPVALIDATOR_SETREGEXP FP=( p )->setRegExp( *hbqt_par_QRegExp( 2 ) ); p is NULL" ) );
+      ( p )->setRegExp( *hbqt_par_QRegExp( 2 ) );
    }
 }
 

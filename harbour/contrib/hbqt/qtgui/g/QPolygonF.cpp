@@ -150,10 +150,8 @@ HB_FUNC( QT_QPOLYGONF_BOUNDINGRECT )
 {
    QPolygonF * p = hbqt_par_QPolygonF( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->boundingRect() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGONF_BOUNDINGRECT FP=hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->boundingRect() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->boundingRect() ), true ) );
    }
 }
 
@@ -164,10 +162,8 @@ HB_FUNC( QT_QPOLYGONF_CONTAINSPOINT )
 {
    QPolygonF * p = hbqt_par_QPolygonF( 1 );
    if( p )
-      hb_retl( ( p )->containsPoint( *hbqt_par_QPointF( 2 ), ( Qt::FillRule ) hb_parni( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGONF_CONTAINSPOINT FP=hb_retl( ( p )->containsPoint( *hbqt_par_QPointF( 2 ), ( Qt::FillRule ) hb_parni( 3 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->containsPoint( *hbqt_par_QPointF( 2 ), ( Qt::FillRule ) hb_parni( 3 ) ) );
    }
 }
 
@@ -178,10 +174,8 @@ HB_FUNC( QT_QPOLYGONF_INTERSECTED )
 {
    QPolygonF * p = hbqt_par_QPolygonF( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->intersected( *hbqt_par_QPolygonF( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGONF_INTERSECTED FP=hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->intersected( *hbqt_par_QPolygonF( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->intersected( *hbqt_par_QPolygonF( 2 ) ) ), true ) );
    }
 }
 
@@ -192,10 +186,8 @@ HB_FUNC( QT_QPOLYGONF_ISCLOSED )
 {
    QPolygonF * p = hbqt_par_QPolygonF( 1 );
    if( p )
-      hb_retl( ( p )->isClosed() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGONF_ISCLOSED FP=hb_retl( ( p )->isClosed() ); p is NULL" ) );
+      hb_retl( ( p )->isClosed() );
    }
 }
 
@@ -206,10 +198,8 @@ HB_FUNC( QT_QPOLYGONF_SUBTRACTED )
 {
    QPolygonF * p = hbqt_par_QPolygonF( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->subtracted( *hbqt_par_QPolygonF( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGONF_SUBTRACTED FP=hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->subtracted( *hbqt_par_QPolygonF( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->subtracted( *hbqt_par_QPolygonF( 2 ) ) ), true ) );
    }
 }
 
@@ -220,10 +210,8 @@ HB_FUNC( QT_QPOLYGONF_TOPOLYGON )
 {
    QPolygonF * p = hbqt_par_QPolygonF( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( ( p )->toPolygon() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGONF_TOPOLYGON FP=hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( ( p )->toPolygon() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( ( p )->toPolygon() ), true ) );
    }
 }
 
@@ -234,10 +222,8 @@ HB_FUNC( QT_QPOLYGONF_TRANSLATE )
 {
    QPolygonF * p = hbqt_par_QPolygonF( 1 );
    if( p )
-      ( p )->translate( *hbqt_par_QPointF( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGONF_TRANSLATE FP=( p )->translate( *hbqt_par_QPointF( 2 ) ); p is NULL" ) );
+      ( p )->translate( *hbqt_par_QPointF( 2 ) );
    }
 }
 
@@ -248,10 +234,8 @@ HB_FUNC( QT_QPOLYGONF_TRANSLATE_1 )
 {
    QPolygonF * p = hbqt_par_QPolygonF( 1 );
    if( p )
-      ( p )->translate( hb_parnd( 2 ), hb_parnd( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGONF_TRANSLATE_1 FP=( p )->translate( hb_parnd( 2 ), hb_parnd( 3 ) ); p is NULL" ) );
+      ( p )->translate( hb_parnd( 2 ), hb_parnd( 3 ) );
    }
 }
 
@@ -262,10 +246,8 @@ HB_FUNC( QT_QPOLYGONF_UNITED )
 {
    QPolygonF * p = hbqt_par_QPolygonF( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->united( *hbqt_par_QPolygonF( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGONF_UNITED FP=hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->united( *hbqt_par_QPolygonF( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->united( *hbqt_par_QPolygonF( 2 ) ) ), true ) );
    }
 }
 

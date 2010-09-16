@@ -150,10 +150,8 @@ HB_FUNC( QT_QTEXTLENGTH_RAWVALUE )
 {
    QTextLength * p = hbqt_par_QTextLength( 1 );
    if( p )
-      hb_retnd( ( p )->rawValue() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTLENGTH_RAWVALUE FP=hb_retnd( ( p )->rawValue() ); p is NULL" ) );
+      hb_retnd( ( p )->rawValue() );
    }
 }
 
@@ -164,10 +162,8 @@ HB_FUNC( QT_QTEXTLENGTH_TYPE )
 {
    QTextLength * p = hbqt_par_QTextLength( 1 );
    if( p )
-      hb_retni( ( QTextLength::Type ) ( p )->type() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTLENGTH_TYPE FP=hb_retni( ( QTextLength::Type ) ( p )->type() ); p is NULL" ) );
+      hb_retni( ( QTextLength::Type ) ( p )->type() );
    }
 }
 
@@ -178,10 +174,8 @@ HB_FUNC( QT_QTEXTLENGTH_VALUE )
 {
    QTextLength * p = hbqt_par_QTextLength( 1 );
    if( p )
-      hb_retnd( ( p )->value( hb_parnd( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTLENGTH_VALUE FP=hb_retnd( ( p )->value( hb_parnd( 2 ) ) ); p is NULL" ) );
+      hb_retnd( ( p )->value( hb_parnd( 2 ) ) );
    }
 }
 

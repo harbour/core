@@ -127,10 +127,8 @@ HB_FUNC( QT_QSCICOMMANDSET_READSETTINGS )
 {
    QsciCommandSet * p = hbqt_par_QsciCommandSet( 1 );
    if( p )
-      hb_retl( ( p )->readSettings( *hbqt_par_QSettings( 2 ), hbqt_par_char( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCICOMMANDSET_READSETTINGS FP=hb_retl( ( p )->readSettings( *hbqt_par_QSettings( 2 ), hbqt_par_char( 3 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->readSettings( *hbqt_par_QSettings( 2 ), hbqt_par_char( 3 ) ) );
    }
 }
 
@@ -141,10 +139,8 @@ HB_FUNC( QT_QSCICOMMANDSET_WRITESETTINGS )
 {
    QsciCommandSet * p = hbqt_par_QsciCommandSet( 1 );
    if( p )
-      hb_retl( ( p )->writeSettings( *hbqt_par_QSettings( 2 ), hbqt_par_char( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCICOMMANDSET_WRITESETTINGS FP=hb_retl( ( p )->writeSettings( *hbqt_par_QSettings( 2 ), hbqt_par_char( 3 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->writeSettings( *hbqt_par_QSettings( 2 ), hbqt_par_char( 3 ) ) );
    }
 }
 
@@ -155,10 +151,8 @@ HB_FUNC( QT_QSCICOMMANDSET_COMMANDS )
 {
    QsciCommandSet * p = hbqt_par_QsciCommandSet( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList< QsciCommand * > &( ( p )->commands() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCICOMMANDSET_COMMANDS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList< QsciCommand * > &( ( p )->commands() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList< QsciCommand * > &( ( p )->commands() ), true ) );
    }
 }
 
@@ -169,10 +163,8 @@ HB_FUNC( QT_QSCICOMMANDSET_CLEARKEYS )
 {
    QsciCommandSet * p = hbqt_par_QsciCommandSet( 1 );
    if( p )
-      ( p )->clearKeys();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCICOMMANDSET_CLEARKEYS FP=( p )->clearKeys(); p is NULL" ) );
+      ( p )->clearKeys();
    }
 }
 
@@ -183,10 +175,8 @@ HB_FUNC( QT_QSCICOMMANDSET_CLEARALTERNATEKEYS )
 {
    QsciCommandSet * p = hbqt_par_QsciCommandSet( 1 );
    if( p )
-      ( p )->clearAlternateKeys();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCICOMMANDSET_CLEARALTERNATEKEYS FP=( p )->clearAlternateKeys(); p is NULL" ) );
+      ( p )->clearAlternateKeys();
    }
 }
 

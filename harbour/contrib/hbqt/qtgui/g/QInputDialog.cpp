@@ -163,10 +163,8 @@ HB_FUNC( QT_QINPUTDIALOG_CANCELBUTTONTEXT )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      hb_retc( ( p )->cancelButtonText().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_CANCELBUTTONTEXT FP=hb_retc( ( p )->cancelButtonText().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->cancelButtonText().toUtf8().data() );
    }
 }
 
@@ -177,10 +175,8 @@ HB_FUNC( QT_QINPUTDIALOG_COMBOBOXITEMS )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->comboBoxItems() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_COMBOBOXITEMS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->comboBoxItems() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->comboBoxItems() ), true ) );
    }
 }
 
@@ -191,10 +187,8 @@ HB_FUNC( QT_QINPUTDIALOG_DONE )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      ( p )->done( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_DONE FP=( p )->done( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->done( hb_parni( 2 ) );
    }
 }
 
@@ -205,10 +199,8 @@ HB_FUNC( QT_QINPUTDIALOG_DOUBLEDECIMALS )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      hb_retni( ( p )->doubleDecimals() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_DOUBLEDECIMALS FP=hb_retni( ( p )->doubleDecimals() ); p is NULL" ) );
+      hb_retni( ( p )->doubleDecimals() );
    }
 }
 
@@ -219,10 +211,8 @@ HB_FUNC( QT_QINPUTDIALOG_DOUBLEMAXIMUM )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      hb_retnd( ( p )->doubleMaximum() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_DOUBLEMAXIMUM FP=hb_retnd( ( p )->doubleMaximum() ); p is NULL" ) );
+      hb_retnd( ( p )->doubleMaximum() );
    }
 }
 
@@ -233,10 +223,8 @@ HB_FUNC( QT_QINPUTDIALOG_DOUBLEMINIMUM )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      hb_retnd( ( p )->doubleMinimum() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_DOUBLEMINIMUM FP=hb_retnd( ( p )->doubleMinimum() ); p is NULL" ) );
+      hb_retnd( ( p )->doubleMinimum() );
    }
 }
 
@@ -247,10 +235,8 @@ HB_FUNC( QT_QINPUTDIALOG_DOUBLEVALUE )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      hb_retnd( ( p )->doubleValue() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_DOUBLEVALUE FP=hb_retnd( ( p )->doubleValue() ); p is NULL" ) );
+      hb_retnd( ( p )->doubleValue() );
    }
 }
 
@@ -261,10 +247,8 @@ HB_FUNC( QT_QINPUTDIALOG_INPUTMODE )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      hb_retni( ( QInputDialog::InputMode ) ( p )->inputMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_INPUTMODE FP=hb_retni( ( QInputDialog::InputMode ) ( p )->inputMode() ); p is NULL" ) );
+      hb_retni( ( QInputDialog::InputMode ) ( p )->inputMode() );
    }
 }
 
@@ -275,10 +259,8 @@ HB_FUNC( QT_QINPUTDIALOG_INTMAXIMUM )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      hb_retni( ( p )->intMaximum() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_INTMAXIMUM FP=hb_retni( ( p )->intMaximum() ); p is NULL" ) );
+      hb_retni( ( p )->intMaximum() );
    }
 }
 
@@ -289,10 +271,8 @@ HB_FUNC( QT_QINPUTDIALOG_INTMINIMUM )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      hb_retni( ( p )->intMinimum() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_INTMINIMUM FP=hb_retni( ( p )->intMinimum() ); p is NULL" ) );
+      hb_retni( ( p )->intMinimum() );
    }
 }
 
@@ -303,10 +283,8 @@ HB_FUNC( QT_QINPUTDIALOG_INTSTEP )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      hb_retni( ( p )->intStep() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_INTSTEP FP=hb_retni( ( p )->intStep() ); p is NULL" ) );
+      hb_retni( ( p )->intStep() );
    }
 }
 
@@ -317,10 +295,8 @@ HB_FUNC( QT_QINPUTDIALOG_INTVALUE )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      hb_retni( ( p )->intValue() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_INTVALUE FP=hb_retni( ( p )->intValue() ); p is NULL" ) );
+      hb_retni( ( p )->intValue() );
    }
 }
 
@@ -331,10 +307,8 @@ HB_FUNC( QT_QINPUTDIALOG_ISCOMBOBOXEDITABLE )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      hb_retl( ( p )->isComboBoxEditable() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_ISCOMBOBOXEDITABLE FP=hb_retl( ( p )->isComboBoxEditable() ); p is NULL" ) );
+      hb_retl( ( p )->isComboBoxEditable() );
    }
 }
 
@@ -345,10 +319,8 @@ HB_FUNC( QT_QINPUTDIALOG_LABELTEXT )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      hb_retc( ( p )->labelText().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_LABELTEXT FP=hb_retc( ( p )->labelText().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->labelText().toUtf8().data() );
    }
 }
 
@@ -359,10 +331,8 @@ HB_FUNC( QT_QINPUTDIALOG_OKBUTTONTEXT )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      hb_retc( ( p )->okButtonText().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_OKBUTTONTEXT FP=hb_retc( ( p )->okButtonText().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->okButtonText().toUtf8().data() );
    }
 }
 
@@ -373,10 +343,8 @@ HB_FUNC( QT_QINPUTDIALOG_OPEN )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      ( p )->open( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_OPEN FP=( p )->open( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) ); p is NULL" ) );
+      ( p )->open( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) );
    }
 }
 
@@ -387,10 +355,8 @@ HB_FUNC( QT_QINPUTDIALOG_OPTIONS )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      hb_retni( ( QInputDialog::InputDialogOptions ) ( p )->options() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_OPTIONS FP=hb_retni( ( QInputDialog::InputDialogOptions ) ( p )->options() ); p is NULL" ) );
+      hb_retni( ( QInputDialog::InputDialogOptions ) ( p )->options() );
    }
 }
 
@@ -401,10 +367,10 @@ HB_FUNC( QT_QINPUTDIALOG_SETCANCELBUTTONTEXT )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      ( p )->setCancelButtonText( QInputDialog::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_SETCANCELBUTTONTEXT FP=( p )->setCancelButtonText( QInputDialog::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setCancelButtonText( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -415,10 +381,8 @@ HB_FUNC( QT_QINPUTDIALOG_SETCOMBOBOXEDITABLE )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      ( p )->setComboBoxEditable( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_SETCOMBOBOXEDITABLE FP=( p )->setComboBoxEditable( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setComboBoxEditable( hb_parl( 2 ) );
    }
 }
 
@@ -429,10 +393,8 @@ HB_FUNC( QT_QINPUTDIALOG_SETCOMBOBOXITEMS )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      ( p )->setComboBoxItems( *hbqt_par_QStringList( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_SETCOMBOBOXITEMS FP=( p )->setComboBoxItems( *hbqt_par_QStringList( 2 ) ); p is NULL" ) );
+      ( p )->setComboBoxItems( *hbqt_par_QStringList( 2 ) );
    }
 }
 
@@ -443,10 +405,8 @@ HB_FUNC( QT_QINPUTDIALOG_SETDOUBLEDECIMALS )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      ( p )->setDoubleDecimals( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_SETDOUBLEDECIMALS FP=( p )->setDoubleDecimals( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setDoubleDecimals( hb_parni( 2 ) );
    }
 }
 
@@ -457,10 +417,8 @@ HB_FUNC( QT_QINPUTDIALOG_SETDOUBLEMAXIMUM )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      ( p )->setDoubleMaximum( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_SETDOUBLEMAXIMUM FP=( p )->setDoubleMaximum( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setDoubleMaximum( hb_parnd( 2 ) );
    }
 }
 
@@ -471,10 +429,8 @@ HB_FUNC( QT_QINPUTDIALOG_SETDOUBLEMINIMUM )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      ( p )->setDoubleMinimum( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_SETDOUBLEMINIMUM FP=( p )->setDoubleMinimum( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setDoubleMinimum( hb_parnd( 2 ) );
    }
 }
 
@@ -485,10 +441,8 @@ HB_FUNC( QT_QINPUTDIALOG_SETDOUBLERANGE )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      ( p )->setDoubleRange( hb_parnd( 2 ), hb_parnd( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_SETDOUBLERANGE FP=( p )->setDoubleRange( hb_parnd( 2 ), hb_parnd( 3 ) ); p is NULL" ) );
+      ( p )->setDoubleRange( hb_parnd( 2 ), hb_parnd( 3 ) );
    }
 }
 
@@ -499,10 +453,8 @@ HB_FUNC( QT_QINPUTDIALOG_SETDOUBLEVALUE )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      ( p )->setDoubleValue( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_SETDOUBLEVALUE FP=( p )->setDoubleValue( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setDoubleValue( hb_parnd( 2 ) );
    }
 }
 
@@ -513,10 +465,8 @@ HB_FUNC( QT_QINPUTDIALOG_SETINPUTMODE )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      ( p )->setInputMode( ( QInputDialog::InputMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_SETINPUTMODE FP=( p )->setInputMode( ( QInputDialog::InputMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setInputMode( ( QInputDialog::InputMode ) hb_parni( 2 ) );
    }
 }
 
@@ -527,10 +477,8 @@ HB_FUNC( QT_QINPUTDIALOG_SETINTMAXIMUM )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      ( p )->setIntMaximum( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_SETINTMAXIMUM FP=( p )->setIntMaximum( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setIntMaximum( hb_parni( 2 ) );
    }
 }
 
@@ -541,10 +489,8 @@ HB_FUNC( QT_QINPUTDIALOG_SETINTMINIMUM )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      ( p )->setIntMinimum( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_SETINTMINIMUM FP=( p )->setIntMinimum( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setIntMinimum( hb_parni( 2 ) );
    }
 }
 
@@ -555,10 +501,8 @@ HB_FUNC( QT_QINPUTDIALOG_SETINTRANGE )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      ( p )->setIntRange( hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_SETINTRANGE FP=( p )->setIntRange( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setIntRange( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -569,10 +513,8 @@ HB_FUNC( QT_QINPUTDIALOG_SETINTSTEP )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      ( p )->setIntStep( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_SETINTSTEP FP=( p )->setIntStep( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setIntStep( hb_parni( 2 ) );
    }
 }
 
@@ -583,10 +525,8 @@ HB_FUNC( QT_QINPUTDIALOG_SETINTVALUE )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      ( p )->setIntValue( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_SETINTVALUE FP=( p )->setIntValue( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setIntValue( hb_parni( 2 ) );
    }
 }
 
@@ -597,10 +537,10 @@ HB_FUNC( QT_QINPUTDIALOG_SETLABELTEXT )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      ( p )->setLabelText( QInputDialog::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_SETLABELTEXT FP=( p )->setLabelText( QInputDialog::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setLabelText( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -611,10 +551,10 @@ HB_FUNC( QT_QINPUTDIALOG_SETOKBUTTONTEXT )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      ( p )->setOkButtonText( QInputDialog::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_SETOKBUTTONTEXT FP=( p )->setOkButtonText( QInputDialog::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setOkButtonText( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -625,10 +565,8 @@ HB_FUNC( QT_QINPUTDIALOG_SETOPTION )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      ( p )->setOption( ( QInputDialog::InputDialogOption ) hb_parni( 2 ), hb_parl( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_SETOPTION FP=( p )->setOption( ( QInputDialog::InputDialogOption ) hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+      ( p )->setOption( ( QInputDialog::InputDialogOption ) hb_parni( 2 ), hb_parl( 3 ) );
    }
 }
 
@@ -639,10 +577,8 @@ HB_FUNC( QT_QINPUTDIALOG_SETOPTIONS )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      ( p )->setOptions( ( QInputDialog::InputDialogOptions ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_SETOPTIONS FP=( p )->setOptions( ( QInputDialog::InputDialogOptions ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setOptions( ( QInputDialog::InputDialogOptions ) hb_parni( 2 ) );
    }
 }
 
@@ -653,10 +589,8 @@ HB_FUNC( QT_QINPUTDIALOG_SETTEXTECHOMODE )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      ( p )->setTextEchoMode( ( QLineEdit::EchoMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_SETTEXTECHOMODE FP=( p )->setTextEchoMode( ( QLineEdit::EchoMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setTextEchoMode( ( QLineEdit::EchoMode ) hb_parni( 2 ) );
    }
 }
 
@@ -667,10 +601,10 @@ HB_FUNC( QT_QINPUTDIALOG_SETTEXTVALUE )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      ( p )->setTextValue( QInputDialog::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_SETTEXTVALUE FP=( p )->setTextValue( QInputDialog::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setTextValue( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -681,10 +615,8 @@ HB_FUNC( QT_QINPUTDIALOG_TESTOPTION )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      hb_retl( ( p )->testOption( ( QInputDialog::InputDialogOption ) hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_TESTOPTION FP=hb_retl( ( p )->testOption( ( QInputDialog::InputDialogOption ) hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->testOption( ( QInputDialog::InputDialogOption ) hb_parni( 2 ) ) );
    }
 }
 
@@ -695,10 +627,8 @@ HB_FUNC( QT_QINPUTDIALOG_TEXTECHOMODE )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      hb_retni( ( QLineEdit::EchoMode ) ( p )->textEchoMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_TEXTECHOMODE FP=hb_retni( ( QLineEdit::EchoMode ) ( p )->textEchoMode() ); p is NULL" ) );
+      hb_retni( ( QLineEdit::EchoMode ) ( p )->textEchoMode() );
    }
 }
 
@@ -709,10 +639,8 @@ HB_FUNC( QT_QINPUTDIALOG_TEXTVALUE )
 {
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
-      hb_retc( ( p )->textValue().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_TEXTVALUE FP=hb_retc( ( p )->textValue().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->textValue().toUtf8().data() );
    }
 }
 
@@ -725,10 +653,10 @@ HB_FUNC( QT_QINPUTDIALOG_GETDOUBLE )
    bool iOk = 0;
 
    if( p )
-      hb_retnd( ( p )->getDouble( hbqt_par_QWidget( 2 ), QInputDialog::tr( hb_parc( 3 ) ), QInputDialog::tr( hb_parc( 4 ) ), hb_parnd( 5 ), hb_parnd( 6 ), hb_parnd( 7 ), hb_parnidef( 8, 1 ), &iOk, ( Qt::WindowFlags ) hb_parni( 10 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_GETDOUBLE FP=hb_retnd( ( p )->getDouble( hbqt_par_QWidget( 2 ), QInputDialog::tr( hb_parc( 3 ) ), QInputDialog::tr( hb_parc( 4 ) ), hb_parnd( 5 ), hb_parnd( 6 ), hb_parnd( 7 ), hb_parnidef( 8, 1 ), &iOk, ( Qt::WindowFlags ) hb_parni( 10 ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retnd( ( p )->getDouble( hbqt_par_QWidget( 2 ), hb_parstr_utf8( 3, &pText, NULL ), hb_parstr_utf8( 4, &pText, NULL ), hb_parnd( 5 ), hb_parnd( 6 ), hb_parnd( 7 ), hb_parnidef( 8, 1 ), &iOk, ( Qt::WindowFlags ) hb_parni( 10 ) ) );
+      hb_strfree( pText );
    }
 
    hb_stornl( iOk, 9 );
@@ -743,10 +671,10 @@ HB_FUNC( QT_QINPUTDIALOG_GETINT )
    bool iOk = 0;
 
    if( p )
-      hb_retni( ( p )->getInt( hbqt_par_QWidget( 2 ), QInputDialog::tr( hb_parc( 3 ) ), QInputDialog::tr( hb_parc( 4 ) ), hb_parni( 5 ), hb_parnidef( 6, -2147483647 ), hb_parnidef( 7, 2147483647 ), hb_parnidef( 8, 1 ), &iOk, ( Qt::WindowFlags ) hb_parni( 10 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_GETINT FP=hb_retni( ( p )->getInt( hbqt_par_QWidget( 2 ), QInputDialog::tr( hb_parc( 3 ) ), QInputDialog::tr( hb_parc( 4 ) ), hb_parni( 5 ), hb_parnidef( 6, -2147483647 ), hb_parnidef( 7, 2147483647 ), hb_parnidef( 8, 1 ), &iOk, ( Qt::WindowFlags ) hb_parni( 10 ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retni( ( p )->getInt( hbqt_par_QWidget( 2 ), hb_parstr_utf8( 3, &pText, NULL ), hb_parstr_utf8( 4, &pText, NULL ), hb_parni( 5 ), hb_parnidef( 6, -2147483647 ), hb_parnidef( 7, 2147483647 ), hb_parnidef( 8, 1 ), &iOk, ( Qt::WindowFlags ) hb_parni( 10 ) ) );
+      hb_strfree( pText );
    }
 
    hb_stornl( iOk, 9 );
@@ -761,10 +689,10 @@ HB_FUNC( QT_QINPUTDIALOG_GETITEM )
    bool iOk = 0;
 
    if( p )
-      hb_retc( ( p )->getItem( hbqt_par_QWidget( 2 ), QInputDialog::tr( hb_parc( 3 ) ), QInputDialog::tr( hb_parc( 4 ) ), *hbqt_par_QStringList( 5 ), hb_parni( 6 ), hb_parl( 7 ), &iOk, ( Qt::WindowFlags ) hb_parni( 9 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_GETITEM FP=hb_retc( ( p )->getItem( hbqt_par_QWidget( 2 ), QInputDialog::tr( hb_parc( 3 ) ), QInputDialog::tr( hb_parc( 4 ) ), *hbqt_par_QStringList( 5 ), hb_parni( 6 ), hb_parl( 7 ), &iOk, ( Qt::WindowFlags ) hb_parni( 9 ) ).toAscii().data() ); p is NULL" ) );
+      void * pText;
+      hb_retstr_utf8( ( p )->getItem( hbqt_par_QWidget( 2 ), hb_parstr_utf8( 3, &pText, NULL ), hb_parstr_utf8( 4, &pText, NULL ), *hbqt_par_QStringList( 5 ), hb_parni( 6 ), hb_parl( 7 ), &iOk, ( Qt::WindowFlags ) hb_parni( 9 ) ).toUtf8().data() );
+      hb_strfree( pText );
    }
 
    hb_stornl( iOk, 8 );
@@ -779,10 +707,10 @@ HB_FUNC( QT_QINPUTDIALOG_GETTEXT )
    bool iOk = 0;
 
    if( p )
-      hb_retc( ( p )->getText( hbqt_par_QWidget( 2 ), QInputDialog::tr( hb_parc( 3 ) ), QInputDialog::tr( hb_parc( 4 ) ), ( HB_ISNUM( 5 ) ? ( QLineEdit::EchoMode ) hb_parni( 5 ) : ( QLineEdit::EchoMode ) QLineEdit::Normal ), QInputDialog::tr( hb_parc( 6 ) ), &iOk, ( Qt::WindowFlags ) hb_parni( 8 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTDIALOG_GETTEXT FP=hb_retc( ( p )->getText( hbqt_par_QWidget( 2 ), QInputDialog::tr( hb_parc( 3 ) ), QInputDialog::tr( hb_parc( 4 ) ), ( HB_ISNUM( 5 ) ? ( QLineEdit::EchoMode ) hb_parni( 5 ) : ( QLineEdit::EchoMode ) QLineEdit::Normal ), QInputDialog::tr( hb_parc( 6 ) ), &iOk, ( Qt::WindowFlags ) hb_parni( 8 ) ).toAscii().data() ); p is NULL" ) );
+      void * pText;
+      hb_retstr_utf8( ( p )->getText( hbqt_par_QWidget( 2 ), hb_parstr_utf8( 3, &pText, NULL ), hb_parstr_utf8( 4, &pText, NULL ), ( HB_ISNUM( 5 ) ? ( QLineEdit::EchoMode ) hb_parni( 5 ) : ( QLineEdit::EchoMode ) QLineEdit::Normal ), hb_parstr_utf8( 6, &pText, NULL ), &iOk, ( Qt::WindowFlags ) hb_parni( 8 ) ).toUtf8().data() );
+      hb_strfree( pText );
    }
 
    hb_stornl( iOk, 7 );

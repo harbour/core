@@ -163,10 +163,8 @@ HB_FUNC( QT_QLINEEDIT_ALIGNMENT )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      hb_retni( ( Qt::Alignment ) ( p )->alignment() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_ALIGNMENT FP=hb_retni( ( Qt::Alignment ) ( p )->alignment() ); p is NULL" ) );
+      hb_retni( ( Qt::Alignment ) ( p )->alignment() );
    }
 }
 
@@ -177,10 +175,8 @@ HB_FUNC( QT_QLINEEDIT_BACKSPACE )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->backspace();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_BACKSPACE FP=( p )->backspace(); p is NULL" ) );
+      ( p )->backspace();
    }
 }
 
@@ -191,10 +187,8 @@ HB_FUNC( QT_QLINEEDIT_COMPLETER )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QCompleter( ( p )->completer(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_COMPLETER FP=hb_retptrGC( hbqt_gcAllocate_QCompleter( ( p )->completer(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QCompleter( ( p )->completer(), false ) );
    }
 }
 
@@ -205,10 +199,8 @@ HB_FUNC( QT_QLINEEDIT_CREATESTANDARDCONTEXTMENU )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QMenu( ( p )->createStandardContextMenu(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_CREATESTANDARDCONTEXTMENU FP=hb_retptrGC( hbqt_gcAllocate_QMenu( ( p )->createStandardContextMenu(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QMenu( ( p )->createStandardContextMenu(), false ) );
    }
 }
 
@@ -219,10 +211,8 @@ HB_FUNC( QT_QLINEEDIT_CURSORBACKWARD )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->cursorBackward( hb_parl( 2 ), hb_parnidef( 3, 1 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_CURSORBACKWARD FP=( p )->cursorBackward( hb_parl( 2 ), hb_parnidef( 3, 1 ) ); p is NULL" ) );
+      ( p )->cursorBackward( hb_parl( 2 ), hb_parnidef( 3, 1 ) );
    }
 }
 
@@ -233,10 +223,8 @@ HB_FUNC( QT_QLINEEDIT_CURSORFORWARD )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->cursorForward( hb_parl( 2 ), hb_parnidef( 3, 1 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_CURSORFORWARD FP=( p )->cursorForward( hb_parl( 2 ), hb_parnidef( 3, 1 ) ); p is NULL" ) );
+      ( p )->cursorForward( hb_parl( 2 ), hb_parnidef( 3, 1 ) );
    }
 }
 
@@ -247,10 +235,8 @@ HB_FUNC( QT_QLINEEDIT_CURSORPOSITION )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      hb_retni( ( p )->cursorPosition() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_CURSORPOSITION FP=hb_retni( ( p )->cursorPosition() ); p is NULL" ) );
+      hb_retni( ( p )->cursorPosition() );
    }
 }
 
@@ -261,10 +247,8 @@ HB_FUNC( QT_QLINEEDIT_CURSORPOSITIONAT )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      hb_retni( ( p )->cursorPositionAt( *hbqt_par_QPoint( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_CURSORPOSITIONAT FP=hb_retni( ( p )->cursorPositionAt( *hbqt_par_QPoint( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->cursorPositionAt( *hbqt_par_QPoint( 2 ) ) );
    }
 }
 
@@ -275,10 +259,8 @@ HB_FUNC( QT_QLINEEDIT_CURSORWORDBACKWARD )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->cursorWordBackward( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_CURSORWORDBACKWARD FP=( p )->cursorWordBackward( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->cursorWordBackward( hb_parl( 2 ) );
    }
 }
 
@@ -289,10 +271,8 @@ HB_FUNC( QT_QLINEEDIT_CURSORWORDFORWARD )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->cursorWordForward( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_CURSORWORDFORWARD FP=( p )->cursorWordForward( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->cursorWordForward( hb_parl( 2 ) );
    }
 }
 
@@ -303,10 +283,8 @@ HB_FUNC( QT_QLINEEDIT_DEL )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->del();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_DEL FP=( p )->del(); p is NULL" ) );
+      ( p )->del();
    }
 }
 
@@ -317,10 +295,8 @@ HB_FUNC( QT_QLINEEDIT_DESELECT )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->deselect();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_DESELECT FP=( p )->deselect(); p is NULL" ) );
+      ( p )->deselect();
    }
 }
 
@@ -331,10 +307,8 @@ HB_FUNC( QT_QLINEEDIT_DISPLAYTEXT )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      hb_retc( ( p )->displayText().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_DISPLAYTEXT FP=hb_retc( ( p )->displayText().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->displayText().toUtf8().data() );
    }
 }
 
@@ -345,10 +319,8 @@ HB_FUNC( QT_QLINEEDIT_DRAGENABLED )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      hb_retl( ( p )->dragEnabled() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_DRAGENABLED FP=hb_retl( ( p )->dragEnabled() ); p is NULL" ) );
+      hb_retl( ( p )->dragEnabled() );
    }
 }
 
@@ -359,10 +331,8 @@ HB_FUNC( QT_QLINEEDIT_ECHOMODE )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      hb_retni( ( QLineEdit::EchoMode ) ( p )->echoMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_ECHOMODE FP=hb_retni( ( QLineEdit::EchoMode ) ( p )->echoMode() ); p is NULL" ) );
+      hb_retni( ( QLineEdit::EchoMode ) ( p )->echoMode() );
    }
 }
 
@@ -373,10 +343,8 @@ HB_FUNC( QT_QLINEEDIT_END )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->end( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_END FP=( p )->end( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->end( hb_parl( 2 ) );
    }
 }
 
@@ -392,10 +360,8 @@ HB_FUNC( QT_QLINEEDIT_GETTEXTMARGINS )
    int iBottom = 0;
 
    if( p )
-      ( p )->getTextMargins( &iLeft, &iTop, &iRight, &iBottom );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_GETTEXTMARGINS FP=( p )->getTextMargins( &iLeft, &iTop, &iRight, &iBottom ); p is NULL" ) );
+      ( p )->getTextMargins( &iLeft, &iTop, &iRight, &iBottom );
    }
 
    hb_storni( iLeft, 2 );
@@ -411,10 +377,8 @@ HB_FUNC( QT_QLINEEDIT_HASACCEPTABLEINPUT )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      hb_retl( ( p )->hasAcceptableInput() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_HASACCEPTABLEINPUT FP=hb_retl( ( p )->hasAcceptableInput() ); p is NULL" ) );
+      hb_retl( ( p )->hasAcceptableInput() );
    }
 }
 
@@ -425,10 +389,8 @@ HB_FUNC( QT_QLINEEDIT_HASFRAME )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      hb_retl( ( p )->hasFrame() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_HASFRAME FP=hb_retl( ( p )->hasFrame() ); p is NULL" ) );
+      hb_retl( ( p )->hasFrame() );
    }
 }
 
@@ -439,10 +401,8 @@ HB_FUNC( QT_QLINEEDIT_HASSELECTEDTEXT )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      hb_retl( ( p )->hasSelectedText() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_HASSELECTEDTEXT FP=hb_retl( ( p )->hasSelectedText() ); p is NULL" ) );
+      hb_retl( ( p )->hasSelectedText() );
    }
 }
 
@@ -453,10 +413,8 @@ HB_FUNC( QT_QLINEEDIT_HOME )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->home( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_HOME FP=( p )->home( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->home( hb_parl( 2 ) );
    }
 }
 
@@ -467,10 +425,8 @@ HB_FUNC( QT_QLINEEDIT_INPUTMASK )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      hb_retc( ( p )->inputMask().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_INPUTMASK FP=hb_retc( ( p )->inputMask().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->inputMask().toUtf8().data() );
    }
 }
 
@@ -481,10 +437,10 @@ HB_FUNC( QT_QLINEEDIT_INSERT )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->insert( QLineEdit::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_INSERT FP=( p )->insert( QLineEdit::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->insert( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -495,10 +451,8 @@ HB_FUNC( QT_QLINEEDIT_ISMODIFIED )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      hb_retl( ( p )->isModified() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_ISMODIFIED FP=hb_retl( ( p )->isModified() ); p is NULL" ) );
+      hb_retl( ( p )->isModified() );
    }
 }
 
@@ -509,10 +463,8 @@ HB_FUNC( QT_QLINEEDIT_ISREADONLY )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      hb_retl( ( p )->isReadOnly() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_ISREADONLY FP=hb_retl( ( p )->isReadOnly() ); p is NULL" ) );
+      hb_retl( ( p )->isReadOnly() );
    }
 }
 
@@ -523,10 +475,8 @@ HB_FUNC( QT_QLINEEDIT_ISREDOAVAILABLE )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      hb_retl( ( p )->isRedoAvailable() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_ISREDOAVAILABLE FP=hb_retl( ( p )->isRedoAvailable() ); p is NULL" ) );
+      hb_retl( ( p )->isRedoAvailable() );
    }
 }
 
@@ -537,10 +487,8 @@ HB_FUNC( QT_QLINEEDIT_ISUNDOAVAILABLE )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      hb_retl( ( p )->isUndoAvailable() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_ISUNDOAVAILABLE FP=hb_retl( ( p )->isUndoAvailable() ); p is NULL" ) );
+      hb_retl( ( p )->isUndoAvailable() );
    }
 }
 
@@ -551,10 +499,8 @@ HB_FUNC( QT_QLINEEDIT_MAXLENGTH )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      hb_retni( ( p )->maxLength() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_MAXLENGTH FP=hb_retni( ( p )->maxLength() ); p is NULL" ) );
+      hb_retni( ( p )->maxLength() );
    }
 }
 
@@ -565,10 +511,8 @@ HB_FUNC( QT_QLINEEDIT_MINIMUMSIZEHINT )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->minimumSizeHint() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_MINIMUMSIZEHINT FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->minimumSizeHint() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->minimumSizeHint() ), true ) );
    }
 }
 
@@ -579,10 +523,8 @@ HB_FUNC( QT_QLINEEDIT_SELECTEDTEXT )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      hb_retc( ( p )->selectedText().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_SELECTEDTEXT FP=hb_retc( ( p )->selectedText().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->selectedText().toUtf8().data() );
    }
 }
 
@@ -593,10 +535,8 @@ HB_FUNC( QT_QLINEEDIT_SELECTIONSTART )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      hb_retni( ( p )->selectionStart() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_SELECTIONSTART FP=hb_retni( ( p )->selectionStart() ); p is NULL" ) );
+      hb_retni( ( p )->selectionStart() );
    }
 }
 
@@ -607,10 +547,8 @@ HB_FUNC( QT_QLINEEDIT_SETALIGNMENT )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_SETALIGNMENT FP=( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
    }
 }
 
@@ -621,10 +559,8 @@ HB_FUNC( QT_QLINEEDIT_SETCOMPLETER )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->setCompleter( hbqt_par_QCompleter( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_SETCOMPLETER FP=( p )->setCompleter( hbqt_par_QCompleter( 2 ) ); p is NULL" ) );
+      ( p )->setCompleter( hbqt_par_QCompleter( 2 ) );
    }
 }
 
@@ -635,10 +571,8 @@ HB_FUNC( QT_QLINEEDIT_SETCURSORPOSITION )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->setCursorPosition( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_SETCURSORPOSITION FP=( p )->setCursorPosition( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setCursorPosition( hb_parni( 2 ) );
    }
 }
 
@@ -649,10 +583,8 @@ HB_FUNC( QT_QLINEEDIT_SETDRAGENABLED )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->setDragEnabled( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_SETDRAGENABLED FP=( p )->setDragEnabled( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setDragEnabled( hb_parl( 2 ) );
    }
 }
 
@@ -663,10 +595,8 @@ HB_FUNC( QT_QLINEEDIT_SETECHOMODE )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->setEchoMode( ( QLineEdit::EchoMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_SETECHOMODE FP=( p )->setEchoMode( ( QLineEdit::EchoMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setEchoMode( ( QLineEdit::EchoMode ) hb_parni( 2 ) );
    }
 }
 
@@ -677,10 +607,8 @@ HB_FUNC( QT_QLINEEDIT_SETFRAME )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->setFrame( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_SETFRAME FP=( p )->setFrame( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setFrame( hb_parl( 2 ) );
    }
 }
 
@@ -691,10 +619,10 @@ HB_FUNC( QT_QLINEEDIT_SETINPUTMASK )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->setInputMask( QLineEdit::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_SETINPUTMASK FP=( p )->setInputMask( QLineEdit::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setInputMask( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -705,10 +633,8 @@ HB_FUNC( QT_QLINEEDIT_SETMAXLENGTH )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->setMaxLength( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_SETMAXLENGTH FP=( p )->setMaxLength( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setMaxLength( hb_parni( 2 ) );
    }
 }
 
@@ -719,10 +645,8 @@ HB_FUNC( QT_QLINEEDIT_SETMODIFIED )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->setModified( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_SETMODIFIED FP=( p )->setModified( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setModified( hb_parl( 2 ) );
    }
 }
 
@@ -733,10 +657,8 @@ HB_FUNC( QT_QLINEEDIT_SETREADONLY )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->setReadOnly( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_SETREADONLY FP=( p )->setReadOnly( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setReadOnly( hb_parl( 2 ) );
    }
 }
 
@@ -747,10 +669,8 @@ HB_FUNC( QT_QLINEEDIT_SETSELECTION )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->setSelection( hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_SETSELECTION FP=( p )->setSelection( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setSelection( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -761,10 +681,8 @@ HB_FUNC( QT_QLINEEDIT_SETTEXTMARGINS )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->setTextMargins( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_SETTEXTMARGINS FP=( p )->setTextMargins( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ); p is NULL" ) );
+      ( p )->setTextMargins( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
    }
 }
 
@@ -775,10 +693,8 @@ HB_FUNC( QT_QLINEEDIT_SETVALIDATOR )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->setValidator( hbqt_par_QValidator( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_SETVALIDATOR FP=( p )->setValidator( hbqt_par_QValidator( 2 ) ); p is NULL" ) );
+      ( p )->setValidator( hbqt_par_QValidator( 2 ) );
    }
 }
 
@@ -789,10 +705,8 @@ HB_FUNC( QT_QLINEEDIT_SIZEHINT )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->sizeHint() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_SIZEHINT FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->sizeHint() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->sizeHint() ), true ) );
    }
 }
 
@@ -803,10 +717,8 @@ HB_FUNC( QT_QLINEEDIT_TEXT )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      hb_retc( ( p )->text().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_TEXT FP=hb_retc( ( p )->text().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->text().toUtf8().data() );
    }
 }
 
@@ -817,10 +729,8 @@ HB_FUNC( QT_QLINEEDIT_VALIDATOR )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QValidator( ( void * ) ( p )->validator(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_VALIDATOR FP=hb_retptrGC( hbqt_gcAllocate_QValidator( ( void * ) ( p )->validator(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QValidator( ( void * ) ( p )->validator(), false ) );
    }
 }
 
@@ -831,10 +741,8 @@ HB_FUNC( QT_QLINEEDIT_CLEAR )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->clear();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_CLEAR FP=( p )->clear(); p is NULL" ) );
+      ( p )->clear();
    }
 }
 
@@ -845,10 +753,8 @@ HB_FUNC( QT_QLINEEDIT_COPY )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->copy();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_COPY FP=( p )->copy(); p is NULL" ) );
+      ( p )->copy();
    }
 }
 
@@ -859,10 +765,8 @@ HB_FUNC( QT_QLINEEDIT_CUT )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->cut();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_CUT FP=( p )->cut(); p is NULL" ) );
+      ( p )->cut();
    }
 }
 
@@ -873,10 +777,8 @@ HB_FUNC( QT_QLINEEDIT_PASTE )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->paste();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_PASTE FP=( p )->paste(); p is NULL" ) );
+      ( p )->paste();
    }
 }
 
@@ -887,10 +789,8 @@ HB_FUNC( QT_QLINEEDIT_REDO )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->redo();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_REDO FP=( p )->redo(); p is NULL" ) );
+      ( p )->redo();
    }
 }
 
@@ -901,10 +801,8 @@ HB_FUNC( QT_QLINEEDIT_SELECTALL )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->selectAll();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_SELECTALL FP=( p )->selectAll(); p is NULL" ) );
+      ( p )->selectAll();
    }
 }
 
@@ -915,10 +813,10 @@ HB_FUNC( QT_QLINEEDIT_SETTEXT )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->setText( QLineEdit::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_SETTEXT FP=( p )->setText( QLineEdit::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setText( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -929,10 +827,8 @@ HB_FUNC( QT_QLINEEDIT_UNDO )
 {
    QLineEdit * p = hbqt_par_QLineEdit( 1 );
    if( p )
-      ( p )->undo();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLINEEDIT_UNDO FP=( p )->undo(); p is NULL" ) );
+      ( p )->undo();
    }
 }
 

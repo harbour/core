@@ -162,10 +162,8 @@ HB_FUNC( QT_QGRAPHICSPATHITEM_PATH )
 {
    QGraphicsPathItem * p = hbqt_par_QGraphicsPathItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPainterPath( new QPainterPath( ( p )->path() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSPATHITEM_PATH FP=hb_retptrGC( hbqt_gcAllocate_QPainterPath( new QPainterPath( ( p )->path() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPainterPath( new QPainterPath( ( p )->path() ), true ) );
    }
 }
 
@@ -176,10 +174,8 @@ HB_FUNC( QT_QGRAPHICSPATHITEM_SETPATH )
 {
    QGraphicsPathItem * p = hbqt_par_QGraphicsPathItem( 1 );
    if( p )
-      ( p )->setPath( *hbqt_par_QPainterPath( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSPATHITEM_SETPATH FP=( p )->setPath( *hbqt_par_QPainterPath( 2 ) ); p is NULL" ) );
+      ( p )->setPath( *hbqt_par_QPainterPath( 2 ) );
    }
 }
 

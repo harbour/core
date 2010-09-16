@@ -149,10 +149,8 @@ HB_FUNC( QT_QTEXTLISTFORMAT_INDENT )
 {
    QTextListFormat * p = hbqt_par_QTextListFormat( 1 );
    if( p )
-      hb_retni( ( p )->indent() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTLISTFORMAT_INDENT FP=hb_retni( ( p )->indent() ); p is NULL" ) );
+      hb_retni( ( p )->indent() );
    }
 }
 
@@ -163,10 +161,8 @@ HB_FUNC( QT_QTEXTLISTFORMAT_ISVALID )
 {
    QTextListFormat * p = hbqt_par_QTextListFormat( 1 );
    if( p )
-      hb_retl( ( p )->isValid() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTLISTFORMAT_ISVALID FP=hb_retl( ( p )->isValid() ); p is NULL" ) );
+      hb_retl( ( p )->isValid() );
    }
 }
 
@@ -177,10 +173,8 @@ HB_FUNC( QT_QTEXTLISTFORMAT_SETINDENT )
 {
    QTextListFormat * p = hbqt_par_QTextListFormat( 1 );
    if( p )
-      ( p )->setIndent( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTLISTFORMAT_SETINDENT FP=( p )->setIndent( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setIndent( hb_parni( 2 ) );
    }
 }
 
@@ -191,10 +185,8 @@ HB_FUNC( QT_QTEXTLISTFORMAT_SETSTYLE )
 {
    QTextListFormat * p = hbqt_par_QTextListFormat( 1 );
    if( p )
-      ( p )->setStyle( ( QTextListFormat::Style ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTLISTFORMAT_SETSTYLE FP=( p )->setStyle( ( QTextListFormat::Style ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setStyle( ( QTextListFormat::Style ) hb_parni( 2 ) );
    }
 }
 
@@ -205,10 +197,8 @@ HB_FUNC( QT_QTEXTLISTFORMAT_STYLE )
 {
    QTextListFormat * p = hbqt_par_QTextListFormat( 1 );
    if( p )
-      hb_retni( ( QTextListFormat::Style ) ( p )->style() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTLISTFORMAT_STYLE FP=hb_retni( ( QTextListFormat::Style ) ( p )->style() ); p is NULL" ) );
+      hb_retni( ( QTextListFormat::Style ) ( p )->style() );
    }
 }
 

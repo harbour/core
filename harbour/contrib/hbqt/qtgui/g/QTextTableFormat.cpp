@@ -154,10 +154,8 @@ HB_FUNC( QT_QTEXTTABLEFORMAT_ALIGNMENT )
 {
    QTextTableFormat * p = hbqt_par_QTextTableFormat( 1 );
    if( p )
-      hb_retni( ( Qt::Alignment ) ( p )->alignment() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTTABLEFORMAT_ALIGNMENT FP=hb_retni( ( Qt::Alignment ) ( p )->alignment() ); p is NULL" ) );
+      hb_retni( ( Qt::Alignment ) ( p )->alignment() );
    }
 }
 
@@ -168,10 +166,8 @@ HB_FUNC( QT_QTEXTTABLEFORMAT_CELLPADDING )
 {
    QTextTableFormat * p = hbqt_par_QTextTableFormat( 1 );
    if( p )
-      hb_retnd( ( p )->cellPadding() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTTABLEFORMAT_CELLPADDING FP=hb_retnd( ( p )->cellPadding() ); p is NULL" ) );
+      hb_retnd( ( p )->cellPadding() );
    }
 }
 
@@ -182,10 +178,8 @@ HB_FUNC( QT_QTEXTTABLEFORMAT_CELLSPACING )
 {
    QTextTableFormat * p = hbqt_par_QTextTableFormat( 1 );
    if( p )
-      hb_retnd( ( p )->cellSpacing() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTTABLEFORMAT_CELLSPACING FP=hb_retnd( ( p )->cellSpacing() ); p is NULL" ) );
+      hb_retnd( ( p )->cellSpacing() );
    }
 }
 
@@ -196,10 +190,8 @@ HB_FUNC( QT_QTEXTTABLEFORMAT_CLEARCOLUMNWIDTHCONSTRAINTS )
 {
    QTextTableFormat * p = hbqt_par_QTextTableFormat( 1 );
    if( p )
-      ( p )->clearColumnWidthConstraints();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTTABLEFORMAT_CLEARCOLUMNWIDTHCONSTRAINTS FP=( p )->clearColumnWidthConstraints(); p is NULL" ) );
+      ( p )->clearColumnWidthConstraints();
    }
 }
 
@@ -210,10 +202,8 @@ HB_FUNC( QT_QTEXTTABLEFORMAT_COLUMNS )
 {
    QTextTableFormat * p = hbqt_par_QTextTableFormat( 1 );
    if( p )
-      hb_retni( ( p )->columns() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTTABLEFORMAT_COLUMNS FP=hb_retni( ( p )->columns() ); p is NULL" ) );
+      hb_retni( ( p )->columns() );
    }
 }
 
@@ -224,10 +214,8 @@ HB_FUNC( QT_QTEXTTABLEFORMAT_HEADERROWCOUNT )
 {
    QTextTableFormat * p = hbqt_par_QTextTableFormat( 1 );
    if( p )
-      hb_retni( ( p )->headerRowCount() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTTABLEFORMAT_HEADERROWCOUNT FP=hb_retni( ( p )->headerRowCount() ); p is NULL" ) );
+      hb_retni( ( p )->headerRowCount() );
    }
 }
 
@@ -238,10 +226,8 @@ HB_FUNC( QT_QTEXTTABLEFORMAT_ISVALID )
 {
    QTextTableFormat * p = hbqt_par_QTextTableFormat( 1 );
    if( p )
-      hb_retl( ( p )->isValid() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTTABLEFORMAT_ISVALID FP=hb_retl( ( p )->isValid() ); p is NULL" ) );
+      hb_retl( ( p )->isValid() );
    }
 }
 
@@ -252,10 +238,8 @@ HB_FUNC( QT_QTEXTTABLEFORMAT_SETALIGNMENT )
 {
    QTextTableFormat * p = hbqt_par_QTextTableFormat( 1 );
    if( p )
-      ( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTTABLEFORMAT_SETALIGNMENT FP=( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
    }
 }
 
@@ -266,10 +250,8 @@ HB_FUNC( QT_QTEXTTABLEFORMAT_SETCELLPADDING )
 {
    QTextTableFormat * p = hbqt_par_QTextTableFormat( 1 );
    if( p )
-      ( p )->setCellPadding( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTTABLEFORMAT_SETCELLPADDING FP=( p )->setCellPadding( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setCellPadding( hb_parnd( 2 ) );
    }
 }
 
@@ -280,10 +262,8 @@ HB_FUNC( QT_QTEXTTABLEFORMAT_SETCELLSPACING )
 {
    QTextTableFormat * p = hbqt_par_QTextTableFormat( 1 );
    if( p )
-      ( p )->setCellSpacing( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTTABLEFORMAT_SETCELLSPACING FP=( p )->setCellSpacing( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setCellSpacing( hb_parnd( 2 ) );
    }
 }
 
@@ -294,10 +274,8 @@ HB_FUNC( QT_QTEXTTABLEFORMAT_SETHEADERROWCOUNT )
 {
    QTextTableFormat * p = hbqt_par_QTextTableFormat( 1 );
    if( p )
-      ( p )->setHeaderRowCount( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTTABLEFORMAT_SETHEADERROWCOUNT FP=( p )->setHeaderRowCount( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setHeaderRowCount( hb_parni( 2 ) );
    }
 }
 

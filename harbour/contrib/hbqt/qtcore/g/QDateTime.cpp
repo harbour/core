@@ -148,10 +148,8 @@ HB_FUNC( QT_QDATETIME_ADDDAYS )
 {
    QDateTime * p = hbqt_par_QDateTime( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->addDays( hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIME_ADDDAYS FP=hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->addDays( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->addDays( hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -162,10 +160,8 @@ HB_FUNC( QT_QDATETIME_ADDMSECS )
 {
    QDateTime * p = hbqt_par_QDateTime( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->addMSecs( hb_parnint( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIME_ADDMSECS FP=hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->addMSecs( hb_parnint( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->addMSecs( hb_parnint( 2 ) ) ), true ) );
    }
 }
 
@@ -176,10 +172,8 @@ HB_FUNC( QT_QDATETIME_ADDMONTHS )
 {
    QDateTime * p = hbqt_par_QDateTime( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->addMonths( hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIME_ADDMONTHS FP=hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->addMonths( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->addMonths( hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -190,10 +184,8 @@ HB_FUNC( QT_QDATETIME_ADDSECS )
 {
    QDateTime * p = hbqt_par_QDateTime( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->addSecs( hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIME_ADDSECS FP=hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->addSecs( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->addSecs( hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -204,10 +196,8 @@ HB_FUNC( QT_QDATETIME_ADDYEARS )
 {
    QDateTime * p = hbqt_par_QDateTime( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->addYears( hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIME_ADDYEARS FP=hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->addYears( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->addYears( hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -218,10 +208,8 @@ HB_FUNC( QT_QDATETIME_DATE )
 {
    QDateTime * p = hbqt_par_QDateTime( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( ( p )->date() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIME_DATE FP=hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( ( p )->date() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( ( p )->date() ), true ) );
    }
 }
 
@@ -232,10 +220,8 @@ HB_FUNC( QT_QDATETIME_DAYSTO )
 {
    QDateTime * p = hbqt_par_QDateTime( 1 );
    if( p )
-      hb_retni( ( p )->daysTo( *hbqt_par_QDateTime( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIME_DAYSTO FP=hb_retni( ( p )->daysTo( *hbqt_par_QDateTime( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->daysTo( *hbqt_par_QDateTime( 2 ) ) );
    }
 }
 
@@ -246,10 +232,8 @@ HB_FUNC( QT_QDATETIME_ISNULL )
 {
    QDateTime * p = hbqt_par_QDateTime( 1 );
    if( p )
-      hb_retl( ( p )->isNull() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIME_ISNULL FP=hb_retl( ( p )->isNull() ); p is NULL" ) );
+      hb_retl( ( p )->isNull() );
    }
 }
 
@@ -260,10 +244,8 @@ HB_FUNC( QT_QDATETIME_ISVALID )
 {
    QDateTime * p = hbqt_par_QDateTime( 1 );
    if( p )
-      hb_retl( ( p )->isValid() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIME_ISVALID FP=hb_retl( ( p )->isValid() ); p is NULL" ) );
+      hb_retl( ( p )->isValid() );
    }
 }
 
@@ -274,10 +256,8 @@ HB_FUNC( QT_QDATETIME_SECSTO )
 {
    QDateTime * p = hbqt_par_QDateTime( 1 );
    if( p )
-      hb_retni( ( p )->secsTo( *hbqt_par_QDateTime( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIME_SECSTO FP=hb_retni( ( p )->secsTo( *hbqt_par_QDateTime( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->secsTo( *hbqt_par_QDateTime( 2 ) ) );
    }
 }
 
@@ -288,10 +268,8 @@ HB_FUNC( QT_QDATETIME_SETDATE )
 {
    QDateTime * p = hbqt_par_QDateTime( 1 );
    if( p )
-      ( p )->setDate( *hbqt_par_QDate( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIME_SETDATE FP=( p )->setDate( *hbqt_par_QDate( 2 ) ); p is NULL" ) );
+      ( p )->setDate( *hbqt_par_QDate( 2 ) );
    }
 }
 
@@ -302,10 +280,8 @@ HB_FUNC( QT_QDATETIME_SETTIME )
 {
    QDateTime * p = hbqt_par_QDateTime( 1 );
    if( p )
-      ( p )->setTime( *hbqt_par_QTime( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIME_SETTIME FP=( p )->setTime( *hbqt_par_QTime( 2 ) ); p is NULL" ) );
+      ( p )->setTime( *hbqt_par_QTime( 2 ) );
    }
 }
 
@@ -316,10 +292,8 @@ HB_FUNC( QT_QDATETIME_SETTIMESPEC )
 {
    QDateTime * p = hbqt_par_QDateTime( 1 );
    if( p )
-      ( p )->setTimeSpec( ( Qt::TimeSpec ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIME_SETTIMESPEC FP=( p )->setTimeSpec( ( Qt::TimeSpec ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setTimeSpec( ( Qt::TimeSpec ) hb_parni( 2 ) );
    }
 }
 
@@ -330,10 +304,8 @@ HB_FUNC( QT_QDATETIME_SETTIME_T )
 {
    QDateTime * p = hbqt_par_QDateTime( 1 );
    if( p )
-      ( p )->setTime_t( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIME_SETTIME_T FP=( p )->setTime_t( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setTime_t( hb_parni( 2 ) );
    }
 }
 
@@ -344,10 +316,8 @@ HB_FUNC( QT_QDATETIME_TIME )
 {
    QDateTime * p = hbqt_par_QDateTime( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( ( p )->time() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIME_TIME FP=hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( ( p )->time() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( ( p )->time() ), true ) );
    }
 }
 
@@ -358,10 +328,8 @@ HB_FUNC( QT_QDATETIME_TIMESPEC )
 {
    QDateTime * p = hbqt_par_QDateTime( 1 );
    if( p )
-      hb_retni( ( Qt::TimeSpec ) ( p )->timeSpec() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIME_TIMESPEC FP=hb_retni( ( Qt::TimeSpec ) ( p )->timeSpec() ); p is NULL" ) );
+      hb_retni( ( Qt::TimeSpec ) ( p )->timeSpec() );
    }
 }
 
@@ -372,10 +340,8 @@ HB_FUNC( QT_QDATETIME_TOLOCALTIME )
 {
    QDateTime * p = hbqt_par_QDateTime( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->toLocalTime() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIME_TOLOCALTIME FP=hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->toLocalTime() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->toLocalTime() ), true ) );
    }
 }
 
@@ -386,10 +352,10 @@ HB_FUNC( QT_QDATETIME_TOSTRING )
 {
    QDateTime * p = hbqt_par_QDateTime( 1 );
    if( p )
-      hb_retc( ( p )->toString( hbqt_par_QString( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIME_TOSTRING FP=hb_retc( ( p )->toString( hbqt_par_QString( 2 ) ).toAscii().data() ); p is NULL" ) );
+      void * pText;
+      hb_retstr_utf8( ( p )->toString( hb_parstr_utf8( 2, &pText, NULL ) ).toUtf8().data() );
+      hb_strfree( pText );
    }
 }
 
@@ -400,10 +366,8 @@ HB_FUNC( QT_QDATETIME_TOSTRING_1 )
 {
    QDateTime * p = hbqt_par_QDateTime( 1 );
    if( p )
-      hb_retc( ( p )->toString( ( HB_ISNUM( 2 ) ? ( Qt::DateFormat ) hb_parni( 2 ) : ( Qt::DateFormat ) Qt::TextDate ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIME_TOSTRING_1 FP=hb_retc( ( p )->toString( ( HB_ISNUM( 2 ) ? ( Qt::DateFormat ) hb_parni( 2 ) : ( Qt::DateFormat ) Qt::TextDate ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->toString( ( HB_ISNUM( 2 ) ? ( Qt::DateFormat ) hb_parni( 2 ) : ( Qt::DateFormat ) Qt::TextDate ) ).toUtf8().data() );
    }
 }
 
@@ -414,10 +378,8 @@ HB_FUNC( QT_QDATETIME_TOTIMESPEC )
 {
    QDateTime * p = hbqt_par_QDateTime( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->toTimeSpec( ( Qt::TimeSpec ) hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIME_TOTIMESPEC FP=hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->toTimeSpec( ( Qt::TimeSpec ) hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->toTimeSpec( ( Qt::TimeSpec ) hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -428,10 +390,8 @@ HB_FUNC( QT_QDATETIME_TOTIME_T )
 {
    QDateTime * p = hbqt_par_QDateTime( 1 );
    if( p )
-      hb_retni( ( p )->toTime_t() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIME_TOTIME_T FP=hb_retni( ( p )->toTime_t() ); p is NULL" ) );
+      hb_retni( ( p )->toTime_t() );
    }
 }
 
@@ -442,10 +402,8 @@ HB_FUNC( QT_QDATETIME_TOUTC )
 {
    QDateTime * p = hbqt_par_QDateTime( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->toUTC() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIME_TOUTC FP=hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->toUTC() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->toUTC() ), true ) );
    }
 }
 
@@ -456,10 +414,8 @@ HB_FUNC( QT_QDATETIME_CURRENTDATETIME )
 {
    QDateTime * p = hbqt_par_QDateTime( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->currentDateTime() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIME_CURRENTDATETIME FP=hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->currentDateTime() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->currentDateTime() ), true ) );
    }
 }
 
@@ -470,10 +426,10 @@ HB_FUNC( QT_QDATETIME_FROMSTRING )
 {
    QDateTime * p = hbqt_par_QDateTime( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->fromString( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::DateFormat ) hb_parni( 3 ) : ( Qt::DateFormat ) Qt::TextDate ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIME_FROMSTRING FP=hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->fromString( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::DateFormat ) hb_parni( 3 ) : ( Qt::DateFormat ) Qt::TextDate ) ) ), true ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->fromString( hb_parstr_utf8( 2, &pText, NULL ), ( HB_ISNUM( 3 ) ? ( Qt::DateFormat ) hb_parni( 3 ) : ( Qt::DateFormat ) Qt::TextDate ) ) ), true ) );
+      hb_strfree( pText );
    }
 }
 
@@ -484,10 +440,10 @@ HB_FUNC( QT_QDATETIME_FROMSTRING_1 )
 {
    QDateTime * p = hbqt_par_QDateTime( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->fromString( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIME_FROMSTRING_1 FP=hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->fromString( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ), true ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->fromString( hb_parstr_utf8( 2, &pText, NULL ), hb_parstr_utf8( 3, &pText, NULL ) ) ), true ) );
+      hb_strfree( pText );
    }
 }
 
@@ -498,10 +454,8 @@ HB_FUNC( QT_QDATETIME_FROMTIME_T )
 {
    QDateTime * p = hbqt_par_QDateTime( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->fromTime_t( hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIME_FROMTIME_T FP=hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->fromTime_t( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->fromTime_t( hb_parni( 2 ) ) ), true ) );
    }
 }
 

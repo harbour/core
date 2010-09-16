@@ -169,10 +169,8 @@ HB_FUNC( QT_QFILE_ATEND )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retl( ( p )->atEnd() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_ATEND FP=hb_retl( ( p )->atEnd() ); p is NULL" ) );
+      hb_retl( ( p )->atEnd() );
    }
 }
 
@@ -183,10 +181,8 @@ HB_FUNC( QT_QFILE_CLOSE )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      ( p )->close();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_CLOSE FP=( p )->close(); p is NULL" ) );
+      ( p )->close();
    }
 }
 
@@ -197,10 +193,10 @@ HB_FUNC( QT_QFILE_COPY )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retl( ( p )->copy( QFile::tr( hb_parc( 2 ) ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_COPY FP=hb_retl( ( p )->copy( QFile::tr( hb_parc( 2 ) ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->copy( hb_parstr_utf8( 2, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -211,10 +207,8 @@ HB_FUNC( QT_QFILE_ERROR )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retni( ( QFile::FileError ) ( p )->error() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_ERROR FP=hb_retni( ( QFile::FileError ) ( p )->error() ); p is NULL" ) );
+      hb_retni( ( QFile::FileError ) ( p )->error() );
    }
 }
 
@@ -225,10 +219,8 @@ HB_FUNC( QT_QFILE_EXISTS )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retl( ( p )->exists() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_EXISTS FP=hb_retl( ( p )->exists() ); p is NULL" ) );
+      hb_retl( ( p )->exists() );
    }
 }
 
@@ -239,10 +231,8 @@ HB_FUNC( QT_QFILE_FILENAME )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retc( ( p )->fileName().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_FILENAME FP=hb_retc( ( p )->fileName().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->fileName().toUtf8().data() );
    }
 }
 
@@ -253,10 +243,8 @@ HB_FUNC( QT_QFILE_FLUSH )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retl( ( p )->flush() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_FLUSH FP=hb_retl( ( p )->flush() ); p is NULL" ) );
+      hb_retl( ( p )->flush() );
    }
 }
 
@@ -267,10 +255,8 @@ HB_FUNC( QT_QFILE_HANDLE )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retni( ( p )->handle() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_HANDLE FP=hb_retni( ( p )->handle() ); p is NULL" ) );
+      hb_retni( ( p )->handle() );
    }
 }
 
@@ -281,10 +267,8 @@ HB_FUNC( QT_QFILE_ISSEQUENTIAL )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retl( ( p )->isSequential() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_ISSEQUENTIAL FP=hb_retl( ( p )->isSequential() ); p is NULL" ) );
+      hb_retl( ( p )->isSequential() );
    }
 }
 
@@ -295,10 +279,10 @@ HB_FUNC( QT_QFILE_LINK )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retl( ( p )->link( QFile::tr( hb_parc( 2 ) ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_LINK FP=hb_retl( ( p )->link( QFile::tr( hb_parc( 2 ) ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->link( hb_parstr_utf8( 2, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -309,10 +293,8 @@ HB_FUNC( QT_QFILE_MAP )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retc( ( const char * ) ( p )->map( hb_parnint( 2 ), hb_parnint( 3 ), ( HB_ISNUM( 4 ) ? ( QFile::MemoryMapFlags ) hb_parni( 4 ) : ( QFile::MemoryMapFlags ) QFile::NoOptions ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_MAP FP=hb_retc( ( const char * ) ( p )->map( hb_parnint( 2 ), hb_parnint( 3 ), ( HB_ISNUM( 4 ) ? ( QFile::MemoryMapFlags ) hb_parni( 4 ) : ( QFile::MemoryMapFlags ) QFile::NoOptions ) ) ); p is NULL" ) );
+      hb_retc( ( const char * ) ( p )->map( hb_parnint( 2 ), hb_parnint( 3 ), ( HB_ISNUM( 4 ) ? ( QFile::MemoryMapFlags ) hb_parni( 4 ) : ( QFile::MemoryMapFlags ) QFile::NoOptions ) ) );
    }
 }
 
@@ -323,10 +305,8 @@ HB_FUNC( QT_QFILE_OPEN )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retl( ( p )->open( ( QFile::OpenMode ) hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_OPEN FP=hb_retl( ( p )->open( ( QFile::OpenMode ) hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->open( ( QFile::OpenMode ) hb_parni( 2 ) ) );
    }
 }
 
@@ -337,10 +317,8 @@ HB_FUNC( QT_QFILE_OPEN_1 )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retl( ( p )->open( hb_parni( 2 ), ( QFile::OpenMode ) hb_parni( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_OPEN_1 FP=hb_retl( ( p )->open( hb_parni( 2 ), ( QFile::OpenMode ) hb_parni( 3 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->open( hb_parni( 2 ), ( QFile::OpenMode ) hb_parni( 3 ) ) );
    }
 }
 
@@ -351,10 +329,8 @@ HB_FUNC( QT_QFILE_PERMISSIONS )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retni( ( QFile::Permissions ) ( p )->permissions() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_PERMISSIONS FP=hb_retni( ( QFile::Permissions ) ( p )->permissions() ); p is NULL" ) );
+      hb_retni( ( QFile::Permissions ) ( p )->permissions() );
    }
 }
 
@@ -365,10 +341,8 @@ HB_FUNC( QT_QFILE_REMOVE )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retl( ( p )->remove() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_REMOVE FP=hb_retl( ( p )->remove() ); p is NULL" ) );
+      hb_retl( ( p )->remove() );
    }
 }
 
@@ -379,10 +353,10 @@ HB_FUNC( QT_QFILE_RENAME )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retl( ( p )->rename( QFile::tr( hb_parc( 2 ) ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_RENAME FP=hb_retl( ( p )->rename( QFile::tr( hb_parc( 2 ) ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->rename( hb_parstr_utf8( 2, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -393,10 +367,8 @@ HB_FUNC( QT_QFILE_RESIZE )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retl( ( p )->resize( hb_parnint( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_RESIZE FP=hb_retl( ( p )->resize( hb_parnint( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->resize( hb_parnint( 2 ) ) );
    }
 }
 
@@ -407,10 +379,10 @@ HB_FUNC( QT_QFILE_SETFILENAME )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      ( p )->setFileName( QFile::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_SETFILENAME FP=( p )->setFileName( QFile::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setFileName( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -421,10 +393,8 @@ HB_FUNC( QT_QFILE_SETPERMISSIONS )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retl( ( p )->setPermissions( ( QFile::Permissions ) hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_SETPERMISSIONS FP=hb_retl( ( p )->setPermissions( ( QFile::Permissions ) hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->setPermissions( ( QFile::Permissions ) hb_parni( 2 ) ) );
    }
 }
 
@@ -435,10 +405,8 @@ HB_FUNC( QT_QFILE_SIZE )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retnint( ( p )->size() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_SIZE FP=hb_retnint( ( p )->size() ); p is NULL" ) );
+      hb_retnint( ( p )->size() );
    }
 }
 
@@ -449,10 +417,8 @@ HB_FUNC( QT_QFILE_SYMLINKTARGET )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retc( ( p )->symLinkTarget().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_SYMLINKTARGET FP=hb_retc( ( p )->symLinkTarget().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->symLinkTarget().toUtf8().data() );
    }
 }
 
@@ -463,10 +429,8 @@ HB_FUNC( QT_QFILE_UNSETERROR )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      ( p )->unsetError();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_UNSETERROR FP=( p )->unsetError(); p is NULL" ) );
+      ( p )->unsetError();
    }
 }
 
@@ -477,10 +441,10 @@ HB_FUNC( QT_QFILE_COPY_1 )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retl( ( p )->copy( QFile::tr( hb_parc( 2 ) ), QFile::tr( hb_parc( 3 ) ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_COPY_1 FP=hb_retl( ( p )->copy( QFile::tr( hb_parc( 2 ) ), QFile::tr( hb_parc( 3 ) ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->copy( hb_parstr_utf8( 2, &pText, NULL ), hb_parstr_utf8( 3, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -491,10 +455,8 @@ HB_FUNC( QT_QFILE_DECODENAME )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retc( ( p )->decodeName( *hbqt_par_QByteArray( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_DECODENAME FP=hb_retc( ( p )->decodeName( *hbqt_par_QByteArray( 2 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->decodeName( *hbqt_par_QByteArray( 2 ) ).toUtf8().data() );
    }
 }
 
@@ -505,10 +467,8 @@ HB_FUNC( QT_QFILE_DECODENAME_1 )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retc( ( p )->decodeName( hbqt_par_char( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_DECODENAME_1 FP=hb_retc( ( p )->decodeName( hbqt_par_char( 2 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->decodeName( hbqt_par_char( 2 ) ).toUtf8().data() );
    }
 }
 
@@ -519,10 +479,10 @@ HB_FUNC( QT_QFILE_ENCODENAME )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->encodeName( QFile::tr( hb_parc( 2 ) ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_ENCODENAME FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->encodeName( QFile::tr( hb_parc( 2 ) ) ) ), true ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->encodeName( hb_parstr_utf8( 2, &pText, NULL ) ) ), true ) );
+      hb_strfree( pText );
    }
 }
 
@@ -533,10 +493,10 @@ HB_FUNC( QT_QFILE_EXISTS_1 )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retl( ( p )->exists( QFile::tr( hb_parc( 2 ) ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_EXISTS_1 FP=hb_retl( ( p )->exists( QFile::tr( hb_parc( 2 ) ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->exists( hb_parstr_utf8( 2, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -547,10 +507,10 @@ HB_FUNC( QT_QFILE_LINK_1 )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retl( ( p )->link( QFile::tr( hb_parc( 2 ) ), QFile::tr( hb_parc( 3 ) ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_LINK_1 FP=hb_retl( ( p )->link( QFile::tr( hb_parc( 2 ) ), QFile::tr( hb_parc( 3 ) ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->link( hb_parstr_utf8( 2, &pText, NULL ), hb_parstr_utf8( 3, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -561,10 +521,10 @@ HB_FUNC( QT_QFILE_PERMISSIONS_1 )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retni( ( QFile::Permissions ) ( p )->permissions( QFile::tr( hb_parc( 2 ) ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_PERMISSIONS_1 FP=hb_retni( ( QFile::Permissions ) ( p )->permissions( QFile::tr( hb_parc( 2 ) ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retni( ( QFile::Permissions ) ( p )->permissions( hb_parstr_utf8( 2, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -575,10 +535,10 @@ HB_FUNC( QT_QFILE_REMOVE_1 )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retl( ( p )->remove( QFile::tr( hb_parc( 2 ) ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_REMOVE_1 FP=hb_retl( ( p )->remove( QFile::tr( hb_parc( 2 ) ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->remove( hb_parstr_utf8( 2, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -589,10 +549,10 @@ HB_FUNC( QT_QFILE_RENAME_1 )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retl( ( p )->rename( QFile::tr( hb_parc( 2 ) ), QFile::tr( hb_parc( 3 ) ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_RENAME_1 FP=hb_retl( ( p )->rename( QFile::tr( hb_parc( 2 ) ), QFile::tr( hb_parc( 3 ) ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->rename( hb_parstr_utf8( 2, &pText, NULL ), hb_parstr_utf8( 3, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -603,10 +563,10 @@ HB_FUNC( QT_QFILE_RESIZE_1 )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retl( ( p )->resize( QFile::tr( hb_parc( 2 ) ), hb_parnint( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_RESIZE_1 FP=hb_retl( ( p )->resize( QFile::tr( hb_parc( 2 ) ), hb_parnint( 3 ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->resize( hb_parstr_utf8( 2, &pText, NULL ), hb_parnint( 3 ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -617,10 +577,10 @@ HB_FUNC( QT_QFILE_SETPERMISSIONS_1 )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retl( ( p )->setPermissions( QFile::tr( hb_parc( 2 ) ), ( QFile::Permissions ) hb_parni( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_SETPERMISSIONS_1 FP=hb_retl( ( p )->setPermissions( QFile::tr( hb_parc( 2 ) ), ( QFile::Permissions ) hb_parni( 3 ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->setPermissions( hb_parstr_utf8( 2, &pText, NULL ), ( QFile::Permissions ) hb_parni( 3 ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -631,10 +591,10 @@ HB_FUNC( QT_QFILE_SYMLINKTARGET_1 )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
-      hb_retc( ( p )->symLinkTarget( QFile::tr( hb_parc( 2 ) ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILE_SYMLINKTARGET_1 FP=hb_retc( ( p )->symLinkTarget( QFile::tr( hb_parc( 2 ) ) ).toAscii().data() ); p is NULL" ) );
+      void * pText;
+      hb_retstr_utf8( ( p )->symLinkTarget( hb_parstr_utf8( 2, &pText, NULL ) ).toUtf8().data() );
+      hb_strfree( pText );
    }
 }
 

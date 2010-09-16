@@ -165,10 +165,8 @@ HB_FUNC( QT_QSIZEPOLICY_CONTROLTYPE )
 {
    QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
    if( p )
-      hb_retni( ( QSizePolicy::ControlType ) ( p )->controlType() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_CONTROLTYPE FP=hb_retni( ( QSizePolicy::ControlType ) ( p )->controlType() ); p is NULL" ) );
+      hb_retni( ( QSizePolicy::ControlType ) ( p )->controlType() );
    }
 }
 
@@ -179,10 +177,8 @@ HB_FUNC( QT_QSIZEPOLICY_EXPANDINGDIRECTIONS )
 {
    QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
    if( p )
-      hb_retni( ( Qt::Orientations ) ( p )->expandingDirections() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_EXPANDINGDIRECTIONS FP=hb_retni( ( Qt::Orientations ) ( p )->expandingDirections() ); p is NULL" ) );
+      hb_retni( ( Qt::Orientations ) ( p )->expandingDirections() );
    }
 }
 
@@ -193,10 +189,8 @@ HB_FUNC( QT_QSIZEPOLICY_HASHEIGHTFORWIDTH )
 {
    QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
    if( p )
-      hb_retl( ( p )->hasHeightForWidth() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_HASHEIGHTFORWIDTH FP=hb_retl( ( p )->hasHeightForWidth() ); p is NULL" ) );
+      hb_retl( ( p )->hasHeightForWidth() );
    }
 }
 
@@ -207,10 +201,8 @@ HB_FUNC( QT_QSIZEPOLICY_HORIZONTALPOLICY )
 {
    QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
    if( p )
-      hb_retni( ( QSizePolicy::Policy ) ( p )->horizontalPolicy() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_HORIZONTALPOLICY FP=hb_retni( ( QSizePolicy::Policy ) ( p )->horizontalPolicy() ); p is NULL" ) );
+      hb_retni( ( QSizePolicy::Policy ) ( p )->horizontalPolicy() );
    }
 }
 
@@ -221,10 +213,8 @@ HB_FUNC( QT_QSIZEPOLICY_HORIZONTALSTRETCH )
 {
    QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
    if( p )
-      hb_retni( ( p )->horizontalStretch() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_HORIZONTALSTRETCH FP=hb_retni( ( p )->horizontalStretch() ); p is NULL" ) );
+      hb_retni( ( p )->horizontalStretch() );
    }
 }
 
@@ -235,10 +225,8 @@ HB_FUNC( QT_QSIZEPOLICY_SETCONTROLTYPE )
 {
    QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
    if( p )
-      ( p )->setControlType( ( QSizePolicy::ControlType ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_SETCONTROLTYPE FP=( p )->setControlType( ( QSizePolicy::ControlType ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setControlType( ( QSizePolicy::ControlType ) hb_parni( 2 ) );
    }
 }
 
@@ -249,10 +237,8 @@ HB_FUNC( QT_QSIZEPOLICY_SETHEIGHTFORWIDTH )
 {
    QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
    if( p )
-      ( p )->setHeightForWidth( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_SETHEIGHTFORWIDTH FP=( p )->setHeightForWidth( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setHeightForWidth( hb_parl( 2 ) );
    }
 }
 
@@ -263,10 +249,8 @@ HB_FUNC( QT_QSIZEPOLICY_SETHORIZONTALPOLICY )
 {
    QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
    if( p )
-      ( p )->setHorizontalPolicy( ( QSizePolicy::Policy ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_SETHORIZONTALPOLICY FP=( p )->setHorizontalPolicy( ( QSizePolicy::Policy ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setHorizontalPolicy( ( QSizePolicy::Policy ) hb_parni( 2 ) );
    }
 }
 
@@ -277,10 +261,8 @@ HB_FUNC( QT_QSIZEPOLICY_SETHORIZONTALSTRETCH )
 {
    QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
    if( p )
-      ( p )->setHorizontalStretch( ( char ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_SETHORIZONTALSTRETCH FP=( p )->setHorizontalStretch( ( char ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setHorizontalStretch( ( char ) hb_parni( 2 ) );
    }
 }
 
@@ -291,10 +273,8 @@ HB_FUNC( QT_QSIZEPOLICY_SETVERTICALPOLICY )
 {
    QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
    if( p )
-      ( p )->setVerticalPolicy( ( QSizePolicy::Policy ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_SETVERTICALPOLICY FP=( p )->setVerticalPolicy( ( QSizePolicy::Policy ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setVerticalPolicy( ( QSizePolicy::Policy ) hb_parni( 2 ) );
    }
 }
 
@@ -305,10 +285,8 @@ HB_FUNC( QT_QSIZEPOLICY_SETVERTICALSTRETCH )
 {
    QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
    if( p )
-      ( p )->setVerticalStretch( ( char ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_SETVERTICALSTRETCH FP=( p )->setVerticalStretch( ( char ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setVerticalStretch( ( char ) hb_parni( 2 ) );
    }
 }
 
@@ -319,10 +297,8 @@ HB_FUNC( QT_QSIZEPOLICY_TRANSPOSE )
 {
    QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
    if( p )
-      ( p )->transpose();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_TRANSPOSE FP=( p )->transpose(); p is NULL" ) );
+      ( p )->transpose();
    }
 }
 
@@ -333,10 +309,8 @@ HB_FUNC( QT_QSIZEPOLICY_VERTICALPOLICY )
 {
    QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
    if( p )
-      hb_retni( ( QSizePolicy::Policy ) ( p )->verticalPolicy() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_VERTICALPOLICY FP=hb_retni( ( QSizePolicy::Policy ) ( p )->verticalPolicy() ); p is NULL" ) );
+      hb_retni( ( QSizePolicy::Policy ) ( p )->verticalPolicy() );
    }
 }
 
@@ -347,10 +321,8 @@ HB_FUNC( QT_QSIZEPOLICY_VERTICALSTRETCH )
 {
    QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
    if( p )
-      hb_retni( ( p )->verticalStretch() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEPOLICY_VERTICALSTRETCH FP=hb_retni( ( p )->verticalStretch() ); p is NULL" ) );
+      hb_retni( ( p )->verticalStretch() );
    }
 }
 

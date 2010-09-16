@@ -172,10 +172,8 @@ HB_FUNC( QT_QMDIAREA_ACTIVATIONORDER )
 {
    QMdiArea * p = hbqt_par_QMdiArea( 1 );
    if( p )
-      hb_retni( ( QMdiArea::WindowOrder ) ( p )->activationOrder() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_ACTIVATIONORDER FP=hb_retni( ( QMdiArea::WindowOrder ) ( p )->activationOrder() ); p is NULL" ) );
+      hb_retni( ( QMdiArea::WindowOrder ) ( p )->activationOrder() );
    }
 }
 
@@ -186,10 +184,8 @@ HB_FUNC( QT_QMDIAREA_ACTIVESUBWINDOW )
 {
    QMdiArea * p = hbqt_par_QMdiArea( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QMdiSubWindow( ( p )->activeSubWindow(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_ACTIVESUBWINDOW FP=hb_retptrGC( hbqt_gcAllocate_QMdiSubWindow( ( p )->activeSubWindow(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QMdiSubWindow( ( p )->activeSubWindow(), false ) );
    }
 }
 
@@ -200,10 +196,8 @@ HB_FUNC( QT_QMDIAREA_ADDSUBWINDOW )
 {
    QMdiArea * p = hbqt_par_QMdiArea( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QMdiSubWindow( ( p )->addSubWindow( hbqt_par_QWidget( 2 ), ( Qt::WindowFlags ) hb_parni( 3 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_ADDSUBWINDOW FP=hb_retptrGC( hbqt_gcAllocate_QMdiSubWindow( ( p )->addSubWindow( hbqt_par_QWidget( 2 ), ( Qt::WindowFlags ) hb_parni( 3 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QMdiSubWindow( ( p )->addSubWindow( hbqt_par_QWidget( 2 ), ( Qt::WindowFlags ) hb_parni( 3 ) ), false ) );
    }
 }
 
@@ -214,10 +208,8 @@ HB_FUNC( QT_QMDIAREA_BACKGROUND )
 {
    QMdiArea * p = hbqt_par_QMdiArea( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->background() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_BACKGROUND FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->background() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->background() ), true ) );
    }
 }
 
@@ -228,10 +220,8 @@ HB_FUNC( QT_QMDIAREA_CURRENTSUBWINDOW )
 {
    QMdiArea * p = hbqt_par_QMdiArea( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QMdiSubWindow( ( p )->currentSubWindow(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_CURRENTSUBWINDOW FP=hb_retptrGC( hbqt_gcAllocate_QMdiSubWindow( ( p )->currentSubWindow(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QMdiSubWindow( ( p )->currentSubWindow(), false ) );
    }
 }
 
@@ -242,10 +232,8 @@ HB_FUNC( QT_QMDIAREA_DOCUMENTMODE )
 {
    QMdiArea * p = hbqt_par_QMdiArea( 1 );
    if( p )
-      hb_retl( ( p )->documentMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_DOCUMENTMODE FP=hb_retl( ( p )->documentMode() ); p is NULL" ) );
+      hb_retl( ( p )->documentMode() );
    }
 }
 
@@ -256,10 +244,8 @@ HB_FUNC( QT_QMDIAREA_REMOVESUBWINDOW )
 {
    QMdiArea * p = hbqt_par_QMdiArea( 1 );
    if( p )
-      ( p )->removeSubWindow( hbqt_par_QWidget( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_REMOVESUBWINDOW FP=( p )->removeSubWindow( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+      ( p )->removeSubWindow( hbqt_par_QWidget( 2 ) );
    }
 }
 
@@ -270,10 +256,8 @@ HB_FUNC( QT_QMDIAREA_SETACTIVATIONORDER )
 {
    QMdiArea * p = hbqt_par_QMdiArea( 1 );
    if( p )
-      ( p )->setActivationOrder( ( QMdiArea::WindowOrder ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_SETACTIVATIONORDER FP=( p )->setActivationOrder( ( QMdiArea::WindowOrder ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setActivationOrder( ( QMdiArea::WindowOrder ) hb_parni( 2 ) );
    }
 }
 
@@ -284,10 +268,8 @@ HB_FUNC( QT_QMDIAREA_SETBACKGROUND )
 {
    QMdiArea * p = hbqt_par_QMdiArea( 1 );
    if( p )
-      ( p )->setBackground( *hbqt_par_QBrush( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_SETBACKGROUND FP=( p )->setBackground( *hbqt_par_QBrush( 2 ) ); p is NULL" ) );
+      ( p )->setBackground( *hbqt_par_QBrush( 2 ) );
    }
 }
 
@@ -298,10 +280,8 @@ HB_FUNC( QT_QMDIAREA_SETDOCUMENTMODE )
 {
    QMdiArea * p = hbqt_par_QMdiArea( 1 );
    if( p )
-      ( p )->setDocumentMode( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_SETDOCUMENTMODE FP=( p )->setDocumentMode( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setDocumentMode( hb_parl( 2 ) );
    }
 }
 
@@ -312,10 +292,8 @@ HB_FUNC( QT_QMDIAREA_SETOPTION )
 {
    QMdiArea * p = hbqt_par_QMdiArea( 1 );
    if( p )
-      ( p )->setOption( ( QMdiArea::AreaOption ) hb_parni( 2 ), hb_parl( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_SETOPTION FP=( p )->setOption( ( QMdiArea::AreaOption ) hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+      ( p )->setOption( ( QMdiArea::AreaOption ) hb_parni( 2 ), hb_parl( 3 ) );
    }
 }
 
@@ -326,10 +304,8 @@ HB_FUNC( QT_QMDIAREA_SETTABPOSITION )
 {
    QMdiArea * p = hbqt_par_QMdiArea( 1 );
    if( p )
-      ( p )->setTabPosition( ( QTabWidget::TabPosition ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_SETTABPOSITION FP=( p )->setTabPosition( ( QTabWidget::TabPosition ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setTabPosition( ( QTabWidget::TabPosition ) hb_parni( 2 ) );
    }
 }
 
@@ -340,10 +316,8 @@ HB_FUNC( QT_QMDIAREA_SETTABSHAPE )
 {
    QMdiArea * p = hbqt_par_QMdiArea( 1 );
    if( p )
-      ( p )->setTabShape( ( QTabWidget::TabShape ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_SETTABSHAPE FP=( p )->setTabShape( ( QTabWidget::TabShape ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setTabShape( ( QTabWidget::TabShape ) hb_parni( 2 ) );
    }
 }
 
@@ -354,10 +328,8 @@ HB_FUNC( QT_QMDIAREA_SETVIEWMODE )
 {
    QMdiArea * p = hbqt_par_QMdiArea( 1 );
    if( p )
-      ( p )->setViewMode( ( QMdiArea::ViewMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_SETVIEWMODE FP=( p )->setViewMode( ( QMdiArea::ViewMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setViewMode( ( QMdiArea::ViewMode ) hb_parni( 2 ) );
    }
 }
 
@@ -368,10 +340,8 @@ HB_FUNC( QT_QMDIAREA_SUBWINDOWLIST )
 {
    QMdiArea * p = hbqt_par_QMdiArea( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QMdiSubWindow *>( ( p )->subWindowList( ( HB_ISNUM( 2 ) ? ( QMdiArea::WindowOrder ) hb_parni( 2 ) : ( QMdiArea::WindowOrder ) QMdiArea::CreationOrder ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_SUBWINDOWLIST FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QMdiSubWindow *>( ( p )->subWindowList( ( HB_ISNUM( 2 ) ? ( QMdiArea::WindowOrder ) hb_parni( 2 ) : ( QMdiArea::WindowOrder ) QMdiArea::CreationOrder ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QMdiSubWindow *>( ( p )->subWindowList( ( HB_ISNUM( 2 ) ? ( QMdiArea::WindowOrder ) hb_parni( 2 ) : ( QMdiArea::WindowOrder ) QMdiArea::CreationOrder ) ) ), true ) );
    }
 }
 
@@ -382,10 +352,8 @@ HB_FUNC( QT_QMDIAREA_TABPOSITION )
 {
    QMdiArea * p = hbqt_par_QMdiArea( 1 );
    if( p )
-      hb_retni( ( QTabWidget::TabPosition ) ( p )->tabPosition() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_TABPOSITION FP=hb_retni( ( QTabWidget::TabPosition ) ( p )->tabPosition() ); p is NULL" ) );
+      hb_retni( ( QTabWidget::TabPosition ) ( p )->tabPosition() );
    }
 }
 
@@ -396,10 +364,8 @@ HB_FUNC( QT_QMDIAREA_TABSHAPE )
 {
    QMdiArea * p = hbqt_par_QMdiArea( 1 );
    if( p )
-      hb_retni( ( QTabWidget::TabShape ) ( p )->tabShape() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_TABSHAPE FP=hb_retni( ( QTabWidget::TabShape ) ( p )->tabShape() ); p is NULL" ) );
+      hb_retni( ( QTabWidget::TabShape ) ( p )->tabShape() );
    }
 }
 
@@ -410,10 +376,8 @@ HB_FUNC( QT_QMDIAREA_TESTOPTION )
 {
    QMdiArea * p = hbqt_par_QMdiArea( 1 );
    if( p )
-      hb_retl( ( p )->testOption( ( QMdiArea::AreaOption ) hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_TESTOPTION FP=hb_retl( ( p )->testOption( ( QMdiArea::AreaOption ) hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->testOption( ( QMdiArea::AreaOption ) hb_parni( 2 ) ) );
    }
 }
 
@@ -424,10 +388,8 @@ HB_FUNC( QT_QMDIAREA_VIEWMODE )
 {
    QMdiArea * p = hbqt_par_QMdiArea( 1 );
    if( p )
-      hb_retni( ( QMdiArea::ViewMode ) ( p )->viewMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_VIEWMODE FP=hb_retni( ( QMdiArea::ViewMode ) ( p )->viewMode() ); p is NULL" ) );
+      hb_retni( ( QMdiArea::ViewMode ) ( p )->viewMode() );
    }
 }
 
@@ -438,10 +400,8 @@ HB_FUNC( QT_QMDIAREA_ACTIVATENEXTSUBWINDOW )
 {
    QMdiArea * p = hbqt_par_QMdiArea( 1 );
    if( p )
-      ( p )->activateNextSubWindow();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_ACTIVATENEXTSUBWINDOW FP=( p )->activateNextSubWindow(); p is NULL" ) );
+      ( p )->activateNextSubWindow();
    }
 }
 
@@ -452,10 +412,8 @@ HB_FUNC( QT_QMDIAREA_ACTIVATEPREVIOUSSUBWINDOW )
 {
    QMdiArea * p = hbqt_par_QMdiArea( 1 );
    if( p )
-      ( p )->activatePreviousSubWindow();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_ACTIVATEPREVIOUSSUBWINDOW FP=( p )->activatePreviousSubWindow(); p is NULL" ) );
+      ( p )->activatePreviousSubWindow();
    }
 }
 
@@ -466,10 +424,8 @@ HB_FUNC( QT_QMDIAREA_CASCADESUBWINDOWS )
 {
    QMdiArea * p = hbqt_par_QMdiArea( 1 );
    if( p )
-      ( p )->cascadeSubWindows();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_CASCADESUBWINDOWS FP=( p )->cascadeSubWindows(); p is NULL" ) );
+      ( p )->cascadeSubWindows();
    }
 }
 
@@ -480,10 +436,8 @@ HB_FUNC( QT_QMDIAREA_CLOSEACTIVESUBWINDOW )
 {
    QMdiArea * p = hbqt_par_QMdiArea( 1 );
    if( p )
-      ( p )->closeActiveSubWindow();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_CLOSEACTIVESUBWINDOW FP=( p )->closeActiveSubWindow(); p is NULL" ) );
+      ( p )->closeActiveSubWindow();
    }
 }
 
@@ -494,10 +448,8 @@ HB_FUNC( QT_QMDIAREA_CLOSEALLSUBWINDOWS )
 {
    QMdiArea * p = hbqt_par_QMdiArea( 1 );
    if( p )
-      ( p )->closeAllSubWindows();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_CLOSEALLSUBWINDOWS FP=( p )->closeAllSubWindows(); p is NULL" ) );
+      ( p )->closeAllSubWindows();
    }
 }
 
@@ -508,10 +460,8 @@ HB_FUNC( QT_QMDIAREA_SETACTIVESUBWINDOW )
 {
    QMdiArea * p = hbqt_par_QMdiArea( 1 );
    if( p )
-      ( p )->setActiveSubWindow( hbqt_par_QMdiSubWindow( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_SETACTIVESUBWINDOW FP=( p )->setActiveSubWindow( hbqt_par_QMdiSubWindow( 2 ) ); p is NULL" ) );
+      ( p )->setActiveSubWindow( hbqt_par_QMdiSubWindow( 2 ) );
    }
 }
 
@@ -522,10 +472,8 @@ HB_FUNC( QT_QMDIAREA_TILESUBWINDOWS )
 {
    QMdiArea * p = hbqt_par_QMdiArea( 1 );
    if( p )
-      ( p )->tileSubWindows();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMDIAREA_TILESUBWINDOWS FP=( p )->tileSubWindows(); p is NULL" ) );
+      ( p )->tileSubWindows();
    }
 }
 

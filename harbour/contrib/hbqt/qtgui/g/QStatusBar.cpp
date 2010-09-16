@@ -157,10 +157,8 @@ HB_FUNC( QT_QSTATUSBAR_ADDPERMANENTWIDGET )
 {
    QStatusBar * p = hbqt_par_QStatusBar( 1 );
    if( p )
-      ( p )->addPermanentWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTATUSBAR_ADDPERMANENTWIDGET FP=( p )->addPermanentWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->addPermanentWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -171,10 +169,8 @@ HB_FUNC( QT_QSTATUSBAR_ADDWIDGET )
 {
    QStatusBar * p = hbqt_par_QStatusBar( 1 );
    if( p )
-      ( p )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTATUSBAR_ADDWIDGET FP=( p )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -185,10 +181,8 @@ HB_FUNC( QT_QSTATUSBAR_CURRENTMESSAGE )
 {
    QStatusBar * p = hbqt_par_QStatusBar( 1 );
    if( p )
-      hb_retc( ( p )->currentMessage().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTATUSBAR_CURRENTMESSAGE FP=hb_retc( ( p )->currentMessage().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->currentMessage().toUtf8().data() );
    }
 }
 
@@ -199,10 +193,8 @@ HB_FUNC( QT_QSTATUSBAR_INSERTPERMANENTWIDGET )
 {
    QStatusBar * p = hbqt_par_QStatusBar( 1 );
    if( p )
-      hb_retni( ( p )->insertPermanentWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ), hb_parni( 4 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTATUSBAR_INSERTPERMANENTWIDGET FP=hb_retni( ( p )->insertPermanentWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ), hb_parni( 4 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->insertPermanentWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ), hb_parni( 4 ) ) );
    }
 }
 
@@ -213,10 +205,8 @@ HB_FUNC( QT_QSTATUSBAR_INSERTWIDGET )
 {
    QStatusBar * p = hbqt_par_QStatusBar( 1 );
    if( p )
-      hb_retni( ( p )->insertWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ), hb_parni( 4 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTATUSBAR_INSERTWIDGET FP=hb_retni( ( p )->insertWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ), hb_parni( 4 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->insertWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ), hb_parni( 4 ) ) );
    }
 }
 
@@ -227,10 +217,8 @@ HB_FUNC( QT_QSTATUSBAR_ISSIZEGRIPENABLED )
 {
    QStatusBar * p = hbqt_par_QStatusBar( 1 );
    if( p )
-      hb_retl( ( p )->isSizeGripEnabled() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTATUSBAR_ISSIZEGRIPENABLED FP=hb_retl( ( p )->isSizeGripEnabled() ); p is NULL" ) );
+      hb_retl( ( p )->isSizeGripEnabled() );
    }
 }
 
@@ -241,10 +229,8 @@ HB_FUNC( QT_QSTATUSBAR_REMOVEWIDGET )
 {
    QStatusBar * p = hbqt_par_QStatusBar( 1 );
    if( p )
-      ( p )->removeWidget( hbqt_par_QWidget( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTATUSBAR_REMOVEWIDGET FP=( p )->removeWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+      ( p )->removeWidget( hbqt_par_QWidget( 2 ) );
    }
 }
 
@@ -255,10 +241,8 @@ HB_FUNC( QT_QSTATUSBAR_SETSIZEGRIPENABLED )
 {
    QStatusBar * p = hbqt_par_QStatusBar( 1 );
    if( p )
-      ( p )->setSizeGripEnabled( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTATUSBAR_SETSIZEGRIPENABLED FP=( p )->setSizeGripEnabled( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setSizeGripEnabled( hb_parl( 2 ) );
    }
 }
 
@@ -269,10 +253,8 @@ HB_FUNC( QT_QSTATUSBAR_CLEARMESSAGE )
 {
    QStatusBar * p = hbqt_par_QStatusBar( 1 );
    if( p )
-      ( p )->clearMessage();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTATUSBAR_CLEARMESSAGE FP=( p )->clearMessage(); p is NULL" ) );
+      ( p )->clearMessage();
    }
 }
 
@@ -283,10 +265,10 @@ HB_FUNC( QT_QSTATUSBAR_SHOWMESSAGE )
 {
    QStatusBar * p = hbqt_par_QStatusBar( 1 );
    if( p )
-      ( p )->showMessage( QStatusBar::tr( hb_parc( 2 ) ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTATUSBAR_SHOWMESSAGE FP=( p )->showMessage( QStatusBar::tr( hb_parc( 2 ) ), hb_parni( 3 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->showMessage( hb_parstr_utf8( 2, &pText, NULL ), hb_parni( 3 ) );
+      hb_strfree( pText );
    }
 }
 

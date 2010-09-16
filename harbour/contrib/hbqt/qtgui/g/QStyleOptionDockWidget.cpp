@@ -173,7 +173,7 @@ HB_FUNC( QT_QSTYLEOPTIONDOCKWIDGET_MOVABLE )
  */
 HB_FUNC( QT_QSTYLEOPTIONDOCKWIDGET_TITLE )
 {
-   hb_retc( hbqt_par_QStyleOptionDockWidget( 1 )->title.toLatin1().data() );
+   hb_retstr_utf8( hbqt_par_QStyleOptionDockWidget( 1 )->title.toUtf8().data() );
 }
 
 

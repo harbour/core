@@ -163,10 +163,8 @@ HB_FUNC( QT_QFRAME_FRAMERECT )
 {
    QFrame * p = hbqt_par_QFrame( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->frameRect() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFRAME_FRAMERECT FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->frameRect() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->frameRect() ), true ) );
    }
 }
 
@@ -177,10 +175,8 @@ HB_FUNC( QT_QFRAME_FRAMESHADOW )
 {
    QFrame * p = hbqt_par_QFrame( 1 );
    if( p )
-      hb_retni( ( QFrame::Shadow ) ( p )->frameShadow() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFRAME_FRAMESHADOW FP=hb_retni( ( QFrame::Shadow ) ( p )->frameShadow() ); p is NULL" ) );
+      hb_retni( ( QFrame::Shadow ) ( p )->frameShadow() );
    }
 }
 
@@ -191,10 +187,8 @@ HB_FUNC( QT_QFRAME_FRAMESHAPE )
 {
    QFrame * p = hbqt_par_QFrame( 1 );
    if( p )
-      hb_retni( ( QFrame::Shape ) ( p )->frameShape() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFRAME_FRAMESHAPE FP=hb_retni( ( QFrame::Shape ) ( p )->frameShape() ); p is NULL" ) );
+      hb_retni( ( QFrame::Shape ) ( p )->frameShape() );
    }
 }
 
@@ -205,10 +199,8 @@ HB_FUNC( QT_QFRAME_FRAMESTYLE )
 {
    QFrame * p = hbqt_par_QFrame( 1 );
    if( p )
-      hb_retni( ( p )->frameStyle() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFRAME_FRAMESTYLE FP=hb_retni( ( p )->frameStyle() ); p is NULL" ) );
+      hb_retni( ( p )->frameStyle() );
    }
 }
 
@@ -219,10 +211,8 @@ HB_FUNC( QT_QFRAME_FRAMEWIDTH )
 {
    QFrame * p = hbqt_par_QFrame( 1 );
    if( p )
-      hb_retni( ( p )->frameWidth() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFRAME_FRAMEWIDTH FP=hb_retni( ( p )->frameWidth() ); p is NULL" ) );
+      hb_retni( ( p )->frameWidth() );
    }
 }
 
@@ -233,10 +223,8 @@ HB_FUNC( QT_QFRAME_LINEWIDTH )
 {
    QFrame * p = hbqt_par_QFrame( 1 );
    if( p )
-      hb_retni( ( p )->lineWidth() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFRAME_LINEWIDTH FP=hb_retni( ( p )->lineWidth() ); p is NULL" ) );
+      hb_retni( ( p )->lineWidth() );
    }
 }
 
@@ -247,10 +235,8 @@ HB_FUNC( QT_QFRAME_MIDLINEWIDTH )
 {
    QFrame * p = hbqt_par_QFrame( 1 );
    if( p )
-      hb_retni( ( p )->midLineWidth() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFRAME_MIDLINEWIDTH FP=hb_retni( ( p )->midLineWidth() ); p is NULL" ) );
+      hb_retni( ( p )->midLineWidth() );
    }
 }
 
@@ -261,10 +247,8 @@ HB_FUNC( QT_QFRAME_SETFRAMERECT )
 {
    QFrame * p = hbqt_par_QFrame( 1 );
    if( p )
-      ( p )->setFrameRect( *hbqt_par_QRect( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFRAME_SETFRAMERECT FP=( p )->setFrameRect( *hbqt_par_QRect( 2 ) ); p is NULL" ) );
+      ( p )->setFrameRect( *hbqt_par_QRect( 2 ) );
    }
 }
 
@@ -275,10 +259,8 @@ HB_FUNC( QT_QFRAME_SETFRAMESHADOW )
 {
    QFrame * p = hbqt_par_QFrame( 1 );
    if( p )
-      ( p )->setFrameShadow( ( QFrame::Shadow ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFRAME_SETFRAMESHADOW FP=( p )->setFrameShadow( ( QFrame::Shadow ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setFrameShadow( ( QFrame::Shadow ) hb_parni( 2 ) );
    }
 }
 
@@ -289,10 +271,8 @@ HB_FUNC( QT_QFRAME_SETFRAMESHAPE )
 {
    QFrame * p = hbqt_par_QFrame( 1 );
    if( p )
-      ( p )->setFrameShape( ( QFrame::Shape ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFRAME_SETFRAMESHAPE FP=( p )->setFrameShape( ( QFrame::Shape ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setFrameShape( ( QFrame::Shape ) hb_parni( 2 ) );
    }
 }
 
@@ -303,10 +283,8 @@ HB_FUNC( QT_QFRAME_SETFRAMESTYLE )
 {
    QFrame * p = hbqt_par_QFrame( 1 );
    if( p )
-      ( p )->setFrameStyle( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFRAME_SETFRAMESTYLE FP=( p )->setFrameStyle( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setFrameStyle( hb_parni( 2 ) );
    }
 }
 
@@ -317,10 +295,8 @@ HB_FUNC( QT_QFRAME_SETLINEWIDTH )
 {
    QFrame * p = hbqt_par_QFrame( 1 );
    if( p )
-      ( p )->setLineWidth( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFRAME_SETLINEWIDTH FP=( p )->setLineWidth( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setLineWidth( hb_parni( 2 ) );
    }
 }
 
@@ -331,10 +307,8 @@ HB_FUNC( QT_QFRAME_SETMIDLINEWIDTH )
 {
    QFrame * p = hbqt_par_QFrame( 1 );
    if( p )
-      ( p )->setMidLineWidth( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFRAME_SETMIDLINEWIDTH FP=( p )->setMidLineWidth( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setMidLineWidth( hb_parni( 2 ) );
    }
 }
 

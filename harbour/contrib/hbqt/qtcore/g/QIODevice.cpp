@@ -135,10 +135,8 @@ HB_FUNC( QT_QIODEVICE_ATEND )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retl( ( p )->atEnd() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_ATEND FP=hb_retl( ( p )->atEnd() ); p is NULL" ) );
+      hb_retl( ( p )->atEnd() );
    }
 }
 
@@ -149,10 +147,8 @@ HB_FUNC( QT_QIODEVICE_BYTESAVAILABLE )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retnint( ( p )->bytesAvailable() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_BYTESAVAILABLE FP=hb_retnint( ( p )->bytesAvailable() ); p is NULL" ) );
+      hb_retnint( ( p )->bytesAvailable() );
    }
 }
 
@@ -163,10 +159,8 @@ HB_FUNC( QT_QIODEVICE_BYTESTOWRITE )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retnint( ( p )->bytesToWrite() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_BYTESTOWRITE FP=hb_retnint( ( p )->bytesToWrite() ); p is NULL" ) );
+      hb_retnint( ( p )->bytesToWrite() );
    }
 }
 
@@ -177,10 +171,8 @@ HB_FUNC( QT_QIODEVICE_CANREADLINE )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retl( ( p )->canReadLine() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_CANREADLINE FP=hb_retl( ( p )->canReadLine() ); p is NULL" ) );
+      hb_retl( ( p )->canReadLine() );
    }
 }
 
@@ -191,10 +183,8 @@ HB_FUNC( QT_QIODEVICE_CLOSE )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      ( p )->close();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_CLOSE FP=( p )->close(); p is NULL" ) );
+      ( p )->close();
    }
 }
 
@@ -205,10 +195,8 @@ HB_FUNC( QT_QIODEVICE_ERRORSTRING )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retc( ( p )->errorString().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_ERRORSTRING FP=hb_retc( ( p )->errorString().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->errorString().toUtf8().data() );
    }
 }
 
@@ -219,10 +207,8 @@ HB_FUNC( QT_QIODEVICE_GETCHAR )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retl( ( p )->getChar( ( char * ) hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_GETCHAR FP=hb_retl( ( p )->getChar( ( char * ) hb_parc( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->getChar( ( char * ) hb_parc( 2 ) ) );
    }
 }
 
@@ -233,10 +219,8 @@ HB_FUNC( QT_QIODEVICE_ISOPEN )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retl( ( p )->isOpen() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_ISOPEN FP=hb_retl( ( p )->isOpen() ); p is NULL" ) );
+      hb_retl( ( p )->isOpen() );
    }
 }
 
@@ -247,10 +231,8 @@ HB_FUNC( QT_QIODEVICE_ISREADABLE )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retl( ( p )->isReadable() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_ISREADABLE FP=hb_retl( ( p )->isReadable() ); p is NULL" ) );
+      hb_retl( ( p )->isReadable() );
    }
 }
 
@@ -261,10 +243,8 @@ HB_FUNC( QT_QIODEVICE_ISSEQUENTIAL )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retl( ( p )->isSequential() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_ISSEQUENTIAL FP=hb_retl( ( p )->isSequential() ); p is NULL" ) );
+      hb_retl( ( p )->isSequential() );
    }
 }
 
@@ -275,10 +255,8 @@ HB_FUNC( QT_QIODEVICE_ISTEXTMODEENABLED )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retl( ( p )->isTextModeEnabled() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_ISTEXTMODEENABLED FP=hb_retl( ( p )->isTextModeEnabled() ); p is NULL" ) );
+      hb_retl( ( p )->isTextModeEnabled() );
    }
 }
 
@@ -289,10 +267,8 @@ HB_FUNC( QT_QIODEVICE_ISWRITABLE )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retl( ( p )->isWritable() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_ISWRITABLE FP=hb_retl( ( p )->isWritable() ); p is NULL" ) );
+      hb_retl( ( p )->isWritable() );
    }
 }
 
@@ -303,10 +279,8 @@ HB_FUNC( QT_QIODEVICE_OPEN )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retl( ( p )->open( ( QIODevice::OpenMode ) hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_OPEN FP=hb_retl( ( p )->open( ( QIODevice::OpenMode ) hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->open( ( QIODevice::OpenMode ) hb_parni( 2 ) ) );
    }
 }
 
@@ -317,10 +291,8 @@ HB_FUNC( QT_QIODEVICE_OPENMODE )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retni( ( QIODevice::OpenMode ) ( p )->openMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_OPENMODE FP=hb_retni( ( QIODevice::OpenMode ) ( p )->openMode() ); p is NULL" ) );
+      hb_retni( ( QIODevice::OpenMode ) ( p )->openMode() );
    }
 }
 
@@ -331,10 +303,8 @@ HB_FUNC( QT_QIODEVICE_PEEK )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retnint( ( p )->peek( ( char * ) hb_parc( 2 ), hb_parnint( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_PEEK FP=hb_retnint( ( p )->peek( ( char * ) hb_parc( 2 ), hb_parnint( 3 ) ) ); p is NULL" ) );
+      hb_retnint( ( p )->peek( ( char * ) hb_parc( 2 ), hb_parnint( 3 ) ) );
    }
 }
 
@@ -345,10 +315,8 @@ HB_FUNC( QT_QIODEVICE_PEEK_1 )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->peek( hb_parnint( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_PEEK_1 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->peek( hb_parnint( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->peek( hb_parnint( 2 ) ) ), true ) );
    }
 }
 
@@ -359,10 +327,8 @@ HB_FUNC( QT_QIODEVICE_POS )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retnint( ( p )->pos() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_POS FP=hb_retnint( ( p )->pos() ); p is NULL" ) );
+      hb_retnint( ( p )->pos() );
    }
 }
 
@@ -373,10 +339,8 @@ HB_FUNC( QT_QIODEVICE_PUTCHAR )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retl( ( p )->putChar( ( char ) hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_PUTCHAR FP=hb_retl( ( p )->putChar( ( char ) hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->putChar( ( char ) hb_parni( 2 ) ) );
    }
 }
 
@@ -387,10 +351,8 @@ HB_FUNC( QT_QIODEVICE_READ )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retnint( ( p )->read( ( char * ) hb_parc( 2 ), hb_parnint( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_READ FP=hb_retnint( ( p )->read( ( char * ) hb_parc( 2 ), hb_parnint( 3 ) ) ); p is NULL" ) );
+      hb_retnint( ( p )->read( ( char * ) hb_parc( 2 ), hb_parnint( 3 ) ) );
    }
 }
 
@@ -401,10 +363,8 @@ HB_FUNC( QT_QIODEVICE_READ_1 )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->read( hb_parnint( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_READ_1 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->read( hb_parnint( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->read( hb_parnint( 2 ) ) ), true ) );
    }
 }
 
@@ -415,10 +375,8 @@ HB_FUNC( QT_QIODEVICE_READALL )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->readAll() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_READALL FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->readAll() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->readAll() ), true ) );
    }
 }
 
@@ -429,10 +387,8 @@ HB_FUNC( QT_QIODEVICE_READLINE )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retnint( ( p )->readLine( ( char * ) hb_parc( 2 ), hb_parnint( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_READLINE FP=hb_retnint( ( p )->readLine( ( char * ) hb_parc( 2 ), hb_parnint( 3 ) ) ); p is NULL" ) );
+      hb_retnint( ( p )->readLine( ( char * ) hb_parc( 2 ), hb_parnint( 3 ) ) );
    }
 }
 
@@ -443,10 +399,8 @@ HB_FUNC( QT_QIODEVICE_READLINE_1 )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->readLine( hb_parnint( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_READLINE_1 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->readLine( hb_parnint( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->readLine( hb_parnint( 2 ) ) ), true ) );
    }
 }
 
@@ -457,10 +411,8 @@ HB_FUNC( QT_QIODEVICE_RESET )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retl( ( p )->reset() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_RESET FP=hb_retl( ( p )->reset() ); p is NULL" ) );
+      hb_retl( ( p )->reset() );
    }
 }
 
@@ -471,10 +423,8 @@ HB_FUNC( QT_QIODEVICE_SEEK )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retl( ( p )->seek( hb_parnint( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_SEEK FP=hb_retl( ( p )->seek( hb_parnint( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->seek( hb_parnint( 2 ) ) );
    }
 }
 
@@ -485,10 +435,8 @@ HB_FUNC( QT_QIODEVICE_SETTEXTMODEENABLED )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      ( p )->setTextModeEnabled( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_SETTEXTMODEENABLED FP=( p )->setTextModeEnabled( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setTextModeEnabled( hb_parl( 2 ) );
    }
 }
 
@@ -499,10 +447,8 @@ HB_FUNC( QT_QIODEVICE_SIZE )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retnint( ( p )->size() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_SIZE FP=hb_retnint( ( p )->size() ); p is NULL" ) );
+      hb_retnint( ( p )->size() );
    }
 }
 
@@ -513,10 +459,8 @@ HB_FUNC( QT_QIODEVICE_UNGETCHAR )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      ( p )->ungetChar( ( char ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_UNGETCHAR FP=( p )->ungetChar( ( char ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->ungetChar( ( char ) hb_parni( 2 ) );
    }
 }
 
@@ -527,10 +471,8 @@ HB_FUNC( QT_QIODEVICE_WAITFORBYTESWRITTEN )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retl( ( p )->waitForBytesWritten( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_WAITFORBYTESWRITTEN FP=hb_retl( ( p )->waitForBytesWritten( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->waitForBytesWritten( hb_parni( 2 ) ) );
    }
 }
 
@@ -541,10 +483,8 @@ HB_FUNC( QT_QIODEVICE_WAITFORREADYREAD )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retl( ( p )->waitForReadyRead( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_WAITFORREADYREAD FP=hb_retl( ( p )->waitForReadyRead( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->waitForReadyRead( hb_parni( 2 ) ) );
    }
 }
 
@@ -555,10 +495,8 @@ HB_FUNC( QT_QIODEVICE_WRITE )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retnint( ( p )->write( hbqt_par_char( 2 ), hb_parnint( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_WRITE FP=hb_retnint( ( p )->write( hbqt_par_char( 2 ), hb_parnint( 3 ) ) ); p is NULL" ) );
+      hb_retnint( ( p )->write( hbqt_par_char( 2 ), hb_parnint( 3 ) ) );
    }
 }
 
@@ -569,10 +507,8 @@ HB_FUNC( QT_QIODEVICE_WRITE_1 )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retnint( ( p )->write( hbqt_par_char( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_WRITE_1 FP=hb_retnint( ( p )->write( hbqt_par_char( 2 ) ) ); p is NULL" ) );
+      hb_retnint( ( p )->write( hbqt_par_char( 2 ) ) );
    }
 }
 
@@ -583,10 +519,8 @@ HB_FUNC( QT_QIODEVICE_WRITE_2 )
 {
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
-      hb_retnint( ( p )->write( *hbqt_par_QByteArray( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QIODEVICE_WRITE_2 FP=hb_retnint( ( p )->write( *hbqt_par_QByteArray( 2 ) ) ); p is NULL" ) );
+      hb_retnint( ( p )->write( *hbqt_par_QByteArray( 2 ) ) );
    }
 }
 

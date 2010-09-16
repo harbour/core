@@ -155,10 +155,8 @@ HB_FUNC( QT_QTRANSLATOR_ISEMPTY )
 {
    QTranslator * p = hbqt_par_QTranslator( 1 );
    if( p )
-      hb_retl( ( p )->isEmpty() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTRANSLATOR_ISEMPTY FP=hb_retl( ( p )->isEmpty() ); p is NULL" ) );
+      hb_retl( ( p )->isEmpty() );
    }
 }
 
@@ -169,10 +167,10 @@ HB_FUNC( QT_QTRANSLATOR_LOAD )
 {
    QTranslator * p = hbqt_par_QTranslator( 1 );
    if( p )
-      hb_retl( ( p )->load( QTranslator::tr( hb_parc( 2 ) ), QTranslator::tr( hb_parc( 3 ) ), QTranslator::tr( hb_parc( 4 ) ), QTranslator::tr( hb_parc( 5 ) ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTRANSLATOR_LOAD FP=hb_retl( ( p )->load( QTranslator::tr( hb_parc( 2 ) ), QTranslator::tr( hb_parc( 3 ) ), QTranslator::tr( hb_parc( 4 ) ), QTranslator::tr( hb_parc( 5 ) ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->load( hb_parstr_utf8( 2, &pText, NULL ), hb_parstr_utf8( 3, &pText, NULL ), hb_parstr_utf8( 4, &pText, NULL ), hb_parstr_utf8( 5, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -183,10 +181,8 @@ HB_FUNC( QT_QTRANSLATOR_TRANSLATE )
 {
    QTranslator * p = hbqt_par_QTranslator( 1 );
    if( p )
-      hb_retc( ( p )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTRANSLATOR_TRANSLATE FP=hb_retc( ( p )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ) ).toUtf8().data() );
    }
 }
 
@@ -197,10 +193,8 @@ HB_FUNC( QT_QTRANSLATOR_TRANSLATE_1 )
 {
    QTranslator * p = hbqt_par_QTranslator( 1 );
    if( p )
-      hb_retc( ( p )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), hb_parni( 5 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTRANSLATOR_TRANSLATE_1 FP=hb_retc( ( p )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), hb_parni( 5 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), hb_parni( 5 ) ).toUtf8().data() );
    }
 }
 

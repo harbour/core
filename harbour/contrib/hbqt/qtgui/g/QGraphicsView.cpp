@@ -195,10 +195,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_ALIGNMENT )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retni( ( Qt::Alignment ) ( p )->alignment() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_ALIGNMENT FP=hb_retni( ( Qt::Alignment ) ( p )->alignment() ); p is NULL" ) );
+      hb_retni( ( Qt::Alignment ) ( p )->alignment() );
    }
 }
 
@@ -209,10 +207,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_BACKGROUNDBRUSH )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->backgroundBrush() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_BACKGROUNDBRUSH FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->backgroundBrush() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->backgroundBrush() ), true ) );
    }
 }
 
@@ -223,10 +219,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_CACHEMODE )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retni( ( QGraphicsView::CacheMode ) ( p )->cacheMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_CACHEMODE FP=hb_retni( ( QGraphicsView::CacheMode ) ( p )->cacheMode() ); p is NULL" ) );
+      hb_retni( ( QGraphicsView::CacheMode ) ( p )->cacheMode() );
    }
 }
 
@@ -237,10 +231,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_CENTERON )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->centerOn( *hbqt_par_QPointF( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_CENTERON FP=( p )->centerOn( *hbqt_par_QPointF( 2 ) ); p is NULL" ) );
+      ( p )->centerOn( *hbqt_par_QPointF( 2 ) );
    }
 }
 
@@ -251,10 +243,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_CENTERON_1 )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->centerOn( hb_parnd( 2 ), hb_parnd( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_CENTERON_1 FP=( p )->centerOn( hb_parnd( 2 ), hb_parnd( 3 ) ); p is NULL" ) );
+      ( p )->centerOn( hb_parnd( 2 ), hb_parnd( 3 ) );
    }
 }
 
@@ -265,10 +255,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_CENTERON_2 )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->centerOn( hbqt_par_QGraphicsItem( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_CENTERON_2 FP=( p )->centerOn( hbqt_par_QGraphicsItem( 2 ) ); p is NULL" ) );
+      ( p )->centerOn( hbqt_par_QGraphicsItem( 2 ) );
    }
 }
 
@@ -279,10 +267,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_DRAGMODE )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retni( ( QGraphicsView::DragMode ) ( p )->dragMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_DRAGMODE FP=hb_retni( ( QGraphicsView::DragMode ) ( p )->dragMode() ); p is NULL" ) );
+      hb_retni( ( QGraphicsView::DragMode ) ( p )->dragMode() );
    }
 }
 
@@ -293,10 +279,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_ENSUREVISIBLE )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->ensureVisible( *hbqt_par_QRectF( 2 ), hb_parnidef( 3, 50 ), hb_parnidef( 4, 50 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_ENSUREVISIBLE FP=( p )->ensureVisible( *hbqt_par_QRectF( 2 ), hb_parnidef( 3, 50 ), hb_parnidef( 4, 50 ) ); p is NULL" ) );
+      ( p )->ensureVisible( *hbqt_par_QRectF( 2 ), hb_parnidef( 3, 50 ), hb_parnidef( 4, 50 ) );
    }
 }
 
@@ -307,10 +291,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_ENSUREVISIBLE_1 )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->ensureVisible( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnidef( 6, 50 ), hb_parnidef( 7, 50 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_ENSUREVISIBLE_1 FP=( p )->ensureVisible( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnidef( 6, 50 ), hb_parnidef( 7, 50 ) ); p is NULL" ) );
+      ( p )->ensureVisible( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnidef( 6, 50 ), hb_parnidef( 7, 50 ) );
    }
 }
 
@@ -321,10 +303,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_ENSUREVISIBLE_2 )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->ensureVisible( hbqt_par_QGraphicsItem( 2 ), hb_parnidef( 3, 50 ), hb_parnidef( 4, 50 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_ENSUREVISIBLE_2 FP=( p )->ensureVisible( hbqt_par_QGraphicsItem( 2 ), hb_parnidef( 3, 50 ), hb_parnidef( 4, 50 ) ); p is NULL" ) );
+      ( p )->ensureVisible( hbqt_par_QGraphicsItem( 2 ), hb_parnidef( 3, 50 ), hb_parnidef( 4, 50 ) );
    }
 }
 
@@ -335,10 +315,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_FITINVIEW )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->fitInView( *hbqt_par_QRectF( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::AspectRatioMode ) hb_parni( 3 ) : ( Qt::AspectRatioMode ) Qt::IgnoreAspectRatio ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_FITINVIEW FP=( p )->fitInView( *hbqt_par_QRectF( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::AspectRatioMode ) hb_parni( 3 ) : ( Qt::AspectRatioMode ) Qt::IgnoreAspectRatio ) ); p is NULL" ) );
+      ( p )->fitInView( *hbqt_par_QRectF( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::AspectRatioMode ) hb_parni( 3 ) : ( Qt::AspectRatioMode ) Qt::IgnoreAspectRatio ) );
    }
 }
 
@@ -349,10 +327,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_FITINVIEW_1 )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->fitInView( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), ( HB_ISNUM( 6 ) ? ( Qt::AspectRatioMode ) hb_parni( 6 ) : ( Qt::AspectRatioMode ) Qt::IgnoreAspectRatio ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_FITINVIEW_1 FP=( p )->fitInView( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), ( HB_ISNUM( 6 ) ? ( Qt::AspectRatioMode ) hb_parni( 6 ) : ( Qt::AspectRatioMode ) Qt::IgnoreAspectRatio ) ); p is NULL" ) );
+      ( p )->fitInView( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), ( HB_ISNUM( 6 ) ? ( Qt::AspectRatioMode ) hb_parni( 6 ) : ( Qt::AspectRatioMode ) Qt::IgnoreAspectRatio ) );
    }
 }
 
@@ -363,10 +339,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_FITINVIEW_2 )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->fitInView( hbqt_par_QGraphicsItem( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::AspectRatioMode ) hb_parni( 3 ) : ( Qt::AspectRatioMode ) Qt::IgnoreAspectRatio ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_FITINVIEW_2 FP=( p )->fitInView( hbqt_par_QGraphicsItem( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::AspectRatioMode ) hb_parni( 3 ) : ( Qt::AspectRatioMode ) Qt::IgnoreAspectRatio ) ); p is NULL" ) );
+      ( p )->fitInView( hbqt_par_QGraphicsItem( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::AspectRatioMode ) hb_parni( 3 ) : ( Qt::AspectRatioMode ) Qt::IgnoreAspectRatio ) );
    }
 }
 
@@ -377,10 +351,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_FOREGROUNDBRUSH )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->foregroundBrush() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_FOREGROUNDBRUSH FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->foregroundBrush() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->foregroundBrush() ), true ) );
    }
 }
 
@@ -391,10 +363,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_ISINTERACTIVE )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retl( ( p )->isInteractive() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_ISINTERACTIVE FP=hb_retl( ( p )->isInteractive() ); p is NULL" ) );
+      hb_retl( ( p )->isInteractive() );
    }
 }
 
@@ -405,10 +375,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_ITEMAT )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QGraphicsItem( ( p )->itemAt( *hbqt_par_QPoint( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_ITEMAT FP=hb_retptrGC( hbqt_gcAllocate_QGraphicsItem( ( p )->itemAt( *hbqt_par_QPoint( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QGraphicsItem( ( p )->itemAt( *hbqt_par_QPoint( 2 ) ), false ) );
    }
 }
 
@@ -419,10 +387,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_ITEMAT_1 )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QGraphicsItem( ( p )->itemAt( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_ITEMAT_1 FP=hb_retptrGC( hbqt_gcAllocate_QGraphicsItem( ( p )->itemAt( hb_parni( 2 ), hb_parni( 3 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QGraphicsItem( ( p )->itemAt( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
    }
 }
 
@@ -433,10 +399,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_ITEMS )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QGraphicsItem *>( ( p )->items() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_ITEMS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QGraphicsItem *>( ( p )->items() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QGraphicsItem *>( ( p )->items() ), true ) );
    }
 }
 
@@ -447,10 +411,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_ITEMS_1 )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QGraphicsItem *>( ( p )->items( *hbqt_par_QPoint( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_ITEMS_1 FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QGraphicsItem *>( ( p )->items( *hbqt_par_QPoint( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QGraphicsItem *>( ( p )->items( *hbqt_par_QPoint( 2 ) ) ), true ) );
    }
 }
 
@@ -461,10 +423,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_ITEMS_2 )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QGraphicsItem *>( ( p )->items( hb_parni( 2 ), hb_parni( 3 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_ITEMS_2 FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QGraphicsItem *>( ( p )->items( hb_parni( 2 ), hb_parni( 3 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QGraphicsItem *>( ( p )->items( hb_parni( 2 ), hb_parni( 3 ) ) ), true ) );
    }
 }
 
@@ -475,10 +435,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_ITEMS_3 )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QGraphicsItem *>( ( p )->items( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), ( HB_ISNUM( 6 ) ? ( Qt::ItemSelectionMode ) hb_parni( 6 ) : ( Qt::ItemSelectionMode ) Qt::IntersectsItemShape ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_ITEMS_3 FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QGraphicsItem *>( ( p )->items( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), ( HB_ISNUM( 6 ) ? ( Qt::ItemSelectionMode ) hb_parni( 6 ) : ( Qt::ItemSelectionMode ) Qt::IntersectsItemShape ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QGraphicsItem *>( ( p )->items( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), ( HB_ISNUM( 6 ) ? ( Qt::ItemSelectionMode ) hb_parni( 6 ) : ( Qt::ItemSelectionMode ) Qt::IntersectsItemShape ) ) ), true ) );
    }
 }
 
@@ -489,10 +447,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_ITEMS_4 )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QGraphicsItem *>( ( p )->items( *hbqt_par_QRect( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::ItemSelectionMode ) hb_parni( 3 ) : ( Qt::ItemSelectionMode ) Qt::IntersectsItemShape ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_ITEMS_4 FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QGraphicsItem *>( ( p )->items( *hbqt_par_QRect( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::ItemSelectionMode ) hb_parni( 3 ) : ( Qt::ItemSelectionMode ) Qt::IntersectsItemShape ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QGraphicsItem *>( ( p )->items( *hbqt_par_QRect( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::ItemSelectionMode ) hb_parni( 3 ) : ( Qt::ItemSelectionMode ) Qt::IntersectsItemShape ) ) ), true ) );
    }
 }
 
@@ -503,10 +459,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_ITEMS_5 )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QGraphicsItem *>( ( p )->items( *hbqt_par_QPolygon( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::ItemSelectionMode ) hb_parni( 3 ) : ( Qt::ItemSelectionMode ) Qt::IntersectsItemShape ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_ITEMS_5 FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QGraphicsItem *>( ( p )->items( *hbqt_par_QPolygon( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::ItemSelectionMode ) hb_parni( 3 ) : ( Qt::ItemSelectionMode ) Qt::IntersectsItemShape ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QGraphicsItem *>( ( p )->items( *hbqt_par_QPolygon( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::ItemSelectionMode ) hb_parni( 3 ) : ( Qt::ItemSelectionMode ) Qt::IntersectsItemShape ) ) ), true ) );
    }
 }
 
@@ -517,10 +471,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_ITEMS_6 )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QGraphicsItem *>( ( p )->items( *hbqt_par_QPainterPath( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::ItemSelectionMode ) hb_parni( 3 ) : ( Qt::ItemSelectionMode ) Qt::IntersectsItemShape ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_ITEMS_6 FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QGraphicsItem *>( ( p )->items( *hbqt_par_QPainterPath( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::ItemSelectionMode ) hb_parni( 3 ) : ( Qt::ItemSelectionMode ) Qt::IntersectsItemShape ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QGraphicsItem *>( ( p )->items( *hbqt_par_QPainterPath( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::ItemSelectionMode ) hb_parni( 3 ) : ( Qt::ItemSelectionMode ) Qt::IntersectsItemShape ) ) ), true ) );
    }
 }
 
@@ -531,10 +483,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_MAPFROMSCENE )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->mapFromScene( *hbqt_par_QPointF( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_MAPFROMSCENE FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->mapFromScene( *hbqt_par_QPointF( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->mapFromScene( *hbqt_par_QPointF( 2 ) ) ), true ) );
    }
 }
 
@@ -545,10 +495,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_MAPFROMSCENE_1 )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( ( p )->mapFromScene( *hbqt_par_QRectF( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_MAPFROMSCENE_1 FP=hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( ( p )->mapFromScene( *hbqt_par_QRectF( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( ( p )->mapFromScene( *hbqt_par_QRectF( 2 ) ) ), true ) );
    }
 }
 
@@ -559,10 +507,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_MAPFROMSCENE_2 )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( ( p )->mapFromScene( *hbqt_par_QPolygonF( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_MAPFROMSCENE_2 FP=hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( ( p )->mapFromScene( *hbqt_par_QPolygonF( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( ( p )->mapFromScene( *hbqt_par_QPolygonF( 2 ) ) ), true ) );
    }
 }
 
@@ -573,10 +519,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_MAPFROMSCENE_3 )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPainterPath( new QPainterPath( ( p )->mapFromScene( *hbqt_par_QPainterPath( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_MAPFROMSCENE_3 FP=hb_retptrGC( hbqt_gcAllocate_QPainterPath( new QPainterPath( ( p )->mapFromScene( *hbqt_par_QPainterPath( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPainterPath( new QPainterPath( ( p )->mapFromScene( *hbqt_par_QPainterPath( 2 ) ) ), true ) );
    }
 }
 
@@ -587,10 +531,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_MAPFROMSCENE_4 )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->mapFromScene( hb_parnd( 2 ), hb_parnd( 3 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_MAPFROMSCENE_4 FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->mapFromScene( hb_parnd( 2 ), hb_parnd( 3 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->mapFromScene( hb_parnd( 2 ), hb_parnd( 3 ) ) ), true ) );
    }
 }
 
@@ -601,10 +543,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_MAPFROMSCENE_5 )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( ( p )->mapFromScene( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_MAPFROMSCENE_5 FP=hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( ( p )->mapFromScene( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( ( p )->mapFromScene( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) ) ), true ) );
    }
 }
 
@@ -615,10 +555,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_MAPTOSCENE )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->mapToScene( *hbqt_par_QPoint( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_MAPTOSCENE FP=hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->mapToScene( *hbqt_par_QPoint( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->mapToScene( *hbqt_par_QPoint( 2 ) ) ), true ) );
    }
 }
 
@@ -629,10 +567,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_MAPTOSCENE_1 )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->mapToScene( *hbqt_par_QRect( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_MAPTOSCENE_1 FP=hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->mapToScene( *hbqt_par_QRect( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->mapToScene( *hbqt_par_QRect( 2 ) ) ), true ) );
    }
 }
 
@@ -643,10 +579,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_MAPTOSCENE_2 )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->mapToScene( *hbqt_par_QPolygon( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_MAPTOSCENE_2 FP=hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->mapToScene( *hbqt_par_QPolygon( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->mapToScene( *hbqt_par_QPolygon( 2 ) ) ), true ) );
    }
 }
 
@@ -657,10 +591,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_MAPTOSCENE_3 )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPainterPath( new QPainterPath( ( p )->mapToScene( *hbqt_par_QPainterPath( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_MAPTOSCENE_3 FP=hb_retptrGC( hbqt_gcAllocate_QPainterPath( new QPainterPath( ( p )->mapToScene( *hbqt_par_QPainterPath( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPainterPath( new QPainterPath( ( p )->mapToScene( *hbqt_par_QPainterPath( 2 ) ) ), true ) );
    }
 }
 
@@ -671,10 +603,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_MAPTOSCENE_4 )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->mapToScene( hb_parni( 2 ), hb_parni( 3 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_MAPTOSCENE_4 FP=hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->mapToScene( hb_parni( 2 ), hb_parni( 3 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->mapToScene( hb_parni( 2 ), hb_parni( 3 ) ) ), true ) );
    }
 }
 
@@ -685,10 +615,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_MAPTOSCENE_5 )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->mapToScene( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_MAPTOSCENE_5 FP=hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->mapToScene( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->mapToScene( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ) ), true ) );
    }
 }
 
@@ -699,10 +627,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_MATRIX )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QMatrix( new QMatrix( ( p )->matrix() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_MATRIX FP=hb_retptrGC( hbqt_gcAllocate_QMatrix( new QMatrix( ( p )->matrix() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QMatrix( new QMatrix( ( p )->matrix() ), true ) );
    }
 }
 
@@ -713,10 +639,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_OPTIMIZATIONFLAGS )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retni( ( QGraphicsView::OptimizationFlags ) ( p )->optimizationFlags() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_OPTIMIZATIONFLAGS FP=hb_retni( ( QGraphicsView::OptimizationFlags ) ( p )->optimizationFlags() ); p is NULL" ) );
+      hb_retni( ( QGraphicsView::OptimizationFlags ) ( p )->optimizationFlags() );
    }
 }
 
@@ -727,10 +651,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_RENDER )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->render( hbqt_par_QPainter( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QRectF( 3 ) : QRectF() ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QRect( 4 ) : QRect() ), ( HB_ISNUM( 5 ) ? ( Qt::AspectRatioMode ) hb_parni( 5 ) : ( Qt::AspectRatioMode ) Qt::KeepAspectRatio ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_RENDER FP=( p )->render( hbqt_par_QPainter( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QRectF( 3 ) : QRectF() ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QRect( 4 ) : QRect() ), ( HB_ISNUM( 5 ) ? ( Qt::AspectRatioMode ) hb_parni( 5 ) : ( Qt::AspectRatioMode ) Qt::KeepAspectRatio ) ); p is NULL" ) );
+      ( p )->render( hbqt_par_QPainter( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QRectF( 3 ) : QRectF() ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QRect( 4 ) : QRect() ), ( HB_ISNUM( 5 ) ? ( Qt::AspectRatioMode ) hb_parni( 5 ) : ( Qt::AspectRatioMode ) Qt::KeepAspectRatio ) );
    }
 }
 
@@ -741,10 +663,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_RENDERHINTS )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retni( ( QPainter::RenderHints ) ( p )->renderHints() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_RENDERHINTS FP=hb_retni( ( QPainter::RenderHints ) ( p )->renderHints() ); p is NULL" ) );
+      hb_retni( ( QPainter::RenderHints ) ( p )->renderHints() );
    }
 }
 
@@ -755,10 +675,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_RESETCACHEDCONTENT )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->resetCachedContent();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_RESETCACHEDCONTENT FP=( p )->resetCachedContent(); p is NULL" ) );
+      ( p )->resetCachedContent();
    }
 }
 
@@ -769,10 +687,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_RESETMATRIX )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->resetMatrix();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_RESETMATRIX FP=( p )->resetMatrix(); p is NULL" ) );
+      ( p )->resetMatrix();
    }
 }
 
@@ -783,10 +699,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_RESETTRANSFORM )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->resetTransform();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_RESETTRANSFORM FP=( p )->resetTransform(); p is NULL" ) );
+      ( p )->resetTransform();
    }
 }
 
@@ -797,10 +711,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_RESIZEANCHOR )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retni( ( QGraphicsView::ViewportAnchor ) ( p )->resizeAnchor() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_RESIZEANCHOR FP=hb_retni( ( QGraphicsView::ViewportAnchor ) ( p )->resizeAnchor() ); p is NULL" ) );
+      hb_retni( ( QGraphicsView::ViewportAnchor ) ( p )->resizeAnchor() );
    }
 }
 
@@ -811,10 +723,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_ROTATE )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->rotate( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_ROTATE FP=( p )->rotate( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->rotate( hb_parnd( 2 ) );
    }
 }
 
@@ -825,10 +735,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_RUBBERBANDSELECTIONMODE )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retni( ( Qt::ItemSelectionMode ) ( p )->rubberBandSelectionMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_RUBBERBANDSELECTIONMODE FP=hb_retni( ( Qt::ItemSelectionMode ) ( p )->rubberBandSelectionMode() ); p is NULL" ) );
+      hb_retni( ( Qt::ItemSelectionMode ) ( p )->rubberBandSelectionMode() );
    }
 }
 
@@ -839,10 +747,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_SCALE )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->scale( hb_parnd( 2 ), hb_parnd( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_SCALE FP=( p )->scale( hb_parnd( 2 ), hb_parnd( 3 ) ); p is NULL" ) );
+      ( p )->scale( hb_parnd( 2 ), hb_parnd( 3 ) );
    }
 }
 
@@ -853,10 +759,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_SCENE )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QGraphicsScene( ( p )->scene(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_SCENE FP=hb_retptrGC( hbqt_gcAllocate_QGraphicsScene( ( p )->scene(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QGraphicsScene( ( p )->scene(), false ) );
    }
 }
 
@@ -867,10 +771,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_SCENERECT )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->sceneRect() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_SCENERECT FP=hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->sceneRect() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->sceneRect() ), true ) );
    }
 }
 
@@ -881,10 +783,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_SETALIGNMENT )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_SETALIGNMENT FP=( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
    }
 }
 
@@ -895,10 +795,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_SETBACKGROUNDBRUSH )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->setBackgroundBrush( *hbqt_par_QBrush( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_SETBACKGROUNDBRUSH FP=( p )->setBackgroundBrush( *hbqt_par_QBrush( 2 ) ); p is NULL" ) );
+      ( p )->setBackgroundBrush( *hbqt_par_QBrush( 2 ) );
    }
 }
 
@@ -909,10 +807,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_SETCACHEMODE )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->setCacheMode( ( QGraphicsView::CacheMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_SETCACHEMODE FP=( p )->setCacheMode( ( QGraphicsView::CacheMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setCacheMode( ( QGraphicsView::CacheMode ) hb_parni( 2 ) );
    }
 }
 
@@ -923,10 +819,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_SETDRAGMODE )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->setDragMode( ( QGraphicsView::DragMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_SETDRAGMODE FP=( p )->setDragMode( ( QGraphicsView::DragMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setDragMode( ( QGraphicsView::DragMode ) hb_parni( 2 ) );
    }
 }
 
@@ -937,10 +831,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_SETFOREGROUNDBRUSH )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->setForegroundBrush( *hbqt_par_QBrush( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_SETFOREGROUNDBRUSH FP=( p )->setForegroundBrush( *hbqt_par_QBrush( 2 ) ); p is NULL" ) );
+      ( p )->setForegroundBrush( *hbqt_par_QBrush( 2 ) );
    }
 }
 
@@ -951,10 +843,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_SETINTERACTIVE )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->setInteractive( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_SETINTERACTIVE FP=( p )->setInteractive( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setInteractive( hb_parl( 2 ) );
    }
 }
 
@@ -965,10 +855,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_SETMATRIX )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->setMatrix( *hbqt_par_QMatrix( 2 ), hb_parl( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_SETMATRIX FP=( p )->setMatrix( *hbqt_par_QMatrix( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+      ( p )->setMatrix( *hbqt_par_QMatrix( 2 ), hb_parl( 3 ) );
    }
 }
 
@@ -979,10 +867,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_SETOPTIMIZATIONFLAG )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->setOptimizationFlag( ( QGraphicsView::OptimizationFlag ) hb_parni( 2 ), hb_parl( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_SETOPTIMIZATIONFLAG FP=( p )->setOptimizationFlag( ( QGraphicsView::OptimizationFlag ) hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+      ( p )->setOptimizationFlag( ( QGraphicsView::OptimizationFlag ) hb_parni( 2 ), hb_parl( 3 ) );
    }
 }
 
@@ -993,10 +879,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_SETOPTIMIZATIONFLAGS )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->setOptimizationFlags( ( QGraphicsView::OptimizationFlags ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_SETOPTIMIZATIONFLAGS FP=( p )->setOptimizationFlags( ( QGraphicsView::OptimizationFlags ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setOptimizationFlags( ( QGraphicsView::OptimizationFlags ) hb_parni( 2 ) );
    }
 }
 
@@ -1007,10 +891,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_SETRENDERHINT )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->setRenderHint( ( QPainter::RenderHint ) hb_parni( 2 ), hb_parl( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_SETRENDERHINT FP=( p )->setRenderHint( ( QPainter::RenderHint ) hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+      ( p )->setRenderHint( ( QPainter::RenderHint ) hb_parni( 2 ), hb_parl( 3 ) );
    }
 }
 
@@ -1021,10 +903,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_SETRENDERHINTS )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->setRenderHints( ( QPainter::RenderHints ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_SETRENDERHINTS FP=( p )->setRenderHints( ( QPainter::RenderHints ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setRenderHints( ( QPainter::RenderHints ) hb_parni( 2 ) );
    }
 }
 
@@ -1035,10 +915,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_SETRESIZEANCHOR )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->setResizeAnchor( ( QGraphicsView::ViewportAnchor ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_SETRESIZEANCHOR FP=( p )->setResizeAnchor( ( QGraphicsView::ViewportAnchor ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setResizeAnchor( ( QGraphicsView::ViewportAnchor ) hb_parni( 2 ) );
    }
 }
 
@@ -1049,10 +927,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_SETRUBBERBANDSELECTIONMODE )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->setRubberBandSelectionMode( ( Qt::ItemSelectionMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_SETRUBBERBANDSELECTIONMODE FP=( p )->setRubberBandSelectionMode( ( Qt::ItemSelectionMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setRubberBandSelectionMode( ( Qt::ItemSelectionMode ) hb_parni( 2 ) );
    }
 }
 
@@ -1063,10 +939,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_SETSCENE )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->setScene( hbqt_par_QGraphicsScene( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_SETSCENE FP=( p )->setScene( hbqt_par_QGraphicsScene( 2 ) ); p is NULL" ) );
+      ( p )->setScene( hbqt_par_QGraphicsScene( 2 ) );
    }
 }
 
@@ -1077,10 +951,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_SETSCENERECT )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->setSceneRect( *hbqt_par_QRectF( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_SETSCENERECT FP=( p )->setSceneRect( *hbqt_par_QRectF( 2 ) ); p is NULL" ) );
+      ( p )->setSceneRect( *hbqt_par_QRectF( 2 ) );
    }
 }
 
@@ -1091,10 +963,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_SETSCENERECT_1 )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->setSceneRect( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_SETSCENERECT_1 FP=( p )->setSceneRect( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) ); p is NULL" ) );
+      ( p )->setSceneRect( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
    }
 }
 
@@ -1105,10 +975,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_SETTRANSFORM )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->setTransform( *hbqt_par_QTransform( 2 ), hb_parl( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_SETTRANSFORM FP=( p )->setTransform( *hbqt_par_QTransform( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+      ( p )->setTransform( *hbqt_par_QTransform( 2 ), hb_parl( 3 ) );
    }
 }
 
@@ -1119,10 +987,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_SETTRANSFORMATIONANCHOR )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->setTransformationAnchor( ( QGraphicsView::ViewportAnchor ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_SETTRANSFORMATIONANCHOR FP=( p )->setTransformationAnchor( ( QGraphicsView::ViewportAnchor ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setTransformationAnchor( ( QGraphicsView::ViewportAnchor ) hb_parni( 2 ) );
    }
 }
 
@@ -1133,10 +999,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_SETVIEWPORTUPDATEMODE )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->setViewportUpdateMode( ( QGraphicsView::ViewportUpdateMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_SETVIEWPORTUPDATEMODE FP=( p )->setViewportUpdateMode( ( QGraphicsView::ViewportUpdateMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setViewportUpdateMode( ( QGraphicsView::ViewportUpdateMode ) hb_parni( 2 ) );
    }
 }
 
@@ -1147,10 +1011,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_SHEAR )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->shear( hb_parnd( 2 ), hb_parnd( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_SHEAR FP=( p )->shear( hb_parnd( 2 ), hb_parnd( 3 ) ); p is NULL" ) );
+      ( p )->shear( hb_parnd( 2 ), hb_parnd( 3 ) );
    }
 }
 
@@ -1161,10 +1023,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_TRANSFORM )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTransform( new QTransform( ( p )->transform() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_TRANSFORM FP=hb_retptrGC( hbqt_gcAllocate_QTransform( new QTransform( ( p )->transform() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTransform( new QTransform( ( p )->transform() ), true ) );
    }
 }
 
@@ -1175,10 +1035,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_TRANSFORMATIONANCHOR )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retni( ( QGraphicsView::ViewportAnchor ) ( p )->transformationAnchor() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_TRANSFORMATIONANCHOR FP=hb_retni( ( QGraphicsView::ViewportAnchor ) ( p )->transformationAnchor() ); p is NULL" ) );
+      hb_retni( ( QGraphicsView::ViewportAnchor ) ( p )->transformationAnchor() );
    }
 }
 
@@ -1189,10 +1047,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_TRANSLATE )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->translate( hb_parnd( 2 ), hb_parnd( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_TRANSLATE FP=( p )->translate( hb_parnd( 2 ), hb_parnd( 3 ) ); p is NULL" ) );
+      ( p )->translate( hb_parnd( 2 ), hb_parnd( 3 ) );
    }
 }
 
@@ -1203,10 +1059,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_VIEWPORTTRANSFORM )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTransform( new QTransform( ( p )->viewportTransform() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_VIEWPORTTRANSFORM FP=hb_retptrGC( hbqt_gcAllocate_QTransform( new QTransform( ( p )->viewportTransform() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTransform( new QTransform( ( p )->viewportTransform() ), true ) );
    }
 }
 
@@ -1217,10 +1071,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_VIEWPORTUPDATEMODE )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      hb_retni( ( QGraphicsView::ViewportUpdateMode ) ( p )->viewportUpdateMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_VIEWPORTUPDATEMODE FP=hb_retni( ( QGraphicsView::ViewportUpdateMode ) ( p )->viewportUpdateMode() ); p is NULL" ) );
+      hb_retni( ( QGraphicsView::ViewportUpdateMode ) ( p )->viewportUpdateMode() );
    }
 }
 
@@ -1231,10 +1083,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_INVALIDATESCENE )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->invalidateScene( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QRectF( 2 ) : QRectF() ), ( HB_ISNUM( 3 ) ? ( QGraphicsScene::SceneLayers ) hb_parni( 3 ) : ( QGraphicsScene::SceneLayers ) QGraphicsScene::AllLayers ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_INVALIDATESCENE FP=( p )->invalidateScene( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QRectF( 2 ) : QRectF() ), ( HB_ISNUM( 3 ) ? ( QGraphicsScene::SceneLayers ) hb_parni( 3 ) : ( QGraphicsScene::SceneLayers ) QGraphicsScene::AllLayers ) ); p is NULL" ) );
+      ( p )->invalidateScene( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QRectF( 2 ) : QRectF() ), ( HB_ISNUM( 3 ) ? ( QGraphicsScene::SceneLayers ) hb_parni( 3 ) : ( QGraphicsScene::SceneLayers ) QGraphicsScene::AllLayers ) );
    }
 }
 
@@ -1245,10 +1095,8 @@ HB_FUNC( QT_QGRAPHICSVIEW_UPDATESCENERECT )
 {
    QGraphicsView * p = hbqt_par_QGraphicsView( 1 );
    if( p )
-      ( p )->updateSceneRect( *hbqt_par_QRectF( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSVIEW_UPDATESCENERECT FP=( p )->updateSceneRect( *hbqt_par_QRectF( 2 ) ); p is NULL" ) );
+      ( p )->updateSceneRect( *hbqt_par_QRectF( 2 ) );
    }
 }
 

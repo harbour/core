@@ -161,10 +161,8 @@ HB_FUNC( QT_QEVENTLOOP_EXEC )
 {
    QEventLoop * p = hbqt_par_QEventLoop( 1 );
    if( p )
-      hb_retni( ( p )->exec( ( HB_ISNUM( 2 ) ? ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ) : ( QEventLoop::ProcessEventsFlags ) QEventLoop::AllEvents ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QEVENTLOOP_EXEC FP=hb_retni( ( p )->exec( ( HB_ISNUM( 2 ) ? ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ) : ( QEventLoop::ProcessEventsFlags ) QEventLoop::AllEvents ) ) ); p is NULL" ) );
+      hb_retni( ( p )->exec( ( HB_ISNUM( 2 ) ? ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ) : ( QEventLoop::ProcessEventsFlags ) QEventLoop::AllEvents ) ) );
    }
 }
 
@@ -175,10 +173,8 @@ HB_FUNC( QT_QEVENTLOOP_EXIT )
 {
    QEventLoop * p = hbqt_par_QEventLoop( 1 );
    if( p )
-      ( p )->exit( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QEVENTLOOP_EXIT FP=( p )->exit( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->exit( hb_parni( 2 ) );
    }
 }
 
@@ -189,10 +185,8 @@ HB_FUNC( QT_QEVENTLOOP_ISRUNNING )
 {
    QEventLoop * p = hbqt_par_QEventLoop( 1 );
    if( p )
-      hb_retl( ( p )->isRunning() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QEVENTLOOP_ISRUNNING FP=hb_retl( ( p )->isRunning() ); p is NULL" ) );
+      hb_retl( ( p )->isRunning() );
    }
 }
 
@@ -203,10 +197,8 @@ HB_FUNC( QT_QEVENTLOOP_PROCESSEVENTS )
 {
    QEventLoop * p = hbqt_par_QEventLoop( 1 );
    if( p )
-      hb_retl( ( p )->processEvents( ( HB_ISNUM( 2 ) ? ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ) : ( QEventLoop::ProcessEventsFlags ) QEventLoop::AllEvents ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QEVENTLOOP_PROCESSEVENTS FP=hb_retl( ( p )->processEvents( ( HB_ISNUM( 2 ) ? ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ) : ( QEventLoop::ProcessEventsFlags ) QEventLoop::AllEvents ) ) ); p is NULL" ) );
+      hb_retl( ( p )->processEvents( ( HB_ISNUM( 2 ) ? ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ) : ( QEventLoop::ProcessEventsFlags ) QEventLoop::AllEvents ) ) );
    }
 }
 
@@ -217,10 +209,8 @@ HB_FUNC( QT_QEVENTLOOP_PROCESSEVENTS_1 )
 {
    QEventLoop * p = hbqt_par_QEventLoop( 1 );
    if( p )
-      ( p )->processEvents( ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QEVENTLOOP_PROCESSEVENTS_1 FP=( p )->processEvents( ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->processEvents( ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -231,10 +221,8 @@ HB_FUNC( QT_QEVENTLOOP_WAKEUP )
 {
    QEventLoop * p = hbqt_par_QEventLoop( 1 );
    if( p )
-      ( p )->wakeUp();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QEVENTLOOP_WAKEUP FP=( p )->wakeUp(); p is NULL" ) );
+      ( p )->wakeUp();
    }
 }
 

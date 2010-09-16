@@ -163,10 +163,8 @@ HB_FUNC( QT_QCOMPLETER_CASESENSITIVITY )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      hb_retni( ( Qt::CaseSensitivity ) ( p )->caseSensitivity() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_CASESENSITIVITY FP=hb_retni( ( Qt::CaseSensitivity ) ( p )->caseSensitivity() ); p is NULL" ) );
+      hb_retni( ( Qt::CaseSensitivity ) ( p )->caseSensitivity() );
    }
 }
 
@@ -177,10 +175,8 @@ HB_FUNC( QT_QCOMPLETER_COMPLETIONCOLUMN )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      hb_retni( ( p )->completionColumn() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_COMPLETIONCOLUMN FP=hb_retni( ( p )->completionColumn() ); p is NULL" ) );
+      hb_retni( ( p )->completionColumn() );
    }
 }
 
@@ -191,10 +187,8 @@ HB_FUNC( QT_QCOMPLETER_COMPLETIONCOUNT )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      hb_retni( ( p )->completionCount() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_COMPLETIONCOUNT FP=hb_retni( ( p )->completionCount() ); p is NULL" ) );
+      hb_retni( ( p )->completionCount() );
    }
 }
 
@@ -205,10 +199,8 @@ HB_FUNC( QT_QCOMPLETER_COMPLETIONMODE )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      hb_retni( ( QCompleter::CompletionMode ) ( p )->completionMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_COMPLETIONMODE FP=hb_retni( ( QCompleter::CompletionMode ) ( p )->completionMode() ); p is NULL" ) );
+      hb_retni( ( QCompleter::CompletionMode ) ( p )->completionMode() );
    }
 }
 
@@ -219,10 +211,8 @@ HB_FUNC( QT_QCOMPLETER_COMPLETIONMODEL )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAbstractItemModel( ( p )->completionModel(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_COMPLETIONMODEL FP=hb_retptrGC( hbqt_gcAllocate_QAbstractItemModel( ( p )->completionModel(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAbstractItemModel( ( p )->completionModel(), false ) );
    }
 }
 
@@ -233,10 +223,8 @@ HB_FUNC( QT_QCOMPLETER_COMPLETIONPREFIX )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      hb_retc( ( p )->completionPrefix().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_COMPLETIONPREFIX FP=hb_retc( ( p )->completionPrefix().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->completionPrefix().toUtf8().data() );
    }
 }
 
@@ -247,10 +235,8 @@ HB_FUNC( QT_QCOMPLETER_COMPLETIONROLE )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      hb_retni( ( p )->completionRole() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_COMPLETIONROLE FP=hb_retni( ( p )->completionRole() ); p is NULL" ) );
+      hb_retni( ( p )->completionRole() );
    }
 }
 
@@ -261,10 +247,8 @@ HB_FUNC( QT_QCOMPLETER_CURRENTCOMPLETION )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      hb_retc( ( p )->currentCompletion().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_CURRENTCOMPLETION FP=hb_retc( ( p )->currentCompletion().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->currentCompletion().toUtf8().data() );
    }
 }
 
@@ -275,10 +259,8 @@ HB_FUNC( QT_QCOMPLETER_CURRENTINDEX )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->currentIndex() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_CURRENTINDEX FP=hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->currentIndex() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->currentIndex() ), true ) );
    }
 }
 
@@ -289,10 +271,8 @@ HB_FUNC( QT_QCOMPLETER_CURRENTROW )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      hb_retni( ( p )->currentRow() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_CURRENTROW FP=hb_retni( ( p )->currentRow() ); p is NULL" ) );
+      hb_retni( ( p )->currentRow() );
    }
 }
 
@@ -303,10 +283,8 @@ HB_FUNC( QT_QCOMPLETER_MODEL )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAbstractItemModel( ( p )->model(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_MODEL FP=hb_retptrGC( hbqt_gcAllocate_QAbstractItemModel( ( p )->model(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAbstractItemModel( ( p )->model(), false ) );
    }
 }
 
@@ -317,10 +295,8 @@ HB_FUNC( QT_QCOMPLETER_MODELSORTING )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      hb_retni( ( QCompleter::ModelSorting ) ( p )->modelSorting() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_MODELSORTING FP=hb_retni( ( QCompleter::ModelSorting ) ( p )->modelSorting() ); p is NULL" ) );
+      hb_retni( ( QCompleter::ModelSorting ) ( p )->modelSorting() );
    }
 }
 
@@ -331,10 +307,8 @@ HB_FUNC( QT_QCOMPLETER_PATHFROMINDEX )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      hb_retc( ( p )->pathFromIndex( *hbqt_par_QModelIndex( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_PATHFROMINDEX FP=hb_retc( ( p )->pathFromIndex( *hbqt_par_QModelIndex( 2 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->pathFromIndex( *hbqt_par_QModelIndex( 2 ) ).toUtf8().data() );
    }
 }
 
@@ -345,10 +319,8 @@ HB_FUNC( QT_QCOMPLETER_POPUP )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAbstractItemView( ( p )->popup(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_POPUP FP=hb_retptrGC( hbqt_gcAllocate_QAbstractItemView( ( p )->popup(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAbstractItemView( ( p )->popup(), false ) );
    }
 }
 
@@ -359,10 +331,8 @@ HB_FUNC( QT_QCOMPLETER_SETCASESENSITIVITY )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      ( p )->setCaseSensitivity( ( Qt::CaseSensitivity ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_SETCASESENSITIVITY FP=( p )->setCaseSensitivity( ( Qt::CaseSensitivity ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setCaseSensitivity( ( Qt::CaseSensitivity ) hb_parni( 2 ) );
    }
 }
 
@@ -373,10 +343,8 @@ HB_FUNC( QT_QCOMPLETER_SETCOMPLETIONCOLUMN )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      ( p )->setCompletionColumn( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_SETCOMPLETIONCOLUMN FP=( p )->setCompletionColumn( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setCompletionColumn( hb_parni( 2 ) );
    }
 }
 
@@ -387,10 +355,8 @@ HB_FUNC( QT_QCOMPLETER_SETCOMPLETIONMODE )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      ( p )->setCompletionMode( ( QCompleter::CompletionMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_SETCOMPLETIONMODE FP=( p )->setCompletionMode( ( QCompleter::CompletionMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setCompletionMode( ( QCompleter::CompletionMode ) hb_parni( 2 ) );
    }
 }
 
@@ -401,10 +367,8 @@ HB_FUNC( QT_QCOMPLETER_SETCOMPLETIONROLE )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      ( p )->setCompletionRole( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_SETCOMPLETIONROLE FP=( p )->setCompletionRole( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setCompletionRole( hb_parni( 2 ) );
    }
 }
 
@@ -415,10 +379,8 @@ HB_FUNC( QT_QCOMPLETER_SETCURRENTROW )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      hb_retl( ( p )->setCurrentRow( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_SETCURRENTROW FP=hb_retl( ( p )->setCurrentRow( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->setCurrentRow( hb_parni( 2 ) ) );
    }
 }
 
@@ -429,10 +391,8 @@ HB_FUNC( QT_QCOMPLETER_SETMODEL )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      ( p )->setModel( hbqt_par_QAbstractItemModel( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_SETMODEL FP=( p )->setModel( hbqt_par_QAbstractItemModel( 2 ) ); p is NULL" ) );
+      ( p )->setModel( hbqt_par_QAbstractItemModel( 2 ) );
    }
 }
 
@@ -443,10 +403,8 @@ HB_FUNC( QT_QCOMPLETER_SETMODELSORTING )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      ( p )->setModelSorting( ( QCompleter::ModelSorting ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_SETMODELSORTING FP=( p )->setModelSorting( ( QCompleter::ModelSorting ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setModelSorting( ( QCompleter::ModelSorting ) hb_parni( 2 ) );
    }
 }
 
@@ -457,10 +415,8 @@ HB_FUNC( QT_QCOMPLETER_SETPOPUP )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      ( p )->setPopup( hbqt_par_QAbstractItemView( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_SETPOPUP FP=( p )->setPopup( hbqt_par_QAbstractItemView( 2 ) ); p is NULL" ) );
+      ( p )->setPopup( hbqt_par_QAbstractItemView( 2 ) );
    }
 }
 
@@ -471,10 +427,8 @@ HB_FUNC( QT_QCOMPLETER_SETWIDGET )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      ( p )->setWidget( hbqt_par_QWidget( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_SETWIDGET FP=( p )->setWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+      ( p )->setWidget( hbqt_par_QWidget( 2 ) );
    }
 }
 
@@ -485,10 +439,10 @@ HB_FUNC( QT_QCOMPLETER_SPLITPATH )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->splitPath( QCompleter::tr( hb_parc( 2 ) ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_SPLITPATH FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->splitPath( QCompleter::tr( hb_parc( 2 ) ) ) ), true ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->splitPath( hb_parstr_utf8( 2, &pText, NULL ) ) ), true ) );
+      hb_strfree( pText );
    }
 }
 
@@ -499,10 +453,8 @@ HB_FUNC( QT_QCOMPLETER_WIDGET )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_WIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) );
    }
 }
 
@@ -513,10 +465,8 @@ HB_FUNC( QT_QCOMPLETER_WRAPAROUND )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      hb_retl( ( p )->wrapAround() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_WRAPAROUND FP=hb_retl( ( p )->wrapAround() ); p is NULL" ) );
+      hb_retl( ( p )->wrapAround() );
    }
 }
 
@@ -527,10 +477,8 @@ HB_FUNC( QT_QCOMPLETER_COMPLETE )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      ( p )->complete( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QRect( 2 ) : QRect() ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_COMPLETE FP=( p )->complete( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QRect( 2 ) : QRect() ) ); p is NULL" ) );
+      ( p )->complete( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QRect( 2 ) : QRect() ) );
    }
 }
 
@@ -541,10 +489,10 @@ HB_FUNC( QT_QCOMPLETER_SETCOMPLETIONPREFIX )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      ( p )->setCompletionPrefix( QCompleter::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_SETCOMPLETIONPREFIX FP=( p )->setCompletionPrefix( QCompleter::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setCompletionPrefix( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -555,10 +503,8 @@ HB_FUNC( QT_QCOMPLETER_SETWRAPAROUND )
 {
    QCompleter * p = hbqt_par_QCompleter( 1 );
    if( p )
-      ( p )->setWrapAround( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMPLETER_SETWRAPAROUND FP=( p )->setWrapAround( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setWrapAround( hb_parl( 2 ) );
    }
 }
 

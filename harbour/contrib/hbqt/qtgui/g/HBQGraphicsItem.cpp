@@ -157,10 +157,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_HBSETBLOCK )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->hbSetBlock( hb_param( 2, HB_IT_ANY ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_HBSETBLOCK FP=( p )->hbSetBlock( hb_param( 2, HB_IT_ANY ) ); p is NULL" ) );
+      ( p )->hbSetBlock( hb_param( 2, HB_IT_ANY ) );
    }
 }
 
@@ -171,10 +169,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_BOUNDINGRECT )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->boundingRect() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_BOUNDINGRECT FP=hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->boundingRect() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->boundingRect() ), true ) );
    }
 }
 
@@ -185,10 +181,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_PAINT )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->paint( hbqt_par_QPainter( 2 ), hbqt_par_QStyleOptionGraphicsItem( 3 ), hbqt_par_QWidget( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_PAINT FP=( p )->paint( hbqt_par_QPainter( 2 ), hbqt_par_QStyleOptionGraphicsItem( 3 ), hbqt_par_QWidget( 4 ) ); p is NULL" ) );
+      ( p )->paint( hbqt_par_QPainter( 2 ), hbqt_par_QStyleOptionGraphicsItem( 3 ), hbqt_par_QWidget( 4 ) );
    }
 }
 
@@ -199,10 +193,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_DETERMINERESIZEMODE )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retni( ( p )->determineResizeMode( *hbqt_par_QPointF( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_DETERMINERESIZEMODE FP=hb_retni( ( p )->determineResizeMode( *hbqt_par_QPointF( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->determineResizeMode( *hbqt_par_QPointF( 2 ) ) );
    }
 }
 
@@ -213,10 +205,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_ADJUSTRECT )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->adjustRect( *hbqt_par_QRectF( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_ADJUSTRECT FP=hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->adjustRect( *hbqt_par_QRectF( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->adjustRect( *hbqt_par_QRectF( 2 ) ) ), true ) );
    }
 }
 
@@ -227,10 +217,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_PREPARE )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->prepare( hbqt_par_QPainter( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_PREPARE FP=( p )->prepare( hbqt_par_QPainter( 2 ) ); p is NULL" ) );
+      ( p )->prepare( hbqt_par_QPainter( 2 ) );
    }
 }
 
@@ -241,10 +229,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_PEN )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPen( new QPen( ( p )->pen() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_PEN FP=hb_retptrGC( hbqt_gcAllocate_QPen( new QPen( ( p )->pen() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPen( new QPen( ( p )->pen() ), true ) );
    }
 }
 
@@ -255,10 +241,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETPEN )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setPen( *hbqt_par_QPen( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETPEN FP=( p )->setPen( *hbqt_par_QPen( 2 ) ); p is NULL" ) );
+      ( p )->setPen( *hbqt_par_QPen( 2 ) );
    }
 }
 
@@ -269,10 +253,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_BRUSH )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->brush() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_BRUSH FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->brush() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->brush() ), true ) );
    }
 }
 
@@ -283,10 +265,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETBRUSH )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setBrush( *hbqt_par_QBrush( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETBRUSH FP=( p )->setBrush( *hbqt_par_QBrush( 2 ) ); p is NULL" ) );
+      ( p )->setBrush( *hbqt_par_QBrush( 2 ) );
    }
 }
 
@@ -297,10 +277,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_BACKGROUNDBRUSH )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->backgroundBrush() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_BACKGROUNDBRUSH FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->backgroundBrush() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->backgroundBrush() ), true ) );
    }
 }
 
@@ -311,10 +289,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETBACKGROUNDBRUSH )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setBackgroundBrush( *hbqt_par_QBrush( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETBACKGROUNDBRUSH FP=( p )->setBackgroundBrush( *hbqt_par_QBrush( 2 ) ); p is NULL" ) );
+      ( p )->setBackgroundBrush( *hbqt_par_QBrush( 2 ) );
    }
 }
 
@@ -325,10 +301,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_FONT )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_FONT FP=hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font() ), true ) );
    }
 }
 
@@ -339,10 +313,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETFONT )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setFont( *hbqt_par_QFont( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETFONT FP=( p )->setFont( *hbqt_par_QFont( 2 ) ); p is NULL" ) );
+      ( p )->setFont( *hbqt_par_QFont( 2 ) );
    }
 }
 
@@ -353,10 +325,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_LINESTYLE )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retni( ( p )->lineStyle() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_LINESTYLE FP=hb_retni( ( p )->lineStyle() ); p is NULL" ) );
+      hb_retni( ( p )->lineStyle() );
    }
 }
 
@@ -367,10 +337,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETLINESTYLE )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setLineStyle( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETLINESTYLE FP=( p )->setLineStyle( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setLineStyle( hb_parni( 2 ) );
    }
 }
 
@@ -381,10 +349,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_STARTANGLE )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retni( ( p )->startAngle() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_STARTANGLE FP=hb_retni( ( p )->startAngle() ); p is NULL" ) );
+      hb_retni( ( p )->startAngle() );
    }
 }
 
@@ -395,10 +361,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETSTARTANGLE )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setStartAngle( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETSTARTANGLE FP=( p )->setStartAngle( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setStartAngle( hb_parni( 2 ) );
    }
 }
 
@@ -409,10 +373,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SPANANGLE )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retni( ( p )->spanAngle() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SPANANGLE FP=hb_retni( ( p )->spanAngle() ); p is NULL" ) );
+      hb_retni( ( p )->spanAngle() );
    }
 }
 
@@ -423,10 +385,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETSPANANGLE )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setSpanAngle( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETSPANANGLE FP=( p )->setSpanAngle( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setSpanAngle( hb_parni( 2 ) );
    }
 }
 
@@ -437,10 +397,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_WIDTH )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retnd( ( p )->width() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_WIDTH FP=hb_retnd( ( p )->width() ); p is NULL" ) );
+      hb_retnd( ( p )->width() );
    }
 }
 
@@ -451,10 +409,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETWIDTH )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setWidth( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETWIDTH FP=( p )->setWidth( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setWidth( hb_parnd( 2 ) );
    }
 }
 
@@ -465,10 +421,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_HEIGHT )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retnd( ( p )->height() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_HEIGHT FP=hb_retnd( ( p )->height() ); p is NULL" ) );
+      hb_retnd( ( p )->height() );
    }
 }
 
@@ -479,10 +433,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETHEIGHT )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setHeight( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETHEIGHT FP=( p )->setHeight( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setHeight( hb_parnd( 2 ) );
    }
 }
 
@@ -493,10 +445,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_OPACITY )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retni( ( p )->opacity() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_OPACITY FP=hb_retni( ( p )->opacity() ); p is NULL" ) );
+      hb_retni( ( p )->opacity() );
    }
 }
 
@@ -507,10 +457,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETOPACITY )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setOpacity( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETOPACITY FP=( p )->setOpacity( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setOpacity( hb_parni( 2 ) );
    }
 }
 
@@ -521,10 +469,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_GEOMETRY )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->geometry() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_GEOMETRY FP=hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->geometry() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->geometry() ), true ) );
    }
 }
 
@@ -535,10 +481,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETGEOMETRY )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setGeometry( *hbqt_par_QRectF( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETGEOMETRY FP=( p )->setGeometry( *hbqt_par_QRectF( 2 ) ); p is NULL" ) );
+      ( p )->setGeometry( *hbqt_par_QRectF( 2 ) );
    }
 }
 
@@ -549,10 +493,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_OBJECTTYPE )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retc( ( p )->objectType().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_OBJECTTYPE FP=hb_retc( ( p )->objectType().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->objectType().toUtf8().data() );
    }
 }
 
@@ -563,10 +505,10 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETOBJECTTYPE )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setObjectType( hbqt_par_QString( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETOBJECTTYPE FP=( p )->setObjectType( hbqt_par_QString( 2 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setObjectType( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -577,10 +519,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_OBJECTNAME )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retc( ( p )->objectName().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_OBJECTNAME FP=hb_retc( ( p )->objectName().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->objectName().toUtf8().data() );
    }
 }
 
@@ -591,10 +531,10 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETOBJECTNAME )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setObjectName( hbqt_par_QString( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETOBJECTNAME FP=( p )->setObjectName( hbqt_par_QString( 2 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setObjectName( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -605,10 +545,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_TEXT )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retc( ( p )->text().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_TEXT FP=hb_retc( ( p )->text().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->text().toUtf8().data() );
    }
 }
 
@@ -619,10 +557,10 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETTEXT )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setText( hbqt_par_QString( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETTEXT FP=( p )->setText( hbqt_par_QString( 2 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setText( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -633,10 +571,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_PAINTTYPE )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retni( ( p )->paintType() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_PAINTTYPE FP=hb_retni( ( p )->paintType() ); p is NULL" ) );
+      hb_retni( ( p )->paintType() );
    }
 }
 
@@ -647,10 +583,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETPAINTTYPE )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setPaintType( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETPAINTTYPE FP=( p )->setPaintType( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setPaintType( hb_parni( 2 ) );
    }
 }
 
@@ -661,10 +595,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_FRAMETYPE )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retni( ( p )->frameType() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_FRAMETYPE FP=hb_retni( ( p )->frameType() ); p is NULL" ) );
+      hb_retni( ( p )->frameType() );
    }
 }
 
@@ -675,10 +607,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETFRAMETYPE )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setFrameType( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETFRAMETYPE FP=( p )->setFrameType( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setFrameType( hb_parni( 2 ) );
    }
 }
 
@@ -689,10 +619,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_DRAWTEXTTYPE )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retni( ( p )->drawTextType() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_DRAWTEXTTYPE FP=hb_retni( ( p )->drawTextType() ); p is NULL" ) );
+      hb_retni( ( p )->drawTextType() );
    }
 }
 
@@ -703,10 +631,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETDRAWTEXTTYPE )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setDrawTextType( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETDRAWTEXTTYPE FP=( p )->setDrawTextType( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setDrawTextType( hb_parni( 2 ) );
    }
 }
 
@@ -717,10 +643,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_PIXMAP )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_PIXMAP FP=hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap() ), true ) );
    }
 }
 
@@ -731,10 +655,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETPIXMAP )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setPixmap( *hbqt_par_QPixmap( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETPIXMAP FP=( p )->setPixmap( *hbqt_par_QPixmap( 2 ) ); p is NULL" ) );
+      ( p )->setPixmap( *hbqt_par_QPixmap( 2 ) );
    }
 }
 
@@ -745,10 +667,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_TEXTCOLOR )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->textColor() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_TEXTCOLOR FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->textColor() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->textColor() ), true ) );
    }
 }
 
@@ -759,10 +679,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETTEXTCOLOR )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setTextColor( *hbqt_par_QColor( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETTEXTCOLOR FP=( p )->setTextColor( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+      ( p )->setTextColor( *hbqt_par_QColor( 2 ) );
    }
 }
 
@@ -773,10 +691,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_BORDERWIDTH )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retni( ( p )->borderWidth() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_BORDERWIDTH FP=hb_retni( ( p )->borderWidth() ); p is NULL" ) );
+      hb_retni( ( p )->borderWidth() );
    }
 }
 
@@ -787,10 +703,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETBORDERWIDTH )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setBorderWidth( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETBORDERWIDTH FP=( p )->setBorderWidth( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setBorderWidth( hb_parni( 2 ) );
    }
 }
 
@@ -801,10 +715,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_BORDERCOLOR )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->borderColor() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_BORDERCOLOR FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->borderColor() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->borderColor() ), true ) );
    }
 }
 
@@ -815,10 +727,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETBORDERCOLOR )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setBorderColor( *hbqt_par_QColor( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETBORDERCOLOR FP=( p )->setBorderColor( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+      ( p )->setBorderColor( *hbqt_par_QColor( 2 ) );
    }
 }
 
@@ -829,10 +739,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SIZEPOLICY )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retni( ( p )->sizePolicy() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SIZEPOLICY FP=hb_retni( ( p )->sizePolicy() ); p is NULL" ) );
+      hb_retni( ( p )->sizePolicy() );
    }
 }
 
@@ -843,10 +751,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETSIZEPOLICY )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setSizePolicy( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETSIZEPOLICY FP=( p )->setSizePolicy( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setSizePolicy( hb_parni( 2 ) );
    }
 }
 
@@ -857,10 +763,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_TEXTFLAGS )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retni( ( p )->textFlags() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_TEXTFLAGS FP=hb_retni( ( p )->textFlags() ); p is NULL" ) );
+      hb_retni( ( p )->textFlags() );
    }
 }
 
@@ -871,10 +775,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETTEXTFLAGS )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setTextFlags( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETTEXTFLAGS FP=( p )->setTextFlags( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setTextFlags( hb_parni( 2 ) );
    }
 }
 
@@ -885,10 +787,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_RESIZEFLAGS )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retni( ( p )->resizeFlags() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_RESIZEFLAGS FP=hb_retni( ( p )->resizeFlags() ); p is NULL" ) );
+      hb_retni( ( p )->resizeFlags() );
    }
 }
 
@@ -899,10 +799,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETRESIZEFLAGS )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setResizeFlags( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETRESIZEFLAGS FP=( p )->setResizeFlags( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setResizeFlags( hb_parni( 2 ) );
    }
 }
 
@@ -913,10 +811,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_RESIZEHANDLE )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retni( ( p )->resizeHandle() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_RESIZEHANDLE FP=hb_retni( ( p )->resizeHandle() ); p is NULL" ) );
+      hb_retni( ( p )->resizeHandle() );
    }
 }
 
@@ -927,10 +823,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETRESIZEHANDLE )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setResizeHandle( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETRESIZEHANDLE FP=( p )->setResizeHandle( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setResizeHandle( hb_parni( 2 ) );
    }
 }
 
@@ -941,10 +835,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_BARSIDENTATION )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retni( ( p )->barsIdentation() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_BARSIDENTATION FP=hb_retni( ( p )->barsIdentation() ); p is NULL" ) );
+      hb_retni( ( p )->barsIdentation() );
    }
 }
 
@@ -955,10 +847,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETBARSIDENTATION )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setBarsIdentation( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETBARSIDENTATION FP=( p )->setBarsIdentation( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setBarsIdentation( hb_parni( 2 ) );
    }
 }
 
@@ -969,10 +859,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_DRAWBORDER )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retl( ( p )->drawBorder() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_DRAWBORDER FP=hb_retl( ( p )->drawBorder() ); p is NULL" ) );
+      hb_retl( ( p )->drawBorder() );
    }
 }
 
@@ -983,10 +871,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETDRAWBORDER )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setDrawBorder( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETDRAWBORDER FP=( p )->setDrawBorder( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setDrawBorder( hb_parl( 2 ) );
    }
 }
 
@@ -997,10 +883,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SHOWGRID )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retl( ( p )->showGrid() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SHOWGRID FP=hb_retl( ( p )->showGrid() ); p is NULL" ) );
+      hb_retl( ( p )->showGrid() );
    }
 }
 
@@ -1011,10 +895,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETSHOWGRID )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setShowGrid( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETSHOWGRID FP=( p )->setShowGrid( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setShowGrid( hb_parl( 2 ) );
    }
 }
 
@@ -1025,10 +907,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SHOWLABELS )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retl( ( p )->showLabels() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SHOWLABELS FP=hb_retl( ( p )->showLabels() ); p is NULL" ) );
+      hb_retl( ( p )->showLabels() );
    }
 }
 
@@ -1039,10 +919,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETSHOWLABELS )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setShowLabels( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETSHOWLABELS FP=( p )->setShowLabels( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setShowLabels( hb_parl( 2 ) );
    }
 }
 
@@ -1053,10 +931,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_TOCOLORFACTOR )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      hb_retnd( ( p )->toColorFactor() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_TOCOLORFACTOR FP=hb_retnd( ( p )->toColorFactor() ); p is NULL" ) );
+      hb_retnd( ( p )->toColorFactor() );
    }
 }
 
@@ -1067,10 +943,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETTOCOLORFACTOR )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setToColorFactor( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETTOCOLORFACTOR FP=( p )->setToColorFactor( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setToColorFactor( hb_parnd( 2 ) );
    }
 }
 
@@ -1081,10 +955,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETBARVALUES )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setBarValues( *hbqt_par_QStringList( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETBARVALUES FP=( p )->setBarValues( *hbqt_par_QStringList( 2 ) ); p is NULL" ) );
+      ( p )->setBarValues( *hbqt_par_QStringList( 2 ) );
    }
 }
 
@@ -1095,10 +967,8 @@ HB_FUNC( QT_HBQGRAPHICSITEM_SETLEGENDCOLORRECTWIDTH )
 {
    HBQGraphicsItem * p = hbqt_par_HBQGraphicsItem( 1 );
    if( p )
-      ( p )->setLegendColorRectWidth( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSITEM_SETLEGENDCOLORRECTWIDTH FP=( p )->setLegendColorRectWidth( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setLegendColorRectWidth( hb_parni( 2 ) );
    }
 }
 

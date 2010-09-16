@@ -153,10 +153,8 @@ HB_FUNC( QT_QCONICALGRADIENT_ANGLE )
 {
    QConicalGradient * p = hbqt_par_QConicalGradient( 1 );
    if( p )
-      hb_retnd( ( p )->angle() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCONICALGRADIENT_ANGLE FP=hb_retnd( ( p )->angle() ); p is NULL" ) );
+      hb_retnd( ( p )->angle() );
    }
 }
 
@@ -167,10 +165,8 @@ HB_FUNC( QT_QCONICALGRADIENT_CENTER )
 {
    QConicalGradient * p = hbqt_par_QConicalGradient( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->center() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCONICALGRADIENT_CENTER FP=hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->center() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->center() ), true ) );
    }
 }
 
@@ -181,10 +177,8 @@ HB_FUNC( QT_QCONICALGRADIENT_SETANGLE )
 {
    QConicalGradient * p = hbqt_par_QConicalGradient( 1 );
    if( p )
-      ( p )->setAngle( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCONICALGRADIENT_SETANGLE FP=( p )->setAngle( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setAngle( hb_parnd( 2 ) );
    }
 }
 
@@ -195,10 +189,8 @@ HB_FUNC( QT_QCONICALGRADIENT_SETCENTER )
 {
    QConicalGradient * p = hbqt_par_QConicalGradient( 1 );
    if( p )
-      ( p )->setCenter( *hbqt_par_QPointF( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCONICALGRADIENT_SETCENTER FP=( p )->setCenter( *hbqt_par_QPointF( 2 ) ); p is NULL" ) );
+      ( p )->setCenter( *hbqt_par_QPointF( 2 ) );
    }
 }
 
@@ -209,10 +201,8 @@ HB_FUNC( QT_QCONICALGRADIENT_SETCENTER_1 )
 {
    QConicalGradient * p = hbqt_par_QConicalGradient( 1 );
    if( p )
-      ( p )->setCenter( hb_parnd( 2 ), hb_parnd( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCONICALGRADIENT_SETCENTER_1 FP=( p )->setCenter( hb_parnd( 2 ), hb_parnd( 3 ) ); p is NULL" ) );
+      ( p )->setCenter( hb_parnd( 2 ), hb_parnd( 3 ) );
    }
 }
 

@@ -134,10 +134,8 @@ HB_FUNC( QT_QABSTRACTSPINBOX_ALIGNMENT )
 {
    QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
    if( p )
-      hb_retni( ( Qt::Alignment ) ( p )->alignment() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_ALIGNMENT FP=hb_retni( ( Qt::Alignment ) ( p )->alignment() ); p is NULL" ) );
+      hb_retni( ( Qt::Alignment ) ( p )->alignment() );
    }
 }
 
@@ -148,10 +146,8 @@ HB_FUNC( QT_QABSTRACTSPINBOX_BUTTONSYMBOLS )
 {
    QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
    if( p )
-      hb_retni( ( QAbstractSpinBox::ButtonSymbols ) ( p )->buttonSymbols() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_BUTTONSYMBOLS FP=hb_retni( ( QAbstractSpinBox::ButtonSymbols ) ( p )->buttonSymbols() ); p is NULL" ) );
+      hb_retni( ( QAbstractSpinBox::ButtonSymbols ) ( p )->buttonSymbols() );
    }
 }
 
@@ -162,10 +158,8 @@ HB_FUNC( QT_QABSTRACTSPINBOX_CORRECTIONMODE )
 {
    QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
    if( p )
-      hb_retni( ( QAbstractSpinBox::CorrectionMode ) ( p )->correctionMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_CORRECTIONMODE FP=hb_retni( ( QAbstractSpinBox::CorrectionMode ) ( p )->correctionMode() ); p is NULL" ) );
+      hb_retni( ( QAbstractSpinBox::CorrectionMode ) ( p )->correctionMode() );
    }
 }
 
@@ -176,10 +170,8 @@ HB_FUNC( QT_QABSTRACTSPINBOX_HASACCEPTABLEINPUT )
 {
    QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
    if( p )
-      hb_retl( ( p )->hasAcceptableInput() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_HASACCEPTABLEINPUT FP=hb_retl( ( p )->hasAcceptableInput() ); p is NULL" ) );
+      hb_retl( ( p )->hasAcceptableInput() );
    }
 }
 
@@ -190,10 +182,8 @@ HB_FUNC( QT_QABSTRACTSPINBOX_HASFRAME )
 {
    QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
    if( p )
-      hb_retl( ( p )->hasFrame() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_HASFRAME FP=hb_retl( ( p )->hasFrame() ); p is NULL" ) );
+      hb_retl( ( p )->hasFrame() );
    }
 }
 
@@ -204,10 +194,8 @@ HB_FUNC( QT_QABSTRACTSPINBOX_INTERPRETTEXT )
 {
    QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
    if( p )
-      ( p )->interpretText();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_INTERPRETTEXT FP=( p )->interpretText(); p is NULL" ) );
+      ( p )->interpretText();
    }
 }
 
@@ -218,10 +206,8 @@ HB_FUNC( QT_QABSTRACTSPINBOX_ISACCELERATED )
 {
    QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
    if( p )
-      hb_retl( ( p )->isAccelerated() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_ISACCELERATED FP=hb_retl( ( p )->isAccelerated() ); p is NULL" ) );
+      hb_retl( ( p )->isAccelerated() );
    }
 }
 
@@ -232,10 +218,8 @@ HB_FUNC( QT_QABSTRACTSPINBOX_ISREADONLY )
 {
    QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
    if( p )
-      hb_retl( ( p )->isReadOnly() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_ISREADONLY FP=hb_retl( ( p )->isReadOnly() ); p is NULL" ) );
+      hb_retl( ( p )->isReadOnly() );
    }
 }
 
@@ -246,10 +230,8 @@ HB_FUNC( QT_QABSTRACTSPINBOX_KEYBOARDTRACKING )
 {
    QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
    if( p )
-      hb_retl( ( p )->keyboardTracking() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_KEYBOARDTRACKING FP=hb_retl( ( p )->keyboardTracking() ); p is NULL" ) );
+      hb_retl( ( p )->keyboardTracking() );
    }
 }
 
@@ -260,10 +242,8 @@ HB_FUNC( QT_QABSTRACTSPINBOX_SETACCELERATED )
 {
    QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
    if( p )
-      ( p )->setAccelerated( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_SETACCELERATED FP=( p )->setAccelerated( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setAccelerated( hb_parl( 2 ) );
    }
 }
 
@@ -274,10 +254,8 @@ HB_FUNC( QT_QABSTRACTSPINBOX_SETALIGNMENT )
 {
    QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
    if( p )
-      ( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_SETALIGNMENT FP=( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
    }
 }
 
@@ -288,10 +266,8 @@ HB_FUNC( QT_QABSTRACTSPINBOX_SETBUTTONSYMBOLS )
 {
    QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
    if( p )
-      ( p )->setButtonSymbols( ( QAbstractSpinBox::ButtonSymbols ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_SETBUTTONSYMBOLS FP=( p )->setButtonSymbols( ( QAbstractSpinBox::ButtonSymbols ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setButtonSymbols( ( QAbstractSpinBox::ButtonSymbols ) hb_parni( 2 ) );
    }
 }
 
@@ -302,10 +278,8 @@ HB_FUNC( QT_QABSTRACTSPINBOX_SETCORRECTIONMODE )
 {
    QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
    if( p )
-      ( p )->setCorrectionMode( ( QAbstractSpinBox::CorrectionMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_SETCORRECTIONMODE FP=( p )->setCorrectionMode( ( QAbstractSpinBox::CorrectionMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setCorrectionMode( ( QAbstractSpinBox::CorrectionMode ) hb_parni( 2 ) );
    }
 }
 
@@ -316,10 +290,8 @@ HB_FUNC( QT_QABSTRACTSPINBOX_SETFRAME )
 {
    QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
    if( p )
-      ( p )->setFrame( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_SETFRAME FP=( p )->setFrame( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setFrame( hb_parl( 2 ) );
    }
 }
 
@@ -330,10 +302,8 @@ HB_FUNC( QT_QABSTRACTSPINBOX_SETKEYBOARDTRACKING )
 {
    QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
    if( p )
-      ( p )->setKeyboardTracking( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_SETKEYBOARDTRACKING FP=( p )->setKeyboardTracking( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setKeyboardTracking( hb_parl( 2 ) );
    }
 }
 
@@ -344,10 +314,8 @@ HB_FUNC( QT_QABSTRACTSPINBOX_SETREADONLY )
 {
    QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
    if( p )
-      ( p )->setReadOnly( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_SETREADONLY FP=( p )->setReadOnly( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setReadOnly( hb_parl( 2 ) );
    }
 }
 
@@ -358,10 +326,10 @@ HB_FUNC( QT_QABSTRACTSPINBOX_SETSPECIALVALUETEXT )
 {
    QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
    if( p )
-      ( p )->setSpecialValueText( QAbstractSpinBox::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_SETSPECIALVALUETEXT FP=( p )->setSpecialValueText( QAbstractSpinBox::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setSpecialValueText( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -372,10 +340,8 @@ HB_FUNC( QT_QABSTRACTSPINBOX_SETWRAPPING )
 {
    QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
    if( p )
-      ( p )->setWrapping( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_SETWRAPPING FP=( p )->setWrapping( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setWrapping( hb_parl( 2 ) );
    }
 }
 
@@ -386,10 +352,8 @@ HB_FUNC( QT_QABSTRACTSPINBOX_SPECIALVALUETEXT )
 {
    QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
    if( p )
-      hb_retc( ( p )->specialValueText().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_SPECIALVALUETEXT FP=hb_retc( ( p )->specialValueText().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->specialValueText().toUtf8().data() );
    }
 }
 
@@ -400,10 +364,8 @@ HB_FUNC( QT_QABSTRACTSPINBOX_STEPBY )
 {
    QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
    if( p )
-      ( p )->stepBy( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_STEPBY FP=( p )->stepBy( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->stepBy( hb_parni( 2 ) );
    }
 }
 
@@ -414,10 +376,8 @@ HB_FUNC( QT_QABSTRACTSPINBOX_TEXT )
 {
    QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
    if( p )
-      hb_retc( ( p )->text().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_TEXT FP=hb_retc( ( p )->text().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->text().toUtf8().data() );
    }
 }
 
@@ -428,10 +388,8 @@ HB_FUNC( QT_QABSTRACTSPINBOX_WRAPPING )
 {
    QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
    if( p )
-      hb_retl( ( p )->wrapping() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_WRAPPING FP=hb_retl( ( p )->wrapping() ); p is NULL" ) );
+      hb_retl( ( p )->wrapping() );
    }
 }
 
@@ -442,10 +400,8 @@ HB_FUNC( QT_QABSTRACTSPINBOX_CLEAR )
 {
    QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
    if( p )
-      ( p )->clear();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_CLEAR FP=( p )->clear(); p is NULL" ) );
+      ( p )->clear();
    }
 }
 
@@ -456,10 +412,8 @@ HB_FUNC( QT_QABSTRACTSPINBOX_SELECTALL )
 {
    QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
    if( p )
-      ( p )->selectAll();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_SELECTALL FP=( p )->selectAll(); p is NULL" ) );
+      ( p )->selectAll();
    }
 }
 
@@ -470,10 +424,8 @@ HB_FUNC( QT_QABSTRACTSPINBOX_STEPDOWN )
 {
    QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
    if( p )
-      ( p )->stepDown();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_STEPDOWN FP=( p )->stepDown(); p is NULL" ) );
+      ( p )->stepDown();
    }
 }
 
@@ -484,10 +436,8 @@ HB_FUNC( QT_QABSTRACTSPINBOX_STEPUP )
 {
    QAbstractSpinBox * p = hbqt_par_QAbstractSpinBox( 1 );
    if( p )
-      ( p )->stepUp();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSPINBOX_STEPUP FP=( p )->stepUp(); p is NULL" ) );
+      ( p )->stepUp();
    }
 }
 

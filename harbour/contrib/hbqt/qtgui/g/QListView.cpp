@@ -165,10 +165,8 @@ HB_FUNC( QT_QLISTVIEW_BATCHSIZE )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      hb_retni( ( p )->batchSize() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_BATCHSIZE FP=hb_retni( ( p )->batchSize() ); p is NULL" ) );
+      hb_retni( ( p )->batchSize() );
    }
 }
 
@@ -179,10 +177,8 @@ HB_FUNC( QT_QLISTVIEW_CLEARPROPERTYFLAGS )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      ( p )->clearPropertyFlags();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_CLEARPROPERTYFLAGS FP=( p )->clearPropertyFlags(); p is NULL" ) );
+      ( p )->clearPropertyFlags();
    }
 }
 
@@ -193,10 +189,8 @@ HB_FUNC( QT_QLISTVIEW_FLOW )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      hb_retni( ( QListView::Flow ) ( p )->flow() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_FLOW FP=hb_retni( ( QListView::Flow ) ( p )->flow() ); p is NULL" ) );
+      hb_retni( ( QListView::Flow ) ( p )->flow() );
    }
 }
 
@@ -207,10 +201,8 @@ HB_FUNC( QT_QLISTVIEW_GRIDSIZE )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->gridSize() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_GRIDSIZE FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->gridSize() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->gridSize() ), true ) );
    }
 }
 
@@ -221,10 +213,8 @@ HB_FUNC( QT_QLISTVIEW_ISROWHIDDEN )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      hb_retl( ( p )->isRowHidden( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_ISROWHIDDEN FP=hb_retl( ( p )->isRowHidden( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->isRowHidden( hb_parni( 2 ) ) );
    }
 }
 
@@ -235,10 +225,8 @@ HB_FUNC( QT_QLISTVIEW_ISSELECTIONRECTVISIBLE )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      hb_retl( ( p )->isSelectionRectVisible() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_ISSELECTIONRECTVISIBLE FP=hb_retl( ( p )->isSelectionRectVisible() ); p is NULL" ) );
+      hb_retl( ( p )->isSelectionRectVisible() );
    }
 }
 
@@ -249,10 +237,8 @@ HB_FUNC( QT_QLISTVIEW_ISWRAPPING )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      hb_retl( ( p )->isWrapping() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_ISWRAPPING FP=hb_retl( ( p )->isWrapping() ); p is NULL" ) );
+      hb_retl( ( p )->isWrapping() );
    }
 }
 
@@ -263,10 +249,8 @@ HB_FUNC( QT_QLISTVIEW_LAYOUTMODE )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      hb_retni( ( QListView::LayoutMode ) ( p )->layoutMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_LAYOUTMODE FP=hb_retni( ( QListView::LayoutMode ) ( p )->layoutMode() ); p is NULL" ) );
+      hb_retni( ( QListView::LayoutMode ) ( p )->layoutMode() );
    }
 }
 
@@ -277,10 +261,8 @@ HB_FUNC( QT_QLISTVIEW_MODELCOLUMN )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      hb_retni( ( p )->modelColumn() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_MODELCOLUMN FP=hb_retni( ( p )->modelColumn() ); p is NULL" ) );
+      hb_retni( ( p )->modelColumn() );
    }
 }
 
@@ -291,10 +273,8 @@ HB_FUNC( QT_QLISTVIEW_MOVEMENT )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      hb_retni( ( QListView::Movement ) ( p )->movement() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_MOVEMENT FP=hb_retni( ( QListView::Movement ) ( p )->movement() ); p is NULL" ) );
+      hb_retni( ( QListView::Movement ) ( p )->movement() );
    }
 }
 
@@ -305,10 +285,8 @@ HB_FUNC( QT_QLISTVIEW_RESIZEMODE )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      hb_retni( ( QListView::ResizeMode ) ( p )->resizeMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_RESIZEMODE FP=hb_retni( ( QListView::ResizeMode ) ( p )->resizeMode() ); p is NULL" ) );
+      hb_retni( ( QListView::ResizeMode ) ( p )->resizeMode() );
    }
 }
 
@@ -319,10 +297,8 @@ HB_FUNC( QT_QLISTVIEW_SETBATCHSIZE )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      ( p )->setBatchSize( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_SETBATCHSIZE FP=( p )->setBatchSize( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setBatchSize( hb_parni( 2 ) );
    }
 }
 
@@ -333,10 +309,8 @@ HB_FUNC( QT_QLISTVIEW_SETFLOW )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      ( p )->setFlow( ( QListView::Flow ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_SETFLOW FP=( p )->setFlow( ( QListView::Flow ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setFlow( ( QListView::Flow ) hb_parni( 2 ) );
    }
 }
 
@@ -347,10 +321,8 @@ HB_FUNC( QT_QLISTVIEW_SETGRIDSIZE )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      ( p )->setGridSize( *hbqt_par_QSize( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_SETGRIDSIZE FP=( p )->setGridSize( *hbqt_par_QSize( 2 ) ); p is NULL" ) );
+      ( p )->setGridSize( *hbqt_par_QSize( 2 ) );
    }
 }
 
@@ -361,10 +333,8 @@ HB_FUNC( QT_QLISTVIEW_SETLAYOUTMODE )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      ( p )->setLayoutMode( ( QListView::LayoutMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_SETLAYOUTMODE FP=( p )->setLayoutMode( ( QListView::LayoutMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setLayoutMode( ( QListView::LayoutMode ) hb_parni( 2 ) );
    }
 }
 
@@ -375,10 +345,8 @@ HB_FUNC( QT_QLISTVIEW_SETMODELCOLUMN )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      ( p )->setModelColumn( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_SETMODELCOLUMN FP=( p )->setModelColumn( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setModelColumn( hb_parni( 2 ) );
    }
 }
 
@@ -389,10 +357,8 @@ HB_FUNC( QT_QLISTVIEW_SETMOVEMENT )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      ( p )->setMovement( ( QListView::Movement ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_SETMOVEMENT FP=( p )->setMovement( ( QListView::Movement ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setMovement( ( QListView::Movement ) hb_parni( 2 ) );
    }
 }
 
@@ -403,10 +369,8 @@ HB_FUNC( QT_QLISTVIEW_SETRESIZEMODE )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      ( p )->setResizeMode( ( QListView::ResizeMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_SETRESIZEMODE FP=( p )->setResizeMode( ( QListView::ResizeMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setResizeMode( ( QListView::ResizeMode ) hb_parni( 2 ) );
    }
 }
 
@@ -417,10 +381,8 @@ HB_FUNC( QT_QLISTVIEW_SETROWHIDDEN )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      ( p )->setRowHidden( hb_parni( 2 ), hb_parl( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_SETROWHIDDEN FP=( p )->setRowHidden( hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+      ( p )->setRowHidden( hb_parni( 2 ), hb_parl( 3 ) );
    }
 }
 
@@ -431,10 +393,8 @@ HB_FUNC( QT_QLISTVIEW_SETSELECTIONRECTVISIBLE )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      ( p )->setSelectionRectVisible( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_SETSELECTIONRECTVISIBLE FP=( p )->setSelectionRectVisible( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setSelectionRectVisible( hb_parl( 2 ) );
    }
 }
 
@@ -445,10 +405,8 @@ HB_FUNC( QT_QLISTVIEW_SETSPACING )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      ( p )->setSpacing( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_SETSPACING FP=( p )->setSpacing( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setSpacing( hb_parni( 2 ) );
    }
 }
 
@@ -459,10 +417,8 @@ HB_FUNC( QT_QLISTVIEW_SETUNIFORMITEMSIZES )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      ( p )->setUniformItemSizes( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_SETUNIFORMITEMSIZES FP=( p )->setUniformItemSizes( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setUniformItemSizes( hb_parl( 2 ) );
    }
 }
 
@@ -473,10 +429,8 @@ HB_FUNC( QT_QLISTVIEW_SETVIEWMODE )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      ( p )->setViewMode( ( QListView::ViewMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_SETVIEWMODE FP=( p )->setViewMode( ( QListView::ViewMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setViewMode( ( QListView::ViewMode ) hb_parni( 2 ) );
    }
 }
 
@@ -487,10 +441,8 @@ HB_FUNC( QT_QLISTVIEW_SETWORDWRAP )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      ( p )->setWordWrap( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_SETWORDWRAP FP=( p )->setWordWrap( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setWordWrap( hb_parl( 2 ) );
    }
 }
 
@@ -501,10 +453,8 @@ HB_FUNC( QT_QLISTVIEW_SETWRAPPING )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      ( p )->setWrapping( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_SETWRAPPING FP=( p )->setWrapping( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setWrapping( hb_parl( 2 ) );
    }
 }
 
@@ -515,10 +465,8 @@ HB_FUNC( QT_QLISTVIEW_SPACING )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      hb_retni( ( p )->spacing() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_SPACING FP=hb_retni( ( p )->spacing() ); p is NULL" ) );
+      hb_retni( ( p )->spacing() );
    }
 }
 
@@ -529,10 +477,8 @@ HB_FUNC( QT_QLISTVIEW_UNIFORMITEMSIZES )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      hb_retl( ( p )->uniformItemSizes() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_UNIFORMITEMSIZES FP=hb_retl( ( p )->uniformItemSizes() ); p is NULL" ) );
+      hb_retl( ( p )->uniformItemSizes() );
    }
 }
 
@@ -543,10 +489,8 @@ HB_FUNC( QT_QLISTVIEW_VIEWMODE )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      hb_retni( ( QListView::ViewMode ) ( p )->viewMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_VIEWMODE FP=hb_retni( ( QListView::ViewMode ) ( p )->viewMode() ); p is NULL" ) );
+      hb_retni( ( QListView::ViewMode ) ( p )->viewMode() );
    }
 }
 
@@ -557,10 +501,8 @@ HB_FUNC( QT_QLISTVIEW_WORDWRAP )
 {
    QListView * p = hbqt_par_QListView( 1 );
    if( p )
-      hb_retl( ( p )->wordWrap() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLISTVIEW_WORDWRAP FP=hb_retl( ( p )->wordWrap() ); p is NULL" ) );
+      hb_retl( ( p )->wordWrap() );
    }
 }
 

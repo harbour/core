@@ -177,10 +177,8 @@ HB_FUNC( QT_QSETTINGS_ALLKEYS )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->allKeys() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_ALLKEYS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->allKeys() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->allKeys() ), true ) );
    }
 }
 
@@ -191,10 +189,8 @@ HB_FUNC( QT_QSETTINGS_APPLICATIONNAME )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      hb_retc( ( p )->applicationName().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_APPLICATIONNAME FP=hb_retc( ( p )->applicationName().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->applicationName().toUtf8().data() );
    }
 }
 
@@ -205,10 +201,10 @@ HB_FUNC( QT_QSETTINGS_BEGINGROUP )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      ( p )->beginGroup( QSettings::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_BEGINGROUP FP=( p )->beginGroup( QSettings::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->beginGroup( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -219,10 +215,10 @@ HB_FUNC( QT_QSETTINGS_BEGINREADARRAY )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      hb_retni( ( p )->beginReadArray( QSettings::tr( hb_parc( 2 ) ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_BEGINREADARRAY FP=hb_retni( ( p )->beginReadArray( QSettings::tr( hb_parc( 2 ) ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retni( ( p )->beginReadArray( hb_parstr_utf8( 2, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -233,10 +229,10 @@ HB_FUNC( QT_QSETTINGS_BEGINWRITEARRAY )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      ( p )->beginWriteArray( QSettings::tr( hb_parc( 2 ) ), hb_parnidef( 3, -1 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_BEGINWRITEARRAY FP=( p )->beginWriteArray( QSettings::tr( hb_parc( 2 ) ), hb_parnidef( 3, -1 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->beginWriteArray( hb_parstr_utf8( 2, &pText, NULL ), hb_parnidef( 3, -1 ) );
+      hb_strfree( pText );
    }
 }
 
@@ -247,10 +243,8 @@ HB_FUNC( QT_QSETTINGS_CHILDGROUPS )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->childGroups() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_CHILDGROUPS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->childGroups() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->childGroups() ), true ) );
    }
 }
 
@@ -261,10 +255,8 @@ HB_FUNC( QT_QSETTINGS_CHILDKEYS )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->childKeys() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_CHILDKEYS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->childKeys() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->childKeys() ), true ) );
    }
 }
 
@@ -275,10 +267,8 @@ HB_FUNC( QT_QSETTINGS_CLEAR )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      ( p )->clear();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_CLEAR FP=( p )->clear(); p is NULL" ) );
+      ( p )->clear();
    }
 }
 
@@ -289,10 +279,10 @@ HB_FUNC( QT_QSETTINGS_CONTAINS )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      hb_retl( ( p )->contains( QSettings::tr( hb_parc( 2 ) ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_CONTAINS FP=hb_retl( ( p )->contains( QSettings::tr( hb_parc( 2 ) ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->contains( hb_parstr_utf8( 2, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -303,10 +293,8 @@ HB_FUNC( QT_QSETTINGS_ENDARRAY )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      ( p )->endArray();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_ENDARRAY FP=( p )->endArray(); p is NULL" ) );
+      ( p )->endArray();
    }
 }
 
@@ -317,10 +305,8 @@ HB_FUNC( QT_QSETTINGS_ENDGROUP )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      ( p )->endGroup();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_ENDGROUP FP=( p )->endGroup(); p is NULL" ) );
+      ( p )->endGroup();
    }
 }
 
@@ -331,10 +317,8 @@ HB_FUNC( QT_QSETTINGS_FALLBACKSENABLED )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      hb_retl( ( p )->fallbacksEnabled() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_FALLBACKSENABLED FP=hb_retl( ( p )->fallbacksEnabled() ); p is NULL" ) );
+      hb_retl( ( p )->fallbacksEnabled() );
    }
 }
 
@@ -345,10 +329,8 @@ HB_FUNC( QT_QSETTINGS_FILENAME )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      hb_retc( ( p )->fileName().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_FILENAME FP=hb_retc( ( p )->fileName().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->fileName().toUtf8().data() );
    }
 }
 
@@ -359,10 +341,8 @@ HB_FUNC( QT_QSETTINGS_FORMAT )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      hb_retni( ( QSettings::Format ) ( p )->format() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_FORMAT FP=hb_retni( ( QSettings::Format ) ( p )->format() ); p is NULL" ) );
+      hb_retni( ( QSettings::Format ) ( p )->format() );
    }
 }
 
@@ -373,10 +353,8 @@ HB_FUNC( QT_QSETTINGS_GROUP )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      hb_retc( ( p )->group().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_GROUP FP=hb_retc( ( p )->group().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->group().toUtf8().data() );
    }
 }
 
@@ -387,10 +365,8 @@ HB_FUNC( QT_QSETTINGS_INICODEC )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->iniCodec(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_INICODEC FP=hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->iniCodec(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->iniCodec(), false ) );
    }
 }
 
@@ -401,10 +377,8 @@ HB_FUNC( QT_QSETTINGS_ISWRITABLE )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      hb_retl( ( p )->isWritable() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_ISWRITABLE FP=hb_retl( ( p )->isWritable() ); p is NULL" ) );
+      hb_retl( ( p )->isWritable() );
    }
 }
 
@@ -415,10 +389,8 @@ HB_FUNC( QT_QSETTINGS_ORGANIZATIONNAME )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      hb_retc( ( p )->organizationName().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_ORGANIZATIONNAME FP=hb_retc( ( p )->organizationName().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->organizationName().toUtf8().data() );
    }
 }
 
@@ -429,10 +401,10 @@ HB_FUNC( QT_QSETTINGS_REMOVE )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      ( p )->remove( QSettings::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_REMOVE FP=( p )->remove( QSettings::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->remove( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -443,10 +415,8 @@ HB_FUNC( QT_QSETTINGS_SCOPE )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      hb_retni( ( QSettings::Scope ) ( p )->scope() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_SCOPE FP=hb_retni( ( QSettings::Scope ) ( p )->scope() ); p is NULL" ) );
+      hb_retni( ( QSettings::Scope ) ( p )->scope() );
    }
 }
 
@@ -457,10 +427,8 @@ HB_FUNC( QT_QSETTINGS_SETARRAYINDEX )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      ( p )->setArrayIndex( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_SETARRAYINDEX FP=( p )->setArrayIndex( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setArrayIndex( hb_parni( 2 ) );
    }
 }
 
@@ -471,10 +439,8 @@ HB_FUNC( QT_QSETTINGS_SETFALLBACKSENABLED )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      ( p )->setFallbacksEnabled( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_SETFALLBACKSENABLED FP=( p )->setFallbacksEnabled( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setFallbacksEnabled( hb_parl( 2 ) );
    }
 }
 
@@ -485,10 +451,8 @@ HB_FUNC( QT_QSETTINGS_SETINICODEC )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      ( p )->setIniCodec( hbqt_par_QTextCodec( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_SETINICODEC FP=( p )->setIniCodec( hbqt_par_QTextCodec( 2 ) ); p is NULL" ) );
+      ( p )->setIniCodec( hbqt_par_QTextCodec( 2 ) );
    }
 }
 
@@ -499,10 +463,8 @@ HB_FUNC( QT_QSETTINGS_SETINICODEC_1 )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      ( p )->setIniCodec( hbqt_par_char( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_SETINICODEC_1 FP=( p )->setIniCodec( hbqt_par_char( 2 ) ); p is NULL" ) );
+      ( p )->setIniCodec( hbqt_par_char( 2 ) );
    }
 }
 
@@ -513,10 +475,10 @@ HB_FUNC( QT_QSETTINGS_SETVALUE )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      ( p )->setValue( QSettings::tr( hb_parc( 2 ) ), *hbqt_par_QVariant( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_SETVALUE FP=( p )->setValue( QSettings::tr( hb_parc( 2 ) ), *hbqt_par_QVariant( 3 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setValue( hb_parstr_utf8( 2, &pText, NULL ), *hbqt_par_QVariant( 3 ) );
+      hb_strfree( pText );
    }
 }
 
@@ -527,10 +489,8 @@ HB_FUNC( QT_QSETTINGS_STATUS )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      hb_retni( ( QSettings::Status ) ( p )->status() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_STATUS FP=hb_retni( ( QSettings::Status ) ( p )->status() ); p is NULL" ) );
+      hb_retni( ( QSettings::Status ) ( p )->status() );
    }
 }
 
@@ -541,10 +501,8 @@ HB_FUNC( QT_QSETTINGS_SYNC )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      ( p )->sync();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_SYNC FP=( p )->sync(); p is NULL" ) );
+      ( p )->sync();
    }
 }
 
@@ -555,10 +513,10 @@ HB_FUNC( QT_QSETTINGS_VALUE )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->value( QSettings::tr( hb_parc( 2 ) ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QVariant( 3 ) : QVariant() ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_VALUE FP=hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->value( QSettings::tr( hb_parc( 2 ) ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QVariant( 3 ) : QVariant() ) ) ), true ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->value( hb_parstr_utf8( 2, &pText, NULL ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QVariant( 3 ) : QVariant() ) ) ), true ) );
+      hb_strfree( pText );
    }
 }
 
@@ -569,10 +527,8 @@ HB_FUNC( QT_QSETTINGS_DEFAULTFORMAT )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      hb_retni( ( QSettings::Format ) ( p )->defaultFormat() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_DEFAULTFORMAT FP=hb_retni( ( QSettings::Format ) ( p )->defaultFormat() ); p is NULL" ) );
+      hb_retni( ( QSettings::Format ) ( p )->defaultFormat() );
    }
 }
 
@@ -583,10 +539,8 @@ HB_FUNC( QT_QSETTINGS_SETDEFAULTFORMAT )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      ( p )->setDefaultFormat( ( QSettings::Format ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_SETDEFAULTFORMAT FP=( p )->setDefaultFormat( ( QSettings::Format ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setDefaultFormat( ( QSettings::Format ) hb_parni( 2 ) );
    }
 }
 
@@ -597,10 +551,10 @@ HB_FUNC( QT_QSETTINGS_SETPATH )
 {
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
-      ( p )->setPath( ( QSettings::Format ) hb_parni( 2 ), ( QSettings::Scope ) hb_parni( 3 ), QSettings::tr( hb_parc( 4 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSETTINGS_SETPATH FP=( p )->setPath( ( QSettings::Format ) hb_parni( 2 ), ( QSettings::Scope ) hb_parni( 3 ), QSettings::tr( hb_parc( 4 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setPath( ( QSettings::Format ) hb_parni( 2 ), ( QSettings::Scope ) hb_parni( 3 ), hb_parstr_utf8( 4, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 

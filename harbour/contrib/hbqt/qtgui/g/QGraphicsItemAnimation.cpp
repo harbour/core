@@ -179,10 +179,8 @@ HB_FUNC( QT_QGRAPHICSITEMANIMATION_CLEAR )
 {
    QGraphicsItemAnimation * p = hbqt_par_QGraphicsItemAnimation( 1 );
    if( p )
-      ( p )->clear();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSITEMANIMATION_CLEAR FP=( p )->clear(); p is NULL" ) );
+      ( p )->clear();
    }
 }
 
@@ -193,10 +191,8 @@ HB_FUNC( QT_QGRAPHICSITEMANIMATION_HORIZONTALSCALEAT )
 {
    QGraphicsItemAnimation * p = hbqt_par_QGraphicsItemAnimation( 1 );
    if( p )
-      hb_retnd( ( p )->horizontalScaleAt( hb_parnd( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSITEMANIMATION_HORIZONTALSCALEAT FP=hb_retnd( ( p )->horizontalScaleAt( hb_parnd( 2 ) ) ); p is NULL" ) );
+      hb_retnd( ( p )->horizontalScaleAt( hb_parnd( 2 ) ) );
    }
 }
 
@@ -207,10 +203,8 @@ HB_FUNC( QT_QGRAPHICSITEMANIMATION_HORIZONTALSHEARAT )
 {
    QGraphicsItemAnimation * p = hbqt_par_QGraphicsItemAnimation( 1 );
    if( p )
-      hb_retnd( ( p )->horizontalShearAt( hb_parnd( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSITEMANIMATION_HORIZONTALSHEARAT FP=hb_retnd( ( p )->horizontalShearAt( hb_parnd( 2 ) ) ); p is NULL" ) );
+      hb_retnd( ( p )->horizontalShearAt( hb_parnd( 2 ) ) );
    }
 }
 
@@ -221,10 +215,8 @@ HB_FUNC( QT_QGRAPHICSITEMANIMATION_ITEM )
 {
    QGraphicsItemAnimation * p = hbqt_par_QGraphicsItemAnimation( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QGraphicsItem( ( p )->item(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSITEMANIMATION_ITEM FP=hb_retptrGC( hbqt_gcAllocate_QGraphicsItem( ( p )->item(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QGraphicsItem( ( p )->item(), false ) );
    }
 }
 
@@ -235,10 +227,8 @@ HB_FUNC( QT_QGRAPHICSITEMANIMATION_MATRIXAT )
 {
    QGraphicsItemAnimation * p = hbqt_par_QGraphicsItemAnimation( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QMatrix( new QMatrix( ( p )->matrixAt( hb_parnd( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSITEMANIMATION_MATRIXAT FP=hb_retptrGC( hbqt_gcAllocate_QMatrix( new QMatrix( ( p )->matrixAt( hb_parnd( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QMatrix( new QMatrix( ( p )->matrixAt( hb_parnd( 2 ) ) ), true ) );
    }
 }
 
@@ -249,10 +239,8 @@ HB_FUNC( QT_QGRAPHICSITEMANIMATION_POSAT )
 {
    QGraphicsItemAnimation * p = hbqt_par_QGraphicsItemAnimation( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->posAt( hb_parnd( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSITEMANIMATION_POSAT FP=hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->posAt( hb_parnd( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->posAt( hb_parnd( 2 ) ) ), true ) );
    }
 }
 
@@ -263,10 +251,8 @@ HB_FUNC( QT_QGRAPHICSITEMANIMATION_ROTATIONAT )
 {
    QGraphicsItemAnimation * p = hbqt_par_QGraphicsItemAnimation( 1 );
    if( p )
-      hb_retnd( ( p )->rotationAt( hb_parnd( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSITEMANIMATION_ROTATIONAT FP=hb_retnd( ( p )->rotationAt( hb_parnd( 2 ) ) ); p is NULL" ) );
+      hb_retnd( ( p )->rotationAt( hb_parnd( 2 ) ) );
    }
 }
 
@@ -277,10 +263,8 @@ HB_FUNC( QT_QGRAPHICSITEMANIMATION_SETITEM )
 {
    QGraphicsItemAnimation * p = hbqt_par_QGraphicsItemAnimation( 1 );
    if( p )
-      ( p )->setItem( hbqt_par_QGraphicsItem( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSITEMANIMATION_SETITEM FP=( p )->setItem( hbqt_par_QGraphicsItem( 2 ) ); p is NULL" ) );
+      ( p )->setItem( hbqt_par_QGraphicsItem( 2 ) );
    }
 }
 
@@ -291,10 +275,8 @@ HB_FUNC( QT_QGRAPHICSITEMANIMATION_SETPOSAT )
 {
    QGraphicsItemAnimation * p = hbqt_par_QGraphicsItemAnimation( 1 );
    if( p )
-      ( p )->setPosAt( hb_parnd( 2 ), *hbqt_par_QPointF( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSITEMANIMATION_SETPOSAT FP=( p )->setPosAt( hb_parnd( 2 ), *hbqt_par_QPointF( 3 ) ); p is NULL" ) );
+      ( p )->setPosAt( hb_parnd( 2 ), *hbqt_par_QPointF( 3 ) );
    }
 }
 
@@ -305,10 +287,8 @@ HB_FUNC( QT_QGRAPHICSITEMANIMATION_SETROTATIONAT )
 {
    QGraphicsItemAnimation * p = hbqt_par_QGraphicsItemAnimation( 1 );
    if( p )
-      ( p )->setRotationAt( hb_parnd( 2 ), hb_parnd( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSITEMANIMATION_SETROTATIONAT FP=( p )->setRotationAt( hb_parnd( 2 ), hb_parnd( 3 ) ); p is NULL" ) );
+      ( p )->setRotationAt( hb_parnd( 2 ), hb_parnd( 3 ) );
    }
 }
 
@@ -319,10 +299,8 @@ HB_FUNC( QT_QGRAPHICSITEMANIMATION_SETSCALEAT )
 {
    QGraphicsItemAnimation * p = hbqt_par_QGraphicsItemAnimation( 1 );
    if( p )
-      ( p )->setScaleAt( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSITEMANIMATION_SETSCALEAT FP=( p )->setScaleAt( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ) ); p is NULL" ) );
+      ( p )->setScaleAt( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ) );
    }
 }
 
@@ -333,10 +311,8 @@ HB_FUNC( QT_QGRAPHICSITEMANIMATION_SETSHEARAT )
 {
    QGraphicsItemAnimation * p = hbqt_par_QGraphicsItemAnimation( 1 );
    if( p )
-      ( p )->setShearAt( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSITEMANIMATION_SETSHEARAT FP=( p )->setShearAt( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ) ); p is NULL" ) );
+      ( p )->setShearAt( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ) );
    }
 }
 
@@ -347,10 +323,8 @@ HB_FUNC( QT_QGRAPHICSITEMANIMATION_SETTIMELINE )
 {
    QGraphicsItemAnimation * p = hbqt_par_QGraphicsItemAnimation( 1 );
    if( p )
-      ( p )->setTimeLine( hbqt_par_QTimeLine( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSITEMANIMATION_SETTIMELINE FP=( p )->setTimeLine( hbqt_par_QTimeLine( 2 ) ); p is NULL" ) );
+      ( p )->setTimeLine( hbqt_par_QTimeLine( 2 ) );
    }
 }
 
@@ -361,10 +335,8 @@ HB_FUNC( QT_QGRAPHICSITEMANIMATION_SETTRANSLATIONAT )
 {
    QGraphicsItemAnimation * p = hbqt_par_QGraphicsItemAnimation( 1 );
    if( p )
-      ( p )->setTranslationAt( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSITEMANIMATION_SETTRANSLATIONAT FP=( p )->setTranslationAt( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ) ); p is NULL" ) );
+      ( p )->setTranslationAt( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ) );
    }
 }
 
@@ -375,10 +347,8 @@ HB_FUNC( QT_QGRAPHICSITEMANIMATION_TIMELINE )
 {
    QGraphicsItemAnimation * p = hbqt_par_QGraphicsItemAnimation( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTimeLine( ( p )->timeLine(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSITEMANIMATION_TIMELINE FP=hb_retptrGC( hbqt_gcAllocate_QTimeLine( ( p )->timeLine(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTimeLine( ( p )->timeLine(), false ) );
    }
 }
 
@@ -389,10 +359,8 @@ HB_FUNC( QT_QGRAPHICSITEMANIMATION_VERTICALSCALEAT )
 {
    QGraphicsItemAnimation * p = hbqt_par_QGraphicsItemAnimation( 1 );
    if( p )
-      hb_retnd( ( p )->verticalScaleAt( hb_parnd( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSITEMANIMATION_VERTICALSCALEAT FP=hb_retnd( ( p )->verticalScaleAt( hb_parnd( 2 ) ) ); p is NULL" ) );
+      hb_retnd( ( p )->verticalScaleAt( hb_parnd( 2 ) ) );
    }
 }
 
@@ -403,10 +371,8 @@ HB_FUNC( QT_QGRAPHICSITEMANIMATION_VERTICALSHEARAT )
 {
    QGraphicsItemAnimation * p = hbqt_par_QGraphicsItemAnimation( 1 );
    if( p )
-      hb_retnd( ( p )->verticalShearAt( hb_parnd( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSITEMANIMATION_VERTICALSHEARAT FP=hb_retnd( ( p )->verticalShearAt( hb_parnd( 2 ) ) ); p is NULL" ) );
+      hb_retnd( ( p )->verticalShearAt( hb_parnd( 2 ) ) );
    }
 }
 
@@ -417,10 +383,8 @@ HB_FUNC( QT_QGRAPHICSITEMANIMATION_XTRANSLATIONAT )
 {
    QGraphicsItemAnimation * p = hbqt_par_QGraphicsItemAnimation( 1 );
    if( p )
-      hb_retnd( ( p )->xTranslationAt( hb_parnd( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSITEMANIMATION_XTRANSLATIONAT FP=hb_retnd( ( p )->xTranslationAt( hb_parnd( 2 ) ) ); p is NULL" ) );
+      hb_retnd( ( p )->xTranslationAt( hb_parnd( 2 ) ) );
    }
 }
 
@@ -431,10 +395,8 @@ HB_FUNC( QT_QGRAPHICSITEMANIMATION_YTRANSLATIONAT )
 {
    QGraphicsItemAnimation * p = hbqt_par_QGraphicsItemAnimation( 1 );
    if( p )
-      hb_retnd( ( p )->yTranslationAt( hb_parnd( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSITEMANIMATION_YTRANSLATIONAT FP=hb_retnd( ( p )->yTranslationAt( hb_parnd( 2 ) ) ); p is NULL" ) );
+      hb_retnd( ( p )->yTranslationAt( hb_parnd( 2 ) ) );
    }
 }
 
@@ -445,10 +407,8 @@ HB_FUNC( QT_QGRAPHICSITEMANIMATION_SETSTEP )
 {
    QGraphicsItemAnimation * p = hbqt_par_QGraphicsItemAnimation( 1 );
    if( p )
-      ( p )->setStep( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSITEMANIMATION_SETSTEP FP=( p )->setStep( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setStep( hb_parnd( 2 ) );
    }
 }
 

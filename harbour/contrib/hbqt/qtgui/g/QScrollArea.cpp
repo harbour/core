@@ -157,10 +157,8 @@ HB_FUNC( QT_QSCROLLAREA_ALIGNMENT )
 {
    QScrollArea * p = hbqt_par_QScrollArea( 1 );
    if( p )
-      hb_retni( ( Qt::Alignment ) ( p )->alignment() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCROLLAREA_ALIGNMENT FP=hb_retni( ( Qt::Alignment ) ( p )->alignment() ); p is NULL" ) );
+      hb_retni( ( Qt::Alignment ) ( p )->alignment() );
    }
 }
 
@@ -171,10 +169,8 @@ HB_FUNC( QT_QSCROLLAREA_ENSUREVISIBLE )
 {
    QScrollArea * p = hbqt_par_QScrollArea( 1 );
    if( p )
-      ( p )->ensureVisible( hb_parni( 2 ), hb_parni( 3 ), hb_parnidef( 4, 50 ), hb_parnidef( 5, 50 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCROLLAREA_ENSUREVISIBLE FP=( p )->ensureVisible( hb_parni( 2 ), hb_parni( 3 ), hb_parnidef( 4, 50 ), hb_parnidef( 5, 50 ) ); p is NULL" ) );
+      ( p )->ensureVisible( hb_parni( 2 ), hb_parni( 3 ), hb_parnidef( 4, 50 ), hb_parnidef( 5, 50 ) );
    }
 }
 
@@ -185,10 +181,8 @@ HB_FUNC( QT_QSCROLLAREA_ENSUREWIDGETVISIBLE )
 {
    QScrollArea * p = hbqt_par_QScrollArea( 1 );
    if( p )
-      ( p )->ensureWidgetVisible( hbqt_par_QWidget( 2 ), hb_parnidef( 3, 50 ), hb_parnidef( 4, 50 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCROLLAREA_ENSUREWIDGETVISIBLE FP=( p )->ensureWidgetVisible( hbqt_par_QWidget( 2 ), hb_parnidef( 3, 50 ), hb_parnidef( 4, 50 ) ); p is NULL" ) );
+      ( p )->ensureWidgetVisible( hbqt_par_QWidget( 2 ), hb_parnidef( 3, 50 ), hb_parnidef( 4, 50 ) );
    }
 }
 
@@ -199,10 +193,8 @@ HB_FUNC( QT_QSCROLLAREA_SETALIGNMENT )
 {
    QScrollArea * p = hbqt_par_QScrollArea( 1 );
    if( p )
-      ( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCROLLAREA_SETALIGNMENT FP=( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
    }
 }
 
@@ -213,10 +205,8 @@ HB_FUNC( QT_QSCROLLAREA_SETWIDGET )
 {
    QScrollArea * p = hbqt_par_QScrollArea( 1 );
    if( p )
-      ( p )->setWidget( hbqt_par_QWidget( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCROLLAREA_SETWIDGET FP=( p )->setWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+      ( p )->setWidget( hbqt_par_QWidget( 2 ) );
    }
 }
 
@@ -227,10 +217,8 @@ HB_FUNC( QT_QSCROLLAREA_SETWIDGETRESIZABLE )
 {
    QScrollArea * p = hbqt_par_QScrollArea( 1 );
    if( p )
-      ( p )->setWidgetResizable( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCROLLAREA_SETWIDGETRESIZABLE FP=( p )->setWidgetResizable( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setWidgetResizable( hb_parl( 2 ) );
    }
 }
 
@@ -241,10 +229,8 @@ HB_FUNC( QT_QSCROLLAREA_TAKEWIDGET )
 {
    QScrollArea * p = hbqt_par_QScrollArea( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->takeWidget(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCROLLAREA_TAKEWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->takeWidget(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->takeWidget(), false ) );
    }
 }
 
@@ -255,10 +241,8 @@ HB_FUNC( QT_QSCROLLAREA_WIDGET )
 {
    QScrollArea * p = hbqt_par_QScrollArea( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCROLLAREA_WIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) );
    }
 }
 
@@ -269,10 +253,8 @@ HB_FUNC( QT_QSCROLLAREA_WIDGETRESIZABLE )
 {
    QScrollArea * p = hbqt_par_QScrollArea( 1 );
    if( p )
-      hb_retl( ( p )->widgetResizable() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCROLLAREA_WIDGETRESIZABLE FP=hb_retl( ( p )->widgetResizable() ); p is NULL" ) );
+      hb_retl( ( p )->widgetResizable() );
    }
 }
 

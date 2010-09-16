@@ -164,10 +164,8 @@ HB_FUNC( QT_QBUTTONGROUP_ADDBUTTON )
 {
    QButtonGroup * p = hbqt_par_QButtonGroup( 1 );
    if( p )
-      ( p )->addButton( hbqt_par_QAbstractButton( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBUTTONGROUP_ADDBUTTON FP=( p )->addButton( hbqt_par_QAbstractButton( 2 ) ); p is NULL" ) );
+      ( p )->addButton( hbqt_par_QAbstractButton( 2 ) );
    }
 }
 
@@ -178,10 +176,8 @@ HB_FUNC( QT_QBUTTONGROUP_ADDBUTTON_1 )
 {
    QButtonGroup * p = hbqt_par_QButtonGroup( 1 );
    if( p )
-      ( p )->addButton( hbqt_par_QAbstractButton( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBUTTONGROUP_ADDBUTTON_1 FP=( p )->addButton( hbqt_par_QAbstractButton( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->addButton( hbqt_par_QAbstractButton( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -192,10 +188,8 @@ HB_FUNC( QT_QBUTTONGROUP_BUTTON )
 {
    QButtonGroup * p = hbqt_par_QButtonGroup( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAbstractButton( ( p )->button( hb_parni( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBUTTONGROUP_BUTTON FP=hb_retptrGC( hbqt_gcAllocate_QAbstractButton( ( p )->button( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAbstractButton( ( p )->button( hb_parni( 2 ) ), false ) );
    }
 }
 
@@ -206,10 +200,8 @@ HB_FUNC( QT_QBUTTONGROUP_BUTTONS )
 {
    QButtonGroup * p = hbqt_par_QButtonGroup( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QAbstractButton *>( ( p )->buttons() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBUTTONGROUP_BUTTONS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QAbstractButton *>( ( p )->buttons() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QAbstractButton *>( ( p )->buttons() ), true ) );
    }
 }
 
@@ -220,10 +212,8 @@ HB_FUNC( QT_QBUTTONGROUP_CHECKEDBUTTON )
 {
    QButtonGroup * p = hbqt_par_QButtonGroup( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAbstractButton( ( p )->checkedButton(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBUTTONGROUP_CHECKEDBUTTON FP=hb_retptrGC( hbqt_gcAllocate_QAbstractButton( ( p )->checkedButton(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAbstractButton( ( p )->checkedButton(), false ) );
    }
 }
 
@@ -234,10 +224,8 @@ HB_FUNC( QT_QBUTTONGROUP_CHECKEDID )
 {
    QButtonGroup * p = hbqt_par_QButtonGroup( 1 );
    if( p )
-      hb_retni( ( p )->checkedId() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBUTTONGROUP_CHECKEDID FP=hb_retni( ( p )->checkedId() ); p is NULL" ) );
+      hb_retni( ( p )->checkedId() );
    }
 }
 
@@ -248,10 +236,8 @@ HB_FUNC( QT_QBUTTONGROUP_EXCLUSIVE )
 {
    QButtonGroup * p = hbqt_par_QButtonGroup( 1 );
    if( p )
-      hb_retl( ( p )->exclusive() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBUTTONGROUP_EXCLUSIVE FP=hb_retl( ( p )->exclusive() ); p is NULL" ) );
+      hb_retl( ( p )->exclusive() );
    }
 }
 
@@ -262,10 +248,8 @@ HB_FUNC( QT_QBUTTONGROUP_ID )
 {
    QButtonGroup * p = hbqt_par_QButtonGroup( 1 );
    if( p )
-      hb_retni( ( p )->id( hbqt_par_QAbstractButton( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBUTTONGROUP_ID FP=hb_retni( ( p )->id( hbqt_par_QAbstractButton( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->id( hbqt_par_QAbstractButton( 2 ) ) );
    }
 }
 
@@ -276,10 +260,8 @@ HB_FUNC( QT_QBUTTONGROUP_REMOVEBUTTON )
 {
    QButtonGroup * p = hbqt_par_QButtonGroup( 1 );
    if( p )
-      ( p )->removeButton( hbqt_par_QAbstractButton( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBUTTONGROUP_REMOVEBUTTON FP=( p )->removeButton( hbqt_par_QAbstractButton( 2 ) ); p is NULL" ) );
+      ( p )->removeButton( hbqt_par_QAbstractButton( 2 ) );
    }
 }
 
@@ -290,10 +272,8 @@ HB_FUNC( QT_QBUTTONGROUP_SETEXCLUSIVE )
 {
    QButtonGroup * p = hbqt_par_QButtonGroup( 1 );
    if( p )
-      ( p )->setExclusive( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBUTTONGROUP_SETEXCLUSIVE FP=( p )->setExclusive( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setExclusive( hb_parl( 2 ) );
    }
 }
 
@@ -304,10 +284,8 @@ HB_FUNC( QT_QBUTTONGROUP_SETID )
 {
    QButtonGroup * p = hbqt_par_QButtonGroup( 1 );
    if( p )
-      ( p )->setId( hbqt_par_QAbstractButton( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBUTTONGROUP_SETID FP=( p )->setId( hbqt_par_QAbstractButton( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setId( hbqt_par_QAbstractButton( 2 ), hb_parni( 3 ) );
    }
 }
 

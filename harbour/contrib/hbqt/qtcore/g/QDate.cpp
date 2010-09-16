@@ -148,10 +148,8 @@ HB_FUNC( QT_QDATE_ADDDAYS )
 {
    QDate * p = hbqt_par_QDate( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( ( p )->addDays( hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATE_ADDDAYS FP=hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( ( p )->addDays( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( ( p )->addDays( hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -162,10 +160,8 @@ HB_FUNC( QT_QDATE_ADDMONTHS )
 {
    QDate * p = hbqt_par_QDate( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( ( p )->addMonths( hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATE_ADDMONTHS FP=hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( ( p )->addMonths( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( ( p )->addMonths( hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -176,10 +172,8 @@ HB_FUNC( QT_QDATE_ADDYEARS )
 {
    QDate * p = hbqt_par_QDate( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( ( p )->addYears( hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATE_ADDYEARS FP=hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( ( p )->addYears( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( ( p )->addYears( hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -190,10 +184,8 @@ HB_FUNC( QT_QDATE_DAY )
 {
    QDate * p = hbqt_par_QDate( 1 );
    if( p )
-      hb_retni( ( p )->day() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATE_DAY FP=hb_retni( ( p )->day() ); p is NULL" ) );
+      hb_retni( ( p )->day() );
    }
 }
 
@@ -204,10 +196,8 @@ HB_FUNC( QT_QDATE_DAYOFWEEK )
 {
    QDate * p = hbqt_par_QDate( 1 );
    if( p )
-      hb_retni( ( p )->dayOfWeek() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATE_DAYOFWEEK FP=hb_retni( ( p )->dayOfWeek() ); p is NULL" ) );
+      hb_retni( ( p )->dayOfWeek() );
    }
 }
 
@@ -218,10 +208,8 @@ HB_FUNC( QT_QDATE_DAYOFYEAR )
 {
    QDate * p = hbqt_par_QDate( 1 );
    if( p )
-      hb_retni( ( p )->dayOfYear() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATE_DAYOFYEAR FP=hb_retni( ( p )->dayOfYear() ); p is NULL" ) );
+      hb_retni( ( p )->dayOfYear() );
    }
 }
 
@@ -232,10 +220,8 @@ HB_FUNC( QT_QDATE_DAYSINMONTH )
 {
    QDate * p = hbqt_par_QDate( 1 );
    if( p )
-      hb_retni( ( p )->daysInMonth() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATE_DAYSINMONTH FP=hb_retni( ( p )->daysInMonth() ); p is NULL" ) );
+      hb_retni( ( p )->daysInMonth() );
    }
 }
 
@@ -246,10 +232,8 @@ HB_FUNC( QT_QDATE_DAYSINYEAR )
 {
    QDate * p = hbqt_par_QDate( 1 );
    if( p )
-      hb_retni( ( p )->daysInYear() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATE_DAYSINYEAR FP=hb_retni( ( p )->daysInYear() ); p is NULL" ) );
+      hb_retni( ( p )->daysInYear() );
    }
 }
 
@@ -260,10 +244,8 @@ HB_FUNC( QT_QDATE_DAYSTO )
 {
    QDate * p = hbqt_par_QDate( 1 );
    if( p )
-      hb_retni( ( p )->daysTo( *hbqt_par_QDate( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATE_DAYSTO FP=hb_retni( ( p )->daysTo( *hbqt_par_QDate( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->daysTo( *hbqt_par_QDate( 2 ) ) );
    }
 }
 
@@ -278,10 +260,8 @@ HB_FUNC( QT_QDATE_GETDATE )
    int iDay = 0;
 
    if( p )
-      ( p )->getDate( &iYear, &iMonth, &iDay );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATE_GETDATE FP=( p )->getDate( &iYear, &iMonth, &iDay ); p is NULL" ) );
+      ( p )->getDate( &iYear, &iMonth, &iDay );
    }
 
    hb_storni( iYear, 2 );
@@ -296,10 +276,8 @@ HB_FUNC( QT_QDATE_ISNULL )
 {
    QDate * p = hbqt_par_QDate( 1 );
    if( p )
-      hb_retl( ( p )->isNull() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATE_ISNULL FP=hb_retl( ( p )->isNull() ); p is NULL" ) );
+      hb_retl( ( p )->isNull() );
    }
 }
 
@@ -310,10 +288,8 @@ HB_FUNC( QT_QDATE_ISVALID )
 {
    QDate * p = hbqt_par_QDate( 1 );
    if( p )
-      hb_retl( ( p )->isValid() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATE_ISVALID FP=hb_retl( ( p )->isValid() ); p is NULL" ) );
+      hb_retl( ( p )->isValid() );
    }
 }
 
@@ -324,10 +300,8 @@ HB_FUNC( QT_QDATE_MONTH )
 {
    QDate * p = hbqt_par_QDate( 1 );
    if( p )
-      hb_retni( ( p )->month() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATE_MONTH FP=hb_retni( ( p )->month() ); p is NULL" ) );
+      hb_retni( ( p )->month() );
    }
 }
 
@@ -338,10 +312,8 @@ HB_FUNC( QT_QDATE_SETDATE )
 {
    QDate * p = hbqt_par_QDate( 1 );
    if( p )
-      hb_retl( ( p )->setDate( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATE_SETDATE FP=hb_retl( ( p )->setDate( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->setDate( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) ) );
    }
 }
 
@@ -352,10 +324,8 @@ HB_FUNC( QT_QDATE_TOJULIANDAY )
 {
    QDate * p = hbqt_par_QDate( 1 );
    if( p )
-      hb_retni( ( p )->toJulianDay() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATE_TOJULIANDAY FP=hb_retni( ( p )->toJulianDay() ); p is NULL" ) );
+      hb_retni( ( p )->toJulianDay() );
    }
 }
 
@@ -366,10 +336,10 @@ HB_FUNC( QT_QDATE_TOSTRING )
 {
    QDate * p = hbqt_par_QDate( 1 );
    if( p )
-      hb_retc( ( p )->toString( hbqt_par_QString( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATE_TOSTRING FP=hb_retc( ( p )->toString( hbqt_par_QString( 2 ) ).toAscii().data() ); p is NULL" ) );
+      void * pText;
+      hb_retstr_utf8( ( p )->toString( hb_parstr_utf8( 2, &pText, NULL ) ).toUtf8().data() );
+      hb_strfree( pText );
    }
 }
 
@@ -380,10 +350,8 @@ HB_FUNC( QT_QDATE_TOSTRING_1 )
 {
    QDate * p = hbqt_par_QDate( 1 );
    if( p )
-      hb_retc( ( p )->toString( ( HB_ISNUM( 2 ) ? ( Qt::DateFormat ) hb_parni( 2 ) : ( Qt::DateFormat ) Qt::TextDate ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATE_TOSTRING_1 FP=hb_retc( ( p )->toString( ( HB_ISNUM( 2 ) ? ( Qt::DateFormat ) hb_parni( 2 ) : ( Qt::DateFormat ) Qt::TextDate ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->toString( ( HB_ISNUM( 2 ) ? ( Qt::DateFormat ) hb_parni( 2 ) : ( Qt::DateFormat ) Qt::TextDate ) ).toUtf8().data() );
    }
 }
 
@@ -396,10 +364,8 @@ HB_FUNC( QT_QDATE_WEEKNUMBER )
    int iYearNumber = 0;
 
    if( p )
-      hb_retni( ( p )->weekNumber( &iYearNumber ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATE_WEEKNUMBER FP=hb_retni( ( p )->weekNumber( &iYearNumber ) ); p is NULL" ) );
+      hb_retni( ( p )->weekNumber( &iYearNumber ) );
    }
 
    hb_storni( iYearNumber, 2 );
@@ -412,10 +378,8 @@ HB_FUNC( QT_QDATE_YEAR )
 {
    QDate * p = hbqt_par_QDate( 1 );
    if( p )
-      hb_retni( ( p )->year() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATE_YEAR FP=hb_retni( ( p )->year() ); p is NULL" ) );
+      hb_retni( ( p )->year() );
    }
 }
 

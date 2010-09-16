@@ -172,10 +172,8 @@ HB_FUNC( QT_QSCISTYLE_STYLE )
 {
    QsciStyle * p = hbqt_par_QsciStyle( 1 );
    if( p )
-      hb_retni( ( p )->style() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISTYLE_STYLE FP=hb_retni( ( p )->style() ); p is NULL" ) );
+      hb_retni( ( p )->style() );
    }
 }
 
@@ -186,10 +184,10 @@ HB_FUNC( QT_QSCISTYLE_SETDESCRIPTION )
 {
    QsciStyle * p = hbqt_par_QsciStyle( 1 );
    if( p )
-      ( p )->setDescription( QsciStyle::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISTYLE_SETDESCRIPTION FP=( p )->setDescription( QsciStyle::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setDescription( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -200,10 +198,8 @@ HB_FUNC( QT_QSCISTYLE_DESCRIPTION )
 {
    QsciStyle * p = hbqt_par_QsciStyle( 1 );
    if( p )
-      hb_retc( ( p )->description().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISTYLE_DESCRIPTION FP=hb_retc( ( p )->description().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->description().toUtf8().data() );
    }
 }
 
@@ -214,10 +210,8 @@ HB_FUNC( QT_QSCISTYLE_SETCOLOR )
 {
    QsciStyle * p = hbqt_par_QsciStyle( 1 );
    if( p )
-      ( p )->setColor( *hbqt_par_QColor( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISTYLE_SETCOLOR FP=( p )->setColor( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+      ( p )->setColor( *hbqt_par_QColor( 2 ) );
    }
 }
 
@@ -228,10 +222,8 @@ HB_FUNC( QT_QSCISTYLE_COLOR )
 {
    QsciStyle * p = hbqt_par_QsciStyle( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->color() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISTYLE_COLOR FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->color() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->color() ), true ) );
    }
 }
 
@@ -242,10 +234,8 @@ HB_FUNC( QT_QSCISTYLE_SETPAPER )
 {
    QsciStyle * p = hbqt_par_QsciStyle( 1 );
    if( p )
-      ( p )->setPaper( *hbqt_par_QColor( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISTYLE_SETPAPER FP=( p )->setPaper( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+      ( p )->setPaper( *hbqt_par_QColor( 2 ) );
    }
 }
 
@@ -256,10 +246,8 @@ HB_FUNC( QT_QSCISTYLE_PAPER )
 {
    QsciStyle * p = hbqt_par_QsciStyle( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->paper() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISTYLE_PAPER FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->paper() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->paper() ), true ) );
    }
 }
 
@@ -270,10 +258,8 @@ HB_FUNC( QT_QSCISTYLE_SETFONT )
 {
    QsciStyle * p = hbqt_par_QsciStyle( 1 );
    if( p )
-      ( p )->setFont( *hbqt_par_QFont( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISTYLE_SETFONT FP=( p )->setFont( *hbqt_par_QFont( 2 ) ); p is NULL" ) );
+      ( p )->setFont( *hbqt_par_QFont( 2 ) );
    }
 }
 
@@ -284,10 +270,8 @@ HB_FUNC( QT_QSCISTYLE_FONT )
 {
    QsciStyle * p = hbqt_par_QsciStyle( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISTYLE_FONT FP=hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font() ), true ) );
    }
 }
 
@@ -298,10 +282,8 @@ HB_FUNC( QT_QSCISTYLE_SETEOLFILL )
 {
    QsciStyle * p = hbqt_par_QsciStyle( 1 );
    if( p )
-      ( p )->setEolFill( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISTYLE_SETEOLFILL FP=( p )->setEolFill( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setEolFill( hb_parl( 2 ) );
    }
 }
 
@@ -312,10 +294,8 @@ HB_FUNC( QT_QSCISTYLE_EOLFILL )
 {
    QsciStyle * p = hbqt_par_QsciStyle( 1 );
    if( p )
-      hb_retl( ( p )->eolFill() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISTYLE_EOLFILL FP=hb_retl( ( p )->eolFill() ); p is NULL" ) );
+      hb_retl( ( p )->eolFill() );
    }
 }
 
@@ -326,10 +306,8 @@ HB_FUNC( QT_QSCISTYLE_SETTEXTCASE )
 {
    QsciStyle * p = hbqt_par_QsciStyle( 1 );
    if( p )
-      ( p )->setTextCase( ( QsciStyle::TextCase ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISTYLE_SETTEXTCASE FP=( p )->setTextCase( ( QsciStyle::TextCase ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setTextCase( ( QsciStyle::TextCase ) hb_parni( 2 ) );
    }
 }
 
@@ -340,10 +318,8 @@ HB_FUNC( QT_QSCISTYLE_TEXTCASE )
 {
    QsciStyle * p = hbqt_par_QsciStyle( 1 );
    if( p )
-      hb_retni( ( QsciStyle::TextCase ) ( p )->textCase() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISTYLE_TEXTCASE FP=hb_retni( ( QsciStyle::TextCase ) ( p )->textCase() ); p is NULL" ) );
+      hb_retni( ( QsciStyle::TextCase ) ( p )->textCase() );
    }
 }
 
@@ -354,10 +330,8 @@ HB_FUNC( QT_QSCISTYLE_SETVISIBLE )
 {
    QsciStyle * p = hbqt_par_QsciStyle( 1 );
    if( p )
-      ( p )->setVisible( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISTYLE_SETVISIBLE FP=( p )->setVisible( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setVisible( hb_parl( 2 ) );
    }
 }
 
@@ -368,10 +342,8 @@ HB_FUNC( QT_QSCISTYLE_VISIBLE )
 {
    QsciStyle * p = hbqt_par_QsciStyle( 1 );
    if( p )
-      hb_retl( ( p )->visible() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISTYLE_VISIBLE FP=hb_retl( ( p )->visible() ); p is NULL" ) );
+      hb_retl( ( p )->visible() );
    }
 }
 
@@ -382,10 +354,8 @@ HB_FUNC( QT_QSCISTYLE_SETCHANGEABLE )
 {
    QsciStyle * p = hbqt_par_QsciStyle( 1 );
    if( p )
-      ( p )->setChangeable( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISTYLE_SETCHANGEABLE FP=( p )->setChangeable( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setChangeable( hb_parl( 2 ) );
    }
 }
 
@@ -396,10 +366,8 @@ HB_FUNC( QT_QSCISTYLE_CHANGEABLE )
 {
    QsciStyle * p = hbqt_par_QsciStyle( 1 );
    if( p )
-      hb_retl( ( p )->changeable() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISTYLE_CHANGEABLE FP=hb_retl( ( p )->changeable() ); p is NULL" ) );
+      hb_retl( ( p )->changeable() );
    }
 }
 
@@ -410,10 +378,8 @@ HB_FUNC( QT_QSCISTYLE_SETHOTSPOT )
 {
    QsciStyle * p = hbqt_par_QsciStyle( 1 );
    if( p )
-      ( p )->setHotspot( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISTYLE_SETHOTSPOT FP=( p )->setHotspot( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setHotspot( hb_parl( 2 ) );
    }
 }
 
@@ -424,10 +390,8 @@ HB_FUNC( QT_QSCISTYLE_HOTSPOT )
 {
    QsciStyle * p = hbqt_par_QsciStyle( 1 );
    if( p )
-      hb_retl( ( p )->hotspot() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISTYLE_HOTSPOT FP=hb_retl( ( p )->hotspot() ); p is NULL" ) );
+      hb_retl( ( p )->hotspot() );
    }
 }
 
@@ -438,10 +402,8 @@ HB_FUNC( QT_QSCISTYLE_REFRESH )
 {
    QsciStyle * p = hbqt_par_QsciStyle( 1 );
    if( p )
-      ( p )->refresh();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISTYLE_REFRESH FP=( p )->refresh(); p is NULL" ) );
+      ( p )->refresh();
    }
 }
 

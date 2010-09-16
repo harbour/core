@@ -157,10 +157,8 @@ HB_FUNC( QT_QFOCUSFRAME_SETWIDGET )
 {
    QFocusFrame * p = hbqt_par_QFocusFrame( 1 );
    if( p )
-      ( p )->setWidget( hbqt_par_QWidget( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFOCUSFRAME_SETWIDGET FP=( p )->setWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+      ( p )->setWidget( hbqt_par_QWidget( 2 ) );
    }
 }
 
@@ -171,10 +169,8 @@ HB_FUNC( QT_QFOCUSFRAME_WIDGET )
 {
    QFocusFrame * p = hbqt_par_QFocusFrame( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFOCUSFRAME_WIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) );
    }
 }
 

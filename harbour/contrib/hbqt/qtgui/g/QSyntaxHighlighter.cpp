@@ -129,10 +129,8 @@ HB_FUNC( QT_QSYNTAXHIGHLIGHTER_DOCUMENT )
 {
    QSyntaxHighlighter * p = hbqt_par_QSyntaxHighlighter( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTextDocument( ( p )->document(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSYNTAXHIGHLIGHTER_DOCUMENT FP=hb_retptrGC( hbqt_gcAllocate_QTextDocument( ( p )->document(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTextDocument( ( p )->document(), false ) );
    }
 }
 
@@ -143,10 +141,8 @@ HB_FUNC( QT_QSYNTAXHIGHLIGHTER_SETDOCUMENT )
 {
    QSyntaxHighlighter * p = hbqt_par_QSyntaxHighlighter( 1 );
    if( p )
-      ( p )->setDocument( hbqt_par_QTextDocument( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSYNTAXHIGHLIGHTER_SETDOCUMENT FP=( p )->setDocument( hbqt_par_QTextDocument( 2 ) ); p is NULL" ) );
+      ( p )->setDocument( hbqt_par_QTextDocument( 2 ) );
    }
 }
 
@@ -157,10 +153,8 @@ HB_FUNC( QT_QSYNTAXHIGHLIGHTER_REHIGHLIGHT )
 {
    QSyntaxHighlighter * p = hbqt_par_QSyntaxHighlighter( 1 );
    if( p )
-      ( p )->rehighlight();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSYNTAXHIGHLIGHTER_REHIGHLIGHT FP=( p )->rehighlight(); p is NULL" ) );
+      ( p )->rehighlight();
    }
 }
 

@@ -150,10 +150,8 @@ HB_FUNC( QT_QINPUTMETHODEVENT_COMMITSTRING )
 {
    QInputMethodEvent * p = hbqt_par_QInputMethodEvent( 1 );
    if( p )
-      hb_retc( ( p )->commitString().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTMETHODEVENT_COMMITSTRING FP=hb_retc( ( p )->commitString().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->commitString().toUtf8().data() );
    }
 }
 
@@ -164,10 +162,8 @@ HB_FUNC( QT_QINPUTMETHODEVENT_PREEDITSTRING )
 {
    QInputMethodEvent * p = hbqt_par_QInputMethodEvent( 1 );
    if( p )
-      hb_retc( ( p )->preeditString().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTMETHODEVENT_PREEDITSTRING FP=hb_retc( ( p )->preeditString().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->preeditString().toUtf8().data() );
    }
 }
 
@@ -178,10 +174,8 @@ HB_FUNC( QT_QINPUTMETHODEVENT_REPLACEMENTLENGTH )
 {
    QInputMethodEvent * p = hbqt_par_QInputMethodEvent( 1 );
    if( p )
-      hb_retni( ( p )->replacementLength() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTMETHODEVENT_REPLACEMENTLENGTH FP=hb_retni( ( p )->replacementLength() ); p is NULL" ) );
+      hb_retni( ( p )->replacementLength() );
    }
 }
 
@@ -192,10 +186,8 @@ HB_FUNC( QT_QINPUTMETHODEVENT_REPLACEMENTSTART )
 {
    QInputMethodEvent * p = hbqt_par_QInputMethodEvent( 1 );
    if( p )
-      hb_retni( ( p )->replacementStart() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTMETHODEVENT_REPLACEMENTSTART FP=hb_retni( ( p )->replacementStart() ); p is NULL" ) );
+      hb_retni( ( p )->replacementStart() );
    }
 }
 
@@ -206,10 +198,10 @@ HB_FUNC( QT_QINPUTMETHODEVENT_SETCOMMITSTRING )
 {
    QInputMethodEvent * p = hbqt_par_QInputMethodEvent( 1 );
    if( p )
-      ( p )->setCommitString( hbqt_par_QString( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTMETHODEVENT_SETCOMMITSTRING FP=( p )->setCommitString( hbqt_par_QString( 2 ), hb_parni( 3 ), hb_parni( 4 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setCommitString( hb_parstr_utf8( 2, &pText, NULL ), hb_parni( 3 ), hb_parni( 4 ) );
+      hb_strfree( pText );
    }
 }
 

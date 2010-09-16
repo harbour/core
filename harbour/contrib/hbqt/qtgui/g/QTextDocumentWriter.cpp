@@ -148,10 +148,8 @@ HB_FUNC( QT_QTEXTDOCUMENTWRITER_CODEC )
 {
    QTextDocumentWriter * p = hbqt_par_QTextDocumentWriter( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codec(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENTWRITER_CODEC FP=hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codec(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codec(), false ) );
    }
 }
 
@@ -162,10 +160,8 @@ HB_FUNC( QT_QTEXTDOCUMENTWRITER_DEVICE )
 {
    QTextDocumentWriter * p = hbqt_par_QTextDocumentWriter( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QIODevice( ( p )->device(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENTWRITER_DEVICE FP=hb_retptrGC( hbqt_gcAllocate_QIODevice( ( p )->device(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QIODevice( ( p )->device(), false ) );
    }
 }
 
@@ -176,10 +172,8 @@ HB_FUNC( QT_QTEXTDOCUMENTWRITER_FILENAME )
 {
    QTextDocumentWriter * p = hbqt_par_QTextDocumentWriter( 1 );
    if( p )
-      hb_retc( ( p )->fileName().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENTWRITER_FILENAME FP=hb_retc( ( p )->fileName().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->fileName().toUtf8().data() );
    }
 }
 
@@ -190,10 +184,8 @@ HB_FUNC( QT_QTEXTDOCUMENTWRITER_FORMAT )
 {
    QTextDocumentWriter * p = hbqt_par_QTextDocumentWriter( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->format() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENTWRITER_FORMAT FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->format() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->format() ), true ) );
    }
 }
 
@@ -204,10 +196,8 @@ HB_FUNC( QT_QTEXTDOCUMENTWRITER_SETCODEC )
 {
    QTextDocumentWriter * p = hbqt_par_QTextDocumentWriter( 1 );
    if( p )
-      ( p )->setCodec( hbqt_par_QTextCodec( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENTWRITER_SETCODEC FP=( p )->setCodec( hbqt_par_QTextCodec( 2 ) ); p is NULL" ) );
+      ( p )->setCodec( hbqt_par_QTextCodec( 2 ) );
    }
 }
 
@@ -218,10 +208,8 @@ HB_FUNC( QT_QTEXTDOCUMENTWRITER_SETDEVICE )
 {
    QTextDocumentWriter * p = hbqt_par_QTextDocumentWriter( 1 );
    if( p )
-      ( p )->setDevice( hbqt_par_QIODevice( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENTWRITER_SETDEVICE FP=( p )->setDevice( hbqt_par_QIODevice( 2 ) ); p is NULL" ) );
+      ( p )->setDevice( hbqt_par_QIODevice( 2 ) );
    }
 }
 
@@ -232,10 +220,10 @@ HB_FUNC( QT_QTEXTDOCUMENTWRITER_SETFILENAME )
 {
    QTextDocumentWriter * p = hbqt_par_QTextDocumentWriter( 1 );
    if( p )
-      ( p )->setFileName( hbqt_par_QString( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENTWRITER_SETFILENAME FP=( p )->setFileName( hbqt_par_QString( 2 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setFileName( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -246,10 +234,8 @@ HB_FUNC( QT_QTEXTDOCUMENTWRITER_SETFORMAT )
 {
    QTextDocumentWriter * p = hbqt_par_QTextDocumentWriter( 1 );
    if( p )
-      ( p )->setFormat( *hbqt_par_QByteArray( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENTWRITER_SETFORMAT FP=( p )->setFormat( *hbqt_par_QByteArray( 2 ) ); p is NULL" ) );
+      ( p )->setFormat( *hbqt_par_QByteArray( 2 ) );
    }
 }
 
@@ -260,10 +246,8 @@ HB_FUNC( QT_QTEXTDOCUMENTWRITER_WRITE )
 {
    QTextDocumentWriter * p = hbqt_par_QTextDocumentWriter( 1 );
    if( p )
-      hb_retl( ( p )->write( hbqt_par_QTextDocument( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENTWRITER_WRITE FP=hb_retl( ( p )->write( hbqt_par_QTextDocument( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->write( hbqt_par_QTextDocument( 2 ) ) );
    }
 }
 
@@ -274,10 +258,8 @@ HB_FUNC( QT_QTEXTDOCUMENTWRITER_WRITE_1 )
 {
    QTextDocumentWriter * p = hbqt_par_QTextDocumentWriter( 1 );
    if( p )
-      hb_retl( ( p )->write( *hbqt_par_QTextDocumentFragment( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDOCUMENTWRITER_WRITE_1 FP=hb_retl( ( p )->write( *hbqt_par_QTextDocumentFragment( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->write( *hbqt_par_QTextDocumentFragment( 2 ) ) );
    }
 }
 

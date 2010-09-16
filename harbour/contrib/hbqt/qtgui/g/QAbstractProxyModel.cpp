@@ -126,10 +126,8 @@ HB_FUNC( QT_QABSTRACTPROXYMODEL_MAPFROMSOURCE )
 {
    QAbstractProxyModel * p = hbqt_par_QAbstractProxyModel( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->mapFromSource( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTPROXYMODEL_MAPFROMSOURCE FP=hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->mapFromSource( *hbqt_par_QModelIndex( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->mapFromSource( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
    }
 }
 
@@ -140,10 +138,8 @@ HB_FUNC( QT_QABSTRACTPROXYMODEL_MAPSELECTIONFROMSOURCE )
 {
    QAbstractProxyModel * p = hbqt_par_QAbstractProxyModel( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QItemSelection( new QItemSelection( ( p )->mapSelectionFromSource( *hbqt_par_QItemSelection( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTPROXYMODEL_MAPSELECTIONFROMSOURCE FP=hb_retptrGC( hbqt_gcAllocate_QItemSelection( new QItemSelection( ( p )->mapSelectionFromSource( *hbqt_par_QItemSelection( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QItemSelection( new QItemSelection( ( p )->mapSelectionFromSource( *hbqt_par_QItemSelection( 2 ) ) ), true ) );
    }
 }
 
@@ -154,10 +150,8 @@ HB_FUNC( QT_QABSTRACTPROXYMODEL_MAPSELECTIONTOSOURCE )
 {
    QAbstractProxyModel * p = hbqt_par_QAbstractProxyModel( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QItemSelection( new QItemSelection( ( p )->mapSelectionToSource( *hbqt_par_QItemSelection( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTPROXYMODEL_MAPSELECTIONTOSOURCE FP=hb_retptrGC( hbqt_gcAllocate_QItemSelection( new QItemSelection( ( p )->mapSelectionToSource( *hbqt_par_QItemSelection( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QItemSelection( new QItemSelection( ( p )->mapSelectionToSource( *hbqt_par_QItemSelection( 2 ) ) ), true ) );
    }
 }
 
@@ -168,10 +162,8 @@ HB_FUNC( QT_QABSTRACTPROXYMODEL_MAPTOSOURCE )
 {
    QAbstractProxyModel * p = hbqt_par_QAbstractProxyModel( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->mapToSource( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTPROXYMODEL_MAPTOSOURCE FP=hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->mapToSource( *hbqt_par_QModelIndex( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QModelIndex( new QModelIndex( ( p )->mapToSource( *hbqt_par_QModelIndex( 2 ) ) ), true ) );
    }
 }
 
@@ -182,10 +174,8 @@ HB_FUNC( QT_QABSTRACTPROXYMODEL_SETSOURCEMODEL )
 {
    QAbstractProxyModel * p = hbqt_par_QAbstractProxyModel( 1 );
    if( p )
-      ( p )->setSourceModel( hbqt_par_QAbstractItemModel( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTPROXYMODEL_SETSOURCEMODEL FP=( p )->setSourceModel( hbqt_par_QAbstractItemModel( 2 ) ); p is NULL" ) );
+      ( p )->setSourceModel( hbqt_par_QAbstractItemModel( 2 ) );
    }
 }
 
@@ -196,10 +186,8 @@ HB_FUNC( QT_QABSTRACTPROXYMODEL_SOURCEMODEL )
 {
    QAbstractProxyModel * p = hbqt_par_QAbstractProxyModel( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAbstractItemModel( ( p )->sourceModel(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTPROXYMODEL_SOURCEMODEL FP=hb_retptrGC( hbqt_gcAllocate_QAbstractItemModel( ( p )->sourceModel(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAbstractItemModel( ( p )->sourceModel(), false ) );
    }
 }
 

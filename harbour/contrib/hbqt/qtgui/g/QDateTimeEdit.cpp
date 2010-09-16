@@ -164,10 +164,8 @@ HB_FUNC( QT_QDATETIMEEDIT_CALENDARPOPUP )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      hb_retl( ( p )->calendarPopup() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_CALENDARPOPUP FP=hb_retl( ( p )->calendarPopup() ); p is NULL" ) );
+      hb_retl( ( p )->calendarPopup() );
    }
 }
 
@@ -178,10 +176,8 @@ HB_FUNC( QT_QDATETIMEEDIT_CALENDARWIDGET )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QCalendarWidget( ( p )->calendarWidget(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_CALENDARWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QCalendarWidget( ( p )->calendarWidget(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QCalendarWidget( ( p )->calendarWidget(), false ) );
    }
 }
 
@@ -192,10 +188,8 @@ HB_FUNC( QT_QDATETIMEEDIT_CLEARMAXIMUMDATE )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      ( p )->clearMaximumDate();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_CLEARMAXIMUMDATE FP=( p )->clearMaximumDate(); p is NULL" ) );
+      ( p )->clearMaximumDate();
    }
 }
 
@@ -206,10 +200,8 @@ HB_FUNC( QT_QDATETIMEEDIT_CLEARMAXIMUMDATETIME )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      ( p )->clearMaximumDateTime();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_CLEARMAXIMUMDATETIME FP=( p )->clearMaximumDateTime(); p is NULL" ) );
+      ( p )->clearMaximumDateTime();
    }
 }
 
@@ -220,10 +212,8 @@ HB_FUNC( QT_QDATETIMEEDIT_CLEARMAXIMUMTIME )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      ( p )->clearMaximumTime();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_CLEARMAXIMUMTIME FP=( p )->clearMaximumTime(); p is NULL" ) );
+      ( p )->clearMaximumTime();
    }
 }
 
@@ -234,10 +224,8 @@ HB_FUNC( QT_QDATETIMEEDIT_CLEARMINIMUMDATE )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      ( p )->clearMinimumDate();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_CLEARMINIMUMDATE FP=( p )->clearMinimumDate(); p is NULL" ) );
+      ( p )->clearMinimumDate();
    }
 }
 
@@ -248,10 +236,8 @@ HB_FUNC( QT_QDATETIMEEDIT_CLEARMINIMUMDATETIME )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      ( p )->clearMinimumDateTime();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_CLEARMINIMUMDATETIME FP=( p )->clearMinimumDateTime(); p is NULL" ) );
+      ( p )->clearMinimumDateTime();
    }
 }
 
@@ -262,10 +248,8 @@ HB_FUNC( QT_QDATETIMEEDIT_CLEARMINIMUMTIME )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      ( p )->clearMinimumTime();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_CLEARMINIMUMTIME FP=( p )->clearMinimumTime(); p is NULL" ) );
+      ( p )->clearMinimumTime();
    }
 }
 
@@ -276,10 +260,8 @@ HB_FUNC( QT_QDATETIMEEDIT_CURRENTSECTION )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      hb_retni( ( QDateTimeEdit::Section ) ( p )->currentSection() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_CURRENTSECTION FP=hb_retni( ( QDateTimeEdit::Section ) ( p )->currentSection() ); p is NULL" ) );
+      hb_retni( ( QDateTimeEdit::Section ) ( p )->currentSection() );
    }
 }
 
@@ -290,10 +272,8 @@ HB_FUNC( QT_QDATETIMEEDIT_CURRENTSECTIONINDEX )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      hb_retni( ( p )->currentSectionIndex() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_CURRENTSECTIONINDEX FP=hb_retni( ( p )->currentSectionIndex() ); p is NULL" ) );
+      hb_retni( ( p )->currentSectionIndex() );
    }
 }
 
@@ -304,10 +284,8 @@ HB_FUNC( QT_QDATETIMEEDIT_DATE )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( ( p )->date() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_DATE FP=hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( ( p )->date() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( ( p )->date() ), true ) );
    }
 }
 
@@ -318,10 +296,8 @@ HB_FUNC( QT_QDATETIMEEDIT_DATETIME )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->dateTime() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_DATETIME FP=hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->dateTime() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->dateTime() ), true ) );
    }
 }
 
@@ -332,10 +308,8 @@ HB_FUNC( QT_QDATETIMEEDIT_DISPLAYFORMAT )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      hb_retc( ( p )->displayFormat().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_DISPLAYFORMAT FP=hb_retc( ( p )->displayFormat().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->displayFormat().toUtf8().data() );
    }
 }
 
@@ -346,10 +320,8 @@ HB_FUNC( QT_QDATETIMEEDIT_DISPLAYEDSECTIONS )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      hb_retni( ( QDateTimeEdit::Sections ) ( p )->displayedSections() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_DISPLAYEDSECTIONS FP=hb_retni( ( QDateTimeEdit::Sections ) ( p )->displayedSections() ); p is NULL" ) );
+      hb_retni( ( QDateTimeEdit::Sections ) ( p )->displayedSections() );
    }
 }
 
@@ -360,10 +332,8 @@ HB_FUNC( QT_QDATETIMEEDIT_MAXIMUMDATE )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( ( p )->maximumDate() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_MAXIMUMDATE FP=hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( ( p )->maximumDate() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( ( p )->maximumDate() ), true ) );
    }
 }
 
@@ -374,10 +344,8 @@ HB_FUNC( QT_QDATETIMEEDIT_MAXIMUMDATETIME )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->maximumDateTime() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_MAXIMUMDATETIME FP=hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->maximumDateTime() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->maximumDateTime() ), true ) );
    }
 }
 
@@ -388,10 +356,8 @@ HB_FUNC( QT_QDATETIMEEDIT_MAXIMUMTIME )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( ( p )->maximumTime() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_MAXIMUMTIME FP=hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( ( p )->maximumTime() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( ( p )->maximumTime() ), true ) );
    }
 }
 
@@ -402,10 +368,8 @@ HB_FUNC( QT_QDATETIMEEDIT_MINIMUMDATE )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( ( p )->minimumDate() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_MINIMUMDATE FP=hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( ( p )->minimumDate() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDate( new QDate( ( p )->minimumDate() ), true ) );
    }
 }
 
@@ -416,10 +380,8 @@ HB_FUNC( QT_QDATETIMEEDIT_MINIMUMDATETIME )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->minimumDateTime() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_MINIMUMDATETIME FP=hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->minimumDateTime() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->minimumDateTime() ), true ) );
    }
 }
 
@@ -430,10 +392,8 @@ HB_FUNC( QT_QDATETIMEEDIT_MINIMUMTIME )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( ( p )->minimumTime() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_MINIMUMTIME FP=hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( ( p )->minimumTime() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( ( p )->minimumTime() ), true ) );
    }
 }
 
@@ -444,10 +404,8 @@ HB_FUNC( QT_QDATETIMEEDIT_SECTIONAT )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      hb_retni( ( QDateTimeEdit::Section ) ( p )->sectionAt( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_SECTIONAT FP=hb_retni( ( QDateTimeEdit::Section ) ( p )->sectionAt( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( QDateTimeEdit::Section ) ( p )->sectionAt( hb_parni( 2 ) ) );
    }
 }
 
@@ -458,10 +416,8 @@ HB_FUNC( QT_QDATETIMEEDIT_SECTIONCOUNT )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      hb_retni( ( p )->sectionCount() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_SECTIONCOUNT FP=hb_retni( ( p )->sectionCount() ); p is NULL" ) );
+      hb_retni( ( p )->sectionCount() );
    }
 }
 
@@ -472,10 +428,8 @@ HB_FUNC( QT_QDATETIMEEDIT_SECTIONTEXT )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      hb_retc( ( p )->sectionText( ( QDateTimeEdit::Section ) hb_parni( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_SECTIONTEXT FP=hb_retc( ( p )->sectionText( ( QDateTimeEdit::Section ) hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->sectionText( ( QDateTimeEdit::Section ) hb_parni( 2 ) ).toUtf8().data() );
    }
 }
 
@@ -486,10 +440,8 @@ HB_FUNC( QT_QDATETIMEEDIT_SETCALENDARPOPUP )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      ( p )->setCalendarPopup( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_SETCALENDARPOPUP FP=( p )->setCalendarPopup( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setCalendarPopup( hb_parl( 2 ) );
    }
 }
 
@@ -500,10 +452,8 @@ HB_FUNC( QT_QDATETIMEEDIT_SETCALENDARWIDGET )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      ( p )->setCalendarWidget( hbqt_par_QCalendarWidget( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_SETCALENDARWIDGET FP=( p )->setCalendarWidget( hbqt_par_QCalendarWidget( 2 ) ); p is NULL" ) );
+      ( p )->setCalendarWidget( hbqt_par_QCalendarWidget( 2 ) );
    }
 }
 
@@ -514,10 +464,8 @@ HB_FUNC( QT_QDATETIMEEDIT_SETCURRENTSECTION )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      ( p )->setCurrentSection( ( QDateTimeEdit::Section ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_SETCURRENTSECTION FP=( p )->setCurrentSection( ( QDateTimeEdit::Section ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setCurrentSection( ( QDateTimeEdit::Section ) hb_parni( 2 ) );
    }
 }
 
@@ -528,10 +476,8 @@ HB_FUNC( QT_QDATETIMEEDIT_SETCURRENTSECTIONINDEX )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      ( p )->setCurrentSectionIndex( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_SETCURRENTSECTIONINDEX FP=( p )->setCurrentSectionIndex( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setCurrentSectionIndex( hb_parni( 2 ) );
    }
 }
 
@@ -542,10 +488,8 @@ HB_FUNC( QT_QDATETIMEEDIT_SETDATERANGE )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      ( p )->setDateRange( *hbqt_par_QDate( 2 ), *hbqt_par_QDate( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_SETDATERANGE FP=( p )->setDateRange( *hbqt_par_QDate( 2 ), *hbqt_par_QDate( 3 ) ); p is NULL" ) );
+      ( p )->setDateRange( *hbqt_par_QDate( 2 ), *hbqt_par_QDate( 3 ) );
    }
 }
 
@@ -556,10 +500,8 @@ HB_FUNC( QT_QDATETIMEEDIT_SETDATETIMERANGE )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      ( p )->setDateTimeRange( *hbqt_par_QDateTime( 2 ), *hbqt_par_QDateTime( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_SETDATETIMERANGE FP=( p )->setDateTimeRange( *hbqt_par_QDateTime( 2 ), *hbqt_par_QDateTime( 3 ) ); p is NULL" ) );
+      ( p )->setDateTimeRange( *hbqt_par_QDateTime( 2 ), *hbqt_par_QDateTime( 3 ) );
    }
 }
 
@@ -570,10 +512,10 @@ HB_FUNC( QT_QDATETIMEEDIT_SETDISPLAYFORMAT )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      ( p )->setDisplayFormat( QDateTimeEdit::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_SETDISPLAYFORMAT FP=( p )->setDisplayFormat( QDateTimeEdit::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setDisplayFormat( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -584,10 +526,8 @@ HB_FUNC( QT_QDATETIMEEDIT_SETMAXIMUMDATE )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      ( p )->setMaximumDate( *hbqt_par_QDate( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_SETMAXIMUMDATE FP=( p )->setMaximumDate( *hbqt_par_QDate( 2 ) ); p is NULL" ) );
+      ( p )->setMaximumDate( *hbqt_par_QDate( 2 ) );
    }
 }
 
@@ -598,10 +538,8 @@ HB_FUNC( QT_QDATETIMEEDIT_SETMAXIMUMDATETIME )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      ( p )->setMaximumDateTime( *hbqt_par_QDateTime( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_SETMAXIMUMDATETIME FP=( p )->setMaximumDateTime( *hbqt_par_QDateTime( 2 ) ); p is NULL" ) );
+      ( p )->setMaximumDateTime( *hbqt_par_QDateTime( 2 ) );
    }
 }
 
@@ -612,10 +550,8 @@ HB_FUNC( QT_QDATETIMEEDIT_SETMAXIMUMTIME )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      ( p )->setMaximumTime( *hbqt_par_QTime( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_SETMAXIMUMTIME FP=( p )->setMaximumTime( *hbqt_par_QTime( 2 ) ); p is NULL" ) );
+      ( p )->setMaximumTime( *hbqt_par_QTime( 2 ) );
    }
 }
 
@@ -626,10 +562,8 @@ HB_FUNC( QT_QDATETIMEEDIT_SETMINIMUMDATE )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      ( p )->setMinimumDate( *hbqt_par_QDate( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_SETMINIMUMDATE FP=( p )->setMinimumDate( *hbqt_par_QDate( 2 ) ); p is NULL" ) );
+      ( p )->setMinimumDate( *hbqt_par_QDate( 2 ) );
    }
 }
 
@@ -640,10 +574,8 @@ HB_FUNC( QT_QDATETIMEEDIT_SETMINIMUMDATETIME )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      ( p )->setMinimumDateTime( *hbqt_par_QDateTime( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_SETMINIMUMDATETIME FP=( p )->setMinimumDateTime( *hbqt_par_QDateTime( 2 ) ); p is NULL" ) );
+      ( p )->setMinimumDateTime( *hbqt_par_QDateTime( 2 ) );
    }
 }
 
@@ -654,10 +586,8 @@ HB_FUNC( QT_QDATETIMEEDIT_SETMINIMUMTIME )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      ( p )->setMinimumTime( *hbqt_par_QTime( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_SETMINIMUMTIME FP=( p )->setMinimumTime( *hbqt_par_QTime( 2 ) ); p is NULL" ) );
+      ( p )->setMinimumTime( *hbqt_par_QTime( 2 ) );
    }
 }
 
@@ -668,10 +598,8 @@ HB_FUNC( QT_QDATETIMEEDIT_SETSELECTEDSECTION )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      ( p )->setSelectedSection( ( QDateTimeEdit::Section ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_SETSELECTEDSECTION FP=( p )->setSelectedSection( ( QDateTimeEdit::Section ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setSelectedSection( ( QDateTimeEdit::Section ) hb_parni( 2 ) );
    }
 }
 
@@ -682,10 +610,8 @@ HB_FUNC( QT_QDATETIMEEDIT_SETTIMERANGE )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      ( p )->setTimeRange( *hbqt_par_QTime( 2 ), *hbqt_par_QTime( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_SETTIMERANGE FP=( p )->setTimeRange( *hbqt_par_QTime( 2 ), *hbqt_par_QTime( 3 ) ); p is NULL" ) );
+      ( p )->setTimeRange( *hbqt_par_QTime( 2 ), *hbqt_par_QTime( 3 ) );
    }
 }
 
@@ -696,10 +622,8 @@ HB_FUNC( QT_QDATETIMEEDIT_SETTIMESPEC )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      ( p )->setTimeSpec( ( Qt::TimeSpec ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_SETTIMESPEC FP=( p )->setTimeSpec( ( Qt::TimeSpec ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setTimeSpec( ( Qt::TimeSpec ) hb_parni( 2 ) );
    }
 }
 
@@ -710,10 +634,8 @@ HB_FUNC( QT_QDATETIMEEDIT_TIME )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( ( p )->time() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_TIME FP=hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( ( p )->time() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTime( new QTime( ( p )->time() ), true ) );
    }
 }
 
@@ -724,10 +646,8 @@ HB_FUNC( QT_QDATETIMEEDIT_TIMESPEC )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      hb_retni( ( Qt::TimeSpec ) ( p )->timeSpec() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_TIMESPEC FP=hb_retni( ( Qt::TimeSpec ) ( p )->timeSpec() ); p is NULL" ) );
+      hb_retni( ( Qt::TimeSpec ) ( p )->timeSpec() );
    }
 }
 
@@ -738,10 +658,8 @@ HB_FUNC( QT_QDATETIMEEDIT_SETDATE )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      ( p )->setDate( *hbqt_par_QDate( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_SETDATE FP=( p )->setDate( *hbqt_par_QDate( 2 ) ); p is NULL" ) );
+      ( p )->setDate( *hbqt_par_QDate( 2 ) );
    }
 }
 
@@ -752,10 +670,8 @@ HB_FUNC( QT_QDATETIMEEDIT_SETDATETIME )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      ( p )->setDateTime( *hbqt_par_QDateTime( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_SETDATETIME FP=( p )->setDateTime( *hbqt_par_QDateTime( 2 ) ); p is NULL" ) );
+      ( p )->setDateTime( *hbqt_par_QDateTime( 2 ) );
    }
 }
 
@@ -766,10 +682,8 @@ HB_FUNC( QT_QDATETIMEEDIT_SETTIME )
 {
    QDateTimeEdit * p = hbqt_par_QDateTimeEdit( 1 );
    if( p )
-      ( p )->setTime( *hbqt_par_QTime( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDATETIMEEDIT_SETTIME FP=( p )->setTime( *hbqt_par_QTime( 2 ) ); p is NULL" ) );
+      ( p )->setTime( *hbqt_par_QTime( 2 ) );
    }
 }
 

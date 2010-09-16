@@ -158,10 +158,8 @@ HB_FUNC( QT_QSTACKEDWIDGET_ADDWIDGET )
 {
    QStackedWidget * p = hbqt_par_QStackedWidget( 1 );
    if( p )
-      hb_retni( ( p )->addWidget( hbqt_par_QWidget( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTACKEDWIDGET_ADDWIDGET FP=hb_retni( ( p )->addWidget( hbqt_par_QWidget( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->addWidget( hbqt_par_QWidget( 2 ) ) );
    }
 }
 
@@ -172,10 +170,8 @@ HB_FUNC( QT_QSTACKEDWIDGET_COUNT )
 {
    QStackedWidget * p = hbqt_par_QStackedWidget( 1 );
    if( p )
-      hb_retni( ( p )->count() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTACKEDWIDGET_COUNT FP=hb_retni( ( p )->count() ); p is NULL" ) );
+      hb_retni( ( p )->count() );
    }
 }
 
@@ -186,10 +182,8 @@ HB_FUNC( QT_QSTACKEDWIDGET_CURRENTINDEX )
 {
    QStackedWidget * p = hbqt_par_QStackedWidget( 1 );
    if( p )
-      hb_retni( ( p )->currentIndex() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTACKEDWIDGET_CURRENTINDEX FP=hb_retni( ( p )->currentIndex() ); p is NULL" ) );
+      hb_retni( ( p )->currentIndex() );
    }
 }
 
@@ -200,10 +194,8 @@ HB_FUNC( QT_QSTACKEDWIDGET_CURRENTWIDGET )
 {
    QStackedWidget * p = hbqt_par_QStackedWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->currentWidget(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTACKEDWIDGET_CURRENTWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->currentWidget(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->currentWidget(), false ) );
    }
 }
 
@@ -214,10 +206,8 @@ HB_FUNC( QT_QSTACKEDWIDGET_INDEXOF )
 {
    QStackedWidget * p = hbqt_par_QStackedWidget( 1 );
    if( p )
-      hb_retni( ( p )->indexOf( hbqt_par_QWidget( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTACKEDWIDGET_INDEXOF FP=hb_retni( ( p )->indexOf( hbqt_par_QWidget( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->indexOf( hbqt_par_QWidget( 2 ) ) );
    }
 }
 
@@ -228,10 +218,8 @@ HB_FUNC( QT_QSTACKEDWIDGET_INSERTWIDGET )
 {
    QStackedWidget * p = hbqt_par_QStackedWidget( 1 );
    if( p )
-      hb_retni( ( p )->insertWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTACKEDWIDGET_INSERTWIDGET FP=hb_retni( ( p )->insertWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->insertWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ) ) );
    }
 }
 
@@ -242,10 +230,8 @@ HB_FUNC( QT_QSTACKEDWIDGET_REMOVEWIDGET )
 {
    QStackedWidget * p = hbqt_par_QStackedWidget( 1 );
    if( p )
-      ( p )->removeWidget( hbqt_par_QWidget( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTACKEDWIDGET_REMOVEWIDGET FP=( p )->removeWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+      ( p )->removeWidget( hbqt_par_QWidget( 2 ) );
    }
 }
 
@@ -256,10 +242,8 @@ HB_FUNC( QT_QSTACKEDWIDGET_WIDGET )
 {
    QStackedWidget * p = hbqt_par_QStackedWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget( hb_parni( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTACKEDWIDGET_WIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget( hb_parni( 2 ) ), false ) );
    }
 }
 
@@ -270,10 +254,8 @@ HB_FUNC( QT_QSTACKEDWIDGET_SETCURRENTINDEX )
 {
    QStackedWidget * p = hbqt_par_QStackedWidget( 1 );
    if( p )
-      ( p )->setCurrentIndex( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTACKEDWIDGET_SETCURRENTINDEX FP=( p )->setCurrentIndex( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setCurrentIndex( hb_parni( 2 ) );
    }
 }
 
@@ -284,10 +266,8 @@ HB_FUNC( QT_QSTACKEDWIDGET_SETCURRENTWIDGET )
 {
    QStackedWidget * p = hbqt_par_QStackedWidget( 1 );
    if( p )
-      ( p )->setCurrentWidget( hbqt_par_QWidget( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTACKEDWIDGET_SETCURRENTWIDGET FP=( p )->setCurrentWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+      ( p )->setCurrentWidget( hbqt_par_QWidget( 2 ) );
    }
 }
 

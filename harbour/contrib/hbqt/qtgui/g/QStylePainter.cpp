@@ -147,10 +147,8 @@ HB_FUNC( QT_QSTYLEPAINTER_BEGIN )
 {
    QStylePainter * p = hbqt_par_QStylePainter( 1 );
    if( p )
-      hb_retl( ( p )->begin( hbqt_par_QWidget( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTYLEPAINTER_BEGIN FP=hb_retl( ( p )->begin( hbqt_par_QWidget( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->begin( hbqt_par_QWidget( 2 ) ) );
    }
 }
 
@@ -161,10 +159,8 @@ HB_FUNC( QT_QSTYLEPAINTER_BEGIN_1 )
 {
    QStylePainter * p = hbqt_par_QStylePainter( 1 );
    if( p )
-      hb_retl( ( p )->begin( hbqt_par_QPaintDevice( 2 ), hbqt_par_QWidget( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTYLEPAINTER_BEGIN_1 FP=hb_retl( ( p )->begin( hbqt_par_QPaintDevice( 2 ), hbqt_par_QWidget( 3 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->begin( hbqt_par_QPaintDevice( 2 ), hbqt_par_QWidget( 3 ) ) );
    }
 }
 
@@ -175,10 +171,8 @@ HB_FUNC( QT_QSTYLEPAINTER_DRAWCOMPLEXCONTROL )
 {
    QStylePainter * p = hbqt_par_QStylePainter( 1 );
    if( p )
-      ( p )->drawComplexControl( ( QStyle::ComplexControl ) hb_parni( 2 ), *hbqt_par_QStyleOptionComplex( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTYLEPAINTER_DRAWCOMPLEXCONTROL FP=( p )->drawComplexControl( ( QStyle::ComplexControl ) hb_parni( 2 ), *hbqt_par_QStyleOptionComplex( 3 ) ); p is NULL" ) );
+      ( p )->drawComplexControl( ( QStyle::ComplexControl ) hb_parni( 2 ), *hbqt_par_QStyleOptionComplex( 3 ) );
    }
 }
 
@@ -189,10 +183,8 @@ HB_FUNC( QT_QSTYLEPAINTER_DRAWCONTROL )
 {
    QStylePainter * p = hbqt_par_QStylePainter( 1 );
    if( p )
-      ( p )->drawControl( ( QStyle::ControlElement ) hb_parni( 2 ), *hbqt_par_QStyleOption( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTYLEPAINTER_DRAWCONTROL FP=( p )->drawControl( ( QStyle::ControlElement ) hb_parni( 2 ), *hbqt_par_QStyleOption( 3 ) ); p is NULL" ) );
+      ( p )->drawControl( ( QStyle::ControlElement ) hb_parni( 2 ), *hbqt_par_QStyleOption( 3 ) );
    }
 }
 
@@ -203,10 +195,8 @@ HB_FUNC( QT_QSTYLEPAINTER_DRAWITEMPIXMAP )
 {
    QStylePainter * p = hbqt_par_QStylePainter( 1 );
    if( p )
-      ( p )->drawItemPixmap( *hbqt_par_QRect( 2 ), hb_parni( 3 ), *hbqt_par_QPixmap( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTYLEPAINTER_DRAWITEMPIXMAP FP=( p )->drawItemPixmap( *hbqt_par_QRect( 2 ), hb_parni( 3 ), *hbqt_par_QPixmap( 4 ) ); p is NULL" ) );
+      ( p )->drawItemPixmap( *hbqt_par_QRect( 2 ), hb_parni( 3 ), *hbqt_par_QPixmap( 4 ) );
    }
 }
 
@@ -217,10 +207,10 @@ HB_FUNC( QT_QSTYLEPAINTER_DRAWITEMTEXT )
 {
    QStylePainter * p = hbqt_par_QStylePainter( 1 );
    if( p )
-      ( p )->drawItemText( *hbqt_par_QRect( 2 ), hb_parni( 3 ), *hbqt_par_QPalette( 4 ), hb_parl( 5 ), hbqt_par_QString( 6 ), ( HB_ISNUM( 7 ) ? ( QPalette::ColorRole ) hb_parni( 7 ) : ( QPalette::ColorRole ) QPalette::NoRole ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTYLEPAINTER_DRAWITEMTEXT FP=( p )->drawItemText( *hbqt_par_QRect( 2 ), hb_parni( 3 ), *hbqt_par_QPalette( 4 ), hb_parl( 5 ), hbqt_par_QString( 6 ), ( HB_ISNUM( 7 ) ? ( QPalette::ColorRole ) hb_parni( 7 ) : ( QPalette::ColorRole ) QPalette::NoRole ) ); p is NULL" ) );
+      void * pText;
+      ( p )->drawItemText( *hbqt_par_QRect( 2 ), hb_parni( 3 ), *hbqt_par_QPalette( 4 ), hb_parl( 5 ), hb_parstr_utf8( 6, &pText, NULL ), ( HB_ISNUM( 7 ) ? ( QPalette::ColorRole ) hb_parni( 7 ) : ( QPalette::ColorRole ) QPalette::NoRole ) );
+      hb_strfree( pText );
    }
 }
 
@@ -231,10 +221,8 @@ HB_FUNC( QT_QSTYLEPAINTER_DRAWPRIMITIVE )
 {
    QStylePainter * p = hbqt_par_QStylePainter( 1 );
    if( p )
-      ( p )->drawPrimitive( ( QStyle::PrimitiveElement ) hb_parni( 2 ), *hbqt_par_QStyleOption( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTYLEPAINTER_DRAWPRIMITIVE FP=( p )->drawPrimitive( ( QStyle::PrimitiveElement ) hb_parni( 2 ), *hbqt_par_QStyleOption( 3 ) ); p is NULL" ) );
+      ( p )->drawPrimitive( ( QStyle::PrimitiveElement ) hb_parni( 2 ), *hbqt_par_QStyleOption( 3 ) );
    }
 }
 
@@ -245,10 +233,8 @@ HB_FUNC( QT_QSTYLEPAINTER_STYLE )
 {
    QStylePainter * p = hbqt_par_QStylePainter( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStyle( ( p )->style(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTYLEPAINTER_STYLE FP=hb_retptrGC( hbqt_gcAllocate_QStyle( ( p )->style(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QStyle( ( p )->style(), false ) );
    }
 }
 

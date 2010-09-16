@@ -152,10 +152,8 @@ HB_FUNC( QT_QNETWORKREQUEST_ATTRIBUTE )
 {
    QNetworkRequest * p = hbqt_par_QNetworkRequest( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->attribute( ( QNetworkRequest::Attribute ) hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QVariant( 3 ) : QVariant() ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QNETWORKREQUEST_ATTRIBUTE FP=hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->attribute( ( QNetworkRequest::Attribute ) hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QVariant( 3 ) : QVariant() ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->attribute( ( QNetworkRequest::Attribute ) hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QVariant( 3 ) : QVariant() ) ) ), true ) );
    }
 }
 
@@ -166,10 +164,8 @@ HB_FUNC( QT_QNETWORKREQUEST_HASRAWHEADER )
 {
    QNetworkRequest * p = hbqt_par_QNetworkRequest( 1 );
    if( p )
-      hb_retl( ( p )->hasRawHeader( *hbqt_par_QByteArray( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QNETWORKREQUEST_HASRAWHEADER FP=hb_retl( ( p )->hasRawHeader( *hbqt_par_QByteArray( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->hasRawHeader( *hbqt_par_QByteArray( 2 ) ) );
    }
 }
 
@@ -180,10 +176,8 @@ HB_FUNC( QT_QNETWORKREQUEST_HEADER )
 {
    QNetworkRequest * p = hbqt_par_QNetworkRequest( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->header( ( QNetworkRequest::KnownHeaders ) hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QNETWORKREQUEST_HEADER FP=hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->header( ( QNetworkRequest::KnownHeaders ) hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->header( ( QNetworkRequest::KnownHeaders ) hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -194,10 +188,8 @@ HB_FUNC( QT_QNETWORKREQUEST_RAWHEADER )
 {
    QNetworkRequest * p = hbqt_par_QNetworkRequest( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->rawHeader( *hbqt_par_QByteArray( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QNETWORKREQUEST_RAWHEADER FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->rawHeader( *hbqt_par_QByteArray( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->rawHeader( *hbqt_par_QByteArray( 2 ) ) ), true ) );
    }
 }
 
@@ -208,10 +200,8 @@ HB_FUNC( QT_QNETWORKREQUEST_RAWHEADERLIST )
 {
    QNetworkRequest * p = hbqt_par_QNetworkRequest( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QByteArray>( ( p )->rawHeaderList() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QNETWORKREQUEST_RAWHEADERLIST FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QByteArray>( ( p )->rawHeaderList() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QByteArray>( ( p )->rawHeaderList() ), true ) );
    }
 }
 
@@ -222,10 +212,8 @@ HB_FUNC( QT_QNETWORKREQUEST_SETATTRIBUTE )
 {
    QNetworkRequest * p = hbqt_par_QNetworkRequest( 1 );
    if( p )
-      ( p )->setAttribute( ( QNetworkRequest::Attribute ) hb_parni( 2 ), *hbqt_par_QVariant( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QNETWORKREQUEST_SETATTRIBUTE FP=( p )->setAttribute( ( QNetworkRequest::Attribute ) hb_parni( 2 ), *hbqt_par_QVariant( 3 ) ); p is NULL" ) );
+      ( p )->setAttribute( ( QNetworkRequest::Attribute ) hb_parni( 2 ), *hbqt_par_QVariant( 3 ) );
    }
 }
 
@@ -236,10 +224,8 @@ HB_FUNC( QT_QNETWORKREQUEST_SETHEADER )
 {
    QNetworkRequest * p = hbqt_par_QNetworkRequest( 1 );
    if( p )
-      ( p )->setHeader( ( QNetworkRequest::KnownHeaders ) hb_parni( 2 ), *hbqt_par_QVariant( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QNETWORKREQUEST_SETHEADER FP=( p )->setHeader( ( QNetworkRequest::KnownHeaders ) hb_parni( 2 ), *hbqt_par_QVariant( 3 ) ); p is NULL" ) );
+      ( p )->setHeader( ( QNetworkRequest::KnownHeaders ) hb_parni( 2 ), *hbqt_par_QVariant( 3 ) );
    }
 }
 
@@ -250,10 +236,8 @@ HB_FUNC( QT_QNETWORKREQUEST_SETRAWHEADER )
 {
    QNetworkRequest * p = hbqt_par_QNetworkRequest( 1 );
    if( p )
-      ( p )->setRawHeader( *hbqt_par_QByteArray( 2 ), *hbqt_par_QByteArray( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QNETWORKREQUEST_SETRAWHEADER FP=( p )->setRawHeader( *hbqt_par_QByteArray( 2 ), *hbqt_par_QByteArray( 3 ) ); p is NULL" ) );
+      ( p )->setRawHeader( *hbqt_par_QByteArray( 2 ), *hbqt_par_QByteArray( 3 ) );
    }
 }
 
@@ -264,10 +248,8 @@ HB_FUNC( QT_QNETWORKREQUEST_SETURL )
 {
    QNetworkRequest * p = hbqt_par_QNetworkRequest( 1 );
    if( p )
-      ( p )->setUrl( *hbqt_par_QUrl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QNETWORKREQUEST_SETURL FP=( p )->setUrl( *hbqt_par_QUrl( 2 ) ); p is NULL" ) );
+      ( p )->setUrl( *hbqt_par_QUrl( 2 ) );
    }
 }
 
@@ -278,10 +260,8 @@ HB_FUNC( QT_QNETWORKREQUEST_URL )
 {
    QNetworkRequest * p = hbqt_par_QNetworkRequest( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->url() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QNETWORKREQUEST_URL FP=hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->url() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->url() ), true ) );
    }
 }
 

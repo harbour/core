@@ -201,7 +201,7 @@ HB_FUNC( QT_QSTYLEOPTIONTAB_SHAPE )
  */
 HB_FUNC( QT_QSTYLEOPTIONTAB_TEXT )
 {
-   hb_retc( hbqt_par_QStyleOptionTab( 1 )->text.toLatin1().data() );
+   hb_retstr_utf8( hbqt_par_QStyleOptionTab( 1 )->text.toUtf8().data() );
 }
 
 

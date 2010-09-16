@@ -165,10 +165,8 @@ HB_FUNC( QT_QGRAPHICSLINEARLAYOUT_ADDITEM )
 {
    QGraphicsLinearLayout * p = hbqt_par_QGraphicsLinearLayout( 1 );
    if( p )
-      ( p )->addItem( hbqt_par_QGraphicsLayoutItem( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLINEARLAYOUT_ADDITEM FP=( p )->addItem( hbqt_par_QGraphicsLayoutItem( 2 ) ); p is NULL" ) );
+      ( p )->addItem( hbqt_par_QGraphicsLayoutItem( 2 ) );
    }
 }
 
@@ -179,10 +177,8 @@ HB_FUNC( QT_QGRAPHICSLINEARLAYOUT_ADDSTRETCH )
 {
    QGraphicsLinearLayout * p = hbqt_par_QGraphicsLinearLayout( 1 );
    if( p )
-      ( p )->addStretch( hb_parnidef( 2, 1 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLINEARLAYOUT_ADDSTRETCH FP=( p )->addStretch( hb_parnidef( 2, 1 ) ); p is NULL" ) );
+      ( p )->addStretch( hb_parnidef( 2, 1 ) );
    }
 }
 
@@ -193,10 +189,8 @@ HB_FUNC( QT_QGRAPHICSLINEARLAYOUT_ALIGNMENT )
 {
    QGraphicsLinearLayout * p = hbqt_par_QGraphicsLinearLayout( 1 );
    if( p )
-      hb_retni( ( Qt::Alignment ) ( p )->alignment( hbqt_par_QGraphicsLayoutItem( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLINEARLAYOUT_ALIGNMENT FP=hb_retni( ( Qt::Alignment ) ( p )->alignment( hbqt_par_QGraphicsLayoutItem( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( Qt::Alignment ) ( p )->alignment( hbqt_par_QGraphicsLayoutItem( 2 ) ) );
    }
 }
 
@@ -207,10 +201,8 @@ HB_FUNC( QT_QGRAPHICSLINEARLAYOUT_INSERTITEM )
 {
    QGraphicsLinearLayout * p = hbqt_par_QGraphicsLinearLayout( 1 );
    if( p )
-      ( p )->insertItem( hb_parni( 2 ), hbqt_par_QGraphicsLayoutItem( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLINEARLAYOUT_INSERTITEM FP=( p )->insertItem( hb_parni( 2 ), hbqt_par_QGraphicsLayoutItem( 3 ) ); p is NULL" ) );
+      ( p )->insertItem( hb_parni( 2 ), hbqt_par_QGraphicsLayoutItem( 3 ) );
    }
 }
 
@@ -221,10 +213,8 @@ HB_FUNC( QT_QGRAPHICSLINEARLAYOUT_INSERTSTRETCH )
 {
    QGraphicsLinearLayout * p = hbqt_par_QGraphicsLinearLayout( 1 );
    if( p )
-      ( p )->insertStretch( hb_parni( 2 ), hb_parnidef( 3, 1 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLINEARLAYOUT_INSERTSTRETCH FP=( p )->insertStretch( hb_parni( 2 ), hb_parnidef( 3, 1 ) ); p is NULL" ) );
+      ( p )->insertStretch( hb_parni( 2 ), hb_parnidef( 3, 1 ) );
    }
 }
 
@@ -235,10 +225,8 @@ HB_FUNC( QT_QGRAPHICSLINEARLAYOUT_ITEMSPACING )
 {
    QGraphicsLinearLayout * p = hbqt_par_QGraphicsLinearLayout( 1 );
    if( p )
-      hb_retnd( ( p )->itemSpacing( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLINEARLAYOUT_ITEMSPACING FP=hb_retnd( ( p )->itemSpacing( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retnd( ( p )->itemSpacing( hb_parni( 2 ) ) );
    }
 }
 
@@ -249,10 +237,8 @@ HB_FUNC( QT_QGRAPHICSLINEARLAYOUT_ORIENTATION )
 {
    QGraphicsLinearLayout * p = hbqt_par_QGraphicsLinearLayout( 1 );
    if( p )
-      hb_retni( ( Qt::Orientation ) ( p )->orientation() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLINEARLAYOUT_ORIENTATION FP=hb_retni( ( Qt::Orientation ) ( p )->orientation() ); p is NULL" ) );
+      hb_retni( ( Qt::Orientation ) ( p )->orientation() );
    }
 }
 
@@ -263,10 +249,8 @@ HB_FUNC( QT_QGRAPHICSLINEARLAYOUT_REMOVEAT )
 {
    QGraphicsLinearLayout * p = hbqt_par_QGraphicsLinearLayout( 1 );
    if( p )
-      ( p )->removeAt( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLINEARLAYOUT_REMOVEAT FP=( p )->removeAt( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->removeAt( hb_parni( 2 ) );
    }
 }
 
@@ -277,10 +261,8 @@ HB_FUNC( QT_QGRAPHICSLINEARLAYOUT_REMOVEITEM )
 {
    QGraphicsLinearLayout * p = hbqt_par_QGraphicsLinearLayout( 1 );
    if( p )
-      ( p )->removeItem( hbqt_par_QGraphicsLayoutItem( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLINEARLAYOUT_REMOVEITEM FP=( p )->removeItem( hbqt_par_QGraphicsLayoutItem( 2 ) ); p is NULL" ) );
+      ( p )->removeItem( hbqt_par_QGraphicsLayoutItem( 2 ) );
    }
 }
 
@@ -291,10 +273,8 @@ HB_FUNC( QT_QGRAPHICSLINEARLAYOUT_SETALIGNMENT )
 {
    QGraphicsLinearLayout * p = hbqt_par_QGraphicsLinearLayout( 1 );
    if( p )
-      ( p )->setAlignment( hbqt_par_QGraphicsLayoutItem( 2 ), ( Qt::Alignment ) hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLINEARLAYOUT_SETALIGNMENT FP=( p )->setAlignment( hbqt_par_QGraphicsLayoutItem( 2 ), ( Qt::Alignment ) hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setAlignment( hbqt_par_QGraphicsLayoutItem( 2 ), ( Qt::Alignment ) hb_parni( 3 ) );
    }
 }
 
@@ -305,10 +285,8 @@ HB_FUNC( QT_QGRAPHICSLINEARLAYOUT_SETITEMSPACING )
 {
    QGraphicsLinearLayout * p = hbqt_par_QGraphicsLinearLayout( 1 );
    if( p )
-      ( p )->setItemSpacing( hb_parni( 2 ), hb_parnd( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLINEARLAYOUT_SETITEMSPACING FP=( p )->setItemSpacing( hb_parni( 2 ), hb_parnd( 3 ) ); p is NULL" ) );
+      ( p )->setItemSpacing( hb_parni( 2 ), hb_parnd( 3 ) );
    }
 }
 
@@ -319,10 +297,8 @@ HB_FUNC( QT_QGRAPHICSLINEARLAYOUT_SETORIENTATION )
 {
    QGraphicsLinearLayout * p = hbqt_par_QGraphicsLinearLayout( 1 );
    if( p )
-      ( p )->setOrientation( ( Qt::Orientation ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLINEARLAYOUT_SETORIENTATION FP=( p )->setOrientation( ( Qt::Orientation ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setOrientation( ( Qt::Orientation ) hb_parni( 2 ) );
    }
 }
 
@@ -333,10 +309,8 @@ HB_FUNC( QT_QGRAPHICSLINEARLAYOUT_SETSPACING )
 {
    QGraphicsLinearLayout * p = hbqt_par_QGraphicsLinearLayout( 1 );
    if( p )
-      ( p )->setSpacing( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLINEARLAYOUT_SETSPACING FP=( p )->setSpacing( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setSpacing( hb_parnd( 2 ) );
    }
 }
 
@@ -347,10 +321,8 @@ HB_FUNC( QT_QGRAPHICSLINEARLAYOUT_SETSTRETCHFACTOR )
 {
    QGraphicsLinearLayout * p = hbqt_par_QGraphicsLinearLayout( 1 );
    if( p )
-      ( p )->setStretchFactor( hbqt_par_QGraphicsLayoutItem( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLINEARLAYOUT_SETSTRETCHFACTOR FP=( p )->setStretchFactor( hbqt_par_QGraphicsLayoutItem( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setStretchFactor( hbqt_par_QGraphicsLayoutItem( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -361,10 +333,8 @@ HB_FUNC( QT_QGRAPHICSLINEARLAYOUT_SPACING )
 {
    QGraphicsLinearLayout * p = hbqt_par_QGraphicsLinearLayout( 1 );
    if( p )
-      hb_retnd( ( p )->spacing() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLINEARLAYOUT_SPACING FP=hb_retnd( ( p )->spacing() ); p is NULL" ) );
+      hb_retnd( ( p )->spacing() );
    }
 }
 
@@ -375,10 +345,8 @@ HB_FUNC( QT_QGRAPHICSLINEARLAYOUT_STRETCHFACTOR )
 {
    QGraphicsLinearLayout * p = hbqt_par_QGraphicsLinearLayout( 1 );
    if( p )
-      hb_retni( ( p )->stretchFactor( hbqt_par_QGraphicsLayoutItem( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLINEARLAYOUT_STRETCHFACTOR FP=hb_retni( ( p )->stretchFactor( hbqt_par_QGraphicsLayoutItem( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->stretchFactor( hbqt_par_QGraphicsLayoutItem( 2 ) ) );
    }
 }
 

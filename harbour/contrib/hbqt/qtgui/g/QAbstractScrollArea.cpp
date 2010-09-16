@@ -127,10 +127,8 @@ HB_FUNC( QT_QABSTRACTSCROLLAREA_ADDSCROLLBARWIDGET )
 {
    QAbstractScrollArea * p = hbqt_par_QAbstractScrollArea( 1 );
    if( p )
-      ( p )->addScrollBarWidget( hbqt_par_QWidget( 2 ), ( Qt::Alignment ) hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSCROLLAREA_ADDSCROLLBARWIDGET FP=( p )->addScrollBarWidget( hbqt_par_QWidget( 2 ), ( Qt::Alignment ) hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->addScrollBarWidget( hbqt_par_QWidget( 2 ), ( Qt::Alignment ) hb_parni( 3 ) );
    }
 }
 
@@ -141,10 +139,8 @@ HB_FUNC( QT_QABSTRACTSCROLLAREA_CORNERWIDGET )
 {
    QAbstractScrollArea * p = hbqt_par_QAbstractScrollArea( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->cornerWidget(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSCROLLAREA_CORNERWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->cornerWidget(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->cornerWidget(), false ) );
    }
 }
 
@@ -155,10 +151,8 @@ HB_FUNC( QT_QABSTRACTSCROLLAREA_HORIZONTALSCROLLBAR )
 {
    QAbstractScrollArea * p = hbqt_par_QAbstractScrollArea( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QScrollBar( ( p )->horizontalScrollBar(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSCROLLAREA_HORIZONTALSCROLLBAR FP=hb_retptrGC( hbqt_gcAllocate_QScrollBar( ( p )->horizontalScrollBar(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QScrollBar( ( p )->horizontalScrollBar(), false ) );
    }
 }
 
@@ -169,10 +163,8 @@ HB_FUNC( QT_QABSTRACTSCROLLAREA_HORIZONTALSCROLLBARPOLICY )
 {
    QAbstractScrollArea * p = hbqt_par_QAbstractScrollArea( 1 );
    if( p )
-      hb_retni( ( Qt::ScrollBarPolicy ) ( p )->horizontalScrollBarPolicy() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSCROLLAREA_HORIZONTALSCROLLBARPOLICY FP=hb_retni( ( Qt::ScrollBarPolicy ) ( p )->horizontalScrollBarPolicy() ); p is NULL" ) );
+      hb_retni( ( Qt::ScrollBarPolicy ) ( p )->horizontalScrollBarPolicy() );
    }
 }
 
@@ -183,10 +175,8 @@ HB_FUNC( QT_QABSTRACTSCROLLAREA_MAXIMUMVIEWPORTSIZE )
 {
    QAbstractScrollArea * p = hbqt_par_QAbstractScrollArea( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->maximumViewportSize() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSCROLLAREA_MAXIMUMVIEWPORTSIZE FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->maximumViewportSize() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->maximumViewportSize() ), true ) );
    }
 }
 
@@ -197,10 +187,8 @@ HB_FUNC( QT_QABSTRACTSCROLLAREA_SETCORNERWIDGET )
 {
    QAbstractScrollArea * p = hbqt_par_QAbstractScrollArea( 1 );
    if( p )
-      ( p )->setCornerWidget( hbqt_par_QWidget( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSCROLLAREA_SETCORNERWIDGET FP=( p )->setCornerWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+      ( p )->setCornerWidget( hbqt_par_QWidget( 2 ) );
    }
 }
 
@@ -211,10 +199,8 @@ HB_FUNC( QT_QABSTRACTSCROLLAREA_SETHORIZONTALSCROLLBAR )
 {
    QAbstractScrollArea * p = hbqt_par_QAbstractScrollArea( 1 );
    if( p )
-      ( p )->setHorizontalScrollBar( hbqt_par_QScrollBar( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSCROLLAREA_SETHORIZONTALSCROLLBAR FP=( p )->setHorizontalScrollBar( hbqt_par_QScrollBar( 2 ) ); p is NULL" ) );
+      ( p )->setHorizontalScrollBar( hbqt_par_QScrollBar( 2 ) );
    }
 }
 
@@ -225,10 +211,8 @@ HB_FUNC( QT_QABSTRACTSCROLLAREA_SETHORIZONTALSCROLLBARPOLICY )
 {
    QAbstractScrollArea * p = hbqt_par_QAbstractScrollArea( 1 );
    if( p )
-      ( p )->setHorizontalScrollBarPolicy( ( Qt::ScrollBarPolicy ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSCROLLAREA_SETHORIZONTALSCROLLBARPOLICY FP=( p )->setHorizontalScrollBarPolicy( ( Qt::ScrollBarPolicy ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setHorizontalScrollBarPolicy( ( Qt::ScrollBarPolicy ) hb_parni( 2 ) );
    }
 }
 
@@ -239,10 +223,8 @@ HB_FUNC( QT_QABSTRACTSCROLLAREA_SETVERTICALSCROLLBAR )
 {
    QAbstractScrollArea * p = hbqt_par_QAbstractScrollArea( 1 );
    if( p )
-      ( p )->setVerticalScrollBar( hbqt_par_QScrollBar( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSCROLLAREA_SETVERTICALSCROLLBAR FP=( p )->setVerticalScrollBar( hbqt_par_QScrollBar( 2 ) ); p is NULL" ) );
+      ( p )->setVerticalScrollBar( hbqt_par_QScrollBar( 2 ) );
    }
 }
 
@@ -253,10 +235,8 @@ HB_FUNC( QT_QABSTRACTSCROLLAREA_SETVERTICALSCROLLBARPOLICY )
 {
    QAbstractScrollArea * p = hbqt_par_QAbstractScrollArea( 1 );
    if( p )
-      ( p )->setVerticalScrollBarPolicy( ( Qt::ScrollBarPolicy ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSCROLLAREA_SETVERTICALSCROLLBARPOLICY FP=( p )->setVerticalScrollBarPolicy( ( Qt::ScrollBarPolicy ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setVerticalScrollBarPolicy( ( Qt::ScrollBarPolicy ) hb_parni( 2 ) );
    }
 }
 
@@ -267,10 +247,8 @@ HB_FUNC( QT_QABSTRACTSCROLLAREA_SETVIEWPORT )
 {
    QAbstractScrollArea * p = hbqt_par_QAbstractScrollArea( 1 );
    if( p )
-      ( p )->setViewport( hbqt_par_QWidget( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSCROLLAREA_SETVIEWPORT FP=( p )->setViewport( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+      ( p )->setViewport( hbqt_par_QWidget( 2 ) );
    }
 }
 
@@ -281,10 +259,8 @@ HB_FUNC( QT_QABSTRACTSCROLLAREA_VERTICALSCROLLBAR )
 {
    QAbstractScrollArea * p = hbqt_par_QAbstractScrollArea( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QScrollBar( ( p )->verticalScrollBar(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSCROLLAREA_VERTICALSCROLLBAR FP=hb_retptrGC( hbqt_gcAllocate_QScrollBar( ( p )->verticalScrollBar(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QScrollBar( ( p )->verticalScrollBar(), false ) );
    }
 }
 
@@ -295,10 +271,8 @@ HB_FUNC( QT_QABSTRACTSCROLLAREA_VERTICALSCROLLBARPOLICY )
 {
    QAbstractScrollArea * p = hbqt_par_QAbstractScrollArea( 1 );
    if( p )
-      hb_retni( ( Qt::ScrollBarPolicy ) ( p )->verticalScrollBarPolicy() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSCROLLAREA_VERTICALSCROLLBARPOLICY FP=hb_retni( ( Qt::ScrollBarPolicy ) ( p )->verticalScrollBarPolicy() ); p is NULL" ) );
+      hb_retni( ( Qt::ScrollBarPolicy ) ( p )->verticalScrollBarPolicy() );
    }
 }
 
@@ -309,10 +283,8 @@ HB_FUNC( QT_QABSTRACTSCROLLAREA_VIEWPORT )
 {
    QAbstractScrollArea * p = hbqt_par_QAbstractScrollArea( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->viewport(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTSCROLLAREA_VIEWPORT FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->viewport(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->viewport(), false ) );
    }
 }
 

@@ -160,10 +160,10 @@ HB_FUNC( QT_QWEBVIEW_FINDTEXT )
 {
    QWebView * p = hbqt_par_QWebView( 1 );
    if( p )
-      hb_retl( ( p )->findText( QWebView::tr( hb_parc( 2 ) ), ( QWebPage::FindFlags ) hb_parni( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBVIEW_FINDTEXT FP=hb_retl( ( p )->findText( QWebView::tr( hb_parc( 2 ) ), ( QWebPage::FindFlags ) hb_parni( 3 ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->findText( hb_parstr_utf8( 2, &pText, NULL ), ( QWebPage::FindFlags ) hb_parni( 3 ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -174,10 +174,8 @@ HB_FUNC( QT_QWEBVIEW_HISTORY )
 {
    QWebView * p = hbqt_par_QWebView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWebHistory( ( p )->history(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBVIEW_HISTORY FP=hb_retptrGC( hbqt_gcAllocate_QWebHistory( ( p )->history(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWebHistory( ( p )->history(), false ) );
    }
 }
 
@@ -188,10 +186,8 @@ HB_FUNC( QT_QWEBVIEW_ICON )
 {
    QWebView * p = hbqt_par_QWebView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBVIEW_ICON FP=hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon() ), true ) );
    }
 }
 
@@ -202,10 +198,8 @@ HB_FUNC( QT_QWEBVIEW_ISMODIFIED )
 {
    QWebView * p = hbqt_par_QWebView( 1 );
    if( p )
-      hb_retl( ( p )->isModified() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBVIEW_ISMODIFIED FP=hb_retl( ( p )->isModified() ); p is NULL" ) );
+      hb_retl( ( p )->isModified() );
    }
 }
 
@@ -216,10 +210,8 @@ HB_FUNC( QT_QWEBVIEW_LOAD )
 {
    QWebView * p = hbqt_par_QWebView( 1 );
    if( p )
-      ( p )->load( *hbqt_par_QUrl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBVIEW_LOAD FP=( p )->load( *hbqt_par_QUrl( 2 ) ); p is NULL" ) );
+      ( p )->load( *hbqt_par_QUrl( 2 ) );
    }
 }
 
@@ -230,10 +222,8 @@ HB_FUNC( QT_QWEBVIEW_LOAD_1 )
 {
    QWebView * p = hbqt_par_QWebView( 1 );
    if( p )
-      ( p )->load( *hbqt_par_QNetworkRequest( 2 ), ( HB_ISNUM( 3 ) ? ( QNetworkAccessManager::Operation ) hb_parni( 3 ) : ( QNetworkAccessManager::Operation ) QNetworkAccessManager::GetOperation ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QByteArray( 4 ) : QByteArray() ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBVIEW_LOAD_1 FP=( p )->load( *hbqt_par_QNetworkRequest( 2 ), ( HB_ISNUM( 3 ) ? ( QNetworkAccessManager::Operation ) hb_parni( 3 ) : ( QNetworkAccessManager::Operation ) QNetworkAccessManager::GetOperation ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QByteArray( 4 ) : QByteArray() ) ); p is NULL" ) );
+      ( p )->load( *hbqt_par_QNetworkRequest( 2 ), ( HB_ISNUM( 3 ) ? ( QNetworkAccessManager::Operation ) hb_parni( 3 ) : ( QNetworkAccessManager::Operation ) QNetworkAccessManager::GetOperation ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QByteArray( 4 ) : QByteArray() ) );
    }
 }
 
@@ -244,10 +234,8 @@ HB_FUNC( QT_QWEBVIEW_PAGE )
 {
    QWebView * p = hbqt_par_QWebView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWebPage( ( p )->page(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBVIEW_PAGE FP=hb_retptrGC( hbqt_gcAllocate_QWebPage( ( p )->page(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWebPage( ( p )->page(), false ) );
    }
 }
 
@@ -258,10 +246,8 @@ HB_FUNC( QT_QWEBVIEW_PAGEACTION )
 {
    QWebView * p = hbqt_par_QWebView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->pageAction( ( QWebPage::WebAction ) hb_parni( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBVIEW_PAGEACTION FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->pageAction( ( QWebPage::WebAction ) hb_parni( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->pageAction( ( QWebPage::WebAction ) hb_parni( 2 ) ), false ) );
    }
 }
 
@@ -272,10 +258,8 @@ HB_FUNC( QT_QWEBVIEW_SELECTEDTEXT )
 {
    QWebView * p = hbqt_par_QWebView( 1 );
    if( p )
-      hb_retc( ( p )->selectedText().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBVIEW_SELECTEDTEXT FP=hb_retc( ( p )->selectedText().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->selectedText().toUtf8().data() );
    }
 }
 
@@ -286,10 +270,10 @@ HB_FUNC( QT_QWEBVIEW_SETCONTENT )
 {
    QWebView * p = hbqt_par_QWebView( 1 );
    if( p )
-      ( p )->setContent( *hbqt_par_QByteArray( 2 ), QWebView::tr( hb_parc( 3 ) ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QUrl( 4 ) : QUrl() ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBVIEW_SETCONTENT FP=( p )->setContent( *hbqt_par_QByteArray( 2 ), QWebView::tr( hb_parc( 3 ) ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QUrl( 4 ) : QUrl() ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setContent( *hbqt_par_QByteArray( 2 ), hb_parstr_utf8( 3, &pText, NULL ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QUrl( 4 ) : QUrl() ) );
+      hb_strfree( pText );
    }
 }
 
@@ -300,10 +284,10 @@ HB_FUNC( QT_QWEBVIEW_SETHTML )
 {
    QWebView * p = hbqt_par_QWebView( 1 );
    if( p )
-      ( p )->setHtml( QWebView::tr( hb_parc( 2 ) ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QUrl( 3 ) : QUrl() ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBVIEW_SETHTML FP=( p )->setHtml( QWebView::tr( hb_parc( 2 ) ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QUrl( 3 ) : QUrl() ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setHtml( hb_parstr_utf8( 2, &pText, NULL ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QUrl( 3 ) : QUrl() ) );
+      hb_strfree( pText );
    }
 }
 
@@ -314,10 +298,8 @@ HB_FUNC( QT_QWEBVIEW_SETPAGE )
 {
    QWebView * p = hbqt_par_QWebView( 1 );
    if( p )
-      ( p )->setPage( hbqt_par_QWebPage( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBVIEW_SETPAGE FP=( p )->setPage( hbqt_par_QWebPage( 2 ) ); p is NULL" ) );
+      ( p )->setPage( hbqt_par_QWebPage( 2 ) );
    }
 }
 
@@ -328,10 +310,8 @@ HB_FUNC( QT_QWEBVIEW_SETTEXTSIZEMULTIPLIER )
 {
    QWebView * p = hbqt_par_QWebView( 1 );
    if( p )
-      ( p )->setTextSizeMultiplier( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBVIEW_SETTEXTSIZEMULTIPLIER FP=( p )->setTextSizeMultiplier( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setTextSizeMultiplier( hb_parnd( 2 ) );
    }
 }
 
@@ -342,10 +322,8 @@ HB_FUNC( QT_QWEBVIEW_SETURL )
 {
    QWebView * p = hbqt_par_QWebView( 1 );
    if( p )
-      ( p )->setUrl( *hbqt_par_QUrl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBVIEW_SETURL FP=( p )->setUrl( *hbqt_par_QUrl( 2 ) ); p is NULL" ) );
+      ( p )->setUrl( *hbqt_par_QUrl( 2 ) );
    }
 }
 
@@ -356,10 +334,8 @@ HB_FUNC( QT_QWEBVIEW_SETZOOMFACTOR )
 {
    QWebView * p = hbqt_par_QWebView( 1 );
    if( p )
-      ( p )->setZoomFactor( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBVIEW_SETZOOMFACTOR FP=( p )->setZoomFactor( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setZoomFactor( hb_parnd( 2 ) );
    }
 }
 
@@ -370,10 +346,8 @@ HB_FUNC( QT_QWEBVIEW_SETTINGS )
 {
    QWebView * p = hbqt_par_QWebView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWebSettings( ( p )->settings(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBVIEW_SETTINGS FP=hb_retptrGC( hbqt_gcAllocate_QWebSettings( ( p )->settings(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWebSettings( ( p )->settings(), false ) );
    }
 }
 
@@ -384,10 +358,8 @@ HB_FUNC( QT_QWEBVIEW_TEXTSIZEMULTIPLIER )
 {
    QWebView * p = hbqt_par_QWebView( 1 );
    if( p )
-      hb_retnd( ( p )->textSizeMultiplier() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBVIEW_TEXTSIZEMULTIPLIER FP=hb_retnd( ( p )->textSizeMultiplier() ); p is NULL" ) );
+      hb_retnd( ( p )->textSizeMultiplier() );
    }
 }
 
@@ -398,10 +370,8 @@ HB_FUNC( QT_QWEBVIEW_TITLE )
 {
    QWebView * p = hbqt_par_QWebView( 1 );
    if( p )
-      hb_retc( ( p )->title().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBVIEW_TITLE FP=hb_retc( ( p )->title().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->title().toUtf8().data() );
    }
 }
 
@@ -412,10 +382,8 @@ HB_FUNC( QT_QWEBVIEW_TRIGGERPAGEACTION )
 {
    QWebView * p = hbqt_par_QWebView( 1 );
    if( p )
-      ( p )->triggerPageAction( ( QWebPage::WebAction ) hb_parni( 2 ), hb_parl( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBVIEW_TRIGGERPAGEACTION FP=( p )->triggerPageAction( ( QWebPage::WebAction ) hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+      ( p )->triggerPageAction( ( QWebPage::WebAction ) hb_parni( 2 ), hb_parl( 3 ) );
    }
 }
 
@@ -426,10 +394,8 @@ HB_FUNC( QT_QWEBVIEW_URL )
 {
    QWebView * p = hbqt_par_QWebView( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->url() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBVIEW_URL FP=hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->url() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->url() ), true ) );
    }
 }
 
@@ -440,10 +406,8 @@ HB_FUNC( QT_QWEBVIEW_ZOOMFACTOR )
 {
    QWebView * p = hbqt_par_QWebView( 1 );
    if( p )
-      hb_retnd( ( p )->zoomFactor() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBVIEW_ZOOMFACTOR FP=hb_retnd( ( p )->zoomFactor() ); p is NULL" ) );
+      hb_retnd( ( p )->zoomFactor() );
    }
 }
 
@@ -454,10 +418,8 @@ HB_FUNC( QT_QWEBVIEW_BACK )
 {
    QWebView * p = hbqt_par_QWebView( 1 );
    if( p )
-      ( p )->back();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBVIEW_BACK FP=( p )->back(); p is NULL" ) );
+      ( p )->back();
    }
 }
 
@@ -468,10 +430,8 @@ HB_FUNC( QT_QWEBVIEW_FORWARD )
 {
    QWebView * p = hbqt_par_QWebView( 1 );
    if( p )
-      ( p )->forward();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBVIEW_FORWARD FP=( p )->forward(); p is NULL" ) );
+      ( p )->forward();
    }
 }
 
@@ -482,10 +442,8 @@ HB_FUNC( QT_QWEBVIEW_PRINT )
 {
    QWebView * p = hbqt_par_QWebView( 1 );
    if( p )
-      ( p )->print( hbqt_par_QPrinter( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBVIEW_PRINT FP=( p )->print( hbqt_par_QPrinter( 2 ) ); p is NULL" ) );
+      ( p )->print( hbqt_par_QPrinter( 2 ) );
    }
 }
 
@@ -496,10 +454,8 @@ HB_FUNC( QT_QWEBVIEW_RELOAD )
 {
    QWebView * p = hbqt_par_QWebView( 1 );
    if( p )
-      ( p )->reload();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBVIEW_RELOAD FP=( p )->reload(); p is NULL" ) );
+      ( p )->reload();
    }
 }
 
@@ -510,10 +466,8 @@ HB_FUNC( QT_QWEBVIEW_STOP )
 {
    QWebView * p = hbqt_par_QWebView( 1 );
    if( p )
-      ( p )->stop();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBVIEW_STOP FP=( p )->stop(); p is NULL" ) );
+      ( p )->stop();
    }
 }
 

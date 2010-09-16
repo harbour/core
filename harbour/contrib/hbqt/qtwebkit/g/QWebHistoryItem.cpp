@@ -152,10 +152,8 @@ HB_FUNC( QT_QWEBHISTORYITEM_ICON )
 {
    QWebHistoryItem * p = hbqt_par_QWebHistoryItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBHISTORYITEM_ICON FP=hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon() ), true ) );
    }
 }
 
@@ -166,10 +164,8 @@ HB_FUNC( QT_QWEBHISTORYITEM_ISVALID )
 {
    QWebHistoryItem * p = hbqt_par_QWebHistoryItem( 1 );
    if( p )
-      hb_retl( ( p )->isValid() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBHISTORYITEM_ISVALID FP=hb_retl( ( p )->isValid() ); p is NULL" ) );
+      hb_retl( ( p )->isValid() );
    }
 }
 
@@ -180,10 +176,8 @@ HB_FUNC( QT_QWEBHISTORYITEM_LASTVISITED )
 {
    QWebHistoryItem * p = hbqt_par_QWebHistoryItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->lastVisited() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBHISTORYITEM_LASTVISITED FP=hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->lastVisited() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDateTime( new QDateTime( ( p )->lastVisited() ), true ) );
    }
 }
 
@@ -194,10 +188,8 @@ HB_FUNC( QT_QWEBHISTORYITEM_ORIGINALURL )
 {
    QWebHistoryItem * p = hbqt_par_QWebHistoryItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->originalUrl() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBHISTORYITEM_ORIGINALURL FP=hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->originalUrl() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->originalUrl() ), true ) );
    }
 }
 
@@ -208,10 +200,8 @@ HB_FUNC( QT_QWEBHISTORYITEM_SETUSERDATA )
 {
    QWebHistoryItem * p = hbqt_par_QWebHistoryItem( 1 );
    if( p )
-      ( p )->setUserData( *hbqt_par_QVariant( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBHISTORYITEM_SETUSERDATA FP=( p )->setUserData( *hbqt_par_QVariant( 2 ) ); p is NULL" ) );
+      ( p )->setUserData( *hbqt_par_QVariant( 2 ) );
    }
 }
 
@@ -222,10 +212,8 @@ HB_FUNC( QT_QWEBHISTORYITEM_TITLE )
 {
    QWebHistoryItem * p = hbqt_par_QWebHistoryItem( 1 );
    if( p )
-      hb_retc( ( p )->title().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBHISTORYITEM_TITLE FP=hb_retc( ( p )->title().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->title().toUtf8().data() );
    }
 }
 
@@ -236,10 +224,8 @@ HB_FUNC( QT_QWEBHISTORYITEM_URL )
 {
    QWebHistoryItem * p = hbqt_par_QWebHistoryItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->url() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBHISTORYITEM_URL FP=hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->url() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->url() ), true ) );
    }
 }
 
@@ -250,10 +236,8 @@ HB_FUNC( QT_QWEBHISTORYITEM_USERDATA )
 {
    QWebHistoryItem * p = hbqt_par_QWebHistoryItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->userData() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBHISTORYITEM_USERDATA FP=hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->userData() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->userData() ), true ) );
    }
 }
 

@@ -163,10 +163,8 @@ HB_FUNC( QT_QFORMLAYOUT_ADDROW )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      ( p )->addRow( hbqt_par_QWidget( 2 ), hbqt_par_QWidget( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_ADDROW FP=( p )->addRow( hbqt_par_QWidget( 2 ), hbqt_par_QWidget( 3 ) ); p is NULL" ) );
+      ( p )->addRow( hbqt_par_QWidget( 2 ), hbqt_par_QWidget( 3 ) );
    }
 }
 
@@ -177,10 +175,8 @@ HB_FUNC( QT_QFORMLAYOUT_ADDROW_1 )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      ( p )->addRow( hbqt_par_QWidget( 2 ), hbqt_par_QLayout( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_ADDROW_1 FP=( p )->addRow( hbqt_par_QWidget( 2 ), hbqt_par_QLayout( 3 ) ); p is NULL" ) );
+      ( p )->addRow( hbqt_par_QWidget( 2 ), hbqt_par_QLayout( 3 ) );
    }
 }
 
@@ -191,10 +187,8 @@ HB_FUNC( QT_QFORMLAYOUT_ADDROW_2 )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      ( p )->addRow( hbqt_par_QWidget( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_ADDROW_2 FP=( p )->addRow( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+      ( p )->addRow( hbqt_par_QWidget( 2 ) );
    }
 }
 
@@ -205,10 +199,10 @@ HB_FUNC( QT_QFORMLAYOUT_ADDROW_3 )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      ( p )->addRow( QFormLayout::tr( hb_parc( 2 ) ), hbqt_par_QWidget( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_ADDROW_3 FP=( p )->addRow( QFormLayout::tr( hb_parc( 2 ) ), hbqt_par_QWidget( 3 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->addRow( hb_parstr_utf8( 2, &pText, NULL ), hbqt_par_QWidget( 3 ) );
+      hb_strfree( pText );
    }
 }
 
@@ -219,10 +213,10 @@ HB_FUNC( QT_QFORMLAYOUT_ADDROW_4 )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      ( p )->addRow( QFormLayout::tr( hb_parc( 2 ) ), hbqt_par_QLayout( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_ADDROW_4 FP=( p )->addRow( QFormLayout::tr( hb_parc( 2 ) ), hbqt_par_QLayout( 3 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->addRow( hb_parstr_utf8( 2, &pText, NULL ), hbqt_par_QLayout( 3 ) );
+      hb_strfree( pText );
    }
 }
 
@@ -233,10 +227,8 @@ HB_FUNC( QT_QFORMLAYOUT_ADDROW_5 )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      ( p )->addRow( hbqt_par_QLayout( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_ADDROW_5 FP=( p )->addRow( hbqt_par_QLayout( 2 ) ); p is NULL" ) );
+      ( p )->addRow( hbqt_par_QLayout( 2 ) );
    }
 }
 
@@ -247,10 +239,8 @@ HB_FUNC( QT_QFORMLAYOUT_FIELDGROWTHPOLICY )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      hb_retni( ( QFormLayout::FieldGrowthPolicy ) ( p )->fieldGrowthPolicy() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_FIELDGROWTHPOLICY FP=hb_retni( ( QFormLayout::FieldGrowthPolicy ) ( p )->fieldGrowthPolicy() ); p is NULL" ) );
+      hb_retni( ( QFormLayout::FieldGrowthPolicy ) ( p )->fieldGrowthPolicy() );
    }
 }
 
@@ -261,10 +251,8 @@ HB_FUNC( QT_QFORMLAYOUT_FORMALIGNMENT )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      hb_retni( ( Qt::Alignment ) ( p )->formAlignment() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_FORMALIGNMENT FP=hb_retni( ( Qt::Alignment ) ( p )->formAlignment() ); p is NULL" ) );
+      hb_retni( ( Qt::Alignment ) ( p )->formAlignment() );
    }
 }
 
@@ -278,10 +266,8 @@ HB_FUNC( QT_QFORMLAYOUT_GETITEMPOSITION )
    QFormLayout::ItemRole iRolePtr = ( QFormLayout::ItemRole ) 0;
 
    if( p )
-      ( p )->getItemPosition( hb_parni( 2 ), &iRowPtr, &iRolePtr );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_GETITEMPOSITION FP=( p )->getItemPosition( hb_parni( 2 ), &iRowPtr, &iRolePtr ); p is NULL" ) );
+      ( p )->getItemPosition( hb_parni( 2 ), &iRowPtr, &iRolePtr );
    }
 
    hb_storni( iRowPtr, 3 );
@@ -298,10 +284,8 @@ HB_FUNC( QT_QFORMLAYOUT_GETLAYOUTPOSITION )
    QFormLayout::ItemRole iRolePtr = ( QFormLayout::ItemRole ) 0;
 
    if( p )
-      ( p )->getLayoutPosition( hbqt_par_QLayout( 2 ), &iRowPtr, &iRolePtr );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_GETLAYOUTPOSITION FP=( p )->getLayoutPosition( hbqt_par_QLayout( 2 ), &iRowPtr, &iRolePtr ); p is NULL" ) );
+      ( p )->getLayoutPosition( hbqt_par_QLayout( 2 ), &iRowPtr, &iRolePtr );
    }
 
    hb_storni( iRowPtr, 3 );
@@ -318,10 +302,8 @@ HB_FUNC( QT_QFORMLAYOUT_GETWIDGETPOSITION )
    QFormLayout::ItemRole iRolePtr = ( QFormLayout::ItemRole ) 0;
 
    if( p )
-      ( p )->getWidgetPosition( hbqt_par_QWidget( 2 ), &iRowPtr, &iRolePtr );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_GETWIDGETPOSITION FP=( p )->getWidgetPosition( hbqt_par_QWidget( 2 ), &iRowPtr, &iRolePtr ); p is NULL" ) );
+      ( p )->getWidgetPosition( hbqt_par_QWidget( 2 ), &iRowPtr, &iRolePtr );
    }
 
    hb_storni( iRowPtr, 3 );
@@ -335,10 +317,8 @@ HB_FUNC( QT_QFORMLAYOUT_HORIZONTALSPACING )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      hb_retni( ( p )->horizontalSpacing() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_HORIZONTALSPACING FP=hb_retni( ( p )->horizontalSpacing() ); p is NULL" ) );
+      hb_retni( ( p )->horizontalSpacing() );
    }
 }
 
@@ -349,10 +329,8 @@ HB_FUNC( QT_QFORMLAYOUT_INSERTROW )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      ( p )->insertRow( hb_parni( 2 ), hbqt_par_QWidget( 3 ), hbqt_par_QWidget( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_INSERTROW FP=( p )->insertRow( hb_parni( 2 ), hbqt_par_QWidget( 3 ), hbqt_par_QWidget( 4 ) ); p is NULL" ) );
+      ( p )->insertRow( hb_parni( 2 ), hbqt_par_QWidget( 3 ), hbqt_par_QWidget( 4 ) );
    }
 }
 
@@ -363,10 +341,8 @@ HB_FUNC( QT_QFORMLAYOUT_INSERTROW_1 )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      ( p )->insertRow( hb_parni( 2 ), hbqt_par_QWidget( 3 ), hbqt_par_QLayout( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_INSERTROW_1 FP=( p )->insertRow( hb_parni( 2 ), hbqt_par_QWidget( 3 ), hbqt_par_QLayout( 4 ) ); p is NULL" ) );
+      ( p )->insertRow( hb_parni( 2 ), hbqt_par_QWidget( 3 ), hbqt_par_QLayout( 4 ) );
    }
 }
 
@@ -377,10 +353,8 @@ HB_FUNC( QT_QFORMLAYOUT_INSERTROW_2 )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      ( p )->insertRow( hb_parni( 2 ), hbqt_par_QWidget( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_INSERTROW_2 FP=( p )->insertRow( hb_parni( 2 ), hbqt_par_QWidget( 3 ) ); p is NULL" ) );
+      ( p )->insertRow( hb_parni( 2 ), hbqt_par_QWidget( 3 ) );
    }
 }
 
@@ -391,10 +365,10 @@ HB_FUNC( QT_QFORMLAYOUT_INSERTROW_3 )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      ( p )->insertRow( hb_parni( 2 ), QFormLayout::tr( hb_parc( 3 ) ), hbqt_par_QWidget( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_INSERTROW_3 FP=( p )->insertRow( hb_parni( 2 ), QFormLayout::tr( hb_parc( 3 ) ), hbqt_par_QWidget( 4 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->insertRow( hb_parni( 2 ), hb_parstr_utf8( 3, &pText, NULL ), hbqt_par_QWidget( 4 ) );
+      hb_strfree( pText );
    }
 }
 
@@ -405,10 +379,10 @@ HB_FUNC( QT_QFORMLAYOUT_INSERTROW_4 )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      ( p )->insertRow( hb_parni( 2 ), QFormLayout::tr( hb_parc( 3 ) ), hbqt_par_QLayout( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_INSERTROW_4 FP=( p )->insertRow( hb_parni( 2 ), QFormLayout::tr( hb_parc( 3 ) ), hbqt_par_QLayout( 4 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->insertRow( hb_parni( 2 ), hb_parstr_utf8( 3, &pText, NULL ), hbqt_par_QLayout( 4 ) );
+      hb_strfree( pText );
    }
 }
 
@@ -419,10 +393,8 @@ HB_FUNC( QT_QFORMLAYOUT_INSERTROW_5 )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      ( p )->insertRow( hb_parni( 2 ), hbqt_par_QLayout( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_INSERTROW_5 FP=( p )->insertRow( hb_parni( 2 ), hbqt_par_QLayout( 3 ) ); p is NULL" ) );
+      ( p )->insertRow( hb_parni( 2 ), hbqt_par_QLayout( 3 ) );
    }
 }
 
@@ -433,10 +405,8 @@ HB_FUNC( QT_QFORMLAYOUT_ITEMAT )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QLayoutItem( ( p )->itemAt( hb_parni( 2 ), ( QFormLayout::ItemRole ) hb_parni( 3 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_ITEMAT FP=hb_retptrGC( hbqt_gcAllocate_QLayoutItem( ( p )->itemAt( hb_parni( 2 ), ( QFormLayout::ItemRole ) hb_parni( 3 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QLayoutItem( ( p )->itemAt( hb_parni( 2 ), ( QFormLayout::ItemRole ) hb_parni( 3 ) ), false ) );
    }
 }
 
@@ -447,10 +417,8 @@ HB_FUNC( QT_QFORMLAYOUT_LABELALIGNMENT )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      hb_retni( ( Qt::Alignment ) ( p )->labelAlignment() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_LABELALIGNMENT FP=hb_retni( ( Qt::Alignment ) ( p )->labelAlignment() ); p is NULL" ) );
+      hb_retni( ( Qt::Alignment ) ( p )->labelAlignment() );
    }
 }
 
@@ -461,10 +429,8 @@ HB_FUNC( QT_QFORMLAYOUT_LABELFORFIELD )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->labelForField( hbqt_par_QWidget( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_LABELFORFIELD FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->labelForField( hbqt_par_QWidget( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->labelForField( hbqt_par_QWidget( 2 ) ), false ) );
    }
 }
 
@@ -475,10 +441,8 @@ HB_FUNC( QT_QFORMLAYOUT_LABELFORFIELD_1 )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->labelForField( hbqt_par_QLayout( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_LABELFORFIELD_1 FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->labelForField( hbqt_par_QLayout( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->labelForField( hbqt_par_QLayout( 2 ) ), false ) );
    }
 }
 
@@ -489,10 +453,8 @@ HB_FUNC( QT_QFORMLAYOUT_ROWCOUNT )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      hb_retni( ( p )->rowCount() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_ROWCOUNT FP=hb_retni( ( p )->rowCount() ); p is NULL" ) );
+      hb_retni( ( p )->rowCount() );
    }
 }
 
@@ -503,10 +465,8 @@ HB_FUNC( QT_QFORMLAYOUT_ROWWRAPPOLICY )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      hb_retni( ( QFormLayout::RowWrapPolicy ) ( p )->rowWrapPolicy() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_ROWWRAPPOLICY FP=hb_retni( ( QFormLayout::RowWrapPolicy ) ( p )->rowWrapPolicy() ); p is NULL" ) );
+      hb_retni( ( QFormLayout::RowWrapPolicy ) ( p )->rowWrapPolicy() );
    }
 }
 
@@ -517,10 +477,8 @@ HB_FUNC( QT_QFORMLAYOUT_SETFIELDGROWTHPOLICY )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      ( p )->setFieldGrowthPolicy( ( QFormLayout::FieldGrowthPolicy ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_SETFIELDGROWTHPOLICY FP=( p )->setFieldGrowthPolicy( ( QFormLayout::FieldGrowthPolicy ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setFieldGrowthPolicy( ( QFormLayout::FieldGrowthPolicy ) hb_parni( 2 ) );
    }
 }
 
@@ -531,10 +489,8 @@ HB_FUNC( QT_QFORMLAYOUT_SETFORMALIGNMENT )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      ( p )->setFormAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_SETFORMALIGNMENT FP=( p )->setFormAlignment( ( Qt::Alignment ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setFormAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
    }
 }
 
@@ -545,10 +501,8 @@ HB_FUNC( QT_QFORMLAYOUT_SETHORIZONTALSPACING )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      ( p )->setHorizontalSpacing( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_SETHORIZONTALSPACING FP=( p )->setHorizontalSpacing( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setHorizontalSpacing( hb_parni( 2 ) );
    }
 }
 
@@ -559,10 +513,8 @@ HB_FUNC( QT_QFORMLAYOUT_SETITEM )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      ( p )->setItem( hb_parni( 2 ), ( QFormLayout::ItemRole ) hb_parni( 3 ), hbqt_par_QLayoutItem( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_SETITEM FP=( p )->setItem( hb_parni( 2 ), ( QFormLayout::ItemRole ) hb_parni( 3 ), hbqt_par_QLayoutItem( 4 ) ); p is NULL" ) );
+      ( p )->setItem( hb_parni( 2 ), ( QFormLayout::ItemRole ) hb_parni( 3 ), hbqt_par_QLayoutItem( 4 ) );
    }
 }
 
@@ -573,10 +525,8 @@ HB_FUNC( QT_QFORMLAYOUT_SETLABELALIGNMENT )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      ( p )->setLabelAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_SETLABELALIGNMENT FP=( p )->setLabelAlignment( ( Qt::Alignment ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setLabelAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
    }
 }
 
@@ -587,10 +537,8 @@ HB_FUNC( QT_QFORMLAYOUT_SETLAYOUT )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      ( p )->setLayout( hb_parni( 2 ), ( QFormLayout::ItemRole ) hb_parni( 3 ), hbqt_par_QLayout( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_SETLAYOUT FP=( p )->setLayout( hb_parni( 2 ), ( QFormLayout::ItemRole ) hb_parni( 3 ), hbqt_par_QLayout( 4 ) ); p is NULL" ) );
+      ( p )->setLayout( hb_parni( 2 ), ( QFormLayout::ItemRole ) hb_parni( 3 ), hbqt_par_QLayout( 4 ) );
    }
 }
 
@@ -601,10 +549,8 @@ HB_FUNC( QT_QFORMLAYOUT_SETROWWRAPPOLICY )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      ( p )->setRowWrapPolicy( ( QFormLayout::RowWrapPolicy ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_SETROWWRAPPOLICY FP=( p )->setRowWrapPolicy( ( QFormLayout::RowWrapPolicy ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setRowWrapPolicy( ( QFormLayout::RowWrapPolicy ) hb_parni( 2 ) );
    }
 }
 
@@ -615,10 +561,8 @@ HB_FUNC( QT_QFORMLAYOUT_SETSPACING )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      ( p )->setSpacing( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_SETSPACING FP=( p )->setSpacing( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setSpacing( hb_parni( 2 ) );
    }
 }
 
@@ -629,10 +573,8 @@ HB_FUNC( QT_QFORMLAYOUT_SETVERTICALSPACING )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      ( p )->setVerticalSpacing( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_SETVERTICALSPACING FP=( p )->setVerticalSpacing( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setVerticalSpacing( hb_parni( 2 ) );
    }
 }
 
@@ -643,10 +585,8 @@ HB_FUNC( QT_QFORMLAYOUT_SETWIDGET )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      ( p )->setWidget( hb_parni( 2 ), ( QFormLayout::ItemRole ) hb_parni( 3 ), hbqt_par_QWidget( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_SETWIDGET FP=( p )->setWidget( hb_parni( 2 ), ( QFormLayout::ItemRole ) hb_parni( 3 ), hbqt_par_QWidget( 4 ) ); p is NULL" ) );
+      ( p )->setWidget( hb_parni( 2 ), ( QFormLayout::ItemRole ) hb_parni( 3 ), hbqt_par_QWidget( 4 ) );
    }
 }
 
@@ -657,10 +597,8 @@ HB_FUNC( QT_QFORMLAYOUT_SPACING )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      hb_retni( ( p )->spacing() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_SPACING FP=hb_retni( ( p )->spacing() ); p is NULL" ) );
+      hb_retni( ( p )->spacing() );
    }
 }
 
@@ -671,10 +609,8 @@ HB_FUNC( QT_QFORMLAYOUT_VERTICALSPACING )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
-      hb_retni( ( p )->verticalSpacing() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFORMLAYOUT_VERTICALSPACING FP=hb_retni( ( p )->verticalSpacing() ); p is NULL" ) );
+      hb_retni( ( p )->verticalSpacing() );
    }
 }
 

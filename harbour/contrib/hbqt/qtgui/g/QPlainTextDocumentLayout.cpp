@@ -160,10 +160,8 @@ HB_FUNC( QT_QPLAINTEXTDOCUMENTLAYOUT_CURSORWIDTH )
 {
    QPlainTextDocumentLayout * p = hbqt_par_QPlainTextDocumentLayout( 1 );
    if( p )
-      hb_retni( ( p )->cursorWidth() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPLAINTEXTDOCUMENTLAYOUT_CURSORWIDTH FP=hb_retni( ( p )->cursorWidth() ); p is NULL" ) );
+      hb_retni( ( p )->cursorWidth() );
    }
 }
 
@@ -174,10 +172,8 @@ HB_FUNC( QT_QPLAINTEXTDOCUMENTLAYOUT_ENSUREBLOCKLAYOUT )
 {
    QPlainTextDocumentLayout * p = hbqt_par_QPlainTextDocumentLayout( 1 );
    if( p )
-      ( p )->ensureBlockLayout( *hbqt_par_QTextBlock( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPLAINTEXTDOCUMENTLAYOUT_ENSUREBLOCKLAYOUT FP=( p )->ensureBlockLayout( *hbqt_par_QTextBlock( 2 ) ); p is NULL" ) );
+      ( p )->ensureBlockLayout( *hbqt_par_QTextBlock( 2 ) );
    }
 }
 
@@ -188,10 +184,8 @@ HB_FUNC( QT_QPLAINTEXTDOCUMENTLAYOUT_REQUESTUPDATE )
 {
    QPlainTextDocumentLayout * p = hbqt_par_QPlainTextDocumentLayout( 1 );
    if( p )
-      ( p )->requestUpdate();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPLAINTEXTDOCUMENTLAYOUT_REQUESTUPDATE FP=( p )->requestUpdate(); p is NULL" ) );
+      ( p )->requestUpdate();
    }
 }
 
@@ -202,10 +196,8 @@ HB_FUNC( QT_QPLAINTEXTDOCUMENTLAYOUT_SETCURSORWIDTH )
 {
    QPlainTextDocumentLayout * p = hbqt_par_QPlainTextDocumentLayout( 1 );
    if( p )
-      ( p )->setCursorWidth( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPLAINTEXTDOCUMENTLAYOUT_SETCURSORWIDTH FP=( p )->setCursorWidth( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setCursorWidth( hb_parni( 2 ) );
    }
 }
 

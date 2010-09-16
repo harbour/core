@@ -169,10 +169,8 @@ HB_FUNC( QT_HBQGRAPHICSSCENE_HBSETBLOCK )
 {
    HBQGraphicsScene * p = hbqt_par_HBQGraphicsScene( 1 );
    if( p )
-      ( p )->hbSetBlock( hb_param( 2, HB_IT_ANY ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSSCENE_HBSETBLOCK FP=( p )->hbSetBlock( hb_param( 2, HB_IT_ANY ) ); p is NULL" ) );
+      ( p )->hbSetBlock( hb_param( 2, HB_IT_ANY ) );
    }
 }
 
@@ -183,10 +181,8 @@ HB_FUNC( QT_HBQGRAPHICSSCENE_PAGESIZE )
 {
    HBQGraphicsScene * p = hbqt_par_HBQGraphicsScene( 1 );
    if( p )
-      hb_retni( ( p )->pageSize() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSSCENE_PAGESIZE FP=hb_retni( ( p )->pageSize() ); p is NULL" ) );
+      hb_retni( ( p )->pageSize() );
    }
 }
 
@@ -197,10 +193,8 @@ HB_FUNC( QT_HBQGRAPHICSSCENE_SETPAGESIZE )
 {
    HBQGraphicsScene * p = hbqt_par_HBQGraphicsScene( 1 );
    if( p )
-      ( p )->setPageSize( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSSCENE_SETPAGESIZE FP=( p )->setPageSize( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setPageSize( hb_parni( 2 ) );
    }
 }
 
@@ -211,10 +205,8 @@ HB_FUNC( QT_HBQGRAPHICSSCENE_PAPERRECT )
 {
    HBQGraphicsScene * p = hbqt_par_HBQGraphicsScene( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->paperRect() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSSCENE_PAPERRECT FP=hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->paperRect() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->paperRect() ), true ) );
    }
 }
 
@@ -225,10 +217,8 @@ HB_FUNC( QT_HBQGRAPHICSSCENE_SETPAPERRECT )
 {
    HBQGraphicsScene * p = hbqt_par_HBQGraphicsScene( 1 );
    if( p )
-      ( p )->setPaperRect( *hbqt_par_QRectF( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSSCENE_SETPAPERRECT FP=( p )->setPaperRect( *hbqt_par_QRectF( 2 ) ); p is NULL" ) );
+      ( p )->setPaperRect( *hbqt_par_QRectF( 2 ) );
    }
 }
 
@@ -239,10 +229,8 @@ HB_FUNC( QT_HBQGRAPHICSSCENE_ORIENTATION )
 {
    HBQGraphicsScene * p = hbqt_par_HBQGraphicsScene( 1 );
    if( p )
-      hb_retni( ( p )->orientation() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSSCENE_ORIENTATION FP=hb_retni( ( p )->orientation() ); p is NULL" ) );
+      hb_retni( ( p )->orientation() );
    }
 }
 
@@ -253,10 +241,8 @@ HB_FUNC( QT_HBQGRAPHICSSCENE_SETORIENTATION )
 {
    HBQGraphicsScene * p = hbqt_par_HBQGraphicsScene( 1 );
    if( p )
-      ( p )->setOrientation( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSSCENE_SETORIENTATION FP=( p )->setOrientation( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setOrientation( hb_parni( 2 ) );
    }
 }
 
@@ -267,10 +253,8 @@ HB_FUNC( QT_HBQGRAPHICSSCENE_GEOMETRY )
 {
    HBQGraphicsScene * p = hbqt_par_HBQGraphicsScene( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->geometry() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSSCENE_GEOMETRY FP=hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->geometry() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->geometry() ), true ) );
    }
 }
 
@@ -281,10 +265,8 @@ HB_FUNC( QT_HBQGRAPHICSSCENE_SETGEOMETRY )
 {
    HBQGraphicsScene * p = hbqt_par_HBQGraphicsScene( 1 );
    if( p )
-      ( p )->setGeometry( *hbqt_par_QRectF( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSSCENE_SETGEOMETRY FP=( p )->setGeometry( *hbqt_par_QRectF( 2 ) ); p is NULL" ) );
+      ( p )->setGeometry( *hbqt_par_QRectF( 2 ) );
    }
 }
 
@@ -295,10 +277,8 @@ HB_FUNC( QT_HBQGRAPHICSSCENE_MAGNETAREA )
 {
    HBQGraphicsScene * p = hbqt_par_HBQGraphicsScene( 1 );
    if( p )
-      hb_retni( ( p )->magnetArea() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSSCENE_MAGNETAREA FP=hb_retni( ( p )->magnetArea() ); p is NULL" ) );
+      hb_retni( ( p )->magnetArea() );
    }
 }
 
@@ -309,10 +289,8 @@ HB_FUNC( QT_HBQGRAPHICSSCENE_SETMAGNETAREA )
 {
    HBQGraphicsScene * p = hbqt_par_HBQGraphicsScene( 1 );
    if( p )
-      ( p )->setMagnetArea( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSSCENE_SETMAGNETAREA FP=( p )->setMagnetArea( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setMagnetArea( hb_parni( 2 ) );
    }
 }
 
@@ -323,10 +301,8 @@ HB_FUNC( QT_HBQGRAPHICSSCENE_SHOWGRID )
 {
    HBQGraphicsScene * p = hbqt_par_HBQGraphicsScene( 1 );
    if( p )
-      hb_retl( ( p )->showGrid() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSSCENE_SHOWGRID FP=hb_retl( ( p )->showGrid() ); p is NULL" ) );
+      hb_retl( ( p )->showGrid() );
    }
 }
 
@@ -337,10 +313,8 @@ HB_FUNC( QT_HBQGRAPHICSSCENE_SETSHOWGRID )
 {
    HBQGraphicsScene * p = hbqt_par_HBQGraphicsScene( 1 );
    if( p )
-      ( p )->setShowGrid( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSSCENE_SETSHOWGRID FP=( p )->setShowGrid( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setShowGrid( hb_parl( 2 ) );
    }
 }
 
@@ -351,10 +325,8 @@ HB_FUNC( QT_HBQGRAPHICSSCENE_SETLEFTMAGNET )
 {
    HBQGraphicsScene * p = hbqt_par_HBQGraphicsScene( 1 );
    if( p )
-      ( p )->setLeftMagnet( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSSCENE_SETLEFTMAGNET FP=( p )->setLeftMagnet( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setLeftMagnet( hb_parl( 2 ) );
    }
 }
 
@@ -365,10 +337,8 @@ HB_FUNC( QT_HBQGRAPHICSSCENE_SETRIGHTMAGNET )
 {
    HBQGraphicsScene * p = hbqt_par_HBQGraphicsScene( 1 );
    if( p )
-      ( p )->setRightMagnet( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSSCENE_SETRIGHTMAGNET FP=( p )->setRightMagnet( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setRightMagnet( hb_parl( 2 ) );
    }
 }
 
@@ -379,10 +349,8 @@ HB_FUNC( QT_HBQGRAPHICSSCENE_SETTOPMAGNET )
 {
    HBQGraphicsScene * p = hbqt_par_HBQGraphicsScene( 1 );
    if( p )
-      ( p )->setTopMagnet( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSSCENE_SETTOPMAGNET FP=( p )->setTopMagnet( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setTopMagnet( hb_parl( 2 ) );
    }
 }
 
@@ -393,10 +361,8 @@ HB_FUNC( QT_HBQGRAPHICSSCENE_SETBOTTOMMAGNET )
 {
    HBQGraphicsScene * p = hbqt_par_HBQGraphicsScene( 1 );
    if( p )
-      ( p )->setBottomMagnet( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSSCENE_SETBOTTOMMAGNET FP=( p )->setBottomMagnet( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setBottomMagnet( hb_parl( 2 ) );
    }
 }
 
@@ -407,10 +373,8 @@ HB_FUNC( QT_HBQGRAPHICSSCENE_SETHORIZONTALMAGNET )
 {
    HBQGraphicsScene * p = hbqt_par_HBQGraphicsScene( 1 );
    if( p )
-      ( p )->setHorizontalMagnet( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSSCENE_SETHORIZONTALMAGNET FP=( p )->setHorizontalMagnet( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setHorizontalMagnet( hb_parl( 2 ) );
    }
 }
 
@@ -421,10 +385,8 @@ HB_FUNC( QT_HBQGRAPHICSSCENE_SETVERTICALMAGNET )
 {
    HBQGraphicsScene * p = hbqt_par_HBQGraphicsScene( 1 );
    if( p )
-      ( p )->setVerticalMagnet( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQGRAPHICSSCENE_SETVERTICALMAGNET FP=( p )->setVerticalMagnet( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setVerticalMagnet( hb_parl( 2 ) );
    }
 }
 

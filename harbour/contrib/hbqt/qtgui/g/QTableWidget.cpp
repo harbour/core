@@ -175,10 +175,8 @@ HB_FUNC( QT_QTABLEWIDGET_CELLWIDGET )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->cellWidget( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_CELLWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->cellWidget( hb_parni( 2 ), hb_parni( 3 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->cellWidget( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
    }
 }
 
@@ -189,10 +187,8 @@ HB_FUNC( QT_QTABLEWIDGET_CLOSEPERSISTENTEDITOR )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      ( p )->closePersistentEditor( hbqt_par_QTableWidgetItem( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_CLOSEPERSISTENTEDITOR FP=( p )->closePersistentEditor( hbqt_par_QTableWidgetItem( 2 ) ); p is NULL" ) );
+      ( p )->closePersistentEditor( hbqt_par_QTableWidgetItem( 2 ) );
    }
 }
 
@@ -203,10 +199,8 @@ HB_FUNC( QT_QTABLEWIDGET_COLUMN )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      hb_retni( ( p )->column( hbqt_par_QTableWidgetItem( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_COLUMN FP=hb_retni( ( p )->column( hbqt_par_QTableWidgetItem( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->column( hbqt_par_QTableWidgetItem( 2 ) ) );
    }
 }
 
@@ -217,10 +211,8 @@ HB_FUNC( QT_QTABLEWIDGET_COLUMNCOUNT )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      hb_retni( ( p )->columnCount() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_COLUMNCOUNT FP=hb_retni( ( p )->columnCount() ); p is NULL" ) );
+      hb_retni( ( p )->columnCount() );
    }
 }
 
@@ -231,10 +223,8 @@ HB_FUNC( QT_QTABLEWIDGET_CURRENTCOLUMN )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      hb_retni( ( p )->currentColumn() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_CURRENTCOLUMN FP=hb_retni( ( p )->currentColumn() ); p is NULL" ) );
+      hb_retni( ( p )->currentColumn() );
    }
 }
 
@@ -245,10 +235,8 @@ HB_FUNC( QT_QTABLEWIDGET_CURRENTITEM )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->currentItem(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_CURRENTITEM FP=hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->currentItem(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->currentItem(), false ) );
    }
 }
 
@@ -259,10 +247,8 @@ HB_FUNC( QT_QTABLEWIDGET_CURRENTROW )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      hb_retni( ( p )->currentRow() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_CURRENTROW FP=hb_retni( ( p )->currentRow() ); p is NULL" ) );
+      hb_retni( ( p )->currentRow() );
    }
 }
 
@@ -273,10 +259,8 @@ HB_FUNC( QT_QTABLEWIDGET_EDITITEM )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      ( p )->editItem( hbqt_par_QTableWidgetItem( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_EDITITEM FP=( p )->editItem( hbqt_par_QTableWidgetItem( 2 ) ); p is NULL" ) );
+      ( p )->editItem( hbqt_par_QTableWidgetItem( 2 ) );
    }
 }
 
@@ -287,10 +271,10 @@ HB_FUNC( QT_QTABLEWIDGET_FINDITEMS )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTableWidgetItem *>( ( p )->findItems( QTableWidget::tr( hb_parc( 2 ) ), ( Qt::MatchFlags ) hb_parni( 3 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_FINDITEMS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTableWidgetItem *>( ( p )->findItems( QTableWidget::tr( hb_parc( 2 ) ), ( Qt::MatchFlags ) hb_parni( 3 ) ) ), true ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTableWidgetItem *>( ( p )->findItems( hb_parstr_utf8( 2, &pText, NULL ), ( Qt::MatchFlags ) hb_parni( 3 ) ) ), true ) );
+      hb_strfree( pText );
    }
 }
 
@@ -301,10 +285,8 @@ HB_FUNC( QT_QTABLEWIDGET_HORIZONTALHEADERITEM )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->horizontalHeaderItem( hb_parni( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_HORIZONTALHEADERITEM FP=hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->horizontalHeaderItem( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->horizontalHeaderItem( hb_parni( 2 ) ), false ) );
    }
 }
 
@@ -315,10 +297,8 @@ HB_FUNC( QT_QTABLEWIDGET_ITEM )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->item( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_ITEM FP=hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->item( hb_parni( 2 ), hb_parni( 3 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->item( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
    }
 }
 
@@ -329,10 +309,8 @@ HB_FUNC( QT_QTABLEWIDGET_ITEMAT )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->itemAt( *hbqt_par_QPoint( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_ITEMAT FP=hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->itemAt( *hbqt_par_QPoint( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->itemAt( *hbqt_par_QPoint( 2 ) ), false ) );
    }
 }
 
@@ -343,10 +321,8 @@ HB_FUNC( QT_QTABLEWIDGET_ITEMAT_1 )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->itemAt( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_ITEMAT_1 FP=hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->itemAt( hb_parni( 2 ), hb_parni( 3 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->itemAt( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
    }
 }
 
@@ -357,10 +333,8 @@ HB_FUNC( QT_QTABLEWIDGET_ITEMPROTOTYPE )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( new QTableWidgetItem( *( ( p )->itemPrototype() ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_ITEMPROTOTYPE FP=hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( new QTableWidgetItem( *( ( p )->itemPrototype() ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( new QTableWidgetItem( *( ( p )->itemPrototype() ) ), true ) );
    }
 }
 
@@ -371,10 +345,8 @@ HB_FUNC( QT_QTABLEWIDGET_OPENPERSISTENTEDITOR )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      ( p )->openPersistentEditor( hbqt_par_QTableWidgetItem( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_OPENPERSISTENTEDITOR FP=( p )->openPersistentEditor( hbqt_par_QTableWidgetItem( 2 ) ); p is NULL" ) );
+      ( p )->openPersistentEditor( hbqt_par_QTableWidgetItem( 2 ) );
    }
 }
 
@@ -385,10 +357,8 @@ HB_FUNC( QT_QTABLEWIDGET_REMOVECELLWIDGET )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      ( p )->removeCellWidget( hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_REMOVECELLWIDGET FP=( p )->removeCellWidget( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->removeCellWidget( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -399,10 +369,8 @@ HB_FUNC( QT_QTABLEWIDGET_ROW )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      hb_retni( ( p )->row( hbqt_par_QTableWidgetItem( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_ROW FP=hb_retni( ( p )->row( hbqt_par_QTableWidgetItem( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->row( hbqt_par_QTableWidgetItem( 2 ) ) );
    }
 }
 
@@ -413,10 +381,8 @@ HB_FUNC( QT_QTABLEWIDGET_ROWCOUNT )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      hb_retni( ( p )->rowCount() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_ROWCOUNT FP=hb_retni( ( p )->rowCount() ); p is NULL" ) );
+      hb_retni( ( p )->rowCount() );
    }
 }
 
@@ -427,10 +393,8 @@ HB_FUNC( QT_QTABLEWIDGET_SELECTEDITEMS )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTableWidgetItem *>( ( p )->selectedItems() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SELECTEDITEMS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTableWidgetItem *>( ( p )->selectedItems() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTableWidgetItem *>( ( p )->selectedItems() ), true ) );
    }
 }
 
@@ -441,10 +405,8 @@ HB_FUNC( QT_QTABLEWIDGET_SELECTEDRANGES )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTableWidgetSelectionRange>( ( p )->selectedRanges() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SELECTEDRANGES FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTableWidgetSelectionRange>( ( p )->selectedRanges() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTableWidgetSelectionRange>( ( p )->selectedRanges() ), true ) );
    }
 }
 
@@ -471,10 +433,8 @@ HB_FUNC( QT_QTABLEWIDGET_SETCOLUMNCOUNT )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      ( p )->setColumnCount( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETCOLUMNCOUNT FP=( p )->setColumnCount( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setColumnCount( hb_parni( 2 ) );
    }
 }
 
@@ -485,10 +445,8 @@ HB_FUNC( QT_QTABLEWIDGET_SETCURRENTCELL )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      ( p )->setCurrentCell( hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETCURRENTCELL FP=( p )->setCurrentCell( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setCurrentCell( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -499,10 +457,8 @@ HB_FUNC( QT_QTABLEWIDGET_SETCURRENTCELL_1 )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      ( p )->setCurrentCell( hb_parni( 2 ), hb_parni( 3 ), ( QItemSelectionModel::SelectionFlags ) hb_parni( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETCURRENTCELL_1 FP=( p )->setCurrentCell( hb_parni( 2 ), hb_parni( 3 ), ( QItemSelectionModel::SelectionFlags ) hb_parni( 4 ) ); p is NULL" ) );
+      ( p )->setCurrentCell( hb_parni( 2 ), hb_parni( 3 ), ( QItemSelectionModel::SelectionFlags ) hb_parni( 4 ) );
    }
 }
 
@@ -561,10 +517,8 @@ HB_FUNC( QT_QTABLEWIDGET_SETHORIZONTALHEADERLABELS )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      ( p )->setHorizontalHeaderLabels( *hbqt_par_QStringList( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETHORIZONTALHEADERLABELS FP=( p )->setHorizontalHeaderLabels( *hbqt_par_QStringList( 2 ) ); p is NULL" ) );
+      ( p )->setHorizontalHeaderLabels( *hbqt_par_QStringList( 2 ) );
    }
 }
 
@@ -591,10 +545,8 @@ HB_FUNC( QT_QTABLEWIDGET_SETITEMPROTOTYPE )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      ( p )->setItemPrototype( hbqt_par_QTableWidgetItem( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETITEMPROTOTYPE FP=( p )->setItemPrototype( hbqt_par_QTableWidgetItem( 2 ) ); p is NULL" ) );
+      ( p )->setItemPrototype( hbqt_par_QTableWidgetItem( 2 ) );
    }
 }
 
@@ -605,10 +557,8 @@ HB_FUNC( QT_QTABLEWIDGET_SETRANGESELECTED )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      ( p )->setRangeSelected( *hbqt_par_QTableWidgetSelectionRange( 2 ), hb_parl( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETRANGESELECTED FP=( p )->setRangeSelected( *hbqt_par_QTableWidgetSelectionRange( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+      ( p )->setRangeSelected( *hbqt_par_QTableWidgetSelectionRange( 2 ), hb_parl( 3 ) );
    }
 }
 
@@ -619,10 +569,8 @@ HB_FUNC( QT_QTABLEWIDGET_SETROWCOUNT )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      ( p )->setRowCount( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETROWCOUNT FP=( p )->setRowCount( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setRowCount( hb_parni( 2 ) );
    }
 }
 
@@ -649,10 +597,8 @@ HB_FUNC( QT_QTABLEWIDGET_SETVERTICALHEADERLABELS )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      ( p )->setVerticalHeaderLabels( *hbqt_par_QStringList( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SETVERTICALHEADERLABELS FP=( p )->setVerticalHeaderLabels( *hbqt_par_QStringList( 2 ) ); p is NULL" ) );
+      ( p )->setVerticalHeaderLabels( *hbqt_par_QStringList( 2 ) );
    }
 }
 
@@ -663,10 +609,8 @@ HB_FUNC( QT_QTABLEWIDGET_SORTITEMS )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      ( p )->sortItems( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::SortOrder ) hb_parni( 3 ) : ( Qt::SortOrder ) Qt::AscendingOrder ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SORTITEMS FP=( p )->sortItems( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::SortOrder ) hb_parni( 3 ) : ( Qt::SortOrder ) Qt::AscendingOrder ) ); p is NULL" ) );
+      ( p )->sortItems( hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::SortOrder ) hb_parni( 3 ) : ( Qt::SortOrder ) Qt::AscendingOrder ) );
    }
 }
 
@@ -677,10 +621,8 @@ HB_FUNC( QT_QTABLEWIDGET_TAKEHORIZONTALHEADERITEM )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->takeHorizontalHeaderItem( hb_parni( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_TAKEHORIZONTALHEADERITEM FP=hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->takeHorizontalHeaderItem( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->takeHorizontalHeaderItem( hb_parni( 2 ) ), false ) );
    }
 }
 
@@ -691,10 +633,8 @@ HB_FUNC( QT_QTABLEWIDGET_TAKEITEM )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->takeItem( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_TAKEITEM FP=hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->takeItem( hb_parni( 2 ), hb_parni( 3 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->takeItem( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
    }
 }
 
@@ -705,10 +645,8 @@ HB_FUNC( QT_QTABLEWIDGET_TAKEVERTICALHEADERITEM )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->takeVerticalHeaderItem( hb_parni( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_TAKEVERTICALHEADERITEM FP=hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->takeVerticalHeaderItem( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->takeVerticalHeaderItem( hb_parni( 2 ) ), false ) );
    }
 }
 
@@ -719,10 +657,8 @@ HB_FUNC( QT_QTABLEWIDGET_VERTICALHEADERITEM )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->verticalHeaderItem( hb_parni( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_VERTICALHEADERITEM FP=hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->verticalHeaderItem( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTableWidgetItem( ( p )->verticalHeaderItem( hb_parni( 2 ) ), false ) );
    }
 }
 
@@ -733,10 +669,8 @@ HB_FUNC( QT_QTABLEWIDGET_VISUALCOLUMN )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      hb_retni( ( p )->visualColumn( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_VISUALCOLUMN FP=hb_retni( ( p )->visualColumn( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->visualColumn( hb_parni( 2 ) ) );
    }
 }
 
@@ -747,10 +681,8 @@ HB_FUNC( QT_QTABLEWIDGET_VISUALITEMRECT )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->visualItemRect( hbqt_par_QTableWidgetItem( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_VISUALITEMRECT FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->visualItemRect( hbqt_par_QTableWidgetItem( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->visualItemRect( hbqt_par_QTableWidgetItem( 2 ) ) ), true ) );
    }
 }
 
@@ -761,10 +693,8 @@ HB_FUNC( QT_QTABLEWIDGET_VISUALROW )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      hb_retni( ( p )->visualRow( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_VISUALROW FP=hb_retni( ( p )->visualRow( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->visualRow( hb_parni( 2 ) ) );
    }
 }
 
@@ -775,10 +705,8 @@ HB_FUNC( QT_QTABLEWIDGET_CLEAR )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      ( p )->clear();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_CLEAR FP=( p )->clear(); p is NULL" ) );
+      ( p )->clear();
    }
 }
 
@@ -789,10 +717,8 @@ HB_FUNC( QT_QTABLEWIDGET_CLEARCONTENTS )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      ( p )->clearContents();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_CLEARCONTENTS FP=( p )->clearContents(); p is NULL" ) );
+      ( p )->clearContents();
    }
 }
 
@@ -803,10 +729,8 @@ HB_FUNC( QT_QTABLEWIDGET_INSERTCOLUMN )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      ( p )->insertColumn( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_INSERTCOLUMN FP=( p )->insertColumn( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->insertColumn( hb_parni( 2 ) );
    }
 }
 
@@ -817,10 +741,8 @@ HB_FUNC( QT_QTABLEWIDGET_INSERTROW )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      ( p )->insertRow( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_INSERTROW FP=( p )->insertRow( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->insertRow( hb_parni( 2 ) );
    }
 }
 
@@ -831,10 +753,8 @@ HB_FUNC( QT_QTABLEWIDGET_REMOVECOLUMN )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      ( p )->removeColumn( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_REMOVECOLUMN FP=( p )->removeColumn( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->removeColumn( hb_parni( 2 ) );
    }
 }
 
@@ -845,10 +765,8 @@ HB_FUNC( QT_QTABLEWIDGET_REMOVEROW )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      ( p )->removeRow( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_REMOVEROW FP=( p )->removeRow( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->removeRow( hb_parni( 2 ) );
    }
 }
 
@@ -859,10 +777,8 @@ HB_FUNC( QT_QTABLEWIDGET_SCROLLTOITEM )
 {
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
-      ( p )->scrollToItem( hbqt_par_QTableWidgetItem( 2 ), ( HB_ISNUM( 3 ) ? ( QAbstractItemView::ScrollHint ) hb_parni( 3 ) : ( QAbstractItemView::ScrollHint ) QTableWidget::EnsureVisible ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABLEWIDGET_SCROLLTOITEM FP=( p )->scrollToItem( hbqt_par_QTableWidgetItem( 2 ), ( HB_ISNUM( 3 ) ? ( QAbstractItemView::ScrollHint ) hb_parni( 3 ) : ( QAbstractItemView::ScrollHint ) QTableWidget::EnsureVisible ) ); p is NULL" ) );
+      ( p )->scrollToItem( hbqt_par_QTableWidgetItem( 2 ), ( HB_ISNUM( 3 ) ? ( QAbstractItemView::ScrollHint ) hb_parni( 3 ) : ( QAbstractItemView::ScrollHint ) QTableWidget::EnsureVisible ) );
    }
 }
 

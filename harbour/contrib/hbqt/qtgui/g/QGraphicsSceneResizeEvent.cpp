@@ -128,10 +128,8 @@ HB_FUNC( QT_QGRAPHICSSCENERESIZEEVENT_NEWSIZE )
 {
    QGraphicsSceneResizeEvent * p = hbqt_par_QGraphicsSceneResizeEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( ( p )->newSize() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENERESIZEEVENT_NEWSIZE FP=hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( ( p )->newSize() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( ( p )->newSize() ), true ) );
    }
 }
 
@@ -142,10 +140,8 @@ HB_FUNC( QT_QGRAPHICSSCENERESIZEEVENT_OLDSIZE )
 {
    QGraphicsSceneResizeEvent * p = hbqt_par_QGraphicsSceneResizeEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( ( p )->oldSize() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENERESIZEEVENT_OLDSIZE FP=hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( ( p )->oldSize() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( ( p )->oldSize() ), true ) );
    }
 }
 

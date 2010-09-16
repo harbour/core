@@ -154,10 +154,8 @@ HB_FUNC( QT_QITEMEDITORFACTORY_CREATEEDITOR )
 {
    QItemEditorFactory * p = hbqt_par_QItemEditorFactory( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->createEditor( ( QVariant::Type ) hb_parni( 2 ), hbqt_par_QWidget( 3 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QITEMEDITORFACTORY_CREATEEDITOR FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->createEditor( ( QVariant::Type ) hb_parni( 2 ), hbqt_par_QWidget( 3 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->createEditor( ( QVariant::Type ) hb_parni( 2 ), hbqt_par_QWidget( 3 ) ), false ) );
    }
 }
 
@@ -168,10 +166,8 @@ HB_FUNC( QT_QITEMEDITORFACTORY_REGISTEREDITOR )
 {
    QItemEditorFactory * p = hbqt_par_QItemEditorFactory( 1 );
    if( p )
-      ( p )->registerEditor( ( QVariant::Type ) hb_parni( 2 ), hbqt_par_QItemEditorCreatorBase( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QITEMEDITORFACTORY_REGISTEREDITOR FP=( p )->registerEditor( ( QVariant::Type ) hb_parni( 2 ), hbqt_par_QItemEditorCreatorBase( 3 ) ); p is NULL" ) );
+      ( p )->registerEditor( ( QVariant::Type ) hb_parni( 2 ), hbqt_par_QItemEditorCreatorBase( 3 ) );
    }
 }
 
@@ -182,10 +178,8 @@ HB_FUNC( QT_QITEMEDITORFACTORY_VALUEPROPERTYNAME )
 {
    QItemEditorFactory * p = hbqt_par_QItemEditorFactory( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->valuePropertyName( ( QVariant::Type ) hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QITEMEDITORFACTORY_VALUEPROPERTYNAME FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->valuePropertyName( ( QVariant::Type ) hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->valuePropertyName( ( QVariant::Type ) hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -196,10 +190,8 @@ HB_FUNC( QT_QITEMEDITORFACTORY_SETDEFAULTFACTORY )
 {
    QItemEditorFactory * p = hbqt_par_QItemEditorFactory( 1 );
    if( p )
-      ( p )->setDefaultFactory( hbqt_par_QItemEditorFactory( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QITEMEDITORFACTORY_SETDEFAULTFACTORY FP=( p )->setDefaultFactory( hbqt_par_QItemEditorFactory( 2 ) ); p is NULL" ) );
+      ( p )->setDefaultFactory( hbqt_par_QItemEditorFactory( 2 ) );
    }
 }
 

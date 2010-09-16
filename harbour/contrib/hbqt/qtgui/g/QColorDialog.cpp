@@ -169,10 +169,8 @@ HB_FUNC( QT_QCOLORDIALOG_CURRENTCOLOR )
 {
    QColorDialog * p = hbqt_par_QColorDialog( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->currentColor() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLORDIALOG_CURRENTCOLOR FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->currentColor() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->currentColor() ), true ) );
    }
 }
 
@@ -183,10 +181,8 @@ HB_FUNC( QT_QCOLORDIALOG_OPEN )
 {
    QColorDialog * p = hbqt_par_QColorDialog( 1 );
    if( p )
-      ( p )->open();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLORDIALOG_OPEN FP=( p )->open(); p is NULL" ) );
+      ( p )->open();
    }
 }
 
@@ -197,10 +193,8 @@ HB_FUNC( QT_QCOLORDIALOG_OPTIONS )
 {
    QColorDialog * p = hbqt_par_QColorDialog( 1 );
    if( p )
-      hb_retni( ( QColorDialog::ColorDialogOptions ) ( p )->options() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLORDIALOG_OPTIONS FP=hb_retni( ( QColorDialog::ColorDialogOptions ) ( p )->options() ); p is NULL" ) );
+      hb_retni( ( QColorDialog::ColorDialogOptions ) ( p )->options() );
    }
 }
 
@@ -211,10 +205,8 @@ HB_FUNC( QT_QCOLORDIALOG_SELECTEDCOLOR )
 {
    QColorDialog * p = hbqt_par_QColorDialog( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->selectedColor() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLORDIALOG_SELECTEDCOLOR FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->selectedColor() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->selectedColor() ), true ) );
    }
 }
 
@@ -225,10 +217,8 @@ HB_FUNC( QT_QCOLORDIALOG_SETCURRENTCOLOR )
 {
    QColorDialog * p = hbqt_par_QColorDialog( 1 );
    if( p )
-      ( p )->setCurrentColor( *hbqt_par_QColor( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLORDIALOG_SETCURRENTCOLOR FP=( p )->setCurrentColor( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+      ( p )->setCurrentColor( *hbqt_par_QColor( 2 ) );
    }
 }
 
@@ -239,10 +229,8 @@ HB_FUNC( QT_QCOLORDIALOG_SETOPTION )
 {
    QColorDialog * p = hbqt_par_QColorDialog( 1 );
    if( p )
-      ( p )->setOption( ( QColorDialog::ColorDialogOption ) hb_parni( 2 ), hb_parl( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLORDIALOG_SETOPTION FP=( p )->setOption( ( QColorDialog::ColorDialogOption ) hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+      ( p )->setOption( ( QColorDialog::ColorDialogOption ) hb_parni( 2 ), hb_parl( 3 ) );
    }
 }
 
@@ -253,10 +241,8 @@ HB_FUNC( QT_QCOLORDIALOG_SETOPTIONS )
 {
    QColorDialog * p = hbqt_par_QColorDialog( 1 );
    if( p )
-      ( p )->setOptions( ( QColorDialog::ColorDialogOptions ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLORDIALOG_SETOPTIONS FP=( p )->setOptions( ( QColorDialog::ColorDialogOptions ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setOptions( ( QColorDialog::ColorDialogOptions ) hb_parni( 2 ) );
    }
 }
 
@@ -267,10 +253,8 @@ HB_FUNC( QT_QCOLORDIALOG_SETVISIBLE )
 {
    QColorDialog * p = hbqt_par_QColorDialog( 1 );
    if( p )
-      ( p )->setVisible( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLORDIALOG_SETVISIBLE FP=( p )->setVisible( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setVisible( hb_parl( 2 ) );
    }
 }
 
@@ -281,10 +265,8 @@ HB_FUNC( QT_QCOLORDIALOG_TESTOPTION )
 {
    QColorDialog * p = hbqt_par_QColorDialog( 1 );
    if( p )
-      hb_retl( ( p )->testOption( ( QColorDialog::ColorDialogOption ) hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLORDIALOG_TESTOPTION FP=hb_retl( ( p )->testOption( ( QColorDialog::ColorDialogOption ) hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->testOption( ( QColorDialog::ColorDialogOption ) hb_parni( 2 ) ) );
    }
 }
 
@@ -295,10 +277,8 @@ HB_FUNC( QT_QCOLORDIALOG_CUSTOMCOLOR )
 {
    QColorDialog * p = hbqt_par_QColorDialog( 1 );
    if( p )
-      hb_retnl( ( p )->customColor( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLORDIALOG_CUSTOMCOLOR FP=hb_retnl( ( p )->customColor( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retnl( ( p )->customColor( hb_parni( 2 ) ) );
    }
 }
 
@@ -309,10 +289,8 @@ HB_FUNC( QT_QCOLORDIALOG_CUSTOMCOUNT )
 {
    QColorDialog * p = hbqt_par_QColorDialog( 1 );
    if( p )
-      hb_retni( ( p )->customCount() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLORDIALOG_CUSTOMCOUNT FP=hb_retni( ( p )->customCount() ); p is NULL" ) );
+      hb_retni( ( p )->customCount() );
    }
 }
 
@@ -323,10 +301,10 @@ HB_FUNC( QT_QCOLORDIALOG_GETCOLOR )
 {
    QColorDialog * p = hbqt_par_QColorDialog( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->getColor( *hbqt_par_QColor( 2 ), hbqt_par_QWidget( 3 ), QColorDialog::tr( hb_parc( 4 ) ), ( QColorDialog::ColorDialogOptions ) hb_parni( 5 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLORDIALOG_GETCOLOR FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->getColor( *hbqt_par_QColor( 2 ), hbqt_par_QWidget( 3 ), QColorDialog::tr( hb_parc( 4 ) ), ( QColorDialog::ColorDialogOptions ) hb_parni( 5 ) ) ), true ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->getColor( *hbqt_par_QColor( 2 ), hbqt_par_QWidget( 3 ), hb_parstr_utf8( 4, &pText, NULL ), ( QColorDialog::ColorDialogOptions ) hb_parni( 5 ) ) ), true ) );
+      hb_strfree( pText );
    }
 }
 
@@ -337,10 +315,8 @@ HB_FUNC( QT_QCOLORDIALOG_GETCOLOR_1 )
 {
    QColorDialog * p = hbqt_par_QColorDialog( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->getColor( *hbqt_par_QColor( 2 ), hbqt_par_QWidget( 3 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLORDIALOG_GETCOLOR_1 FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->getColor( *hbqt_par_QColor( 2 ), hbqt_par_QWidget( 3 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->getColor( *hbqt_par_QColor( 2 ), hbqt_par_QWidget( 3 ) ) ), true ) );
    }
 }
 
@@ -351,10 +327,8 @@ HB_FUNC( QT_QCOLORDIALOG_SETCUSTOMCOLOR )
 {
    QColorDialog * p = hbqt_par_QColorDialog( 1 );
    if( p )
-      ( p )->setCustomColor( hb_parni( 2 ), hb_parnl( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLORDIALOG_SETCUSTOMCOLOR FP=( p )->setCustomColor( hb_parni( 2 ), hb_parnl( 3 ) ); p is NULL" ) );
+      ( p )->setCustomColor( hb_parni( 2 ), hb_parnl( 3 ) );
    }
 }
 
@@ -365,10 +339,8 @@ HB_FUNC( QT_QCOLORDIALOG_SETSTANDARDCOLOR )
 {
    QColorDialog * p = hbqt_par_QColorDialog( 1 );
    if( p )
-      ( p )->setStandardColor( hb_parni( 2 ), hb_parnl( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOLORDIALOG_SETSTANDARDCOLOR FP=( p )->setStandardColor( hb_parni( 2 ), hb_parnl( 3 ) ); p is NULL" ) );
+      ( p )->setStandardColor( hb_parni( 2 ), hb_parnl( 3 ) );
    }
 }
 

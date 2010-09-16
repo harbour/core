@@ -130,10 +130,8 @@ HB_FUNC( QT_QVALIDATOR_LOCALE )
 {
    QValidator * p = hbqt_par_QValidator( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QLocale( new QLocale( ( p )->locale() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QVALIDATOR_LOCALE FP=hb_retptrGC( hbqt_gcAllocate_QLocale( new QLocale( ( p )->locale() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QLocale( new QLocale( ( p )->locale() ), true ) );
    }
 }
 
@@ -144,10 +142,8 @@ HB_FUNC( QT_QVALIDATOR_SETLOCALE )
 {
    QValidator * p = hbqt_par_QValidator( 1 );
    if( p )
-      ( p )->setLocale( *hbqt_par_QLocale( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QVALIDATOR_SETLOCALE FP=( p )->setLocale( *hbqt_par_QLocale( 2 ) ); p is NULL" ) );
+      ( p )->setLocale( *hbqt_par_QLocale( 2 ) );
    }
 }
 

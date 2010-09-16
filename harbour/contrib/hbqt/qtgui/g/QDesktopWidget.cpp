@@ -157,10 +157,8 @@ HB_FUNC( QT_QDESKTOPWIDGET_AVAILABLEGEOMETRY )
 {
    QDesktopWidget * p = hbqt_par_QDesktopWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->availableGeometry( hb_parnidef( 2, -1 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESKTOPWIDGET_AVAILABLEGEOMETRY FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->availableGeometry( hb_parnidef( 2, -1 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->availableGeometry( hb_parnidef( 2, -1 ) ) ), true ) );
    }
 }
 
@@ -171,10 +169,8 @@ HB_FUNC( QT_QDESKTOPWIDGET_AVAILABLEGEOMETRY_1 )
 {
    QDesktopWidget * p = hbqt_par_QDesktopWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->availableGeometry( hbqt_par_QWidget( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESKTOPWIDGET_AVAILABLEGEOMETRY_1 FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->availableGeometry( hbqt_par_QWidget( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->availableGeometry( hbqt_par_QWidget( 2 ) ) ), true ) );
    }
 }
 
@@ -185,10 +181,8 @@ HB_FUNC( QT_QDESKTOPWIDGET_AVAILABLEGEOMETRY_2 )
 {
    QDesktopWidget * p = hbqt_par_QDesktopWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->availableGeometry( *hbqt_par_QPoint( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESKTOPWIDGET_AVAILABLEGEOMETRY_2 FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->availableGeometry( *hbqt_par_QPoint( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->availableGeometry( *hbqt_par_QPoint( 2 ) ) ), true ) );
    }
 }
 
@@ -199,10 +193,8 @@ HB_FUNC( QT_QDESKTOPWIDGET_ISVIRTUALDESKTOP )
 {
    QDesktopWidget * p = hbqt_par_QDesktopWidget( 1 );
    if( p )
-      hb_retl( ( p )->isVirtualDesktop() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESKTOPWIDGET_ISVIRTUALDESKTOP FP=hb_retl( ( p )->isVirtualDesktop() ); p is NULL" ) );
+      hb_retl( ( p )->isVirtualDesktop() );
    }
 }
 
@@ -213,10 +205,8 @@ HB_FUNC( QT_QDESKTOPWIDGET_NUMSCREENS )
 {
    QDesktopWidget * p = hbqt_par_QDesktopWidget( 1 );
    if( p )
-      hb_retni( ( p )->numScreens() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESKTOPWIDGET_NUMSCREENS FP=hb_retni( ( p )->numScreens() ); p is NULL" ) );
+      hb_retni( ( p )->numScreens() );
    }
 }
 
@@ -227,10 +217,8 @@ HB_FUNC( QT_QDESKTOPWIDGET_PRIMARYSCREEN )
 {
    QDesktopWidget * p = hbqt_par_QDesktopWidget( 1 );
    if( p )
-      hb_retni( ( p )->primaryScreen() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESKTOPWIDGET_PRIMARYSCREEN FP=hb_retni( ( p )->primaryScreen() ); p is NULL" ) );
+      hb_retni( ( p )->primaryScreen() );
    }
 }
 
@@ -241,10 +229,8 @@ HB_FUNC( QT_QDESKTOPWIDGET_SCREEN )
 {
    QDesktopWidget * p = hbqt_par_QDesktopWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->screen( hb_parnidef( 2, -1 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESKTOPWIDGET_SCREEN FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->screen( hb_parnidef( 2, -1 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->screen( hb_parnidef( 2, -1 ) ), false ) );
    }
 }
 
@@ -255,10 +241,8 @@ HB_FUNC( QT_QDESKTOPWIDGET_SCREENGEOMETRY )
 {
    QDesktopWidget * p = hbqt_par_QDesktopWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->screenGeometry( hb_parnidef( 2, -1 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESKTOPWIDGET_SCREENGEOMETRY FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->screenGeometry( hb_parnidef( 2, -1 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->screenGeometry( hb_parnidef( 2, -1 ) ) ), true ) );
    }
 }
 
@@ -269,10 +253,8 @@ HB_FUNC( QT_QDESKTOPWIDGET_SCREENGEOMETRY_1 )
 {
    QDesktopWidget * p = hbqt_par_QDesktopWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->screenGeometry( hbqt_par_QWidget( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESKTOPWIDGET_SCREENGEOMETRY_1 FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->screenGeometry( hbqt_par_QWidget( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->screenGeometry( hbqt_par_QWidget( 2 ) ) ), true ) );
    }
 }
 
@@ -283,10 +265,8 @@ HB_FUNC( QT_QDESKTOPWIDGET_SCREENGEOMETRY_2 )
 {
    QDesktopWidget * p = hbqt_par_QDesktopWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->screenGeometry( *hbqt_par_QPoint( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESKTOPWIDGET_SCREENGEOMETRY_2 FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->screenGeometry( *hbqt_par_QPoint( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->screenGeometry( *hbqt_par_QPoint( 2 ) ) ), true ) );
    }
 }
 
@@ -297,10 +277,8 @@ HB_FUNC( QT_QDESKTOPWIDGET_SCREENNUMBER )
 {
    QDesktopWidget * p = hbqt_par_QDesktopWidget( 1 );
    if( p )
-      hb_retni( ( p )->screenNumber( hbqt_par_QWidget( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESKTOPWIDGET_SCREENNUMBER FP=hb_retni( ( p )->screenNumber( hbqt_par_QWidget( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->screenNumber( hbqt_par_QWidget( 2 ) ) );
    }
 }
 
@@ -311,10 +289,8 @@ HB_FUNC( QT_QDESKTOPWIDGET_SCREENNUMBER_1 )
 {
    QDesktopWidget * p = hbqt_par_QDesktopWidget( 1 );
    if( p )
-      hb_retni( ( p )->screenNumber( *hbqt_par_QPoint( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESKTOPWIDGET_SCREENNUMBER_1 FP=hb_retni( ( p )->screenNumber( *hbqt_par_QPoint( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->screenNumber( *hbqt_par_QPoint( 2 ) ) );
    }
 }
 

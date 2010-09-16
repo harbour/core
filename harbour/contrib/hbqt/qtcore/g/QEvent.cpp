@@ -149,10 +149,8 @@ HB_FUNC( QT_QEVENT_ACCEPT )
 {
    QEvent * p = hbqt_par_QEvent( 1 );
    if( p )
-      ( p )->accept();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QEVENT_ACCEPT FP=( p )->accept(); p is NULL" ) );
+      ( p )->accept();
    }
 }
 
@@ -163,10 +161,8 @@ HB_FUNC( QT_QEVENT_IGNORE )
 {
    QEvent * p = hbqt_par_QEvent( 1 );
    if( p )
-      ( p )->ignore();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QEVENT_IGNORE FP=( p )->ignore(); p is NULL" ) );
+      ( p )->ignore();
    }
 }
 
@@ -177,10 +173,8 @@ HB_FUNC( QT_QEVENT_ISACCEPTED )
 {
    QEvent * p = hbqt_par_QEvent( 1 );
    if( p )
-      hb_retl( ( p )->isAccepted() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QEVENT_ISACCEPTED FP=hb_retl( ( p )->isAccepted() ); p is NULL" ) );
+      hb_retl( ( p )->isAccepted() );
    }
 }
 
@@ -191,10 +185,8 @@ HB_FUNC( QT_QEVENT_SETACCEPTED )
 {
    QEvent * p = hbqt_par_QEvent( 1 );
    if( p )
-      ( p )->setAccepted( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QEVENT_SETACCEPTED FP=( p )->setAccepted( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setAccepted( hb_parl( 2 ) );
    }
 }
 
@@ -205,10 +197,8 @@ HB_FUNC( QT_QEVENT_SPONTANEOUS )
 {
    QEvent * p = hbqt_par_QEvent( 1 );
    if( p )
-      hb_retl( ( p )->spontaneous() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QEVENT_SPONTANEOUS FP=hb_retl( ( p )->spontaneous() ); p is NULL" ) );
+      hb_retl( ( p )->spontaneous() );
    }
 }
 
@@ -219,10 +209,8 @@ HB_FUNC( QT_QEVENT_TYPE )
 {
    QEvent * p = hbqt_par_QEvent( 1 );
    if( p )
-      hb_retni( ( QEvent::Type ) ( p )->type() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QEVENT_TYPE FP=hb_retni( ( QEvent::Type ) ( p )->type() ); p is NULL" ) );
+      hb_retni( ( QEvent::Type ) ( p )->type() );
    }
 }
 
@@ -233,10 +221,8 @@ HB_FUNC( QT_QEVENT_REGISTEREVENTTYPE )
 {
    QEvent * p = hbqt_par_QEvent( 1 );
    if( p )
-      hb_retni( ( p )->registerEventType( hb_parnidef( 2, -1 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QEVENT_REGISTEREVENTTYPE FP=hb_retni( ( p )->registerEventType( hb_parnidef( 2, -1 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->registerEventType( hb_parnidef( 2, -1 ) ) );
    }
 }
 

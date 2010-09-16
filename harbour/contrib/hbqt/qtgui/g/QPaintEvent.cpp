@@ -158,10 +158,8 @@ HB_FUNC( QT_QPAINTEVENT_RECT )
 {
    QPaintEvent * p = hbqt_par_QPaintEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->rect() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTEVENT_RECT FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->rect() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->rect() ), true ) );
    }
 }
 
@@ -172,10 +170,8 @@ HB_FUNC( QT_QPAINTEVENT_REGION )
 {
    QPaintEvent * p = hbqt_par_QPaintEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( ( p )->region() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTEVENT_REGION FP=hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( ( p )->region() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRegion( new QRegion( ( p )->region() ), true ) );
    }
 }
 

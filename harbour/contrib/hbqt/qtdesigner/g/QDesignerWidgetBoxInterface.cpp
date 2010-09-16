@@ -130,10 +130,8 @@ HB_FUNC( QT_QDESIGNERWIDGETBOXINTERFACE_FILENAME )
 {
    QDesignerWidgetBoxInterface * p = hbqt_par_QDesignerWidgetBoxInterface( 1 );
    if( p )
-      hb_retc( ( p )->fileName().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERWIDGETBOXINTERFACE_FILENAME FP=hb_retc( ( p )->fileName().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->fileName().toUtf8().data() );
    }
 }
 
@@ -144,10 +142,8 @@ HB_FUNC( QT_QDESIGNERWIDGETBOXINTERFACE_LOAD )
 {
    QDesignerWidgetBoxInterface * p = hbqt_par_QDesignerWidgetBoxInterface( 1 );
    if( p )
-      hb_retl( ( p )->load() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERWIDGETBOXINTERFACE_LOAD FP=hb_retl( ( p )->load() ); p is NULL" ) );
+      hb_retl( ( p )->load() );
    }
 }
 
@@ -158,10 +154,8 @@ HB_FUNC( QT_QDESIGNERWIDGETBOXINTERFACE_SAVE )
 {
    QDesignerWidgetBoxInterface * p = hbqt_par_QDesignerWidgetBoxInterface( 1 );
    if( p )
-      hb_retl( ( p )->save() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERWIDGETBOXINTERFACE_SAVE FP=hb_retl( ( p )->save() ); p is NULL" ) );
+      hb_retl( ( p )->save() );
    }
 }
 
@@ -172,10 +166,10 @@ HB_FUNC( QT_QDESIGNERWIDGETBOXINTERFACE_SETFILENAME )
 {
    QDesignerWidgetBoxInterface * p = hbqt_par_QDesignerWidgetBoxInterface( 1 );
    if( p )
-      ( p )->setFileName( QDesignerWidgetBoxInterface::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERWIDGETBOXINTERFACE_SETFILENAME FP=( p )->setFileName( QDesignerWidgetBoxInterface::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setFileName( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 

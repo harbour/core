@@ -1010,11 +1010,15 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
                aA[ PRT_DOC  ] := "l" + cDocNM
 
             CASE aA[ PRT_CAST ] == "QString"
+               #if 0
                IF !( s_isObject )
                   aA[ PRT_BODY ] := "hbqt_par_QString( " + cHBIdx + " )"
                ELSE
-                  aA[ PRT_BODY ] := cWidget+"::tr( hb_parc( " + cHBIdx + " ) )"
+                  //aA[ PRT_BODY ] := cWidget+"::tr( hb_parc( " + cHBIdx + " ) )"
+                  aA[ PRT_BODY ] := "hb_parstr_utf8( " + cHBIdx + ", &pText, NULL )"
                ENDIF
+               #endif
+               aA[ PRT_BODY ] := "hb_parstr_utf8( " + cHBIdx + ", &pText, NULL )"
                aA[ PRT_DOC  ] := "c" + cDocNM
 
             CASE aA[ PRT_CAST ] == "FT_Face"
@@ -1144,7 +1148,8 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
                cPrgRet := "c" + cDocNM
 
             CASE aA[ PRT_CAST ] == "QString"
-               cCmd := "hb_retc( " + cCmn + ".toAscii().data()" + " )"
+               //cCmd := "hb_retc( " + cCmn + ".toAscii().data()" + " )"
+               cCmd := "hb_retstr_utf8( " + cCmn + ".toUtf8().data()" + " )"
                cPrgRet := "c" + cDocNM
 
             CASE aA[ PRT_CAST ] == "FT_Face"
@@ -1266,12 +1271,21 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
          /* One line function body */
          FP = strtran( cCmd, "hbqt_par_" + cWidget + "( 1 )", "( p )" )
          aadd( txt_, "   if( p )" )
+         aadd( txt_, "   {" )
+         IF "hb_parstr_utf8(" $ cCmd
+            aadd( txt_, "      void * pText;" )
+         ENDIF
          aadd( txt_, "      " + FP )
+         IF "hb_parstr_utf8(" $ cCmd
+            aadd( txt_, "      hb_strfree( pText );" )
+         ENDIF
+         aadd( txt_, "   }" )
+         #if 0
          aadd( txt_, "   else" )
          aadd( txt_, "   {" )
          aadd( txt_, '      HB_TRACE( ' + s_trMode + ', ( "............................... F=QT_' + upper( cWidget ) + '_' + upper( cHBFunc) + ' FP=' + FP + ' p is NULL" ) );')
          aadd( txt_, "   }" )
-
+         #endif
          /* Return values back to PRG */
          IF ! empty( aPre )
             aadd( txt_, "" )
@@ -1373,7 +1387,8 @@ STATIC FUNCTION ParseVariables( cProto, cWidget, txt_, doc_, aEnum, func_ )
                cPrgRet := "c" + cDocNM
 
             CASE aA[ PRT_CAST ] == "QString"
-               cCmd := "hb_retc( " + cCmn + ".toLatin1().data()" + " )"
+//               cCmd := "hb_retc( " + cCmn + ".toLatin1().data()" + " )"
+               cCmd := "hb_retstr_utf8( " + cCmn + ".toUtf8().data()" + " )"
                cPrgRet := "c" + cDocNM
 
             CASE aA[ PRT_CAST ] == "FT_Face"

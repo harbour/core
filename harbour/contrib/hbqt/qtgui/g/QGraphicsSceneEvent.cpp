@@ -126,10 +126,8 @@ HB_FUNC( QT_QGRAPHICSSCENEEVENT_WIDGET )
 {
    QGraphicsSceneEvent * p = hbqt_par_QGraphicsSceneEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEEVENT_WIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) );
    }
 }
 

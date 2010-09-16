@@ -211,10 +211,10 @@ HB_FUNC( QT_QSCISCINTILLA_ANNOTATE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->annotate( hb_parni( 2 ), QsciScintilla::tr( hb_parc( 3 ) ), hb_parni( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_ANNOTATE FP=( p )->annotate( hb_parni( 2 ), QsciScintilla::tr( hb_parc( 3 ) ), hb_parni( 4 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->annotate( hb_parni( 2 ), hb_parstr_utf8( 3, &pText, NULL ), hb_parni( 4 ) );
+      hb_strfree( pText );
    }
 }
 
@@ -225,10 +225,10 @@ HB_FUNC( QT_QSCISCINTILLA_ANNOTATE_1 )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->annotate( hb_parni( 2 ), QsciScintilla::tr( hb_parc( 3 ) ), *hbqt_par_QsciStyle( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_ANNOTATE_1 FP=( p )->annotate( hb_parni( 2 ), QsciScintilla::tr( hb_parc( 3 ) ), *hbqt_par_QsciStyle( 4 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->annotate( hb_parni( 2 ), hb_parstr_utf8( 3, &pText, NULL ), *hbqt_par_QsciStyle( 4 ) );
+      hb_strfree( pText );
    }
 }
 
@@ -239,10 +239,8 @@ HB_FUNC( QT_QSCISCINTILLA_ANNOTATE_2 )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->annotate( hb_parni( 2 ), *hbqt_par_QsciStyledText( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_ANNOTATE_2 FP=( p )->annotate( hb_parni( 2 ), *hbqt_par_QsciStyledText( 3 ) ); p is NULL" ) );
+      ( p )->annotate( hb_parni( 2 ), *hbqt_par_QsciStyledText( 3 ) );
    }
 }
 
@@ -253,10 +251,8 @@ HB_FUNC( QT_QSCISCINTILLA_ANNOTATION )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retc( ( p )->annotation( hb_parni( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_ANNOTATION FP=hb_retc( ( p )->annotation( hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->annotation( hb_parni( 2 ) ).toUtf8().data() );
    }
 }
 
@@ -267,10 +263,8 @@ HB_FUNC( QT_QSCISCINTILLA_ANNOTATIONDISPLAY )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( QsciScintilla::AnnotationDisplay ) ( p )->annotationDisplay() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_ANNOTATIONDISPLAY FP=hb_retni( ( QsciScintilla::AnnotationDisplay ) ( p )->annotationDisplay() ); p is NULL" ) );
+      hb_retni( ( QsciScintilla::AnnotationDisplay ) ( p )->annotationDisplay() );
    }
 }
 
@@ -281,10 +275,8 @@ HB_FUNC( QT_QSCISCINTILLA_CLEARANNOTATIONS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->clearAnnotations( hb_parnidef( 2, -1 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_CLEARANNOTATIONS FP=( p )->clearAnnotations( hb_parnidef( 2, -1 ) ); p is NULL" ) );
+      ( p )->clearAnnotations( hb_parnidef( 2, -1 ) );
    }
 }
 
@@ -295,10 +287,8 @@ HB_FUNC( QT_QSCISCINTILLA_AUTOCOMPLETIONCASESENSITIVITY )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retl( ( p )->autoCompletionCaseSensitivity() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_AUTOCOMPLETIONCASESENSITIVITY FP=hb_retl( ( p )->autoCompletionCaseSensitivity() ); p is NULL" ) );
+      hb_retl( ( p )->autoCompletionCaseSensitivity() );
    }
 }
 
@@ -309,10 +299,8 @@ HB_FUNC( QT_QSCISCINTILLA_AUTOCOMPLETIONFILLUPSENABLED )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retl( ( p )->autoCompletionFillupsEnabled() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_AUTOCOMPLETIONFILLUPSENABLED FP=hb_retl( ( p )->autoCompletionFillupsEnabled() ); p is NULL" ) );
+      hb_retl( ( p )->autoCompletionFillupsEnabled() );
    }
 }
 
@@ -323,10 +311,8 @@ HB_FUNC( QT_QSCISCINTILLA_AUTOCOMPLETIONREPLACEWORD )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retl( ( p )->autoCompletionReplaceWord() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_AUTOCOMPLETIONREPLACEWORD FP=hb_retl( ( p )->autoCompletionReplaceWord() ); p is NULL" ) );
+      hb_retl( ( p )->autoCompletionReplaceWord() );
    }
 }
 
@@ -337,10 +323,8 @@ HB_FUNC( QT_QSCISCINTILLA_AUTOCOMPLETIONSHOWSINGLE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retl( ( p )->autoCompletionShowSingle() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_AUTOCOMPLETIONSHOWSINGLE FP=hb_retl( ( p )->autoCompletionShowSingle() ); p is NULL" ) );
+      hb_retl( ( p )->autoCompletionShowSingle() );
    }
 }
 
@@ -351,10 +335,8 @@ HB_FUNC( QT_QSCISCINTILLA_AUTOCOMPLETIONSOURCE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( QsciScintilla::AutoCompletionSource ) ( p )->autoCompletionSource() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_AUTOCOMPLETIONSOURCE FP=hb_retni( ( QsciScintilla::AutoCompletionSource ) ( p )->autoCompletionSource() ); p is NULL" ) );
+      hb_retni( ( QsciScintilla::AutoCompletionSource ) ( p )->autoCompletionSource() );
    }
 }
 
@@ -365,10 +347,8 @@ HB_FUNC( QT_QSCISCINTILLA_AUTOCOMPLETIONTHRESHOLD )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( p )->autoCompletionThreshold() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_AUTOCOMPLETIONTHRESHOLD FP=hb_retni( ( p )->autoCompletionThreshold() ); p is NULL" ) );
+      hb_retni( ( p )->autoCompletionThreshold() );
    }
 }
 
@@ -379,10 +359,8 @@ HB_FUNC( QT_QSCISCINTILLA_AUTOINDENT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retl( ( p )->autoIndent() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_AUTOINDENT FP=hb_retl( ( p )->autoIndent() ); p is NULL" ) );
+      hb_retl( ( p )->autoIndent() );
    }
 }
 
@@ -393,10 +371,8 @@ HB_FUNC( QT_QSCISCINTILLA_BACKSPACEUNINDENTS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retl( ( p )->backspaceUnindents() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_BACKSPACEUNINDENTS FP=hb_retl( ( p )->backspaceUnindents() ); p is NULL" ) );
+      hb_retl( ( p )->backspaceUnindents() );
    }
 }
 
@@ -407,10 +383,8 @@ HB_FUNC( QT_QSCISCINTILLA_BEGINUNDOACTION )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->beginUndoAction();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_BEGINUNDOACTION FP=( p )->beginUndoAction(); p is NULL" ) );
+      ( p )->beginUndoAction();
    }
 }
 
@@ -421,10 +395,8 @@ HB_FUNC( QT_QSCISCINTILLA_BRACEMATCHING )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( QsciScintilla::BraceMatch ) ( p )->braceMatching() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_BRACEMATCHING FP=hb_retni( ( QsciScintilla::BraceMatch ) ( p )->braceMatching() ); p is NULL" ) );
+      hb_retni( ( QsciScintilla::BraceMatch ) ( p )->braceMatching() );
    }
 }
 
@@ -435,10 +407,8 @@ HB_FUNC( QT_QSCISCINTILLA_CALLTIPSSTYLE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( QsciScintilla::CallTipsStyle ) ( p )->callTipsStyle() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_CALLTIPSSTYLE FP=hb_retni( ( QsciScintilla::CallTipsStyle ) ( p )->callTipsStyle() ); p is NULL" ) );
+      hb_retni( ( QsciScintilla::CallTipsStyle ) ( p )->callTipsStyle() );
    }
 }
 
@@ -449,10 +419,8 @@ HB_FUNC( QT_QSCISCINTILLA_CALLTIPSVISIBLE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( p )->callTipsVisible() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_CALLTIPSVISIBLE FP=hb_retni( ( p )->callTipsVisible() ); p is NULL" ) );
+      hb_retni( ( p )->callTipsVisible() );
    }
 }
 
@@ -463,10 +431,8 @@ HB_FUNC( QT_QSCISCINTILLA_CANCELLIST )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->cancelList();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_CANCELLIST FP=( p )->cancelList(); p is NULL" ) );
+      ( p )->cancelList();
    }
 }
 
@@ -477,10 +443,8 @@ HB_FUNC( QT_QSCISCINTILLA_CASESENSITIVE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retl( ( p )->caseSensitive() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_CASESENSITIVE FP=hb_retl( ( p )->caseSensitive() ); p is NULL" ) );
+      hb_retl( ( p )->caseSensitive() );
    }
 }
 
@@ -491,10 +455,8 @@ HB_FUNC( QT_QSCISCINTILLA_CLEARFOLDS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->clearFolds();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_CLEARFOLDS FP=( p )->clearFolds(); p is NULL" ) );
+      ( p )->clearFolds();
    }
 }
 
@@ -505,10 +467,8 @@ HB_FUNC( QT_QSCISCINTILLA_CLEARREGISTEREDIMAGES )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->clearRegisteredImages();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_CLEARREGISTEREDIMAGES FP=( p )->clearRegisteredImages(); p is NULL" ) );
+      ( p )->clearRegisteredImages();
    }
 }
 
@@ -519,10 +479,8 @@ HB_FUNC( QT_QSCISCINTILLA_COLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->color() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_COLOR FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->color() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->color() ), true ) );
    }
 }
 
@@ -533,10 +491,8 @@ HB_FUNC( QT_QSCISCINTILLA_CONVERTEOLS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->convertEols( ( QsciScintilla::EolMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_CONVERTEOLS FP=( p )->convertEols( ( QsciScintilla::EolMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->convertEols( ( QsciScintilla::EolMode ) hb_parni( 2 ) );
    }
 }
 
@@ -547,10 +503,8 @@ HB_FUNC( QT_QSCISCINTILLA_DOCUMENT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QsciDocument( new QsciDocument( ( p )->document() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_DOCUMENT FP=hb_retptrGC( hbqt_gcAllocate_QsciDocument( new QsciDocument( ( p )->document() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QsciDocument( new QsciDocument( ( p )->document() ), true ) );
    }
 }
 
@@ -561,10 +515,8 @@ HB_FUNC( QT_QSCISCINTILLA_ENDUNDOACTION )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->endUndoAction();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_ENDUNDOACTION FP=( p )->endUndoAction(); p is NULL" ) );
+      ( p )->endUndoAction();
    }
 }
 
@@ -575,10 +527,8 @@ HB_FUNC( QT_QSCISCINTILLA_EDGECOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->edgeColor() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_EDGECOLOR FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->edgeColor() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->edgeColor() ), true ) );
    }
 }
 
@@ -589,10 +539,8 @@ HB_FUNC( QT_QSCISCINTILLA_EDGECOLUMN )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( p )->edgeColumn() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_EDGECOLUMN FP=hb_retni( ( p )->edgeColumn() ); p is NULL" ) );
+      hb_retni( ( p )->edgeColumn() );
    }
 }
 
@@ -603,10 +551,8 @@ HB_FUNC( QT_QSCISCINTILLA_EDGEMODE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( QsciScintilla::EdgeMode ) ( p )->edgeMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_EDGEMODE FP=hb_retni( ( QsciScintilla::EdgeMode ) ( p )->edgeMode() ); p is NULL" ) );
+      hb_retni( ( QsciScintilla::EdgeMode ) ( p )->edgeMode() );
    }
 }
 
@@ -617,10 +563,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETFONT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setFont( *hbqt_par_QFont( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETFONT FP=( p )->setFont( *hbqt_par_QFont( 2 ) ); p is NULL" ) );
+      ( p )->setFont( *hbqt_par_QFont( 2 ) );
    }
 }
 
@@ -631,10 +575,8 @@ HB_FUNC( QT_QSCISCINTILLA_EOLMODE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( QsciScintilla::EolMode ) ( p )->eolMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_EOLMODE FP=hb_retni( ( QsciScintilla::EolMode ) ( p )->eolMode() ); p is NULL" ) );
+      hb_retni( ( QsciScintilla::EolMode ) ( p )->eolMode() );
    }
 }
 
@@ -645,10 +587,8 @@ HB_FUNC( QT_QSCISCINTILLA_EOLVISIBILITY )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retl( ( p )->eolVisibility() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_EOLVISIBILITY FP=hb_retl( ( p )->eolVisibility() ); p is NULL" ) );
+      hb_retl( ( p )->eolVisibility() );
    }
 }
 
@@ -659,10 +599,10 @@ HB_FUNC( QT_QSCISCINTILLA_FINDFIRST )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retl( ( p )->findFirst( QsciScintilla::tr( hb_parc( 2 ) ), hb_parl( 3 ), hb_parl( 4 ), hb_parl( 5 ), hb_parl( 6 ), hb_parl( 7 ), hb_parnidef( 8, -1 ), hb_parnidef( 9, -1 ), hb_parl( 10 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_FINDFIRST FP=hb_retl( ( p )->findFirst( QsciScintilla::tr( hb_parc( 2 ) ), hb_parl( 3 ), hb_parl( 4 ), hb_parl( 5 ), hb_parl( 6 ), hb_parl( 7 ), hb_parnidef( 8, -1 ), hb_parnidef( 9, -1 ), hb_parl( 10 ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->findFirst( hb_parstr_utf8( 2, &pText, NULL ), hb_parl( 3 ), hb_parl( 4 ), hb_parl( 5 ), hb_parl( 6 ), hb_parl( 7 ), hb_parnidef( 8, -1 ), hb_parnidef( 9, -1 ), hb_parl( 10 ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -673,10 +613,8 @@ HB_FUNC( QT_QSCISCINTILLA_FINDNEXT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retl( ( p )->findNext() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_FINDNEXT FP=hb_retl( ( p )->findNext() ); p is NULL" ) );
+      hb_retl( ( p )->findNext() );
    }
 }
 
@@ -687,10 +625,8 @@ HB_FUNC( QT_QSCISCINTILLA_FIRSTVISIBLELINE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( p )->firstVisibleLine() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_FIRSTVISIBLELINE FP=hb_retni( ( p )->firstVisibleLine() ); p is NULL" ) );
+      hb_retni( ( p )->firstVisibleLine() );
    }
 }
 
@@ -701,10 +637,8 @@ HB_FUNC( QT_QSCISCINTILLA_FOLDING )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( QsciScintilla::FoldStyle ) ( p )->folding() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_FOLDING FP=hb_retni( ( QsciScintilla::FoldStyle ) ( p )->folding() ); p is NULL" ) );
+      hb_retni( ( QsciScintilla::FoldStyle ) ( p )->folding() );
    }
 }
 
@@ -718,10 +652,8 @@ HB_FUNC( QT_QSCISCINTILLA_GETCURSORPOSITION )
    int iIndex = 0;
 
    if( p )
-      ( p )->getCursorPosition( &iLine, &iIndex );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_GETCURSORPOSITION FP=( p )->getCursorPosition( &iLine, &iIndex ); p is NULL" ) );
+      ( p )->getCursorPosition( &iLine, &iIndex );
    }
 
    hb_storni( iLine, 2 );
@@ -740,10 +672,8 @@ HB_FUNC( QT_QSCISCINTILLA_GETSELECTION )
    int iIndexTo = 0;
 
    if( p )
-      ( p )->getSelection( &iLineFrom, &iIndexFrom, &iLineTo, &iIndexTo );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_GETSELECTION FP=( p )->getSelection( &iLineFrom, &iIndexFrom, &iLineTo, &iIndexTo ); p is NULL" ) );
+      ( p )->getSelection( &iLineFrom, &iIndexFrom, &iLineTo, &iIndexTo );
    }
 
    hb_storni( iLineFrom, 2 );
@@ -759,10 +689,8 @@ HB_FUNC( QT_QSCISCINTILLA_HASSELECTEDTEXT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retl( ( p )->hasSelectedText() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_HASSELECTEDTEXT FP=hb_retl( ( p )->hasSelectedText() ); p is NULL" ) );
+      hb_retl( ( p )->hasSelectedText() );
    }
 }
 
@@ -773,10 +701,8 @@ HB_FUNC( QT_QSCISCINTILLA_INDENTATION )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( p )->indentation( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_INDENTATION FP=hb_retni( ( p )->indentation( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->indentation( hb_parni( 2 ) ) );
    }
 }
 
@@ -787,10 +713,8 @@ HB_FUNC( QT_QSCISCINTILLA_INDENTATIONGUIDES )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retl( ( p )->indentationGuides() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_INDENTATIONGUIDES FP=hb_retl( ( p )->indentationGuides() ); p is NULL" ) );
+      hb_retl( ( p )->indentationGuides() );
    }
 }
 
@@ -801,10 +725,8 @@ HB_FUNC( QT_QSCISCINTILLA_INDENTATIONSUSETABS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retl( ( p )->indentationsUseTabs() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_INDENTATIONSUSETABS FP=hb_retl( ( p )->indentationsUseTabs() ); p is NULL" ) );
+      hb_retl( ( p )->indentationsUseTabs() );
    }
 }
 
@@ -815,10 +737,8 @@ HB_FUNC( QT_QSCISCINTILLA_INDENTATIONWIDTH )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( p )->indentationWidth() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_INDENTATIONWIDTH FP=hb_retni( ( p )->indentationWidth() ); p is NULL" ) );
+      hb_retni( ( p )->indentationWidth() );
    }
 }
 
@@ -829,10 +749,8 @@ HB_FUNC( QT_QSCISCINTILLA_ISCALLTIPACTIVE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retl( ( p )->isCallTipActive() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_ISCALLTIPACTIVE FP=hb_retl( ( p )->isCallTipActive() ); p is NULL" ) );
+      hb_retl( ( p )->isCallTipActive() );
    }
 }
 
@@ -843,10 +761,8 @@ HB_FUNC( QT_QSCISCINTILLA_ISLISTACTIVE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retl( ( p )->isListActive() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_ISLISTACTIVE FP=hb_retl( ( p )->isListActive() ); p is NULL" ) );
+      hb_retl( ( p )->isListActive() );
    }
 }
 
@@ -857,10 +773,8 @@ HB_FUNC( QT_QSCISCINTILLA_ISMODIFIED )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retl( ( p )->isModified() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_ISMODIFIED FP=hb_retl( ( p )->isModified() ); p is NULL" ) );
+      hb_retl( ( p )->isModified() );
    }
 }
 
@@ -871,10 +785,8 @@ HB_FUNC( QT_QSCISCINTILLA_ISREADONLY )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retl( ( p )->isReadOnly() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_ISREADONLY FP=hb_retl( ( p )->isReadOnly() ); p is NULL" ) );
+      hb_retl( ( p )->isReadOnly() );
    }
 }
 
@@ -885,10 +797,8 @@ HB_FUNC( QT_QSCISCINTILLA_ISREDOAVAILABLE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retl( ( p )->isRedoAvailable() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_ISREDOAVAILABLE FP=hb_retl( ( p )->isRedoAvailable() ); p is NULL" ) );
+      hb_retl( ( p )->isRedoAvailable() );
    }
 }
 
@@ -899,10 +809,8 @@ HB_FUNC( QT_QSCISCINTILLA_ISUNDOAVAILABLE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retl( ( p )->isUndoAvailable() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_ISUNDOAVAILABLE FP=hb_retl( ( p )->isUndoAvailable() ); p is NULL" ) );
+      hb_retl( ( p )->isUndoAvailable() );
    }
 }
 
@@ -913,10 +821,8 @@ HB_FUNC( QT_QSCISCINTILLA_ISUTF8 )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retl( ( p )->isUtf8() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_ISUTF8 FP=hb_retl( ( p )->isUtf8() ); p is NULL" ) );
+      hb_retl( ( p )->isUtf8() );
    }
 }
 
@@ -927,10 +833,8 @@ HB_FUNC( QT_QSCISCINTILLA_ISWORDCHARACTER )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retl( ( p )->isWordCharacter( ( char ) hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_ISWORDCHARACTER FP=hb_retl( ( p )->isWordCharacter( ( char ) hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->isWordCharacter( ( char ) hb_parni( 2 ) ) );
    }
 }
 
@@ -941,10 +845,8 @@ HB_FUNC( QT_QSCISCINTILLA_LINEAT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( p )->lineAt( *hbqt_par_QPoint( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_LINEAT FP=hb_retni( ( p )->lineAt( *hbqt_par_QPoint( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->lineAt( *hbqt_par_QPoint( 2 ) ) );
    }
 }
 
@@ -958,10 +860,8 @@ HB_FUNC( QT_QSCISCINTILLA_LINEINDEXFROMPOSITION )
    int iIndex = 0;
 
    if( p )
-      ( p )->lineIndexFromPosition( hb_parni( 2 ), &iLine, &iIndex );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_LINEINDEXFROMPOSITION FP=( p )->lineIndexFromPosition( hb_parni( 2 ), &iLine, &iIndex ); p is NULL" ) );
+      ( p )->lineIndexFromPosition( hb_parni( 2 ), &iLine, &iIndex );
    }
 
    hb_storni( iLine, 3 );
@@ -975,10 +875,8 @@ HB_FUNC( QT_QSCISCINTILLA_LINELENGTH )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( p )->lineLength( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_LINELENGTH FP=hb_retni( ( p )->lineLength( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->lineLength( hb_parni( 2 ) ) );
    }
 }
 
@@ -989,10 +887,8 @@ HB_FUNC( QT_QSCISCINTILLA_LINES )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( p )->lines() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_LINES FP=hb_retni( ( p )->lines() ); p is NULL" ) );
+      hb_retni( ( p )->lines() );
    }
 }
 
@@ -1003,10 +899,8 @@ HB_FUNC( QT_QSCISCINTILLA_LENGTH )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( p )->length() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_LENGTH FP=hb_retni( ( p )->length() ); p is NULL" ) );
+      hb_retni( ( p )->length() );
    }
 }
 
@@ -1017,10 +911,8 @@ HB_FUNC( QT_QSCISCINTILLA_LEXER )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QsciLexer( ( p )->lexer(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_LEXER FP=hb_retptrGC( hbqt_gcAllocate_QsciLexer( ( p )->lexer(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QsciLexer( ( p )->lexer(), false ) );
    }
 }
 
@@ -1031,10 +923,8 @@ HB_FUNC( QT_QSCISCINTILLA_MARGINLINENUMBERS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retl( ( p )->marginLineNumbers( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_MARGINLINENUMBERS FP=hb_retl( ( p )->marginLineNumbers( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->marginLineNumbers( hb_parni( 2 ) ) );
    }
 }
 
@@ -1045,10 +935,8 @@ HB_FUNC( QT_QSCISCINTILLA_MARGINMARKERMASK )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( p )->marginMarkerMask( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_MARGINMARKERMASK FP=hb_retni( ( p )->marginMarkerMask( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->marginMarkerMask( hb_parni( 2 ) ) );
    }
 }
 
@@ -1059,10 +947,8 @@ HB_FUNC( QT_QSCISCINTILLA_MARGINSENSITIVITY )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retl( ( p )->marginSensitivity( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_MARGINSENSITIVITY FP=hb_retl( ( p )->marginSensitivity( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->marginSensitivity( hb_parni( 2 ) ) );
    }
 }
 
@@ -1073,10 +959,8 @@ HB_FUNC( QT_QSCISCINTILLA_MARGINTYPE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( QsciScintilla::MarginType ) ( p )->marginType( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_MARGINTYPE FP=hb_retni( ( QsciScintilla::MarginType ) ( p )->marginType( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( QsciScintilla::MarginType ) ( p )->marginType( hb_parni( 2 ) ) );
    }
 }
 
@@ -1087,10 +971,8 @@ HB_FUNC( QT_QSCISCINTILLA_MARGINWIDTH )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( p )->marginWidth( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_MARGINWIDTH FP=hb_retni( ( p )->marginWidth( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->marginWidth( hb_parni( 2 ) ) );
    }
 }
 
@@ -1101,10 +983,8 @@ HB_FUNC( QT_QSCISCINTILLA_MARKERDEFINE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( p )->markerDefine( ( QsciScintilla::MarkerSymbol ) hb_parni( 2 ), hb_parnidef( 3, -1 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_MARKERDEFINE FP=hb_retni( ( p )->markerDefine( ( QsciScintilla::MarkerSymbol ) hb_parni( 2 ), hb_parnidef( 3, -1 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->markerDefine( ( QsciScintilla::MarkerSymbol ) hb_parni( 2 ), hb_parnidef( 3, -1 ) ) );
    }
 }
 
@@ -1115,10 +995,8 @@ HB_FUNC( QT_QSCISCINTILLA_MARKERDEFINE_1 )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( p )->markerDefine( ( char ) hb_parni( 2 ), hb_parnidef( 3, -1 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_MARKERDEFINE_1 FP=hb_retni( ( p )->markerDefine( ( char ) hb_parni( 2 ), hb_parnidef( 3, -1 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->markerDefine( ( char ) hb_parni( 2 ), hb_parnidef( 3, -1 ) ) );
    }
 }
 
@@ -1129,10 +1007,8 @@ HB_FUNC( QT_QSCISCINTILLA_MARKERDEFINE_2 )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( p )->markerDefine( *hbqt_par_QPixmap( 2 ), hb_parnidef( 3, -1 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_MARKERDEFINE_2 FP=hb_retni( ( p )->markerDefine( *hbqt_par_QPixmap( 2 ), hb_parnidef( 3, -1 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->markerDefine( *hbqt_par_QPixmap( 2 ), hb_parnidef( 3, -1 ) ) );
    }
 }
 
@@ -1143,10 +1019,8 @@ HB_FUNC( QT_QSCISCINTILLA_MARKERADD )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( p )->markerAdd( hb_parni( 2 ), hb_parni( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_MARKERADD FP=hb_retni( ( p )->markerAdd( hb_parni( 2 ), hb_parni( 3 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->markerAdd( hb_parni( 2 ), hb_parni( 3 ) ) );
    }
 }
 
@@ -1157,10 +1031,8 @@ HB_FUNC( QT_QSCISCINTILLA_MARKERSATLINE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( p )->markersAtLine( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_MARKERSATLINE FP=hb_retni( ( p )->markersAtLine( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->markersAtLine( hb_parni( 2 ) ) );
    }
 }
 
@@ -1171,10 +1043,8 @@ HB_FUNC( QT_QSCISCINTILLA_MARKERDELETE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->markerDelete( hb_parni( 2 ), hb_parnidef( 3, -1 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_MARKERDELETE FP=( p )->markerDelete( hb_parni( 2 ), hb_parnidef( 3, -1 ) ); p is NULL" ) );
+      ( p )->markerDelete( hb_parni( 2 ), hb_parnidef( 3, -1 ) );
    }
 }
 
@@ -1185,10 +1055,8 @@ HB_FUNC( QT_QSCISCINTILLA_MARKERDELETEALL )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->markerDeleteAll( hb_parnidef( 2, -1 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_MARKERDELETEALL FP=( p )->markerDeleteAll( hb_parnidef( 2, -1 ) ); p is NULL" ) );
+      ( p )->markerDeleteAll( hb_parnidef( 2, -1 ) );
    }
 }
 
@@ -1199,10 +1067,8 @@ HB_FUNC( QT_QSCISCINTILLA_MARKERDELETEHANDLE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->markerDeleteHandle( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_MARKERDELETEHANDLE FP=( p )->markerDeleteHandle( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->markerDeleteHandle( hb_parni( 2 ) );
    }
 }
 
@@ -1213,10 +1079,8 @@ HB_FUNC( QT_QSCISCINTILLA_MARKERLINE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( p )->markerLine( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_MARKERLINE FP=hb_retni( ( p )->markerLine( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->markerLine( hb_parni( 2 ) ) );
    }
 }
 
@@ -1227,10 +1091,8 @@ HB_FUNC( QT_QSCISCINTILLA_MARKERFINDNEXT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( p )->markerFindNext( hb_parni( 2 ), hb_parni( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_MARKERFINDNEXT FP=hb_retni( ( p )->markerFindNext( hb_parni( 2 ), hb_parni( 3 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->markerFindNext( hb_parni( 2 ), hb_parni( 3 ) ) );
    }
 }
 
@@ -1241,10 +1103,8 @@ HB_FUNC( QT_QSCISCINTILLA_MARKERFINDPREVIOUS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( p )->markerFindPrevious( hb_parni( 2 ), hb_parni( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_MARKERFINDPREVIOUS FP=hb_retni( ( p )->markerFindPrevious( hb_parni( 2 ), hb_parni( 3 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->markerFindPrevious( hb_parni( 2 ), hb_parni( 3 ) ) );
    }
 }
 
@@ -1255,10 +1115,8 @@ HB_FUNC( QT_QSCISCINTILLA_PAPER )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->paper() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_PAPER FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->paper() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->paper() ), true ) );
    }
 }
 
@@ -1269,10 +1127,8 @@ HB_FUNC( QT_QSCISCINTILLA_POSITIONFROMLINEINDEX )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( p )->positionFromLineIndex( hb_parni( 2 ), hb_parni( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_POSITIONFROMLINEINDEX FP=hb_retni( ( p )->positionFromLineIndex( hb_parni( 2 ), hb_parni( 3 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->positionFromLineIndex( hb_parni( 2 ), hb_parni( 3 ) ) );
    }
 }
 
@@ -1283,10 +1139,8 @@ HB_FUNC( QT_QSCISCINTILLA_READ )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retl( ( p )->read( hbqt_par_QIODevice( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_READ FP=hb_retl( ( p )->read( hbqt_par_QIODevice( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->read( hbqt_par_QIODevice( 2 ) ) );
    }
 }
 
@@ -1297,10 +1151,8 @@ HB_FUNC( QT_QSCISCINTILLA_RECOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->recolor( hb_parni( 2 ), hb_parnidef( 3, -1 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_RECOLOR FP=( p )->recolor( hb_parni( 2 ), hb_parnidef( 3, -1 ) ); p is NULL" ) );
+      ( p )->recolor( hb_parni( 2 ), hb_parnidef( 3, -1 ) );
    }
 }
 
@@ -1311,10 +1163,8 @@ HB_FUNC( QT_QSCISCINTILLA_REGISTERIMAGE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->registerImage( hb_parni( 2 ), *hbqt_par_QPixmap( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_REGISTERIMAGE FP=( p )->registerImage( hb_parni( 2 ), *hbqt_par_QPixmap( 3 ) ); p is NULL" ) );
+      ( p )->registerImage( hb_parni( 2 ), *hbqt_par_QPixmap( 3 ) );
    }
 }
 
@@ -1325,10 +1175,10 @@ HB_FUNC( QT_QSCISCINTILLA_REPLACE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->replace( QsciScintilla::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_REPLACE FP=( p )->replace( QsciScintilla::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->replace( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -1339,10 +1189,8 @@ HB_FUNC( QT_QSCISCINTILLA_RESETFOLDMARGINCOLORS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->resetFoldMarginColors();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_RESETFOLDMARGINCOLORS FP=( p )->resetFoldMarginColors(); p is NULL" ) );
+      ( p )->resetFoldMarginColors();
    }
 }
 
@@ -1353,10 +1201,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETFOLDMARGINCOLORS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setFoldMarginColors( *hbqt_par_QColor( 2 ), *hbqt_par_QColor( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETFOLDMARGINCOLORS FP=( p )->setFoldMarginColors( *hbqt_par_QColor( 2 ), *hbqt_par_QColor( 3 ) ); p is NULL" ) );
+      ( p )->setFoldMarginColors( *hbqt_par_QColor( 2 ), *hbqt_par_QColor( 3 ) );
    }
 }
 
@@ -1367,10 +1213,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETANNOTATIONDISPLAY )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setAnnotationDisplay( ( QsciScintilla::AnnotationDisplay ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETANNOTATIONDISPLAY FP=( p )->setAnnotationDisplay( ( QsciScintilla::AnnotationDisplay ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setAnnotationDisplay( ( QsciScintilla::AnnotationDisplay ) hb_parni( 2 ) );
    }
 }
 
@@ -1381,10 +1225,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETAUTOCOMPLETIONFILLUPSENABLED )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setAutoCompletionFillupsEnabled( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETAUTOCOMPLETIONFILLUPSENABLED FP=( p )->setAutoCompletionFillupsEnabled( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setAutoCompletionFillupsEnabled( hb_parl( 2 ) );
    }
 }
 
@@ -1395,10 +1237,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETAUTOCOMPLETIONFILLUPS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setAutoCompletionFillups( hbqt_par_char( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETAUTOCOMPLETIONFILLUPS FP=( p )->setAutoCompletionFillups( hbqt_par_char( 2 ) ); p is NULL" ) );
+      ( p )->setAutoCompletionFillups( hbqt_par_char( 2 ) );
    }
 }
 
@@ -1409,10 +1249,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETAUTOCOMPLETIONWORDSEPARATORS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setAutoCompletionWordSeparators( *hbqt_par_QStringList( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETAUTOCOMPLETIONWORDSEPARATORS FP=( p )->setAutoCompletionWordSeparators( *hbqt_par_QStringList( 2 ) ); p is NULL" ) );
+      ( p )->setAutoCompletionWordSeparators( *hbqt_par_QStringList( 2 ) );
    }
 }
 
@@ -1423,10 +1261,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETCALLTIPSBACKGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setCallTipsBackgroundColor( *hbqt_par_QColor( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETCALLTIPSBACKGROUNDCOLOR FP=( p )->setCallTipsBackgroundColor( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+      ( p )->setCallTipsBackgroundColor( *hbqt_par_QColor( 2 ) );
    }
 }
 
@@ -1437,10 +1273,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETCALLTIPSFOREGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setCallTipsForegroundColor( *hbqt_par_QColor( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETCALLTIPSFOREGROUNDCOLOR FP=( p )->setCallTipsForegroundColor( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+      ( p )->setCallTipsForegroundColor( *hbqt_par_QColor( 2 ) );
    }
 }
 
@@ -1451,10 +1285,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETCALLTIPSHIGHLIGHTCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setCallTipsHighlightColor( *hbqt_par_QColor( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETCALLTIPSHIGHLIGHTCOLOR FP=( p )->setCallTipsHighlightColor( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+      ( p )->setCallTipsHighlightColor( *hbqt_par_QColor( 2 ) );
    }
 }
 
@@ -1465,10 +1297,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETCALLTIPSSTYLE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setCallTipsStyle( ( QsciScintilla::CallTipsStyle ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETCALLTIPSSTYLE FP=( p )->setCallTipsStyle( ( QsciScintilla::CallTipsStyle ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setCallTipsStyle( ( QsciScintilla::CallTipsStyle ) hb_parni( 2 ) );
    }
 }
 
@@ -1479,10 +1309,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETCALLTIPSVISIBLE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setCallTipsVisible( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETCALLTIPSVISIBLE FP=( p )->setCallTipsVisible( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setCallTipsVisible( hb_parni( 2 ) );
    }
 }
 
@@ -1493,10 +1321,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETDOCUMENT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setDocument( *hbqt_par_QsciDocument( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETDOCUMENT FP=( p )->setDocument( *hbqt_par_QsciDocument( 2 ) ); p is NULL" ) );
+      ( p )->setDocument( *hbqt_par_QsciDocument( 2 ) );
    }
 }
 
@@ -1507,10 +1333,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETEDGECOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setEdgeColor( *hbqt_par_QColor( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETEDGECOLOR FP=( p )->setEdgeColor( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+      ( p )->setEdgeColor( *hbqt_par_QColor( 2 ) );
    }
 }
 
@@ -1521,10 +1345,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETEDGECOLUMN )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setEdgeColumn( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETEDGECOLUMN FP=( p )->setEdgeColumn( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setEdgeColumn( hb_parni( 2 ) );
    }
 }
 
@@ -1535,10 +1357,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETEDGEMODE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setEdgeMode( ( QsciScintilla::EdgeMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETEDGEMODE FP=( p )->setEdgeMode( ( QsciScintilla::EdgeMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setEdgeMode( ( QsciScintilla::EdgeMode ) hb_parni( 2 ) );
    }
 }
 
@@ -1549,10 +1369,10 @@ HB_FUNC( QT_QSCISCINTILLA_SETMARGINTEXT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setMarginText( hb_parni( 2 ), QsciScintilla::tr( hb_parc( 3 ) ), hb_parni( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETMARGINTEXT FP=( p )->setMarginText( hb_parni( 2 ), QsciScintilla::tr( hb_parc( 3 ) ), hb_parni( 4 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setMarginText( hb_parni( 2 ), hb_parstr_utf8( 3, &pText, NULL ), hb_parni( 4 ) );
+      hb_strfree( pText );
    }
 }
 
@@ -1563,10 +1383,10 @@ HB_FUNC( QT_QSCISCINTILLA_SETMARGINTEXT_1 )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setMarginText( hb_parni( 2 ), QsciScintilla::tr( hb_parc( 3 ) ), *hbqt_par_QsciStyle( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETMARGINTEXT_1 FP=( p )->setMarginText( hb_parni( 2 ), QsciScintilla::tr( hb_parc( 3 ) ), *hbqt_par_QsciStyle( 4 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setMarginText( hb_parni( 2 ), hb_parstr_utf8( 3, &pText, NULL ), *hbqt_par_QsciStyle( 4 ) );
+      hb_strfree( pText );
    }
 }
 
@@ -1577,10 +1397,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETMARGINTEXT_2 )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setMarginText( hb_parni( 2 ), *hbqt_par_QsciStyledText( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETMARGINTEXT_2 FP=( p )->setMarginText( hb_parni( 2 ), *hbqt_par_QsciStyledText( 3 ) ); p is NULL" ) );
+      ( p )->setMarginText( hb_parni( 2 ), *hbqt_par_QsciStyledText( 3 ) );
    }
 }
 
@@ -1591,10 +1409,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETMARGINTYPE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setMarginType( hb_parni( 2 ), ( QsciScintilla::MarginType ) hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETMARGINTYPE FP=( p )->setMarginType( hb_parni( 2 ), ( QsciScintilla::MarginType ) hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setMarginType( hb_parni( 2 ), ( QsciScintilla::MarginType ) hb_parni( 3 ) );
    }
 }
 
@@ -1605,10 +1421,8 @@ HB_FUNC( QT_QSCISCINTILLA_CLEARMARGINTEXT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->clearMarginText( hb_parnidef( 2, -1 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_CLEARMARGINTEXT FP=( p )->clearMarginText( hb_parnidef( 2, -1 ) ); p is NULL" ) );
+      ( p )->clearMarginText( hb_parnidef( 2, -1 ) );
    }
 }
 
@@ -1619,10 +1433,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETMARKERBACKGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setMarkerBackgroundColor( *hbqt_par_QColor( 2 ), hb_parnidef( 3, -1 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETMARKERBACKGROUNDCOLOR FP=( p )->setMarkerBackgroundColor( *hbqt_par_QColor( 2 ), hb_parnidef( 3, -1 ) ); p is NULL" ) );
+      ( p )->setMarkerBackgroundColor( *hbqt_par_QColor( 2 ), hb_parnidef( 3, -1 ) );
    }
 }
 
@@ -1633,10 +1445,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETMARKERFOREGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setMarkerForegroundColor( *hbqt_par_QColor( 2 ), hb_parnidef( 3, -1 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETMARKERFOREGROUNDCOLOR FP=( p )->setMarkerForegroundColor( *hbqt_par_QColor( 2 ), hb_parnidef( 3, -1 ) ); p is NULL" ) );
+      ( p )->setMarkerForegroundColor( *hbqt_par_QColor( 2 ), hb_parnidef( 3, -1 ) );
    }
 }
 
@@ -1647,10 +1457,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETMATCHEDBRACEBACKGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setMatchedBraceBackgroundColor( *hbqt_par_QColor( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETMATCHEDBRACEBACKGROUNDCOLOR FP=( p )->setMatchedBraceBackgroundColor( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+      ( p )->setMatchedBraceBackgroundColor( *hbqt_par_QColor( 2 ) );
    }
 }
 
@@ -1661,10 +1469,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETMATCHEDBRACEFOREGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setMatchedBraceForegroundColor( *hbqt_par_QColor( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETMATCHEDBRACEFOREGROUNDCOLOR FP=( p )->setMatchedBraceForegroundColor( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+      ( p )->setMatchedBraceForegroundColor( *hbqt_par_QColor( 2 ) );
    }
 }
 
@@ -1675,10 +1481,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETUNMATCHEDBRACEBACKGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setUnmatchedBraceBackgroundColor( *hbqt_par_QColor( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETUNMATCHEDBRACEBACKGROUNDCOLOR FP=( p )->setUnmatchedBraceBackgroundColor( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+      ( p )->setUnmatchedBraceBackgroundColor( *hbqt_par_QColor( 2 ) );
    }
 }
 
@@ -1689,10 +1493,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETUNMATCHEDBRACEFOREGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setUnmatchedBraceForegroundColor( *hbqt_par_QColor( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETUNMATCHEDBRACEFOREGROUNDCOLOR FP=( p )->setUnmatchedBraceForegroundColor( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+      ( p )->setUnmatchedBraceForegroundColor( *hbqt_par_QColor( 2 ) );
    }
 }
 
@@ -1703,10 +1505,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETWRAPVISUALFLAGS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setWrapVisualFlags( ( QsciScintilla::WrapVisualFlag ) hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( QsciScintilla::WrapVisualFlag ) hb_parni( 3 ) : ( QsciScintilla::WrapVisualFlag ) QsciScintilla::WrapFlagNone ), hb_parni( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETWRAPVISUALFLAGS FP=( p )->setWrapVisualFlags( ( QsciScintilla::WrapVisualFlag ) hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( QsciScintilla::WrapVisualFlag ) hb_parni( 3 ) : ( QsciScintilla::WrapVisualFlag ) QsciScintilla::WrapFlagNone ), hb_parni( 4 ) ); p is NULL" ) );
+      ( p )->setWrapVisualFlags( ( QsciScintilla::WrapVisualFlag ) hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( QsciScintilla::WrapVisualFlag ) hb_parni( 3 ) : ( QsciScintilla::WrapVisualFlag ) QsciScintilla::WrapFlagNone ), hb_parni( 4 ) );
    }
 }
 
@@ -1717,10 +1517,8 @@ HB_FUNC( QT_QSCISCINTILLA_SELECTEDTEXT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retc( ( p )->selectedText().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SELECTEDTEXT FP=hb_retc( ( p )->selectedText().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->selectedText().toUtf8().data() );
    }
 }
 
@@ -1731,10 +1529,8 @@ HB_FUNC( QT_QSCISCINTILLA_SELECTIONTOEOL )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retl( ( p )->selectionToEol() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SELECTIONTOEOL FP=hb_retl( ( p )->selectionToEol() ); p is NULL" ) );
+      hb_retl( ( p )->selectionToEol() );
    }
 }
 
@@ -1745,10 +1541,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETSELECTIONTOEOL )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setSelectionToEol( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETSELECTIONTOEOL FP=( p )->setSelectionToEol( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setSelectionToEol( hb_parl( 2 ) );
    }
 }
 
@@ -1759,10 +1553,8 @@ HB_FUNC( QT_QSCISCINTILLA_SHOWUSERLIST )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->showUserList( hb_parni( 2 ), *hbqt_par_QStringList( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SHOWUSERLIST FP=( p )->showUserList( hb_parni( 2 ), *hbqt_par_QStringList( 3 ) ); p is NULL" ) );
+      ( p )->showUserList( hb_parni( 2 ), *hbqt_par_QStringList( 3 ) );
    }
 }
 
@@ -1773,10 +1565,8 @@ HB_FUNC( QT_QSCISCINTILLA_STANDARDCOMMANDS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QsciCommandSet( ( p )->standardCommands(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_STANDARDCOMMANDS FP=hb_retptrGC( hbqt_gcAllocate_QsciCommandSet( ( p )->standardCommands(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QsciCommandSet( ( p )->standardCommands(), false ) );
    }
 }
 
@@ -1787,10 +1577,8 @@ HB_FUNC( QT_QSCISCINTILLA_TABINDENTS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retl( ( p )->tabIndents() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_TABINDENTS FP=hb_retl( ( p )->tabIndents() ); p is NULL" ) );
+      hb_retl( ( p )->tabIndents() );
    }
 }
 
@@ -1801,10 +1589,8 @@ HB_FUNC( QT_QSCISCINTILLA_TABWIDTH )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( p )->tabWidth() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_TABWIDTH FP=hb_retni( ( p )->tabWidth() ); p is NULL" ) );
+      hb_retni( ( p )->tabWidth() );
    }
 }
 
@@ -1815,10 +1601,8 @@ HB_FUNC( QT_QSCISCINTILLA_TEXT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retc( ( p )->text().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_TEXT FP=hb_retc( ( p )->text().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->text().toUtf8().data() );
    }
 }
 
@@ -1829,10 +1613,8 @@ HB_FUNC( QT_QSCISCINTILLA_TEXT_1 )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retc( ( p )->text( hb_parni( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_TEXT_1 FP=hb_retc( ( p )->text( hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->text( hb_parni( 2 ) ).toUtf8().data() );
    }
 }
 
@@ -1843,10 +1625,8 @@ HB_FUNC( QT_QSCISCINTILLA_TEXTHEIGHT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( p )->textHeight( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_TEXTHEIGHT FP=hb_retni( ( p )->textHeight( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->textHeight( hb_parni( 2 ) ) );
    }
 }
 
@@ -1857,10 +1637,8 @@ HB_FUNC( QT_QSCISCINTILLA_WHITESPACEVISIBILITY )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( QsciScintilla::WhitespaceVisibility ) ( p )->whitespaceVisibility() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_WHITESPACEVISIBILITY FP=hb_retni( ( QsciScintilla::WhitespaceVisibility ) ( p )->whitespaceVisibility() ); p is NULL" ) );
+      hb_retni( ( QsciScintilla::WhitespaceVisibility ) ( p )->whitespaceVisibility() );
    }
 }
 
@@ -1871,10 +1649,8 @@ HB_FUNC( QT_QSCISCINTILLA_WORDATPOINT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retc( ( p )->wordAtPoint( *hbqt_par_QPoint( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_WORDATPOINT FP=hb_retc( ( p )->wordAtPoint( *hbqt_par_QPoint( 2 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->wordAtPoint( *hbqt_par_QPoint( 2 ) ).toUtf8().data() );
    }
 }
 
@@ -1885,10 +1661,8 @@ HB_FUNC( QT_QSCISCINTILLA_WORDCHARACTERS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retc( ( p )->wordCharacters() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_WORDCHARACTERS FP=hb_retc( ( p )->wordCharacters() ); p is NULL" ) );
+      hb_retc( ( p )->wordCharacters() );
    }
 }
 
@@ -1899,10 +1673,8 @@ HB_FUNC( QT_QSCISCINTILLA_WRAPMODE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retni( ( QsciScintilla::WrapMode ) ( p )->wrapMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_WRAPMODE FP=hb_retni( ( QsciScintilla::WrapMode ) ( p )->wrapMode() ); p is NULL" ) );
+      hb_retni( ( QsciScintilla::WrapMode ) ( p )->wrapMode() );
    }
 }
 
@@ -1913,10 +1685,8 @@ HB_FUNC( QT_QSCISCINTILLA_WRITE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      hb_retl( ( p )->write( hbqt_par_QIODevice( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_WRITE FP=hb_retl( ( p )->write( hbqt_par_QIODevice( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->write( hbqt_par_QIODevice( 2 ) ) );
    }
 }
 
@@ -1927,10 +1697,10 @@ HB_FUNC( QT_QSCISCINTILLA_APPEND )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->append( QsciScintilla::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_APPEND FP=( p )->append( QsciScintilla::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->append( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -1941,10 +1711,8 @@ HB_FUNC( QT_QSCISCINTILLA_AUTOCOMPLETEFROMALL )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->autoCompleteFromAll();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_AUTOCOMPLETEFROMALL FP=( p )->autoCompleteFromAll(); p is NULL" ) );
+      ( p )->autoCompleteFromAll();
    }
 }
 
@@ -1955,10 +1723,8 @@ HB_FUNC( QT_QSCISCINTILLA_AUTOCOMPLETEFROMAPIS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->autoCompleteFromAPIs();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_AUTOCOMPLETEFROMAPIS FP=( p )->autoCompleteFromAPIs(); p is NULL" ) );
+      ( p )->autoCompleteFromAPIs();
    }
 }
 
@@ -1969,10 +1735,8 @@ HB_FUNC( QT_QSCISCINTILLA_AUTOCOMPLETEFROMDOCUMENT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->autoCompleteFromDocument();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_AUTOCOMPLETEFROMDOCUMENT FP=( p )->autoCompleteFromDocument(); p is NULL" ) );
+      ( p )->autoCompleteFromDocument();
    }
 }
 
@@ -1983,10 +1747,8 @@ HB_FUNC( QT_QSCISCINTILLA_CALLTIP )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->callTip();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_CALLTIP FP=( p )->callTip(); p is NULL" ) );
+      ( p )->callTip();
    }
 }
 
@@ -1997,10 +1759,8 @@ HB_FUNC( QT_QSCISCINTILLA_CLEAR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->clear();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_CLEAR FP=( p )->clear(); p is NULL" ) );
+      ( p )->clear();
    }
 }
 
@@ -2011,10 +1771,8 @@ HB_FUNC( QT_QSCISCINTILLA_COPY )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->copy();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_COPY FP=( p )->copy(); p is NULL" ) );
+      ( p )->copy();
    }
 }
 
@@ -2025,10 +1783,8 @@ HB_FUNC( QT_QSCISCINTILLA_CUT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->cut();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_CUT FP=( p )->cut(); p is NULL" ) );
+      ( p )->cut();
    }
 }
 
@@ -2039,10 +1795,8 @@ HB_FUNC( QT_QSCISCINTILLA_ENSURECURSORVISIBLE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->ensureCursorVisible();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_ENSURECURSORVISIBLE FP=( p )->ensureCursorVisible(); p is NULL" ) );
+      ( p )->ensureCursorVisible();
    }
 }
 
@@ -2053,10 +1807,8 @@ HB_FUNC( QT_QSCISCINTILLA_ENSURELINEVISIBLE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->ensureLineVisible( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_ENSURELINEVISIBLE FP=( p )->ensureLineVisible( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->ensureLineVisible( hb_parni( 2 ) );
    }
 }
 
@@ -2067,10 +1819,8 @@ HB_FUNC( QT_QSCISCINTILLA_FOLDALL )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->foldAll( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_FOLDALL FP=( p )->foldAll( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->foldAll( hb_parl( 2 ) );
    }
 }
 
@@ -2081,10 +1831,8 @@ HB_FUNC( QT_QSCISCINTILLA_FOLDLINE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->foldLine( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_FOLDLINE FP=( p )->foldLine( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->foldLine( hb_parni( 2 ) );
    }
 }
 
@@ -2095,10 +1843,8 @@ HB_FUNC( QT_QSCISCINTILLA_INDENT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->indent( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_INDENT FP=( p )->indent( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->indent( hb_parni( 2 ) );
    }
 }
 
@@ -2109,10 +1855,10 @@ HB_FUNC( QT_QSCISCINTILLA_INSERT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->insert( QsciScintilla::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_INSERT FP=( p )->insert( QsciScintilla::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->insert( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -2123,10 +1869,10 @@ HB_FUNC( QT_QSCISCINTILLA_INSERTAT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->insertAt( QsciScintilla::tr( hb_parc( 2 ) ), hb_parni( 3 ), hb_parni( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_INSERTAT FP=( p )->insertAt( QsciScintilla::tr( hb_parc( 2 ) ), hb_parni( 3 ), hb_parni( 4 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->insertAt( hb_parstr_utf8( 2, &pText, NULL ), hb_parni( 3 ), hb_parni( 4 ) );
+      hb_strfree( pText );
    }
 }
 
@@ -2137,10 +1883,8 @@ HB_FUNC( QT_QSCISCINTILLA_MOVETOMATCHINGBRACE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->moveToMatchingBrace();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_MOVETOMATCHINGBRACE FP=( p )->moveToMatchingBrace(); p is NULL" ) );
+      ( p )->moveToMatchingBrace();
    }
 }
 
@@ -2151,10 +1895,8 @@ HB_FUNC( QT_QSCISCINTILLA_PASTE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->paste();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_PASTE FP=( p )->paste(); p is NULL" ) );
+      ( p )->paste();
    }
 }
 
@@ -2165,10 +1907,8 @@ HB_FUNC( QT_QSCISCINTILLA_REDO )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->redo();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_REDO FP=( p )->redo(); p is NULL" ) );
+      ( p )->redo();
    }
 }
 
@@ -2179,10 +1919,8 @@ HB_FUNC( QT_QSCISCINTILLA_REMOVESELECTEDTEXT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->removeSelectedText();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_REMOVESELECTEDTEXT FP=( p )->removeSelectedText(); p is NULL" ) );
+      ( p )->removeSelectedText();
    }
 }
 
@@ -2193,10 +1931,8 @@ HB_FUNC( QT_QSCISCINTILLA_RESETSELECTIONBACKGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->resetSelectionBackgroundColor();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_RESETSELECTIONBACKGROUNDCOLOR FP=( p )->resetSelectionBackgroundColor(); p is NULL" ) );
+      ( p )->resetSelectionBackgroundColor();
    }
 }
 
@@ -2207,10 +1943,8 @@ HB_FUNC( QT_QSCISCINTILLA_RESETSELECTIONFOREGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->resetSelectionForegroundColor();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_RESETSELECTIONFOREGROUNDCOLOR FP=( p )->resetSelectionForegroundColor(); p is NULL" ) );
+      ( p )->resetSelectionForegroundColor();
    }
 }
 
@@ -2221,10 +1955,8 @@ HB_FUNC( QT_QSCISCINTILLA_SELECTALL )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->selectAll( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SELECTALL FP=( p )->selectAll( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->selectAll( hb_parl( 2 ) );
    }
 }
 
@@ -2235,10 +1967,8 @@ HB_FUNC( QT_QSCISCINTILLA_SELECTTOMATCHINGBRACE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->selectToMatchingBrace();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SELECTTOMATCHINGBRACE FP=( p )->selectToMatchingBrace(); p is NULL" ) );
+      ( p )->selectToMatchingBrace();
    }
 }
 
@@ -2249,10 +1979,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETAUTOCOMPLETIONCASESENSITIVITY )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setAutoCompletionCaseSensitivity( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETAUTOCOMPLETIONCASESENSITIVITY FP=( p )->setAutoCompletionCaseSensitivity( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setAutoCompletionCaseSensitivity( hb_parl( 2 ) );
    }
 }
 
@@ -2263,10 +1991,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETAUTOCOMPLETIONREPLACEWORD )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setAutoCompletionReplaceWord( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETAUTOCOMPLETIONREPLACEWORD FP=( p )->setAutoCompletionReplaceWord( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setAutoCompletionReplaceWord( hb_parl( 2 ) );
    }
 }
 
@@ -2277,10 +2003,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETAUTOCOMPLETIONSHOWSINGLE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setAutoCompletionShowSingle( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETAUTOCOMPLETIONSHOWSINGLE FP=( p )->setAutoCompletionShowSingle( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setAutoCompletionShowSingle( hb_parl( 2 ) );
    }
 }
 
@@ -2291,10 +2015,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETAUTOCOMPLETIONSOURCE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setAutoCompletionSource( ( QsciScintilla::AutoCompletionSource ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETAUTOCOMPLETIONSOURCE FP=( p )->setAutoCompletionSource( ( QsciScintilla::AutoCompletionSource ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setAutoCompletionSource( ( QsciScintilla::AutoCompletionSource ) hb_parni( 2 ) );
    }
 }
 
@@ -2305,10 +2027,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETAUTOCOMPLETIONTHRESHOLD )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setAutoCompletionThreshold( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETAUTOCOMPLETIONTHRESHOLD FP=( p )->setAutoCompletionThreshold( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setAutoCompletionThreshold( hb_parni( 2 ) );
    }
 }
 
@@ -2319,10 +2039,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETAUTOINDENT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setAutoIndent( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETAUTOINDENT FP=( p )->setAutoIndent( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setAutoIndent( hb_parl( 2 ) );
    }
 }
 
@@ -2333,10 +2051,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETBRACEMATCHING )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setBraceMatching( ( QsciScintilla::BraceMatch ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETBRACEMATCHING FP=( p )->setBraceMatching( ( QsciScintilla::BraceMatch ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setBraceMatching( ( QsciScintilla::BraceMatch ) hb_parni( 2 ) );
    }
 }
 
@@ -2347,10 +2063,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETBACKSPACEUNINDENTS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setBackspaceUnindents( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETBACKSPACEUNINDENTS FP=( p )->setBackspaceUnindents( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setBackspaceUnindents( hb_parl( 2 ) );
    }
 }
 
@@ -2361,10 +2075,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETCARETFOREGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setCaretForegroundColor( *hbqt_par_QColor( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETCARETFOREGROUNDCOLOR FP=( p )->setCaretForegroundColor( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+      ( p )->setCaretForegroundColor( *hbqt_par_QColor( 2 ) );
    }
 }
 
@@ -2375,10 +2087,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETCARETLINEBACKGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setCaretLineBackgroundColor( *hbqt_par_QColor( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETCARETLINEBACKGROUNDCOLOR FP=( p )->setCaretLineBackgroundColor( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+      ( p )->setCaretLineBackgroundColor( *hbqt_par_QColor( 2 ) );
    }
 }
 
@@ -2389,10 +2099,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETCARETLINEVISIBLE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setCaretLineVisible( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETCARETLINEVISIBLE FP=( p )->setCaretLineVisible( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setCaretLineVisible( hb_parl( 2 ) );
    }
 }
 
@@ -2403,10 +2111,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETCARETWIDTH )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setCaretWidth( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETCARETWIDTH FP=( p )->setCaretWidth( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setCaretWidth( hb_parni( 2 ) );
    }
 }
 
@@ -2417,10 +2123,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setColor( *hbqt_par_QColor( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETCOLOR FP=( p )->setColor( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+      ( p )->setColor( *hbqt_par_QColor( 2 ) );
    }
 }
 
@@ -2431,10 +2135,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETCURSORPOSITION )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setCursorPosition( hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETCURSORPOSITION FP=( p )->setCursorPosition( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setCursorPosition( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -2445,10 +2147,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETEOLMODE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setEolMode( ( QsciScintilla::EolMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETEOLMODE FP=( p )->setEolMode( ( QsciScintilla::EolMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setEolMode( ( QsciScintilla::EolMode ) hb_parni( 2 ) );
    }
 }
 
@@ -2459,10 +2159,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETEOLVISIBILITY )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setEolVisibility( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETEOLVISIBILITY FP=( p )->setEolVisibility( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setEolVisibility( hb_parl( 2 ) );
    }
 }
 
@@ -2473,10 +2171,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETFOLDING )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setFolding( ( QsciScintilla::FoldStyle ) hb_parni( 2 ), hb_parnidef( 3, 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETFOLDING FP=( p )->setFolding( ( QsciScintilla::FoldStyle ) hb_parni( 2 ), hb_parnidef( 3, 2 ) ); p is NULL" ) );
+      ( p )->setFolding( ( QsciScintilla::FoldStyle ) hb_parni( 2 ), hb_parnidef( 3, 2 ) );
    }
 }
 
@@ -2487,10 +2183,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETINDENTATION )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setIndentation( hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETINDENTATION FP=( p )->setIndentation( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setIndentation( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -2501,10 +2195,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETINDENTATIONGUIDES )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setIndentationGuides( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETINDENTATIONGUIDES FP=( p )->setIndentationGuides( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setIndentationGuides( hb_parl( 2 ) );
    }
 }
 
@@ -2515,10 +2207,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETINDENTATIONGUIDESBACKGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setIndentationGuidesBackgroundColor( *hbqt_par_QColor( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETINDENTATIONGUIDESBACKGROUNDCOLOR FP=( p )->setIndentationGuidesBackgroundColor( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+      ( p )->setIndentationGuidesBackgroundColor( *hbqt_par_QColor( 2 ) );
    }
 }
 
@@ -2529,10 +2219,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETINDENTATIONGUIDESFOREGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setIndentationGuidesForegroundColor( *hbqt_par_QColor( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETINDENTATIONGUIDESFOREGROUNDCOLOR FP=( p )->setIndentationGuidesForegroundColor( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+      ( p )->setIndentationGuidesForegroundColor( *hbqt_par_QColor( 2 ) );
    }
 }
 
@@ -2543,10 +2231,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETINDENTATIONSUSETABS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setIndentationsUseTabs( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETINDENTATIONSUSETABS FP=( p )->setIndentationsUseTabs( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setIndentationsUseTabs( hb_parl( 2 ) );
    }
 }
 
@@ -2557,10 +2243,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETINDENTATIONWIDTH )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setIndentationWidth( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETINDENTATIONWIDTH FP=( p )->setIndentationWidth( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setIndentationWidth( hb_parni( 2 ) );
    }
 }
 
@@ -2571,10 +2255,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETLEXER )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setLexer( hbqt_par_QsciLexer( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETLEXER FP=( p )->setLexer( hbqt_par_QsciLexer( 2 ) ); p is NULL" ) );
+      ( p )->setLexer( hbqt_par_QsciLexer( 2 ) );
    }
 }
 
@@ -2585,10 +2267,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETMARGINSBACKGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setMarginsBackgroundColor( *hbqt_par_QColor( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETMARGINSBACKGROUNDCOLOR FP=( p )->setMarginsBackgroundColor( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+      ( p )->setMarginsBackgroundColor( *hbqt_par_QColor( 2 ) );
    }
 }
 
@@ -2599,10 +2279,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETMARGINSFONT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setMarginsFont( *hbqt_par_QFont( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETMARGINSFONT FP=( p )->setMarginsFont( *hbqt_par_QFont( 2 ) ); p is NULL" ) );
+      ( p )->setMarginsFont( *hbqt_par_QFont( 2 ) );
    }
 }
 
@@ -2613,10 +2291,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETMARGINSFOREGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setMarginsForegroundColor( *hbqt_par_QColor( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETMARGINSFOREGROUNDCOLOR FP=( p )->setMarginsForegroundColor( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+      ( p )->setMarginsForegroundColor( *hbqt_par_QColor( 2 ) );
    }
 }
 
@@ -2627,10 +2303,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETMARGINLINENUMBERS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setMarginLineNumbers( hb_parni( 2 ), hb_parl( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETMARGINLINENUMBERS FP=( p )->setMarginLineNumbers( hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+      ( p )->setMarginLineNumbers( hb_parni( 2 ), hb_parl( 3 ) );
    }
 }
 
@@ -2641,10 +2315,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETMARGINMARKERMASK )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setMarginMarkerMask( hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETMARGINMARKERMASK FP=( p )->setMarginMarkerMask( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setMarginMarkerMask( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -2655,10 +2327,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETMARGINSENSITIVITY )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setMarginSensitivity( hb_parni( 2 ), hb_parl( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETMARGINSENSITIVITY FP=( p )->setMarginSensitivity( hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+      ( p )->setMarginSensitivity( hb_parni( 2 ), hb_parl( 3 ) );
    }
 }
 
@@ -2669,10 +2339,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETMARGINWIDTH )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setMarginWidth( hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETMARGINWIDTH FP=( p )->setMarginWidth( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setMarginWidth( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -2683,10 +2351,10 @@ HB_FUNC( QT_QSCISCINTILLA_SETMARGINWIDTH_1 )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setMarginWidth( hb_parni( 2 ), QsciScintilla::tr( hb_parc( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETMARGINWIDTH_1 FP=( p )->setMarginWidth( hb_parni( 2 ), QsciScintilla::tr( hb_parc( 3 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setMarginWidth( hb_parni( 2 ), hb_parstr_utf8( 3, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -2697,10 +2365,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETMODIFIED )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setModified( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETMODIFIED FP=( p )->setModified( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setModified( hb_parl( 2 ) );
    }
 }
 
@@ -2711,10 +2377,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETPAPER )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setPaper( *hbqt_par_QColor( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETPAPER FP=( p )->setPaper( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+      ( p )->setPaper( *hbqt_par_QColor( 2 ) );
    }
 }
 
@@ -2725,10 +2389,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETREADONLY )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setReadOnly( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETREADONLY FP=( p )->setReadOnly( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setReadOnly( hb_parl( 2 ) );
    }
 }
 
@@ -2739,10 +2401,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETSELECTION )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setSelection( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETSELECTION FP=( p )->setSelection( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ); p is NULL" ) );
+      ( p )->setSelection( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
    }
 }
 
@@ -2753,10 +2413,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETSELECTIONBACKGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setSelectionBackgroundColor( *hbqt_par_QColor( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETSELECTIONBACKGROUNDCOLOR FP=( p )->setSelectionBackgroundColor( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+      ( p )->setSelectionBackgroundColor( *hbqt_par_QColor( 2 ) );
    }
 }
 
@@ -2767,10 +2425,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETSELECTIONFOREGROUNDCOLOR )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setSelectionForegroundColor( *hbqt_par_QColor( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETSELECTIONFOREGROUNDCOLOR FP=( p )->setSelectionForegroundColor( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+      ( p )->setSelectionForegroundColor( *hbqt_par_QColor( 2 ) );
    }
 }
 
@@ -2781,10 +2437,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETTABINDENTS )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setTabIndents( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETTABINDENTS FP=( p )->setTabIndents( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setTabIndents( hb_parl( 2 ) );
    }
 }
 
@@ -2795,10 +2449,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETTABWIDTH )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setTabWidth( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETTABWIDTH FP=( p )->setTabWidth( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setTabWidth( hb_parni( 2 ) );
    }
 }
 
@@ -2809,10 +2461,10 @@ HB_FUNC( QT_QSCISCINTILLA_SETTEXT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setText( QsciScintilla::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETTEXT FP=( p )->setText( QsciScintilla::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setText( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -2823,10 +2475,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETUTF8 )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setUtf8( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETUTF8 FP=( p )->setUtf8( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setUtf8( hb_parl( 2 ) );
    }
 }
 
@@ -2837,10 +2487,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETWHITESPACEVISIBILITY )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setWhitespaceVisibility( ( QsciScintilla::WhitespaceVisibility ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETWHITESPACEVISIBILITY FP=( p )->setWhitespaceVisibility( ( QsciScintilla::WhitespaceVisibility ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setWhitespaceVisibility( ( QsciScintilla::WhitespaceVisibility ) hb_parni( 2 ) );
    }
 }
 
@@ -2851,10 +2499,8 @@ HB_FUNC( QT_QSCISCINTILLA_SETWRAPMODE )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->setWrapMode( ( QsciScintilla::WrapMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_SETWRAPMODE FP=( p )->setWrapMode( ( QsciScintilla::WrapMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setWrapMode( ( QsciScintilla::WrapMode ) hb_parni( 2 ) );
    }
 }
 
@@ -2865,10 +2511,8 @@ HB_FUNC( QT_QSCISCINTILLA_UNDO )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->undo();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_UNDO FP=( p )->undo(); p is NULL" ) );
+      ( p )->undo();
    }
 }
 
@@ -2879,10 +2523,8 @@ HB_FUNC( QT_QSCISCINTILLA_UNINDENT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->unindent( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_UNINDENT FP=( p )->unindent( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->unindent( hb_parni( 2 ) );
    }
 }
 
@@ -2893,10 +2535,8 @@ HB_FUNC( QT_QSCISCINTILLA_ZOOMIN )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->zoomIn( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_ZOOMIN FP=( p )->zoomIn( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->zoomIn( hb_parni( 2 ) );
    }
 }
 
@@ -2907,10 +2547,8 @@ HB_FUNC( QT_QSCISCINTILLA_ZOOMIN_1 )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->zoomIn();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_ZOOMIN_1 FP=( p )->zoomIn(); p is NULL" ) );
+      ( p )->zoomIn();
    }
 }
 
@@ -2921,10 +2559,8 @@ HB_FUNC( QT_QSCISCINTILLA_ZOOMOUT )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->zoomOut( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_ZOOMOUT FP=( p )->zoomOut( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->zoomOut( hb_parni( 2 ) );
    }
 }
 
@@ -2935,10 +2571,8 @@ HB_FUNC( QT_QSCISCINTILLA_ZOOMOUT_1 )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->zoomOut();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_ZOOMOUT_1 FP=( p )->zoomOut(); p is NULL" ) );
+      ( p )->zoomOut();
    }
 }
 
@@ -2949,10 +2583,8 @@ HB_FUNC( QT_QSCISCINTILLA_ZOOMTO )
 {
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
-      ( p )->zoomTo( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISCINTILLA_ZOOMTO FP=( p )->zoomTo( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->zoomTo( hb_parni( 2 ) );
    }
 }
 

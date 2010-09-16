@@ -157,10 +157,10 @@ HB_FUNC( QT_QERRORMESSAGE_SHOWMESSAGE )
 {
    QErrorMessage * p = hbqt_par_QErrorMessage( 1 );
    if( p )
-      ( p )->showMessage( QErrorMessage::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QERRORMESSAGE_SHOWMESSAGE FP=( p )->showMessage( QErrorMessage::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->showMessage( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -171,10 +171,10 @@ HB_FUNC( QT_QERRORMESSAGE_SHOWMESSAGE_1 )
 {
    QErrorMessage * p = hbqt_par_QErrorMessage( 1 );
    if( p )
-      ( p )->showMessage( QErrorMessage::tr( hb_parc( 2 ) ), QErrorMessage::tr( hb_parc( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QERRORMESSAGE_SHOWMESSAGE_1 FP=( p )->showMessage( QErrorMessage::tr( hb_parc( 2 ) ), QErrorMessage::tr( hb_parc( 3 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->showMessage( hb_parstr_utf8( 2, &pText, NULL ), hb_parstr_utf8( 3, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 

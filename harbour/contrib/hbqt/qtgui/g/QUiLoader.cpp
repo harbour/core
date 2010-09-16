@@ -165,10 +165,10 @@ HB_FUNC( QT_QUILOADER_ADDPLUGINPATH )
 {
    QUiLoader * p = hbqt_par_QUiLoader( 1 );
    if( p )
-      ( p )->addPluginPath( QUiLoader::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_ADDPLUGINPATH FP=( p )->addPluginPath( QUiLoader::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->addPluginPath( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -179,10 +179,8 @@ HB_FUNC( QT_QUILOADER_AVAILABLELAYOUTS )
 {
    QUiLoader * p = hbqt_par_QUiLoader( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->availableLayouts() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_AVAILABLELAYOUTS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->availableLayouts() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->availableLayouts() ), true ) );
    }
 }
 
@@ -193,10 +191,8 @@ HB_FUNC( QT_QUILOADER_AVAILABLEWIDGETS )
 {
    QUiLoader * p = hbqt_par_QUiLoader( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->availableWidgets() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_AVAILABLEWIDGETS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->availableWidgets() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->availableWidgets() ), true ) );
    }
 }
 
@@ -207,10 +203,8 @@ HB_FUNC( QT_QUILOADER_CLEARPLUGINPATHS )
 {
    QUiLoader * p = hbqt_par_QUiLoader( 1 );
    if( p )
-      ( p )->clearPluginPaths();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_CLEARPLUGINPATHS FP=( p )->clearPluginPaths(); p is NULL" ) );
+      ( p )->clearPluginPaths();
    }
 }
 
@@ -221,10 +215,10 @@ HB_FUNC( QT_QUILOADER_CREATEACTION )
 {
    QUiLoader * p = hbqt_par_QUiLoader( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->createAction( hbqt_par_QObject( 2 ), QUiLoader::tr( hb_parc( 3 ) ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_CREATEACTION FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->createAction( hbqt_par_QObject( 2 ), QUiLoader::tr( hb_parc( 3 ) ) ), false ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->createAction( hbqt_par_QObject( 2 ), hb_parstr_utf8( 3, &pText, NULL ) ), false ) );
+      hb_strfree( pText );
    }
 }
 
@@ -235,10 +229,10 @@ HB_FUNC( QT_QUILOADER_CREATEACTIONGROUP )
 {
    QUiLoader * p = hbqt_par_QUiLoader( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QActionGroup( ( p )->createActionGroup( hbqt_par_QObject( 2 ), QUiLoader::tr( hb_parc( 3 ) ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_CREATEACTIONGROUP FP=hb_retptrGC( hbqt_gcAllocate_QActionGroup( ( p )->createActionGroup( hbqt_par_QObject( 2 ), QUiLoader::tr( hb_parc( 3 ) ) ), false ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QActionGroup( ( p )->createActionGroup( hbqt_par_QObject( 2 ), hb_parstr_utf8( 3, &pText, NULL ) ), false ) );
+      hb_strfree( pText );
    }
 }
 
@@ -249,10 +243,10 @@ HB_FUNC( QT_QUILOADER_CREATELAYOUT )
 {
    QUiLoader * p = hbqt_par_QUiLoader( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QLayout( ( p )->createLayout( QUiLoader::tr( hb_parc( 2 ) ), hbqt_par_QObject( 3 ), QUiLoader::tr( hb_parc( 4 ) ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_CREATELAYOUT FP=hb_retptrGC( hbqt_gcAllocate_QLayout( ( p )->createLayout( QUiLoader::tr( hb_parc( 2 ) ), hbqt_par_QObject( 3 ), QUiLoader::tr( hb_parc( 4 ) ) ), false ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QLayout( ( p )->createLayout( hb_parstr_utf8( 2, &pText, NULL ), hbqt_par_QObject( 3 ), hb_parstr_utf8( 4, &pText, NULL ) ), false ) );
+      hb_strfree( pText );
    }
 }
 
@@ -263,10 +257,10 @@ HB_FUNC( QT_QUILOADER_CREATEWIDGET )
 {
    QUiLoader * p = hbqt_par_QUiLoader( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->createWidget( QUiLoader::tr( hb_parc( 2 ) ), hbqt_par_QWidget( 3 ), QUiLoader::tr( hb_parc( 4 ) ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_CREATEWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->createWidget( QUiLoader::tr( hb_parc( 2 ) ), hbqt_par_QWidget( 3 ), QUiLoader::tr( hb_parc( 4 ) ) ), false ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->createWidget( hb_parstr_utf8( 2, &pText, NULL ), hbqt_par_QWidget( 3 ), hb_parstr_utf8( 4, &pText, NULL ) ), false ) );
+      hb_strfree( pText );
    }
 }
 
@@ -277,10 +271,8 @@ HB_FUNC( QT_QUILOADER_ISLANGUAGECHANGEENABLED )
 {
    QUiLoader * p = hbqt_par_QUiLoader( 1 );
    if( p )
-      hb_retl( ( p )->isLanguageChangeEnabled() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_ISLANGUAGECHANGEENABLED FP=hb_retl( ( p )->isLanguageChangeEnabled() ); p is NULL" ) );
+      hb_retl( ( p )->isLanguageChangeEnabled() );
    }
 }
 
@@ -291,10 +283,8 @@ HB_FUNC( QT_QUILOADER_LOAD )
 {
    QUiLoader * p = hbqt_par_QUiLoader( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->load( hbqt_par_QIODevice( 2 ), hbqt_par_QWidget( 3 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_LOAD FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->load( hbqt_par_QIODevice( 2 ), hbqt_par_QWidget( 3 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->load( hbqt_par_QIODevice( 2 ), hbqt_par_QWidget( 3 ) ), false ) );
    }
 }
 
@@ -305,10 +295,8 @@ HB_FUNC( QT_QUILOADER_PLUGINPATHS )
 {
    QUiLoader * p = hbqt_par_QUiLoader( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->pluginPaths() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_PLUGINPATHS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->pluginPaths() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->pluginPaths() ), true ) );
    }
 }
 
@@ -319,10 +307,8 @@ HB_FUNC( QT_QUILOADER_SETLANGUAGECHANGEENABLED )
 {
    QUiLoader * p = hbqt_par_QUiLoader( 1 );
    if( p )
-      ( p )->setLanguageChangeEnabled( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_SETLANGUAGECHANGEENABLED FP=( p )->setLanguageChangeEnabled( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setLanguageChangeEnabled( hb_parl( 2 ) );
    }
 }
 
@@ -333,10 +319,8 @@ HB_FUNC( QT_QUILOADER_SETWORKINGDIRECTORY )
 {
    QUiLoader * p = hbqt_par_QUiLoader( 1 );
    if( p )
-      ( p )->setWorkingDirectory( *hbqt_par_QDir( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_SETWORKINGDIRECTORY FP=( p )->setWorkingDirectory( *hbqt_par_QDir( 2 ) ); p is NULL" ) );
+      ( p )->setWorkingDirectory( *hbqt_par_QDir( 2 ) );
    }
 }
 
@@ -347,10 +331,8 @@ HB_FUNC( QT_QUILOADER_WORKINGDIRECTORY )
 {
    QUiLoader * p = hbqt_par_QUiLoader( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( ( p )->workingDirectory() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QUILOADER_WORKINGDIRECTORY FP=hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( ( p )->workingDirectory() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( ( p )->workingDirectory() ), true ) );
    }
 }
 

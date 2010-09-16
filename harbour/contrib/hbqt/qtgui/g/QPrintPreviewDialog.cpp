@@ -161,10 +161,8 @@ HB_FUNC( QT_QPRINTPREVIEWDIALOG_OPEN )
 {
    QPrintPreviewDialog * p = hbqt_par_QPrintPreviewDialog( 1 );
    if( p )
-      ( p )->open( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTPREVIEWDIALOG_OPEN FP=( p )->open( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) ); p is NULL" ) );
+      ( p )->open( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) );
    }
 }
 
@@ -175,10 +173,8 @@ HB_FUNC( QT_QPRINTPREVIEWDIALOG_PRINTER )
 {
    QPrintPreviewDialog * p = hbqt_par_QPrintPreviewDialog( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPrinter( ( p )->printer(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTPREVIEWDIALOG_PRINTER FP=hb_retptrGC( hbqt_gcAllocate_QPrinter( ( p )->printer(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPrinter( ( p )->printer(), false ) );
    }
 }
 

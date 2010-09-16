@@ -128,10 +128,8 @@ HB_FUNC( QT_QGRAPHICSSCENEHELPEVENT_SCENEPOS )
 {
    QGraphicsSceneHelpEvent * p = hbqt_par_QGraphicsSceneHelpEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->scenePos() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEHELPEVENT_SCENEPOS FP=hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->scenePos() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->scenePos() ), true ) );
    }
 }
 
@@ -142,10 +140,8 @@ HB_FUNC( QT_QGRAPHICSSCENEHELPEVENT_SCREENPOS )
 {
    QGraphicsSceneHelpEvent * p = hbqt_par_QGraphicsSceneHelpEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->screenPos() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEHELPEVENT_SCREENPOS FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->screenPos() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->screenPos() ), true ) );
    }
 }
 

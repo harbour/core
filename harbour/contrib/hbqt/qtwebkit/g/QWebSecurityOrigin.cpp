@@ -149,10 +149,8 @@ HB_FUNC( QT_QWEBSECURITYORIGIN_DATABASEQUOTA )
 {
    QWebSecurityOrigin * p = hbqt_par_QWebSecurityOrigin( 1 );
    if( p )
-      hb_retnint( ( p )->databaseQuota() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSECURITYORIGIN_DATABASEQUOTA FP=hb_retnint( ( p )->databaseQuota() ); p is NULL" ) );
+      hb_retnint( ( p )->databaseQuota() );
    }
 }
 
@@ -163,10 +161,8 @@ HB_FUNC( QT_QWEBSECURITYORIGIN_DATABASEUSAGE )
 {
    QWebSecurityOrigin * p = hbqt_par_QWebSecurityOrigin( 1 );
    if( p )
-      hb_retnint( ( p )->databaseUsage() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSECURITYORIGIN_DATABASEUSAGE FP=hb_retnint( ( p )->databaseUsage() ); p is NULL" ) );
+      hb_retnint( ( p )->databaseUsage() );
    }
 }
 
@@ -177,10 +173,8 @@ HB_FUNC( QT_QWEBSECURITYORIGIN_HOST )
 {
    QWebSecurityOrigin * p = hbqt_par_QWebSecurityOrigin( 1 );
    if( p )
-      hb_retc( ( p )->host().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSECURITYORIGIN_HOST FP=hb_retc( ( p )->host().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->host().toUtf8().data() );
    }
 }
 
@@ -191,10 +185,8 @@ HB_FUNC( QT_QWEBSECURITYORIGIN_PORT )
 {
    QWebSecurityOrigin * p = hbqt_par_QWebSecurityOrigin( 1 );
    if( p )
-      hb_retni( ( p )->port() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSECURITYORIGIN_PORT FP=hb_retni( ( p )->port() ); p is NULL" ) );
+      hb_retni( ( p )->port() );
    }
 }
 
@@ -205,10 +197,8 @@ HB_FUNC( QT_QWEBSECURITYORIGIN_SCHEME )
 {
    QWebSecurityOrigin * p = hbqt_par_QWebSecurityOrigin( 1 );
    if( p )
-      hb_retc( ( p )->scheme().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSECURITYORIGIN_SCHEME FP=hb_retc( ( p )->scheme().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->scheme().toUtf8().data() );
    }
 }
 
@@ -219,10 +209,8 @@ HB_FUNC( QT_QWEBSECURITYORIGIN_SETDATABASEQUOTA )
 {
    QWebSecurityOrigin * p = hbqt_par_QWebSecurityOrigin( 1 );
    if( p )
-      ( p )->setDatabaseQuota( hb_parnint( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSECURITYORIGIN_SETDATABASEQUOTA FP=( p )->setDatabaseQuota( hb_parnint( 2 ) ); p is NULL" ) );
+      ( p )->setDatabaseQuota( hb_parnint( 2 ) );
    }
 }
 
@@ -233,10 +221,8 @@ HB_FUNC( QT_QWEBSECURITYORIGIN_ALLORIGINS )
 {
    QWebSecurityOrigin * p = hbqt_par_QWebSecurityOrigin( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QWebSecurityOrigin>( ( p )->allOrigins() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBSECURITYORIGIN_ALLORIGINS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QWebSecurityOrigin>( ( p )->allOrigins() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QWebSecurityOrigin>( ( p )->allOrigins() ), true ) );
    }
 }
 

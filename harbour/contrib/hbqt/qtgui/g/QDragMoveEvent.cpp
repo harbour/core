@@ -127,10 +127,8 @@ HB_FUNC( QT_QDRAGMOVEEVENT_ACCEPT )
 {
    QDragMoveEvent * p = hbqt_par_QDragMoveEvent( 1 );
    if( p )
-      ( p )->accept( *hbqt_par_QRect( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDRAGMOVEEVENT_ACCEPT FP=( p )->accept( *hbqt_par_QRect( 2 ) ); p is NULL" ) );
+      ( p )->accept( *hbqt_par_QRect( 2 ) );
    }
 }
 
@@ -141,10 +139,8 @@ HB_FUNC( QT_QDRAGMOVEEVENT_ACCEPT_1 )
 {
    QDragMoveEvent * p = hbqt_par_QDragMoveEvent( 1 );
    if( p )
-      ( p )->accept();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDRAGMOVEEVENT_ACCEPT_1 FP=( p )->accept(); p is NULL" ) );
+      ( p )->accept();
    }
 }
 
@@ -155,10 +151,8 @@ HB_FUNC( QT_QDRAGMOVEEVENT_ANSWERRECT )
 {
    QDragMoveEvent * p = hbqt_par_QDragMoveEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->answerRect() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDRAGMOVEEVENT_ANSWERRECT FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->answerRect() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->answerRect() ), true ) );
    }
 }
 
@@ -169,10 +163,8 @@ HB_FUNC( QT_QDRAGMOVEEVENT_IGNORE )
 {
    QDragMoveEvent * p = hbqt_par_QDragMoveEvent( 1 );
    if( p )
-      ( p )->ignore( *hbqt_par_QRect( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDRAGMOVEEVENT_IGNORE FP=( p )->ignore( *hbqt_par_QRect( 2 ) ); p is NULL" ) );
+      ( p )->ignore( *hbqt_par_QRect( 2 ) );
    }
 }
 
@@ -183,10 +175,8 @@ HB_FUNC( QT_QDRAGMOVEEVENT_IGNORE_1 )
 {
    QDragMoveEvent * p = hbqt_par_QDragMoveEvent( 1 );
    if( p )
-      ( p )->ignore();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDRAGMOVEEVENT_IGNORE_1 FP=( p )->ignore(); p is NULL" ) );
+      ( p )->ignore();
    }
 }
 

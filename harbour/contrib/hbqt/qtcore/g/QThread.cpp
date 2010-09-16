@@ -159,10 +159,8 @@ HB_FUNC( QT_QTHREAD_EXIT )
 {
    QThread * p = hbqt_par_QThread( 1 );
    if( p )
-      ( p )->exit( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_EXIT FP=( p )->exit( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->exit( hb_parni( 2 ) );
    }
 }
 
@@ -173,10 +171,8 @@ HB_FUNC( QT_QTHREAD_ISFINISHED )
 {
    QThread * p = hbqt_par_QThread( 1 );
    if( p )
-      hb_retl( ( p )->isFinished() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_ISFINISHED FP=hb_retl( ( p )->isFinished() ); p is NULL" ) );
+      hb_retl( ( p )->isFinished() );
    }
 }
 
@@ -187,10 +183,8 @@ HB_FUNC( QT_QTHREAD_ISRUNNING )
 {
    QThread * p = hbqt_par_QThread( 1 );
    if( p )
-      hb_retl( ( p )->isRunning() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_ISRUNNING FP=hb_retl( ( p )->isRunning() ); p is NULL" ) );
+      hb_retl( ( p )->isRunning() );
    }
 }
 
@@ -201,10 +195,8 @@ HB_FUNC( QT_QTHREAD_PRIORITY )
 {
    QThread * p = hbqt_par_QThread( 1 );
    if( p )
-      hb_retni( ( QThread::Priority ) ( p )->priority() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_PRIORITY FP=hb_retni( ( QThread::Priority ) ( p )->priority() ); p is NULL" ) );
+      hb_retni( ( QThread::Priority ) ( p )->priority() );
    }
 }
 
@@ -215,10 +207,8 @@ HB_FUNC( QT_QTHREAD_SETPRIORITY )
 {
    QThread * p = hbqt_par_QThread( 1 );
    if( p )
-      ( p )->setPriority( ( QThread::Priority ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_SETPRIORITY FP=( p )->setPriority( ( QThread::Priority ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setPriority( ( QThread::Priority ) hb_parni( 2 ) );
    }
 }
 
@@ -229,10 +219,8 @@ HB_FUNC( QT_QTHREAD_SETSTACKSIZE )
 {
    QThread * p = hbqt_par_QThread( 1 );
    if( p )
-      ( p )->setStackSize( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_SETSTACKSIZE FP=( p )->setStackSize( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setStackSize( hb_parni( 2 ) );
    }
 }
 
@@ -243,10 +231,8 @@ HB_FUNC( QT_QTHREAD_STACKSIZE )
 {
    QThread * p = hbqt_par_QThread( 1 );
    if( p )
-      hb_retni( ( p )->stackSize() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_STACKSIZE FP=hb_retni( ( p )->stackSize() ); p is NULL" ) );
+      hb_retni( ( p )->stackSize() );
    }
 }
 
@@ -257,10 +243,8 @@ HB_FUNC( QT_QTHREAD_WAIT )
 {
    QThread * p = hbqt_par_QThread( 1 );
    if( p )
-      hb_retl( ( p )->wait( ( ulong ) hb_parnintdef( 2, ULONG_MAX ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_WAIT FP=hb_retl( ( p )->wait( ( ulong ) hb_parnintdef( 2, ULONG_MAX ) ) ); p is NULL" ) );
+      hb_retl( ( p )->wait( ( ulong ) hb_parnintdef( 2, ULONG_MAX ) ) );
    }
 }
 
@@ -271,10 +255,8 @@ HB_FUNC( QT_QTHREAD_CURRENTTHREAD )
 {
    QThread * p = hbqt_par_QThread( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QThread( ( p )->currentThread(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_CURRENTTHREAD FP=hb_retptrGC( hbqt_gcAllocate_QThread( ( p )->currentThread(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QThread( ( p )->currentThread(), false ) );
    }
 }
 
@@ -285,10 +267,8 @@ HB_FUNC( QT_QTHREAD_IDEALTHREADCOUNT )
 {
    QThread * p = hbqt_par_QThread( 1 );
    if( p )
-      hb_retni( ( p )->idealThreadCount() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_IDEALTHREADCOUNT FP=hb_retni( ( p )->idealThreadCount() ); p is NULL" ) );
+      hb_retni( ( p )->idealThreadCount() );
    }
 }
 
@@ -299,10 +279,8 @@ HB_FUNC( QT_QTHREAD_YIELDCURRENTTHREAD )
 {
    QThread * p = hbqt_par_QThread( 1 );
    if( p )
-      ( p )->yieldCurrentThread();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_YIELDCURRENTTHREAD FP=( p )->yieldCurrentThread(); p is NULL" ) );
+      ( p )->yieldCurrentThread();
    }
 }
 
@@ -313,10 +291,8 @@ HB_FUNC( QT_QTHREAD_QUIT )
 {
    QThread * p = hbqt_par_QThread( 1 );
    if( p )
-      ( p )->quit();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_QUIT FP=( p )->quit(); p is NULL" ) );
+      ( p )->quit();
    }
 }
 
@@ -327,10 +303,8 @@ HB_FUNC( QT_QTHREAD_START )
 {
    QThread * p = hbqt_par_QThread( 1 );
    if( p )
-      ( p )->start( ( HB_ISNUM( 2 ) ? ( QThread::Priority ) hb_parni( 2 ) : ( QThread::Priority ) QThread::InheritPriority ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_START FP=( p )->start( ( HB_ISNUM( 2 ) ? ( QThread::Priority ) hb_parni( 2 ) : ( QThread::Priority ) QThread::InheritPriority ) ); p is NULL" ) );
+      ( p )->start( ( HB_ISNUM( 2 ) ? ( QThread::Priority ) hb_parni( 2 ) : ( QThread::Priority ) QThread::InheritPriority ) );
    }
 }
 
@@ -341,10 +315,8 @@ HB_FUNC( QT_QTHREAD_TERMINATE )
 {
    QThread * p = hbqt_par_QThread( 1 );
    if( p )
-      ( p )->terminate();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTHREAD_TERMINATE FP=( p )->terminate(); p is NULL" ) );
+      ( p )->terminate();
    }
 }
 

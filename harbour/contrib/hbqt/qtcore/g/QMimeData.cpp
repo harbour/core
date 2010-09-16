@@ -166,10 +166,8 @@ HB_FUNC( QT_QMIMEDATA_CLEAR )
 {
    QMimeData * p = hbqt_par_QMimeData( 1 );
    if( p )
-      ( p )->clear();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMIMEDATA_CLEAR FP=( p )->clear(); p is NULL" ) );
+      ( p )->clear();
    }
 }
 
@@ -180,10 +178,8 @@ HB_FUNC( QT_QMIMEDATA_COLORDATA )
 {
    QMimeData * p = hbqt_par_QMimeData( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->colorData() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMIMEDATA_COLORDATA FP=hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->colorData() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->colorData() ), true ) );
    }
 }
 
@@ -194,10 +190,10 @@ HB_FUNC( QT_QMIMEDATA_DATA )
 {
    QMimeData * p = hbqt_par_QMimeData( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->data( QMimeData::tr( hb_parc( 2 ) ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMIMEDATA_DATA FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->data( QMimeData::tr( hb_parc( 2 ) ) ) ), true ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->data( hb_parstr_utf8( 2, &pText, NULL ) ) ), true ) );
+      hb_strfree( pText );
    }
 }
 
@@ -208,10 +204,8 @@ HB_FUNC( QT_QMIMEDATA_FORMATS )
 {
    QMimeData * p = hbqt_par_QMimeData( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->formats() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMIMEDATA_FORMATS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->formats() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->formats() ), true ) );
    }
 }
 
@@ -222,10 +216,8 @@ HB_FUNC( QT_QMIMEDATA_HASCOLOR )
 {
    QMimeData * p = hbqt_par_QMimeData( 1 );
    if( p )
-      hb_retl( ( p )->hasColor() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMIMEDATA_HASCOLOR FP=hb_retl( ( p )->hasColor() ); p is NULL" ) );
+      hb_retl( ( p )->hasColor() );
    }
 }
 
@@ -236,10 +228,10 @@ HB_FUNC( QT_QMIMEDATA_HASFORMAT )
 {
    QMimeData * p = hbqt_par_QMimeData( 1 );
    if( p )
-      hb_retl( ( p )->hasFormat( QMimeData::tr( hb_parc( 2 ) ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMIMEDATA_HASFORMAT FP=hb_retl( ( p )->hasFormat( QMimeData::tr( hb_parc( 2 ) ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->hasFormat( hb_parstr_utf8( 2, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -250,10 +242,8 @@ HB_FUNC( QT_QMIMEDATA_HASHTML )
 {
    QMimeData * p = hbqt_par_QMimeData( 1 );
    if( p )
-      hb_retl( ( p )->hasHtml() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMIMEDATA_HASHTML FP=hb_retl( ( p )->hasHtml() ); p is NULL" ) );
+      hb_retl( ( p )->hasHtml() );
    }
 }
 
@@ -264,10 +254,8 @@ HB_FUNC( QT_QMIMEDATA_HASIMAGE )
 {
    QMimeData * p = hbqt_par_QMimeData( 1 );
    if( p )
-      hb_retl( ( p )->hasImage() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMIMEDATA_HASIMAGE FP=hb_retl( ( p )->hasImage() ); p is NULL" ) );
+      hb_retl( ( p )->hasImage() );
    }
 }
 
@@ -278,10 +266,8 @@ HB_FUNC( QT_QMIMEDATA_HASTEXT )
 {
    QMimeData * p = hbqt_par_QMimeData( 1 );
    if( p )
-      hb_retl( ( p )->hasText() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMIMEDATA_HASTEXT FP=hb_retl( ( p )->hasText() ); p is NULL" ) );
+      hb_retl( ( p )->hasText() );
    }
 }
 
@@ -292,10 +278,8 @@ HB_FUNC( QT_QMIMEDATA_HASURLS )
 {
    QMimeData * p = hbqt_par_QMimeData( 1 );
    if( p )
-      hb_retl( ( p )->hasUrls() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMIMEDATA_HASURLS FP=hb_retl( ( p )->hasUrls() ); p is NULL" ) );
+      hb_retl( ( p )->hasUrls() );
    }
 }
 
@@ -306,10 +290,8 @@ HB_FUNC( QT_QMIMEDATA_HTML )
 {
    QMimeData * p = hbqt_par_QMimeData( 1 );
    if( p )
-      hb_retc( ( p )->html().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMIMEDATA_HTML FP=hb_retc( ( p )->html().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->html().toUtf8().data() );
    }
 }
 
@@ -320,10 +302,8 @@ HB_FUNC( QT_QMIMEDATA_IMAGEDATA )
 {
    QMimeData * p = hbqt_par_QMimeData( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->imageData() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMIMEDATA_IMAGEDATA FP=hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->imageData() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->imageData() ), true ) );
    }
 }
 
@@ -334,10 +314,10 @@ HB_FUNC( QT_QMIMEDATA_REMOVEFORMAT )
 {
    QMimeData * p = hbqt_par_QMimeData( 1 );
    if( p )
-      ( p )->removeFormat( QMimeData::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMIMEDATA_REMOVEFORMAT FP=( p )->removeFormat( QMimeData::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->removeFormat( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -348,10 +328,8 @@ HB_FUNC( QT_QMIMEDATA_SETCOLORDATA )
 {
    QMimeData * p = hbqt_par_QMimeData( 1 );
    if( p )
-      ( p )->setColorData( *hbqt_par_QVariant( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMIMEDATA_SETCOLORDATA FP=( p )->setColorData( *hbqt_par_QVariant( 2 ) ); p is NULL" ) );
+      ( p )->setColorData( *hbqt_par_QVariant( 2 ) );
    }
 }
 
@@ -362,10 +340,10 @@ HB_FUNC( QT_QMIMEDATA_SETDATA )
 {
    QMimeData * p = hbqt_par_QMimeData( 1 );
    if( p )
-      ( p )->setData( QMimeData::tr( hb_parc( 2 ) ), *hbqt_par_QByteArray( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMIMEDATA_SETDATA FP=( p )->setData( QMimeData::tr( hb_parc( 2 ) ), *hbqt_par_QByteArray( 3 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setData( hb_parstr_utf8( 2, &pText, NULL ), *hbqt_par_QByteArray( 3 ) );
+      hb_strfree( pText );
    }
 }
 
@@ -376,10 +354,10 @@ HB_FUNC( QT_QMIMEDATA_SETHTML )
 {
    QMimeData * p = hbqt_par_QMimeData( 1 );
    if( p )
-      ( p )->setHtml( QMimeData::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMIMEDATA_SETHTML FP=( p )->setHtml( QMimeData::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setHtml( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -390,10 +368,8 @@ HB_FUNC( QT_QMIMEDATA_SETIMAGEDATA )
 {
    QMimeData * p = hbqt_par_QMimeData( 1 );
    if( p )
-      ( p )->setImageData( *hbqt_par_QVariant( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMIMEDATA_SETIMAGEDATA FP=( p )->setImageData( *hbqt_par_QVariant( 2 ) ); p is NULL" ) );
+      ( p )->setImageData( *hbqt_par_QVariant( 2 ) );
    }
 }
 
@@ -404,10 +380,10 @@ HB_FUNC( QT_QMIMEDATA_SETTEXT )
 {
    QMimeData * p = hbqt_par_QMimeData( 1 );
    if( p )
-      ( p )->setText( QMimeData::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMIMEDATA_SETTEXT FP=( p )->setText( QMimeData::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setText( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -418,10 +394,8 @@ HB_FUNC( QT_QMIMEDATA_TEXT )
 {
    QMimeData * p = hbqt_par_QMimeData( 1 );
    if( p )
-      hb_retc( ( p )->text().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMIMEDATA_TEXT FP=hb_retc( ( p )->text().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->text().toUtf8().data() );
    }
 }
 
@@ -432,10 +406,8 @@ HB_FUNC( QT_QMIMEDATA_URLS )
 {
    QMimeData * p = hbqt_par_QMimeData( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QUrl>( ( p )->urls() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMIMEDATA_URLS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QUrl>( ( p )->urls() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QUrl>( ( p )->urls() ), true ) );
    }
 }
 

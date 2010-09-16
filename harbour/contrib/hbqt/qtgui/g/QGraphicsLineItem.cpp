@@ -168,10 +168,8 @@ HB_FUNC( QT_QGRAPHICSLINEITEM_LINE )
 {
    QGraphicsLineItem * p = hbqt_par_QGraphicsLineItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QLineF( new QLineF( ( p )->line() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLINEITEM_LINE FP=hb_retptrGC( hbqt_gcAllocate_QLineF( new QLineF( ( p )->line() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QLineF( new QLineF( ( p )->line() ), true ) );
    }
 }
 
@@ -182,10 +180,8 @@ HB_FUNC( QT_QGRAPHICSLINEITEM_PEN )
 {
    QGraphicsLineItem * p = hbqt_par_QGraphicsLineItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPen( new QPen( ( p )->pen() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLINEITEM_PEN FP=hb_retptrGC( hbqt_gcAllocate_QPen( new QPen( ( p )->pen() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPen( new QPen( ( p )->pen() ), true ) );
    }
 }
 
@@ -196,10 +192,8 @@ HB_FUNC( QT_QGRAPHICSLINEITEM_SETLINE )
 {
    QGraphicsLineItem * p = hbqt_par_QGraphicsLineItem( 1 );
    if( p )
-      ( p )->setLine( *hbqt_par_QLineF( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLINEITEM_SETLINE FP=( p )->setLine( *hbqt_par_QLineF( 2 ) ); p is NULL" ) );
+      ( p )->setLine( *hbqt_par_QLineF( 2 ) );
    }
 }
 
@@ -210,10 +204,8 @@ HB_FUNC( QT_QGRAPHICSLINEITEM_SETLINE_1 )
 {
    QGraphicsLineItem * p = hbqt_par_QGraphicsLineItem( 1 );
    if( p )
-      ( p )->setLine( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLINEITEM_SETLINE_1 FP=( p )->setLine( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) ); p is NULL" ) );
+      ( p )->setLine( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
    }
 }
 
@@ -224,10 +216,8 @@ HB_FUNC( QT_QGRAPHICSLINEITEM_SETPEN )
 {
    QGraphicsLineItem * p = hbqt_par_QGraphicsLineItem( 1 );
    if( p )
-      ( p )->setPen( *hbqt_par_QPen( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSLINEITEM_SETPEN FP=( p )->setPen( *hbqt_par_QPen( 2 ) ); p is NULL" ) );
+      ( p )->setPen( *hbqt_par_QPen( 2 ) );
    }
 }
 

@@ -175,10 +175,8 @@ HB_FUNC( QT_QWIZARD_ADDPAGE )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      hb_retni( ( p )->addPage( hbqt_par_QWizardPage( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_ADDPAGE FP=hb_retni( ( p )->addPage( hbqt_par_QWizardPage( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->addPage( hbqt_par_QWizardPage( 2 ) ) );
    }
 }
 
@@ -189,10 +187,8 @@ HB_FUNC( QT_QWIZARD_BUTTON )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAbstractButton( ( p )->button( ( QWizard::WizardButton ) hb_parni( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_BUTTON FP=hb_retptrGC( hbqt_gcAllocate_QAbstractButton( ( p )->button( ( QWizard::WizardButton ) hb_parni( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAbstractButton( ( p )->button( ( QWizard::WizardButton ) hb_parni( 2 ) ), false ) );
    }
 }
 
@@ -203,10 +199,8 @@ HB_FUNC( QT_QWIZARD_BUTTONTEXT )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      hb_retc( ( p )->buttonText( ( QWizard::WizardButton ) hb_parni( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_BUTTONTEXT FP=hb_retc( ( p )->buttonText( ( QWizard::WizardButton ) hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->buttonText( ( QWizard::WizardButton ) hb_parni( 2 ) ).toUtf8().data() );
    }
 }
 
@@ -217,10 +211,8 @@ HB_FUNC( QT_QWIZARD_CURRENTID )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      hb_retni( ( p )->currentId() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_CURRENTID FP=hb_retni( ( p )->currentId() ); p is NULL" ) );
+      hb_retni( ( p )->currentId() );
    }
 }
 
@@ -231,10 +223,8 @@ HB_FUNC( QT_QWIZARD_CURRENTPAGE )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWizardPage( ( p )->currentPage(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_CURRENTPAGE FP=hb_retptrGC( hbqt_gcAllocate_QWizardPage( ( p )->currentPage(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWizardPage( ( p )->currentPage(), false ) );
    }
 }
 
@@ -245,10 +235,10 @@ HB_FUNC( QT_QWIZARD_FIELD )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->field( QWizard::tr( hb_parc( 2 ) ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_FIELD FP=hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->field( QWizard::tr( hb_parc( 2 ) ) ) ), true ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->field( hb_parstr_utf8( 2, &pText, NULL ) ) ), true ) );
+      hb_strfree( pText );
    }
 }
 
@@ -259,10 +249,8 @@ HB_FUNC( QT_QWIZARD_HASVISITEDPAGE )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      hb_retl( ( p )->hasVisitedPage( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_HASVISITEDPAGE FP=hb_retl( ( p )->hasVisitedPage( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->hasVisitedPage( hb_parni( 2 ) ) );
    }
 }
 
@@ -273,10 +261,8 @@ HB_FUNC( QT_QWIZARD_NEXTID )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      hb_retni( ( p )->nextId() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_NEXTID FP=hb_retni( ( p )->nextId() ); p is NULL" ) );
+      hb_retni( ( p )->nextId() );
    }
 }
 
@@ -287,10 +273,8 @@ HB_FUNC( QT_QWIZARD_OPTIONS )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      hb_retni( ( QWizard::WizardOptions ) ( p )->options() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_OPTIONS FP=hb_retni( ( QWizard::WizardOptions ) ( p )->options() ); p is NULL" ) );
+      hb_retni( ( QWizard::WizardOptions ) ( p )->options() );
    }
 }
 
@@ -301,10 +285,8 @@ HB_FUNC( QT_QWIZARD_PAGE )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWizardPage( ( p )->page( hb_parni( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_PAGE FP=hb_retptrGC( hbqt_gcAllocate_QWizardPage( ( p )->page( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWizardPage( ( p )->page( hb_parni( 2 ) ), false ) );
    }
 }
 
@@ -315,10 +297,8 @@ HB_FUNC( QT_QWIZARD_PAGEIDS )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<int>( ( p )->pageIds() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_PAGEIDS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<int>( ( p )->pageIds() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<int>( ( p )->pageIds() ), true ) );
    }
 }
 
@@ -329,10 +309,8 @@ HB_FUNC( QT_QWIZARD_PIXMAP )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_PIXMAP FP=hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -343,10 +321,8 @@ HB_FUNC( QT_QWIZARD_REMOVEPAGE )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      ( p )->removePage( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_REMOVEPAGE FP=( p )->removePage( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->removePage( hb_parni( 2 ) );
    }
 }
 
@@ -357,10 +333,8 @@ HB_FUNC( QT_QWIZARD_SETBUTTON )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      ( p )->setButton( ( QWizard::WizardButton ) hb_parni( 2 ), hbqt_par_QAbstractButton( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_SETBUTTON FP=( p )->setButton( ( QWizard::WizardButton ) hb_parni( 2 ), hbqt_par_QAbstractButton( 3 ) ); p is NULL" ) );
+      ( p )->setButton( ( QWizard::WizardButton ) hb_parni( 2 ), hbqt_par_QAbstractButton( 3 ) );
    }
 }
 
@@ -371,10 +345,10 @@ HB_FUNC( QT_QWIZARD_SETBUTTONTEXT )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      ( p )->setButtonText( ( QWizard::WizardButton ) hb_parni( 2 ), QWizard::tr( hb_parc( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_SETBUTTONTEXT FP=( p )->setButtonText( ( QWizard::WizardButton ) hb_parni( 2 ), QWizard::tr( hb_parc( 3 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setButtonText( ( QWizard::WizardButton ) hb_parni( 2 ), hb_parstr_utf8( 3, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -385,10 +359,8 @@ HB_FUNC( QT_QWIZARD_SETDEFAULTPROPERTY )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      ( p )->setDefaultProperty( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_SETDEFAULTPROPERTY FP=( p )->setDefaultProperty( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ) ); p is NULL" ) );
+      ( p )->setDefaultProperty( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ) );
    }
 }
 
@@ -399,10 +371,10 @@ HB_FUNC( QT_QWIZARD_SETFIELD )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      ( p )->setField( QWizard::tr( hb_parc( 2 ) ), *hbqt_par_QVariant( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_SETFIELD FP=( p )->setField( QWizard::tr( hb_parc( 2 ) ), *hbqt_par_QVariant( 3 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setField( hb_parstr_utf8( 2, &pText, NULL ), *hbqt_par_QVariant( 3 ) );
+      hb_strfree( pText );
    }
 }
 
@@ -413,10 +385,8 @@ HB_FUNC( QT_QWIZARD_SETOPTION )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      ( p )->setOption( ( QWizard::WizardOption ) hb_parni( 2 ), hb_parl( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_SETOPTION FP=( p )->setOption( ( QWizard::WizardOption ) hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+      ( p )->setOption( ( QWizard::WizardOption ) hb_parni( 2 ), hb_parl( 3 ) );
    }
 }
 
@@ -427,10 +397,8 @@ HB_FUNC( QT_QWIZARD_SETOPTIONS )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      ( p )->setOptions( ( QWizard::WizardOptions ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_SETOPTIONS FP=( p )->setOptions( ( QWizard::WizardOptions ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setOptions( ( QWizard::WizardOptions ) hb_parni( 2 ) );
    }
 }
 
@@ -441,10 +409,8 @@ HB_FUNC( QT_QWIZARD_SETPAGE )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      ( p )->setPage( hb_parni( 2 ), hbqt_par_QWizardPage( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_SETPAGE FP=( p )->setPage( hb_parni( 2 ), hbqt_par_QWizardPage( 3 ) ); p is NULL" ) );
+      ( p )->setPage( hb_parni( 2 ), hbqt_par_QWizardPage( 3 ) );
    }
 }
 
@@ -455,10 +421,8 @@ HB_FUNC( QT_QWIZARD_SETPIXMAP )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      ( p )->setPixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ), *hbqt_par_QPixmap( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_SETPIXMAP FP=( p )->setPixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ), *hbqt_par_QPixmap( 3 ) ); p is NULL" ) );
+      ( p )->setPixmap( ( QWizard::WizardPixmap ) hb_parni( 2 ), *hbqt_par_QPixmap( 3 ) );
    }
 }
 
@@ -469,10 +433,8 @@ HB_FUNC( QT_QWIZARD_SETSTARTID )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      ( p )->setStartId( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_SETSTARTID FP=( p )->setStartId( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setStartId( hb_parni( 2 ) );
    }
 }
 
@@ -483,10 +445,8 @@ HB_FUNC( QT_QWIZARD_SETSUBTITLEFORMAT )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      ( p )->setSubTitleFormat( ( Qt::TextFormat ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_SETSUBTITLEFORMAT FP=( p )->setSubTitleFormat( ( Qt::TextFormat ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setSubTitleFormat( ( Qt::TextFormat ) hb_parni( 2 ) );
    }
 }
 
@@ -497,10 +457,8 @@ HB_FUNC( QT_QWIZARD_SETTITLEFORMAT )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      ( p )->setTitleFormat( ( Qt::TextFormat ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_SETTITLEFORMAT FP=( p )->setTitleFormat( ( Qt::TextFormat ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setTitleFormat( ( Qt::TextFormat ) hb_parni( 2 ) );
    }
 }
 
@@ -511,10 +469,8 @@ HB_FUNC( QT_QWIZARD_SETWIZARDSTYLE )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      ( p )->setWizardStyle( ( QWizard::WizardStyle ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_SETWIZARDSTYLE FP=( p )->setWizardStyle( ( QWizard::WizardStyle ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setWizardStyle( ( QWizard::WizardStyle ) hb_parni( 2 ) );
    }
 }
 
@@ -525,10 +481,8 @@ HB_FUNC( QT_QWIZARD_STARTID )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      hb_retni( ( p )->startId() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_STARTID FP=hb_retni( ( p )->startId() ); p is NULL" ) );
+      hb_retni( ( p )->startId() );
    }
 }
 
@@ -539,10 +493,8 @@ HB_FUNC( QT_QWIZARD_SUBTITLEFORMAT )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      hb_retni( ( Qt::TextFormat ) ( p )->subTitleFormat() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_SUBTITLEFORMAT FP=hb_retni( ( Qt::TextFormat ) ( p )->subTitleFormat() ); p is NULL" ) );
+      hb_retni( ( Qt::TextFormat ) ( p )->subTitleFormat() );
    }
 }
 
@@ -553,10 +505,8 @@ HB_FUNC( QT_QWIZARD_TESTOPTION )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      hb_retl( ( p )->testOption( ( QWizard::WizardOption ) hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_TESTOPTION FP=hb_retl( ( p )->testOption( ( QWizard::WizardOption ) hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->testOption( ( QWizard::WizardOption ) hb_parni( 2 ) ) );
    }
 }
 
@@ -567,10 +517,8 @@ HB_FUNC( QT_QWIZARD_TITLEFORMAT )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      hb_retni( ( Qt::TextFormat ) ( p )->titleFormat() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_TITLEFORMAT FP=hb_retni( ( Qt::TextFormat ) ( p )->titleFormat() ); p is NULL" ) );
+      hb_retni( ( Qt::TextFormat ) ( p )->titleFormat() );
    }
 }
 
@@ -581,10 +529,8 @@ HB_FUNC( QT_QWIZARD_VALIDATECURRENTPAGE )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      hb_retl( ( p )->validateCurrentPage() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_VALIDATECURRENTPAGE FP=hb_retl( ( p )->validateCurrentPage() ); p is NULL" ) );
+      hb_retl( ( p )->validateCurrentPage() );
    }
 }
 
@@ -595,10 +541,8 @@ HB_FUNC( QT_QWIZARD_VISITEDPAGES )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<int>( ( p )->visitedPages() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_VISITEDPAGES FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<int>( ( p )->visitedPages() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<int>( ( p )->visitedPages() ), true ) );
    }
 }
 
@@ -609,10 +553,8 @@ HB_FUNC( QT_QWIZARD_WIZARDSTYLE )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      hb_retni( ( QWizard::WizardStyle ) ( p )->wizardStyle() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_WIZARDSTYLE FP=hb_retni( ( QWizard::WizardStyle ) ( p )->wizardStyle() ); p is NULL" ) );
+      hb_retni( ( QWizard::WizardStyle ) ( p )->wizardStyle() );
    }
 }
 
@@ -623,10 +565,8 @@ HB_FUNC( QT_QWIZARD_BACK )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      ( p )->back();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_BACK FP=( p )->back(); p is NULL" ) );
+      ( p )->back();
    }
 }
 
@@ -637,10 +577,8 @@ HB_FUNC( QT_QWIZARD_NEXT )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      ( p )->next();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_NEXT FP=( p )->next(); p is NULL" ) );
+      ( p )->next();
    }
 }
 
@@ -651,10 +589,8 @@ HB_FUNC( QT_QWIZARD_RESTART )
 {
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
-      ( p )->restart();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIZARD_RESTART FP=( p )->restart(); p is NULL" ) );
+      ( p )->restart();
    }
 }
 

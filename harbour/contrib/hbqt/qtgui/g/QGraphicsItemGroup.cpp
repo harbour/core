@@ -153,10 +153,8 @@ HB_FUNC( QT_QGRAPHICSITEMGROUP_ADDTOGROUP )
 {
    QGraphicsItemGroup * p = hbqt_par_QGraphicsItemGroup( 1 );
    if( p )
-      ( p )->addToGroup( hbqt_par_QGraphicsItem( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSITEMGROUP_ADDTOGROUP FP=( p )->addToGroup( hbqt_par_QGraphicsItem( 2 ) ); p is NULL" ) );
+      ( p )->addToGroup( hbqt_par_QGraphicsItem( 2 ) );
    }
 }
 
@@ -167,10 +165,8 @@ HB_FUNC( QT_QGRAPHICSITEMGROUP_REMOVEFROMGROUP )
 {
    QGraphicsItemGroup * p = hbqt_par_QGraphicsItemGroup( 1 );
    if( p )
-      ( p )->removeFromGroup( hbqt_par_QGraphicsItem( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSITEMGROUP_REMOVEFROMGROUP FP=( p )->removeFromGroup( hbqt_par_QGraphicsItem( 2 ) ); p is NULL" ) );
+      ( p )->removeFromGroup( hbqt_par_QGraphicsItem( 2 ) );
    }
 }
 

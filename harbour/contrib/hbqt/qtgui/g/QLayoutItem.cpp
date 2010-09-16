@@ -127,10 +127,8 @@ HB_FUNC( QT_QLAYOUTITEM_ALIGNMENT )
 {
    QLayoutItem * p = hbqt_par_QLayoutItem( 1 );
    if( p )
-      hb_retni( ( Qt::Alignment ) ( p )->alignment() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUTITEM_ALIGNMENT FP=hb_retni( ( Qt::Alignment ) ( p )->alignment() ); p is NULL" ) );
+      hb_retni( ( Qt::Alignment ) ( p )->alignment() );
    }
 }
 
@@ -141,10 +139,8 @@ HB_FUNC( QT_QLAYOUTITEM_CONTROLTYPES )
 {
    QLayoutItem * p = hbqt_par_QLayoutItem( 1 );
    if( p )
-      hb_retni( ( QSizePolicy::ControlTypes ) ( p )->controlTypes() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUTITEM_CONTROLTYPES FP=hb_retni( ( QSizePolicy::ControlTypes ) ( p )->controlTypes() ); p is NULL" ) );
+      hb_retni( ( QSizePolicy::ControlTypes ) ( p )->controlTypes() );
    }
 }
 
@@ -155,10 +151,8 @@ HB_FUNC( QT_QLAYOUTITEM_EXPANDINGDIRECTIONS )
 {
    QLayoutItem * p = hbqt_par_QLayoutItem( 1 );
    if( p )
-      hb_retni( ( Qt::Orientations ) ( p )->expandingDirections() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUTITEM_EXPANDINGDIRECTIONS FP=hb_retni( ( Qt::Orientations ) ( p )->expandingDirections() ); p is NULL" ) );
+      hb_retni( ( Qt::Orientations ) ( p )->expandingDirections() );
    }
 }
 
@@ -169,10 +163,8 @@ HB_FUNC( QT_QLAYOUTITEM_GEOMETRY )
 {
    QLayoutItem * p = hbqt_par_QLayoutItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->geometry() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUTITEM_GEOMETRY FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->geometry() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->geometry() ), true ) );
    }
 }
 
@@ -183,10 +175,8 @@ HB_FUNC( QT_QLAYOUTITEM_HASHEIGHTFORWIDTH )
 {
    QLayoutItem * p = hbqt_par_QLayoutItem( 1 );
    if( p )
-      hb_retl( ( p )->hasHeightForWidth() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUTITEM_HASHEIGHTFORWIDTH FP=hb_retl( ( p )->hasHeightForWidth() ); p is NULL" ) );
+      hb_retl( ( p )->hasHeightForWidth() );
    }
 }
 
@@ -197,10 +187,8 @@ HB_FUNC( QT_QLAYOUTITEM_HEIGHTFORWIDTH )
 {
    QLayoutItem * p = hbqt_par_QLayoutItem( 1 );
    if( p )
-      hb_retni( ( p )->heightForWidth( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUTITEM_HEIGHTFORWIDTH FP=hb_retni( ( p )->heightForWidth( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->heightForWidth( hb_parni( 2 ) ) );
    }
 }
 
@@ -211,10 +199,8 @@ HB_FUNC( QT_QLAYOUTITEM_INVALIDATE )
 {
    QLayoutItem * p = hbqt_par_QLayoutItem( 1 );
    if( p )
-      ( p )->invalidate();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUTITEM_INVALIDATE FP=( p )->invalidate(); p is NULL" ) );
+      ( p )->invalidate();
    }
 }
 
@@ -225,10 +211,8 @@ HB_FUNC( QT_QLAYOUTITEM_ISEMPTY )
 {
    QLayoutItem * p = hbqt_par_QLayoutItem( 1 );
    if( p )
-      hb_retl( ( p )->isEmpty() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUTITEM_ISEMPTY FP=hb_retl( ( p )->isEmpty() ); p is NULL" ) );
+      hb_retl( ( p )->isEmpty() );
    }
 }
 
@@ -239,10 +223,8 @@ HB_FUNC( QT_QLAYOUTITEM_LAYOUT )
 {
    QLayoutItem * p = hbqt_par_QLayoutItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QLayout( ( p )->layout(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUTITEM_LAYOUT FP=hb_retptrGC( hbqt_gcAllocate_QLayout( ( p )->layout(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QLayout( ( p )->layout(), false ) );
    }
 }
 
@@ -253,10 +235,8 @@ HB_FUNC( QT_QLAYOUTITEM_MAXIMUMSIZE )
 {
    QLayoutItem * p = hbqt_par_QLayoutItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->maximumSize() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUTITEM_MAXIMUMSIZE FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->maximumSize() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->maximumSize() ), true ) );
    }
 }
 
@@ -267,10 +247,8 @@ HB_FUNC( QT_QLAYOUTITEM_MINIMUMHEIGHTFORWIDTH )
 {
    QLayoutItem * p = hbqt_par_QLayoutItem( 1 );
    if( p )
-      hb_retni( ( p )->minimumHeightForWidth( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUTITEM_MINIMUMHEIGHTFORWIDTH FP=hb_retni( ( p )->minimumHeightForWidth( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->minimumHeightForWidth( hb_parni( 2 ) ) );
    }
 }
 
@@ -281,10 +259,8 @@ HB_FUNC( QT_QLAYOUTITEM_MINIMUMSIZE )
 {
    QLayoutItem * p = hbqt_par_QLayoutItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->minimumSize() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUTITEM_MINIMUMSIZE FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->minimumSize() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->minimumSize() ), true ) );
    }
 }
 
@@ -295,10 +271,8 @@ HB_FUNC( QT_QLAYOUTITEM_SETALIGNMENT )
 {
    QLayoutItem * p = hbqt_par_QLayoutItem( 1 );
    if( p )
-      ( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUTITEM_SETALIGNMENT FP=( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
    }
 }
 
@@ -309,10 +283,8 @@ HB_FUNC( QT_QLAYOUTITEM_SETGEOMETRY )
 {
    QLayoutItem * p = hbqt_par_QLayoutItem( 1 );
    if( p )
-      ( p )->setGeometry( *hbqt_par_QRect( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUTITEM_SETGEOMETRY FP=( p )->setGeometry( *hbqt_par_QRect( 2 ) ); p is NULL" ) );
+      ( p )->setGeometry( *hbqt_par_QRect( 2 ) );
    }
 }
 
@@ -323,10 +295,8 @@ HB_FUNC( QT_QLAYOUTITEM_SIZEHINT )
 {
    QLayoutItem * p = hbqt_par_QLayoutItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->sizeHint() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUTITEM_SIZEHINT FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->sizeHint() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->sizeHint() ), true ) );
    }
 }
 
@@ -337,10 +307,8 @@ HB_FUNC( QT_QLAYOUTITEM_SPACERITEM )
 {
    QLayoutItem * p = hbqt_par_QLayoutItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QSpacerItem( ( p )->spacerItem(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUTITEM_SPACERITEM FP=hb_retptrGC( hbqt_gcAllocate_QSpacerItem( ( p )->spacerItem(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QSpacerItem( ( p )->spacerItem(), false ) );
    }
 }
 
@@ -351,10 +319,8 @@ HB_FUNC( QT_QLAYOUTITEM_WIDGET )
 {
    QLayoutItem * p = hbqt_par_QLayoutItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLAYOUTITEM_WIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) );
    }
 }
 

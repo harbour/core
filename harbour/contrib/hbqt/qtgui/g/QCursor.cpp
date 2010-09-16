@@ -181,10 +181,8 @@ HB_FUNC( QT_QCURSOR_BITMAP )
 {
    QCursor * p = hbqt_par_QCursor( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap( *( ( p )->bitmap() ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCURSOR_BITMAP FP=hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap( *( ( p )->bitmap() ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap( *( ( p )->bitmap() ) ), true ) );
    }
 }
 
@@ -195,10 +193,8 @@ HB_FUNC( QT_QCURSOR_HOTSPOT )
 {
    QCursor * p = hbqt_par_QCursor( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->hotSpot() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCURSOR_HOTSPOT FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->hotSpot() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->hotSpot() ), true ) );
    }
 }
 
@@ -209,10 +205,8 @@ HB_FUNC( QT_QCURSOR_MASK )
 {
    QCursor * p = hbqt_par_QCursor( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap( *( ( p )->mask() ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCURSOR_MASK FP=hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap( *( ( p )->mask() ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap( *( ( p )->mask() ) ), true ) );
    }
 }
 
@@ -223,10 +217,8 @@ HB_FUNC( QT_QCURSOR_PIXMAP )
 {
    QCursor * p = hbqt_par_QCursor( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCURSOR_PIXMAP FP=hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap() ), true ) );
    }
 }
 
@@ -237,10 +229,8 @@ HB_FUNC( QT_QCURSOR_SETSHAPE )
 {
    QCursor * p = hbqt_par_QCursor( 1 );
    if( p )
-      ( p )->setShape( ( Qt::CursorShape ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCURSOR_SETSHAPE FP=( p )->setShape( ( Qt::CursorShape ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setShape( ( Qt::CursorShape ) hb_parni( 2 ) );
    }
 }
 
@@ -251,10 +241,8 @@ HB_FUNC( QT_QCURSOR_SHAPE )
 {
    QCursor * p = hbqt_par_QCursor( 1 );
    if( p )
-      hb_retni( ( Qt::CursorShape ) ( p )->shape() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCURSOR_SHAPE FP=hb_retni( ( Qt::CursorShape ) ( p )->shape() ); p is NULL" ) );
+      hb_retni( ( Qt::CursorShape ) ( p )->shape() );
    }
 }
 
@@ -265,10 +253,8 @@ HB_FUNC( QT_QCURSOR_POS )
 {
    QCursor * p = hbqt_par_QCursor( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCURSOR_POS FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) );
    }
 }
 
@@ -279,10 +265,8 @@ HB_FUNC( QT_QCURSOR_SETPOS )
 {
    QCursor * p = hbqt_par_QCursor( 1 );
    if( p )
-      ( p )->setPos( hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCURSOR_SETPOS FP=( p )->setPos( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setPos( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -293,10 +277,8 @@ HB_FUNC( QT_QCURSOR_SETPOS_1 )
 {
    QCursor * p = hbqt_par_QCursor( 1 );
    if( p )
-      ( p )->setPos( *hbqt_par_QPoint( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCURSOR_SETPOS_1 FP=( p )->setPos( *hbqt_par_QPoint( 2 ) ); p is NULL" ) );
+      ( p )->setPos( *hbqt_par_QPoint( 2 ) );
    }
 }
 

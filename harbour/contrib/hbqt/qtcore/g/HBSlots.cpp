@@ -157,10 +157,8 @@ HB_FUNC( QT_HBSLOTS_HBCONNECT )
 {
    HBSlots * p = hbqt_par_HBSlots( 1 );
    if( p )
-      hb_retl( ( p )->hbConnect( hb_param( 2, HB_IT_ANY ), hbqt_par_char( 3 ), hb_param( 4, HB_IT_ANY ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBSLOTS_HBCONNECT FP=hb_retl( ( p )->hbConnect( hb_param( 2, HB_IT_ANY ), hbqt_par_char( 3 ), hb_param( 4, HB_IT_ANY ) ) ); p is NULL" ) );
+      hb_retl( ( p )->hbConnect( hb_param( 2, HB_IT_ANY ), hbqt_par_char( 3 ), hb_param( 4, HB_IT_ANY ) ) );
    }
 }
 
@@ -171,10 +169,8 @@ HB_FUNC( QT_HBSLOTS_HBDISCONNECT )
 {
    HBSlots * p = hbqt_par_HBSlots( 1 );
    if( p )
-      hb_retl( ( p )->hbDisconnect( hb_param( 2, HB_IT_ANY ), hbqt_par_char( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBSLOTS_HBDISCONNECT FP=hb_retl( ( p )->hbDisconnect( hb_param( 2, HB_IT_ANY ), hbqt_par_char( 3 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->hbDisconnect( hb_param( 2, HB_IT_ANY ), hbqt_par_char( 3 ) ) );
    }
 }
 
@@ -185,10 +181,8 @@ HB_FUNC( QT_HBSLOTS_HBISCONNECTED )
 {
    HBSlots * p = hbqt_par_HBSlots( 1 );
    if( p )
-      hb_retl( ( p )->hbIsConnected( hb_param( 2, HB_IT_ANY ), hbqt_par_char( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBSLOTS_HBISCONNECTED FP=hb_retl( ( p )->hbIsConnected( hb_param( 2, HB_IT_ANY ), hbqt_par_char( 3 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->hbIsConnected( hb_param( 2, HB_IT_ANY ), hbqt_par_char( 3 ) ) );
    }
 }
 
@@ -199,10 +193,8 @@ HB_FUNC( QT_HBSLOTS_HBCLEAR )
 {
    HBSlots * p = hbqt_par_HBSlots( 1 );
    if( p )
-      hb_retl( ( p )->hbClear() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBSLOTS_HBCLEAR FP=hb_retl( ( p )->hbClear() ); p is NULL" ) );
+      hb_retl( ( p )->hbClear() );
    }
 }
 

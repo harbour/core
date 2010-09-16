@@ -161,10 +161,8 @@ HB_FUNC( QT_QDIALOG_ISSIZEGRIPENABLED )
 {
    QDialog * p = hbqt_par_QDialog( 1 );
    if( p )
-      hb_retl( ( p )->isSizeGripEnabled() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIALOG_ISSIZEGRIPENABLED FP=hb_retl( ( p )->isSizeGripEnabled() ); p is NULL" ) );
+      hb_retl( ( p )->isSizeGripEnabled() );
    }
 }
 
@@ -175,10 +173,8 @@ HB_FUNC( QT_QDIALOG_RESULT )
 {
    QDialog * p = hbqt_par_QDialog( 1 );
    if( p )
-      hb_retni( ( p )->result() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIALOG_RESULT FP=hb_retni( ( p )->result() ); p is NULL" ) );
+      hb_retni( ( p )->result() );
    }
 }
 
@@ -189,10 +185,8 @@ HB_FUNC( QT_QDIALOG_SETMODAL )
 {
    QDialog * p = hbqt_par_QDialog( 1 );
    if( p )
-      ( p )->setModal( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIALOG_SETMODAL FP=( p )->setModal( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setModal( hb_parl( 2 ) );
    }
 }
 
@@ -203,10 +197,8 @@ HB_FUNC( QT_QDIALOG_SETRESULT )
 {
    QDialog * p = hbqt_par_QDialog( 1 );
    if( p )
-      ( p )->setResult( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIALOG_SETRESULT FP=( p )->setResult( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setResult( hb_parni( 2 ) );
    }
 }
 
@@ -217,10 +209,8 @@ HB_FUNC( QT_QDIALOG_SETSIZEGRIPENABLED )
 {
    QDialog * p = hbqt_par_QDialog( 1 );
    if( p )
-      ( p )->setSizeGripEnabled( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIALOG_SETSIZEGRIPENABLED FP=( p )->setSizeGripEnabled( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setSizeGripEnabled( hb_parl( 2 ) );
    }
 }
 
@@ -231,10 +221,8 @@ HB_FUNC( QT_QDIALOG_ACCEPT )
 {
    QDialog * p = hbqt_par_QDialog( 1 );
    if( p )
-      ( p )->accept();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIALOG_ACCEPT FP=( p )->accept(); p is NULL" ) );
+      ( p )->accept();
    }
 }
 
@@ -245,10 +233,8 @@ HB_FUNC( QT_QDIALOG_DONE )
 {
    QDialog * p = hbqt_par_QDialog( 1 );
    if( p )
-      ( p )->done( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIALOG_DONE FP=( p )->done( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->done( hb_parni( 2 ) );
    }
 }
 
@@ -259,10 +245,8 @@ HB_FUNC( QT_QDIALOG_EXEC )
 {
    QDialog * p = hbqt_par_QDialog( 1 );
    if( p )
-      hb_retni( ( p )->exec() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIALOG_EXEC FP=hb_retni( ( p )->exec() ); p is NULL" ) );
+      hb_retni( ( p )->exec() );
    }
 }
 
@@ -273,10 +257,8 @@ HB_FUNC( QT_QDIALOG_OPEN )
 {
    QDialog * p = hbqt_par_QDialog( 1 );
    if( p )
-      ( p )->open();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIALOG_OPEN FP=( p )->open(); p is NULL" ) );
+      ( p )->open();
    }
 }
 
@@ -287,10 +269,8 @@ HB_FUNC( QT_QDIALOG_REJECT )
 {
    QDialog * p = hbqt_par_QDialog( 1 );
    if( p )
-      ( p )->reject();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIALOG_REJECT FP=( p )->reject(); p is NULL" ) );
+      ( p )->reject();
    }
 }
 

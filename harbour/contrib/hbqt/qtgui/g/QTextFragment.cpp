@@ -146,10 +146,8 @@ HB_FUNC( QT_QTEXTFRAGMENT_CHARFORMAT )
 {
    QTextFragment * p = hbqt_par_QTextFragment( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( ( p )->charFormat() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAGMENT_CHARFORMAT FP=hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( ( p )->charFormat() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( ( p )->charFormat() ), true ) );
    }
 }
 
@@ -160,10 +158,8 @@ HB_FUNC( QT_QTEXTFRAGMENT_CHARFORMATINDEX )
 {
    QTextFragment * p = hbqt_par_QTextFragment( 1 );
    if( p )
-      hb_retni( ( p )->charFormatIndex() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAGMENT_CHARFORMATINDEX FP=hb_retni( ( p )->charFormatIndex() ); p is NULL" ) );
+      hb_retni( ( p )->charFormatIndex() );
    }
 }
 
@@ -174,10 +170,8 @@ HB_FUNC( QT_QTEXTFRAGMENT_CONTAINS )
 {
    QTextFragment * p = hbqt_par_QTextFragment( 1 );
    if( p )
-      hb_retl( ( p )->contains( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAGMENT_CONTAINS FP=hb_retl( ( p )->contains( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->contains( hb_parni( 2 ) ) );
    }
 }
 
@@ -188,10 +182,8 @@ HB_FUNC( QT_QTEXTFRAGMENT_ISVALID )
 {
    QTextFragment * p = hbqt_par_QTextFragment( 1 );
    if( p )
-      hb_retl( ( p )->isValid() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAGMENT_ISVALID FP=hb_retl( ( p )->isValid() ); p is NULL" ) );
+      hb_retl( ( p )->isValid() );
    }
 }
 
@@ -202,10 +194,8 @@ HB_FUNC( QT_QTEXTFRAGMENT_LENGTH )
 {
    QTextFragment * p = hbqt_par_QTextFragment( 1 );
    if( p )
-      hb_retni( ( p )->length() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAGMENT_LENGTH FP=hb_retni( ( p )->length() ); p is NULL" ) );
+      hb_retni( ( p )->length() );
    }
 }
 
@@ -216,10 +206,8 @@ HB_FUNC( QT_QTEXTFRAGMENT_POSITION )
 {
    QTextFragment * p = hbqt_par_QTextFragment( 1 );
    if( p )
-      hb_retni( ( p )->position() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAGMENT_POSITION FP=hb_retni( ( p )->position() ); p is NULL" ) );
+      hb_retni( ( p )->position() );
    }
 }
 
@@ -230,10 +218,8 @@ HB_FUNC( QT_QTEXTFRAGMENT_TEXT )
 {
    QTextFragment * p = hbqt_par_QTextFragment( 1 );
    if( p )
-      hb_retc( ( p )->text().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAGMENT_TEXT FP=hb_retc( ( p )->text().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->text().toUtf8().data() );
    }
 }
 

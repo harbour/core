@@ -171,10 +171,8 @@ HB_FUNC( QT_QTOOLBAR_ACTIONAT )
 {
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionAt( *hbqt_par_QPoint( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_ACTIONAT FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionAt( *hbqt_par_QPoint( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionAt( *hbqt_par_QPoint( 2 ) ), false ) );
    }
 }
 
@@ -185,10 +183,8 @@ HB_FUNC( QT_QTOOLBAR_ACTIONAT_1 )
 {
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionAt( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_ACTIONAT_1 FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionAt( hb_parni( 2 ), hb_parni( 3 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionAt( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
    }
 }
 
@@ -216,10 +212,10 @@ HB_FUNC( QT_QTOOLBAR_ADDACTION_1 )
 {
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( QToolBar::tr( hb_parc( 2 ) ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_ADDACTION_1 FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( QToolBar::tr( hb_parc( 2 ) ) ), false ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( hb_parstr_utf8( 2, &pText, NULL ) ), false ) );
+      hb_strfree( pText );
    }
 }
 
@@ -230,10 +226,10 @@ HB_FUNC( QT_QTOOLBAR_ADDACTION_2 )
 {
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QIcon( 2 ) : QIcon( hbqt_par_QString( 2 ) ) ), QToolBar::tr( hb_parc( 3 ) ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_ADDACTION_2 FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QIcon( 2 ) : QIcon( hbqt_par_QString( 2 ) ) ), QToolBar::tr( hb_parc( 3 ) ) ), false ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QIcon( 2 ) : QIcon( hbqt_par_QString( 2 ) ) ), hb_parstr_utf8( 3, &pText, NULL ) ), false ) );
+      hb_strfree( pText );
    }
 }
 
@@ -244,10 +240,10 @@ HB_FUNC( QT_QTOOLBAR_ADDACTION_3 )
 {
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( QToolBar::tr( hb_parc( 2 ) ), hbqt_par_QObject( 3 ), hbqt_par_char( 4 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_ADDACTION_3 FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( QToolBar::tr( hb_parc( 2 ) ), hbqt_par_QObject( 3 ), hbqt_par_char( 4 ) ), false ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( hb_parstr_utf8( 2, &pText, NULL ), hbqt_par_QObject( 3 ), hbqt_par_char( 4 ) ), false ) );
+      hb_strfree( pText );
    }
 }
 
@@ -280,10 +276,8 @@ HB_FUNC( QT_QTOOLBAR_ADDSEPARATOR )
 {
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addSeparator(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_ADDSEPARATOR FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addSeparator(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addSeparator(), false ) );
    }
 }
 
@@ -294,10 +288,8 @@ HB_FUNC( QT_QTOOLBAR_ADDWIDGET )
 {
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addWidget( hbqt_par_QWidget( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_ADDWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addWidget( hbqt_par_QWidget( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addWidget( hbqt_par_QWidget( 2 ) ), false ) );
    }
 }
 
@@ -308,10 +300,8 @@ HB_FUNC( QT_QTOOLBAR_ALLOWEDAREAS )
 {
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
-      hb_retni( ( Qt::ToolBarAreas ) ( p )->allowedAreas() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_ALLOWEDAREAS FP=hb_retni( ( Qt::ToolBarAreas ) ( p )->allowedAreas() ); p is NULL" ) );
+      hb_retni( ( Qt::ToolBarAreas ) ( p )->allowedAreas() );
    }
 }
 
@@ -322,10 +312,8 @@ HB_FUNC( QT_QTOOLBAR_CLEAR )
 {
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
-      ( p )->clear();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_CLEAR FP=( p )->clear(); p is NULL" ) );
+      ( p )->clear();
    }
 }
 
@@ -336,10 +324,8 @@ HB_FUNC( QT_QTOOLBAR_ICONSIZE )
 {
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->iconSize() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_ICONSIZE FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->iconSize() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->iconSize() ), true ) );
    }
 }
 
@@ -350,10 +336,8 @@ HB_FUNC( QT_QTOOLBAR_INSERTSEPARATOR )
 {
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->insertSeparator( hbqt_par_QAction( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_INSERTSEPARATOR FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->insertSeparator( hbqt_par_QAction( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->insertSeparator( hbqt_par_QAction( 2 ) ), false ) );
    }
 }
 
@@ -364,10 +348,8 @@ HB_FUNC( QT_QTOOLBAR_INSERTWIDGET )
 {
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->insertWidget( hbqt_par_QAction( 2 ), hbqt_par_QWidget( 3 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_INSERTWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->insertWidget( hbqt_par_QAction( 2 ), hbqt_par_QWidget( 3 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->insertWidget( hbqt_par_QAction( 2 ), hbqt_par_QWidget( 3 ) ), false ) );
    }
 }
 
@@ -378,10 +360,8 @@ HB_FUNC( QT_QTOOLBAR_ISAREAALLOWED )
 {
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
-      hb_retl( ( p )->isAreaAllowed( ( Qt::ToolBarArea ) hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_ISAREAALLOWED FP=hb_retl( ( p )->isAreaAllowed( ( Qt::ToolBarArea ) hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->isAreaAllowed( ( Qt::ToolBarArea ) hb_parni( 2 ) ) );
    }
 }
 
@@ -392,10 +372,8 @@ HB_FUNC( QT_QTOOLBAR_ISFLOATABLE )
 {
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
-      hb_retl( ( p )->isFloatable() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_ISFLOATABLE FP=hb_retl( ( p )->isFloatable() ); p is NULL" ) );
+      hb_retl( ( p )->isFloatable() );
    }
 }
 
@@ -406,10 +384,8 @@ HB_FUNC( QT_QTOOLBAR_ISFLOATING )
 {
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
-      hb_retl( ( p )->isFloating() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_ISFLOATING FP=hb_retl( ( p )->isFloating() ); p is NULL" ) );
+      hb_retl( ( p )->isFloating() );
    }
 }
 
@@ -420,10 +396,8 @@ HB_FUNC( QT_QTOOLBAR_ISMOVABLE )
 {
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
-      hb_retl( ( p )->isMovable() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_ISMOVABLE FP=hb_retl( ( p )->isMovable() ); p is NULL" ) );
+      hb_retl( ( p )->isMovable() );
    }
 }
 
@@ -434,10 +408,8 @@ HB_FUNC( QT_QTOOLBAR_ORIENTATION )
 {
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
-      hb_retni( ( Qt::Orientation ) ( p )->orientation() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_ORIENTATION FP=hb_retni( ( Qt::Orientation ) ( p )->orientation() ); p is NULL" ) );
+      hb_retni( ( Qt::Orientation ) ( p )->orientation() );
    }
 }
 
@@ -448,10 +420,8 @@ HB_FUNC( QT_QTOOLBAR_SETALLOWEDAREAS )
 {
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
-      ( p )->setAllowedAreas( ( Qt::ToolBarAreas ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_SETALLOWEDAREAS FP=( p )->setAllowedAreas( ( Qt::ToolBarAreas ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setAllowedAreas( ( Qt::ToolBarAreas ) hb_parni( 2 ) );
    }
 }
 
@@ -462,10 +432,8 @@ HB_FUNC( QT_QTOOLBAR_SETFLOATABLE )
 {
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
-      ( p )->setFloatable( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_SETFLOATABLE FP=( p )->setFloatable( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setFloatable( hb_parl( 2 ) );
    }
 }
 
@@ -476,10 +444,8 @@ HB_FUNC( QT_QTOOLBAR_SETMOVABLE )
 {
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
-      ( p )->setMovable( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_SETMOVABLE FP=( p )->setMovable( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setMovable( hb_parl( 2 ) );
    }
 }
 
@@ -490,10 +456,8 @@ HB_FUNC( QT_QTOOLBAR_SETORIENTATION )
 {
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
-      ( p )->setOrientation( ( Qt::Orientation ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_SETORIENTATION FP=( p )->setOrientation( ( Qt::Orientation ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setOrientation( ( Qt::Orientation ) hb_parni( 2 ) );
    }
 }
 
@@ -504,10 +468,8 @@ HB_FUNC( QT_QTOOLBAR_TOGGLEVIEWACTION )
 {
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->toggleViewAction(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_TOGGLEVIEWACTION FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->toggleViewAction(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->toggleViewAction(), false ) );
    }
 }
 
@@ -518,10 +480,8 @@ HB_FUNC( QT_QTOOLBAR_TOOLBUTTONSTYLE )
 {
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
-      hb_retni( ( Qt::ToolButtonStyle ) ( p )->toolButtonStyle() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_TOOLBUTTONSTYLE FP=hb_retni( ( Qt::ToolButtonStyle ) ( p )->toolButtonStyle() ); p is NULL" ) );
+      hb_retni( ( Qt::ToolButtonStyle ) ( p )->toolButtonStyle() );
    }
 }
 
@@ -532,10 +492,8 @@ HB_FUNC( QT_QTOOLBAR_WIDGETFORACTION )
 {
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widgetForAction( hbqt_par_QAction( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_WIDGETFORACTION FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widgetForAction( hbqt_par_QAction( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widgetForAction( hbqt_par_QAction( 2 ) ), false ) );
    }
 }
 
@@ -546,10 +504,8 @@ HB_FUNC( QT_QTOOLBAR_SETICONSIZE )
 {
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
-      ( p )->setIconSize( *hbqt_par_QSize( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_SETICONSIZE FP=( p )->setIconSize( *hbqt_par_QSize( 2 ) ); p is NULL" ) );
+      ( p )->setIconSize( *hbqt_par_QSize( 2 ) );
    }
 }
 
@@ -560,10 +516,8 @@ HB_FUNC( QT_QTOOLBAR_SETTOOLBUTTONSTYLE )
 {
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
-      ( p )->setToolButtonStyle( ( Qt::ToolButtonStyle ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTOOLBAR_SETTOOLBUTTONSTYLE FP=( p )->setToolButtonStyle( ( Qt::ToolButtonStyle ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setToolButtonStyle( ( Qt::ToolButtonStyle ) hb_parni( 2 ) );
    }
 }
 

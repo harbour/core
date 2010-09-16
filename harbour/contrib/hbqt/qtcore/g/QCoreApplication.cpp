@@ -131,10 +131,8 @@ HB_FUNC( QT_QCOREAPPLICATION_NOTIFY )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      hb_retl( ( p )->notify( hbqt_par_QObject( 2 ), hbqt_par_QEvent( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_NOTIFY FP=hb_retl( ( p )->notify( hbqt_par_QObject( 2 ), hbqt_par_QEvent( 3 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->notify( hbqt_par_QObject( 2 ), hbqt_par_QEvent( 3 ) ) );
    }
 }
 
@@ -145,10 +143,10 @@ HB_FUNC( QT_QCOREAPPLICATION_ADDLIBRARYPATH )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      ( p )->addLibraryPath( QCoreApplication::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_ADDLIBRARYPATH FP=( p )->addLibraryPath( QCoreApplication::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->addLibraryPath( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -159,10 +157,8 @@ HB_FUNC( QT_QCOREAPPLICATION_APPLICATIONDIRPATH )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      hb_retc( ( p )->applicationDirPath().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_APPLICATIONDIRPATH FP=hb_retc( ( p )->applicationDirPath().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->applicationDirPath().toUtf8().data() );
    }
 }
 
@@ -173,10 +169,8 @@ HB_FUNC( QT_QCOREAPPLICATION_APPLICATIONFILEPATH )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      hb_retc( ( p )->applicationFilePath().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_APPLICATIONFILEPATH FP=hb_retc( ( p )->applicationFilePath().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->applicationFilePath().toUtf8().data() );
    }
 }
 
@@ -187,10 +181,8 @@ HB_FUNC( QT_QCOREAPPLICATION_APPLICATIONNAME )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      hb_retc( ( p )->applicationName().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_APPLICATIONNAME FP=hb_retc( ( p )->applicationName().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->applicationName().toUtf8().data() );
    }
 }
 
@@ -201,10 +193,8 @@ HB_FUNC( QT_QCOREAPPLICATION_APPLICATIONPID )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      hb_retnint( ( p )->applicationPid() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_APPLICATIONPID FP=hb_retnint( ( p )->applicationPid() ); p is NULL" ) );
+      hb_retnint( ( p )->applicationPid() );
    }
 }
 
@@ -215,10 +205,8 @@ HB_FUNC( QT_QCOREAPPLICATION_APPLICATIONVERSION )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      hb_retc( ( p )->applicationVersion().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_APPLICATIONVERSION FP=hb_retc( ( p )->applicationVersion().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->applicationVersion().toUtf8().data() );
    }
 }
 
@@ -229,10 +217,8 @@ HB_FUNC( QT_QCOREAPPLICATION_ARGUMENTS )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->arguments() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_ARGUMENTS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->arguments() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->arguments() ), true ) );
    }
 }
 
@@ -243,10 +229,8 @@ HB_FUNC( QT_QCOREAPPLICATION_CLOSINGDOWN )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      hb_retl( ( p )->closingDown() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_CLOSINGDOWN FP=hb_retl( ( p )->closingDown() ); p is NULL" ) );
+      hb_retl( ( p )->closingDown() );
    }
 }
 
@@ -257,10 +241,8 @@ HB_FUNC( QT_QCOREAPPLICATION_EXEC )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      hb_retni( ( p )->exec() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_EXEC FP=hb_retni( ( p )->exec() ); p is NULL" ) );
+      hb_retni( ( p )->exec() );
    }
 }
 
@@ -271,10 +253,8 @@ HB_FUNC( QT_QCOREAPPLICATION_EXIT )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      ( p )->exit( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_EXIT FP=( p )->exit( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->exit( hb_parni( 2 ) );
    }
 }
 
@@ -285,10 +265,8 @@ HB_FUNC( QT_QCOREAPPLICATION_FLUSH )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      ( p )->flush();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_FLUSH FP=( p )->flush(); p is NULL" ) );
+      ( p )->flush();
    }
 }
 
@@ -299,10 +277,8 @@ HB_FUNC( QT_QCOREAPPLICATION_HASPENDINGEVENTS )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      hb_retl( ( p )->hasPendingEvents() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_HASPENDINGEVENTS FP=hb_retl( ( p )->hasPendingEvents() ); p is NULL" ) );
+      hb_retl( ( p )->hasPendingEvents() );
    }
 }
 
@@ -313,10 +289,8 @@ HB_FUNC( QT_QCOREAPPLICATION_INSTALLTRANSLATOR )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      ( p )->installTranslator( hbqt_par_QTranslator( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_INSTALLTRANSLATOR FP=( p )->installTranslator( hbqt_par_QTranslator( 2 ) ); p is NULL" ) );
+      ( p )->installTranslator( hbqt_par_QTranslator( 2 ) );
    }
 }
 
@@ -327,10 +301,8 @@ HB_FUNC( QT_QCOREAPPLICATION_INSTANCE )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QCoreApplication( ( p )->instance(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_INSTANCE FP=hb_retptrGC( hbqt_gcAllocate_QCoreApplication( ( p )->instance(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QCoreApplication( ( p )->instance(), false ) );
    }
 }
 
@@ -341,10 +313,8 @@ HB_FUNC( QT_QCOREAPPLICATION_LIBRARYPATHS )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->libraryPaths() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_LIBRARYPATHS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->libraryPaths() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->libraryPaths() ), true ) );
    }
 }
 
@@ -355,10 +325,8 @@ HB_FUNC( QT_QCOREAPPLICATION_ORGANIZATIONDOMAIN )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      hb_retc( ( p )->organizationDomain().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_ORGANIZATIONDOMAIN FP=hb_retc( ( p )->organizationDomain().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->organizationDomain().toUtf8().data() );
    }
 }
 
@@ -369,10 +337,8 @@ HB_FUNC( QT_QCOREAPPLICATION_ORGANIZATIONNAME )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      hb_retc( ( p )->organizationName().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_ORGANIZATIONNAME FP=hb_retc( ( p )->organizationName().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->organizationName().toUtf8().data() );
    }
 }
 
@@ -383,10 +349,8 @@ HB_FUNC( QT_QCOREAPPLICATION_POSTEVENT )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      ( p )->postEvent( hbqt_par_QObject( 2 ), hbqt_par_QEvent( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_POSTEVENT FP=( p )->postEvent( hbqt_par_QObject( 2 ), hbqt_par_QEvent( 3 ) ); p is NULL" ) );
+      ( p )->postEvent( hbqt_par_QObject( 2 ), hbqt_par_QEvent( 3 ) );
    }
 }
 
@@ -397,10 +361,8 @@ HB_FUNC( QT_QCOREAPPLICATION_POSTEVENT_1 )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      ( p )->postEvent( hbqt_par_QObject( 2 ), hbqt_par_QEvent( 3 ), hb_parni( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_POSTEVENT_1 FP=( p )->postEvent( hbqt_par_QObject( 2 ), hbqt_par_QEvent( 3 ), hb_parni( 4 ) ); p is NULL" ) );
+      ( p )->postEvent( hbqt_par_QObject( 2 ), hbqt_par_QEvent( 3 ), hb_parni( 4 ) );
    }
 }
 
@@ -411,10 +373,8 @@ HB_FUNC( QT_QCOREAPPLICATION_PROCESSEVENTS )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      ( p )->processEvents( ( HB_ISNUM( 2 ) ? ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ) : ( QEventLoop::ProcessEventsFlags ) QEventLoop::AllEvents ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_PROCESSEVENTS FP=( p )->processEvents( ( HB_ISNUM( 2 ) ? ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ) : ( QEventLoop::ProcessEventsFlags ) QEventLoop::AllEvents ) ); p is NULL" ) );
+      ( p )->processEvents( ( HB_ISNUM( 2 ) ? ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ) : ( QEventLoop::ProcessEventsFlags ) QEventLoop::AllEvents ) );
    }
 }
 
@@ -425,10 +385,8 @@ HB_FUNC( QT_QCOREAPPLICATION_PROCESSEVENTS_1 )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      ( p )->processEvents( ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_PROCESSEVENTS_1 FP=( p )->processEvents( ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->processEvents( ( QEventLoop::ProcessEventsFlags ) hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -439,10 +397,10 @@ HB_FUNC( QT_QCOREAPPLICATION_REMOVELIBRARYPATH )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      ( p )->removeLibraryPath( QCoreApplication::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_REMOVELIBRARYPATH FP=( p )->removeLibraryPath( QCoreApplication::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->removeLibraryPath( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -453,10 +411,8 @@ HB_FUNC( QT_QCOREAPPLICATION_REMOVEPOSTEDEVENTS )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      ( p )->removePostedEvents( hbqt_par_QObject( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_REMOVEPOSTEDEVENTS FP=( p )->removePostedEvents( hbqt_par_QObject( 2 ) ); p is NULL" ) );
+      ( p )->removePostedEvents( hbqt_par_QObject( 2 ) );
    }
 }
 
@@ -467,10 +423,8 @@ HB_FUNC( QT_QCOREAPPLICATION_REMOVEPOSTEDEVENTS_1 )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      ( p )->removePostedEvents( hbqt_par_QObject( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_REMOVEPOSTEDEVENTS_1 FP=( p )->removePostedEvents( hbqt_par_QObject( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->removePostedEvents( hbqt_par_QObject( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -481,10 +435,8 @@ HB_FUNC( QT_QCOREAPPLICATION_REMOVETRANSLATOR )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      ( p )->removeTranslator( hbqt_par_QTranslator( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_REMOVETRANSLATOR FP=( p )->removeTranslator( hbqt_par_QTranslator( 2 ) ); p is NULL" ) );
+      ( p )->removeTranslator( hbqt_par_QTranslator( 2 ) );
    }
 }
 
@@ -495,10 +447,8 @@ HB_FUNC( QT_QCOREAPPLICATION_SENDEVENT )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      hb_retl( ( p )->sendEvent( hbqt_par_QObject( 2 ), hbqt_par_QEvent( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_SENDEVENT FP=hb_retl( ( p )->sendEvent( hbqt_par_QObject( 2 ), hbqt_par_QEvent( 3 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->sendEvent( hbqt_par_QObject( 2 ), hbqt_par_QEvent( 3 ) ) );
    }
 }
 
@@ -509,10 +459,8 @@ HB_FUNC( QT_QCOREAPPLICATION_SENDPOSTEDEVENTS )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      ( p )->sendPostedEvents( hbqt_par_QObject( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_SENDPOSTEDEVENTS FP=( p )->sendPostedEvents( hbqt_par_QObject( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->sendPostedEvents( hbqt_par_QObject( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -523,10 +471,8 @@ HB_FUNC( QT_QCOREAPPLICATION_SENDPOSTEDEVENTS_1 )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      ( p )->sendPostedEvents();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_SENDPOSTEDEVENTS_1 FP=( p )->sendPostedEvents(); p is NULL" ) );
+      ( p )->sendPostedEvents();
    }
 }
 
@@ -537,10 +483,10 @@ HB_FUNC( QT_QCOREAPPLICATION_SETAPPLICATIONNAME )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      ( p )->setApplicationName( QCoreApplication::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_SETAPPLICATIONNAME FP=( p )->setApplicationName( QCoreApplication::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setApplicationName( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -551,10 +497,10 @@ HB_FUNC( QT_QCOREAPPLICATION_SETAPPLICATIONVERSION )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      ( p )->setApplicationVersion( QCoreApplication::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_SETAPPLICATIONVERSION FP=( p )->setApplicationVersion( QCoreApplication::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setApplicationVersion( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -565,10 +511,8 @@ HB_FUNC( QT_QCOREAPPLICATION_SETATTRIBUTE )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      ( p )->setAttribute( ( Qt::ApplicationAttribute ) hb_parni( 2 ), hb_parl( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_SETATTRIBUTE FP=( p )->setAttribute( ( Qt::ApplicationAttribute ) hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+      ( p )->setAttribute( ( Qt::ApplicationAttribute ) hb_parni( 2 ), hb_parl( 3 ) );
    }
 }
 
@@ -579,10 +523,8 @@ HB_FUNC( QT_QCOREAPPLICATION_SETLIBRARYPATHS )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      ( p )->setLibraryPaths( *hbqt_par_QStringList( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_SETLIBRARYPATHS FP=( p )->setLibraryPaths( *hbqt_par_QStringList( 2 ) ); p is NULL" ) );
+      ( p )->setLibraryPaths( *hbqt_par_QStringList( 2 ) );
    }
 }
 
@@ -593,10 +535,10 @@ HB_FUNC( QT_QCOREAPPLICATION_SETORGANIZATIONDOMAIN )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      ( p )->setOrganizationDomain( QCoreApplication::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_SETORGANIZATIONDOMAIN FP=( p )->setOrganizationDomain( QCoreApplication::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setOrganizationDomain( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -607,10 +549,10 @@ HB_FUNC( QT_QCOREAPPLICATION_SETORGANIZATIONNAME )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      ( p )->setOrganizationName( QCoreApplication::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_SETORGANIZATIONNAME FP=( p )->setOrganizationName( QCoreApplication::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setOrganizationName( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -621,10 +563,8 @@ HB_FUNC( QT_QCOREAPPLICATION_STARTINGUP )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      hb_retl( ( p )->startingUp() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_STARTINGUP FP=hb_retl( ( p )->startingUp() ); p is NULL" ) );
+      hb_retl( ( p )->startingUp() );
    }
 }
 
@@ -635,10 +575,8 @@ HB_FUNC( QT_QCOREAPPLICATION_TESTATTRIBUTE )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      hb_retl( ( p )->testAttribute( ( Qt::ApplicationAttribute ) hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_TESTATTRIBUTE FP=hb_retl( ( p )->testAttribute( ( Qt::ApplicationAttribute ) hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->testAttribute( ( Qt::ApplicationAttribute ) hb_parni( 2 ) ) );
    }
 }
 
@@ -649,10 +587,8 @@ HB_FUNC( QT_QCOREAPPLICATION_TRANSLATE )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      hb_retc( ( p )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), ( QCoreApplication::Encoding ) hb_parni( 5 ), hb_parni( 6 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_TRANSLATE FP=hb_retc( ( p )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), ( QCoreApplication::Encoding ) hb_parni( 5 ), hb_parni( 6 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), ( QCoreApplication::Encoding ) hb_parni( 5 ), hb_parni( 6 ) ).toUtf8().data() );
    }
 }
 
@@ -663,10 +599,8 @@ HB_FUNC( QT_QCOREAPPLICATION_TRANSLATE_1 )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      hb_retc( ( p )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), ( HB_ISNUM( 5 ) ? ( QCoreApplication::Encoding ) hb_parni( 5 ) : ( QCoreApplication::Encoding ) QCoreApplication::CodecForTr ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_TRANSLATE_1 FP=hb_retc( ( p )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), ( HB_ISNUM( 5 ) ? ( QCoreApplication::Encoding ) hb_parni( 5 ) : ( QCoreApplication::Encoding ) QCoreApplication::CodecForTr ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), ( HB_ISNUM( 5 ) ? ( QCoreApplication::Encoding ) hb_parni( 5 ) : ( QCoreApplication::Encoding ) QCoreApplication::CodecForTr ) ).toUtf8().data() );
    }
 }
 
@@ -677,10 +611,8 @@ HB_FUNC( QT_QCOREAPPLICATION_QUIT )
 {
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
-      ( p )->quit();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOREAPPLICATION_QUIT FP=( p )->quit(); p is NULL" ) );
+      ( p )->quit();
    }
 }
 

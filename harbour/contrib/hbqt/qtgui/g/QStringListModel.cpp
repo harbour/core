@@ -157,10 +157,8 @@ HB_FUNC( QT_QSTRINGLISTMODEL_DATA )
 {
    QStringListModel * p = hbqt_par_QStringListModel( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->data( *hbqt_par_QModelIndex( 2 ), hb_parni( 3 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLISTMODEL_DATA FP=hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->data( *hbqt_par_QModelIndex( 2 ), hb_parni( 3 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->data( *hbqt_par_QModelIndex( 2 ), hb_parni( 3 ) ) ), true ) );
    }
 }
 
@@ -171,10 +169,8 @@ HB_FUNC( QT_QSTRINGLISTMODEL_FLAGS )
 {
    QStringListModel * p = hbqt_par_QStringListModel( 1 );
    if( p )
-      hb_retni( ( Qt::ItemFlags ) ( p )->flags( *hbqt_par_QModelIndex( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLISTMODEL_FLAGS FP=hb_retni( ( Qt::ItemFlags ) ( p )->flags( *hbqt_par_QModelIndex( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( Qt::ItemFlags ) ( p )->flags( *hbqt_par_QModelIndex( 2 ) ) );
    }
 }
 
@@ -185,10 +181,8 @@ HB_FUNC( QT_QSTRINGLISTMODEL_INSERTROWS )
 {
    QStringListModel * p = hbqt_par_QStringListModel( 1 );
    if( p )
-      hb_retl( ( p )->insertRows( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLISTMODEL_INSERTROWS FP=hb_retl( ( p )->insertRows( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ); p is NULL" ) );
+      hb_retl( ( p )->insertRows( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) );
    }
 }
 
@@ -199,10 +193,8 @@ HB_FUNC( QT_QSTRINGLISTMODEL_REMOVEROWS )
 {
    QStringListModel * p = hbqt_par_QStringListModel( 1 );
    if( p )
-      hb_retl( ( p )->removeRows( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLISTMODEL_REMOVEROWS FP=hb_retl( ( p )->removeRows( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) ); p is NULL" ) );
+      hb_retl( ( p )->removeRows( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QModelIndex( 4 ) : QModelIndex() ) ) );
    }
 }
 
@@ -213,10 +205,8 @@ HB_FUNC( QT_QSTRINGLISTMODEL_ROWCOUNT )
 {
    QStringListModel * p = hbqt_par_QStringListModel( 1 );
    if( p )
-      hb_retni( ( p )->rowCount( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLISTMODEL_ROWCOUNT FP=hb_retni( ( p )->rowCount( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) ); p is NULL" ) );
+      hb_retni( ( p )->rowCount( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QModelIndex( 2 ) : QModelIndex() ) ) );
    }
 }
 
@@ -227,10 +217,8 @@ HB_FUNC( QT_QSTRINGLISTMODEL_SETDATA )
 {
    QStringListModel * p = hbqt_par_QStringListModel( 1 );
    if( p )
-      hb_retl( ( p )->setData( *hbqt_par_QModelIndex( 2 ), *hbqt_par_QVariant( 3 ), hb_parnidef( 4, Qt::EditRole ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLISTMODEL_SETDATA FP=hb_retl( ( p )->setData( *hbqt_par_QModelIndex( 2 ), *hbqt_par_QVariant( 3 ), hb_parnidef( 4, Qt::EditRole ) ) ); p is NULL" ) );
+      hb_retl( ( p )->setData( *hbqt_par_QModelIndex( 2 ), *hbqt_par_QVariant( 3 ), hb_parnidef( 4, Qt::EditRole ) ) );
    }
 }
 
@@ -241,10 +229,8 @@ HB_FUNC( QT_QSTRINGLISTMODEL_SETSTRINGLIST )
 {
    QStringListModel * p = hbqt_par_QStringListModel( 1 );
    if( p )
-      ( p )->setStringList( *hbqt_par_QStringList( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLISTMODEL_SETSTRINGLIST FP=( p )->setStringList( *hbqt_par_QStringList( 2 ) ); p is NULL" ) );
+      ( p )->setStringList( *hbqt_par_QStringList( 2 ) );
    }
 }
 
@@ -255,10 +241,8 @@ HB_FUNC( QT_QSTRINGLISTMODEL_STRINGLIST )
 {
    QStringListModel * p = hbqt_par_QStringListModel( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->stringList() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLISTMODEL_STRINGLIST FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->stringList() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->stringList() ), true ) );
    }
 }
 

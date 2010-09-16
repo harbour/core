@@ -165,10 +165,8 @@ HB_FUNC( QT_QMOVIE_BACKGROUNDCOLOR )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->backgroundColor() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_BACKGROUNDCOLOR FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->backgroundColor() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->backgroundColor() ), true ) );
    }
 }
 
@@ -179,10 +177,8 @@ HB_FUNC( QT_QMOVIE_CACHEMODE )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      hb_retni( ( QMovie::CacheMode ) ( p )->cacheMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_CACHEMODE FP=hb_retni( ( QMovie::CacheMode ) ( p )->cacheMode() ); p is NULL" ) );
+      hb_retni( ( QMovie::CacheMode ) ( p )->cacheMode() );
    }
 }
 
@@ -193,10 +189,8 @@ HB_FUNC( QT_QMOVIE_CURRENTFRAMENUMBER )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      hb_retni( ( p )->currentFrameNumber() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_CURRENTFRAMENUMBER FP=hb_retni( ( p )->currentFrameNumber() ); p is NULL" ) );
+      hb_retni( ( p )->currentFrameNumber() );
    }
 }
 
@@ -207,10 +201,8 @@ HB_FUNC( QT_QMOVIE_CURRENTIMAGE )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( ( p )->currentImage() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_CURRENTIMAGE FP=hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( ( p )->currentImage() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( ( p )->currentImage() ), true ) );
    }
 }
 
@@ -221,10 +213,8 @@ HB_FUNC( QT_QMOVIE_CURRENTPIXMAP )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->currentPixmap() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_CURRENTPIXMAP FP=hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->currentPixmap() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->currentPixmap() ), true ) );
    }
 }
 
@@ -235,10 +225,8 @@ HB_FUNC( QT_QMOVIE_DEVICE )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QIODevice( ( p )->device(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_DEVICE FP=hb_retptrGC( hbqt_gcAllocate_QIODevice( ( p )->device(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QIODevice( ( p )->device(), false ) );
    }
 }
 
@@ -249,10 +237,8 @@ HB_FUNC( QT_QMOVIE_FILENAME )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      hb_retc( ( p )->fileName().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_FILENAME FP=hb_retc( ( p )->fileName().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->fileName().toUtf8().data() );
    }
 }
 
@@ -263,10 +249,8 @@ HB_FUNC( QT_QMOVIE_FORMAT )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->format() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_FORMAT FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->format() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->format() ), true ) );
    }
 }
 
@@ -277,10 +261,8 @@ HB_FUNC( QT_QMOVIE_FRAMECOUNT )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      hb_retni( ( p )->frameCount() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_FRAMECOUNT FP=hb_retni( ( p )->frameCount() ); p is NULL" ) );
+      hb_retni( ( p )->frameCount() );
    }
 }
 
@@ -291,10 +273,8 @@ HB_FUNC( QT_QMOVIE_FRAMERECT )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->frameRect() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_FRAMERECT FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->frameRect() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->frameRect() ), true ) );
    }
 }
 
@@ -305,10 +285,8 @@ HB_FUNC( QT_QMOVIE_ISVALID )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      hb_retl( ( p )->isValid() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_ISVALID FP=hb_retl( ( p )->isValid() ); p is NULL" ) );
+      hb_retl( ( p )->isValid() );
    }
 }
 
@@ -319,10 +297,8 @@ HB_FUNC( QT_QMOVIE_JUMPTOFRAME )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      hb_retl( ( p )->jumpToFrame( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_JUMPTOFRAME FP=hb_retl( ( p )->jumpToFrame( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->jumpToFrame( hb_parni( 2 ) ) );
    }
 }
 
@@ -333,10 +309,8 @@ HB_FUNC( QT_QMOVIE_LOOPCOUNT )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      hb_retni( ( p )->loopCount() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_LOOPCOUNT FP=hb_retni( ( p )->loopCount() ); p is NULL" ) );
+      hb_retni( ( p )->loopCount() );
    }
 }
 
@@ -347,10 +321,8 @@ HB_FUNC( QT_QMOVIE_NEXTFRAMEDELAY )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      hb_retni( ( p )->nextFrameDelay() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_NEXTFRAMEDELAY FP=hb_retni( ( p )->nextFrameDelay() ); p is NULL" ) );
+      hb_retni( ( p )->nextFrameDelay() );
    }
 }
 
@@ -361,10 +333,8 @@ HB_FUNC( QT_QMOVIE_SCALEDSIZE )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->scaledSize() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_SCALEDSIZE FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->scaledSize() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->scaledSize() ), true ) );
    }
 }
 
@@ -375,10 +345,8 @@ HB_FUNC( QT_QMOVIE_SETBACKGROUNDCOLOR )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      ( p )->setBackgroundColor( *hbqt_par_QColor( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_SETBACKGROUNDCOLOR FP=( p )->setBackgroundColor( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+      ( p )->setBackgroundColor( *hbqt_par_QColor( 2 ) );
    }
 }
 
@@ -389,10 +357,8 @@ HB_FUNC( QT_QMOVIE_SETCACHEMODE )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      ( p )->setCacheMode( ( QMovie::CacheMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_SETCACHEMODE FP=( p )->setCacheMode( ( QMovie::CacheMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setCacheMode( ( QMovie::CacheMode ) hb_parni( 2 ) );
    }
 }
 
@@ -403,10 +369,8 @@ HB_FUNC( QT_QMOVIE_SETDEVICE )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      ( p )->setDevice( hbqt_par_QIODevice( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_SETDEVICE FP=( p )->setDevice( hbqt_par_QIODevice( 2 ) ); p is NULL" ) );
+      ( p )->setDevice( hbqt_par_QIODevice( 2 ) );
    }
 }
 
@@ -417,10 +381,10 @@ HB_FUNC( QT_QMOVIE_SETFILENAME )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      ( p )->setFileName( QMovie::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_SETFILENAME FP=( p )->setFileName( QMovie::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setFileName( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -431,10 +395,8 @@ HB_FUNC( QT_QMOVIE_SETFORMAT )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      ( p )->setFormat( *hbqt_par_QByteArray( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_SETFORMAT FP=( p )->setFormat( *hbqt_par_QByteArray( 2 ) ); p is NULL" ) );
+      ( p )->setFormat( *hbqt_par_QByteArray( 2 ) );
    }
 }
 
@@ -445,10 +407,8 @@ HB_FUNC( QT_QMOVIE_SETSCALEDSIZE )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      ( p )->setScaledSize( *hbqt_par_QSize( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_SETSCALEDSIZE FP=( p )->setScaledSize( *hbqt_par_QSize( 2 ) ); p is NULL" ) );
+      ( p )->setScaledSize( *hbqt_par_QSize( 2 ) );
    }
 }
 
@@ -459,10 +419,8 @@ HB_FUNC( QT_QMOVIE_SPEED )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      hb_retni( ( p )->speed() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_SPEED FP=hb_retni( ( p )->speed() ); p is NULL" ) );
+      hb_retni( ( p )->speed() );
    }
 }
 
@@ -473,10 +431,8 @@ HB_FUNC( QT_QMOVIE_STATE )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      hb_retni( ( QMovie::MovieState ) ( p )->state() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_STATE FP=hb_retni( ( QMovie::MovieState ) ( p )->state() ); p is NULL" ) );
+      hb_retni( ( QMovie::MovieState ) ( p )->state() );
    }
 }
 
@@ -487,10 +443,8 @@ HB_FUNC( QT_QMOVIE_JUMPTONEXTFRAME )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      hb_retl( ( p )->jumpToNextFrame() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_JUMPTONEXTFRAME FP=hb_retl( ( p )->jumpToNextFrame() ); p is NULL" ) );
+      hb_retl( ( p )->jumpToNextFrame() );
    }
 }
 
@@ -501,10 +455,8 @@ HB_FUNC( QT_QMOVIE_SETPAUSED )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      ( p )->setPaused( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_SETPAUSED FP=( p )->setPaused( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setPaused( hb_parl( 2 ) );
    }
 }
 
@@ -515,10 +467,8 @@ HB_FUNC( QT_QMOVIE_SETSPEED )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      ( p )->setSpeed( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_SETSPEED FP=( p )->setSpeed( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setSpeed( hb_parni( 2 ) );
    }
 }
 
@@ -529,10 +479,8 @@ HB_FUNC( QT_QMOVIE_START )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      ( p )->start();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_START FP=( p )->start(); p is NULL" ) );
+      ( p )->start();
    }
 }
 
@@ -543,10 +491,8 @@ HB_FUNC( QT_QMOVIE_STOP )
 {
    QMovie * p = hbqt_par_QMovie( 1 );
    if( p )
-      ( p )->stop();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMOVIE_STOP FP=( p )->stop(); p is NULL" ) );
+      ( p )->stop();
    }
 }
 

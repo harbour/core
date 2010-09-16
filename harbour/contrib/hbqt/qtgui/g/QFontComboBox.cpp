@@ -162,10 +162,8 @@ HB_FUNC( QT_QFONTCOMBOBOX_CURRENTFONT )
 {
    QFontComboBox * p = hbqt_par_QFontComboBox( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->currentFont() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTCOMBOBOX_CURRENTFONT FP=hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->currentFont() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->currentFont() ), true ) );
    }
 }
 
@@ -176,10 +174,8 @@ HB_FUNC( QT_QFONTCOMBOBOX_FONTFILTERS )
 {
    QFontComboBox * p = hbqt_par_QFontComboBox( 1 );
    if( p )
-      hb_retni( ( QFontComboBox::FontFilters ) ( p )->fontFilters() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTCOMBOBOX_FONTFILTERS FP=hb_retni( ( QFontComboBox::FontFilters ) ( p )->fontFilters() ); p is NULL" ) );
+      hb_retni( ( QFontComboBox::FontFilters ) ( p )->fontFilters() );
    }
 }
 
@@ -190,10 +186,8 @@ HB_FUNC( QT_QFONTCOMBOBOX_SETFONTFILTERS )
 {
    QFontComboBox * p = hbqt_par_QFontComboBox( 1 );
    if( p )
-      ( p )->setFontFilters( ( QFontComboBox::FontFilters ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTCOMBOBOX_SETFONTFILTERS FP=( p )->setFontFilters( ( QFontComboBox::FontFilters ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setFontFilters( ( QFontComboBox::FontFilters ) hb_parni( 2 ) );
    }
 }
 
@@ -204,10 +198,8 @@ HB_FUNC( QT_QFONTCOMBOBOX_SETWRITINGSYSTEM )
 {
    QFontComboBox * p = hbqt_par_QFontComboBox( 1 );
    if( p )
-      ( p )->setWritingSystem( ( QFontDatabase::WritingSystem ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTCOMBOBOX_SETWRITINGSYSTEM FP=( p )->setWritingSystem( ( QFontDatabase::WritingSystem ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setWritingSystem( ( QFontDatabase::WritingSystem ) hb_parni( 2 ) );
    }
 }
 
@@ -218,10 +210,8 @@ HB_FUNC( QT_QFONTCOMBOBOX_WRITINGSYSTEM )
 {
    QFontComboBox * p = hbqt_par_QFontComboBox( 1 );
    if( p )
-      hb_retni( ( QFontDatabase::WritingSystem ) ( p )->writingSystem() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTCOMBOBOX_WRITINGSYSTEM FP=hb_retni( ( QFontDatabase::WritingSystem ) ( p )->writingSystem() ); p is NULL" ) );
+      hb_retni( ( QFontDatabase::WritingSystem ) ( p )->writingSystem() );
    }
 }
 
@@ -232,10 +222,8 @@ HB_FUNC( QT_QFONTCOMBOBOX_SETCURRENTFONT )
 {
    QFontComboBox * p = hbqt_par_QFontComboBox( 1 );
    if( p )
-      ( p )->setCurrentFont( *hbqt_par_QFont( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTCOMBOBOX_SETCURRENTFONT FP=( p )->setCurrentFont( *hbqt_par_QFont( 2 ) ); p is NULL" ) );
+      ( p )->setCurrentFont( *hbqt_par_QFont( 2 ) );
    }
 }
 

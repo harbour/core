@@ -156,10 +156,8 @@ HB_FUNC( QT_QTIMER_INTERVAL )
 {
    QTimer * p = hbqt_par_QTimer( 1 );
    if( p )
-      hb_retni( ( p )->interval() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMER_INTERVAL FP=hb_retni( ( p )->interval() ); p is NULL" ) );
+      hb_retni( ( p )->interval() );
    }
 }
 
@@ -170,10 +168,8 @@ HB_FUNC( QT_QTIMER_ISACTIVE )
 {
    QTimer * p = hbqt_par_QTimer( 1 );
    if( p )
-      hb_retl( ( p )->isActive() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMER_ISACTIVE FP=hb_retl( ( p )->isActive() ); p is NULL" ) );
+      hb_retl( ( p )->isActive() );
    }
 }
 
@@ -184,10 +180,8 @@ HB_FUNC( QT_QTIMER_ISSINGLESHOT )
 {
    QTimer * p = hbqt_par_QTimer( 1 );
    if( p )
-      hb_retl( ( p )->isSingleShot() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMER_ISSINGLESHOT FP=hb_retl( ( p )->isSingleShot() ); p is NULL" ) );
+      hb_retl( ( p )->isSingleShot() );
    }
 }
 
@@ -198,10 +192,8 @@ HB_FUNC( QT_QTIMER_SETINTERVAL )
 {
    QTimer * p = hbqt_par_QTimer( 1 );
    if( p )
-      ( p )->setInterval( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMER_SETINTERVAL FP=( p )->setInterval( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setInterval( hb_parni( 2 ) );
    }
 }
 
@@ -212,10 +204,8 @@ HB_FUNC( QT_QTIMER_SETSINGLESHOT )
 {
    QTimer * p = hbqt_par_QTimer( 1 );
    if( p )
-      ( p )->setSingleShot( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMER_SETSINGLESHOT FP=( p )->setSingleShot( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setSingleShot( hb_parl( 2 ) );
    }
 }
 
@@ -226,10 +216,8 @@ HB_FUNC( QT_QTIMER_TIMERID )
 {
    QTimer * p = hbqt_par_QTimer( 1 );
    if( p )
-      hb_retni( ( p )->timerId() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMER_TIMERID FP=hb_retni( ( p )->timerId() ); p is NULL" ) );
+      hb_retni( ( p )->timerId() );
    }
 }
 
@@ -240,10 +228,8 @@ HB_FUNC( QT_QTIMER_SINGLESHOT )
 {
    QTimer * p = hbqt_par_QTimer( 1 );
    if( p )
-      ( p )->singleShot( hb_parni( 2 ), hbqt_par_QObject( 3 ), hbqt_par_char( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMER_SINGLESHOT FP=( p )->singleShot( hb_parni( 2 ), hbqt_par_QObject( 3 ), hbqt_par_char( 4 ) ); p is NULL" ) );
+      ( p )->singleShot( hb_parni( 2 ), hbqt_par_QObject( 3 ), hbqt_par_char( 4 ) );
    }
 }
 
@@ -254,10 +240,8 @@ HB_FUNC( QT_QTIMER_START )
 {
    QTimer * p = hbqt_par_QTimer( 1 );
    if( p )
-      ( p )->start();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMER_START FP=( p )->start(); p is NULL" ) );
+      ( p )->start();
    }
 }
 
@@ -268,10 +252,8 @@ HB_FUNC( QT_QTIMER_STOP )
 {
    QTimer * p = hbqt_par_QTimer( 1 );
    if( p )
-      ( p )->stop();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMER_STOP FP=( p )->stop(); p is NULL" ) );
+      ( p )->stop();
    }
 }
 
@@ -282,10 +264,8 @@ HB_FUNC( QT_QTIMER_START_1 )
 {
    QTimer * p = hbqt_par_QTimer( 1 );
    if( p )
-      ( p )->start( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTIMER_START_1 FP=( p )->start( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->start( hb_parni( 2 ) );
    }
 }
 

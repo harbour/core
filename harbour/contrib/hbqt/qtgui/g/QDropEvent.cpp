@@ -135,10 +135,8 @@ HB_FUNC( QT_QDROPEVENT_ACCEPTPROPOSEDACTION )
 {
    QDropEvent * p = hbqt_par_QDropEvent( 1 );
    if( p )
-      ( p )->acceptProposedAction();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDROPEVENT_ACCEPTPROPOSEDACTION FP=( p )->acceptProposedAction(); p is NULL" ) );
+      ( p )->acceptProposedAction();
    }
 }
 
@@ -149,10 +147,8 @@ HB_FUNC( QT_QDROPEVENT_DROPACTION )
 {
    QDropEvent * p = hbqt_par_QDropEvent( 1 );
    if( p )
-      hb_retni( ( Qt::DropAction ) ( p )->dropAction() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDROPEVENT_DROPACTION FP=hb_retni( ( Qt::DropAction ) ( p )->dropAction() ); p is NULL" ) );
+      hb_retni( ( Qt::DropAction ) ( p )->dropAction() );
    }
 }
 
@@ -163,10 +159,8 @@ HB_FUNC( QT_QDROPEVENT_KEYBOARDMODIFIERS )
 {
    QDropEvent * p = hbqt_par_QDropEvent( 1 );
    if( p )
-      hb_retni( ( Qt::KeyboardModifiers ) ( p )->keyboardModifiers() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDROPEVENT_KEYBOARDMODIFIERS FP=hb_retni( ( Qt::KeyboardModifiers ) ( p )->keyboardModifiers() ); p is NULL" ) );
+      hb_retni( ( Qt::KeyboardModifiers ) ( p )->keyboardModifiers() );
    }
 }
 
@@ -185,10 +179,8 @@ HB_FUNC( QT_QDROPEVENT_MOUSEBUTTONS )
 {
    QDropEvent * p = hbqt_par_QDropEvent( 1 );
    if( p )
-      hb_retni( ( Qt::MouseButtons ) ( p )->mouseButtons() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDROPEVENT_MOUSEBUTTONS FP=hb_retni( ( Qt::MouseButtons ) ( p )->mouseButtons() ); p is NULL" ) );
+      hb_retni( ( Qt::MouseButtons ) ( p )->mouseButtons() );
    }
 }
 
@@ -199,10 +191,8 @@ HB_FUNC( QT_QDROPEVENT_POS )
 {
    QDropEvent * p = hbqt_par_QDropEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDROPEVENT_POS FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) );
    }
 }
 
@@ -213,10 +203,8 @@ HB_FUNC( QT_QDROPEVENT_POSSIBLEACTIONS )
 {
    QDropEvent * p = hbqt_par_QDropEvent( 1 );
    if( p )
-      hb_retni( ( Qt::DropActions ) ( p )->possibleActions() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDROPEVENT_POSSIBLEACTIONS FP=hb_retni( ( Qt::DropActions ) ( p )->possibleActions() ); p is NULL" ) );
+      hb_retni( ( Qt::DropActions ) ( p )->possibleActions() );
    }
 }
 
@@ -227,10 +215,8 @@ HB_FUNC( QT_QDROPEVENT_PROPOSEDACTION )
 {
    QDropEvent * p = hbqt_par_QDropEvent( 1 );
    if( p )
-      hb_retni( ( Qt::DropAction ) ( p )->proposedAction() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDROPEVENT_PROPOSEDACTION FP=hb_retni( ( Qt::DropAction ) ( p )->proposedAction() ); p is NULL" ) );
+      hb_retni( ( Qt::DropAction ) ( p )->proposedAction() );
    }
 }
 
@@ -241,10 +227,8 @@ HB_FUNC( QT_QDROPEVENT_SETDROPACTION )
 {
    QDropEvent * p = hbqt_par_QDropEvent( 1 );
    if( p )
-      ( p )->setDropAction( ( Qt::DropAction ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDROPEVENT_SETDROPACTION FP=( p )->setDropAction( ( Qt::DropAction ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setDropAction( ( Qt::DropAction ) hb_parni( 2 ) );
    }
 }
 
@@ -255,10 +239,8 @@ HB_FUNC( QT_QDROPEVENT_SOURCE )
 {
    QDropEvent * p = hbqt_par_QDropEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->source(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDROPEVENT_SOURCE FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->source(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->source(), false ) );
    }
 }
 

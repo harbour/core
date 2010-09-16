@@ -158,10 +158,8 @@ HB_FUNC( QT_QGROUPBOX_ALIGNMENT )
 {
    QGroupBox * p = hbqt_par_QGroupBox( 1 );
    if( p )
-      hb_retni( ( Qt::Alignment ) ( p )->alignment() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGROUPBOX_ALIGNMENT FP=hb_retni( ( Qt::Alignment ) ( p )->alignment() ); p is NULL" ) );
+      hb_retni( ( Qt::Alignment ) ( p )->alignment() );
    }
 }
 
@@ -172,10 +170,8 @@ HB_FUNC( QT_QGROUPBOX_ISCHECKABLE )
 {
    QGroupBox * p = hbqt_par_QGroupBox( 1 );
    if( p )
-      hb_retl( ( p )->isCheckable() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGROUPBOX_ISCHECKABLE FP=hb_retl( ( p )->isCheckable() ); p is NULL" ) );
+      hb_retl( ( p )->isCheckable() );
    }
 }
 
@@ -186,10 +182,8 @@ HB_FUNC( QT_QGROUPBOX_ISCHECKED )
 {
    QGroupBox * p = hbqt_par_QGroupBox( 1 );
    if( p )
-      hb_retl( ( p )->isChecked() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGROUPBOX_ISCHECKED FP=hb_retl( ( p )->isChecked() ); p is NULL" ) );
+      hb_retl( ( p )->isChecked() );
    }
 }
 
@@ -200,10 +194,8 @@ HB_FUNC( QT_QGROUPBOX_ISFLAT )
 {
    QGroupBox * p = hbqt_par_QGroupBox( 1 );
    if( p )
-      hb_retl( ( p )->isFlat() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGROUPBOX_ISFLAT FP=hb_retl( ( p )->isFlat() ); p is NULL" ) );
+      hb_retl( ( p )->isFlat() );
    }
 }
 
@@ -214,10 +206,8 @@ HB_FUNC( QT_QGROUPBOX_SETALIGNMENT )
 {
    QGroupBox * p = hbqt_par_QGroupBox( 1 );
    if( p )
-      ( p )->setAlignment( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGROUPBOX_SETALIGNMENT FP=( p )->setAlignment( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setAlignment( hb_parni( 2 ) );
    }
 }
 
@@ -228,10 +218,8 @@ HB_FUNC( QT_QGROUPBOX_SETCHECKABLE )
 {
    QGroupBox * p = hbqt_par_QGroupBox( 1 );
    if( p )
-      ( p )->setCheckable( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGROUPBOX_SETCHECKABLE FP=( p )->setCheckable( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setCheckable( hb_parl( 2 ) );
    }
 }
 
@@ -242,10 +230,8 @@ HB_FUNC( QT_QGROUPBOX_SETFLAT )
 {
    QGroupBox * p = hbqt_par_QGroupBox( 1 );
    if( p )
-      ( p )->setFlat( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGROUPBOX_SETFLAT FP=( p )->setFlat( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setFlat( hb_parl( 2 ) );
    }
 }
 
@@ -256,10 +242,10 @@ HB_FUNC( QT_QGROUPBOX_SETTITLE )
 {
    QGroupBox * p = hbqt_par_QGroupBox( 1 );
    if( p )
-      ( p )->setTitle( QGroupBox::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGROUPBOX_SETTITLE FP=( p )->setTitle( QGroupBox::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setTitle( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -270,10 +256,8 @@ HB_FUNC( QT_QGROUPBOX_TITLE )
 {
    QGroupBox * p = hbqt_par_QGroupBox( 1 );
    if( p )
-      hb_retc( ( p )->title().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGROUPBOX_TITLE FP=hb_retc( ( p )->title().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->title().toUtf8().data() );
    }
 }
 
@@ -284,10 +268,8 @@ HB_FUNC( QT_QGROUPBOX_SETCHECKED )
 {
    QGroupBox * p = hbqt_par_QGroupBox( 1 );
    if( p )
-      ( p )->setChecked( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGROUPBOX_SETCHECKED FP=( p )->setChecked( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setChecked( hb_parl( 2 ) );
    }
 }
 

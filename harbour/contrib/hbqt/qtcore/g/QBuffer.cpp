@@ -157,10 +157,8 @@ HB_FUNC( QT_QBUFFER_BUFFER )
 {
    QBuffer * p = hbqt_par_QBuffer( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->buffer() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBUFFER_BUFFER FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->buffer() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->buffer() ), true ) );
    }
 }
 
@@ -171,10 +169,8 @@ HB_FUNC( QT_QBUFFER_BUFFER_1 )
 {
    QBuffer * p = hbqt_par_QBuffer( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->buffer() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBUFFER_BUFFER_1 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->buffer() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->buffer() ), true ) );
    }
 }
 
@@ -185,10 +181,8 @@ HB_FUNC( QT_QBUFFER_DATA )
 {
    QBuffer * p = hbqt_par_QBuffer( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->data() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBUFFER_DATA FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->data() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->data() ), true ) );
    }
 }
 
@@ -199,10 +193,8 @@ HB_FUNC( QT_QBUFFER_SETBUFFER )
 {
    QBuffer * p = hbqt_par_QBuffer( 1 );
    if( p )
-      ( p )->setBuffer( hbqt_par_QByteArray( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBUFFER_SETBUFFER FP=( p )->setBuffer( hbqt_par_QByteArray( 2 ) ); p is NULL" ) );
+      ( p )->setBuffer( hbqt_par_QByteArray( 2 ) );
    }
 }
 
@@ -213,10 +205,8 @@ HB_FUNC( QT_QBUFFER_SETDATA )
 {
    QBuffer * p = hbqt_par_QBuffer( 1 );
    if( p )
-      ( p )->setData( hbqt_par_char( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBUFFER_SETDATA FP=( p )->setData( hbqt_par_char( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setData( hbqt_par_char( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -227,10 +217,8 @@ HB_FUNC( QT_QBUFFER_SETDATA_1 )
 {
    QBuffer * p = hbqt_par_QBuffer( 1 );
    if( p )
-      ( p )->setData( *hbqt_par_QByteArray( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBUFFER_SETDATA_1 FP=( p )->setData( *hbqt_par_QByteArray( 2 ) ); p is NULL" ) );
+      ( p )->setData( *hbqt_par_QByteArray( 2 ) );
    }
 }
 

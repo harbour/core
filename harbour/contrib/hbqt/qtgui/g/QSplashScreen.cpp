@@ -158,10 +158,8 @@ HB_FUNC( QT_QSPLASHSCREEN_FINISH )
 {
    QSplashScreen * p = hbqt_par_QSplashScreen( 1 );
    if( p )
-      ( p )->finish( hbqt_par_QWidget( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLASHSCREEN_FINISH FP=( p )->finish( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+      ( p )->finish( hbqt_par_QWidget( 2 ) );
    }
 }
 
@@ -172,10 +170,8 @@ HB_FUNC( QT_QSPLASHSCREEN_PIXMAP )
 {
    QSplashScreen * p = hbqt_par_QSplashScreen( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLASHSCREEN_PIXMAP FP=hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap() ), true ) );
    }
 }
 
@@ -186,10 +182,8 @@ HB_FUNC( QT_QSPLASHSCREEN_REPAINT )
 {
    QSplashScreen * p = hbqt_par_QSplashScreen( 1 );
    if( p )
-      ( p )->repaint();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLASHSCREEN_REPAINT FP=( p )->repaint(); p is NULL" ) );
+      ( p )->repaint();
    }
 }
 
@@ -200,10 +194,8 @@ HB_FUNC( QT_QSPLASHSCREEN_SETPIXMAP )
 {
    QSplashScreen * p = hbqt_par_QSplashScreen( 1 );
    if( p )
-      ( p )->setPixmap( *hbqt_par_QPixmap( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLASHSCREEN_SETPIXMAP FP=( p )->setPixmap( *hbqt_par_QPixmap( 2 ) ); p is NULL" ) );
+      ( p )->setPixmap( *hbqt_par_QPixmap( 2 ) );
    }
 }
 
@@ -214,10 +206,8 @@ HB_FUNC( QT_QSPLASHSCREEN_CLEARMESSAGE )
 {
    QSplashScreen * p = hbqt_par_QSplashScreen( 1 );
    if( p )
-      ( p )->clearMessage();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLASHSCREEN_CLEARMESSAGE FP=( p )->clearMessage(); p is NULL" ) );
+      ( p )->clearMessage();
    }
 }
 
@@ -228,10 +218,10 @@ HB_FUNC( QT_QSPLASHSCREEN_SHOWMESSAGE )
 {
    QSplashScreen * p = hbqt_par_QSplashScreen( 1 );
    if( p )
-      ( p )->showMessage( QSplashScreen::tr( hb_parc( 2 ) ), hb_parnidef( 3, Qt::AlignLeft ), *hbqt_par_QColor( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLASHSCREEN_SHOWMESSAGE FP=( p )->showMessage( QSplashScreen::tr( hb_parc( 2 ) ), hb_parnidef( 3, Qt::AlignLeft ), *hbqt_par_QColor( 4 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->showMessage( hb_parstr_utf8( 2, &pText, NULL ), hb_parnidef( 3, Qt::AlignLeft ), *hbqt_par_QColor( 4 ) );
+      hb_strfree( pText );
    }
 }
 

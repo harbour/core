@@ -145,10 +145,10 @@ HB_FUNC( QT_QTEXTENCODER_FROMUNICODE )
 {
    QTextEncoder * p = hbqt_par_QTextEncoder( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->fromUnicode( hbqt_par_QString( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTENCODER_FROMUNICODE FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->fromUnicode( hbqt_par_QString( 2 ) ) ), true ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->fromUnicode( hb_parstr_utf8( 2, &pText, NULL ) ) ), true ) );
+      hb_strfree( pText );
    }
 }
 
@@ -159,10 +159,8 @@ HB_FUNC( QT_QTEXTENCODER_FROMUNICODE_1 )
 {
    QTextEncoder * p = hbqt_par_QTextEncoder( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->fromUnicode( hbqt_par_QChar( 2 ), hb_parni( 3 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTENCODER_FROMUNICODE_1 FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->fromUnicode( hbqt_par_QChar( 2 ), hb_parni( 3 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->fromUnicode( hbqt_par_QChar( 2 ), hb_parni( 3 ) ) ), true ) );
    }
 }
 

@@ -163,10 +163,8 @@ HB_FUNC( QT_QLCDNUMBER_CHECKOVERFLOW )
 {
    QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
    if( p )
-      hb_retl( ( p )->checkOverflow( hb_parnd( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_CHECKOVERFLOW FP=hb_retl( ( p )->checkOverflow( hb_parnd( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->checkOverflow( hb_parnd( 2 ) ) );
    }
 }
 
@@ -177,10 +175,8 @@ HB_FUNC( QT_QLCDNUMBER_CHECKOVERFLOW_1 )
 {
    QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
    if( p )
-      hb_retl( ( p )->checkOverflow( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_CHECKOVERFLOW_1 FP=hb_retl( ( p )->checkOverflow( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->checkOverflow( hb_parni( 2 ) ) );
    }
 }
 
@@ -191,10 +187,8 @@ HB_FUNC( QT_QLCDNUMBER_INTVALUE )
 {
    QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
    if( p )
-      hb_retni( ( p )->intValue() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_INTVALUE FP=hb_retni( ( p )->intValue() ); p is NULL" ) );
+      hb_retni( ( p )->intValue() );
    }
 }
 
@@ -205,10 +199,8 @@ HB_FUNC( QT_QLCDNUMBER_MODE )
 {
    QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
    if( p )
-      hb_retni( ( QLCDNumber::Mode ) ( p )->mode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_MODE FP=hb_retni( ( QLCDNumber::Mode ) ( p )->mode() ); p is NULL" ) );
+      hb_retni( ( QLCDNumber::Mode ) ( p )->mode() );
    }
 }
 
@@ -219,10 +211,8 @@ HB_FUNC( QT_QLCDNUMBER_NUMDIGITS )
 {
    QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
    if( p )
-      hb_retni( ( p )->numDigits() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_NUMDIGITS FP=hb_retni( ( p )->numDigits() ); p is NULL" ) );
+      hb_retni( ( p )->numDigits() );
    }
 }
 
@@ -233,10 +223,8 @@ HB_FUNC( QT_QLCDNUMBER_SEGMENTSTYLE )
 {
    QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
    if( p )
-      hb_retni( ( QLCDNumber::SegmentStyle ) ( p )->segmentStyle() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_SEGMENTSTYLE FP=hb_retni( ( QLCDNumber::SegmentStyle ) ( p )->segmentStyle() ); p is NULL" ) );
+      hb_retni( ( QLCDNumber::SegmentStyle ) ( p )->segmentStyle() );
    }
 }
 
@@ -247,10 +235,8 @@ HB_FUNC( QT_QLCDNUMBER_SETMODE )
 {
    QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
    if( p )
-      ( p )->setMode( ( QLCDNumber::Mode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_SETMODE FP=( p )->setMode( ( QLCDNumber::Mode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setMode( ( QLCDNumber::Mode ) hb_parni( 2 ) );
    }
 }
 
@@ -261,10 +247,8 @@ HB_FUNC( QT_QLCDNUMBER_SETNUMDIGITS )
 {
    QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
    if( p )
-      ( p )->setNumDigits( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_SETNUMDIGITS FP=( p )->setNumDigits( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setNumDigits( hb_parni( 2 ) );
    }
 }
 
@@ -275,10 +259,8 @@ HB_FUNC( QT_QLCDNUMBER_SETSEGMENTSTYLE )
 {
    QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
    if( p )
-      ( p )->setSegmentStyle( ( QLCDNumber::SegmentStyle ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_SETSEGMENTSTYLE FP=( p )->setSegmentStyle( ( QLCDNumber::SegmentStyle ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setSegmentStyle( ( QLCDNumber::SegmentStyle ) hb_parni( 2 ) );
    }
 }
 
@@ -289,10 +271,8 @@ HB_FUNC( QT_QLCDNUMBER_SMALLDECIMALPOINT )
 {
    QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
    if( p )
-      hb_retl( ( p )->smallDecimalPoint() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_SMALLDECIMALPOINT FP=hb_retl( ( p )->smallDecimalPoint() ); p is NULL" ) );
+      hb_retl( ( p )->smallDecimalPoint() );
    }
 }
 
@@ -303,10 +283,8 @@ HB_FUNC( QT_QLCDNUMBER_VALUE )
 {
    QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
    if( p )
-      hb_retnd( ( p )->value() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_VALUE FP=hb_retnd( ( p )->value() ); p is NULL" ) );
+      hb_retnd( ( p )->value() );
    }
 }
 
@@ -317,10 +295,10 @@ HB_FUNC( QT_QLCDNUMBER_DISPLAY )
 {
    QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
    if( p )
-      ( p )->display( QLCDNumber::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_DISPLAY FP=( p )->display( QLCDNumber::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->display( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -331,10 +309,8 @@ HB_FUNC( QT_QLCDNUMBER_DISPLAY_1 )
 {
    QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
    if( p )
-      ( p )->display( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_DISPLAY_1 FP=( p )->display( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->display( hb_parnd( 2 ) );
    }
 }
 
@@ -345,10 +321,8 @@ HB_FUNC( QT_QLCDNUMBER_DISPLAY_2 )
 {
    QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
    if( p )
-      ( p )->display( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_DISPLAY_2 FP=( p )->display( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->display( hb_parni( 2 ) );
    }
 }
 
@@ -359,10 +333,8 @@ HB_FUNC( QT_QLCDNUMBER_SETBINMODE )
 {
    QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
    if( p )
-      ( p )->setBinMode();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_SETBINMODE FP=( p )->setBinMode(); p is NULL" ) );
+      ( p )->setBinMode();
    }
 }
 
@@ -373,10 +345,8 @@ HB_FUNC( QT_QLCDNUMBER_SETDECMODE )
 {
    QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
    if( p )
-      ( p )->setDecMode();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_SETDECMODE FP=( p )->setDecMode(); p is NULL" ) );
+      ( p )->setDecMode();
    }
 }
 
@@ -387,10 +357,8 @@ HB_FUNC( QT_QLCDNUMBER_SETHEXMODE )
 {
    QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
    if( p )
-      ( p )->setHexMode();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_SETHEXMODE FP=( p )->setHexMode(); p is NULL" ) );
+      ( p )->setHexMode();
    }
 }
 
@@ -401,10 +369,8 @@ HB_FUNC( QT_QLCDNUMBER_SETOCTMODE )
 {
    QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
    if( p )
-      ( p )->setOctMode();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_SETOCTMODE FP=( p )->setOctMode(); p is NULL" ) );
+      ( p )->setOctMode();
    }
 }
 
@@ -415,10 +381,8 @@ HB_FUNC( QT_QLCDNUMBER_SETSMALLDECIMALPOINT )
 {
    QLCDNumber * p = hbqt_par_QLCDNumber( 1 );
    if( p )
-      ( p )->setSmallDecimalPoint( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLCDNUMBER_SETSMALLDECIMALPOINT FP=( p )->setSmallDecimalPoint( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setSmallDecimalPoint( hb_parl( 2 ) );
    }
 }
 

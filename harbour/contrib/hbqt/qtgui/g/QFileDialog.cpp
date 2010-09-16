@@ -194,10 +194,8 @@ HB_FUNC( QT_QFILEDIALOG_ACCEPTMODE )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      hb_retni( ( QFileDialog::AcceptMode ) ( p )->acceptMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_ACCEPTMODE FP=hb_retni( ( QFileDialog::AcceptMode ) ( p )->acceptMode() ); p is NULL" ) );
+      hb_retni( ( QFileDialog::AcceptMode ) ( p )->acceptMode() );
    }
 }
 
@@ -208,10 +206,8 @@ HB_FUNC( QT_QFILEDIALOG_CONFIRMOVERWRITE )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      hb_retl( ( p )->confirmOverwrite() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_CONFIRMOVERWRITE FP=hb_retl( ( p )->confirmOverwrite() ); p is NULL" ) );
+      hb_retl( ( p )->confirmOverwrite() );
    }
 }
 
@@ -222,10 +218,8 @@ HB_FUNC( QT_QFILEDIALOG_DEFAULTSUFFIX )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      hb_retc( ( p )->defaultSuffix().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_DEFAULTSUFFIX FP=hb_retc( ( p )->defaultSuffix().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->defaultSuffix().toUtf8().data() );
    }
 }
 
@@ -236,10 +230,8 @@ HB_FUNC( QT_QFILEDIALOG_DIRECTORY )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( ( p )->directory() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_DIRECTORY FP=hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( ( p )->directory() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDir( new QDir( ( p )->directory() ), true ) );
    }
 }
 
@@ -250,10 +242,8 @@ HB_FUNC( QT_QFILEDIALOG_FILEMODE )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      hb_retni( ( QFileDialog::FileMode ) ( p )->fileMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_FILEMODE FP=hb_retni( ( QFileDialog::FileMode ) ( p )->fileMode() ); p is NULL" ) );
+      hb_retni( ( QFileDialog::FileMode ) ( p )->fileMode() );
    }
 }
 
@@ -264,10 +254,8 @@ HB_FUNC( QT_QFILEDIALOG_FILTER )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      hb_retni( ( QDir::Filters ) ( p )->filter() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_FILTER FP=hb_retni( ( QDir::Filters ) ( p )->filter() ); p is NULL" ) );
+      hb_retni( ( QDir::Filters ) ( p )->filter() );
    }
 }
 
@@ -278,10 +266,8 @@ HB_FUNC( QT_QFILEDIALOG_HISTORY )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->history() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_HISTORY FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->history() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->history() ), true ) );
    }
 }
 
@@ -292,10 +278,8 @@ HB_FUNC( QT_QFILEDIALOG_ICONPROVIDER )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QFileIconProvider( ( p )->iconProvider(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_ICONPROVIDER FP=hb_retptrGC( hbqt_gcAllocate_QFileIconProvider( ( p )->iconProvider(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QFileIconProvider( ( p )->iconProvider(), false ) );
    }
 }
 
@@ -306,10 +290,8 @@ HB_FUNC( QT_QFILEDIALOG_ISNAMEFILTERDETAILSVISIBLE )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      hb_retl( ( p )->isNameFilterDetailsVisible() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_ISNAMEFILTERDETAILSVISIBLE FP=hb_retl( ( p )->isNameFilterDetailsVisible() ); p is NULL" ) );
+      hb_retl( ( p )->isNameFilterDetailsVisible() );
    }
 }
 
@@ -320,10 +302,8 @@ HB_FUNC( QT_QFILEDIALOG_ISREADONLY )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      hb_retl( ( p )->isReadOnly() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_ISREADONLY FP=hb_retl( ( p )->isReadOnly() ); p is NULL" ) );
+      hb_retl( ( p )->isReadOnly() );
    }
 }
 
@@ -334,10 +314,8 @@ HB_FUNC( QT_QFILEDIALOG_ITEMDELEGATE )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAbstractItemDelegate( ( p )->itemDelegate(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_ITEMDELEGATE FP=hb_retptrGC( hbqt_gcAllocate_QAbstractItemDelegate( ( p )->itemDelegate(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAbstractItemDelegate( ( p )->itemDelegate(), false ) );
    }
 }
 
@@ -348,10 +326,8 @@ HB_FUNC( QT_QFILEDIALOG_LABELTEXT )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      hb_retc( ( p )->labelText( ( QFileDialog::DialogLabel ) hb_parni( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_LABELTEXT FP=hb_retc( ( p )->labelText( ( QFileDialog::DialogLabel ) hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->labelText( ( QFileDialog::DialogLabel ) hb_parni( 2 ) ).toUtf8().data() );
    }
 }
 
@@ -362,10 +338,8 @@ HB_FUNC( QT_QFILEDIALOG_NAMEFILTERS )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->nameFilters() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_NAMEFILTERS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->nameFilters() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->nameFilters() ), true ) );
    }
 }
 
@@ -376,10 +350,8 @@ HB_FUNC( QT_QFILEDIALOG_OPTIONS )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      hb_retni( ( QFileDialog::Options ) ( p )->options() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_OPTIONS FP=hb_retni( ( QFileDialog::Options ) ( p )->options() ); p is NULL" ) );
+      hb_retni( ( QFileDialog::Options ) ( p )->options() );
    }
 }
 
@@ -390,10 +362,8 @@ HB_FUNC( QT_QFILEDIALOG_PROXYMODEL )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAbstractProxyModel( ( p )->proxyModel(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_PROXYMODEL FP=hb_retptrGC( hbqt_gcAllocate_QAbstractProxyModel( ( p )->proxyModel(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAbstractProxyModel( ( p )->proxyModel(), false ) );
    }
 }
 
@@ -404,10 +374,8 @@ HB_FUNC( QT_QFILEDIALOG_RESOLVESYMLINKS )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      hb_retl( ( p )->resolveSymlinks() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_RESOLVESYMLINKS FP=hb_retl( ( p )->resolveSymlinks() ); p is NULL" ) );
+      hb_retl( ( p )->resolveSymlinks() );
    }
 }
 
@@ -418,10 +386,8 @@ HB_FUNC( QT_QFILEDIALOG_RESTORESTATE )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      hb_retl( ( p )->restoreState( *hbqt_par_QByteArray( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_RESTORESTATE FP=hb_retl( ( p )->restoreState( *hbqt_par_QByteArray( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->restoreState( *hbqt_par_QByteArray( 2 ) ) );
    }
 }
 
@@ -432,10 +398,8 @@ HB_FUNC( QT_QFILEDIALOG_SAVESTATE )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->saveState() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SAVESTATE FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->saveState() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->saveState() ), true ) );
    }
 }
 
@@ -446,10 +410,10 @@ HB_FUNC( QT_QFILEDIALOG_SELECTFILE )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      ( p )->selectFile( QFileDialog::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SELECTFILE FP=( p )->selectFile( QFileDialog::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->selectFile( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -460,10 +424,10 @@ HB_FUNC( QT_QFILEDIALOG_SELECTNAMEFILTER )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      ( p )->selectNameFilter( QFileDialog::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SELECTNAMEFILTER FP=( p )->selectNameFilter( QFileDialog::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->selectNameFilter( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -474,10 +438,8 @@ HB_FUNC( QT_QFILEDIALOG_SELECTEDFILES )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->selectedFiles() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SELECTEDFILES FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->selectedFiles() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->selectedFiles() ), true ) );
    }
 }
 
@@ -488,10 +450,8 @@ HB_FUNC( QT_QFILEDIALOG_SELECTEDNAMEFILTER )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      hb_retc( ( p )->selectedNameFilter().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SELECTEDNAMEFILTER FP=hb_retc( ( p )->selectedNameFilter().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->selectedNameFilter().toUtf8().data() );
    }
 }
 
@@ -502,10 +462,8 @@ HB_FUNC( QT_QFILEDIALOG_SETACCEPTMODE )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      ( p )->setAcceptMode( ( QFileDialog::AcceptMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SETACCEPTMODE FP=( p )->setAcceptMode( ( QFileDialog::AcceptMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setAcceptMode( ( QFileDialog::AcceptMode ) hb_parni( 2 ) );
    }
 }
 
@@ -516,10 +474,8 @@ HB_FUNC( QT_QFILEDIALOG_SETCONFIRMOVERWRITE )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      ( p )->setConfirmOverwrite( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SETCONFIRMOVERWRITE FP=( p )->setConfirmOverwrite( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setConfirmOverwrite( hb_parl( 2 ) );
    }
 }
 
@@ -530,10 +486,10 @@ HB_FUNC( QT_QFILEDIALOG_SETDEFAULTSUFFIX )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      ( p )->setDefaultSuffix( QFileDialog::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SETDEFAULTSUFFIX FP=( p )->setDefaultSuffix( QFileDialog::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setDefaultSuffix( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -544,10 +500,10 @@ HB_FUNC( QT_QFILEDIALOG_SETDIRECTORY )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      ( p )->setDirectory( QFileDialog::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SETDIRECTORY FP=( p )->setDirectory( QFileDialog::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setDirectory( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -558,10 +514,8 @@ HB_FUNC( QT_QFILEDIALOG_SETDIRECTORY_1 )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      ( p )->setDirectory( *hbqt_par_QDir( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SETDIRECTORY_1 FP=( p )->setDirectory( *hbqt_par_QDir( 2 ) ); p is NULL" ) );
+      ( p )->setDirectory( *hbqt_par_QDir( 2 ) );
    }
 }
 
@@ -572,10 +526,8 @@ HB_FUNC( QT_QFILEDIALOG_SETFILEMODE )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      ( p )->setFileMode( ( QFileDialog::FileMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SETFILEMODE FP=( p )->setFileMode( ( QFileDialog::FileMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setFileMode( ( QFileDialog::FileMode ) hb_parni( 2 ) );
    }
 }
 
@@ -586,10 +538,8 @@ HB_FUNC( QT_QFILEDIALOG_SETFILTER )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      ( p )->setFilter( ( QDir::Filters ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SETFILTER FP=( p )->setFilter( ( QDir::Filters ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setFilter( ( QDir::Filters ) hb_parni( 2 ) );
    }
 }
 
@@ -600,10 +550,8 @@ HB_FUNC( QT_QFILEDIALOG_SETHISTORY )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      ( p )->setHistory( *hbqt_par_QStringList( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SETHISTORY FP=( p )->setHistory( *hbqt_par_QStringList( 2 ) ); p is NULL" ) );
+      ( p )->setHistory( *hbqt_par_QStringList( 2 ) );
    }
 }
 
@@ -614,10 +562,8 @@ HB_FUNC( QT_QFILEDIALOG_SETICONPROVIDER )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      ( p )->setIconProvider( hbqt_par_QFileIconProvider( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SETICONPROVIDER FP=( p )->setIconProvider( hbqt_par_QFileIconProvider( 2 ) ); p is NULL" ) );
+      ( p )->setIconProvider( hbqt_par_QFileIconProvider( 2 ) );
    }
 }
 
@@ -628,10 +574,8 @@ HB_FUNC( QT_QFILEDIALOG_SETITEMDELEGATE )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      ( p )->setItemDelegate( hbqt_par_QAbstractItemDelegate( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SETITEMDELEGATE FP=( p )->setItemDelegate( hbqt_par_QAbstractItemDelegate( 2 ) ); p is NULL" ) );
+      ( p )->setItemDelegate( hbqt_par_QAbstractItemDelegate( 2 ) );
    }
 }
 
@@ -642,10 +586,10 @@ HB_FUNC( QT_QFILEDIALOG_SETLABELTEXT )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      ( p )->setLabelText( ( QFileDialog::DialogLabel ) hb_parni( 2 ), QFileDialog::tr( hb_parc( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SETLABELTEXT FP=( p )->setLabelText( ( QFileDialog::DialogLabel ) hb_parni( 2 ), QFileDialog::tr( hb_parc( 3 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setLabelText( ( QFileDialog::DialogLabel ) hb_parni( 2 ), hb_parstr_utf8( 3, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -656,10 +600,10 @@ HB_FUNC( QT_QFILEDIALOG_SETNAMEFILTER )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      ( p )->setNameFilter( QFileDialog::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SETNAMEFILTER FP=( p )->setNameFilter( QFileDialog::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setNameFilter( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -670,10 +614,8 @@ HB_FUNC( QT_QFILEDIALOG_SETNAMEFILTERDETAILSVISIBLE )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      ( p )->setNameFilterDetailsVisible( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SETNAMEFILTERDETAILSVISIBLE FP=( p )->setNameFilterDetailsVisible( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setNameFilterDetailsVisible( hb_parl( 2 ) );
    }
 }
 
@@ -684,10 +626,8 @@ HB_FUNC( QT_QFILEDIALOG_SETNAMEFILTERS )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      ( p )->setNameFilters( *hbqt_par_QStringList( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SETNAMEFILTERS FP=( p )->setNameFilters( *hbqt_par_QStringList( 2 ) ); p is NULL" ) );
+      ( p )->setNameFilters( *hbqt_par_QStringList( 2 ) );
    }
 }
 
@@ -698,10 +638,8 @@ HB_FUNC( QT_QFILEDIALOG_SETOPTION )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      ( p )->setOption( ( QFileDialog::Option ) hb_parni( 2 ), hb_parl( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SETOPTION FP=( p )->setOption( ( QFileDialog::Option ) hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+      ( p )->setOption( ( QFileDialog::Option ) hb_parni( 2 ), hb_parl( 3 ) );
    }
 }
 
@@ -712,10 +650,8 @@ HB_FUNC( QT_QFILEDIALOG_SETOPTIONS )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      ( p )->setOptions( ( QFileDialog::Options ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SETOPTIONS FP=( p )->setOptions( ( QFileDialog::Options ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setOptions( ( QFileDialog::Options ) hb_parni( 2 ) );
    }
 }
 
@@ -726,10 +662,8 @@ HB_FUNC( QT_QFILEDIALOG_SETPROXYMODEL )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      ( p )->setProxyModel( hbqt_par_QAbstractProxyModel( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SETPROXYMODEL FP=( p )->setProxyModel( hbqt_par_QAbstractProxyModel( 2 ) ); p is NULL" ) );
+      ( p )->setProxyModel( hbqt_par_QAbstractProxyModel( 2 ) );
    }
 }
 
@@ -740,10 +674,8 @@ HB_FUNC( QT_QFILEDIALOG_SETREADONLY )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      ( p )->setReadOnly( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SETREADONLY FP=( p )->setReadOnly( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setReadOnly( hb_parl( 2 ) );
    }
 }
 
@@ -754,10 +686,8 @@ HB_FUNC( QT_QFILEDIALOG_SETRESOLVESYMLINKS )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      ( p )->setResolveSymlinks( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SETRESOLVESYMLINKS FP=( p )->setResolveSymlinks( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setResolveSymlinks( hb_parl( 2 ) );
    }
 }
 
@@ -768,10 +698,8 @@ HB_FUNC( QT_QFILEDIALOG_SETVIEWMODE )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      ( p )->setViewMode( ( QFileDialog::ViewMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SETVIEWMODE FP=( p )->setViewMode( ( QFileDialog::ViewMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setViewMode( ( QFileDialog::ViewMode ) hb_parni( 2 ) );
    }
 }
 
@@ -782,10 +710,8 @@ HB_FUNC( QT_QFILEDIALOG_SIDEBARURLS )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QUrl>( ( p )->sidebarUrls() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_SIDEBARURLS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QUrl>( ( p )->sidebarUrls() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QUrl>( ( p )->sidebarUrls() ), true ) );
    }
 }
 
@@ -796,10 +722,8 @@ HB_FUNC( QT_QFILEDIALOG_TESTOPTION )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      hb_retl( ( p )->testOption( ( QFileDialog::Option ) hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_TESTOPTION FP=hb_retl( ( p )->testOption( ( QFileDialog::Option ) hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->testOption( ( QFileDialog::Option ) hb_parni( 2 ) ) );
    }
 }
 
@@ -810,10 +734,8 @@ HB_FUNC( QT_QFILEDIALOG_VIEWMODE )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      hb_retni( ( QFileDialog::ViewMode ) ( p )->viewMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_VIEWMODE FP=hb_retni( ( QFileDialog::ViewMode ) ( p )->viewMode() ); p is NULL" ) );
+      hb_retni( ( QFileDialog::ViewMode ) ( p )->viewMode() );
    }
 }
 
@@ -824,10 +746,10 @@ HB_FUNC( QT_QFILEDIALOG_GETEXISTINGDIRECTORY )
 {
    QFileDialog * p = hbqt_par_QFileDialog( 1 );
    if( p )
-      hb_retc( ( p )->getExistingDirectory( hbqt_par_QWidget( 2 ), QFileDialog::tr( hb_parc( 3 ) ), QFileDialog::tr( hb_parc( 4 ) ), ( HB_ISNUM( 5 ) ? ( QFileDialog::Options ) hb_parni( 5 ) : ( QFileDialog::Options ) QFileDialog::ShowDirsOnly ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEDIALOG_GETEXISTINGDIRECTORY FP=hb_retc( ( p )->getExistingDirectory( hbqt_par_QWidget( 2 ), QFileDialog::tr( hb_parc( 3 ) ), QFileDialog::tr( hb_parc( 4 ) ), ( HB_ISNUM( 5 ) ? ( QFileDialog::Options ) hb_parni( 5 ) : ( QFileDialog::Options ) QFileDialog::ShowDirsOnly ) ).toAscii().data() ); p is NULL" ) );
+      void * pText;
+      hb_retstr_utf8( ( p )->getExistingDirectory( hbqt_par_QWidget( 2 ), hb_parstr_utf8( 3, &pText, NULL ), hb_parstr_utf8( 4, &pText, NULL ), ( HB_ISNUM( 5 ) ? ( QFileDialog::Options ) hb_parni( 5 ) : ( QFileDialog::Options ) QFileDialog::ShowDirsOnly ) ).toUtf8().data() );
+      hb_strfree( pText );
    }
 }
 

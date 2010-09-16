@@ -146,10 +146,8 @@ HB_FUNC( QT_QINPUTEVENT_MODIFIERS )
 {
    QInputEvent * p = hbqt_par_QInputEvent( 1 );
    if( p )
-      hb_retni( ( Qt::KeyboardModifiers ) ( p )->modifiers() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QINPUTEVENT_MODIFIERS FP=hb_retni( ( Qt::KeyboardModifiers ) ( p )->modifiers() ); p is NULL" ) );
+      hb_retni( ( Qt::KeyboardModifiers ) ( p )->modifiers() );
    }
 }
 

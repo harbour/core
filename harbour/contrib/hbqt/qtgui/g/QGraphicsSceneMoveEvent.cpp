@@ -129,10 +129,8 @@ HB_FUNC( QT_QGRAPHICSSCENEMOVEEVENT_NEWPOS )
 {
    QGraphicsSceneMoveEvent * p = hbqt_par_QGraphicsSceneMoveEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->newPos() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEMOVEEVENT_NEWPOS FP=hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->newPos() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->newPos() ), true ) );
    }
 }
 
@@ -143,10 +141,8 @@ HB_FUNC( QT_QGRAPHICSSCENEMOVEEVENT_OLDPOS )
 {
    QGraphicsSceneMoveEvent * p = hbqt_par_QGraphicsSceneMoveEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->oldPos() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENEMOVEEVENT_OLDPOS FP=hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->oldPos() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->oldPos() ), true ) );
    }
 }
 

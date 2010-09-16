@@ -130,10 +130,8 @@ HB_FUNC( QT_QSESSIONMANAGER_ALLOWSERRORINTERACTION )
 {
    QSessionManager * p = hbqt_par_QSessionManager( 1 );
    if( p )
-      hb_retl( ( p )->allowsErrorInteraction() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSESSIONMANAGER_ALLOWSERRORINTERACTION FP=hb_retl( ( p )->allowsErrorInteraction() ); p is NULL" ) );
+      hb_retl( ( p )->allowsErrorInteraction() );
    }
 }
 
@@ -144,10 +142,8 @@ HB_FUNC( QT_QSESSIONMANAGER_ALLOWSINTERACTION )
 {
    QSessionManager * p = hbqt_par_QSessionManager( 1 );
    if( p )
-      hb_retl( ( p )->allowsInteraction() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSESSIONMANAGER_ALLOWSINTERACTION FP=hb_retl( ( p )->allowsInteraction() ); p is NULL" ) );
+      hb_retl( ( p )->allowsInteraction() );
    }
 }
 
@@ -158,10 +154,8 @@ HB_FUNC( QT_QSESSIONMANAGER_CANCEL )
 {
    QSessionManager * p = hbqt_par_QSessionManager( 1 );
    if( p )
-      ( p )->cancel();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSESSIONMANAGER_CANCEL FP=( p )->cancel(); p is NULL" ) );
+      ( p )->cancel();
    }
 }
 
@@ -172,10 +166,8 @@ HB_FUNC( QT_QSESSIONMANAGER_DISCARDCOMMAND )
 {
    QSessionManager * p = hbqt_par_QSessionManager( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->discardCommand() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSESSIONMANAGER_DISCARDCOMMAND FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->discardCommand() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->discardCommand() ), true ) );
    }
 }
 
@@ -186,10 +178,8 @@ HB_FUNC( QT_QSESSIONMANAGER_ISPHASE2 )
 {
    QSessionManager * p = hbqt_par_QSessionManager( 1 );
    if( p )
-      hb_retl( ( p )->isPhase2() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSESSIONMANAGER_ISPHASE2 FP=hb_retl( ( p )->isPhase2() ); p is NULL" ) );
+      hb_retl( ( p )->isPhase2() );
    }
 }
 
@@ -200,10 +190,8 @@ HB_FUNC( QT_QSESSIONMANAGER_RELEASE )
 {
    QSessionManager * p = hbqt_par_QSessionManager( 1 );
    if( p )
-      ( p )->release();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSESSIONMANAGER_RELEASE FP=( p )->release(); p is NULL" ) );
+      ( p )->release();
    }
 }
 
@@ -214,10 +202,8 @@ HB_FUNC( QT_QSESSIONMANAGER_REQUESTPHASE2 )
 {
    QSessionManager * p = hbqt_par_QSessionManager( 1 );
    if( p )
-      ( p )->requestPhase2();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSESSIONMANAGER_REQUESTPHASE2 FP=( p )->requestPhase2(); p is NULL" ) );
+      ( p )->requestPhase2();
    }
 }
 
@@ -228,10 +214,8 @@ HB_FUNC( QT_QSESSIONMANAGER_RESTARTCOMMAND )
 {
    QSessionManager * p = hbqt_par_QSessionManager( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->restartCommand() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSESSIONMANAGER_RESTARTCOMMAND FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->restartCommand() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->restartCommand() ), true ) );
    }
 }
 
@@ -242,10 +226,8 @@ HB_FUNC( QT_QSESSIONMANAGER_RESTARTHINT )
 {
    QSessionManager * p = hbqt_par_QSessionManager( 1 );
    if( p )
-      hb_retni( ( QSessionManager::RestartHint ) ( p )->restartHint() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSESSIONMANAGER_RESTARTHINT FP=hb_retni( ( QSessionManager::RestartHint ) ( p )->restartHint() ); p is NULL" ) );
+      hb_retni( ( QSessionManager::RestartHint ) ( p )->restartHint() );
    }
 }
 
@@ -256,10 +238,8 @@ HB_FUNC( QT_QSESSIONMANAGER_SESSIONID )
 {
    QSessionManager * p = hbqt_par_QSessionManager( 1 );
    if( p )
-      hb_retc( ( p )->sessionId().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSESSIONMANAGER_SESSIONID FP=hb_retc( ( p )->sessionId().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->sessionId().toUtf8().data() );
    }
 }
 
@@ -270,10 +250,8 @@ HB_FUNC( QT_QSESSIONMANAGER_SESSIONKEY )
 {
    QSessionManager * p = hbqt_par_QSessionManager( 1 );
    if( p )
-      hb_retc( ( p )->sessionKey().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSESSIONMANAGER_SESSIONKEY FP=hb_retc( ( p )->sessionKey().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->sessionKey().toUtf8().data() );
    }
 }
 
@@ -284,10 +262,8 @@ HB_FUNC( QT_QSESSIONMANAGER_SETDISCARDCOMMAND )
 {
    QSessionManager * p = hbqt_par_QSessionManager( 1 );
    if( p )
-      ( p )->setDiscardCommand( *hbqt_par_QStringList( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSESSIONMANAGER_SETDISCARDCOMMAND FP=( p )->setDiscardCommand( *hbqt_par_QStringList( 2 ) ); p is NULL" ) );
+      ( p )->setDiscardCommand( *hbqt_par_QStringList( 2 ) );
    }
 }
 
@@ -298,10 +274,10 @@ HB_FUNC( QT_QSESSIONMANAGER_SETMANAGERPROPERTY )
 {
    QSessionManager * p = hbqt_par_QSessionManager( 1 );
    if( p )
-      ( p )->setManagerProperty( QSessionManager::tr( hb_parc( 2 ) ), *hbqt_par_QStringList( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSESSIONMANAGER_SETMANAGERPROPERTY FP=( p )->setManagerProperty( QSessionManager::tr( hb_parc( 2 ) ), *hbqt_par_QStringList( 3 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setManagerProperty( hb_parstr_utf8( 2, &pText, NULL ), *hbqt_par_QStringList( 3 ) );
+      hb_strfree( pText );
    }
 }
 
@@ -312,10 +288,10 @@ HB_FUNC( QT_QSESSIONMANAGER_SETMANAGERPROPERTY_1 )
 {
    QSessionManager * p = hbqt_par_QSessionManager( 1 );
    if( p )
-      ( p )->setManagerProperty( QSessionManager::tr( hb_parc( 2 ) ), QSessionManager::tr( hb_parc( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSESSIONMANAGER_SETMANAGERPROPERTY_1 FP=( p )->setManagerProperty( QSessionManager::tr( hb_parc( 2 ) ), QSessionManager::tr( hb_parc( 3 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setManagerProperty( hb_parstr_utf8( 2, &pText, NULL ), hb_parstr_utf8( 3, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -326,10 +302,8 @@ HB_FUNC( QT_QSESSIONMANAGER_SETRESTARTCOMMAND )
 {
    QSessionManager * p = hbqt_par_QSessionManager( 1 );
    if( p )
-      ( p )->setRestartCommand( *hbqt_par_QStringList( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSESSIONMANAGER_SETRESTARTCOMMAND FP=( p )->setRestartCommand( *hbqt_par_QStringList( 2 ) ); p is NULL" ) );
+      ( p )->setRestartCommand( *hbqt_par_QStringList( 2 ) );
    }
 }
 
@@ -340,10 +314,8 @@ HB_FUNC( QT_QSESSIONMANAGER_SETRESTARTHINT )
 {
    QSessionManager * p = hbqt_par_QSessionManager( 1 );
    if( p )
-      ( p )->setRestartHint( ( QSessionManager::RestartHint ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSESSIONMANAGER_SETRESTARTHINT FP=( p )->setRestartHint( ( QSessionManager::RestartHint ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setRestartHint( ( QSessionManager::RestartHint ) hb_parni( 2 ) );
    }
 }
 

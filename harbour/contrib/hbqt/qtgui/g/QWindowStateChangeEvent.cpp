@@ -126,10 +126,8 @@ HB_FUNC( QT_QWINDOWSTATECHANGEEVENT_OLDSTATE )
 {
    QWindowStateChangeEvent * p = hbqt_par_QWindowStateChangeEvent( 1 );
    if( p )
-      hb_retni( ( Qt::WindowStates ) ( p )->oldState() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWINDOWSTATECHANGEEVENT_OLDSTATE FP=hb_retni( ( Qt::WindowStates ) ( p )->oldState() ); p is NULL" ) );
+      hb_retni( ( Qt::WindowStates ) ( p )->oldState() );
    }
 }
 

@@ -157,10 +157,8 @@ HB_FUNC( QT_QSOUND_FILENAME )
 {
    QSound * p = hbqt_par_QSound( 1 );
    if( p )
-      hb_retc( ( p )->fileName().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSOUND_FILENAME FP=hb_retc( ( p )->fileName().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->fileName().toUtf8().data() );
    }
 }
 
@@ -171,10 +169,8 @@ HB_FUNC( QT_QSOUND_ISFINISHED )
 {
    QSound * p = hbqt_par_QSound( 1 );
    if( p )
-      hb_retl( ( p )->isFinished() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSOUND_ISFINISHED FP=hb_retl( ( p )->isFinished() ); p is NULL" ) );
+      hb_retl( ( p )->isFinished() );
    }
 }
 
@@ -185,10 +181,8 @@ HB_FUNC( QT_QSOUND_LOOPS )
 {
    QSound * p = hbqt_par_QSound( 1 );
    if( p )
-      hb_retni( ( p )->loops() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSOUND_LOOPS FP=hb_retni( ( p )->loops() ); p is NULL" ) );
+      hb_retni( ( p )->loops() );
    }
 }
 
@@ -199,10 +193,8 @@ HB_FUNC( QT_QSOUND_LOOPSREMAINING )
 {
    QSound * p = hbqt_par_QSound( 1 );
    if( p )
-      hb_retni( ( p )->loopsRemaining() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSOUND_LOOPSREMAINING FP=hb_retni( ( p )->loopsRemaining() ); p is NULL" ) );
+      hb_retni( ( p )->loopsRemaining() );
    }
 }
 
@@ -213,10 +205,8 @@ HB_FUNC( QT_QSOUND_SETLOOPS )
 {
    QSound * p = hbqt_par_QSound( 1 );
    if( p )
-      ( p )->setLoops( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSOUND_SETLOOPS FP=( p )->setLoops( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setLoops( hb_parni( 2 ) );
    }
 }
 
@@ -227,10 +217,8 @@ HB_FUNC( QT_QSOUND_ISAVAILABLE )
 {
    QSound * p = hbqt_par_QSound( 1 );
    if( p )
-      hb_retl( ( p )->isAvailable() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSOUND_ISAVAILABLE FP=hb_retl( ( p )->isAvailable() ); p is NULL" ) );
+      hb_retl( ( p )->isAvailable() );
    }
 }
 
@@ -241,10 +229,10 @@ HB_FUNC( QT_QSOUND_PLAY )
 {
    QSound * p = hbqt_par_QSound( 1 );
    if( p )
-      ( p )->play( QSound::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSOUND_PLAY FP=( p )->play( QSound::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->play( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 

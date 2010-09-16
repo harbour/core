@@ -145,10 +145,8 @@ HB_FUNC( QT_QTEXTDECODER_TOUNICODE )
 {
    QTextDecoder * p = hbqt_par_QTextDecoder( 1 );
    if( p )
-      hb_retc( ( p )->toUnicode( hbqt_par_char( 2 ), hb_parni( 3 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTDECODER_TOUNICODE FP=hb_retc( ( p )->toUnicode( hbqt_par_char( 2 ), hb_parni( 3 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->toUnicode( hbqt_par_char( 2 ), hb_parni( 3 ) ).toUtf8().data() );
    }
 }
 

@@ -174,10 +174,8 @@ HB_FUNC( QT_QSPLITTER_ADDWIDGET )
 {
    QSplitter * p = hbqt_par_QSplitter( 1 );
    if( p )
-      ( p )->addWidget( hbqt_par_QWidget( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLITTER_ADDWIDGET FP=( p )->addWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+      ( p )->addWidget( hbqt_par_QWidget( 2 ) );
    }
 }
 
@@ -188,10 +186,8 @@ HB_FUNC( QT_QSPLITTER_CHILDRENCOLLAPSIBLE )
 {
    QSplitter * p = hbqt_par_QSplitter( 1 );
    if( p )
-      hb_retl( ( p )->childrenCollapsible() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLITTER_CHILDRENCOLLAPSIBLE FP=hb_retl( ( p )->childrenCollapsible() ); p is NULL" ) );
+      hb_retl( ( p )->childrenCollapsible() );
    }
 }
 
@@ -202,10 +198,8 @@ HB_FUNC( QT_QSPLITTER_COUNT )
 {
    QSplitter * p = hbqt_par_QSplitter( 1 );
    if( p )
-      hb_retni( ( p )->count() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLITTER_COUNT FP=hb_retni( ( p )->count() ); p is NULL" ) );
+      hb_retni( ( p )->count() );
    }
 }
 
@@ -219,10 +213,8 @@ HB_FUNC( QT_QSPLITTER_GETRANGE )
    int iMax = 0;
 
    if( p )
-      ( p )->getRange( hb_parni( 2 ), &iMin, &iMax );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLITTER_GETRANGE FP=( p )->getRange( hb_parni( 2 ), &iMin, &iMax ); p is NULL" ) );
+      ( p )->getRange( hb_parni( 2 ), &iMin, &iMax );
    }
 
    hb_storni( iMin, 3 );
@@ -236,10 +228,8 @@ HB_FUNC( QT_QSPLITTER_HANDLEWIDTH )
 {
    QSplitter * p = hbqt_par_QSplitter( 1 );
    if( p )
-      hb_retni( ( p )->handleWidth() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLITTER_HANDLEWIDTH FP=hb_retni( ( p )->handleWidth() ); p is NULL" ) );
+      hb_retni( ( p )->handleWidth() );
    }
 }
 
@@ -250,10 +240,8 @@ HB_FUNC( QT_QSPLITTER_INDEXOF )
 {
    QSplitter * p = hbqt_par_QSplitter( 1 );
    if( p )
-      hb_retni( ( p )->indexOf( hbqt_par_QWidget( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLITTER_INDEXOF FP=hb_retni( ( p )->indexOf( hbqt_par_QWidget( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->indexOf( hbqt_par_QWidget( 2 ) ) );
    }
 }
 
@@ -264,10 +252,8 @@ HB_FUNC( QT_QSPLITTER_INSERTWIDGET )
 {
    QSplitter * p = hbqt_par_QSplitter( 1 );
    if( p )
-      ( p )->insertWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLITTER_INSERTWIDGET FP=( p )->insertWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ) ); p is NULL" ) );
+      ( p )->insertWidget( hb_parni( 2 ), hbqt_par_QWidget( 3 ) );
    }
 }
 
@@ -278,10 +264,8 @@ HB_FUNC( QT_QSPLITTER_ISCOLLAPSIBLE )
 {
    QSplitter * p = hbqt_par_QSplitter( 1 );
    if( p )
-      hb_retl( ( p )->isCollapsible( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLITTER_ISCOLLAPSIBLE FP=hb_retl( ( p )->isCollapsible( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->isCollapsible( hb_parni( 2 ) ) );
    }
 }
 
@@ -292,10 +276,8 @@ HB_FUNC( QT_QSPLITTER_OPAQUERESIZE )
 {
    QSplitter * p = hbqt_par_QSplitter( 1 );
    if( p )
-      hb_retl( ( p )->opaqueResize() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLITTER_OPAQUERESIZE FP=hb_retl( ( p )->opaqueResize() ); p is NULL" ) );
+      hb_retl( ( p )->opaqueResize() );
    }
 }
 
@@ -306,10 +288,8 @@ HB_FUNC( QT_QSPLITTER_ORIENTATION )
 {
    QSplitter * p = hbqt_par_QSplitter( 1 );
    if( p )
-      hb_retni( ( Qt::Orientation ) ( p )->orientation() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLITTER_ORIENTATION FP=hb_retni( ( Qt::Orientation ) ( p )->orientation() ); p is NULL" ) );
+      hb_retni( ( Qt::Orientation ) ( p )->orientation() );
    }
 }
 
@@ -320,10 +300,8 @@ HB_FUNC( QT_QSPLITTER_REFRESH )
 {
    QSplitter * p = hbqt_par_QSplitter( 1 );
    if( p )
-      ( p )->refresh();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLITTER_REFRESH FP=( p )->refresh(); p is NULL" ) );
+      ( p )->refresh();
    }
 }
 
@@ -334,10 +312,8 @@ HB_FUNC( QT_QSPLITTER_RESTORESTATE )
 {
    QSplitter * p = hbqt_par_QSplitter( 1 );
    if( p )
-      hb_retl( ( p )->restoreState( *hbqt_par_QByteArray( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLITTER_RESTORESTATE FP=hb_retl( ( p )->restoreState( *hbqt_par_QByteArray( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->restoreState( *hbqt_par_QByteArray( 2 ) ) );
    }
 }
 
@@ -348,10 +324,8 @@ HB_FUNC( QT_QSPLITTER_SAVESTATE )
 {
    QSplitter * p = hbqt_par_QSplitter( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->saveState() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLITTER_SAVESTATE FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->saveState() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->saveState() ), true ) );
    }
 }
 
@@ -362,10 +336,8 @@ HB_FUNC( QT_QSPLITTER_SETCHILDRENCOLLAPSIBLE )
 {
    QSplitter * p = hbqt_par_QSplitter( 1 );
    if( p )
-      ( p )->setChildrenCollapsible( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLITTER_SETCHILDRENCOLLAPSIBLE FP=( p )->setChildrenCollapsible( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setChildrenCollapsible( hb_parl( 2 ) );
    }
 }
 
@@ -376,10 +348,8 @@ HB_FUNC( QT_QSPLITTER_SETCOLLAPSIBLE )
 {
    QSplitter * p = hbqt_par_QSplitter( 1 );
    if( p )
-      ( p )->setCollapsible( hb_parni( 2 ), hb_parl( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLITTER_SETCOLLAPSIBLE FP=( p )->setCollapsible( hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+      ( p )->setCollapsible( hb_parni( 2 ), hb_parl( 3 ) );
    }
 }
 
@@ -390,10 +360,8 @@ HB_FUNC( QT_QSPLITTER_SETHANDLEWIDTH )
 {
    QSplitter * p = hbqt_par_QSplitter( 1 );
    if( p )
-      ( p )->setHandleWidth( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLITTER_SETHANDLEWIDTH FP=( p )->setHandleWidth( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setHandleWidth( hb_parni( 2 ) );
    }
 }
 
@@ -404,10 +372,8 @@ HB_FUNC( QT_QSPLITTER_SETOPAQUERESIZE )
 {
    QSplitter * p = hbqt_par_QSplitter( 1 );
    if( p )
-      ( p )->setOpaqueResize( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLITTER_SETOPAQUERESIZE FP=( p )->setOpaqueResize( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setOpaqueResize( hb_parl( 2 ) );
    }
 }
 
@@ -418,10 +384,8 @@ HB_FUNC( QT_QSPLITTER_SETORIENTATION )
 {
    QSplitter * p = hbqt_par_QSplitter( 1 );
    if( p )
-      ( p )->setOrientation( ( Qt::Orientation ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLITTER_SETORIENTATION FP=( p )->setOrientation( ( Qt::Orientation ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setOrientation( ( Qt::Orientation ) hb_parni( 2 ) );
    }
 }
 
@@ -432,10 +396,8 @@ HB_FUNC( QT_QSPLITTER_SETSTRETCHFACTOR )
 {
    QSplitter * p = hbqt_par_QSplitter( 1 );
    if( p )
-      ( p )->setStretchFactor( hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLITTER_SETSTRETCHFACTOR FP=( p )->setStretchFactor( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setStretchFactor( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -446,10 +408,8 @@ HB_FUNC( QT_QSPLITTER_SIZES )
 {
    QSplitter * p = hbqt_par_QSplitter( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<int>( ( p )->sizes() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLITTER_SIZES FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<int>( ( p )->sizes() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<int>( ( p )->sizes() ), true ) );
    }
 }
 
@@ -460,10 +420,8 @@ HB_FUNC( QT_QSPLITTER_WIDGET )
 {
    QSplitter * p = hbqt_par_QSplitter( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget( hb_parni( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPLITTER_WIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget( hb_parni( 2 ) ), false ) );
    }
 }
 

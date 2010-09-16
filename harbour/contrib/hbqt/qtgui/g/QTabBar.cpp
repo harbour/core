@@ -164,10 +164,10 @@ HB_FUNC( QT_QTABBAR_ADDTAB )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      hb_retni( ( p )->addTab( QTabBar::tr( hb_parc( 2 ) ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_ADDTAB FP=hb_retni( ( p )->addTab( QTabBar::tr( hb_parc( 2 ) ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retni( ( p )->addTab( hb_parstr_utf8( 2, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -178,10 +178,8 @@ HB_FUNC( QT_QTABBAR_COUNT )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      hb_retni( ( p )->count() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_COUNT FP=hb_retni( ( p )->count() ); p is NULL" ) );
+      hb_retni( ( p )->count() );
    }
 }
 
@@ -192,10 +190,8 @@ HB_FUNC( QT_QTABBAR_CURRENTINDEX )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      hb_retni( ( p )->currentIndex() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_CURRENTINDEX FP=hb_retni( ( p )->currentIndex() ); p is NULL" ) );
+      hb_retni( ( p )->currentIndex() );
    }
 }
 
@@ -206,10 +202,8 @@ HB_FUNC( QT_QTABBAR_DOCUMENTMODE )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      hb_retl( ( p )->documentMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_DOCUMENTMODE FP=hb_retl( ( p )->documentMode() ); p is NULL" ) );
+      hb_retl( ( p )->documentMode() );
    }
 }
 
@@ -220,10 +214,8 @@ HB_FUNC( QT_QTABBAR_DRAWBASE )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      hb_retl( ( p )->drawBase() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_DRAWBASE FP=hb_retl( ( p )->drawBase() ); p is NULL" ) );
+      hb_retl( ( p )->drawBase() );
    }
 }
 
@@ -234,10 +226,8 @@ HB_FUNC( QT_QTABBAR_ELIDEMODE )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      hb_retni( ( Qt::TextElideMode ) ( p )->elideMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_ELIDEMODE FP=hb_retni( ( Qt::TextElideMode ) ( p )->elideMode() ); p is NULL" ) );
+      hb_retni( ( Qt::TextElideMode ) ( p )->elideMode() );
    }
 }
 
@@ -248,10 +238,8 @@ HB_FUNC( QT_QTABBAR_EXPANDING )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      hb_retl( ( p )->expanding() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_EXPANDING FP=hb_retl( ( p )->expanding() ); p is NULL" ) );
+      hb_retl( ( p )->expanding() );
    }
 }
 
@@ -262,10 +250,8 @@ HB_FUNC( QT_QTABBAR_ICONSIZE )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->iconSize() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_ICONSIZE FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->iconSize() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->iconSize() ), true ) );
    }
 }
 
@@ -276,10 +262,10 @@ HB_FUNC( QT_QTABBAR_INSERTTAB )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      hb_retni( ( p )->insertTab( hb_parni( 2 ), QTabBar::tr( hb_parc( 3 ) ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_INSERTTAB FP=hb_retni( ( p )->insertTab( hb_parni( 2 ), QTabBar::tr( hb_parc( 3 ) ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retni( ( p )->insertTab( hb_parni( 2 ), hb_parstr_utf8( 3, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -290,10 +276,8 @@ HB_FUNC( QT_QTABBAR_ISMOVABLE )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      hb_retl( ( p )->isMovable() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_ISMOVABLE FP=hb_retl( ( p )->isMovable() ); p is NULL" ) );
+      hb_retl( ( p )->isMovable() );
    }
 }
 
@@ -304,10 +288,8 @@ HB_FUNC( QT_QTABBAR_ISTABENABLED )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      hb_retl( ( p )->isTabEnabled( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_ISTABENABLED FP=hb_retl( ( p )->isTabEnabled( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->isTabEnabled( hb_parni( 2 ) ) );
    }
 }
 
@@ -318,10 +300,8 @@ HB_FUNC( QT_QTABBAR_MOVETAB )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      ( p )->moveTab( hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_MOVETAB FP=( p )->moveTab( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->moveTab( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -332,10 +312,8 @@ HB_FUNC( QT_QTABBAR_REMOVETAB )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      ( p )->removeTab( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_REMOVETAB FP=( p )->removeTab( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->removeTab( hb_parni( 2 ) );
    }
 }
 
@@ -346,10 +324,8 @@ HB_FUNC( QT_QTABBAR_SELECTIONBEHAVIORONREMOVE )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      hb_retni( ( QTabBar::SelectionBehavior ) ( p )->selectionBehaviorOnRemove() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_SELECTIONBEHAVIORONREMOVE FP=hb_retni( ( QTabBar::SelectionBehavior ) ( p )->selectionBehaviorOnRemove() ); p is NULL" ) );
+      hb_retni( ( QTabBar::SelectionBehavior ) ( p )->selectionBehaviorOnRemove() );
    }
 }
 
@@ -360,10 +336,8 @@ HB_FUNC( QT_QTABBAR_SETDOCUMENTMODE )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      ( p )->setDocumentMode( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_SETDOCUMENTMODE FP=( p )->setDocumentMode( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setDocumentMode( hb_parl( 2 ) );
    }
 }
 
@@ -374,10 +348,8 @@ HB_FUNC( QT_QTABBAR_SETDRAWBASE )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      ( p )->setDrawBase( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_SETDRAWBASE FP=( p )->setDrawBase( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setDrawBase( hb_parl( 2 ) );
    }
 }
 
@@ -388,10 +360,8 @@ HB_FUNC( QT_QTABBAR_SETELIDEMODE )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      ( p )->setElideMode( ( Qt::TextElideMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_SETELIDEMODE FP=( p )->setElideMode( ( Qt::TextElideMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setElideMode( ( Qt::TextElideMode ) hb_parni( 2 ) );
    }
 }
 
@@ -402,10 +372,8 @@ HB_FUNC( QT_QTABBAR_SETEXPANDING )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      ( p )->setExpanding( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_SETEXPANDING FP=( p )->setExpanding( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setExpanding( hb_parl( 2 ) );
    }
 }
 
@@ -416,10 +384,8 @@ HB_FUNC( QT_QTABBAR_SETICONSIZE )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      ( p )->setIconSize( *hbqt_par_QSize( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_SETICONSIZE FP=( p )->setIconSize( *hbqt_par_QSize( 2 ) ); p is NULL" ) );
+      ( p )->setIconSize( *hbqt_par_QSize( 2 ) );
    }
 }
 
@@ -430,10 +396,8 @@ HB_FUNC( QT_QTABBAR_SETMOVABLE )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      ( p )->setMovable( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_SETMOVABLE FP=( p )->setMovable( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setMovable( hb_parl( 2 ) );
    }
 }
 
@@ -444,10 +408,8 @@ HB_FUNC( QT_QTABBAR_SETSELECTIONBEHAVIORONREMOVE )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      ( p )->setSelectionBehaviorOnRemove( ( QTabBar::SelectionBehavior ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_SETSELECTIONBEHAVIORONREMOVE FP=( p )->setSelectionBehaviorOnRemove( ( QTabBar::SelectionBehavior ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setSelectionBehaviorOnRemove( ( QTabBar::SelectionBehavior ) hb_parni( 2 ) );
    }
 }
 
@@ -458,10 +420,8 @@ HB_FUNC( QT_QTABBAR_SETSHAPE )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      ( p )->setShape( ( QTabBar::Shape ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_SETSHAPE FP=( p )->setShape( ( QTabBar::Shape ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setShape( ( QTabBar::Shape ) hb_parni( 2 ) );
    }
 }
 
@@ -472,10 +432,8 @@ HB_FUNC( QT_QTABBAR_SETTABBUTTON )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      ( p )->setTabButton( hb_parni( 2 ), ( QTabBar::ButtonPosition ) hb_parni( 3 ), hbqt_par_QWidget( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_SETTABBUTTON FP=( p )->setTabButton( hb_parni( 2 ), ( QTabBar::ButtonPosition ) hb_parni( 3 ), hbqt_par_QWidget( 4 ) ); p is NULL" ) );
+      ( p )->setTabButton( hb_parni( 2 ), ( QTabBar::ButtonPosition ) hb_parni( 3 ), hbqt_par_QWidget( 4 ) );
    }
 }
 
@@ -486,10 +444,8 @@ HB_FUNC( QT_QTABBAR_SETTABDATA )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      ( p )->setTabData( hb_parni( 2 ), *hbqt_par_QVariant( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_SETTABDATA FP=( p )->setTabData( hb_parni( 2 ), *hbqt_par_QVariant( 3 ) ); p is NULL" ) );
+      ( p )->setTabData( hb_parni( 2 ), *hbqt_par_QVariant( 3 ) );
    }
 }
 
@@ -500,10 +456,8 @@ HB_FUNC( QT_QTABBAR_SETTABENABLED )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      ( p )->setTabEnabled( hb_parni( 2 ), hb_parl( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_SETTABENABLED FP=( p )->setTabEnabled( hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+      ( p )->setTabEnabled( hb_parni( 2 ), hb_parl( 3 ) );
    }
 }
 
@@ -514,10 +468,10 @@ HB_FUNC( QT_QTABBAR_SETTABTEXT )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      ( p )->setTabText( hb_parni( 2 ), QTabBar::tr( hb_parc( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_SETTABTEXT FP=( p )->setTabText( hb_parni( 2 ), QTabBar::tr( hb_parc( 3 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setTabText( hb_parni( 2 ), hb_parstr_utf8( 3, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -528,10 +482,8 @@ HB_FUNC( QT_QTABBAR_SETTABTEXTCOLOR )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      ( p )->setTabTextColor( hb_parni( 2 ), *hbqt_par_QColor( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_SETTABTEXTCOLOR FP=( p )->setTabTextColor( hb_parni( 2 ), *hbqt_par_QColor( 3 ) ); p is NULL" ) );
+      ( p )->setTabTextColor( hb_parni( 2 ), *hbqt_par_QColor( 3 ) );
    }
 }
 
@@ -542,10 +494,10 @@ HB_FUNC( QT_QTABBAR_SETTABTOOLTIP )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      ( p )->setTabToolTip( hb_parni( 2 ), QTabBar::tr( hb_parc( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_SETTABTOOLTIP FP=( p )->setTabToolTip( hb_parni( 2 ), QTabBar::tr( hb_parc( 3 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setTabToolTip( hb_parni( 2 ), hb_parstr_utf8( 3, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -556,10 +508,10 @@ HB_FUNC( QT_QTABBAR_SETTABWHATSTHIS )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      ( p )->setTabWhatsThis( hb_parni( 2 ), QTabBar::tr( hb_parc( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_SETTABWHATSTHIS FP=( p )->setTabWhatsThis( hb_parni( 2 ), QTabBar::tr( hb_parc( 3 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setTabWhatsThis( hb_parni( 2 ), hb_parstr_utf8( 3, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -570,10 +522,8 @@ HB_FUNC( QT_QTABBAR_SETTABSCLOSABLE )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      ( p )->setTabsClosable( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_SETTABSCLOSABLE FP=( p )->setTabsClosable( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setTabsClosable( hb_parl( 2 ) );
    }
 }
 
@@ -584,10 +534,8 @@ HB_FUNC( QT_QTABBAR_SETUSESSCROLLBUTTONS )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      ( p )->setUsesScrollButtons( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_SETUSESSCROLLBUTTONS FP=( p )->setUsesScrollButtons( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setUsesScrollButtons( hb_parl( 2 ) );
    }
 }
 
@@ -598,10 +546,8 @@ HB_FUNC( QT_QTABBAR_SHAPE )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      hb_retni( ( QTabBar::Shape ) ( p )->shape() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_SHAPE FP=hb_retni( ( QTabBar::Shape ) ( p )->shape() ); p is NULL" ) );
+      hb_retni( ( QTabBar::Shape ) ( p )->shape() );
    }
 }
 
@@ -612,10 +558,8 @@ HB_FUNC( QT_QTABBAR_TABAT )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      hb_retni( ( p )->tabAt( *hbqt_par_QPoint( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_TABAT FP=hb_retni( ( p )->tabAt( *hbqt_par_QPoint( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->tabAt( *hbqt_par_QPoint( 2 ) ) );
    }
 }
 
@@ -626,10 +570,8 @@ HB_FUNC( QT_QTABBAR_TABBUTTON )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->tabButton( hb_parni( 2 ), ( QTabBar::ButtonPosition ) hb_parni( 3 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_TABBUTTON FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->tabButton( hb_parni( 2 ), ( QTabBar::ButtonPosition ) hb_parni( 3 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->tabButton( hb_parni( 2 ), ( QTabBar::ButtonPosition ) hb_parni( 3 ) ), false ) );
    }
 }
 
@@ -640,10 +582,8 @@ HB_FUNC( QT_QTABBAR_TABDATA )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->tabData( hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_TABDATA FP=hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->tabData( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->tabData( hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -654,10 +594,8 @@ HB_FUNC( QT_QTABBAR_TABICON )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->tabIcon( hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_TABICON FP=hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->tabIcon( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->tabIcon( hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -668,10 +606,8 @@ HB_FUNC( QT_QTABBAR_TABRECT )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->tabRect( hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_TABRECT FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->tabRect( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->tabRect( hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -682,10 +618,8 @@ HB_FUNC( QT_QTABBAR_TABTEXT )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      hb_retc( ( p )->tabText( hb_parni( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_TABTEXT FP=hb_retc( ( p )->tabText( hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->tabText( hb_parni( 2 ) ).toUtf8().data() );
    }
 }
 
@@ -696,10 +630,8 @@ HB_FUNC( QT_QTABBAR_TABTEXTCOLOR )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->tabTextColor( hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_TABTEXTCOLOR FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->tabTextColor( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->tabTextColor( hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -710,10 +642,8 @@ HB_FUNC( QT_QTABBAR_TABTOOLTIP )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      hb_retc( ( p )->tabToolTip( hb_parni( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_TABTOOLTIP FP=hb_retc( ( p )->tabToolTip( hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->tabToolTip( hb_parni( 2 ) ).toUtf8().data() );
    }
 }
 
@@ -724,10 +654,8 @@ HB_FUNC( QT_QTABBAR_TABWHATSTHIS )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      hb_retc( ( p )->tabWhatsThis( hb_parni( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_TABWHATSTHIS FP=hb_retc( ( p )->tabWhatsThis( hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->tabWhatsThis( hb_parni( 2 ) ).toUtf8().data() );
    }
 }
 
@@ -738,10 +666,8 @@ HB_FUNC( QT_QTABBAR_TABSCLOSABLE )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      hb_retl( ( p )->tabsClosable() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_TABSCLOSABLE FP=hb_retl( ( p )->tabsClosable() ); p is NULL" ) );
+      hb_retl( ( p )->tabsClosable() );
    }
 }
 
@@ -752,10 +678,8 @@ HB_FUNC( QT_QTABBAR_USESSCROLLBUTTONS )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      hb_retl( ( p )->usesScrollButtons() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_USESSCROLLBUTTONS FP=hb_retl( ( p )->usesScrollButtons() ); p is NULL" ) );
+      hb_retl( ( p )->usesScrollButtons() );
    }
 }
 
@@ -766,10 +690,8 @@ HB_FUNC( QT_QTABBAR_SETCURRENTINDEX )
 {
    QTabBar * p = hbqt_par_QTabBar( 1 );
    if( p )
-      ( p )->setCurrentIndex( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTABBAR_SETCURRENTINDEX FP=( p )->setCurrentIndex( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setCurrentIndex( hb_parni( 2 ) );
    }
 }
 

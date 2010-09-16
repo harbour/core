@@ -199,7 +199,7 @@ HB_FUNC( QT_QSTYLEOPTIONTOOLBUTTON_POS )
  */
 HB_FUNC( QT_QSTYLEOPTIONTOOLBUTTON_TEXT )
 {
-   hb_retc( hbqt_par_QStyleOptionToolButton( 1 )->text.toLatin1().data() );
+   hb_retstr_utf8( hbqt_par_QStyleOptionToolButton( 1 )->text.toUtf8().data() );
 }
 
 /*

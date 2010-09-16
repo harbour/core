@@ -154,10 +154,8 @@ HB_FUNC( QT_QTEXTBOUNDARYFINDER_BOUNDARYREASONS )
 {
    QTextBoundaryFinder * p = hbqt_par_QTextBoundaryFinder( 1 );
    if( p )
-      hb_retni( ( QTextBoundaryFinder::BoundaryReasons ) ( p )->boundaryReasons() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBOUNDARYFINDER_BOUNDARYREASONS FP=hb_retni( ( QTextBoundaryFinder::BoundaryReasons ) ( p )->boundaryReasons() ); p is NULL" ) );
+      hb_retni( ( QTextBoundaryFinder::BoundaryReasons ) ( p )->boundaryReasons() );
    }
 }
 
@@ -168,10 +166,8 @@ HB_FUNC( QT_QTEXTBOUNDARYFINDER_ISATBOUNDARY )
 {
    QTextBoundaryFinder * p = hbqt_par_QTextBoundaryFinder( 1 );
    if( p )
-      hb_retl( ( p )->isAtBoundary() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBOUNDARYFINDER_ISATBOUNDARY FP=hb_retl( ( p )->isAtBoundary() ); p is NULL" ) );
+      hb_retl( ( p )->isAtBoundary() );
    }
 }
 
@@ -182,10 +178,8 @@ HB_FUNC( QT_QTEXTBOUNDARYFINDER_ISVALID )
 {
    QTextBoundaryFinder * p = hbqt_par_QTextBoundaryFinder( 1 );
    if( p )
-      hb_retl( ( p )->isValid() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBOUNDARYFINDER_ISVALID FP=hb_retl( ( p )->isValid() ); p is NULL" ) );
+      hb_retl( ( p )->isValid() );
    }
 }
 
@@ -196,10 +190,8 @@ HB_FUNC( QT_QTEXTBOUNDARYFINDER_POSITION )
 {
    QTextBoundaryFinder * p = hbqt_par_QTextBoundaryFinder( 1 );
    if( p )
-      hb_retni( ( p )->position() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBOUNDARYFINDER_POSITION FP=hb_retni( ( p )->position() ); p is NULL" ) );
+      hb_retni( ( p )->position() );
    }
 }
 
@@ -210,10 +202,8 @@ HB_FUNC( QT_QTEXTBOUNDARYFINDER_SETPOSITION )
 {
    QTextBoundaryFinder * p = hbqt_par_QTextBoundaryFinder( 1 );
    if( p )
-      ( p )->setPosition( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBOUNDARYFINDER_SETPOSITION FP=( p )->setPosition( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setPosition( hb_parni( 2 ) );
    }
 }
 
@@ -224,10 +214,8 @@ HB_FUNC( QT_QTEXTBOUNDARYFINDER_STRING )
 {
    QTextBoundaryFinder * p = hbqt_par_QTextBoundaryFinder( 1 );
    if( p )
-      hb_retc( ( p )->string().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBOUNDARYFINDER_STRING FP=hb_retc( ( p )->string().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->string().toUtf8().data() );
    }
 }
 
@@ -238,10 +226,8 @@ HB_FUNC( QT_QTEXTBOUNDARYFINDER_TOEND )
 {
    QTextBoundaryFinder * p = hbqt_par_QTextBoundaryFinder( 1 );
    if( p )
-      ( p )->toEnd();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBOUNDARYFINDER_TOEND FP=( p )->toEnd(); p is NULL" ) );
+      ( p )->toEnd();
    }
 }
 
@@ -252,10 +238,8 @@ HB_FUNC( QT_QTEXTBOUNDARYFINDER_TONEXTBOUNDARY )
 {
    QTextBoundaryFinder * p = hbqt_par_QTextBoundaryFinder( 1 );
    if( p )
-      hb_retni( ( p )->toNextBoundary() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBOUNDARYFINDER_TONEXTBOUNDARY FP=hb_retni( ( p )->toNextBoundary() ); p is NULL" ) );
+      hb_retni( ( p )->toNextBoundary() );
    }
 }
 
@@ -266,10 +250,8 @@ HB_FUNC( QT_QTEXTBOUNDARYFINDER_TOPREVIOUSBOUNDARY )
 {
    QTextBoundaryFinder * p = hbqt_par_QTextBoundaryFinder( 1 );
    if( p )
-      hb_retni( ( p )->toPreviousBoundary() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBOUNDARYFINDER_TOPREVIOUSBOUNDARY FP=hb_retni( ( p )->toPreviousBoundary() ); p is NULL" ) );
+      hb_retni( ( p )->toPreviousBoundary() );
    }
 }
 
@@ -280,10 +262,8 @@ HB_FUNC( QT_QTEXTBOUNDARYFINDER_TOSTART )
 {
    QTextBoundaryFinder * p = hbqt_par_QTextBoundaryFinder( 1 );
    if( p )
-      ( p )->toStart();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBOUNDARYFINDER_TOSTART FP=( p )->toStart(); p is NULL" ) );
+      ( p )->toStart();
    }
 }
 
@@ -294,10 +274,8 @@ HB_FUNC( QT_QTEXTBOUNDARYFINDER_TYPE )
 {
    QTextBoundaryFinder * p = hbqt_par_QTextBoundaryFinder( 1 );
    if( p )
-      hb_retni( ( QTextBoundaryFinder::BoundaryType ) ( p )->type() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTBOUNDARYFINDER_TYPE FP=hb_retni( ( QTextBoundaryFinder::BoundaryType ) ( p )->type() ); p is NULL" ) );
+      hb_retni( ( QTextBoundaryFinder::BoundaryType ) ( p )->type() );
    }
 }
 

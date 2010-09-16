@@ -154,10 +154,8 @@ HB_FUNC( QT_QSCISTYLEDTEXT_TEXT )
 {
    QsciStyledText * p = hbqt_par_QsciStyledText( 1 );
    if( p )
-      hb_retc( ( p )->text().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISTYLEDTEXT_TEXT FP=hb_retc( ( p )->text().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->text().toUtf8().data() );
    }
 }
 
@@ -168,10 +166,8 @@ HB_FUNC( QT_QSCISTYLEDTEXT_STYLE )
 {
    QsciStyledText * p = hbqt_par_QsciStyledText( 1 );
    if( p )
-      hb_retni( ( p )->style() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCISTYLEDTEXT_STYLE FP=hb_retni( ( p )->style() ); p is NULL" ) );
+      hb_retni( ( p )->style() );
    }
 }
 

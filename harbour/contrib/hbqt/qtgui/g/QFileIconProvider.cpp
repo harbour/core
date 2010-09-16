@@ -149,10 +149,8 @@ HB_FUNC( QT_QFILEICONPROVIDER_ICON )
 {
    QFileIconProvider * p = hbqt_par_QFileIconProvider( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon( ( QFileIconProvider::IconType ) hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEICONPROVIDER_ICON FP=hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon( ( QFileIconProvider::IconType ) hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon( ( QFileIconProvider::IconType ) hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -163,10 +161,8 @@ HB_FUNC( QT_QFILEICONPROVIDER_ICON_1 )
 {
    QFileIconProvider * p = hbqt_par_QFileIconProvider( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon( *hbqt_par_QFileInfo( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEICONPROVIDER_ICON_1 FP=hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon( *hbqt_par_QFileInfo( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon( *hbqt_par_QFileInfo( 2 ) ) ), true ) );
    }
 }
 
@@ -177,10 +173,8 @@ HB_FUNC( QT_QFILEICONPROVIDER_TYPE )
 {
    QFileIconProvider * p = hbqt_par_QFileIconProvider( 1 );
    if( p )
-      hb_retc( ( p )->type( *hbqt_par_QFileInfo( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFILEICONPROVIDER_TYPE FP=hb_retc( ( p )->type( *hbqt_par_QFileInfo( 2 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->type( *hbqt_par_QFileInfo( 2 ) ).toUtf8().data() );
    }
 }
 

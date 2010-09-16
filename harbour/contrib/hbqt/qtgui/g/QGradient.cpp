@@ -132,10 +132,8 @@ HB_FUNC( QT_QGRADIENT_COORDINATEMODE )
 {
    QGradient * p = hbqt_par_QGradient( 1 );
    if( p )
-      hb_retni( ( QGradient::CoordinateMode ) ( p )->coordinateMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRADIENT_COORDINATEMODE FP=hb_retni( ( QGradient::CoordinateMode ) ( p )->coordinateMode() ); p is NULL" ) );
+      hb_retni( ( QGradient::CoordinateMode ) ( p )->coordinateMode() );
    }
 }
 
@@ -146,10 +144,8 @@ HB_FUNC( QT_QGRADIENT_SETCOLORAT )
 {
    QGradient * p = hbqt_par_QGradient( 1 );
    if( p )
-      ( p )->setColorAt( hb_parnd( 2 ), *hbqt_par_QColor( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRADIENT_SETCOLORAT FP=( p )->setColorAt( hb_parnd( 2 ), *hbqt_par_QColor( 3 ) ); p is NULL" ) );
+      ( p )->setColorAt( hb_parnd( 2 ), *hbqt_par_QColor( 3 ) );
    }
 }
 
@@ -160,10 +156,8 @@ HB_FUNC( QT_QGRADIENT_SETCOORDINATEMODE )
 {
    QGradient * p = hbqt_par_QGradient( 1 );
    if( p )
-      ( p )->setCoordinateMode( ( QGradient::CoordinateMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRADIENT_SETCOORDINATEMODE FP=( p )->setCoordinateMode( ( QGradient::CoordinateMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setCoordinateMode( ( QGradient::CoordinateMode ) hb_parni( 2 ) );
    }
 }
 
@@ -174,10 +168,8 @@ HB_FUNC( QT_QGRADIENT_SETSPREAD )
 {
    QGradient * p = hbqt_par_QGradient( 1 );
    if( p )
-      ( p )->setSpread( ( QGradient::Spread ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRADIENT_SETSPREAD FP=( p )->setSpread( ( QGradient::Spread ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setSpread( ( QGradient::Spread ) hb_parni( 2 ) );
    }
 }
 
@@ -188,10 +180,8 @@ HB_FUNC( QT_QGRADIENT_SPREAD )
 {
    QGradient * p = hbqt_par_QGradient( 1 );
    if( p )
-      hb_retni( ( QGradient::Spread ) ( p )->spread() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRADIENT_SPREAD FP=hb_retni( ( QGradient::Spread ) ( p )->spread() ); p is NULL" ) );
+      hb_retni( ( QGradient::Spread ) ( p )->spread() );
    }
 }
 
@@ -202,10 +192,8 @@ HB_FUNC( QT_QGRADIENT_TYPE )
 {
    QGradient * p = hbqt_par_QGradient( 1 );
    if( p )
-      hb_retni( ( QGradient::Type ) ( p )->type() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRADIENT_TYPE FP=hb_retni( ( QGradient::Type ) ( p )->type() ); p is NULL" ) );
+      hb_retni( ( QGradient::Type ) ( p )->type() );
    }
 }
 

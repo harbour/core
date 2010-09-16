@@ -173,10 +173,8 @@ HB_FUNC( QT_QLIST_APPEND )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      ( p )->append( hb_param( 2, HB_IT_ANY ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_APPEND FP=( p )->append( hb_param( 2, HB_IT_ANY ) ); p is NULL" ) );
+      ( p )->append( hb_param( 2, HB_IT_ANY ) );
    }
 }
 
@@ -187,10 +185,8 @@ HB_FUNC( QT_QLIST_AT )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      hb_retptr( ( p )->at( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_AT FP=hb_retptr( ( p )->at( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retptr( ( p )->at( hb_parni( 2 ) ) );
    }
 }
 
@@ -201,10 +197,8 @@ HB_FUNC( QT_QLIST_BACK )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      hb_retptr( ( p )->back() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_BACK FP=hb_retptr( ( p )->back() ); p is NULL" ) );
+      hb_retptr( ( p )->back() );
    }
 }
 
@@ -215,10 +209,8 @@ HB_FUNC( QT_QLIST_BACK_1 )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      hb_retptr( ( p )->back() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_BACK_1 FP=hb_retptr( ( p )->back() ); p is NULL" ) );
+      hb_retptr( ( p )->back() );
    }
 }
 
@@ -229,10 +221,8 @@ HB_FUNC( QT_QLIST_CLEAR )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      ( p )->clear();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_CLEAR FP=( p )->clear(); p is NULL" ) );
+      ( p )->clear();
    }
 }
 
@@ -243,10 +233,8 @@ HB_FUNC( QT_QLIST_COUNT )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      hb_retni( ( p )->count( hb_param( 2, HB_IT_ANY ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_COUNT FP=hb_retni( ( p )->count( hb_param( 2, HB_IT_ANY ) ) ); p is NULL" ) );
+      hb_retni( ( p )->count( hb_param( 2, HB_IT_ANY ) ) );
    }
 }
 
@@ -257,10 +245,8 @@ HB_FUNC( QT_QLIST_COUNT_1 )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      hb_retni( ( p )->count() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_COUNT_1 FP=hb_retni( ( p )->count() ); p is NULL" ) );
+      hb_retni( ( p )->count() );
    }
 }
 
@@ -271,10 +257,8 @@ HB_FUNC( QT_QLIST_EMPTY )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      hb_retl( ( p )->empty() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_EMPTY FP=hb_retl( ( p )->empty() ); p is NULL" ) );
+      hb_retl( ( p )->empty() );
    }
 }
 
@@ -285,10 +269,8 @@ HB_FUNC( QT_QLIST_ENDSWITH )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      hb_retl( ( p )->endsWith( hb_param( 2, HB_IT_ANY ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_ENDSWITH FP=hb_retl( ( p )->endsWith( hb_param( 2, HB_IT_ANY ) ) ); p is NULL" ) );
+      hb_retl( ( p )->endsWith( hb_param( 2, HB_IT_ANY ) ) );
    }
 }
 
@@ -299,10 +281,8 @@ HB_FUNC( QT_QLIST_FIRST )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      hb_retptr( ( p )->first() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_FIRST FP=hb_retptr( ( p )->first() ); p is NULL" ) );
+      hb_retptr( ( p )->first() );
    }
 }
 
@@ -313,10 +293,8 @@ HB_FUNC( QT_QLIST_FIRST_1 )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      hb_retptr( ( p )->first() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_FIRST_1 FP=hb_retptr( ( p )->first() ); p is NULL" ) );
+      hb_retptr( ( p )->first() );
    }
 }
 
@@ -327,10 +305,8 @@ HB_FUNC( QT_QLIST_FRONT )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      hb_retptr( ( p )->front() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_FRONT FP=hb_retptr( ( p )->front() ); p is NULL" ) );
+      hb_retptr( ( p )->front() );
    }
 }
 
@@ -341,10 +317,8 @@ HB_FUNC( QT_QLIST_FRONT_1 )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      hb_retptr( ( p )->front() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_FRONT_1 FP=hb_retptr( ( p )->front() ); p is NULL" ) );
+      hb_retptr( ( p )->front() );
    }
 }
 
@@ -355,10 +329,8 @@ HB_FUNC( QT_QLIST_INDEXOF )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      hb_retni( ( p )->indexOf( hb_param( 2, HB_IT_ANY ), hb_parni( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_INDEXOF FP=hb_retni( ( p )->indexOf( hb_param( 2, HB_IT_ANY ), hb_parni( 3 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->indexOf( hb_param( 2, HB_IT_ANY ), hb_parni( 3 ) ) );
    }
 }
 
@@ -369,10 +341,8 @@ HB_FUNC( QT_QLIST_INSERT )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      ( p )->insert( hb_parni( 2 ), hb_param( 3, HB_IT_ANY ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_INSERT FP=( p )->insert( hb_parni( 2 ), hb_param( 3, HB_IT_ANY ) ); p is NULL" ) );
+      ( p )->insert( hb_parni( 2 ), hb_param( 3, HB_IT_ANY ) );
    }
 }
 
@@ -383,10 +353,8 @@ HB_FUNC( QT_QLIST_ISEMPTY )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      hb_retl( ( p )->isEmpty() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_ISEMPTY FP=hb_retl( ( p )->isEmpty() ); p is NULL" ) );
+      hb_retl( ( p )->isEmpty() );
    }
 }
 
@@ -397,10 +365,8 @@ HB_FUNC( QT_QLIST_LAST )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      hb_retptr( ( p )->last() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_LAST FP=hb_retptr( ( p )->last() ); p is NULL" ) );
+      hb_retptr( ( p )->last() );
    }
 }
 
@@ -411,10 +377,8 @@ HB_FUNC( QT_QLIST_LAST_1 )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      hb_retptr( ( p )->last() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_LAST_1 FP=hb_retptr( ( p )->last() ); p is NULL" ) );
+      hb_retptr( ( p )->last() );
    }
 }
 
@@ -425,10 +389,8 @@ HB_FUNC( QT_QLIST_LASTINDEXOF )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      hb_retni( ( p )->lastIndexOf( hb_param( 2, HB_IT_ANY ), hb_parnidef( 3, -1 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_LASTINDEXOF FP=hb_retni( ( p )->lastIndexOf( hb_param( 2, HB_IT_ANY ), hb_parnidef( 3, -1 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->lastIndexOf( hb_param( 2, HB_IT_ANY ), hb_parnidef( 3, -1 ) ) );
    }
 }
 
@@ -439,10 +401,8 @@ HB_FUNC( QT_QLIST_LENGTH )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      hb_retni( ( p )->length() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_LENGTH FP=hb_retni( ( p )->length() ); p is NULL" ) );
+      hb_retni( ( p )->length() );
    }
 }
 
@@ -453,10 +413,8 @@ HB_FUNC( QT_QLIST_MOVE )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      ( p )->move( hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_MOVE FP=( p )->move( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->move( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -467,10 +425,8 @@ HB_FUNC( QT_QLIST_POP_BACK )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      ( p )->pop_back();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_POP_BACK FP=( p )->pop_back(); p is NULL" ) );
+      ( p )->pop_back();
    }
 }
 
@@ -481,10 +437,8 @@ HB_FUNC( QT_QLIST_POP_FRONT )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      ( p )->pop_front();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_POP_FRONT FP=( p )->pop_front(); p is NULL" ) );
+      ( p )->pop_front();
    }
 }
 
@@ -495,10 +449,8 @@ HB_FUNC( QT_QLIST_PREPEND )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      ( p )->prepend( hb_param( 2, HB_IT_ANY ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_PREPEND FP=( p )->prepend( hb_param( 2, HB_IT_ANY ) ); p is NULL" ) );
+      ( p )->prepend( hb_param( 2, HB_IT_ANY ) );
    }
 }
 
@@ -509,10 +461,8 @@ HB_FUNC( QT_QLIST_PUSH_BACK )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      ( p )->push_back( hb_param( 2, HB_IT_ANY ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_PUSH_BACK FP=( p )->push_back( hb_param( 2, HB_IT_ANY ) ); p is NULL" ) );
+      ( p )->push_back( hb_param( 2, HB_IT_ANY ) );
    }
 }
 
@@ -523,10 +473,8 @@ HB_FUNC( QT_QLIST_PUSH_FRONT )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      ( p )->push_front( hb_param( 2, HB_IT_ANY ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_PUSH_FRONT FP=( p )->push_front( hb_param( 2, HB_IT_ANY ) ); p is NULL" ) );
+      ( p )->push_front( hb_param( 2, HB_IT_ANY ) );
    }
 }
 
@@ -537,10 +485,8 @@ HB_FUNC( QT_QLIST_REMOVEALL )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      hb_retni( ( p )->removeAll( hb_param( 2, HB_IT_ANY ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_REMOVEALL FP=hb_retni( ( p )->removeAll( hb_param( 2, HB_IT_ANY ) ) ); p is NULL" ) );
+      hb_retni( ( p )->removeAll( hb_param( 2, HB_IT_ANY ) ) );
    }
 }
 
@@ -551,10 +497,8 @@ HB_FUNC( QT_QLIST_REMOVEAT )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      ( p )->removeAt( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_REMOVEAT FP=( p )->removeAt( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->removeAt( hb_parni( 2 ) );
    }
 }
 
@@ -565,10 +509,8 @@ HB_FUNC( QT_QLIST_REMOVEFIRST )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      ( p )->removeFirst();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_REMOVEFIRST FP=( p )->removeFirst(); p is NULL" ) );
+      ( p )->removeFirst();
    }
 }
 
@@ -579,10 +521,8 @@ HB_FUNC( QT_QLIST_REMOVELAST )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      ( p )->removeLast();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_REMOVELAST FP=( p )->removeLast(); p is NULL" ) );
+      ( p )->removeLast();
    }
 }
 
@@ -593,10 +533,8 @@ HB_FUNC( QT_QLIST_REMOVEONE )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      hb_retl( ( p )->removeOne( hb_param( 2, HB_IT_ANY ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_REMOVEONE FP=hb_retl( ( p )->removeOne( hb_param( 2, HB_IT_ANY ) ) ); p is NULL" ) );
+      hb_retl( ( p )->removeOne( hb_param( 2, HB_IT_ANY ) ) );
    }
 }
 
@@ -607,10 +545,8 @@ HB_FUNC( QT_QLIST_REPLACE )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      ( p )->replace( hb_parni( 2 ), hb_param( 3, HB_IT_ANY ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_REPLACE FP=( p )->replace( hb_parni( 2 ), hb_param( 3, HB_IT_ANY ) ); p is NULL" ) );
+      ( p )->replace( hb_parni( 2 ), hb_param( 3, HB_IT_ANY ) );
    }
 }
 
@@ -621,10 +557,8 @@ HB_FUNC( QT_QLIST_SIZE )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      hb_retni( ( p )->size() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_SIZE FP=hb_retni( ( p )->size() ); p is NULL" ) );
+      hb_retni( ( p )->size() );
    }
 }
 
@@ -635,10 +569,8 @@ HB_FUNC( QT_QLIST_STARTSWITH )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      hb_retl( ( p )->startsWith( hb_param( 2, HB_IT_ANY ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_STARTSWITH FP=hb_retl( ( p )->startsWith( hb_param( 2, HB_IT_ANY ) ) ); p is NULL" ) );
+      hb_retl( ( p )->startsWith( hb_param( 2, HB_IT_ANY ) ) );
    }
 }
 
@@ -649,10 +581,8 @@ HB_FUNC( QT_QLIST_SWAP )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      ( p )->swap( hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_SWAP FP=( p )->swap( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->swap( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -663,10 +593,8 @@ HB_FUNC( QT_QLIST_TAKEAT )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      hb_retptr( ( p )->takeAt( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_TAKEAT FP=hb_retptr( ( p )->takeAt( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retptr( ( p )->takeAt( hb_parni( 2 ) ) );
    }
 }
 
@@ -677,10 +605,8 @@ HB_FUNC( QT_QLIST_TAKEFIRST )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      hb_retptr( ( p )->takeFirst() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_TAKEFIRST FP=hb_retptr( ( p )->takeFirst() ); p is NULL" ) );
+      hb_retptr( ( p )->takeFirst() );
    }
 }
 
@@ -691,10 +617,8 @@ HB_FUNC( QT_QLIST_TAKELAST )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      hb_retptr( ( p )->takeLast() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_TAKELAST FP=hb_retptr( ( p )->takeLast() ); p is NULL" ) );
+      hb_retptr( ( p )->takeLast() );
    }
 }
 
@@ -705,10 +629,8 @@ HB_FUNC( QT_QLIST_VALUE )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      hb_retptr( ( p )->value( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_VALUE FP=hb_retptr( ( p )->value( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retptr( ( p )->value( hb_parni( 2 ) ) );
    }
 }
 
@@ -719,10 +641,8 @@ HB_FUNC( QT_QLIST_VALUE_1 )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
-      hb_retptr( ( p )->value( hb_parni( 2 ), hb_param( 3, HB_IT_ANY ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLIST_VALUE_1 FP=hb_retptr( ( p )->value( hb_parni( 2 ), hb_param( 3, HB_IT_ANY ) ) ); p is NULL" ) );
+      hb_retptr( ( p )->value( hb_parni( 2 ), hb_param( 3, HB_IT_ANY ) ) );
    }
 }
 

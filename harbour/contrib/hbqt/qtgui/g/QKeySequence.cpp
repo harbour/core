@@ -163,10 +163,8 @@ HB_FUNC( QT_QKEYSEQUENCE_COUNT )
 {
    QKeySequence * p = hbqt_par_QKeySequence( 1 );
    if( p )
-      hb_retni( ( p )->count() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QKEYSEQUENCE_COUNT FP=hb_retni( ( p )->count() ); p is NULL" ) );
+      hb_retni( ( p )->count() );
    }
 }
 
@@ -177,10 +175,8 @@ HB_FUNC( QT_QKEYSEQUENCE_ISEMPTY )
 {
    QKeySequence * p = hbqt_par_QKeySequence( 1 );
    if( p )
-      hb_retl( ( p )->isEmpty() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QKEYSEQUENCE_ISEMPTY FP=hb_retl( ( p )->isEmpty() ); p is NULL" ) );
+      hb_retl( ( p )->isEmpty() );
    }
 }
 
@@ -191,10 +187,8 @@ HB_FUNC( QT_QKEYSEQUENCE_MATCHES )
 {
    QKeySequence * p = hbqt_par_QKeySequence( 1 );
    if( p )
-      hb_retni( ( QKeySequence::SequenceMatch ) ( p )->matches( *hbqt_par_QKeySequence( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QKEYSEQUENCE_MATCHES FP=hb_retni( ( QKeySequence::SequenceMatch ) ( p )->matches( *hbqt_par_QKeySequence( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( QKeySequence::SequenceMatch ) ( p )->matches( *hbqt_par_QKeySequence( 2 ) ) );
    }
 }
 
@@ -205,10 +199,8 @@ HB_FUNC( QT_QKEYSEQUENCE_TOSTRING )
 {
    QKeySequence * p = hbqt_par_QKeySequence( 1 );
    if( p )
-      hb_retc( ( p )->toString( ( HB_ISNUM( 2 ) ? ( QKeySequence::SequenceFormat ) hb_parni( 2 ) : ( QKeySequence::SequenceFormat ) QKeySequence::PortableText ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QKEYSEQUENCE_TOSTRING FP=hb_retc( ( p )->toString( ( HB_ISNUM( 2 ) ? ( QKeySequence::SequenceFormat ) hb_parni( 2 ) : ( QKeySequence::SequenceFormat ) QKeySequence::PortableText ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->toString( ( HB_ISNUM( 2 ) ? ( QKeySequence::SequenceFormat ) hb_parni( 2 ) : ( QKeySequence::SequenceFormat ) QKeySequence::PortableText ) ).toUtf8().data() );
    }
 }
 
@@ -219,10 +211,10 @@ HB_FUNC( QT_QKEYSEQUENCE_FROMSTRING )
 {
    QKeySequence * p = hbqt_par_QKeySequence( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QKeySequence( new QKeySequence( ( p )->fromString( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( QKeySequence::SequenceFormat ) hb_parni( 3 ) : ( QKeySequence::SequenceFormat ) QKeySequence::PortableText ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QKEYSEQUENCE_FROMSTRING FP=hb_retptrGC( hbqt_gcAllocate_QKeySequence( new QKeySequence( ( p )->fromString( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( QKeySequence::SequenceFormat ) hb_parni( 3 ) : ( QKeySequence::SequenceFormat ) QKeySequence::PortableText ) ) ), true ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QKeySequence( new QKeySequence( ( p )->fromString( hb_parstr_utf8( 2, &pText, NULL ), ( HB_ISNUM( 3 ) ? ( QKeySequence::SequenceFormat ) hb_parni( 3 ) : ( QKeySequence::SequenceFormat ) QKeySequence::PortableText ) ) ), true ) );
+      hb_strfree( pText );
    }
 }
 
@@ -233,10 +225,8 @@ HB_FUNC( QT_QKEYSEQUENCE_KEYBINDINGS )
 {
    QKeySequence * p = hbqt_par_QKeySequence( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QKeySequence>( ( p )->keyBindings( ( QKeySequence::StandardKey ) hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QKEYSEQUENCE_KEYBINDINGS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QKeySequence>( ( p )->keyBindings( ( QKeySequence::StandardKey ) hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QKeySequence>( ( p )->keyBindings( ( QKeySequence::StandardKey ) hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -247,10 +237,10 @@ HB_FUNC( QT_QKEYSEQUENCE_MNEMONIC )
 {
    QKeySequence * p = hbqt_par_QKeySequence( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QKeySequence( new QKeySequence( ( p )->mnemonic( hbqt_par_QString( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QKEYSEQUENCE_MNEMONIC FP=hb_retptrGC( hbqt_gcAllocate_QKeySequence( new QKeySequence( ( p )->mnemonic( hbqt_par_QString( 2 ) ) ), true ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QKeySequence( new QKeySequence( ( p )->mnemonic( hb_parstr_utf8( 2, &pText, NULL ) ) ), true ) );
+      hb_strfree( pText );
    }
 }
 

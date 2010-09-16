@@ -56,6 +56,7 @@
 #define __HBQT_H
 
 #include "hbapi.h"
+#include "hbapistr.h"
 
 #if defined( HB_OS_OS2 )
 #  define OS2EMX_PLAIN_CHAR

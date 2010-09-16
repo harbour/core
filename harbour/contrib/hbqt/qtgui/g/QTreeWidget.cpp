@@ -188,10 +188,8 @@ HB_FUNC( QT_QTREEWIDGET_CLOSEPERSISTENTEDITOR )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      ( p )->closePersistentEditor( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_CLOSEPERSISTENTEDITOR FP=( p )->closePersistentEditor( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->closePersistentEditor( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -202,10 +200,8 @@ HB_FUNC( QT_QTREEWIDGET_COLUMNCOUNT )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      hb_retni( ( p )->columnCount() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_COLUMNCOUNT FP=hb_retni( ( p )->columnCount() ); p is NULL" ) );
+      hb_retni( ( p )->columnCount() );
    }
 }
 
@@ -216,10 +212,8 @@ HB_FUNC( QT_QTREEWIDGET_CURRENTCOLUMN )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      hb_retni( ( p )->currentColumn() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_CURRENTCOLUMN FP=hb_retni( ( p )->currentColumn() ); p is NULL" ) );
+      hb_retni( ( p )->currentColumn() );
    }
 }
 
@@ -230,10 +224,8 @@ HB_FUNC( QT_QTREEWIDGET_CURRENTITEM )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->currentItem(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_CURRENTITEM FP=hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->currentItem(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->currentItem(), false ) );
    }
 }
 
@@ -244,10 +236,8 @@ HB_FUNC( QT_QTREEWIDGET_EDITITEM )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      ( p )->editItem( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_EDITITEM FP=( p )->editItem( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->editItem( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -258,10 +248,10 @@ HB_FUNC( QT_QTREEWIDGET_FINDITEMS )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTreeWidgetItem *>( ( p )->findItems( QTreeWidget::tr( hb_parc( 2 ) ), ( Qt::MatchFlags ) hb_parni( 3 ), hb_parni( 4 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_FINDITEMS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTreeWidgetItem *>( ( p )->findItems( QTreeWidget::tr( hb_parc( 2 ) ), ( Qt::MatchFlags ) hb_parni( 3 ), hb_parni( 4 ) ) ), true ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTreeWidgetItem *>( ( p )->findItems( hb_parstr_utf8( 2, &pText, NULL ), ( Qt::MatchFlags ) hb_parni( 3 ), hb_parni( 4 ) ) ), true ) );
+      hb_strfree( pText );
    }
 }
 
@@ -272,10 +262,8 @@ HB_FUNC( QT_QTREEWIDGET_HEADERITEM )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->headerItem(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_HEADERITEM FP=hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->headerItem(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->headerItem(), false ) );
    }
 }
 
@@ -286,10 +274,8 @@ HB_FUNC( QT_QTREEWIDGET_INDEXOFTOPLEVELITEM )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      hb_retni( ( p )->indexOfTopLevelItem( hbqt_par_QTreeWidgetItem( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_INDEXOFTOPLEVELITEM FP=hb_retni( ( p )->indexOfTopLevelItem( hbqt_par_QTreeWidgetItem( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->indexOfTopLevelItem( hbqt_par_QTreeWidgetItem( 2 ) ) );
    }
 }
 
@@ -300,10 +286,8 @@ HB_FUNC( QT_QTREEWIDGET_INSERTTOPLEVELITEM )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      ( p )->insertTopLevelItem( hb_parni( 2 ), hbqt_par_QTreeWidgetItem( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_INSERTTOPLEVELITEM FP=( p )->insertTopLevelItem( hb_parni( 2 ), hbqt_par_QTreeWidgetItem( 3 ) ); p is NULL" ) );
+      ( p )->insertTopLevelItem( hb_parni( 2 ), hbqt_par_QTreeWidgetItem( 3 ) );
    }
 }
 
@@ -314,10 +298,8 @@ HB_FUNC( QT_QTREEWIDGET_INVISIBLEROOTITEM )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->invisibleRootItem(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_INVISIBLEROOTITEM FP=hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->invisibleRootItem(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->invisibleRootItem(), false ) );
    }
 }
 
@@ -328,10 +310,8 @@ HB_FUNC( QT_QTREEWIDGET_ISFIRSTITEMCOLUMNSPANNED )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      hb_retl( ( p )->isFirstItemColumnSpanned( hbqt_par_QTreeWidgetItem( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_ISFIRSTITEMCOLUMNSPANNED FP=hb_retl( ( p )->isFirstItemColumnSpanned( hbqt_par_QTreeWidgetItem( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->isFirstItemColumnSpanned( hbqt_par_QTreeWidgetItem( 2 ) ) );
    }
 }
 
@@ -342,10 +322,8 @@ HB_FUNC( QT_QTREEWIDGET_ITEMABOVE )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->itemAbove( hbqt_par_QTreeWidgetItem( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_ITEMABOVE FP=hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->itemAbove( hbqt_par_QTreeWidgetItem( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->itemAbove( hbqt_par_QTreeWidgetItem( 2 ) ), false ) );
    }
 }
 
@@ -356,10 +334,8 @@ HB_FUNC( QT_QTREEWIDGET_ITEMAT )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->itemAt( *hbqt_par_QPoint( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_ITEMAT FP=hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->itemAt( *hbqt_par_QPoint( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->itemAt( *hbqt_par_QPoint( 2 ) ), false ) );
    }
 }
 
@@ -370,10 +346,8 @@ HB_FUNC( QT_QTREEWIDGET_ITEMAT_1 )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->itemAt( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_ITEMAT_1 FP=hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->itemAt( hb_parni( 2 ), hb_parni( 3 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->itemAt( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
    }
 }
 
@@ -384,10 +358,8 @@ HB_FUNC( QT_QTREEWIDGET_ITEMBELOW )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->itemBelow( hbqt_par_QTreeWidgetItem( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_ITEMBELOW FP=hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->itemBelow( hbqt_par_QTreeWidgetItem( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->itemBelow( hbqt_par_QTreeWidgetItem( 2 ) ), false ) );
    }
 }
 
@@ -398,10 +370,8 @@ HB_FUNC( QT_QTREEWIDGET_ITEMWIDGET )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->itemWidget( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_ITEMWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->itemWidget( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->itemWidget( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ) ), false ) );
    }
 }
 
@@ -412,10 +382,8 @@ HB_FUNC( QT_QTREEWIDGET_OPENPERSISTENTEDITOR )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      ( p )->openPersistentEditor( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_OPENPERSISTENTEDITOR FP=( p )->openPersistentEditor( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->openPersistentEditor( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -426,10 +394,8 @@ HB_FUNC( QT_QTREEWIDGET_REMOVEITEMWIDGET )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      ( p )->removeItemWidget( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_REMOVEITEMWIDGET FP=( p )->removeItemWidget( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->removeItemWidget( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -440,10 +406,8 @@ HB_FUNC( QT_QTREEWIDGET_SELECTEDITEMS )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTreeWidgetItem *>( ( p )->selectedItems() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_SELECTEDITEMS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTreeWidgetItem *>( ( p )->selectedItems() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTreeWidgetItem *>( ( p )->selectedItems() ), true ) );
    }
 }
 
@@ -454,10 +418,8 @@ HB_FUNC( QT_QTREEWIDGET_SETCOLUMNCOUNT )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      ( p )->setColumnCount( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_SETCOLUMNCOUNT FP=( p )->setColumnCount( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setColumnCount( hb_parni( 2 ) );
    }
 }
 
@@ -516,10 +478,8 @@ HB_FUNC( QT_QTREEWIDGET_SETFIRSTITEMCOLUMNSPANNED )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      ( p )->setFirstItemColumnSpanned( hbqt_par_QTreeWidgetItem( 2 ), hb_parl( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_SETFIRSTITEMCOLUMNSPANNED FP=( p )->setFirstItemColumnSpanned( hbqt_par_QTreeWidgetItem( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+      ( p )->setFirstItemColumnSpanned( hbqt_par_QTreeWidgetItem( 2 ), hb_parl( 3 ) );
    }
 }
 
@@ -546,10 +506,10 @@ HB_FUNC( QT_QTREEWIDGET_SETHEADERLABEL )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      ( p )->setHeaderLabel( QTreeWidget::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_SETHEADERLABEL FP=( p )->setHeaderLabel( QTreeWidget::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setHeaderLabel( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -560,10 +520,8 @@ HB_FUNC( QT_QTREEWIDGET_SETHEADERLABELS )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      ( p )->setHeaderLabels( *hbqt_par_QStringList( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_SETHEADERLABELS FP=( p )->setHeaderLabels( *hbqt_par_QStringList( 2 ) ); p is NULL" ) );
+      ( p )->setHeaderLabels( *hbqt_par_QStringList( 2 ) );
    }
 }
 
@@ -574,10 +532,8 @@ HB_FUNC( QT_QTREEWIDGET_SETITEMWIDGET )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      ( p )->setItemWidget( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ), hbqt_par_QWidget( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_SETITEMWIDGET FP=( p )->setItemWidget( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ), hbqt_par_QWidget( 4 ) ); p is NULL" ) );
+      ( p )->setItemWidget( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ), hbqt_par_QWidget( 4 ) );
    }
 }
 
@@ -588,10 +544,8 @@ HB_FUNC( QT_QTREEWIDGET_SORTCOLUMN )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      hb_retni( ( p )->sortColumn() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_SORTCOLUMN FP=hb_retni( ( p )->sortColumn() ); p is NULL" ) );
+      hb_retni( ( p )->sortColumn() );
    }
 }
 
@@ -602,10 +556,8 @@ HB_FUNC( QT_QTREEWIDGET_SORTITEMS )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      ( p )->sortItems( hb_parni( 2 ), ( Qt::SortOrder ) hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_SORTITEMS FP=( p )->sortItems( hb_parni( 2 ), ( Qt::SortOrder ) hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->sortItems( hb_parni( 2 ), ( Qt::SortOrder ) hb_parni( 3 ) );
    }
 }
 
@@ -616,10 +568,8 @@ HB_FUNC( QT_QTREEWIDGET_TAKETOPLEVELITEM )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->takeTopLevelItem( hb_parni( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_TAKETOPLEVELITEM FP=hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->takeTopLevelItem( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->takeTopLevelItem( hb_parni( 2 ) ), false ) );
    }
 }
 
@@ -630,10 +580,8 @@ HB_FUNC( QT_QTREEWIDGET_TOPLEVELITEM )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->topLevelItem( hb_parni( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_TOPLEVELITEM FP=hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->topLevelItem( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( p )->topLevelItem( hb_parni( 2 ) ), false ) );
    }
 }
 
@@ -644,10 +592,8 @@ HB_FUNC( QT_QTREEWIDGET_TOPLEVELITEMCOUNT )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      hb_retni( ( p )->topLevelItemCount() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_TOPLEVELITEMCOUNT FP=hb_retni( ( p )->topLevelItemCount() ); p is NULL" ) );
+      hb_retni( ( p )->topLevelItemCount() );
    }
 }
 
@@ -658,10 +604,8 @@ HB_FUNC( QT_QTREEWIDGET_VISUALITEMRECT )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->visualItemRect( hbqt_par_QTreeWidgetItem( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_VISUALITEMRECT FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->visualItemRect( hbqt_par_QTreeWidgetItem( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->visualItemRect( hbqt_par_QTreeWidgetItem( 2 ) ) ), true ) );
    }
 }
 
@@ -672,10 +616,8 @@ HB_FUNC( QT_QTREEWIDGET_CLEAR )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      ( p )->clear();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_CLEAR FP=( p )->clear(); p is NULL" ) );
+      ( p )->clear();
    }
 }
 
@@ -686,10 +628,8 @@ HB_FUNC( QT_QTREEWIDGET_COLLAPSEITEM )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      ( p )->collapseItem( hbqt_par_QTreeWidgetItem( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_COLLAPSEITEM FP=( p )->collapseItem( hbqt_par_QTreeWidgetItem( 2 ) ); p is NULL" ) );
+      ( p )->collapseItem( hbqt_par_QTreeWidgetItem( 2 ) );
    }
 }
 
@@ -700,10 +640,8 @@ HB_FUNC( QT_QTREEWIDGET_EXPANDITEM )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      ( p )->expandItem( hbqt_par_QTreeWidgetItem( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_EXPANDITEM FP=( p )->expandItem( hbqt_par_QTreeWidgetItem( 2 ) ); p is NULL" ) );
+      ( p )->expandItem( hbqt_par_QTreeWidgetItem( 2 ) );
    }
 }
 
@@ -714,10 +652,8 @@ HB_FUNC( QT_QTREEWIDGET_SCROLLTOITEM )
 {
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
-      ( p )->scrollToItem( hbqt_par_QTreeWidgetItem( 2 ), ( HB_ISNUM( 3 ) ? ( QAbstractItemView::ScrollHint ) hb_parni( 3 ) : ( QAbstractItemView::ScrollHint ) QTreeWidget::EnsureVisible ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTREEWIDGET_SCROLLTOITEM FP=( p )->scrollToItem( hbqt_par_QTreeWidgetItem( 2 ), ( HB_ISNUM( 3 ) ? ( QAbstractItemView::ScrollHint ) hb_parni( 3 ) : ( QAbstractItemView::ScrollHint ) QTreeWidget::EnsureVisible ) ); p is NULL" ) );
+      ( p )->scrollToItem( hbqt_par_QTreeWidgetItem( 2 ), ( HB_ISNUM( 3 ) ? ( QAbstractItemView::ScrollHint ) hb_parni( 3 ) : ( QAbstractItemView::ScrollHint ) QTreeWidget::EnsureVisible ) );
    }
 }
 

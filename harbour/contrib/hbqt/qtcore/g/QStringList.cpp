@@ -164,10 +164,10 @@ HB_FUNC( QT_QSTRINGLIST_APPEND )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      ( p )->append( hbqt_par_QString( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_APPEND FP=( p )->append( hbqt_par_QString( 2 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->append( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -178,10 +178,10 @@ HB_FUNC( QT_QSTRINGLIST_FILTER )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->filter( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::CaseSensitivity ) hb_parni( 3 ) : ( Qt::CaseSensitivity ) Qt::CaseSensitive ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_FILTER FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->filter( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::CaseSensitivity ) hb_parni( 3 ) : ( Qt::CaseSensitivity ) Qt::CaseSensitive ) ) ), true ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->filter( hb_parstr_utf8( 2, &pText, NULL ), ( HB_ISNUM( 3 ) ? ( Qt::CaseSensitivity ) hb_parni( 3 ) : ( Qt::CaseSensitivity ) Qt::CaseSensitive ) ) ), true ) );
+      hb_strfree( pText );
    }
 }
 
@@ -192,10 +192,8 @@ HB_FUNC( QT_QSTRINGLIST_FILTER_1 )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->filter( *hbqt_par_QRegExp( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_FILTER_1 FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->filter( *hbqt_par_QRegExp( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->filter( *hbqt_par_QRegExp( 2 ) ) ), true ) );
    }
 }
 
@@ -206,10 +204,10 @@ HB_FUNC( QT_QSTRINGLIST_INDEXOF )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retni( ( p )->indexOf( hbqt_par_QString( 2 ), hb_parni( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_INDEXOF FP=hb_retni( ( p )->indexOf( hbqt_par_QString( 2 ), hb_parni( 3 ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retni( ( p )->indexOf( hb_parstr_utf8( 2, &pText, NULL ), hb_parni( 3 ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -220,10 +218,8 @@ HB_FUNC( QT_QSTRINGLIST_INDEXOF_1 )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retni( ( p )->indexOf( *hbqt_par_QRegExp( 2 ), hb_parni( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_INDEXOF_1 FP=hb_retni( ( p )->indexOf( *hbqt_par_QRegExp( 2 ), hb_parni( 3 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->indexOf( *hbqt_par_QRegExp( 2 ), hb_parni( 3 ) ) );
    }
 }
 
@@ -234,10 +230,8 @@ HB_FUNC( QT_QSTRINGLIST_INDEXOF_2 )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retni( ( p )->indexOf( *hbqt_par_QRegExp( 2 ), hb_parni( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_INDEXOF_2 FP=hb_retni( ( p )->indexOf( *hbqt_par_QRegExp( 2 ), hb_parni( 3 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->indexOf( *hbqt_par_QRegExp( 2 ), hb_parni( 3 ) ) );
    }
 }
 
@@ -248,10 +242,10 @@ HB_FUNC( QT_QSTRINGLIST_JOIN )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retc( ( p )->join( hbqt_par_QString( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_JOIN FP=hb_retc( ( p )->join( hbqt_par_QString( 2 ) ).toAscii().data() ); p is NULL" ) );
+      void * pText;
+      hb_retstr_utf8( ( p )->join( hb_parstr_utf8( 2, &pText, NULL ) ).toUtf8().data() );
+      hb_strfree( pText );
    }
 }
 
@@ -262,10 +256,8 @@ HB_FUNC( QT_QSTRINGLIST_LASTINDEXOF )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retni( ( p )->lastIndexOf( *hbqt_par_QRegExp( 2 ), hb_parnidef( 3, -1 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_LASTINDEXOF FP=hb_retni( ( p )->lastIndexOf( *hbqt_par_QRegExp( 2 ), hb_parnidef( 3, -1 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->lastIndexOf( *hbqt_par_QRegExp( 2 ), hb_parnidef( 3, -1 ) ) );
    }
 }
 
@@ -276,10 +268,10 @@ HB_FUNC( QT_QSTRINGLIST_LASTINDEXOF_1 )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retni( ( p )->lastIndexOf( hbqt_par_QString( 2 ), hb_parnidef( 3, -1 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_LASTINDEXOF_1 FP=hb_retni( ( p )->lastIndexOf( hbqt_par_QString( 2 ), hb_parnidef( 3, -1 ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retni( ( p )->lastIndexOf( hb_parstr_utf8( 2, &pText, NULL ), hb_parnidef( 3, -1 ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -290,10 +282,8 @@ HB_FUNC( QT_QSTRINGLIST_LASTINDEXOF_2 )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retni( ( p )->lastIndexOf( *hbqt_par_QRegExp( 2 ), hb_parnidef( 3, -1 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_LASTINDEXOF_2 FP=hb_retni( ( p )->lastIndexOf( *hbqt_par_QRegExp( 2 ), hb_parnidef( 3, -1 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->lastIndexOf( *hbqt_par_QRegExp( 2 ), hb_parnidef( 3, -1 ) ) );
    }
 }
 
@@ -304,10 +294,8 @@ HB_FUNC( QT_QSTRINGLIST_REMOVEDUPLICATES )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retni( ( p )->removeDuplicates() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_REMOVEDUPLICATES FP=hb_retni( ( p )->removeDuplicates() ); p is NULL" ) );
+      hb_retni( ( p )->removeDuplicates() );
    }
 }
 
@@ -318,10 +306,8 @@ HB_FUNC( QT_QSTRINGLIST_SORT )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      ( p )->sort();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_SORT FP=( p )->sort(); p is NULL" ) );
+      ( p )->sort();
    }
 }
 
@@ -332,10 +318,8 @@ HB_FUNC( QT_QSTRINGLIST_AT )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retc( ( p )->at( hb_parni( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_AT FP=hb_retc( ( p )->at( hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->at( hb_parni( 2 ) ).toUtf8().data() );
    }
 }
 
@@ -346,10 +330,8 @@ HB_FUNC( QT_QSTRINGLIST_BACK )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retc( ( p )->back().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_BACK FP=hb_retc( ( p )->back().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->back().toUtf8().data() );
    }
 }
 
@@ -360,10 +342,10 @@ HB_FUNC( QT_QSTRINGLIST_COUNT )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retni( ( p )->count( hbqt_par_QString( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_COUNT FP=hb_retni( ( p )->count( hbqt_par_QString( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retni( ( p )->count( hb_parstr_utf8( 2, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -374,10 +356,10 @@ HB_FUNC( QT_QSTRINGLIST_ENDSWITH )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retl( ( p )->endsWith( hbqt_par_QString( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_ENDSWITH FP=hb_retl( ( p )->endsWith( hbqt_par_QString( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->endsWith( hb_parstr_utf8( 2, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -388,10 +370,8 @@ HB_FUNC( QT_QSTRINGLIST_FIRST )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retc( ( p )->first().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_FIRST FP=hb_retc( ( p )->first().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->first().toUtf8().data() );
    }
 }
 
@@ -402,10 +382,8 @@ HB_FUNC( QT_QSTRINGLIST_FIRST_1 )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retc( ( p )->first().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_FIRST_1 FP=hb_retc( ( p )->first().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->first().toUtf8().data() );
    }
 }
 
@@ -416,10 +394,8 @@ HB_FUNC( QT_QSTRINGLIST_FRONT )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retc( ( p )->front().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_FRONT FP=hb_retc( ( p )->front().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->front().toUtf8().data() );
    }
 }
 
@@ -430,10 +406,8 @@ HB_FUNC( QT_QSTRINGLIST_FRONT_1 )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retc( ( p )->front().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_FRONT_1 FP=hb_retc( ( p )->front().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->front().toUtf8().data() );
    }
 }
 
@@ -444,10 +418,10 @@ HB_FUNC( QT_QSTRINGLIST_INSERT )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      ( p )->insert( hb_parni( 2 ), hbqt_par_QString( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_INSERT FP=( p )->insert( hb_parni( 2 ), hbqt_par_QString( 3 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->insert( hb_parni( 2 ), hb_parstr_utf8( 3, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -458,10 +432,8 @@ HB_FUNC( QT_QSTRINGLIST_LAST )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retc( ( p )->last().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_LAST FP=hb_retc( ( p )->last().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->last().toUtf8().data() );
    }
 }
 
@@ -472,10 +444,8 @@ HB_FUNC( QT_QSTRINGLIST_LAST_1 )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retc( ( p )->last().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_LAST_1 FP=hb_retc( ( p )->last().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->last().toUtf8().data() );
    }
 }
 
@@ -486,10 +456,8 @@ HB_FUNC( QT_QSTRINGLIST_MID )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QString>( ( p )->mid( hb_parni( 2 ), hb_parnidef( 3, -1 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_MID FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QString>( ( p )->mid( hb_parni( 2 ), hb_parnidef( 3, -1 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QString>( ( p )->mid( hb_parni( 2 ), hb_parnidef( 3, -1 ) ) ), true ) );
    }
 }
 
@@ -500,10 +468,10 @@ HB_FUNC( QT_QSTRINGLIST_PREPEND )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      ( p )->prepend( hbqt_par_QString( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_PREPEND FP=( p )->prepend( hbqt_par_QString( 2 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->prepend( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -514,10 +482,10 @@ HB_FUNC( QT_QSTRINGLIST_PUSH_BACK )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      ( p )->push_back( hbqt_par_QString( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_PUSH_BACK FP=( p )->push_back( hbqt_par_QString( 2 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->push_back( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -528,10 +496,10 @@ HB_FUNC( QT_QSTRINGLIST_PUSH_FRONT )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      ( p )->push_front( hbqt_par_QString( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_PUSH_FRONT FP=( p )->push_front( hbqt_par_QString( 2 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->push_front( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -542,10 +510,10 @@ HB_FUNC( QT_QSTRINGLIST_REMOVEALL )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retni( ( p )->removeAll( hbqt_par_QString( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_REMOVEALL FP=hb_retni( ( p )->removeAll( hbqt_par_QString( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retni( ( p )->removeAll( hb_parstr_utf8( 2, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -556,10 +524,10 @@ HB_FUNC( QT_QSTRINGLIST_REMOVEONE )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retl( ( p )->removeOne( hbqt_par_QString( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_REMOVEONE FP=hb_retl( ( p )->removeOne( hbqt_par_QString( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->removeOne( hb_parstr_utf8( 2, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -570,10 +538,10 @@ HB_FUNC( QT_QSTRINGLIST_REPLACE )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      ( p )->replace( hb_parni( 2 ), hbqt_par_QString( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_REPLACE FP=( p )->replace( hb_parni( 2 ), hbqt_par_QString( 3 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->replace( hb_parni( 2 ), hb_parstr_utf8( 3, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -584,10 +552,10 @@ HB_FUNC( QT_QSTRINGLIST_STARTSWITH )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retl( ( p )->startsWith( hbqt_par_QString( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_STARTSWITH FP=hb_retl( ( p )->startsWith( hbqt_par_QString( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->startsWith( hb_parstr_utf8( 2, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -598,10 +566,8 @@ HB_FUNC( QT_QSTRINGLIST_TAKEAT )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retc( ( p )->takeAt( hb_parni( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_TAKEAT FP=hb_retc( ( p )->takeAt( hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->takeAt( hb_parni( 2 ) ).toUtf8().data() );
    }
 }
 
@@ -612,10 +578,8 @@ HB_FUNC( QT_QSTRINGLIST_TAKEFIRST )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retc( ( p )->takeFirst().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_TAKEFIRST FP=hb_retc( ( p )->takeFirst().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->takeFirst().toUtf8().data() );
    }
 }
 
@@ -626,10 +590,8 @@ HB_FUNC( QT_QSTRINGLIST_TAKELAST )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retc( ( p )->takeLast().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_TAKELAST FP=hb_retc( ( p )->takeLast().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->takeLast().toUtf8().data() );
    }
 }
 
@@ -640,10 +602,8 @@ HB_FUNC( QT_QSTRINGLIST_VALUE )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retc( ( p )->value( hb_parni( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_VALUE FP=hb_retc( ( p )->value( hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->value( hb_parni( 2 ) ).toUtf8().data() );
    }
 }
 
@@ -654,10 +614,10 @@ HB_FUNC( QT_QSTRINGLIST_VALUE_1 )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
-      hb_retc( ( p )->value( hb_parni( 2 ), hbqt_par_QString( 3 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGLIST_VALUE_1 FP=hb_retc( ( p )->value( hb_parni( 2 ), hbqt_par_QString( 3 ) ).toAscii().data() ); p is NULL" ) );
+      void * pText;
+      hb_retstr_utf8( ( p )->value( hb_parni( 2 ), hb_parstr_utf8( 3, &pText, NULL ) ).toUtf8().data() );
+      hb_strfree( pText );
    }
 }
 

@@ -137,10 +137,8 @@ HB_FUNC( QT_QSCIABSTRACTAPIS_LEXER )
 {
    QsciAbstractAPIs * p = hbqt_par_QsciAbstractAPIs( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QsciLexer( ( p )->lexer(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCIABSTRACTAPIS_LEXER FP=hb_retptrGC( hbqt_gcAllocate_QsciLexer( ( p )->lexer(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QsciLexer( ( p )->lexer(), false ) );
    }
 }
 
@@ -151,10 +149,8 @@ HB_FUNC( QT_QSCIABSTRACTAPIS_UPDATEAUTOCOMPLETIONLIST )
 {
    QsciAbstractAPIs * p = hbqt_par_QsciAbstractAPIs( 1 );
    if( p )
-      ( p )->updateAutoCompletionList( *hbqt_par_QStringList( 2 ), *hbqt_par_QStringList( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCIABSTRACTAPIS_UPDATEAUTOCOMPLETIONLIST FP=( p )->updateAutoCompletionList( *hbqt_par_QStringList( 2 ), *hbqt_par_QStringList( 3 ) ); p is NULL" ) );
+      ( p )->updateAutoCompletionList( *hbqt_par_QStringList( 2 ), *hbqt_par_QStringList( 3 ) );
    }
 }
 
@@ -165,10 +161,10 @@ HB_FUNC( QT_QSCIABSTRACTAPIS_AUTOCOMPLETIONSELECTED )
 {
    QsciAbstractAPIs * p = hbqt_par_QsciAbstractAPIs( 1 );
    if( p )
-      ( p )->autoCompletionSelected( QsciAbstractAPIs::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCIABSTRACTAPIS_AUTOCOMPLETIONSELECTED FP=( p )->autoCompletionSelected( QsciAbstractAPIs::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->autoCompletionSelected( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 

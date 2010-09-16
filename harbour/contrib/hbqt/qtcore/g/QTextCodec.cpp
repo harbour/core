@@ -131,10 +131,8 @@ HB_FUNC( QT_QTEXTCODEC_ALIASES )
 {
    QTextCodec * p = hbqt_par_QTextCodec( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QByteArray>( ( p )->aliases() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTCODEC_ALIASES FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QByteArray>( ( p )->aliases() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QByteArray>( ( p )->aliases() ), true ) );
    }
 }
 
@@ -145,10 +143,8 @@ HB_FUNC( QT_QTEXTCODEC_CANENCODE )
 {
    QTextCodec * p = hbqt_par_QTextCodec( 1 );
    if( p )
-      hb_retl( ( p )->canEncode( *hbqt_par_QChar( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTCODEC_CANENCODE FP=hb_retl( ( p )->canEncode( *hbqt_par_QChar( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->canEncode( *hbqt_par_QChar( 2 ) ) );
    }
 }
 
@@ -159,10 +155,10 @@ HB_FUNC( QT_QTEXTCODEC_CANENCODE_1 )
 {
    QTextCodec * p = hbqt_par_QTextCodec( 1 );
    if( p )
-      hb_retl( ( p )->canEncode( hbqt_par_QString( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTCODEC_CANENCODE_1 FP=hb_retl( ( p )->canEncode( hbqt_par_QString( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->canEncode( hb_parstr_utf8( 2, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -173,10 +169,10 @@ HB_FUNC( QT_QTEXTCODEC_FROMUNICODE )
 {
    QTextCodec * p = hbqt_par_QTextCodec( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->fromUnicode( hbqt_par_QString( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTCODEC_FROMUNICODE FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->fromUnicode( hbqt_par_QString( 2 ) ) ), true ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->fromUnicode( hb_parstr_utf8( 2, &pText, NULL ) ) ), true ) );
+      hb_strfree( pText );
    }
 }
 
@@ -187,10 +183,8 @@ HB_FUNC( QT_QTEXTCODEC_MAKEDECODER )
 {
    QTextCodec * p = hbqt_par_QTextCodec( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTextDecoder( ( p )->makeDecoder(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTCODEC_MAKEDECODER FP=hb_retptrGC( hbqt_gcAllocate_QTextDecoder( ( p )->makeDecoder(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTextDecoder( ( p )->makeDecoder(), false ) );
    }
 }
 
@@ -201,10 +195,8 @@ HB_FUNC( QT_QTEXTCODEC_MAKEENCODER )
 {
    QTextCodec * p = hbqt_par_QTextCodec( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTextEncoder( ( p )->makeEncoder(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTCODEC_MAKEENCODER FP=hb_retptrGC( hbqt_gcAllocate_QTextEncoder( ( p )->makeEncoder(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTextEncoder( ( p )->makeEncoder(), false ) );
    }
 }
 
@@ -215,10 +207,8 @@ HB_FUNC( QT_QTEXTCODEC_MIBENUM )
 {
    QTextCodec * p = hbqt_par_QTextCodec( 1 );
    if( p )
-      hb_retni( ( p )->mibEnum() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTCODEC_MIBENUM FP=hb_retni( ( p )->mibEnum() ); p is NULL" ) );
+      hb_retni( ( p )->mibEnum() );
    }
 }
 
@@ -229,10 +219,8 @@ HB_FUNC( QT_QTEXTCODEC_NAME )
 {
    QTextCodec * p = hbqt_par_QTextCodec( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->name() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTCODEC_NAME FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->name() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->name() ), true ) );
    }
 }
 
@@ -243,10 +231,8 @@ HB_FUNC( QT_QTEXTCODEC_TOUNICODE )
 {
    QTextCodec * p = hbqt_par_QTextCodec( 1 );
    if( p )
-      hb_retc( ( p )->toUnicode( *hbqt_par_QByteArray( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTCODEC_TOUNICODE FP=hb_retc( ( p )->toUnicode( *hbqt_par_QByteArray( 2 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->toUnicode( *hbqt_par_QByteArray( 2 ) ).toUtf8().data() );
    }
 }
 
@@ -257,10 +243,8 @@ HB_FUNC( QT_QTEXTCODEC_TOUNICODE_1 )
 {
    QTextCodec * p = hbqt_par_QTextCodec( 1 );
    if( p )
-      hb_retc( ( p )->toUnicode( hbqt_par_char( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTCODEC_TOUNICODE_1 FP=hb_retc( ( p )->toUnicode( hbqt_par_char( 2 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->toUnicode( hbqt_par_char( 2 ) ).toUtf8().data() );
    }
 }
 
@@ -271,10 +255,8 @@ HB_FUNC( QT_QTEXTCODEC_CODECFORCSTRINGS )
 {
    QTextCodec * p = hbqt_par_QTextCodec( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codecForCStrings(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTCODEC_CODECFORCSTRINGS FP=hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codecForCStrings(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codecForCStrings(), false ) );
    }
 }
 
@@ -285,10 +267,8 @@ HB_FUNC( QT_QTEXTCODEC_CODECFORHTML )
 {
    QTextCodec * p = hbqt_par_QTextCodec( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codecForHtml( *hbqt_par_QByteArray( 2 ), hbqt_par_QTextCodec( 3 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTCODEC_CODECFORHTML FP=hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codecForHtml( *hbqt_par_QByteArray( 2 ), hbqt_par_QTextCodec( 3 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codecForHtml( *hbqt_par_QByteArray( 2 ), hbqt_par_QTextCodec( 3 ) ), false ) );
    }
 }
 
@@ -299,10 +279,8 @@ HB_FUNC( QT_QTEXTCODEC_CODECFORHTML_1 )
 {
    QTextCodec * p = hbqt_par_QTextCodec( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codecForHtml( *hbqt_par_QByteArray( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTCODEC_CODECFORHTML_1 FP=hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codecForHtml( *hbqt_par_QByteArray( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codecForHtml( *hbqt_par_QByteArray( 2 ) ), false ) );
    }
 }
 
@@ -313,10 +291,8 @@ HB_FUNC( QT_QTEXTCODEC_CODECFORLOCALE )
 {
    QTextCodec * p = hbqt_par_QTextCodec( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codecForLocale(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTCODEC_CODECFORLOCALE FP=hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codecForLocale(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codecForLocale(), false ) );
    }
 }
 
@@ -327,10 +303,8 @@ HB_FUNC( QT_QTEXTCODEC_CODECFORMIB )
 {
    QTextCodec * p = hbqt_par_QTextCodec( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codecForMib( hb_parni( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTCODEC_CODECFORMIB FP=hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codecForMib( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codecForMib( hb_parni( 2 ) ), false ) );
    }
 }
 
@@ -341,10 +315,8 @@ HB_FUNC( QT_QTEXTCODEC_CODECFORNAME )
 {
    QTextCodec * p = hbqt_par_QTextCodec( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codecForName( *hbqt_par_QByteArray( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTCODEC_CODECFORNAME FP=hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codecForName( *hbqt_par_QByteArray( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codecForName( *hbqt_par_QByteArray( 2 ) ), false ) );
    }
 }
 
@@ -355,10 +327,8 @@ HB_FUNC( QT_QTEXTCODEC_CODECFORNAME_1 )
 {
    QTextCodec * p = hbqt_par_QTextCodec( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codecForName( hbqt_par_char( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTCODEC_CODECFORNAME_1 FP=hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codecForName( hbqt_par_char( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codecForName( hbqt_par_char( 2 ) ), false ) );
    }
 }
 
@@ -369,10 +339,8 @@ HB_FUNC( QT_QTEXTCODEC_CODECFORTR )
 {
    QTextCodec * p = hbqt_par_QTextCodec( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codecForTr(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTCODEC_CODECFORTR FP=hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codecForTr(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTextCodec( ( p )->codecForTr(), false ) );
    }
 }
 
@@ -383,10 +351,8 @@ HB_FUNC( QT_QTEXTCODEC_SETCODECFORCSTRINGS )
 {
    QTextCodec * p = hbqt_par_QTextCodec( 1 );
    if( p )
-      ( p )->setCodecForCStrings( hbqt_par_QTextCodec( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTCODEC_SETCODECFORCSTRINGS FP=( p )->setCodecForCStrings( hbqt_par_QTextCodec( 2 ) ); p is NULL" ) );
+      ( p )->setCodecForCStrings( hbqt_par_QTextCodec( 2 ) );
    }
 }
 
@@ -397,10 +363,8 @@ HB_FUNC( QT_QTEXTCODEC_SETCODECFORLOCALE )
 {
    QTextCodec * p = hbqt_par_QTextCodec( 1 );
    if( p )
-      ( p )->setCodecForLocale( hbqt_par_QTextCodec( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTCODEC_SETCODECFORLOCALE FP=( p )->setCodecForLocale( hbqt_par_QTextCodec( 2 ) ); p is NULL" ) );
+      ( p )->setCodecForLocale( hbqt_par_QTextCodec( 2 ) );
    }
 }
 
@@ -411,10 +375,8 @@ HB_FUNC( QT_QTEXTCODEC_SETCODECFORTR )
 {
    QTextCodec * p = hbqt_par_QTextCodec( 1 );
    if( p )
-      ( p )->setCodecForTr( hbqt_par_QTextCodec( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTCODEC_SETCODECFORTR FP=( p )->setCodecForTr( hbqt_par_QTextCodec( 2 ) ); p is NULL" ) );
+      ( p )->setCodecForTr( hbqt_par_QTextCodec( 2 ) );
    }
 }
 

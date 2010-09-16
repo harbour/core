@@ -156,10 +156,8 @@ HB_FUNC( QT_QSIGNALMAPPER_MAPPING )
 {
    QSignalMapper * p = hbqt_par_QSignalMapper( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->mapping( hb_parni( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIGNALMAPPER_MAPPING FP=hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->mapping( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->mapping( hb_parni( 2 ) ), false ) );
    }
 }
 
@@ -170,10 +168,10 @@ HB_FUNC( QT_QSIGNALMAPPER_MAPPING_1 )
 {
    QSignalMapper * p = hbqt_par_QSignalMapper( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->mapping( QSignalMapper::tr( hb_parc( 2 ) ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIGNALMAPPER_MAPPING_1 FP=hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->mapping( QSignalMapper::tr( hb_parc( 2 ) ) ), false ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->mapping( hb_parstr_utf8( 2, &pText, NULL ) ), false ) );
+      hb_strfree( pText );
    }
 }
 
@@ -184,10 +182,8 @@ HB_FUNC( QT_QSIGNALMAPPER_MAPPING_2 )
 {
    QSignalMapper * p = hbqt_par_QSignalMapper( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->mapping( hbqt_par_QObject( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIGNALMAPPER_MAPPING_2 FP=hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->mapping( hbqt_par_QObject( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QObject( ( p )->mapping( hbqt_par_QObject( 2 ) ), false ) );
    }
 }
 
@@ -198,10 +194,8 @@ HB_FUNC( QT_QSIGNALMAPPER_REMOVEMAPPINGS )
 {
    QSignalMapper * p = hbqt_par_QSignalMapper( 1 );
    if( p )
-      ( p )->removeMappings( hbqt_par_QObject( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIGNALMAPPER_REMOVEMAPPINGS FP=( p )->removeMappings( hbqt_par_QObject( 2 ) ); p is NULL" ) );
+      ( p )->removeMappings( hbqt_par_QObject( 2 ) );
    }
 }
 
@@ -212,10 +206,8 @@ HB_FUNC( QT_QSIGNALMAPPER_SETMAPPING )
 {
    QSignalMapper * p = hbqt_par_QSignalMapper( 1 );
    if( p )
-      ( p )->setMapping( hbqt_par_QObject( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIGNALMAPPER_SETMAPPING FP=( p )->setMapping( hbqt_par_QObject( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setMapping( hbqt_par_QObject( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -226,10 +218,10 @@ HB_FUNC( QT_QSIGNALMAPPER_SETMAPPING_1 )
 {
    QSignalMapper * p = hbqt_par_QSignalMapper( 1 );
    if( p )
-      ( p )->setMapping( hbqt_par_QObject( 2 ), QSignalMapper::tr( hb_parc( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIGNALMAPPER_SETMAPPING_1 FP=( p )->setMapping( hbqt_par_QObject( 2 ), QSignalMapper::tr( hb_parc( 3 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setMapping( hbqt_par_QObject( 2 ), hb_parstr_utf8( 3, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -240,10 +232,8 @@ HB_FUNC( QT_QSIGNALMAPPER_SETMAPPING_2 )
 {
    QSignalMapper * p = hbqt_par_QSignalMapper( 1 );
    if( p )
-      ( p )->setMapping( hbqt_par_QObject( 2 ), hbqt_par_QObject( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIGNALMAPPER_SETMAPPING_2 FP=( p )->setMapping( hbqt_par_QObject( 2 ), hbqt_par_QObject( 3 ) ); p is NULL" ) );
+      ( p )->setMapping( hbqt_par_QObject( 2 ), hbqt_par_QObject( 3 ) );
    }
 }
 
@@ -254,10 +244,8 @@ HB_FUNC( QT_QSIGNALMAPPER_MAP )
 {
    QSignalMapper * p = hbqt_par_QSignalMapper( 1 );
    if( p )
-      ( p )->map();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIGNALMAPPER_MAP FP=( p )->map(); p is NULL" ) );
+      ( p )->map();
    }
 }
 
@@ -268,10 +256,8 @@ HB_FUNC( QT_QSIGNALMAPPER_MAP_1 )
 {
    QSignalMapper * p = hbqt_par_QSignalMapper( 1 );
    if( p )
-      ( p )->map( hbqt_par_QObject( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIGNALMAPPER_MAP_1 FP=( p )->map( hbqt_par_QObject( 2 ) ); p is NULL" ) );
+      ( p )->map( hbqt_par_QObject( 2 ) );
    }
 }
 

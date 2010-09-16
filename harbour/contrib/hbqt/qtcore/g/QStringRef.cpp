@@ -163,10 +163,8 @@ HB_FUNC( QT_QSTRINGREF_AT )
 {
    QStringRef * p = hbqt_par_QStringRef( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( ( p )->at( hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGREF_AT FP=hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( ( p )->at( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( ( p )->at( hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -177,10 +175,8 @@ HB_FUNC( QT_QSTRINGREF_CLEAR )
 {
    QStringRef * p = hbqt_par_QStringRef( 1 );
    if( p )
-      ( p )->clear();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGREF_CLEAR FP=( p )->clear(); p is NULL" ) );
+      ( p )->clear();
    }
 }
 
@@ -191,10 +187,10 @@ HB_FUNC( QT_QSTRINGREF_COMPARE )
 {
    QStringRef * p = hbqt_par_QStringRef( 1 );
    if( p )
-      hb_retni( ( p )->compare( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::CaseSensitivity ) hb_parni( 3 ) : ( Qt::CaseSensitivity ) Qt::CaseSensitive ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGREF_COMPARE FP=hb_retni( ( p )->compare( hbqt_par_QString( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::CaseSensitivity ) hb_parni( 3 ) : ( Qt::CaseSensitivity ) Qt::CaseSensitive ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retni( ( p )->compare( hb_parstr_utf8( 2, &pText, NULL ), ( HB_ISNUM( 3 ) ? ( Qt::CaseSensitivity ) hb_parni( 3 ) : ( Qt::CaseSensitivity ) Qt::CaseSensitive ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -205,10 +201,8 @@ HB_FUNC( QT_QSTRINGREF_COMPARE_1 )
 {
    QStringRef * p = hbqt_par_QStringRef( 1 );
    if( p )
-      hb_retni( ( p )->compare( *hbqt_par_QStringRef( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::CaseSensitivity ) hb_parni( 3 ) : ( Qt::CaseSensitivity ) Qt::CaseSensitive ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGREF_COMPARE_1 FP=hb_retni( ( p )->compare( *hbqt_par_QStringRef( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::CaseSensitivity ) hb_parni( 3 ) : ( Qt::CaseSensitivity ) Qt::CaseSensitive ) ) ); p is NULL" ) );
+      hb_retni( ( p )->compare( *hbqt_par_QStringRef( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::CaseSensitivity ) hb_parni( 3 ) : ( Qt::CaseSensitivity ) Qt::CaseSensitive ) ) );
    }
 }
 
@@ -219,10 +213,8 @@ HB_FUNC( QT_QSTRINGREF_CONSTDATA )
 {
    QStringRef * p = hbqt_par_QStringRef( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( *( ( p )->constData() ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGREF_CONSTDATA FP=hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( *( ( p )->constData() ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( *( ( p )->constData() ) ), true ) );
    }
 }
 
@@ -233,10 +225,8 @@ HB_FUNC( QT_QSTRINGREF_COUNT )
 {
    QStringRef * p = hbqt_par_QStringRef( 1 );
    if( p )
-      hb_retni( ( p )->count() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGREF_COUNT FP=hb_retni( ( p )->count() ); p is NULL" ) );
+      hb_retni( ( p )->count() );
    }
 }
 
@@ -247,10 +237,8 @@ HB_FUNC( QT_QSTRINGREF_DATA )
 {
    QStringRef * p = hbqt_par_QStringRef( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( *( ( p )->data() ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGREF_DATA FP=hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( *( ( p )->data() ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( *( ( p )->data() ) ), true ) );
    }
 }
 
@@ -261,10 +249,8 @@ HB_FUNC( QT_QSTRINGREF_ISEMPTY )
 {
    QStringRef * p = hbqt_par_QStringRef( 1 );
    if( p )
-      hb_retl( ( p )->isEmpty() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGREF_ISEMPTY FP=hb_retl( ( p )->isEmpty() ); p is NULL" ) );
+      hb_retl( ( p )->isEmpty() );
    }
 }
 
@@ -275,10 +261,8 @@ HB_FUNC( QT_QSTRINGREF_ISNULL )
 {
    QStringRef * p = hbqt_par_QStringRef( 1 );
    if( p )
-      hb_retl( ( p )->isNull() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGREF_ISNULL FP=hb_retl( ( p )->isNull() ); p is NULL" ) );
+      hb_retl( ( p )->isNull() );
    }
 }
 
@@ -289,10 +273,8 @@ HB_FUNC( QT_QSTRINGREF_LENGTH )
 {
    QStringRef * p = hbqt_par_QStringRef( 1 );
    if( p )
-      hb_retni( ( p )->length() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGREF_LENGTH FP=hb_retni( ( p )->length() ); p is NULL" ) );
+      hb_retni( ( p )->length() );
    }
 }
 
@@ -303,10 +285,10 @@ HB_FUNC( QT_QSTRINGREF_LOCALEAWARECOMPARE )
 {
    QStringRef * p = hbqt_par_QStringRef( 1 );
    if( p )
-      hb_retni( ( p )->localeAwareCompare( hbqt_par_QString( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGREF_LOCALEAWARECOMPARE FP=hb_retni( ( p )->localeAwareCompare( hbqt_par_QString( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retni( ( p )->localeAwareCompare( hb_parstr_utf8( 2, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -317,10 +299,8 @@ HB_FUNC( QT_QSTRINGREF_LOCALEAWARECOMPARE_1 )
 {
    QStringRef * p = hbqt_par_QStringRef( 1 );
    if( p )
-      hb_retni( ( p )->localeAwareCompare( *hbqt_par_QStringRef( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGREF_LOCALEAWARECOMPARE_1 FP=hb_retni( ( p )->localeAwareCompare( *hbqt_par_QStringRef( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->localeAwareCompare( *hbqt_par_QStringRef( 2 ) ) );
    }
 }
 
@@ -331,10 +311,8 @@ HB_FUNC( QT_QSTRINGREF_POSITION )
 {
    QStringRef * p = hbqt_par_QStringRef( 1 );
    if( p )
-      hb_retni( ( p )->position() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGREF_POSITION FP=hb_retni( ( p )->position() ); p is NULL" ) );
+      hb_retni( ( p )->position() );
    }
 }
 
@@ -345,10 +323,8 @@ HB_FUNC( QT_QSTRINGREF_SIZE )
 {
    QStringRef * p = hbqt_par_QStringRef( 1 );
    if( p )
-      hb_retni( ( p )->size() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGREF_SIZE FP=hb_retni( ( p )->size() ); p is NULL" ) );
+      hb_retni( ( p )->size() );
    }
 }
 
@@ -359,10 +335,8 @@ HB_FUNC( QT_QSTRINGREF_UNICODE )
 {
    QStringRef * p = hbqt_par_QStringRef( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( *( ( p )->unicode() ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGREF_UNICODE FP=hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( *( ( p )->unicode() ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QChar( new QChar( *( ( p )->unicode() ) ), true ) );
    }
 }
 
@@ -373,10 +347,10 @@ HB_FUNC( QT_QSTRINGREF_COMPARE_2 )
 {
    QStringRef * p = hbqt_par_QStringRef( 1 );
    if( p )
-      hb_retni( ( p )->compare( *hbqt_par_QStringRef( 2 ), hbqt_par_QString( 3 ), ( HB_ISNUM( 4 ) ? ( Qt::CaseSensitivity ) hb_parni( 4 ) : ( Qt::CaseSensitivity ) Qt::CaseSensitive ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGREF_COMPARE_2 FP=hb_retni( ( p )->compare( *hbqt_par_QStringRef( 2 ), hbqt_par_QString( 3 ), ( HB_ISNUM( 4 ) ? ( Qt::CaseSensitivity ) hb_parni( 4 ) : ( Qt::CaseSensitivity ) Qt::CaseSensitive ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retni( ( p )->compare( *hbqt_par_QStringRef( 2 ), hb_parstr_utf8( 3, &pText, NULL ), ( HB_ISNUM( 4 ) ? ( Qt::CaseSensitivity ) hb_parni( 4 ) : ( Qt::CaseSensitivity ) Qt::CaseSensitive ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -387,10 +361,8 @@ HB_FUNC( QT_QSTRINGREF_COMPARE_3 )
 {
    QStringRef * p = hbqt_par_QStringRef( 1 );
    if( p )
-      hb_retni( ( p )->compare( *hbqt_par_QStringRef( 2 ), *hbqt_par_QStringRef( 3 ), ( HB_ISNUM( 4 ) ? ( Qt::CaseSensitivity ) hb_parni( 4 ) : ( Qt::CaseSensitivity ) Qt::CaseSensitive ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGREF_COMPARE_3 FP=hb_retni( ( p )->compare( *hbqt_par_QStringRef( 2 ), *hbqt_par_QStringRef( 3 ), ( HB_ISNUM( 4 ) ? ( Qt::CaseSensitivity ) hb_parni( 4 ) : ( Qt::CaseSensitivity ) Qt::CaseSensitive ) ) ); p is NULL" ) );
+      hb_retni( ( p )->compare( *hbqt_par_QStringRef( 2 ), *hbqt_par_QStringRef( 3 ), ( HB_ISNUM( 4 ) ? ( Qt::CaseSensitivity ) hb_parni( 4 ) : ( Qt::CaseSensitivity ) Qt::CaseSensitive ) ) );
    }
 }
 
@@ -401,10 +373,10 @@ HB_FUNC( QT_QSTRINGREF_LOCALEAWARECOMPARE_2 )
 {
    QStringRef * p = hbqt_par_QStringRef( 1 );
    if( p )
-      hb_retni( ( p )->localeAwareCompare( *hbqt_par_QStringRef( 2 ), hbqt_par_QString( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGREF_LOCALEAWARECOMPARE_2 FP=hb_retni( ( p )->localeAwareCompare( *hbqt_par_QStringRef( 2 ), hbqt_par_QString( 3 ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retni( ( p )->localeAwareCompare( *hbqt_par_QStringRef( 2 ), hb_parstr_utf8( 3, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -415,10 +387,8 @@ HB_FUNC( QT_QSTRINGREF_LOCALEAWARECOMPARE_3 )
 {
    QStringRef * p = hbqt_par_QStringRef( 1 );
    if( p )
-      hb_retni( ( p )->localeAwareCompare( *hbqt_par_QStringRef( 2 ), *hbqt_par_QStringRef( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTRINGREF_LOCALEAWARECOMPARE_3 FP=hb_retni( ( p )->localeAwareCompare( *hbqt_par_QStringRef( 2 ), *hbqt_par_QStringRef( 3 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->localeAwareCompare( *hbqt_par_QStringRef( 2 ), *hbqt_par_QStringRef( 3 ) ) );
    }
 }
 

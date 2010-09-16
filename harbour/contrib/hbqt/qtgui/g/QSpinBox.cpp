@@ -156,10 +156,8 @@ HB_FUNC( QT_QSPINBOX_CLEANTEXT )
 {
    QSpinBox * p = hbqt_par_QSpinBox( 1 );
    if( p )
-      hb_retc( ( p )->cleanText().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPINBOX_CLEANTEXT FP=hb_retc( ( p )->cleanText().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->cleanText().toUtf8().data() );
    }
 }
 
@@ -170,10 +168,8 @@ HB_FUNC( QT_QSPINBOX_MAXIMUM )
 {
    QSpinBox * p = hbqt_par_QSpinBox( 1 );
    if( p )
-      hb_retni( ( p )->maximum() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPINBOX_MAXIMUM FP=hb_retni( ( p )->maximum() ); p is NULL" ) );
+      hb_retni( ( p )->maximum() );
    }
 }
 
@@ -184,10 +180,8 @@ HB_FUNC( QT_QSPINBOX_MINIMUM )
 {
    QSpinBox * p = hbqt_par_QSpinBox( 1 );
    if( p )
-      hb_retni( ( p )->minimum() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPINBOX_MINIMUM FP=hb_retni( ( p )->minimum() ); p is NULL" ) );
+      hb_retni( ( p )->minimum() );
    }
 }
 
@@ -198,10 +192,8 @@ HB_FUNC( QT_QSPINBOX_PREFIX )
 {
    QSpinBox * p = hbqt_par_QSpinBox( 1 );
    if( p )
-      hb_retc( ( p )->prefix().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPINBOX_PREFIX FP=hb_retc( ( p )->prefix().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->prefix().toUtf8().data() );
    }
 }
 
@@ -212,10 +204,8 @@ HB_FUNC( QT_QSPINBOX_SETMAXIMUM )
 {
    QSpinBox * p = hbqt_par_QSpinBox( 1 );
    if( p )
-      ( p )->setMaximum( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPINBOX_SETMAXIMUM FP=( p )->setMaximum( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setMaximum( hb_parni( 2 ) );
    }
 }
 
@@ -226,10 +216,8 @@ HB_FUNC( QT_QSPINBOX_SETMINIMUM )
 {
    QSpinBox * p = hbqt_par_QSpinBox( 1 );
    if( p )
-      ( p )->setMinimum( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPINBOX_SETMINIMUM FP=( p )->setMinimum( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setMinimum( hb_parni( 2 ) );
    }
 }
 
@@ -240,10 +228,10 @@ HB_FUNC( QT_QSPINBOX_SETPREFIX )
 {
    QSpinBox * p = hbqt_par_QSpinBox( 1 );
    if( p )
-      ( p )->setPrefix( QSpinBox::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPINBOX_SETPREFIX FP=( p )->setPrefix( QSpinBox::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setPrefix( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -254,10 +242,8 @@ HB_FUNC( QT_QSPINBOX_SETRANGE )
 {
    QSpinBox * p = hbqt_par_QSpinBox( 1 );
    if( p )
-      ( p )->setRange( hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPINBOX_SETRANGE FP=( p )->setRange( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setRange( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -268,10 +254,8 @@ HB_FUNC( QT_QSPINBOX_SETSINGLESTEP )
 {
    QSpinBox * p = hbqt_par_QSpinBox( 1 );
    if( p )
-      ( p )->setSingleStep( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPINBOX_SETSINGLESTEP FP=( p )->setSingleStep( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setSingleStep( hb_parni( 2 ) );
    }
 }
 
@@ -282,10 +266,10 @@ HB_FUNC( QT_QSPINBOX_SETSUFFIX )
 {
    QSpinBox * p = hbqt_par_QSpinBox( 1 );
    if( p )
-      ( p )->setSuffix( QSpinBox::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPINBOX_SETSUFFIX FP=( p )->setSuffix( QSpinBox::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setSuffix( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -296,10 +280,8 @@ HB_FUNC( QT_QSPINBOX_SINGLESTEP )
 {
    QSpinBox * p = hbqt_par_QSpinBox( 1 );
    if( p )
-      hb_retni( ( p )->singleStep() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPINBOX_SINGLESTEP FP=hb_retni( ( p )->singleStep() ); p is NULL" ) );
+      hb_retni( ( p )->singleStep() );
    }
 }
 
@@ -310,10 +292,8 @@ HB_FUNC( QT_QSPINBOX_SUFFIX )
 {
    QSpinBox * p = hbqt_par_QSpinBox( 1 );
    if( p )
-      hb_retc( ( p )->suffix().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPINBOX_SUFFIX FP=hb_retc( ( p )->suffix().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->suffix().toUtf8().data() );
    }
 }
 
@@ -324,10 +304,8 @@ HB_FUNC( QT_QSPINBOX_VALUE )
 {
    QSpinBox * p = hbqt_par_QSpinBox( 1 );
    if( p )
-      hb_retni( ( p )->value() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPINBOX_VALUE FP=hb_retni( ( p )->value() ); p is NULL" ) );
+      hb_retni( ( p )->value() );
    }
 }
 
@@ -338,10 +316,8 @@ HB_FUNC( QT_QSPINBOX_SETVALUE )
 {
    QSpinBox * p = hbqt_par_QSpinBox( 1 );
    if( p )
-      ( p )->setValue( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSPINBOX_SETVALUE FP=( p )->setValue( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setValue( hb_parni( 2 ) );
    }
 }
 

@@ -146,10 +146,8 @@ HB_FUNC( QT_HBQTEXTBLOCKUSERDATA_HBSETSTATE )
 {
    HBQTextBlockUserData * p = hbqt_par_HBQTextBlockUserData( 1 );
    if( p )
-      hb_retni( ( p )->hbSetState( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQTEXTBLOCKUSERDATA_HBSETSTATE FP=hb_retni( ( p )->hbSetState( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->hbSetState( hb_parni( 2 ) ) );
    }
 }
 
@@ -160,10 +158,8 @@ HB_FUNC( QT_HBQTEXTBLOCKUSERDATA_HBSTATE )
 {
    HBQTextBlockUserData * p = hbqt_par_HBQTextBlockUserData( 1 );
    if( p )
-      hb_retni( ( p )->hbState() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_HBQTEXTBLOCKUSERDATA_HBSTATE FP=hb_retni( ( p )->hbState() ); p is NULL" ) );
+      hb_retni( ( p )->hbState() );
    }
 }
 

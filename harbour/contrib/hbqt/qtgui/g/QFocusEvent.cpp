@@ -126,10 +126,8 @@ HB_FUNC( QT_QFOCUSEVENT_GOTFOCUS )
 {
    QFocusEvent * p = hbqt_par_QFocusEvent( 1 );
    if( p )
-      hb_retl( ( p )->gotFocus() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFOCUSEVENT_GOTFOCUS FP=hb_retl( ( p )->gotFocus() ); p is NULL" ) );
+      hb_retl( ( p )->gotFocus() );
    }
 }
 
@@ -140,10 +138,8 @@ HB_FUNC( QT_QFOCUSEVENT_LOSTFOCUS )
 {
    QFocusEvent * p = hbqt_par_QFocusEvent( 1 );
    if( p )
-      hb_retl( ( p )->lostFocus() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFOCUSEVENT_LOSTFOCUS FP=hb_retl( ( p )->lostFocus() ); p is NULL" ) );
+      hb_retl( ( p )->lostFocus() );
    }
 }
 
@@ -154,10 +150,8 @@ HB_FUNC( QT_QFOCUSEVENT_REASON )
 {
    QFocusEvent * p = hbqt_par_QFocusEvent( 1 );
    if( p )
-      hb_retni( ( Qt::FocusReason ) ( p )->reason() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFOCUSEVENT_REASON FP=hb_retni( ( Qt::FocusReason ) ( p )->reason() ); p is NULL" ) );
+      hb_retni( ( Qt::FocusReason ) ( p )->reason() );
    }
 }
 

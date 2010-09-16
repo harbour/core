@@ -147,10 +147,8 @@ HB_FUNC( QT_QHTTPRESPONSEHEADER_MAJORVERSION )
 {
    QHttpResponseHeader * p = hbqt_par_QHttpResponseHeader( 1 );
    if( p )
-      hb_retni( ( p )->majorVersion() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPRESPONSEHEADER_MAJORVERSION FP=hb_retni( ( p )->majorVersion() ); p is NULL" ) );
+      hb_retni( ( p )->majorVersion() );
    }
 }
 
@@ -161,10 +159,8 @@ HB_FUNC( QT_QHTTPRESPONSEHEADER_MINORVERSION )
 {
    QHttpResponseHeader * p = hbqt_par_QHttpResponseHeader( 1 );
    if( p )
-      hb_retni( ( p )->minorVersion() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPRESPONSEHEADER_MINORVERSION FP=hb_retni( ( p )->minorVersion() ); p is NULL" ) );
+      hb_retni( ( p )->minorVersion() );
    }
 }
 
@@ -175,10 +171,8 @@ HB_FUNC( QT_QHTTPRESPONSEHEADER_REASONPHRASE )
 {
    QHttpResponseHeader * p = hbqt_par_QHttpResponseHeader( 1 );
    if( p )
-      hb_retc( ( p )->reasonPhrase().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPRESPONSEHEADER_REASONPHRASE FP=hb_retc( ( p )->reasonPhrase().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->reasonPhrase().toUtf8().data() );
    }
 }
 
@@ -189,10 +183,10 @@ HB_FUNC( QT_QHTTPRESPONSEHEADER_SETSTATUSLINE )
 {
    QHttpResponseHeader * p = hbqt_par_QHttpResponseHeader( 1 );
    if( p )
-      ( p )->setStatusLine( hb_parni( 2 ), hbqt_par_QString( 3 ), hb_parnidef( 4, 1 ), hb_parnidef( 5, 1 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPRESPONSEHEADER_SETSTATUSLINE FP=( p )->setStatusLine( hb_parni( 2 ), hbqt_par_QString( 3 ), hb_parnidef( 4, 1 ), hb_parnidef( 5, 1 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setStatusLine( hb_parni( 2 ), hb_parstr_utf8( 3, &pText, NULL ), hb_parnidef( 4, 1 ), hb_parnidef( 5, 1 ) );
+      hb_strfree( pText );
    }
 }
 
@@ -203,10 +197,8 @@ HB_FUNC( QT_QHTTPRESPONSEHEADER_STATUSCODE )
 {
    QHttpResponseHeader * p = hbqt_par_QHttpResponseHeader( 1 );
    if( p )
-      hb_retni( ( p )->statusCode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPRESPONSEHEADER_STATUSCODE FP=hb_retni( ( p )->statusCode() ); p is NULL" ) );
+      hb_retni( ( p )->statusCode() );
    }
 }
 

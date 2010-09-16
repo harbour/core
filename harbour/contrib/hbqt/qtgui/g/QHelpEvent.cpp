@@ -126,10 +126,8 @@ HB_FUNC( QT_QHELPEVENT_GLOBALPOS )
 {
    QHelpEvent * p = hbqt_par_QHelpEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->globalPos() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHELPEVENT_GLOBALPOS FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->globalPos() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->globalPos() ), true ) );
    }
 }
 
@@ -140,10 +138,8 @@ HB_FUNC( QT_QHELPEVENT_GLOBALX )
 {
    QHelpEvent * p = hbqt_par_QHelpEvent( 1 );
    if( p )
-      hb_retni( ( p )->globalX() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHELPEVENT_GLOBALX FP=hb_retni( ( p )->globalX() ); p is NULL" ) );
+      hb_retni( ( p )->globalX() );
    }
 }
 
@@ -154,10 +150,8 @@ HB_FUNC( QT_QHELPEVENT_GLOBALY )
 {
    QHelpEvent * p = hbqt_par_QHelpEvent( 1 );
    if( p )
-      hb_retni( ( p )->globalY() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHELPEVENT_GLOBALY FP=hb_retni( ( p )->globalY() ); p is NULL" ) );
+      hb_retni( ( p )->globalY() );
    }
 }
 
@@ -168,10 +162,8 @@ HB_FUNC( QT_QHELPEVENT_POS )
 {
    QHelpEvent * p = hbqt_par_QHelpEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHELPEVENT_POS FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) );
    }
 }
 
@@ -182,10 +174,8 @@ HB_FUNC( QT_QHELPEVENT_X )
 {
    QHelpEvent * p = hbqt_par_QHelpEvent( 1 );
    if( p )
-      hb_retni( ( p )->x() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHELPEVENT_X FP=hb_retni( ( p )->x() ); p is NULL" ) );
+      hb_retni( ( p )->x() );
    }
 }
 
@@ -196,10 +186,8 @@ HB_FUNC( QT_QHELPEVENT_Y )
 {
    QHelpEvent * p = hbqt_par_QHelpEvent( 1 );
    if( p )
-      hb_retni( ( p )->y() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHELPEVENT_Y FP=hb_retni( ( p )->y() ); p is NULL" ) );
+      hb_retni( ( p )->y() );
    }
 }
 

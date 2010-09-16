@@ -184,10 +184,8 @@ HB_FUNC( QT_QBITMAP_CLEAR )
 {
    QBitmap * p = hbqt_par_QBitmap( 1 );
    if( p )
-      ( p )->clear();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBITMAP_CLEAR FP=( p )->clear(); p is NULL" ) );
+      ( p )->clear();
    }
 }
 
@@ -198,10 +196,8 @@ HB_FUNC( QT_QBITMAP_TRANSFORMED )
 {
    QBitmap * p = hbqt_par_QBitmap( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap( ( p )->transformed( *hbqt_par_QTransform( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBITMAP_TRANSFORMED FP=hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap( ( p )->transformed( *hbqt_par_QTransform( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap( ( p )->transformed( *hbqt_par_QTransform( 2 ) ) ), true ) );
    }
 }
 
@@ -212,10 +208,8 @@ HB_FUNC( QT_QBITMAP_TRANSFORMED_1 )
 {
    QBitmap * p = hbqt_par_QBitmap( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap( ( p )->transformed( *hbqt_par_QMatrix( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBITMAP_TRANSFORMED_1 FP=hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap( ( p )->transformed( *hbqt_par_QMatrix( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap( ( p )->transformed( *hbqt_par_QMatrix( 2 ) ) ), true ) );
    }
 }
 
@@ -226,10 +220,8 @@ HB_FUNC( QT_QBITMAP_FROMIMAGE )
 {
    QBitmap * p = hbqt_par_QBitmap( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap( ( p )->fromImage( *hbqt_par_QImage( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::ImageConversionFlags ) hb_parni( 3 ) : ( Qt::ImageConversionFlags ) Qt::AutoColor ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QBITMAP_FROMIMAGE FP=hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap( ( p )->fromImage( *hbqt_par_QImage( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::ImageConversionFlags ) hb_parni( 3 ) : ( Qt::ImageConversionFlags ) Qt::AutoColor ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap( ( p )->fromImage( *hbqt_par_QImage( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::ImageConversionFlags ) hb_parni( 3 ) : ( Qt::ImageConversionFlags ) Qt::AutoColor ) ) ), true ) );
    }
 }
 

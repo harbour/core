@@ -162,10 +162,8 @@ HB_FUNC( QT_QFONTMETRICS_ASCENT )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-      hb_retni( ( p )->ascent() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTMETRICS_ASCENT FP=hb_retni( ( p )->ascent() ); p is NULL" ) );
+      hb_retni( ( p )->ascent() );
    }
 }
 
@@ -176,10 +174,8 @@ HB_FUNC( QT_QFONTMETRICS_AVERAGECHARWIDTH )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-      hb_retni( ( p )->averageCharWidth() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTMETRICS_AVERAGECHARWIDTH FP=hb_retni( ( p )->averageCharWidth() ); p is NULL" ) );
+      hb_retni( ( p )->averageCharWidth() );
    }
 }
 
@@ -190,10 +186,8 @@ HB_FUNC( QT_QFONTMETRICS_BOUNDINGRECT )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->boundingRect( *hbqt_par_QChar( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTMETRICS_BOUNDINGRECT FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->boundingRect( *hbqt_par_QChar( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->boundingRect( *hbqt_par_QChar( 2 ) ) ), true ) );
    }
 }
 
@@ -204,10 +198,10 @@ HB_FUNC( QT_QFONTMETRICS_BOUNDINGRECT_1 )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->boundingRect( hbqt_par_QString( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTMETRICS_BOUNDINGRECT_1 FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->boundingRect( hbqt_par_QString( 2 ) ) ), true ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->boundingRect( hb_parstr_utf8( 2, &pText, NULL ) ) ), true ) );
+      hb_strfree( pText );
    }
 }
 
@@ -220,10 +214,10 @@ HB_FUNC( QT_QFONTMETRICS_BOUNDINGRECT_2 )
    int iTabArray = 0;
 
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->boundingRect( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ), hbqt_par_QString( 7 ), hb_parni( 8 ), &iTabArray ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTMETRICS_BOUNDINGRECT_2 FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->boundingRect( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ), hbqt_par_QString( 7 ), hb_parni( 8 ), &iTabArray ) ), true ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->boundingRect( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ), hb_parstr_utf8( 7, &pText, NULL ), hb_parni( 8 ), &iTabArray ) ), true ) );
+      hb_strfree( pText );
    }
 
    hb_storni( iTabArray, 9 );
@@ -238,10 +232,10 @@ HB_FUNC( QT_QFONTMETRICS_BOUNDINGRECT_3 )
    int iTabArray = 0;
 
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->boundingRect( *hbqt_par_QRect( 2 ), hb_parni( 3 ), hbqt_par_QString( 4 ), hb_parni( 5 ), &iTabArray ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTMETRICS_BOUNDINGRECT_3 FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->boundingRect( *hbqt_par_QRect( 2 ), hb_parni( 3 ), hbqt_par_QString( 4 ), hb_parni( 5 ), &iTabArray ) ), true ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->boundingRect( *hbqt_par_QRect( 2 ), hb_parni( 3 ), hb_parstr_utf8( 4, &pText, NULL ), hb_parni( 5 ), &iTabArray ) ), true ) );
+      hb_strfree( pText );
    }
 
    hb_storni( iTabArray, 6 );
@@ -254,10 +248,8 @@ HB_FUNC( QT_QFONTMETRICS_DESCENT )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-      hb_retni( ( p )->descent() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTMETRICS_DESCENT FP=hb_retni( ( p )->descent() ); p is NULL" ) );
+      hb_retni( ( p )->descent() );
    }
 }
 
@@ -268,10 +260,10 @@ HB_FUNC( QT_QFONTMETRICS_ELIDEDTEXT )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-      hb_retc( ( p )->elidedText( hbqt_par_QString( 2 ), ( Qt::TextElideMode ) hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTMETRICS_ELIDEDTEXT FP=hb_retc( ( p )->elidedText( hbqt_par_QString( 2 ), ( Qt::TextElideMode ) hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ).toAscii().data() ); p is NULL" ) );
+      void * pText;
+      hb_retstr_utf8( ( p )->elidedText( hb_parstr_utf8( 2, &pText, NULL ), ( Qt::TextElideMode ) hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ).toUtf8().data() );
+      hb_strfree( pText );
    }
 }
 
@@ -282,10 +274,8 @@ HB_FUNC( QT_QFONTMETRICS_HEIGHT )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-      hb_retni( ( p )->height() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTMETRICS_HEIGHT FP=hb_retni( ( p )->height() ); p is NULL" ) );
+      hb_retni( ( p )->height() );
    }
 }
 
@@ -296,10 +286,8 @@ HB_FUNC( QT_QFONTMETRICS_INFONT )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-      hb_retl( ( p )->inFont( *hbqt_par_QChar( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTMETRICS_INFONT FP=hb_retl( ( p )->inFont( *hbqt_par_QChar( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->inFont( *hbqt_par_QChar( 2 ) ) );
    }
 }
 
@@ -310,10 +298,8 @@ HB_FUNC( QT_QFONTMETRICS_LEADING )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-      hb_retni( ( p )->leading() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTMETRICS_LEADING FP=hb_retni( ( p )->leading() ); p is NULL" ) );
+      hb_retni( ( p )->leading() );
    }
 }
 
@@ -324,10 +310,8 @@ HB_FUNC( QT_QFONTMETRICS_LEFTBEARING )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-      hb_retni( ( p )->leftBearing( *hbqt_par_QChar( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTMETRICS_LEFTBEARING FP=hb_retni( ( p )->leftBearing( *hbqt_par_QChar( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->leftBearing( *hbqt_par_QChar( 2 ) ) );
    }
 }
 
@@ -338,10 +322,8 @@ HB_FUNC( QT_QFONTMETRICS_LINESPACING )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-      hb_retni( ( p )->lineSpacing() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTMETRICS_LINESPACING FP=hb_retni( ( p )->lineSpacing() ); p is NULL" ) );
+      hb_retni( ( p )->lineSpacing() );
    }
 }
 
@@ -352,10 +334,8 @@ HB_FUNC( QT_QFONTMETRICS_LINEWIDTH )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-      hb_retni( ( p )->lineWidth() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTMETRICS_LINEWIDTH FP=hb_retni( ( p )->lineWidth() ); p is NULL" ) );
+      hb_retni( ( p )->lineWidth() );
    }
 }
 
@@ -366,10 +346,8 @@ HB_FUNC( QT_QFONTMETRICS_MAXWIDTH )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-      hb_retni( ( p )->maxWidth() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTMETRICS_MAXWIDTH FP=hb_retni( ( p )->maxWidth() ); p is NULL" ) );
+      hb_retni( ( p )->maxWidth() );
    }
 }
 
@@ -380,10 +358,8 @@ HB_FUNC( QT_QFONTMETRICS_MINLEFTBEARING )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-      hb_retni( ( p )->minLeftBearing() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTMETRICS_MINLEFTBEARING FP=hb_retni( ( p )->minLeftBearing() ); p is NULL" ) );
+      hb_retni( ( p )->minLeftBearing() );
    }
 }
 
@@ -394,10 +370,8 @@ HB_FUNC( QT_QFONTMETRICS_MINRIGHTBEARING )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-      hb_retni( ( p )->minRightBearing() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTMETRICS_MINRIGHTBEARING FP=hb_retni( ( p )->minRightBearing() ); p is NULL" ) );
+      hb_retni( ( p )->minRightBearing() );
    }
 }
 
@@ -408,10 +382,8 @@ HB_FUNC( QT_QFONTMETRICS_OVERLINEPOS )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-      hb_retni( ( p )->overlinePos() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTMETRICS_OVERLINEPOS FP=hb_retni( ( p )->overlinePos() ); p is NULL" ) );
+      hb_retni( ( p )->overlinePos() );
    }
 }
 
@@ -422,10 +394,8 @@ HB_FUNC( QT_QFONTMETRICS_RIGHTBEARING )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-      hb_retni( ( p )->rightBearing( *hbqt_par_QChar( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTMETRICS_RIGHTBEARING FP=hb_retni( ( p )->rightBearing( *hbqt_par_QChar( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->rightBearing( *hbqt_par_QChar( 2 ) ) );
    }
 }
 
@@ -438,10 +408,10 @@ HB_FUNC( QT_QFONTMETRICS_SIZE )
    int iTabArray = 0;
 
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->size( hb_parni( 2 ), hbqt_par_QString( 3 ), hb_parni( 4 ), &iTabArray ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTMETRICS_SIZE FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->size( hb_parni( 2 ), hbqt_par_QString( 3 ), hb_parni( 4 ), &iTabArray ) ), true ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->size( hb_parni( 2 ), hb_parstr_utf8( 3, &pText, NULL ), hb_parni( 4 ), &iTabArray ) ), true ) );
+      hb_strfree( pText );
    }
 
    hb_storni( iTabArray, 5 );
@@ -454,10 +424,8 @@ HB_FUNC( QT_QFONTMETRICS_STRIKEOUTPOS )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-      hb_retni( ( p )->strikeOutPos() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTMETRICS_STRIKEOUTPOS FP=hb_retni( ( p )->strikeOutPos() ); p is NULL" ) );
+      hb_retni( ( p )->strikeOutPos() );
    }
 }
 
@@ -468,10 +436,10 @@ HB_FUNC( QT_QFONTMETRICS_TIGHTBOUNDINGRECT )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->tightBoundingRect( hbqt_par_QString( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTMETRICS_TIGHTBOUNDINGRECT FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->tightBoundingRect( hbqt_par_QString( 2 ) ) ), true ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->tightBoundingRect( hb_parstr_utf8( 2, &pText, NULL ) ) ), true ) );
+      hb_strfree( pText );
    }
 }
 
@@ -482,10 +450,8 @@ HB_FUNC( QT_QFONTMETRICS_UNDERLINEPOS )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-      hb_retni( ( p )->underlinePos() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTMETRICS_UNDERLINEPOS FP=hb_retni( ( p )->underlinePos() ); p is NULL" ) );
+      hb_retni( ( p )->underlinePos() );
    }
 }
 
@@ -496,10 +462,10 @@ HB_FUNC( QT_QFONTMETRICS_WIDTH )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-      hb_retni( ( p )->width( hbqt_par_QString( 2 ), hb_parnidef( 3, -1 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTMETRICS_WIDTH FP=hb_retni( ( p )->width( hbqt_par_QString( 2 ), hb_parnidef( 3, -1 ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retni( ( p )->width( hb_parstr_utf8( 2, &pText, NULL ), hb_parnidef( 3, -1 ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -510,10 +476,8 @@ HB_FUNC( QT_QFONTMETRICS_WIDTH_1 )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-      hb_retni( ( p )->width( *hbqt_par_QChar( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTMETRICS_WIDTH_1 FP=hb_retni( ( p )->width( *hbqt_par_QChar( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( p )->width( *hbqt_par_QChar( 2 ) ) );
    }
 }
 
@@ -524,10 +488,8 @@ HB_FUNC( QT_QFONTMETRICS_XHEIGHT )
 {
    QFontMetrics * p = hbqt_par_QFontMetrics( 1 );
    if( p )
-      hb_retni( ( p )->xHeight() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QFONTMETRICS_XHEIGHT FP=hb_retni( ( p )->xHeight() ); p is NULL" ) );
+      hb_retni( ( p )->xHeight() );
    }
 }
 

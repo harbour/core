@@ -186,10 +186,8 @@ HB_FUNC( QT_QMAINWINDOW_ADDDOCKWIDGET )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      ( p )->addDockWidget( ( Qt::DockWidgetArea ) hb_parni( 2 ), hbqt_par_QDockWidget( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_ADDDOCKWIDGET FP=( p )->addDockWidget( ( Qt::DockWidgetArea ) hb_parni( 2 ), hbqt_par_QDockWidget( 3 ) ); p is NULL" ) );
+      ( p )->addDockWidget( ( Qt::DockWidgetArea ) hb_parni( 2 ), hbqt_par_QDockWidget( 3 ) );
    }
 }
 
@@ -200,10 +198,8 @@ HB_FUNC( QT_QMAINWINDOW_ADDDOCKWIDGET_1 )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      ( p )->addDockWidget( ( Qt::DockWidgetArea ) hb_parni( 2 ), hbqt_par_QDockWidget( 3 ), ( Qt::Orientation ) hb_parni( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_ADDDOCKWIDGET_1 FP=( p )->addDockWidget( ( Qt::DockWidgetArea ) hb_parni( 2 ), hbqt_par_QDockWidget( 3 ), ( Qt::Orientation ) hb_parni( 4 ) ); p is NULL" ) );
+      ( p )->addDockWidget( ( Qt::DockWidgetArea ) hb_parni( 2 ), hbqt_par_QDockWidget( 3 ), ( Qt::Orientation ) hb_parni( 4 ) );
    }
 }
 
@@ -239,10 +235,8 @@ HB_FUNC( QT_QMAINWINDOW_ADDTOOLBAR_1 )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      ( p )->addToolBar( hbqt_par_QToolBar( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_ADDTOOLBAR_1 FP=( p )->addToolBar( hbqt_par_QToolBar( 2 ) ); p is NULL" ) );
+      ( p )->addToolBar( hbqt_par_QToolBar( 2 ) );
    }
 }
 
@@ -253,10 +247,10 @@ HB_FUNC( QT_QMAINWINDOW_ADDTOOLBAR_2 )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QToolBar( ( p )->addToolBar( QMainWindow::tr( hb_parc( 2 ) ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_ADDTOOLBAR_2 FP=hb_retptrGC( hbqt_gcAllocate_QToolBar( ( p )->addToolBar( QMainWindow::tr( hb_parc( 2 ) ) ), false ) ); p is NULL" ) );
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QToolBar( ( p )->addToolBar( hb_parstr_utf8( 2, &pText, NULL ) ), false ) );
+      hb_strfree( pText );
    }
 }
 
@@ -267,10 +261,8 @@ HB_FUNC( QT_QMAINWINDOW_ADDTOOLBARBREAK )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      ( p )->addToolBarBreak( ( HB_ISNUM( 2 ) ? ( Qt::ToolBarArea ) hb_parni( 2 ) : ( Qt::ToolBarArea ) Qt::TopToolBarArea ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_ADDTOOLBARBREAK FP=( p )->addToolBarBreak( ( HB_ISNUM( 2 ) ? ( Qt::ToolBarArea ) hb_parni( 2 ) : ( Qt::ToolBarArea ) Qt::TopToolBarArea ) ); p is NULL" ) );
+      ( p )->addToolBarBreak( ( HB_ISNUM( 2 ) ? ( Qt::ToolBarArea ) hb_parni( 2 ) : ( Qt::ToolBarArea ) Qt::TopToolBarArea ) );
    }
 }
 
@@ -281,10 +273,8 @@ HB_FUNC( QT_QMAINWINDOW_CENTRALWIDGET )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->centralWidget(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_CENTRALWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->centralWidget(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->centralWidget(), false ) );
    }
 }
 
@@ -295,10 +285,8 @@ HB_FUNC( QT_QMAINWINDOW_CORNER )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      hb_retni( ( Qt::DockWidgetArea ) ( p )->corner( ( Qt::Corner ) hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_CORNER FP=hb_retni( ( Qt::DockWidgetArea ) ( p )->corner( ( Qt::Corner ) hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( Qt::DockWidgetArea ) ( p )->corner( ( Qt::Corner ) hb_parni( 2 ) ) );
    }
 }
 
@@ -309,10 +297,8 @@ HB_FUNC( QT_QMAINWINDOW_CREATEPOPUPMENU )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QMenu( ( p )->createPopupMenu(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_CREATEPOPUPMENU FP=hb_retptrGC( hbqt_gcAllocate_QMenu( ( p )->createPopupMenu(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QMenu( ( p )->createPopupMenu(), false ) );
    }
 }
 
@@ -323,10 +309,8 @@ HB_FUNC( QT_QMAINWINDOW_DOCKOPTIONS )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      hb_retni( ( QMainWindow::DockOptions ) ( p )->dockOptions() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_DOCKOPTIONS FP=hb_retni( ( QMainWindow::DockOptions ) ( p )->dockOptions() ); p is NULL" ) );
+      hb_retni( ( QMainWindow::DockOptions ) ( p )->dockOptions() );
    }
 }
 
@@ -337,10 +321,8 @@ HB_FUNC( QT_QMAINWINDOW_DOCKWIDGETAREA )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      hb_retni( ( Qt::DockWidgetArea ) ( p )->dockWidgetArea( hbqt_par_QDockWidget( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_DOCKWIDGETAREA FP=hb_retni( ( Qt::DockWidgetArea ) ( p )->dockWidgetArea( hbqt_par_QDockWidget( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( Qt::DockWidgetArea ) ( p )->dockWidgetArea( hbqt_par_QDockWidget( 2 ) ) );
    }
 }
 
@@ -351,10 +333,8 @@ HB_FUNC( QT_QMAINWINDOW_DOCUMENTMODE )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      hb_retl( ( p )->documentMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_DOCUMENTMODE FP=hb_retl( ( p )->documentMode() ); p is NULL" ) );
+      hb_retl( ( p )->documentMode() );
    }
 }
 
@@ -365,10 +345,8 @@ HB_FUNC( QT_QMAINWINDOW_ICONSIZE )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->iconSize() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_ICONSIZE FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->iconSize() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->iconSize() ), true ) );
    }
 }
 
@@ -379,10 +357,8 @@ HB_FUNC( QT_QMAINWINDOW_INSERTTOOLBAR )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      ( p )->insertToolBar( hbqt_par_QToolBar( 2 ), hbqt_par_QToolBar( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_INSERTTOOLBAR FP=( p )->insertToolBar( hbqt_par_QToolBar( 2 ), hbqt_par_QToolBar( 3 ) ); p is NULL" ) );
+      ( p )->insertToolBar( hbqt_par_QToolBar( 2 ), hbqt_par_QToolBar( 3 ) );
    }
 }
 
@@ -393,10 +369,8 @@ HB_FUNC( QT_QMAINWINDOW_INSERTTOOLBARBREAK )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      ( p )->insertToolBarBreak( hbqt_par_QToolBar( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_INSERTTOOLBARBREAK FP=( p )->insertToolBarBreak( hbqt_par_QToolBar( 2 ) ); p is NULL" ) );
+      ( p )->insertToolBarBreak( hbqt_par_QToolBar( 2 ) );
    }
 }
 
@@ -407,10 +381,8 @@ HB_FUNC( QT_QMAINWINDOW_ISANIMATED )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      hb_retl( ( p )->isAnimated() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_ISANIMATED FP=hb_retl( ( p )->isAnimated() ); p is NULL" ) );
+      hb_retl( ( p )->isAnimated() );
    }
 }
 
@@ -421,10 +393,8 @@ HB_FUNC( QT_QMAINWINDOW_ISDOCKNESTINGENABLED )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      hb_retl( ( p )->isDockNestingEnabled() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_ISDOCKNESTINGENABLED FP=hb_retl( ( p )->isDockNestingEnabled() ); p is NULL" ) );
+      hb_retl( ( p )->isDockNestingEnabled() );
    }
 }
 
@@ -435,10 +405,8 @@ HB_FUNC( QT_QMAINWINDOW_MENUBAR )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QMenuBar( ( p )->menuBar(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_MENUBAR FP=hb_retptrGC( hbqt_gcAllocate_QMenuBar( ( p )->menuBar(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QMenuBar( ( p )->menuBar(), false ) );
    }
 }
 
@@ -449,10 +417,8 @@ HB_FUNC( QT_QMAINWINDOW_MENUWIDGET )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->menuWidget(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_MENUWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->menuWidget(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->menuWidget(), false ) );
    }
 }
 
@@ -463,10 +429,8 @@ HB_FUNC( QT_QMAINWINDOW_REMOVEDOCKWIDGET )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      ( p )->removeDockWidget( hbqt_par_QDockWidget( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_REMOVEDOCKWIDGET FP=( p )->removeDockWidget( hbqt_par_QDockWidget( 2 ) ); p is NULL" ) );
+      ( p )->removeDockWidget( hbqt_par_QDockWidget( 2 ) );
    }
 }
 
@@ -477,10 +441,8 @@ HB_FUNC( QT_QMAINWINDOW_REMOVETOOLBAR )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      ( p )->removeToolBar( hbqt_par_QToolBar( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_REMOVETOOLBAR FP=( p )->removeToolBar( hbqt_par_QToolBar( 2 ) ); p is NULL" ) );
+      ( p )->removeToolBar( hbqt_par_QToolBar( 2 ) );
    }
 }
 
@@ -491,10 +453,8 @@ HB_FUNC( QT_QMAINWINDOW_REMOVETOOLBARBREAK )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      ( p )->removeToolBarBreak( hbqt_par_QToolBar( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_REMOVETOOLBARBREAK FP=( p )->removeToolBarBreak( hbqt_par_QToolBar( 2 ) ); p is NULL" ) );
+      ( p )->removeToolBarBreak( hbqt_par_QToolBar( 2 ) );
    }
 }
 
@@ -505,10 +465,8 @@ HB_FUNC( QT_QMAINWINDOW_RESTOREDOCKWIDGET )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      hb_retl( ( p )->restoreDockWidget( hbqt_par_QDockWidget( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_RESTOREDOCKWIDGET FP=hb_retl( ( p )->restoreDockWidget( hbqt_par_QDockWidget( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->restoreDockWidget( hbqt_par_QDockWidget( 2 ) ) );
    }
 }
 
@@ -519,10 +477,8 @@ HB_FUNC( QT_QMAINWINDOW_RESTORESTATE )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      hb_retl( ( p )->restoreState( *hbqt_par_QByteArray( 2 ), hb_parni( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_RESTORESTATE FP=hb_retl( ( p )->restoreState( *hbqt_par_QByteArray( 2 ), hb_parni( 3 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->restoreState( *hbqt_par_QByteArray( 2 ), hb_parni( 3 ) ) );
    }
 }
 
@@ -533,10 +489,8 @@ HB_FUNC( QT_QMAINWINDOW_SAVESTATE )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->saveState( hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_SAVESTATE FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->saveState( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->saveState( hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -547,10 +501,8 @@ HB_FUNC( QT_QMAINWINDOW_SETCENTRALWIDGET )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      ( p )->setCentralWidget( hbqt_par_QWidget( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_SETCENTRALWIDGET FP=( p )->setCentralWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+      ( p )->setCentralWidget( hbqt_par_QWidget( 2 ) );
    }
 }
 
@@ -561,10 +513,8 @@ HB_FUNC( QT_QMAINWINDOW_SETCORNER )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      ( p )->setCorner( ( Qt::Corner ) hb_parni( 2 ), ( Qt::DockWidgetArea ) hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_SETCORNER FP=( p )->setCorner( ( Qt::Corner ) hb_parni( 2 ), ( Qt::DockWidgetArea ) hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setCorner( ( Qt::Corner ) hb_parni( 2 ), ( Qt::DockWidgetArea ) hb_parni( 3 ) );
    }
 }
 
@@ -575,10 +525,8 @@ HB_FUNC( QT_QMAINWINDOW_SETDOCKOPTIONS )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      ( p )->setDockOptions( ( QMainWindow::DockOptions ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_SETDOCKOPTIONS FP=( p )->setDockOptions( ( QMainWindow::DockOptions ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setDockOptions( ( QMainWindow::DockOptions ) hb_parni( 2 ) );
    }
 }
 
@@ -589,10 +537,8 @@ HB_FUNC( QT_QMAINWINDOW_SETDOCUMENTMODE )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      ( p )->setDocumentMode( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_SETDOCUMENTMODE FP=( p )->setDocumentMode( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setDocumentMode( hb_parl( 2 ) );
    }
 }
 
@@ -603,10 +549,8 @@ HB_FUNC( QT_QMAINWINDOW_SETICONSIZE )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      ( p )->setIconSize( *hbqt_par_QSize( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_SETICONSIZE FP=( p )->setIconSize( *hbqt_par_QSize( 2 ) ); p is NULL" ) );
+      ( p )->setIconSize( *hbqt_par_QSize( 2 ) );
    }
 }
 
@@ -617,10 +561,8 @@ HB_FUNC( QT_QMAINWINDOW_SETMENUBAR )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      ( p )->setMenuBar( hbqt_par_QMenuBar( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_SETMENUBAR FP=( p )->setMenuBar( hbqt_par_QMenuBar( 2 ) ); p is NULL" ) );
+      ( p )->setMenuBar( hbqt_par_QMenuBar( 2 ) );
    }
 }
 
@@ -631,10 +573,8 @@ HB_FUNC( QT_QMAINWINDOW_SETMENUWIDGET )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      ( p )->setMenuWidget( hbqt_par_QWidget( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_SETMENUWIDGET FP=( p )->setMenuWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+      ( p )->setMenuWidget( hbqt_par_QWidget( 2 ) );
    }
 }
 
@@ -645,10 +585,8 @@ HB_FUNC( QT_QMAINWINDOW_SETSTATUSBAR )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      ( p )->setStatusBar( hbqt_par_QStatusBar( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_SETSTATUSBAR FP=( p )->setStatusBar( hbqt_par_QStatusBar( 2 ) ); p is NULL" ) );
+      ( p )->setStatusBar( hbqt_par_QStatusBar( 2 ) );
    }
 }
 
@@ -659,10 +597,8 @@ HB_FUNC( QT_QMAINWINDOW_SETTABPOSITION )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      ( p )->setTabPosition( ( Qt::DockWidgetAreas ) hb_parni( 2 ), ( QTabWidget::TabPosition ) hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_SETTABPOSITION FP=( p )->setTabPosition( ( Qt::DockWidgetAreas ) hb_parni( 2 ), ( QTabWidget::TabPosition ) hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->setTabPosition( ( Qt::DockWidgetAreas ) hb_parni( 2 ), ( QTabWidget::TabPosition ) hb_parni( 3 ) );
    }
 }
 
@@ -673,10 +609,8 @@ HB_FUNC( QT_QMAINWINDOW_SETTABSHAPE )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      ( p )->setTabShape( ( QTabWidget::TabShape ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_SETTABSHAPE FP=( p )->setTabShape( ( QTabWidget::TabShape ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setTabShape( ( QTabWidget::TabShape ) hb_parni( 2 ) );
    }
 }
 
@@ -687,10 +621,8 @@ HB_FUNC( QT_QMAINWINDOW_SETTOOLBUTTONSTYLE )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      ( p )->setToolButtonStyle( ( Qt::ToolButtonStyle ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_SETTOOLBUTTONSTYLE FP=( p )->setToolButtonStyle( ( Qt::ToolButtonStyle ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setToolButtonStyle( ( Qt::ToolButtonStyle ) hb_parni( 2 ) );
    }
 }
 
@@ -701,10 +633,8 @@ HB_FUNC( QT_QMAINWINDOW_SETUNIFIEDTITLEANDTOOLBARONMAC )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      ( p )->setUnifiedTitleAndToolBarOnMac( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_SETUNIFIEDTITLEANDTOOLBARONMAC FP=( p )->setUnifiedTitleAndToolBarOnMac( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setUnifiedTitleAndToolBarOnMac( hb_parl( 2 ) );
    }
 }
 
@@ -715,10 +645,8 @@ HB_FUNC( QT_QMAINWINDOW_SPLITDOCKWIDGET )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      ( p )->splitDockWidget( hbqt_par_QDockWidget( 2 ), hbqt_par_QDockWidget( 3 ), ( Qt::Orientation ) hb_parni( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_SPLITDOCKWIDGET FP=( p )->splitDockWidget( hbqt_par_QDockWidget( 2 ), hbqt_par_QDockWidget( 3 ), ( Qt::Orientation ) hb_parni( 4 ) ); p is NULL" ) );
+      ( p )->splitDockWidget( hbqt_par_QDockWidget( 2 ), hbqt_par_QDockWidget( 3 ), ( Qt::Orientation ) hb_parni( 4 ) );
    }
 }
 
@@ -729,10 +657,8 @@ HB_FUNC( QT_QMAINWINDOW_STATUSBAR )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStatusBar( ( p )->statusBar(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_STATUSBAR FP=hb_retptrGC( hbqt_gcAllocate_QStatusBar( ( p )->statusBar(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QStatusBar( ( p )->statusBar(), false ) );
    }
 }
 
@@ -743,10 +669,8 @@ HB_FUNC( QT_QMAINWINDOW_TABPOSITION )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      hb_retni( ( QTabWidget::TabPosition ) ( p )->tabPosition( ( Qt::DockWidgetArea ) hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_TABPOSITION FP=hb_retni( ( QTabWidget::TabPosition ) ( p )->tabPosition( ( Qt::DockWidgetArea ) hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( QTabWidget::TabPosition ) ( p )->tabPosition( ( Qt::DockWidgetArea ) hb_parni( 2 ) ) );
    }
 }
 
@@ -757,10 +681,8 @@ HB_FUNC( QT_QMAINWINDOW_TABSHAPE )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      hb_retni( ( QTabWidget::TabShape ) ( p )->tabShape() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_TABSHAPE FP=hb_retni( ( QTabWidget::TabShape ) ( p )->tabShape() ); p is NULL" ) );
+      hb_retni( ( QTabWidget::TabShape ) ( p )->tabShape() );
    }
 }
 
@@ -771,10 +693,8 @@ HB_FUNC( QT_QMAINWINDOW_TABIFIEDDOCKWIDGETS )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QDockWidget *>( ( p )->tabifiedDockWidgets( hbqt_par_QDockWidget( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_TABIFIEDDOCKWIDGETS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QDockWidget *>( ( p )->tabifiedDockWidgets( hbqt_par_QDockWidget( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QDockWidget *>( ( p )->tabifiedDockWidgets( hbqt_par_QDockWidget( 2 ) ) ), true ) );
    }
 }
 
@@ -785,10 +705,8 @@ HB_FUNC( QT_QMAINWINDOW_TABIFYDOCKWIDGET )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      ( p )->tabifyDockWidget( hbqt_par_QDockWidget( 2 ), hbqt_par_QDockWidget( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_TABIFYDOCKWIDGET FP=( p )->tabifyDockWidget( hbqt_par_QDockWidget( 2 ), hbqt_par_QDockWidget( 3 ) ); p is NULL" ) );
+      ( p )->tabifyDockWidget( hbqt_par_QDockWidget( 2 ), hbqt_par_QDockWidget( 3 ) );
    }
 }
 
@@ -799,10 +717,8 @@ HB_FUNC( QT_QMAINWINDOW_TOOLBARAREA )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      hb_retni( ( Qt::ToolBarArea ) ( p )->toolBarArea( hbqt_par_QToolBar( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_TOOLBARAREA FP=hb_retni( ( Qt::ToolBarArea ) ( p )->toolBarArea( hbqt_par_QToolBar( 2 ) ) ); p is NULL" ) );
+      hb_retni( ( Qt::ToolBarArea ) ( p )->toolBarArea( hbqt_par_QToolBar( 2 ) ) );
    }
 }
 
@@ -813,10 +729,8 @@ HB_FUNC( QT_QMAINWINDOW_TOOLBARBREAK )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      hb_retl( ( p )->toolBarBreak( hbqt_par_QToolBar( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_TOOLBARBREAK FP=hb_retl( ( p )->toolBarBreak( hbqt_par_QToolBar( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->toolBarBreak( hbqt_par_QToolBar( 2 ) ) );
    }
 }
 
@@ -827,10 +741,8 @@ HB_FUNC( QT_QMAINWINDOW_TOOLBUTTONSTYLE )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      hb_retni( ( Qt::ToolButtonStyle ) ( p )->toolButtonStyle() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_TOOLBUTTONSTYLE FP=hb_retni( ( Qt::ToolButtonStyle ) ( p )->toolButtonStyle() ); p is NULL" ) );
+      hb_retni( ( Qt::ToolButtonStyle ) ( p )->toolButtonStyle() );
    }
 }
 
@@ -841,10 +753,8 @@ HB_FUNC( QT_QMAINWINDOW_UNIFIEDTITLEANDTOOLBARONMAC )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      hb_retl( ( p )->unifiedTitleAndToolBarOnMac() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_UNIFIEDTITLEANDTOOLBARONMAC FP=hb_retl( ( p )->unifiedTitleAndToolBarOnMac() ); p is NULL" ) );
+      hb_retl( ( p )->unifiedTitleAndToolBarOnMac() );
    }
 }
 
@@ -855,10 +765,8 @@ HB_FUNC( QT_QMAINWINDOW_SETANIMATED )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      ( p )->setAnimated( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_SETANIMATED FP=( p )->setAnimated( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setAnimated( hb_parl( 2 ) );
    }
 }
 
@@ -869,10 +777,8 @@ HB_FUNC( QT_QMAINWINDOW_SETDOCKNESTINGENABLED )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
-      ( p )->setDockNestingEnabled( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QMAINWINDOW_SETDOCKNESTINGENABLED FP=( p )->setDockNestingEnabled( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setDockNestingEnabled( hb_parl( 2 ) );
    }
 }
 

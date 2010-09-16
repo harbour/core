@@ -144,10 +144,8 @@ HB_FUNC( QT_QLATIN1STRING_LATIN1 )
 {
    QLatin1String * p = hbqt_par_QLatin1String( 1 );
    if( p )
-      hb_retc( ( p )->latin1() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QLATIN1STRING_LATIN1 FP=hb_retc( ( p )->latin1() ); p is NULL" ) );
+      hb_retc( ( p )->latin1() );
    }
 }
 

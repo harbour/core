@@ -145,10 +145,8 @@ HB_FUNC( QT_QWIDGETITEM_ISEMPTY )
 {
    QWidgetItem * p = hbqt_par_QWidgetItem( 1 );
    if( p )
-      hb_retl( ( p )->isEmpty() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIDGETITEM_ISEMPTY FP=hb_retl( ( p )->isEmpty() ); p is NULL" ) );
+      hb_retl( ( p )->isEmpty() );
    }
 }
 
@@ -159,10 +157,8 @@ HB_FUNC( QT_QWIDGETITEM_WIDGET )
 {
    QWidgetItem * p = hbqt_par_QWidgetItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIDGETITEM_WIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) );
    }
 }
 

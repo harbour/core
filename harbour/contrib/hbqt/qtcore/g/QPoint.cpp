@@ -157,10 +157,8 @@ HB_FUNC( QT_QPOINT_ISNULL )
 {
    QPoint * p = hbqt_par_QPoint( 1 );
    if( p )
-      hb_retl( ( p )->isNull() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOINT_ISNULL FP=hb_retl( ( p )->isNull() ); p is NULL" ) );
+      hb_retl( ( p )->isNull() );
    }
 }
 
@@ -171,10 +169,8 @@ HB_FUNC( QT_QPOINT_MANHATTANLENGTH )
 {
    QPoint * p = hbqt_par_QPoint( 1 );
    if( p )
-      hb_retni( ( p )->manhattanLength() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOINT_MANHATTANLENGTH FP=hb_retni( ( p )->manhattanLength() ); p is NULL" ) );
+      hb_retni( ( p )->manhattanLength() );
    }
 }
 
@@ -185,10 +181,8 @@ HB_FUNC( QT_QPOINT_RX )
 {
    QPoint * p = hbqt_par_QPoint( 1 );
    if( p )
-      hb_retni( ( p )->rx() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOINT_RX FP=hb_retni( ( p )->rx() ); p is NULL" ) );
+      hb_retni( ( p )->rx() );
    }
 }
 
@@ -199,10 +193,8 @@ HB_FUNC( QT_QPOINT_RY )
 {
    QPoint * p = hbqt_par_QPoint( 1 );
    if( p )
-      hb_retni( ( p )->ry() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOINT_RY FP=hb_retni( ( p )->ry() ); p is NULL" ) );
+      hb_retni( ( p )->ry() );
    }
 }
 
@@ -213,10 +205,8 @@ HB_FUNC( QT_QPOINT_SETX )
 {
    QPoint * p = hbqt_par_QPoint( 1 );
    if( p )
-      ( p )->setX( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOINT_SETX FP=( p )->setX( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setX( hb_parni( 2 ) );
    }
 }
 
@@ -227,10 +217,8 @@ HB_FUNC( QT_QPOINT_SETY )
 {
    QPoint * p = hbqt_par_QPoint( 1 );
    if( p )
-      ( p )->setY( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOINT_SETY FP=( p )->setY( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setY( hb_parni( 2 ) );
    }
 }
 
@@ -241,10 +229,8 @@ HB_FUNC( QT_QPOINT_X )
 {
    QPoint * p = hbqt_par_QPoint( 1 );
    if( p )
-      hb_retni( ( p )->x() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOINT_X FP=hb_retni( ( p )->x() ); p is NULL" ) );
+      hb_retni( ( p )->x() );
    }
 }
 
@@ -255,10 +241,8 @@ HB_FUNC( QT_QPOINT_Y )
 {
    QPoint * p = hbqt_par_QPoint( 1 );
    if( p )
-      hb_retni( ( p )->y() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOINT_Y FP=hb_retni( ( p )->y() ); p is NULL" ) );
+      hb_retni( ( p )->y() );
    }
 }
 

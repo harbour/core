@@ -145,10 +145,8 @@ HB_FUNC( QT_QRESOURCE_ABSOLUTEFILEPATH )
 {
    QResource * p = hbqt_par_QResource( 1 );
    if( p )
-      hb_retc( ( p )->absoluteFilePath().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRESOURCE_ABSOLUTEFILEPATH FP=hb_retc( ( p )->absoluteFilePath().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->absoluteFilePath().toUtf8().data() );
    }
 }
 
@@ -159,10 +157,8 @@ HB_FUNC( QT_QRESOURCE_DATA )
 {
    QResource * p = hbqt_par_QResource( 1 );
    if( p )
-      hb_retc( ( const char * ) ( p )->data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRESOURCE_DATA FP=hb_retc( ( const char * ) ( p )->data() ); p is NULL" ) );
+      hb_retc( ( const char * ) ( p )->data() );
    }
 }
 
@@ -173,10 +169,8 @@ HB_FUNC( QT_QRESOURCE_FILENAME )
 {
    QResource * p = hbqt_par_QResource( 1 );
    if( p )
-      hb_retc( ( p )->fileName().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRESOURCE_FILENAME FP=hb_retc( ( p )->fileName().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->fileName().toUtf8().data() );
    }
 }
 
@@ -187,10 +181,8 @@ HB_FUNC( QT_QRESOURCE_ISCOMPRESSED )
 {
    QResource * p = hbqt_par_QResource( 1 );
    if( p )
-      hb_retl( ( p )->isCompressed() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRESOURCE_ISCOMPRESSED FP=hb_retl( ( p )->isCompressed() ); p is NULL" ) );
+      hb_retl( ( p )->isCompressed() );
    }
 }
 
@@ -201,10 +193,8 @@ HB_FUNC( QT_QRESOURCE_ISVALID )
 {
    QResource * p = hbqt_par_QResource( 1 );
    if( p )
-      hb_retl( ( p )->isValid() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRESOURCE_ISVALID FP=hb_retl( ( p )->isValid() ); p is NULL" ) );
+      hb_retl( ( p )->isValid() );
    }
 }
 
@@ -215,10 +205,8 @@ HB_FUNC( QT_QRESOURCE_LOCALE )
 {
    QResource * p = hbqt_par_QResource( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QLocale( new QLocale( ( p )->locale() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRESOURCE_LOCALE FP=hb_retptrGC( hbqt_gcAllocate_QLocale( new QLocale( ( p )->locale() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QLocale( new QLocale( ( p )->locale() ), true ) );
    }
 }
 
@@ -229,10 +217,10 @@ HB_FUNC( QT_QRESOURCE_SETFILENAME )
 {
    QResource * p = hbqt_par_QResource( 1 );
    if( p )
-      ( p )->setFileName( hbqt_par_QString( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRESOURCE_SETFILENAME FP=( p )->setFileName( hbqt_par_QString( 2 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setFileName( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -243,10 +231,8 @@ HB_FUNC( QT_QRESOURCE_SETLOCALE )
 {
    QResource * p = hbqt_par_QResource( 1 );
    if( p )
-      ( p )->setLocale( *hbqt_par_QLocale( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRESOURCE_SETLOCALE FP=( p )->setLocale( *hbqt_par_QLocale( 2 ) ); p is NULL" ) );
+      ( p )->setLocale( *hbqt_par_QLocale( 2 ) );
    }
 }
 
@@ -257,10 +243,8 @@ HB_FUNC( QT_QRESOURCE_SIZE )
 {
    QResource * p = hbqt_par_QResource( 1 );
    if( p )
-      hb_retnint( ( p )->size() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRESOURCE_SIZE FP=hb_retnint( ( p )->size() ); p is NULL" ) );
+      hb_retnint( ( p )->size() );
    }
 }
 
@@ -271,10 +255,10 @@ HB_FUNC( QT_QRESOURCE_REGISTERRESOURCE )
 {
    QResource * p = hbqt_par_QResource( 1 );
    if( p )
-      hb_retl( ( p )->registerResource( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRESOURCE_REGISTERRESOURCE FP=hb_retl( ( p )->registerResource( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->registerResource( hb_parstr_utf8( 2, &pText, NULL ), hb_parstr_utf8( 3, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -285,10 +269,10 @@ HB_FUNC( QT_QRESOURCE_REGISTERRESOURCE_1 )
 {
    QResource * p = hbqt_par_QResource( 1 );
    if( p )
-      hb_retl( ( p )->registerResource( hbqt_par_uchar( 2 ), hbqt_par_QString( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRESOURCE_REGISTERRESOURCE_1 FP=hb_retl( ( p )->registerResource( hbqt_par_uchar( 2 ), hbqt_par_QString( 3 ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->registerResource( hbqt_par_uchar( 2 ), hb_parstr_utf8( 3, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -299,10 +283,8 @@ HB_FUNC( QT_QRESOURCE_SEARCHPATHS )
 {
    QResource * p = hbqt_par_QResource( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->searchPaths() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRESOURCE_SEARCHPATHS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->searchPaths() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->searchPaths() ), true ) );
    }
 }
 
@@ -313,10 +295,10 @@ HB_FUNC( QT_QRESOURCE_UNREGISTERRESOURCE )
 {
    QResource * p = hbqt_par_QResource( 1 );
    if( p )
-      hb_retl( ( p )->unregisterResource( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRESOURCE_UNREGISTERRESOURCE FP=hb_retl( ( p )->unregisterResource( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->unregisterResource( hb_parstr_utf8( 2, &pText, NULL ), hb_parstr_utf8( 3, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
@@ -327,10 +309,10 @@ HB_FUNC( QT_QRESOURCE_UNREGISTERRESOURCE_1 )
 {
    QResource * p = hbqt_par_QResource( 1 );
    if( p )
-      hb_retl( ( p )->unregisterResource( hbqt_par_uchar( 2 ), hbqt_par_QString( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRESOURCE_UNREGISTERRESOURCE_1 FP=hb_retl( ( p )->unregisterResource( hbqt_par_uchar( 2 ), hbqt_par_QString( 3 ) ) ); p is NULL" ) );
+      void * pText;
+      hb_retl( ( p )->unregisterResource( hbqt_par_uchar( 2 ), hb_parstr_utf8( 3, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 

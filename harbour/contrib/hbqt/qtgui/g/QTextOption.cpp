@@ -169,10 +169,8 @@ HB_FUNC( QT_QTEXTOPTION_ALIGNMENT )
 {
    QTextOption * p = hbqt_par_QTextOption( 1 );
    if( p )
-      hb_retni( ( Qt::Alignment ) ( p )->alignment() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTOPTION_ALIGNMENT FP=hb_retni( ( Qt::Alignment ) ( p )->alignment() ); p is NULL" ) );
+      hb_retni( ( Qt::Alignment ) ( p )->alignment() );
    }
 }
 
@@ -183,10 +181,8 @@ HB_FUNC( QT_QTEXTOPTION_FLAGS )
 {
    QTextOption * p = hbqt_par_QTextOption( 1 );
    if( p )
-      hb_retni( ( QTextOption::Flags ) ( p )->flags() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTOPTION_FLAGS FP=hb_retni( ( QTextOption::Flags ) ( p )->flags() ); p is NULL" ) );
+      hb_retni( ( QTextOption::Flags ) ( p )->flags() );
    }
 }
 
@@ -197,10 +193,8 @@ HB_FUNC( QT_QTEXTOPTION_SETALIGNMENT )
 {
    QTextOption * p = hbqt_par_QTextOption( 1 );
    if( p )
-      ( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTOPTION_SETALIGNMENT FP=( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setAlignment( ( Qt::Alignment ) hb_parni( 2 ) );
    }
 }
 
@@ -211,10 +205,8 @@ HB_FUNC( QT_QTEXTOPTION_SETFLAGS )
 {
    QTextOption * p = hbqt_par_QTextOption( 1 );
    if( p )
-      ( p )->setFlags( ( QTextOption::Flags ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTOPTION_SETFLAGS FP=( p )->setFlags( ( QTextOption::Flags ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setFlags( ( QTextOption::Flags ) hb_parni( 2 ) );
    }
 }
 
@@ -225,10 +217,8 @@ HB_FUNC( QT_QTEXTOPTION_SETTABSTOP )
 {
    QTextOption * p = hbqt_par_QTextOption( 1 );
    if( p )
-      ( p )->setTabStop( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTOPTION_SETTABSTOP FP=( p )->setTabStop( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setTabStop( hb_parnd( 2 ) );
    }
 }
 
@@ -239,10 +229,8 @@ HB_FUNC( QT_QTEXTOPTION_SETTEXTDIRECTION )
 {
    QTextOption * p = hbqt_par_QTextOption( 1 );
    if( p )
-      ( p )->setTextDirection( ( Qt::LayoutDirection ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTOPTION_SETTEXTDIRECTION FP=( p )->setTextDirection( ( Qt::LayoutDirection ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setTextDirection( ( Qt::LayoutDirection ) hb_parni( 2 ) );
    }
 }
 
@@ -253,10 +241,8 @@ HB_FUNC( QT_QTEXTOPTION_SETUSEDESIGNMETRICS )
 {
    QTextOption * p = hbqt_par_QTextOption( 1 );
    if( p )
-      ( p )->setUseDesignMetrics( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTOPTION_SETUSEDESIGNMETRICS FP=( p )->setUseDesignMetrics( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setUseDesignMetrics( hb_parl( 2 ) );
    }
 }
 
@@ -267,10 +253,8 @@ HB_FUNC( QT_QTEXTOPTION_SETWRAPMODE )
 {
    QTextOption * p = hbqt_par_QTextOption( 1 );
    if( p )
-      ( p )->setWrapMode( ( QTextOption::WrapMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTOPTION_SETWRAPMODE FP=( p )->setWrapMode( ( QTextOption::WrapMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setWrapMode( ( QTextOption::WrapMode ) hb_parni( 2 ) );
    }
 }
 
@@ -281,10 +265,8 @@ HB_FUNC( QT_QTEXTOPTION_TABARRAY )
 {
    QTextOption * p = hbqt_par_QTextOption( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<qreal>( ( p )->tabArray() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTOPTION_TABARRAY FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<qreal>( ( p )->tabArray() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<qreal>( ( p )->tabArray() ), true ) );
    }
 }
 
@@ -295,10 +277,8 @@ HB_FUNC( QT_QTEXTOPTION_TABSTOP )
 {
    QTextOption * p = hbqt_par_QTextOption( 1 );
    if( p )
-      hb_retnd( ( p )->tabStop() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTOPTION_TABSTOP FP=hb_retnd( ( p )->tabStop() ); p is NULL" ) );
+      hb_retnd( ( p )->tabStop() );
    }
 }
 
@@ -309,10 +289,8 @@ HB_FUNC( QT_QTEXTOPTION_TEXTDIRECTION )
 {
    QTextOption * p = hbqt_par_QTextOption( 1 );
    if( p )
-      hb_retni( ( Qt::LayoutDirection ) ( p )->textDirection() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTOPTION_TEXTDIRECTION FP=hb_retni( ( Qt::LayoutDirection ) ( p )->textDirection() ); p is NULL" ) );
+      hb_retni( ( Qt::LayoutDirection ) ( p )->textDirection() );
    }
 }
 
@@ -323,10 +301,8 @@ HB_FUNC( QT_QTEXTOPTION_USEDESIGNMETRICS )
 {
    QTextOption * p = hbqt_par_QTextOption( 1 );
    if( p )
-      hb_retl( ( p )->useDesignMetrics() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTOPTION_USEDESIGNMETRICS FP=hb_retl( ( p )->useDesignMetrics() ); p is NULL" ) );
+      hb_retl( ( p )->useDesignMetrics() );
    }
 }
 
@@ -337,10 +313,8 @@ HB_FUNC( QT_QTEXTOPTION_WRAPMODE )
 {
    QTextOption * p = hbqt_par_QTextOption( 1 );
    if( p )
-      hb_retni( ( QTextOption::WrapMode ) ( p )->wrapMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTOPTION_WRAPMODE FP=hb_retni( ( QTextOption::WrapMode ) ( p )->wrapMode() ); p is NULL" ) );
+      hb_retni( ( QTextOption::WrapMode ) ( p )->wrapMode() );
    }
 }
 

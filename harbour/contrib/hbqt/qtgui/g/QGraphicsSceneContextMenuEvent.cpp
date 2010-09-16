@@ -132,10 +132,8 @@ HB_FUNC( QT_QGRAPHICSSCENECONTEXTMENUEVENT_MODIFIERS )
 {
    QGraphicsSceneContextMenuEvent * p = hbqt_par_QGraphicsSceneContextMenuEvent( 1 );
    if( p )
-      hb_retni( ( Qt::KeyboardModifiers ) ( p )->modifiers() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENECONTEXTMENUEVENT_MODIFIERS FP=hb_retni( ( Qt::KeyboardModifiers ) ( p )->modifiers() ); p is NULL" ) );
+      hb_retni( ( Qt::KeyboardModifiers ) ( p )->modifiers() );
    }
 }
 
@@ -146,10 +144,8 @@ HB_FUNC( QT_QGRAPHICSSCENECONTEXTMENUEVENT_POS )
 {
    QGraphicsSceneContextMenuEvent * p = hbqt_par_QGraphicsSceneContextMenuEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->pos() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENECONTEXTMENUEVENT_POS FP=hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->pos() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->pos() ), true ) );
    }
 }
 
@@ -160,10 +156,8 @@ HB_FUNC( QT_QGRAPHICSSCENECONTEXTMENUEVENT_REASON )
 {
    QGraphicsSceneContextMenuEvent * p = hbqt_par_QGraphicsSceneContextMenuEvent( 1 );
    if( p )
-      hb_retni( ( QGraphicsSceneContextMenuEvent::Reason ) ( p )->reason() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENECONTEXTMENUEVENT_REASON FP=hb_retni( ( QGraphicsSceneContextMenuEvent::Reason ) ( p )->reason() ); p is NULL" ) );
+      hb_retni( ( QGraphicsSceneContextMenuEvent::Reason ) ( p )->reason() );
    }
 }
 
@@ -174,10 +168,8 @@ HB_FUNC( QT_QGRAPHICSSCENECONTEXTMENUEVENT_SCENEPOS )
 {
    QGraphicsSceneContextMenuEvent * p = hbqt_par_QGraphicsSceneContextMenuEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->scenePos() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENECONTEXTMENUEVENT_SCENEPOS FP=hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->scenePos() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->scenePos() ), true ) );
    }
 }
 
@@ -188,10 +180,8 @@ HB_FUNC( QT_QGRAPHICSSCENECONTEXTMENUEVENT_SCREENPOS )
 {
    QGraphicsSceneContextMenuEvent * p = hbqt_par_QGraphicsSceneContextMenuEvent( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->screenPos() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSSCENECONTEXTMENUEVENT_SCREENPOS FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->screenPos() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->screenPos() ), true ) );
    }
 }
 

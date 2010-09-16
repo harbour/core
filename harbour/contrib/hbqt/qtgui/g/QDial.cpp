@@ -157,10 +157,8 @@ HB_FUNC( QT_QDIAL_NOTCHSIZE )
 {
    QDial * p = hbqt_par_QDial( 1 );
    if( p )
-      hb_retni( ( p )->notchSize() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIAL_NOTCHSIZE FP=hb_retni( ( p )->notchSize() ); p is NULL" ) );
+      hb_retni( ( p )->notchSize() );
    }
 }
 
@@ -171,10 +169,8 @@ HB_FUNC( QT_QDIAL_NOTCHTARGET )
 {
    QDial * p = hbqt_par_QDial( 1 );
    if( p )
-      hb_retnd( ( p )->notchTarget() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIAL_NOTCHTARGET FP=hb_retnd( ( p )->notchTarget() ); p is NULL" ) );
+      hb_retnd( ( p )->notchTarget() );
    }
 }
 
@@ -185,10 +181,8 @@ HB_FUNC( QT_QDIAL_NOTCHESVISIBLE )
 {
    QDial * p = hbqt_par_QDial( 1 );
    if( p )
-      hb_retl( ( p )->notchesVisible() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIAL_NOTCHESVISIBLE FP=hb_retl( ( p )->notchesVisible() ); p is NULL" ) );
+      hb_retl( ( p )->notchesVisible() );
    }
 }
 
@@ -199,10 +193,8 @@ HB_FUNC( QT_QDIAL_SETNOTCHTARGET )
 {
    QDial * p = hbqt_par_QDial( 1 );
    if( p )
-      ( p )->setNotchTarget( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIAL_SETNOTCHTARGET FP=( p )->setNotchTarget( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setNotchTarget( hb_parnd( 2 ) );
    }
 }
 
@@ -213,10 +205,8 @@ HB_FUNC( QT_QDIAL_WRAPPING )
 {
    QDial * p = hbqt_par_QDial( 1 );
    if( p )
-      hb_retl( ( p )->wrapping() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIAL_WRAPPING FP=hb_retl( ( p )->wrapping() ); p is NULL" ) );
+      hb_retl( ( p )->wrapping() );
    }
 }
 
@@ -227,10 +217,8 @@ HB_FUNC( QT_QDIAL_SETNOTCHESVISIBLE )
 {
    QDial * p = hbqt_par_QDial( 1 );
    if( p )
-      ( p )->setNotchesVisible( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIAL_SETNOTCHESVISIBLE FP=( p )->setNotchesVisible( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setNotchesVisible( hb_parl( 2 ) );
    }
 }
 
@@ -241,10 +229,8 @@ HB_FUNC( QT_QDIAL_SETWRAPPING )
 {
    QDial * p = hbqt_par_QDial( 1 );
    if( p )
-      ( p )->setWrapping( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDIAL_SETWRAPPING FP=( p )->setWrapping( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setWrapping( hb_parl( 2 ) );
    }
 }
 

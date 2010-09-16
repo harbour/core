@@ -147,10 +147,8 @@ HB_FUNC( QT_QHTTPREQUESTHEADER_MAJORVERSION )
 {
    QHttpRequestHeader * p = hbqt_par_QHttpRequestHeader( 1 );
    if( p )
-      hb_retni( ( p )->majorVersion() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPREQUESTHEADER_MAJORVERSION FP=hb_retni( ( p )->majorVersion() ); p is NULL" ) );
+      hb_retni( ( p )->majorVersion() );
    }
 }
 
@@ -161,10 +159,8 @@ HB_FUNC( QT_QHTTPREQUESTHEADER_METHOD )
 {
    QHttpRequestHeader * p = hbqt_par_QHttpRequestHeader( 1 );
    if( p )
-      hb_retc( ( p )->method().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPREQUESTHEADER_METHOD FP=hb_retc( ( p )->method().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->method().toUtf8().data() );
    }
 }
 
@@ -175,10 +171,8 @@ HB_FUNC( QT_QHTTPREQUESTHEADER_MINORVERSION )
 {
    QHttpRequestHeader * p = hbqt_par_QHttpRequestHeader( 1 );
    if( p )
-      hb_retni( ( p )->minorVersion() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPREQUESTHEADER_MINORVERSION FP=hb_retni( ( p )->minorVersion() ); p is NULL" ) );
+      hb_retni( ( p )->minorVersion() );
    }
 }
 
@@ -189,10 +183,8 @@ HB_FUNC( QT_QHTTPREQUESTHEADER_PATH )
 {
    QHttpRequestHeader * p = hbqt_par_QHttpRequestHeader( 1 );
    if( p )
-      hb_retc( ( p )->path().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPREQUESTHEADER_PATH FP=hb_retc( ( p )->path().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->path().toUtf8().data() );
    }
 }
 
@@ -203,10 +195,10 @@ HB_FUNC( QT_QHTTPREQUESTHEADER_SETREQUEST )
 {
    QHttpRequestHeader * p = hbqt_par_QHttpRequestHeader( 1 );
    if( p )
-      ( p )->setRequest( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ), hb_parnidef( 4, 1 ), hb_parnidef( 5, 1 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QHTTPREQUESTHEADER_SETREQUEST FP=( p )->setRequest( hbqt_par_QString( 2 ), hbqt_par_QString( 3 ), hb_parnidef( 4, 1 ), hb_parnidef( 5, 1 ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setRequest( hb_parstr_utf8( 2, &pText, NULL ), hb_parstr_utf8( 3, &pText, NULL ), hb_parnidef( 4, 1 ), hb_parnidef( 5, 1 ) );
+      hb_strfree( pText );
    }
 }
 

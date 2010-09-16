@@ -587,7 +587,7 @@ METHOD IdeINI:load( cHbideIni )
                      //
                      CASE "CurrentProject"              ; ::oIde:cWrkProject                  := cVal ; EXIT
                      CASE "CurrentTheme"                ; ::oIde:cWrkTheme                    := cVal ; EXIT
-                     CASE "CurrentCodec"                ; ::oIde:cWrkCodec                    := cVal ; EXIT
+                     CASE "CurrentCodec"                ; ::oIde:cWrkCodec                    := "UTF-8" ; EXIT
                      CASE "CurrentEnvironment"          ; ::oIde:cWrkEnvironment              := cVal ; EXIT
                      CASE "CurrentFind"                 ; ::oIde:cWrkFind                     := cVal ; EXIT
                      CASE "CurrentFolderFind"           ; ::oIde:cWrkFolderFind               := cVal ; EXIT

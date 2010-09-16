@@ -163,10 +163,8 @@ HB_FUNC( QT_QDOCKWIDGET_ALLOWEDAREAS )
 {
    QDockWidget * p = hbqt_par_QDockWidget( 1 );
    if( p )
-      hb_retni( ( Qt::DockWidgetAreas ) ( p )->allowedAreas() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOCKWIDGET_ALLOWEDAREAS FP=hb_retni( ( Qt::DockWidgetAreas ) ( p )->allowedAreas() ); p is NULL" ) );
+      hb_retni( ( Qt::DockWidgetAreas ) ( p )->allowedAreas() );
    }
 }
 
@@ -177,10 +175,8 @@ HB_FUNC( QT_QDOCKWIDGET_FEATURES )
 {
    QDockWidget * p = hbqt_par_QDockWidget( 1 );
    if( p )
-      hb_retni( ( QDockWidget::DockWidgetFeatures ) ( p )->features() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOCKWIDGET_FEATURES FP=hb_retni( ( QDockWidget::DockWidgetFeatures ) ( p )->features() ); p is NULL" ) );
+      hb_retni( ( QDockWidget::DockWidgetFeatures ) ( p )->features() );
    }
 }
 
@@ -191,10 +187,8 @@ HB_FUNC( QT_QDOCKWIDGET_ISAREAALLOWED )
 {
    QDockWidget * p = hbqt_par_QDockWidget( 1 );
    if( p )
-      hb_retl( ( p )->isAreaAllowed( ( Qt::DockWidgetArea ) hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOCKWIDGET_ISAREAALLOWED FP=hb_retl( ( p )->isAreaAllowed( ( Qt::DockWidgetArea ) hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->isAreaAllowed( ( Qt::DockWidgetArea ) hb_parni( 2 ) ) );
    }
 }
 
@@ -205,10 +199,8 @@ HB_FUNC( QT_QDOCKWIDGET_ISFLOATING )
 {
    QDockWidget * p = hbqt_par_QDockWidget( 1 );
    if( p )
-      hb_retl( ( p )->isFloating() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOCKWIDGET_ISFLOATING FP=hb_retl( ( p )->isFloating() ); p is NULL" ) );
+      hb_retl( ( p )->isFloating() );
    }
 }
 
@@ -219,10 +211,8 @@ HB_FUNC( QT_QDOCKWIDGET_SETALLOWEDAREAS )
 {
    QDockWidget * p = hbqt_par_QDockWidget( 1 );
    if( p )
-      ( p )->setAllowedAreas( ( Qt::DockWidgetAreas ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOCKWIDGET_SETALLOWEDAREAS FP=( p )->setAllowedAreas( ( Qt::DockWidgetAreas ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setAllowedAreas( ( Qt::DockWidgetAreas ) hb_parni( 2 ) );
    }
 }
 
@@ -233,10 +223,8 @@ HB_FUNC( QT_QDOCKWIDGET_SETFEATURES )
 {
    QDockWidget * p = hbqt_par_QDockWidget( 1 );
    if( p )
-      ( p )->setFeatures( ( QDockWidget::DockWidgetFeatures ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOCKWIDGET_SETFEATURES FP=( p )->setFeatures( ( QDockWidget::DockWidgetFeatures ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setFeatures( ( QDockWidget::DockWidgetFeatures ) hb_parni( 2 ) );
    }
 }
 
@@ -247,10 +235,8 @@ HB_FUNC( QT_QDOCKWIDGET_SETFLOATING )
 {
    QDockWidget * p = hbqt_par_QDockWidget( 1 );
    if( p )
-      ( p )->setFloating( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOCKWIDGET_SETFLOATING FP=( p )->setFloating( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setFloating( hb_parl( 2 ) );
    }
 }
 
@@ -261,10 +247,8 @@ HB_FUNC( QT_QDOCKWIDGET_SETTITLEBARWIDGET )
 {
    QDockWidget * p = hbqt_par_QDockWidget( 1 );
    if( p )
-      ( p )->setTitleBarWidget( hbqt_par_QWidget( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOCKWIDGET_SETTITLEBARWIDGET FP=( p )->setTitleBarWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+      ( p )->setTitleBarWidget( hbqt_par_QWidget( 2 ) );
    }
 }
 
@@ -275,10 +259,8 @@ HB_FUNC( QT_QDOCKWIDGET_SETWIDGET )
 {
    QDockWidget * p = hbqt_par_QDockWidget( 1 );
    if( p )
-      ( p )->setWidget( hbqt_par_QWidget( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOCKWIDGET_SETWIDGET FP=( p )->setWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+      ( p )->setWidget( hbqt_par_QWidget( 2 ) );
    }
 }
 
@@ -289,10 +271,8 @@ HB_FUNC( QT_QDOCKWIDGET_TITLEBARWIDGET )
 {
    QDockWidget * p = hbqt_par_QDockWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->titleBarWidget(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOCKWIDGET_TITLEBARWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->titleBarWidget(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->titleBarWidget(), false ) );
    }
 }
 
@@ -303,10 +283,8 @@ HB_FUNC( QT_QDOCKWIDGET_TOGGLEVIEWACTION )
 {
    QDockWidget * p = hbqt_par_QDockWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->toggleViewAction(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOCKWIDGET_TOGGLEVIEWACTION FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->toggleViewAction(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->toggleViewAction(), false ) );
    }
 }
 
@@ -317,10 +295,8 @@ HB_FUNC( QT_QDOCKWIDGET_WIDGET )
 {
    QDockWidget * p = hbqt_par_QDockWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDOCKWIDGET_WIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->widget(), false ) );
    }
 }
 

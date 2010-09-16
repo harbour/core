@@ -157,10 +157,8 @@ HB_FUNC( QT_QWIDGETACTION_DEFAULTWIDGET )
 {
    QWidgetAction * p = hbqt_par_QWidgetAction( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->defaultWidget(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIDGETACTION_DEFAULTWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->defaultWidget(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->defaultWidget(), false ) );
    }
 }
 
@@ -171,10 +169,8 @@ HB_FUNC( QT_QWIDGETACTION_RELEASEWIDGET )
 {
    QWidgetAction * p = hbqt_par_QWidgetAction( 1 );
    if( p )
-      ( p )->releaseWidget( hbqt_par_QWidget( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIDGETACTION_RELEASEWIDGET FP=( p )->releaseWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+      ( p )->releaseWidget( hbqt_par_QWidget( 2 ) );
    }
 }
 
@@ -185,10 +181,8 @@ HB_FUNC( QT_QWIDGETACTION_REQUESTWIDGET )
 {
    QWidgetAction * p = hbqt_par_QWidgetAction( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->requestWidget( hbqt_par_QWidget( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIDGETACTION_REQUESTWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->requestWidget( hbqt_par_QWidget( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->requestWidget( hbqt_par_QWidget( 2 ) ), false ) );
    }
 }
 
@@ -199,10 +193,8 @@ HB_FUNC( QT_QWIDGETACTION_SETDEFAULTWIDGET )
 {
    QWidgetAction * p = hbqt_par_QWidgetAction( 1 );
    if( p )
-      ( p )->setDefaultWidget( hbqt_par_QWidget( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWIDGETACTION_SETDEFAULTWIDGET FP=( p )->setDefaultWidget( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+      ( p )->setDefaultWidget( hbqt_par_QWidget( 2 ) );
    }
 }
 

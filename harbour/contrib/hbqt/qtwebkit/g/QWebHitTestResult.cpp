@@ -149,10 +149,8 @@ HB_FUNC( QT_QWEBHITTESTRESULT_ALTERNATETEXT )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-      hb_retc( ( p )->alternateText().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBHITTESTRESULT_ALTERNATETEXT FP=hb_retc( ( p )->alternateText().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->alternateText().toUtf8().data() );
    }
 }
 
@@ -163,10 +161,8 @@ HB_FUNC( QT_QWEBHITTESTRESULT_BOUNDINGRECT )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->boundingRect() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBHITTESTRESULT_BOUNDINGRECT FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->boundingRect() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->boundingRect() ), true ) );
    }
 }
 
@@ -177,10 +173,8 @@ HB_FUNC( QT_QWEBHITTESTRESULT_FRAME )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWebFrame( ( p )->frame(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBHITTESTRESULT_FRAME FP=hb_retptrGC( hbqt_gcAllocate_QWebFrame( ( p )->frame(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWebFrame( ( p )->frame(), false ) );
    }
 }
 
@@ -191,10 +185,8 @@ HB_FUNC( QT_QWEBHITTESTRESULT_IMAGEURL )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->imageUrl() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBHITTESTRESULT_IMAGEURL FP=hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->imageUrl() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->imageUrl() ), true ) );
    }
 }
 
@@ -205,10 +197,8 @@ HB_FUNC( QT_QWEBHITTESTRESULT_ISCONTENTEDITABLE )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-      hb_retl( ( p )->isContentEditable() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBHITTESTRESULT_ISCONTENTEDITABLE FP=hb_retl( ( p )->isContentEditable() ); p is NULL" ) );
+      hb_retl( ( p )->isContentEditable() );
    }
 }
 
@@ -219,10 +209,8 @@ HB_FUNC( QT_QWEBHITTESTRESULT_ISCONTENTSELECTED )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-      hb_retl( ( p )->isContentSelected() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBHITTESTRESULT_ISCONTENTSELECTED FP=hb_retl( ( p )->isContentSelected() ); p is NULL" ) );
+      hb_retl( ( p )->isContentSelected() );
    }
 }
 
@@ -233,10 +221,8 @@ HB_FUNC( QT_QWEBHITTESTRESULT_ISNULL )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-      hb_retl( ( p )->isNull() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBHITTESTRESULT_ISNULL FP=hb_retl( ( p )->isNull() ); p is NULL" ) );
+      hb_retl( ( p )->isNull() );
    }
 }
 
@@ -247,10 +233,8 @@ HB_FUNC( QT_QWEBHITTESTRESULT_LINKTARGETFRAME )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWebFrame( ( p )->linkTargetFrame(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBHITTESTRESULT_LINKTARGETFRAME FP=hb_retptrGC( hbqt_gcAllocate_QWebFrame( ( p )->linkTargetFrame(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWebFrame( ( p )->linkTargetFrame(), false ) );
    }
 }
 
@@ -261,10 +245,8 @@ HB_FUNC( QT_QWEBHITTESTRESULT_LINKTEXT )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-      hb_retc( ( p )->linkText().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBHITTESTRESULT_LINKTEXT FP=hb_retc( ( p )->linkText().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->linkText().toUtf8().data() );
    }
 }
 
@@ -275,10 +257,8 @@ HB_FUNC( QT_QWEBHITTESTRESULT_LINKTITLE )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->linkTitle() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBHITTESTRESULT_LINKTITLE FP=hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->linkTitle() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->linkTitle() ), true ) );
    }
 }
 
@@ -289,10 +269,8 @@ HB_FUNC( QT_QWEBHITTESTRESULT_LINKURL )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->linkUrl() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBHITTESTRESULT_LINKURL FP=hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->linkUrl() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QUrl( new QUrl( ( p )->linkUrl() ), true ) );
    }
 }
 
@@ -303,10 +281,8 @@ HB_FUNC( QT_QWEBHITTESTRESULT_PIXMAP )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBHITTESTRESULT_PIXMAP FP=hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap() ), true ) );
    }
 }
 
@@ -317,10 +293,8 @@ HB_FUNC( QT_QWEBHITTESTRESULT_POS )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBHITTESTRESULT_POS FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->pos() ), true ) );
    }
 }
 
@@ -331,10 +305,8 @@ HB_FUNC( QT_QWEBHITTESTRESULT_TITLE )
 {
    QWebHitTestResult * p = hbqt_par_QWebHitTestResult( 1 );
    if( p )
-      hb_retc( ( p )->title().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QWEBHITTESTRESULT_TITLE FP=hb_retc( ( p )->title().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->title().toUtf8().data() );
    }
 }
 

@@ -129,10 +129,8 @@ HB_FUNC( QT_QPAINTDEVICE_DEPTH )
 {
    QPaintDevice * p = hbqt_par_QPaintDevice( 1 );
    if( p )
-      hb_retni( ( p )->depth() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTDEVICE_DEPTH FP=hb_retni( ( p )->depth() ); p is NULL" ) );
+      hb_retni( ( p )->depth() );
    }
 }
 
@@ -143,10 +141,8 @@ HB_FUNC( QT_QPAINTDEVICE_HEIGHT )
 {
    QPaintDevice * p = hbqt_par_QPaintDevice( 1 );
    if( p )
-      hb_retni( ( p )->height() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTDEVICE_HEIGHT FP=hb_retni( ( p )->height() ); p is NULL" ) );
+      hb_retni( ( p )->height() );
    }
 }
 
@@ -157,10 +153,8 @@ HB_FUNC( QT_QPAINTDEVICE_HEIGHTMM )
 {
    QPaintDevice * p = hbqt_par_QPaintDevice( 1 );
    if( p )
-      hb_retni( ( p )->heightMM() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTDEVICE_HEIGHTMM FP=hb_retni( ( p )->heightMM() ); p is NULL" ) );
+      hb_retni( ( p )->heightMM() );
    }
 }
 
@@ -171,10 +165,8 @@ HB_FUNC( QT_QPAINTDEVICE_LOGICALDPIX )
 {
    QPaintDevice * p = hbqt_par_QPaintDevice( 1 );
    if( p )
-      hb_retni( ( p )->logicalDpiX() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTDEVICE_LOGICALDPIX FP=hb_retni( ( p )->logicalDpiX() ); p is NULL" ) );
+      hb_retni( ( p )->logicalDpiX() );
    }
 }
 
@@ -185,10 +177,8 @@ HB_FUNC( QT_QPAINTDEVICE_LOGICALDPIY )
 {
    QPaintDevice * p = hbqt_par_QPaintDevice( 1 );
    if( p )
-      hb_retni( ( p )->logicalDpiY() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTDEVICE_LOGICALDPIY FP=hb_retni( ( p )->logicalDpiY() ); p is NULL" ) );
+      hb_retni( ( p )->logicalDpiY() );
    }
 }
 
@@ -199,10 +189,8 @@ HB_FUNC( QT_QPAINTDEVICE_NUMCOLORS )
 {
    QPaintDevice * p = hbqt_par_QPaintDevice( 1 );
    if( p )
-      hb_retni( ( p )->numColors() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTDEVICE_NUMCOLORS FP=hb_retni( ( p )->numColors() ); p is NULL" ) );
+      hb_retni( ( p )->numColors() );
    }
 }
 
@@ -213,10 +201,8 @@ HB_FUNC( QT_QPAINTDEVICE_PAINTENGINE )
 {
    QPaintDevice * p = hbqt_par_QPaintDevice( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPaintEngine( ( p )->paintEngine(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTDEVICE_PAINTENGINE FP=hb_retptrGC( hbqt_gcAllocate_QPaintEngine( ( p )->paintEngine(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPaintEngine( ( p )->paintEngine(), false ) );
    }
 }
 
@@ -227,10 +213,8 @@ HB_FUNC( QT_QPAINTDEVICE_PAINTINGACTIVE )
 {
    QPaintDevice * p = hbqt_par_QPaintDevice( 1 );
    if( p )
-      hb_retl( ( p )->paintingActive() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTDEVICE_PAINTINGACTIVE FP=hb_retl( ( p )->paintingActive() ); p is NULL" ) );
+      hb_retl( ( p )->paintingActive() );
    }
 }
 
@@ -241,10 +225,8 @@ HB_FUNC( QT_QPAINTDEVICE_PHYSICALDPIX )
 {
    QPaintDevice * p = hbqt_par_QPaintDevice( 1 );
    if( p )
-      hb_retni( ( p )->physicalDpiX() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTDEVICE_PHYSICALDPIX FP=hb_retni( ( p )->physicalDpiX() ); p is NULL" ) );
+      hb_retni( ( p )->physicalDpiX() );
    }
 }
 
@@ -255,10 +237,8 @@ HB_FUNC( QT_QPAINTDEVICE_PHYSICALDPIY )
 {
    QPaintDevice * p = hbqt_par_QPaintDevice( 1 );
    if( p )
-      hb_retni( ( p )->physicalDpiY() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTDEVICE_PHYSICALDPIY FP=hb_retni( ( p )->physicalDpiY() ); p is NULL" ) );
+      hb_retni( ( p )->physicalDpiY() );
    }
 }
 
@@ -269,10 +249,8 @@ HB_FUNC( QT_QPAINTDEVICE_WIDTH )
 {
    QPaintDevice * p = hbqt_par_QPaintDevice( 1 );
    if( p )
-      hb_retni( ( p )->width() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTDEVICE_WIDTH FP=hb_retni( ( p )->width() ); p is NULL" ) );
+      hb_retni( ( p )->width() );
    }
 }
 
@@ -283,10 +261,8 @@ HB_FUNC( QT_QPAINTDEVICE_WIDTHMM )
 {
    QPaintDevice * p = hbqt_par_QPaintDevice( 1 );
    if( p )
-      hb_retni( ( p )->widthMM() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPAINTDEVICE_WIDTHMM FP=hb_retni( ( p )->widthMM() ); p is NULL" ) );
+      hb_retni( ( p )->widthMM() );
    }
 }
 

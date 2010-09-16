@@ -164,10 +164,8 @@ HB_FUNC( QT_QCHECKBOX_CHECKSTATE )
 {
    QCheckBox * p = hbqt_par_QCheckBox( 1 );
    if( p )
-      hb_retni( ( Qt::CheckState ) ( p )->checkState() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCHECKBOX_CHECKSTATE FP=hb_retni( ( Qt::CheckState ) ( p )->checkState() ); p is NULL" ) );
+      hb_retni( ( Qt::CheckState ) ( p )->checkState() );
    }
 }
 
@@ -178,10 +176,8 @@ HB_FUNC( QT_QCHECKBOX_ISTRISTATE )
 {
    QCheckBox * p = hbqt_par_QCheckBox( 1 );
    if( p )
-      hb_retl( ( p )->isTristate() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCHECKBOX_ISTRISTATE FP=hb_retl( ( p )->isTristate() ); p is NULL" ) );
+      hb_retl( ( p )->isTristate() );
    }
 }
 
@@ -192,10 +188,8 @@ HB_FUNC( QT_QCHECKBOX_SETCHECKSTATE )
 {
    QCheckBox * p = hbqt_par_QCheckBox( 1 );
    if( p )
-      ( p )->setCheckState( ( Qt::CheckState ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCHECKBOX_SETCHECKSTATE FP=( p )->setCheckState( ( Qt::CheckState ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setCheckState( ( Qt::CheckState ) hb_parni( 2 ) );
    }
 }
 
@@ -206,10 +200,8 @@ HB_FUNC( QT_QCHECKBOX_SETTRISTATE )
 {
    QCheckBox * p = hbqt_par_QCheckBox( 1 );
    if( p )
-      ( p )->setTristate( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCHECKBOX_SETTRISTATE FP=( p )->setTristate( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setTristate( hb_parl( 2 ) );
    }
 }
 

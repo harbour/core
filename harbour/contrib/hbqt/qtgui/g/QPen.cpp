@@ -192,10 +192,8 @@ HB_FUNC( QT_QPEN_BRUSH )
 {
    QPen * p = hbqt_par_QPen( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->brush() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPEN_BRUSH FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->brush() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->brush() ), true ) );
    }
 }
 
@@ -206,10 +204,8 @@ HB_FUNC( QT_QPEN_CAPSTYLE )
 {
    QPen * p = hbqt_par_QPen( 1 );
    if( p )
-      hb_retni( ( Qt::PenCapStyle ) ( p )->capStyle() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPEN_CAPSTYLE FP=hb_retni( ( Qt::PenCapStyle ) ( p )->capStyle() ); p is NULL" ) );
+      hb_retni( ( Qt::PenCapStyle ) ( p )->capStyle() );
    }
 }
 
@@ -220,10 +216,8 @@ HB_FUNC( QT_QPEN_COLOR )
 {
    QPen * p = hbqt_par_QPen( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->color() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPEN_COLOR FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->color() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->color() ), true ) );
    }
 }
 
@@ -234,10 +228,8 @@ HB_FUNC( QT_QPEN_DASHOFFSET )
 {
    QPen * p = hbqt_par_QPen( 1 );
    if( p )
-      hb_retnd( ( p )->dashOffset() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPEN_DASHOFFSET FP=hb_retnd( ( p )->dashOffset() ); p is NULL" ) );
+      hb_retnd( ( p )->dashOffset() );
    }
 }
 
@@ -248,10 +240,8 @@ HB_FUNC( QT_QPEN_ISCOSMETIC )
 {
    QPen * p = hbqt_par_QPen( 1 );
    if( p )
-      hb_retl( ( p )->isCosmetic() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPEN_ISCOSMETIC FP=hb_retl( ( p )->isCosmetic() ); p is NULL" ) );
+      hb_retl( ( p )->isCosmetic() );
    }
 }
 
@@ -262,10 +252,8 @@ HB_FUNC( QT_QPEN_ISSOLID )
 {
    QPen * p = hbqt_par_QPen( 1 );
    if( p )
-      hb_retl( ( p )->isSolid() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPEN_ISSOLID FP=hb_retl( ( p )->isSolid() ); p is NULL" ) );
+      hb_retl( ( p )->isSolid() );
    }
 }
 
@@ -276,10 +264,8 @@ HB_FUNC( QT_QPEN_JOINSTYLE )
 {
    QPen * p = hbqt_par_QPen( 1 );
    if( p )
-      hb_retni( ( Qt::PenJoinStyle ) ( p )->joinStyle() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPEN_JOINSTYLE FP=hb_retni( ( Qt::PenJoinStyle ) ( p )->joinStyle() ); p is NULL" ) );
+      hb_retni( ( Qt::PenJoinStyle ) ( p )->joinStyle() );
    }
 }
 
@@ -290,10 +276,8 @@ HB_FUNC( QT_QPEN_MITERLIMIT )
 {
    QPen * p = hbqt_par_QPen( 1 );
    if( p )
-      hb_retnd( ( p )->miterLimit() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPEN_MITERLIMIT FP=hb_retnd( ( p )->miterLimit() ); p is NULL" ) );
+      hb_retnd( ( p )->miterLimit() );
    }
 }
 
@@ -304,10 +288,8 @@ HB_FUNC( QT_QPEN_SETBRUSH )
 {
    QPen * p = hbqt_par_QPen( 1 );
    if( p )
-      ( p )->setBrush( *hbqt_par_QBrush( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPEN_SETBRUSH FP=( p )->setBrush( *hbqt_par_QBrush( 2 ) ); p is NULL" ) );
+      ( p )->setBrush( *hbqt_par_QBrush( 2 ) );
    }
 }
 
@@ -318,10 +300,8 @@ HB_FUNC( QT_QPEN_SETCAPSTYLE )
 {
    QPen * p = hbqt_par_QPen( 1 );
    if( p )
-      ( p )->setCapStyle( ( Qt::PenCapStyle ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPEN_SETCAPSTYLE FP=( p )->setCapStyle( ( Qt::PenCapStyle ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setCapStyle( ( Qt::PenCapStyle ) hb_parni( 2 ) );
    }
 }
 
@@ -332,10 +312,8 @@ HB_FUNC( QT_QPEN_SETCOLOR )
 {
    QPen * p = hbqt_par_QPen( 1 );
    if( p )
-      ( p )->setColor( *hbqt_par_QColor( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPEN_SETCOLOR FP=( p )->setColor( *hbqt_par_QColor( 2 ) ); p is NULL" ) );
+      ( p )->setColor( *hbqt_par_QColor( 2 ) );
    }
 }
 
@@ -346,10 +324,8 @@ HB_FUNC( QT_QPEN_SETCOSMETIC )
 {
    QPen * p = hbqt_par_QPen( 1 );
    if( p )
-      ( p )->setCosmetic( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPEN_SETCOSMETIC FP=( p )->setCosmetic( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setCosmetic( hb_parl( 2 ) );
    }
 }
 
@@ -360,10 +336,8 @@ HB_FUNC( QT_QPEN_SETDASHOFFSET )
 {
    QPen * p = hbqt_par_QPen( 1 );
    if( p )
-      ( p )->setDashOffset( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPEN_SETDASHOFFSET FP=( p )->setDashOffset( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setDashOffset( hb_parnd( 2 ) );
    }
 }
 
@@ -374,10 +348,8 @@ HB_FUNC( QT_QPEN_SETJOINSTYLE )
 {
    QPen * p = hbqt_par_QPen( 1 );
    if( p )
-      ( p )->setJoinStyle( ( Qt::PenJoinStyle ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPEN_SETJOINSTYLE FP=( p )->setJoinStyle( ( Qt::PenJoinStyle ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setJoinStyle( ( Qt::PenJoinStyle ) hb_parni( 2 ) );
    }
 }
 
@@ -388,10 +360,8 @@ HB_FUNC( QT_QPEN_SETMITERLIMIT )
 {
    QPen * p = hbqt_par_QPen( 1 );
    if( p )
-      ( p )->setMiterLimit( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPEN_SETMITERLIMIT FP=( p )->setMiterLimit( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setMiterLimit( hb_parnd( 2 ) );
    }
 }
 
@@ -402,10 +372,8 @@ HB_FUNC( QT_QPEN_SETSTYLE )
 {
    QPen * p = hbqt_par_QPen( 1 );
    if( p )
-      ( p )->setStyle( ( Qt::PenStyle ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPEN_SETSTYLE FP=( p )->setStyle( ( Qt::PenStyle ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setStyle( ( Qt::PenStyle ) hb_parni( 2 ) );
    }
 }
 
@@ -416,10 +384,8 @@ HB_FUNC( QT_QPEN_SETWIDTH )
 {
    QPen * p = hbqt_par_QPen( 1 );
    if( p )
-      ( p )->setWidth( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPEN_SETWIDTH FP=( p )->setWidth( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setWidth( hb_parni( 2 ) );
    }
 }
 
@@ -430,10 +396,8 @@ HB_FUNC( QT_QPEN_SETWIDTHF )
 {
    QPen * p = hbqt_par_QPen( 1 );
    if( p )
-      ( p )->setWidthF( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPEN_SETWIDTHF FP=( p )->setWidthF( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setWidthF( hb_parnd( 2 ) );
    }
 }
 
@@ -444,10 +408,8 @@ HB_FUNC( QT_QPEN_STYLE )
 {
    QPen * p = hbqt_par_QPen( 1 );
    if( p )
-      hb_retni( ( Qt::PenStyle ) ( p )->style() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPEN_STYLE FP=hb_retni( ( Qt::PenStyle ) ( p )->style() ); p is NULL" ) );
+      hb_retni( ( Qt::PenStyle ) ( p )->style() );
    }
 }
 
@@ -458,10 +420,8 @@ HB_FUNC( QT_QPEN_WIDTH )
 {
    QPen * p = hbqt_par_QPen( 1 );
    if( p )
-      hb_retni( ( p )->width() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPEN_WIDTH FP=hb_retni( ( p )->width() ); p is NULL" ) );
+      hb_retni( ( p )->width() );
    }
 }
 
@@ -472,10 +432,8 @@ HB_FUNC( QT_QPEN_WIDTHF )
 {
    QPen * p = hbqt_par_QPen( 1 );
    if( p )
-      hb_retnd( ( p )->widthF() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPEN_WIDTHF FP=hb_retnd( ( p )->widthF() ); p is NULL" ) );
+      hb_retnd( ( p )->widthF() );
    }
 }
 

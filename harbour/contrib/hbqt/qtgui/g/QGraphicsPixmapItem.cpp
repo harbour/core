@@ -166,10 +166,8 @@ HB_FUNC( QT_QGRAPHICSPIXMAPITEM_OFFSET )
 {
    QGraphicsPixmapItem * p = hbqt_par_QGraphicsPixmapItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->offset() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSPIXMAPITEM_OFFSET FP=hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->offset() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPointF( new QPointF( ( p )->offset() ), true ) );
    }
 }
 
@@ -180,10 +178,8 @@ HB_FUNC( QT_QGRAPHICSPIXMAPITEM_PIXMAP )
 {
    QGraphicsPixmapItem * p = hbqt_par_QGraphicsPixmapItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSPIXMAPITEM_PIXMAP FP=hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->pixmap() ), true ) );
    }
 }
 
@@ -194,10 +190,8 @@ HB_FUNC( QT_QGRAPHICSPIXMAPITEM_SETOFFSET )
 {
    QGraphicsPixmapItem * p = hbqt_par_QGraphicsPixmapItem( 1 );
    if( p )
-      ( p )->setOffset( *hbqt_par_QPointF( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSPIXMAPITEM_SETOFFSET FP=( p )->setOffset( *hbqt_par_QPointF( 2 ) ); p is NULL" ) );
+      ( p )->setOffset( *hbqt_par_QPointF( 2 ) );
    }
 }
 
@@ -208,10 +202,8 @@ HB_FUNC( QT_QGRAPHICSPIXMAPITEM_SETOFFSET_1 )
 {
    QGraphicsPixmapItem * p = hbqt_par_QGraphicsPixmapItem( 1 );
    if( p )
-      ( p )->setOffset( hb_parnd( 2 ), hb_parnd( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSPIXMAPITEM_SETOFFSET_1 FP=( p )->setOffset( hb_parnd( 2 ), hb_parnd( 3 ) ); p is NULL" ) );
+      ( p )->setOffset( hb_parnd( 2 ), hb_parnd( 3 ) );
    }
 }
 
@@ -222,10 +214,8 @@ HB_FUNC( QT_QGRAPHICSPIXMAPITEM_SETPIXMAP )
 {
    QGraphicsPixmapItem * p = hbqt_par_QGraphicsPixmapItem( 1 );
    if( p )
-      ( p )->setPixmap( *hbqt_par_QPixmap( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSPIXMAPITEM_SETPIXMAP FP=( p )->setPixmap( *hbqt_par_QPixmap( 2 ) ); p is NULL" ) );
+      ( p )->setPixmap( *hbqt_par_QPixmap( 2 ) );
    }
 }
 
@@ -236,10 +226,8 @@ HB_FUNC( QT_QGRAPHICSPIXMAPITEM_SETSHAPEMODE )
 {
    QGraphicsPixmapItem * p = hbqt_par_QGraphicsPixmapItem( 1 );
    if( p )
-      ( p )->setShapeMode( ( QGraphicsPixmapItem::ShapeMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSPIXMAPITEM_SETSHAPEMODE FP=( p )->setShapeMode( ( QGraphicsPixmapItem::ShapeMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setShapeMode( ( QGraphicsPixmapItem::ShapeMode ) hb_parni( 2 ) );
    }
 }
 
@@ -250,10 +238,8 @@ HB_FUNC( QT_QGRAPHICSPIXMAPITEM_SETTRANSFORMATIONMODE )
 {
    QGraphicsPixmapItem * p = hbqt_par_QGraphicsPixmapItem( 1 );
    if( p )
-      ( p )->setTransformationMode( ( Qt::TransformationMode ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSPIXMAPITEM_SETTRANSFORMATIONMODE FP=( p )->setTransformationMode( ( Qt::TransformationMode ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setTransformationMode( ( Qt::TransformationMode ) hb_parni( 2 ) );
    }
 }
 
@@ -264,10 +250,8 @@ HB_FUNC( QT_QGRAPHICSPIXMAPITEM_SHAPEMODE )
 {
    QGraphicsPixmapItem * p = hbqt_par_QGraphicsPixmapItem( 1 );
    if( p )
-      hb_retni( ( QGraphicsPixmapItem::ShapeMode ) ( p )->shapeMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSPIXMAPITEM_SHAPEMODE FP=hb_retni( ( QGraphicsPixmapItem::ShapeMode ) ( p )->shapeMode() ); p is NULL" ) );
+      hb_retni( ( QGraphicsPixmapItem::ShapeMode ) ( p )->shapeMode() );
    }
 }
 
@@ -278,10 +262,8 @@ HB_FUNC( QT_QGRAPHICSPIXMAPITEM_TRANSFORMATIONMODE )
 {
    QGraphicsPixmapItem * p = hbqt_par_QGraphicsPixmapItem( 1 );
    if( p )
-      hb_retni( ( Qt::TransformationMode ) ( p )->transformationMode() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSPIXMAPITEM_TRANSFORMATIONMODE FP=hb_retni( ( Qt::TransformationMode ) ( p )->transformationMode() ); p is NULL" ) );
+      hb_retni( ( Qt::TransformationMode ) ( p )->transformationMode() );
    }
 }
 

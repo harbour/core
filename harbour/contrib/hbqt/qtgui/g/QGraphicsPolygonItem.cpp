@@ -162,10 +162,8 @@ HB_FUNC( QT_QGRAPHICSPOLYGONITEM_FILLRULE )
 {
    QGraphicsPolygonItem * p = hbqt_par_QGraphicsPolygonItem( 1 );
    if( p )
-      hb_retni( ( Qt::FillRule ) ( p )->fillRule() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSPOLYGONITEM_FILLRULE FP=hb_retni( ( Qt::FillRule ) ( p )->fillRule() ); p is NULL" ) );
+      hb_retni( ( Qt::FillRule ) ( p )->fillRule() );
    }
 }
 
@@ -176,10 +174,8 @@ HB_FUNC( QT_QGRAPHICSPOLYGONITEM_POLYGON )
 {
    QGraphicsPolygonItem * p = hbqt_par_QGraphicsPolygonItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->polygon() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSPOLYGONITEM_POLYGON FP=hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->polygon() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPolygonF( new QPolygonF( ( p )->polygon() ), true ) );
    }
 }
 
@@ -190,10 +186,8 @@ HB_FUNC( QT_QGRAPHICSPOLYGONITEM_SETFILLRULE )
 {
    QGraphicsPolygonItem * p = hbqt_par_QGraphicsPolygonItem( 1 );
    if( p )
-      ( p )->setFillRule( ( Qt::FillRule ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSPOLYGONITEM_SETFILLRULE FP=( p )->setFillRule( ( Qt::FillRule ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setFillRule( ( Qt::FillRule ) hb_parni( 2 ) );
    }
 }
 
@@ -204,10 +198,8 @@ HB_FUNC( QT_QGRAPHICSPOLYGONITEM_SETPOLYGON )
 {
    QGraphicsPolygonItem * p = hbqt_par_QGraphicsPolygonItem( 1 );
    if( p )
-      ( p )->setPolygon( *hbqt_par_QPolygonF( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSPOLYGONITEM_SETPOLYGON FP=( p )->setPolygon( *hbqt_par_QPolygonF( 2 ) ); p is NULL" ) );
+      ( p )->setPolygon( *hbqt_par_QPolygonF( 2 ) );
    }
 }
 

@@ -151,10 +151,8 @@ HB_FUNC( QT_QTEXTITEM_ASCENT )
 {
    QTextItem * p = hbqt_par_QTextItem( 1 );
    if( p )
-      hb_retnd( ( p )->ascent() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTITEM_ASCENT FP=hb_retnd( ( p )->ascent() ); p is NULL" ) );
+      hb_retnd( ( p )->ascent() );
    }
 }
 
@@ -165,10 +163,8 @@ HB_FUNC( QT_QTEXTITEM_DESCENT )
 {
    QTextItem * p = hbqt_par_QTextItem( 1 );
    if( p )
-      hb_retnd( ( p )->descent() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTITEM_DESCENT FP=hb_retnd( ( p )->descent() ); p is NULL" ) );
+      hb_retnd( ( p )->descent() );
    }
 }
 
@@ -179,10 +175,8 @@ HB_FUNC( QT_QTEXTITEM_FONT )
 {
    QTextItem * p = hbqt_par_QTextItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTITEM_FONT FP=hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font() ), true ) );
    }
 }
 
@@ -193,10 +187,8 @@ HB_FUNC( QT_QTEXTITEM_RENDERFLAGS )
 {
    QTextItem * p = hbqt_par_QTextItem( 1 );
    if( p )
-      hb_retni( ( QTextItem::RenderFlags ) ( p )->renderFlags() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTITEM_RENDERFLAGS FP=hb_retni( ( QTextItem::RenderFlags ) ( p )->renderFlags() ); p is NULL" ) );
+      hb_retni( ( QTextItem::RenderFlags ) ( p )->renderFlags() );
    }
 }
 
@@ -207,10 +199,8 @@ HB_FUNC( QT_QTEXTITEM_TEXT )
 {
    QTextItem * p = hbqt_par_QTextItem( 1 );
    if( p )
-      hb_retc( ( p )->text().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTITEM_TEXT FP=hb_retc( ( p )->text().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->text().toUtf8().data() );
    }
 }
 
@@ -221,10 +211,8 @@ HB_FUNC( QT_QTEXTITEM_WIDTH )
 {
    QTextItem * p = hbqt_par_QTextItem( 1 );
    if( p )
-      hb_retnd( ( p )->width() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTITEM_WIDTH FP=hb_retnd( ( p )->width() ); p is NULL" ) );
+      hb_retnd( ( p )->width() );
    }
 }
 

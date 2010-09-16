@@ -179,10 +179,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_ACTIONS )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QAction *>( ( p )->actions() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_ACTIONS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QAction *>( ( p )->actions() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QAction *>( ( p )->actions() ), true ) );
    }
 }
 
@@ -193,10 +191,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_ADDACTION )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      ( p )->addAction( hbqt_par_QAction( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_ADDACTION FP=( p )->addAction( hbqt_par_QAction( 2 ) ); p is NULL" ) );
+      ( p )->addAction( hbqt_par_QAction( 2 ) );
    }
 }
 
@@ -207,10 +203,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_ADJUSTSIZE )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      ( p )->adjustSize();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_ADJUSTSIZE FP=( p )->adjustSize(); p is NULL" ) );
+      ( p )->adjustSize();
    }
 }
 
@@ -221,10 +215,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_FOCUSPOLICY )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      hb_retni( ( Qt::FocusPolicy ) ( p )->focusPolicy() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_FOCUSPOLICY FP=hb_retni( ( Qt::FocusPolicy ) ( p )->focusPolicy() ); p is NULL" ) );
+      hb_retni( ( Qt::FocusPolicy ) ( p )->focusPolicy() );
    }
 }
 
@@ -235,10 +227,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_FOCUSWIDGET )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QGraphicsWidget( ( p )->focusWidget(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_FOCUSWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QGraphicsWidget( ( p )->focusWidget(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QGraphicsWidget( ( p )->focusWidget(), false ) );
    }
 }
 
@@ -249,10 +239,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_FONT )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_FONT FP=hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font() ), true ) );
    }
 }
 
@@ -268,10 +256,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_GETCONTENTSMARGINS )
    qreal qrBottom = 0;
 
    if( p )
-      ( p )->getContentsMargins( &qrLeft, &qrTop, &qrRight, &qrBottom );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_GETCONTENTSMARGINS FP=( p )->getContentsMargins( &qrLeft, &qrTop, &qrRight, &qrBottom ); p is NULL" ) );
+      ( p )->getContentsMargins( &qrLeft, &qrTop, &qrRight, &qrBottom );
    }
 
    hb_stornd( qrLeft, 2 );
@@ -292,10 +278,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_GETWINDOWFRAMEMARGINS )
    qreal qrBottom = 0;
 
    if( p )
-      ( p )->getWindowFrameMargins( &qrLeft, &qrTop, &qrRight, &qrBottom );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_GETWINDOWFRAMEMARGINS FP=( p )->getWindowFrameMargins( &qrLeft, &qrTop, &qrRight, &qrBottom ); p is NULL" ) );
+      ( p )->getWindowFrameMargins( &qrLeft, &qrTop, &qrRight, &qrBottom );
    }
 
    hb_stornd( qrLeft, 2 );
@@ -311,10 +295,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_GRABSHORTCUT )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      hb_retni( ( p )->grabShortcut( *hbqt_par_QKeySequence( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::ShortcutContext ) hb_parni( 3 ) : ( Qt::ShortcutContext ) Qt::WindowShortcut ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_GRABSHORTCUT FP=hb_retni( ( p )->grabShortcut( *hbqt_par_QKeySequence( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::ShortcutContext ) hb_parni( 3 ) : ( Qt::ShortcutContext ) Qt::WindowShortcut ) ) ); p is NULL" ) );
+      hb_retni( ( p )->grabShortcut( *hbqt_par_QKeySequence( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::ShortcutContext ) hb_parni( 3 ) : ( Qt::ShortcutContext ) Qt::WindowShortcut ) ) );
    }
 }
 
@@ -325,10 +307,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_INSERTACTION )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      ( p )->insertAction( hbqt_par_QAction( 2 ), hbqt_par_QAction( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_INSERTACTION FP=( p )->insertAction( hbqt_par_QAction( 2 ), hbqt_par_QAction( 3 ) ); p is NULL" ) );
+      ( p )->insertAction( hbqt_par_QAction( 2 ), hbqt_par_QAction( 3 ) );
    }
 }
 
@@ -339,10 +319,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_ISACTIVEWINDOW )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      hb_retl( ( p )->isActiveWindow() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_ISACTIVEWINDOW FP=hb_retl( ( p )->isActiveWindow() ); p is NULL" ) );
+      hb_retl( ( p )->isActiveWindow() );
    }
 }
 
@@ -353,10 +331,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_LAYOUT )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QGraphicsLayout( ( p )->layout(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_LAYOUT FP=hb_retptrGC( hbqt_gcAllocate_QGraphicsLayout( ( p )->layout(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QGraphicsLayout( ( p )->layout(), false ) );
    }
 }
 
@@ -367,10 +343,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_LAYOUTDIRECTION )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      hb_retni( ( Qt::LayoutDirection ) ( p )->layoutDirection() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_LAYOUTDIRECTION FP=hb_retni( ( Qt::LayoutDirection ) ( p )->layoutDirection() ); p is NULL" ) );
+      hb_retni( ( Qt::LayoutDirection ) ( p )->layoutDirection() );
    }
 }
 
@@ -381,10 +355,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_PALETTE )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPalette( new QPalette( ( p )->palette() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_PALETTE FP=hb_retptrGC( hbqt_gcAllocate_QPalette( new QPalette( ( p )->palette() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPalette( new QPalette( ( p )->palette() ), true ) );
    }
 }
 
@@ -395,10 +367,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_RECT )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->rect() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_RECT FP=hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->rect() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->rect() ), true ) );
    }
 }
 
@@ -409,10 +379,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_RELEASESHORTCUT )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      ( p )->releaseShortcut( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_RELEASESHORTCUT FP=( p )->releaseShortcut( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->releaseShortcut( hb_parni( 2 ) );
    }
 }
 
@@ -423,10 +391,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_REMOVEACTION )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      ( p )->removeAction( hbqt_par_QAction( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_REMOVEACTION FP=( p )->removeAction( hbqt_par_QAction( 2 ) ); p is NULL" ) );
+      ( p )->removeAction( hbqt_par_QAction( 2 ) );
    }
 }
 
@@ -437,10 +403,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_RESIZE )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      ( p )->resize( *hbqt_par_QSizeF( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_RESIZE FP=( p )->resize( *hbqt_par_QSizeF( 2 ) ); p is NULL" ) );
+      ( p )->resize( *hbqt_par_QSizeF( 2 ) );
    }
 }
 
@@ -451,10 +415,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_RESIZE_1 )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      ( p )->resize( hb_parnd( 2 ), hb_parnd( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_RESIZE_1 FP=( p )->resize( hb_parnd( 2 ), hb_parnd( 3 ) ); p is NULL" ) );
+      ( p )->resize( hb_parnd( 2 ), hb_parnd( 3 ) );
    }
 }
 
@@ -465,10 +427,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_SETATTRIBUTE )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      ( p )->setAttribute( ( Qt::WidgetAttribute ) hb_parni( 2 ), hb_parl( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_SETATTRIBUTE FP=( p )->setAttribute( ( Qt::WidgetAttribute ) hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+      ( p )->setAttribute( ( Qt::WidgetAttribute ) hb_parni( 2 ), hb_parl( 3 ) );
    }
 }
 
@@ -479,10 +439,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_SETCONTENTSMARGINS )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      ( p )->setContentsMargins( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_SETCONTENTSMARGINS FP=( p )->setContentsMargins( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) ); p is NULL" ) );
+      ( p )->setContentsMargins( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
    }
 }
 
@@ -493,10 +451,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_SETFOCUSPOLICY )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      ( p )->setFocusPolicy( ( Qt::FocusPolicy ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_SETFOCUSPOLICY FP=( p )->setFocusPolicy( ( Qt::FocusPolicy ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setFocusPolicy( ( Qt::FocusPolicy ) hb_parni( 2 ) );
    }
 }
 
@@ -507,10 +463,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_SETFONT )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      ( p )->setFont( *hbqt_par_QFont( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_SETFONT FP=( p )->setFont( *hbqt_par_QFont( 2 ) ); p is NULL" ) );
+      ( p )->setFont( *hbqt_par_QFont( 2 ) );
    }
 }
 
@@ -521,10 +475,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_SETGEOMETRY )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      ( p )->setGeometry( *hbqt_par_QRectF( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_SETGEOMETRY FP=( p )->setGeometry( *hbqt_par_QRectF( 2 ) ); p is NULL" ) );
+      ( p )->setGeometry( *hbqt_par_QRectF( 2 ) );
    }
 }
 
@@ -535,10 +487,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_SETGEOMETRY_1 )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      ( p )->setGeometry( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_SETGEOMETRY_1 FP=( p )->setGeometry( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) ); p is NULL" ) );
+      ( p )->setGeometry( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
    }
 }
 
@@ -549,10 +499,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_SETLAYOUT )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      ( p )->setLayout( hbqt_par_QGraphicsLayout( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_SETLAYOUT FP=( p )->setLayout( hbqt_par_QGraphicsLayout( 2 ) ); p is NULL" ) );
+      ( p )->setLayout( hbqt_par_QGraphicsLayout( 2 ) );
    }
 }
 
@@ -563,10 +511,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_SETLAYOUTDIRECTION )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      ( p )->setLayoutDirection( ( Qt::LayoutDirection ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_SETLAYOUTDIRECTION FP=( p )->setLayoutDirection( ( Qt::LayoutDirection ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setLayoutDirection( ( Qt::LayoutDirection ) hb_parni( 2 ) );
    }
 }
 
@@ -577,10 +523,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_SETPALETTE )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      ( p )->setPalette( *hbqt_par_QPalette( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_SETPALETTE FP=( p )->setPalette( *hbqt_par_QPalette( 2 ) ); p is NULL" ) );
+      ( p )->setPalette( *hbqt_par_QPalette( 2 ) );
    }
 }
 
@@ -591,10 +535,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_SETSHORTCUTAUTOREPEAT )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      ( p )->setShortcutAutoRepeat( hb_parni( 2 ), hb_parl( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_SETSHORTCUTAUTOREPEAT FP=( p )->setShortcutAutoRepeat( hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+      ( p )->setShortcutAutoRepeat( hb_parni( 2 ), hb_parl( 3 ) );
    }
 }
 
@@ -605,10 +547,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_SETSHORTCUTENABLED )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      ( p )->setShortcutEnabled( hb_parni( 2 ), hb_parl( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_SETSHORTCUTENABLED FP=( p )->setShortcutEnabled( hb_parni( 2 ), hb_parl( 3 ) ); p is NULL" ) );
+      ( p )->setShortcutEnabled( hb_parni( 2 ), hb_parl( 3 ) );
    }
 }
 
@@ -619,10 +559,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_SETSTYLE )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      ( p )->setStyle( hbqt_par_QStyle( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_SETSTYLE FP=( p )->setStyle( hbqt_par_QStyle( 2 ) ); p is NULL" ) );
+      ( p )->setStyle( hbqt_par_QStyle( 2 ) );
    }
 }
 
@@ -633,10 +571,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_SETWINDOWFLAGS )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      ( p )->setWindowFlags( ( Qt::WindowFlags ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_SETWINDOWFLAGS FP=( p )->setWindowFlags( ( Qt::WindowFlags ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setWindowFlags( ( Qt::WindowFlags ) hb_parni( 2 ) );
    }
 }
 
@@ -647,10 +583,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_SETWINDOWFRAMEMARGINS )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      ( p )->setWindowFrameMargins( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_SETWINDOWFRAMEMARGINS FP=( p )->setWindowFrameMargins( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) ); p is NULL" ) );
+      ( p )->setWindowFrameMargins( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
    }
 }
 
@@ -661,10 +595,10 @@ HB_FUNC( QT_QGRAPHICSWIDGET_SETWINDOWTITLE )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      ( p )->setWindowTitle( QGraphicsWidget::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_SETWINDOWTITLE FP=( p )->setWindowTitle( QGraphicsWidget::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setWindowTitle( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -675,10 +609,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_SIZE )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( ( p )->size() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_SIZE FP=hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( ( p )->size() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( ( p )->size() ), true ) );
    }
 }
 
@@ -689,10 +621,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_STYLE )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStyle( ( p )->style(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_STYLE FP=hb_retptrGC( hbqt_gcAllocate_QStyle( ( p )->style(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QStyle( ( p )->style(), false ) );
    }
 }
 
@@ -703,10 +633,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_TESTATTRIBUTE )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      hb_retl( ( p )->testAttribute( ( Qt::WidgetAttribute ) hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_TESTATTRIBUTE FP=hb_retl( ( p )->testAttribute( ( Qt::WidgetAttribute ) hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->testAttribute( ( Qt::WidgetAttribute ) hb_parni( 2 ) ) );
    }
 }
 
@@ -717,10 +645,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_UNSETLAYOUTDIRECTION )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      ( p )->unsetLayoutDirection();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_UNSETLAYOUTDIRECTION FP=( p )->unsetLayoutDirection(); p is NULL" ) );
+      ( p )->unsetLayoutDirection();
    }
 }
 
@@ -731,10 +657,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_UNSETWINDOWFRAMEMARGINS )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      ( p )->unsetWindowFrameMargins();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_UNSETWINDOWFRAMEMARGINS FP=( p )->unsetWindowFrameMargins(); p is NULL" ) );
+      ( p )->unsetWindowFrameMargins();
    }
 }
 
@@ -745,10 +669,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_WINDOWFLAGS )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      hb_retni( ( Qt::WindowFlags ) ( p )->windowFlags() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_WINDOWFLAGS FP=hb_retni( ( Qt::WindowFlags ) ( p )->windowFlags() ); p is NULL" ) );
+      hb_retni( ( Qt::WindowFlags ) ( p )->windowFlags() );
    }
 }
 
@@ -759,10 +681,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_WINDOWFRAMEGEOMETRY )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->windowFrameGeometry() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_WINDOWFRAMEGEOMETRY FP=hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->windowFrameGeometry() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->windowFrameGeometry() ), true ) );
    }
 }
 
@@ -773,10 +693,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_WINDOWFRAMERECT )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->windowFrameRect() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_WINDOWFRAMERECT FP=hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->windowFrameRect() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->windowFrameRect() ), true ) );
    }
 }
 
@@ -787,10 +705,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_WINDOWTITLE )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      hb_retc( ( p )->windowTitle().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_WINDOWTITLE FP=hb_retc( ( p )->windowTitle().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->windowTitle().toUtf8().data() );
    }
 }
 
@@ -801,10 +717,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_WINDOWTYPE )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      hb_retni( ( Qt::WindowType ) ( p )->windowType() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_WINDOWTYPE FP=hb_retni( ( Qt::WindowType ) ( p )->windowType() ); p is NULL" ) );
+      hb_retni( ( Qt::WindowType ) ( p )->windowType() );
    }
 }
 
@@ -815,10 +729,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_SETTABORDER )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      ( p )->setTabOrder( hbqt_par_QGraphicsWidget( 2 ), hbqt_par_QGraphicsWidget( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_SETTABORDER FP=( p )->setTabOrder( hbqt_par_QGraphicsWidget( 2 ), hbqt_par_QGraphicsWidget( 3 ) ); p is NULL" ) );
+      ( p )->setTabOrder( hbqt_par_QGraphicsWidget( 2 ), hbqt_par_QGraphicsWidget( 3 ) );
    }
 }
 
@@ -829,10 +741,8 @@ HB_FUNC( QT_QGRAPHICSWIDGET_CLOSE )
 {
    QGraphicsWidget * p = hbqt_par_QGraphicsWidget( 1 );
    if( p )
-      hb_retl( ( p )->close() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QGRAPHICSWIDGET_CLOSE FP=hb_retl( ( p )->close() ); p is NULL" ) );
+      hb_retl( ( p )->close() );
    }
 }
 

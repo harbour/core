@@ -158,10 +158,8 @@ HB_FUNC( QT_QTEXTFRAME_CHILDFRAMES )
 {
    QTextFrame * p = hbqt_par_QTextFrame( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTextFrame *>( ( p )->childFrames() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAME_CHILDFRAMES FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTextFrame *>( ( p )->childFrames() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QTextFrame *>( ( p )->childFrames() ), true ) );
    }
 }
 
@@ -172,10 +170,8 @@ HB_FUNC( QT_QTEXTFRAME_FIRSTCURSORPOSITION )
 {
    QTextFrame * p = hbqt_par_QTextFrame( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( ( p )->firstCursorPosition() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAME_FIRSTCURSORPOSITION FP=hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( ( p )->firstCursorPosition() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( ( p )->firstCursorPosition() ), true ) );
    }
 }
 
@@ -186,10 +182,8 @@ HB_FUNC( QT_QTEXTFRAME_FIRSTPOSITION )
 {
    QTextFrame * p = hbqt_par_QTextFrame( 1 );
    if( p )
-      hb_retni( ( p )->firstPosition() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAME_FIRSTPOSITION FP=hb_retni( ( p )->firstPosition() ); p is NULL" ) );
+      hb_retni( ( p )->firstPosition() );
    }
 }
 
@@ -200,10 +194,8 @@ HB_FUNC( QT_QTEXTFRAME_FRAMEFORMAT )
 {
    QTextFrame * p = hbqt_par_QTextFrame( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTextFrameFormat( new QTextFrameFormat( ( p )->frameFormat() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAME_FRAMEFORMAT FP=hb_retptrGC( hbqt_gcAllocate_QTextFrameFormat( new QTextFrameFormat( ( p )->frameFormat() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTextFrameFormat( new QTextFrameFormat( ( p )->frameFormat() ), true ) );
    }
 }
 
@@ -214,10 +206,8 @@ HB_FUNC( QT_QTEXTFRAME_LASTCURSORPOSITION )
 {
    QTextFrame * p = hbqt_par_QTextFrame( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( ( p )->lastCursorPosition() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAME_LASTCURSORPOSITION FP=hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( ( p )->lastCursorPosition() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( ( p )->lastCursorPosition() ), true ) );
    }
 }
 
@@ -228,10 +218,8 @@ HB_FUNC( QT_QTEXTFRAME_LASTPOSITION )
 {
    QTextFrame * p = hbqt_par_QTextFrame( 1 );
    if( p )
-      hb_retni( ( p )->lastPosition() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAME_LASTPOSITION FP=hb_retni( ( p )->lastPosition() ); p is NULL" ) );
+      hb_retni( ( p )->lastPosition() );
    }
 }
 
@@ -242,10 +230,8 @@ HB_FUNC( QT_QTEXTFRAME_PARENTFRAME )
 {
    QTextFrame * p = hbqt_par_QTextFrame( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTextFrame( ( p )->parentFrame(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAME_PARENTFRAME FP=hb_retptrGC( hbqt_gcAllocate_QTextFrame( ( p )->parentFrame(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTextFrame( ( p )->parentFrame(), false ) );
    }
 }
 
@@ -256,10 +242,8 @@ HB_FUNC( QT_QTEXTFRAME_SETFRAMEFORMAT )
 {
    QTextFrame * p = hbqt_par_QTextFrame( 1 );
    if( p )
-      ( p )->setFrameFormat( *hbqt_par_QTextFrameFormat( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAME_SETFRAMEFORMAT FP=( p )->setFrameFormat( *hbqt_par_QTextFrameFormat( 2 ) ); p is NULL" ) );
+      ( p )->setFrameFormat( *hbqt_par_QTextFrameFormat( 2 ) );
    }
 }
 

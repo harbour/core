@@ -158,10 +158,8 @@ HB_FUNC( QT_QCOMMANDLINKBUTTON_DESCRIPTION )
 {
    QCommandLinkButton * p = hbqt_par_QCommandLinkButton( 1 );
    if( p )
-      hb_retc( ( p )->description().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMMANDLINKBUTTON_DESCRIPTION FP=hb_retc( ( p )->description().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->description().toUtf8().data() );
    }
 }
 
@@ -172,10 +170,10 @@ HB_FUNC( QT_QCOMMANDLINKBUTTON_SETDESCRIPTION )
 {
    QCommandLinkButton * p = hbqt_par_QCommandLinkButton( 1 );
    if( p )
-      ( p )->setDescription( QCommandLinkButton::tr( hb_parc( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QCOMMANDLINKBUTTON_SETDESCRIPTION FP=( p )->setDescription( QCommandLinkButton::tr( hb_parc( 2 ) ) ); p is NULL" ) );
+      void * pText;
+      ( p )->setDescription( hb_parstr_utf8( 2, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 

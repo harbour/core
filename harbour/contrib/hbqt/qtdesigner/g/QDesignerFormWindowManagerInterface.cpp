@@ -130,10 +130,8 @@ HB_FUNC( QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONADJUSTSIZE )
 {
    QDesignerFormWindowManagerInterface * p = hbqt_par_QDesignerFormWindowManagerInterface( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionAdjustSize(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONADJUSTSIZE FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionAdjustSize(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionAdjustSize(), false ) );
    }
 }
 
@@ -144,10 +142,8 @@ HB_FUNC( QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONBREAKLAYOUT )
 {
    QDesignerFormWindowManagerInterface * p = hbqt_par_QDesignerFormWindowManagerInterface( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionBreakLayout(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONBREAKLAYOUT FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionBreakLayout(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionBreakLayout(), false ) );
    }
 }
 
@@ -158,10 +154,8 @@ HB_FUNC( QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONCOPY )
 {
    QDesignerFormWindowManagerInterface * p = hbqt_par_QDesignerFormWindowManagerInterface( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionCopy(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONCOPY FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionCopy(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionCopy(), false ) );
    }
 }
 
@@ -172,10 +166,8 @@ HB_FUNC( QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONCUT )
 {
    QDesignerFormWindowManagerInterface * p = hbqt_par_QDesignerFormWindowManagerInterface( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionCut(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONCUT FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionCut(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionCut(), false ) );
    }
 }
 
@@ -186,10 +178,8 @@ HB_FUNC( QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONDELETE )
 {
    QDesignerFormWindowManagerInterface * p = hbqt_par_QDesignerFormWindowManagerInterface( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionDelete(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONDELETE FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionDelete(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionDelete(), false ) );
    }
 }
 
@@ -200,10 +190,8 @@ HB_FUNC( QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONFORMLAYOUT )
 {
    QDesignerFormWindowManagerInterface * p = hbqt_par_QDesignerFormWindowManagerInterface( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionFormLayout(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONFORMLAYOUT FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionFormLayout(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionFormLayout(), false ) );
    }
 }
 
@@ -214,10 +202,8 @@ HB_FUNC( QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONGRIDLAYOUT )
 {
    QDesignerFormWindowManagerInterface * p = hbqt_par_QDesignerFormWindowManagerInterface( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionGridLayout(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONGRIDLAYOUT FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionGridLayout(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionGridLayout(), false ) );
    }
 }
 
@@ -228,10 +214,8 @@ HB_FUNC( QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONHORIZONTALLAYOUT )
 {
    QDesignerFormWindowManagerInterface * p = hbqt_par_QDesignerFormWindowManagerInterface( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionHorizontalLayout(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONHORIZONTALLAYOUT FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionHorizontalLayout(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionHorizontalLayout(), false ) );
    }
 }
 
@@ -242,10 +226,8 @@ HB_FUNC( QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONLOWER )
 {
    QDesignerFormWindowManagerInterface * p = hbqt_par_QDesignerFormWindowManagerInterface( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionLower(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONLOWER FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionLower(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionLower(), false ) );
    }
 }
 
@@ -256,10 +238,8 @@ HB_FUNC( QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONPASTE )
 {
    QDesignerFormWindowManagerInterface * p = hbqt_par_QDesignerFormWindowManagerInterface( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionPaste(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONPASTE FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionPaste(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionPaste(), false ) );
    }
 }
 
@@ -270,10 +250,8 @@ HB_FUNC( QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONRAISE )
 {
    QDesignerFormWindowManagerInterface * p = hbqt_par_QDesignerFormWindowManagerInterface( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionRaise(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONRAISE FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionRaise(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionRaise(), false ) );
    }
 }
 
@@ -284,10 +262,8 @@ HB_FUNC( QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONREDO )
 {
    QDesignerFormWindowManagerInterface * p = hbqt_par_QDesignerFormWindowManagerInterface( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionRedo(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONREDO FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionRedo(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionRedo(), false ) );
    }
 }
 
@@ -298,10 +274,8 @@ HB_FUNC( QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONSELECTALL )
 {
    QDesignerFormWindowManagerInterface * p = hbqt_par_QDesignerFormWindowManagerInterface( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionSelectAll(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONSELECTALL FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionSelectAll(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionSelectAll(), false ) );
    }
 }
 
@@ -312,10 +286,8 @@ HB_FUNC( QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONSIMPLIFYLAYOUT )
 {
    QDesignerFormWindowManagerInterface * p = hbqt_par_QDesignerFormWindowManagerInterface( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionSimplifyLayout(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONSIMPLIFYLAYOUT FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionSimplifyLayout(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionSimplifyLayout(), false ) );
    }
 }
 
@@ -326,10 +298,8 @@ HB_FUNC( QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONSPLITHORIZONTAL )
 {
    QDesignerFormWindowManagerInterface * p = hbqt_par_QDesignerFormWindowManagerInterface( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionSplitHorizontal(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONSPLITHORIZONTAL FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionSplitHorizontal(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionSplitHorizontal(), false ) );
    }
 }
 
@@ -340,10 +310,8 @@ HB_FUNC( QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONSPLITVERTICAL )
 {
    QDesignerFormWindowManagerInterface * p = hbqt_par_QDesignerFormWindowManagerInterface( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionSplitVertical(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONSPLITVERTICAL FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionSplitVertical(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionSplitVertical(), false ) );
    }
 }
 
@@ -354,10 +322,8 @@ HB_FUNC( QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONUNDO )
 {
    QDesignerFormWindowManagerInterface * p = hbqt_par_QDesignerFormWindowManagerInterface( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionUndo(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONUNDO FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionUndo(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionUndo(), false ) );
    }
 }
 
@@ -368,10 +334,8 @@ HB_FUNC( QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONVERTICALLAYOUT )
 {
    QDesignerFormWindowManagerInterface * p = hbqt_par_QDesignerFormWindowManagerInterface( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionVerticalLayout(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIONVERTICALLAYOUT FP=hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionVerticalLayout(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->actionVerticalLayout(), false ) );
    }
 }
 
@@ -382,10 +346,8 @@ HB_FUNC( QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIVEFORMWINDOW )
 {
    QDesignerFormWindowManagerInterface * p = hbqt_par_QDesignerFormWindowManagerInterface( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDesignerFormWindowInterface( ( p )->activeFormWindow(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ACTIVEFORMWINDOW FP=hb_retptrGC( hbqt_gcAllocate_QDesignerFormWindowInterface( ( p )->activeFormWindow(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDesignerFormWindowInterface( ( p )->activeFormWindow(), false ) );
    }
 }
 
@@ -396,10 +358,8 @@ HB_FUNC( QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_CORE )
 {
    QDesignerFormWindowManagerInterface * p = hbqt_par_QDesignerFormWindowManagerInterface( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDesignerFormEditorInterface( ( p )->core(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_CORE FP=hb_retptrGC( hbqt_gcAllocate_QDesignerFormEditorInterface( ( p )->core(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDesignerFormEditorInterface( ( p )->core(), false ) );
    }
 }
 
@@ -410,10 +370,8 @@ HB_FUNC( QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_CREATEFORMWINDOW )
 {
    QDesignerFormWindowManagerInterface * p = hbqt_par_QDesignerFormWindowManagerInterface( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDesignerFormWindowInterface( ( p )->createFormWindow( hbqt_par_QWidget( 2 ), ( Qt::WindowFlags ) hb_parni( 3 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_CREATEFORMWINDOW FP=hb_retptrGC( hbqt_gcAllocate_QDesignerFormWindowInterface( ( p )->createFormWindow( hbqt_par_QWidget( 2 ), ( Qt::WindowFlags ) hb_parni( 3 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDesignerFormWindowInterface( ( p )->createFormWindow( hbqt_par_QWidget( 2 ), ( Qt::WindowFlags ) hb_parni( 3 ) ), false ) );
    }
 }
 
@@ -424,10 +382,8 @@ HB_FUNC( QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_FORMWINDOW )
 {
    QDesignerFormWindowManagerInterface * p = hbqt_par_QDesignerFormWindowManagerInterface( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QDesignerFormWindowInterface( ( p )->formWindow( hb_parni( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_FORMWINDOW FP=hb_retptrGC( hbqt_gcAllocate_QDesignerFormWindowInterface( ( p )->formWindow( hb_parni( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QDesignerFormWindowInterface( ( p )->formWindow( hb_parni( 2 ) ), false ) );
    }
 }
 
@@ -438,10 +394,8 @@ HB_FUNC( QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_FORMWINDOWCOUNT )
 {
    QDesignerFormWindowManagerInterface * p = hbqt_par_QDesignerFormWindowManagerInterface( 1 );
    if( p )
-      hb_retni( ( p )->formWindowCount() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_FORMWINDOWCOUNT FP=hb_retni( ( p )->formWindowCount() ); p is NULL" ) );
+      hb_retni( ( p )->formWindowCount() );
    }
 }
 
@@ -452,10 +406,8 @@ HB_FUNC( QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ADDFORMWINDOW )
 {
    QDesignerFormWindowManagerInterface * p = hbqt_par_QDesignerFormWindowManagerInterface( 1 );
    if( p )
-      ( p )->addFormWindow( hbqt_par_QDesignerFormWindowInterface( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_ADDFORMWINDOW FP=( p )->addFormWindow( hbqt_par_QDesignerFormWindowInterface( 2 ) ); p is NULL" ) );
+      ( p )->addFormWindow( hbqt_par_QDesignerFormWindowInterface( 2 ) );
    }
 }
 
@@ -466,10 +418,8 @@ HB_FUNC( QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_REMOVEFORMWINDOW )
 {
    QDesignerFormWindowManagerInterface * p = hbqt_par_QDesignerFormWindowManagerInterface( 1 );
    if( p )
-      ( p )->removeFormWindow( hbqt_par_QDesignerFormWindowInterface( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_REMOVEFORMWINDOW FP=( p )->removeFormWindow( hbqt_par_QDesignerFormWindowInterface( 2 ) ); p is NULL" ) );
+      ( p )->removeFormWindow( hbqt_par_QDesignerFormWindowInterface( 2 ) );
    }
 }
 
@@ -480,10 +430,8 @@ HB_FUNC( QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_SETACTIVEFORMWINDOW )
 {
    QDesignerFormWindowManagerInterface * p = hbqt_par_QDesignerFormWindowManagerInterface( 1 );
    if( p )
-      ( p )->setActiveFormWindow( hbqt_par_QDesignerFormWindowInterface( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QDESIGNERFORMWINDOWMANAGERINTERFACE_SETACTIVEFORMWINDOW FP=( p )->setActiveFormWindow( hbqt_par_QDesignerFormWindowInterface( 2 ) ); p is NULL" ) );
+      ( p )->setActiveFormWindow( hbqt_par_QDesignerFormWindowInterface( 2 ) );
    }
 }
 

@@ -129,10 +129,8 @@ HB_FUNC( QT_QABSTRACTGRAPHICSSHAPEITEM_BRUSH )
 {
    QAbstractGraphicsShapeItem * p = hbqt_par_QAbstractGraphicsShapeItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->brush() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTGRAPHICSSHAPEITEM_BRUSH FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->brush() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->brush() ), true ) );
    }
 }
 
@@ -143,10 +141,8 @@ HB_FUNC( QT_QABSTRACTGRAPHICSSHAPEITEM_PEN )
 {
    QAbstractGraphicsShapeItem * p = hbqt_par_QAbstractGraphicsShapeItem( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPen( new QPen( ( p )->pen() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTGRAPHICSSHAPEITEM_PEN FP=hb_retptrGC( hbqt_gcAllocate_QPen( new QPen( ( p )->pen() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPen( new QPen( ( p )->pen() ), true ) );
    }
 }
 
@@ -157,10 +153,8 @@ HB_FUNC( QT_QABSTRACTGRAPHICSSHAPEITEM_SETBRUSH )
 {
    QAbstractGraphicsShapeItem * p = hbqt_par_QAbstractGraphicsShapeItem( 1 );
    if( p )
-      ( p )->setBrush( *hbqt_par_QBrush( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTGRAPHICSSHAPEITEM_SETBRUSH FP=( p )->setBrush( *hbqt_par_QBrush( 2 ) ); p is NULL" ) );
+      ( p )->setBrush( *hbqt_par_QBrush( 2 ) );
    }
 }
 
@@ -171,10 +165,8 @@ HB_FUNC( QT_QABSTRACTGRAPHICSSHAPEITEM_SETPEN )
 {
    QAbstractGraphicsShapeItem * p = hbqt_par_QAbstractGraphicsShapeItem( 1 );
    if( p )
-      ( p )->setPen( *hbqt_par_QPen( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QABSTRACTGRAPHICSSHAPEITEM_SETPEN FP=( p )->setPen( *hbqt_par_QPen( 2 ) ); p is NULL" ) );
+      ( p )->setPen( *hbqt_par_QPen( 2 ) );
    }
 }
 

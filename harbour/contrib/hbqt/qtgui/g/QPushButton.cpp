@@ -159,10 +159,8 @@ HB_FUNC( QT_QPUSHBUTTON_AUTODEFAULT )
 {
    QPushButton * p = hbqt_par_QPushButton( 1 );
    if( p )
-      hb_retl( ( p )->autoDefault() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPUSHBUTTON_AUTODEFAULT FP=hb_retl( ( p )->autoDefault() ); p is NULL" ) );
+      hb_retl( ( p )->autoDefault() );
    }
 }
 
@@ -173,10 +171,8 @@ HB_FUNC( QT_QPUSHBUTTON_ISDEFAULT )
 {
    QPushButton * p = hbqt_par_QPushButton( 1 );
    if( p )
-      hb_retl( ( p )->isDefault() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPUSHBUTTON_ISDEFAULT FP=hb_retl( ( p )->isDefault() ); p is NULL" ) );
+      hb_retl( ( p )->isDefault() );
    }
 }
 
@@ -187,10 +183,8 @@ HB_FUNC( QT_QPUSHBUTTON_ISFLAT )
 {
    QPushButton * p = hbqt_par_QPushButton( 1 );
    if( p )
-      hb_retl( ( p )->isFlat() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPUSHBUTTON_ISFLAT FP=hb_retl( ( p )->isFlat() ); p is NULL" ) );
+      hb_retl( ( p )->isFlat() );
    }
 }
 
@@ -201,10 +195,8 @@ HB_FUNC( QT_QPUSHBUTTON_MENU )
 {
    QPushButton * p = hbqt_par_QPushButton( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QMenu( ( p )->menu(), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPUSHBUTTON_MENU FP=hb_retptrGC( hbqt_gcAllocate_QMenu( ( p )->menu(), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QMenu( ( p )->menu(), false ) );
    }
 }
 
@@ -215,10 +207,8 @@ HB_FUNC( QT_QPUSHBUTTON_SETAUTODEFAULT )
 {
    QPushButton * p = hbqt_par_QPushButton( 1 );
    if( p )
-      ( p )->setAutoDefault( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPUSHBUTTON_SETAUTODEFAULT FP=( p )->setAutoDefault( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setAutoDefault( hb_parl( 2 ) );
    }
 }
 
@@ -229,10 +219,8 @@ HB_FUNC( QT_QPUSHBUTTON_SETDEFAULT )
 {
    QPushButton * p = hbqt_par_QPushButton( 1 );
    if( p )
-      ( p )->setDefault( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPUSHBUTTON_SETDEFAULT FP=( p )->setDefault( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setDefault( hb_parl( 2 ) );
    }
 }
 
@@ -243,10 +231,8 @@ HB_FUNC( QT_QPUSHBUTTON_SETFLAT )
 {
    QPushButton * p = hbqt_par_QPushButton( 1 );
    if( p )
-      ( p )->setFlat( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPUSHBUTTON_SETFLAT FP=( p )->setFlat( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setFlat( hb_parl( 2 ) );
    }
 }
 
@@ -257,10 +243,8 @@ HB_FUNC( QT_QPUSHBUTTON_SETMENU )
 {
    QPushButton * p = hbqt_par_QPushButton( 1 );
    if( p )
-      ( p )->setMenu( hbqt_par_QMenu( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPUSHBUTTON_SETMENU FP=( p )->setMenu( hbqt_par_QMenu( 2 ) ); p is NULL" ) );
+      ( p )->setMenu( hbqt_par_QMenu( 2 ) );
    }
 }
 
@@ -271,10 +255,8 @@ HB_FUNC( QT_QPUSHBUTTON_SHOWMENU )
 {
    QPushButton * p = hbqt_par_QPushButton( 1 );
    if( p )
-      ( p )->showMenu();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPUSHBUTTON_SHOWMENU FP=( p )->showMenu(); p is NULL" ) );
+      ( p )->showMenu();
    }
 }
 

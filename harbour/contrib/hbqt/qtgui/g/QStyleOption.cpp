@@ -153,10 +153,8 @@ HB_FUNC( QT_QSTYLEOPTION_INITFROM )
 {
    QStyleOption * p = hbqt_par_QStyleOption( 1 );
    if( p )
-      ( p )->initFrom( hbqt_par_QWidget( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSTYLEOPTION_INITFROM FP=( p )->initFrom( hbqt_par_QWidget( 2 ) ); p is NULL" ) );
+      ( p )->initFrom( hbqt_par_QWidget( 2 ) );
    }
 }
 

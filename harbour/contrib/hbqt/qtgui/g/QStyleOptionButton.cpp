@@ -175,7 +175,7 @@ HB_FUNC( QT_QSTYLEOPTIONBUTTON_ICONSIZE )
  */
 HB_FUNC( QT_QSTYLEOPTIONBUTTON_TEXT )
 {
-   hb_retc( hbqt_par_QStyleOptionButton( 1 )->text.toLatin1().data() );
+   hb_retstr_utf8( hbqt_par_QStyleOptionButton( 1 )->text.toUtf8().data() );
 }
 
 

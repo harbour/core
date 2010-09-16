@@ -127,10 +127,8 @@ HB_FUNC( QT_QITEMEDITORCREATORBASE_CREATEWIDGET )
 {
    QItemEditorCreatorBase * p = hbqt_par_QItemEditorCreatorBase( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->createWidget( hbqt_par_QWidget( 2 ) ), false ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QITEMEDITORCREATORBASE_CREATEWIDGET FP=hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->createWidget( hbqt_par_QWidget( 2 ) ), false ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->createWidget( hbqt_par_QWidget( 2 ) ), false ) );
    }
 }
 
@@ -141,10 +139,8 @@ HB_FUNC( QT_QITEMEDITORCREATORBASE_VALUEPROPERTYNAME )
 {
    QItemEditorCreatorBase * p = hbqt_par_QItemEditorCreatorBase( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->valuePropertyName() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QITEMEDITORCREATORBASE_VALUEPROPERTYNAME FP=hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->valuePropertyName() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->valuePropertyName() ), true ) );
    }
 }
 

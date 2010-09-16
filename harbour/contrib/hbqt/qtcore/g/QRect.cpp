@@ -163,10 +163,8 @@ HB_FUNC( QT_QRECT_ADJUST )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->adjust( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_ADJUST FP=( p )->adjust( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ); p is NULL" ) );
+      ( p )->adjust( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
    }
 }
 
@@ -177,10 +175,8 @@ HB_FUNC( QT_QRECT_ADJUSTED )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->adjusted( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_ADJUSTED FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->adjusted( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->adjusted( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ) ), true ) );
    }
 }
 
@@ -191,10 +187,8 @@ HB_FUNC( QT_QRECT_BOTTOM )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retni( ( p )->bottom() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_BOTTOM FP=hb_retni( ( p )->bottom() ); p is NULL" ) );
+      hb_retni( ( p )->bottom() );
    }
 }
 
@@ -205,10 +199,8 @@ HB_FUNC( QT_QRECT_BOTTOMLEFT )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->bottomLeft() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_BOTTOMLEFT FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->bottomLeft() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->bottomLeft() ), true ) );
    }
 }
 
@@ -219,10 +211,8 @@ HB_FUNC( QT_QRECT_BOTTOMRIGHT )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->bottomRight() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_BOTTOMRIGHT FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->bottomRight() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->bottomRight() ), true ) );
    }
 }
 
@@ -233,10 +223,8 @@ HB_FUNC( QT_QRECT_CENTER )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->center() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_CENTER FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->center() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->center() ), true ) );
    }
 }
 
@@ -247,10 +235,8 @@ HB_FUNC( QT_QRECT_CONTAINS )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retl( ( p )->contains( *hbqt_par_QPoint( 2 ), hb_parl( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_CONTAINS FP=hb_retl( ( p )->contains( *hbqt_par_QPoint( 2 ), hb_parl( 3 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->contains( *hbqt_par_QPoint( 2 ), hb_parl( 3 ) ) );
    }
 }
 
@@ -261,10 +247,8 @@ HB_FUNC( QT_QRECT_CONTAINS_1 )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retl( ( p )->contains( hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_CONTAINS_1 FP=hb_retl( ( p )->contains( hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->contains( hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ) ) );
    }
 }
 
@@ -275,10 +259,8 @@ HB_FUNC( QT_QRECT_CONTAINS_2 )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retl( ( p )->contains( hb_parni( 2 ), hb_parni( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_CONTAINS_2 FP=hb_retl( ( p )->contains( hb_parni( 2 ), hb_parni( 3 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->contains( hb_parni( 2 ), hb_parni( 3 ) ) );
    }
 }
 
@@ -289,10 +271,8 @@ HB_FUNC( QT_QRECT_CONTAINS_3 )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retl( ( p )->contains( *hbqt_par_QRect( 2 ), hb_parl( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_CONTAINS_3 FP=hb_retl( ( p )->contains( *hbqt_par_QRect( 2 ), hb_parl( 3 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->contains( *hbqt_par_QRect( 2 ), hb_parl( 3 ) ) );
    }
 }
 
@@ -308,10 +288,8 @@ HB_FUNC( QT_QRECT_GETCOORDS )
    int iY2 = 0;
 
    if( p )
-      ( p )->getCoords( &iX1, &iY1, &iX2, &iY2 );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_GETCOORDS FP=( p )->getCoords( &iX1, &iY1, &iX2, &iY2 ); p is NULL" ) );
+      ( p )->getCoords( &iX1, &iY1, &iX2, &iY2 );
    }
 
    hb_storni( iX1, 2 );
@@ -332,10 +310,8 @@ HB_FUNC( QT_QRECT_GETRECT )
    int iHeight = 0;
 
    if( p )
-      ( p )->getRect( &iX, &iY, &iWidth, &iHeight );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_GETRECT FP=( p )->getRect( &iX, &iY, &iWidth, &iHeight ); p is NULL" ) );
+      ( p )->getRect( &iX, &iY, &iWidth, &iHeight );
    }
 
    hb_storni( iX, 2 );
@@ -351,10 +327,8 @@ HB_FUNC( QT_QRECT_HEIGHT )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retni( ( p )->height() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_HEIGHT FP=hb_retni( ( p )->height() ); p is NULL" ) );
+      hb_retni( ( p )->height() );
    }
 }
 
@@ -365,10 +339,8 @@ HB_FUNC( QT_QRECT_INTERSECTED )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->intersected( *hbqt_par_QRect( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_INTERSECTED FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->intersected( *hbqt_par_QRect( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->intersected( *hbqt_par_QRect( 2 ) ) ), true ) );
    }
 }
 
@@ -379,10 +351,8 @@ HB_FUNC( QT_QRECT_INTERSECTS )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retl( ( p )->intersects( *hbqt_par_QRect( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_INTERSECTS FP=hb_retl( ( p )->intersects( *hbqt_par_QRect( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->intersects( *hbqt_par_QRect( 2 ) ) );
    }
 }
 
@@ -393,10 +363,8 @@ HB_FUNC( QT_QRECT_ISEMPTY )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retl( ( p )->isEmpty() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_ISEMPTY FP=hb_retl( ( p )->isEmpty() ); p is NULL" ) );
+      hb_retl( ( p )->isEmpty() );
    }
 }
 
@@ -407,10 +375,8 @@ HB_FUNC( QT_QRECT_ISNULL )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retl( ( p )->isNull() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_ISNULL FP=hb_retl( ( p )->isNull() ); p is NULL" ) );
+      hb_retl( ( p )->isNull() );
    }
 }
 
@@ -421,10 +387,8 @@ HB_FUNC( QT_QRECT_ISVALID )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retl( ( p )->isValid() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_ISVALID FP=hb_retl( ( p )->isValid() ); p is NULL" ) );
+      hb_retl( ( p )->isValid() );
    }
 }
 
@@ -435,10 +399,8 @@ HB_FUNC( QT_QRECT_LEFT )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retni( ( p )->left() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_LEFT FP=hb_retni( ( p )->left() ); p is NULL" ) );
+      hb_retni( ( p )->left() );
    }
 }
 
@@ -449,10 +411,8 @@ HB_FUNC( QT_QRECT_MOVEBOTTOM )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->moveBottom( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_MOVEBOTTOM FP=( p )->moveBottom( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->moveBottom( hb_parni( 2 ) );
    }
 }
 
@@ -463,10 +423,8 @@ HB_FUNC( QT_QRECT_MOVEBOTTOMLEFT )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->moveBottomLeft( *hbqt_par_QPoint( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_MOVEBOTTOMLEFT FP=( p )->moveBottomLeft( *hbqt_par_QPoint( 2 ) ); p is NULL" ) );
+      ( p )->moveBottomLeft( *hbqt_par_QPoint( 2 ) );
    }
 }
 
@@ -477,10 +435,8 @@ HB_FUNC( QT_QRECT_MOVEBOTTOMRIGHT )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->moveBottomRight( *hbqt_par_QPoint( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_MOVEBOTTOMRIGHT FP=( p )->moveBottomRight( *hbqt_par_QPoint( 2 ) ); p is NULL" ) );
+      ( p )->moveBottomRight( *hbqt_par_QPoint( 2 ) );
    }
 }
 
@@ -491,10 +447,8 @@ HB_FUNC( QT_QRECT_MOVECENTER )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->moveCenter( *hbqt_par_QPoint( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_MOVECENTER FP=( p )->moveCenter( *hbqt_par_QPoint( 2 ) ); p is NULL" ) );
+      ( p )->moveCenter( *hbqt_par_QPoint( 2 ) );
    }
 }
 
@@ -505,10 +459,8 @@ HB_FUNC( QT_QRECT_MOVELEFT )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->moveLeft( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_MOVELEFT FP=( p )->moveLeft( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->moveLeft( hb_parni( 2 ) );
    }
 }
 
@@ -519,10 +471,8 @@ HB_FUNC( QT_QRECT_MOVERIGHT )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->moveRight( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_MOVERIGHT FP=( p )->moveRight( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->moveRight( hb_parni( 2 ) );
    }
 }
 
@@ -533,10 +483,8 @@ HB_FUNC( QT_QRECT_MOVETO )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->moveTo( hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_MOVETO FP=( p )->moveTo( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->moveTo( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -547,10 +495,8 @@ HB_FUNC( QT_QRECT_MOVETO_1 )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->moveTo( *hbqt_par_QPoint( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_MOVETO_1 FP=( p )->moveTo( *hbqt_par_QPoint( 2 ) ); p is NULL" ) );
+      ( p )->moveTo( *hbqt_par_QPoint( 2 ) );
    }
 }
 
@@ -561,10 +507,8 @@ HB_FUNC( QT_QRECT_MOVETOP )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->moveTop( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_MOVETOP FP=( p )->moveTop( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->moveTop( hb_parni( 2 ) );
    }
 }
 
@@ -575,10 +519,8 @@ HB_FUNC( QT_QRECT_MOVETOPLEFT )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->moveTopLeft( *hbqt_par_QPoint( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_MOVETOPLEFT FP=( p )->moveTopLeft( *hbqt_par_QPoint( 2 ) ); p is NULL" ) );
+      ( p )->moveTopLeft( *hbqt_par_QPoint( 2 ) );
    }
 }
 
@@ -589,10 +531,8 @@ HB_FUNC( QT_QRECT_MOVETOPRIGHT )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->moveTopRight( *hbqt_par_QPoint( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_MOVETOPRIGHT FP=( p )->moveTopRight( *hbqt_par_QPoint( 2 ) ); p is NULL" ) );
+      ( p )->moveTopRight( *hbqt_par_QPoint( 2 ) );
    }
 }
 
@@ -603,10 +543,8 @@ HB_FUNC( QT_QRECT_NORMALIZED )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->normalized() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_NORMALIZED FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->normalized() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->normalized() ), true ) );
    }
 }
 
@@ -617,10 +555,8 @@ HB_FUNC( QT_QRECT_RIGHT )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retni( ( p )->right() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_RIGHT FP=hb_retni( ( p )->right() ); p is NULL" ) );
+      hb_retni( ( p )->right() );
    }
 }
 
@@ -631,10 +567,8 @@ HB_FUNC( QT_QRECT_SETBOTTOM )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->setBottom( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_SETBOTTOM FP=( p )->setBottom( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setBottom( hb_parni( 2 ) );
    }
 }
 
@@ -645,10 +579,8 @@ HB_FUNC( QT_QRECT_SETBOTTOMLEFT )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->setBottomLeft( *hbqt_par_QPoint( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_SETBOTTOMLEFT FP=( p )->setBottomLeft( *hbqt_par_QPoint( 2 ) ); p is NULL" ) );
+      ( p )->setBottomLeft( *hbqt_par_QPoint( 2 ) );
    }
 }
 
@@ -659,10 +591,8 @@ HB_FUNC( QT_QRECT_SETBOTTOMRIGHT )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->setBottomRight( *hbqt_par_QPoint( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_SETBOTTOMRIGHT FP=( p )->setBottomRight( *hbqt_par_QPoint( 2 ) ); p is NULL" ) );
+      ( p )->setBottomRight( *hbqt_par_QPoint( 2 ) );
    }
 }
 
@@ -673,10 +603,8 @@ HB_FUNC( QT_QRECT_SETCOORDS )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->setCoords( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_SETCOORDS FP=( p )->setCoords( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ); p is NULL" ) );
+      ( p )->setCoords( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
    }
 }
 
@@ -687,10 +615,8 @@ HB_FUNC( QT_QRECT_SETHEIGHT )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->setHeight( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_SETHEIGHT FP=( p )->setHeight( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setHeight( hb_parni( 2 ) );
    }
 }
 
@@ -701,10 +627,8 @@ HB_FUNC( QT_QRECT_SETLEFT )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->setLeft( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_SETLEFT FP=( p )->setLeft( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setLeft( hb_parni( 2 ) );
    }
 }
 
@@ -715,10 +639,8 @@ HB_FUNC( QT_QRECT_SETRECT )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->setRect( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_SETRECT FP=( p )->setRect( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ); p is NULL" ) );
+      ( p )->setRect( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
    }
 }
 
@@ -729,10 +651,8 @@ HB_FUNC( QT_QRECT_SETRIGHT )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->setRight( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_SETRIGHT FP=( p )->setRight( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setRight( hb_parni( 2 ) );
    }
 }
 
@@ -743,10 +663,8 @@ HB_FUNC( QT_QRECT_SETSIZE )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->setSize( *hbqt_par_QSize( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_SETSIZE FP=( p )->setSize( *hbqt_par_QSize( 2 ) ); p is NULL" ) );
+      ( p )->setSize( *hbqt_par_QSize( 2 ) );
    }
 }
 
@@ -757,10 +675,8 @@ HB_FUNC( QT_QRECT_SETTOP )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->setTop( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_SETTOP FP=( p )->setTop( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setTop( hb_parni( 2 ) );
    }
 }
 
@@ -771,10 +687,8 @@ HB_FUNC( QT_QRECT_SETTOPLEFT )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->setTopLeft( *hbqt_par_QPoint( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_SETTOPLEFT FP=( p )->setTopLeft( *hbqt_par_QPoint( 2 ) ); p is NULL" ) );
+      ( p )->setTopLeft( *hbqt_par_QPoint( 2 ) );
    }
 }
 
@@ -785,10 +699,8 @@ HB_FUNC( QT_QRECT_SETTOPRIGHT )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->setTopRight( *hbqt_par_QPoint( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_SETTOPRIGHT FP=( p )->setTopRight( *hbqt_par_QPoint( 2 ) ); p is NULL" ) );
+      ( p )->setTopRight( *hbqt_par_QPoint( 2 ) );
    }
 }
 
@@ -799,10 +711,8 @@ HB_FUNC( QT_QRECT_SETWIDTH )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->setWidth( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_SETWIDTH FP=( p )->setWidth( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setWidth( hb_parni( 2 ) );
    }
 }
 
@@ -813,10 +723,8 @@ HB_FUNC( QT_QRECT_SETX )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->setX( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_SETX FP=( p )->setX( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setX( hb_parni( 2 ) );
    }
 }
 
@@ -827,10 +735,8 @@ HB_FUNC( QT_QRECT_SETY )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->setY( hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_SETY FP=( p )->setY( hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setY( hb_parni( 2 ) );
    }
 }
 
@@ -841,10 +747,8 @@ HB_FUNC( QT_QRECT_SIZE )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->size() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_SIZE FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->size() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->size() ), true ) );
    }
 }
 
@@ -855,10 +759,8 @@ HB_FUNC( QT_QRECT_TOP )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retni( ( p )->top() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_TOP FP=hb_retni( ( p )->top() ); p is NULL" ) );
+      hb_retni( ( p )->top() );
    }
 }
 
@@ -869,10 +771,8 @@ HB_FUNC( QT_QRECT_TOPLEFT )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->topLeft() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_TOPLEFT FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->topLeft() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->topLeft() ), true ) );
    }
 }
 
@@ -883,10 +783,8 @@ HB_FUNC( QT_QRECT_TOPRIGHT )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->topRight() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_TOPRIGHT FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->topRight() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->topRight() ), true ) );
    }
 }
 
@@ -897,10 +795,8 @@ HB_FUNC( QT_QRECT_TRANSLATE )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->translate( hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_TRANSLATE FP=( p )->translate( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->translate( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -911,10 +807,8 @@ HB_FUNC( QT_QRECT_TRANSLATE_1 )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      ( p )->translate( *hbqt_par_QPoint( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_TRANSLATE_1 FP=( p )->translate( *hbqt_par_QPoint( 2 ) ); p is NULL" ) );
+      ( p )->translate( *hbqt_par_QPoint( 2 ) );
    }
 }
 
@@ -925,10 +819,8 @@ HB_FUNC( QT_QRECT_TRANSLATED )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->translated( hb_parni( 2 ), hb_parni( 3 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_TRANSLATED FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->translated( hb_parni( 2 ), hb_parni( 3 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->translated( hb_parni( 2 ), hb_parni( 3 ) ) ), true ) );
    }
 }
 
@@ -939,10 +831,8 @@ HB_FUNC( QT_QRECT_TRANSLATED_1 )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->translated( *hbqt_par_QPoint( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_TRANSLATED_1 FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->translated( *hbqt_par_QPoint( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->translated( *hbqt_par_QPoint( 2 ) ) ), true ) );
    }
 }
 
@@ -953,10 +843,8 @@ HB_FUNC( QT_QRECT_UNITED )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->united( *hbqt_par_QRect( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_UNITED FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->united( *hbqt_par_QRect( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->united( *hbqt_par_QRect( 2 ) ) ), true ) );
    }
 }
 
@@ -967,10 +855,8 @@ HB_FUNC( QT_QRECT_WIDTH )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retni( ( p )->width() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_WIDTH FP=hb_retni( ( p )->width() ); p is NULL" ) );
+      hb_retni( ( p )->width() );
    }
 }
 
@@ -981,10 +867,8 @@ HB_FUNC( QT_QRECT_X )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retni( ( p )->x() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_X FP=hb_retni( ( p )->x() ); p is NULL" ) );
+      hb_retni( ( p )->x() );
    }
 }
 
@@ -995,10 +879,8 @@ HB_FUNC( QT_QRECT_Y )
 {
    QRect * p = hbqt_par_QRect( 1 );
    if( p )
-      hb_retni( ( p )->y() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QRECT_Y FP=hb_retni( ( p )->y() ); p is NULL" ) );
+      hb_retni( ( p )->y() );
    }
 }
 

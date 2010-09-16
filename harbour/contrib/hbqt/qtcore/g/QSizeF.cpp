@@ -154,10 +154,8 @@ HB_FUNC( QT_QSIZEF_BOUNDEDTO )
 {
    QSizeF * p = hbqt_par_QSizeF( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( ( p )->boundedTo( *hbqt_par_QSizeF( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEF_BOUNDEDTO FP=hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( ( p )->boundedTo( *hbqt_par_QSizeF( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( ( p )->boundedTo( *hbqt_par_QSizeF( 2 ) ) ), true ) );
    }
 }
 
@@ -168,10 +166,8 @@ HB_FUNC( QT_QSIZEF_EXPANDEDTO )
 {
    QSizeF * p = hbqt_par_QSizeF( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( ( p )->expandedTo( *hbqt_par_QSizeF( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEF_EXPANDEDTO FP=hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( ( p )->expandedTo( *hbqt_par_QSizeF( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QSizeF( new QSizeF( ( p )->expandedTo( *hbqt_par_QSizeF( 2 ) ) ), true ) );
    }
 }
 
@@ -182,10 +178,8 @@ HB_FUNC( QT_QSIZEF_HEIGHT )
 {
    QSizeF * p = hbqt_par_QSizeF( 1 );
    if( p )
-      hb_retnd( ( p )->height() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEF_HEIGHT FP=hb_retnd( ( p )->height() ); p is NULL" ) );
+      hb_retnd( ( p )->height() );
    }
 }
 
@@ -196,10 +190,8 @@ HB_FUNC( QT_QSIZEF_ISEMPTY )
 {
    QSizeF * p = hbqt_par_QSizeF( 1 );
    if( p )
-      hb_retl( ( p )->isEmpty() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEF_ISEMPTY FP=hb_retl( ( p )->isEmpty() ); p is NULL" ) );
+      hb_retl( ( p )->isEmpty() );
    }
 }
 
@@ -210,10 +202,8 @@ HB_FUNC( QT_QSIZEF_ISNULL )
 {
    QSizeF * p = hbqt_par_QSizeF( 1 );
    if( p )
-      hb_retl( ( p )->isNull() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEF_ISNULL FP=hb_retl( ( p )->isNull() ); p is NULL" ) );
+      hb_retl( ( p )->isNull() );
    }
 }
 
@@ -224,10 +214,8 @@ HB_FUNC( QT_QSIZEF_ISVALID )
 {
    QSizeF * p = hbqt_par_QSizeF( 1 );
    if( p )
-      hb_retl( ( p )->isValid() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEF_ISVALID FP=hb_retl( ( p )->isValid() ); p is NULL" ) );
+      hb_retl( ( p )->isValid() );
    }
 }
 
@@ -238,10 +226,8 @@ HB_FUNC( QT_QSIZEF_RHEIGHT )
 {
    QSizeF * p = hbqt_par_QSizeF( 1 );
    if( p )
-      hb_retnd( ( p )->rheight() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEF_RHEIGHT FP=hb_retnd( ( p )->rheight() ); p is NULL" ) );
+      hb_retnd( ( p )->rheight() );
    }
 }
 
@@ -252,10 +238,8 @@ HB_FUNC( QT_QSIZEF_RWIDTH )
 {
    QSizeF * p = hbqt_par_QSizeF( 1 );
    if( p )
-      hb_retnd( ( p )->rwidth() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEF_RWIDTH FP=hb_retnd( ( p )->rwidth() ); p is NULL" ) );
+      hb_retnd( ( p )->rwidth() );
    }
 }
 
@@ -266,10 +250,8 @@ HB_FUNC( QT_QSIZEF_SCALE )
 {
    QSizeF * p = hbqt_par_QSizeF( 1 );
    if( p )
-      ( p )->scale( hb_parnd( 2 ), hb_parnd( 3 ), ( Qt::AspectRatioMode ) hb_parni( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEF_SCALE FP=( p )->scale( hb_parnd( 2 ), hb_parnd( 3 ), ( Qt::AspectRatioMode ) hb_parni( 4 ) ); p is NULL" ) );
+      ( p )->scale( hb_parnd( 2 ), hb_parnd( 3 ), ( Qt::AspectRatioMode ) hb_parni( 4 ) );
    }
 }
 
@@ -280,10 +262,8 @@ HB_FUNC( QT_QSIZEF_SCALE_1 )
 {
    QSizeF * p = hbqt_par_QSizeF( 1 );
    if( p )
-      ( p )->scale( *hbqt_par_QSizeF( 2 ), ( Qt::AspectRatioMode ) hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEF_SCALE_1 FP=( p )->scale( *hbqt_par_QSizeF( 2 ), ( Qt::AspectRatioMode ) hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->scale( *hbqt_par_QSizeF( 2 ), ( Qt::AspectRatioMode ) hb_parni( 3 ) );
    }
 }
 
@@ -294,10 +274,8 @@ HB_FUNC( QT_QSIZEF_SETHEIGHT )
 {
    QSizeF * p = hbqt_par_QSizeF( 1 );
    if( p )
-      ( p )->setHeight( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEF_SETHEIGHT FP=( p )->setHeight( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setHeight( hb_parnd( 2 ) );
    }
 }
 
@@ -308,10 +286,8 @@ HB_FUNC( QT_QSIZEF_SETWIDTH )
 {
    QSizeF * p = hbqt_par_QSizeF( 1 );
    if( p )
-      ( p )->setWidth( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEF_SETWIDTH FP=( p )->setWidth( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setWidth( hb_parnd( 2 ) );
    }
 }
 
@@ -322,10 +298,8 @@ HB_FUNC( QT_QSIZEF_TOSIZE )
 {
    QSizeF * p = hbqt_par_QSizeF( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->toSize() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEF_TOSIZE FP=hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->toSize() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->toSize() ), true ) );
    }
 }
 
@@ -336,10 +310,8 @@ HB_FUNC( QT_QSIZEF_TRANSPOSE )
 {
    QSizeF * p = hbqt_par_QSizeF( 1 );
    if( p )
-      ( p )->transpose();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEF_TRANSPOSE FP=( p )->transpose(); p is NULL" ) );
+      ( p )->transpose();
    }
 }
 
@@ -350,10 +322,8 @@ HB_FUNC( QT_QSIZEF_WIDTH )
 {
    QSizeF * p = hbqt_par_QSizeF( 1 );
    if( p )
-      hb_retnd( ( p )->width() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSIZEF_WIDTH FP=hb_retnd( ( p )->width() ); p is NULL" ) );
+      hb_retnd( ( p )->width() );
    }
 }
 

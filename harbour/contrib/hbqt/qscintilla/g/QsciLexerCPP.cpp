@@ -185,10 +185,8 @@ HB_FUNC( QT_QSCILEXERCPP_LANGUAGE )
 {
    QsciLexerCPP * p = hbqt_par_QsciLexerCPP( 1 );
    if( p )
-      hb_retc( ( p )->language() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCILEXERCPP_LANGUAGE FP=hb_retc( ( p )->language() ); p is NULL" ) );
+      hb_retc( ( p )->language() );
    }
 }
 
@@ -199,10 +197,8 @@ HB_FUNC( QT_QSCILEXERCPP_LEXER )
 {
    QsciLexerCPP * p = hbqt_par_QsciLexerCPP( 1 );
    if( p )
-      hb_retc( ( p )->lexer() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCILEXERCPP_LEXER FP=hb_retc( ( p )->lexer() ); p is NULL" ) );
+      hb_retc( ( p )->lexer() );
    }
 }
 
@@ -213,10 +209,8 @@ HB_FUNC( QT_QSCILEXERCPP_AUTOCOMPLETIONWORDSEPARATORS )
 {
    QsciLexerCPP * p = hbqt_par_QsciLexerCPP( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->autoCompletionWordSeparators() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCILEXERCPP_AUTOCOMPLETIONWORDSEPARATORS FP=hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->autoCompletionWordSeparators() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QStringList( new QStringList( ( p )->autoCompletionWordSeparators() ), true ) );
    }
 }
 
@@ -229,10 +223,8 @@ HB_FUNC( QT_QSCILEXERCPP_BLOCKEND )
    int iStyle = 0;
 
    if( p )
-      hb_retc( ( p )->blockEnd( &iStyle ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCILEXERCPP_BLOCKEND FP=hb_retc( ( p )->blockEnd( &iStyle ) ); p is NULL" ) );
+      hb_retc( ( p )->blockEnd( &iStyle ) );
    }
 
    hb_storni( iStyle, 2 );
@@ -247,10 +239,8 @@ HB_FUNC( QT_QSCILEXERCPP_BLOCKSTART )
    int iStyle = 0;
 
    if( p )
-      hb_retc( ( p )->blockStart( &iStyle ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCILEXERCPP_BLOCKSTART FP=hb_retc( ( p )->blockStart( &iStyle ) ); p is NULL" ) );
+      hb_retc( ( p )->blockStart( &iStyle ) );
    }
 
    hb_storni( iStyle, 2 );
@@ -265,10 +255,8 @@ HB_FUNC( QT_QSCILEXERCPP_BLOCKSTARTKEYWORD )
    int iStyle = 0;
 
    if( p )
-      hb_retc( ( p )->blockStartKeyword( &iStyle ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCILEXERCPP_BLOCKSTARTKEYWORD FP=hb_retc( ( p )->blockStartKeyword( &iStyle ) ); p is NULL" ) );
+      hb_retc( ( p )->blockStartKeyword( &iStyle ) );
    }
 
    hb_storni( iStyle, 2 );
@@ -281,10 +269,8 @@ HB_FUNC( QT_QSCILEXERCPP_BRACESTYLE )
 {
    QsciLexerCPP * p = hbqt_par_QsciLexerCPP( 1 );
    if( p )
-      hb_retni( ( p )->braceStyle() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCILEXERCPP_BRACESTYLE FP=hb_retni( ( p )->braceStyle() ); p is NULL" ) );
+      hb_retni( ( p )->braceStyle() );
    }
 }
 
@@ -295,10 +281,8 @@ HB_FUNC( QT_QSCILEXERCPP_WORDCHARACTERS )
 {
    QsciLexerCPP * p = hbqt_par_QsciLexerCPP( 1 );
    if( p )
-      hb_retc( ( p )->wordCharacters() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCILEXERCPP_WORDCHARACTERS FP=hb_retc( ( p )->wordCharacters() ); p is NULL" ) );
+      hb_retc( ( p )->wordCharacters() );
    }
 }
 
@@ -309,10 +293,8 @@ HB_FUNC( QT_QSCILEXERCPP_DEFAULTCOLOR )
 {
    QsciLexerCPP * p = hbqt_par_QsciLexerCPP( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->defaultColor( hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCILEXERCPP_DEFAULTCOLOR FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->defaultColor( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->defaultColor( hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -323,10 +305,8 @@ HB_FUNC( QT_QSCILEXERCPP_DEFAULTEOLFILL )
 {
    QsciLexerCPP * p = hbqt_par_QsciLexerCPP( 1 );
    if( p )
-      hb_retl( ( p )->defaultEolFill( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCILEXERCPP_DEFAULTEOLFILL FP=hb_retl( ( p )->defaultEolFill( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->defaultEolFill( hb_parni( 2 ) ) );
    }
 }
 
@@ -337,10 +317,8 @@ HB_FUNC( QT_QSCILEXERCPP_DEFAULTFONT )
 {
    QsciLexerCPP * p = hbqt_par_QsciLexerCPP( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->defaultFont( hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCILEXERCPP_DEFAULTFONT FP=hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->defaultFont( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->defaultFont( hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -351,10 +329,8 @@ HB_FUNC( QT_QSCILEXERCPP_DEFAULTPAPER )
 {
    QsciLexerCPP * p = hbqt_par_QsciLexerCPP( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->defaultPaper( hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCILEXERCPP_DEFAULTPAPER FP=hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->defaultPaper( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->defaultPaper( hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -365,10 +341,8 @@ HB_FUNC( QT_QSCILEXERCPP_KEYWORDS )
 {
    QsciLexerCPP * p = hbqt_par_QsciLexerCPP( 1 );
    if( p )
-      hb_retc( ( p )->keywords( hb_parni( 2 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCILEXERCPP_KEYWORDS FP=hb_retc( ( p )->keywords( hb_parni( 2 ) ) ); p is NULL" ) );
+      hb_retc( ( p )->keywords( hb_parni( 2 ) ) );
    }
 }
 
@@ -379,10 +353,8 @@ HB_FUNC( QT_QSCILEXERCPP_DESCRIPTION )
 {
    QsciLexerCPP * p = hbqt_par_QsciLexerCPP( 1 );
    if( p )
-      hb_retc( ( p )->description( hb_parni( 2 ) ).toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCILEXERCPP_DESCRIPTION FP=hb_retc( ( p )->description( hb_parni( 2 ) ).toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->description( hb_parni( 2 ) ).toUtf8().data() );
    }
 }
 
@@ -393,10 +365,8 @@ HB_FUNC( QT_QSCILEXERCPP_REFRESHPROPERTIES )
 {
    QsciLexerCPP * p = hbqt_par_QsciLexerCPP( 1 );
    if( p )
-      ( p )->refreshProperties();
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCILEXERCPP_REFRESHPROPERTIES FP=( p )->refreshProperties(); p is NULL" ) );
+      ( p )->refreshProperties();
    }
 }
 
@@ -407,10 +377,8 @@ HB_FUNC( QT_QSCILEXERCPP_FOLDATELSE )
 {
    QsciLexerCPP * p = hbqt_par_QsciLexerCPP( 1 );
    if( p )
-      hb_retl( ( p )->foldAtElse() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCILEXERCPP_FOLDATELSE FP=hb_retl( ( p )->foldAtElse() ); p is NULL" ) );
+      hb_retl( ( p )->foldAtElse() );
    }
 }
 
@@ -421,10 +389,8 @@ HB_FUNC( QT_QSCILEXERCPP_FOLDCOMMENTS )
 {
    QsciLexerCPP * p = hbqt_par_QsciLexerCPP( 1 );
    if( p )
-      hb_retl( ( p )->foldComments() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCILEXERCPP_FOLDCOMMENTS FP=hb_retl( ( p )->foldComments() ); p is NULL" ) );
+      hb_retl( ( p )->foldComments() );
    }
 }
 
@@ -435,10 +401,8 @@ HB_FUNC( QT_QSCILEXERCPP_FOLDCOMPACT )
 {
    QsciLexerCPP * p = hbqt_par_QsciLexerCPP( 1 );
    if( p )
-      hb_retl( ( p )->foldCompact() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCILEXERCPP_FOLDCOMPACT FP=hb_retl( ( p )->foldCompact() ); p is NULL" ) );
+      hb_retl( ( p )->foldCompact() );
    }
 }
 
@@ -449,10 +413,8 @@ HB_FUNC( QT_QSCILEXERCPP_FOLDPREPROCESSOR )
 {
    QsciLexerCPP * p = hbqt_par_QsciLexerCPP( 1 );
    if( p )
-      hb_retl( ( p )->foldPreprocessor() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCILEXERCPP_FOLDPREPROCESSOR FP=hb_retl( ( p )->foldPreprocessor() ); p is NULL" ) );
+      hb_retl( ( p )->foldPreprocessor() );
    }
 }
 
@@ -463,10 +425,8 @@ HB_FUNC( QT_QSCILEXERCPP_STYLEPREPROCESSOR )
 {
    QsciLexerCPP * p = hbqt_par_QsciLexerCPP( 1 );
    if( p )
-      hb_retl( ( p )->stylePreprocessor() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCILEXERCPP_STYLEPREPROCESSOR FP=hb_retl( ( p )->stylePreprocessor() ); p is NULL" ) );
+      hb_retl( ( p )->stylePreprocessor() );
    }
 }
 
@@ -477,10 +437,8 @@ HB_FUNC( QT_QSCILEXERCPP_SETDOLLARSALLOWED )
 {
    QsciLexerCPP * p = hbqt_par_QsciLexerCPP( 1 );
    if( p )
-      ( p )->setDollarsAllowed( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCILEXERCPP_SETDOLLARSALLOWED FP=( p )->setDollarsAllowed( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setDollarsAllowed( hb_parl( 2 ) );
    }
 }
 
@@ -491,10 +449,8 @@ HB_FUNC( QT_QSCILEXERCPP_DOLLARSALLOWED )
 {
    QsciLexerCPP * p = hbqt_par_QsciLexerCPP( 1 );
    if( p )
-      hb_retl( ( p )->dollarsAllowed() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCILEXERCPP_DOLLARSALLOWED FP=hb_retl( ( p )->dollarsAllowed() ); p is NULL" ) );
+      hb_retl( ( p )->dollarsAllowed() );
    }
 }
 
@@ -505,10 +461,8 @@ HB_FUNC( QT_QSCILEXERCPP_SETFOLDATELSE )
 {
    QsciLexerCPP * p = hbqt_par_QsciLexerCPP( 1 );
    if( p )
-      ( p )->setFoldAtElse( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCILEXERCPP_SETFOLDATELSE FP=( p )->setFoldAtElse( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setFoldAtElse( hb_parl( 2 ) );
    }
 }
 
@@ -519,10 +473,8 @@ HB_FUNC( QT_QSCILEXERCPP_SETFOLDCOMMENTS )
 {
    QsciLexerCPP * p = hbqt_par_QsciLexerCPP( 1 );
    if( p )
-      ( p )->setFoldComments( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCILEXERCPP_SETFOLDCOMMENTS FP=( p )->setFoldComments( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setFoldComments( hb_parl( 2 ) );
    }
 }
 
@@ -533,10 +485,8 @@ HB_FUNC( QT_QSCILEXERCPP_SETFOLDCOMPACT )
 {
    QsciLexerCPP * p = hbqt_par_QsciLexerCPP( 1 );
    if( p )
-      ( p )->setFoldCompact( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCILEXERCPP_SETFOLDCOMPACT FP=( p )->setFoldCompact( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setFoldCompact( hb_parl( 2 ) );
    }
 }
 
@@ -547,10 +497,8 @@ HB_FUNC( QT_QSCILEXERCPP_SETFOLDPREPROCESSOR )
 {
    QsciLexerCPP * p = hbqt_par_QsciLexerCPP( 1 );
    if( p )
-      ( p )->setFoldPreprocessor( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCILEXERCPP_SETFOLDPREPROCESSOR FP=( p )->setFoldPreprocessor( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setFoldPreprocessor( hb_parl( 2 ) );
    }
 }
 
@@ -561,10 +509,8 @@ HB_FUNC( QT_QSCILEXERCPP_SETSTYLEPREPROCESSOR )
 {
    QsciLexerCPP * p = hbqt_par_QsciLexerCPP( 1 );
    if( p )
-      ( p )->setStylePreprocessor( hb_parl( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QSCILEXERCPP_SETSTYLEPREPROCESSOR FP=( p )->setStylePreprocessor( hb_parl( 2 ) ); p is NULL" ) );
+      ( p )->setStylePreprocessor( hb_parl( 2 ) );
    }
 }
 

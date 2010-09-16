@@ -149,10 +149,8 @@ HB_FUNC( QT_QPOLYGON_BOUNDINGRECT )
 {
    QPolygon * p = hbqt_par_QPolygon( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->boundingRect() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGON_BOUNDINGRECT FP=hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->boundingRect() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->boundingRect() ), true ) );
    }
 }
 
@@ -163,10 +161,8 @@ HB_FUNC( QT_QPOLYGON_CONTAINSPOINT )
 {
    QPolygon * p = hbqt_par_QPolygon( 1 );
    if( p )
-      hb_retl( ( p )->containsPoint( *hbqt_par_QPoint( 2 ), ( Qt::FillRule ) hb_parni( 3 ) ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGON_CONTAINSPOINT FP=hb_retl( ( p )->containsPoint( *hbqt_par_QPoint( 2 ), ( Qt::FillRule ) hb_parni( 3 ) ) ); p is NULL" ) );
+      hb_retl( ( p )->containsPoint( *hbqt_par_QPoint( 2 ), ( Qt::FillRule ) hb_parni( 3 ) ) );
    }
 }
 
@@ -177,10 +173,8 @@ HB_FUNC( QT_QPOLYGON_INTERSECTED )
 {
    QPolygon * p = hbqt_par_QPolygon( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( ( p )->intersected( *hbqt_par_QPolygon( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGON_INTERSECTED FP=hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( ( p )->intersected( *hbqt_par_QPolygon( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( ( p )->intersected( *hbqt_par_QPolygon( 2 ) ) ), true ) );
    }
 }
 
@@ -194,10 +188,8 @@ HB_FUNC( QT_QPOLYGON_POINT )
    int iY = 0;
 
    if( p )
-      ( p )->point( hb_parni( 2 ), &iX, &iY );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGON_POINT FP=( p )->point( hb_parni( 2 ), &iX, &iY ); p is NULL" ) );
+      ( p )->point( hb_parni( 2 ), &iX, &iY );
    }
 
    hb_storni( iX, 3 );
@@ -211,10 +203,8 @@ HB_FUNC( QT_QPOLYGON_POINT_1 )
 {
    QPolygon * p = hbqt_par_QPolygon( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->point( hb_parni( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGON_POINT_1 FP=hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->point( hb_parni( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPoint( new QPoint( ( p )->point( hb_parni( 2 ) ) ), true ) );
    }
 }
 
@@ -225,10 +215,8 @@ HB_FUNC( QT_QPOLYGON_PUTPOINTS )
 {
    QPolygon * p = hbqt_par_QPolygon( 1 );
    if( p )
-      ( p )->putPoints( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QPolygon( 4 ), hb_parni( 5 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGON_PUTPOINTS FP=( p )->putPoints( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QPolygon( 4 ), hb_parni( 5 ) ); p is NULL" ) );
+      ( p )->putPoints( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QPolygon( 4 ), hb_parni( 5 ) );
    }
 }
 
@@ -239,10 +227,8 @@ HB_FUNC( QT_QPOLYGON_SETPOINT )
 {
    QPolygon * p = hbqt_par_QPolygon( 1 );
    if( p )
-      ( p )->setPoint( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGON_SETPOINT FP=( p )->setPoint( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) ); p is NULL" ) );
+      ( p )->setPoint( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
    }
 }
 
@@ -253,10 +239,8 @@ HB_FUNC( QT_QPOLYGON_SETPOINT_1 )
 {
    QPolygon * p = hbqt_par_QPolygon( 1 );
    if( p )
-      ( p )->setPoint( hb_parni( 2 ), *hbqt_par_QPoint( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGON_SETPOINT_1 FP=( p )->setPoint( hb_parni( 2 ), *hbqt_par_QPoint( 3 ) ); p is NULL" ) );
+      ( p )->setPoint( hb_parni( 2 ), *hbqt_par_QPoint( 3 ) );
    }
 }
 
@@ -269,10 +253,8 @@ HB_FUNC( QT_QPOLYGON_SETPOINTS )
    int iPoints = 0;
 
    if( p )
-      ( p )->setPoints( hb_parni( 2 ), &iPoints );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGON_SETPOINTS FP=( p )->setPoints( hb_parni( 2 ), &iPoints ); p is NULL" ) );
+      ( p )->setPoints( hb_parni( 2 ), &iPoints );
    }
 
    hb_storni( iPoints, 3 );
@@ -285,10 +267,8 @@ HB_FUNC( QT_QPOLYGON_SUBTRACTED )
 {
    QPolygon * p = hbqt_par_QPolygon( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( ( p )->subtracted( *hbqt_par_QPolygon( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGON_SUBTRACTED FP=hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( ( p )->subtracted( *hbqt_par_QPolygon( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( ( p )->subtracted( *hbqt_par_QPolygon( 2 ) ) ), true ) );
    }
 }
 
@@ -299,10 +279,8 @@ HB_FUNC( QT_QPOLYGON_TRANSLATE )
 {
    QPolygon * p = hbqt_par_QPolygon( 1 );
    if( p )
-      ( p )->translate( hb_parni( 2 ), hb_parni( 3 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGON_TRANSLATE FP=( p )->translate( hb_parni( 2 ), hb_parni( 3 ) ); p is NULL" ) );
+      ( p )->translate( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -313,10 +291,8 @@ HB_FUNC( QT_QPOLYGON_TRANSLATE_1 )
 {
    QPolygon * p = hbqt_par_QPolygon( 1 );
    if( p )
-      ( p )->translate( *hbqt_par_QPoint( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGON_TRANSLATE_1 FP=( p )->translate( *hbqt_par_QPoint( 2 ) ); p is NULL" ) );
+      ( p )->translate( *hbqt_par_QPoint( 2 ) );
    }
 }
 
@@ -327,10 +303,8 @@ HB_FUNC( QT_QPOLYGON_UNITED )
 {
    QPolygon * p = hbqt_par_QPolygon( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( ( p )->united( *hbqt_par_QPolygon( 2 ) ) ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPOLYGON_UNITED FP=hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( ( p )->united( *hbqt_par_QPolygon( 2 ) ) ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPolygon( new QPolygon( ( p )->united( *hbqt_par_QPolygon( 2 ) ) ), true ) );
    }
 }
 

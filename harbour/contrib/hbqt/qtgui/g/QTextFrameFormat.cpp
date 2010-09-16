@@ -155,10 +155,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_BORDER )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      hb_retnd( ( p )->border() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_BORDER FP=hb_retnd( ( p )->border() ); p is NULL" ) );
+      hb_retnd( ( p )->border() );
    }
 }
 
@@ -169,10 +167,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_BORDERBRUSH )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->borderBrush() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_BORDERBRUSH FP=hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->borderBrush() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( p )->borderBrush() ), true ) );
    }
 }
 
@@ -183,10 +179,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_BORDERSTYLE )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      hb_retni( ( QTextFrameFormat::BorderStyle ) ( p )->borderStyle() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_BORDERSTYLE FP=hb_retni( ( QTextFrameFormat::BorderStyle ) ( p )->borderStyle() ); p is NULL" ) );
+      hb_retni( ( QTextFrameFormat::BorderStyle ) ( p )->borderStyle() );
    }
 }
 
@@ -197,10 +191,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_BOTTOMMARGIN )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      hb_retnd( ( p )->bottomMargin() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_BOTTOMMARGIN FP=hb_retnd( ( p )->bottomMargin() ); p is NULL" ) );
+      hb_retnd( ( p )->bottomMargin() );
    }
 }
 
@@ -211,10 +203,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_HEIGHT )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTextLength( new QTextLength( ( p )->height() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_HEIGHT FP=hb_retptrGC( hbqt_gcAllocate_QTextLength( new QTextLength( ( p )->height() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTextLength( new QTextLength( ( p )->height() ), true ) );
    }
 }
 
@@ -225,10 +215,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_ISVALID )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      hb_retl( ( p )->isValid() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_ISVALID FP=hb_retl( ( p )->isValid() ); p is NULL" ) );
+      hb_retl( ( p )->isValid() );
    }
 }
 
@@ -239,10 +227,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_LEFTMARGIN )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      hb_retnd( ( p )->leftMargin() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_LEFTMARGIN FP=hb_retnd( ( p )->leftMargin() ); p is NULL" ) );
+      hb_retnd( ( p )->leftMargin() );
    }
 }
 
@@ -253,10 +239,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_MARGIN )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      hb_retnd( ( p )->margin() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_MARGIN FP=hb_retnd( ( p )->margin() ); p is NULL" ) );
+      hb_retnd( ( p )->margin() );
    }
 }
 
@@ -267,10 +251,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_PADDING )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      hb_retnd( ( p )->padding() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_PADDING FP=hb_retnd( ( p )->padding() ); p is NULL" ) );
+      hb_retnd( ( p )->padding() );
    }
 }
 
@@ -281,10 +263,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_PAGEBREAKPOLICY )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      hb_retni( ( QTextFrameFormat::PageBreakFlags ) ( p )->pageBreakPolicy() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_PAGEBREAKPOLICY FP=hb_retni( ( QTextFrameFormat::PageBreakFlags ) ( p )->pageBreakPolicy() ); p is NULL" ) );
+      hb_retni( ( QTextFrameFormat::PageBreakFlags ) ( p )->pageBreakPolicy() );
    }
 }
 
@@ -295,10 +275,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_POSITION )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      hb_retni( ( QTextFrameFormat::Position ) ( p )->position() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_POSITION FP=hb_retni( ( QTextFrameFormat::Position ) ( p )->position() ); p is NULL" ) );
+      hb_retni( ( QTextFrameFormat::Position ) ( p )->position() );
    }
 }
 
@@ -309,10 +287,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_RIGHTMARGIN )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      hb_retnd( ( p )->rightMargin() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_RIGHTMARGIN FP=hb_retnd( ( p )->rightMargin() ); p is NULL" ) );
+      hb_retnd( ( p )->rightMargin() );
    }
 }
 
@@ -323,10 +299,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_SETBORDER )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      ( p )->setBorder( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_SETBORDER FP=( p )->setBorder( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setBorder( hb_parnd( 2 ) );
    }
 }
 
@@ -337,10 +311,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_SETBORDERBRUSH )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      ( p )->setBorderBrush( *hbqt_par_QBrush( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_SETBORDERBRUSH FP=( p )->setBorderBrush( *hbqt_par_QBrush( 2 ) ); p is NULL" ) );
+      ( p )->setBorderBrush( *hbqt_par_QBrush( 2 ) );
    }
 }
 
@@ -351,10 +323,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_SETBORDERSTYLE )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      ( p )->setBorderStyle( ( QTextFrameFormat::BorderStyle ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_SETBORDERSTYLE FP=( p )->setBorderStyle( ( QTextFrameFormat::BorderStyle ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setBorderStyle( ( QTextFrameFormat::BorderStyle ) hb_parni( 2 ) );
    }
 }
 
@@ -365,10 +335,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_SETBOTTOMMARGIN )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      ( p )->setBottomMargin( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_SETBOTTOMMARGIN FP=( p )->setBottomMargin( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setBottomMargin( hb_parnd( 2 ) );
    }
 }
 
@@ -379,10 +347,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_SETHEIGHT )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      ( p )->setHeight( *hbqt_par_QTextLength( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_SETHEIGHT FP=( p )->setHeight( *hbqt_par_QTextLength( 2 ) ); p is NULL" ) );
+      ( p )->setHeight( *hbqt_par_QTextLength( 2 ) );
    }
 }
 
@@ -393,10 +359,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_SETHEIGHT_1 )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      ( p )->setHeight( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_SETHEIGHT_1 FP=( p )->setHeight( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setHeight( hb_parnd( 2 ) );
    }
 }
 
@@ -407,10 +371,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_SETLEFTMARGIN )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      ( p )->setLeftMargin( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_SETLEFTMARGIN FP=( p )->setLeftMargin( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setLeftMargin( hb_parnd( 2 ) );
    }
 }
 
@@ -421,10 +383,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_SETMARGIN )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      ( p )->setMargin( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_SETMARGIN FP=( p )->setMargin( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setMargin( hb_parnd( 2 ) );
    }
 }
 
@@ -435,10 +395,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_SETPADDING )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      ( p )->setPadding( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_SETPADDING FP=( p )->setPadding( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setPadding( hb_parnd( 2 ) );
    }
 }
 
@@ -449,10 +407,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_SETPAGEBREAKPOLICY )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      ( p )->setPageBreakPolicy( ( QTextFrameFormat::PageBreakFlags ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_SETPAGEBREAKPOLICY FP=( p )->setPageBreakPolicy( ( QTextFrameFormat::PageBreakFlags ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setPageBreakPolicy( ( QTextFrameFormat::PageBreakFlags ) hb_parni( 2 ) );
    }
 }
 
@@ -463,10 +419,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_SETPOSITION )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      ( p )->setPosition( ( QTextFrameFormat::Position ) hb_parni( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_SETPOSITION FP=( p )->setPosition( ( QTextFrameFormat::Position ) hb_parni( 2 ) ); p is NULL" ) );
+      ( p )->setPosition( ( QTextFrameFormat::Position ) hb_parni( 2 ) );
    }
 }
 
@@ -477,10 +431,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_SETRIGHTMARGIN )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      ( p )->setRightMargin( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_SETRIGHTMARGIN FP=( p )->setRightMargin( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setRightMargin( hb_parnd( 2 ) );
    }
 }
 
@@ -491,10 +443,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_SETTOPMARGIN )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      ( p )->setTopMargin( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_SETTOPMARGIN FP=( p )->setTopMargin( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setTopMargin( hb_parnd( 2 ) );
    }
 }
 
@@ -505,10 +455,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_SETWIDTH )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      ( p )->setWidth( *hbqt_par_QTextLength( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_SETWIDTH FP=( p )->setWidth( *hbqt_par_QTextLength( 2 ) ); p is NULL" ) );
+      ( p )->setWidth( *hbqt_par_QTextLength( 2 ) );
    }
 }
 
@@ -519,10 +467,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_SETWIDTH_1 )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      ( p )->setWidth( hb_parnd( 2 ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_SETWIDTH_1 FP=( p )->setWidth( hb_parnd( 2 ) ); p is NULL" ) );
+      ( p )->setWidth( hb_parnd( 2 ) );
    }
 }
 
@@ -533,10 +479,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_TOPMARGIN )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      hb_retnd( ( p )->topMargin() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_TOPMARGIN FP=hb_retnd( ( p )->topMargin() ); p is NULL" ) );
+      hb_retnd( ( p )->topMargin() );
    }
 }
 
@@ -547,10 +491,8 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT_WIDTH )
 {
    QTextFrameFormat * p = hbqt_par_QTextFrameFormat( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QTextLength( new QTextLength( ( p )->width() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QTEXTFRAMEFORMAT_WIDTH FP=hb_retptrGC( hbqt_gcAllocate_QTextLength( new QTextLength( ( p )->width() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QTextLength( new QTextLength( ( p )->width() ), true ) );
    }
 }
 

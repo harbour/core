@@ -168,10 +168,8 @@ HB_FUNC( QT_QPRINTERINFO_ISDEFAULT )
 {
    QPrinterInfo * p = hbqt_par_QPrinterInfo( 1 );
    if( p )
-      hb_retl( ( p )->isDefault() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTERINFO_ISDEFAULT FP=hb_retl( ( p )->isDefault() ); p is NULL" ) );
+      hb_retl( ( p )->isDefault() );
    }
 }
 
@@ -182,10 +180,8 @@ HB_FUNC( QT_QPRINTERINFO_ISNULL )
 {
    QPrinterInfo * p = hbqt_par_QPrinterInfo( 1 );
    if( p )
-      hb_retl( ( p )->isNull() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTERINFO_ISNULL FP=hb_retl( ( p )->isNull() ); p is NULL" ) );
+      hb_retl( ( p )->isNull() );
    }
 }
 
@@ -196,10 +192,8 @@ HB_FUNC( QT_QPRINTERINFO_PRINTERNAME )
 {
    QPrinterInfo * p = hbqt_par_QPrinterInfo( 1 );
    if( p )
-      hb_retc( ( p )->printerName().toAscii().data() );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTERINFO_PRINTERNAME FP=hb_retc( ( p )->printerName().toAscii().data() ); p is NULL" ) );
+      hb_retstr_utf8( ( p )->printerName().toUtf8().data() );
    }
 }
 
@@ -210,10 +204,8 @@ HB_FUNC( QT_QPRINTERINFO_AVAILABLEPRINTERS )
 {
    QPrinterInfo * p = hbqt_par_QPrinterInfo( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QPrinterInfo>( ( p )->availablePrinters() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTERINFO_AVAILABLEPRINTERS FP=hb_retptrGC( hbqt_gcAllocate_QList( new QList<QPrinterInfo>( ( p )->availablePrinters() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QList( new QList<QPrinterInfo>( ( p )->availablePrinters() ), true ) );
    }
 }
 
@@ -224,10 +216,8 @@ HB_FUNC( QT_QPRINTERINFO_DEFAULTPRINTER )
 {
    QPrinterInfo * p = hbqt_par_QPrinterInfo( 1 );
    if( p )
-      hb_retptrGC( hbqt_gcAllocate_QPrinterInfo( new QPrinterInfo( ( p )->defaultPrinter() ), true ) );
-   else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "............................... F=QT_QPRINTERINFO_DEFAULTPRINTER FP=hb_retptrGC( hbqt_gcAllocate_QPrinterInfo( new QPrinterInfo( ( p )->defaultPrinter() ), true ) ); p is NULL" ) );
+      hb_retptrGC( hbqt_gcAllocate_QPrinterInfo( new QPrinterInfo( ( p )->defaultPrinter() ), true ) );
    }
 }
 
