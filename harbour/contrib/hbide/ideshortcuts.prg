@@ -308,6 +308,9 @@ METHOD IdeShortcuts:execEvent( nMode, p )
 
    SWITCH nMode
 
+   CASE 21000
+      MsgBox( "KeyPress on LabelMacros" )
+      EXIT
    CASE buttonDelete_clicked
       nRow := ::oUI:q_tableMacros:currentRow()
       IF nRow >= 0 .AND. nRow < len( ::aDftSCuts )
@@ -579,6 +582,10 @@ METHOD IdeShortcuts:buildUI()
    ::qHiliter := ::oTH:SetSyntaxHilighting( ::oUI:q_plainBlock, "Pritpal's Favourite" )
 
    ::buildSignals()
+
+   /* Demonstration only */
+   ::oUI:q_labelMacros:setFocusPolicy( Qt_StrongFocus )
+   ::oUI:q_labelMacros:connect( QEvent_KeyPress, {|p| ::execEvent( 21000, p ) } )
 
    RETURN Self
 
