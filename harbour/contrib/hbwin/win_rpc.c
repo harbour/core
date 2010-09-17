@@ -95,18 +95,18 @@ HB_FUNC( WIN_UUIDCREATESTRING )
    {
       TCHAR * tszUuid = NULL;
       UUID uuid;
-      
+
       memset( &uuid, 0, sizeof( UUID ) );
-      
+
       s_pUuidCreate( &uuid );
 
-      s_pUuidToString( &uuid, ( unsigned char ** ) &tszUuid );
-      
+      s_pUuidToString( &uuid, ( unsigned char ** ) ( void * ) &tszUuid );
+
       if( tszUuid != NULL )
       {
          HB_RETSTR( tszUuid );
-      
-         s_pRpcStringFree( ( unsigned char ** ) &tszUuid );
+
+         s_pRpcStringFree( ( unsigned char ** ) ( void * ) &tszUuid );
       }
       else
          hb_retc_null();
