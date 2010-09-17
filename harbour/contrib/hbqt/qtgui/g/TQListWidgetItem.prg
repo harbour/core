@@ -90,7 +90,7 @@ CREATE CLASS QListWidgetItem INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_Q
    METHOD  setFont( pFont )
    METHOD  setForeground( pBrush )
    METHOD  setHidden( lHide )
-   METHOD  setIcon( cIcon )
+   METHOD  setIcon( pIcon )
    METHOD  setSelected( lSelect )
    METHOD  setSizeHint( pSize )
    METHOD  setStatusTip( cStatusTip )
@@ -195,8 +195,8 @@ METHOD QListWidgetItem:setHidden( lHide )
    RETURN Qt_QListWidgetItem_setHidden( ::pPtr, lHide )
 
 
-METHOD QListWidgetItem:setIcon( cIcon )
-   RETURN Qt_QListWidgetItem_setIcon( ::pPtr, cIcon )
+METHOD QListWidgetItem:setIcon( pIcon )
+   RETURN Qt_QListWidgetItem_setIcon( ::pPtr, hbqt_ptr( pIcon ) )
 
 
 METHOD QListWidgetItem:setSelected( lSelect )

@@ -93,7 +93,7 @@ CREATE CLASS QAction INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QAction
    METHOD  setCheckable( lBool )
    METHOD  setData( pUserData )
    METHOD  setFont( pFont )
-   METHOD  setIcon( cIcon )
+   METHOD  setIcon( pIcon )
    METHOD  setIconText( cText )
    METHOD  setIconVisibleInMenu( lVisible )
    METHOD  setMenu( pMenu )
@@ -222,8 +222,8 @@ METHOD QAction:setFont( pFont )
    RETURN Qt_QAction_setFont( ::pPtr, hbqt_ptr( pFont ) )
 
 
-METHOD QAction:setIcon( cIcon )
-   RETURN Qt_QAction_setIcon( ::pPtr, cIcon )
+METHOD QAction:setIcon( pIcon )
+   RETURN Qt_QAction_setIcon( ::pPtr, hbqt_ptr( pIcon ) )
 
 
 METHOD QAction:setIconText( cText )

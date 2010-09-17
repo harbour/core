@@ -29,7 +29,7 @@
  *     :actions()                                          -> pQList<QAction *>
  *     :addAction( pAction )                               -> pQAction
  *     :addAction_1( cText )                               -> pQAction
- *     :addAction_2( cIcon, cText )                        -> pQAction
+ *     :addAction_2( pIcon, cText )                        -> pQAction
  *     :checkedAction()                                    -> pQAction
  *     :isEnabled()                                        -> lBool
  *     :isExclusive()                                      -> lBool

@@ -159,7 +159,7 @@ HB_FUNC( QT_QTOOLBOX_ADDITEM )
    if( p )
    {
       void * pText;
-      hb_retni( ( p )->addItem( hbqt_par_QWidget( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QIcon( 3 ) : QIcon( hbqt_par_QString( 3 ) ) ), hb_parstr_utf8( 4, &pText, NULL ) ) );
+      hb_retni( ( p )->addItem( hbqt_par_QWidget( 2 ), ( HB_ISCHAR( 3 ) ? QIcon( hbqt_par_QString( 3 ) ) : *hbqt_par_QIcon( 3 )), hb_parstr_utf8( 4, &pText, NULL ) ) );
       hb_strfree( pText );
    }
 }
@@ -235,7 +235,7 @@ HB_FUNC( QT_QTOOLBOX_INSERTITEM )
    if( p )
    {
       void * pText;
-      hb_retni( ( p )->insertItem( hb_parni( 2 ), hbqt_par_QWidget( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QIcon( 4 ) : QIcon( hbqt_par_QString( 4 ) ) ), hb_parstr_utf8( 5, &pText, NULL ) ) );
+      hb_retni( ( p )->insertItem( hb_parni( 2 ), hbqt_par_QWidget( 3 ), ( HB_ISCHAR( 4 ) ? QIcon( hbqt_par_QString( 4 ) ) : *hbqt_par_QIcon( 4 )), hb_parstr_utf8( 5, &pText, NULL ) ) );
       hb_strfree( pText );
    }
 }
@@ -334,7 +334,7 @@ HB_FUNC( QT_QTOOLBOX_SETITEMICON )
    QToolBox * p = hbqt_par_QToolBox( 1 );
    if( p )
    {
-      ( p )->setItemIcon( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QIcon( 3 ) : QIcon( hbqt_par_QString( 3 ) ) ) );
+      ( p )->setItemIcon( hb_parni( 2 ), ( HB_ISCHAR( 3 ) ? QIcon( hbqt_par_QString( 3 ) ) : *hbqt_par_QIcon( 3 )) );
    }
 }
 

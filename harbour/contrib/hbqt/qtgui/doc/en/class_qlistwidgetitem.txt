@@ -44,7 +44,7 @@
  *     :setFont( pFont )                                   -> NIL
  *     :setForeground( pBrush )                            -> NIL
  *     :setHidden( lHide )                                 -> NIL
- *     :setIcon( cIcon )                                   -> NIL
+ *     :setIcon( pIcon )                                   -> NIL
  *     :setSelected( lSelect )                             -> NIL
  *     :setSizeHint( pSize )                               -> NIL
  *     :setStatusTip( cStatusTip )                         -> NIL

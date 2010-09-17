@@ -72,7 +72,7 @@ CREATE CLASS QTabWidget INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QTabWi
    METHOD  new( ... )
 
    METHOD  addTab( pPage, cLabel )
-   METHOD  addTab_1( pPage, cIcon, cLabel )
+   METHOD  addTab_1( pPage, pIcon, cLabel )
    METHOD  clear()
    METHOD  cornerWidget( nCorner )
    METHOD  count()
@@ -83,7 +83,7 @@ CREATE CLASS QTabWidget INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QTabWi
    METHOD  iconSize()
    METHOD  indexOf( pW )
    METHOD  insertTab( nIndex, pPage, cLabel )
-   METHOD  insertTab_1( nIndex, pPage, cIcon, cLabel )
+   METHOD  insertTab_1( nIndex, pPage, pIcon, cLabel )
    METHOD  isMovable()
    METHOD  isTabEnabled( nIndex )
    METHOD  removeTab( nIndex )
@@ -93,7 +93,7 @@ CREATE CLASS QTabWidget INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QTabWi
    METHOD  setIconSize( pSize )
    METHOD  setMovable( lMovable )
    METHOD  setTabEnabled( nIndex, lEnable )
-   METHOD  setTabIcon( nIndex, cIcon )
+   METHOD  setTabIcon( nIndex, pIcon )
    METHOD  setTabPosition( nTabPosition )
    METHOD  setTabShape( nS )
    METHOD  setTabText( nIndex, cLabel )
@@ -129,8 +129,8 @@ METHOD QTabWidget:addTab( pPage, cLabel )
    RETURN Qt_QTabWidget_addTab( ::pPtr, hbqt_ptr( pPage ), cLabel )
 
 
-METHOD QTabWidget:addTab_1( pPage, cIcon, cLabel )
-   RETURN Qt_QTabWidget_addTab_1( ::pPtr, hbqt_ptr( pPage ), cIcon, cLabel )
+METHOD QTabWidget:addTab_1( pPage, pIcon, cLabel )
+   RETURN Qt_QTabWidget_addTab_1( ::pPtr, hbqt_ptr( pPage ), hbqt_ptr( pIcon ), cLabel )
 
 
 METHOD QTabWidget:clear()
@@ -173,8 +173,8 @@ METHOD QTabWidget:insertTab( nIndex, pPage, cLabel )
    RETURN Qt_QTabWidget_insertTab( ::pPtr, nIndex, hbqt_ptr( pPage ), cLabel )
 
 
-METHOD QTabWidget:insertTab_1( nIndex, pPage, cIcon, cLabel )
-   RETURN Qt_QTabWidget_insertTab_1( ::pPtr, nIndex, hbqt_ptr( pPage ), cIcon, cLabel )
+METHOD QTabWidget:insertTab_1( nIndex, pPage, pIcon, cLabel )
+   RETURN Qt_QTabWidget_insertTab_1( ::pPtr, nIndex, hbqt_ptr( pPage ), hbqt_ptr( pIcon ), cLabel )
 
 
 METHOD QTabWidget:isMovable()
@@ -213,8 +213,8 @@ METHOD QTabWidget:setTabEnabled( nIndex, lEnable )
    RETURN Qt_QTabWidget_setTabEnabled( ::pPtr, nIndex, lEnable )
 
 
-METHOD QTabWidget:setTabIcon( nIndex, cIcon )
-   RETURN Qt_QTabWidget_setTabIcon( ::pPtr, nIndex, cIcon )
+METHOD QTabWidget:setTabIcon( nIndex, pIcon )
+   RETURN Qt_QTabWidget_setTabIcon( ::pPtr, nIndex, hbqt_ptr( pIcon ) )
 
 
 METHOD QTabWidget:setTabPosition( nTabPosition )

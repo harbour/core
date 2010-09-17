@@ -74,7 +74,7 @@
  *     :setFlags( nFlags )                                 -> NIL
  *     :setFont( pFont )                                   -> NIL
  *     :setForeground( pBrush )                            -> NIL
- *     :setIcon( cIcon )                                   -> NIL
+ *     :setIcon( pIcon )                                   -> NIL
  *     :setRowCount( nRows )                               -> NIL
  *     :setSelectable( lSelectable )                       -> NIL
  *     :setSizeHint( pSize )                               -> NIL

@@ -214,7 +214,7 @@ CREATE CLASS QWidget INHERIT HbQtObjectHandler, HB_QObject, HB_QPaintDevice FUNC
    METHOD  setWhatsThis( cQString )
    METHOD  setWindowFilePath( cFilePath )
    METHOD  setWindowFlags( nType )
-   METHOD  setWindowIcon( cIcon )
+   METHOD  setWindowIcon( pIcon )
    METHOD  setWindowIconText( cQString )
    METHOD  setWindowModality( nWindowModality )
    METHOD  setWindowOpacity( nLevel )
@@ -862,8 +862,8 @@ METHOD QWidget:setWindowFlags( nType )
    RETURN Qt_QWidget_setWindowFlags( ::pPtr, nType )
 
 
-METHOD QWidget:setWindowIcon( cIcon )
-   RETURN Qt_QWidget_setWindowIcon( ::pPtr, cIcon )
+METHOD QWidget:setWindowIcon( pIcon )
+   RETURN Qt_QWidget_setWindowIcon( ::pPtr, hbqt_ptr( pIcon ) )
 
 
 METHOD QWidget:setWindowIconText( cQString )

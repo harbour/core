@@ -27,7 +27,7 @@
  *     An instance of the object of type QTabWidget
  *  $METHODS$
  *     :addTab( pPage, cLabel )                            -> nInt
- *     :addTab_1( pPage, cIcon, cLabel )                   -> nInt
+ *     :addTab_1( pPage, pIcon, cLabel )                   -> nInt
  *     :clear()                                            -> NIL
  *     :cornerWidget( nCorner )                            -> pQWidget
  *     :count()                                            -> nInt
@@ -38,7 +38,7 @@
  *     :iconSize()                                         -> pQSize
  *     :indexOf( pW )                                      -> nInt
  *     :insertTab( nIndex, pPage, cLabel )                 -> nInt
- *     :insertTab_1( nIndex, pPage, cIcon, cLabel )        -> nInt
+ *     :insertTab_1( nIndex, pPage, pIcon, cLabel )        -> nInt
  *     :isMovable()                                        -> lBool
  *     :isTabEnabled( nIndex )                             -> lBool
  *     :removeTab( nIndex )                                -> NIL
@@ -48,7 +48,7 @@
  *     :setIconSize( pSize )                               -> NIL
  *     :setMovable( lMovable )                             -> NIL
  *     :setTabEnabled( nIndex, lEnable )                   -> NIL
- *     :setTabIcon( nIndex, cIcon )                        -> NIL
+ *     :setTabIcon( nIndex, pIcon )                        -> NIL
  *     :setTabPosition( nTabPosition )                     -> NIL
  *     :setTabShape( nS )                                  -> NIL
  *     :setTabText( nIndex, cLabel )                       -> NIL

@@ -148,7 +148,7 @@ HB_FUNC( QT_QICON )
    {
       pObj =  new QIcon( hbqt_par_QString( 1 ) ) ;
    }
-   if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
+   else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
       pObj =  new QIcon( *hbqt_par_QPixmap( 1 ) ) ;
    }

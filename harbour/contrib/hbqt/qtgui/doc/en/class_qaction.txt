@@ -48,7 +48,7 @@
  *     :setCheckable( lBool )                              -> NIL
  *     :setData( pUserData )                               -> NIL
  *     :setFont( pFont )                                   -> NIL
- *     :setIcon( cIcon )                                   -> NIL
+ *     :setIcon( pIcon )                                   -> NIL
  *     :setIconText( cText )                               -> NIL
  *     :setIconVisibleInMenu( lVisible )                   -> NIL
  *     :setMenu( pMenu )                                   -> NIL

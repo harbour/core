@@ -75,9 +75,9 @@ CREATE CLASS QToolBar INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QToolBar
    METHOD  actionAt_1( nX, nY )
    METHOD  addAction( pAction )
    METHOD  addAction_1( cText )
-   METHOD  addAction_2( cIcon, cText )
+   METHOD  addAction_2( pIcon, cText )
    METHOD  addAction_3( cText, pReceiver, pMember )
-   METHOD  addAction_4( cIcon, cText, pReceiver, pMember )
+   METHOD  addAction_4( pIcon, cText, pReceiver, pMember )
    METHOD  addSeparator()
    METHOD  addWidget( pWidget )
    METHOD  allowedAreas()
@@ -128,16 +128,16 @@ METHOD QToolBar:addAction_1( cText )
    RETURN Qt_QToolBar_addAction_1( ::pPtr, cText )
 
 
-METHOD QToolBar:addAction_2( cIcon, cText )
-   RETURN Qt_QToolBar_addAction_2( ::pPtr, cIcon, cText )
+METHOD QToolBar:addAction_2( pIcon, cText )
+   RETURN Qt_QToolBar_addAction_2( ::pPtr, hbqt_ptr( pIcon ), cText )
 
 
 METHOD QToolBar:addAction_3( cText, pReceiver, pMember )
    RETURN Qt_QToolBar_addAction_3( ::pPtr, cText, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ) )
 
 
-METHOD QToolBar:addAction_4( cIcon, cText, pReceiver, pMember )
-   RETURN Qt_QToolBar_addAction_4( ::pPtr, cIcon, cText, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ) )
+METHOD QToolBar:addAction_4( pIcon, cText, pReceiver, pMember )
+   RETURN Qt_QToolBar_addAction_4( ::pPtr, hbqt_ptr( pIcon ), cText, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ) )
 
 
 METHOD QToolBar:addSeparator()

@@ -122,7 +122,7 @@ CREATE CLASS QStandardItem INHERIT HbQtObjectHandler FUNCTION HB_QStandardItem
    METHOD  setFlags( nFlags )
    METHOD  setFont( pFont )
    METHOD  setForeground( pBrush )
-   METHOD  setIcon( cIcon )
+   METHOD  setIcon( pIcon )
    METHOD  setRowCount( nRows )
    METHOD  setSelectable( lSelectable )
    METHOD  setSizeHint( pSize )
@@ -361,8 +361,8 @@ METHOD QStandardItem:setForeground( pBrush )
    RETURN Qt_QStandardItem_setForeground( ::pPtr, hbqt_ptr( pBrush ) )
 
 
-METHOD QStandardItem:setIcon( cIcon )
-   RETURN Qt_QStandardItem_setIcon( ::pPtr, cIcon )
+METHOD QStandardItem:setIcon( pIcon )
+   RETURN Qt_QStandardItem_setIcon( ::pPtr, hbqt_ptr( pIcon ) )
 
 
 METHOD QStandardItem:setRowCount( nRows )

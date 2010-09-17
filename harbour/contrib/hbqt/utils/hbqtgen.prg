@@ -1027,8 +1027,9 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
 
             CASE aA[ PRT_CAST ] == "QIcon"
                s := "*hbqt_par_QIcon( " + cHBIdx + " )"
-               aA[ PRT_BODY ] := "( HB_ISPOINTER( " + cHBIdx + " ) ? " + s + " : " + "QIcon( hbqt_par_QString( " + cHBIdx + " ) ) )"
-               aA[ PRT_DOC  ] := "c" + cDocNM
+//               aA[ PRT_BODY ] := "( HB_ISPOINTER( " + cHBIdx + " ) ? " + s + " : " + "QIcon( hbqt_par_QString( " + cHBIdx + " ) ) )"
+               aA[ PRT_BODY ] := "( HB_ISCHAR( " + cHBIdx + " ) ? " + "QIcon( hbqt_par_QString( " + cHBIdx + " ) )" + " : " + s + ")"
+               aA[ PRT_DOC  ] := "p" + cDocNM
 
             CASE aA[ PRT_L_FAR ]
                aA[ PRT_BODY ] := "hbqt_par_" + aA[ PRT_CAST ] + "( " + cHBIdx + " )"

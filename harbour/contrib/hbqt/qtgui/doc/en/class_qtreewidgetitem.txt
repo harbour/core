@@ -57,7 +57,7 @@
  *     :setFont( nColumn, pFont )                          -> NIL
  *     :setForeground( nColumn, pBrush )                   -> NIL
  *     :setHidden( lHide )                                 -> NIL
- *     :setIcon( nColumn, cIcon )                          -> NIL
+ *     :setIcon( nColumn, pIcon )                          -> NIL
  *     :setSelected( lSelect )                             -> NIL
  *     :setSizeHint( nColumn, pSize )                      -> NIL
  *     :setStatusTip( nColumn, cStatusTip )                -> NIL

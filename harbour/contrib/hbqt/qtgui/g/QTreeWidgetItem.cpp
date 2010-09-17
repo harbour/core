@@ -591,7 +591,7 @@ HB_FUNC( QT_QTREEWIDGETITEM_SETICON )
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
    {
-      ( p )->setIcon( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QIcon( 3 ) : QIcon( hbqt_par_QString( 3 ) ) ) );
+      ( p )->setIcon( hb_parni( 2 ), ( HB_ISCHAR( 3 ) ? QIcon( hbqt_par_QString( 3 ) ) : *hbqt_par_QIcon( 3 )) );
    }
 }
 

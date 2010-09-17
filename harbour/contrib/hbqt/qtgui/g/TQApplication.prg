@@ -130,7 +130,7 @@ CREATE CLASS QApplication INHERIT HbQtObjectHandler, HB_QCoreApplication FUNCTIO
    METHOD  setStyle( pStyle )
    METHOD  setStyle_1( cStyle )
    METHOD  setWheelScrollLines( nInt )
-   METHOD  setWindowIcon( cIcon )
+   METHOD  setWindowIcon( pIcon )
    METHOD  startDragDistance()
    METHOD  startDragTime()
    METHOD  style()
@@ -394,8 +394,8 @@ METHOD QApplication:setWheelScrollLines( nInt )
    RETURN Qt_QApplication_setWheelScrollLines( ::pPtr, nInt )
 
 
-METHOD QApplication:setWindowIcon( cIcon )
-   RETURN Qt_QApplication_setWindowIcon( ::pPtr, cIcon )
+METHOD QApplication:setWindowIcon( pIcon )
+   RETURN Qt_QApplication_setWindowIcon( ::pPtr, hbqt_ptr( pIcon ) )
 
 
 METHOD QApplication:startDragDistance()

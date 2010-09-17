@@ -30,9 +30,9 @@
  *     :actionGeometry( pAct )                             -> pQRect
  *     :activeAction()                                     -> pQAction
  *     :addAction( cText )                                 -> pQAction
- *     :addAction_1( cIcon, cText )                        -> pQAction
+ *     :addAction_1( pIcon, cText )                        -> pQAction
  *     :addAction_2( cText, pReceiver, pMember, pShortcut )  -> pQAction
- *     :addAction_3( cIcon, cText, pReceiver, pMember, pShortcut )  -> pQAction
+ *     :addAction_3( pIcon, cText, pReceiver, pMember, pShortcut )  -> pQAction
  *     :addAction_4( pAction )                             -> NIL
  *     :addMenu( pMenu )                                   -> pQAction
  *     :addSeparator()                                     -> pQAction
@@ -52,7 +52,7 @@
  *     :separatorsCollapsible()                            -> lBool
  *     :setActiveAction( pAct )                            -> NIL
  *     :setDefaultAction( pAct )                           -> NIL
- *     :setIcon( cIcon )                                   -> NIL
+ *     :setIcon( pIcon )                                   -> NIL
  *     :setSeparatorsCollapsible( lCollapse )              -> NIL
  *     :setTearOffEnabled( lBool )                         -> NIL
  *     :setTitle( cTitle )                                 -> NIL

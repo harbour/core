@@ -320,7 +320,7 @@ HB_FUNC( QT_QABSTRACTBUTTON_SETICON )
    QAbstractButton * p = hbqt_par_QAbstractButton( 1 );
    if( p )
    {
-      ( p )->setIcon( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QIcon( 2 ) : QIcon( hbqt_par_QString( 2 ) ) ) );
+      ( p )->setIcon( ( HB_ISCHAR( 2 ) ? QIcon( hbqt_par_QString( 2 ) ) : *hbqt_par_QIcon( 2 )) );
    }
 }
 

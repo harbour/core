@@ -162,7 +162,7 @@
  *     :setWhatsThis( cQString )                           -> NIL
  *     :setWindowFilePath( cFilePath )                     -> NIL
  *     :setWindowFlags( nType )                            -> NIL
- *     :setWindowIcon( cIcon )                             -> NIL
+ *     :setWindowIcon( pIcon )                             -> NIL
  *     :setWindowIconText( cQString )                      -> NIL
  *     :setWindowModality( nWindowModality )               -> NIL
  *     :setWindowOpacity( nLevel )                         -> NIL

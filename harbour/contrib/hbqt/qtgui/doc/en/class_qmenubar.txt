@@ -32,7 +32,7 @@
  *     :addAction_2( pAction )                             -> NIL
  *     :addMenu( pMenu )                                   -> pQAction
  *     :addMenu_1( cTitle )                                -> pQMenu
- *     :addMenu_2( cIcon, cTitle )                         -> pQMenu
+ *     :addMenu_2( pIcon, cTitle )                         -> pQMenu
  *     :addSeparator()                                     -> pQAction
  *     :clear()                                            -> NIL
  *     :insertMenu( pBefore, pMenu )                       -> pQAction

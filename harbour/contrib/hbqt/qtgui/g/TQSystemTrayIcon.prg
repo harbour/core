@@ -76,7 +76,7 @@ CREATE CLASS QSystemTrayIcon INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_Q
    METHOD  icon()
    METHOD  isVisible()
    METHOD  setContextMenu( pMenu )
-   METHOD  setIcon( cIcon )
+   METHOD  setIcon( pIcon )
    METHOD  setToolTip( cTip )
    METHOD  showMessage( cTitle, cMessage, nIcon, nMillisecondsTimeoutHint )
    METHOD  toolTip()
@@ -118,8 +118,8 @@ METHOD QSystemTrayIcon:setContextMenu( pMenu )
    RETURN Qt_QSystemTrayIcon_setContextMenu( ::pPtr, hbqt_ptr( pMenu ) )
 
 
-METHOD QSystemTrayIcon:setIcon( cIcon )
-   RETURN Qt_QSystemTrayIcon_setIcon( ::pPtr, cIcon )
+METHOD QSystemTrayIcon:setIcon( pIcon )
+   RETURN Qt_QSystemTrayIcon_setIcon( ::pPtr, hbqt_ptr( pIcon ) )
 
 
 METHOD QSystemTrayIcon:setToolTip( cTip )

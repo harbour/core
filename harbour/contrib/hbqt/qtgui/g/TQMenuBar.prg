@@ -77,7 +77,7 @@ CREATE CLASS QMenuBar INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QMenuBar
    METHOD  addAction_2( pAction )
    METHOD  addMenu( pMenu )
    METHOD  addMenu_1( cTitle )
-   METHOD  addMenu_2( cIcon, cTitle )
+   METHOD  addMenu_2( pIcon, cTitle )
    METHOD  addSeparator()
    METHOD  clear()
    METHOD  insertMenu( pBefore, pMenu )
@@ -122,8 +122,8 @@ METHOD QMenuBar:addMenu_1( cTitle )
    RETURN Qt_QMenuBar_addMenu_1( ::pPtr, cTitle )
 
 
-METHOD QMenuBar:addMenu_2( cIcon, cTitle )
-   RETURN Qt_QMenuBar_addMenu_2( ::pPtr, cIcon, cTitle )
+METHOD QMenuBar:addMenu_2( pIcon, cTitle )
+   RETURN Qt_QMenuBar_addMenu_2( ::pPtr, hbqt_ptr( pIcon ), cTitle )
 
 
 METHOD QMenuBar:addSeparator()

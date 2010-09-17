@@ -71,13 +71,13 @@ CREATE CLASS QToolBox INHERIT HbQtObjectHandler, HB_QFrame FUNCTION HB_QToolBox
 
    METHOD  new( ... )
 
-   METHOD  addItem( pWidget, cIconSet, cText )
+   METHOD  addItem( pWidget, pIconSet, cText )
    METHOD  addItem_1( pW, cText )
    METHOD  count()
    METHOD  currentIndex()
    METHOD  currentWidget()
    METHOD  indexOf( pWidget )
-   METHOD  insertItem( nIndex, pWidget, cIcon, cText )
+   METHOD  insertItem( nIndex, pWidget, pIcon, cText )
    METHOD  insertItem_1( nIndex, pWidget, cText )
    METHOD  isItemEnabled( nIndex )
    METHOD  itemIcon( nIndex )
@@ -85,7 +85,7 @@ CREATE CLASS QToolBox INHERIT HbQtObjectHandler, HB_QFrame FUNCTION HB_QToolBox
    METHOD  itemToolTip( nIndex )
    METHOD  removeItem( nIndex )
    METHOD  setItemEnabled( nIndex, lEnabled )
-   METHOD  setItemIcon( nIndex, cIcon )
+   METHOD  setItemIcon( nIndex, pIcon )
    METHOD  setItemText( nIndex, cText )
    METHOD  setItemToolTip( nIndex, cToolTip )
    METHOD  widget( nIndex )
@@ -104,8 +104,8 @@ METHOD QToolBox:new( ... )
    RETURN Self
 
 
-METHOD QToolBox:addItem( pWidget, cIconSet, cText )
-   RETURN Qt_QToolBox_addItem( ::pPtr, hbqt_ptr( pWidget ), cIconSet, cText )
+METHOD QToolBox:addItem( pWidget, pIconSet, cText )
+   RETURN Qt_QToolBox_addItem( ::pPtr, hbqt_ptr( pWidget ), hbqt_ptr( pIconSet ), cText )
 
 
 METHOD QToolBox:addItem_1( pW, cText )
@@ -128,8 +128,8 @@ METHOD QToolBox:indexOf( pWidget )
    RETURN Qt_QToolBox_indexOf( ::pPtr, hbqt_ptr( pWidget ) )
 
 
-METHOD QToolBox:insertItem( nIndex, pWidget, cIcon, cText )
-   RETURN Qt_QToolBox_insertItem( ::pPtr, nIndex, hbqt_ptr( pWidget ), cIcon, cText )
+METHOD QToolBox:insertItem( nIndex, pWidget, pIcon, cText )
+   RETURN Qt_QToolBox_insertItem( ::pPtr, nIndex, hbqt_ptr( pWidget ), hbqt_ptr( pIcon ), cText )
 
 
 METHOD QToolBox:insertItem_1( nIndex, pWidget, cText )
@@ -160,8 +160,8 @@ METHOD QToolBox:setItemEnabled( nIndex, lEnabled )
    RETURN Qt_QToolBox_setItemEnabled( ::pPtr, nIndex, lEnabled )
 
 
-METHOD QToolBox:setItemIcon( nIndex, cIcon )
-   RETURN Qt_QToolBox_setItemIcon( ::pPtr, nIndex, cIcon )
+METHOD QToolBox:setItemIcon( nIndex, pIcon )
+   RETURN Qt_QToolBox_setItemIcon( ::pPtr, nIndex, hbqt_ptr( pIcon ) )
 
 
 METHOD QToolBox:setItemText( nIndex, cText )

@@ -75,13 +75,13 @@ CREATE CLASS QMenu INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QMenu
    METHOD  actionGeometry( pAct )
    METHOD  activeAction()
    METHOD  addAction( cText )
-   METHOD  addAction_1( cIcon, cText )
+   METHOD  addAction_1( pIcon, cText )
    METHOD  addAction_2( cText, pReceiver, pMember, pShortcut )
-   METHOD  addAction_3( cIcon, cText, pReceiver, pMember, pShortcut )
+   METHOD  addAction_3( pIcon, cText, pReceiver, pMember, pShortcut )
    METHOD  addAction_4( pAction )
    METHOD  addMenu( pMenu )
    METHOD  addMenu_1( cTitle )
-   METHOD  addMenu_2( cIcon, cTitle )
+   METHOD  addMenu_2( pIcon, cTitle )
    METHOD  addSeparator()
    METHOD  clear()
    METHOD  defaultAction()
@@ -99,7 +99,7 @@ CREATE CLASS QMenu INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QMenu
    METHOD  separatorsCollapsible()
    METHOD  setActiveAction( pAct )
    METHOD  setDefaultAction( pAct )
-   METHOD  setIcon( cIcon )
+   METHOD  setIcon( pIcon )
    METHOD  setSeparatorsCollapsible( lCollapse )
    METHOD  setTearOffEnabled( lBool )
    METHOD  setTitle( cTitle )
@@ -133,16 +133,16 @@ METHOD QMenu:addAction( cText )
    RETURN Qt_QMenu_addAction( ::pPtr, cText )
 
 
-METHOD QMenu:addAction_1( cIcon, cText )
-   RETURN Qt_QMenu_addAction_1( ::pPtr, cIcon, cText )
+METHOD QMenu:addAction_1( pIcon, cText )
+   RETURN Qt_QMenu_addAction_1( ::pPtr, hbqt_ptr( pIcon ), cText )
 
 
 METHOD QMenu:addAction_2( cText, pReceiver, pMember, pShortcut )
    RETURN Qt_QMenu_addAction_2( ::pPtr, cText, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ), hbqt_ptr( pShortcut ) )
 
 
-METHOD QMenu:addAction_3( cIcon, cText, pReceiver, pMember, pShortcut )
-   RETURN Qt_QMenu_addAction_3( ::pPtr, cIcon, cText, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ), hbqt_ptr( pShortcut ) )
+METHOD QMenu:addAction_3( pIcon, cText, pReceiver, pMember, pShortcut )
+   RETURN Qt_QMenu_addAction_3( ::pPtr, hbqt_ptr( pIcon ), cText, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ), hbqt_ptr( pShortcut ) )
 
 
 METHOD QMenu:addAction_4( pAction )
@@ -157,8 +157,8 @@ METHOD QMenu:addMenu_1( cTitle )
    RETURN Qt_QMenu_addMenu_1( ::pPtr, cTitle )
 
 
-METHOD QMenu:addMenu_2( cIcon, cTitle )
-   RETURN Qt_QMenu_addMenu_2( ::pPtr, cIcon, cTitle )
+METHOD QMenu:addMenu_2( pIcon, cTitle )
+   RETURN Qt_QMenu_addMenu_2( ::pPtr, hbqt_ptr( pIcon ), cTitle )
 
 
 METHOD QMenu:addSeparator()
@@ -229,8 +229,8 @@ METHOD QMenu:setDefaultAction( pAct )
    RETURN Qt_QMenu_setDefaultAction( ::pPtr, hbqt_ptr( pAct ) )
 
 
-METHOD QMenu:setIcon( cIcon )
-   RETURN Qt_QMenu_setIcon( ::pPtr, cIcon )
+METHOD QMenu:setIcon( pIcon )
+   RETURN Qt_QMenu_setIcon( ::pPtr, hbqt_ptr( pIcon ) )
 
 
 METHOD QMenu:setSeparatorsCollapsible( lCollapse )

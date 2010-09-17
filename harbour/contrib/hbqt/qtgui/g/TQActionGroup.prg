@@ -74,7 +74,7 @@ CREATE CLASS QActionGroup INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QAct
    METHOD  actions()
    METHOD  addAction( pAction )
    METHOD  addAction_1( cText )
-   METHOD  addAction_2( cIcon, cText )
+   METHOD  addAction_2( pIcon, cText )
    METHOD  checkedAction()
    METHOD  isEnabled()
    METHOD  isExclusive()
@@ -109,8 +109,8 @@ METHOD QActionGroup:addAction_1( cText )
    RETURN Qt_QActionGroup_addAction_1( ::pPtr, cText )
 
 
-METHOD QActionGroup:addAction_2( cIcon, cText )
-   RETURN Qt_QActionGroup_addAction_2( ::pPtr, cIcon, cText )
+METHOD QActionGroup:addAction_2( pIcon, cText )
+   RETURN Qt_QActionGroup_addAction_2( ::pPtr, hbqt_ptr( pIcon ), cText )
 
 
 METHOD QActionGroup:checkedAction()

@@ -30,9 +30,9 @@
  *     :actionAt_1( nX, nY )                               -> pQAction
  *     :addAction( pAction )                               -> NIL
  *     :addAction_1( cText )                               -> pQAction
- *     :addAction_2( cIcon, cText )                        -> pQAction
+ *     :addAction_2( pIcon, cText )                        -> pQAction
  *     :addAction_3( cText, pReceiver, pMember )           -> pQAction
- *     :addAction_4( cIcon, cText, pReceiver, pMember )    -> pQAction
+ *     :addAction_4( pIcon, cText, pReceiver, pMember )    -> pQAction
  *     :addSeparator()                                     -> pQAction
  *     :addWidget( pWidget )                               -> pQAction
  *     :allowedAreas()                                     -> nQt::ToolBarAreas

@@ -26,13 +26,13 @@
  *  $RETURNS$
  *     An instance of the object of type QToolBox
  *  $METHODS$
- *     :addItem( pWidget, cIconSet, cText )                -> nInt
+ *     :addItem( pWidget, pIconSet, cText )                -> nInt
  *     :addItem_1( pW, cText )                             -> nInt
  *     :count()                                            -> nInt
  *     :currentIndex()                                     -> nInt
  *     :currentWidget()                                    -> pQWidget
  *     :indexOf( pWidget )                                 -> nInt
- *     :insertItem( nIndex, pWidget, cIcon, cText )        -> nInt
+ *     :insertItem( nIndex, pWidget, pIcon, cText )        -> nInt
  *     :insertItem_1( nIndex, pWidget, cText )             -> nInt
  *     :isItemEnabled( nIndex )                            -> lBool
  *     :itemIcon( nIndex )                                 -> pQIcon
@@ -40,7 +40,7 @@
  *     :itemToolTip( nIndex )                              -> cQString
  *     :removeItem( nIndex )                               -> NIL
  *     :setItemEnabled( nIndex, lEnabled )                 -> NIL
- *     :setItemIcon( nIndex, cIcon )                       -> NIL
+ *     :setItemIcon( nIndex, pIcon )                       -> NIL
  *     :setItemText( nIndex, cText )                       -> NIL
  *     :setItemToolTip( nIndex, cToolTip )                 -> NIL
  *     :widget( nIndex )                                   -> pQWidget

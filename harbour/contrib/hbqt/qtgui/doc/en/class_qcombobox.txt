@@ -27,7 +27,7 @@
  *     An instance of the object of type QComboBox
  *  $METHODS$
  *     :addItem( cText, pUserData )                        -> NIL
- *     :addItem_1( cIcon, cText, pUserData )               -> NIL
+ *     :addItem_1( pIcon, cText, pUserData )               -> NIL
  *     :addItems( pTexts )                                 -> NIL
  *     :completer()                                        -> pQCompleter
  *     :count()                                            -> nInt
@@ -40,7 +40,7 @@
  *     :hidePopup()                                        -> NIL
  *     :iconSize()                                         -> pQSize
  *     :insertItem( nIndex, cText, pUserData )             -> NIL
- *     :insertItem_1( nIndex, cIcon, cText, pUserData )    -> NIL
+ *     :insertItem_1( nIndex, pIcon, cText, pUserData )    -> NIL
  *     :insertItems( nIndex, pList )                       -> NIL
  *     :insertPolicy()                                     -> nInsertPolicy
  *     :insertSeparator( nIndex )                          -> NIL
@@ -65,7 +65,7 @@
  *     :setInsertPolicy( nPolicy )                         -> NIL
  *     :setItemData( nIndex, pValue, nRole )               -> NIL
  *     :setItemDelegate( pDelegate )                       -> NIL
- *     :setItemIcon( nIndex, cIcon )                       -> NIL
+ *     :setItemIcon( nIndex, pIcon )                       -> NIL
  *     :setItemText( nIndex, cText )                       -> NIL
  *     :setLineEdit( pEdit )                               -> NIL
  *     :setMaxCount( nMax )                                -> NIL

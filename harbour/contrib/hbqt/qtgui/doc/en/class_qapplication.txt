@@ -85,7 +85,7 @@
  *     :setStyle( pStyle )                                 -> NIL
  *     :setStyle_1( cStyle )                               -> pQStyle
  *     :setWheelScrollLines( nInt )                        -> NIL
- *     :setWindowIcon( cIcon )                             -> NIL
+ *     :setWindowIcon( pIcon )                             -> NIL
  *     :startDragDistance()                                -> nInt
  *     :startDragTime()                                    -> nInt
  *     :style()                                            -> pQStyle

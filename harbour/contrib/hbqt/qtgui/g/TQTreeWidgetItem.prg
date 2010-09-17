@@ -105,7 +105,7 @@ CREATE CLASS QTreeWidgetItem INHERIT HbQtObjectHandler FUNCTION HB_QTreeWidgetIt
    METHOD  setFont( nColumn, pFont )
    METHOD  setForeground( nColumn, pBrush )
    METHOD  setHidden( lHide )
-   METHOD  setIcon( nColumn, cIcon )
+   METHOD  setIcon( nColumn, pIcon )
    METHOD  setSelected( lSelect )
    METHOD  setSizeHint( nColumn, pSize )
    METHOD  setStatusTip( nColumn, cStatusTip )
@@ -273,8 +273,8 @@ METHOD QTreeWidgetItem:setHidden( lHide )
    RETURN Qt_QTreeWidgetItem_setHidden( ::pPtr, lHide )
 
 
-METHOD QTreeWidgetItem:setIcon( nColumn, cIcon )
-   RETURN Qt_QTreeWidgetItem_setIcon( ::pPtr, nColumn, cIcon )
+METHOD QTreeWidgetItem:setIcon( nColumn, pIcon )
+   RETURN Qt_QTreeWidgetItem_setIcon( ::pPtr, nColumn, hbqt_ptr( pIcon ) )
 
 
 METHOD QTreeWidgetItem:setSelected( lSelect )

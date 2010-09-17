@@ -72,7 +72,7 @@ CREATE CLASS QComboBox INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QComboB
    METHOD  new( ... )
 
    METHOD  addItem( cText, pUserData )
-   METHOD  addItem_1( cIcon, cText, pUserData )
+   METHOD  addItem_1( pIcon, cText, pUserData )
    METHOD  addItems( pTexts )
    METHOD  completer()
    METHOD  count()
@@ -85,7 +85,7 @@ CREATE CLASS QComboBox INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QComboB
    METHOD  hidePopup()
    METHOD  iconSize()
    METHOD  insertItem( nIndex, cText, pUserData )
-   METHOD  insertItem_1( nIndex, cIcon, cText, pUserData )
+   METHOD  insertItem_1( nIndex, pIcon, cText, pUserData )
    METHOD  insertItems( nIndex, pList )
    METHOD  insertPolicy()
    METHOD  insertSeparator( nIndex )
@@ -110,7 +110,7 @@ CREATE CLASS QComboBox INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QComboB
    METHOD  setInsertPolicy( nPolicy )
    METHOD  setItemData( nIndex, pValue, nRole )
    METHOD  setItemDelegate( pDelegate )
-   METHOD  setItemIcon( nIndex, cIcon )
+   METHOD  setItemIcon( nIndex, pIcon )
    METHOD  setItemText( nIndex, cText )
    METHOD  setLineEdit( pEdit )
    METHOD  setMaxCount( nMax )
@@ -147,8 +147,8 @@ METHOD QComboBox:addItem( cText, pUserData )
    RETURN Qt_QComboBox_addItem( ::pPtr, cText, hbqt_ptr( pUserData ) )
 
 
-METHOD QComboBox:addItem_1( cIcon, cText, pUserData )
-   RETURN Qt_QComboBox_addItem_1( ::pPtr, cIcon, cText, hbqt_ptr( pUserData ) )
+METHOD QComboBox:addItem_1( pIcon, cText, pUserData )
+   RETURN Qt_QComboBox_addItem_1( ::pPtr, hbqt_ptr( pIcon ), cText, hbqt_ptr( pUserData ) )
 
 
 METHOD QComboBox:addItems( pTexts )
@@ -199,8 +199,8 @@ METHOD QComboBox:insertItem( nIndex, cText, pUserData )
    RETURN Qt_QComboBox_insertItem( ::pPtr, nIndex, cText, hbqt_ptr( pUserData ) )
 
 
-METHOD QComboBox:insertItem_1( nIndex, cIcon, cText, pUserData )
-   RETURN Qt_QComboBox_insertItem_1( ::pPtr, nIndex, cIcon, cText, hbqt_ptr( pUserData ) )
+METHOD QComboBox:insertItem_1( nIndex, pIcon, cText, pUserData )
+   RETURN Qt_QComboBox_insertItem_1( ::pPtr, nIndex, hbqt_ptr( pIcon ), cText, hbqt_ptr( pUserData ) )
 
 
 METHOD QComboBox:insertItems( nIndex, pList )
@@ -299,8 +299,8 @@ METHOD QComboBox:setItemDelegate( pDelegate )
    RETURN Qt_QComboBox_setItemDelegate( ::pPtr, hbqt_ptr( pDelegate ) )
 
 
-METHOD QComboBox:setItemIcon( nIndex, cIcon )
-   RETURN Qt_QComboBox_setItemIcon( ::pPtr, nIndex, cIcon )
+METHOD QComboBox:setItemIcon( nIndex, pIcon )
+   RETURN Qt_QComboBox_setItemIcon( ::pPtr, nIndex, hbqt_ptr( pIcon ) )
 
 
 METHOD QComboBox:setItemText( nIndex, cText )

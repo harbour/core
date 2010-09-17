@@ -192,7 +192,7 @@ HB_FUNC( QT_QTABWIDGET_ADDTAB_1 )
    if( p )
    {
       void * pText;
-      hb_retni( ( p )->addTab( hbqt_par_QWidget( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QIcon( 3 ) : QIcon( hbqt_par_QString( 3 ) ) ), hb_parstr_utf8( 4, &pText, NULL ) ) );
+      hb_retni( ( p )->addTab( hbqt_par_QWidget( 2 ), ( HB_ISCHAR( 3 ) ? QIcon( hbqt_par_QString( 3 ) ) : *hbqt_par_QIcon( 3 )), hb_parstr_utf8( 4, &pText, NULL ) ) );
       hb_strfree( pText );
    }
 }
@@ -328,7 +328,7 @@ HB_FUNC( QT_QTABWIDGET_INSERTTAB_1 )
    if( p )
    {
       void * pText;
-      hb_retni( ( p )->insertTab( hb_parni( 2 ), hbqt_par_QWidget( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QIcon( 4 ) : QIcon( hbqt_par_QString( 4 ) ) ), hb_parstr_utf8( 5, &pText, NULL ) ) );
+      hb_retni( ( p )->insertTab( hb_parni( 2 ), hbqt_par_QWidget( 3 ), ( HB_ISCHAR( 4 ) ? QIcon( hbqt_par_QString( 4 ) ) : *hbqt_par_QIcon( 4 )), hb_parstr_utf8( 5, &pText, NULL ) ) );
       hb_strfree( pText );
    }
 }
@@ -449,7 +449,7 @@ HB_FUNC( QT_QTABWIDGET_SETTABICON )
    QTabWidget * p = hbqt_par_QTabWidget( 1 );
    if( p )
    {
-      ( p )->setTabIcon( hb_parni( 2 ), ( HB_ISPOINTER( 3 ) ? *hbqt_par_QIcon( 3 ) : QIcon( hbqt_par_QString( 3 ) ) ) );
+      ( p )->setTabIcon( hb_parni( 2 ), ( HB_ISCHAR( 3 ) ? QIcon( hbqt_par_QString( 3 ) ) : *hbqt_par_QIcon( 3 )) );
    }
 }
 

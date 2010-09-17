@@ -918,7 +918,7 @@ HB_FUNC( QT_QAPPLICATION_SETWINDOWICON )
    QApplication * p = hbqt_par_QApplication( 1 );
    if( p )
    {
-      ( p )->setWindowIcon( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QIcon( 2 ) : QIcon( hbqt_par_QString( 2 ) ) ) );
+      ( p )->setWindowIcon( ( HB_ISCHAR( 2 ) ? QIcon( hbqt_par_QString( 2 ) ) : *hbqt_par_QIcon( 2 )) );
    }
 }
 

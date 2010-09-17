@@ -87,7 +87,7 @@ CREATE CLASS QAbstractButton INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_Q
    METHOD  setAutoRepeatInterval( nInt )
    METHOD  setCheckable( lBool )
    METHOD  setDown( lBool )
-   METHOD  setIcon( cIcon )
+   METHOD  setIcon( pIcon )
    METHOD  setShortcut( pKey )
    METHOD  setText( cText )
    METHOD  shortcut()
@@ -174,8 +174,8 @@ METHOD QAbstractButton:setDown( lBool )
    RETURN Qt_QAbstractButton_setDown( ::pPtr, lBool )
 
 
-METHOD QAbstractButton:setIcon( cIcon )
-   RETURN Qt_QAbstractButton_setIcon( ::pPtr, cIcon )
+METHOD QAbstractButton:setIcon( pIcon )
+   RETURN Qt_QAbstractButton_setIcon( ::pPtr, hbqt_ptr( pIcon ) )
 
 
 METHOD QAbstractButton:setShortcut( pKey )

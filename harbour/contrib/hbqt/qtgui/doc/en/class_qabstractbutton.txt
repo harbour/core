@@ -42,7 +42,7 @@
  *     :setAutoRepeatInterval( nInt )                      -> NIL
  *     :setCheckable( lBool )                              -> NIL
  *     :setDown( lBool )                                   -> NIL
- *     :setIcon( cIcon )                                   -> NIL
+ *     :setIcon( pIcon )                                   -> NIL
  *     :setShortcut( pKey )                                -> NIL
  *     :setText( cText )                                   -> NIL
  *     :shortcut()                                         -> pQKeySequence

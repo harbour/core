@@ -89,7 +89,7 @@ CREATE CLASS QTableWidgetItem INHERIT HbQtObjectHandler FUNCTION HB_QTableWidget
    METHOD  setFlags( nFlags )
    METHOD  setFont( pFont )
    METHOD  setForeground( pBrush )
-   METHOD  setIcon( cIcon )
+   METHOD  setIcon( pIcon )
    METHOD  setSelected( lSelect )
    METHOD  setSizeHint( pSize )
    METHOD  setStatusTip( cStatusTip )
@@ -191,8 +191,8 @@ METHOD QTableWidgetItem:setForeground( pBrush )
    RETURN Qt_QTableWidgetItem_setForeground( ::pPtr, hbqt_ptr( pBrush ) )
 
 
-METHOD QTableWidgetItem:setIcon( cIcon )
-   RETURN Qt_QTableWidgetItem_setIcon( ::pPtr, cIcon )
+METHOD QTableWidgetItem:setIcon( pIcon )
+   RETURN Qt_QTableWidgetItem_setIcon( ::pPtr, hbqt_ptr( pIcon ) )
 
 
 METHOD QTableWidgetItem:setSelected( lSelect )

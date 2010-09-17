@@ -43,7 +43,7 @@
  *     :setFlags( nFlags )                                 -> NIL
  *     :setFont( pFont )                                   -> NIL
  *     :setForeground( pBrush )                            -> NIL
- *     :setIcon( cIcon )                                   -> NIL
+ *     :setIcon( pIcon )                                   -> NIL
  *     :setSelected( lSelect )                             -> NIL
  *     :setSizeHint( pSize )                               -> NIL
  *     :setStatusTip( cStatusTip )                         -> NIL

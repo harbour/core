@@ -31,7 +31,7 @@
  *     :icon()                                             -> pQIcon
  *     :isVisible()                                        -> lBool
  *     :setContextMenu( pMenu )                            -> NIL
- *     :setIcon( cIcon )                                   -> NIL
+ *     :setIcon( pIcon )                                   -> NIL
  *     :setToolTip( cTip )                                 -> NIL
  *     :showMessage( cTitle, cMessage, nIcon, nMillisecondsTimeoutHint )  -> NIL
  *     :toolTip()                                          -> cQString
