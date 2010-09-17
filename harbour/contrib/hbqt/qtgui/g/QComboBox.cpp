@@ -71,6 +71,15 @@
  *  enum SizeAdjustPolicy { AdjustToContents, AdjustToContentsOnFirstShow, AdjustToMinimumContentsLength, AdjustToMinimumContentsLengthWithIcon }
  */
 
+/*
+ *  Constructed[ 59/60 [ 98.33% ] ]
+ *
+ *  *** Unconvered Prototypes ***
+ *  -----------------------------
+ *
+ *  }
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QComboBox>
@@ -772,10 +781,12 @@ HB_FUNC( QT_QCOMBOBOX_SETVALIDATOR )
  */
 HB_FUNC( QT_QCOMBOBOX_SETVIEW )
 {
-   QComboBox * p = hbqt_par_QComboBox( 1 );
-   if( p )
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+   if( p && p->ph && q && q->ph )
    {
-      ( p )->setView( hbqt_par_QAbstractItemView( 2 ) );
+      q->bNew = HB_FALSE;
+      hbqt_par_QComboBox( 1 )->setView( hbqt_par_QAbstractItemView( 2 ) );
    }
 }
 

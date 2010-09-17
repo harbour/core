@@ -78,6 +78,7 @@ CLASS XbpComboBox  INHERIT  XbpWindow
    DATA     type                                  INIT    XBPCOMBO_DROPDOWN
    DATA     drawMode                              INIT    XBP_DRAW_NORMAL
 
+//   MESSAGE  init( ... )                           METHOD  new( ... )
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
@@ -134,14 +135,17 @@ METHOD XbpComboBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::oSLE := XbpSLE():new():create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   ::oLB  := XbpListBox():new():create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::oSLE := XbpSLE():new():create( ::oParent, ::oOwner, ::aPos, ::aSize, ::aPresParams, ::visible )
+   ::oLB  := XbpListBox():new():create( ::oParent, ::oOwner, ::aPos, ::aSize, ::aPresParams, ::visible )
 
    ::oWidget := QComboBox( ::pParent )
 
-   ::oWidget:setLineEdit( ::XbpSLE:oWidget:pPtr )
-   ::oWidget:setEditable( ::XbpSLE:editable )
-   ::oWidget:setFrame( ::XbpSLE:border )
+   ::oWidget:setModel( QAbstractItemModel():from( ::xbpListBox:model() ) )
+   ::oWidget:setView( ::xbpListBox:oWidget )
+   ::oWidget:setLineEdit( ::xbpSLE:oWidget )
+   //::oWidget:setLineEdit( ::XbpSLE:oWidget:pPtr )
+   ::oWidget:setEditable( ::xbpSLE:editable )
+   ::oWidget:setFrame( ::xbpSLE:border )
 
    ::oWidget:connect( "highlighted(int)"        , {|i| ::execSlot( "highlighted(int)"        , i ) } )
    ::oWidget:connect( "activated(int)"          , {|i| ::execSlot( "activated(int)"          , i ) } )
@@ -166,18 +170,20 @@ METHOD XbpComboBox:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams,
       ::oWidget:pPtr := pQtObject
 
    ELSE
-      ::oSLE := XbpSLE():new():create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-      ::oLB  := XbpListBox():new():create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+      ::oSLE := XbpSLE():new():create( ::oParent, ::oOwner, ::aPos, ::aSize, ::aPresParams, ::lVisible )
+      ::oLB  := XbpListBox():new():create( ::oParent, ::oOwner, ::aPos, ::aSize, ::aPresParams, ::lVisible )
 
       ::oWidget := QComboBox( ::pParent )
+      ::oWidget:setModel( QAbstractItemModel():from( ::xbpListBox:model() ) )
+      ::oWidget:setView( ::xbpListBox:oWidget )
+      ::oWidget:setLineEdit( ::xbpSLE:oWidget )
+      ::oWidget:setEditable( ::xbpSLE:editable )
+      ::oWidget:setFrame( ::xbpSLE:border )
+
       ::setPosAndSize()
       IF ::visible
          ::show()
       ENDIF
-      ::oWidget:setLineEdit( ::XbpSLE:oWidget )
-      ::oWidget:setEditable( ::XbpSLE:editable )
-      ::oWidget:setFrame( ::XbpSLE:border )
-
    ENDIF
 
    ::oWidget:connect( "highlighted(int)"        , {|i| ::execSlot( "highlighted(int)"        , i ) } )
@@ -190,6 +196,9 @@ METHOD XbpComboBox:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams,
 /*----------------------------------------------------------------------*/
 
 METHOD XbpComboBox:destroy()
+
+   ::xbpSLE:destroy()
+   ::xbpListBox:destroy()
 
    ::xbpWindow:destroy()
 
