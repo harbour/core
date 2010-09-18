@@ -74,6 +74,7 @@
 #include <QtGui/QHeaderView>
 #include <QtGui/QSystemTrayIcon>
 #include <QtGui/QMdiSubWindow>
+#include <QtGui/QSessionManager>
 
 /*----------------------------------------------------------------------*/
 
@@ -306,6 +307,12 @@ public slots:
    void dateChanged( const QDate & date );
    void dateTimeChanged( const QDateTime & datetime );
    void timeChanged( const QTime & time );
+   /* QApplication */
+   void commitDataRequest( QSessionManager & manager );
+   void focusChanged( QWidget * old, QWidget * now );
+   void fontDatabaseChanged();
+   void lastWindowClosed();
+   void saveStateRequest( QSessionManager & manager );
    /* Latest */
 };
 

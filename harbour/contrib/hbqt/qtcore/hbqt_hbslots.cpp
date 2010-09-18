@@ -249,6 +249,12 @@ static bool connect_signal( QString signal, QObject * object, HBSlots * t_slots 
    if( signal == ( QString ) "dateChanged(QDate)"                             ) return object->connect( object, SIGNAL( dateChanged( const QDate & )                                      ), t_slots, SLOT( dateChanged( const QDate & )                                       ), Qt::AutoConnection );
    if( signal == ( QString ) "dateTimeChanged(QDateTime)"                     ) return object->connect( object, SIGNAL( dateTimeChanged( const QDateTime & )                              ), t_slots, SLOT( dateTimeChanged( const QDateTime & )                               ), Qt::AutoConnection );
    if( signal == ( QString ) "timeChanged(QTime)"                             ) return object->connect( object, SIGNAL( timeChanged( const QTime & )                                      ), t_slots, SLOT( timeChanged( const QTime & )                                       ), Qt::AutoConnection );
+   /* QApplication */
+// if( signal == ( QString ) "commitDataRequest(QSessionManager)"             ) return object->connect( object, SIGNAL( commitDataRequest( QSessionManager & )                            ), t_slots, SLOT( commitDataRequest( QSessionManager & )                             ), Qt::AutoConnection );
+   if( signal == ( QString ) "focusChanged(QWidget,QWidget)"                  ) return object->connect( object, SIGNAL( focusChanged( QWidget *, QWidget * )                              ), t_slots, SLOT( focusChanged( QWidget *, QWidget * )                               ), Qt::AutoConnection );
+   if( signal == ( QString ) "fontDatabaseChanged()"                          ) return object->connect( object, SIGNAL( fontDatabaseChanged()                                             ), t_slots, SLOT( fontDatabaseChanged()                                              ), Qt::AutoConnection );
+   if( signal == ( QString ) "lastWindowClosed()"                             ) return object->connect( object, SIGNAL( lastWindowClosed()                                                ), t_slots, SLOT( lastWindowClosed()                                                 ), Qt::AutoConnection );
+// if( signal == ( QString ) "saveStateRequest(QSessionManager)"              ) return object->connect( object, SIGNAL( saveStateRequest( QSessionManager & )                             ), t_slots, SLOT( saveStateRequest( QSessionManager & )                              ), Qt::AutoConnection );
    /* New */
    return false;
 }
@@ -435,6 +441,12 @@ static bool disconnect_signal( QObject * object, const char * signal )
    if( signal == ( QString ) "dateChanged(QDate)"                             ) return object->disconnect( SIGNAL( dateChanged( const QDate & )                                      ) );
    if( signal == ( QString ) "dateTimeChanged(QDateTime)"                     ) return object->disconnect( SIGNAL( dateTimeChanged( const QDateTime & )                              ) );
    if( signal == ( QString ) "timeChanged(QTime)"                             ) return object->disconnect( SIGNAL( timeChanged( const QTime & )                                      ) );
+   /* QApplication */
+// if( signal == ( QString ) "commitDataRequest(QSessionManager)"             ) return object->disconnect( SIGNAL( commitDataRequest( QSessionManager & )                            ) );
+   if( signal == ( QString ) "focusChanged(QWidget,QWidget)"                  ) return object->disconnect( SIGNAL( focusChanged( QWidget *, QWidget * )                              ) );
+   if( signal == ( QString ) "fontDatabaseChanged()"                          ) return object->disconnect( SIGNAL( fontDatabaseChanged()                                             ) );
+   if( signal == ( QString ) "lastWindowClosed()"                             ) return object->disconnect( SIGNAL( lastWindowClosed()                                                ) );
+// if( signal == ( QString ) "saveStateRequest(QSessionManager)"              ) return object->disconnect( SIGNAL( saveStateRequest( QSessionManager & )                             ) );
    /* new */
 
    return false;
@@ -838,6 +850,7 @@ static void hbqt_SlotsExecQTime( HBSlots * t_slots, QObject * object, const char
    }
 }
 
+
 HBSlots::HBSlots( QObject* parent ) : QObject( parent )
 {
 }
@@ -1139,6 +1152,12 @@ void HBSlots::sceneRectChanged( const QRectF & rect )                           
 void HBSlots::dateChanged( const QDate & date )                                                            { hbqt_SlotsExecQDate(          this, qobject_cast<QObject *>( sender() ), "dateChanged(QDate)", date                                        ); }
 void HBSlots::dateTimeChanged( const QDateTime & datetime )                                                { hbqt_SlotsExecQDateTime(      this, qobject_cast<QObject *>( sender() ), "dateTimeChanged(QDate)", datetime                                ); }
 void HBSlots::timeChanged( const QTime & time )                                                            { hbqt_SlotsExecQTime(          this, qobject_cast<QObject *>( sender() ), "timeChanged(QTime)", time                                        ); }
+/* QApplication */
+//void HBSlots::commitDataRequest( QSessionManager & manager )                                             { hbqt_SlotsExecQSessionManager(this, qobject_cast<QObject *>( sender() ), "commitDataRequest(QSessionManager)", manager                     ); }
+void HBSlots::focusChanged( QWidget * old, QWidget * now )                                                 { hbqt_SlotsExecPointerPointer( this, qobject_cast<QObject *>( sender() ), "focusChanged(QWidget,QWidget)"     , old, now                    ); }
+void HBSlots::fontDatabaseChanged()                                                                        { hbqt_SlotsExec(               this, qobject_cast<QObject *>( sender() ), "fontDatabaseChanged()"                                           ); }
+void HBSlots::lastWindowClosed()                                                                           { hbqt_SlotsExec(               this, qobject_cast<QObject *>( sender() ), "lastWindowClosed()"                                              ); }
+//void HBSlots::saveStateRequest( QSessionManager & manager )                                              { hbqt_SlotsExecQSessionManager(this, qobject_cast<QObject *>( sender() ), "saveStateRequest(QSessionManager)" , manager                     ); }
 /* Latest */
 
 /*----------------------------------------------------------------------*/
