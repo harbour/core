@@ -66,7 +66,7 @@ CREATE CLASS TOPBARMENU FUNCTION HBTopBarMenu
 
    EXPORTED:
 
-   METHOD cargo( xCargo ) SETGET
+   VAR cargo
 
    METHOD addItem( oItem )
    METHOD delItem( nPos )
@@ -103,8 +103,7 @@ CREATE CLASS TOPBARMENU FUNCTION HBTopBarMenu
 
    VAR aItems     INIT {}
    VAR nWidth     INIT 0
-   
-   VAR xCargo
+
 ENDCLASS
 
 METHOD addItem( oItem ) CLASS TOPBARMENU
@@ -464,16 +463,6 @@ METHOD New( nRow, nLeft, nRight ) CLASS TOPBARMENU
    ENDIF
 
    RETURN Self
-
-/* -------------------------------------------- */
-
-METHOD cargo( xCargo ) CLASS TOPBARMENU 
-
-   IF xCargo != NIL 
-     ::xCargo := xCargo 
-   ENDIF 
-
-   RETURN ::xCargo 
 
 /* -------------------------------------------- */
 
