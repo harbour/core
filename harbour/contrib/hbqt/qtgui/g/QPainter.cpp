@@ -73,17 +73,27 @@
  */
 
 /*
- *  Constructed[ 182/188 [ 96.81% ] ]
+ *  Constructed[ 179/192 [ 93.23% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
  *
+ *  }
  *  void drawLines ( const QVector<QPointF> & pointPairs )
  *  void drawLines ( const QVector<QPoint> & pointPairs )
  *  void drawLines ( const QVector<QLineF> & lines )
  *  void drawLines ( const QVector<QLine> & lines )
+ *  }
  *  void drawRects ( const QVector<QRectF> & rectangles )
  *  void drawRects ( const QVector<QRect> & rectangles )
+ *
+ *  *** Commented out protos which construct fine but do not compile ***
+ *
+ *  //void drawLine ( const QLineF & line )
+ *  //void drawLine ( const QLine & line )
+ *  //void drawLine ( const QPoint & p1, const QPoint & p2 )
+ *  //void drawLine ( const QPointF & p1, const QPointF & p2 )
+ *  //void drawLine ( int x1, int y1, int x2, int y2 )
  */
 
 #include <QtCore/QPointer>
@@ -667,62 +677,47 @@ HB_FUNC( QT_QPAINTER_DRAWIMAGE_8 )
 }
 
 /*
- * void drawLine ( const QLineF & line )
+ * void drawLine ( ... )
  */
 HB_FUNC( QT_QPAINTER_DRAWLINE )
 {
    QPainter * p = hbqt_par_QPainter( 1 );
    if( p )
    {
-      ( p )->drawLine( *hbqt_par_QLineF( 2 ) );
-   }
-}
+      switch( hb_pcount() )
+      {
+      case 5:
+         ( p )->drawLine( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
+         break;
+      case 3:
+         {
+            HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
 
-/*
- * void drawLine ( const QLine & line )
- */
-HB_FUNC( QT_QPAINTER_DRAWLINE_1 )
-{
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      ( p )->drawLine( *hbqt_par_QLine( 2 ) );
-   }
-}
+            if( q->type == HBQT_TYPE_QPoint )
+            {
+               ( p )->drawLine( *hbqt_par_QPoint( 2 ), *hbqt_par_QPoint( 3 ) );
+            }
+            else if( q->type == HBQT_TYPE_QPointF )
+            {
+               ( p )->drawLine( *hbqt_par_QPointF( 2 ), *hbqt_par_QPointF( 3 ) );
+            }
+         }
+         break;
+      case 2:
+         {
+            HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
 
-/*
- * void drawLine ( const QPoint & p1, const QPoint & p2 )
- */
-HB_FUNC( QT_QPAINTER_DRAWLINE_2 )
-{
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      ( p )->drawLine( *hbqt_par_QPoint( 2 ), *hbqt_par_QPoint( 3 ) );
-   }
-}
-
-/*
- * void drawLine ( const QPointF & p1, const QPointF & p2 )
- */
-HB_FUNC( QT_QPAINTER_DRAWLINE_3 )
-{
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      ( p )->drawLine( *hbqt_par_QPointF( 2 ), *hbqt_par_QPointF( 3 ) );
-   }
-}
-
-/*
- * void drawLine ( int x1, int y1, int x2, int y2 )
- */
-HB_FUNC( QT_QPAINTER_DRAWLINE_4 )
-{
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      ( p )->drawLine( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
+            if( q->type == HBQT_TYPE_QLineF )
+            {
+               ( p )->drawLine( *hbqt_par_QLineF( 2 ) );
+            }
+            else if( q->type == HBQT_TYPE_QLine )
+            {
+               ( p )->drawLine( *hbqt_par_QLine( 2 ) );
+            }
+         }
+         break;
+      }
    }
 }
 
@@ -855,6 +850,68 @@ HB_FUNC( QT_QPAINTER_DRAWPIE_2 )
    if( p )
    {
       ( p )->drawPie( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ), hb_parni( 7 ) );
+   }
+}
+
+/*
+ * void hbDrawPixmap ( ... )
+ */
+HB_FUNC( QT_QPAINTER_HBDRAWPIXMAP )
+{
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+   if( p && p->ph )
+   {
+      switch( hb_pcount() )
+      {
+      case 10:
+         hbqt_par_QPainter( 1 )->drawPixmap( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), *hbqt_par_QPixmap( 6 ), hb_parni( 7 ), hb_parni( 8 ), hb_parni( 9 ), hb_parni( 10 ) );
+         break;
+      case 8:
+         hbqt_par_QPainter( 1 )->drawPixmap( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QPixmap( 4 ), hb_parni( 5 ), hb_parni( 6 ), hb_parni( 7 ), hb_parni( 8 ) );
+         break;
+      case 6:
+         hbqt_par_QPainter( 1 )->drawPixmap( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), *hbqt_par_QPixmap( 6 ) );
+         break;
+      case 4:
+         if( HB_ISNUM( 2 ) )
+         {
+            hbqt_par_QPainter( 1 )->drawPixmap( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QPixmap( 4 ) );
+         }
+         else
+         {
+            if( p->type == HBQT_TYPE_QRectF )
+            {
+               hbqt_par_QPainter( 1 )->drawPixmap( *hbqt_par_QRectF( 2 ), *hbqt_par_QPixmap( 3 ), *hbqt_par_QRectF( 4 ) );
+            }
+            else if( p->type == HBQT_TYPE_QRect )
+            {
+               hbqt_par_QPainter( 1 )->drawPixmap( *hbqt_par_QRect( 2 ), *hbqt_par_QPixmap( 3 ), *hbqt_par_QRect( 4 ) );
+            }
+            else if( p->type == HBQT_TYPE_QPointF )
+            {
+               hbqt_par_QPainter( 1 )->drawPixmap( *hbqt_par_QPointF( 2 ), *hbqt_par_QPixmap( 3 ), *hbqt_par_QRectF( 4 ) );
+            }
+            else if( p->type == HBQT_TYPE_QPoint )
+            {
+               hbqt_par_QPainter( 1 )->drawPixmap( *hbqt_par_QPoint( 2 ), *hbqt_par_QPixmap( 3 ), *hbqt_par_QRect( 4 ) );
+            }
+         }
+         break;
+      case 3:
+         if( p->type == HBQT_TYPE_QRect )
+         {
+            hbqt_par_QPainter( 1 )->drawPixmap( *hbqt_par_QRect( 2 ), *hbqt_par_QPixmap( 3 ) );
+         }
+         else if( p->type == HBQT_TYPE_QPointF )
+         {
+            hbqt_par_QPainter( 1 )->drawPixmap( *hbqt_par_QPointF( 2 ), *hbqt_par_QPixmap( 3 ) );
+         }
+         else if( p->type == HBQT_TYPE_QPoint )
+         {
+            hbqt_par_QPainter( 1 )->drawPixmap( *hbqt_par_QPoint( 2 ), *hbqt_par_QPixmap( 3 ) );
+         }
+         break;
+      }
    }
 }
 

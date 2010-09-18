@@ -67,11 +67,7 @@
  *     :drawImage_6( pRectangle, pImage )                  -> NIL
  *     :drawImage_7( pRectangle, pImage )                  -> NIL
  *     :drawImage_8( nX, nY, pImage, nSx, nSy, nSw, nSh, nFlags )  -> NIL
- *     :drawLine( pLine )                                  -> NIL
- *     :drawLine_1( pLine )                                -> NIL
- *     :drawLine_2( pP1, pP2 )                             -> NIL
- *     :drawLine_3( pP1, pP2 )                             -> NIL
- *     :drawLine_4( nX1, nY1, nX2, nY2 )                   -> NIL
+ *     :drawLine( ... )                                    -> NIL
  *     :drawLines( pLines, nLineCount )                    -> NIL
  *     :drawLines_1( pLines, nLineCount )                  -> NIL
  *     :drawLines_2( pPointPairs, nLineCount )             -> NIL
@@ -83,6 +79,7 @@
  *     :drawPie( pRectangle, nStartAngle, nSpanAngle )     -> NIL
  *     :drawPie_1( pRectangle, nStartAngle, nSpanAngle )   -> NIL
  *     :drawPie_2( nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle )  -> NIL
+ *     :hbDrawPixmap( ... )                                -> NIL
  *     :drawPixmap( pTarget, pPixmap, pSource )            -> NIL
  *     :drawPixmap_1( pTarget, pPixmap, pSource )          -> NIL
  *     :drawPixmap_2( pPoint, pPixmap, pSource )           -> NIL

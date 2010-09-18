@@ -2331,16 +2331,17 @@ METHOD HqrGraphicsItem:drawLine( qPainter, qRect )
 
    SWITCH ::lineType()
    CASE HBQT_GRAPHICSITEM_LINE_VERTICAL
-      qPainter:drawLine_4( qRect:x() + qRect:width() / 2, qRect:y(), qRect:x() +  qRect:width() / 2, qRect:y() + qRect:height() )
+      qPainter:drawLine( qRect:x() + qRect:width() / 2, qRect:y(), qRect:x() +  qRect:width() / 2, qRect:y() + qRect:height() )
       EXIT
    case HBQT_GRAPHICSITEM_LINE_HORIZONTAL
-      qPainter:drawLine_4( qRect:x(), qRect:y() + qRect:height() / 2, qRect:x() + qRect:width(), qRect:y() + qRect:height() / 2 )
+      qPainter:drawLine( qRect:x(), qRect:y() + qRect:height() / 2, qRect:x() + qRect:width(), qRect:y() + qRect:height() / 2 )
       EXIT
    case HBQT_GRAPHICSITEM_LINE_BACKWARDDIAGONAL
-      qPainter:drawLine_4( qRect:right(), qRect:y(), qRect:x(), qRect:bottom() )
+      qPainter:drawLine( qRect:right(), qRect:y(), qRect:x(), qRect:bottom() )
       EXIT
    case HBQT_GRAPHICSITEM_LINE_FORWARDDIAGONAL
-      qPainter:drawLine_4( qRect:x(), qRect:y(), qRect:right(), qRect:bottom() )
+      //qPainter:drawLine_4( qRect:x(), qRect:y(), qRect:right(), qRect:bottom() )
+      qPainter:drawLine( QPointF( qRect:x(), qRect:y() ), QPointF( qRect:right(), qRect:bottom() ) )
       EXIT
    ENDSWITCH
    RETURN Self

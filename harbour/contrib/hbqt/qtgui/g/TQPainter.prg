@@ -112,11 +112,7 @@ CREATE CLASS QPainter INHERIT HbQtObjectHandler FUNCTION HB_QPainter
    METHOD  drawImage_6( pRectangle, pImage )
    METHOD  drawImage_7( pRectangle, pImage )
    METHOD  drawImage_8( nX, nY, pImage, nSx, nSy, nSw, nSh, nFlags )
-   METHOD  drawLine( pLine )
-   METHOD  drawLine_1( pLine )
-   METHOD  drawLine_2( pP1, pP2 )
-   METHOD  drawLine_3( pP1, pP2 )
-   METHOD  drawLine_4( nX1, nY1, nX2, nY2 )
+   METHOD  drawLine( ... )
    METHOD  drawLines( pLines, nLineCount )
    METHOD  drawLines_1( pLines, nLineCount )
    METHOD  drawLines_2( pPointPairs, nLineCount )
@@ -128,6 +124,7 @@ CREATE CLASS QPainter INHERIT HbQtObjectHandler FUNCTION HB_QPainter
    METHOD  drawPie( pRectangle, nStartAngle, nSpanAngle )
    METHOD  drawPie_1( pRectangle, nStartAngle, nSpanAngle )
    METHOD  drawPie_2( nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle )
+   METHOD  hbDrawPixmap( ... )
    METHOD  drawPixmap( pTarget, pPixmap, pSource )
    METHOD  drawPixmap_1( pTarget, pPixmap, pSource )
    METHOD  drawPixmap_2( pPoint, pPixmap, pSource )
@@ -430,24 +427,12 @@ METHOD QPainter:drawImage_8( nX, nY, pImage, nSx, nSy, nSw, nSh, nFlags )
    RETURN Qt_QPainter_drawImage_8( ::pPtr, nX, nY, hbqt_ptr( pImage ), nSx, nSy, nSw, nSh, nFlags )
 
 
-METHOD QPainter:drawLine( pLine )
-   RETURN Qt_QPainter_drawLine( ::pPtr, hbqt_ptr( pLine ) )
-
-
-METHOD QPainter:drawLine_1( pLine )
-   RETURN Qt_QPainter_drawLine_1( ::pPtr, hbqt_ptr( pLine ) )
-
-
-METHOD QPainter:drawLine_2( pP1, pP2 )
-   RETURN Qt_QPainter_drawLine_2( ::pPtr, hbqt_ptr( pP1 ), hbqt_ptr( pP2 ) )
-
-
-METHOD QPainter:drawLine_3( pP1, pP2 )
-   RETURN Qt_QPainter_drawLine_3( ::pPtr, hbqt_ptr( pP1 ), hbqt_ptr( pP2 ) )
-
-
-METHOD QPainter:drawLine_4( nX1, nY1, nX2, nY2 )
-   RETURN Qt_QPainter_drawLine_4( ::pPtr, nX1, nY1, nX2, nY2 )
+METHOD QPainter:drawLine( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_drawLine( ::pPtr, ... )
 
 
 METHOD QPainter:drawLines( pLines, nLineCount )
@@ -492,6 +477,14 @@ METHOD QPainter:drawPie_1( pRectangle, nStartAngle, nSpanAngle )
 
 METHOD QPainter:drawPie_2( nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle )
    RETURN Qt_QPainter_drawPie_2( ::pPtr, nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle )
+
+
+METHOD QPainter:hbDrawPixmap( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_hbDrawPixmap( ::pPtr, ... )
 
 
 METHOD QPainter:drawPixmap( pTarget, pPixmap, pSource )

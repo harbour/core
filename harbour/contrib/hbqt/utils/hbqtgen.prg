@@ -898,6 +898,10 @@ STATIC FUNCTION ParseProto( cProto, cWidget, txt_, doc_, aEnum, func_, lList, fB
             ENDIF
 
             DO CASE
+            CASE aA[ PRT_CAST ] == "..."
+               aA[ PRT_BODY ] := "..."
+               aA[ PRT_DOC  ] := "..."
+
             CASE aA[ PRT_CAST ] == "PHB_ITEM"
                aA[ PRT_BODY ] := "hb_param( " + cHBIdx + ", HB_IT_ANY )"
                aA[ PRT_DOC  ] := "x" + cDocNM
@@ -1688,6 +1692,12 @@ STATIC FUNCTION Build_Class( cWidget, cls_, doc_, cPathOut, subCls_ )
    FOR i := 1 TO len( mth_ )
       aadd( txt_, ""                                               )
       aadd( txt_, "METHOD " + cWidget + ":" + mth_[ i, 1 ]         )
+      IF "..." $ mth_[ i, 1 ]
+         aadd( txt_, "   LOCAL p"                                        )
+         aadd( txt_, "   FOR EACH p IN { ... }"                          )
+         aadd( txt_, "      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )" )
+         aadd( txt_, "   NEXT"                                           )
+      ENDIF
       aadd( txt_, "   RETURN " + ParsePtr( mth_[ i, 2 ] )          )
       aadd( txt_, ""                                               )
    NEXT
