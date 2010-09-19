@@ -368,6 +368,8 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
 
    LOCAL cDynSuffix
 
+   LOCAL nErrorLevel
+
    /* Preprocessing */
 
    IF Len( hProjectReqList ) > 1
@@ -430,7 +432,7 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
          lPrimary := cProject $ hProjectReqList
          lContainer := "lFromContainer" $ hProjectList[ cProject ]
 
-         IF call_hbmk2( cProjectPath, iif( lPrimary .OR. lContainer, iif( lContainer, cOptions, cOptions + cOptionsUser ), " -inc" ), NIL )
+         IF ( nErrorLevel := call_hbmk2( cProjectPath, iif( lPrimary .OR. lContainer, iif( lContainer, cOptions, cOptions + cOptionsUser ), " -inc" ), NIL ) ) == 0
 
             /* Build dynamic lib */
             IF GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "yes" .AND. hProjectList[ cProject ][ "cType" ] == "hblib"
@@ -460,6 +462,14 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
                                  FNameExtSet( PathSepToSelf( cProjectPath ), ".hbx" ) )
                ENDIF
             ENDIF
+         ELSE
+            /* Ignore certain non-fatal hbmk2 return values */
+            IF nErrorLevel != 10 .AND. ;
+               nErrorLevel != 20 .AND. ;
+               nErrorLevel != 50
+               ErrorLevel( nErrorLevel )
+               EXIT
+            ENDIF
          ENDIF
       ENDIF
    NEXT
@@ -472,11 +482,13 @@ STATIC FUNCTION call_hbmk2_hbinfo( cProjectPath, hProject )
    LOCAL cName
    LOCAL tmp
 
+   LOCAL nErrorLevel
+
    hProject[ "cType" ] := ""
    hProject[ "aDept" ] := {}
    hProject[ "lChecked" ] := NIL
 
-   IF call_hbmk2( cProjectPath, " --hbinfo", NIL,, @cStdOut )
+   IF ( nErrorLevel := call_hbmk2( cProjectPath, " --hbinfo", NIL,, @cStdOut ) ) == 0
 
       hProject[ "cType" ] := hbmk2_hbinfo_getitem( cStdOut, "targettype" )
       hProject[ "cOutputName" ] := hbmk2_hbinfo_getitem( cStdOut, "outputname" )
@@ -490,11 +502,9 @@ STATIC FUNCTION call_hbmk2_hbinfo( cProjectPath, hProject )
                                          "cFileName_HBP" => StrTran( PathNormalize( PathMakeAbsolute( FNameExtSet( PathSepToSelf( LTrim( tmp ) ), ".hbp" ), s_cRebase ) ), "\", "/" ) } )
          ENDIF
       NEXT
-
-      RETURN .T.
    ENDIF
 
-   RETURN .F.
+   RETURN nErrorLevel
 
 STATIC FUNCTION hbmk2_hbinfo_getitem( cString, cItem, lAll )
    LOCAL cRetVal := ""
@@ -556,10 +566,9 @@ STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, cDynSuffix, cStdErr, cStd
 
    IF nErrorLevel != 0
       OutStd( hb_StrFormat( "! '%1$s' returned status: %2$s", cProjectPath, hb_ntos( nErrorLevel ) ) + hb_eol() )
-      RETURN .F.
    ENDIF
 
-   RETURN .T.
+   RETURN nErrorLevel
 
 STATIC FUNCTION mk_hb_processRun( cCommand, ... )
 
