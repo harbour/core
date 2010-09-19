@@ -435,8 +435,7 @@ METHOD HbIde:create( aParams )
    hbide_loadSkltns( Self )
 
    /* Set Codec at the Begining - no interface display */
-   ::cWrkCodec := "UTF-8"
-   HbXbp_SetCodec( ::cWrkCodec )
+   ::cWrkCodec := hb_cdpSelect()
 
    /* Load IDE|User defined Themes */
    ::oTH := IdeThemes():new( Self, ::oINI:getThemesFile() ):create()
@@ -1437,9 +1436,7 @@ METHOD HbIde:setCodec( cCodec )
 
    ::cWrkCodec := cCodec
 
-   HbXbp_SetCodec( ::cWrkCodec )
-
-   ::oDK:setStatusText( SB_PNL_CODEC, ::cWrkCodec )
+   ::oDK:setStatusText( SB_PNL_CODEC, hb_cdpUniID( ::cWrkCodec ) )
 
    RETURN Self
 
@@ -1460,4 +1457,3 @@ METHOD HbIde:testPainter( qPainter )
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
-

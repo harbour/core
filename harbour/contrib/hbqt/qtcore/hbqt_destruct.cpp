@@ -171,13 +171,13 @@ void * hbqt_pPtrFromObj( int iParam )
    }
 }
 
-HB_FUNC( HBQT_SETCODECFORCSTRINGS )
+HB_FUNC( __HBQT_SETCODECFORCSTRINGS )
 {
    QTextCodec * codec = QTextCodec::codecForName( ( char * ) hb_parc( 1 ) );
    QTextCodec::setCodecForCStrings( codec );
 }
 
-HB_FUNC( HBQT_SETCODECFORTR )
+HB_FUNC( __HBQT_SETCODECFORTR )
 {
    QTextCodec * codec = QTextCodec::codecForName( ( char * ) hb_parc( 1 ) );
    QTextCodec::setCodecForTr( codec );

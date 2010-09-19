@@ -73,7 +73,7 @@
  */
 
 /*
- *  Constructed[ 179/192 [ 93.23% ] ]
+ *  Constructed[ 180/194 [ 92.78% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -86,6 +86,7 @@
  *  }
  *  void drawRects ( const QVector<QRectF> & rectangles )
  *  void drawRects ( const QVector<QRect> & rectangles )
+ *  }
  *
  *  *** Commented out protos which construct fine but do not compile ***
  *
@@ -1320,6 +1321,58 @@ HB_FUNC( QT_QPAINTER_DRAWROUNDEDRECT_2 )
    if( p )
    {
       ( p )->drawRoundedRect( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parnd( 6 ), hb_parnd( 7 ), ( HB_ISNUM( 8 ) ? ( Qt::SizeMode ) hb_parni( 8 ) : ( Qt::SizeMode ) Qt::AbsoluteSize ) );
+   }
+}
+
+/*
+ * void hbDrawText ( ... )
+ */
+HB_FUNC( QT_QPAINTER_HBDRAWTEXT )
+{
+   QPainter * p = hbqt_par_QPainter( 1 );
+   if( p )
+   {
+      int iP = hb_pcount();
+
+      if( HB_ISNUM( 2 ) )
+      {
+         if( iP >= 7 )
+         {
+            ( p )->drawText( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ), hbqt_par_QString( 7 ), ( HB_ISPOINTER( 8 ) ? hbqt_par_QRect( 8 ) : 0 ) );
+         }
+         else if( iP == 4 )
+         {
+            ( p )->drawText( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_QString( 4 ) );
+         }
+      }
+      else if( HB_ISPOINTER( 2 ) )
+      {
+         HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+
+         if( q->type == HBQT_TYPE_QPointF )
+         {
+            ( p )->drawText( *hbqt_par_QPointF( 2 ), hbqt_par_QString( 3 ) );
+         }
+         else if( q->type == HBQT_TYPE_QPoint )
+         {
+            ( p )->drawText( *hbqt_par_QPoint( 2 ), hbqt_par_QString( 3 ) );
+         }
+         else if( q->type == HBQT_TYPE_QRect )
+         {
+            ( p )->drawText( *hbqt_par_QRect( 2 ), hb_parni( 3 ), hbqt_par_QString( 4 ), ( HB_ISPOINTER( 5 ) ? hbqt_par_QRect( 5 ) : 0 ) );
+         }
+         else if( q->type == HBQT_TYPE_QRectF )
+         {
+            if( HB_ISNUM( 3 ) )
+            {
+               ( p )->drawText( *hbqt_par_QRectF( 2 ), hb_parni( 3 ), hbqt_par_QString( 4 ), ( HB_ISPOINTER( 5 ) ? hbqt_par_QRectF( 5 ) : 0 ) );
+            }
+            else if( HB_ISCHAR( 3 ) )
+            {
+               ( p )->drawText( *hbqt_par_QRectF( 2 ), hbqt_par_QString( 3 ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QTextOption( 4 ) : QTextOption() ) );
+            }
+         }
+      }
    }
 }
 

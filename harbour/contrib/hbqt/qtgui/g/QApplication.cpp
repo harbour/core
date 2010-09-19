@@ -84,7 +84,6 @@
 #include <QtGui/QPalette>
 #include <QtGui/QApplication>
 #include <QtCore/QLocale>
-#include <QtCore/QTextCodec>
 #include <QtGui/QIcon>
 
 static QApplication * s_app = NULL;
@@ -92,7 +91,17 @@ static QApplication * s_app = NULL;
 static int s_argc;
 static char ** s_argv;
 
-HB_FUNC( HB_QT ) {;}
+HB_FUNC_EXTERN( HB_QTCORE );
+
+HB_FUNC( HB_QTGUI )
+{
+   HB_FUNC_EXEC( HB_QTCORE );
+}
+
+HB_FUNC( HB_QT ) /* For compatibility */
+{
+   HB_FUNC_EXEC( HB_QTCORE );
+}
 
 /*
  * QApplication ( int & argc, char ** argv )
@@ -104,7 +113,7 @@ HB_FUNC( HB_QT ) {;}
 */
 
 
-static void hbqt_Exit( void * cargo )
+static void hbqtgui_Exit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
@@ -112,13 +121,9 @@ static void hbqt_Exit( void * cargo )
    //s_app = NULL;
 }
 
-static void hbqt_Init( void * cargo )
+static void hbqtgui_Init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
-
-   QTextCodec * codec = QTextCodec::codecForName( "UTF8" );
-   QTextCodec::setCodecForTr( codec );
-   QTextCodec::setCodecForCStrings( codec );
 
    s_argc = hb_cmdargARGC();
    s_argv = hb_cmdargARGV();
@@ -126,20 +131,20 @@ static void hbqt_Init( void * cargo )
    s_app = new QApplication( s_argc, s_argv );
 
    if( ! s_app )
-      hb_errInternal( 11001, "hbqt_Init(): QT Initilization Error.", NULL, NULL );
+      hb_errInternal( 11001, "hbqtgui_Init(): QT Initilization Error.", NULL, NULL );
 
    hb_cmdargInit( s_argc, s_argv );
 }
 
-HB_CALL_ON_STARTUP_BEGIN( _hb_hbqt_init_ )
-   hb_vmAtInit( hbqt_Init, NULL );
-   hb_vmAtExit( hbqt_Exit, NULL );
-HB_CALL_ON_STARTUP_END( _hb_hbqt_init_ )
+HB_CALL_ON_STARTUP_BEGIN( _hb_hbqtgui_init_ )
+   hb_vmAtInit( hbqtgui_Init, NULL );
+   hb_vmAtExit( hbqtgui_Exit, NULL );
+HB_CALL_ON_STARTUP_END( _hb_hbqtgui_init_ )
 
 #if defined( HB_PRAGMA_STARTUP )
-   #pragma startup _hb_hbqt_init_
+   #pragma startup _hb_hbqtgui_init_
 #elif defined( HB_DATASEG_STARTUP )
-   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( _hb_hbqt_init_ )
+   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( _hb_hbqtgui_init_ )
    #include "hbiniseg.h"
 #endif
 

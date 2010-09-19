@@ -159,6 +159,7 @@ CREATE CLASS QPainter INHERIT HbQtObjectHandler FUNCTION HB_QPainter
    METHOD  drawRoundedRect( pRect, nXRadius, nYRadius, nMode )
    METHOD  drawRoundedRect_1( pRect, nXRadius, nYRadius, nMode )
    METHOD  drawRoundedRect_2( nX, nY, nW, nH, nXRadius, nYRadius, nMode )
+   METHOD  hbDrawText( ... )
    METHOD  drawText( pPosition, cText )
    METHOD  drawText_1( pPosition, cText )
    METHOD  drawText_2( pRectangle, nFlags, cText, pBoundingRect )
@@ -621,6 +622,14 @@ METHOD QPainter:drawRoundedRect_1( pRect, nXRadius, nYRadius, nMode )
 
 METHOD QPainter:drawRoundedRect_2( nX, nY, nW, nH, nXRadius, nYRadius, nMode )
    RETURN Qt_QPainter_drawRoundedRect_2( ::pPtr, nX, nY, nW, nH, nXRadius, nYRadius, nMode )
+
+
+METHOD QPainter:hbDrawText( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_hbDrawText( ::pPtr, ... )
 
 
 METHOD QPainter:drawText( pPosition, cText )

@@ -392,19 +392,3 @@ FUNCTION hbxbp_ConvertAFactFromXBP( cMode, xValue )
    RETURN xValue
 
 /*----------------------------------------------------------------------*/
-
-FUNCTION HbXbp_SetCodec( cCodec )
-   IF !empty( cCodec )
-      hbqt_SetCodecForCStrings( cCodec )
-   ENDIF
-   RETURN NIL
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION HbXbp_SetCodecForTr( cCodec )
-   IF !empty( cCodec )
-      hbqt_SetCodecForTr( cCodec )
-   ENDIF
-   RETURN NIL
-
-/*----------------------------------------------------------------------*/

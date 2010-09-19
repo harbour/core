@@ -114,6 +114,7 @@
  *     :drawRoundedRect( pRect, nXRadius, nYRadius, nMode )  -> NIL
  *     :drawRoundedRect_1( pRect, nXRadius, nYRadius, nMode )  -> NIL
  *     :drawRoundedRect_2( nX, nY, nW, nH, nXRadius, nYRadius, nMode )  -> NIL
+ *     :hbDrawText( ... )                                  -> NIL
  *     :drawText( pPosition, cText )                       -> NIL
  *     :drawText_1( pPosition, cText )                     -> NIL
  *     :drawText_2( pRectangle, nFlags, cText, pBoundingRect )  -> NIL
