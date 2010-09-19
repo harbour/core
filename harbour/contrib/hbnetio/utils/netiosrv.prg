@@ -46,7 +46,7 @@ REQUEST HB_MT
 #define _NETIOSRV_cRootDir          3
 #define _NETIOSRV_lRPC              4
 #define _NETIOSRV_cRPCFFileName     5
-#define _NETIOSRV_cRPCFHRB          6
+#define _NETIOSRV_hRPCFHRB          6
 #define _NETIOSRV_lEncryption       7
 #define _NETIOSRV_pListenSocket     8
 #define _NETIOSRV_MAX_              8
@@ -113,17 +113,17 @@ PROCEDURE Main( ... )
                cFile := HB_COMPILEBUF( HB_ARGV( 0 ), "-n2", "-w", "-es2", "-q0",;
                                        "-D" + "__HBSCRIPT__HBNETIOSRV", netiosrv[ _NETIOSRV_cRPCFFileName ] )
                IF cFile != NIL
-                  netiosrv[ _NETIOSRV_cRPCFHRB ] := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
+                  netiosrv[ _NETIOSRV_hRPCFHRB ] := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
                ENDIF
                EXIT
             OTHERWISE
-               netiosrv[ _NETIOSRV_cRPCFHRB ] := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, netiosrv[ _NETIOSRV_cRPCFFileName ] )
+               netiosrv[ _NETIOSRV_hRPCFHRB ] := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, netiosrv[ _NETIOSRV_cRPCFFileName ] )
                EXIT
          ENDSWITCH
-         netiosrv[ _NETIOSRV_lRPC ] := ! Empty( netiosrv[ _NETIOSRV_cRPCFHRB ] ) .AND. ! Empty( hb_hrbGetFunSym( netiosrv[ _NETIOSRV_cRPCFHRB ], _RPC_FILTER ) )
+         netiosrv[ _NETIOSRV_lRPC ] := ! Empty( netiosrv[ _NETIOSRV_hRPCFHRB ] ) .AND. ! Empty( hb_hrbGetFunSym( netiosrv[ _NETIOSRV_hRPCFHRB ], _RPC_FILTER ) )
          IF ! netiosrv[ _NETIOSRV_lRPC ]
             netiosrv[ _NETIOSRV_cRPCFFileName ] := NIL
-            netiosrv[ _NETIOSRV_cRPCFHRB ] := NIL
+            netiosrv[ _NETIOSRV_hRPCFHRB ] := NIL
          ENDIF
       CASE Lower( cParam ) == "-rpc"
          netiosrv[ _NETIOSRV_lRPC ] := .T.
@@ -144,7 +144,7 @@ PROCEDURE Main( ... )
       netio_mtserver( netiosrv[ _NETIOSRV_nPort ],;
                       netiosrv[ _NETIOSRV_cIFAddr ],;
                       netiosrv[ _NETIOSRV_cRootDir ],;
-                      iif( Empty( netiosrv[ _NETIOSRV_cRPCFHRB ] ), netiosrv[ _NETIOSRV_lRPC ], hb_hrbGetFunSym( netiosrv[ _NETIOSRV_cRPCFHRB ], _RPC_FILTER ) ),;
+                      iif( Empty( netiosrv[ _NETIOSRV_hRPCFHRB ] ), netiosrv[ _NETIOSRV_lRPC ], hb_hrbGetFunSym( netiosrv[ _NETIOSRV_hRPCFHRB ], _RPC_FILTER ) ),;
                       cPassword )
 
    netiosrv[ _NETIOSRV_lEncryption ] := ! Empty( cPassword )
@@ -285,7 +285,7 @@ STATIC PROCEDURE ShowConfig( netiosrv )
    QQOut( "Root filesystem: "   + netiosrv[ _NETIOSRV_cRootDir ], hb_eol() )
    QQOut( "RPC support: "       + iif( netiosrv[ _NETIOSRV_lRPC ], "enabled", "disabled" ), hb_eol() )
    QQOut( "Encryption: "        + iif( netiosrv[ _NETIOSRV_lEncryption ], "enabled", "disabled" ), hb_eol() )
-   QQOut( "RPC filter module: " + iif( Empty( netiosrv[ _NETIOSRV_cRPCFHRB ] ), iif( netiosrv[ _NETIOSRV_lRPC ], "not set (WARNING: unsafe open server)", "not set" ), netiosrv[ _NETIOSRV_cRPCFFileName ] ), hb_eol() )
+   QQOut( "RPC filter module: " + iif( Empty( netiosrv[ _NETIOSRV_hRPCFHRB ] ), iif( netiosrv[ _NETIOSRV_lRPC ], "not set (WARNING: unsafe open server)", "not set" ), netiosrv[ _NETIOSRV_cRPCFFileName ] ), hb_eol() )
 
    RETURN
 

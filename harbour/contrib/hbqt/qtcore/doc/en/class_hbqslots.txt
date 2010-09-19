@@ -6,28 +6,29 @@
  *  $TEMPLATE$
  *     Class
  *  $NAME$
- *     HBEvents()
+ *     HBQSlots()
  *  $CATEGORY$
  *     Harbour Bindings for Qt
  *  $SUBCATEGORY$
  *     GUI
  *  $EXTERNALLINK$
- *     http://doc.trolltech.com/4.5/hbevents.html
+ *     http://doc.trolltech.com/4.5/hbqslots.html
  *  $ONELINER$
- *     Creates a new HBEvents object.
+ *     Creates a new HBQSlots object.
  *  $INHERITS$
  *     QObject
  *  $SYNTAX$
- *     HBEvents():new( ... )
- *     HBEvents():from( pPtr_OR_oObj_of_type_HBEvents )
- *     HBEvents():configure( pPtr_OR_oObj_of_type_HBEvents )
+ *     HBQSlots():new( ... )
+ *     HBQSlots():from( pPtr_OR_oObj_of_type_HBQSlots )
+ *     HBQSlots():configure( pPtr_OR_oObj_of_type_HBQSlots )
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
- *     An instance of the object of type HBEvents
+ *     An instance of the object of type HBQSlots
  *  $METHODS$
- *     :hbConnect( xObj, nEvent, xBlock )                  -> lBool
- *     :hbDisconnect( xObj, nEvent )                       -> lBool
+ *     :hbConnect( xPObj, pSlot, xBBlock )                 -> lBool
+ *     :hbDisconnect( xObj, pSlot )                        -> lBool
+ *     :hbIsConnected( xObj, pSlot )                       -> lBool
  *     :hbClear()                                          -> lBool
  * 
  *  $DESCRIPTION$
@@ -45,8 +46,8 @@
  *  $VERSION$
  *     4.5 or upper
  *  $FILES$
- *     Harbour source: contrib/hbqt/qtcore/THBEvents.prg
- *     C++ wrappers  : contrib/hbqt/qtcore/HBEvents.cpp
+ *     Harbour source: contrib/hbqt/qtcore/THBQSlots.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/HBQSlots.cpp
  *     Library       : hbqtcore
  *  $SEEALSO$
  *     QObject

@@ -69,17 +69,17 @@ New      =
 
 <CODE>
 #include <QtCore/QObject>
-#include "hbqt_hbevents.h"
+#include "hbqt_hbqevents.h"
 
 
 /*
- * HBEvents()
- * ~HBEvents()
+ * HBQEvents()
+ * ~HBQEvents()
  *
  */
-HB_FUNC( QT_HBEVENTS )
+HB_FUNC( QT_HBQEVENTS )
 {
-   hb_retptr( new HBEvents() );
+   hb_retptr( new HBQEvents() );
 }
 </CODE>
 

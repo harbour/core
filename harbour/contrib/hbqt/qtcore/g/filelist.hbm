@@ -9,8 +9,8 @@
 # --------------------------------------------------------------------
 
 hbqtcore_extern.prg
-HBEvents.cpp
-HBSlots.cpp
+HBQEvents.cpp
+HBQSlots.cpp
 HBQString.cpp
 QAbstractItemModel.cpp
 QAbstractListModel.cpp
@@ -64,8 +64,8 @@ QTranslator.cpp
 QUrl.cpp
 QVariant.cpp
 
-THBEvents.prg
-THBSlots.prg
+THBQEvents.prg
+THBQSlots.prg
 THBQString.prg
 TQAbstractItemModel.prg
 TQAbstractListModel.prg

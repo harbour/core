@@ -61,19 +61,19 @@
 
 #if QT_VERSION >= 0x040500
 
-#include "hbqt_hbevents.h"
+#include "hbqt_hbqevents.h"
 
 #include <QtCore/QPointer>
 #include <QtCore/QVariant>
 
-HBEvents::HBEvents( QObject * parent ) : QObject( parent )
+HBQEvents::HBQEvents( QObject * parent ) : QObject( parent )
 {
 }
 
 /* QUESTION: Shouldn't all events be disconnected at this point? */
-HBEvents::~HBEvents()
+HBQEvents::~HBQEvents()
 {
-   HB_TRACE( HB_TR_DEBUG, ( "      HBEvents::~HBEvents()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "      HBQEvents::~HBQEvents()" ) );
    int i;
 
    for( i = 0; i < listBlock.size(); i++ )
@@ -87,7 +87,7 @@ HBEvents::~HBEvents()
    listBlock.clear();
 }
 
-bool HBEvents::hbConnect( PHB_ITEM pObj, int iEvent, PHB_ITEM bBlock )
+bool HBQEvents::hbConnect( PHB_ITEM pObj, int iEvent, PHB_ITEM bBlock )
 {
    HB_SYMBOL_UNUSED( pObj   );
    HB_SYMBOL_UNUSED( iEvent );
@@ -112,7 +112,7 @@ bool HBEvents::hbConnect( PHB_ITEM pObj, int iEvent, PHB_ITEM bBlock )
    return false;
 }
 
-bool HBEvents::hbDisconnect( PHB_ITEM pObj, int iEvent )
+bool HBQEvents::hbDisconnect( PHB_ITEM pObj, int iEvent )
 {
    HB_SYMBOL_UNUSED( pObj );
 
@@ -137,9 +137,9 @@ bool HBEvents::hbDisconnect( PHB_ITEM pObj, int iEvent )
    return false;
 }
 
-bool HBEvents::hbClear()
+bool HBQEvents::hbClear()
 {
-   HB_TRACE( HB_TR_DEBUG, ( "      HBEvents::hbClear()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "      HBQEvents::hbClear()" ) );
    int i;
 
    for( i = 0; i < listBlock.size(); i++ )
@@ -154,7 +154,7 @@ bool HBEvents::hbClear()
    return true;
 }
 
-bool HBEvents::eventFilter( QObject * object, QEvent * event )
+bool HBQEvents::eventFilter( QObject * object, QEvent * event )
 {
    QEvent::Type eventtype = event->type();
 
@@ -186,7 +186,7 @@ bool HBEvents::eventFilter( QObject * object, QEvent * event )
 HB_FUNC( QT_EVENTS_CONNECT )
 {
    HB_BOOL  bRet       = HB_FALSE;
-   HBEvents * t_events = hbqt_par_HBEvents( 1 );
+   HBQEvents * t_events = hbqt_par_HBQEvents( 1 );
 
    if( t_events )
    {
@@ -218,7 +218,7 @@ HB_FUNC( QT_EVENTS_CONNECT )
 HB_FUNC( QT_EVENTS_DISCONNECT )
 {
    HB_BOOL  bRet       = HB_FALSE;
-   HBEvents * t_events = hbqt_par_HBEvents( 1 );
+   HBQEvents * t_events = hbqt_par_HBQEvents( 1 );
 
    if( t_events )
    {
@@ -252,9 +252,9 @@ HB_FUNC( QT_EVENTS_NEW )
 {
    void * pObj = NULL;
 
-   pObj = ( HBEvents * ) new HBEvents();
+   pObj = ( HBQEvents * ) new HBQEvents();
 
-   hb_retptrGC( hbqt_gcAllocate_HBEvents( pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_HBQEvents( pObj, true ) );
 }
 
 #endif

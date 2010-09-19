@@ -68,26 +68,26 @@
 #include <QtCore/QPointer>
 
 #include <QtCore/QObject>
-#include "hbqt_hbslots.h"
+#include "hbqt_hbqslots.h"
 
 
 /*
- * HBSlots()
- * ~HBSlots()
+ * HBQSlots()
+ * ~HBQSlots()
  */
 
 typedef struct
 {
-   QPointer< HBSlots > ph;
+   QPointer< HBQSlots > ph;
    bool bNew;
    PHBQT_GC_FUNC func;
    int type;
-} HBQT_GC_T_HBSlots;
+} HBQT_GC_T_HBQSlots;
 
-HBQT_GC_FUNC( hbqt_gcRelease_HBSlots )
+HBQT_GC_FUNC( hbqt_gcRelease_HBQSlots )
 {
-   HBSlots  * ph = NULL ;
-   HBQT_GC_T_HBSlots * p = ( HBQT_GC_T_HBSlots * ) Cargo;
+   HBQSlots  * ph = NULL ;
+   HBQT_GC_T_HBQSlots * p = ( HBQT_GC_T_HBQSlots * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -97,65 +97,65 @@ HBQT_GC_FUNC( hbqt_gcRelease_HBSlots )
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_HBSlots   /.\\   ", (void*) ph, (void*) p->ph ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_HBQSlots   /.\\   ", (void*) ph, (void*) p->ph ) );
             delete ( p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_HBSlots   \\./   ", (void*) ph, (void*) p->ph ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_HBQSlots   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_HBSlots          ", ph ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_HBQSlots          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_HBSlots    :     Object already deleted!", ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_HBQSlots    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_HBSlots    :    Object not created with new=true", ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_HBQSlots    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_HBSlots( void * pObj, bool bNew )
+void * hbqt_gcAllocate_HBQSlots( void * pObj, bool bNew )
 {
-   HBQT_GC_T_HBSlots * p = ( HBQT_GC_T_HBSlots * ) hb_gcAllocate( sizeof( HBQT_GC_T_HBSlots ), hbqt_gcFuncs() );
+   HBQT_GC_T_HBQSlots * p = ( HBQT_GC_T_HBQSlots * ) hb_gcAllocate( sizeof( HBQT_GC_T_HBQSlots ), hbqt_gcFuncs() );
 
-   new( & p->ph ) QPointer< HBSlots >( ( HBSlots * ) pObj );
+   new( & p->ph ) QPointer< HBQSlots >( ( HBQSlots * ) pObj );
    p->bNew = bNew;
-   p->func = hbqt_gcRelease_HBSlots;
-   p->type = HBQT_TYPE_HBSlots;
+   p->func = hbqt_gcRelease_HBQSlots;
+   p->type = HBQT_TYPE_HBQSlots;
 
    if( bNew )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_HBSlots  under p->pq", pObj ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_HBQSlots  under p->pq", pObj ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_HBSlots", pObj ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_HBQSlots", pObj ) );
    }
    return p;
 }
 
-HB_FUNC( QT_HBSLOTS )
+HB_FUNC( QT_HBQSLOTS )
 {
-   HBSlots * pObj = NULL;
+   HBQSlots * pObj = NULL;
 
-   pObj = new HBSlots() ;
+   pObj = new HBQSlots() ;
 
-   hb_retptrGC( hbqt_gcAllocate_HBSlots( ( void * ) pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_HBQSlots( ( void * ) pObj, true ) );
 }
 
 /*
  * bool hbConnect( PHB_ITEM pObj, const char * slot, PHB_ITEM bBlock )
  */
-HB_FUNC( QT_HBSLOTS_HBCONNECT )
+HB_FUNC( QT_HBQSLOTS_HBCONNECT )
 {
-   HBSlots * p = hbqt_par_HBSlots( 1 );
+   HBQSlots * p = hbqt_par_HBQSlots( 1 );
    if( p )
    {
       hb_retl( ( p )->hbConnect( hb_param( 2, HB_IT_ANY ), hbqt_par_char( 3 ), hb_param( 4, HB_IT_ANY ) ) );
@@ -165,9 +165,9 @@ HB_FUNC( QT_HBSLOTS_HBCONNECT )
 /*
  * bool hbDisconnect( PHB_ITEM obj, const char * slot )
  */
-HB_FUNC( QT_HBSLOTS_HBDISCONNECT )
+HB_FUNC( QT_HBQSLOTS_HBDISCONNECT )
 {
-   HBSlots * p = hbqt_par_HBSlots( 1 );
+   HBQSlots * p = hbqt_par_HBQSlots( 1 );
    if( p )
    {
       hb_retl( ( p )->hbDisconnect( hb_param( 2, HB_IT_ANY ), hbqt_par_char( 3 ) ) );
@@ -177,9 +177,9 @@ HB_FUNC( QT_HBSLOTS_HBDISCONNECT )
 /*
  * bool hbIsConnected( PHB_ITEM obj, const char * slot )
  */
-HB_FUNC( QT_HBSLOTS_HBISCONNECTED )
+HB_FUNC( QT_HBQSLOTS_HBISCONNECTED )
 {
-   HBSlots * p = hbqt_par_HBSlots( 1 );
+   HBQSlots * p = hbqt_par_HBQSlots( 1 );
    if( p )
    {
       hb_retl( ( p )->hbIsConnected( hb_param( 2, HB_IT_ANY ), hbqt_par_char( 3 ) ) );
@@ -189,9 +189,9 @@ HB_FUNC( QT_HBSLOTS_HBISCONNECTED )
 /*
  * bool hbClear()
  */
-HB_FUNC( QT_HBSLOTS_HBCLEAR )
+HB_FUNC( QT_HBQSLOTS_HBCLEAR )
 {
-   HBSlots * p = hbqt_par_HBSlots( 1 );
+   HBQSlots * p = hbqt_par_HBQSlots( 1 );
    if( p )
    {
       hb_retl( ( p )->hbClear() );

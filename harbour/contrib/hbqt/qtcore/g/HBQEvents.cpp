@@ -68,27 +68,27 @@
 #include <QtCore/QPointer>
 
 #include <QtCore/QObject>
-#include "hbqt_hbevents.h"
+#include "hbqt_hbqevents.h"
 
 
 /*
- * HBEvents()
- * ~HBEvents()
+ * HBQEvents()
+ * ~HBQEvents()
  *
  */
 
 typedef struct
 {
-   QPointer< HBEvents > ph;
+   QPointer< HBQEvents > ph;
    bool bNew;
    PHBQT_GC_FUNC func;
    int type;
-} HBQT_GC_T_HBEvents;
+} HBQT_GC_T_HBQEvents;
 
-HBQT_GC_FUNC( hbqt_gcRelease_HBEvents )
+HBQT_GC_FUNC( hbqt_gcRelease_HBQEvents )
 {
-   HBEvents  * ph = NULL ;
-   HBQT_GC_T_HBEvents * p = ( HBQT_GC_T_HBEvents * ) Cargo;
+   HBQEvents  * ph = NULL ;
+   HBQT_GC_T_HBQEvents * p = ( HBQT_GC_T_HBQEvents * ) Cargo;
 
    if( p && p->bNew && p->ph )
    {
@@ -98,65 +98,65 @@ HBQT_GC_FUNC( hbqt_gcRelease_HBEvents )
          const QMetaObject * m = ( ph )->metaObject();
          if( ( QString ) m->className() != ( QString ) "QObject" )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_HBEvents   /.\\   ", (void*) ph, (void*) p->ph ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_HBQEvents   /.\\   ", (void*) ph, (void*) p->ph ) );
             delete ( p->ph );
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_HBEvents   \\./   ", (void*) ph, (void*) p->ph ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p %p YES_rel_HBQEvents   \\./   ", (void*) ph, (void*) p->ph ) );
             p->ph = NULL;
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_HBEvents          ", ph ) );
+            HB_TRACE( HB_TR_DEBUG, ( "ph=%p NO__rel_HBQEvents          ", ph ) );
             p->ph = NULL;
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_HBEvents    :     Object already deleted!", ph ) );
+         HB_TRACE( HB_TR_DEBUG, ( "ph=%p DEL_rel_HBQEvents    :     Object already deleted!", ph ) );
          p->ph = NULL;
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_HBEvents    :    Object not created with new=true", ph ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p PTR_rel_HBQEvents    :    Object not created with new=true", ph ) );
       p->ph = NULL;
    }
 }
 
-void * hbqt_gcAllocate_HBEvents( void * pObj, bool bNew )
+void * hbqt_gcAllocate_HBQEvents( void * pObj, bool bNew )
 {
-   HBQT_GC_T_HBEvents * p = ( HBQT_GC_T_HBEvents * ) hb_gcAllocate( sizeof( HBQT_GC_T_HBEvents ), hbqt_gcFuncs() );
+   HBQT_GC_T_HBQEvents * p = ( HBQT_GC_T_HBQEvents * ) hb_gcAllocate( sizeof( HBQT_GC_T_HBQEvents ), hbqt_gcFuncs() );
 
-   new( & p->ph ) QPointer< HBEvents >( ( HBEvents * ) pObj );
+   new( & p->ph ) QPointer< HBQEvents >( ( HBQEvents * ) pObj );
    p->bNew = bNew;
-   p->func = hbqt_gcRelease_HBEvents;
-   p->type = HBQT_TYPE_HBEvents;
+   p->func = hbqt_gcRelease_HBQEvents;
+   p->type = HBQT_TYPE_HBQEvents;
 
    if( bNew )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_HBEvents  under p->pq", pObj ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p    _new_HBQEvents  under p->pq", pObj ) );
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_HBEvents", pObj ) );
+      HB_TRACE( HB_TR_DEBUG, ( "ph=%p NOT_new_HBQEvents", pObj ) );
    }
    return p;
 }
 
-HB_FUNC( QT_HBEVENTS )
+HB_FUNC( QT_HBQEVENTS )
 {
-   HBEvents * pObj = NULL;
+   HBQEvents * pObj = NULL;
 
-   pObj = new HBEvents() ;
+   pObj = new HBQEvents() ;
 
-   hb_retptrGC( hbqt_gcAllocate_HBEvents( ( void * ) pObj, true ) );
+   hb_retptrGC( hbqt_gcAllocate_HBQEvents( ( void * ) pObj, true ) );
 }
 
 /*
  * bool hbConnect( PHB_ITEM obj, int event, PHB_ITEM block )
  */
-HB_FUNC( QT_HBEVENTS_HBCONNECT )
+HB_FUNC( QT_HBQEVENTS_HBCONNECT )
 {
-   HBEvents * p = hbqt_par_HBEvents( 1 );
+   HBQEvents * p = hbqt_par_HBQEvents( 1 );
    if( p )
    {
       hb_retl( ( p )->hbConnect( hb_param( 2, HB_IT_ANY ), hb_parni( 3 ), hb_param( 4, HB_IT_ANY ) ) );
@@ -166,9 +166,9 @@ HB_FUNC( QT_HBEVENTS_HBCONNECT )
 /*
  * bool hbDisconnect( PHB_ITEM obj, int event )
  */
-HB_FUNC( QT_HBEVENTS_HBDISCONNECT )
+HB_FUNC( QT_HBQEVENTS_HBDISCONNECT )
 {
-   HBEvents * p = hbqt_par_HBEvents( 1 );
+   HBQEvents * p = hbqt_par_HBQEvents( 1 );
    if( p )
    {
       hb_retl( ( p )->hbDisconnect( hb_param( 2, HB_IT_ANY ), hb_parni( 3 ) ) );
@@ -178,9 +178,9 @@ HB_FUNC( QT_HBEVENTS_HBDISCONNECT )
 /*
  * bool hbClear()
  */
-HB_FUNC( QT_HBEVENTS_HBCLEAR )
+HB_FUNC( QT_HBQEVENTS_HBCLEAR )
 {
-   HBEvents * p = hbqt_par_HBEvents( 1 );
+   HBQEvents * p = hbqt_par_HBQEvents( 1 );
    if( p )
    {
       hb_retl( ( p )->hbClear() );

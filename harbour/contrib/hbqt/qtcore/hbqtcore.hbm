@@ -9,11 +9,11 @@ g/filelist.hbm
 
 hbqt_base.cpp
 hbqt_destruct.cpp
-hbqt_hbevents.cpp
-hbqt_hbslots.cpp
+hbqt_hbqevents.cpp
+hbqt_hbqslots.cpp
 hbqt_hbqstring.cpp
 
 hbqt_misc.prg
 
-hbqt_hbevents.h
-hbqt_hbslots.h
+hbqt_hbqevents.h
+hbqt_hbqslots.h

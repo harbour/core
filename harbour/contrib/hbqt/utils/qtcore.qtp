@@ -6,8 +6,8 @@
 -O=../qtcore/g
 -D=../qtcore/doc
 
-HBEvents.qth
-HBSlots.qth
+HBQEvents.qth
+HBQSlots.qth
 HBQString.qth
 
 ; QAbstractEventDispatcher.qth

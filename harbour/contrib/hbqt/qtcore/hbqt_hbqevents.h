@@ -4,10 +4,12 @@
 
 /*
  * Harbour Project source code:
- * QT Source Generator for Harbour
+ * QT wrapper main header
+ *
+ * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
  *
  * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
- * www - http://www.harbour-project.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,51 +51,36 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
+#ifndef HBQT_EVENTS_H
+#define HBQT_EVENTS_H
+
 /*----------------------------------------------------------------------*/
-;
-;              Header File to Generate QT Wrapper Sources
-;
 
-<CLASS>
-QObject  =
-Inherits = QObject
-Type     =
-New      =
-</CLASS>
+#include "hbqtcore.h"
 
-<SUBCLASS>
-</SUBCLASS>
-
-<DOC>
-</DOC>
-
-<CODE>
 #include <QtCore/QObject>
-#include "hbqt_hbslots.h"
+#include <QtCore/QEvent>
+#include <QtCore/QList>
 
-
-/*
- * HBSlots()
- * ~HBSlots()
- */
-HB_FUNC( QT_HBSLOTS )
+class HBQEvents: public QObject
 {
-   hb_retptr( new HBSlots() );
-}
-</CODE>
+   Q_OBJECT
 
-<ENUMS>
-</ENUMS>
+public:
+   HBQEvents( QObject *parent = 0 );
+   ~HBQEvents();
+   QList<PHB_ITEM>     listBlock;
 
-<PROTOS>
-bool hbConnect( PHB_ITEM pObj, const char * slot, PHB_ITEM bBlock )
-bool hbDisconnect( PHB_ITEM obj, const char * slot )
-bool hbIsConnected( PHB_ITEM obj, const char * slot )
-bool hbClear()
-</PROTOS>
+   bool hbConnect( PHB_ITEM pObj, int iEvent, PHB_ITEM bBlock );
+   bool hbDisconnect( PHB_ITEM pObj, int iEvent );
+   bool hbClear();
 
-<SLOTS>
-</SLOTS>
+protected:
+   bool eventFilter( QObject * obj, QEvent * event );
 
-<SIGNALS>
-</SIGNALS>
+};
+
+/*----------------------------------------------------------------------*/
+
+#endif

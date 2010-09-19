@@ -78,13 +78,13 @@
 
 /*----------------------------------------------------------------------*/
 
-class HBSlots: public QObject
+class HBQSlots: public QObject
 {
    Q_OBJECT
 
 public:
-   HBSlots( QObject *parent = 0 );
-   ~HBSlots();
+   HBQSlots( QObject *parent = 0 );
+   ~HBQSlots();
    QList<PHB_ITEM>  listBlock;
    QList<QObject *> listObj;
 

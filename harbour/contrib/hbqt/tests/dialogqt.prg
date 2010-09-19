@@ -72,7 +72,7 @@
 
 #include "common.ch"
 
-REQUEST HB_QT
+REQUEST HB_QTGUI
 
 THREAD STATIC s_events
 THREAD STATIC s_slots

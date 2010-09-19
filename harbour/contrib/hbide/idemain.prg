@@ -88,7 +88,7 @@ REQUEST __HBEXTERN__HBQTNETWORK__
 
 /*----------------------------------------------------------------------*/
 
-REQUEST HB_QT
+REQUEST HB_QTGUI
 
 REQUEST DBFCDX
 REQUEST DBFNTX

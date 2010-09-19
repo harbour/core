@@ -15,8 +15,8 @@
 
 HB_EXTERN_BEGIN
 
-extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_HBEvents );
-extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_HBSlots );
+extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_HBQEvents );
+extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_HBQSlots );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_HBQString );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QAbstractItemModel );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QAbstractListModel );
@@ -70,8 +70,8 @@ extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QTranslator );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QUrl );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QVariant );
 
-extern HB_EXPORT void * hbqt_gcAllocate_HBEvents( void * pObj, bool bNew );
-extern HB_EXPORT void * hbqt_gcAllocate_HBSlots( void * pObj, bool bNew );
+extern HB_EXPORT void * hbqt_gcAllocate_HBQEvents( void * pObj, bool bNew );
+extern HB_EXPORT void * hbqt_gcAllocate_HBQSlots( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_HBQString( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QAbstractItemModel( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QAbstractListModel( void * pObj, bool bNew );
@@ -127,8 +127,8 @@ extern HB_EXPORT void * hbqt_gcAllocate_QVariant( void * pObj, bool bNew );
 
 HB_EXTERN_END
 
-#define hbqt_par_HBEvents( n )                                  ( ( HBEvents                                    * ) hbqt_gcpointer( n ) )
-#define hbqt_par_HBSlots( n )                                   ( ( HBSlots                                     * ) hbqt_gcpointer( n ) )
+#define hbqt_par_HBQEvents( n )                                 ( ( HBQEvents                                   * ) hbqt_gcpointer( n ) )
+#define hbqt_par_HBQSlots( n )                                  ( ( HBQSlots                                    * ) hbqt_gcpointer( n ) )
 #define hbqt_par_HBQString( n )                                 ( ( HBQString                                   * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QAbstractItemModel( n )                        ( ( QAbstractItemModel                          * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QAbstractListModel( n )                        ( ( QAbstractListModel                          * ) hbqt_gcpointer( n ) )
@@ -182,8 +182,8 @@ HB_EXTERN_END
 #define hbqt_par_QUrl( n )                                      ( ( QUrl                                        * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QVariant( n )                                  ( ( QVariant                                    * ) hbqt_gcpointer( n ) )
 
-#define HBQT_TYPE_HBEvents                                      0x44355450
-#define HBQT_TYPE_HBSlots                                       0xCDC96C4E
+#define HBQT_TYPE_HBQEvents                                     0xCFEFBC47
+#define HBQT_TYPE_HBQSlots                                      0xA9999114
 #define HBQT_TYPE_HBQString                                     0x02D659A4
 #define HBQT_TYPE_QAbstractItemModel                            0xA364960B
 #define HBQT_TYPE_QAbstractListModel                            0x2E9A0D19

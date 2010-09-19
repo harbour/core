@@ -16,7 +16,7 @@
 
 #include "common.ch"
 
-REQUEST HB_QT
+REQUEST HB_QTGUI
 
 STATIC s_qApp
 STATIC s_re1
