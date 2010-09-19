@@ -308,11 +308,11 @@ public slots:
    void dateTimeChanged( const QDateTime & datetime );
    void timeChanged( const QTime & time );
    /* QApplication */
-   void commitDataRequest( QSessionManager & manager );
+//   void commitDataRequest( QSessionManager & manager );
    void focusChanged( QWidget * old, QWidget * now );
    void fontDatabaseChanged();
    void lastWindowClosed();
-   void saveStateRequest( QSessionManager & manager );
+//   void saveStateRequest( QSessionManager & manager );
    /* Latest */
 };
 

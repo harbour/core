@@ -116,7 +116,7 @@ static void hbqt_Init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   QTextCodec *codec = QTextCodec::codecForLocale();
+   QTextCodec * codec = QTextCodec::codecForName( "UTF8" );
    QTextCodec::setCodecForTr( codec );
    QTextCodec::setCodecForCStrings( codec );
 
