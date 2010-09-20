@@ -63,11 +63,11 @@
 #include "hbclass.ch"
 
 
-FUNCTION HBSlots( ... )
-   RETURN HB_HBSlots():new( ... )
+FUNCTION HBQSlots( ... )
+   RETURN HB_HBQSlots():new( ... )
 
 
-CREATE CLASS HBSlots INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_HBSlots
+CREATE CLASS HBQSlots INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_HBQSlots
 
    METHOD  new( ... )
 
@@ -79,27 +79,27 @@ CREATE CLASS HBSlots INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_HBSlots
    ENDCLASS
 
 
-METHOD HBSlots:new( ... )
+METHOD HBQSlots:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   ::pPtr := Qt_HBSlots( ... )
+   ::pPtr := Qt_HBQSlots( ... )
    RETURN Self
 
 
-METHOD HBSlots:hbConnect( xPObj, pSlot, xBBlock )
-   RETURN Qt_HBSlots_hbConnect( ::pPtr, xPObj, hbqt_ptr( pSlot ), xBBlock )
+METHOD HBQSlots:hbConnect( xPObj, pSlot, xBBlock )
+   RETURN Qt_HBQSlots_hbConnect( ::pPtr, xPObj, hbqt_ptr( pSlot ), xBBlock )
 
 
-METHOD HBSlots:hbDisconnect( xObj, pSlot )
-   RETURN Qt_HBSlots_hbDisconnect( ::pPtr, xObj, hbqt_ptr( pSlot ) )
+METHOD HBQSlots:hbDisconnect( xObj, pSlot )
+   RETURN Qt_HBQSlots_hbDisconnect( ::pPtr, xObj, hbqt_ptr( pSlot ) )
 
 
-METHOD HBSlots:hbIsConnected( xObj, pSlot )
-   RETURN Qt_HBSlots_hbIsConnected( ::pPtr, xObj, hbqt_ptr( pSlot ) )
+METHOD HBQSlots:hbIsConnected( xObj, pSlot )
+   RETURN Qt_HBQSlots_hbIsConnected( ::pPtr, xObj, hbqt_ptr( pSlot ) )
 
 
-METHOD HBSlots:hbClear()
-   RETURN Qt_HBSlots_hbClear( ::pPtr )
+METHOD HBQSlots:hbClear()
+   RETURN Qt_HBQSlots_hbClear( ::pPtr )
 

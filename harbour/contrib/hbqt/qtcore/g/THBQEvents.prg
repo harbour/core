@@ -63,11 +63,11 @@
 #include "hbclass.ch"
 
 
-FUNCTION HBEvents( ... )
-   RETURN HB_HBEvents():new( ... )
+FUNCTION HBQEvents( ... )
+   RETURN HB_HBQEvents():new( ... )
 
 
-CREATE CLASS HBEvents INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_HBEvents
+CREATE CLASS HBQEvents INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_HBQEvents
 
    METHOD  new( ... )
 
@@ -78,23 +78,23 @@ CREATE CLASS HBEvents INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_HBEvents
    ENDCLASS
 
 
-METHOD HBEvents:new( ... )
+METHOD HBQEvents:new( ... )
    LOCAL p
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   ::pPtr := Qt_HBEvents( ... )
+   ::pPtr := Qt_HBQEvents( ... )
    RETURN Self
 
 
-METHOD HBEvents:hbConnect( xObj, nEvent, xBlock )
-   RETURN Qt_HBEvents_hbConnect( ::pPtr, xObj, nEvent, xBlock )
+METHOD HBQEvents:hbConnect( xObj, nEvent, xBlock )
+   RETURN Qt_HBQEvents_hbConnect( ::pPtr, xObj, nEvent, xBlock )
 
 
-METHOD HBEvents:hbDisconnect( xObj, nEvent )
-   RETURN Qt_HBEvents_hbDisconnect( ::pPtr, xObj, nEvent )
+METHOD HBQEvents:hbDisconnect( xObj, nEvent )
+   RETURN Qt_HBQEvents_hbDisconnect( ::pPtr, xObj, nEvent )
 
 
-METHOD HBEvents:hbClear()
-   RETURN Qt_HBEvents_hbClear( ::pPtr )
+METHOD HBQEvents:hbClear()
+   RETURN Qt_HBQEvents_hbClear( ::pPtr )
 
