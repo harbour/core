@@ -1433,7 +1433,7 @@ METHOD IdeDocks:buildProjectTree()
 
    ::oProjTree:setStyleSheet( GetStyleSheet( "QTreeWidgetHB", ::nAnimantionMode ) )
    ::oProjTree:oWidget:setMinimumWidth( 100 )
-   ::oProjTree:oWidget:setSizePolicy_1( QSizePolicy_MinimumExpanding, QSizePolicy_Preferred )
+   ::oProjTree:oWidget:setSizePolicy( QSizePolicy_MinimumExpanding, QSizePolicy_Preferred )
    ::oProjTree:oWidget:setIconSize( QSize( 12,12 ) )
    ::oProjTree:oWidget:setIndentation( 12 )
 
@@ -1486,7 +1486,7 @@ METHOD IdeDocks:buildEditorTree()
    ::oEditTree:hasButtons := .T.
    ::oEditTree:create( ::oDockED, , { 0,0 }, { 100,10 }, , .t. )
 
-   ::oEditTree:oWidget:setSizePolicy_1( QSizePolicy_MinimumExpanding, QSizePolicy_Preferred )
+   ::oEditTree:oWidget:setSizePolicy( QSizePolicy_MinimumExpanding, QSizePolicy_Preferred )
    ::oEditTree:oWidget:setMinimumWidth( 100 )
    ::oEditTree:oWidget:setIconSize( QSize( 12,12 ) )
    ::oEditTree:oWidget:setIndentation( 12 )

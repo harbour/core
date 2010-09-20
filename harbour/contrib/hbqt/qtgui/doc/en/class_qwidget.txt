@@ -52,8 +52,7 @@
  *     :geometry()                                         -> pQRect
  *     :getContentsMargins( @nLeft, @nTop, @nRight, @nBottom )  -> NIL
  *     :grabKeyboard()                                     -> NIL
- *     :grabMouse()                                        -> NIL
- *     :grabMouse_1( pCursor )                             -> NIL
+ *     :grabMouse( ... )                                   -> NIL
  *     :grabShortcut( pKey, nContext )                     -> nInt
  *     :hasFocus()                                         -> lBool
  *     :hasMouseTracking()                                 -> lBool
@@ -91,8 +90,7 @@
  *     :minimumSize()                                      -> pQSize
  *     :minimumSizeHint()                                  -> pQSize
  *     :minimumWidth()                                     -> nInt
- *     :move( nX, nY )                                     -> NIL
- *     :move_1( pQPoint )                                  -> NIL
+ *     :move( ... )                                        -> NIL
  *     :normalGeometry()                                   -> pQRect
  *     :overrideWindowFlags( nFlags )                      -> NIL
  *     :paintEngine()                                      -> pQPaintEngine
@@ -103,58 +101,45 @@
  *     :releaseMouse()                                     -> NIL
  *     :releaseShortcut( nId )                             -> NIL
  *     :removeAction( pAction )                            -> NIL
- *     :repaint( nX, nY, nW, nH )                          -> NIL
- *     :repaint_1( pRect )                                 -> NIL
- *     :repaint_2( pRgn )                                  -> NIL
- *     :resize( nW, nH )                                   -> NIL
- *     :resize_1( pQSize )                                 -> NIL
+ *     :repaint( ... )                                     -> NIL
+ *     :resize( ... )                                      -> NIL
  *     :restoreGeometry( pGeometry )                       -> lBool
  *     :saveGeometry()                                     -> pQByteArray
- *     :scroll( nDx, nDy )                                 -> NIL
- *     :scroll_1( nDx, nDy, pR )                           -> NIL
+ *     :scroll( ... )                                      -> NIL
  *     :setAcceptDrops( lOn )                              -> NIL
  *     :setAttribute( nAttribute, lOn )                    -> NIL
  *     :setAutoFillBackground( lEnabled )                  -> NIL
  *     :setBackgroundRole( nRole )                         -> NIL
- *     :setBaseSize( pQSize )                              -> NIL
- *     :setBaseSize_1( nBasew, nBaseh )                    -> NIL
+ *     :setBaseSize( ... )                                 -> NIL
  *     :setContentsMargins( nLeft, nTop, nRight, nBottom )  -> NIL
  *     :setContextMenuPolicy( nPolicy )                    -> NIL
  *     :setCursor( pQCursor )                              -> NIL
  *     :setFixedHeight( nH )                               -> NIL
- *     :setFixedSize( pS )                                 -> NIL
- *     :setFixedSize_1( nW, nH )                           -> NIL
+ *     :setFixedSize( ... )                                -> NIL
  *     :setFixedWidth( nW )                                -> NIL
- *     :setFocus( nReason )                                -> NIL
+ *     :setFocus( ... )                                    -> NIL
  *     :setFocusPolicy( nPolicy )                          -> NIL
  *     :setFocusProxy( pW )                                -> NIL
  *     :setFont( pQFont )                                  -> NIL
  *     :setForegroundRole( nRole )                         -> NIL
- *     :setGeometry( pQRect )                              -> NIL
- *     :setGeometry_1( nX, nY, nW, nH )                    -> NIL
+ *     :setGeometry( ... )                                 -> NIL
  *     :setLayout( pLayout )                               -> NIL
  *     :setLayoutDirection( nDirection )                   -> NIL
  *     :setLocale( pLocale )                               -> NIL
- *     :setMask( pBitmap )                                 -> NIL
- *     :setMask_1( pRegion )                               -> NIL
+ *     :setMask( ... )                                     -> NIL
  *     :setMaximumHeight( nMaxh )                          -> NIL
- *     :setMaximumSize( pQSize )                           -> NIL
- *     :setMaximumSize_1( nMaxw, nMaxh )                   -> NIL
+ *     :setMaximumSize( ... )                              -> NIL
  *     :setMaximumWidth( nMaxw )                           -> NIL
  *     :setMinimumHeight( nMinh )                          -> NIL
- *     :setMinimumSize( pQSize )                           -> NIL
- *     :setMinimumSize_1( nMinw, nMinh )                   -> NIL
+ *     :setMinimumSize( ... )                              -> NIL
  *     :setMinimumWidth( nMinw )                           -> NIL
  *     :setMouseTracking( lEnable )                        -> NIL
  *     :setPalette( pQPalette )                            -> NIL
- *     :setParent( pParent )                               -> NIL
- *     :setParent_1( pParent, nF )                         -> NIL
+ *     :setParent( ... )                                   -> NIL
  *     :setShortcutAutoRepeat( nId, lEnable )              -> NIL
  *     :setShortcutEnabled( nId, lEnable )                 -> NIL
- *     :setSizeIncrement( pQSize )                         -> NIL
- *     :setSizeIncrement_1( nW, nH )                       -> NIL
- *     :setSizePolicy( pPolicy )                           -> NIL
- *     :setSizePolicy_1( nHorizontal, nVertical )          -> NIL
+ *     :setSizeIncrement( ... )                            -> NIL
+ *     :setSizePolicy( ... )                               -> NIL
  *     :setStatusTip( cQString )                           -> NIL
  *     :setStyle( pStyle )                                 -> NIL
  *     :setToolTip( cQString )                             -> NIL
@@ -182,9 +167,7 @@
  *     :unsetCursor()                                      -> NIL
  *     :unsetLayoutDirection()                             -> NIL
  *     :unsetLocale()                                      -> NIL
- *     :update( nX, nY, nW, nH )                           -> NIL
- *     :update_1( pRect )                                  -> NIL
- *     :update_2( pRgn )                                   -> NIL
+ *     :update( ... )                                      -> NIL
  *     :updateGeometry()                                   -> NIL
  *     :updatesEnabled()                                   -> lBool
  *     :visibleRegion()                                    -> pQRegion
@@ -207,10 +190,8 @@
  *     :hide()                                             -> NIL
  *     :lower()                                            -> NIL
  *     :raise()                                            -> NIL
- *     :repaint_3()                                        -> NIL
  *     :setDisabled( lDisable )                            -> NIL
  *     :setEnabled( lEnable )                              -> NIL
- *     :setFocus_1()                                       -> NIL
  *     :setHidden( lHidden )                               -> NIL
  *     :setStyleSheet( cStyleSheet )                       -> NIL
  *     :setVisible( lVisible )                             -> NIL
@@ -221,7 +202,6 @@
  *     :showMaximized()                                    -> NIL
  *     :showMinimized()                                    -> NIL
  *     :showNormal()                                       -> NIL
- *     :update_3()                                         -> NIL
  * 
  *  $DESCRIPTION$
  * 

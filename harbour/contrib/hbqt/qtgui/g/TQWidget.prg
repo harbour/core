@@ -79,8 +79,7 @@ CREATE CLASS QWidget INHERIT HbQtObjectHandler, HB_QObject, HB_QPaintDevice FUNC
    METHOD  autoFillBackground()
    METHOD  backgroundRole()
    METHOD  baseSize()
-   METHOD  childAt( nX, nY )
-   METHOD  childAt_1( pP )
+   METHOD  childAt( ... )
    METHOD  childrenRect()
    METHOD  childrenRegion()
    METHOD  clearFocus()
@@ -101,8 +100,7 @@ CREATE CLASS QWidget INHERIT HbQtObjectHandler, HB_QObject, HB_QPaintDevice FUNC
    METHOD  geometry()
    METHOD  getContentsMargins( nLeft, nTop, nRight, nBottom )
    METHOD  grabKeyboard()
-   METHOD  grabMouse()
-   METHOD  grabMouse_1( pCursor )
+   METHOD  grabMouse( ... )
    METHOD  grabShortcut( pKey, nContext )
    METHOD  hasFocus()
    METHOD  hasMouseTracking()
@@ -140,8 +138,7 @@ CREATE CLASS QWidget INHERIT HbQtObjectHandler, HB_QObject, HB_QPaintDevice FUNC
    METHOD  minimumSize()
    METHOD  minimumSizeHint()
    METHOD  minimumWidth()
-   METHOD  move( nX, nY )
-   METHOD  move_1( pQPoint )
+   METHOD  move( ... )
    METHOD  nativeParentWidget()
    METHOD  nextInFocusChain()
    METHOD  normalGeometry()
@@ -155,58 +152,45 @@ CREATE CLASS QWidget INHERIT HbQtObjectHandler, HB_QObject, HB_QPaintDevice FUNC
    METHOD  releaseMouse()
    METHOD  releaseShortcut( nId )
    METHOD  removeAction( pAction )
-   METHOD  repaint( nX, nY, nW, nH )
-   METHOD  repaint_1( pRect )
-   METHOD  repaint_2( pRgn )
-   METHOD  resize( nW, nH )
-   METHOD  resize_1( pQSize )
+   METHOD  repaint( ... )
+   METHOD  resize( ... )
    METHOD  restoreGeometry( pGeometry )
    METHOD  saveGeometry()
-   METHOD  scroll( nDx, nDy )
-   METHOD  scroll_1( nDx, nDy, pR )
+   METHOD  scroll( ... )
    METHOD  setAcceptDrops( lOn )
    METHOD  setAttribute( nAttribute, lOn )
    METHOD  setAutoFillBackground( lEnabled )
    METHOD  setBackgroundRole( nRole )
-   METHOD  setBaseSize( pQSize )
-   METHOD  setBaseSize_1( nBasew, nBaseh )
+   METHOD  setBaseSize( ... )
    METHOD  setContentsMargins( nLeft, nTop, nRight, nBottom )
    METHOD  setContextMenuPolicy( nPolicy )
    METHOD  setCursor( pQCursor )
    METHOD  setFixedHeight( nH )
-   METHOD  setFixedSize( pS )
-   METHOD  setFixedSize_1( nW, nH )
+   METHOD  setFixedSize( ... )
    METHOD  setFixedWidth( nW )
-   METHOD  setFocus( nReason )
+   METHOD  setFocus( ... )
    METHOD  setFocusPolicy( nPolicy )
    METHOD  setFocusProxy( pW )
    METHOD  setFont( pQFont )
    METHOD  setForegroundRole( nRole )
-   METHOD  setGeometry( pQRect )
-   METHOD  setGeometry_1( nX, nY, nW, nH )
+   METHOD  setGeometry( ... )
    METHOD  setLayout( pLayout )
    METHOD  setLayoutDirection( nDirection )
    METHOD  setLocale( pLocale )
-   METHOD  setMask( pBitmap )
-   METHOD  setMask_1( pRegion )
+   METHOD  setMask( ... )
    METHOD  setMaximumHeight( nMaxh )
-   METHOD  setMaximumSize( pQSize )
-   METHOD  setMaximumSize_1( nMaxw, nMaxh )
+   METHOD  setMaximumSize( ... )
    METHOD  setMaximumWidth( nMaxw )
    METHOD  setMinimumHeight( nMinh )
-   METHOD  setMinimumSize( pQSize )
-   METHOD  setMinimumSize_1( nMinw, nMinh )
+   METHOD  setMinimumSize( ... )
    METHOD  setMinimumWidth( nMinw )
    METHOD  setMouseTracking( lEnable )
    METHOD  setPalette( pQPalette )
-   METHOD  setParent( pParent )
-   METHOD  setParent_1( pParent, nF )
+   METHOD  setParent( ... )
    METHOD  setShortcutAutoRepeat( nId, lEnable )
    METHOD  setShortcutEnabled( nId, lEnable )
-   METHOD  setSizeIncrement( pQSize )
-   METHOD  setSizeIncrement_1( nW, nH )
-   METHOD  setSizePolicy( pPolicy )
-   METHOD  setSizePolicy_1( nHorizontal, nVertical )
+   METHOD  setSizeIncrement( ... )
+   METHOD  setSizePolicy( ... )
    METHOD  setStatusTip( cQString )
    METHOD  setStyle( pStyle )
    METHOD  setToolTip( cQString )
@@ -234,9 +218,7 @@ CREATE CLASS QWidget INHERIT HbQtObjectHandler, HB_QObject, HB_QPaintDevice FUNC
    METHOD  unsetCursor()
    METHOD  unsetLayoutDirection()
    METHOD  unsetLocale()
-   METHOD  update( nX, nY, nW, nH )
-   METHOD  update_1( pRect )
-   METHOD  update_2( pRgn )
+   METHOD  update( ... )
    METHOD  updateGeometry()
    METHOD  updatesEnabled()
    METHOD  visibleRegion()
@@ -262,10 +244,8 @@ CREATE CLASS QWidget INHERIT HbQtObjectHandler, HB_QObject, HB_QPaintDevice FUNC
    METHOD  hide()
    METHOD  lower()
    METHOD  raise()
-   METHOD  repaint_3()
    METHOD  setDisabled( lDisable )
    METHOD  setEnabled( lEnable )
-   METHOD  setFocus_1()
    METHOD  setHidden( lHidden )
    METHOD  setStyleSheet( cStyleSheet )
    METHOD  setVisible( lVisible )
@@ -276,7 +256,6 @@ CREATE CLASS QWidget INHERIT HbQtObjectHandler, HB_QObject, HB_QPaintDevice FUNC
    METHOD  showMaximized()
    METHOD  showMinimized()
    METHOD  showNormal()
-   METHOD  update_3()
 
    ENDCLASS
 
@@ -322,12 +301,12 @@ METHOD QWidget:baseSize()
    RETURN Qt_QWidget_baseSize( ::pPtr )
 
 
-METHOD QWidget:childAt( nX, nY )
-   RETURN Qt_QWidget_childAt( ::pPtr, nX, nY )
-
-
-METHOD QWidget:childAt_1( pP )
-   RETURN Qt_QWidget_childAt_1( ::pPtr, hbqt_ptr( pP ) )
+METHOD QWidget:childAt( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QWidget_childAt( ::pPtr, ... )
 
 
 METHOD QWidget:childrenRect()
@@ -410,12 +389,12 @@ METHOD QWidget:grabKeyboard()
    RETURN Qt_QWidget_grabKeyboard( ::pPtr )
 
 
-METHOD QWidget:grabMouse()
-   RETURN Qt_QWidget_grabMouse( ::pPtr )
-
-
-METHOD QWidget:grabMouse_1( pCursor )
-   RETURN Qt_QWidget_grabMouse_1( ::pPtr, hbqt_ptr( pCursor ) )
+METHOD QWidget:grabMouse( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QWidget_grabMouse( ::pPtr, ... )
 
 
 METHOD QWidget:grabShortcut( pKey, nContext )
@@ -566,12 +545,12 @@ METHOD QWidget:minimumWidth()
    RETURN Qt_QWidget_minimumWidth( ::pPtr )
 
 
-METHOD QWidget:move( nX, nY )
-   RETURN Qt_QWidget_move( ::pPtr, nX, nY )
-
-
-METHOD QWidget:move_1( pQPoint )
-   RETURN Qt_QWidget_move_1( ::pPtr, hbqt_ptr( pQPoint ) )
+METHOD QWidget:move( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QWidget_move( ::pPtr, ... )
 
 
 METHOD QWidget:nativeParentWidget()
@@ -626,24 +605,20 @@ METHOD QWidget:removeAction( pAction )
    RETURN Qt_QWidget_removeAction( ::pPtr, hbqt_ptr( pAction ) )
 
 
-METHOD QWidget:repaint( nX, nY, nW, nH )
-   RETURN Qt_QWidget_repaint( ::pPtr, nX, nY, nW, nH )
+METHOD QWidget:repaint( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QWidget_repaint( ::pPtr, ... )
 
 
-METHOD QWidget:repaint_1( pRect )
-   RETURN Qt_QWidget_repaint_1( ::pPtr, hbqt_ptr( pRect ) )
-
-
-METHOD QWidget:repaint_2( pRgn )
-   RETURN Qt_QWidget_repaint_2( ::pPtr, hbqt_ptr( pRgn ) )
-
-
-METHOD QWidget:resize( nW, nH )
-   RETURN Qt_QWidget_resize( ::pPtr, nW, nH )
-
-
-METHOD QWidget:resize_1( pQSize )
-   RETURN Qt_QWidget_resize_1( ::pPtr, hbqt_ptr( pQSize ) )
+METHOD QWidget:resize( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QWidget_resize( ::pPtr, ... )
 
 
 METHOD QWidget:restoreGeometry( pGeometry )
@@ -654,12 +629,12 @@ METHOD QWidget:saveGeometry()
    RETURN Qt_QWidget_saveGeometry( ::pPtr )
 
 
-METHOD QWidget:scroll( nDx, nDy )
-   RETURN Qt_QWidget_scroll( ::pPtr, nDx, nDy )
-
-
-METHOD QWidget:scroll_1( nDx, nDy, pR )
-   RETURN Qt_QWidget_scroll_1( ::pPtr, nDx, nDy, hbqt_ptr( pR ) )
+METHOD QWidget:scroll( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QWidget_scroll( ::pPtr, ... )
 
 
 METHOD QWidget:setAcceptDrops( lOn )
@@ -678,12 +653,12 @@ METHOD QWidget:setBackgroundRole( nRole )
    RETURN Qt_QWidget_setBackgroundRole( ::pPtr, nRole )
 
 
-METHOD QWidget:setBaseSize( pQSize )
-   RETURN Qt_QWidget_setBaseSize( ::pPtr, hbqt_ptr( pQSize ) )
-
-
-METHOD QWidget:setBaseSize_1( nBasew, nBaseh )
-   RETURN Qt_QWidget_setBaseSize_1( ::pPtr, nBasew, nBaseh )
+METHOD QWidget:setBaseSize( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QWidget_setBaseSize( ::pPtr, ... )
 
 
 METHOD QWidget:setContentsMargins( nLeft, nTop, nRight, nBottom )
@@ -702,20 +677,24 @@ METHOD QWidget:setFixedHeight( nH )
    RETURN Qt_QWidget_setFixedHeight( ::pPtr, nH )
 
 
-METHOD QWidget:setFixedSize( pS )
-   RETURN Qt_QWidget_setFixedSize( ::pPtr, hbqt_ptr( pS ) )
-
-
-METHOD QWidget:setFixedSize_1( nW, nH )
-   RETURN Qt_QWidget_setFixedSize_1( ::pPtr, nW, nH )
+METHOD QWidget:setFixedSize( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QWidget_setFixedSize( ::pPtr, ... )
 
 
 METHOD QWidget:setFixedWidth( nW )
    RETURN Qt_QWidget_setFixedWidth( ::pPtr, nW )
 
 
-METHOD QWidget:setFocus( nReason )
-   RETURN Qt_QWidget_setFocus( ::pPtr, nReason )
+METHOD QWidget:setFocus( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QWidget_setFocus( ::pPtr, ... )
 
 
 METHOD QWidget:setFocusPolicy( nPolicy )
@@ -734,12 +713,12 @@ METHOD QWidget:setForegroundRole( nRole )
    RETURN Qt_QWidget_setForegroundRole( ::pPtr, nRole )
 
 
-METHOD QWidget:setGeometry( pQRect )
-   RETURN Qt_QWidget_setGeometry( ::pPtr, hbqt_ptr( pQRect ) )
-
-
-METHOD QWidget:setGeometry_1( nX, nY, nW, nH )
-   RETURN Qt_QWidget_setGeometry_1( ::pPtr, nX, nY, nW, nH )
+METHOD QWidget:setGeometry( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QWidget_setGeometry( ::pPtr, ... )
 
 
 METHOD QWidget:setLayout( pLayout )
@@ -754,24 +733,24 @@ METHOD QWidget:setLocale( pLocale )
    RETURN Qt_QWidget_setLocale( ::pPtr, hbqt_ptr( pLocale ) )
 
 
-METHOD QWidget:setMask( pBitmap )
-   RETURN Qt_QWidget_setMask( ::pPtr, hbqt_ptr( pBitmap ) )
-
-
-METHOD QWidget:setMask_1( pRegion )
-   RETURN Qt_QWidget_setMask_1( ::pPtr, hbqt_ptr( pRegion ) )
+METHOD QWidget:setMask( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QWidget_setMask( ::pPtr, ... )
 
 
 METHOD QWidget:setMaximumHeight( nMaxh )
    RETURN Qt_QWidget_setMaximumHeight( ::pPtr, nMaxh )
 
 
-METHOD QWidget:setMaximumSize( pQSize )
-   RETURN Qt_QWidget_setMaximumSize( ::pPtr, hbqt_ptr( pQSize ) )
-
-
-METHOD QWidget:setMaximumSize_1( nMaxw, nMaxh )
-   RETURN Qt_QWidget_setMaximumSize_1( ::pPtr, nMaxw, nMaxh )
+METHOD QWidget:setMaximumSize( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QWidget_setMaximumSize( ::pPtr, ... )
 
 
 METHOD QWidget:setMaximumWidth( nMaxw )
@@ -782,12 +761,12 @@ METHOD QWidget:setMinimumHeight( nMinh )
    RETURN Qt_QWidget_setMinimumHeight( ::pPtr, nMinh )
 
 
-METHOD QWidget:setMinimumSize( pQSize )
-   RETURN Qt_QWidget_setMinimumSize( ::pPtr, hbqt_ptr( pQSize ) )
-
-
-METHOD QWidget:setMinimumSize_1( nMinw, nMinh )
-   RETURN Qt_QWidget_setMinimumSize_1( ::pPtr, nMinw, nMinh )
+METHOD QWidget:setMinimumSize( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QWidget_setMinimumSize( ::pPtr, ... )
 
 
 METHOD QWidget:setMinimumWidth( nMinw )
@@ -802,12 +781,12 @@ METHOD QWidget:setPalette( pQPalette )
    RETURN Qt_QWidget_setPalette( ::pPtr, hbqt_ptr( pQPalette ) )
 
 
-METHOD QWidget:setParent( pParent )
-   RETURN Qt_QWidget_setParent( ::pPtr, hbqt_ptr( pParent ) )
-
-
-METHOD QWidget:setParent_1( pParent, nF )
-   RETURN Qt_QWidget_setParent_1( ::pPtr, hbqt_ptr( pParent ), nF )
+METHOD QWidget:setParent( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QWidget_setParent( ::pPtr, ... )
 
 
 METHOD QWidget:setShortcutAutoRepeat( nId, lEnable )
@@ -818,20 +797,20 @@ METHOD QWidget:setShortcutEnabled( nId, lEnable )
    RETURN Qt_QWidget_setShortcutEnabled( ::pPtr, nId, lEnable )
 
 
-METHOD QWidget:setSizeIncrement( pQSize )
-   RETURN Qt_QWidget_setSizeIncrement( ::pPtr, hbqt_ptr( pQSize ) )
+METHOD QWidget:setSizeIncrement( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QWidget_setSizeIncrement( ::pPtr, ... )
 
 
-METHOD QWidget:setSizeIncrement_1( nW, nH )
-   RETURN Qt_QWidget_setSizeIncrement_1( ::pPtr, nW, nH )
-
-
-METHOD QWidget:setSizePolicy( pPolicy )
-   RETURN Qt_QWidget_setSizePolicy( ::pPtr, hbqt_ptr( pPolicy ) )
-
-
-METHOD QWidget:setSizePolicy_1( nHorizontal, nVertical )
-   RETURN Qt_QWidget_setSizePolicy_1( ::pPtr, nHorizontal, nVertical )
+METHOD QWidget:setSizePolicy( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QWidget_setSizePolicy( ::pPtr, ... )
 
 
 METHOD QWidget:setStatusTip( cQString )
@@ -942,16 +921,12 @@ METHOD QWidget:unsetLocale()
    RETURN Qt_QWidget_unsetLocale( ::pPtr )
 
 
-METHOD QWidget:update( nX, nY, nW, nH )
-   RETURN Qt_QWidget_update( ::pPtr, nX, nY, nW, nH )
-
-
-METHOD QWidget:update_1( pRect )
-   RETURN Qt_QWidget_update_1( ::pPtr, hbqt_ptr( pRect ) )
-
-
-METHOD QWidget:update_2( pRgn )
-   RETURN Qt_QWidget_update_2( ::pPtr, hbqt_ptr( pRgn ) )
+METHOD QWidget:update( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QWidget_update( ::pPtr, ... )
 
 
 METHOD QWidget:updateGeometry()
@@ -1054,20 +1029,12 @@ METHOD QWidget:raise()
    RETURN Qt_QWidget_raise( ::pPtr )
 
 
-METHOD QWidget:repaint_3()
-   RETURN Qt_QWidget_repaint_3( ::pPtr )
-
-
 METHOD QWidget:setDisabled( lDisable )
    RETURN Qt_QWidget_setDisabled( ::pPtr, lDisable )
 
 
 METHOD QWidget:setEnabled( lEnable )
    RETURN Qt_QWidget_setEnabled( ::pPtr, lEnable )
-
-
-METHOD QWidget:setFocus_1()
-   RETURN Qt_QWidget_setFocus_1( ::pPtr )
 
 
 METHOD QWidget:setHidden( lHidden )
@@ -1108,8 +1075,4 @@ METHOD QWidget:showMinimized()
 
 METHOD QWidget:showNormal()
    RETURN Qt_QWidget_showNormal( ::pPtr )
-
-
-METHOD QWidget:update_3()
-   RETURN Qt_QWidget_update_3( ::pPtr )
 

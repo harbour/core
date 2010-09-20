@@ -368,7 +368,7 @@ METHOD IdeSearchReplace:beginFind()
    ::cFind := ""
 
    ::qFindLineEdit:activateWindow()
-   ::qFindLineEdit:setFocus_1()
+   ::qFindLineEdit:setFocus()
    ::qFindLineEdit:selectAll()
 
    RETURN Self
@@ -607,7 +607,7 @@ METHOD IdeFindReplace:onClickFind()
       ::oUI:q_checkGlobal:setEnabled( .f. )
       ::oUI:q_checkNoPrompting:setEnabled( .f. )
       ::oUI:q_buttonFind:activateWindow()
-      ::oUI:q_buttonFind:setFocus_1()
+      ::oUI:q_buttonFind:setFocus()
    ENDIF
 
    RETURN Self

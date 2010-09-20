@@ -295,7 +295,7 @@ METHOD IdeDocWriter:setParameters()
    ::oUI:q_plainExamples:setFont( ::oFont:oWidget )
    ::oUI:q_plainTests:setFont( ::oFont:oWidget )
 
-   ::oUI:q_frameGeneral:setSizePolicy_1( QSizePolicy_Preferred, QSizePolicy_Fixed )
+   ::oUI:q_frameGeneral:setSizePolicy( QSizePolicy_Preferred, QSizePolicy_Fixed )
 
    RETURN Self
 

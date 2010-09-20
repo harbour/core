@@ -218,7 +218,7 @@ METHOD XbpPushButton:setFocus()
    IF !( ::oWidget:isDefault() )
       ::oWidget:setDefault( .t. )
    ENDIF
-   ::oWidget:setFocus_1()
+   ::oWidget:setFocus()
 
    RETURN Self
 

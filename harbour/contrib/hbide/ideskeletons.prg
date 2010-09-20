@@ -497,7 +497,7 @@ METHOD IdeSkeletons:showTree()
       ::oTree:create( ::oSkltnsTreeDock, , { 0,0 }, { 10,10 }, , .t. )
 
       ::oTree:oWidget:setMinimumWidth( 100 )
-      ::oTree:oWidget:setSizePolicy_1( QSizePolicy_MinimumExpanding, QSizePolicy_Preferred )
+      ::oTree:oWidget:setSizePolicy( QSizePolicy_MinimumExpanding, QSizePolicy_Preferred )
       ::oTree:oWidget:setIconSize( QSize( 12,12 ) )
       ::oTree:oWidget:setIndentation( 12 )
 

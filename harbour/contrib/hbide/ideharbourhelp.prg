@@ -425,7 +425,7 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
 
    CASE "tabWidgetContents_currentChanged"
       IF p == 1
-         ::oUI:q_editIndex:setFocus_1()
+         ::oUI:q_editIndex:setFocus()
       ENDIF
       EXIT
 
@@ -441,13 +441,13 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
 
    CASE "listIndex_ItemDoubleClicked"
       ::populateIndexedSelection()
-      ::oUI:q_editIndex:setFocus_1()
+      ::oUI:q_editIndex:setFocus()
       EXIT
 
    CASE "editIndex_returnPressed"
       IF !empty( ::oUI:q_editIndex:text() )
          ::populateIndexedSelection()
-         ::oUI:q_editIndex:setFocus_1()
+         ::oUI:q_editIndex:setFocus()
       ENDIF
       EXIT
 

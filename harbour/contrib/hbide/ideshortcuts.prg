@@ -741,7 +741,7 @@ METHOD IdeShortcuts:test( cString, lWarn )
 
    ErrorBlock( bError )
    ::oUI:raise()
-   ::oUI:setFocus_1()
+   ::oUI:setFocus()
 
    RETURN lOk
 

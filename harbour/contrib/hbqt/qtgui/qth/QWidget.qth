@@ -112,8 +112,24 @@ void adjustSize ()
 bool autoFillBackground () const
 QPalette::ColorRole backgroundRole () const
 QSize baseSize () const
-QWidget * childAt ( int x, int y ) const
-QWidget * childAt ( const QPoint & p ) const
+
+QWidget * childAt ( ... ){
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
+      {
+         hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->childAt( *hbqt_par_QPoint( 2 ) ), false ) );
+      }
+      else if( hb_pcount() == 3 && HB_ISNUM( 2 ) )
+      {
+         hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->childAt( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
+      }
+   }
+}
+//QWidget * childAt ( int x, int y ) const
+//QWidget * childAt ( const QPoint & p ) const
+
 QRect childrenRect () const
 QRegion childrenRegion () const
 void clearFocus ()
@@ -139,8 +155,24 @@ void getContentsMargins ( int * left, int * top, int * right, int * bottom ) con
 # non-portable
 // virtual HDC getDC () const
 void grabKeyboard ()
-void grabMouse ()
-void grabMouse ( const QCursor & cursor )
+
+void grabMouse ( ... ){
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
+      {
+         ( p )->grabMouse( *hbqt_par_QCursor( 2 ) );
+      }
+      else
+      {
+         ( p )->grabMouse();
+      }
+   }
+}
+//void grabMouse ()
+//void grabMouse ( const QCursor & cursor )
+
 int grabShortcut ( const QKeySequence & key, Qt::ShortcutContext context = Qt::WindowShortcut )
 // QGraphicsProxyWidget * graphicsProxyWidget () const
 // bool hasEditFocus () const
@@ -184,14 +216,24 @@ int minimumHeight () const
 QSize minimumSize () const
 virtual QSize minimumSizeHint () const
 int minimumWidth () const
-#
-#  Note that order of the function calls is swaped
-#  It implies that we can implement the method in a simpler way
-#  Infact we can remove second method with QPoint as it needs more code
-#
-void move ( int x, int y )
-void move ( const QPoint & )
-#
+
+void move ( ... ){
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
+      {
+         ( p )->move( *hbqt_par_QPoint( 2 ) );
+      }
+      else if( hb_pcount() == 3 && HB_ISNUM( 2 ) )
+      {
+         ( p )->move( hb_parni( 2 ), hb_parni( 3 ) );
+      }
+   }
+}
+//void move ( int x, int y )
+//void move ( const QPoint & )
+
 QWidget * nativeParentWidget () const
 QWidget * nextInFocusChain () const
 QRect normalGeometry () const
@@ -209,73 +251,283 @@ void releaseShortcut ( int id )
 void removeAction ( QAction * action )
 //void render ( QPaintDevice * target, const QPoint & targetOffset = QPoint(), const QRegion & sourceRegion = QRegion(), RenderFlags renderFlags = RenderFlags( DrawWindowBackground | DrawChildren ) )
 //void render ( QPainter * painter, const QPoint & targetOffset = QPoint(), const QRegion & sourceRegion = QRegion(), RenderFlags renderFlags = RenderFlags( DrawWindowBackground | DrawChildren ) )
-#
-#  As a normalized behavior, int types are the best.
-#    
-void repaint ( int x, int y, int w, int h )
-void repaint ( const QRect & rect )
-void repaint ( const QRegion & rgn )
-#
-#   Please never change this order as it is considered natural
-#
-void resize ( int w, int h )
-void resize ( const QSize & )
-#
+
+void repaint ( ... ){
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
+      {
+         HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+
+         if( q->type == HBQT_TYPE_QRect )
+         {
+            ( p )->repaint( *hbqt_par_QRect( 2 ) );
+         }
+         else if( q->type == HBQT_TYPE_QRegion )
+         {
+            ( p )->repaint( *hbqt_par_QRegion( 2 ) );
+         }
+      }
+      else if( hb_pcount() == 5 && HB_ISNUM( 2 ) )
+      {
+         ( p )->repaint( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
+      }
+      else
+      {
+         ( p )->repaint();
+      }
+   }
+}
+//void repaint ( int x, int y, int w, int h )
+//void repaint ( const QRect & rect )
+//void repaint ( const QRegion & rgn )
+
+void resize ( ... ){
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
+      {
+         ( p )->resize( *hbqt_par_QSize( 2 ) );
+      }
+      else if( hb_pcount() == 3 && HB_ISNUM( 2 ) )
+      {
+         ( p )->resize( hb_parni( 2 ), hb_parni( 3 ) );
+      }
+   }
+}
+//void resize ( int w, int h )
+//void resize ( const QSize & )
+
 bool restoreGeometry ( const QByteArray & geometry )
 QByteArray saveGeometry () const
-#
-#  Normalized behavior
-#
-void scroll ( int dx, int dy )
-void scroll ( int dx, int dy, const QRect & r )
-#
+
+void scroll ( ... ){
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      if( hb_pcount() == 4 && HB_ISNUM( 2 ) && HB_ISPOINTER( 4 ) )
+      {
+         ( p )->scroll( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QRect( 4 ) );
+      }
+      else if( hb_pcount() == 3 && HB_ISNUM( 2 ) )
+      {
+         ( p )->scroll( hb_parni( 2 ), hb_parni( 3 ) );
+      }
+   }
+}
+//void scroll ( int dx, int dy )
+//void scroll ( int dx, int dy, const QRect & r )
+
 void setAcceptDrops ( bool on )
 // void setAccessibleDescription ( const QString & description )
 // void setAccessibleName ( const QString & name )
 void setAttribute ( Qt::WidgetAttribute attribute, bool on = true )
 void setAutoFillBackground ( bool enabled )
 void setBackgroundRole ( QPalette::ColorRole role )
-void setBaseSize ( const QSize & )
-void setBaseSize ( int basew, int baseh )
+
+void setBaseSize ( ... ){
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
+      {
+         ( p )->setBaseSize( *hbqt_par_QSize( 2 ) );
+      }
+      else if( hb_pcount() == 3 && HB_ISNUM( 2 ) )
+      {
+         ( p )->setBaseSize( hb_parni( 2 ), hb_parni( 3 ) );
+      }
+   }
+}
+//void setBaseSize ( const QSize & )
+//void setBaseSize ( int basew, int baseh )
+
 void setContentsMargins ( int left, int top, int right, int bottom )
 void setContextMenuPolicy ( Qt::ContextMenuPolicy policy )
 void setCursor ( const QCursor & )
 // void setEditFocus ( bool enable )
 void setFixedHeight ( int h )
-void setFixedSize ( const QSize & s )
-void setFixedSize ( int w, int h )
+
+void setFixedSize ( ... ){
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
+      {
+         ( p )->setFixedSize( *hbqt_par_QSize( 2 ) );
+      }
+      else if( hb_pcount() == 3 && HB_ISNUM( 2 ) )
+      {
+         ( p )->setFixedSize( hb_parni( 2 ), hb_parni( 3 ) );
+      }
+   }
+}
+//void setFixedSize ( const QSize & s )
+//void setFixedSize ( int w, int h )
+
 void setFixedWidth ( int w )
-void setFocus ( Qt::FocusReason reason )
+
+void setFocus ( ... ){
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      if( hb_pcount() == 2 && HB_ISNUM( 2 ) )
+      {
+         ( p )->setFocus( ( Qt::FocusReason ) hb_parni( 2 ) );
+      }
+      else
+      {
+         ( p )->setFocus();
+      }
+   }
+}
+//void setFocus ( Qt::FocusReason reason )
+
 void setFocusPolicy ( Qt::FocusPolicy policy )
 void setFocusProxy ( QWidget * w )
 void setFont ( const QFont & )
 void setForegroundRole ( QPalette::ColorRole role )
-void setGeometry ( const QRect & )
-void setGeometry ( int x, int y, int w, int h )
+
+void setGeometry ( ... ){
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
+      {
+         ( p )->setGeometry( *hbqt_par_QRect( 2 ) );
+      }
+      else if( hb_pcount() == 5 && HB_ISNUM( 2 ) )
+      {
+         ( p )->setGeometry( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
+      }
+   }
+}
+//void setGeometry ( const QRect & )
+//void setGeometry ( int x, int y, int w, int h )
+
 // void setInputContext ( QInputContext * context )
 void setLayout ( QLayout * layout )
 void setLayoutDirection ( Qt::LayoutDirection direction )
 void setLocale ( const QLocale & locale )
-void setMask ( const QBitmap & bitmap )
-void setMask ( const QRegion & region )
+
+void setMask ( ... ){
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+
+      if( q->type == HBQT_TYPE_QBitmap )
+      {
+         ( p )->setMask( *hbqt_par_QBitmap( 2 ) );
+      }
+      else if( q->type == HBQT_TYPE_QRegion )
+      {
+         ( p )->setMask( *hbqt_par_QRegion( 2 ) );
+      }
+   }
+}
+//void setMask ( const QBitmap & bitmap )
+//void setMask ( const QRegion & region )
+
 void setMaximumHeight ( int maxh )
-void setMaximumSize ( const QSize & )
-void setMaximumSize ( int maxw, int maxh )
+
+void setMaximumSize ( ... ){
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
+      {
+         ( p )->setMaximumSize( *hbqt_par_QSize( 2 ) );
+      }
+      else if( hb_pcount() == 3 && HB_ISNUM( 2 ) )
+      {
+         ( p )->setMaximumSize( hb_parni( 2 ), hb_parni( 3 ) );
+      }
+   }
+}
+//void setMaximumSize ( const QSize & )
+//void setMaximumSize ( int maxw, int maxh )
+
 void setMaximumWidth ( int maxw )
 void setMinimumHeight ( int minh )
-void setMinimumSize ( const QSize & )
-void setMinimumSize ( int minw, int minh )
+
+void setMinimumSize ( ... ){
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
+      {
+         ( p )->setMinimumSize( *hbqt_par_QSize( 2 ) );
+      }
+      else if( hb_pcount() == 3 && HB_ISNUM( 2 ) )
+      {
+         ( p )->setMinimumSize( hb_parni( 2 ), hb_parni( 3 ) );
+      }
+   }
+}
+//void setMinimumSize ( const QSize & )
+//void setMinimumSize ( int minw, int minh )
+
 void setMinimumWidth ( int minw )
 void setMouseTracking ( bool enable )
 void setPalette ( const QPalette & )
-void setParent ( QWidget * parent )
-void setParent ( QWidget * parent, Qt::WindowFlags f )
+
+void setParent ( ... ){
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
+      {
+         ( p )->setParent( hbqt_par_QWidget( 2 ) );
+      }
+      else if( hb_pcount() == 3 && HB_ISPOINTER( 2 ) && HB_ISNUM( 3 ) )
+      {
+         ( p )->setParent( hbqt_par_QWidget( 2 ), ( Qt::WindowFlags ) hb_parni( 3 ) );
+      }
+   }
+}
+//void setParent ( QWidget * parent )
+//void setParent ( QWidget * parent, Qt::WindowFlags f )
+
 void setShortcutAutoRepeat ( int id, bool enable = true )
 void setShortcutEnabled ( int id, bool enable = true )
-void setSizeIncrement ( const QSize & )
-void setSizeIncrement ( int w, int h )
-void setSizePolicy ( const QSizePolicy & policy )
-void setSizePolicy ( QSizePolicy::Policy horizontal, QSizePolicy::Policy vertical )
+
+void setSizeIncrement ( ... ){
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
+      {
+         ( p )->setSizeIncrement( *hbqt_par_QSize( 2 ) );
+      }
+      else if( hb_pcount() == 3 && HB_ISNUM( 2 ) )
+      {
+         ( p )->setSizeIncrement( hb_parni( 2 ), hb_parni( 3 ) );
+      }
+   }
+}
+//void setSizeIncrement ( const QSize & )
+//void setSizeIncrement ( int w, int h )
+
+void setSizePolicy ( ... ){
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
+      {
+         ( p )->setSizePolicy( *hbqt_par_QSizePolicy( 2 ) );
+      }
+      else if( hb_pcount() == 3 && HB_ISNUM( 2 ) )
+      {
+         ( p )->setSizePolicy( ( QSizePolicy::Policy ) hb_parni( 2 ), ( QSizePolicy::Policy ) hb_parni( 3 ) );
+      }
+   }
+}
+//void setSizePolicy ( const QSizePolicy & policy )
+//void setSizePolicy ( QSizePolicy::Policy horizontal, QSizePolicy::Policy vertical )
+
 void setStatusTip ( const QString & )
 void setStyle ( QStyle * style )
 void setToolTip ( const QString & )
@@ -289,7 +541,7 @@ void setWindowModality ( Qt::WindowModality windowModality )
 void setWindowOpacity ( qreal level )
 void setWindowRole ( const QString & role )
 void setWindowState ( Qt::WindowStates windowState )
-// void setWindowSurface ( QWindowSurface * surface )   
+// void setWindowSurface ( QWindowSurface * surface )
 QSize size () const
 virtual QSize sizeHint () const
 QSize sizeIncrement () const
@@ -304,9 +556,38 @@ bool underMouse () const
 void unsetCursor ()
 void unsetLayoutDirection ()
 void unsetLocale ()
-void update ( int x, int y, int w, int h )
-void update ( const QRect & rect )
-void update ( const QRegion & rgn )
+
+void update ( ... ){
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
+      {
+         HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+
+         if( q->type == HBQT_TYPE_QRect )
+         {
+            ( p )->update( *hbqt_par_QRect( 2 ) );
+         }
+         else if( q->type == HBQT_TYPE_QRegion )
+         {
+            ( p )->update( *hbqt_par_QRegion( 2 ) );
+         }
+      }
+      else if( hb_pcount() == 5 && HB_ISNUM( 2 ) )
+      {
+         ( p )->update( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
+      }
+      else
+      {
+         ( p )->update();
+      }
+   }
+}
+//void update ( int x, int y, int w, int h )
+//void update ( const QRect & rect )
+//void update ( const QRegion & rgn )
+
 void updateGeometry ()
 bool updatesEnabled () const
 QRegion visibleRegion () const
@@ -340,10 +621,10 @@ bool close ()
 void hide ()
 void lower ()
 void raise ()
-void repaint ()
+//void repaint ()
 void setDisabled ( bool disable )
 void setEnabled ( bool enable )
-void setFocus ()
+//void setFocus ()
 void setHidden ( bool hidden )
 void setStyleSheet ( const QString & styleSheet )
 virtual void setVisible ( bool visible )
@@ -354,7 +635,7 @@ void showFullScreen ()
 void showMaximized ()
 void showMinimized ()
 void showNormal ()
-void update ()
+//void update ()
 </SLOTS>
 
 <SIGNALS>

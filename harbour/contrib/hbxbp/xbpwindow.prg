@@ -1662,7 +1662,7 @@ METHOD XbpWindow:Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
 METHOD XbpWindow:setFocus()
 
-   ::oWidget:setFocus_1()
+   ::oWidget:setFocus()
 
    RETURN Self
 
