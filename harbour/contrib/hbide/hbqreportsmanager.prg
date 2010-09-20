@@ -2397,14 +2397,12 @@ METHOD HqrGraphicsItem:drawChord( qPainter, qRect )
 /*----------------------------------------------------------------------*/
 
 METHOD HqrGraphicsItem:drawText( qPainter, qRect )
-   //qPainter:drawText_2( qRect, ::textFlags(), ::text() )
    qPainter:drawText( qRect, ::textFlags(), ::text() )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD HqrGraphicsItem:drawField( qPainter, qRect )
-   //qPainter:drawText_2( qRect, ::textFlags(), ::text() )
    qPainter:drawText( qRect, ::textFlags(), ::text() )
    RETURN Self
 
@@ -2602,8 +2600,8 @@ METHOD HqrGraphicsItem:drawChart( qPainter, qRect )
    valstep := maxHeight / ( maxVal / chartStep )
 
    IF ( valstep < nFHeight )
-      chartStep *= ( (  ( nFHeight / valstep ) ) + 1 )
-      valstep := ( (  ( nFHeight / valstep ) ) + 1 ) * valstep
+      chartStep *= ( ( ( nFHeight / valstep ) ) + 1 )
+      valstep := ( ( ( nFHeight / valstep ) ) + 1 ) * valstep
    ENDIF
 
    nPlanes := maxVal / chartStep + 1 + iif( maxVal % chartStep != 0, 1, 0 )

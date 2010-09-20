@@ -586,7 +586,7 @@ FUNCTION hbide_isValidSource( cSourceFile )
 
    hb_fNameSplit( cSourceFile, , , @cExt )
 
-   RETURN ( lower( cExt ) $ ".c,.cpp,.prg,.res,.rc" )
+   RETURN ( lower( cExt ) $ ".c,.cpp,.prg,.res,.rc,.hbs" )
 
 /*----------------------------------------------------------------------*/
 

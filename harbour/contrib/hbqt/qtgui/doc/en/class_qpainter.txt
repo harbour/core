@@ -43,21 +43,10 @@
  *     :device()                                           -> pQPaintDevice
  *     :deviceMatrix()                                     -> pQMatrix
  *     :deviceTransform()                                  -> pQTransform
- *     :drawArc( pRectangle, nStartAngle, nSpanAngle )     -> NIL
- *     :drawArc_1( pRectangle, nStartAngle, nSpanAngle )   -> NIL
- *     :drawArc_2( nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle )  -> NIL
- *     :drawChord( pRectangle, nStartAngle, nSpanAngle )   -> NIL
- *     :drawChord_1( pRectangle, nStartAngle, nSpanAngle )  -> NIL
- *     :drawChord_2( nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle )  -> NIL
- *     :drawConvexPolygon( pPoints, nPointCount )          -> NIL
- *     :drawConvexPolygon_1( pPoints, nPointCount )        -> NIL
- *     :drawConvexPolygon_2( pPolygon )                    -> NIL
- *     :drawConvexPolygon_3( pPolygon )                    -> NIL
- *     :drawEllipse( pRectangle )                          -> NIL
- *     :drawEllipse_1( pRectangle )                        -> NIL
- *     :drawEllipse_2( nX, nY, nWidth, nHeight )           -> NIL
- *     :drawEllipse_3( pCenter, nRx, nRy )                 -> NIL
- *     :drawEllipse_4( pCenter, nRx, nRy )                 -> NIL
+ *     :drawArc( ... )                                     -> NIL
+ *     :drawChord( ... )                                   -> NIL
+ *     :drawConvexPolygon( ... )                           -> NIL
+ *     :drawEllipse( ... )                                 -> NIL
  *     :drawImage( ... )                                   -> NIL
  *     :drawLine( ... )                                    -> NIL
  *     :drawLines( pLines, nLineCount )                    -> NIL
@@ -65,44 +54,21 @@
  *     :drawLines_2( pPointPairs, nLineCount )             -> NIL
  *     :drawLines_3( pPointPairs, nLineCount )             -> NIL
  *     :drawPath( pPath )                                  -> NIL
- *     :drawPicture( pPoint, pPicture )                    -> NIL
- *     :drawPicture_1( pPoint, pPicture )                  -> NIL
- *     :drawPicture_2( nX, nY, pPicture )                  -> NIL
- *     :drawPie( pRectangle, nStartAngle, nSpanAngle )     -> NIL
- *     :drawPie_1( pRectangle, nStartAngle, nSpanAngle )   -> NIL
- *     :drawPie_2( nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle )  -> NIL
+ *     :drawPicture( ... )                                 -> NIL
+ *     :drawPie( ... )                                     -> NIL
  *     :drawPixmap( ... )                                  -> NIL
- *     :drawPoint( pPosition )                             -> NIL
- *     :drawPoint_1( pPosition )                           -> NIL
- *     :drawPoint_2( nX, nY )                              -> NIL
- *     :drawPoints( pPoints, nPointCount )                 -> NIL
- *     :drawPoints_1( pPoints, nPointCount )               -> NIL
- *     :drawPoints_2( pPoints )                            -> NIL
- *     :drawPoints_3( pPoints )                            -> NIL
- *     :drawPolygon( pPoints, nPointCount, nFillRule )     -> NIL
- *     :drawPolygon_1( pPoints, nPointCount, nFillRule )   -> NIL
- *     :drawPolygon_2( pPoints, nFillRule )                -> NIL
- *     :drawPolygon_3( pPoints, nFillRule )                -> NIL
- *     :drawPolyline( pPoints, nPointCount )               -> NIL
- *     :drawPolyline_1( pPoints, nPointCount )             -> NIL
- *     :drawPolyline_2( pPoints )                          -> NIL
- *     :drawPolyline_3( pPoints )                          -> NIL
- *     :drawRect( pRectangle )                             -> NIL
- *     :drawRect_1( pRectangle )                           -> NIL
- *     :drawRect_2( nX, nY, nWidth, nHeight )              -> NIL
+ *     :drawPoint( ... )                                   -> NIL
+ *     :drawPoints( ... )                                  -> NIL
+ *     :drawPolygon( ... )                                 -> NIL
+ *     :drawPolyline( ... )                                -> NIL
+ *     :drawRect( ... )                                    -> NIL
  *     :drawRects( pRectangles, nRectCount )               -> NIL
  *     :drawRects_1( pRectangles, nRectCount )             -> NIL
- *     :drawRoundedRect( pRect, nXRadius, nYRadius, nMode )  -> NIL
- *     :drawRoundedRect_1( pRect, nXRadius, nYRadius, nMode )  -> NIL
- *     :drawRoundedRect_2( nX, nY, nW, nH, nXRadius, nYRadius, nMode )  -> NIL
+ *     :drawRoundedRect( ... )                             -> NIL
  *     :drawText( ... )                                    -> NIL
- *     :drawTiledPixmap( pRectangle, pPixmap, pPosition )  -> NIL
- *     :drawTiledPixmap_1( pRectangle, pPixmap, pPosition )  -> NIL
- *     :drawTiledPixmap_2( nX, nY, nWidth, nHeight, pPixmap, nSx, nSy )  -> NIL
+ *     :drawTiledPixmap( ... )                             -> NIL
  *     :end()                                              -> lBool
- *     :eraseRect( pRectangle )                            -> NIL
- *     :eraseRect_1( pRectangle )                          -> NIL
- *     :eraseRect_2( nX, nY, nWidth, nHeight )             -> NIL
+ *     :eraseRect( ... )                                   -> NIL
  *     :fillPath( pPath, pBrush )                          -> NIL
  *     :fillRect( pRectangle, pBrush )                     -> NIL
  *     :fillRect_1( nX, nY, nWidth, nHeight, nStyle )      -> NIL
@@ -135,32 +101,23 @@
  *     :scale( nSx, nSy )                                  -> NIL
  *     :setBackground( pBrush )                            -> NIL
  *     :setBackgroundMode( nMode )                         -> NIL
- *     :setBrush( pBrush )                                 -> NIL
- *     :setBrush_1( nStyle )                               -> NIL
- *     :setBrushOrigin( pPosition )                        -> NIL
- *     :setBrushOrigin_1( pPosition )                      -> NIL
- *     :setBrushOrigin_2( nX, nY )                         -> NIL
+ *     :setBrush( ... )                                    -> NIL
+ *     :setBrushOrigin( ... )                              -> NIL
  *     :setClipPath( pPath, nOperation )                   -> NIL
- *     :setClipRect( pRectangle, nOperation )              -> NIL
- *     :setClipRect_1( nX, nY, nWidth, nHeight, nOperation )  -> NIL
- *     :setClipRect_2( pRectangle, nOperation )            -> NIL
+ *     :setClipRect( ... )                                 -> NIL
  *     :setClipRegion( pRegion, nOperation )               -> NIL
  *     :setClipping( lEnable )                             -> NIL
  *     :setCompositionMode( nMode )                        -> NIL
  *     :setFont( pFont )                                   -> NIL
  *     :setLayoutDirection( nDirection )                   -> NIL
  *     :setOpacity( nOpacity )                             -> NIL
- *     :setPen( pPen )                                     -> NIL
- *     :setPen_1( pColor )                                 -> NIL
- *     :setPen_2( nStyle )                                 -> NIL
+ *     :setPen( ... )                                      -> NIL
  *     :setRenderHint( nHint, lOn )                        -> NIL
  *     :setRenderHints( nHints, lOn )                      -> NIL
  *     :setTransform( pTransform, lCombine )               -> NIL
  *     :setViewTransformEnabled( lEnable )                 -> NIL
- *     :setViewport( pRectangle )                          -> NIL
- *     :setViewport_1( nX, nY, nWidth, nHeight )           -> NIL
- *     :setWindow( pRectangle )                            -> NIL
- *     :setWindow_1( nX, nY, nWidth, nHeight )             -> NIL
+ *     :setViewport( ... )                                 -> NIL
+ *     :setWindow( ... )                                   -> NIL
  *     :setWorldMatrix( pMatrix, lCombine )                -> NIL
  *     :setWorldMatrixEnabled( lEnable )                   -> NIL
  *     :setWorldTransform( pMatrix, lCombine )             -> NIL
@@ -168,9 +125,7 @@
  *     :strokePath( pPath, pPen )                          -> NIL
  *     :testRenderHint( nHint )                            -> lBool
  *     :transform()                                        -> pQTransform
- *     :translate( pOffset )                               -> NIL
- *     :translate_1( pOffset )                             -> NIL
- *     :translate_2( nDx, nDy )                            -> NIL
+ *     :translate( ... )                                   -> NIL
  *     :viewTransformEnabled()                             -> lBool
  *     :viewport()                                         -> pQRect
  *     :window()                                           -> pQRect

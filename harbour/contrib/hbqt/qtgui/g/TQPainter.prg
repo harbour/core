@@ -88,21 +88,10 @@ CREATE CLASS QPainter INHERIT HbQtObjectHandler FUNCTION HB_QPainter
    METHOD  device()
    METHOD  deviceMatrix()
    METHOD  deviceTransform()
-   METHOD  drawArc( pRectangle, nStartAngle, nSpanAngle )
-   METHOD  drawArc_1( pRectangle, nStartAngle, nSpanAngle )
-   METHOD  drawArc_2( nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle )
-   METHOD  drawChord( pRectangle, nStartAngle, nSpanAngle )
-   METHOD  drawChord_1( pRectangle, nStartAngle, nSpanAngle )
-   METHOD  drawChord_2( nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle )
-   METHOD  drawConvexPolygon( pPoints, nPointCount )
-   METHOD  drawConvexPolygon_1( pPoints, nPointCount )
-   METHOD  drawConvexPolygon_2( pPolygon )
-   METHOD  drawConvexPolygon_3( pPolygon )
-   METHOD  drawEllipse( pRectangle )
-   METHOD  drawEllipse_1( pRectangle )
-   METHOD  drawEllipse_2( nX, nY, nWidth, nHeight )
-   METHOD  drawEllipse_3( pCenter, nRx, nRy )
-   METHOD  drawEllipse_4( pCenter, nRx, nRy )
+   METHOD  drawArc( ... )
+   METHOD  drawChord( ... )
+   METHOD  drawConvexPolygon( ... )
+   METHOD  drawEllipse( ... )
    METHOD  drawImage( ... )
    METHOD  drawLine( ... )
    METHOD  drawLines( pLines, nLineCount )
@@ -110,44 +99,21 @@ CREATE CLASS QPainter INHERIT HbQtObjectHandler FUNCTION HB_QPainter
    METHOD  drawLines_2( pPointPairs, nLineCount )
    METHOD  drawLines_3( pPointPairs, nLineCount )
    METHOD  drawPath( pPath )
-   METHOD  drawPicture( pPoint, pPicture )
-   METHOD  drawPicture_1( pPoint, pPicture )
-   METHOD  drawPicture_2( nX, nY, pPicture )
-   METHOD  drawPie( pRectangle, nStartAngle, nSpanAngle )
-   METHOD  drawPie_1( pRectangle, nStartAngle, nSpanAngle )
-   METHOD  drawPie_2( nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle )
+   METHOD  drawPicture( ... )
+   METHOD  drawPie( ... )
    METHOD  drawPixmap( ... )
-   METHOD  drawPoint( pPosition )
-   METHOD  drawPoint_1( pPosition )
-   METHOD  drawPoint_2( nX, nY )
-   METHOD  drawPoints( pPoints, nPointCount )
-   METHOD  drawPoints_1( pPoints, nPointCount )
-   METHOD  drawPoints_2( pPoints )
-   METHOD  drawPoints_3( pPoints )
-   METHOD  drawPolygon( pPoints, nPointCount, nFillRule )
-   METHOD  drawPolygon_1( pPoints, nPointCount, nFillRule )
-   METHOD  drawPolygon_2( pPoints, nFillRule )
-   METHOD  drawPolygon_3( pPoints, nFillRule )
-   METHOD  drawPolyline( pPoints, nPointCount )
-   METHOD  drawPolyline_1( pPoints, nPointCount )
-   METHOD  drawPolyline_2( pPoints )
-   METHOD  drawPolyline_3( pPoints )
-   METHOD  drawRect( pRectangle )
-   METHOD  drawRect_1( pRectangle )
-   METHOD  drawRect_2( nX, nY, nWidth, nHeight )
+   METHOD  drawPoint( ... )
+   METHOD  drawPoints( ... )
+   METHOD  drawPolygon( ... )
+   METHOD  drawPolyline( ... )
+   METHOD  drawRect( ... )
    METHOD  drawRects( pRectangles, nRectCount )
    METHOD  drawRects_1( pRectangles, nRectCount )
-   METHOD  drawRoundedRect( pRect, nXRadius, nYRadius, nMode )
-   METHOD  drawRoundedRect_1( pRect, nXRadius, nYRadius, nMode )
-   METHOD  drawRoundedRect_2( nX, nY, nW, nH, nXRadius, nYRadius, nMode )
+   METHOD  drawRoundedRect( ... )
    METHOD  drawText( ... )
-   METHOD  drawTiledPixmap( pRectangle, pPixmap, pPosition )
-   METHOD  drawTiledPixmap_1( pRectangle, pPixmap, pPosition )
-   METHOD  drawTiledPixmap_2( nX, nY, nWidth, nHeight, pPixmap, nSx, nSy )
+   METHOD  drawTiledPixmap( ... )
    METHOD  end()
-   METHOD  eraseRect( pRectangle )
-   METHOD  eraseRect_1( pRectangle )
-   METHOD  eraseRect_2( nX, nY, nWidth, nHeight )
+   METHOD  eraseRect( ... )
    METHOD  fillPath( pPath, pBrush )
    METHOD  fillRect( pRectangle, pBrush )
    METHOD  fillRect_1( nX, nY, nWidth, nHeight, nStyle )
@@ -180,32 +146,23 @@ CREATE CLASS QPainter INHERIT HbQtObjectHandler FUNCTION HB_QPainter
    METHOD  scale( nSx, nSy )
    METHOD  setBackground( pBrush )
    METHOD  setBackgroundMode( nMode )
-   METHOD  setBrush( pBrush )
-   METHOD  setBrush_1( nStyle )
-   METHOD  setBrushOrigin( pPosition )
-   METHOD  setBrushOrigin_1( pPosition )
-   METHOD  setBrushOrigin_2( nX, nY )
+   METHOD  setBrush( ... )
+   METHOD  setBrushOrigin( ... )
    METHOD  setClipPath( pPath, nOperation )
-   METHOD  setClipRect( pRectangle, nOperation )
-   METHOD  setClipRect_1( nX, nY, nWidth, nHeight, nOperation )
-   METHOD  setClipRect_2( pRectangle, nOperation )
+   METHOD  setClipRect( ... )
    METHOD  setClipRegion( pRegion, nOperation )
    METHOD  setClipping( lEnable )
    METHOD  setCompositionMode( nMode )
    METHOD  setFont( pFont )
    METHOD  setLayoutDirection( nDirection )
    METHOD  setOpacity( nOpacity )
-   METHOD  setPen( pPen )
-   METHOD  setPen_1( pColor )
-   METHOD  setPen_2( nStyle )
+   METHOD  setPen( ... )
    METHOD  setRenderHint( nHint, lOn )
    METHOD  setRenderHints( nHints, lOn )
    METHOD  setTransform( pTransform, lCombine )
    METHOD  setViewTransformEnabled( lEnable )
-   METHOD  setViewport( pRectangle )
-   METHOD  setViewport_1( nX, nY, nWidth, nHeight )
-   METHOD  setWindow( pRectangle )
-   METHOD  setWindow_1( nX, nY, nWidth, nHeight )
+   METHOD  setViewport( ... )
+   METHOD  setWindow( ... )
    METHOD  setWorldMatrix( pMatrix, lCombine )
    METHOD  setWorldMatrixEnabled( lEnable )
    METHOD  setWorldTransform( pMatrix, lCombine )
@@ -213,9 +170,7 @@ CREATE CLASS QPainter INHERIT HbQtObjectHandler FUNCTION HB_QPainter
    METHOD  strokePath( pPath, pPen )
    METHOD  testRenderHint( nHint )
    METHOD  transform()
-   METHOD  translate( pOffset )
-   METHOD  translate_1( pOffset )
-   METHOD  translate_2( nDx, nDy )
+   METHOD  translate( ... )
    METHOD  viewTransformEnabled()
    METHOD  viewport()
    METHOD  window()
@@ -306,64 +261,36 @@ METHOD QPainter:deviceTransform()
    RETURN Qt_QPainter_deviceTransform( ::pPtr )
 
 
-METHOD QPainter:drawArc( pRectangle, nStartAngle, nSpanAngle )
-   RETURN Qt_QPainter_drawArc( ::pPtr, hbqt_ptr( pRectangle ), nStartAngle, nSpanAngle )
+METHOD QPainter:drawArc( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_drawArc( ::pPtr, ... )
 
 
-METHOD QPainter:drawArc_1( pRectangle, nStartAngle, nSpanAngle )
-   RETURN Qt_QPainter_drawArc_1( ::pPtr, hbqt_ptr( pRectangle ), nStartAngle, nSpanAngle )
+METHOD QPainter:drawChord( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_drawChord( ::pPtr, ... )
 
 
-METHOD QPainter:drawArc_2( nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle )
-   RETURN Qt_QPainter_drawArc_2( ::pPtr, nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle )
+METHOD QPainter:drawConvexPolygon( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_drawConvexPolygon( ::pPtr, ... )
 
 
-METHOD QPainter:drawChord( pRectangle, nStartAngle, nSpanAngle )
-   RETURN Qt_QPainter_drawChord( ::pPtr, hbqt_ptr( pRectangle ), nStartAngle, nSpanAngle )
-
-
-METHOD QPainter:drawChord_1( pRectangle, nStartAngle, nSpanAngle )
-   RETURN Qt_QPainter_drawChord_1( ::pPtr, hbqt_ptr( pRectangle ), nStartAngle, nSpanAngle )
-
-
-METHOD QPainter:drawChord_2( nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle )
-   RETURN Qt_QPainter_drawChord_2( ::pPtr, nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle )
-
-
-METHOD QPainter:drawConvexPolygon( pPoints, nPointCount )
-   RETURN Qt_QPainter_drawConvexPolygon( ::pPtr, hbqt_ptr( pPoints ), nPointCount )
-
-
-METHOD QPainter:drawConvexPolygon_1( pPoints, nPointCount )
-   RETURN Qt_QPainter_drawConvexPolygon_1( ::pPtr, hbqt_ptr( pPoints ), nPointCount )
-
-
-METHOD QPainter:drawConvexPolygon_2( pPolygon )
-   RETURN Qt_QPainter_drawConvexPolygon_2( ::pPtr, hbqt_ptr( pPolygon ) )
-
-
-METHOD QPainter:drawConvexPolygon_3( pPolygon )
-   RETURN Qt_QPainter_drawConvexPolygon_3( ::pPtr, hbqt_ptr( pPolygon ) )
-
-
-METHOD QPainter:drawEllipse( pRectangle )
-   RETURN Qt_QPainter_drawEllipse( ::pPtr, hbqt_ptr( pRectangle ) )
-
-
-METHOD QPainter:drawEllipse_1( pRectangle )
-   RETURN Qt_QPainter_drawEllipse_1( ::pPtr, hbqt_ptr( pRectangle ) )
-
-
-METHOD QPainter:drawEllipse_2( nX, nY, nWidth, nHeight )
-   RETURN Qt_QPainter_drawEllipse_2( ::pPtr, nX, nY, nWidth, nHeight )
-
-
-METHOD QPainter:drawEllipse_3( pCenter, nRx, nRy )
-   RETURN Qt_QPainter_drawEllipse_3( ::pPtr, hbqt_ptr( pCenter ), nRx, nRy )
-
-
-METHOD QPainter:drawEllipse_4( pCenter, nRx, nRy )
-   RETURN Qt_QPainter_drawEllipse_4( ::pPtr, hbqt_ptr( pCenter ), nRx, nRy )
+METHOD QPainter:drawEllipse( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_drawEllipse( ::pPtr, ... )
 
 
 METHOD QPainter:drawImage( ... )
@@ -402,28 +329,20 @@ METHOD QPainter:drawPath( pPath )
    RETURN Qt_QPainter_drawPath( ::pPtr, hbqt_ptr( pPath ) )
 
 
-METHOD QPainter:drawPicture( pPoint, pPicture )
-   RETURN Qt_QPainter_drawPicture( ::pPtr, hbqt_ptr( pPoint ), hbqt_ptr( pPicture ) )
+METHOD QPainter:drawPicture( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_drawPicture( ::pPtr, ... )
 
 
-METHOD QPainter:drawPicture_1( pPoint, pPicture )
-   RETURN Qt_QPainter_drawPicture_1( ::pPtr, hbqt_ptr( pPoint ), hbqt_ptr( pPicture ) )
-
-
-METHOD QPainter:drawPicture_2( nX, nY, pPicture )
-   RETURN Qt_QPainter_drawPicture_2( ::pPtr, nX, nY, hbqt_ptr( pPicture ) )
-
-
-METHOD QPainter:drawPie( pRectangle, nStartAngle, nSpanAngle )
-   RETURN Qt_QPainter_drawPie( ::pPtr, hbqt_ptr( pRectangle ), nStartAngle, nSpanAngle )
-
-
-METHOD QPainter:drawPie_1( pRectangle, nStartAngle, nSpanAngle )
-   RETURN Qt_QPainter_drawPie_1( ::pPtr, hbqt_ptr( pRectangle ), nStartAngle, nSpanAngle )
-
-
-METHOD QPainter:drawPie_2( nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle )
-   RETURN Qt_QPainter_drawPie_2( ::pPtr, nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle )
+METHOD QPainter:drawPie( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_drawPie( ::pPtr, ... )
 
 
 METHOD QPainter:drawPixmap( ... )
@@ -434,76 +353,44 @@ METHOD QPainter:drawPixmap( ... )
    RETURN Qt_QPainter_drawPixmap( ::pPtr, ... )
 
 
-METHOD QPainter:drawPoint( pPosition )
-   RETURN Qt_QPainter_drawPoint( ::pPtr, hbqt_ptr( pPosition ) )
+METHOD QPainter:drawPoint( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_drawPoint( ::pPtr, ... )
 
 
-METHOD QPainter:drawPoint_1( pPosition )
-   RETURN Qt_QPainter_drawPoint_1( ::pPtr, hbqt_ptr( pPosition ) )
+METHOD QPainter:drawPoints( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_drawPoints( ::pPtr, ... )
 
 
-METHOD QPainter:drawPoint_2( nX, nY )
-   RETURN Qt_QPainter_drawPoint_2( ::pPtr, nX, nY )
+METHOD QPainter:drawPolygon( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_drawPolygon( ::pPtr, ... )
 
 
-METHOD QPainter:drawPoints( pPoints, nPointCount )
-   RETURN Qt_QPainter_drawPoints( ::pPtr, hbqt_ptr( pPoints ), nPointCount )
+METHOD QPainter:drawPolyline( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_drawPolyline( ::pPtr, ... )
 
 
-METHOD QPainter:drawPoints_1( pPoints, nPointCount )
-   RETURN Qt_QPainter_drawPoints_1( ::pPtr, hbqt_ptr( pPoints ), nPointCount )
-
-
-METHOD QPainter:drawPoints_2( pPoints )
-   RETURN Qt_QPainter_drawPoints_2( ::pPtr, hbqt_ptr( pPoints ) )
-
-
-METHOD QPainter:drawPoints_3( pPoints )
-   RETURN Qt_QPainter_drawPoints_3( ::pPtr, hbqt_ptr( pPoints ) )
-
-
-METHOD QPainter:drawPolygon( pPoints, nPointCount, nFillRule )
-   RETURN Qt_QPainter_drawPolygon( ::pPtr, hbqt_ptr( pPoints ), nPointCount, nFillRule )
-
-
-METHOD QPainter:drawPolygon_1( pPoints, nPointCount, nFillRule )
-   RETURN Qt_QPainter_drawPolygon_1( ::pPtr, hbqt_ptr( pPoints ), nPointCount, nFillRule )
-
-
-METHOD QPainter:drawPolygon_2( pPoints, nFillRule )
-   RETURN Qt_QPainter_drawPolygon_2( ::pPtr, hbqt_ptr( pPoints ), nFillRule )
-
-
-METHOD QPainter:drawPolygon_3( pPoints, nFillRule )
-   RETURN Qt_QPainter_drawPolygon_3( ::pPtr, hbqt_ptr( pPoints ), nFillRule )
-
-
-METHOD QPainter:drawPolyline( pPoints, nPointCount )
-   RETURN Qt_QPainter_drawPolyline( ::pPtr, hbqt_ptr( pPoints ), nPointCount )
-
-
-METHOD QPainter:drawPolyline_1( pPoints, nPointCount )
-   RETURN Qt_QPainter_drawPolyline_1( ::pPtr, hbqt_ptr( pPoints ), nPointCount )
-
-
-METHOD QPainter:drawPolyline_2( pPoints )
-   RETURN Qt_QPainter_drawPolyline_2( ::pPtr, hbqt_ptr( pPoints ) )
-
-
-METHOD QPainter:drawPolyline_3( pPoints )
-   RETURN Qt_QPainter_drawPolyline_3( ::pPtr, hbqt_ptr( pPoints ) )
-
-
-METHOD QPainter:drawRect( pRectangle )
-   RETURN Qt_QPainter_drawRect( ::pPtr, hbqt_ptr( pRectangle ) )
-
-
-METHOD QPainter:drawRect_1( pRectangle )
-   RETURN Qt_QPainter_drawRect_1( ::pPtr, hbqt_ptr( pRectangle ) )
-
-
-METHOD QPainter:drawRect_2( nX, nY, nWidth, nHeight )
-   RETURN Qt_QPainter_drawRect_2( ::pPtr, nX, nY, nWidth, nHeight )
+METHOD QPainter:drawRect( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_drawRect( ::pPtr, ... )
 
 
 METHOD QPainter:drawRects( pRectangles, nRectCount )
@@ -514,16 +401,12 @@ METHOD QPainter:drawRects_1( pRectangles, nRectCount )
    RETURN Qt_QPainter_drawRects_1( ::pPtr, hbqt_ptr( pRectangles ), nRectCount )
 
 
-METHOD QPainter:drawRoundedRect( pRect, nXRadius, nYRadius, nMode )
-   RETURN Qt_QPainter_drawRoundedRect( ::pPtr, hbqt_ptr( pRect ), nXRadius, nYRadius, nMode )
-
-
-METHOD QPainter:drawRoundedRect_1( pRect, nXRadius, nYRadius, nMode )
-   RETURN Qt_QPainter_drawRoundedRect_1( ::pPtr, hbqt_ptr( pRect ), nXRadius, nYRadius, nMode )
-
-
-METHOD QPainter:drawRoundedRect_2( nX, nY, nW, nH, nXRadius, nYRadius, nMode )
-   RETURN Qt_QPainter_drawRoundedRect_2( ::pPtr, nX, nY, nW, nH, nXRadius, nYRadius, nMode )
+METHOD QPainter:drawRoundedRect( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_drawRoundedRect( ::pPtr, ... )
 
 
 METHOD QPainter:drawText( ... )
@@ -534,32 +417,24 @@ METHOD QPainter:drawText( ... )
    RETURN Qt_QPainter_drawText( ::pPtr, ... )
 
 
-METHOD QPainter:drawTiledPixmap( pRectangle, pPixmap, pPosition )
-   RETURN Qt_QPainter_drawTiledPixmap( ::pPtr, hbqt_ptr( pRectangle ), hbqt_ptr( pPixmap ), hbqt_ptr( pPosition ) )
-
-
-METHOD QPainter:drawTiledPixmap_1( pRectangle, pPixmap, pPosition )
-   RETURN Qt_QPainter_drawTiledPixmap_1( ::pPtr, hbqt_ptr( pRectangle ), hbqt_ptr( pPixmap ), hbqt_ptr( pPosition ) )
-
-
-METHOD QPainter:drawTiledPixmap_2( nX, nY, nWidth, nHeight, pPixmap, nSx, nSy )
-   RETURN Qt_QPainter_drawTiledPixmap_2( ::pPtr, nX, nY, nWidth, nHeight, hbqt_ptr( pPixmap ), nSx, nSy )
+METHOD QPainter:drawTiledPixmap( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_drawTiledPixmap( ::pPtr, ... )
 
 
 METHOD QPainter:end()
    RETURN Qt_QPainter_end( ::pPtr )
 
 
-METHOD QPainter:eraseRect( pRectangle )
-   RETURN Qt_QPainter_eraseRect( ::pPtr, hbqt_ptr( pRectangle ) )
-
-
-METHOD QPainter:eraseRect_1( pRectangle )
-   RETURN Qt_QPainter_eraseRect_1( ::pPtr, hbqt_ptr( pRectangle ) )
-
-
-METHOD QPainter:eraseRect_2( nX, nY, nWidth, nHeight )
-   RETURN Qt_QPainter_eraseRect_2( ::pPtr, nX, nY, nWidth, nHeight )
+METHOD QPainter:eraseRect( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_eraseRect( ::pPtr, ... )
 
 
 METHOD QPainter:fillPath( pPath, pBrush )
@@ -690,40 +565,32 @@ METHOD QPainter:setBackgroundMode( nMode )
    RETURN Qt_QPainter_setBackgroundMode( ::pPtr, nMode )
 
 
-METHOD QPainter:setBrush( pBrush )
-   RETURN Qt_QPainter_setBrush( ::pPtr, hbqt_ptr( pBrush ) )
+METHOD QPainter:setBrush( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_setBrush( ::pPtr, ... )
 
 
-METHOD QPainter:setBrush_1( nStyle )
-   RETURN Qt_QPainter_setBrush_1( ::pPtr, nStyle )
-
-
-METHOD QPainter:setBrushOrigin( pPosition )
-   RETURN Qt_QPainter_setBrushOrigin( ::pPtr, hbqt_ptr( pPosition ) )
-
-
-METHOD QPainter:setBrushOrigin_1( pPosition )
-   RETURN Qt_QPainter_setBrushOrigin_1( ::pPtr, hbqt_ptr( pPosition ) )
-
-
-METHOD QPainter:setBrushOrigin_2( nX, nY )
-   RETURN Qt_QPainter_setBrushOrigin_2( ::pPtr, nX, nY )
+METHOD QPainter:setBrushOrigin( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_setBrushOrigin( ::pPtr, ... )
 
 
 METHOD QPainter:setClipPath( pPath, nOperation )
    RETURN Qt_QPainter_setClipPath( ::pPtr, hbqt_ptr( pPath ), nOperation )
 
 
-METHOD QPainter:setClipRect( pRectangle, nOperation )
-   RETURN Qt_QPainter_setClipRect( ::pPtr, hbqt_ptr( pRectangle ), nOperation )
-
-
-METHOD QPainter:setClipRect_1( nX, nY, nWidth, nHeight, nOperation )
-   RETURN Qt_QPainter_setClipRect_1( ::pPtr, nX, nY, nWidth, nHeight, nOperation )
-
-
-METHOD QPainter:setClipRect_2( pRectangle, nOperation )
-   RETURN Qt_QPainter_setClipRect_2( ::pPtr, hbqt_ptr( pRectangle ), nOperation )
+METHOD QPainter:setClipRect( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_setClipRect( ::pPtr, ... )
 
 
 METHOD QPainter:setClipRegion( pRegion, nOperation )
@@ -750,16 +617,12 @@ METHOD QPainter:setOpacity( nOpacity )
    RETURN Qt_QPainter_setOpacity( ::pPtr, nOpacity )
 
 
-METHOD QPainter:setPen( pPen )
-   RETURN Qt_QPainter_setPen( ::pPtr, hbqt_ptr( pPen ) )
-
-
-METHOD QPainter:setPen_1( pColor )
-   RETURN Qt_QPainter_setPen_1( ::pPtr, hbqt_ptr( pColor ) )
-
-
-METHOD QPainter:setPen_2( nStyle )
-   RETURN Qt_QPainter_setPen_2( ::pPtr, nStyle )
+METHOD QPainter:setPen( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_setPen( ::pPtr, ... )
 
 
 METHOD QPainter:setRenderHint( nHint, lOn )
@@ -778,20 +641,20 @@ METHOD QPainter:setViewTransformEnabled( lEnable )
    RETURN Qt_QPainter_setViewTransformEnabled( ::pPtr, lEnable )
 
 
-METHOD QPainter:setViewport( pRectangle )
-   RETURN Qt_QPainter_setViewport( ::pPtr, hbqt_ptr( pRectangle ) )
+METHOD QPainter:setViewport( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_setViewport( ::pPtr, ... )
 
 
-METHOD QPainter:setViewport_1( nX, nY, nWidth, nHeight )
-   RETURN Qt_QPainter_setViewport_1( ::pPtr, nX, nY, nWidth, nHeight )
-
-
-METHOD QPainter:setWindow( pRectangle )
-   RETURN Qt_QPainter_setWindow( ::pPtr, hbqt_ptr( pRectangle ) )
-
-
-METHOD QPainter:setWindow_1( nX, nY, nWidth, nHeight )
-   RETURN Qt_QPainter_setWindow_1( ::pPtr, nX, nY, nWidth, nHeight )
+METHOD QPainter:setWindow( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_setWindow( ::pPtr, ... )
 
 
 METHOD QPainter:setWorldMatrix( pMatrix, lCombine )
@@ -822,16 +685,12 @@ METHOD QPainter:transform()
    RETURN Qt_QPainter_transform( ::pPtr )
 
 
-METHOD QPainter:translate( pOffset )
-   RETURN Qt_QPainter_translate( ::pPtr, hbqt_ptr( pOffset ) )
-
-
-METHOD QPainter:translate_1( pOffset )
-   RETURN Qt_QPainter_translate_1( ::pPtr, hbqt_ptr( pOffset ) )
-
-
-METHOD QPainter:translate_2( nDx, nDy )
-   RETURN Qt_QPainter_translate_2( ::pPtr, nDx, nDy )
+METHOD QPainter:translate( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_translate( ::pPtr, ... )
 
 
 METHOD QPainter:viewTransformEnabled()
