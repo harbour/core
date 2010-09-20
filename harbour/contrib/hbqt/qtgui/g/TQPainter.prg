@@ -74,10 +74,7 @@ CREATE CLASS QPainter INHERIT HbQtObjectHandler FUNCTION HB_QPainter
    METHOD  background()
    METHOD  backgroundMode()
    METHOD  begin( pDevice )
-   METHOD  boundingRect( pRectangle, nFlags, cText )
-   METHOD  boundingRect_1( pRectangle, nFlags, cText )
-   METHOD  boundingRect_2( nX, nY, nW, nH, nFlags, cText )
-   METHOD  boundingRect_3( pRectangle, cText, pOption )
+   METHOD  boundingRect( ... )
    METHOD  brush()
    METHOD  brushOrigin()
    METHOD  clipPath()
@@ -94,10 +91,7 @@ CREATE CLASS QPainter INHERIT HbQtObjectHandler FUNCTION HB_QPainter
    METHOD  drawEllipse( ... )
    METHOD  drawImage( ... )
    METHOD  drawLine( ... )
-   METHOD  drawLines( pLines, nLineCount )
-   METHOD  drawLines_1( pLines, nLineCount )
-   METHOD  drawLines_2( pPointPairs, nLineCount )
-   METHOD  drawLines_3( pPointPairs, nLineCount )
+   METHOD  drawLines( ... )
    METHOD  drawPath( pPath )
    METHOD  drawPicture( ... )
    METHOD  drawPie( ... )
@@ -107,26 +101,14 @@ CREATE CLASS QPainter INHERIT HbQtObjectHandler FUNCTION HB_QPainter
    METHOD  drawPolygon( ... )
    METHOD  drawPolyline( ... )
    METHOD  drawRect( ... )
-   METHOD  drawRects( pRectangles, nRectCount )
-   METHOD  drawRects_1( pRectangles, nRectCount )
+   METHOD  drawRects( ... )
    METHOD  drawRoundedRect( ... )
    METHOD  drawText( ... )
    METHOD  drawTiledPixmap( ... )
    METHOD  end()
    METHOD  eraseRect( ... )
    METHOD  fillPath( pPath, pBrush )
-   METHOD  fillRect( pRectangle, pBrush )
-   METHOD  fillRect_1( nX, nY, nWidth, nHeight, nStyle )
-   METHOD  fillRect_2( pRectangle, nStyle )
-   METHOD  fillRect_3( pRectangle, nStyle )
-   METHOD  fillRect_4( pRectangle, pBrush )
-   METHOD  fillRect_5( pRectangle, pColor )
-   METHOD  fillRect_6( pRectangle, pColor )
-   METHOD  fillRect_7( nX, nY, nWidth, nHeight, pBrush )
-   METHOD  fillRect_8( nX, nY, nWidth, nHeight, pColor )
-   METHOD  fillRect_9( nX, nY, nWidth, nHeight, nColor )
-   METHOD  fillRect_10( pRectangle, nColor )
-   METHOD  fillRect_11( pRectangle, nColor )
+   METHOD  fillRect( ... )
    METHOD  font()
    METHOD  fontInfo()
    METHOD  fontMetrics()
@@ -205,20 +187,12 @@ METHOD QPainter:begin( pDevice )
    RETURN Qt_QPainter_begin( ::pPtr, hbqt_ptr( pDevice ) )
 
 
-METHOD QPainter:boundingRect( pRectangle, nFlags, cText )
-   RETURN Qt_QPainter_boundingRect( ::pPtr, hbqt_ptr( pRectangle ), nFlags, cText )
-
-
-METHOD QPainter:boundingRect_1( pRectangle, nFlags, cText )
-   RETURN Qt_QPainter_boundingRect_1( ::pPtr, hbqt_ptr( pRectangle ), nFlags, cText )
-
-
-METHOD QPainter:boundingRect_2( nX, nY, nW, nH, nFlags, cText )
-   RETURN Qt_QPainter_boundingRect_2( ::pPtr, nX, nY, nW, nH, nFlags, cText )
-
-
-METHOD QPainter:boundingRect_3( pRectangle, cText, pOption )
-   RETURN Qt_QPainter_boundingRect_3( ::pPtr, hbqt_ptr( pRectangle ), cText, hbqt_ptr( pOption ) )
+METHOD QPainter:boundingRect( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_boundingRect( ::pPtr, ... )
 
 
 METHOD QPainter:brush()
@@ -309,20 +283,12 @@ METHOD QPainter:drawLine( ... )
    RETURN Qt_QPainter_drawLine( ::pPtr, ... )
 
 
-METHOD QPainter:drawLines( pLines, nLineCount )
-   RETURN Qt_QPainter_drawLines( ::pPtr, hbqt_ptr( pLines ), nLineCount )
-
-
-METHOD QPainter:drawLines_1( pLines, nLineCount )
-   RETURN Qt_QPainter_drawLines_1( ::pPtr, hbqt_ptr( pLines ), nLineCount )
-
-
-METHOD QPainter:drawLines_2( pPointPairs, nLineCount )
-   RETURN Qt_QPainter_drawLines_2( ::pPtr, hbqt_ptr( pPointPairs ), nLineCount )
-
-
-METHOD QPainter:drawLines_3( pPointPairs, nLineCount )
-   RETURN Qt_QPainter_drawLines_3( ::pPtr, hbqt_ptr( pPointPairs ), nLineCount )
+METHOD QPainter:drawLines( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_drawLines( ::pPtr, ... )
 
 
 METHOD QPainter:drawPath( pPath )
@@ -393,12 +359,12 @@ METHOD QPainter:drawRect( ... )
    RETURN Qt_QPainter_drawRect( ::pPtr, ... )
 
 
-METHOD QPainter:drawRects( pRectangles, nRectCount )
-   RETURN Qt_QPainter_drawRects( ::pPtr, hbqt_ptr( pRectangles ), nRectCount )
-
-
-METHOD QPainter:drawRects_1( pRectangles, nRectCount )
-   RETURN Qt_QPainter_drawRects_1( ::pPtr, hbqt_ptr( pRectangles ), nRectCount )
+METHOD QPainter:drawRects( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_drawRects( ::pPtr, ... )
 
 
 METHOD QPainter:drawRoundedRect( ... )
@@ -441,52 +407,12 @@ METHOD QPainter:fillPath( pPath, pBrush )
    RETURN Qt_QPainter_fillPath( ::pPtr, hbqt_ptr( pPath ), hbqt_ptr( pBrush ) )
 
 
-METHOD QPainter:fillRect( pRectangle, pBrush )
-   RETURN Qt_QPainter_fillRect( ::pPtr, hbqt_ptr( pRectangle ), hbqt_ptr( pBrush ) )
-
-
-METHOD QPainter:fillRect_1( nX, nY, nWidth, nHeight, nStyle )
-   RETURN Qt_QPainter_fillRect_1( ::pPtr, nX, nY, nWidth, nHeight, nStyle )
-
-
-METHOD QPainter:fillRect_2( pRectangle, nStyle )
-   RETURN Qt_QPainter_fillRect_2( ::pPtr, hbqt_ptr( pRectangle ), nStyle )
-
-
-METHOD QPainter:fillRect_3( pRectangle, nStyle )
-   RETURN Qt_QPainter_fillRect_3( ::pPtr, hbqt_ptr( pRectangle ), nStyle )
-
-
-METHOD QPainter:fillRect_4( pRectangle, pBrush )
-   RETURN Qt_QPainter_fillRect_4( ::pPtr, hbqt_ptr( pRectangle ), hbqt_ptr( pBrush ) )
-
-
-METHOD QPainter:fillRect_5( pRectangle, pColor )
-   RETURN Qt_QPainter_fillRect_5( ::pPtr, hbqt_ptr( pRectangle ), hbqt_ptr( pColor ) )
-
-
-METHOD QPainter:fillRect_6( pRectangle, pColor )
-   RETURN Qt_QPainter_fillRect_6( ::pPtr, hbqt_ptr( pRectangle ), hbqt_ptr( pColor ) )
-
-
-METHOD QPainter:fillRect_7( nX, nY, nWidth, nHeight, pBrush )
-   RETURN Qt_QPainter_fillRect_7( ::pPtr, nX, nY, nWidth, nHeight, hbqt_ptr( pBrush ) )
-
-
-METHOD QPainter:fillRect_8( nX, nY, nWidth, nHeight, pColor )
-   RETURN Qt_QPainter_fillRect_8( ::pPtr, nX, nY, nWidth, nHeight, hbqt_ptr( pColor ) )
-
-
-METHOD QPainter:fillRect_9( nX, nY, nWidth, nHeight, nColor )
-   RETURN Qt_QPainter_fillRect_9( ::pPtr, nX, nY, nWidth, nHeight, nColor )
-
-
-METHOD QPainter:fillRect_10( pRectangle, nColor )
-   RETURN Qt_QPainter_fillRect_10( ::pPtr, hbqt_ptr( pRectangle ), nColor )
-
-
-METHOD QPainter:fillRect_11( pRectangle, nColor )
-   RETURN Qt_QPainter_fillRect_11( ::pPtr, hbqt_ptr( pRectangle ), nColor )
+METHOD QPainter:fillRect( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_fillRect( ::pPtr, ... )
 
 
 METHOD QPainter:font()

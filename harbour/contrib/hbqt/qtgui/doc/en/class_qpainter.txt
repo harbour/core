@@ -29,10 +29,7 @@
  *     :background()                                       -> pQBrush
  *     :backgroundMode()                                   -> nQt::BGMode
  *     :begin( pDevice )                                   -> lBool
- *     :boundingRect( pRectangle, nFlags, cText )          -> pQRectF
- *     :boundingRect_1( pRectangle, nFlags, cText )        -> pQRect
- *     :boundingRect_2( nX, nY, nW, nH, nFlags, cText )    -> pQRect
- *     :boundingRect_3( pRectangle, cText, pOption )       -> pQRectF
+ *     :boundingRect( ... )                                -> NIL
  *     :brush()                                            -> pQBrush
  *     :brushOrigin()                                      -> pQPoint
  *     :clipPath()                                         -> Path
@@ -49,10 +46,7 @@
  *     :drawEllipse( ... )                                 -> NIL
  *     :drawImage( ... )                                   -> NIL
  *     :drawLine( ... )                                    -> NIL
- *     :drawLines( pLines, nLineCount )                    -> NIL
- *     :drawLines_1( pLines, nLineCount )                  -> NIL
- *     :drawLines_2( pPointPairs, nLineCount )             -> NIL
- *     :drawLines_3( pPointPairs, nLineCount )             -> NIL
+ *     :drawLines( ... )                                   -> NIL
  *     :drawPath( pPath )                                  -> NIL
  *     :drawPicture( ... )                                 -> NIL
  *     :drawPie( ... )                                     -> NIL
@@ -62,26 +56,14 @@
  *     :drawPolygon( ... )                                 -> NIL
  *     :drawPolyline( ... )                                -> NIL
  *     :drawRect( ... )                                    -> NIL
- *     :drawRects( pRectangles, nRectCount )               -> NIL
- *     :drawRects_1( pRectangles, nRectCount )             -> NIL
+ *     :drawRects( ... )                                   -> NIL
  *     :drawRoundedRect( ... )                             -> NIL
  *     :drawText( ... )                                    -> NIL
  *     :drawTiledPixmap( ... )                             -> NIL
  *     :end()                                              -> lBool
  *     :eraseRect( ... )                                   -> NIL
  *     :fillPath( pPath, pBrush )                          -> NIL
- *     :fillRect( pRectangle, pBrush )                     -> NIL
- *     :fillRect_1( nX, nY, nWidth, nHeight, nStyle )      -> NIL
- *     :fillRect_2( pRectangle, nStyle )                   -> NIL
- *     :fillRect_3( pRectangle, nStyle )                   -> NIL
- *     :fillRect_4( pRectangle, pBrush )                   -> NIL
- *     :fillRect_5( pRectangle, pColor )                   -> NIL
- *     :fillRect_6( pRectangle, pColor )                   -> NIL
- *     :fillRect_7( nX, nY, nWidth, nHeight, pBrush )      -> NIL
- *     :fillRect_8( nX, nY, nWidth, nHeight, pColor )      -> NIL
- *     :fillRect_9( nX, nY, nWidth, nHeight, nColor )      -> NIL
- *     :fillRect_10( pRectangle, nColor )                  -> NIL
- *     :fillRect_11( pRectangle, nColor )                  -> NIL
+ *     :fillRect( ... )                                    -> NIL
  *     :font()                                             -> pQFont
  *     :fontInfo()                                         -> pQFontInfo
  *     :fontMetrics()                                      -> pQFontMetrics

@@ -71,48 +71,34 @@ CREATE CLASS QPainterPath INHERIT HbQtObjectHandler FUNCTION HB_QPainterPath
 
    METHOD  new( ... )
 
-   METHOD  addEllipse( pBoundingRectangle )
-   METHOD  addEllipse_1( nX, nY, nWidth, nHeight )
-   METHOD  addEllipse_2( pCenter, nRx, nRy )
+   METHOD  addEllipse( ... )
    METHOD  addPath( pPath )
    METHOD  addPolygon( pPolygon )
-   METHOD  addRect( pRectangle )
-   METHOD  addRect_1( nX, nY, nWidth, nHeight )
+   METHOD  addRect( ... )
    METHOD  addRegion( pRegion )
-   METHOD  addRoundedRect( pRect, nXRadius, nYRadius, nMode )
-   METHOD  addRoundedRect_1( nX, nY, nW, nH, nXRadius, nYRadius, nMode )
-   METHOD  addText( pPoint, pFont, cText )
-   METHOD  addText_1( nX, nY, pFont, cText )
+   METHOD  addRoundedRect( ... )
+   METHOD  addText( ... )
    METHOD  angleAtPercent( nT )
-   METHOD  arcMoveTo( pRectangle, nAngle )
-   METHOD  arcMoveTo_1( nX, nY, nWidth, nHeight, nAngle )
-   METHOD  arcTo( pRectangle, nStartAngle, nSweepLength )
-   METHOD  arcTo_1( nX, nY, nWidth, nHeight, nStartAngle, nSweepLength )
+   METHOD  arcMoveTo( ... )
+   METHOD  arcTo( ... )
    METHOD  boundingRect()
    METHOD  closeSubpath()
    METHOD  connectPath( pPath )
-   METHOD  contains( pPoint )
-   METHOD  contains_1( pRectangle )
-   METHOD  contains_2( pP )
+   METHOD  contains( ... )
    METHOD  controlPointRect()
-   METHOD  cubicTo( pC1, pC2, pEndPoint )
-   METHOD  cubicTo_1( nC1X, nC1Y, nC2X, nC2Y, nEndPointX, nEndPointY )
+   METHOD  cubicTo( ... )
    METHOD  currentPosition()
    METHOD  elementCount()
    METHOD  fillRule()
    METHOD  intersected( pP )
-   METHOD  intersects( pRectangle )
-   METHOD  intersects_1( pP )
+   METHOD  intersects( ... )
    METHOD  isEmpty()
    METHOD  length()
-   METHOD  lineTo( pEndPoint )
-   METHOD  lineTo_1( nX, nY )
-   METHOD  moveTo( pPoint )
-   METHOD  moveTo_1( nX, nY )
+   METHOD  lineTo( ... )
+   METHOD  moveTo( ... )
    METHOD  percentAtLength( nLen )
    METHOD  pointAtPercent( nT )
-   METHOD  quadTo( pC, pEndPoint )
-   METHOD  quadTo_1( nCx, nCy, nEndPointX, nEndPointY )
+   METHOD  quadTo( ... )
    METHOD  setElementPositionAt( nIndex, nX, nY )
    METHOD  setFillRule( nFillRule )
    METHOD  simplified()
@@ -139,16 +125,12 @@ METHOD QPainterPath:new( ... )
    RETURN Self
 
 
-METHOD QPainterPath:addEllipse( pBoundingRectangle )
-   RETURN Qt_QPainterPath_addEllipse( ::pPtr, hbqt_ptr( pBoundingRectangle ) )
-
-
-METHOD QPainterPath:addEllipse_1( nX, nY, nWidth, nHeight )
-   RETURN Qt_QPainterPath_addEllipse_1( ::pPtr, nX, nY, nWidth, nHeight )
-
-
-METHOD QPainterPath:addEllipse_2( pCenter, nRx, nRy )
-   RETURN Qt_QPainterPath_addEllipse_2( ::pPtr, hbqt_ptr( pCenter ), nRx, nRy )
+METHOD QPainterPath:addEllipse( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainterPath_addEllipse( ::pPtr, ... )
 
 
 METHOD QPainterPath:addPath( pPath )
@@ -159,52 +141,52 @@ METHOD QPainterPath:addPolygon( pPolygon )
    RETURN Qt_QPainterPath_addPolygon( ::pPtr, hbqt_ptr( pPolygon ) )
 
 
-METHOD QPainterPath:addRect( pRectangle )
-   RETURN Qt_QPainterPath_addRect( ::pPtr, hbqt_ptr( pRectangle ) )
-
-
-METHOD QPainterPath:addRect_1( nX, nY, nWidth, nHeight )
-   RETURN Qt_QPainterPath_addRect_1( ::pPtr, nX, nY, nWidth, nHeight )
+METHOD QPainterPath:addRect( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainterPath_addRect( ::pPtr, ... )
 
 
 METHOD QPainterPath:addRegion( pRegion )
    RETURN Qt_QPainterPath_addRegion( ::pPtr, hbqt_ptr( pRegion ) )
 
 
-METHOD QPainterPath:addRoundedRect( pRect, nXRadius, nYRadius, nMode )
-   RETURN Qt_QPainterPath_addRoundedRect( ::pPtr, hbqt_ptr( pRect ), nXRadius, nYRadius, nMode )
+METHOD QPainterPath:addRoundedRect( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainterPath_addRoundedRect( ::pPtr, ... )
 
 
-METHOD QPainterPath:addRoundedRect_1( nX, nY, nW, nH, nXRadius, nYRadius, nMode )
-   RETURN Qt_QPainterPath_addRoundedRect_1( ::pPtr, nX, nY, nW, nH, nXRadius, nYRadius, nMode )
-
-
-METHOD QPainterPath:addText( pPoint, pFont, cText )
-   RETURN Qt_QPainterPath_addText( ::pPtr, hbqt_ptr( pPoint ), hbqt_ptr( pFont ), cText )
-
-
-METHOD QPainterPath:addText_1( nX, nY, pFont, cText )
-   RETURN Qt_QPainterPath_addText_1( ::pPtr, nX, nY, hbqt_ptr( pFont ), cText )
+METHOD QPainterPath:addText( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainterPath_addText( ::pPtr, ... )
 
 
 METHOD QPainterPath:angleAtPercent( nT )
    RETURN Qt_QPainterPath_angleAtPercent( ::pPtr, nT )
 
 
-METHOD QPainterPath:arcMoveTo( pRectangle, nAngle )
-   RETURN Qt_QPainterPath_arcMoveTo( ::pPtr, hbqt_ptr( pRectangle ), nAngle )
+METHOD QPainterPath:arcMoveTo( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainterPath_arcMoveTo( ::pPtr, ... )
 
 
-METHOD QPainterPath:arcMoveTo_1( nX, nY, nWidth, nHeight, nAngle )
-   RETURN Qt_QPainterPath_arcMoveTo_1( ::pPtr, nX, nY, nWidth, nHeight, nAngle )
-
-
-METHOD QPainterPath:arcTo( pRectangle, nStartAngle, nSweepLength )
-   RETURN Qt_QPainterPath_arcTo( ::pPtr, hbqt_ptr( pRectangle ), nStartAngle, nSweepLength )
-
-
-METHOD QPainterPath:arcTo_1( nX, nY, nWidth, nHeight, nStartAngle, nSweepLength )
-   RETURN Qt_QPainterPath_arcTo_1( ::pPtr, nX, nY, nWidth, nHeight, nStartAngle, nSweepLength )
+METHOD QPainterPath:arcTo( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainterPath_arcTo( ::pPtr, ... )
 
 
 METHOD QPainterPath:boundingRect()
@@ -219,28 +201,24 @@ METHOD QPainterPath:connectPath( pPath )
    RETURN Qt_QPainterPath_connectPath( ::pPtr, hbqt_ptr( pPath ) )
 
 
-METHOD QPainterPath:contains( pPoint )
-   RETURN Qt_QPainterPath_contains( ::pPtr, hbqt_ptr( pPoint ) )
-
-
-METHOD QPainterPath:contains_1( pRectangle )
-   RETURN Qt_QPainterPath_contains_1( ::pPtr, hbqt_ptr( pRectangle ) )
-
-
-METHOD QPainterPath:contains_2( pP )
-   RETURN Qt_QPainterPath_contains_2( ::pPtr, hbqt_ptr( pP ) )
+METHOD QPainterPath:contains( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainterPath_contains( ::pPtr, ... )
 
 
 METHOD QPainterPath:controlPointRect()
    RETURN Qt_QPainterPath_controlPointRect( ::pPtr )
 
 
-METHOD QPainterPath:cubicTo( pC1, pC2, pEndPoint )
-   RETURN Qt_QPainterPath_cubicTo( ::pPtr, hbqt_ptr( pC1 ), hbqt_ptr( pC2 ), hbqt_ptr( pEndPoint ) )
-
-
-METHOD QPainterPath:cubicTo_1( nC1X, nC1Y, nC2X, nC2Y, nEndPointX, nEndPointY )
-   RETURN Qt_QPainterPath_cubicTo_1( ::pPtr, nC1X, nC1Y, nC2X, nC2Y, nEndPointX, nEndPointY )
+METHOD QPainterPath:cubicTo( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainterPath_cubicTo( ::pPtr, ... )
 
 
 METHOD QPainterPath:currentPosition()
@@ -259,12 +237,12 @@ METHOD QPainterPath:intersected( pP )
    RETURN Qt_QPainterPath_intersected( ::pPtr, hbqt_ptr( pP ) )
 
 
-METHOD QPainterPath:intersects( pRectangle )
-   RETURN Qt_QPainterPath_intersects( ::pPtr, hbqt_ptr( pRectangle ) )
-
-
-METHOD QPainterPath:intersects_1( pP )
-   RETURN Qt_QPainterPath_intersects_1( ::pPtr, hbqt_ptr( pP ) )
+METHOD QPainterPath:intersects( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainterPath_intersects( ::pPtr, ... )
 
 
 METHOD QPainterPath:isEmpty()
@@ -275,20 +253,20 @@ METHOD QPainterPath:length()
    RETURN Qt_QPainterPath_length( ::pPtr )
 
 
-METHOD QPainterPath:lineTo( pEndPoint )
-   RETURN Qt_QPainterPath_lineTo( ::pPtr, hbqt_ptr( pEndPoint ) )
+METHOD QPainterPath:lineTo( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainterPath_lineTo( ::pPtr, ... )
 
 
-METHOD QPainterPath:lineTo_1( nX, nY )
-   RETURN Qt_QPainterPath_lineTo_1( ::pPtr, nX, nY )
-
-
-METHOD QPainterPath:moveTo( pPoint )
-   RETURN Qt_QPainterPath_moveTo( ::pPtr, hbqt_ptr( pPoint ) )
-
-
-METHOD QPainterPath:moveTo_1( nX, nY )
-   RETURN Qt_QPainterPath_moveTo_1( ::pPtr, nX, nY )
+METHOD QPainterPath:moveTo( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainterPath_moveTo( ::pPtr, ... )
 
 
 METHOD QPainterPath:percentAtLength( nLen )
@@ -299,12 +277,12 @@ METHOD QPainterPath:pointAtPercent( nT )
    RETURN Qt_QPainterPath_pointAtPercent( ::pPtr, nT )
 
 
-METHOD QPainterPath:quadTo( pC, pEndPoint )
-   RETURN Qt_QPainterPath_quadTo( ::pPtr, hbqt_ptr( pC ), hbqt_ptr( pEndPoint ) )
-
-
-METHOD QPainterPath:quadTo_1( nCx, nCy, nEndPointX, nEndPointY )
-   RETURN Qt_QPainterPath_quadTo_1( ::pPtr, nCx, nCy, nEndPointX, nEndPointY )
+METHOD QPainterPath:quadTo( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainterPath_quadTo( ::pPtr, ... )
 
 
 METHOD QPainterPath:setElementPositionAt( nIndex, nX, nY )

@@ -1550,7 +1550,7 @@ METHOD HbqReportsManager:printReport( qPrinter )
    qPainter:begin( qPrinter )
 
    qPainter:setWindow( QRectF():from( ::qScene:paperRect() ) )
-   qPainter:setViewPort_1( 0, 0, qPrinter:width(), qPrinter:height() )
+   qPainter:setViewPort( 0, 0, qPrinter:width(), qPrinter:height() )
    FOR EACH a_ IN ::aObjects
       IF hb_hHasKey( ::hItems, a_[ 3 ] )
          oHqrObject := ::hItems[ a_[ 3 ] ]
@@ -2225,27 +2225,27 @@ METHOD HqrGraphicsItem:drawSelection( qPainter, qRect )
          qPainter:drawRect( qRect )
       ENDIF
       lt := QPainterPath()
-      lt:moveTo_1( 0,0 )
-      lt:lineTo_1( 0, iResizeHandle )
-      lt:lineTo_1( iResizeHandle, 0 )
+      lt:moveTo( 0,0 )
+      lt:lineTo( 0, iResizeHandle )
+      lt:lineTo( iResizeHandle, 0 )
       qPainter:fillPath( lt, a )
 
       rt := QPainterPath()
-      rt:moveTo_1( nW,0 )
-      rt:lineTo_1( nW, iResizeHandle )
-      rt:lineTo_1( nW-iResizeHandle, 0 )
+      rt:moveTo( nW,0 )
+      rt:lineTo( nW, iResizeHandle )
+      rt:lineTo( nW-iResizeHandle, 0 )
       qPainter:fillPath( rt,a )
 
       lb := QPainterPath()
-      lb:moveTo_1( 0, nH )
-      lb:lineTo_1( 0, nH - iResizeHandle )
-      lb:lineTo_1( iResizeHandle, nH )
+      lb:moveTo( 0, nH )
+      lb:lineTo( 0, nH - iResizeHandle )
+      lb:lineTo( iResizeHandle, nH )
       qPainter:fillPath( lb,a )
 
       rb := QPainterPath()
-      rb:moveTo_1( nW, nH )
-      rb:lineTo_1( nW, nH - iResizeHandle )
-      rb:lineTo_1( nW-iResizeHandle, nH )
+      rb:moveTo( nW, nH )
+      rb:lineTo( nW, nH - iResizeHandle )
+      rb:lineTo( nW-iResizeHandle, nH )
       qPainter:fillPath( rb,a )
    ELSE
       IF drawSelectionBorder
@@ -2358,11 +2358,11 @@ METHOD HqrGraphicsItem:drawDiamond( qPainter, qRect )
    LOCAL p := QPainterPath()
    LOCAL x := qRect:x(), y := qRect:y(), w := qRect:width(), h := qRect:height()
 
-   p:moveTo_1( x, y + h / 2 )
-   p:lineTo_1( x + w / 2, y )
-   p:lineTo_1( x + w, y + h / 2 )
-   p:lineTo_1( x + w / 2, y + h )
-   p:lineTo_1( x, y + h / 2 )
+   p:moveTo( x, y + h / 2 )
+   p:lineTo( x + w / 2, y )
+   p:lineTo( x + w, y + h / 2 )
+   p:lineTo( x + w / 2, y + h )
+   p:lineTo( x, y + h / 2 )
 
    qPainter:drawPath( p )
 
@@ -2373,10 +2373,10 @@ METHOD HqrGraphicsItem:drawDiamond( qPainter, qRect )
 METHOD HqrGraphicsItem:drawTriangle( qPainter, qRect )
    LOCAL p := QPainterPath()
 
-   p:moveTo_1( qRect:x(), qRect:y() + qRect:height() )
-   p:lineTo_1( qRect:x() + qRect:width() / 2, qRect:y() )
-   p:lineTo_1( qRect:x() + qRect:width(), qRect:y() + qRect:height() )
-   p:lineTo_1( qRect:x(), qRect:y() + qRect:height() )
+   p:moveTo( qRect:x(), qRect:y() + qRect:height() )
+   p:lineTo( qRect:x() + qRect:width() / 2, qRect:y() )
+   p:lineTo( qRect:x() + qRect:width(), qRect:y() + qRect:height() )
+   p:lineTo( qRect:x(), qRect:y() + qRect:height() )
 
    qPainter:drawPath( p )
 
@@ -2428,9 +2428,9 @@ METHOD HqrGraphicsItem:drawBarcode( qPainter, qRect )
 
    FOR i := 1 TO len( cCode )
       IF substr( cCode, i, 1 ) == "1"
-         qPainter:fillRect_6( QRectF( rc:x() + x, rc:y(), w, rc:height() ), clr )
+         qPainter:fillRect( QRectF( rc:x() + x, rc:y(), w, rc:height() ), clr )
       ELSE
-         qPainter:fillRect_6( QRectF( rc:x() + x, rc:y(), w, rc:height() ), fl )
+         qPainter:fillRect( QRectF( rc:x() + x, rc:y(), w, rc:height() ), fl )
       ENDIF
       x += w
    NEXT

@@ -73,7 +73,7 @@
  */
 
 /*
- *  Constructed[ 109/238 [ 45.80% ] ]
+ *  Constructed[ 91/266 [ 34.21% ] ]
  *
  *  *** Unconvered Prototypes ***
  *  -----------------------------
@@ -84,10 +84,6 @@
  *  }
  *  }
  *  }
- *  void drawLines ( const QVector<QPointF> & pointPairs )
- *  void drawLines ( const QVector<QPoint> & pointPairs )
- *  void drawLines ( const QVector<QLineF> & lines )
- *  void drawLines ( const QVector<QLine> & lines )
  *  }
  *  }
  *  }
@@ -96,8 +92,10 @@
  *  }
  *  }
  *  }
- *  void drawRects ( const QVector<QRectF> & rectangles )
- *  void drawRects ( const QVector<QRect> & rectangles )
+ *  }
+ *  }
+ *  }
+ *  }
  *  }
  *  }
  *  }
@@ -112,6 +110,10 @@
  *
  *  *** Commented out protos which construct fine but do not compile ***
  *
+ *  //QRectF boundingRect ( const QRectF & rectangle, int flags, const QString & text )
+ *  //QRect boundingRect ( const QRect & rectangle, int flags, const QString & text )
+ *  //QRect boundingRect ( int x, int y, int w, int h, int flags, const QString & text )
+ *  //QRectF boundingRect ( const QRectF & rectangle, const QString & text, const QTextOption & option = QTextOption() )
  *  //void drawArc ( const QRectF & rectangle, int startAngle, int spanAngle )
  *  //void drawArc ( const QRect & rectangle, int startAngle, int spanAngle )
  *  //void drawArc ( int x, int y, int width, int height, int startAngle, int spanAngle )
@@ -141,6 +143,15 @@
  *  //void drawLine ( const QPoint & p1, const QPoint & p2 )
  *  //void drawLine ( const QPointF & p1, const QPointF & p2 )
  *  //void drawLine ( int x1, int y1, int x2, int y2 )
+ *  //void drawLines ( const QLineF * lines, int lineCount )
+ *  //void drawLines ( const QLine * lines, int lineCount )
+ *  //void drawLines ( const QPointF * pointPairs, int lineCount )
+ *  //void drawLines ( const QPoint * pointPairs, int lineCount )
+ *  //
+ *  //void drawLines ( const QVector<QPointF> & pointPairs )
+ *  //void drawLines ( const QVector<QPoint> & pointPairs )
+ *  //void drawLines ( const QVector<QLineF> & lines )
+ *  //void drawLines ( const QVector<QLine> & lines )
  *  //void drawPicture ( const QPointF & point, const QPicture & picture )
  *  //void drawPicture ( const QPoint & point, const QPicture & picture )
  *  //void drawPicture ( int x, int y, const QPicture & picture )
@@ -176,6 +187,11 @@
  *  //void drawRect ( const QRectF & rectangle )
  *  //void drawRect ( const QRect & rectangle )
  *  //void drawRect ( int x, int y, int width, int height )
+ *  //void drawRects ( const QRectF * rectangles, int rectCount )
+ *  //void drawRects ( const QRect * rectangles, int rectCount )
+ *  //
+ *  //void drawRects ( const QVector<QRectF> & rectangles )
+ *  //void drawRects ( const QVector<QRect> & rectangles )
  *  //void drawRoundedRect ( const QRectF & rect, qreal xRadius, qreal yRadius, Qt::SizeMode mode = Qt::AbsoluteSize )
  *  //void drawRoundedRect ( const QRect & rect, qreal xRadius, qreal yRadius, Qt::SizeMode mode = Qt::AbsoluteSize )
  *  //void drawRoundedRect ( int x, int y, int w, int h, qreal xRadius, qreal yRadius, Qt::SizeMode mode = Qt::AbsoluteSize )
@@ -192,6 +208,36 @@
  *  //void eraseRect ( const QRectF & rectangle )
  *  //void eraseRect ( const QRect & rectangle )
  *  //void eraseRect ( int x, int y, int width, int height )
+ *  // void fillRect ( const QRectF & rectangle, const QBrush & brush )
+ *  // void fillRect ( const QRectF & rectangle, const QColor & color )
+ *  // void fillRect ( const QRectF & rectangle, Qt::GlobalColor color )
+ *  // //
+ *  // void fillRect ( const QRect  & rectangle, const QBrush & brush )
+ *  // void fillRect ( const QRect  & rectangle, const QColor & color )
+ *  // void fillRect ( const QRect  & rectangle, Qt::GlobalColor color )
+ *  // //
+ *  // void fillRect ( int x, int y, int width, int height, const QBrush & brush )
+ *  // void fillRect ( int x, int y, int width, int height, const QColor & color )
+ *  // void fillRect ( int x, int y, int width, int height, Qt::GlobalColor color )
+ *  //
+ *  //                       NOT IMPLEMENTED
+ *  // void fillRect ( const QRectF & rectangle, Qt::BrushStyle style )
+ *  // void fillRect ( const QRect  & rectangle, Qt::BrushStyle style )
+ *  // void fillRect ( int x, int y, int width, int height, Qt::BrushStyle style )
+ *  //
+ *  //                           original order
+ *  // void fillRect ( const QRectF & rectangle, const QBrush & brush )
+ *  // void fillRect ( int x, int y, int width, int height, Qt::BrushStyle style )
+ *  // void fillRect ( const QRect  & rectangle, Qt::BrushStyle style )
+ *  // void fillRect ( const QRectF & rectangle, Qt::BrushStyle style )
+ *  // void fillRect ( const QRect  & rectangle, const QBrush & brush )
+ *  // void fillRect ( const QRect  & rectangle, const QColor & color )
+ *  // void fillRect ( const QRectF & rectangle, const QColor & color )
+ *  // void fillRect ( int x, int y, int width, int height, const QBrush & brush )
+ *  // void fillRect ( int x, int y, int width, int height, const QColor & color )
+ *  // void fillRect ( int x, int y, int width, int height, Qt::GlobalColor color )
+ *  // void fillRect ( const QRect  & rectangle, Qt::GlobalColor color )
+ *  // void fillRect ( const QRectF & rectangle, Qt::GlobalColor color )
  *  //void setBrush ( const QBrush & brush )
  *  //void setBrush ( Qt::BrushStyle style )
  *  //void setBrushOrigin ( const QPointF & position )
@@ -329,58 +375,41 @@ HB_FUNC( QT_QPAINTER_BEGIN )
 }
 
 /*
- * QRectF boundingRect ( const QRectF & rectangle, int flags, const QString & text )
+ * void boundingRect ( ... )
  */
 HB_FUNC( QT_QPAINTER_BOUNDINGRECT )
 {
    QPainter * p = hbqt_par_QPainter( 1 );
    if( p )
    {
-      void * pText;
-      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->boundingRect( *hbqt_par_QRectF( 2 ), hb_parni( 3 ), hb_parstr_utf8( 4, &pText, NULL ) ) ), true ) );
-      hb_strfree( pText );
-   }
-}
+      if( hb_pcount() == 4 )
+      {
+         if( HB_ISCHAR( 4 ) )
+         {
+            HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
 
-/*
- * QRect boundingRect ( const QRect & rectangle, int flags, const QString & text )
- */
-HB_FUNC( QT_QPAINTER_BOUNDINGRECT_1 )
-{
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      void * pText;
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->boundingRect( *hbqt_par_QRect( 2 ), hb_parni( 3 ), hb_parstr_utf8( 4, &pText, NULL ) ) ), true ) );
-      hb_strfree( pText );
-   }
-}
-
-/*
- * QRect boundingRect ( int x, int y, int w, int h, int flags, const QString & text )
- */
-HB_FUNC( QT_QPAINTER_BOUNDINGRECT_2 )
-{
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      void * pText;
-      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->boundingRect( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ), hb_parstr_utf8( 7, &pText, NULL ) ) ), true ) );
-      hb_strfree( pText );
-   }
-}
-
-/*
- * QRectF boundingRect ( const QRectF & rectangle, const QString & text, const QTextOption & option = QTextOption() )
- */
-HB_FUNC( QT_QPAINTER_BOUNDINGRECT_3 )
-{
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      void * pText;
-      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->boundingRect( *hbqt_par_QRectF( 2 ), hb_parstr_utf8( 3, &pText, NULL ), ( HB_ISPOINTER( 4 ) ? *hbqt_par_QTextOption( 4 ) : QTextOption() ) ) ), true ) );
-      hb_strfree( pText );
+            if( q->type == HBQT_TYPE_QRectF )
+            {
+               ( p )->boundingRect( *hbqt_par_QRectF( 2 ), hb_parni( 3 ), hbqt_par_QString( 4 ) );
+            }
+            else if( q->type == HBQT_TYPE_QRect )
+            {
+               ( p )->boundingRect( *hbqt_par_QRect( 2 ), hb_parni( 3 ), hbqt_par_QString( 4 ) );
+            }
+         }
+         else if( HB_ISPOINTER( 4 ) )
+         {
+            ( p )->boundingRect( *hbqt_par_QRectF( 2 ), hbqt_par_QString( 3 ), *hbqt_par_QTextOption( 4 ) );
+         }
+      }
+      else if( hb_pcount() == 3 )
+      {
+         ( p )->boundingRect( *hbqt_par_QRectF( 2 ), hbqt_par_QString( 3 ), QTextOption() );
+      }
+      else if( hb_pcount() == 7 )
+      {
+         ( p )->boundingRect( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ), hbqt_par_QString( 7 ) );
+      }
    }
 }
 
@@ -747,50 +776,34 @@ HB_FUNC( QT_QPAINTER_DRAWLINE )
 }
 
 /*
- * void drawLines ( const QLineF * lines, int lineCount )
+ * void drawLines ( ... )
  */
 HB_FUNC( QT_QPAINTER_DRAWLINES )
 {
    QPainter * p = hbqt_par_QPainter( 1 );
    if( p )
    {
-      ( p )->drawLines( hbqt_par_QLineF( 2 ), hb_parni( 3 ) );
-   }
-}
+      if( hb_pcount() == 3 && HB_ISPOINTER( 2 ) )
+      {
+         HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
 
-/*
- * void drawLines ( const QLine * lines, int lineCount )
- */
-HB_FUNC( QT_QPAINTER_DRAWLINES_1 )
-{
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      ( p )->drawLines( hbqt_par_QLine( 2 ), hb_parni( 3 ) );
-   }
-}
-
-/*
- * void drawLines ( const QPointF * pointPairs, int lineCount )
- */
-HB_FUNC( QT_QPAINTER_DRAWLINES_2 )
-{
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      ( p )->drawLines( hbqt_par_QPointF( 2 ), hb_parni( 3 ) );
-   }
-}
-
-/*
- * void drawLines ( const QPoint * pointPairs, int lineCount )
- */
-HB_FUNC( QT_QPAINTER_DRAWLINES_3 )
-{
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      ( p )->drawLines( hbqt_par_QPoint( 2 ), hb_parni( 3 ) );
+         if( q->type == HBQT_TYPE_QLineF )
+         {
+            ( p )->drawLines( hbqt_par_QLineF( 2 ), hb_parni( 3 ) );
+         }
+         else if( q->type == HBQT_TYPE_QLine )
+         {
+            ( p )->drawLines( hbqt_par_QLine( 2 ), hb_parni( 3 ) );
+         }
+         else if( q->type == HBQT_TYPE_QPointF )
+         {
+            ( p )->drawLines( hbqt_par_QPointF( 2 ), hb_parni( 3 ) );
+         }
+         else if( q->type == HBQT_TYPE_QPoint )
+         {
+            ( p )->drawLines( hbqt_par_QPoint( 2 ), hb_parni( 3 ) );
+         }
+      }
    }
 }
 
@@ -1096,26 +1109,26 @@ HB_FUNC( QT_QPAINTER_DRAWRECT )
 }
 
 /*
- * void drawRects ( const QRectF * rectangles, int rectCount )
+ * void drawRects ( ... )
  */
 HB_FUNC( QT_QPAINTER_DRAWRECTS )
 {
    QPainter * p = hbqt_par_QPainter( 1 );
    if( p )
    {
-      ( p )->drawRects( hbqt_par_QRectF( 2 ), hb_parni( 3 ) );
-   }
-}
+      if( hb_pcount() == 3 && HB_ISPOINTER( 2 ) )
+      {
+         HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
 
-/*
- * void drawRects ( const QRect * rectangles, int rectCount )
- */
-HB_FUNC( QT_QPAINTER_DRAWRECTS_1 )
-{
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      ( p )->drawRects( hbqt_par_QRect( 2 ), hb_parni( 3 ) );
+         if( q->type == HBQT_TYPE_QRectF )
+         {
+            ( p )->drawRects( hbqt_par_QRectF( 2 ), hb_parni( 3 ) );
+         }
+         else if( q->type == HBQT_TYPE_QRect )
+         {
+            ( p )->drawRects( hbqt_par_QRect( 2 ), hb_parni( 3 ) );
+         }
+      }
    }
 }
 
@@ -1247,9 +1260,9 @@ HB_FUNC( QT_QPAINTER_ERASERECT )
    QPainter * p = hbqt_par_QPainter( 1 );
    if( p )
    {
-      if( hb_pcount() == 4 && HB_ISNUM( 2 ) )
+      if( hb_pcount() == 5 && HB_ISNUM( 2 ) )
       {
-         ( p )->eraseRect( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 3 ), hb_parni( 4 ) );
+         ( p )->eraseRect( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
       }
       else if( hb_pcount() == 2 )
       {
@@ -1280,146 +1293,76 @@ HB_FUNC( QT_QPAINTER_FILLPATH )
 }
 
 /*
- * void fillRect ( const QRectF & rectangle, const QBrush & brush )
+ * void fillRect ( ... )
  */
 HB_FUNC( QT_QPAINTER_FILLRECT )
 {
    QPainter * p = hbqt_par_QPainter( 1 );
    if( p )
    {
-      ( p )->fillRect( *hbqt_par_QRectF( 2 ), *hbqt_par_QBrush( 3 ) );
-   }
-}
+      if( hb_pcount() == 6 && HB_ISNUM( 2 ) )
+      {
+         if( HB_ISNUM( 6 ) )
+         {
+            ( p )->fillRect( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), ( Qt::GlobalColor ) hb_parni( 6 ) );
+         }
+         else if( HB_ISPOINTER( 6 ) )
+         {
+            HBQT_GC_T * r = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 6 );
 
-/*
- * void fillRect ( int x, int y, int width, int height, Qt::BrushStyle style )
- */
-HB_FUNC( QT_QPAINTER_FILLRECT_1 )
-{
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      ( p )->fillRect( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), ( Qt::BrushStyle ) hb_parni( 6 ) );
-   }
-}
+            if( r->type == HBQT_TYPE_QBrush )
+            {
+               ( p )->fillRect( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), *hbqt_par_QBrush( 6 ) );
+            }
+            if( r->type == HBQT_TYPE_QColor )
+            {
+               ( p )->fillRect( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), *hbqt_par_QColor( 6 ) );
+            }
+         }
+      }
+      else if( hb_pcount() == 3 && HB_ISPOINTER( 2 ) )
+      {
+         HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
 
-/*
- * void fillRect ( const QRect & rectangle, Qt::BrushStyle style )
- */
-HB_FUNC( QT_QPAINTER_FILLRECT_2 )
-{
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      ( p )->fillRect( *hbqt_par_QRect( 2 ), ( Qt::BrushStyle ) hb_parni( 3 ) );
-   }
-}
+         if( HB_ISNUM( 3 ) )
+         {
+            if( q->type == HBQT_TYPE_QRectF )
+            {
+               ( p )->fillRect( *hbqt_par_QRectF( 2 ), ( Qt::GlobalColor ) hb_parni( 3 ) );
+            }
+            else if( q->type == HBQT_TYPE_QRect )
+            {
+               ( p )->fillRect( *hbqt_par_QRect( 2 ), ( Qt::GlobalColor ) hb_parni( 3 ) );
+            }
+         }
+         else if( HB_ISPOINTER( 3 ) )
+         {
+            HBQT_GC_T * r = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 3 );
 
-/*
- * void fillRect ( const QRectF & rectangle, Qt::BrushStyle style )
- */
-HB_FUNC( QT_QPAINTER_FILLRECT_3 )
-{
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      ( p )->fillRect( *hbqt_par_QRectF( 2 ), ( Qt::BrushStyle ) hb_parni( 3 ) );
-   }
-}
-
-/*
- * void fillRect ( const QRect & rectangle, const QBrush & brush )
- */
-HB_FUNC( QT_QPAINTER_FILLRECT_4 )
-{
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      ( p )->fillRect( *hbqt_par_QRect( 2 ), *hbqt_par_QBrush( 3 ) );
-   }
-}
-
-/*
- * void fillRect ( const QRect & rectangle, const QColor & color )
- */
-HB_FUNC( QT_QPAINTER_FILLRECT_5 )
-{
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      ( p )->fillRect( *hbqt_par_QRect( 2 ), *hbqt_par_QColor( 3 ) );
-   }
-}
-
-/*
- * void fillRect ( const QRectF & rectangle, const QColor & color )
- */
-HB_FUNC( QT_QPAINTER_FILLRECT_6 )
-{
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      ( p )->fillRect( *hbqt_par_QRectF( 2 ), *hbqt_par_QColor( 3 ) );
-   }
-}
-
-/*
- * void fillRect ( int x, int y, int width, int height, const QBrush & brush )
- */
-HB_FUNC( QT_QPAINTER_FILLRECT_7 )
-{
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      ( p )->fillRect( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), *hbqt_par_QBrush( 6 ) );
-   }
-}
-
-/*
- * void fillRect ( int x, int y, int width, int height, const QColor & color )
- */
-HB_FUNC( QT_QPAINTER_FILLRECT_8 )
-{
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      ( p )->fillRect( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), *hbqt_par_QColor( 6 ) );
-   }
-}
-
-/*
- * void fillRect ( int x, int y, int width, int height, Qt::GlobalColor color )
- */
-HB_FUNC( QT_QPAINTER_FILLRECT_9 )
-{
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      ( p )->fillRect( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), ( Qt::GlobalColor ) hb_parni( 6 ) );
-   }
-}
-
-/*
- * void fillRect ( const QRect & rectangle, Qt::GlobalColor color )
- */
-HB_FUNC( QT_QPAINTER_FILLRECT_10 )
-{
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      ( p )->fillRect( *hbqt_par_QRect( 2 ), ( Qt::GlobalColor ) hb_parni( 3 ) );
-   }
-}
-
-/*
- * void fillRect ( const QRectF & rectangle, Qt::GlobalColor color )
- */
-HB_FUNC( QT_QPAINTER_FILLRECT_11 )
-{
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      ( p )->fillRect( *hbqt_par_QRectF( 2 ), ( Qt::GlobalColor ) hb_parni( 3 ) );
+            if( q->type == HBQT_TYPE_QRectF )
+            {
+               if( r->type == HBQT_TYPE_QBrush )
+               {
+                  ( p )->fillRect( *hbqt_par_QRectF( 2 ), *hbqt_par_QBrush( 3 ) );
+               }
+               if( r->type == HBQT_TYPE_QColor )
+               {
+                  ( p )->fillRect( *hbqt_par_QRectF( 2 ), *hbqt_par_QColor( 3 ) );
+               }
+            }
+            else if( q->type == HBQT_TYPE_QRect )
+            {
+               if( r->type == HBQT_TYPE_QBrush )
+               {
+                  ( p )->fillRect( *hbqt_par_QRect( 2 ), *hbqt_par_QBrush( 3 ) );
+               }
+               if( r->type == HBQT_TYPE_QColor )
+               {
+                  ( p )->fillRect( *hbqt_par_QRect( 2 ), *hbqt_par_QColor( 3 ) );
+               }
+            }
+         }
+      }
    }
 }
 

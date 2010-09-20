@@ -26,47 +26,33 @@
  *  $RETURNS$
  *     An instance of the object of type QPainterPath
  *  $METHODS$
- *     :addEllipse( pBoundingRectangle )                   -> NIL
- *     :addEllipse_1( nX, nY, nWidth, nHeight )            -> NIL
- *     :addEllipse_2( pCenter, nRx, nRy )                  -> NIL
+ *     :addEllipse( ... )                                  -> NIL
  *     :addPath( pPath )                                   -> NIL
  *     :addPolygon( pPolygon )                             -> NIL
- *     :addRect( pRectangle )                              -> NIL
- *     :addRect_1( nX, nY, nWidth, nHeight )               -> NIL
+ *     :addRect( ... )                                     -> NIL
  *     :addRegion( pRegion )                               -> NIL
- *     :addRoundedRect( pRect, nXRadius, nYRadius, nMode )  -> NIL
- *     :addRoundedRect_1( nX, nY, nW, nH, nXRadius, nYRadius, nMode )  -> NIL
- *     :addText( pPoint, pFont, cText )                    -> NIL
- *     :addText_1( nX, nY, pFont, cText )                  -> NIL
+ *     :addRoundedRect( ... )                              -> NIL
+ *     :addText( ... )                                     -> NIL
  *     :angleAtPercent( nT )                               -> nQreal
- *     :arcMoveTo( pRectangle, nAngle )                    -> NIL
- *     :arcMoveTo_1( nX, nY, nWidth, nHeight, nAngle )     -> NIL
- *     :arcTo( pRectangle, nStartAngle, nSweepLength )     -> NIL
- *     :arcTo_1( nX, nY, nWidth, nHeight, nStartAngle, nSweepLength )  -> NIL
+ *     :arcMoveTo( ... )                                   -> NIL
+ *     :arcTo( ... )                                       -> NIL
  *     :boundingRect()                                     -> pQRectF
  *     :closeSubpath()                                     -> NIL
  *     :connectPath( pPath )                               -> NIL
- *     :contains( pPoint )                                 -> lBool
- *     :contains_1( pRectangle )                           -> lBool
- *     :contains_2( pP )                                   -> lBool
+ *     :contains( ... )                                    -> NIL
  *     :controlPointRect()                                 -> pQRectF
- *     :cubicTo( pC1, pC2, pEndPoint )                     -> NIL
- *     :cubicTo_1( nC1X, nC1Y, nC2X, nC2Y, nEndPointX, nEndPointY )  -> NIL
+ *     :cubicTo( ... )                                     -> NIL
  *     :currentPosition()                                  -> pQPointF
  *     :elementCount()                                     -> nInt
  *     :fillRule()                                         -> nQt::FillRule
- *     :intersects( pRectangle )                           -> lBool
- *     :intersects_1( pP )                                 -> lBool
+ *     :intersects( ... )                                  -> NIL
  *     :isEmpty()                                          -> lBool
  *     :length()                                           -> nQreal
- *     :lineTo( pEndPoint )                                -> NIL
- *     :lineTo_1( nX, nY )                                 -> NIL
- *     :moveTo( pPoint )                                   -> NIL
- *     :moveTo_1( nX, nY )                                 -> NIL
+ *     :lineTo( ... )                                      -> NIL
+ *     :moveTo( ... )                                      -> NIL
  *     :percentAtLength( nLen )                            -> nQreal
  *     :pointAtPercent( nT )                               -> pQPointF
- *     :quadTo( pC, pEndPoint )                            -> NIL
- *     :quadTo_1( nCx, nCy, nEndPointX, nEndPointY )       -> NIL
+ *     :quadTo( ... )                                      -> NIL
  *     :setElementPositionAt( nIndex, nX, nY )             -> NIL
  *     :setFillRule( nFillRule )                           -> NIL
  *     :slopeAtPercent( nT )                               -> nQreal
