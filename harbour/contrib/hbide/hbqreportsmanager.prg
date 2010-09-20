@@ -2277,33 +2277,34 @@ METHOD HqrGraphicsItem:drawSelection( qPainter, qRect )
 /*----------------------------------------------------------------------*/
 
 METHOD HqrGraphicsItem:draw( qPainter, qRect, lDrawSelection )
+   LOCAL qRectF := QRectF( qRect )
 
    DEFAULT lDrawSelection TO .t.
 
    ::setupPainter( qPainter, lDrawSelection )
 
    SWITCH ::cType
-   CASE "Barcode"    ;   ::drawBarcode( qPainter, qRect )      ;    EXIT
-   CASE "Image"      ;   ::drawImage( qPainter, qRect )        ;    EXIT
-   CASE "Chart"      ;   ::drawChart( qPainter, qRect )        ;    EXIT
-   CASE "Gradient"   ;   ::drawGradient( qPainter, qRect )     ;    EXIT
-   CASE "Text"       ;   ::drawText( qPainter, qRect )         ;    EXIT
-   CASE "Field"      ;   ::drawField( qPainter, qRect )        ;    EXIT
-   CASE "Rectangle"  ;   ::drawRect( qPainter, qRect )         ;    EXIT
-   CASE "RoundRect"  ;   ::drawRoundRect( qPainter, qRect )    ;    EXIT
-   CASE "Ellipse"    ;   ::drawEllipse( qPainter, qRect )      ;    EXIT
-   CASE "LineH"      ;   ::drawLine( qPainter, qRect )         ;    EXIT
-   CASE "LineV"      ;   ::drawLine( qPainter, qRect )         ;    EXIT
-   CASE "LineDR"     ;   ::drawLine( qPainter, qRect )         ;    EXIT
-   CASE "LineDL"     ;   ::drawLine( qPainter, qRect )         ;    EXIT
-   CASE "Arc"        ;   ::drawArc( qPainter, qRect )          ;    EXIT
-   CASE "Chord"      ;   ::drawChord( qPainter, qRect )        ;    EXIT
-   CASE "Diamond"    ;   ::drawDiamond( qPainter, qRect )      ;    EXIT
-   CASE "Triangle"   ;   ::drawTriangle( qPainter, qRect )     ;    EXIT
+   CASE "Barcode"    ;   ::drawBarcode( qPainter, qRectF )      ;    EXIT
+   CASE "Image"      ;   ::drawImage( qPainter, qRectF )        ;    EXIT
+   CASE "Chart"      ;   ::drawChart( qPainter, qRectF )        ;    EXIT
+   CASE "Gradient"   ;   ::drawGradient( qPainter, qRectF )     ;    EXIT
+   CASE "Text"       ;   ::drawText( qPainter, qRectF )         ;    EXIT
+   CASE "Field"      ;   ::drawField( qPainter, qRectF )        ;    EXIT
+   CASE "Rectangle"  ;   ::drawRect( qPainter, qRectF )         ;    EXIT
+   CASE "RoundRect"  ;   ::drawRoundRect( qPainter, qRectF )    ;    EXIT
+   CASE "Ellipse"    ;   ::drawEllipse( qPainter, qRectF )      ;    EXIT
+   CASE "LineH"      ;   ::drawLine( qPainter, qRectF )         ;    EXIT
+   CASE "LineV"      ;   ::drawLine( qPainter, qRectF )         ;    EXIT
+   CASE "LineDR"     ;   ::drawLine( qPainter, qRectF )         ;    EXIT
+   CASE "LineDL"     ;   ::drawLine( qPainter, qRectF )         ;    EXIT
+   CASE "Arc"        ;   ::drawArc( qPainter, qRectF )          ;    EXIT
+   CASE "Chord"      ;   ::drawChord( qPainter, qRectF )        ;    EXIT
+   CASE "Diamond"    ;   ::drawDiamond( qPainter, qRectF )      ;    EXIT
+   CASE "Triangle"   ;   ::drawTriangle( qPainter, qRectF )     ;    EXIT
    ENDSWITCH
 
    IF lDrawSelection
-      ::drawSelection( qPainter, qRect )
+      ::drawSelection( qPainter, qRectF )
    ENDIF
    RETURN Self
 
@@ -2340,7 +2341,6 @@ METHOD HqrGraphicsItem:drawLine( qPainter, qRect )
       qPainter:drawLine( qRect:right(), qRect:y(), qRect:x(), qRect:bottom() )
       EXIT
    case HBQT_GRAPHICSITEM_LINE_FORWARDDIAGONAL
-      //qPainter:drawLine_4( qRect:x(), qRect:y(), qRect:right(), qRect:bottom() )
       qPainter:drawLine( QPointF( qRect:x(), qRect:y() ), QPointF( qRect:right(), qRect:bottom() ) )
       EXIT
    ENDSWITCH
@@ -2397,14 +2397,15 @@ METHOD HqrGraphicsItem:drawChord( qPainter, qRect )
 /*----------------------------------------------------------------------*/
 
 METHOD HqrGraphicsItem:drawText( qPainter, qRect )
-   qPainter:drawText_2( qRect, ::textFlags(), ::text() )
+   //qPainter:drawText_2( qRect, ::textFlags(), ::text() )
+   qPainter:drawText( qRect, ::textFlags(), ::text() )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD HqrGraphicsItem:drawField( qPainter, qRect )
-   qPainter:setRenderHint( QPainter_TextAntialiasing )
-   qPainter:drawText_2( qRect, ::textFlags(), ::text() )
+   //qPainter:drawText_2( qRect, ::textFlags(), ::text() )
+   qPainter:drawText( qRect, ::textFlags(), ::text() )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -2449,7 +2450,7 @@ METHOD HqrGraphicsItem:drawImage( qPainter, qRect )
    LOCAL cText        := "Picture"
    LOCAL qObj         := ::oWidget
 
-   rc    := QRectF():from( qRect:adjusted( 1, 1, -2, -2 ) )
+   rc    := QRectF( qRect:adjusted( 1, 1, -2, -2 ) )
 
    textH := 0
    sw    := 0
@@ -2502,7 +2503,7 @@ METHOD HqrGraphicsItem:drawImage( qPainter, qRect )
          point:setY( point:y() + textH )
       ENDIF
 
-      qPainter:drawImage_2( point, img )
+      qPainter:drawImage( point, img )
    ENDIF
    qPainter:setPen( QPen( textColor ) )
 
@@ -2617,19 +2618,19 @@ METHOD HqrGraphicsItem:drawChart( qPainter, qRect )
       NEXT
       y := 0
       FOR i := 1 TO nPlanes
-         qPainter:drawText_2( QRectF( rc:x(), rc:y() + y, maxLabelWidth, nFHeight ), ;
+         qPainter:drawText( QRectF( rc:x(), rc:y() + y, maxLabelWidth, nFHeight ), ;
                          Qt_AlignRight + Qt_AlignVCenter, hb_ntos( Int( ( maxpv - chartStep * ( i - 1 ) ) / powVal ) ) )
          y += valstep
       NEXT
 
-      qPainter:drawLine_4( rc:x() + maxLabelWidth + 1 / UNIT / 4, rc:y(), rc:x() + maxLabelWidth + 1 / UNIT / 4, rc:y() + qRect:height() )
+      qPainter:drawLine( rc:x() + maxLabelWidth + 1 / UNIT / 4, rc:y(), rc:x() + maxLabelWidth + 1 / UNIT / 4, rc:y() + qRect:height() )
       rc := QRectF():from( rc:adjusted( maxLabelWidth + 1 / UNIT / 4, 0, 0, 0 ) )
    ENDIF
 
    IF m_showGrid
       y :=  nFHeight / 2
       FOR i := 1 TO nPlanes
-         qPainter:drawLine_4( rc:x(), rc:y() + y, rc:x() + rc:width(), rc:y() + y )
+         qPainter:drawLine( rc:x(), rc:y() + y, rc:x() + rc:width(), rc:y() + y )
          y += valstep
       NEXT
    ENDIF
@@ -2651,7 +2652,7 @@ METHOD HqrGraphicsItem:drawChart( qPainter, qRect )
       qPainter:fillRect( QRectF( rc:x() + x, rc:y() + py * maxpv - py * cv[ 2 ] * powVal, barWidth, py * cv[ 2 ] * powVal ), br )
 
       IF m_showLabels
-         qPainter:drawText_2( QRectF( rc:x() + x - m_barsIdentation / 2, rc:y() + py * maxpv - iif( cv[ 2 ] >= 0, nFHeight, 0 ), ;
+         qPainter:drawText( QRectF( rc:x() + x - m_barsIdentation / 2, rc:y() + py * maxpv - iif( cv[ 2 ] >= 0, nFHeight, 0 ), ;
                                       barWidth + m_barsIdentation, nFHeight ), Qt_AlignCenter, hb_ntos( Int( cv[ 2 ] ) ) )
       ENDIF
       x += barWidth + m_barsIdentation

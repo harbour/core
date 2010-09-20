@@ -435,7 +435,7 @@ METHOD HbIde:create( aParams )
    hbide_loadSkltns( Self )
 
    /* Set Codec at the Begining - no interface display */
-   ::cWrkCodec := hb_cdpSelect()
+   hb_cdpSelect( ::cWrkCodec )
 
    /* Load IDE|User defined Themes */
    ::oTH := IdeThemes():new( Self, ::oINI:getThemesFile() ):create()
@@ -1434,9 +1434,11 @@ METHOD HbIde:setCodec( cCodec )
 
    DEFAULT cCodec TO ::cWrkCodec
 
-   ::cWrkCodec := cCodec
+   ::cWrkCodec := hbide_getCDPforID( cCodec )
 
-   ::oDK:setStatusText( SB_PNL_CODEC, hb_cdpUniID( ::cWrkCodec ) )
+   ::oDK:setStatusText( SB_PNL_CODEC, ::cWrkCodec + ":" + hb_cdpUniID( ::cWrkCodec ) )
+
+   hb_cdpSelect( ::cWrkCodec )
 
    RETURN Self
 

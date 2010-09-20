@@ -103,15 +103,7 @@ CREATE CLASS QPainter INHERIT HbQtObjectHandler FUNCTION HB_QPainter
    METHOD  drawEllipse_2( nX, nY, nWidth, nHeight )
    METHOD  drawEllipse_3( pCenter, nRx, nRy )
    METHOD  drawEllipse_4( pCenter, nRx, nRy )
-   METHOD  drawImage( pTarget, pImage, pSource, nFlags )
-   METHOD  drawImage_1( pTarget, pImage, pSource, nFlags )
-   METHOD  drawImage_2( pPoint, pImage )
-   METHOD  drawImage_3( pPoint, pImage )
-   METHOD  drawImage_4( pPoint, pImage, pSource, nFlags )
-   METHOD  drawImage_5( pPoint, pImage, pSource, nFlags )
-   METHOD  drawImage_6( pRectangle, pImage )
-   METHOD  drawImage_7( pRectangle, pImage )
-   METHOD  drawImage_8( nX, nY, pImage, nSx, nSy, nSw, nSh, nFlags )
+   METHOD  drawImage( ... )
    METHOD  drawLine( ... )
    METHOD  drawLines( pLines, nLineCount )
    METHOD  drawLines_1( pLines, nLineCount )
@@ -124,18 +116,7 @@ CREATE CLASS QPainter INHERIT HbQtObjectHandler FUNCTION HB_QPainter
    METHOD  drawPie( pRectangle, nStartAngle, nSpanAngle )
    METHOD  drawPie_1( pRectangle, nStartAngle, nSpanAngle )
    METHOD  drawPie_2( nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle )
-   METHOD  hbDrawPixmap( ... )
-   METHOD  drawPixmap( pTarget, pPixmap, pSource )
-   METHOD  drawPixmap_1( pTarget, pPixmap, pSource )
-   METHOD  drawPixmap_2( pPoint, pPixmap, pSource )
-   METHOD  drawPixmap_3( pPoint, pPixmap, pSource )
-   METHOD  drawPixmap_4( pPoint, pPixmap )
-   METHOD  drawPixmap_5( pPoint, pPixmap )
-   METHOD  drawPixmap_6( nX, nY, pPixmap )
-   METHOD  drawPixmap_7( pRectangle, pPixmap )
-   METHOD  drawPixmap_8( nX, nY, nWidth, nHeight, pPixmap )
-   METHOD  drawPixmap_9( nX, nY, nW, nH, pPixmap, nSx, nSy, nSw, nSh )
-   METHOD  drawPixmap_10( nX, nY, pPixmap, nSx, nSy, nSw, nSh )
+   METHOD  drawPixmap( ... )
    METHOD  drawPoint( pPosition )
    METHOD  drawPoint_1( pPosition )
    METHOD  drawPoint_2( nX, nY )
@@ -159,14 +140,7 @@ CREATE CLASS QPainter INHERIT HbQtObjectHandler FUNCTION HB_QPainter
    METHOD  drawRoundedRect( pRect, nXRadius, nYRadius, nMode )
    METHOD  drawRoundedRect_1( pRect, nXRadius, nYRadius, nMode )
    METHOD  drawRoundedRect_2( nX, nY, nW, nH, nXRadius, nYRadius, nMode )
-   METHOD  hbDrawText( ... )
-   METHOD  drawText( pPosition, cText )
-   METHOD  drawText_1( pPosition, cText )
-   METHOD  drawText_2( pRectangle, nFlags, cText, pBoundingRect )
-   METHOD  drawText_3( pRectangle, nFlags, cText, pBoundingRect )
-   METHOD  drawText_4( nX, nY, cText )
-   METHOD  drawText_5( nX, nY, nWidth, nHeight, nFlags, cText, pBoundingRect )
-   METHOD  drawText_6( pRectangle, cText, pOption )
+   METHOD  drawText( ... )
    METHOD  drawTiledPixmap( pRectangle, pPixmap, pPosition )
    METHOD  drawTiledPixmap_1( pRectangle, pPixmap, pPosition )
    METHOD  drawTiledPixmap_2( nX, nY, nWidth, nHeight, pPixmap, nSx, nSy )
@@ -392,40 +366,12 @@ METHOD QPainter:drawEllipse_4( pCenter, nRx, nRy )
    RETURN Qt_QPainter_drawEllipse_4( ::pPtr, hbqt_ptr( pCenter ), nRx, nRy )
 
 
-METHOD QPainter:drawImage( pTarget, pImage, pSource, nFlags )
-   RETURN Qt_QPainter_drawImage( ::pPtr, hbqt_ptr( pTarget ), hbqt_ptr( pImage ), hbqt_ptr( pSource ), nFlags )
-
-
-METHOD QPainter:drawImage_1( pTarget, pImage, pSource, nFlags )
-   RETURN Qt_QPainter_drawImage_1( ::pPtr, hbqt_ptr( pTarget ), hbqt_ptr( pImage ), hbqt_ptr( pSource ), nFlags )
-
-
-METHOD QPainter:drawImage_2( pPoint, pImage )
-   RETURN Qt_QPainter_drawImage_2( ::pPtr, hbqt_ptr( pPoint ), hbqt_ptr( pImage ) )
-
-
-METHOD QPainter:drawImage_3( pPoint, pImage )
-   RETURN Qt_QPainter_drawImage_3( ::pPtr, hbqt_ptr( pPoint ), hbqt_ptr( pImage ) )
-
-
-METHOD QPainter:drawImage_4( pPoint, pImage, pSource, nFlags )
-   RETURN Qt_QPainter_drawImage_4( ::pPtr, hbqt_ptr( pPoint ), hbqt_ptr( pImage ), hbqt_ptr( pSource ), nFlags )
-
-
-METHOD QPainter:drawImage_5( pPoint, pImage, pSource, nFlags )
-   RETURN Qt_QPainter_drawImage_5( ::pPtr, hbqt_ptr( pPoint ), hbqt_ptr( pImage ), hbqt_ptr( pSource ), nFlags )
-
-
-METHOD QPainter:drawImage_6( pRectangle, pImage )
-   RETURN Qt_QPainter_drawImage_6( ::pPtr, hbqt_ptr( pRectangle ), hbqt_ptr( pImage ) )
-
-
-METHOD QPainter:drawImage_7( pRectangle, pImage )
-   RETURN Qt_QPainter_drawImage_7( ::pPtr, hbqt_ptr( pRectangle ), hbqt_ptr( pImage ) )
-
-
-METHOD QPainter:drawImage_8( nX, nY, pImage, nSx, nSy, nSw, nSh, nFlags )
-   RETURN Qt_QPainter_drawImage_8( ::pPtr, nX, nY, hbqt_ptr( pImage ), nSx, nSy, nSw, nSh, nFlags )
+METHOD QPainter:drawImage( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPainter_drawImage( ::pPtr, ... )
 
 
 METHOD QPainter:drawLine( ... )
@@ -480,56 +426,12 @@ METHOD QPainter:drawPie_2( nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle )
    RETURN Qt_QPainter_drawPie_2( ::pPtr, nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle )
 
 
-METHOD QPainter:hbDrawPixmap( ... )
+METHOD QPainter:drawPixmap( ... )
    LOCAL p
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QPainter_hbDrawPixmap( ::pPtr, ... )
-
-
-METHOD QPainter:drawPixmap( pTarget, pPixmap, pSource )
-   RETURN Qt_QPainter_drawPixmap( ::pPtr, hbqt_ptr( pTarget ), hbqt_ptr( pPixmap ), hbqt_ptr( pSource ) )
-
-
-METHOD QPainter:drawPixmap_1( pTarget, pPixmap, pSource )
-   RETURN Qt_QPainter_drawPixmap_1( ::pPtr, hbqt_ptr( pTarget ), hbqt_ptr( pPixmap ), hbqt_ptr( pSource ) )
-
-
-METHOD QPainter:drawPixmap_2( pPoint, pPixmap, pSource )
-   RETURN Qt_QPainter_drawPixmap_2( ::pPtr, hbqt_ptr( pPoint ), hbqt_ptr( pPixmap ), hbqt_ptr( pSource ) )
-
-
-METHOD QPainter:drawPixmap_3( pPoint, pPixmap, pSource )
-   RETURN Qt_QPainter_drawPixmap_3( ::pPtr, hbqt_ptr( pPoint ), hbqt_ptr( pPixmap ), hbqt_ptr( pSource ) )
-
-
-METHOD QPainter:drawPixmap_4( pPoint, pPixmap )
-   RETURN Qt_QPainter_drawPixmap_4( ::pPtr, hbqt_ptr( pPoint ), hbqt_ptr( pPixmap ) )
-
-
-METHOD QPainter:drawPixmap_5( pPoint, pPixmap )
-   RETURN Qt_QPainter_drawPixmap_5( ::pPtr, hbqt_ptr( pPoint ), hbqt_ptr( pPixmap ) )
-
-
-METHOD QPainter:drawPixmap_6( nX, nY, pPixmap )
-   RETURN Qt_QPainter_drawPixmap_6( ::pPtr, nX, nY, hbqt_ptr( pPixmap ) )
-
-
-METHOD QPainter:drawPixmap_7( pRectangle, pPixmap )
-   RETURN Qt_QPainter_drawPixmap_7( ::pPtr, hbqt_ptr( pRectangle ), hbqt_ptr( pPixmap ) )
-
-
-METHOD QPainter:drawPixmap_8( nX, nY, nWidth, nHeight, pPixmap )
-   RETURN Qt_QPainter_drawPixmap_8( ::pPtr, nX, nY, nWidth, nHeight, hbqt_ptr( pPixmap ) )
-
-
-METHOD QPainter:drawPixmap_9( nX, nY, nW, nH, pPixmap, nSx, nSy, nSw, nSh )
-   RETURN Qt_QPainter_drawPixmap_9( ::pPtr, nX, nY, nW, nH, hbqt_ptr( pPixmap ), nSx, nSy, nSw, nSh )
-
-
-METHOD QPainter:drawPixmap_10( nX, nY, pPixmap, nSx, nSy, nSw, nSh )
-   RETURN Qt_QPainter_drawPixmap_10( ::pPtr, nX, nY, hbqt_ptr( pPixmap ), nSx, nSy, nSw, nSh )
+   RETURN Qt_QPainter_drawPixmap( ::pPtr, ... )
 
 
 METHOD QPainter:drawPoint( pPosition )
@@ -624,40 +526,12 @@ METHOD QPainter:drawRoundedRect_2( nX, nY, nW, nH, nXRadius, nYRadius, nMode )
    RETURN Qt_QPainter_drawRoundedRect_2( ::pPtr, nX, nY, nW, nH, nXRadius, nYRadius, nMode )
 
 
-METHOD QPainter:hbDrawText( ... )
+METHOD QPainter:drawText( ... )
    LOCAL p
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QPainter_hbDrawText( ::pPtr, ... )
-
-
-METHOD QPainter:drawText( pPosition, cText )
-   RETURN Qt_QPainter_drawText( ::pPtr, hbqt_ptr( pPosition ), cText )
-
-
-METHOD QPainter:drawText_1( pPosition, cText )
-   RETURN Qt_QPainter_drawText_1( ::pPtr, hbqt_ptr( pPosition ), cText )
-
-
-METHOD QPainter:drawText_2( pRectangle, nFlags, cText, pBoundingRect )
-   RETURN Qt_QPainter_drawText_2( ::pPtr, hbqt_ptr( pRectangle ), nFlags, cText, hbqt_ptr( pBoundingRect ) )
-
-
-METHOD QPainter:drawText_3( pRectangle, nFlags, cText, pBoundingRect )
-   RETURN Qt_QPainter_drawText_3( ::pPtr, hbqt_ptr( pRectangle ), nFlags, cText, hbqt_ptr( pBoundingRect ) )
-
-
-METHOD QPainter:drawText_4( nX, nY, cText )
-   RETURN Qt_QPainter_drawText_4( ::pPtr, nX, nY, cText )
-
-
-METHOD QPainter:drawText_5( nX, nY, nWidth, nHeight, nFlags, cText, pBoundingRect )
-   RETURN Qt_QPainter_drawText_5( ::pPtr, nX, nY, nWidth, nHeight, nFlags, cText, hbqt_ptr( pBoundingRect ) )
-
-
-METHOD QPainter:drawText_6( pRectangle, cText, pOption )
-   RETURN Qt_QPainter_drawText_6( ::pPtr, hbqt_ptr( pRectangle ), cText, hbqt_ptr( pOption ) )
+   RETURN Qt_QPainter_drawText( ::pPtr, ... )
 
 
 METHOD QPainter:drawTiledPixmap( pRectangle, pPixmap, pPosition )

@@ -76,7 +76,7 @@ HB_FUNC( QT_QPAINTER )
    else
    {
       hb_retptr( new QPainter() );
-   } 
+   }
 }
 </CODE>
 
@@ -124,15 +124,71 @@ void drawEllipse ( int x, int y, int width, int height )
 void drawEllipse ( const QPointF & center, qreal rx, qreal ry )
 void drawEllipse ( const QPoint & center, int rx, int ry )
 
-void drawImage ( const QRectF & target, const QImage & image, const QRectF & source, Qt::ImageConversionFlags flags = Qt::AutoColor )
-void drawImage ( const QRect & target, const QImage & image, const QRect & source, Qt::ImageConversionFlags flags = Qt::AutoColor )
-void drawImage ( const QPointF & point, const QImage & image )
-void drawImage ( const QPoint & point, const QImage & image )
-void drawImage ( const QPointF & point, const QImage & image, const QRectF & source, Qt::ImageConversionFlags flags = Qt::AutoColor )
-void drawImage ( const QPoint & point, const QImage & image, const QRect & source, Qt::ImageConversionFlags flags = Qt::AutoColor )
-void drawImage ( const QRectF & rectangle, const QImage & image )
-void drawImage ( const QRect & rectangle, const QImage & image )
-void drawImage ( int x, int y, const QImage & image, int sx = 0, int sy = 0, int sw = -1, int sh = -1, Qt::ImageConversionFlags flags = Qt::AutoColor )
+void drawImage ( ... ){
+   QPainter * p = hbqt_par_QPainter( 1 );
+   if( p )
+   {
+      if( hb_pcount() >= 4 )
+      {
+         if( HB_ISNUM( 2 ) )
+         {
+            ( p )->drawImage( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QImage( 4 ), hb_parni( 5 ), hb_parni( 6 ), HB_ISNUM( 7 ) ? hb_parni( 7 ) : -1, HB_ISNUM( 8 ) ? hb_parni( 8 ) : -1, ( Qt::ImageConversionFlags ) ( HB_ISNUM( 9 ) ? hb_parni( 9 ) : Qt::AutoColor ) );
+         }
+         else
+         {
+            HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+
+            if( q->type == HBQT_TYPE_QRectF )
+            {
+               ( p )->drawImage( *hbqt_par_QRectF( 2 ), *hbqt_par_QImage( 3 ), *hbqt_par_QRectF( 4 ) );
+            }
+            else if( q->type == HBQT_TYPE_QRect )
+            {
+               ( p )->drawImage( *hbqt_par_QRect( 2 ), *hbqt_par_QImage( 3 ), *hbqt_par_QRect( 4 ) );
+            }
+            else if( q->type == HBQT_TYPE_QPointF )
+            {
+               ( p )->drawImage( *hbqt_par_QPointF( 2 ), *hbqt_par_QImage( 3 ), *hbqt_par_QRectF( 4 ) );
+            }
+            else if( q->type == HBQT_TYPE_QPoint )
+            {
+               ( p )->drawImage( *hbqt_par_QPoint( 2 ), *hbqt_par_QImage( 3 ), *hbqt_par_QRect( 4 ) );
+            }
+         }
+      }
+      else if( hb_pcount() == 3 )
+      {
+         HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+
+         if( q->type == HBQT_TYPE_QRectF )
+         {
+            ( p )->drawImage( *hbqt_par_QRectF( 2 ), *hbqt_par_QImage( 3 ) );
+         }
+         else if( q->type == HBQT_TYPE_QRect )
+         {
+            ( p )->drawImage( *hbqt_par_QRect( 2 ), *hbqt_par_QImage( 3 ) );
+         }
+         else if( q->type == HBQT_TYPE_QPointF )
+         {
+            ( p )->drawImage( *hbqt_par_QPointF( 2 ), *hbqt_par_QImage( 3 ) );
+         }
+         else if( q->type == HBQT_TYPE_QPoint )
+         {
+            ( p )->drawImage( *hbqt_par_QPoint( 2 ), *hbqt_par_QImage( 3 ) );
+         }
+      }
+   }
+}
+}
+//void drawImage ( const QRectF & target, const QImage & image, const QRectF & source, Qt::ImageConversionFlags flags = Qt::AutoColor )
+//void drawImage ( const QRect & target, const QImage & image, const QRect & source, Qt::ImageConversionFlags flags = Qt::AutoColor )
+//void drawImage ( const QPointF & point, const QImage & image )
+//void drawImage ( const QPoint & point, const QImage & image )
+//void drawImage ( const QPointF & point, const QImage & image, const QRectF & source, Qt::ImageConversionFlags flags = Qt::AutoColor )
+//void drawImage ( const QPoint & point, const QImage & image, const QRect & source, Qt::ImageConversionFlags flags = Qt::AutoColor )
+//void drawImage ( const QRectF & rectangle, const QImage & image )
+//void drawImage ( const QRect & rectangle, const QImage & image )
+//void drawImage ( int x, int y, const QImage & image, int sx = 0, int sy = 0, int sw = -1, int sh = -1, Qt::ImageConversionFlags flags = Qt::AutoColor )
 
 void drawLine ( ... ){
    QPainter * p = hbqt_par_QPainter( 1 );
@@ -158,7 +214,7 @@ void drawLine ( ... ){
          }
          break;
       case 2:
-         {  
+         {
             HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
 
             if( q->type == HBQT_TYPE_QLineF )
@@ -199,74 +255,78 @@ void drawPie ( const QRectF & rectangle, int startAngle, int spanAngle )
 void drawPie ( const QRect & rectangle, int startAngle, int spanAngle )
 void drawPie ( int x, int y, int width, int height, int startAngle, int spanAngle )
 
-void hbDrawPixmap ( ... ){
-   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   if( p && p->ph )
+void drawPixmap ( ... ){
+   QPainter * p = hbqt_par_QPainter( 1 );
+   if( p )
    {
       switch( hb_pcount() )
       {
       case 10:
-         hbqt_par_QPainter( 1 )->drawPixmap( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), *hbqt_par_QPixmap( 6 ), hb_parni( 7 ), hb_parni( 8 ), hb_parni( 9 ), hb_parni( 10 ) );
+         ( p )->drawPixmap( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), *hbqt_par_QPixmap( 6 ), hb_parni( 7 ), hb_parni( 8 ), hb_parni( 9 ), hb_parni( 10 ) );
          break;
       case 8:
-         hbqt_par_QPainter( 1 )->drawPixmap( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QPixmap( 4 ), hb_parni( 5 ), hb_parni( 6 ), hb_parni( 7 ), hb_parni( 8 ) );
+         ( p )->drawPixmap( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QPixmap( 4 ), hb_parni( 5 ), hb_parni( 6 ), hb_parni( 7 ), hb_parni( 8 ) );
          break;
       case 6:
-         hbqt_par_QPainter( 1 )->drawPixmap( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), *hbqt_par_QPixmap( 6 ) );
+         ( p )->drawPixmap( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), *hbqt_par_QPixmap( 6 ) );
          break;
       case 4:
          if( HB_ISNUM( 2 ) )
          {
-            hbqt_par_QPainter( 1 )->drawPixmap( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QPixmap( 4 ) );
-         } 
+            ( p )->drawPixmap( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QPixmap( 4 ) );
+         }
          else
          {
-            if( p->type == HBQT_TYPE_QRectF )
+            HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+
+            if( q->type == HBQT_TYPE_QRectF )
             {
-               hbqt_par_QPainter( 1 )->drawPixmap( *hbqt_par_QRectF( 2 ), *hbqt_par_QPixmap( 3 ), *hbqt_par_QRectF( 4 ) );
+               ( p )->drawPixmap( *hbqt_par_QRectF( 2 ), *hbqt_par_QPixmap( 3 ), *hbqt_par_QRectF( 4 ) );
             }
-            else if( p->type == HBQT_TYPE_QRect )
+            else if( q->type == HBQT_TYPE_QRect )
             {
-               hbqt_par_QPainter( 1 )->drawPixmap( *hbqt_par_QRect( 2 ), *hbqt_par_QPixmap( 3 ), *hbqt_par_QRect( 4 ) );
+               ( p )->drawPixmap( *hbqt_par_QRect( 2 ), *hbqt_par_QPixmap( 3 ), *hbqt_par_QRect( 4 ) );
             }
-            else if( p->type == HBQT_TYPE_QPointF )
+            else if( q->type == HBQT_TYPE_QPointF )
             {
-               hbqt_par_QPainter( 1 )->drawPixmap( *hbqt_par_QPointF( 2 ), *hbqt_par_QPixmap( 3 ), *hbqt_par_QRectF( 4 ) );
+               ( p )->drawPixmap( *hbqt_par_QPointF( 2 ), *hbqt_par_QPixmap( 3 ), *hbqt_par_QRectF( 4 ) );
             }
-            else if( p->type == HBQT_TYPE_QPoint )
+            else if( q->type == HBQT_TYPE_QPoint )
             {
-               hbqt_par_QPainter( 1 )->drawPixmap( *hbqt_par_QPoint( 2 ), *hbqt_par_QPixmap( 3 ), *hbqt_par_QRect( 4 ) );
+               ( p )->drawPixmap( *hbqt_par_QPoint( 2 ), *hbqt_par_QPixmap( 3 ), *hbqt_par_QRect( 4 ) );
             }
          }
          break;
       case 3:
-         if( p->type == HBQT_TYPE_QRect )
+         HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+
+         if( q->type == HBQT_TYPE_QRect )
          {
-            hbqt_par_QPainter( 1 )->drawPixmap( *hbqt_par_QRect( 2 ), *hbqt_par_QPixmap( 3 ) );
+            ( p )->drawPixmap( *hbqt_par_QRect( 2 ), *hbqt_par_QPixmap( 3 ) );
          }
-         else if( p->type == HBQT_TYPE_QPointF )
+         else if( q->type == HBQT_TYPE_QPointF )
          {
-            hbqt_par_QPainter( 1 )->drawPixmap( *hbqt_par_QPointF( 2 ), *hbqt_par_QPixmap( 3 ) );
+            ( p )->drawPixmap( *hbqt_par_QPointF( 2 ), *hbqt_par_QPixmap( 3 ) );
          }
-         else if( p->type == HBQT_TYPE_QPoint )
+         else if( q->type == HBQT_TYPE_QPoint )
          {
-            hbqt_par_QPainter( 1 )->drawPixmap( *hbqt_par_QPoint( 2 ), *hbqt_par_QPixmap( 3 ) );
+            ( p )->drawPixmap( *hbqt_par_QPoint( 2 ), *hbqt_par_QPixmap( 3 ) );
          }
          break;
       }
    }
 }
-void drawPixmap ( const QRectF & target, const QPixmap & pixmap, const QRectF & source )
-void drawPixmap ( const QRect & target, const QPixmap & pixmap, const QRect & source )
-void drawPixmap ( const QPointF & point, const QPixmap & pixmap, const QRectF & source )
-void drawPixmap ( const QPoint & point, const QPixmap & pixmap, const QRect & source )
-void drawPixmap ( const QPointF & point, const QPixmap & pixmap )
-void drawPixmap ( const QPoint & point, const QPixmap & pixmap )
-void drawPixmap ( int x, int y, const QPixmap & pixmap )
-void drawPixmap ( const QRect & rectangle, const QPixmap & pixmap )
-void drawPixmap ( int x, int y, int width, int height, const QPixmap & pixmap )
-void drawPixmap ( int x, int y, int w, int h, const QPixmap & pixmap, int sx, int sy, int sw, int sh )
-void drawPixmap ( int x, int y, const QPixmap & pixmap, int sx, int sy, int sw, int sh )
+//void drawPixmap ( const QRectF & target, const QPixmap & pixmap, const QRectF & source )
+//void drawPixmap ( const QRect & target, const QPixmap & pixmap, const QRect & source )
+//void drawPixmap ( const QPointF & point, const QPixmap & pixmap, const QRectF & source )
+//void drawPixmap ( const QPoint & point, const QPixmap & pixmap, const QRect & source )
+//void drawPixmap ( const QPointF & point, const QPixmap & pixmap )
+//void drawPixmap ( const QPoint & point, const QPixmap & pixmap )
+//void drawPixmap ( int x, int y, const QPixmap & pixmap )
+//void drawPixmap ( const QRect & rectangle, const QPixmap & pixmap )
+//void drawPixmap ( int x, int y, int width, int height, const QPixmap & pixmap )
+//void drawPixmap ( int x, int y, int w, int h, const QPixmap & pixmap, int sx, int sy, int sw, int sh )
+//void drawPixmap ( int x, int y, const QPixmap & pixmap, int sx, int sy, int sw, int sh )
 
 
 void drawPoint ( const QPointF & position )
@@ -301,7 +361,7 @@ void drawRoundedRect ( const QRectF & rect, qreal xRadius, qreal yRadius, Qt::Si
 void drawRoundedRect ( const QRect & rect, qreal xRadius, qreal yRadius, Qt::SizeMode mode = Qt::AbsoluteSize )
 void drawRoundedRect ( int x, int y, int w, int h, qreal xRadius, qreal yRadius, Qt::SizeMode mode = Qt::AbsoluteSize )
 
-void hbDrawText ( ... ){
+void drawText ( ... ){
    QPainter * p = hbqt_par_QPainter( 1 );
    if( p )
    {
@@ -310,7 +370,7 @@ void hbDrawText ( ... ){
       if( HB_ISNUM( 2 ) )
       {
          if( iP >= 7 )
-         { 
+         {
             ( p )->drawText( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ), hbqt_par_QString( 7 ), ( HB_ISPOINTER( 8 ) ? hbqt_par_QRect( 8 ) : 0 ) );
          }
          else if( iP == 4 )
@@ -348,13 +408,13 @@ void hbDrawText ( ... ){
       }
    }
 }
-void drawText ( const QPointF & position, const QString & text )
-void drawText ( const QPoint & position, const QString & text )
-void drawText ( const QRectF & rectangle, int flags, const QString & text, QRectF * boundingRect = 0 )
-void drawText ( const QRect & rectangle, int flags, const QString & text, QRect * boundingRect = 0 )
-void drawText ( int x, int y, const QString & text )
-void drawText ( int x, int y, int width, int height, int flags, const QString & text, QRect * boundingRect = 0 )
-void drawText ( const QRectF & rectangle, const QString & text, const QTextOption & option = QTextOption() )
+//void drawText ( const QPointF & position, const QString & text )
+//void drawText ( const QPoint & position, const QString & text )
+//void drawText ( const QRectF & rectangle, int flags, const QString & text, QRectF * boundingRect = 0 )
+//void drawText ( const QRect & rectangle, int flags, const QString & text, QRect * boundingRect = 0 )
+//void drawText ( int x, int y, const QString & text )
+//void drawText ( int x, int y, int width, int height, int flags, const QString & text, QRect * boundingRect = 0 )
+//void drawText ( const QRectF & rectangle, const QString & text, const QTextOption & option = QTextOption() )
 
 void drawTiledPixmap ( const QRectF & rectangle, const QPixmap & pixmap, const QPointF & position = QPointF() )
 void drawTiledPixmap ( const QRect & rectangle, const QPixmap & pixmap, const QPoint & position = QPoint() )

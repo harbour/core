@@ -617,9 +617,9 @@ METHOD IdeActions:buildMainMenu()
    hbide_menuAddSep( oSubMenu )
    oSubMenu:addItem( { ::getAction( "TB_Tools"            ), {|| oIde:execAction( "Tools"              ) } } )
    hbide_menuAddSep( oSubMenu )
-   #if 0
-   oSubMenu2 := hbide_buildCodecMenu( oIde, oSubMenu )
-   oSubMenu2:title := "~Encoding"
+   #if 1
+   oSubMenu2 := hbide_buildCDPMenu( oIde, oSubMenu ) //hbide_buildCodecMenu( oIde, oSubMenu )
+   oSubMenu2:title := "~CodePage"
    oSubMenu:addItem( { oSubMenu2, NIL } )
    #endif
    oMenuBar:addItem( { oSubMenu, NIL } )
@@ -905,5 +905,45 @@ FUNCTION hbide_mnuFindItem( oIde, cCaption )
    NEXT
 
    RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+#include "hbextcdp.ch"
+
+STATIC FUNCTION hbide_buildCDPMenu( oIde, oMenu )
+   LOCAL oSubMenu, cdp
+
+   oSubMenu := XbpMenu():new( oMenu ):create()
+
+   FOR EACH cdp IN get_list_of_real_codepages()
+      oSubMenu:addItem( { hb_cdpUniID( cdp ), get_cdp_block( oIde, hb_cdpUniID( cdp ) ) } )
+   NEXT
+
+   RETURN oSubMenu
+
+STATIC FUNCTION get_cdp_block( oIde, cCodePage )
+   RETURN {|| oIde:setCodec( cCodePage ) }
+
+STATIC FUNCTION get_list_of_real_codepages()
+   LOCAL s_uni, cdp
+
+   s_uni := { => }
+   FOR EACH cdp IN hb_cdpList()
+      s_uni[ hb_cdpUniID( cdp ) ] := cdp
+   NEXT
+
+   RETURN s_uni
+
+FUNCTION hbide_getCDPforID( cCodec )
+   LOCAL cdp
+
+   FOR EACH cdp IN hb_cdpList()
+      IF hb_cdpUniID( cdp ) == cCodec
+         cCodec := cdp
+         EXIT
+      ENDIF
+   NEXT
+
+   RETURN cCodec
 
 /*----------------------------------------------------------------------*/
