@@ -74,8 +74,7 @@ CREATE CLASS QBrush INHERIT HbQtObjectHandler FUNCTION HB_QBrush
    METHOD  color()
    METHOD  isOpaque()
    METHOD  matrix()
-   METHOD  setColor( pColor )
-   METHOD  setColor_1( nColor )
+   METHOD  setColor( ... )
    METHOD  setMatrix( pMatrix )
    METHOD  setStyle( nStyle )
    METHOD  setTexture( pPixmap )
@@ -110,12 +109,12 @@ METHOD QBrush:matrix()
    RETURN Qt_QBrush_matrix( ::pPtr )
 
 
-METHOD QBrush:setColor( pColor )
-   RETURN Qt_QBrush_setColor( ::pPtr, hbqt_ptr( pColor ) )
-
-
-METHOD QBrush:setColor_1( nColor )
-   RETURN Qt_QBrush_setColor_1( ::pPtr, nColor )
+METHOD QBrush:setColor( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QBrush_setColor( ::pPtr, ... )
 
 
 METHOD QBrush:setMatrix( pMatrix )

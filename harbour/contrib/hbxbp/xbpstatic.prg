@@ -407,7 +407,7 @@ METHOD XbpStatic:setCaption( xCaption, cDll )
 
          /* Harbour can also implement if icon be displayed scaled or proportionate
           */
-         oPixmap:pPtr := oIcon:pixmap_1( ::aSize[ 1 ], ::aSize[ 2 ] )
+         oPixmap:pPtr := oIcon:pixmap( ::aSize[ 1 ], ::aSize[ 2 ] )
          pPixmap      := oPixmap:scaled( ::aSize[ 1 ], ::aSize[ 2 ] )
 
          ::oWidget:setPixmap( pPixmap )

@@ -367,10 +367,10 @@ STATIC FUNCTION Build_Grid( oWnd, aPos, aSize )
    //
    oBrushBackItem0x0 := QBrush()
    oBrushBackItem0x0:setStyle( 1 )        // Solid Color
-   oBrushBackItem0x0:setColor_1( 10 )     // http://doc.qtsoftware.com/4.5/qt.html#GlobalColor-enum
+   oBrushBackItem0x0:setColor( 10 )     // http://doc.qtsoftware.com/4.5/qt.html#GlobalColor-enum
    //
    oBrushForeItem0x0 := QBrush()
-   oBrushForeItem0x0:setColor_1( 7 )
+   oBrushForeItem0x0:setColor( 7 )
    //
    oGridItem0x0 := QTableWidgetItem()
    oGridItem0x0:setBackground( oBrushBackItem0x0 )

@@ -58,7 +58,7 @@
 QObject  = no
 Inherits = QPaintDevice
 Type     = PlainObject
-New      = 
+New      =
 </CLASS>
 
 <DOC>
@@ -89,7 +89,22 @@ HB_FUNC( QT_QPIXMAP )
    }
    else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( new QPixmap( *hbqt_par_QPixmap( 1 ) ) );
+      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+      if( q )
+      {
+         if( q->type == HBQT_TYPE_QPixmap )
+         {
+            hb_retptr( new QPixmap( *hbqt_par_QPixmap( 1 ) ) );
+         }
+         if( q->type == HBQT_TYPE_QSize )
+         {
+            hb_retptr( new QPixmap( *hbqt_par_QSize( 1 ) ) );
+         }
+      }
+      else
+      {
+         hb_retptr( new QPixmap( *hbqt_par_QPixmap( 1 ) ) );
+      }
    }
    else if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
@@ -113,45 +128,133 @@ qint64 cacheKey () const
 #
 // QRgb * clut () const
 #
-QPixmap copy ( const QRect & rectangle = QRect() ) const
-QPixmap copy ( int x, int y, int width, int height ) const
+
+QPixmap copy ( ... ){
+   QPixmap * p = hbqt_par_QPixmap( 1 );
+   if( p )
+   {
+      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
+      {
+         hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->copy( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QRect( 2 ) : QRect() ) ) ), true ) );
+      }
+      else if( hb_pcount() == 5 && HB_ISNUM( 2 ) )
+      {
+         hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->copy( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ) ), true ) );
+      }
+      else
+      {
+         hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->copy( QRect() ) ), true ) );
+      }
+   }
+}
+//QPixmap copy ( const QRect & rectangle = QRect() ) const
+//QPixmap copy ( int x, int y, int width, int height ) const
+
 QBitmap createHeuristicMask ( bool clipTight = true ) const
-QBitmap createMaskFromColor ( const QColor & maskColor, Qt::MaskMode mode ) const
-QBitmap createMaskFromColor ( const QColor & maskColor ) const
+
+QBitmap createMaskFromColor ( ... ){
+   QPixmap * p = hbqt_par_QPixmap( 1 );
+   if( p )
+   {
+      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
+      {
+         hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap( ( p )->createMaskFromColor( *hbqt_par_QColor( 2 ) ) ), true ) );
+      }
+      else if( hb_pcount() == 3 && HB_ISPOINTER( 2 ) && HB_ISNUM( 3 ) )
+      {
+         hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap( ( p )->createMaskFromColor( *hbqt_par_QColor( 2 ), ( Qt::MaskMode ) hb_parni( 3 ) ) ), true ) );
+      }
+      else
+      {
+         ( p )->copy( QRect() );
+      }
+   }
+}
+//QBitmap createMaskFromColor ( const QColor & maskColor, Qt::MaskMode mode ) const
+//QBitmap createMaskFromColor ( const QColor & maskColor ) const
+
 int depth () const
 void detach ()
-void fill ( const QColor & color = Qt::white )
-void fill ( const QWidget * widget, const QPoint & offset )
-void fill ( const QWidget * widget, int x, int y )
-#
+
+void fill ( ... ){
+   QPixmap * p = hbqt_par_QPixmap( 1 );
+   if( p )
+   {
+      if( hb_pcount() == 4 && HB_ISPOINTER( 2 ) && HB_ISNUM( 3 ) )
+      {
+         ( p )->fill( hbqt_par_QWidget( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
+      }
+      else if( hb_pcount() == 3 && HB_ISPOINTER( 2 ) && HB_ISPOINTER( 3 ) )
+      {
+         ( p )->fill( hbqt_par_QWidget( 2 ), *hbqt_par_QPoint( 3 ) );
+      }
+      else
+      {
+         ( p )->fill( *hbqt_par_QColor( 2 ) );
+      }
+   }
+}
+//void fill ( const QColor & color = Qt::white )
+//void fill ( const QWidget * widget, const QPoint & offset )
+//void fill ( const QWidget * widget, int x, int y )
+
 // Qt::HANDLE handle () const
-#
+
 bool hasAlpha () const
 bool hasAlphaChannel () const
 int height () const
 bool isNull () const
 bool isQBitmap () const
 bool load ( const QString & fileName, const char * format = 0, Qt::ImageConversionFlags flags = Qt::AutoColor )
-#
+
 // bool loadFromData ( const uchar * data, uint len, const char * format = 0, Qt::ImageConversionFlags flags = Qt::AutoColor )
-#
+
 bool loadFromData ( const QByteArray & data, const char * format = 0, Qt::ImageConversionFlags flags = Qt::AutoColor )
 QBitmap mask () const
-#
-// int numCols () const
-#
-// const uchar * qwsBits () const
-#
-// int qwsBytesPerLine () const
-#
-QRect rect () const
-bool save ( const QString & fileName, const char * format = 0, int quality = -1 ) const
-bool save ( QIODevice * device, const char * format = 0, int quality = -1 ) const
 
-#   Swapped 
-QPixmap scaled ( int width, int height, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
-QPixmap scaled ( const QSize & size, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
-#   
+// int numCols () const
+// const uchar * qwsBits () const
+// int qwsBytesPerLine () const
+
+QRect rect () const
+
+bool save ( ... ){
+   QPixmap * p = hbqt_par_QPixmap( 1 );
+   if( p )
+   {
+      if( hb_pcount() >= 2 && HB_ISCHAR( 2 ) )
+      {
+         void * pText;
+         hb_retl( ( p )->save( hb_parstr_utf8( 2, &pText, NULL ), hbqt_par_char( 3 ), hb_parnidef( 4, -1 ) ) );
+         hb_strfree( pText );
+      }
+      else if( hb_pcount() >= 2 && HB_ISPOINTER( 2 ) )
+      {
+         hb_retl( ( p )->save( hbqt_par_QIODevice( 2 ), hbqt_par_char( 3 ), hb_parnidef( 4, -1 ) ) );
+      }
+   }
+}
+//bool save ( const QString & fileName, const char * format = 0, int quality = -1 ) const
+//bool save ( QIODevice * device, const char * format = 0, int quality = -1 ) const
+
+
+QPixmap scaled ( ... ){
+   QPixmap * p = hbqt_par_QPixmap( 1 );
+   if( p )
+   {
+      if( hb_pcount() >= 2 && HB_ISPOINTER( 2 ) )
+      {
+         hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->scaled( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNUM( 4 ) ? ( Qt::AspectRatioMode ) hb_parni( 4 ) : ( Qt::AspectRatioMode ) Qt::IgnoreAspectRatio ), ( HB_ISNUM( 5 ) ? ( Qt::TransformationMode ) hb_parni( 5 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ), true ) );
+      }
+      else if( hb_pcount() >= 3 && HB_ISNUM( 2 )  && HB_ISNUM( 3 ) )
+      {
+         hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->scaled( *hbqt_par_QSize( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::AspectRatioMode ) hb_parni( 3 ) : ( Qt::AspectRatioMode ) Qt::IgnoreAspectRatio ), ( HB_ISNUM( 4 ) ? ( Qt::TransformationMode ) hb_parni( 4 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ), true ) );
+      }
+   }
+}
+//QPixmap scaled ( int width, int height, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
+//QPixmap scaled ( const QSize & size, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
+
 
 QPixmap scaledToHeight ( int height, Qt::TransformationMode mode = Qt::FastTransformation ) const
 QPixmap scaledToWidth ( int width, Qt::TransformationMode mode = Qt::FastTransformation ) const
@@ -159,21 +262,53 @@ void setAlphaChannel ( const QPixmap & alphaChannel )
 void setMask ( const QBitmap & mask )
 QSize size () const
 QImage toImage () const
-#
-// CGImageRef toMacCGImageRef () const
-#
-//HBITMAP toWinHBITMAP ( HBitmapFormat format = NoAlpha ) const
-QPixmap transformed ( const QTransform & transform, Qt::TransformationMode mode = Qt::FastTransformation ) const
-QPixmap transformed ( const QMatrix & matrix, Qt::TransformationMode mode = Qt::FastTransformation ) const
-int width () const
 
+// CGImageRef toMacCGImageRef () const
+//HBITMAP toWinHBITMAP ( HBitmapFormat format = NoAlpha ) const
+
+QPixmap transformed ( ... ){
+   QPixmap * p = hbqt_par_QPixmap( 1 );
+   if( p )
+   {
+      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+
+      if( q->type == HBQT_TYPE_QTransform )
+      {
+         hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->transformed( *hbqt_par_QTransform( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::TransformationMode ) hb_parni( 3 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ), true ) );
+      }
+      else if( q->type == HBQT_TYPE_QMatrix )
+      {
+         hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->transformed( *hbqt_par_QMatrix( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::TransformationMode ) hb_parni( 3 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ), true ) );
+      }
+   }
+}
+//QPixmap transformed ( const QTransform & transform, Qt::TransformationMode mode = Qt::FastTransformation ) const
+//QPixmap transformed ( const QMatrix & matrix, Qt::TransformationMode mode = Qt::FastTransformation ) const
+
+int width () const
 int defaultDepth ()
 QPixmap fromImage ( const QImage & image, Qt::ImageConversionFlags flags = Qt::AutoColor )
 //QPixmap fromMacCGImageRef ( CGImageRef image )
 //QPixmap fromWinHBITMAP ( HBITMAP bitmap, HBitmapFormat format = NoAlpha )
 //QPixmap fromX11Pixmap ( Qt::HANDLE pixmap, ShareMode mode = ImplicitlyShared )
-QPixmap grabWidget ( QWidget * widget, const QRect & rectangle )
-QPixmap grabWidget ( QWidget * widget, int x = 0, int y = 0, int width = -1, int height = -1 )
+
+QPixmap grabWidget ( ... ){
+   QPixmap * p = hbqt_par_QPixmap( 1 );
+   if( p )
+   {
+      if( hb_pcount() == 3 && HB_ISPOINTER( 2 ) && HB_ISPOINTER( 3 ) )
+      {
+         hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->grabWidget( hbqt_par_QWidget( 2 ), *hbqt_par_QRect( 3 ) ) ), true ) );
+      }
+      else if( hb_pcount() >= 2 && HB_ISPOINTER( 2 ) )
+      {
+         hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->grabWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parnidef( 5, -1 ), hb_parnidef( 6, -1 ) ) ), true ) );
+      }
+   }
+}
+//QPixmap grabWidget ( QWidget * widget, const QRect & rectangle )
+//QPixmap grabWidget ( QWidget * widget, int x = 0, int y = 0, int width = -1, int height = -1 )
+
 //QPixmap grabWindow ( WId window, int x = 0, int y = 0, int width = -1, int height = -1 )
 QTransform trueMatrix ( const QTransform & matrix, int width, int height )
 QMatrix trueMatrix ( const QMatrix & m, int w, int h )

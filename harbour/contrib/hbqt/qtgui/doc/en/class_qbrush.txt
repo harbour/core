@@ -29,8 +29,7 @@
  *     :color()                                            -> pQColor
  *     :isOpaque()                                         -> lBool
  *     :matrix()                                           -> pQMatrix
- *     :setColor( pColor )                                 -> NIL
- *     :setColor_1( nColor )                               -> NIL
+ *     :setColor( ... )                                    -> NIL
  *     :setMatrix( pMatrix )                               -> NIL
  *     :setStyle( nStyle )                                 -> NIL
  *     :setTexture( pPixmap )                              -> NIL
@@ -44,17 +43,17 @@
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$
- *     oBrush := QBrush():new()
- *     oBrush := QBrush():new( pQBrush )
- *     oBrush := QBrush():new( nQt_GlobalColor )
- *     oBrush := QBrush():new( nQt_GlobalColor, nQt_BrushStyle ) 
- *     oBrush := QBrush():new( pQColor, nQt_BrushStyle )         
- *     oBrush := QBrush():new( pQColor, pQPixmap )
- *     oBrush := QBrush():new( nQt_GlobalColor, pQPixmap )
- *     oBrush := QBrush():new( "QPixmap"  , pQPixmap )
- *     oBrush := QBrush():new( "QImage"   , pQImage )
- *     oBrush := QBrush():new( "QGradient", pQGradient )
- *     oBrush := QBrush():new( "QColor"   , pQColor, [ nQt_BrushStyle = Qt_SolidPattern ] )
+ *     oBrush := QBrush()
+ *     oBrush := QBrush( pQBrush )
+ *     oBrush := QBrush( nQt_GlobalColor )
+ *     oBrush := QBrush( nQt_GlobalColor, nQt_BrushStyle )
+ *     oBrush := QBrush( pQColor, nQt_BrushStyle )
+ *     oBrush := QBrush( pQColor, pQPixmap )
+ *     oBrush := QBrush( nQt_GlobalColor, pQPixmap )
+ *     oBrush := QBrush( "QPixmap"  , pQPixmap )
+ *     oBrush := QBrush( "QImage"   , pQImage )
+ *     oBrush := QBrush( "QGradient", pQGradient )
+ *     oBrush := QBrush( "QColor"   , pQColor, [ nQt_BrushStyle = Qt_SolidPattern ] )
  * 
  *  $TESTS$
  * 

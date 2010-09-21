@@ -175,7 +175,7 @@ METHOD HbqToolbar:execEvent( cEvent, p, p1 )
          ::qMime:setData( "application/x-toolbaricon", ::qByte )
          ::qMime:setHtml( ::hItems[ p1 ]:objectName() )
 
-         ::qPix  := QPixmap():from( QIcon():from( ::hItems[ p1 ]:icon ):pixmap_1( 16,16 ) )
+         ::qPix  := QPixmap( QIcon( ::hItems[ p1 ]:icon ):pixmap( 16,16 ) )
 
          ::qDrag := QDrag( hbide_setIde():oDlg:oWidget )
          ::qDrag:setMimeData( ::qMime )

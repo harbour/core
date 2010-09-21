@@ -67,8 +67,7 @@
  *     :setNamedColor( cName )                             -> NIL
  *     :setRed( nRed )                                     -> NIL
  *     :setRedF( nRed )                                    -> NIL
- *     :setRgb( nRgb )                                     -> NIL
- *     :setRgb_1( nR, nG, nB, nA )                         -> NIL
+ *     :setRgb( ... )                                      -> NIL
  *     :setRgba( nRgba )                                   -> NIL
  *     :setRgbF( nR, nG, nB, nA )                          -> NIL
  *     :spec()                                             -> nSpec

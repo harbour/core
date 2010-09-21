@@ -28,13 +28,10 @@
  *  $METHODS$
  *     :cacheKey()                                         -> nQint64
  *     :createHeuristicMask( lClipTight )                  -> pQBitmap
- *     :createMaskFromColor( pMaskColor, nMode )           -> pQBitmap
- *     :createMaskFromColor_1( pMaskColor )                -> pQBitmap
+ *     :createMaskFromColor( ... )                         -> pQBitmap
  *     :depth()                                            -> nInt
  *     :detach()                                           -> NIL
- *     :fill( pColor )                                     -> NIL
- *     :fill_1( pWidget, pOffset )                         -> NIL
- *     :fill_2( pWidget, nX, nY )                          -> NIL
+ *     :fill( ... )                                        -> NIL
  *     :hasAlpha()                                         -> lBool
  *     :hasAlphaChannel()                                  -> lBool
  *     :height()                                           -> nInt
@@ -44,8 +41,7 @@
  *     :loadFromData( pData, pFormat, nFlags )             -> lBool
  *     :mask()                                             -> pQBitmap
  *     :rect()                                             -> pQRect
- *     :save( cFileName, pFormat, nQuality )               -> lBool
- *     :save_1( pDevice, pFormat, nQuality )               -> lBool
+ *     :save( ... )                                        -> lBool
  *     :setAlphaChannel( pAlphaChannel )                   -> NIL
  *     :setMask( pMask )                                   -> NIL
  *     :size()                                             -> pQSize

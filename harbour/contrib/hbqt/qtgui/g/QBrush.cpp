@@ -66,6 +66,21 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  Constructed[ 13/17 [ 76.47% ] ]
+ *
+ *  *** Unconvered Prototypes ***
+ *  -----------------------------
+ *
+ *  }
+ *
+ *  *** Commented out protos which construct fine but do not compile ***
+ *
+ *  //const QGradient * gradient () const
+ *  //void setColor ( const QColor & color )
+ *  //void setColor ( Qt::GlobalColor color )
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QBrush>
@@ -145,27 +160,54 @@ HB_FUNC( QT_QBRUSH )
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj =  new QBrush( *hbqt_par_QBrush( 1 ) ) ;
+      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+      if( q )
+      {
+         if( q->type == HBQT_TYPE_QBrush )
+         {
+            pObj = new QBrush( *hbqt_par_QBrush( 1 ) ) ;
+         }
+         if( q->type == HBQT_TYPE_QPixmap )
+         {
+            pObj = new QBrush( *hbqt_par_QPixmap( 1 ) ) ;
+         }
+         if( q->type == HBQT_TYPE_QImage )
+         {
+            pObj = new QBrush( *hbqt_par_QImage( 1 ) ) ;
+         }
+         if( q->type == HBQT_TYPE_QGradient )
+         {
+            pObj = new QBrush( *hbqt_par_QGradient( 1 ) ) ;
+         }
+         if( q->type == HBQT_TYPE_QColor )
+         {
+            pObj = new QBrush( *hbqt_par_QColor( 1 ), Qt::SolidPattern ) ;
+         }
+      }
+      else
+      {
+         pObj = new QBrush( *hbqt_par_QBrush( 1 ) ) ;
+      }
    }
    else if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
    {
-      pObj =  new QBrush( ( Qt::GlobalColor ) hb_parni( 1 ), Qt::SolidPattern ) ;
+      pObj = new QBrush( ( Qt::GlobalColor ) hb_parni( 1 ), Qt::SolidPattern ) ;
    }
    else if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
-      pObj =  new QBrush( ( Qt::GlobalColor ) hb_parni( 1 ), ( Qt::BrushStyle ) hb_parni( 2 ) ) ;
+      pObj = new QBrush( ( Qt::GlobalColor ) hb_parni( 1 ), ( Qt::BrushStyle ) hb_parni( 2 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) )
    {
-      pObj =  new QBrush( *hbqt_par_QColor( 1 ), ( Qt::BrushStyle ) hb_parni( 2 ) ) ;
+      pObj = new QBrush( *hbqt_par_QColor( 1 ), ( Qt::BrushStyle ) hb_parni( 2 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
    {
-      pObj =  new QBrush( *hbqt_par_QColor( 1 ), *hbqt_par_QPixmap( 2 ) ) ;
+      pObj = new QBrush( *hbqt_par_QColor( 1 ), *hbqt_par_QPixmap( 2 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISPOINTER( 2 ) )
    {
-      pObj =  new QBrush( ( Qt::GlobalColor ) hb_parni( 1 ), *hbqt_par_QPixmap( 2 ) ) ;
+      pObj = new QBrush( ( Qt::GlobalColor ) hb_parni( 1 ), *hbqt_par_QPixmap( 2 ) ) ;
    }
    else if( hb_pcount() >= 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
    {
@@ -173,28 +215,28 @@ HB_FUNC( QT_QBRUSH )
 
       if(      objName == ( QString ) "QPixmap" )
       {
-         pObj =  new QBrush( *hbqt_par_QPixmap( 2 ) ) ;
+         pObj = new QBrush( *hbqt_par_QPixmap( 2 ) ) ;
       }
       else if( objName == ( QString ) "QImage" )
       {
-         pObj =  new QBrush( *hbqt_par_QImage( 2 ) ) ;
+         pObj = new QBrush( *hbqt_par_QImage( 2 ) ) ;
       }
       else if( objName == ( QString ) "QGradient" )
       {
-         pObj =  new QBrush( *hbqt_par_QGradient( 2 ) ) ;
+         pObj = new QBrush( *hbqt_par_QGradient( 2 ) ) ;
       }
       else if( objName == ( QString ) "QColor" )
       {
-         pObj =  new QBrush( *hbqt_par_QColor( 2 ), HB_ISNUM( 3 ) ? ( Qt::BrushStyle ) hb_parni( 3 ) : Qt::SolidPattern ) ;
+         pObj = new QBrush( *hbqt_par_QColor( 2 ), HB_ISNUM( 3 ) ? ( Qt::BrushStyle ) hb_parni( 3 ) : Qt::SolidPattern ) ;
       }
       else
       {
-         pObj =  new QBrush() ;
+         pObj = new QBrush() ;
       }
    }
    else
    {
-      pObj =  new QBrush() ;
+      pObj = new QBrush() ;
    }
 
    hb_retptrGC( hbqt_gcAllocate_QBrush( ( void * ) pObj, true ) );
@@ -237,26 +279,21 @@ HB_FUNC( QT_QBRUSH_MATRIX )
 }
 
 /*
- * void setColor ( const QColor & color )
+ * void setColor ( ... )
  */
 HB_FUNC( QT_QBRUSH_SETCOLOR )
 {
    QBrush * p = hbqt_par_QBrush( 1 );
    if( p )
    {
-      ( p )->setColor( *hbqt_par_QColor( 2 ) );
-   }
-}
-
-/*
- * void setColor ( Qt::GlobalColor color )
- */
-HB_FUNC( QT_QBRUSH_SETCOLOR_1 )
-{
-   QBrush * p = hbqt_par_QBrush( 1 );
-   if( p )
-   {
-      ( p )->setColor( ( Qt::GlobalColor ) hb_parni( 2 ) );
+      if( HB_ISPOINTER( 2 ) )
+      {
+         ( p )->setColor( *hbqt_par_QColor( 2 ) );
+      }
+      else if( HB_ISNUM( 2 ) )
+      {
+         ( p )->setColor( ( Qt::GlobalColor ) hb_parni( 2 ) );
+      }
    }
 }
 

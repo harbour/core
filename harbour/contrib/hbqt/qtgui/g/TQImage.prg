@@ -79,8 +79,7 @@ CREATE CLASS QImage INHERIT HbQtObjectHandler FUNCTION HB_QImage
    METHOD  cacheKey()
    METHOD  color( nI )
    METHOD  convertToFormat( nFormat, nFlags )
-   METHOD  copy( pRectangle )
-   METHOD  copy_1( nX, nY, nWidth, nHeight )
+   METHOD  copy( ... )
    METHOD  createAlphaMask( nFlags )
    METHOD  createHeuristicMask( lClipTight )
    METHOD  createMaskFromColor( nColor, nMode )
@@ -94,23 +93,18 @@ CREATE CLASS QImage INHERIT HbQtObjectHandler FUNCTION HB_QImage
    METHOD  invertPixels( nMode )
    METHOD  isGrayscale()
    METHOD  isNull()
-   METHOD  load( cFileName, pFormat )
-   METHOD  load_1( pDevice, pFormat )
+   METHOD  load( ... )
    METHOD  loadFromData( pData, pFormat )
    METHOD  mirrored( lHorizontal, lVertical )
    METHOD  numBytes()
    METHOD  numColors()
    METHOD  offset()
-   METHOD  pixel( pPosition )
-   METHOD  pixel_1( nX, nY )
-   METHOD  pixelIndex( pPosition )
-   METHOD  pixelIndex_1( nX, nY )
+   METHOD  pixel( ... )
+   METHOD  pixelIndex( ... )
    METHOD  rect()
    METHOD  rgbSwapped()
-   METHOD  save( cFileName, pFormat, nQuality )
-   METHOD  save_1( pDevice, pFormat, nQuality )
-   METHOD  scaled( pSize, nAspectRatioMode, nTransformMode )
-   METHOD  scaled_1( nWidth, nHeight, nAspectRatioMode, nTransformMode )
+   METHOD  save( ... )
+   METHOD  scaled( ... )
    METHOD  scaledToHeight( nHeight, nMode )
    METHOD  scaledToWidth( nWidth, nMode )
    METHOD  scanLine( nI )
@@ -120,16 +114,13 @@ CREATE CLASS QImage INHERIT HbQtObjectHandler FUNCTION HB_QImage
    METHOD  setDotsPerMeterY( nY )
    METHOD  setNumColors( nNumColors )
    METHOD  setOffset( pOffset )
-   METHOD  setPixel( pPosition, nIndex_or_rgb )
-   METHOD  setPixel_1( nX, nY, nIndex_or_rgb )
+   METHOD  setPixel( ... )
    METHOD  setText( cKey, cText )
    METHOD  size()
    METHOD  text( cKey )
    METHOD  textKeys()
-   METHOD  transformed( pMatrix, nMode )
-   METHOD  transformed_1( pMatrix, nMode )
-   METHOD  valid( pPos )
-   METHOD  valid_1( nX, nY )
+   METHOD  transformed( ... )
+   METHOD  valid( ... )
    METHOD  width()
 
    ENDCLASS
@@ -176,12 +167,12 @@ METHOD QImage:convertToFormat( nFormat, nFlags )
    RETURN Qt_QImage_convertToFormat( ::pPtr, nFormat, nFlags )
 
 
-METHOD QImage:copy( pRectangle )
-   RETURN Qt_QImage_copy( ::pPtr, hbqt_ptr( pRectangle ) )
-
-
-METHOD QImage:copy_1( nX, nY, nWidth, nHeight )
-   RETURN Qt_QImage_copy_1( ::pPtr, nX, nY, nWidth, nHeight )
+METHOD QImage:copy( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QImage_copy( ::pPtr, ... )
 
 
 METHOD QImage:createAlphaMask( nFlags )
@@ -236,12 +227,12 @@ METHOD QImage:isNull()
    RETURN Qt_QImage_isNull( ::pPtr )
 
 
-METHOD QImage:load( cFileName, pFormat )
-   RETURN Qt_QImage_load( ::pPtr, cFileName, hbqt_ptr( pFormat ) )
-
-
-METHOD QImage:load_1( pDevice, pFormat )
-   RETURN Qt_QImage_load_1( ::pPtr, hbqt_ptr( pDevice ), hbqt_ptr( pFormat ) )
+METHOD QImage:load( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QImage_load( ::pPtr, ... )
 
 
 METHOD QImage:loadFromData( pData, pFormat )
@@ -264,20 +255,20 @@ METHOD QImage:offset()
    RETURN Qt_QImage_offset( ::pPtr )
 
 
-METHOD QImage:pixel( pPosition )
-   RETURN Qt_QImage_pixel( ::pPtr, hbqt_ptr( pPosition ) )
+METHOD QImage:pixel( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QImage_pixel( ::pPtr, ... )
 
 
-METHOD QImage:pixel_1( nX, nY )
-   RETURN Qt_QImage_pixel_1( ::pPtr, nX, nY )
-
-
-METHOD QImage:pixelIndex( pPosition )
-   RETURN Qt_QImage_pixelIndex( ::pPtr, hbqt_ptr( pPosition ) )
-
-
-METHOD QImage:pixelIndex_1( nX, nY )
-   RETURN Qt_QImage_pixelIndex_1( ::pPtr, nX, nY )
+METHOD QImage:pixelIndex( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QImage_pixelIndex( ::pPtr, ... )
 
 
 METHOD QImage:rect()
@@ -288,20 +279,20 @@ METHOD QImage:rgbSwapped()
    RETURN Qt_QImage_rgbSwapped( ::pPtr )
 
 
-METHOD QImage:save( cFileName, pFormat, nQuality )
-   RETURN Qt_QImage_save( ::pPtr, cFileName, hbqt_ptr( pFormat ), nQuality )
+METHOD QImage:save( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QImage_save( ::pPtr, ... )
 
 
-METHOD QImage:save_1( pDevice, pFormat, nQuality )
-   RETURN Qt_QImage_save_1( ::pPtr, hbqt_ptr( pDevice ), hbqt_ptr( pFormat ), nQuality )
-
-
-METHOD QImage:scaled( pSize, nAspectRatioMode, nTransformMode )
-   RETURN Qt_QImage_scaled( ::pPtr, hbqt_ptr( pSize ), nAspectRatioMode, nTransformMode )
-
-
-METHOD QImage:scaled_1( nWidth, nHeight, nAspectRatioMode, nTransformMode )
-   RETURN Qt_QImage_scaled_1( ::pPtr, nWidth, nHeight, nAspectRatioMode, nTransformMode )
+METHOD QImage:scaled( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QImage_scaled( ::pPtr, ... )
 
 
 METHOD QImage:scaledToHeight( nHeight, nMode )
@@ -340,12 +331,12 @@ METHOD QImage:setOffset( pOffset )
    RETURN Qt_QImage_setOffset( ::pPtr, hbqt_ptr( pOffset ) )
 
 
-METHOD QImage:setPixel( pPosition, nIndex_or_rgb )
-   RETURN Qt_QImage_setPixel( ::pPtr, hbqt_ptr( pPosition ), nIndex_or_rgb )
-
-
-METHOD QImage:setPixel_1( nX, nY, nIndex_or_rgb )
-   RETURN Qt_QImage_setPixel_1( ::pPtr, nX, nY, nIndex_or_rgb )
+METHOD QImage:setPixel( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QImage_setPixel( ::pPtr, ... )
 
 
 METHOD QImage:setText( cKey, cText )
@@ -364,20 +355,20 @@ METHOD QImage:textKeys()
    RETURN Qt_QImage_textKeys( ::pPtr )
 
 
-METHOD QImage:transformed( pMatrix, nMode )
-   RETURN Qt_QImage_transformed( ::pPtr, hbqt_ptr( pMatrix ), nMode )
+METHOD QImage:transformed( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QImage_transformed( ::pPtr, ... )
 
 
-METHOD QImage:transformed_1( pMatrix, nMode )
-   RETURN Qt_QImage_transformed_1( ::pPtr, hbqt_ptr( pMatrix ), nMode )
-
-
-METHOD QImage:valid( pPos )
-   RETURN Qt_QImage_valid( ::pPtr, hbqt_ptr( pPos ) )
-
-
-METHOD QImage:valid_1( nX, nY )
-   RETURN Qt_QImage_valid_1( ::pPtr, nX, nY )
+METHOD QImage:valid( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QImage_valid( ::pPtr, ... )
 
 
 METHOD QImage:width()

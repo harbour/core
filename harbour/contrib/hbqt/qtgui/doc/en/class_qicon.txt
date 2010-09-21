@@ -32,11 +32,8 @@
  *     :availableSizes( nMode, nState )                    -> pQList<QSize>
  *     :cacheKey()                                         -> nQint64
  *     :isNull()                                           -> lBool
- *     :paint( pPainter, pRect, nAlignment, nMode, nState )  -> NIL
- *     :paint_1( pPainter, nX, nY, nW, nH, nAlignment, nMode, nState )  -> NIL
- *     :pixmap( pSize, nMode, nState )                     -> pQPixmap
- *     :pixmap_1( nW, nH, nMode, nState )                  -> pQPixmap
- *     :pixmap_2( nExtent, nMode, nState )                 -> pQPixmap
+ *     :paint( ... )                                       -> NIL
+ *     :pixmap( ... )                                      -> pQPixmap
  * 
  *  $DESCRIPTION$
  * 

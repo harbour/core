@@ -115,8 +115,7 @@ CREATE CLASS QColor INHERIT HbQtObjectHandler FUNCTION HB_QColor
    METHOD  setNamedColor( cName )
    METHOD  setRed( nRed )
    METHOD  setRedF( nRed )
-   METHOD  setRgb( nRgb )
-   METHOD  setRgb_1( nR, nG, nB, nA )
+   METHOD  setRgb( ... )
    METHOD  setRgba( nRgba )
    METHOD  setRgbF( nR, nG, nB, nA )
    METHOD  spec()
@@ -132,8 +131,7 @@ CREATE CLASS QColor INHERIT HbQtObjectHandler FUNCTION HB_QColor
    METHOD  fromCmykF( nC, nM, nY, nK, nA )
    METHOD  fromHsv( nH, nS, nV, nA )
    METHOD  fromHsvF( nH, nS, nV, nA )
-   METHOD  fromRgb( nRgb )
-   METHOD  fromRgb_1( nR, nG, nB, nA )
+   METHOD  fromRgb( ... )
    METHOD  fromRgbF( nR, nG, nB, nA )
    METHOD  fromRgba( nRgba )
 
@@ -325,12 +323,12 @@ METHOD QColor:setRedF( nRed )
    RETURN Qt_QColor_setRedF( ::pPtr, nRed )
 
 
-METHOD QColor:setRgb( nRgb )
-   RETURN Qt_QColor_setRgb( ::pPtr, nRgb )
-
-
-METHOD QColor:setRgb_1( nR, nG, nB, nA )
-   RETURN Qt_QColor_setRgb_1( ::pPtr, nR, nG, nB, nA )
+METHOD QColor:setRgb( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QColor_setRgb( ::pPtr, ... )
 
 
 METHOD QColor:setRgba( nRgba )
@@ -393,12 +391,12 @@ METHOD QColor:fromHsvF( nH, nS, nV, nA )
    RETURN Qt_QColor_fromHsvF( ::pPtr, nH, nS, nV, nA )
 
 
-METHOD QColor:fromRgb( nRgb )
-   RETURN Qt_QColor_fromRgb( ::pPtr, nRgb )
-
-
-METHOD QColor:fromRgb_1( nR, nG, nB, nA )
-   RETURN Qt_QColor_fromRgb_1( ::pPtr, nR, nG, nB, nA )
+METHOD QColor:fromRgb( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QColor_fromRgb( ::pPtr, ... )
 
 
 METHOD QColor:fromRgbF( nR, nG, nB, nA )

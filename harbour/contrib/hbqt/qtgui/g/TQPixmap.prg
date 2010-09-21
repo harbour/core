@@ -73,16 +73,12 @@ CREATE CLASS QPixmap INHERIT HbQtObjectHandler, HB_QPaintDevice FUNCTION HB_QPix
 
    METHOD  alphaChannel()
    METHOD  cacheKey()
-   METHOD  copy( pRectangle )
-   METHOD  copy_1( nX, nY, nWidth, nHeight )
+   METHOD  copy( ... )
    METHOD  createHeuristicMask( lClipTight )
-   METHOD  createMaskFromColor( pMaskColor, nMode )
-   METHOD  createMaskFromColor_1( pMaskColor )
+   METHOD  createMaskFromColor( ... )
    METHOD  depth()
    METHOD  detach()
-   METHOD  fill( pColor )
-   METHOD  fill_1( pWidget, pOffset )
-   METHOD  fill_2( pWidget, nX, nY )
+   METHOD  fill( ... )
    METHOD  hasAlpha()
    METHOD  hasAlphaChannel()
    METHOD  height()
@@ -92,23 +88,19 @@ CREATE CLASS QPixmap INHERIT HbQtObjectHandler, HB_QPaintDevice FUNCTION HB_QPix
    METHOD  loadFromData( pData, pFormat, nFlags )
    METHOD  mask()
    METHOD  rect()
-   METHOD  save( cFileName, pFormat, nQuality )
-   METHOD  save_1( pDevice, pFormat, nQuality )
-   METHOD  scaled( nWidth, nHeight, nAspectRatioMode, nTransformMode )
-   METHOD  scaled_1( pSize, nAspectRatioMode, nTransformMode )
+   METHOD  save( ... )
+   METHOD  scaled( ... )
    METHOD  scaledToHeight( nHeight, nMode )
    METHOD  scaledToWidth( nWidth, nMode )
    METHOD  setAlphaChannel( pAlphaChannel )
    METHOD  setMask( pMask )
    METHOD  size()
    METHOD  toImage()
-   METHOD  transformed( pTransform, nMode )
-   METHOD  transformed_1( pMatrix, nMode )
+   METHOD  transformed( ... )
    METHOD  width()
    METHOD  defaultDepth()
    METHOD  fromImage( pImage, nFlags )
-   METHOD  grabWidget( pWidget, pRectangle )
-   METHOD  grabWidget_1( pWidget, nX, nY, nWidth, nHeight )
+   METHOD  grabWidget( ... )
    METHOD  trueMatrix( pMatrix, nWidth, nHeight )
    METHOD  trueMatrix_1( pM, nW, nH )
 
@@ -132,24 +124,24 @@ METHOD QPixmap:cacheKey()
    RETURN Qt_QPixmap_cacheKey( ::pPtr )
 
 
-METHOD QPixmap:copy( pRectangle )
-   RETURN Qt_QPixmap_copy( ::pPtr, hbqt_ptr( pRectangle ) )
-
-
-METHOD QPixmap:copy_1( nX, nY, nWidth, nHeight )
-   RETURN Qt_QPixmap_copy_1( ::pPtr, nX, nY, nWidth, nHeight )
+METHOD QPixmap:copy( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPixmap_copy( ::pPtr, ... )
 
 
 METHOD QPixmap:createHeuristicMask( lClipTight )
    RETURN Qt_QPixmap_createHeuristicMask( ::pPtr, lClipTight )
 
 
-METHOD QPixmap:createMaskFromColor( pMaskColor, nMode )
-   RETURN Qt_QPixmap_createMaskFromColor( ::pPtr, hbqt_ptr( pMaskColor ), nMode )
-
-
-METHOD QPixmap:createMaskFromColor_1( pMaskColor )
-   RETURN Qt_QPixmap_createMaskFromColor_1( ::pPtr, hbqt_ptr( pMaskColor ) )
+METHOD QPixmap:createMaskFromColor( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPixmap_createMaskFromColor( ::pPtr, ... )
 
 
 METHOD QPixmap:depth()
@@ -160,16 +152,12 @@ METHOD QPixmap:detach()
    RETURN Qt_QPixmap_detach( ::pPtr )
 
 
-METHOD QPixmap:fill( pColor )
-   RETURN Qt_QPixmap_fill( ::pPtr, hbqt_ptr( pColor ) )
-
-
-METHOD QPixmap:fill_1( pWidget, pOffset )
-   RETURN Qt_QPixmap_fill_1( ::pPtr, hbqt_ptr( pWidget ), hbqt_ptr( pOffset ) )
-
-
-METHOD QPixmap:fill_2( pWidget, nX, nY )
-   RETURN Qt_QPixmap_fill_2( ::pPtr, hbqt_ptr( pWidget ), nX, nY )
+METHOD QPixmap:fill( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPixmap_fill( ::pPtr, ... )
 
 
 METHOD QPixmap:hasAlpha()
@@ -208,20 +196,20 @@ METHOD QPixmap:rect()
    RETURN Qt_QPixmap_rect( ::pPtr )
 
 
-METHOD QPixmap:save( cFileName, pFormat, nQuality )
-   RETURN Qt_QPixmap_save( ::pPtr, cFileName, hbqt_ptr( pFormat ), nQuality )
+METHOD QPixmap:save( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPixmap_save( ::pPtr, ... )
 
 
-METHOD QPixmap:save_1( pDevice, pFormat, nQuality )
-   RETURN Qt_QPixmap_save_1( ::pPtr, hbqt_ptr( pDevice ), hbqt_ptr( pFormat ), nQuality )
-
-
-METHOD QPixmap:scaled( nWidth, nHeight, nAspectRatioMode, nTransformMode )
-   RETURN Qt_QPixmap_scaled( ::pPtr, nWidth, nHeight, nAspectRatioMode, nTransformMode )
-
-
-METHOD QPixmap:scaled_1( pSize, nAspectRatioMode, nTransformMode )
-   RETURN Qt_QPixmap_scaled_1( ::pPtr, hbqt_ptr( pSize ), nAspectRatioMode, nTransformMode )
+METHOD QPixmap:scaled( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPixmap_scaled( ::pPtr, ... )
 
 
 METHOD QPixmap:scaledToHeight( nHeight, nMode )
@@ -248,12 +236,12 @@ METHOD QPixmap:toImage()
    RETURN Qt_QPixmap_toImage( ::pPtr )
 
 
-METHOD QPixmap:transformed( pTransform, nMode )
-   RETURN Qt_QPixmap_transformed( ::pPtr, hbqt_ptr( pTransform ), nMode )
-
-
-METHOD QPixmap:transformed_1( pMatrix, nMode )
-   RETURN Qt_QPixmap_transformed_1( ::pPtr, hbqt_ptr( pMatrix ), nMode )
+METHOD QPixmap:transformed( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPixmap_transformed( ::pPtr, ... )
 
 
 METHOD QPixmap:width()
@@ -268,12 +256,12 @@ METHOD QPixmap:fromImage( pImage, nFlags )
    RETURN Qt_QPixmap_fromImage( ::pPtr, hbqt_ptr( pImage ), nFlags )
 
 
-METHOD QPixmap:grabWidget( pWidget, pRectangle )
-   RETURN Qt_QPixmap_grabWidget( ::pPtr, hbqt_ptr( pWidget ), hbqt_ptr( pRectangle ) )
-
-
-METHOD QPixmap:grabWidget_1( pWidget, nX, nY, nWidth, nHeight )
-   RETURN Qt_QPixmap_grabWidget_1( ::pPtr, hbqt_ptr( pWidget ), nX, nY, nWidth, nHeight )
+METHOD QPixmap:grabWidget( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QPixmap_grabWidget( ::pPtr, ... )
 
 
 METHOD QPixmap:trueMatrix( pMatrix, nWidth, nHeight )

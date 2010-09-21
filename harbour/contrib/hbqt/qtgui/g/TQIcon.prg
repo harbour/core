@@ -77,11 +77,8 @@ CREATE CLASS QIcon INHERIT HbQtObjectHandler FUNCTION HB_QIcon
    METHOD  availableSizes( nMode, nState )
    METHOD  cacheKey()
    METHOD  isNull()
-   METHOD  paint( pPainter, pRect, nAlignment, nMode, nState )
-   METHOD  paint_1( pPainter, nX, nY, nW, nH, nAlignment, nMode, nState )
-   METHOD  pixmap( pSize, nMode, nState )
-   METHOD  pixmap_1( nW, nH, nMode, nState )
-   METHOD  pixmap_2( nExtent, nMode, nState )
+   METHOD  paint( ... )
+   METHOD  pixmap( ... )
 
    ENDCLASS
 
@@ -119,22 +116,18 @@ METHOD QIcon:isNull()
    RETURN Qt_QIcon_isNull( ::pPtr )
 
 
-METHOD QIcon:paint( pPainter, pRect, nAlignment, nMode, nState )
-   RETURN Qt_QIcon_paint( ::pPtr, hbqt_ptr( pPainter ), hbqt_ptr( pRect ), nAlignment, nMode, nState )
+METHOD QIcon:paint( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QIcon_paint( ::pPtr, ... )
 
 
-METHOD QIcon:paint_1( pPainter, nX, nY, nW, nH, nAlignment, nMode, nState )
-   RETURN Qt_QIcon_paint_1( ::pPtr, hbqt_ptr( pPainter ), nX, nY, nW, nH, nAlignment, nMode, nState )
-
-
-METHOD QIcon:pixmap( pSize, nMode, nState )
-   RETURN Qt_QIcon_pixmap( ::pPtr, hbqt_ptr( pSize ), nMode, nState )
-
-
-METHOD QIcon:pixmap_1( nW, nH, nMode, nState )
-   RETURN Qt_QIcon_pixmap_1( ::pPtr, nW, nH, nMode, nState )
-
-
-METHOD QIcon:pixmap_2( nExtent, nMode, nState )
-   RETURN Qt_QIcon_pixmap_2( ::pPtr, nExtent, nMode, nState )
+METHOD QIcon:pixmap( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QIcon_pixmap( ::pPtr, ... )
 

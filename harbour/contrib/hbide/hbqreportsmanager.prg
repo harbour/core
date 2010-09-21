@@ -537,7 +537,7 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
 
       IF qRC:contains( qEvent:pos() )
          qAct := QAction():from( ::pAct )
-         qIcon := QIcon():from( qAct:icon() )
+         qIcon := QIcon( qAct:icon() )
 
          ::qByte := QByteArray( qAct:text() )
 
@@ -545,7 +545,7 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
          ::qMime:setData( "application/x-menuitem", ::qByte )
          ::qMime:setHtml( qAct:text() )
 
-         ::qPix  := QPixmap():from( qIcon:pixmap_1( 16,16 ) )
+         ::qPix  := QPixmap( qIcon:pixmap( 16,16 ) )
 
          ::qDrag := QDrag( hbide_setIde():oDlg:oWidget )
          ::qDrag:setMimeData( ::qMime )
@@ -2458,8 +2458,8 @@ METHOD HqrGraphicsItem:drawImage( qPainter, qRect )
       textH = QFontMetricsF():from( qPainter:font() ):height()
    ENDIF
 
-   qPix  := QPixmap():from( ::pixmap() )
-   image := QImage():from( qPix:toImage() )
+   qPix  := QPixmap( ::pixmap() )
+   image := QImage( qPix:toImage() )
 
    IF image:isNull()
       qPainter:drawRect( qRect )
@@ -2470,10 +2470,10 @@ METHOD HqrGraphicsItem:drawImage( qPainter, qRect )
 
       SWITCH paintType
       CASE HBQT_GRAPHICSITEM_RESIZE_PICTURE_TO_ITEM_KEEP_ASPECT_RATIO
-         img := QImage():from( image:scaled_1( rc:width(), rc:height() - textH, Qt_KeepAspectRatio, Qt_SmoothTransformation ) )
+         img := QImage( image:scaled( rc:width(), rc:height() - textH, Qt_KeepAspectRatio, Qt_SmoothTransformation ) )
          EXIT
       CASE HBQT_GRAPHICSITEM_RESIZE_PICTURE_TO_ITEM_IGNORE_ASPECT_RATIO
-         img := QImage():from( image:scaled_1( rc:width(), rc:height() - textH, Qt_IgnoreAspectRatio, Qt_SmoothTransformation ) )
+         img := QImage( image:scaled( rc:width(), rc:height() - textH, Qt_IgnoreAspectRatio, Qt_SmoothTransformation ) )
          EXIT
       CASE HBQT_GRAPHICSITEM_CENTER_PICTURE_TO_ITEM
          point:setX( point:x() + ( rc:width() - image:width() ) / 2 )
@@ -2488,7 +2488,7 @@ METHOD HqrGraphicsItem:drawImage( qPainter, qRect )
             ch -= 2 * cy
             point:setY( 0 )
          ENDIF
-         img := QImage():from( image:copy_1( cx, cy, cw, ch ) )
+         img := QImage( image:copy( cx, cy, cw, ch ) )
          EXIT
       CASE HBQT_GRAPHICSITEM_RESIZE_ITEM_TO_PICTURE
          img := image

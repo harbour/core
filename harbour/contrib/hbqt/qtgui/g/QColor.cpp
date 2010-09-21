@@ -70,6 +70,25 @@
  *  enum Spec { Rgb, Hsv, Cmyk, Invalid }
  */
 
+/*
+ *  Constructed[ 63/71 [ 88.73% ] ]
+ *
+ *  *** Unconvered Prototypes ***
+ *  -----------------------------
+ *
+ *  }
+ *  }
+ *
+ *  *** Commented out protos which construct fine but do not compile ***
+ *
+ *  //void setRgb ( QRgb rgb )
+ *  //void setRgb ( int r, int g, int b, int a = 255 )
+ *  //bool allowX11ColorNames ()
+ *  //QColor fromRgb ( QRgb rgb )
+ *  //QColor fromRgb ( int r, int g, int b, int a = 255 )
+ *  //void setAllowX11ColorNames ( bool enabled )
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QColor>
@@ -147,36 +166,36 @@ HB_FUNC( QT_QCOLOR )
    {
       if( hb_pcount() == 1 && HB_ISNUM( 1 ) && hb_parni( 1 ) < 25 )
       {
-         pObj =  new QColor( ( Qt::GlobalColor ) hb_parni( 1 ) ) ;
+         pObj = new QColor( ( Qt::GlobalColor ) hb_parni( 1 ) ) ;
       }
       else if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
       {
-         pObj =  new QColor( ( QRgb ) hb_parni( 1 ) ) ;
+         pObj = new QColor( ( QRgb ) hb_parni( 1 ) ) ;
       }
       else if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
       {
-         pObj =  new QColor( hbqt_par_QString( 1 ) ) ;
+         pObj = new QColor( hbqt_par_QString( 1 ) ) ;
       }
       else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
       {
-         pObj =  new QColor( *hbqt_par_QColor( 1 ) ) ;
+         pObj = new QColor( *hbqt_par_QColor( 1 ) ) ;
       }
       else if( hb_pcount() == 3 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
       {
-         pObj =  new QColor( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), ( int ) 255 ) ;
+         pObj = new QColor( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), ( int ) 255 ) ;
       }
       else if( hb_pcount() == 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
       {
-         pObj =  new QColor( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) ) ;
+         pObj = new QColor( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) ) ;
       }
       else
       {
-         pObj =  new QColor() ;
+         pObj = new QColor() ;
       }
    }
    else
    {
-      pObj =  new QColor() ;
+      pObj = new QColor() ;
    }
 
    hb_retptrGC( hbqt_gcAllocate_QColor( ( void * ) pObj, true ) );
@@ -777,26 +796,21 @@ HB_FUNC( QT_QCOLOR_SETREDF )
 }
 
 /*
- * void setRgb ( QRgb rgb )
+ * void setRgb ( ... )
  */
 HB_FUNC( QT_QCOLOR_SETRGB )
 {
    QColor * p = hbqt_par_QColor( 1 );
    if( p )
    {
-      ( p )->setRgb( hb_parnl( 2 ) );
-   }
-}
-
-/*
- * void setRgb ( int r, int g, int b, int a = 255 )
- */
-HB_FUNC( QT_QCOLOR_SETRGB_1 )
-{
-   QColor * p = hbqt_par_QColor( 1 );
-   if( p )
-   {
-      ( p )->setRgb( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parnidef( 5, 255 ) );
+      if( hb_pcount() == 2 && HB_ISNUM( 2 ) )
+      {
+         ( p )->setRgb( hb_parnl( 2 ) );
+      }
+      else if( hb_pcount() >= 4 && HB_ISNUM( 2 ) )
+      {
+         ( p )->setRgb( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parnidef( 5, 255 ) );
+      }
    }
 }
 
@@ -981,26 +995,21 @@ HB_FUNC( QT_QCOLOR_FROMHSVF )
 }
 
 /*
- * QColor fromRgb ( QRgb rgb )
+ * QColor fromRgb ( ... )
  */
 HB_FUNC( QT_QCOLOR_FROMRGB )
 {
    QColor * p = hbqt_par_QColor( 1 );
    if( p )
    {
-      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->fromRgb( hb_parnl( 2 ) ) ), true ) );
-   }
-}
-
-/*
- * QColor fromRgb ( int r, int g, int b, int a = 255 )
- */
-HB_FUNC( QT_QCOLOR_FROMRGB_1 )
-{
-   QColor * p = hbqt_par_QColor( 1 );
-   if( p )
-   {
-      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->fromRgb( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parnidef( 5, 255 ) ) ), true ) );
+      if( hb_pcount() == 2 && HB_ISNUM( 2 ) )
+      {
+         hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->fromRgb( hb_parnl( 2 ) ) ), true ) );
+      }
+      else if( hb_pcount() >= 4 && HB_ISNUM( 2 ) )
+      {
+         hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->fromRgb( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parnidef( 5, 255 ) ) ), true ) );
+      }
    }
 }
 

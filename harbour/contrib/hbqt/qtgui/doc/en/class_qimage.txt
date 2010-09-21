@@ -42,19 +42,15 @@
  *     :invertPixels( nMode )                              -> NIL
  *     :isGrayscale()                                      -> lBool
  *     :isNull()                                           -> lBool
- *     :load( cFileName, pFormat )                         -> lBool
- *     :load_1( pDevice, pFormat )                         -> lBool
+ *     :load( ... )                                        -> lBool
  *     :loadFromData( pData, pFormat )                     -> lBool
  *     :numBytes()                                         -> nInt
  *     :numColors()                                        -> nInt
  *     :offset()                                           -> pQPoint
- *     :pixel( pPosition )                                 -> nQRgb
- *     :pixel_1( nX, nY )                                  -> nQRgb
- *     :pixelIndex( pPosition )                            -> nInt
- *     :pixelIndex_1( nX, nY )                             -> nInt
+ *     :pixel( ... )                                       -> nQRgb
+ *     :pixelIndex( ... )                                  -> nInt
  *     :rect()                                             -> pQRect
- *     :save( cFileName, pFormat, nQuality )               -> lBool
- *     :save_1( pDevice, pFormat, nQuality )               -> lBool
+ *     :save( ... )                                        -> lBool
  *     :scanLine( nI )                                     -> pUchar
  *     :scanLine_1( nI )                                   -> pUchar
  *     :setColor( nIndex, nColorValue )                    -> NIL
@@ -62,28 +58,26 @@
  *     :setDotsPerMeterY( nY )                             -> NIL
  *     :setNumColors( nNumColors )                         -> NIL
  *     :setOffset( pOffset )                               -> NIL
- *     :setPixel( pPosition, nIndex_or_rgb )               -> NIL
- *     :setPixel_1( nX, nY, nIndex_or_rgb )                -> NIL
+ *     :setPixel( ... )                                    -> NIL
  *     :setText( cKey, cText )                             -> NIL
  *     :size()                                             -> pQSize
  *     :text( cKey )                                       -> cQString
  *     :textKeys()                                         -> pQStringList
- *     :valid( pPos )                                      -> lBool
- *     :valid_1( nX, nY )                                  -> lBool
+ *     :valid( ... )                                       -> lBool
  *     :width()                                            -> nInt
  * 
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$
- *     oImage := QImage():new()
- *     oImage := QImage():new( pQSize, cFormat )
- *     oImage := QImage():new( iWidth, iHeight, cFormat )
- *     oImage := QImage():new( @cData, iWidth, iHeight, cFormat )
- *     oImage := QImage():new( cData , iWidth, iHeight, cFormat )
- *     oImage := QImage():new( @cData, iWidth, iHeight, iBytesPerLine, cFormat )
- *     oImage := QImage():new( cData , iWidth, iHeight, iBytesPerLine, cFormat )
- *     oImage := QImage():new( cFileName [, cFormat ] )
- *     oImage := QImage():new( pQImage )
+ *     oImage := QImage()
+ *     oImage := QImage( pQSize, cFormat )
+ *     oImage := QImage( iWidth, iHeight, cFormat )
+ *     oImage := QImage( @cData, iWidth, iHeight, cFormat )
+ *     oImage := QImage( cData , iWidth, iHeight, cFormat )
+ *     oImage := QImage( @cData, iWidth, iHeight, iBytesPerLine, cFormat )
+ *     oImage := QImage( cData , iWidth, iHeight, iBytesPerLine, cFormat )
+ *     oImage := QImage( cFileName [, cFormat ] )
+ *     oImage := QImage( pQImage )
  * 
  *  $TESTS$
  * 
