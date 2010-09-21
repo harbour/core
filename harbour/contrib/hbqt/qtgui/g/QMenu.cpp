@@ -174,11 +174,11 @@ HB_FUNC( QT_QMENU )
 
    if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
    {
-      pObj =  new QMenu( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) ;
+      pObj = new QMenu( hbqt_par_QString( 1 ), HB_ISPOINTER( 2 ) ? hbqt_par_QWidget( 2 ) : 0 ) ;
    }
    else
    {
-      pObj =  new QMenu( hbqt_par_QWidget( 1 ) ) ;
+      pObj = new QMenu( HB_ISPOINTER( 1 ) ? hbqt_par_QWidget( 1 ) : 0 ) ;
    }
 
    hb_retptrGC( hbqt_gcAllocate_QMenu( ( void * ) pObj, true ) );
@@ -268,11 +268,11 @@ HB_FUNC( QT_QMENU_ADDMENU )
    QMenu * p = hbqt_par_QMenu( 1 );
    if( p )
    {
-      void * pText;
-
       if( hb_pcount() == 2 && HB_ISCHAR( 2 ) )
       {
+         void * pText;
          hb_retptrGC( hbqt_gcAllocate_QMenu( ( p )->addMenu( hb_parstr_utf8( 2, &pText, NULL ) ), false ) );
+         hb_strfree( pText );
       }
       else if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
       {
@@ -280,11 +280,8 @@ HB_FUNC( QT_QMENU_ADDMENU )
       }
       else if( hb_pcount() == 3 )
       {
+         void * pText;
          hb_retptrGC( hbqt_gcAllocate_QMenu( ( p )->addMenu( ( HB_ISCHAR( 2 ) ? QIcon( hbqt_par_QString( 2 ) ) : *hbqt_par_QIcon( 2 )), hb_parstr_utf8( 3, &pText, NULL ) ), false ) );
-      }
-
-      if( pText )
-      {
          hb_strfree( pText );
       }
    }
