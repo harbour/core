@@ -149,7 +149,7 @@ FUNCTION hbide_execPopup( aPops, aqPos, qParent )
          qPop:addSeparator()
       ELSE
          IF hb_isObject( aPops[ i, 1 ] )
-            qPop:addAction_4( aPops[ i, 1 ] )
+            qPop:addAction( aPops[ i, 1 ] )
          ELSEIF hb_isArray( aPops[ i, 1 ] )     /* Sub-menu */
             qSub := QMenu( qPop )
             qSub:setStyleSheet( GetStyleSheet( "QMenuPop", hbide_setIde():nAnimantionMode ) )
@@ -170,7 +170,7 @@ FUNCTION hbide_execPopup( aPops, aqPos, qParent )
    ELSE
       qPoint := QPoint():configure( qParent:mapToGlobal( aqPos ) )
    ENDIF
-   pAct   := qPop:exec_1( qPoint )
+   pAct   := qPop:exec( qPoint )
    IF !hbqt_isEmptyQtPointer( pAct )
       qAct := QAction():configure( pAct )
       cAct := qAct:text()

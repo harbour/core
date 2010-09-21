@@ -1449,12 +1449,12 @@ METHOD HbIde:testPainter( qPainter )
 
    HB_TRACE( HB_TR_DEBUG, "qPainter:isActive()", qP:isActive() )
 
-   qP:setPen_2( Qt_red )
-   qP:drawEllipse_2( 100,300,100,150 )
+   qP:setPen( Qt_red )
+   qP:drawEllipse( 100,300,100,150 )
    qP:setFont( ::oFont:oWidget )
-   qP:drawText_4( 100,300,"Harbour" )
+   qP:drawText( 100,300,"Harbour" )
 
-   //qPainter:fillRect_8( 100, 100, 500, 500, QColor( 175, 175, 255 ) )
+   //qPainter:fillRect( 100, 100, 500, 500, QColor( 175, 175, 255 ) )
 
    RETURN NIL
 

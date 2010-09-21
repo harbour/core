@@ -238,14 +238,14 @@ STATIC FUNCTION Build_MenuBar( oWnd )
    oActNew:setText( "&New" )
    oActNew:setIcon( "new.png" )
    oActNew:connect( "triggered(bool)", {|w,l| FileDialog( "New" , w, l ) } )
-   oMenu1:addAction_4( oActNew )
+   oMenu1:addAction( oActNew )
 
-   oActOpen := QAction():from( oMenu1:addAction_1( "open.png", "&Open" ) )
+   oActOpen := QAction():from( oMenu1:addAction( "open.png", "&Open" ) )
    oActOpen:connect( QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Open" , w, l ) } )
 
    oMenu1:addSeparator()
 
-   oActSave := QAction():from( oMenu1:addAction_1(  "save.png", "&Save" ) )
+   oActSave := QAction():from( oMenu1:addAction(  "save.png", "&Save" ) )
    oActSave:connect( QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Save" , w, l ) } )
 
    oMenu1:addSeparator()
@@ -331,7 +331,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    oTB:addAction( oActSave )
 
    /* Add this toolbar with main window */
-   oWnd:addToolBar_1( oTB )
+   oWnd:addToolBar( oTB )
 
    RETURN { oActNew, oActOpen, oActSave, oTB }
 
@@ -631,12 +631,12 @@ FUNCTION ShowInSystemTray( oWnd )
    oMenuSys := QMenu( oWnd )
    oMenuSys:setTitle( "&File" )
 
-   oActShow := QAction():from( oMenuSys:addAction_1( "new.png" , "&Show" ) )
+   oActShow := QAction():from( oMenuSys:addAction( "new.png" , "&Show" ) )
    oActShow:connect( QT_EVE_TRIGGERED_B, {|| oWnd:show() } )
 
    oMenuSys:addSeparator()
 
-   oActHide := QAction():from( oMenuSys:addAction_1( "new.png" , "&Show" ) )
+   oActHide := QAction():from( oMenuSys:addAction( "new.png" , "&Show" ) )
    oActHide:connect( QT_EVE_TRIGGERED_B, {|| oWnd:hide() } )
 
    oSys := QSystemTrayIcon( oWnd )

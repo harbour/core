@@ -328,7 +328,7 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
       ENDIF
 
       IF nMode == QTC_MENUITEM_ADD
-         ::oWidget:addAction_4( oAction )
+         ::oWidget:addAction( oAction )
       ELSE
          ::oWidget:insertAction( pOldAct, oAction )
       ENDIF
@@ -362,7 +362,7 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
       ENDIF
 
       IF nMode == QTC_MENUITEM_ADD
-         ::oWidget:addAction_4( oAction )
+         ::oWidget:addAction( oAction )
       ELSE
          ::oWidget:insertAction( pOldAct, oAction )
       ENDIF

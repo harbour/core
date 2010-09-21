@@ -26,11 +26,8 @@
  *  $RETURNS$
  *     An instance of the object of type QMainWindow
  *  $METHODS$
- *     :addDockWidget( nArea, pDockwidget )                -> NIL
- *     :addDockWidget_1( nArea, pDockwidget, nOrientation )  -> NIL
- *     :addToolBar( nArea, pToolbar )                      -> NIL
- *     :addToolBar_1( pToolbar )                           -> NIL
- *     :addToolBar_2( cTitle )                             -> pQToolBar
+ *     :addDockWidget( ... )                               -> NIL
+ *     :addToolBar( ... )                                  -> NIL
  *     :addToolBarBreak( nArea )                           -> NIL
  *     :centralWidget()                                    -> pQWidget
  *     :corner( nCorner )                                  -> nQt::DockWidgetArea

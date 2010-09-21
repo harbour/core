@@ -349,7 +349,7 @@ METHOD IdeSkeletons:selectByMenuAndPostText( qEdit )
             qMenu:addAction( a_[ 1 ] )
          NEXT
 
-         pAct := qMenu:exec_1( qEdit:mapToGlobal( QPoint( qRect:x(), qRect:y() ) ) )
+         pAct := qMenu:exec( qEdit:mapToGlobal( QPoint( qRect:x(), qRect:y() ) ) )
          IF !hbqt_isEmptyQtPointer( pAct )
             qAct  := QAction():from( pAct )
 

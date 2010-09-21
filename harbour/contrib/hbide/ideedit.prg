@@ -448,7 +448,7 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
       QAction():from( ::oEM:aActions[ 19, 2 ] ):setEnabled( len( ::oEditor:aEdits ) == 0 .OR. ::oEditor:nSplOrient == -1 .OR. ::oEditor:nSplOrient == 2 )
       QAction():from( ::oEM:aActions[ 21, 2 ] ):setEnabled( n > 0 )
 
-      pAct := ::oEM:qContextMenu:exec_1( qEdit:mapToGlobal( p ) )
+      pAct := ::oEM:qContextMenu:exec( qEdit:mapToGlobal( p ) )
       IF !hbqt_isEmptyQtPointer( pAct )
          qAct := QAction():configure( pAct )
          cAct := strtran( qAct:text(), "&", "" )

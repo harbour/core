@@ -71,11 +71,8 @@ CREATE CLASS QMainWindow INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QMain
 
    METHOD  new( ... )
 
-   METHOD  addDockWidget( nArea, pDockwidget )
-   METHOD  addDockWidget_1( nArea, pDockwidget, nOrientation )
-   METHOD  addToolBar( nArea, pToolbar )
-   METHOD  addToolBar_1( pToolbar )
-   METHOD  addToolBar_2( cTitle )
+   METHOD  addDockWidget( ... )
+   METHOD  addToolBar( ... )
    METHOD  addToolBarBreak( nArea )
    METHOD  centralWidget()
    METHOD  corner( nCorner )
@@ -133,24 +130,20 @@ METHOD QMainWindow:new( ... )
    RETURN Self
 
 
-METHOD QMainWindow:addDockWidget( nArea, pDockwidget )
-   RETURN Qt_QMainWindow_addDockWidget( ::pPtr, nArea, hbqt_ptr( pDockwidget ) )
+METHOD QMainWindow:addDockWidget( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QMainWindow_addDockWidget( ::pPtr, ... )
 
 
-METHOD QMainWindow:addDockWidget_1( nArea, pDockwidget, nOrientation )
-   RETURN Qt_QMainWindow_addDockWidget_1( ::pPtr, nArea, hbqt_ptr( pDockwidget ), nOrientation )
-
-
-METHOD QMainWindow:addToolBar( nArea, pToolbar )
-   RETURN Qt_QMainWindow_addToolBar( ::pPtr, nArea, hbqt_ptr( pToolbar ) )
-
-
-METHOD QMainWindow:addToolBar_1( pToolbar )
-   RETURN Qt_QMainWindow_addToolBar_1( ::pPtr, hbqt_ptr( pToolbar ) )
-
-
-METHOD QMainWindow:addToolBar_2( cTitle )
-   RETURN Qt_QMainWindow_addToolBar_2( ::pPtr, cTitle )
+METHOD QMainWindow:addToolBar( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QMainWindow_addToolBar( ::pPtr, ... )
 
 
 METHOD QMainWindow:addToolBarBreak( nArea )

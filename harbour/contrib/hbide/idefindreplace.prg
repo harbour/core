@@ -974,7 +974,7 @@ METHOD IdeFindInFiles:execContextMenu( p )
       qMenu:addAction( "Zoom In"  )
       qMenu:addAction( "Zoom Out" )
 
-      pAct := qMenu:exec_1( ::oUI:q_editResults:mapToGlobal( p ) )
+      pAct := qMenu:exec( ::oUI:q_editResults:mapToGlobal( p ) )
       IF !hbqt_isEmptyQtPointer( pAct )
          qAct := QAction():configure( pAct )
          cAct := qAct:text()

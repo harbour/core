@@ -74,19 +74,12 @@ CREATE CLASS QMenu INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QMenu
    METHOD  actionAt( pPt )
    METHOD  actionGeometry( pAct )
    METHOD  activeAction()
-   METHOD  addAction( cText )
-   METHOD  addAction_1( pIcon, cText )
-   METHOD  addAction_2( cText, pReceiver, pMember, pShortcut )
-   METHOD  addAction_3( pIcon, cText, pReceiver, pMember, pShortcut )
-   METHOD  addAction_4( pAction )
-   METHOD  addMenu( pMenu )
-   METHOD  addMenu_1( cTitle )
-   METHOD  addMenu_2( pIcon, cTitle )
+   METHOD  addAction( ... )
+   METHOD  addMenu( ... )
    METHOD  addSeparator()
    METHOD  clear()
    METHOD  defaultAction()
-   METHOD  exec()
-   METHOD  exec_1( pP, pAction )
+   METHOD  exec( ... )
    METHOD  hideTearOffMenu()
    METHOD  icon()
    METHOD  insertMenu( pBefore, pMenu )
@@ -129,36 +122,20 @@ METHOD QMenu:activeAction()
    RETURN Qt_QMenu_activeAction( ::pPtr )
 
 
-METHOD QMenu:addAction( cText )
-   RETURN Qt_QMenu_addAction( ::pPtr, cText )
+METHOD QMenu:addAction( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QMenu_addAction( ::pPtr, ... )
 
 
-METHOD QMenu:addAction_1( pIcon, cText )
-   RETURN Qt_QMenu_addAction_1( ::pPtr, hbqt_ptr( pIcon ), cText )
-
-
-METHOD QMenu:addAction_2( cText, pReceiver, pMember, pShortcut )
-   RETURN Qt_QMenu_addAction_2( ::pPtr, cText, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ), hbqt_ptr( pShortcut ) )
-
-
-METHOD QMenu:addAction_3( pIcon, cText, pReceiver, pMember, pShortcut )
-   RETURN Qt_QMenu_addAction_3( ::pPtr, hbqt_ptr( pIcon ), cText, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ), hbqt_ptr( pShortcut ) )
-
-
-METHOD QMenu:addAction_4( pAction )
-   RETURN Qt_QMenu_addAction_4( ::pPtr, hbqt_ptr( pAction ) )
-
-
-METHOD QMenu:addMenu( pMenu )
-   RETURN Qt_QMenu_addMenu( ::pPtr, hbqt_ptr( pMenu ) )
-
-
-METHOD QMenu:addMenu_1( cTitle )
-   RETURN Qt_QMenu_addMenu_1( ::pPtr, cTitle )
-
-
-METHOD QMenu:addMenu_2( pIcon, cTitle )
-   RETURN Qt_QMenu_addMenu_2( ::pPtr, hbqt_ptr( pIcon ), cTitle )
+METHOD QMenu:addMenu( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QMenu_addMenu( ::pPtr, ... )
 
 
 METHOD QMenu:addSeparator()
@@ -173,12 +150,12 @@ METHOD QMenu:defaultAction()
    RETURN Qt_QMenu_defaultAction( ::pPtr )
 
 
-METHOD QMenu:exec()
-   RETURN Qt_QMenu_exec( ::pPtr )
-
-
-METHOD QMenu:exec_1( pP, pAction )
-   RETURN Qt_QMenu_exec_1( ::pPtr, hbqt_ptr( pP ), hbqt_ptr( pAction ) )
+METHOD QMenu:exec( ... )
+   LOCAL p
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   RETURN Qt_QMenu_exec( ::pPtr, ... )
 
 
 METHOD QMenu:hideTearOffMenu()
