@@ -1048,7 +1048,7 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ul
          if ( pConn && ! pConn->uiAreaCount && pConn->pSDD->Disconnect( pConn ) == HB_SUCCESS )
          {
             hb_xfree( pConn );
-            s_pConnection[ ulConn ] = NULL;
+            s_pConnection[ ulConn - 1 ] = NULL;
             if( s_ulConnectionCurrent == ulConn )
             {
                s_ulConnectionCurrent = 0;

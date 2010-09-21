@@ -117,6 +117,12 @@ extern HB_EXPORT int          hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD
                                                PHB_ITEM pArrayEX, HB_BOOL fSetEX,
                                                HB_MAXINT timeout, HB_SOCKET_FUNC pFunc );
 
+/* Harbour level socket item API functions */
+extern HB_EXPORT HB_SOCKET hb_socketParam( int iParam );
+extern HB_EXPORT HB_SOCKET hb_socketItemGet( PHB_ITEM pItem );
+extern HB_EXPORT PHB_ITEM  hb_socketItemPut( PHB_ITEM pItem, HB_SOCKET sd );
+extern HB_EXPORT void      hb_socketItemClear( PHB_ITEM pItem );
+
 HB_EXTERN_END
 
 #endif /* HB_SOCKET_H_ */
