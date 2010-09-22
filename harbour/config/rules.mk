@@ -60,7 +60,7 @@ ifeq ($(S_RULE),)
    S_RULE = $(CC) $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.s=$(OBJ_EXT)) $(HB_CFLAGS_STA) $(CC_IN) $<)
 endif
 ifeq ($(SX_RULE),)
-   SX_RULE = $(CC) $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.sx=$(OBJ_EXT)) $(HB_CFLAGS_STA) $(CC_IN) $<)
+   SX_RULE = $(CC) $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.sx=$(OBJ_EXT)) $(HB_CFLAGS_STA) -x assembler-with-cpp $(CC_IN) $<)
 endif
 
 # The rule to compile a C++ source file.
