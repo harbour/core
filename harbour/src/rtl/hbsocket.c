@@ -1845,7 +1845,7 @@ HB_BOOL hb_socketAddrFromItem( void ** pSockAddr, unsigned * puiLen, PHB_ITEM pA
    if( pAddrItm && HB_IS_ARRAY( pAddrItm ) )
    {
       if( hb_arrayLen( pAddrItm ) >= 2 &&
-          ( hb_arrayGetType( pAddrItm, 1 ) & HB_IT_NUMERIC ) != 0  )
+          ( hb_arrayGetType( pAddrItm, 1 ) & HB_IT_NUMERIC ) != 0 )
       {
          switch( hb_arrayGetNI( pAddrItm, 1 ) )
          {

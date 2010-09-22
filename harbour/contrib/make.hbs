@@ -590,12 +590,13 @@ STATIC FUNCTION mk_extern_lib( cInputName, cOutputName )
 
 STATIC FUNCTION mk_hbd( cDir )
    LOCAL cName
+   LOCAL cDocDir
    LOCAL tmp
 
    LOCAL aErrMsg
    LOCAL aEntry
 
-   IF ! Empty( GetEnv( "HB_INSTALL_DOC" ) )
+   IF ! Empty( cDocDir := GetEnv( "HB_INSTALL_DOC" ) ) .AND. ! cDocDir == "no"
 
       cName := DirGetName( cDir )
       IF Empty( cName )
@@ -610,7 +611,7 @@ STATIC FUNCTION mk_hbd( cDir )
       NEXT
 
       IF ! Empty( aEntry )
-         cName := PathSepToSelf( GetEnv( "HB_INSTALL_DOC" ) ) + hb_ps() + cName + ".hbd"
+         cName := PathSepToSelf( cDocDir ) + hb_ps() + cName + ".hbd"
          IF __hbdoc_SaveHBD( cName, aEntry )
             OutStd( "! Compiled documentation: " + cName + " <= " + cDir + hb_eol() )
             RETURN .T.

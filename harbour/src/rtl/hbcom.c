@@ -147,7 +147,7 @@ static void hb_comCloseAll( void )
    }
 }
 
-static void hb_comSetError( PHB_COM pCom, int iError )
+static void hb_comSetComError( PHB_COM pCom, int iError )
 {
    pCom->error = iError;
    pCom->oserr = 0;
@@ -161,9 +161,9 @@ static PHB_COM hb_comGetPort( int iPort, int iStatus )
       if( iStatus == HB_COM_ANY || ( iStatus & pCom->status ) != 0 )
          return pCom;
       if( iStatus & HB_COM_ENABLED )
-         hb_comSetError( pCom, HB_COM_ERR_WRONGPORT );
+         hb_comSetComError( pCom, HB_COM_ERR_WRONGPORT );
       else
-         hb_comSetError( pCom, HB_COM_ERR_CLOSED );
+         hb_comSetComError( pCom, HB_COM_ERR_CLOSED );
    }
    return NULL;
 }
@@ -231,6 +231,13 @@ int hb_comSetDevice( int iPort, const char * szDevName )
    }
 
    return pCom ? 0 : -1;
+}
+
+void hb_comSetError( int iPort, int iError )
+{
+   PHB_COM pCom = hb_comGetPort( iPort, HB_COM_ANY );
+   if( pCom )
+      pCom->error = iError;
 }
 
 int hb_comGetError( int iPort )
@@ -390,7 +397,7 @@ int hb_comInputCount( int iPort )
       hb_comSetOsError( pCom, iResult == -1 );
 #else
       int TODO_TIOCINQ;
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
 #endif
    }
    else
@@ -413,7 +420,7 @@ int hb_comOutputCount( int iPort )
       hb_comSetOsError( pCom, iResult == -1 );
 #else
       int TODO_TIOCOUTQ;
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
 #endif
    }
    else
@@ -445,7 +452,7 @@ int hb_comFlush( int iPort, int iType )
             break;
          default:
             iResult = -1;
-            hb_comSetError( pCom, HB_COM_ERR_PARAMVALUE );
+            hb_comSetComError( pCom, HB_COM_ERR_PARAMVALUE );
             break;
       }
    }
@@ -553,7 +560,7 @@ int hb_comMCR( int iPort, int * piValue, int iClr, int iSet )
       int TODO_TIOCMGET_MCR;
       HB_SYMBOL_UNUSED( iClr );
       HB_SYMBOL_UNUSED( iSet );
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
 #endif
    }
 
@@ -588,7 +595,7 @@ int hb_comMSR( int iPort, int * piValue )
       }
 #else
       int TODO_TIOCMGET_MSR;
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
 #endif
    }
 
@@ -612,7 +619,7 @@ int hb_comLSR( int iPort, int * piValue )
       /* NOTE: most of systems do not give access to the
        *       Line Status Register (LSR)
        */
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
 #endif
    }
 
@@ -870,7 +877,7 @@ int hb_comDiscardChar( int iPort, int iChar )
 #else
       int TODO_VDISCARD;
       HB_SYMBOL_UNUSED( iChar );
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
 #endif
    }
 
@@ -888,7 +895,7 @@ int hb_comErrorChar( int iPort, int iChar )
        */
 
       HB_SYMBOL_UNUSED( iChar );
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
    }
 
    return iResult;
@@ -915,7 +922,7 @@ int hb_comInputState( int iPort )
    if( pCom )
    {
       /* NOTE: checking HB_COM_RX_* input flow states is unsupported */
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
    }
 
    return iResult;
@@ -936,7 +943,7 @@ long hb_comSend( int iPort, const void * data, long len, HB_MAXINT timeout )
          lSent = hb_comCanWrite( pCom, timeout );
          if( lSent == 0 )
          {
-            hb_comSetError( pCom, HB_COM_ERR_TIMEOUT );
+            hb_comSetComError( pCom, HB_COM_ERR_TIMEOUT );
             lSent = -1;
          }
       }
@@ -978,7 +985,7 @@ long hb_comRecv( int iPort, void * data, long len, HB_MAXINT timeout )
          lReceived = hb_comCanRead( pCom, timeout );
          if( lReceived == 0 )
          {
-            hb_comSetError( pCom, HB_COM_ERR_TIMEOUT );
+            hb_comSetComError( pCom, HB_COM_ERR_TIMEOUT );
             lReceived = -1;
          }
       }
@@ -1153,7 +1160,7 @@ int hb_comInit( int iPort, int iBaud, int iParity, int iSize, int iStop )
             hb_comSetOsError( pCom, iResult == -1 );
          }
          else
-            hb_comSetError( pCom, HB_COM_ERR_PARAMVALUE );
+            hb_comSetComError( pCom, HB_COM_ERR_PARAMVALUE );
       }
    }
 
@@ -1196,7 +1203,7 @@ int hb_comOpen( int iPort )
    {
       if( pCom->status & HB_COM_OPEN )
       {
-         hb_comSetError( pCom, HB_COM_ERR_ALREADYOPEN );
+         hb_comSetComError( pCom, HB_COM_ERR_ALREADYOPEN );
       }
       else
       {
@@ -1212,7 +1219,7 @@ int hb_comOpen( int iPort )
             {
                close( pCom->fd );
                pCom->fd = -1;
-               hb_comSetError( pCom, HB_COM_ERR_BUSY );
+               hb_comSetComError( pCom, HB_COM_ERR_BUSY );
             }
             else
 #else
@@ -1305,7 +1312,7 @@ int hb_comFlush( int iPort, int iType )
             hb_comSetOsError( pCom, !fResult );
             break;
          default:
-            hb_comSetError( pCom, HB_COM_ERR_PARAMVALUE );
+            hb_comSetComError( pCom, HB_COM_ERR_PARAMVALUE );
             break;
       }
    }
@@ -1528,7 +1535,7 @@ int hb_comFlowSet( int iPort, int iFlow )
          fNotSup = TRUE;
 
       if( fNotSup )
-         hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+         hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
       else
          hb_comSetOsError( pCom, !fResult );
    }
@@ -1575,7 +1582,7 @@ int hb_comDiscardChar( int iPort, int iChar )
        * discarding input buffer
        */
       HB_SYMBOL_UNUSED( iChar );
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
    }
 
    return iResult;
@@ -1849,7 +1856,7 @@ int hb_comInit( int iPort, int iBaud, int iParity, int iSize, int iStop )
             hb_comSetOsError( pCom, !fResult );
          }
          else
-            hb_comSetError( pCom, HB_COM_ERR_PARAMVALUE );
+            hb_comSetComError( pCom, HB_COM_ERR_PARAMVALUE );
       }
       else
          hb_comSetOsError( pCom, !fResult );
@@ -1884,7 +1891,7 @@ int hb_comOpen( int iPort )
    {
       if( pCom->status & HB_COM_OPEN )
       {
-         hb_comSetError( pCom, HB_COM_ERR_ALREADYOPEN );
+         hb_comSetComError( pCom, HB_COM_ERR_ALREADYOPEN );
       }
       else
       {
@@ -2290,7 +2297,7 @@ int hb_comFlowSet( int iPort, int iFlow )
          fNotSup = TRUE;
 
       if( fNotSup )
-         hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+         hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
       else
          hb_comSetOsError( pCom, rc );
    }
@@ -2338,7 +2345,7 @@ int hb_comDiscardChar( int iPort, int iChar )
        * discarding input buffer
        */
       HB_SYMBOL_UNUSED( iChar );
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
    }
 
    return iResult;
@@ -2415,7 +2422,7 @@ int hb_comInputState( int iPort )
    if( pCom )
    {
       /* TODO: checking HB_COM_RX_* input flow states is unsupported */
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
    }
 
    return iResult;
@@ -2670,7 +2677,7 @@ int hb_comOpen( int iPort )
    {
       if( pCom->status & HB_COM_OPEN )
       {
-         hb_comSetError( pCom, HB_COM_ERR_ALREADYOPEN );
+         hb_comSetComError( pCom, HB_COM_ERR_ALREADYOPEN );
       }
       else
       {
@@ -2705,7 +2712,7 @@ int hb_comInputCount( int iPort )
    PHB_COM pCom = hb_comGetPort( iPort, HB_COM_OPEN );
 
    if( pCom )
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
 
    return -1;
 }
@@ -2715,7 +2722,7 @@ int hb_comOutputCount( int iPort )
    PHB_COM pCom = hb_comGetPort( iPort, HB_COM_OPEN );
 
    if( pCom )
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
 
    return -1;
 }
@@ -2727,7 +2734,7 @@ int hb_comFlush( int iPort, int iType )
    HB_SYMBOL_UNUSED( iType );
 
    if( pCom )
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
 
    return -1;
 }
@@ -2741,7 +2748,7 @@ int hb_comMCR( int iPort, int * piValue, int iClr, int iSet )
    HB_SYMBOL_UNUSED( iSet );
 
    if( pCom )
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
 
    return -1;
 }
@@ -2753,7 +2760,7 @@ int hb_comMSR( int iPort, int * piValue )
    HB_SYMBOL_UNUSED( piValue );
 
    if( pCom )
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
 
    return -1;
 }
@@ -2765,7 +2772,7 @@ int hb_comLSR( int iPort, int * piValue )
    HB_SYMBOL_UNUSED( piValue );
 
    if( pCom )
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
 
    return -1;
 }
@@ -2777,7 +2784,7 @@ int hb_comSendBreak( int iPort, int iDurationInMilliSecs )
    HB_SYMBOL_UNUSED( iDurationInMilliSecs );
 
    if( pCom )
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
 
    return -1;
 }
@@ -2790,7 +2797,7 @@ int hb_comFlowControl( int iPort, int *piFlow, int iFlow )
    HB_SYMBOL_UNUSED( iFlow );
 
    if( pCom )
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
 
    return -1;
 }
@@ -2802,7 +2809,7 @@ int hb_comFlowSet( int iPort, int iFlow )
    HB_SYMBOL_UNUSED( iFlow );
 
    if( pCom )
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
 
    return -1;
 }
@@ -2815,7 +2822,7 @@ int hb_comFlowChars( int iPort, int iXONchar, int iXOFFchar )
    HB_SYMBOL_UNUSED( iXOFFchar );
 
    if( pCom )
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
 
    return -1;
 }
@@ -2827,7 +2834,7 @@ int hb_comDiscardChar( int iPort, int iChar )
    HB_SYMBOL_UNUSED( iChar );
 
    if( pCom )
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
 
    return -1;
 }
@@ -2839,7 +2846,7 @@ int hb_comErrorChar( int iPort, int iChar )
    HB_SYMBOL_UNUSED( iChar );
 
    if( pCom )
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
 
    return -1;
 }
@@ -2849,7 +2856,7 @@ int hb_comOutputState( int iPort )
    PHB_COM pCom = hb_comGetPort( iPort, HB_COM_OPEN );
 
    if( pCom )
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
 
    return -1;
 }
@@ -2859,7 +2866,7 @@ int hb_comInputState( int iPort )
    PHB_COM pCom = hb_comGetPort( iPort, HB_COM_OPEN );
 
    if( pCom )
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
 
    return -1;
 }
@@ -2873,7 +2880,7 @@ long hb_comSend( int iPort, const void * data, long len, HB_MAXINT timeout )
    HB_SYMBOL_UNUSED( timeout );
 
    if( pCom )
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
 
    return -1;
 }
@@ -2887,7 +2894,7 @@ long hb_comRecv( int iPort, void * data, long len, HB_MAXINT timeout )
    HB_SYMBOL_UNUSED( timeout );
 
    if( pCom )
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
 
    return -1;
 }
@@ -2902,7 +2909,7 @@ int hb_comInit( int iPort, int iBaud, int iParity, int iSize, int iStop )
    HB_SYMBOL_UNUSED( iStop );
 
    if( pCom )
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
 
    return -1;
 }
@@ -2912,7 +2919,7 @@ int hb_comClose( int iPort )
    PHB_COM pCom = hb_comGetPort( iPort, HB_COM_OPEN );
 
    if( pCom )
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
 
    return -1;
 }
@@ -2923,7 +2930,7 @@ int hb_comOpen( int iPort )
    int iTODO_serial_port_support;
 
    if( pCom )
-      hb_comSetError( pCom, HB_COM_ERR_NOSUPPORT );
+      hb_comSetComError( pCom, HB_COM_ERR_NOSUPPORT );
 
    return -1;
 }

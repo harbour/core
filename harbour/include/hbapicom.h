@@ -73,6 +73,7 @@ extern HB_EXPORT int  hb_comClose( int iPort );
 extern HB_EXPORT int  hb_comInit( int iPort, int iBaud, int iParity, int iSize, int iStop );
 extern HB_EXPORT long hb_comSend( int iPort, const void * data, long len, HB_MAXINT timeout );
 extern HB_EXPORT long hb_comRecv( int iPort, void * data, long len, HB_MAXINT timeout );
+extern HB_EXPORT void hb_comSetError( int iPort, int iError );
 extern HB_EXPORT int  hb_comGetError( int iPort );
 extern HB_EXPORT int  hb_comGetOsError( int iPort );
 extern HB_EXPORT int  hb_comInputCount( int iPort );

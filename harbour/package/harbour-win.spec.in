@@ -16,7 +16,6 @@
 %define name      harbour-win
 %define version   2.1.0
 %define releasen  beta2
-%define hb_pref   hbw
 
 # Workaround for the problem of /usr/bin/strip not handling PE binaries.
 %define hb_ccpath /opt/xmingw/bin
@@ -106,14 +105,25 @@ export HB_INSTALL_BIN=${RPM_BUILD_ROOT}/%{_bindir}
 export HB_INSTALL_INC=${RPM_BUILD_ROOT}/%{_includedir}/%{name}
 export HB_INSTALL_LIB=${RPM_BUILD_ROOT}/%{_libdir}/%{name}
 export HB_INSTALL_DYN=${HB_INSTALL_LIB}
+export HB_INSTALL_DOC=no
 export HB_BUILD_STRIP=lib
 
 mkdir -p $HB_INSTALL_BIN
+export HB_MK2WRAP=$HB_INSTALL_BIN/hbwmk2
+export HB_INSTALL_SCRIPT=$HB_MK2WRAP.tmp
+
+echo "#!/bin/sh" > $HB_INSTALL_SCRIPT
+echo "echo export HB_CCPREFIX=\$HB_CCPREFIX >> $HB_MK2WRAP" > $HB_INSTALL_SCRIPT
+chmod +x $HB_INSTALL_SCRIPT
+
+echo "#!/bin/sh" > $HB_MK2WRAP
+echo "export HB_INSTALL_LIB=%{_libdir}/%{name}" >> $HB_MK2WRAP
+echo "export HB_INSTALL_INC=%{_includedir}/%{name}" >> $HB_MK2WRAP
 
 make install %{?_smp_mflags}
 
-# remove unused files
-rm -fR ${HB_INSTALL_BIN}/{harbour,hbpp,hbmk2,hbrun,hbi18n,hbtest}.exe
+echo "hbmk2 -plat=win -comp=mingw \"\$@\"" >> $HB_MK2WRAP
+rm -fR $HB_INSTALL_SCRIPT
 
 ######################################################################
 ## Post install
@@ -139,9 +149,8 @@ rm -fR $RPM_BUILD_ROOT
 ######################################################################
 
 %files
-%defattr(-,root,root,755)
-
-%{_bindir}/hbmk2
+%defattr(755,root,root,755)
+%{_bindir}/*
 
 %defattr(644,root,root,755)
 %dir %{_includedir}/%{name}

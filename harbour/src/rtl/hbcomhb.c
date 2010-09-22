@@ -73,6 +73,7 @@
  * HB_COMOUTPUTSTATE( nPort ) --> nState
  * HB_COMSENDBREAK( nPort, [ nDuration = 50 ] ) --> lSuccess
  * HB_COMSETDEVICE( nPort, cDeviceName ) --> lSuccess
+ * HB_COMSETERROR( nPort, nError ) --> NIL
  * HB_COMRECV( nPort, @cBuffer, [ nLen = LEN( cBuffer ) ], [ nTimeout = 0 ] ) --> nBytesRecv
  * HB_COMSEND( nPort, cBuffer, [ nLen = LEN( cBuffer ) ], [ nTimeout = 0 ] ) --> nBytesSent
  */
@@ -204,6 +205,11 @@ HB_FUNC( HB_COMSENDBREAK )
 HB_FUNC( HB_COMSETDEVICE )
 {
    hb_retl( hb_comSetDevice( hb_parni( 1 ), hb_parc( 2 ) ) == 0 );
+}
+
+HB_FUNC( HB_COMSETERROR )
+{
+   hb_comSetError( hb_parni( 1 ), hb_parni( 2 ) );
 }
 
 HB_FUNC( HB_COMRECV )

@@ -69,31 +69,32 @@ PROCEDURE Main( ... )
    IF AScan( hb_AParams(), {| tmp | Lower( tmp ) == "install" } ) > 0
 
       /* Installing some misc files */
+      tmp := GetEnv( "HB_INSTALL_DOC" )
+      IF ! tmp == "no"
+         IF GetEnv( "HB_PLATFORM" ) $ "win|wce|os2|dos"
+            tmp := GetEnv( "HB_INSTALL_PREFIX" )
+         ENDIF
+         IF ! Empty( tmp )
 
-      IF GetEnv( "HB_PLATFORM" ) $ "win|wce|os2|dos"
-         tmp := GetEnv( "HB_INSTALL_PREFIX" )
-      ELSE
-         tmp := GetEnv( "HB_INSTALL_DOC" )
-      ENDIF
-      IF ! Empty( tmp )
+            OutStd( "! Copying root documents..." + hb_eol() )
 
-         OutStd( "! Copying root documents..." + hb_eol() )
+            IF DirBuild( tmp )
+               FOR EACH aFile IN Directory( "Change*" )
+                  mk_hb_FCopy( aFile[ F_NAME ], tmp + hb_ps() + iif( GetEnv( "HB_PLATFORM" ) == "dos", "CHANGES", "" ) )
+               NEXT
 
-         IF DirBuild( tmp )
-            FOR EACH aFile IN Directory( "Change*" )
-               mk_hb_FCopy( aFile[ F_NAME ], tmp + hb_ps() + iif( GetEnv( "HB_PLATFORM" ) == "dos", "CHANGES", "" ) )
-            NEXT
-
-            mk_hb_FCopy( "COPYING", tmp + hb_ps() )
-            mk_hb_FCopy( "INSTALL", tmp + hb_ps() )
-            mk_hb_FCopy( "NEWS"   , tmp + hb_ps() )
-            mk_hb_FCopy( "TODO"   , tmp + hb_ps() )
-         ELSE
-            OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", tmp ) + hb_eol() )
+               mk_hb_FCopy( "COPYING", tmp + hb_ps() )
+               mk_hb_FCopy( "INSTALL", tmp + hb_ps() )
+               mk_hb_FCopy( "NEWS"   , tmp + hb_ps() )
+               mk_hb_FCopy( "TODO"   , tmp + hb_ps() )
+            ELSE
+               OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", tmp ) + hb_eol() )
+            ENDIF
          ENDIF
       ENDIF
 
-      IF ! Empty( GetEnv( "HB_INSTALL_BIN" ) )
+      IF ! Empty( GetEnv( "HB_INSTALL_BIN" ) ) .AND. ;
+         ! GetEnv( "HB_BUILD_PARTS" ) == "lib"
 
          OutStd( "! Copying Harbour script (.hbs) files..." + hb_eol() )
 
@@ -188,7 +189,8 @@ PROCEDURE Main( ... )
 
       /* Creating language files */
 
-      IF ! Empty( GetEnv( "HB_INSTALL_BIN" ) )
+      IF ! Empty( GetEnv( "HB_INSTALL_BIN" ) ) .AND. ;
+         ! GetEnv( "HB_BUILD_PARTS" ) == "lib"
 
          OutStd( "! Making core translation (.hbl) files..." + hb_eol() )
 
@@ -204,11 +206,11 @@ PROCEDURE Main( ... )
 
       /* Creating docs for core */
 
-      IF ! Empty( GetEnv( "HB_INSTALL_DOC" ) )
+      IF ! Empty( tmp := GetEnv( "HB_INSTALL_DOC" ) ) .AND. ! tmp == "no"
 
          OutStd( "! Compiling core documentation (.hbd)..." + hb_eol() )
 
-         mk_hbd_core( "." + hb_ps(), GetEnv( "HB_INSTALL_DOC" ) )
+         mk_hbd_core( "." + hb_ps(), tmp )
       ENDIF
 
       /* Creating install packages */
@@ -329,6 +331,14 @@ PROCEDURE Main( ... )
             ENDIF
          ENDIF
       ENDIF
+
+      /* Executing user postinst configuration script */
+
+      IF ! Empty( tmp := GetEnv( "HB_INSTALL_SCRIPT" ) )
+
+         mk_hb_processRun( tmp )
+      ENDIF
+
    ELSE
       /* Regenerating extern headers */
 

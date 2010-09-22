@@ -9,6 +9,10 @@ ifneq ($(HB_COMPILER),)
 
 first::
 
+ifeq ($(HB_INSTALL_DOC),no)
+install::
+
+else
 ifeq ($(HB_INSTALL_DOC),)
 install::
 
@@ -23,6 +27,7 @@ install:: first
 
 endif
 
+endif
 endif
 endif
 endif
