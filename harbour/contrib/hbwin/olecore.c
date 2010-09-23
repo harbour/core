@@ -1490,6 +1490,27 @@ HB_FUNC( WIN_OLEERRORTEXT )
    }
 }
 
+/*
+
+VBScript and Harbour syntax and IDispatch:Invoke() usage differences 
+
+VBScript syntax          dispid        DISPATCH_* flags  argcnt | Harbour syntax      :Invoke parameters
+================================================================+=======================================
+obj                      DISPID_VALUE  METHOD+PROPERTYGET  0    | Same                :Invoke is not used
+obj()                    DISPID_VALUE  METHOD              0    | Not supported
+obj(param)               DISPID_VALUE  METHOD+PROPERTYGET  1    | obj[param]          Same
+obj.name                 name          METHOD+PROPERTYGET  0    | Same, =obj.name()   Same
+obj.name()               name          METHOD              0    | Same, =obj.name     flags=METHOD+PROPERTYGET
+obj.name(param)          name          METHOD+PROPERTYGET  1    | Same                Same
+                                                                |
+obj = value              obj reassigned, :Invoke is not used    | Same
+obj() = value            DISPID_VALUE  PROPERTYPUT         1    | Not supported
+obj(param) = value       DISPID_VALUE  PROPERTYPUT         2    | obj[param] = value
+obj.name = value         name          PROPERTYPUT         1    | Same                Same
+obj.name() = value       name          PROPERTYPUT         1    | Not supported, use obj.name = value
+obj.name(param) = value  name          PROPERTYPUT         2    | Not supported, workaround obj._name(param, value)
+
+*/
 
 HB_FUNC( WIN_OLEAUTO___ONERROR )
 {
@@ -1521,7 +1542,7 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
 
    /* Try property put */
 
-   if( szMethod[ 0 ] == '_' && hb_pcount() == 1 )
+   if( szMethod[ 0 ] == '_' && hb_pcount() >= 1 )
    {
       pMemberArray = &szMethodWide[ 1 ];
       lOleError = HB_VTBL( pDisp )->GetIDsOfNames( HB_THIS_( pDisp ) HB_ID_REF( IID_NULL ), &pMemberArray,
