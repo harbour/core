@@ -283,7 +283,7 @@ static wchar_t* AnsiToWide( const char* szString )
 static void AnsiToWideBuffer( const char* szString, wchar_t* szWide, int iLen )
 {
    MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, szString, -1, szWide, iLen );
-   szWide[ iLen - 1 ] = '0';
+   szWide[ iLen - 1 ] = L'\0';
 }
 
 static BSTR hb_oleItemToString( PHB_ITEM pItem )

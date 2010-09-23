@@ -137,14 +137,14 @@ static HB_BOOL s_hashWithNumKeys( PHB_ITEM pHash )
 static wchar_t* s_AnsiToWideBuffer( const char* szString, wchar_t* szWide, int iLen )
 {
    MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, szString, -1, szWide, iLen );
-   szWide[ iLen - 1 ] = '0';
+   szWide[ iLen - 1 ] = L'\0';
    return szWide;
 }
 
 static int s_WideToAnsiBuffer( const wchar_t* wszString, char* szBuffer, int iLen )
 {
    int iResult = WideCharToMultiByte( CP_ACP, 0, wszString, -1, szBuffer, iLen, NULL, NULL );
-   szBuffer[ iLen - 1 ] = '0';
+   szBuffer[ iLen - 1 ] = '\0';
    return iResult;
 }
 
