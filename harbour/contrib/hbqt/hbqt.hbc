@@ -7,8 +7,8 @@
 # See COPYING for licensing terms.
 # ---------------------------------------------------------------
 
-hbqtcore.hbc
-# hbqtdesigner.hbc
-hbqtgui.hbc
-hbqtnetwork.hbc
-# hbqtwebkit.hbc
+libs=hbqtcore.hbc
+# libs=hbqtdesigner.hbc
+libs=hbqtgui.hbc
+libs=hbqtnetwork.hbc
+# libs=hbqtwebkit.hbc
