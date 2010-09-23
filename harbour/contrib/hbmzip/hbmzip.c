@@ -450,7 +450,7 @@ HB_FUNC( HB_UNZIPFILEINFO )
          {
             char * pszComment = ( char * ) hb_xgrab( ufi.size_file_comment + 1 );
 
-            iResult = unzGetCurrentFileInfo( hUnzip, NULL, NULL, 0, NULL, 0,
+            iResult = unzGetCurrentFileInfo( hUnzip, &ufi, NULL, 0, NULL, 0,
                                              pszComment, ufi.size_file_comment );
             pszComment[ ufi.size_file_comment ] = '\0';
             if( iResult != UNZ_OK )
@@ -1391,7 +1391,7 @@ static int hb_zipDeleteFile( const char* szZipFile, const char* szFileMask )
          if( ufi.size_file_comment )
             pszFileComment = ( char * ) hb_xgrab( ufi.size_file_comment + 1 );
 
-         iResult = unzGetCurrentFileInfo( hUnzip, NULL, NULL, 0,
+         iResult = unzGetCurrentFileInfo( hUnzip, &ufi, NULL, 0,
                                           pExtraField, ufi.size_file_extra,
                                           pszFileComment, ufi.size_file_comment );
          if( pszFileComment )

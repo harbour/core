@@ -363,7 +363,7 @@ HARBOUR
    You can override automatic detection of QT 'moc', 'rcc' and 'uic' tools
    by using HB_QTPATH and optionally HB_QTPOSTFIX envvars, f.e.:
       HB_QTPATH=/opt/qt46/bin/
-      HB_QTPOSTFIX=-qt4
+      HB_QTPOSTFIX=
 
    Certain contribs can be instructed (when using .hbc files) to link
    against static build of their 3rd party lib dependencies:
