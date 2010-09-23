@@ -201,8 +201,10 @@
 /* Should we disable compile errors for undeclared methods? */
 #ifdef HB_CLS_NO_OO_ERR
    #xtranslate __HB_CLS_ERR([<msg,...>]) =>
+   #xtranslate __HB_CLS_WARN([<msg,...>]) =>
 #else
    #xtranslate __HB_CLS_ERR([<msg,...>]) => ;#error [ <msg>] ; #line
+   #xtranslate __HB_CLS_WARN([<msg,...>]) => ;#warning [ <msg>] ; #line
 #endif
 
 #xtranslate __HB_CLS_VARERR(<var>) => __HB_CLS_ERR( Invalid instance variable name \<<var>> )
@@ -307,7 +309,7 @@ DECLARE HBClass ;
          DECLARED METHOD \<type> <MethodName>(\[ \<xparams>] ) CLASS <ClassName>
 
 #xcommand METHOD <type: FUNCTION, PROCEDURE> <MethodName> CLASS <ClassName> _CLASS_IMPLEMENTATION_ => ;
-   __HB_CLS_ERR( Method \<<MethodName>> not declared or declaration mismatch in class \<<ClassName>> ) ;;
+   __HB_CLS_WARN( Method \<<MethodName>> not declared or declaration mismatch in class \<<ClassName>> ) ;;
    DECLARED METHOD <type> <MethodName> CLASS <ClassName>
 
 #xcommand METHOD <MethodName> [ <ctor: CONSTRUCTOR> ] [ AS <type> ] [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] [<sync: SYNC>] [_CLASS_DECLARATION_] => ;

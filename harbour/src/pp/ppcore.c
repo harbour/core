@@ -64,7 +64,8 @@
 #include "hbpp.h"
 #include "hbdate.h"
 
-#define HB_PP_WARN_DEFINE_REDEF                 1     /* C1005 */
+#define HB_PP_WARN_EXPLICIT                     1     /* C10?? */
+#define HB_PP_WARN_DEFINE_REDEF                 2     /* C1005 */
 
 #define HB_PP_ERR_ILLEGAL_CHAR                  1     /* C2004 */
 #define HB_PP_ERR_STRING_TERMINATOR             2     /* C2007 */
@@ -105,6 +106,7 @@
 /* warning messages */
 static const char * hb_pp_szWarnings[] =
 {
+   "1%s",                                                               /* C10?? */
    "1Redefinition or duplicate definition of #define %s"                /* C1005 */
 };
 
@@ -5188,6 +5190,12 @@ static void hb_pp_preprocessToken( PHB_PP_STATE pState )
          else if( hb_pp_tokenValueCmp( pToken, "ERROR", HB_PP_CMP_DBASE ) )
          {
             hb_pp_error( pState, 'E', HB_PP_ERR_EXPLICIT,
+                         hb_pp_tokenListStr( pToken->pNext, NULL, HB_FALSE,
+                                             pState->pBuffer, HB_FALSE, HB_FALSE ) );
+         }
+         else if( hb_pp_tokenValueCmp( pToken, "WARNING", HB_PP_CMP_DBASE ) )
+         {
+            hb_pp_error( pState, 'W', HB_PP_WARN_EXPLICIT,
                          hb_pp_tokenListStr( pToken->pNext, NULL, HB_FALSE,
                                              pState->pBuffer, HB_FALSE, HB_FALSE ) );
          }
