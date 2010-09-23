@@ -78,42 +78,12 @@ enum Direction { LeftToRight, RightToLeft, TopToBottom, BottomToTop }
 </ENUMS>
 
 <PROTOS>
-void addLayout ( QLayout * layout, int stretch = 0 ){
-   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QBOXLAYOUT_ADDLAYOUT()" ) );
-   if( p && p->ph && q && q->ph )
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "QT_QBOXLAYOUT_ADDLAYOUT() Qt object: %p is attached to: %p", p->ph, q->ph ) );
-      q->bNew = HB_FALSE;
-      hbqt_par_QBoxLayout( 1 )->addLayout( hbqt_par_QLayout( 2 ), hb_parni( 3 ) );
-   }
-}
-void addSpacerItem ( QSpacerItem * spacerItem ){
-   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QBOXLAYOUT_ADDSPACERITEM()" ) );
-   if( p && p->ph && q && q->ph )
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "QT_QBOXLAYOUT_ADDSPACERITEM() Qt object: %p is attached to: %p", p->ph, q->ph ) );
-      q->bNew = HB_FALSE;
-      hbqt_par_QBoxLayout( 1 )->addSpacerItem( hbqt_par_QSpacerItem( 2 ) );
-   }
-}
+void addLayout ( QLayout * layout, int stretch = 0 )   [*D=1*]
+void addSpacerItem ( QSpacerItem * spacerItem )   [*D=1*]
 void addSpacing ( int size )
 void addStretch ( int stretch = 0 )
 void addStrut ( int size )
-void addWidget ( QWidget * widget, int stretch = 0, Qt::Alignment alignment = 0 ){
-   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QBOXLAYOUT_ADDWIDGET()" ) );
-   if( p && p->ph && q && q->ph )
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "QT_QBOXLAYOUT_ADDWIDGET() Qt object: %p is attached to: %p", p->ph, q->ph ) );
-      q->bNew = HB_FALSE;
-      hbqt_par_QBoxLayout( 1 )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ), ( Qt::Alignment ) hb_parni( 4 ) );
-   }
-}
+void addWidget ( QWidget * widget, int stretch = 0, Qt::Alignment alignment = 0 )   [*D=1*]
 Direction direction () const
 void insertLayout ( int index, QLayout * layout, int stretch = 0 )
 void insertSpacerItem ( int index, QSpacerItem * spacerItem )

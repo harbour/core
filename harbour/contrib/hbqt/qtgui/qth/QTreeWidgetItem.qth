@@ -94,18 +94,7 @@ enum ItemType { Type, UserType }
 </ENUMS>
 
 <PROTOS>
-void addChild ( QTreeWidgetItem * child ){
-   HBQT_GC_T_QTreeWidgetItem * q = ( HBQT_GC_T_QTreeWidgetItem * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-
-   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTREEWIDGETITEM_ADDCHILD()" ) );
-   if( p && p->ph && q && q->ph )
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "QT_QTOOLBAR_ADDACTION() Qt oject: %p is attached to: %p", ( void * ) p->ph, ( void * ) q->ph ) );
-      p->bNew = HB_FALSE;
-      ( q->ph )->addChild( ( QTreeWidgetItem * ) p->ph );
-   }
-}
+void addChild ( QTreeWidgetItem * child )   [*D=1*]
 void addChildren ( const QList<QTreeWidgetItem *> & children )
 QBrush background ( int column ) const
 Qt::CheckState checkState ( int column ) const

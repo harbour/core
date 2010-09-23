@@ -79,21 +79,8 @@ enum TabShape { Rounded, Triangular }
 </ENUMS>
 
 <PROTOS>
-int addTab ( QWidget * page, const QString & label ){
-   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-
-   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTABWIDGET_ADDTAB()" ) );
-   if( p && p->ph && q && q->ph )
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "QT_QTABWIDGET_ADDTAB() Qt object: %p is attached to: %p", p->ph, q->ph ) );
-
-      q->bNew = HB_FALSE;
-
-      hb_retni( hbqt_par_QTabWidget( 1 )->addTab( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ) ) );
-   }
-}
-int addTab ( QWidget * page, const QIcon & icon, const QString & label )
+int addTab ( QWidget * page, const QString & label )   [*D=1*]
+int addTab ( QWidget * page, const QIcon & icon, const QString & label )   [*D=1*]
 void clear ()
 QWidget * cornerWidget ( Qt::Corner corner = Qt::TopRightCorner ) const
 int count () const

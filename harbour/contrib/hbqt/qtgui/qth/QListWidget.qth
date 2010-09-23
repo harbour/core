@@ -69,23 +69,14 @@ New      = pParent
  */
 HB_FUNC( QT_QLISTWIDGET )
 {
-   hb_retptr( new QListWidget( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( new QListWidget( HB_ISPOINTER( 1 ) ? hbqt_par_QWidget( 1 ) : 0 ) );
 }
 </CODE>
 
 <PROTOS>
+
 void addItem ( const QString & label )
-void addItem ( QListWidgetItem * item ){
-   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QLISTWIDGET_ADDITEM()" ) );
-   if( p && p->ph && q && q->ph )
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "QT_QLISTWIDGET_ADDITEM() Qt object: %p is attached to: %p", p->ph, q->ph ) );
-      q->bNew = HB_FALSE;
-      hbqt_par_QListWidget( 1 )->addItem( hbqt_par_QListWidgetItem( 2 ) );
-   }
-}
+void addItem ( QListWidgetItem * item )              [*D=1*]
 void addItems ( const QStringList & labels )
 void closePersistentEditor ( QListWidgetItem * item )
 int count () const
@@ -93,32 +84,29 @@ QListWidgetItem * currentItem () const
 int currentRow () const
 void editItem ( QListWidgetItem * item )
 QList<QListWidgetItem *> findItems ( const QString & text, Qt::MatchFlags flags ) const
-void insertItem ( int row, QListWidgetItem * item ){
-   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 3 );
-   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QLISTWIDGET_INSERTITEM()" ) );
-   if( p && p->ph && q && q->ph )
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "QT_QLISTWIDGET_INSERTITEM() Qt object: %p is attached to: %p", p->ph, q->ph ) );
-      q->bNew = HB_FALSE;
-      hbqt_par_QListWidget( 1 )->insertItem( hb_parni( 2 ), hbqt_par_QListWidgetItem( 3 ) );
-   }
-}
+
+void insertItem ( int row, QListWidgetItem * item )  [*D=2*]
 void insertItem ( int row, const QString & label )
+
 void insertItems ( int row, const QStringList & labels )
 bool isSortingEnabled () const
 QListWidgetItem * item ( int row ) const
+
 QListWidgetItem * itemAt ( const QPoint & p ) const
 QListWidgetItem * itemAt ( int x, int y ) const
+
 QWidget * itemWidget ( QListWidgetItem * item ) const
 void openPersistentEditor ( QListWidgetItem * item )
 void removeItemWidget ( QListWidgetItem * item )
 int row ( const QListWidgetItem * item ) const
 QList<QListWidgetItem *> selectedItems () const
+
 void setCurrentItem ( QListWidgetItem * item )
 void setCurrentItem ( QListWidgetItem * item, QItemSelectionModel::SelectionFlags command )
+
 void setCurrentRow ( int row )
 void setCurrentRow ( int row, QItemSelectionModel::SelectionFlags command )
+
 void setItemWidget ( QListWidgetItem * item, QWidget * widget )
 void setSortingEnabled ( bool enable )
 void sortItems ( Qt::SortOrder order = Qt::AscendingOrder )
