@@ -1564,7 +1564,7 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
          FreeParams( &dispparam );
 
          /* assign method should return assigned value */
-         hb_itemReturn( hb_param( 1, HB_IT_ANY ) );
+         hb_itemReturn( hb_param( hb_pcount(), HB_IT_ANY ) );
 
          hb_oleSetError( lOleError );
          if( lOleError != S_OK )

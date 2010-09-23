@@ -256,6 +256,7 @@ static ULONG STDMETHODCALLTYPE Release( IDispatch* lpThis )
          pHbOleServer->pAction = NULL;
       }
       hb_xfree( pHbOleServer );
+      InterlockedDecrement( &s_lObjectCount );
       return 0;
    }
    return pHbOleServer->count;
@@ -580,14 +581,15 @@ static HRESULT s_createHbOleObject( REFIID riid, void** ppvObj,
    }
    else
    {
+      InterlockedIncrement( &s_lObjectCount );
+
       thisobj->lpVtbl = &IHbOleServer_Vtbl;
       thisobj->count = 1;
       thisobj->pAction = pAction;
       thisobj->fGuids = fGuids;
+
       hr = IHbOleServer_Vtbl.QueryInterface( ( IDispatch* ) thisobj, riid, ppvObj );
       IHbOleServer_Vtbl.Release( ( IDispatch* ) thisobj );
-      if( hr == S_OK )
-         InterlockedIncrement( &s_lObjectCount );
    }
    return hr;
 }
