@@ -84,7 +84,7 @@ flags PrintDialogOptions
 virtual void done ( int result )
 void open ( QObject * receiver, const char * member )
 PrintDialogOptions options () const
-QPrinter * printer () const
+//QPrinter * printer () const
 QPrinter * printer ()
 void setOption ( PrintDialogOption option, bool on = true )
 void setOptions ( PrintDialogOptions options )

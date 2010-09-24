@@ -57,7 +57,7 @@
 <CLASS>
 QObject  = no
 Inherits =
-Type     = 
+Type     =
 New      =
 Destructor = no
 </CLASS>
@@ -133,7 +133,7 @@ QChar toLower () const
 QChar toTitleCase () const
 QChar toUpper () const
 ushort & unicode ()
-ushort unicode () const
+//ushort unicode () const
 UnicodeVersion unicodeVersion () const
 
 </PROTOS>

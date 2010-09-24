@@ -55,9 +55,9 @@
 ;
 
 <CLASS>
-QObject  = 
+QObject  =
 Inherits = QIODevice
-Type     = 
+Type     =
 New      =
 </CLASS>
 
@@ -87,7 +87,7 @@ HB_FUNC( QT_QBUFFER )
 
 <PROTOS>
 QByteArray & buffer ()
-const QByteArray & buffer () const
+//const QByteArray & buffer () const
 const QByteArray & data () const
 void setBuffer ( QByteArray * byteArray )
 void setData ( const char * data, int size )

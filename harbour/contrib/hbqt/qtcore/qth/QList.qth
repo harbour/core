@@ -56,9 +56,9 @@
 
 <CLASS>
 QObject  = no
-Inherits = 
+Inherits =
 Type     = Core
-New      = 
+New      =
 List     = yes
 </CLASS>
 
@@ -85,7 +85,7 @@ HB_FUNC( QT_QLIST )
 void append ( const T & value )
 void append ( const QList<T> & value )
 const T & at ( int i ) const
-T & back ()
+//T & back ()
 const T & back () const
 //iterator begin ()
 //const_iterator begin () const
@@ -101,15 +101,15 @@ bool empty () const
 bool endsWith ( const T & value ) const
 //iterator erase ( iterator pos )
 //iterator erase ( iterator begin, iterator end )
-T & first ()
+//T & first ()
 const T & first () const
-T & front ()
+//T & front ()
 const T & front () const
 int indexOf ( const T & value, int from = 0 ) const
 void insert ( int i, const T & value )
 //iterator insert ( iterator before, const T & value )
 bool isEmpty () const
-T & last ()
+//T & last ()
 const T & last () const
 int lastIndexOf ( const T & value, int from = -1 ) const
 int length () const
