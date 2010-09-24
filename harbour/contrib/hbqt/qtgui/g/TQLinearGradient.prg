@@ -72,10 +72,8 @@ CREATE CLASS QLinearGradient INHERIT HbQtObjectHandler, HB_QGradient FUNCTION HB
    METHOD  new( ... )
 
    METHOD  finalStop()
-   METHOD  setFinalStop( pStop )
-   METHOD  setFinalStop_1( nX, nY )
-   METHOD  setStart( pStart )
-   METHOD  setStart_1( nX, nY )
+   METHOD  setFinalStop( ... )
+   METHOD  setStart( ... )
    METHOD  start()
 
    ENDCLASS
@@ -94,20 +92,58 @@ METHOD QLinearGradient:finalStop()
    RETURN Qt_QLinearGradient_finalStop( ::pPtr )
 
 
-METHOD QLinearGradient:setFinalStop( pStop )
-   RETURN Qt_QLinearGradient_setFinalStop( ::pPtr, hbqt_ptr( pStop ) )
+METHOD QLinearGradient:setFinalStop( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void setFinalStop ( qreal x, qreal y )
+                // N n qreal, N n qreal
+         RETURN Qt_QLinearGradient_setFinalStop_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void setFinalStop ( const QPointF & stop )
+                // PO p QPointF
+         RETURN Qt_QLinearGradient_setFinalStop( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QLinearGradient:setFinalStop_1( nX, nY )
-   RETURN Qt_QLinearGradient_setFinalStop_1( ::pPtr, nX, nY )
-
-
-METHOD QLinearGradient:setStart( pStart )
-   RETURN Qt_QLinearGradient_setStart( ::pPtr, hbqt_ptr( pStart ) )
-
-
-METHOD QLinearGradient:setStart_1( nX, nY )
-   RETURN Qt_QLinearGradient_setStart_1( ::pPtr, nX, nY )
+METHOD QLinearGradient:setStart( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void setStart ( qreal x, qreal y )
+                // N n qreal, N n qreal
+         RETURN Qt_QLinearGradient_setStart_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void setStart ( const QPointF & start )
+                // PO p QPointF
+         RETURN Qt_QLinearGradient_setStart( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QLinearGradient:start()

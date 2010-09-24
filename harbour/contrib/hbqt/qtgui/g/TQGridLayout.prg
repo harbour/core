@@ -72,10 +72,8 @@ CREATE CLASS QGridLayout INHERIT HbQtObjectHandler, HB_QLayout FUNCTION HB_QGrid
    METHOD  new( ... )
 
    METHOD  addItem( pItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
-   METHOD  addLayout( pLayout, nRow, nColumn, nAlignment )
-   METHOD  addLayout_1( pLayout, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
-   METHOD  addWidget( pWidget, nRow, nColumn, nAlignment )
-   METHOD  addWidget_1( pWidget, nFromRow, nFromColumn, nRowSpan, nColumnSpan, nAlignment )
+   METHOD  addLayout( ... )
+   METHOD  addWidget( ... )
    METHOD  cellRect( nRow, nColumn )
    METHOD  columnCount()
    METHOD  columnMinimumWidth( nColumn )
@@ -114,20 +112,86 @@ METHOD QGridLayout:addItem( pItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignm
    RETURN Qt_QGridLayout_addItem( ::pPtr, hbqt_ptr( pItem ), nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
 
 
-METHOD QGridLayout:addLayout( pLayout, nRow, nColumn, nAlignment )
-   RETURN Qt_QGridLayout_addLayout( ::pPtr, hbqt_ptr( pLayout ), nRow, nColumn, nAlignment )
+METHOD QGridLayout:addLayout( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 6
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N" .AND. aV[ 6 ] $ "N"
+                // void addLayout ( QLayout * layout, int row, int column, int rowSpan, int columnSpan, Qt::Alignment alignment = 0 )   [*D=1*]
+                // PO p QLayout, N n int, N n int, N n int, N n int, N n Qt::Alignment
+         RETURN Qt_QGridLayout_addLayout_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 5
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N"
+                // void addLayout ( QLayout * layout, int row, int column, int rowSpan, int columnSpan, Qt::Alignment alignment = 0 )   [*D=1*]
+                // PO p QLayout, N n int, N n int, N n int, N n int, N n Qt::Alignment
+         RETURN Qt_QGridLayout_addLayout_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // void addLayout ( QLayout * layout, int row, int column, Qt::Alignment alignment = 0 )   [*D=1*]
+                // PO p QLayout, N n int, N n int, N n Qt::Alignment
+         RETURN Qt_QGridLayout_addLayout( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // void addLayout ( QLayout * layout, int row, int column, Qt::Alignment alignment = 0 )   [*D=1*]
+                // PO p QLayout, N n int, N n int, N n Qt::Alignment
+         RETURN Qt_QGridLayout_addLayout( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QGridLayout:addLayout_1( pLayout, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
-   RETURN Qt_QGridLayout_addLayout_1( ::pPtr, hbqt_ptr( pLayout ), nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
-
-
-METHOD QGridLayout:addWidget( pWidget, nRow, nColumn, nAlignment )
-   RETURN Qt_QGridLayout_addWidget( ::pPtr, hbqt_ptr( pWidget ), nRow, nColumn, nAlignment )
-
-
-METHOD QGridLayout:addWidget_1( pWidget, nFromRow, nFromColumn, nRowSpan, nColumnSpan, nAlignment )
-   RETURN Qt_QGridLayout_addWidget_1( ::pPtr, hbqt_ptr( pWidget ), nFromRow, nFromColumn, nRowSpan, nColumnSpan, nAlignment )
+METHOD QGridLayout:addWidget( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 6
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N" .AND. aV[ 6 ] $ "N"
+                // void addWidget ( QWidget * widget, int fromRow, int fromColumn, int rowSpan, int columnSpan, Qt::Alignment alignment = 0 )   [*D=1*]
+                // PO p QWidget, N n int, N n int, N n int, N n int, N n Qt::Alignment
+         RETURN Qt_QGridLayout_addWidget_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 5
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N"
+                // void addWidget ( QWidget * widget, int fromRow, int fromColumn, int rowSpan, int columnSpan, Qt::Alignment alignment = 0 )   [*D=1*]
+                // PO p QWidget, N n int, N n int, N n int, N n int, N n Qt::Alignment
+         RETURN Qt_QGridLayout_addWidget_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // void addWidget ( QWidget * widget, int row, int column, Qt::Alignment alignment = 0 )   [*D=1*]
+                // PO p QWidget, N n int, N n int, N n Qt::Alignment
+         RETURN Qt_QGridLayout_addWidget( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // void addWidget ( QWidget * widget, int row, int column, Qt::Alignment alignment = 0 )   [*D=1*]
+                // PO p QWidget, N n int, N n int, N n Qt::Alignment
+         RETURN Qt_QGridLayout_addWidget( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QGridLayout:cellRect( nRow, nColumn )

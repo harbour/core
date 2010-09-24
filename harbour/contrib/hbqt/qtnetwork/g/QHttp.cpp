@@ -72,6 +72,18 @@
  *  enum State { Unconnected, HostLookup, Connecting, Sending, ..., Closing }
  */
 
+/*
+ *  Constructed[ 24/24 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // qint64 read ( char * data, qint64 maxlen )
+ *  // int setProxy ( const QNetworkProxy & proxy )
+ *  // int setSocket ( QTcpSocket * socket )
+ *  //void ignoreSslErrors ()
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtNetwork/QHttp>

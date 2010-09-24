@@ -71,8 +71,7 @@ CREATE CLASS QTextEncoder INHERIT HbQtObjectHandler FUNCTION HB_QTextEncoder
 
    METHOD  new( ... )
 
-   METHOD  fromUnicode( cStr )
-   METHOD  fromUnicode_1( pUc, nLen )
+   METHOD  fromUnicode( ... )
 
    ENDCLASS
 
@@ -86,10 +85,29 @@ METHOD QTextEncoder:new( ... )
    RETURN Self
 
 
-METHOD QTextEncoder:fromUnicode( cStr )
-   RETURN Qt_QTextEncoder_fromUnicode( ::pPtr, cStr )
-
-
-METHOD QTextEncoder:fromUnicode_1( pUc, nLen )
-   RETURN Qt_QTextEncoder_fromUnicode_1( ::pPtr, hbqt_ptr( pUc ), nLen )
+METHOD QTextEncoder:fromUnicode( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // QByteArray fromUnicode ( const QChar * uc, int len )
+                // PO p QChar, N n int
+         RETURN QByteArray():from( Qt_QTextEncoder_fromUnicode_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // QByteArray fromUnicode ( const QString & str )
+                // C c QString
+         RETURN QByteArray():from( Qt_QTextEncoder_fromUnicode( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 

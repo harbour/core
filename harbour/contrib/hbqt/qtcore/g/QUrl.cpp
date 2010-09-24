@@ -72,17 +72,16 @@
  */
 
 /*
- *  Constructed[ 70/75 [ 93.33% ] ]
+ *  Constructed[ 70/74 [ 94.59% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  QList<QPair<QByteArray, QByteArray> > encodedQueryItems () const
  *  QList<QPair<QString, QString> > queryItems () const
  *  void setEncodedQueryItems ( const QList<QPair<QByteArray, QByteArray> > & query )
  *  void setQueryItems ( const QList<QPair<QString, QString> > & query )
  *
- *  *** Commented out protos which construct fine but do not compile ***
+ *  *** Commented out protostypes ***
  *
  *  //void setQueryDelimiters ( char valueDelimiter, char pairDelimiter )
  */

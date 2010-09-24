@@ -73,6 +73,16 @@
  *  enum StepEnabledFlag { StepNone, StepUpEnabled, StepDownEnabled }
  */
 
+/*
+ *  Constructed[ 26/26 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // virtual void fixup ( QString & input ) const
+ *  // virtual QValidator::State validate ( QString & input, int & pos ) const
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QAbstractSpinBox>

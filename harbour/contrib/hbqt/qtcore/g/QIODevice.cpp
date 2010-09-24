@@ -70,6 +70,11 @@
  *  enum OpenModeFlag { NotOpen, ReadOnly, WriteOnly, ReadWrite, ..., Unbuffered }
  */
 
+/*
+ *  Constructed[ 33/33 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtCore/QIODevice>

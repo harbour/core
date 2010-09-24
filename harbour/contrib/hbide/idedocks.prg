@@ -286,18 +286,24 @@ METHOD IdeDocks:buildDialog()
 
    IF ::oIde:lCurEditsMdi
       ::buildMdiToolbar()
-      ::qLayout:addWidget_1( ::qMdiToolbar:oWidget   , 0, 0, 1, 2 )
+      //::qLayout:addWidget_1( ::qMdiToolbar:oWidget   , 0, 0, 1, 2 )
+      ::qLayout:addWidget( ::qMdiToolbar:oWidget   , 0, 0, 1, 2 )
       ::buildMdiToolbarLeft()
-      ::qLayout:addWidget_1( ::qMdiToolbarL:oWidget  , 1, 0, 1, 1 )
+      //::qLayout:addWidget_1( ::qMdiToolbarL:oWidget  , 1, 0, 1, 1 )
+      ::qLayout:addWidget( ::qMdiToolbarL:oWidget  , 1, 0, 1, 1 )
       ::buildStackedWidget()
-      ::qLayout:addWidget_1( ::oStackedWidget:oWidget, 1, 1, 1, 1 )
+      //::qLayout:addWidget_1( ::oStackedWidget:oWidget, 1, 1, 1, 1 )
+      ::qLayout:addWidget( ::oStackedWidget:oWidget, 1, 1, 1, 1 )
       ::buildSearchReplaceWidget()
-      ::qLayout:addWidget_1( ::oSearchReplace:oUI    , 2, 0, 1, 2 )
+      //::qLayout:addWidget_1( ::oSearchReplace:oUI    , 2, 0, 1, 2 )
+      ::qLayout:addWidget( ::oSearchReplace:oUI    , 2, 0, 1, 2 )
    ELSE
       ::buildStackedWidget()
-      ::qLayout:addWidget_1( ::oStackedWidget:oWidget, 0, 0, 1, 1 )
+      //::qLayout:addWidget_1( ::oStackedWidget:oWidget, 0, 0, 1, 1 )
+      ::qLayout:addWidget( ::oStackedWidget:oWidget, 0, 0, 1, 1 )
       ::buildSearchReplaceWidget()
-      ::qLayout:addWidget_1( ::oSearchReplace:oUI    , 1, 0, 1, 1 )
+      //::qLayout:addWidget_1( ::oSearchReplace:oUI    , 1, 0, 1, 1 )
+      ::qLayout:addWidget( ::oSearchReplace:oUI    , 1, 0, 1, 1 )
    ENDIF
 
    /* Normalize Views */
@@ -348,12 +354,6 @@ METHOD IdeDocks:buildDialog()
          ::oStackedWidget:cascadeSubWindows()
       ELSEIF x_[ 1,6 ] == 3
          ::stackMaximized()
-#if 0  /* At this point size of the viewport is not determined */
-      ELSEIF x_[ 1,6 ] == 4
-         ::stackVertically()
-      ELSEIF x_[ 1,6 ] == 5
-         ::stackHorizontally()
-#endif
       ELSE
          FOR EACH a_ IN x_
             IF !empty( a_[ 2 ] )
@@ -429,7 +429,7 @@ METHOD IdeDocks:buildSystemTray()
          ::oSys:setIcon( hbide_image( "hbide" ) )
          ::oSys:connect( "activated(QSystemTrayIcon::ActivationReason)", {|p| ::execEvent( "qSystemTrayIcon_activated", p ) } )
 
-         ::oIde:oSysMenu := QMenu( ::oDlg:oWidget )
+         ::oIde:oSysMenu := QMenu() // ::oDlg:oWidget )
          ::qAct1 := QAction():from( ::oSysMenu:addAction( hbide_image( "fullscreen" ), "&Show" ) )
          ::oSysMenu:addSeparator()
          ::qAct2 := QAction():from( ::oSysMenu:addAction( hbide_image( "exit" ), "&Exit" ) )

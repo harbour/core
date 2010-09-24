@@ -93,8 +93,7 @@ CREATE CLASS QSettings INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QSettin
    METHOD  scope()
    METHOD  setArrayIndex( nI )
    METHOD  setFallbacksEnabled( lB )
-   METHOD  setIniCodec( pCodec )
-   METHOD  setIniCodec_1( pCodecName )
+   METHOD  setIniCodec( ... )
    METHOD  setValue( cKey, pValue )
    METHOD  status()
    METHOD  sync()
@@ -203,12 +202,27 @@ METHOD QSettings:setFallbacksEnabled( lB )
    RETURN Qt_QSettings_setFallbacksEnabled( ::pPtr, lB )
 
 
-METHOD QSettings:setIniCodec( pCodec )
-   RETURN Qt_QSettings_setIniCodec( ::pPtr, hbqt_ptr( pCodec ) )
-
-
-METHOD QSettings:setIniCodec_1( pCodecName )
-   RETURN Qt_QSettings_setIniCodec_1( ::pPtr, hbqt_ptr( pCodecName ) )
+METHOD QSettings:setIniCodec( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void setIniCodec ( QTextCodec * codec )
+                // PO p QTextCodec
+         RETURN Qt_QSettings_setIniCodec( ::pPtr, ... )
+                // void setIniCodec ( const char * codecName )
+                // PO p char
+         // RETURN Qt_QSettings_setIniCodec_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QSettings:setValue( cKey, pValue )

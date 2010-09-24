@@ -71,6 +71,15 @@
  *  enum Status { NoError, AccessError, FormatError }
  */
 
+/*
+ *  Constructed[ 31/31 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  //Format registerFormat ( const QString & extension, ReadFunc readFunc, WriteFunc writeFunc, Qt::CaseSensitivity caseSensitivity = Qt::CaseSensitive )
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtCore/QSettings>

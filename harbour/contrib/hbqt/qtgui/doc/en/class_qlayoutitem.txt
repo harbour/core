@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QLayoutItem():new( ... )
+ *     QLayoutItem( ... )
  *     QLayoutItem():from( pPtr_OR_oObj_of_type_QLayoutItem )
  *     QLayoutItem():configure( pPtr_OR_oObj_of_type_QLayoutItem )
  *  $ARGUMENTS$

@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QLayout
  *  $SYNTAX$
- *     QGridLayout():new( ... )
+ *     QGridLayout( ... )
  *     QGridLayout():from( pPtr_OR_oObj_of_type_QGridLayout )
  *     QGridLayout():configure( pPtr_OR_oObj_of_type_QGridLayout )
  *  $ARGUMENTS$

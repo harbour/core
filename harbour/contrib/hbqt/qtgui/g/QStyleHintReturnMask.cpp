@@ -75,7 +75,6 @@
  *  Constructed[ 0/1 [ 0.00% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  QRegion region
  */

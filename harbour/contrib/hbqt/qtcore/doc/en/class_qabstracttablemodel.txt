@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QAbstractItemModel
  *  $SYNTAX$
- *     QAbstractTableModel():new( ... )
+ *     QAbstractTableModel( ... )
  *     QAbstractTableModel():from( pPtr_OR_oObj_of_type_QAbstractTableModel )
  *     QAbstractTableModel():configure( pPtr_OR_oObj_of_type_QAbstractTableModel )
  *  $ARGUMENTS$

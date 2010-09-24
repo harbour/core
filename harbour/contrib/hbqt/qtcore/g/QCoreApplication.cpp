@@ -69,6 +69,17 @@
  *  enum Encoding { CodecForTr, UnicodeUTF8, DefaultCodec }
  */
 
+/*
+ *  Constructed[ 40/40 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // bool filterEvent ( void * message, long * result )
+ *  // EventFilter setEventFilter ( EventFilter filter )
+ *  // virtual bool winEventFilter ( MSG * msg, long * result )
+ */
+
 #include <QtCore/QPointer>
 
 #include "hbapi.h"

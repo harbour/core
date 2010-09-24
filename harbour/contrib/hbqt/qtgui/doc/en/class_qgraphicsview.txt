@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QAbstractScrollArea
  *  $SYNTAX$
- *     QGraphicsView():new( ... )
+ *     QGraphicsView( ... )
  *     QGraphicsView():from( pPtr_OR_oObj_of_type_QGraphicsView )
  *     QGraphicsView():configure( pPtr_OR_oObj_of_type_QGraphicsView )
  *  $ARGUMENTS$

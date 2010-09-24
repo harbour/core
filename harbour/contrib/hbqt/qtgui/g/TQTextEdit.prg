@@ -76,13 +76,11 @@ CREATE CLASS QTextEdit INHERIT HbQtObjectHandler, HB_QAbstractScrollArea FUNCTIO
    METHOD  anchorAt( pPos )
    METHOD  autoFormatting()
    METHOD  canPaste()
-   METHOD  createStandardContextMenu()
-   METHOD  createStandardContextMenu_1( pPosition )
+   METHOD  createStandardContextMenu( ... )
    METHOD  currentCharFormat()
    METHOD  currentFont()
    METHOD  cursorForPosition( pPos )
-   METHOD  cursorRect( pCursor )
-   METHOD  cursorRect_1()
+   METHOD  cursorRect( ... )
    METHOD  cursorWidth()
    METHOD  document()
    METHOD  documentTitle()
@@ -185,12 +183,27 @@ METHOD QTextEdit:canPaste()
    RETURN Qt_QTextEdit_canPaste( ::pPtr )
 
 
-METHOD QTextEdit:createStandardContextMenu()
-   RETURN Qt_QTextEdit_createStandardContextMenu( ::pPtr )
-
-
-METHOD QTextEdit:createStandardContextMenu_1( pPosition )
-   RETURN Qt_QTextEdit_createStandardContextMenu_1( ::pPtr, hbqt_ptr( pPosition ) )
+METHOD QTextEdit:createStandardContextMenu( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QMenu * createStandardContextMenu ( const QPoint & position )
+                // PO p QPoint
+         RETURN QMenu():from( Qt_QTextEdit_createStandardContextMenu_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 0
+             // QMenu * createStandardContextMenu ()
+      RETURN QMenu():from( Qt_QTextEdit_createStandardContextMenu( ::pPtr, ... ) )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QTextEdit:currentCharFormat()
@@ -205,12 +218,27 @@ METHOD QTextEdit:cursorForPosition( pPos )
    RETURN Qt_QTextEdit_cursorForPosition( ::pPtr, hbqt_ptr( pPos ) )
 
 
-METHOD QTextEdit:cursorRect( pCursor )
-   RETURN Qt_QTextEdit_cursorRect( ::pPtr, hbqt_ptr( pCursor ) )
-
-
-METHOD QTextEdit:cursorRect_1()
-   RETURN Qt_QTextEdit_cursorRect_1( ::pPtr )
+METHOD QTextEdit:cursorRect( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QRect cursorRect ( const QTextCursor & cursor ) const
+                // PO p QTextCursor
+         RETURN QRect():from( Qt_QTextEdit_cursorRect( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 0
+             // QRect cursorRect () const
+      RETURN QRect():from( Qt_QTextEdit_cursorRect_1( ::pPtr, ... ) )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QTextEdit:cursorWidth()

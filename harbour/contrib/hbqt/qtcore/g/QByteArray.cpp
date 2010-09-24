@@ -65,6 +65,17 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  Constructed[ 98/98 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // bool contains ( const QByteArray & ba ) const
+ *  // bool contains ( const char * str ) const
+ *  // bool contains ( char ch ) const
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtCore/QByteArray>

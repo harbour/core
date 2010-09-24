@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QWidget
  *  $SYNTAX$
- *     QDesignerPropertyEditorInterface():new( ... )
+ *     QDesignerPropertyEditorInterface( ... )
  *     QDesignerPropertyEditorInterface():from( pPtr_OR_oObj_of_type_QDesignerPropertyEditorInterface )
  *     QDesignerPropertyEditorInterface():configure( pPtr_OR_oObj_of_type_QDesignerPropertyEditorInterface )
  *  $ARGUMENTS$

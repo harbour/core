@@ -70,6 +70,11 @@
  *  enum ResizeMode { Interactive, Fixed, Stretch, ResizeToContents, Custom }
  */
 
+/*
+ *  Constructed[ 57/57 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QHeaderView>

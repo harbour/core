@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QDialog
  *  $SYNTAX$
- *     QErrorMessage():new( ... )
+ *     QErrorMessage( ... )
  *     QErrorMessage():from( pPtr_OR_oObj_of_type_QErrorMessage )
  *     QErrorMessage():configure( pPtr_OR_oObj_of_type_QErrorMessage )
  *  $ARGUMENTS$

@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QWebHitTestResult():new( ... )
+ *     QWebHitTestResult( ... )
  *     QWebHitTestResult():from( pPtr_OR_oObj_of_type_QWebHitTestResult )
  *     QWebHitTestResult():configure( pPtr_OR_oObj_of_type_QWebHitTestResult )
  *  $ARGUMENTS$

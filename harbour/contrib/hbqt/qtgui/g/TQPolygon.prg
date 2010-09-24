@@ -74,15 +74,12 @@ CREATE CLASS QPolygon INHERIT HbQtObjectHandler FUNCTION HB_QPolygon
    METHOD  boundingRect()
    METHOD  containsPoint( pPoint, nFillRule )
    METHOD  intersected( pR )
-   METHOD  point( nIndex, nX, nY )
-   METHOD  point_1( nIndex )
+   METHOD  point( ... )
    METHOD  putPoints( nIndex, nNPoints, pFromPolygon, nFromIndex )
-   METHOD  setPoint( nIndex, nX, nY )
-   METHOD  setPoint_1( nIndex, pPoint )
+   METHOD  setPoint( ... )
    METHOD  setPoints( nNPoints, nPoints )
    METHOD  subtracted( pR )
-   METHOD  translate( nDx, nDy )
-   METHOD  translate_1( pOffset )
+   METHOD  translate( ... )
    METHOD  united( pR )
 
    ENDCLASS
@@ -109,24 +106,62 @@ METHOD QPolygon:intersected( pR )
    RETURN Qt_QPolygon_intersected( ::pPtr, hbqt_ptr( pR ) )
 
 
-METHOD QPolygon:point( nIndex, nX, nY )
-   RETURN Qt_QPolygon_point( ::pPtr, nIndex, nX, nY )
-
-
-METHOD QPolygon:point_1( nIndex )
-   RETURN Qt_QPolygon_point_1( ::pPtr, nIndex )
+METHOD QPolygon:point( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // void point ( int index, int * x, int * y ) const
+                // N n int, N @ int, N @ int
+         RETURN Qt_QPolygon_point( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // QPoint point ( int index ) const
+                // N n int
+         RETURN QPoint():from( Qt_QPolygon_point_1( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPolygon:putPoints( nIndex, nNPoints, pFromPolygon, nFromIndex )
    RETURN Qt_QPolygon_putPoints( ::pPtr, nIndex, nNPoints, hbqt_ptr( pFromPolygon ), nFromIndex )
 
 
-METHOD QPolygon:setPoint( nIndex, nX, nY )
-   RETURN Qt_QPolygon_setPoint( ::pPtr, nIndex, nX, nY )
-
-
-METHOD QPolygon:setPoint_1( nIndex, pPoint )
-   RETURN Qt_QPolygon_setPoint_1( ::pPtr, nIndex, hbqt_ptr( pPoint ) )
+METHOD QPolygon:setPoint( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // void setPoint ( int index, int x, int y )
+                // N n int, N n int, N n int
+         RETURN Qt_QPolygon_setPoint( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PO"
+                // void setPoint ( int index, const QPoint & point )
+                // N n int, PO p QPoint
+         RETURN Qt_QPolygon_setPoint_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPolygon:setPoints( nNPoints, nPoints )
@@ -137,12 +172,31 @@ METHOD QPolygon:subtracted( pR )
    RETURN Qt_QPolygon_subtracted( ::pPtr, hbqt_ptr( pR ) )
 
 
-METHOD QPolygon:translate( nDx, nDy )
-   RETURN Qt_QPolygon_translate( ::pPtr, nDx, nDy )
-
-
-METHOD QPolygon:translate_1( pOffset )
-   RETURN Qt_QPolygon_translate_1( ::pPtr, hbqt_ptr( pOffset ) )
+METHOD QPolygon:translate( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void translate ( int dx, int dy )
+                // N n int, N n int
+         RETURN Qt_QPolygon_translate( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void translate ( const QPoint & offset )
+                // PO p QPoint
+         RETURN Qt_QPolygon_translate_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPolygon:united( pR )

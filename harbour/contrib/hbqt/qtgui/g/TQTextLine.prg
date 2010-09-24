@@ -72,8 +72,7 @@ CREATE CLASS QTextLine INHERIT HbQtObjectHandler FUNCTION HB_QTextLine
    METHOD  new( ... )
 
    METHOD  ascent()
-   METHOD  cursorToX( nCursorPos, nEdge )
-   METHOD  cursorToX_1( nCursorPos, nEdge )
+   METHOD  cursorToX( ... )
    METHOD  descent()
    METHOD  height()
    METHOD  isValid()
@@ -83,8 +82,7 @@ CREATE CLASS QTextLine INHERIT HbQtObjectHandler FUNCTION HB_QTextLine
    METHOD  position()
    METHOD  rect()
    METHOD  setLineWidth( nWidth )
-   METHOD  setNumColumns( nNumColumns )
-   METHOD  setNumColumns_1( nNumColumns, nAlignmentWidth )
+   METHOD  setNumColumns( ... )
    METHOD  setPosition( pPos )
    METHOD  textLength()
    METHOD  textStart()
@@ -109,12 +107,37 @@ METHOD QTextLine:ascent()
    RETURN Qt_QTextLine_ascent( ::pPtr )
 
 
-METHOD QTextLine:cursorToX( nCursorPos, nEdge )
-   RETURN Qt_QTextLine_cursorToX( ::pPtr, nCursorPos, nEdge )
-
-
-METHOD QTextLine:cursorToX_1( nCursorPos, nEdge )
-   RETURN Qt_QTextLine_cursorToX_1( ::pPtr, nCursorPos, nEdge )
+METHOD QTextLine:cursorToX( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // qreal cursorToX ( int * cursorPos, Edge edge = Leading ) const
+                // N @ int, N n QTextLine::Edge
+         RETURN Qt_QTextLine_cursorToX( ::pPtr, ... )
+                // qreal cursorToX ( int cursorPos, Edge edge = Leading ) const
+                // N n int, N n QTextLine::Edge
+         // RETURN Qt_QTextLine_cursorToX_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // qreal cursorToX ( int * cursorPos, Edge edge = Leading ) const
+                // N @ int, N n QTextLine::Edge
+         RETURN Qt_QTextLine_cursorToX( ::pPtr, ... )
+                // qreal cursorToX ( int cursorPos, Edge edge = Leading ) const
+                // N n int, N n QTextLine::Edge
+         // RETURN Qt_QTextLine_cursorToX_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QTextLine:descent()
@@ -153,12 +176,31 @@ METHOD QTextLine:setLineWidth( nWidth )
    RETURN Qt_QTextLine_setLineWidth( ::pPtr, nWidth )
 
 
-METHOD QTextLine:setNumColumns( nNumColumns )
-   RETURN Qt_QTextLine_setNumColumns( ::pPtr, nNumColumns )
-
-
-METHOD QTextLine:setNumColumns_1( nNumColumns, nAlignmentWidth )
-   RETURN Qt_QTextLine_setNumColumns_1( ::pPtr, nNumColumns, nAlignmentWidth )
+METHOD QTextLine:setNumColumns( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void setNumColumns ( int numColumns, qreal alignmentWidth )
+                // N n int, N n qreal
+         RETURN Qt_QTextLine_setNumColumns_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // void setNumColumns ( int numColumns )
+                // N n int
+         RETURN Qt_QTextLine_setNumColumns( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QTextLine:setPosition( pPos )

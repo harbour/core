@@ -65,6 +65,16 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  Constructed[ 1/1 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  //void toUnicode ( QString * target, const char * chars, int len )
+ *  //QString toUnicode ( const QByteArray & ba )
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtCore/QTextDecoder>

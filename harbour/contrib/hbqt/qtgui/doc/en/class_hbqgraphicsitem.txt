@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QGraphicsItem
  *  $SYNTAX$
- *     HBQGraphicsItem():new( ... )
+ *     HBQGraphicsItem( ... )
  *     HBQGraphicsItem():from( pPtr_OR_oObj_of_type_HBQGraphicsItem )
  *     HBQGraphicsItem():configure( pPtr_OR_oObj_of_type_HBQGraphicsItem )
  *  $ARGUMENTS$

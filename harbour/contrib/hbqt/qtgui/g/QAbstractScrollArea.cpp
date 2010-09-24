@@ -66,6 +66,15 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  Constructed[ 14/14 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // QWidgetList scrollBarWidgets ( Qt::Alignment alignment )
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QAbstractScrollArea>

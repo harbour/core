@@ -70,6 +70,16 @@
  *  enum WritingSystem { Any, Latin, Greek, Cyrillic, ..., Runic }
  */
 
+/*
+ *  Constructed[ 23/23 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  //QList<WritingSystem> writingSystems () const
+ *  //QList<WritingSystem> writingSystems ( const QString & family ) const
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtCore/QStringList>

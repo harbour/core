@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QDataStream():new( ... )
+ *     QDataStream( ... )
  *     QDataStream():from( pPtr_OR_oObj_of_type_QDataStream )
  *     QDataStream():configure( pPtr_OR_oObj_of_type_QDataStream )
  *  $ARGUMENTS$

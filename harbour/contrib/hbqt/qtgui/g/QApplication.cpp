@@ -71,6 +71,31 @@
  *  enum Type { Tty, GuiClient, GuiServer }
  */
 
+/*
+ *  Constructed[ 74/74 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // QInputContext * inputContext () const
+ *  // virtual bool macEventFilter ( EventHandlerCallRef, EventRef )
+ *  // virtual bool qwsEventFilter ( QWSEvent * )
+ *  // int qwsProcessEvent ( QWSEvent * )
+ *  // void qwsSetCustomColors ( QRgb * colortable, int start, int numColors )
+ *  // void setInputContext ( QInputContext * inputContext )
+ *  // QWidgetList allWidgets ()
+ *  //bool keypadNavigationEnabled ()
+ *  //QDecoration & qwsDecoration ()
+ *  //void qwsSetDecoration ( QDecoration * )
+ *  //QDecoration * qwsSetDecoration ( const QString & decoration )
+ *  //void setKeypadNavigationEnabled ( bool enable )
+ *  // QWidgetList topLevelWidgets ()
+ *  //int autoMaximizeThreshold () const
+ *  //bool autoSipEnabled () const
+ *  //void setAutoMaximizeThreshold ( const int threshold )
+ *  //void setAutoSipEnabled ( const bool enabled )
+ */
+
 #include <QtCore/QPointer>
 
 #include "hbapi.h"

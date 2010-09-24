@@ -71,6 +71,11 @@
  *  enum StyleOptionVersion { Version }
  */
 
+/*
+ *  Constructed[ 3/3 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionSpinBox>
@@ -149,7 +154,11 @@ HB_FUNC( QT_QSTYLEOPTIONSPINBOX )
  */
 HB_FUNC( QT_QSTYLEOPTIONSPINBOX_BUTTONSYMBOLS )
 {
-   hb_retni( ( QAbstractSpinBox::ButtonSymbols ) hbqt_par_QStyleOptionSpinBox( 1 )->buttonSymbols );
+   QStyleOptionSpinBox * p = hbqt_par_QStyleOptionSpinBox( 1 );
+   if( p )
+   {
+      hb_retni( ( QAbstractSpinBox::ButtonSymbols ) ( p )->buttonSymbols );
+   }
 }
 
 /*
@@ -157,7 +166,11 @@ HB_FUNC( QT_QSTYLEOPTIONSPINBOX_BUTTONSYMBOLS )
  */
 HB_FUNC( QT_QSTYLEOPTIONSPINBOX_FRAME )
 {
-   hb_retl( hbqt_par_QStyleOptionSpinBox( 1 )->frame );
+   QStyleOptionSpinBox * p = hbqt_par_QStyleOptionSpinBox( 1 );
+   if( p )
+   {
+      hb_retl( ( p )->frame );
+   }
 }
 
 /*
@@ -165,7 +178,11 @@ HB_FUNC( QT_QSTYLEOPTIONSPINBOX_FRAME )
  */
 HB_FUNC( QT_QSTYLEOPTIONSPINBOX_STEPENABLED )
 {
-   hb_retni( ( QAbstractSpinBox::StepEnabled ) hbqt_par_QStyleOptionSpinBox( 1 )->stepEnabled );
+   QStyleOptionSpinBox * p = hbqt_par_QStyleOptionSpinBox( 1 );
+   if( p )
+   {
+      hb_retni( ( QAbstractSpinBox::StepEnabled ) ( p )->stepEnabled );
+   }
 }
 
 

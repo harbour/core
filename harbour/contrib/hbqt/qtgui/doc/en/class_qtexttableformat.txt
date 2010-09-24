@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QTextFrameFormat
  *  $SYNTAX$
- *     QTextTableFormat():new( ... )
+ *     QTextTableFormat( ... )
  *     QTextTableFormat():from( pPtr_OR_oObj_of_type_QTextTableFormat )
  *     QTextTableFormat():configure( pPtr_OR_oObj_of_type_QTextTableFormat )
  *  $ARGUMENTS$

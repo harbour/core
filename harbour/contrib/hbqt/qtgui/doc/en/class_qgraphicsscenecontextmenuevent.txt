@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QGraphicsSceneEvent
  *  $SYNTAX$
- *     QGraphicsSceneContextMenuEvent():new( ... )
+ *     QGraphicsSceneContextMenuEvent( ... )
  *     QGraphicsSceneContextMenuEvent():from( pPtr_OR_oObj_of_type_QGraphicsSceneContextMenuEvent )
  *     QGraphicsSceneContextMenuEvent():configure( pPtr_OR_oObj_of_type_QGraphicsSceneContextMenuEvent )
  *  $ARGUMENTS$

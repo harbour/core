@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QChar():new( ... )
+ *     QChar( ... )
  *     QChar():from( pPtr_OR_oObj_of_type_QChar )
  *     QChar():configure( pPtr_OR_oObj_of_type_QChar )
  *  $ARGUMENTS$
@@ -27,7 +27,7 @@
  *     An instance of the object of type QChar
  *  $METHODS$
  *     :category()                                         -> nCategory
- *     :combiningClass()                                   -> nUnsigned
+ *     :combiningClass()                                   -> nChar
  *     :decomposition()                                    -> cQString
  *     :decompositionTag()                                 -> nDecomposition
  *     :digitValue()                                       -> nInt
@@ -52,7 +52,6 @@
  *     :toAscii()                                          -> cChar
  *     :toLatin1()                                         -> cChar
  *     :unicode()                                          -> nUshort
- *     :unicode_1()                                        -> nUshort
  *     :unicodeVersion()                                   -> nUnicodeVersion
  * 
  *  $DESCRIPTION$

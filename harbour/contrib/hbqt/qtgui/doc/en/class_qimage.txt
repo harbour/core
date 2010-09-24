@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QImage():new( ... )
+ *     QImage( ... )
  *     QImage():from( pPtr_OR_oObj_of_type_QImage )
  *     QImage():configure( pPtr_OR_oObj_of_type_QImage )
  *  $ARGUMENTS$
@@ -28,7 +28,6 @@
  *  $METHODS$
  *     :allGray()                                          -> lBool
  *     :bits()                                             -> pUchar
- *     :bits_1()                                           -> pUchar
  *     :bytesPerLine()                                     -> nInt
  *     :cacheKey()                                         -> nQint64
  *     :color( nI )                                        -> nQRgb
@@ -42,28 +41,33 @@
  *     :invertPixels( nMode )                              -> NIL
  *     :isGrayscale()                                      -> lBool
  *     :isNull()                                           -> lBool
- *     :load( ... )                                        -> lBool
+ *     :load( cFileName, pFormat )                         -> lBool
+ *     :load_1( pDevice, pFormat )                         -> lBool
  *     :loadFromData( pData, pFormat )                     -> lBool
  *     :numBytes()                                         -> nInt
  *     :numColors()                                        -> nInt
  *     :offset()                                           -> pQPoint
- *     :pixel( ... )                                       -> nQRgb
- *     :pixelIndex( ... )                                  -> nInt
+ *     :pixel( pPosition )                                 -> nQRgb
+ *     :pixel_1( nX, nY )                                  -> nQRgb
+ *     :pixelIndex( pPosition )                            -> nInt
+ *     :pixelIndex_1( nX, nY )                             -> nInt
  *     :rect()                                             -> pQRect
- *     :save( ... )                                        -> lBool
+ *     :save( cFileName, pFormat, nQuality )               -> lBool
+ *     :save_1( pDevice, pFormat, nQuality )               -> lBool
  *     :scanLine( nI )                                     -> pUchar
- *     :scanLine_1( nI )                                   -> pUchar
  *     :setColor( nIndex, nColorValue )                    -> NIL
  *     :setDotsPerMeterX( nX )                             -> NIL
  *     :setDotsPerMeterY( nY )                             -> NIL
  *     :setNumColors( nNumColors )                         -> NIL
  *     :setOffset( pOffset )                               -> NIL
- *     :setPixel( ... )                                    -> NIL
+ *     :setPixel( pPosition, nIndex_or_rgb )               -> NIL
+ *     :setPixel_1( nX, nY, nIndex_or_rgb )                -> NIL
  *     :setText( cKey, cText )                             -> NIL
  *     :size()                                             -> pQSize
  *     :text( cKey )                                       -> cQString
  *     :textKeys()                                         -> pQStringList
- *     :valid( ... )                                       -> lBool
+ *     :valid( pPos )                                      -> lBool
+ *     :valid_1( nX, nY )                                  -> lBool
  *     :width()                                            -> nInt
  * 
  *  $DESCRIPTION$

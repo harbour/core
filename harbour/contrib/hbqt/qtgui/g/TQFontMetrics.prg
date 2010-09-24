@@ -73,10 +73,7 @@ CREATE CLASS QFontMetrics INHERIT HbQtObjectHandler FUNCTION HB_QFontMetrics
 
    METHOD  ascent()
    METHOD  averageCharWidth()
-   METHOD  boundingRect( pCh )
-   METHOD  boundingRect_1( cText )
-   METHOD  boundingRect_2( nX, nY, nWidth, nHeight, nFlags, cText, nTabStops, nTabArray )
-   METHOD  boundingRect_3( pRect, nFlags, cText, nTabStops, nTabArray )
+   METHOD  boundingRect( ... )
    METHOD  descent()
    METHOD  elidedText( cText, nMode, nWidth, nFlags )
    METHOD  height()
@@ -94,8 +91,7 @@ CREATE CLASS QFontMetrics INHERIT HbQtObjectHandler FUNCTION HB_QFontMetrics
    METHOD  strikeOutPos()
    METHOD  tightBoundingRect( cText )
    METHOD  underlinePos()
-   METHOD  width( cText, nLen )
-   METHOD  width_1( pCh )
+   METHOD  width( ... )
    METHOD  xHeight()
 
    ENDCLASS
@@ -118,20 +114,56 @@ METHOD QFontMetrics:averageCharWidth()
    RETURN Qt_QFontMetrics_averageCharWidth( ::pPtr )
 
 
-METHOD QFontMetrics:boundingRect( pCh )
-   RETURN Qt_QFontMetrics_boundingRect( ::pPtr, hbqt_ptr( pCh ) )
-
-
-METHOD QFontMetrics:boundingRect_1( cText )
-   RETURN Qt_QFontMetrics_boundingRect_1( ::pPtr, cText )
-
-
-METHOD QFontMetrics:boundingRect_2( nX, nY, nWidth, nHeight, nFlags, cText, nTabStops, nTabArray )
-   RETURN Qt_QFontMetrics_boundingRect_2( ::pPtr, nX, nY, nWidth, nHeight, nFlags, cText, nTabStops, nTabArray )
-
-
-METHOD QFontMetrics:boundingRect_3( pRect, nFlags, cText, nTabStops, nTabArray )
-   RETURN Qt_QFontMetrics_boundingRect_3( ::pPtr, hbqt_ptr( pRect ), nFlags, cText, nTabStops, nTabArray )
+METHOD QFontMetrics:boundingRect( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 8
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N" .AND. aV[ 6 ] $ "C" .AND. aV[ 7 ] $ "N" .AND. aV[ 8 ] $ "N"
+                // QRect boundingRect ( int x, int y, int width, int height, int flags, const QString & text, int tabStops = 0, int * tabArray = 0 ) const
+                // N n int, N n int, N n int, N n int, N n int, C c QString, N n int, N @ int
+         RETURN QRect():from( Qt_QFontMetrics_boundingRect_2( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 6
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N" .AND. aV[ 6 ] $ "C"
+                // QRect boundingRect ( int x, int y, int width, int height, int flags, const QString & text, int tabStops = 0, int * tabArray = 0 ) const
+                // N n int, N n int, N n int, N n int, N n int, C c QString, N n int, N @ int
+         RETURN QRect():from( Qt_QFontMetrics_boundingRect_2( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 5
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "C" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N"
+                // QRect boundingRect ( const QRect & rect, int flags, const QString & text, int tabStops = 0, int * tabArray = 0 ) const
+                // PO p QRect, N n int, C c QString, N n int, N @ int
+         RETURN QRect():from( Qt_QFontMetrics_boundingRect_3( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "C"
+                // QRect boundingRect ( const QRect & rect, int flags, const QString & text, int tabStops = 0, int * tabArray = 0 ) const
+                // PO p QRect, N n int, C c QString, N n int, N @ int
+         RETURN QRect():from( Qt_QFontMetrics_boundingRect_3( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // QRect boundingRect ( const QString & text ) const
+                // C c QString
+         RETURN QRect():from( Qt_QFontMetrics_boundingRect_1( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "PO"
+                // QRect boundingRect ( QChar ch ) const
+                // PO p QChar
+         RETURN QRect():from( Qt_QFontMetrics_boundingRect( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QFontMetrics:descent()
@@ -202,12 +234,35 @@ METHOD QFontMetrics:underlinePos()
    RETURN Qt_QFontMetrics_underlinePos( ::pPtr )
 
 
-METHOD QFontMetrics:width( cText, nLen )
-   RETURN Qt_QFontMetrics_width( ::pPtr, cText, nLen )
-
-
-METHOD QFontMetrics:width_1( pCh )
-   RETURN Qt_QFontMetrics_width_1( ::pPtr, hbqt_ptr( pCh ) )
+METHOD QFontMetrics:width( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
+                // int width ( const QString & text, int len = -1 ) const
+                // C c QString, N n int
+         RETURN Qt_QFontMetrics_width( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // int width ( const QString & text, int len = -1 ) const
+                // C c QString, N n int
+         RETURN Qt_QFontMetrics_width( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO"
+                // int width ( QChar ch ) const
+                // PO p QChar
+         RETURN Qt_QFontMetrics_width_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QFontMetrics:xHeight()

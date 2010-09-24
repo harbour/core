@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QObject
  *  $SYNTAX$
- *     QEventLoop():new( ... )
+ *     QEventLoop( ... )
  *     QEventLoop():from( pPtr_OR_oObj_of_type_QEventLoop )
  *     QEventLoop():configure( pPtr_OR_oObj_of_type_QEventLoop )
  *  $ARGUMENTS$

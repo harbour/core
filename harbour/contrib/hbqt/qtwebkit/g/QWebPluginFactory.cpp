@@ -71,6 +71,16 @@
  *  enum Extension { }
  */
 
+/*
+ *  Constructed[ 3/3 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // virtual bool extension ( Extension extension, const ExtensionOption * option = 0, ExtensionReturn * output = 0 )
+ *  // virtual QList<Plugin> plugins () const = 0
+ */
+
 #include <QtCore/QPointer>
 
 #include "hbqtgui.h"

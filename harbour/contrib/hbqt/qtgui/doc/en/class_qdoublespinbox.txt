@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QAbstractSpinBox
  *  $SYNTAX$
- *     QDoubleSpinBox():new( ... )
+ *     QDoubleSpinBox( ... )
  *     QDoubleSpinBox():from( pPtr_OR_oObj_of_type_QDoubleSpinBox )
  *     QDoubleSpinBox():configure( pPtr_OR_oObj_of_type_QDoubleSpinBox )
  *  $ARGUMENTS$

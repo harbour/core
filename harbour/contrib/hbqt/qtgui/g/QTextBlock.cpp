@@ -66,6 +66,16 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  Constructed[ 27/27 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  //iterator begin () const
+ *  //iterator end () const
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QTextBlock>

@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QBrush():new( ... )
+ *     QBrush( ... )
  *     QBrush():from( pPtr_OR_oObj_of_type_QBrush )
  *     QBrush():configure( pPtr_OR_oObj_of_type_QBrush )
  *  $ARGUMENTS$
@@ -29,7 +29,8 @@
  *     :color()                                            -> pQColor
  *     :isOpaque()                                         -> lBool
  *     :matrix()                                           -> pQMatrix
- *     :setColor( ... )                                    -> NIL
+ *     :setColor( pColor )                                 -> NIL
+ *     :setColor_1( nColor )                               -> NIL
  *     :setMatrix( pMatrix )                               -> NIL
  *     :setStyle( nStyle )                                 -> NIL
  *     :setTexture( pPixmap )                              -> NIL

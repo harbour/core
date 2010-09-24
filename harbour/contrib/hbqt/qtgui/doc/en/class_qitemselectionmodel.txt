@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QObject
  *  $SYNTAX$
- *     QItemSelectionModel():new( ... )
+ *     QItemSelectionModel( ... )
  *     QItemSelectionModel():from( pPtr_OR_oObj_of_type_QItemSelectionModel )
  *     QItemSelectionModel():configure( pPtr_OR_oObj_of_type_QItemSelectionModel )
  *  $ARGUMENTS$

@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QEvent
  *  $SYNTAX$
- *     QMoveEvent():new( ... )
+ *     QMoveEvent( ... )
  *     QMoveEvent():from( pPtr_OR_oObj_of_type_QMoveEvent )
  *     QMoveEvent():configure( pPtr_OR_oObj_of_type_QMoveEvent )
  *  $ARGUMENTS$

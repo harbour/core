@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QAbstractScrollArea
  *  $SYNTAX$
- *     QPlainTextEdit():new( ... )
+ *     QPlainTextEdit( ... )
  *     QPlainTextEdit():from( pPtr_OR_oObj_of_type_QPlainTextEdit )
  *     QPlainTextEdit():configure( pPtr_OR_oObj_of_type_QPlainTextEdit )
  *  $ARGUMENTS$

@@ -75,16 +75,15 @@
  */
 
 /*
- *  Constructed[ 41/45 [ 91.11% ] ]
+ *  Constructed[ 41/44 [ 93.18% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  QVector<QTextLength> lengthVectorProperty ( int propertyId ) const
  *  QMap<int, QVariant> properties () const
  *  void setProperty ( int propertyId, const QVector<QTextLength> & value )
  *
- *  *** Commented out protos which construct fine but do not compile ***
+ *  *** Commented out protostypes ***
  *
  *  // QTextTableCellFormat toTableCellFormat () const
  */

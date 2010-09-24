@@ -72,11 +72,9 @@ CREATE CLASS QTextDocumentFragment INHERIT HbQtObjectHandler FUNCTION HB_QTextDo
    METHOD  new( ... )
 
    METHOD  isEmpty()
-   METHOD  toHtml( pEncoding )
-   METHOD  toHtml_1()
+   METHOD  toHtml( ... )
    METHOD  toPlainText()
-   METHOD  fromHtml( cText )
-   METHOD  fromHtml_1( cText, pResourceProvider )
+   METHOD  fromHtml( ... )
    METHOD  fromPlainText( cPlainText )
 
    ENDCLASS
@@ -95,24 +93,58 @@ METHOD QTextDocumentFragment:isEmpty()
    RETURN Qt_QTextDocumentFragment_isEmpty( ::pPtr )
 
 
-METHOD QTextDocumentFragment:toHtml( pEncoding )
-   RETURN Qt_QTextDocumentFragment_toHtml( ::pPtr, hbqt_ptr( pEncoding ) )
-
-
-METHOD QTextDocumentFragment:toHtml_1()
-   RETURN Qt_QTextDocumentFragment_toHtml_1( ::pPtr )
+METHOD QTextDocumentFragment:toHtml( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QString toHtml ( const QByteArray & encoding ) const
+                // PO p QByteArray
+         RETURN Qt_QTextDocumentFragment_toHtml( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // QString toHtml () const
+      RETURN Qt_QTextDocumentFragment_toHtml_1( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QTextDocumentFragment:toPlainText()
    RETURN Qt_QTextDocumentFragment_toPlainText( ::pPtr )
 
 
-METHOD QTextDocumentFragment:fromHtml( cText )
-   RETURN Qt_QTextDocumentFragment_fromHtml( ::pPtr, cText )
-
-
-METHOD QTextDocumentFragment:fromHtml_1( cText, pResourceProvider )
-   RETURN Qt_QTextDocumentFragment_fromHtml_1( ::pPtr, cText, hbqt_ptr( pResourceProvider ) )
+METHOD QTextDocumentFragment:fromHtml( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO"
+                // QTextDocumentFragment fromHtml ( const QString & text, const QTextDocument * resourceProvider )
+                // C c QString, PO p QTextDocument
+         RETURN QTextDocumentFragment():from( Qt_QTextDocumentFragment_fromHtml_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // QTextDocumentFragment fromHtml ( const QString & text )
+                // C c QString
+         RETURN QTextDocumentFragment():from( Qt_QTextDocumentFragment_fromHtml( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QTextDocumentFragment:fromPlainText( cPlainText )

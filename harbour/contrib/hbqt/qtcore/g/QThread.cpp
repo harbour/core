@@ -69,6 +69,15 @@
  *  enum Priority { IdlePriority, LowestPriority, LowPriority, NormalPriority, ..., InheritPriority }
  */
 
+/*
+ *  Constructed[ 14/14 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // Qt::HANDLE currentThreadId ()
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtCore/QThread>

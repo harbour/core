@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QGraphicsItem
  *  $SYNTAX$
- *     QGraphicsLineItem():new( ... )
+ *     QGraphicsLineItem( ... )
  *     QGraphicsLineItem():from( pPtr_OR_oObj_of_type_QGraphicsLineItem )
  *     QGraphicsLineItem():configure( pPtr_OR_oObj_of_type_QGraphicsLineItem )
  *  $ARGUMENTS$

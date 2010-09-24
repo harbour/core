@@ -72,14 +72,13 @@
  */
 
 /*
- *  Constructed[ 50/52 [ 96.15% ] ]
+ *  Constructed[ 50/51 [ 98.04% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  void setShortcuts ( const QList<QKeySequence> & shortcuts )
  *
- *  *** Commented out protos which construct fine but do not compile ***
+ *  *** Commented out protostypes ***
  *
  *  //QList<QGraphicsWidget *> associatedGraphicsWidgets () const
  */

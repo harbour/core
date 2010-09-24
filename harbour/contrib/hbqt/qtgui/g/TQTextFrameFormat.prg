@@ -87,8 +87,7 @@ CREATE CLASS QTextFrameFormat INHERIT HbQtObjectHandler, HB_QTextFormat FUNCTION
    METHOD  setBorderBrush( pBrush )
    METHOD  setBorderStyle( nStyle )
    METHOD  setBottomMargin( nMargin )
-   METHOD  setHeight( pHeight )
-   METHOD  setHeight_1( nHeight )
+   METHOD  setHeight( ... )
    METHOD  setLeftMargin( nMargin )
    METHOD  setMargin( nMargin )
    METHOD  setPadding( nWidth )
@@ -96,8 +95,7 @@ CREATE CLASS QTextFrameFormat INHERIT HbQtObjectHandler, HB_QTextFormat FUNCTION
    METHOD  setPosition( nPolicy )
    METHOD  setRightMargin( nMargin )
    METHOD  setTopMargin( nMargin )
-   METHOD  setWidth( pWidth )
-   METHOD  setWidth_1( nWidth )
+   METHOD  setWidth( ... )
    METHOD  topMargin()
    METHOD  width()
 
@@ -177,12 +175,28 @@ METHOD QTextFrameFormat:setBottomMargin( nMargin )
    RETURN Qt_QTextFrameFormat_setBottomMargin( ::pPtr, nMargin )
 
 
-METHOD QTextFrameFormat:setHeight( pHeight )
-   RETURN Qt_QTextFrameFormat_setHeight( ::pPtr, hbqt_ptr( pHeight ) )
-
-
-METHOD QTextFrameFormat:setHeight_1( nHeight )
-   RETURN Qt_QTextFrameFormat_setHeight_1( ::pPtr, nHeight )
+METHOD QTextFrameFormat:setHeight( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // void setHeight ( qreal height )
+                // N n qreal
+         RETURN Qt_QTextFrameFormat_setHeight_1( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO"
+                // void setHeight ( const QTextLength & height )
+                // PO p QTextLength
+         RETURN Qt_QTextFrameFormat_setHeight( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QTextFrameFormat:setLeftMargin( nMargin )
@@ -213,12 +227,28 @@ METHOD QTextFrameFormat:setTopMargin( nMargin )
    RETURN Qt_QTextFrameFormat_setTopMargin( ::pPtr, nMargin )
 
 
-METHOD QTextFrameFormat:setWidth( pWidth )
-   RETURN Qt_QTextFrameFormat_setWidth( ::pPtr, hbqt_ptr( pWidth ) )
-
-
-METHOD QTextFrameFormat:setWidth_1( nWidth )
-   RETURN Qt_QTextFrameFormat_setWidth_1( ::pPtr, nWidth )
+METHOD QTextFrameFormat:setWidth( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // void setWidth ( qreal width )
+                // N n qreal
+         RETURN Qt_QTextFrameFormat_setWidth_1( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO"
+                // void setWidth ( const QTextLength & width )
+                // PO p QTextLength
+         RETURN Qt_QTextFrameFormat_setWidth( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QTextFrameFormat:topMargin()

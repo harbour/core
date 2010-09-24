@@ -1006,23 +1006,8 @@ void save ()
 void scale ( qreal sx, qreal sy )
 void setBackground ( const QBrush & brush )
 void setBackgroundMode ( Qt::BGMode mode )
-
-void setBrush ( ... ){
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      if( hb_pcount() == 2 && HB_ISNUM( 2 ) )
-      {
-         ( p )->setBrush( ( Qt::BrushStyle ) hb_parni( 2 ) );
-      }
-      else if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->setBrush( *hbqt_par_QBrush( 2 ) );
-      }
-   }
-}
-//void setBrush ( const QBrush & brush )
-//void setBrush ( Qt::BrushStyle style )
+void setBrush ( const QBrush & brush )
+void setBrush ( Qt::BrushStyle style )
 
 void setBrushOrigin ( ... ){
    QPainter * p = hbqt_par_QPainter( 1 );
@@ -1118,40 +1103,10 @@ void setRenderHint ( RenderHint hint, bool on = true )
 void setRenderHints ( RenderHints hints, bool on = true )
 void setTransform ( const QTransform & transform, bool combine = false )
 void setViewTransformEnabled ( bool enable )
-
-void setViewport ( ... ){
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      if( hb_pcount() == 5 && HB_ISNUM( 2 ) )
-      {
-         ( p )->setViewport( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
-      }
-      else if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->setViewport( *hbqt_par_QRect( 2 ) );
-      }
-   }
-}
-//void setViewport ( const QRect & rectangle )
-//void setViewport ( int x, int y, int width, int height )
-
-void setWindow ( ... ){
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      if( hb_pcount() == 5 && HB_ISNUM( 2 ) )
-      {
-         ( p )->setWindow( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
-      }
-      else if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->setWindow( *hbqt_par_QRect( 2 ) );
-      }
-   }
-}
-//void setWindow ( const QRect & rectangle )
-//void setWindow ( int x, int y, int width, int height )
+void setViewport ( const QRect & rectangle )
+void setViewport ( int x, int y, int width, int height )
+void setWindow ( const QRect & rectangle )
+void setWindow ( int x, int y, int width, int height )
 
 void setWorldMatrix ( const QMatrix & matrix, bool combine = false )
 void setWorldMatrixEnabled ( bool enable )

@@ -71,6 +71,11 @@
  *  enum MoveOperation { NoMove, Start, End, Next, ..., Down }
  */
 
+/*
+ *  Constructed[ 14/14 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include "hbqtgui.h"

@@ -71,18 +71,13 @@ CREATE CLASS QDesktopWidget INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QD
 
    METHOD  new( ... )
 
-   METHOD  availableGeometry( nScreen )
-   METHOD  availableGeometry_1( pWidget )
-   METHOD  availableGeometry_2( pP )
+   METHOD  availableGeometry( ... )
    METHOD  isVirtualDesktop()
    METHOD  numScreens()
    METHOD  primaryScreen()
    METHOD  screen( nScreen )
-   METHOD  screenGeometry( nScreen )
-   METHOD  screenGeometry_1( pWidget )
-   METHOD  screenGeometry_2( pP )
-   METHOD  screenNumber( pWidget )
-   METHOD  screenNumber_1( pPoint )
+   METHOD  screenGeometry( ... )
+   METHOD  screenNumber( ... )
 
    ENDCLASS
 
@@ -96,16 +91,35 @@ METHOD QDesktopWidget:new( ... )
    RETURN Self
 
 
-METHOD QDesktopWidget:availableGeometry( nScreen )
-   RETURN Qt_QDesktopWidget_availableGeometry( ::pPtr, nScreen )
-
-
-METHOD QDesktopWidget:availableGeometry_1( pWidget )
-   RETURN Qt_QDesktopWidget_availableGeometry_1( ::pPtr, hbqt_ptr( pWidget ) )
-
-
-METHOD QDesktopWidget:availableGeometry_2( pP )
-   RETURN Qt_QDesktopWidget_availableGeometry_2( ::pPtr, hbqt_ptr( pP ) )
+METHOD QDesktopWidget:availableGeometry( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // const QRect availableGeometry ( int screen = -1 ) const
+                // N n int
+         RETURN QRect():from( Qt_QDesktopWidget_availableGeometry( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "PO"
+                // const QRect availableGeometry ( const QWidget * widget ) const
+                // PO p QWidget
+         RETURN QRect():from( Qt_QDesktopWidget_availableGeometry_1( ::pPtr, ... ) )
+                // const QRect availableGeometry ( const QPoint & p ) const
+                // PO p QPoint
+         // RETURN QRect():from( Qt_QDesktopWidget_availableGeometry_2( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 0
+             // const QRect availableGeometry ( int screen = -1 ) const
+             // N n int
+      RETURN QRect():from( Qt_QDesktopWidget_availableGeometry( ::pPtr, ... ) )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QDesktopWidget:isVirtualDesktop()
@@ -124,22 +138,60 @@ METHOD QDesktopWidget:screen( nScreen )
    RETURN Qt_QDesktopWidget_screen( ::pPtr, nScreen )
 
 
-METHOD QDesktopWidget:screenGeometry( nScreen )
-   RETURN Qt_QDesktopWidget_screenGeometry( ::pPtr, nScreen )
+METHOD QDesktopWidget:screenGeometry( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // const QRect screenGeometry ( int screen = -1 ) const
+                // N n int
+         RETURN QRect():from( Qt_QDesktopWidget_screenGeometry( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "PO"
+                // const QRect screenGeometry ( const QWidget * widget ) const
+                // PO p QWidget
+         RETURN QRect():from( Qt_QDesktopWidget_screenGeometry_1( ::pPtr, ... ) )
+                // const QRect screenGeometry ( const QPoint & p ) const
+                // PO p QPoint
+         // RETURN QRect():from( Qt_QDesktopWidget_screenGeometry_2( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 0
+             // const QRect screenGeometry ( int screen = -1 ) const
+             // N n int
+      RETURN QRect():from( Qt_QDesktopWidget_screenGeometry( ::pPtr, ... ) )
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QDesktopWidget:screenGeometry_1( pWidget )
-   RETURN Qt_QDesktopWidget_screenGeometry_1( ::pPtr, hbqt_ptr( pWidget ) )
-
-
-METHOD QDesktopWidget:screenGeometry_2( pP )
-   RETURN Qt_QDesktopWidget_screenGeometry_2( ::pPtr, hbqt_ptr( pP ) )
-
-
-METHOD QDesktopWidget:screenNumber( pWidget )
-   RETURN Qt_QDesktopWidget_screenNumber( ::pPtr, hbqt_ptr( pWidget ) )
-
-
-METHOD QDesktopWidget:screenNumber_1( pPoint )
-   RETURN Qt_QDesktopWidget_screenNumber_1( ::pPtr, hbqt_ptr( pPoint ) )
+METHOD QDesktopWidget:screenNumber( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // int screenNumber ( const QWidget * widget = 0 ) const
+                // PO p QWidget
+         RETURN Qt_QDesktopWidget_screenNumber( ::pPtr, ... )
+                // int screenNumber ( const QPoint & point ) const
+                // PO p QPoint
+         // RETURN Qt_QDesktopWidget_screenNumber_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // int screenNumber ( const QWidget * widget = 0 ) const
+             // PO p QWidget
+      RETURN Qt_QDesktopWidget_screenNumber( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 

@@ -71,13 +71,8 @@ CREATE CLASS QToolBar INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QToolBar
 
    METHOD  new( ... )
 
-   METHOD  actionAt( pP )
-   METHOD  actionAt_1( nX, nY )
-   METHOD  addAction( pAction )
-   METHOD  addAction_1( cText )
-   METHOD  addAction_2( pIcon, cText )
-   METHOD  addAction_3( cText, pReceiver, pMember )
-   METHOD  addAction_4( pIcon, cText, pReceiver, pMember )
+   METHOD  actionAt( ... )
+   METHOD  addAction( ... )
    METHOD  addSeparator()
    METHOD  addWidget( pWidget )
    METHOD  allowedAreas()
@@ -112,32 +107,76 @@ METHOD QToolBar:new( ... )
    RETURN Self
 
 
-METHOD QToolBar:actionAt( pP )
-   RETURN Qt_QToolBar_actionAt( ::pPtr, hbqt_ptr( pP ) )
+METHOD QToolBar:actionAt( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // QAction * actionAt ( int x, int y ) const
+                // N n int, N n int
+         RETURN QAction():from( Qt_QToolBar_actionAt_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QAction * actionAt ( const QPoint & p ) const
+                // PO p QPoint
+         RETURN QAction():from( Qt_QToolBar_actionAt( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QToolBar:actionAt_1( nX, nY )
-   RETURN Qt_QToolBar_actionAt_1( ::pPtr, nX, nY )
-
-
-METHOD QToolBar:addAction( pAction )
-   RETURN Qt_QToolBar_addAction( ::pPtr, hbqt_ptr( pAction ) )
-
-
-METHOD QToolBar:addAction_1( cText )
-   RETURN Qt_QToolBar_addAction_1( ::pPtr, cText )
-
-
-METHOD QToolBar:addAction_2( pIcon, cText )
-   RETURN Qt_QToolBar_addAction_2( ::pPtr, hbqt_ptr( pIcon ), cText )
-
-
-METHOD QToolBar:addAction_3( cText, pReceiver, pMember )
-   RETURN Qt_QToolBar_addAction_3( ::pPtr, cText, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ) )
-
-
-METHOD QToolBar:addAction_4( pIcon, cText, pReceiver, pMember )
-   RETURN Qt_QToolBar_addAction_4( ::pPtr, hbqt_ptr( pIcon ), cText, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ) )
+METHOD QToolBar:addAction( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "PCO" .AND. aV[ 2 ] $ "C" .AND. aV[ 3 ] $ "PO" .AND. aV[ 4 ] $ "PO"
+                // QAction * addAction ( const QIcon & icon, const QString & text, const QObject * receiver, const char * member )   [*D=3*]
+                // PCO p QIcon, C c QString, PO p QObject, PO p char
+         RETURN QAction():from( Qt_QToolBar_addAction_4( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PO"
+                // QAction * addAction ( const QString & text, const QObject * receiver, const char * member )
+                // C c QString, PO p QObject, PO p char
+         RETURN QAction():from( Qt_QToolBar_addAction_3( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PCO" .AND. aV[ 2 ] $ "C"
+                // QAction * addAction ( const QIcon & icon, const QString & text )
+                // PCO p QIcon, C c QString
+         RETURN QAction():from( Qt_QToolBar_addAction_2( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // QAction * addAction ( const QString & text )
+                // C c QString
+         RETURN QAction():from( Qt_QToolBar_addAction_1( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "PO"
+                // void addAction ( QAction * action )   [*D=1*]
+                // PO p QAction
+         RETURN Qt_QToolBar_addAction( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QToolBar:addSeparator()

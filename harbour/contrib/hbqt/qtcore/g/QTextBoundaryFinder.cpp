@@ -71,6 +71,11 @@
  *  enum BoundaryType { Grapheme, Word, Line, Sentence }
  */
 
+/*
+ *  Constructed[ 11/11 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtCore/QTextBoundaryFinder>

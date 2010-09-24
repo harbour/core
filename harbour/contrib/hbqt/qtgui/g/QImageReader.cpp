@@ -70,6 +70,11 @@
  *  enum ImageReaderError { FileNotFoundError, DeviceError, UnsupportedFormatError, InvalidDataError, UnknownError }
  */
 
+/*
+ *  Constructed[ 39/39 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QColor>

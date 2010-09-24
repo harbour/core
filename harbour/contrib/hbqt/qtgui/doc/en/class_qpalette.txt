@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QPalette():new( ... )
+ *     QPalette( ... )
  *     QPalette():from( pPtr_OR_oObj_of_type_QPalette )
  *     QPalette():configure( pPtr_OR_oObj_of_type_QPalette )
  *  $ARGUMENTS$

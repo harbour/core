@@ -93,10 +93,8 @@ CREATE CLASS QLineF INHERIT HbQtObjectHandler FUNCTION HB_QLineF
    METHOD  setLine( nX1, nY1, nX2, nY2 )
    METHOD  setPoints( pP1, pP2 )
    METHOD  toLine()
-   METHOD  translate( pOffset )
-   METHOD  translate_1( nDx, nDy )
-   METHOD  translated( pOffset )
-   METHOD  translated_1( nDx, nDy )
+   METHOD  translate( ... )
+   METHOD  translated( ... )
    METHOD  unitVector()
 
    ENDCLASS
@@ -199,20 +197,58 @@ METHOD QLineF:toLine()
    RETURN Qt_QLineF_toLine( ::pPtr )
 
 
-METHOD QLineF:translate( pOffset )
-   RETURN Qt_QLineF_translate( ::pPtr, hbqt_ptr( pOffset ) )
+METHOD QLineF:translate( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void translate ( qreal dx, qreal dy )
+                // N n qreal, N n qreal
+         RETURN Qt_QLineF_translate_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void translate ( const QPointF & offset )
+                // PO p QPointF
+         RETURN Qt_QLineF_translate( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QLineF:translate_1( nDx, nDy )
-   RETURN Qt_QLineF_translate_1( ::pPtr, nDx, nDy )
-
-
-METHOD QLineF:translated( pOffset )
-   RETURN Qt_QLineF_translated( ::pPtr, hbqt_ptr( pOffset ) )
-
-
-METHOD QLineF:translated_1( nDx, nDy )
-   RETURN Qt_QLineF_translated_1( ::pPtr, nDx, nDy )
+METHOD QLineF:translated( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // QLineF translated ( qreal dx, qreal dy ) const
+                // N n qreal, N n qreal
+         RETURN QLineF():from( Qt_QLineF_translated_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QLineF translated ( const QPointF & offset ) const
+                // PO p QPointF
+         RETURN QLineF():from( Qt_QLineF_translated( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QLineF:unitVector()

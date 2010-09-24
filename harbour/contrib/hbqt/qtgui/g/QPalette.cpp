@@ -71,6 +71,11 @@
  *  enum ColorRole { Window, Background, WindowText, Foreground, ..., NoRole }
  */
 
+/*
+ *  Constructed[ 35/35 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QPalette>

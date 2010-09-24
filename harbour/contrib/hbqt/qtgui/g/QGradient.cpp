@@ -72,6 +72,16 @@
  *  enum Type { LinearGradient, RadialGradient, ConicalGradient, NoGradient }
  */
 
+/*
+ *  Constructed[ 6/6 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // void setStops ( const QGradientStops & stopPoints )
+ *  // QGradientStops stops () const
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QGradient>

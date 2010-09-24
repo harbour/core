@@ -65,6 +65,7 @@ CLASS HbQtObjectHandler
 
    METHOD configure( xObject )
    METHOD from( xObject )                         INLINE ::configure( xObject )
+   METHOD valtypes( aP, aV )
 
    METHOD connect( cnEvent, bBlock )
    METHOD disconnect( cnEvent )
@@ -81,6 +82,15 @@ METHOD HbQtObjectHandler:configure( xObject )
    ELSEIF hb_isPointer( xObject )
       ::pPtr := xObject
    ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbQtObjectHandler:valtypes( aP, aV )
+   LOCAL p
+   FOR EACH p IN aP
+      aadd( aV, valtype( p ) )
+   NEXT
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -151,28 +161,9 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbqt_ptr( xParam )
-   #if 0
-   LOCAL cClsName
-
-   IF hb_isObject( xParam )
-      cClsName := __ObjGetClsName( xParam )
-
-      IF left( cClsName, 1 ) == "Q"
-         RETURN xParam:pPtr
-
-      ELSEIF left( cClsName, 2 ) == "HB"
-         RETURN xParam:pPtr
-
-      ELSE /* we don't care, programmer is at a fault */
-
-      ENDIF
-   ENDIF
-   #else
    IF hb_isObject( xParam ) .AND. __objHasMsg( xParam, "PPTR" )
       RETURN xParam:pPtr
    ENDIF
-   #endif
-
    RETURN xParam
 
 /*----------------------------------------------------------------------*/

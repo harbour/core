@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QPolygon():new( ... )
+ *     QPolygon( ... )
  *     QPolygon():from( pPtr_OR_oObj_of_type_QPolygon )
  *     QPolygon():configure( pPtr_OR_oObj_of_type_QPolygon )
  *  $ARGUMENTS$

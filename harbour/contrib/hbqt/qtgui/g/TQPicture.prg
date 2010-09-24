@@ -74,11 +74,9 @@ CREATE CLASS QPicture INHERIT HbQtObjectHandler, HB_QPaintDevice FUNCTION HB_QPi
    METHOD  boundingRect()
    METHOD  data()
    METHOD  isNull()
-   METHOD  load( cFileName, pFormat )
-   METHOD  load_1( pDev, pFormat )
+   METHOD  load( ... )
    METHOD  play( pPainter )
-   METHOD  save( cFileName, pFormat )
-   METHOD  save_1( pDev, pFormat )
+   METHOD  save( ... )
    METHOD  setBoundingRect( pR )
    METHOD  setData( pData, nSize )
    METHOD  size()
@@ -107,24 +105,78 @@ METHOD QPicture:isNull()
    RETURN Qt_QPicture_isNull( ::pPtr )
 
 
-METHOD QPicture:load( cFileName, pFormat )
-   RETURN Qt_QPicture_load( ::pPtr, cFileName, hbqt_ptr( pFormat ) )
-
-
-METHOD QPicture:load_1( pDev, pFormat )
-   RETURN Qt_QPicture_load_1( ::pPtr, hbqt_ptr( pDev ), hbqt_ptr( pFormat ) )
+METHOD QPicture:load( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO"
+                // bool load ( const QString & fileName, const char * format = 0 )
+                // C c QString, PO p char
+         RETURN Qt_QPicture_load( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
+                // bool load ( QIODevice * dev, const char * format = 0 )
+                // PO p QIODevice, PO p char
+         RETURN Qt_QPicture_load_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // bool load ( const QString & fileName, const char * format = 0 )
+                // C c QString, PO p char
+         RETURN Qt_QPicture_load( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO"
+                // bool load ( QIODevice * dev, const char * format = 0 )
+                // PO p QIODevice, PO p char
+         RETURN Qt_QPicture_load_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPicture:play( pPainter )
    RETURN Qt_QPicture_play( ::pPtr, hbqt_ptr( pPainter ) )
 
 
-METHOD QPicture:save( cFileName, pFormat )
-   RETURN Qt_QPicture_save( ::pPtr, cFileName, hbqt_ptr( pFormat ) )
-
-
-METHOD QPicture:save_1( pDev, pFormat )
-   RETURN Qt_QPicture_save_1( ::pPtr, hbqt_ptr( pDev ), hbqt_ptr( pFormat ) )
+METHOD QPicture:save( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO"
+                // bool save ( const QString & fileName, const char * format = 0 )
+                // C c QString, PO p char
+         RETURN Qt_QPicture_save( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
+                // bool save ( QIODevice * dev, const char * format = 0 )
+                // PO p QIODevice, PO p char
+         RETURN Qt_QPicture_save_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // bool save ( const QString & fileName, const char * format = 0 )
+                // C c QString, PO p char
+         RETURN Qt_QPicture_save( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO"
+                // bool save ( QIODevice * dev, const char * format = 0 )
+                // PO p QIODevice, PO p char
+         RETURN Qt_QPicture_save_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPicture:setBoundingRect( pR )

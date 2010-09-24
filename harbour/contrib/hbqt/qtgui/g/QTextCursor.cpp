@@ -72,6 +72,17 @@
  *  enum SelectionType { Document, BlockUnderCursor, LineUnderCursor, WordUnderCursor }
  */
 
+/*
+ *  Constructed[ 58/58 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  //QTextTable * currentTable () const
+ *  //QTextTable * insertTable ( int rows, int columns, const QTextTableFormat & format )
+ *  //QTextTable * insertTable ( int rows, int columns )
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QTextBlock>

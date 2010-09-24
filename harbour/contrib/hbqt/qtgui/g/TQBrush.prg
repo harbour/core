@@ -110,11 +110,27 @@ METHOD QBrush:matrix()
 
 
 METHOD QBrush:setColor( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QBrush_setColor( ::pPtr, ... )
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // void setColor ( Qt::GlobalColor color )
+                // N n Qt::GlobalColor
+         RETURN Qt_QBrush_setColor_1( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO"
+                // void setColor ( const QColor & color )
+                // PO p QColor
+         RETURN Qt_QBrush_setColor( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QBrush:setMatrix( pMatrix )

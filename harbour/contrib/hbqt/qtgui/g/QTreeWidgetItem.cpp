@@ -72,12 +72,10 @@
  */
 
 /*
- *  Constructed[ 53/56 [ 94.64% ] ]
+ *  Constructed[ 53/55 [ 96.36% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
- *  }
  *  void addChildren ( const QList<QTreeWidgetItem *> & children )
  *  void insertChildren ( int index, const QList<QTreeWidgetItem *> & children )
  */
@@ -171,19 +169,19 @@ HB_FUNC( QT_QTREEWIDGETITEM )
 }
 
 /*
- * void addChild ( QTreeWidgetItem * child )
+ * void addChild ( QTreeWidgetItem * child )   [*D=1*]
  */
 HB_FUNC( QT_QTREEWIDGETITEM_ADDCHILD )
 {
-   HBQT_GC_T_QTreeWidgetItem * q = ( HBQT_GC_T_QTreeWidgetItem * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-
-   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTREEWIDGETITEM_ADDCHILD()" ) );
-   if( p && p->ph && q && q->ph )
+   QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
+   if( p )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "QT_QTOOLBAR_ADDACTION() Qt oject: %p is attached to: %p", ( void * ) p->ph, ( void * ) q->ph ) );
-      p->bNew = HB_FALSE;
-      ( q->ph )->addChild( ( QTreeWidgetItem * ) p->ph );
+      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+      if( q && q->ph )
+      {
+         q->bNew = false;
+      }
+      ( p )->addChild( hbqt_par_QTreeWidgetItem( 2 ) );
    }
 }
 

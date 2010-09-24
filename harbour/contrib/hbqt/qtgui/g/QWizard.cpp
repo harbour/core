@@ -78,7 +78,6 @@
  *  Constructed[ 35/36 [ 97.22% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  void setButtonLayout ( const QList<WizardButton> & layout )
  */

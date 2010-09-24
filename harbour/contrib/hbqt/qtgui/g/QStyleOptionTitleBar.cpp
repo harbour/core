@@ -71,6 +71,11 @@
  *  enum StyleOptionVersion { Version }
  */
 
+/*
+ *  Constructed[ 4/4 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionTitleBar>
@@ -149,7 +154,11 @@ HB_FUNC( QT_QSTYLEOPTIONTITLEBAR )
  */
 HB_FUNC( QT_QSTYLEOPTIONTITLEBAR_ICON )
 {
-   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QStyleOptionTitleBar( 1 )->icon ), true ) );
+   QStyleOptionTitleBar * p = hbqt_par_QStyleOptionTitleBar( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon ), true ) );
+   }
 }
 
 /*
@@ -157,7 +166,11 @@ HB_FUNC( QT_QSTYLEOPTIONTITLEBAR_ICON )
  */
 HB_FUNC( QT_QSTYLEOPTIONTITLEBAR_TEXT )
 {
-   hb_retstr_utf8( hbqt_par_QStyleOptionTitleBar( 1 )->text.toUtf8().data() );
+   QStyleOptionTitleBar * p = hbqt_par_QStyleOptionTitleBar( 1 );
+   if( p )
+   {
+      hb_retstr_utf8( ( p )->text.toUtf8().data() );
+   }
 }
 
 /*
@@ -165,7 +178,11 @@ HB_FUNC( QT_QSTYLEOPTIONTITLEBAR_TEXT )
  */
 HB_FUNC( QT_QSTYLEOPTIONTITLEBAR_TITLEBARFLAGS )
 {
-   hb_retni( ( Qt::WindowFlags ) hbqt_par_QStyleOptionTitleBar( 1 )->titleBarFlags );
+   QStyleOptionTitleBar * p = hbqt_par_QStyleOptionTitleBar( 1 );
+   if( p )
+   {
+      hb_retni( ( Qt::WindowFlags ) ( p )->titleBarFlags );
+   }
 }
 
 /*
@@ -173,7 +190,11 @@ HB_FUNC( QT_QSTYLEOPTIONTITLEBAR_TITLEBARFLAGS )
  */
 HB_FUNC( QT_QSTYLEOPTIONTITLEBAR_TITLEBARSTATE )
 {
-   hb_retni( hbqt_par_QStyleOptionTitleBar( 1 )->titleBarState );
+   QStyleOptionTitleBar * p = hbqt_par_QStyleOptionTitleBar( 1 );
+   if( p )
+   {
+      hb_retni( ( p )->titleBarState );
+   }
 }
 
 

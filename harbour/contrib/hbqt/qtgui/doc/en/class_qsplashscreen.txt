@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QWidget
  *  $SYNTAX$
- *     QSplashScreen():new( ... )
+ *     QSplashScreen( ... )
  *     QSplashScreen():from( pPtr_OR_oObj_of_type_QSplashScreen )
  *     QSplashScreen():configure( pPtr_OR_oObj_of_type_QSplashScreen )
  *  $ARGUMENTS$

@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QGraphicsItem
  *  $SYNTAX$
- *     QAbstractGraphicsShapeItem():new( ... )
+ *     QAbstractGraphicsShapeItem( ... )
  *     QAbstractGraphicsShapeItem():from( pPtr_OR_oObj_of_type_QAbstractGraphicsShapeItem )
  *     QAbstractGraphicsShapeItem():configure( pPtr_OR_oObj_of_type_QAbstractGraphicsShapeItem )
  *  $ARGUMENTS$

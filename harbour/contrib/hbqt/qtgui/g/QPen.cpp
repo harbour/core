@@ -70,7 +70,6 @@
  *  Constructed[ 21/23 [ 91.30% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  QVector<qreal> dashPattern () const
  *  void setDashPattern ( const QVector<qreal> & pattern )

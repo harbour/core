@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QDialog
  *  $SYNTAX$
- *     QFontDialog():new( ... )
+ *     QFontDialog( ... )
  *     QFontDialog():from( pPtr_OR_oObj_of_type_QFontDialog )
  *     QFontDialog():configure( pPtr_OR_oObj_of_type_QFontDialog )
  *  $ARGUMENTS$

@@ -70,6 +70,11 @@
  *  enum TextCase { OriginalCase = 0, UpperCase = 1, LowerCase = 2 }
  */
 
+/*
+ *  Constructed[ 20/20 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <qscistyle.h>

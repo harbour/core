@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QGradient
  *  $SYNTAX$
- *     QRadialGradient():new( ... )
+ *     QRadialGradient( ... )
  *     QRadialGradient():from( pPtr_OR_oObj_of_type_QRadialGradient )
  *     QRadialGradient():configure( pPtr_OR_oObj_of_type_QRadialGradient )
  *  $ARGUMENTS$

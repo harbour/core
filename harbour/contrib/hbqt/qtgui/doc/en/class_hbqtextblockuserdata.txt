@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     HBQTextBlockUserData():new( ... )
+ *     HBQTextBlockUserData( ... )
  *     HBQTextBlockUserData():from( pPtr_OR_oObj_of_type_HBQTextBlockUserData )
  *     HBQTextBlockUserData():configure( pPtr_OR_oObj_of_type_HBQTextBlockUserData )
  *  $ARGUMENTS$

@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QLine():new( ... )
+ *     QLine( ... )
  *     QLine():from( pPtr_OR_oObj_of_type_QLine )
  *     QLine():configure( pPtr_OR_oObj_of_type_QLine )
  *  $ARGUMENTS$

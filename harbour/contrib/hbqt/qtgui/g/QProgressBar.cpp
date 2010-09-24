@@ -70,6 +70,11 @@
  *  enum Direction { TopToBottom, BottomToTop }
  */
 
+/*
+ *  Constructed[ 21/21 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QProgressBar>

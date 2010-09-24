@@ -87,9 +87,7 @@ CREATE CLASS QLayout INHERIT HbQtObjectHandler, HB_QObject, HB_QLayoutItem FUNCT
    METHOD  parentWidget()
    METHOD  removeItem( pItem )
    METHOD  removeWidget( pWidget )
-   METHOD  setAlignment( pW, nAlignment )
-   METHOD  setAlignment_1( nAlignment )
-   METHOD  setAlignment_2( pL, nAlignment )
+   METHOD  setAlignment( ... )
    METHOD  setContentsMargins( nLeft, nTop, nRight, nBottom )
    METHOD  setEnabled( lEnable )
    METHOD  setMenuBar( pWidget )
@@ -177,16 +175,34 @@ METHOD QLayout:removeWidget( pWidget )
    RETURN Qt_QLayout_removeWidget( ::pPtr, hbqt_ptr( pWidget ) )
 
 
-METHOD QLayout:setAlignment( pW, nAlignment )
-   RETURN Qt_QLayout_setAlignment( ::pPtr, hbqt_ptr( pW ), nAlignment )
-
-
-METHOD QLayout:setAlignment_1( nAlignment )
-   RETURN Qt_QLayout_setAlignment_1( ::pPtr, nAlignment )
-
-
-METHOD QLayout:setAlignment_2( pL, nAlignment )
-   RETURN Qt_QLayout_setAlignment_2( ::pPtr, hbqt_ptr( pL ), nAlignment )
+METHOD QLayout:setAlignment( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // bool setAlignment ( QLayout * l, Qt::Alignment alignment )
+                // PO p QLayout, N n Qt::Alignment
+         RETURN Qt_QLayout_setAlignment_2( ::pPtr, ... )
+                // bool setAlignment ( QWidget * w, Qt::Alignment alignment )
+                // PO p QWidget, N n Qt::Alignment
+         // RETURN Qt_QLayout_setAlignment( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // void setAlignment ( Qt::Alignment alignment )
+                // N n Qt::Alignment
+         RETURN Qt_QLayout_setAlignment_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QLayout:setContentsMargins( nLeft, nTop, nRight, nBottom )

@@ -59,7 +59,7 @@ QObject    =
 Inherits   = QIODevice
 Type       = Core
 New        =
-Destructor = 
+Destructor =
 </CLASS>
 
 <CODE>
@@ -117,7 +117,7 @@ QString symLinkTarget () const
 void unsetError ()
 
 bool copy ( const QString & fileName, const QString & newName )
-QString decodeName ( const QByteArray & localFileName )
+//QString decodeName ( const QByteArray & localFileName )
 QString decodeName ( const char * localFileName )
 QByteArray encodeName ( const QString & fileName )
 bool exists ( const QString & fileName )

@@ -74,6 +74,15 @@
  *  enum TransferType { Binary, Ascii }
  */
 
+/*
+ *  Constructed[ 26/26 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // qint64 read ( char * data, qint64 maxlen )
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtNetwork/QFtp>

@@ -76,7 +76,6 @@
  *  Constructed[ 38/39 [ 97.44% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  QMap<QDate, QTextCharFormat> dateTextFormat () const
  */

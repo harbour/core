@@ -71,8 +71,7 @@ CREATE CLASS QListWidget INHERIT HbQtObjectHandler, HB_QListView FUNCTION HB_QLi
 
    METHOD  new( ... )
 
-   METHOD  addItem( cLabel )
-   METHOD  addItem_1( pItem )
+   METHOD  addItem( ... )
    METHOD  addItems( pLabels )
    METHOD  closePersistentEditor( pItem )
    METHOD  count()
@@ -80,22 +79,18 @@ CREATE CLASS QListWidget INHERIT HbQtObjectHandler, HB_QListView FUNCTION HB_QLi
    METHOD  currentRow()
    METHOD  editItem( pItem )
    METHOD  findItems( cText, nFlags )
-   METHOD  insertItem( nRow, pItem )
-   METHOD  insertItem_1( nRow, cLabel )
+   METHOD  insertItem( ... )
    METHOD  insertItems( nRow, pLabels )
    METHOD  isSortingEnabled()
    METHOD  item( nRow )
-   METHOD  itemAt( pP )
-   METHOD  itemAt_1( nX, nY )
+   METHOD  itemAt( ... )
    METHOD  itemWidget( pItem )
    METHOD  openPersistentEditor( pItem )
    METHOD  removeItemWidget( pItem )
    METHOD  row( pItem )
    METHOD  selectedItems()
-   METHOD  setCurrentItem( pItem )
-   METHOD  setCurrentItem_1( pItem, nCommand )
-   METHOD  setCurrentRow( nRow )
-   METHOD  setCurrentRow_1( nRow, nCommand )
+   METHOD  setCurrentItem( ... )
+   METHOD  setCurrentRow( ... )
    METHOD  setItemWidget( pItem, pWidget )
    METHOD  setSortingEnabled( lEnable )
    METHOD  sortItems( nOrder )
@@ -116,12 +111,28 @@ METHOD QListWidget:new( ... )
    RETURN Self
 
 
-METHOD QListWidget:addItem( cLabel )
-   RETURN Qt_QListWidget_addItem( ::pPtr, cLabel )
-
-
-METHOD QListWidget:addItem_1( pItem )
-   RETURN Qt_QListWidget_addItem_1( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QListWidget:addItem( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // void addItem ( const QString & label )
+                // C c QString
+         RETURN Qt_QListWidget_addItem( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO"
+                // void addItem ( QListWidgetItem * item )              [*D=1*]
+                // PO p QListWidgetItem
+         RETURN Qt_QListWidget_addItem_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QListWidget:addItems( pLabels )
@@ -152,12 +163,28 @@ METHOD QListWidget:findItems( cText, nFlags )
    RETURN Qt_QListWidget_findItems( ::pPtr, cText, nFlags )
 
 
-METHOD QListWidget:insertItem( nRow, pItem )
-   RETURN Qt_QListWidget_insertItem( ::pPtr, nRow, hbqt_ptr( pItem ) )
-
-
-METHOD QListWidget:insertItem_1( nRow, cLabel )
-   RETURN Qt_QListWidget_insertItem_1( ::pPtr, nRow, cLabel )
+METHOD QListWidget:insertItem( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "C"
+                // void insertItem ( int row, const QString & label )
+                // N n int, C c QString
+         RETURN Qt_QListWidget_insertItem_1( ::pPtr, ... )
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PO"
+                // void insertItem ( int row, QListWidgetItem * item )  [*D=2*]
+                // N n int, PO p QListWidgetItem
+         RETURN Qt_QListWidget_insertItem( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QListWidget:insertItems( nRow, pLabels )
@@ -172,12 +199,31 @@ METHOD QListWidget:item( nRow )
    RETURN Qt_QListWidget_item( ::pPtr, nRow )
 
 
-METHOD QListWidget:itemAt( pP )
-   RETURN Qt_QListWidget_itemAt( ::pPtr, hbqt_ptr( pP ) )
-
-
-METHOD QListWidget:itemAt_1( nX, nY )
-   RETURN Qt_QListWidget_itemAt_1( ::pPtr, nX, nY )
+METHOD QListWidget:itemAt( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // QListWidgetItem * itemAt ( int x, int y ) const
+                // N n int, N n int
+         RETURN QListWidgetItem():from( Qt_QListWidget_itemAt_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QListWidgetItem * itemAt ( const QPoint & p ) const
+                // PO p QPoint
+         RETURN QListWidgetItem():from( Qt_QListWidget_itemAt( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QListWidget:itemWidget( pItem )
@@ -200,20 +246,58 @@ METHOD QListWidget:selectedItems()
    RETURN Qt_QListWidget_selectedItems( ::pPtr )
 
 
-METHOD QListWidget:setCurrentItem( pItem )
-   RETURN Qt_QListWidget_setCurrentItem( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QListWidget:setCurrentItem( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // void setCurrentItem ( QListWidgetItem * item, QItemSelectionModel::SelectionFlags command )
+                // PO p QListWidgetItem, N n QItemSelectionModel::SelectionFlags
+         RETURN Qt_QListWidget_setCurrentItem_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void setCurrentItem ( QListWidgetItem * item )
+                // PO p QListWidgetItem
+         RETURN Qt_QListWidget_setCurrentItem( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QListWidget:setCurrentItem_1( pItem, nCommand )
-   RETURN Qt_QListWidget_setCurrentItem_1( ::pPtr, hbqt_ptr( pItem ), nCommand )
-
-
-METHOD QListWidget:setCurrentRow( nRow )
-   RETURN Qt_QListWidget_setCurrentRow( ::pPtr, nRow )
-
-
-METHOD QListWidget:setCurrentRow_1( nRow, nCommand )
-   RETURN Qt_QListWidget_setCurrentRow_1( ::pPtr, nRow, nCommand )
+METHOD QListWidget:setCurrentRow( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void setCurrentRow ( int row, QItemSelectionModel::SelectionFlags command )
+                // N n int, N n QItemSelectionModel::SelectionFlags
+         RETURN Qt_QListWidget_setCurrentRow_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // void setCurrentRow ( int row )
+                // N n int
+         RETURN Qt_QListWidget_setCurrentRow( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QListWidget:setItemWidget( pItem, pWidget )

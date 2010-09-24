@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QObject, QGraphicsItem, QGraphicsLayoutItem
  *  $SYNTAX$
- *     QGraphicsWidget():new( ... )
+ *     QGraphicsWidget( ... )
  *     QGraphicsWidget():from( pPtr_OR_oObj_of_type_QGraphicsWidget )
  *     QGraphicsWidget():configure( pPtr_OR_oObj_of_type_QGraphicsWidget )
  *  $ARGUMENTS$

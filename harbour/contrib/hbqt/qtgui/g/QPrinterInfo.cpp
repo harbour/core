@@ -70,7 +70,6 @@
  *  Constructed[ 5/6 [ 83.33% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  QList<QPrinter::PaperSize> supportedPaperSizes () const
  */

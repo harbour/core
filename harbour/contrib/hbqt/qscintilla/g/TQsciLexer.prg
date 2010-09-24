@@ -92,13 +92,10 @@ CREATE CLASS QsciLexer INHERIT HbQtObjectHandler FUNCTION HB_QsciLexer
    METHOD  defaultStyle()
    METHOD  description( nStyle )
    METHOD  paper( nStyle )
-   METHOD  defaultColor()
-   METHOD  defaultColor_1( nStyle )
+   METHOD  defaultColor( ... )
    METHOD  defaultEolFill( nStyle )
-   METHOD  defaultFont()
-   METHOD  defaultFont_1( nStyle )
-   METHOD  defaultPaper()
-   METHOD  defaultPaper_1( nStyle )
+   METHOD  defaultFont( ... )
+   METHOD  defaultPaper( ... )
    METHOD  editor()
    METHOD  setEditor( pEditor )
    METHOD  readSettings( pQs, pPrefix )
@@ -212,32 +209,77 @@ METHOD QsciLexer:paper( nStyle )
    RETURN Qt_QsciLexer_paper( ::pPtr, nStyle )
 
 
-METHOD QsciLexer:defaultColor()
-   RETURN Qt_QsciLexer_defaultColor( ::pPtr )
-
-
-METHOD QsciLexer:defaultColor_1( nStyle )
-   RETURN Qt_QsciLexer_defaultColor_1( ::pPtr, nStyle )
+METHOD QsciLexer:defaultColor( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // virtual QColor defaultColor (int style) const
+                // N n int
+         RETURN QColor():from( Qt_QsciLexer_defaultColor_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 0
+             // QColor defaultColor () const
+      RETURN QColor():from( Qt_QsciLexer_defaultColor( ::pPtr, ... ) )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QsciLexer:defaultEolFill( nStyle )
    RETURN Qt_QsciLexer_defaultEolFill( ::pPtr, nStyle )
 
 
-METHOD QsciLexer:defaultFont()
-   RETURN Qt_QsciLexer_defaultFont( ::pPtr )
+METHOD QsciLexer:defaultFont( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // virtual QFont defaultFont (int style) const
+                // N n int
+         RETURN QFont():from( Qt_QsciLexer_defaultFont_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 0
+             // QFont defaultFont () const
+      RETURN QFont():from( Qt_QsciLexer_defaultFont( ::pPtr, ... ) )
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QsciLexer:defaultFont_1( nStyle )
-   RETURN Qt_QsciLexer_defaultFont_1( ::pPtr, nStyle )
-
-
-METHOD QsciLexer:defaultPaper()
-   RETURN Qt_QsciLexer_defaultPaper( ::pPtr )
-
-
-METHOD QsciLexer:defaultPaper_1( nStyle )
-   RETURN Qt_QsciLexer_defaultPaper_1( ::pPtr, nStyle )
+METHOD QsciLexer:defaultPaper( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // virtual QColor defaultPaper (int style) const
+                // N n int
+         RETURN QColor():from( Qt_QsciLexer_defaultPaper_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 0
+             // QColor defaultPaper () const
+      RETURN QColor():from( Qt_QsciLexer_defaultPaper( ::pPtr, ... ) )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QsciLexer:editor()

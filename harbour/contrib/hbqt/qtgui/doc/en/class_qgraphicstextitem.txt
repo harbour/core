@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QObject, QGraphicsItem
  *  $SYNTAX$
- *     QGraphicsTextItem():new( ... )
+ *     QGraphicsTextItem( ... )
  *     QGraphicsTextItem():from( pPtr_OR_oObj_of_type_QGraphicsTextItem )
  *     QGraphicsTextItem():configure( pPtr_OR_oObj_of_type_QGraphicsTextItem )
  *  $ARGUMENTS$

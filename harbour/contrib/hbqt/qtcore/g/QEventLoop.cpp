@@ -70,6 +70,11 @@
  *  flags ProcessEventsFlags
  */
 
+/*
+ *  Constructed[ 6/6 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtCore/QEventLoop>

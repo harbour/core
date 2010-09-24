@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QList
  *  $SYNTAX$
- *     QItemSelection():new( ... )
+ *     QItemSelection( ... )
  *     QItemSelection():from( pPtr_OR_oObj_of_type_QItemSelection )
  *     QItemSelection():configure( pPtr_OR_oObj_of_type_QItemSelection )
  *  $ARGUMENTS$

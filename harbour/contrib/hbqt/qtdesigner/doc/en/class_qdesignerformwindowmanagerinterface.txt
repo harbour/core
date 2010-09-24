@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QObject
  *  $SYNTAX$
- *     QDesignerFormWindowManagerInterface():new( ... )
+ *     QDesignerFormWindowManagerInterface( ... )
  *     QDesignerFormWindowManagerInterface():from( pPtr_OR_oObj_of_type_QDesignerFormWindowManagerInterface )
  *     QDesignerFormWindowManagerInterface():configure( pPtr_OR_oObj_of_type_QDesignerFormWindowManagerInterface )
  *  $ARGUMENTS$

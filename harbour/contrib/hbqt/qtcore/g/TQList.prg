@@ -74,21 +74,16 @@ CREATE CLASS QList INHERIT HbQtObjectHandler FUNCTION HB_QList
    METHOD  append( xValue )
    METHOD  at( nI )
    METHOD  back()
-   METHOD  back_1()
    METHOD  clear()
-   METHOD  count( xValue )
-   METHOD  count_1()
+   METHOD  count( ... )
    METHOD  empty()
    METHOD  endsWith( xValue )
    METHOD  first()
-   METHOD  first_1()
    METHOD  front()
-   METHOD  front_1()
    METHOD  indexOf( xValue, nFrom )
    METHOD  insert( nI, xValue )
    METHOD  isEmpty()
    METHOD  last()
-   METHOD  last_1()
    METHOD  lastIndexOf( xValue, nFrom )
    METHOD  length()
    METHOD  move( nFrom, nTo )
@@ -109,8 +104,7 @@ CREATE CLASS QList INHERIT HbQtObjectHandler FUNCTION HB_QList
    METHOD  takeAt( nI )
    METHOD  takeFirst()
    METHOD  takeLast()
-   METHOD  value( nI )
-   METHOD  value_1( nI, xDefaultValue )
+   METHOD  value( ... )
 
    ENDCLASS
 
@@ -136,20 +130,31 @@ METHOD QList:back()
    RETURN Qt_QList_back( ::pPtr )
 
 
-METHOD QList:back_1()
-   RETURN Qt_QList_back_1( ::pPtr )
-
-
 METHOD QList:clear()
    RETURN Qt_QList_clear( ::pPtr )
 
 
-METHOD QList:count( xValue )
-   RETURN Qt_QList_count( ::pPtr, xValue )
-
-
-METHOD QList:count_1()
-   RETURN Qt_QList_count_1( ::pPtr )
+METHOD QList:count( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "X"
+                // int count ( const T & value ) const
+                // X x T
+         RETURN Qt_QList_count( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // int count () const
+      RETURN Qt_QList_count_1( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QList:empty()
@@ -164,16 +169,8 @@ METHOD QList:first()
    RETURN Qt_QList_first( ::pPtr )
 
 
-METHOD QList:first_1()
-   RETURN Qt_QList_first_1( ::pPtr )
-
-
 METHOD QList:front()
    RETURN Qt_QList_front( ::pPtr )
-
-
-METHOD QList:front_1()
-   RETURN Qt_QList_front_1( ::pPtr )
 
 
 METHOD QList:indexOf( xValue, nFrom )
@@ -190,10 +187,6 @@ METHOD QList:isEmpty()
 
 METHOD QList:last()
    RETURN Qt_QList_last( ::pPtr )
-
-
-METHOD QList:last_1()
-   RETURN Qt_QList_last_1( ::pPtr )
 
 
 METHOD QList:lastIndexOf( xValue, nFrom )
@@ -276,10 +269,29 @@ METHOD QList:takeLast()
    RETURN Qt_QList_takeLast( ::pPtr )
 
 
-METHOD QList:value( nI )
-   RETURN Qt_QList_value( ::pPtr, nI )
-
-
-METHOD QList:value_1( nI, xDefaultValue )
-   RETURN Qt_QList_value_1( ::pPtr, nI, xDefaultValue )
+METHOD QList:value( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "X"
+                // T value ( int i, const T & defaultValue ) const
+                // N n int, X x T
+         RETURN Qt_QList_value_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // T value ( int i ) const
+                // N n int
+         RETURN Qt_QList_value( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 

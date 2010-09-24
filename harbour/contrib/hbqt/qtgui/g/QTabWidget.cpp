@@ -72,12 +72,8 @@
  */
 
 /*
- *  Constructed[ 41/42 [ 97.62% ] ]
+ *  Constructed[ 41/41 [ 100.00% ] ]
  *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  }
  */
 
 #include <QtCore/QPointer>
@@ -165,32 +161,37 @@ HB_FUNC( QT_QTABWIDGET )
 }
 
 /*
- * int addTab ( QWidget * page, const QString & label )
+ * int addTab ( QWidget * page, const QString & label )   [*D=1*]
  */
 HB_FUNC( QT_QTABWIDGET_ADDTAB )
 {
-   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-
-   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QTABWIDGET_ADDTAB()" ) );
-   if( p && p->ph && q && q->ph )
+   QTabWidget * p = hbqt_par_QTabWidget( 1 );
+   if( p )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "QT_QTABWIDGET_ADDTAB() Qt object: %p is attached to: %p", p->ph, q->ph ) );
-
-      q->bNew = HB_FALSE;
-
-      hb_retni( hbqt_par_QTabWidget( 1 )->addTab( hbqt_par_QWidget( 2 ), hbqt_par_QString( 3 ) ) );
+      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+      if( q && q->ph )
+      {
+         q->bNew = false;
+      }
+      void * pText;
+      hb_retni( ( p )->addTab( hbqt_par_QWidget( 2 ), hb_parstr_utf8( 3, &pText, NULL ) ) );
+      hb_strfree( pText );
    }
 }
 
 /*
- * int addTab ( QWidget * page, const QIcon & icon, const QString & label )
+ * int addTab ( QWidget * page, const QIcon & icon, const QString & label )   [*D=1*]
  */
 HB_FUNC( QT_QTABWIDGET_ADDTAB_1 )
 {
    QTabWidget * p = hbqt_par_QTabWidget( 1 );
    if( p )
    {
+      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+      if( q && q->ph )
+      {
+         q->bNew = false;
+      }
       void * pText;
       hb_retni( ( p )->addTab( hbqt_par_QWidget( 2 ), ( HB_ISCHAR( 3 ) ? QIcon( hbqt_par_QString( 3 ) ) : *hbqt_par_QIcon( 3 )), hb_parstr_utf8( 4, &pText, NULL ) ) );
       hb_strfree( pText );

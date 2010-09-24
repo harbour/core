@@ -73,38 +73,27 @@ CREATE CLASS QFile INHERIT HbQtObjectHandler, HB_QIODevice FUNCTION HB_QFile
 
    METHOD  atEnd()
    METHOD  close()
-   METHOD  copy( cNewName )
+   METHOD  copy( ... )
    METHOD  error()
-   METHOD  exists()
+   METHOD  exists( ... )
    METHOD  fileName()
    METHOD  flush()
    METHOD  handle()
    METHOD  isSequential()
-   METHOD  link( cLinkName )
+   METHOD  link( ... )
    METHOD  map( nOffset, nSize, nFlags )
-   METHOD  open( nMode )
-   METHOD  open_1( nFd, nMode )
-   METHOD  permissions()
-   METHOD  remove()
-   METHOD  rename( cNewName )
-   METHOD  resize( nSz )
+   METHOD  open( ... )
+   METHOD  permissions( ... )
+   METHOD  remove( ... )
+   METHOD  rename( ... )
+   METHOD  resize( ... )
    METHOD  setFileName( cName )
-   METHOD  setPermissions( nPermissions )
+   METHOD  setPermissions( ... )
    METHOD  size()
-   METHOD  symLinkTarget()
+   METHOD  symLinkTarget( ... )
    METHOD  unsetError()
-   METHOD  copy_1( cFileName, cNewName )
    METHOD  decodeName( pLocalFileName )
-   METHOD  decodeName_1( pLocalFileName )
    METHOD  encodeName( cFileName )
-   METHOD  exists_1( cFileName )
-   METHOD  link_1( cFileName, cLinkName )
-   METHOD  permissions_1( cFileName )
-   METHOD  remove_1( cFileName )
-   METHOD  rename_1( cOldName, cNewName )
-   METHOD  resize_1( cFileName, nSz )
-   METHOD  setPermissions_1( cFileName, nPermissions )
-   METHOD  symLinkTarget_1( cFileName )
 
    ENDCLASS
 
@@ -126,16 +115,58 @@ METHOD QFile:close()
    RETURN Qt_QFile_close( ::pPtr )
 
 
-METHOD QFile:copy( cNewName )
-   RETURN Qt_QFile_copy( ::pPtr, cNewName )
+METHOD QFile:copy( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "C"
+                // bool copy ( const QString & fileName, const QString & newName )
+                // C c QString, C c QString
+         RETURN Qt_QFile_copy_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // bool copy ( const QString & newName )
+                // C c QString
+         RETURN Qt_QFile_copy( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QFile:error()
    RETURN Qt_QFile_error( ::pPtr )
 
 
-METHOD QFile:exists()
-   RETURN Qt_QFile_exists( ::pPtr )
+METHOD QFile:exists( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // bool exists ( const QString & fileName )
+                // C c QString
+         RETURN Qt_QFile_exists_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // bool exists () const
+      RETURN Qt_QFile_exists( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QFile:fileName()
@@ -154,102 +185,230 @@ METHOD QFile:isSequential()
    RETURN Qt_QFile_isSequential( ::pPtr )
 
 
-METHOD QFile:link( cLinkName )
-   RETURN Qt_QFile_link( ::pPtr, cLinkName )
+METHOD QFile:link( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "C"
+                // bool link ( const QString & fileName, const QString & linkName )
+                // C c QString, C c QString
+         RETURN Qt_QFile_link_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // bool link ( const QString & linkName )
+                // C c QString
+         RETURN Qt_QFile_link( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QFile:map( nOffset, nSize, nFlags )
    RETURN Qt_QFile_map( ::pPtr, nOffset, nSize, nFlags )
 
 
-METHOD QFile:open( nMode )
-   RETURN Qt_QFile_open( ::pPtr, nMode )
+METHOD QFile:open( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // bool open ( int fd, OpenMode mode )
+                // N n int, N n QFile::OpenMode
+         RETURN Qt_QFile_open_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // virtual bool open ( OpenMode mode )
+                // N n QFile::OpenMode
+         RETURN Qt_QFile_open( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QFile:open_1( nFd, nMode )
-   RETURN Qt_QFile_open_1( ::pPtr, nFd, nMode )
+METHOD QFile:permissions( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // Permissions permissions ( const QString & fileName )
+                // C c QString
+         RETURN Qt_QFile_permissions_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // Permissions permissions () const
+      RETURN Qt_QFile_permissions( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QFile:permissions()
-   RETURN Qt_QFile_permissions( ::pPtr )
+METHOD QFile:remove( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // bool remove ( const QString & fileName )
+                // C c QString
+         RETURN Qt_QFile_remove_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // bool remove ()
+      RETURN Qt_QFile_remove( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QFile:remove()
-   RETURN Qt_QFile_remove( ::pPtr )
+METHOD QFile:rename( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "C"
+                // bool rename ( const QString & oldName, const QString & newName )
+                // C c QString, C c QString
+         RETURN Qt_QFile_rename_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // bool rename ( const QString & newName )
+                // C c QString
+         RETURN Qt_QFile_rename( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QFile:rename( cNewName )
-   RETURN Qt_QFile_rename( ::pPtr, cNewName )
-
-
-METHOD QFile:resize( nSz )
-   RETURN Qt_QFile_resize( ::pPtr, nSz )
+METHOD QFile:resize( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
+                // bool resize ( const QString & fileName, qint64 sz )
+                // C c QString, N n qint64
+         RETURN Qt_QFile_resize_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // bool resize ( qint64 sz )
+                // N n qint64
+         RETURN Qt_QFile_resize( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QFile:setFileName( cName )
    RETURN Qt_QFile_setFileName( ::pPtr, cName )
 
 
-METHOD QFile:setPermissions( nPermissions )
-   RETURN Qt_QFile_setPermissions( ::pPtr, nPermissions )
+METHOD QFile:setPermissions( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
+                // bool setPermissions ( const QString & fileName, Permissions permissions )
+                // C c QString, N n QFile::Permissions
+         RETURN Qt_QFile_setPermissions_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // bool setPermissions ( Permissions permissions )
+                // N n QFile::Permissions
+         RETURN Qt_QFile_setPermissions( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QFile:size()
    RETURN Qt_QFile_size( ::pPtr )
 
 
-METHOD QFile:symLinkTarget()
-   RETURN Qt_QFile_symLinkTarget( ::pPtr )
+METHOD QFile:symLinkTarget( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // QString symLinkTarget ( const QString & fileName )
+                // C c QString
+         RETURN Qt_QFile_symLinkTarget_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // QString symLinkTarget () const
+      RETURN Qt_QFile_symLinkTarget( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QFile:unsetError()
    RETURN Qt_QFile_unsetError( ::pPtr )
 
 
-METHOD QFile:copy_1( cFileName, cNewName )
-   RETURN Qt_QFile_copy_1( ::pPtr, cFileName, cNewName )
-
-
 METHOD QFile:decodeName( pLocalFileName )
    RETURN Qt_QFile_decodeName( ::pPtr, hbqt_ptr( pLocalFileName ) )
 
 
-METHOD QFile:decodeName_1( pLocalFileName )
-   RETURN Qt_QFile_decodeName_1( ::pPtr, hbqt_ptr( pLocalFileName ) )
-
-
 METHOD QFile:encodeName( cFileName )
    RETURN Qt_QFile_encodeName( ::pPtr, cFileName )
-
-
-METHOD QFile:exists_1( cFileName )
-   RETURN Qt_QFile_exists_1( ::pPtr, cFileName )
-
-
-METHOD QFile:link_1( cFileName, cLinkName )
-   RETURN Qt_QFile_link_1( ::pPtr, cFileName, cLinkName )
-
-
-METHOD QFile:permissions_1( cFileName )
-   RETURN Qt_QFile_permissions_1( ::pPtr, cFileName )
-
-
-METHOD QFile:remove_1( cFileName )
-   RETURN Qt_QFile_remove_1( ::pPtr, cFileName )
-
-
-METHOD QFile:rename_1( cOldName, cNewName )
-   RETURN Qt_QFile_rename_1( ::pPtr, cOldName, cNewName )
-
-
-METHOD QFile:resize_1( cFileName, nSz )
-   RETURN Qt_QFile_resize_1( ::pPtr, cFileName, nSz )
-
-
-METHOD QFile:setPermissions_1( cFileName, nPermissions )
-   RETURN Qt_QFile_setPermissions_1( ::pPtr, cFileName, nPermissions )
-
-
-METHOD QFile:symLinkTarget_1( cFileName )
-   RETURN Qt_QFile_symLinkTarget_1( ::pPtr, cFileName )
 

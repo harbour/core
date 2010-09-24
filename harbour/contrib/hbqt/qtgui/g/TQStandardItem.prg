@@ -111,8 +111,7 @@ CREATE CLASS QStandardItem INHERIT HbQtObjectHandler FUNCTION HB_QStandardItem
    METHOD  setBackground( pBrush )
    METHOD  setCheckState( nState )
    METHOD  setCheckable( lCheckable )
-   METHOD  setChild( nRow, nColumn, pItem )
-   METHOD  setChild_1( nRow, pItem )
+   METHOD  setChild( ... )
    METHOD  setColumnCount( nColumns )
    METHOD  setData( pValue, nRole )
    METHOD  setDragEnabled( lDragEnabled )
@@ -317,12 +316,31 @@ METHOD QStandardItem:setCheckable( lCheckable )
    RETURN Qt_QStandardItem_setCheckable( ::pPtr, lCheckable )
 
 
-METHOD QStandardItem:setChild( nRow, nColumn, pItem )
-   RETURN Qt_QStandardItem_setChild( ::pPtr, nRow, nColumn, hbqt_ptr( pItem ) )
-
-
-METHOD QStandardItem:setChild_1( nRow, pItem )
-   RETURN Qt_QStandardItem_setChild_1( ::pPtr, nRow, hbqt_ptr( pItem ) )
+METHOD QStandardItem:setChild( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "PO"
+                // void setChild ( int row, int column, QStandardItem * item )
+                // N n int, N n int, PO p QStandardItem
+         RETURN Qt_QStandardItem_setChild( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PO"
+                // void setChild ( int row, QStandardItem * item )
+                // N n int, PO p QStandardItem
+         RETURN Qt_QStandardItem_setChild_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QStandardItem:setColumnCount( nColumns )

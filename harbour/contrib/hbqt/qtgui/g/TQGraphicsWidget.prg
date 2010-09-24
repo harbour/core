@@ -88,14 +88,12 @@ CREATE CLASS QGraphicsWidget INHERIT HbQtObjectHandler, HB_QObject, HB_QGraphics
    METHOD  rect()
    METHOD  releaseShortcut( nId )
    METHOD  removeAction( pAction )
-   METHOD  resize( pSize )
-   METHOD  resize_1( nW, nH )
+   METHOD  resize( ... )
    METHOD  setAttribute( nAttribute, lOn )
    METHOD  setContentsMargins( nLeft, nTop, nRight, nBottom )
    METHOD  setFocusPolicy( nPolicy )
    METHOD  setFont( pFont )
-   METHOD  setGeometry( pRect )
-   METHOD  setGeometry_1( nX, nY, nW, nH )
+   METHOD  setGeometry( ... )
    METHOD  setLayout( pLayout )
    METHOD  setLayoutDirection( nDirection )
    METHOD  setPalette( pPalette )
@@ -198,12 +196,31 @@ METHOD QGraphicsWidget:removeAction( pAction )
    RETURN Qt_QGraphicsWidget_removeAction( ::pPtr, hbqt_ptr( pAction ) )
 
 
-METHOD QGraphicsWidget:resize( pSize )
-   RETURN Qt_QGraphicsWidget_resize( ::pPtr, hbqt_ptr( pSize ) )
-
-
-METHOD QGraphicsWidget:resize_1( nW, nH )
-   RETURN Qt_QGraphicsWidget_resize_1( ::pPtr, nW, nH )
+METHOD QGraphicsWidget:resize( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void resize ( qreal w, qreal h )
+                // N n qreal, N n qreal
+         RETURN Qt_QGraphicsWidget_resize_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void resize ( const QSizeF & size )
+                // PO p QSizeF
+         RETURN Qt_QGraphicsWidget_resize( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QGraphicsWidget:setAttribute( nAttribute, lOn )
@@ -222,12 +239,31 @@ METHOD QGraphicsWidget:setFont( pFont )
    RETURN Qt_QGraphicsWidget_setFont( ::pPtr, hbqt_ptr( pFont ) )
 
 
-METHOD QGraphicsWidget:setGeometry( pRect )
-   RETURN Qt_QGraphicsWidget_setGeometry( ::pPtr, hbqt_ptr( pRect ) )
-
-
-METHOD QGraphicsWidget:setGeometry_1( nX, nY, nW, nH )
-   RETURN Qt_QGraphicsWidget_setGeometry_1( ::pPtr, nX, nY, nW, nH )
+METHOD QGraphicsWidget:setGeometry( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // void setGeometry ( qreal x, qreal y, qreal w, qreal h )
+                // N n qreal, N n qreal, N n qreal, N n qreal
+         RETURN Qt_QGraphicsWidget_setGeometry_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // virtual void setGeometry ( const QRectF & rect )
+                // PO p QRectF
+         RETURN Qt_QGraphicsWidget_setGeometry( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QGraphicsWidget:setLayout( pLayout )

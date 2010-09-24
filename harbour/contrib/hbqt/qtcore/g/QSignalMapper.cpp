@@ -65,6 +65,16 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  Constructed[ 9/9 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // QObject * mapping ( QWidget * widget ) const
+ *  // void setMapping ( QObject * sender, QWidget * widget )
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtCore/QSignalMapper>

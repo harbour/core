@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QFrame
  *  $SYNTAX$
- *     QAbstractScrollArea():new( ... )
+ *     QAbstractScrollArea( ... )
  *     QAbstractScrollArea():from( pPtr_OR_oObj_of_type_QAbstractScrollArea )
  *     QAbstractScrollArea():configure( pPtr_OR_oObj_of_type_QAbstractScrollArea )
  *  $ARGUMENTS$

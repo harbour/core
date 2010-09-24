@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QGradient():new( ... )
+ *     QGradient( ... )
  *     QGradient():from( pPtr_OR_oObj_of_type_QGradient )
  *     QGradient():configure( pPtr_OR_oObj_of_type_QGradient )
  *  $ARGUMENTS$

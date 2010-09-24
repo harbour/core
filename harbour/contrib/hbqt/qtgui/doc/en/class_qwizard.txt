@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QDialog
  *  $SYNTAX$
- *     QWizard():new( ... )
+ *     QWizard( ... )
  *     QWizard():from( pPtr_OR_oObj_of_type_QWizard )
  *     QWizard():configure( pPtr_OR_oObj_of_type_QWizard )
  *  $ARGUMENTS$

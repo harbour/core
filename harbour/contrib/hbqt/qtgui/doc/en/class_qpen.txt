@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QPen():new( ... )
+ *     QPen( ... )
  *     QPen():from( pPtr_OR_oObj_of_type_QPen )
  *     QPen():configure( pPtr_OR_oObj_of_type_QPen )
  *  $ARGUMENTS$

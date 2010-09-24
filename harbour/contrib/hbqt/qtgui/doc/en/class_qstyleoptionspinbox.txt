@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QStyleOptionComplex
  *  $SYNTAX$
- *     QStyleOptionSpinBox():new( ... )
+ *     QStyleOptionSpinBox( ... )
  *     QStyleOptionSpinBox():from( pPtr_OR_oObj_of_type_QStyleOptionSpinBox )
  *     QStyleOptionSpinBox():configure( pPtr_OR_oObj_of_type_QStyleOptionSpinBox )
  *  $ARGUMENTS$

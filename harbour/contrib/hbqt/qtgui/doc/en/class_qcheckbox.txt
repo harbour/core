@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QAbstractButton
  *  $SYNTAX$
- *     QCheckBox():new( ... )
+ *     QCheckBox( ... )
  *     QCheckBox():from( pPtr_OR_oObj_of_type_QCheckBox )
  *     QCheckBox():configure( pPtr_OR_oObj_of_type_QCheckBox )
  *  $ARGUMENTS$

@@ -76,14 +76,13 @@
  */
 
 /*
- *  Constructed[ 46/51 [ 90.20% ] ]
+ *  Constructed[ 46/47 [ 97.87% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  void setSidebarUrls ( const QList<QUrl> & urls )
  *
- *  *** Commented out protos which construct fine but do not compile ***
+ *  *** Commented out protostypes ***
  *
  *  // void open ( QObject * receiver, const char * member )
  *  //QString getOpenFileName ( QWidget * parent = 0, const QString & caption = QString(), const QString & dir = QString(), const QString & filter = QString(), QString * selectedFilter = 0, Options options = 0 )

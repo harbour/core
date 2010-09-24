@@ -78,10 +78,8 @@ CREATE CLASS QDir INHERIT HbQtObjectHandler FUNCTION HB_QDir
    METHOD  cdUp()
    METHOD  count()
    METHOD  dirName()
-   METHOD  entryList( pNameFilters, nFilters, nSort )
-   METHOD  entryList_1( nFilters, nSort )
-   METHOD  exists( cName )
-   METHOD  exists_1()
+   METHOD  entryList( ... )
+   METHOD  exists( ... )
    METHOD  filePath( cFileName )
    METHOD  filter()
    METHOD  isAbsolute()
@@ -113,8 +111,7 @@ CREATE CLASS QDir INHERIT HbQtObjectHandler FUNCTION HB_QDir
    METHOD  homePath()
    METHOD  isAbsolutePath( cPath )
    METHOD  isRelativePath( cPath )
-   METHOD  match( cFilter, cFileName )
-   METHOD  match_1( pFilters, cFileName )
+   METHOD  match( ... )
    METHOD  root()
    METHOD  rootPath()
    METHOD  searchPaths( cPrefix )
@@ -165,20 +162,65 @@ METHOD QDir:dirName()
    RETURN Qt_QDir_dirName( ::pPtr )
 
 
-METHOD QDir:entryList( pNameFilters, nFilters, nSort )
-   RETURN Qt_QDir_entryList( ::pPtr, hbqt_ptr( pNameFilters ), nFilters, nSort )
+METHOD QDir:entryList( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // QStringList entryList ( const QStringList & nameFilters, Filters filters = NoFilter, SortFlags sort = NoSort ) const
+                // PO p QStringList, N n QDir::Filters, N n QDir::SortFlags
+         RETURN QStringList():from( Qt_QDir_entryList( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // QStringList entryList ( Filters filters = NoFilter, SortFlags sort = NoSort ) const
+                // N n QDir::Filters, N n QDir::SortFlags
+         RETURN QStringList():from( Qt_QDir_entryList_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QStringList entryList ( const QStringList & nameFilters, Filters filters = NoFilter, SortFlags sort = NoSort ) const
+                // PO p QStringList, N n QDir::Filters, N n QDir::SortFlags
+         RETURN QStringList():from( Qt_QDir_entryList( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 0
+             // QStringList entryList ( Filters filters = NoFilter, SortFlags sort = NoSort ) const
+             // N n QDir::Filters, N n QDir::SortFlags
+      RETURN QStringList():from( Qt_QDir_entryList_1( ::pPtr, ... ) )
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QDir:entryList_1( nFilters, nSort )
-   RETURN Qt_QDir_entryList_1( ::pPtr, nFilters, nSort )
-
-
-METHOD QDir:exists( cName )
-   RETURN Qt_QDir_exists( ::pPtr, cName )
-
-
-METHOD QDir:exists_1()
-   RETURN Qt_QDir_exists_1( ::pPtr )
+METHOD QDir:exists( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // bool exists ( const QString & name ) const
+                // C c QString
+         RETURN Qt_QDir_exists( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // bool exists () const
+      RETURN Qt_QDir_exists_1( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QDir:filePath( cFileName )
@@ -305,12 +347,28 @@ METHOD QDir:isRelativePath( cPath )
    RETURN Qt_QDir_isRelativePath( ::pPtr, cPath )
 
 
-METHOD QDir:match( cFilter, cFileName )
-   RETURN Qt_QDir_match( ::pPtr, cFilter, cFileName )
-
-
-METHOD QDir:match_1( pFilters, cFileName )
-   RETURN Qt_QDir_match_1( ::pPtr, hbqt_ptr( pFilters ), cFileName )
+METHOD QDir:match( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "C"
+                // bool match ( const QString & filter, const QString & fileName )
+                // C c QString, C c QString
+         RETURN Qt_QDir_match( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "C"
+                // bool match ( const QStringList & filters, const QString & fileName )
+                // PO p QStringList, C c QString
+         RETURN Qt_QDir_match_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QDir:root()

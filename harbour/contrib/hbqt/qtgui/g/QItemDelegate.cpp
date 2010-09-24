@@ -70,6 +70,11 @@
  *  enum EndEditHint { NoHint, EditNextItem, EditPreviousItem, SubmitModelCache, RevertModelCache }
  */
 
+/*
+ *  Constructed[ 10/10 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QItemDelegate>

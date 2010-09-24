@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QObject
  *  $SYNTAX$
- *     QDrag():new( ... )
+ *     QDrag( ... )
  *     QDrag():from( pPtr_OR_oObj_of_type_QDrag )
  *     QDrag():configure( pPtr_OR_oObj_of_type_QDrag )
  *  $ARGUMENTS$

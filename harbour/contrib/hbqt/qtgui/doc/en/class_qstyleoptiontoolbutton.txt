@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QStyleOptionComplex
  *  $SYNTAX$
- *     QStyleOptionToolButton():new( ... )
+ *     QStyleOptionToolButton( ... )
  *     QStyleOptionToolButton():from( pPtr_OR_oObj_of_type_QStyleOptionToolButton )
  *     QStyleOptionToolButton():configure( pPtr_OR_oObj_of_type_QStyleOptionToolButton )
  *  $ARGUMENTS$

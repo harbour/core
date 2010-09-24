@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QFrame
  *  $SYNTAX$
- *     QStackedWidget():new( ... )
+ *     QStackedWidget( ... )
  *     QStackedWidget():from( pPtr_OR_oObj_of_type_QStackedWidget )
  *     QStackedWidget():configure( pPtr_OR_oObj_of_type_QStackedWidget )
  *  $ARGUMENTS$

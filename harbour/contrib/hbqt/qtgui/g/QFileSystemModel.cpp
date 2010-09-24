@@ -70,6 +70,17 @@
  *  enum Roles { FileIconRole, FilePathRole, FileNameRole, FilePermissions }
  */
 
+/*
+ *  Constructed[ 29/29 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // QFileIconProvider * iconProvider () const
+ *  // virtual QMimeData * mimeData ( const QModelIndexList & indexes ) const
+ *  // void setIconProvider ( QFileIconProvider * provider )
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QFileSystemModel>

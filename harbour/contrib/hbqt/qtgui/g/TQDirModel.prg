@@ -83,8 +83,7 @@ CREATE CLASS QDirModel INHERIT HbQtObjectHandler, HB_QAbstractItemModel FUNCTION
    METHOD  hasChildren( pParent )
    METHOD  headerData( nSection, nOrientation, nRole )
    METHOD  iconProvider()
-   METHOD  index( nRow, nColumn, pParent )
-   METHOD  index_1( cPath, nColumn )
+   METHOD  index( ... )
    METHOD  isDir( pIndex )
    METHOD  isReadOnly()
    METHOD  lazyChildCount()
@@ -169,12 +168,42 @@ METHOD QDirModel:iconProvider()
    RETURN Qt_QDirModel_iconProvider( ::pPtr )
 
 
-METHOD QDirModel:index( nRow, nColumn, pParent )
-   RETURN Qt_QDirModel_index( ::pPtr, nRow, nColumn, hbqt_ptr( pParent ) )
-
-
-METHOD QDirModel:index_1( cPath, nColumn )
-   RETURN Qt_QDirModel_index_1( ::pPtr, cPath, nColumn )
+METHOD QDirModel:index( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "PO"
+                // virtual QModelIndex index ( int row, int column, const QModelIndex & parent = QModelIndex() ) const
+                // N n int, N n int, PO p QModelIndex
+         RETURN QModelIndex():from( Qt_QDirModel_index( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
+                // QModelIndex index ( const QString & path, int column = 0 ) const
+                // C c QString, N n int
+         RETURN QModelIndex():from( Qt_QDirModel_index_1( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // virtual QModelIndex index ( int row, int column, const QModelIndex & parent = QModelIndex() ) const
+                // N n int, N n int, PO p QModelIndex
+         RETURN QModelIndex():from( Qt_QDirModel_index( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // QModelIndex index ( const QString & path, int column = 0 ) const
+                // C c QString, N n int
+         RETURN QModelIndex():from( Qt_QDirModel_index_1( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QDirModel:isDir( pIndex )

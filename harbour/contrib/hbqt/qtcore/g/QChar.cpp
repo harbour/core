@@ -75,13 +75,16 @@
  */
 
 /*
- *  Constructed[ 33/35 [ 94.29% ] ]
+ *  Constructed[ 32/34 [ 94.12% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  uchar cell () const
  *  uchar row () const
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  //ushort unicode () const
  */
 
 #include <QtCore/QPointer>
@@ -514,18 +517,6 @@ HB_FUNC( QT_QCHAR_TOUPPER )
  * ushort & unicode ()
  */
 HB_FUNC( QT_QCHAR_UNICODE )
-{
-   QChar * p = hbqt_par_QChar( 1 );
-   if( p )
-   {
-      hb_retni( ( p )->unicode() );
-   }
-}
-
-/*
- * ushort unicode () const
- */
-HB_FUNC( QT_QCHAR_UNICODE_1 )
 {
    QChar * p = hbqt_par_QChar( 1 );
    if( p )

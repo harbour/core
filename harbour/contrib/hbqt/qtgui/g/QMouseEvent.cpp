@@ -70,6 +70,11 @@
  *  enum Type { None, AccessibilityDescription, AccessibilityHelp, AccessibilityPrepare, ..., MaxUser }
  */
 
+/*
+ *  Constructed[ 9/9 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QMouseEvent>

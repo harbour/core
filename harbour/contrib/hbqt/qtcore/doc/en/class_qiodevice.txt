@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QObject
  *  $SYNTAX$
- *     QIODevice():new( ... )
+ *     QIODevice( ... )
  *     QIODevice():from( pPtr_OR_oObj_of_type_QIODevice )
  *     QIODevice():configure( pPtr_OR_oObj_of_type_QIODevice )
  *  $ARGUMENTS$

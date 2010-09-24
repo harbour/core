@@ -90,20 +90,16 @@ CREATE CLASS QGraphicsLayoutItem INHERIT HbQtObjectHandler FUNCTION HB_QGraphics
    METHOD  preferredWidth()
    METHOD  setGeometry( pRect )
    METHOD  setMaximumHeight( nHeight )
-   METHOD  setMaximumSize( pSize )
-   METHOD  setMaximumSize_1( nW, nH )
+   METHOD  setMaximumSize( ... )
    METHOD  setMaximumWidth( nWidth )
    METHOD  setMinimumHeight( nHeight )
-   METHOD  setMinimumSize( pSize )
-   METHOD  setMinimumSize_1( nW, nH )
+   METHOD  setMinimumSize( ... )
    METHOD  setMinimumWidth( nWidth )
    METHOD  setParentLayoutItem( pParent )
    METHOD  setPreferredHeight( nHeight )
-   METHOD  setPreferredSize( pSize )
-   METHOD  setPreferredSize_1( nW, nH )
+   METHOD  setPreferredSize( ... )
    METHOD  setPreferredWidth( nWidth )
-   METHOD  setSizePolicy( pPolicy )
-   METHOD  setSizePolicy_1( nHPolicy, nVPolicy, nControlType )
+   METHOD  setSizePolicy( ... )
    METHOD  sizePolicy()
    METHOD  updateGeometry()
 
@@ -195,12 +191,31 @@ METHOD QGraphicsLayoutItem:setMaximumHeight( nHeight )
    RETURN Qt_QGraphicsLayoutItem_setMaximumHeight( ::pPtr, nHeight )
 
 
-METHOD QGraphicsLayoutItem:setMaximumSize( pSize )
-   RETURN Qt_QGraphicsLayoutItem_setMaximumSize( ::pPtr, hbqt_ptr( pSize ) )
-
-
-METHOD QGraphicsLayoutItem:setMaximumSize_1( nW, nH )
-   RETURN Qt_QGraphicsLayoutItem_setMaximumSize_1( ::pPtr, nW, nH )
+METHOD QGraphicsLayoutItem:setMaximumSize( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void setMaximumSize ( qreal w, qreal h )
+                // N n qreal, N n qreal
+         RETURN Qt_QGraphicsLayoutItem_setMaximumSize_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void setMaximumSize ( const QSizeF & size )
+                // PO p QSizeF
+         RETURN Qt_QGraphicsLayoutItem_setMaximumSize( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QGraphicsLayoutItem:setMaximumWidth( nWidth )
@@ -211,12 +226,31 @@ METHOD QGraphicsLayoutItem:setMinimumHeight( nHeight )
    RETURN Qt_QGraphicsLayoutItem_setMinimumHeight( ::pPtr, nHeight )
 
 
-METHOD QGraphicsLayoutItem:setMinimumSize( pSize )
-   RETURN Qt_QGraphicsLayoutItem_setMinimumSize( ::pPtr, hbqt_ptr( pSize ) )
-
-
-METHOD QGraphicsLayoutItem:setMinimumSize_1( nW, nH )
-   RETURN Qt_QGraphicsLayoutItem_setMinimumSize_1( ::pPtr, nW, nH )
+METHOD QGraphicsLayoutItem:setMinimumSize( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void setMinimumSize ( qreal w, qreal h )
+                // N n qreal, N n qreal
+         RETURN Qt_QGraphicsLayoutItem_setMinimumSize_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void setMinimumSize ( const QSizeF & size )
+                // PO p QSizeF
+         RETURN Qt_QGraphicsLayoutItem_setMinimumSize( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QGraphicsLayoutItem:setMinimumWidth( nWidth )
@@ -231,24 +265,69 @@ METHOD QGraphicsLayoutItem:setPreferredHeight( nHeight )
    RETURN Qt_QGraphicsLayoutItem_setPreferredHeight( ::pPtr, nHeight )
 
 
-METHOD QGraphicsLayoutItem:setPreferredSize( pSize )
-   RETURN Qt_QGraphicsLayoutItem_setPreferredSize( ::pPtr, hbqt_ptr( pSize ) )
-
-
-METHOD QGraphicsLayoutItem:setPreferredSize_1( nW, nH )
-   RETURN Qt_QGraphicsLayoutItem_setPreferredSize_1( ::pPtr, nW, nH )
+METHOD QGraphicsLayoutItem:setPreferredSize( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void setPreferredSize ( qreal w, qreal h )
+                // N n qreal, N n qreal
+         RETURN Qt_QGraphicsLayoutItem_setPreferredSize_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void setPreferredSize ( const QSizeF & size )
+                // PO p QSizeF
+         RETURN Qt_QGraphicsLayoutItem_setPreferredSize( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QGraphicsLayoutItem:setPreferredWidth( nWidth )
    RETURN Qt_QGraphicsLayoutItem_setPreferredWidth( ::pPtr, nWidth )
 
 
-METHOD QGraphicsLayoutItem:setSizePolicy( pPolicy )
-   RETURN Qt_QGraphicsLayoutItem_setSizePolicy( ::pPtr, hbqt_ptr( pPolicy ) )
-
-
-METHOD QGraphicsLayoutItem:setSizePolicy_1( nHPolicy, nVPolicy, nControlType )
-   RETURN Qt_QGraphicsLayoutItem_setSizePolicy_1( ::pPtr, nHPolicy, nVPolicy, nControlType )
+METHOD QGraphicsLayoutItem:setSizePolicy( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // void setSizePolicy ( QSizePolicy::Policy hPolicy, QSizePolicy::Policy vPolicy, QSizePolicy::ControlType controlType = QSizePolicy::DefaultType )
+                // N n QSizePolicy::Policy, N n QSizePolicy::Policy, N n QSizePolicy::ControlType
+         RETURN Qt_QGraphicsLayoutItem_setSizePolicy_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void setSizePolicy ( QSizePolicy::Policy hPolicy, QSizePolicy::Policy vPolicy, QSizePolicy::ControlType controlType = QSizePolicy::DefaultType )
+                // N n QSizePolicy::Policy, N n QSizePolicy::Policy, N n QSizePolicy::ControlType
+         RETURN Qt_QGraphicsLayoutItem_setSizePolicy_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void setSizePolicy ( const QSizePolicy & policy )
+                // PO p QSizePolicy
+         RETURN Qt_QGraphicsLayoutItem_setSizePolicy( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QGraphicsLayoutItem:sizePolicy()

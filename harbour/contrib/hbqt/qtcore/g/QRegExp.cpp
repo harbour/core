@@ -70,6 +70,11 @@
  *  enum PatternSyntax { RegExp, RegExp2, Wildcard, FixedString }
  */
 
+/*
+ *  Constructed[ 19/19 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtCore/QRegExp>

@@ -74,6 +74,11 @@
  *  enum ToolBarPosition { Beginning, Middle, End, OnlyOne }
  */
 
+/*
+ *  Constructed[ 6/6 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionToolBar>
@@ -152,7 +157,11 @@ HB_FUNC( QT_QSTYLEOPTIONTOOLBAR )
  */
 HB_FUNC( QT_QSTYLEOPTIONTOOLBAR_FEATURES )
 {
-   hb_retni( ( QStyleOptionToolBar::ToolBarFeatures ) hbqt_par_QStyleOptionToolBar( 1 )->features );
+   QStyleOptionToolBar * p = hbqt_par_QStyleOptionToolBar( 1 );
+   if( p )
+   {
+      hb_retni( ( QStyleOptionToolBar::ToolBarFeatures ) ( p )->features );
+   }
 }
 
 /*
@@ -160,7 +169,11 @@ HB_FUNC( QT_QSTYLEOPTIONTOOLBAR_FEATURES )
  */
 HB_FUNC( QT_QSTYLEOPTIONTOOLBAR_LINEWIDTH )
 {
-   hb_retni( hbqt_par_QStyleOptionToolBar( 1 )->lineWidth );
+   QStyleOptionToolBar * p = hbqt_par_QStyleOptionToolBar( 1 );
+   if( p )
+   {
+      hb_retni( ( p )->lineWidth );
+   }
 }
 
 /*
@@ -168,7 +181,11 @@ HB_FUNC( QT_QSTYLEOPTIONTOOLBAR_LINEWIDTH )
  */
 HB_FUNC( QT_QSTYLEOPTIONTOOLBAR_MIDLINEWIDTH )
 {
-   hb_retni( hbqt_par_QStyleOptionToolBar( 1 )->midLineWidth );
+   QStyleOptionToolBar * p = hbqt_par_QStyleOptionToolBar( 1 );
+   if( p )
+   {
+      hb_retni( ( p )->midLineWidth );
+   }
 }
 
 /*
@@ -176,7 +193,11 @@ HB_FUNC( QT_QSTYLEOPTIONTOOLBAR_MIDLINEWIDTH )
  */
 HB_FUNC( QT_QSTYLEOPTIONTOOLBAR_POSITIONOFLINE )
 {
-   hb_retni( ( QStyleOptionToolBar::ToolBarPosition ) hbqt_par_QStyleOptionToolBar( 1 )->positionOfLine );
+   QStyleOptionToolBar * p = hbqt_par_QStyleOptionToolBar( 1 );
+   if( p )
+   {
+      hb_retni( ( QStyleOptionToolBar::ToolBarPosition ) ( p )->positionOfLine );
+   }
 }
 
 /*
@@ -184,7 +205,11 @@ HB_FUNC( QT_QSTYLEOPTIONTOOLBAR_POSITIONOFLINE )
  */
 HB_FUNC( QT_QSTYLEOPTIONTOOLBAR_POSITIONWITHINLINE )
 {
-   hb_retni( ( QStyleOptionToolBar::ToolBarPosition ) hbqt_par_QStyleOptionToolBar( 1 )->positionWithinLine );
+   QStyleOptionToolBar * p = hbqt_par_QStyleOptionToolBar( 1 );
+   if( p )
+   {
+      hb_retni( ( QStyleOptionToolBar::ToolBarPosition ) ( p )->positionWithinLine );
+   }
 }
 
 /*
@@ -192,7 +217,11 @@ HB_FUNC( QT_QSTYLEOPTIONTOOLBAR_POSITIONWITHINLINE )
  */
 HB_FUNC( QT_QSTYLEOPTIONTOOLBAR_TOOLBARAREA )
 {
-   hb_retni( ( Qt::ToolBarArea ) hbqt_par_QStyleOptionToolBar( 1 )->toolBarArea );
+   QStyleOptionToolBar * p = hbqt_par_QStyleOptionToolBar( 1 );
+   if( p )
+   {
+      hb_retni( ( Qt::ToolBarArea ) ( p )->toolBarArea );
+   }
 }
 
 

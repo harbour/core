@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QWidget
  *  $SYNTAX$
- *     QWizardPage():new( ... )
+ *     QWizardPage( ... )
  *     QWizardPage():from( pPtr_OR_oObj_of_type_QWizardPage )
  *     QWizardPage():configure( pPtr_OR_oObj_of_type_QWizardPage )
  *  $ARGUMENTS$

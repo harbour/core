@@ -71,6 +71,11 @@
  *  enum StyleOptionVersion { Version }
  */
 
+/*
+ *  Constructed[ 6/6 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionTabWidgetFrame>
@@ -149,7 +154,11 @@ HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME )
  */
 HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME_LEFTCORNERWIDGETSIZE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QStyleOptionTabWidgetFrame( 1 )->leftCornerWidgetSize ), true ) );
+   QStyleOptionTabWidgetFrame * p = hbqt_par_QStyleOptionTabWidgetFrame( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->leftCornerWidgetSize ), true ) );
+   }
 }
 
 /*
@@ -157,7 +166,11 @@ HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME_LEFTCORNERWIDGETSIZE )
  */
 HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME_LINEWIDTH )
 {
-   hb_retni( hbqt_par_QStyleOptionTabWidgetFrame( 1 )->lineWidth );
+   QStyleOptionTabWidgetFrame * p = hbqt_par_QStyleOptionTabWidgetFrame( 1 );
+   if( p )
+   {
+      hb_retni( ( p )->lineWidth );
+   }
 }
 
 /*
@@ -165,7 +178,11 @@ HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME_LINEWIDTH )
  */
 HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME_MIDLINEWIDTH )
 {
-   hb_retni( hbqt_par_QStyleOptionTabWidgetFrame( 1 )->midLineWidth );
+   QStyleOptionTabWidgetFrame * p = hbqt_par_QStyleOptionTabWidgetFrame( 1 );
+   if( p )
+   {
+      hb_retni( ( p )->midLineWidth );
+   }
 }
 
 /*
@@ -173,7 +190,11 @@ HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME_MIDLINEWIDTH )
  */
 HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME_RIGHTCORNERWIDGETSIZE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QStyleOptionTabWidgetFrame( 1 )->rightCornerWidgetSize ), true ) );
+   QStyleOptionTabWidgetFrame * p = hbqt_par_QStyleOptionTabWidgetFrame( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->rightCornerWidgetSize ), true ) );
+   }
 }
 
 /*
@@ -181,7 +202,11 @@ HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME_RIGHTCORNERWIDGETSIZE )
  */
 HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME_SHAPE )
 {
-   hb_retni( ( QTabBar::Shape ) hbqt_par_QStyleOptionTabWidgetFrame( 1 )->shape );
+   QStyleOptionTabWidgetFrame * p = hbqt_par_QStyleOptionTabWidgetFrame( 1 );
+   if( p )
+   {
+      hb_retni( ( QTabBar::Shape ) ( p )->shape );
+   }
 }
 
 /*
@@ -189,7 +214,11 @@ HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME_SHAPE )
  */
 HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME_TABBARSIZE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QStyleOptionTabWidgetFrame( 1 )->tabBarSize ), true ) );
+   QStyleOptionTabWidgetFrame * p = hbqt_par_QStyleOptionTabWidgetFrame( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->tabBarSize ), true ) );
+   }
 }
 
 

@@ -70,6 +70,11 @@
  *     enum Magnet { Left, Right, Top, Bottom, Vertical, Horizontal }
  */
 
+/*
+ *  Constructed[ 19/19 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QGraphicsScene>

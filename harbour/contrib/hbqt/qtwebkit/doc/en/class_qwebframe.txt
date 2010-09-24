@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QObject
  *  $SYNTAX$
- *     QWebFrame():new( ... )
+ *     QWebFrame( ... )
  *     QWebFrame():from( pPtr_OR_oObj_of_type_QWebFrame )
  *     QWebFrame():configure( pPtr_OR_oObj_of_type_QWebFrame )
  *  $ARGUMENTS$

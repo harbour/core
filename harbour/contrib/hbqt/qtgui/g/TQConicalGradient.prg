@@ -74,8 +74,7 @@ CREATE CLASS QConicalGradient INHERIT HbQtObjectHandler, HB_QGradient FUNCTION H
    METHOD  angle()
    METHOD  center()
    METHOD  setAngle( nAngle )
-   METHOD  setCenter( pCenter )
-   METHOD  setCenter_1( nX, nY )
+   METHOD  setCenter( ... )
 
    ENDCLASS
 
@@ -101,10 +100,29 @@ METHOD QConicalGradient:setAngle( nAngle )
    RETURN Qt_QConicalGradient_setAngle( ::pPtr, nAngle )
 
 
-METHOD QConicalGradient:setCenter( pCenter )
-   RETURN Qt_QConicalGradient_setCenter( ::pPtr, hbqt_ptr( pCenter ) )
-
-
-METHOD QConicalGradient:setCenter_1( nX, nY )
-   RETURN Qt_QConicalGradient_setCenter_1( ::pPtr, nX, nY )
+METHOD QConicalGradient:setCenter( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void setCenter ( qreal x, qreal y )
+                // N n qreal, N n qreal
+         RETURN Qt_QConicalGradient_setCenter_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void setCenter ( const QPointF & center )
+                // PO p QPointF
+         RETURN Qt_QConicalGradient_setCenter( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 

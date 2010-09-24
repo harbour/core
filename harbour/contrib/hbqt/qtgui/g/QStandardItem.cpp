@@ -74,7 +74,6 @@
  *  Constructed[ 73/79 [ 92.41% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  void appendColumn ( const QList<QStandardItem *> & items )
  *  void appendRow ( const QList<QStandardItem *> & items )

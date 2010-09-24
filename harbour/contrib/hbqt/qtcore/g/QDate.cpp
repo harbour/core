@@ -69,6 +69,11 @@
  *  enum MonthNameType { DateFormat, StandaloneFormat }
  */
 
+/*
+ *  Constructed[ 19/19 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtCore/QDate>

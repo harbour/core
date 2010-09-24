@@ -73,14 +73,13 @@
  */
 
 /*
- *  Constructed[ 81/83 [ 97.59% ] ]
+ *  Constructed[ 81/82 [ 98.78% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  void setExtraSelections ( const QList<ExtraSelection> & selections )
  *
- *  *** Commented out protos which construct fine but do not compile ***
+ *  *** Commented out protostypes ***
  *
  *  // QList<ExtraSelection> extraSelections () const
  */

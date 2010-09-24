@@ -74,6 +74,19 @@
  *  enum OpenModeFlag { NotOpen, ReadOnly, WriteOnly, ReadWrite, ..., Unbuffered }
  */
 
+/*
+ *  Constructed[ 33/33 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // bool open ( FILE * fh, OpenMode mode )
+ *  // bool unmap ( uchar * address )
+ *  //QString decodeName ( const QByteArray & localFileName )
+ *  // void setDecodingFunction ( DecoderFn function )
+ *  // void setEncodingFunction ( EncoderFn function )
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtCore/QFile>
@@ -449,21 +462,9 @@ HB_FUNC( QT_QFILE_COPY_1 )
 }
 
 /*
- * QString decodeName ( const QByteArray & localFileName )
- */
-HB_FUNC( QT_QFILE_DECODENAME )
-{
-   QFile * p = hbqt_par_QFile( 1 );
-   if( p )
-   {
-      hb_retstr_utf8( ( p )->decodeName( *hbqt_par_QByteArray( 2 ) ).toUtf8().data() );
-   }
-}
-
-/*
  * QString decodeName ( const char * localFileName )
  */
-HB_FUNC( QT_QFILE_DECODENAME_1 )
+HB_FUNC( QT_QFILE_DECODENAME )
 {
    QFile * p = hbqt_par_QFile( 1 );
    if( p )

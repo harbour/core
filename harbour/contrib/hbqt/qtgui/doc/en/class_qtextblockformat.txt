@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QTextFormat
  *  $SYNTAX$
- *     QTextBlockFormat():new( ... )
+ *     QTextBlockFormat( ... )
  *     QTextBlockFormat():from( pPtr_OR_oObj_of_type_QTextBlockFormat )
  *     QTextBlockFormat():configure( pPtr_OR_oObj_of_type_QTextBlockFormat )
  *  $ARGUMENTS$

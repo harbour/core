@@ -74,39 +74,16 @@ CREATE CLASS QGraphicsView INHERIT HbQtObjectHandler, HB_QAbstractScrollArea FUN
    METHOD  alignment()
    METHOD  backgroundBrush()
    METHOD  cacheMode()
-   METHOD  centerOn( pPos )
-   METHOD  centerOn_1( nX, nY )
-   METHOD  centerOn_2( pItem )
+   METHOD  centerOn( ... )
    METHOD  dragMode()
-   METHOD  ensureVisible( pRect, nXmargin, nYmargin )
-   METHOD  ensureVisible_1( nX, nY, nW, nH, nXmargin, nYmargin )
-   METHOD  ensureVisible_2( pItem, nXmargin, nYmargin )
-   METHOD  fitInView( pRect, nAspectRatioMode )
-   METHOD  fitInView_1( nX, nY, nW, nH, nAspectRatioMode )
-   METHOD  fitInView_2( pItem, nAspectRatioMode )
+   METHOD  ensureVisible( ... )
+   METHOD  fitInView( ... )
    METHOD  foregroundBrush()
    METHOD  isInteractive()
-   METHOD  itemAt( pPos )
-   METHOD  itemAt_1( nX, nY )
-   METHOD  items()
-   METHOD  items_1( pPos )
-   METHOD  items_2( nX, nY )
-   METHOD  items_3( nX, nY, nW, nH, nMode )
-   METHOD  items_4( pRect, nMode )
-   METHOD  items_5( pPolygon, nMode )
-   METHOD  items_6( pPath, nMode )
-   METHOD  mapFromScene( pPoint )
-   METHOD  mapFromScene_1( pRect )
-   METHOD  mapFromScene_2( pPolygon )
-   METHOD  mapFromScene_3( pPath )
-   METHOD  mapFromScene_4( nX, nY )
-   METHOD  mapFromScene_5( nX, nY, nW, nH )
-   METHOD  mapToScene( pPoint )
-   METHOD  mapToScene_1( pRect )
-   METHOD  mapToScene_2( pPolygon )
-   METHOD  mapToScene_3( pPath )
-   METHOD  mapToScene_4( nX, nY )
-   METHOD  mapToScene_5( nX, nY, nW, nH )
+   METHOD  itemAt( ... )
+   METHOD  items( ... )
+   METHOD  mapFromScene( ... )
+   METHOD  mapToScene( ... )
    METHOD  matrix()
    METHOD  optimizationFlags()
    METHOD  render( pPainter, pTarget, pSource, nAspectRatioMode )
@@ -134,8 +111,7 @@ CREATE CLASS QGraphicsView INHERIT HbQtObjectHandler, HB_QAbstractScrollArea FUN
    METHOD  setResizeAnchor( nAnchor )
    METHOD  setRubberBandSelectionMode( nMode )
    METHOD  setScene( pScene )
-   METHOD  setSceneRect( pRect )
-   METHOD  setSceneRect_1( nX, nY, nW, nH )
+   METHOD  setSceneRect( ... )
    METHOD  setTransform( pMatrix, lCombine )
    METHOD  setTransformationAnchor( nAnchor )
    METHOD  setViewportUpdateMode( nMode )
@@ -172,44 +148,132 @@ METHOD QGraphicsView:cacheMode()
    RETURN Qt_QGraphicsView_cacheMode( ::pPtr )
 
 
-METHOD QGraphicsView:centerOn( pPos )
-   RETURN Qt_QGraphicsView_centerOn( ::pPtr, hbqt_ptr( pPos ) )
-
-
-METHOD QGraphicsView:centerOn_1( nX, nY )
-   RETURN Qt_QGraphicsView_centerOn_1( ::pPtr, nX, nY )
-
-
-METHOD QGraphicsView:centerOn_2( pItem )
-   RETURN Qt_QGraphicsView_centerOn_2( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QGraphicsView:centerOn( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void centerOn ( qreal x, qreal y )
+                // N n qreal, N n qreal
+         RETURN Qt_QGraphicsView_centerOn_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void centerOn ( const QPointF & pos )
+                // PO p QPointF
+         RETURN Qt_QGraphicsView_centerOn( ::pPtr, ... )
+                // void centerOn ( const QGraphicsItem * item )
+                // PO p QGraphicsItem
+         // RETURN Qt_QGraphicsView_centerOn_2( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QGraphicsView:dragMode()
    RETURN Qt_QGraphicsView_dragMode( ::pPtr )
 
 
-METHOD QGraphicsView:ensureVisible( pRect, nXmargin, nYmargin )
-   RETURN Qt_QGraphicsView_ensureVisible( ::pPtr, hbqt_ptr( pRect ), nXmargin, nYmargin )
+METHOD QGraphicsView:ensureVisible( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 6
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N" .AND. aV[ 6 ] $ "N"
+                // void ensureVisible ( qreal x, qreal y, qreal w, qreal h, int xmargin = 50, int ymargin = 50 )
+                // N n qreal, N n qreal, N n qreal, N n qreal, N n int, N n int
+         RETURN Qt_QGraphicsView_ensureVisible_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // void ensureVisible ( qreal x, qreal y, qreal w, qreal h, int xmargin = 50, int ymargin = 50 )
+                // N n qreal, N n qreal, N n qreal, N n qreal, N n int, N n int
+         RETURN Qt_QGraphicsView_ensureVisible_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // void ensureVisible ( const QRectF & rect, int xmargin = 50, int ymargin = 50 )
+                // PO p QRectF, N n int, N n int
+         RETURN Qt_QGraphicsView_ensureVisible( ::pPtr, ... )
+                // void ensureVisible ( const QGraphicsItem * item, int xmargin = 50, int ymargin = 50 )
+                // PO p QGraphicsItem, N n int, N n int
+         // RETURN Qt_QGraphicsView_ensureVisible_2( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void ensureVisible ( const QRectF & rect, int xmargin = 50, int ymargin = 50 )
+                // PO p QRectF, N n int, N n int
+         RETURN Qt_QGraphicsView_ensureVisible( ::pPtr, ... )
+                // void ensureVisible ( const QGraphicsItem * item, int xmargin = 50, int ymargin = 50 )
+                // PO p QGraphicsItem, N n int, N n int
+         // RETURN Qt_QGraphicsView_ensureVisible_2( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QGraphicsView:ensureVisible_1( nX, nY, nW, nH, nXmargin, nYmargin )
-   RETURN Qt_QGraphicsView_ensureVisible_1( ::pPtr, nX, nY, nW, nH, nXmargin, nYmargin )
-
-
-METHOD QGraphicsView:ensureVisible_2( pItem, nXmargin, nYmargin )
-   RETURN Qt_QGraphicsView_ensureVisible_2( ::pPtr, hbqt_ptr( pItem ), nXmargin, nYmargin )
-
-
-METHOD QGraphicsView:fitInView( pRect, nAspectRatioMode )
-   RETURN Qt_QGraphicsView_fitInView( ::pPtr, hbqt_ptr( pRect ), nAspectRatioMode )
-
-
-METHOD QGraphicsView:fitInView_1( nX, nY, nW, nH, nAspectRatioMode )
-   RETURN Qt_QGraphicsView_fitInView_1( ::pPtr, nX, nY, nW, nH, nAspectRatioMode )
-
-
-METHOD QGraphicsView:fitInView_2( pItem, nAspectRatioMode )
-   RETURN Qt_QGraphicsView_fitInView_2( ::pPtr, hbqt_ptr( pItem ), nAspectRatioMode )
+METHOD QGraphicsView:fitInView( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 5
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N"
+                // void fitInView ( qreal x, qreal y, qreal w, qreal h, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio )
+                // N n qreal, N n qreal, N n qreal, N n qreal, N n Qt::AspectRatioMode
+         RETURN Qt_QGraphicsView_fitInView_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // void fitInView ( qreal x, qreal y, qreal w, qreal h, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio )
+                // N n qreal, N n qreal, N n qreal, N n qreal, N n Qt::AspectRatioMode
+         RETURN Qt_QGraphicsView_fitInView_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // void fitInView ( const QRectF & rect, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio )
+                // PO p QRectF, N n Qt::AspectRatioMode
+         RETURN Qt_QGraphicsView_fitInView( ::pPtr, ... )
+                // void fitInView ( const QGraphicsItem * item, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio )
+                // PO p QGraphicsItem, N n Qt::AspectRatioMode
+         // RETURN Qt_QGraphicsView_fitInView_2( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void fitInView ( const QRectF & rect, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio )
+                // PO p QRectF, N n Qt::AspectRatioMode
+         RETURN Qt_QGraphicsView_fitInView( ::pPtr, ... )
+                // void fitInView ( const QGraphicsItem * item, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio )
+                // PO p QGraphicsItem, N n Qt::AspectRatioMode
+         // RETURN Qt_QGraphicsView_fitInView_2( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QGraphicsView:foregroundBrush()
@@ -220,88 +284,180 @@ METHOD QGraphicsView:isInteractive()
    RETURN Qt_QGraphicsView_isInteractive( ::pPtr )
 
 
-METHOD QGraphicsView:itemAt( pPos )
-   RETURN Qt_QGraphicsView_itemAt( ::pPtr, hbqt_ptr( pPos ) )
+METHOD QGraphicsView:itemAt( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // QGraphicsItem * itemAt ( int x, int y ) const
+                // N n int, N n int
+         RETURN QGraphicsItem():from( Qt_QGraphicsView_itemAt_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QGraphicsItem * itemAt ( const QPoint & pos ) const
+                // PO p QPoint
+         RETURN QGraphicsItem():from( Qt_QGraphicsView_itemAt( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QGraphicsView:itemAt_1( nX, nY )
-   RETURN Qt_QGraphicsView_itemAt_1( ::pPtr, nX, nY )
+METHOD QGraphicsView:items( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 5
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N"
+                // QList<QGraphicsItem *> items ( int x, int y, int w, int h, Qt::ItemSelectionMode mode = Qt::IntersectsItemShape ) const
+                // N n int, N n int, N n int, N n int, N n Qt::ItemSelectionMode
+         RETURN Qt_QGraphicsView_items_3( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // QList<QGraphicsItem *> items ( int x, int y, int w, int h, Qt::ItemSelectionMode mode = Qt::IntersectsItemShape ) const
+                // N n int, N n int, N n int, N n int, N n Qt::ItemSelectionMode
+         RETURN Qt_QGraphicsView_items_3( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // QList<QGraphicsItem *> items ( int x, int y ) const
+                // N n int, N n int
+         RETURN Qt_QGraphicsView_items_2( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // QList<QGraphicsItem *> items ( const QPolygon & polygon, Qt::ItemSelectionMode mode = Qt::IntersectsItemShape ) const
+                // PO p QPolygon, N n Qt::ItemSelectionMode
+         RETURN Qt_QGraphicsView_items_5( ::pPtr, ... )
+                // QList<QGraphicsItem *> items ( const QPainterPath & path, Qt::ItemSelectionMode mode = Qt::IntersectsItemShape ) const
+                // PO p QPainterPath, N n Qt::ItemSelectionMode
+         // RETURN Qt_QGraphicsView_items_6( ::pPtr, ... )
+                // QList<QGraphicsItem *> items ( const QRect & rect, Qt::ItemSelectionMode mode = Qt::IntersectsItemShape ) const
+                // PO p QRect, N n Qt::ItemSelectionMode
+         // RETURN Qt_QGraphicsView_items_4( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QList<QGraphicsItem *> items ( const QPolygon & polygon, Qt::ItemSelectionMode mode = Qt::IntersectsItemShape ) const
+                // PO p QPolygon, N n Qt::ItemSelectionMode
+         RETURN Qt_QGraphicsView_items_5( ::pPtr, ... )
+                // QList<QGraphicsItem *> items ( const QRect & rect, Qt::ItemSelectionMode mode = Qt::IntersectsItemShape ) const
+                // PO p QRect, N n Qt::ItemSelectionMode
+         // RETURN Qt_QGraphicsView_items_4( ::pPtr, ... )
+                // QList<QGraphicsItem *> items ( const QPoint & pos ) const
+                // PO p QPoint
+         // RETURN Qt_QGraphicsView_items_1( ::pPtr, ... )
+                // QList<QGraphicsItem *> items ( const QPainterPath & path, Qt::ItemSelectionMode mode = Qt::IntersectsItemShape ) const
+                // PO p QPainterPath, N n Qt::ItemSelectionMode
+         // RETURN Qt_QGraphicsView_items_6( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // QList<QGraphicsItem *> items () const
+      RETURN Qt_QGraphicsView_items( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QGraphicsView:items()
-   RETURN Qt_QGraphicsView_items( ::pPtr )
+METHOD QGraphicsView:mapFromScene( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // QPolygon mapFromScene ( qreal x, qreal y, qreal w, qreal h ) const
+                // N n qreal, N n qreal, N n qreal, N n qreal
+         RETURN QPolygon():from( Qt_QGraphicsView_mapFromScene_5( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // QPoint mapFromScene ( qreal x, qreal y ) const
+                // N n qreal, N n qreal
+         RETURN QPoint():from( Qt_QGraphicsView_mapFromScene_4( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QPainterPath mapFromScene ( const QPainterPath & path ) const
+                // PO p QPainterPath
+         RETURN QPainterPath():from( Qt_QGraphicsView_mapFromScene_3( ::pPtr, ... ) )
+                // QPoint mapFromScene ( const QPointF & point ) const
+                // PO p QPointF
+         // RETURN QPoint():from( Qt_QGraphicsView_mapFromScene( ::pPtr, ... ) )
+                // QPolygon mapFromScene ( const QRectF & rect ) const
+                // PO p QRectF
+         // RETURN QPolygon():from( Qt_QGraphicsView_mapFromScene_1( ::pPtr, ... ) )
+                // QPolygon mapFromScene ( const QPolygonF & polygon ) const
+                // PO p QPolygonF
+         // RETURN QPolygon():from( Qt_QGraphicsView_mapFromScene_2( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QGraphicsView:items_1( pPos )
-   RETURN Qt_QGraphicsView_items_1( ::pPtr, hbqt_ptr( pPos ) )
-
-
-METHOD QGraphicsView:items_2( nX, nY )
-   RETURN Qt_QGraphicsView_items_2( ::pPtr, nX, nY )
-
-
-METHOD QGraphicsView:items_3( nX, nY, nW, nH, nMode )
-   RETURN Qt_QGraphicsView_items_3( ::pPtr, nX, nY, nW, nH, nMode )
-
-
-METHOD QGraphicsView:items_4( pRect, nMode )
-   RETURN Qt_QGraphicsView_items_4( ::pPtr, hbqt_ptr( pRect ), nMode )
-
-
-METHOD QGraphicsView:items_5( pPolygon, nMode )
-   RETURN Qt_QGraphicsView_items_5( ::pPtr, hbqt_ptr( pPolygon ), nMode )
-
-
-METHOD QGraphicsView:items_6( pPath, nMode )
-   RETURN Qt_QGraphicsView_items_6( ::pPtr, hbqt_ptr( pPath ), nMode )
-
-
-METHOD QGraphicsView:mapFromScene( pPoint )
-   RETURN Qt_QGraphicsView_mapFromScene( ::pPtr, hbqt_ptr( pPoint ) )
-
-
-METHOD QGraphicsView:mapFromScene_1( pRect )
-   RETURN Qt_QGraphicsView_mapFromScene_1( ::pPtr, hbqt_ptr( pRect ) )
-
-
-METHOD QGraphicsView:mapFromScene_2( pPolygon )
-   RETURN Qt_QGraphicsView_mapFromScene_2( ::pPtr, hbqt_ptr( pPolygon ) )
-
-
-METHOD QGraphicsView:mapFromScene_3( pPath )
-   RETURN Qt_QGraphicsView_mapFromScene_3( ::pPtr, hbqt_ptr( pPath ) )
-
-
-METHOD QGraphicsView:mapFromScene_4( nX, nY )
-   RETURN Qt_QGraphicsView_mapFromScene_4( ::pPtr, nX, nY )
-
-
-METHOD QGraphicsView:mapFromScene_5( nX, nY, nW, nH )
-   RETURN Qt_QGraphicsView_mapFromScene_5( ::pPtr, nX, nY, nW, nH )
-
-
-METHOD QGraphicsView:mapToScene( pPoint )
-   RETURN Qt_QGraphicsView_mapToScene( ::pPtr, hbqt_ptr( pPoint ) )
-
-
-METHOD QGraphicsView:mapToScene_1( pRect )
-   RETURN Qt_QGraphicsView_mapToScene_1( ::pPtr, hbqt_ptr( pRect ) )
-
-
-METHOD QGraphicsView:mapToScene_2( pPolygon )
-   RETURN Qt_QGraphicsView_mapToScene_2( ::pPtr, hbqt_ptr( pPolygon ) )
-
-
-METHOD QGraphicsView:mapToScene_3( pPath )
-   RETURN Qt_QGraphicsView_mapToScene_3( ::pPtr, hbqt_ptr( pPath ) )
-
-
-METHOD QGraphicsView:mapToScene_4( nX, nY )
-   RETURN Qt_QGraphicsView_mapToScene_4( ::pPtr, nX, nY )
-
-
-METHOD QGraphicsView:mapToScene_5( nX, nY, nW, nH )
-   RETURN Qt_QGraphicsView_mapToScene_5( ::pPtr, nX, nY, nW, nH )
+METHOD QGraphicsView:mapToScene( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // QPolygonF mapToScene ( int x, int y, int w, int h ) const
+                // N n int, N n int, N n int, N n int
+         RETURN QPolygonF():from( Qt_QGraphicsView_mapToScene_5( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // QPointF mapToScene ( int x, int y ) const
+                // N n int, N n int
+         RETURN QPointF():from( Qt_QGraphicsView_mapToScene_4( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QPainterPath mapToScene ( const QPainterPath & path ) const
+                // PO p QPainterPath
+         RETURN QPainterPath():from( Qt_QGraphicsView_mapToScene_3( ::pPtr, ... ) )
+                // QPointF mapToScene ( const QPoint & point ) const
+                // PO p QPoint
+         // RETURN QPointF():from( Qt_QGraphicsView_mapToScene( ::pPtr, ... ) )
+                // QPolygonF mapToScene ( const QRect & rect ) const
+                // PO p QRect
+         // RETURN QPolygonF():from( Qt_QGraphicsView_mapToScene_1( ::pPtr, ... ) )
+                // QPolygonF mapToScene ( const QPolygon & polygon ) const
+                // PO p QPolygon
+         // RETURN QPolygonF():from( Qt_QGraphicsView_mapToScene_2( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QGraphicsView:matrix()
@@ -412,12 +568,31 @@ METHOD QGraphicsView:setScene( pScene )
    RETURN Qt_QGraphicsView_setScene( ::pPtr, hbqt_ptr( pScene ) )
 
 
-METHOD QGraphicsView:setSceneRect( pRect )
-   RETURN Qt_QGraphicsView_setSceneRect( ::pPtr, hbqt_ptr( pRect ) )
-
-
-METHOD QGraphicsView:setSceneRect_1( nX, nY, nW, nH )
-   RETURN Qt_QGraphicsView_setSceneRect_1( ::pPtr, nX, nY, nW, nH )
+METHOD QGraphicsView:setSceneRect( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // void setSceneRect ( qreal x, qreal y, qreal w, qreal h )
+                // N n qreal, N n qreal, N n qreal, N n qreal
+         RETURN Qt_QGraphicsView_setSceneRect_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void setSceneRect ( const QRectF & rect )
+                // PO p QRectF
+         RETURN Qt_QGraphicsView_setSceneRect( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QGraphicsView:setTransform( pMatrix, lCombine )

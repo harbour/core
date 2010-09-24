@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QDropEvent
  *  $SYNTAX$
- *     QDragMoveEvent():new( ... )
+ *     QDragMoveEvent( ... )
  *     QDragMoveEvent():from( pPtr_OR_oObj_of_type_QDragMoveEvent )
  *     QDragMoveEvent():configure( pPtr_OR_oObj_of_type_QDragMoveEvent )
  *  $ARGUMENTS$

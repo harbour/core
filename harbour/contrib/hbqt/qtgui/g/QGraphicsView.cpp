@@ -80,7 +80,6 @@
  *  Constructed[ 76/77 [ 98.70% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  void updateScene ( const QList<QRectF> & rects )
  */

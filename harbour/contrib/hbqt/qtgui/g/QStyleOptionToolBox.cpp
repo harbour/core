@@ -71,6 +71,11 @@
  *  enum StyleOptionVersion { Version }
  */
 
+/*
+ *  Constructed[ 2/2 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionToolBox>
@@ -149,7 +154,11 @@ HB_FUNC( QT_QSTYLEOPTIONTOOLBOX )
  */
 HB_FUNC( QT_QSTYLEOPTIONTOOLBOX_ICON )
 {
-   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QStyleOptionToolBox( 1 )->icon ), true ) );
+   QStyleOptionToolBox * p = hbqt_par_QStyleOptionToolBox( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon ), true ) );
+   }
 }
 
 /*
@@ -157,7 +166,11 @@ HB_FUNC( QT_QSTYLEOPTIONTOOLBOX_ICON )
  */
 HB_FUNC( QT_QSTYLEOPTIONTOOLBOX_TEXT )
 {
-   hb_retstr_utf8( hbqt_par_QStyleOptionToolBox( 1 )->text.toUtf8().data() );
+   QStyleOptionToolBox * p = hbqt_par_QStyleOptionToolBox( 1 );
+   if( p )
+   {
+      hb_retstr_utf8( ( p )->text.toUtf8().data() );
+   }
 }
 
 

@@ -67,15 +67,14 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 46/50 [ 92.00% ] ]
+ *  Constructed[ 46/48 [ 95.83% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  void addActions ( QList<QAction *> actions )
  *  void insertActions ( QAction * before, QList<QAction *> actions )
  *
- *  *** Commented out protos which construct fine but do not compile ***
+ *  *** Commented out protostypes ***
  *
  *  // const QObjectList & children () const
  *  // virtual void paintWindowFrame ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 )

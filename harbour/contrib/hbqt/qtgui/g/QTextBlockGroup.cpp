@@ -66,6 +66,18 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  Constructed[ 0/0 [ 0% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  //virtual void blockFormatChanged ( const QTextBlock & block )
+ *  //virtual void blockInserted ( const QTextBlock & block )
+ *  //QList<QTextBlock> blockList () const
+ *  //virtual void blockRemoved ( const QTextBlock & block )
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QTextBlockGroup>

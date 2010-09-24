@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QWidget
  *  $SYNTAX$
- *     QMenu():new( ... )
+ *     QMenu( ... )
  *     QMenu():from( pPtr_OR_oObj_of_type_QMenu )
  *     QMenu():configure( pPtr_OR_oObj_of_type_QMenu )
  *  $ARGUMENTS$
@@ -29,11 +29,17 @@
  *     :actionAt( pPt )                                    -> pQAction
  *     :actionGeometry( pAct )                             -> pQRect
  *     :activeAction()                                     -> pQAction
- *     :addAction( ... )                                   -> pQAction
+ *     :addAction( cText )                                 -> pQAction
+ *     :addAction_1( pIcon, cText )                        -> pQAction
+ *     :addAction_2( cText, pReceiver, pMember, pShortcut )  -> pQAction
+ *     :addAction_3( pIcon, cText, pReceiver, pMember, pShortcut )  -> pQAction
+ *     :addAction_4( pAction )                             -> NIL
+ *     :addMenu( pMenu )                                   -> pQAction
  *     :addSeparator()                                     -> pQAction
  *     :clear()                                            -> NIL
  *     :defaultAction()                                    -> pQAction
- *     :exec( ... )                                        -> pQAction
+ *     :exec()                                             -> pQAction
+ *     :exec_1( pP, pAction )                              -> pQAction
  *     :hideTearOffMenu()                                  -> NIL
  *     :icon()                                             -> pQIcon
  *     :insertMenu( pBefore, pMenu )                       -> pQAction

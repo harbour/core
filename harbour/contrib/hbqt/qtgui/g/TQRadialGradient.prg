@@ -74,10 +74,8 @@ CREATE CLASS QRadialGradient INHERIT HbQtObjectHandler, HB_QGradient FUNCTION HB
    METHOD  center()
    METHOD  focalPoint()
    METHOD  radius()
-   METHOD  setCenter( pCenter )
-   METHOD  setCenter_1( nX, nY )
-   METHOD  setFocalPoint( pFocalPoint )
-   METHOD  setFocalPoint_1( nX, nY )
+   METHOD  setCenter( ... )
+   METHOD  setFocalPoint( ... )
    METHOD  setRadius( nRadius )
 
    ENDCLASS
@@ -104,20 +102,58 @@ METHOD QRadialGradient:radius()
    RETURN Qt_QRadialGradient_radius( ::pPtr )
 
 
-METHOD QRadialGradient:setCenter( pCenter )
-   RETURN Qt_QRadialGradient_setCenter( ::pPtr, hbqt_ptr( pCenter ) )
+METHOD QRadialGradient:setCenter( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void setCenter ( qreal x, qreal y )
+                // N n qreal, N n qreal
+         RETURN Qt_QRadialGradient_setCenter_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void setCenter ( const QPointF & center )
+                // PO p QPointF
+         RETURN Qt_QRadialGradient_setCenter( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QRadialGradient:setCenter_1( nX, nY )
-   RETURN Qt_QRadialGradient_setCenter_1( ::pPtr, nX, nY )
-
-
-METHOD QRadialGradient:setFocalPoint( pFocalPoint )
-   RETURN Qt_QRadialGradient_setFocalPoint( ::pPtr, hbqt_ptr( pFocalPoint ) )
-
-
-METHOD QRadialGradient:setFocalPoint_1( nX, nY )
-   RETURN Qt_QRadialGradient_setFocalPoint_1( ::pPtr, nX, nY )
+METHOD QRadialGradient:setFocalPoint( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void setFocalPoint ( qreal x, qreal y )
+                // N n qreal, N n qreal
+         RETURN Qt_QRadialGradient_setFocalPoint_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void setFocalPoint ( const QPointF & focalPoint )
+                // PO p QPointF
+         RETURN Qt_QRadialGradient_setFocalPoint( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QRadialGradient:setRadius( nRadius )

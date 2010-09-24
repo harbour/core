@@ -73,6 +73,11 @@
  *  flags GraphicsItemFlags
  */
 
+/*
+ *  Constructed[ 150/150 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QGraphicsItem>

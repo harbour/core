@@ -76,7 +76,6 @@
  *  Constructed[ 10/11 [ 90.91% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  void setOptionTabs ( const QList<QWidget *> & tabs )
  */

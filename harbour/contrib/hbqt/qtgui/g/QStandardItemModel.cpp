@@ -67,17 +67,16 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 28/33 [ 84.85% ] ]
+ *  Constructed[ 28/32 [ 87.50% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  void appendColumn ( const QList<QStandardItem *> & items )
  *  void appendRow ( const QList<QStandardItem *> & items )
  *  void insertColumn ( int column, const QList<QStandardItem *> & items )
  *  void insertRow ( int row, const QList<QStandardItem *> & items )
  *
- *  *** Commented out protos which construct fine but do not compile ***
+ *  *** Commented out protostypes ***
  *
  *  // const QStandardItem * itemPrototype () const
  */

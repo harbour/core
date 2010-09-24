@@ -67,18 +67,12 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 13/17 [ 76.47% ] ]
+ *  Constructed[ 14/14 [ 100.00% ] ]
  *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
- *  }
- *
- *  *** Commented out protos which construct fine but do not compile ***
+ *  *** Commented out protostypes ***
  *
  *  //const QGradient * gradient () const
- *  //void setColor ( const QColor & color )
- *  //void setColor ( Qt::GlobalColor color )
  */
 
 #include <QtCore/QPointer>
@@ -279,21 +273,26 @@ HB_FUNC( QT_QBRUSH_MATRIX )
 }
 
 /*
- * void setColor ( ... )
+ * void setColor ( const QColor & color )
  */
 HB_FUNC( QT_QBRUSH_SETCOLOR )
 {
    QBrush * p = hbqt_par_QBrush( 1 );
    if( p )
    {
-      if( HB_ISPOINTER( 2 ) )
-      {
-         ( p )->setColor( *hbqt_par_QColor( 2 ) );
-      }
-      else if( HB_ISNUM( 2 ) )
-      {
-         ( p )->setColor( ( Qt::GlobalColor ) hb_parni( 2 ) );
-      }
+      ( p )->setColor( *hbqt_par_QColor( 2 ) );
+   }
+}
+
+/*
+ * void setColor ( Qt::GlobalColor color )
+ */
+HB_FUNC( QT_QBRUSH_SETCOLOR_1 )
+{
+   QBrush * p = hbqt_par_QBrush( 1 );
+   if( p )
+   {
+      ( p )->setColor( ( Qt::GlobalColor ) hb_parni( 2 ) );
    }
 }
 

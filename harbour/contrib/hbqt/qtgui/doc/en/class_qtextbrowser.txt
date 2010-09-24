@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QTextEdit
  *  $SYNTAX$
- *     QTextBrowser():new( ... )
+ *     QTextBrowser( ... )
  *     QTextBrowser():from( pPtr_OR_oObj_of_type_QTextBrowser )
  *     QTextBrowser():configure( pPtr_OR_oObj_of_type_QTextBrowser )
  *  $ARGUMENTS$

@@ -84,17 +84,14 @@ CREATE CLASS QTreeWidget INHERIT HbQtObjectHandler, HB_QTreeView FUNCTION HB_QTr
    METHOD  invisibleRootItem()
    METHOD  isFirstItemColumnSpanned( pItem )
    METHOD  itemAbove( pItem )
-   METHOD  itemAt( pP )
-   METHOD  itemAt_1( nX, nY )
+   METHOD  itemAt( ... )
    METHOD  itemBelow( pItem )
    METHOD  itemWidget( pItem, nColumn )
    METHOD  openPersistentEditor( pItem, nColumn )
    METHOD  removeItemWidget( pItem, nColumn )
    METHOD  selectedItems()
    METHOD  setColumnCount( nColumns )
-   METHOD  setCurrentItem( pItem )
-   METHOD  setCurrentItem_1( pItem, nColumn )
-   METHOD  setCurrentItem_2( pItem, nColumn, nCommand )
+   METHOD  setCurrentItem( ... )
    METHOD  setFirstItemColumnSpanned( pItem, lSpan )
    METHOD  setHeaderItem( pItem )
    METHOD  setHeaderLabel( cLabel )
@@ -175,12 +172,31 @@ METHOD QTreeWidget:itemAbove( pItem )
    RETURN Qt_QTreeWidget_itemAbove( ::pPtr, hbqt_ptr( pItem ) )
 
 
-METHOD QTreeWidget:itemAt( pP )
-   RETURN Qt_QTreeWidget_itemAt( ::pPtr, hbqt_ptr( pP ) )
-
-
-METHOD QTreeWidget:itemAt_1( nX, nY )
-   RETURN Qt_QTreeWidget_itemAt_1( ::pPtr, nX, nY )
+METHOD QTreeWidget:itemAt( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // QTreeWidgetItem * itemAt ( int x, int y ) const
+                // N n int, N n int
+         RETURN QTreeWidgetItem():from( Qt_QTreeWidget_itemAt_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QTreeWidgetItem * itemAt ( const QPoint & p ) const
+                // PO p QPoint
+         RETURN QTreeWidgetItem():from( Qt_QTreeWidget_itemAt( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QTreeWidget:itemBelow( pItem )
@@ -207,16 +223,38 @@ METHOD QTreeWidget:setColumnCount( nColumns )
    RETURN Qt_QTreeWidget_setColumnCount( ::pPtr, nColumns )
 
 
-METHOD QTreeWidget:setCurrentItem( pItem )
-   RETURN Qt_QTreeWidget_setCurrentItem( ::pPtr, hbqt_ptr( pItem ) )
-
-
-METHOD QTreeWidget:setCurrentItem_1( pItem, nColumn )
-   RETURN Qt_QTreeWidget_setCurrentItem_1( ::pPtr, hbqt_ptr( pItem ), nColumn )
-
-
-METHOD QTreeWidget:setCurrentItem_2( pItem, nColumn, nCommand )
-   RETURN Qt_QTreeWidget_setCurrentItem_2( ::pPtr, hbqt_ptr( pItem ), nColumn, nCommand )
+METHOD QTreeWidget:setCurrentItem( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // void setCurrentItem ( QTreeWidgetItem * item, int column, QItemSelectionModel::SelectionFlags command )   [*D=1*]
+                // PO p QTreeWidgetItem, N n int, N n QItemSelectionModel::SelectionFlags
+         RETURN Qt_QTreeWidget_setCurrentItem_2( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // void setCurrentItem ( QTreeWidgetItem * item, int column )   [*D=1*]
+                // PO p QTreeWidgetItem, N n int
+         RETURN Qt_QTreeWidget_setCurrentItem_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void setCurrentItem ( QTreeWidgetItem * item )   [*D=1*]
+                // PO p QTreeWidgetItem
+         RETURN Qt_QTreeWidget_setCurrentItem( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QTreeWidget:setFirstItemColumnSpanned( pItem, lSpan )

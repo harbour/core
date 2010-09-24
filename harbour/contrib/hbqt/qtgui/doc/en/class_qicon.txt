@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QIcon():new( ... )
+ *     QIcon( ... )
  *     QIcon():from( pPtr_OR_oObj_of_type_QIcon )
  *     QIcon():configure( pPtr_OR_oObj_of_type_QIcon )
  *  $ARGUMENTS$
@@ -32,8 +32,10 @@
  *     :availableSizes( nMode, nState )                    -> pQList<QSize>
  *     :cacheKey()                                         -> nQint64
  *     :isNull()                                           -> lBool
- *     :paint( ... )                                       -> NIL
- *     :pixmap( ... )                                      -> pQPixmap
+ *     :paint( pPainter, pRect, nAlignment, nMode, nState )  -> NIL
+ *     :paint_1( pPainter, nX, nY, nW, nH, nAlignment, nMode, nState )  -> NIL
+ *     :pixmap( pSize, nMode, nState )                     -> pQPixmap
+ *     :pixmap_1( nW, nH, nMode, nState )                  -> pQPixmap
  * 
  *  $DESCRIPTION$
  * 

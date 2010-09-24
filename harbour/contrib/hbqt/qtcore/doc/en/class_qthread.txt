@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QObject
  *  $SYNTAX$
- *     QThread():new( ... )
+ *     QThread( ... )
  *     QThread():from( pPtr_OR_oObj_of_type_QThread )
  *     QThread():configure( pPtr_OR_oObj_of_type_QThread )
  *  $ARGUMENTS$

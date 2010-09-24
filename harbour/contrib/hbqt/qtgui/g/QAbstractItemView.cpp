@@ -76,6 +76,11 @@
  *  enum SelectionMode { SingleSelection, ContiguousSelection, ExtendedSelection, MultiSelection, NoSelection }
  */
 
+/*
+ *  Constructed[ 63/63 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QAbstractItemView>

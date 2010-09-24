@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QFrame
  *  $SYNTAX$
- *     QLCDNumber():new( ... )
+ *     QLCDNumber( ... )
  *     QLCDNumber():from( pPtr_OR_oObj_of_type_QLCDNumber )
  *     QLCDNumber():configure( pPtr_OR_oObj_of_type_QLCDNumber )
  *  $ARGUMENTS$

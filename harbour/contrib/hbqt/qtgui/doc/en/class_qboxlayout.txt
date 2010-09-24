@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QLayout
  *  $SYNTAX$
- *     QBoxLayout():new( ... )
+ *     QBoxLayout( ... )
  *     QBoxLayout():from( pPtr_OR_oObj_of_type_QBoxLayout )
  *     QBoxLayout():configure( pPtr_OR_oObj_of_type_QBoxLayout )
  *  $ARGUMENTS$

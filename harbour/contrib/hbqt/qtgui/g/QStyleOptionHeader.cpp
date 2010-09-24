@@ -74,6 +74,11 @@
  *  enum StyleOptionVersion { Version }
  */
 
+/*
+ *  Constructed[ 9/9 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionHeader>
@@ -152,7 +157,11 @@ HB_FUNC( QT_QSTYLEOPTIONHEADER )
  */
 HB_FUNC( QT_QSTYLEOPTIONHEADER_ICON )
 {
-   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QStyleOptionHeader( 1 )->icon ), true ) );
+   QStyleOptionHeader * p = hbqt_par_QStyleOptionHeader( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon ), true ) );
+   }
 }
 
 /*
@@ -160,7 +169,11 @@ HB_FUNC( QT_QSTYLEOPTIONHEADER_ICON )
  */
 HB_FUNC( QT_QSTYLEOPTIONHEADER_ICONALIGNMENT )
 {
-   hb_retni( ( Qt::Alignment ) hbqt_par_QStyleOptionHeader( 1 )->iconAlignment );
+   QStyleOptionHeader * p = hbqt_par_QStyleOptionHeader( 1 );
+   if( p )
+   {
+      hb_retni( ( Qt::Alignment ) ( p )->iconAlignment );
+   }
 }
 
 /*
@@ -168,7 +181,11 @@ HB_FUNC( QT_QSTYLEOPTIONHEADER_ICONALIGNMENT )
  */
 HB_FUNC( QT_QSTYLEOPTIONHEADER_ORIENTATION )
 {
-   hb_retni( ( Qt::Orientation ) hbqt_par_QStyleOptionHeader( 1 )->orientation );
+   QStyleOptionHeader * p = hbqt_par_QStyleOptionHeader( 1 );
+   if( p )
+   {
+      hb_retni( ( Qt::Orientation ) ( p )->orientation );
+   }
 }
 
 /*
@@ -176,7 +193,11 @@ HB_FUNC( QT_QSTYLEOPTIONHEADER_ORIENTATION )
  */
 HB_FUNC( QT_QSTYLEOPTIONHEADER_POSITION )
 {
-   hb_retni( ( QStyleOptionHeader::SectionPosition ) hbqt_par_QStyleOptionHeader( 1 )->position );
+   QStyleOptionHeader * p = hbqt_par_QStyleOptionHeader( 1 );
+   if( p )
+   {
+      hb_retni( ( QStyleOptionHeader::SectionPosition ) ( p )->position );
+   }
 }
 
 /*
@@ -184,7 +205,11 @@ HB_FUNC( QT_QSTYLEOPTIONHEADER_POSITION )
  */
 HB_FUNC( QT_QSTYLEOPTIONHEADER_SECTION )
 {
-   hb_retni( hbqt_par_QStyleOptionHeader( 1 )->section );
+   QStyleOptionHeader * p = hbqt_par_QStyleOptionHeader( 1 );
+   if( p )
+   {
+      hb_retni( ( p )->section );
+   }
 }
 
 /*
@@ -192,7 +217,11 @@ HB_FUNC( QT_QSTYLEOPTIONHEADER_SECTION )
  */
 HB_FUNC( QT_QSTYLEOPTIONHEADER_SELECTEDPOSITION )
 {
-   hb_retni( ( QStyleOptionHeader::SelectedPosition ) hbqt_par_QStyleOptionHeader( 1 )->selectedPosition );
+   QStyleOptionHeader * p = hbqt_par_QStyleOptionHeader( 1 );
+   if( p )
+   {
+      hb_retni( ( QStyleOptionHeader::SelectedPosition ) ( p )->selectedPosition );
+   }
 }
 
 /*
@@ -200,7 +229,11 @@ HB_FUNC( QT_QSTYLEOPTIONHEADER_SELECTEDPOSITION )
  */
 HB_FUNC( QT_QSTYLEOPTIONHEADER_SORTINDICATOR )
 {
-   hb_retni( ( QStyleOptionHeader::SortIndicator ) hbqt_par_QStyleOptionHeader( 1 )->sortIndicator );
+   QStyleOptionHeader * p = hbqt_par_QStyleOptionHeader( 1 );
+   if( p )
+   {
+      hb_retni( ( QStyleOptionHeader::SortIndicator ) ( p )->sortIndicator );
+   }
 }
 
 /*
@@ -208,7 +241,11 @@ HB_FUNC( QT_QSTYLEOPTIONHEADER_SORTINDICATOR )
  */
 HB_FUNC( QT_QSTYLEOPTIONHEADER_TEXT )
 {
-   hb_retstr_utf8( hbqt_par_QStyleOptionHeader( 1 )->text.toUtf8().data() );
+   QStyleOptionHeader * p = hbqt_par_QStyleOptionHeader( 1 );
+   if( p )
+   {
+      hb_retstr_utf8( ( p )->text.toUtf8().data() );
+   }
 }
 
 /*
@@ -216,7 +253,11 @@ HB_FUNC( QT_QSTYLEOPTIONHEADER_TEXT )
  */
 HB_FUNC( QT_QSTYLEOPTIONHEADER_TEXTALIGNMENT )
 {
-   hb_retni( ( Qt::Alignment ) hbqt_par_QStyleOptionHeader( 1 )->textAlignment );
+   QStyleOptionHeader * p = hbqt_par_QStyleOptionHeader( 1 );
+   if( p )
+   {
+      hb_retni( ( Qt::Alignment ) ( p )->textAlignment );
+   }
 }
 
 

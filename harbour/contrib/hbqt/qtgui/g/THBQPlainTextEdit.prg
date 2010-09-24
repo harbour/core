@@ -80,10 +80,8 @@ CREATE CLASS HBQPlainTextEdit INHERIT HbQtObjectHandler, HB_QPlainTextEdit FUNCT
    METHOD  hbNextBookmark( nBlock )
    METHOD  hbPrevBookmark( nBlock )
    METHOD  hbGotoBookmark( nBlock )
-   METHOD  hbNumberBlockVisible( lB )
-   METHOD  hbNumberBlockVisible_1()
-   METHOD  hbHighlightCurrentLine( lB )
-   METHOD  hbHighlightCurrentLine_1()
+   METHOD  hbNumberBlockVisible( ... )
+   METHOD  hbHighlightCurrentLine( ... )
    METHOD  hbSetEventBlock( xBlock )
    METHOD  hbUpdateLineNumberAreaWidth( nNewBlockCount )
    METHOD  hbCaseUpper()
@@ -176,20 +174,50 @@ METHOD HBQPlainTextEdit:hbGotoBookmark( nBlock )
    RETURN Qt_HBQPlainTextEdit_hbGotoBookmark( ::pPtr, nBlock )
 
 
-METHOD HBQPlainTextEdit:hbNumberBlockVisible( lB )
-   RETURN Qt_HBQPlainTextEdit_hbNumberBlockVisible( ::pPtr, lB )
+METHOD HBQPlainTextEdit:hbNumberBlockVisible( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "L"
+                // void           hbNumberBlockVisible(bool b)
+                // L l bool
+         RETURN Qt_HBQPlainTextEdit_hbNumberBlockVisible( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // bool           hbNumberBlockVisible()
+      RETURN Qt_HBQPlainTextEdit_hbNumberBlockVisible_1( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
-METHOD HBQPlainTextEdit:hbNumberBlockVisible_1()
-   RETURN Qt_HBQPlainTextEdit_hbNumberBlockVisible_1( ::pPtr )
-
-
-METHOD HBQPlainTextEdit:hbHighlightCurrentLine( lB )
-   RETURN Qt_HBQPlainTextEdit_hbHighlightCurrentLine( ::pPtr, lB )
-
-
-METHOD HBQPlainTextEdit:hbHighlightCurrentLine_1()
-   RETURN Qt_HBQPlainTextEdit_hbHighlightCurrentLine_1( ::pPtr )
+METHOD HBQPlainTextEdit:hbHighlightCurrentLine( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "L"
+                // void           hbHighlightCurrentLine(bool b)
+                // L l bool
+         RETURN Qt_HBQPlainTextEdit_hbHighlightCurrentLine( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // bool           hbHighlightCurrentLine()
+      RETURN Qt_HBQPlainTextEdit_hbHighlightCurrentLine_1( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD HBQPlainTextEdit:hbSetEventBlock( xBlock )

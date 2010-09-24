@@ -73,6 +73,11 @@
  *  enum WindowOrder { CreationOrder, StackingOrder, ActivationHistoryOrder }
  */
 
+/*
+ *  Constructed[ 26/26 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QMdiArea>

@@ -74,8 +74,7 @@ CREATE CLASS QEventLoop INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QEvent
    METHOD  exec( nFlags )
    METHOD  exit( nReturnCode )
    METHOD  isRunning()
-   METHOD  processEvents( nFlags )
-   METHOD  processEvents_1( nFlags, nMaxTime )
+   METHOD  processEvents( ... )
    METHOD  wakeUp()
 
    ENDCLASS
@@ -102,12 +101,35 @@ METHOD QEventLoop:isRunning()
    RETURN Qt_QEventLoop_isRunning( ::pPtr )
 
 
-METHOD QEventLoop:processEvents( nFlags )
-   RETURN Qt_QEventLoop_processEvents( ::pPtr, nFlags )
-
-
-METHOD QEventLoop:processEvents_1( nFlags, nMaxTime )
-   RETURN Qt_QEventLoop_processEvents_1( ::pPtr, nFlags, nMaxTime )
+METHOD QEventLoop:processEvents( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void processEvents ( ProcessEventsFlags flags, int maxTime )
+                // N n QEventLoop::ProcessEventsFlags, N n int
+         RETURN Qt_QEventLoop_processEvents_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // bool processEvents ( ProcessEventsFlags flags = AllEvents )
+                // N n QEventLoop::ProcessEventsFlags
+         RETURN Qt_QEventLoop_processEvents( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // bool processEvents ( ProcessEventsFlags flags = AllEvents )
+             // N n QEventLoop::ProcessEventsFlags
+      RETURN Qt_QEventLoop_processEvents( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QEventLoop:wakeUp()

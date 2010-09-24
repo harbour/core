@@ -71,6 +71,11 @@
  *  enum MessageIcon { NoIcon, Information, Warning, Critical }
  */
 
+/*
+ *  Constructed[ 14/14 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QSystemTrayIcon>

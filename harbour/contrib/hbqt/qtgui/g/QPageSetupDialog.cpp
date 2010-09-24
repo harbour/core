@@ -71,6 +71,11 @@
  *  flags PageSetupDialogOptions
  */
 
+/*
+ *  Constructed[ 8/8 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QPageSetupDialog>

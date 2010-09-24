@@ -75,8 +75,7 @@ CREATE CLASS QWebView INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QWebView
    METHOD  history()
    METHOD  icon()
    METHOD  isModified()
-   METHOD  load( pUrl )
-   METHOD  load_1( pRequest, nOperation, pBody )
+   METHOD  load( ... )
    METHOD  page()
    METHOD  pageAction( nAction )
    METHOD  selectedText()
@@ -126,12 +125,34 @@ METHOD QWebView:isModified()
    RETURN Qt_QWebView_isModified( ::pPtr )
 
 
-METHOD QWebView:load( pUrl )
-   RETURN Qt_QWebView_load( ::pPtr, hbqt_ptr( pUrl ) )
-
-
-METHOD QWebView:load_1( pRequest, nOperation, pBody )
-   RETURN Qt_QWebView_load_1( ::pPtr, hbqt_ptr( pRequest ), nOperation, hbqt_ptr( pBody ) )
+METHOD QWebView:load( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "PO"
+                // void load ( const QNetworkRequest & request, QNetworkAccessManager::Operation operation = QNetworkAccessManager::GetOperation, const QByteArray & body = QByteArray() )
+                // PO p QNetworkRequest, N n QNetworkAccessManager::Operation, PO p QByteArray
+         RETURN Qt_QWebView_load_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void load ( const QUrl & url )
+                // PO p QUrl
+         RETURN Qt_QWebView_load( ::pPtr, ... )
+                // void load ( const QNetworkRequest & request, QNetworkAccessManager::Operation operation = QNetworkAccessManager::GetOperation, const QByteArray & body = QByteArray() )
+                // PO p QNetworkRequest, N n QNetworkAccessManager::Operation, PO p QByteArray
+         // RETURN Qt_QWebView_load_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QWebView:page()

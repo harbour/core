@@ -66,6 +66,11 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  Constructed[ 44/44 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <qscilexer.h>

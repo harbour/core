@@ -86,8 +86,7 @@ CREATE CLASS QDate INHERIT HbQtObjectHandler FUNCTION HB_QDate
    METHOD  month()
    METHOD  setDate( nYear, nMonth, nDay )
    METHOD  toJulianDay()
-   METHOD  toString( cFormat )
-   METHOD  toString_1( nFormat )
+   METHOD  toString( ... )
    METHOD  weekNumber( nYearNumber )
    METHOD  year()
 
@@ -163,12 +162,32 @@ METHOD QDate:toJulianDay()
    RETURN Qt_QDate_toJulianDay( ::pPtr )
 
 
-METHOD QDate:toString( cFormat )
-   RETURN Qt_QDate_toString( ::pPtr, cFormat )
-
-
-METHOD QDate:toString_1( nFormat )
-   RETURN Qt_QDate_toString_1( ::pPtr, nFormat )
+METHOD QDate:toString( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // QString toString ( const QString & format ) const
+                // C c QString
+         RETURN Qt_QDate_toString( ::pPtr, ... )
+      CASE aV[ 1 ] $ "N"
+                // QString toString ( Qt::DateFormat format = Qt::TextDate ) const
+                // N n Qt::DateFormat
+         RETURN Qt_QDate_toString_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // QString toString ( Qt::DateFormat format = Qt::TextDate ) const
+             // N n Qt::DateFormat
+      RETURN Qt_QDate_toString_1( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QDate:weekNumber( nYearNumber )

@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QWidget
  *  $SYNTAX$
- *     QDesignerActionEditorInterface():new( ... )
+ *     QDesignerActionEditorInterface( ... )
  *     QDesignerActionEditorInterface():from( pPtr_OR_oObj_of_type_QDesignerActionEditorInterface )
  *     QDesignerActionEditorInterface():configure( pPtr_OR_oObj_of_type_QDesignerActionEditorInterface )
  *  $ARGUMENTS$

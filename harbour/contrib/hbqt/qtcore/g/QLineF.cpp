@@ -69,6 +69,11 @@
  *  enum IntersectType { NoIntersection, UnboundedIntersection, BoundedIntersection }
  */
 
+/*
+ *  Constructed[ 27/27 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtCore/QLineF>

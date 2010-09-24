@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QTreeWidgetItem():new( ... )
+ *     QTreeWidgetItem( ... )
  *     QTreeWidgetItem():from( pPtr_OR_oObj_of_type_QTreeWidgetItem )
  *     QTreeWidgetItem():configure( pPtr_OR_oObj_of_type_QTreeWidgetItem )
  *  $ARGUMENTS$

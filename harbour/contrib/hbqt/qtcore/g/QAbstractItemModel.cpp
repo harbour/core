@@ -66,15 +66,14 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 32/36 [ 88.89% ] ]
+ *  Constructed[ 32/34 [ 94.12% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  virtual QMap<int, QVariant> itemData ( const QModelIndex & index ) const
  *  virtual bool setItemData ( const QModelIndex & index, const QMap<int, QVariant> & roles )
  *
- *  *** Commented out protos which construct fine but do not compile ***
+ *  *** Commented out protostypes ***
  *
  *  // virtual QModelIndexList match ( const QModelIndex & start, int role, const QVariant & value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const
  *  // virtual QMimeData * mimeData ( const QModelIndexList & indexes ) const

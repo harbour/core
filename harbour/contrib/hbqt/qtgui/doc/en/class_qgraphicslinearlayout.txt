@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QGraphicsLayout
  *  $SYNTAX$
- *     QGraphicsLinearLayout():new( ... )
+ *     QGraphicsLinearLayout( ... )
  *     QGraphicsLinearLayout():from( pPtr_OR_oObj_of_type_QGraphicsLinearLayout )
  *     QGraphicsLinearLayout():configure( pPtr_OR_oObj_of_type_QGraphicsLinearLayout )
  *  $ARGUMENTS$

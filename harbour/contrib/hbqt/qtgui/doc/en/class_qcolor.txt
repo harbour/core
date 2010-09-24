@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QColor():new( ... )
+ *     QColor( ... )
  *     QColor():from( pPtr_OR_oObj_of_type_QColor )
  *     QColor():configure( pPtr_OR_oObj_of_type_QColor )
  *  $ARGUMENTS$
@@ -67,7 +67,8 @@
  *     :setNamedColor( cName )                             -> NIL
  *     :setRed( nRed )                                     -> NIL
  *     :setRedF( nRed )                                    -> NIL
- *     :setRgb( ... )                                      -> NIL
+ *     :setRgb( nRgb )                                     -> NIL
+ *     :setRgb_1( nR, nG, nB, nA )                         -> NIL
  *     :setRgba( nRgba )                                   -> NIL
  *     :setRgbF( nR, nG, nB, nA )                          -> NIL
  *     :spec()                                             -> nSpec

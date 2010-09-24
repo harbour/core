@@ -71,14 +71,12 @@ CREATE CLASS QToolBox INHERIT HbQtObjectHandler, HB_QFrame FUNCTION HB_QToolBox
 
    METHOD  new( ... )
 
-   METHOD  addItem( pWidget, pIconSet, cText )
-   METHOD  addItem_1( pW, cText )
+   METHOD  addItem( ... )
    METHOD  count()
    METHOD  currentIndex()
    METHOD  currentWidget()
    METHOD  indexOf( pWidget )
-   METHOD  insertItem( nIndex, pWidget, pIcon, cText )
-   METHOD  insertItem_1( nIndex, pWidget, cText )
+   METHOD  insertItem( ... )
    METHOD  isItemEnabled( nIndex )
    METHOD  itemIcon( nIndex )
    METHOD  itemText( nIndex )
@@ -104,12 +102,31 @@ METHOD QToolBox:new( ... )
    RETURN Self
 
 
-METHOD QToolBox:addItem( pWidget, pIconSet, cText )
-   RETURN Qt_QToolBox_addItem( ::pPtr, hbqt_ptr( pWidget ), hbqt_ptr( pIconSet ), cText )
-
-
-METHOD QToolBox:addItem_1( pW, cText )
-   RETURN Qt_QToolBox_addItem_1( ::pPtr, hbqt_ptr( pW ), cText )
+METHOD QToolBox:addItem( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PCO" .AND. aV[ 3 ] $ "C"
+                // int addItem ( QWidget * widget, const QIcon & iconSet, const QString & text )
+                // PO p QWidget, PCO p QIcon, C c QString
+         RETURN Qt_QToolBox_addItem( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "C"
+                // int addItem ( QWidget * w, const QString & text )
+                // PO p QWidget, C c QString
+         RETURN Qt_QToolBox_addItem_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QToolBox:count()
@@ -128,12 +145,31 @@ METHOD QToolBox:indexOf( pWidget )
    RETURN Qt_QToolBox_indexOf( ::pPtr, hbqt_ptr( pWidget ) )
 
 
-METHOD QToolBox:insertItem( nIndex, pWidget, pIcon, cText )
-   RETURN Qt_QToolBox_insertItem( ::pPtr, nIndex, hbqt_ptr( pWidget ), hbqt_ptr( pIcon ), cText )
-
-
-METHOD QToolBox:insertItem_1( nIndex, pWidget, cText )
-   RETURN Qt_QToolBox_insertItem_1( ::pPtr, nIndex, hbqt_ptr( pWidget ), cText )
+METHOD QToolBox:insertItem( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PCO" .AND. aV[ 4 ] $ "C"
+                // int insertItem ( int index, QWidget * widget, const QIcon & icon, const QString & text )
+                // N n int, PO p QWidget, PCO p QIcon, C c QString
+         RETURN Qt_QToolBox_insertItem( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "C"
+                // int insertItem ( int index, QWidget * widget, const QString & text )
+                // N n int, PO p QWidget, C c QString
+         RETURN Qt_QToolBox_insertItem_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QToolBox:isItemEnabled( nIndex )

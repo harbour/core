@@ -71,6 +71,11 @@
  *  enum StyleOptionVersion { Version }
  */
 
+/*
+ *  Constructed[ 1/1 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionFocusRect>
@@ -149,7 +154,11 @@ HB_FUNC( QT_QSTYLEOPTIONFOCUSRECT )
  */
 HB_FUNC( QT_QSTYLEOPTIONFOCUSRECT_BACKGROUNDCOLOR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QStyleOptionFocusRect( 1 )->backgroundColor ), true ) );
+   QStyleOptionFocusRect * p = hbqt_par_QStyleOptionFocusRect( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->backgroundColor ), true ) );
+   }
 }
 
 

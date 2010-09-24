@@ -101,8 +101,7 @@ CREATE CLASS QPixmap INHERIT HbQtObjectHandler, HB_QPaintDevice FUNCTION HB_QPix
    METHOD  defaultDepth()
    METHOD  fromImage( pImage, nFlags )
    METHOD  grabWidget( ... )
-   METHOD  trueMatrix( pMatrix, nWidth, nHeight )
-   METHOD  trueMatrix_1( pM, nW, nH )
+   METHOD  trueMatrix( ... )
 
    ENDCLASS
 
@@ -125,11 +124,34 @@ METHOD QPixmap:cacheKey()
 
 
 METHOD QPixmap:copy( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QPixmap_copy( ::pPtr, ... )
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // QPixmap copy ( int x, int y, int width, int height ) const
+                // N n int, N n int, N n int, N n int
+         RETURN QPixmap():from( Qt_QPixmap_copy_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QPixmap copy ( const QRect & rectangle = QRect() ) const
+                // PO p QRect
+         RETURN QPixmap():from( Qt_QPixmap_copy( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 0
+             // QPixmap copy ( const QRect & rectangle = QRect() ) const
+             // PO p QRect
+      RETURN QPixmap():from( Qt_QPixmap_copy( ::pPtr, ... ) )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPixmap:createHeuristicMask( lClipTight )
@@ -137,11 +159,30 @@ METHOD QPixmap:createHeuristicMask( lClipTight )
 
 
 METHOD QPixmap:createMaskFromColor( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QPixmap_createMaskFromColor( ::pPtr, ... )
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // QBitmap createMaskFromColor ( const QColor & maskColor, Qt::MaskMode mode ) const
+                // PO p QColor, N n Qt::MaskMode
+         RETURN QBitmap():from( Qt_QPixmap_createMaskFromColor( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QBitmap createMaskFromColor ( const QColor & maskColor ) const
+                // PO p QColor
+         RETURN QBitmap():from( Qt_QPixmap_createMaskFromColor_1( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPixmap:depth()
@@ -153,11 +194,41 @@ METHOD QPixmap:detach()
 
 
 METHOD QPixmap:fill( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QPixmap_fill( ::pPtr, ... )
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // void fill ( const QWidget * widget, int x, int y )
+                // PO p QWidget, N n int, N n int
+         RETURN Qt_QPixmap_fill_2( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
+                // void fill ( const QWidget * widget, const QPoint & offset )
+                // PO p QWidget, PO p QPoint
+         RETURN Qt_QPixmap_fill_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void fill ( const QColor & color = Qt::white )
+                // PO p QColor
+         RETURN Qt_QPixmap_fill( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // void fill ( const QColor & color = Qt::white )
+             // PO p QColor
+      RETURN Qt_QPixmap_fill( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPixmap:hasAlpha()
@@ -197,19 +268,79 @@ METHOD QPixmap:rect()
 
 
 METHOD QPixmap:save( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QPixmap_save( ::pPtr, ... )
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "N"
+                // bool save ( const QString & fileName, const char * format = 0, int quality = -1 ) const
+                // C c QString, PO p char, N n int
+         RETURN Qt_QPixmap_save( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "N"
+                // bool save ( QIODevice * device, const char * format = 0, int quality = -1 ) const
+                // PO p QIODevice, PO p char, N n int
+         RETURN Qt_QPixmap_save_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // bool save ( const QString & fileName, const char * format = 0, int quality = -1 ) const
+                // C c QString, PO p char, N n int
+         RETURN Qt_QPixmap_save( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO"
+                // bool save ( QIODevice * device, const char * format = 0, int quality = -1 ) const
+                // PO p QIODevice, PO p char, N n int
+         RETURN Qt_QPixmap_save_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPixmap:scaled( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QPixmap_scaled( ::pPtr, ... )
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // QPixmap scaled ( int width, int height, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
+                // N n int, N n int, N n Qt::AspectRatioMode, N n Qt::TransformationMode
+         RETURN QPixmap():from( Qt_QPixmap_scaled( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // QPixmap scaled ( const QSize & size, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
+                // PO p QSize, N n Qt::AspectRatioMode, N n Qt::TransformationMode
+         RETURN QPixmap():from( Qt_QPixmap_scaled_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // QPixmap scaled ( int width, int height, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
+                // N n int, N n int, N n Qt::AspectRatioMode, N n Qt::TransformationMode
+         RETURN QPixmap():from( Qt_QPixmap_scaled( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QPixmap scaled ( const QSize & size, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
+                // PO p QSize, N n Qt::AspectRatioMode, N n Qt::TransformationMode
+         RETURN QPixmap():from( Qt_QPixmap_scaled_1( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPixmap:scaledToHeight( nHeight, nMode )
@@ -257,17 +388,58 @@ METHOD QPixmap:fromImage( pImage, nFlags )
 
 
 METHOD QPixmap:grabWidget( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QPixmap_grabWidget( ::pPtr, ... )
+   DO CASE
+   CASE nP == 5
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N"
+                // QPixmap grabWidget ( QWidget * widget, int x = 0, int y = 0, int width = -1, int height = -1 )
+                // PO p QWidget, N n int, N n int, N n int, N n int
+         RETURN QPixmap():from( Qt_QPixmap_grabWidget_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
+                // QPixmap grabWidget ( QWidget * widget, const QRect & rectangle )
+                // PO p QWidget, PO p QRect
+         RETURN QPixmap():from( Qt_QPixmap_grabWidget( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QPixmap grabWidget ( QWidget * widget, int x = 0, int y = 0, int width = -1, int height = -1 )
+                // PO p QWidget, N n int, N n int, N n int, N n int
+         RETURN QPixmap():from( Qt_QPixmap_grabWidget_1( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QPixmap:trueMatrix( pMatrix, nWidth, nHeight )
-   RETURN Qt_QPixmap_trueMatrix( ::pPtr, hbqt_ptr( pMatrix ), nWidth, nHeight )
-
-
-METHOD QPixmap:trueMatrix_1( pM, nW, nH )
-   RETURN Qt_QPixmap_trueMatrix_1( ::pPtr, hbqt_ptr( pM ), nW, nH )
+METHOD QPixmap:trueMatrix( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // QTransform trueMatrix ( const QTransform & matrix, int width, int height )
+                // PO p QTransform, N n int, N n int
+         RETURN QTransform():from( Qt_QPixmap_trueMatrix( ::pPtr, ... ) )
+                // QMatrix trueMatrix ( const QMatrix & m, int w, int h )
+                // PO p QMatrix, N n int, N n int
+         // RETURN QMatrix():from( Qt_QPixmap_trueMatrix_1( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 

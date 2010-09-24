@@ -72,15 +72,10 @@ CREATE CLASS QStringList INHERIT HbQtObjectHandler, HB_QList FUNCTION HB_QString
    METHOD  new( ... )
 
    METHOD  append( cValue )
-   METHOD  filter( cStr, nCs )
-   METHOD  filter_1( pRx )
-   METHOD  indexOf( cValue, nFrom )
-   METHOD  indexOf_1( pRx, nFrom )
-   METHOD  indexOf_2( pRx, nFrom )
+   METHOD  filter( ... )
+   METHOD  indexOf( ... )
    METHOD  join( cSeparator )
-   METHOD  lastIndexOf( pRx, nFrom )
-   METHOD  lastIndexOf_1( cValue, nFrom )
-   METHOD  lastIndexOf_2( pRx, nFrom )
+   METHOD  lastIndexOf( ... )
    METHOD  removeDuplicates()
    METHOD  sort()
    METHOD  at( nI )
@@ -88,12 +83,9 @@ CREATE CLASS QStringList INHERIT HbQtObjectHandler, HB_QList FUNCTION HB_QString
    METHOD  count( cValue )
    METHOD  endsWith( cValue )
    METHOD  first()
-   METHOD  first_1()
    METHOD  front()
-   METHOD  front_1()
    METHOD  insert( nI, cValue )
    METHOD  last()
-   METHOD  last_1()
    METHOD  mid( nPos, nLength )
    METHOD  prepend( cValue )
    METHOD  push_back( cValue )
@@ -105,8 +97,7 @@ CREATE CLASS QStringList INHERIT HbQtObjectHandler, HB_QList FUNCTION HB_QString
    METHOD  takeAt( nI )
    METHOD  takeFirst()
    METHOD  takeLast()
-   METHOD  value( nI )
-   METHOD  value_1( nI, cDefaultValue )
+   METHOD  value( ... )
 
    ENDCLASS
 
@@ -124,40 +115,121 @@ METHOD QStringList:append( cValue )
    RETURN Qt_QStringList_append( ::pPtr, cValue )
 
 
-METHOD QStringList:filter( cStr, nCs )
-   RETURN Qt_QStringList_filter( ::pPtr, cStr, nCs )
+METHOD QStringList:filter( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
+                // QStringList filter ( const QString & str, Qt::CaseSensitivity cs = Qt::CaseSensitive ) const
+                // C c QString, N n Qt::CaseSensitivity
+         RETURN QStringList():from( Qt_QStringList_filter( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // QStringList filter ( const QString & str, Qt::CaseSensitivity cs = Qt::CaseSensitive ) const
+                // C c QString, N n Qt::CaseSensitivity
+         RETURN QStringList():from( Qt_QStringList_filter( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "PO"
+                // QStringList filter ( const QRegExp & rx ) const
+                // PO p QRegExp
+         RETURN QStringList():from( Qt_QStringList_filter_1( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QStringList:filter_1( pRx )
-   RETURN Qt_QStringList_filter_1( ::pPtr, hbqt_ptr( pRx ) )
-
-
-METHOD QStringList:indexOf( cValue, nFrom )
-   RETURN Qt_QStringList_indexOf( ::pPtr, cValue, nFrom )
-
-
-METHOD QStringList:indexOf_1( pRx, nFrom )
-   RETURN Qt_QStringList_indexOf_1( ::pPtr, hbqt_ptr( pRx ), nFrom )
-
-
-METHOD QStringList:indexOf_2( pRx, nFrom )
-   RETURN Qt_QStringList_indexOf_2( ::pPtr, hbqt_ptr( pRx ), nFrom )
+METHOD QStringList:indexOf( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
+                // int indexOf ( const QString & value, int from = 0 ) const
+                // C c QString, N n int
+         RETURN Qt_QStringList_indexOf( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // int indexOf ( const QRegExp & rx, int from = 0 ) const
+                // PO p QRegExp, N n int
+         RETURN Qt_QStringList_indexOf_1( ::pPtr, ... )
+                // int indexOf ( QRegExp & rx, int from = 0 ) const
+                // PO p QRegExp, N n int
+         // RETURN Qt_QStringList_indexOf_2( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // int indexOf ( const QString & value, int from = 0 ) const
+                // C c QString, N n int
+         RETURN Qt_QStringList_indexOf( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO"
+                // int indexOf ( const QRegExp & rx, int from = 0 ) const
+                // PO p QRegExp, N n int
+         RETURN Qt_QStringList_indexOf_1( ::pPtr, ... )
+                // int indexOf ( QRegExp & rx, int from = 0 ) const
+                // PO p QRegExp, N n int
+         // RETURN Qt_QStringList_indexOf_2( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QStringList:join( cSeparator )
    RETURN Qt_QStringList_join( ::pPtr, cSeparator )
 
 
-METHOD QStringList:lastIndexOf( pRx, nFrom )
-   RETURN Qt_QStringList_lastIndexOf( ::pPtr, hbqt_ptr( pRx ), nFrom )
-
-
-METHOD QStringList:lastIndexOf_1( cValue, nFrom )
-   RETURN Qt_QStringList_lastIndexOf_1( ::pPtr, cValue, nFrom )
-
-
-METHOD QStringList:lastIndexOf_2( pRx, nFrom )
-   RETURN Qt_QStringList_lastIndexOf_2( ::pPtr, hbqt_ptr( pRx ), nFrom )
+METHOD QStringList:lastIndexOf( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
+                // int lastIndexOf ( const QString & value, int from = -1 ) const
+                // C c QString, N n int
+         RETURN Qt_QStringList_lastIndexOf_1( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // int lastIndexOf ( QRegExp & rx, int from = -1 ) const
+                // PO p QRegExp, N n int
+         RETURN Qt_QStringList_lastIndexOf_2( ::pPtr, ... )
+                // int lastIndexOf ( const QRegExp & rx, int from = -1 ) const
+                // PO p QRegExp, N n int
+         // RETURN Qt_QStringList_lastIndexOf( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // int lastIndexOf ( const QString & value, int from = -1 ) const
+                // C c QString, N n int
+         RETURN Qt_QStringList_lastIndexOf_1( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO"
+                // int lastIndexOf ( QRegExp & rx, int from = -1 ) const
+                // PO p QRegExp, N n int
+         RETURN Qt_QStringList_lastIndexOf_2( ::pPtr, ... )
+                // int lastIndexOf ( const QRegExp & rx, int from = -1 ) const
+                // PO p QRegExp, N n int
+         // RETURN Qt_QStringList_lastIndexOf( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QStringList:removeDuplicates()
@@ -188,16 +260,8 @@ METHOD QStringList:first()
    RETURN Qt_QStringList_first( ::pPtr )
 
 
-METHOD QStringList:first_1()
-   RETURN Qt_QStringList_first_1( ::pPtr )
-
-
 METHOD QStringList:front()
    RETURN Qt_QStringList_front( ::pPtr )
-
-
-METHOD QStringList:front_1()
-   RETURN Qt_QStringList_front_1( ::pPtr )
 
 
 METHOD QStringList:insert( nI, cValue )
@@ -206,10 +270,6 @@ METHOD QStringList:insert( nI, cValue )
 
 METHOD QStringList:last()
    RETURN Qt_QStringList_last( ::pPtr )
-
-
-METHOD QStringList:last_1()
-   RETURN Qt_QStringList_last_1( ::pPtr )
 
 
 METHOD QStringList:mid( nPos, nLength )
@@ -256,10 +316,29 @@ METHOD QStringList:takeLast()
    RETURN Qt_QStringList_takeLast( ::pPtr )
 
 
-METHOD QStringList:value( nI )
-   RETURN Qt_QStringList_value( ::pPtr, nI )
-
-
-METHOD QStringList:value_1( nI, cDefaultValue )
-   RETURN Qt_QStringList_value_1( ::pPtr, nI, cDefaultValue )
+METHOD QStringList:value( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "C"
+                // QString value ( int i, const QString & defaultValue ) const
+                // N n int, C c QString
+         RETURN Qt_QStringList_value_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // QString value ( int i ) const
+                // N n int
+         RETURN Qt_QStringList_value( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 

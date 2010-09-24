@@ -72,45 +72,21 @@
  */
 
 /*
- *  Constructed[ 51/82 [ 62.20% ] ]
+ *  Constructed[ 57/60 [ 95.00% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  QVector<QRgb> colorTable () const
  *  QImage convertToFormat ( Format format, const QVector<QRgb> & colorTable, Qt::ImageConversionFlags flags = Qt::AutoColor ) const
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
  *  void setColorTable ( const QVector<QRgb> colors )
- *  }
- *  }
- *  }
  *
- *  *** Commented out protos which construct fine but do not compile ***
+ *  *** Commented out protostypes ***
  *
- *  //QImage copy ( const QRect & rectangle = QRect() ) const
- *  //QImage copy ( int x, int y, int width, int height ) const
- *  //bool load ( const QString & fileName, const char * format = 0 )
- *  //bool load ( QIODevice * device, const char * format )
+ *  //uchar * bits ()
  *  // bool loadFromData ( const uchar * data, int len, const char * format = 0 )
- *  //QRgb pixel ( const QPoint & position ) const
- *  //QRgb pixel ( int x, int y ) const
- *  //int pixelIndex ( const QPoint & position ) const
- *  //int pixelIndex ( int x, int y ) const
- *  //bool save ( const QString & fileName, const char * format = 0, int quality = -1 ) const
- *  //bool save ( QIODevice * device, const char * format = 0, int quality = -1 ) const
- *  //QImage scaled ( const QSize & size, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
- *  //QImage scaled ( int width, int height, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
- *  //void setPixel ( const QPoint & position, uint index_or_rgb )
- *  //void setPixel ( int x, int y, uint index_or_rgb )
+ *  //uchar * scanLine ( int i )
  *  //QImage transformed ( const QMatrix & matrix, Qt::TransformationMode mode = Qt::FastTransformation ) const
  *  //QImage transformed ( const QTransform & matrix, Qt::TransformationMode mode = Qt::FastTransformation ) const
- *  //bool valid ( const QPoint & pos ) const
- *  //bool valid ( int x, int y ) const
  */
 
 #include <QtCore/QPointer>
@@ -253,21 +229,9 @@ HB_FUNC( QT_QIMAGE_ALPHACHANNEL )
 }
 
 /*
- * uchar * bits ()
- */
-HB_FUNC( QT_QIMAGE_BITS )
-{
-   QImage * p = hbqt_par_QImage( 1 );
-   if( p )
-   {
-      hb_retc( ( const char * ) ( p )->bits() );
-   }
-}
-
-/*
  * const uchar * bits () const
  */
-HB_FUNC( QT_QIMAGE_BITS_1 )
+HB_FUNC( QT_QIMAGE_BITS )
 {
    QImage * p = hbqt_par_QImage( 1 );
    if( p )
@@ -325,25 +289,26 @@ HB_FUNC( QT_QIMAGE_CONVERTTOFORMAT )
 }
 
 /*
- * QImage copy ( ... )
+ * QImage copy ( const QRect & rectangle = QRect() ) const
  */
 HB_FUNC( QT_QIMAGE_COPY )
 {
    QImage * p = hbqt_par_QImage( 1 );
    if( p )
    {
-      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( ( p )->copy( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QRect( 2 ) : QRect() ) ) ), true ) );
-      }
-      else if( hb_pcount() == 5 && HB_ISNUM( 2 ) )
-      {
-         hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( ( p )->copy( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ) ), true ) );
-      }
-      else
-      {
-         hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( ( p )->copy( QRect() ) ), true ) );
-      }
+      hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( ( p )->copy( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QRect( 2 ) : QRect() ) ) ), true ) );
+   }
+}
+
+/*
+ * QImage copy ( int x, int y, int width, int height ) const
+ */
+HB_FUNC( QT_QIMAGE_COPY_1 )
+{
+   QImage * p = hbqt_par_QImage( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( ( p )->copy( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ) ), true ) );
    }
 }
 
@@ -504,23 +469,28 @@ HB_FUNC( QT_QIMAGE_ISNULL )
 }
 
 /*
- * bool load ( ... )
+ * bool load ( const QString & fileName, const char * format = 0 )
  */
 HB_FUNC( QT_QIMAGE_LOAD )
 {
    QImage * p = hbqt_par_QImage( 1 );
    if( p )
    {
-      if( hb_pcount() == 2 && HB_ISCHAR( 2 ) )
-      {
-         void * pText;
-         hb_retl( ( p )->load( hb_parstr_utf8( 2, &pText, NULL ), hbqt_par_char( 3 ) ) );
-         hb_strfree( pText );
-      }
-      else if( hb_pcount() == 3 && HB_ISPOINTER( 2 ) && HB_ISPOINTER( 3 ) )
-      {
-         hb_retl( ( p )->load( hbqt_par_QIODevice( 2 ), hbqt_par_char( 3 ) ) );
-      }
+      void * pText;
+      hb_retl( ( p )->load( hb_parstr_utf8( 2, &pText, NULL ), hbqt_par_char( 3 ) ) );
+      hb_strfree( pText );
+   }
+}
+
+/*
+ * bool load ( QIODevice * device, const char * format )
+ */
+HB_FUNC( QT_QIMAGE_LOAD_1 )
+{
+   QImage * p = hbqt_par_QImage( 1 );
+   if( p )
+   {
+      hb_retl( ( p )->load( hbqt_par_QIODevice( 2 ), hbqt_par_char( 3 ) ) );
    }
 }
 
@@ -585,40 +555,50 @@ HB_FUNC( QT_QIMAGE_OFFSET )
 }
 
 /*
- * QRgb pixel ( ... )
+ * QRgb pixel ( const QPoint & position ) const
  */
 HB_FUNC( QT_QIMAGE_PIXEL )
 {
    QImage * p = hbqt_par_QImage( 1 );
    if( p )
    {
-      if( hb_pcount() >= 2 && HB_ISPOINTER( 2 ) )
-      {
-         hb_retnl( ( p )->pixel( *hbqt_par_QPoint( 2 ) ) );
-      }
-      else if( hb_pcount() == 3 && HB_ISNUM( 2 ) )
-      {
-         hb_retnl( ( p )->pixel( hb_parni( 2 ), hb_parni( 3 ) ) );
-      }
+      hb_retnl( ( p )->pixel( *hbqt_par_QPoint( 2 ) ) );
    }
 }
 
 /*
- * int pixelIndex ( ... )
+ * QRgb pixel ( int x, int y ) const
+ */
+HB_FUNC( QT_QIMAGE_PIXEL_1 )
+{
+   QImage * p = hbqt_par_QImage( 1 );
+   if( p )
+   {
+      hb_retnl( ( p )->pixel( hb_parni( 2 ), hb_parni( 3 ) ) );
+   }
+}
+
+/*
+ * int pixelIndex ( const QPoint & position ) const
  */
 HB_FUNC( QT_QIMAGE_PIXELINDEX )
 {
    QImage * p = hbqt_par_QImage( 1 );
    if( p )
    {
-      if( hb_pcount() >= 2 && HB_ISPOINTER( 2 ) )
-      {
-         hb_retni( ( p )->pixelIndex( *hbqt_par_QPoint( 2 ) ) );
-      }
-      else if( hb_pcount() == 3 && HB_ISNUM( 2 ) )
-      {
-         hb_retni( ( p )->pixelIndex( hb_parni( 2 ), hb_parni( 3 ) ) );
-      }
+      hb_retni( ( p )->pixelIndex( *hbqt_par_QPoint( 2 ) ) );
+   }
+}
+
+/*
+ * int pixelIndex ( int x, int y ) const
+ */
+HB_FUNC( QT_QIMAGE_PIXELINDEX_1 )
+{
+   QImage * p = hbqt_par_QImage( 1 );
+   if( p )
+   {
+      hb_retni( ( p )->pixelIndex( hb_parni( 2 ), hb_parni( 3 ) ) );
    }
 }
 
@@ -647,42 +627,52 @@ HB_FUNC( QT_QIMAGE_RGBSWAPPED )
 }
 
 /*
- * bool save ( ... )
+ * bool save ( const QString & fileName, const char * format = 0, int quality = -1 ) const
  */
 HB_FUNC( QT_QIMAGE_SAVE )
 {
    QImage * p = hbqt_par_QImage( 1 );
    if( p )
    {
-      if( hb_pcount() >= 2 && HB_ISCHAR( 2 ) )
-      {
-         void * pText;
-         hb_retl( ( p )->save( hb_parstr_utf8( 2, &pText, NULL ), hbqt_par_char( 3 ), hb_parnidef( 4, -1 ) ) );
-         hb_strfree( pText );
-      }
-      else if( hb_pcount() >= 2 && HB_ISPOINTER( 2 ) )
-      {
-         hb_retl( ( p )->save( hbqt_par_QIODevice( 2 ), hbqt_par_char( 3 ), hb_parnidef( 4, -1 ) ) );
-      }
+      void * pText;
+      hb_retl( ( p )->save( hb_parstr_utf8( 2, &pText, NULL ), hbqt_par_char( 3 ), hb_parnidef( 4, -1 ) ) );
+      hb_strfree( pText );
    }
 }
 
 /*
- * QImage scaled ( ... )
+ * bool save ( QIODevice * device, const char * format = 0, int quality = -1 ) const
+ */
+HB_FUNC( QT_QIMAGE_SAVE_1 )
+{
+   QImage * p = hbqt_par_QImage( 1 );
+   if( p )
+   {
+      hb_retl( ( p )->save( hbqt_par_QIODevice( 2 ), hbqt_par_char( 3 ), hb_parnidef( 4, -1 ) ) );
+   }
+}
+
+/*
+ * QImage scaled ( const QSize & size, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
  */
 HB_FUNC( QT_QIMAGE_SCALED )
 {
    QImage * p = hbqt_par_QImage( 1 );
    if( p )
    {
-      if( hb_pcount() >= 2 && HB_ISPOINTER( 2 ) )
-      {
-         hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( ( p )->scaled( *hbqt_par_QSize( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::AspectRatioMode ) hb_parni( 3 ) : ( Qt::AspectRatioMode ) Qt::IgnoreAspectRatio ), ( HB_ISNUM( 4 ) ? ( Qt::TransformationMode ) hb_parni( 4 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ), true ) );
-      }
-      else if( hb_pcount() >= 3 && HB_ISNUM( 2 )  && HB_ISNUM( 3 ) )
-      {
-         hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( ( p )->scaled( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNUM( 4 ) ? ( Qt::AspectRatioMode ) hb_parni( 4 ) : ( Qt::AspectRatioMode ) Qt::IgnoreAspectRatio ), ( HB_ISNUM( 5 ) ? ( Qt::TransformationMode ) hb_parni( 5 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ), true ) );
-      }
+      hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( ( p )->scaled( *hbqt_par_QSize( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::AspectRatioMode ) hb_parni( 3 ) : ( Qt::AspectRatioMode ) Qt::IgnoreAspectRatio ), ( HB_ISNUM( 4 ) ? ( Qt::TransformationMode ) hb_parni( 4 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ), true ) );
+   }
+}
+
+/*
+ * QImage scaled ( int width, int height, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
+ */
+HB_FUNC( QT_QIMAGE_SCALED_1 )
+{
+   QImage * p = hbqt_par_QImage( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( ( p )->scaled( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNUM( 4 ) ? ( Qt::AspectRatioMode ) hb_parni( 4 ) : ( Qt::AspectRatioMode ) Qt::IgnoreAspectRatio ), ( HB_ISNUM( 5 ) ? ( Qt::TransformationMode ) hb_parni( 5 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ), true ) );
    }
 }
 
@@ -711,21 +701,9 @@ HB_FUNC( QT_QIMAGE_SCALEDTOWIDTH )
 }
 
 /*
- * uchar * scanLine ( int i )
- */
-HB_FUNC( QT_QIMAGE_SCANLINE )
-{
-   QImage * p = hbqt_par_QImage( 1 );
-   if( p )
-   {
-      hb_retc( ( const char * ) ( p )->scanLine( hb_parni( 2 ) ) );
-   }
-}
-
-/*
  * const uchar * scanLine ( int i ) const
  */
-HB_FUNC( QT_QIMAGE_SCANLINE_1 )
+HB_FUNC( QT_QIMAGE_SCANLINE )
 {
    QImage * p = hbqt_par_QImage( 1 );
    if( p )
@@ -795,21 +773,26 @@ HB_FUNC( QT_QIMAGE_SETOFFSET )
 }
 
 /*
- * void setPixel ( ... )
+ * void setPixel ( const QPoint & position, uint index_or_rgb )
  */
 HB_FUNC( QT_QIMAGE_SETPIXEL )
 {
    QImage * p = hbqt_par_QImage( 1 );
    if( p )
    {
-      if( hb_pcount() == 3 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->setPixel( *hbqt_par_QPoint( 2 ), hb_parni( 3 ) );
-      }
-      else if( hb_pcount() == 4 && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
-      {
-         ( p )->setPixel( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
-      }
+      ( p )->setPixel( *hbqt_par_QPoint( 2 ), hb_parni( 3 ) );
+   }
+}
+
+/*
+ * void setPixel ( int x, int y, uint index_or_rgb )
+ */
+HB_FUNC( QT_QIMAGE_SETPIXEL_1 )
+{
+   QImage * p = hbqt_par_QImage( 1 );
+   if( p )
+   {
+      ( p )->setPixel( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
    }
 }
 
@@ -887,21 +870,26 @@ HB_FUNC( QT_QIMAGE_TRANSFORMED )
 }
 
 /*
- * bool valid ( ... )
+ * bool valid ( const QPoint & pos ) const
  */
 HB_FUNC( QT_QIMAGE_VALID )
 {
    QImage * p = hbqt_par_QImage( 1 );
    if( p )
    {
-      if( hb_pcount() >= 2 && HB_ISPOINTER( 2 ) )
-      {
-         hb_retl( ( p )->valid( *hbqt_par_QPoint( 2 ) ) );
-      }
-      else if( hb_pcount() >= 2 && HB_ISPOINTER( 2 ) )
-      {
-         hb_retl( ( p )->valid( hb_parni( 2 ), hb_parni( 3 ) ) );
-      }
+      hb_retl( ( p )->valid( *hbqt_par_QPoint( 2 ) ) );
+   }
+}
+
+/*
+ * bool valid ( int x, int y ) const
+ */
+HB_FUNC( QT_QIMAGE_VALID_1 )
+{
+   QImage * p = hbqt_par_QImage( 1 );
+   if( p )
+   {
+      hb_retl( ( p )->valid( hb_parni( 2 ), hb_parni( 3 ) ) );
    }
 }
 

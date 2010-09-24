@@ -67,13 +67,8 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 32/34 [ 94.12% ] ]
+ *  Constructed[ 32/32 [ 100.00% ] ]
  *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  }
- *  }
  */
 
 #include <QtCore/QPointer>
@@ -155,7 +150,7 @@ HB_FUNC( QT_QLISTWIDGET )
 {
    QListWidget * pObj = NULL;
 
-   pObj = new QListWidget( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QListWidget( HB_ISPOINTER( 1 ) ? hbqt_par_QWidget( 1 ) : 0 ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QListWidget( ( void * ) pObj, true ) );
 }
@@ -175,18 +170,19 @@ HB_FUNC( QT_QLISTWIDGET_ADDITEM )
 }
 
 /*
- * void addItem ( QListWidgetItem * item )
+ * void addItem ( QListWidgetItem * item )              [*D=1*]
  */
 HB_FUNC( QT_QLISTWIDGET_ADDITEM_1 )
 {
-   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QLISTWIDGET_ADDITEM()" ) );
-   if( p && p->ph && q && q->ph )
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "QT_QLISTWIDGET_ADDITEM() Qt object: %p is attached to: %p", p->ph, q->ph ) );
-      q->bNew = HB_FALSE;
-      hbqt_par_QListWidget( 1 )->addItem( hbqt_par_QListWidgetItem( 2 ) );
+      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+      if( q && q->ph )
+      {
+         q->bNew = false;
+      }
+      ( p )->addItem( hbqt_par_QListWidgetItem( 2 ) );
    }
 }
 
@@ -277,18 +273,19 @@ HB_FUNC( QT_QLISTWIDGET_FINDITEMS )
 }
 
 /*
- * void insertItem ( int row, QListWidgetItem * item )
+ * void insertItem ( int row, QListWidgetItem * item )  [*D=2*]
  */
 HB_FUNC( QT_QLISTWIDGET_INSERTITEM )
 {
-   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 3 );
-   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QLISTWIDGET_INSERTITEM()" ) );
-   if( p && p->ph && q && q->ph )
+   QListWidget * p = hbqt_par_QListWidget( 1 );
+   if( p )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "QT_QLISTWIDGET_INSERTITEM() Qt object: %p is attached to: %p", p->ph, q->ph ) );
-      q->bNew = HB_FALSE;
-      hbqt_par_QListWidget( 1 )->insertItem( hb_parni( 2 ), hbqt_par_QListWidgetItem( 3 ) );
+      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 3 );
+      if( q && q->ph )
+      {
+         q->bNew = false;
+      }
+      ( p )->insertItem( hb_parni( 2 ), hbqt_par_QListWidgetItem( 3 ) );
    }
 }
 

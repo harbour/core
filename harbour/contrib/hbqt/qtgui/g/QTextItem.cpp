@@ -71,6 +71,11 @@
  *  flags RenderFlags
  */
 
+/*
+ *  Constructed[ 6/6 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QTextItem>

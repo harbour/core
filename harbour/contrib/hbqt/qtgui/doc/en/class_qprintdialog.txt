@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QAbstractPrintDialog
  *  $SYNTAX$
- *     QPrintDialog():new( ... )
+ *     QPrintDialog( ... )
  *     QPrintDialog():from( pPtr_OR_oObj_of_type_QPrintDialog )
  *     QPrintDialog():configure( pPtr_OR_oObj_of_type_QPrintDialog )
  *  $ARGUMENTS$
@@ -30,7 +30,6 @@
  *     :open( pReceiver, pMember )                         -> NIL
  *     :options()                                          -> nPrintDialogOptions
  *     :printer()                                          -> pQPrinter
- *     :printer_1()                                        -> pQPrinter
  *     :setOption( nOption, lOn )                          -> NIL
  *     :setOptions( nOptions )                             -> NIL
  *     :setVisible( lVisible )                             -> NIL

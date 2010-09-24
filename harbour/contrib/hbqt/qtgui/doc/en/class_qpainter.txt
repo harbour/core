@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QPainter():new( ... )
+ *     QPainter( ... )
  *     QPainter():from( pPtr_OR_oObj_of_type_QPainter )
  *     QPainter():configure( pPtr_OR_oObj_of_type_QPainter )
  *  $ARGUMENTS$
@@ -83,7 +83,8 @@
  *     :scale( nSx, nSy )                                  -> NIL
  *     :setBackground( pBrush )                            -> NIL
  *     :setBackgroundMode( nMode )                         -> NIL
- *     :setBrush( ... )                                    -> NIL
+ *     :setBrush( pBrush )                                 -> NIL
+ *     :setBrush_1( nStyle )                               -> NIL
  *     :setBrushOrigin( ... )                              -> NIL
  *     :setClipPath( pPath, nOperation )                   -> NIL
  *     :setClipRect( ... )                                 -> NIL
@@ -98,8 +99,10 @@
  *     :setRenderHints( nHints, lOn )                      -> NIL
  *     :setTransform( pTransform, lCombine )               -> NIL
  *     :setViewTransformEnabled( lEnable )                 -> NIL
- *     :setViewport( ... )                                 -> NIL
- *     :setWindow( ... )                                   -> NIL
+ *     :setViewport( pRectangle )                          -> NIL
+ *     :setViewport_1( nX, nY, nWidth, nHeight )           -> NIL
+ *     :setWindow( pRectangle )                            -> NIL
+ *     :setWindow_1( nX, nY, nWidth, nHeight )             -> NIL
  *     :setWorldMatrix( pMatrix, lCombine )                -> NIL
  *     :setWorldMatrixEnabled( lEnable )                   -> NIL
  *     :setWorldTransform( pMatrix, lCombine )             -> NIL

@@ -83,8 +83,7 @@ CREATE CLASS QSessionManager INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_Q
    METHOD  sessionId()
    METHOD  sessionKey()
    METHOD  setDiscardCommand( pList )
-   METHOD  setManagerProperty( cName, pValue )
-   METHOD  setManagerProperty_1( cName, cValue )
+   METHOD  setManagerProperty( ... )
    METHOD  setRestartCommand( pCommand )
    METHOD  setRestartHint( nHint )
 
@@ -148,12 +147,28 @@ METHOD QSessionManager:setDiscardCommand( pList )
    RETURN Qt_QSessionManager_setDiscardCommand( ::pPtr, hbqt_ptr( pList ) )
 
 
-METHOD QSessionManager:setManagerProperty( cName, pValue )
-   RETURN Qt_QSessionManager_setManagerProperty( ::pPtr, cName, hbqt_ptr( pValue ) )
-
-
-METHOD QSessionManager:setManagerProperty_1( cName, cValue )
-   RETURN Qt_QSessionManager_setManagerProperty_1( ::pPtr, cName, cValue )
+METHOD QSessionManager:setManagerProperty( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "C"
+                // void setManagerProperty ( const QString & name, const QString & value )
+                // C c QString, C c QString
+         RETURN Qt_QSessionManager_setManagerProperty_1( ::pPtr, ... )
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO"
+                // void setManagerProperty ( const QString & name, const QStringList & value )
+                // C c QString, PO p QStringList
+         RETURN Qt_QSessionManager_setManagerProperty( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QSessionManager:setRestartCommand( pCommand )

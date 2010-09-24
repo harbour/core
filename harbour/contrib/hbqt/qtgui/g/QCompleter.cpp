@@ -71,6 +71,11 @@
  *  enum ModelSorting { UnsortedModel, CaseSensitivelySortedModel, CaseInsensitivelySortedModel }
  */
 
+/*
+ *  Constructed[ 29/29 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QCompleter>

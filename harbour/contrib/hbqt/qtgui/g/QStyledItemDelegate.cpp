@@ -66,6 +66,16 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  Constructed[ 7/7 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // QItemEditorFactory * itemEditorFactory () const
+ *  // void setItemEditorFactory ( QItemEditorFactory * factory )
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QStyledItemDelegate>

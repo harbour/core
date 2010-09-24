@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QPainter
  *  $SYNTAX$
- *     QStylePainter():new( ... )
+ *     QStylePainter( ... )
  *     QStylePainter():from( pPtr_OR_oObj_of_type_QStylePainter )
  *     QStylePainter():configure( pPtr_OR_oObj_of_type_QStylePainter )
  *  $ARGUMENTS$

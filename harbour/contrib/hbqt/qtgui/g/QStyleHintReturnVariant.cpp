@@ -76,7 +76,6 @@
  *  Constructed[ 0/1 [ 0.00% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  QVariant variant
  */

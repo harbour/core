@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QAbstractItemModel
  *  $SYNTAX$
- *     HBQAbstractItemModel():new( ... )
+ *     HBQAbstractItemModel( ... )
  *     HBQAbstractItemModel():from( pPtr_OR_oObj_of_type_HBQAbstractItemModel )
  *     HBQAbstractItemModel():configure( pPtr_OR_oObj_of_type_HBQAbstractItemModel )
  *  $ARGUMENTS$

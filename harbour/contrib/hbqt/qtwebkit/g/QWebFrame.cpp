@@ -67,14 +67,13 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 38/40 [ 95.00% ] ]
+ *  Constructed[ 38/39 [ 97.44% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  QMultiMap<QString, QString> metaData () const
  *
- *  *** Commented out protos which construct fine but do not compile ***
+ *  *** Commented out protostypes ***
  *
  *  // void load ( const QWebNetworkRequest & req )
  */

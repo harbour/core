@@ -72,22 +72,16 @@ CREATE CLASS QRegion INHERIT HbQtObjectHandler FUNCTION HB_QRegion
    METHOD  new( ... )
 
    METHOD  boundingRect()
-   METHOD  contains( pP )
-   METHOD  contains_1( pR )
-   METHOD  intersected( pR )
-   METHOD  intersected_1( pRect )
-   METHOD  intersects( pRegion )
-   METHOD  intersects_1( pRect )
+   METHOD  contains( ... )
+   METHOD  intersected( ... )
+   METHOD  intersects( ... )
    METHOD  isEmpty()
    METHOD  numRects()
    METHOD  setRects( pRects, nNumber )
    METHOD  subtracted( pR )
-   METHOD  translate( nDx, nDy )
-   METHOD  translate_1( pPoint )
-   METHOD  translated( nDx, nDy )
-   METHOD  translated_1( pP )
-   METHOD  united( pR )
-   METHOD  united_1( pRect )
+   METHOD  translate( ... )
+   METHOD  translated( ... )
+   METHOD  united( ... )
    METHOD  xored( pR )
 
    ENDCLASS
@@ -106,28 +100,73 @@ METHOD QRegion:boundingRect()
    RETURN Qt_QRegion_boundingRect( ::pPtr )
 
 
-METHOD QRegion:contains( pP )
-   RETURN Qt_QRegion_contains( ::pPtr, hbqt_ptr( pP ) )
+METHOD QRegion:contains( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // bool contains ( const QPoint & p ) const
+                // PO p QPoint
+         RETURN Qt_QRegion_contains( ::pPtr, ... )
+                // bool contains ( const QRect & r ) const
+                // PO p QRect
+         // RETURN Qt_QRegion_contains_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QRegion:contains_1( pR )
-   RETURN Qt_QRegion_contains_1( ::pPtr, hbqt_ptr( pR ) )
+METHOD QRegion:intersected( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QRegion intersected ( const QRegion & r ) const
+                // PO p QRegion
+         RETURN QRegion():from( Qt_QRegion_intersected( ::pPtr, ... ) )
+                // QRegion intersected ( const QRect & rect ) const
+                // PO p QRect
+         // RETURN QRegion():from( Qt_QRegion_intersected_1( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QRegion:intersected( pR )
-   RETURN Qt_QRegion_intersected( ::pPtr, hbqt_ptr( pR ) )
-
-
-METHOD QRegion:intersected_1( pRect )
-   RETURN Qt_QRegion_intersected_1( ::pPtr, hbqt_ptr( pRect ) )
-
-
-METHOD QRegion:intersects( pRegion )
-   RETURN Qt_QRegion_intersects( ::pPtr, hbqt_ptr( pRegion ) )
-
-
-METHOD QRegion:intersects_1( pRect )
-   RETURN Qt_QRegion_intersects_1( ::pPtr, hbqt_ptr( pRect ) )
+METHOD QRegion:intersects( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // bool intersects ( const QRegion & region ) const
+                // PO p QRegion
+         RETURN Qt_QRegion_intersects( ::pPtr, ... )
+                // bool intersects ( const QRect & rect ) const
+                // PO p QRect
+         // RETURN Qt_QRegion_intersects_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QRegion:isEmpty()
@@ -146,28 +185,81 @@ METHOD QRegion:subtracted( pR )
    RETURN Qt_QRegion_subtracted( ::pPtr, hbqt_ptr( pR ) )
 
 
-METHOD QRegion:translate( nDx, nDy )
-   RETURN Qt_QRegion_translate( ::pPtr, nDx, nDy )
+METHOD QRegion:translate( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void translate ( int dx, int dy )
+                // N n int, N n int
+         RETURN Qt_QRegion_translate( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void translate ( const QPoint & point )
+                // PO p QPoint
+         RETURN Qt_QRegion_translate_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QRegion:translate_1( pPoint )
-   RETURN Qt_QRegion_translate_1( ::pPtr, hbqt_ptr( pPoint ) )
+METHOD QRegion:translated( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // QRegion translated ( int dx, int dy ) const
+                // N n int, N n int
+         RETURN QRegion():from( Qt_QRegion_translated( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QRegion translated ( const QPoint & p ) const
+                // PO p QPoint
+         RETURN QRegion():from( Qt_QRegion_translated_1( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QRegion:translated( nDx, nDy )
-   RETURN Qt_QRegion_translated( ::pPtr, nDx, nDy )
-
-
-METHOD QRegion:translated_1( pP )
-   RETURN Qt_QRegion_translated_1( ::pPtr, hbqt_ptr( pP ) )
-
-
-METHOD QRegion:united( pR )
-   RETURN Qt_QRegion_united( ::pPtr, hbqt_ptr( pR ) )
-
-
-METHOD QRegion:united_1( pRect )
-   RETURN Qt_QRegion_united_1( ::pPtr, hbqt_ptr( pRect ) )
+METHOD QRegion:united( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QRegion united ( const QRegion & r ) const
+                // PO p QRegion
+         RETURN QRegion():from( Qt_QRegion_united( ::pPtr, ... ) )
+                // QRegion united ( const QRect & rect ) const
+                // PO p QRect
+         // RETURN QRegion():from( Qt_QRegion_united_1( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QRegion:xored( pR )

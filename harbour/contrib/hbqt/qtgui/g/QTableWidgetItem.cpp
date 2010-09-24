@@ -70,6 +70,11 @@
  *  enum ItemType { Type, UserType }
  */
 
+/*
+ *  Constructed[ 35/35 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QTableWidgetItem>

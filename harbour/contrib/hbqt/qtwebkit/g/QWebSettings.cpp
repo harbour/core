@@ -73,6 +73,11 @@
  *  enum WebGraphic { MissingImageGraphic, MissingPluginGraphic, DefaultFrameIconGraphic, TextAreaSizeGripCornerGraphic }
  */
 
+/*
+ *  Constructed[ 25/25 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include "hbqtgui.h"

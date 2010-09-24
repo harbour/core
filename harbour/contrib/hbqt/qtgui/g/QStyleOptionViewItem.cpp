@@ -72,6 +72,11 @@
  *  enum StyleOptionVersion { Version }
  */
 
+/*
+ *  Constructed[ 7/7 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionViewItem>
@@ -150,7 +155,11 @@ HB_FUNC( QT_QSTYLEOPTIONVIEWITEM )
  */
 HB_FUNC( QT_QSTYLEOPTIONVIEWITEM_DECORATIONALIGNMENT )
 {
-   hb_retni( ( Qt::Alignment ) hbqt_par_QStyleOptionViewItem( 1 )->decorationAlignment );
+   QStyleOptionViewItem * p = hbqt_par_QStyleOptionViewItem( 1 );
+   if( p )
+   {
+      hb_retni( ( Qt::Alignment ) ( p )->decorationAlignment );
+   }
 }
 
 /*
@@ -158,7 +167,11 @@ HB_FUNC( QT_QSTYLEOPTIONVIEWITEM_DECORATIONALIGNMENT )
  */
 HB_FUNC( QT_QSTYLEOPTIONVIEWITEM_DECORATIONPOSITION )
 {
-   hb_retni( ( QStyleOptionViewItem::Position ) hbqt_par_QStyleOptionViewItem( 1 )->decorationPosition );
+   QStyleOptionViewItem * p = hbqt_par_QStyleOptionViewItem( 1 );
+   if( p )
+   {
+      hb_retni( ( QStyleOptionViewItem::Position ) ( p )->decorationPosition );
+   }
 }
 
 /*
@@ -166,7 +179,11 @@ HB_FUNC( QT_QSTYLEOPTIONVIEWITEM_DECORATIONPOSITION )
  */
 HB_FUNC( QT_QSTYLEOPTIONVIEWITEM_DECORATIONSIZE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QStyleOptionViewItem( 1 )->decorationSize ), true ) );
+   QStyleOptionViewItem * p = hbqt_par_QStyleOptionViewItem( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->decorationSize ), true ) );
+   }
 }
 
 /*
@@ -174,7 +191,11 @@ HB_FUNC( QT_QSTYLEOPTIONVIEWITEM_DECORATIONSIZE )
  */
 HB_FUNC( QT_QSTYLEOPTIONVIEWITEM_DISPLAYALIGNMENT )
 {
-   hb_retni( ( Qt::Alignment ) hbqt_par_QStyleOptionViewItem( 1 )->displayAlignment );
+   QStyleOptionViewItem * p = hbqt_par_QStyleOptionViewItem( 1 );
+   if( p )
+   {
+      hb_retni( ( Qt::Alignment ) ( p )->displayAlignment );
+   }
 }
 
 /*
@@ -182,7 +203,11 @@ HB_FUNC( QT_QSTYLEOPTIONVIEWITEM_DISPLAYALIGNMENT )
  */
 HB_FUNC( QT_QSTYLEOPTIONVIEWITEM_FONT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( hbqt_par_QStyleOptionViewItem( 1 )->font ), true ) );
+   QStyleOptionViewItem * p = hbqt_par_QStyleOptionViewItem( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font ), true ) );
+   }
 }
 
 /*
@@ -190,7 +215,11 @@ HB_FUNC( QT_QSTYLEOPTIONVIEWITEM_FONT )
  */
 HB_FUNC( QT_QSTYLEOPTIONVIEWITEM_SHOWDECORATIONSELECTED )
 {
-   hb_retl( hbqt_par_QStyleOptionViewItem( 1 )->showDecorationSelected );
+   QStyleOptionViewItem * p = hbqt_par_QStyleOptionViewItem( 1 );
+   if( p )
+   {
+      hb_retl( ( p )->showDecorationSelected );
+   }
 }
 
 /*
@@ -198,7 +227,11 @@ HB_FUNC( QT_QSTYLEOPTIONVIEWITEM_SHOWDECORATIONSELECTED )
  */
 HB_FUNC( QT_QSTYLEOPTIONVIEWITEM_TEXTELIDEMODE )
 {
-   hb_retni( ( Qt::TextElideMode ) hbqt_par_QStyleOptionViewItem( 1 )->textElideMode );
+   QStyleOptionViewItem * p = hbqt_par_QStyleOptionViewItem( 1 );
+   if( p )
+   {
+      hb_retni( ( Qt::TextElideMode ) ( p )->textElideMode );
+   }
 }
 
 

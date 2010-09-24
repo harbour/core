@@ -71,6 +71,11 @@
  *  enum StyleOptionVersion { Version }
  */
 
+/*
+ *  Constructed[ 1/1 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionSizeGrip>
@@ -149,7 +154,11 @@ HB_FUNC( QT_QSTYLEOPTIONSIZEGRIP )
  */
 HB_FUNC( QT_QSTYLEOPTIONSIZEGRIP_CORNER )
 {
-   hb_retni( ( Qt::Corner ) hbqt_par_QStyleOptionSizeGrip( 1 )->corner );
+   QStyleOptionSizeGrip * p = hbqt_par_QStyleOptionSizeGrip( 1 );
+   if( p )
+   {
+      hb_retni( ( Qt::Corner ) ( p )->corner );
+   }
 }
 
 

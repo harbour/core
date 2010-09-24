@@ -66,6 +66,16 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  Constructed[ 3/3 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // QModelIndexList indexes () const
+ *  // void split ( const QItemSelectionRange & range, const QItemSelectionRange & other, QItemSelection * result )
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QItemSelection>

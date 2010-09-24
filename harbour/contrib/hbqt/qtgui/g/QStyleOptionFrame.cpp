@@ -71,6 +71,11 @@
  *  enum StyleOptionVersion { Version }
  */
 
+/*
+ *  Constructed[ 2/2 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionFrame>
@@ -149,7 +154,11 @@ HB_FUNC( QT_QSTYLEOPTIONFRAME )
  */
 HB_FUNC( QT_QSTYLEOPTIONFRAME_LINEWIDTH )
 {
-   hb_retni( hbqt_par_QStyleOptionFrame( 1 )->lineWidth );
+   QStyleOptionFrame * p = hbqt_par_QStyleOptionFrame( 1 );
+   if( p )
+   {
+      hb_retni( ( p )->lineWidth );
+   }
 }
 
 /*
@@ -157,7 +166,11 @@ HB_FUNC( QT_QSTYLEOPTIONFRAME_LINEWIDTH )
  */
 HB_FUNC( QT_QSTYLEOPTIONFRAME_MIDLINEWIDTH )
 {
-   hb_retni( hbqt_par_QStyleOptionFrame( 1 )->midLineWidth );
+   QStyleOptionFrame * p = hbqt_par_QStyleOptionFrame( 1 );
+   if( p )
+   {
+      hb_retni( ( p )->midLineWidth );
+   }
 }
 
 

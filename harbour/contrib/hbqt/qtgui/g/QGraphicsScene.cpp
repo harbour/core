@@ -73,15 +73,13 @@
  */
 
 /*
- *  Constructed[ 69/72 [ 95.83% ] ]
+ *  Constructed[ 69/70 [ 98.57% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
- *  }
  *  QGraphicsItemGroup * createItemGroup ( const QList<QGraphicsItem *> & items )
  *
- *  *** Commented out protos which construct fine but do not compile ***
+ *  *** Commented out protostypes ***
  *
  *  // virtual QVariant inputMethodQuery ( Qt::InputMethodQuery query ) const
  */

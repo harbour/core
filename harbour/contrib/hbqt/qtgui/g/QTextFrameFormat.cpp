@@ -76,6 +76,11 @@
  *  enum Position { InFlow, FloatLeft, FloatRight }
  */
 
+/*
+ *  Constructed[ 29/29 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QTextFrameFormat>

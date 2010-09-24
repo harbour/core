@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QInputEvent
  *  $SYNTAX$
- *     QContextMenuEvent():new( ... )
+ *     QContextMenuEvent( ... )
  *     QContextMenuEvent():from( pPtr_OR_oObj_of_type_QContextMenuEvent )
  *     QContextMenuEvent():configure( pPtr_OR_oObj_of_type_QContextMenuEvent )
  *  $ARGUMENTS$

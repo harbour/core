@@ -70,7 +70,6 @@
  *  Constructed[ 20/25 [ 80.00% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  QList<QPair<qreal, QPointF> > posList () const
  *  QList<QPair<qreal, qreal> > rotationList () const

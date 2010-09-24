@@ -95,45 +95,11 @@ flags DockOptions
 
 <PROTOS>
 
-void addDockWidget ( ... ){
-   QMainWindow * p = hbqt_par_QMainWindow( 1 );
-   if( p )
-   {
-      if( hb_pcount() == 3 && HB_ISNUM( 2 ) && HB_ISPOINTER( 3 ) )
-      {
-         ( p )->addDockWidget( ( Qt::DockWidgetArea ) hb_parni( 2 ), hbqt_par_QDockWidget( 3 ) );
-      }
-      if( hb_pcount() == 4 && HB_ISNUM( 2 ) && HB_ISPOINTER( 3 ) )
-      {
-         ( p )->addDockWidget( ( Qt::DockWidgetArea ) hb_parni( 2 ), hbqt_par_QDockWidget( 3 ), ( Qt::Orientation ) hb_parni( 4 ) );
-      }
-   }
-}
-//void addDockWidget ( Qt::DockWidgetArea area, QDockWidget * dockwidget )
-//void addDockWidget ( Qt::DockWidgetArea area, QDockWidget * dockwidget, Qt::Orientation orientation )
-
-void addToolBar ( ... ){
-   QMainWindow * p = hbqt_par_QMainWindow( 1 );
-   if( p )
-   {
-      if( hb_pcount() == 3 && HB_ISNUM( 2 ) && HB_ISPOINTER( 3 ) )
-      {
-         HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 3 );
-         ( q )->bNew = false;
-         ( p )->addToolBar( ( Qt::ToolBarArea ) hb_parni( 2 ), hbqt_par_QToolBar( 3 ) );
-      }
-      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-         ( q )->bNew = false;
-         ( p )->addToolBar( hbqt_par_QToolBar( 2 ) );
-      }
-   }
-}
-// void addToolBar ( Qt::ToolBarArea area, QToolBar * toolbar )
-// void addToolBar ( QToolBar * toolbar )
-// QToolBar * addToolBar ( const QString & title )               // NOT implemented
-
+void addDockWidget ( Qt::DockWidgetArea area, QDockWidget * dockwidget )
+void addDockWidget ( Qt::DockWidgetArea area, QDockWidget * dockwidget, Qt::Orientation orientation )
+void addToolBar ( Qt::ToolBarArea area, QToolBar * toolbar )
+void addToolBar ( QToolBar * toolbar )
+QToolBar * addToolBar ( const QString & title )               // NOT implemented
 void addToolBarBreak ( Qt::ToolBarArea area = Qt::TopToolBarArea )
 QWidget * centralWidget () const
 Qt::DockWidgetArea corner ( Qt::Corner corner ) const

@@ -66,20 +66,22 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 36/42 [ 85.71% ] ]
+ *  Constructed[ 33/36 [ 91.67% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  QSet<QString> toSet () const
  *  std::list<QString> toStdList () const
  *  QVector<QString> toVector () const
  *
- *  *** Commented out protos which construct fine but do not compile ***
+ *  *** Commented out protostypes ***
  *
  *  // bool contains ( const QString & str, Qt::CaseSensitivity cs = Qt::CaseSensitive ) const
  *  // QStringList & replaceInStrings ( const QString & before, const QString & after, Qt::CaseSensitivity cs = Qt::CaseSensitive )
  *  // QStringList & replaceInStrings ( const QRegExp & rx, const QString & after )
+ *  //QString & first ()
+ *  //QString & front ()
+ *  //QString & last ()
  */
 
 #include <QtCore/QPointer>
@@ -364,7 +366,7 @@ HB_FUNC( QT_QSTRINGLIST_ENDSWITH )
 }
 
 /*
- * QString & first ()
+ * const QString & first () const
  */
 HB_FUNC( QT_QSTRINGLIST_FIRST )
 {
@@ -376,33 +378,9 @@ HB_FUNC( QT_QSTRINGLIST_FIRST )
 }
 
 /*
- * const QString & first () const
- */
-HB_FUNC( QT_QSTRINGLIST_FIRST_1 )
-{
-   QStringList * p = hbqt_par_QStringList( 1 );
-   if( p )
-   {
-      hb_retstr_utf8( ( p )->first().toUtf8().data() );
-   }
-}
-
-/*
- * QString & front ()
- */
-HB_FUNC( QT_QSTRINGLIST_FRONT )
-{
-   QStringList * p = hbqt_par_QStringList( 1 );
-   if( p )
-   {
-      hb_retstr_utf8( ( p )->front().toUtf8().data() );
-   }
-}
-
-/*
  * const QString & front () const
  */
-HB_FUNC( QT_QSTRINGLIST_FRONT_1 )
+HB_FUNC( QT_QSTRINGLIST_FRONT )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )
@@ -426,21 +404,9 @@ HB_FUNC( QT_QSTRINGLIST_INSERT )
 }
 
 /*
- * QString & last ()
- */
-HB_FUNC( QT_QSTRINGLIST_LAST )
-{
-   QStringList * p = hbqt_par_QStringList( 1 );
-   if( p )
-   {
-      hb_retstr_utf8( ( p )->last().toUtf8().data() );
-   }
-}
-
-/*
  * const QString & last () const
  */
-HB_FUNC( QT_QSTRINGLIST_LAST_1 )
+HB_FUNC( QT_QSTRINGLIST_LAST )
 {
    QStringList * p = hbqt_par_QStringList( 1 );
    if( p )

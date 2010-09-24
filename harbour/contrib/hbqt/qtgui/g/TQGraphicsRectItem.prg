@@ -72,8 +72,7 @@ CREATE CLASS QGraphicsRectItem INHERIT HbQtObjectHandler, HB_QAbstractGraphicsSh
    METHOD  new( ... )
 
    METHOD  rect()
-   METHOD  setRect( pRectangle )
-   METHOD  setRect_1( nX, nY, nWidth, nHeight )
+   METHOD  setRect( ... )
 
    ENDCLASS
 
@@ -91,10 +90,29 @@ METHOD QGraphicsRectItem:rect()
    RETURN Qt_QGraphicsRectItem_rect( ::pPtr )
 
 
-METHOD QGraphicsRectItem:setRect( pRectangle )
-   RETURN Qt_QGraphicsRectItem_setRect( ::pPtr, hbqt_ptr( pRectangle ) )
-
-
-METHOD QGraphicsRectItem:setRect_1( nX, nY, nWidth, nHeight )
-   RETURN Qt_QGraphicsRectItem_setRect_1( ::pPtr, nX, nY, nWidth, nHeight )
+METHOD QGraphicsRectItem:setRect( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // void setRect ( qreal x, qreal y, qreal width, qreal height )
+                // N n qreal, N n qreal, N n qreal, N n qreal
+         RETURN Qt_QGraphicsRectItem_setRect_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void setRect ( const QRectF & rectangle )
+                // PO p QRectF
+         RETURN Qt_QGraphicsRectItem_setRect( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 

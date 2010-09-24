@@ -74,15 +74,12 @@ CREATE CLASS QBitArray INHERIT HbQtObjectHandler FUNCTION HB_QBitArray
    METHOD  at( nI )
    METHOD  clear()
    METHOD  clearBit( nI )
-   METHOD  count()
-   METHOD  count_1( lOn )
-   METHOD  fill( lValue, nSize )
-   METHOD  fill_1( lValue, nBegin, nEnd )
+   METHOD  count( ... )
+   METHOD  fill( ... )
    METHOD  isEmpty()
    METHOD  isNull()
    METHOD  resize( nSize )
-   METHOD  setBit( nI )
-   METHOD  setBit_1( nI, lValue )
+   METHOD  setBit( ... )
    METHOD  size()
    METHOD  testBit( nI )
    METHOD  toggleBit( nI )
@@ -112,20 +109,61 @@ METHOD QBitArray:clearBit( nI )
    RETURN Qt_QBitArray_clearBit( ::pPtr, nI )
 
 
-METHOD QBitArray:count()
-   RETURN Qt_QBitArray_count( ::pPtr )
+METHOD QBitArray:count( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "L"
+                // int count ( bool on ) const
+                // L l bool
+         RETURN Qt_QBitArray_count_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // int count () const
+      RETURN Qt_QBitArray_count( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QBitArray:count_1( lOn )
-   RETURN Qt_QBitArray_count_1( ::pPtr, lOn )
-
-
-METHOD QBitArray:fill( lValue, nSize )
-   RETURN Qt_QBitArray_fill( ::pPtr, lValue, nSize )
-
-
-METHOD QBitArray:fill_1( lValue, nBegin, nEnd )
-   RETURN Qt_QBitArray_fill_1( ::pPtr, lValue, nBegin, nEnd )
+METHOD QBitArray:fill( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "L" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // void fill ( bool value, int begin, int end )
+                // L l bool, N n int, N n int
+         RETURN Qt_QBitArray_fill_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "L" .AND. aV[ 2 ] $ "N"
+                // bool fill ( bool value, int size = -1 )
+                // L l bool, N n int
+         RETURN Qt_QBitArray_fill( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "L"
+                // bool fill ( bool value, int size = -1 )
+                // L l bool, N n int
+         RETURN Qt_QBitArray_fill( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QBitArray:isEmpty()
@@ -140,12 +178,31 @@ METHOD QBitArray:resize( nSize )
    RETURN Qt_QBitArray_resize( ::pPtr, nSize )
 
 
-METHOD QBitArray:setBit( nI )
-   RETURN Qt_QBitArray_setBit( ::pPtr, nI )
-
-
-METHOD QBitArray:setBit_1( nI, lValue )
-   RETURN Qt_QBitArray_setBit_1( ::pPtr, nI, lValue )
+METHOD QBitArray:setBit( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "L"
+                // void setBit ( int i, bool value )
+                // N n int, L l bool
+         RETURN Qt_QBitArray_setBit_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // void setBit ( int i )
+                // N n int
+         RETURN Qt_QBitArray_setBit( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QBitArray:size()

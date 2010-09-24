@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QTextFragment():new( ... )
+ *     QTextFragment( ... )
  *     QTextFragment():from( pPtr_OR_oObj_of_type_QTextFragment )
  *     QTextFragment():configure( pPtr_OR_oObj_of_type_QTextFragment )
  *  $ARGUMENTS$

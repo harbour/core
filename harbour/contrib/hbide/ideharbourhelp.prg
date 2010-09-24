@@ -728,7 +728,8 @@ METHOD IdeHarbourHelp:populateIndex()
          qItem := QListWidgetItem()
          qItem:setText( a_[ 2 ] )
          a_[ 5 ] := qItem
-         ::oUI:q_listIndex:addItem_1( qItem )
+         //::oUI:q_listIndex:addItem_1( qItem )
+         ::oUI:q_listIndex:addItem( qItem )
       ENDIF
    NEXT
 

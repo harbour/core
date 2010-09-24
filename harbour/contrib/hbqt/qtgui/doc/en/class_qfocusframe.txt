@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QWidget
  *  $SYNTAX$
- *     QFocusFrame():new( ... )
+ *     QFocusFrame( ... )
  *     QFocusFrame():from( pPtr_OR_oObj_of_type_QFocusFrame )
  *     QFocusFrame():configure( pPtr_OR_oObj_of_type_QFocusFrame )
  *  $ARGUMENTS$

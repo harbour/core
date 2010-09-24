@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QAbstractGraphicsShapeItem
  *  $SYNTAX$
- *     QGraphicsEllipseItem():new( ... )
+ *     QGraphicsEllipseItem( ... )
  *     QGraphicsEllipseItem():from( pPtr_OR_oObj_of_type_QGraphicsEllipseItem )
  *     QGraphicsEllipseItem():configure( pPtr_OR_oObj_of_type_QGraphicsEllipseItem )
  *  $ARGUMENTS$

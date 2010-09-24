@@ -81,18 +81,8 @@ CREATE CLASS QMatrix INHERIT HbQtObjectHandler FUNCTION HB_QMatrix
    METHOD  inverted( lInvertible )
    METHOD  isIdentity()
    METHOD  isInvertible()
-   METHOD  map( nX, nY, nTx, nTy )
-   METHOD  map_1( nX, nY, nTx, nTy )
-   METHOD  map_2( pPoint )
-   METHOD  map_3( pPoint )
-   METHOD  map_4( pLine )
-   METHOD  map_5( pLine )
-   METHOD  map_6( pPolygon )
-   METHOD  map_7( pPolygon )
-   METHOD  map_8( pRegion )
-   METHOD  map_9( pPath )
-   METHOD  mapRect( pRectangle )
-   METHOD  mapRect_1( pRectangle )
+   METHOD  map( ... )
+   METHOD  mapRect( ... )
    METHOD  mapToPolygon( pRectangle )
    METHOD  reset()
    METHOD  rotate( nDegrees )
@@ -153,52 +143,78 @@ METHOD QMatrix:isInvertible()
    RETURN Qt_QMatrix_isInvertible( ::pPtr )
 
 
-METHOD QMatrix:map( nX, nY, nTx, nTy )
-   RETURN Qt_QMatrix_map( ::pPtr, nX, nY, nTx, nTy )
+METHOD QMatrix:map( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // void map ( int x, int y, int * tx, int * ty ) const
+                // N n int, N n int, N @ int, N @ int
+         RETURN Qt_QMatrix_map_1( ::pPtr, ... )
+                // void map ( qreal x, qreal y, qreal * tx, qreal * ty ) const
+                // N n qreal, N n qreal, N @ qreal, N @ qreal
+         // RETURN Qt_QMatrix_map( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QPolygon map ( const QPolygon & polygon ) const
+                // PO p QPolygon
+         RETURN QPolygon():from( Qt_QMatrix_map_7( ::pPtr, ... ) )
+                // QLine map ( const QLine & line ) const
+                // PO p QLine
+         // RETURN QLine():from( Qt_QMatrix_map_5( ::pPtr, ... ) )
+                // QPoint map ( const QPoint & point ) const
+                // PO p QPoint
+         // RETURN QPoint():from( Qt_QMatrix_map_3( ::pPtr, ... ) )
+                // QRegion map ( const QRegion & region ) const
+                // PO p QRegion
+         // RETURN QRegion():from( Qt_QMatrix_map_8( ::pPtr, ... ) )
+                // QPointF map ( const QPointF & point ) const
+                // PO p QPointF
+         // RETURN QPointF():from( Qt_QMatrix_map_2( ::pPtr, ... ) )
+                // QPolygonF map ( const QPolygonF & polygon ) const
+                // PO p QPolygonF
+         // RETURN QPolygonF():from( Qt_QMatrix_map_6( ::pPtr, ... ) )
+                // QLineF map ( const QLineF & line ) const
+                // PO p QLineF
+         // RETURN QLineF():from( Qt_QMatrix_map_4( ::pPtr, ... ) )
+                // QPainterPath map ( const QPainterPath & path ) const
+                // PO p QPainterPath
+         // RETURN QPainterPath():from( Qt_QMatrix_map_9( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QMatrix:map_1( nX, nY, nTx, nTy )
-   RETURN Qt_QMatrix_map_1( ::pPtr, nX, nY, nTx, nTy )
-
-
-METHOD QMatrix:map_2( pPoint )
-   RETURN Qt_QMatrix_map_2( ::pPtr, hbqt_ptr( pPoint ) )
-
-
-METHOD QMatrix:map_3( pPoint )
-   RETURN Qt_QMatrix_map_3( ::pPtr, hbqt_ptr( pPoint ) )
-
-
-METHOD QMatrix:map_4( pLine )
-   RETURN Qt_QMatrix_map_4( ::pPtr, hbqt_ptr( pLine ) )
-
-
-METHOD QMatrix:map_5( pLine )
-   RETURN Qt_QMatrix_map_5( ::pPtr, hbqt_ptr( pLine ) )
-
-
-METHOD QMatrix:map_6( pPolygon )
-   RETURN Qt_QMatrix_map_6( ::pPtr, hbqt_ptr( pPolygon ) )
-
-
-METHOD QMatrix:map_7( pPolygon )
-   RETURN Qt_QMatrix_map_7( ::pPtr, hbqt_ptr( pPolygon ) )
-
-
-METHOD QMatrix:map_8( pRegion )
-   RETURN Qt_QMatrix_map_8( ::pPtr, hbqt_ptr( pRegion ) )
-
-
-METHOD QMatrix:map_9( pPath )
-   RETURN Qt_QMatrix_map_9( ::pPtr, hbqt_ptr( pPath ) )
-
-
-METHOD QMatrix:mapRect( pRectangle )
-   RETURN Qt_QMatrix_mapRect( ::pPtr, hbqt_ptr( pRectangle ) )
-
-
-METHOD QMatrix:mapRect_1( pRectangle )
-   RETURN Qt_QMatrix_mapRect_1( ::pPtr, hbqt_ptr( pRectangle ) )
+METHOD QMatrix:mapRect( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QRectF mapRect ( const QRectF & rectangle ) const
+                // PO p QRectF
+         RETURN QRectF():from( Qt_QMatrix_mapRect( ::pPtr, ... ) )
+                // QRect mapRect ( const QRect & rectangle ) const
+                // PO p QRect
+         // RETURN QRect():from( Qt_QMatrix_mapRect_1( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QMatrix:mapToPolygon( pRectangle )

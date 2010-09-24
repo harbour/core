@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QDialog
  *  $SYNTAX$
- *     QAbstractPrintDialog():new( ... )
+ *     QAbstractPrintDialog( ... )
  *     QAbstractPrintDialog():from( pPtr_OR_oObj_of_type_QAbstractPrintDialog )
  *     QAbstractPrintDialog():configure( pPtr_OR_oObj_of_type_QAbstractPrintDialog )
  *  $ARGUMENTS$

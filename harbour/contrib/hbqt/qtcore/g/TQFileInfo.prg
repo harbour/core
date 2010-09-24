@@ -109,9 +109,7 @@ CREATE CLASS QFileInfo INHERIT HbQtObjectHandler FUNCTION HB_QFileInfo
    METHOD  permissions()
    METHOD  refresh()
    METHOD  setCaching( lEnable )
-   METHOD  setFile( cFile )
-   METHOD  setFile_1( pFile )
-   METHOD  setFile_2( pDir, cFile )
+   METHOD  setFile( ... )
    METHOD  size()
    METHOD  suffix()
    METHOD  symLinkTarget()
@@ -280,16 +278,35 @@ METHOD QFileInfo:setCaching( lEnable )
    RETURN Qt_QFileInfo_setCaching( ::pPtr, lEnable )
 
 
-METHOD QFileInfo:setFile( cFile )
-   RETURN Qt_QFileInfo_setFile( ::pPtr, cFile )
-
-
-METHOD QFileInfo:setFile_1( pFile )
-   RETURN Qt_QFileInfo_setFile_1( ::pPtr, hbqt_ptr( pFile ) )
-
-
-METHOD QFileInfo:setFile_2( pDir, cFile )
-   RETURN Qt_QFileInfo_setFile_2( ::pPtr, hbqt_ptr( pDir ), cFile )
+METHOD QFileInfo:setFile( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "C"
+                // void setFile ( const QDir & dir, const QString & file )
+                // PO p QDir, C c QString
+         RETURN Qt_QFileInfo_setFile_2( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // void setFile ( const QString & file )
+                // C c QString
+         RETURN Qt_QFileInfo_setFile( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO"
+                // void setFile ( const QFile & file )
+                // PO p QFile
+         RETURN Qt_QFileInfo_setFile_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QFileInfo:size()

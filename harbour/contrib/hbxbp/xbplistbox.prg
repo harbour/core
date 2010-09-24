@@ -338,7 +338,9 @@ METHOD XbpListBox:destroy()
 METHOD XbpListBox:addItem( cItem )
    LOCAL qItm := QListWidgetItem()
 
-   qItm:setText( cItem ) ; ::oWidget:addItem_1( qItm )
+   qItm:setText( cItem )
+   //::oWidget:addItem_1( qItm )
+   ::oWidget:addItem( qItm )
    aadd( ::aItems, qItm )
 
    RETURN len( ::aItems )

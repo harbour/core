@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QsciCommandSet():new( ... )
+ *     QsciCommandSet( ... )
  *     QsciCommandSet():from( pPtr_OR_oObj_of_type_QsciCommandSet )
  *     QsciCommandSet():configure( pPtr_OR_oObj_of_type_QsciCommandSet )
  *  $ARGUMENTS$

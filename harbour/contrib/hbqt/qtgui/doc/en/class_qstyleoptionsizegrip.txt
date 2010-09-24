@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QStyleOptionComplex
  *  $SYNTAX$
- *     QStyleOptionSizeGrip():new( ... )
+ *     QStyleOptionSizeGrip( ... )
  *     QStyleOptionSizeGrip():from( pPtr_OR_oObj_of_type_QStyleOptionSizeGrip )
  *     QStyleOptionSizeGrip():configure( pPtr_OR_oObj_of_type_QStyleOptionSizeGrip )
  *  $ARGUMENTS$

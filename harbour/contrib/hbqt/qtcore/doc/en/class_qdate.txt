@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QDate():new( ... )
+ *     QDate( ... )
  *     QDate():from( pPtr_OR_oObj_of_type_QDate )
  *     QDate():configure( pPtr_OR_oObj_of_type_QDate )
  *  $ARGUMENTS$

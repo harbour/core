@@ -73,23 +73,17 @@ CREATE CLASS QStringRef INHERIT HbQtObjectHandler FUNCTION HB_QStringRef
 
    METHOD  at( nPosition )
    METHOD  clear()
-   METHOD  compare( cOther, nCs )
-   METHOD  compare_1( pOther, nCs )
+   METHOD  compare( ... )
    METHOD  constData()
    METHOD  count()
    METHOD  data()
    METHOD  isEmpty()
    METHOD  isNull()
    METHOD  length()
-   METHOD  localeAwareCompare( cOther )
-   METHOD  localeAwareCompare_1( pOther )
+   METHOD  localeAwareCompare( ... )
    METHOD  position()
    METHOD  size()
    METHOD  unicode()
-   METHOD  compare_2( pS1, cS2, nCs )
-   METHOD  compare_3( pS1, pS2, nCs )
-   METHOD  localeAwareCompare_2( pS1, cS2 )
-   METHOD  localeAwareCompare_3( pS1, pS2 )
 
    ENDCLASS
 
@@ -111,12 +105,58 @@ METHOD QStringRef:clear()
    RETURN Qt_QStringRef_clear( ::pPtr )
 
 
-METHOD QStringRef:compare( cOther, nCs )
-   RETURN Qt_QStringRef_compare( ::pPtr, cOther, nCs )
-
-
-METHOD QStringRef:compare_1( pOther, nCs )
-   RETURN Qt_QStringRef_compare_1( ::pPtr, hbqt_ptr( pOther ), nCs )
+METHOD QStringRef:compare( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "C" .AND. aV[ 3 ] $ "N"
+                // int compare ( const QStringRef & s1, const QString & s2, Qt::CaseSensitivity cs = Qt::CaseSensitive )
+                // PO p QStringRef, C c QString, N n Qt::CaseSensitivity
+         RETURN Qt_QStringRef_compare_2( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "N"
+                // int compare ( const QStringRef & s1, const QStringRef & s2, Qt::CaseSensitivity cs = Qt::CaseSensitive )
+                // PO p QStringRef, PO p QStringRef, N n Qt::CaseSensitivity
+         RETURN Qt_QStringRef_compare_3( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
+                // int compare ( const QString & other, Qt::CaseSensitivity cs = Qt::CaseSensitive ) const
+                // C c QString, N n Qt::CaseSensitivity
+         RETURN Qt_QStringRef_compare( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "C"
+                // int compare ( const QStringRef & s1, const QString & s2, Qt::CaseSensitivity cs = Qt::CaseSensitive )
+                // PO p QStringRef, C c QString, N n Qt::CaseSensitivity
+         RETURN Qt_QStringRef_compare_2( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // int compare ( const QStringRef & other, Qt::CaseSensitivity cs = Qt::CaseSensitive ) const
+                // PO p QStringRef, N n Qt::CaseSensitivity
+         RETURN Qt_QStringRef_compare_1( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
+                // int compare ( const QStringRef & s1, const QStringRef & s2, Qt::CaseSensitivity cs = Qt::CaseSensitive )
+                // PO p QStringRef, PO p QStringRef, N n Qt::CaseSensitivity
+         RETURN Qt_QStringRef_compare_3( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // int compare ( const QString & other, Qt::CaseSensitivity cs = Qt::CaseSensitive ) const
+                // C c QString, N n Qt::CaseSensitivity
+         RETURN Qt_QStringRef_compare( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO"
+                // int compare ( const QStringRef & other, Qt::CaseSensitivity cs = Qt::CaseSensitive ) const
+                // PO p QStringRef, N n Qt::CaseSensitivity
+         RETURN Qt_QStringRef_compare_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QStringRef:constData()
@@ -143,12 +183,39 @@ METHOD QStringRef:length()
    RETURN Qt_QStringRef_length( ::pPtr )
 
 
-METHOD QStringRef:localeAwareCompare( cOther )
-   RETURN Qt_QStringRef_localeAwareCompare( ::pPtr, cOther )
-
-
-METHOD QStringRef:localeAwareCompare_1( pOther )
-   RETURN Qt_QStringRef_localeAwareCompare_1( ::pPtr, hbqt_ptr( pOther ) )
+METHOD QStringRef:localeAwareCompare( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "C"
+                // int localeAwareCompare ( const QStringRef & s1, const QString & s2 )
+                // PO p QStringRef, C c QString
+         RETURN Qt_QStringRef_localeAwareCompare_2( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
+                // int localeAwareCompare ( const QStringRef & s1, const QStringRef & s2 )
+                // PO p QStringRef, PO p QStringRef
+         RETURN Qt_QStringRef_localeAwareCompare_3( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // int localeAwareCompare ( const QString & other ) const
+                // C c QString
+         RETURN Qt_QStringRef_localeAwareCompare( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO"
+                // int localeAwareCompare ( const QStringRef & other ) const
+                // PO p QStringRef
+         RETURN Qt_QStringRef_localeAwareCompare_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QStringRef:position()
@@ -161,20 +228,4 @@ METHOD QStringRef:size()
 
 METHOD QStringRef:unicode()
    RETURN Qt_QStringRef_unicode( ::pPtr )
-
-
-METHOD QStringRef:compare_2( pS1, cS2, nCs )
-   RETURN Qt_QStringRef_compare_2( ::pPtr, hbqt_ptr( pS1 ), cS2, nCs )
-
-
-METHOD QStringRef:compare_3( pS1, pS2, nCs )
-   RETURN Qt_QStringRef_compare_3( ::pPtr, hbqt_ptr( pS1 ), hbqt_ptr( pS2 ), nCs )
-
-
-METHOD QStringRef:localeAwareCompare_2( pS1, cS2 )
-   RETURN Qt_QStringRef_localeAwareCompare_2( ::pPtr, hbqt_ptr( pS1 ), cS2 )
-
-
-METHOD QStringRef:localeAwareCompare_3( pS1, pS2 )
-   RETURN Qt_QStringRef_localeAwareCompare_3( ::pPtr, hbqt_ptr( pS1 ), hbqt_ptr( pS2 ) )
 

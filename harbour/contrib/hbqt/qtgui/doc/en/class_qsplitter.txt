@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QFrame
  *  $SYNTAX$
- *     QSplitter():new( ... )
+ *     QSplitter( ... )
  *     QSplitter():from( pPtr_OR_oObj_of_type_QSplitter )
  *     QSplitter():configure( pPtr_OR_oObj_of_type_QSplitter )
  *  $ARGUMENTS$

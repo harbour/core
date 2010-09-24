@@ -69,6 +69,11 @@
  *  enum Type { None, AccessibilityDescription, AccessibilityHelp, AccessibilityPrepare, ..., MaxUser }
  */
 
+/*
+ *  Constructed[ 7/7 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtCore/QEvent>

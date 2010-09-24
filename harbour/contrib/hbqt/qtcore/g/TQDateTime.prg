@@ -88,14 +88,12 @@ CREATE CLASS QDateTime INHERIT HbQtObjectHandler FUNCTION HB_QDateTime
    METHOD  time()
    METHOD  timeSpec()
    METHOD  toLocalTime()
-   METHOD  toString( cFormat )
-   METHOD  toString_1( nFormat )
+   METHOD  toString( ... )
    METHOD  toTimeSpec( nSpecification )
    METHOD  toTime_t()
    METHOD  toUTC()
    METHOD  currentDateTime()
-   METHOD  fromString( cString, nFormat )
-   METHOD  fromString_1( cString, cFormat )
+   METHOD  fromString( ... )
    METHOD  fromTime_t( nSeconds )
 
    ENDCLASS
@@ -178,12 +176,32 @@ METHOD QDateTime:toLocalTime()
    RETURN Qt_QDateTime_toLocalTime( ::pPtr )
 
 
-METHOD QDateTime:toString( cFormat )
-   RETURN Qt_QDateTime_toString( ::pPtr, cFormat )
-
-
-METHOD QDateTime:toString_1( nFormat )
-   RETURN Qt_QDateTime_toString_1( ::pPtr, nFormat )
+METHOD QDateTime:toString( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // QString toString ( const QString & format ) const
+                // C c QString
+         RETURN Qt_QDateTime_toString( ::pPtr, ... )
+      CASE aV[ 1 ] $ "N"
+                // QString toString ( Qt::DateFormat format = Qt::TextDate ) const
+                // N n Qt::DateFormat
+         RETURN Qt_QDateTime_toString_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // QString toString ( Qt::DateFormat format = Qt::TextDate ) const
+             // N n Qt::DateFormat
+      RETURN Qt_QDateTime_toString_1( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QDateTime:toTimeSpec( nSpecification )
@@ -202,12 +220,35 @@ METHOD QDateTime:currentDateTime()
    RETURN Qt_QDateTime_currentDateTime( ::pPtr )
 
 
-METHOD QDateTime:fromString( cString, nFormat )
-   RETURN Qt_QDateTime_fromString( ::pPtr, cString, nFormat )
-
-
-METHOD QDateTime:fromString_1( cString, cFormat )
-   RETURN Qt_QDateTime_fromString_1( ::pPtr, cString, cFormat )
+METHOD QDateTime:fromString( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "C"
+                // QDateTime fromString ( const QString & string, const QString & format )
+                // C c QString, C c QString
+         RETURN QDateTime():from( Qt_QDateTime_fromString_1( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
+                // QDateTime fromString ( const QString & string, Qt::DateFormat format = Qt::TextDate )
+                // C c QString, N n Qt::DateFormat
+         RETURN QDateTime():from( Qt_QDateTime_fromString( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // QDateTime fromString ( const QString & string, Qt::DateFormat format = Qt::TextDate )
+                // C c QString, N n Qt::DateFormat
+         RETURN QDateTime():from( Qt_QDateTime_fromString( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QDateTime:fromTime_t( nSeconds )

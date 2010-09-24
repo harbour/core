@@ -71,8 +71,7 @@ CREATE CLASS QStylePainter INHERIT HbQtObjectHandler, HB_QPainter FUNCTION HB_QS
 
    METHOD  new( ... )
 
-   METHOD  begin( pWidget )
-   METHOD  begin_1( pPd, pWidget )
+   METHOD  begin( ... )
    METHOD  drawComplexControl( nCc, pOption )
    METHOD  drawControl( nCe, pOption )
    METHOD  drawItemPixmap( pRect, nFlags, pPixmap )
@@ -92,12 +91,31 @@ METHOD QStylePainter:new( ... )
    RETURN Self
 
 
-METHOD QStylePainter:begin( pWidget )
-   RETURN Qt_QStylePainter_begin( ::pPtr, hbqt_ptr( pWidget ) )
-
-
-METHOD QStylePainter:begin_1( pPd, pWidget )
-   RETURN Qt_QStylePainter_begin_1( ::pPtr, hbqt_ptr( pPd ), hbqt_ptr( pWidget ) )
+METHOD QStylePainter:begin( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
+                // bool begin ( QPaintDevice * pd, QWidget * widget )
+                // PO p QPaintDevice, PO p QWidget
+         RETURN Qt_QStylePainter_begin_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // bool begin ( QWidget * widget )
+                // PO p QWidget
+         RETURN Qt_QStylePainter_begin( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QStylePainter:drawComplexControl( nCc, pOption )

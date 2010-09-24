@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QStyleOption
  *  $SYNTAX$
- *     QStyleOptionDockWidget():new( ... )
+ *     QStyleOptionDockWidget( ... )
  *     QStyleOptionDockWidget():from( pPtr_OR_oObj_of_type_QStyleOptionDockWidget )
  *     QStyleOptionDockWidget():configure( pPtr_OR_oObj_of_type_QStyleOptionDockWidget )
  *  $ARGUMENTS$

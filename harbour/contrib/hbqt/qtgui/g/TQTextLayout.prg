@@ -77,8 +77,7 @@ CREATE CLASS QTextLayout INHERIT HbQtObjectHandler FUNCTION HB_QTextLayout
    METHOD  clearAdditionalFormats()
    METHOD  clearLayout()
    METHOD  createLine()
-   METHOD  drawCursor( pPainter, pPosition, nCursorPosition, nWidth )
-   METHOD  drawCursor_1( pPainter, pPosition, nCursorPosition )
+   METHOD  drawCursor( ... )
    METHOD  endLayout()
    METHOD  font()
    METHOD  isValidCursorPosition( nPos )
@@ -137,12 +136,31 @@ METHOD QTextLayout:createLine()
    RETURN Qt_QTextLayout_createLine( ::pPtr )
 
 
-METHOD QTextLayout:drawCursor( pPainter, pPosition, nCursorPosition, nWidth )
-   RETURN Qt_QTextLayout_drawCursor( ::pPtr, hbqt_ptr( pPainter ), hbqt_ptr( pPosition ), nCursorPosition, nWidth )
-
-
-METHOD QTextLayout:drawCursor_1( pPainter, pPosition, nCursorPosition )
-   RETURN Qt_QTextLayout_drawCursor_1( ::pPtr, hbqt_ptr( pPainter ), hbqt_ptr( pPosition ), nCursorPosition )
+METHOD QTextLayout:drawCursor( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // void drawCursor ( QPainter * painter, const QPointF & position, int cursorPosition, int width ) const
+                // PO p QPainter, PO p QPointF, N n int, N n int
+         RETURN Qt_QTextLayout_drawCursor( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "N"
+                // void drawCursor ( QPainter * painter, const QPointF & position, int cursorPosition ) const
+                // PO p QPainter, PO p QPointF, N n int
+         RETURN Qt_QTextLayout_drawCursor_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QTextLayout:endLayout()

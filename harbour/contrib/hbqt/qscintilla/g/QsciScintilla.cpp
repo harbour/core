@@ -106,7 +106,6 @@
  *  Constructed[ 195/197 [ 98.98% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  void annotate (int line, const QList< QsciStyledText > &text)
  *  void setMarginText (int line, const QList< QsciStyledText > &text)

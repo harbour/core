@@ -71,6 +71,11 @@
  *  enum StyleOptionVersion { Version }
  */
 
+/*
+ *  Constructed[ 6/6 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionComboBox>
@@ -149,7 +154,11 @@ HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX )
  */
 HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_CURRENTICON )
 {
-   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QStyleOptionComboBox( 1 )->currentIcon ), true ) );
+   QStyleOptionComboBox * p = hbqt_par_QStyleOptionComboBox( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->currentIcon ), true ) );
+   }
 }
 
 /*
@@ -157,7 +166,11 @@ HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_CURRENTICON )
  */
 HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_CURRENTTEXT )
 {
-   hb_retstr_utf8( hbqt_par_QStyleOptionComboBox( 1 )->currentText.toUtf8().data() );
+   QStyleOptionComboBox * p = hbqt_par_QStyleOptionComboBox( 1 );
+   if( p )
+   {
+      hb_retstr_utf8( ( p )->currentText.toUtf8().data() );
+   }
 }
 
 /*
@@ -165,7 +178,11 @@ HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_CURRENTTEXT )
  */
 HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_EDITABLE )
 {
-   hb_retl( hbqt_par_QStyleOptionComboBox( 1 )->editable );
+   QStyleOptionComboBox * p = hbqt_par_QStyleOptionComboBox( 1 );
+   if( p )
+   {
+      hb_retl( ( p )->editable );
+   }
 }
 
 /*
@@ -173,7 +190,11 @@ HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_EDITABLE )
  */
 HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_FRAME )
 {
-   hb_retl( hbqt_par_QStyleOptionComboBox( 1 )->frame );
+   QStyleOptionComboBox * p = hbqt_par_QStyleOptionComboBox( 1 );
+   if( p )
+   {
+      hb_retl( ( p )->frame );
+   }
 }
 
 /*
@@ -181,7 +202,11 @@ HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_FRAME )
  */
 HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_ICONSIZE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QStyleOptionComboBox( 1 )->iconSize ), true ) );
+   QStyleOptionComboBox * p = hbqt_par_QStyleOptionComboBox( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->iconSize ), true ) );
+   }
 }
 
 /*
@@ -189,7 +214,11 @@ HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_ICONSIZE )
  */
 HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX_POPUPRECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QStyleOptionComboBox( 1 )->popupRect ), true ) );
+   QStyleOptionComboBox * p = hbqt_par_QStyleOptionComboBox( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->popupRect ), true ) );
+   }
 }
 
 

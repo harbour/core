@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QAbstractListModel
  *  $SYNTAX$
- *     QStringListModel():new( ... )
+ *     QStringListModel( ... )
  *     QStringListModel():from( pPtr_OR_oObj_of_type_QStringListModel )
  *     QStringListModel():configure( pPtr_OR_oObj_of_type_QStringListModel )
  *  $ARGUMENTS$

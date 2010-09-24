@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QStyleOption
  *  $SYNTAX$
- *     QStyleOptionTabWidgetFrame():new( ... )
+ *     QStyleOptionTabWidgetFrame( ... )
  *     QStyleOptionTabWidgetFrame():from( pPtr_OR_oObj_of_type_QStyleOptionTabWidgetFrame )
  *     QStyleOptionTabWidgetFrame():configure( pPtr_OR_oObj_of_type_QStyleOptionTabWidgetFrame )
  *  $ARGUMENTS$

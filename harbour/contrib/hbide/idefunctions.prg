@@ -384,7 +384,8 @@ METHOD IdeFunctions:listProjects()
       qItm := QListWidgetItem()
       qItm:setText( s )
       qItm:setCheckState( Qt_Unchecked )
-      oLst:addItem_1( qItm )
+      //oLst:addItem_1( qItm )
+      oLst:addItem( qItm )
       aadd( ::aProjList, qItm )
    NEXT
 

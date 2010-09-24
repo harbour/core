@@ -1543,7 +1543,8 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
          aadd( ::oINI:aAppThemes, cTheme + "," + ::fetchThemeColorsString() )
          qItem := QListWidgetItem()
          qItem:setText( cTheme )
-         ::oUI:q_listThemes:addItem_1( qItem )
+         //::oUI:q_listThemes:addItem_1( qItem )
+         ::oUI:q_listThemes:addItem( qItem )
          ::oUI:q_listThemes:setCurrentRow( len( ::oINI:aAppThemes ) - 1 )
       ENDIF
       EXIT
@@ -1695,7 +1696,8 @@ METHOD IdeSetup:pushThemesData()
          a_:= hb_aTokens( s, "," )
          qItem := QListWidgetItem()
          qItem:setText( a_[ 1 ] )
-         ::oUI:q_listThemes:addItem_1( qItem )
+         //::oUI:q_listThemes:addItem_1( qItem )
+         ::oUI:q_listThemes:addItem( qItem )
          ::pushThemeColors( s:__enumIndex() )
       NEXT
    ENDIF

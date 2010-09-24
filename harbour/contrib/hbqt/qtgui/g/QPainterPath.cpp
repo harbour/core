@@ -71,53 +71,17 @@
  */
 
 /*
- *  Constructed[ 41/80 [ 51.25% ] ]
+ *  Constructed[ 52/52 [ 100.00% ] ]
  *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
+ *  *** Commented out protostypes ***
  *
- *  *** Commented out protos which construct fine but do not compile ***
- *
- *  //void addEllipse ( const QRectF & boundingRectangle )
- *  //void addEllipse ( qreal x, qreal y, qreal width, qreal height )
- *  //void addEllipse ( const QPointF & center, qreal rx, qreal ry )
- *  //void addRect ( const QRectF & rectangle )
- *  //void addRect ( qreal x, qreal y, qreal width, qreal height )
- *  //void addRoundedRect ( const QRectF & rect, qreal xRadius, qreal yRadius, Qt::SizeMode mode = Qt::AbsoluteSize )
- *  //void addRoundedRect ( qreal x, qreal y, qreal w, qreal h, qreal xRadius, qreal yRadius, Qt::SizeMode mode = Qt::AbsoluteSize )
- *  //void addText ( const QPointF & point, const QFont & font, const QString & text )
- *  //void addText ( qreal x, qreal y, const QFont & font, const QString & text )
- *  //void arcMoveTo ( const QRectF & rectangle, qreal angle )
- *  //void arcMoveTo ( qreal x, qreal y, qreal width, qreal height, qreal angle )
- *  //void arcTo ( const QRectF & rectangle, qreal startAngle, qreal sweepLength )
- *  //void arcTo ( qreal x, qreal y, qreal width, qreal height, qreal startAngle, qreal sweepLength )
  *  //bool contains ( const QPointF & point ) const
  *  //bool contains ( const QRectF & rectangle ) const
  *  //bool contains ( const QPainterPath & p ) const
- *  //void cubicTo ( const QPointF & c1, const QPointF & c2, const QPointF & endPoint )
- *  //void cubicTo ( qreal c1X, qreal c1Y, qreal c2X, qreal c2Y, qreal endPointX, qreal endPointY )
  *  // const QPainterPath::Element & elementAt ( int index ) const
  *  //bool intersects ( const QRectF & rectangle ) const
  *  //bool intersects ( const QPainterPath & p ) const
- *  //void lineTo ( const QPointF & endPoint )
- *  //void lineTo ( qreal x, qreal y )
- *  //void moveTo ( const QPointF & point )
- *  //void moveTo ( qreal x, qreal y )
- *  //void quadTo ( const QPointF & c, const QPointF & endPoint )
- *  //void quadTo ( qreal cx, qreal cy, qreal endPointX, qreal endPointY )
  */
 
 #include <QtCore/QPointer>
@@ -195,25 +159,38 @@ HB_FUNC( QT_QPAINTERPATH )
 }
 
 /*
- * void addEllipse ( ... )
+ * void addEllipse ( const QRectF & boundingRectangle )
  */
 HB_FUNC( QT_QPAINTERPATH_ADDELLIPSE )
 {
    QPainterPath * p = hbqt_par_QPainterPath( 1 );
    if( p )
    {
-      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->addEllipse( *hbqt_par_QRectF( 2 ) );
-      }
-      else if( hb_pcount() == 4 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->addEllipse( *hbqt_par_QPointF( 2 ), hb_parnd( 3 ), hb_parnd( 4 ) );
-      }
-      else if( hb_pcount() == 5 && HB_ISNUM( 2 ) )
-      {
-         ( p )->addEllipse( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
-      }
+      ( p )->addEllipse( *hbqt_par_QRectF( 2 ) );
+   }
+}
+
+/*
+ * void addEllipse ( qreal x, qreal y, qreal width, qreal height )
+ */
+HB_FUNC( QT_QPAINTERPATH_ADDELLIPSE_1 )
+{
+   QPainterPath * p = hbqt_par_QPainterPath( 1 );
+   if( p )
+   {
+      ( p )->addEllipse( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
+   }
+}
+
+/*
+ * void addEllipse ( const QPointF & center, qreal rx, qreal ry )
+ */
+HB_FUNC( QT_QPAINTERPATH_ADDELLIPSE_2 )
+{
+   QPainterPath * p = hbqt_par_QPainterPath( 1 );
+   if( p )
+   {
+      ( p )->addEllipse( *hbqt_par_QPointF( 2 ), hb_parnd( 3 ), hb_parnd( 4 ) );
    }
 }
 
@@ -242,21 +219,26 @@ HB_FUNC( QT_QPAINTERPATH_ADDPOLYGON )
 }
 
 /*
- * void addRect ( ... )
+ * void addRect ( const QRectF & rectangle )
  */
 HB_FUNC( QT_QPAINTERPATH_ADDRECT )
 {
    QPainterPath * p = hbqt_par_QPainterPath( 1 );
    if( p )
    {
-      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->addRect( *hbqt_par_QRectF( 2 ) );
-      }
-      else if( hb_pcount() == 5 && HB_ISNUM( 2 ) )
-      {
-         ( p )->addRect( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
-      }
+      ( p )->addRect( *hbqt_par_QRectF( 2 ) );
+   }
+}
+
+/*
+ * void addRect ( qreal x, qreal y, qreal width, qreal height )
+ */
+HB_FUNC( QT_QPAINTERPATH_ADDRECT_1 )
+{
+   QPainterPath * p = hbqt_par_QPainterPath( 1 );
+   if( p )
+   {
+      ( p )->addRect( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
    }
 }
 
@@ -273,40 +255,54 @@ HB_FUNC( QT_QPAINTERPATH_ADDREGION )
 }
 
 /*
- * void addRoundedRect ( ... )
+ * void addRoundedRect ( const QRectF & rect, qreal xRadius, qreal yRadius, Qt::SizeMode mode = Qt::AbsoluteSize )
  */
 HB_FUNC( QT_QPAINTERPATH_ADDROUNDEDRECT )
 {
    QPainterPath * p = hbqt_par_QPainterPath( 1 );
    if( p )
    {
-      if( hb_pcount() >= 4 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->addRoundedRect( *hbqt_par_QRectF( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), ( Qt::SizeMode ) ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : Qt::AbsoluteSize ) );
-      }
-      else if( hb_pcount() >= 7 && HB_ISNUM( 2 ) )
-      {
-         ( p )->addRoundedRect( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnd( 6 ), hb_parnd( 7 ), ( Qt::SizeMode ) ( HB_ISNUM( 8 ) ? hb_parni( 8 ) : Qt::AbsoluteSize ) );
-      }
+      ( p )->addRoundedRect( *hbqt_par_QRectF( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), ( HB_ISNUM( 5 ) ? ( Qt::SizeMode ) hb_parni( 5 ) : ( Qt::SizeMode ) Qt::AbsoluteSize ) );
    }
 }
 
 /*
- * void addText ( ... )
+ * void addRoundedRect ( qreal x, qreal y, qreal w, qreal h, qreal xRadius, qreal yRadius, Qt::SizeMode mode = Qt::AbsoluteSize )
+ */
+HB_FUNC( QT_QPAINTERPATH_ADDROUNDEDRECT_1 )
+{
+   QPainterPath * p = hbqt_par_QPainterPath( 1 );
+   if( p )
+   {
+      ( p )->addRoundedRect( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnd( 6 ), hb_parnd( 7 ), ( HB_ISNUM( 8 ) ? ( Qt::SizeMode ) hb_parni( 8 ) : ( Qt::SizeMode ) Qt::AbsoluteSize ) );
+   }
+}
+
+/*
+ * void addText ( const QPointF & point, const QFont & font, const QString & text )
  */
 HB_FUNC( QT_QPAINTERPATH_ADDTEXT )
 {
    QPainterPath * p = hbqt_par_QPainterPath( 1 );
    if( p )
    {
-      if( hb_pcount() == 4 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->addText( *hbqt_par_QPointF( 2 ), *hbqt_par_QFont( 3 ), hbqt_par_QString( 4 ) );
-      }
-      else if( hb_pcount() == 5 && HB_ISNUM( 2 ) )
-      {
-         ( p )->addText( hb_parnd( 2 ), hb_parnd( 3 ), *hbqt_par_QFont( 4 ), hbqt_par_QString( 5 ) );
-      }
+      void * pText;
+      ( p )->addText( *hbqt_par_QPointF( 2 ), *hbqt_par_QFont( 3 ), hb_parstr_utf8( 4, &pText, NULL ) );
+      hb_strfree( pText );
+   }
+}
+
+/*
+ * void addText ( qreal x, qreal y, const QFont & font, const QString & text )
+ */
+HB_FUNC( QT_QPAINTERPATH_ADDTEXT_1 )
+{
+   QPainterPath * p = hbqt_par_QPainterPath( 1 );
+   if( p )
+   {
+      void * pText;
+      ( p )->addText( hb_parnd( 2 ), hb_parnd( 3 ), *hbqt_par_QFont( 4 ), hb_parstr_utf8( 5, &pText, NULL ) );
+      hb_strfree( pText );
    }
 }
 
@@ -323,40 +319,50 @@ HB_FUNC( QT_QPAINTERPATH_ANGLEATPERCENT )
 }
 
 /*
- * void arcMoveTo ( ... )
+ * void arcMoveTo ( const QRectF & rectangle, qreal angle )
  */
 HB_FUNC( QT_QPAINTERPATH_ARCMOVETO )
 {
    QPainterPath * p = hbqt_par_QPainterPath( 1 );
    if( p )
    {
-      if( hb_pcount() == 3 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->arcMoveTo( *hbqt_par_QRectF( 2 ), hb_parnd( 3 ) );
-      }
-      else if( hb_pcount() == 6 && HB_ISNUM( 2 ) )
-      {
-         ( p )->arcMoveTo( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnd( 6 ) );
-      }
+      ( p )->arcMoveTo( *hbqt_par_QRectF( 2 ), hb_parnd( 3 ) );
    }
 }
 
 /*
- * void arcTo ( ... )
+ * void arcMoveTo ( qreal x, qreal y, qreal width, qreal height, qreal angle )
+ */
+HB_FUNC( QT_QPAINTERPATH_ARCMOVETO_1 )
+{
+   QPainterPath * p = hbqt_par_QPainterPath( 1 );
+   if( p )
+   {
+      ( p )->arcMoveTo( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnd( 6 ) );
+   }
+}
+
+/*
+ * void arcTo ( const QRectF & rectangle, qreal startAngle, qreal sweepLength )
  */
 HB_FUNC( QT_QPAINTERPATH_ARCTO )
 {
    QPainterPath * p = hbqt_par_QPainterPath( 1 );
    if( p )
    {
-      if( hb_pcount() == 4 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->arcTo( *hbqt_par_QRectF( 2 ), hb_parnd( 3 ), hb_parnd( 4 ) );
-      }
-      else if( hb_pcount() == 7 && HB_ISNUM( 2 ) )
-      {
-         ( p )->arcTo( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnd( 6 ), hb_parnd( 7 ) );
-      }
+      ( p )->arcTo( *hbqt_par_QRectF( 2 ), hb_parnd( 3 ), hb_parnd( 4 ) );
+   }
+}
+
+/*
+ * void arcTo ( qreal x, qreal y, qreal width, qreal height, qreal startAngle, qreal sweepLength )
+ */
+HB_FUNC( QT_QPAINTERPATH_ARCTO_1 )
+{
+   QPainterPath * p = hbqt_par_QPainterPath( 1 );
+   if( p )
+   {
+      ( p )->arcTo( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnd( 6 ), hb_parnd( 7 ) );
    }
 }
 
@@ -434,21 +440,26 @@ HB_FUNC( QT_QPAINTERPATH_CONTROLPOINTRECT )
 }
 
 /*
- * void cubicTo ( ... )
+ * void cubicTo ( const QPointF & c1, const QPointF & c2, const QPointF & endPoint )
  */
 HB_FUNC( QT_QPAINTERPATH_CUBICTO )
 {
    QPainterPath * p = hbqt_par_QPainterPath( 1 );
    if( p )
    {
-      if( hb_pcount() == 4 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->cubicTo( *hbqt_par_QPointF( 2 ), *hbqt_par_QPointF( 3 ), *hbqt_par_QPointF( 4 ) );
-      }
-      else if( hb_pcount() == 7 && HB_ISNUM( 2 ) )
-      {
-         ( p )->cubicTo( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnd( 6 ), hb_parnd( 7 ) );
-      }
+      ( p )->cubicTo( *hbqt_par_QPointF( 2 ), *hbqt_par_QPointF( 3 ), *hbqt_par_QPointF( 4 ) );
+   }
+}
+
+/*
+ * void cubicTo ( qreal c1X, qreal c1Y, qreal c2X, qreal c2Y, qreal endPointX, qreal endPointY )
+ */
+HB_FUNC( QT_QPAINTERPATH_CUBICTO_1 )
+{
+   QPainterPath * p = hbqt_par_QPainterPath( 1 );
+   if( p )
+   {
+      ( p )->cubicTo( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnd( 6 ), hb_parnd( 7 ) );
    }
 }
 
@@ -546,40 +557,50 @@ HB_FUNC( QT_QPAINTERPATH_LENGTH )
 }
 
 /*
- * void lineTo ( ... )
+ * void lineTo ( const QPointF & endPoint )
  */
 HB_FUNC( QT_QPAINTERPATH_LINETO )
 {
    QPainterPath * p = hbqt_par_QPainterPath( 1 );
    if( p )
    {
-      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->lineTo( *hbqt_par_QPointF( 2 ) );
-      }
-      else if( hb_pcount() == 3 && HB_ISNUM( 2 ) )
-      {
-         ( p )->lineTo( hb_parnd( 2 ), hb_parnd( 3 ) );
-      }
+      ( p )->lineTo( *hbqt_par_QPointF( 2 ) );
    }
 }
 
 /*
- * void moveTo ( ... )
+ * void lineTo ( qreal x, qreal y )
+ */
+HB_FUNC( QT_QPAINTERPATH_LINETO_1 )
+{
+   QPainterPath * p = hbqt_par_QPainterPath( 1 );
+   if( p )
+   {
+      ( p )->lineTo( hb_parnd( 2 ), hb_parnd( 3 ) );
+   }
+}
+
+/*
+ * void moveTo ( const QPointF & point )
  */
 HB_FUNC( QT_QPAINTERPATH_MOVETO )
 {
    QPainterPath * p = hbqt_par_QPainterPath( 1 );
    if( p )
    {
-      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->moveTo( *hbqt_par_QPointF( 2 ) );
-      }
-      else if( hb_pcount() == 3 && HB_ISNUM( 2 ) )
-      {
-         ( p )->moveTo( hb_parnd( 2 ), hb_parnd( 3 ) );
-      }
+      ( p )->moveTo( *hbqt_par_QPointF( 2 ) );
+   }
+}
+
+/*
+ * void moveTo ( qreal x, qreal y )
+ */
+HB_FUNC( QT_QPAINTERPATH_MOVETO_1 )
+{
+   QPainterPath * p = hbqt_par_QPainterPath( 1 );
+   if( p )
+   {
+      ( p )->moveTo( hb_parnd( 2 ), hb_parnd( 3 ) );
    }
 }
 
@@ -608,21 +629,26 @@ HB_FUNC( QT_QPAINTERPATH_POINTATPERCENT )
 }
 
 /*
- * void quadTo ( ... )
+ * void quadTo ( const QPointF & c, const QPointF & endPoint )
  */
 HB_FUNC( QT_QPAINTERPATH_QUADTO )
 {
    QPainterPath * p = hbqt_par_QPainterPath( 1 );
    if( p )
    {
-      if( hb_pcount() == 3 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->quadTo( *hbqt_par_QPointF( 2 ), *hbqt_par_QPointF( 3 ) );
-      }
-      else if( hb_pcount() == 5 && HB_ISNUM( 2 ) )
-      {
-         ( p )->quadTo( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
-      }
+      ( p )->quadTo( *hbqt_par_QPointF( 2 ), *hbqt_par_QPointF( 3 ) );
+   }
+}
+
+/*
+ * void quadTo ( qreal cx, qreal cy, qreal endPointX, qreal endPointY )
+ */
+HB_FUNC( QT_QPAINTERPATH_QUADTO_1 )
+{
+   QPainterPath * p = hbqt_par_QPainterPath( 1 );
+   if( p )
+   {
+      ( p )->quadTo( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
    }
 }
 

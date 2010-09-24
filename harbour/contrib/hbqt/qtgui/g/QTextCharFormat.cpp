@@ -71,6 +71,11 @@
  *  enum VerticalAlignment { AlignNormal, AlignSuperScript, AlignSubScript, AlignMiddle, AlignBottom, AlignTop }
  */
 
+/*
+ *  Constructed[ 47/47 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QTextCharFormat>

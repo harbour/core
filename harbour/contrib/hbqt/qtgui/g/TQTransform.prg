@@ -92,18 +92,8 @@ CREATE CLASS QTransform INHERIT HbQtObjectHandler FUNCTION HB_QTransform
    METHOD  isRotating()
    METHOD  isScaling()
    METHOD  isTranslating()
-   METHOD  map( nX, nY, nTx, nTy )
-   METHOD  map_1( pP )
-   METHOD  map_2( pPoint )
-   METHOD  map_3( pL )
-   METHOD  map_4( pLine )
-   METHOD  map_5( pPolygon )
-   METHOD  map_6( pPolygon )
-   METHOD  map_7( pRegion )
-   METHOD  map_8( pPath )
-   METHOD  map_9( nX, nY, nTx, nTy )
-   METHOD  mapRect( pRectangle )
-   METHOD  mapRect_1( pRectangle )
+   METHOD  map( ... )
+   METHOD  mapRect( ... )
    METHOD  mapToPolygon( pRectangle )
    METHOD  reset()
    METHOD  rotate( nAngle, nAxis )
@@ -217,52 +207,78 @@ METHOD QTransform:isTranslating()
    RETURN Qt_QTransform_isTranslating( ::pPtr )
 
 
-METHOD QTransform:map( nX, nY, nTx, nTy )
-   RETURN Qt_QTransform_map( ::pPtr, nX, nY, nTx, nTy )
+METHOD QTransform:map( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // void map ( qreal x, qreal y, qreal * tx, qreal * ty ) const
+                // N n qreal, N n qreal, N @ qreal, N @ qreal
+         RETURN Qt_QTransform_map( ::pPtr, ... )
+                // void map ( int x, int y, int * tx, int * ty ) const
+                // N n int, N n int, N @ int, N @ int
+         // RETURN Qt_QTransform_map_9( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QPointF map ( const QPointF & p ) const
+                // PO p QPointF
+         RETURN QPointF():from( Qt_QTransform_map_1( ::pPtr, ... ) )
+                // QRegion map ( const QRegion & region ) const
+                // PO p QRegion
+         // RETURN QRegion():from( Qt_QTransform_map_7( ::pPtr, ... ) )
+                // QPoint map ( const QPoint & point ) const
+                // PO p QPoint
+         // RETURN QPoint():from( Qt_QTransform_map_2( ::pPtr, ... ) )
+                // QLine map ( const QLine & l ) const
+                // PO p QLine
+         // RETURN QLine():from( Qt_QTransform_map_3( ::pPtr, ... ) )
+                // QPolygonF map ( const QPolygonF & polygon ) const
+                // PO p QPolygonF
+         // RETURN QPolygonF():from( Qt_QTransform_map_5( ::pPtr, ... ) )
+                // QPainterPath map ( const QPainterPath & path ) const
+                // PO p QPainterPath
+         // RETURN QPainterPath():from( Qt_QTransform_map_8( ::pPtr, ... ) )
+                // QPolygon map ( const QPolygon & polygon ) const
+                // PO p QPolygon
+         // RETURN QPolygon():from( Qt_QTransform_map_6( ::pPtr, ... ) )
+                // QLineF map ( const QLineF & line ) const
+                // PO p QLineF
+         // RETURN QLineF():from( Qt_QTransform_map_4( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QTransform:map_1( pP )
-   RETURN Qt_QTransform_map_1( ::pPtr, hbqt_ptr( pP ) )
-
-
-METHOD QTransform:map_2( pPoint )
-   RETURN Qt_QTransform_map_2( ::pPtr, hbqt_ptr( pPoint ) )
-
-
-METHOD QTransform:map_3( pL )
-   RETURN Qt_QTransform_map_3( ::pPtr, hbqt_ptr( pL ) )
-
-
-METHOD QTransform:map_4( pLine )
-   RETURN Qt_QTransform_map_4( ::pPtr, hbqt_ptr( pLine ) )
-
-
-METHOD QTransform:map_5( pPolygon )
-   RETURN Qt_QTransform_map_5( ::pPtr, hbqt_ptr( pPolygon ) )
-
-
-METHOD QTransform:map_6( pPolygon )
-   RETURN Qt_QTransform_map_6( ::pPtr, hbqt_ptr( pPolygon ) )
-
-
-METHOD QTransform:map_7( pRegion )
-   RETURN Qt_QTransform_map_7( ::pPtr, hbqt_ptr( pRegion ) )
-
-
-METHOD QTransform:map_8( pPath )
-   RETURN Qt_QTransform_map_8( ::pPtr, hbqt_ptr( pPath ) )
-
-
-METHOD QTransform:map_9( nX, nY, nTx, nTy )
-   RETURN Qt_QTransform_map_9( ::pPtr, nX, nY, nTx, nTy )
-
-
-METHOD QTransform:mapRect( pRectangle )
-   RETURN Qt_QTransform_mapRect( ::pPtr, hbqt_ptr( pRectangle ) )
-
-
-METHOD QTransform:mapRect_1( pRectangle )
-   RETURN Qt_QTransform_mapRect_1( ::pPtr, hbqt_ptr( pRectangle ) )
+METHOD QTransform:mapRect( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QRectF mapRect ( const QRectF & rectangle ) const
+                // PO p QRectF
+         RETURN QRectF():from( Qt_QTransform_mapRect( ::pPtr, ... ) )
+                // QRect mapRect ( const QRect & rectangle ) const
+                // PO p QRect
+         // RETURN QRect():from( Qt_QTransform_mapRect_1( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QTransform:mapToPolygon( pRectangle )

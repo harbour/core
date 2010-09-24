@@ -77,9 +77,7 @@ CREATE CLASS QRectF INHERIT HbQtObjectHandler FUNCTION HB_QRectF
    METHOD  bottomLeft()
    METHOD  bottomRight()
    METHOD  center()
-   METHOD  contains( pPoint )
-   METHOD  contains_1( nX, nY )
-   METHOD  contains_2( pRectangle )
+   METHOD  contains( ... )
    METHOD  getCoords( nX1, nY1, nX2, nY2 )
    METHOD  getRect( nX, nY, nWidth, nHeight )
    METHOD  height()
@@ -95,8 +93,7 @@ CREATE CLASS QRectF INHERIT HbQtObjectHandler FUNCTION HB_QRectF
    METHOD  moveCenter( pPosition )
    METHOD  moveLeft( nX )
    METHOD  moveRight( nX )
-   METHOD  moveTo( nX, nY )
-   METHOD  moveTo_1( pPosition )
+   METHOD  moveTo( ... )
    METHOD  moveTop( nY )
    METHOD  moveTopLeft( pPosition )
    METHOD  moveTopRight( pPosition )
@@ -123,10 +120,8 @@ CREATE CLASS QRectF INHERIT HbQtObjectHandler FUNCTION HB_QRectF
    METHOD  top()
    METHOD  topLeft()
    METHOD  topRight()
-   METHOD  translate( nDx, nDy )
-   METHOD  translate_1( pOffset )
-   METHOD  translated( nDx, nDy )
-   METHOD  translated_1( pOffset )
+   METHOD  translate( ... )
+   METHOD  translated( ... )
    METHOD  united( pRectangle )
    METHOD  width()
    METHOD  x()
@@ -168,16 +163,34 @@ METHOD QRectF:center()
    RETURN Qt_QRectF_center( ::pPtr )
 
 
-METHOD QRectF:contains( pPoint )
-   RETURN Qt_QRectF_contains( ::pPtr, hbqt_ptr( pPoint ) )
-
-
-METHOD QRectF:contains_1( nX, nY )
-   RETURN Qt_QRectF_contains_1( ::pPtr, nX, nY )
-
-
-METHOD QRectF:contains_2( pRectangle )
-   RETURN Qt_QRectF_contains_2( ::pPtr, hbqt_ptr( pRectangle ) )
+METHOD QRectF:contains( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // bool contains ( qreal x, qreal y ) const
+                // N n qreal, N n qreal
+         RETURN Qt_QRectF_contains_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // bool contains ( const QPointF & point ) const
+                // PO p QPointF
+         RETURN Qt_QRectF_contains( ::pPtr, ... )
+                // bool contains ( const QRectF & rectangle ) const
+                // PO p QRectF
+         // RETURN Qt_QRectF_contains_2( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QRectF:getCoords( nX1, nY1, nX2, nY2 )
@@ -240,12 +253,31 @@ METHOD QRectF:moveRight( nX )
    RETURN Qt_QRectF_moveRight( ::pPtr, nX )
 
 
-METHOD QRectF:moveTo( nX, nY )
-   RETURN Qt_QRectF_moveTo( ::pPtr, nX, nY )
-
-
-METHOD QRectF:moveTo_1( pPosition )
-   RETURN Qt_QRectF_moveTo_1( ::pPtr, hbqt_ptr( pPosition ) )
+METHOD QRectF:moveTo( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void moveTo ( qreal x, qreal y )
+                // N n qreal, N n qreal
+         RETURN Qt_QRectF_moveTo( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void moveTo ( const QPointF & position )
+                // PO p QPointF
+         RETURN Qt_QRectF_moveTo_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QRectF:moveTop( nY )
@@ -352,20 +384,58 @@ METHOD QRectF:topRight()
    RETURN Qt_QRectF_topRight( ::pPtr )
 
 
-METHOD QRectF:translate( nDx, nDy )
-   RETURN Qt_QRectF_translate( ::pPtr, nDx, nDy )
+METHOD QRectF:translate( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void translate ( qreal dx, qreal dy )
+                // N n qreal, N n qreal
+         RETURN Qt_QRectF_translate( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void translate ( const QPointF & offset )
+                // PO p QPointF
+         RETURN Qt_QRectF_translate_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QRectF:translate_1( pOffset )
-   RETURN Qt_QRectF_translate_1( ::pPtr, hbqt_ptr( pOffset ) )
-
-
-METHOD QRectF:translated( nDx, nDy )
-   RETURN Qt_QRectF_translated( ::pPtr, nDx, nDy )
-
-
-METHOD QRectF:translated_1( pOffset )
-   RETURN Qt_QRectF_translated_1( ::pPtr, hbqt_ptr( pOffset ) )
+METHOD QRectF:translated( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // QRectF translated ( qreal dx, qreal dy ) const
+                // N n qreal, N n qreal
+         RETURN QRectF():from( Qt_QRectF_translated( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QRectF translated ( const QPointF & offset ) const
+                // PO p QPointF
+         RETURN QRectF():from( Qt_QRectF_translated_1( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QRectF:united( pRectangle )

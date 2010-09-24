@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QsciAbstractAPIs
  *  $SYNTAX$
- *     QsciAPIs():new( ... )
+ *     QsciAPIs( ... )
  *     QsciAPIs():from( pPtr_OR_oObj_of_type_QsciAPIs )
  *     QsciAPIs():configure( pPtr_OR_oObj_of_type_QsciAPIs )
  *  $ARGUMENTS$

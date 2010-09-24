@@ -66,6 +66,16 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  Constructed[ 13/13 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // void putPoints ( int index, int nPoints, int firstx, int firsty, ... )
+ *  // void setPoints ( int nPoints, int firstx, int firsty, ... )
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QPolygon>

@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QStyleOption
  *  $SYNTAX$
- *     QStyleOptionMenuItem():new( ... )
+ *     QStyleOptionMenuItem( ... )
  *     QStyleOptionMenuItem():from( pPtr_OR_oObj_of_type_QStyleOptionMenuItem )
  *     QStyleOptionMenuItem():configure( pPtr_OR_oObj_of_type_QStyleOptionMenuItem )
  *  $ARGUMENTS$

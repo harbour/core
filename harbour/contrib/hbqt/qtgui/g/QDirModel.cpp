@@ -70,6 +70,15 @@
  *  enum Roles { FileIconRole, FilePathRole, FileNameRole }
  */
 
+/*
+ *  Constructed[ 37/37 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // virtual QMimeData * mimeData ( const QModelIndexList & indexes ) const
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QDirModel>

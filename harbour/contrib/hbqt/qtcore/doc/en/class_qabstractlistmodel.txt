@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QAbstractItemModel
  *  $SYNTAX$
- *     QAbstractListModel():new( ... )
+ *     QAbstractListModel( ... )
  *     QAbstractListModel():from( pPtr_OR_oObj_of_type_QAbstractListModel )
  *     QAbstractListModel():configure( pPtr_OR_oObj_of_type_QAbstractListModel )
  *  $ARGUMENTS$

@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QLayout
  *  $SYNTAX$
- *     QFormLayout():new( ... )
+ *     QFormLayout( ... )
  *     QFormLayout():from( pPtr_OR_oObj_of_type_QFormLayout )
  *     QFormLayout():configure( pPtr_OR_oObj_of_type_QFormLayout )
  *  $ARGUMENTS$
@@ -27,11 +27,8 @@
  *     An instance of the object of type QFormLayout
  *  $METHODS$
  *     :addRow( pLabel, pField )                           -> NIL
- *     :addRow_1( pLabel, pField )                         -> NIL
- *     :addRow_2( pWidget )                                -> NIL
- *     :addRow_3( cLabelText, pField )                     -> NIL
- *     :addRow_4( cLabelText, pField )                     -> NIL
- *     :addRow_5( pLayout )                                -> NIL
+ *     :addRow_1( pWidget )                                -> NIL
+ *     :addRow_2( cLabelText, pField )                     -> NIL
  *     :fieldGrowthPolicy()                                -> nFieldGrowthPolicy
  *     :formAlignment()                                    -> nQt::Alignment
  *     :getItemPosition( nIndex, @nRowPtr, @nRolePtr )     -> NIL

@@ -73,8 +73,7 @@ CREATE CLASS QTranslator INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QTran
 
    METHOD  isEmpty()
    METHOD  load( cFilename, cDirectory, cSearch_delimiters, cSuffix )
-   METHOD  translate( pContext, pSourceText, pDisambiguation )
-   METHOD  translate_1( pContext, pSourceText, pDisambiguation, nN )
+   METHOD  translate( ... )
 
    ENDCLASS
 
@@ -96,10 +95,36 @@ METHOD QTranslator:load( cFilename, cDirectory, cSearch_delimiters, cSuffix )
    RETURN Qt_QTranslator_load( ::pPtr, cFilename, cDirectory, cSearch_delimiters, cSuffix )
 
 
-METHOD QTranslator:translate( pContext, pSourceText, pDisambiguation )
-   RETURN Qt_QTranslator_translate( ::pPtr, hbqt_ptr( pContext ), hbqt_ptr( pSourceText ), hbqt_ptr( pDisambiguation ) )
-
-
-METHOD QTranslator:translate_1( pContext, pSourceText, pDisambiguation, nN )
-   RETURN Qt_QTranslator_translate_1( ::pPtr, hbqt_ptr( pContext ), hbqt_ptr( pSourceText ), hbqt_ptr( pDisambiguation ), nN )
+METHOD QTranslator:translate( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PO" .AND. aV[ 4 ] $ "N"
+                // QString translate ( const char * context, const char * sourceText, const char * disambiguation, int n ) const
+                // PO p char, PO p char, PO p char, N n int
+         RETURN Qt_QTranslator_translate_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PO"
+                // virtual QString translate ( const char * context, const char * sourceText, const char * disambiguation = 0 ) const
+                // PO p char, PO p char, PO p char
+         RETURN Qt_QTranslator_translate( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
+                // virtual QString translate ( const char * context, const char * sourceText, const char * disambiguation = 0 ) const
+                // PO p char, PO p char, PO p char
+         RETURN Qt_QTranslator_translate( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 

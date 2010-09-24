@@ -70,6 +70,11 @@
  *  enum RestartHint { RestartIfRunning, RestartAnyway, RestartImmediately, RestartNever }
  */
 
+/*
+ *  Constructed[ 16/16 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QSessionManager>

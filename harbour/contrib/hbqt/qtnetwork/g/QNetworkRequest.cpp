@@ -72,6 +72,16 @@
  *  enum KnownHeaders { ContentTypeHeader, ContentLengthHeader, LocationHeader, LastModifiedHeader, CookieHeader, SetCookieHeader }
  */
 
+/*
+ *  Constructed[ 10/10 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // void setSslConfiguration ( const QSslConfiguration & config )
+ *  // QSslConfiguration sslConfiguration () const
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtNetwork/QNetworkRequest>

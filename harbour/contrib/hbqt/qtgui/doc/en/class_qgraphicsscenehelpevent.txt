@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QGraphicsSceneEvent
  *  $SYNTAX$
- *     QGraphicsSceneHelpEvent():new( ... )
+ *     QGraphicsSceneHelpEvent( ... )
  *     QGraphicsSceneHelpEvent():from( pPtr_OR_oObj_of_type_QGraphicsSceneHelpEvent )
  *     QGraphicsSceneHelpEvent():configure( pPtr_OR_oObj_of_type_QGraphicsSceneHelpEvent )
  *  $ARGUMENTS$

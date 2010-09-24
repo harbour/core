@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QGradient
  *  $SYNTAX$
- *     QLinearGradient():new( ... )
+ *     QLinearGradient( ... )
  *     QLinearGradient():from( pPtr_OR_oObj_of_type_QLinearGradient )
  *     QLinearGradient():configure( pPtr_OR_oObj_of_type_QLinearGradient )
  *  $ARGUMENTS$

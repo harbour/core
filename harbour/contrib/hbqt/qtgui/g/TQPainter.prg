@@ -492,11 +492,27 @@ METHOD QPainter:setBackgroundMode( nMode )
 
 
 METHOD QPainter:setBrush( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QPainter_setBrush( ::pPtr, ... )
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // void setBrush ( Qt::BrushStyle style )
+                // N n Qt::BrushStyle
+         RETURN Qt_QPainter_setBrush_1( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO"
+                // void setBrush ( const QBrush & brush )
+                // PO p QBrush
+         RETURN Qt_QPainter_setBrush( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPainter:setBrushOrigin( ... )
@@ -568,19 +584,57 @@ METHOD QPainter:setViewTransformEnabled( lEnable )
 
 
 METHOD QPainter:setViewport( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QPainter_setViewport( ::pPtr, ... )
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // void setViewport ( int x, int y, int width, int height )
+                // N n int, N n int, N n int, N n int
+         RETURN Qt_QPainter_setViewport_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void setViewport ( const QRect & rectangle )
+                // PO p QRect
+         RETURN Qt_QPainter_setViewport( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPainter:setWindow( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QPainter_setWindow( ::pPtr, ... )
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // void setWindow ( int x, int y, int width, int height )
+                // N n int, N n int, N n int, N n int
+         RETURN Qt_QPainter_setWindow_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void setWindow ( const QRect & rectangle )
+                // PO p QRect
+         RETURN Qt_QPainter_setWindow( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPainter:setWorldMatrix( pMatrix, lCombine )

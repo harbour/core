@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QEvent
  *  $SYNTAX$
- *     QResizeEvent():new( ... )
+ *     QResizeEvent( ... )
  *     QResizeEvent():from( pPtr_OR_oObj_of_type_QResizeEvent )
  *     QResizeEvent():configure( pPtr_OR_oObj_of_type_QResizeEvent )
  *  $ARGUMENTS$

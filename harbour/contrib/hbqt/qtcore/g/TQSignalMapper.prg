@@ -71,15 +71,10 @@ CREATE CLASS QSignalMapper INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QSi
 
    METHOD  new( ... )
 
-   METHOD  mapping( nId )
-   METHOD  mapping_1( cId )
-   METHOD  mapping_2( pObject )
+   METHOD  mapping( ... )
    METHOD  removeMappings( pSender )
-   METHOD  setMapping( pSender, nId )
-   METHOD  setMapping_1( pSender, cText )
-   METHOD  setMapping_2( pSender, pObject )
-   METHOD  map()
-   METHOD  map_1( pSender )
+   METHOD  setMapping( ... )
+   METHOD  map( ... )
 
    ENDCLASS
 
@@ -93,38 +88,85 @@ METHOD QSignalMapper:new( ... )
    RETURN Self
 
 
-METHOD QSignalMapper:mapping( nId )
-   RETURN Qt_QSignalMapper_mapping( ::pPtr, nId )
-
-
-METHOD QSignalMapper:mapping_1( cId )
-   RETURN Qt_QSignalMapper_mapping_1( ::pPtr, cId )
-
-
-METHOD QSignalMapper:mapping_2( pObject )
-   RETURN Qt_QSignalMapper_mapping_2( ::pPtr, hbqt_ptr( pObject ) )
+METHOD QSignalMapper:mapping( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // QObject * mapping ( const QString & id ) const
+                // C c QString
+         RETURN QObject():from( Qt_QSignalMapper_mapping_1( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "N"
+                // QObject * mapping ( int id ) const
+                // N n int
+         RETURN QObject():from( Qt_QSignalMapper_mapping( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "PO"
+                // QObject * mapping ( QObject * object ) const
+                // PO p QObject
+         RETURN QObject():from( Qt_QSignalMapper_mapping_2( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QSignalMapper:removeMappings( pSender )
    RETURN Qt_QSignalMapper_removeMappings( ::pPtr, hbqt_ptr( pSender ) )
 
 
-METHOD QSignalMapper:setMapping( pSender, nId )
-   RETURN Qt_QSignalMapper_setMapping( ::pPtr, hbqt_ptr( pSender ), nId )
+METHOD QSignalMapper:setMapping( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "C"
+                // void setMapping ( QObject * sender, const QString & text )
+                // PO p QObject, C c QString
+         RETURN Qt_QSignalMapper_setMapping_1( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // void setMapping ( QObject * sender, int id )
+                // PO p QObject, N n int
+         RETURN Qt_QSignalMapper_setMapping( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
+                // void setMapping ( QObject * sender, QObject * object )
+                // PO p QObject, PO p QObject
+         RETURN Qt_QSignalMapper_setMapping_2( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QSignalMapper:setMapping_1( pSender, cText )
-   RETURN Qt_QSignalMapper_setMapping_1( ::pPtr, hbqt_ptr( pSender ), cText )
-
-
-METHOD QSignalMapper:setMapping_2( pSender, pObject )
-   RETURN Qt_QSignalMapper_setMapping_2( ::pPtr, hbqt_ptr( pSender ), hbqt_ptr( pObject ) )
-
-
-METHOD QSignalMapper:map()
-   RETURN Qt_QSignalMapper_map( ::pPtr )
-
-
-METHOD QSignalMapper:map_1( pSender )
-   RETURN Qt_QSignalMapper_map_1( ::pPtr, hbqt_ptr( pSender ) )
+METHOD QSignalMapper:map( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void map ( QObject * sender )
+                // PO p QObject
+         RETURN Qt_QSignalMapper_map_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // void map ()
+      RETURN Qt_QSignalMapper_map( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 

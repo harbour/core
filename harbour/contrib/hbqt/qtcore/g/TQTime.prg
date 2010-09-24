@@ -76,7 +76,7 @@ CREATE CLASS QTime INHERIT HbQtObjectHandler FUNCTION HB_QTime
    METHOD  elapsed()
    METHOD  hour()
    METHOD  isNull()
-   METHOD  isValid()
+   METHOD  isValid( ... )
    METHOD  minute()
    METHOD  msec()
    METHOD  msecsTo( pT )
@@ -85,12 +85,9 @@ CREATE CLASS QTime INHERIT HbQtObjectHandler FUNCTION HB_QTime
    METHOD  secsTo( pT )
    METHOD  setHMS( nH, nM, nS, nMs )
    METHOD  start()
-   METHOD  toString( cFormat )
-   METHOD  toString_1( nFormat )
+   METHOD  toString( ... )
    METHOD  currentTime()
-   METHOD  fromString( cString, nFormat )
-   METHOD  fromString_1( cString, cFormat )
-   METHOD  isValid_1( nH, nM, nS, nMs )
+   METHOD  fromString( ... )
 
    ENDCLASS
 
@@ -124,8 +121,34 @@ METHOD QTime:isNull()
    RETURN Qt_QTime_isNull( ::pPtr )
 
 
-METHOD QTime:isValid()
-   RETURN Qt_QTime_isValid( ::pPtr )
+METHOD QTime:isValid( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // bool isValid ( int h, int m, int s, int ms = 0 )
+                // N n int, N n int, N n int, N n int
+         RETURN Qt_QTime_isValid_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // bool isValid ( int h, int m, int s, int ms = 0 )
+                // N n int, N n int, N n int, N n int
+         RETURN Qt_QTime_isValid_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // bool isValid () const
+      RETURN Qt_QTime_isValid( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QTime:minute()
@@ -160,26 +183,65 @@ METHOD QTime:start()
    RETURN Qt_QTime_start( ::pPtr )
 
 
-METHOD QTime:toString( cFormat )
-   RETURN Qt_QTime_toString( ::pPtr, cFormat )
-
-
-METHOD QTime:toString_1( nFormat )
-   RETURN Qt_QTime_toString_1( ::pPtr, nFormat )
+METHOD QTime:toString( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // QString toString ( const QString & format ) const
+                // C c QString
+         RETURN Qt_QTime_toString( ::pPtr, ... )
+      CASE aV[ 1 ] $ "N"
+                // QString toString ( Qt::DateFormat format = Qt::TextDate ) const
+                // N n Qt::DateFormat
+         RETURN Qt_QTime_toString_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // QString toString ( Qt::DateFormat format = Qt::TextDate ) const
+             // N n Qt::DateFormat
+      RETURN Qt_QTime_toString_1( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QTime:currentTime()
    RETURN Qt_QTime_currentTime( ::pPtr )
 
 
-METHOD QTime:fromString( cString, nFormat )
-   RETURN Qt_QTime_fromString( ::pPtr, cString, nFormat )
-
-
-METHOD QTime:fromString_1( cString, cFormat )
-   RETURN Qt_QTime_fromString_1( ::pPtr, cString, cFormat )
-
-
-METHOD QTime:isValid_1( nH, nM, nS, nMs )
-   RETURN Qt_QTime_isValid_1( ::pPtr, nH, nM, nS, nMs )
+METHOD QTime:fromString( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "C"
+                // QTime fromString ( const QString & string, const QString & format )
+                // C c QString, C c QString
+         RETURN QTime():from( Qt_QTime_fromString_1( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
+                // QTime fromString ( const QString & string, Qt::DateFormat format = Qt::TextDate )
+                // C c QString, N n Qt::DateFormat
+         RETURN QTime():from( Qt_QTime_fromString( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // QTime fromString ( const QString & string, Qt::DateFormat format = Qt::TextDate )
+                // C c QString, N n Qt::DateFormat
+         RETURN QTime():from( Qt_QTime_fromString( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 

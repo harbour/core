@@ -749,6 +749,7 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oGridLayout:setHorizontalSpacing( 0 )
    ::oGridLayout:setVerticalSpacing( 0 )
    /*  Rows */
+#if 0
    ::oGridLayout:addWidget_1( ::oLeftView       , 0, 0, 1, 1 )
    ::oGridLayout:addWidget_1( ::oLeftFooterView , 1, 0, 1, 1 )
    //
@@ -761,7 +762,20 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oGridLayout:addWidget_1( ::oHScrollBar     , 2, 0, 1, 3 )
    /*  Columns */
    ::oGridLayout:addWidget_1( ::oVScrollBar     , 0, 3, 2, 1 )
-
+#else
+   ::oGridLayout:addWidget( ::oLeftView       , 0, 0, 1, 1 )
+   ::oGridLayout:addWidget( ::oLeftFooterView , 1, 0, 1, 1 )
+   //
+   ::oGridLayout:addWidget( ::oTableView      , 0, 1, 1, 1 )
+   ::oGridLayout:addWidget( ::oFooterView     , 1, 1, 1, 1 )
+   //
+   ::oGridLayout:addWidget( ::oRightView      , 0, 2, 1, 1 )
+   ::oGridLayout:addWidget( ::oRightFooterView, 1, 2, 1, 1 )
+   //
+   ::oGridLayout:addWidget( ::oHScrollBar     , 2, 0, 1, 3 )
+   /*  Columns */
+   ::oGridLayout:addWidget( ::oVScrollBar     , 0, 3, 2, 1 )
+#endif
    IF ::visible
       ::show()
    ENDIF

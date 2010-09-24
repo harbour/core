@@ -66,6 +66,16 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  Constructed[ 10/10 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  //virtual void draw ( QPainter * painter, const PaintContext & context ) = 0
+ *  //QTextObjectInterface * handlerForObject ( int objectType ) const
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QAbstractTextDocumentLayout>

@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QGraphicsSceneEvent
  *  $SYNTAX$
- *     QGraphicsSceneHoverEvent():new( ... )
+ *     QGraphicsSceneHoverEvent( ... )
  *     QGraphicsSceneHoverEvent():from( pPtr_OR_oObj_of_type_QGraphicsSceneHoverEvent )
  *     QGraphicsSceneHoverEvent():configure( pPtr_OR_oObj_of_type_QGraphicsSceneHoverEvent )
  *  $ARGUMENTS$

@@ -78,14 +78,13 @@
  */
 
 /*
- *  Constructed[ 167/187 [ 89.30% ] ]
+ *  Constructed[ 167/168 [ 99.40% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  QVector<uint> toUcs4 () const
  *
- *  *** Commented out protos which construct fine but do not compile ***
+ *  *** Commented out protostypes ***
  *
  *  //iterator begin ()
  *  //const_iterator begin () const

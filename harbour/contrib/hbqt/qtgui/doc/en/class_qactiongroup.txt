@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QObject
  *  $SYNTAX$
- *     QActionGroup():new( ... )
+ *     QActionGroup( ... )
  *     QActionGroup():from( pPtr_OR_oObj_of_type_QActionGroup )
  *     QActionGroup():configure( pPtr_OR_oObj_of_type_QActionGroup )
  *  $ARGUMENTS$

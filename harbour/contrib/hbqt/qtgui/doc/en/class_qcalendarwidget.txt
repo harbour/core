@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QWidget
  *  $SYNTAX$
- *     QCalendarWidget():new( ... )
+ *     QCalendarWidget( ... )
  *     QCalendarWidget():from( pPtr_OR_oObj_of_type_QCalendarWidget )
  *     QCalendarWidget():configure( pPtr_OR_oObj_of_type_QCalendarWidget )
  *  $ARGUMENTS$

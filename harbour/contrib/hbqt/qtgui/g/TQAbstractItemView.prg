@@ -84,8 +84,7 @@ CREATE CLASS QAbstractItemView INHERIT HbQtObjectHandler, HB_QAbstractScrollArea
    METHOD  iconSize()
    METHOD  indexAt( pPoint )
    METHOD  indexWidget( pIndex )
-   METHOD  itemDelegate()
-   METHOD  itemDelegate_1( pIndex )
+   METHOD  itemDelegate( ... )
    METHOD  itemDelegateForColumn( nColumn )
    METHOD  itemDelegateForRow( nRow )
    METHOD  keyboardSearch( cSearch )
@@ -199,12 +198,27 @@ METHOD QAbstractItemView:indexWidget( pIndex )
    RETURN Qt_QAbstractItemView_indexWidget( ::pPtr, hbqt_ptr( pIndex ) )
 
 
-METHOD QAbstractItemView:itemDelegate()
-   RETURN Qt_QAbstractItemView_itemDelegate( ::pPtr )
-
-
-METHOD QAbstractItemView:itemDelegate_1( pIndex )
-   RETURN Qt_QAbstractItemView_itemDelegate_1( ::pPtr, hbqt_ptr( pIndex ) )
+METHOD QAbstractItemView:itemDelegate( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QAbstractItemDelegate * itemDelegate ( const QModelIndex & index ) const
+                // PO p QModelIndex
+         RETURN QAbstractItemDelegate():from( Qt_QAbstractItemView_itemDelegate_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 0
+             // QAbstractItemDelegate * itemDelegate () const
+      RETURN QAbstractItemDelegate():from( Qt_QAbstractItemView_itemDelegate( ::pPtr, ... ) )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QAbstractItemView:itemDelegateForColumn( nColumn )

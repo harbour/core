@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QHttpHeader
  *  $SYNTAX$
- *     QHttpRequestHeader():new( ... )
+ *     QHttpRequestHeader( ... )
  *     QHttpRequestHeader():from( pPtr_OR_oObj_of_type_QHttpRequestHeader )
  *     QHttpRequestHeader():configure( pPtr_OR_oObj_of_type_QHttpRequestHeader )
  *  $ARGUMENTS$

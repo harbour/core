@@ -70,7 +70,6 @@
  *  Constructed[ 14/15 [ 93.33% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  virtual QStringList callTips (const QStringList &context, int commas, QsciScintilla::CallTipsStyle style, QList< int > &shifts)
  */

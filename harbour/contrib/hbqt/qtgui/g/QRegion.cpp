@@ -71,14 +71,13 @@
  */
 
 /*
- *  Constructed[ 18/20 [ 90.00% ] ]
+ *  Constructed[ 18/19 [ 94.74% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  QVector<QRect> rects () const
  *
- *  *** Commented out protos which construct fine but do not compile ***
+ *  *** Commented out protostypes ***
  *
  *  // Handle handle () const
  */

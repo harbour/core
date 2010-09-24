@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QAbstractItemModel
  *  $SYNTAX$
- *     QAbstractProxyModel():new( ... )
+ *     QAbstractProxyModel( ... )
  *     QAbstractProxyModel():from( pPtr_OR_oObj_of_type_QAbstractProxyModel )
  *     QAbstractProxyModel():configure( pPtr_OR_oObj_of_type_QAbstractProxyModel )
  *  $ARGUMENTS$

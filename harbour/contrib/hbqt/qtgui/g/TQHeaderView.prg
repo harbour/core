@@ -84,9 +84,7 @@ CREATE CLASS QHeaderView INHERIT HbQtObjectHandler, HB_QAbstractItemView FUNCTIO
    METHOD  isSortIndicatorShown()
    METHOD  length()
    METHOD  logicalIndex( nVisualIndex )
-   METHOD  logicalIndexAt( nPosition )
-   METHOD  logicalIndexAt_1( nX, nY )
-   METHOD  logicalIndexAt_2( pPos )
+   METHOD  logicalIndexAt( ... )
    METHOD  minimumSectionSize()
    METHOD  moveSection( nFrom, nTo )
    METHOD  offset()
@@ -109,8 +107,7 @@ CREATE CLASS QHeaderView INHERIT HbQtObjectHandler, HB_QAbstractItemView FUNCTIO
    METHOD  setHighlightSections( lHighlight )
    METHOD  setMinimumSectionSize( nSize )
    METHOD  setMovable( lMovable )
-   METHOD  setResizeMode( nMode )
-   METHOD  setResizeMode_1( nLogicalIndex, nMode )
+   METHOD  setResizeMode( ... )
    METHOD  setSectionHidden( nLogicalIndex, lHide )
    METHOD  setSortIndicator( nLogicalIndex, nOrder )
    METHOD  setSortIndicatorShown( lShow )
@@ -193,16 +190,35 @@ METHOD QHeaderView:logicalIndex( nVisualIndex )
    RETURN Qt_QHeaderView_logicalIndex( ::pPtr, nVisualIndex )
 
 
-METHOD QHeaderView:logicalIndexAt( nPosition )
-   RETURN Qt_QHeaderView_logicalIndexAt( ::pPtr, nPosition )
-
-
-METHOD QHeaderView:logicalIndexAt_1( nX, nY )
-   RETURN Qt_QHeaderView_logicalIndexAt_1( ::pPtr, nX, nY )
-
-
-METHOD QHeaderView:logicalIndexAt_2( pPos )
-   RETURN Qt_QHeaderView_logicalIndexAt_2( ::pPtr, hbqt_ptr( pPos ) )
+METHOD QHeaderView:logicalIndexAt( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // int logicalIndexAt ( int x, int y ) const
+                // N n int, N n int
+         RETURN Qt_QHeaderView_logicalIndexAt_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // int logicalIndexAt ( int position ) const
+                // N n int
+         RETURN Qt_QHeaderView_logicalIndexAt( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO"
+                // int logicalIndexAt ( const QPoint & pos ) const
+                // PO p QPoint
+         RETURN Qt_QHeaderView_logicalIndexAt_2( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QHeaderView:minimumSectionSize()
@@ -293,12 +309,31 @@ METHOD QHeaderView:setMovable( lMovable )
    RETURN Qt_QHeaderView_setMovable( ::pPtr, lMovable )
 
 
-METHOD QHeaderView:setResizeMode( nMode )
-   RETURN Qt_QHeaderView_setResizeMode( ::pPtr, nMode )
-
-
-METHOD QHeaderView:setResizeMode_1( nLogicalIndex, nMode )
-   RETURN Qt_QHeaderView_setResizeMode_1( ::pPtr, nLogicalIndex, nMode )
+METHOD QHeaderView:setResizeMode( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void setResizeMode ( int logicalIndex, ResizeMode mode )
+                // N n int, N n QHeaderView::ResizeMode
+         RETURN Qt_QHeaderView_setResizeMode_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // void setResizeMode ( ResizeMode mode )
+                // N n QHeaderView::ResizeMode
+         RETURN Qt_QHeaderView_setResizeMode( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QHeaderView:setSectionHidden( nLogicalIndex, lHide )

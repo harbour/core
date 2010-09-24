@@ -83,14 +83,13 @@ CREATE CLASS QImageReader INHERIT HbQtObjectHandler FUNCTION HB_QImageReader
    METHOD  fileName()
    METHOD  format()
    METHOD  imageCount()
-   METHOD  imageFormat()
+   METHOD  imageFormat( ... )
    METHOD  jumpToImage( nImageNumber )
    METHOD  jumpToNextImage()
    METHOD  loopCount()
    METHOD  nextImageDelay()
    METHOD  quality()
-   METHOD  read()
-   METHOD  read_1( pImage )
+   METHOD  read( ... )
    METHOD  scaledClipRect()
    METHOD  scaledSize()
    METHOD  setAutoDetectImageFormat( lEnabled )
@@ -107,8 +106,6 @@ CREATE CLASS QImageReader INHERIT HbQtObjectHandler FUNCTION HB_QImageReader
    METHOD  supportsOption( nOption )
    METHOD  text( cKey )
    METHOD  textKeys()
-   METHOD  imageFormat_1( cFileName )
-   METHOD  imageFormat_2( pDevice )
    METHOD  supportedImageFormats()
 
    ENDCLASS
@@ -171,8 +168,31 @@ METHOD QImageReader:imageCount()
    RETURN Qt_QImageReader_imageCount( ::pPtr )
 
 
-METHOD QImageReader:imageFormat()
-   RETURN Qt_QImageReader_imageFormat( ::pPtr )
+METHOD QImageReader:imageFormat( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // QByteArray imageFormat ( const QString & fileName )
+                // C c QString
+         RETURN QByteArray():from( Qt_QImageReader_imageFormat_1( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "PO"
+                // QByteArray imageFormat ( QIODevice * device )
+                // PO p QIODevice
+         RETURN QByteArray():from( Qt_QImageReader_imageFormat_2( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 0
+             // QImage::Format imageFormat () const
+      RETURN Qt_QImageReader_imageFormat( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QImageReader:jumpToImage( nImageNumber )
@@ -195,12 +215,27 @@ METHOD QImageReader:quality()
    RETURN Qt_QImageReader_quality( ::pPtr )
 
 
-METHOD QImageReader:read()
-   RETURN Qt_QImageReader_read( ::pPtr )
-
-
-METHOD QImageReader:read_1( pImage )
-   RETURN Qt_QImageReader_read_1( ::pPtr, hbqt_ptr( pImage ) )
+METHOD QImageReader:read( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // bool read ( QImage * image )
+                // PO p QImage
+         RETURN Qt_QImageReader_read_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // QImage read ()
+      RETURN QImage():from( Qt_QImageReader_read( ::pPtr, ... ) )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QImageReader:scaledClipRect()
@@ -265,14 +300,6 @@ METHOD QImageReader:text( cKey )
 
 METHOD QImageReader:textKeys()
    RETURN Qt_QImageReader_textKeys( ::pPtr )
-
-
-METHOD QImageReader:imageFormat_1( cFileName )
-   RETURN Qt_QImageReader_imageFormat_1( ::pPtr, cFileName )
-
-
-METHOD QImageReader:imageFormat_2( pDevice )
-   RETURN Qt_QImageReader_imageFormat_2( ::pPtr, hbqt_ptr( pDevice ) )
 
 
 METHOD QImageReader:supportedImageFormats()

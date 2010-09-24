@@ -676,7 +676,8 @@ METHOD IdeShortcuts:populateMethods()
             qItem:setText( a_[ 1 ] )
          ENDIF
          aadd( ::aMtdItms, qItem )
-         qLW:addItem_1( qItem )
+         //qLW:addItem_1( qItem )
+         qLW:addItem( qItem )
       ENDIF
    NEXT
    qLW:setCurrentRow( 0 )

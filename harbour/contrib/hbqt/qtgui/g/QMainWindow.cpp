@@ -72,21 +72,8 @@
  */
 
 /*
- *  Constructed[ 46/53 [ 86.79% ] ]
+ *  Constructed[ 49/49 [ 100.00% ] ]
  *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  }
- *  }
- *
- *  *** Commented out protos which construct fine but do not compile ***
- *
- *  //void addDockWidget ( Qt::DockWidgetArea area, QDockWidget * dockwidget )
- *  //void addDockWidget ( Qt::DockWidgetArea area, QDockWidget * dockwidget, Qt::Orientation orientation )
- *  // void addToolBar ( Qt::ToolBarArea area, QToolBar * toolbar )
- *  // void addToolBar ( QToolBar * toolbar )
- *  // QToolBar * addToolBar ( const QString & title )               // NOT implemented
  */
 
 #include <QtCore/QPointer>
@@ -189,44 +176,64 @@ HB_FUNC( QT_QMAINWINDOW )
 }
 
 /*
- * void addDockWidget ( ... )
+ * void addDockWidget ( Qt::DockWidgetArea area, QDockWidget * dockwidget )
  */
 HB_FUNC( QT_QMAINWINDOW_ADDDOCKWIDGET )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
    {
-      if( hb_pcount() == 3 && HB_ISNUM( 2 ) && HB_ISPOINTER( 3 ) )
-      {
-         ( p )->addDockWidget( ( Qt::DockWidgetArea ) hb_parni( 2 ), hbqt_par_QDockWidget( 3 ) );
-      }
-      if( hb_pcount() == 4 && HB_ISNUM( 2 ) && HB_ISPOINTER( 3 ) )
-      {
-         ( p )->addDockWidget( ( Qt::DockWidgetArea ) hb_parni( 2 ), hbqt_par_QDockWidget( 3 ), ( Qt::Orientation ) hb_parni( 4 ) );
-      }
+      ( p )->addDockWidget( ( Qt::DockWidgetArea ) hb_parni( 2 ), hbqt_par_QDockWidget( 3 ) );
    }
 }
 
 /*
- * void addToolBar ( ... )
+ * void addDockWidget ( Qt::DockWidgetArea area, QDockWidget * dockwidget, Qt::Orientation orientation )
+ */
+HB_FUNC( QT_QMAINWINDOW_ADDDOCKWIDGET_1 )
+{
+   QMainWindow * p = hbqt_par_QMainWindow( 1 );
+   if( p )
+   {
+      ( p )->addDockWidget( ( Qt::DockWidgetArea ) hb_parni( 2 ), hbqt_par_QDockWidget( 3 ), ( Qt::Orientation ) hb_parni( 4 ) );
+   }
+}
+
+/*
+ * void addToolBar ( Qt::ToolBarArea area, QToolBar * toolbar )
  */
 HB_FUNC( QT_QMAINWINDOW_ADDTOOLBAR )
 {
    QMainWindow * p = hbqt_par_QMainWindow( 1 );
    if( p )
    {
-      if( hb_pcount() == 3 && HB_ISNUM( 2 ) && HB_ISPOINTER( 3 ) )
-      {
-         HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 3 );
-         ( q )->bNew = false;
-         ( p )->addToolBar( ( Qt::ToolBarArea ) hb_parni( 2 ), hbqt_par_QToolBar( 3 ) );
-      }
-      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-         ( q )->bNew = false;
-         ( p )->addToolBar( hbqt_par_QToolBar( 2 ) );
-      }
+      ( p )->addToolBar( ( Qt::ToolBarArea ) hb_parni( 2 ), hbqt_par_QToolBar( 3 ) );
+   }
+}
+
+/*
+ * void addToolBar ( QToolBar * toolbar )
+ */
+HB_FUNC( QT_QMAINWINDOW_ADDTOOLBAR_1 )
+{
+   QMainWindow * p = hbqt_par_QMainWindow( 1 );
+   if( p )
+   {
+      ( p )->addToolBar( hbqt_par_QToolBar( 2 ) );
+   }
+}
+
+/*
+ * QToolBar * addToolBar ( const QString & title )               // NOT implemented
+ */
+HB_FUNC( QT_QMAINWINDOW_ADDTOOLBAR_2 )
+{
+   QMainWindow * p = hbqt_par_QMainWindow( 1 );
+   if( p )
+   {
+      void * pText;
+      hb_retptrGC( hbqt_gcAllocate_QToolBar( ( p )->addToolBar( hb_parstr_utf8( 2, &pText, NULL ) ), false ) );
+      hb_strfree( pText );
    }
 }
 

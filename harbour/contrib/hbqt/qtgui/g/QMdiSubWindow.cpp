@@ -71,6 +71,11 @@
  *  flags SubWindowOptions
  */
 
+/*
+ *  Constructed[ 14/14 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QMdiSubWindow>

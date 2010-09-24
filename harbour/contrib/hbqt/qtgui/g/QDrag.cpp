@@ -67,12 +67,8 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 11/12 [ 91.67% ] ]
+ *  Constructed[ 11/11 [ 100.00% ] ]
  *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  }
  */
 
 #include <QtCore/QPointer>
@@ -246,18 +242,19 @@ HB_FUNC( QT_QDRAG_SETHOTSPOT )
 }
 
 /*
- * void setMimeData ( QMimeData * data )
+ * void setMimeData ( QMimeData * data )   [*D=1*]
  */
 HB_FUNC( QT_QDRAG_SETMIMEDATA )
 {
-   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QDRAG_SETMIMEDATA()" ) );
-   if( p && p->ph && q && q->ph )
+   QDrag * p = hbqt_par_QDrag( 1 );
+   if( p )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "QT_QDRAG_SETMIMEDATA() Qt object: %p is attached to: %p", p->ph, q->ph ) );
-      q->bNew = HB_FALSE;
-      hbqt_par_QDrag( 1 )->setMimeData( hbqt_par_QMimeData( 2 ) );
+      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+      if( q && q->ph )
+      {
+         q->bNew = false;
+      }
+      ( p )->setMimeData( hbqt_par_QMimeData( 2 ) );
    }
 }
 

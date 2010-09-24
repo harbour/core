@@ -66,6 +66,11 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  Constructed[ 26/26 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include "hbqtgui.h"

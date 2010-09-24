@@ -823,7 +823,8 @@ METHOD IdeFindInFiles:buildUI()
             qItem:setFlags( Qt_ItemIsUserCheckable + Qt_ItemIsEnabled + Qt_ItemIsSelectable )
             qItem:setText( cProj )
             qItem:setCheckState( 0 )
-            ::oUI:q_listProjects:addItem_1( qItem )
+            //::oUI:q_listProjects:addItem_1( qItem )
+            ::oUI:q_listProjects:addItem( qItem )
             aadd( ::aItems, qItem )
          ENDIF
       NEXT

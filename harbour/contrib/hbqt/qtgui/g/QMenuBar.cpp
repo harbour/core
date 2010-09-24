@@ -66,6 +66,17 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  Constructed[ 14/14 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // QAction * defaultAction () const
+ *  // OSMenuRef macMenu ()
+ *  // void setDefaultAction ( QAction * act )
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QMenuBar>
@@ -145,7 +156,7 @@ HB_FUNC( QT_QMENUBAR )
 {
    QMenuBar * pObj = NULL;
 
-   pObj =  new QMenuBar( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QMenuBar( HB_ISPOINTER( 1 ) ? hbqt_par_QWidget( 1 ) : 0 ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QMenuBar( ( void * ) pObj, true ) );
 }

@@ -71,15 +71,14 @@
  */
 
 /*
- *  Constructed[ 29/32 [ 90.63% ] ]
+ *  Constructed[ 29/31 [ 93.55% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  void draw ( QPainter * p, const QPointF & pos, const QVector<FormatRange> & selections = QVector<FormatRange> (), const QRectF & clip = QRectF() ) const
  *  void setAdditionalFormats ( const QList<FormatRange> & formatList )
  *
- *  *** Commented out protos which construct fine but do not compile ***
+ *  *** Commented out protostypes ***
  *
  *  //QList<FormatRange> additionalFormats () const
  */

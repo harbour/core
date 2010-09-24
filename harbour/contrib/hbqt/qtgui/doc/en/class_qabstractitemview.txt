@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QAbstractScrollArea
  *  $SYNTAX$
- *     QAbstractItemView():new( ... )
+ *     QAbstractItemView( ... )
  *     QAbstractItemView():from( pPtr_OR_oObj_of_type_QAbstractItemView )
  *     QAbstractItemView():configure( pPtr_OR_oObj_of_type_QAbstractItemView )
  *  $ARGUMENTS$

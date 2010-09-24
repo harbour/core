@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QList():new( ... )
+ *     QList( ... )
  *     QList():from( pPtr_OR_oObj_of_type_QList )
  *     QList():configure( pPtr_OR_oObj_of_type_QList )
  *  $ARGUMENTS$
@@ -29,21 +29,17 @@
  *     :append( xValue )                                   -> NIL
  *     :at( nI )                                           -> pT
  *     :back()                                             -> pT
- *     :back_1()                                           -> pT
  *     :clear()                                            -> NIL
  *     :count( xValue )                                    -> nInt
  *     :count_1()                                          -> nInt
  *     :empty()                                            -> lBool
  *     :endsWith( xValue )                                 -> lBool
  *     :first()                                            -> pT
- *     :first_1()                                          -> pT
  *     :front()                                            -> pT
- *     :front_1()                                          -> pT
  *     :indexOf( xValue, nFrom )                           -> nInt
  *     :insert( nI, xValue )                               -> NIL
  *     :isEmpty()                                          -> lBool
  *     :last()                                             -> pT
- *     :last_1()                                           -> pT
  *     :lastIndexOf( xValue, nFrom )                       -> nInt
  *     :length()                                           -> nInt
  *     :move( nFrom, nTo )                                 -> NIL

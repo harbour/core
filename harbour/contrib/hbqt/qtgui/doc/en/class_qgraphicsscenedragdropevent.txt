@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QGraphicsSceneEvent
  *  $SYNTAX$
- *     QGraphicsSceneDragDropEvent():new( ... )
+ *     QGraphicsSceneDragDropEvent( ... )
  *     QGraphicsSceneDragDropEvent():from( pPtr_OR_oObj_of_type_QGraphicsSceneDragDropEvent )
  *     QGraphicsSceneDragDropEvent():configure( pPtr_OR_oObj_of_type_QGraphicsSceneDragDropEvent )
  *  $ARGUMENTS$

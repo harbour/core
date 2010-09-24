@@ -71,6 +71,17 @@
  *  flags SelectionFlags
  */
 
+/*
+ *  Constructed[ 15/15 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // QModelIndexList selectedColumns ( int row = 0 ) const
+ *  // QModelIndexList selectedIndexes () const
+ *  // QModelIndexList selectedRows ( int column = 0 ) const
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QItemSelectionModel>

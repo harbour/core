@@ -84,13 +84,10 @@ CREATE CLASS QHttp INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QHttp
    METHOD  hasPendingRequests()
    METHOD  head( cPath )
    METHOD  lastResponse()
-   METHOD  post( cPath, pData, pTo )
-   METHOD  post_1( cPath, pData, pTo )
+   METHOD  post( ... )
    METHOD  readAll()
-   METHOD  request( pHeader, pData, pTo )
-   METHOD  request_1( pHeader, pData, pTo )
-   METHOD  setHost( cHostName, nPort )
-   METHOD  setHost_1( cHostName, nMode, nPort )
+   METHOD  request( ... )
+   METHOD  setHost( ... )
    METHOD  setProxy( cHost, nPort, cUsername, cPassword )
    METHOD  setUser( cUserName, cPassword )
    METHOD  state()
@@ -160,32 +157,115 @@ METHOD QHttp:lastResponse()
    RETURN Qt_QHttp_lastResponse( ::pPtr )
 
 
-METHOD QHttp:post( cPath, pData, pTo )
-   RETURN Qt_QHttp_post( ::pPtr, cPath, hbqt_ptr( pData ), hbqt_ptr( pTo ) )
-
-
-METHOD QHttp:post_1( cPath, pData, pTo )
-   RETURN Qt_QHttp_post_1( ::pPtr, cPath, hbqt_ptr( pData ), hbqt_ptr( pTo ) )
+METHOD QHttp:post( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PO"
+                // int post ( const QString & path, QIODevice * data, QIODevice * to = 0 )
+                // C c QString, PO p QIODevice, PO p QIODevice
+         RETURN Qt_QHttp_post( ::pPtr, ... )
+                // int post ( const QString & path, const QByteArray & data, QIODevice * to = 0 )
+                // C c QString, PO p QByteArray, PO p QIODevice
+         // RETURN Qt_QHttp_post_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO"
+                // int post ( const QString & path, QIODevice * data, QIODevice * to = 0 )
+                // C c QString, PO p QIODevice, PO p QIODevice
+         RETURN Qt_QHttp_post( ::pPtr, ... )
+                // int post ( const QString & path, const QByteArray & data, QIODevice * to = 0 )
+                // C c QString, PO p QByteArray, PO p QIODevice
+         // RETURN Qt_QHttp_post_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QHttp:readAll()
    RETURN Qt_QHttp_readAll( ::pPtr )
 
 
-METHOD QHttp:request( pHeader, pData, pTo )
-   RETURN Qt_QHttp_request( ::pPtr, hbqt_ptr( pHeader ), hbqt_ptr( pData ), hbqt_ptr( pTo ) )
+METHOD QHttp:request( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PO"
+                // int request ( const QHttpRequestHeader & header, QIODevice * data = 0, QIODevice * to = 0 )
+                // PO p QHttpRequestHeader, PO p QIODevice, PO p QIODevice
+         RETURN Qt_QHttp_request( ::pPtr, ... )
+                // int request ( const QHttpRequestHeader & header, const QByteArray & data, QIODevice * to = 0 )
+                // PO p QHttpRequestHeader, PO p QByteArray, PO p QIODevice
+         // RETURN Qt_QHttp_request_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
+                // int request ( const QHttpRequestHeader & header, const QByteArray & data, QIODevice * to = 0 )
+                // PO p QHttpRequestHeader, PO p QByteArray, PO p QIODevice
+         RETURN Qt_QHttp_request_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // int request ( const QHttpRequestHeader & header, QIODevice * data = 0, QIODevice * to = 0 )
+                // PO p QHttpRequestHeader, PO p QIODevice, PO p QIODevice
+         RETURN Qt_QHttp_request( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QHttp:request_1( pHeader, pData, pTo )
-   RETURN Qt_QHttp_request_1( ::pPtr, hbqt_ptr( pHeader ), hbqt_ptr( pData ), hbqt_ptr( pTo ) )
-
-
-METHOD QHttp:setHost( cHostName, nPort )
-   RETURN Qt_QHttp_setHost( ::pPtr, cHostName, nPort )
-
-
-METHOD QHttp:setHost_1( cHostName, nMode, nPort )
-   RETURN Qt_QHttp_setHost_1( ::pPtr, cHostName, nMode, nPort )
+METHOD QHttp:setHost( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // int setHost ( const QString & hostName, ConnectionMode mode, quint16 port = 0 )
+                // C c QString, N n QHttp::ConnectionMode, N n quint16
+         RETURN Qt_QHttp_setHost_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
+                // int setHost ( const QString & hostName, quint16 port = 80 )
+                // C c QString, N n quint16
+         RETURN Qt_QHttp_setHost( ::pPtr, ... )
+                // int setHost ( const QString & hostName, ConnectionMode mode, quint16 port = 0 )
+                // C c QString, N n QHttp::ConnectionMode, N n quint16
+         // RETURN Qt_QHttp_setHost_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // int setHost ( const QString & hostName, quint16 port = 80 )
+                // C c QString, N n quint16
+         RETURN Qt_QHttp_setHost( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QHttp:setProxy( cHost, nPort, cUsername, cPassword )

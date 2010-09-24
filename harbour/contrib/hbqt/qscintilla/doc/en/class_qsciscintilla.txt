@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QsciScintilla():new( ... )
+ *     QsciScintilla( ... )
  *     QsciScintilla():from( pPtr_OR_oObj_of_type_QsciScintilla )
  *     QsciScintilla():configure( pPtr_OR_oObj_of_type_QsciScintilla )
  *  $ARGUMENTS$

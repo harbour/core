@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QVariant():new( ... )
+ *     QVariant( ... )
  *     QVariant():from( pPtr_OR_oObj_of_type_QVariant )
  *     QVariant():configure( pPtr_OR_oObj_of_type_QVariant )
  *  $ARGUMENTS$

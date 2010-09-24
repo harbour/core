@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QAbstractItemView
  *  $SYNTAX$
- *     QListView():new( ... )
+ *     QListView( ... )
  *     QListView():from( pPtr_OR_oObj_of_type_QListView )
  *     QListView():configure( pPtr_OR_oObj_of_type_QListView )
  *  $ARGUMENTS$

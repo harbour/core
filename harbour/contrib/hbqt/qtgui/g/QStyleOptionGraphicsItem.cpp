@@ -71,6 +71,11 @@
  *  enum StyleOptionVersion { Version }
  */
 
+/*
+ *  Constructed[ 3/3 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionGraphicsItem>
@@ -151,7 +156,11 @@ HB_FUNC( QT_QSTYLEOPTIONGRAPHICSITEM )
  */
 HB_FUNC( QT_QSTYLEOPTIONGRAPHICSITEM_EXPOSEDRECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( hbqt_par_QStyleOptionGraphicsItem( 1 )->exposedRect ), true ) );
+   QStyleOptionGraphicsItem * p = hbqt_par_QStyleOptionGraphicsItem( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QRectF( new QRectF( ( p )->exposedRect ), true ) );
+   }
 }
 
 /*
@@ -159,7 +168,11 @@ HB_FUNC( QT_QSTYLEOPTIONGRAPHICSITEM_EXPOSEDRECT )
  */
 HB_FUNC( QT_QSTYLEOPTIONGRAPHICSITEM_LEVELOFDETAIL )
 {
-   hb_retnd( hbqt_par_QStyleOptionGraphicsItem( 1 )->levelOfDetail );
+   QStyleOptionGraphicsItem * p = hbqt_par_QStyleOptionGraphicsItem( 1 );
+   if( p )
+   {
+      hb_retnd( ( p )->levelOfDetail );
+   }
 }
 
 /*
@@ -167,7 +180,11 @@ HB_FUNC( QT_QSTYLEOPTIONGRAPHICSITEM_LEVELOFDETAIL )
  */
 HB_FUNC( QT_QSTYLEOPTIONGRAPHICSITEM_MATRIX )
 {
-   hb_retptrGC( hbqt_gcAllocate_QMatrix( new QMatrix( hbqt_par_QStyleOptionGraphicsItem( 1 )->matrix ), true ) );
+   QStyleOptionGraphicsItem * p = hbqt_par_QStyleOptionGraphicsItem( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QMatrix( new QMatrix( ( p )->matrix ), true ) );
+   }
 }
 
 

@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QObject
  *  $SYNTAX$
- *     QWebPage():new( ... )
+ *     QWebPage( ... )
  *     QWebPage():from( pPtr_OR_oObj_of_type_QWebPage )
  *     QWebPage():configure( pPtr_OR_oObj_of_type_QWebPage )
  *  $ARGUMENTS$

@@ -76,6 +76,15 @@
  *  enum ProcessState { NotRunning, Starting, Running }
  */
 
+/*
+ *  Constructed[ 33/33 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // Q_PID pid () const
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtCore/QProcess>

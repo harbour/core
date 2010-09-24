@@ -71,8 +71,7 @@ CREATE CLASS QVariant INHERIT HbQtObjectHandler FUNCTION HB_QVariant
 
    METHOD  new( ... )
 
-   METHOD  canConvert( nT )
-   METHOD  canConvert_1( nT )
+   METHOD  canConvert( ... )
    METHOD  clear()
    METHOD  convert( nT )
    METHOD  isNull()
@@ -122,12 +121,27 @@ METHOD QVariant:new( ... )
    RETURN Self
 
 
-METHOD QVariant:canConvert( nT )
-   RETURN Qt_QVariant_canConvert( ::pPtr, nT )
-
-
-METHOD QVariant:canConvert_1( nT )
-   RETURN Qt_QVariant_canConvert_1( ::pPtr, nT )
+METHOD QVariant:canConvert( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // bool canConvert ( Type t ) const
+                // N n QVariant::Type
+         RETURN Qt_QVariant_canConvert( ::pPtr, ... )
+                // bool canConvert ( Type t ) const
+                // N n QVariant::Type
+         // RETURN Qt_QVariant_canConvert_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QVariant:clear()

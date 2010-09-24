@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QGradient
  *  $SYNTAX$
- *     QConicalGradient():new( ... )
+ *     QConicalGradient( ... )
  *     QConicalGradient():from( pPtr_OR_oObj_of_type_QConicalGradient )
  *     QConicalGradient():configure( pPtr_OR_oObj_of_type_QConicalGradient )
  *  $ARGUMENTS$

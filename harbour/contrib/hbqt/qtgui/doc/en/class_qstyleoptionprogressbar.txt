@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QStyleOption
  *  $SYNTAX$
- *     QStyleOptionProgressBar():new( ... )
+ *     QStyleOptionProgressBar( ... )
  *     QStyleOptionProgressBar():from( pPtr_OR_oObj_of_type_QStyleOptionProgressBar )
  *     QStyleOptionProgressBar():configure( pPtr_OR_oObj_of_type_QStyleOptionProgressBar )
  *  $ARGUMENTS$

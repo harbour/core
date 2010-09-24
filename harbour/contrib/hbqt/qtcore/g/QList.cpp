@@ -66,18 +66,18 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 40/55 [ 72.73% ] ]
+ *  Constructed[ 36/40 [ 90.00% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  void append ( const QList<T> & value )
  *  QList<T> mid ( int pos, int length = -1 ) const
  *  QSet<T> toSet () const
  *  QVector<T> toVector () const
  *
- *  *** Commented out protos which construct fine but do not compile ***
+ *  *** Commented out protostypes ***
  *
+ *  //T & back ()
  *  //iterator begin ()
  *  //const_iterator begin () const
  *  //const_iterator constBegin () const
@@ -87,7 +87,10 @@
  *  //const_iterator end () const
  *  //iterator erase ( iterator pos )
  *  //iterator erase ( iterator begin, iterator end )
+ *  //T & first ()
+ *  //T & front ()
  *  //iterator insert ( iterator before, const T & value )
+ *  //T & last ()
  *  //std::list<T> toStdList () const
  */
 
@@ -191,21 +194,9 @@ HB_FUNC( QT_QLIST_AT )
 }
 
 /*
- * T & back ()
- */
-HB_FUNC( QT_QLIST_BACK )
-{
-   QList< void *> * p = hbqt_par_QList( 1 );
-   if( p )
-   {
-      hb_retptr( ( p )->back() );
-   }
-}
-
-/*
  * const T & back () const
  */
-HB_FUNC( QT_QLIST_BACK_1 )
+HB_FUNC( QT_QLIST_BACK )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
@@ -275,7 +266,7 @@ HB_FUNC( QT_QLIST_ENDSWITH )
 }
 
 /*
- * T & first ()
+ * const T & first () const
  */
 HB_FUNC( QT_QLIST_FIRST )
 {
@@ -287,33 +278,9 @@ HB_FUNC( QT_QLIST_FIRST )
 }
 
 /*
- * const T & first () const
- */
-HB_FUNC( QT_QLIST_FIRST_1 )
-{
-   QList< void *> * p = hbqt_par_QList( 1 );
-   if( p )
-   {
-      hb_retptr( ( p )->first() );
-   }
-}
-
-/*
- * T & front ()
- */
-HB_FUNC( QT_QLIST_FRONT )
-{
-   QList< void *> * p = hbqt_par_QList( 1 );
-   if( p )
-   {
-      hb_retptr( ( p )->front() );
-   }
-}
-
-/*
  * const T & front () const
  */
-HB_FUNC( QT_QLIST_FRONT_1 )
+HB_FUNC( QT_QLIST_FRONT )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )
@@ -359,21 +326,9 @@ HB_FUNC( QT_QLIST_ISEMPTY )
 }
 
 /*
- * T & last ()
- */
-HB_FUNC( QT_QLIST_LAST )
-{
-   QList< void *> * p = hbqt_par_QList( 1 );
-   if( p )
-   {
-      hb_retptr( ( p )->last() );
-   }
-}
-
-/*
  * const T & last () const
  */
-HB_FUNC( QT_QLIST_LAST_1 )
+HB_FUNC( QT_QLIST_LAST )
 {
    QList< void *> * p = hbqt_par_QList( 1 );
    if( p )

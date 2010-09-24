@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QAction
  *  $SYNTAX$
- *     QWidgetAction():new( ... )
+ *     QWidgetAction( ... )
  *     QWidgetAction():from( pPtr_OR_oObj_of_type_QWidgetAction )
  *     QWidgetAction():configure( pPtr_OR_oObj_of_type_QWidgetAction )
  *  $ARGUMENTS$

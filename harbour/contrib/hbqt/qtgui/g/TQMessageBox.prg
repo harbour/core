@@ -71,9 +71,7 @@ CREATE CLASS QMessageBox INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QMess
 
    METHOD  new( ... )
 
-   METHOD  addButton( pButton, nRole )
-   METHOD  addButton_1( cText, nRole )
-   METHOD  addButton_2( nButton )
+   METHOD  addButton( ... )
    METHOD  button( nWhich )
    METHOD  buttonRole( pButton )
    METHOD  buttons()
@@ -86,11 +84,9 @@ CREATE CLASS QMessageBox INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QMess
    METHOD  informativeText()
    METHOD  open( pReceiver, pMember )
    METHOD  removeButton( pButton )
-   METHOD  setDefaultButton( pButton )
-   METHOD  setDefaultButton_1( nButton )
+   METHOD  setDefaultButton( ... )
    METHOD  setDetailedText( cText )
-   METHOD  setEscapeButton( pButton )
-   METHOD  setEscapeButton_1( nButton )
+   METHOD  setEscapeButton( ... )
    METHOD  setIcon( nIcon )
    METHOD  setIconPixmap( pPixmap )
    METHOD  setInformativeText( cText )
@@ -123,16 +119,35 @@ METHOD QMessageBox:new( ... )
    RETURN Self
 
 
-METHOD QMessageBox:addButton( pButton, nRole )
-   RETURN Qt_QMessageBox_addButton( ::pPtr, hbqt_ptr( pButton ), nRole )
-
-
-METHOD QMessageBox:addButton_1( cText, nRole )
-   RETURN Qt_QMessageBox_addButton_1( ::pPtr, cText, nRole )
-
-
-METHOD QMessageBox:addButton_2( nButton )
-   RETURN Qt_QMessageBox_addButton_2( ::pPtr, nButton )
+METHOD QMessageBox:addButton( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
+                // QPushButton * addButton ( const QString & text, ButtonRole role )
+                // C c QString, N n QMessageBox::ButtonRole
+         RETURN QPushButton():from( Qt_QMessageBox_addButton_1( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // void addButton ( QAbstractButton * button, ButtonRole role )
+                // PO p QAbstractButton, N n QMessageBox::ButtonRole
+         RETURN Qt_QMessageBox_addButton( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // QPushButton * addButton ( StandardButton button )
+                // N n QMessageBox::StandardButton
+         RETURN QPushButton():from( Qt_QMessageBox_addButton_2( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QMessageBox:button( nWhich )
@@ -183,24 +198,56 @@ METHOD QMessageBox:removeButton( pButton )
    RETURN Qt_QMessageBox_removeButton( ::pPtr, hbqt_ptr( pButton ) )
 
 
-METHOD QMessageBox:setDefaultButton( pButton )
-   RETURN Qt_QMessageBox_setDefaultButton( ::pPtr, hbqt_ptr( pButton ) )
-
-
-METHOD QMessageBox:setDefaultButton_1( nButton )
-   RETURN Qt_QMessageBox_setDefaultButton_1( ::pPtr, nButton )
+METHOD QMessageBox:setDefaultButton( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // void setDefaultButton ( StandardButton button )
+                // N n QMessageBox::StandardButton
+         RETURN Qt_QMessageBox_setDefaultButton_1( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO"
+                // void setDefaultButton ( QPushButton * button )
+                // PO p QPushButton
+         RETURN Qt_QMessageBox_setDefaultButton( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QMessageBox:setDetailedText( cText )
    RETURN Qt_QMessageBox_setDetailedText( ::pPtr, cText )
 
 
-METHOD QMessageBox:setEscapeButton( pButton )
-   RETURN Qt_QMessageBox_setEscapeButton( ::pPtr, hbqt_ptr( pButton ) )
-
-
-METHOD QMessageBox:setEscapeButton_1( nButton )
-   RETURN Qt_QMessageBox_setEscapeButton_1( ::pPtr, nButton )
+METHOD QMessageBox:setEscapeButton( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // void setEscapeButton ( StandardButton button )
+                // N n QMessageBox::StandardButton
+         RETURN Qt_QMessageBox_setEscapeButton_1( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO"
+                // void setEscapeButton ( QAbstractButton * button )
+                // PO p QAbstractButton
+         RETURN Qt_QMessageBox_setEscapeButton( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QMessageBox:setIcon( nIcon )

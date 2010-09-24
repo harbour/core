@@ -71,6 +71,16 @@
  *  flags FontDialogOptions
  */
 
+/*
+ *  Constructed[ 12/12 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // void open ( QObject * receiver, const char * member )
+ *  // QFont getFont ( bool * ok, QWidget * parent, const char * name )
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QFontDialog>

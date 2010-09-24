@@ -72,6 +72,11 @@
  *  enum StandardKey { AddTab, Back, Bold, Close, ..., ZoomOut }
  */
 
+/*
+ *  Constructed[ 7/7 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QKeySequence>

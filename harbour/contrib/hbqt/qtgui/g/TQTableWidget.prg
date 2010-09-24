@@ -82,8 +82,7 @@ CREATE CLASS QTableWidget INHERIT HbQtObjectHandler, HB_QTableView FUNCTION HB_Q
    METHOD  findItems( cText, nFlags )
    METHOD  horizontalHeaderItem( nColumn )
    METHOD  item( nRow, nColumn )
-   METHOD  itemAt( pPoint )
-   METHOD  itemAt_1( nAx, nAy )
+   METHOD  itemAt( ... )
    METHOD  itemPrototype()
    METHOD  openPersistentEditor( pItem )
    METHOD  removeCellWidget( nRow, nColumn )
@@ -93,10 +92,8 @@ CREATE CLASS QTableWidget INHERIT HbQtObjectHandler, HB_QTableView FUNCTION HB_Q
    METHOD  selectedRanges()
    METHOD  setCellWidget( nRow, nColumn, pWidget )
    METHOD  setColumnCount( nColumns )
-   METHOD  setCurrentCell( nRow, nColumn )
-   METHOD  setCurrentCell_1( nRow, nColumn, nCommand )
-   METHOD  setCurrentItem( pItem )
-   METHOD  setCurrentItem_1( pItem, nCommand )
+   METHOD  setCurrentCell( ... )
+   METHOD  setCurrentItem( ... )
    METHOD  setHorizontalHeaderItem( nColumn, pItem )
    METHOD  setHorizontalHeaderLabels( pLabels )
    METHOD  setItem( nRow, nColumn, pItem )
@@ -177,12 +174,31 @@ METHOD QTableWidget:item( nRow, nColumn )
    RETURN Qt_QTableWidget_item( ::pPtr, nRow, nColumn )
 
 
-METHOD QTableWidget:itemAt( pPoint )
-   RETURN Qt_QTableWidget_itemAt( ::pPtr, hbqt_ptr( pPoint ) )
-
-
-METHOD QTableWidget:itemAt_1( nAx, nAy )
-   RETURN Qt_QTableWidget_itemAt_1( ::pPtr, nAx, nAy )
+METHOD QTableWidget:itemAt( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // QTableWidgetItem * itemAt ( int ax, int ay ) const
+                // N n int, N n int
+         RETURN QTableWidgetItem():from( Qt_QTableWidget_itemAt_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QTableWidgetItem * itemAt ( const QPoint & point ) const
+                // PO p QPoint
+         RETURN QTableWidgetItem():from( Qt_QTableWidget_itemAt( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QTableWidget:itemPrototype()
@@ -221,20 +237,58 @@ METHOD QTableWidget:setColumnCount( nColumns )
    RETURN Qt_QTableWidget_setColumnCount( ::pPtr, nColumns )
 
 
-METHOD QTableWidget:setCurrentCell( nRow, nColumn )
-   RETURN Qt_QTableWidget_setCurrentCell( ::pPtr, nRow, nColumn )
+METHOD QTableWidget:setCurrentCell( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // void setCurrentCell ( int row, int column, QItemSelectionModel::SelectionFlags command )
+                // N n int, N n int, N n QItemSelectionModel::SelectionFlags
+         RETURN Qt_QTableWidget_setCurrentCell_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void setCurrentCell ( int row, int column )
+                // N n int, N n int
+         RETURN Qt_QTableWidget_setCurrentCell( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QTableWidget:setCurrentCell_1( nRow, nColumn, nCommand )
-   RETURN Qt_QTableWidget_setCurrentCell_1( ::pPtr, nRow, nColumn, nCommand )
-
-
-METHOD QTableWidget:setCurrentItem( pItem )
-   RETURN Qt_QTableWidget_setCurrentItem( ::pPtr, hbqt_ptr( pItem ) )
-
-
-METHOD QTableWidget:setCurrentItem_1( pItem, nCommand )
-   RETURN Qt_QTableWidget_setCurrentItem_1( ::pPtr, hbqt_ptr( pItem ), nCommand )
+METHOD QTableWidget:setCurrentItem( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // void setCurrentItem ( QTableWidgetItem * item, QItemSelectionModel::SelectionFlags command )   [*D=1*]
+                // PO p QTableWidgetItem, N n QItemSelectionModel::SelectionFlags
+         RETURN Qt_QTableWidget_setCurrentItem_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void setCurrentItem ( QTableWidgetItem * item )   [*D=1*]
+                // PO p QTableWidgetItem
+         RETURN Qt_QTableWidget_setCurrentItem( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QTableWidget:setHorizontalHeaderItem( nColumn, pItem )

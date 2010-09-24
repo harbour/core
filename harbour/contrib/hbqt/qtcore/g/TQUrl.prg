@@ -97,8 +97,7 @@ CREATE CLASS QUrl INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QUrl
    METHOD  isValid()
    METHOD  password()
    METHOD  path()
-   METHOD  port()
-   METHOD  port_1( nDefaultPort )
+   METHOD  port( ... )
    METHOD  queryItemValue( cKey )
    METHOD  queryPairDelimiter()
    METHOD  queryValueDelimiter()
@@ -114,8 +113,7 @@ CREATE CLASS QUrl INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QUrl
    METHOD  setEncodedPassword( pPassword )
    METHOD  setEncodedPath( pPath )
    METHOD  setEncodedQuery( pQuery )
-   METHOD  setEncodedUrl( pEncodedUrl )
-   METHOD  setEncodedUrl_1( pEncodedUrl, nParsingMode )
+   METHOD  setEncodedUrl( ... )
    METHOD  setEncodedUserName( pUserName )
    METHOD  setFragment( cFragment )
    METHOD  setHost( cHost )
@@ -123,8 +121,7 @@ CREATE CLASS QUrl INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QUrl
    METHOD  setPath( cPath )
    METHOD  setPort( nPort )
    METHOD  setScheme( cScheme )
-   METHOD  setUrl( cUrl )
-   METHOD  setUrl_1( cUrl, nParsingMode )
+   METHOD  setUrl( ... )
    METHOD  setUserInfo( cUserInfo )
    METHOD  setUserName( cUserName )
    METHOD  toEncoded( nOptions )
@@ -133,8 +130,7 @@ CREATE CLASS QUrl INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QUrl
    METHOD  userInfo()
    METHOD  userName()
    METHOD  fromAce( pDomain )
-   METHOD  fromEncoded( pInput )
-   METHOD  fromEncoded_1( pInput, nParsingMode )
+   METHOD  fromEncoded( ... )
    METHOD  fromLocalFile( cLocalFile )
    METHOD  fromPercentEncoding( pInput )
    METHOD  idnWhitelist()
@@ -258,12 +254,27 @@ METHOD QUrl:path()
    RETURN Qt_QUrl_path( ::pPtr )
 
 
-METHOD QUrl:port()
-   RETURN Qt_QUrl_port( ::pPtr )
-
-
-METHOD QUrl:port_1( nDefaultPort )
-   RETURN Qt_QUrl_port_1( ::pPtr, nDefaultPort )
+METHOD QUrl:port( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // int port ( int defaultPort ) const
+                // N n int
+         RETURN Qt_QUrl_port_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // int port () const
+      RETURN Qt_QUrl_port( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QUrl:queryItemValue( cKey )
@@ -326,12 +337,31 @@ METHOD QUrl:setEncodedQuery( pQuery )
    RETURN Qt_QUrl_setEncodedQuery( ::pPtr, hbqt_ptr( pQuery ) )
 
 
-METHOD QUrl:setEncodedUrl( pEncodedUrl )
-   RETURN Qt_QUrl_setEncodedUrl( ::pPtr, hbqt_ptr( pEncodedUrl ) )
-
-
-METHOD QUrl:setEncodedUrl_1( pEncodedUrl, nParsingMode )
-   RETURN Qt_QUrl_setEncodedUrl_1( ::pPtr, hbqt_ptr( pEncodedUrl ), nParsingMode )
+METHOD QUrl:setEncodedUrl( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // void setEncodedUrl ( const QByteArray & encodedUrl, ParsingMode parsingMode )
+                // PO p QByteArray, N n QUrl::ParsingMode
+         RETURN Qt_QUrl_setEncodedUrl_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void setEncodedUrl ( const QByteArray & encodedUrl )
+                // PO p QByteArray
+         RETURN Qt_QUrl_setEncodedUrl( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QUrl:setEncodedUserName( pUserName )
@@ -362,12 +392,31 @@ METHOD QUrl:setScheme( cScheme )
    RETURN Qt_QUrl_setScheme( ::pPtr, cScheme )
 
 
-METHOD QUrl:setUrl( cUrl )
-   RETURN Qt_QUrl_setUrl( ::pPtr, cUrl )
-
-
-METHOD QUrl:setUrl_1( cUrl, nParsingMode )
-   RETURN Qt_QUrl_setUrl_1( ::pPtr, cUrl, nParsingMode )
+METHOD QUrl:setUrl( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
+                // void setUrl ( const QString & url, ParsingMode parsingMode )
+                // C c QString, N n QUrl::ParsingMode
+         RETURN Qt_QUrl_setUrl_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // void setUrl ( const QString & url )
+                // C c QString
+         RETURN Qt_QUrl_setUrl( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QUrl:setUserInfo( cUserInfo )
@@ -402,12 +451,31 @@ METHOD QUrl:fromAce( pDomain )
    RETURN Qt_QUrl_fromAce( ::pPtr, hbqt_ptr( pDomain ) )
 
 
-METHOD QUrl:fromEncoded( pInput )
-   RETURN Qt_QUrl_fromEncoded( ::pPtr, hbqt_ptr( pInput ) )
-
-
-METHOD QUrl:fromEncoded_1( pInput, nParsingMode )
-   RETURN Qt_QUrl_fromEncoded_1( ::pPtr, hbqt_ptr( pInput ), nParsingMode )
+METHOD QUrl:fromEncoded( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // QUrl fromEncoded ( const QByteArray & input, ParsingMode parsingMode )
+                // PO p QByteArray, N n QUrl::ParsingMode
+         RETURN QUrl():from( Qt_QUrl_fromEncoded_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QUrl fromEncoded ( const QByteArray & input )
+                // PO p QByteArray
+         RETURN QUrl():from( Qt_QUrl_fromEncoded( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QUrl:fromLocalFile( cLocalFile )

@@ -77,8 +77,7 @@ CREATE CLASS QPolygonF INHERIT HbQtObjectHandler FUNCTION HB_QPolygonF
    METHOD  isClosed()
    METHOD  subtracted( pR )
    METHOD  toPolygon()
-   METHOD  translate( pOffset )
-   METHOD  translate_1( nDx, nDy )
+   METHOD  translate( ... )
    METHOD  united( pR )
 
    ENDCLASS
@@ -117,12 +116,31 @@ METHOD QPolygonF:toPolygon()
    RETURN Qt_QPolygonF_toPolygon( ::pPtr )
 
 
-METHOD QPolygonF:translate( pOffset )
-   RETURN Qt_QPolygonF_translate( ::pPtr, hbqt_ptr( pOffset ) )
-
-
-METHOD QPolygonF:translate_1( nDx, nDy )
-   RETURN Qt_QPolygonF_translate_1( ::pPtr, nDx, nDy )
+METHOD QPolygonF:translate( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void translate ( qreal dx, qreal dy )
+                // N n qreal, N n qreal
+         RETURN Qt_QPolygonF_translate_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void translate ( const QPointF & offset )
+                // PO p QPointF
+         RETURN Qt_QPolygonF_translate( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPolygonF:united( pR )

@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QStyleOption
  *  $SYNTAX$
- *     QStyleOptionComplex():new( ... )
+ *     QStyleOptionComplex( ... )
  *     QStyleOptionComplex():from( pPtr_OR_oObj_of_type_QStyleOptionComplex )
  *     QStyleOptionComplex():configure( pPtr_OR_oObj_of_type_QStyleOptionComplex )
  *  $ARGUMENTS$

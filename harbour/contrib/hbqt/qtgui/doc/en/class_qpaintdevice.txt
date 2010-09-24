@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QPaintDevice():new( ... )
+ *     QPaintDevice( ... )
  *     QPaintDevice():from( pPtr_OR_oObj_of_type_QPaintDevice )
  *     QPaintDevice():configure( pPtr_OR_oObj_of_type_QPaintDevice )
  *  $ARGUMENTS$

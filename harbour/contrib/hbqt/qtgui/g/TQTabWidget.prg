@@ -71,8 +71,7 @@ CREATE CLASS QTabWidget INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QTabWi
 
    METHOD  new( ... )
 
-   METHOD  addTab( pPage, cLabel )
-   METHOD  addTab_1( pPage, pIcon, cLabel )
+   METHOD  addTab( ... )
    METHOD  clear()
    METHOD  cornerWidget( nCorner )
    METHOD  count()
@@ -82,8 +81,7 @@ CREATE CLASS QTabWidget INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QTabWi
    METHOD  elideMode()
    METHOD  iconSize()
    METHOD  indexOf( pW )
-   METHOD  insertTab( nIndex, pPage, cLabel )
-   METHOD  insertTab_1( nIndex, pPage, pIcon, cLabel )
+   METHOD  insertTab( ... )
    METHOD  isMovable()
    METHOD  isTabEnabled( nIndex )
    METHOD  removeTab( nIndex )
@@ -125,12 +123,31 @@ METHOD QTabWidget:new( ... )
    RETURN Self
 
 
-METHOD QTabWidget:addTab( pPage, cLabel )
-   RETURN Qt_QTabWidget_addTab( ::pPtr, hbqt_ptr( pPage ), cLabel )
-
-
-METHOD QTabWidget:addTab_1( pPage, pIcon, cLabel )
-   RETURN Qt_QTabWidget_addTab_1( ::pPtr, hbqt_ptr( pPage ), hbqt_ptr( pIcon ), cLabel )
+METHOD QTabWidget:addTab( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PCO" .AND. aV[ 3 ] $ "C"
+                // int addTab ( QWidget * page, const QIcon & icon, const QString & label )   [*D=1*]
+                // PO p QWidget, PCO p QIcon, C c QString
+         RETURN Qt_QTabWidget_addTab_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "C"
+                // int addTab ( QWidget * page, const QString & label )   [*D=1*]
+                // PO p QWidget, C c QString
+         RETURN Qt_QTabWidget_addTab( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QTabWidget:clear()
@@ -169,12 +186,31 @@ METHOD QTabWidget:indexOf( pW )
    RETURN Qt_QTabWidget_indexOf( ::pPtr, hbqt_ptr( pW ) )
 
 
-METHOD QTabWidget:insertTab( nIndex, pPage, cLabel )
-   RETURN Qt_QTabWidget_insertTab( ::pPtr, nIndex, hbqt_ptr( pPage ), cLabel )
-
-
-METHOD QTabWidget:insertTab_1( nIndex, pPage, pIcon, cLabel )
-   RETURN Qt_QTabWidget_insertTab_1( ::pPtr, nIndex, hbqt_ptr( pPage ), hbqt_ptr( pIcon ), cLabel )
+METHOD QTabWidget:insertTab( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PCO" .AND. aV[ 4 ] $ "C"
+                // int insertTab ( int index, QWidget * page, const QIcon & icon, const QString & label )
+                // N n int, PO p QWidget, PCO p QIcon, C c QString
+         RETURN Qt_QTabWidget_insertTab_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "C"
+                // int insertTab ( int index, QWidget * page, const QString & label )
+                // N n int, PO p QWidget, C c QString
+         RETURN Qt_QTabWidget_insertTab( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QTabWidget:isMovable()

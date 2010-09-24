@@ -77,16 +77,14 @@ CREATE CLASS QStandardItemModel INHERIT HbQtObjectHandler, HB_QAbstractItemModeL
    METHOD  horizontalHeaderItem( nColumn )
    METHOD  indexFromItem( pItem )
    METHOD  insertColumn( nColumn, pParent )
-   METHOD  insertRow( nRow, pParent )
-   METHOD  insertRow_1( nRow, pItem )
+   METHOD  insertRow( ... )
    METHOD  invisibleRootItem()
    METHOD  item( nRow, nColumn )
    METHOD  itemFromIndex( pIndex )
    METHOD  setColumnCount( nColumns )
    METHOD  setHorizontalHeaderItem( nColumn, pItem )
    METHOD  setHorizontalHeaderLabels( pLabels )
-   METHOD  setItem( nRow, nColumn, pItem )
-   METHOD  setItem_1( nRow, pItem )
+   METHOD  setItem( ... )
    METHOD  setItemPrototype( pItem )
    METHOD  setRowCount( nRows )
    METHOD  setSortRole( nRole )
@@ -136,12 +134,34 @@ METHOD QStandardItemModel:insertColumn( nColumn, pParent )
    RETURN Qt_QStandardItemModel_insertColumn( ::pPtr, nColumn, hbqt_ptr( pParent ) )
 
 
-METHOD QStandardItemModel:insertRow( nRow, pParent )
-   RETURN Qt_QStandardItemModel_insertRow( ::pPtr, nRow, hbqt_ptr( pParent ) )
-
-
-METHOD QStandardItemModel:insertRow_1( nRow, pItem )
-   RETURN Qt_QStandardItemModel_insertRow_1( ::pPtr, nRow, hbqt_ptr( pItem ) )
+METHOD QStandardItemModel:insertRow( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PO"
+                // bool insertRow ( int row, const QModelIndex & parent = QModelIndex() )
+                // N n int, PO p QModelIndex
+         RETURN Qt_QStandardItemModel_insertRow( ::pPtr, ... )
+                // void insertRow ( int row, QStandardItem * item )
+                // N n int, PO p QStandardItem
+         // RETURN Qt_QStandardItemModel_insertRow_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // bool insertRow ( int row, const QModelIndex & parent = QModelIndex() )
+                // N n int, PO p QModelIndex
+         RETURN Qt_QStandardItemModel_insertRow( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QStandardItemModel:invisibleRootItem()
@@ -168,12 +188,31 @@ METHOD QStandardItemModel:setHorizontalHeaderLabels( pLabels )
    RETURN Qt_QStandardItemModel_setHorizontalHeaderLabels( ::pPtr, hbqt_ptr( pLabels ) )
 
 
-METHOD QStandardItemModel:setItem( nRow, nColumn, pItem )
-   RETURN Qt_QStandardItemModel_setItem( ::pPtr, nRow, nColumn, hbqt_ptr( pItem ) )
-
-
-METHOD QStandardItemModel:setItem_1( nRow, pItem )
-   RETURN Qt_QStandardItemModel_setItem_1( ::pPtr, nRow, hbqt_ptr( pItem ) )
+METHOD QStandardItemModel:setItem( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "PO"
+                // void setItem ( int row, int column, QStandardItem * item )
+                // N n int, N n int, PO p QStandardItem
+         RETURN Qt_QStandardItemModel_setItem( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PO"
+                // void setItem ( int row, QStandardItem * item )
+                // N n int, PO p QStandardItem
+         RETURN Qt_QStandardItemModel_setItem_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QStandardItemModel:setItemPrototype( pItem )

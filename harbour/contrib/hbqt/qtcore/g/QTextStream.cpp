@@ -73,6 +73,16 @@
  *  enum Status { Ok, ReadPastEnd, ReadCorruptData }
  */
 
+/*
+ *  Constructed[ 37/37 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  //void setString ( QString * string, QIODevice::OpenMode openMode = QIODevice::ReadWrite )
+ *  //QString * string () const
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtCore/QTextStream>

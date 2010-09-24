@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QPaintDevice
  *  $SYNTAX$
- *     QPrinter():new( ... )
+ *     QPrinter( ... )
  *     QPrinter():from( pPtr_OR_oObj_of_type_QPrinter )
  *     QPrinter():configure( pPtr_OR_oObj_of_type_QPrinter )
  *  $ARGUMENTS$

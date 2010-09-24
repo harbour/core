@@ -66,14 +66,13 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 24/35 [ 68.57% ] ]
+ *  Constructed[ 24/25 [ 96.00% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  const QMetaObject staticMetaObject
  *
- *  *** Commented out protos which construct fine but do not compile ***
+ *  *** Commented out protostypes ***
  *
  *  // const QObjectList & children () const
  *  // bool connect ( const QObject * sender, const char * signal, const char * method, Qt::ConnectionType type = Qt::AutoConnection ) const

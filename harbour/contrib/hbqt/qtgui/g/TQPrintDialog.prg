@@ -75,7 +75,6 @@ CREATE CLASS QPrintDialog INHERIT HbQtObjectHandler, HB_QAbstractPrintDialog FUN
    METHOD  open( pReceiver, pMember )
    METHOD  options()
    METHOD  printer()
-   METHOD  printer_1()
    METHOD  setOption( nOption, lOn )
    METHOD  setOptions( nOptions )
    METHOD  setVisible( lVisible )
@@ -107,10 +106,6 @@ METHOD QPrintDialog:options()
 
 METHOD QPrintDialog:printer()
    RETURN Qt_QPrintDialog_printer( ::pPtr )
-
-
-METHOD QPrintDialog:printer_1()
-   RETURN Qt_QPrintDialog_printer_1( ::pPtr )
 
 
 METHOD QPrintDialog:setOption( nOption, lOn )

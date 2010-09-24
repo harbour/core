@@ -78,11 +78,7 @@ CREATE CLASS QFontDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QFont
    METHOD  setOption( nOption, lOn )
    METHOD  setOptions( nOptions )
    METHOD  testOption( nOption )
-   METHOD  getFont( lOk, pInitial, pParent, cTitle, nOptions )
-   METHOD  getFont_1( lOk, pInitial, pParent, pName )
-   METHOD  getFont_2( lOk, pInitial, pParent, cTitle )
-   METHOD  getFont_3( lOk, pInitial, pParent )
-   METHOD  getFont_4( lOk, pParent )
+   METHOD  getFont( ... )
 
    ENDCLASS
 
@@ -124,22 +120,57 @@ METHOD QFontDialog:testOption( nOption )
    RETURN Qt_QFontDialog_testOption( ::pPtr, nOption )
 
 
-METHOD QFontDialog:getFont( lOk, pInitial, pParent, cTitle, nOptions )
-   RETURN Qt_QFontDialog_getFont( ::pPtr, lOk, hbqt_ptr( pInitial ), hbqt_ptr( pParent ), cTitle, nOptions )
-
-
-METHOD QFontDialog:getFont_1( lOk, pInitial, pParent, pName )
-   RETURN Qt_QFontDialog_getFont_1( ::pPtr, lOk, hbqt_ptr( pInitial ), hbqt_ptr( pParent ), hbqt_ptr( pName ) )
-
-
-METHOD QFontDialog:getFont_2( lOk, pInitial, pParent, cTitle )
-   RETURN Qt_QFontDialog_getFont_2( ::pPtr, lOk, hbqt_ptr( pInitial ), hbqt_ptr( pParent ), cTitle )
-
-
-METHOD QFontDialog:getFont_3( lOk, pInitial, pParent )
-   RETURN Qt_QFontDialog_getFont_3( ::pPtr, lOk, hbqt_ptr( pInitial ), hbqt_ptr( pParent ) )
-
-
-METHOD QFontDialog:getFont_4( lOk, pParent )
-   RETURN Qt_QFontDialog_getFont_4( ::pPtr, lOk, hbqt_ptr( pParent ) )
+METHOD QFontDialog:getFont( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 5
+      DO CASE
+      CASE aV[ 1 ] $ "L" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PO" .AND. aV[ 4 ] $ "C" .AND. aV[ 5 ] $ "N"
+                // QFont getFont ( bool * ok, const QFont & initial, QWidget * parent, const QString & title, FontDialogOptions options )
+                // L @ bool, PO p QFont, PO p QWidget, C c QString, N n QFontDialog::FontDialogOptions
+         RETURN QFont():from( Qt_QFontDialog_getFont( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "L" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PO" .AND. aV[ 4 ] $ "C"
+                // QFont getFont ( bool * ok, const QFont & initial, QWidget * parent, const QString & title )
+                // L @ bool, PO p QFont, PO p QWidget, C c QString
+         RETURN QFont():from( Qt_QFontDialog_getFont_2( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "L" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PO" .AND. aV[ 4 ] $ "PO"
+                // QFont getFont ( bool * ok, const QFont & initial, QWidget * parent, const char * name )
+                // L @ bool, PO p QFont, PO p QWidget, PO p char
+         RETURN QFont():from( Qt_QFontDialog_getFont_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "L" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PO"
+                // QFont getFont ( bool * ok, const QFont & initial, QWidget * parent = 0 )
+                // L @ bool, PO p QFont, PO p QWidget
+         RETURN QFont():from( Qt_QFontDialog_getFont_3( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "L" .AND. aV[ 2 ] $ "PO"
+                // QFont getFont ( bool * ok, QWidget * parent = 0 )
+                // L @ bool, PO p QWidget
+         RETURN QFont():from( Qt_QFontDialog_getFont_4( ::pPtr, ... ) )
+                // QFont getFont ( bool * ok, const QFont & initial, QWidget * parent = 0 )
+                // L @ bool, PO p QFont, PO p QWidget
+         // RETURN QFont():from( Qt_QFontDialog_getFont_3( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "L"
+                // QFont getFont ( bool * ok, QWidget * parent = 0 )
+                // L @ bool, PO p QWidget
+         RETURN QFont():from( Qt_QFontDialog_getFont_4( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 

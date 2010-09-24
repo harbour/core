@@ -70,15 +70,14 @@
  */
 
 /*
- *  Constructed[ 38/42 [ 90.48% ] ]
+ *  Constructed[ 38/40 [ 95.00% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  QHash<QString, QVariant> toHash () const
  *  QMap<QString, QVariant> toMap () const
  *
- *  *** Commented out protos which construct fine but do not compile ***
+ *  *** Commented out protostypes ***
  *
  *  //const char * typeName () const
  *  //T value () const

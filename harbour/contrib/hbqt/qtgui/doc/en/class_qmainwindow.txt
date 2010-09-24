@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QWidget
  *  $SYNTAX$
- *     QMainWindow():new( ... )
+ *     QMainWindow( ... )
  *     QMainWindow():from( pPtr_OR_oObj_of_type_QMainWindow )
  *     QMainWindow():configure( pPtr_OR_oObj_of_type_QMainWindow )
  *  $ARGUMENTS$
@@ -26,8 +26,11 @@
  *  $RETURNS$
  *     An instance of the object of type QMainWindow
  *  $METHODS$
- *     :addDockWidget( ... )                               -> NIL
- *     :addToolBar( ... )                                  -> NIL
+ *     :addDockWidget( nArea, pDockwidget )                -> NIL
+ *     :addDockWidget_1( nArea, pDockwidget, nOrientation )  -> NIL
+ *     :addToolBar( nArea, pToolbar )                      -> NIL
+ *     :addToolBar_1( pToolbar )                           -> NIL
+ *     :addToolBar_2( cTitle )                             -> pQToolBar
  *     :addToolBarBreak( nArea )                           -> NIL
  *     :centralWidget()                                    -> pQWidget
  *     :corner( nCorner )                                  -> nQt::DockWidgetArea

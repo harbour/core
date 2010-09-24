@@ -72,6 +72,17 @@
  *  enum Shape { RoundedNorth, RoundedSouth, RoundedWest, RoundedEast, ..., TriangularEast }
  */
 
+/*
+ *  Constructed[ 44/44 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // int addTab ( const QIcon & icon, const QString & text )
+ *  // int insertTab ( int index, const QIcon & icon, const QString & text )
+ *  // void setTabIcon ( int index, const QIcon & icon )
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QTabBar>

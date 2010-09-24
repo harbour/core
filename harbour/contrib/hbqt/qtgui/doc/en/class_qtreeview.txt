@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QAbstractItemView
  *  $SYNTAX$
- *     QTreeView():new( ... )
+ *     QTreeView( ... )
  *     QTreeView():from( pPtr_OR_oObj_of_type_QTreeView )
  *     QTreeView():configure( pPtr_OR_oObj_of_type_QTreeView )
  *  $ARGUMENTS$

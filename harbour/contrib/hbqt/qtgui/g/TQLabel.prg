@@ -95,8 +95,7 @@ CREATE CLASS QLabel INHERIT HbQtObjectHandler, HB_QFrame FUNCTION HB_QLabel
    METHOD  wordWrap()
    METHOD  clear()
    METHOD  setMovie( pMovie )
-   METHOD  setNum( nNum )
-   METHOD  setNum_1( nNum )
+   METHOD  setNum( ... )
    METHOD  setPicture( pPicture )
    METHOD  setPixmap( pQPixmap )
    METHOD  setText( cQString )
@@ -209,12 +208,27 @@ METHOD QLabel:setMovie( pMovie )
    RETURN Qt_QLabel_setMovie( ::pPtr, hbqt_ptr( pMovie ) )
 
 
-METHOD QLabel:setNum( nNum )
-   RETURN Qt_QLabel_setNum( ::pPtr, nNum )
-
-
-METHOD QLabel:setNum_1( nNum )
-   RETURN Qt_QLabel_setNum_1( ::pPtr, nNum )
+METHOD QLabel:setNum( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // void setNum ( int num )
+                // N n int
+         RETURN Qt_QLabel_setNum( ::pPtr, ... )
+                // void setNum ( double num )
+                // N n double
+         // RETURN Qt_QLabel_setNum_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QLabel:setPicture( pPicture )

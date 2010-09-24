@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QAbstractSlider
  *  $SYNTAX$
- *     QDial():new( ... )
+ *     QDial( ... )
  *     QDial():from( pPtr_OR_oObj_of_type_QDial )
  *     QDial():configure( pPtr_OR_oObj_of_type_QDial )
  *  $ARGUMENTS$

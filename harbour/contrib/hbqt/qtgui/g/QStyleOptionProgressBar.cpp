@@ -72,6 +72,11 @@
  *  Public Functions
  */
 
+/*
+ *  Constructed[ 6/6 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionProgressBar>
@@ -150,7 +155,11 @@ HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR )
  */
 HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR_MAXIMUM )
 {
-   hb_retni( hbqt_par_QStyleOptionProgressBar( 1 )->maximum );
+   QStyleOptionProgressBar * p = hbqt_par_QStyleOptionProgressBar( 1 );
+   if( p )
+   {
+      hb_retni( ( p )->maximum );
+   }
 }
 
 /*
@@ -158,7 +167,11 @@ HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR_MAXIMUM )
  */
 HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR_MINIMUM )
 {
-   hb_retni( hbqt_par_QStyleOptionProgressBar( 1 )->minimum );
+   QStyleOptionProgressBar * p = hbqt_par_QStyleOptionProgressBar( 1 );
+   if( p )
+   {
+      hb_retni( ( p )->minimum );
+   }
 }
 
 /*
@@ -166,7 +179,11 @@ HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR_MINIMUM )
  */
 HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR_PROGRESS )
 {
-   hb_retni( hbqt_par_QStyleOptionProgressBar( 1 )->progress );
+   QStyleOptionProgressBar * p = hbqt_par_QStyleOptionProgressBar( 1 );
+   if( p )
+   {
+      hb_retni( ( p )->progress );
+   }
 }
 
 /*
@@ -174,7 +191,11 @@ HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR_PROGRESS )
  */
 HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR_TEXT )
 {
-   hb_retstr_utf8( hbqt_par_QStyleOptionProgressBar( 1 )->text.toUtf8().data() );
+   QStyleOptionProgressBar * p = hbqt_par_QStyleOptionProgressBar( 1 );
+   if( p )
+   {
+      hb_retstr_utf8( ( p )->text.toUtf8().data() );
+   }
 }
 
 /*
@@ -182,7 +203,11 @@ HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR_TEXT )
  */
 HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR_TEXTALIGNMENT )
 {
-   hb_retni( ( Qt::Alignment ) hbqt_par_QStyleOptionProgressBar( 1 )->textAlignment );
+   QStyleOptionProgressBar * p = hbqt_par_QStyleOptionProgressBar( 1 );
+   if( p )
+   {
+      hb_retni( ( Qt::Alignment ) ( p )->textAlignment );
+   }
 }
 
 /*
@@ -190,7 +215,11 @@ HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR_TEXTALIGNMENT )
  */
 HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR_TEXTVISIBLE )
 {
-   hb_retl( hbqt_par_QStyleOptionProgressBar( 1 )->textVisible );
+   QStyleOptionProgressBar * p = hbqt_par_QStyleOptionProgressBar( 1 );
+   if( p )
+   {
+      hb_retl( ( p )->textVisible );
+   }
 }
 
 

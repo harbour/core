@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QNetworkRequest():new( ... )
+ *     QNetworkRequest( ... )
  *     QNetworkRequest():from( pPtr_OR_oObj_of_type_QNetworkRequest )
  *     QNetworkRequest():configure( pPtr_OR_oObj_of_type_QNetworkRequest )
  *  $ARGUMENTS$

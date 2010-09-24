@@ -73,8 +73,7 @@ CREATE CLASS QGraphicsLineItem INHERIT HbQtObjectHandler, HB_QGraphicsItem FUNCT
 
    METHOD  line()
    METHOD  pen()
-   METHOD  setLine( pLine )
-   METHOD  setLine_1( nX1, nY1, nX2, nY2 )
+   METHOD  setLine( ... )
    METHOD  setPen( pPen )
 
    ENDCLASS
@@ -97,12 +96,31 @@ METHOD QGraphicsLineItem:pen()
    RETURN Qt_QGraphicsLineItem_pen( ::pPtr )
 
 
-METHOD QGraphicsLineItem:setLine( pLine )
-   RETURN Qt_QGraphicsLineItem_setLine( ::pPtr, hbqt_ptr( pLine ) )
-
-
-METHOD QGraphicsLineItem:setLine_1( nX1, nY1, nX2, nY2 )
-   RETURN Qt_QGraphicsLineItem_setLine_1( ::pPtr, nX1, nY1, nX2, nY2 )
+METHOD QGraphicsLineItem:setLine( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // void setLine ( qreal x1, qreal y1, qreal x2, qreal y2 )
+                // N n qreal, N n qreal, N n qreal, N n qreal
+         RETURN Qt_QGraphicsLineItem_setLine_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void setLine ( const QLineF & line )
+                // PO p QLineF
+         RETURN Qt_QGraphicsLineItem_setLine( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QGraphicsLineItem:setPen( pPen )

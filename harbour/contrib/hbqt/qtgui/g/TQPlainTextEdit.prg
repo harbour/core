@@ -78,8 +78,7 @@ CREATE CLASS QPlainTextEdit INHERIT HbQtObjectHandler, HB_QAbstractScrollArea FU
    METHOD  createStandardContextMenu()
    METHOD  currentCharFormat()
    METHOD  cursorForPosition( pPos )
-   METHOD  cursorRect( pCursor )
-   METHOD  cursorRect_1()
+   METHOD  cursorRect( ... )
    METHOD  cursorWidth()
    METHOD  document()
    METHOD  documentTitle()
@@ -169,12 +168,27 @@ METHOD QPlainTextEdit:cursorForPosition( pPos )
    RETURN Qt_QPlainTextEdit_cursorForPosition( ::pPtr, hbqt_ptr( pPos ) )
 
 
-METHOD QPlainTextEdit:cursorRect( pCursor )
-   RETURN Qt_QPlainTextEdit_cursorRect( ::pPtr, hbqt_ptr( pCursor ) )
-
-
-METHOD QPlainTextEdit:cursorRect_1()
-   RETURN Qt_QPlainTextEdit_cursorRect_1( ::pPtr )
+METHOD QPlainTextEdit:cursorRect( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QRect cursorRect ( const QTextCursor & cursor ) const
+                // PO p QTextCursor
+         RETURN QRect():from( Qt_QPlainTextEdit_cursorRect( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 0
+             // QRect cursorRect () const
+      RETURN QRect():from( Qt_QPlainTextEdit_cursorRect_1( ::pPtr, ... ) )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPlainTextEdit:cursorWidth()

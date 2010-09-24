@@ -71,6 +71,11 @@
  *  enum StyleOptionVersion { Version }
  */
 
+/*
+ *  Constructed[ 4/4 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionDockWidget>
@@ -149,7 +154,11 @@ HB_FUNC( QT_QSTYLEOPTIONDOCKWIDGET )
  */
 HB_FUNC( QT_QSTYLEOPTIONDOCKWIDGET_CLOSABLE )
 {
-   hb_retl( hbqt_par_QStyleOptionDockWidget( 1 )->closable );
+   QStyleOptionDockWidget * p = hbqt_par_QStyleOptionDockWidget( 1 );
+   if( p )
+   {
+      hb_retl( ( p )->closable );
+   }
 }
 
 /*
@@ -157,7 +166,11 @@ HB_FUNC( QT_QSTYLEOPTIONDOCKWIDGET_CLOSABLE )
  */
 HB_FUNC( QT_QSTYLEOPTIONDOCKWIDGET_FLOATABLE )
 {
-   hb_retl( hbqt_par_QStyleOptionDockWidget( 1 )->floatable );
+   QStyleOptionDockWidget * p = hbqt_par_QStyleOptionDockWidget( 1 );
+   if( p )
+   {
+      hb_retl( ( p )->floatable );
+   }
 }
 
 /*
@@ -165,7 +178,11 @@ HB_FUNC( QT_QSTYLEOPTIONDOCKWIDGET_FLOATABLE )
  */
 HB_FUNC( QT_QSTYLEOPTIONDOCKWIDGET_MOVABLE )
 {
-   hb_retl( hbqt_par_QStyleOptionDockWidget( 1 )->movable );
+   QStyleOptionDockWidget * p = hbqt_par_QStyleOptionDockWidget( 1 );
+   if( p )
+   {
+      hb_retl( ( p )->movable );
+   }
 }
 
 /*
@@ -173,7 +190,11 @@ HB_FUNC( QT_QSTYLEOPTIONDOCKWIDGET_MOVABLE )
  */
 HB_FUNC( QT_QSTYLEOPTIONDOCKWIDGET_TITLE )
 {
-   hb_retstr_utf8( hbqt_par_QStyleOptionDockWidget( 1 )->title.toUtf8().data() );
+   QStyleOptionDockWidget * p = hbqt_par_QStyleOptionDockWidget( 1 );
+   if( p )
+   {
+      hb_retstr_utf8( ( p )->title.toUtf8().data() );
+   }
 }
 
 

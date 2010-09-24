@@ -131,19 +131,61 @@ METHOD QMainWindow:new( ... )
 
 
 METHOD QMainWindow:addDockWidget( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QMainWindow_addDockWidget( ::pPtr, ... )
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "N"
+                // void addDockWidget ( Qt::DockWidgetArea area, QDockWidget * dockwidget, Qt::Orientation orientation )
+                // N n Qt::DockWidgetArea, PO p QDockWidget, N n Qt::Orientation
+         RETURN Qt_QMainWindow_addDockWidget_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PO"
+                // void addDockWidget ( Qt::DockWidgetArea area, QDockWidget * dockwidget )
+                // N n Qt::DockWidgetArea, PO p QDockWidget
+         RETURN Qt_QMainWindow_addDockWidget( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QMainWindow:addToolBar( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QMainWindow_addToolBar( ::pPtr, ... )
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PO"
+                // void addToolBar ( Qt::ToolBarArea area, QToolBar * toolbar )
+                // N n Qt::ToolBarArea, PO p QToolBar
+         RETURN Qt_QMainWindow_addToolBar( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // QToolBar * addToolBar ( const QString & title )               // NOT implemented
+                // C c QString
+         RETURN QToolBar():from( Qt_QMainWindow_addToolBar_2( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "PO"
+                // void addToolBar ( QToolBar * toolbar )
+                // PO p QToolBar
+         RETURN Qt_QMainWindow_addToolBar_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QMainWindow:addToolBarBreak( nArea )

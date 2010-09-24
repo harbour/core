@@ -104,13 +104,10 @@ CREATE CLASS QPainterPath INHERIT HbQtObjectHandler FUNCTION HB_QPainterPath
    METHOD  simplified()
    METHOD  slopeAtPercent( nT )
    METHOD  subtracted( pP )
-   METHOD  toFillPolygon( pMatrix )
-   METHOD  toFillPolygon_1( pMatrix )
-   METHOD  toFillPolygons( pMatrix )
-   METHOD  toFillPolygons_1( pMatrix )
+   METHOD  toFillPolygon( ... )
+   METHOD  toFillPolygons( ... )
    METHOD  toReversed()
-   METHOD  toSubpathPolygons( pMatrix )
-   METHOD  toSubpathPolygons_1( pMatrix )
+   METHOD  toSubpathPolygons( ... )
    METHOD  united( pP )
 
    ENDCLASS
@@ -126,11 +123,37 @@ METHOD QPainterPath:new( ... )
 
 
 METHOD QPainterPath:addEllipse( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QPainterPath_addEllipse( ::pPtr, ... )
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // void addEllipse ( qreal x, qreal y, qreal width, qreal height )
+                // N n qreal, N n qreal, N n qreal, N n qreal
+         RETURN Qt_QPainterPath_addEllipse_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // void addEllipse ( const QPointF & center, qreal rx, qreal ry )
+                // PO p QPointF, N n qreal, N n qreal
+         RETURN Qt_QPainterPath_addEllipse_2( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void addEllipse ( const QRectF & boundingRectangle )
+                // PO p QRectF
+         RETURN Qt_QPainterPath_addEllipse( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPainterPath:addPath( pPath )
@@ -142,11 +165,30 @@ METHOD QPainterPath:addPolygon( pPolygon )
 
 
 METHOD QPainterPath:addRect( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QPainterPath_addRect( ::pPtr, ... )
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // void addRect ( qreal x, qreal y, qreal width, qreal height )
+                // N n qreal, N n qreal, N n qreal, N n qreal
+         RETURN Qt_QPainterPath_addRect_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void addRect ( const QRectF & rectangle )
+                // PO p QRectF
+         RETURN Qt_QPainterPath_addRect( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPainterPath:addRegion( pRegion )
@@ -154,19 +196,71 @@ METHOD QPainterPath:addRegion( pRegion )
 
 
 METHOD QPainterPath:addRoundedRect( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QPainterPath_addRoundedRect( ::pPtr, ... )
+   DO CASE
+   CASE nP == 7
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N" .AND. aV[ 6 ] $ "N" .AND. aV[ 7 ] $ "N"
+                // void addRoundedRect ( qreal x, qreal y, qreal w, qreal h, qreal xRadius, qreal yRadius, Qt::SizeMode mode = Qt::AbsoluteSize )
+                // N n qreal, N n qreal, N n qreal, N n qreal, N n qreal, N n qreal, N n Qt::SizeMode
+         RETURN Qt_QPainterPath_addRoundedRect_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 6
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N" .AND. aV[ 6 ] $ "N"
+                // void addRoundedRect ( qreal x, qreal y, qreal w, qreal h, qreal xRadius, qreal yRadius, Qt::SizeMode mode = Qt::AbsoluteSize )
+                // N n qreal, N n qreal, N n qreal, N n qreal, N n qreal, N n qreal, N n Qt::SizeMode
+         RETURN Qt_QPainterPath_addRoundedRect_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // void addRoundedRect ( const QRectF & rect, qreal xRadius, qreal yRadius, Qt::SizeMode mode = Qt::AbsoluteSize )
+                // PO p QRectF, N n qreal, N n qreal, N n Qt::SizeMode
+         RETURN Qt_QPainterPath_addRoundedRect( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // void addRoundedRect ( const QRectF & rect, qreal xRadius, qreal yRadius, Qt::SizeMode mode = Qt::AbsoluteSize )
+                // PO p QRectF, N n qreal, N n qreal, N n Qt::SizeMode
+         RETURN Qt_QPainterPath_addRoundedRect( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPainterPath:addText( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QPainterPath_addText( ::pPtr, ... )
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "PO" .AND. aV[ 4 ] $ "C"
+                // void addText ( qreal x, qreal y, const QFont & font, const QString & text )
+                // N n qreal, N n qreal, PO p QFont, C c QString
+         RETURN Qt_QPainterPath_addText_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "C"
+                // void addText ( const QPointF & point, const QFont & font, const QString & text )
+                // PO p QPointF, PO p QFont, C c QString
+         RETURN Qt_QPainterPath_addText( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPainterPath:angleAtPercent( nT )
@@ -174,19 +268,57 @@ METHOD QPainterPath:angleAtPercent( nT )
 
 
 METHOD QPainterPath:arcMoveTo( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QPainterPath_arcMoveTo( ::pPtr, ... )
+   DO CASE
+   CASE nP == 5
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N"
+                // void arcMoveTo ( qreal x, qreal y, qreal width, qreal height, qreal angle )
+                // N n qreal, N n qreal, N n qreal, N n qreal, N n qreal
+         RETURN Qt_QPainterPath_arcMoveTo_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // void arcMoveTo ( const QRectF & rectangle, qreal angle )
+                // PO p QRectF, N n qreal
+         RETURN Qt_QPainterPath_arcMoveTo( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPainterPath:arcTo( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QPainterPath_arcTo( ::pPtr, ... )
+   DO CASE
+   CASE nP == 6
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N" .AND. aV[ 6 ] $ "N"
+                // void arcTo ( qreal x, qreal y, qreal width, qreal height, qreal startAngle, qreal sweepLength )
+                // N n qreal, N n qreal, N n qreal, N n qreal, N n qreal, N n qreal
+         RETURN Qt_QPainterPath_arcTo_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // void arcTo ( const QRectF & rectangle, qreal startAngle, qreal sweepLength )
+                // PO p QRectF, N n qreal, N n qreal
+         RETURN Qt_QPainterPath_arcTo( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPainterPath:boundingRect()
@@ -214,11 +346,30 @@ METHOD QPainterPath:controlPointRect()
 
 
 METHOD QPainterPath:cubicTo( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QPainterPath_cubicTo( ::pPtr, ... )
+   DO CASE
+   CASE nP == 6
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N" .AND. aV[ 6 ] $ "N"
+                // void cubicTo ( qreal c1X, qreal c1Y, qreal c2X, qreal c2Y, qreal endPointX, qreal endPointY )
+                // N n qreal, N n qreal, N n qreal, N n qreal, N n qreal, N n qreal
+         RETURN Qt_QPainterPath_cubicTo_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PO"
+                // void cubicTo ( const QPointF & c1, const QPointF & c2, const QPointF & endPoint )
+                // PO p QPointF, PO p QPointF, PO p QPointF
+         RETURN Qt_QPainterPath_cubicTo( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPainterPath:currentPosition()
@@ -254,19 +405,57 @@ METHOD QPainterPath:length()
 
 
 METHOD QPainterPath:lineTo( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QPainterPath_lineTo( ::pPtr, ... )
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void lineTo ( qreal x, qreal y )
+                // N n qreal, N n qreal
+         RETURN Qt_QPainterPath_lineTo_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void lineTo ( const QPointF & endPoint )
+                // PO p QPointF
+         RETURN Qt_QPainterPath_lineTo( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPainterPath:moveTo( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QPainterPath_moveTo( ::pPtr, ... )
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void moveTo ( qreal x, qreal y )
+                // N n qreal, N n qreal
+         RETURN Qt_QPainterPath_moveTo_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void moveTo ( const QPointF & point )
+                // PO p QPointF
+         RETURN Qt_QPainterPath_moveTo( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPainterPath:percentAtLength( nLen )
@@ -278,11 +467,30 @@ METHOD QPainterPath:pointAtPercent( nT )
 
 
 METHOD QPainterPath:quadTo( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QPainterPath_quadTo( ::pPtr, ... )
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // void quadTo ( qreal cx, qreal cy, qreal endPointX, qreal endPointY )
+                // N n qreal, N n qreal, N n qreal, N n qreal
+         RETURN Qt_QPainterPath_quadTo_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
+                // void quadTo ( const QPointF & c, const QPointF & endPoint )
+                // PO p QPointF, PO p QPointF
+         RETURN Qt_QPainterPath_quadTo( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPainterPath:setElementPositionAt( nIndex, nX, nY )
@@ -305,32 +513,89 @@ METHOD QPainterPath:subtracted( pP )
    RETURN Qt_QPainterPath_subtracted( ::pPtr, hbqt_ptr( pP ) )
 
 
-METHOD QPainterPath:toFillPolygon( pMatrix )
-   RETURN Qt_QPainterPath_toFillPolygon( ::pPtr, hbqt_ptr( pMatrix ) )
+METHOD QPainterPath:toFillPolygon( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QPolygonF toFillPolygon ( const QTransform & matrix ) const
+                // PO p QTransform
+         RETURN QPolygonF():from( Qt_QPainterPath_toFillPolygon( ::pPtr, ... ) )
+                // QPolygonF toFillPolygon ( const QMatrix & matrix = QMatrix() ) const
+                // PO p QMatrix
+         // RETURN QPolygonF():from( Qt_QPainterPath_toFillPolygon_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 0
+             // QPolygonF toFillPolygon ( const QMatrix & matrix = QMatrix() ) const
+             // PO p QMatrix
+      RETURN QPolygonF():from( Qt_QPainterPath_toFillPolygon_1( ::pPtr, ... ) )
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QPainterPath:toFillPolygon_1( pMatrix )
-   RETURN Qt_QPainterPath_toFillPolygon_1( ::pPtr, hbqt_ptr( pMatrix ) )
-
-
-METHOD QPainterPath:toFillPolygons( pMatrix )
-   RETURN Qt_QPainterPath_toFillPolygons( ::pPtr, hbqt_ptr( pMatrix ) )
-
-
-METHOD QPainterPath:toFillPolygons_1( pMatrix )
-   RETURN Qt_QPainterPath_toFillPolygons_1( ::pPtr, hbqt_ptr( pMatrix ) )
+METHOD QPainterPath:toFillPolygons( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QList<QPolygonF> toFillPolygons ( const QTransform & matrix ) const
+                // PO p QTransform
+         RETURN Qt_QPainterPath_toFillPolygons( ::pPtr, ... )
+                // QList<QPolygonF> toFillPolygons ( const QMatrix & matrix = QMatrix() ) const
+                // PO p QMatrix
+         // RETURN Qt_QPainterPath_toFillPolygons_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // QList<QPolygonF> toFillPolygons ( const QMatrix & matrix = QMatrix() ) const
+             // PO p QMatrix
+      RETURN Qt_QPainterPath_toFillPolygons_1( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPainterPath:toReversed()
    RETURN Qt_QPainterPath_toReversed( ::pPtr )
 
 
-METHOD QPainterPath:toSubpathPolygons( pMatrix )
-   RETURN Qt_QPainterPath_toSubpathPolygons( ::pPtr, hbqt_ptr( pMatrix ) )
-
-
-METHOD QPainterPath:toSubpathPolygons_1( pMatrix )
-   RETURN Qt_QPainterPath_toSubpathPolygons_1( ::pPtr, hbqt_ptr( pMatrix ) )
+METHOD QPainterPath:toSubpathPolygons( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QList<QPolygonF> toSubpathPolygons ( const QTransform & matrix ) const
+                // PO p QTransform
+         RETURN Qt_QPainterPath_toSubpathPolygons( ::pPtr, ... )
+                // QList<QPolygonF> toSubpathPolygons ( const QMatrix & matrix = QMatrix() ) const
+                // PO p QMatrix
+         // RETURN Qt_QPainterPath_toSubpathPolygons_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // QList<QPolygonF> toSubpathPolygons ( const QMatrix & matrix = QMatrix() ) const
+             // PO p QMatrix
+      RETURN Qt_QPainterPath_toSubpathPolygons_1( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPainterPath:united( pP )

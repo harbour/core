@@ -74,6 +74,15 @@
  *  flags NumberOptions
  */
 
+/*
+ *  Constructed[ 55/55 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  //QList<Country> countriesForLanguage ( Language language )
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtCore/QLocale>

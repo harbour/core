@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QWidget
  *  $SYNTAX$
- *     QToolBar():new( ... )
+ *     QToolBar( ... )
  *     QToolBar():from( pPtr_OR_oObj_of_type_QToolBar )
  *     QToolBar():configure( pPtr_OR_oObj_of_type_QToolBar )
  *  $ARGUMENTS$

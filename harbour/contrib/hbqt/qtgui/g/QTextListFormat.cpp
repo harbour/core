@@ -70,6 +70,11 @@
  *  enum Style { ListDisc, ListCircle, ListSquare, ListDecimal, ListLowerAlpha, ListUpperAlpha }
  */
 
+/*
+ *  Constructed[ 5/5 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QTextListFormat>

@@ -83,17 +83,14 @@ CREATE CLASS QStyle INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QStyle
    METHOD  itemTextRect( pMetrics, pRectangle, nAlignment, lEnabled, cText )
    METHOD  layoutSpacing( nControl1, nControl2, nOrientation, pOption, pWidget )
    METHOD  pixelMetric( nMetric, pOption, pWidget )
-   METHOD  polish( pWidget )
-   METHOD  polish_1( pApplication )
-   METHOD  polish_2( pPalette )
+   METHOD  polish( ... )
    METHOD  sizeFromContents( nType, pOption, pContentsSize, pWidget )
    METHOD  standardIcon( nStandardIcon, pOption, pWidget )
    METHOD  standardPalette()
    METHOD  styleHint( nHint, pOption, pWidget, pReturnData )
    METHOD  subControlRect( nControl, pOption, nSubControl, pWidget )
    METHOD  subElementRect( nElement, pOption, pWidget )
-   METHOD  unpolish( pWidget )
-   METHOD  unpolish_1( pApplication )
+   METHOD  unpolish( ... )
    METHOD  alignedRect( nDirection, nAlignment, pSize, pRectangle )
    METHOD  sliderPositionFromValue( nMin, nMax, nLogicalValue, nSpan, lUpsideDown )
    METHOD  sliderValueFromPosition( nMin, nMax, nPosition, nSpan, lUpsideDown )
@@ -161,16 +158,30 @@ METHOD QStyle:pixelMetric( nMetric, pOption, pWidget )
    RETURN Qt_QStyle_pixelMetric( ::pPtr, nMetric, hbqt_ptr( pOption ), hbqt_ptr( pWidget ) )
 
 
-METHOD QStyle:polish( pWidget )
-   RETURN Qt_QStyle_polish( ::pPtr, hbqt_ptr( pWidget ) )
-
-
-METHOD QStyle:polish_1( pApplication )
-   RETURN Qt_QStyle_polish_1( ::pPtr, hbqt_ptr( pApplication ) )
-
-
-METHOD QStyle:polish_2( pPalette )
-   RETURN Qt_QStyle_polish_2( ::pPtr, hbqt_ptr( pPalette ) )
+METHOD QStyle:polish( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // virtual void polish ( QWidget * widget )
+                // PO p QWidget
+         RETURN Qt_QStyle_polish( ::pPtr, ... )
+                // virtual void polish ( QApplication * application )
+                // PO p QApplication
+         // RETURN Qt_QStyle_polish_1( ::pPtr, ... )
+                // virtual void polish ( QPalette & palette )
+                // PO p QPalette
+         // RETURN Qt_QStyle_polish_2( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QStyle:sizeFromContents( nType, pOption, pContentsSize, pWidget )
@@ -197,12 +208,27 @@ METHOD QStyle:subElementRect( nElement, pOption, pWidget )
    RETURN Qt_QStyle_subElementRect( ::pPtr, nElement, hbqt_ptr( pOption ), hbqt_ptr( pWidget ) )
 
 
-METHOD QStyle:unpolish( pWidget )
-   RETURN Qt_QStyle_unpolish( ::pPtr, hbqt_ptr( pWidget ) )
-
-
-METHOD QStyle:unpolish_1( pApplication )
-   RETURN Qt_QStyle_unpolish_1( ::pPtr, hbqt_ptr( pApplication ) )
+METHOD QStyle:unpolish( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // virtual void unpolish ( QWidget * widget )
+                // PO p QWidget
+         RETURN Qt_QStyle_unpolish( ::pPtr, ... )
+                // virtual void unpolish ( QApplication * application )
+                // PO p QApplication
+         // RETURN Qt_QStyle_unpolish_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QStyle:alignedRect( nDirection, nAlignment, pSize, pRectangle )

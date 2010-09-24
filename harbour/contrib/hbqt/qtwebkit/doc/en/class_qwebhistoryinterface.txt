@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QObject
  *  $SYNTAX$
- *     QWebHistoryInterface():new( ... )
+ *     QWebHistoryInterface( ... )
  *     QWebHistoryInterface():from( pPtr_OR_oObj_of_type_QWebHistoryInterface )
  *     QWebHistoryInterface():configure( pPtr_OR_oObj_of_type_QWebHistoryInterface )
  *  $ARGUMENTS$

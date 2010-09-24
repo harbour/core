@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QGraphicsSceneEvent
  *  $SYNTAX$
- *     QGraphicsSceneMouseEvent():new( ... )
+ *     QGraphicsSceneMouseEvent( ... )
  *     QGraphicsSceneMouseEvent():from( pPtr_OR_oObj_of_type_QGraphicsSceneMouseEvent )
  *     QGraphicsSceneMouseEvent():configure( pPtr_OR_oObj_of_type_QGraphicsSceneMouseEvent )
  *  $ARGUMENTS$

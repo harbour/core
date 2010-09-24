@@ -70,6 +70,15 @@
  *  enum State { Invalid, Intermediate, Acceptable }
  */
 
+/*
+ *  Constructed[ 5/5 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  //virtual QValidator::State validate ( QString & input, int & pos ) const
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QIntValidator>

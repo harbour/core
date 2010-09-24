@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QSizePolicy():new( ... )
+ *     QSizePolicy( ... )
  *     QSizePolicy():from( pPtr_OR_oObj_of_type_QSizePolicy )
  *     QSizePolicy():configure( pPtr_OR_oObj_of_type_QSizePolicy )
  *  $ARGUMENTS$

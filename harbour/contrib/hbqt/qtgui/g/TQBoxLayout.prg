@@ -87,8 +87,7 @@ CREATE CLASS QBoxLayout INHERIT HbQtObjectHandler, HB_QLayout FUNCTION HB_QBoxLa
    METHOD  setDirection( nDirection )
    METHOD  setSpacing( nSpacing )
    METHOD  setStretch( nIndex, nStretch )
-   METHOD  setStretchFactor( pWidget, nStretch )
-   METHOD  setStretchFactor_1( pLayout, nStretch )
+   METHOD  setStretchFactor( ... )
    METHOD  spacing()
    METHOD  stretch( nIndex )
 
@@ -168,12 +167,27 @@ METHOD QBoxLayout:setStretch( nIndex, nStretch )
    RETURN Qt_QBoxLayout_setStretch( ::pPtr, nIndex, nStretch )
 
 
-METHOD QBoxLayout:setStretchFactor( pWidget, nStretch )
-   RETURN Qt_QBoxLayout_setStretchFactor( ::pPtr, hbqt_ptr( pWidget ), nStretch )
-
-
-METHOD QBoxLayout:setStretchFactor_1( pLayout, nStretch )
-   RETURN Qt_QBoxLayout_setStretchFactor_1( ::pPtr, hbqt_ptr( pLayout ), nStretch )
+METHOD QBoxLayout:setStretchFactor( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // bool setStretchFactor ( QWidget * widget, int stretch )
+                // PO p QWidget, N n int
+         RETURN Qt_QBoxLayout_setStretchFactor( ::pPtr, ... )
+                // bool setStretchFactor ( QLayout * layout, int stretch )
+                // PO p QLayout, N n int
+         // RETURN Qt_QBoxLayout_setStretchFactor_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QBoxLayout:spacing()

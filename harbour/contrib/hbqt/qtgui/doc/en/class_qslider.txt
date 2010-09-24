@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QAbstractSlider
  *  $SYNTAX$
- *     QSlider():new( ... )
+ *     QSlider( ... )
  *     QSlider():from( pPtr_OR_oObj_of_type_QSlider )
  *     QSlider():configure( pPtr_OR_oObj_of_type_QSlider )
  *  $ARGUMENTS$

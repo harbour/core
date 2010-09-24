@@ -71,6 +71,17 @@
  *  flags PrintDialogOptions
  */
 
+/*
+ *  Constructed[ 8/8 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // void addButton ( QPushButton * button )
+ *  //QPrinter * printer () const
+ *  // void setPrinter ( QPrinter * printer, bool pickupSettings = false )
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QPrintDialog>
@@ -193,21 +204,9 @@ HB_FUNC( QT_QPRINTDIALOG_OPTIONS )
 }
 
 /*
- * QPrinter * printer () const
- */
-HB_FUNC( QT_QPRINTDIALOG_PRINTER )
-{
-   QPrintDialog * p = hbqt_par_QPrintDialog( 1 );
-   if( p )
-   {
-      hb_retptrGC( hbqt_gcAllocate_QPrinter( ( p )->printer(), false ) );
-   }
-}
-
-/*
  * QPrinter * printer ()
  */
-HB_FUNC( QT_QPRINTDIALOG_PRINTER_1 )
+HB_FUNC( QT_QPRINTDIALOG_PRINTER )
 {
    QPrintDialog * p = hbqt_par_QPrintDialog( 1 );
    if( p )

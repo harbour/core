@@ -96,8 +96,7 @@ CREATE CLASS QFileDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QFile
    METHOD  setAcceptMode( nMode )
    METHOD  setConfirmOverwrite( lEnabled )
    METHOD  setDefaultSuffix( cSuffix )
-   METHOD  setDirectory( cDirectory )
-   METHOD  setDirectory_1( pDirectory )
+   METHOD  setDirectory( ... )
    METHOD  setFileMode( nMode )
    METHOD  setFilter( nFilters )
    METHOD  setHistory( pPaths )
@@ -230,12 +229,28 @@ METHOD QFileDialog:setDefaultSuffix( cSuffix )
    RETURN Qt_QFileDialog_setDefaultSuffix( ::pPtr, cSuffix )
 
 
-METHOD QFileDialog:setDirectory( cDirectory )
-   RETURN Qt_QFileDialog_setDirectory( ::pPtr, cDirectory )
-
-
-METHOD QFileDialog:setDirectory_1( pDirectory )
-   RETURN Qt_QFileDialog_setDirectory_1( ::pPtr, hbqt_ptr( pDirectory ) )
+METHOD QFileDialog:setDirectory( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // void setDirectory ( const QString & directory )
+                // C c QString
+         RETURN Qt_QFileDialog_setDirectory( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO"
+                // void setDirectory ( const QDir & directory )
+                // PO p QDir
+         RETURN Qt_QFileDialog_setDirectory_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QFileDialog:setFileMode( nMode )

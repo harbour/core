@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QObject
  *  $SYNTAX$
- *     QDesignerFormEditorInterface():new( ... )
+ *     QDesignerFormEditorInterface( ... )
  *     QDesignerFormEditorInterface():from( pPtr_OR_oObj_of_type_QDesignerFormEditorInterface )
  *     QDesignerFormEditorInterface():configure( pPtr_OR_oObj_of_type_QDesignerFormEditorInterface )
  *  $ARGUMENTS$

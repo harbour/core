@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QResource():new( ... )
+ *     QResource( ... )
  *     QResource():from( pPtr_OR_oObj_of_type_QResource )
  *     QResource():configure( pPtr_OR_oObj_of_type_QResource )
  *  $ARGUMENTS$

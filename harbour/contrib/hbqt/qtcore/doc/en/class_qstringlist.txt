@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QList
  *  $SYNTAX$
- *     QStringList():new( ... )
+ *     QStringList( ... )
  *     QStringList():from( pPtr_OR_oObj_of_type_QStringList )
  *     QStringList():configure( pPtr_OR_oObj_of_type_QStringList )
  *  $ARGUMENTS$
@@ -41,12 +41,9 @@
  *     :count( cValue )                                    -> nInt
  *     :endsWith( cValue )                                 -> lBool
  *     :first()                                            -> cQString
- *     :first_1()                                          -> cQString
  *     :front()                                            -> cQString
- *     :front_1()                                          -> cQString
  *     :insert( nI, cValue )                               -> NIL
  *     :last()                                             -> cQString
- *     :last_1()                                           -> cQString
  *     :mid( nPos, nLength )                               -> pQList<QString>
  *     :prepend( cValue )                                  -> NIL
  *     :push_back( cValue )                                -> NIL

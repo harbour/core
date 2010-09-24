@@ -71,8 +71,7 @@ CREATE CLASS QComboBox INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QComboB
 
    METHOD  new( ... )
 
-   METHOD  addItem( cText, pUserData )
-   METHOD  addItem_1( pIcon, cText, pUserData )
+   METHOD  addItem( ... )
    METHOD  addItems( pTexts )
    METHOD  completer()
    METHOD  count()
@@ -84,8 +83,7 @@ CREATE CLASS QComboBox INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QComboB
    METHOD  hasFrame()
    METHOD  hidePopup()
    METHOD  iconSize()
-   METHOD  insertItem( nIndex, cText, pUserData )
-   METHOD  insertItem_1( nIndex, pIcon, cText, pUserData )
+   METHOD  insertItem( ... )
    METHOD  insertItems( nIndex, pList )
    METHOD  insertPolicy()
    METHOD  insertSeparator( nIndex )
@@ -143,12 +141,42 @@ METHOD QComboBox:new( ... )
    RETURN Self
 
 
-METHOD QComboBox:addItem( cText, pUserData )
-   RETURN Qt_QComboBox_addItem( ::pPtr, cText, hbqt_ptr( pUserData ) )
-
-
-METHOD QComboBox:addItem_1( pIcon, cText, pUserData )
-   RETURN Qt_QComboBox_addItem_1( ::pPtr, hbqt_ptr( pIcon ), cText, hbqt_ptr( pUserData ) )
+METHOD QComboBox:addItem( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PCO" .AND. aV[ 2 ] $ "C" .AND. aV[ 3 ] $ "PO"
+                // void addItem ( const QIcon & icon, const QString & text, const QVariant & userData = QVariant() )
+                // PCO p QIcon, C c QString, PO p QVariant
+         RETURN Qt_QComboBox_addItem_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO"
+                // void addItem ( const QString & text, const QVariant & userData = QVariant() )
+                // C c QString, PO p QVariant
+         RETURN Qt_QComboBox_addItem( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PCO" .AND. aV[ 2 ] $ "C"
+                // void addItem ( const QIcon & icon, const QString & text, const QVariant & userData = QVariant() )
+                // PCO p QIcon, C c QString, PO p QVariant
+         RETURN Qt_QComboBox_addItem_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // void addItem ( const QString & text, const QVariant & userData = QVariant() )
+                // C c QString, PO p QVariant
+         RETURN Qt_QComboBox_addItem( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QComboBox:addItems( pTexts )
@@ -195,12 +223,42 @@ METHOD QComboBox:iconSize()
    RETURN Qt_QComboBox_iconSize( ::pPtr )
 
 
-METHOD QComboBox:insertItem( nIndex, cText, pUserData )
-   RETURN Qt_QComboBox_insertItem( ::pPtr, nIndex, cText, hbqt_ptr( pUserData ) )
-
-
-METHOD QComboBox:insertItem_1( nIndex, pIcon, cText, pUserData )
-   RETURN Qt_QComboBox_insertItem_1( ::pPtr, nIndex, hbqt_ptr( pIcon ), cText, hbqt_ptr( pUserData ) )
+METHOD QComboBox:insertItem( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PCO" .AND. aV[ 3 ] $ "C" .AND. aV[ 4 ] $ "PO"
+                // void insertItem ( int index, const QIcon & icon, const QString & text, const QVariant & userData = QVariant() )
+                // N n int, PCO p QIcon, C c QString, PO p QVariant
+         RETURN Qt_QComboBox_insertItem_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "C" .AND. aV[ 3 ] $ "PO"
+                // void insertItem ( int index, const QString & text, const QVariant & userData = QVariant() )
+                // N n int, C c QString, PO p QVariant
+         RETURN Qt_QComboBox_insertItem( ::pPtr, ... )
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PCO" .AND. aV[ 3 ] $ "C"
+                // void insertItem ( int index, const QIcon & icon, const QString & text, const QVariant & userData = QVariant() )
+                // N n int, PCO p QIcon, C c QString, PO p QVariant
+         RETURN Qt_QComboBox_insertItem_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "C"
+                // void insertItem ( int index, const QString & text, const QVariant & userData = QVariant() )
+                // N n int, C c QString, PO p QVariant
+         RETURN Qt_QComboBox_insertItem( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QComboBox:insertItems( nIndex, pList )

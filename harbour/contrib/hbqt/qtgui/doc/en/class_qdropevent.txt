@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QEvent
  *  $SYNTAX$
- *     QDropEvent():new( ... )
+ *     QDropEvent( ... )
  *     QDropEvent():from( pPtr_OR_oObj_of_type_QDropEvent )
  *     QDropEvent():configure( pPtr_OR_oObj_of_type_QDropEvent )
  *  $ARGUMENTS$

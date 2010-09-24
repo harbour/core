@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QTextFormat
  *  $SYNTAX$
- *     QTextListFormat():new( ... )
+ *     QTextListFormat( ... )
  *     QTextListFormat():from( pPtr_OR_oObj_of_type_QTextListFormat )
  *     QTextListFormat():configure( pPtr_OR_oObj_of_type_QTextListFormat )
  *  $ARGUMENTS$

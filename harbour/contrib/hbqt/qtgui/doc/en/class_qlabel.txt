@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QFrame
  *  $SYNTAX$
- *     QLabel():new( ... )
+ *     QLabel( ... )
  *     QLabel():from( pPtr_OR_oObj_of_type_QLabel )
  *     QLabel():configure( pPtr_OR_oObj_of_type_QLabel )
  *  $ARGUMENTS$

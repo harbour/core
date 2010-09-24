@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QWidget
  *  $SYNTAX$
- *     QDialog():new( ... )
+ *     QDialog( ... )
  *     QDialog():from( pPtr_OR_oObj_of_type_QDialog )
  *     QDialog():configure( pPtr_OR_oObj_of_type_QDialog )
  *  $ARGUMENTS$

@@ -73,93 +73,36 @@
  */
 
 /*
- *  Constructed[ 185/264 [ 70.08% ] ]
+ *  Constructed[ 206/208 [ 99.04% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
- *  }
  *  void addActions ( QList<QAction *> actions )
- *  }
- *  }
  *  void insertActions ( QAction * before, QList<QAction *> actions )
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
  *
- *  *** Commented out protos which construct fine but do not compile ***
+ *  *** Commented out protostypes ***
  *
  *  // QString accessibleDescription () const
  *  // QString accessibleName () const
- *  //QWidget * childAt ( int x, int y ) const
- *  //QWidget * childAt ( const QPoint & p ) const
  *  // WId effectiveWinId () const
  *  // virtual HDC getDC () const
- *  //void grabMouse ()
- *  //void grabMouse ( const QCursor & cursor )
  *  // QGraphicsProxyWidget * graphicsProxyWidget () const
  *  // bool hasEditFocus () const
  *  // QInputContext * inputContext ()
  *  // Qt::HANDLE macCGHandle () const
  *  // Qt::HANDLE macQDHandle () const
- *  //void move ( int x, int y )
- *  //void move ( const QPoint & )
  *  // virtual void releaseDC ( HDC hdc ) const
  *  //void render ( QPaintDevice * target, const QPoint & targetOffset = QPoint(), const QRegion & sourceRegion = QRegion(), RenderFlags renderFlags = RenderFlags( DrawWindowBackground | DrawChildren ) )
  *  //void render ( QPainter * painter, const QPoint & targetOffset = QPoint(), const QRegion & sourceRegion = QRegion(), RenderFlags renderFlags = RenderFlags( DrawWindowBackground | DrawChildren ) )
- *  //void repaint ( int x, int y, int w, int h )
- *  //void repaint ( const QRect & rect )
- *  //void repaint ( const QRegion & rgn )
- *  //void resize ( int w, int h )
- *  //void resize ( const QSize & )
- *  //void scroll ( int dx, int dy )
- *  //void scroll ( int dx, int dy, const QRect & r )
  *  // void setAccessibleDescription ( const QString & description )
  *  // void setAccessibleName ( const QString & name )
- *  //void setBaseSize ( const QSize & )
- *  //void setBaseSize ( int basew, int baseh )
  *  // void setEditFocus ( bool enable )
- *  //void setFixedSize ( const QSize & s )
- *  //void setFixedSize ( int w, int h )
- *  //void setFocus ( Qt::FocusReason reason )
- *  //void setGeometry ( const QRect & )
- *  //void setGeometry ( int x, int y, int w, int h )
  *  // void setInputContext ( QInputContext * context )
- *  //void setMask ( const QBitmap & bitmap )
- *  //void setMask ( const QRegion & region )
- *  //void setMaximumSize ( const QSize & )
- *  //void setMaximumSize ( int maxw, int maxh )
- *  //void setMinimumSize ( const QSize & )
- *  //void setMinimumSize ( int minw, int minh )
- *  //void setParent ( QWidget * parent )
- *  //void setParent ( QWidget * parent, Qt::WindowFlags f )
- *  //void setSizeIncrement ( const QSize & )
- *  //void setSizeIncrement ( int w, int h )
- *  //void setSizePolicy ( const QSizePolicy & policy )
- *  //void setSizePolicy ( QSizePolicy::Policy horizontal, QSizePolicy::Policy vertical )
  *  // void setWindowSurface ( QWindowSurface * surface )
- *  //void update ( int x, int y, int w, int h )
- *  //void update ( const QRect & rect )
- *  //void update ( const QRegion & rgn )
- *  //WId winId () const
+ *  // WId winId () const
  *  // QWindowSurface * windowSurface () const   (preliminary)
  *  //Qt::HANDLE x11PictureHandle () const
  *  //QWidget * find ( WId id )
- *  //void repaint ()
- *  //void setFocus ()
- *  //void update ()
  */
 
 #include <QtCore/QPointer>
@@ -297,15 +240,10 @@ HB_FUNC( QT_QWIDGET_ACTIVATEWINDOW )
  */
 HB_FUNC( QT_QWIDGET_ADDACTION )
 {
-   HBQT_GC_T_QWidget * q =  (HBQT_GC_T_QWidget *)hb_parptrGC( hbqt_gcFuncs(), 1 );
-   HBQT_GC_T * p =  (HBQT_GC_T *)hb_parptrGC( hbqt_gcFuncs(), 2 );
-
-   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QWIDGET_ADDACTION()" ) );
-   if( p && p->ph && q && q->ph )
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "QT_QWIDGET_ADDACTION() Qt object: %p is attached to: %p", (void * )p->ph, (void *)q->ph ) );
-      // p->bNew = HB_FALSE;  // The ownership of action is not transferred to this QWidget.
-      ( q->ph )->addAction( ( QAction * ) p->ph );
+      ( p )->addAction( hbqt_par_QAction( 2 ) );
    }
 }
 
@@ -358,21 +296,26 @@ HB_FUNC( QT_QWIDGET_BASESIZE )
 }
 
 /*
- * QWidget * childAt ( ... )
+ * QWidget * childAt ( int x, int y ) const
  */
 HB_FUNC( QT_QWIDGET_CHILDAT )
 {
    QWidget * p = hbqt_par_QWidget( 1 );
    if( p )
    {
-      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->childAt( *hbqt_par_QPoint( 2 ) ), false ) );
-      }
-      else if( hb_pcount() == 3 && HB_ISNUM( 2 ) )
-      {
-         hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->childAt( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
-      }
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->childAt( hb_parni( 2 ), hb_parni( 3 ) ), false ) );
+   }
+}
+
+/*
+ * QWidget * childAt ( const QPoint & p ) const
+ */
+HB_FUNC( QT_QWIDGET_CHILDAT_1 )
+{
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QWidget( ( p )->childAt( *hbqt_par_QPoint( 2 ) ), false ) );
    }
 }
 
@@ -627,21 +570,26 @@ HB_FUNC( QT_QWIDGET_GRABKEYBOARD )
 }
 
 /*
- * void grabMouse ( ... )
+ * void grabMouse ()
  */
 HB_FUNC( QT_QWIDGET_GRABMOUSE )
 {
    QWidget * p = hbqt_par_QWidget( 1 );
    if( p )
    {
-      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->grabMouse( *hbqt_par_QCursor( 2 ) );
-      }
-      else
-      {
-         ( p )->grabMouse();
-      }
+      ( p )->grabMouse();
+   }
+}
+
+/*
+ * void grabMouse ( const QCursor & cursor )
+ */
+HB_FUNC( QT_QWIDGET_GRABMOUSE_1 )
+{
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      ( p )->grabMouse( *hbqt_par_QCursor( 2 ) );
    }
 }
 
@@ -1090,21 +1038,26 @@ HB_FUNC( QT_QWIDGET_MINIMUMWIDTH )
 }
 
 /*
- * void move ( ... )
+ * void move ( int x, int y )
  */
 HB_FUNC( QT_QWIDGET_MOVE )
 {
    QWidget * p = hbqt_par_QWidget( 1 );
    if( p )
    {
-      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->move( *hbqt_par_QPoint( 2 ) );
-      }
-      else if( hb_pcount() == 3 && HB_ISNUM( 2 ) )
-      {
-         ( p )->move( hb_parni( 2 ), hb_parni( 3 ) );
-      }
+      ( p )->move( hb_parni( 2 ), hb_parni( 3 ) );
+   }
+}
+
+/*
+ * void move ( const QPoint & )
+ */
+HB_FUNC( QT_QWIDGET_MOVE_1 )
+{
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      ( p )->move( *hbqt_par_QPoint( 2 ) );
    }
 }
 
@@ -1265,53 +1218,62 @@ HB_FUNC( QT_QWIDGET_REMOVEACTION )
 }
 
 /*
- * void repaint ( ... )
+ * void repaint ( int x, int y, int w, int h )
  */
 HB_FUNC( QT_QWIDGET_REPAINT )
 {
    QWidget * p = hbqt_par_QWidget( 1 );
    if( p )
    {
-      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-
-         if( q->type == HBQT_TYPE_QRect )
-         {
-            ( p )->repaint( *hbqt_par_QRect( 2 ) );
-         }
-         else if( q->type == HBQT_TYPE_QRegion )
-         {
-            ( p )->repaint( *hbqt_par_QRegion( 2 ) );
-         }
-      }
-      else if( hb_pcount() == 5 && HB_ISNUM( 2 ) )
-      {
-         ( p )->repaint( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
-      }
-      else
-      {
-         ( p )->repaint();
-      }
+      ( p )->repaint( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
    }
 }
 
 /*
- * void resize ( ... )
+ * void repaint ( const QRect & rect )
+ */
+HB_FUNC( QT_QWIDGET_REPAINT_1 )
+{
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      ( p )->repaint( *hbqt_par_QRect( 2 ) );
+   }
+}
+
+/*
+ * void repaint ( const QRegion & rgn )
+ */
+HB_FUNC( QT_QWIDGET_REPAINT_2 )
+{
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      ( p )->repaint( *hbqt_par_QRegion( 2 ) );
+   }
+}
+
+/*
+ * void resize ( int w, int h )
  */
 HB_FUNC( QT_QWIDGET_RESIZE )
 {
    QWidget * p = hbqt_par_QWidget( 1 );
    if( p )
    {
-      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->resize( *hbqt_par_QSize( 2 ) );
-      }
-      else if( hb_pcount() == 3 && HB_ISNUM( 2 ) )
-      {
-         ( p )->resize( hb_parni( 2 ), hb_parni( 3 ) );
-      }
+      ( p )->resize( hb_parni( 2 ), hb_parni( 3 ) );
+   }
+}
+
+/*
+ * void resize ( const QSize & )
+ */
+HB_FUNC( QT_QWIDGET_RESIZE_1 )
+{
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      ( p )->resize( *hbqt_par_QSize( 2 ) );
    }
 }
 
@@ -1340,21 +1302,26 @@ HB_FUNC( QT_QWIDGET_SAVEGEOMETRY )
 }
 
 /*
- * void scroll ( ... )
+ * void scroll ( int dx, int dy )
  */
 HB_FUNC( QT_QWIDGET_SCROLL )
 {
    QWidget * p = hbqt_par_QWidget( 1 );
    if( p )
    {
-      if( hb_pcount() == 4 && HB_ISNUM( 2 ) && HB_ISPOINTER( 4 ) )
-      {
-         ( p )->scroll( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QRect( 4 ) );
-      }
-      else if( hb_pcount() == 3 && HB_ISNUM( 2 ) )
-      {
-         ( p )->scroll( hb_parni( 2 ), hb_parni( 3 ) );
-      }
+      ( p )->scroll( hb_parni( 2 ), hb_parni( 3 ) );
+   }
+}
+
+/*
+ * void scroll ( int dx, int dy, const QRect & r )
+ */
+HB_FUNC( QT_QWIDGET_SCROLL_1 )
+{
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      ( p )->scroll( hb_parni( 2 ), hb_parni( 3 ), *hbqt_par_QRect( 4 ) );
    }
 }
 
@@ -1407,21 +1374,26 @@ HB_FUNC( QT_QWIDGET_SETBACKGROUNDROLE )
 }
 
 /*
- * void setBaseSize ( ... )
+ * void setBaseSize ( const QSize & )
  */
 HB_FUNC( QT_QWIDGET_SETBASESIZE )
 {
    QWidget * p = hbqt_par_QWidget( 1 );
    if( p )
    {
-      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->setBaseSize( *hbqt_par_QSize( 2 ) );
-      }
-      else if( hb_pcount() == 3 && HB_ISNUM( 2 ) )
-      {
-         ( p )->setBaseSize( hb_parni( 2 ), hb_parni( 3 ) );
-      }
+      ( p )->setBaseSize( *hbqt_par_QSize( 2 ) );
+   }
+}
+
+/*
+ * void setBaseSize ( int basew, int baseh )
+ */
+HB_FUNC( QT_QWIDGET_SETBASESIZE_1 )
+{
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      ( p )->setBaseSize( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -1474,21 +1446,26 @@ HB_FUNC( QT_QWIDGET_SETFIXEDHEIGHT )
 }
 
 /*
- * void setFixedSize ( ... )
+ * void setFixedSize ( const QSize & s )
  */
 HB_FUNC( QT_QWIDGET_SETFIXEDSIZE )
 {
    QWidget * p = hbqt_par_QWidget( 1 );
    if( p )
    {
-      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->setFixedSize( *hbqt_par_QSize( 2 ) );
-      }
-      else if( hb_pcount() == 3 && HB_ISNUM( 2 ) )
-      {
-         ( p )->setFixedSize( hb_parni( 2 ), hb_parni( 3 ) );
-      }
+      ( p )->setFixedSize( *hbqt_par_QSize( 2 ) );
+   }
+}
+
+/*
+ * void setFixedSize ( int w, int h )
+ */
+HB_FUNC( QT_QWIDGET_SETFIXEDSIZE_1 )
+{
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      ( p )->setFixedSize( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -1505,21 +1482,14 @@ HB_FUNC( QT_QWIDGET_SETFIXEDWIDTH )
 }
 
 /*
- * void setFocus ( ... )
+ * void setFocus ( Qt::FocusReason reason )
  */
 HB_FUNC( QT_QWIDGET_SETFOCUS )
 {
    QWidget * p = hbqt_par_QWidget( 1 );
    if( p )
    {
-      if( hb_pcount() == 2 && HB_ISNUM( 2 ) )
-      {
-         ( p )->setFocus( ( Qt::FocusReason ) hb_parni( 2 ) );
-      }
-      else
-      {
-         ( p )->setFocus();
-      }
+      ( p )->setFocus( ( Qt::FocusReason ) hb_parni( 2 ) );
    }
 }
 
@@ -1572,21 +1542,26 @@ HB_FUNC( QT_QWIDGET_SETFOREGROUNDROLE )
 }
 
 /*
- * void setGeometry ( ... )
+ * void setGeometry ( const QRect & )
  */
 HB_FUNC( QT_QWIDGET_SETGEOMETRY )
 {
    QWidget * p = hbqt_par_QWidget( 1 );
    if( p )
    {
-      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->setGeometry( *hbqt_par_QRect( 2 ) );
-      }
-      else if( hb_pcount() == 5 && HB_ISNUM( 2 ) )
-      {
-         ( p )->setGeometry( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
-      }
+      ( p )->setGeometry( *hbqt_par_QRect( 2 ) );
+   }
+}
+
+/*
+ * void setGeometry ( int x, int y, int w, int h )
+ */
+HB_FUNC( QT_QWIDGET_SETGEOMETRY_1 )
+{
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      ( p )->setGeometry( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
    }
 }
 
@@ -1627,23 +1602,26 @@ HB_FUNC( QT_QWIDGET_SETLOCALE )
 }
 
 /*
- * void setMask ( ... )
+ * void setMask ( const QBitmap & bitmap )
  */
 HB_FUNC( QT_QWIDGET_SETMASK )
 {
    QWidget * p = hbqt_par_QWidget( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+      ( p )->setMask( *hbqt_par_QBitmap( 2 ) );
+   }
+}
 
-      if( q->type == HBQT_TYPE_QBitmap )
-      {
-         ( p )->setMask( *hbqt_par_QBitmap( 2 ) );
-      }
-      else if( q->type == HBQT_TYPE_QRegion )
-      {
-         ( p )->setMask( *hbqt_par_QRegion( 2 ) );
-      }
+/*
+ * void setMask ( const QRegion & region )
+ */
+HB_FUNC( QT_QWIDGET_SETMASK_1 )
+{
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      ( p )->setMask( *hbqt_par_QRegion( 2 ) );
    }
 }
 
@@ -1660,21 +1638,26 @@ HB_FUNC( QT_QWIDGET_SETMAXIMUMHEIGHT )
 }
 
 /*
- * void setMaximumSize ( ... )
+ * void setMaximumSize ( const QSize & )
  */
 HB_FUNC( QT_QWIDGET_SETMAXIMUMSIZE )
 {
    QWidget * p = hbqt_par_QWidget( 1 );
    if( p )
    {
-      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->setMaximumSize( *hbqt_par_QSize( 2 ) );
-      }
-      else if( hb_pcount() == 3 && HB_ISNUM( 2 ) )
-      {
-         ( p )->setMaximumSize( hb_parni( 2 ), hb_parni( 3 ) );
-      }
+      ( p )->setMaximumSize( *hbqt_par_QSize( 2 ) );
+   }
+}
+
+/*
+ * void setMaximumSize ( int maxw, int maxh )
+ */
+HB_FUNC( QT_QWIDGET_SETMAXIMUMSIZE_1 )
+{
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      ( p )->setMaximumSize( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -1703,21 +1686,26 @@ HB_FUNC( QT_QWIDGET_SETMINIMUMHEIGHT )
 }
 
 /*
- * void setMinimumSize ( ... )
+ * void setMinimumSize ( const QSize & )
  */
 HB_FUNC( QT_QWIDGET_SETMINIMUMSIZE )
 {
    QWidget * p = hbqt_par_QWidget( 1 );
    if( p )
    {
-      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->setMinimumSize( *hbqt_par_QSize( 2 ) );
-      }
-      else if( hb_pcount() == 3 && HB_ISNUM( 2 ) )
-      {
-         ( p )->setMinimumSize( hb_parni( 2 ), hb_parni( 3 ) );
-      }
+      ( p )->setMinimumSize( *hbqt_par_QSize( 2 ) );
+   }
+}
+
+/*
+ * void setMinimumSize ( int minw, int minh )
+ */
+HB_FUNC( QT_QWIDGET_SETMINIMUMSIZE_1 )
+{
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      ( p )->setMinimumSize( hb_parni( 2 ), hb_parni( 3 ) );
    }
 }
 
@@ -1758,21 +1746,26 @@ HB_FUNC( QT_QWIDGET_SETPALETTE )
 }
 
 /*
- * void setParent ( ... )
+ * void setParent ( QWidget * parent )
  */
 HB_FUNC( QT_QWIDGET_SETPARENT )
 {
    QWidget * p = hbqt_par_QWidget( 1 );
    if( p )
    {
-      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->setParent( hbqt_par_QWidget( 2 ) );
-      }
-      else if( hb_pcount() == 3 && HB_ISPOINTER( 2 ) && HB_ISNUM( 3 ) )
-      {
-         ( p )->setParent( hbqt_par_QWidget( 2 ), ( Qt::WindowFlags ) hb_parni( 3 ) );
-      }
+      ( p )->setParent( hbqt_par_QWidget( 2 ) );
+   }
+}
+
+/*
+ * void setParent ( QWidget * parent, Qt::WindowFlags f )
+ */
+HB_FUNC( QT_QWIDGET_SETPARENT_1 )
+{
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      ( p )->setParent( hbqt_par_QWidget( 2 ), ( Qt::WindowFlags ) hb_parni( 3 ) );
    }
 }
 
@@ -1801,40 +1794,50 @@ HB_FUNC( QT_QWIDGET_SETSHORTCUTENABLED )
 }
 
 /*
- * void setSizeIncrement ( ... )
+ * void setSizeIncrement ( const QSize & )
  */
 HB_FUNC( QT_QWIDGET_SETSIZEINCREMENT )
 {
    QWidget * p = hbqt_par_QWidget( 1 );
    if( p )
    {
-      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->setSizeIncrement( *hbqt_par_QSize( 2 ) );
-      }
-      else if( hb_pcount() == 3 && HB_ISNUM( 2 ) )
-      {
-         ( p )->setSizeIncrement( hb_parni( 2 ), hb_parni( 3 ) );
-      }
+      ( p )->setSizeIncrement( *hbqt_par_QSize( 2 ) );
    }
 }
 
 /*
- * void setSizePolicy ( ... )
+ * void setSizeIncrement ( int w, int h )
+ */
+HB_FUNC( QT_QWIDGET_SETSIZEINCREMENT_1 )
+{
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      ( p )->setSizeIncrement( hb_parni( 2 ), hb_parni( 3 ) );
+   }
+}
+
+/*
+ * void setSizePolicy ( const QSizePolicy & policy )
  */
 HB_FUNC( QT_QWIDGET_SETSIZEPOLICY )
 {
    QWidget * p = hbqt_par_QWidget( 1 );
    if( p )
    {
-      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->setSizePolicy( *hbqt_par_QSizePolicy( 2 ) );
-      }
-      else if( hb_pcount() == 3 && HB_ISNUM( 2 ) )
-      {
-         ( p )->setSizePolicy( ( QSizePolicy::Policy ) hb_parni( 2 ), ( QSizePolicy::Policy ) hb_parni( 3 ) );
-      }
+      ( p )->setSizePolicy( *hbqt_par_QSizePolicy( 2 ) );
+   }
+}
+
+/*
+ * void setSizePolicy ( QSizePolicy::Policy horizontal, QSizePolicy::Policy vertical )
+ */
+HB_FUNC( QT_QWIDGET_SETSIZEPOLICY_1 )
+{
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      ( p )->setSizePolicy( ( QSizePolicy::Policy ) hb_parni( 2 ), ( QSizePolicy::Policy ) hb_parni( 3 ) );
    }
 }
 
@@ -2175,34 +2178,38 @@ HB_FUNC( QT_QWIDGET_UNSETLOCALE )
 }
 
 /*
- * void update ( ... )
+ * void update ( int x, int y, int w, int h )
  */
 HB_FUNC( QT_QWIDGET_UPDATE )
 {
    QWidget * p = hbqt_par_QWidget( 1 );
    if( p )
    {
-      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+      ( p )->update( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
+   }
+}
 
-         if( q->type == HBQT_TYPE_QRect )
-         {
-            ( p )->update( *hbqt_par_QRect( 2 ) );
-         }
-         else if( q->type == HBQT_TYPE_QRegion )
-         {
-            ( p )->update( *hbqt_par_QRegion( 2 ) );
-         }
-      }
-      else if( hb_pcount() == 5 && HB_ISNUM( 2 ) )
-      {
-         ( p )->update( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
-      }
-      else
-      {
-         ( p )->update();
-      }
+/*
+ * void update ( const QRect & rect )
+ */
+HB_FUNC( QT_QWIDGET_UPDATE_1 )
+{
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      ( p )->update( *hbqt_par_QRect( 2 ) );
+   }
+}
+
+/*
+ * void update ( const QRegion & rgn )
+ */
+HB_FUNC( QT_QWIDGET_UPDATE_2 )
+{
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      ( p )->update( *hbqt_par_QRegion( 2 ) );
    }
 }
 
@@ -2507,6 +2514,18 @@ HB_FUNC( QT_QWIDGET_RAISE )
 }
 
 /*
+ * void repaint ()
+ */
+HB_FUNC( QT_QWIDGET_REPAINT_3 )
+{
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      ( p )->repaint();
+   }
+}
+
+/*
  * void setDisabled ( bool disable )
  */
 HB_FUNC( QT_QWIDGET_SETDISABLED )
@@ -2527,6 +2546,18 @@ HB_FUNC( QT_QWIDGET_SETENABLED )
    if( p )
    {
       ( p )->setEnabled( hb_parl( 2 ) );
+   }
+}
+
+/*
+ * void setFocus ()
+ */
+HB_FUNC( QT_QWIDGET_SETFOCUS_1 )
+{
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      ( p )->setFocus();
    }
 }
 
@@ -2651,6 +2682,18 @@ HB_FUNC( QT_QWIDGET_SHOWNORMAL )
    if( p )
    {
       ( p )->showNormal();
+   }
+}
+
+/*
+ * void update ()
+ */
+HB_FUNC( QT_QWIDGET_UPDATE_3 )
+{
+   QWidget * p = hbqt_par_QWidget( 1 );
+   if( p )
+   {
+      ( p )->update();
    }
 }
 

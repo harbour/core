@@ -70,6 +70,11 @@
  *  enum DialogCode { Accepted, Rejected }
  */
 
+/*
+ *  Constructed[ 10/10 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include  <QtGui/QDialog>

@@ -56,9 +56,10 @@
 
 <CLASS>
 QObject  = no
-Inherits = 
+Inherits =
 Type     = Core
-New      = 
+New      =
+ClubMethods = no
 </CLASS>
 
 <CODE>

@@ -72,6 +72,17 @@
  *  enum RowWrapPolicy { DontWrapRows, WrapLongRows, WrapAllRows }
  */
 
+/*
+ *  Constructed[ 33/33 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  //void addRow ( QWidget * label, QLayout * field )
+ *  //void addRow ( const QString & labelText, QLayout * field )
+ *  //void addRow ( QLayout * layout )
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QFormLayout>
@@ -169,21 +180,9 @@ HB_FUNC( QT_QFORMLAYOUT_ADDROW )
 }
 
 /*
- * void addRow ( QWidget * label, QLayout * field )
- */
-HB_FUNC( QT_QFORMLAYOUT_ADDROW_1 )
-{
-   QFormLayout * p = hbqt_par_QFormLayout( 1 );
-   if( p )
-   {
-      ( p )->addRow( hbqt_par_QWidget( 2 ), hbqt_par_QLayout( 3 ) );
-   }
-}
-
-/*
  * void addRow ( QWidget * widget )
  */
-HB_FUNC( QT_QFORMLAYOUT_ADDROW_2 )
+HB_FUNC( QT_QFORMLAYOUT_ADDROW_1 )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
@@ -195,7 +194,7 @@ HB_FUNC( QT_QFORMLAYOUT_ADDROW_2 )
 /*
  * void addRow ( const QString & labelText, QWidget * field )
  */
-HB_FUNC( QT_QFORMLAYOUT_ADDROW_3 )
+HB_FUNC( QT_QFORMLAYOUT_ADDROW_2 )
 {
    QFormLayout * p = hbqt_par_QFormLayout( 1 );
    if( p )
@@ -203,32 +202,6 @@ HB_FUNC( QT_QFORMLAYOUT_ADDROW_3 )
       void * pText;
       ( p )->addRow( hb_parstr_utf8( 2, &pText, NULL ), hbqt_par_QWidget( 3 ) );
       hb_strfree( pText );
-   }
-}
-
-/*
- * void addRow ( const QString & labelText, QLayout * field )
- */
-HB_FUNC( QT_QFORMLAYOUT_ADDROW_4 )
-{
-   QFormLayout * p = hbqt_par_QFormLayout( 1 );
-   if( p )
-   {
-      void * pText;
-      ( p )->addRow( hb_parstr_utf8( 2, &pText, NULL ), hbqt_par_QLayout( 3 ) );
-      hb_strfree( pText );
-   }
-}
-
-/*
- * void addRow ( QLayout * layout )
- */
-HB_FUNC( QT_QFORMLAYOUT_ADDROW_5 )
-{
-   QFormLayout * p = hbqt_par_QFormLayout( 1 );
-   if( p )
-   {
-      ( p )->addRow( hbqt_par_QLayout( 2 ) );
    }
 }
 

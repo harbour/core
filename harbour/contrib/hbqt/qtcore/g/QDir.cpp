@@ -72,6 +72,17 @@
  *  flags SortFlags
  */
 
+/*
+ *  Constructed[ 53/53 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // QFileInfoList entryInfoList ( const QStringList & nameFilters, Filters filters = NoFilter, SortFlags sort = NoSort ) const
+ *  // QFileInfoList entryInfoList ( Filters filters = NoFilter, SortFlags sort = NoSort ) const
+ *  // QFileInfoList drives ()
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtCore/QDir>

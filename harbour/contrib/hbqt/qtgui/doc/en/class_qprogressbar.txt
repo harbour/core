@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QWidget
  *  $SYNTAX$
- *     QProgressBar():new( ... )
+ *     QProgressBar( ... )
  *     QProgressBar():from( pPtr_OR_oObj_of_type_QProgressBar )
  *     QProgressBar():configure( pPtr_OR_oObj_of_type_QProgressBar )
  *  $ARGUMENTS$

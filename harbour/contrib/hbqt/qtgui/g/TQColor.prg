@@ -324,11 +324,37 @@ METHOD QColor:setRedF( nRed )
 
 
 METHOD QColor:setRgb( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QColor_setRgb( ::pPtr, ... )
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // void setRgb ( int r, int g, int b, int a = 255 )
+                // N n int, N n int, N n int, N n int
+         RETURN Qt_QColor_setRgb_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // void setRgb ( int r, int g, int b, int a = 255 )
+                // N n int, N n int, N n int, N n int
+         RETURN Qt_QColor_setRgb_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // void setRgb ( QRgb rgb )
+                // N n QRgb
+         RETURN Qt_QColor_setRgb( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QColor:setRgba( nRgba )
@@ -392,11 +418,37 @@ METHOD QColor:fromHsvF( nH, nS, nV, nA )
 
 
 METHOD QColor:fromRgb( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QColor_fromRgb( ::pPtr, ... )
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // QColor fromRgb ( int r, int g, int b, int a = 255 )
+                // N n int, N n int, N n int, N n int
+         RETURN QColor():from( Qt_QColor_fromRgb_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // QColor fromRgb ( int r, int g, int b, int a = 255 )
+                // N n int, N n int, N n int, N n int
+         RETURN QColor():from( Qt_QColor_fromRgb_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // QColor fromRgb ( QRgb rgb )
+                // N n QRgb
+         RETURN QColor():from( Qt_QColor_fromRgb( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QColor:fromRgbF( nR, nG, nB, nA )

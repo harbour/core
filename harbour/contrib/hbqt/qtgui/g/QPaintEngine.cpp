@@ -75,6 +75,15 @@
  *  enum Type { X11, Windows, MacPrinter, CoreGraphics, ..., MaxUser }
  */
 
+/*
+ *  Constructed[ 23/23 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // virtual void updateState ( const QPaintEngineState & state ) = 0
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QPaintEngine>

@@ -69,7 +69,7 @@ New      = pParent
  */
 HB_FUNC( QT_QMENUBAR )
 {
-   hb_retptr( ( QMenuBar* ) new QMenuBar( hbqt_par_QWidget( 1 ) ) );
+   hb_retptr( new QMenuBar( HB_ISPOINTER( 1 ) ? hbqt_par_QWidget( 1 ) : 0 ) );
 }
 </CODE>
 

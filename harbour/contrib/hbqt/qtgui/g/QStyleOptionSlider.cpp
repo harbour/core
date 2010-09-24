@@ -71,6 +71,11 @@
  *  enum StyleOptionVersion { Version }
  */
 
+/*
+ *  Constructed[ 12/12 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionSlider>
@@ -149,7 +154,11 @@ HB_FUNC( QT_QSTYLEOPTIONSLIDER )
  */
 HB_FUNC( QT_QSTYLEOPTIONSLIDER_DIALWRAPPING )
 {
-   hb_retl( hbqt_par_QStyleOptionSlider( 1 )->dialWrapping );
+   QStyleOptionSlider * p = hbqt_par_QStyleOptionSlider( 1 );
+   if( p )
+   {
+      hb_retl( ( p )->dialWrapping );
+   }
 }
 
 /*
@@ -157,7 +166,11 @@ HB_FUNC( QT_QSTYLEOPTIONSLIDER_DIALWRAPPING )
  */
 HB_FUNC( QT_QSTYLEOPTIONSLIDER_MAXIMUM )
 {
-   hb_retni( hbqt_par_QStyleOptionSlider( 1 )->maximum );
+   QStyleOptionSlider * p = hbqt_par_QStyleOptionSlider( 1 );
+   if( p )
+   {
+      hb_retni( ( p )->maximum );
+   }
 }
 
 /*
@@ -165,7 +178,11 @@ HB_FUNC( QT_QSTYLEOPTIONSLIDER_MAXIMUM )
  */
 HB_FUNC( QT_QSTYLEOPTIONSLIDER_MINIMUM )
 {
-   hb_retni( hbqt_par_QStyleOptionSlider( 1 )->minimum );
+   QStyleOptionSlider * p = hbqt_par_QStyleOptionSlider( 1 );
+   if( p )
+   {
+      hb_retni( ( p )->minimum );
+   }
 }
 
 /*
@@ -173,7 +190,11 @@ HB_FUNC( QT_QSTYLEOPTIONSLIDER_MINIMUM )
  */
 HB_FUNC( QT_QSTYLEOPTIONSLIDER_NOTCHTARGET )
 {
-   hb_retnd( hbqt_par_QStyleOptionSlider( 1 )->notchTarget );
+   QStyleOptionSlider * p = hbqt_par_QStyleOptionSlider( 1 );
+   if( p )
+   {
+      hb_retnd( ( p )->notchTarget );
+   }
 }
 
 /*
@@ -181,7 +202,11 @@ HB_FUNC( QT_QSTYLEOPTIONSLIDER_NOTCHTARGET )
  */
 HB_FUNC( QT_QSTYLEOPTIONSLIDER_ORIENTATION )
 {
-   hb_retni( ( Qt::Orientation ) hbqt_par_QStyleOptionSlider( 1 )->orientation );
+   QStyleOptionSlider * p = hbqt_par_QStyleOptionSlider( 1 );
+   if( p )
+   {
+      hb_retni( ( Qt::Orientation ) ( p )->orientation );
+   }
 }
 
 /*
@@ -189,7 +214,11 @@ HB_FUNC( QT_QSTYLEOPTIONSLIDER_ORIENTATION )
  */
 HB_FUNC( QT_QSTYLEOPTIONSLIDER_PAGESTEP )
 {
-   hb_retni( hbqt_par_QStyleOptionSlider( 1 )->pageStep );
+   QStyleOptionSlider * p = hbqt_par_QStyleOptionSlider( 1 );
+   if( p )
+   {
+      hb_retni( ( p )->pageStep );
+   }
 }
 
 /*
@@ -197,7 +226,11 @@ HB_FUNC( QT_QSTYLEOPTIONSLIDER_PAGESTEP )
  */
 HB_FUNC( QT_QSTYLEOPTIONSLIDER_SINGLESTEP )
 {
-   hb_retni( hbqt_par_QStyleOptionSlider( 1 )->singleStep );
+   QStyleOptionSlider * p = hbqt_par_QStyleOptionSlider( 1 );
+   if( p )
+   {
+      hb_retni( ( p )->singleStep );
+   }
 }
 
 /*
@@ -205,7 +238,11 @@ HB_FUNC( QT_QSTYLEOPTIONSLIDER_SINGLESTEP )
  */
 HB_FUNC( QT_QSTYLEOPTIONSLIDER_SLIDERPOSITION )
 {
-   hb_retni( hbqt_par_QStyleOptionSlider( 1 )->sliderPosition );
+   QStyleOptionSlider * p = hbqt_par_QStyleOptionSlider( 1 );
+   if( p )
+   {
+      hb_retni( ( p )->sliderPosition );
+   }
 }
 
 /*
@@ -213,7 +250,11 @@ HB_FUNC( QT_QSTYLEOPTIONSLIDER_SLIDERPOSITION )
  */
 HB_FUNC( QT_QSTYLEOPTIONSLIDER_SLIDERVALUE )
 {
-   hb_retni( hbqt_par_QStyleOptionSlider( 1 )->sliderValue );
+   QStyleOptionSlider * p = hbqt_par_QStyleOptionSlider( 1 );
+   if( p )
+   {
+      hb_retni( ( p )->sliderValue );
+   }
 }
 
 /*
@@ -221,7 +262,11 @@ HB_FUNC( QT_QSTYLEOPTIONSLIDER_SLIDERVALUE )
  */
 HB_FUNC( QT_QSTYLEOPTIONSLIDER_TICKINTERVAL )
 {
-   hb_retni( hbqt_par_QStyleOptionSlider( 1 )->tickInterval );
+   QStyleOptionSlider * p = hbqt_par_QStyleOptionSlider( 1 );
+   if( p )
+   {
+      hb_retni( ( p )->tickInterval );
+   }
 }
 
 /*
@@ -229,7 +274,11 @@ HB_FUNC( QT_QSTYLEOPTIONSLIDER_TICKINTERVAL )
  */
 HB_FUNC( QT_QSTYLEOPTIONSLIDER_TICKPOSITION )
 {
-   hb_retni( ( QSlider::TickPosition ) hbqt_par_QStyleOptionSlider( 1 )->tickPosition );
+   QStyleOptionSlider * p = hbqt_par_QStyleOptionSlider( 1 );
+   if( p )
+   {
+      hb_retni( ( QSlider::TickPosition ) ( p )->tickPosition );
+   }
 }
 
 /*
@@ -237,7 +286,11 @@ HB_FUNC( QT_QSTYLEOPTIONSLIDER_TICKPOSITION )
  */
 HB_FUNC( QT_QSTYLEOPTIONSLIDER_UPSIDEDOWN )
 {
-   hb_retl( hbqt_par_QStyleOptionSlider( 1 )->upsideDown );
+   QStyleOptionSlider * p = hbqt_par_QStyleOptionSlider( 1 );
+   if( p )
+   {
+      hb_retl( ( p )->upsideDown );
+   }
 }
 
 

@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QAbstractItemDelegate
  *  $SYNTAX$
- *     QItemDelegate():new( ... )
+ *     QItemDelegate( ... )
  *     QItemDelegate():from( pPtr_OR_oObj_of_type_QItemDelegate )
  *     QItemDelegate():configure( pPtr_OR_oObj_of_type_QItemDelegate )
  *  $ARGUMENTS$

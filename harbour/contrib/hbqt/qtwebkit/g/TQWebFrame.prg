@@ -71,8 +71,7 @@ CREATE CLASS QWebFrame INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QWebFra
 
    METHOD  new( ... )
 
-   METHOD  addToJavaScriptWindowObject( cName, pObject )
-   METHOD  addToJavaScriptWindowObject_1( cName, pObject, nOwn )
+   METHOD  addToJavaScriptWindowObject( ... )
    METHOD  childFrames()
    METHOD  contentsSize()
    METHOD  frameName()
@@ -83,8 +82,7 @@ CREATE CLASS QWebFrame INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QWebFra
    METHOD  page()
    METHOD  parentFrame()
    METHOD  pos()
-   METHOD  render( pPainter, pClip )
-   METHOD  render_1( pPainter )
+   METHOD  render( ... )
    METHOD  renderTreeDump()
    METHOD  scroll( nDx, nDy )
    METHOD  scrollBarMaximum( nOrientation )
@@ -122,12 +120,31 @@ METHOD QWebFrame:new( ... )
    RETURN Self
 
 
-METHOD QWebFrame:addToJavaScriptWindowObject( cName, pObject )
-   RETURN Qt_QWebFrame_addToJavaScriptWindowObject( ::pPtr, cName, hbqt_ptr( pObject ) )
-
-
-METHOD QWebFrame:addToJavaScriptWindowObject_1( cName, pObject, nOwn )
-   RETURN Qt_QWebFrame_addToJavaScriptWindowObject_1( ::pPtr, cName, hbqt_ptr( pObject ), nOwn )
+METHOD QWebFrame:addToJavaScriptWindowObject( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "N"
+                // void addToJavaScriptWindowObject ( const QString & name, QObject * object, QScriptEngine::ValueOwnership own )
+                // C c QString, PO p QObject, N n QScriptEngine::ValueOwnership
+         RETURN Qt_QWebFrame_addToJavaScriptWindowObject_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO"
+                // void addToJavaScriptWindowObject ( const QString & name, QObject * object )
+                // C c QString, PO p QObject
+         RETURN Qt_QWebFrame_addToJavaScriptWindowObject( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QWebFrame:childFrames()
@@ -170,12 +187,31 @@ METHOD QWebFrame:pos()
    RETURN Qt_QWebFrame_pos( ::pPtr )
 
 
-METHOD QWebFrame:render( pPainter, pClip )
-   RETURN Qt_QWebFrame_render( ::pPtr, hbqt_ptr( pPainter ), hbqt_ptr( pClip ) )
-
-
-METHOD QWebFrame:render_1( pPainter )
-   RETURN Qt_QWebFrame_render_1( ::pPtr, hbqt_ptr( pPainter ) )
+METHOD QWebFrame:render( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
+                // void render ( QPainter * painter, const QRegion & clip )
+                // PO p QPainter, PO p QRegion
+         RETURN Qt_QWebFrame_render( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void render ( QPainter * painter )
+                // PO p QPainter
+         RETURN Qt_QWebFrame_render_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QWebFrame:renderTreeDump()

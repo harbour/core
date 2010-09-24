@@ -70,6 +70,11 @@
  *  enum EchoMode { Normal, NoEcho, Password, PasswordEchoOnEdit }
  */
 
+/*
+ *  Constructed[ 55/55 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QLineEdit>

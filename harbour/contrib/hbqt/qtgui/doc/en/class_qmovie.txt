@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QObject
  *  $SYNTAX$
- *     QMovie():new( ... )
+ *     QMovie( ... )
  *     QMovie():from( pPtr_OR_oObj_of_type_QMovie )
  *     QMovie():configure( pPtr_OR_oObj_of_type_QMovie )
  *  $ARGUMENTS$

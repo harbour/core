@@ -72,6 +72,11 @@
  *  enum Type { LinearGradient, RadialGradient, ConicalGradient, NoGradient }
  */
 
+/*
+ *  Constructed[ 8/8 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QRadialGradient>

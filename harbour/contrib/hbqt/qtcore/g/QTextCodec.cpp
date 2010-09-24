@@ -70,6 +70,16 @@
  *  flags ConversionFlags
  */
 
+/*
+ *  Constructed[ 21/21 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  //QByteArray fromUnicode ( const QChar * input, int number, ConverterState * state = 0 ) const
+ *  // QString toUnicode ( const char * input, int size, ConverterState * state = 0 ) const
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtCore/QTextCodec>

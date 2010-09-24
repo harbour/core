@@ -71,28 +71,17 @@ CREATE CLASS QFormLayout INHERIT HbQtObjectHandler, HB_QLayout FUNCTION HB_QForm
 
    METHOD  new( ... )
 
-   METHOD  addRow( pLabel, pField )
-   METHOD  addRow_1( pLabel, pField )
-   METHOD  addRow_2( pWidget )
-   METHOD  addRow_3( cLabelText, pField )
-   METHOD  addRow_4( cLabelText, pField )
-   METHOD  addRow_5( pLayout )
+   METHOD  addRow( ... )
    METHOD  fieldGrowthPolicy()
    METHOD  formAlignment()
    METHOD  getItemPosition( nIndex, nRowPtr, nRolePtr )
    METHOD  getLayoutPosition( pLayout, nRowPtr, nRolePtr )
    METHOD  getWidgetPosition( pWidget, nRowPtr, nRolePtr )
    METHOD  horizontalSpacing()
-   METHOD  insertRow( nRow, pLabel, pField )
-   METHOD  insertRow_1( nRow, pLabel, pField )
-   METHOD  insertRow_2( nRow, pWidget )
-   METHOD  insertRow_3( nRow, cLabelText, pField )
-   METHOD  insertRow_4( nRow, cLabelText, pField )
-   METHOD  insertRow_5( nRow, pLayout )
+   METHOD  insertRow( ... )
    METHOD  itemAt( nRow, nRole )
    METHOD  labelAlignment()
-   METHOD  labelForField( pField )
-   METHOD  labelForField_1( pField )
+   METHOD  labelForField( ... )
    METHOD  rowCount()
    METHOD  rowWrapPolicy()
    METHOD  setFieldGrowthPolicy( nPolicy )
@@ -120,28 +109,35 @@ METHOD QFormLayout:new( ... )
    RETURN Self
 
 
-METHOD QFormLayout:addRow( pLabel, pField )
-   RETURN Qt_QFormLayout_addRow( ::pPtr, hbqt_ptr( pLabel ), hbqt_ptr( pField ) )
-
-
-METHOD QFormLayout:addRow_1( pLabel, pField )
-   RETURN Qt_QFormLayout_addRow_1( ::pPtr, hbqt_ptr( pLabel ), hbqt_ptr( pField ) )
-
-
-METHOD QFormLayout:addRow_2( pWidget )
-   RETURN Qt_QFormLayout_addRow_2( ::pPtr, hbqt_ptr( pWidget ) )
-
-
-METHOD QFormLayout:addRow_3( cLabelText, pField )
-   RETURN Qt_QFormLayout_addRow_3( ::pPtr, cLabelText, hbqt_ptr( pField ) )
-
-
-METHOD QFormLayout:addRow_4( cLabelText, pField )
-   RETURN Qt_QFormLayout_addRow_4( ::pPtr, cLabelText, hbqt_ptr( pField ) )
-
-
-METHOD QFormLayout:addRow_5( pLayout )
-   RETURN Qt_QFormLayout_addRow_5( ::pPtr, hbqt_ptr( pLayout ) )
+METHOD QFormLayout:addRow( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO"
+                // void addRow ( const QString & labelText, QWidget * field )
+                // C c QString, PO p QWidget
+         RETURN Qt_QFormLayout_addRow_2( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
+                // void addRow ( QWidget * label, QWidget * field )
+                // PO p QWidget, PO p QWidget
+         RETURN Qt_QFormLayout_addRow( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void addRow ( QWidget * widget )
+                // PO p QWidget
+         RETURN Qt_QFormLayout_addRow_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QFormLayout:fieldGrowthPolicy()
@@ -168,28 +164,44 @@ METHOD QFormLayout:horizontalSpacing()
    RETURN Qt_QFormLayout_horizontalSpacing( ::pPtr )
 
 
-METHOD QFormLayout:insertRow( nRow, pLabel, pField )
-   RETURN Qt_QFormLayout_insertRow( ::pPtr, nRow, hbqt_ptr( pLabel ), hbqt_ptr( pField ) )
-
-
-METHOD QFormLayout:insertRow_1( nRow, pLabel, pField )
-   RETURN Qt_QFormLayout_insertRow_1( ::pPtr, nRow, hbqt_ptr( pLabel ), hbqt_ptr( pField ) )
-
-
-METHOD QFormLayout:insertRow_2( nRow, pWidget )
-   RETURN Qt_QFormLayout_insertRow_2( ::pPtr, nRow, hbqt_ptr( pWidget ) )
-
-
-METHOD QFormLayout:insertRow_3( nRow, cLabelText, pField )
-   RETURN Qt_QFormLayout_insertRow_3( ::pPtr, nRow, cLabelText, hbqt_ptr( pField ) )
-
-
-METHOD QFormLayout:insertRow_4( nRow, cLabelText, pField )
-   RETURN Qt_QFormLayout_insertRow_4( ::pPtr, nRow, cLabelText, hbqt_ptr( pField ) )
-
-
-METHOD QFormLayout:insertRow_5( nRow, pLayout )
-   RETURN Qt_QFormLayout_insertRow_5( ::pPtr, nRow, hbqt_ptr( pLayout ) )
+METHOD QFormLayout:insertRow( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "C" .AND. aV[ 3 ] $ "PO"
+                // void insertRow ( int row, const QString & labelText, QLayout * field )
+                // N n int, C c QString, PO p QLayout
+         RETURN Qt_QFormLayout_insertRow_4( ::pPtr, ... )
+                // void insertRow ( int row, const QString & labelText, QWidget * field )
+                // N n int, C c QString, PO p QWidget
+         // RETURN Qt_QFormLayout_insertRow_3( ::pPtr, ... )
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PO"
+                // void insertRow ( int row, QWidget * label, QLayout * field )
+                // N n int, PO p QWidget, PO p QLayout
+         RETURN Qt_QFormLayout_insertRow_1( ::pPtr, ... )
+                // void insertRow ( int row, QWidget * label, QWidget * field )
+                // N n int, PO p QWidget, PO p QWidget
+         // RETURN Qt_QFormLayout_insertRow( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PO"
+                // void insertRow ( int row, QWidget * widget )
+                // N n int, PO p QWidget
+         RETURN Qt_QFormLayout_insertRow_2( ::pPtr, ... )
+                // void insertRow ( int row, QLayout * layout )
+                // N n int, PO p QLayout
+         // RETURN Qt_QFormLayout_insertRow_5( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QFormLayout:itemAt( nRow, nRole )
@@ -200,12 +212,27 @@ METHOD QFormLayout:labelAlignment()
    RETURN Qt_QFormLayout_labelAlignment( ::pPtr )
 
 
-METHOD QFormLayout:labelForField( pField )
-   RETURN Qt_QFormLayout_labelForField( ::pPtr, hbqt_ptr( pField ) )
-
-
-METHOD QFormLayout:labelForField_1( pField )
-   RETURN Qt_QFormLayout_labelForField_1( ::pPtr, hbqt_ptr( pField ) )
+METHOD QFormLayout:labelForField( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QWidget * labelForField ( QWidget * field ) const
+                // PO p QWidget
+         RETURN QWidget():from( Qt_QFormLayout_labelForField( ::pPtr, ... ) )
+                // QWidget * labelForField ( QLayout * field ) const
+                // PO p QLayout
+         // RETURN QWidget():from( Qt_QFormLayout_labelForField_1( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QFormLayout:rowCount()

@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QsciLexer
  *  $SYNTAX$
- *     QsciLexerFlagship():new( ... )
+ *     QsciLexerFlagship( ... )
  *     QsciLexerFlagship():from( pPtr_OR_oObj_of_type_QsciLexerFlagship )
  *     QsciLexerFlagship():configure( pPtr_OR_oObj_of_type_QsciLexerFlagship )
  *  $ARGUMENTS$

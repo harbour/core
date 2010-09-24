@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QTextInlineObject():new( ... )
+ *     QTextInlineObject( ... )
  *     QTextInlineObject():from( pPtr_OR_oObj_of_type_QTextInlineObject )
  *     QTextInlineObject():configure( pPtr_OR_oObj_of_type_QTextInlineObject )
  *  $ARGUMENTS$

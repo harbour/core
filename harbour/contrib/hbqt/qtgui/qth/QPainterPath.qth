@@ -83,120 +83,23 @@ enum ElementType { MoveToElement, LineToElement, CurveToElement, CurveToDataElem
 
 <PROTOS>
 
-void addEllipse ( ... ){
-   QPainterPath * p = hbqt_par_QPainterPath( 1 );
-   if( p )
-   {
-      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->addEllipse( *hbqt_par_QRectF( 2 ) );
-      }
-      else if( hb_pcount() == 4 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->addEllipse( *hbqt_par_QPointF( 2 ), hb_parnd( 3 ), hb_parnd( 4 ) );
-      }
-      else if( hb_pcount() == 5 && HB_ISNUM( 2 ) )
-      {
-         ( p )->addEllipse( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
-      }
-   }
-}
-//void addEllipse ( const QRectF & boundingRectangle )
-//void addEllipse ( qreal x, qreal y, qreal width, qreal height )
-//void addEllipse ( const QPointF & center, qreal rx, qreal ry )
-
+void addEllipse ( const QRectF & boundingRectangle )
+void addEllipse ( qreal x, qreal y, qreal width, qreal height )
+void addEllipse ( const QPointF & center, qreal rx, qreal ry )
 void addPath ( const QPainterPath & path )
 void addPolygon ( const QPolygonF & polygon )
-
-void addRect ( ... ){
-   QPainterPath * p = hbqt_par_QPainterPath( 1 );
-   if( p )
-   {
-      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->addRect( *hbqt_par_QRectF( 2 ) );
-      }
-      else if( hb_pcount() == 5 && HB_ISNUM( 2 ) )
-      {
-         ( p )->addRect( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
-      }
-   }
-}
-//void addRect ( const QRectF & rectangle )
-//void addRect ( qreal x, qreal y, qreal width, qreal height )
-
+void addRect ( const QRectF & rectangle )
+void addRect ( qreal x, qreal y, qreal width, qreal height )
 void addRegion ( const QRegion & region )
-
-void addRoundedRect ( ... ){
-   QPainterPath * p = hbqt_par_QPainterPath( 1 );
-   if( p )
-   {
-      if( hb_pcount() >= 4 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->addRoundedRect( *hbqt_par_QRectF( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), ( Qt::SizeMode ) ( HB_ISNUM( 5 ) ? hb_parni( 5 ) : Qt::AbsoluteSize ) );
-      }
-      else if( hb_pcount() >= 7 && HB_ISNUM( 2 ) )
-      {
-         ( p )->addRoundedRect( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnd( 6 ), hb_parnd( 7 ), ( Qt::SizeMode ) ( HB_ISNUM( 8 ) ? hb_parni( 8 ) : Qt::AbsoluteSize ) );
-      }
-   }
-}
-//void addRoundedRect ( const QRectF & rect, qreal xRadius, qreal yRadius, Qt::SizeMode mode = Qt::AbsoluteSize )
-//void addRoundedRect ( qreal x, qreal y, qreal w, qreal h, qreal xRadius, qreal yRadius, Qt::SizeMode mode = Qt::AbsoluteSize )
-
-void addText ( ... ){
-   QPainterPath * p = hbqt_par_QPainterPath( 1 );
-   if( p )
-   {
-      if( hb_pcount() == 4 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->addText( *hbqt_par_QPointF( 2 ), *hbqt_par_QFont( 3 ), hbqt_par_QString( 4 ) );
-      }
-      else if( hb_pcount() == 5 && HB_ISNUM( 2 ) )
-      {
-         ( p )->addText( hb_parnd( 2 ), hb_parnd( 3 ), *hbqt_par_QFont( 4 ), hbqt_par_QString( 5 ) );
-      }
-   }
-}
-//void addText ( const QPointF & point, const QFont & font, const QString & text )
-//void addText ( qreal x, qreal y, const QFont & font, const QString & text )
-
+void addRoundedRect ( const QRectF & rect, qreal xRadius, qreal yRadius, Qt::SizeMode mode = Qt::AbsoluteSize )
+void addRoundedRect ( qreal x, qreal y, qreal w, qreal h, qreal xRadius, qreal yRadius, Qt::SizeMode mode = Qt::AbsoluteSize )
+void addText ( const QPointF & point, const QFont & font, const QString & text )
+void addText ( qreal x, qreal y, const QFont & font, const QString & text )
 qreal angleAtPercent ( qreal t ) const
-
-void arcMoveTo ( ... ){
-   QPainterPath * p = hbqt_par_QPainterPath( 1 );
-   if( p )
-   {
-      if( hb_pcount() == 3 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->arcMoveTo( *hbqt_par_QRectF( 2 ), hb_parnd( 3 ) );
-      }
-      else if( hb_pcount() == 6 && HB_ISNUM( 2 ) )
-      {
-         ( p )->arcMoveTo( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnd( 6 ) );
-      }
-   }
-}
-//void arcMoveTo ( const QRectF & rectangle, qreal angle )
-//void arcMoveTo ( qreal x, qreal y, qreal width, qreal height, qreal angle )
-
-void arcTo ( ... ){
-   QPainterPath * p = hbqt_par_QPainterPath( 1 );
-   if( p )
-   {
-      if( hb_pcount() == 4 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->arcTo( *hbqt_par_QRectF( 2 ), hb_parnd( 3 ), hb_parnd( 4 ) );
-      }
-      else if( hb_pcount() == 7 && HB_ISNUM( 2 ) )
-      {
-         ( p )->arcTo( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnd( 6 ), hb_parnd( 7 ) );
-      }
-   }
-}
-//void arcTo ( const QRectF & rectangle, qreal startAngle, qreal sweepLength )
-//void arcTo ( qreal x, qreal y, qreal width, qreal height, qreal startAngle, qreal sweepLength )
-
+void arcMoveTo ( const QRectF & rectangle, qreal angle )
+void arcMoveTo ( qreal x, qreal y, qreal width, qreal height, qreal angle )
+void arcTo ( const QRectF & rectangle, qreal startAngle, qreal sweepLength )
+void arcTo ( qreal x, qreal y, qreal width, qreal height, qreal startAngle, qreal sweepLength )
 QRectF boundingRect () const
 void closeSubpath ()
 void connectPath ( const QPainterPath & path )
@@ -226,24 +129,8 @@ void contains ( ... ){
 //bool contains ( const QPainterPath & p ) const
 
 QRectF controlPointRect () const
-
-void cubicTo ( ... ){
-   QPainterPath * p = hbqt_par_QPainterPath( 1 );
-   if( p )
-   {
-      if( hb_pcount() == 4 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->cubicTo( *hbqt_par_QPointF( 2 ), *hbqt_par_QPointF( 3 ), *hbqt_par_QPointF( 4 ) );
-      }
-      else if( hb_pcount() == 7 && HB_ISNUM( 2 ) )
-      {
-         ( p )->cubicTo( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnd( 6 ), hb_parnd( 7 ) );
-      }
-   }
-}
-//void cubicTo ( const QPointF & c1, const QPointF & c2, const QPointF & endPoint )
-//void cubicTo ( qreal c1X, qreal c1Y, qreal c2X, qreal c2Y, qreal endPointX, qreal endPointY )
-
+void cubicTo ( const QPointF & c1, const QPointF & c2, const QPointF & endPoint )
+void cubicTo ( qreal c1X, qreal c1Y, qreal c2X, qreal c2Y, qreal endPointX, qreal endPointY )
 QPointF currentPosition () const
 // const QPainterPath::Element & elementAt ( int index ) const
 int elementCount () const
@@ -271,61 +158,14 @@ void intersects ( ... ){
 
 bool isEmpty () const
 qreal length () const
-
-void lineTo ( ... ){
-   QPainterPath * p = hbqt_par_QPainterPath( 1 );
-   if( p )
-   {
-      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->lineTo( *hbqt_par_QPointF( 2 ) );
-      }
-      else if( hb_pcount() == 3 && HB_ISNUM( 2 ) )
-      {
-         ( p )->lineTo( hb_parnd( 2 ), hb_parnd( 3 ) );
-      }
-   }
-}
-//void lineTo ( const QPointF & endPoint )
-//void lineTo ( qreal x, qreal y )
-
-void moveTo ( ... ){
-   QPainterPath * p = hbqt_par_QPainterPath( 1 );
-   if( p )
-   {
-      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->moveTo( *hbqt_par_QPointF( 2 ) );
-      }
-      else if( hb_pcount() == 3 && HB_ISNUM( 2 ) )
-      {
-         ( p )->moveTo( hb_parnd( 2 ), hb_parnd( 3 ) );
-      }
-   }
-}
-//void moveTo ( const QPointF & point )
-//void moveTo ( qreal x, qreal y )
-
+void lineTo ( const QPointF & endPoint )
+void lineTo ( qreal x, qreal y )
+void moveTo ( const QPointF & point )
+void moveTo ( qreal x, qreal y )
 qreal percentAtLength ( qreal len ) const
 QPointF pointAtPercent ( qreal t ) const
-
-void quadTo ( ... ){
-   QPainterPath * p = hbqt_par_QPainterPath( 1 );
-   if( p )
-   {
-      if( hb_pcount() == 3 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->quadTo( *hbqt_par_QPointF( 2 ), *hbqt_par_QPointF( 3 ) );
-      }
-      else if( hb_pcount() == 5 && HB_ISNUM( 2 ) )
-      {
-         ( p )->quadTo( hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
-      }
-   }
-}
-//void quadTo ( const QPointF & c, const QPointF & endPoint )
-//void quadTo ( qreal cx, qreal cy, qreal endPointX, qreal endPointY )
-
+void quadTo ( const QPointF & c, const QPointF & endPoint )
+void quadTo ( qreal cx, qreal cy, qreal endPointX, qreal endPointY )
 void setElementPositionAt ( int index, qreal x, qreal y )
 void setFillRule ( Qt::FillRule fillRule )
 QPainterPath simplified () const

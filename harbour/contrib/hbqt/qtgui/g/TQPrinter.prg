@@ -89,13 +89,10 @@ CREATE CLASS QPrinter INHERIT HbQtObjectHandler, HB_QPaintDevice FUNCTION HB_QPr
    METHOD  outputFileName()
    METHOD  outputFormat()
    METHOD  pageOrder()
-   METHOD  pageRect()
-   METHOD  pageRect_1( nUnit )
+   METHOD  pageRect( ... )
    METHOD  paintEngine()
-   METHOD  paperRect()
-   METHOD  paperRect_1( nUnit )
-   METHOD  paperSize()
-   METHOD  paperSize_1( nUnit )
+   METHOD  paperRect( ... )
+   METHOD  paperSize( ... )
    METHOD  paperSource()
    METHOD  printEngine()
    METHOD  printProgram()
@@ -118,8 +115,7 @@ CREATE CLASS QPrinter INHERIT HbQtObjectHandler, HB_QPaintDevice FUNCTION HB_QPr
    METHOD  setOutputFormat( nFormat )
    METHOD  setPageMargins( nLeft, nTop, nRight, nBottom, nUnit )
    METHOD  setPageOrder( nPageOrder )
-   METHOD  setPaperSize( nNewPaperSize )
-   METHOD  setPaperSize_1( pPaperSize, nUnit )
+   METHOD  setPaperSize( ... )
    METHOD  setPaperSource( nSource )
    METHOD  setPrintProgram( cPrintProg )
    METHOD  setPrintRange( nRange )
@@ -212,32 +208,77 @@ METHOD QPrinter:pageOrder()
    RETURN Qt_QPrinter_pageOrder( ::pPtr )
 
 
-METHOD QPrinter:pageRect()
-   RETURN Qt_QPrinter_pageRect( ::pPtr )
-
-
-METHOD QPrinter:pageRect_1( nUnit )
-   RETURN Qt_QPrinter_pageRect_1( ::pPtr, nUnit )
+METHOD QPrinter:pageRect( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // QRectF pageRect ( Unit unit ) const
+                // N n QPrinter::Unit
+         RETURN QRectF():from( Qt_QPrinter_pageRect_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 0
+             // QRect pageRect () const
+      RETURN QRect():from( Qt_QPrinter_pageRect( ::pPtr, ... ) )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPrinter:paintEngine()
    RETURN Qt_QPrinter_paintEngine( ::pPtr )
 
 
-METHOD QPrinter:paperRect()
-   RETURN Qt_QPrinter_paperRect( ::pPtr )
+METHOD QPrinter:paperRect( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // QRectF paperRect ( Unit unit ) const
+                // N n QPrinter::Unit
+         RETURN QRectF():from( Qt_QPrinter_paperRect_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 0
+             // QRect paperRect () const
+      RETURN QRect():from( Qt_QPrinter_paperRect( ::pPtr, ... ) )
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QPrinter:paperRect_1( nUnit )
-   RETURN Qt_QPrinter_paperRect_1( ::pPtr, nUnit )
-
-
-METHOD QPrinter:paperSize()
-   RETURN Qt_QPrinter_paperSize( ::pPtr )
-
-
-METHOD QPrinter:paperSize_1( nUnit )
-   RETURN Qt_QPrinter_paperSize_1( ::pPtr, nUnit )
+METHOD QPrinter:paperSize( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // QSizeF paperSize ( Unit unit ) const
+                // N n QPrinter::Unit
+         RETURN QSizeF():from( Qt_QPrinter_paperSize_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 0
+             // PaperSize paperSize () const
+      RETURN Qt_QPrinter_paperSize( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPrinter:paperSource()
@@ -328,12 +369,31 @@ METHOD QPrinter:setPageOrder( nPageOrder )
    RETURN Qt_QPrinter_setPageOrder( ::pPtr, nPageOrder )
 
 
-METHOD QPrinter:setPaperSize( nNewPaperSize )
-   RETURN Qt_QPrinter_setPaperSize( ::pPtr, nNewPaperSize )
-
-
-METHOD QPrinter:setPaperSize_1( pPaperSize, nUnit )
-   RETURN Qt_QPrinter_setPaperSize_1( ::pPtr, hbqt_ptr( pPaperSize ), nUnit )
+METHOD QPrinter:setPaperSize( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // void setPaperSize ( const QSizeF & paperSize, Unit unit )
+                // PO p QSizeF, N n QPrinter::Unit
+         RETURN Qt_QPrinter_setPaperSize_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // void setPaperSize ( PaperSize newPaperSize )
+                // N n QPrinter::PaperSize
+         RETURN Qt_QPrinter_setPaperSize( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPrinter:setPaperSource( nSource )

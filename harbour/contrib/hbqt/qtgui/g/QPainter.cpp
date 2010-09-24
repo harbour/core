@@ -73,42 +73,10 @@
  */
 
 /*
- *  Constructed[ 91/266 [ 34.21% ] ]
+ *  Constructed[ 94/94 [ 100.00% ] ]
  *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *
- *  *** Commented out protos which construct fine but do not compile ***
+ *  *** Commented out protostypes ***
  *
  *  //QRectF boundingRect ( const QRectF & rectangle, int flags, const QString & text )
  *  //QRect boundingRect ( const QRect & rectangle, int flags, const QString & text )
@@ -238,8 +206,6 @@
  *  // void fillRect ( int x, int y, int width, int height, Qt::GlobalColor color )
  *  // void fillRect ( const QRect  & rectangle, Qt::GlobalColor color )
  *  // void fillRect ( const QRectF & rectangle, Qt::GlobalColor color )
- *  //void setBrush ( const QBrush & brush )
- *  //void setBrush ( Qt::BrushStyle style )
  *  //void setBrushOrigin ( const QPointF & position )
  *  //void setBrushOrigin ( const QPoint & position )
  *  //void setBrushOrigin ( int x, int y )
@@ -249,10 +215,6 @@
  *  //void setPen ( const QPen & pen )
  *  //void setPen ( const QColor & color )
  *  //void setPen ( Qt::PenStyle style )
- *  //void setViewport ( const QRect & rectangle )
- *  //void setViewport ( int x, int y, int width, int height )
- *  //void setWindow ( const QRect & rectangle )
- *  //void setWindow ( int x, int y, int width, int height )
  *  //void translate ( const QPointF & offset )
  *  //void translate ( const QPoint & offset )
  *  //void translate ( qreal dx, qreal dy )
@@ -1595,21 +1557,26 @@ HB_FUNC( QT_QPAINTER_SETBACKGROUNDMODE )
 }
 
 /*
- * void setBrush ( ... )
+ * void setBrush ( const QBrush & brush )
  */
 HB_FUNC( QT_QPAINTER_SETBRUSH )
 {
    QPainter * p = hbqt_par_QPainter( 1 );
    if( p )
    {
-      if( hb_pcount() == 2 && HB_ISNUM( 2 ) )
-      {
-         ( p )->setBrush( ( Qt::BrushStyle ) hb_parni( 2 ) );
-      }
-      else if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->setBrush( *hbqt_par_QBrush( 2 ) );
-      }
+      ( p )->setBrush( *hbqt_par_QBrush( 2 ) );
+   }
+}
+
+/*
+ * void setBrush ( Qt::BrushStyle style )
+ */
+HB_FUNC( QT_QPAINTER_SETBRUSH_1 )
+{
+   QPainter * p = hbqt_par_QPainter( 1 );
+   if( p )
+   {
+      ( p )->setBrush( ( Qt::BrushStyle ) hb_parni( 2 ) );
    }
 }
 
@@ -1830,40 +1797,50 @@ HB_FUNC( QT_QPAINTER_SETVIEWTRANSFORMENABLED )
 }
 
 /*
- * void setViewport ( ... )
+ * void setViewport ( const QRect & rectangle )
  */
 HB_FUNC( QT_QPAINTER_SETVIEWPORT )
 {
    QPainter * p = hbqt_par_QPainter( 1 );
    if( p )
    {
-      if( hb_pcount() == 5 && HB_ISNUM( 2 ) )
-      {
-         ( p )->setViewport( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
-      }
-      else if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->setViewport( *hbqt_par_QRect( 2 ) );
-      }
+      ( p )->setViewport( *hbqt_par_QRect( 2 ) );
    }
 }
 
 /*
- * void setWindow ( ... )
+ * void setViewport ( int x, int y, int width, int height )
+ */
+HB_FUNC( QT_QPAINTER_SETVIEWPORT_1 )
+{
+   QPainter * p = hbqt_par_QPainter( 1 );
+   if( p )
+   {
+      ( p )->setViewport( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
+   }
+}
+
+/*
+ * void setWindow ( const QRect & rectangle )
  */
 HB_FUNC( QT_QPAINTER_SETWINDOW )
 {
    QPainter * p = hbqt_par_QPainter( 1 );
    if( p )
    {
-      if( hb_pcount() == 5 && HB_ISNUM( 2 ) )
-      {
-         ( p )->setWindow( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
-      }
-      else if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         ( p )->setWindow( *hbqt_par_QRect( 2 ) );
-      }
+      ( p )->setWindow( *hbqt_par_QRect( 2 ) );
+   }
+}
+
+/*
+ * void setWindow ( int x, int y, int width, int height )
+ */
+HB_FUNC( QT_QPAINTER_SETWINDOW_1 )
+{
+   QPainter * p = hbqt_par_QPainter( 1 );
+   if( p )
+   {
+      ( p )->setWindow( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
    }
 }
 

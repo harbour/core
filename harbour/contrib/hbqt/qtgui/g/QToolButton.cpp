@@ -70,6 +70,11 @@
  *  enum ToolButtonPopupMode { DelayedPopup, MenuButtonPopup, InstantPopup }
  */
 
+/*
+ *  Constructed[ 13/13 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QToolButton>

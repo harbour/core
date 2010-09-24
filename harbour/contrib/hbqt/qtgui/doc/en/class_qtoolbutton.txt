@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QAbstractButton
  *  $SYNTAX$
- *     QToolButton():new( ... )
+ *     QToolButton( ... )
  *     QToolButton():from( pPtr_OR_oObj_of_type_QToolButton )
  *     QToolButton():configure( pPtr_OR_oObj_of_type_QToolButton )
  *  $ARGUMENTS$

@@ -70,6 +70,11 @@
  *  enum Type { VariableLength, FixedLength, PercentageLength }
  */
 
+/*
+ *  Constructed[ 3/3 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QTextLength>

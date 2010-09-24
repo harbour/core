@@ -71,6 +71,15 @@
  *  enum Edge { Leading, Trailing }
  */
 
+/*
+ *  Constructed[ 21/21 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  //void draw ( QPainter * painter, const QPointF & position, const QTextLayout::FormatRange * selection = 0 ) const
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QTextLine>

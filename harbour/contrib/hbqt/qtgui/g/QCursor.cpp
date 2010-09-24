@@ -66,6 +66,15 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  Constructed[ 9/9 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // HCURSOR_or_HANDLE handle () const
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QPixmap>

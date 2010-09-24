@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QSyntaxHighlighter
  *  $SYNTAX$
- *     HBQSyntaxHighlighter():new( ... )
+ *     HBQSyntaxHighlighter( ... )
  *     HBQSyntaxHighlighter():from( pPtr_OR_oObj_of_type_HBQSyntaxHighlighter )
  *     HBQSyntaxHighlighter():configure( pPtr_OR_oObj_of_type_HBQSyntaxHighlighter )
  *  $ARGUMENTS$

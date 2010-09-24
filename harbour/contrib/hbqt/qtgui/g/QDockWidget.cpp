@@ -71,6 +71,11 @@
  *  flags DockWidgetFeatures
  */
 
+/*
+ *  Constructed[ 12/12 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QDockWidget>

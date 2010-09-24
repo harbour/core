@@ -71,6 +71,11 @@
  *  enum State { NotRunning, Paused, Running }
  */
 
+/*
+ *  Constructed[ 27/27 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtCore/QTimeLine>

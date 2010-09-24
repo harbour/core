@@ -81,8 +81,7 @@ CREATE CLASS QFontDatabase INHERIT HbQtObjectHandler FUNCTION HB_QFontDatabase
    METHOD  italic( cFamily, cStyle )
    METHOD  pointSizes( cFamily, cStyle )
    METHOD  smoothSizes( cFamily, cStyle )
-   METHOD  styleString( pFont )
-   METHOD  styleString_1( pFontInfo )
+   METHOD  styleString( ... )
    METHOD  styles( cFamily )
    METHOD  weight( cFamily, cStyle )
    METHOD  addApplicationFont( cFileName )
@@ -147,12 +146,27 @@ METHOD QFontDatabase:smoothSizes( cFamily, cStyle )
    RETURN Qt_QFontDatabase_smoothSizes( ::pPtr, cFamily, cStyle )
 
 
-METHOD QFontDatabase:styleString( pFont )
-   RETURN Qt_QFontDatabase_styleString( ::pPtr, hbqt_ptr( pFont ) )
-
-
-METHOD QFontDatabase:styleString_1( pFontInfo )
-   RETURN Qt_QFontDatabase_styleString_1( ::pPtr, hbqt_ptr( pFontInfo ) )
+METHOD QFontDatabase:styleString( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QString styleString ( const QFont & font )
+                // PO p QFont
+         RETURN Qt_QFontDatabase_styleString( ::pPtr, ... )
+                // QString styleString ( const QFontInfo & fontInfo )
+                // PO p QFontInfo
+         // RETURN Qt_QFontDatabase_styleString_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QFontDatabase:styles( cFamily )

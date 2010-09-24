@@ -74,7 +74,6 @@
  *  Constructed[ 57/59 [ 96.61% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  QList<QTextEdit::ExtraSelection> extraSelections () const
  *  void setExtraSelections ( const QList<QTextEdit::ExtraSelection> & selections )

@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QEvent
  *  $SYNTAX$
- *     QWindowStateChangeEvent():new( ... )
+ *     QWindowStateChangeEvent( ... )
  *     QWindowStateChangeEvent():from( pPtr_OR_oObj_of_type_QWindowStateChangeEvent )
  *     QWindowStateChangeEvent():configure( pPtr_OR_oObj_of_type_QWindowStateChangeEvent )
  *  $ARGUMENTS$

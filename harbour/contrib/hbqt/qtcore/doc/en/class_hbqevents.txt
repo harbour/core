@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QObject
  *  $SYNTAX$
- *     HBQEvents():new( ... )
+ *     HBQEvents( ... )
  *     HBQEvents():from( pPtr_OR_oObj_of_type_HBQEvents )
  *     HBQEvents():configure( pPtr_OR_oObj_of_type_HBQEvents )
  *  $ARGUMENTS$

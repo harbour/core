@@ -78,6 +78,11 @@
  *  }
  */
 
+/*
+ *  Constructed[ 27/27 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <qscilexercpp.h>

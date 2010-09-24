@@ -70,6 +70,15 @@
  *  enum EndEditHint { NoHint, EditNextItem, EditPreviousItem, SubmitModelCache, RevertModelCache }
  */
 
+/*
+ *  Constructed[ 7/7 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // bool helpEvent ( QHelpEvent * event, QAbstractItemView * view, const QStyleOptionViewItem & option, const QModelIndex & index )
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QAbstractItemDelegate>

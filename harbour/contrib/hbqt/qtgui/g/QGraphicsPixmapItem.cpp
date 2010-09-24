@@ -70,6 +70,11 @@
  *  enum ShapeMode { MaskShape, BoundingRectShape, HeuristicMaskShape }
  */
 
+/*
+ *  Constructed[ 9/9 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QGraphicsPixmapItem>

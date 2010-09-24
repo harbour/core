@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QDialog
  *  $SYNTAX$
- *     QProgressDialog():new( ... )
+ *     QProgressDialog( ... )
  *     QProgressDialog():from( pPtr_OR_oObj_of_type_QProgressDialog )
  *     QProgressDialog():configure( pPtr_OR_oObj_of_type_QProgressDialog )
  *  $ARGUMENTS$

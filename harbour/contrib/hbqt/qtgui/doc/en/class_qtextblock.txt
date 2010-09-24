@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QTextBlock():new( ... )
+ *     QTextBlock( ... )
  *     QTextBlock():from( pPtr_OR_oObj_of_type_QTextBlock )
  *     QTextBlock():configure( pPtr_OR_oObj_of_type_QTextBlock )
  *  $ARGUMENTS$

@@ -81,11 +81,11 @@ enum RowWrapPolicy { DontWrapRows, WrapLongRows, WrapAllRows }
 
 <PROTOS>
 void addRow ( QWidget * label, QWidget * field )
-void addRow ( QWidget * label, QLayout * field )
+//void addRow ( QWidget * label, QLayout * field )
 void addRow ( QWidget * widget )
 void addRow ( const QString & labelText, QWidget * field )
-void addRow ( const QString & labelText, QLayout * field )
-void addRow ( QLayout * layout )
+//void addRow ( const QString & labelText, QLayout * field )
+//void addRow ( QLayout * layout )
 FieldGrowthPolicy fieldGrowthPolicy () const
 Qt::Alignment formAlignment () const
 void getItemPosition ( int index, int * rowPtr, ItemRole * rolePtr ) const

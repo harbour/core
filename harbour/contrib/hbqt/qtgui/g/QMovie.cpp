@@ -71,6 +71,11 @@
  *  enum MovieState { NotRunning, Paused, Running }
  */
 
+/*
+ *  Constructed[ 28/28 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QMovie>

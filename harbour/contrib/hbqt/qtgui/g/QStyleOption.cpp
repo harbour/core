@@ -72,6 +72,11 @@
  *  enum StyleOptionVersion { Version }
  */
 
+/*
+ *  Constructed[ 8/8 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QStyleOption>
@@ -163,7 +168,11 @@ HB_FUNC( QT_QSTYLEOPTION_INITFROM )
  */
 HB_FUNC( QT_QSTYLEOPTION_DIRECTION )
 {
-   hb_retni( ( Qt::LayoutDirection ) hbqt_par_QStyleOption( 1 )->direction );
+   QStyleOption * p = hbqt_par_QStyleOption( 1 );
+   if( p )
+   {
+      hb_retni( ( Qt::LayoutDirection ) ( p )->direction );
+   }
 }
 
 /*
@@ -171,7 +180,11 @@ HB_FUNC( QT_QSTYLEOPTION_DIRECTION )
  */
 HB_FUNC( QT_QSTYLEOPTION_FONTMETRICS )
 {
-   hb_retptrGC( hbqt_gcAllocate_QFontMetrics( new QFontMetrics( hbqt_par_QStyleOption( 1 )->fontMetrics ), true ) );
+   QStyleOption * p = hbqt_par_QStyleOption( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QFontMetrics( new QFontMetrics( ( p )->fontMetrics ), true ) );
+   }
 }
 
 /*
@@ -179,7 +192,11 @@ HB_FUNC( QT_QSTYLEOPTION_FONTMETRICS )
  */
 HB_FUNC( QT_QSTYLEOPTION_PALETTE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QPalette( new QPalette( hbqt_par_QStyleOption( 1 )->palette ), true ) );
+   QStyleOption * p = hbqt_par_QStyleOption( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QPalette( new QPalette( ( p )->palette ), true ) );
+   }
 }
 
 /*
@@ -187,7 +204,11 @@ HB_FUNC( QT_QSTYLEOPTION_PALETTE )
  */
 HB_FUNC( QT_QSTYLEOPTION_RECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QStyleOption( 1 )->rect ), true ) );
+   QStyleOption * p = hbqt_par_QStyleOption( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->rect ), true ) );
+   }
 }
 
 /*
@@ -195,7 +216,11 @@ HB_FUNC( QT_QSTYLEOPTION_RECT )
  */
 HB_FUNC( QT_QSTYLEOPTION_STATE )
 {
-   hb_retni( ( QStyle::State ) hbqt_par_QStyleOption( 1 )->state );
+   QStyleOption * p = hbqt_par_QStyleOption( 1 );
+   if( p )
+   {
+      hb_retni( ( QStyle::State ) ( p )->state );
+   }
 }
 
 /*
@@ -203,7 +228,11 @@ HB_FUNC( QT_QSTYLEOPTION_STATE )
  */
 HB_FUNC( QT_QSTYLEOPTION_TYPE )
 {
-   hb_retni( hbqt_par_QStyleOption( 1 )->type );
+   QStyleOption * p = hbqt_par_QStyleOption( 1 );
+   if( p )
+   {
+      hb_retni( ( p )->type );
+   }
 }
 
 /*
@@ -211,7 +240,11 @@ HB_FUNC( QT_QSTYLEOPTION_TYPE )
  */
 HB_FUNC( QT_QSTYLEOPTION_VERSION )
 {
-   hb_retni( hbqt_par_QStyleOption( 1 )->version );
+   QStyleOption * p = hbqt_par_QStyleOption( 1 );
+   if( p )
+   {
+      hb_retni( ( p )->version );
+   }
 }
 
 

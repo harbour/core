@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QObject
  *  $SYNTAX$
- *     QValidator():new( ... )
+ *     QValidator( ... )
  *     QValidator():from( pPtr_OR_oObj_of_type_QValidator )
  *     QValidator():configure( pPtr_OR_oObj_of_type_QValidator )
  *  $ARGUMENTS$

@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QStyleOption
  *  $SYNTAX$
- *     QStyleOptionTabBarBase():new( ... )
+ *     QStyleOptionTabBarBase( ... )
  *     QStyleOptionTabBarBase():from( pPtr_OR_oObj_of_type_QStyleOptionTabBarBase )
  *     QStyleOptionTabBarBase():configure( pPtr_OR_oObj_of_type_QStyleOptionTabBarBase )
  *  $ARGUMENTS$

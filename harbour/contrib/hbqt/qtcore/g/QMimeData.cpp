@@ -66,13 +66,11 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 21/23 [ 91.30% ] ]
+ *  Constructed[ 21/22 [ 95.45% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  void setUrls ( const QList<QUrl> & urls )
- *  }
  */
 
 #include <QtCore/QPointer>

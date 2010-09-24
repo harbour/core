@@ -85,15 +85,12 @@ CREATE CLASS QIODevice INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QIODevi
    METHOD  isWritable()
    METHOD  open( nMode )
    METHOD  openMode()
-   METHOD  peek( cData, nMaxSize )
-   METHOD  peek_1( nMaxSize )
+   METHOD  peek( ... )
    METHOD  pos()
    METHOD  putChar( cC )
-   METHOD  read( cData, nMaxSize )
-   METHOD  read_1( nMaxSize )
+   METHOD  read( ... )
    METHOD  readAll()
-   METHOD  readLine( cData, nMaxSize )
-   METHOD  readLine_1( nMaxSize )
+   METHOD  readLine( ... )
    METHOD  reset()
    METHOD  seek( nPos )
    METHOD  setTextModeEnabled( lEnabled )
@@ -101,9 +98,7 @@ CREATE CLASS QIODevice INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QIODevi
    METHOD  ungetChar( cC )
    METHOD  waitForBytesWritten( nMsecs )
    METHOD  waitForReadyRead( nMsecs )
-   METHOD  write( pData, nMaxSize )
-   METHOD  write_1( pData )
-   METHOD  write_2( pByteArray )
+   METHOD  write( ... )
 
    ENDCLASS
 
@@ -173,12 +168,31 @@ METHOD QIODevice:openMode()
    RETURN Qt_QIODevice_openMode( ::pPtr )
 
 
-METHOD QIODevice:peek( cData, nMaxSize )
-   RETURN Qt_QIODevice_peek( ::pPtr, cData, nMaxSize )
-
-
-METHOD QIODevice:peek_1( nMaxSize )
-   RETURN Qt_QIODevice_peek_1( ::pPtr, nMaxSize )
+METHOD QIODevice:peek( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
+                // qint64 peek ( char * data, qint64 maxSize )
+                // C c char, N n qint64
+         RETURN Qt_QIODevice_peek( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // QByteArray peek ( qint64 maxSize )
+                // N n qint64
+         RETURN QByteArray():from( Qt_QIODevice_peek_1( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QIODevice:pos()
@@ -189,24 +203,66 @@ METHOD QIODevice:putChar( cC )
    RETURN Qt_QIODevice_putChar( ::pPtr, cC )
 
 
-METHOD QIODevice:read( cData, nMaxSize )
-   RETURN Qt_QIODevice_read( ::pPtr, cData, nMaxSize )
-
-
-METHOD QIODevice:read_1( nMaxSize )
-   RETURN Qt_QIODevice_read_1( ::pPtr, nMaxSize )
+METHOD QIODevice:read( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
+                // qint64 read ( char * data, qint64 maxSize )
+                // C c char, N n qint64
+         RETURN Qt_QIODevice_read( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // QByteArray read ( qint64 maxSize )
+                // N n qint64
+         RETURN QByteArray():from( Qt_QIODevice_read_1( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QIODevice:readAll()
    RETURN Qt_QIODevice_readAll( ::pPtr )
 
 
-METHOD QIODevice:readLine( cData, nMaxSize )
-   RETURN Qt_QIODevice_readLine( ::pPtr, cData, nMaxSize )
-
-
-METHOD QIODevice:readLine_1( nMaxSize )
-   RETURN Qt_QIODevice_readLine_1( ::pPtr, nMaxSize )
+METHOD QIODevice:readLine( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
+                // qint64 readLine ( char * data, qint64 maxSize )
+                // C c char, N n qint64
+         RETURN Qt_QIODevice_readLine( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // QByteArray readLine ( qint64 maxSize = 0 )
+                // N n qint64
+         RETURN QByteArray():from( Qt_QIODevice_readLine_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 0
+             // QByteArray readLine ( qint64 maxSize = 0 )
+             // N n qint64
+      RETURN QByteArray():from( Qt_QIODevice_readLine_1( ::pPtr, ... ) )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QIODevice:reset()
@@ -237,14 +293,32 @@ METHOD QIODevice:waitForReadyRead( nMsecs )
    RETURN Qt_QIODevice_waitForReadyRead( ::pPtr, nMsecs )
 
 
-METHOD QIODevice:write( pData, nMaxSize )
-   RETURN Qt_QIODevice_write( ::pPtr, hbqt_ptr( pData ), nMaxSize )
-
-
-METHOD QIODevice:write_1( pData )
-   RETURN Qt_QIODevice_write_1( ::pPtr, hbqt_ptr( pData ) )
-
-
-METHOD QIODevice:write_2( pByteArray )
-   RETURN Qt_QIODevice_write_2( ::pPtr, hbqt_ptr( pByteArray ) )
+METHOD QIODevice:write( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // qint64 write ( const char * data, qint64 maxSize )
+                // PO p char, N n qint64
+         RETURN Qt_QIODevice_write( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // qint64 write ( const char * data )
+                // PO p char
+         RETURN Qt_QIODevice_write_1( ::pPtr, ... )
+                // qint64 write ( const QByteArray & byteArray )
+                // PO p QByteArray
+         // RETURN Qt_QIODevice_write_2( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 

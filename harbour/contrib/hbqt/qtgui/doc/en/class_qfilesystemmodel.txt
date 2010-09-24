@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QAbstractItemModel
  *  $SYNTAX$
- *     QFileSystemModel():new( ... )
+ *     QFileSystemModel( ... )
  *     QFileSystemModel():from( pPtr_OR_oObj_of_type_QFileSystemModel )
  *     QFileSystemModel():configure( pPtr_OR_oObj_of_type_QFileSystemModel )
  *  $ARGUMENTS$

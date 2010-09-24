@@ -93,18 +93,16 @@ CREATE CLASS QDesignerFormWindowInterface INHERIT HbQtObjectHandler, HB_QWidget 
    METHOD  resourceFiles()
    METHOD  setAuthor( cAuthor )
    METHOD  setComment( cComment )
-   METHOD  setContents( pDevice )
+   METHOD  setContents( ... )
    METHOD  setExportMacro( cExportMacro )
    METHOD  setIncludeHints( pIncludeHints )
    METHOD  setLayoutDefault( nMargin, nSpacing )
    METHOD  setMainContainer( pMainContainer )
    METHOD  setPixmapFunction( cPixmapFunction )
-   METHOD  findFormWindow( pWidget )
-   METHOD  findFormWindow_1( pObject )
+   METHOD  findFormWindow( ... )
    METHOD  clearSelection( lUpdate )
    METHOD  manageWidget( pWidget )
    METHOD  selectWidget( pWidget, lSelect )
-   METHOD  setContents_1( cContents )
    METHOD  setDirty( lDirty )
    METHOD  setFeatures( nFeatures )
    METHOD  setFileName( cFileName )
@@ -211,8 +209,28 @@ METHOD QDesignerFormWindowInterface:setComment( cComment )
    RETURN Qt_QDesignerFormWindowInterface_setComment( ::pPtr, cComment )
 
 
-METHOD QDesignerFormWindowInterface:setContents( pDevice )
-   RETURN Qt_QDesignerFormWindowInterface_setContents( ::pPtr, hbqt_ptr( pDevice ) )
+METHOD QDesignerFormWindowInterface:setContents( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // virtual void setContents ( const QString & contents ) = 0
+                // C c QString
+         RETURN Qt_QDesignerFormWindowInterface_setContents_1( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO"
+                // virtual void setContents ( QIODevice * device ) = 0
+                // PO p QIODevice
+         RETURN Qt_QDesignerFormWindowInterface_setContents( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QDesignerFormWindowInterface:setExportMacro( cExportMacro )
@@ -235,12 +253,27 @@ METHOD QDesignerFormWindowInterface:setPixmapFunction( cPixmapFunction )
    RETURN Qt_QDesignerFormWindowInterface_setPixmapFunction( ::pPtr, cPixmapFunction )
 
 
-METHOD QDesignerFormWindowInterface:findFormWindow( pWidget )
-   RETURN Qt_QDesignerFormWindowInterface_findFormWindow( ::pPtr, hbqt_ptr( pWidget ) )
-
-
-METHOD QDesignerFormWindowInterface:findFormWindow_1( pObject )
-   RETURN Qt_QDesignerFormWindowInterface_findFormWindow_1( ::pPtr, hbqt_ptr( pObject ) )
+METHOD QDesignerFormWindowInterface:findFormWindow( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QDesignerFormWindowInterface * findFormWindow ( QWidget * widget )
+                // PO p QWidget
+         RETURN QDesignerFormWindowInterface():from( Qt_QDesignerFormWindowInterface_findFormWindow( ::pPtr, ... ) )
+                // QDesignerFormWindowInterface * findFormWindow ( QObject * object )
+                // PO p QObject
+         // RETURN QDesignerFormWindowInterface():from( Qt_QDesignerFormWindowInterface_findFormWindow_1( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QDesignerFormWindowInterface:clearSelection( lUpdate )
@@ -253,10 +286,6 @@ METHOD QDesignerFormWindowInterface:manageWidget( pWidget )
 
 METHOD QDesignerFormWindowInterface:selectWidget( pWidget, lSelect )
    RETURN Qt_QDesignerFormWindowInterface_selectWidget( ::pPtr, hbqt_ptr( pWidget ), lSelect )
-
-
-METHOD QDesignerFormWindowInterface:setContents_1( cContents )
-   RETURN Qt_QDesignerFormWindowInterface_setContents_1( ::pPtr, cContents )
 
 
 METHOD QDesignerFormWindowInterface:setDirty( lDirty )

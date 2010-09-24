@@ -71,8 +71,7 @@ CREATE CLASS QErrorMessage INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QEr
 
    METHOD  new( ... )
 
-   METHOD  showMessage( cMessage )
-   METHOD  showMessage_1( cMessage, cType )
+   METHOD  showMessage( ... )
 
    ENDCLASS
 
@@ -86,10 +85,29 @@ METHOD QErrorMessage:new( ... )
    RETURN Self
 
 
-METHOD QErrorMessage:showMessage( cMessage )
-   RETURN Qt_QErrorMessage_showMessage( ::pPtr, cMessage )
-
-
-METHOD QErrorMessage:showMessage_1( cMessage, cType )
-   RETURN Qt_QErrorMessage_showMessage_1( ::pPtr, cMessage, cType )
+METHOD QErrorMessage:showMessage( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "C"
+                // void showMessage ( const QString & message, const QString & type )
+                // C c QString, C c QString
+         RETURN Qt_QErrorMessage_showMessage_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // void showMessage ( const QString & message )
+                // C c QString
+         RETURN Qt_QErrorMessage_showMessage( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 

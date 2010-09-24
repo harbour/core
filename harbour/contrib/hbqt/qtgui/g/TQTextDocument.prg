@@ -86,10 +86,7 @@ CREATE CLASS QTextDocument INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QTe
    METHOD  documentMargin()
    METHOD  drawContents( pP, pRect )
    METHOD  end()
-   METHOD  find( cSubString, pCursor, nOptions )
-   METHOD  find_1( pExpr, pCursor, nOptions )
-   METHOD  find_2( cSubString, nPosition, nOptions )
-   METHOD  find_3( pExpr, nPosition, nOptions )
+   METHOD  find( ... )
    METHOD  findBlock( nPos )
    METHOD  findBlockByLineNumber( nLineNumber )
    METHOD  findBlockByNumber( nBlockNumber )
@@ -111,7 +108,7 @@ CREATE CLASS QTextDocument INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QTe
    METHOD  pageCount()
    METHOD  pageSize()
    METHOD  print( pPrinter )
-   METHOD  redo( pCursor )
+   METHOD  redo( ... )
    METHOD  resource( nType, pName )
    METHOD  revision()
    METHOD  rootFrame()
@@ -133,11 +130,9 @@ CREATE CLASS QTextDocument INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QTe
    METHOD  textWidth()
    METHOD  toHtml( pEncoding )
    METHOD  toPlainText()
-   METHOD  undo( pCursor )
+   METHOD  undo( ... )
    METHOD  useDesignMetrics()
-   METHOD  redo_1()
    METHOD  setModified( lM )
-   METHOD  undo_1()
 
    ENDCLASS
 
@@ -211,20 +206,58 @@ METHOD QTextDocument:end()
    RETURN Qt_QTextDocument_end( ::pPtr )
 
 
-METHOD QTextDocument:find( cSubString, pCursor, nOptions )
-   RETURN Qt_QTextDocument_find( ::pPtr, cSubString, hbqt_ptr( pCursor ), nOptions )
-
-
-METHOD QTextDocument:find_1( pExpr, pCursor, nOptions )
-   RETURN Qt_QTextDocument_find_1( ::pPtr, hbqt_ptr( pExpr ), hbqt_ptr( pCursor ), nOptions )
-
-
-METHOD QTextDocument:find_2( cSubString, nPosition, nOptions )
-   RETURN Qt_QTextDocument_find_2( ::pPtr, cSubString, nPosition, nOptions )
-
-
-METHOD QTextDocument:find_3( pExpr, nPosition, nOptions )
-   RETURN Qt_QTextDocument_find_3( ::pPtr, hbqt_ptr( pExpr ), nPosition, nOptions )
+METHOD QTextDocument:find( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // QTextCursor find ( const QString & subString, int position = 0, FindFlags options = 0 ) const
+                // C c QString, N n int, N n QTextDocument::FindFlags
+         RETURN QTextCursor():from( Qt_QTextDocument_find_2( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "N"
+                // QTextCursor find ( const QString & subString, const QTextCursor & cursor, FindFlags options = 0 ) const
+                // C c QString, PO p QTextCursor, N n QTextDocument::FindFlags
+         RETURN QTextCursor():from( Qt_QTextDocument_find( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // QTextCursor find ( const QRegExp & expr, int position = 0, FindFlags options = 0 ) const
+                // PO p QRegExp, N n int, N n QTextDocument::FindFlags
+         RETURN QTextCursor():from( Qt_QTextDocument_find_3( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "N"
+                // QTextCursor find ( const QRegExp & expr, const QTextCursor & cursor, FindFlags options = 0 ) const
+                // PO p QRegExp, PO p QTextCursor, N n QTextDocument::FindFlags
+         RETURN QTextCursor():from( Qt_QTextDocument_find_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO"
+                // QTextCursor find ( const QString & subString, const QTextCursor & cursor, FindFlags options = 0 ) const
+                // C c QString, PO p QTextCursor, N n QTextDocument::FindFlags
+         RETURN QTextCursor():from( Qt_QTextDocument_find( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
+                // QTextCursor find ( const QRegExp & expr, const QTextCursor & cursor, FindFlags options = 0 ) const
+                // PO p QRegExp, PO p QTextCursor, N n QTextDocument::FindFlags
+         RETURN QTextCursor():from( Qt_QTextDocument_find_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // QTextCursor find ( const QString & subString, int position = 0, FindFlags options = 0 ) const
+                // C c QString, N n int, N n QTextDocument::FindFlags
+         RETURN QTextCursor():from( Qt_QTextDocument_find_2( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "PO"
+                // QTextCursor find ( const QRegExp & expr, int position = 0, FindFlags options = 0 ) const
+                // PO p QRegExp, N n int, N n QTextDocument::FindFlags
+         RETURN QTextCursor():from( Qt_QTextDocument_find_3( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QTextDocument:findBlock( nPos )
@@ -311,8 +344,27 @@ METHOD QTextDocument:print( pPrinter )
    RETURN Qt_QTextDocument_print( ::pPtr, hbqt_ptr( pPrinter ) )
 
 
-METHOD QTextDocument:redo( pCursor )
-   RETURN Qt_QTextDocument_redo( ::pPtr, hbqt_ptr( pCursor ) )
+METHOD QTextDocument:redo( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void redo ( QTextCursor * cursor )
+                // PO p QTextCursor
+         RETURN Qt_QTextDocument_redo( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // void redo ()
+      RETURN Qt_QTextDocument_redo_1( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QTextDocument:resource( nType, pName )
@@ -399,22 +451,33 @@ METHOD QTextDocument:toPlainText()
    RETURN Qt_QTextDocument_toPlainText( ::pPtr )
 
 
-METHOD QTextDocument:undo( pCursor )
-   RETURN Qt_QTextDocument_undo( ::pPtr, hbqt_ptr( pCursor ) )
+METHOD QTextDocument:undo( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void undo ( QTextCursor * cursor )
+                // PO p QTextCursor
+         RETURN Qt_QTextDocument_undo( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // void undo ()
+      RETURN Qt_QTextDocument_undo_1( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QTextDocument:useDesignMetrics()
    RETURN Qt_QTextDocument_useDesignMetrics( ::pPtr )
 
 
-METHOD QTextDocument:redo_1()
-   RETURN Qt_QTextDocument_redo_1( ::pPtr )
-
-
 METHOD QTextDocument:setModified( lM )
    RETURN Qt_QTextDocument_setModified( ::pPtr, lM )
-
-
-METHOD QTextDocument:undo_1()
-   RETURN Qt_QTextDocument_undo_1( ::pPtr )
 

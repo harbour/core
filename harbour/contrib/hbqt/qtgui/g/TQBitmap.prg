@@ -72,8 +72,7 @@ CREATE CLASS QBitmap INHERIT HbQtObjectHandler, HB_QPixmap FUNCTION HB_QBitmap
    METHOD  new( ... )
 
    METHOD  clear()
-   METHOD  transformed( pMatrix )
-   METHOD  transformed_1( pMatrix )
+   METHOD  transformed( ... )
    METHOD  fromImage( pImage, nFlags )
 
    ENDCLASS
@@ -92,12 +91,27 @@ METHOD QBitmap:clear()
    RETURN Qt_QBitmap_clear( ::pPtr )
 
 
-METHOD QBitmap:transformed( pMatrix )
-   RETURN Qt_QBitmap_transformed( ::pPtr, hbqt_ptr( pMatrix ) )
-
-
-METHOD QBitmap:transformed_1( pMatrix )
-   RETURN Qt_QBitmap_transformed_1( ::pPtr, hbqt_ptr( pMatrix ) )
+METHOD QBitmap:transformed( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QBitmap transformed ( const QTransform & matrix ) const
+                // PO p QTransform
+         RETURN QBitmap():from( Qt_QBitmap_transformed( ::pPtr, ... ) )
+                // QBitmap transformed ( const QMatrix & matrix ) const
+                // PO p QMatrix
+         // RETURN QBitmap():from( Qt_QBitmap_transformed_1( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QBitmap:fromImage( pImage, nFlags )

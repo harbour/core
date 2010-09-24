@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QWidget
  *  $SYNTAX$
- *     QComboBox():new( ... )
+ *     QComboBox( ... )
  *     QComboBox():from( pPtr_OR_oObj_of_type_QComboBox )
  *     QComboBox():configure( pPtr_OR_oObj_of_type_QComboBox )
  *  $ARGUMENTS$

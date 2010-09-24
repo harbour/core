@@ -74,13 +74,11 @@ CREATE CLASS QPalette INHERIT HbQtObjectHandler FUNCTION HB_QPalette
    METHOD  alternateBase()
    METHOD  base()
    METHOD  brightText()
-   METHOD  brush( nGroup, nRole )
-   METHOD  brush_1( nRole )
+   METHOD  brush( ... )
    METHOD  button()
    METHOD  buttonText()
    METHOD  cacheKey()
-   METHOD  color( nGroup, nRole )
-   METHOD  color_1( nRole )
+   METHOD  color( ... )
    METHOD  currentColorGroup()
    METHOD  dark()
    METHOD  highlight()
@@ -94,10 +92,8 @@ CREATE CLASS QPalette INHERIT HbQtObjectHandler FUNCTION HB_QPalette
    METHOD  mid()
    METHOD  midlight()
    METHOD  resolve( pOther )
-   METHOD  setBrush( nRole, pBrush )
-   METHOD  setBrush_1( nGroup, nRole, pBrush )
-   METHOD  setColor( nRole, pColor )
-   METHOD  setColor_1( nGroup, nRole, pColor )
+   METHOD  setBrush( ... )
+   METHOD  setColor( ... )
    METHOD  setColorGroup( nCg, pWindowText, pButton, pLight, pDark, pMid, pText, pBright_text, pBase, pWindow )
    METHOD  setCurrentColorGroup( nCg )
    METHOD  shadow()
@@ -131,12 +127,31 @@ METHOD QPalette:brightText()
    RETURN Qt_QPalette_brightText( ::pPtr )
 
 
-METHOD QPalette:brush( nGroup, nRole )
-   RETURN Qt_QPalette_brush( ::pPtr, nGroup, nRole )
-
-
-METHOD QPalette:brush_1( nRole )
-   RETURN Qt_QPalette_brush_1( ::pPtr, nRole )
+METHOD QPalette:brush( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // const QBrush & brush ( ColorGroup group, ColorRole role ) const
+                // N n QPalette::ColorGroup, N n QPalette::ColorRole
+         RETURN QBrush():from( Qt_QPalette_brush( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // const QBrush & brush ( ColorRole role ) const
+                // N n QPalette::ColorRole
+         RETURN QBrush():from( Qt_QPalette_brush_1( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPalette:button()
@@ -151,12 +166,31 @@ METHOD QPalette:cacheKey()
    RETURN Qt_QPalette_cacheKey( ::pPtr )
 
 
-METHOD QPalette:color( nGroup, nRole )
-   RETURN Qt_QPalette_color( ::pPtr, nGroup, nRole )
-
-
-METHOD QPalette:color_1( nRole )
-   RETURN Qt_QPalette_color_1( ::pPtr, nRole )
+METHOD QPalette:color( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // const QColor & color ( ColorGroup group, ColorRole role ) const
+                // N n QPalette::ColorGroup, N n QPalette::ColorRole
+         RETURN QColor():from( Qt_QPalette_color( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // const QColor & color ( ColorRole role ) const
+                // N n QPalette::ColorRole
+         RETURN QColor():from( Qt_QPalette_color_1( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPalette:currentColorGroup()
@@ -211,20 +245,58 @@ METHOD QPalette:resolve( pOther )
    RETURN Qt_QPalette_resolve( ::pPtr, hbqt_ptr( pOther ) )
 
 
-METHOD QPalette:setBrush( nRole, pBrush )
-   RETURN Qt_QPalette_setBrush( ::pPtr, nRole, hbqt_ptr( pBrush ) )
+METHOD QPalette:setBrush( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "PO"
+                // void setBrush ( ColorGroup group, ColorRole role, const QBrush & brush )
+                // N n QPalette::ColorGroup, N n QPalette::ColorRole, PO p QBrush
+         RETURN Qt_QPalette_setBrush_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PO"
+                // void setBrush ( ColorRole role, const QBrush & brush )
+                // N n QPalette::ColorRole, PO p QBrush
+         RETURN Qt_QPalette_setBrush( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QPalette:setBrush_1( nGroup, nRole, pBrush )
-   RETURN Qt_QPalette_setBrush_1( ::pPtr, nGroup, nRole, hbqt_ptr( pBrush ) )
-
-
-METHOD QPalette:setColor( nRole, pColor )
-   RETURN Qt_QPalette_setColor( ::pPtr, nRole, hbqt_ptr( pColor ) )
-
-
-METHOD QPalette:setColor_1( nGroup, nRole, pColor )
-   RETURN Qt_QPalette_setColor_1( ::pPtr, nGroup, nRole, hbqt_ptr( pColor ) )
+METHOD QPalette:setColor( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "PO"
+                // void setColor ( ColorGroup group, ColorRole role, const QColor & color )
+                // N n QPalette::ColorGroup, N n QPalette::ColorRole, PO p QColor
+         RETURN Qt_QPalette_setColor_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PO"
+                // void setColor ( ColorRole role, const QColor & color )
+                // N n QPalette::ColorRole, PO p QColor
+         RETURN Qt_QPalette_setColor( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPalette:setColorGroup( nCg, pWindowText, pButton, pLight, pDark, pMid, pText, pBright_text, pBase, pWindow )

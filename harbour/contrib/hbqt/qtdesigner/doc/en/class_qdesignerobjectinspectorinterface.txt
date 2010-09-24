@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QWidget
  *  $SYNTAX$
- *     QDesignerObjectInspectorInterface():new( ... )
+ *     QDesignerObjectInspectorInterface( ... )
  *     QDesignerObjectInspectorInterface():from( pPtr_OR_oObj_of_type_QDesignerObjectInspectorInterface )
  *     QDesignerObjectInspectorInterface():configure( pPtr_OR_oObj_of_type_QDesignerObjectInspectorInterface )
  *  $ARGUMENTS$

@@ -71,8 +71,7 @@ CREATE CLASS QLCDNumber INHERIT HbQtObjectHandler, HB_QFrame FUNCTION HB_QLCDNum
 
    METHOD  new( ... )
 
-   METHOD  checkOverflow( nNum )
-   METHOD  checkOverflow_1( nNum )
+   METHOD  checkOverflow( ... )
    METHOD  intValue()
    METHOD  mode()
    METHOD  numDigits()
@@ -82,9 +81,7 @@ CREATE CLASS QLCDNumber INHERIT HbQtObjectHandler, HB_QFrame FUNCTION HB_QLCDNum
    METHOD  setSegmentStyle( nSegmentStyle )
    METHOD  smallDecimalPoint()
    METHOD  value()
-   METHOD  display( cS )
-   METHOD  display_1( nNum )
-   METHOD  display_2( nNum )
+   METHOD  display( ... )
    METHOD  setBinMode()
    METHOD  setDecMode()
    METHOD  setHexMode()
@@ -103,12 +100,27 @@ METHOD QLCDNumber:new( ... )
    RETURN Self
 
 
-METHOD QLCDNumber:checkOverflow( nNum )
-   RETURN Qt_QLCDNumber_checkOverflow( ::pPtr, nNum )
-
-
-METHOD QLCDNumber:checkOverflow_1( nNum )
-   RETURN Qt_QLCDNumber_checkOverflow_1( ::pPtr, nNum )
+METHOD QLCDNumber:checkOverflow( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // bool checkOverflow ( double num ) const
+                // N n double
+         RETURN Qt_QLCDNumber_checkOverflow( ::pPtr, ... )
+                // bool checkOverflow ( int num ) const
+                // N n int
+         // RETURN Qt_QLCDNumber_checkOverflow_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QLCDNumber:intValue()
@@ -147,16 +159,31 @@ METHOD QLCDNumber:value()
    RETURN Qt_QLCDNumber_value( ::pPtr )
 
 
-METHOD QLCDNumber:display( cS )
-   RETURN Qt_QLCDNumber_display( ::pPtr, cS )
-
-
-METHOD QLCDNumber:display_1( nNum )
-   RETURN Qt_QLCDNumber_display_1( ::pPtr, nNum )
-
-
-METHOD QLCDNumber:display_2( nNum )
-   RETURN Qt_QLCDNumber_display_2( ::pPtr, nNum )
+METHOD QLCDNumber:display( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // void display ( const QString & s )
+                // C c QString
+         RETURN Qt_QLCDNumber_display( ::pPtr, ... )
+      CASE aV[ 1 ] $ "N"
+                // void display ( double num )
+                // N n double
+         RETURN Qt_QLCDNumber_display_1( ::pPtr, ... )
+                // void display ( int num )
+                // N n int
+         // RETURN Qt_QLCDNumber_display_2( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QLCDNumber:setBinMode()

@@ -71,6 +71,15 @@
  *  flags ColorDialogOptions
  */
 
+/*
+ *  Constructed[ 15/15 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  //void open ( QObject * receiver, const char * member )
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QColorDialog>

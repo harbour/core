@@ -84,8 +84,7 @@ CREATE CLASS QTextCursor INHERIT HbQtObjectHandler FUNCTION HB_QTextCursor
    METHOD  charFormat()
    METHOD  clearSelection()
    METHOD  columnNumber()
-   METHOD  createList( pFormat )
-   METHOD  createList_1( nStyle )
+   METHOD  createList( ... )
    METHOD  currentFrame()
    METHOD  currentList()
    METHOD  deleteChar()
@@ -94,20 +93,13 @@ CREATE CLASS QTextCursor INHERIT HbQtObjectHandler FUNCTION HB_QTextCursor
    METHOD  endEditBlock()
    METHOD  hasComplexSelection()
    METHOD  hasSelection()
-   METHOD  insertBlock()
-   METHOD  insertBlock_1( pFormat )
-   METHOD  insertBlock_2( pFormat, pCharFormat )
+   METHOD  insertBlock( ... )
    METHOD  insertFragment( pFragment )
    METHOD  insertFrame( pFormat )
    METHOD  insertHtml( cHtml )
-   METHOD  insertImage( cName )
-   METHOD  insertImage_1( pFormat )
-   METHOD  insertImage_2( pFormat, nAlignment )
-   METHOD  insertImage_3( pImage, cName )
-   METHOD  insertList( pFormat )
-   METHOD  insertList_1( nStyle )
-   METHOD  insertText( cText )
-   METHOD  insertText_1( cText, pFormat )
+   METHOD  insertImage( ... )
+   METHOD  insertList( ... )
+   METHOD  insertText( ... )
    METHOD  isCopyOf( pOther )
    METHOD  isNull()
    METHOD  joinPreviousEditBlock()
@@ -194,12 +186,28 @@ METHOD QTextCursor:columnNumber()
    RETURN Qt_QTextCursor_columnNumber( ::pPtr )
 
 
-METHOD QTextCursor:createList( pFormat )
-   RETURN Qt_QTextCursor_createList( ::pPtr, hbqt_ptr( pFormat ) )
-
-
-METHOD QTextCursor:createList_1( nStyle )
-   RETURN Qt_QTextCursor_createList_1( ::pPtr, nStyle )
+METHOD QTextCursor:createList( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // QTextList * createList ( QTextListFormat::Style style )
+                // N n QTextListFormat::Style
+         RETURN QTextList():from( Qt_QTextCursor_createList_1( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "PO"
+                // QTextList * createList ( const QTextListFormat & format )
+                // PO p QTextListFormat
+         RETURN QTextList():from( Qt_QTextCursor_createList( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QTextCursor:currentFrame()
@@ -234,16 +242,34 @@ METHOD QTextCursor:hasSelection()
    RETURN Qt_QTextCursor_hasSelection( ::pPtr )
 
 
-METHOD QTextCursor:insertBlock()
-   RETURN Qt_QTextCursor_insertBlock( ::pPtr )
-
-
-METHOD QTextCursor:insertBlock_1( pFormat )
-   RETURN Qt_QTextCursor_insertBlock_1( ::pPtr, hbqt_ptr( pFormat ) )
-
-
-METHOD QTextCursor:insertBlock_2( pFormat, pCharFormat )
-   RETURN Qt_QTextCursor_insertBlock_2( ::pPtr, hbqt_ptr( pFormat ), hbqt_ptr( pCharFormat ) )
+METHOD QTextCursor:insertBlock( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
+                // void insertBlock ( const QTextBlockFormat & format, const QTextCharFormat & charFormat )
+                // PO p QTextBlockFormat, PO p QTextCharFormat
+         RETURN Qt_QTextCursor_insertBlock_2( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void insertBlock ( const QTextBlockFormat & format )
+                // PO p QTextBlockFormat
+         RETURN Qt_QTextCursor_insertBlock_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // void insertBlock ()
+      RETURN Qt_QTextCursor_insertBlock( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QTextCursor:insertFragment( pFragment )
@@ -258,36 +284,93 @@ METHOD QTextCursor:insertHtml( cHtml )
    RETURN Qt_QTextCursor_insertHtml( ::pPtr, cHtml )
 
 
-METHOD QTextCursor:insertImage( cName )
-   RETURN Qt_QTextCursor_insertImage( ::pPtr, cName )
+METHOD QTextCursor:insertImage( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "C"
+                // void insertImage ( const QImage & image, const QString & name = QString() )
+                // PO p QImage, C c QString
+         RETURN Qt_QTextCursor_insertImage_3( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // void insertImage ( const QTextImageFormat & format, QTextFrameFormat::Position alignment )
+                // PO p QTextImageFormat, N n QTextFrameFormat::Position
+         RETURN Qt_QTextCursor_insertImage_2( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // void insertImage ( const QString & name )
+                // C c QString
+         RETURN Qt_QTextCursor_insertImage( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO"
+                // void insertImage ( const QTextImageFormat & format )
+                // PO p QTextImageFormat
+         RETURN Qt_QTextCursor_insertImage_1( ::pPtr, ... )
+                // void insertImage ( const QImage & image, const QString & name = QString() )
+                // PO p QImage, C c QString
+         // RETURN Qt_QTextCursor_insertImage_3( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QTextCursor:insertImage_1( pFormat )
-   RETURN Qt_QTextCursor_insertImage_1( ::pPtr, hbqt_ptr( pFormat ) )
+METHOD QTextCursor:insertList( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // QTextList * insertList ( QTextListFormat::Style style )
+                // N n QTextListFormat::Style
+         RETURN QTextList():from( Qt_QTextCursor_insertList_1( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "PO"
+                // QTextList * insertList ( const QTextListFormat & format )
+                // PO p QTextListFormat
+         RETURN QTextList():from( Qt_QTextCursor_insertList( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QTextCursor:insertImage_2( pFormat, nAlignment )
-   RETURN Qt_QTextCursor_insertImage_2( ::pPtr, hbqt_ptr( pFormat ), nAlignment )
-
-
-METHOD QTextCursor:insertImage_3( pImage, cName )
-   RETURN Qt_QTextCursor_insertImage_3( ::pPtr, hbqt_ptr( pImage ), cName )
-
-
-METHOD QTextCursor:insertList( pFormat )
-   RETURN Qt_QTextCursor_insertList( ::pPtr, hbqt_ptr( pFormat ) )
-
-
-METHOD QTextCursor:insertList_1( nStyle )
-   RETURN Qt_QTextCursor_insertList_1( ::pPtr, nStyle )
-
-
-METHOD QTextCursor:insertText( cText )
-   RETURN Qt_QTextCursor_insertText( ::pPtr, cText )
-
-
-METHOD QTextCursor:insertText_1( cText, pFormat )
-   RETURN Qt_QTextCursor_insertText_1( ::pPtr, cText, hbqt_ptr( pFormat ) )
+METHOD QTextCursor:insertText( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO"
+                // void insertText ( const QString & text, const QTextCharFormat & format )
+                // C c QString, PO p QTextCharFormat
+         RETURN Qt_QTextCursor_insertText_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // void insertText ( const QString & text )
+                // C c QString
+         RETURN Qt_QTextCursor_insertText( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QTextCursor:isCopyOf( pOther )

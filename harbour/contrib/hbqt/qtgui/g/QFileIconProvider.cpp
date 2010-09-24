@@ -70,6 +70,11 @@
  *  enum IconType { Computer, Desktop, Trashcan, Network, ..., File }
  */
 
+/*
+ *  Constructed[ 3/3 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QFileIconProvider>

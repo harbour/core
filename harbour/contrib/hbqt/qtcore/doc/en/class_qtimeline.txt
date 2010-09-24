@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QObject
  *  $SYNTAX$
- *     QTimeLine():new( ... )
+ *     QTimeLine( ... )
  *     QTimeLine():from( pPtr_OR_oObj_of_type_QTimeLine )
  *     QTimeLine():configure( pPtr_OR_oObj_of_type_QTimeLine )
  *  $ARGUMENTS$

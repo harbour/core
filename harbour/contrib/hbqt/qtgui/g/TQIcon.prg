@@ -117,17 +117,80 @@ METHOD QIcon:isNull()
 
 
 METHOD QIcon:paint( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QIcon_paint( ::pPtr, ... )
+   DO CASE
+   CASE nP == 8
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N" .AND. aV[ 6 ] $ "N" .AND. aV[ 7 ] $ "N" .AND. aV[ 8 ] $ "N"
+                // void paint ( QPainter * painter, int x, int y, int w, int h, Qt::Alignment alignment = Qt::AlignCenter, Mode mode = Normal, State state = Off ) const
+                // PO p QPainter, N n int, N n int, N n int, N n int, N n Qt::Alignment, N n QIcon::Mode, N n QIcon::State
+         RETURN Qt_QIcon_paint_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 5
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N"
+                // void paint ( QPainter * painter, int x, int y, int w, int h, Qt::Alignment alignment = Qt::AlignCenter, Mode mode = Normal, State state = Off ) const
+                // PO p QPainter, N n int, N n int, N n int, N n int, N n Qt::Alignment, N n QIcon::Mode, N n QIcon::State
+         RETURN Qt_QIcon_paint_1( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N"
+                // void paint ( QPainter * painter, const QRect & rect, Qt::Alignment alignment = Qt::AlignCenter, Mode mode = Normal, State state = Off ) const
+                // PO p QPainter, PO p QRect, N n Qt::Alignment, N n QIcon::Mode, N n QIcon::State
+         RETURN Qt_QIcon_paint( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
+                // void paint ( QPainter * painter, const QRect & rect, Qt::Alignment alignment = Qt::AlignCenter, Mode mode = Normal, State state = Off ) const
+                // PO p QPainter, PO p QRect, N n Qt::Alignment, N n QIcon::Mode, N n QIcon::State
+         RETURN Qt_QIcon_paint( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QIcon:pixmap( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QIcon_pixmap( ::pPtr, ... )
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // QPixmap pixmap ( int w, int h, Mode mode = Normal, State state = Off ) const
+                // N n int, N n int, N n QIcon::Mode, N n QIcon::State
+         RETURN QPixmap():from( Qt_QIcon_pixmap_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // QPixmap pixmap ( const QSize & size, Mode mode = Normal, State state = Off ) const
+                // PO p QSize, N n QIcon::Mode, N n QIcon::State
+         RETURN QPixmap():from( Qt_QIcon_pixmap( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // QPixmap pixmap ( int w, int h, Mode mode = Normal, State state = Off ) const
+                // N n int, N n int, N n QIcon::Mode, N n QIcon::State
+         RETURN QPixmap():from( Qt_QIcon_pixmap_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QPixmap pixmap ( const QSize & size, Mode mode = Normal, State state = Off ) const
+                // PO p QSize, N n QIcon::Mode, N n QIcon::State
+         RETURN QPixmap():from( Qt_QIcon_pixmap( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 

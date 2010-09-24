@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QAbstractScrollArea
  *  $SYNTAX$
- *     QMdiArea():new( ... )
+ *     QMdiArea( ... )
  *     QMdiArea():from( pPtr_OR_oObj_of_type_QMdiArea )
  *     QMdiArea():configure( pPtr_OR_oObj_of_type_QMdiArea )
  *  $ARGUMENTS$

@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QStyleOptionComplex
  *  $SYNTAX$
- *     QStyleOptionSlider():new( ... )
+ *     QStyleOptionSlider( ... )
  *     QStyleOptionSlider():from( pPtr_OR_oObj_of_type_QStyleOptionSlider )
  *     QStyleOptionSlider():configure( pPtr_OR_oObj_of_type_QStyleOptionSlider )
  *  $ARGUMENTS$

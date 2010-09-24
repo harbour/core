@@ -72,12 +72,8 @@ CREATE CLASS QMenuBar INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QMenuBar
    METHOD  new( ... )
 
    METHOD  activeAction()
-   METHOD  addAction( cText )
-   METHOD  addAction_1( cText, pReceiver, pMember )
-   METHOD  addAction_2( pAction )
-   METHOD  addMenu( pMenu )
-   METHOD  addMenu_1( cTitle )
-   METHOD  addMenu_2( pIcon, cTitle )
+   METHOD  addAction( ... )
+   METHOD  addMenu( ... )
    METHOD  addSeparator()
    METHOD  clear()
    METHOD  insertMenu( pBefore, pMenu )
@@ -102,28 +98,66 @@ METHOD QMenuBar:activeAction()
    RETURN Qt_QMenuBar_activeAction( ::pPtr )
 
 
-METHOD QMenuBar:addAction( cText )
-   RETURN Qt_QMenuBar_addAction( ::pPtr, cText )
+METHOD QMenuBar:addAction( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PO"
+                // QAction * addAction ( const QString & text, const QObject * receiver, const char * member )
+                // C c QString, PO p QObject, PO p char
+         RETURN QAction():from( Qt_QMenuBar_addAction_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // QAction * addAction ( const QString & text )
+                // C c QString
+         RETURN QAction():from( Qt_QMenuBar_addAction( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "PO"
+                // void addAction ( QAction * action )
+                // PO p QAction
+         RETURN Qt_QMenuBar_addAction_2( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QMenuBar:addAction_1( cText, pReceiver, pMember )
-   RETURN Qt_QMenuBar_addAction_1( ::pPtr, cText, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ) )
-
-
-METHOD QMenuBar:addAction_2( pAction )
-   RETURN Qt_QMenuBar_addAction_2( ::pPtr, hbqt_ptr( pAction ) )
-
-
-METHOD QMenuBar:addMenu( pMenu )
-   RETURN Qt_QMenuBar_addMenu( ::pPtr, hbqt_ptr( pMenu ) )
-
-
-METHOD QMenuBar:addMenu_1( cTitle )
-   RETURN Qt_QMenuBar_addMenu_1( ::pPtr, cTitle )
-
-
-METHOD QMenuBar:addMenu_2( pIcon, cTitle )
-   RETURN Qt_QMenuBar_addMenu_2( ::pPtr, hbqt_ptr( pIcon ), cTitle )
+METHOD QMenuBar:addMenu( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PCO" .AND. aV[ 2 ] $ "C"
+                // QMenu * addMenu ( const QIcon & icon, const QString & title )
+                // PCO p QIcon, C c QString
+         RETURN QMenu():from( Qt_QMenuBar_addMenu_2( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // QMenu * addMenu ( const QString & title )
+                // C c QString
+         RETURN QMenu():from( Qt_QMenuBar_addMenu_1( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "PO"
+                // QAction * addMenu ( QMenu * menu )
+                // PO p QMenu
+         RETURN QAction():from( Qt_QMenuBar_addMenu( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QMenuBar:addSeparator()

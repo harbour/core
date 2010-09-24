@@ -73,8 +73,7 @@ CREATE CLASS QGraphicsPixmapItem INHERIT HbQtObjectHandler, HB_QGraphicsItem FUN
 
    METHOD  offset()
    METHOD  pixmap()
-   METHOD  setOffset( pOffset )
-   METHOD  setOffset_1( nX, nY )
+   METHOD  setOffset( ... )
    METHOD  setPixmap( pPixmap )
    METHOD  setShapeMode( nMode )
    METHOD  setTransformationMode( nMode )
@@ -101,12 +100,31 @@ METHOD QGraphicsPixmapItem:pixmap()
    RETURN Qt_QGraphicsPixmapItem_pixmap( ::pPtr )
 
 
-METHOD QGraphicsPixmapItem:setOffset( pOffset )
-   RETURN Qt_QGraphicsPixmapItem_setOffset( ::pPtr, hbqt_ptr( pOffset ) )
-
-
-METHOD QGraphicsPixmapItem:setOffset_1( nX, nY )
-   RETURN Qt_QGraphicsPixmapItem_setOffset_1( ::pPtr, nX, nY )
+METHOD QGraphicsPixmapItem:setOffset( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void setOffset ( qreal x, qreal y )
+                // N n qreal, N n qreal
+         RETURN Qt_QGraphicsPixmapItem_setOffset_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void setOffset ( const QPointF & offset )
+                // PO p QPointF
+         RETURN Qt_QGraphicsPixmapItem_setOffset( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QGraphicsPixmapItem:setPixmap( pPixmap )

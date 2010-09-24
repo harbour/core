@@ -72,11 +72,9 @@ CREATE CLASS QBuffer INHERIT HbQtObjectHandler, HB_QIODevice FUNCTION HB_QBuffer
    METHOD  new( ... )
 
    METHOD  buffer()
-   METHOD  buffer_1()
    METHOD  data()
    METHOD  setBuffer( pByteArray )
-   METHOD  setData( pData, nSize )
-   METHOD  setData_1( pData )
+   METHOD  setData( ... )
 
    ENDCLASS
 
@@ -94,10 +92,6 @@ METHOD QBuffer:buffer()
    RETURN Qt_QBuffer_buffer( ::pPtr )
 
 
-METHOD QBuffer:buffer_1()
-   RETURN Qt_QBuffer_buffer_1( ::pPtr )
-
-
 METHOD QBuffer:data()
    RETURN Qt_QBuffer_data( ::pPtr )
 
@@ -106,10 +100,29 @@ METHOD QBuffer:setBuffer( pByteArray )
    RETURN Qt_QBuffer_setBuffer( ::pPtr, hbqt_ptr( pByteArray ) )
 
 
-METHOD QBuffer:setData( pData, nSize )
-   RETURN Qt_QBuffer_setData( ::pPtr, hbqt_ptr( pData ), nSize )
-
-
-METHOD QBuffer:setData_1( pData )
-   RETURN Qt_QBuffer_setData_1( ::pPtr, hbqt_ptr( pData ) )
+METHOD QBuffer:setData( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // void setData ( const char * data, int size )
+                // PO p char, N n int
+         RETURN Qt_QBuffer_setData( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void setData ( const QByteArray & data )
+                // PO p QByteArray
+         RETURN Qt_QBuffer_setData_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 

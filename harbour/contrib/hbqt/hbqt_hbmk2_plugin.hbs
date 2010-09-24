@@ -644,11 +644,13 @@ STATIC FUNCTION hbq_gen_ui_prg( cFile, cFuncName )
 
       IF "addWidget" $ cCmd
          IF hbq_occurs( cCmd, "," ) >= 4
-            cCmd := StrTran( cCmd, "addWidget", "addWidget_1" )
+//            cCmd := StrTran( cCmd, "addWidget", "addWidget_1" )
+            cCmd := StrTran( cCmd, "addWidget", "addWidget" )
          ENDIF
       ELSEIF "addLayout" $ cCmd
          IF hbq_occurs( cCmd, "," ) >= 4
-            cCmd := StrTran( cCmd, "addLayout", "addLayout_1" )
+//            cCmd := StrTran( cCmd, "addLayout", "addLayout_1" )
+            cCmd := StrTran( cCmd, "addLayout", "addLayout" )
          ENDIF
       ENDIF
 

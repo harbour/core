@@ -263,25 +263,31 @@ METHOD HbqReportsManager:create( qParent )
 
    /* Toolbar */
    ::buildToolbar()
-   ::qLayout:addWidget_1( ::qToolbar:oWidget      , 0, 0, 1, 2 )
+   //::qLayout:addWidget_1( ::qToolbar:oWidget      , 0, 0, 1, 2 )
+   ::qLayout:addWidget( ::qToolbar:oWidget      , 0, 0, 1, 2 )
    ::buildToolbarAlign()
-   ::qLayout:addWidget_1( ::qToolbarAlign:oWidget , 1, 0, 1, 2 )
+   //::qLayout:addWidget_1( ::qToolbarAlign:oWidget , 1, 0, 1, 2 )
+   ::qLayout:addWidget( ::qToolbarAlign:oWidget , 1, 0, 1, 2 )
 
    /* Toolbar left */
    ::buildToolbarLeft()
-   ::qLayout:addWidget_1( ::qToolbarL:oWidget     , 2, 0, 2, 1 )
+   //::qLayout:addWidget_1( ::qToolbarL:oWidget     , 2, 0, 2, 1 )
+   ::qLayout:addWidget( ::qToolbarL:oWidget     , 2, 0, 2, 1 )
 
    /* ::qTabBar */
    ::buildTabBar()
-   ::qLayout:addWidget_1( ::qTabBar               , 2, 1, 1, 1 )
+   //::qLayout:addWidget_1( ::qTabBar               , 2, 1, 1, 1 )
+   ::qLayout:addWidget( ::qTabBar               , 2, 1, 1, 1 )
 
    /* Stacked widget */
    ::buildStacks()
-   ::qLayout:addWidget_1( ::qStack                , 3, 1, 1, 1 )
+   //::qLayout:addWidget_1( ::qStack                , 3, 1, 1, 1 )
+   ::qLayout:addWidget( ::qStack                , 3, 1, 1, 1 )
 
    /* StatusBar */
    ::buildStatusBar()
-   ::qLayout:addWidget_1( ::qStatus               , 4, 0, 1, 2 )
+   //::qLayout:addWidget_1( ::qStatus               , 4, 0, 1, 2 )
+   ::qLayout:addWidget( ::qStatus               , 4, 0, 1, 2 )
 
    /* Document manipulation interface */
    ::buildDesignReport()
@@ -1052,11 +1058,13 @@ METHOD HbqReportsManager:zoom( nMode )
    CASE HBQT_GRAPHICSVIEW_ZOOM_WYSIWYG
       ::qView:resetMatrix()
       ::qView:scale( ::nScreenDpiX / 25.4 / 10.0, ::nScreenDpiY / 25.4 / 10.0 )
-      ::qView:centerOn_1( 0.0, 0.0 )
+      //::qView:centerOn_1( 0.0, 0.0 )
+      ::qView:centerOn( 0.0, 0.0 )
       EXIT
    CASE HBQT_GRAPHICSVIEW_ZOOM_ORIGINAL
       ::qView:resetMatrix()
-      ::qView:centerOn_1( 0.0, 0.0 )
+      //::qView:centerOn_1( 0.0, 0.0 )
+      ::qView:centerOn( 0.0, 0.0 )
       EXIT
    ENDSWITCH
 

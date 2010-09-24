@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QAbstractItemModel
  *  $SYNTAX$
- *     QDirModel():new( ... )
+ *     QDirModel( ... )
  *     QDirModel():from( pPtr_OR_oObj_of_type_QDirModel )
  *     QDirModel():configure( pPtr_OR_oObj_of_type_QDirModel )
  *  $ARGUMENTS$

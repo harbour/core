@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QAbstractItemView
  *  $SYNTAX$
- *     QHeaderView():new( ... )
+ *     QHeaderView( ... )
  *     QHeaderView():from( pPtr_OR_oObj_of_type_QHeaderView )
  *     QHeaderView():configure( pPtr_OR_oObj_of_type_QHeaderView )
  *  $ARGUMENTS$

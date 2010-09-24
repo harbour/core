@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QObject
  *  $SYNTAX$
- *     QTextObject():new( ... )
+ *     QTextObject( ... )
  *     QTextObject():from( pPtr_OR_oObj_of_type_QTextObject )
  *     QTextObject():configure( pPtr_OR_oObj_of_type_QTextObject )
  *  $ARGUMENTS$

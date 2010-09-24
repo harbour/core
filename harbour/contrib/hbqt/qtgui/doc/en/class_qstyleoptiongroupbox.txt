@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QStyleOptionComplex
  *  $SYNTAX$
- *     QStyleOptionGroupBox():new( ... )
+ *     QStyleOptionGroupBox( ... )
  *     QStyleOptionGroupBox():from( pPtr_OR_oObj_of_type_QStyleOptionGroupBox )
  *     QStyleOptionGroupBox():configure( pPtr_OR_oObj_of_type_QStyleOptionGroupBox )
  *  $ARGUMENTS$

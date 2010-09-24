@@ -182,24 +182,8 @@ const QColor & color () const
 //const QGradient * gradient () const
 bool isOpaque () const
 const QMatrix & matrix () const
-
-void setColor ( ... ){
-   QBrush * p = hbqt_par_QBrush( 1 );
-   if( p )
-   {
-      if( HB_ISPOINTER( 2 ) )
-      {
-         ( p )->setColor( *hbqt_par_QColor( 2 ) );
-      }
-      else if( HB_ISNUM( 2 ) )
-      {
-         ( p )->setColor( ( Qt::GlobalColor ) hb_parni( 2 ) );
-      }
-   }
-}
-//void setColor ( const QColor & color )
-//void setColor ( Qt::GlobalColor color )
-
+void setColor ( const QColor & color )
+void setColor ( Qt::GlobalColor color )
 void setMatrix ( const QMatrix & matrix )
 void setStyle ( Qt::BrushStyle style )
 void setTexture ( const QPixmap & pixmap )

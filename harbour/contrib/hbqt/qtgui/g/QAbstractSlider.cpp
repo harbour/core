@@ -70,6 +70,11 @@
  *  enum SliderAction { SliderNoAction, SliderSingleStepAdd, SliderSingleStepSub, SliderPageStepAdd, ..., SliderMove }
  */
 
+/*
+ *  Constructed[ 24/24 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QAbstractSlider>

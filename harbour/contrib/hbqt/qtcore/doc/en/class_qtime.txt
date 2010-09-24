@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QTime():new( ... )
+ *     QTime( ... )
  *     QTime():from( pPtr_OR_oObj_of_type_QTime )
  *     QTime():configure( pPtr_OR_oObj_of_type_QTime )
  *  $ARGUMENTS$

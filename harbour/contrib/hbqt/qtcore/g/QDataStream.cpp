@@ -71,6 +71,16 @@
  *  enum Version { Qt_1_0, Qt_2_0, Qt_2_1, Qt_3_0, ..., Qt_4_5 }
  */
 
+/*
+ *  Constructed[ 13/13 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  //QDataStream & readBytes ( char *& s, uint & l )
+ *  //QDataStream & writeBytes ( const char * s, uint len )
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtCore/QDataStream>

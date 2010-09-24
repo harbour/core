@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QStyleOption():new( ... )
+ *     QStyleOption( ... )
  *     QStyleOption():from( pPtr_OR_oObj_of_type_QStyleOption )
  *     QStyleOption():configure( pPtr_OR_oObj_of_type_QStyleOption )
  *  $ARGUMENTS$

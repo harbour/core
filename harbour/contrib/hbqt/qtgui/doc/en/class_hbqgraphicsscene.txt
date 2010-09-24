@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QGraphicsScene
  *  $SYNTAX$
- *     HBQGraphicsScene():new( ... )
+ *     HBQGraphicsScene( ... )
  *     HBQGraphicsScene():from( pPtr_OR_oObj_of_type_HBQGraphicsScene )
  *     HBQGraphicsScene():configure( pPtr_OR_oObj_of_type_HBQGraphicsScene )
  *  $ARGUMENTS$

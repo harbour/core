@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QObject
  *  $SYNTAX$
- *     QGraphicsScene():new( ... )
+ *     QGraphicsScene( ... )
  *     QGraphicsScene():from( pPtr_OR_oObj_of_type_QGraphicsScene )
  *     QGraphicsScene():configure( pPtr_OR_oObj_of_type_QGraphicsScene )
  *  $ARGUMENTS$

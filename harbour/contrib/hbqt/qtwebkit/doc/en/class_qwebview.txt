@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QWidget
  *  $SYNTAX$
- *     QWebView():new( ... )
+ *     QWebView( ... )
  *     QWebView():from( pPtr_OR_oObj_of_type_QWebView )
  *     QWebView():configure( pPtr_OR_oObj_of_type_QWebView )
  *  $ARGUMENTS$

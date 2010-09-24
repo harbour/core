@@ -76,6 +76,18 @@
  *  flags FindFlags
  */
 
+/*
+ *  Constructed[ 31/31 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // virtual bool extension ( Extension extension, const ExtensionOption * option = 0, ExtensionReturn * output = 0 )
+ *  // QNetworkAccessManager * networkAccessManager () const
+ *  // void setNetworkAccessManager ( QNetworkAccessManager * manager )
+ *  //QUndoStack * undoStack () const
+ */
+
 #include <QtCore/QPointer>
 
 #include "hbqtgui.h"

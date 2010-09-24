@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QPointF():new( ... )
+ *     QPointF( ... )
  *     QPointF():from( pPtr_OR_oObj_of_type_QPointF )
  *     QPointF():configure( pPtr_OR_oObj_of_type_QPointF )
  *  $ARGUMENTS$

@@ -71,8 +71,7 @@ CREATE CLASS QGraphicsGridLayout INHERIT HbQtObjectHandler, HB_QGraphicsLayout F
 
    METHOD  new( ... )
 
-   METHOD  addItem( pItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
-   METHOD  addItem_1( pItem, nRow, nColumn, nAlignment )
+   METHOD  addItem( ... )
    METHOD  alignment( pItem )
    METHOD  columnAlignment( nColumn )
    METHOD  columnCount()
@@ -83,8 +82,7 @@ CREATE CLASS QGraphicsGridLayout INHERIT HbQtObjectHandler, HB_QGraphicsLayout F
    METHOD  columnStretchFactor( nColumn )
    METHOD  count()
    METHOD  horizontalSpacing()
-   METHOD  itemAt( nRow, nColumn )
-   METHOD  itemAt_1( nIndex )
+   METHOD  itemAt( ... )
    METHOD  removeAt( nIndex )
    METHOD  rowAlignment( nRow )
    METHOD  rowCount()
@@ -126,12 +124,45 @@ METHOD QGraphicsGridLayout:new( ... )
    RETURN Self
 
 
-METHOD QGraphicsGridLayout:addItem( pItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
-   RETURN Qt_QGraphicsGridLayout_addItem( ::pPtr, hbqt_ptr( pItem ), nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
-
-
-METHOD QGraphicsGridLayout:addItem_1( pItem, nRow, nColumn, nAlignment )
-   RETURN Qt_QGraphicsGridLayout_addItem_1( ::pPtr, hbqt_ptr( pItem ), nRow, nColumn, nAlignment )
+METHOD QGraphicsGridLayout:addItem( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 6
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N" .AND. aV[ 6 ] $ "N"
+                // void addItem ( QGraphicsLayoutItem * item, int row, int column, int rowSpan, int columnSpan, Qt::Alignment alignment = 0 )
+                // PO p QGraphicsLayoutItem, N n int, N n int, N n int, N n int, N n Qt::Alignment
+         RETURN Qt_QGraphicsGridLayout_addItem( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 5
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N"
+                // void addItem ( QGraphicsLayoutItem * item, int row, int column, int rowSpan, int columnSpan, Qt::Alignment alignment = 0 )
+                // PO p QGraphicsLayoutItem, N n int, N n int, N n int, N n int, N n Qt::Alignment
+         RETURN Qt_QGraphicsGridLayout_addItem( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // void addItem ( QGraphicsLayoutItem * item, int row, int column, Qt::Alignment alignment = 0 )
+                // PO p QGraphicsLayoutItem, N n int, N n int, N n Qt::Alignment
+         RETURN Qt_QGraphicsGridLayout_addItem_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // void addItem ( QGraphicsLayoutItem * item, int row, int column, Qt::Alignment alignment = 0 )
+                // PO p QGraphicsLayoutItem, N n int, N n int, N n Qt::Alignment
+         RETURN Qt_QGraphicsGridLayout_addItem_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QGraphicsGridLayout:alignment( pItem )
@@ -174,12 +205,31 @@ METHOD QGraphicsGridLayout:horizontalSpacing()
    RETURN Qt_QGraphicsGridLayout_horizontalSpacing( ::pPtr )
 
 
-METHOD QGraphicsGridLayout:itemAt( nRow, nColumn )
-   RETURN Qt_QGraphicsGridLayout_itemAt( ::pPtr, nRow, nColumn )
-
-
-METHOD QGraphicsGridLayout:itemAt_1( nIndex )
-   RETURN Qt_QGraphicsGridLayout_itemAt_1( ::pPtr, nIndex )
+METHOD QGraphicsGridLayout:itemAt( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // QGraphicsLayoutItem * itemAt ( int row, int column ) const
+                // N n int, N n int
+         RETURN QGraphicsLayoutItem():from( Qt_QGraphicsGridLayout_itemAt( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // virtual QGraphicsLayoutItem * itemAt ( int index ) const
+                // N n int
+         RETURN QGraphicsLayoutItem():from( Qt_QGraphicsGridLayout_itemAt_1( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QGraphicsGridLayout:removeAt( nIndex )

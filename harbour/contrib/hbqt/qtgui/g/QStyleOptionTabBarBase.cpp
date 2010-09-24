@@ -71,6 +71,11 @@
  *  enum StyleOptionVersion { Version }
  */
 
+/*
+ *  Constructed[ 3/3 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionTabBarBase>
@@ -149,7 +154,11 @@ HB_FUNC( QT_QSTYLEOPTIONTABBARBASE )
  */
 HB_FUNC( QT_QSTYLEOPTIONTABBARBASE_SELECTEDTABRECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QStyleOptionTabBarBase( 1 )->selectedTabRect ), true ) );
+   QStyleOptionTabBarBase * p = hbqt_par_QStyleOptionTabBarBase( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->selectedTabRect ), true ) );
+   }
 }
 
 /*
@@ -157,7 +166,11 @@ HB_FUNC( QT_QSTYLEOPTIONTABBARBASE_SELECTEDTABRECT )
  */
 HB_FUNC( QT_QSTYLEOPTIONTABBARBASE_SHAPE )
 {
-   hb_retni( ( QTabBar::Shape ) hbqt_par_QStyleOptionTabBarBase( 1 )->shape );
+   QStyleOptionTabBarBase * p = hbqt_par_QStyleOptionTabBarBase( 1 );
+   if( p )
+   {
+      hb_retni( ( QTabBar::Shape ) ( p )->shape );
+   }
 }
 
 /*
@@ -165,7 +178,11 @@ HB_FUNC( QT_QSTYLEOPTIONTABBARBASE_SHAPE )
  */
 HB_FUNC( QT_QSTYLEOPTIONTABBARBASE_TABBARRECT )
 {
-   hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( hbqt_par_QStyleOptionTabBarBase( 1 )->tabBarRect ), true ) );
+   QStyleOptionTabBarBase * p = hbqt_par_QStyleOptionTabBarBase( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QRect( new QRect( ( p )->tabBarRect ), true ) );
+   }
 }
 
 

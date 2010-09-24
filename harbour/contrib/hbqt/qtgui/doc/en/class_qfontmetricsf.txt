@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QFontMetricsF():new( ... )
+ *     QFontMetricsF( ... )
  *     QFontMetricsF():from( pPtr_OR_oObj_of_type_QFontMetricsF )
  *     QFontMetricsF():configure( pPtr_OR_oObj_of_type_QFontMetricsF )
  *  $ARGUMENTS$

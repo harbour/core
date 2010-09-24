@@ -78,7 +78,6 @@
  *  Constructed[ 19/21 [ 90.48% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  void setTabPositions ( const QList<QTextOption::Tab> & tabs )
  *  QList<QTextOption::Tab> tabPositions () const

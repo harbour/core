@@ -74,7 +74,6 @@ CREATE CLASS QImage INHERIT HbQtObjectHandler FUNCTION HB_QImage
    METHOD  allGray()
    METHOD  alphaChannel()
    METHOD  bits()
-   METHOD  bits_1()
    METHOD  bytesPerLine()
    METHOD  cacheKey()
    METHOD  color( nI )
@@ -108,7 +107,6 @@ CREATE CLASS QImage INHERIT HbQtObjectHandler FUNCTION HB_QImage
    METHOD  scaledToHeight( nHeight, nMode )
    METHOD  scaledToWidth( nWidth, nMode )
    METHOD  scanLine( nI )
-   METHOD  scanLine_1( nI )
    METHOD  setColor( nIndex, nColorValue )
    METHOD  setDotsPerMeterX( nX )
    METHOD  setDotsPerMeterY( nY )
@@ -147,10 +145,6 @@ METHOD QImage:bits()
    RETURN Qt_QImage_bits( ::pPtr )
 
 
-METHOD QImage:bits_1()
-   RETURN Qt_QImage_bits_1( ::pPtr )
-
-
 METHOD QImage:bytesPerLine()
    RETURN Qt_QImage_bytesPerLine( ::pPtr )
 
@@ -168,11 +162,34 @@ METHOD QImage:convertToFormat( nFormat, nFlags )
 
 
 METHOD QImage:copy( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QImage_copy( ::pPtr, ... )
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // QImage copy ( int x, int y, int width, int height ) const
+                // N n int, N n int, N n int, N n int
+         RETURN QImage():from( Qt_QImage_copy_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QImage copy ( const QRect & rectangle = QRect() ) const
+                // PO p QRect
+         RETURN QImage():from( Qt_QImage_copy( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 0
+             // QImage copy ( const QRect & rectangle = QRect() ) const
+             // PO p QRect
+      RETURN QImage():from( Qt_QImage_copy( ::pPtr, ... ) )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QImage:createAlphaMask( nFlags )
@@ -228,11 +245,34 @@ METHOD QImage:isNull()
 
 
 METHOD QImage:load( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QImage_load( ::pPtr, ... )
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO"
+                // bool load ( const QString & fileName, const char * format = 0 )
+                // C c QString, PO p char
+         RETURN Qt_QImage_load( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
+                // bool load ( QIODevice * device, const char * format )
+                // PO p QIODevice, PO p char
+         RETURN Qt_QImage_load_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // bool load ( const QString & fileName, const char * format = 0 )
+                // C c QString, PO p char
+         RETURN Qt_QImage_load( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QImage:loadFromData( pData, pFormat )
@@ -256,19 +296,57 @@ METHOD QImage:offset()
 
 
 METHOD QImage:pixel( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QImage_pixel( ::pPtr, ... )
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // QRgb pixel ( int x, int y ) const
+                // N n int, N n int
+         RETURN Qt_QImage_pixel_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QRgb pixel ( const QPoint & position ) const
+                // PO p QPoint
+         RETURN Qt_QImage_pixel( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QImage:pixelIndex( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QImage_pixelIndex( ::pPtr, ... )
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // int pixelIndex ( int x, int y ) const
+                // N n int, N n int
+         RETURN Qt_QImage_pixelIndex_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // int pixelIndex ( const QPoint & position ) const
+                // PO p QPoint
+         RETURN Qt_QImage_pixelIndex( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QImage:rect()
@@ -280,19 +358,79 @@ METHOD QImage:rgbSwapped()
 
 
 METHOD QImage:save( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QImage_save( ::pPtr, ... )
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "N"
+                // bool save ( const QString & fileName, const char * format = 0, int quality = -1 ) const
+                // C c QString, PO p char, N n int
+         RETURN Qt_QImage_save( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "N"
+                // bool save ( QIODevice * device, const char * format = 0, int quality = -1 ) const
+                // PO p QIODevice, PO p char, N n int
+         RETURN Qt_QImage_save_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // bool save ( const QString & fileName, const char * format = 0, int quality = -1 ) const
+                // C c QString, PO p char, N n int
+         RETURN Qt_QImage_save( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO"
+                // bool save ( QIODevice * device, const char * format = 0, int quality = -1 ) const
+                // PO p QIODevice, PO p char, N n int
+         RETURN Qt_QImage_save_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QImage:scaled( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QImage_scaled( ::pPtr, ... )
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // QImage scaled ( int width, int height, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
+                // N n int, N n int, N n Qt::AspectRatioMode, N n Qt::TransformationMode
+         RETURN QImage():from( Qt_QImage_scaled_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // QImage scaled ( const QSize & size, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
+                // PO p QSize, N n Qt::AspectRatioMode, N n Qt::TransformationMode
+         RETURN QImage():from( Qt_QImage_scaled( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // QImage scaled ( int width, int height, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
+                // N n int, N n int, N n Qt::AspectRatioMode, N n Qt::TransformationMode
+         RETURN QImage():from( Qt_QImage_scaled_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QImage scaled ( const QSize & size, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
+                // PO p QSize, N n Qt::AspectRatioMode, N n Qt::TransformationMode
+         RETURN QImage():from( Qt_QImage_scaled( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QImage:scaledToHeight( nHeight, nMode )
@@ -305,10 +443,6 @@ METHOD QImage:scaledToWidth( nWidth, nMode )
 
 METHOD QImage:scanLine( nI )
    RETURN Qt_QImage_scanLine( ::pPtr, nI )
-
-
-METHOD QImage:scanLine_1( nI )
-   RETURN Qt_QImage_scanLine_1( ::pPtr, nI )
 
 
 METHOD QImage:setColor( nIndex, nColorValue )
@@ -332,11 +466,30 @@ METHOD QImage:setOffset( pOffset )
 
 
 METHOD QImage:setPixel( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QImage_setPixel( ::pPtr, ... )
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // void setPixel ( int x, int y, uint index_or_rgb )
+                // N n int, N n int, N n uint
+         RETURN Qt_QImage_setPixel_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // void setPixel ( const QPoint & position, uint index_or_rgb )
+                // PO p QPoint, N n uint
+         RETURN Qt_QImage_setPixel( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QImage:setText( cKey, cText )
@@ -364,11 +517,30 @@ METHOD QImage:transformed( ... )
 
 
 METHOD QImage:valid( ... )
-   LOCAL p
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
    FOR EACH p IN { ... }
       hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
    NEXT
-   RETURN Qt_QImage_valid( ::pPtr, ... )
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // bool valid ( int x, int y ) const
+                // N n int, N n int
+         RETURN Qt_QImage_valid_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // bool valid ( const QPoint & pos ) const
+                // PO p QPoint
+         RETURN Qt_QImage_valid( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QImage:width()

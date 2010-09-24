@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QAbstractGraphicsShapeItem
  *  $SYNTAX$
- *     QGraphicsSimpleTextItem():new( ... )
+ *     QGraphicsSimpleTextItem( ... )
  *     QGraphicsSimpleTextItem():from( pPtr_OR_oObj_of_type_QGraphicsSimpleTextItem )
  *     QGraphicsSimpleTextItem():configure( pPtr_OR_oObj_of_type_QGraphicsSimpleTextItem )
  *  $ARGUMENTS$

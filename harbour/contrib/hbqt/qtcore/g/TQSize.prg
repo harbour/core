@@ -77,8 +77,7 @@ CREATE CLASS QSize INHERIT HbQtObjectHandler FUNCTION HB_QSize
    METHOD  isValid()
    METHOD  rheight()
    METHOD  rwidth()
-   METHOD  scale( nWidth, nHeight, nMode )
-   METHOD  scale_1( pSize, nMode )
+   METHOD  scale( ... )
    METHOD  setHeight( nHeight )
    METHOD  setWidth( nWidth )
    METHOD  transpose()
@@ -122,12 +121,31 @@ METHOD QSize:rwidth()
    RETURN Qt_QSize_rwidth( ::pPtr )
 
 
-METHOD QSize:scale( nWidth, nHeight, nMode )
-   RETURN Qt_QSize_scale( ::pPtr, nWidth, nHeight, nMode )
-
-
-METHOD QSize:scale_1( pSize, nMode )
-   RETURN Qt_QSize_scale_1( ::pPtr, hbqt_ptr( pSize ), nMode )
+METHOD QSize:scale( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // void scale ( int width, int height, Qt::AspectRatioMode mode )
+                // N n int, N n int, N n Qt::AspectRatioMode
+         RETURN Qt_QSize_scale( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // void scale ( const QSize & size, Qt::AspectRatioMode mode )
+                // PO p QSize, N n Qt::AspectRatioMode
+         RETURN Qt_QSize_scale_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QSize:setHeight( nHeight )

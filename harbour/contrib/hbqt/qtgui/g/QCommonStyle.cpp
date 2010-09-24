@@ -66,6 +66,11 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  Constructed[ 0/0 [ 0% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QCommonStyle>

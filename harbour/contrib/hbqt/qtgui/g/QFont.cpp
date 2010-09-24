@@ -76,6 +76,19 @@
  *  enum Weight { Light, Normal, DemiBold, Bold, Black }
  */
 
+/*
+ *  Constructed[ 58/58 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // FT_Face freetypeFace () const
+ *  // HFONT handle () const
+ *  // bool isCopyOf ( const QFont & f ) const
+ *  // quint32 macFontID () const
+ *  // QFont resolve ( const QFont & other ) const
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtCore/QStringList>

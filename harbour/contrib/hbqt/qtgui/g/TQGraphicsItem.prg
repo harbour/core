@@ -92,8 +92,7 @@ CREATE CLASS QGraphicsItem INHERIT HbQtObjectHandler FUNCTION HB_QGraphicsItem
    METHOD  data( nKey )
    METHOD  deviceTransform( pViewportTransform )
    METHOD  effectiveOpacity()
-   METHOD  ensureVisible( pRect, nXmargin, nYmargin )
-   METHOD  ensureVisible_1( nX, nY, nW, nH, nXmargin, nYmargin )
+   METHOD  ensureVisible( ... )
    METHOD  flags()
    METHOD  grabKeyboard()
    METHOD  grabMouse()
@@ -106,9 +105,7 @@ CREATE CLASS QGraphicsItem INHERIT HbQtObjectHandler FUNCTION HB_QGraphicsItem
    METHOD  isAncestorOf( pChild )
    METHOD  isClipped()
    METHOD  isEnabled()
-   METHOD  isObscured()
-   METHOD  isObscured_1( nX, nY, nW, nH )
-   METHOD  isObscured_2( pRect )
+   METHOD  isObscured( ... )
    METHOD  isObscuredBy( pItem )
    METHOD  isSelected()
    METHOD  isUnderMouse()
@@ -117,54 +114,18 @@ CREATE CLASS QGraphicsItem INHERIT HbQtObjectHandler FUNCTION HB_QGraphicsItem
    METHOD  isWidget()
    METHOD  isWindow()
    METHOD  itemTransform( pOther, lOk )
-   METHOD  mapFromItem( pItem, pPoint )
-   METHOD  mapFromItem_1( pItem, pRect )
-   METHOD  mapFromItem_2( pItem, pPolygon )
-   METHOD  mapFromItem_3( pItem, pPath )
-   METHOD  mapFromItem_4( pItem, nX, nY, nW, nH )
-   METHOD  mapFromItem_5( pItem, nX, nY )
-   METHOD  mapFromParent( pPoint )
-   METHOD  mapFromParent_1( pRect )
-   METHOD  mapFromParent_2( pPolygon )
-   METHOD  mapFromParent_3( pPath )
-   METHOD  mapFromParent_4( nX, nY, nW, nH )
-   METHOD  mapFromParent_5( nX, nY )
-   METHOD  mapFromScene( pPoint )
-   METHOD  mapFromScene_1( pRect )
-   METHOD  mapFromScene_2( pPolygon )
-   METHOD  mapFromScene_3( pPath )
-   METHOD  mapFromScene_4( nX, nY, nW, nH )
-   METHOD  mapFromScene_5( nX, nY )
-   METHOD  mapRectFromItem( pItem, pRect )
-   METHOD  mapRectFromItem_1( pItem, nX, nY, nW, nH )
-   METHOD  mapRectFromParent( pRect )
-   METHOD  mapRectFromParent_1( nX, nY, nW, nH )
-   METHOD  mapRectFromScene( pRect )
-   METHOD  mapRectFromScene_1( nX, nY, nW, nH )
-   METHOD  mapRectToItem( pItem, pRect )
-   METHOD  mapRectToItem_1( pItem, nX, nY, nW, nH )
-   METHOD  mapRectToParent( pRect )
-   METHOD  mapRectToParent_1( nX, nY, nW, nH )
-   METHOD  mapRectToScene( pRect )
-   METHOD  mapRectToScene_1( nX, nY, nW, nH )
-   METHOD  mapToItem( pItem, pPoint )
-   METHOD  mapToItem_1( pItem, pRect )
-   METHOD  mapToItem_2( pItem, pPolygon )
-   METHOD  mapToItem_3( pItem, pPath )
-   METHOD  mapToItem_4( pItem, nX, nY, nW, nH )
-   METHOD  mapToItem_5( pItem, nX, nY )
-   METHOD  mapToParent( pPoint )
-   METHOD  mapToParent_1( pRect )
-   METHOD  mapToParent_2( pPolygon )
-   METHOD  mapToParent_3( pPath )
-   METHOD  mapToParent_4( nX, nY, nW, nH )
-   METHOD  mapToParent_5( nX, nY )
-   METHOD  mapToScene( pPoint )
-   METHOD  mapToScene_1( pRect )
-   METHOD  mapToScene_2( pPolygon )
-   METHOD  mapToScene_3( pPath )
-   METHOD  mapToScene_4( nX, nY, nW, nH )
-   METHOD  mapToScene_5( nX, nY )
+   METHOD  mapFromItem( ... )
+   METHOD  mapFromParent( ... )
+   METHOD  mapFromScene( ... )
+   METHOD  mapRectFromItem( ... )
+   METHOD  mapRectFromParent( ... )
+   METHOD  mapRectFromScene( ... )
+   METHOD  mapRectToItem( ... )
+   METHOD  mapRectToParent( ... )
+   METHOD  mapRectToScene( ... )
+   METHOD  mapToItem( ... )
+   METHOD  mapToParent( ... )
+   METHOD  mapToScene( ... )
    METHOD  moveBy( nDx, nDy )
    METHOD  opacity()
    METHOD  opaqueArea()
@@ -196,8 +157,7 @@ CREATE CLASS QGraphicsItem INHERIT HbQtObjectHandler FUNCTION HB_QGraphicsItem
    METHOD  setHandlesChildEvents( lEnabled )
    METHOD  setOpacity( nOpacity )
    METHOD  setParentItem( pParent )
-   METHOD  setPos( pPos )
-   METHOD  setPos_1( nX, nY )
+   METHOD  setPos( ... )
    METHOD  setSelected( lSelected )
    METHOD  setToolTip( cToolTip )
    METHOD  setTransform( pMatrix, lCombine )
@@ -215,8 +175,7 @@ CREATE CLASS QGraphicsItem INHERIT HbQtObjectHandler FUNCTION HB_QGraphicsItem
    METHOD  ungrabKeyboard()
    METHOD  ungrabMouse()
    METHOD  unsetCursor()
-   METHOD  update( pRect )
-   METHOD  update_1( nX, nY, nWidth, nHeight )
+   METHOD  update( ... )
    METHOD  window()
    METHOD  x()
    METHOD  y()
@@ -318,12 +277,42 @@ METHOD QGraphicsItem:effectiveOpacity()
    RETURN Qt_QGraphicsItem_effectiveOpacity( ::pPtr )
 
 
-METHOD QGraphicsItem:ensureVisible( pRect, nXmargin, nYmargin )
-   RETURN Qt_QGraphicsItem_ensureVisible( ::pPtr, hbqt_ptr( pRect ), nXmargin, nYmargin )
-
-
-METHOD QGraphicsItem:ensureVisible_1( nX, nY, nW, nH, nXmargin, nYmargin )
-   RETURN Qt_QGraphicsItem_ensureVisible_1( ::pPtr, nX, nY, nW, nH, nXmargin, nYmargin )
+METHOD QGraphicsItem:ensureVisible( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 6
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N" .AND. aV[ 6 ] $ "N"
+                // void ensureVisible ( qreal x, qreal y, qreal w, qreal h, int xmargin = 50, int ymargin = 50 )
+                // N n qreal, N n qreal, N n qreal, N n qreal, N n int, N n int
+         RETURN Qt_QGraphicsItem_ensureVisible_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // void ensureVisible ( qreal x, qreal y, qreal w, qreal h, int xmargin = 50, int ymargin = 50 )
+                // N n qreal, N n qreal, N n qreal, N n qreal, N n int, N n int
+         RETURN Qt_QGraphicsItem_ensureVisible_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // void ensureVisible ( const QRectF & rect = QRectF(), int xmargin = 50, int ymargin = 50 )
+                // PO p QRectF, N n int, N n int
+         RETURN Qt_QGraphicsItem_ensureVisible( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // void ensureVisible ( const QRectF & rect = QRectF(), int xmargin = 50, int ymargin = 50 )
+             // PO p QRectF, N n int, N n int
+      RETURN Qt_QGraphicsItem_ensureVisible( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QGraphicsItem:flags()
@@ -374,16 +363,34 @@ METHOD QGraphicsItem:isEnabled()
    RETURN Qt_QGraphicsItem_isEnabled( ::pPtr )
 
 
-METHOD QGraphicsItem:isObscured()
-   RETURN Qt_QGraphicsItem_isObscured( ::pPtr )
-
-
-METHOD QGraphicsItem:isObscured_1( nX, nY, nW, nH )
-   RETURN Qt_QGraphicsItem_isObscured_1( ::pPtr, nX, nY, nW, nH )
-
-
-METHOD QGraphicsItem:isObscured_2( pRect )
-   RETURN Qt_QGraphicsItem_isObscured_2( ::pPtr, hbqt_ptr( pRect ) )
+METHOD QGraphicsItem:isObscured( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // bool isObscured ( qreal x, qreal y, qreal w, qreal h ) const
+                // N n qreal, N n qreal, N n qreal, N n qreal
+         RETURN Qt_QGraphicsItem_isObscured_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // bool isObscured ( const QRectF & rect ) const
+                // PO p QRectF
+         RETURN Qt_QGraphicsItem_isObscured_2( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // bool isObscured () const
+      RETURN Qt_QGraphicsItem_isObscured( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QGraphicsItem:isObscuredBy( pItem )
@@ -418,196 +425,424 @@ METHOD QGraphicsItem:itemTransform( pOther, lOk )
    RETURN Qt_QGraphicsItem_itemTransform( ::pPtr, hbqt_ptr( pOther ), lOk )
 
 
-METHOD QGraphicsItem:mapFromItem( pItem, pPoint )
-   RETURN Qt_QGraphicsItem_mapFromItem( ::pPtr, hbqt_ptr( pItem ), hbqt_ptr( pPoint ) )
-
-
-METHOD QGraphicsItem:mapFromItem_1( pItem, pRect )
-   RETURN Qt_QGraphicsItem_mapFromItem_1( ::pPtr, hbqt_ptr( pItem ), hbqt_ptr( pRect ) )
-
-
-METHOD QGraphicsItem:mapFromItem_2( pItem, pPolygon )
-   RETURN Qt_QGraphicsItem_mapFromItem_2( ::pPtr, hbqt_ptr( pItem ), hbqt_ptr( pPolygon ) )
-
-
-METHOD QGraphicsItem:mapFromItem_3( pItem, pPath )
-   RETURN Qt_QGraphicsItem_mapFromItem_3( ::pPtr, hbqt_ptr( pItem ), hbqt_ptr( pPath ) )
-
-
-METHOD QGraphicsItem:mapFromItem_4( pItem, nX, nY, nW, nH )
-   RETURN Qt_QGraphicsItem_mapFromItem_4( ::pPtr, hbqt_ptr( pItem ), nX, nY, nW, nH )
-
-
-METHOD QGraphicsItem:mapFromItem_5( pItem, nX, nY )
-   RETURN Qt_QGraphicsItem_mapFromItem_5( ::pPtr, hbqt_ptr( pItem ), nX, nY )
-
-
-METHOD QGraphicsItem:mapFromParent( pPoint )
-   RETURN Qt_QGraphicsItem_mapFromParent( ::pPtr, hbqt_ptr( pPoint ) )
-
-
-METHOD QGraphicsItem:mapFromParent_1( pRect )
-   RETURN Qt_QGraphicsItem_mapFromParent_1( ::pPtr, hbqt_ptr( pRect ) )
-
-
-METHOD QGraphicsItem:mapFromParent_2( pPolygon )
-   RETURN Qt_QGraphicsItem_mapFromParent_2( ::pPtr, hbqt_ptr( pPolygon ) )
-
-
-METHOD QGraphicsItem:mapFromParent_3( pPath )
-   RETURN Qt_QGraphicsItem_mapFromParent_3( ::pPtr, hbqt_ptr( pPath ) )
-
-
-METHOD QGraphicsItem:mapFromParent_4( nX, nY, nW, nH )
-   RETURN Qt_QGraphicsItem_mapFromParent_4( ::pPtr, nX, nY, nW, nH )
-
-
-METHOD QGraphicsItem:mapFromParent_5( nX, nY )
-   RETURN Qt_QGraphicsItem_mapFromParent_5( ::pPtr, nX, nY )
-
-
-METHOD QGraphicsItem:mapFromScene( pPoint )
-   RETURN Qt_QGraphicsItem_mapFromScene( ::pPtr, hbqt_ptr( pPoint ) )
-
-
-METHOD QGraphicsItem:mapFromScene_1( pRect )
-   RETURN Qt_QGraphicsItem_mapFromScene_1( ::pPtr, hbqt_ptr( pRect ) )
-
-
-METHOD QGraphicsItem:mapFromScene_2( pPolygon )
-   RETURN Qt_QGraphicsItem_mapFromScene_2( ::pPtr, hbqt_ptr( pPolygon ) )
-
-
-METHOD QGraphicsItem:mapFromScene_3( pPath )
-   RETURN Qt_QGraphicsItem_mapFromScene_3( ::pPtr, hbqt_ptr( pPath ) )
-
-
-METHOD QGraphicsItem:mapFromScene_4( nX, nY, nW, nH )
-   RETURN Qt_QGraphicsItem_mapFromScene_4( ::pPtr, nX, nY, nW, nH )
-
-
-METHOD QGraphicsItem:mapFromScene_5( nX, nY )
-   RETURN Qt_QGraphicsItem_mapFromScene_5( ::pPtr, nX, nY )
-
-
-METHOD QGraphicsItem:mapRectFromItem( pItem, pRect )
-   RETURN Qt_QGraphicsItem_mapRectFromItem( ::pPtr, hbqt_ptr( pItem ), hbqt_ptr( pRect ) )
-
-
-METHOD QGraphicsItem:mapRectFromItem_1( pItem, nX, nY, nW, nH )
-   RETURN Qt_QGraphicsItem_mapRectFromItem_1( ::pPtr, hbqt_ptr( pItem ), nX, nY, nW, nH )
-
-
-METHOD QGraphicsItem:mapRectFromParent( pRect )
-   RETURN Qt_QGraphicsItem_mapRectFromParent( ::pPtr, hbqt_ptr( pRect ) )
-
-
-METHOD QGraphicsItem:mapRectFromParent_1( nX, nY, nW, nH )
-   RETURN Qt_QGraphicsItem_mapRectFromParent_1( ::pPtr, nX, nY, nW, nH )
-
-
-METHOD QGraphicsItem:mapRectFromScene( pRect )
-   RETURN Qt_QGraphicsItem_mapRectFromScene( ::pPtr, hbqt_ptr( pRect ) )
-
-
-METHOD QGraphicsItem:mapRectFromScene_1( nX, nY, nW, nH )
-   RETURN Qt_QGraphicsItem_mapRectFromScene_1( ::pPtr, nX, nY, nW, nH )
-
-
-METHOD QGraphicsItem:mapRectToItem( pItem, pRect )
-   RETURN Qt_QGraphicsItem_mapRectToItem( ::pPtr, hbqt_ptr( pItem ), hbqt_ptr( pRect ) )
-
-
-METHOD QGraphicsItem:mapRectToItem_1( pItem, nX, nY, nW, nH )
-   RETURN Qt_QGraphicsItem_mapRectToItem_1( ::pPtr, hbqt_ptr( pItem ), nX, nY, nW, nH )
-
-
-METHOD QGraphicsItem:mapRectToParent( pRect )
-   RETURN Qt_QGraphicsItem_mapRectToParent( ::pPtr, hbqt_ptr( pRect ) )
-
-
-METHOD QGraphicsItem:mapRectToParent_1( nX, nY, nW, nH )
-   RETURN Qt_QGraphicsItem_mapRectToParent_1( ::pPtr, nX, nY, nW, nH )
-
-
-METHOD QGraphicsItem:mapRectToScene( pRect )
-   RETURN Qt_QGraphicsItem_mapRectToScene( ::pPtr, hbqt_ptr( pRect ) )
-
-
-METHOD QGraphicsItem:mapRectToScene_1( nX, nY, nW, nH )
-   RETURN Qt_QGraphicsItem_mapRectToScene_1( ::pPtr, nX, nY, nW, nH )
-
-
-METHOD QGraphicsItem:mapToItem( pItem, pPoint )
-   RETURN Qt_QGraphicsItem_mapToItem( ::pPtr, hbqt_ptr( pItem ), hbqt_ptr( pPoint ) )
-
-
-METHOD QGraphicsItem:mapToItem_1( pItem, pRect )
-   RETURN Qt_QGraphicsItem_mapToItem_1( ::pPtr, hbqt_ptr( pItem ), hbqt_ptr( pRect ) )
-
-
-METHOD QGraphicsItem:mapToItem_2( pItem, pPolygon )
-   RETURN Qt_QGraphicsItem_mapToItem_2( ::pPtr, hbqt_ptr( pItem ), hbqt_ptr( pPolygon ) )
-
-
-METHOD QGraphicsItem:mapToItem_3( pItem, pPath )
-   RETURN Qt_QGraphicsItem_mapToItem_3( ::pPtr, hbqt_ptr( pItem ), hbqt_ptr( pPath ) )
-
-
-METHOD QGraphicsItem:mapToItem_4( pItem, nX, nY, nW, nH )
-   RETURN Qt_QGraphicsItem_mapToItem_4( ::pPtr, hbqt_ptr( pItem ), nX, nY, nW, nH )
-
-
-METHOD QGraphicsItem:mapToItem_5( pItem, nX, nY )
-   RETURN Qt_QGraphicsItem_mapToItem_5( ::pPtr, hbqt_ptr( pItem ), nX, nY )
-
-
-METHOD QGraphicsItem:mapToParent( pPoint )
-   RETURN Qt_QGraphicsItem_mapToParent( ::pPtr, hbqt_ptr( pPoint ) )
-
-
-METHOD QGraphicsItem:mapToParent_1( pRect )
-   RETURN Qt_QGraphicsItem_mapToParent_1( ::pPtr, hbqt_ptr( pRect ) )
-
-
-METHOD QGraphicsItem:mapToParent_2( pPolygon )
-   RETURN Qt_QGraphicsItem_mapToParent_2( ::pPtr, hbqt_ptr( pPolygon ) )
-
-
-METHOD QGraphicsItem:mapToParent_3( pPath )
-   RETURN Qt_QGraphicsItem_mapToParent_3( ::pPtr, hbqt_ptr( pPath ) )
-
-
-METHOD QGraphicsItem:mapToParent_4( nX, nY, nW, nH )
-   RETURN Qt_QGraphicsItem_mapToParent_4( ::pPtr, nX, nY, nW, nH )
-
-
-METHOD QGraphicsItem:mapToParent_5( nX, nY )
-   RETURN Qt_QGraphicsItem_mapToParent_5( ::pPtr, nX, nY )
-
-
-METHOD QGraphicsItem:mapToScene( pPoint )
-   RETURN Qt_QGraphicsItem_mapToScene( ::pPtr, hbqt_ptr( pPoint ) )
-
-
-METHOD QGraphicsItem:mapToScene_1( pRect )
-   RETURN Qt_QGraphicsItem_mapToScene_1( ::pPtr, hbqt_ptr( pRect ) )
-
-
-METHOD QGraphicsItem:mapToScene_2( pPolygon )
-   RETURN Qt_QGraphicsItem_mapToScene_2( ::pPtr, hbqt_ptr( pPolygon ) )
-
-
-METHOD QGraphicsItem:mapToScene_3( pPath )
-   RETURN Qt_QGraphicsItem_mapToScene_3( ::pPtr, hbqt_ptr( pPath ) )
-
-
-METHOD QGraphicsItem:mapToScene_4( nX, nY, nW, nH )
-   RETURN Qt_QGraphicsItem_mapToScene_4( ::pPtr, nX, nY, nW, nH )
-
-
-METHOD QGraphicsItem:mapToScene_5( nX, nY )
-   RETURN Qt_QGraphicsItem_mapToScene_5( ::pPtr, nX, nY )
+METHOD QGraphicsItem:mapFromItem( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 5
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N"
+                // QPolygonF mapFromItem ( const QGraphicsItem * item, qreal x, qreal y, qreal w, qreal h ) const
+                // PO p QGraphicsItem, N n qreal, N n qreal, N n qreal, N n qreal
+         RETURN QPolygonF():from( Qt_QGraphicsItem_mapFromItem_4( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // QPointF mapFromItem ( const QGraphicsItem * item, qreal x, qreal y ) const
+                // PO p QGraphicsItem, N n qreal, N n qreal
+         RETURN QPointF():from( Qt_QGraphicsItem_mapFromItem_5( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
+                // QPainterPath mapFromItem ( const QGraphicsItem * item, const QPainterPath & path ) const
+                // PO p QGraphicsItem, PO p QPainterPath
+         RETURN QPainterPath():from( Qt_QGraphicsItem_mapFromItem_3( ::pPtr, ... ) )
+                // QPointF mapFromItem ( const QGraphicsItem * item, const QPointF & point ) const
+                // PO p QGraphicsItem, PO p QPointF
+         // RETURN QPointF():from( Qt_QGraphicsItem_mapFromItem( ::pPtr, ... ) )
+                // QPolygonF mapFromItem ( const QGraphicsItem * item, const QRectF & rect ) const
+                // PO p QGraphicsItem, PO p QRectF
+         // RETURN QPolygonF():from( Qt_QGraphicsItem_mapFromItem_1( ::pPtr, ... ) )
+                // QPolygonF mapFromItem ( const QGraphicsItem * item, const QPolygonF & polygon ) const
+                // PO p QGraphicsItem, PO p QPolygonF
+         // RETURN QPolygonF():from( Qt_QGraphicsItem_mapFromItem_2( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
+
+
+METHOD QGraphicsItem:mapFromParent( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // QPolygonF mapFromParent ( qreal x, qreal y, qreal w, qreal h ) const
+                // N n qreal, N n qreal, N n qreal, N n qreal
+         RETURN QPolygonF():from( Qt_QGraphicsItem_mapFromParent_4( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // QPointF mapFromParent ( qreal x, qreal y ) const
+                // N n qreal, N n qreal
+         RETURN QPointF():from( Qt_QGraphicsItem_mapFromParent_5( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QPainterPath mapFromParent ( const QPainterPath & path ) const
+                // PO p QPainterPath
+         RETURN QPainterPath():from( Qt_QGraphicsItem_mapFromParent_3( ::pPtr, ... ) )
+                // QPointF mapFromParent ( const QPointF & point ) const
+                // PO p QPointF
+         // RETURN QPointF():from( Qt_QGraphicsItem_mapFromParent( ::pPtr, ... ) )
+                // QPolygonF mapFromParent ( const QRectF & rect ) const
+                // PO p QRectF
+         // RETURN QPolygonF():from( Qt_QGraphicsItem_mapFromParent_1( ::pPtr, ... ) )
+                // QPolygonF mapFromParent ( const QPolygonF & polygon ) const
+                // PO p QPolygonF
+         // RETURN QPolygonF():from( Qt_QGraphicsItem_mapFromParent_2( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
+
+
+METHOD QGraphicsItem:mapFromScene( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // QPolygonF mapFromScene ( qreal x, qreal y, qreal w, qreal h ) const
+                // N n qreal, N n qreal, N n qreal, N n qreal
+         RETURN QPolygonF():from( Qt_QGraphicsItem_mapFromScene_4( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // QPointF mapFromScene ( qreal x, qreal y ) const
+                // N n qreal, N n qreal
+         RETURN QPointF():from( Qt_QGraphicsItem_mapFromScene_5( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QPainterPath mapFromScene ( const QPainterPath & path ) const
+                // PO p QPainterPath
+         RETURN QPainterPath():from( Qt_QGraphicsItem_mapFromScene_3( ::pPtr, ... ) )
+                // QPointF mapFromScene ( const QPointF & point ) const
+                // PO p QPointF
+         // RETURN QPointF():from( Qt_QGraphicsItem_mapFromScene( ::pPtr, ... ) )
+                // QPolygonF mapFromScene ( const QRectF & rect ) const
+                // PO p QRectF
+         // RETURN QPolygonF():from( Qt_QGraphicsItem_mapFromScene_1( ::pPtr, ... ) )
+                // QPolygonF mapFromScene ( const QPolygonF & polygon ) const
+                // PO p QPolygonF
+         // RETURN QPolygonF():from( Qt_QGraphicsItem_mapFromScene_2( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
+
+
+METHOD QGraphicsItem:mapRectFromItem( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 5
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N"
+                // QRectF mapRectFromItem ( const QGraphicsItem * item, qreal x, qreal y, qreal w, qreal h ) const
+                // PO p QGraphicsItem, N n qreal, N n qreal, N n qreal, N n qreal
+         RETURN QRectF():from( Qt_QGraphicsItem_mapRectFromItem_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
+                // QRectF mapRectFromItem ( const QGraphicsItem * item, const QRectF & rect ) const
+                // PO p QGraphicsItem, PO p QRectF
+         RETURN QRectF():from( Qt_QGraphicsItem_mapRectFromItem( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
+
+
+METHOD QGraphicsItem:mapRectFromParent( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // QRectF mapRectFromParent ( qreal x, qreal y, qreal w, qreal h ) const
+                // N n qreal, N n qreal, N n qreal, N n qreal
+         RETURN QRectF():from( Qt_QGraphicsItem_mapRectFromParent_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QRectF mapRectFromParent ( const QRectF & rect ) const
+                // PO p QRectF
+         RETURN QRectF():from( Qt_QGraphicsItem_mapRectFromParent( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
+
+
+METHOD QGraphicsItem:mapRectFromScene( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // QRectF mapRectFromScene ( qreal x, qreal y, qreal w, qreal h ) const
+                // N n qreal, N n qreal, N n qreal, N n qreal
+         RETURN QRectF():from( Qt_QGraphicsItem_mapRectFromScene_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QRectF mapRectFromScene ( const QRectF & rect ) const
+                // PO p QRectF
+         RETURN QRectF():from( Qt_QGraphicsItem_mapRectFromScene( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
+
+
+METHOD QGraphicsItem:mapRectToItem( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 5
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N"
+                // QRectF mapRectToItem ( const QGraphicsItem * item, qreal x, qreal y, qreal w, qreal h ) const
+                // PO p QGraphicsItem, N n qreal, N n qreal, N n qreal, N n qreal
+         RETURN QRectF():from( Qt_QGraphicsItem_mapRectToItem_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
+                // QRectF mapRectToItem ( const QGraphicsItem * item, const QRectF & rect ) const
+                // PO p QGraphicsItem, PO p QRectF
+         RETURN QRectF():from( Qt_QGraphicsItem_mapRectToItem( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
+
+
+METHOD QGraphicsItem:mapRectToParent( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // QRectF mapRectToParent ( qreal x, qreal y, qreal w, qreal h ) const
+                // N n qreal, N n qreal, N n qreal, N n qreal
+         RETURN QRectF():from( Qt_QGraphicsItem_mapRectToParent_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QRectF mapRectToParent ( const QRectF & rect ) const
+                // PO p QRectF
+         RETURN QRectF():from( Qt_QGraphicsItem_mapRectToParent( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
+
+
+METHOD QGraphicsItem:mapRectToScene( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // QRectF mapRectToScene ( qreal x, qreal y, qreal w, qreal h ) const
+                // N n qreal, N n qreal, N n qreal, N n qreal
+         RETURN QRectF():from( Qt_QGraphicsItem_mapRectToScene_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QRectF mapRectToScene ( const QRectF & rect ) const
+                // PO p QRectF
+         RETURN QRectF():from( Qt_QGraphicsItem_mapRectToScene( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
+
+
+METHOD QGraphicsItem:mapToItem( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 5
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N"
+                // QPolygonF mapToItem ( const QGraphicsItem * item, qreal x, qreal y, qreal w, qreal h ) const
+                // PO p QGraphicsItem, N n qreal, N n qreal, N n qreal, N n qreal
+         RETURN QPolygonF():from( Qt_QGraphicsItem_mapToItem_4( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // QPointF mapToItem ( const QGraphicsItem * item, qreal x, qreal y ) const
+                // PO p QGraphicsItem, N n qreal, N n qreal
+         RETURN QPointF():from( Qt_QGraphicsItem_mapToItem_5( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
+                // QPainterPath mapToItem ( const QGraphicsItem * item, const QPainterPath & path ) const
+                // PO p QGraphicsItem, PO p QPainterPath
+         RETURN QPainterPath():from( Qt_QGraphicsItem_mapToItem_3( ::pPtr, ... ) )
+                // QPointF mapToItem ( const QGraphicsItem * item, const QPointF & point ) const
+                // PO p QGraphicsItem, PO p QPointF
+         // RETURN QPointF():from( Qt_QGraphicsItem_mapToItem( ::pPtr, ... ) )
+                // QPolygonF mapToItem ( const QGraphicsItem * item, const QRectF & rect ) const
+                // PO p QGraphicsItem, PO p QRectF
+         // RETURN QPolygonF():from( Qt_QGraphicsItem_mapToItem_1( ::pPtr, ... ) )
+                // QPolygonF mapToItem ( const QGraphicsItem * item, const QPolygonF & polygon ) const
+                // PO p QGraphicsItem, PO p QPolygonF
+         // RETURN QPolygonF():from( Qt_QGraphicsItem_mapToItem_2( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
+
+
+METHOD QGraphicsItem:mapToParent( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // QPolygonF mapToParent ( qreal x, qreal y, qreal w, qreal h ) const
+                // N n qreal, N n qreal, N n qreal, N n qreal
+         RETURN QPolygonF():from( Qt_QGraphicsItem_mapToParent_4( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // QPointF mapToParent ( qreal x, qreal y ) const
+                // N n qreal, N n qreal
+         RETURN QPointF():from( Qt_QGraphicsItem_mapToParent_5( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QPainterPath mapToParent ( const QPainterPath & path ) const
+                // PO p QPainterPath
+         RETURN QPainterPath():from( Qt_QGraphicsItem_mapToParent_3( ::pPtr, ... ) )
+                // QPointF mapToParent ( const QPointF & point ) const
+                // PO p QPointF
+         // RETURN QPointF():from( Qt_QGraphicsItem_mapToParent( ::pPtr, ... ) )
+                // QPolygonF mapToParent ( const QRectF & rect ) const
+                // PO p QRectF
+         // RETURN QPolygonF():from( Qt_QGraphicsItem_mapToParent_1( ::pPtr, ... ) )
+                // QPolygonF mapToParent ( const QPolygonF & polygon ) const
+                // PO p QPolygonF
+         // RETURN QPolygonF():from( Qt_QGraphicsItem_mapToParent_2( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
+
+
+METHOD QGraphicsItem:mapToScene( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // QPolygonF mapToScene ( qreal x, qreal y, qreal w, qreal h ) const
+                // N n qreal, N n qreal, N n qreal, N n qreal
+         RETURN QPolygonF():from( Qt_QGraphicsItem_mapToScene_4( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // QPointF mapToScene ( qreal x, qreal y ) const
+                // N n qreal, N n qreal
+         RETURN QPointF():from( Qt_QGraphicsItem_mapToScene_5( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QPainterPath mapToScene ( const QPainterPath & path ) const
+                // PO p QPainterPath
+         RETURN QPainterPath():from( Qt_QGraphicsItem_mapToScene_3( ::pPtr, ... ) )
+                // QPointF mapToScene ( const QPointF & point ) const
+                // PO p QPointF
+         // RETURN QPointF():from( Qt_QGraphicsItem_mapToScene( ::pPtr, ... ) )
+                // QPolygonF mapToScene ( const QRectF & rect ) const
+                // PO p QRectF
+         // RETURN QPolygonF():from( Qt_QGraphicsItem_mapToScene_1( ::pPtr, ... ) )
+                // QPolygonF mapToScene ( const QPolygonF & polygon ) const
+                // PO p QPolygonF
+         // RETURN QPolygonF():from( Qt_QGraphicsItem_mapToScene_2( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QGraphicsItem:moveBy( nDx, nDy )
@@ -734,12 +969,31 @@ METHOD QGraphicsItem:setParentItem( pParent )
    RETURN Qt_QGraphicsItem_setParentItem( ::pPtr, hbqt_ptr( pParent ) )
 
 
-METHOD QGraphicsItem:setPos( pPos )
-   RETURN Qt_QGraphicsItem_setPos( ::pPtr, hbqt_ptr( pPos ) )
-
-
-METHOD QGraphicsItem:setPos_1( nX, nY )
-   RETURN Qt_QGraphicsItem_setPos_1( ::pPtr, nX, nY )
+METHOD QGraphicsItem:setPos( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void setPos ( qreal x, qreal y )
+                // N n qreal, N n qreal
+         RETURN Qt_QGraphicsItem_setPos_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void setPos ( const QPointF & pos )
+                // PO p QPointF
+         RETURN Qt_QGraphicsItem_setPos( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QGraphicsItem:setSelected( lSelected )
@@ -810,12 +1064,35 @@ METHOD QGraphicsItem:unsetCursor()
    RETURN Qt_QGraphicsItem_unsetCursor( ::pPtr )
 
 
-METHOD QGraphicsItem:update( pRect )
-   RETURN Qt_QGraphicsItem_update( ::pPtr, hbqt_ptr( pRect ) )
-
-
-METHOD QGraphicsItem:update_1( nX, nY, nWidth, nHeight )
-   RETURN Qt_QGraphicsItem_update_1( ::pPtr, nX, nY, nWidth, nHeight )
+METHOD QGraphicsItem:update( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // void update ( qreal x, qreal y, qreal width, qreal height )
+                // N n qreal, N n qreal, N n qreal, N n qreal
+         RETURN Qt_QGraphicsItem_update_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void update ( const QRectF & rect = QRectF() )
+                // PO p QRectF
+         RETURN Qt_QGraphicsItem_update( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // void update ( const QRectF & rect = QRectF() )
+             // PO p QRectF
+      RETURN Qt_QGraphicsItem_update( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QGraphicsItem:window()

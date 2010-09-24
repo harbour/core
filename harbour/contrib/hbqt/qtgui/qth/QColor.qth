@@ -173,27 +173,10 @@ void setHsvF ( qreal h, qreal s, qreal v, qreal a = 1.0 )
 void setNamedColor ( const QString & name )
 void setRed ( int red )
 void setRedF ( qreal red )
-
-void setRgb ( ... ){
-   QColor * p = hbqt_par_QColor( 1 );
-   if( p )
-   {
-      if( hb_pcount() == 2 && HB_ISNUM( 2 ) )
-      {
-         ( p )->setRgb( hb_parnl( 2 ) );
-      }
-      else if( hb_pcount() >= 4 && HB_ISNUM( 2 ) )
-      {
-         ( p )->setRgb( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parnidef( 5, 255 ) );
-      }
-   }
-}
-//void setRgb ( QRgb rgb )
-//void setRgb ( int r, int g, int b, int a = 255 )
-
+void setRgb ( QRgb rgb )
+void setRgb ( int r, int g, int b, int a = 255 )
 void setRgba ( QRgb rgba )
 void setRgbF ( qreal r, qreal g, qreal b, qreal a = 1.0 )
-
 Spec spec () const
 QColor toCmyk () const
 QColor toHsv () const
@@ -202,8 +185,6 @@ int value () const
 qreal valueF () const
 int yellow () const
 qreal yellowF () const
-
-
 //bool allowX11ColorNames ()
 QStringList colorNames ()
 QColor fromCmyk ( int c, int m, int y, int k, int a = 255 )
@@ -211,22 +192,8 @@ QColor fromCmykF ( qreal c, qreal m, qreal y, qreal k, qreal a = 1.0 )
 QColor fromHsv ( int h, int s, int v, int a = 255 )
 QColor fromHsvF ( qreal h, qreal s, qreal v, qreal a = 1.0 )
 
-QColor fromRgb ( ... ){
-   QColor * p = hbqt_par_QColor( 1 );
-   if( p )
-   {
-      if( hb_pcount() == 2 && HB_ISNUM( 2 ) )
-      {
-         hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->fromRgb( hb_parnl( 2 ) ) ), true ) );
-      }
-      else if( hb_pcount() >= 4 && HB_ISNUM( 2 ) )
-      {
-         hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->fromRgb( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parnidef( 5, 255 ) ) ), true ) );
-      }
-   }
-}
-//QColor fromRgb ( QRgb rgb )
-//QColor fromRgb ( int r, int g, int b, int a = 255 )
+QColor fromRgb ( QRgb rgb )
+QColor fromRgb ( int r, int g, int b, int a = 255 )
 
 QColor fromRgbF ( qreal r, qreal g, qreal b, qreal a = 1.0 )
 QColor fromRgba ( QRgb rgba )

@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QObject
  *  $SYNTAX$
- *     QSyntaxHighlighter():new( ... )
+ *     QSyntaxHighlighter( ... )
  *     QSyntaxHighlighter():from( pPtr_OR_oObj_of_type_QSyntaxHighlighter )
  *     QSyntaxHighlighter():configure( pPtr_OR_oObj_of_type_QSyntaxHighlighter )
  *  $ARGUMENTS$

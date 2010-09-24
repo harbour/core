@@ -72,8 +72,7 @@ CREATE CLASS QGraphicsEllipseItem INHERIT HbQtObjectHandler, HB_QAbstractGraphic
    METHOD  new( ... )
 
    METHOD  rect()
-   METHOD  setRect( pRect )
-   METHOD  setRect_1( nX, nY, nWidth, nHeight )
+   METHOD  setRect( ... )
    METHOD  setSpanAngle( nAngle )
    METHOD  setStartAngle( nAngle )
    METHOD  spanAngle()
@@ -95,12 +94,31 @@ METHOD QGraphicsEllipseItem:rect()
    RETURN Qt_QGraphicsEllipseItem_rect( ::pPtr )
 
 
-METHOD QGraphicsEllipseItem:setRect( pRect )
-   RETURN Qt_QGraphicsEllipseItem_setRect( ::pPtr, hbqt_ptr( pRect ) )
-
-
-METHOD QGraphicsEllipseItem:setRect_1( nX, nY, nWidth, nHeight )
-   RETURN Qt_QGraphicsEllipseItem_setRect_1( ::pPtr, nX, nY, nWidth, nHeight )
+METHOD QGraphicsEllipseItem:setRect( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
+                // void setRect ( qreal x, qreal y, qreal width, qreal height )
+                // N n qreal, N n qreal, N n qreal, N n qreal
+         RETURN Qt_QGraphicsEllipseItem_setRect_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void setRect ( const QRectF & rect )
+                // PO p QRectF
+         RETURN Qt_QGraphicsEllipseItem_setRect( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QGraphicsEllipseItem:setSpanAngle( nAngle )

@@ -93,8 +93,7 @@ CREATE CLASS QTextStream INHERIT HbQtObjectHandler FUNCTION HB_QTextStream
    METHOD  resetStatus()
    METHOD  seek( nPos )
    METHOD  setAutoDetectUnicode( lEnabled )
-   METHOD  setCodec( pCodec )
-   METHOD  setCodec_1( pCodecName )
+   METHOD  setCodec( ... )
    METHOD  setDevice( pDevice )
    METHOD  setFieldAlignment( nMode )
    METHOD  setFieldWidth( nWidth )
@@ -209,12 +208,27 @@ METHOD QTextStream:setAutoDetectUnicode( lEnabled )
    RETURN Qt_QTextStream_setAutoDetectUnicode( ::pPtr, lEnabled )
 
 
-METHOD QTextStream:setCodec( pCodec )
-   RETURN Qt_QTextStream_setCodec( ::pPtr, hbqt_ptr( pCodec ) )
-
-
-METHOD QTextStream:setCodec_1( pCodecName )
-   RETURN Qt_QTextStream_setCodec_1( ::pPtr, hbqt_ptr( pCodecName ) )
+METHOD QTextStream:setCodec( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void setCodec ( QTextCodec * codec )
+                // PO p QTextCodec
+         RETURN Qt_QTextStream_setCodec( ::pPtr, ... )
+                // void setCodec ( const char * codecName )
+                // PO p char
+         // RETURN Qt_QTextStream_setCodec_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QTextStream:setDevice( pDevice )

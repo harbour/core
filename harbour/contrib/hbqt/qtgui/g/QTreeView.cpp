@@ -78,6 +78,11 @@
  *  flags EditTriggers
  */
 
+/*
+ *  Constructed[ 49/49 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QTreeView>

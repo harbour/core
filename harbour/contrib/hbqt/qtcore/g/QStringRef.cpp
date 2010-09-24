@@ -65,6 +65,19 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  Constructed[ 19/19 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  //QStringRef appendTo ( QString * string ) const
+ *  //int compare ( QLatin1String other, Qt::CaseSensitivity cs = Qt::CaseSensitive ) const
+ *  //const QString * string () const
+ *  //QString toString () const
+ *  //int compare ( const QStringRef & s1, QLatin1String s2, Qt::CaseSensitivity cs = Qt::CaseSensitive )
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtCore/QStringRef>

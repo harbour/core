@@ -71,6 +71,11 @@
  *  enum StyleOptionVersion { Version }
  */
 
+/*
+ *  Constructed[ 2/2 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionComplex>
@@ -149,7 +154,11 @@ HB_FUNC( QT_QSTYLEOPTIONCOMPLEX )
  */
 HB_FUNC( QT_QSTYLEOPTIONCOMPLEX_ACTIVESUBCONTROLS )
 {
-   hb_retni( ( QStyle::SubControls ) hbqt_par_QStyleOptionComplex( 1 )->activeSubControls );
+   QStyleOptionComplex * p = hbqt_par_QStyleOptionComplex( 1 );
+   if( p )
+   {
+      hb_retni( ( QStyle::SubControls ) ( p )->activeSubControls );
+   }
 }
 
 /*
@@ -157,7 +166,11 @@ HB_FUNC( QT_QSTYLEOPTIONCOMPLEX_ACTIVESUBCONTROLS )
  */
 HB_FUNC( QT_QSTYLEOPTIONCOMPLEX_SUBCONTROLS )
 {
-   hb_retni( ( QStyle::SubControls ) hbqt_par_QStyleOptionComplex( 1 )->subControls );
+   QStyleOptionComplex * p = hbqt_par_QStyleOptionComplex( 1 );
+   if( p )
+   {
+      hb_retni( ( QStyle::SubControls ) ( p )->subControls );
+   }
 }
 
 

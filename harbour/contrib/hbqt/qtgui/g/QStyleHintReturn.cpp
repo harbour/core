@@ -76,7 +76,6 @@
  *  Constructed[ 0/2 [ 0.00% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  int type
  *  int version

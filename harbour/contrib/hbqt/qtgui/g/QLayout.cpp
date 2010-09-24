@@ -71,13 +71,8 @@
  */
 
 /*
- *  Constructed[ 29/31 [ 93.55% ] ]
+ *  Constructed[ 29/29 [ 100.00% ] ]
  *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  }
- *  }
  */
 
 #include <QtCore/QPointer>
@@ -147,34 +142,36 @@ HB_FUNC( QT_QLAYOUT_ACTIVATE )
 }
 
 /*
- * virtual void addItem ( QLayoutItem * item )
+ * virtual void addItem ( QLayoutItem * item )    [*D=1*]
  */
 HB_FUNC( QT_QLAYOUT_ADDITEM )
 {
-   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QLAYOUT_ADDITEM()" ) );
-   if( p && p->ph && q && q->ph )
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "QT_QLAYOUT_ADDITEM() Qt object: %p is attached to: %p", p->ph, q->ph ) );
-      q->bNew = HB_FALSE;
-      hbqt_par_QLayout( 1 )->addItem( hbqt_par_QLayoutItem( 2 ) );
+      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+      if( q && q->ph )
+      {
+         q->bNew = false;
+      }
+      ( p )->addItem( hbqt_par_QLayoutItem( 2 ) );
    }
 }
 
 /*
- * void addWidget ( QWidget * w )
+ * void addWidget ( QWidget * w )                 [*D=1*]
  */
 HB_FUNC( QT_QLAYOUT_ADDWIDGET )
 {
-   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-   HB_TRACE( HB_TR_DEBUG, ( "Entering function QT_QLAYOUT_ADDWIDGET()" ) );
-   if( p && p->ph && q && q->ph )
+   QLayout * p = hbqt_par_QLayout( 1 );
+   if( p )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "QT_QLAYOUT_ADDWIDGET() Qt object: %p is attached to: %p", p->ph, q->ph ) );
-      q->bNew = HB_FALSE;
-      hbqt_par_QLayout( 1 )->addWidget( hbqt_par_QWidget( 2 ) );
+      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+      if( q && q->ph )
+      {
+         q->bNew = false;
+      }
+      ( p )->addWidget( hbqt_par_QWidget( 2 ) );
    }
 }
 

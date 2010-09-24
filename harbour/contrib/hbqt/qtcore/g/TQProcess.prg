@@ -90,17 +90,13 @@ CREATE CLASS QProcess INHERIT HbQtObjectHandler, HB_QIODevice FUNCTION HB_QProce
    METHOD  setStandardOutputFile( cFileName, nMode )
    METHOD  setStandardOutputProcess( pDestination )
    METHOD  setWorkingDirectory( cDir )
-   METHOD  start( cProgram, pArguments, nMode )
-   METHOD  start_1( cProgram, nMode )
+   METHOD  start( ... )
    METHOD  state()
    METHOD  waitForFinished( nMsecs )
    METHOD  waitForStarted( nMsecs )
    METHOD  workingDirectory()
-   METHOD  execute( cProgram, pArguments )
-   METHOD  execute_1( cProgram )
-   METHOD  startDetached( cProgram, pArguments, cWorkingDirectory, nPid )
-   METHOD  startDetached_1( cProgram, pArguments )
-   METHOD  startDetached_2( cProgram )
+   METHOD  execute( ... )
+   METHOD  startDetached( ... )
    METHOD  systemEnvironment()
    METHOD  kill()
    METHOD  terminate()
@@ -193,12 +189,42 @@ METHOD QProcess:setWorkingDirectory( cDir )
    RETURN Qt_QProcess_setWorkingDirectory( ::pPtr, cDir )
 
 
-METHOD QProcess:start( cProgram, pArguments, nMode )
-   RETURN Qt_QProcess_start( ::pPtr, cProgram, hbqt_ptr( pArguments ), nMode )
-
-
-METHOD QProcess:start_1( cProgram, nMode )
-   RETURN Qt_QProcess_start_1( ::pPtr, cProgram, nMode )
+METHOD QProcess:start( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "N"
+                // void start ( const QString & program, const QStringList & arguments, OpenMode mode = ReadWrite )
+                // C c QString, PO p QStringList, N n QProcess::OpenMode
+         RETURN Qt_QProcess_start( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
+                // void start ( const QString & program, OpenMode mode = ReadWrite )
+                // C c QString, N n QProcess::OpenMode
+         RETURN Qt_QProcess_start_1( ::pPtr, ... )
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO"
+                // void start ( const QString & program, const QStringList & arguments, OpenMode mode = ReadWrite )
+                // C c QString, PO p QStringList, N n QProcess::OpenMode
+         RETURN Qt_QProcess_start( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // void start ( const QString & program, OpenMode mode = ReadWrite )
+                // C c QString, N n QProcess::OpenMode
+         RETURN Qt_QProcess_start_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QProcess:state()
@@ -217,24 +243,72 @@ METHOD QProcess:workingDirectory()
    RETURN Qt_QProcess_workingDirectory( ::pPtr )
 
 
-METHOD QProcess:execute( cProgram, pArguments )
-   RETURN Qt_QProcess_execute( ::pPtr, cProgram, hbqt_ptr( pArguments ) )
+METHOD QProcess:execute( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO"
+                // int execute ( const QString & program, const QStringList & arguments )
+                // C c QString, PO p QStringList
+         RETURN Qt_QProcess_execute( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // int execute ( const QString & program )
+                // C c QString
+         RETURN Qt_QProcess_execute_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QProcess:execute_1( cProgram )
-   RETURN Qt_QProcess_execute_1( ::pPtr, cProgram )
-
-
-METHOD QProcess:startDetached( cProgram, pArguments, cWorkingDirectory, nPid )
-   RETURN Qt_QProcess_startDetached( ::pPtr, cProgram, hbqt_ptr( pArguments ), cWorkingDirectory, nPid )
-
-
-METHOD QProcess:startDetached_1( cProgram, pArguments )
-   RETURN Qt_QProcess_startDetached_1( ::pPtr, cProgram, hbqt_ptr( pArguments ) )
-
-
-METHOD QProcess:startDetached_2( cProgram )
-   RETURN Qt_QProcess_startDetached_2( ::pPtr, cProgram )
+METHOD QProcess:startDetached( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "C" .AND. aV[ 4 ] $ "N"
+                // bool startDetached ( const QString & program, const QStringList & arguments, const QString & workingDirectory, qint64 * pid = 0 )
+                // C c QString, PO p QStringList, C c QString, N @ qint64
+         RETURN Qt_QProcess_startDetached( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "C"
+                // bool startDetached ( const QString & program, const QStringList & arguments, const QString & workingDirectory, qint64 * pid = 0 )
+                // C c QString, PO p QStringList, C c QString, N @ qint64
+         RETURN Qt_QProcess_startDetached( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO"
+                // bool startDetached ( const QString & program, const QStringList & arguments )
+                // C c QString, PO p QStringList
+         RETURN Qt_QProcess_startDetached_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // bool startDetached ( const QString & program )
+                // C c QString
+         RETURN Qt_QProcess_startDetached_2( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QProcess:systemEnvironment()

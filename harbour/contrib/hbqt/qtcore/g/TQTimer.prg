@@ -78,9 +78,8 @@ CREATE CLASS QTimer INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QTimer
    METHOD  setSingleShot( lSingleShot )
    METHOD  timerId()
    METHOD  singleShot( nMsec, pReceiver, pMember )
-   METHOD  start()
+   METHOD  start( ... )
    METHOD  stop()
-   METHOD  start_1( nMsec )
 
    ENDCLASS
 
@@ -122,14 +121,29 @@ METHOD QTimer:singleShot( nMsec, pReceiver, pMember )
    RETURN Qt_QTimer_singleShot( ::pPtr, nMsec, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ) )
 
 
-METHOD QTimer:start()
-   RETURN Qt_QTimer_start( ::pPtr )
+METHOD QTimer:start( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // void start ( int msec )
+                // N n int
+         RETURN Qt_QTimer_start_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // void start ()
+      RETURN Qt_QTimer_start( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QTimer:stop()
    RETURN Qt_QTimer_stop( ::pPtr )
-
-
-METHOD QTimer:start_1( nMsec )
-   RETURN Qt_QTimer_start_1( ::pPtr, nMsec )
 

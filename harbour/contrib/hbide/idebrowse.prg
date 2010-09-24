@@ -308,20 +308,24 @@ METHOD IdeBrowseManager:create( oIde )
 
    /* Toolbar */
    ::buildToolbar()
-   ::qLayout:addWidget_1( ::qToolbar, 0, 0, 1, 2 )
+   //::qLayout:addWidget_1( ::qToolbar, 0, 0, 1, 2 )
+   ::qLayout:addWidget( ::qToolbar, 0, 0, 1, 2 )
 
    /* Toolbar left */
    ::buildLeftToolbar()
-   ::qLayout:addWidget_1( ::qToolbarL, 1, 0, 1, 1 )
+   //::qLayout:addWidget_1( ::qToolbarL, 1, 0, 1, 1 )
+   ::qLayout:addWidget( ::qToolbarL, 1, 0, 1, 1 )
 
    /* Stacked widget */
    ::qStack := QStackedWidget()
-   ::qLayout:addWidget_1( ::qStack   , 1, 1, 1, 1 )
+   //::qLayout:addWidget_1( ::qStack   , 1, 1, 1, 1 )
+   ::qLayout:addWidget( ::qStack   , 1, 1, 1, 1 )
 
    /* StatusBar */
    ::qStatus := QStatusBar()
    ::qStatus:setSizeGripEnabled( .f. )
-   ::qLayout:addWidget_1( ::qStatus  , 2, 0, 1, 2 )
+   //::qLayout:addWidget_1( ::qStatus  , 2, 0, 1, 2 )
+   ::qLayout:addWidget( ::qStatus  , 2, 0, 1, 2 )
 
    /* */
    ::buildStatusPanels()

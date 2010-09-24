@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QIODevice
  *  $SYNTAX$
- *     QFile():new( ... )
+ *     QFile( ... )
  *     QFile():from( pPtr_OR_oObj_of_type_QFile )
  *     QFile():configure( pPtr_OR_oObj_of_type_QFile )
  *  $ARGUMENTS$
@@ -50,7 +50,6 @@
  *     :unsetError()                                       -> NIL
  *     :copy_1( cFileName, cNewName )                      -> lBool
  *     :decodeName( pLocalFileName )                       -> cQString
- *     :decodeName_1( pLocalFileName )                     -> cQString
  *     :encodeName( cFileName )                            -> pQByteArray
  *     :exists_1( cFileName )                              -> lBool
  *     :link_1( cFileName, cLinkName )                     -> lBool

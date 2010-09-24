@@ -80,6 +80,19 @@
  *  enum Unit { Millimeter, Point, Inch, Pica, ..., DevicePixel }
  */
 
+/*
+ *  Constructed[ 56/56 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  // QString printerSelectionOption () const
+ *  // void setPrinterSelectionOption ( const QString & option )
+ *  // void setWinPageSize ( int pageSize )
+ *  // QList<PaperSource> supportedPaperSources () const
+ *  // int winPageSize () const
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QPrinter>

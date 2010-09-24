@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QIODevice
  *  $SYNTAX$
- *     QBuffer():new( ... )
+ *     QBuffer( ... )
  *     QBuffer():from( pPtr_OR_oObj_of_type_QBuffer )
  *     QBuffer():configure( pPtr_OR_oObj_of_type_QBuffer )
  *  $ARGUMENTS$
@@ -27,7 +27,6 @@
  *     An instance of the object of type QBuffer
  *  $METHODS$
  *     :buffer()                                           -> pQByteArray
- *     :buffer_1()                                         -> pQByteArray
  *     :data()                                             -> pQByteArray
  *     :setBuffer( pByteArray )                            -> NIL
  *     :setData( pData, nSize )                            -> NIL

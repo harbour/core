@@ -86,8 +86,7 @@ CREATE CLASS QFtp INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QFtp
    METHOD  list( cDir )
    METHOD  login( cUser, cPassword )
    METHOD  mkdir( cDir )
-   METHOD  put( pDev, cFile, nType )
-   METHOD  put_1( pData, cFile, nType )
+   METHOD  put( ... )
    METHOD  rawCommand( cCommand )
    METHOD  readAll()
    METHOD  remove( cFile )
@@ -170,12 +169,37 @@ METHOD QFtp:mkdir( cDir )
    RETURN Qt_QFtp_mkdir( ::pPtr, cDir )
 
 
-METHOD QFtp:put( pDev, cFile, nType )
-   RETURN Qt_QFtp_put( ::pPtr, hbqt_ptr( pDev ), cFile, nType )
-
-
-METHOD QFtp:put_1( pData, cFile, nType )
-   RETURN Qt_QFtp_put_1( ::pPtr, hbqt_ptr( pData ), cFile, nType )
+METHOD QFtp:put( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "C" .AND. aV[ 3 ] $ "N"
+                // int put ( QIODevice * dev, const QString & file, TransferType type = Binary )
+                // PO p QIODevice, C c QString, N n QFtp::TransferType
+         RETURN Qt_QFtp_put( ::pPtr, ... )
+                // int put ( const QByteArray & data, const QString & file, TransferType type = Binary )
+                // PO p QByteArray, C c QString, N n QFtp::TransferType
+         // RETURN Qt_QFtp_put_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "C"
+                // int put ( QIODevice * dev, const QString & file, TransferType type = Binary )
+                // PO p QIODevice, C c QString, N n QFtp::TransferType
+         RETURN Qt_QFtp_put( ::pPtr, ... )
+                // int put ( const QByteArray & data, const QString & file, TransferType type = Binary )
+                // PO p QByteArray, C c QString, N n QFtp::TransferType
+         // RETURN Qt_QFtp_put_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QFtp:rawCommand( cCommand )

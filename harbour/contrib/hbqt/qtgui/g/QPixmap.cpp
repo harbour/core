@@ -72,38 +72,17 @@
  */
 
 /*
- *  Constructed[ 32/66 [ 48.48% ] ]
+ *  Constructed[ 39/39 [ 100.00% ] ]
  *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *  }
- *
- *  *** Commented out protos which construct fine but do not compile ***
+ *  *** Commented out protostypes ***
  *
  *  // QRgb * clut () const
- *  //QPixmap copy ( const QRect & rectangle = QRect() ) const
- *  //QPixmap copy ( int x, int y, int width, int height ) const
- *  //QBitmap createMaskFromColor ( const QColor & maskColor, Qt::MaskMode mode ) const
- *  //QBitmap createMaskFromColor ( const QColor & maskColor ) const
- *  //void fill ( const QColor & color = Qt::white )
- *  //void fill ( const QWidget * widget, const QPoint & offset )
- *  //void fill ( const QWidget * widget, int x, int y )
  *  // Qt::HANDLE handle () const
  *  // bool loadFromData ( const uchar * data, uint len, const char * format = 0, Qt::ImageConversionFlags flags = Qt::AutoColor )
  *  // int numCols () const
  *  // const uchar * qwsBits () const
  *  // int qwsBytesPerLine () const
- *  //bool save ( const QString & fileName, const char * format = 0, int quality = -1 ) const
- *  //bool save ( QIODevice * device, const char * format = 0, int quality = -1 ) const
- *  //QPixmap scaled ( int width, int height, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
- *  //QPixmap scaled ( const QSize & size, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
  *  // CGImageRef toMacCGImageRef () const
  *  //HBITMAP toWinHBITMAP ( HBitmapFormat format = NoAlpha ) const
  *  //QPixmap transformed ( const QTransform & transform, Qt::TransformationMode mode = Qt::FastTransformation ) const
@@ -111,8 +90,6 @@
  *  //QPixmap fromMacCGImageRef ( CGImageRef image )
  *  //QPixmap fromWinHBITMAP ( HBITMAP bitmap, HBitmapFormat format = NoAlpha )
  *  //QPixmap fromX11Pixmap ( Qt::HANDLE pixmap, ShareMode mode = ImplicitlyShared )
- *  //QPixmap grabWidget ( QWidget * widget, const QRect & rectangle )
- *  //QPixmap grabWidget ( QWidget * widget, int x = 0, int y = 0, int width = -1, int height = -1 )
  *  //QPixmap grabWindow ( WId window, int x = 0, int y = 0, int width = -1, int height = -1 )
  */
 
@@ -249,25 +226,26 @@ HB_FUNC( QT_QPIXMAP_CACHEKEY )
 }
 
 /*
- * QPixmap copy ( ... )
+ * QPixmap copy ( const QRect & rectangle = QRect() ) const
  */
 HB_FUNC( QT_QPIXMAP_COPY )
 {
    QPixmap * p = hbqt_par_QPixmap( 1 );
    if( p )
    {
-      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->copy( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QRect( 2 ) : QRect() ) ) ), true ) );
-      }
-      else if( hb_pcount() == 5 && HB_ISNUM( 2 ) )
-      {
-         hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->copy( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ) ), true ) );
-      }
-      else
-      {
-         hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->copy( QRect() ) ), true ) );
-      }
+      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->copy( ( HB_ISPOINTER( 2 ) ? *hbqt_par_QRect( 2 ) : QRect() ) ) ), true ) );
+   }
+}
+
+/*
+ * QPixmap copy ( int x, int y, int width, int height ) const
+ */
+HB_FUNC( QT_QPIXMAP_COPY_1 )
+{
+   QPixmap * p = hbqt_par_QPixmap( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->copy( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) ) ), true ) );
    }
 }
 
@@ -284,25 +262,26 @@ HB_FUNC( QT_QPIXMAP_CREATEHEURISTICMASK )
 }
 
 /*
- * QBitmap createMaskFromColor ( ... )
+ * QBitmap createMaskFromColor ( const QColor & maskColor, Qt::MaskMode mode ) const
  */
 HB_FUNC( QT_QPIXMAP_CREATEMASKFROMCOLOR )
 {
    QPixmap * p = hbqt_par_QPixmap( 1 );
    if( p )
    {
-      if( hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-      {
-         hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap( ( p )->createMaskFromColor( *hbqt_par_QColor( 2 ) ) ), true ) );
-      }
-      else if( hb_pcount() == 3 && HB_ISPOINTER( 2 ) && HB_ISNUM( 3 ) )
-      {
-         hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap( ( p )->createMaskFromColor( *hbqt_par_QColor( 2 ), ( Qt::MaskMode ) hb_parni( 3 ) ) ), true ) );
-      }
-      else
-      {
-         ( p )->copy( QRect() );
-      }
+      hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap( ( p )->createMaskFromColor( *hbqt_par_QColor( 2 ), ( Qt::MaskMode ) hb_parni( 3 ) ) ), true ) );
+   }
+}
+
+/*
+ * QBitmap createMaskFromColor ( const QColor & maskColor ) const
+ */
+HB_FUNC( QT_QPIXMAP_CREATEMASKFROMCOLOR_1 )
+{
+   QPixmap * p = hbqt_par_QPixmap( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap( ( p )->createMaskFromColor( *hbqt_par_QColor( 2 ) ) ), true ) );
    }
 }
 
@@ -331,25 +310,38 @@ HB_FUNC( QT_QPIXMAP_DETACH )
 }
 
 /*
- * void fill ( ... )
+ * void fill ( const QColor & color = Qt::white )
  */
 HB_FUNC( QT_QPIXMAP_FILL )
 {
    QPixmap * p = hbqt_par_QPixmap( 1 );
    if( p )
    {
-      if( hb_pcount() == 4 && HB_ISPOINTER( 2 ) && HB_ISNUM( 3 ) )
-      {
-         ( p )->fill( hbqt_par_QWidget( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
-      }
-      else if( hb_pcount() == 3 && HB_ISPOINTER( 2 ) && HB_ISPOINTER( 3 ) )
-      {
-         ( p )->fill( hbqt_par_QWidget( 2 ), *hbqt_par_QPoint( 3 ) );
-      }
-      else
-      {
-         ( p )->fill( *hbqt_par_QColor( 2 ) );
-      }
+      ( p )->fill( *hbqt_par_QColor( 2 ) );
+   }
+}
+
+/*
+ * void fill ( const QWidget * widget, const QPoint & offset )
+ */
+HB_FUNC( QT_QPIXMAP_FILL_1 )
+{
+   QPixmap * p = hbqt_par_QPixmap( 1 );
+   if( p )
+   {
+      ( p )->fill( hbqt_par_QWidget( 2 ), *hbqt_par_QPoint( 3 ) );
+   }
+}
+
+/*
+ * void fill ( const QWidget * widget, int x, int y )
+ */
+HB_FUNC( QT_QPIXMAP_FILL_2 )
+{
+   QPixmap * p = hbqt_par_QPixmap( 1 );
+   if( p )
+   {
+      ( p )->fill( hbqt_par_QWidget( 2 ), hb_parni( 3 ), hb_parni( 4 ) );
    }
 }
 
@@ -464,42 +456,52 @@ HB_FUNC( QT_QPIXMAP_RECT )
 }
 
 /*
- * bool save ( ... )
+ * bool save ( const QString & fileName, const char * format = 0, int quality = -1 ) const
  */
 HB_FUNC( QT_QPIXMAP_SAVE )
 {
    QPixmap * p = hbqt_par_QPixmap( 1 );
    if( p )
    {
-      if( hb_pcount() >= 2 && HB_ISCHAR( 2 ) )
-      {
-         void * pText;
-         hb_retl( ( p )->save( hb_parstr_utf8( 2, &pText, NULL ), hbqt_par_char( 3 ), hb_parnidef( 4, -1 ) ) );
-         hb_strfree( pText );
-      }
-      else if( hb_pcount() >= 2 && HB_ISPOINTER( 2 ) )
-      {
-         hb_retl( ( p )->save( hbqt_par_QIODevice( 2 ), hbqt_par_char( 3 ), hb_parnidef( 4, -1 ) ) );
-      }
+      void * pText;
+      hb_retl( ( p )->save( hb_parstr_utf8( 2, &pText, NULL ), hbqt_par_char( 3 ), hb_parnidef( 4, -1 ) ) );
+      hb_strfree( pText );
    }
 }
 
 /*
- * QPixmap scaled ( ... )
+ * bool save ( QIODevice * device, const char * format = 0, int quality = -1 ) const
+ */
+HB_FUNC( QT_QPIXMAP_SAVE_1 )
+{
+   QPixmap * p = hbqt_par_QPixmap( 1 );
+   if( p )
+   {
+      hb_retl( ( p )->save( hbqt_par_QIODevice( 2 ), hbqt_par_char( 3 ), hb_parnidef( 4, -1 ) ) );
+   }
+}
+
+/*
+ * QPixmap scaled ( int width, int height, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
  */
 HB_FUNC( QT_QPIXMAP_SCALED )
 {
    QPixmap * p = hbqt_par_QPixmap( 1 );
    if( p )
    {
-      if( hb_pcount() >= 2 && HB_ISPOINTER( 2 ) )
-      {
-         hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->scaled( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNUM( 4 ) ? ( Qt::AspectRatioMode ) hb_parni( 4 ) : ( Qt::AspectRatioMode ) Qt::IgnoreAspectRatio ), ( HB_ISNUM( 5 ) ? ( Qt::TransformationMode ) hb_parni( 5 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ), true ) );
-      }
-      else if( hb_pcount() >= 3 && HB_ISNUM( 2 )  && HB_ISNUM( 3 ) )
-      {
-         hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->scaled( *hbqt_par_QSize( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::AspectRatioMode ) hb_parni( 3 ) : ( Qt::AspectRatioMode ) Qt::IgnoreAspectRatio ), ( HB_ISNUM( 4 ) ? ( Qt::TransformationMode ) hb_parni( 4 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ), true ) );
-      }
+      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->scaled( hb_parni( 2 ), hb_parni( 3 ), ( HB_ISNUM( 4 ) ? ( Qt::AspectRatioMode ) hb_parni( 4 ) : ( Qt::AspectRatioMode ) Qt::IgnoreAspectRatio ), ( HB_ISNUM( 5 ) ? ( Qt::TransformationMode ) hb_parni( 5 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ), true ) );
+   }
+}
+
+/*
+ * QPixmap scaled ( const QSize & size, Qt::AspectRatioMode aspectRatioMode = Qt::IgnoreAspectRatio, Qt::TransformationMode transformMode = Qt::FastTransformation ) const
+ */
+HB_FUNC( QT_QPIXMAP_SCALED_1 )
+{
+   QPixmap * p = hbqt_par_QPixmap( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->scaled( *hbqt_par_QSize( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::AspectRatioMode ) hb_parni( 3 ) : ( Qt::AspectRatioMode ) Qt::IgnoreAspectRatio ), ( HB_ISNUM( 4 ) ? ( Qt::TransformationMode ) hb_parni( 4 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ), true ) );
    }
 }
 
@@ -633,21 +635,26 @@ HB_FUNC( QT_QPIXMAP_FROMIMAGE )
 }
 
 /*
- * QPixmap grabWidget ( ... )
+ * QPixmap grabWidget ( QWidget * widget, const QRect & rectangle )
  */
 HB_FUNC( QT_QPIXMAP_GRABWIDGET )
 {
    QPixmap * p = hbqt_par_QPixmap( 1 );
    if( p )
    {
-      if( hb_pcount() == 3 && HB_ISPOINTER( 2 ) && HB_ISPOINTER( 3 ) )
-      {
-         hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->grabWidget( hbqt_par_QWidget( 2 ), *hbqt_par_QRect( 3 ) ) ), true ) );
-      }
-      else if( hb_pcount() >= 2 && HB_ISPOINTER( 2 ) )
-      {
-         hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->grabWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parnidef( 5, -1 ), hb_parnidef( 6, -1 ) ) ), true ) );
-      }
+      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->grabWidget( hbqt_par_QWidget( 2 ), *hbqt_par_QRect( 3 ) ) ), true ) );
+   }
+}
+
+/*
+ * QPixmap grabWidget ( QWidget * widget, int x = 0, int y = 0, int width = -1, int height = -1 )
+ */
+HB_FUNC( QT_QPIXMAP_GRABWIDGET_1 )
+{
+   QPixmap * p = hbqt_par_QPixmap( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->grabWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parnidef( 5, -1 ), hb_parnidef( 6, -1 ) ) ), true ) );
    }
 }
 

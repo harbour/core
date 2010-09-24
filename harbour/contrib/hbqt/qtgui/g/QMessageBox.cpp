@@ -73,6 +73,11 @@
  *  flags StandardButtons
  */
 
+/*
+ *  Constructed[ 39/39 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QMessageBox>

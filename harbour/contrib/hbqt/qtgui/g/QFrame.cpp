@@ -72,6 +72,11 @@
  *  enum StyleMask { Shadow_Mask, Shape_Mask }
  */
 
+/*
+ *  Constructed[ 13/13 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QFrame>

@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QWidget
  *  $SYNTAX$
- *     QMenuBar():new( ... )
+ *     QMenuBar( ... )
  *     QMenuBar():from( pPtr_OR_oObj_of_type_QMenuBar )
  *     QMenuBar():configure( pPtr_OR_oObj_of_type_QMenuBar )
  *  $ARGUMENTS$

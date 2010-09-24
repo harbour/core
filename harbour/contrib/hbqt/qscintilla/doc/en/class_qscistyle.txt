@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QsciStyle():new( ... )
+ *     QsciStyle( ... )
  *     QsciStyle():from( pPtr_OR_oObj_of_type_QsciStyle )
  *     QsciStyle():configure( pPtr_OR_oObj_of_type_QsciStyle )
  *  $ARGUMENTS$

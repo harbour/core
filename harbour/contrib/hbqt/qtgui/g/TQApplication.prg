@@ -91,9 +91,7 @@ CREATE CLASS QApplication INHERIT HbQtObjectHandler, HB_QCoreApplication FUNCTIO
    METHOD  doubleClickInterval()
    METHOD  exec()
    METHOD  focusWidget()
-   METHOD  font()
-   METHOD  font_1( pWidget )
-   METHOD  font_2( pClassName )
+   METHOD  font( ... )
    METHOD  fontMetrics()
    METHOD  globalStrut()
    METHOD  isEffectEnabled( nEffect )
@@ -106,9 +104,7 @@ CREATE CLASS QApplication INHERIT HbQtObjectHandler, HB_QCoreApplication FUNCTIO
    METHOD  layoutDirection()
    METHOD  mouseButtons()
    METHOD  overrideCursor()
-   METHOD  palette()
-   METHOD  palette_1( pWidget )
-   METHOD  palette_2( pClassName )
+   METHOD  palette( ... )
    METHOD  quitOnLastWindowClosed()
    METHOD  restoreOverrideCursor()
    METHOD  setActiveWindow( pActive )
@@ -127,20 +123,17 @@ CREATE CLASS QApplication INHERIT HbQtObjectHandler, HB_QCoreApplication FUNCTIO
    METHOD  setQuitOnLastWindowClosed( lQuit )
    METHOD  setStartDragDistance( nL )
    METHOD  setStartDragTime( nMs )
-   METHOD  setStyle( pStyle )
-   METHOD  setStyle_1( cStyle )
+   METHOD  setStyle( ... )
    METHOD  setWheelScrollLines( nInt )
    METHOD  setWindowIcon( pIcon )
    METHOD  startDragDistance()
    METHOD  startDragTime()
    METHOD  style()
    METHOD  syncX()
-   METHOD  topLevelAt( pPoint )
-   METHOD  topLevelAt_1( nX, nY )
+   METHOD  topLevelAt( ... )
    METHOD  type()
    METHOD  wheelScrollLines()
-   METHOD  widgetAt( pPoint )
-   METHOD  widgetAt_1( nX, nY )
+   METHOD  widgetAt( ... )
    METHOD  windowIcon()
    METHOD  aboutQt()
    METHOD  closeAllWindows()
@@ -238,16 +231,30 @@ METHOD QApplication:focusWidget()
    RETURN Qt_QApplication_focusWidget( ::pPtr )
 
 
-METHOD QApplication:font()
-   RETURN Qt_QApplication_font( ::pPtr )
-
-
-METHOD QApplication:font_1( pWidget )
-   RETURN Qt_QApplication_font_1( ::pPtr, hbqt_ptr( pWidget ) )
-
-
-METHOD QApplication:font_2( pClassName )
-   RETURN Qt_QApplication_font_2( ::pPtr, hbqt_ptr( pClassName ) )
+METHOD QApplication:font( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QFont font ( const QWidget * widget )
+                // PO p QWidget
+         RETURN QFont():from( Qt_QApplication_font_1( ::pPtr, ... ) )
+                // QFont font ( const char * className )
+                // PO p char
+         // RETURN QFont():from( Qt_QApplication_font_2( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 0
+             // QFont font ()
+      RETURN QFont():from( Qt_QApplication_font( ::pPtr, ... ) )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QApplication:fontMetrics()
@@ -298,16 +305,30 @@ METHOD QApplication:overrideCursor()
    RETURN Qt_QApplication_overrideCursor( ::pPtr )
 
 
-METHOD QApplication:palette()
-   RETURN Qt_QApplication_palette( ::pPtr )
-
-
-METHOD QApplication:palette_1( pWidget )
-   RETURN Qt_QApplication_palette_1( ::pPtr, hbqt_ptr( pWidget ) )
-
-
-METHOD QApplication:palette_2( pClassName )
-   RETURN Qt_QApplication_palette_2( ::pPtr, hbqt_ptr( pClassName ) )
+METHOD QApplication:palette( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QPalette palette ( const QWidget * widget )
+                // PO p QWidget
+         RETURN QPalette():from( Qt_QApplication_palette_1( ::pPtr, ... ) )
+                // QPalette palette ( const char * className )
+                // PO p char
+         // RETURN QPalette():from( Qt_QApplication_palette_2( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 0
+             // QPalette palette ()
+      RETURN QPalette():from( Qt_QApplication_palette( ::pPtr, ... ) )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QApplication:quitOnLastWindowClosed()
@@ -382,12 +403,28 @@ METHOD QApplication:setStartDragTime( nMs )
    RETURN Qt_QApplication_setStartDragTime( ::pPtr, nMs )
 
 
-METHOD QApplication:setStyle( pStyle )
-   RETURN Qt_QApplication_setStyle( ::pPtr, hbqt_ptr( pStyle ) )
-
-
-METHOD QApplication:setStyle_1( cStyle )
-   RETURN Qt_QApplication_setStyle_1( ::pPtr, cStyle )
+METHOD QApplication:setStyle( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // QStyle * setStyle ( const QString & style )
+                // C c QString
+         RETURN QStyle():from( Qt_QApplication_setStyle_1( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "PO"
+                // void setStyle ( QStyle * style )
+                // PO p QStyle
+         RETURN Qt_QApplication_setStyle( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QApplication:setWheelScrollLines( nInt )
@@ -414,12 +451,31 @@ METHOD QApplication:syncX()
    RETURN Qt_QApplication_syncX( ::pPtr )
 
 
-METHOD QApplication:topLevelAt( pPoint )
-   RETURN Qt_QApplication_topLevelAt( ::pPtr, hbqt_ptr( pPoint ) )
-
-
-METHOD QApplication:topLevelAt_1( nX, nY )
-   RETURN Qt_QApplication_topLevelAt_1( ::pPtr, nX, nY )
+METHOD QApplication:topLevelAt( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // QWidget * topLevelAt ( int x, int y )
+                // N n int, N n int
+         RETURN QWidget():from( Qt_QApplication_topLevelAt_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QWidget * topLevelAt ( const QPoint & point )
+                // PO p QPoint
+         RETURN QWidget():from( Qt_QApplication_topLevelAt( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QApplication:type()
@@ -430,12 +486,31 @@ METHOD QApplication:wheelScrollLines()
    RETURN Qt_QApplication_wheelScrollLines( ::pPtr )
 
 
-METHOD QApplication:widgetAt( pPoint )
-   RETURN Qt_QApplication_widgetAt( ::pPtr, hbqt_ptr( pPoint ) )
-
-
-METHOD QApplication:widgetAt_1( nX, nY )
-   RETURN Qt_QApplication_widgetAt_1( ::pPtr, nX, nY )
+METHOD QApplication:widgetAt( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // QWidget * widgetAt ( int x, int y )
+                // N n int, N n int
+         RETURN QWidget():from( Qt_QApplication_widgetAt_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // QWidget * widgetAt ( const QPoint & point )
+                // PO p QPoint
+         RETURN QWidget():from( Qt_QApplication_widgetAt( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QApplication:windowIcon()

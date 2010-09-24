@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QComboBox
  *  $SYNTAX$
- *     QFontComboBox():new( ... )
+ *     QFontComboBox( ... )
  *     QFontComboBox():from( pPtr_OR_oObj_of_type_QFontComboBox )
  *     QFontComboBox():configure( pPtr_OR_oObj_of_type_QFontComboBox )
  *  $ARGUMENTS$

@@ -71,6 +71,15 @@
  *  enum Notation { StandardNotation, ScientificNotation }
  */
 
+/*
+ *  Constructed[ 9/9 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  //virtual QValidator::State validate ( const QString & input, const int & pos ) const
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QDoubleValidator>

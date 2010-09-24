@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QEvent
  *  $SYNTAX$
- *     QPaintEvent():new( ... )
+ *     QPaintEvent( ... )
  *     QPaintEvent():from( pPtr_OR_oObj_of_type_QPaintEvent )
  *     QPaintEvent():configure( pPtr_OR_oObj_of_type_QPaintEvent )
  *  $ARGUMENTS$

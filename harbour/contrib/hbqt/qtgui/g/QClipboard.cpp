@@ -70,6 +70,16 @@
  *  enum Mode { Clipboard, Selection, FindBuffer }
  */
 
+/*
+ *  Constructed[ 13/13 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  //const QMimeData * mimeData ( Mode mode = Clipboard ) const
+ *  // QString text ( QString & subtype, Mode mode = Clipboard ) const
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QPalette>

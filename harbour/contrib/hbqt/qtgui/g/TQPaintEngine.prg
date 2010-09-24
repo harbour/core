@@ -72,19 +72,14 @@ CREATE CLASS QPaintEngine INHERIT HbQtObjectHandler FUNCTION HB_QPaintEngine
    METHOD  new( ... )
 
    METHOD  begin( pPdev )
-   METHOD  drawEllipse( pRect )
-   METHOD  drawEllipse_1( pRect )
+   METHOD  drawEllipse( ... )
    METHOD  drawImage( pRectangle, pImage, pSr, nFlags )
-   METHOD  drawLines( pLines, nLineCount )
-   METHOD  drawLines_1( pLines, nLineCount )
+   METHOD  drawLines( ... )
    METHOD  drawPath( pPath )
    METHOD  drawPixmap( pR, pPm, pSr )
-   METHOD  drawPoints( pPoints, nPointCount )
-   METHOD  drawPoints_1( pPoints, nPointCount )
-   METHOD  drawPolygon( pPoints, nPointCount, nMode )
-   METHOD  drawPolygon_1( pPoints, nPointCount, nMode )
-   METHOD  drawRects( pRects, nRectCount )
-   METHOD  drawRects_1( pRects, nRectCount )
+   METHOD  drawPoints( ... )
+   METHOD  drawPolygon( ... )
+   METHOD  drawRects( ... )
    METHOD  drawTextItem( pP, pTextItem )
    METHOD  drawTiledPixmap( pRect, pPixmap, pP )
    METHOD  end()
@@ -111,24 +106,54 @@ METHOD QPaintEngine:begin( pPdev )
    RETURN Qt_QPaintEngine_begin( ::pPtr, hbqt_ptr( pPdev ) )
 
 
-METHOD QPaintEngine:drawEllipse( pRect )
-   RETURN Qt_QPaintEngine_drawEllipse( ::pPtr, hbqt_ptr( pRect ) )
-
-
-METHOD QPaintEngine:drawEllipse_1( pRect )
-   RETURN Qt_QPaintEngine_drawEllipse_1( ::pPtr, hbqt_ptr( pRect ) )
+METHOD QPaintEngine:drawEllipse( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // virtual void drawEllipse ( const QRectF & rect )
+                // PO p QRectF
+         RETURN Qt_QPaintEngine_drawEllipse( ::pPtr, ... )
+                // virtual void drawEllipse ( const QRect & rect )
+                // PO p QRect
+         // RETURN Qt_QPaintEngine_drawEllipse_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPaintEngine:drawImage( pRectangle, pImage, pSr, nFlags )
    RETURN Qt_QPaintEngine_drawImage( ::pPtr, hbqt_ptr( pRectangle ), hbqt_ptr( pImage ), hbqt_ptr( pSr ), nFlags )
 
 
-METHOD QPaintEngine:drawLines( pLines, nLineCount )
-   RETURN Qt_QPaintEngine_drawLines( ::pPtr, hbqt_ptr( pLines ), nLineCount )
-
-
-METHOD QPaintEngine:drawLines_1( pLines, nLineCount )
-   RETURN Qt_QPaintEngine_drawLines_1( ::pPtr, hbqt_ptr( pLines ), nLineCount )
+METHOD QPaintEngine:drawLines( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // virtual void drawLines ( const QLineF * lines, int lineCount )
+                // PO p QLineF, N n int
+         RETURN Qt_QPaintEngine_drawLines( ::pPtr, ... )
+                // virtual void drawLines ( const QLine * lines, int lineCount )
+                // PO p QLine, N n int
+         // RETURN Qt_QPaintEngine_drawLines_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPaintEngine:drawPath( pPath )
@@ -139,28 +164,73 @@ METHOD QPaintEngine:drawPixmap( pR, pPm, pSr )
    RETURN Qt_QPaintEngine_drawPixmap( ::pPtr, hbqt_ptr( pR ), hbqt_ptr( pPm ), hbqt_ptr( pSr ) )
 
 
-METHOD QPaintEngine:drawPoints( pPoints, nPointCount )
-   RETURN Qt_QPaintEngine_drawPoints( ::pPtr, hbqt_ptr( pPoints ), nPointCount )
+METHOD QPaintEngine:drawPoints( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // virtual void drawPoints ( const QPointF * points, int pointCount )
+                // PO p QPointF, N n int
+         RETURN Qt_QPaintEngine_drawPoints( ::pPtr, ... )
+                // virtual void drawPoints ( const QPoint * points, int pointCount )
+                // PO p QPoint, N n int
+         // RETURN Qt_QPaintEngine_drawPoints_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QPaintEngine:drawPoints_1( pPoints, nPointCount )
-   RETURN Qt_QPaintEngine_drawPoints_1( ::pPtr, hbqt_ptr( pPoints ), nPointCount )
+METHOD QPaintEngine:drawPolygon( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
+                // virtual void drawPolygon ( const QPointF * points, int pointCount, PolygonDrawMode mode )
+                // PO p QPointF, N n int, N n QPaintEngine::PolygonDrawMode
+         RETURN Qt_QPaintEngine_drawPolygon( ::pPtr, ... )
+                // virtual void drawPolygon ( const QPoint * points, int pointCount, PolygonDrawMode mode )
+                // PO p QPoint, N n int, N n QPaintEngine::PolygonDrawMode
+         // RETURN Qt_QPaintEngine_drawPolygon_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QPaintEngine:drawPolygon( pPoints, nPointCount, nMode )
-   RETURN Qt_QPaintEngine_drawPolygon( ::pPtr, hbqt_ptr( pPoints ), nPointCount, nMode )
-
-
-METHOD QPaintEngine:drawPolygon_1( pPoints, nPointCount, nMode )
-   RETURN Qt_QPaintEngine_drawPolygon_1( ::pPtr, hbqt_ptr( pPoints ), nPointCount, nMode )
-
-
-METHOD QPaintEngine:drawRects( pRects, nRectCount )
-   RETURN Qt_QPaintEngine_drawRects( ::pPtr, hbqt_ptr( pRects ), nRectCount )
-
-
-METHOD QPaintEngine:drawRects_1( pRects, nRectCount )
-   RETURN Qt_QPaintEngine_drawRects_1( ::pPtr, hbqt_ptr( pRects ), nRectCount )
+METHOD QPaintEngine:drawRects( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // virtual void drawRects ( const QRectF * rects, int rectCount )
+                // PO p QRectF, N n int
+         RETURN Qt_QPaintEngine_drawRects( ::pPtr, ... )
+                // virtual void drawRects ( const QRect * rects, int rectCount )
+                // PO p QRect, N n int
+         // RETURN Qt_QPaintEngine_drawRects_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QPaintEngine:drawTextItem( pP, pTextItem )

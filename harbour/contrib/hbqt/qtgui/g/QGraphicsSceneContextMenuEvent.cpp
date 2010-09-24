@@ -70,6 +70,11 @@
  *  enum Reason { Mouse, Keyboard, Other }
  */
 
+/*
+ *  Constructed[ 5/5 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QGraphicsSceneContextMenuEvent>

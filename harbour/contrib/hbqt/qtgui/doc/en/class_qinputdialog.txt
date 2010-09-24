@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QDialog
  *  $SYNTAX$
- *     QInputDialog():new( ... )
+ *     QInputDialog( ... )
  *     QInputDialog():from( pPtr_OR_oObj_of_type_QInputDialog )
  *     QInputDialog():configure( pPtr_OR_oObj_of_type_QInputDialog )
  *  $ARGUMENTS$

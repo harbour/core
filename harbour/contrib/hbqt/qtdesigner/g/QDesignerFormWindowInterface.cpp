@@ -71,6 +71,17 @@
  *  enum FeatureFlag { EditFeature, GridFeature, TabOrderFeature, DefaultFeature }
  */
 
+/*
+ *  Constructed[ 39/39 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  //virtual QDir absoluteDir () const = 0
+ *  //virtual void layoutFunction ( QString * margin, QString * spacing ) = 0
+ *  //virtual void setLayoutFunction ( const QString & margin, const QString & spacing ) = 0
+ */
+
 #include <QtCore/QPointer>
 
 #include "hbqtgui.h"

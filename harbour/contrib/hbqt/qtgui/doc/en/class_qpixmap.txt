@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QPaintDevice
  *  $SYNTAX$
- *     QPixmap():new( ... )
+ *     QPixmap( ... )
  *     QPixmap():from( pPtr_OR_oObj_of_type_QPixmap )
  *     QPixmap():configure( pPtr_OR_oObj_of_type_QPixmap )
  *  $ARGUMENTS$
@@ -28,10 +28,13 @@
  *  $METHODS$
  *     :cacheKey()                                         -> nQint64
  *     :createHeuristicMask( lClipTight )                  -> pQBitmap
- *     :createMaskFromColor( ... )                         -> pQBitmap
+ *     :createMaskFromColor( pMaskColor, nMode )           -> pQBitmap
+ *     :createMaskFromColor_1( pMaskColor )                -> pQBitmap
  *     :depth()                                            -> nInt
  *     :detach()                                           -> NIL
- *     :fill( ... )                                        -> NIL
+ *     :fill( pColor )                                     -> NIL
+ *     :fill_1( pWidget, pOffset )                         -> NIL
+ *     :fill_2( pWidget, nX, nY )                          -> NIL
  *     :hasAlpha()                                         -> lBool
  *     :hasAlphaChannel()                                  -> lBool
  *     :height()                                           -> nInt
@@ -41,7 +44,8 @@
  *     :loadFromData( pData, pFormat, nFlags )             -> lBool
  *     :mask()                                             -> pQBitmap
  *     :rect()                                             -> pQRect
- *     :save( ... )                                        -> lBool
+ *     :save( cFileName, pFormat, nQuality )               -> lBool
+ *     :save_1( pDevice, pFormat, nQuality )               -> lBool
  *     :setAlphaChannel( pAlphaChannel )                   -> NIL
  *     :setMask( pMask )                                   -> NIL
  *     :size()                                             -> pQSize

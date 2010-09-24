@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QTableView
  *  $SYNTAX$
- *     QTableWidget():new( ... )
+ *     QTableWidget( ... )
  *     QTableWidget():from( pPtr_OR_oObj_of_type_QTableWidget )
  *     QTableWidget():configure( pPtr_OR_oObj_of_type_QTableWidget )
  *  $ARGUMENTS$

@@ -83,8 +83,7 @@ CREATE CLASS QItemSelectionModel INHERIT HbQtObjectHandler, HB_QObject FUNCTION 
    METHOD  clear()
    METHOD  clearSelection()
    METHOD  reset()
-   METHOD  select( pIndex, nCommand )
-   METHOD  select_1( pSelection, nCommand )
+   METHOD  select( ... )
    METHOD  setCurrentIndex( pIndex, nCommand )
 
    ENDCLASS
@@ -147,12 +146,27 @@ METHOD QItemSelectionModel:reset()
    RETURN Qt_QItemSelectionModel_reset( ::pPtr )
 
 
-METHOD QItemSelectionModel:select( pIndex, nCommand )
-   RETURN Qt_QItemSelectionModel_select( ::pPtr, hbqt_ptr( pIndex ), nCommand )
-
-
-METHOD QItemSelectionModel:select_1( pSelection, nCommand )
-   RETURN Qt_QItemSelectionModel_select_1( ::pPtr, hbqt_ptr( pSelection ), nCommand )
+METHOD QItemSelectionModel:select( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // virtual void select ( const QModelIndex & index, QItemSelectionModel::SelectionFlags command )
+                // PO p QModelIndex, N n QItemSelectionModel::SelectionFlags
+         RETURN Qt_QItemSelectionModel_select( ::pPtr, ... )
+                // virtual void select ( const QItemSelection & selection, QItemSelectionModel::SelectionFlags command )
+                // PO p QItemSelection, N n QItemSelectionModel::SelectionFlags
+         // RETURN Qt_QItemSelectionModel_select_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QItemSelectionModel:setCurrentIndex( pIndex, nCommand )

@@ -92,31 +92,15 @@ CREATE CLASS QLocale INHERIT HbQtObjectHandler FUNCTION HB_QLocale
    METHOD  standaloneDayName( nDay, nType )
    METHOD  standaloneMonthName( nMonth, nType )
    METHOD  timeFormat( nFormat )
-   METHOD  toDate( cString, nFormat )
-   METHOD  toDate_1( cString, cFormat )
-   METHOD  toDateTime( cString, nFormat )
-   METHOD  toDateTime_1( cString, cFormat )
+   METHOD  toDate( ... )
+   METHOD  toDateTime( ... )
    METHOD  toDouble( cS, lOk )
    METHOD  toFloat( cS, lOk )
    METHOD  toInt( cS, lOk, nBase )
    METHOD  toLongLong( cS, lOk, nBase )
    METHOD  toShort( cS, lOk, nBase )
-   METHOD  toString( nI )
-   METHOD  toString_1( pDate, cFormat )
-   METHOD  toString_2( pDate, nFormat )
-   METHOD  toString_3( pTime, cFormat )
-   METHOD  toString_4( pTime, nFormat )
-   METHOD  toString_5( pDateTime, nFormat )
-   METHOD  toString_6( pDateTime, cFormat )
-   METHOD  toString_7( nI )
-   METHOD  toString_8( nI, cF, nPrec )
-   METHOD  toString_9( nI )
-   METHOD  toString_10( nI )
-   METHOD  toString_11( nI )
-   METHOD  toString_12( nI )
-   METHOD  toString_13( nI, cF, nPrec )
-   METHOD  toTime( cString, nFormat )
-   METHOD  toTime_1( cString, cFormat )
+   METHOD  toString( ... )
+   METHOD  toTime( ... )
    METHOD  toUInt( cS, lOk, nBase )
    METHOD  toULongLong( cS, lOk, nBase )
    METHOD  toUShort( cS, lOk, nBase )
@@ -223,20 +207,66 @@ METHOD QLocale:timeFormat( nFormat )
    RETURN Qt_QLocale_timeFormat( ::pPtr, nFormat )
 
 
-METHOD QLocale:toDate( cString, nFormat )
-   RETURN Qt_QLocale_toDate( ::pPtr, cString, nFormat )
+METHOD QLocale:toDate( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "C"
+                // QDate toDate ( const QString & string, const QString & format ) const
+                // C c QString, C c QString
+         RETURN QDate():from( Qt_QLocale_toDate_1( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
+                // QDate toDate ( const QString & string, FormatType format = LongFormat ) const
+                // C c QString, N n QLocale::FormatType
+         RETURN QDate():from( Qt_QLocale_toDate( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // QDate toDate ( const QString & string, FormatType format = LongFormat ) const
+                // C c QString, N n QLocale::FormatType
+         RETURN QDate():from( Qt_QLocale_toDate( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QLocale:toDate_1( cString, cFormat )
-   RETURN Qt_QLocale_toDate_1( ::pPtr, cString, cFormat )
-
-
-METHOD QLocale:toDateTime( cString, nFormat )
-   RETURN Qt_QLocale_toDateTime( ::pPtr, cString, nFormat )
-
-
-METHOD QLocale:toDateTime_1( cString, cFormat )
-   RETURN Qt_QLocale_toDateTime_1( ::pPtr, cString, cFormat )
+METHOD QLocale:toDateTime( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "C"
+                // QDateTime toDateTime ( const QString & string, const QString & format ) const
+                // C c QString, C c QString
+         RETURN QDateTime():from( Qt_QLocale_toDateTime_1( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
+                // QDateTime toDateTime ( const QString & string, FormatType format = LongFormat ) const
+                // C c QString, N n QLocale::FormatType
+         RETURN QDateTime():from( Qt_QLocale_toDateTime( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // QDateTime toDateTime ( const QString & string, FormatType format = LongFormat ) const
+                // C c QString, N n QLocale::FormatType
+         RETURN QDateTime():from( Qt_QLocale_toDateTime( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QLocale:toDouble( cS, lOk )
@@ -259,68 +289,119 @@ METHOD QLocale:toShort( cS, lOk, nBase )
    RETURN Qt_QLocale_toShort( ::pPtr, cS, lOk, nBase )
 
 
-METHOD QLocale:toString( nI )
-   RETURN Qt_QLocale_toString( ::pPtr, nI )
+METHOD QLocale:toString( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "C" .AND. aV[ 3 ] $ "N"
+                // QString toString ( float i, char f = 'g', int prec = 6 ) const
+                // N n float, C c char, N n int
+         RETURN Qt_QLocale_toString_13( ::pPtr, ... )
+                // QString toString ( double i, char f = 'g', int prec = 6 ) const
+                // N n double, C c char, N n int
+         // RETURN Qt_QLocale_toString_8( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "C"
+                // QString toString ( const QDate & date, const QString & format ) const
+                // PO p QDate, C c QString
+         RETURN Qt_QLocale_toString_1( ::pPtr, ... )
+                // QString toString ( const QDateTime & dateTime, const QString & format ) const
+                // PO p QDateTime, C c QString
+         // RETURN Qt_QLocale_toString_6( ::pPtr, ... )
+                // QString toString ( const QTime & time, const QString & format ) const
+                // PO p QTime, C c QString
+         // RETURN Qt_QLocale_toString_3( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // QString toString ( const QDate & date, FormatType format = LongFormat ) const
+                // PO p QDate, N n QLocale::FormatType
+         RETURN Qt_QLocale_toString_2( ::pPtr, ... )
+                // QString toString ( const QDateTime & dateTime, FormatType format = LongFormat ) const
+                // PO p QDateTime, N n QLocale::FormatType
+         // RETURN Qt_QLocale_toString_5( ::pPtr, ... )
+                // QString toString ( const QTime & time, FormatType format = LongFormat ) const
+                // PO p QTime, N n QLocale::FormatType
+         // RETURN Qt_QLocale_toString_4( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // QString toString ( qlonglong i ) const
+                // N n qlonglong
+         RETURN Qt_QLocale_toString( ::pPtr, ... )
+                // QString toString ( ushort i ) const
+                // N n ushort
+         // RETURN Qt_QLocale_toString_10( ::pPtr, ... )
+                // QString toString ( float i, char f = 'g', int prec = 6 ) const
+                // N n float, C c char, N n int
+         // RETURN Qt_QLocale_toString_13( ::pPtr, ... )
+                // QString toString ( short i ) const
+                // N n short
+         // RETURN Qt_QLocale_toString_9( ::pPtr, ... )
+                // QString toString ( double i, char f = 'g', int prec = 6 ) const
+                // N n double, C c char, N n int
+         // RETURN Qt_QLocale_toString_8( ::pPtr, ... )
+                // QString toString ( qulonglong i ) const
+                // N n qulonglong
+         // RETURN Qt_QLocale_toString_7( ::pPtr, ... )
+                // QString toString ( uint i ) const
+                // N n uint
+         // RETURN Qt_QLocale_toString_12( ::pPtr, ... )
+                // QString toString ( int i ) const
+                // N n int
+         // RETURN Qt_QLocale_toString_11( ::pPtr, ... )
+      CASE aV[ 1 ] $ "PO"
+                // QString toString ( const QDate & date, FormatType format = LongFormat ) const
+                // PO p QDate, N n QLocale::FormatType
+         RETURN Qt_QLocale_toString_2( ::pPtr, ... )
+                // QString toString ( const QTime & time, FormatType format = LongFormat ) const
+                // PO p QTime, N n QLocale::FormatType
+         // RETURN Qt_QLocale_toString_4( ::pPtr, ... )
+                // QString toString ( const QDateTime & dateTime, FormatType format = LongFormat ) const
+                // PO p QDateTime, N n QLocale::FormatType
+         // RETURN Qt_QLocale_toString_5( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QLocale:toString_1( pDate, cFormat )
-   RETURN Qt_QLocale_toString_1( ::pPtr, hbqt_ptr( pDate ), cFormat )
-
-
-METHOD QLocale:toString_2( pDate, nFormat )
-   RETURN Qt_QLocale_toString_2( ::pPtr, hbqt_ptr( pDate ), nFormat )
-
-
-METHOD QLocale:toString_3( pTime, cFormat )
-   RETURN Qt_QLocale_toString_3( ::pPtr, hbqt_ptr( pTime ), cFormat )
-
-
-METHOD QLocale:toString_4( pTime, nFormat )
-   RETURN Qt_QLocale_toString_4( ::pPtr, hbqt_ptr( pTime ), nFormat )
-
-
-METHOD QLocale:toString_5( pDateTime, nFormat )
-   RETURN Qt_QLocale_toString_5( ::pPtr, hbqt_ptr( pDateTime ), nFormat )
-
-
-METHOD QLocale:toString_6( pDateTime, cFormat )
-   RETURN Qt_QLocale_toString_6( ::pPtr, hbqt_ptr( pDateTime ), cFormat )
-
-
-METHOD QLocale:toString_7( nI )
-   RETURN Qt_QLocale_toString_7( ::pPtr, nI )
-
-
-METHOD QLocale:toString_8( nI, cF, nPrec )
-   RETURN Qt_QLocale_toString_8( ::pPtr, nI, cF, nPrec )
-
-
-METHOD QLocale:toString_9( nI )
-   RETURN Qt_QLocale_toString_9( ::pPtr, nI )
-
-
-METHOD QLocale:toString_10( nI )
-   RETURN Qt_QLocale_toString_10( ::pPtr, nI )
-
-
-METHOD QLocale:toString_11( nI )
-   RETURN Qt_QLocale_toString_11( ::pPtr, nI )
-
-
-METHOD QLocale:toString_12( nI )
-   RETURN Qt_QLocale_toString_12( ::pPtr, nI )
-
-
-METHOD QLocale:toString_13( nI, cF, nPrec )
-   RETURN Qt_QLocale_toString_13( ::pPtr, nI, cF, nPrec )
-
-
-METHOD QLocale:toTime( cString, nFormat )
-   RETURN Qt_QLocale_toTime( ::pPtr, cString, nFormat )
-
-
-METHOD QLocale:toTime_1( cString, cFormat )
-   RETURN Qt_QLocale_toTime_1( ::pPtr, cString, cFormat )
+METHOD QLocale:toTime( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "C"
+                // QTime toTime ( const QString & string, const QString & format ) const
+                // C c QString, C c QString
+         RETURN QTime():from( Qt_QLocale_toTime_1( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
+                // QTime toTime ( const QString & string, FormatType format = LongFormat ) const
+                // C c QString, N n QLocale::FormatType
+         RETURN QTime():from( Qt_QLocale_toTime( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // QTime toTime ( const QString & string, FormatType format = LongFormat ) const
+                // C c QString, N n QLocale::FormatType
+         RETURN QTime():from( Qt_QLocale_toTime( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QLocale:toUInt( cS, lOk, nBase )

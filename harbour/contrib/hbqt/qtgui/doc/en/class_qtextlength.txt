@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QTextLength():new( ... )
+ *     QTextLength( ... )
  *     QTextLength():from( pPtr_OR_oObj_of_type_QTextLength )
  *     QTextLength():configure( pPtr_OR_oObj_of_type_QTextLength )
  *  $ARGUMENTS$

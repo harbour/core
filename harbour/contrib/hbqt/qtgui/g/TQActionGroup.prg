@@ -72,9 +72,7 @@ CREATE CLASS QActionGroup INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QAct
    METHOD  new( ... )
 
    METHOD  actions()
-   METHOD  addAction( pAction )
-   METHOD  addAction_1( cText )
-   METHOD  addAction_2( pIcon, cText )
+   METHOD  addAction( ... )
    METHOD  checkedAction()
    METHOD  isEnabled()
    METHOD  isExclusive()
@@ -101,16 +99,35 @@ METHOD QActionGroup:actions()
    RETURN Qt_QActionGroup_actions( ::pPtr )
 
 
-METHOD QActionGroup:addAction( pAction )
-   RETURN Qt_QActionGroup_addAction( ::pPtr, hbqt_ptr( pAction ) )
-
-
-METHOD QActionGroup:addAction_1( cText )
-   RETURN Qt_QActionGroup_addAction_1( ::pPtr, cText )
-
-
-METHOD QActionGroup:addAction_2( pIcon, cText )
-   RETURN Qt_QActionGroup_addAction_2( ::pPtr, hbqt_ptr( pIcon ), cText )
+METHOD QActionGroup:addAction( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PCO" .AND. aV[ 2 ] $ "C"
+                // QAction * addAction ( const QIcon & icon, const QString & text )
+                // PCO p QIcon, C c QString
+         RETURN QAction():from( Qt_QActionGroup_addAction_2( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "C"
+                // QAction * addAction ( const QString & text )
+                // C c QString
+         RETURN QAction():from( Qt_QActionGroup_addAction_1( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "PO"
+                // QAction * addAction ( QAction * action )
+                // PO p QAction
+         RETURN QAction():from( Qt_QActionGroup_addAction( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QActionGroup:checkedAction()

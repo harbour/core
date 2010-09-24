@@ -70,7 +70,6 @@
  *  Constructed[ 18/19 [ 94.74% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  void setValues ( const QList<QPair<QString, QString> > & values )
  */

@@ -79,8 +79,7 @@ CREATE CLASS QTextDocumentWriter INHERIT HbQtObjectHandler FUNCTION HB_QTextDocu
    METHOD  setDevice( pDevice )
    METHOD  setFileName( cFileName )
    METHOD  setFormat( pFormat )
-   METHOD  write( pDocument )
-   METHOD  write_1( pFragment )
+   METHOD  write( ... )
 
    ENDCLASS
 
@@ -126,10 +125,25 @@ METHOD QTextDocumentWriter:setFormat( pFormat )
    RETURN Qt_QTextDocumentWriter_setFormat( ::pPtr, hbqt_ptr( pFormat ) )
 
 
-METHOD QTextDocumentWriter:write( pDocument )
-   RETURN Qt_QTextDocumentWriter_write( ::pPtr, hbqt_ptr( pDocument ) )
-
-
-METHOD QTextDocumentWriter:write_1( pFragment )
-   RETURN Qt_QTextDocumentWriter_write_1( ::pPtr, hbqt_ptr( pFragment ) )
+METHOD QTextDocumentWriter:write( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // bool write ( const QTextDocument * document )
+                // PO p QTextDocument
+         RETURN Qt_QTextDocumentWriter_write( ::pPtr, ... )
+                // bool write ( const QTextDocumentFragment & fragment )
+                // PO p QTextDocumentFragment
+         // RETURN Qt_QTextDocumentWriter_write_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 

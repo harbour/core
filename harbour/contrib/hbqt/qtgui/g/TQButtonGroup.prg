@@ -71,8 +71,7 @@ CREATE CLASS QButtonGroup INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QBut
 
    METHOD  new( ... )
 
-   METHOD  addButton( pButton )
-   METHOD  addButton_1( pButton, nId )
+   METHOD  addButton( ... )
    METHOD  button( nId )
    METHOD  buttons()
    METHOD  checkedButton()
@@ -95,12 +94,31 @@ METHOD QButtonGroup:new( ... )
    RETURN Self
 
 
-METHOD QButtonGroup:addButton( pButton )
-   RETURN Qt_QButtonGroup_addButton( ::pPtr, hbqt_ptr( pButton ) )
-
-
-METHOD QButtonGroup:addButton_1( pButton, nId )
-   RETURN Qt_QButtonGroup_addButton_1( ::pPtr, hbqt_ptr( pButton ), nId )
+METHOD QButtonGroup:addButton( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // void addButton ( QAbstractButton * button, int id )
+                // PO p QAbstractButton, N n int
+         RETURN Qt_QButtonGroup_addButton_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void addButton ( QAbstractButton * button )
+                // PO p QAbstractButton
+         RETURN Qt_QButtonGroup_addButton( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QButtonGroup:button( nId )

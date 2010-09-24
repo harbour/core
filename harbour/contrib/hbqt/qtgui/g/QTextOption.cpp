@@ -75,15 +75,14 @@
  */
 
 /*
- *  Constructed[ 13/16 [ 81.25% ] ]
+ *  Constructed[ 13/15 [ 86.67% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  void setTabArray ( QList<qreal> tabStops )
  *  void setTabs ( QList<Tab> tabStops )
  *
- *  *** Commented out protos which construct fine but do not compile ***
+ *  *** Commented out protostypes ***
  *
  *  //QList<Tab> tabs () const
  */

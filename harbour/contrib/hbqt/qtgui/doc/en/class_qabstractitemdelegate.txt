@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QObject
  *  $SYNTAX$
- *     QAbstractItemDelegate():new( ... )
+ *     QAbstractItemDelegate( ... )
  *     QAbstractItemDelegate():from( pPtr_OR_oObj_of_type_QAbstractItemDelegate )
  *     QAbstractItemDelegate():configure( pPtr_OR_oObj_of_type_QAbstractItemDelegate )
  *  $ARGUMENTS$

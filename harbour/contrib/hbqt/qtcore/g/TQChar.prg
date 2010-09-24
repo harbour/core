@@ -102,7 +102,6 @@ CREATE CLASS QChar INHERIT HbQtObjectHandler FUNCTION HB_QChar
    METHOD  toTitleCase()
    METHOD  toUpper()
    METHOD  unicode()
-   METHOD  unicode_1()
    METHOD  unicodeVersion()
 
    ENDCLASS
@@ -239,10 +238,6 @@ METHOD QChar:toUpper()
 
 METHOD QChar:unicode()
    RETURN Qt_QChar_unicode( ::pPtr )
-
-
-METHOD QChar:unicode_1()
-   RETURN Qt_QChar_unicode_1( ::pPtr )
 
 
 METHOD QChar:unicodeVersion()

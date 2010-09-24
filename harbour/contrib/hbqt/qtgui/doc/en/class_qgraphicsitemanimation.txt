@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QObject
  *  $SYNTAX$
- *     QGraphicsItemAnimation():new( ... )
+ *     QGraphicsItemAnimation( ... )
  *     QGraphicsItemAnimation():from( pPtr_OR_oObj_of_type_QGraphicsItemAnimation )
  *     QGraphicsItemAnimation():configure( pPtr_OR_oObj_of_type_QGraphicsItemAnimation )
  *  $ARGUMENTS$

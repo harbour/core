@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QAbstractItemView
  *  $SYNTAX$
- *     QTableView():new( ... )
+ *     QTableView( ... )
  *     QTableView():from( pPtr_OR_oObj_of_type_QTableView )
  *     QTableView():configure( pPtr_OR_oObj_of_type_QTableView )
  *  $ARGUMENTS$

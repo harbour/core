@@ -89,17 +89,13 @@ CREATE CLASS QCoreApplication INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_
    METHOD  libraryPaths()
    METHOD  organizationDomain()
    METHOD  organizationName()
-   METHOD  postEvent( pReceiver, pEvent )
-   METHOD  postEvent_1( pReceiver, pEvent, nPriority )
-   METHOD  processEvents( nFlags )
-   METHOD  processEvents_1( nFlags, nMaxtime )
+   METHOD  postEvent( ... )
+   METHOD  processEvents( ... )
    METHOD  removeLibraryPath( cPath )
-   METHOD  removePostedEvents( pReceiver )
-   METHOD  removePostedEvents_1( pReceiver, nEventType )
+   METHOD  removePostedEvents( ... )
    METHOD  removeTranslator( pTranslationFile )
    METHOD  sendEvent( pReceiver, pEvent )
-   METHOD  sendPostedEvents( pReceiver, nEvent_type )
-   METHOD  sendPostedEvents_1()
+   METHOD  sendPostedEvents( ... )
    METHOD  setApplicationName( cApplication )
    METHOD  setApplicationVersion( cVersion )
    METHOD  setAttribute( nAttribute, lOn )
@@ -108,8 +104,7 @@ CREATE CLASS QCoreApplication INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_
    METHOD  setOrganizationName( cOrgName )
    METHOD  startingUp()
    METHOD  testAttribute( nAttribute )
-   METHOD  translate( pContext, pSourceText, pDisambiguation, nEncoding, nN )
-   METHOD  translate_1( pContext, pSourceText, pDisambiguation, nEncoding )
+   METHOD  translate( ... )
    METHOD  quit()
 
    ENDCLASS
@@ -196,32 +191,93 @@ METHOD QCoreApplication:organizationName()
    RETURN Qt_QCoreApplication_organizationName( ::pPtr )
 
 
-METHOD QCoreApplication:postEvent( pReceiver, pEvent )
-   RETURN Qt_QCoreApplication_postEvent( ::pPtr, hbqt_ptr( pReceiver ), hbqt_ptr( pEvent ) )
+METHOD QCoreApplication:postEvent( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "N"
+                // void postEvent ( QObject * receiver, QEvent * event, int priority )
+                // PO p QObject, PO p QEvent, N n int
+         RETURN Qt_QCoreApplication_postEvent_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
+                // void postEvent ( QObject * receiver, QEvent * event )
+                // PO p QObject, PO p QEvent
+         RETURN Qt_QCoreApplication_postEvent( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
-METHOD QCoreApplication:postEvent_1( pReceiver, pEvent, nPriority )
-   RETURN Qt_QCoreApplication_postEvent_1( ::pPtr, hbqt_ptr( pReceiver ), hbqt_ptr( pEvent ), nPriority )
-
-
-METHOD QCoreApplication:processEvents( nFlags )
-   RETURN Qt_QCoreApplication_processEvents( ::pPtr, nFlags )
-
-
-METHOD QCoreApplication:processEvents_1( nFlags, nMaxtime )
-   RETURN Qt_QCoreApplication_processEvents_1( ::pPtr, nFlags, nMaxtime )
+METHOD QCoreApplication:processEvents( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void processEvents ( QEventLoop::ProcessEventsFlags flags, int maxtime )
+                // N n QEventLoop::ProcessEventsFlags, N n int
+         RETURN Qt_QCoreApplication_processEvents_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // void processEvents ( QEventLoop::ProcessEventsFlags flags = QEventLoop::AllEvents )
+                // N n QEventLoop::ProcessEventsFlags
+         RETURN Qt_QCoreApplication_processEvents( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // void processEvents ( QEventLoop::ProcessEventsFlags flags = QEventLoop::AllEvents )
+             // N n QEventLoop::ProcessEventsFlags
+      RETURN Qt_QCoreApplication_processEvents( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QCoreApplication:removeLibraryPath( cPath )
    RETURN Qt_QCoreApplication_removeLibraryPath( ::pPtr, cPath )
 
 
-METHOD QCoreApplication:removePostedEvents( pReceiver )
-   RETURN Qt_QCoreApplication_removePostedEvents( ::pPtr, hbqt_ptr( pReceiver ) )
-
-
-METHOD QCoreApplication:removePostedEvents_1( pReceiver, nEventType )
-   RETURN Qt_QCoreApplication_removePostedEvents_1( ::pPtr, hbqt_ptr( pReceiver ), nEventType )
+METHOD QCoreApplication:removePostedEvents( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // void removePostedEvents ( QObject * receiver, int eventType )
+                // PO p QObject, N n int
+         RETURN Qt_QCoreApplication_removePostedEvents_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void removePostedEvents ( QObject * receiver )
+                // PO p QObject
+         RETURN Qt_QCoreApplication_removePostedEvents( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QCoreApplication:removeTranslator( pTranslationFile )
@@ -232,12 +288,27 @@ METHOD QCoreApplication:sendEvent( pReceiver, pEvent )
    RETURN Qt_QCoreApplication_sendEvent( ::pPtr, hbqt_ptr( pReceiver ), hbqt_ptr( pEvent ) )
 
 
-METHOD QCoreApplication:sendPostedEvents( pReceiver, nEvent_type )
-   RETURN Qt_QCoreApplication_sendPostedEvents( ::pPtr, hbqt_ptr( pReceiver ), nEvent_type )
-
-
-METHOD QCoreApplication:sendPostedEvents_1()
-   RETURN Qt_QCoreApplication_sendPostedEvents_1( ::pPtr )
+METHOD QCoreApplication:sendPostedEvents( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
+                // void sendPostedEvents ( QObject * receiver, int event_type )
+                // PO p QObject, N n int
+         RETURN Qt_QCoreApplication_sendPostedEvents( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // void sendPostedEvents ()
+      RETURN Qt_QCoreApplication_sendPostedEvents_1( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QCoreApplication:setApplicationName( cApplication )
@@ -272,12 +343,38 @@ METHOD QCoreApplication:testAttribute( nAttribute )
    RETURN Qt_QCoreApplication_testAttribute( ::pPtr, nAttribute )
 
 
-METHOD QCoreApplication:translate( pContext, pSourceText, pDisambiguation, nEncoding, nN )
-   RETURN Qt_QCoreApplication_translate( ::pPtr, hbqt_ptr( pContext ), hbqt_ptr( pSourceText ), hbqt_ptr( pDisambiguation ), nEncoding, nN )
-
-
-METHOD QCoreApplication:translate_1( pContext, pSourceText, pDisambiguation, nEncoding )
-   RETURN Qt_QCoreApplication_translate_1( ::pPtr, hbqt_ptr( pContext ), hbqt_ptr( pSourceText ), hbqt_ptr( pDisambiguation ), nEncoding )
+METHOD QCoreApplication:translate( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 5
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PO" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N"
+                // QString translate ( const char * context, const char * sourceText, const char * disambiguation, Encoding encoding, int n )
+                // PO p char, PO p char, PO p char, N n QCoreApplication::Encoding, N n int
+         RETURN Qt_QCoreApplication_translate( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PO" .AND. aV[ 4 ] $ "N"
+                // QString translate ( const char * context, const char * sourceText, const char * disambiguation = 0, Encoding encoding = CodecForTr )
+                // PO p char, PO p char, PO p char, N n QCoreApplication::Encoding
+         RETURN Qt_QCoreApplication_translate_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
+                // QString translate ( const char * context, const char * sourceText, const char * disambiguation = 0, Encoding encoding = CodecForTr )
+                // PO p char, PO p char, PO p char, N n QCoreApplication::Encoding
+         RETURN Qt_QCoreApplication_translate_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QCoreApplication:quit()

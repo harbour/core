@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QTextEncoder():new( ... )
+ *     QTextEncoder( ... )
  *     QTextEncoder():from( pPtr_OR_oObj_of_type_QTextEncoder )
  *     QTextEncoder():configure( pPtr_OR_oObj_of_type_QTextEncoder )
  *  $ARGUMENTS$

@@ -65,6 +65,15 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  Constructed[ 2/2 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  //QByteArray fromUnicode ( const QString & uc, int & lenInOut )
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtCore/QTextEncoder>

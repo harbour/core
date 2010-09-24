@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QStyleOptionComplex
  *  $SYNTAX$
- *     QStyleOptionTitleBar():new( ... )
+ *     QStyleOptionTitleBar( ... )
  *     QStyleOptionTitleBar():from( pPtr_OR_oObj_of_type_QStyleOptionTitleBar )
  *     QStyleOptionTitleBar():configure( pPtr_OR_oObj_of_type_QStyleOptionTitleBar )
  *  $ARGUMENTS$

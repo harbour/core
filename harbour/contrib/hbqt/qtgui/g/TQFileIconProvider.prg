@@ -71,8 +71,7 @@ CREATE CLASS QFileIconProvider INHERIT HbQtObjectHandler FUNCTION HB_QFileIconPr
 
    METHOD  new( ... )
 
-   METHOD  icon( nType )
-   METHOD  icon_1( pInfo )
+   METHOD  icon( ... )
    METHOD  type( pInfo )
 
    ENDCLASS
@@ -87,12 +86,28 @@ METHOD QFileIconProvider:new( ... )
    RETURN Self
 
 
-METHOD QFileIconProvider:icon( nType )
-   RETURN Qt_QFileIconProvider_icon( ::pPtr, nType )
-
-
-METHOD QFileIconProvider:icon_1( pInfo )
-   RETURN Qt_QFileIconProvider_icon_1( ::pPtr, hbqt_ptr( pInfo ) )
+METHOD QFileIconProvider:icon( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // virtual QIcon icon ( IconType type ) const
+                // N n QFileIconProvider::IconType
+         RETURN QIcon():from( Qt_QFileIconProvider_icon( ::pPtr, ... ) )
+      CASE aV[ 1 ] $ "PO"
+                // virtual QIcon icon ( const QFileInfo & info ) const
+                // PO p QFileInfo
+         RETURN QIcon():from( Qt_QFileIconProvider_icon_1( ::pPtr, ... ) )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QFileIconProvider:type( pInfo )

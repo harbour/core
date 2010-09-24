@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QAbstractScrollArea
  *  $SYNTAX$
- *     QScrollArea():new( ... )
+ *     QScrollArea( ... )
  *     QScrollArea():from( pPtr_OR_oObj_of_type_QScrollArea )
  *     QScrollArea():configure( pPtr_OR_oObj_of_type_QScrollArea )
  *  $ARGUMENTS$

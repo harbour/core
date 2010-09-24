@@ -78,8 +78,7 @@ CREATE CLASS QCursor INHERIT HbQtObjectHandler FUNCTION HB_QCursor
    METHOD  setShape( nShape )
    METHOD  shape()
    METHOD  pos()
-   METHOD  setPos( nX, nY )
-   METHOD  setPos_1( pP )
+   METHOD  setPos( ... )
 
    ENDCLASS
 
@@ -121,10 +120,29 @@ METHOD QCursor:pos()
    RETURN Qt_QCursor_pos( ::pPtr )
 
 
-METHOD QCursor:setPos( nX, nY )
-   RETURN Qt_QCursor_setPos( ::pPtr, nX, nY )
-
-
-METHOD QCursor:setPos_1( pP )
-   RETURN Qt_QCursor_setPos_1( ::pPtr, hbqt_ptr( pP ) )
+METHOD QCursor:setPos( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // void setPos ( int x, int y )
+                // N n int, N n int
+         RETURN Qt_QCursor_setPos( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void setPos ( const QPoint & p )
+                // PO p QPoint
+         RETURN Qt_QCursor_setPos_1( ::pPtr, ... )
+      ENDCASE
+   ENDCASE
+   RETURN NIL
 

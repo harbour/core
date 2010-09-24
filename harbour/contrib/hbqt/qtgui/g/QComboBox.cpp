@@ -72,12 +72,8 @@
  */
 
 /*
- *  Constructed[ 59/60 [ 98.33% ] ]
+ *  Constructed[ 59/59 [ 100.00% ] ]
  *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
- *
- *  }
  */
 
 #include <QtCore/QPointer>
@@ -777,16 +773,19 @@ HB_FUNC( QT_QCOMBOBOX_SETVALIDATOR )
 }
 
 /*
- * void setView ( QAbstractItemView * itemView )
+ * void setView ( QAbstractItemView * itemView )   [*D=1*]
  */
 HB_FUNC( QT_QCOMBOBOX_SETVIEW )
 {
-   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-   if( p && p->ph && q && q->ph )
+   QComboBox * p = hbqt_par_QComboBox( 1 );
+   if( p )
    {
-      q->bNew = HB_FALSE;
-      hbqt_par_QComboBox( 1 )->setView( hbqt_par_QAbstractItemView( 2 ) );
+      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+      if( q && q->ph )
+      {
+         q->bNew = false;
+      }
+      ( p )->setView( hbqt_par_QAbstractItemView( 2 ) );
    }
 }
 

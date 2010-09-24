@@ -71,21 +71,12 @@
  */
 
 /*
- *  Constructed[ 63/71 [ 88.73% ] ]
+ *  Constructed[ 65/65 [ 100.00% ] ]
  *
- *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
- *  }
- *  }
+ *  *** Commented out protostypes ***
  *
- *  *** Commented out protos which construct fine but do not compile ***
- *
- *  //void setRgb ( QRgb rgb )
- *  //void setRgb ( int r, int g, int b, int a = 255 )
  *  //bool allowX11ColorNames ()
- *  //QColor fromRgb ( QRgb rgb )
- *  //QColor fromRgb ( int r, int g, int b, int a = 255 )
  *  //void setAllowX11ColorNames ( bool enabled )
  */
 
@@ -796,21 +787,26 @@ HB_FUNC( QT_QCOLOR_SETREDF )
 }
 
 /*
- * void setRgb ( ... )
+ * void setRgb ( QRgb rgb )
  */
 HB_FUNC( QT_QCOLOR_SETRGB )
 {
    QColor * p = hbqt_par_QColor( 1 );
    if( p )
    {
-      if( hb_pcount() == 2 && HB_ISNUM( 2 ) )
-      {
-         ( p )->setRgb( hb_parnl( 2 ) );
-      }
-      else if( hb_pcount() >= 4 && HB_ISNUM( 2 ) )
-      {
-         ( p )->setRgb( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parnidef( 5, 255 ) );
-      }
+      ( p )->setRgb( hb_parnl( 2 ) );
+   }
+}
+
+/*
+ * void setRgb ( int r, int g, int b, int a = 255 )
+ */
+HB_FUNC( QT_QCOLOR_SETRGB_1 )
+{
+   QColor * p = hbqt_par_QColor( 1 );
+   if( p )
+   {
+      ( p )->setRgb( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parnidef( 5, 255 ) );
    }
 }
 
@@ -995,21 +991,26 @@ HB_FUNC( QT_QCOLOR_FROMHSVF )
 }
 
 /*
- * QColor fromRgb ( ... )
+ * QColor fromRgb ( QRgb rgb )
  */
 HB_FUNC( QT_QCOLOR_FROMRGB )
 {
    QColor * p = hbqt_par_QColor( 1 );
    if( p )
    {
-      if( hb_pcount() == 2 && HB_ISNUM( 2 ) )
-      {
-         hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->fromRgb( hb_parnl( 2 ) ) ), true ) );
-      }
-      else if( hb_pcount() >= 4 && HB_ISNUM( 2 ) )
-      {
-         hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->fromRgb( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parnidef( 5, 255 ) ) ), true ) );
-      }
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->fromRgb( hb_parnl( 2 ) ) ), true ) );
+   }
+}
+
+/*
+ * QColor fromRgb ( int r, int g, int b, int a = 255 )
+ */
+HB_FUNC( QT_QCOLOR_FROMRGB_1 )
+{
+   QColor * p = hbqt_par_QColor( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->fromRgb( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parnidef( 5, 255 ) ) ), true ) );
    }
 }
 

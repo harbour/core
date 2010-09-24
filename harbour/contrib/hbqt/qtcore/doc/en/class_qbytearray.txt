@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     
  *  $SYNTAX$
- *     QByteArray():new( ... )
+ *     QByteArray( ... )
  *     QByteArray():from( pPtr_OR_oObj_of_type_QByteArray )
  *     QByteArray():configure( pPtr_OR_oObj_of_type_QByteArray )
  *  $ARGUMENTS$

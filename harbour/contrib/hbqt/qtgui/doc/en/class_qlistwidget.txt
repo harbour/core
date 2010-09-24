@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QListView
  *  $SYNTAX$
- *     QListWidget():new( ... )
+ *     QListWidget( ... )
  *     QListWidget():from( pPtr_OR_oObj_of_type_QListWidget )
  *     QListWidget():configure( pPtr_OR_oObj_of_type_QListWidget )
  *  $ARGUMENTS$

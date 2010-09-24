@@ -65,6 +65,15 @@
 #if QT_VERSION >= 0x040500
 /*----------------------------------------------------------------------*/
 
+/*
+ *  Constructed[ 5/5 [ 100.00% ] ]
+ *
+ *
+ *  *** Commented out protostypes ***
+ *
+ *  //const QByteArray & buffer () const
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtCore/QBuffer>
@@ -154,18 +163,6 @@ HB_FUNC( QT_QBUFFER )
  * QByteArray & buffer ()
  */
 HB_FUNC( QT_QBUFFER_BUFFER )
-{
-   QBuffer * p = hbqt_par_QBuffer( 1 );
-   if( p )
-   {
-      hb_retptrGC( hbqt_gcAllocate_QByteArray( new QByteArray( ( p )->buffer() ), true ) );
-   }
-}
-
-/*
- * const QByteArray & buffer () const
- */
-HB_FUNC( QT_QBUFFER_BUFFER_1 )
 {
    QBuffer * p = hbqt_par_QBuffer( 1 );
    if( p )

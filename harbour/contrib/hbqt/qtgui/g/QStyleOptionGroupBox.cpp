@@ -71,6 +71,11 @@
  *  enum StyleOptionVersion { Version }
  */
 
+/*
+ *  Constructed[ 6/6 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionGroupBox>
@@ -149,7 +154,11 @@ HB_FUNC( QT_QSTYLEOPTIONGROUPBOX )
  */
 HB_FUNC( QT_QSTYLEOPTIONGROUPBOX_FEATURES )
 {
-   hb_retni( ( QStyleOptionFrameV2::FrameFeatures ) hbqt_par_QStyleOptionGroupBox( 1 )->features );
+   QStyleOptionGroupBox * p = hbqt_par_QStyleOptionGroupBox( 1 );
+   if( p )
+   {
+      hb_retni( ( QStyleOptionFrameV2::FrameFeatures ) ( p )->features );
+   }
 }
 
 /*
@@ -157,7 +166,11 @@ HB_FUNC( QT_QSTYLEOPTIONGROUPBOX_FEATURES )
  */
 HB_FUNC( QT_QSTYLEOPTIONGROUPBOX_LINEWIDTH )
 {
-   hb_retni( hbqt_par_QStyleOptionGroupBox( 1 )->lineWidth );
+   QStyleOptionGroupBox * p = hbqt_par_QStyleOptionGroupBox( 1 );
+   if( p )
+   {
+      hb_retni( ( p )->lineWidth );
+   }
 }
 
 /*
@@ -165,7 +178,11 @@ HB_FUNC( QT_QSTYLEOPTIONGROUPBOX_LINEWIDTH )
  */
 HB_FUNC( QT_QSTYLEOPTIONGROUPBOX_MIDLINEWIDTH )
 {
-   hb_retni( hbqt_par_QStyleOptionGroupBox( 1 )->midLineWidth );
+   QStyleOptionGroupBox * p = hbqt_par_QStyleOptionGroupBox( 1 );
+   if( p )
+   {
+      hb_retni( ( p )->midLineWidth );
+   }
 }
 
 /*
@@ -173,7 +190,11 @@ HB_FUNC( QT_QSTYLEOPTIONGROUPBOX_MIDLINEWIDTH )
  */
 HB_FUNC( QT_QSTYLEOPTIONGROUPBOX_TEXT )
 {
-   hb_retstr_utf8( hbqt_par_QStyleOptionGroupBox( 1 )->text.toUtf8().data() );
+   QStyleOptionGroupBox * p = hbqt_par_QStyleOptionGroupBox( 1 );
+   if( p )
+   {
+      hb_retstr_utf8( ( p )->text.toUtf8().data() );
+   }
 }
 
 /*
@@ -181,7 +202,11 @@ HB_FUNC( QT_QSTYLEOPTIONGROUPBOX_TEXT )
  */
 HB_FUNC( QT_QSTYLEOPTIONGROUPBOX_TEXTALIGNMENT )
 {
-   hb_retni( ( Qt::Alignment ) hbqt_par_QStyleOptionGroupBox( 1 )->textAlignment );
+   QStyleOptionGroupBox * p = hbqt_par_QStyleOptionGroupBox( 1 );
+   if( p )
+   {
+      hb_retni( ( Qt::Alignment ) ( p )->textAlignment );
+   }
 }
 
 /*
@@ -189,7 +214,11 @@ HB_FUNC( QT_QSTYLEOPTIONGROUPBOX_TEXTALIGNMENT )
  */
 HB_FUNC( QT_QSTYLEOPTIONGROUPBOX_TEXTCOLOR )
 {
-   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hbqt_par_QStyleOptionGroupBox( 1 )->textColor ), true ) );
+   QStyleOptionGroupBox * p = hbqt_par_QStyleOptionGroupBox( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->textColor ), true ) );
+   }
 }
 
 

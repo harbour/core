@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QWidget
  *  $SYNTAX$
- *     QGroupBox():new( ... )
+ *     QGroupBox( ... )
  *     QGroupBox():from( pPtr_OR_oObj_of_type_QGroupBox )
  *     QGroupBox():configure( pPtr_OR_oObj_of_type_QGroupBox )
  *  $ARGUMENTS$

@@ -71,8 +71,7 @@ CREATE CLASS QDrag INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QDrag
 
    METHOD  new( ... )
 
-   METHOD  exec( nSupportedActions )
-   METHOD  exec_1( nSupportedActions, nDefaultDropAction )
+   METHOD  exec( ... )
    METHOD  hotSpot()
    METHOD  mimeData()
    METHOD  pixmap()
@@ -95,12 +94,35 @@ METHOD QDrag:new( ... )
    RETURN Self
 
 
-METHOD QDrag:exec( nSupportedActions )
-   RETURN Qt_QDrag_exec( ::pPtr, nSupportedActions )
-
-
-METHOD QDrag:exec_1( nSupportedActions, nDefaultDropAction )
-   RETURN Qt_QDrag_exec_1( ::pPtr, nSupportedActions, nDefaultDropAction )
+METHOD QDrag:exec( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
+                // Qt::DropAction exec ( Qt::DropActions supportedActions, Qt::DropAction defaultDropAction )
+                // N n Qt::DropActions, N n Qt::DropAction
+         RETURN Qt_QDrag_exec_1( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "N"
+                // Qt::DropAction exec ( Qt::DropActions supportedActions = Qt::MoveAction )
+                // N n Qt::DropActions
+         RETURN Qt_QDrag_exec( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // Qt::DropAction exec ( Qt::DropActions supportedActions = Qt::MoveAction )
+             // N n Qt::DropActions
+      RETURN Qt_QDrag_exec( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QDrag:hotSpot()

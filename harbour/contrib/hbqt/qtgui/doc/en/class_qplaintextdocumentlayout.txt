@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QAbstractTextDocumentLayout
  *  $SYNTAX$
- *     QPlainTextDocumentLayout():new( ... )
+ *     QPlainTextDocumentLayout( ... )
  *     QPlainTextDocumentLayout():from( pPtr_OR_oObj_of_type_QPlainTextDocumentLayout )
  *     QPlainTextDocumentLayout():configure( pPtr_OR_oObj_of_type_QPlainTextDocumentLayout )
  *  $ARGUMENTS$

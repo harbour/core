@@ -82,8 +82,7 @@ CREATE CLASS QColorDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QCol
    METHOD  testOption( nOption )
    METHOD  customColor( nIndex )
    METHOD  customCount()
-   METHOD  getColor( pInitial, pParent, cTitle, nOptions )
-   METHOD  getColor_1( pInitial, pParent )
+   METHOD  getColor( ... )
    METHOD  setCustomColor( nIndex, nColor )
    METHOD  setStandardColor( nIndex, nColor )
 
@@ -143,12 +142,42 @@ METHOD QColorDialog:customCount()
    RETURN Qt_QColorDialog_customCount( ::pPtr )
 
 
-METHOD QColorDialog:getColor( pInitial, pParent, cTitle, nOptions )
-   RETURN Qt_QColorDialog_getColor( ::pPtr, hbqt_ptr( pInitial ), hbqt_ptr( pParent ), cTitle, nOptions )
-
-
-METHOD QColorDialog:getColor_1( pInitial, pParent )
-   RETURN Qt_QColorDialog_getColor_1( ::pPtr, hbqt_ptr( pInitial ), hbqt_ptr( pParent ) )
+METHOD QColorDialog:getColor( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 4
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "C" .AND. aV[ 4 ] $ "N"
+                // QColor getColor ( const QColor & initial, QWidget * parent, const QString & title, ColorDialogOptions options = 0 )
+                // PO p QColor, PO p QWidget, C c QString, N n QColorDialog::ColorDialogOptions
+         RETURN QColor():from( Qt_QColorDialog_getColor( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 3
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "C"
+                // QColor getColor ( const QColor & initial, QWidget * parent, const QString & title, ColorDialogOptions options = 0 )
+                // PO p QColor, PO p QWidget, C c QString, N n QColorDialog::ColorDialogOptions
+         RETURN QColor():from( Qt_QColorDialog_getColor( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 2
+      DO CASE
+      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
+                // QColor getColor ( const QColor & initial = Qt::white, QWidget * parent = 0 )
+                // PO p QColor, PO p QWidget
+         RETURN QColor():from( Qt_QColorDialog_getColor_1( ::pPtr, ... ) )
+      ENDCASE
+   CASE nP == 0
+             // QColor getColor ( const QColor & initial = Qt::white, QWidget * parent = 0 )
+             // PO p QColor, PO p QWidget
+      RETURN QColor():from( Qt_QColorDialog_getColor_1( ::pPtr, ... ) )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QColorDialog:setCustomColor( nIndex, nColor )

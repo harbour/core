@@ -71,11 +71,9 @@ CREATE CLASS QDragMoveEvent INHERIT HbQtObjectHandler, HB_QDropEvent FUNCTION HB
 
    METHOD  new( ... )
 
-   METHOD  accept( pRectangle )
-   METHOD  accept_1()
+   METHOD  accept( ... )
    METHOD  answerRect()
-   METHOD  ignore( pRectangle )
-   METHOD  ignore_1()
+   METHOD  ignore( ... )
 
    ENDCLASS
 
@@ -89,22 +87,52 @@ METHOD QDragMoveEvent:new( ... )
    RETURN Self
 
 
-METHOD QDragMoveEvent:accept( pRectangle )
-   RETURN Qt_QDragMoveEvent_accept( ::pPtr, hbqt_ptr( pRectangle ) )
-
-
-METHOD QDragMoveEvent:accept_1()
-   RETURN Qt_QDragMoveEvent_accept_1( ::pPtr )
+METHOD QDragMoveEvent:accept( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void accept ( const QRect & rectangle )
+                // PO p QRect
+         RETURN Qt_QDragMoveEvent_accept( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // void accept ()
+      RETURN Qt_QDragMoveEvent_accept_1( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 
 
 METHOD QDragMoveEvent:answerRect()
    RETURN Qt_QDragMoveEvent_answerRect( ::pPtr )
 
 
-METHOD QDragMoveEvent:ignore( pRectangle )
-   RETURN Qt_QDragMoveEvent_ignore( ::pPtr, hbqt_ptr( pRectangle ) )
-
-
-METHOD QDragMoveEvent:ignore_1()
-   RETURN Qt_QDragMoveEvent_ignore_1( ::pPtr )
+METHOD QDragMoveEvent:ignore( ... )
+   LOCAL p, aP, nP, aV := {}
+   aP := hb_aParams()
+   nP := len( aP )
+   ::valtypes( aP, aV )
+   FOR EACH p IN { ... }
+      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
+   NEXT
+   DO CASE
+   CASE nP == 1
+      DO CASE
+      CASE aV[ 1 ] $ "PO"
+                // void ignore ( const QRect & rectangle )
+                // PO p QRect
+         RETURN Qt_QDragMoveEvent_ignore( ::pPtr, ... )
+      ENDCASE
+   CASE nP == 0
+             // void ignore ()
+      RETURN Qt_QDragMoveEvent_ignore_1( ::pPtr, ... )
+   ENDCASE
+   RETURN NIL
 

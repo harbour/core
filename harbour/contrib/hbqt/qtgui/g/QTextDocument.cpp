@@ -77,7 +77,6 @@
  *  Constructed[ 67/68 [ 98.53% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  QVector<QTextFormat> allFormats () const
  */

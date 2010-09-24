@@ -70,7 +70,6 @@
  *  Constructed[ 11/13 [ 84.62% ] ]
  *
  *  *** Unconvered Prototypes ***
- *  -----------------------------
  *
  *  QVector<QTextLength> columnWidthConstraints () const
  *  void setColumnWidthConstraints ( const QVector<QTextLength> & constraints )

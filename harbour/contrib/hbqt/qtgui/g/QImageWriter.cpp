@@ -70,6 +70,11 @@
  *  enum ImageWriterError { DeviceError, UnsupportedFormatError, UnknownError }
  */
 
+/*
+ *  Constructed[ 19/19 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QImageWriter>

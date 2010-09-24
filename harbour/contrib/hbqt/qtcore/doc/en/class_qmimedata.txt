@@ -18,7 +18,7 @@
  *  $INHERITS$
  *     QObject
  *  $SYNTAX$
- *     QMimeData():new( ... )
+ *     QMimeData( ... )
  *     QMimeData():from( pPtr_OR_oObj_of_type_QMimeData )
  *     QMimeData():configure( pPtr_OR_oObj_of_type_QMimeData )
  *  $ARGUMENTS$

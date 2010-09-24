@@ -73,6 +73,11 @@
  *  enum StyleOptionVersion { Version }
  */
 
+/*
+ *  Constructed[ 4/4 [ 100.00% ] ]
+ *
+ */
+
 #include <QtCore/QPointer>
 
 #include <QtGui/QStyleOptionButton>
@@ -151,7 +156,11 @@ HB_FUNC( QT_QSTYLEOPTIONBUTTON )
  */
 HB_FUNC( QT_QSTYLEOPTIONBUTTON_FEATURES )
 {
-   hb_retni( ( QStyleOptionButton::ButtonFeatures ) hbqt_par_QStyleOptionButton( 1 )->features );
+   QStyleOptionButton * p = hbqt_par_QStyleOptionButton( 1 );
+   if( p )
+   {
+      hb_retni( ( QStyleOptionButton::ButtonFeatures ) ( p )->features );
+   }
 }
 
 /*
@@ -159,7 +168,11 @@ HB_FUNC( QT_QSTYLEOPTIONBUTTON_FEATURES )
  */
 HB_FUNC( QT_QSTYLEOPTIONBUTTON_ICON )
 {
-   hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( hbqt_par_QStyleOptionButton( 1 )->icon ), true ) );
+   QStyleOptionButton * p = hbqt_par_QStyleOptionButton( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QIcon( new QIcon( ( p )->icon ), true ) );
+   }
 }
 
 /*
@@ -167,7 +180,11 @@ HB_FUNC( QT_QSTYLEOPTIONBUTTON_ICON )
  */
 HB_FUNC( QT_QSTYLEOPTIONBUTTON_ICONSIZE )
 {
-   hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( hbqt_par_QStyleOptionButton( 1 )->iconSize ), true ) );
+   QStyleOptionButton * p = hbqt_par_QStyleOptionButton( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QSize( new QSize( ( p )->iconSize ), true ) );
+   }
 }
 
 /*
@@ -175,7 +192,11 @@ HB_FUNC( QT_QSTYLEOPTIONBUTTON_ICONSIZE )
  */
 HB_FUNC( QT_QSTYLEOPTIONBUTTON_TEXT )
 {
-   hb_retstr_utf8( hbqt_par_QStyleOptionButton( 1 )->text.toUtf8().data() );
+   QStyleOptionButton * p = hbqt_par_QStyleOptionButton( 1 );
+   if( p )
+   {
+      hb_retstr_utf8( ( p )->text.toUtf8().data() );
+   }
 }
 
 
