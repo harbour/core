@@ -245,13 +245,13 @@ METHOD HbQtUI:loadUI( cUiFull, qParent )
       pWidget    := qUiLoader:load( qFile, qParent )
       DO CASE
       CASE ::widgets[ 1,1 ] == "QWidget"
-         oWidget    := QWidget():configure( pWidget )
+         oWidget    := QWidget():from( pWidget )
       CASE ::widgets[ 1,1 ] == "QDialog"
-         oWidget    := QDialog():configure( pWidget )
+         oWidget    := QDialog():from( pWidget )
       CASE ::widgets[ 1,1 ] == "QMainWindow"
-         oWidget    := QMainWindow():configure( pWidget )
+         oWidget    := QMainWindow():from( pWidget )
       OTHERWISE
-         oWidget    := QWidget():configure( pWidget )
+         oWidget    := QWidget():from( pWidget )
       ENDCASE
       qFile:close()
       qFile := NIL
@@ -380,7 +380,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
          s := alltrim( strtran( s, cCls, "" ) )
          IF ( n := at( "(", s ) ) > 0
             cNam := substr( s, 1, n - 1 )
-            aadd( ::widgets, { cCls, cNam, cCls+"()", cCls+"():new"+substr( s, n ) } )
+            aadd( ::widgets, { cCls, cNam, cCls+"()", cCls+"(" + substr( s,n ) + ")" } )
             //
          *  HB_TRACE( HB_TR_DEBUG, "Object   ", pad( cNam, 20 ), pad( cCls, 20 ), cCls+"():new"+substr( s, n ) )
          ELSE
@@ -450,7 +450,7 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
          cCmd := hbq_setObjects( cCmd, ::widgets )
          n := at( "(", cCmd )
          cCls := substr( cCmd, 1, n - 1 )
-         aadd( ::widgets, { cCls, cNam, cCls+"()", cCls+"():new"+substr(cCmd,n) } )
+         aadd( ::widgets, { cCls, cNam, cCls+"()", cCls+"("+substr(cCmd,n)+")" } )
       *  HB_TRACE( HB_TR_DEBUG, "new      ", pad( cNam, 20 ), cCmd )
 
       ENDIF
@@ -505,12 +505,12 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
 
          IF "addWidget" $ cCmd
             IF hbq_occurs( cCmd, "," ) >= 4
-               cCmd := strtran( cCmd, "addWidget", "addWidget_1" )
+               cCmd := strtran( cCmd, "addWidget", "addWidget" )
             ENDIF
 
          ELSEIF "addLayout" $ cCmd
             IF hbq_occurs( cCmd, "," ) >= 4
-               cCmd := strtran( cCmd, "addLayout", "addLayout_1" )
+               cCmd := strtran( cCmd, "addLayout", "addLayout" )
             ENDIF
          ENDIF
 
@@ -581,7 +581,7 @@ METHOD HbQtUI:formatCommand( cCmd, lText )
          n1   := at( ".", cCmd )
          cCmd1 := hbq_setObjects( substr( cCmd, n + 1, n1 - n - 1 ), ::widgets )
          cCmd1 := strtran( cCmd1, "->", ":" )
-         aadd( ::widgets, { "QSizePolicy", cNam, "QSizePolicy()", "QSizePolicy():configure(" + cCmd1 + ")" } )
+         aadd( ::widgets, { "QSizePolicy", cNam, "QSizePolicy()", "QSizePolicy():from(" + cCmd1 + ")" } )
          cCmd := 'setHeightForWidth(o[ "' + cNam + '" ]:' + substr( cCmd, n1 + 1 )
 
       ELSE
