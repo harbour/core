@@ -32,6 +32,7 @@
 #include "inkey.ch"
 #include "common.ch"
 #include "setcurs.ch"
+#include "hbgtinfo.ch"
 
     #define MF_INSERT                     0
     #define MF_CHANGE                   128
@@ -197,7 +198,7 @@ local ch
 
    s_afontinfo := WVW_getfontinfo()
 
-//   SETINKEYAFTERBLOCK({|nkey| nAfterInkey(nkey)})
+   hb_gtInfo( HB_GTI_INKEYFILTER, {|nkey| nAfterInkey(nkey) } )
    WVW_SETMOUSEMOVE(,.t.)                           //required by wvwmouse
    kF1 := SetKey( K_F1, {|| xHelp() } )
    kF2 := SetKey( K_F2, {|| xDebugInfo() } )
@@ -1206,7 +1207,7 @@ enddo
 
 //? cErr  // Calls quit
 ldebug(cErr)
-//SETINKEYAFTERBLOCK(NIL)  //x
+hb_gtInfo( HB_GTI_INKEYFILTER, NIL )
 quit
 
 return

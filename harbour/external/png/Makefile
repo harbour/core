@@ -69,8 +69,8 @@ else
 endif
 
 # ORIGIN http://www.libpng.org/pub/png/libpng.html
-# VER    1.4.3
-# URL    http://sourceforge.net/projects/libpng/files/01-libpng-master/1.4.3/lpng143.zip/download
+# VER    1.4.4
+# URL    http://sourceforge.net/projects/libpng/files/01-libpng-master/1.4.4/lpng144.zip/download
 # DIFF
 #
 # MAP    LICENSE

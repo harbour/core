@@ -2179,7 +2179,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
       CASE Left( cParamL, 3 ) == "-gt"
 
-         cParam := SubStr( cParam, 2 )
+         cParam := MacroProc( hbmk, SubStr( cParam, 2 ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
             IF hbmk[ _HBMK_cGT ] == NIL
                IF ! SetupForGT( cParam, @hbmk[ _HBMK_cGT ], @hbmk[ _HBMK_lGUI ] )
@@ -9057,6 +9057,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
          ENDIF
 
       CASE Lower( Left( cLine, Len( "gt="           ) ) ) == "gt="           ; cLine := SubStr( cLine, Len( "gt="           ) + 1 )
+         cLine := MacroProc( hbmk, cLine, cFileName )
          IF ! Empty( cLine )
             IF hbmk[ _HBMK_cGT ] == NIL
                IF ! SetupForGT( cLine, @hbmk[ _HBMK_cGT ], @hbmk[ _HBMK_lGUI ] )

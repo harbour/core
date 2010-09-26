@@ -41,8 +41,8 @@ else
 endif
 
 # ORIGIN http://www.bzip.org/
-# VER    1.0.5
-# URL    http://www.bzip.org/1.0.5/bzip2-1.0.5.tar.gz
+# VER    1.0.6
+# URL    http://www.bzip.org/1.0.6/bzip2-1.0.6.tar.gz
 # DIFF
 #
 # MAP    LICENSE
