@@ -117,6 +117,35 @@ int hb_tracelevel( int new_level )
    return old_level;
 }
 
+HB_BOOL hb_tracefile( const char * szFile )
+{
+   if( szFile && *szFile )
+   {
+      FILE * fp = hb_fopen( szFile, "w" );
+
+      if( fp )
+      {
+         if( s_fp != NULL && s_fp != stderr )
+            fclose( s_fp );
+         s_fp = fp;
+         return HB_TRUE;
+      }
+   }
+
+   return HB_FALSE;
+}
+
+int hb_traceflush( int new_flush )
+{
+   int old_flush = s_flush;
+
+   if( new_flush == 0 ||
+       new_flush == 1 )
+      s_flush = new_flush;
+
+   return old_flush;
+}
+
 int hb_tr_level( void )
 {
    if( s_level == -1 )

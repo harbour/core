@@ -87,7 +87,19 @@ static void hb_trace_message( char * buffer, HB_SIZE nSize, int iParam, int iCou
 
 HB_FUNC( HB_TRACESTATE )
 {
-   hb_retni( hb_tracestate( hb_parnidef( 1, -1 ) ) );
+   hb_retl( hb_tracestate( HB_ISLOG( 1 ) ? hb_parl( 1 ) :
+                                           hb_parnidef( 1, -1 ) ) );
+}
+
+HB_FUNC( HB_TRACEFLUSH )
+{
+   hb_retl( hb_traceflush( HB_ISLOG( 1 ) ? hb_parl( 1 ) :
+                                           hb_parnidef( 1, -1 ) ) );
+}
+
+HB_FUNC( HB_TRACEFILE )
+{
+   hb_retl( hb_tracefile( hb_parc( 1 ) ) );
 }
 
 HB_FUNC( HB_TRACELEVEL )
