@@ -314,7 +314,7 @@ static void hb_oleStringToItem( BSTR strVal, PHB_ITEM pItem )
 }
 
 
-static IDispatch * hb_oleItemGetDispatch( PHB_ITEM pItem )
+IDispatch * hb_oleItemGetDispatch( PHB_ITEM pItem )
 {
    if( HB_IS_OBJECT( pItem ) )
    {
@@ -601,7 +601,7 @@ static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray,
 }
 
 
-static void hb_oleDispatchToItem( PHB_ITEM pItem, IDispatch* pdispVal, HB_USHORT uiClass )
+void hb_oleDispatchToItem( PHB_ITEM pItem, IDispatch* pdispVal, HB_USHORT uiClass )
 {
    if( pdispVal )
    {
