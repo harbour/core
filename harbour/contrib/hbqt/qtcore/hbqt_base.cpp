@@ -78,7 +78,7 @@ HB_FUNC( QT_VERSION_STR )
 
 #include <QtCore/QObject>
 
-HB_FUNC( QT_FINDCHILD )
+HB_FUNC( HBQT_FINDCHILD )
 {
    QObject * object = ( QObject * ) hbqt_pPtrFromObj( 1 );
    hb_retptr( object->findChild< QObject * >( hbqt_par_QString( 2 ) ) );

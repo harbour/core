@@ -904,7 +904,6 @@ bool HBQSlots::hbConnect( PHB_ITEM pObj, const char * slot, PHB_ITEM bBlock )
    HB_SYMBOL_UNUSED( pObj   );
    HB_SYMBOL_UNUSED( bBlock );
 
-   //QObject * object = ( QObject * ) hbqt_pPtrFromItem( pObj );             /* get sender    */
    QObject * object = ( QObject * ) hbqt_pPtrFromObj( 1 );                   /* get sender    */
 
    if( object )

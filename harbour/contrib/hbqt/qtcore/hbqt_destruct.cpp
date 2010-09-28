@@ -82,7 +82,7 @@ const HB_GC_FUNCS * hbqt_gcFuncs( void )
    return &QT_gcFuncs;
 }
 
-void * hbqt_gcpointerFromItem( PHB_ITEM pObj )
+static void * hbqt_gcpointerFromItem( PHB_ITEM pObj )
 {
    HBQT_GC_T * p;
 
@@ -185,27 +185,6 @@ void * hbqt_gcpointer( int iParam )
       return NULL; /* TODO: Still better if RTE. */
    }
 #endif
-}
-
-void * hbqt_pPtrFromItem( PHB_ITEM pObj )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_pPtrFromItem( %p )", pObj ) );
-
-   if( hb_itemType( pObj ) == HB_IT_OBJECT )
-   {
-      hb_vmPushSymbol( hb_dynsymSymbol( hb_dynsymFindName( "PPTR" ) ) );
-      hb_vmPush( pObj );
-      hb_vmSend( 0 );
-
-      return hbqt_gcpointer( -1 );
-   }
-   else if( hb_itemType( pObj ) == HB_IT_POINTER )
-      return hbqt_gcpointerFromItem( pObj );
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "hbqt_pPtrFromItem(): returns NULL" ) );
-      return NULL; /* TODO: Still better if RTE. */
-   }
 }
 
 void * hbqt_pPtrFromObj( int iParam )

@@ -184,7 +184,7 @@ METHOD HbQtUI:loadWidgets()
          IF type( a_[ 1 ] + "()" ) == "UI"
             cBlock := "{|| " + a_[ 1 ] + "() }"
 
-            pPtr := Qt_findChild( ::oWidget, a_[ 2 ] )
+            pPtr := HBQT_findChild( ::oWidget, a_[ 2 ] )
             bBlock := &( cBlock )
 
             x := eval( bBlock )
