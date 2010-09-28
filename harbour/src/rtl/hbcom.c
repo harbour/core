@@ -296,7 +296,24 @@ int hb_comLastNum( void )
 static void hb_comSetOsError( PHB_COM pCom, HB_BOOL fError )
 {
    pCom->oserr = fError ? HB_COM_GETERROR() : 0;
-   pCom->error = pCom->oserr ? HB_COM_ERR_OTHER : 0;
+   switch( pCom->oserr )
+   {
+      case 0:
+         pCom->error = 0;
+         break;
+      case EIO:
+         pCom->error = HB_COM_ERR_IO;
+         break;
+      case EBUSY:
+         pCom->error = HB_COM_ERR_BUSY;
+         break;
+      case EAGAIN:
+         pCom->error = HB_COM_ERR_TIMEOUT;
+         break;
+      default:
+         pCom->error = HB_COM_ERR_OTHER;
+         break;
+   }
 }
 
 #if defined( HB_OS_UNIX )
@@ -1260,7 +1277,19 @@ int hb_comOpen( int iPort )
 static void hb_comSetOsError( PHB_COM pCom, BOOL fError )
 {
    pCom->oserr = fError ? GetLastError() : 0;
-   pCom->error = pCom->oserr ? HB_COM_ERR_OTHER : 0;
+
+   switch( pCom->oserr )
+   {
+      case 0:
+         pCom->error = 0;
+         break;
+      case ERROR_TIMEOUT:
+         pCom->error = HB_COM_ERR_TIMEOUT;
+         break;
+      default:
+         pCom->error = HB_COM_ERR_OTHER;
+         break;
+   }
 }
 
 int hb_comInputCount( int iPort )
@@ -1945,7 +1974,15 @@ int hb_comOpen( int iPort )
 static void hb_comSetOsError( PHB_COM pCom, APIRET rc )
 {
    pCom->oserr = rc;
-   pCom->error = rc != NO_ERROR ? HB_COM_ERR_OTHER : 0;
+   switch( pCom->oserr )
+   {
+      case NO_ERROR:
+         pCom->error = 0;
+         break;
+      default:
+         pCom->error = HB_COM_ERR_OTHER;
+         break;
+   }
 }
 
 int hb_comInputCount( int iPort )

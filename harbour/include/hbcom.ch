@@ -125,5 +125,6 @@
 #define HB_COM_ERR_BUSY             6
 #define HB_COM_ERR_OTHER            7
 #define HB_COM_ERR_ALREADYOPEN      8
+#define HB_COM_ERR_IO               9
 
 #endif /* HB_COM_CH_ */
