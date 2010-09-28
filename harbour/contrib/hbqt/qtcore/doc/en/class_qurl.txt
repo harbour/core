@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QUrl( ... )
  *     QUrl():from( pPtr_OR_oObj_of_type_QUrl )
- *     QUrl():configure( pPtr_OR_oObj_of_type_QUrl )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -112,6 +112,6 @@
  *     C++ wrappers  : contrib/hbqt/qtcore/QUrl.cpp
  *     Library       : hbqtcore
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

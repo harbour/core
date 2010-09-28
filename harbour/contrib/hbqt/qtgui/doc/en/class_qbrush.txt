@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QBrush( ... )
  *     QBrush():from( pPtr_OR_oObj_of_type_QBrush )
- *     QBrush():configure( pPtr_OR_oObj_of_type_QBrush )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

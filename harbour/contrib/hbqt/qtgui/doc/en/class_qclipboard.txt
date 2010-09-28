@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QClipboard( ... )
  *     QClipboard():from( pPtr_OR_oObj_of_type_QClipboard )
- *     QClipboard():configure( pPtr_OR_oObj_of_type_QClipboard )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -59,6 +59,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QClipboard.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

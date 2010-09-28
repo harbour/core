@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QFileInfo( ... )
  *     QFileInfo():from( pPtr_OR_oObj_of_type_QFileInfo )
- *     QFileInfo():configure( pPtr_OR_oObj_of_type_QFileInfo )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

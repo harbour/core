@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QSignalMapper( ... )
  *     QSignalMapper():from( pPtr_OR_oObj_of_type_QSignalMapper )
- *     QSignalMapper():configure( pPtr_OR_oObj_of_type_QSignalMapper )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -55,6 +55,6 @@
  *     C++ wrappers  : contrib/hbqt/qtcore/QSignalMapper.cpp
  *     Library       : hbqtcore
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

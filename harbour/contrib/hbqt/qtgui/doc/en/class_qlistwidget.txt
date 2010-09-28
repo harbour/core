@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QListWidget( ... )
  *     QListWidget():from( pPtr_OR_oObj_of_type_QListWidget )
- *     QListWidget():configure( pPtr_OR_oObj_of_type_QListWidget )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -78,6 +78,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QListWidget.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QListView
+ *     QListView()
  *  $END$
  */

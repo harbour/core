@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -103,11 +135,11 @@ METHOD QUiLoader:addPluginPath( cPath )
 
 
 METHOD QUiLoader:availableLayouts()
-   RETURN Qt_QUiLoader_availableLayouts( ::pPtr )
+   RETURN HB_QStringList():from( Qt_QUiLoader_availableLayouts( ::pPtr ) )
 
 
 METHOD QUiLoader:availableWidgets()
-   RETURN Qt_QUiLoader_availableWidgets( ::pPtr )
+   RETURN HB_QStringList():from( Qt_QUiLoader_availableWidgets( ::pPtr ) )
 
 
 METHOD QUiLoader:clearPluginPaths()
@@ -115,19 +147,19 @@ METHOD QUiLoader:clearPluginPaths()
 
 
 METHOD QUiLoader:createAction( pParent, cName )
-   RETURN Qt_QUiLoader_createAction( ::pPtr, hbqt_ptr( pParent ), cName )
+   RETURN HB_QAction():from( Qt_QUiLoader_createAction( ::pPtr, hbqt_ptr( pParent ), cName ) )
 
 
 METHOD QUiLoader:createActionGroup( pParent, cName )
-   RETURN Qt_QUiLoader_createActionGroup( ::pPtr, hbqt_ptr( pParent ), cName )
+   RETURN HB_QActionGroup():from( Qt_QUiLoader_createActionGroup( ::pPtr, hbqt_ptr( pParent ), cName ) )
 
 
 METHOD QUiLoader:createLayout( cClassName, pParent, cName )
-   RETURN Qt_QUiLoader_createLayout( ::pPtr, cClassName, hbqt_ptr( pParent ), cName )
+   RETURN HB_QLayout():from( Qt_QUiLoader_createLayout( ::pPtr, cClassName, hbqt_ptr( pParent ), cName ) )
 
 
 METHOD QUiLoader:createWidget( cClassName, pParent, cName )
-   RETURN Qt_QUiLoader_createWidget( ::pPtr, cClassName, hbqt_ptr( pParent ), cName )
+   RETURN HB_QWidget():from( Qt_QUiLoader_createWidget( ::pPtr, cClassName, hbqt_ptr( pParent ), cName ) )
 
 
 METHOD QUiLoader:isLanguageChangeEnabled()
@@ -135,11 +167,11 @@ METHOD QUiLoader:isLanguageChangeEnabled()
 
 
 METHOD QUiLoader:load( pDevice, pParentWidget )
-   RETURN Qt_QUiLoader_load( ::pPtr, hbqt_ptr( pDevice ), hbqt_ptr( pParentWidget ) )
+   RETURN HB_QWidget():from( Qt_QUiLoader_load( ::pPtr, hbqt_ptr( pDevice ), hbqt_ptr( pParentWidget ) ) )
 
 
 METHOD QUiLoader:pluginPaths()
-   RETURN Qt_QUiLoader_pluginPaths( ::pPtr )
+   RETURN HB_QStringList():from( Qt_QUiLoader_pluginPaths( ::pPtr ) )
 
 
 METHOD QUiLoader:setLanguageChangeEnabled( lEnabled )
@@ -151,5 +183,5 @@ METHOD QUiLoader:setWorkingDirectory( pDir )
 
 
 METHOD QUiLoader:workingDirectory()
-   RETURN Qt_QUiLoader_workingDirectory( ::pPtr )
+   RETURN HB_QDir():from( Qt_QUiLoader_workingDirectory( ::pPtr ) )
 

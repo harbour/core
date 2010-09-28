@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QUiLoader( ... )
  *     QUiLoader():from( pPtr_OR_oObj_of_type_QUiLoader )
- *     QUiLoader():configure( pPtr_OR_oObj_of_type_QUiLoader )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -60,6 +60,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QUiLoader.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QAbstractTextDocumentLayout( ... )
  *     QAbstractTextDocumentLayout():from( pPtr_OR_oObj_of_type_QAbstractTextDocumentLayout )
- *     QAbstractTextDocumentLayout():configure( pPtr_OR_oObj_of_type_QAbstractTextDocumentLayout )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -56,6 +56,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QAbstractTextDocumentLayout.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

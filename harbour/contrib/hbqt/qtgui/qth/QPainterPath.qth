@@ -104,29 +104,9 @@ QRectF boundingRect () const
 void closeSubpath ()
 void connectPath ( const QPainterPath & path )
 
-void contains ( ... ){
-   QPainterPath * p = hbqt_par_QPainterPath( 1 );
-   if( p && hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-   {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-
-      if( q->type == HBQT_TYPE_QPointF )
-      {
-         ( p )->contains( *hbqt_par_QPointF( 2 ) );
-      }
-      else if( q->type == HBQT_TYPE_QRectF )
-      {
-         ( p )->contains( *hbqt_par_QRectF( 2 ) );
-      }
-      else if( q->type == HBQT_TYPE_QPainterPath )
-      {
-         ( p )->contains( *hbqt_par_QPainterPath( 2 ) );
-      }
-   }
-}
-//bool contains ( const QPointF & point ) const
-//bool contains ( const QRectF & rectangle ) const
-//bool contains ( const QPainterPath & p ) const
+bool contains ( const QPointF & point ) const
+bool contains ( const QRectF & rectangle ) const
+bool contains ( const QPainterPath & p ) const
 
 QRectF controlPointRect () const
 void cubicTo ( const QPointF & c1, const QPointF & c2, const QPointF & endPoint )
@@ -137,24 +117,8 @@ int elementCount () const
 Qt::FillRule fillRule () const
 QPainterPath intersected ( const QPainterPath & p ) const
 
-void intersects ( ... ){
-   QPainterPath * p = hbqt_par_QPainterPath( 1 );
-   if( p && hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
-   {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-
-      if( q->type == HBQT_TYPE_QRectF )
-      {
-         ( p )->intersects( *hbqt_par_QRectF( 2 ) );
-      }
-      else if( q->type == HBQT_TYPE_QPainterPath )
-      {
-         ( p )->intersects( *hbqt_par_QPainterPath( 2 ) );
-      }
-   }
-}
-//bool intersects ( const QRectF & rectangle ) const
-//bool intersects ( const QPainterPath & p ) const
+bool intersects ( const QRectF & rectangle ) const
+bool intersects ( const QPainterPath & p ) const
 
 bool isEmpty () const
 qreal length () const

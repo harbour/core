@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -121,38 +153,29 @@ METHOD QWebFrame:new( ... )
 
 
 METHOD QWebFrame:addToJavaScriptWindowObject( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 3
+   SWITCH PCount()
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "N"
-                // void addToJavaScriptWindowObject ( const QString & name, QObject * object, QScriptEngine::ValueOwnership own )
-                // C c QString, PO p QObject, N n QScriptEngine::ValueOwnership
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
          RETURN Qt_QWebFrame_addToJavaScriptWindowObject_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO"
-                // void addToJavaScriptWindowObject ( const QString & name, QObject * object )
-                // C c QString, PO p QObject
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
          RETURN Qt_QWebFrame_addToJavaScriptWindowObject( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWebFrame:childFrames()
-   RETURN Qt_QWebFrame_childFrames( ::pPtr )
+   RETURN HB_QList():from( Qt_QWebFrame_childFrames( ::pPtr ) )
 
 
 METHOD QWebFrame:contentsSize()
-   RETURN Qt_QWebFrame_contentsSize( ::pPtr )
+   RETURN HB_QSize():from( Qt_QWebFrame_contentsSize( ::pPtr ) )
 
 
 METHOD QWebFrame:frameName()
@@ -160,15 +183,15 @@ METHOD QWebFrame:frameName()
 
 
 METHOD QWebFrame:geometry()
-   RETURN Qt_QWebFrame_geometry( ::pPtr )
+   RETURN HB_QRect():from( Qt_QWebFrame_geometry( ::pPtr ) )
 
 
 METHOD QWebFrame:hitTestContent( pPos )
-   RETURN Qt_QWebFrame_hitTestContent( ::pPtr, hbqt_ptr( pPos ) )
+   RETURN HB_QWebHitTestResult():from( Qt_QWebFrame_hitTestContent( ::pPtr, hbqt_ptr( pPos ) ) )
 
 
 METHOD QWebFrame:icon()
-   RETURN Qt_QWebFrame_icon( ::pPtr )
+   RETURN HB_QIcon():from( Qt_QWebFrame_icon( ::pPtr ) )
 
 
 METHOD QWebFrame:load( pUrl )
@@ -176,42 +199,33 @@ METHOD QWebFrame:load( pUrl )
 
 
 METHOD QWebFrame:page()
-   RETURN Qt_QWebFrame_page( ::pPtr )
+   RETURN HB_QWebPage():from( Qt_QWebFrame_page( ::pPtr ) )
 
 
 METHOD QWebFrame:parentFrame()
-   RETURN Qt_QWebFrame_parentFrame( ::pPtr )
+   RETURN HB_QWebFrame():from( Qt_QWebFrame_parentFrame( ::pPtr ) )
 
 
 METHOD QWebFrame:pos()
-   RETURN Qt_QWebFrame_pos( ::pPtr )
+   RETURN HB_QPoint():from( Qt_QWebFrame_pos( ::pPtr ) )
 
 
 METHOD QWebFrame:render( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
-                // void render ( QPainter * painter, const QRegion & clip )
-                // PO p QPainter, PO p QRegion
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
          RETURN Qt_QWebFrame_render( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void render ( QPainter * painter )
-                // PO p QPainter
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QWebFrame_render_1( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWebFrame:renderTreeDump()
@@ -239,11 +253,11 @@ METHOD QWebFrame:scrollBarValue( nOrientation )
 
 
 METHOD QWebFrame:scrollPosition()
-   RETURN Qt_QWebFrame_scrollPosition( ::pPtr )
+   RETURN HB_QPoint():from( Qt_QWebFrame_scrollPosition( ::pPtr ) )
 
 
 METHOD QWebFrame:securityOrigin()
-   RETURN Qt_QWebFrame_securityOrigin( ::pPtr )
+   RETURN HB_QWebSecurityOrigin():from( Qt_QWebFrame_securityOrigin( ::pPtr ) )
 
 
 METHOD QWebFrame:setContent( pData, cMimeType, pBaseUrl )
@@ -295,7 +309,7 @@ METHOD QWebFrame:toPlainText()
 
 
 METHOD QWebFrame:url()
-   RETURN Qt_QWebFrame_url( ::pPtr )
+   RETURN HB_QUrl():from( Qt_QWebFrame_url( ::pPtr ) )
 
 
 METHOD QWebFrame:zoomFactor()
@@ -303,7 +317,7 @@ METHOD QWebFrame:zoomFactor()
 
 
 METHOD QWebFrame:evaluateJavaScript( cScriptSource )
-   RETURN Qt_QWebFrame_evaluateJavaScript( ::pPtr, cScriptSource )
+   RETURN HB_QVariant():from( Qt_QWebFrame_evaluateJavaScript( ::pPtr, cScriptSource ) )
 
 
 METHOD QWebFrame:print( pPrinter )

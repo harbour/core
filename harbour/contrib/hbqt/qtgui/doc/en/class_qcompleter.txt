@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QCompleter( ... )
  *     QCompleter():from( pPtr_OR_oObj_of_type_QCompleter )
- *     QCompleter():configure( pPtr_OR_oObj_of_type_QCompleter )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -75,6 +75,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QCompleter.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -176,15 +208,15 @@ METHOD QApplication:styleSheet()
 
 
 METHOD QApplication:activeModalWidget()
-   RETURN Qt_QApplication_activeModalWidget( ::pPtr )
+   RETURN HB_QWidget():from( Qt_QApplication_activeModalWidget( ::pPtr ) )
 
 
 METHOD QApplication:activePopupWidget()
-   RETURN Qt_QApplication_activePopupWidget( ::pPtr )
+   RETURN HB_QWidget():from( Qt_QApplication_activePopupWidget( ::pPtr ) )
 
 
 METHOD QApplication:activeWindow()
-   RETURN Qt_QApplication_activeWindow( ::pPtr )
+   RETURN HB_QWidget():from( Qt_QApplication_activeWindow( ::pPtr ) )
 
 
 METHOD QApplication:alert( pWidget, nMsec )
@@ -200,7 +232,7 @@ METHOD QApplication:changeOverrideCursor( pCursor )
 
 
 METHOD QApplication:clipboard()
-   RETURN Qt_QApplication_clipboard( ::pPtr )
+   RETURN HB_QClipboard():from( Qt_QApplication_clipboard( ::pPtr ) )
 
 
 METHOD QApplication:colorSpec()
@@ -212,7 +244,7 @@ METHOD QApplication:cursorFlashTime()
 
 
 METHOD QApplication:desktop()
-   RETURN Qt_QApplication_desktop( ::pPtr )
+   RETURN HB_QDesktopWidget():from( Qt_QApplication_desktop( ::pPtr ) )
 
 
 METHOD QApplication:desktopSettingsAware()
@@ -228,41 +260,33 @@ METHOD QApplication:exec()
 
 
 METHOD QApplication:focusWidget()
-   RETURN Qt_QApplication_focusWidget( ::pPtr )
+   RETURN HB_QWidget():from( Qt_QApplication_focusWidget( ::pPtr ) )
 
 
 METHOD QApplication:font( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // QFont font ( const QWidget * widget )
-                // PO p QWidget
-         RETURN QFont():from( Qt_QApplication_font_1( ::pPtr, ... ) )
-                // QFont font ( const char * className )
-                // PO p char
-         // RETURN QFont():from( Qt_QApplication_font_2( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QWIDGET"
+            RETURN HB_QFont():from( Qt_QApplication_font_1( ::pPtr, ... ) )
+         // RETURN HB_QFont():from( Qt_QApplication_font_2( ::pPtr, ... ) )
+         ENDSWITCH
       ENDCASE
-   CASE nP == 0
-             // QFont font ()
-      RETURN QFont():from( Qt_QApplication_font( ::pPtr, ... ) )
-   ENDCASE
-   RETURN NIL
+      EXIT
+   CASE 0
+      RETURN HB_QFont():from( Qt_QApplication_font( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QApplication:fontMetrics()
-   RETURN Qt_QApplication_fontMetrics( ::pPtr )
+   RETURN HB_QFontMetrics():from( Qt_QApplication_fontMetrics( ::pPtr ) )
 
 
 METHOD QApplication:globalStrut()
-   RETURN Qt_QApplication_globalStrut( ::pPtr )
+   RETURN HB_QSize():from( Qt_QApplication_globalStrut( ::pPtr ) )
 
 
 METHOD QApplication:isEffectEnabled( nEffect )
@@ -286,7 +310,7 @@ METHOD QApplication:keyboardInputInterval()
 
 
 METHOD QApplication:keyboardInputLocale()
-   RETURN Qt_QApplication_keyboardInputLocale( ::pPtr )
+   RETURN HB_QLocale():from( Qt_QApplication_keyboardInputLocale( ::pPtr ) )
 
 
 METHOD QApplication:keyboardModifiers()
@@ -302,33 +326,25 @@ METHOD QApplication:mouseButtons()
 
 
 METHOD QApplication:overrideCursor()
-   RETURN Qt_QApplication_overrideCursor( ::pPtr )
+   RETURN HB_QCursor():from( Qt_QApplication_overrideCursor( ::pPtr ) )
 
 
 METHOD QApplication:palette( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // QPalette palette ( const QWidget * widget )
-                // PO p QWidget
-         RETURN QPalette():from( Qt_QApplication_palette_1( ::pPtr, ... ) )
-                // QPalette palette ( const char * className )
-                // PO p char
-         // RETURN QPalette():from( Qt_QApplication_palette_2( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QWIDGET"
+            RETURN HB_QPalette():from( Qt_QApplication_palette_1( ::pPtr, ... ) )
+         // RETURN HB_QPalette():from( Qt_QApplication_palette_2( ::pPtr, ... ) )
+         ENDSWITCH
       ENDCASE
-   CASE nP == 0
-             // QPalette palette ()
-      RETURN QPalette():from( Qt_QApplication_palette( ::pPtr, ... ) )
-   ENDCASE
-   RETURN NIL
+      EXIT
+   CASE 0
+      RETURN HB_QPalette():from( Qt_QApplication_palette( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QApplication:quitOnLastWindowClosed()
@@ -404,27 +420,17 @@ METHOD QApplication:setStartDragTime( nMs )
 
 
 METHOD QApplication:setStyle( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // QStyle * setStyle ( const QString & style )
-                // C c QString
-         RETURN QStyle():from( Qt_QApplication_setStyle_1( ::pPtr, ... ) )
-      CASE aV[ 1 ] $ "PO"
-                // void setStyle ( QStyle * style )
-                // PO p QStyle
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QStyle():from( Qt_QApplication_setStyle_1( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QApplication_setStyle( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QApplication:setWheelScrollLines( nInt )
@@ -444,7 +450,7 @@ METHOD QApplication:startDragTime()
 
 
 METHOD QApplication:style()
-   RETURN Qt_QApplication_style( ::pPtr )
+   RETURN HB_QStyle():from( Qt_QApplication_style( ::pPtr ) )
 
 
 METHOD QApplication:syncX()
@@ -452,30 +458,21 @@ METHOD QApplication:syncX()
 
 
 METHOD QApplication:topLevelAt( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // QWidget * topLevelAt ( int x, int y )
-                // N n int, N n int
-         RETURN QWidget():from( Qt_QApplication_topLevelAt_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QWidget():from( Qt_QApplication_topLevelAt_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // QWidget * topLevelAt ( const QPoint & point )
-                // PO p QPoint
-         RETURN QWidget():from( Qt_QApplication_topLevelAt( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QWidget():from( Qt_QApplication_topLevelAt( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QApplication:type()
@@ -487,34 +484,25 @@ METHOD QApplication:wheelScrollLines()
 
 
 METHOD QApplication:widgetAt( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // QWidget * widgetAt ( int x, int y )
-                // N n int, N n int
-         RETURN QWidget():from( Qt_QApplication_widgetAt_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QWidget():from( Qt_QApplication_widgetAt_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // QWidget * widgetAt ( const QPoint & point )
-                // PO p QPoint
-         RETURN QWidget():from( Qt_QApplication_widgetAt( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QWidget():from( Qt_QApplication_widgetAt( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QApplication:windowIcon()
-   RETURN Qt_QApplication_windowIcon( ::pPtr )
+   RETURN HB_QIcon():from( Qt_QApplication_windowIcon( ::pPtr ) )
 
 
 METHOD QApplication:aboutQt()

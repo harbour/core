@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QsciLexer( ... )
  *     QsciLexer():from( pPtr_OR_oObj_of_type_QsciLexer )
- *     QsciLexer():configure( pPtr_OR_oObj_of_type_QsciLexer )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QTimer( ... )
  *     QTimer():from( pPtr_OR_oObj_of_type_QTimer )
- *     QTimer():configure( pPtr_OR_oObj_of_type_QTimer )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -56,6 +56,6 @@
  *     C++ wrappers  : contrib/hbqt/qtcore/QTimer.cpp
  *     Library       : hbqtcore
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

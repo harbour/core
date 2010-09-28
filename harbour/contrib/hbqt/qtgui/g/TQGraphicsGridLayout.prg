@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -125,44 +157,33 @@ METHOD QGraphicsGridLayout:new( ... )
 
 
 METHOD QGraphicsGridLayout:addItem( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 6
+   SWITCH PCount()
+   CASE 6
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N" .AND. aV[ 6 ] $ "N"
-                // void addItem ( QGraphicsLayoutItem * item, int row, int column, int rowSpan, int columnSpan, Qt::Alignment alignment = 0 )
-                // PO p QGraphicsLayoutItem, N n int, N n int, N n int, N n int, N n Qt::Alignment
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) ) .AND. hb_isNumeric( hb_pvalue( 6 ) )
          RETURN Qt_QGraphicsGridLayout_addItem( ::pPtr, ... )
       ENDCASE
-   CASE nP == 5
+      EXIT
+   CASE 5
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N"
-                // void addItem ( QGraphicsLayoutItem * item, int row, int column, int rowSpan, int columnSpan, Qt::Alignment alignment = 0 )
-                // PO p QGraphicsLayoutItem, N n int, N n int, N n int, N n int, N n Qt::Alignment
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
          RETURN Qt_QGraphicsGridLayout_addItem( ::pPtr, ... )
       ENDCASE
-   CASE nP == 4
+      EXIT
+   CASE 4
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
-                // void addItem ( QGraphicsLayoutItem * item, int row, int column, Qt::Alignment alignment = 0 )
-                // PO p QGraphicsLayoutItem, N n int, N n int, N n Qt::Alignment
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
          RETURN Qt_QGraphicsGridLayout_addItem_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 3
+      EXIT
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
-                // void addItem ( QGraphicsLayoutItem * item, int row, int column, Qt::Alignment alignment = 0 )
-                // PO p QGraphicsLayoutItem, N n int, N n int, N n Qt::Alignment
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
          RETURN Qt_QGraphicsGridLayout_addItem_1( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsGridLayout:alignment( pItem )
@@ -206,30 +227,21 @@ METHOD QGraphicsGridLayout:horizontalSpacing()
 
 
 METHOD QGraphicsGridLayout:itemAt( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // QGraphicsLayoutItem * itemAt ( int row, int column ) const
-                // N n int, N n int
-         RETURN QGraphicsLayoutItem():from( Qt_QGraphicsGridLayout_itemAt( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QGraphicsLayoutItem():from( Qt_QGraphicsGridLayout_itemAt( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // virtual QGraphicsLayoutItem * itemAt ( int index ) const
-                // N n int
-         RETURN QGraphicsLayoutItem():from( Qt_QGraphicsGridLayout_itemAt_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QGraphicsLayoutItem():from( Qt_QGraphicsGridLayout_itemAt_1( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsGridLayout:removeAt( nIndex )

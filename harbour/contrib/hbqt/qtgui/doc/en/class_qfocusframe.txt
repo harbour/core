@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QFocusFrame( ... )
  *     QFocusFrame():from( pPtr_OR_oObj_of_type_QFocusFrame )
- *     QFocusFrame():configure( pPtr_OR_oObj_of_type_QFocusFrame )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -48,6 +48,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QFocusFrame.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QWidget
+ *     QWidget()
  *  $END$
  */

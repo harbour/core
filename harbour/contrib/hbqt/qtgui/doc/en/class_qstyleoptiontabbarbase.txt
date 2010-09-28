@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QStyleOptionTabBarBase( ... )
  *     QStyleOptionTabBarBase():from( pPtr_OR_oObj_of_type_QStyleOptionTabBarBase )
- *     QStyleOptionTabBarBase():configure( pPtr_OR_oObj_of_type_QStyleOptionTabBarBase )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -49,6 +49,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionTabBarBase.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QStyleOption
+ *     QStyleOption()
  *  $END$
  */

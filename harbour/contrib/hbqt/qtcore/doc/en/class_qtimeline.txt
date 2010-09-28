@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QTimeLine( ... )
  *     QTimeLine():from( pPtr_OR_oObj_of_type_QTimeLine )
- *     QTimeLine():configure( pPtr_OR_oObj_of_type_QTimeLine )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -73,6 +73,6 @@
  *     C++ wrappers  : contrib/hbqt/qtcore/QTimeLine.cpp
  *     Library       : hbqtcore
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

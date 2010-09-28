@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QStyleOptionToolButton( ... )
  *     QStyleOptionToolButton():from( pPtr_OR_oObj_of_type_QStyleOptionToolButton )
- *     QStyleOptionToolButton():configure( pPtr_OR_oObj_of_type_QStyleOptionToolButton )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -54,6 +54,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionToolButton.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QStyleOptionComplex
+ *     QStyleOptionComplex()
  *  $END$
  */

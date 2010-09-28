@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QsciLexerFlagship( ... )
  *     QsciLexerFlagship():from( pPtr_OR_oObj_of_type_QsciLexerFlagship )
- *     QsciLexerFlagship():configure( pPtr_OR_oObj_of_type_QsciLexerFlagship )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -73,6 +73,6 @@
  *     C++ wrappers  : contrib/hbqt/qscintilla/QsciLexerFlagship.cpp
  *     Library       : hbqscintilla
  *  $SEEALSO$
- *     QsciLexer
+ *     QsciLexer()
  *  $END$
  */

@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QStyleOptionGraphicsItem( ... )
  *     QStyleOptionGraphicsItem():from( pPtr_OR_oObj_of_type_QStyleOptionGraphicsItem )
- *     QStyleOptionGraphicsItem():configure( pPtr_OR_oObj_of_type_QStyleOptionGraphicsItem )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -49,6 +49,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionGraphicsItem.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QStyleOption
+ *     QStyleOption()
  *  $END$
  */

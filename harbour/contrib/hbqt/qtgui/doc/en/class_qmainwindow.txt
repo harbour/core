@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QMainWindow( ... )
  *     QMainWindow():from( pPtr_OR_oObj_of_type_QMainWindow )
- *     QMainWindow():configure( pPtr_OR_oObj_of_type_QMainWindow )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -95,6 +95,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QMainWindow.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QWidget
+ *     QWidget()
  *  $END$
  */

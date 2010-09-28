@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QStyleOptionFocusRect( ... )
  *     QStyleOptionFocusRect():from( pPtr_OR_oObj_of_type_QStyleOptionFocusRect )
- *     QStyleOptionFocusRect():configure( pPtr_OR_oObj_of_type_QStyleOptionFocusRect )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -47,6 +47,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionFocusRect.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QStyleOption
+ *     QStyleOption()
  *  $END$
  */

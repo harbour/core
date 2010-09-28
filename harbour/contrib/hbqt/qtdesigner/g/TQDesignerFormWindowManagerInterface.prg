@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -111,91 +143,91 @@ METHOD QDesignerFormWindowManagerInterface:new( ... )
 
 
 METHOD QDesignerFormWindowManagerInterface:actionAdjustSize()
-   RETURN Qt_QDesignerFormWindowManagerInterface_actionAdjustSize( ::pPtr )
+   RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionAdjustSize( ::pPtr ) )
 
 
 METHOD QDesignerFormWindowManagerInterface:actionBreakLayout()
-   RETURN Qt_QDesignerFormWindowManagerInterface_actionBreakLayout( ::pPtr )
+   RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionBreakLayout( ::pPtr ) )
 
 
 METHOD QDesignerFormWindowManagerInterface:actionCopy()
-   RETURN Qt_QDesignerFormWindowManagerInterface_actionCopy( ::pPtr )
+   RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionCopy( ::pPtr ) )
 
 
 METHOD QDesignerFormWindowManagerInterface:actionCut()
-   RETURN Qt_QDesignerFormWindowManagerInterface_actionCut( ::pPtr )
+   RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionCut( ::pPtr ) )
 
 
 METHOD QDesignerFormWindowManagerInterface:actionDelete()
-   RETURN Qt_QDesignerFormWindowManagerInterface_actionDelete( ::pPtr )
+   RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionDelete( ::pPtr ) )
 
 
 METHOD QDesignerFormWindowManagerInterface:actionFormLayout()
-   RETURN Qt_QDesignerFormWindowManagerInterface_actionFormLayout( ::pPtr )
+   RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionFormLayout( ::pPtr ) )
 
 
 METHOD QDesignerFormWindowManagerInterface:actionGridLayout()
-   RETURN Qt_QDesignerFormWindowManagerInterface_actionGridLayout( ::pPtr )
+   RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionGridLayout( ::pPtr ) )
 
 
 METHOD QDesignerFormWindowManagerInterface:actionHorizontalLayout()
-   RETURN Qt_QDesignerFormWindowManagerInterface_actionHorizontalLayout( ::pPtr )
+   RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionHorizontalLayout( ::pPtr ) )
 
 
 METHOD QDesignerFormWindowManagerInterface:actionLower()
-   RETURN Qt_QDesignerFormWindowManagerInterface_actionLower( ::pPtr )
+   RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionLower( ::pPtr ) )
 
 
 METHOD QDesignerFormWindowManagerInterface:actionPaste()
-   RETURN Qt_QDesignerFormWindowManagerInterface_actionPaste( ::pPtr )
+   RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionPaste( ::pPtr ) )
 
 
 METHOD QDesignerFormWindowManagerInterface:actionRaise()
-   RETURN Qt_QDesignerFormWindowManagerInterface_actionRaise( ::pPtr )
+   RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionRaise( ::pPtr ) )
 
 
 METHOD QDesignerFormWindowManagerInterface:actionRedo()
-   RETURN Qt_QDesignerFormWindowManagerInterface_actionRedo( ::pPtr )
+   RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionRedo( ::pPtr ) )
 
 
 METHOD QDesignerFormWindowManagerInterface:actionSelectAll()
-   RETURN Qt_QDesignerFormWindowManagerInterface_actionSelectAll( ::pPtr )
+   RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionSelectAll( ::pPtr ) )
 
 
 METHOD QDesignerFormWindowManagerInterface:actionSimplifyLayout()
-   RETURN Qt_QDesignerFormWindowManagerInterface_actionSimplifyLayout( ::pPtr )
+   RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionSimplifyLayout( ::pPtr ) )
 
 
 METHOD QDesignerFormWindowManagerInterface:actionSplitHorizontal()
-   RETURN Qt_QDesignerFormWindowManagerInterface_actionSplitHorizontal( ::pPtr )
+   RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionSplitHorizontal( ::pPtr ) )
 
 
 METHOD QDesignerFormWindowManagerInterface:actionSplitVertical()
-   RETURN Qt_QDesignerFormWindowManagerInterface_actionSplitVertical( ::pPtr )
+   RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionSplitVertical( ::pPtr ) )
 
 
 METHOD QDesignerFormWindowManagerInterface:actionUndo()
-   RETURN Qt_QDesignerFormWindowManagerInterface_actionUndo( ::pPtr )
+   RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionUndo( ::pPtr ) )
 
 
 METHOD QDesignerFormWindowManagerInterface:actionVerticalLayout()
-   RETURN Qt_QDesignerFormWindowManagerInterface_actionVerticalLayout( ::pPtr )
+   RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionVerticalLayout( ::pPtr ) )
 
 
 METHOD QDesignerFormWindowManagerInterface:activeFormWindow()
-   RETURN Qt_QDesignerFormWindowManagerInterface_activeFormWindow( ::pPtr )
+   RETURN HB_QDesignerFormWindowInterface():from( Qt_QDesignerFormWindowManagerInterface_activeFormWindow( ::pPtr ) )
 
 
 METHOD QDesignerFormWindowManagerInterface:core()
-   RETURN Qt_QDesignerFormWindowManagerInterface_core( ::pPtr )
+   RETURN HB_QDesignerFormEditorInterface():from( Qt_QDesignerFormWindowManagerInterface_core( ::pPtr ) )
 
 
 METHOD QDesignerFormWindowManagerInterface:createFormWindow( pParent, nFlags )
-   RETURN Qt_QDesignerFormWindowManagerInterface_createFormWindow( ::pPtr, hbqt_ptr( pParent ), nFlags )
+   RETURN HB_QDesignerFormWindowInterface():from( Qt_QDesignerFormWindowManagerInterface_createFormWindow( ::pPtr, hbqt_ptr( pParent ), nFlags ) )
 
 
 METHOD QDesignerFormWindowManagerInterface:formWindow( nIndex )
-   RETURN Qt_QDesignerFormWindowManagerInterface_formWindow( ::pPtr, nIndex )
+   RETURN HB_QDesignerFormWindowInterface():from( Qt_QDesignerFormWindowManagerInterface_formWindow( ::pPtr, nIndex ) )
 
 
 METHOD QDesignerFormWindowManagerInterface:formWindowCount()

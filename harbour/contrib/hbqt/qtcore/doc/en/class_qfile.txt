@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QFile( ... )
  *     QFile():from( pPtr_OR_oObj_of_type_QFile )
- *     QFile():configure( pPtr_OR_oObj_of_type_QFile )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -79,6 +79,6 @@
  *     C++ wrappers  : contrib/hbqt/qtcore/QFile.cpp
  *     Library       : hbqtcore
  *  $SEEALSO$
- *     QIODevice
+ *     QIODevice()
  *  $END$
  */

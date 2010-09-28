@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QStyledItemDelegate( ... )
  *     QStyledItemDelegate():from( pPtr_OR_oObj_of_type_QStyledItemDelegate )
- *     QStyledItemDelegate():configure( pPtr_OR_oObj_of_type_QStyledItemDelegate )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

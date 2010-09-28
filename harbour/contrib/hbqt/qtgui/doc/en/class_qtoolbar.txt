@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QToolBar( ... )
  *     QToolBar():from( pPtr_OR_oObj_of_type_QToolBar )
- *     QToolBar():configure( pPtr_OR_oObj_of_type_QToolBar )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -74,6 +74,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QToolBar.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QWidget
+ *     QWidget()
  *  $END$
  */

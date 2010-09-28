@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QGroupBox( ... )
  *     QGroupBox():from( pPtr_OR_oObj_of_type_QGroupBox )
- *     QGroupBox():configure( pPtr_OR_oObj_of_type_QGroupBox )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -56,6 +56,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QGroupBox.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QWidget
+ *     QWidget()
  *  $END$
  */

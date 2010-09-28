@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QTextBoundaryFinder( ... )
  *     QTextBoundaryFinder():from( pPtr_OR_oObj_of_type_QTextBoundaryFinder )
- *     QTextBoundaryFinder():configure( pPtr_OR_oObj_of_type_QTextBoundaryFinder )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

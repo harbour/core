@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QTableWidgetSelectionRange( ... )
  *     QTableWidgetSelectionRange():from( pPtr_OR_oObj_of_type_QTableWidgetSelectionRange )
- *     QTableWidgetSelectionRange():configure( pPtr_OR_oObj_of_type_QTableWidgetSelectionRange )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QObject( ... )
  *     QObject():from( pPtr_OR_oObj_of_type_QObject )
- *     QObject():configure( pPtr_OR_oObj_of_type_QObject )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

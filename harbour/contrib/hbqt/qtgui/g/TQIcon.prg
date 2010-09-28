@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -58,6 +56,40 @@
  *
  */
 /*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
+/*----------------------------------------------------------------------*/
 
 
 #include "hbclass.ch"
@@ -93,7 +125,7 @@ METHOD QIcon:new( ... )
 
 
 METHOD QIcon:actualSize( pSize, nMode, nState )
-   RETURN Qt_QIcon_actualSize( ::pPtr, hbqt_ptr( pSize ), nMode, nState )
+   RETURN HB_QSize():from( Qt_QIcon_actualSize( ::pPtr, hbqt_ptr( pSize ), nMode, nState ) )
 
 
 METHOD QIcon:addFile( cFileName, pSize, nMode, nState )
@@ -105,7 +137,7 @@ METHOD QIcon:addPixmap( pPixmap, nMode, nState )
 
 
 METHOD QIcon:availableSizes( nMode, nState )
-   RETURN Qt_QIcon_availableSizes( ::pPtr, nMode, nState )
+   RETURN HB_QList():from( Qt_QIcon_availableSizes( ::pPtr, nMode, nState ) )
 
 
 METHOD QIcon:cacheKey()
@@ -117,80 +149,57 @@ METHOD QIcon:isNull()
 
 
 METHOD QIcon:paint( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 8
+   SWITCH PCount()
+   CASE 8
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N" .AND. aV[ 6 ] $ "N" .AND. aV[ 7 ] $ "N" .AND. aV[ 8 ] $ "N"
-                // void paint ( QPainter * painter, int x, int y, int w, int h, Qt::Alignment alignment = Qt::AlignCenter, Mode mode = Normal, State state = Off ) const
-                // PO p QPainter, N n int, N n int, N n int, N n int, N n Qt::Alignment, N n QIcon::Mode, N n QIcon::State
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) ) .AND. hb_isNumeric( hb_pvalue( 6 ) ) .AND. hb_isNumeric( hb_pvalue( 7 ) ) .AND. hb_isNumeric( hb_pvalue( 8 ) )
          RETURN Qt_QIcon_paint_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 5
+      EXIT
+   CASE 5
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N"
-                // void paint ( QPainter * painter, int x, int y, int w, int h, Qt::Alignment alignment = Qt::AlignCenter, Mode mode = Normal, State state = Off ) const
-                // PO p QPainter, N n int, N n int, N n int, N n int, N n Qt::Alignment, N n QIcon::Mode, N n QIcon::State
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
          RETURN Qt_QIcon_paint_1( ::pPtr, ... )
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N"
-                // void paint ( QPainter * painter, const QRect & rect, Qt::Alignment alignment = Qt::AlignCenter, Mode mode = Normal, State state = Off ) const
-                // PO p QPainter, PO p QRect, N n Qt::Alignment, N n QIcon::Mode, N n QIcon::State
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
          RETURN Qt_QIcon_paint( ::pPtr, ... )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
-                // void paint ( QPainter * painter, const QRect & rect, Qt::Alignment alignment = Qt::AlignCenter, Mode mode = Normal, State state = Off ) const
-                // PO p QPainter, PO p QRect, N n Qt::Alignment, N n QIcon::Mode, N n QIcon::State
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
          RETURN Qt_QIcon_paint( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QIcon:pixmap( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 4
+   SWITCH PCount()
+   CASE 4
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
-                // QPixmap pixmap ( int w, int h, Mode mode = Normal, State state = Off ) const
-                // N n int, N n int, N n QIcon::Mode, N n QIcon::State
-         RETURN QPixmap():from( Qt_QIcon_pixmap_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN HB_QPixmap():from( Qt_QIcon_pixmap_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 3
+      EXIT
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
-                // QPixmap pixmap ( const QSize & size, Mode mode = Normal, State state = Off ) const
-                // PO p QSize, N n QIcon::Mode, N n QIcon::State
-         RETURN QPixmap():from( Qt_QIcon_pixmap( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN HB_QPixmap():from( Qt_QIcon_pixmap( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // QPixmap pixmap ( int w, int h, Mode mode = Normal, State state = Off ) const
-                // N n int, N n int, N n QIcon::Mode, N n QIcon::State
-         RETURN QPixmap():from( Qt_QIcon_pixmap_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QPixmap():from( Qt_QIcon_pixmap_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // QPixmap pixmap ( const QSize & size, Mode mode = Normal, State state = Off ) const
-                // PO p QSize, N n QIcon::Mode, N n QIcon::State
-         RETURN QPixmap():from( Qt_QIcon_pixmap( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QPixmap():from( Qt_QIcon_pixmap( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

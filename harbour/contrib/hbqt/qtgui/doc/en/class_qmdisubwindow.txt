@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QMdiSubWindow( ... )
  *     QMdiSubWindow():from( pPtr_OR_oObj_of_type_QMdiSubWindow )
- *     QMdiSubWindow():configure( pPtr_OR_oObj_of_type_QMdiSubWindow )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -60,6 +60,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QMdiSubWindow.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QWidget
+ *     QWidget()
  *  $END$
  */

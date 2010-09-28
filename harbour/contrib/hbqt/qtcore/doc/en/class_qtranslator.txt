@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QTranslator( ... )
  *     QTranslator():from( pPtr_OR_oObj_of_type_QTranslator )
- *     QTranslator():configure( pPtr_OR_oObj_of_type_QTranslator )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -50,6 +50,6 @@
  *     C++ wrappers  : contrib/hbqt/qtcore/QTranslator.cpp
  *     Library       : hbqtcore
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

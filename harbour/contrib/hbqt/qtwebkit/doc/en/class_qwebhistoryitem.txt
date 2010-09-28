@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QWebHistoryItem( ... )
  *     QWebHistoryItem():from( pPtr_OR_oObj_of_type_QWebHistoryItem )
- *     QWebHistoryItem():configure( pPtr_OR_oObj_of_type_QWebHistoryItem )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

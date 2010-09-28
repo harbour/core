@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QStringListModel( ... )
  *     QStringListModel():from( pPtr_OR_oObj_of_type_QStringListModel )
- *     QStringListModel():configure( pPtr_OR_oObj_of_type_QStringListModel )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -54,6 +54,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QStringListModel.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QAbstractListModel
+ *     QAbstractListModel()
  *  $END$
  */

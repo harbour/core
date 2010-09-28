@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QValidator( ... )
  *     QValidator():from( pPtr_OR_oObj_of_type_QValidator )
- *     QValidator():configure( pPtr_OR_oObj_of_type_QValidator )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -48,6 +48,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QValidator.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

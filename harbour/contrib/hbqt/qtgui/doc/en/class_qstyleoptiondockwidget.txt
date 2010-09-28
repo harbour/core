@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QStyleOptionDockWidget( ... )
  *     QStyleOptionDockWidget():from( pPtr_OR_oObj_of_type_QStyleOptionDockWidget )
- *     QStyleOptionDockWidget():configure( pPtr_OR_oObj_of_type_QStyleOptionDockWidget )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -50,6 +50,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionDockWidget.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QStyleOption
+ *     QStyleOption()
  *  $END$
  */

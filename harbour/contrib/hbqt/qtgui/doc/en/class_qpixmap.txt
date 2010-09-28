@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QPixmap( ... )
  *     QPixmap():from( pPtr_OR_oObj_of_type_QPixmap )
- *     QPixmap():configure( pPtr_OR_oObj_of_type_QPixmap )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -78,6 +78,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QPixmap.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QPaintDevice
+ *     QPaintDevice()
  *  $END$
  */

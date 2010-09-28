@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QFileDialog( ... )
  *     QFileDialog():from( pPtr_OR_oObj_of_type_QFileDialog )
- *     QFileDialog():configure( pPtr_OR_oObj_of_type_QFileDialog )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -92,6 +92,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QFileDialog.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QDialog
+ *     QDialog()
  *  $END$
  */

@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QsciLexerCPP( ... )
  *     QsciLexerCPP():from( pPtr_OR_oObj_of_type_QsciLexerCPP )
- *     QsciLexerCPP():configure( pPtr_OR_oObj_of_type_QsciLexerCPP )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -73,6 +73,6 @@
  *     C++ wrappers  : contrib/hbqt/qscintilla/QsciLexerCPP.cpp
  *     Library       : hbqscintilla
  *  $SEEALSO$
- *     QsciLexer
+ *     QsciLexer()
  *  $END$
  */

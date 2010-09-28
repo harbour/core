@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QStyleOptionGroupBox( ... )
  *     QStyleOptionGroupBox():from( pPtr_OR_oObj_of_type_QStyleOptionGroupBox )
- *     QStyleOptionGroupBox():configure( pPtr_OR_oObj_of_type_QStyleOptionGroupBox )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -52,6 +52,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionGroupBox.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QStyleOptionComplex
+ *     QStyleOptionComplex()
  *  $END$
  */

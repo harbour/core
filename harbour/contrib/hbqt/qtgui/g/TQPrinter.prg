@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -209,76 +241,49 @@ METHOD QPrinter:pageOrder()
 
 
 METHOD QPrinter:pageRect( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // QRectF pageRect ( Unit unit ) const
-                // N n QPrinter::Unit
-         RETURN QRectF():from( Qt_QPrinter_pageRect_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QRectF():from( Qt_QPrinter_pageRect_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 0
-             // QRect pageRect () const
-      RETURN QRect():from( Qt_QPrinter_pageRect( ::pPtr, ... ) )
-   ENDCASE
-   RETURN NIL
+      EXIT
+   CASE 0
+      RETURN HB_QRect():from( Qt_QPrinter_pageRect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPrinter:paintEngine()
-   RETURN Qt_QPrinter_paintEngine( ::pPtr )
+   RETURN HB_QPaintEngine():from( Qt_QPrinter_paintEngine( ::pPtr ) )
 
 
 METHOD QPrinter:paperRect( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // QRectF paperRect ( Unit unit ) const
-                // N n QPrinter::Unit
-         RETURN QRectF():from( Qt_QPrinter_paperRect_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QRectF():from( Qt_QPrinter_paperRect_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 0
-             // QRect paperRect () const
-      RETURN QRect():from( Qt_QPrinter_paperRect( ::pPtr, ... ) )
-   ENDCASE
-   RETURN NIL
+      EXIT
+   CASE 0
+      RETURN HB_QRect():from( Qt_QPrinter_paperRect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPrinter:paperSize( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // QSizeF paperSize ( Unit unit ) const
-                // N n QPrinter::Unit
-         RETURN QSizeF():from( Qt_QPrinter_paperSize_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QSizeF():from( Qt_QPrinter_paperSize_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 0
-             // PaperSize paperSize () const
+      EXIT
+   CASE 0
       RETURN Qt_QPrinter_paperSize( ::pPtr, ... )
-   ENDCASE
-   RETURN NIL
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPrinter:paperSource()
@@ -286,7 +291,7 @@ METHOD QPrinter:paperSource()
 
 
 METHOD QPrinter:printEngine()
-   RETURN Qt_QPrinter_printEngine( ::pPtr )
+   RETURN HB_QPrintEngine():from( Qt_QPrinter_printEngine( ::pPtr ) )
 
 
 METHOD QPrinter:printProgram()
@@ -370,30 +375,21 @@ METHOD QPrinter:setPageOrder( nPageOrder )
 
 
 METHOD QPrinter:setPaperSize( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
-                // void setPaperSize ( const QSizeF & paperSize, Unit unit )
-                // PO p QSizeF, N n QPrinter::Unit
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QPrinter_setPaperSize_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // void setPaperSize ( PaperSize newPaperSize )
-                // N n QPrinter::PaperSize
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
          RETURN Qt_QPrinter_setPaperSize( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPrinter:setPaperSource( nSource )
@@ -417,7 +413,7 @@ METHOD QPrinter:setResolution( nDpi )
 
 
 METHOD QPrinter:supportedResolutions()
-   RETURN Qt_QPrinter_supportedResolutions( ::pPtr )
+   RETURN HB_QList():from( Qt_QPrinter_supportedResolutions( ::pPtr ) )
 
 
 METHOD QPrinter:toPage()

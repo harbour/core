@@ -53,6 +53,7 @@ extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QContextMenuEvent );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QCursor );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QDateEdit );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QDateTimeEdit );
+extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QDesktopServices );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QDesktopWidget );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QDial );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QDialog );
@@ -314,6 +315,7 @@ extern HB_EXPORT void * hbqt_gcAllocate_QContextMenuEvent( void * pObj, bool bNe
 extern HB_EXPORT void * hbqt_gcAllocate_QCursor( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QDateEdit( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QDateTimeEdit( void * pObj, bool bNew );
+extern HB_EXPORT void * hbqt_gcAllocate_QDesktopServices( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QDesktopWidget( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QDial( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QDialog( void * pObj, bool bNew );
@@ -577,6 +579,7 @@ HB_EXTERN_END
 #define hbqt_par_QCursor( n )                                   ( ( QCursor                                     * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QDateEdit( n )                                 ( ( QDateEdit                                   * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QDateTimeEdit( n )                             ( ( QDateTimeEdit                               * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QDesktopServices( n )                          ( ( QDesktopServices                            * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QDesktopWidget( n )                            ( ( QDesktopWidget                              * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QDial( n )                                     ( ( QDial                                       * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QDialog( n )                                   ( ( QDialog                                     * ) hbqt_gcpointer( n ) )
@@ -838,6 +841,7 @@ HB_EXTERN_END
 #define HBQT_TYPE_QCursor                                       0x0C144DE3
 #define HBQT_TYPE_QDateEdit                                     0xA8394641
 #define HBQT_TYPE_QDateTimeEdit                                 0xB7E6B53F
+#define HBQT_TYPE_QDesktopServices                              0xD90AA1BF
 #define HBQT_TYPE_QDesktopWidget                                0x511C93FC
 #define HBQT_TYPE_QDial                                         0x304587E9
 #define HBQT_TYPE_QDialog                                       0x8C0AFF0F

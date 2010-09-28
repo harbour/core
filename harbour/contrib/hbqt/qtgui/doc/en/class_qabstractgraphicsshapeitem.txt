@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QAbstractGraphicsShapeItem( ... )
  *     QAbstractGraphicsShapeItem():from( pPtr_OR_oObj_of_type_QAbstractGraphicsShapeItem )
- *     QAbstractGraphicsShapeItem():configure( pPtr_OR_oObj_of_type_QAbstractGraphicsShapeItem )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -50,6 +50,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QAbstractGraphicsShapeItem.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QGraphicsItem
+ *     QGraphicsItem()
  *  $END$
  */

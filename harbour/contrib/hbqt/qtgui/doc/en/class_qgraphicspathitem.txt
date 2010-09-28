@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QGraphicsPathItem( ... )
  *     QGraphicsPathItem():from( pPtr_OR_oObj_of_type_QGraphicsPathItem )
- *     QGraphicsPathItem():configure( pPtr_OR_oObj_of_type_QGraphicsPathItem )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -48,6 +48,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsPathItem.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QAbstractGraphicsShapeItem
+ *     QAbstractGraphicsShapeItem()
  *  $END$
  */

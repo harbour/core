@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QGraphicsSceneMoveEvent( ... )
  *     QGraphicsSceneMoveEvent():from( pPtr_OR_oObj_of_type_QGraphicsSceneMoveEvent )
- *     QGraphicsSceneMoveEvent():configure( pPtr_OR_oObj_of_type_QGraphicsSceneMoveEvent )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -48,6 +48,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsSceneMoveEvent.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QGraphicsSceneEvent
+ *     QGraphicsSceneEvent()
  *  $END$
  */

@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QDesktopWidget( ... )
  *     QDesktopWidget():from( pPtr_OR_oObj_of_type_QDesktopWidget )
- *     QDesktopWidget():configure( pPtr_OR_oObj_of_type_QDesktopWidget )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -58,6 +58,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QDesktopWidget.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QWidget
+ *     QWidget()
  *  $END$
  */

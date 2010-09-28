@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -116,50 +148,41 @@ METHOD QPalette:new( ... )
 
 
 METHOD QPalette:alternateBase()
-   RETURN Qt_QPalette_alternateBase( ::pPtr )
+   RETURN HB_QBrush():from( Qt_QPalette_alternateBase( ::pPtr ) )
 
 
 METHOD QPalette:base()
-   RETURN Qt_QPalette_base( ::pPtr )
+   RETURN HB_QBrush():from( Qt_QPalette_base( ::pPtr ) )
 
 
 METHOD QPalette:brightText()
-   RETURN Qt_QPalette_brightText( ::pPtr )
+   RETURN HB_QBrush():from( Qt_QPalette_brightText( ::pPtr ) )
 
 
 METHOD QPalette:brush( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // const QBrush & brush ( ColorGroup group, ColorRole role ) const
-                // N n QPalette::ColorGroup, N n QPalette::ColorRole
-         RETURN QBrush():from( Qt_QPalette_brush( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QBrush():from( Qt_QPalette_brush( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // const QBrush & brush ( ColorRole role ) const
-                // N n QPalette::ColorRole
-         RETURN QBrush():from( Qt_QPalette_brush_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QBrush():from( Qt_QPalette_brush_1( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPalette:button()
-   RETURN Qt_QPalette_button( ::pPtr )
+   RETURN HB_QBrush():from( Qt_QPalette_button( ::pPtr ) )
 
 
 METHOD QPalette:buttonText()
-   RETURN Qt_QPalette_buttonText( ::pPtr )
+   RETURN HB_QBrush():from( Qt_QPalette_buttonText( ::pPtr ) )
 
 
 METHOD QPalette:cacheKey()
@@ -167,30 +190,21 @@ METHOD QPalette:cacheKey()
 
 
 METHOD QPalette:color( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // const QColor & color ( ColorGroup group, ColorRole role ) const
-                // N n QPalette::ColorGroup, N n QPalette::ColorRole
-         RETURN QColor():from( Qt_QPalette_color( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QColor():from( Qt_QPalette_color( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // const QColor & color ( ColorRole role ) const
-                // N n QPalette::ColorRole
-         RETURN QColor():from( Qt_QPalette_color_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QColor():from( Qt_QPalette_color_1( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPalette:currentColorGroup()
@@ -198,15 +212,15 @@ METHOD QPalette:currentColorGroup()
 
 
 METHOD QPalette:dark()
-   RETURN Qt_QPalette_dark( ::pPtr )
+   RETURN HB_QBrush():from( Qt_QPalette_dark( ::pPtr ) )
 
 
 METHOD QPalette:highlight()
-   RETURN Qt_QPalette_highlight( ::pPtr )
+   RETURN HB_QBrush():from( Qt_QPalette_highlight( ::pPtr ) )
 
 
 METHOD QPalette:highlightedText()
-   RETURN Qt_QPalette_highlightedText( ::pPtr )
+   RETURN HB_QBrush():from( Qt_QPalette_highlightedText( ::pPtr ) )
 
 
 METHOD QPalette:isBrushSet( nCg, nCr )
@@ -222,81 +236,63 @@ METHOD QPalette:isEqual( nCg1, nCg2 )
 
 
 METHOD QPalette:light()
-   RETURN Qt_QPalette_light( ::pPtr )
+   RETURN HB_QBrush():from( Qt_QPalette_light( ::pPtr ) )
 
 
 METHOD QPalette:link()
-   RETURN Qt_QPalette_link( ::pPtr )
+   RETURN HB_QBrush():from( Qt_QPalette_link( ::pPtr ) )
 
 
 METHOD QPalette:linkVisited()
-   RETURN Qt_QPalette_linkVisited( ::pPtr )
+   RETURN HB_QBrush():from( Qt_QPalette_linkVisited( ::pPtr ) )
 
 
 METHOD QPalette:mid()
-   RETURN Qt_QPalette_mid( ::pPtr )
+   RETURN HB_QBrush():from( Qt_QPalette_mid( ::pPtr ) )
 
 
 METHOD QPalette:midlight()
-   RETURN Qt_QPalette_midlight( ::pPtr )
+   RETURN HB_QBrush():from( Qt_QPalette_midlight( ::pPtr ) )
 
 
 METHOD QPalette:resolve( pOther )
-   RETURN Qt_QPalette_resolve( ::pPtr, hbqt_ptr( pOther ) )
+   RETURN HB_QPalette():from( Qt_QPalette_resolve( ::pPtr, hbqt_ptr( pOther ) ) )
 
 
 METHOD QPalette:setBrush( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 3
+   SWITCH PCount()
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "PO"
-                // void setBrush ( ColorGroup group, ColorRole role, const QBrush & brush )
-                // N n QPalette::ColorGroup, N n QPalette::ColorRole, PO p QBrush
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
          RETURN Qt_QPalette_setBrush_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PO"
-                // void setBrush ( ColorRole role, const QBrush & brush )
-                // N n QPalette::ColorRole, PO p QBrush
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
          RETURN Qt_QPalette_setBrush( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPalette:setColor( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 3
+   SWITCH PCount()
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "PO"
-                // void setColor ( ColorGroup group, ColorRole role, const QColor & color )
-                // N n QPalette::ColorGroup, N n QPalette::ColorRole, PO p QColor
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
          RETURN Qt_QPalette_setColor_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PO"
-                // void setColor ( ColorRole role, const QColor & color )
-                // N n QPalette::ColorRole, PO p QColor
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
          RETURN Qt_QPalette_setColor( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPalette:setColorGroup( nCg, pWindowText, pButton, pLight, pDark, pMid, pText, pBright_text, pBase, pWindow )
@@ -308,25 +304,25 @@ METHOD QPalette:setCurrentColorGroup( nCg )
 
 
 METHOD QPalette:shadow()
-   RETURN Qt_QPalette_shadow( ::pPtr )
+   RETURN HB_QBrush():from( Qt_QPalette_shadow( ::pPtr ) )
 
 
 METHOD QPalette:text()
-   RETURN Qt_QPalette_text( ::pPtr )
+   RETURN HB_QBrush():from( Qt_QPalette_text( ::pPtr ) )
 
 
 METHOD QPalette:toolTipBase()
-   RETURN Qt_QPalette_toolTipBase( ::pPtr )
+   RETURN HB_QBrush():from( Qt_QPalette_toolTipBase( ::pPtr ) )
 
 
 METHOD QPalette:toolTipText()
-   RETURN Qt_QPalette_toolTipText( ::pPtr )
+   RETURN HB_QBrush():from( Qt_QPalette_toolTipText( ::pPtr ) )
 
 
 METHOD QPalette:window()
-   RETURN Qt_QPalette_window( ::pPtr )
+   RETURN HB_QBrush():from( Qt_QPalette_window( ::pPtr ) )
 
 
 METHOD QPalette:windowText()
-   RETURN Qt_QPalette_windowText( ::pPtr )
+   RETURN HB_QBrush():from( Qt_QPalette_windowText( ::pPtr ) )
 

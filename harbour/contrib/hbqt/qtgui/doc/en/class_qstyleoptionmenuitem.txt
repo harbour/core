@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QStyleOptionMenuItem( ... )
  *     QStyleOptionMenuItem():from( pPtr_OR_oObj_of_type_QStyleOptionMenuItem )
- *     QStyleOptionMenuItem():configure( pPtr_OR_oObj_of_type_QStyleOptionMenuItem )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -56,6 +56,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionMenuItem.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QStyleOption
+ *     QStyleOption()
  *  $END$
  */

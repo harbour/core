@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -102,43 +134,33 @@ METHOD QTextCodec:new( ... )
 
 
 METHOD QTextCodec:aliases()
-   RETURN Qt_QTextCodec_aliases( ::pPtr )
+   RETURN HB_QList():from( Qt_QTextCodec_aliases( ::pPtr ) )
 
 
 METHOD QTextCodec:canEncode( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // bool canEncode ( const QString & s ) const
-                // C c QString
+      CASE hb_isChar( hb_pvalue( 1 ) )
          RETURN Qt_QTextCodec_canEncode_1( ::pPtr, ... )
-      CASE aV[ 1 ] $ "PO"
-                // bool canEncode ( QChar ch ) const
-                // PO p QChar
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QTextCodec_canEncode( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTextCodec:fromUnicode( cStr )
-   RETURN Qt_QTextCodec_fromUnicode( ::pPtr, cStr )
+   RETURN HB_QByteArray():from( Qt_QTextCodec_fromUnicode( ::pPtr, cStr ) )
 
 
 METHOD QTextCodec:makeDecoder()
-   RETURN Qt_QTextCodec_makeDecoder( ::pPtr )
+   RETURN HB_QTextDecoder():from( Qt_QTextCodec_makeDecoder( ::pPtr ) )
 
 
 METHOD QTextCodec:makeEncoder()
-   RETURN Qt_QTextCodec_makeEncoder( ::pPtr )
+   RETURN HB_QTextEncoder():from( Qt_QTextCodec_makeEncoder( ::pPtr ) )
 
 
 METHOD QTextCodec:mibEnum()
@@ -146,96 +168,73 @@ METHOD QTextCodec:mibEnum()
 
 
 METHOD QTextCodec:name()
-   RETURN Qt_QTextCodec_name( ::pPtr )
+   RETURN HB_QByteArray():from( Qt_QTextCodec_name( ::pPtr ) )
 
 
 METHOD QTextCodec:toUnicode( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // QString toUnicode ( const QByteArray & a ) const
-                // PO p QByteArray
-         RETURN Qt_QTextCodec_toUnicode( ::pPtr, ... )
-                // QString toUnicode ( const char * chars ) const
-                // PO p char
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QBYTEARRAY"
+            RETURN Qt_QTextCodec_toUnicode( ::pPtr, ... )
          // RETURN Qt_QTextCodec_toUnicode_1( ::pPtr, ... )
+         ENDSWITCH
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTextCodec:codecForCStrings()
-   RETURN Qt_QTextCodec_codecForCStrings( ::pPtr )
+   RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForCStrings( ::pPtr ) )
 
 
 METHOD QTextCodec:codecForHtml( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
-                // QTextCodec * codecForHtml ( const QByteArray & ba, QTextCodec * defaultCodec )
-                // PO p QByteArray, PO p QTextCodec
-         RETURN QTextCodec():from( Qt_QTextCodec_codecForHtml( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForHtml( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // QTextCodec * codecForHtml ( const QByteArray & ba )
-                // PO p QByteArray
-         RETURN QTextCodec():from( Qt_QTextCodec_codecForHtml_1( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForHtml_1( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTextCodec:codecForLocale()
-   RETURN Qt_QTextCodec_codecForLocale( ::pPtr )
+   RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForLocale( ::pPtr ) )
 
 
 METHOD QTextCodec:codecForMib( nMib )
-   RETURN Qt_QTextCodec_codecForMib( ::pPtr, nMib )
+   RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForMib( ::pPtr, nMib ) )
 
 
 METHOD QTextCodec:codecForName( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // QTextCodec * codecForName ( const QByteArray & name )
-                // PO p QByteArray
-         RETURN QTextCodec():from( Qt_QTextCodec_codecForName( ::pPtr, ... ) )
-                // QTextCodec * codecForName ( const char * name )
-                // PO p char
-         // RETURN QTextCodec():from( Qt_QTextCodec_codecForName_1( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QBYTEARRAY"
+            RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForName( ::pPtr, ... ) )
+         // RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForName_1( ::pPtr, ... ) )
+         ENDSWITCH
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTextCodec:codecForTr()
-   RETURN Qt_QTextCodec_codecForTr( ::pPtr )
+   RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForTr( ::pPtr ) )
 
 
 METHOD QTextCodec:setCodecForCStrings( pCodec )

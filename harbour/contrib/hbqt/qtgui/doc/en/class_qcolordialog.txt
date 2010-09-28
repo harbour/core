@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QColorDialog( ... )
  *     QColorDialog():from( pPtr_OR_oObj_of_type_QColorDialog )
- *     QColorDialog():configure( pPtr_OR_oObj_of_type_QColorDialog )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -61,6 +61,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QColorDialog.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QDialog
+ *     QDialog()
  *  $END$
  */

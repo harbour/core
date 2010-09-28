@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -102,11 +134,11 @@ METHOD QTime:new( ... )
 
 
 METHOD QTime:addMSecs( nMs )
-   RETURN Qt_QTime_addMSecs( ::pPtr, nMs )
+   RETURN HB_QTime():from( Qt_QTime_addMSecs( ::pPtr, nMs ) )
 
 
 METHOD QTime:addSecs( nS )
-   RETURN Qt_QTime_addSecs( ::pPtr, nS )
+   RETURN HB_QTime():from( Qt_QTime_addSecs( ::pPtr, nS ) )
 
 
 METHOD QTime:elapsed()
@@ -122,33 +154,23 @@ METHOD QTime:isNull()
 
 
 METHOD QTime:isValid( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 4
+   SWITCH PCount()
+   CASE 4
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
-                // bool isValid ( int h, int m, int s, int ms = 0 )
-                // N n int, N n int, N n int, N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
          RETURN Qt_QTime_isValid_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 3
+      EXIT
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
-                // bool isValid ( int h, int m, int s, int ms = 0 )
-                // N n int, N n int, N n int, N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
          RETURN Qt_QTime_isValid_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 0
-             // bool isValid () const
+      EXIT
+   CASE 0
       RETURN Qt_QTime_isValid( ::pPtr, ... )
-   ENDCASE
-   RETURN NIL
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTime:minute()
@@ -184,64 +206,41 @@ METHOD QTime:start()
 
 
 METHOD QTime:toString( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // QString toString ( const QString & format ) const
-                // C c QString
+      CASE hb_isChar( hb_pvalue( 1 ) )
          RETURN Qt_QTime_toString( ::pPtr, ... )
-      CASE aV[ 1 ] $ "N"
-                // QString toString ( Qt::DateFormat format = Qt::TextDate ) const
-                // N n Qt::DateFormat
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
          RETURN Qt_QTime_toString_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 0
-             // QString toString ( Qt::DateFormat format = Qt::TextDate ) const
-             // N n Qt::DateFormat
+      EXIT
+   CASE 0
       RETURN Qt_QTime_toString_1( ::pPtr, ... )
-   ENDCASE
-   RETURN NIL
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTime:currentTime()
-   RETURN Qt_QTime_currentTime( ::pPtr )
+   RETURN HB_QTime():from( Qt_QTime_currentTime( ::pPtr ) )
 
 
 METHOD QTime:fromString( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "C"
-                // QTime fromString ( const QString & string, const QString & format )
-                // C c QString, C c QString
-         RETURN QTime():from( Qt_QTime_fromString_1( ::pPtr, ... ) )
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
-                // QTime fromString ( const QString & string, Qt::DateFormat format = Qt::TextDate )
-                // C c QString, N n Qt::DateFormat
-         RETURN QTime():from( Qt_QTime_fromString( ::pPtr, ... ) )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN HB_QTime():from( Qt_QTime_fromString_1( ::pPtr, ... ) )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QTime():from( Qt_QTime_fromString( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // QTime fromString ( const QString & string, Qt::DateFormat format = Qt::TextDate )
-                // C c QString, N n Qt::DateFormat
-         RETURN QTime():from( Qt_QTime_fromString( ::pPtr, ... ) )
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QTime():from( Qt_QTime_fromString( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

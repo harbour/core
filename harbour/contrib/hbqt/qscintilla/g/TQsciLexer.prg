@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -138,7 +170,7 @@ METHOD QsciLexer:lexerId()
 
 
 METHOD QsciLexer:apis()
-   RETURN Qt_QsciLexer_apis( ::pPtr )
+   RETURN HB_QsciAbstractAPIs():from( Qt_QsciLexer_apis( ::pPtr ) )
 
 
 METHOD QsciLexer:autoCompletionFillups()
@@ -146,7 +178,7 @@ METHOD QsciLexer:autoCompletionFillups()
 
 
 METHOD QsciLexer:autoCompletionWordSeparators()
-   RETURN Qt_QsciLexer_autoCompletionWordSeparators( ::pPtr )
+   RETURN HB_QStringList():from( Qt_QsciLexer_autoCompletionWordSeparators( ::pPtr ) )
 
 
 METHOD QsciLexer:autoIndentStyle()
@@ -178,7 +210,7 @@ METHOD QsciLexer:caseSensitive()
 
 
 METHOD QsciLexer:color( nStyle )
-   RETURN Qt_QsciLexer_color( ::pPtr, nStyle )
+   RETURN HB_QColor():from( Qt_QsciLexer_color( ::pPtr, nStyle ) )
 
 
 METHOD QsciLexer:eolFill( nStyle )
@@ -186,7 +218,7 @@ METHOD QsciLexer:eolFill( nStyle )
 
 
 METHOD QsciLexer:font( nStyle )
-   RETURN Qt_QsciLexer_font( ::pPtr, nStyle )
+   RETURN HB_QFont():from( Qt_QsciLexer_font( ::pPtr, nStyle ) )
 
 
 METHOD QsciLexer:indentationGuideView()
@@ -206,30 +238,21 @@ METHOD QsciLexer:description( nStyle )
 
 
 METHOD QsciLexer:paper( nStyle )
-   RETURN Qt_QsciLexer_paper( ::pPtr, nStyle )
+   RETURN HB_QColor():from( Qt_QsciLexer_paper( ::pPtr, nStyle ) )
 
 
 METHOD QsciLexer:defaultColor( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // virtual QColor defaultColor (int style) const
-                // N n int
-         RETURN QColor():from( Qt_QsciLexer_defaultColor_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QColor():from( Qt_QsciLexer_defaultColor_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 0
-             // QColor defaultColor () const
-      RETURN QColor():from( Qt_QsciLexer_defaultColor( ::pPtr, ... ) )
-   ENDCASE
-   RETURN NIL
+      EXIT
+   CASE 0
+      RETURN HB_QColor():from( Qt_QsciLexer_defaultColor( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QsciLexer:defaultEolFill( nStyle )
@@ -237,53 +260,35 @@ METHOD QsciLexer:defaultEolFill( nStyle )
 
 
 METHOD QsciLexer:defaultFont( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // virtual QFont defaultFont (int style) const
-                // N n int
-         RETURN QFont():from( Qt_QsciLexer_defaultFont_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QFont():from( Qt_QsciLexer_defaultFont_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 0
-             // QFont defaultFont () const
-      RETURN QFont():from( Qt_QsciLexer_defaultFont( ::pPtr, ... ) )
-   ENDCASE
-   RETURN NIL
+      EXIT
+   CASE 0
+      RETURN HB_QFont():from( Qt_QsciLexer_defaultFont( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QsciLexer:defaultPaper( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // virtual QColor defaultPaper (int style) const
-                // N n int
-         RETURN QColor():from( Qt_QsciLexer_defaultPaper_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QColor():from( Qt_QsciLexer_defaultPaper_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 0
-             // QColor defaultPaper () const
-      RETURN QColor():from( Qt_QsciLexer_defaultPaper( ::pPtr, ... ) )
-   ENDCASE
-   RETURN NIL
+      EXIT
+   CASE 0
+      RETURN HB_QColor():from( Qt_QsciLexer_defaultPaper( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QsciLexer:editor()
-   RETURN Qt_QsciLexer_editor( ::pPtr )
+   RETURN HB_QsciScintilla():from( Qt_QsciLexer_editor( ::pPtr ) )
 
 
 METHOD QsciLexer:setEditor( pEditor )

@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -58,6 +56,40 @@
  *
  */
 /*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
+/*----------------------------------------------------------------------*/
 
 #include "hbqtcore.h"
 #include "hbqtgui.h"
@@ -72,7 +104,7 @@
  */
 
 /*
- *  Constructed[ 39/39 [ 100.00% ] ]
+ *  Constructed[ 40/40 [ 100.00% ] ]
  *
  *
  *  *** Commented out protostypes ***
@@ -85,8 +117,6 @@
  *  // int qwsBytesPerLine () const
  *  // CGImageRef toMacCGImageRef () const
  *  //HBITMAP toWinHBITMAP ( HBitmapFormat format = NoAlpha ) const
- *  //QPixmap transformed ( const QTransform & transform, Qt::TransformationMode mode = Qt::FastTransformation ) const
- *  //QPixmap transformed ( const QMatrix & matrix, Qt::TransformationMode mode = Qt::FastTransformation ) const
  *  //QPixmap fromMacCGImageRef ( CGImageRef image )
  *  //QPixmap fromWinHBITMAP ( HBITMAP bitmap, HBitmapFormat format = NoAlpha )
  *  //QPixmap fromX11Pixmap ( Qt::HANDLE pixmap, ShareMode mode = ImplicitlyShared )
@@ -578,23 +608,26 @@ HB_FUNC( QT_QPIXMAP_TOIMAGE )
 }
 
 /*
- * QPixmap transformed ( ... )
+ * QPixmap transformed ( const QTransform & transform, Qt::TransformationMode mode = Qt::FastTransformation ) const
  */
 HB_FUNC( QT_QPIXMAP_TRANSFORMED )
 {
    QPixmap * p = hbqt_par_QPixmap( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->transformed( *hbqt_par_QTransform( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::TransformationMode ) hb_parni( 3 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ), true ) );
+   }
+}
 
-      if( q->type == HBQT_TYPE_QTransform )
-      {
-         hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->transformed( *hbqt_par_QTransform( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::TransformationMode ) hb_parni( 3 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ), true ) );
-      }
-      else if( q->type == HBQT_TYPE_QMatrix )
-      {
-         hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->transformed( *hbqt_par_QMatrix( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::TransformationMode ) hb_parni( 3 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ), true ) );
-      }
+/*
+ * QPixmap transformed ( const QMatrix & matrix, Qt::TransformationMode mode = Qt::FastTransformation ) const
+ */
+HB_FUNC( QT_QPIXMAP_TRANSFORMED_1 )
+{
+   QPixmap * p = hbqt_par_QPixmap( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->transformed( *hbqt_par_QMatrix( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::TransformationMode ) hb_parni( 3 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ), true ) );
    }
 }
 

@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -117,7 +149,7 @@ METHOD QAbstractItemModel:new( ... )
 
 
 METHOD QAbstractItemModel:buddy( pIndex )
-   RETURN Qt_QAbstractItemModel_buddy( ::pPtr, hbqt_ptr( pIndex ) )
+   RETURN HB_QModelIndex():from( Qt_QAbstractItemModel_buddy( ::pPtr, hbqt_ptr( pIndex ) ) )
 
 
 METHOD QAbstractItemModel:canFetchMore( pParent )
@@ -129,7 +161,7 @@ METHOD QAbstractItemModel:columnCount( pParent )
 
 
 METHOD QAbstractItemModel:data( pIndex, nRole )
-   RETURN Qt_QAbstractItemModel_data( ::pPtr, hbqt_ptr( pIndex ), nRole )
+   RETURN HB_QVariant():from( Qt_QAbstractItemModel_data( ::pPtr, hbqt_ptr( pIndex ), nRole ) )
 
 
 METHOD QAbstractItemModel:dropMimeData( pData, nAction, nRow, nColumn, pParent )
@@ -153,11 +185,11 @@ METHOD QAbstractItemModel:hasIndex( nRow, nColumn, pParent )
 
 
 METHOD QAbstractItemModel:headerData( nSection, nOrientation, nRole )
-   RETURN Qt_QAbstractItemModel_headerData( ::pPtr, nSection, nOrientation, nRole )
+   RETURN HB_QVariant():from( Qt_QAbstractItemModel_headerData( ::pPtr, nSection, nOrientation, nRole ) )
 
 
 METHOD QAbstractItemModel:index( nRow, nColumn, pParent )
-   RETURN Qt_QAbstractItemModel_index( ::pPtr, nRow, nColumn, hbqt_ptr( pParent ) )
+   RETURN HB_QModelIndex():from( Qt_QAbstractItemModel_index( ::pPtr, nRow, nColumn, hbqt_ptr( pParent ) ) )
 
 
 METHOD QAbstractItemModel:insertColumn( nColumn, pParent )
@@ -177,11 +209,11 @@ METHOD QAbstractItemModel:insertRows( nRow, nCount, pParent )
 
 
 METHOD QAbstractItemModel:mimeTypes()
-   RETURN Qt_QAbstractItemModel_mimeTypes( ::pPtr )
+   RETURN HB_QStringList():from( Qt_QAbstractItemModel_mimeTypes( ::pPtr ) )
 
 
 METHOD QAbstractItemModel:parent( pIndex )
-   RETURN Qt_QAbstractItemModel_parent( ::pPtr, hbqt_ptr( pIndex ) )
+   RETURN HB_QModelIndex():from( Qt_QAbstractItemModel_parent( ::pPtr, hbqt_ptr( pIndex ) ) )
 
 
 METHOD QAbstractItemModel:removeColumn( nColumn, pParent )
@@ -217,7 +249,7 @@ METHOD QAbstractItemModel:setSupportedDragActions( nActions )
 
 
 METHOD QAbstractItemModel:sibling( nRow, nColumn, pIndex )
-   RETURN Qt_QAbstractItemModel_sibling( ::pPtr, nRow, nColumn, hbqt_ptr( pIndex ) )
+   RETURN HB_QModelIndex():from( Qt_QAbstractItemModel_sibling( ::pPtr, nRow, nColumn, hbqt_ptr( pIndex ) ) )
 
 
 METHOD QAbstractItemModel:sort( nColumn, nOrder )
@@ -225,7 +257,7 @@ METHOD QAbstractItemModel:sort( nColumn, nOrder )
 
 
 METHOD QAbstractItemModel:span( pIndex )
-   RETURN Qt_QAbstractItemModel_span( ::pPtr, hbqt_ptr( pIndex ) )
+   RETURN HB_QSize():from( Qt_QAbstractItemModel_span( ::pPtr, hbqt_ptr( pIndex ) ) )
 
 
 METHOD QAbstractItemModel:supportedDragActions()

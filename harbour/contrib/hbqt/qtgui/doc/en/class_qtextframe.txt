@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QTextFrame( ... )
  *     QTextFrame():from( pPtr_OR_oObj_of_type_QTextFrame )
- *     QTextFrame():configure( pPtr_OR_oObj_of_type_QTextFrame )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -53,6 +53,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextFrame.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QTextObject
+ *     QTextObject()
  *  $END$
  */

@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -58,6 +56,40 @@
  *
  */
 /*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
+/*----------------------------------------------------------------------*/
 
 
 #include "hbclass.ch"
@@ -99,7 +131,7 @@ METHOD QColorDialog:new( ... )
 
 
 METHOD QColorDialog:currentColor()
-   RETURN Qt_QColorDialog_currentColor( ::pPtr )
+   RETURN HB_QColor():from( Qt_QColorDialog_currentColor( ::pPtr ) )
 
 
 METHOD QColorDialog:open()
@@ -111,7 +143,7 @@ METHOD QColorDialog:options()
 
 
 METHOD QColorDialog:selectedColor()
-   RETURN Qt_QColorDialog_selectedColor( ::pPtr )
+   RETURN HB_QColor():from( Qt_QColorDialog_selectedColor( ::pPtr ) )
 
 
 METHOD QColorDialog:setCurrentColor( pColor )
@@ -143,41 +175,29 @@ METHOD QColorDialog:customCount()
 
 
 METHOD QColorDialog:getColor( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 4
+   SWITCH PCount()
+   CASE 4
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "C" .AND. aV[ 4 ] $ "N"
-                // QColor getColor ( const QColor & initial, QWidget * parent, const QString & title, ColorDialogOptions options = 0 )
-                // PO p QColor, PO p QWidget, C c QString, N n QColorDialog::ColorDialogOptions
-         RETURN QColor():from( Qt_QColorDialog_getColor( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN HB_QColor():from( Qt_QColorDialog_getColor( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 3
+      EXIT
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "C"
-                // QColor getColor ( const QColor & initial, QWidget * parent, const QString & title, ColorDialogOptions options = 0 )
-                // PO p QColor, PO p QWidget, C c QString, N n QColorDialog::ColorDialogOptions
-         RETURN QColor():from( Qt_QColorDialog_getColor( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
+         RETURN HB_QColor():from( Qt_QColorDialog_getColor( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
-                // QColor getColor ( const QColor & initial = Qt::white, QWidget * parent = 0 )
-                // PO p QColor, PO p QWidget
-         RETURN QColor():from( Qt_QColorDialog_getColor_1( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QColor():from( Qt_QColorDialog_getColor_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 0
-             // QColor getColor ( const QColor & initial = Qt::white, QWidget * parent = 0 )
-             // PO p QColor, PO p QWidget
-      RETURN QColor():from( Qt_QColorDialog_getColor_1( ::pPtr, ... ) )
-   ENDCASE
-   RETURN NIL
+      EXIT
+   CASE 0
+      RETURN HB_QColor():from( Qt_QColorDialog_getColor_1( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QColorDialog:setCustomColor( nIndex, nColor )

@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QGridLayout( ... )
  *     QGridLayout():from( pPtr_OR_oObj_of_type_QGridLayout )
- *     QGridLayout():configure( pPtr_OR_oObj_of_type_QGridLayout )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -72,6 +72,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QGridLayout.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QLayout
+ *     QLayout()
  *  $END$
  */

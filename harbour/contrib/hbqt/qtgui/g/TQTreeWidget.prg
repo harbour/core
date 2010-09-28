@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -137,7 +169,7 @@ METHOD QTreeWidget:currentColumn()
 
 
 METHOD QTreeWidget:currentItem()
-   RETURN Qt_QTreeWidget_currentItem( ::pPtr )
+   RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_currentItem( ::pPtr ) )
 
 
 METHOD QTreeWidget:editItem( pItem, nColumn )
@@ -145,11 +177,11 @@ METHOD QTreeWidget:editItem( pItem, nColumn )
 
 
 METHOD QTreeWidget:findItems( cText, nFlags, nColumn )
-   RETURN Qt_QTreeWidget_findItems( ::pPtr, cText, nFlags, nColumn )
+   RETURN HB_QList():from( Qt_QTreeWidget_findItems( ::pPtr, cText, nFlags, nColumn ) )
 
 
 METHOD QTreeWidget:headerItem()
-   RETURN Qt_QTreeWidget_headerItem( ::pPtr )
+   RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_headerItem( ::pPtr ) )
 
 
 METHOD QTreeWidget:indexOfTopLevelItem( pItem )
@@ -161,7 +193,7 @@ METHOD QTreeWidget:insertTopLevelItem( nIndex, pItem )
 
 
 METHOD QTreeWidget:invisibleRootItem()
-   RETURN Qt_QTreeWidget_invisibleRootItem( ::pPtr )
+   RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_invisibleRootItem( ::pPtr ) )
 
 
 METHOD QTreeWidget:isFirstItemColumnSpanned( pItem )
@@ -169,42 +201,33 @@ METHOD QTreeWidget:isFirstItemColumnSpanned( pItem )
 
 
 METHOD QTreeWidget:itemAbove( pItem )
-   RETURN Qt_QTreeWidget_itemAbove( ::pPtr, hbqt_ptr( pItem ) )
+   RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_itemAbove( ::pPtr, hbqt_ptr( pItem ) ) )
 
 
 METHOD QTreeWidget:itemAt( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // QTreeWidgetItem * itemAt ( int x, int y ) const
-                // N n int, N n int
-         RETURN QTreeWidgetItem():from( Qt_QTreeWidget_itemAt_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_itemAt_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // QTreeWidgetItem * itemAt ( const QPoint & p ) const
-                // PO p QPoint
-         RETURN QTreeWidgetItem():from( Qt_QTreeWidget_itemAt( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_itemAt( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTreeWidget:itemBelow( pItem )
-   RETURN Qt_QTreeWidget_itemBelow( ::pPtr, hbqt_ptr( pItem ) )
+   RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_itemBelow( ::pPtr, hbqt_ptr( pItem ) ) )
 
 
 METHOD QTreeWidget:itemWidget( pItem, nColumn )
-   RETURN Qt_QTreeWidget_itemWidget( ::pPtr, hbqt_ptr( pItem ), nColumn )
+   RETURN HB_QWidget():from( Qt_QTreeWidget_itemWidget( ::pPtr, hbqt_ptr( pItem ), nColumn ) )
 
 
 METHOD QTreeWidget:openPersistentEditor( pItem, nColumn )
@@ -216,7 +239,7 @@ METHOD QTreeWidget:removeItemWidget( pItem, nColumn )
 
 
 METHOD QTreeWidget:selectedItems()
-   RETURN Qt_QTreeWidget_selectedItems( ::pPtr )
+   RETURN HB_QList():from( Qt_QTreeWidget_selectedItems( ::pPtr ) )
 
 
 METHOD QTreeWidget:setColumnCount( nColumns )
@@ -224,37 +247,27 @@ METHOD QTreeWidget:setColumnCount( nColumns )
 
 
 METHOD QTreeWidget:setCurrentItem( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 3
+   SWITCH PCount()
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
-                // void setCurrentItem ( QTreeWidgetItem * item, int column, QItemSelectionModel::SelectionFlags command )   [*D=1*]
-                // PO p QTreeWidgetItem, N n int, N n QItemSelectionModel::SelectionFlags
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
          RETURN Qt_QTreeWidget_setCurrentItem_2( ::pPtr, ... )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
-                // void setCurrentItem ( QTreeWidgetItem * item, int column )   [*D=1*]
-                // PO p QTreeWidgetItem, N n int
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QTreeWidget_setCurrentItem_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void setCurrentItem ( QTreeWidgetItem * item )   [*D=1*]
-                // PO p QTreeWidgetItem
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QTreeWidget_setCurrentItem( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTreeWidget:setFirstItemColumnSpanned( pItem, lSpan )
@@ -286,11 +299,11 @@ METHOD QTreeWidget:sortItems( nColumn, nOrder )
 
 
 METHOD QTreeWidget:takeTopLevelItem( nIndex )
-   RETURN Qt_QTreeWidget_takeTopLevelItem( ::pPtr, nIndex )
+   RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_takeTopLevelItem( ::pPtr, nIndex ) )
 
 
 METHOD QTreeWidget:topLevelItem( nIndex )
-   RETURN Qt_QTreeWidget_topLevelItem( ::pPtr, nIndex )
+   RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_topLevelItem( ::pPtr, nIndex ) )
 
 
 METHOD QTreeWidget:topLevelItemCount()
@@ -298,7 +311,7 @@ METHOD QTreeWidget:topLevelItemCount()
 
 
 METHOD QTreeWidget:visualItemRect( pItem )
-   RETURN Qt_QTreeWidget_visualItemRect( ::pPtr, hbqt_ptr( pItem ) )
+   RETURN HB_QRect():from( Qt_QTreeWidget_visualItemRect( ::pPtr, hbqt_ptr( pItem ) ) )
 
 
 METHOD QTreeWidget:clear()

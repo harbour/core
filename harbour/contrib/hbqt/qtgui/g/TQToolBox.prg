@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -103,30 +135,21 @@ METHOD QToolBox:new( ... )
 
 
 METHOD QToolBox:addItem( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 3
+   SWITCH PCount()
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PCO" .AND. aV[ 3 ] $ "C"
-                // int addItem ( QWidget * widget, const QIcon & iconSet, const QString & text )
-                // PO p QWidget, PCO p QIcon, C c QString
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. ( hb_isObject( hb_pvalue( 2 ) ) .OR. hb_isChar( hb_pvalue( 2 ) ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
          RETURN Qt_QToolBox_addItem( ::pPtr, ... )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "C"
-                // int addItem ( QWidget * w, const QString & text )
-                // PO p QWidget, C c QString
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
          RETURN Qt_QToolBox_addItem_1( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QToolBox:count()
@@ -138,7 +161,7 @@ METHOD QToolBox:currentIndex()
 
 
 METHOD QToolBox:currentWidget()
-   RETURN Qt_QToolBox_currentWidget( ::pPtr )
+   RETURN HB_QWidget():from( Qt_QToolBox_currentWidget( ::pPtr ) )
 
 
 METHOD QToolBox:indexOf( pWidget )
@@ -146,30 +169,21 @@ METHOD QToolBox:indexOf( pWidget )
 
 
 METHOD QToolBox:insertItem( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 4
+   SWITCH PCount()
+   CASE 4
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PCO" .AND. aV[ 4 ] $ "C"
-                // int insertItem ( int index, QWidget * widget, const QIcon & icon, const QString & text )
-                // N n int, PO p QWidget, PCO p QIcon, C c QString
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. ( hb_isObject( hb_pvalue( 3 ) ) .OR. hb_isChar( hb_pvalue( 3 ) ) ) .AND. hb_isChar( hb_pvalue( 4 ) )
          RETURN Qt_QToolBox_insertItem( ::pPtr, ... )
       ENDCASE
-   CASE nP == 3
+      EXIT
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "C"
-                // int insertItem ( int index, QWidget * widget, const QString & text )
-                // N n int, PO p QWidget, C c QString
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
          RETURN Qt_QToolBox_insertItem_1( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QToolBox:isItemEnabled( nIndex )
@@ -177,7 +191,7 @@ METHOD QToolBox:isItemEnabled( nIndex )
 
 
 METHOD QToolBox:itemIcon( nIndex )
-   RETURN Qt_QToolBox_itemIcon( ::pPtr, nIndex )
+   RETURN HB_QIcon():from( Qt_QToolBox_itemIcon( ::pPtr, nIndex ) )
 
 
 METHOD QToolBox:itemText( nIndex )
@@ -209,7 +223,7 @@ METHOD QToolBox:setItemToolTip( nIndex, cToolTip )
 
 
 METHOD QToolBox:widget( nIndex )
-   RETURN Qt_QToolBox_widget( ::pPtr, nIndex )
+   RETURN HB_QWidget():from( Qt_QToolBox_widget( ::pPtr, nIndex ) )
 
 
 METHOD QToolBox:setCurrentIndex( nIndex )

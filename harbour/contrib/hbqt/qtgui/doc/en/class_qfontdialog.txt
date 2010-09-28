@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QFontDialog( ... )
  *     QFontDialog():from( pPtr_OR_oObj_of_type_QFontDialog )
- *     QFontDialog():configure( pPtr_OR_oObj_of_type_QFontDialog )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -58,6 +58,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QFontDialog.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QDialog
+ *     QDialog()
  *  $END$
  */

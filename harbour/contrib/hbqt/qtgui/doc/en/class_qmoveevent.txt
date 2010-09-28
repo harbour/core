@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QMoveEvent( ... )
  *     QMoveEvent():from( pPtr_OR_oObj_of_type_QMoveEvent )
- *     QMoveEvent():configure( pPtr_OR_oObj_of_type_QMoveEvent )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -48,6 +48,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QMoveEvent.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QEvent
+ *     QEvent()
  *  $END$
  */

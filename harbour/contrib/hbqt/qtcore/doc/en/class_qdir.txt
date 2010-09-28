@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QDir( ... )
  *     QDir():from( pPtr_OR_oObj_of_type_QDir )
- *     QDir():configure( pPtr_OR_oObj_of_type_QDir )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

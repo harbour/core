@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QFileSystemModel( ... )
  *     QFileSystemModel():from( pPtr_OR_oObj_of_type_QFileSystemModel )
- *     QFileSystemModel():configure( pPtr_OR_oObj_of_type_QFileSystemModel )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -75,6 +75,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QFileSystemModel.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QAbstractItemModel
+ *     QAbstractItemModel()
  *  $END$
  */

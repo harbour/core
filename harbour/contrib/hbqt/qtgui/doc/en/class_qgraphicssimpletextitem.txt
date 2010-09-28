@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QGraphicsSimpleTextItem( ... )
  *     QGraphicsSimpleTextItem():from( pPtr_OR_oObj_of_type_QGraphicsSimpleTextItem )
- *     QGraphicsSimpleTextItem():configure( pPtr_OR_oObj_of_type_QGraphicsSimpleTextItem )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -50,6 +50,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsSimpleTextItem.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QAbstractGraphicsShapeItem
+ *     QAbstractGraphicsShapeItem()
  *  $END$
  */

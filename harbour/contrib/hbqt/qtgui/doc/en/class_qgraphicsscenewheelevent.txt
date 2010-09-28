@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QGraphicsSceneWheelEvent( ... )
  *     QGraphicsSceneWheelEvent():from( pPtr_OR_oObj_of_type_QGraphicsSceneWheelEvent )
- *     QGraphicsSceneWheelEvent():configure( pPtr_OR_oObj_of_type_QGraphicsSceneWheelEvent )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -53,6 +53,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsSceneWheelEvent.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QGraphicsSceneEvent
+ *     QGraphicsSceneEvent()
  *  $END$
  */

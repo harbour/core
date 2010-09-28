@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QDial( ... )
  *     QDial():from( pPtr_OR_oObj_of_type_QDial )
- *     QDial():configure( pPtr_OR_oObj_of_type_QDial )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -53,6 +53,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QDial.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QAbstractSlider
+ *     QAbstractSlider()
  *  $END$
  */

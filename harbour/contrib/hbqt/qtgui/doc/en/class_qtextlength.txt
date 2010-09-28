@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QTextLength( ... )
  *     QTextLength():from( pPtr_OR_oObj_of_type_QTextLength )
- *     QTextLength():configure( pPtr_OR_oObj_of_type_QTextLength )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

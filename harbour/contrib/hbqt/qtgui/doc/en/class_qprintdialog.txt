@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QPrintDialog( ... )
  *     QPrintDialog():from( pPtr_OR_oObj_of_type_QPrintDialog )
- *     QPrintDialog():configure( pPtr_OR_oObj_of_type_QPrintDialog )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -54,6 +54,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QPrintDialog.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QAbstractPrintDialog
+ *     QAbstractPrintDialog()
  *  $END$
  */

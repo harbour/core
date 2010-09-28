@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QEventLoop( ... )
  *     QEventLoop():from( pPtr_OR_oObj_of_type_QEventLoop )
- *     QEventLoop():configure( pPtr_OR_oObj_of_type_QEventLoop )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -52,6 +52,6 @@
  *     C++ wrappers  : contrib/hbqt/qtcore/QEventLoop.cpp
  *     Library       : hbqtcore
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

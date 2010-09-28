@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QLinearGradient( ... )
  *     QLinearGradient():from( pPtr_OR_oObj_of_type_QLinearGradient )
- *     QLinearGradient():configure( pPtr_OR_oObj_of_type_QLinearGradient )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -56,6 +56,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QLinearGradient.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QGradient
+ *     QGradient()
  *  $END$
  */

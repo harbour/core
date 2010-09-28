@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QTextImageFormat( ... )
  *     QTextImageFormat():from( pPtr_OR_oObj_of_type_QTextImageFormat )
- *     QTextImageFormat():configure( pPtr_OR_oObj_of_type_QTextImageFormat )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -53,6 +53,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextImageFormat.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QTextCharFormat
+ *     QTextCharFormat()
  *  $END$
  */

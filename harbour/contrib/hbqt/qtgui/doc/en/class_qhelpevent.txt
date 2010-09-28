@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QHelpEvent( ... )
  *     QHelpEvent():from( pPtr_OR_oObj_of_type_QHelpEvent )
- *     QHelpEvent():configure( pPtr_OR_oObj_of_type_QHelpEvent )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

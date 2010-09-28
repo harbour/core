@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -58,6 +56,40 @@
  *
  */
 /*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
+/*----------------------------------------------------------------------*/
 
 #include "hbqtcore.h"
 #include "hbqtgui.h"
@@ -71,17 +103,12 @@
  */
 
 /*
- *  Constructed[ 52/52 [ 100.00% ] ]
+ *  Constructed[ 55/55 [ 100.00% ] ]
  *
  *
  *  *** Commented out protostypes ***
  *
- *  //bool contains ( const QPointF & point ) const
- *  //bool contains ( const QRectF & rectangle ) const
- *  //bool contains ( const QPainterPath & p ) const
  *  // const QPainterPath::Element & elementAt ( int index ) const
- *  //bool intersects ( const QRectF & rectangle ) const
- *  //bool intersects ( const QPainterPath & p ) const
  */
 
 #include <QtCore/QPointer>
@@ -403,27 +430,38 @@ HB_FUNC( QT_QPAINTERPATH_CONNECTPATH )
 }
 
 /*
- * void contains ( ... )
+ * bool contains ( const QPointF & point ) const
  */
 HB_FUNC( QT_QPAINTERPATH_CONTAINS )
 {
    QPainterPath * p = hbqt_par_QPainterPath( 1 );
-   if( p && hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
+   if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+      hb_retl( ( p )->contains( *hbqt_par_QPointF( 2 ) ) );
+   }
+}
 
-      if( q->type == HBQT_TYPE_QPointF )
-      {
-         ( p )->contains( *hbqt_par_QPointF( 2 ) );
-      }
-      else if( q->type == HBQT_TYPE_QRectF )
-      {
-         ( p )->contains( *hbqt_par_QRectF( 2 ) );
-      }
-      else if( q->type == HBQT_TYPE_QPainterPath )
-      {
-         ( p )->contains( *hbqt_par_QPainterPath( 2 ) );
-      }
+/*
+ * bool contains ( const QRectF & rectangle ) const
+ */
+HB_FUNC( QT_QPAINTERPATH_CONTAINS_1 )
+{
+   QPainterPath * p = hbqt_par_QPainterPath( 1 );
+   if( p )
+   {
+      hb_retl( ( p )->contains( *hbqt_par_QRectF( 2 ) ) );
+   }
+}
+
+/*
+ * bool contains ( const QPainterPath & p ) const
+ */
+HB_FUNC( QT_QPAINTERPATH_CONTAINS_2 )
+{
+   QPainterPath * p = hbqt_par_QPainterPath( 1 );
+   if( p )
+   {
+      hb_retl( ( p )->contains( *hbqt_par_QPainterPath( 2 ) ) );
    }
 }
 
@@ -512,23 +550,26 @@ HB_FUNC( QT_QPAINTERPATH_INTERSECTED )
 }
 
 /*
- * void intersects ( ... )
+ * bool intersects ( const QRectF & rectangle ) const
  */
 HB_FUNC( QT_QPAINTERPATH_INTERSECTS )
 {
    QPainterPath * p = hbqt_par_QPainterPath( 1 );
-   if( p && hb_pcount() == 2 && HB_ISPOINTER( 2 ) )
+   if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+      hb_retl( ( p )->intersects( *hbqt_par_QRectF( 2 ) ) );
+   }
+}
 
-      if( q->type == HBQT_TYPE_QRectF )
-      {
-         ( p )->intersects( *hbqt_par_QRectF( 2 ) );
-      }
-      else if( q->type == HBQT_TYPE_QPainterPath )
-      {
-         ( p )->intersects( *hbqt_par_QPainterPath( 2 ) );
-      }
+/*
+ * bool intersects ( const QPainterPath & p ) const
+ */
+HB_FUNC( QT_QPAINTERPATH_INTERSECTS_1 )
+{
+   QPainterPath * p = hbqt_par_QPainterPath( 1 );
+   if( p )
+   {
+      hb_retl( ( p )->intersects( *hbqt_par_QPainterPath( 2 ) ) );
    }
 }
 

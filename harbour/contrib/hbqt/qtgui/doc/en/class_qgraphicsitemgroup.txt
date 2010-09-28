@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QGraphicsItemGroup( ... )
  *     QGraphicsItemGroup():from( pPtr_OR_oObj_of_type_QGraphicsItemGroup )
- *     QGraphicsItemGroup():configure( pPtr_OR_oObj_of_type_QGraphicsItemGroup )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -48,6 +48,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsItemGroup.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QGraphicsItem
+ *     QGraphicsItem()
  *  $END$
  */

@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QSplitter( ... )
  *     QSplitter():from( pPtr_OR_oObj_of_type_QSplitter )
- *     QSplitter():configure( pPtr_OR_oObj_of_type_QSplitter )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -67,6 +67,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QSplitter.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QFrame
+ *     QFrame()
  *  $END$
  */

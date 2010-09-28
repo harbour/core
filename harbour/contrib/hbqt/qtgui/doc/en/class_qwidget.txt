@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QWidget( ... )
  *     QWidget():from( pPtr_OR_oObj_of_type_QWidget )
- *     QWidget():configure( pPtr_OR_oObj_of_type_QWidget )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -242,6 +242,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QWidget.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QObject, QPaintDevice
+ *     QObject, QPaintDevice()
  *  $END$
  */

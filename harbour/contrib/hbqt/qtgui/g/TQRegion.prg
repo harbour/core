@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -58,6 +56,40 @@
  *
  */
 /*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
+/*----------------------------------------------------------------------*/
 
 
 #include "hbclass.ch"
@@ -97,76 +129,58 @@ METHOD QRegion:new( ... )
 
 
 METHOD QRegion:boundingRect()
-   RETURN Qt_QRegion_boundingRect( ::pPtr )
+   RETURN HB_QRect():from( Qt_QRegion_boundingRect( ::pPtr ) )
 
 
 METHOD QRegion:contains( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // bool contains ( const QPoint & p ) const
-                // PO p QPoint
-         RETURN Qt_QRegion_contains( ::pPtr, ... )
-                // bool contains ( const QRect & r ) const
-                // PO p QRect
-         // RETURN Qt_QRegion_contains_1( ::pPtr, ... )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QPOINT"
+            RETURN Qt_QRegion_contains( ::pPtr, ... )
+         CASE "QRECT"
+            RETURN Qt_QRegion_contains_1( ::pPtr, ... )
+         ENDSWITCH
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QRegion:intersected( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // QRegion intersected ( const QRegion & r ) const
-                // PO p QRegion
-         RETURN QRegion():from( Qt_QRegion_intersected( ::pPtr, ... ) )
-                // QRegion intersected ( const QRect & rect ) const
-                // PO p QRect
-         // RETURN QRegion():from( Qt_QRegion_intersected_1( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QREGION"
+            RETURN HB_QRegion():from( Qt_QRegion_intersected( ::pPtr, ... ) )
+         CASE "QRECT"
+            RETURN HB_QRegion():from( Qt_QRegion_intersected_1( ::pPtr, ... ) )
+         ENDSWITCH
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QRegion:intersects( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // bool intersects ( const QRegion & region ) const
-                // PO p QRegion
-         RETURN Qt_QRegion_intersects( ::pPtr, ... )
-                // bool intersects ( const QRect & rect ) const
-                // PO p QRect
-         // RETURN Qt_QRegion_intersects_1( ::pPtr, ... )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QREGION"
+            RETURN Qt_QRegion_intersects( ::pPtr, ... )
+         CASE "QRECT"
+            RETURN Qt_QRegion_intersects_1( ::pPtr, ... )
+         ENDSWITCH
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QRegion:isEmpty()
@@ -182,86 +196,62 @@ METHOD QRegion:setRects( pRects, nNumber )
 
 
 METHOD QRegion:subtracted( pR )
-   RETURN Qt_QRegion_subtracted( ::pPtr, hbqt_ptr( pR ) )
+   RETURN HB_QRegion():from( Qt_QRegion_subtracted( ::pPtr, hbqt_ptr( pR ) ) )
 
 
 METHOD QRegion:translate( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // void translate ( int dx, int dy )
-                // N n int, N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QRegion_translate( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void translate ( const QPoint & point )
-                // PO p QPoint
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QRegion_translate_1( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QRegion:translated( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // QRegion translated ( int dx, int dy ) const
-                // N n int, N n int
-         RETURN QRegion():from( Qt_QRegion_translated( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QRegion():from( Qt_QRegion_translated( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // QRegion translated ( const QPoint & p ) const
-                // PO p QPoint
-         RETURN QRegion():from( Qt_QRegion_translated_1( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QRegion():from( Qt_QRegion_translated_1( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QRegion:united( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // QRegion united ( const QRegion & r ) const
-                // PO p QRegion
-         RETURN QRegion():from( Qt_QRegion_united( ::pPtr, ... ) )
-                // QRegion united ( const QRect & rect ) const
-                // PO p QRect
-         // RETURN QRegion():from( Qt_QRegion_united_1( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QREGION"
+            RETURN HB_QRegion():from( Qt_QRegion_united( ::pPtr, ... ) )
+         CASE "QRECT"
+            RETURN HB_QRegion():from( Qt_QRegion_united_1( ::pPtr, ... ) )
+         ENDSWITCH
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QRegion:xored( pR )
-   RETURN Qt_QRegion_xored( ::pPtr, hbqt_ptr( pR ) )
+   RETURN HB_QRegion():from( Qt_QRegion_xored( ::pPtr, hbqt_ptr( pR ) ) )
 

@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QPlainTextDocumentLayout( ... )
  *     QPlainTextDocumentLayout():from( pPtr_OR_oObj_of_type_QPlainTextDocumentLayout )
- *     QPlainTextDocumentLayout():configure( pPtr_OR_oObj_of_type_QPlainTextDocumentLayout )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -50,6 +50,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QPlainTextDocumentLayout.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QAbstractTextDocumentLayout
+ *     QAbstractTextDocumentLayout()
  *  $END$
  */

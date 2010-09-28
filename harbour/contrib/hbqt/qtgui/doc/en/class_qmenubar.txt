@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QMenuBar( ... )
  *     QMenuBar():from( pPtr_OR_oObj_of_type_QMenuBar )
- *     QMenuBar():configure( pPtr_OR_oObj_of_type_QMenuBar )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -60,6 +60,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QMenuBar.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QWidget
+ *     QWidget()
  *  $END$
  */

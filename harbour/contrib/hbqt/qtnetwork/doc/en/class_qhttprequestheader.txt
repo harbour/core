@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QHttpRequestHeader( ... )
  *     QHttpRequestHeader():from( pPtr_OR_oObj_of_type_QHttpRequestHeader )
- *     QHttpRequestHeader():configure( pPtr_OR_oObj_of_type_QHttpRequestHeader )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -51,6 +51,6 @@
  *     C++ wrappers  : contrib/hbqt/qtnetwork/QHttpRequestHeader.cpp
  *     Library       : hbqtnetwork
  *  $SEEALSO$
- *     QHttpHeader
+ *     QHttpHeader()
  *  $END$
  */

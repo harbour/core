@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     HBQEvents( ... )
  *     HBQEvents():from( pPtr_OR_oObj_of_type_HBQEvents )
- *     HBQEvents():configure( pPtr_OR_oObj_of_type_HBQEvents )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -49,6 +49,6 @@
  *     C++ wrappers  : contrib/hbqt/qtcore/HBQEvents.cpp
  *     Library       : hbqtcore
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

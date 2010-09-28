@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QPicture( ... )
  *     QPicture():from( pPtr_OR_oObj_of_type_QPicture )
- *     QPicture():configure( pPtr_OR_oObj_of_type_QPicture )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -60,6 +60,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QPicture.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QPaintDevice
+ *     QPaintDevice()
  *  $END$
  */

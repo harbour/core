@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QStylePainter( ... )
  *     QStylePainter():from( pPtr_OR_oObj_of_type_QStylePainter )
- *     QStylePainter():configure( pPtr_OR_oObj_of_type_QStylePainter )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -54,6 +54,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QStylePainter.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QPainter
+ *     QPainter()
  *  $END$
  */

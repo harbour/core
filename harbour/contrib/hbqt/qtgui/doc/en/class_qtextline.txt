@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QTextLine( ... )
  *     QTextLine():from( pPtr_OR_oObj_of_type_QTextLine )
- *     QTextLine():configure( pPtr_OR_oObj_of_type_QTextLine )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

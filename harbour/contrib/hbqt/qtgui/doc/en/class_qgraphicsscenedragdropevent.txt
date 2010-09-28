@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QGraphicsSceneDragDropEvent( ... )
  *     QGraphicsSceneDragDropEvent():from( pPtr_OR_oObj_of_type_QGraphicsSceneDragDropEvent )
- *     QGraphicsSceneDragDropEvent():configure( pPtr_OR_oObj_of_type_QGraphicsSceneDragDropEvent )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -58,6 +58,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsSceneDragDropEvent.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QGraphicsSceneEvent
+ *     QGraphicsSceneEvent()
  *  $END$
  */

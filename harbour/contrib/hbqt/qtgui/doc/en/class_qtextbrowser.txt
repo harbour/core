@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QTextBrowser( ... )
  *     QTextBrowser():from( pPtr_OR_oObj_of_type_QTextBrowser )
- *     QTextBrowser():configure( pPtr_OR_oObj_of_type_QTextBrowser )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -66,6 +66,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextBrowser.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QTextEdit
+ *     QTextEdit()
  *  $END$
  */

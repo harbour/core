@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -124,7 +156,7 @@ METHOD QLayout:addWidget( pW )
 
 
 METHOD QLayout:contentsRect()
-   RETURN Qt_QLayout_contentsRect( ::pPtr )
+   RETURN HB_QRect():from( Qt_QLayout_contentsRect( ::pPtr ) )
 
 
 METHOD QLayout:count()
@@ -148,23 +180,23 @@ METHOD QLayout:isEnabled()
 
 
 METHOD QLayout:itemAt( nIndex )
-   RETURN Qt_QLayout_itemAt( ::pPtr, nIndex )
+   RETURN HB_QLayoutItem():from( Qt_QLayout_itemAt( ::pPtr, nIndex ) )
 
 
 METHOD QLayout:maximumSize()
-   RETURN Qt_QLayout_maximumSize( ::pPtr )
+   RETURN HB_QSize():from( Qt_QLayout_maximumSize( ::pPtr ) )
 
 
 METHOD QLayout:menuBar()
-   RETURN Qt_QLayout_menuBar( ::pPtr )
+   RETURN HB_QWidget():from( Qt_QLayout_menuBar( ::pPtr ) )
 
 
 METHOD QLayout:minimumSize()
-   RETURN Qt_QLayout_minimumSize( ::pPtr )
+   RETURN HB_QSize():from( Qt_QLayout_minimumSize( ::pPtr ) )
 
 
 METHOD QLayout:parentWidget()
-   RETURN Qt_QLayout_parentWidget( ::pPtr )
+   RETURN HB_QWidget():from( Qt_QLayout_parentWidget( ::pPtr ) )
 
 
 METHOD QLayout:removeItem( pItem )
@@ -176,33 +208,26 @@ METHOD QLayout:removeWidget( pWidget )
 
 
 METHOD QLayout:setAlignment( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
-                // bool setAlignment ( QLayout * l, Qt::Alignment alignment )
-                // PO p QLayout, N n Qt::Alignment
-         RETURN Qt_QLayout_setAlignment_2( ::pPtr, ... )
-                // bool setAlignment ( QWidget * w, Qt::Alignment alignment )
-                // PO p QWidget, N n Qt::Alignment
-         // RETURN Qt_QLayout_setAlignment( ::pPtr, ... )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QLAYOUT"
+            RETURN Qt_QLayout_setAlignment_2( ::pPtr, ... )
+         CASE "QWIDGET"
+            RETURN Qt_QLayout_setAlignment( ::pPtr, ... )
+         ENDSWITCH
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // void setAlignment ( Qt::Alignment alignment )
-                // N n Qt::Alignment
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
          RETURN Qt_QLayout_setAlignment_1( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QLayout:setContentsMargins( nLeft, nTop, nRight, nBottom )
@@ -234,7 +259,7 @@ METHOD QLayout:spacing()
 
 
 METHOD QLayout:takeAt( nIndex )
-   RETURN Qt_QLayout_takeAt( ::pPtr, nIndex )
+   RETURN HB_QLayoutItem():from( Qt_QLayout_takeAt( ::pPtr, nIndex ) )
 
 
 METHOD QLayout:update()
@@ -242,5 +267,5 @@ METHOD QLayout:update()
 
 
 METHOD QLayout:closestAcceptableSize( pWidget, pSize )
-   RETURN Qt_QLayout_closestAcceptableSize( ::pPtr, hbqt_ptr( pWidget ), hbqt_ptr( pSize ) )
+   RETURN HB_QSize():from( Qt_QLayout_closestAcceptableSize( ::pPtr, hbqt_ptr( pWidget ), hbqt_ptr( pSize ) ) )
 

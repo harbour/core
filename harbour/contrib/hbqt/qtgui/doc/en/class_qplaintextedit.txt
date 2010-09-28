@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QPlainTextEdit( ... )
  *     QPlainTextEdit():from( pPtr_OR_oObj_of_type_QPlainTextEdit )
- *     QPlainTextEdit():configure( pPtr_OR_oObj_of_type_QPlainTextEdit )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -103,6 +103,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QPlainTextEdit.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QAbstractScrollArea
+ *     QAbstractScrollArea()
  *  $END$
  */

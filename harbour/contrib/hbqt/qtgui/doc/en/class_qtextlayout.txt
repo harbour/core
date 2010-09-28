@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QTextLayout( ... )
  *     QTextLayout():from( pPtr_OR_oObj_of_type_QTextLayout )
- *     QTextLayout():configure( pPtr_OR_oObj_of_type_QTextLayout )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QMdiArea( ... )
  *     QMdiArea():from( pPtr_OR_oObj_of_type_QMdiArea )
- *     QMdiArea():configure( pPtr_OR_oObj_of_type_QMdiArea )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -72,6 +72,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QMdiArea.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QAbstractScrollArea
+ *     QAbstractScrollArea()
  *  $END$
  */

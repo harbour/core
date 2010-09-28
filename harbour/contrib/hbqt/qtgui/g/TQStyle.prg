@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -135,7 +167,7 @@ METHOD QStyle:drawPrimitive( nElement, pOption, pPainter, pWidget )
 
 
 METHOD QStyle:generatedIconPixmap( nIconMode, pPixmap, pOption )
-   RETURN Qt_QStyle_generatedIconPixmap( ::pPtr, nIconMode, hbqt_ptr( pPixmap ), hbqt_ptr( pOption ) )
+   RETURN HB_QPixmap():from( Qt_QStyle_generatedIconPixmap( ::pPtr, nIconMode, hbqt_ptr( pPixmap ), hbqt_ptr( pOption ) ) )
 
 
 METHOD QStyle:hitTestComplexControl( nControl, pOption, pPosition, pWidget )
@@ -143,11 +175,11 @@ METHOD QStyle:hitTestComplexControl( nControl, pOption, pPosition, pWidget )
 
 
 METHOD QStyle:itemPixmapRect( pRectangle, nAlignment, pPixmap )
-   RETURN Qt_QStyle_itemPixmapRect( ::pPtr, hbqt_ptr( pRectangle ), nAlignment, hbqt_ptr( pPixmap ) )
+   RETURN HB_QRect():from( Qt_QStyle_itemPixmapRect( ::pPtr, hbqt_ptr( pRectangle ), nAlignment, hbqt_ptr( pPixmap ) ) )
 
 
 METHOD QStyle:itemTextRect( pMetrics, pRectangle, nAlignment, lEnabled, cText )
-   RETURN Qt_QStyle_itemTextRect( ::pPtr, hbqt_ptr( pMetrics ), hbqt_ptr( pRectangle ), nAlignment, lEnabled, cText )
+   RETURN HB_QRect():from( Qt_QStyle_itemTextRect( ::pPtr, hbqt_ptr( pMetrics ), hbqt_ptr( pRectangle ), nAlignment, lEnabled, cText ) )
 
 
 METHOD QStyle:layoutSpacing( nControl1, nControl2, nOrientation, pOption, pWidget )
@@ -159,41 +191,34 @@ METHOD QStyle:pixelMetric( nMetric, pOption, pWidget )
 
 
 METHOD QStyle:polish( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // virtual void polish ( QWidget * widget )
-                // PO p QWidget
-         RETURN Qt_QStyle_polish( ::pPtr, ... )
-                // virtual void polish ( QApplication * application )
-                // PO p QApplication
-         // RETURN Qt_QStyle_polish_1( ::pPtr, ... )
-                // virtual void polish ( QPalette & palette )
-                // PO p QPalette
-         // RETURN Qt_QStyle_polish_2( ::pPtr, ... )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QWIDGET"
+            RETURN Qt_QStyle_polish( ::pPtr, ... )
+         CASE "QAPPLICATION"
+            RETURN Qt_QStyle_polish_1( ::pPtr, ... )
+         CASE "QPALETTE"
+            RETURN Qt_QStyle_polish_2( ::pPtr, ... )
+         ENDSWITCH
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QStyle:sizeFromContents( nType, pOption, pContentsSize, pWidget )
-   RETURN Qt_QStyle_sizeFromContents( ::pPtr, nType, hbqt_ptr( pOption ), hbqt_ptr( pContentsSize ), hbqt_ptr( pWidget ) )
+   RETURN HB_QSize():from( Qt_QStyle_sizeFromContents( ::pPtr, nType, hbqt_ptr( pOption ), hbqt_ptr( pContentsSize ), hbqt_ptr( pWidget ) ) )
 
 
 METHOD QStyle:standardIcon( nStandardIcon, pOption, pWidget )
-   RETURN Qt_QStyle_standardIcon( ::pPtr, nStandardIcon, hbqt_ptr( pOption ), hbqt_ptr( pWidget ) )
+   RETURN HB_QIcon():from( Qt_QStyle_standardIcon( ::pPtr, nStandardIcon, hbqt_ptr( pOption ), hbqt_ptr( pWidget ) ) )
 
 
 METHOD QStyle:standardPalette()
-   RETURN Qt_QStyle_standardPalette( ::pPtr )
+   RETURN HB_QPalette():from( Qt_QStyle_standardPalette( ::pPtr ) )
 
 
 METHOD QStyle:styleHint( nHint, pOption, pWidget, pReturnData )
@@ -201,38 +226,32 @@ METHOD QStyle:styleHint( nHint, pOption, pWidget, pReturnData )
 
 
 METHOD QStyle:subControlRect( nControl, pOption, nSubControl, pWidget )
-   RETURN Qt_QStyle_subControlRect( ::pPtr, nControl, hbqt_ptr( pOption ), nSubControl, hbqt_ptr( pWidget ) )
+   RETURN HB_QRect():from( Qt_QStyle_subControlRect( ::pPtr, nControl, hbqt_ptr( pOption ), nSubControl, hbqt_ptr( pWidget ) ) )
 
 
 METHOD QStyle:subElementRect( nElement, pOption, pWidget )
-   RETURN Qt_QStyle_subElementRect( ::pPtr, nElement, hbqt_ptr( pOption ), hbqt_ptr( pWidget ) )
+   RETURN HB_QRect():from( Qt_QStyle_subElementRect( ::pPtr, nElement, hbqt_ptr( pOption ), hbqt_ptr( pWidget ) ) )
 
 
 METHOD QStyle:unpolish( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // virtual void unpolish ( QWidget * widget )
-                // PO p QWidget
-         RETURN Qt_QStyle_unpolish( ::pPtr, ... )
-                // virtual void unpolish ( QApplication * application )
-                // PO p QApplication
-         // RETURN Qt_QStyle_unpolish_1( ::pPtr, ... )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QWIDGET"
+            RETURN Qt_QStyle_unpolish( ::pPtr, ... )
+         CASE "QAPPLICATION"
+            RETURN Qt_QStyle_unpolish_1( ::pPtr, ... )
+         ENDSWITCH
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QStyle:alignedRect( nDirection, nAlignment, pSize, pRectangle )
-   RETURN Qt_QStyle_alignedRect( ::pPtr, nDirection, nAlignment, hbqt_ptr( pSize ), hbqt_ptr( pRectangle ) )
+   RETURN HB_QRect():from( Qt_QStyle_alignedRect( ::pPtr, nDirection, nAlignment, hbqt_ptr( pSize ), hbqt_ptr( pRectangle ) ) )
 
 
 METHOD QStyle:sliderPositionFromValue( nMin, nMax, nLogicalValue, nSpan, lUpsideDown )
@@ -248,9 +267,9 @@ METHOD QStyle:visualAlignment( nDirection, nAlignment )
 
 
 METHOD QStyle:visualPos( nDirection, pBoundingRectangle, pLogicalPosition )
-   RETURN Qt_QStyle_visualPos( ::pPtr, nDirection, hbqt_ptr( pBoundingRectangle ), hbqt_ptr( pLogicalPosition ) )
+   RETURN HB_QPoint():from( Qt_QStyle_visualPos( ::pPtr, nDirection, hbqt_ptr( pBoundingRectangle ), hbqt_ptr( pLogicalPosition ) ) )
 
 
 METHOD QStyle:visualRect( nDirection, pBoundingRectangle, pLogicalRectangle )
-   RETURN Qt_QStyle_visualRect( ::pPtr, nDirection, hbqt_ptr( pBoundingRectangle ), hbqt_ptr( pLogicalRectangle ) )
+   RETURN HB_QRect():from( Qt_QStyle_visualRect( ::pPtr, nDirection, hbqt_ptr( pBoundingRectangle ), hbqt_ptr( pLogicalRectangle ) ) )
 

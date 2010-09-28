@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QDesignerActionEditorInterface( ... )
  *     QDesignerActionEditorInterface():from( pPtr_OR_oObj_of_type_QDesignerActionEditorInterface )
- *     QDesignerActionEditorInterface():configure( pPtr_OR_oObj_of_type_QDesignerActionEditorInterface )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -50,6 +50,6 @@
  *     C++ wrappers  : contrib/hbqt/qtdesigner/QDesignerActionEditorInterface.cpp
  *     Library       : hbqtdesigner
  *  $SEEALSO$
- *     QWidget
+ *     QWidget()
  *  $END$
  */

@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QStyleOptionComboBox( ... )
  *     QStyleOptionComboBox():from( pPtr_OR_oObj_of_type_QStyleOptionComboBox )
- *     QStyleOptionComboBox():configure( pPtr_OR_oObj_of_type_QStyleOptionComboBox )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -52,6 +52,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionComboBox.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QStyleOption
+ *     QStyleOption()
  *  $END$
  */

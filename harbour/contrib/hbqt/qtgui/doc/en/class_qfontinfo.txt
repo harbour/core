@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QFontInfo( ... )
  *     QFontInfo():from( pPtr_OR_oObj_of_type_QFontInfo )
- *     QFontInfo():configure( pPtr_OR_oObj_of_type_QFontInfo )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QAction( ... )
  *     QAction():from( pPtr_OR_oObj_of_type_QAction )
- *     QAction():configure( pPtr_OR_oObj_of_type_QAction )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -96,6 +96,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QAction.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

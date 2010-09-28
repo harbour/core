@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QDockWidget( ... )
  *     QDockWidget():from( pPtr_OR_oObj_of_type_QDockWidget )
- *     QDockWidget():configure( pPtr_OR_oObj_of_type_QDockWidget )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -58,6 +58,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QDockWidget.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QWidget
+ *     QWidget()
  *  $END$
  */

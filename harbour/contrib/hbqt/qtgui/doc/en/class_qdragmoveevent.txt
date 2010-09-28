@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QDragMoveEvent( ... )
  *     QDragMoveEvent():from( pPtr_OR_oObj_of_type_QDragMoveEvent )
- *     QDragMoveEvent():configure( pPtr_OR_oObj_of_type_QDragMoveEvent )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -51,6 +51,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QDragMoveEvent.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QDropEvent
+ *     QDropEvent()
  *  $END$
  */

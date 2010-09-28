@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QGraphicsLinearLayout( ... )
  *     QGraphicsLinearLayout():from( pPtr_OR_oObj_of_type_QGraphicsLinearLayout )
- *     QGraphicsLinearLayout():configure( pPtr_OR_oObj_of_type_QGraphicsLinearLayout )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -62,6 +62,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsLinearLayout.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QGraphicsLayout
+ *     QGraphicsLayout()
  *  $END$
  */

@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QTransform( ... )
  *     QTransform():from( pPtr_OR_oObj_of_type_QTransform )
- *     QTransform():configure( pPtr_OR_oObj_of_type_QTransform )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

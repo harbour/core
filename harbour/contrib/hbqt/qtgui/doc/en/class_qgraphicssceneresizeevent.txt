@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QGraphicsSceneResizeEvent( ... )
  *     QGraphicsSceneResizeEvent():from( pPtr_OR_oObj_of_type_QGraphicsSceneResizeEvent )
- *     QGraphicsSceneResizeEvent():configure( pPtr_OR_oObj_of_type_QGraphicsSceneResizeEvent )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -48,6 +48,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsSceneResizeEvent.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QGraphicsSceneEvent
+ *     QGraphicsSceneEvent()
  *  $END$
  */

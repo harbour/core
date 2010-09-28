@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QStringList( ... )
  *     QStringList():from( pPtr_OR_oObj_of_type_QStringList )
- *     QStringList():configure( pPtr_OR_oObj_of_type_QStringList )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -77,6 +77,6 @@
  *     C++ wrappers  : contrib/hbqt/qtcore/QStringList.cpp
  *     Library       : hbqtcore
  *  $SEEALSO$
- *     QList
+ *     QList()
  *  $END$
  */

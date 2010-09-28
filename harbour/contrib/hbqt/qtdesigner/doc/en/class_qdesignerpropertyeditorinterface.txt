@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QDesignerPropertyEditorInterface( ... )
  *     QDesignerPropertyEditorInterface():from( pPtr_OR_oObj_of_type_QDesignerPropertyEditorInterface )
- *     QDesignerPropertyEditorInterface():configure( pPtr_OR_oObj_of_type_QDesignerPropertyEditorInterface )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -53,6 +53,6 @@
  *     C++ wrappers  : contrib/hbqt/qtdesigner/QDesignerPropertyEditorInterface.cpp
  *     Library       : hbqtdesigner
  *  $SEEALSO$
- *     QWidget
+ *     QWidget()
  *  $END$
  */

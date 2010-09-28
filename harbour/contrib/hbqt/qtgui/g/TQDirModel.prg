@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -125,7 +157,7 @@ METHOD QDirModel:columnCount( pParent )
 
 
 METHOD QDirModel:data( pIndex, nRole )
-   RETURN Qt_QDirModel_data( ::pPtr, hbqt_ptr( pIndex ), nRole )
+   RETURN HB_QVariant():from( Qt_QDirModel_data( ::pPtr, hbqt_ptr( pIndex ), nRole ) )
 
 
 METHOD QDirModel:dropMimeData( pData, nAction, nRow, nColumn, pParent )
@@ -133,11 +165,11 @@ METHOD QDirModel:dropMimeData( pData, nAction, nRow, nColumn, pParent )
 
 
 METHOD QDirModel:fileIcon( pIndex )
-   RETURN Qt_QDirModel_fileIcon( ::pPtr, hbqt_ptr( pIndex ) )
+   RETURN HB_QIcon():from( Qt_QDirModel_fileIcon( ::pPtr, hbqt_ptr( pIndex ) ) )
 
 
 METHOD QDirModel:fileInfo( pIndex )
-   RETURN Qt_QDirModel_fileInfo( ::pPtr, hbqt_ptr( pIndex ) )
+   RETURN HB_QFileInfo():from( Qt_QDirModel_fileInfo( ::pPtr, hbqt_ptr( pIndex ) ) )
 
 
 METHOD QDirModel:fileName( pIndex )
@@ -161,49 +193,37 @@ METHOD QDirModel:hasChildren( pParent )
 
 
 METHOD QDirModel:headerData( nSection, nOrientation, nRole )
-   RETURN Qt_QDirModel_headerData( ::pPtr, nSection, nOrientation, nRole )
+   RETURN HB_QVariant():from( Qt_QDirModel_headerData( ::pPtr, nSection, nOrientation, nRole ) )
 
 
 METHOD QDirModel:iconProvider()
-   RETURN Qt_QDirModel_iconProvider( ::pPtr )
+   RETURN HB_QFileIconProvider():from( Qt_QDirModel_iconProvider( ::pPtr ) )
 
 
 METHOD QDirModel:index( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 3
+   SWITCH PCount()
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "PO"
-                // virtual QModelIndex index ( int row, int column, const QModelIndex & parent = QModelIndex() ) const
-                // N n int, N n int, PO p QModelIndex
-         RETURN QModelIndex():from( Qt_QDirModel_index( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN HB_QModelIndex():from( Qt_QDirModel_index( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
-                // QModelIndex index ( const QString & path, int column = 0 ) const
-                // C c QString, N n int
-         RETURN QModelIndex():from( Qt_QDirModel_index_1( ::pPtr, ... ) )
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // virtual QModelIndex index ( int row, int column, const QModelIndex & parent = QModelIndex() ) const
-                // N n int, N n int, PO p QModelIndex
-         RETURN QModelIndex():from( Qt_QDirModel_index( ::pPtr, ... ) )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QModelIndex():from( Qt_QDirModel_index_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QModelIndex():from( Qt_QDirModel_index( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // QModelIndex index ( const QString & path, int column = 0 ) const
-                // C c QString, N n int
-         RETURN QModelIndex():from( Qt_QDirModel_index_1( ::pPtr, ... ) )
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QModelIndex():from( Qt_QDirModel_index_1( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QDirModel:isDir( pIndex )
@@ -219,19 +239,19 @@ METHOD QDirModel:lazyChildCount()
 
 
 METHOD QDirModel:mimeTypes()
-   RETURN Qt_QDirModel_mimeTypes( ::pPtr )
+   RETURN HB_QStringList():from( Qt_QDirModel_mimeTypes( ::pPtr ) )
 
 
 METHOD QDirModel:mkdir( pParent, cName )
-   RETURN Qt_QDirModel_mkdir( ::pPtr, hbqt_ptr( pParent ), cName )
+   RETURN HB_QModelIndex():from( Qt_QDirModel_mkdir( ::pPtr, hbqt_ptr( pParent ), cName ) )
 
 
 METHOD QDirModel:nameFilters()
-   RETURN Qt_QDirModel_nameFilters( ::pPtr )
+   RETURN HB_QStringList():from( Qt_QDirModel_nameFilters( ::pPtr ) )
 
 
 METHOD QDirModel:parent( pChild )
-   RETURN Qt_QDirModel_parent( ::pPtr, hbqt_ptr( pChild ) )
+   RETURN HB_QModelIndex():from( Qt_QDirModel_parent( ::pPtr, hbqt_ptr( pChild ) ) )
 
 
 METHOD QDirModel:remove( pIndex )

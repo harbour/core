@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QStyleOptionSpinBox( ... )
  *     QStyleOptionSpinBox():from( pPtr_OR_oObj_of_type_QStyleOptionSpinBox )
- *     QStyleOptionSpinBox():configure( pPtr_OR_oObj_of_type_QStyleOptionSpinBox )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -49,6 +49,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionSpinBox.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QStyleOptionComplex
+ *     QStyleOptionComplex()
  *  $END$
  */

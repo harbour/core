@@ -68,6 +68,7 @@
 #include "hbclass.ch"
 #include "common.ch"
 #include "error.ch"
+#include "hbtrace.ch"
 
 #include "hbqtgui.ch"
 
@@ -156,8 +157,6 @@ METHOD HbQtUI:create( cFile, qParent )
 METHOD HbQtUI:destroy()
    LOCAL a_, i
 
-   ::oWidget:hide()
-
    ::pSlots := NIL
    ::pEvents := NIL
 
@@ -227,7 +226,7 @@ METHOD HbQtUI:loadContents( cUiFull )
 /*----------------------------------------------------------------------*/
 
 METHOD HbQtUI:loadUI( cUiFull, qParent )
-   LOCAL oWidget, qUiLoader, qFile, pWidget
+   LOCAL oWidget, qUiLoader, qFile //, pWidget
    #if 1
    LOCAL cBuffer
 
@@ -242,6 +241,8 @@ METHOD HbQtUI:loadUI( cUiFull, qParent )
    #endif
    IF qFile:open( 1 )
       qUiLoader  := QUiLoader()
+      oWidget := qUiLoader:load( qFile, qParent )
+      #if 0
       pWidget    := qUiLoader:load( qFile, qParent )
       DO CASE
       CASE ::widgets[ 1,1 ] == "QWidget"
@@ -253,6 +254,7 @@ METHOD HbQtUI:loadUI( cUiFull, qParent )
       OTHERWISE
          oWidget    := QWidget():from( pWidget )
       ENDCASE
+      #endif
       qFile:close()
       qFile := NIL
       qUiLoader := NIL
@@ -293,7 +295,9 @@ METHOD HbQtUI:OnError( ... )
          Eval( ErrorBlock(), oError )
       ENDIF
    ELSE
-      xReturn := ::oWidget:&cMsg( ... )
+      IF ::oWidget:isValidObject()
+         xReturn := ::oWidget:&cMsg( ... )
+      ENDIF
    ENDIF
 
    RETURN xReturn

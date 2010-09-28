@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -126,7 +158,7 @@ METHOD QProcess:closeWriteChannel()
 
 
 METHOD QProcess:environment()
-   RETURN Qt_QProcess_environment( ::pPtr )
+   RETURN HB_QStringList():from( Qt_QProcess_environment( ::pPtr ) )
 
 
 METHOD QProcess:error()
@@ -146,11 +178,11 @@ METHOD QProcess:processChannelMode()
 
 
 METHOD QProcess:readAllStandardError()
-   RETURN Qt_QProcess_readAllStandardError( ::pPtr )
+   RETURN HB_QByteArray():from( Qt_QProcess_readAllStandardError( ::pPtr ) )
 
 
 METHOD QProcess:readAllStandardOutput()
-   RETURN Qt_QProcess_readAllStandardOutput( ::pPtr )
+   RETURN HB_QByteArray():from( Qt_QProcess_readAllStandardOutput( ::pPtr ) )
 
 
 METHOD QProcess:readChannel()
@@ -190,41 +222,29 @@ METHOD QProcess:setWorkingDirectory( cDir )
 
 
 METHOD QProcess:start( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 3
+   SWITCH PCount()
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "N"
-                // void start ( const QString & program, const QStringList & arguments, OpenMode mode = ReadWrite )
-                // C c QString, PO p QStringList, N n QProcess::OpenMode
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
          RETURN Qt_QProcess_start( ::pPtr, ... )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
-                // void start ( const QString & program, OpenMode mode = ReadWrite )
-                // C c QString, N n QProcess::OpenMode
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QProcess_start_1( ::pPtr, ... )
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO"
-                // void start ( const QString & program, const QStringList & arguments, OpenMode mode = ReadWrite )
-                // C c QString, PO p QStringList, N n QProcess::OpenMode
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
          RETURN Qt_QProcess_start( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // void start ( const QString & program, OpenMode mode = ReadWrite )
-                // C c QString, N n QProcess::OpenMode
+      CASE hb_isChar( hb_pvalue( 1 ) )
          RETURN Qt_QProcess_start_1( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QProcess:state()
@@ -244,75 +264,55 @@ METHOD QProcess:workingDirectory()
 
 
 METHOD QProcess:execute( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO"
-                // int execute ( const QString & program, const QStringList & arguments )
-                // C c QString, PO p QStringList
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
          RETURN Qt_QProcess_execute( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // int execute ( const QString & program )
-                // C c QString
+      CASE hb_isChar( hb_pvalue( 1 ) )
          RETURN Qt_QProcess_execute_1( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QProcess:startDetached( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 4
+   SWITCH PCount()
+   CASE 4
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "C" .AND. aV[ 4 ] $ "N"
-                // bool startDetached ( const QString & program, const QStringList & arguments, const QString & workingDirectory, qint64 * pid = 0 )
-                // C c QString, PO p QStringList, C c QString, N @ qint64
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
          RETURN Qt_QProcess_startDetached( ::pPtr, ... )
       ENDCASE
-   CASE nP == 3
+      EXIT
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "C"
-                // bool startDetached ( const QString & program, const QStringList & arguments, const QString & workingDirectory, qint64 * pid = 0 )
-                // C c QString, PO p QStringList, C c QString, N @ qint64
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
          RETURN Qt_QProcess_startDetached( ::pPtr, ... )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO"
-                // bool startDetached ( const QString & program, const QStringList & arguments )
-                // C c QString, PO p QStringList
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
          RETURN Qt_QProcess_startDetached_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // bool startDetached ( const QString & program )
-                // C c QString
+      CASE hb_isChar( hb_pvalue( 1 ) )
          RETURN Qt_QProcess_startDetached_2( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QProcess:systemEnvironment()
-   RETURN Qt_QProcess_systemEnvironment( ::pPtr )
+   RETURN HB_QStringList():from( Qt_QProcess_systemEnvironment( ::pPtr ) )
 
 
 METHOD QProcess:kill()

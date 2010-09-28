@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QDoubleValidator( ... )
  *     QDoubleValidator():from( pPtr_OR_oObj_of_type_QDoubleValidator )
- *     QDoubleValidator():configure( pPtr_OR_oObj_of_type_QDoubleValidator )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -55,6 +55,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QDoubleValidator.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QValidator
+ *     QValidator()
  *  $END$
  */

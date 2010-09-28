@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -120,38 +152,27 @@ METHOD QMessageBox:new( ... )
 
 
 METHOD QMessageBox:addButton( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
-                // QPushButton * addButton ( const QString & text, ButtonRole role )
-                // C c QString, N n QMessageBox::ButtonRole
-         RETURN QPushButton():from( Qt_QMessageBox_addButton_1( ::pPtr, ... ) )
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
-                // void addButton ( QAbstractButton * button, ButtonRole role )
-                // PO p QAbstractButton, N n QMessageBox::ButtonRole
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QPushButton():from( Qt_QMessageBox_addButton_1( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QMessageBox_addButton( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // QPushButton * addButton ( StandardButton button )
-                // N n QMessageBox::StandardButton
-         RETURN QPushButton():from( Qt_QMessageBox_addButton_2( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QPushButton():from( Qt_QMessageBox_addButton_2( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QMessageBox:button( nWhich )
-   RETURN Qt_QMessageBox_button( ::pPtr, nWhich )
+   RETURN HB_QAbstractButton():from( Qt_QMessageBox_button( ::pPtr, nWhich ) )
 
 
 METHOD QMessageBox:buttonRole( pButton )
@@ -159,15 +180,15 @@ METHOD QMessageBox:buttonRole( pButton )
 
 
 METHOD QMessageBox:buttons()
-   RETURN Qt_QMessageBox_buttons( ::pPtr )
+   RETURN HB_QList():from( Qt_QMessageBox_buttons( ::pPtr ) )
 
 
 METHOD QMessageBox:clickedButton()
-   RETURN Qt_QMessageBox_clickedButton( ::pPtr )
+   RETURN HB_QAbstractButton():from( Qt_QMessageBox_clickedButton( ::pPtr ) )
 
 
 METHOD QMessageBox:defaultButton()
-   RETURN Qt_QMessageBox_defaultButton( ::pPtr )
+   RETURN HB_QPushButton():from( Qt_QMessageBox_defaultButton( ::pPtr ) )
 
 
 METHOD QMessageBox:detailedText()
@@ -175,7 +196,7 @@ METHOD QMessageBox:detailedText()
 
 
 METHOD QMessageBox:escapeButton()
-   RETURN Qt_QMessageBox_escapeButton( ::pPtr )
+   RETURN HB_QAbstractButton():from( Qt_QMessageBox_escapeButton( ::pPtr ) )
 
 
 METHOD QMessageBox:icon()
@@ -183,7 +204,7 @@ METHOD QMessageBox:icon()
 
 
 METHOD QMessageBox:iconPixmap()
-   RETURN Qt_QMessageBox_iconPixmap( ::pPtr )
+   RETURN HB_QPixmap():from( Qt_QMessageBox_iconPixmap( ::pPtr ) )
 
 
 METHOD QMessageBox:informativeText()
@@ -199,27 +220,17 @@ METHOD QMessageBox:removeButton( pButton )
 
 
 METHOD QMessageBox:setDefaultButton( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // void setDefaultButton ( StandardButton button )
-                // N n QMessageBox::StandardButton
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
          RETURN Qt_QMessageBox_setDefaultButton_1( ::pPtr, ... )
-      CASE aV[ 1 ] $ "PO"
-                // void setDefaultButton ( QPushButton * button )
-                // PO p QPushButton
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QMessageBox_setDefaultButton( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QMessageBox:setDetailedText( cText )
@@ -227,27 +238,17 @@ METHOD QMessageBox:setDetailedText( cText )
 
 
 METHOD QMessageBox:setEscapeButton( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // void setEscapeButton ( StandardButton button )
-                // N n QMessageBox::StandardButton
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
          RETURN Qt_QMessageBox_setEscapeButton_1( ::pPtr, ... )
-      CASE aV[ 1 ] $ "PO"
-                // void setEscapeButton ( QAbstractButton * button )
-                // PO p QAbstractButton
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QMessageBox_setEscapeButton( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QMessageBox:setIcon( nIcon )

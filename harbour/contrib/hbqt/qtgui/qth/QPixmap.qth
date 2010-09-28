@@ -167,24 +167,8 @@ QImage toImage () const
 // CGImageRef toMacCGImageRef () const
 //HBITMAP toWinHBITMAP ( HBitmapFormat format = NoAlpha ) const
 
-QPixmap transformed ( ... ){
-   QPixmap * p = hbqt_par_QPixmap( 1 );
-   if( p )
-   {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-
-      if( q->type == HBQT_TYPE_QTransform )
-      {
-         hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->transformed( *hbqt_par_QTransform( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::TransformationMode ) hb_parni( 3 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ), true ) );
-      }
-      else if( q->type == HBQT_TYPE_QMatrix )
-      {
-         hb_retptrGC( hbqt_gcAllocate_QPixmap( new QPixmap( ( p )->transformed( *hbqt_par_QMatrix( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::TransformationMode ) hb_parni( 3 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ), true ) );
-      }
-   }
-}
-//QPixmap transformed ( const QTransform & transform, Qt::TransformationMode mode = Qt::FastTransformation ) const
-//QPixmap transformed ( const QMatrix & matrix, Qt::TransformationMode mode = Qt::FastTransformation ) const
+QPixmap transformed ( const QTransform & transform, Qt::TransformationMode mode = Qt::FastTransformation ) const
+QPixmap transformed ( const QMatrix & matrix, Qt::TransformationMode mode = Qt::FastTransformation ) const
 
 int width () const
 int defaultDepth ()

@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QTextItem( ... )
  *     QTextItem():from( pPtr_OR_oObj_of_type_QTextItem )
- *     QTextItem():configure( pPtr_OR_oObj_of_type_QTextItem )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QProcess( ... )
  *     QProcess():from( pPtr_OR_oObj_of_type_QProcess )
- *     QProcess():configure( pPtr_OR_oObj_of_type_QProcess )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -79,6 +79,6 @@
  *     C++ wrappers  : contrib/hbqt/qtcore/QProcess.cpp
  *     Library       : hbqtcore
  *  $SEEALSO$
- *     QIODevice
+ *     QIODevice()
  *  $END$
  */

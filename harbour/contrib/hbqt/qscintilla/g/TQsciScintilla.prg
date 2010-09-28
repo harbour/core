@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -270,34 +302,23 @@ METHOD QsciScintilla:new( ... )
 
 
 METHOD QsciScintilla:annotate( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 3
+   SWITCH PCount()
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "C" .AND. aV[ 3 ] $ "N"
-                // void annotate (int line, const QString &text, int style)
-                // N n int, C c QString, N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
          RETURN Qt_QsciScintilla_annotate( ::pPtr, ... )
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "C" .AND. aV[ 3 ] $ "PO"
-                // void annotate (int line, const QString &text, const QsciStyle &style)
-                // N n int, C c QString, PO p QsciStyle
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
          RETURN Qt_QsciScintilla_annotate_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PO"
-                // void annotate (int line, const QsciStyledText &text)
-                // N n int, PO p QsciStyledText
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
          RETURN Qt_QsciScintilla_annotate_2( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QsciScintilla:annotation( nLine )
@@ -377,7 +398,7 @@ METHOD QsciScintilla:clearRegisteredImages()
 
 
 METHOD QsciScintilla:color()
-   RETURN Qt_QsciScintilla_color( ::pPtr )
+   RETURN HB_QColor():from( Qt_QsciScintilla_color( ::pPtr ) )
 
 
 METHOD QsciScintilla:convertEols( nMode )
@@ -385,7 +406,7 @@ METHOD QsciScintilla:convertEols( nMode )
 
 
 METHOD QsciScintilla:document()
-   RETURN Qt_QsciScintilla_document( ::pPtr )
+   RETURN HB_QsciDocument():from( Qt_QsciScintilla_document( ::pPtr ) )
 
 
 METHOD QsciScintilla:endUndoAction()
@@ -393,7 +414,7 @@ METHOD QsciScintilla:endUndoAction()
 
 
 METHOD QsciScintilla:edgeColor()
-   RETURN Qt_QsciScintilla_edgeColor( ::pPtr )
+   RETURN HB_QColor():from( Qt_QsciScintilla_edgeColor( ::pPtr ) )
 
 
 METHOD QsciScintilla:edgeColumn()
@@ -513,7 +534,7 @@ METHOD QsciScintilla:length()
 
 
 METHOD QsciScintilla:lexer()
-   RETURN Qt_QsciScintilla_lexer( ::pPtr )
+   RETURN HB_QsciLexer():from( Qt_QsciScintilla_lexer( ::pPtr ) )
 
 
 METHOD QsciScintilla:marginLineNumbers( nMargin )
@@ -537,46 +558,29 @@ METHOD QsciScintilla:marginWidth( nMargin )
 
 
 METHOD QsciScintilla:markerDefine( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
-                // int markerDefine (char ch, int mnr=-1)
-                // C c char, N n int
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QsciScintilla_markerDefine_1( ::pPtr, ... )
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // int markerDefine (MarkerSymbol sym, int mnr=-1)
-                // N n QsciScintilla::MarkerSymbol, N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QsciScintilla_markerDefine( ::pPtr, ... )
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
-                // int markerDefine (const QPixmap &pm, int mnr=-1)
-                // PO p QPixmap, N n int
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QsciScintilla_markerDefine_2( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // int markerDefine (char ch, int mnr=-1)
-                // C c char, N n int
+      CASE hb_isChar( hb_pvalue( 1 ) )
          RETURN Qt_QsciScintilla_markerDefine_1( ::pPtr, ... )
-      CASE aV[ 1 ] $ "N"
-                // int markerDefine (MarkerSymbol sym, int mnr=-1)
-                // N n QsciScintilla::MarkerSymbol, N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
          RETURN Qt_QsciScintilla_markerDefine( ::pPtr, ... )
-      CASE aV[ 1 ] $ "PO"
-                // int markerDefine (const QPixmap &pm, int mnr=-1)
-                // PO p QPixmap, N n int
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QsciScintilla_markerDefine_2( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QsciScintilla:markerAdd( nLinenr, nMnr )
@@ -612,7 +616,7 @@ METHOD QsciScintilla:markerFindPrevious( nLinenr, nMask )
 
 
 METHOD QsciScintilla:paper()
-   RETURN Qt_QsciScintilla_paper( ::pPtr )
+   RETURN HB_QColor():from( Qt_QsciScintilla_paper( ::pPtr ) )
 
 
 METHOD QsciScintilla:positionFromLineIndex( nLine, nIndex )
@@ -696,34 +700,23 @@ METHOD QsciScintilla:setEdgeMode( nMode )
 
 
 METHOD QsciScintilla:setMarginText( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 3
+   SWITCH PCount()
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "C" .AND. aV[ 3 ] $ "N"
-                // void setMarginText (int line, const QString &text, int style)
-                // N n int, C c QString, N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
          RETURN Qt_QsciScintilla_setMarginText( ::pPtr, ... )
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "C" .AND. aV[ 3 ] $ "PO"
-                // void setMarginText (int line, const QString &text, const QsciStyle &style)
-                // N n int, C c QString, PO p QsciStyle
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
          RETURN Qt_QsciScintilla_setMarginText_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PO"
-                // void setMarginText (int line, const QsciStyledText &text)
-                // N n int, PO p QsciStyledText
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
          RETURN Qt_QsciScintilla_setMarginText_2( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QsciScintilla:setMarginType( nMargin, nType )
@@ -779,7 +772,7 @@ METHOD QsciScintilla:showUserList( nId, pList )
 
 
 METHOD QsciScintilla:standardCommands()
-   RETURN Qt_QsciScintilla_standardCommands( ::pPtr )
+   RETURN HB_QsciCommandSet():from( Qt_QsciScintilla_standardCommands( ::pPtr ) )
 
 
 METHOD QsciScintilla:tabIndents()
@@ -791,26 +784,17 @@ METHOD QsciScintilla:tabWidth()
 
 
 METHOD QsciScintilla:text( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // QString text (int line) const
-                // N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
          RETURN Qt_QsciScintilla_text_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 0
-             // QString text () const
+      EXIT
+   CASE 0
       RETURN Qt_QsciScintilla_text( ::pPtr, ... )
-   ENDCASE
-   RETURN NIL
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QsciScintilla:textHeight( nLinenr )
@@ -1050,27 +1034,17 @@ METHOD QsciScintilla:setMarginSensitivity( nMargin, lSens )
 
 
 METHOD QsciScintilla:setMarginWidth( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "C"
-                // virtual void setMarginWidth (int margin, const QString &s)
-                // N n int, C c QString
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
          RETURN Qt_QsciScintilla_setMarginWidth_1( ::pPtr, ... )
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // virtual void setMarginWidth (int margin, int width)
-                // N n int, N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QsciScintilla_setMarginWidth( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QsciScintilla:setModified( lM )
@@ -1130,49 +1104,31 @@ METHOD QsciScintilla:unindent( nLine )
 
 
 METHOD QsciScintilla:zoomIn( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // virtual void zoomIn (int range)
-                // N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
          RETURN Qt_QsciScintilla_zoomIn( ::pPtr, ... )
       ENDCASE
-   CASE nP == 0
-             // virtual void zoomIn ()
+      EXIT
+   CASE 0
       RETURN Qt_QsciScintilla_zoomIn_1( ::pPtr, ... )
-   ENDCASE
-   RETURN NIL
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QsciScintilla:zoomOut( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // virtual void zoomOut (int range)
-                // N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
          RETURN Qt_QsciScintilla_zoomOut( ::pPtr, ... )
       ENDCASE
-   CASE nP == 0
-             // virtual void zoomOut ()
+      EXIT
+   CASE 0
       RETURN Qt_QsciScintilla_zoomOut_1( ::pPtr, ... )
-   ENDCASE
-   RETURN NIL
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QsciScintilla:zoomTo( nSize )

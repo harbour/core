@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QGraphicsSceneHoverEvent( ... )
  *     QGraphicsSceneHoverEvent():from( pPtr_OR_oObj_of_type_QGraphicsSceneHoverEvent )
- *     QGraphicsSceneHoverEvent():configure( pPtr_OR_oObj_of_type_QGraphicsSceneHoverEvent )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -53,6 +53,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsSceneHoverEvent.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QGraphicsSceneEvent
+ *     QGraphicsSceneEvent()
  *  $END$
  */

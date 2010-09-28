@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     HBQPlainTextEdit( ... )
  *     HBQPlainTextEdit():from( pPtr_OR_oObj_of_type_HBQPlainTextEdit )
- *     HBQPlainTextEdit():configure( pPtr_OR_oObj_of_type_HBQPlainTextEdit )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -102,6 +102,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/HBQPlainTextEdit.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QPlainTextEdit
+ *     QPlainTextEdit()
  *  $END$
  */

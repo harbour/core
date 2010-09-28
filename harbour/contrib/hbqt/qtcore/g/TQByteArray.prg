@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -183,23 +215,23 @@ METHOD QByteArray:new( ... )
 
 
 METHOD QByteArray:append( pBa )
-   RETURN Qt_QByteArray_append( ::pPtr, hbqt_ptr( pBa ) )
+   RETURN HB_QByteArray():from( Qt_QByteArray_append( ::pPtr, hbqt_ptr( pBa ) ) )
 
 
 METHOD QByteArray:append_1( cStr )
-   RETURN Qt_QByteArray_append_1( ::pPtr, cStr )
+   RETURN HB_QByteArray():from( Qt_QByteArray_append_1( ::pPtr, cStr ) )
 
 
 METHOD QByteArray:append_2( pStr )
-   RETURN Qt_QByteArray_append_2( ::pPtr, hbqt_ptr( pStr ) )
+   RETURN HB_QByteArray():from( Qt_QByteArray_append_2( ::pPtr, hbqt_ptr( pStr ) ) )
 
 
 METHOD QByteArray:append_3( pStr, nLen )
-   RETURN Qt_QByteArray_append_3( ::pPtr, hbqt_ptr( pStr ), nLen )
+   RETURN HB_QByteArray():from( Qt_QByteArray_append_3( ::pPtr, hbqt_ptr( pStr ), nLen ) )
 
 
 METHOD QByteArray:append_4( cCh )
-   RETURN Qt_QByteArray_append_4( ::pPtr, cCh )
+   RETURN HB_QByteArray():from( Qt_QByteArray_append_4( ::pPtr, cCh ) )
 
 
 METHOD QByteArray:at( nI )
@@ -259,7 +291,7 @@ METHOD QByteArray:endsWith_2( cCh )
 
 
 METHOD QByteArray:fill( cCh, nSize )
-   RETURN Qt_QByteArray_fill( ::pPtr, cCh, nSize )
+   RETURN HB_QByteArray():from( Qt_QByteArray_fill( ::pPtr, cCh, nSize ) )
 
 
 METHOD QByteArray:indexOf( pBa, nFrom )
@@ -279,19 +311,19 @@ METHOD QByteArray:indexOf_3( cCh, nFrom )
 
 
 METHOD QByteArray:insert( nI, pBa )
-   RETURN Qt_QByteArray_insert( ::pPtr, nI, hbqt_ptr( pBa ) )
+   RETURN HB_QByteArray():from( Qt_QByteArray_insert( ::pPtr, nI, hbqt_ptr( pBa ) ) )
 
 
 METHOD QByteArray:insert_1( nI, cStr )
-   RETURN Qt_QByteArray_insert_1( ::pPtr, nI, cStr )
+   RETURN HB_QByteArray():from( Qt_QByteArray_insert_1( ::pPtr, nI, cStr ) )
 
 
 METHOD QByteArray:insert_2( nI, pStr )
-   RETURN Qt_QByteArray_insert_2( ::pPtr, nI, hbqt_ptr( pStr ) )
+   RETURN HB_QByteArray():from( Qt_QByteArray_insert_2( ::pPtr, nI, hbqt_ptr( pStr ) ) )
 
 
 METHOD QByteArray:insert_3( nI, cCh )
-   RETURN Qt_QByteArray_insert_3( ::pPtr, nI, cCh )
+   RETURN HB_QByteArray():from( Qt_QByteArray_insert_3( ::pPtr, nI, cCh ) )
 
 
 METHOD QByteArray:isEmpty()
@@ -319,11 +351,11 @@ METHOD QByteArray:lastIndexOf_3( cCh, nFrom )
 
 
 METHOD QByteArray:left( nLen )
-   RETURN Qt_QByteArray_left( ::pPtr, nLen )
+   RETURN HB_QByteArray():from( Qt_QByteArray_left( ::pPtr, nLen ) )
 
 
 METHOD QByteArray:leftJustified( nWidth, cFill, lTruncate )
-   RETURN Qt_QByteArray_leftJustified( ::pPtr, nWidth, cFill, lTruncate )
+   RETURN HB_QByteArray():from( Qt_QByteArray_leftJustified( ::pPtr, nWidth, cFill, lTruncate ) )
 
 
 METHOD QByteArray:length()
@@ -331,19 +363,19 @@ METHOD QByteArray:length()
 
 
 METHOD QByteArray:mid( nPos, nLen )
-   RETURN Qt_QByteArray_mid( ::pPtr, nPos, nLen )
+   RETURN HB_QByteArray():from( Qt_QByteArray_mid( ::pPtr, nPos, nLen ) )
 
 
 METHOD QByteArray:prepend( pBa )
-   RETURN Qt_QByteArray_prepend( ::pPtr, hbqt_ptr( pBa ) )
+   RETURN HB_QByteArray():from( Qt_QByteArray_prepend( ::pPtr, hbqt_ptr( pBa ) ) )
 
 
 METHOD QByteArray:prepend_1( pStr )
-   RETURN Qt_QByteArray_prepend_1( ::pPtr, hbqt_ptr( pStr ) )
+   RETURN HB_QByteArray():from( Qt_QByteArray_prepend_1( ::pPtr, hbqt_ptr( pStr ) ) )
 
 
 METHOD QByteArray:prepend_2( cCh )
-   RETURN Qt_QByteArray_prepend_2( ::pPtr, cCh )
+   RETURN HB_QByteArray():from( Qt_QByteArray_prepend_2( ::pPtr, cCh ) )
 
 
 METHOD QByteArray:push_back( pOther )
@@ -371,63 +403,63 @@ METHOD QByteArray:push_front_2( cCh )
 
 
 METHOD QByteArray:remove( nPos, nLen )
-   RETURN Qt_QByteArray_remove( ::pPtr, nPos, nLen )
+   RETURN HB_QByteArray():from( Qt_QByteArray_remove( ::pPtr, nPos, nLen ) )
 
 
 METHOD QByteArray:repeated( nTimes )
-   RETURN Qt_QByteArray_repeated( ::pPtr, nTimes )
+   RETURN HB_QByteArray():from( Qt_QByteArray_repeated( ::pPtr, nTimes ) )
 
 
 METHOD QByteArray:replace( nPos, nLen, pAfter )
-   RETURN Qt_QByteArray_replace( ::pPtr, nPos, nLen, hbqt_ptr( pAfter ) )
+   RETURN HB_QByteArray():from( Qt_QByteArray_replace( ::pPtr, nPos, nLen, hbqt_ptr( pAfter ) ) )
 
 
 METHOD QByteArray:replace_1( nPos, nLen, pAfter )
-   RETURN Qt_QByteArray_replace_1( ::pPtr, nPos, nLen, hbqt_ptr( pAfter ) )
+   RETURN HB_QByteArray():from( Qt_QByteArray_replace_1( ::pPtr, nPos, nLen, hbqt_ptr( pAfter ) ) )
 
 
 METHOD QByteArray:replace_2( pBefore, pAfter )
-   RETURN Qt_QByteArray_replace_2( ::pPtr, hbqt_ptr( pBefore ), hbqt_ptr( pAfter ) )
+   RETURN HB_QByteArray():from( Qt_QByteArray_replace_2( ::pPtr, hbqt_ptr( pBefore ), hbqt_ptr( pAfter ) ) )
 
 
 METHOD QByteArray:replace_3( pBefore, pAfter )
-   RETURN Qt_QByteArray_replace_3( ::pPtr, hbqt_ptr( pBefore ), hbqt_ptr( pAfter ) )
+   RETURN HB_QByteArray():from( Qt_QByteArray_replace_3( ::pPtr, hbqt_ptr( pBefore ), hbqt_ptr( pAfter ) ) )
 
 
 METHOD QByteArray:replace_4( pBefore, nBsize, pAfter, nAsize )
-   RETURN Qt_QByteArray_replace_4( ::pPtr, hbqt_ptr( pBefore ), nBsize, hbqt_ptr( pAfter ), nAsize )
+   RETURN HB_QByteArray():from( Qt_QByteArray_replace_4( ::pPtr, hbqt_ptr( pBefore ), nBsize, hbqt_ptr( pAfter ), nAsize ) )
 
 
 METHOD QByteArray:replace_5( pBefore, pAfter )
-   RETURN Qt_QByteArray_replace_5( ::pPtr, hbqt_ptr( pBefore ), hbqt_ptr( pAfter ) )
+   RETURN HB_QByteArray():from( Qt_QByteArray_replace_5( ::pPtr, hbqt_ptr( pBefore ), hbqt_ptr( pAfter ) ) )
 
 
 METHOD QByteArray:replace_6( cBefore, pAfter )
-   RETURN Qt_QByteArray_replace_6( ::pPtr, cBefore, hbqt_ptr( pAfter ) )
+   RETURN HB_QByteArray():from( Qt_QByteArray_replace_6( ::pPtr, cBefore, hbqt_ptr( pAfter ) ) )
 
 
 METHOD QByteArray:replace_7( cBefore, pAfter )
-   RETURN Qt_QByteArray_replace_7( ::pPtr, cBefore, hbqt_ptr( pAfter ) )
+   RETURN HB_QByteArray():from( Qt_QByteArray_replace_7( ::pPtr, cBefore, hbqt_ptr( pAfter ) ) )
 
 
 METHOD QByteArray:replace_8( pBefore, pAfter )
-   RETURN Qt_QByteArray_replace_8( ::pPtr, hbqt_ptr( pBefore ), hbqt_ptr( pAfter ) )
+   RETURN HB_QByteArray():from( Qt_QByteArray_replace_8( ::pPtr, hbqt_ptr( pBefore ), hbqt_ptr( pAfter ) ) )
 
 
 METHOD QByteArray:replace_9( cBefore, pAfter )
-   RETURN Qt_QByteArray_replace_9( ::pPtr, cBefore, hbqt_ptr( pAfter ) )
+   RETURN HB_QByteArray():from( Qt_QByteArray_replace_9( ::pPtr, cBefore, hbqt_ptr( pAfter ) ) )
 
 
 METHOD QByteArray:replace_10( cBefore, cAfter )
-   RETURN Qt_QByteArray_replace_10( ::pPtr, cBefore, cAfter )
+   RETURN HB_QByteArray():from( Qt_QByteArray_replace_10( ::pPtr, cBefore, cAfter ) )
 
 
 METHOD QByteArray:replace_11( cBefore, pAfter )
-   RETURN Qt_QByteArray_replace_11( ::pPtr, cBefore, hbqt_ptr( pAfter ) )
+   RETURN HB_QByteArray():from( Qt_QByteArray_replace_11( ::pPtr, cBefore, hbqt_ptr( pAfter ) ) )
 
 
 METHOD QByteArray:replace_12( cBefore, cAfter )
-   RETURN Qt_QByteArray_replace_12( ::pPtr, cBefore, cAfter )
+   RETURN HB_QByteArray():from( Qt_QByteArray_replace_12( ::pPtr, cBefore, cAfter ) )
 
 
 METHOD QByteArray:reserve( nSize )
@@ -439,47 +471,47 @@ METHOD QByteArray:resize( nSize )
 
 
 METHOD QByteArray:right( nLen )
-   RETURN Qt_QByteArray_right( ::pPtr, nLen )
+   RETURN HB_QByteArray():from( Qt_QByteArray_right( ::pPtr, nLen ) )
 
 
 METHOD QByteArray:rightJustified( nWidth, cFill, lTruncate )
-   RETURN Qt_QByteArray_rightJustified( ::pPtr, nWidth, cFill, lTruncate )
+   RETURN HB_QByteArray():from( Qt_QByteArray_rightJustified( ::pPtr, nWidth, cFill, lTruncate ) )
 
 
 METHOD QByteArray:setNum( nN, nBase )
-   RETURN Qt_QByteArray_setNum( ::pPtr, nN, nBase )
+   RETURN HB_QByteArray():from( Qt_QByteArray_setNum( ::pPtr, nN, nBase ) )
 
 
 METHOD QByteArray:setNum_1( nN, nBase )
-   RETURN Qt_QByteArray_setNum_1( ::pPtr, nN, nBase )
+   RETURN HB_QByteArray():from( Qt_QByteArray_setNum_1( ::pPtr, nN, nBase ) )
 
 
 METHOD QByteArray:setNum_2( nN, nBase )
-   RETURN Qt_QByteArray_setNum_2( ::pPtr, nN, nBase )
+   RETURN HB_QByteArray():from( Qt_QByteArray_setNum_2( ::pPtr, nN, nBase ) )
 
 
 METHOD QByteArray:setNum_3( nN, nBase )
-   RETURN Qt_QByteArray_setNum_3( ::pPtr, nN, nBase )
+   RETURN HB_QByteArray():from( Qt_QByteArray_setNum_3( ::pPtr, nN, nBase ) )
 
 
 METHOD QByteArray:setNum_4( nN, nBase )
-   RETURN Qt_QByteArray_setNum_4( ::pPtr, nN, nBase )
+   RETURN HB_QByteArray():from( Qt_QByteArray_setNum_4( ::pPtr, nN, nBase ) )
 
 
 METHOD QByteArray:setNum_5( nN, nBase )
-   RETURN Qt_QByteArray_setNum_5( ::pPtr, nN, nBase )
+   RETURN HB_QByteArray():from( Qt_QByteArray_setNum_5( ::pPtr, nN, nBase ) )
 
 
 METHOD QByteArray:setNum_6( nN, cF, nPrec )
-   RETURN Qt_QByteArray_setNum_6( ::pPtr, nN, cF, nPrec )
+   RETURN HB_QByteArray():from( Qt_QByteArray_setNum_6( ::pPtr, nN, cF, nPrec ) )
 
 
 METHOD QByteArray:setNum_7( nN, cF, nPrec )
-   RETURN Qt_QByteArray_setNum_7( ::pPtr, nN, cF, nPrec )
+   RETURN HB_QByteArray():from( Qt_QByteArray_setNum_7( ::pPtr, nN, cF, nPrec ) )
 
 
 METHOD QByteArray:simplified()
-   RETURN Qt_QByteArray_simplified( ::pPtr )
+   RETURN HB_QByteArray():from( Qt_QByteArray_simplified( ::pPtr ) )
 
 
 METHOD QByteArray:size()
@@ -487,7 +519,7 @@ METHOD QByteArray:size()
 
 
 METHOD QByteArray:split( cSep )
-   RETURN Qt_QByteArray_split( ::pPtr, cSep )
+   RETURN HB_QList():from( Qt_QByteArray_split( ::pPtr, cSep ) )
 
 
 METHOD QByteArray:squeeze()
@@ -507,7 +539,7 @@ METHOD QByteArray:startsWith_2( cCh )
 
 
 METHOD QByteArray:toBase64()
-   RETURN Qt_QByteArray_toBase64( ::pPtr )
+   RETURN HB_QByteArray():from( Qt_QByteArray_toBase64( ::pPtr ) )
 
 
 METHOD QByteArray:toDouble( lOk )
@@ -519,7 +551,7 @@ METHOD QByteArray:toFloat( lOk )
 
 
 METHOD QByteArray:toHex()
-   RETURN Qt_QByteArray_toHex( ::pPtr )
+   RETURN HB_QByteArray():from( Qt_QByteArray_toHex( ::pPtr ) )
 
 
 METHOD QByteArray:toInt( lOk, nBase )
@@ -535,11 +567,11 @@ METHOD QByteArray:toLongLong( lOk, nBase )
 
 
 METHOD QByteArray:toLower()
-   RETURN Qt_QByteArray_toLower( ::pPtr )
+   RETURN HB_QByteArray():from( Qt_QByteArray_toLower( ::pPtr ) )
 
 
 METHOD QByteArray:toPercentEncoding( pExclude, pInclude, cPercent )
-   RETURN Qt_QByteArray_toPercentEncoding( ::pPtr, hbqt_ptr( pExclude ), hbqt_ptr( pInclude ), cPercent )
+   RETURN HB_QByteArray():from( Qt_QByteArray_toPercentEncoding( ::pPtr, hbqt_ptr( pExclude ), hbqt_ptr( pInclude ), cPercent ) )
 
 
 METHOD QByteArray:toShort( lOk, nBase )
@@ -563,11 +595,11 @@ METHOD QByteArray:toUShort( lOk, nBase )
 
 
 METHOD QByteArray:toUpper()
-   RETURN Qt_QByteArray_toUpper( ::pPtr )
+   RETURN HB_QByteArray():from( Qt_QByteArray_toUpper( ::pPtr ) )
 
 
 METHOD QByteArray:trimmed()
-   RETURN Qt_QByteArray_trimmed( ::pPtr )
+   RETURN HB_QByteArray():from( Qt_QByteArray_trimmed( ::pPtr ) )
 
 
 METHOD QByteArray:truncate( nPos )

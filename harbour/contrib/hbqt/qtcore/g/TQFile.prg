@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -116,30 +148,21 @@ METHOD QFile:close()
 
 
 METHOD QFile:copy( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "C"
-                // bool copy ( const QString & fileName, const QString & newName )
-                // C c QString, C c QString
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
          RETURN Qt_QFile_copy_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // bool copy ( const QString & newName )
-                // C c QString
+      CASE hb_isChar( hb_pvalue( 1 ) )
          RETURN Qt_QFile_copy( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QFile:error()
@@ -147,26 +170,17 @@ METHOD QFile:error()
 
 
 METHOD QFile:exists( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // bool exists ( const QString & fileName )
-                // C c QString
+      CASE hb_isChar( hb_pvalue( 1 ) )
          RETURN Qt_QFile_exists_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 0
-             // bool exists () const
+      EXIT
+   CASE 0
       RETURN Qt_QFile_exists( ::pPtr, ... )
-   ENDCASE
-   RETURN NIL
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QFile:fileName()
@@ -186,30 +200,21 @@ METHOD QFile:isSequential()
 
 
 METHOD QFile:link( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "C"
-                // bool link ( const QString & fileName, const QString & linkName )
-                // C c QString, C c QString
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
          RETURN Qt_QFile_link_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // bool link ( const QString & linkName )
-                // C c QString
+      CASE hb_isChar( hb_pvalue( 1 ) )
          RETURN Qt_QFile_link( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QFile:map( nOffset, nSize, nFlags )
@@ -217,130 +222,85 @@ METHOD QFile:map( nOffset, nSize, nFlags )
 
 
 METHOD QFile:open( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // bool open ( int fd, OpenMode mode )
-                // N n int, N n QFile::OpenMode
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QFile_open_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // virtual bool open ( OpenMode mode )
-                // N n QFile::OpenMode
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
          RETURN Qt_QFile_open( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QFile:permissions( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // Permissions permissions ( const QString & fileName )
-                // C c QString
+      CASE hb_isChar( hb_pvalue( 1 ) )
          RETURN Qt_QFile_permissions_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 0
-             // Permissions permissions () const
+      EXIT
+   CASE 0
       RETURN Qt_QFile_permissions( ::pPtr, ... )
-   ENDCASE
-   RETURN NIL
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QFile:remove( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // bool remove ( const QString & fileName )
-                // C c QString
+      CASE hb_isChar( hb_pvalue( 1 ) )
          RETURN Qt_QFile_remove_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 0
-             // bool remove ()
+      EXIT
+   CASE 0
       RETURN Qt_QFile_remove( ::pPtr, ... )
-   ENDCASE
-   RETURN NIL
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QFile:rename( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "C"
-                // bool rename ( const QString & oldName, const QString & newName )
-                // C c QString, C c QString
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
          RETURN Qt_QFile_rename_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // bool rename ( const QString & newName )
-                // C c QString
+      CASE hb_isChar( hb_pvalue( 1 ) )
          RETURN Qt_QFile_rename( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QFile:resize( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
-                // bool resize ( const QString & fileName, qint64 sz )
-                // C c QString, N n qint64
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QFile_resize_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // bool resize ( qint64 sz )
-                // N n qint64
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
          RETURN Qt_QFile_resize( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QFile:setFileName( cName )
@@ -348,30 +308,21 @@ METHOD QFile:setFileName( cName )
 
 
 METHOD QFile:setPermissions( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
-                // bool setPermissions ( const QString & fileName, Permissions permissions )
-                // C c QString, N n QFile::Permissions
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QFile_setPermissions_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // bool setPermissions ( Permissions permissions )
-                // N n QFile::Permissions
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
          RETURN Qt_QFile_setPermissions( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QFile:size()
@@ -379,26 +330,17 @@ METHOD QFile:size()
 
 
 METHOD QFile:symLinkTarget( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // QString symLinkTarget ( const QString & fileName )
-                // C c QString
+      CASE hb_isChar( hb_pvalue( 1 ) )
          RETURN Qt_QFile_symLinkTarget_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 0
-             // QString symLinkTarget () const
+      EXIT
+   CASE 0
       RETURN Qt_QFile_symLinkTarget( ::pPtr, ... )
-   ENDCASE
-   RETURN NIL
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QFile:unsetError()
@@ -410,5 +352,5 @@ METHOD QFile:decodeName( pLocalFileName )
 
 
 METHOD QFile:encodeName( cFileName )
-   RETURN Qt_QFile_encodeName( ::pPtr, cFileName )
+   RETURN HB_QByteArray():from( Qt_QFile_encodeName( ::pPtr, cFileName ) )
 

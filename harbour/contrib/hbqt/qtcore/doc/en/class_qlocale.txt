@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QLocale( ... )
  *     QLocale():from( pPtr_OR_oObj_of_type_QLocale )
- *     QLocale():configure( pPtr_OR_oObj_of_type_QLocale )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

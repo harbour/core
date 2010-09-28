@@ -55,6 +55,7 @@
 
 #include "hbapiitm.h"
 #include "hbvm.h"
+#include "hbapierr.h"
 
 #if QT_VERSION >= 0x040500
 
@@ -103,8 +104,57 @@ void * hbqt_gcpointerFromItem( PHB_ITEM pObj )
    }
 }
 
+void * hbqt_par_obj( int iParam )
+{
+   PHB_ITEM pItem;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_par_obj( %d )", iParam ) );
+
+   if( ( pItem = hb_param( iParam, HB_IT_OBJECT ) ) != NULL )
+   {
+      HBQT_GC_T * p;
+      void * pr;
+
+      hb_vmPushSymbol( hb_dynsymSymbol( hb_dynsymFindName( "PPTR" ) ) );
+      hb_vmPush( pItem );
+      hb_vmSend( 0 );
+
+      pItem = hb_param( -1, HB_IT_POINTER );
+
+      p = ( HBQT_GC_T * ) hb_itemGetPtrGC( pItem, hbqt_gcFuncs() );
+
+      if( p && p->ph )
+         return p->ph;
+#if 1
+      else if( ( pr = hb_itemGetPtr( pItem ) ) != NULL )
+         return pr; /* TOFIX: Only required in QList.cpp hb_retptr() calls. Though the latter should be fixed, rather than this code. */
+#endif
+      else
+         hb_errRT_BASE( EG_ARG, 8001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }
+   else if( HB_ISPOINTER( iParam ) )
+   {
+      return hb_parptr( iParam );
+   }
+   else
+   {
+      //hb_errRT_BASE( EG_ARG, 8000, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      HBQT_GC_T * p;
+      p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), iParam );
+      if( p && p->ph )
+      {
+         return p->ph;
+      }
+   }
+
+   return NULL;
+}
+
 void * hbqt_gcpointer( int iParam )
 {
+#if 0
+   return hbqt_par_obj( iParam );
+#else
    HBQT_GC_T * p;
 
    HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcpointer( %d )", iParam ) );
@@ -112,17 +162,29 @@ void * hbqt_gcpointer( int iParam )
    p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), iParam );
 
    if( p && p->ph )
+   {
       return p->ph;
+   }
    else if( HB_ISPOINTER( iParam ) )
    {
-      HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcpointer(): returns raw pointer: %p", hb_parptr( iParam ) ) );
+      HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcpointer(): returns RAW pointer: %p", hb_parptr( iParam ) ) );
       return hb_parptr( iParam ); /* TOFIX: In what cases is this needed? Reference counting to avoid referring to freed pointers? */
+   }
+   else if( HB_ISOBJECT( iParam ) )
+   {
+      PHB_ITEM pObj = hb_param( iParam, HB_IT_ANY );
+
+      hb_vmPushSymbol( hb_dynsymSymbol( hb_dynsymFindName( "PPTR" ) ) );
+      hb_vmPush( pObj );
+      hb_vmSend( 0 );
+      return hbqt_gcpointer( -1 );
    }
    else
    {
       HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcpointer(): returns NULL" ) );
       return NULL; /* TODO: Still better if RTE. */
    }
+#endif
 }
 
 void * hbqt_pPtrFromItem( PHB_ITEM pObj )

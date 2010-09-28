@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QTextDocument( ... )
  *     QTextDocument():from( pPtr_OR_oObj_of_type_QTextDocument )
- *     QTextDocument():configure( pPtr_OR_oObj_of_type_QTextDocument )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -112,6 +112,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextDocument.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

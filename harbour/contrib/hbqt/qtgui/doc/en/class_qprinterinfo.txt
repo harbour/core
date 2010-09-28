@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QPrinterInfo( ... )
  *     QPrinterInfo():from( pPtr_OR_oObj_of_type_QPrinterInfo )
- *     QPrinterInfo():configure( pPtr_OR_oObj_of_type_QPrinterInfo )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

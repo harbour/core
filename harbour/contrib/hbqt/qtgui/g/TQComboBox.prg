@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -142,41 +174,29 @@ METHOD QComboBox:new( ... )
 
 
 METHOD QComboBox:addItem( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 3
+   SWITCH PCount()
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "PCO" .AND. aV[ 2 ] $ "C" .AND. aV[ 3 ] $ "PO"
-                // void addItem ( const QIcon & icon, const QString & text, const QVariant & userData = QVariant() )
-                // PCO p QIcon, C c QString, PO p QVariant
+      CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
          RETURN Qt_QComboBox_addItem_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO"
-                // void addItem ( const QString & text, const QVariant & userData = QVariant() )
-                // C c QString, PO p QVariant
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
          RETURN Qt_QComboBox_addItem( ::pPtr, ... )
-      CASE aV[ 1 ] $ "PCO" .AND. aV[ 2 ] $ "C"
-                // void addItem ( const QIcon & icon, const QString & text, const QVariant & userData = QVariant() )
-                // PCO p QIcon, C c QString, PO p QVariant
+      CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
          RETURN Qt_QComboBox_addItem_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // void addItem ( const QString & text, const QVariant & userData = QVariant() )
-                // C c QString, PO p QVariant
+      CASE hb_isChar( hb_pvalue( 1 ) )
          RETURN Qt_QComboBox_addItem( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QComboBox:addItems( pTexts )
@@ -184,7 +204,7 @@ METHOD QComboBox:addItems( pTexts )
 
 
 METHOD QComboBox:completer()
-   RETURN Qt_QComboBox_completer( ::pPtr )
+   RETURN HB_QCompleter():from( Qt_QComboBox_completer( ::pPtr ) )
 
 
 METHOD QComboBox:count()
@@ -220,45 +240,33 @@ METHOD QComboBox:hidePopup()
 
 
 METHOD QComboBox:iconSize()
-   RETURN Qt_QComboBox_iconSize( ::pPtr )
+   RETURN HB_QSize():from( Qt_QComboBox_iconSize( ::pPtr ) )
 
 
 METHOD QComboBox:insertItem( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 4
+   SWITCH PCount()
+   CASE 4
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PCO" .AND. aV[ 3 ] $ "C" .AND. aV[ 4 ] $ "PO"
-                // void insertItem ( int index, const QIcon & icon, const QString & text, const QVariant & userData = QVariant() )
-                // N n int, PCO p QIcon, C c QString, PO p QVariant
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. ( hb_isObject( hb_pvalue( 2 ) ) .OR. hb_isChar( hb_pvalue( 2 ) ) ) .AND. hb_isChar( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
          RETURN Qt_QComboBox_insertItem_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 3
+      EXIT
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "C" .AND. aV[ 3 ] $ "PO"
-                // void insertItem ( int index, const QString & text, const QVariant & userData = QVariant() )
-                // N n int, C c QString, PO p QVariant
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
          RETURN Qt_QComboBox_insertItem( ::pPtr, ... )
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PCO" .AND. aV[ 3 ] $ "C"
-                // void insertItem ( int index, const QIcon & icon, const QString & text, const QVariant & userData = QVariant() )
-                // N n int, PCO p QIcon, C c QString, PO p QVariant
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. ( hb_isObject( hb_pvalue( 2 ) ) .OR. hb_isChar( hb_pvalue( 2 ) ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
          RETURN Qt_QComboBox_insertItem_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "C"
-                // void insertItem ( int index, const QString & text, const QVariant & userData = QVariant() )
-                // N n int, C c QString, PO p QVariant
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
          RETURN Qt_QComboBox_insertItem( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QComboBox:insertItems( nIndex, pList )
@@ -278,15 +286,15 @@ METHOD QComboBox:isEditable()
 
 
 METHOD QComboBox:itemData( nIndex, nRole )
-   RETURN Qt_QComboBox_itemData( ::pPtr, nIndex, nRole )
+   RETURN HB_QVariant():from( Qt_QComboBox_itemData( ::pPtr, nIndex, nRole ) )
 
 
 METHOD QComboBox:itemDelegate()
-   RETURN Qt_QComboBox_itemDelegate( ::pPtr )
+   RETURN HB_QAbstractItemDelegate():from( Qt_QComboBox_itemDelegate( ::pPtr ) )
 
 
 METHOD QComboBox:itemIcon( nIndex )
-   RETURN Qt_QComboBox_itemIcon( ::pPtr, nIndex )
+   RETURN HB_QIcon():from( Qt_QComboBox_itemIcon( ::pPtr, nIndex ) )
 
 
 METHOD QComboBox:itemText( nIndex )
@@ -294,7 +302,7 @@ METHOD QComboBox:itemText( nIndex )
 
 
 METHOD QComboBox:lineEdit()
-   RETURN Qt_QComboBox_lineEdit( ::pPtr )
+   RETURN HB_QLineEdit():from( Qt_QComboBox_lineEdit( ::pPtr ) )
 
 
 METHOD QComboBox:maxCount()
@@ -310,7 +318,7 @@ METHOD QComboBox:minimumContentsLength()
 
 
 METHOD QComboBox:model()
-   RETURN Qt_QComboBox_model( ::pPtr )
+   RETURN HB_QAbstractItemModel():from( Qt_QComboBox_model( ::pPtr ) )
 
 
 METHOD QComboBox:modelColumn()
@@ -322,7 +330,7 @@ METHOD QComboBox:removeItem( nIndex )
 
 
 METHOD QComboBox:rootModelIndex()
-   RETURN Qt_QComboBox_rootModelIndex( ::pPtr )
+   RETURN HB_QModelIndex():from( Qt_QComboBox_rootModelIndex( ::pPtr ) )
 
 
 METHOD QComboBox:setCompleter( pCompleter )
@@ -414,11 +422,11 @@ METHOD QComboBox:sizeAdjustPolicy()
 
 
 METHOD QComboBox:validator()
-   RETURN Qt_QComboBox_validator( ::pPtr )
+   RETURN HB_QValidator():from( Qt_QComboBox_validator( ::pPtr ) )
 
 
 METHOD QComboBox:view()
-   RETURN Qt_QComboBox_view( ::pPtr )
+   RETURN HB_QAbstractItemView():from( Qt_QComboBox_view( ::pPtr ) )
 
 
 METHOD QComboBox:clear()

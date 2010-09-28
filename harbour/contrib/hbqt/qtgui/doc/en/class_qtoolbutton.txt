@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QToolButton( ... )
  *     QToolButton():from( pPtr_OR_oObj_of_type_QToolButton )
- *     QToolButton():configure( pPtr_OR_oObj_of_type_QToolButton )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -59,6 +59,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QToolButton.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QAbstractButton
+ *     QAbstractButton()
  *  $END$
  */

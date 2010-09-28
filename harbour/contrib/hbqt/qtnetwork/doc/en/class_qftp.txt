@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QFtp( ... )
  *     QFtp():from( pPtr_OR_oObj_of_type_QFtp )
- *     QFtp():configure( pPtr_OR_oObj_of_type_QFtp )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -72,6 +72,6 @@
  *     C++ wrappers  : contrib/hbqt/qtnetwork/QFtp.cpp
  *     Library       : hbqtnetwork
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

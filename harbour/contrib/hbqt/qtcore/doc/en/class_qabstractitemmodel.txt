@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QAbstractItemModel( ... )
  *     QAbstractItemModel():from( pPtr_OR_oObj_of_type_QAbstractItemModel )
- *     QAbstractItemModel():configure( pPtr_OR_oObj_of_type_QAbstractItemModel )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -78,6 +78,6 @@
  *     C++ wrappers  : contrib/hbqt/qtcore/QAbstractItemModel.cpp
  *     Library       : hbqtcore
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

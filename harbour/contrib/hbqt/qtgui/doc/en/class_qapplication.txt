@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QApplication( ... )
  *     QApplication():from( pPtr_OR_oObj_of_type_QApplication )
- *     QApplication():configure( pPtr_OR_oObj_of_type_QApplication )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -120,6 +120,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QApplication.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QCoreApplication
+ *     QCoreApplication()
  *  $END$
  */

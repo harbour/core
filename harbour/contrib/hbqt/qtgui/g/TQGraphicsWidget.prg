@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -129,7 +161,7 @@ METHOD QGraphicsWidget:new( ... )
 
 
 METHOD QGraphicsWidget:actions()
-   RETURN Qt_QGraphicsWidget_actions( ::pPtr )
+   RETURN HB_QList():from( Qt_QGraphicsWidget_actions( ::pPtr ) )
 
 
 METHOD QGraphicsWidget:addAction( pAction )
@@ -145,11 +177,11 @@ METHOD QGraphicsWidget:focusPolicy()
 
 
 METHOD QGraphicsWidget:focusWidget()
-   RETURN Qt_QGraphicsWidget_focusWidget( ::pPtr )
+   RETURN HB_QGraphicsWidget():from( Qt_QGraphicsWidget_focusWidget( ::pPtr ) )
 
 
 METHOD QGraphicsWidget:font()
-   RETURN Qt_QGraphicsWidget_font( ::pPtr )
+   RETURN HB_QFont():from( Qt_QGraphicsWidget_font( ::pPtr ) )
 
 
 METHOD QGraphicsWidget:getContentsMargins( nLeft, nTop, nRight, nBottom )
@@ -173,7 +205,7 @@ METHOD QGraphicsWidget:isActiveWindow()
 
 
 METHOD QGraphicsWidget:layout()
-   RETURN Qt_QGraphicsWidget_layout( ::pPtr )
+   RETURN HB_QGraphicsLayout():from( Qt_QGraphicsWidget_layout( ::pPtr ) )
 
 
 METHOD QGraphicsWidget:layoutDirection()
@@ -181,11 +213,11 @@ METHOD QGraphicsWidget:layoutDirection()
 
 
 METHOD QGraphicsWidget:palette()
-   RETURN Qt_QGraphicsWidget_palette( ::pPtr )
+   RETURN HB_QPalette():from( Qt_QGraphicsWidget_palette( ::pPtr ) )
 
 
 METHOD QGraphicsWidget:rect()
-   RETURN Qt_QGraphicsWidget_rect( ::pPtr )
+   RETURN HB_QRectF():from( Qt_QGraphicsWidget_rect( ::pPtr ) )
 
 
 METHOD QGraphicsWidget:releaseShortcut( nId )
@@ -197,30 +229,21 @@ METHOD QGraphicsWidget:removeAction( pAction )
 
 
 METHOD QGraphicsWidget:resize( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // void resize ( qreal w, qreal h )
-                // N n qreal, N n qreal
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QGraphicsWidget_resize_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void resize ( const QSizeF & size )
-                // PO p QSizeF
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QGraphicsWidget_resize( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsWidget:setAttribute( nAttribute, lOn )
@@ -240,30 +263,21 @@ METHOD QGraphicsWidget:setFont( pFont )
 
 
 METHOD QGraphicsWidget:setGeometry( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 4
+   SWITCH PCount()
+   CASE 4
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
-                // void setGeometry ( qreal x, qreal y, qreal w, qreal h )
-                // N n qreal, N n qreal, N n qreal, N n qreal
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
          RETURN Qt_QGraphicsWidget_setGeometry_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // virtual void setGeometry ( const QRectF & rect )
-                // PO p QRectF
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QGraphicsWidget_setGeometry( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsWidget:setLayout( pLayout )
@@ -303,11 +317,11 @@ METHOD QGraphicsWidget:setWindowTitle( cTitle )
 
 
 METHOD QGraphicsWidget:size()
-   RETURN Qt_QGraphicsWidget_size( ::pPtr )
+   RETURN HB_QSizeF():from( Qt_QGraphicsWidget_size( ::pPtr ) )
 
 
 METHOD QGraphicsWidget:style()
-   RETURN Qt_QGraphicsWidget_style( ::pPtr )
+   RETURN HB_QStyle():from( Qt_QGraphicsWidget_style( ::pPtr ) )
 
 
 METHOD QGraphicsWidget:testAttribute( nAttribute )
@@ -327,11 +341,11 @@ METHOD QGraphicsWidget:windowFlags()
 
 
 METHOD QGraphicsWidget:windowFrameGeometry()
-   RETURN Qt_QGraphicsWidget_windowFrameGeometry( ::pPtr )
+   RETURN HB_QRectF():from( Qt_QGraphicsWidget_windowFrameGeometry( ::pPtr ) )
 
 
 METHOD QGraphicsWidget:windowFrameRect()
-   RETURN Qt_QGraphicsWidget_windowFrameRect( ::pPtr )
+   RETURN HB_QRectF():from( Qt_QGraphicsWidget_windowFrameRect( ::pPtr ) )
 
 
 METHOD QGraphicsWidget:windowTitle()

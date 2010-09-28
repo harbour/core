@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QHeaderView( ... )
  *     QHeaderView():from( pPtr_OR_oObj_of_type_QHeaderView )
- *     QHeaderView():configure( pPtr_OR_oObj_of_type_QHeaderView )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -103,6 +103,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QHeaderView.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QAbstractItemView
+ *     QAbstractItemView()
  *  $END$
  */

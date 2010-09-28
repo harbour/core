@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QAbstractItemView( ... )
  *     QAbstractItemView():from( pPtr_OR_oObj_of_type_QAbstractItemView )
- *     QAbstractItemView():configure( pPtr_OR_oObj_of_type_QAbstractItemView )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -109,6 +109,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QAbstractItemView.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QAbstractScrollArea
+ *     QAbstractScrollArea()
  *  $END$
  */

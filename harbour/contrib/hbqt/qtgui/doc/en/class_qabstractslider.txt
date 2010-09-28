@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QAbstractSlider( ... )
  *     QAbstractSlider():from( pPtr_OR_oObj_of_type_QAbstractSlider )
- *     QAbstractSlider():configure( pPtr_OR_oObj_of_type_QAbstractSlider )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -70,6 +70,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QAbstractSlider.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QWidget
+ *     QWidget()
  *  $END$
  */

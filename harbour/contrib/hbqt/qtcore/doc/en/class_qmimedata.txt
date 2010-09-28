@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QMimeData( ... )
  *     QMimeData():from( pPtr_OR_oObj_of_type_QMimeData )
- *     QMimeData():configure( pPtr_OR_oObj_of_type_QMimeData )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -67,6 +67,6 @@
  *     C++ wrappers  : contrib/hbqt/qtcore/QMimeData.cpp
  *     Library       : hbqtcore
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

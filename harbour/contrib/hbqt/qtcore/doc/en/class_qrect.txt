@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QRect( ... )
  *     QRect():from( pPtr_OR_oObj_of_type_QRect )
- *     QRect():configure( pPtr_OR_oObj_of_type_QRect )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

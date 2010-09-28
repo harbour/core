@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -144,7 +176,7 @@ METHOD QRectF:adjust( nDx1, nDy1, nDx2, nDy2 )
 
 
 METHOD QRectF:adjusted( nDx1, nDy1, nDx2, nDy2 )
-   RETURN Qt_QRectF_adjusted( ::pPtr, nDx1, nDy1, nDx2, nDy2 )
+   RETURN HB_QRectF():from( Qt_QRectF_adjusted( ::pPtr, nDx1, nDy1, nDx2, nDy2 ) )
 
 
 METHOD QRectF:bottom()
@@ -152,45 +184,38 @@ METHOD QRectF:bottom()
 
 
 METHOD QRectF:bottomLeft()
-   RETURN Qt_QRectF_bottomLeft( ::pPtr )
+   RETURN HB_QPointF():from( Qt_QRectF_bottomLeft( ::pPtr ) )
 
 
 METHOD QRectF:bottomRight()
-   RETURN Qt_QRectF_bottomRight( ::pPtr )
+   RETURN HB_QPointF():from( Qt_QRectF_bottomRight( ::pPtr ) )
 
 
 METHOD QRectF:center()
-   RETURN Qt_QRectF_center( ::pPtr )
+   RETURN HB_QPointF():from( Qt_QRectF_center( ::pPtr ) )
 
 
 METHOD QRectF:contains( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // bool contains ( qreal x, qreal y ) const
-                // N n qreal, N n qreal
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QRectF_contains_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // bool contains ( const QPointF & point ) const
-                // PO p QPointF
-         RETURN Qt_QRectF_contains( ::pPtr, ... )
-                // bool contains ( const QRectF & rectangle ) const
-                // PO p QRectF
-         // RETURN Qt_QRectF_contains_2( ::pPtr, ... )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QPOINTF"
+            RETURN Qt_QRectF_contains( ::pPtr, ... )
+         CASE "QRECTF"
+            RETURN Qt_QRectF_contains_2( ::pPtr, ... )
+         ENDSWITCH
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QRectF:getCoords( nX1, nY1, nX2, nY2 )
@@ -206,7 +231,7 @@ METHOD QRectF:height()
 
 
 METHOD QRectF:intersected( pRectangle )
-   RETURN Qt_QRectF_intersected( ::pPtr, hbqt_ptr( pRectangle ) )
+   RETURN HB_QRectF():from( Qt_QRectF_intersected( ::pPtr, hbqt_ptr( pRectangle ) ) )
 
 
 METHOD QRectF:intersects( pRectangle )
@@ -254,30 +279,21 @@ METHOD QRectF:moveRight( nX )
 
 
 METHOD QRectF:moveTo( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // void moveTo ( qreal x, qreal y )
-                // N n qreal, N n qreal
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QRectF_moveTo( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void moveTo ( const QPointF & position )
-                // PO p QPointF
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QRectF_moveTo_1( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QRectF:moveTop( nY )
@@ -293,7 +309,7 @@ METHOD QRectF:moveTopRight( pPosition )
 
 
 METHOD QRectF:normalized()
-   RETURN Qt_QRectF_normalized( ::pPtr )
+   RETURN HB_QRectF():from( Qt_QRectF_normalized( ::pPtr ) )
 
 
 METHOD QRectF:right()
@@ -361,15 +377,15 @@ METHOD QRectF:setY( nY )
 
 
 METHOD QRectF:size()
-   RETURN Qt_QRectF_size( ::pPtr )
+   RETURN HB_QSizeF():from( Qt_QRectF_size( ::pPtr ) )
 
 
 METHOD QRectF:toAlignedRect()
-   RETURN Qt_QRectF_toAlignedRect( ::pPtr )
+   RETURN HB_QRect():from( Qt_QRectF_toAlignedRect( ::pPtr ) )
 
 
 METHOD QRectF:toRect()
-   RETURN Qt_QRectF_toRect( ::pPtr )
+   RETURN HB_QRect():from( Qt_QRectF_toRect( ::pPtr ) )
 
 
 METHOD QRectF:top()
@@ -377,69 +393,51 @@ METHOD QRectF:top()
 
 
 METHOD QRectF:topLeft()
-   RETURN Qt_QRectF_topLeft( ::pPtr )
+   RETURN HB_QPointF():from( Qt_QRectF_topLeft( ::pPtr ) )
 
 
 METHOD QRectF:topRight()
-   RETURN Qt_QRectF_topRight( ::pPtr )
+   RETURN HB_QPointF():from( Qt_QRectF_topRight( ::pPtr ) )
 
 
 METHOD QRectF:translate( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // void translate ( qreal dx, qreal dy )
-                // N n qreal, N n qreal
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QRectF_translate( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void translate ( const QPointF & offset )
-                // PO p QPointF
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QRectF_translate_1( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QRectF:translated( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // QRectF translated ( qreal dx, qreal dy ) const
-                // N n qreal, N n qreal
-         RETURN QRectF():from( Qt_QRectF_translated( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QRectF():from( Qt_QRectF_translated( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // QRectF translated ( const QPointF & offset ) const
-                // PO p QPointF
-         RETURN QRectF():from( Qt_QRectF_translated_1( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QRectF():from( Qt_QRectF_translated_1( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QRectF:united( pRectangle )
-   RETURN Qt_QRectF_united( ::pPtr, hbqt_ptr( pRectangle ) )
+   RETURN HB_QRectF():from( Qt_QRectF_united( ::pPtr, hbqt_ptr( pRectangle ) ) )
 
 
 METHOD QRectF:width()

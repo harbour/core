@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -58,6 +56,40 @@
  *
  */
 /*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
+/*----------------------------------------------------------------------*/
 
 
 #include "hbclass.ch"
@@ -93,19 +125,19 @@ METHOD QCursor:new( ... )
 
 
 METHOD QCursor:bitmap()
-   RETURN Qt_QCursor_bitmap( ::pPtr )
+   RETURN HB_QBitmap():from( Qt_QCursor_bitmap( ::pPtr ) )
 
 
 METHOD QCursor:hotSpot()
-   RETURN Qt_QCursor_hotSpot( ::pPtr )
+   RETURN HB_QPoint():from( Qt_QCursor_hotSpot( ::pPtr ) )
 
 
 METHOD QCursor:mask()
-   RETURN Qt_QCursor_mask( ::pPtr )
+   RETURN HB_QBitmap():from( Qt_QCursor_mask( ::pPtr ) )
 
 
 METHOD QCursor:pixmap()
-   RETURN Qt_QCursor_pixmap( ::pPtr )
+   RETURN HB_QPixmap():from( Qt_QCursor_pixmap( ::pPtr ) )
 
 
 METHOD QCursor:setShape( nShape )
@@ -117,32 +149,23 @@ METHOD QCursor:shape()
 
 
 METHOD QCursor:pos()
-   RETURN Qt_QCursor_pos( ::pPtr )
+   RETURN HB_QPoint():from( Qt_QCursor_pos( ::pPtr ) )
 
 
 METHOD QCursor:setPos( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // void setPos ( int x, int y )
-                // N n int, N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QCursor_setPos( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void setPos ( const QPoint & p )
-                // PO p QPoint
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QCursor_setPos_1( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

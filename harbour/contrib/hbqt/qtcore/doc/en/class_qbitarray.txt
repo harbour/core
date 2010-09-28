@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QBitArray( ... )
  *     QBitArray():from( pPtr_OR_oObj_of_type_QBitArray )
- *     QBitArray():configure( pPtr_OR_oObj_of_type_QBitArray )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

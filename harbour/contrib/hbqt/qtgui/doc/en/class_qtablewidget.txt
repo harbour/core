@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QTableWidget( ... )
  *     QTableWidget():from( pPtr_OR_oObj_of_type_QTableWidget )
- *     QTableWidget():configure( pPtr_OR_oObj_of_type_QTableWidget )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -95,6 +95,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QTableWidget.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QTableView
+ *     QTableView()
  *  $END$
  */

@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QFontComboBox( ... )
  *     QFontComboBox():from( pPtr_OR_oObj_of_type_QFontComboBox )
- *     QFontComboBox():configure( pPtr_OR_oObj_of_type_QFontComboBox )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -52,6 +52,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QFontComboBox.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QComboBox
+ *     QComboBox()
  *  $END$
  */

@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QAbstractTableModel( ... )
  *     QAbstractTableModel():from( pPtr_OR_oObj_of_type_QAbstractTableModel )
- *     QAbstractTableModel():configure( pPtr_OR_oObj_of_type_QAbstractTableModel )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -47,6 +47,6 @@
  *     C++ wrappers  : contrib/hbqt/qtcore/QAbstractTableModel.cpp
  *     Library       : hbqtcore
  *  $SEEALSO$
- *     QAbstractItemModel
+ *     QAbstractItemModel()
  *  $END$
  */

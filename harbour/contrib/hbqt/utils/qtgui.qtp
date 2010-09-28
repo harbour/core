@@ -45,6 +45,7 @@ QContextMenuEvent.qth
 QCursor.qth
 QDateEdit.qth
 QDateTimeEdit.qth
+QDesktopServices.qth
 QDesktopWidget.qth
 QDial.qth
 QDialog.qth

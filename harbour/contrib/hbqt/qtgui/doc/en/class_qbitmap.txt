@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QBitmap( ... )
  *     QBitmap():from( pPtr_OR_oObj_of_type_QBitmap )
- *     QBitmap():configure( pPtr_OR_oObj_of_type_QBitmap )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -53,6 +53,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QBitmap.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QPixmap
+ *     QPixmap()
  *  $END$
  */

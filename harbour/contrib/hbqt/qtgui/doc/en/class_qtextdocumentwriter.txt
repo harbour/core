@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QTextDocumentWriter( ... )
  *     QTextDocumentWriter():from( pPtr_OR_oObj_of_type_QTextDocumentWriter )
- *     QTextDocumentWriter():configure( pPtr_OR_oObj_of_type_QTextDocumentWriter )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

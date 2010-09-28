@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -115,41 +147,29 @@ METHOD QFontMetricsF:averageCharWidth()
 
 
 METHOD QFontMetricsF:boundingRect( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 5
+   SWITCH PCount()
+   CASE 5
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "C" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N"
-                // QRectF boundingRect ( const QRectF & rect, int flags, const QString & text, int tabStops = 0, int * tabArray = 0 ) const
-                // PO p QRectF, N n int, C c QString, N n int, N @ int
-         RETURN QRectF():from( Qt_QFontMetricsF_boundingRect_2( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
+         RETURN HB_QRectF():from( Qt_QFontMetricsF_boundingRect_2( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 3
+      EXIT
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "C"
-                // QRectF boundingRect ( const QRectF & rect, int flags, const QString & text, int tabStops = 0, int * tabArray = 0 ) const
-                // PO p QRectF, N n int, C c QString, N n int, N @ int
-         RETURN QRectF():from( Qt_QFontMetricsF_boundingRect_2( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
+         RETURN HB_QRectF():from( Qt_QFontMetricsF_boundingRect_2( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // QRectF boundingRect ( const QString & text ) const
-                // C c QString
-         RETURN QRectF():from( Qt_QFontMetricsF_boundingRect( ::pPtr, ... ) )
-      CASE aV[ 1 ] $ "PO"
-                // QRectF boundingRect ( QChar ch ) const
-                // PO p QChar
-         RETURN QRectF():from( Qt_QFontMetricsF_boundingRect_1( ::pPtr, ... ) )
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QRectF():from( Qt_QFontMetricsF_boundingRect( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QRectF():from( Qt_QFontMetricsF_boundingRect_1( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QFontMetricsF:descent()
@@ -205,7 +225,7 @@ METHOD QFontMetricsF:rightBearing( pCh )
 
 
 METHOD QFontMetricsF:size( nFlags, cText, nTabStops, nTabArray )
-   RETURN Qt_QFontMetricsF_size( ::pPtr, nFlags, cText, nTabStops, nTabArray )
+   RETURN HB_QSizeF():from( Qt_QFontMetricsF_size( ::pPtr, nFlags, cText, nTabStops, nTabArray ) )
 
 
 METHOD QFontMetricsF:strikeOutPos()
@@ -213,7 +233,7 @@ METHOD QFontMetricsF:strikeOutPos()
 
 
 METHOD QFontMetricsF:tightBoundingRect( cText )
-   RETURN Qt_QFontMetricsF_tightBoundingRect( ::pPtr, cText )
+   RETURN HB_QRectF():from( Qt_QFontMetricsF_tightBoundingRect( ::pPtr, cText ) )
 
 
 METHOD QFontMetricsF:underlinePos()
@@ -221,27 +241,17 @@ METHOD QFontMetricsF:underlinePos()
 
 
 METHOD QFontMetricsF:width( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // qreal width ( const QString & text ) const
-                // C c QString
+      CASE hb_isChar( hb_pvalue( 1 ) )
          RETURN Qt_QFontMetricsF_width( ::pPtr, ... )
-      CASE aV[ 1 ] $ "PO"
-                // qreal width ( QChar ch ) const
-                // PO p QChar
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QFontMetricsF_width_1( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QFontMetricsF:xHeight()

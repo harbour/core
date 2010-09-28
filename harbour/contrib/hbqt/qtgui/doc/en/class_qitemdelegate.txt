@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QItemDelegate( ... )
  *     QItemDelegate():from( pPtr_OR_oObj_of_type_QItemDelegate )
- *     QItemDelegate():configure( pPtr_OR_oObj_of_type_QItemDelegate )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -56,6 +56,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QItemDelegate.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QAbstractItemDelegate
+ *     QAbstractItemDelegate()
  *  $END$
  */

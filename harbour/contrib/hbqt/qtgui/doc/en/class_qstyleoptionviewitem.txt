@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QStyleOptionViewItem( ... )
  *     QStyleOptionViewItem():from( pPtr_OR_oObj_of_type_QStyleOptionViewItem )
- *     QStyleOptionViewItem():configure( pPtr_OR_oObj_of_type_QStyleOptionViewItem )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -53,6 +53,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionViewItem.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QStyleOption
+ *     QStyleOption()
  *  $END$
  */

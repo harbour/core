@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QImageReader( ... )
  *     QImageReader():from( pPtr_OR_oObj_of_type_QImageReader )
- *     QImageReader():configure( pPtr_OR_oObj_of_type_QImageReader )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

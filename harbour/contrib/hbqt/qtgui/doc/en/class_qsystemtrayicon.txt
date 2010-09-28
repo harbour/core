@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QSystemTrayIcon( ... )
  *     QSystemTrayIcon():from( pPtr_OR_oObj_of_type_QSystemTrayIcon )
- *     QSystemTrayIcon():configure( pPtr_OR_oObj_of_type_QSystemTrayIcon )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -60,6 +60,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QSystemTrayIcon.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

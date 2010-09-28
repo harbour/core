@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -155,7 +187,7 @@ METHOD QTextDocument:adjustSize()
 
 
 METHOD QTextDocument:begin()
-   RETURN Qt_QTextDocument_begin( ::pPtr )
+   RETURN HB_QTextBlock():from( Qt_QTextDocument_begin( ::pPtr ) )
 
 
 METHOD QTextDocument:blockCount()
@@ -163,7 +195,7 @@ METHOD QTextDocument:blockCount()
 
 
 METHOD QTextDocument:characterAt( nPos )
-   RETURN Qt_QTextDocument_characterAt( ::pPtr, nPos )
+   RETURN HB_QChar():from( Qt_QTextDocument_characterAt( ::pPtr, nPos ) )
 
 
 METHOD QTextDocument:characterCount()
@@ -175,11 +207,11 @@ METHOD QTextDocument:clear()
 
 
 METHOD QTextDocument:clone( pParent )
-   RETURN Qt_QTextDocument_clone( ::pPtr, hbqt_ptr( pParent ) )
+   RETURN HB_QTextDocument():from( Qt_QTextDocument_clone( ::pPtr, hbqt_ptr( pParent ) ) )
 
 
 METHOD QTextDocument:defaultFont()
-   RETURN Qt_QTextDocument_defaultFont( ::pPtr )
+   RETURN HB_QFont():from( Qt_QTextDocument_defaultFont( ::pPtr ) )
 
 
 METHOD QTextDocument:defaultStyleSheet()
@@ -187,11 +219,11 @@ METHOD QTextDocument:defaultStyleSheet()
 
 
 METHOD QTextDocument:defaultTextOption()
-   RETURN Qt_QTextDocument_defaultTextOption( ::pPtr )
+   RETURN HB_QTextOption():from( Qt_QTextDocument_defaultTextOption( ::pPtr ) )
 
 
 METHOD QTextDocument:documentLayout()
-   RETURN Qt_QTextDocument_documentLayout( ::pPtr )
+   RETURN HB_QAbstractTextDocumentLayout():from( Qt_QTextDocument_documentLayout( ::pPtr ) )
 
 
 METHOD QTextDocument:documentMargin()
@@ -203,77 +235,57 @@ METHOD QTextDocument:drawContents( pP, pRect )
 
 
 METHOD QTextDocument:end()
-   RETURN Qt_QTextDocument_end( ::pPtr )
+   RETURN HB_QTextBlock():from( Qt_QTextDocument_end( ::pPtr ) )
 
 
 METHOD QTextDocument:find( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 3
+   SWITCH PCount()
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
-                // QTextCursor find ( const QString & subString, int position = 0, FindFlags options = 0 ) const
-                // C c QString, N n int, N n QTextDocument::FindFlags
-         RETURN QTextCursor():from( Qt_QTextDocument_find_2( ::pPtr, ... ) )
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "N"
-                // QTextCursor find ( const QString & subString, const QTextCursor & cursor, FindFlags options = 0 ) const
-                // C c QString, PO p QTextCursor, N n QTextDocument::FindFlags
-         RETURN QTextCursor():from( Qt_QTextDocument_find( ::pPtr, ... ) )
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
-                // QTextCursor find ( const QRegExp & expr, int position = 0, FindFlags options = 0 ) const
-                // PO p QRegExp, N n int, N n QTextDocument::FindFlags
-         RETURN QTextCursor():from( Qt_QTextDocument_find_3( ::pPtr, ... ) )
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "N"
-                // QTextCursor find ( const QRegExp & expr, const QTextCursor & cursor, FindFlags options = 0 ) const
-                // PO p QRegExp, PO p QTextCursor, N n QTextDocument::FindFlags
-         RETURN QTextCursor():from( Qt_QTextDocument_find_1( ::pPtr, ... ) )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN HB_QTextCursor():from( Qt_QTextDocument_find_2( ::pPtr, ... ) )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN HB_QTextCursor():from( Qt_QTextDocument_find( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN HB_QTextCursor():from( Qt_QTextDocument_find_3( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN HB_QTextCursor():from( Qt_QTextDocument_find_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO"
-                // QTextCursor find ( const QString & subString, const QTextCursor & cursor, FindFlags options = 0 ) const
-                // C c QString, PO p QTextCursor, N n QTextDocument::FindFlags
-         RETURN QTextCursor():from( Qt_QTextDocument_find( ::pPtr, ... ) )
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
-                // QTextCursor find ( const QRegExp & expr, const QTextCursor & cursor, FindFlags options = 0 ) const
-                // PO p QRegExp, PO p QTextCursor, N n QTextDocument::FindFlags
-         RETURN QTextCursor():from( Qt_QTextDocument_find_1( ::pPtr, ... ) )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QTextCursor():from( Qt_QTextDocument_find( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QTextCursor():from( Qt_QTextDocument_find_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // QTextCursor find ( const QString & subString, int position = 0, FindFlags options = 0 ) const
-                // C c QString, N n int, N n QTextDocument::FindFlags
-         RETURN QTextCursor():from( Qt_QTextDocument_find_2( ::pPtr, ... ) )
-      CASE aV[ 1 ] $ "PO"
-                // QTextCursor find ( const QRegExp & expr, int position = 0, FindFlags options = 0 ) const
-                // PO p QRegExp, N n int, N n QTextDocument::FindFlags
-         RETURN QTextCursor():from( Qt_QTextDocument_find_3( ::pPtr, ... ) )
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QTextCursor():from( Qt_QTextDocument_find_2( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QTextCursor():from( Qt_QTextDocument_find_3( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTextDocument:findBlock( nPos )
-   RETURN Qt_QTextDocument_findBlock( ::pPtr, nPos )
+   RETURN HB_QTextBlock():from( Qt_QTextDocument_findBlock( ::pPtr, nPos ) )
 
 
 METHOD QTextDocument:findBlockByLineNumber( nLineNumber )
-   RETURN Qt_QTextDocument_findBlockByLineNumber( ::pPtr, nLineNumber )
+   RETURN HB_QTextBlock():from( Qt_QTextDocument_findBlockByLineNumber( ::pPtr, nLineNumber ) )
 
 
 METHOD QTextDocument:findBlockByNumber( nBlockNumber )
-   RETURN Qt_QTextDocument_findBlockByNumber( ::pPtr, nBlockNumber )
+   RETURN HB_QTextBlock():from( Qt_QTextDocument_findBlockByNumber( ::pPtr, nBlockNumber ) )
 
 
 METHOD QTextDocument:firstBlock()
-   RETURN Qt_QTextDocument_firstBlock( ::pPtr )
+   RETURN HB_QTextBlock():from( Qt_QTextDocument_firstBlock( ::pPtr ) )
 
 
 METHOD QTextDocument:idealWidth()
@@ -305,7 +317,7 @@ METHOD QTextDocument:isUndoRedoEnabled()
 
 
 METHOD QTextDocument:lastBlock()
-   RETURN Qt_QTextDocument_lastBlock( ::pPtr )
+   RETURN HB_QTextBlock():from( Qt_QTextDocument_lastBlock( ::pPtr ) )
 
 
 METHOD QTextDocument:lineCount()
@@ -325,11 +337,11 @@ METHOD QTextDocument:metaInformation( nInfo )
 
 
 METHOD QTextDocument:object( nObjectIndex )
-   RETURN Qt_QTextDocument_object( ::pPtr, nObjectIndex )
+   RETURN HB_QTextObject():from( Qt_QTextDocument_object( ::pPtr, nObjectIndex ) )
 
 
 METHOD QTextDocument:objectForFormat( pF )
-   RETURN Qt_QTextDocument_objectForFormat( ::pPtr, hbqt_ptr( pF ) )
+   RETURN HB_QTextObject():from( Qt_QTextDocument_objectForFormat( ::pPtr, hbqt_ptr( pF ) ) )
 
 
 METHOD QTextDocument:pageCount()
@@ -337,7 +349,7 @@ METHOD QTextDocument:pageCount()
 
 
 METHOD QTextDocument:pageSize()
-   RETURN Qt_QTextDocument_pageSize( ::pPtr )
+   RETURN HB_QSizeF():from( Qt_QTextDocument_pageSize( ::pPtr ) )
 
 
 METHOD QTextDocument:print( pPrinter )
@@ -345,30 +357,21 @@ METHOD QTextDocument:print( pPrinter )
 
 
 METHOD QTextDocument:redo( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void redo ( QTextCursor * cursor )
-                // PO p QTextCursor
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QTextDocument_redo( ::pPtr, ... )
       ENDCASE
-   CASE nP == 0
-             // void redo ()
+      EXIT
+   CASE 0
       RETURN Qt_QTextDocument_redo_1( ::pPtr, ... )
-   ENDCASE
-   RETURN NIL
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTextDocument:resource( nType, pName )
-   RETURN Qt_QTextDocument_resource( ::pPtr, nType, hbqt_ptr( pName ) )
+   RETURN HB_QVariant():from( Qt_QTextDocument_resource( ::pPtr, nType, hbqt_ptr( pName ) ) )
 
 
 METHOD QTextDocument:revision()
@@ -376,7 +379,7 @@ METHOD QTextDocument:revision()
 
 
 METHOD QTextDocument:rootFrame()
-   RETURN Qt_QTextDocument_rootFrame( ::pPtr )
+   RETURN HB_QTextFrame():from( Qt_QTextDocument_rootFrame( ::pPtr ) )
 
 
 METHOD QTextDocument:setDefaultFont( pFont )
@@ -436,7 +439,7 @@ METHOD QTextDocument:setUseDesignMetrics( lB )
 
 
 METHOD QTextDocument:size()
-   RETURN Qt_QTextDocument_size( ::pPtr )
+   RETURN HB_QSizeF():from( Qt_QTextDocument_size( ::pPtr ) )
 
 
 METHOD QTextDocument:textWidth()
@@ -452,26 +455,17 @@ METHOD QTextDocument:toPlainText()
 
 
 METHOD QTextDocument:undo( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void undo ( QTextCursor * cursor )
-                // PO p QTextCursor
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QTextDocument_undo( ::pPtr, ... )
       ENDCASE
-   CASE nP == 0
-             // void undo ()
+      EXIT
+   CASE 0
       RETURN Qt_QTextDocument_undo_1( ::pPtr, ... )
-   ENDCASE
-   RETURN NIL
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTextDocument:useDesignMetrics()

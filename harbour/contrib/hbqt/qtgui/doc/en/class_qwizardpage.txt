@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QWizardPage( ... )
  *     QWizardPage():from( pPtr_OR_oObj_of_type_QWizardPage )
- *     QWizardPage():configure( pPtr_OR_oObj_of_type_QWizardPage )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -63,6 +63,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QWizardPage.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QWidget
+ *     QWidget()
  *  $END$
  */

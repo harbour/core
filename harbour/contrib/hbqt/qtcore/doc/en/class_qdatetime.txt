@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QDateTime( ... )
  *     QDateTime():from( pPtr_OR_oObj_of_type_QDateTime )
- *     QDateTime():configure( pPtr_OR_oObj_of_type_QDateTime )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

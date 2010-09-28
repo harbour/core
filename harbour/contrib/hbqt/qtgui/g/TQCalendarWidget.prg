@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -127,7 +159,7 @@ METHOD QCalendarWidget:dateEditAcceptDelay()
 
 
 METHOD QCalendarWidget:dateTextFormat( pDate )
-   RETURN Qt_QCalendarWidget_dateTextFormat( ::pPtr, hbqt_ptr( pDate ) )
+   RETURN HB_QTextCharFormat():from( Qt_QCalendarWidget_dateTextFormat( ::pPtr, hbqt_ptr( pDate ) ) )
 
 
 METHOD QCalendarWidget:firstDayOfWeek()
@@ -135,7 +167,7 @@ METHOD QCalendarWidget:firstDayOfWeek()
 
 
 METHOD QCalendarWidget:headerTextFormat()
-   RETURN Qt_QCalendarWidget_headerTextFormat( ::pPtr )
+   RETURN HB_QTextCharFormat():from( Qt_QCalendarWidget_headerTextFormat( ::pPtr ) )
 
 
 METHOD QCalendarWidget:horizontalHeaderFormat()
@@ -155,11 +187,11 @@ METHOD QCalendarWidget:isNavigationBarVisible()
 
 
 METHOD QCalendarWidget:maximumDate()
-   RETURN Qt_QCalendarWidget_maximumDate( ::pPtr )
+   RETURN HB_QDate():from( Qt_QCalendarWidget_maximumDate( ::pPtr ) )
 
 
 METHOD QCalendarWidget:minimumDate()
-   RETURN Qt_QCalendarWidget_minimumDate( ::pPtr )
+   RETURN HB_QDate():from( Qt_QCalendarWidget_minimumDate( ::pPtr ) )
 
 
 METHOD QCalendarWidget:monthShown()
@@ -167,7 +199,7 @@ METHOD QCalendarWidget:monthShown()
 
 
 METHOD QCalendarWidget:selectedDate()
-   RETURN Qt_QCalendarWidget_selectedDate( ::pPtr )
+   RETURN HB_QDate():from( Qt_QCalendarWidget_selectedDate( ::pPtr ) )
 
 
 METHOD QCalendarWidget:selectionMode()
@@ -223,7 +255,7 @@ METHOD QCalendarWidget:verticalHeaderFormat()
 
 
 METHOD QCalendarWidget:weekdayTextFormat( nDayOfWeek )
-   RETURN Qt_QCalendarWidget_weekdayTextFormat( ::pPtr, nDayOfWeek )
+   RETURN HB_QTextCharFormat():from( Qt_QCalendarWidget_weekdayTextFormat( ::pPtr, nDayOfWeek ) )
 
 
 METHOD QCalendarWidget:yearShown()

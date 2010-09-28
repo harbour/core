@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QTextTableFormat( ... )
  *     QTextTableFormat():from( pPtr_OR_oObj_of_type_QTextTableFormat )
- *     QTextTableFormat():configure( pPtr_OR_oObj_of_type_QTextTableFormat )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -57,6 +57,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextTableFormat.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QTextFrameFormat
+ *     QTextFrameFormat()
  *  $END$
  */

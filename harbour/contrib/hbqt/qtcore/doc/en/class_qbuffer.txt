@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QBuffer( ... )
  *     QBuffer():from( pPtr_OR_oObj_of_type_QBuffer )
- *     QBuffer():configure( pPtr_OR_oObj_of_type_QBuffer )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -51,6 +51,6 @@
  *     C++ wrappers  : contrib/hbqt/qtcore/QBuffer.cpp
  *     Library       : hbqtcore
  *  $SEEALSO$
- *     QIODevice
+ *     QIODevice()
  *  $END$
  */

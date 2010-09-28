@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QLayout( ... )
  *     QLayout():from( pPtr_OR_oObj_of_type_QLayout )
- *     QLayout():configure( pPtr_OR_oObj_of_type_QLayout )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -75,6 +75,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QLayout.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QObject, QLayoutItem
+ *     QObject, QLayoutItem()
  *  $END$
  */

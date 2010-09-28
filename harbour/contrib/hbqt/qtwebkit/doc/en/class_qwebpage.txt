@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QWebPage( ... )
  *     QWebPage():from( pPtr_OR_oObj_of_type_QWebPage )
- *     QWebPage():configure( pPtr_OR_oObj_of_type_QWebPage )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -77,6 +77,6 @@
  *     C++ wrappers  : contrib/hbqt/qtwebkit/QWebPage.cpp
  *     Library       : hbqtwebkit
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

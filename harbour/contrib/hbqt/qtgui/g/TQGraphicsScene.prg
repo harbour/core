@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -141,48 +173,37 @@ METHOD QGraphicsScene:new( ... )
 
 
 METHOD QGraphicsScene:activeWindow()
-   RETURN Qt_QGraphicsScene_activeWindow( ::pPtr )
+   RETURN HB_QGraphicsWidget():from( Qt_QGraphicsScene_activeWindow( ::pPtr ) )
 
 
 METHOD QGraphicsScene:addEllipse( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 6
+   SWITCH PCount()
+   CASE 6
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "PO" .AND. aV[ 6 ] $ "PO"
-                // QGraphicsEllipseItem * addEllipse ( qreal x, qreal y, qreal w, qreal h, const QPen & pen = QPen(), const QBrush & brush = QBrush() )
-                // N n qreal, N n qreal, N n qreal, N n qreal, PO p QPen, PO p QBrush
-         RETURN QGraphicsEllipseItem():from( Qt_QGraphicsScene_addEllipse_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isObject( hb_pvalue( 5 ) ) .AND. hb_isObject( hb_pvalue( 6 ) )
+         RETURN HB_QGraphicsEllipseItem():from( Qt_QGraphicsScene_addEllipse_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 4
+      EXIT
+   CASE 4
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
-                // QGraphicsEllipseItem * addEllipse ( qreal x, qreal y, qreal w, qreal h, const QPen & pen = QPen(), const QBrush & brush = QBrush() )
-                // N n qreal, N n qreal, N n qreal, N n qreal, PO p QPen, PO p QBrush
-         RETURN QGraphicsEllipseItem():from( Qt_QGraphicsScene_addEllipse_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN HB_QGraphicsEllipseItem():from( Qt_QGraphicsScene_addEllipse_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 3
+      EXIT
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PO"
-                // QGraphicsEllipseItem * addEllipse ( const QRectF & rect, const QPen & pen = QPen(), const QBrush & brush = QBrush() )
-                // PO p QRectF, PO p QPen, PO p QBrush
-         RETURN QGraphicsEllipseItem():from( Qt_QGraphicsScene_addEllipse( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN HB_QGraphicsEllipseItem():from( Qt_QGraphicsScene_addEllipse( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // QGraphicsEllipseItem * addEllipse ( const QRectF & rect, const QPen & pen = QPen(), const QBrush & brush = QBrush() )
-                // PO p QRectF, PO p QPen, PO p QBrush
-         RETURN QGraphicsEllipseItem():from( Qt_QGraphicsScene_addEllipse( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QGraphicsEllipseItem():from( Qt_QGraphicsScene_addEllipse( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsScene:addItem( pItem )
@@ -190,113 +211,91 @@ METHOD QGraphicsScene:addItem( pItem )
 
 
 METHOD QGraphicsScene:addLine( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 5
+   SWITCH PCount()
+   CASE 5
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "PO"
-                // QGraphicsLineItem * addLine ( qreal x1, qreal y1, qreal x2, qreal y2, const QPen & pen = QPen() )
-                // N n qreal, N n qreal, N n qreal, N n qreal, PO p QPen
-         RETURN QGraphicsLineItem():from( Qt_QGraphicsScene_addLine_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isObject( hb_pvalue( 5 ) )
+         RETURN HB_QGraphicsLineItem():from( Qt_QGraphicsScene_addLine_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 4
+      EXIT
+   CASE 4
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
-                // QGraphicsLineItem * addLine ( qreal x1, qreal y1, qreal x2, qreal y2, const QPen & pen = QPen() )
-                // N n qreal, N n qreal, N n qreal, N n qreal, PO p QPen
-         RETURN QGraphicsLineItem():from( Qt_QGraphicsScene_addLine_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN HB_QGraphicsLineItem():from( Qt_QGraphicsScene_addLine_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
-                // QGraphicsLineItem * addLine ( const QLineF & line, const QPen & pen = QPen() )
-                // PO p QLineF, PO p QPen
-         RETURN QGraphicsLineItem():from( Qt_QGraphicsScene_addLine( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QGraphicsLineItem():from( Qt_QGraphicsScene_addLine( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // QGraphicsLineItem * addLine ( const QLineF & line, const QPen & pen = QPen() )
-                // PO p QLineF, PO p QPen
-         RETURN QGraphicsLineItem():from( Qt_QGraphicsScene_addLine( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QGraphicsLineItem():from( Qt_QGraphicsScene_addLine( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsScene:addPath( pPath, pPen, pBrush )
-   RETURN Qt_QGraphicsScene_addPath( ::pPtr, hbqt_ptr( pPath ), hbqt_ptr( pPen ), hbqt_ptr( pBrush ) )
+   RETURN HB_QGraphicsPathItem():from( Qt_QGraphicsScene_addPath( ::pPtr, hbqt_ptr( pPath ), hbqt_ptr( pPen ), hbqt_ptr( pBrush ) ) )
 
 
 METHOD QGraphicsScene:addPixmap( pPixmap )
-   RETURN Qt_QGraphicsScene_addPixmap( ::pPtr, hbqt_ptr( pPixmap ) )
+   RETURN HB_QGraphicsPixmapItem():from( Qt_QGraphicsScene_addPixmap( ::pPtr, hbqt_ptr( pPixmap ) ) )
 
 
 METHOD QGraphicsScene:addPolygon( pPolygon, pPen, pBrush )
-   RETURN Qt_QGraphicsScene_addPolygon( ::pPtr, hbqt_ptr( pPolygon ), hbqt_ptr( pPen ), hbqt_ptr( pBrush ) )
+   RETURN HB_QGraphicsPolygonItem():from( Qt_QGraphicsScene_addPolygon( ::pPtr, hbqt_ptr( pPolygon ), hbqt_ptr( pPen ), hbqt_ptr( pBrush ) ) )
 
 
 METHOD QGraphicsScene:addRect( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 6
+   SWITCH PCount()
+   CASE 6
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "PO" .AND. aV[ 6 ] $ "PO"
-                // QGraphicsRectItem * addRect ( qreal x, qreal y, qreal w, qreal h, const QPen & pen = QPen(), const QBrush & brush = QBrush() )
-                // N n qreal, N n qreal, N n qreal, N n qreal, PO p QPen, PO p QBrush
-         RETURN QGraphicsRectItem():from( Qt_QGraphicsScene_addRect_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isObject( hb_pvalue( 5 ) ) .AND. hb_isObject( hb_pvalue( 6 ) )
+         RETURN HB_QGraphicsRectItem():from( Qt_QGraphicsScene_addRect_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 4
+      EXIT
+   CASE 4
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
-                // QGraphicsRectItem * addRect ( qreal x, qreal y, qreal w, qreal h, const QPen & pen = QPen(), const QBrush & brush = QBrush() )
-                // N n qreal, N n qreal, N n qreal, N n qreal, PO p QPen, PO p QBrush
-         RETURN QGraphicsRectItem():from( Qt_QGraphicsScene_addRect_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN HB_QGraphicsRectItem():from( Qt_QGraphicsScene_addRect_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 3
+      EXIT
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PO"
-                // QGraphicsRectItem * addRect ( const QRectF & rect, const QPen & pen = QPen(), const QBrush & brush = QBrush() )
-                // PO p QRectF, PO p QPen, PO p QBrush
-         RETURN QGraphicsRectItem():from( Qt_QGraphicsScene_addRect( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN HB_QGraphicsRectItem():from( Qt_QGraphicsScene_addRect( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // QGraphicsRectItem * addRect ( const QRectF & rect, const QPen & pen = QPen(), const QBrush & brush = QBrush() )
-                // PO p QRectF, PO p QPen, PO p QBrush
-         RETURN QGraphicsRectItem():from( Qt_QGraphicsScene_addRect( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QGraphicsRectItem():from( Qt_QGraphicsScene_addRect( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsScene:addSimpleText( cText, pFont )
-   RETURN Qt_QGraphicsScene_addSimpleText( ::pPtr, cText, hbqt_ptr( pFont ) )
+   RETURN HB_QGraphicsSimpleTextItem():from( Qt_QGraphicsScene_addSimpleText( ::pPtr, cText, hbqt_ptr( pFont ) ) )
 
 
 METHOD QGraphicsScene:addText( cText, pFont )
-   RETURN Qt_QGraphicsScene_addText( ::pPtr, cText, hbqt_ptr( pFont ) )
+   RETURN HB_QGraphicsTextItem():from( Qt_QGraphicsScene_addText( ::pPtr, cText, hbqt_ptr( pFont ) ) )
 
 
 METHOD QGraphicsScene:addWidget( pWidget, nWFlags )
-   RETURN Qt_QGraphicsScene_addWidget( ::pPtr, hbqt_ptr( pWidget ), nWFlags )
+   RETURN HB_QGraphicsProxyWidget():from( Qt_QGraphicsScene_addWidget( ::pPtr, hbqt_ptr( pWidget ), nWFlags ) )
 
 
 METHOD QGraphicsScene:backgroundBrush()
-   RETURN Qt_QGraphicsScene_backgroundBrush( ::pPtr )
+   RETURN HB_QBrush():from( Qt_QGraphicsScene_backgroundBrush( ::pPtr ) )
 
 
 METHOD QGraphicsScene:bspTreeDepth()
@@ -308,7 +307,7 @@ METHOD QGraphicsScene:clearFocus()
 
 
 METHOD QGraphicsScene:collidingItems( pItem, nMode )
-   RETURN Qt_QGraphicsScene_collidingItems( ::pPtr, hbqt_ptr( pItem ), nMode )
+   RETURN HB_QList():from( Qt_QGraphicsScene_collidingItems( ::pPtr, hbqt_ptr( pItem ), nMode ) )
 
 
 METHOD QGraphicsScene:destroyItemGroup( pGroup )
@@ -316,15 +315,15 @@ METHOD QGraphicsScene:destroyItemGroup( pGroup )
 
 
 METHOD QGraphicsScene:focusItem()
-   RETURN Qt_QGraphicsScene_focusItem( ::pPtr )
+   RETURN HB_QGraphicsItem():from( Qt_QGraphicsScene_focusItem( ::pPtr ) )
 
 
 METHOD QGraphicsScene:font()
-   RETURN Qt_QGraphicsScene_font( ::pPtr )
+   RETURN HB_QFont():from( Qt_QGraphicsScene_font( ::pPtr ) )
 
 
 METHOD QGraphicsScene:foregroundBrush()
-   RETURN Qt_QGraphicsScene_foregroundBrush( ::pPtr )
+   RETURN HB_QBrush():from( Qt_QGraphicsScene_foregroundBrush( ::pPtr ) )
 
 
 METHOD QGraphicsScene:hasFocus()
@@ -336,41 +335,29 @@ METHOD QGraphicsScene:height()
 
 
 METHOD QGraphicsScene:invalidate( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 5
+   SWITCH PCount()
+   CASE 5
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N"
-                // void invalidate ( qreal x, qreal y, qreal w, qreal h, SceneLayers layers = AllLayers )
-                // N n qreal, N n qreal, N n qreal, N n qreal, N n QGraphicsScene::SceneLayers
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
          RETURN Qt_QGraphicsScene_invalidate( ::pPtr, ... )
       ENDCASE
-   CASE nP == 4
+      EXIT
+   CASE 4
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
-                // void invalidate ( qreal x, qreal y, qreal w, qreal h, SceneLayers layers = AllLayers )
-                // N n qreal, N n qreal, N n qreal, N n qreal, N n QGraphicsScene::SceneLayers
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
          RETURN Qt_QGraphicsScene_invalidate( ::pPtr, ... )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
-                // void invalidate ( const QRectF & rect = QRectF(), SceneLayers layers = AllLayers )
-                // PO p QRectF, N n QGraphicsScene::SceneLayers
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QGraphicsScene_invalidate_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 0
-             // void invalidate ( const QRectF & rect = QRectF(), SceneLayers layers = AllLayers )
-             // PO p QRectF, N n QGraphicsScene::SceneLayers
+      EXIT
+   CASE 0
       RETURN Qt_QGraphicsScene_invalidate_1( ::pPtr, ... )
-   ENDCASE
-   RETURN NIL
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsScene:isSortCacheEnabled()
@@ -378,30 +365,21 @@ METHOD QGraphicsScene:isSortCacheEnabled()
 
 
 METHOD QGraphicsScene:itemAt( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // QGraphicsItem * itemAt ( qreal x, qreal y ) const
-                // N n qreal, N n qreal
-         RETURN QGraphicsItem():from( Qt_QGraphicsScene_itemAt_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QGraphicsItem():from( Qt_QGraphicsScene_itemAt_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // QGraphicsItem * itemAt ( const QPointF & position ) const
-                // PO p QPointF
-         RETURN QGraphicsItem():from( Qt_QGraphicsScene_itemAt( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QGraphicsItem():from( Qt_QGraphicsScene_itemAt( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsScene:itemIndexMethod()
@@ -409,74 +387,63 @@ METHOD QGraphicsScene:itemIndexMethod()
 
 
 METHOD QGraphicsScene:items( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 5
+   SWITCH PCount()
+   CASE 5
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N"
-                // QList<QGraphicsItem *> items ( qreal x, qreal y, qreal w, qreal h, Qt::ItemSelectionMode mode = Qt::IntersectsItemShape ) const
-                // N n qreal, N n qreal, N n qreal, N n qreal, N n Qt::ItemSelectionMode
-         RETURN Qt_QGraphicsScene_items_2( ::pPtr, ... )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
+         RETURN HB_QList():from( Qt_QGraphicsScene_items_2( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 4
+      EXIT
+   CASE 4
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
-                // QList<QGraphicsItem *> items ( qreal x, qreal y, qreal w, qreal h, Qt::ItemSelectionMode mode = Qt::IntersectsItemShape ) const
-                // N n qreal, N n qreal, N n qreal, N n qreal, N n Qt::ItemSelectionMode
-         RETURN Qt_QGraphicsScene_items_2( ::pPtr, ... )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN HB_QList():from( Qt_QGraphicsScene_items_2( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
-                // QList<QGraphicsItem *> items ( const QPolygonF & polygon, Qt::ItemSelectionMode mode = Qt::IntersectsItemShape ) const
-                // PO p QPolygonF, N n Qt::ItemSelectionMode
-         RETURN Qt_QGraphicsScene_items_4( ::pPtr, ... )
-                // QList<QGraphicsItem *> items ( const QRectF & rectangle, Qt::ItemSelectionMode mode = Qt::IntersectsItemShape ) const
-                // PO p QRectF, N n Qt::ItemSelectionMode
-         // RETURN Qt_QGraphicsScene_items_3( ::pPtr, ... )
-                // QList<QGraphicsItem *> items ( const QPainterPath & path, Qt::ItemSelectionMode mode = Qt::IntersectsItemShape ) const
-                // PO p QPainterPath, N n Qt::ItemSelectionMode
-         // RETURN Qt_QGraphicsScene_items_5( ::pPtr, ... )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QPOLYGONF"
+            RETURN HB_QList():from( Qt_QGraphicsScene_items_4( ::pPtr, ... ) )
+         CASE "QRECTF"
+            RETURN HB_QList():from( Qt_QGraphicsScene_items_3( ::pPtr, ... ) )
+         CASE "QPAINTERPATH"
+            RETURN HB_QList():from( Qt_QGraphicsScene_items_5( ::pPtr, ... ) )
+         ENDSWITCH
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // QList<QGraphicsItem *> items ( const QRectF & rectangle, Qt::ItemSelectionMode mode = Qt::IntersectsItemShape ) const
-                // PO p QRectF, N n Qt::ItemSelectionMode
-         RETURN Qt_QGraphicsScene_items_3( ::pPtr, ... )
-                // QList<QGraphicsItem *> items ( const QPolygonF & polygon, Qt::ItemSelectionMode mode = Qt::IntersectsItemShape ) const
-                // PO p QPolygonF, N n Qt::ItemSelectionMode
-         // RETURN Qt_QGraphicsScene_items_4( ::pPtr, ... )
-                // QList<QGraphicsItem *> items ( const QPointF & pos ) const
-                // PO p QPointF
-         // RETURN Qt_QGraphicsScene_items_1( ::pPtr, ... )
-                // QList<QGraphicsItem *> items ( const QPainterPath & path, Qt::ItemSelectionMode mode = Qt::IntersectsItemShape ) const
-                // PO p QPainterPath, N n Qt::ItemSelectionMode
-         // RETURN Qt_QGraphicsScene_items_5( ::pPtr, ... )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QRECTF"
+            RETURN HB_QList():from( Qt_QGraphicsScene_items_3( ::pPtr, ... ) )
+         CASE "QPOLYGONF"
+            RETURN HB_QList():from( Qt_QGraphicsScene_items_4( ::pPtr, ... ) )
+         CASE "QPOINTF"
+            RETURN HB_QList():from( Qt_QGraphicsScene_items_1( ::pPtr, ... ) )
+         CASE "QPAINTERPATH"
+            RETURN HB_QList():from( Qt_QGraphicsScene_items_5( ::pPtr, ... ) )
+         ENDSWITCH
       ENDCASE
-   CASE nP == 0
-             // QList<QGraphicsItem *> items () const
-      RETURN Qt_QGraphicsScene_items( ::pPtr, ... )
-   ENDCASE
-   RETURN NIL
+      EXIT
+   CASE 0
+      RETURN HB_QList():from( Qt_QGraphicsScene_items( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsScene:itemsBoundingRect()
-   RETURN Qt_QGraphicsScene_itemsBoundingRect( ::pPtr )
+   RETURN HB_QRectF():from( Qt_QGraphicsScene_itemsBoundingRect( ::pPtr ) )
 
 
 METHOD QGraphicsScene:mouseGrabberItem()
-   RETURN Qt_QGraphicsScene_mouseGrabberItem( ::pPtr )
+   RETURN HB_QGraphicsItem():from( Qt_QGraphicsScene_mouseGrabberItem( ::pPtr ) )
 
 
 METHOD QGraphicsScene:palette()
-   RETURN Qt_QGraphicsScene_palette( ::pPtr )
+   RETURN HB_QPalette():from( Qt_QGraphicsScene_palette( ::pPtr ) )
 
 
 METHOD QGraphicsScene:removeItem( pItem )
@@ -488,15 +455,15 @@ METHOD QGraphicsScene:render( pPainter, pTarget, pSource, nAspectRatioMode )
 
 
 METHOD QGraphicsScene:sceneRect()
-   RETURN Qt_QGraphicsScene_sceneRect( ::pPtr )
+   RETURN HB_QRectF():from( Qt_QGraphicsScene_sceneRect( ::pPtr ) )
 
 
 METHOD QGraphicsScene:selectedItems()
-   RETURN Qt_QGraphicsScene_selectedItems( ::pPtr )
+   RETURN HB_QList():from( Qt_QGraphicsScene_selectedItems( ::pPtr ) )
 
 
 METHOD QGraphicsScene:selectionArea()
-   RETURN Qt_QGraphicsScene_selectionArea( ::pPtr )
+   RETURN HB_QPainterPath():from( Qt_QGraphicsScene_selectionArea( ::pPtr ) )
 
 
 METHOD QGraphicsScene:setActiveWindow( pWidget )
@@ -536,57 +503,39 @@ METHOD QGraphicsScene:setPalette( pPalette )
 
 
 METHOD QGraphicsScene:setSceneRect( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 4
+   SWITCH PCount()
+   CASE 4
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
-                // void setSceneRect ( qreal x, qreal y, qreal w, qreal h )
-                // N n qreal, N n qreal, N n qreal, N n qreal
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
          RETURN Qt_QGraphicsScene_setSceneRect_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void setSceneRect ( const QRectF & rect )
-                // PO p QRectF
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QGraphicsScene_setSceneRect( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsScene:setSelectionArea( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
-                // void setSelectionArea ( const QPainterPath & path, Qt::ItemSelectionMode mode )
-                // PO p QPainterPath, N n Qt::ItemSelectionMode
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QGraphicsScene_setSelectionArea_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void setSelectionArea ( const QPainterPath & path )
-                // PO p QPainterPath
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QGraphicsScene_setSelectionArea( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsScene:setSortCacheEnabled( lEnabled )
@@ -606,42 +555,31 @@ METHOD QGraphicsScene:stickyFocus()
 
 
 METHOD QGraphicsScene:style()
-   RETURN Qt_QGraphicsScene_style( ::pPtr )
+   RETURN HB_QStyle():from( Qt_QGraphicsScene_style( ::pPtr ) )
 
 
 METHOD QGraphicsScene:update( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 4
+   SWITCH PCount()
+   CASE 4
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
-                // void update ( qreal x, qreal y, qreal w, qreal h )
-                // N n qreal, N n qreal, N n qreal, N n qreal
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
          RETURN Qt_QGraphicsScene_update( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void update ( const QRectF & rect = QRectF() )
-                // PO p QRectF
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QGraphicsScene_update_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 0
-             // void update ( const QRectF & rect = QRectF() )
-             // PO p QRectF
+      EXIT
+   CASE 0
       RETURN Qt_QGraphicsScene_update_1( ::pPtr, ... )
-   ENDCASE
-   RETURN NIL
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsScene:views()
-   RETURN Qt_QGraphicsScene_views( ::pPtr )
+   RETURN HB_QList():from( Qt_QGraphicsScene_views( ::pPtr ) )
 
 
 METHOD QGraphicsScene:width()

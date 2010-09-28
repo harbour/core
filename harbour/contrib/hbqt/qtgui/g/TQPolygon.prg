@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -58,6 +56,40 @@
  *
  */
 /*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
+/*----------------------------------------------------------------------*/
 
 
 #include "hbclass.ch"
@@ -95,7 +127,7 @@ METHOD QPolygon:new( ... )
 
 
 METHOD QPolygon:boundingRect()
-   RETURN Qt_QPolygon_boundingRect( ::pPtr )
+   RETURN HB_QRect():from( Qt_QPolygon_boundingRect( ::pPtr ) )
 
 
 METHOD QPolygon:containsPoint( pPoint, nFillRule )
@@ -103,34 +135,25 @@ METHOD QPolygon:containsPoint( pPoint, nFillRule )
 
 
 METHOD QPolygon:intersected( pR )
-   RETURN Qt_QPolygon_intersected( ::pPtr, hbqt_ptr( pR ) )
+   RETURN HB_QPolygon():from( Qt_QPolygon_intersected( ::pPtr, hbqt_ptr( pR ) ) )
 
 
 METHOD QPolygon:point( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 3
+   SWITCH PCount()
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
-                // void point ( int index, int * x, int * y ) const
-                // N n int, N @ int, N @ int
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
          RETURN Qt_QPolygon_point( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // QPoint point ( int index ) const
-                // N n int
-         RETURN QPoint():from( Qt_QPolygon_point_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QPoint():from( Qt_QPolygon_point_1( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPolygon:putPoints( nIndex, nNPoints, pFromPolygon, nFromIndex )
@@ -138,30 +161,21 @@ METHOD QPolygon:putPoints( nIndex, nNPoints, pFromPolygon, nFromIndex )
 
 
 METHOD QPolygon:setPoint( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 3
+   SWITCH PCount()
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
-                // void setPoint ( int index, int x, int y )
-                // N n int, N n int, N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
          RETURN Qt_QPolygon_setPoint( ::pPtr, ... )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PO"
-                // void setPoint ( int index, const QPoint & point )
-                // N n int, PO p QPoint
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
          RETURN Qt_QPolygon_setPoint_1( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPolygon:setPoints( nNPoints, nPoints )
@@ -169,36 +183,27 @@ METHOD QPolygon:setPoints( nNPoints, nPoints )
 
 
 METHOD QPolygon:subtracted( pR )
-   RETURN Qt_QPolygon_subtracted( ::pPtr, hbqt_ptr( pR ) )
+   RETURN HB_QPolygon():from( Qt_QPolygon_subtracted( ::pPtr, hbqt_ptr( pR ) ) )
 
 
 METHOD QPolygon:translate( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // void translate ( int dx, int dy )
-                // N n int, N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QPolygon_translate( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void translate ( const QPoint & offset )
-                // PO p QPoint
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QPolygon_translate_1( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPolygon:united( pR )
-   RETURN Qt_QPolygon_united( ::pPtr, hbqt_ptr( pR ) )
+   RETURN HB_QPolygon():from( Qt_QPolygon_united( ::pPtr, hbqt_ptr( pR ) ) )
 

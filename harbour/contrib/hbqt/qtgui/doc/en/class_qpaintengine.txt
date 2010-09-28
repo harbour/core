@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QPaintEngine( ... )
  *     QPaintEngine():from( pPtr_OR_oObj_of_type_QPaintEngine )
- *     QPaintEngine():configure( pPtr_OR_oObj_of_type_QPaintEngine )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

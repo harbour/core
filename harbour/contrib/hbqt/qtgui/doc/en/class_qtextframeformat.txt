@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QTextFrameFormat( ... )
  *     QTextFrameFormat():from( pPtr_OR_oObj_of_type_QTextFrameFormat )
- *     QTextFrameFormat():configure( pPtr_OR_oObj_of_type_QTextFrameFormat )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -75,6 +75,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextFrameFormat.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QTextFormat
+ *     QTextFormat()
  *  $END$
  */

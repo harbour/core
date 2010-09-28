@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QToolBox( ... )
  *     QToolBox():from( pPtr_OR_oObj_of_type_QToolBox )
- *     QToolBox():configure( pPtr_OR_oObj_of_type_QToolBox )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -66,6 +66,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QToolBox.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QFrame
+ *     QFrame()
  *  $END$
  */

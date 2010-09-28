@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QStyleOptionTitleBar( ... )
  *     QStyleOptionTitleBar():from( pPtr_OR_oObj_of_type_QStyleOptionTitleBar )
- *     QStyleOptionTitleBar():configure( pPtr_OR_oObj_of_type_QStyleOptionTitleBar )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -50,6 +50,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionTitleBar.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QStyleOptionComplex
+ *     QStyleOptionComplex()
  *  $END$
  */

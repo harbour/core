@@ -63,9 +63,8 @@ CLASS HbQtObjectHandler
    VAR    pSlots
    VAR    pEvents
 
-   METHOD configure( xObject )
-   METHOD from( xObject )                         INLINE ::configure( xObject )
-   METHOD valtypes( aP, aV )
+   METHOD from( xObject )
+   METHOD isValidObject()
 
    METHOD connect( cnEvent, bBlock )
    METHOD disconnect( cnEvent )
@@ -76,21 +75,16 @@ CLASS HbQtObjectHandler
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbQtObjectHandler:configure( xObject )
-   IF hb_isObject( xObject )
-      ::pPtr := xObject:pPtr
-   ELSEIF hb_isPointer( xObject )
-      ::pPtr := xObject
-   ENDIF
-   RETURN Self
+METHOD HbQtObjectHandler:isValidObject()
+   RETURN ! hbqt_isEmptyQtPointer( ::pPtr )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbQtObjectHandler:valtypes( aP, aV )
-   LOCAL p
-   FOR EACH p IN aP
-      aadd( aV, valtype( p ) )
-   NEXT
+METHOD HbQtObjectHandler:from( xObject )
+   LOCAL pPtr
+   IF hb_isPointer( pPtr := hbqt_ptr( xObject ) )
+      ::pPtr := pPtr
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -167,3 +161,21 @@ FUNCTION hbqt_ptr( xParam )
    RETURN xParam
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION hbqt_error()
+   LOCAL oError := ErrorNew()
+
+   oError:severity    := ES_ERROR
+   oError:genCode     := EG_ARG
+   oError:subSystem   := "HBQT"
+   oError:subCode     := 1001
+   oError:canRetry    := .F.
+   oError:canDefault  := .F.
+   oError:Args        := hb_AParams()
+   oError:operation   := ProcName()
+   oError:Description := "Incorrect parameters type"
+
+   RETURN Eval( ErrorBlock(), oError )
+
+/*----------------------------------------------------------------------*/
+

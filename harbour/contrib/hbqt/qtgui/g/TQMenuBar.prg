@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -58,6 +56,40 @@
  *
  */
 /*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
+/*----------------------------------------------------------------------*/
 
 
 #include "hbclass.ch"
@@ -95,73 +127,51 @@ METHOD QMenuBar:new( ... )
 
 
 METHOD QMenuBar:activeAction()
-   RETURN Qt_QMenuBar_activeAction( ::pPtr )
+   RETURN HB_QAction():from( Qt_QMenuBar_activeAction( ::pPtr ) )
 
 
 METHOD QMenuBar:addAction( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 3
+   SWITCH PCount()
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PO"
-                // QAction * addAction ( const QString & text, const QObject * receiver, const char * member )
-                // C c QString, PO p QObject, PO p char
-         RETURN QAction():from( Qt_QMenuBar_addAction_1( ::pPtr, ... ) )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN HB_QAction():from( Qt_QMenuBar_addAction_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // QAction * addAction ( const QString & text )
-                // C c QString
-         RETURN QAction():from( Qt_QMenuBar_addAction( ::pPtr, ... ) )
-      CASE aV[ 1 ] $ "PO"
-                // void addAction ( QAction * action )
-                // PO p QAction
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QAction():from( Qt_QMenuBar_addAction( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QMenuBar_addAction_2( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QMenuBar:addMenu( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PCO" .AND. aV[ 2 ] $ "C"
-                // QMenu * addMenu ( const QIcon & icon, const QString & title )
-                // PCO p QIcon, C c QString
-         RETURN QMenu():from( Qt_QMenuBar_addMenu_2( ::pPtr, ... ) )
+      CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN HB_QMenu():from( Qt_QMenuBar_addMenu_2( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // QMenu * addMenu ( const QString & title )
-                // C c QString
-         RETURN QMenu():from( Qt_QMenuBar_addMenu_1( ::pPtr, ... ) )
-      CASE aV[ 1 ] $ "PO"
-                // QAction * addMenu ( QMenu * menu )
-                // PO p QMenu
-         RETURN QAction():from( Qt_QMenuBar_addMenu( ::pPtr, ... ) )
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QMenu():from( Qt_QMenuBar_addMenu_1( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QAction():from( Qt_QMenuBar_addMenu( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QMenuBar:addSeparator()
-   RETURN Qt_QMenuBar_addSeparator( ::pPtr )
+   RETURN HB_QAction():from( Qt_QMenuBar_addSeparator( ::pPtr ) )
 
 
 METHOD QMenuBar:clear()
@@ -169,11 +179,11 @@ METHOD QMenuBar:clear()
 
 
 METHOD QMenuBar:insertMenu( pBefore, pMenu )
-   RETURN Qt_QMenuBar_insertMenu( ::pPtr, hbqt_ptr( pBefore ), hbqt_ptr( pMenu ) )
+   RETURN HB_QAction():from( Qt_QMenuBar_insertMenu( ::pPtr, hbqt_ptr( pBefore ), hbqt_ptr( pMenu ) ) )
 
 
 METHOD QMenuBar:insertSeparator( pBefore )
-   RETURN Qt_QMenuBar_insertSeparator( ::pPtr, hbqt_ptr( pBefore ) )
+   RETURN HB_QAction():from( Qt_QMenuBar_insertSeparator( ::pPtr, hbqt_ptr( pBefore ) ) )
 
 
 METHOD QMenuBar:isDefaultUp()

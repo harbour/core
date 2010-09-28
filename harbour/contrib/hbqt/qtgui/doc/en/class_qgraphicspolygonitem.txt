@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QGraphicsPolygonItem( ... )
  *     QGraphicsPolygonItem():from( pPtr_OR_oObj_of_type_QGraphicsPolygonItem )
- *     QGraphicsPolygonItem():configure( pPtr_OR_oObj_of_type_QGraphicsPolygonItem )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -50,6 +50,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsPolygonItem.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QAbstractGraphicsShapeItem
+ *     QAbstractGraphicsShapeItem()
  *  $END$
  */

@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QStandardItem( ... )
  *     QStandardItem():from( pPtr_OR_oObj_of_type_QStandardItem )
- *     QStandardItem():configure( pPtr_OR_oObj_of_type_QStandardItem )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

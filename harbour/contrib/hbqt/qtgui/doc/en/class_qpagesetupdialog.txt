@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QPageSetupDialog( ... )
  *     QPageSetupDialog():from( pPtr_OR_oObj_of_type_QPageSetupDialog )
- *     QPageSetupDialog():configure( pPtr_OR_oObj_of_type_QPageSetupDialog )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -54,6 +54,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QPageSetupDialog.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QDialog
+ *     QDialog()
  *  $END$
  */

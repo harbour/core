@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QStyleOptionToolBar( ... )
  *     QStyleOptionToolBar():from( pPtr_OR_oObj_of_type_QStyleOptionToolBar )
- *     QStyleOptionToolBar():configure( pPtr_OR_oObj_of_type_QStyleOptionToolBar )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -52,6 +52,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionToolBar.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QStyleOption
+ *     QStyleOption()
  *  $END$
  */

@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QMessageBox( ... )
  *     QMessageBox():from( pPtr_OR_oObj_of_type_QMessageBox )
- *     QMessageBox():configure( pPtr_OR_oObj_of_type_QMessageBox )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -85,6 +85,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QMessageBox.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QDialog
+ *     QDialog()
  *  $END$
  */

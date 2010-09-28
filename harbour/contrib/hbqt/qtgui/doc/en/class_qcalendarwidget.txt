@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QCalendarWidget( ... )
  *     QCalendarWidget():from( pPtr_OR_oObj_of_type_QCalendarWidget )
- *     QCalendarWidget():configure( pPtr_OR_oObj_of_type_QCalendarWidget )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -84,6 +84,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QCalendarWidget.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QWidget
+ *     QWidget()
  *  $END$
  */

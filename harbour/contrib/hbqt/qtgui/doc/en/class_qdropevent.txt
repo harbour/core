@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QDropEvent( ... )
  *     QDropEvent():from( pPtr_OR_oObj_of_type_QDropEvent )
- *     QDropEvent():configure( pPtr_OR_oObj_of_type_QDropEvent )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -56,6 +56,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QDropEvent.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QEvent
+ *     QEvent()
  *  $END$
  */

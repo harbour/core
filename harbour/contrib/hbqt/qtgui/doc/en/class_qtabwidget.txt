@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QTabWidget( ... )
  *     QTabWidget():from( pPtr_OR_oObj_of_type_QTabWidget )
- *     QTabWidget():configure( pPtr_OR_oObj_of_type_QTabWidget )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -87,6 +87,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QTabWidget.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QWidget
+ *     QWidget()
  *  $END$
  */

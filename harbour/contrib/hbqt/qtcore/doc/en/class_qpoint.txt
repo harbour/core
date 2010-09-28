@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QPoint( ... )
  *     QPoint():from( pPtr_OR_oObj_of_type_QPoint )
- *     QPoint():configure( pPtr_OR_oObj_of_type_QPoint )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

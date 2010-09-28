@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QRegExpValidator( ... )
  *     QRegExpValidator():from( pPtr_OR_oObj_of_type_QRegExpValidator )
- *     QRegExpValidator():configure( pPtr_OR_oObj_of_type_QRegExpValidator )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -48,6 +48,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QRegExpValidator.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QValidator
+ *     QValidator()
  *  $END$
  */

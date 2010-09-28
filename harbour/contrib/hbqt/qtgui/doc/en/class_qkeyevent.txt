@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QKeyEvent( ... )
  *     QKeyEvent():from( pPtr_OR_oObj_of_type_QKeyEvent )
- *     QKeyEvent():configure( pPtr_OR_oObj_of_type_QKeyEvent )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -55,6 +55,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QKeyEvent.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QInputEvent
+ *     QInputEvent()
  *  $END$
  */

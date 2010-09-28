@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -160,7 +192,7 @@ METHOD QTransform:m33()
 
 
 METHOD QTransform:adjoint()
-   RETURN Qt_QTransform_adjoint( ::pPtr )
+   RETURN HB_QTransform():from( Qt_QTransform_adjoint( ::pPtr ) )
 
 
 METHOD QTransform:det()
@@ -180,7 +212,7 @@ METHOD QTransform:dy()
 
 
 METHOD QTransform:inverted( lInvertible )
-   RETURN Qt_QTransform_inverted( ::pPtr, lInvertible )
+   RETURN HB_QTransform():from( Qt_QTransform_inverted( ::pPtr, lInvertible ) )
 
 
 METHOD QTransform:isAffine()
@@ -208,81 +240,60 @@ METHOD QTransform:isTranslating()
 
 
 METHOD QTransform:map( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 4
+   SWITCH PCount()
+   CASE 4
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
-                // void map ( qreal x, qreal y, qreal * tx, qreal * ty ) const
-                // N n qreal, N n qreal, N @ qreal, N @ qreal
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
          RETURN Qt_QTransform_map( ::pPtr, ... )
-                // void map ( int x, int y, int * tx, int * ty ) const
-                // N n int, N n int, N @ int, N @ int
          // RETURN Qt_QTransform_map_9( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // QPointF map ( const QPointF & p ) const
-                // PO p QPointF
-         RETURN QPointF():from( Qt_QTransform_map_1( ::pPtr, ... ) )
-                // QRegion map ( const QRegion & region ) const
-                // PO p QRegion
-         // RETURN QRegion():from( Qt_QTransform_map_7( ::pPtr, ... ) )
-                // QPoint map ( const QPoint & point ) const
-                // PO p QPoint
-         // RETURN QPoint():from( Qt_QTransform_map_2( ::pPtr, ... ) )
-                // QLine map ( const QLine & l ) const
-                // PO p QLine
-         // RETURN QLine():from( Qt_QTransform_map_3( ::pPtr, ... ) )
-                // QPolygonF map ( const QPolygonF & polygon ) const
-                // PO p QPolygonF
-         // RETURN QPolygonF():from( Qt_QTransform_map_5( ::pPtr, ... ) )
-                // QPainterPath map ( const QPainterPath & path ) const
-                // PO p QPainterPath
-         // RETURN QPainterPath():from( Qt_QTransform_map_8( ::pPtr, ... ) )
-                // QPolygon map ( const QPolygon & polygon ) const
-                // PO p QPolygon
-         // RETURN QPolygon():from( Qt_QTransform_map_6( ::pPtr, ... ) )
-                // QLineF map ( const QLineF & line ) const
-                // PO p QLineF
-         // RETURN QLineF():from( Qt_QTransform_map_4( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QPOINTF"
+            RETURN HB_QPointF():from( Qt_QTransform_map_1( ::pPtr, ... ) )
+         CASE "QREGION"
+            RETURN HB_QRegion():from( Qt_QTransform_map_7( ::pPtr, ... ) )
+         CASE "QPOINT"
+            RETURN HB_QPoint():from( Qt_QTransform_map_2( ::pPtr, ... ) )
+         CASE "QLINE"
+            RETURN HB_QLine():from( Qt_QTransform_map_3( ::pPtr, ... ) )
+         CASE "QPOLYGONF"
+            RETURN HB_QPolygonF():from( Qt_QTransform_map_5( ::pPtr, ... ) )
+         CASE "QPAINTERPATH"
+            RETURN HB_QPainterPath():from( Qt_QTransform_map_8( ::pPtr, ... ) )
+         CASE "QPOLYGON"
+            RETURN HB_QPolygon():from( Qt_QTransform_map_6( ::pPtr, ... ) )
+         CASE "QLINEF"
+            RETURN HB_QLineF():from( Qt_QTransform_map_4( ::pPtr, ... ) )
+         ENDSWITCH
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTransform:mapRect( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // QRectF mapRect ( const QRectF & rectangle ) const
-                // PO p QRectF
-         RETURN QRectF():from( Qt_QTransform_mapRect( ::pPtr, ... ) )
-                // QRect mapRect ( const QRect & rectangle ) const
-                // PO p QRect
-         // RETURN QRect():from( Qt_QTransform_mapRect_1( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QRECTF"
+            RETURN HB_QRectF():from( Qt_QTransform_mapRect( ::pPtr, ... ) )
+         CASE "QRECT"
+            RETURN HB_QRect():from( Qt_QTransform_mapRect_1( ::pPtr, ... ) )
+         ENDSWITCH
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTransform:mapToPolygon( pRectangle )
-   RETURN Qt_QTransform_mapToPolygon( ::pPtr, hbqt_ptr( pRectangle ) )
+   RETURN HB_QPolygon():from( Qt_QTransform_mapToPolygon( ::pPtr, hbqt_ptr( pRectangle ) ) )
 
 
 METHOD QTransform:reset()
@@ -290,15 +301,15 @@ METHOD QTransform:reset()
 
 
 METHOD QTransform:rotate( nAngle, nAxis )
-   RETURN Qt_QTransform_rotate( ::pPtr, nAngle, nAxis )
+   RETURN HB_QTransform():from( Qt_QTransform_rotate( ::pPtr, nAngle, nAxis ) )
 
 
 METHOD QTransform:rotateRadians( nAngle, nAxis )
-   RETURN Qt_QTransform_rotateRadians( ::pPtr, nAngle, nAxis )
+   RETURN HB_QTransform():from( Qt_QTransform_rotateRadians( ::pPtr, nAngle, nAxis ) )
 
 
 METHOD QTransform:scale( nSx, nSy )
-   RETURN Qt_QTransform_scale( ::pPtr, nSx, nSy )
+   RETURN HB_QTransform():from( Qt_QTransform_scale( ::pPtr, nSx, nSy ) )
 
 
 METHOD QTransform:setMatrix( nM11, nM12, nM13, nM21, nM22, nM23, nM31, nM32, nM33 )
@@ -306,19 +317,19 @@ METHOD QTransform:setMatrix( nM11, nM12, nM13, nM21, nM22, nM23, nM31, nM32, nM3
 
 
 METHOD QTransform:shear( nSh, nSv )
-   RETURN Qt_QTransform_shear( ::pPtr, nSh, nSv )
+   RETURN HB_QTransform():from( Qt_QTransform_shear( ::pPtr, nSh, nSv ) )
 
 
 METHOD QTransform:toAffine()
-   RETURN Qt_QTransform_toAffine( ::pPtr )
+   RETURN HB_QMatrix():from( Qt_QTransform_toAffine( ::pPtr ) )
 
 
 METHOD QTransform:translate( nDx, nDy )
-   RETURN Qt_QTransform_translate( ::pPtr, nDx, nDy )
+   RETURN HB_QTransform():from( Qt_QTransform_translate( ::pPtr, nDx, nDy ) )
 
 
 METHOD QTransform:transposed()
-   RETURN Qt_QTransform_transposed( ::pPtr )
+   RETURN HB_QTransform():from( Qt_QTransform_transposed( ::pPtr ) )
 
 
 METHOD QTransform:type()
@@ -326,11 +337,11 @@ METHOD QTransform:type()
 
 
 METHOD QTransform:fromScale( nSx, nSy )
-   RETURN Qt_QTransform_fromScale( ::pPtr, nSx, nSy )
+   RETURN HB_QTransform():from( Qt_QTransform_fromScale( ::pPtr, nSx, nSy ) )
 
 
 METHOD QTransform:fromTranslate( nDx, nDy )
-   RETURN Qt_QTransform_fromTranslate( ::pPtr, nDx, nDy )
+   RETURN HB_QTransform():from( Qt_QTransform_fromTranslate( ::pPtr, nDx, nDy ) )
 
 
 METHOD QTransform:quadToQuad( pOne, pTwo, pTrans )

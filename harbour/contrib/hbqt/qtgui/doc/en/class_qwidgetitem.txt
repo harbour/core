@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QWidgetItem( ... )
  *     QWidgetItem():from( pPtr_OR_oObj_of_type_QWidgetItem )
- *     QWidgetItem():configure( pPtr_OR_oObj_of_type_QWidgetItem )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -48,6 +48,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QWidgetItem.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QLayoutItem
+ *     QLayoutItem()
  *  $END$
  */

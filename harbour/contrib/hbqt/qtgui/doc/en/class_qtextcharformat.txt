@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QTextCharFormat( ... )
  *     QTextCharFormat():from( pPtr_OR_oObj_of_type_QTextCharFormat )
- *     QTextCharFormat():configure( pPtr_OR_oObj_of_type_QTextCharFormat )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -93,6 +93,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextCharFormat.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QTextFormat
+ *     QTextFormat()
  *  $END$
  */

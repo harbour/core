@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -142,7 +174,7 @@ METHOD QTreeWidgetItem:addChild( pChild )
 
 
 METHOD QTreeWidgetItem:background( nColumn )
-   RETURN Qt_QTreeWidgetItem_background( ::pPtr, nColumn )
+   RETURN HB_QBrush():from( Qt_QTreeWidgetItem_background( ::pPtr, nColumn ) )
 
 
 METHOD QTreeWidgetItem:checkState( nColumn )
@@ -150,7 +182,7 @@ METHOD QTreeWidgetItem:checkState( nColumn )
 
 
 METHOD QTreeWidgetItem:child( nIndex )
-   RETURN Qt_QTreeWidgetItem_child( ::pPtr, nIndex )
+   RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidgetItem_child( ::pPtr, nIndex ) )
 
 
 METHOD QTreeWidgetItem:childCount()
@@ -162,7 +194,7 @@ METHOD QTreeWidgetItem:childIndicatorPolicy()
 
 
 METHOD QTreeWidgetItem:clone()
-   RETURN Qt_QTreeWidgetItem_clone( ::pPtr )
+   RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidgetItem_clone( ::pPtr ) )
 
 
 METHOD QTreeWidgetItem:columnCount()
@@ -170,7 +202,7 @@ METHOD QTreeWidgetItem:columnCount()
 
 
 METHOD QTreeWidgetItem:data( nColumn, nRole )
-   RETURN Qt_QTreeWidgetItem_data( ::pPtr, nColumn, nRole )
+   RETURN HB_QVariant():from( Qt_QTreeWidgetItem_data( ::pPtr, nColumn, nRole ) )
 
 
 METHOD QTreeWidgetItem:flags()
@@ -178,15 +210,15 @@ METHOD QTreeWidgetItem:flags()
 
 
 METHOD QTreeWidgetItem:font( nColumn )
-   RETURN Qt_QTreeWidgetItem_font( ::pPtr, nColumn )
+   RETURN HB_QFont():from( Qt_QTreeWidgetItem_font( ::pPtr, nColumn ) )
 
 
 METHOD QTreeWidgetItem:foreground( nColumn )
-   RETURN Qt_QTreeWidgetItem_foreground( ::pPtr, nColumn )
+   RETURN HB_QBrush():from( Qt_QTreeWidgetItem_foreground( ::pPtr, nColumn ) )
 
 
 METHOD QTreeWidgetItem:icon( nColumn )
-   RETURN Qt_QTreeWidgetItem_icon( ::pPtr, nColumn )
+   RETURN HB_QIcon():from( Qt_QTreeWidgetItem_icon( ::pPtr, nColumn ) )
 
 
 METHOD QTreeWidgetItem:indexOfChild( pChild )
@@ -218,7 +250,7 @@ METHOD QTreeWidgetItem:isSelected()
 
 
 METHOD QTreeWidgetItem:parent()
-   RETURN Qt_QTreeWidgetItem_parent( ::pPtr )
+   RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidgetItem_parent( ::pPtr ) )
 
 
 METHOD QTreeWidgetItem:read( pIn )
@@ -306,7 +338,7 @@ METHOD QTreeWidgetItem:setWhatsThis( nColumn, cWhatsThis )
 
 
 METHOD QTreeWidgetItem:sizeHint( nColumn )
-   RETURN Qt_QTreeWidgetItem_sizeHint( ::pPtr, nColumn )
+   RETURN HB_QSize():from( Qt_QTreeWidgetItem_sizeHint( ::pPtr, nColumn ) )
 
 
 METHOD QTreeWidgetItem:sortChildren( nColumn, nOrder )
@@ -318,11 +350,11 @@ METHOD QTreeWidgetItem:statusTip( nColumn )
 
 
 METHOD QTreeWidgetItem:takeChild( nIndex )
-   RETURN Qt_QTreeWidgetItem_takeChild( ::pPtr, nIndex )
+   RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidgetItem_takeChild( ::pPtr, nIndex ) )
 
 
 METHOD QTreeWidgetItem:takeChildren()
-   RETURN Qt_QTreeWidgetItem_takeChildren( ::pPtr )
+   RETURN HB_QList():from( Qt_QTreeWidgetItem_takeChildren( ::pPtr ) )
 
 
 METHOD QTreeWidgetItem:text( nColumn )
@@ -338,7 +370,7 @@ METHOD QTreeWidgetItem:toolTip( nColumn )
 
 
 METHOD QTreeWidgetItem:treeWidget()
-   RETURN Qt_QTreeWidgetItem_treeWidget( ::pPtr )
+   RETURN HB_QTreeWidget():from( Qt_QTreeWidgetItem_treeWidget( ::pPtr ) )
 
 
 METHOD QTreeWidgetItem:type()

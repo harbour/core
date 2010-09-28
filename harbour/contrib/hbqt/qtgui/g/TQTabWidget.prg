@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -124,30 +156,21 @@ METHOD QTabWidget:new( ... )
 
 
 METHOD QTabWidget:addTab( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 3
+   SWITCH PCount()
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PCO" .AND. aV[ 3 ] $ "C"
-                // int addTab ( QWidget * page, const QIcon & icon, const QString & label )   [*D=1*]
-                // PO p QWidget, PCO p QIcon, C c QString
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. ( hb_isObject( hb_pvalue( 2 ) ) .OR. hb_isChar( hb_pvalue( 2 ) ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
          RETURN Qt_QTabWidget_addTab_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "C"
-                // int addTab ( QWidget * page, const QString & label )   [*D=1*]
-                // PO p QWidget, C c QString
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
          RETURN Qt_QTabWidget_addTab( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTabWidget:clear()
@@ -155,7 +178,7 @@ METHOD QTabWidget:clear()
 
 
 METHOD QTabWidget:cornerWidget( nCorner )
-   RETURN Qt_QTabWidget_cornerWidget( ::pPtr, nCorner )
+   RETURN HB_QWidget():from( Qt_QTabWidget_cornerWidget( ::pPtr, nCorner ) )
 
 
 METHOD QTabWidget:count()
@@ -167,7 +190,7 @@ METHOD QTabWidget:currentIndex()
 
 
 METHOD QTabWidget:currentWidget()
-   RETURN Qt_QTabWidget_currentWidget( ::pPtr )
+   RETURN HB_QWidget():from( Qt_QTabWidget_currentWidget( ::pPtr ) )
 
 
 METHOD QTabWidget:documentMode()
@@ -179,7 +202,7 @@ METHOD QTabWidget:elideMode()
 
 
 METHOD QTabWidget:iconSize()
-   RETURN Qt_QTabWidget_iconSize( ::pPtr )
+   RETURN HB_QSize():from( Qt_QTabWidget_iconSize( ::pPtr ) )
 
 
 METHOD QTabWidget:indexOf( pW )
@@ -187,30 +210,21 @@ METHOD QTabWidget:indexOf( pW )
 
 
 METHOD QTabWidget:insertTab( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 4
+   SWITCH PCount()
+   CASE 4
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PCO" .AND. aV[ 4 ] $ "C"
-                // int insertTab ( int index, QWidget * page, const QIcon & icon, const QString & label )
-                // N n int, PO p QWidget, PCO p QIcon, C c QString
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. ( hb_isObject( hb_pvalue( 3 ) ) .OR. hb_isChar( hb_pvalue( 3 ) ) ) .AND. hb_isChar( hb_pvalue( 4 ) )
          RETURN Qt_QTabWidget_insertTab_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 3
+      EXIT
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "C"
-                // int insertTab ( int index, QWidget * page, const QString & label )
-                // N n int, PO p QWidget, C c QString
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
          RETURN Qt_QTabWidget_insertTab( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTabWidget:isMovable()
@@ -282,7 +296,7 @@ METHOD QTabWidget:setUsesScrollButtons( lUseButtons )
 
 
 METHOD QTabWidget:tabIcon( nIndex )
-   RETURN Qt_QTabWidget_tabIcon( ::pPtr, nIndex )
+   RETURN HB_QIcon():from( Qt_QTabWidget_tabIcon( ::pPtr, nIndex ) )
 
 
 METHOD QTabWidget:tabPosition()
@@ -314,7 +328,7 @@ METHOD QTabWidget:usesScrollButtons()
 
 
 METHOD QTabWidget:widget( nIndex )
-   RETURN Qt_QTabWidget_widget( ::pPtr, nIndex )
+   RETURN HB_QWidget():from( Qt_QTabWidget_widget( ::pPtr, nIndex ) )
 
 
 METHOD QTabWidget:setCurrentIndex( nIndex )

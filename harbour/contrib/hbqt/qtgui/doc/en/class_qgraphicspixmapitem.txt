@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QGraphicsPixmapItem( ... )
  *     QGraphicsPixmapItem():from( pPtr_OR_oObj_of_type_QGraphicsPixmapItem )
- *     QGraphicsPixmapItem():configure( pPtr_OR_oObj_of_type_QGraphicsPixmapItem )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -55,6 +55,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsPixmapItem.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QGraphicsItem
+ *     QGraphicsItem()
  *  $END$
  */

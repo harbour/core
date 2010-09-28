@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QFormLayout( ... )
  *     QFormLayout():from( pPtr_OR_oObj_of_type_QFormLayout )
- *     QFormLayout():configure( pPtr_OR_oObj_of_type_QFormLayout )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -79,6 +79,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QFormLayout.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QLayout
+ *     QLayout()
  *  $END$
  */

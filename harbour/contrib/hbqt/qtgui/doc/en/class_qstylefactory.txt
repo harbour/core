@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QStyleFactory( ... )
  *     QStyleFactory():from( pPtr_OR_oObj_of_type_QStyleFactory )
- *     QStyleFactory():configure( pPtr_OR_oObj_of_type_QStyleFactory )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

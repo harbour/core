@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -126,7 +158,7 @@ METHOD QTextFormat:new( ... )
 
 
 METHOD QTextFormat:background()
-   RETURN Qt_QTextFormat_background( ::pPtr )
+   RETURN HB_QBrush():from( Qt_QTextFormat_background( ::pPtr ) )
 
 
 METHOD QTextFormat:boolProperty( nPropertyId )
@@ -134,7 +166,7 @@ METHOD QTextFormat:boolProperty( nPropertyId )
 
 
 METHOD QTextFormat:brushProperty( nPropertyId )
-   RETURN Qt_QTextFormat_brushProperty( ::pPtr, nPropertyId )
+   RETURN HB_QBrush():from( Qt_QTextFormat_brushProperty( ::pPtr, nPropertyId ) )
 
 
 METHOD QTextFormat:clearBackground()
@@ -150,7 +182,7 @@ METHOD QTextFormat:clearProperty( nPropertyId )
 
 
 METHOD QTextFormat:colorProperty( nPropertyId )
-   RETURN Qt_QTextFormat_colorProperty( ::pPtr, nPropertyId )
+   RETURN HB_QColor():from( Qt_QTextFormat_colorProperty( ::pPtr, nPropertyId ) )
 
 
 METHOD QTextFormat:doubleProperty( nPropertyId )
@@ -158,7 +190,7 @@ METHOD QTextFormat:doubleProperty( nPropertyId )
 
 
 METHOD QTextFormat:foreground()
-   RETURN Qt_QTextFormat_foreground( ::pPtr )
+   RETURN HB_QBrush():from( Qt_QTextFormat_foreground( ::pPtr ) )
 
 
 METHOD QTextFormat:hasProperty( nPropertyId )
@@ -206,7 +238,7 @@ METHOD QTextFormat:layoutDirection()
 
 
 METHOD QTextFormat:lengthProperty( nPropertyId )
-   RETURN Qt_QTextFormat_lengthProperty( ::pPtr, nPropertyId )
+   RETURN HB_QTextLength():from( Qt_QTextFormat_lengthProperty( ::pPtr, nPropertyId ) )
 
 
 METHOD QTextFormat:merge( pOther )
@@ -222,11 +254,11 @@ METHOD QTextFormat:objectType()
 
 
 METHOD QTextFormat:penProperty( nPropertyId )
-   RETURN Qt_QTextFormat_penProperty( ::pPtr, nPropertyId )
+   RETURN HB_QPen():from( Qt_QTextFormat_penProperty( ::pPtr, nPropertyId ) )
 
 
 METHOD QTextFormat:property( nPropertyId )
-   RETURN Qt_QTextFormat_property( ::pPtr, nPropertyId )
+   RETURN HB_QVariant():from( Qt_QTextFormat_property( ::pPtr, nPropertyId ) )
 
 
 METHOD QTextFormat:propertyCount()
@@ -262,27 +294,27 @@ METHOD QTextFormat:stringProperty( nPropertyId )
 
 
 METHOD QTextFormat:toBlockFormat()
-   RETURN Qt_QTextFormat_toBlockFormat( ::pPtr )
+   RETURN HB_QTextBlockFormat():from( Qt_QTextFormat_toBlockFormat( ::pPtr ) )
 
 
 METHOD QTextFormat:toCharFormat()
-   RETURN Qt_QTextFormat_toCharFormat( ::pPtr )
+   RETURN HB_QTextCharFormat():from( Qt_QTextFormat_toCharFormat( ::pPtr ) )
 
 
 METHOD QTextFormat:toFrameFormat()
-   RETURN Qt_QTextFormat_toFrameFormat( ::pPtr )
+   RETURN HB_QTextFrameFormat():from( Qt_QTextFormat_toFrameFormat( ::pPtr ) )
 
 
 METHOD QTextFormat:toImageFormat()
-   RETURN Qt_QTextFormat_toImageFormat( ::pPtr )
+   RETURN HB_QTextImageFormat():from( Qt_QTextFormat_toImageFormat( ::pPtr ) )
 
 
 METHOD QTextFormat:toListFormat()
-   RETURN Qt_QTextFormat_toListFormat( ::pPtr )
+   RETURN HB_QTextListFormat():from( Qt_QTextFormat_toListFormat( ::pPtr ) )
 
 
 METHOD QTextFormat:toTableFormat()
-   RETURN Qt_QTextFormat_toTableFormat( ::pPtr )
+   RETURN HB_QTextTableFormat():from( Qt_QTextFormat_toTableFormat( ::pPtr ) )
 
 
 METHOD QTextFormat:type()

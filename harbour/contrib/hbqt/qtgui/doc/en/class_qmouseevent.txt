@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QMouseEvent( ... )
  *     QMouseEvent():from( pPtr_OR_oObj_of_type_QMouseEvent )
- *     QMouseEvent():configure( pPtr_OR_oObj_of_type_QMouseEvent )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -55,6 +55,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QMouseEvent.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QInputEvent
+ *     QInputEvent()
  *  $END$
  */

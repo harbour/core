@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QStyle( ... )
  *     QStyle():from( pPtr_OR_oObj_of_type_QStyle )
- *     QStyle():configure( pPtr_OR_oObj_of_type_QStyle )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -75,6 +75,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyle.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

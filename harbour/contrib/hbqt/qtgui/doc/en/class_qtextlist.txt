@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QTextList( ... )
  *     QTextList():from( pPtr_OR_oObj_of_type_QTextList )
- *     QTextList():configure( pPtr_OR_oObj_of_type_QTextList )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -55,6 +55,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextList.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QTextBlockGroup
+ *     QTextBlockGroup()
  *  $END$
  */

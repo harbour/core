@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QPrinter( ... )
  *     QPrinter():from( pPtr_OR_oObj_of_type_QPrinter )
- *     QPrinter():configure( pPtr_OR_oObj_of_type_QPrinter )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -102,6 +102,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QPrinter.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QPaintDevice
+ *     QPaintDevice()
  *  $END$
  */

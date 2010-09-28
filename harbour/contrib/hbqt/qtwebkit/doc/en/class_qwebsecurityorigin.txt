@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QWebSecurityOrigin( ... )
  *     QWebSecurityOrigin():from( pPtr_OR_oObj_of_type_QWebSecurityOrigin )
- *     QWebSecurityOrigin():configure( pPtr_OR_oObj_of_type_QWebSecurityOrigin )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QDialog( ... )
  *     QDialog():from( pPtr_OR_oObj_of_type_QDialog )
- *     QDialog():configure( pPtr_OR_oObj_of_type_QDialog )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -56,6 +56,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QDialog.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QWidget
+ *     QWidget()
  *  $END$
  */

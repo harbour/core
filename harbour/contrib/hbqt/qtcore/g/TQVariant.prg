@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -122,26 +154,20 @@ METHOD QVariant:new( ... )
 
 
 METHOD QVariant:canConvert( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // bool canConvert ( Type t ) const
-                // N n QVariant::Type
-         RETURN Qt_QVariant_canConvert( ::pPtr, ... )
-                // bool canConvert ( Type t ) const
-                // N n QVariant::Type
-         // RETURN Qt_QVariant_canConvert_1( ::pPtr, ... )
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QVARIANT::TYPE"
+            RETURN Qt_QVariant_canConvert( ::pPtr, ... )
+         CASE "QVARIANT::TYPE"
+            RETURN Qt_QVariant_canConvert_1( ::pPtr, ... )
+         ENDSWITCH
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QVariant:clear()
@@ -165,7 +191,7 @@ METHOD QVariant:setValue( xValue )
 
 
 METHOD QVariant:toBitArray()
-   RETURN Qt_QVariant_toBitArray( ::pPtr )
+   RETURN HB_QBitArray():from( Qt_QVariant_toBitArray( ::pPtr ) )
 
 
 METHOD QVariant:toBool()
@@ -173,19 +199,19 @@ METHOD QVariant:toBool()
 
 
 METHOD QVariant:toByteArray()
-   RETURN Qt_QVariant_toByteArray( ::pPtr )
+   RETURN HB_QByteArray():from( Qt_QVariant_toByteArray( ::pPtr ) )
 
 
 METHOD QVariant:toChar()
-   RETURN Qt_QVariant_toChar( ::pPtr )
+   RETURN HB_QChar():from( Qt_QVariant_toChar( ::pPtr ) )
 
 
 METHOD QVariant:toDate()
-   RETURN Qt_QVariant_toDate( ::pPtr )
+   RETURN HB_QDate():from( Qt_QVariant_toDate( ::pPtr ) )
 
 
 METHOD QVariant:toDateTime()
-   RETURN Qt_QVariant_toDateTime( ::pPtr )
+   RETURN HB_QDateTime():from( Qt_QVariant_toDateTime( ::pPtr ) )
 
 
 METHOD QVariant:toDouble( lOk )
@@ -197,19 +223,19 @@ METHOD QVariant:toInt( lOk )
 
 
 METHOD QVariant:toLine()
-   RETURN Qt_QVariant_toLine( ::pPtr )
+   RETURN HB_QLine():from( Qt_QVariant_toLine( ::pPtr ) )
 
 
 METHOD QVariant:toLineF()
-   RETURN Qt_QVariant_toLineF( ::pPtr )
+   RETURN HB_QLineF():from( Qt_QVariant_toLineF( ::pPtr ) )
 
 
 METHOD QVariant:toList()
-   RETURN Qt_QVariant_toList( ::pPtr )
+   RETURN HB_QList():from( Qt_QVariant_toList( ::pPtr ) )
 
 
 METHOD QVariant:toLocale()
-   RETURN Qt_QVariant_toLocale( ::pPtr )
+   RETURN HB_QLocale():from( Qt_QVariant_toLocale( ::pPtr ) )
 
 
 METHOD QVariant:toLongLong( lOk )
@@ -217,31 +243,31 @@ METHOD QVariant:toLongLong( lOk )
 
 
 METHOD QVariant:toPoint()
-   RETURN Qt_QVariant_toPoint( ::pPtr )
+   RETURN HB_QPoint():from( Qt_QVariant_toPoint( ::pPtr ) )
 
 
 METHOD QVariant:toPointF()
-   RETURN Qt_QVariant_toPointF( ::pPtr )
+   RETURN HB_QPointF():from( Qt_QVariant_toPointF( ::pPtr ) )
 
 
 METHOD QVariant:toRect()
-   RETURN Qt_QVariant_toRect( ::pPtr )
+   RETURN HB_QRect():from( Qt_QVariant_toRect( ::pPtr ) )
 
 
 METHOD QVariant:toRectF()
-   RETURN Qt_QVariant_toRectF( ::pPtr )
+   RETURN HB_QRectF():from( Qt_QVariant_toRectF( ::pPtr ) )
 
 
 METHOD QVariant:toRegExp()
-   RETURN Qt_QVariant_toRegExp( ::pPtr )
+   RETURN HB_QRegExp():from( Qt_QVariant_toRegExp( ::pPtr ) )
 
 
 METHOD QVariant:toSize()
-   RETURN Qt_QVariant_toSize( ::pPtr )
+   RETURN HB_QSize():from( Qt_QVariant_toSize( ::pPtr ) )
 
 
 METHOD QVariant:toSizeF()
-   RETURN Qt_QVariant_toSizeF( ::pPtr )
+   RETURN HB_QSizeF():from( Qt_QVariant_toSizeF( ::pPtr ) )
 
 
 METHOD QVariant:toString()
@@ -249,11 +275,11 @@ METHOD QVariant:toString()
 
 
 METHOD QVariant:toStringList()
-   RETURN Qt_QVariant_toStringList( ::pPtr )
+   RETURN HB_QStringList():from( Qt_QVariant_toStringList( ::pPtr ) )
 
 
 METHOD QVariant:toTime()
-   RETURN Qt_QVariant_toTime( ::pPtr )
+   RETURN HB_QTime():from( Qt_QVariant_toTime( ::pPtr ) )
 
 
 METHOD QVariant:toUInt( lOk )
@@ -265,7 +291,7 @@ METHOD QVariant:toULongLong( lOk )
 
 
 METHOD QVariant:toUrl()
-   RETURN Qt_QVariant_toUrl( ::pPtr )
+   RETURN HB_QUrl():from( Qt_QVariant_toUrl( ::pPtr ) )
 
 
 METHOD QVariant:type()
@@ -277,7 +303,7 @@ METHOD QVariant:userType()
 
 
 METHOD QVariant:fromValue( xValue )
-   RETURN Qt_QVariant_fromValue( ::pPtr, xValue )
+   RETURN HB_QVariant():from( Qt_QVariant_fromValue( ::pPtr, xValue ) )
 
 
 METHOD QVariant:nameToType( pName )

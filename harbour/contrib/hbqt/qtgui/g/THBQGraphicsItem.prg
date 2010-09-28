@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -157,7 +189,7 @@ METHOD HBQGraphicsItem:hbSetBlock( xBlock )
 
 
 METHOD HBQGraphicsItem:boundingRect()
-   RETURN Qt_HBQGraphicsItem_boundingRect( ::pPtr )
+   RETURN HB_QRectF():from( Qt_HBQGraphicsItem_boundingRect( ::pPtr ) )
 
 
 METHOD HBQGraphicsItem:paint( pPainter, pOption, pWidget )
@@ -169,7 +201,7 @@ METHOD HBQGraphicsItem:determineResizeMode( pPos )
 
 
 METHOD HBQGraphicsItem:adjustRect( pRect )
-   RETURN Qt_HBQGraphicsItem_adjustRect( ::pPtr, hbqt_ptr( pRect ) )
+   RETURN HB_QRectF():from( Qt_HBQGraphicsItem_adjustRect( ::pPtr, hbqt_ptr( pRect ) ) )
 
 
 METHOD HBQGraphicsItem:prepare( pPainter )
@@ -177,7 +209,7 @@ METHOD HBQGraphicsItem:prepare( pPainter )
 
 
 METHOD HBQGraphicsItem:pen()
-   RETURN Qt_HBQGraphicsItem_pen( ::pPtr )
+   RETURN HB_QPen():from( Qt_HBQGraphicsItem_pen( ::pPtr ) )
 
 
 METHOD HBQGraphicsItem:setPen( pPen )
@@ -185,7 +217,7 @@ METHOD HBQGraphicsItem:setPen( pPen )
 
 
 METHOD HBQGraphicsItem:brush()
-   RETURN Qt_HBQGraphicsItem_brush( ::pPtr )
+   RETURN HB_QBrush():from( Qt_HBQGraphicsItem_brush( ::pPtr ) )
 
 
 METHOD HBQGraphicsItem:setBrush( pBrush )
@@ -193,7 +225,7 @@ METHOD HBQGraphicsItem:setBrush( pBrush )
 
 
 METHOD HBQGraphicsItem:backgroundBrush()
-   RETURN Qt_HBQGraphicsItem_backgroundBrush( ::pPtr )
+   RETURN HB_QBrush():from( Qt_HBQGraphicsItem_backgroundBrush( ::pPtr ) )
 
 
 METHOD HBQGraphicsItem:setBackgroundBrush( pBrush )
@@ -201,7 +233,7 @@ METHOD HBQGraphicsItem:setBackgroundBrush( pBrush )
 
 
 METHOD HBQGraphicsItem:font()
-   RETURN Qt_HBQGraphicsItem_font( ::pPtr )
+   RETURN HB_QFont():from( Qt_HBQGraphicsItem_font( ::pPtr ) )
 
 
 METHOD HBQGraphicsItem:setFont( pFont )
@@ -257,7 +289,7 @@ METHOD HBQGraphicsItem:setOpacity( nOpacity )
 
 
 METHOD HBQGraphicsItem:geometry()
-   RETURN Qt_HBQGraphicsItem_geometry( ::pPtr )
+   RETURN HB_QRectF():from( Qt_HBQGraphicsItem_geometry( ::pPtr ) )
 
 
 METHOD HBQGraphicsItem:setGeometry( pRect )
@@ -313,7 +345,7 @@ METHOD HBQGraphicsItem:setDrawTextType( nDrawTextType )
 
 
 METHOD HBQGraphicsItem:pixmap()
-   RETURN Qt_HBQGraphicsItem_pixmap( ::pPtr )
+   RETURN HB_QPixmap():from( Qt_HBQGraphicsItem_pixmap( ::pPtr ) )
 
 
 METHOD HBQGraphicsItem:setPixmap( pPixmap )
@@ -321,7 +353,7 @@ METHOD HBQGraphicsItem:setPixmap( pPixmap )
 
 
 METHOD HBQGraphicsItem:textColor()
-   RETURN Qt_HBQGraphicsItem_textColor( ::pPtr )
+   RETURN HB_QColor():from( Qt_HBQGraphicsItem_textColor( ::pPtr ) )
 
 
 METHOD HBQGraphicsItem:setTextColor( pColor )
@@ -337,7 +369,7 @@ METHOD HBQGraphicsItem:setBorderWidth( nBWidth )
 
 
 METHOD HBQGraphicsItem:borderColor()
-   RETURN Qt_HBQGraphicsItem_borderColor( ::pPtr )
+   RETURN HB_QColor():from( Qt_HBQGraphicsItem_borderColor( ::pPtr ) )
 
 
 METHOD HBQGraphicsItem:setBorderColor( pColor )

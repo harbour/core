@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -274,7 +306,7 @@ METHOD QWidget:acceptDrops()
 
 
 METHOD QWidget:actions()
-   RETURN Qt_QWidget_actions( ::pPtr )
+   RETURN HB_QList():from( Qt_QWidget_actions( ::pPtr ) )
 
 
 METHOD QWidget:activateWindow()
@@ -298,42 +330,33 @@ METHOD QWidget:backgroundRole()
 
 
 METHOD QWidget:baseSize()
-   RETURN Qt_QWidget_baseSize( ::pPtr )
+   RETURN HB_QSize():from( Qt_QWidget_baseSize( ::pPtr ) )
 
 
 METHOD QWidget:childAt( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // QWidget * childAt ( int x, int y ) const
-                // N n int, N n int
-         RETURN QWidget():from( Qt_QWidget_childAt( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QWidget():from( Qt_QWidget_childAt( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // QWidget * childAt ( const QPoint & p ) const
-                // PO p QPoint
-         RETURN QWidget():from( Qt_QWidget_childAt_1( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QWidget():from( Qt_QWidget_childAt_1( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:childrenRect()
-   RETURN Qt_QWidget_childrenRect( ::pPtr )
+   RETURN HB_QRect():from( Qt_QWidget_childrenRect( ::pPtr ) )
 
 
 METHOD QWidget:childrenRegion()
-   RETURN Qt_QWidget_childrenRegion( ::pPtr )
+   RETURN HB_QRegion():from( Qt_QWidget_childrenRegion( ::pPtr ) )
 
 
 METHOD QWidget:clearFocus()
@@ -345,7 +368,7 @@ METHOD QWidget:clearMask()
 
 
 METHOD QWidget:contentsRect()
-   RETURN Qt_QWidget_contentsRect( ::pPtr )
+   RETURN HB_QRect():from( Qt_QWidget_contentsRect( ::pPtr ) )
 
 
 METHOD QWidget:contextMenuPolicy()
@@ -353,7 +376,7 @@ METHOD QWidget:contextMenuPolicy()
 
 
 METHOD QWidget:cursor()
-   RETURN Qt_QWidget_cursor( ::pPtr )
+   RETURN HB_QCursor():from( Qt_QWidget_cursor( ::pPtr ) )
 
 
 METHOD QWidget:ensurePolished()
@@ -365,23 +388,23 @@ METHOD QWidget:focusPolicy()
 
 
 METHOD QWidget:focusProxy()
-   RETURN Qt_QWidget_focusProxy( ::pPtr )
+   RETURN HB_QWidget():from( Qt_QWidget_focusProxy( ::pPtr ) )
 
 
 METHOD QWidget:focusWidget()
-   RETURN Qt_QWidget_focusWidget( ::pPtr )
+   RETURN HB_QWidget():from( Qt_QWidget_focusWidget( ::pPtr ) )
 
 
 METHOD QWidget:font()
-   RETURN Qt_QWidget_font( ::pPtr )
+   RETURN HB_QFont():from( Qt_QWidget_font( ::pPtr ) )
 
 
 METHOD QWidget:fontInfo()
-   RETURN Qt_QWidget_fontInfo( ::pPtr )
+   RETURN HB_QFontInfo():from( Qt_QWidget_fontInfo( ::pPtr ) )
 
 
 METHOD QWidget:fontMetrics()
-   RETURN Qt_QWidget_fontMetrics( ::pPtr )
+   RETURN HB_QFontMetrics():from( Qt_QWidget_fontMetrics( ::pPtr ) )
 
 
 METHOD QWidget:foregroundRole()
@@ -389,15 +412,15 @@ METHOD QWidget:foregroundRole()
 
 
 METHOD QWidget:frameGeometry()
-   RETURN Qt_QWidget_frameGeometry( ::pPtr )
+   RETURN HB_QRect():from( Qt_QWidget_frameGeometry( ::pPtr ) )
 
 
 METHOD QWidget:frameSize()
-   RETURN Qt_QWidget_frameSize( ::pPtr )
+   RETURN HB_QSize():from( Qt_QWidget_frameSize( ::pPtr ) )
 
 
 METHOD QWidget:geometry()
-   RETURN Qt_QWidget_geometry( ::pPtr )
+   RETURN HB_QRect():from( Qt_QWidget_geometry( ::pPtr ) )
 
 
 METHOD QWidget:getContentsMargins( nLeft, nTop, nRight, nBottom )
@@ -409,26 +432,17 @@ METHOD QWidget:grabKeyboard()
 
 
 METHOD QWidget:grabMouse( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void grabMouse ( const QCursor & cursor )
-                // PO p QCursor
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QWidget_grabMouse_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 0
-             // void grabMouse ()
+      EXIT
+   CASE 0
       RETURN Qt_QWidget_grabMouse( ::pPtr, ... )
-   ENDCASE
-   RETURN NIL
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:grabShortcut( pKey, nContext )
@@ -452,7 +466,7 @@ METHOD QWidget:heightForWidth( nW )
 
 
 METHOD QWidget:inputMethodQuery( nQuery )
-   RETURN Qt_QWidget_inputMethodQuery( ::pPtr, nQuery )
+   RETURN HB_QVariant():from( Qt_QWidget_inputMethodQuery( ::pPtr, nQuery ) )
 
 
 METHOD QWidget:insertAction( pBefore, pAction )
@@ -512,7 +526,7 @@ METHOD QWidget:isWindowModified()
 
 
 METHOD QWidget:layout()
-   RETURN Qt_QWidget_layout( ::pPtr )
+   RETURN HB_QLayout():from( Qt_QWidget_layout( ::pPtr ) )
 
 
 METHOD QWidget:layoutDirection()
@@ -520,35 +534,35 @@ METHOD QWidget:layoutDirection()
 
 
 METHOD QWidget:locale()
-   RETURN Qt_QWidget_locale( ::pPtr )
+   RETURN HB_QLocale():from( Qt_QWidget_locale( ::pPtr ) )
 
 
 METHOD QWidget:mapFrom( pParent, pPos )
-   RETURN Qt_QWidget_mapFrom( ::pPtr, hbqt_ptr( pParent ), hbqt_ptr( pPos ) )
+   RETURN HB_QPoint():from( Qt_QWidget_mapFrom( ::pPtr, hbqt_ptr( pParent ), hbqt_ptr( pPos ) ) )
 
 
 METHOD QWidget:mapFromGlobal( pPos )
-   RETURN Qt_QWidget_mapFromGlobal( ::pPtr, hbqt_ptr( pPos ) )
+   RETURN HB_QPoint():from( Qt_QWidget_mapFromGlobal( ::pPtr, hbqt_ptr( pPos ) ) )
 
 
 METHOD QWidget:mapFromParent( pPos )
-   RETURN Qt_QWidget_mapFromParent( ::pPtr, hbqt_ptr( pPos ) )
+   RETURN HB_QPoint():from( Qt_QWidget_mapFromParent( ::pPtr, hbqt_ptr( pPos ) ) )
 
 
 METHOD QWidget:mapTo( pParent, pPos )
-   RETURN Qt_QWidget_mapTo( ::pPtr, hbqt_ptr( pParent ), hbqt_ptr( pPos ) )
+   RETURN HB_QPoint():from( Qt_QWidget_mapTo( ::pPtr, hbqt_ptr( pParent ), hbqt_ptr( pPos ) ) )
 
 
 METHOD QWidget:mapToGlobal( pPos )
-   RETURN Qt_QWidget_mapToGlobal( ::pPtr, hbqt_ptr( pPos ) )
+   RETURN HB_QPoint():from( Qt_QWidget_mapToGlobal( ::pPtr, hbqt_ptr( pPos ) ) )
 
 
 METHOD QWidget:mapToParent( pPos )
-   RETURN Qt_QWidget_mapToParent( ::pPtr, hbqt_ptr( pPos ) )
+   RETURN HB_QPoint():from( Qt_QWidget_mapToParent( ::pPtr, hbqt_ptr( pPos ) ) )
 
 
 METHOD QWidget:mask()
-   RETURN Qt_QWidget_mask( ::pPtr )
+   RETURN HB_QRegion():from( Qt_QWidget_mask( ::pPtr ) )
 
 
 METHOD QWidget:maximumHeight()
@@ -556,7 +570,7 @@ METHOD QWidget:maximumHeight()
 
 
 METHOD QWidget:maximumSize()
-   RETURN Qt_QWidget_maximumSize( ::pPtr )
+   RETURN HB_QSize():from( Qt_QWidget_maximumSize( ::pPtr ) )
 
 
 METHOD QWidget:maximumWidth()
@@ -568,11 +582,11 @@ METHOD QWidget:minimumHeight()
 
 
 METHOD QWidget:minimumSize()
-   RETURN Qt_QWidget_minimumSize( ::pPtr )
+   RETURN HB_QSize():from( Qt_QWidget_minimumSize( ::pPtr ) )
 
 
 METHOD QWidget:minimumSizeHint()
-   RETURN Qt_QWidget_minimumSizeHint( ::pPtr )
+   RETURN HB_QSize():from( Qt_QWidget_minimumSizeHint( ::pPtr ) )
 
 
 METHOD QWidget:minimumWidth()
@@ -580,42 +594,33 @@ METHOD QWidget:minimumWidth()
 
 
 METHOD QWidget:move( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // void move ( int x, int y )
-                // N n int, N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QWidget_move( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void move ( const QPoint & )
-                // PO p QPoint
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QWidget_move_1( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:nativeParentWidget()
-   RETURN Qt_QWidget_nativeParentWidget( ::pPtr )
+   RETURN HB_QWidget():from( Qt_QWidget_nativeParentWidget( ::pPtr ) )
 
 
 METHOD QWidget:nextInFocusChain()
-   RETURN Qt_QWidget_nextInFocusChain( ::pPtr )
+   RETURN HB_QWidget():from( Qt_QWidget_nextInFocusChain( ::pPtr ) )
 
 
 METHOD QWidget:normalGeometry()
-   RETURN Qt_QWidget_normalGeometry( ::pPtr )
+   RETURN HB_QRect():from( Qt_QWidget_normalGeometry( ::pPtr ) )
 
 
 METHOD QWidget:overrideWindowFlags( nFlags )
@@ -623,23 +628,23 @@ METHOD QWidget:overrideWindowFlags( nFlags )
 
 
 METHOD QWidget:paintEngine()
-   RETURN Qt_QWidget_paintEngine( ::pPtr )
+   RETURN HB_QPaintEngine():from( Qt_QWidget_paintEngine( ::pPtr ) )
 
 
 METHOD QWidget:palette()
-   RETURN Qt_QWidget_palette( ::pPtr )
+   RETURN HB_QPalette():from( Qt_QWidget_palette( ::pPtr ) )
 
 
 METHOD QWidget:parentWidget()
-   RETURN Qt_QWidget_parentWidget( ::pPtr )
+   RETURN HB_QWidget():from( Qt_QWidget_parentWidget( ::pPtr ) )
 
 
 METHOD QWidget:pos()
-   RETURN Qt_QWidget_pos( ::pPtr )
+   RETURN HB_QPoint():from( Qt_QWidget_pos( ::pPtr ) )
 
 
 METHOD QWidget:rect()
-   RETURN Qt_QWidget_rect( ::pPtr )
+   RETURN HB_QRect():from( Qt_QWidget_rect( ::pPtr ) )
 
 
 METHOD QWidget:releaseKeyboard()
@@ -659,63 +664,46 @@ METHOD QWidget:removeAction( pAction )
 
 
 METHOD QWidget:repaint( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 4
+   SWITCH PCount()
+   CASE 4
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
-                // void repaint ( int x, int y, int w, int h )
-                // N n int, N n int, N n int, N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
          RETURN Qt_QWidget_repaint( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void repaint ( const QRect & rect )
-                // PO p QRect
-         RETURN Qt_QWidget_repaint_1( ::pPtr, ... )
-                // void repaint ( const QRegion & rgn )
-                // PO p QRegion
-         // RETURN Qt_QWidget_repaint_2( ::pPtr, ... )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QRECT"
+            RETURN Qt_QWidget_repaint_1( ::pPtr, ... )
+         CASE "QREGION"
+            RETURN Qt_QWidget_repaint_2( ::pPtr, ... )
+         ENDSWITCH
       ENDCASE
-   CASE nP == 0
-             // void repaint ()
+      EXIT
+   CASE 0
       RETURN Qt_QWidget_repaint_3( ::pPtr, ... )
-   ENDCASE
-   RETURN NIL
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:resize( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // void resize ( int w, int h )
-                // N n int, N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QWidget_resize( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void resize ( const QSize & )
-                // PO p QSize
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QWidget_resize_1( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:restoreGeometry( pGeometry )
@@ -723,34 +711,25 @@ METHOD QWidget:restoreGeometry( pGeometry )
 
 
 METHOD QWidget:saveGeometry()
-   RETURN Qt_QWidget_saveGeometry( ::pPtr )
+   RETURN HB_QByteArray():from( Qt_QWidget_saveGeometry( ::pPtr ) )
 
 
 METHOD QWidget:scroll( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 3
+   SWITCH PCount()
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "PO"
-                // void scroll ( int dx, int dy, const QRect & r )
-                // N n int, N n int, PO p QRect
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
          RETURN Qt_QWidget_scroll_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // void scroll ( int dx, int dy )
-                // N n int, N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QWidget_scroll( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:setAcceptDrops( lOn )
@@ -770,30 +749,21 @@ METHOD QWidget:setBackgroundRole( nRole )
 
 
 METHOD QWidget:setBaseSize( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // void setBaseSize ( int basew, int baseh )
-                // N n int, N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QWidget_setBaseSize_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void setBaseSize ( const QSize & )
-                // PO p QSize
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QWidget_setBaseSize( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:setContentsMargins( nLeft, nTop, nRight, nBottom )
@@ -813,30 +783,21 @@ METHOD QWidget:setFixedHeight( nH )
 
 
 METHOD QWidget:setFixedSize( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // void setFixedSize ( int w, int h )
-                // N n int, N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QWidget_setFixedSize_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void setFixedSize ( const QSize & s )
-                // PO p QSize
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QWidget_setFixedSize( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:setFixedWidth( nW )
@@ -844,26 +805,17 @@ METHOD QWidget:setFixedWidth( nW )
 
 
 METHOD QWidget:setFocus( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // void setFocus ( Qt::FocusReason reason )
-                // N n Qt::FocusReason
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
          RETURN Qt_QWidget_setFocus( ::pPtr, ... )
       ENDCASE
-   CASE nP == 0
-             // void setFocus ()
+      EXIT
+   CASE 0
       RETURN Qt_QWidget_setFocus_1( ::pPtr, ... )
-   ENDCASE
-   RETURN NIL
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:setFocusPolicy( nPolicy )
@@ -883,30 +835,21 @@ METHOD QWidget:setForegroundRole( nRole )
 
 
 METHOD QWidget:setGeometry( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 4
+   SWITCH PCount()
+   CASE 4
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
-                // void setGeometry ( int x, int y, int w, int h )
-                // N n int, N n int, N n int, N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
          RETURN Qt_QWidget_setGeometry_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void setGeometry ( const QRect & )
-                // PO p QRect
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QWidget_setGeometry( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:setLayout( pLayout )
@@ -922,26 +865,20 @@ METHOD QWidget:setLocale( pLocale )
 
 
 METHOD QWidget:setMask( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void setMask ( const QBitmap & bitmap )
-                // PO p QBitmap
-         RETURN Qt_QWidget_setMask( ::pPtr, ... )
-                // void setMask ( const QRegion & region )
-                // PO p QRegion
-         // RETURN Qt_QWidget_setMask_1( ::pPtr, ... )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QBITMAP"
+            RETURN Qt_QWidget_setMask( ::pPtr, ... )
+         CASE "QREGION"
+            RETURN Qt_QWidget_setMask_1( ::pPtr, ... )
+         ENDSWITCH
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:setMaximumHeight( nMaxh )
@@ -949,30 +886,21 @@ METHOD QWidget:setMaximumHeight( nMaxh )
 
 
 METHOD QWidget:setMaximumSize( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // void setMaximumSize ( int maxw, int maxh )
-                // N n int, N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QWidget_setMaximumSize_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void setMaximumSize ( const QSize & )
-                // PO p QSize
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QWidget_setMaximumSize( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:setMaximumWidth( nMaxw )
@@ -984,30 +912,21 @@ METHOD QWidget:setMinimumHeight( nMinh )
 
 
 METHOD QWidget:setMinimumSize( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // void setMinimumSize ( int minw, int minh )
-                // N n int, N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QWidget_setMinimumSize_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void setMinimumSize ( const QSize & )
-                // PO p QSize
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QWidget_setMinimumSize( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:setMinimumWidth( nMinw )
@@ -1023,30 +942,21 @@ METHOD QWidget:setPalette( pQPalette )
 
 
 METHOD QWidget:setParent( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
-                // void setParent ( QWidget * parent, Qt::WindowFlags f )
-                // PO p QWidget, N n Qt::WindowFlags
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QWidget_setParent_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void setParent ( QWidget * parent )
-                // PO p QWidget
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QWidget_setParent( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:setShortcutAutoRepeat( nId, lEnable )
@@ -1058,57 +968,39 @@ METHOD QWidget:setShortcutEnabled( nId, lEnable )
 
 
 METHOD QWidget:setSizeIncrement( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // void setSizeIncrement ( int w, int h )
-                // N n int, N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QWidget_setSizeIncrement_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void setSizeIncrement ( const QSize & )
-                // PO p QSize
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QWidget_setSizeIncrement( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:setSizePolicy( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // void setSizePolicy ( QSizePolicy::Policy horizontal, QSizePolicy::Policy vertical )
-                // N n QSizePolicy::Policy, N n QSizePolicy::Policy
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QWidget_setSizePolicy_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void setSizePolicy ( const QSizePolicy & policy )
-                // PO p QSizePolicy
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QWidget_setSizePolicy( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:setStatusTip( cQString )
@@ -1164,19 +1056,19 @@ METHOD QWidget:setWindowState( nWindowState )
 
 
 METHOD QWidget:size()
-   RETURN Qt_QWidget_size( ::pPtr )
+   RETURN HB_QSize():from( Qt_QWidget_size( ::pPtr ) )
 
 
 METHOD QWidget:sizeHint()
-   RETURN Qt_QWidget_sizeHint( ::pPtr )
+   RETURN HB_QSize():from( Qt_QWidget_sizeHint( ::pPtr ) )
 
 
 METHOD QWidget:sizeIncrement()
-   RETURN Qt_QWidget_sizeIncrement( ::pPtr )
+   RETURN HB_QSize():from( Qt_QWidget_sizeIncrement( ::pPtr ) )
 
 
 METHOD QWidget:sizePolicy()
-   RETURN Qt_QWidget_sizePolicy( ::pPtr )
+   RETURN HB_QSizePolicy():from( Qt_QWidget_sizePolicy( ::pPtr ) )
 
 
 METHOD QWidget:stackUnder( pW )
@@ -1188,7 +1080,7 @@ METHOD QWidget:statusTip()
 
 
 METHOD QWidget:style()
-   RETURN Qt_QWidget_style( ::pPtr )
+   RETURN HB_QStyle():from( Qt_QWidget_style( ::pPtr ) )
 
 
 METHOD QWidget:styleSheet()
@@ -1220,36 +1112,28 @@ METHOD QWidget:unsetLocale()
 
 
 METHOD QWidget:update( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 4
+   SWITCH PCount()
+   CASE 4
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
-                // void update ( int x, int y, int w, int h )
-                // N n int, N n int, N n int, N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
          RETURN Qt_QWidget_update( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void update ( const QRect & rect )
-                // PO p QRect
-         RETURN Qt_QWidget_update_1( ::pPtr, ... )
-                // void update ( const QRegion & rgn )
-                // PO p QRegion
-         // RETURN Qt_QWidget_update_2( ::pPtr, ... )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QRECT"
+            RETURN Qt_QWidget_update_1( ::pPtr, ... )
+         CASE "QREGION"
+            RETURN Qt_QWidget_update_2( ::pPtr, ... )
+         ENDSWITCH
       ENDCASE
-   CASE nP == 0
-             // void update ()
+      EXIT
+   CASE 0
       RETURN Qt_QWidget_update_3( ::pPtr, ... )
-   ENDCASE
-   RETURN NIL
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:updateGeometry()
@@ -1261,7 +1145,7 @@ METHOD QWidget:updatesEnabled()
 
 
 METHOD QWidget:visibleRegion()
-   RETURN Qt_QWidget_visibleRegion( ::pPtr )
+   RETURN HB_QRegion():from( Qt_QWidget_visibleRegion( ::pPtr ) )
 
 
 METHOD QWidget:whatsThis()
@@ -1273,7 +1157,7 @@ METHOD QWidget:width()
 
 
 METHOD QWidget:window()
-   RETURN Qt_QWidget_window( ::pPtr )
+   RETURN HB_QWidget():from( Qt_QWidget_window( ::pPtr ) )
 
 
 METHOD QWidget:windowFilePath()
@@ -1285,7 +1169,7 @@ METHOD QWidget:windowFlags()
 
 
 METHOD QWidget:windowIcon()
-   RETURN Qt_QWidget_windowIcon( ::pPtr )
+   RETURN HB_QIcon():from( Qt_QWidget_windowIcon( ::pPtr ) )
 
 
 METHOD QWidget:windowIconText()
@@ -1325,11 +1209,11 @@ METHOD QWidget:y()
 
 
 METHOD QWidget:keyboardGrabber()
-   RETURN Qt_QWidget_keyboardGrabber( ::pPtr )
+   RETURN HB_QWidget():from( Qt_QWidget_keyboardGrabber( ::pPtr ) )
 
 
 METHOD QWidget:mouseGrabber()
-   RETURN Qt_QWidget_mouseGrabber( ::pPtr )
+   RETURN HB_QWidget():from( Qt_QWidget_mouseGrabber( ::pPtr ) )
 
 
 METHOD QWidget:setTabOrder( pFirst, pSecond )

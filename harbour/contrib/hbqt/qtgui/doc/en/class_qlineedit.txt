@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QLineEdit( ... )
  *     QLineEdit():from( pPtr_OR_oObj_of_type_QLineEdit )
- *     QLineEdit():configure( pPtr_OR_oObj_of_type_QLineEdit )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -101,6 +101,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QLineEdit.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QWidget
+ *     QWidget()
  *  $END$
  */

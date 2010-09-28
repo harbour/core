@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -112,27 +144,17 @@ METHOD QListWidget:new( ... )
 
 
 METHOD QListWidget:addItem( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // void addItem ( const QString & label )
-                // C c QString
+      CASE hb_isChar( hb_pvalue( 1 ) )
          RETURN Qt_QListWidget_addItem( ::pPtr, ... )
-      CASE aV[ 1 ] $ "PO"
-                // void addItem ( QListWidgetItem * item )              [*D=1*]
-                // PO p QListWidgetItem
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QListWidget_addItem_1( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QListWidget:addItems( pLabels )
@@ -148,7 +170,7 @@ METHOD QListWidget:count()
 
 
 METHOD QListWidget:currentItem()
-   RETURN Qt_QListWidget_currentItem( ::pPtr )
+   RETURN HB_QListWidgetItem():from( Qt_QListWidget_currentItem( ::pPtr ) )
 
 
 METHOD QListWidget:currentRow()
@@ -160,31 +182,21 @@ METHOD QListWidget:editItem( pItem )
 
 
 METHOD QListWidget:findItems( cText, nFlags )
-   RETURN Qt_QListWidget_findItems( ::pPtr, cText, nFlags )
+   RETURN HB_QList():from( Qt_QListWidget_findItems( ::pPtr, cText, nFlags ) )
 
 
 METHOD QListWidget:insertItem( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "C"
-                // void insertItem ( int row, const QString & label )
-                // N n int, C c QString
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
          RETURN Qt_QListWidget_insertItem_1( ::pPtr, ... )
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PO"
-                // void insertItem ( int row, QListWidgetItem * item )  [*D=2*]
-                // N n int, PO p QListWidgetItem
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
          RETURN Qt_QListWidget_insertItem( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QListWidget:insertItems( nRow, pLabels )
@@ -196,38 +208,29 @@ METHOD QListWidget:isSortingEnabled()
 
 
 METHOD QListWidget:item( nRow )
-   RETURN Qt_QListWidget_item( ::pPtr, nRow )
+   RETURN HB_QListWidgetItem():from( Qt_QListWidget_item( ::pPtr, nRow ) )
 
 
 METHOD QListWidget:itemAt( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // QListWidgetItem * itemAt ( int x, int y ) const
-                // N n int, N n int
-         RETURN QListWidgetItem():from( Qt_QListWidget_itemAt_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QListWidgetItem():from( Qt_QListWidget_itemAt_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // QListWidgetItem * itemAt ( const QPoint & p ) const
-                // PO p QPoint
-         RETURN QListWidgetItem():from( Qt_QListWidget_itemAt( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QListWidgetItem():from( Qt_QListWidget_itemAt( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QListWidget:itemWidget( pItem )
-   RETURN Qt_QListWidget_itemWidget( ::pPtr, hbqt_ptr( pItem ) )
+   RETURN HB_QWidget():from( Qt_QListWidget_itemWidget( ::pPtr, hbqt_ptr( pItem ) ) )
 
 
 METHOD QListWidget:openPersistentEditor( pItem )
@@ -243,61 +246,43 @@ METHOD QListWidget:row( pItem )
 
 
 METHOD QListWidget:selectedItems()
-   RETURN Qt_QListWidget_selectedItems( ::pPtr )
+   RETURN HB_QList():from( Qt_QListWidget_selectedItems( ::pPtr ) )
 
 
 METHOD QListWidget:setCurrentItem( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
-                // void setCurrentItem ( QListWidgetItem * item, QItemSelectionModel::SelectionFlags command )
-                // PO p QListWidgetItem, N n QItemSelectionModel::SelectionFlags
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QListWidget_setCurrentItem_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void setCurrentItem ( QListWidgetItem * item )
-                // PO p QListWidgetItem
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QListWidget_setCurrentItem( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QListWidget:setCurrentRow( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // void setCurrentRow ( int row, QItemSelectionModel::SelectionFlags command )
-                // N n int, N n QItemSelectionModel::SelectionFlags
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QListWidget_setCurrentRow_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // void setCurrentRow ( int row )
-                // N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
          RETURN Qt_QListWidget_setCurrentRow( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QListWidget:setItemWidget( pItem, pWidget )
@@ -313,11 +298,11 @@ METHOD QListWidget:sortItems( nOrder )
 
 
 METHOD QListWidget:takeItem( nRow )
-   RETURN Qt_QListWidget_takeItem( ::pPtr, nRow )
+   RETURN HB_QListWidgetItem():from( Qt_QListWidget_takeItem( ::pPtr, nRow ) )
 
 
 METHOD QListWidget:visualItemRect( pItem )
-   RETURN Qt_QListWidget_visualItemRect( ::pPtr, hbqt_ptr( pItem ) )
+   RETURN HB_QRect():from( Qt_QListWidget_visualItemRect( ::pPtr, hbqt_ptr( pItem ) ) )
 
 
 METHOD QListWidget:clear()

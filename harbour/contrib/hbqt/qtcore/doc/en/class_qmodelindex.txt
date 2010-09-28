@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QModelIndex( ... )
  *     QModelIndex():from( pPtr_OR_oObj_of_type_QModelIndex )
- *     QModelIndex():configure( pPtr_OR_oObj_of_type_QModelIndex )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

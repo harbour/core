@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QTextCursor( ... )
  *     QTextCursor():from( pPtr_OR_oObj_of_type_QTextCursor )
- *     QTextCursor():configure( pPtr_OR_oObj_of_type_QTextCursor )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

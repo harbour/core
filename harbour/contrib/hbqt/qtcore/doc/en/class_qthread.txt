@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QThread( ... )
  *     QThread():from( pPtr_OR_oObj_of_type_QThread )
- *     QThread():configure( pPtr_OR_oObj_of_type_QThread )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -59,6 +59,6 @@
  *     C++ wrappers  : contrib/hbqt/qtcore/QThread.cpp
  *     Library       : hbqtcore
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

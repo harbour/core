@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QHttp( ... )
  *     QHttp():from( pPtr_OR_oObj_of_type_QHttp )
- *     QHttp():configure( pPtr_OR_oObj_of_type_QHttp )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -70,6 +70,6 @@
  *     C++ wrappers  : contrib/hbqt/qtnetwork/QHttp.cpp
  *     Library       : hbqtnetwork
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

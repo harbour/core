@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QDesignerWidgetBoxInterface( ... )
  *     QDesignerWidgetBoxInterface():from( pPtr_OR_oObj_of_type_QDesignerWidgetBoxInterface )
- *     QDesignerWidgetBoxInterface():configure( pPtr_OR_oObj_of_type_QDesignerWidgetBoxInterface )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -50,6 +50,6 @@
  *     C++ wrappers  : contrib/hbqt/qtdesigner/QDesignerWidgetBoxInterface.cpp
  *     Library       : hbqtdesigner
  *  $SEEALSO$
- *     QWidget
+ *     QWidget()
  *  $END$
  */

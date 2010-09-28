@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QSizeF( ... )
  *     QSizeF():from( pPtr_OR_oObj_of_type_QSizeF )
- *     QSizeF():configure( pPtr_OR_oObj_of_type_QSizeF )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

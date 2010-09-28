@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QGraphicsProxyWidget( ... )
  *     QGraphicsProxyWidget():from( pPtr_OR_oObj_of_type_QGraphicsProxyWidget )
- *     QGraphicsProxyWidget():configure( pPtr_OR_oObj_of_type_QGraphicsProxyWidget )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -49,6 +49,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsProxyWidget.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QGraphicsWidget
+ *     QGraphicsWidget()
  *  $END$
  */

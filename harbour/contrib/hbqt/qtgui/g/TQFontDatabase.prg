@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -111,11 +143,11 @@ METHOD QFontDatabase:bold( cFamily, cStyle )
 
 
 METHOD QFontDatabase:families( nWritingSystem )
-   RETURN Qt_QFontDatabase_families( ::pPtr, nWritingSystem )
+   RETURN HB_QStringList():from( Qt_QFontDatabase_families( ::pPtr, nWritingSystem ) )
 
 
 METHOD QFontDatabase:font( cFamily, cStyle, nPointSize )
-   RETURN Qt_QFontDatabase_font( ::pPtr, cFamily, cStyle, nPointSize )
+   RETURN HB_QFont():from( Qt_QFontDatabase_font( ::pPtr, cFamily, cStyle, nPointSize ) )
 
 
 METHOD QFontDatabase:isBitmapScalable( cFamily, cStyle )
@@ -139,38 +171,32 @@ METHOD QFontDatabase:italic( cFamily, cStyle )
 
 
 METHOD QFontDatabase:pointSizes( cFamily, cStyle )
-   RETURN Qt_QFontDatabase_pointSizes( ::pPtr, cFamily, cStyle )
+   RETURN HB_QList():from( Qt_QFontDatabase_pointSizes( ::pPtr, cFamily, cStyle ) )
 
 
 METHOD QFontDatabase:smoothSizes( cFamily, cStyle )
-   RETURN Qt_QFontDatabase_smoothSizes( ::pPtr, cFamily, cStyle )
+   RETURN HB_QList():from( Qt_QFontDatabase_smoothSizes( ::pPtr, cFamily, cStyle ) )
 
 
 METHOD QFontDatabase:styleString( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // QString styleString ( const QFont & font )
-                // PO p QFont
-         RETURN Qt_QFontDatabase_styleString( ::pPtr, ... )
-                // QString styleString ( const QFontInfo & fontInfo )
-                // PO p QFontInfo
-         // RETURN Qt_QFontDatabase_styleString_1( ::pPtr, ... )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QFONT"
+            RETURN Qt_QFontDatabase_styleString( ::pPtr, ... )
+         CASE "QFONTINFO"
+            RETURN Qt_QFontDatabase_styleString_1( ::pPtr, ... )
+         ENDSWITCH
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QFontDatabase:styles( cFamily )
-   RETURN Qt_QFontDatabase_styles( ::pPtr, cFamily )
+   RETURN HB_QStringList():from( Qt_QFontDatabase_styles( ::pPtr, cFamily ) )
 
 
 METHOD QFontDatabase:weight( cFamily, cStyle )
@@ -186,7 +212,7 @@ METHOD QFontDatabase:addApplicationFontFromData( pFontData )
 
 
 METHOD QFontDatabase:applicationFontFamilies( nId )
-   RETURN Qt_QFontDatabase_applicationFontFamilies( ::pPtr, nId )
+   RETURN HB_QStringList():from( Qt_QFontDatabase_applicationFontFamilies( ::pPtr, nId ) )
 
 
 METHOD QFontDatabase:removeAllApplicationFonts()
@@ -198,7 +224,7 @@ METHOD QFontDatabase:removeApplicationFont( nId )
 
 
 METHOD QFontDatabase:standardSizes()
-   RETURN Qt_QFontDatabase_standardSizes( ::pPtr )
+   RETURN HB_QList():from( Qt_QFontDatabase_standardSizes( ::pPtr ) )
 
 
 METHOD QFontDatabase:supportsThreadedFontRendering()

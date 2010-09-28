@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QDrag( ... )
  *     QDrag():from( pPtr_OR_oObj_of_type_QDrag )
- *     QDrag():configure( pPtr_OR_oObj_of_type_QDrag )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -57,6 +57,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QDrag.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

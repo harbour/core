@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QDesignerFormWindowManagerInterface( ... )
  *     QDesignerFormWindowManagerInterface():from( pPtr_OR_oObj_of_type_QDesignerFormWindowManagerInterface )
- *     QDesignerFormWindowManagerInterface():configure( pPtr_OR_oObj_of_type_QDesignerFormWindowManagerInterface )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -72,6 +72,6 @@
  *     C++ wrappers  : contrib/hbqt/qtdesigner/QDesignerFormWindowManagerInterface.cpp
  *     Library       : hbqtdesigner
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

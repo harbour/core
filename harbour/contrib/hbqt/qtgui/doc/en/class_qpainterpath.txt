@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QPainterPath( ... )
  *     QPainterPath():from( pPtr_OR_oObj_of_type_QPainterPath )
- *     QPainterPath():configure( pPtr_OR_oObj_of_type_QPainterPath )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -46,14 +46,17 @@
  *     :boundingRect()                                     -> pQRectF
  *     :closeSubpath()                                     -> NIL
  *     :connectPath( pPath )                               -> NIL
- *     :contains( ... )                                    -> NIL
+ *     :contains( pPoint )                                 -> lBool
+ *     :contains_1( pRectangle )                           -> lBool
+ *     :contains_2( pP )                                   -> lBool
  *     :controlPointRect()                                 -> pQRectF
  *     :cubicTo( pC1, pC2, pEndPoint )                     -> NIL
  *     :cubicTo_1( nC1X, nC1Y, nC2X, nC2Y, nEndPointX, nEndPointY )  -> NIL
  *     :currentPosition()                                  -> pQPointF
  *     :elementCount()                                     -> nInt
  *     :fillRule()                                         -> nQt::FillRule
- *     :intersects( ... )                                  -> NIL
+ *     :intersects( pRectangle )                           -> lBool
+ *     :intersects_1( pP )                                 -> lBool
  *     :isEmpty()                                          -> lBool
  *     :length()                                           -> nQreal
  *     :lineTo( pEndPoint )                                -> NIL

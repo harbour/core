@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QsciStyledText( ... )
  *     QsciStyledText():from( pPtr_OR_oObj_of_type_QsciStyledText )
- *     QsciStyledText():configure( pPtr_OR_oObj_of_type_QsciStyledText )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

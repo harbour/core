@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QAbstractScrollArea( ... )
  *     QAbstractScrollArea():from( pPtr_OR_oObj_of_type_QAbstractScrollArea )
- *     QAbstractScrollArea():configure( pPtr_OR_oObj_of_type_QAbstractScrollArea )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -60,6 +60,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QAbstractScrollArea.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QFrame
+ *     QFrame()
  *  $END$
  */

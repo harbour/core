@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QContextMenuEvent( ... )
  *     QContextMenuEvent():from( pPtr_OR_oObj_of_type_QContextMenuEvent )
- *     QContextMenuEvent():configure( pPtr_OR_oObj_of_type_QContextMenuEvent )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -53,6 +53,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QContextMenuEvent.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QInputEvent
+ *     QInputEvent()
  *  $END$
  */

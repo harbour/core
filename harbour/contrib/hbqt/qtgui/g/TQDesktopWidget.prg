@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -58,6 +56,40 @@
  *
  */
 /*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
+/*----------------------------------------------------------------------*/
 
 
 #include "hbclass.ch"
@@ -92,34 +124,24 @@ METHOD QDesktopWidget:new( ... )
 
 
 METHOD QDesktopWidget:availableGeometry( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // const QRect availableGeometry ( int screen = -1 ) const
-                // N n int
-         RETURN QRect():from( Qt_QDesktopWidget_availableGeometry( ::pPtr, ... ) )
-      CASE aV[ 1 ] $ "PO"
-                // const QRect availableGeometry ( const QWidget * widget ) const
-                // PO p QWidget
-         RETURN QRect():from( Qt_QDesktopWidget_availableGeometry_1( ::pPtr, ... ) )
-                // const QRect availableGeometry ( const QPoint & p ) const
-                // PO p QPoint
-         // RETURN QRect():from( Qt_QDesktopWidget_availableGeometry_2( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QRect():from( Qt_QDesktopWidget_availableGeometry( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QWIDGET"
+            RETURN HB_QRect():from( Qt_QDesktopWidget_availableGeometry_1( ::pPtr, ... ) )
+         CASE "QPOINT"
+            RETURN HB_QRect():from( Qt_QDesktopWidget_availableGeometry_2( ::pPtr, ... ) )
+         ENDSWITCH
       ENDCASE
-   CASE nP == 0
-             // const QRect availableGeometry ( int screen = -1 ) const
-             // N n int
-      RETURN QRect():from( Qt_QDesktopWidget_availableGeometry( ::pPtr, ... ) )
-   ENDCASE
-   RETURN NIL
+      EXIT
+   CASE 0
+      RETURN HB_QRect():from( Qt_QDesktopWidget_availableGeometry( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QDesktopWidget:isVirtualDesktop()
@@ -135,63 +157,45 @@ METHOD QDesktopWidget:primaryScreen()
 
 
 METHOD QDesktopWidget:screen( nScreen )
-   RETURN Qt_QDesktopWidget_screen( ::pPtr, nScreen )
+   RETURN HB_QWidget():from( Qt_QDesktopWidget_screen( ::pPtr, nScreen ) )
 
 
 METHOD QDesktopWidget:screenGeometry( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // const QRect screenGeometry ( int screen = -1 ) const
-                // N n int
-         RETURN QRect():from( Qt_QDesktopWidget_screenGeometry( ::pPtr, ... ) )
-      CASE aV[ 1 ] $ "PO"
-                // const QRect screenGeometry ( const QWidget * widget ) const
-                // PO p QWidget
-         RETURN QRect():from( Qt_QDesktopWidget_screenGeometry_1( ::pPtr, ... ) )
-                // const QRect screenGeometry ( const QPoint & p ) const
-                // PO p QPoint
-         // RETURN QRect():from( Qt_QDesktopWidget_screenGeometry_2( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QRect():from( Qt_QDesktopWidget_screenGeometry( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QWIDGET"
+            RETURN HB_QRect():from( Qt_QDesktopWidget_screenGeometry_1( ::pPtr, ... ) )
+         CASE "QPOINT"
+            RETURN HB_QRect():from( Qt_QDesktopWidget_screenGeometry_2( ::pPtr, ... ) )
+         ENDSWITCH
       ENDCASE
-   CASE nP == 0
-             // const QRect screenGeometry ( int screen = -1 ) const
-             // N n int
-      RETURN QRect():from( Qt_QDesktopWidget_screenGeometry( ::pPtr, ... ) )
-   ENDCASE
-   RETURN NIL
+      EXIT
+   CASE 0
+      RETURN HB_QRect():from( Qt_QDesktopWidget_screenGeometry( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QDesktopWidget:screenNumber( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // int screenNumber ( const QWidget * widget = 0 ) const
-                // PO p QWidget
-         RETURN Qt_QDesktopWidget_screenNumber( ::pPtr, ... )
-                // int screenNumber ( const QPoint & point ) const
-                // PO p QPoint
-         // RETURN Qt_QDesktopWidget_screenNumber_1( ::pPtr, ... )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QWIDGET"
+            RETURN Qt_QDesktopWidget_screenNumber( ::pPtr, ... )
+         CASE "QPOINT"
+            RETURN Qt_QDesktopWidget_screenNumber_1( ::pPtr, ... )
+         ENDSWITCH
       ENDCASE
-   CASE nP == 0
-             // int screenNumber ( const QWidget * widget = 0 ) const
-             // PO p QWidget
+      EXIT
+   CASE 0
       RETURN Qt_QDesktopWidget_screenNumber( ::pPtr, ... )
-   ENDCASE
-   RETURN NIL
+   ENDSWITCH
+   RETURN hbqt_error()
 

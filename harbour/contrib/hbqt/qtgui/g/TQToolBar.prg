@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -108,83 +140,61 @@ METHOD QToolBar:new( ... )
 
 
 METHOD QToolBar:actionAt( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // QAction * actionAt ( int x, int y ) const
-                // N n int, N n int
-         RETURN QAction():from( Qt_QToolBar_actionAt_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QAction():from( Qt_QToolBar_actionAt_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // QAction * actionAt ( const QPoint & p ) const
-                // PO p QPoint
-         RETURN QAction():from( Qt_QToolBar_actionAt( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QAction():from( Qt_QToolBar_actionAt( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QToolBar:addAction( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 4
+   SWITCH PCount()
+   CASE 4
       DO CASE
-      CASE aV[ 1 ] $ "PCO" .AND. aV[ 2 ] $ "C" .AND. aV[ 3 ] $ "PO" .AND. aV[ 4 ] $ "PO"
-                // QAction * addAction ( const QIcon & icon, const QString & text, const QObject * receiver, const char * member )   [*D=3*]
-                // PCO p QIcon, C c QString, PO p QObject, PO p char
-         RETURN QAction():from( Qt_QToolBar_addAction_4( ::pPtr, ... ) )
+      CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
+         RETURN HB_QAction():from( Qt_QToolBar_addAction_4( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 3
+      EXIT
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PO"
-                // QAction * addAction ( const QString & text, const QObject * receiver, const char * member )
-                // C c QString, PO p QObject, PO p char
-         RETURN QAction():from( Qt_QToolBar_addAction_3( ::pPtr, ... ) )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN HB_QAction():from( Qt_QToolBar_addAction_3( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PCO" .AND. aV[ 2 ] $ "C"
-                // QAction * addAction ( const QIcon & icon, const QString & text )
-                // PCO p QIcon, C c QString
-         RETURN QAction():from( Qt_QToolBar_addAction_2( ::pPtr, ... ) )
+      CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN HB_QAction():from( Qt_QToolBar_addAction_2( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // QAction * addAction ( const QString & text )
-                // C c QString
-         RETURN QAction():from( Qt_QToolBar_addAction_1( ::pPtr, ... ) )
-      CASE aV[ 1 ] $ "PO"
-                // void addAction ( QAction * action )   [*D=1*]
-                // PO p QAction
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QAction():from( Qt_QToolBar_addAction_1( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QToolBar_addAction( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QToolBar:addSeparator()
-   RETURN Qt_QToolBar_addSeparator( ::pPtr )
+   RETURN HB_QAction():from( Qt_QToolBar_addSeparator( ::pPtr ) )
 
 
 METHOD QToolBar:addWidget( pWidget )
-   RETURN Qt_QToolBar_addWidget( ::pPtr, hbqt_ptr( pWidget ) )
+   RETURN HB_QAction():from( Qt_QToolBar_addWidget( ::pPtr, hbqt_ptr( pWidget ) ) )
 
 
 METHOD QToolBar:allowedAreas()
@@ -196,15 +206,15 @@ METHOD QToolBar:clear()
 
 
 METHOD QToolBar:iconSize()
-   RETURN Qt_QToolBar_iconSize( ::pPtr )
+   RETURN HB_QSize():from( Qt_QToolBar_iconSize( ::pPtr ) )
 
 
 METHOD QToolBar:insertSeparator( pBefore )
-   RETURN Qt_QToolBar_insertSeparator( ::pPtr, hbqt_ptr( pBefore ) )
+   RETURN HB_QAction():from( Qt_QToolBar_insertSeparator( ::pPtr, hbqt_ptr( pBefore ) ) )
 
 
 METHOD QToolBar:insertWidget( pBefore, pWidget )
-   RETURN Qt_QToolBar_insertWidget( ::pPtr, hbqt_ptr( pBefore ), hbqt_ptr( pWidget ) )
+   RETURN HB_QAction():from( Qt_QToolBar_insertWidget( ::pPtr, hbqt_ptr( pBefore ), hbqt_ptr( pWidget ) ) )
 
 
 METHOD QToolBar:isAreaAllowed( nArea )
@@ -244,7 +254,7 @@ METHOD QToolBar:setOrientation( nOrientation )
 
 
 METHOD QToolBar:toggleViewAction()
-   RETURN Qt_QToolBar_toggleViewAction( ::pPtr )
+   RETURN HB_QAction():from( Qt_QToolBar_toggleViewAction( ::pPtr ) )
 
 
 METHOD QToolBar:toolButtonStyle()
@@ -252,7 +262,7 @@ METHOD QToolBar:toolButtonStyle()
 
 
 METHOD QToolBar:widgetForAction( pAction )
-   RETURN Qt_QToolBar_widgetForAction( ::pPtr, hbqt_ptr( pAction ) )
+   RETURN HB_QWidget():from( Qt_QToolBar_widgetForAction( ::pPtr, hbqt_ptr( pAction ) ) )
 
 
 METHOD QToolBar:setIconSize( pIconSize )

@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QStyleOptionFrame( ... )
  *     QStyleOptionFrame():from( pPtr_OR_oObj_of_type_QStyleOptionFrame )
- *     QStyleOptionFrame():configure( pPtr_OR_oObj_of_type_QStyleOptionFrame )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -48,6 +48,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionFrame.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     qStyleOption
+ *     qStyleOption()
  *  $END$
  */

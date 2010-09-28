@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -135,7 +167,7 @@ METHOD QAction:new( ... )
 
 
 METHOD QAction:actionGroup()
-   RETURN Qt_QAction_actionGroup( ::pPtr )
+   RETURN HB_QActionGroup():from( Qt_QAction_actionGroup( ::pPtr ) )
 
 
 METHOD QAction:activate( nEvent )
@@ -143,7 +175,7 @@ METHOD QAction:activate( nEvent )
 
 
 METHOD QAction:associatedWidgets()
-   RETURN Qt_QAction_associatedWidgets( ::pPtr )
+   RETURN HB_QList():from( Qt_QAction_associatedWidgets( ::pPtr ) )
 
 
 METHOD QAction:autoRepeat()
@@ -151,15 +183,15 @@ METHOD QAction:autoRepeat()
 
 
 METHOD QAction:data()
-   RETURN Qt_QAction_data( ::pPtr )
+   RETURN HB_QVariant():from( Qt_QAction_data( ::pPtr ) )
 
 
 METHOD QAction:font()
-   RETURN Qt_QAction_font( ::pPtr )
+   RETURN HB_QFont():from( Qt_QAction_font( ::pPtr ) )
 
 
 METHOD QAction:icon()
-   RETURN Qt_QAction_icon( ::pPtr )
+   RETURN HB_QIcon():from( Qt_QAction_icon( ::pPtr ) )
 
 
 METHOD QAction:iconText()
@@ -191,7 +223,7 @@ METHOD QAction:isVisible()
 
 
 METHOD QAction:menu()
-   RETURN Qt_QAction_menu( ::pPtr )
+   RETURN HB_QMenu():from( Qt_QAction_menu( ::pPtr ) )
 
 
 METHOD QAction:menuRole()
@@ -199,7 +231,7 @@ METHOD QAction:menuRole()
 
 
 METHOD QAction:parentWidget()
-   RETURN Qt_QAction_parentWidget( ::pPtr )
+   RETURN HB_QWidget():from( Qt_QAction_parentWidget( ::pPtr ) )
 
 
 METHOD QAction:setActionGroup( pGroup )
@@ -275,7 +307,7 @@ METHOD QAction:setWhatsThis( cWhat )
 
 
 METHOD QAction:shortcut()
-   RETURN Qt_QAction_shortcut( ::pPtr )
+   RETURN HB_QKeySequence():from( Qt_QAction_shortcut( ::pPtr ) )
 
 
 METHOD QAction:shortcutContext()
@@ -283,7 +315,7 @@ METHOD QAction:shortcutContext()
 
 
 METHOD QAction:shortcuts()
-   RETURN Qt_QAction_shortcuts( ::pPtr )
+   RETURN HB_QList():from( Qt_QAction_shortcuts( ::pPtr ) )
 
 
 METHOD QAction:showStatusText( pWidget )

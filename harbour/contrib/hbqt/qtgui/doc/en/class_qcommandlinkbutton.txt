@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QCommandLinkButton( ... )
  *     QCommandLinkButton():from( pPtr_OR_oObj_of_type_QCommandLinkButton )
- *     QCommandLinkButton():configure( pPtr_OR_oObj_of_type_QCommandLinkButton )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -48,6 +48,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QCommandLinkButton.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QPushButton
+ *     QPushButton()
  *  $END$
  */

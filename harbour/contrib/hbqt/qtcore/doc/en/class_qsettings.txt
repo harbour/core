@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QSettings( ... )
  *     QSettings():from( pPtr_OR_oObj_of_type_QSettings )
- *     QSettings():configure( pPtr_OR_oObj_of_type_QSettings )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -77,6 +77,6 @@
  *     C++ wrappers  : contrib/hbqt/qtcore/QSettings.cpp
  *     Library       : hbqtcore
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

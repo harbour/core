@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     HBQGraphicsScene( ... )
  *     HBQGraphicsScene():from( pPtr_OR_oObj_of_type_HBQGraphicsScene )
- *     HBQGraphicsScene():configure( pPtr_OR_oObj_of_type_HBQGraphicsScene )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -65,6 +65,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/HBQGraphicsScene.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QGraphicsScene
+ *     QGraphicsScene()
  *  $END$
  */

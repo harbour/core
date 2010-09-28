@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -148,7 +180,7 @@ METHOD QCoreApplication:applicationVersion()
 
 
 METHOD QCoreApplication:arguments()
-   RETURN Qt_QCoreApplication_arguments( ::pPtr )
+   RETURN HB_QStringList():from( Qt_QCoreApplication_arguments( ::pPtr ) )
 
 
 METHOD QCoreApplication:closingDown()
@@ -176,11 +208,11 @@ METHOD QCoreApplication:installTranslator( pTranslationFile )
 
 
 METHOD QCoreApplication:instance()
-   RETURN Qt_QCoreApplication_instance( ::pPtr )
+   RETURN HB_QCoreApplication():from( Qt_QCoreApplication_instance( ::pPtr ) )
 
 
 METHOD QCoreApplication:libraryPaths()
-   RETURN Qt_QCoreApplication_libraryPaths( ::pPtr )
+   RETURN HB_QStringList():from( Qt_QCoreApplication_libraryPaths( ::pPtr ) )
 
 
 METHOD QCoreApplication:organizationDomain()
@@ -192,61 +224,41 @@ METHOD QCoreApplication:organizationName()
 
 
 METHOD QCoreApplication:postEvent( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 3
+   SWITCH PCount()
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "N"
-                // void postEvent ( QObject * receiver, QEvent * event, int priority )
-                // PO p QObject, PO p QEvent, N n int
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
          RETURN Qt_QCoreApplication_postEvent_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
-                // void postEvent ( QObject * receiver, QEvent * event )
-                // PO p QObject, PO p QEvent
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
          RETURN Qt_QCoreApplication_postEvent( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QCoreApplication:processEvents( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // void processEvents ( QEventLoop::ProcessEventsFlags flags, int maxtime )
-                // N n QEventLoop::ProcessEventsFlags, N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QCoreApplication_processEvents_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // void processEvents ( QEventLoop::ProcessEventsFlags flags = QEventLoop::AllEvents )
-                // N n QEventLoop::ProcessEventsFlags
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
          RETURN Qt_QCoreApplication_processEvents( ::pPtr, ... )
       ENDCASE
-   CASE nP == 0
-             // void processEvents ( QEventLoop::ProcessEventsFlags flags = QEventLoop::AllEvents )
-             // N n QEventLoop::ProcessEventsFlags
+      EXIT
+   CASE 0
       RETURN Qt_QCoreApplication_processEvents( ::pPtr, ... )
-   ENDCASE
-   RETURN NIL
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QCoreApplication:removeLibraryPath( cPath )
@@ -254,30 +266,21 @@ METHOD QCoreApplication:removeLibraryPath( cPath )
 
 
 METHOD QCoreApplication:removePostedEvents( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
-                // void removePostedEvents ( QObject * receiver, int eventType )
-                // PO p QObject, N n int
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QCoreApplication_removePostedEvents_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void removePostedEvents ( QObject * receiver )
-                // PO p QObject
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QCoreApplication_removePostedEvents( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QCoreApplication:removeTranslator( pTranslationFile )
@@ -289,26 +292,17 @@ METHOD QCoreApplication:sendEvent( pReceiver, pEvent )
 
 
 METHOD QCoreApplication:sendPostedEvents( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
-                // void sendPostedEvents ( QObject * receiver, int event_type )
-                // PO p QObject, N n int
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QCoreApplication_sendPostedEvents( ::pPtr, ... )
       ENDCASE
-   CASE nP == 0
-             // void sendPostedEvents ()
+      EXIT
+   CASE 0
       RETURN Qt_QCoreApplication_sendPostedEvents_1( ::pPtr, ... )
-   ENDCASE
-   RETURN NIL
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QCoreApplication:setApplicationName( cApplication )
@@ -344,37 +338,27 @@ METHOD QCoreApplication:testAttribute( nAttribute )
 
 
 METHOD QCoreApplication:translate( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 5
+   SWITCH PCount()
+   CASE 5
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PO" .AND. aV[ 4 ] $ "N" .AND. aV[ 5 ] $ "N"
-                // QString translate ( const char * context, const char * sourceText, const char * disambiguation, Encoding encoding, int n )
-                // PO p char, PO p char, PO p char, N n QCoreApplication::Encoding, N n int
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
          RETURN Qt_QCoreApplication_translate( ::pPtr, ... )
       ENDCASE
-   CASE nP == 4
+      EXIT
+   CASE 4
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PO" .AND. aV[ 4 ] $ "N"
-                // QString translate ( const char * context, const char * sourceText, const char * disambiguation = 0, Encoding encoding = CodecForTr )
-                // PO p char, PO p char, PO p char, N n QCoreApplication::Encoding
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
          RETURN Qt_QCoreApplication_translate_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
-                // QString translate ( const char * context, const char * sourceText, const char * disambiguation = 0, Encoding encoding = CodecForTr )
-                // PO p char, PO p char, PO p char, N n QCoreApplication::Encoding
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
          RETURN Qt_QCoreApplication_translate_1( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QCoreApplication:quit()

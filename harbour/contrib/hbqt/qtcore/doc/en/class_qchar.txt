@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QChar( ... )
  *     QChar():from( pPtr_OR_oObj_of_type_QChar )
- *     QChar():configure( pPtr_OR_oObj_of_type_QChar )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

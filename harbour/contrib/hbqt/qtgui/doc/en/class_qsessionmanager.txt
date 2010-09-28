@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QSessionManager( ... )
  *     QSessionManager():from( pPtr_OR_oObj_of_type_QSessionManager )
- *     QSessionManager():configure( pPtr_OR_oObj_of_type_QSessionManager )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -62,6 +62,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QSessionManager.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

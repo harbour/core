@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QDirModel( ... )
  *     QDirModel():from( pPtr_OR_oObj_of_type_QDirModel )
- *     QDirModel():configure( pPtr_OR_oObj_of_type_QDirModel )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -83,6 +83,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QDirModel.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QAbstractItemModel
+ *     QAbstractItemModel()
  *  $END$
  */

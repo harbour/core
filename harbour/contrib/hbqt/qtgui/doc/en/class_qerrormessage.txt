@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QErrorMessage( ... )
  *     QErrorMessage():from( pPtr_OR_oObj_of_type_QErrorMessage )
- *     QErrorMessage():configure( pPtr_OR_oObj_of_type_QErrorMessage )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -48,6 +48,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QErrorMessage.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QDialog
+ *     QDialog()
  *  $END$
  */

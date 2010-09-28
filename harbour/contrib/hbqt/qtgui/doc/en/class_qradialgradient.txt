@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QRadialGradient( ... )
  *     QRadialGradient():from( pPtr_OR_oObj_of_type_QRadialGradient )
- *     QRadialGradient():configure( pPtr_OR_oObj_of_type_QRadialGradient )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -59,6 +59,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QRadialGradient.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QGradient
+ *     QGradient()
  *  $END$
  */

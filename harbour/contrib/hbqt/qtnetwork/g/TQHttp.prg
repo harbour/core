@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -118,7 +150,7 @@ METHOD QHttp:close()
 
 
 METHOD QHttp:currentDestinationDevice()
-   RETURN Qt_QHttp_currentDestinationDevice( ::pPtr )
+   RETURN HB_QIODevice():from( Qt_QHttp_currentDestinationDevice( ::pPtr ) )
 
 
 METHOD QHttp:currentId()
@@ -126,11 +158,11 @@ METHOD QHttp:currentId()
 
 
 METHOD QHttp:currentRequest()
-   RETURN Qt_QHttp_currentRequest( ::pPtr )
+   RETURN HB_QHttpRequestHeader():from( Qt_QHttp_currentRequest( ::pPtr ) )
 
 
 METHOD QHttp:currentSourceDevice()
-   RETURN Qt_QHttp_currentSourceDevice( ::pPtr )
+   RETURN HB_QIODevice():from( Qt_QHttp_currentSourceDevice( ::pPtr ) )
 
 
 METHOD QHttp:error()
@@ -154,118 +186,97 @@ METHOD QHttp:head( cPath )
 
 
 METHOD QHttp:lastResponse()
-   RETURN Qt_QHttp_lastResponse( ::pPtr )
+   RETURN HB_QHttpResponseHeader():from( Qt_QHttp_lastResponse( ::pPtr ) )
 
 
 METHOD QHttp:post( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 3
+   SWITCH PCount()
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PO"
-                // int post ( const QString & path, QIODevice * data, QIODevice * to = 0 )
-                // C c QString, PO p QIODevice, PO p QIODevice
-         RETURN Qt_QHttp_post( ::pPtr, ... )
-                // int post ( const QString & path, const QByteArray & data, QIODevice * to = 0 )
-                // C c QString, PO p QByteArray, PO p QIODevice
-         // RETURN Qt_QHttp_post_1( ::pPtr, ... )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QSTRING"
+            RETURN Qt_QHttp_post( ::pPtr, ... )
+         CASE "QSTRING"
+            RETURN Qt_QHttp_post_1( ::pPtr, ... )
+         ENDSWITCH
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO"
-                // int post ( const QString & path, QIODevice * data, QIODevice * to = 0 )
-                // C c QString, PO p QIODevice, PO p QIODevice
-         RETURN Qt_QHttp_post( ::pPtr, ... )
-                // int post ( const QString & path, const QByteArray & data, QIODevice * to = 0 )
-                // C c QString, PO p QByteArray, PO p QIODevice
-         // RETURN Qt_QHttp_post_1( ::pPtr, ... )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QSTRING"
+            RETURN Qt_QHttp_post( ::pPtr, ... )
+         CASE "QSTRING"
+            RETURN Qt_QHttp_post_1( ::pPtr, ... )
+         ENDSWITCH
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QHttp:readAll()
-   RETURN Qt_QHttp_readAll( ::pPtr )
+   RETURN HB_QByteArray():from( Qt_QHttp_readAll( ::pPtr ) )
 
 
 METHOD QHttp:request( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 3
+   SWITCH PCount()
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PO"
-                // int request ( const QHttpRequestHeader & header, QIODevice * data = 0, QIODevice * to = 0 )
-                // PO p QHttpRequestHeader, PO p QIODevice, PO p QIODevice
-         RETURN Qt_QHttp_request( ::pPtr, ... )
-                // int request ( const QHttpRequestHeader & header, const QByteArray & data, QIODevice * to = 0 )
-                // PO p QHttpRequestHeader, PO p QByteArray, PO p QIODevice
-         // RETURN Qt_QHttp_request_1( ::pPtr, ... )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QHTTPREQUESTHEADER"
+            RETURN Qt_QHttp_request( ::pPtr, ... )
+         CASE "QHTTPREQUESTHEADER"
+            RETURN Qt_QHttp_request_1( ::pPtr, ... )
+         ENDSWITCH
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
-                // int request ( const QHttpRequestHeader & header, const QByteArray & data, QIODevice * to = 0 )
-                // PO p QHttpRequestHeader, PO p QByteArray, PO p QIODevice
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
          RETURN Qt_QHttp_request_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // int request ( const QHttpRequestHeader & header, QIODevice * data = 0, QIODevice * to = 0 )
-                // PO p QHttpRequestHeader, PO p QIODevice, PO p QIODevice
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QHttp_request( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QHttp:setHost( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 3
+   SWITCH PCount()
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
-                // int setHost ( const QString & hostName, ConnectionMode mode, quint16 port = 0 )
-                // C c QString, N n QHttp::ConnectionMode, N n quint16
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
          RETURN Qt_QHttp_setHost_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
-                // int setHost ( const QString & hostName, quint16 port = 80 )
-                // C c QString, N n quint16
-         RETURN Qt_QHttp_setHost( ::pPtr, ... )
-                // int setHost ( const QString & hostName, ConnectionMode mode, quint16 port = 0 )
-                // C c QString, N n QHttp::ConnectionMode, N n quint16
-         // RETURN Qt_QHttp_setHost_1( ::pPtr, ... )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QSTRING"
+            RETURN Qt_QHttp_setHost( ::pPtr, ... )
+         CASE "QSTRING"
+            RETURN Qt_QHttp_setHost_1( ::pPtr, ... )
+         ENDSWITCH
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // int setHost ( const QString & hostName, quint16 port = 80 )
-                // C c QString, N n quint16
+      CASE hb_isChar( hb_pvalue( 1 ) )
          RETURN Qt_QHttp_setHost( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QHttp:setProxy( cHost, nPort, cUsername, cPassword )

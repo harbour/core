@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -116,75 +148,55 @@ METHOD QStringList:append( cValue )
 
 
 METHOD QStringList:filter( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
-                // QStringList filter ( const QString & str, Qt::CaseSensitivity cs = Qt::CaseSensitive ) const
-                // C c QString, N n Qt::CaseSensitivity
-         RETURN QStringList():from( Qt_QStringList_filter( ::pPtr, ... ) )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QStringList():from( Qt_QStringList_filter( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // QStringList filter ( const QString & str, Qt::CaseSensitivity cs = Qt::CaseSensitive ) const
-                // C c QString, N n Qt::CaseSensitivity
-         RETURN QStringList():from( Qt_QStringList_filter( ::pPtr, ... ) )
-      CASE aV[ 1 ] $ "PO"
-                // QStringList filter ( const QRegExp & rx ) const
-                // PO p QRegExp
-         RETURN QStringList():from( Qt_QStringList_filter_1( ::pPtr, ... ) )
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QStringList():from( Qt_QStringList_filter( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QStringList():from( Qt_QStringList_filter_1( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QStringList:indexOf( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
-                // int indexOf ( const QString & value, int from = 0 ) const
-                // C c QString, N n int
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QStringList_indexOf( ::pPtr, ... )
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
-                // int indexOf ( const QRegExp & rx, int from = 0 ) const
-                // PO p QRegExp, N n int
-         RETURN Qt_QStringList_indexOf_1( ::pPtr, ... )
-                // int indexOf ( QRegExp & rx, int from = 0 ) const
-                // PO p QRegExp, N n int
-         // RETURN Qt_QStringList_indexOf_2( ::pPtr, ... )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QREGEXP"
+            RETURN Qt_QStringList_indexOf_1( ::pPtr, ... )
+         CASE "QREGEXP"
+            RETURN Qt_QStringList_indexOf_2( ::pPtr, ... )
+         ENDSWITCH
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // int indexOf ( const QString & value, int from = 0 ) const
-                // C c QString, N n int
+      CASE hb_isChar( hb_pvalue( 1 ) )
          RETURN Qt_QStringList_indexOf( ::pPtr, ... )
-      CASE aV[ 1 ] $ "PO"
-                // int indexOf ( const QRegExp & rx, int from = 0 ) const
-                // PO p QRegExp, N n int
-         RETURN Qt_QStringList_indexOf_1( ::pPtr, ... )
-                // int indexOf ( QRegExp & rx, int from = 0 ) const
-                // PO p QRegExp, N n int
-         // RETURN Qt_QStringList_indexOf_2( ::pPtr, ... )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QREGEXP"
+            RETURN Qt_QStringList_indexOf_1( ::pPtr, ... )
+         CASE "QREGEXP"
+            RETURN Qt_QStringList_indexOf_2( ::pPtr, ... )
+         ENDSWITCH
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QStringList:join( cSeparator )
@@ -192,44 +204,35 @@ METHOD QStringList:join( cSeparator )
 
 
 METHOD QStringList:lastIndexOf( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
-                // int lastIndexOf ( const QString & value, int from = -1 ) const
-                // C c QString, N n int
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QStringList_lastIndexOf_1( ::pPtr, ... )
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
-                // int lastIndexOf ( QRegExp & rx, int from = -1 ) const
-                // PO p QRegExp, N n int
-         RETURN Qt_QStringList_lastIndexOf_2( ::pPtr, ... )
-                // int lastIndexOf ( const QRegExp & rx, int from = -1 ) const
-                // PO p QRegExp, N n int
-         // RETURN Qt_QStringList_lastIndexOf( ::pPtr, ... )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QREGEXP"
+            RETURN Qt_QStringList_lastIndexOf_2( ::pPtr, ... )
+         CASE "QREGEXP"
+            RETURN Qt_QStringList_lastIndexOf( ::pPtr, ... )
+         ENDSWITCH
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // int lastIndexOf ( const QString & value, int from = -1 ) const
-                // C c QString, N n int
+      CASE hb_isChar( hb_pvalue( 1 ) )
          RETURN Qt_QStringList_lastIndexOf_1( ::pPtr, ... )
-      CASE aV[ 1 ] $ "PO"
-                // int lastIndexOf ( QRegExp & rx, int from = -1 ) const
-                // PO p QRegExp, N n int
-         RETURN Qt_QStringList_lastIndexOf_2( ::pPtr, ... )
-                // int lastIndexOf ( const QRegExp & rx, int from = -1 ) const
-                // PO p QRegExp, N n int
-         // RETURN Qt_QStringList_lastIndexOf( ::pPtr, ... )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QREGEXP"
+            RETURN Qt_QStringList_lastIndexOf_2( ::pPtr, ... )
+         CASE "QREGEXP"
+            RETURN Qt_QStringList_lastIndexOf( ::pPtr, ... )
+         ENDSWITCH
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QStringList:removeDuplicates()
@@ -273,7 +276,7 @@ METHOD QStringList:last()
 
 
 METHOD QStringList:mid( nPos, nLength )
-   RETURN Qt_QStringList_mid( ::pPtr, nPos, nLength )
+   RETURN HB_QList():from( Qt_QStringList_mid( ::pPtr, nPos, nLength ) )
 
 
 METHOD QStringList:prepend( cValue )
@@ -317,28 +320,19 @@ METHOD QStringList:takeLast()
 
 
 METHOD QStringList:value( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "C"
-                // QString value ( int i, const QString & defaultValue ) const
-                // N n int, C c QString
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
          RETURN Qt_QStringList_value_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // QString value ( int i ) const
-                // N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
          RETURN Qt_QStringList_value( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QAbstractSpinBox( ... )
  *     QAbstractSpinBox():from( pPtr_OR_oObj_of_type_QAbstractSpinBox )
- *     QAbstractSpinBox():configure( pPtr_OR_oObj_of_type_QAbstractSpinBox )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -72,6 +72,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QAbstractSpinBox.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QWidget
+ *     QWidget()
  *  $END$
  */

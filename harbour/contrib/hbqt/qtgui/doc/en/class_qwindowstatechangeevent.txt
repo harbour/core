@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QWindowStateChangeEvent( ... )
  *     QWindowStateChangeEvent():from( pPtr_OR_oObj_of_type_QWindowStateChangeEvent )
- *     QWindowStateChangeEvent():configure( pPtr_OR_oObj_of_type_QWindowStateChangeEvent )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -47,6 +47,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QWindowStateChangeEvent.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QEvent
+ *     QEvent()
  *  $END$
  */

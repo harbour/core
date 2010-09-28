@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QsciAbstractAPIs( ... )
  *     QsciAbstractAPIs():from( pPtr_OR_oObj_of_type_QsciAbstractAPIs )
- *     QsciAbstractAPIs():configure( pPtr_OR_oObj_of_type_QsciAbstractAPIs )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

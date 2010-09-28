@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QWebPluginFactory( ... )
  *     QWebPluginFactory():from( pPtr_OR_oObj_of_type_QWebPluginFactory )
- *     QWebPluginFactory():configure( pPtr_OR_oObj_of_type_QWebPluginFactory )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -49,6 +49,6 @@
  *     C++ wrappers  : contrib/hbqt/qtwebkit/QWebPluginFactory.cpp
  *     Library       : hbqtwebkit
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

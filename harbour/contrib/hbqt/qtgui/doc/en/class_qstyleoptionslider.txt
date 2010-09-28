@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QStyleOptionSlider( ... )
  *     QStyleOptionSlider():from( pPtr_OR_oObj_of_type_QStyleOptionSlider )
- *     QStyleOptionSlider():configure( pPtr_OR_oObj_of_type_QStyleOptionSlider )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -58,6 +58,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionSlider.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QStyleOptionComplex
+ *     QStyleOptionComplex()
  *  $END$
  */

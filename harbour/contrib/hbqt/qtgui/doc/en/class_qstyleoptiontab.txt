@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QStyleOptionTab( ... )
  *     QStyleOptionTab():from( pPtr_OR_oObj_of_type_QStyleOptionTab )
- *     QStyleOptionTab():configure( pPtr_OR_oObj_of_type_QStyleOptionTab )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -53,6 +53,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionTab.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QStyleOption
+ *     QStyleOption()
  *  $END$
  */

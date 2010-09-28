@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QCheckBox( ... )
  *     QCheckBox():from( pPtr_OR_oObj_of_type_QCheckBox )
- *     QCheckBox():configure( pPtr_OR_oObj_of_type_QCheckBox )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -50,6 +50,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QCheckBox.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QAbstractButton
+ *     QAbstractButton()
  *  $END$
  */

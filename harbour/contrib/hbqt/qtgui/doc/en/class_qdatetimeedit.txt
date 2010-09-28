@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QDateTimeEdit( ... )
  *     QDateTimeEdit():from( pPtr_OR_oObj_of_type_QDateTimeEdit )
- *     QDateTimeEdit():configure( pPtr_OR_oObj_of_type_QDateTimeEdit )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -90,6 +90,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QDateTimeEdit.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QAbstractSpinBox
+ *     QAbstractSpinBox()
  *  $END$
  */

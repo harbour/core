@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QWidgetAction( ... )
  *     QWidgetAction():from( pPtr_OR_oObj_of_type_QWidgetAction )
- *     QWidgetAction():configure( pPtr_OR_oObj_of_type_QWidgetAction )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -50,6 +50,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QWidgetAction.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QAction
+ *     QAction()
  *  $END$
  */

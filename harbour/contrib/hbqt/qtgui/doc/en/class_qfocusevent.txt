@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QFocusEvent( ... )
  *     QFocusEvent():from( pPtr_OR_oObj_of_type_QFocusEvent )
- *     QFocusEvent():configure( pPtr_OR_oObj_of_type_QFocusEvent )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -49,6 +49,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QFocusEvent.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QEvent
+ *     QEvent()
  *  $END$
  */

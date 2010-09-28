@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -101,15 +133,15 @@ METHOD QGraphicsSceneMouseEvent:button()
 
 
 METHOD QGraphicsSceneMouseEvent:buttonDownPos( nButton )
-   RETURN Qt_QGraphicsSceneMouseEvent_buttonDownPos( ::pPtr, nButton )
+   RETURN HB_QPointF():from( Qt_QGraphicsSceneMouseEvent_buttonDownPos( ::pPtr, nButton ) )
 
 
 METHOD QGraphicsSceneMouseEvent:buttonDownScenePos( nButton )
-   RETURN Qt_QGraphicsSceneMouseEvent_buttonDownScenePos( ::pPtr, nButton )
+   RETURN HB_QPointF():from( Qt_QGraphicsSceneMouseEvent_buttonDownScenePos( ::pPtr, nButton ) )
 
 
 METHOD QGraphicsSceneMouseEvent:buttonDownScreenPos( nButton )
-   RETURN Qt_QGraphicsSceneMouseEvent_buttonDownScreenPos( ::pPtr, nButton )
+   RETURN HB_QPoint():from( Qt_QGraphicsSceneMouseEvent_buttonDownScreenPos( ::pPtr, nButton ) )
 
 
 METHOD QGraphicsSceneMouseEvent:buttons()
@@ -117,15 +149,15 @@ METHOD QGraphicsSceneMouseEvent:buttons()
 
 
 METHOD QGraphicsSceneMouseEvent:lastPos()
-   RETURN Qt_QGraphicsSceneMouseEvent_lastPos( ::pPtr )
+   RETURN HB_QPointF():from( Qt_QGraphicsSceneMouseEvent_lastPos( ::pPtr ) )
 
 
 METHOD QGraphicsSceneMouseEvent:lastScenePos()
-   RETURN Qt_QGraphicsSceneMouseEvent_lastScenePos( ::pPtr )
+   RETURN HB_QPointF():from( Qt_QGraphicsSceneMouseEvent_lastScenePos( ::pPtr ) )
 
 
 METHOD QGraphicsSceneMouseEvent:lastScreenPos()
-   RETURN Qt_QGraphicsSceneMouseEvent_lastScreenPos( ::pPtr )
+   RETURN HB_QPoint():from( Qt_QGraphicsSceneMouseEvent_lastScreenPos( ::pPtr ) )
 
 
 METHOD QGraphicsSceneMouseEvent:modifiers()
@@ -133,13 +165,13 @@ METHOD QGraphicsSceneMouseEvent:modifiers()
 
 
 METHOD QGraphicsSceneMouseEvent:pos()
-   RETURN Qt_QGraphicsSceneMouseEvent_pos( ::pPtr )
+   RETURN HB_QPointF():from( Qt_QGraphicsSceneMouseEvent_pos( ::pPtr ) )
 
 
 METHOD QGraphicsSceneMouseEvent:scenePos()
-   RETURN Qt_QGraphicsSceneMouseEvent_scenePos( ::pPtr )
+   RETURN HB_QPointF():from( Qt_QGraphicsSceneMouseEvent_scenePos( ::pPtr ) )
 
 
 METHOD QGraphicsSceneMouseEvent:screenPos()
-   RETURN Qt_QGraphicsSceneMouseEvent_screenPos( ::pPtr )
+   RETURN HB_QPoint():from( Qt_QGraphicsSceneMouseEvent_screenPos( ::pPtr ) )
 

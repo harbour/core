@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QGraphicsItemAnimation( ... )
  *     QGraphicsItemAnimation():from( pPtr_OR_oObj_of_type_QGraphicsItemAnimation )
- *     QGraphicsItemAnimation():configure( pPtr_OR_oObj_of_type_QGraphicsItemAnimation )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -66,6 +66,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsItemAnimation.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

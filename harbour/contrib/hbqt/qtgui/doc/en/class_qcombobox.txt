@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QComboBox( ... )
  *     QComboBox():from( pPtr_OR_oObj_of_type_QComboBox )
- *     QComboBox():configure( pPtr_OR_oObj_of_type_QComboBox )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -105,6 +105,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QComboBox.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QWidget
+ *     QWidget()
  *  $END$
  */

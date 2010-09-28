@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -172,7 +204,7 @@ METHOD QColor:blueF()
 
 
 METHOD QColor:convertTo( nColorSpec )
-   RETURN Qt_QColor_convertTo( ::pPtr, nColorSpec )
+   RETURN HB_QColor():from( Qt_QColor_convertTo( ::pPtr, nColorSpec ) )
 
 
 METHOD QColor:cyan()
@@ -184,7 +216,7 @@ METHOD QColor:cyanF()
 
 
 METHOD QColor:darker( nFactor )
-   RETURN Qt_QColor_darker( ::pPtr, nFactor )
+   RETURN HB_QColor():from( Qt_QColor_darker( ::pPtr, nFactor ) )
 
 
 METHOD QColor:getCmyk( nC, nM, nY, nK, nA )
@@ -232,7 +264,7 @@ METHOD QColor:isValid()
 
 
 METHOD QColor:lighter( nFactor )
-   RETURN Qt_QColor_lighter( ::pPtr, nFactor )
+   RETURN HB_QColor():from( Qt_QColor_lighter( ::pPtr, nFactor ) )
 
 
 METHOD QColor:magenta()
@@ -324,37 +356,27 @@ METHOD QColor:setRedF( nRed )
 
 
 METHOD QColor:setRgb( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 4
+   SWITCH PCount()
+   CASE 4
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
-                // void setRgb ( int r, int g, int b, int a = 255 )
-                // N n int, N n int, N n int, N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
          RETURN Qt_QColor_setRgb_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 3
+      EXIT
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
-                // void setRgb ( int r, int g, int b, int a = 255 )
-                // N n int, N n int, N n int, N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
          RETURN Qt_QColor_setRgb_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // void setRgb ( QRgb rgb )
-                // N n QRgb
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
          RETURN Qt_QColor_setRgb( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QColor:setRgba( nRgba )
@@ -370,15 +392,15 @@ METHOD QColor:spec()
 
 
 METHOD QColor:toCmyk()
-   RETURN Qt_QColor_toCmyk( ::pPtr )
+   RETURN HB_QColor():from( Qt_QColor_toCmyk( ::pPtr ) )
 
 
 METHOD QColor:toHsv()
-   RETURN Qt_QColor_toHsv( ::pPtr )
+   RETURN HB_QColor():from( Qt_QColor_toHsv( ::pPtr ) )
 
 
 METHOD QColor:toRgb()
-   RETURN Qt_QColor_toRgb( ::pPtr )
+   RETURN HB_QColor():from( Qt_QColor_toRgb( ::pPtr ) )
 
 
 METHOD QColor:value()
@@ -398,63 +420,53 @@ METHOD QColor:yellowF()
 
 
 METHOD QColor:colorNames()
-   RETURN Qt_QColor_colorNames( ::pPtr )
+   RETURN HB_QStringList():from( Qt_QColor_colorNames( ::pPtr ) )
 
 
 METHOD QColor:fromCmyk( nC, nM, nY, nK, nA )
-   RETURN Qt_QColor_fromCmyk( ::pPtr, nC, nM, nY, nK, nA )
+   RETURN HB_QColor():from( Qt_QColor_fromCmyk( ::pPtr, nC, nM, nY, nK, nA ) )
 
 
 METHOD QColor:fromCmykF( nC, nM, nY, nK, nA )
-   RETURN Qt_QColor_fromCmykF( ::pPtr, nC, nM, nY, nK, nA )
+   RETURN HB_QColor():from( Qt_QColor_fromCmykF( ::pPtr, nC, nM, nY, nK, nA ) )
 
 
 METHOD QColor:fromHsv( nH, nS, nV, nA )
-   RETURN Qt_QColor_fromHsv( ::pPtr, nH, nS, nV, nA )
+   RETURN HB_QColor():from( Qt_QColor_fromHsv( ::pPtr, nH, nS, nV, nA ) )
 
 
 METHOD QColor:fromHsvF( nH, nS, nV, nA )
-   RETURN Qt_QColor_fromHsvF( ::pPtr, nH, nS, nV, nA )
+   RETURN HB_QColor():from( Qt_QColor_fromHsvF( ::pPtr, nH, nS, nV, nA ) )
 
 
 METHOD QColor:fromRgb( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 4
+   SWITCH PCount()
+   CASE 4
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N" .AND. aV[ 4 ] $ "N"
-                // QColor fromRgb ( int r, int g, int b, int a = 255 )
-                // N n int, N n int, N n int, N n int
-         RETURN QColor():from( Qt_QColor_fromRgb_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN HB_QColor():from( Qt_QColor_fromRgb_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 3
+      EXIT
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
-                // QColor fromRgb ( int r, int g, int b, int a = 255 )
-                // N n int, N n int, N n int, N n int
-         RETURN QColor():from( Qt_QColor_fromRgb_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN HB_QColor():from( Qt_QColor_fromRgb_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // QColor fromRgb ( QRgb rgb )
-                // N n QRgb
-         RETURN QColor():from( Qt_QColor_fromRgb( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QColor():from( Qt_QColor_fromRgb( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QColor:fromRgbF( nR, nG, nB, nA )
-   RETURN Qt_QColor_fromRgbF( ::pPtr, nR, nG, nB, nA )
+   RETURN HB_QColor():from( Qt_QColor_fromRgbF( ::pPtr, nR, nG, nB, nA ) )
 
 
 METHOD QColor:fromRgba( nRgba )
-   RETURN Qt_QColor_fromRgba( ::pPtr, nRgba )
+   RETURN HB_QColor():from( Qt_QColor_fromRgba( ::pPtr, nRgba ) )
 

@@ -196,24 +196,8 @@ QSize size () const
 QString text ( const QString & key = QString() ) const
 QStringList textKeys () const
 
-QImage transformed ( ... ){
-   QImage * p = hbqt_par_QImage( 1 );
-   if( p )
-   {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-
-      if( q->type == HBQT_TYPE_QTransform )
-      {
-         hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( ( p )->transformed( *hbqt_par_QTransform( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::TransformationMode ) hb_parni( 3 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ), true ) );
-      }
-      else if( q->type == HBQT_TYPE_QMatrix )
-      {
-         hb_retptrGC( hbqt_gcAllocate_QImage( new QImage( ( p )->transformed( *hbqt_par_QMatrix( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::TransformationMode ) hb_parni( 3 ) : ( Qt::TransformationMode ) Qt::FastTransformation ) ) ), true ) );
-      }
-   }
-}
-//QImage transformed ( const QMatrix & matrix, Qt::TransformationMode mode = Qt::FastTransformation ) const
-//QImage transformed ( const QTransform & matrix, Qt::TransformationMode mode = Qt::FastTransformation ) const
+QImage transformed ( const QMatrix & matrix, Qt::TransformationMode mode = Qt::FastTransformation ) const
+QImage transformed ( const QTransform & matrix, Qt::TransformationMode mode = Qt::FastTransformation ) const
 
 bool valid ( const QPoint & pos ) const
 bool valid ( int x, int y ) const

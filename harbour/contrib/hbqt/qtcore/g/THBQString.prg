@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -356,7 +388,7 @@ METHOD HBQString:arg_19( nA, nFieldWidth, cFormat, nPrecision, pFillChar )
 
 
 METHOD HBQString:at( nPosition )
-   RETURN Qt_HBQString_at( ::pPtr, nPosition )
+   RETURN HB_QChar():from( Qt_HBQString_at( ::pPtr, nPosition ) )
 
 
 METHOD HBQString:capacity()
@@ -388,7 +420,7 @@ METHOD HBQString:compare_3( pRef, nCs )
 
 
 METHOD HBQString:constData()
-   RETURN Qt_HBQString_constData( ::pPtr )
+   RETURN HB_QChar():from( Qt_HBQString_constData( ::pPtr ) )
 
 
 METHOD HBQString:count( cStr, nCs )
@@ -408,11 +440,11 @@ METHOD HBQString:count_3()
 
 
 METHOD HBQString:data()
-   RETURN Qt_HBQString_data( ::pPtr )
+   RETURN HB_QChar():from( Qt_HBQString_data( ::pPtr ) )
 
 
 METHOD HBQString:data_1()
-   RETURN Qt_HBQString_data_1( ::pPtr )
+   RETURN HB_QChar():from( Qt_HBQString_data_1( ::pPtr ) )
 
 
 METHOD HBQString:endsWith( cS, nCs )
@@ -504,7 +536,7 @@ METHOD HBQString:leftJustified( nWidth, pFill, lTruncate )
 
 
 METHOD HBQString:leftRef( nN )
-   RETURN Qt_HBQString_leftRef( ::pPtr, nN )
+   RETURN HB_QStringRef():from( Qt_HBQString_leftRef( ::pPtr, nN ) )
 
 
 METHOD HBQString:length()
@@ -524,7 +556,7 @@ METHOD HBQString:mid( nPosition, nN )
 
 
 METHOD HBQString:midRef( nPosition, nN )
-   RETURN Qt_HBQString_midRef( ::pPtr, nPosition, nN )
+   RETURN HB_QStringRef():from( Qt_HBQString_midRef( ::pPtr, nPosition, nN ) )
 
 
 METHOD HBQString:normalized( nMode )
@@ -656,7 +688,7 @@ METHOD HBQString:rightJustified( nWidth, pFill, lTruncate )
 
 
 METHOD HBQString:rightRef( nN )
-   RETURN Qt_HBQString_rightRef( ::pPtr, nN )
+   RETURN HB_QStringRef():from( Qt_HBQString_rightRef( ::pPtr, nN ) )
 
 
 METHOD HBQString:section( pSep, nStart, nEnd, nFlags )
@@ -728,15 +760,15 @@ METHOD HBQString:size()
 
 
 METHOD HBQString:split( cSep, nBehavior, nCs )
-   RETURN Qt_HBQString_split( ::pPtr, cSep, nBehavior, nCs )
+   RETURN HB_QStringList():from( Qt_HBQString_split( ::pPtr, cSep, nBehavior, nCs ) )
 
 
 METHOD HBQString:split_1( pSep, nBehavior, nCs )
-   RETURN Qt_HBQString_split_1( ::pPtr, hbqt_ptr( pSep ), nBehavior, nCs )
+   RETURN HB_QStringList():from( Qt_HBQString_split_1( ::pPtr, hbqt_ptr( pSep ), nBehavior, nCs ) )
 
 
 METHOD HBQString:split_2( pRx, nBehavior )
-   RETURN Qt_HBQString_split_2( ::pPtr, hbqt_ptr( pRx ), nBehavior )
+   RETURN HB_QStringList():from( Qt_HBQString_split_2( ::pPtr, hbqt_ptr( pRx ), nBehavior ) )
 
 
 METHOD HBQString:squeeze()
@@ -756,7 +788,7 @@ METHOD HBQString:startsWith_2( pC, nCs )
 
 
 METHOD HBQString:toAscii()
-   RETURN Qt_HBQString_toAscii( ::pPtr )
+   RETURN HB_QByteArray():from( Qt_HBQString_toAscii( ::pPtr ) )
 
 
 METHOD HBQString:toCaseFolded()
@@ -776,11 +808,11 @@ METHOD HBQString:toInt( lOk, nBase )
 
 
 METHOD HBQString:toLatin1()
-   RETURN Qt_HBQString_toLatin1( ::pPtr )
+   RETURN HB_QByteArray():from( Qt_HBQString_toLatin1( ::pPtr ) )
 
 
 METHOD HBQString:toLocal8Bit()
-   RETURN Qt_HBQString_toLocal8Bit( ::pPtr )
+   RETURN HB_QByteArray():from( Qt_HBQString_toLocal8Bit( ::pPtr ) )
 
 
 METHOD HBQString:toLong( lOk, nBase )
@@ -820,7 +852,7 @@ METHOD HBQString:toUpper()
 
 
 METHOD HBQString:toUtf8()
-   RETURN Qt_HBQString_toUtf8( ::pPtr )
+   RETURN HB_QByteArray():from( Qt_HBQString_toUtf8( ::pPtr ) )
 
 
 METHOD HBQString:trimmed()
@@ -832,7 +864,7 @@ METHOD HBQString:truncate( nPosition )
 
 
 METHOD HBQString:unicode()
-   RETURN Qt_HBQString_unicode( ::pPtr )
+   RETURN HB_QChar():from( Qt_HBQString_unicode( ::pPtr ) )
 
 
 METHOD HBQString:compare_4( cS1, cS2, nCs )

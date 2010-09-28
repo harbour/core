@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QTextCodec( ... )
  *     QTextCodec():from( pPtr_OR_oObj_of_type_QTextCodec )
- *     QTextCodec():configure( pPtr_OR_oObj_of_type_QTextCodec )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

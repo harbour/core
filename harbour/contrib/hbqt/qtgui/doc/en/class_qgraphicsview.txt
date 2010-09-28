@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QGraphicsView( ... )
  *     QGraphicsView():from( pPtr_OR_oObj_of_type_QGraphicsView )
- *     QGraphicsView():configure( pPtr_OR_oObj_of_type_QGraphicsView )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -122,6 +122,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsView.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QAbstractScrollArea
+ *     QAbstractScrollArea()
  *  $END$
  */

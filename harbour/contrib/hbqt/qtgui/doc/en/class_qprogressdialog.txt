@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QProgressDialog( ... )
  *     QProgressDialog():from( pPtr_OR_oObj_of_type_QProgressDialog )
- *     QProgressDialog():configure( pPtr_OR_oObj_of_type_QProgressDialog )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -70,6 +70,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QProgressDialog.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QDialog
+ *     QDialog()
  *  $END$
  */

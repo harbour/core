@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QIODevice( ... )
  *     QIODevice():from( pPtr_OR_oObj_of_type_QIODevice )
- *     QIODevice():configure( pPtr_OR_oObj_of_type_QIODevice )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -79,6 +79,6 @@
  *     C++ wrappers  : contrib/hbqt/qtcore/QIODevice.cpp
  *     Library       : hbqtcore
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

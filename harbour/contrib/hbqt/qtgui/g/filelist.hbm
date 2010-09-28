@@ -47,6 +47,7 @@ QContextMenuEvent.cpp
 QCursor.cpp
 QDateEdit.cpp
 QDateTimeEdit.cpp
+QDesktopServices.cpp
 QDesktopWidget.cpp
 QDial.cpp
 QDialog.cpp
@@ -308,6 +309,7 @@ TQContextMenuEvent.prg
 TQCursor.prg
 TQDateEdit.prg
 TQDateTimeEdit.prg
+TQDesktopServices.prg
 TQDesktopWidget.prg
 TQDial.prg
 TQDialog.prg

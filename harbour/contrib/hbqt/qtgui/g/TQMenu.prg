@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -111,106 +143,79 @@ METHOD QMenu:new( ... )
 
 
 METHOD QMenu:actionAt( pPt )
-   RETURN Qt_QMenu_actionAt( ::pPtr, hbqt_ptr( pPt ) )
+   RETURN HB_QAction():from( Qt_QMenu_actionAt( ::pPtr, hbqt_ptr( pPt ) ) )
 
 
 METHOD QMenu:actionGeometry( pAct )
-   RETURN Qt_QMenu_actionGeometry( ::pPtr, hbqt_ptr( pAct ) )
+   RETURN HB_QRect():from( Qt_QMenu_actionGeometry( ::pPtr, hbqt_ptr( pAct ) ) )
 
 
 METHOD QMenu:activeAction()
-   RETURN Qt_QMenu_activeAction( ::pPtr )
+   RETURN HB_QAction():from( Qt_QMenu_activeAction( ::pPtr ) )
 
 
 METHOD QMenu:addAction( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 5
+   SWITCH PCount()
+   CASE 5
       DO CASE
-      CASE aV[ 1 ] $ "PCO" .AND. aV[ 2 ] $ "C" .AND. aV[ 3 ] $ "PO" .AND. aV[ 4 ] $ "PO" .AND. aV[ 5 ] $ "PO"
-                // QAction * addAction ( const QIcon & icon, const QString & text, const QObject * receiver, const char * member, const QKeySequence & shortcut = 0 )
-                // PCO p QIcon, C c QString, PO p QObject, PO p char, PO p QKeySequence
-         RETURN QAction():from( Qt_QMenu_addAction_3( ::pPtr, ... ) )
+      CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) ) .AND. hb_isObject( hb_pvalue( 5 ) )
+         RETURN HB_QAction():from( Qt_QMenu_addAction_3( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 4
+      EXIT
+   CASE 4
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PO" .AND. aV[ 4 ] $ "PO"
-                // QAction * addAction ( const QString & text, const QObject * receiver, const char * member, const QKeySequence & shortcut = 0 )
-                // C c QString, PO p QObject, PO p char, PO p QKeySequence
-         RETURN QAction():from( Qt_QMenu_addAction_2( ::pPtr, ... ) )
-      CASE aV[ 1 ] $ "PCO" .AND. aV[ 2 ] $ "C" .AND. aV[ 3 ] $ "PO" .AND. aV[ 4 ] $ "PO"
-                // QAction * addAction ( const QIcon & icon, const QString & text, const QObject * receiver, const char * member, const QKeySequence & shortcut = 0 )
-                // PCO p QIcon, C c QString, PO p QObject, PO p char, PO p QKeySequence
-         RETURN QAction():from( Qt_QMenu_addAction_3( ::pPtr, ... ) )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
+         RETURN HB_QAction():from( Qt_QMenu_addAction_2( ::pPtr, ... ) )
+      CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
+         RETURN HB_QAction():from( Qt_QMenu_addAction_3( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 3
+      EXIT
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO" .AND. aV[ 3 ] $ "PO"
-                // QAction * addAction ( const QString & text, const QObject * receiver, const char * member, const QKeySequence & shortcut = 0 )
-                // C c QString, PO p QObject, PO p char, PO p QKeySequence
-         RETURN QAction():from( Qt_QMenu_addAction_2( ::pPtr, ... ) )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN HB_QAction():from( Qt_QMenu_addAction_2( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PCO" .AND. aV[ 2 ] $ "C"
-                // QAction * addAction ( const QIcon & icon, const QString & text )
-                // PCO p QIcon, C c QString
-         RETURN QAction():from( Qt_QMenu_addAction_1( ::pPtr, ... ) )
+      CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN HB_QAction():from( Qt_QMenu_addAction_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // QAction * addAction ( const QString & text )
-                // C c QString
-         RETURN QAction():from( Qt_QMenu_addAction( ::pPtr, ... ) )
-      CASE aV[ 1 ] $ "PO"
-                // void addAction ( QAction * action )
-                // PO p QAction
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QAction():from( Qt_QMenu_addAction( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QMenu_addAction_4( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QMenu:addMenu( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PCO" .AND. aV[ 2 ] $ "C"
-                // QMenu * addMenu ( const QIcon & icon, const QString & title )
-                // PCO p QIcon, C c QString
-         RETURN QMenu():from( Qt_QMenu_addMenu_2( ::pPtr, ... ) )
+      CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN HB_QMenu():from( Qt_QMenu_addMenu_2( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // QMenu * addMenu ( const QString & title )
-                // C c QString
-         RETURN QMenu():from( Qt_QMenu_addMenu_1( ::pPtr, ... ) )
-      CASE aV[ 1 ] $ "PO"
-                // QAction * addMenu ( QMenu * menu )
-                // PO p QMenu
-         RETURN QAction():from( Qt_QMenu_addMenu( ::pPtr, ... ) )
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QMenu():from( Qt_QMenu_addMenu_1( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QAction():from( Qt_QMenu_addMenu( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QMenu:addSeparator()
-   RETURN Qt_QMenu_addSeparator( ::pPtr )
+   RETURN HB_QAction():from( Qt_QMenu_addSeparator( ::pPtr ) )
 
 
 METHOD QMenu:clear()
@@ -218,37 +223,27 @@ METHOD QMenu:clear()
 
 
 METHOD QMenu:defaultAction()
-   RETURN Qt_QMenu_defaultAction( ::pPtr )
+   RETURN HB_QAction():from( Qt_QMenu_defaultAction( ::pPtr ) )
 
 
 METHOD QMenu:exec( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
-                // QAction * exec ( const QPoint & p, QAction * action = 0 )
-                // PO p QPoint, PO p QAction
-         RETURN QAction():from( Qt_QMenu_exec_1( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QAction():from( Qt_QMenu_exec_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // QAction * exec ( const QPoint & p, QAction * action = 0 )
-                // PO p QPoint, PO p QAction
-         RETURN QAction():from( Qt_QMenu_exec_1( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QAction():from( Qt_QMenu_exec_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 0
-             // QAction * exec ()
-      RETURN QAction():from( Qt_QMenu_exec( ::pPtr, ... ) )
-   ENDCASE
-   RETURN NIL
+      EXIT
+   CASE 0
+      RETURN HB_QAction():from( Qt_QMenu_exec( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QMenu:hideTearOffMenu()
@@ -256,15 +251,15 @@ METHOD QMenu:hideTearOffMenu()
 
 
 METHOD QMenu:icon()
-   RETURN Qt_QMenu_icon( ::pPtr )
+   RETURN HB_QIcon():from( Qt_QMenu_icon( ::pPtr ) )
 
 
 METHOD QMenu:insertMenu( pBefore, pMenu )
-   RETURN Qt_QMenu_insertMenu( ::pPtr, hbqt_ptr( pBefore ), hbqt_ptr( pMenu ) )
+   RETURN HB_QAction():from( Qt_QMenu_insertMenu( ::pPtr, hbqt_ptr( pBefore ), hbqt_ptr( pMenu ) ) )
 
 
 METHOD QMenu:insertSeparator( pBefore )
-   RETURN Qt_QMenu_insertSeparator( ::pPtr, hbqt_ptr( pBefore ) )
+   RETURN HB_QAction():from( Qt_QMenu_insertSeparator( ::pPtr, hbqt_ptr( pBefore ) ) )
 
 
 METHOD QMenu:isEmpty()
@@ -280,7 +275,7 @@ METHOD QMenu:isTearOffMenuVisible()
 
 
 METHOD QMenu:menuAction()
-   RETURN Qt_QMenu_menuAction( ::pPtr )
+   RETURN HB_QAction():from( Qt_QMenu_menuAction( ::pPtr ) )
 
 
 METHOD QMenu:popup( pP, pAtAction )

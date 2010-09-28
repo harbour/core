@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QConicalGradient( ... )
  *     QConicalGradient():from( pPtr_OR_oObj_of_type_QConicalGradient )
- *     QConicalGradient():configure( pPtr_OR_oObj_of_type_QConicalGradient )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -51,6 +51,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QConicalGradient.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QGradient
+ *     QGradient()
  *  $END$
  */

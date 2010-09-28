@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QMatrix( ... )
  *     QMatrix():from( pPtr_OR_oObj_of_type_QMatrix )
- *     QMatrix():configure( pPtr_OR_oObj_of_type_QMatrix )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

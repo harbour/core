@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QTreeWidget( ... )
  *     QTreeWidget():from( pPtr_OR_oObj_of_type_QTreeWidget )
- *     QTreeWidget():configure( pPtr_OR_oObj_of_type_QTreeWidget )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -85,6 +85,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QTreeWidget.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QTreeView
+ *     QTreeView()
  *  $END$
  */

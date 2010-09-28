@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QDesignerFormEditorInterface( ... )
  *     QDesignerFormEditorInterface():from( pPtr_OR_oObj_of_type_QDesignerFormEditorInterface )
- *     QDesignerFormEditorInterface():configure( pPtr_OR_oObj_of_type_QDesignerFormEditorInterface )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -56,6 +56,6 @@
  *     C++ wrappers  : contrib/hbqt/qtdesigner/QDesignerFormEditorInterface.cpp
  *     Library       : hbqtdesigner
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -169,7 +201,7 @@ METHOD QStandardItem:appendRow( pItem )
 
 
 METHOD QStandardItem:background()
-   RETURN Qt_QStandardItem_background( ::pPtr )
+   RETURN HB_QBrush():from( Qt_QStandardItem_background( ::pPtr ) )
 
 
 METHOD QStandardItem:checkState()
@@ -177,11 +209,11 @@ METHOD QStandardItem:checkState()
 
 
 METHOD QStandardItem:child( nRow, nColumn )
-   RETURN Qt_QStandardItem_child( ::pPtr, nRow, nColumn )
+   RETURN HB_QStandardItem():from( Qt_QStandardItem_child( ::pPtr, nRow, nColumn ) )
 
 
 METHOD QStandardItem:clone()
-   RETURN Qt_QStandardItem_clone( ::pPtr )
+   RETURN HB_QStandardItem():from( Qt_QStandardItem_clone( ::pPtr ) )
 
 
 METHOD QStandardItem:column()
@@ -193,7 +225,7 @@ METHOD QStandardItem:columnCount()
 
 
 METHOD QStandardItem:data( nRole )
-   RETURN Qt_QStandardItem_data( ::pPtr, nRole )
+   RETURN HB_QVariant():from( Qt_QStandardItem_data( ::pPtr, nRole ) )
 
 
 METHOD QStandardItem:flags()
@@ -201,11 +233,11 @@ METHOD QStandardItem:flags()
 
 
 METHOD QStandardItem:font()
-   RETURN Qt_QStandardItem_font( ::pPtr )
+   RETURN HB_QFont():from( Qt_QStandardItem_font( ::pPtr ) )
 
 
 METHOD QStandardItem:foreground()
-   RETURN Qt_QStandardItem_foreground( ::pPtr )
+   RETURN HB_QBrush():from( Qt_QStandardItem_foreground( ::pPtr ) )
 
 
 METHOD QStandardItem:hasChildren()
@@ -213,11 +245,11 @@ METHOD QStandardItem:hasChildren()
 
 
 METHOD QStandardItem:icon()
-   RETURN Qt_QStandardItem_icon( ::pPtr )
+   RETURN HB_QIcon():from( Qt_QStandardItem_icon( ::pPtr ) )
 
 
 METHOD QStandardItem:index()
-   RETURN Qt_QStandardItem_index( ::pPtr )
+   RETURN HB_QModelIndex():from( Qt_QStandardItem_index( ::pPtr ) )
 
 
 METHOD QStandardItem:insertColumns( nColumn, nCount )
@@ -261,11 +293,11 @@ METHOD QStandardItem:isTristate()
 
 
 METHOD QStandardItem:model()
-   RETURN Qt_QStandardItem_model( ::pPtr )
+   RETURN HB_QStandardItemModel():from( Qt_QStandardItem_model( ::pPtr ) )
 
 
 METHOD QStandardItem:parent()
-   RETURN Qt_QStandardItem_parent( ::pPtr )
+   RETURN HB_QStandardItem():from( Qt_QStandardItem_parent( ::pPtr ) )
 
 
 METHOD QStandardItem:read( pIn )
@@ -317,30 +349,21 @@ METHOD QStandardItem:setCheckable( lCheckable )
 
 
 METHOD QStandardItem:setChild( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 3
+   SWITCH PCount()
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "PO"
-                // void setChild ( int row, int column, QStandardItem * item )
-                // N n int, N n int, PO p QStandardItem
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
          RETURN Qt_QStandardItem_setChild( ::pPtr, ... )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "PO"
-                // void setChild ( int row, QStandardItem * item )
-                // N n int, PO p QStandardItem
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
          RETURN Qt_QStandardItem_setChild_1( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QStandardItem:setColumnCount( nColumns )
@@ -420,7 +443,7 @@ METHOD QStandardItem:setWhatsThis( cWhatsThis )
 
 
 METHOD QStandardItem:sizeHint()
-   RETURN Qt_QStandardItem_sizeHint( ::pPtr )
+   RETURN HB_QSize():from( Qt_QStandardItem_sizeHint( ::pPtr ) )
 
 
 METHOD QStandardItem:sortChildren( nColumn, nOrder )
@@ -432,15 +455,15 @@ METHOD QStandardItem:statusTip()
 
 
 METHOD QStandardItem:takeChild( nRow, nColumn )
-   RETURN Qt_QStandardItem_takeChild( ::pPtr, nRow, nColumn )
+   RETURN HB_QStandardItem():from( Qt_QStandardItem_takeChild( ::pPtr, nRow, nColumn ) )
 
 
 METHOD QStandardItem:takeColumn( nColumn )
-   RETURN Qt_QStandardItem_takeColumn( ::pPtr, nColumn )
+   RETURN HB_QList():from( Qt_QStandardItem_takeColumn( ::pPtr, nColumn ) )
 
 
 METHOD QStandardItem:takeRow( nRow )
-   RETURN Qt_QStandardItem_takeRow( ::pPtr, nRow )
+   RETURN HB_QList():from( Qt_QStandardItem_takeRow( ::pPtr, nRow ) )
 
 
 METHOD QStandardItem:text()

@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QGraphicsTextItem( ... )
  *     QGraphicsTextItem():from( pPtr_OR_oObj_of_type_QGraphicsTextItem )
- *     QGraphicsTextItem():configure( pPtr_OR_oObj_of_type_QGraphicsTextItem )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -67,6 +67,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsTextItem.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QObject, QGraphicsItem
+ *     QObject, QGraphicsItem()
  *  $END$
  */

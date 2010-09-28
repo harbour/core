@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QGraphicsSceneContextMenuEvent( ... )
  *     QGraphicsSceneContextMenuEvent():from( pPtr_OR_oObj_of_type_QGraphicsSceneContextMenuEvent )
- *     QGraphicsSceneContextMenuEvent():configure( pPtr_OR_oObj_of_type_QGraphicsSceneContextMenuEvent )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -51,6 +51,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsSceneContextMenuEvent.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QGraphicsSceneEvent
+ *     QGraphicsSceneEvent()
  *  $END$
  */

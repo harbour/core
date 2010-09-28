@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -159,11 +191,11 @@ METHOD QUrl:addQueryItem( cKey, cValue )
 
 
 METHOD QUrl:allEncodedQueryItemValues( pKey )
-   RETURN Qt_QUrl_allEncodedQueryItemValues( ::pPtr, hbqt_ptr( pKey ) )
+   RETURN HB_QList():from( Qt_QUrl_allEncodedQueryItemValues( ::pPtr, hbqt_ptr( pKey ) ) )
 
 
 METHOD QUrl:allQueryItemValues( cKey )
-   RETURN Qt_QUrl_allQueryItemValues( ::pPtr, cKey )
+   RETURN HB_QStringList():from( Qt_QUrl_allQueryItemValues( ::pPtr, cKey ) )
 
 
 METHOD QUrl:authority()
@@ -175,31 +207,31 @@ METHOD QUrl:clear()
 
 
 METHOD QUrl:encodedFragment()
-   RETURN Qt_QUrl_encodedFragment( ::pPtr )
+   RETURN HB_QByteArray():from( Qt_QUrl_encodedFragment( ::pPtr ) )
 
 
 METHOD QUrl:encodedHost()
-   RETURN Qt_QUrl_encodedHost( ::pPtr )
+   RETURN HB_QByteArray():from( Qt_QUrl_encodedHost( ::pPtr ) )
 
 
 METHOD QUrl:encodedPassword()
-   RETURN Qt_QUrl_encodedPassword( ::pPtr )
+   RETURN HB_QByteArray():from( Qt_QUrl_encodedPassword( ::pPtr ) )
 
 
 METHOD QUrl:encodedPath()
-   RETURN Qt_QUrl_encodedPath( ::pPtr )
+   RETURN HB_QByteArray():from( Qt_QUrl_encodedPath( ::pPtr ) )
 
 
 METHOD QUrl:encodedQuery()
-   RETURN Qt_QUrl_encodedQuery( ::pPtr )
+   RETURN HB_QByteArray():from( Qt_QUrl_encodedQuery( ::pPtr ) )
 
 
 METHOD QUrl:encodedQueryItemValue( pKey )
-   RETURN Qt_QUrl_encodedQueryItemValue( ::pPtr, hbqt_ptr( pKey ) )
+   RETURN HB_QByteArray():from( Qt_QUrl_encodedQueryItemValue( ::pPtr, hbqt_ptr( pKey ) ) )
 
 
 METHOD QUrl:encodedUserName()
-   RETURN Qt_QUrl_encodedUserName( ::pPtr )
+   RETURN HB_QByteArray():from( Qt_QUrl_encodedUserName( ::pPtr ) )
 
 
 METHOD QUrl:errorString()
@@ -255,26 +287,17 @@ METHOD QUrl:path()
 
 
 METHOD QUrl:port( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // int port ( int defaultPort ) const
-                // N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
          RETURN Qt_QUrl_port_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 0
-             // int port () const
+      EXIT
+   CASE 0
       RETURN Qt_QUrl_port( ::pPtr, ... )
-   ENDCASE
-   RETURN NIL
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QUrl:queryItemValue( cKey )
@@ -306,7 +329,7 @@ METHOD QUrl:removeQueryItem( cKey )
 
 
 METHOD QUrl:resolved( pRelative )
-   RETURN Qt_QUrl_resolved( ::pPtr, hbqt_ptr( pRelative ) )
+   RETURN HB_QUrl():from( Qt_QUrl_resolved( ::pPtr, hbqt_ptr( pRelative ) ) )
 
 
 METHOD QUrl:scheme()
@@ -338,30 +361,21 @@ METHOD QUrl:setEncodedQuery( pQuery )
 
 
 METHOD QUrl:setEncodedUrl( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
-                // void setEncodedUrl ( const QByteArray & encodedUrl, ParsingMode parsingMode )
-                // PO p QByteArray, N n QUrl::ParsingMode
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QUrl_setEncodedUrl_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void setEncodedUrl ( const QByteArray & encodedUrl )
-                // PO p QByteArray
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QUrl_setEncodedUrl( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QUrl:setEncodedUserName( pUserName )
@@ -393,30 +407,21 @@ METHOD QUrl:setScheme( cScheme )
 
 
 METHOD QUrl:setUrl( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "N"
-                // void setUrl ( const QString & url, ParsingMode parsingMode )
-                // C c QString, N n QUrl::ParsingMode
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QUrl_setUrl_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // void setUrl ( const QString & url )
-                // C c QString
+      CASE hb_isChar( hb_pvalue( 1 ) )
          RETURN Qt_QUrl_setUrl( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QUrl:setUserInfo( cUserInfo )
@@ -428,7 +433,7 @@ METHOD QUrl:setUserName( cUserName )
 
 
 METHOD QUrl:toEncoded( nOptions )
-   RETURN Qt_QUrl_toEncoded( ::pPtr, nOptions )
+   RETURN HB_QByteArray():from( Qt_QUrl_toEncoded( ::pPtr, nOptions ) )
 
 
 METHOD QUrl:toLocalFile()
@@ -452,34 +457,25 @@ METHOD QUrl:fromAce( pDomain )
 
 
 METHOD QUrl:fromEncoded( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
-                // QUrl fromEncoded ( const QByteArray & input, ParsingMode parsingMode )
-                // PO p QByteArray, N n QUrl::ParsingMode
-         RETURN QUrl():from( Qt_QUrl_fromEncoded_1( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QUrl():from( Qt_QUrl_fromEncoded_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // QUrl fromEncoded ( const QByteArray & input )
-                // PO p QByteArray
-         RETURN QUrl():from( Qt_QUrl_fromEncoded( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QUrl():from( Qt_QUrl_fromEncoded( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QUrl:fromLocalFile( cLocalFile )
-   RETURN Qt_QUrl_fromLocalFile( ::pPtr, cLocalFile )
+   RETURN HB_QUrl():from( Qt_QUrl_fromLocalFile( ::pPtr, cLocalFile ) )
 
 
 METHOD QUrl:fromPercentEncoding( pInput )
@@ -487,7 +483,7 @@ METHOD QUrl:fromPercentEncoding( pInput )
 
 
 METHOD QUrl:idnWhitelist()
-   RETURN Qt_QUrl_idnWhitelist( ::pPtr )
+   RETURN HB_QStringList():from( Qt_QUrl_idnWhitelist( ::pPtr ) )
 
 
 METHOD QUrl:setIdnWhitelist( pList )
@@ -495,9 +491,9 @@ METHOD QUrl:setIdnWhitelist( pList )
 
 
 METHOD QUrl:toAce( cDomain )
-   RETURN Qt_QUrl_toAce( ::pPtr, cDomain )
+   RETURN HB_QByteArray():from( Qt_QUrl_toAce( ::pPtr, cDomain ) )
 
 
 METHOD QUrl:toPercentEncoding( cInput, pExclude, pInclude )
-   RETURN Qt_QUrl_toPercentEncoding( ::pPtr, cInput, hbqt_ptr( pExclude ), hbqt_ptr( pInclude ) )
+   RETURN HB_QByteArray():from( Qt_QUrl_toPercentEncoding( ::pPtr, cInput, hbqt_ptr( pExclude ), hbqt_ptr( pInclude ) ) )
 

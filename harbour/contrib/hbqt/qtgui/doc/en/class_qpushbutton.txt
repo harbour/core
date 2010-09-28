@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QPushButton( ... )
  *     QPushButton():from( pPtr_OR_oObj_of_type_QPushButton )
- *     QPushButton():configure( pPtr_OR_oObj_of_type_QPushButton )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -55,6 +55,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QPushButton.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QAbstractButton
+ *     QAbstractButton()
  *  $END$
  */

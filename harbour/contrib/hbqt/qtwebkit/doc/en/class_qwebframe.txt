@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QWebFrame( ... )
  *     QWebFrame():from( pPtr_OR_oObj_of_type_QWebFrame )
- *     QWebFrame():configure( pPtr_OR_oObj_of_type_QWebFrame )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -83,6 +83,6 @@
  *     C++ wrappers  : contrib/hbqt/qtwebkit/QWebFrame.cpp
  *     Library       : hbqtwebkit
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

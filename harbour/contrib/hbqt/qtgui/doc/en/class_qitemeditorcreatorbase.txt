@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QItemEditorCreatorBase( ... )
  *     QItemEditorCreatorBase():from( pPtr_OR_oObj_of_type_QItemEditorCreatorBase )
- *     QItemEditorCreatorBase():configure( pPtr_OR_oObj_of_type_QItemEditorCreatorBase )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

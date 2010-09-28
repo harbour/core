@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     HBQSlots( ... )
  *     HBQSlots():from( pPtr_OR_oObj_of_type_HBQSlots )
- *     HBQSlots():configure( pPtr_OR_oObj_of_type_HBQSlots )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -50,6 +50,6 @@
  *     C++ wrappers  : contrib/hbqt/qtcore/HBQSlots.cpp
  *     Library       : hbqtcore
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

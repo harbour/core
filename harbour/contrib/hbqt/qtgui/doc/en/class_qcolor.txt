@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QColor( ... )
  *     QColor():from( pPtr_OR_oObj_of_type_QColor )
- *     QColor():configure( pPtr_OR_oObj_of_type_QColor )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

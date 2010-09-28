@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     HBQGraphicsItem( ... )
  *     HBQGraphicsItem():from( pPtr_OR_oObj_of_type_HBQGraphicsItem )
- *     HBQGraphicsItem():configure( pPtr_OR_oObj_of_type_HBQGraphicsItem )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -114,6 +114,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/HBQGraphicsItem.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QGraphicsItem
+ *     QGraphicsItem()
  *  $END$
  */

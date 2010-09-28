@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QGraphicsGridLayout( ... )
  *     QGraphicsGridLayout():from( pPtr_OR_oObj_of_type_QGraphicsGridLayout )
- *     QGraphicsGridLayout():configure( pPtr_OR_oObj_of_type_QGraphicsGridLayout )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -88,6 +88,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsGridLayout.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QGraphicsLayout
+ *     QGraphicsLayout()
  *  $END$
  */

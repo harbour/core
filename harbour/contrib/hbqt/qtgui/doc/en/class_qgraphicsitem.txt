@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QGraphicsItem( ... )
  *     QGraphicsItem():from( pPtr_OR_oObj_of_type_QGraphicsItem )
- *     QGraphicsItem():configure( pPtr_OR_oObj_of_type_QGraphicsItem )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

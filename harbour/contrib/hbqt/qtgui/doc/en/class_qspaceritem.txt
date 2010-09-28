@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QSpacerItem( ... )
  *     QSpacerItem():from( pPtr_OR_oObj_of_type_QSpacerItem )
- *     QSpacerItem():configure( pPtr_OR_oObj_of_type_QSpacerItem )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -48,6 +48,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QSpacerItem.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QLayoutItem
+ *     QLayoutItem()
  *  $END$
  */

@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QSyntaxHighlighter( ... )
  *     QSyntaxHighlighter():from( pPtr_OR_oObj_of_type_QSyntaxHighlighter )
- *     QSyntaxHighlighter():configure( pPtr_OR_oObj_of_type_QSyntaxHighlighter )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -52,6 +52,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QSyntaxHighlighter.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QObject
+ *     QObject()
  *  $END$
  */

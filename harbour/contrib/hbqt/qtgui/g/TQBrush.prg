@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -58,6 +56,40 @@
  *
  */
 /*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
+/*----------------------------------------------------------------------*/
 
 
 #include "hbclass.ch"
@@ -98,7 +130,7 @@ METHOD QBrush:new( ... )
 
 
 METHOD QBrush:color()
-   RETURN Qt_QBrush_color( ::pPtr )
+   RETURN HB_QColor():from( Qt_QBrush_color( ::pPtr ) )
 
 
 METHOD QBrush:isOpaque()
@@ -106,31 +138,21 @@ METHOD QBrush:isOpaque()
 
 
 METHOD QBrush:matrix()
-   RETURN Qt_QBrush_matrix( ::pPtr )
+   RETURN HB_QMatrix():from( Qt_QBrush_matrix( ::pPtr ) )
 
 
 METHOD QBrush:setColor( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 1
+   SWITCH PCount()
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "N"
-                // void setColor ( Qt::GlobalColor color )
-                // N n Qt::GlobalColor
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
          RETURN Qt_QBrush_setColor_1( ::pPtr, ... )
-      CASE aV[ 1 ] $ "PO"
-                // void setColor ( const QColor & color )
-                // PO p QColor
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QBrush_setColor( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QBrush:setMatrix( pMatrix )
@@ -158,13 +180,13 @@ METHOD QBrush:style()
 
 
 METHOD QBrush:texture()
-   RETURN Qt_QBrush_texture( ::pPtr )
+   RETURN HB_QPixmap():from( Qt_QBrush_texture( ::pPtr ) )
 
 
 METHOD QBrush:textureImage()
-   RETURN Qt_QBrush_textureImage( ::pPtr )
+   RETURN HB_QImage():from( Qt_QBrush_textureImage( ::pPtr ) )
 
 
 METHOD QBrush:transform()
-   RETURN Qt_QBrush_transform( ::pPtr )
+   RETURN HB_QTransform():from( Qt_QBrush_transform( ::pPtr ) )
 

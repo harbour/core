@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QInputEvent( ... )
  *     QInputEvent():from( pPtr_OR_oObj_of_type_QInputEvent )
- *     QInputEvent():configure( pPtr_OR_oObj_of_type_QInputEvent )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -47,6 +47,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QInputEvent.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QEvent
+ *     QEvent()
  *  $END$
  */

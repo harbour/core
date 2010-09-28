@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QWizard( ... )
  *     QWizard():from( pPtr_OR_oObj_of_type_QWizard )
- *     QWizard():configure( pPtr_OR_oObj_of_type_QWizard )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -81,6 +81,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QWizard.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QDialog
+ *     QDialog()
  *  $END$
  */

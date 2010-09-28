@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QResizeEvent( ... )
  *     QResizeEvent():from( pPtr_OR_oObj_of_type_QResizeEvent )
- *     QResizeEvent():configure( pPtr_OR_oObj_of_type_QResizeEvent )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -48,6 +48,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QResizeEvent.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QEvent
+ *     QEvent()
  *  $END$
  */

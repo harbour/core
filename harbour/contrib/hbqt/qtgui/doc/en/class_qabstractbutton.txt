@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QAbstractButton( ... )
  *     QAbstractButton():from( pPtr_OR_oObj_of_type_QAbstractButton )
- *     QAbstractButton():configure( pPtr_OR_oObj_of_type_QAbstractButton )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -72,6 +72,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QAbstractButton.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QWidget
+ *     QWidget()
  *  $END$
  */

@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QDoubleSpinBox( ... )
  *     QDoubleSpinBox():from( pPtr_OR_oObj_of_type_QDoubleSpinBox )
- *     QDoubleSpinBox():configure( pPtr_OR_oObj_of_type_QDoubleSpinBox )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -64,6 +64,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QDoubleSpinBox.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QAbstractSpinBox
+ *     QAbstractSpinBox()
  *  $END$
  */

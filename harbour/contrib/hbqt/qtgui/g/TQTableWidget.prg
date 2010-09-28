@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -131,7 +163,7 @@ METHOD QTableWidget:new( ... )
 
 
 METHOD QTableWidget:cellWidget( nRow, nColumn )
-   RETURN Qt_QTableWidget_cellWidget( ::pPtr, nRow, nColumn )
+   RETURN HB_QWidget():from( Qt_QTableWidget_cellWidget( ::pPtr, nRow, nColumn ) )
 
 
 METHOD QTableWidget:closePersistentEditor( pItem )
@@ -151,7 +183,7 @@ METHOD QTableWidget:currentColumn()
 
 
 METHOD QTableWidget:currentItem()
-   RETURN Qt_QTableWidget_currentItem( ::pPtr )
+   RETURN HB_QTableWidgetItem():from( Qt_QTableWidget_currentItem( ::pPtr ) )
 
 
 METHOD QTableWidget:currentRow()
@@ -163,46 +195,37 @@ METHOD QTableWidget:editItem( pItem )
 
 
 METHOD QTableWidget:findItems( cText, nFlags )
-   RETURN Qt_QTableWidget_findItems( ::pPtr, cText, nFlags )
+   RETURN HB_QList():from( Qt_QTableWidget_findItems( ::pPtr, cText, nFlags ) )
 
 
 METHOD QTableWidget:horizontalHeaderItem( nColumn )
-   RETURN Qt_QTableWidget_horizontalHeaderItem( ::pPtr, nColumn )
+   RETURN HB_QTableWidgetItem():from( Qt_QTableWidget_horizontalHeaderItem( ::pPtr, nColumn ) )
 
 
 METHOD QTableWidget:item( nRow, nColumn )
-   RETURN Qt_QTableWidget_item( ::pPtr, nRow, nColumn )
+   RETURN HB_QTableWidgetItem():from( Qt_QTableWidget_item( ::pPtr, nRow, nColumn ) )
 
 
 METHOD QTableWidget:itemAt( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // QTableWidgetItem * itemAt ( int ax, int ay ) const
-                // N n int, N n int
-         RETURN QTableWidgetItem():from( Qt_QTableWidget_itemAt_1( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QTableWidgetItem():from( Qt_QTableWidget_itemAt_1( ::pPtr, ... ) )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // QTableWidgetItem * itemAt ( const QPoint & point ) const
-                // PO p QPoint
-         RETURN QTableWidgetItem():from( Qt_QTableWidget_itemAt( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QTableWidgetItem():from( Qt_QTableWidget_itemAt( ::pPtr, ... ) )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTableWidget:itemPrototype()
-   RETURN Qt_QTableWidget_itemPrototype( ::pPtr )
+   RETURN HB_QTableWidgetItem():from( Qt_QTableWidget_itemPrototype( ::pPtr ) )
 
 
 METHOD QTableWidget:openPersistentEditor( pItem )
@@ -222,11 +245,11 @@ METHOD QTableWidget:rowCount()
 
 
 METHOD QTableWidget:selectedItems()
-   RETURN Qt_QTableWidget_selectedItems( ::pPtr )
+   RETURN HB_QList():from( Qt_QTableWidget_selectedItems( ::pPtr ) )
 
 
 METHOD QTableWidget:selectedRanges()
-   RETURN Qt_QTableWidget_selectedRanges( ::pPtr )
+   RETURN HB_QList():from( Qt_QTableWidget_selectedRanges( ::pPtr ) )
 
 
 METHOD QTableWidget:setCellWidget( nRow, nColumn, pWidget )
@@ -238,57 +261,39 @@ METHOD QTableWidget:setColumnCount( nColumns )
 
 
 METHOD QTableWidget:setCurrentCell( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 3
+   SWITCH PCount()
+   CASE 3
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N" .AND. aV[ 3 ] $ "N"
-                // void setCurrentCell ( int row, int column, QItemSelectionModel::SelectionFlags command )
-                // N n int, N n int, N n QItemSelectionModel::SelectionFlags
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
          RETURN Qt_QTableWidget_setCurrentCell_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 2
+      EXIT
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "N" .AND. aV[ 2 ] $ "N"
-                // void setCurrentCell ( int row, int column )
-                // N n int, N n int
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QTableWidget_setCurrentCell( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTableWidget:setCurrentItem( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "N"
-                // void setCurrentItem ( QTableWidgetItem * item, QItemSelectionModel::SelectionFlags command )   [*D=1*]
-                // PO p QTableWidgetItem, N n QItemSelectionModel::SelectionFlags
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QTableWidget_setCurrentItem_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "PO"
-                // void setCurrentItem ( QTableWidgetItem * item )   [*D=1*]
-                // PO p QTableWidgetItem
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QTableWidget_setCurrentItem( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTableWidget:setHorizontalHeaderItem( nColumn, pItem )
@@ -328,19 +333,19 @@ METHOD QTableWidget:sortItems( nColumn, nOrder )
 
 
 METHOD QTableWidget:takeHorizontalHeaderItem( nColumn )
-   RETURN Qt_QTableWidget_takeHorizontalHeaderItem( ::pPtr, nColumn )
+   RETURN HB_QTableWidgetItem():from( Qt_QTableWidget_takeHorizontalHeaderItem( ::pPtr, nColumn ) )
 
 
 METHOD QTableWidget:takeItem( nRow, nColumn )
-   RETURN Qt_QTableWidget_takeItem( ::pPtr, nRow, nColumn )
+   RETURN HB_QTableWidgetItem():from( Qt_QTableWidget_takeItem( ::pPtr, nRow, nColumn ) )
 
 
 METHOD QTableWidget:takeVerticalHeaderItem( nRow )
-   RETURN Qt_QTableWidget_takeVerticalHeaderItem( ::pPtr, nRow )
+   RETURN HB_QTableWidgetItem():from( Qt_QTableWidget_takeVerticalHeaderItem( ::pPtr, nRow ) )
 
 
 METHOD QTableWidget:verticalHeaderItem( nRow )
-   RETURN Qt_QTableWidget_verticalHeaderItem( ::pPtr, nRow )
+   RETURN HB_QTableWidgetItem():from( Qt_QTableWidget_verticalHeaderItem( ::pPtr, nRow ) )
 
 
 METHOD QTableWidget:visualColumn( nLogicalColumn )
@@ -348,7 +353,7 @@ METHOD QTableWidget:visualColumn( nLogicalColumn )
 
 
 METHOD QTableWidget:visualItemRect( pItem )
-   RETURN Qt_QTableWidget_visualItemRect( ::pPtr, hbqt_ptr( pItem ) )
+   RETURN HB_QRect():from( Qt_QTableWidget_visualItemRect( ::pPtr, hbqt_ptr( pItem ) ) )
 
 
 METHOD QTableWidget:visualRow( nLogicalRow )

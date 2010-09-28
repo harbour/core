@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -58,6 +56,40 @@
  *
  */
 /*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
+/*----------------------------------------------------------------------*/
 
 
 #include "hbclass.ch"
@@ -94,7 +126,7 @@ METHOD QPicture:new( ... )
 
 
 METHOD QPicture:boundingRect()
-   RETURN Qt_QPicture_boundingRect( ::pPtr )
+   RETURN HB_QRect():from( Qt_QPicture_boundingRect( ::pPtr ) )
 
 
 METHOD QPicture:data()
@@ -106,38 +138,25 @@ METHOD QPicture:isNull()
 
 
 METHOD QPicture:load( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO"
-                // bool load ( const QString & fileName, const char * format = 0 )
-                // C c QString, PO p char
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
          RETURN Qt_QPicture_load( ::pPtr, ... )
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
-                // bool load ( QIODevice * dev, const char * format = 0 )
-                // PO p QIODevice, PO p char
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
          RETURN Qt_QPicture_load_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // bool load ( const QString & fileName, const char * format = 0 )
-                // C c QString, PO p char
+      CASE hb_isChar( hb_pvalue( 1 ) )
          RETURN Qt_QPicture_load( ::pPtr, ... )
-      CASE aV[ 1 ] $ "PO"
-                // bool load ( QIODevice * dev, const char * format = 0 )
-                // PO p QIODevice, PO p char
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QPicture_load_1( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPicture:play( pPainter )
@@ -145,38 +164,25 @@ METHOD QPicture:play( pPainter )
 
 
 METHOD QPicture:save( ... )
-   LOCAL p, aP, nP, aV := {}
-   aP := hb_aParams()
-   nP := len( aP )
-   ::valtypes( aP, aV )
-   FOR EACH p IN { ... }
-      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )
-   NEXT
-   DO CASE
-   CASE nP == 2
+   SWITCH PCount()
+   CASE 2
       DO CASE
-      CASE aV[ 1 ] $ "C" .AND. aV[ 2 ] $ "PO"
-                // bool save ( const QString & fileName, const char * format = 0 )
-                // C c QString, PO p char
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
          RETURN Qt_QPicture_save( ::pPtr, ... )
-      CASE aV[ 1 ] $ "PO" .AND. aV[ 2 ] $ "PO"
-                // bool save ( QIODevice * dev, const char * format = 0 )
-                // PO p QIODevice, PO p char
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
          RETURN Qt_QPicture_save_1( ::pPtr, ... )
       ENDCASE
-   CASE nP == 1
+      EXIT
+   CASE 1
       DO CASE
-      CASE aV[ 1 ] $ "C"
-                // bool save ( const QString & fileName, const char * format = 0 )
-                // C c QString, PO p char
+      CASE hb_isChar( hb_pvalue( 1 ) )
          RETURN Qt_QPicture_save( ::pPtr, ... )
-      CASE aV[ 1 ] $ "PO"
-                // bool save ( QIODevice * dev, const char * format = 0 )
-                // PO p QIODevice, PO p char
+      CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QPicture_save_1( ::pPtr, ... )
       ENDCASE
-   ENDCASE
-   RETURN NIL
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPicture:setBoundingRect( pR )

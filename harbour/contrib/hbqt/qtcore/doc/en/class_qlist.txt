@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QList( ... )
  *     QList():from( pPtr_OR_oObj_of_type_QList )
- *     QList():configure( pPtr_OR_oObj_of_type_QList )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$

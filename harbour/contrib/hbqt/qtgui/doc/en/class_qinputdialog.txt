@@ -20,7 +20,7 @@
  *  $SYNTAX$
  *     QInputDialog( ... )
  *     QInputDialog():from( pPtr_OR_oObj_of_type_QInputDialog )
- *     QInputDialog():configure( pPtr_OR_oObj_of_type_QInputDialog )
+ * 
  *  $ARGUMENTS$
  * 
  *  $RETURNS$
@@ -90,6 +90,6 @@
  *     C++ wrappers  : contrib/hbqt/qtgui/QInputDialog.cpp
  *     Library       : hbqtgui
  *  $SEEALSO$
- *     QDialog
+ *     QDialog()
  *  $END$
  */
