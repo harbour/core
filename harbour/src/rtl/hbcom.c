@@ -243,7 +243,7 @@ HB_FHANDLE hb_comGetDeviceHandle( int iPort )
 #if defined( HB_HAS_TERMIOS )
       hFile = pCom->fd;
 #elif defined( HB_OS_WIN )
-      hFile = ( HB_FHANDLE ) pCom->hCom;
+      hFile = ( HB_FHANDLE ) pCom->hComm;
 #elif defined( HB_OS_OS2 )
       hFile = ( HB_FHANDLE ) pCom->hFile;
 #endif
