@@ -92,6 +92,7 @@ extern HB_EXPORT int  hb_comOutputState( int iPort );
 extern HB_EXPORT int  hb_comInputState( int iPort );
 extern HB_EXPORT int  hb_comSetDevice( int iPort, const char * szDevName );
 extern HB_EXPORT const char * hb_comGetDevice( int iPort, char * buffer, int size );
+extern HB_EXPORT HB_FHANDLE hb_comGetDeviceHandle( int iPort );
 
 HB_EXTERN_END
 

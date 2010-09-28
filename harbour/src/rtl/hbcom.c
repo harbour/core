@@ -233,6 +233,25 @@ int hb_comSetDevice( int iPort, const char * szDevName )
    return pCom ? 0 : -1;
 }
 
+HB_FHANDLE hb_comGetDeviceHandle( int iPort )
+{
+   PHB_COM pCom = hb_comGetPort( iPort, HB_COM_ANY );
+   HB_FHANDLE hFile = FS_ERROR;
+
+   if( pCom )
+   {
+#if defined( HB_HAS_TERMIOS )
+      hFile = pCom->fd;
+#elif defined( HB_OS_WIN )
+      hFile = ( HB_FHANDLE ) pCom->hCom;
+#elif defined( HB_OS_OS2 )
+      hFile = ( HB_FHANDLE ) pCom->hFile;
+#endif
+   }
+
+   return hFile;
+}
+
 void hb_comSetError( int iPort, int iError )
 {
    PHB_COM pCom = hb_comGetPort( iPort, HB_COM_ANY );
@@ -2259,7 +2278,7 @@ int hb_comFlowControl( int iPort, int *piFlow, int iFlow )
             else
                dcb.fbFlowReplace &= ~MODE_AUTO_RECEIVE;
 
-            dcb.fbCtlHndShake &= ~( MODE_DSR_SENSITIVITY | MODE_DCD_HANDSHAKE );
+            dcb.fbCtlHndShake &= ~MODE_DSR_SENSITIVITY;
             dcb.fbFlowReplace |= MODE_FULL_DUPLEX;
 
             rc = DosDevIOCtl( pCom->hFile, IOCTL_ASYNC, ASYNC_SETDCBINFO,

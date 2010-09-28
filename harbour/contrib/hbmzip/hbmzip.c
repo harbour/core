@@ -205,7 +205,7 @@ HB_FUNC( HB_ZIPFILECREATE )
          int iMethod = hb_parnidef( 7, Z_DEFLATED );
          int iLevel = hb_parnidef( 8, Z_DEFAULT_COMPRESSION );
          long lJulian, lMillisec;
-         int iY, iM, iD;
+         int iYear, iMonth, iDay, iHour, iMinute, iSecond;
 
          zip_fileinfo zfi;
 
@@ -214,22 +214,22 @@ HB_FUNC( HB_ZIPFILECREATE )
          if( HB_ISTIMESTAMP( 3 ) )
          {
             hb_partdt( &lJulian, &lMillisec, 3 );
-            hb_dateDecode( lJulian, &iY, &iM, &iD );
-            hb_timeDecode( lMillisec, &iY, &iM, &iD, NULL );
+            hb_dateDecode( lJulian, &iYear, &iMonth, &iDay );
+            hb_timeDecode( lMillisec, &iHour, &iMinute, &iSecond, NULL );
          }
          else
          {
-            hb_dateDecode( hb_pardl( 3 ), &iY, &iM, &iD );
-            hb_timeStrGet( hb_parc( 4 ), &iY, &iM, &iD, NULL );
+            hb_dateDecode( hb_pardl( 3 ), &iYear, &iMonth, &iDay );
+            hb_timeStrGet( hb_parc( 4 ), &iHour, &iMinute, &iSecond, NULL );
          }
 
-         zfi.tmz_date.tm_hour = iY;
-         zfi.tmz_date.tm_min = iM;
-         zfi.tmz_date.tm_sec = iD;
+         zfi.tmz_date.tm_hour = iHour;
+         zfi.tmz_date.tm_min = iMinute;
+         zfi.tmz_date.tm_sec = iSecond;
 
-         zfi.tmz_date.tm_year = iY;
-         zfi.tmz_date.tm_mon = iM - 1;
-         zfi.tmz_date.tm_mday = iD;
+         zfi.tmz_date.tm_year = iYear;
+         zfi.tmz_date.tm_mon = iMonth - 1;
+         zfi.tmz_date.tm_mday = iDay;
 
          zfi.internal_fa = hb_parnl( 5 );
          zfi.external_fa = hb_parnl( 6 );

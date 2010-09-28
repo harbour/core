@@ -55,10 +55,11 @@
  * HB_COMDISCARDCHAR( nPort, nChar | cChar ) --> lSuccess
  * HB_COMERRORCHAR( nPort, nChar | cChar ) --> lSuccess
  * HB_COMFLOWCHARS( nPort, nXONchar | cXONchar, nXOFFchar | cXOFFchar ) --> lSuccess
- * HB_COMFLOWCONTROL( nPort, @nOldFlow, nFlow ) --> lSuccess
+ * HB_COMFLOWCONTROL( nPort, @nOldFlow [, nNewFlow] ) --> lSuccess
  * HB_COMFLOWSET( nPort, nFlow ) --> lSuccess
  * HB_COMFLUSH( nPort, [ nType = HB_COM_IOFLUSH ] ) --> lSuccess
  * HB_COMGETDEVICE( nPort )  --> cDeviceName
+ * HB_COMGETDEVICEHANDLE( nPort )  --> nHandle | F_ERROR
  * HB_COMGETERROR( nPort ) --> nError
  * HB_COMGETOSERROR( nPort ) --> nError
  * HB_COMINIT( nPort, nBaud, cParity, nSize, nStop ) --> lSuccess
@@ -108,7 +109,7 @@ HB_FUNC( HB_COMFLOWCHARS )
 HB_FUNC( HB_COMFLOWCONTROL )
 {
    int iValue = 0;
-   hb_retl( hb_comFlowControl( hb_parni( 1 ), &iValue, hb_parni( 3 ) ) == 0 );
+   hb_retl( hb_comFlowControl( hb_parni( 1 ), &iValue, hb_parnidef( 3, -1 ) ) == 0 );
    hb_storni( iValue, 2 );
 }
 
@@ -127,6 +128,11 @@ HB_FUNC( HB_COMGETDEVICE )
    char buffer[ HB_COM_DEV_NAME_MAX ];
    const char * name = hb_comGetDevice( hb_parni( 1 ), buffer, sizeof( buffer ) );
    hb_retc( name );
+}
+
+HB_FUNC( HB_COMGETDEVICEHANDLE )
+{
+   hb_retnint( ( HB_NHANDLE ) hb_comGetDeviceHandle( hb_parni( 1 ) ) );
 }
 
 HB_FUNC( HB_COMGETERROR )

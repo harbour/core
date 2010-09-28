@@ -87,11 +87,11 @@
 #define HB_COM_LSR_TRANS_EMPTY      0x40  /* TX shift register empty */
 
 /* hb_comFlowControl() parameters */
-#define HB_COM_FLOW_IRTSCTS         0x01
-#define HB_COM_FLOW_ORTSCTS         0x02
-#define HB_COM_FLOW_IDTRDSR         0x04
-#define HB_COM_FLOW_ODTRDSR         0x08
-#define HB_COM_FLOW_DCD             0x10
+#define HB_COM_FLOW_IRTSCTS         0x01  /* use RTS to stop input */
+#define HB_COM_FLOW_ORTSCTS         0x02  /* check CTS on output */
+#define HB_COM_FLOW_IDTRDSR         0x04  /* use DTR to stop input */
+#define HB_COM_FLOW_ODTRDSR         0x08  /* check DSR on output */
+#define HB_COM_FLOW_DCD             0x10  /* respect DCD */
 #define HB_COM_FLOW_XOFF            0x20  /* XON/XOFF on input */
 #define HB_COM_FLOW_XON             0x40  /* XON/XOFF on output */
 
