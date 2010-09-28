@@ -197,7 +197,7 @@ CLASS HbqReportsManager
    DATA   qByte
    DATA   qMime
    DATA   qPix
-   DATA   pAct
+   DATA   qAct
    DATA   qShapesMenu
    DATA   aShapesAct                              INIT array( NUM_SHAPES )
 
@@ -263,30 +263,24 @@ METHOD HbqReportsManager:create( qParent )
 
    /* Toolbar */
    ::buildToolbar()
-   //::qLayout:addWidget_1( ::qToolbar:oWidget      , 0, 0, 1, 2 )
    ::qLayout:addWidget( ::qToolbar:oWidget      , 0, 0, 1, 2 )
    ::buildToolbarAlign()
-   //::qLayout:addWidget_1( ::qToolbarAlign:oWidget , 1, 0, 1, 2 )
    ::qLayout:addWidget( ::qToolbarAlign:oWidget , 1, 0, 1, 2 )
 
    /* Toolbar left */
    ::buildToolbarLeft()
-   //::qLayout:addWidget_1( ::qToolbarL:oWidget     , 2, 0, 2, 1 )
    ::qLayout:addWidget( ::qToolbarL:oWidget     , 2, 0, 2, 1 )
 
    /* ::qTabBar */
    ::buildTabBar()
-   //::qLayout:addWidget_1( ::qTabBar               , 2, 1, 1, 1 )
    ::qLayout:addWidget( ::qTabBar               , 2, 1, 1, 1 )
 
    /* Stacked widget */
    ::buildStacks()
-   //::qLayout:addWidget_1( ::qStack                , 3, 1, 1, 1 )
    ::qLayout:addWidget( ::qStack                , 3, 1, 1, 1 )
 
    /* StatusBar */
    ::buildStatusBar()
-   //::qLayout:addWidget_1( ::qStatus               , 4, 0, 1, 2 )
    ::qLayout:addWidget( ::qStatus               , 4, 0, 1, 2 )
 
    /* Document manipulation interface */
@@ -430,7 +424,7 @@ METHOD HbqReportsManager:buildDesignReport()
 /*----------------------------------------------------------------------*/
 
 METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
-   LOCAL qEvent, qMime, qItem, i, qList, cFile, nArea, aStruct, cAlias, cPath, qRC, qAct, qIcon, cType
+   LOCAL qEvent, qMime, qItem, i, qList, cFile, nArea, aStruct, cAlias, cPath, qRC, qIcon, cType
 
    SWITCH cEvent
    CASE "graphicsScene_block"
@@ -459,16 +453,16 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
       CASE p == QEvent_GraphicsSceneDragLeave
 
       CASE p == QEvent_GraphicsSceneDrop
-         qMime := QMimeData():from( qEvent:mimeData() )
+         qMime := qEvent:mimeData()
          IF qMime:hasFormat( "application/x-qabstractitemmodeldatalist" )
             IF p2[ 1 ] == "DataTree"
                IF p2[ 2 ] != p2[ 3 ]
-                  ::addField( p2[ 2 ], p2[ 3 ], QPointF():from( qEvent:scenePos() ), NIL )
+                  ::addField( p2[ 2 ], p2[ 3 ], qEvent:scenePos(), NIL )
                ENDIF
             ENDIF
 
          ELSEIF qMime:hasFormat( "application/x-toolbaricon"  )
-            ::addObject( qMime:html(), QPointF():from( qEvent:scenePos() ), NIL )
+            ::addObject( qMime:html(), qEvent:scenePos(), NIL )
 
          ELSEIF qMime:hasFormat( "application/x-menuitem" )
             cType := qMime:html()
@@ -485,10 +479,10 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
             CASE "Diagonal Line Right"; cType := "LineDR"    ; EXIT
             CASE "Diagonal Line Left" ; cType := "LineDL"    ; EXIT
             ENDSWITCH
-            ::addObject( cType, QPointF():from( qEvent:scenePos() ), NIL )
+            ::addObject( cType, qEvent:scenePos(), NIL )
 
          ELSEIF qMime:hasUrls()
-            qList := QStringList():from( qMime:hbUrlList() )
+            qList := qMime:hbUrlList()
             FOR i := 0 TO qList:size() - 1
                cFile := ( QUrl( qList:at( i ) ) ):toLocalFile()
 
@@ -534,22 +528,21 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
       EXIT
 
    CASE "QEvent_MouseMoveMenu"
-      IF empty( ::qPos ) .OR. empty( ::pAct ) .OR. hbqt_isEmptyQtPointer( ::pAct )
+      IF empty( ::qPos ) .OR. empty( ::qAct ) .OR. ! ::qAct:isValidObject()
          EXIT
       ENDIF
 
       qEvent := QMouseEvent():from( p )
-      qRC := QRect():from( ( QRect( ::qPos:x() - 5, ::qPos:y() - 5, 10, 10 ) ):normalized() )
+      qRC := QRect( ::qPos:x() - 5, ::qPos:y() - 5, 10, 10 ):normalized()
 
       IF qRC:contains( qEvent:pos() )
-         qAct := QAction():from( ::pAct )
-         qIcon := QIcon( qAct:icon() )
+         qIcon := QIcon( ::qAct:icon() )
 
-         ::qByte := QByteArray( qAct:text() )
+         ::qByte := QByteArray( ::qAct:text() )
 
          ::qMime := QMimeData()
          ::qMime:setData( "application/x-menuitem", ::qByte )
-         ::qMime:setHtml( qAct:text() )
+         ::qMime:setHtml( ::qAct:text() )
 
          ::qPix  := QPixmap( qIcon:pixmap( 16,16 ) )
 
@@ -563,7 +556,7 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
       ENDIF
       ::qDrag := NIL
       ::qPos  := NIL
-      ::pAct  := NIL
+      ::qAct  := NIL
       EXIT
    CASE "QEvent_MouseReleaseMenu"
       ::qDrag := NIL
@@ -572,8 +565,8 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
       EXIT
    CASE "QEvent_MousePressMenu"
       qEvent := QMouseEvent():from( p )
-      ::qPos := QPoint():from( qEvent:pos() )
-      ::pAct := ::qShapesMenu:actionAt( qEvent:pos() )
+      ::qPos := qEvent:pos()
+      ::qAct := ::qShapesMenu:actionAt( qEvent:pos() )
       EXIT
 
    CASE "buttonShapes_clicked"
@@ -675,7 +668,7 @@ METHOD HbqReportsManager:openReport()
    qFileDlg:setNameFilter( "HB Reports (*.hqr)" )
 
    IF qFileDlg:exec() == 1
-      qList := QStringList():from( qFileDlg:selectedFiles() )
+      qList := qFileDlg:selectedFiles()
       cFile := qList:at( 0 )
       IF !empty( cFile ) .AND. lower( right( cFile, 4 ) ) == ".hqr"
          ::loadReport( cFile )
@@ -701,7 +694,7 @@ METHOD HbqReportsManager:saveReport( lSaveAs )
       qFileDlg:setNameFilter( "HB Reports (*.hqr)" )
 
       IF qFileDlg:exec() == 1
-         qList := QStringList():from( qFileDlg:selectedFiles() )
+         qList := qFileDlg:selectedFiles()
          cFile := qList:at( 0 )
          hb_fNameSplit( cFile, , , @cExt )
          IF empty( cExt )
@@ -768,8 +761,8 @@ METHOD HbqReportsManager:buildReportStream()
       n := a_:__enumIndex()
       IF hb_hHasKey( ::hItems, a_[ 3 ] )
          oWidget := ::hItems[ a_[ 3 ] ]:oWidget
-         qPos    := QPointF():from( oWidget:scenePos() )
-         qTran   := QTransform():from( oWidget:transform() )
+         qPos    := oWidget:scenePos()
+         qTran   := oWidget:transform()
 
          a_[ 5 ] := { { 0, 0, oWidget:width(), oWidget:height() }, ;
                       { qPos:x(), qPos:y() }, ;
@@ -1073,7 +1066,7 @@ METHOD HbqReportsManager:zoom( nMode )
 /*----------------------------------------------------------------------*/
 
 METHOD HbqReportsManager:contextMenuScene( p1 )
-   LOCAL qMenu, qEvent, pAct
+   LOCAL qMenu, qEvent, qAct
 
    qEvent := QGraphicsSceneContextMenuEvent():from( p1 )
 
@@ -1081,9 +1074,8 @@ METHOD HbqReportsManager:contextMenuScene( p1 )
    qMenu:addAction( "Refresh"  )
    qMenu:addAction( "Zoom+" )
 
-   pAct := qMenu:exec( qEvent:screenPos() )
-   IF ! hbqt_isEmptyQtPointer( pAct )
-      SWITCH ( QAction():configure( pAct ) ):text()
+   IF ( qAct := qMenu:exec( qEvent:screenPos() ) ):isValidObject()
+      SWITCH qAct:text()
       CASE "Refresh"
          EXIT
       CASE "Zoom+"
@@ -1096,7 +1088,7 @@ METHOD HbqReportsManager:contextMenuScene( p1 )
 /*----------------------------------------------------------------------*/
 
 METHOD HbqReportsManager:contextMenuItem( p1, p2 )
-   LOCAL qMenu, qEvent, pAct
+   LOCAL qMenu, qEvent, qAct
 
    HB_SYMBOL_UNUSED( p2 )
 
@@ -1106,9 +1098,8 @@ METHOD HbqReportsManager:contextMenuItem( p1, p2 )
    qMenu:addAction( "Cut"  )
    qMenu:addAction( "Copy" )
 
-   pAct := qMenu:exec( qEvent:screenPos() )
-   IF ! hbqt_isEmptyQtPointer( pAct )
-      SWITCH ( QAction():configure( pAct ) ):text()
+   IF ( qAct := qMenu:exec( qEvent:screenPos() ) ):isValidObject()
+      SWITCH qAct:text()
       CASE "Cut"
          EXIT
       CASE "Copy"
@@ -1337,7 +1328,7 @@ METHOD HbqReportsManager:execMenuShapes()
 
    qBtn := ::qToolbarL:getItem( "Shapes" )
    //
-   qPos := QPoint():from( ::qToolbarL:mapToGlobal( qBtn:pos() ) )
+   qPos := ::qToolbarL:mapToGlobal( qBtn:pos() )
    qPos:setX( qPos:x() + qBtn:width()  / 2 )
    qPos:setY( qPos:y() + qBtn:height() / 2 )
 
@@ -1519,14 +1510,14 @@ METHOD HbqReportsManager:printPreview( qPrinter )
    qPrinter := QPrinter()
 
    qInfo := QPrinterInfo( "QPrinter", qPrinter )
-   qList := QList():from( qInfo:availablePrinters() )
+   qList := qInfo:availablePrinters()
    FOR i := 0 TO qList:size() - 1
-      qStr := QPrinterInfo():from( qList:at( i ) )
+      qStr := qList:at( i )
 //HB_TRACE( HB_TR_ALWAYS, qList:at( i ), valtype( qList:at( i ) ), qStr:printerName() )
    NEXT
    qPrinter:setOutputFormat( QPrinter_PdfFormat )
    qPrinter:setOrientation( ::qScene:orientation() )
-   qPrinter:setPaperSize( QRectF():from( ::qScene:paperRect() ):size() )
+   qPrinter:setPaperSize( ::qScene:pageSize() )
    // qPrinter:setFullPage( .t. )
 
    qDlg := QPrintPreviewDialog( qPrinter, ::qView )
@@ -1557,15 +1548,15 @@ METHOD HbqReportsManager:printReport( qPrinter )
    qPainter := QPainter()
    qPainter:begin( qPrinter )
 
-   qPainter:setWindow( QRectF():from( ::qScene:paperRect() ) )
+   qPainter:setWindow( ::qScene:paperRect() )
    qPainter:setViewPort( 0, 0, qPrinter:width(), qPrinter:height() )
    FOR EACH a_ IN ::aObjects
       IF hb_hHasKey( ::hItems, a_[ 3 ] )
          oHqrObject := ::hItems[ a_[ 3 ] ]
-         qRectF     := QRectF():from( oHqrObject:geometry() )
+         qRectF     := oHqrObject:geometry()
          qRectF     := QRectF( TO_MMS( qRectF:x() ), TO_MMS( qRectF:y() ), TO_MMS( qRectF:width() ), TO_MMS( qRectF:height() ) )
 
-         qT := QTransform():from( oHqrObject:transform() )
+         qT := oHqrObject:transform()
 //HB_TRACE( HB_TR_ALWAYS, qT:m11(), qT:m12(), qT:m13(), qT:m21(), qT:m22(), qT:m23(), qT:m31(), qT:m32(), qT:m33() )
          qT:translate( 0,0 )
          qPainter:resetMatrix()
@@ -1811,8 +1802,9 @@ METHOD HqrGraphicsItem:execEvent( cEvent, p, p1, p2 )
          ::oRM:objectSelected( Self )
 
       CASE p == 21017
-         qPainter := QPainter():from( p1 )
-         qRect    := QRectF():from( p2 )
+         //qPainter := QPainter():from( p1 )
+         qPainter := HB_QPainter():from( p1 )
+         qRect    := HB_QRectF():from( p2 )
          ::draw( qPainter, qRect )
 
       CASE p == QEvent_GraphicsSceneContextMenu
@@ -2084,7 +2076,7 @@ METHOD HqrGraphicsItem:setGeometry( ... )
    LOCAL qRectF, qPos, a_:= hb_aParams()
    SWITCH len( a_ )
    CASE 0
-      qPos := QPointF():from( ::oWidget:pos() )
+      qPos := ::oWidget:pos()
       RETURN QRectF( qPos:x(), qPos:y(), ::width(), ::height() )
    CASE 1
       IF hb_isObject( a_[ 1 ] )
@@ -2110,7 +2102,7 @@ METHOD HqrGraphicsItem:setPos( ... )
    LOCAL a_:= hb_aParams()
    SWITCH len( a_ )
    CASE 0
-      RETURN QPointF():from( ::oWidget:pos() )
+      RETURN ::oWidget:pos()
    CASE 1
       IF hb_isObject( a_[ 1 ] )
          ::oWidget:setPos( a_[ 1 ] )
@@ -2122,7 +2114,7 @@ METHOD HqrGraphicsItem:setPos( ... )
       ::update()
       EXIT
    ENDSWITCH
-   RETURN QPointF():from( ::oWidget:pos() )
+   RETURN ::oWidget:pos()
 
 /*----------------------------------------------------------------------*/
 
@@ -2425,7 +2417,7 @@ METHOD HqrGraphicsItem:drawGradient( qPainter, qRect )
 METHOD HqrGraphicsItem:drawBarcode( qPainter, qRect )
    LOCAL fl, clr, rc, w, x, i, cCode
 
-   rc    := QRectF():from( qRect:adjusted( 5, 5, -10, -10 ) )
+   rc    := qRect:adjusted( 5, 5, -10, -10 )
 
    cCode := fetchBarString( ::text() )
 
@@ -2463,7 +2455,7 @@ METHOD HqrGraphicsItem:drawImage( qPainter, qRect )
    sh    := 0
 
    IF drawTextType == HBQT_GRAPHICSITEM_TEXT_DRAW_ABOVE .OR. ::drawTextType == HBQT_GRAPHICSITEM_TEXT_DRAW_BELOW
-      textH = QFontMetricsF():from( qPainter:font() ):height()
+      textH = qPainter:font():pixelSize()
    ENDIF
 
    qPix  := QPixmap( ::pixmap() )
@@ -2473,7 +2465,7 @@ METHOD HqrGraphicsItem:drawImage( qPainter, qRect )
       qPainter:drawRect( qRect )
    ELSE
       img   := QImage( 0, 0 )
-      point := QPointF():from( qRect:topLeft() )
+      point := qRect:topLeft()
       cx    := 0; cy := 0; cw := qPix:width(); ch := qPix:height()
 
       SWITCH paintType
@@ -2557,7 +2549,7 @@ METHOD HqrGraphicsItem:drawChart( qPainter, qRect )
    LOCAL m_barsIdentation  := 1.0 / UNIT
    LOCAL nColorFactor      := 1.7
 
-   qFMetrix := QFontMetrics():from( qPainter:fontMetrics() )
+   qFMetrix := qPainter:fontMetrics()
    nFHeight := qFMetrix:height()
 
    IF empty( ::xData )
@@ -2568,8 +2560,8 @@ METHOD HqrGraphicsItem:drawChart( qPainter, qRect )
       aadd( ::xData, { "Mangoes", 095.0, rmgr_generateNextColor() } )
    ENDIF
 
-   maxpv := 0
-   minnv := 0
+   maxpv     := 0
+   minnv     := 0
    aeval( ::xData, {|e_| iif( e_[ 2 ] < 0, minnv := min( minnv, e_[ 2 ] ), NIL ), iif( e_[ 2 ] > 0, maxpv := max( maxpv, e_[ 2 ] ), NIL ) } )
 
    absMaxVal := maxpv - minnv
@@ -2591,7 +2583,7 @@ METHOD HqrGraphicsItem:drawChart( qPainter, qRect )
    ENDIF
 
    pw := iif( abs( ::pen():widthF() ) > 0, abs( ::pen():widthF() ), 1 )
-   rc := QRectF():from( qRect:adjusted( pw / 2, pw / 2, -pw, -pw ) )
+   rc := qRect:adjusted( pw / 2, pw / 2, -pw, -pw )
 
    f  := 2
    chartStep := ( 10.0 ^ ( len( substr( cMaxVal, 1, nDec - 1 ) ) - 1 ) ) / f
@@ -2630,7 +2622,7 @@ METHOD HqrGraphicsItem:drawChart( qPainter, qRect )
       NEXT
 
       qPainter:drawLine( rc:x() + maxLabelWidth + 1 / UNIT / 4, rc:y(), rc:x() + maxLabelWidth + 1 / UNIT / 4, rc:y() + qRect:height() )
-      rc := QRectF():from( rc:adjusted( maxLabelWidth + 1 / UNIT / 4, 0, 0, 0 ) )
+      rc := rc:adjusted( maxLabelWidth + 1 / UNIT / 4, 0, 0, 0 )
    ENDIF
 
    IF m_showGrid
@@ -2641,7 +2633,7 @@ METHOD HqrGraphicsItem:drawChart( qPainter, qRect )
       NEXT
    ENDIF
 
-   rc := QRectF():from( rc:adjusted( 0,  nFHeight / 2, 0, 0 ) )
+   rc := rc:adjusted( 0,  nFHeight / 2, 0, 0 )
    x := m_barsIdentation
    barWidth := ( rc:width() - m_barsIdentation * ( len( ::xData ) + 1 ) ) / len( ::xData )
    py := maxHeight / maxVal

@@ -157,7 +157,7 @@ METHOD XbpBitmap:loadFile( cImageFileName )
 
    ::cImageFileName := cImageFileName
 
-   lSuccess := ::oWidget:load( cImageFileName, 0, Qt_AutoColor )
+   lSuccess := ::oWidget:load( cImageFileName )
 
    RETURN lSuccess
 

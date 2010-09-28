@@ -115,7 +115,7 @@ METHOD IdeActions:destroy()
    LOCAL qAction
 
    FOR EACH qAction IN ::hActions
-      qAction:pPtr := NIL
+      qAction := NIL
    NEXT
    RETURN Self
 

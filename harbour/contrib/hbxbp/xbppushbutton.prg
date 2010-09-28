@@ -146,8 +146,7 @@ METHOD XbpPushButton:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParam
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF hb_isPointer( pQtObject )
-      ::oWidget := QPushButton()
-      ::oWidget:pPtr := pQtObject
+      ::oWidget := QPushButton():from( pQtObject )
 
    ELSE
       ::oWidget := QPushButton( ::oParent:oWidget )

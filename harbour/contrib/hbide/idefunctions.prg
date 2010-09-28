@@ -201,9 +201,9 @@ METHOD IdeFunctions:buildHeader()
    qFnt := QFont( "Courier New" )
    oTbl:setFont( qFnt )
 
-   QHeaderView():from( oTbl:verticalHeader() ):hide()
+   oTbl:verticalHeader():hide()
 
-   qHdr := QHeaderView():from( oTbl:horizontalHeader() )
+   qHdr := oTbl:horizontalHeader()
    qHdr:stretchLastSection( .t. )
 
    oTbl:setColumnCount( 1 )

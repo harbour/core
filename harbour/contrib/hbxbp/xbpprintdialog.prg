@@ -125,7 +125,6 @@ METHOD XbpPrintDialog:destroy()
       ::aConnections := {}
    ENDIF
 
-   ::oWidget:pPtr := NIL
    ::oWidget := NIL
 
    RETURN nil
@@ -167,9 +166,10 @@ METHOD XbpPrintDialog:display( oXbpPrinter )
          oXbpPrinter := XbpPrinter():new()
          oXbpPrinter:oWidget := QPrinter()
       ENDIF
-      oXbpPrinter:oWidget:pPtr      := ::pPrinter
+//      oXbpPrinter:oWidget:pPtr      := ::pPrinter
+      oXbpPrinter:oWidget           := QPrinter( ::pPrinter )
       oXbpPrinter:oPrintEngine      := QPrintEngine()
-      oXbpPrinter:oPrintEngine:pPtr := oXbpPrinter:oWidget:printEngine()
+      oXbpPrinter:oPrintEngine      := oXbpPrinter:oWidget:printEngine()
 
       oXbpPrinter:setDevName( oXbpPrinter:oWidget:printerName() )
 

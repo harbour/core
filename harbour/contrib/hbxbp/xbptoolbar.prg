@@ -199,7 +199,7 @@ METHOD XbpToolbar:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, 
 
    IF hb_isPointer( pQtObject )
       ::oWidget := QToolBar()
-      ::oWidget:pPtr := pQtObject
+      ::oWidget:pPtr := hbqt_ptr( pQtObject )
 
    ENDIF
 
@@ -217,7 +217,6 @@ METHOD XbpToolbar:destroy()
 
          ::disConnect( oBtn:oAction, "triggered(bool)" )
 
-         oBtn:oAction:pPtr := NIL
          oBtn:oAction := NIL
       ELSE
          aItem := NIL

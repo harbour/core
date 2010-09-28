@@ -652,7 +652,7 @@ METHOD IdeDocWriter:saveInFunction()
             MsgBox( "Source is modified, anyway proceeding.", "Documentation Save Alert" )
          ENDIF
 
-         qCursor := QTextCursor():from( oEdit:qEdit:textCursor() )
+         qCursor := oEdit:qEdit:textCursor()
          qCursor:beginEditBlock()
 
          ::removeDocHelp( nCurLine, oEdit )

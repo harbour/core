@@ -12,9 +12,7 @@
  * Harbour Project source code:
  * QT wrapper main header
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
- *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -57,6 +55,40 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+/*----------------------------------------------------------------------*/
+/*                            C R E D I T S                             */
+/*----------------------------------------------------------------------*/
+/*
+ * Marcos Antonio Gambeta
+ *    for providing first ever prototype parsing methods. Though the current
+ *    implementation is diametrically different then what he proposed, still
+ *    current code shaped on those footsteps.
+ *
+ * Viktor Szakats
+ *    for directing the project with futuristic vision;
+ *    for designing and maintaining a complex build system for hbQT, hbIDE;
+ *    for introducing many constructs on PRG and C++ levels;
+ *    for streamlining signal/slots and events management classes;
+ *
+ * Istvan Bisz
+ *    for introducing QPointer<> concept in the generator;
+ *    for testing the library on numerous accounts;
+ *    for showing a way how a GC pointer can be detached;
+ *
+ * Francesco Perillo
+ *    for taking keen interest in hbQT development and peeking the code;
+ *    for providing tips here and there to improve the code quality;
+ *    for hitting bulls eye to describe why few objects need GC detachment;
+ *
+ * Carlos Bacco
+ *    for implementing HBQT_TYPE_Q*Class enums;
+ *    for peeking into the code and suggesting optimization points;
+ *
+ * Przemyslaw Czerpak
+ *    for providing tips and trick to manipulate HVM internals to the best
+ *    of its use and always showing a path when we get stuck;
+ *    A true tradition of a MASTER...
+*/
 /*----------------------------------------------------------------------*/
 
 
@@ -150,7 +182,7 @@ METHOD QWebSettings:testAttribute( nAttribute )
 
 
 METHOD QWebSettings:userStyleSheetUrl()
-   RETURN Qt_QWebSettings_userStyleSheetUrl( ::pPtr )
+   RETURN HB_QUrl():from( Qt_QWebSettings_userStyleSheetUrl( ::pPtr ) )
 
 
 METHOD QWebSettings:clearIconDatabase()
@@ -158,7 +190,7 @@ METHOD QWebSettings:clearIconDatabase()
 
 
 METHOD QWebSettings:globalSettings()
-   RETURN Qt_QWebSettings_globalSettings( ::pPtr )
+   RETURN HB_QWebSettings():from( Qt_QWebSettings_globalSettings( ::pPtr ) )
 
 
 METHOD QWebSettings:iconDatabasePath()
@@ -166,7 +198,7 @@ METHOD QWebSettings:iconDatabasePath()
 
 
 METHOD QWebSettings:iconForUrl( pUrl )
-   RETURN Qt_QWebSettings_iconForUrl( ::pPtr, hbqt_ptr( pUrl ) )
+   RETURN HB_QIcon():from( Qt_QWebSettings_iconForUrl( ::pPtr, hbqt_ptr( pUrl ) ) )
 
 
 METHOD QWebSettings:maximumPagesInCache()
@@ -206,5 +238,5 @@ METHOD QWebSettings:setWebGraphic( nType, pGraphic )
 
 
 METHOD QWebSettings:webGraphic( nType )
-   RETURN Qt_QWebSettings_webGraphic( ::pPtr, nType )
+   RETURN HB_QPixmap():from( Qt_QWebSettings_webGraphic( ::pPtr, nType ) )
 

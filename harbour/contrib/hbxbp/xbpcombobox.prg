@@ -140,10 +140,9 @@ METHOD XbpComboBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget := QComboBox( ::pParent )
 
-   ::oWidget:setModel( QAbstractItemModel():from( ::xbpListBox:model() ) )
+   ::oWidget:setModel( ::xbpListBox:model() )
    ::oWidget:setView( ::xbpListBox:oWidget )
    ::oWidget:setLineEdit( ::xbpSLE:oWidget )
-   //::oWidget:setLineEdit( ::XbpSLE:oWidget:pPtr )
    ::oWidget:setEditable( ::xbpSLE:editable )
    ::oWidget:setFrame( ::xbpSLE:border )
 
@@ -166,15 +165,13 @@ METHOD XbpComboBox:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams,
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF hb_isPointer( pQtObject )
-      ::oWidget := QComboBox()
-      ::oWidget:pPtr := pQtObject
-
+      ::oWidget := QComboBox():from( pQtObject )
    ELSE
       ::oSLE := XbpSLE():new():create( ::oParent, ::oOwner, ::aPos, ::aSize, ::aPresParams, ::lVisible )
       ::oLB  := XbpListBox():new():create( ::oParent, ::oOwner, ::aPos, ::aSize, ::aPresParams, ::lVisible )
 
       ::oWidget := QComboBox( ::pParent )
-      ::oWidget:setModel( QAbstractItemModel():from( ::xbpListBox:model() ) )
+      ::oWidget:setModel(::xbpListBox:model() )
       ::oWidget:setView( ::xbpListBox:oWidget )
       ::oWidget:setLineEdit( ::xbpSLE:oWidget )
       ::oWidget:setEditable( ::xbpSLE:editable )

@@ -184,12 +184,12 @@ METHOD IdeSkeletons:execEvent( cEvent, p )
       EXIT
 
    CASE "buttonRename_clicked"
-      qItem := QListWidgetItem():configure( ::oUI:q_listNames:currentItem() )
+      qItem := ::oUI:q_listNames:currentItem()
       qItem:setText( ::rename( qItem:text() ) )
       EXIT
 
    CASE "buttonDelete_clicked"
-      qItem := QListWidgetItem():from( ::oUI:q_listNames:currentItem() )
+      qItem := ::oUI:q_listNames:currentItem()
       ::delete( qItem:text() )
       EXIT
 
@@ -205,12 +205,12 @@ METHOD IdeSkeletons:execEvent( cEvent, p )
       EXIT
 
    CASE "buttonUpdate_clicked"
-      qItem := QListWidgetItem():configure( ::oUI:q_listNames:currentItem() )
+      qItem := ::oUI:q_listNames:currentItem()
       ::save( qItem:text(), ::oUI:q_editCode:toPlainText() )
       EXIT
 
    CASE "listNames_itemSelectionChanged"
-      qItem := QListWidgetItem():configure( ::oUI:q_listNames:currentItem() )
+      qItem := ::oUI:q_listNames:currentItem()
       cName := qItem:text()
       IF ( n := ascan( ::aSkltns, {|e_| e_[ 1 ] == cName } ) ) > 0
          ::oUI:q_editCode:setPlainText( ::aSkltns[ n, 2 ] )
@@ -328,10 +328,10 @@ METHOD IdeSkeletons:postSkeleton( cSkeleton )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeSkeletons:selectByMenuAndPostText( qEdit )
-   LOCAL cText, qCursor, qRect, qMenu, qAct, pAct, a_
+   LOCAL cText, qCursor, qRect, qMenu, qAct, a_
 
    IF !empty( ::aSkltns )
-      qCursor := QTextCursor():from( qEdit:textCursor() )
+      qCursor := qEdit:textCursor()
 
       /* Look for if a macro is executed */
       qCursor:select( QTextCursor_WordUnderCursor )
@@ -342,17 +342,14 @@ METHOD IdeSkeletons:selectByMenuAndPostText( qEdit )
          ::postText( qEdit, ::getText( cText  ) )
 
       ELSE
-         qRect := QRect():from( qEdit:cursorRect( qCursor ) )
+         qRect := qEdit:cursorRect( qCursor )
 
          qMenu := QMenu( qEdit )
          FOR EACH a_ IN ::aSkltns
             qMenu:addAction( a_[ 1 ] )
          NEXT
 
-         pAct := qMenu:exec( qEdit:mapToGlobal( QPoint( qRect:x(), qRect:y() ) ) )
-         IF !hbqt_isEmptyQtPointer( pAct )
-            qAct  := QAction():from( pAct )
-
+         IF ( qAct := qMenu:exec( qEdit:mapToGlobal( QPoint( qRect:x(), qRect:y() ) ) ) ):isValidObject()
             IF !empty( cText := ::getText( qAct:text() ) )
                ::postText( qEdit, cText )
             ENDIF
@@ -452,7 +449,7 @@ METHOD IdeSkeletons:getText( cSkeleton )
 
 METHOD IdeSkeletons:postText( qEdit, cText )
    LOCAL s, a_, nCol, nPos, nRowCur, nColCur, n
-   LOCAL qCursor := QTextCursor():from( qEdit:textCursor() )
+   LOCAL qCursor := qEdit:textCursor()
 
    ::nPosCursor := NIL
    ::aMetas     := { { "", "" } }

@@ -132,8 +132,7 @@ METHOD XbpSLE:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVis
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF hb_isPointer( pQtObject )
-      ::oWidget := QLineEdit()
-      ::oWidget:pPtr := pQtObject
+      ::oWidget := QLineEdit():from( pQtObject )
    ENDIF
 
    RETURN Self

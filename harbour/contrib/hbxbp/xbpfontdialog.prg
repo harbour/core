@@ -319,7 +319,7 @@ METHOD XbpFontDialog:XbpFontObject()
    LOCAL oXbp
 
    ::oFont := QFont()
-   ::oFont:pPtr := ::oWidget:currentFont()
+   ::oFont := ::oWidget:currentFont()
 
    oXbp := XbpFont():new()
 
@@ -496,8 +496,8 @@ METHOD XbpFont:configure( cFontName )
 
 METHOD XbpFont:destroy()
 
-   ::oFontInfo:pPtr := NIL
-   ::oWidget:pPtr   := 0
+   ::oFontInfo := NIL
+   ::oWidget   := NIL
 
    RETURN NIL
 
@@ -505,8 +505,8 @@ METHOD XbpFont:destroy()
 
 METHOD XbpFont:_destroy()
 
-   ::oFontInfo:pPtr := NIL
-   ::oWidget:pPtr   := 0
+   ::oFontInfo := NIL
+   ::oWidget   := NIL
 
    RETURN NIL
 

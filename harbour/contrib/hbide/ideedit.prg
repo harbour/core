@@ -205,7 +205,7 @@ CLASS IdeEdit INHERIT IdeObject
 
    METHOD setLineNumbersBkColor( nR, nG, nB )
    METHOD setCurrentLineColor( nR, nG, nB )
-   METHOD getCursor()                             INLINE QTextCursor():from( ::qEdit:textCursor() )
+   METHOD getCursor()                             INLINE ::qEdit:textCursor()
    METHOD find( cText, nPosFrom )
    METHOD refresh()
    METHOD isModified()                            INLINE ::oEditor:qDocument:isModified()
@@ -280,7 +280,6 @@ METHOD IdeEdit:create( oIde, oEditor, nMode )
    ::qEdit:setLineWrapMode( QTextEdit_NoWrap )
    ::qEdit:ensureCursorVisible()
    ::qEdit:setContextMenuPolicy( Qt_CustomContextMenu )
-//   ::qEdit:installEventFilter( ::pEvents )
    ::qEdit:setTabChangesFocus( .f. )
 
    ::setFont()
@@ -429,83 +428,84 @@ METHOD IdeEdit:connectEditSignals( oEdit )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
-   LOCAL pAct, qAct, n, qEdit, oo, qCursor, cProto, nRows, nCols, cAct
+   LOCAL qAct, n, qEdit, oo, qCursor, cProto, nRows, nCols, cAct
 
    HB_SYMBOL_UNUSED( p1 )
 
    qEdit   := oEdit:qEdit
-   qCursor := QTextCursor():configure( qEdit:textCursor() )
+   qCursor := qEdit:textCursor()
    oEdit:nCurLineNo := qCursor:blockNumber()
 
    SWITCH nMode
 
    CASE customContextMenuRequested
-      QAction():from( ::oEM:aActions[ 17, 2 ] ):setEnabled( !empty( qCursor:selectedText() ) )
+      //::oEM:aActions[ 17, 2 ]:setEnabled( !empty( qCursor:selectedText() ) )
+      ::oEM:aActions[ 17, 2 ]:setEnabled( !empty( qCursor:selectedText() ) )
 
       n := ascan( ::oEditor:aEdits, {|o| o == oEdit } )
 
-      QAction():from( ::oEM:aActions[ 18, 2 ] ):setEnabled( len( ::oEditor:aEdits ) == 0 .OR. ::oEditor:nSplOrient == -1 .OR. ::oEditor:nSplOrient == 1 )
-      QAction():from( ::oEM:aActions[ 19, 2 ] ):setEnabled( len( ::oEditor:aEdits ) == 0 .OR. ::oEditor:nSplOrient == -1 .OR. ::oEditor:nSplOrient == 2 )
-      QAction():from( ::oEM:aActions[ 21, 2 ] ):setEnabled( n > 0 )
+      ::oEM:aActions[ 18, 2 ]:setEnabled( len( ::oEditor:aEdits ) == 0 .OR. ::oEditor:nSplOrient == -1 .OR. ::oEditor:nSplOrient == 1 )
+      ::oEM:aActions[ 19, 2 ]:setEnabled( len( ::oEditor:aEdits ) == 0 .OR. ::oEditor:nSplOrient == -1 .OR. ::oEditor:nSplOrient == 2 )
+      ::oEM:aActions[ 21, 2 ]:setEnabled( n > 0 )
 
-      pAct := ::oEM:qContextMenu:exec( qEdit:mapToGlobal( p ) )
-      IF !hbqt_isEmptyQtPointer( pAct )
-         qAct := QAction():configure( pAct )
-         cAct := strtran( qAct:text(), "&", "" )
-         SWITCH cAct
-         CASE "Split Horizontally"
-            ::oEditor:split( 1, oEdit )
-            EXIT
-         CASE "Split Vertically"
-            ::oEditor:split( 2, oEdit )
-            EXIT
-         CASE "Close Split Window"
-            IF n > 0  /* 1 == Main Edit */
-               ::oUpDn:oUI:setParent( ::oEditor:oEdit:qEdit )
-               oo := ::oEditor:aEdits[ n ]
-               hb_adel( ::oEditor:aEdits, n, .t. )
-               oo:destroy( .f. )
-               ::oEditor:qCqEdit := ::oEditor:qEdit
-               ::oEditor:qCoEdit := ::oEditor:oEdit
-               ::oIde:manageFocusInEditor()
-            ENDIF
-            EXIT
-         CASE "Save as Skeleton..."
-            ::oSK:saveAs( ::getSelectedText() )
-            EXIT
-         CASE "Apply Theme"
-            ::oEditor:applyTheme()
-            EXIT
-         CASE "Goto Function"
-            ::gotoFunction()
-            EXIT
-         CASE "Cut"
-            IF ::oIde:lCurEditsMdi
-               ::cut()
-            ENDIF
-            EXIT
-         CASE "Copy"
-            IF ::oIde:lCurEditsMdi
-               ::copy()
-            ENDIF
-            EXIT
-         CASE "Paste"
-            IF ::oIde:lCurEditsMdi
-               ::paste()
-            ENDIF
-            EXIT
-         CASE "Undo"
-            IF ::oIde:lCurEditsMdi
-               ::undo()
-            ENDIF
-            EXIT
-         CASE "Redo"
-            IF ::oIde:lCurEditsMdi
-               ::redo()
-            ENDIF
-            EXIT
-         ENDSWITCH
+      IF ! ( qAct := ::oEM:qContextMenu:exec( qEdit:mapToGlobal( p ) ) ):isValidObject()
+         RETURN Self
       ENDIF
+
+      cAct := strtran( qAct:text(), "&", "" )
+      SWITCH cAct
+      CASE "Split Horizontally"
+         ::oEditor:split( 1, oEdit )
+         EXIT
+      CASE "Split Vertically"
+         ::oEditor:split( 2, oEdit )
+         EXIT
+      CASE "Close Split Window"
+         IF n > 0  /* 1 == Main Edit */
+            ::oUpDn:oUI:setParent( ::oEditor:oEdit:qEdit )
+            oo := ::oEditor:aEdits[ n ]
+            hb_adel( ::oEditor:aEdits, n, .t. )
+            oo:destroy( .f. )
+            ::oEditor:qCqEdit := ::oEditor:qEdit
+            ::oEditor:qCoEdit := ::oEditor:oEdit
+            ::oIde:manageFocusInEditor()
+         ENDIF
+         EXIT
+      CASE "Save as Skeleton..."
+         ::oSK:saveAs( ::getSelectedText() )
+         EXIT
+      CASE "Apply Theme"
+         ::oEditor:applyTheme()
+         EXIT
+      CASE "Goto Function"
+         ::gotoFunction()
+         EXIT
+      CASE "Cut"
+         IF ::oIde:lCurEditsMdi
+            ::cut()
+         ENDIF
+         EXIT
+      CASE "Copy"
+         IF ::oIde:lCurEditsMdi
+            ::copy()
+         ENDIF
+         EXIT
+      CASE "Paste"
+         IF ::oIde:lCurEditsMdi
+            ::paste()
+         ENDIF
+         EXIT
+      CASE "Undo"
+         IF ::oIde:lCurEditsMdi
+            ::undo()
+         ENDIF
+         EXIT
+      CASE "Redo"
+         IF ::oIde:lCurEditsMdi
+            ::redo()
+         ENDIF
+         EXIT
+      ENDSWITCH
       EXIT
 
 
@@ -602,7 +602,7 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
    SWITCH nEvent
    CASE QEvent_KeyPress
 
-      qEvent := QKeyEvent():configure( p )
+      qEvent := QKeyEvent():from( p )
 
       key    := qEvent:key()
       kbm    := qEvent:modifiers()
@@ -768,7 +768,7 @@ STATIC FUNCTION hbide_setQCursor( qEdit, q_ )
       qEdit:setTextCursor( qCursor )
       qCursor:endEditBlock()
    ELSE
-      qCursor := QTextCursor():from( qEdit:textCursor() )
+      qCursor := qEdit:textCursor()
       qCursor:beginEditBlock()
       RETURN { qCursor, qCursor:blockNumber(), qCursor:columnNumber() }
    ENDIF
@@ -941,7 +941,7 @@ METHOD IdeEdit:pasteBlockContents( nMode )
    ENDIF
 
    nPasteMode := iif( empty( nPasteMode ), selectionMode_stream, nPasteMode )
-   qCursor    := QTextCursor():from( ::qEdit:textCursor() )
+   qCursor    := ::qEdit:textCursor()
    nCol       := qCursor:columnNumber()
 
    qCursor:beginEditBlock()
@@ -1000,7 +1000,7 @@ METHOD IdeEdit:insertBlockContents( aCord )
 
    cKey := chr( XbpQKeyEventToAppEvent( aCord[ 7 ] ) )
 
-   qCursor := QTextCursor():from( ::qEdit:textCursor() )
+   qCursor := ::qEdit:textCursor()
    qCursor:beginEditBlock()
 
    IF nW == 0
@@ -1046,7 +1046,7 @@ METHOD IdeEdit:deleteBlockContents( aCord )
 
    nSelMode := aCord[ 5 ]
 
-   qCursor := QTextCursor():from( ::qEdit:textCursor() )
+   qCursor := ::qEdit:textCursor()
    qCursor:beginEditBlock()
 
    nW := nR - nL
@@ -1586,7 +1586,7 @@ METHOD IdeEdit:relayMarkButtons()
 METHOD IdeEdit:setNewMark()
    LOCAL qCursor, nBlock, n
 
-   IF !( qCursor := QTextCursor():configure( ::qEdit:textCursor() ) ):isNull()
+   IF !( qCursor := ::qEdit:textCursor() ):isNull()
       nBlock := qCursor:blockNumber() + 1
 
       IF ( n := ascan( ::aBookMarks, nBlock ) ) > 0
@@ -1664,7 +1664,7 @@ METHOD IdeEdit:findEx( cText, nFlags, nStart )
 
    IF ( lFound := ::qEdit:find( cText, nFlags ) )
       ::qEdit:centerCursor()
-      qCursor := QTextCursor():from( ::qEdit:textCursor() ) //::getCursor()
+      qCursor := ::qEdit:textCursor()
 
       ::qEdit:hbSetSelectionInfo( { qCursor:blockNumber(), qCursor:columnNumber() - len( cText ), ;
                                     qCursor:blockNumber(), qCursor:columnNumber(), 1, .t., .f. } )
@@ -1685,10 +1685,10 @@ METHOD IdeEdit:unHighlight()
       ::isHighLighted := .f.
       qCursor := ::getCursor()
       nPos := qCursor:position()
-      lModified := QTextDocument():configure( ::qEdit:document() ):isModified()
+      lModified := ::qEdit:document():isModified()
       ::qEdit:undo()
       IF ! lModified
-         QTextDocument():configure( ::qEdit:document() ):setModified( .f. )
+         ::qEdit:document():setModified( .f. )
          ::oEditor:setTabImage( ::qEdit )
       ENDIF
       qCursor:setPosition( nPos )
@@ -1710,18 +1710,18 @@ METHOD IdeEdit:highlightAll( cText )
    ::isHighLighted := .t.
 
    qDoc := ::oEditor:qDocument
-   lModified := QTextDocument():configure( ::qEdit:document() ):isModified()
+   lModified := ::qEdit:document():isModified()
 
    qCur := ::getCursor()
    qCur:beginEditBlock()
 
    qCursor   := QTextCursor( "QTextDocument", qDoc )
-   qFormat   := QTextCharFormat():from( qCursor:charFormat() )
+   qFormat   := qCursor:charFormat()
    qFormatHL := qFormat
    qFormatHL:setBackground( QBrush( "QColor", QColor( Qt_yellow ) ) )
 
    DO WHILE .t.
-      qCursor := QTextCursor():from( qDoc:find( cText, qCursor, 0 ) )
+      qCursor := qDoc:find( cText, qCursor, 0 )
       IF qCursor:isNull()
          EXIT
       ENDIF
@@ -1730,7 +1730,7 @@ METHOD IdeEdit:highlightAll( cText )
    qCur:endEditBlock()
 
    IF ! lModified
-      QTextDocument():configure( ::qEdit:document() ):setModified( .f. )
+      ::qEdit:document():setModified( .f. )
       ::oEditor:setTabImage( ::qEdit )
    ENDIF
 
@@ -1849,7 +1849,7 @@ METHOD IdeEdit:printPreview()
 
 METHOD IdeEdit:paintRequested( pPrinter )
    LOCAL qPrinter
-   qPrinter := QPrinter():configure( pPrinter )
+   qPrinter := QPrinter():from( pPrinter )
    ::qEdit:print( qPrinter )
    RETURN Self
 
@@ -1858,7 +1858,7 @@ METHOD IdeEdit:paintRequested( pPrinter )
 METHOD IdeEdit:formatBraces()
    LOCAL qDoc, cText
 
-   qDoc := QTextDocument():configure( ::qEdit:document() )
+   qDoc := ::qEdit:document()
 
    IF !( qDoc:isEmpty() )
       qDoc:setUndoRedoEnabled( .f. )
@@ -1905,7 +1905,7 @@ METHOD IdeEdit:formatBraces()
 METHOD IdeEdit:removeTrailingSpaces()
    LOCAL qDoc, cText, a_, s
 
-   qDoc := QTextDocument():from( ::qEdit:document() )
+   qDoc := ::qEdit:document()
    IF !( qDoc:isEmpty() )
       qDoc:setUndoRedoEnabled( .f. )
       cText := qDoc:toPlainText()
@@ -1925,7 +1925,7 @@ METHOD IdeEdit:removeTrailingSpaces()
 METHOD IdeEdit:tabs2spaces()
    LOCAL qDoc, cText, cSpaces
 
-   qDoc := QTextDocument():configure( ::qEdit:document() )
+   qDoc := ::qEdit:document()
    IF !( qDoc:isEmpty() )
       cSpaces := space( ::nTabSpaces )
 
@@ -1944,7 +1944,7 @@ METHOD IdeEdit:tabs2spaces()
 METHOD IdeEdit:spaces2tabs()
    LOCAL qDoc, cText, cSpaces
 
-   qDoc := QTextDocument():configure( ::qEdit:document() )
+   qDoc := ::qEdit:document()
    IF !( qDoc:isEmpty() )
       cSpaces := space( ::nTabSpaces )
 
@@ -1979,12 +1979,12 @@ METHOD IdeEdit:moveLine( nDirection )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:getText()
-   RETURN QTextCursor():from( ::qEdit:textCursor() ):selectedText()
+   RETURN ::qEdit:textCursor():selectedText()
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:getWord( lSelect )
-   LOCAL cText, qCursor := QTextCursor():configure( ::qEdit:textCursor() )
+   LOCAL cText, qCursor := ::qEdit:textCursor()
 
    DEFAULT lSelect TO .F.
 
@@ -2000,7 +2000,7 @@ METHOD IdeEdit:getWord( lSelect )
 
 METHOD IdeEdit:goto( nLine )
    LOCAL nRows, qGo
-   LOCAL qCursor := QTextCursor():configure( ::qEdit:textCursor() )
+   LOCAL qCursor := ::qEdit:textCursor()
 
    IF empty( nLine )
       nRows := ::qEdit:blockCount()
@@ -2030,7 +2030,7 @@ METHOD IdeEdit:goto( nLine )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:getLine( nLine, lSelect )
-   LOCAL cText, qCursor := QTextCursor():configure( ::qEdit:textCursor() )
+   LOCAL cText, qCursor := ::qEdit:textCursor()
 
    DEFAULT nLine   TO qCursor:blockNumber() + 1
    DEFAULT lSelect TO .F.
@@ -2051,17 +2051,17 @@ METHOD IdeEdit:getLine( nLine, lSelect )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:getColumnNo()
-   RETURN QTextCursor():from( ::qEdit:textCursor() ):columnNumber() + 1
+   RETURN ::qEdit:textCursor():columnNumber() + 1
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:getLineNo()
-   RETURN QTextCursor():from( ::qEdit:textCursor() ):blockNumber() + 1
+   RETURN ::qEdit:textCursor():blockNumber() + 1
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:insertSeparator( cSep )
-   LOCAL qCursor := QTextCursor():configure( ::qEdit:textCursor() )
+   LOCAL qCursor := ::qEdit:textCursor()
 
    IF empty( cSep )
       cSep := ::cSeparator
@@ -2083,7 +2083,7 @@ METHOD IdeEdit:insertText( cText )
    LOCAL qCursor, nL, nB
 
    IF hb_isChar( cText ) .AND. !Empty( cText )
-      qCursor := QTextCursor():configure( ::qEdit:textCursor() )
+      qCursor := ::qEdit:textCursor()
 
       nL := len( cText )
       nB := qCursor:position() + nL
@@ -2108,8 +2108,8 @@ METHOD IdeEdit:handlePreviousWord( lUpdatePrevWord )
 
    qEdit := ::qEdit
 
-   qCursor    := QTextCursor():configure( qEdit:textCursor() )
-   qTextBlock := QTextBlock():configure( qCursor:block() )
+   qCursor    := qEdit:textCursor()
+   qTextBlock := qCursor:block()
    cText      := qTextBlock:text()
    nCol       := qCursor:columnNumber()
    IF ( substr( cText, nCol - 1, 1 ) == " " )
@@ -2187,10 +2187,10 @@ METHOD IdeEdit:findLastIndent()
    LOCAL qCursor, qTextBlock, cText, cWord
    LOCAL nSpaces := 0
 
-   qCursor := QTextCursor():configure( ::qEdit:textCursor() )
-   qTextBlock := QTextBlock():configure( qCursor:block() )
+   qCursor := ::qEdit:textCursor()
+   qTextBlock := qCursor:block()
 
-   qTextBlock := QTextBlock():configure( qTextBlock:previous() )
+   qTextBlock := qTextBlock:previous()
    DO WHILE .t.
       IF !( qTextBlock:isValid() )
          EXIT
@@ -2204,7 +2204,7 @@ METHOD IdeEdit:findLastIndent()
             EXIT
          ENDIF
       ENDIF
-      qTextBlock := QTextBlock():configure( qTextBlock:previous() )
+      qTextBlock := qTextBlock:previous()
    ENDDO
 
    RETURN nSpaces
@@ -2217,7 +2217,7 @@ METHOD IdeEdit:handleCurrentIndent()
    IF ::lIndentIt
       ::lIndentIt := .f.
       IF ( nSpaces := ::findLastIndent() ) > 0
-         qCursor := QTextCursor():configure( ::qEdit:textCursor() )
+         qCursor := ::qEdit:textCursor()
          qCursor:insertText( space( nSpaces ) )
       ENDIF
    ENDIF
@@ -2258,8 +2258,8 @@ METHOD IdeEdit:loadFuncHelp()
    LOCAL qEdit, qCursor, qTextBlock, cText, cWord, nCol, cPro
 
    qEdit := ::qEdit
-   qCursor    := QTextCursor():configure( qEdit:textCursor() )
-   qTextBlock := QTextBlock():configure( qCursor:block() )
+   qCursor    := qEdit:textCursor()
+   qTextBlock := qCursor:block()
    cText      := qTextBlock:text()
    nCol       := qCursor:columnNumber()
    cWord      := hbide_getPreviousWord( cText, nCol )
@@ -2369,7 +2369,7 @@ METHOD IdeEdit:parseCodeCompletion( cSyntax )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:completeCode( p )
-   LOCAL qCursor := QTextCursor():from( ::qEdit:textCursor() )
+   LOCAL qCursor := ::qEdit:textCursor()
    LOCAL cWord
 
    qCursor:movePosition( QTextCursor_Left )

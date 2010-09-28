@@ -162,7 +162,7 @@ FUNCTION xReleaseMemory( aObj )
    LOCAL i
    FOR i := 1 TO len( aObj )
       IF hb_isObject( aObj[ i ] )
-         aObj[ i ]:pPtr := 1
+         aObj[ i ] := NIL
       ELSEIF hb_isArray( aObj[ i ] )
          xReleaseMemory( aObj[ i ] )
       ENDIF
@@ -240,17 +240,17 @@ STATIC FUNCTION Build_MenuBar( oWnd )
    oActNew:connect( "triggered(bool)", {|w,l| FileDialog( "New" , w, l ) } )
    oMenu1:addAction( oActNew )
 
-   oActOpen := QAction():from( oMenu1:addAction( "open.png", "&Open" ) )
+   oActOpen := oMenu1:addAction( "open.png", "&Open" )
    oActOpen:connect( QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Open" , w, l ) } )
 
    oMenu1:addSeparator()
 
-   oActSave := QAction():from( oMenu1:addAction(  "save.png", "&Save" ) )
+   oActSave := oMenu1:addAction(  "save.png", "&Save" )
    oActSave:connect( QT_EVE_TRIGGERED_B, {|w,l| FileDialog( "Save" , w, l ) } )
 
    oMenu1:addSeparator()
 
-   oActExit := QAction():from( oMenu1:addAction( "E&xit" ) )
+   oActExit := oMenu1:addAction( "E&xit" )
    oActExit:connect( QT_EVE_TRIGGERED_B, {|| s_qApp:quit() } )
 
    oMenuBar:addMenu( oMenu1 )
@@ -258,31 +258,31 @@ STATIC FUNCTION Build_MenuBar( oWnd )
    oMenu2 := QMenu()
    oMenu2:setTitle( "&Dialogs" )
 
-   oActColors := QAction():from( oMenu2:addAction( "&Colors" ) )
+   oActColors := oMenu2:addAction( "&Colors" )
    oActColors:connect( QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Colors", w, l ) } )
 
-   oActFonts := QAction():from( oMenu2:addAction( "&Fonts" ) )
+   oActFonts := oMenu2:addAction( "&Fonts" )
    oActFonts:connect( QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Fonts", w, l ) } )
 
    oMenu2:addSeparator()
 
-   oActPgSetup := QAction():from( oMenu2:addAction( "&PageSetup" ) )
+   oActPgSetup := oMenu2:addAction( "&PageSetup" )
    oActPgSetup:connect( QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "PageSetup", w, l ) } )
 
-   oActPreview := QAction():from( oMenu2:addAction( "P&review" ) )
+   oActPreview := oMenu2:addAction( "P&review" )
    oActPreview:connect( QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Preview", w, l ) } )
 
    oMenu2:addSeparator()
 
-   oActWiz := QAction():from( oMenu2:addAction( "&Wizard" ) )
+   oActWiz := oMenu2:addAction( "&Wizard" )
    oActWiz:connect( QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "Wizard", w, l ) } )
 
-   oActWeb := QAction():from( oMenu2:addAction( "W&ebPage" ) )
+   oActWeb := oMenu2:addAction( "W&ebPage" )
    oActWeb:connect( QT_EVE_TRIGGERED_B, {|w,l| Dialogs( "WebPage", w, l ) } )
 
    oMenu2:addSeparator()
 
-   oActOther := QAction():from( oMenu2:addAction( "&Another Dialog" ) )
+   oActOther := oMenu2:addAction( "&Another Dialog" )
    oActOther:connect( QT_EVE_TRIGGERED_B, {|| ExecOneMore() } )
 
    oMenuBar:addMenu( oMenu2 )
@@ -601,7 +601,6 @@ STATIC FUNCTION Dialogs( cType )
       oDlg := QWebView()
       oUrl := QUrl()
       oUrl:setUrl( "http://www.harbour.vouch.info" )
-      QT_QWebView_SetUrl( oDlg:pPtr, oUrl:pPtr )
       oDlg:setWindowTitle( "Harbour-QT Web Page Navigator" )
       oDlg:exec()
       #endif
@@ -631,12 +630,12 @@ FUNCTION ShowInSystemTray( oWnd )
    oMenuSys := QMenu( oWnd )
    oMenuSys:setTitle( "&File" )
 
-   oActShow := QAction():from( oMenuSys:addAction( "new.png" , "&Show" ) )
+   oActShow := oMenuSys:addAction( "new.png" , "&Show" )
    oActShow:connect( QT_EVE_TRIGGERED_B, {|| oWnd:show() } )
 
    oMenuSys:addSeparator()
 
-   oActHide := QAction():from( oMenuSys:addAction( "new.png" , "&Show" ) )
+   oActHide := oMenuSys:addAction( "new.png" , "&Show" )
    oActHide:connect( QT_EVE_TRIGGERED_B, {|| oWnd:hide() } )
 
    oSys := QSystemTrayIcon( oWnd )

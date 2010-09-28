@@ -208,7 +208,7 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
 
    /* Install Event Loop per Dialog Basis */
-   ::oEventLoop := QEventLoop( ::pWidget )
+   ::oEventLoop := QEventLoop( ::oWidget )
    hbxbp_SetEventLoop( ::oEventLoop )
 
    /* Instal Event Filter */
@@ -244,7 +244,7 @@ METHOD XbpDialog:destroy()
 
    hbxbp_SetEventLoop( NIL )
    ::oEventLoop:exit( 0 )
-   ::oEventLoop:pPtr := NIL
+   ::oEventLoop := NIL
    ::oMenu := NIL
 
    IF ::isViaQtObject

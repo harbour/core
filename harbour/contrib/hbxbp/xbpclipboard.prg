@@ -167,7 +167,7 @@ METHOD XbpClipBoard:open()
 METHOD XbpClipBoard:queryFormats()
    LOCAL aFormats := {}
    LOCAL cText  := ::oWidget:text()
-   LOCAL qImage := QImage():from( ::oWidget:image() )
+   LOCAL qImage := ::oWidget:image()
 
    IF !empty( cText )
       aadd( aFormats, XBPCLPBRD_TEXT )

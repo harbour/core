@@ -137,9 +137,7 @@ METHOD XbpScrollBar:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF hb_isPointer( pQtObject )
-      ::oWidget := QScrollBar()
-      ::oWidget:pPtr := pQtObject
-
+      ::oWidget := QScrollBar():from( pQtObject )
    ENDIF
 
    RETURN Self

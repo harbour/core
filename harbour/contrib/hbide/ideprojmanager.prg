@@ -1518,10 +1518,10 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
       ::oOutputResult:find( ::cIfError )
       ::oOutputResult:SelBold  := .T.
 
-      qDoc := QTextDocument():from( ::oOutputResult:document() )
+      qDoc := ::oOutputResult:document()
       FOR n := 0 TO qDoc:blockCount() - 1
-         IF ::cIfError == QTextBlock():from( qDoc:findBlockByNumber( n ) ):text()
-            qCursor := QTextCursor():from( qDoc:find_2( ::cIfError ) )
+         IF ::cIfError == qDoc:findBlockByNumber( n ):text()
+            qCursor := qDoc:find( ::cIfError )
             ::oOutputResult:setTextCursor( qCursor )
             EXIT
          ENDIF

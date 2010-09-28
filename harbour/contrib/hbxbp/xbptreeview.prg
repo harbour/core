@@ -131,7 +131,6 @@ METHOD XbpTreeView:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   LOCAL oW
 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -140,7 +139,6 @@ METHOD XbpTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oWidget:setColumnCount( 1 )
    ::oWidget:setHeaderHidden( .t. )
    ::oWidget:setContextMenuPolicy( Qt_CustomContextMenu )
-
 
    #if 0
    IF ::alwaysShowSelection
@@ -158,9 +156,7 @@ METHOD XbpTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oRootItem:hTree    := ::oWidget
    ::oRootItem:oXbpTree := self
 
-   oW                   := QTreeWidgetItem()
-   oW:pPtr              := ::oWidget:invisibleRootItem()
-   ::oRootItem:oWidget  := oW
+   ::oRootItem:oWidget  := ::oWidget:invisibleRootItem()
 
 *  ::oWidget:connect( "currentItemChanged(QTWItem)"       , {|p1| ::execSlot( "currentItemChanged(QTWItem)", p1 ) } )
 *  ::oWidget:connect( "itemActivated(QTWItem)"            , {|p1| ::execSlot( "itemActivated(QTWItem)"     , p1 ) } )
@@ -189,9 +185,7 @@ METHOD XbpTreeView:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams,
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF hb_isPointer( pQtObject )
-      ::oWidget := QTreeWidget()
-      ::oWidget:pPtr := pQtObject
-
+      ::oWidget := pQtObject
    ENDIF
 
    RETURN Self
@@ -199,7 +193,7 @@ METHOD XbpTreeView:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams,
 /*----------------------------------------------------------------------*/
 
 METHOD XbpTreeView:execSlot( cSlot, p )
-   LOCAL oItem, n, qPt, pNode
+   LOCAL n, qPt, qItem, oItem, qPos
 
    IF hb_isPointer( p )
       IF ( n := ascan( ::aItems, {|o| hbqt_IsEqualGcQtPointer( o:oWidget:pPtr, p ) } ) ) > 0
@@ -219,13 +213,12 @@ METHOD XbpTreeView:execSlot( cSlot, p )
    CASE cSlot == "itemEntered(QTWItem)"
       ::oWidget:setToolTip( iif( empty( oItem:tooltipText ), oItem:caption, oItem:tooltipText ) )
    CASE cSlot == "customContextMenuRequested(QPoint)"
-      pNode := ::oWidget:itemAt( p )
-      IF !hbqt_isEmptyQtPointer( pNode )
-         qPt := QPoint():from( ::oWidget:mapToGlobal( p ) )
-         IF ( n := ascan( ::aItems, {|o| hbqt_IsEqualGcQtPointer( o:oWidget:pPtr, pNode ) } ) ) > 0
-            oItem := ::aItems[ n ]
-            IF hb_isBlock( ::hb_contextMenu )
-               eval( ::hb_contextMenu, { qPt:x(), qPt:y() }, NIL, oItem )
+      IF hb_isBlock( ::hb_contextMenu )
+         qPos := QPoint( p )
+         IF ( qItem := ::oWidget:itemAt( qPos ) ):isValidObject()
+            IF ( n := ascan( ::aItems, {|o| hbqt_IsEqualGcQtPointer( o:oWidget:pPtr, qItem:pPtr ) } ) ) > 0
+               qPt := ::oWidget:mapToGlobal( p )
+               eval( ::hb_contextMenu, { qPt:x(), qPt:y() }, NIL, ::aItems[ n ] )
             ENDIF
          ENDIF
       ENDIF
@@ -412,7 +405,8 @@ METHOD XbpTreeViewItem:addItem( xItem, xNormalImage, xMarkedImage, xExpandedImag
       oItem:xValue := xValue
    ENDIF
 
-   ::oWidget:addChild( oItem:oWidget:pPtr )
+//   ::oWidget:addChild( oItem:oWidget:pPtr )
+   ::oWidget:addChild( oItem:oWidget )
 
    aadd( ::aChilds, oItem )
    aadd( oItem:aChilds, oItem )
@@ -447,11 +441,9 @@ METHOD XbpTreeViewItem:destroy()
    LOCAL i
 
    FOR i := 1 TO len( ::aChilds )
-      ::aChilds[ i ]:oWidget:pPtr := NIL
+      ::aChilds[ i ]:oWidget := NIL
    NEXT
-
-   //::oItem:pPtr := NIL
-   ::oWidget:pPtr := NIL
+   ::oWidget := NIL
 
    RETURN NIL
 
@@ -486,7 +478,7 @@ METHOD XbpTreeViewItem:delItem( oItem )
 
    IF ( n := ascan( ::aChilds, {|o| o == oItem } ) ) > 0
       ::oWidget:removeChild( ::aChilds[ n ]:oWidget:pPtr )
-      ::aChilds[ n ]:oWidget:pPtr := NIL
+      ::aChilds[ n ]:oWidget := NIL
       adel( ::aChilds, n )
       asize( ::aChilds, len( ::aChilds )-1 )
    ENDIF

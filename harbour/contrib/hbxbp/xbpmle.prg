@@ -191,9 +191,7 @@ METHOD XbpMLE:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVis
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF hb_isPointer( pQtObject )
-      ::oWidget := QPlainTextEdit()
-      ::oWidget:pPtr := pQtObject
-
+      ::oWidget := QPlainTextEdit():from( pQtObject )
    ENDIF
 
    RETURN Self
@@ -221,7 +219,7 @@ METHOD XbpMLE:clear()
 METHOD XbpMLE:copyMarked()
    LOCAL qCursor, cText
 
-   qCursor := QTextCursor():from( ::oWidget:textCursor() )
+   qCursor := ::oWidget:textCursor()
    cText   := qCursor:selectedText()
 
    ::oWidget:copy()
@@ -233,7 +231,7 @@ METHOD XbpMLE:copyMarked()
 METHOD XbpMLE:cutMarked()
    LOCAL qCursor, cText
 
-   qCursor := QTextCursor():from( ::oWidget:textCursor() )
+   qCursor := ::oWidget:textCursor()
    cText   := qCursor:selectedText()
 
    ::oWidget:cut()
@@ -245,7 +243,7 @@ METHOD XbpMLE:cutMarked()
 METHOD XbpMLE:deleteMarked()
    LOCAL qCursor, cText
 
-   qCursor := QTextCursor():from( ::oWidget:textCursor() )
+   qCursor := ::oWidget:textCursor()
    cText   := qCursor:selectedText()
    qCursor:removeSelectedText()
    ::oWidget:setTextCursor( qCursor )
@@ -257,7 +255,7 @@ METHOD XbpMLE:deleteMarked()
 METHOD XbpMLE:delete( nPos, nChars )
    LOCAL qCursor, cText
 
-   qCursor := QTextCursor():from( ::oWidget:textCursor() )
+   qCursor := ::oWidget:textCursor()
    qCursor:setPosition( nPos )
    qCursor:movePosition( QTextCursor_Right, QTextCursor_KeepAnchor, nChars )
    cText   := qCursor:selectedText()
@@ -287,7 +285,7 @@ METHOD XbpMLE:queryFirstChar()
 METHOD XbpMLE:queryMarked()
    LOCAL qCursor, a_
 
-   qCursor := QTextCursor():from( ::oWidget:textCursor() )
+   qCursor := ::oWidget:textCursor()
    IF qCursor:hasSelection()
       a_:= { qCursor:selectionStart(), qCursor:selectionEnd() }
    ELSE
@@ -310,7 +308,7 @@ METHOD XbpMLE:setMarked( aStartEnd )
    LOCAL qCursor, cText
 
    IF hb_isArray( aStartEnd ) .AND. len( aStartEnd ) == 2 .AND. aStartEnd[ 1 ] >= 0 .AND. aStartEnd[ 2 ] > aStartEnd[ 1 ]
-      qCursor := QTextCursor():from( ::oWidget:textCursor() )
+      qCursor := ::oWidget:textCursor()
       qCursor:setPosition( aStartEnd[ 1 ] )
       qCursor:movePosition( QTextCursor_Right, QTextCursor_KeepAnchor, aStartEnd[ 2 ] - aStartEnd[ 1 ] )
       cText := qCursor:selectedText()
@@ -328,7 +326,7 @@ METHOD XbpMLE:insert( nPos, cString )
    LOCAL qCursor
 
    IF hb_isChar( cString )
-      qCursor := QTextCursor():from( ::oWidget:textCursor() )
+      qCursor := ::oWidget:textCursor()
       IF hb_isNumeric( nPos ) .AND. nPos >= 0
          qCursor:setPosition( nPos )
       ENDIF
@@ -344,7 +342,7 @@ METHOD XbpMLE:insert( nPos, cString )
 METHOD XbpMLE:charFromLine( nLine )
    LOCAL qCursor, nPos
 
-   qCursor := QTextCursor():from( ::oWidget:textCursor() )
+   qCursor := ::oWidget:textCursor()
    IF hb_isNumeric( nLine )
       qCursor:movePosition( QTextCursor_Start )
       qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, nLine )
@@ -361,7 +359,7 @@ METHOD XbpMLE:charFromLine( nLine )
 METHOD XbpMLE:lineFromChar( nPos )
    LOCAL qCursor, nLine
 
-   qCursor := QTextCursor():from( ::oWidget:textCursor() )
+   qCursor := ::oWidget:textCursor()
    IF hb_isNumeric( nPos )
       qCursor:setPosition( nPos )
       nLine := qCursor:blockNumber()
@@ -374,7 +372,7 @@ METHOD XbpMLE:lineFromChar( nPos )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpMLE:pos()
-   RETURN QTextCursor():from( ::oWidget:textCursor() ):position()
+   RETURN ::oWidget:textCursor():position()
 
 /*----------------------------------------------------------------------*/
 

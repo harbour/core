@@ -139,7 +139,7 @@ METHOD XbpTabPage:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oWidget:setContextMenuPolicy( Qt_CustomContextMenu )
    ::oWidget:setObjectName( "Tab_Page" )
 
-   oPar:oWidget:addTab( ::pWidget, ::caption )
+   oPar:oWidget:addTab( ::oWidget, ::caption )
 
    ::setPosAndSize()
    IF ::visible
@@ -157,8 +157,7 @@ METHOD XbpTabPage:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF hb_isPointer( pQtObject )
-      ::oWidget := QWidget()
-      ::oWidget:pPtr := pQtObject
+      ::oWidget := QWidget():from( pQtObject )
 
    ENDIF
 
@@ -319,9 +318,10 @@ METHOD XbpTabWidget:execSlot( cSlot, p )
    LOCAL iIndex
 
    IF hb_isPointer( p )
-      qPoint  := QPoint():from( ::oWidget:mapToGlobal( p ) )
+      qPoint  := ::oWidget:mapToGlobal( p )
       qApp    := QApplication()
-      pWidget := QWidget():from( qApp:widgetAt( qPoint ) )
+      pWidget := qApp:widgetAt( qPoint )
+
       iIndex  := ascan( ::aChildren, {|o| hbqt_IsEqualGcQtPointer( o:oWidget:pPtr, pWidget:pPtr ) } ) - 1
 HB_TRACE( HB_TR_DEBUG, "iIndex", iIndex, pWidget:objectName() )
    ELSE
@@ -331,7 +331,7 @@ HB_TRACE( HB_TR_DEBUG, "iIndex", iIndex, pWidget:objectName() )
    IF !empty( ::aChildren ) .and. iIndex >= 0 .and. iIndex < len( ::aChildren )
       qTab := ::oWidget:widget( iIndex )
 
-      IF ( nIndex := ascan( ::aChildren, {|o| hbqt_IsEqualGcQtPointer( o:oWidget:pPtr, qTab ) } ) ) > 0
+      IF ( nIndex := ascan( ::aChildren, {|o| hbqt_IsEqualGcQtPointer( o:oWidget:pPtr, qTab:pPtr ) } ) ) > 0
          oTab := ::aChildren[ nIndex ]
 
          DO CASE

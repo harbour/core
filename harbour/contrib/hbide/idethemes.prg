@@ -664,7 +664,7 @@ METHOD IdeThemes:updateColor()
    oDlg:setCurrentColor( qColor )
    oDlg:exec()
 
-   qColor:configure( oDlg:currentColor() )
+   qColor := oDlg:currentColor()
 
    ::aThemes[ ::nCurTheme, 2, ::nCurItem, 2, THM_ATR_R ] := qColor:red()
    ::aThemes[ ::nCurTheme, 2, ::nCurItem, 2, THM_ATR_G ] := qColor:green()
@@ -751,12 +751,12 @@ METHOD IdeThemes:selectThemeProc( nMode, p )
 
    DO CASE
    CASE nMode == 1
-      qModalIndex := QModelIndex():configure( p )
+      qModalIndex := QModelIndex():from( p )
       ::cSelTheme := ::aThemes[ qModalIndex:row() + 1, 1 ]
       ::oSL:done( 1 )
 
    CASE nMode == 2
-      qModalIndex := QModelIndex():configure( ::oSL:qObj[ "listOptions" ]:currentIndex() )
+      qModalIndex := ::oSL:qObj[ "listOptions" ]:currentIndex()
       ::cSelTheme := ::aThemes[ qModalIndex:row() + 1, 1 ]
       ::oSL:done( 1 )
 

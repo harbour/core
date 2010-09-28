@@ -105,7 +105,7 @@ CLASS IdeDocFunction
    DATA   cOneliner                               INIT ""
    DATA   cStatus                                 INIT ""
    DATA   cPlatforms                              INIT ""
-   DATA   cSeaAlso                                INIT ""
+   DATA   cSeeAlso                                INIT ""
    DATA   cVersion                                INIT ""
    DATA   cInherits                               INIT ""
    DATA   cExternalLink                           INIT ""
@@ -489,7 +489,7 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
 
    CASE "buttonUp_clicked"
       IF ::nCurInHist > 1 .AND. ::nCurInHist <= len( ::aHistory )
-         IF !empty( qTWItem := ::oUI:q_treeDoc:itemAbove( ::oUI:q_treeDoc:currentItem( 0 ) ) )
+         IF ( qTWItem := ::oUI:q_treeDoc:itemAbove( ::oUI:q_treeDoc:currentItem( 0 ) ) ):isValidObject()
             ::oUI:q_treeDoc:setCurrentItem( qTWItem, 0 )
          ENDIF
       ENDIF
@@ -512,7 +512,7 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
 
    CASE "treeCategory_itemSelectionChanged"
       qTWItem := ::oUI:q_treeCategory:currentItem()
-      n := ascan( ::aCategory, {|e_| hbqt_IsEqualGcQtPointer( e_[ 5 ]:pPtr, qTWItem ) } )
+      n := ascan( ::aCategory, {|e_| hbqt_IsEqualGcQtPointer( e_[ 5 ]:pPtr, qTWItem:pPtr ) } )
       IF n > 0
          IF ::aCategory[ n, 5 ]:childCount() == 0
             ::oUI:q_treeDoc:setCurrentItem( ::aCategory[ n, 4 ], 0 )
@@ -521,7 +521,7 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
       EXIT
 
    CASE "treeDoc_itemSelectionChanged"
-      qTWItem := QTreeWidgetItem():from( ::oUI:q_treeDoc:currentItem() )
+      qTWItem := ::oUI:q_treeDoc:currentItem()
       cText   := qTWItem:text( 0 )
 
       IF ( n := ascan( ::aNodes, {|e_| e_[ 5 ] == cText } ) ) > 0
@@ -571,7 +571,6 @@ METHOD IdeHarbourHelp:populateIndexedSelection()
 
    IF !empty( ::aNodes )
       IF !empty( qItem := ::oUI:q_listIndex:currentItem() )
-         qItem := QListWidgetItem():from( qItem )
          cText := qItem:text()
          IF ( n := ascan( ::aFunctions, {|e_| e_[ 2 ] == cText } ) ) > 0
             ::oUI:q_treeDoc:setCurrentItem( ::aFunctions[ n, 4 ] )
@@ -844,7 +843,7 @@ METHOD IdeHarbourHelp:pullDefinitions( acBuffer )
             IF ! lIsFunc
                LOOP   // It is a fake line not within $DOC$ => $END$ block
             ENDIF
-            s := substr( s, 9 )
+            s := substr( s, 8 )
 
             SWITCH nPart
             CASE DOC_FUN_BEGINS
@@ -892,7 +891,7 @@ METHOD IdeHarbourHelp:pullDefinitions( acBuffer )
                oFunc:cPlatForms := alltrim( s )
                EXIT
             CASE DOC_FUN_SEEALSO
-               oFunc:cSeaAlso   := alltrim( s )
+               oFunc:cSeeAlso   := alltrim( s )
                EXIT
             CASE DOC_FUN_SEEALSO
                oFunc:cVersion   := alltrim( s )
@@ -1172,7 +1171,22 @@ METHOD IdeHarbourHelp:buildView( oFunc )
 
    IF !empty( oFunc:cInherits )
       aadd( aHtm, x + "Inherits"       + y )
-      aadd( aHtm, v + oFunc:cInherits  + w )
+      a_:= hb_aTokens( oFunc:cInherits, "," )
+      IF !empty( a_ )
+         aadd( aHtm, "<tr><td>" )
+         FOR EACH s IN a_
+            s := alltrim( s )
+            IF ( n := at( "(", s ) ) > 0
+               s1 := substr( s, 1, n-1 )
+            ELSE
+               s1 := s
+            ENDIF
+            aadd( aHtm, '<a href="' + s1 + '">' + s + "</a>" + ;
+                                        iif( s:__enumIndex() == len( a_ ), "", ",&nbsp;" ) )
+         NEXT
+         aadd( aHtm, "</td></tr>" )
+      ENDIF
+      //aadd( aHtm, v + oFunc:cInherits  + w )
       aadd( aHtm, z )
    ENDIF
    #if 0
@@ -1223,7 +1237,8 @@ METHOD IdeHarbourHelp:buildView( oFunc )
       aadd( aHtm, v + s + w )
       aadd( aHtm, z )
    ENDIF
-   a_:= hb_atokens( oFunc:cSeaAlso, "," )
+HB_TRACE( HB_TR_ALWAYS, 12100, oFunc:cSeeAlso )
+   a_:= hb_atokens( oFunc:cSeeAlso, "," )
    IF !empty( a_ )
       aadd( aHtm, x + "SeeAlso"        + y )
       aadd( aHtm, "<tr><td>" )

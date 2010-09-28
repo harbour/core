@@ -225,7 +225,7 @@ METHOD IdeBrowseManager:getPanelsInfo()
             aAttr[ TBL_RECORD   ] := hb_ntos( oBrw:recNo()     )
             aAttr[ TBL_CURSOR   ] := hb_ntos( oBrw:nCursorType )
             IF !hb_isObject( aSub[ SUB_GEOMETRY ] )
-               aSub[ SUB_GEOMETRY ] := QRect():from( aSub[ SUB_WINDOW ]:geometry() )
+               aSub[ SUB_GEOMETRY ] := aSub[ SUB_WINDOW ]:geometry()
             ENDIF
             aAttr[ TBL_GEOMETRY ] := hb_ntos( aSub[ SUB_GEOMETRY ]:x() )     + " " + hb_ntos( aSub[ SUB_GEOMETRY ]:y() ) + " " + ;
                                      hb_ntos( aSub[ SUB_GEOMETRY ]:width() ) + " " + hb_ntos( aSub[ SUB_GEOMETRY ]:height() )
@@ -308,23 +308,19 @@ METHOD IdeBrowseManager:create( oIde )
 
    /* Toolbar */
    ::buildToolbar()
-   //::qLayout:addWidget_1( ::qToolbar, 0, 0, 1, 2 )
    ::qLayout:addWidget( ::qToolbar, 0, 0, 1, 2 )
 
    /* Toolbar left */
    ::buildLeftToolbar()
-   //::qLayout:addWidget_1( ::qToolbarL, 1, 0, 1, 1 )
    ::qLayout:addWidget( ::qToolbarL, 1, 0, 1, 1 )
 
    /* Stacked widget */
    ::qStack := QStackedWidget()
-   //::qLayout:addWidget_1( ::qStack   , 1, 1, 1, 1 )
    ::qLayout:addWidget( ::qStack   , 1, 1, 1, 1 )
 
    /* StatusBar */
    ::qStatus := QStatusBar()
    ::qStatus:setSizeGripEnabled( .f. )
-   //::qLayout:addWidget_1( ::qStatus  , 2, 0, 1, 2 )
    ::qLayout:addWidget( ::qStatus  , 2, 0, 1, 2 )
 
    /* */
@@ -462,7 +458,7 @@ METHOD IdeBrowseManager:addPanel( cPanel )
 METHOD IdeBrowseManager:addPanelsMenu( cPanel )
    LOCAL qAct
 
-   ( qAct := QAction():from( ::qPanelsMenu:addAction( cPanel ) ) ):setIcon( hbide_image( "panel_7" ) )
+   ( qAct := ::qPanelsMenu:addAction( cPanel ) ):setIcon( hbide_image( "panel_7" ) )
    qAct:connect( "triggered(bool)", {|| ::setPanel( cPanel ) } )
    aadd( ::aPanelsAct, qAct )
 
@@ -503,9 +499,9 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
 
    CASE "dockDbu_dropEvent"
       qEvent := QDropEvent():from( p )
-      qMime := QMimeData():from( qEvent:mimeData() )
+      qMime := qEvent:mimeData()
       IF qMime:hasUrls()
-         qList := QStringList():from( qMime:hbUrlList() )
+         qList := qMime:hbUrlList()
          FOR i := 0 TO qList:size() - 1
             qUrl := QUrl( qList:at( i ) )
             hb_fNameSplit( qUrl:toLocalFile(), @cPath, @cTable, @cExt )
@@ -763,13 +759,13 @@ METHOD IdeBrowseManager:populateFieldData()
    LOCAL nRow, qItm
 
    IF ( nRow := ::qStruct:q_tableFields:currentRow() ) >= 0
-      qItm := QTableWidgetItem():from( ::qStruct:q_tableFields:item( nRow, 1 ) )
+      qItm := ::qStruct:q_tableFields:item( nRow, 1 )
       ::qStruct:q_editName:setText( qItm:text() )
-      qItm := QTableWidgetItem():from( ::qStruct:q_tableFields:item( nRow, 2 ) )
+      qItm := ::qStruct:q_tableFields:item( nRow, 2 )
       ::qStruct:q_comboType:setCurrentIndex( ascan( {"Character", "Numeric", "Date", "Logical" }, qItm:text() ) - 1 )
-      qItm := QTableWidgetItem():from( ::qStruct:q_tableFields:item( nRow, 3 ) )
+      qItm := ::qStruct:q_tableFields:item( nRow, 3 )
       ::qStruct:q_editSize:setText( qItm:text() )
-      qItm := QTableWidgetItem():from( ::qStruct:q_tableFields:item( nRow, 4 ) )
+      qItm := ::qStruct:q_tableFields:item( nRow, 4 )
       ::qStruct:q_editDec:setText( qItm:text() )
    ENDIF
 
@@ -838,8 +834,8 @@ METHOD IdeBrowseManager:buildUiStruct()
    ::qStruct:connect( QEvent_Close, {|| ::execEvent( "dbStruct_closeEvent" ) } )
 
    oTbl := ::qStruct:q_tableFields
-   QHeaderView():from( oTbl:verticalHeader() ):hide()
-   QHeaderView():from( oTbl:horizontalHeader() ):stretchLastSection( .t. )
+   oTbl:verticalHeader():hide()
+   oTbl:horizontalHeader():stretchLastSection( .t. )
    oTbl:setAlternatingRowColors( .t. )
    oTbl:setColumnCount( len( hdr_ ) )
    oTbl:setShowGrid( .t. )
@@ -1102,7 +1098,7 @@ METHOD IdeBrowseManager:updateIndexMenu( oBrw )
 
    aIndex := ::oCurPanel:getIndexInfo( oBrw )
    FOR EACH cIndex IN aIndex
-      qAct := QAction():from( ::qIndexMenu:addAction( cIndex ) )
+      qAct := ::qIndexMenu:addAction( cIndex )
       qAct:connect( "triggered(bool)", hbide_getMenuBlock( ::oCurPanel, oBrw, cIndex ) )
       aadd( ::aIndexAct, qAct )
    NEXT
@@ -1232,7 +1228,7 @@ METHOD IdeBrowsePanel:setViewStyle( nStyle )
          ENDIF
 
          IF ::nViewStyle == HBPMDI_STYLE_MAXIMIZED
-            qObj := QMdiSubWindow():from( ::activeSubWindow() )
+            qObj := ::activeSubWindow()
             FOR EACH a_ IN ::aBrowsers
                a_[ 2 ]:setWindowState( Qt_WindowNoState )
             NEXT
@@ -1250,7 +1246,7 @@ METHOD IdeBrowsePanel:setViewStyle( nStyle )
             ::qWidget:tileSubWindows()
             EXIT
          CASE HBPMDI_STYLE_MAXIMIZED
-            qObj := QMdiSubWindow():from( ::activeSubWindow() )
+            qObj := ::activeSubWindow()
             FOR EACH a_ IN ::aBrowsers
                a_[ 2 ]:setWindowState( Qt_WindowMaximized )
             NEXT
@@ -1276,7 +1272,7 @@ METHOD IdeBrowsePanel:tileVertically()
    LOCAL qObj, qVPort, nH, nT, nW, a_
 
    qObj   := ::activeSubWindow()
-   qVPort := QWidget():from( ::viewport() )
+   qVPort := ::viewport()
    nH     := qVPort:height() / len( ::aBrowsers )
    nW     := qVPort:width()
    nT     := 0
@@ -1293,7 +1289,7 @@ METHOD IdeBrowsePanel:tileHorizontally()
    LOCAL qObj, qVPort, nH, nT, nW, nL, a_
 
    qObj   := ::activeSubWindow()
-   qVPort := QWidget():from( ::viewport() )
+   qVPort := ::viewport()
    nH     := qVPort:height()
    nW     := qVPort:width() / len( ::aBrowsers )
    nT     := 0
@@ -1315,7 +1311,7 @@ METHOD IdeBrowsePanel:tilesZoom( nMode )
          nT := 0
          FOR EACH a_ IN ::aBrowsers
             qMdi  := a_[ 2 ]
-            qRect := QRect():from( qMdi:geometry() )
+            qRect := qMdi:geometry()
             nH    := qRect:height() + ( nMode * ( qRect:height() / 4 ) )
             qMdi:setGeometry( QRect( 0, nT, qRect:width(), nH ) )
             nT    += nH
@@ -1324,7 +1320,7 @@ METHOD IdeBrowsePanel:tilesZoom( nMode )
          nL := 0
          FOR EACH a_ IN ::aBrowsers
             qMdi  := a_[ 2 ]
-            qRect := QRect():from( qMdi:geometry() )
+            qRect := qMdi:geometry()
             nW    := qRect:width() + ( nMode * ( qRect:width() / 4 ) )
             qMdi:setGeometry( QRect( nL, 0, nW, qRect:height() ) )
             nL    += nW
@@ -1341,7 +1337,7 @@ METHOD IdeBrowsePanel:saveGeometry()
    LOCAL a_
    IF ::nViewStyle == HBPMDI_STYLE_ORGANIZED
       FOR EACH a_ IN ::aBrowsers
-         a_[ SUB_GEOMETRY ] := QRect():from( a_[ SUB_WINDOW ]:geometry() )
+         a_[ SUB_GEOMETRY ] := a_[ SUB_WINDOW ]:geometry()
       NEXT
    ENDIF
    RETURN Self
@@ -1438,7 +1434,7 @@ METHOD IdeBrowsePanel:addBrowser( aInfo )
    IF empty( oBrw:oBrw )
       RETURN Self
    ENDIF
-   aadd( ::aBrowsers, { oBrw:nID, oBrw:qMdi, QRect():from( oBrw:qMdi:geometry() ), oBrw, NIL } )
+   aadd( ::aBrowsers, { oBrw:nID, oBrw:qMdi, oBrw:qMdi:geometry(), oBrw, NIL } )
    ::oManager:updateIndexMenu( oBrw )
    RETURN Self
 

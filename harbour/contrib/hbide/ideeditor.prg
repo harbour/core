@@ -225,7 +225,7 @@ METHOD IdeEditsManager:create( oIde )
    aadd( ::aActions, { "Apply Theme"  , ::qContextMenu:addAction( "Apply Theme"                      ) } )
    aadd( ::aActions, { "Save as Skltn", ::qContextMenu:addAction( "Save as Skeleton..."              ) } )
 
-   ::qContextSub := QMenu():configure( ::qContextMenu:addMenu( "Split" ) )
+   ::qContextSub := ::qContextMenu:addMenu( "Split" )
    //
    aadd( ::aActions, { "Split H"      , ::qContextSub:addAction( "Split Horizontally" ) } )
    aadd( ::aActions, { "Split V"      , ::qContextSub:addAction( "Split Vertically"   ) } )
@@ -316,8 +316,8 @@ METHOD IdeEditsManager:updateCompleter()
    ::qCompModel:setStringList( ::qProtoList )
    ::qCompleter:setModel( ::qCompModel )
    ::qCompleter:setCompletionMode( QCompleter_PopupCompletion )
-   ( QListView():from( ::qCompleter:popup() ) ):setAlternatingRowColors( .t. )
-   ( QListView():from( ::qCompleter:popup() ) ):setFont( QFont( "Courier New", 8 ) )
+   ::qCompleter:popup():setAlternatingRowColors( .t. )
+   ::qCompleter:popup():setFont( QFont( "Courier New", 8 ) )
 
    ::qCompleter:connect( "activated(QString)", {|p| ::execEvent( "qcompleter_activated", p ) } )
 
@@ -374,7 +374,6 @@ METHOD IdeEditsManager:removeSourceInTree( cSourceFile )
 
 METHOD IdeEditsManager:addSourceInTree( cSourceFile, cView )
    LOCAL cPath, cFile, cExt, oItem
-   //LOCAL oGrand := ::oOpenedSources
    LOCAL oParent := ::oOpenedSources
 
    IF Empty( cSourceFile )
@@ -382,21 +381,6 @@ METHOD IdeEditsManager:addSourceInTree( cSourceFile, cView )
    ENDIF
 
    hb_fNameSplit( cSourceFile, @cPath, @cFile, @cExt )
-   #if 0
-   cPathA := hbide_pathNormalized( cPath )
-
-array2table(
-   IF ( n := ascan( ::aEditorPath, {|e_| e_[ 2 ] == cPathA } ) ) == 0
-      oParent := oGrand:addItem( cPath )
-      aadd( ::aProjData, { oParent, "Editor Path", oGrand, cPathA, cSourceFile } )
-      aadd( ::aEditorPath, { oParent, cPathA } )
-   ELSE
-      oParent := ::aEditorPath[ n,1 ]
-   ENDIF
-
-   aadd( ::aProjData, { oParent:addItem( cFile + cExt ), "Opened Source", oParent, ;
-                                   cSourceFile, hbide_pathNormalized( cSourceFile ) } )
-   #endif
 
    oItem := oParent:addItem( cFile + cExt )
    oItem:tooltipText := cSourceFile
@@ -451,7 +435,7 @@ METHOD IdeEditsManager:getTabCurrent()
 
    IF !empty( ::qTabWidget )
       qTab := ::qTabWidget:currentWidget()
-      nTab := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ TAB_OTAB ]:oWidget:pPtr, qTab ) } )
+      nTab := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ TAB_OTAB ]:oWidget:pPtr, qTab:pPtr ) } )
    ENDIF
    RETURN nTab
 
@@ -462,8 +446,8 @@ METHOD IdeEditsManager:getDocumentCurrent()
 
    IF !empty( ::qTabWidget ) .AND. ::qTabWidget:count() > 0
       qTab := ::qTabWidget:currentWidget()
-      IF ( nTab := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ TAB_OTAB ]:oWidget:pPtr, qTab ) } ) ) > 0
-         RETURN QTextDocument():configure( ::aTabs[ nTab, TAB_OEDITOR ]:document() )
+      IF ( nTab := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ TAB_OTAB ]:oWidget:pPtr, qTab:pPtr ) } ) ) > 0
+         RETURN ::aTabs[ nTab, TAB_OEDITOR ]:document()
       ENDIF
    ENDIF
 
@@ -476,7 +460,7 @@ METHOD IdeEditsManager:getEditObjectCurrent()
 
    IF !empty( ::qTabWidget ) .AND. ::qTabWidget:count() > 0
       qTab := ::qTabWidget:currentWidget()
-      IF ( nTab := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ TAB_OTAB ]:oWidget:pPtr, qTab ) } ) ) > 0
+      IF ( nTab := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ TAB_OTAB ]:oWidget:pPtr, qTab:pPtr ) } ) ) > 0
          RETURN ::aTabs[ nTab, TAB_OEDITOR ]:qCoEdit
       ENDIF
    ENDIF
@@ -490,7 +474,7 @@ METHOD IdeEditsManager:getEditCurrent()
 
    IF !empty( ::qTabWidget ) .AND. ::qTabWidget:count() > 0
       qTab := ::qTabWidget:currentWidget()
-      IF ( nTab := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ TAB_OTAB ]:oWidget:pPtr, qTab ) } ) ) > 0
+      IF ( nTab := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ TAB_OTAB ]:oWidget:pPtr, qTab:pPtr ) } ) ) > 0
          RETURN ::aTabs[ nTab, TAB_OEDITOR ]:qCqEdit
       ENDIF
    ENDIF
@@ -504,7 +488,7 @@ METHOD IdeEditsManager:getEditorCurrent()
 
    IF !empty( ::qTabWidget ) .AND. ::qTabWidget:count() > 0
       qTab := ::qTabWidget:currentWidget()
-      IF ( nTab := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ TAB_OTAB ]:oWidget:pPtr, qTab ) } ) ) > 0
+      IF ( nTab := ascan( ::aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ TAB_OTAB ]:oWidget:pPtr, qTab:pPtr ) } ) ) > 0
          RETURN ::aTabs[ nTab, TAB_OEDITOR ]
       ENDIF
    ENDIF
@@ -514,12 +498,12 @@ METHOD IdeEditsManager:getEditorCurrent()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:getEditorByIndex( nIndex ) /* Index is 0 based */
-   LOCAL pTab, a_
+   LOCAL qTab, a_
 
    IF hb_isNumeric( nIndex ) .AND. nIndex >= 0 .AND. nIndex < ::qTabWidget:count()
-      pTab := ::qTabWidget:widget( nIndex )
+      qTab := ::qTabWidget:widget( nIndex )
       FOR EACH a_ IN ::aTabs
-         IF !empty( a_[ TAB_OTAB ] ) .AND. hbqt_IsEqualGcQtPointer( a_[ TAB_OTAB ]:oWidget:pPtr, pTab )
+         IF !empty( a_[ TAB_OTAB ] ) .AND. hbqt_IsEqualGcQtPointer( a_[ TAB_OTAB ]:oWidget:pPtr, qTab:pPtr )
             RETURN ::aTabs[ a_:__enumIndex(), TAB_OEDITOR ]
          ENDIF
       NEXT
@@ -1028,7 +1012,7 @@ METHOD IdeEditsManager:printPreview()
 
 METHOD IdeEditsManager:paintRequested( pPrinter )
    LOCAL qPrinter
-   qPrinter := QPrinter():configure( pPrinter )
+   qPrinter := QPrinter():from( pPrinter )
    ::qCurEdit:print( qPrinter )
    RETURN Self
 
@@ -1357,12 +1341,12 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
 
    ::oEdit:qEdit:connect( "updateRequest(QRect,int)", {|| ::scrollThumbnail() } )
 
-   ::qDocument  := QTextDocument():configure( ::qEdit:document() )
+   ::qDocument  := ::qEdit:document()
 
    IF ::cType != "U"
       ::qHiliter := ::oTH:SetSyntaxHilighting( ::oEdit:qEdit, @::cTheme )
    ENDIF
-   ::qCursor := QTextCursor():configure( ::qEdit:textCursor() )
+   ::qCursor := ::qEdit:textCursor()
 
    /* Populate Tabs Array */
    aadd( ::aTabs, { ::oTab, Self } )
@@ -1549,17 +1533,17 @@ METHOD IdeEditor:reload()
 METHOD IdeEditor:setDocumentProperties()
    LOCAL qCursor
 
-   qCursor := QTextCursor():configure( ::qEdit:textCursor() )
+   qCursor := ::qEdit:textCursor()
 
    IF !( ::lLoaded )       /* First Time */
       ::qEdit:setPlainText( ::prepareBufferToLoad( hb_memoread( ::sourceFile ) ) )
       qCursor:setPosition( ::nPos )
       ::qEdit:setTextCursor( qCursor )
 
-      QScrollBar():configure( ::qEdit:horizontalScrollBar() ):setValue( ::nHPos )
-      QScrollBar():configure( ::qEdit:verticalScrollBar() ):setValue( ::nVPos )
+      ::qEdit:horizontalScrollBar():setValue( ::nHPos )
+      ::qEdit:verticalScrollBar():setValue( ::nVPos )
 
-      QTextDocument():configure( ::qEdit:document() ):setModified( .f. )
+      ::qEdit:document():setModified( .f. )
 
       ::qTabWidget:setTabIcon( ::qTabWidget:indexOf( ::oTab:oWidget ), ;
                                 hbide_image( iif( ::lReadOnly, "tabreadonly", "tabunmodified" ) ) )
@@ -1662,8 +1646,8 @@ METHOD IdeEditor:dispEditInfo( qEdit )
 
    DEFAULT qEdit TO ::qEdit
 
-   qDocument := QTextDocument():configure( qEdit:document() )
-   qCursor   := QTextCursor():configure( qEdit:textCursor() )
+   qDocument := qEdit:document()
+   qCursor   := qEdit:textCursor()
 
    s := "<b>Line "+ hb_ntos( qCursor:blockNumber() + 1 ) + " of " + ;
                     hb_ntos( qDocument:blockCount() ) + "</b>"
@@ -1758,8 +1742,8 @@ METHOD IdeEditor:scrollThumbnail()
    LOCAL qScroll
 
    IF ::lLoaded .AND. ::oSourceThumbnailDock:oWidget:isVisible() .AND. !empty( ::qThumbnail )
-      qScroll := QScrollBar():configure( ::oEdit:qEdit:verticalScrollBar() )
-      QScrollBar():configure( ::qThumbnail:qEdit:verticalScrollBar() ):setValue( qScroll:value() )
+      qScroll := ::oEdit:qEdit:verticalScrollBar()
+      ::qThumbnail:qEdit:verticalScrollBar():setValue( qScroll:value() )
 
       ::oEdit:qEdit:hbGetViewportInfo()
 
@@ -1908,7 +1892,7 @@ STATIC FUNCTION hbide_qtDesigner()
 
    oEdt := QDesignerFormEditorInterface( ::oDlg:oWidget )
    HB_TRACE( HB_TR_DEBUG, 1 )
-   oWM := QDesignerFormWindowManagerInterface():from( oEdt:formWindowManager() )
+   oWM := oEdt:formWindowManager()
    HB_TRACE( HB_TR_DEBUG, 2 )
    oWM:createFormWindow( ::oQScintillaDock:oWidget )
    HB_TRACE( HB_TR_DEBUG, 3 )

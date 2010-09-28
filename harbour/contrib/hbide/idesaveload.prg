@@ -349,7 +349,7 @@ METHOD IdeINI:save( cHbideIni )
       nTabs := ::oIde:qTabWidget:count()
       FOR n := 1 TO nTabs
          pTab  := ::oIde:qTabWidget:widget( n - 1 )
-         nTab  := ascan( ::oIde:aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ 1 ]:oWidget:pPtr, pTab ) } )
+         nTab  := ascan( ::oIde:aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ 1 ]:oWidget:pPtr, pTab:pPtr ) } )
          oEdit := ::oIde:aTabs[ nTab, TAB_OEDITOR ]
 
          IF !Empty( oEdit:sourceFile ) .AND. !( ".ppo" == lower( oEdit:cExt ) )
@@ -746,9 +746,9 @@ FUNCTION hbide_restSettings( oIde )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_getEditInfoAsString( oEdit )
-   LOCAL qHScr   := QScrollBar():configure( oEdit:qEdit:horizontalScrollBar() )
-   LOCAL qVScr   := QScrollBar():configure( oEdit:qEdit:verticalScrollBar() )
-   LOCAL qCursor := QTextCursor():configure( oEdit:qEdit:textCursor() )
+   LOCAL qHScr   := oEdit:qEdit:horizontalScrollBar()
+   LOCAL qVScr   := oEdit:qEdit:verticalScrollBar()
+   LOCAL qCursor := oEdit:qEdit:textCursor()
    LOCAL cBMarks := hbide_nArray2string( oEdit:oEdit:aBookMarks )
 
    RETURN hbide_pathNormalized( oEdit:sourceFile, .f. ) +  ","  + ;
@@ -1185,7 +1185,7 @@ METHOD IdeSetup:retrieve()
 
    s := ""
    FOR i := 1 TO ::oUI:q_listTextExt:count()
-      qItm := QListWidgetItem():from( ::oUI:q_listTextExt:item( i - 1 ) )
+      qItm := ::oUI:q_listTextExt:item( i - 1 )
       s += "." + qItm:text() + ","
    NEXT
    s := substr( s, 1, len( s ) - 1 )
@@ -1357,7 +1357,7 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       qFontDlg:setCurrentFont( qFont )
       nOK := qFontDlg:exec()
       IF nOK == 1
-         qFont := QFont():from( qFontDlg:currentFont() )
+         qFont := qFontDlg:currentFont()
 
          ::oUI:q_editFontName:setText( qFont:family() )
          ::oUI:q_editPointSize:setText( hb_ntos( qFont:pointSize() ) )
@@ -1384,7 +1384,7 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       EXIT
 
    CASE "treeWidget_itemSelectionChanged"
-      qItem  := QTreeWidgetItem():from( ::oUI:q_treeWidget:currentItem() )
+      qItem  := ::oUI:q_treeWidget:currentItem()
       IF ( nIndex := ascan( ::aTree, qItem:text() ) ) > 0
          ::oUI:q_stackedWidget:setCurrentIndex( nIndex - 1 )
       ENDIF
@@ -1558,7 +1558,7 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       EXIT
    CASE "buttonThmSav_clicked"
       IF ( n := ::oUI:q_listThemes:currentRow() ) > -1
-         ::oINI:aAppThemes[ n + 1 ] := QListWidgetItem():from( ::oUI:q_listThemes:currentItem() ):text() + "," + ;
+         ::oINI:aAppThemes[ n + 1 ] := ::oUI:q_listThemes:currentItem():text() + "," + ;
                                        ::fetchThemeColorsString()
       ENDIF
       EXIT
@@ -1844,8 +1844,8 @@ METHOD IdeSetup:buildKeywords()
 
    oTbl := ::oUI:q_tableVar
 
-   QHeaderView():from( oTbl:verticalHeader() ):hide()
-   QHeaderView():from( oTbl:horizontalHeader() ):stretchLastSection( .t. )
+   oTbl:verticalHeader():hide()
+   oTbl:horizontalHeader():stretchLastSection( .t. )
 
    oTbl:setAlternatingRowColors( .t. )
    oTbl:setColumnCount( len( hdr_ ) )
@@ -1910,12 +1910,12 @@ METHOD IdeSetup:setBaseColor()
 
    oApp := QApplication()
 
-   ::qOrgPalette := QPalette():from( oApp:palette() )
+   ::qOrgPalette := oApp:palette()
 
    qColor := QColor( Qt_red )
    qBrush := QBrush( "QColor", qColor )
 
-   qPalette := QPalette():from( oApp:palette() )
+   qPalette := oApp:palette()
    qPalette:setBrush( QPalette_Window, qBrush )
    qPalette:setColor( QPalette_Window, qColor )
    qPalette:setColor( QPalette_Base, qColor )

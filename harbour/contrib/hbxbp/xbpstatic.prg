@@ -253,65 +253,62 @@ METHOD XbpStatic:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, l
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF hb_isPointer( pQtObject )
-   DO CASE
-   CASE ::type == XBPSTATIC_TYPE_TEXT
-      ::oWidget := QLabel()
+      DO CASE
+      CASE ::type == XBPSTATIC_TYPE_TEXT
+         ::oWidget := QLabel():from( pQtObject )
 
-   CASE ::type == XBPSTATIC_TYPE_GROUPBOX
-      ::oWidget := QGroupBox()
+      CASE ::type == XBPSTATIC_TYPE_GROUPBOX
+         ::oWidget := QGroupBox():from( pQtObject )
 
-   CASE ::type == XBPSTATIC_TYPE_RAISEDBOX
-      ::oWidget := QFrame()
+      CASE ::type == XBPSTATIC_TYPE_RAISEDBOX
+         ::oWidget := QFrame():from( pQtObject )
 
-   CASE ::type == XBPSTATIC_TYPE_RECESSEDBOX
-      ::oWidget := QFrame()
+      CASE ::type == XBPSTATIC_TYPE_RECESSEDBOX
+         ::oWidget := QFrame():from( pQtObject )
 
-   CASE ::type == XBPSTATIC_TYPE_RAISEDRECT
-      ::oWidget := QFrame()
+      CASE ::type == XBPSTATIC_TYPE_RAISEDRECT
+         ::oWidget := QFrame():from( pQtObject )
 
-   CASE ::type == XBPSTATIC_TYPE_RECESSEDRECT
-      ::oWidget := QFrame()
+      CASE ::type == XBPSTATIC_TYPE_RECESSEDRECT
+         ::oWidget := QFrame():from( pQtObject )
 
-   CASE ::type == XBPSTATIC_TYPE_FGNDFRAME     // rectangle in foreground color, not filled
-      ::oWidget := QFrame()
+      CASE ::type == XBPSTATIC_TYPE_FGNDFRAME     // rectangle in foreground color, not filled
+         ::oWidget := QFrame():from( pQtObject )
 
-   CASE ::type == XBPSTATIC_TYPE_BGNDFRAME
-      ::oWidget := QFrame()
+      CASE ::type == XBPSTATIC_TYPE_BGNDFRAME
+         ::oWidget := QFrame():from( pQtObject )
 
-   CASE ::type == XBPSTATIC_TYPE_FGNDRECT
-      ::oWidget := QFrame()
+      CASE ::type == XBPSTATIC_TYPE_FGNDRECT
+         ::oWidget := QFrame():from( pQtObject )
 
-   CASE ::type == XBPSTATIC_TYPE_BGNDRECT
-      ::oWidget := QFrame()
+      CASE ::type == XBPSTATIC_TYPE_BGNDRECT
+         ::oWidget := QFrame():from( pQtObject )
 
-   CASE ::type == XBPSTATIC_TYPE_HALFTONERECT
-      ::oWidget := QFrame()
+      CASE ::type == XBPSTATIC_TYPE_HALFTONERECT
+         ::oWidget := QFrame():from( pQtObject )
 
-   CASE ::type == XBPSTATIC_TYPE_HALFTONEFRAME
-      ::oWidget := QFrame()
+      CASE ::type == XBPSTATIC_TYPE_HALFTONEFRAME
+         ::oWidget := QFrame():from( pQtObject )
 
-   CASE ::type == XBPSTATIC_TYPE_RAISEDLINE
-      ::oWidget := QFrame()
+      CASE ::type == XBPSTATIC_TYPE_RAISEDLINE
+         ::oWidget := QFrame():from( pQtObject )
 
-   CASE ::type == XBPSTATIC_TYPE_RECESSEDLINE
-      ::oWidget := QFrame()
+      CASE ::type == XBPSTATIC_TYPE_RECESSEDLINE
+         ::oWidget := QFrame():from( pQtObject )
 
-   CASE ::type == XBPSTATIC_TYPE_ICON
-      ::oWidget := QLabel()
+      CASE ::type == XBPSTATIC_TYPE_ICON
+         ::oWidget := QLabel():from( pQtObject )
 
-   CASE ::type == XBPSTATIC_TYPE_SYSICON
-      ::oWidget := QLabel()
+      CASE ::type == XBPSTATIC_TYPE_SYSICON
+         ::oWidget := QLabel():from( pQtObject )
 
-   CASE ::type == XBPSTATIC_TYPE_BITMAP
-      ::oWidget := QLabel()
+      CASE ::type == XBPSTATIC_TYPE_BITMAP
+         ::oWidget := QLabel():from( pQtObject )
 
-   OTHERWISE
-      ::oWidget := QFrame()
+      OTHERWISE
+         ::oWidget := QFrame():from( pQtObject )
 
-   ENDCASE
-
-      ::oWidget:pPtr := pQtObject
-
+      ENDCASE
    ENDIF
 
    RETURN Self
@@ -345,7 +342,7 @@ METHOD XbpStatic:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpStatic:setCaption( xCaption, cDll )
-   LOCAL oStyle, pPixmap, oIcon, oPixmap
+   LOCAL oStyle, oIcon, oPixmap
 
    HB_SYMBOL_UNUSED( cDll )
 
@@ -379,38 +376,34 @@ METHOD XbpStatic:setCaption( xCaption, cDll )
          ::oWidget:setPixmap( QPixmap( ::caption ):scaled( ::aSize[ 1 ], ::aSize[ 2 ] ) )
 
       CASE ::type == XBPSTATIC_TYPE_SYSICON
-         oPixmap     := QPixmap()
-         oIcon       := QIcon()
-         oStyle      := QStyle()
-         oStyle:pPtr := QApplication():style()
+         oStyle      := QApplication():style()
 
          DO CASE
          CASE ::caption == XBPSTATIC_SYSICON_ICONINFORMATION
-            oIcon:pPtr := oStyle:standardIcon( QStyle_SP_MessageBoxInformation )
+            oIcon := oStyle:standardIcon( QStyle_SP_MessageBoxInformation )
 
          CASE ::caption == XBPSTATIC_SYSICON_ICONQUESTION
-            oIcon:pPtr := oStyle:standardIcon( QStyle_SP_MessageBoxQuestion )
+            oIcon := oStyle:standardIcon( QStyle_SP_MessageBoxQuestion )
 
          CASE ::caption == XBPSTATIC_SYSICON_ICONERROR
-            oIcon:pPtr := oStyle:standardIcon( QStyle_SP_MessageBoxCritical )
+            oIcon := oStyle:standardIcon( QStyle_SP_MessageBoxCritical )
 
          CASE ::caption == XBPSTATIC_SYSICON_ICONWARNING
-            oIcon:pPtr := oStyle:standardIcon( QStyle_SP_MessageBoxWarning )
+            oIcon := oStyle:standardIcon( QStyle_SP_MessageBoxWarning )
 
          OTHERWISE
             /* It is a Harbour Extension - you have 60+ icons to display
              * Check hbqtgui.ch : #define QStyle_SP_* constants
              */
-            oIcon:pPtr := oStyle:standardIcon( ::caption )
+            oIcon := oStyle:standardIcon( ::caption )
 
          ENDCASE
 
          /* Harbour can also implement if icon be displayed scaled or proportionate
           */
-         oPixmap:pPtr := oIcon:pixmap( ::aSize[ 1 ], ::aSize[ 2 ] )
-         pPixmap      := oPixmap:scaled( ::aSize[ 1 ], ::aSize[ 2 ] )
+         oPixmap := oIcon:pixmap( ::aSize[ 1 ], ::aSize[ 2 ] ):scaled( ::aSize[ 1 ], ::aSize[ 2 ] )
 
-         ::oWidget:setPixmap( pPixmap )
+         ::oWidget:setPixmap( oPixmap )
       ENDCASE
    ENDIF
 

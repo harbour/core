@@ -562,8 +562,8 @@ METHOD IdeShortcuts:buildUI()
    ::oUI:oWidget:connect( QEvent_Close, {|| ::oIde:oINI:cShortcutsDialogGeometry := hbide_posAndSize( ::oUI:oWidget ) } )
 
    oTbl := ::oUI:q_tableMacros                              /* Build Table Header */
-   QHeaderView():from( oTbl:verticalHeader() ):hide()
-   QHeaderView():from( oTbl:horizontalHeader() ):stretchLastSection( .t. )
+   oTbl:verticalHeader():hide()
+   oTbl:horizontalHeader():stretchLastSection( .t. )
    oTbl:setAlternatingRowColors( .t. )
    oTbl:setColumnCount( len( hdr_ ) )
    oTbl:setShowGrid( .t. )

@@ -266,8 +266,8 @@ METHOD IdeToolsManager:show()
       hdr_:= { { "Img", 30 }, { "Tool", 218 } }
       oTbl := ::oUI:q_tableButtons
       //
-      QHeaderView():from( oTbl:verticalHeader() ):hide()
-      QHeaderView():from( oTbl:horizontalHeader() ):stretchLastSection( .t. )
+      oTbl:verticalHeader():hide()
+      oTbl:horizontalHeader():stretchLastSection( .t. )
       oTbl:setAlternatingRowColors( .t. )
       oTbl:setColumnCount( len( hdr_ ) )
       oTbl:setShowGrid( .t. )
@@ -332,7 +332,7 @@ METHOD IdeToolsManager:execEvent( cMode, p )
       ::oUI:q_listToolbars:setCurrentRow( p )
       EXIT
    CASE "listNames_itemSelectionChanged"
-      qItem := QListWidgetItem():from( ::oUI:q_listNames:currentItem() )
+      qItem := ::oUI:q_listNames:currentItem()
       cName := qItem:text()
       IF ( nIndex := ascan( aTools, {|e_| e_[ 1 ] == cName } ) ) > 0
          ::ini2Controls( nIndex )
@@ -346,7 +346,7 @@ METHOD IdeToolsManager:execEvent( cMode, p )
       EXIT
    CASE "buttonDelete_clicked"
       IF ::oUI:q_listNames:currentRow() >= 0
-         qItem := QListWidgetItem():from( ::oUI:q_listNames:currentItem() )
+         qItem := ::oUI:q_listNames:currentItem()
          cName := qItem:text()
          IF ( nIndex := ascan( aTools, {|e_| e_[ 1 ] == cName } ) ) > 0
             hb_adel( ::oINI:aTools, nIndex, .t. )
@@ -363,7 +363,7 @@ METHOD IdeToolsManager:execEvent( cMode, p )
       IF ! ::lExecuting
          ::lExecuting := .t.
          IF ::oUI:q_listNames:currentRow() >= 0
-            qItem := QListWidgetItem():from( ::oUI:q_listNames:currentItem() )
+            qItem := ::oUI:q_listNames:currentItem()
             ::execTool( qItem:text() )
          ENDIF
          ::lExecuting := .f.
@@ -379,7 +379,7 @@ METHOD IdeToolsManager:execEvent( cMode, p )
       EXIT
    CASE "buttonUpdate_clicked"
       IF ( nRow := ::oUI:q_listNames:currentRow() ) >= 0
-         qItem := QListWidgetItem():from( ::oUI:q_listNames:currentItem() )
+         qItem := ::oUI:q_listNames:currentItem()
          cName := qItem:text()
 
          IF ( nIndex := ascan( aTools, {|e_| e_[ 1 ] == cName } ) ) > 0
@@ -644,7 +644,7 @@ METHOD IdeToolsManager:buildToolsButton()
    ::qToolsMenu := QMenu()
    ::qToolsMenu:setStyleSheet( GetStyleSheet( "QMenuPop", ::nAnimantionMode ) )
    FOR EACH a_ IN ::aTools
-      qAct := QAction():from( ::qToolsMenu:addAction( a_[ 1 ] ) )
+      qAct := ::qToolsMenu:addAction( a_[ 1 ] )
       qAct:connect( "triggered(bool)", {|| ::execTool( a_[ 1 ] ) } )
       aadd( ::aAct, qAct )
    NEXT
@@ -684,7 +684,7 @@ METHOD IdeToolsManager:buildPanelsButton()
 METHOD IdeToolsManager:addPanelsMenu( cPrompt )
    LOCAL qAct
 
-   qAct := QAction():from( ::qPanelsMenu:addAction( cPrompt ) )
+   qAct := ::qPanelsMenu:addAction( cPrompt )
    qAct:setIcon( ::oDK:getPanelIcon( cPrompt ) )
    qAct:connect( "triggered(bool)", {|| ::oDK:setView( cPrompt ) } )
    aadd( ::aPanelsAct, qAct )

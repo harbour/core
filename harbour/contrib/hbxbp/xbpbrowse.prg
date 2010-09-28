@@ -491,33 +491,33 @@ METHOD XbpBrowse:destroy()
    NEXT
 
    IF !empty( ::oModelIndex )
-      ::oModelIndex:pPtr      := 0
+      ::oModelIndex           := NIL
    ENDIF
 
-   ::oHScrollBar:pPtr         := 0
-   ::oVScrollBar:pPtr         := 0
+   ::oHScrollBar              := NIL
+   ::oVScrollBar              := NIL
 
-   ::oLeftView:pPtr           := 0
-   ::oLeftDbfModel:pPtr       := 0
-   ::oLeftVHeaderView:pPtr    := 0
-   ::oLeftHeaderView:pPtr     := 0
-   ::oLeftFooterView:pPtr     := 0
-   ::oLeftFooterModel:pPtr    := 0
+   ::oLeftView                := NIL
+   ::oLeftDbfModel            := NIL
+   ::oLeftVHeaderView         := NIL
+   ::oLeftHeaderView          := NIL
+   ::oLeftFooterView          := NIL
+   ::oLeftFooterModel         := NIL
 
-   ::oRightView:pPtr          := 0
-   ::oRightHeaderView:pPtr    := 0
-   ::oRightDbfModel:pPtr      := 0
-   ::oRightFooterView:pPtr    := 0
-   ::oRightFooterModel:pPtr   := 0
+   ::oRightView               := NIL
+   ::oRightHeaderView         := NIL
+   ::oRightDbfModel           := NIL
+   ::oRightFooterView         := NIL
+   ::oRightFooterModel        := NIL
 
-   ::oTableView:pPtr          := 0
-   ::oVHeaderView:pPtr        := 0
-   ::oDbfModel:pPtr           := 0
+   ::oTableView               := NIL
+   ::oVHeaderView             := NIL
+   ::oDbfModel                := NIL
 
-   ::oFooterView:pPtr         := 0
-   ::oFooterModel:pPtr        := 0
+   ::oFooterView              := NIL
+   ::oFooterModel             := NIL
 
-   ::oGridLayout:pPtr         := 0
+   ::oGridLayout              := NIL
 
    ::oGridLayout              := NIL
    ::oFooterModel             := NIL
@@ -572,12 +572,10 @@ METHOD XbpBrowse:buildLeftFreeze()
    ::oLeftView:setSelectionBehavior( iif( ::cursorMode == XBPBRW_CURSOR_ROW, QAbstractItemView_SelectRows, QAbstractItemView_SelectItems ) )
    //
    /*  Veritical Header because of Performance boost */
-   ::oLeftVHeaderView := QHeaderView()
-   ::oLeftVHeaderView:configure( ::oLeftView:verticalHeader() )
+   ::oLeftVHeaderView := ::oLeftView:verticalHeader()
    ::oLeftVHeaderView:hide()
    /*  Horizontal Header Fine Tuning */
-   ::oLeftHeaderView := QHeaderView()
-   ::oLeftHeaderView:configure( ::oLeftView:horizontalHeader() )
+   ::oLeftHeaderView := ::oLeftView:horizontalHeader()
    ::oLeftHeaderView:setHighlightSections( .F. )
 
    ::oLeftDbfModel := HBQAbstractItemModel( {|t,role,x,y| ::supplyInfo( 151, t, role, x, y ) } )
@@ -624,12 +622,10 @@ METHOD XbpBrowse:buildRightFreeze()
    ::oRightView:setSelectionBehavior( iif( ::cursorMode == XBPBRW_CURSOR_ROW, QAbstractItemView_SelectRows, QAbstractItemView_SelectItems ) )
    //
    /*  Veritical Header because of Performance boost */
-   oVHdr := QHeaderView()
-   oVHdr:configure( ::oRightView:verticalHeader() )
+   oVHdr := ::oRightView:verticalHeader()
    oVHdr:hide()
    /*  Horizontal Header Fine Tuning */
-   ::oRightHeaderView := QHeaderView()
-   ::oRightHeaderView:configure( ::oRightView:horizontalHeader() )
+   ::oRightHeaderView := ::oRightView:horizontalHeader()
    ::oRightHeaderView:setHighlightSections( .F. )
 
    ::oRightDbfModel := HBQAbstractItemModel( {|t,role,x,y| ::supplyInfo( 161, t, role, x, y ) } )
@@ -705,13 +701,11 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oVScrollBar:connect( "sliderReleased()"                 , {|i| ::execSlot( __ev_vertscroll_sliderreleased__, i ) } )
 
    /*  Veritical Header because of Performance boost */
-   ::oVHeaderView := QHeaderView()
-   ::oVHeaderView:configure( ::oTableView:verticalHeader() )
+   ::oVHeaderView := ::oTableView:verticalHeader()
    ::oVHeaderView:hide()
 
    /*  Horizontal Header Fine Tuning */
-   ::oHeaderView := QHeaderView()
-   ::oHeaderView:configure( ::oTableView:horizontalHeader() )
+   ::oHeaderView := ::oTableView:horizontalHeader()
    ::oHeaderView:setHighlightSections( .F. )
    //
    ::oHeaderView:connect( "sectionPressed(int)"              , {|i      | ::execSlot( __ev_columnheader_pressed__, i         ) } )
@@ -744,25 +738,11 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::buildRightFreeze()
 
    /* Place all widgets in a Grid Layout */
-   ::oGridLayout := QGridLayout( ::pWidget )
+   ::oGridLayout := QGridLayout( ::oWidget )
    ::oGridLayout:setContentsMargins( 0,0,0,0 )
    ::oGridLayout:setHorizontalSpacing( 0 )
    ::oGridLayout:setVerticalSpacing( 0 )
    /*  Rows */
-#if 0
-   ::oGridLayout:addWidget_1( ::oLeftView       , 0, 0, 1, 1 )
-   ::oGridLayout:addWidget_1( ::oLeftFooterView , 1, 0, 1, 1 )
-   //
-   ::oGridLayout:addWidget_1( ::oTableView      , 0, 1, 1, 1 )
-   ::oGridLayout:addWidget_1( ::oFooterView     , 1, 1, 1, 1 )
-   //
-   ::oGridLayout:addWidget_1( ::oRightView      , 0, 2, 1, 1 )
-   ::oGridLayout:addWidget_1( ::oRightFooterView, 1, 2, 1, 1 )
-   //
-   ::oGridLayout:addWidget_1( ::oHScrollBar     , 2, 0, 1, 3 )
-   /*  Columns */
-   ::oGridLayout:addWidget_1( ::oVScrollBar     , 0, 3, 2, 1 )
-#else
    ::oGridLayout:addWidget( ::oLeftView       , 0, 0, 1, 1 )
    ::oGridLayout:addWidget( ::oLeftFooterView , 1, 0, 1, 1 )
    //
@@ -775,7 +755,7 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oGridLayout:addWidget( ::oHScrollBar     , 2, 0, 1, 3 )
    /*  Columns */
    ::oGridLayout:addWidget( ::oVScrollBar     , 0, 3, 2, 1 )
-#endif
+
    IF ::visible
       ::show()
    ENDIF
@@ -784,11 +764,11 @@ METHOD XbpBrowse:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oFooterView:hide()
 
    /* Viewport */
-   ::oViewport:configure( ::oTableView:viewport() )
+   ::oViewport := ::oTableView:viewport()
 
    ::oWidget:connect( QEvent_Resize, {|| ::execSlot( __ev_frame_resized__ ) } )
 
-   qRect := QRect():from( ::oWidget:geometry() )
+   qRect := ::oWidget:geometry()
    ::oWidget:setGeometry( qRect )
 
    /* Handle the delegate */
@@ -817,7 +797,7 @@ METHOD XbpBrowse:execSlot( nEvent, p1, p2, p3 )
 
    DO CASE
    CASE nEvent == __ev_contextMenuRequested__
-      oPoint := QPoint():from( ::oTableView:mapToGlobal( p1 ) )
+      oPoint := ::oTableView:mapToGlobal( p1 )
       ::hbContextMenu( { oPoint:x(), oPoint:y() } )
 
    CASE nEvent == __editor_commitData__
@@ -868,10 +848,11 @@ METHOD XbpBrowse:execSlot( nEvent, p1, p2, p3 )
       ::oTableView:setFocus()
 
    CASE nEvent == __ev_mousepress__
-      oMouseEvent := QMouseEvent():configure( p1 )
+      oMouseEvent := QMouseEvent():from( p1 )
 
       oPoint := QPoint( oMouseEvent:x(), oMouseEvent:y() )
-      ::oModelIndex:configure( ::oTableView:indexAt( oPoint ) )
+//      ::oModelIndex:configure( ::oTableView:indexAt( oPoint ) )
+      ::oModelIndex := ::oTableView:indexAt( oPoint )
       IF ::oModelIndex:isValid()      /* Reposition the record pointer */
          SetAppEvent( xbeBRW_Navigate, XBPBRW_Navigate_Skip, ( ::oModelIndex:row() + 1 ) - ::rowPos, Self )
 
@@ -887,13 +868,13 @@ METHOD XbpBrowse:execSlot( nEvent, p1, p2, p3 )
       ENDIF
 
    CASE nEvent == __ev_xbpBrw_itemSelected__
-      oMouseEvent := QMouseEvent():configure( p1 )
+      oMouseEvent := QMouseEvent():from( p1 )
       IF oMouseEvent:button() == Qt_LeftButton
          SetAppEvent( xbeBRW_ItemSelected, NIL, NIL, Self )
       ENDIF
 
    CASE nEvent == __ev_wheel__
-      oWheelEvent := QWheelEvent():configure( p1 )
+      oWheelEvent := QWheelEvent():from( p1 )
       IF oWheelEvent:orientation() == Qt_Vertical
          IF oWheelEvent:delta() > 0
             SetAppEvent( xbeBRW_Navigate, XBPBRW_Navigate_Skip, -1, Self )

@@ -98,10 +98,10 @@ METHOD IdeUpDown:position()
    IF !empty( qEdit := ::oEM:getEditCurrent() )
       ::oUI:setParent( qEdit )
 
-      qHSBar := QScrollBar():from( qEdit:horizontalScrollBar() )
-      qVSBar := QScrollBar():from( qEdit:verticalScrollBar() )
+      qHSBar := qEdit:horizontalScrollBar()
+      qVSBar := qEdit:verticalScrollBar()
 
-      qRect  := QRect():from( qEdit:geometry() )
+      qRect  := qEdit:geometry()
 
       ::oUI:move( qRect:width()  - ::oUI:width()  - iif( qVSBar:isVisible(), qVSBar:width() , 0 ), ;
                   qRect:height() - ::oUI:height() - iif( qHSBar:isVisible(), qHSBar:height(), 0 ) )
@@ -279,13 +279,13 @@ METHOD IdeSearchReplace:create( oIde )
                                ::oUI:q_buttonReplace:setEnabled( i == 2 ), ;
                                iif( i == 2, ::oUI:q_frameReplace:show(), ::oUI:q_frameReplace:hide() ) } )
 
-   ::qFindLineEdit := QLineEdit():from( ::oUI:q_comboFind:lineEdit() )
+   ::qFindLineEdit := ::oUI:q_comboFind:lineEdit()
    ::qFindLineEdit:setFocusPolicy( Qt_StrongFocus )
    ::qFindLineEdit:setStyleSheet( "background-color: white;" )
    ::qFindLineEdit:connect( "textChanged(QString)", {|cText| ::setFindString( cText ) } )
    ::qFindLineEdit:connect( "returnPressed()"     , {|| ::find( ::cFind ) } )
 
-   ::qReplLineEdit := QLineEdit():from( ::oUI:q_comboReplace:lineEdit() )
+   ::qReplLineEdit := ::oUI:q_comboReplace:lineEdit()
    ::qReplLineEdit:setFocusPolicy( Qt_StrongFocus )
    ::qReplLineEdit:setStyleSheet( "background-color: white;" )
 
@@ -320,10 +320,10 @@ METHOD IdeSearchReplace:find( cText, lBackward )
    ::nCurDirection := iif( lBackward, QTextDocument_FindBackward, 0 )
 
    IF len( cText ) > 0
-      qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
+      qCursor := ::qCurEdit:textCursor()
 
       IF ::oUI:q_checkRegEx:isChecked()
-         qDoc := QTextDocument():from( ::qCurEdit:document() )
+         qDoc := ::qCurEdit:document()
          qReg := QRegExp()
          qReg:setPattern( cText )
          qReg:setCaseSensitivity( iif( ::oUI:q_checkMatchCase:isChecked(), Qt_CaseSensitive, Qt_CaseInsensitive ) )
@@ -331,7 +331,7 @@ METHOD IdeSearchReplace:find( cText, lBackward )
          nFlags += ::nCurDirection
          nFlags += iif( ::oUI:q_checkWhole:isChecked(), QTextDocument_FindWholeWords, 0 )
 
-         qCur := QTextCursor():from( qDoc:find_1( qReg, qCursor, nFlags  ) )
+         qCur := qDoc:find( qReg, qCursor, nFlags )
          lFound := ! qCur:isNull()
          IF lFound
             ::qCurEdit:setTextCursor( qCur )
@@ -382,7 +382,7 @@ METHOD IdeSearchReplace:setFindString( cText )
       RETURN .f.
    ENDIF
 
-   qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
+   qCursor := ::qCurEdit:textCursor()
    IF ::oUI:q_radioTop:isChecked()
       nPos := qCursor:position()
       qCursor:setPosition( 0 )
@@ -408,7 +408,7 @@ METHOD IdeSearchReplace:setFindString( cText )
 METHOD IdeSearchReplace:startFromTop()
    LOCAL qCursor
 
-   qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
+   qCursor := ::qCurEdit:textCursor()
    qCursor:setPosition( 0 )
    ::qCurEdit:setTextCursor( qCursor )
 
@@ -487,7 +487,7 @@ METHOD IdeFindReplace:create( oIde )
                                         ::oUI:q_comboReplaceWith:setEnabled( p == 0 ), ;
                                    iif( p == 1, ::oUI:q_buttonReplace:setEnabled( .f. ), NIL ) } )
 
-   ::qLineEdit := QLineEdit():configure( ::oUI:q_comboFindWhat:lineEdit() )
+   ::qLineEdit := ::oUI:q_comboFindWhat:lineEdit()
 
    RETURN Self
 
@@ -531,7 +531,7 @@ METHOD IdeFindReplace:replaceSelection( cReplWith )
 
    DEFAULT cReplWith TO ""
 
-   qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
+   qCursor := ::qCurEdit:textCursor()
    IF qCursor:hasSelection() .and. !empty( cBuffer := qCursor:selectedText() )
       nL := len( cBuffer )
       nB := qCursor:position() - nL
@@ -554,7 +554,7 @@ METHOD IdeFindReplace:replace()
    LOCAL nFound
 
    IF !empty( ::qCurEdit )
-      cReplWith := QLineEdit():configure( ::oUI:q_comboReplaceWith:lineEdit() ):text()
+      cReplWith := ::oUI:q_comboReplaceWith:lineEdit():text()
       ::replaceSelection( cReplWith )
 
       IF ::oUI:q_checkGlobal:isChecked()
@@ -585,7 +585,7 @@ METHOD IdeFindReplace:onClickFind()
 
    IF ::oUI:q_radioEntire:isChecked()
       ::oUI:q_radioFromCursor:setChecked( .t. )
-      qCursor := QTextCursor():configure( ::qCurEdit:textCursor() )
+      qCursor := ::qCurEdit:textCursor()
       nPos := qCursor:position()
 
       qCursor:setPosition( 0 )
@@ -616,7 +616,7 @@ METHOD IdeFindReplace:onClickFind()
 
 METHOD IdeFindReplace:find( lWarn )
    LOCAL nFlags
-   LOCAL cText := QLineEdit():configure( ::oUI:q_comboFindWhat:lineEdit() ):text()
+   LOCAL cText := ::oUI:q_comboFindWhat:lineEdit():text()
    LOCAL lFound := .f.
 
    DEFAULT lWarn TO .t.
@@ -639,7 +639,7 @@ METHOD IdeFindReplace:updateFindReplaceData( cMode )
    LOCAL cData
 
    IF cMode == "find"
-      cData := QLineEdit():configure( ::oUI:q_comboFindWhat:lineEdit() ):text()
+      cData := ::oUI:q_comboFindWhat:lineEdit():text()
       IF !empty( cData )
          IF ascan( ::oINI:aFind, {|e| e == cData } ) == 0
             hb_ains( ::oINI:aFind, 1, cData, .t. )
@@ -649,7 +649,7 @@ METHOD IdeFindReplace:updateFindReplaceData( cMode )
       //
       ::oDK:setStatusText( SB_PNL_SEARCH, cData )
    ELSE
-      cData := QLineEdit():configure( ::oUI:q_comboReplaceWith:lineEdit() ):text()
+      cData := ::oUI:q_comboReplaceWith:lineEdit():text()
       IF !empty( cData )
          IF ascan( ::oINI:aReplace, cData ) == 0
             hb_ains( ::oINI:aReplace, 1, cData, .t. )
@@ -806,7 +806,7 @@ METHOD IdeFindInFiles:buildUI()
    ::oUI:q_checkListOnly:setChecked( .t. )
    ::oUI:q_checkPrg:setChecked( .t. )
 
-   qLineEdit := QLineEdit():configure( ::oUI:q_comboExpr:lineEdit() )
+   qLineEdit := ::oUI:q_comboExpr:lineEdit()
    IF !empty( ::oEM )
       IF !empty( cText := ::oEM:getSelectedText() )
          qLineEdit:setText( cText )
@@ -853,7 +853,7 @@ METHOD IdeFindInFiles:buildUI()
    ::oUI:q_editResults  :connect( "copyAvailable(bool)"         , {|l| ::execEvent( "editResults", l   ) } )
    ::oUI:q_editResults  :connect( "customContextMenuRequested(QPoint)", {|p| ::execEvent( "editResults-contextMenu", p ) } )
 
-   ::qEditFind := QLineEdit():from( ::oUI:q_comboExpr:lineEdit() )
+   ::qEditFind := ::oUI:q_comboExpr:lineEdit()
    ::qEditFind:connect( "returnPressed()", {|| ::execEvent( "buttonFind" ) } )
 
    RETURN Self
@@ -899,7 +899,7 @@ METHOD IdeFindInFiles:execEvent( cEvent, p )
       IF !empty( cPath )
          ::oIde:cLastFileOpenPath := cPath
 
-         qLineEdit := QLineEdit():configure( ::oUI:q_comboFolder:lineEdit() )
+         qLineEdit := ::oUI:q_comboFolder:lineEdit()
          qLineEdit:setText( cPath )
          IF ascan( ::oINI:aFolders, {|e| e == cPath } ) == 0
             hb_ains( ::oINI:aFolders, 1, cPath, .t. )
@@ -924,14 +924,14 @@ METHOD IdeFindInFiles:execEvent( cEvent, p )
 
    CASE "editResults"
       IF p .AND. ! ::lNotDblClick
-         qCursor := QTextCursor():configure( ::oUI:q_editResults:textCursor() )
+         qCursor := ::oUI:q_editResults:textCursor()
          nInfo := qCursor:blockNumber() + 1
 
          IF nInfo <= len( ::aInfo ) .AND. ::aInfo[ nInfo, 1 ] == -2
             cSource := ::aInfo[ nInfo, 2 ]
 
             ::oSM:editSource( cSource, 0, 0, 0, NIL, NIL, .f., .t. )
-            qCursor := QTextCursor():configure( ::oIde:qCurEdit:textCursor() )
+            qCursor := ::oIde:qCurEdit:textCursor()
             qCursor:setPosition( 0 )
             qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, ::aInfo[ nInfo, 3 ] - 1 )
             qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, ::aInfo[ nInfo, 4 ] - 1 )
@@ -950,9 +950,9 @@ METHOD IdeFindInFiles:execEvent( cEvent, p )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeFindInFiles:execContextMenu( p )
-   LOCAL nLine, qCursor, qMenu, pAct, qAct, cAct, cFind
+   LOCAL nLine, qCursor, qMenu, qAct, cAct, cFind
 
-   qCursor := QTextCursor():configure( ::oUI:q_editResults:textCursor() )
+   qCursor := ::oUI:q_editResults:textCursor()
    nLine := qCursor:blockNumber() + 1
 
    IF nLine <= len( ::aInfo )
@@ -975,9 +975,7 @@ METHOD IdeFindInFiles:execContextMenu( p )
       qMenu:addAction( "Zoom In"  )
       qMenu:addAction( "Zoom Out" )
 
-      pAct := qMenu:exec( ::oUI:q_editResults:mapToGlobal( p ) )
-      IF !hbqt_isEmptyQtPointer( pAct )
-         qAct := QAction():configure( pAct )
+      IF ( qAct := qMenu:exec( ::oUI:q_editResults:mapToGlobal( p ) ) ):isValidObject()
          cAct := qAct:text()
 
          SWITCH cAct
@@ -1277,7 +1275,7 @@ METHOD IdeFindInFiles:showLog( nType, cMsg, aLines )
    DEFAULT cMsg TO ""
    cMsg := hbide_convertHtmlDelimiters( cMsg )
 
-   qCursor := QTextCursor():configure( ::oUI:q_editResults:textCursor() )
+   qCursor := ::oUI:q_editResults:textCursor()
 
    SWITCH nType
 

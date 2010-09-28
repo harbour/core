@@ -138,8 +138,7 @@ FUNCTION hbide_setProjectTitle( cTitle )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_execPopup( aPops, aqPos, qParent )
-   LOCAL i, qPop, qPoint, qAct, cAct, xRet, pAct, a_, qSub, b_
-   LOCAL qSub_:={}
+   LOCAL i, qPop, qPoint, qAct, cAct, xRet, a_, qSub, b_, qSub_:={}
 
    qPop := QMenu( iif( hb_isObject( qParent ), qParent, NIL ) )
    qPop:setStyleSheet( GetStyleSheet( "QMenuPop", hbide_setIde():nAnimantionMode ) )
@@ -168,11 +167,9 @@ FUNCTION hbide_execPopup( aPops, aqPos, qParent )
    IF hb_isArray( aqPos )
       qPoint := QPoint( aqPos[ 1 ], aqPos[ 2 ] )
    ELSE
-      qPoint := QPoint():configure( qParent:mapToGlobal( aqPos ) )
+      qPoint := qParent:mapToGlobal( aqPos )
    ENDIF
-   pAct   := qPop:exec( qPoint )
-   IF !hbqt_isEmptyQtPointer( pAct )
-      qAct := QAction():configure( pAct )
+   IF ( qAct := qPop:exec( qPoint ) ):isValidObject()
       cAct := qAct:text()
       FOR EACH a_ IN aPops
          IF hb_isObject( a_[ 1 ] )
@@ -195,7 +192,6 @@ FUNCTION hbide_execPopup( aPops, aqPos, qParent )
          ENDIF
       NEXT
    ENDIF
-
    qPop := NIL
    HB_SYMBOL_UNUSED( xRet )
    RETURN cAct
@@ -234,7 +230,7 @@ FUNCTION hbide_showWarning( cMsg, cInfo, cTitle, qParent )
    LOCAL oMB
 
    DEFAULT cTitle  TO "Information"
-   DEFAULT qParent TO SetAppWindow():pWidget
+   DEFAULT qParent TO SetAppWindow():oWidget
 
    oMB := QMessageBox()
    oMB:setText( cMsg )
@@ -261,7 +257,7 @@ FUNCTION hbide_getYesNo( cMsg, cInfo, cTitle )
       oMB:setInformativeText( cInfo )
    ENDIF
    oMB:setIcon( QMessageBox_Information )
-   oMB:setParent( SetAppWindow():pWidget )
+   oMB:setParent( SetAppWindow():oWidget )
    oMB:setWindowFlags( Qt_Dialog )
    oMB:setWindowTitle( cTitle )
    oMB:setStandardButtons( QMessageBox_Yes + QMessageBox_No )
@@ -281,7 +277,7 @@ FUNCTION hbide_getYesNoCancel( cMsg, cInfo, cTitle )
       oMB:setInformativeText( cInfo )
    ENDIF
    oMB:setIcon( QMessageBox_Information )
-   oMB:setParent( SetAppWindow():pWidget )
+   oMB:setParent( SetAppWindow():oWidget )
    oMB:setWindowFlags( Qt_Dialog )
    oMB:setWindowTitle( cTitle )
    oMB:setStandardButtons( QMessageBox_Yes + QMessageBox_No + QMessageBox_Cancel )
@@ -1301,8 +1297,6 @@ FUNCTION hbide_fetchADate( qParent, cTitle, cPrompt, dDefault )
    DEFAULT cTitle  TO "A Date Value"
    DEFAULT cPrompt TO "What"
 
-   //pSlots := hbxbp_getSlotsPtr()
-
    oUI := hbide_getUI( "fetchdate", qParent )
 
    oUI:setWindowTitle( cTitle )
@@ -1315,20 +1309,16 @@ FUNCTION hbide_fetchADate( qParent, cTitle, cPrompt, dDefault )
       oUI:q_editDate:setDate( qDate )
    ENDIF
 
-   //Qt_Slots_connect( pSlots, oUI:q_buttonOk    , "clicked()", {|| oUI:done( 1 ) } )
    oUI:q_buttonOk:connect( "clicked()", {|| oUI:done( 1 ) } )
-   //Qt_Slots_connect( pSlots, oUI:q_buttonOk    , "clicked()", {|| oUI:done( 1 ) } )
    oUI:q_buttonCancel:connect( "clicked()", {|| oUI:done( 0 ) } )
 
    nRet := oUI:exec()
 
-   //Qt_Slots_disconnect( pSlots, oUI:q_buttonOk     )
    oUI:q_buttonOk:disconnect( "clicked()" )
-   //Qt_Slots_disconnect( pSlots, oUI:q_buttonCancel )
    oUI:q_buttonCancel:disconnect( "clicked()" )
 
    IF nRet == 1
-      qDate := QDate():from( oUI:q_editDate:date() )
+      qDate := oUI:q_editDate:date()
       RETURN stod( strzero( qDate:year(), 4 ) + strzero( qDate:month(),2 ) + strzero( qDate:day(), 2 ) )
    ENDIF
 

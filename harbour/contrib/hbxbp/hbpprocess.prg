@@ -218,16 +218,16 @@ METHOD HbpProcess:start( cShellCmd )
 
    IF ::lDetached
       IF !empty( ::qStrList )
-         ::qProcess:startDetached_1( ::cShellCmd, ::qStrList )
+         ::qProcess:startDetached( ::cShellCmd, ::qStrList )
       ELSE
-         ::qProcess:startDetached_2( ::cShellCmd )
+         ::qProcess:startDetached( ::cShellCmd )
       ENDIF
       ::qProcess:waitForStarted()
    ELSE
       IF !empty( ::qStrList )
          ::qProcess:start( ::cShellCmd, ::qStrList )
       ELSE
-         ::qProcess:start_1( ::cShellCmd )
+         ::qProcess:start( ::cShellCmd )
       ENDIF
    ENDIF
 

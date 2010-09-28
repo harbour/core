@@ -286,23 +286,17 @@ METHOD IdeDocks:buildDialog()
 
    IF ::oIde:lCurEditsMdi
       ::buildMdiToolbar()
-      //::qLayout:addWidget_1( ::qMdiToolbar:oWidget   , 0, 0, 1, 2 )
       ::qLayout:addWidget( ::qMdiToolbar:oWidget   , 0, 0, 1, 2 )
       ::buildMdiToolbarLeft()
-      //::qLayout:addWidget_1( ::qMdiToolbarL:oWidget  , 1, 0, 1, 1 )
       ::qLayout:addWidget( ::qMdiToolbarL:oWidget  , 1, 0, 1, 1 )
       ::buildStackedWidget()
-      //::qLayout:addWidget_1( ::oStackedWidget:oWidget, 1, 1, 1, 1 )
       ::qLayout:addWidget( ::oStackedWidget:oWidget, 1, 1, 1, 1 )
       ::buildSearchReplaceWidget()
-      //::qLayout:addWidget_1( ::oSearchReplace:oUI    , 2, 0, 1, 2 )
       ::qLayout:addWidget( ::oSearchReplace:oUI    , 2, 0, 1, 2 )
    ELSE
       ::buildStackedWidget()
-      //::qLayout:addWidget_1( ::oStackedWidget:oWidget, 0, 0, 1, 1 )
       ::qLayout:addWidget( ::oStackedWidget:oWidget, 0, 0, 1, 1 )
       ::buildSearchReplaceWidget()
-      //::qLayout:addWidget_1( ::oSearchReplace:oUI    , 1, 0, 1, 1 )
       ::qLayout:addWidget( ::oSearchReplace:oUI    , 1, 0, 1, 1 )
    ENDIF
 
@@ -429,10 +423,10 @@ METHOD IdeDocks:buildSystemTray()
          ::oSys:setIcon( hbide_image( "hbide" ) )
          ::oSys:connect( "activated(QSystemTrayIcon::ActivationReason)", {|p| ::execEvent( "qSystemTrayIcon_activated", p ) } )
 
-         ::oIde:oSysMenu := QMenu() // ::oDlg:oWidget )
-         ::qAct1 := QAction():from( ::oSysMenu:addAction( hbide_image( "fullscreen" ), "&Show" ) )
+         ::oIde:oSysMenu := QMenu()
+         ::qAct1 := ::oSysMenu:addAction( hbide_image( "fullscreen" ), "&Show" )
          ::oSysMenu:addSeparator()
-         ::qAct2 := QAction():from( ::oSysMenu:addAction( hbide_image( "exit" ), "&Exit" ) )
+         ::qAct2 := ::oSysMenu:addAction( hbide_image( "exit" ), "&Exit" )
 
          ::qAct1:connect( "triggered(bool)", {|| ::execEvent( "qSystemTrayIcon_show"  ) } )
          ::qAct2:connect( "triggered(bool)", {|| ::execEvent( "qSystemTrayIcon_close" ) } )
@@ -602,9 +596,9 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
 
    CASE "editWidget_dropEvent"
       qEvent := QDropEvent():from( p )
-      qMime := QMimeData():from( qEvent:mimeData() )
+      qMime := qEvent:mimeData()
       IF qMime:hasUrls()
-         qList := QStringList():from( qMime:hbUrlList() )
+         qList := qMime:hbUrlList()
          FOR i := 0 TO qList:size() - 1
             qUrl := QUrl( qList:at( i ) )
             IF hbide_isValidText( qUrl:toLocalFile() )
@@ -622,9 +616,9 @@ HB_TRACE( HB_TR_DEBUG, "projectTree_dragEnterEvent" )
    CASE "projectTree_dropEvent"
 HB_TRACE( HB_TR_DEBUG, "projectTree_dropEvent" )
       qEvent := QDropEvent():from( p )
-      qMime := QMimeData():from( qEvent:mimeData() )
+      qMime := qEvent:mimeData()
       IF qMime:hasUrls()
-         qList := QStringList():from( qMime:hbUrlList() )
+         qList := qMime:hbUrlList()
          FOR i := 0 TO qList:size() - 1
             qUrl := QUrl( qList:at( i ) )
             IF hbide_sourceType( qUrl:toLocalFile() ) == ".hbp"
@@ -723,7 +717,7 @@ METHOD IdeDocks:restState( nMode )
 
 METHOD IdeDocks:stackMaximized()
    LOCAL qObj, qMdi
-   qObj := QMdiSubWindow():from( ::oStackedWidget:activeSubWindow() )
+   qObj := ::oStackedWidget:activeSubWindow()
    FOR EACH qMdi IN ::oIde:aMdies
       qMdi:setWindowState( Qt_WindowMaximized )
    NEXT
@@ -742,7 +736,7 @@ METHOD IdeDocks:stackZoom( nMode )
          nT := 0
          FOR EACH qMdi IN ::oIde:aMdies
             IF ::aViewsInfo[ qMdi:__enumIndex(), 1 ] != "Stats"
-               qRect := QRect():from( qMdi:geometry() )
+               qRect := qMdi:geometry()
                nH := qRect:height() + ( nMode * ( qRect:height() / 4 ) )
                qMdi:setGeometry( QRect( 0, nT, qRect:width(), nH ) )
                nT += nH
@@ -752,7 +746,7 @@ METHOD IdeDocks:stackZoom( nMode )
          nL := 0
          FOR EACH qMdi IN ::oIde:aMdies
             IF ::aViewsInfo[ qMdi:__enumIndex(), 1 ] != "Stats"
-               qRect := QRect():from( qMdi:geometry() )
+               qRect := qMdi:geometry()
                nW := qRect:width() + ( nMode * ( qRect:width() / 4 ) )
                qMdi:setGeometry( QRect( nL, 0, nW, qRect:height() ) )
                nL += nW
@@ -770,8 +764,8 @@ METHOD IdeDocks:stackHorizontally()
    ::restState( 0 )
 
    qArea  := ::oStackedWidget
-   qObj   := QMdiSubWindow():from( qArea:activeSubWindow() )
-   qVPort := QWidget():from( qArea:viewport() )
+   qObj   := qArea:activeSubWindow()
+   qVPort := qArea:viewport()
    nH     := qVPort:height()
    nW     := qVPort:width() / ( len( ::oIde:aMdies ) - 1 )
    nT     := 0
@@ -795,8 +789,8 @@ METHOD IdeDocks:stackVertically()
    ::restState( 0 )
 
    qArea  := ::oStackedWidget
-   qObj   := QMdiSubWindow():from( qArea:activeSubWindow() )
-   qVPort := QWidget():from( qArea:viewport() )
+   qObj   := qArea:activeSubWindow()
+   qVPort := qArea:viewport()
    nH     := qVPort:height() / ( len( ::oIde:aMdies ) - 1 )
    nW     := qVPort:width()
    nT     := 0
@@ -830,7 +824,7 @@ METHOD IdeDocks:savePanelsGeometry()
    LOCAL a_, n
    FOR EACH a_ IN ::aViewsInfo
       IF ( n := ascan( ::oIde:aMdies, {|o| o:objectName() == a_[ 1 ] } ) ) > 0
-         a_[ 2 ] := QRect():from( ::oIde:aMdies[ n ]:geometry() )
+         a_[ 2 ] := ::oIde:aMdies[ n ]:geometry()
       ENDIF
    NEXT
    RETURN Self
@@ -1346,7 +1340,7 @@ METHOD IdeDocks:buildToolBarPanels()
       IF empty( a_ )
          ::qTBarDocks:addSeparator()
       ELSE
-         qAct := QAction():from( a_[ 1 ]:oWidget:toggleViewAction() )
+         qAct := a_[ 1 ]:oWidget:toggleViewAction()
          qAct:setIcon( hbide_image( a_[ 2 ] ) )
          ::qTBarDocks:addAction( qAct )
          aadd( ::aBtnDocks, qAct )
@@ -1616,12 +1610,12 @@ METHOD IdeDocks:outputDoubleClicked( lSelected )
    LOCAL cSource, nLine
 
    IF lSelected
-      qCursor := QTextCursor():configure( ::oOutputResult:oWidget:textCursor() )
-      cText := QTextBlock():configure( qCursor:block() ):text()
+      qCursor := ::oOutputResult:oWidget:textCursor()
+      cText := qCursor:block():text()
 
       IF hbide_parseFNfromStatusMsg( cText, @cSource, @nLine, .T. )
          IF ::oSM:editSource( cSource, 0, 0, 0, NIL, NIL, .f., .t. )
-            qCursor := QTextCursor():configure( ::oIde:qCurEdit:textCursor() )
+            qCursor := ::oIde:qCurEdit:textCursor()
             nLine   := iif( nLine < 1, 0, nLine - 1 )
 
             qCursor:setPosition( 0 )

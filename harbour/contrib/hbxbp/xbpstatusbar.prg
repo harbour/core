@@ -144,9 +144,7 @@ METHOD XbpStatusBar:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF hb_isPointer( pQtObject )
-      ::oWidget := QStatusBar()
-      ::oWidget:pPtr := pQtObject
-
+      ::oWidget := QStatusBar():from( pQtObject )
    ENDIF
 
    RETURN Self
@@ -178,7 +176,6 @@ METHOD XbpStatusBar:destroy()
    FOR EACH obj IN ::aItems
       ::oWidget:removeWidget( obj )
       obj:oParent := NIL
-      obj:oWidget:pPtr := NIL
       obj := NIL
    NEXT
    ::aItems := {}

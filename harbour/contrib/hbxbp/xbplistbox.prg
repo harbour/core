@@ -234,8 +234,7 @@ METHOD XbpListBox:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF hb_isPointer( pQtObject )
-      ::oWidget := QListView()
-      ::oWidget:pPtr := pQtObject
+      ::oWidget := pQtObject
    ENDIF
 
    RETURN Self
@@ -328,22 +327,9 @@ METHOD XbpListBox:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 METHOD XbpListBox:destroy()
 
    ::clear()
-
    ::xbpWindow:destroy()
 
    RETURN NIL
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpListBox:addItem( cItem )
-   LOCAL qItm := QListWidgetItem()
-
-   qItm:setText( cItem )
-   //::oWidget:addItem_1( qItm )
-   ::oWidget:addItem( qItm )
-   aadd( ::aItems, qItm )
-
-   RETURN len( ::aItems )
 
 /*----------------------------------------------------------------------*/
 
@@ -356,11 +342,23 @@ METHOD XbpListBox:clear()
       qItm := NIL
    NEXT
    ::aItems := {}
-   ::oWidget:clear()
-
+   IF ::oWidget:isValidObject()
+      ::oWidget:clear()
+   ENDIF
    ::connectAll()
 
    RETURN .t.
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpListBox:addItem( cItem )
+   LOCAL qItm := QListWidgetItem()
+
+   qItm:setText( cItem )
+   ::oWidget:addItem( qItm )
+   aadd( ::aItems, qItm )
+
+   RETURN len( ::aItems )
 
 /*----------------------------------------------------------------------*/
 

@@ -201,7 +201,7 @@ METHOD xbpMenuBar:hbCreateFromQtPtr( oParent, aPresParams, lVisible, pQtObject )
 
    IF hb_isPointer( pQtObject )
       ::oWidget := QMenuBar()
-      ::oWidget:pPtr := pQtObject
+      ::oWidget:pPtr := hbqt_ptr( pQtObject )
 
    ENDIF
 
@@ -254,7 +254,6 @@ METHOD xbpMenuBar:delItem( aItem )
          ::disConnect( aItem[ 5 ], "hovered()"       )
       ENDIF
       ::oWidget:removeAction( aItem[ 5 ] )
-      aItem[ 5 ]:pPtr := NIL
       aItem[ 5 ] := NIL
    ENDIF
 
@@ -279,9 +278,9 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
    DO CASE
    CASE cType == "U" .OR. empty( xCaption ) .OR. nStyle == XBPMENUBAR_MIS_SEPARATOR
       IF lInsert
-         oAction := QAction():configure( ::oWidget:insertSeparator() )
+         oAction := ::oWidget:insertSeparator()
       ELSE
-         QAction():configure( ::oWidget:addSeparator() )
+         ::oWidget:addSeparator()
       ENDIF
       aItem := { QMF_SEPARATOR, 0, 0, NIL, oAction }
 

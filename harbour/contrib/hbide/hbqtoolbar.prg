@@ -166,8 +166,7 @@ METHOD HbqToolbar:execEvent( cEvent, p, p1 )
       EXIT
 
    CASE "QEvent_MouseMove"
-      qRC := QRect():from( ( QRect( ::qPos:x() - 5, ::qPos:y() - 5, 10, 10 ) ):normalized() )
-
+      qRC := QRect( ::qPos:x() - 5, ::qPos:y() - 5, 10, 10 ):normalized()
       IF qRC:contains( qEvent:pos() )
          ::qByte := QByteArray( ::hItems[ p1 ]:objectName() )
 
@@ -182,9 +181,7 @@ METHOD HbqToolbar:execEvent( cEvent, p, p1 )
          ::qDrag:setPixmap( ::qPix )
          ::qDrag:setHotSpot( QPoint( 15,15 ) )
          ::qDrag:setDragCursor( ::qPix, Qt_MoveAction )
-
          ::qDropAction := ::qDrag:exec( Qt_MoveAction )
-
          ::qDrag := NIL
          ::qPos  := NIL
          ::hItems[ p1 ]:setChecked( .f. )
@@ -193,12 +190,11 @@ METHOD HbqToolbar:execEvent( cEvent, p, p1 )
       EXIT
 
    CASE "QEvent_MouseRelease"
-HB_TRACE( HB_TR_ALWAYS, "QEvent_MouseRelease" )
       ::qDrag := NIL
       EXIT
 
    CASE "QEvent_MousePress"
-      ::qPos := QPoint():from( qEvent:pos() )
+      ::qPos := qEvent:pos()
       EXIT
 
    CASE "buttonNew_clicked"
@@ -228,7 +224,7 @@ METHOD HbqToolbar:addWidget( cName, qWidget )
 /*----------------------------------------------------------------------*/
 
 METHOD HbqToolbar:addToolButton( cName, cDesc, cImage, bAction, lCheckable, lDragEnabled )
-   LOCAL oButton, qAction
+   LOCAL oButton
 
    STATIC nID := 0
 
@@ -253,13 +249,7 @@ METHOD HbqToolbar:addToolButton( cName, cDesc, cImage, bAction, lCheckable, lDra
    IF hb_isBlock( bAction )
       oButton:connect( "clicked()", bAction )
    ENDIF
-   #if 1
-   qAction := QWidgetAction( ::oWidget )
-   qAction:setDefaultWidget( oButton )
-   ::oWidget:addAction( qAction )
-   #else
    ::oWidget:addWidget( oButton )
-   #endif
 
    ::hItems[ cName ] := oButton
    RETURN oButton

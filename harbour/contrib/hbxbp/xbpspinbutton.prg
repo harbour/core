@@ -173,8 +173,7 @@ METHOD XbpSpinButton:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParam
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF hb_isPointer( pQtObject )
-      ::oWidget := QSpinBox()
-      ::oWidget:pPtr := pQtObject
+      ::oWidget := QSpinBox():from( pQtObject )
    ENDIF
 
    RETURN Self
