@@ -93,6 +93,8 @@ CLASS XbpTreeView  INHERIT  XbpWindow, XbpDataRef
    METHOD   setStyle()
 
    METHOD   itemFromPos( aPos )
+   METHOD   connect()
+   METHOD   disconnect()
 
    DATA     sl_itemCollapsed
    DATA     sl_itemExpanded
@@ -158,17 +160,7 @@ METHOD XbpTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oRootItem:oWidget  := ::oWidget:invisibleRootItem()
 
-*  ::oWidget:connect( "currentItemChanged(QTWItem)"       , {|p1| ::execSlot( "currentItemChanged(QTWItem)", p1 ) } )
-*  ::oWidget:connect( "itemActivated(QTWItem)"            , {|p1| ::execSlot( "itemActivated(QTWItem)"     , p1 ) } )
-*  ::oWidget:connect( "itemChanged(QTWItem)"              , {|p1| ::execSlot( "itemChanged(QTWItem)"       , p1 ) } )
-   ::oWidget:connect( "itemClicked(QTWItem)"              , {|p1| ::execSlot( "itemClicked(QTWItem)"       , p1 ) } )
-   ::oWidget:connect( "itemCollapsed(QTWItem)"            , {|p1| ::execSlot( "itemCollapsed(QTWItem)"     , p1 ) } )
-   ::oWidget:connect( "itemDoubleClicked(QTWItem)"        , {|p1| ::execSlot( "itemDoubleClicked(QTWItem)" , p1 ) } )
-   ::oWidget:connect( "itemEntered(QTWItem)"              , {|p1| ::execSlot( "itemEntered(QTWItem)"       , p1 ) } )
-   ::oWidget:connect( "itemExpanded(QTWItem)"             , {|p1| ::execSlot( "itemExpanded(QTWItem)"      , p1 ) } )
-*  ::oWidget:connect( "itemPressed(QTWItem)"              , {|p1| ::execSlot( "itemPressed(QTWItem)"       , p1 ) } )
-*  ::oWidget:connect( "itemSelectionChanged()"            , {|p1| ::execSlot( "itemSelectionChanged()"     , p1 ) } )
-   ::oWidget:connect( "customContextMenuRequested(QPoint)", {|p1| ::execSlot( "customContextMenuRequested(QPoint)", p1     ) } )
+   ::connect()
 
    ::setPosAndSize()
    IF ::visible
@@ -196,7 +188,7 @@ METHOD XbpTreeView:execSlot( cSlot, p )
    LOCAL n, qPt, qItem, oItem, qPos
 
    IF hb_isPointer( p )
-      IF ( n := ascan( ::aItems, {|o| hbqt_IsEqualGcQtPointer( o:oWidget:pPtr, p ) } ) ) > 0
+      IF ( n := ascan( ::aItems, {|o| iif( empty( o ), .f., hbqt_IsEqualGcQtPointer( o:oWidget:pPtr, p ) ) } ) ) > 0
          oItem := ::aItems[ n ]
       ENDIF
    ENDIF
@@ -266,6 +258,42 @@ METHOD XbpTreeView:destroy()
    ::xbpWindow:destroy()
 
    RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpTreeView:connect()
+
+*  ::oWidget:connect( "currentItemChanged(QTWItem)"       , {|p1| ::execSlot( "currentItemChanged(QTWItem)", p1 ) } )
+*  ::oWidget:connect( "itemActivated(QTWItem)"            , {|p1| ::execSlot( "itemActivated(QTWItem)"     , p1 ) } )
+*  ::oWidget:connect( "itemChanged(QTWItem)"              , {|p1| ::execSlot( "itemChanged(QTWItem)"       , p1 ) } )
+   ::oWidget:connect( "itemClicked(QTWItem)"              , {|p1| ::execSlot( "itemClicked(QTWItem)"       , p1 ) } )
+   ::oWidget:connect( "itemCollapsed(QTWItem)"            , {|p1| ::execSlot( "itemCollapsed(QTWItem)"     , p1 ) } )
+   ::oWidget:connect( "itemDoubleClicked(QTWItem)"        , {|p1| ::execSlot( "itemDoubleClicked(QTWItem)" , p1 ) } )
+   ::oWidget:connect( "itemEntered(QTWItem)"              , {|p1| ::execSlot( "itemEntered(QTWItem)"       , p1 ) } )
+   ::oWidget:connect( "itemExpanded(QTWItem)"             , {|p1| ::execSlot( "itemExpanded(QTWItem)"      , p1 ) } )
+*  ::oWidget:connect( "itemPressed(QTWItem)"              , {|p1| ::execSlot( "itemPressed(QTWItem)"       , p1 ) } )
+*  ::oWidget:connect( "itemSelectionChanged()"            , {|p1| ::execSlot( "itemSelectionChanged()"     , p1 ) } )
+   ::oWidget:connect( "customContextMenuRequested(QPoint)", {|p1| ::execSlot( "customContextMenuRequested(QPoint)", p1 ) } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpTreeView:disconnect()
+
+*  ::oWidget:disconnect( "currentItemChanged(QTWItem)"        )
+*  ::oWidget:disconnect( "itemActivated(QTWItem)"             )
+*  ::oWidget:disconnect( "itemChanged(QTWItem)"               )
+   ::oWidget:disconnect( "itemClicked(QTWItem)"               )
+   ::oWidget:disconnect( "itemCollapsed(QTWItem)"             )
+   ::oWidget:disconnect( "itemDoubleClicked(QTWItem)"         )
+   ::oWidget:disconnect( "itemEntered(QTWItem)"               )
+   ::oWidget:disconnect( "itemExpanded(QTWItem)"              )
+*  ::oWidget:disconnect( "itemPressed(QTWItem)"               )
+*  ::oWidget:disconnect( "itemSelectionChanged()"             )
+   ::oWidget:disconnect( "customContextMenuRequested(QPoint)" )
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
