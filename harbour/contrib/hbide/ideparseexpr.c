@@ -244,9 +244,9 @@ HB_FUNC( PARSEXPR ) /* ( c, bHonorSpacing, bInRemark, bUpperKeyWord, bKeepCommen
 
    HB_BOOL bHonorSpacing = hb_parl( 2 );
    HB_BOOL bInRemark     = hb_parl( 3 );
-   HB_BOOL bKeepComments = HB_ISLOG( 5 ) ? hb_parl( 5 ) : HB_TRUE;
-   HB_BOOL bPRG          = HB_ISLOG( 6 ) ? hb_parl( 6 ) : HB_TRUE;
-   HB_BOOL bKeepSpaces   = HB_ISLOG( 7 ) ? hb_parl( 7 ) : HB_TRUE;
+   HB_BOOL bKeepComments = hb_parldef( 5, 1 );
+   HB_BOOL bPRG          = hb_parldef( 6, 1 );
+   HB_BOOL bKeepSpaces   = hb_parldef( 7, 1 );
    HB_BOOL bFirst        = HB_TRUE;
    HB_ISIZ lenprocessed  = 0;
    HB_ISIZ lenwords      = 0;
