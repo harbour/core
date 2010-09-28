@@ -88,6 +88,7 @@ find_in_path_prw = $(strip $(subst $(substpat), ,$(firstword $(subst |, ,$(subst
 
 # Some presets based on HB_BUILD_NAME
 ifneq ($(HB_BUILD_NAME),)
+   export HB_BUILD_NAME := $(subst /,,$(subst \,/,$(HB_BUILD_NAME)))
    ifeq ($(HB_BUILD_NAME),.r)
       HB_BUILD_DEBUG := no
       HB_BUILD_OPTIM := yes

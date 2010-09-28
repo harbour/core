@@ -659,7 +659,8 @@ HARBOUR
                                  NOTE: In current implementation it's
                                  appended to compiler directory name, so all
                                  filesystem/platform name rules and limits
-                                 apply. It's valid to use (back)slashes though.
+                                 apply. (Back)slashes will be stripped from 
+                                 the name though.
    - HB_BUILD_PKG=yes            Create release package. Default: no
                                  Requires 'clean install' in root source dir.
    - HB_BUILD_DYN=no             Create Harbour dynamic libraries. Default: yes

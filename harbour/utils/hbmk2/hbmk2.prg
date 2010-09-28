@@ -1024,7 +1024,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE Left( cParamL, 10 ) == "-platform=" ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 11 ), _TARG_PLAT )
       CASE Left( cParamL, 6 )  == "-arch="     ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 7 ), _TARG_PLAT ) /* Compatibility */
       CASE Left( cParamL, 5 )  == "-cpu="      ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 6 ), _TARG_CPU )
-      CASE Left( cParamL, 7 )  == "-build="    ; hbmk[ _HBMK_cBUILD ] := PathSepToSelf( SubStr( cParam, 8 ) )
+      CASE Left( cParamL, 7 )  == "-build="    ; hbmk[ _HBMK_cBUILD ] := StrTran( PathSepToSelf( SubStr( cParam, 8 ) ), hb_ps() )
       CASE Left( cParamL, 6 )  == "-build"     ; hbmk[ _HBMK_lStopAfterHarbour ] := .T.
       CASE Left( cParamL, 6 )  == "-lang="     ; hbmk[ _HBMK_cUILNG ] := SubStr( cParam, 7 ) ; SetUILang( hbmk )
       CASE Left( cParamL, 4 )  == "-shl"       ; hbmk[ _HBMK_lShowLevel ] := .T.
