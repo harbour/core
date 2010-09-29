@@ -154,14 +154,6 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbqt_ptr( xParam )
-   IF hb_isObject( xParam ) .AND. __objHasMsg( xParam, "PPTR" )
-      RETURN xParam:pPtr
-   ENDIF
-   RETURN xParam
-
-/*----------------------------------------------------------------------*/
-
 FUNCTION hbqt_error()
    LOCAL oError := ErrorNew()
 

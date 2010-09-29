@@ -188,27 +188,23 @@ void * hbqt_pPtrFromObj( int iParam )
    }
 }
 
-/* TOFIX */
-HB_FUNC( HBQT_PTR__ )
+HB_FUNC( HBQT_PTR )
 {
-   PHB_ITEM pObj = hb_param( 1, HB_IT_OBJECT );
+   PHB_ITEM pParam = hb_param( 1, HB_IT_ANY );
 
-   if( pObj )
+   if( hb_itemType( pParam ) & HB_IT_OBJECT )
    {
-      PHB_DYNS pPPTR = hb_dynsymFindName( "PPTR" );
+      PHB_ITEM pRetVal;
 
-      if( pPPTR ) /* TOFIX: Verify is such message really provided by this object */
-      {
-         hb_vmPushSymbol( hb_dynsymSymbol( pPPTR ) );
-         hb_vmPush( pObj );
-         hb_vmSend( 0 );
+      hb_vmPushSymbol( hb_dynsymSymbol( hb_dynsymFindName( "PPTR" ) ) );
+      hb_vmPush( pParam );
+      hb_vmSend( 0 );
 
-         hb_itemReturn( hb_param( -1, HB_IT_ANY ) );
+      if( ( pRetVal = hb_param( -1, HB_IT_POINTER ) ) != NULL )
          return;
-      }
    }
 
-   hb_itemReturn( hb_param( 1, HB_IT_ANY ) );
+   hb_itemReturn( pParam );
 }
 
 HB_FUNC( __HBQT_ISVALIDPOINTER )
