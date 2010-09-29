@@ -9487,6 +9487,8 @@ STATIC FUNCTION MacroGet( hbmk, cMacro, cFileName )
       cMacro := iif( ISCHARACTER( hbmk[ _HBMK_cPROGDIR ] ), FNameDirGet( hbmk[ _HBMK_cPROGDIR ] ), "" ) ; EXIT
    CASE "HB_OUTPUTNAME"
       cMacro := iif( ISCHARACTER( hbmk[ _HBMK_cPROGNAME ] ), FNameNameGet( hbmk[ _HBMK_cPROGNAME ] ), "" ) ; EXIT
+   CASE "HB_LEVEL"
+      cMacro := hb_ntos( hbmk[ _HBMK_nLevel ] ) ; EXIT
    OTHERWISE
       /* NOTE: If macro not found, try to interpret as
                envvar. If it doesn't exist, empty string
