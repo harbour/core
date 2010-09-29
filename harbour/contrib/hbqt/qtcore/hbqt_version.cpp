@@ -4,10 +4,9 @@
 
 /*
  * Harbour Project source code:
- * QT wrapper main header
+ * QT version functions
  *
- * Copyright 2009 Marcos Antonio Gambeta <marcosgambeta at gmail dot com>
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2010 Viktor Szakats (harbour.01 syenar.hu)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -73,46 +72,3 @@ HB_FUNC( QT_VERSION_STR )
 {
    hb_retc_const( QT_VERSION_STR );
 }
-
-#if QT_VERSION >= 0x040500
-
-#include <QtCore/QObject>
-
-HB_FUNC( HBQT_FINDCHILD )
-{
-   QObject * object = ( QObject * ) hbqt_pPtrFromObj( 1 );
-   hb_retptr( object->findChild< QObject * >( hbqt_par_QString( 2 ) ) );
-}
-
-HB_FUNC( HBQT_ISEMPTYQTPOINTER )
-{
-   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-
-   if( p && p->ph )
-      hb_retl( HB_FALSE );
-   else
-      hb_retl( HB_TRUE );
-}
-
-HB_FUNC( HBQT_ISEQUALGCQTPOINTER )
-{
-   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
-   HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-
-   if( p && q )
-   {
-      if( p->ph && q->ph )
-         hb_retl( p->ph == q->ph );
-      else
-         hb_retl( HB_FALSE );
-   }
-   else
-   {
-      if( p && p->ph )
-         hb_retl( p->ph == hb_parptr( 2 ) );
-      else
-         hb_retl( HB_FALSE );
-   }
-}
-
-#endif                  // #if QT_VERSION >= 0x040500

@@ -88,7 +88,6 @@ HB_EXTERN_BEGIN
 extern HB_EXPORT void * hbqt_gcpointer( int iParam );
 extern HB_EXPORT const HB_GC_FUNCS * hbqt_gcFuncs( void );
 extern HB_EXPORT void * hbqt_pPtrFromObj( int iParam );
-extern HB_EXPORT void * hbqt_pPtrFromItem( PHB_ITEM pObj );
 
 HB_EXTERN_END
 

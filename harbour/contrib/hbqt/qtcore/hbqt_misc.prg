@@ -76,7 +76,7 @@ CLASS HbQtObjectHandler
 /*----------------------------------------------------------------------*/
 
 METHOD HbQtObjectHandler:isValidObject()
-   RETURN ! hbqt_isEmptyQtPointer( ::pPtr )
+   RETURN __hbqt_IsValidPointer( ::pPtr )
 
 /*----------------------------------------------------------------------*/
 
@@ -178,4 +178,3 @@ FUNCTION hbqt_error()
    RETURN Eval( ErrorBlock(), oError )
 
 /*----------------------------------------------------------------------*/
-

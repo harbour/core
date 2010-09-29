@@ -1829,7 +1829,7 @@ METHOD HqrGraphicsItem:contextMenu( p1, p2 )
    qMenu:addAction( "Copy" )
 
    pAct := qMenu:exec( qEvent:screenPos() )
-   IF ! hbqt_isEmptyQtPointer( pAct )
+   IF pAct:isValidObject()
       SWITCH ( QAction():configure( pAct ) ):text()
       CASE "Cut"
          EXIT

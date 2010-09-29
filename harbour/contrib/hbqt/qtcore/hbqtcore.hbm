@@ -7,8 +7,9 @@
 
 g/filelist.hbm
 
-hbqt_base.cpp
-hbqt_destruct.cpp
+hbqt_pointer.cpp
+hbqt_version.cpp
+
 hbqt_hbqevents.cpp
 hbqt_hbqslots.cpp
 hbqt_hbqstring.cpp

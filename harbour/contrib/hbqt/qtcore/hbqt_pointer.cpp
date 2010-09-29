@@ -59,8 +59,6 @@
 
 #if QT_VERSION >= 0x040500
 
-#include <QtCore/QTextCodec>
-
 /*----------------------------------------------------------------------*/
 
 static HB_GARBAGE_FUNC( Q_release )
@@ -80,28 +78,6 @@ static const HB_GC_FUNCS QT_gcFuncs =
 const HB_GC_FUNCS * hbqt_gcFuncs( void )
 {
    return &QT_gcFuncs;
-}
-
-static void * hbqt_gcpointerFromItem( PHB_ITEM pObj )
-{
-   HBQT_GC_T * p;
-
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcpointerFromItem( %p )", pObj ) );
-
-   p = ( HBQT_GC_T * ) hb_itemGetPtrGC( pObj, hbqt_gcFuncs() );
-
-   if( p && p->ph )
-      return p->ph;
-   else if( hb_itemGetPtr( pObj ) )
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcpointerFromItem(): returns raw pointer: %p", hb_itemGetPtr( pObj ) ) );
-      return hb_itemGetPtr( pObj ); /* TOFIX: In what cases is this needed? Reference counting to avoid referring to freed pointers? */
-   }
-   else
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcpointerFromItem(): returns NULL" ) );
-      return NULL; /* TODO: Still better if RTE. */
-   }
 }
 
 void * hbqt_par_obj( int iParam )
@@ -212,16 +188,47 @@ void * hbqt_pPtrFromObj( int iParam )
    }
 }
 
-HB_FUNC( __HBQT_SETCODECFORCSTRINGS )
+/* TOFIX */
+HB_FUNC( HBQT_PTR__ )
 {
-   QTextCodec * codec = QTextCodec::codecForName( ( char * ) hb_parc( 1 ) );
-   QTextCodec::setCodecForCStrings( codec );
+   PHB_ITEM pObj = hb_param( 1, HB_IT_OBJECT );
+
+   if( pObj )
+   {
+      PHB_DYNS pPPTR = hb_dynsymFindName( "PPTR" );
+
+      if( pPPTR ) /* TOFIX: Verify is such message really provided by this object */
+      {
+         hb_vmPushSymbol( hb_dynsymSymbol( pPPTR ) );
+         hb_vmPush( pObj );
+         hb_vmSend( 0 );
+
+         hb_itemReturn( hb_param( -1, HB_IT_ANY ) );
+         return;
+      }
+   }
+
+   hb_itemReturn( hb_param( 1, HB_IT_ANY ) );
 }
 
-HB_FUNC( __HBQT_SETCODECFORTR )
+HB_FUNC( __HBQT_ISVALIDPOINTER )
 {
-   QTextCodec * codec = QTextCodec::codecForName( ( char * ) hb_parc( 1 ) );
-   QTextCodec::setCodecForTr( codec );
+   HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
+
+   hb_retl( p && p->ph );
+}
+
+#include <QtCore/QObject>
+
+HB_FUNC( HBQT_FINDCHILD )
+{
+   QObject * object = ( QObject * ) hbqt_pPtrFromObj( 1 );
+   hb_retptr( object->findChild< QObject * >( hbqt_par_QString( 2 ) ) );
+}
+
+HB_FUNC( HBQT_ISEQUALGCQTPOINTER )
+{
+   hb_retl( hbqt_pPtrFromObj( 1 ) == hbqt_pPtrFromObj( 2 ) );
 }
 
 /*----------------------------------------------------------------------*/

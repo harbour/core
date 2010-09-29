@@ -67,6 +67,7 @@
 
 #include "hbclass.ch"
 #include "common.ch"
+#include "error.ch"
 #include "inkey.ch"
 
 #include "xbp.ch"
@@ -1284,8 +1285,18 @@ METHOD XbpWindow:currentSize()
 /*----------------------------------------------------------------------*/
 
 METHOD XbpWindow:getHWND()
+   LOCAL oError := ErrorNew()
 
-   MsgBox( "hbQT is a not a Windows only solution !" )
+   oError:severity    := ES_ERROR
+   oError:genCode     := EG_UNSUPPORTED
+   oError:subSystem   := "HBXBP"
+   oError:subCode     := 7000
+   oError:canRetry    := .F.
+   oError:canDefault  := .F.
+   oError:Args        := hb_AParams()
+   oError:operation   := ProcName()
+
+   Eval( ErrorBlock(), oError )
 
    RETURN NIL
 
