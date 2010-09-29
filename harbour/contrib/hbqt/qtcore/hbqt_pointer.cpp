@@ -227,6 +227,13 @@ HB_FUNC( HBQT_ISEQUALGCQTPOINTER )
    hb_retl( hbqt_pPtrFromObj( 1 ) == hbqt_pPtrFromObj( 2 ) );
 }
 
+HB_FUNC( HBQT_ERROR )
+{
+   PHB_ITEM pError = hb_errRT_New( ES_ERROR, "HBQT", EG_ARG, 1001, NULL, NULL, 0, EF_NONE );
+   hb_errLaunch( pError );
+   hb_itemRelease( pError );
+}
+
 /*----------------------------------------------------------------------*/
 
 #endif                  // #if QT_VERSION >= 0x040500

@@ -160,20 +160,3 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
    RETURN .F.
 
 /*----------------------------------------------------------------------*/
-
-FUNCTION hbqt_error()
-   LOCAL oError := ErrorNew()
-
-   oError:severity    := ES_ERROR
-   oError:genCode     := EG_ARG
-   oError:subSystem   := "HBQT"
-   oError:subCode     := 1001
-   oError:canRetry    := .F.
-   oError:canDefault  := .F.
-   oError:Args        := hb_AParams()
-   oError:operation   := ProcName()
-   oError:Description := "Incorrect parameter type"
-
-   RETURN Eval( ErrorBlock(), oError )
-
-/*----------------------------------------------------------------------*/
