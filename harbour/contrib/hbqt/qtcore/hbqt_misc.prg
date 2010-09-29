@@ -51,9 +51,7 @@
 /*----------------------------------------------------------------------*/
 
 #include "hbclass.ch"
-#include "common.ch"
 #include "error.ch"
-#include "hbtrace.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -71,7 +69,7 @@ CLASS HbQtObjectHandler
 
    ERROR HANDLER onError()
 
-   ENDCLASS
+ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
@@ -112,45 +110,54 @@ METHOD HbQtObjectHandler:onError()
 
    Eval( ErrorBlock(), oError )
 
-   RETURN nil
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
 METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
-   LOCAL cType := valtype( cnEvent )
 
-   IF cType == "C"
-      IF empty( ::pSlots )
+   SWITCH ValType( cnEvent )
+   CASE "C"
+
+      IF Empty( ::pSlots )
          ::pSlots := Qt_Slots_New()
       ENDIF
       RETURN Qt_Slots_Connect( ::pSlots, ::pPtr, cnEvent, bBlock )
 
-   ELSEIF cType == "N"
-      IF empty( ::pEvents )
+   CASE "N"
+
+      IF Empty( ::pEvents )
          ::pEvents := Qt_Events_New()
          ::installEventFilter( ::pEvents )
       ENDIF
       RETURN Qt_Events_Connect( ::pEvents, ::pPtr, cnEvent, bBlock )
 
-   ENDIF
-   RETURN .f.
+   ENDSWITCH
+
+   RETURN .F.
 
 /*----------------------------------------------------------------------*/
 
 METHOD HbQtObjectHandler:disconnect( cnEvent )
-   LOCAL cType := valtype( cnEvent )
-   IF cType == "C"
-      IF ! empty( ::pSlots )
+
+   SWITCH ValType( cnEvent )
+   CASE "C"
+
+      IF ! Empty( ::pSlots )
          RETURN Qt_Slots_DisConnect( ::pSlots, ::pPtr, cnEvent )
       ENDIF
+      EXIT
 
-   ELSEIF cType == "N"
-      IF ! empty( ::pEvents )
+   CASE "N"
+
+      IF ! Empty( ::pEvents )
          RETURN Qt_Events_DisConnect( ::pEvents, ::pPtr, cnEvent )
       ENDIF
+      EXIT
 
-   ENDIF
-   RETURN .f.
+   ENDSWITCH
+
+   RETURN .F.
 
 /*----------------------------------------------------------------------*/
 
@@ -165,7 +172,7 @@ FUNCTION hbqt_error()
    oError:canDefault  := .F.
    oError:Args        := hb_AParams()
    oError:operation   := ProcName()
-   oError:Description := "Incorrect parameters type"
+   oError:Description := "Incorrect parameter type"
 
    RETURN Eval( ErrorBlock(), oError )
 

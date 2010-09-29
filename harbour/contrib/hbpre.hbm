@@ -8,7 +8,7 @@
 
 {HB_BUILD_VERBOSE}-quiet-
 {HB_BUILD_VERBOSE}-info
-{!(HB_BUILD_VERBOSE='no')}-trace
+{HB_BUILD_VERBOSE}-trace
 
 {!HB_BUILD_DEBUG}-l
 
