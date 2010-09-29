@@ -1,6 +1,6 @@
 diff -u dbu53ori/dbu.prg dbu53pat/dbu.prg
 --- dbu53ori/dbu.prg	1996-05-20 05:31:00.000000000 +0200
-+++ dbu53pat/dbu.prg	2009-06-10 01:43:32.000000000 +0200
++++ dbu53pat/dbu.prg	2010-09-29 16:45:18.000000000 +0200
 @@ -9,8 +9,8 @@
  *
  ***/
@@ -59,7 +59,7 @@ diff -u dbu53ori/dbu.prg dbu53pat/dbu.prg
  
        OTHERWISE
      // file not found..ignore command line
-@@ -409,14 +412,14 @@
+@@ -409,7 +412,7 @@
        IF .NOT. EMPTY(com_line)
      // command line file exists
  
@@ -68,14 +68,6 @@ diff -u dbu53ori/dbu.prg dbu53pat/dbu.prg
         // assume a valid .VEW file
         view_file := com_line
         set_from(.F.)                        // restore view
-        KEYBOARD CHR(-4) + CHR(24) + CHR(13) // browse view
- 
-     ELSE
--       // assume a valid .DBF file
-+       // assume a valid .dbf file
-        dbf[1] := com_line                    // primary database
- 
-        IF NetUse( com_line )
 @@ -708,18 +711,18 @@
      @ 3,0 CLEAR
  
@@ -101,7 +93,7 @@ diff -u dbu53ori/dbu.prg dbu53pat/dbu.prg
  
 diff -u dbu53ori/dbucopy.prg dbu53pat/dbucopy.prg
 --- dbu53ori/dbucopy.prg	1996-05-20 05:31:00.000000000 +0200
-+++ dbu53pat/dbucopy.prg	2009-06-10 01:35:15.000000000 +0200
++++ dbu53pat/dbucopy.prg	2010-09-29 16:47:43.000000000 +0200
 @@ -62,8 +62,8 @@
  	filename = ""
  
@@ -122,6 +114,15 @@ diff -u dbu53ori/dbucopy.prg dbu53pat/dbucopy.prg
  
  	* when is a filename acceptable?
  	fi_done = "not_empty('filename')"
+@@ -208,7 +208,7 @@
+ 
+ 		SELECT (M->cur_area)
+ 
+-		IF RAT(M->def_ext, M->filename) = LEN(M->filename) - 3
++		IF RAT(Lower( M->def_ext ), Lower( M->filename )) = LEN(M->filename) - 3
+ 			* target has default extension..does it exists in current dir?
+ 			add_name = .NOT. FILE(name(M->filename) + M->def_ext)
+ 
 @@ -742,7 +742,7 @@
  			cur_el = 1
  			rel_row = 0
@@ -158,6 +159,106 @@ diff -u dbu53ori/dbucopy.prg dbu53pat/dbucopy.prg
  				filelist(1)		&& display new list
  
  			ENDIF
+diff -u dbu53ori/dbuedit.prg dbu53pat/dbuedit.prg
+--- dbu53ori/dbuedit.prg	1996-05-20 05:31:00.000000000 +0200
++++ dbu53pat/dbuedit.prg	2010-09-29 16:37:37.000000000 +0200
+@@ -47,7 +47,7 @@
+    nHelpSave := help_code
+ 
+    /* save, clear, and frame the window */
+-   cBrowseBuf := SaveScreen(8, 0, 23, 79)
++   cBrowseBuf := SaveScreen(8, 0, MaxRow()-1, MaxCol())
+ 
+    /* array to save move_ptr expressions */
+    aMoveExp := Array(4)
+@@ -95,7 +95,7 @@
+ 
+    /* create TBrowse object */
+    nColorSave := SetColor(color7)
+-   oB := TBrowseDB(10, 1, 23, 78)
++   oB := TBrowseDB(10, 1, MaxRow()-1, MaxCol()-1)
+ 
+    oB:headSep := "ÍÑÍ"
+    oB:colSep  := " ³ "
+@@ -139,10 +139,10 @@
+ 
+    /* initialize parts of screen not handled by TBrowse */
+    stat_msg("")
+-   scroll(8, 0, 23, 79, 0)
+-   @ 8, 0, 23, 79 BOX frame
++   scroll(8, 0, MaxRow()-1, MaxCol(), 0)
++   @ 8, 0, MaxRow()-1, MaxCol() BOX frame
+    @ nHsepRow, 0 SAY "Æ"
+-   @ nHsepRow, 79 SAY "µ"
++   @ nHsepRow, MaxCol() SAY "µ"
+ 
+    /* init rest of locals */
+    cAlias := ""
+@@ -353,11 +353,11 @@
+             box_open := .t.
+ 
+             /* save, clear, and frame window for memoedit */
+-            cMemoBuff := SaveScreen(10, 10, 22, 69)
++            cMemoBuff := SaveScreen(10, 10, MaxRow()-2, 69)
+ 
+             SetColor(color8)
+-            Scroll(10, 10, 22, 69, 0)
+-            @ 10, 10, 22, 69 BOX frame
++            Scroll(10, 10, MaxRow()-2, 69, 0)
++            @ 10, 10, MaxRow()-2, 69 BOX frame
+ 
+             /* use fieldspec for title */
+             SetColor(color9)
+@@ -365,7 +365,7 @@
+ 
+             /* edit the memo field */
+             SetColor(color8)
+-            cMemo := MemoEdit(&cEditField, 11, 11, 21, 68,.T.,"xmemo")
++            cMemo := MemoEdit(&cEditField, 11, 11, MaxRow()-3, 68,.T.,"xmemo")
+ 
+             if Lastkey() == K_CTRL_END
+                /* ^W..new memo confirmed */
+@@ -397,7 +397,7 @@
+             end
+ 
+             /* restore the window */
+-            RestScreen(10, 10, 22, 69, cMemoBuff)
++            RestScreen(10, 10, MaxRow()-2, 69, cMemoBuff)
+             box_open := .F.
+          else
+             /* regular data entry */
+@@ -467,7 +467,7 @@
+    end
+ 
+    /* restore the screen */
+-   RestScreen(8, 0, 23, 79, cBrowseBuf)
++   RestScreen(8, 0, MaxRow()-1, MaxCol(), cBrowseBuf)
+    SetColor(nColorSave)
+    SetCursor(nCType)
+    curs_on := (nCType != 0)
+@@ -930,8 +930,8 @@
+                "mGetVar")
+ 
+    /* setup a scrolling GET if it's too long to fit on the screen */
+-   if oGet:type == "C" .AND. LEN( oGet:varGet() ) > 78
+-      oGet:picture := "@S78"
++   if oGet:type == "C" .AND. LEN( oGet:varGet() ) > MaxCol()-1
++      oGet:picture := "@S" + hb_ntos( MaxCol()-1 )
+    endif
+ 
+    /* refresh flag */
+diff -u dbu53ori/dbuindx.prg dbu53pat/dbuindx.prg
+--- dbu53ori/dbuindx.prg	1996-05-20 05:31:00.000000000 +0200
++++ dbu53pat/dbuindx.prg	2010-09-29 16:48:24.000000000 +0200
+@@ -240,7 +240,7 @@
+ 		INDEX ON &k_exp TO &filename
+ 		CLOSE INDEX
+ 
+-		IF AT(INDEXEXT(), M->filename) = LEN(M->filename) - 3 .AND.;
++		IF AT(Lower( INDEXEXT() ), Lower( M->filename )) = LEN(M->filename) - 3 .AND.;
+ 		   FILE(name(M->filename) + INDEXEXT()) .AND. M->add_name
+ 			* add only .ntx files in the current directory
+ 
 diff -u dbu53ori/dbustru.prg dbu53pat/dbustru.prg
 --- dbu53ori/dbustru.prg	1996-05-20 05:31:00.000000000 +0200
 +++ dbu53pat/dbustru.prg	2009-06-10 01:43:02.000000000 +0200
@@ -207,7 +308,7 @@ diff -u dbu53ori/dbustru.prg dbu53pat/dbustru.prg
  
 diff -u dbu53ori/dbuutil.prg dbu53pat/dbuutil.prg
 --- dbu53ori/dbuutil.prg	1996-05-20 05:31:00.000000000 +0200
-+++ dbu53pat/dbuutil.prg	2009-06-12 17:41:51.000000000 +0200
++++ dbu53pat/dbuutil.prg	2010-09-29 16:49:39.000000000 +0200
 @@ -950,7 +950,7 @@
  		SET KEY 24 TO clear_gets
  
@@ -222,7 +323,7 @@ diff -u dbu53ori/dbuutil.prg dbu53pat/dbuutil.prg
  	* only if the file exists
  
 -	IF INDEXEXT() = ".NTX"
-+	IF INDEXEXT() = ".ntx"
++	IF Lower( INDEXEXT() ) = ".ntx"
  		* Clipper index file format
  		k_pos = 23
  

@@ -1,6 +1,6 @@
 diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
 --- dbu52ori/dbu.prg	1993-03-04 04:20:00.000000000 +0100
-+++ dbu52pat/dbu.prg	2009-06-10 01:37:40.000000000 +0200
++++ dbu52pat/dbu.prg	2010-09-29 16:43:46.000000000 +0200
 @@ -60,6 +60,9 @@
     SAVE SCREEN                                   && the screen you save...
     SET SCOREBOARD OFF                            && who's keeping score, anyhow
@@ -11,6 +11,25 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
     
     IF (ISCOLOR() .OR. "/C" $ UPPER(param2)) .AND. .NOT. "/M" $ UPPER(param2)
        * make it pretty
+@@ -346,14 +349,14 @@
+    help_title[22] = "REPLACE"
+    
+    * arrays for file names in default directory
+-   DECLARE dbf_list[adir("*.DBF") + 20]          && directory of data files
++   DECLARE dbf_list[adir("*.dbf") + 20]          && directory of data files
+    DECLARE ntx_list[adir("*" + INDEXEXT()) + 20] && directory of index files
+-   DECLARE vew_list[adir("*.VEW") + 20]          && directory of view files
++   DECLARE vew_list[adir("*.vew") + 20]          && directory of view files
+    
+    * fill the arrays with filenames
+-   array_dir("*.DBF",dbf_list)
++   array_dir("*.dbf",dbf_list)
+    array_dir("*" + INDEXEXT(),ntx_list)
+-   array_dir("*.VEW",vew_list)
++   array_dir("*.vew",vew_list)
+    
+    * default to set view
+    local_func = 0                                && local menu
 @@ -378,13 +381,13 @@
              
           ENDIF
@@ -38,9 +57,43 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
              * assume a valid .VEW file
              view_file = com_line
              set_from(.F.)                        && restore view
+@@ -646,18 +649,18 @@
+          @ 3,0 CLEAR
+          
+          * rebuild directory arrays..must keep current
+-         DECLARE dbf_list[adir("*.DBF") + 20]
++         DECLARE dbf_list[adir("*.dbf") + 20]
+          DECLARE ntx_list[adir("*" + INDEXEXT()) + 20]
+-         DECLARE vew_list[adir("*.VEW") + 20]
++         DECLARE vew_list[adir("*.vew") + 20]
+          
+          * fill the arrays with filenames..data files
+-         array_dir("*.DBF",dbf_list)
++         array_dir("*.dbf",dbf_list)
+          
+          * index files
+          array_dir("*" + INDEXEXT(),ntx_list)
+          
+          * view files
+-         array_dir("*.VEW",vew_list)
++         array_dir("*.vew",vew_list)
+          cur_area = 0                            && re-draw view screen
+          sysfunc = 0                             && back to the main view screen
+          
 diff -u dbu52ori/dbucopy.prg dbu52pat/dbucopy.prg
 --- dbu52ori/dbucopy.prg	1993-03-04 04:20:00.000000000 +0100
-+++ dbu52pat/dbucopy.prg	2009-06-10 01:37:40.000000000 +0200
++++ dbu52pat/dbucopy.prg	2010-09-29 16:45:38.000000000 +0200
+@@ -62,8 +62,8 @@
+ 	filename = ""
+ 
+ 	* only copy and append use a list of text files
+-	DECLARE txt_list[adir("*.TXT") + 20]		&& directory of text files
+-	array_dir("*.TXT",txt_list)					&& fill array with filenames
++	DECLARE txt_list[adir("*.txt") + 20]		&& directory of text files
++	array_dir("*.txt",txt_list)					&& fill array with filenames
+ 
+ 	* set up for multi-box
+ 	DECLARE boxarray[10]
 @@ -104,7 +104,7 @@
  
  	* DBF for normal mode
@@ -95,6 +148,94 @@ diff -u dbu52ori/dbucopy.prg dbu52pat/dbucopy.prg
  				filelist(1)		&& display new list
  
  			ENDIF
+diff -u dbu52ori/dbuedit.prg dbu52pat/dbuedit.prg
+--- dbu52ori/dbuedit.prg	1993-03-04 04:20:00.000000000 +0100
++++ dbu52pat/dbuedit.prg	2010-09-29 16:40:38.000000000 +0200
+@@ -47,7 +47,7 @@
+ 	nHelpSave := help_code
+ 
+ 	/* save, clear, and frame the window */
+-	cBrowseBuf := SaveScreen(8, 0, 23, 79)
++	cBrowseBuf := SaveScreen(8, 0, MaxRow()-1, MaxCol())
+ 
+ 	/* array to save move_ptr expressions */
+ 	aMoveExp := Array(4)
+@@ -95,7 +95,7 @@
+ 
+ 	/* create TBrowse object */
+ 	nColorSave := SetColor(color7)
+-	oB := TBrowseDB(10, 1, 23, 78)
++	oB := TBrowseDB(10, 1, MaxRow()-1, MaxCol()-1)
+ 
+ 	oB:headSep := "ÍÑÍ"
+ 	oB:colSep  := " ³ "
+@@ -135,10 +135,10 @@
+ 
+ 	/* initialize parts of screen not handled by TBrowse */
+ 	stat_msg("")
+-	scroll(8, 0, 23, 79, 0)
+-	@ 8, 0, 23, 79 BOX frame
++	scroll(8, 0, MaxRow()-1, MaxCol(), 0)
++	@ 8, 0, MaxRow()-1, MaxCol() BOX frame
+ 	@ nHsepRow, 0 SAY "Æ"
+-	@ nHsepRow, 79 SAY "µ"
++	@ nHsepRow, MaxCol() SAY "µ"
+ 
+ 	/* init rest of locals */
+ 	cAlias := ""
+@@ -349,11 +349,11 @@
+ 				box_open := .t.
+ 
+ 				/* save, clear, and frame window for memoedit */
+-				cMemoBuff := SaveScreen(10, 10, 22, 69)
++				cMemoBuff := SaveScreen(10, 10, MaxRow()-2, 69)
+ 
+ 				SetColor(color8)
+-				Scroll(10, 10, 22, 69, 0)
+-				@ 10, 10, 22, 69 BOX frame
++				Scroll(10, 10, MaxRow()-2, 69, 0)
++				@ 10, 10, MaxRow()-2, 69 BOX frame
+ 
+ 				/* use fieldspec for title */
+ 				SetColor(color9)
+@@ -361,7 +361,7 @@
+ 
+ 				/* edit the memo field */
+ 				SetColor(color8)
+-				cMemo := MemoEdit(&cEditField, 11, 11, 21, 68,.T.,"xmemo")
++				cMemo := MemoEdit(&cEditField, 11, 11, MaxRow()-3, 68,.T.,"xmemo")
+ 
+ 				if Lastkey() == K_CTRL_END
+ 					/* ^W..new memo confirmed */
+@@ -393,7 +393,7 @@
+ 				end
+ 
+ 				/* restore the window */
+-				RestScreen(10, 10, 22, 69, cMemoBuff)
++				RestScreen(10, 10, MaxRow()-2, 69, cMemoBuff)
+ 				box_open := .F.
+ 			else
+ 				/* regular data entry */
+@@ -461,7 +461,7 @@
+ 	end
+ 
+ 	/* restore the screen */
+-	RestScreen(8, 0, 23, 79, cBrowseBuf)
++	RestScreen(8, 0, MaxRow()-1, MaxCol(), cBrowseBuf)
+ 	SetColor(nColorSave)
+ 	SetCursor(nCType)
+ 	curs_on := (nCType != 0)
+@@ -924,8 +924,8 @@
+ 				   "mGetVar")
+ 
+    /* setup a scrolling GET if it's too long to fit on the screen */
+-   if oGet:type == "C" .AND. LEN( oGet:varGet() ) > 78
+-      oGet:picture := "@S78"
++   if oGet:type == "C" .AND. LEN( oGet:varGet() ) > MaxCol() - 1
++      oGet:picture := "@S" + hb_ntos( MaxCol() - 1 )
+    endif
+ 
+ 	/* refresh flag */
 diff -u dbu52ori/dbuindx.prg dbu52pat/dbuindx.prg
 --- dbu52ori/dbuindx.prg	1993-03-04 04:20:00.000000000 +0100
 +++ dbu52pat/dbuindx.prg	2009-06-10 01:37:40.000000000 +0200
