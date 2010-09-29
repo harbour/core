@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Wvg*Classes
  *
- * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2008-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -58,7 +58,7 @@
  *
  *                  Xbase++ xbpTreeView compatible Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                             Pritpal Bedi
  *                               26Nov2008
  */
 /*----------------------------------------------------------------------*/
@@ -147,7 +147,7 @@ CLASS XbpListBox  INHERIT  XbpWindow, XbpDataRef
 
 METHOD XbpListBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
@@ -168,20 +168,13 @@ METHOD XbpListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    IF ::markMode == XBPLISTBOX_MM_MULTIPLE
       ::oWidget:setSelectionMode( QAbstractItemView_MultiSelection )
    ENDIF
-
    ::oWidget:setEditTriggers( QAbstractItemView_NoEditTriggers )
-
    IF ! ::horizScroll
       ::oWidget:setHorizontalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
    ENDIF
    IF ! ::vertScroll
       ::oWidget:setVerticalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
    ENDIF
-
-   ::sl_editBuffer := {}
-
-   /* Window Events */
-   ::oWidget:connect( QEvent_ContextMenu, {|e| ::grabEvent( QEvent_ContextMenu, e ) } )
 
    ::connect()
    ::setPosAndSize()
@@ -190,11 +183,16 @@ METHOD XbpListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
    ::oParent:AddChild( SELF )
    ::postCreate()
+
+   ::sl_editBuffer := {}
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpListBox:connect()
+
+   ::oWidget:connect( QEvent_ContextMenu, {|e| ::grabEvent( QEvent_ContextMenu, e ) } )
 
    ::oWidget:connect( "currentItemChanged(QLWItem,QLWItem)", {|p,p1| ::execSlot( "currentItemChanged(QLWItem,QLWItem)", p, p1 ) } )
    ::oWidget:connect( "currentRowChanged(int)"             , {|p,p1| ::execSlot( "currentRowChanged(int)"             , p, p1 ) } )
@@ -212,6 +210,8 @@ METHOD XbpListBox:connect()
 /*----------------------------------------------------------------------*/
 
 METHOD XbpListBox:disConnect()
+
+   ::oWidget:disconnect( QEvent_ContextMenu )
 
    ::oWidget:disConnect( "currentItemChanged(QLWItem,QLWItem)" )
    ::oWidget:disConnect( "currentRowChanged(int)"              )

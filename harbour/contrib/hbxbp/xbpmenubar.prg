@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Xbp*Classes
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -58,7 +58,7 @@
  *
  *                  Xbase++ Compatible xbpMenuBar Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                            Pritpal Bedi
  *                              08Jun2009
  */
 /*----------------------------------------------------------------------*/
@@ -156,15 +156,7 @@ CLASS xbpMenuBar INHERIT xbpWindow
 
 METHOD xbpMenuBar:new( oParent, aPresParams, lVisible )
 
-   DEFAULT oParent     TO ::oParent
-   DEFAULT aPresParams TO ::aPresParams
-   DEFAULT lVisible    TO ::visible
-
-   ::oParent     := oParent
-   ::aPresParams := aPresParams
-   ::visible     := lVisible
-
-   ::xbpWindow:new( ::oParent, , , , ::aPresParams, ::visible )
+   ::xbpWindow:init( oParent, , , , aPresParams, lVisible )
 
    RETURN Self
 
@@ -172,15 +164,7 @@ METHOD xbpMenuBar:new( oParent, aPresParams, lVisible )
 
 METHOD xbpMenuBar:create( oParent, aPresParams, lVisible )
 
-   DEFAULT oParent     TO ::oParent
-   DEFAULT aPresParams TO ::aPresParams
-   DEFAULT lVisible    TO ::visible
-
-   ::oParent     := oParent
-   ::aPresParams := aPresParams
-   ::visible     := lVisible
-
-   ::xbpWindow:create( ::oParent, , , , ::aPresParams, ::visible )
+   ::xbpWindow:create( oParent, , , , aPresParams, lVisible )
 
    ::oWidget := QMenuBar()
    ::oParent:oWidget:setMenuBar( ::oWidget )
@@ -188,9 +172,9 @@ METHOD xbpMenuBar:create( oParent, aPresParams, lVisible )
    if !empty( ::oWidget )
       ::oParent:oMenu := Self
    endif
-
    ::oParent:addChild( self )
    ::postCreate()
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -713,15 +697,7 @@ CLASS xbpMenu INHERIT xbpMenuBar
 
 METHOD xbpMenu:new( oParent, aPresParams, lVisible )
 
-   DEFAULT oParent     TO ::oParent
-   DEFAULT aPresParams TO ::aPresParams
-   DEFAULT lVisible    TO ::visible
-
-   ::oParent     := oParent
-   ::aPresParams := aPresParams
-   ::visible     := lVisible
-
-   ::xbpWindow:new( ::oParent, , , , ::aPresParams, ::visible )
+   ::xbpWindow:init( oParent, , , , aPresParams, lVisible )
 
    RETURN Self
 
@@ -729,21 +705,14 @@ METHOD xbpMenu:new( oParent, aPresParams, lVisible )
 
 METHOD xbpMenu:create( oParent, aPresParams, lVisible )
 
-   DEFAULT oParent     TO ::oParent
-   DEFAULT aPresParams TO ::aPresParams
-   DEFAULT lVisible    TO ::visible
-
-   ::oParent     := oParent
-   ::aPresParams := aPresParams
-   ::visible     := lVisible
-
-   ::xbpWindow:create( ::oParent, , , , ::aPresParams, ::visible )
+   ::xbpWindow:create( oParent, , , , aPresParams, lVisible )
 
    ::oWidget := QMenu()
    ::oParent:oWidget:addMenu( ::oWidget )
 
    ::oParent:addChild( self )
    ::postCreate()
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

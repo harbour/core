@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Xbp*Classes
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -58,7 +58,7 @@
  *
  *                  Xbase++ xbpTabPage compatible Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                              Pritpal Bedi
  *                               14Jun2009
  */
 /*----------------------------------------------------------------------*/
@@ -145,8 +145,8 @@ METHOD XbpTabPage:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    IF ::visible
       ::show()
    ENDIF
-
    oPar:addChild( SELF )
+   ::postCreate()
 
    RETURN Self
 
@@ -330,16 +330,15 @@ METHOD XbpTabWidget:destroy()
 /*----------------------------------------------------------------------*/
 
 METHOD XbpTabWidget:execSlot( cSlot, p )
-   LOCAL qTab, nIndex, oTab, pWidget, qPoint, qApp
-   LOCAL iIndex
+   LOCAL qTab, nIndex, oTab, qWidget, qPoint, iIndex
 
    IF hb_isPointer( p )
       qPoint  := ::oWidget:mapToGlobal( p )
-      qApp    := QApplication()
-      pWidget := qApp:widgetAt( qPoint )
+      qWidget := QApplication():widgetAt( qPoint )
 
-      iIndex  := ascan( ::aChildren, {|o| hbqt_IsEqualGcQtPointer( o:oWidget:pPtr, pWidget:pPtr ) } ) - 1
-HB_TRACE( HB_TR_DEBUG, "iIndex", iIndex, pWidget:objectName() )
+      iIndex  := ascan( ::aChildren, {|o| hbqt_IsEqualGcQtPointer( o:oWidget:pPtr, qWidget:pPtr ) } ) - 1
+//      iIndex  := ascan( ::aChildren, {|o| hbqt_areEqualObjects( o:oWidget, qWidget ) } ) - 1
+HB_TRACE( HB_TR_ALWAYS, "iIndex", iIndex, qWidget:objectName() )
    ELSE
       iIndex := p
    ENDIF
@@ -348,6 +347,8 @@ HB_TRACE( HB_TR_DEBUG, "iIndex", iIndex, pWidget:objectName() )
       qTab := ::oWidget:widget( iIndex )
 
       IF ( nIndex := ascan( ::aChildren, {|o| hbqt_IsEqualGcQtPointer( o:oWidget:pPtr, qTab:pPtr ) } ) ) > 0
+//      IF ( nIndex := ascan( ::aChildren, {|o| hbqt_areEqualObjects( o:oWidget, qTab ) } ) ) > 0
+//HB_TRACE( HB_TR_ALWAYS, "hurray", iIndex, nIndex )
          oTab := ::aChildren[ nIndex ]
 
          DO CASE

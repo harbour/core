@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Xbp*Classes
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -56,9 +56,9 @@
  *                                EkOnkar
  *                          ( The LORD is ONE )
  *
- *                    Xbase++ XbpSpinButton compatible Class
+ *                  Xbase++ XbpSpinButton compatible Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                             Pritpal Bedi
  *                               17Jun2009
  */
 /*----------------------------------------------------------------------*/
@@ -95,6 +95,8 @@ CLASS XbpSpinButton INHERIT XbpWindow, XbpDataRef
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) VIRTUAL
    METHOD   destroy()
+   METHOD   connect()
+   METHOD   disconnect()
    METHOD   handleEvent( nEvent, mp1, mp2 )
    METHOD   execSlot( cSlot, p )
 
@@ -147,23 +149,16 @@ METHOD XbpSpinButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
    ::oWidget:setFrame( ::border )
    ::oWidget:setAlignment( es_[ ::align ] )
 
-   #if 0
-   ::oWidget:connect( QEvent_FocusIn , {|| ::execSlot( "QEvent_FocusIn"  ) } )
-   ::oWidget:connect( QEvent_FocusOut, {|| ::execSlot( "QEvent_FocusOut" ) } )
-   ::oWidget:connect( QEvent_KeyPress, {|| ::execSlot( "QEvent_KeyPress" ) } )
-   #endif
-
-   ::oWidget:connect( "valueChanged(int)" , {|i| ::execSlot( "valueChanged(int)", i ) } )
-
+   ::connect()
    ::setPosAndSize()
    IF ::visible
       ::show()
    ENDIF
+   ::oParent:addChild( Self )
+   ::postCreate()
 
    ::setData()
 
-   ::oParent:addChild( Self )
-   ::postCreate()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -219,8 +214,37 @@ METHOD XbpSpinButton:handleEvent( nEvent, mp1, mp2 )
 
 /*----------------------------------------------------------------------*/
 
+METHOD XbpSpinButton:connect()
+
+   #if 0
+   ::oWidget:connect( QEvent_FocusIn , {|| ::execSlot( "QEvent_FocusIn"  ) } )
+   ::oWidget:connect( QEvent_FocusOut, {|| ::execSlot( "QEvent_FocusOut" ) } )
+   ::oWidget:connect( QEvent_KeyPress, {|| ::execSlot( "QEvent_KeyPress" ) } )
+   #endif
+
+   ::oWidget:connect( "valueChanged(int)" , {|i| ::execSlot( "valueChanged(int)", i ) } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpSpinButton:disconnect()
+
+   #if 0
+   ::oWidget:connect( QEvent_FocusIn  )
+   ::oWidget:connect( QEvent_FocusOut )
+   ::oWidget:connect( QEvent_KeyPress )
+   #endif
+
+   ::oWidget:connect( "valueChanged(int)" )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD XbpSpinButton:destroy()
 
+   ::disconnect()
    ::xbpWindow:destroy()
 
    RETURN NIL

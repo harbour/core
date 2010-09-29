@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Xbp*Classes
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -56,9 +56,9 @@
  *                                EkOnkar
  *                          ( The LORD is ONE )
  *
-                              Class XbpStyle()
+ *                            Class XbpStyle()
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                             Pritpal Bedi
  *                               21Jun2009
  */
 /*----------------------------------------------------------------------*/

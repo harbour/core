@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Xbp*Classes
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -58,7 +58,7 @@
  *
  *                    Xbase++ Compatible XbpRtf Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                            Pritpal Bedi
  *                              10Jul2009
  */
 /*----------------------------------------------------------------------*/
@@ -81,6 +81,8 @@ CLASS XbpRtf INHERIT XbpWindow
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure()
    METHOD   destroy()
+   METHOD   connect()
+   METHOD   disconnect()
    METHOD   handleEvent( nEvent, mp1, mp2 )       VIRTUAL
    METHOD   execSlot( cSlot, p )
    METHOD   setStyle()                            VIRTUAL
@@ -171,25 +173,18 @@ METHOD XbpRtf:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget := QTextEdit( ::pParent )
 
-*  ::oWidget:connect( "copyAvailable(bool)"                      , {|p| ::execSlot( "copyAvailable(bool)"    , p ) } )
-   ::oWidget:connect( "currentCharFormatChanged(QTextCharFormat)", {|p| ::execSlot( "currentCharFormatChanged(QTextCharFormat)", p ) } )
-   ::oWidget:connect( "cursorPositionChanged()"                  , {|p| ::execSlot( "cursorPositionChanged()", p ) } )
-   ::oWidget:connect( "redoAvailable(bool)"                      , {|p| ::execSlot( "redoAvailable(bool)"    , p ) } )
-   ::oWidget:connect( "undoAvailable(bool)"                      , {|p| ::execSlot( "undoAvailable(bool)"    , p ) } )
-   ::oWidget:connect( "textChanged()"                            , {|p| ::execSlot( "textChanged()"          , p ) } )
-   ::oWidget:connect( "selectionChanged()"                       , {|p| ::execSlot( "selectionChanged()"     , p ) } )
-
+   ::connect()
    ::setPosAndSize()
    IF ::visible
       ::show()
    ENDIF
    ::oParent:AddChild( SELF )
+   ::postCreate()
 
    ::oTextDocument   := ::oWidget:document()
    ::oTextCursor     := ::oWidget:textCursor()
    ::oTextCharFormat := ::oTextCursor:charFormat()
 
-   ::postCreate()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -201,8 +196,9 @@ METHOD XbpRtf:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVis
    IF hb_isPointer( pQtObject )
       ::oWidget := QTextEdit()
       ::oWidget := pQtObject
-
    ENDIF
+
+   ::connect()
 
    RETURN Self
 
@@ -239,8 +235,37 @@ METHOD XbpRtf:configure()
 
 /*----------------------------------------------------------------------*/
 
+METHOD XbpRtf:connect()
+
+*  ::oWidget:connect( "copyAvailable(bool)"                      , {|p| ::execSlot( "copyAvailable(bool)"    , p ) } )
+   ::oWidget:connect( "currentCharFormatChanged(QTextCharFormat)", {|p| ::execSlot( "currentCharFormatChanged(QTextCharFormat)", p ) } )
+   ::oWidget:connect( "cursorPositionChanged()"                  , {|p| ::execSlot( "cursorPositionChanged()", p ) } )
+   ::oWidget:connect( "redoAvailable(bool)"                      , {|p| ::execSlot( "redoAvailable(bool)"    , p ) } )
+   ::oWidget:connect( "undoAvailable(bool)"                      , {|p| ::execSlot( "undoAvailable(bool)"    , p ) } )
+   ::oWidget:connect( "textChanged()"                            , {|p| ::execSlot( "textChanged()"          , p ) } )
+   ::oWidget:connect( "selectionChanged()"                       , {|p| ::execSlot( "selectionChanged()"     , p ) } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpRtf:disconnect()
+
+*  ::oWidget:disconnect( "copyAvailable(bool)"                       )
+   ::oWidget:disconnect( "currentCharFormatChanged(QTextCharFormat)" )
+   ::oWidget:disconnect( "cursorPositionChanged()"                   )
+   ::oWidget:disconnect( "redoAvailable(bool)"                       )
+   ::oWidget:disconnect( "undoAvailable(bool)"                       )
+   ::oWidget:disconnect( "textChanged()"                             )
+   ::oWidget:disconnect( "selectionChanged()"                        )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD XbpRtf:destroy()
 
+   ::disconnect()
    ::xbpWindow:destroy()
 
    ::oTextDocument   := NIL

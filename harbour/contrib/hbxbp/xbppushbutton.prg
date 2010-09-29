@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Xbp*Classes
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -58,7 +58,7 @@
  *
  *                 Xbase++ xbpPushButton Compatible Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                             Pritpal Bedi
  *                               13Jun2009
  */
 /*----------------------------------------------------------------------*/
@@ -93,6 +93,8 @@ CLASS XbpPushButton  INHERIT  XbpWindow
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
+   METHOD   connect()
+   METHOD   disconnect()
    METHOD   handleEvent( nEvent, mp1, mp2 )
    METHOD   execSlot( cSlot, p )
    METHOD   setStyle()                            VIRTUAL
@@ -121,22 +123,20 @@ METHOD XbpPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
    ::oWidget := QPushButton( ::oParent:oWidget )
    ::oWidget:setFocusPolicy( Qt_StrongFocus )
-
-   ::setPosAndSize()
-   IF ::visible
-      ::oWidget:show()
-   ENDIF
-
-   ::setCaption( ::caption )
-
    IF ::default
       ::oWidget:setDefault( .t. )
    ENDIF
 
-   ::oWidget:connect( "clicked()", {|| ::execSlot( "clicked()" ) } )
-   ::oWidget:connect( "pressed()", {|| ::execSlot( "pressed()" ) } )
-
+   ::connect()
+   ::setPosAndSize()
+   IF ::visible
+      ::oWidget:show()
+   ENDIF
    ::oParent:AddChild( SELF )
+   ::postCreate()
+
+   ::setCaption( ::caption )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -163,10 +163,10 @@ METHOD XbpPushButton:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParam
 
    ENDIF
 
-   ::oWidget:connect( "clicked()", {|| ::execSlot( "clicked()" ) } )
-
+   ::connect()
    ::addAsChild()
    ::postCreate()
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -196,8 +196,23 @@ METHOD XbpPushButton:handleEvent( nEvent, mp1, mp2 )
 
 /*----------------------------------------------------------------------*/
 
+METHOD XbpPushButton:connect()
+   ::oWidget:connect( "clicked()", {|| ::execSlot( "clicked()" ) } )
+   ::oWidget:connect( "pressed()", {|| ::execSlot( "pressed()" ) } )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpPushButton:disconnect()
+   ::oWidget:disconnect( "clicked()" )
+   ::oWidget:disconnect( "pressed()" )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD XbpPushButton:destroy()
 
+   ::disconnect()
    ::xbpWindow:destroy()
 
    RETURN NIL

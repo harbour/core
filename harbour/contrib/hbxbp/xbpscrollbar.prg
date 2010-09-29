@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Xbp*Classes
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -58,7 +58,7 @@
  *
  *                 Xbase++ xbpScrollBar Compatible Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                            Pritpal Bedi
  *                              15Jun2009
  */
 /*----------------------------------------------------------------------*/
@@ -88,6 +88,8 @@ CLASS XbpScrollBar  INHERIT  XbpWindow, XbpDataRef
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )  VIRTUAL
    METHOD   destroy()
+   METHOD   connect()
+   METHOD   disconnect()
 
    METHOD   scroll( ... )                         SETGET
 
@@ -117,17 +119,16 @@ METHOD XbpScrollBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
    ::oWidget:setOrientation( IF( ::type == XBPSCROLL_VERTICAL, 2, 1 ) )
    ::oWidget:setTracking( ::autoTrack )
 
-   ::oWidget:connect( "actionTriggered(int)", {|i| ::execSlot( "actionTriggered(int)", i ) } )
-
+   ::connect()
    ::setPosAndSize()
-   ::setRange( ::range )
-
    IF ::visible
       ::show()
    ENDIF
-
    ::oParent:AddChild( SELF )
    ::postCreate()
+
+   ::setRange( ::range )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -196,8 +197,21 @@ METHOD XbpScrollBar:handleEvent( nEvent, mp1, mp2 )
 
 /*----------------------------------------------------------------------*/
 
+METHOD XbpScrollBar:connect()
+   ::oWidget:connect( "actionTriggered(int)", {|i| ::execSlot( "actionTriggered(int)", i ) } )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpScrollBar:disconnect()
+   ::oWidget:disconnect( "actionTriggered(int)" )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD XbpScrollBar:destroy()
 
+   ::disconnect()
    ::xbpWindow:destroy()
 
    RETURN NIL

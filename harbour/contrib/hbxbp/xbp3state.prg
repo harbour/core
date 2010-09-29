@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Xbp*Classes
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -56,9 +56,9 @@
  *                                EkOnkar
  *                          ( The LORD is ONE )
  *
- *                  Xbase++ xbp3State Compatible Class
+ *                   Xbase++ xbp3State Compatible Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                             Pritpal Bedi
  *                               14Jun2009
  */
 /*----------------------------------------------------------------------*/
@@ -85,6 +85,8 @@ CLASS Xbp3State  INHERIT  XbpWindow, XbpDataRef
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
+   METHOD   connect()
+   METHOD   disconnect()
    METHOD   handleEvent( nEvent, mp1, mp2 )
    METHOD   setCaption( xCaption )
 
@@ -108,30 +110,22 @@ METHOD Xbp3State:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget := QCheckBox( ::oParent:oWidget )
-
-   ::oWidget:connect( "stateChanged(int)", {|i| ::execSlot( "stateChanged(int)", i ) } )
-
    ::oWidget:setTriState( .t. )
 
+   ::connect()
    ::setPosAndSize()
    IF ::visible
       ::show()
    ENDIF
+   ::oParent:AddChild( Self )
+   ::postCreate()
 
    ::setCaption( ::caption )
-
    IF ::selection
       ::oWidget:setCheckState( 2 )
    ENDIF
-
-   IF ::visible
-      ::show()
-   ENDIF
-
    ::editBuffer := ::oWidget:checkState()
 
-   ::oParent:AddChild( SELF )
-   ::postCreate()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -142,7 +136,6 @@ METHOD Xbp3State:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, l
 
    IF hb_isPointer( pQtObject )
       ::oWidget := QCheckBox():from( pQtObject )
-
    ENDIF
 
    RETURN Self
@@ -158,7 +151,7 @@ METHOD Xbp3State:execSlot( cSlot, p )
       EXIT
    ENDSWITCH
 
-   RETURN nil
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -172,8 +165,21 @@ METHOD Xbp3State:handleEvent( nEvent, mp1, mp2 )
 
 /*----------------------------------------------------------------------*/
 
+METHOD Xbp3State:connect()
+   ::oWidget:connect( "stateChanged(int)", {|i| ::execSlot( "stateChanged(int)", i ) } )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD Xbp3State:disconnect()
+   ::oWidget:disconnect( "stateChanged(int)" )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD Xbp3State:destroy()
 
+   ::disconnect()
    ::xbpWindow:destroy()
 
    RETURN NIL

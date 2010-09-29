@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Xbp*Classes
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -58,7 +58,7 @@
  *
  *                 Xbase++ xbpPushButton Compatible Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                             Pritpal Bedi
  *                               14Jun2009
  */
 /*----------------------------------------------------------------------*/
@@ -87,6 +87,8 @@ CLASS XbpCheckBox  INHERIT  XbpWindow, XbpDataRef
    METHOD   destroy()
    METHOD   handleEvent( nEvent, mp1, mp2 )
    METHOD   execSlot( cSlot, p )
+   METHOD   connect()
+   METHOD   disconnect()
    METHOD   setCaption( xCaption )
 
    METHOD   selected( ... )                       SETGET
@@ -108,21 +110,21 @@ METHOD XbpCheckBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget := QCheckBox( ::oParent:oWidget )
-   ::oWidget:connect( "stateChanged(int)", {|i| ::execSlot( "stateChanged(int)", i ) } )
 
+   ::connect()
    ::setPosAndSize()
    IF ::visible
       ::show()
    ENDIF
    ::setCaption( ::caption )
+   ::oParent:AddChild( SELF )
+   ::postCreate()
+
    IF ::selection
       ::oWidget:setChecked( .t. )
    ENDIF
-
    ::editBuffer := ::oWidget:isChecked()
 
-   ::oParent:AddChild( SELF )
-   ::postCreate()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -162,8 +164,21 @@ METHOD XbpCheckBox:handleEvent( nEvent, mp1, mp2 )
 
 /*----------------------------------------------------------------------*/
 
+METHOD XbpCheckBox:connect()
+   ::oWidget:connect( "stateChanged(int)", {|i| ::execSlot( "stateChanged(int)", i ) } )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpCheckBox:disconnect()
+   ::oWidget:disconnect( "stateChanged(int)" )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD XbpCheckBox:destroy()
 
+   ::disconnect()
    ::xbpWindow:destroy()
 
    RETURN NIL

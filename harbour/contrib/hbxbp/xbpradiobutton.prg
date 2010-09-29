@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Xbp*Classes
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -58,7 +58,7 @@
  *
  *                 Xbase++ xbpPushButton Compatible Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                             Pritpal Bedi
  *                               14Jun2009
  */
 /*----------------------------------------------------------------------*/
@@ -85,6 +85,8 @@ CLASS XbpRadioButton  INHERIT  XbpWindow, XbpDataRef
    METHOD   hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
+   METHOD   connect()
+   METHOD   disconnect()
    METHOD   handleEvent( nEvent, mp1, mp2 )
    METHOD   execSlot( cSlot, p )
 
@@ -108,21 +110,20 @@ METHOD XbpRadioButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget := QRadioButton( ::oParent:oWidget )
-
-   ::oWidget:connect( "clicked()", {|| ::execSlot( "clicked()" ) } )
-
-   ::setPosAndSize()
-   IF ::visible
-      ::show()
-   ENDIF
-   ::setCaption( ::caption )
-
    IF ::selection
       ::oWidget:setChecked( .t. )
    ENDIF
 
+   ::connect()
+   ::setPosAndSize()
+   IF ::visible
+      ::show()
+   ENDIF
    ::oParent:AddChild( SELF )
    ::postCreate()
+
+   ::setCaption( ::caption )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -159,6 +160,18 @@ METHOD XbpRadioButton:handleEvent( nEvent, mp1, mp2 )
    HB_SYMBOL_UNUSED( mp2    )
 
    RETURN HBXBP_EVENT_UNHANDLED
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpRadioButton:connect()
+   ::oWidget:connect( "clicked()", {|| ::execSlot( "clicked()" ) } )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpRadioButton:disconnect()
+   ::oWidget:disconnect( "clicked()" )
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 

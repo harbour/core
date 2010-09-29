@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Xbp*Classes
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * Navigation Based on TBrowse.prg
@@ -61,7 +61,7 @@
  *
  *                  Xbase++ Compatible XbpBrowse Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                            Pritpal Bedi
  *                              10Jul2009
  */
 /*----------------------------------------------------------------------*/
