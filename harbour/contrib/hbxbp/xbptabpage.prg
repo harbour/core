@@ -336,9 +336,7 @@ METHOD XbpTabWidget:execSlot( cSlot, p )
       qPoint  := ::oWidget:mapToGlobal( p )
       qWidget := QApplication():widgetAt( qPoint )
 
-      iIndex  := ascan( ::aChildren, {|o| hbqt_IsEqualGcQtPointer( o:oWidget:pPtr, qWidget:pPtr ) } ) - 1
-//      iIndex  := ascan( ::aChildren, {|o| hbqt_areEqualObjects( o:oWidget, qWidget ) } ) - 1
-HB_TRACE( HB_TR_ALWAYS, "iIndex", iIndex, qWidget:objectName() )
+      iIndex  := ascan( ::aChildren, {|o| hbqt_IsEqualGcQtPointer( o:oWidget, qWidget ) } ) - 1
    ELSE
       iIndex := p
    ENDIF
@@ -346,9 +344,7 @@ HB_TRACE( HB_TR_ALWAYS, "iIndex", iIndex, qWidget:objectName() )
    IF !empty( ::aChildren ) .and. iIndex >= 0 .and. iIndex < len( ::aChildren )
       qTab := ::oWidget:widget( iIndex )
 
-      IF ( nIndex := ascan( ::aChildren, {|o| hbqt_IsEqualGcQtPointer( o:oWidget:pPtr, qTab:pPtr ) } ) ) > 0
-//      IF ( nIndex := ascan( ::aChildren, {|o| hbqt_areEqualObjects( o:oWidget, qTab ) } ) ) > 0
-//HB_TRACE( HB_TR_ALWAYS, "hurray", iIndex, nIndex )
+      IF ( nIndex := ascan( ::aChildren, {|o| hbqt_IsEqualGcQtPointer( o:oWidget, qTab ) } ) ) > 0
          oTab := ::aChildren[ nIndex ]
 
          DO CASE

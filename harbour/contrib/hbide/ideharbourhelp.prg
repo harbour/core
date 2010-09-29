@@ -512,7 +512,7 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
 
    CASE "treeCategory_itemSelectionChanged"
       qTWItem := ::oUI:q_treeCategory:currentItem()
-      n := ascan( ::aCategory, {|e_| hbqt_IsEqualGcQtPointer( e_[ 5 ]:pPtr, qTWItem:pPtr ) } )
+      n := ascan( ::aCategory, {|e_| hbqt_IsEqualGcQtPointer( e_[ 5 ], qTWItem ) } )
       IF n > 0
          IF ::aCategory[ n, 5 ]:childCount() == 0
             ::oUI:q_treeDoc:setCurrentItem( ::aCategory[ n, 4 ], 0 )

@@ -188,7 +188,7 @@ METHOD XbpTreeView:execSlot( cSlot, p )
    LOCAL n, qPt, qItem, oItem, qPos
 
    IF hb_isPointer( p )
-      IF ( n := ascan( ::aItems, {|o| iif( empty( o ), .f., hbqt_IsEqualGcQtPointer( o:oWidget:pPtr, p ) ) } ) ) > 0
+      IF ( n := ascan( ::aItems, {|o| iif( empty( o ), .f., hbqt_IsEqualGcQtPointer( o:oWidget, p ) ) } ) ) > 0
          oItem := ::aItems[ n ]
       ENDIF
    ENDIF
@@ -208,7 +208,7 @@ METHOD XbpTreeView:execSlot( cSlot, p )
       IF hb_isBlock( ::hb_contextMenu )
          qPos := QPoint( p )
          IF ( qItem := ::oWidget:itemAt( qPos ) ):isValidObject()
-            IF ( n := ascan( ::aItems, {|o| hbqt_IsEqualGcQtPointer( o:oWidget:pPtr, qItem:pPtr ) } ) ) > 0
+            IF ( n := ascan( ::aItems, {|o| hbqt_IsEqualGcQtPointer( o:oWidget, qItem ) } ) ) > 0
                qPt := ::oWidget:mapToGlobal( p )
                eval( ::hb_contextMenu, { qPt:x(), qPt:y() }, NIL, ::aItems[ n ] )
             ENDIF

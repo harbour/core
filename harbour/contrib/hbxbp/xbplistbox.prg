@@ -259,7 +259,7 @@ METHOD XbpListBox:toggleSelected( nIndex )
 
 METHOD XbpListBox:getItemIndex( pItm )
 
-   RETURN  ascan( ::aItems, {|o| hbqt_IsEqualGcQtPointer( o:pPtr, pItm ) } )
+   RETURN  ascan( ::aItems, {|o| hbqt_IsEqualGcQtPointer( o, pItm ) } )
 
 /*----------------------------------------------------------------------*/
 

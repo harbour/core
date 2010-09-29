@@ -630,7 +630,7 @@ HB_TRACE( HB_TR_DEBUG, "projectTree_dropEvent" )
 
    CASE "mdiArea_subWindowActivated"
       IF ! empty( ::oIde:aMdies )
-         IF ( n := ascan( ::oIde:aMdies, {|e| hbqt_IsEqualGcQtPointer( e:pPtr, p ) } ) )  > 0
+         IF ( n := ascan( ::oIde:aMdies, {|e| hbqt_IsEqualGcQtPointer( e, p ) } ) )  > 0
             ::setView( ::oIde:aMdies[ n ]:objectName() )
 
             IF ! ::oIde:aMdies[ n ]:objectName() == "Stats" .AND. ! empty( ::oEM ) .AND. ! empty( oEdit := ::oEM:getEditorCurrent() )

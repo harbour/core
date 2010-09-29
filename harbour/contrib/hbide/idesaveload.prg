@@ -349,7 +349,7 @@ METHOD IdeINI:save( cHbideIni )
       nTabs := ::oIde:qTabWidget:count()
       FOR n := 1 TO nTabs
          pTab  := ::oIde:qTabWidget:widget( n - 1 )
-         nTab  := ascan( ::oIde:aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ 1 ]:oWidget:pPtr, pTab:pPtr ) } )
+         nTab  := ascan( ::oIde:aTabs, {|e_| hbqt_IsEqualGcQtPointer( e_[ 1 ]:oWidget, pTab ) } )
          oEdit := ::oIde:aTabs[ nTab, TAB_OEDITOR ]
 
          IF !Empty( oEdit:sourceFile ) .AND. !( ".ppo" == lower( oEdit:cExt ) )
@@ -729,7 +729,6 @@ STATIC FUNCTION hbide_saveSettings( oIde )
    LOCAL cPath
 
    hb_fNameSplit( oIde:cProjIni, @cPath )
-//   hbqt_QMainWindow_saveSettings( cPath + "settings.ide", "hbidesettings", oIde:oDlg:oWidget:pPtr )
    hbqt_QMainWindow_saveSettings( cPath + "settings.ide", "hbidesettings", oIde:oDlg:oWidget )
 
    RETURN nil
@@ -740,7 +739,6 @@ FUNCTION hbide_restSettings( oIde )
    LOCAL cPath
 
    hb_fNameSplit( oIde:cProjIni, @cPath )
-//   hbqt_QMainWindow_restSettings( cPath + "settings.ide", "hbidesettings", oIde:oDlg:oWidget:pPtr )
    hbqt_QMainWindow_restSettings( cPath + "settings.ide", "hbidesettings", oIde:oDlg:oWidget )
 
    RETURN nil
