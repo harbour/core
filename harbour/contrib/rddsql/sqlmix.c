@@ -1480,7 +1480,7 @@ static HB_ERRCODE sqlmixGoCold( SQLMIXAREAP pArea )
 
          if ( ! pTag->fCustom )
          {
-            PMIXKEY pKey = hb_mixKeyEval( pKey, pTag );
+            PMIXKEY pKey = hb_mixKeyEval( NULL, pTag );
 
             if ( pTag->pForItem != NULL )
                fAdd = hb_mixEvalCond( pArea, pTag->pForItem );
