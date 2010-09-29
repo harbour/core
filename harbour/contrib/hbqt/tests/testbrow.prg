@@ -37,7 +37,6 @@ REQUEST HB_QTGUI
 
 INIT PROCEDURE Qt_Start()
    qApp := QApplication()
-   qSlots := QT_SLOTS_NEW()
    RETURN
 
 EXIT PROCEDURE Qt_End()
@@ -70,14 +69,14 @@ PROCEDURE Main()
    mo1 := HBQAbstractItemModel( {| t, r, x, y| my_browse( 1, aStru1, t, r, x, y ) } )
    tb1:setModel( mo1 )
 
-   QT_SLOTS_CONNECT( qSlots, tb1:itemDelegate(), "commitData(QWidget)", {| w | my_save( w, 1, aStru1, @nCX1, @nCY1 ) } )
-   QT_SLOTS_CONNECT( qslots, tb1:SelectionModel(), "currentChanged(QModelIndex,QModelIndex)", {| n | my_select( n, @nCX1, @nCY1 ) } )
+   tb1:itemDelegate():connect( "commitData(QWidget)", {| w | my_save( w, 1, aStru1, @nCX1, @nCY1 ) } )
+   tb1:selectionModel():connect( "currentChanged(QModelIndex,QModelIndex)", {| n | my_select( n, @nCX1, @nCY1 ) } )
 
-   hd1 := QHeaderView():from( tb1:horizontalHeader() )
+   hd1 := tb1:horizontalHeader()
    FOR i := 1 To Len( aStru1 )
       hd1:resizeSection( i - 1, aStru1[ i, 3 ] * 6 + 60 )
    NEXT
-   QHeaderView():from( tb1:verticalHeader() ):setDefaultSectionSize( 24 )
+   tb1:verticalHeader():setDefaultSectionSize( 24 )
 
    oSize := QSize(50,24)
 
