@@ -227,33 +227,17 @@ void eraseRect ( int x, int y, int width, int height )
 void fillPath ( const QPainterPath & path, const QBrush & brush )
 
 void fillRect ( const QRectF & rectangle, const QBrush & brush )
-void fillRect ( const QRectF & rectangle, const QColor & color )
-void fillRect ( const QRectF & rectangle, Qt::GlobalColor color )
+//void fillRect ( int x, int y, int width, int height, Qt::BrushStyle style )
+//void fillRect ( const QRect  & rectangle, Qt::BrushStyle style )
+//void fillRect ( const QRectF & rectangle, Qt::BrushStyle style )
 void fillRect ( const QRect  & rectangle, const QBrush & brush )
 void fillRect ( const QRect  & rectangle, const QColor & color )
-void fillRect ( const QRect  & rectangle, Qt::GlobalColor color )
+void fillRect ( const QRectF & rectangle, const QColor & color )
 void fillRect ( int x, int y, int width, int height, const QBrush & brush )
 void fillRect ( int x, int y, int width, int height, const QColor & color )
 void fillRect ( int x, int y, int width, int height, Qt::GlobalColor color )
-//
-//                       NOT IMPLEMENTED
-void fillRect ( const QRectF & rectangle, Qt::BrushStyle style )
-void fillRect ( const QRect  & rectangle, Qt::BrushStyle style )
-void fillRect ( int x, int y, int width, int height, Qt::BrushStyle style )
-//
-//                           original order
-// void fillRect ( const QRectF & rectangle, const QBrush & brush )
-// void fillRect ( int x, int y, int width, int height, Qt::BrushStyle style )
-// void fillRect ( const QRect  & rectangle, Qt::BrushStyle style )
-// void fillRect ( const QRectF & rectangle, Qt::BrushStyle style )
-// void fillRect ( const QRect  & rectangle, const QBrush & brush )
-// void fillRect ( const QRect  & rectangle, const QColor & color )
-// void fillRect ( const QRectF & rectangle, const QColor & color )
-// void fillRect ( int x, int y, int width, int height, const QBrush & brush )
-// void fillRect ( int x, int y, int width, int height, const QColor & color )
-// void fillRect ( int x, int y, int width, int height, Qt::GlobalColor color )
-// void fillRect ( const QRect  & rectangle, Qt::GlobalColor color )
-// void fillRect ( const QRectF & rectangle, Qt::GlobalColor color )
+void fillRect ( const QRect  & rectangle, Qt::GlobalColor color )
+void fillRect ( const QRectF & rectangle, Qt::GlobalColor color )
 
 const QFont & font () const
 QFontInfo fontInfo () const

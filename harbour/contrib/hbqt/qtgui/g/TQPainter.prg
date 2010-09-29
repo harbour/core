@@ -951,18 +951,13 @@ METHOD QPainter:fillRect( ... )
    CASE 5
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
-         SWITCH __objGetClsName( hb_pvalue( 5 ) )
-         CASE "QT::GLOBALCOLOR"
-            RETURN Qt_QPainter_fillRect_8( ::pPtr, ... )
-         CASE "QT::BRUSHSTYLE"
-            RETURN Qt_QPainter_fillRect_11( ::pPtr, ... )
-         ENDSWITCH
+         RETURN Qt_QPainter_fillRect_6( ::pPtr, ... )
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isObject( hb_pvalue( 5 ) )
          SWITCH __objGetClsName( hb_pvalue( 5 ) )
          CASE "QBRUSH"
-            RETURN Qt_QPainter_fillRect_6( ::pPtr, ... )
+            RETURN Qt_QPainter_fillRect_4( ::pPtr, ... )
          CASE "QCOLOR"
-            RETURN Qt_QPainter_fillRect_7( ::pPtr, ... )
+            RETURN Qt_QPainter_fillRect_5( ::pPtr, ... )
          ENDSWITCH
       ENDCASE
       EXIT
@@ -971,23 +966,19 @@ METHOD QPainter:fillRect( ... )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) )
          CASE "QRECTF"
-            RETURN Qt_QPainter_fillRect_2( ::pPtr, ... )
+            RETURN Qt_QPainter_fillRect_8( ::pPtr, ... )
          CASE "QRECT"
-            RETURN Qt_QPainter_fillRect_5( ::pPtr, ... )
-         CASE "QRECT"
-            RETURN Qt_QPainter_fillRect_10( ::pPtr, ... )
-         CASE "QRECTF"
-            RETURN Qt_QPainter_fillRect_9( ::pPtr, ... )
+            RETURN Qt_QPainter_fillRect_7( ::pPtr, ... )
          ENDSWITCH
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) )
          CASE "QRECT"
-            RETURN Qt_QPainter_fillRect_4( ::pPtr, ... )
-         CASE "QRECTF"
             RETURN Qt_QPainter_fillRect_1( ::pPtr, ... )
          CASE "QRECTF"
             RETURN Qt_QPainter_fillRect( ::pPtr, ... )
          CASE "QRECT"
+            RETURN Qt_QPainter_fillRect_2( ::pPtr, ... )
+         CASE "QRECTF"
             RETURN Qt_QPainter_fillRect_3( ::pPtr, ... )
          ENDSWITCH
       ENDCASE

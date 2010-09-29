@@ -105,7 +105,7 @@
  */
 
 /*
- *  Constructed[ 182/188 [ 96.81% ] ]
+ *  Constructed[ 179/185 [ 96.76% ] ]
  *
  *  *** Unconvered Prototypes ***
  *
@@ -118,22 +118,9 @@
  *
  *  *** Commented out protostypes ***
  *
- *  //
- *  //                       NOT IMPLEMENTED
- *  //
- *  //                           original order
- *  // void fillRect ( const QRectF & rectangle, const QBrush & brush )
- *  // void fillRect ( int x, int y, int width, int height, Qt::BrushStyle style )
- *  // void fillRect ( const QRect  & rectangle, Qt::BrushStyle style )
- *  // void fillRect ( const QRectF & rectangle, Qt::BrushStyle style )
- *  // void fillRect ( const QRect  & rectangle, const QBrush & brush )
- *  // void fillRect ( const QRect  & rectangle, const QColor & color )
- *  // void fillRect ( const QRectF & rectangle, const QColor & color )
- *  // void fillRect ( int x, int y, int width, int height, const QBrush & brush )
- *  // void fillRect ( int x, int y, int width, int height, const QColor & color )
- *  // void fillRect ( int x, int y, int width, int height, Qt::GlobalColor color )
- *  // void fillRect ( const QRect  & rectangle, Qt::GlobalColor color )
- *  // void fillRect ( const QRectF & rectangle, Qt::GlobalColor color )
+ *  //void fillRect ( int x, int y, int width, int height, Qt::BrushStyle style )
+ *  //void fillRect ( const QRect  & rectangle, Qt::BrushStyle style )
+ *  //void fillRect ( const QRectF & rectangle, Qt::BrushStyle style )
  */
 
 #include <QtCore/QPointer>
@@ -1523,33 +1510,9 @@ HB_FUNC( QT_QPAINTER_FILLRECT )
 }
 
 /*
- * void fillRect ( const QRectF & rectangle, const QColor & color )
- */
-HB_FUNC( QT_QPAINTER_FILLRECT_1 )
-{
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      ( p )->fillRect( *hbqt_par_QRectF( 2 ), *hbqt_par_QColor( 3 ) );
-   }
-}
-
-/*
- * void fillRect ( const QRectF & rectangle, Qt::GlobalColor color )
- */
-HB_FUNC( QT_QPAINTER_FILLRECT_2 )
-{
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      ( p )->fillRect( *hbqt_par_QRectF( 2 ), ( Qt::GlobalColor ) hb_parni( 3 ) );
-   }
-}
-
-/*
  * void fillRect ( const QRect  & rectangle, const QBrush & brush )
  */
-HB_FUNC( QT_QPAINTER_FILLRECT_3 )
+HB_FUNC( QT_QPAINTER_FILLRECT_1 )
 {
    QPainter * p = hbqt_par_QPainter( 1 );
    if( p )
@@ -1561,7 +1524,7 @@ HB_FUNC( QT_QPAINTER_FILLRECT_3 )
 /*
  * void fillRect ( const QRect  & rectangle, const QColor & color )
  */
-HB_FUNC( QT_QPAINTER_FILLRECT_4 )
+HB_FUNC( QT_QPAINTER_FILLRECT_2 )
 {
    QPainter * p = hbqt_par_QPainter( 1 );
    if( p )
@@ -1571,21 +1534,21 @@ HB_FUNC( QT_QPAINTER_FILLRECT_4 )
 }
 
 /*
- * void fillRect ( const QRect  & rectangle, Qt::GlobalColor color )
+ * void fillRect ( const QRectF & rectangle, const QColor & color )
  */
-HB_FUNC( QT_QPAINTER_FILLRECT_5 )
+HB_FUNC( QT_QPAINTER_FILLRECT_3 )
 {
    QPainter * p = hbqt_par_QPainter( 1 );
    if( p )
    {
-      ( p )->fillRect( *hbqt_par_QRect( 2 ), ( Qt::GlobalColor ) hb_parni( 3 ) );
+      ( p )->fillRect( *hbqt_par_QRectF( 2 ), *hbqt_par_QColor( 3 ) );
    }
 }
 
 /*
  * void fillRect ( int x, int y, int width, int height, const QBrush & brush )
  */
-HB_FUNC( QT_QPAINTER_FILLRECT_6 )
+HB_FUNC( QT_QPAINTER_FILLRECT_4 )
 {
    QPainter * p = hbqt_par_QPainter( 1 );
    if( p )
@@ -1597,7 +1560,7 @@ HB_FUNC( QT_QPAINTER_FILLRECT_6 )
 /*
  * void fillRect ( int x, int y, int width, int height, const QColor & color )
  */
-HB_FUNC( QT_QPAINTER_FILLRECT_7 )
+HB_FUNC( QT_QPAINTER_FILLRECT_5 )
 {
    QPainter * p = hbqt_par_QPainter( 1 );
    if( p )
@@ -1609,7 +1572,7 @@ HB_FUNC( QT_QPAINTER_FILLRECT_7 )
 /*
  * void fillRect ( int x, int y, int width, int height, Qt::GlobalColor color )
  */
-HB_FUNC( QT_QPAINTER_FILLRECT_8 )
+HB_FUNC( QT_QPAINTER_FILLRECT_6 )
 {
    QPainter * p = hbqt_par_QPainter( 1 );
    if( p )
@@ -1619,38 +1582,26 @@ HB_FUNC( QT_QPAINTER_FILLRECT_8 )
 }
 
 /*
- * void fillRect ( const QRectF & rectangle, Qt::BrushStyle style )
+ * void fillRect ( const QRect  & rectangle, Qt::GlobalColor color )
  */
-HB_FUNC( QT_QPAINTER_FILLRECT_9 )
+HB_FUNC( QT_QPAINTER_FILLRECT_7 )
 {
    QPainter * p = hbqt_par_QPainter( 1 );
    if( p )
    {
-      ( p )->fillRect( *hbqt_par_QRectF( 2 ), ( Qt::BrushStyle ) hb_parni( 3 ) );
+      ( p )->fillRect( *hbqt_par_QRect( 2 ), ( Qt::GlobalColor ) hb_parni( 3 ) );
    }
 }
 
 /*
- * void fillRect ( const QRect  & rectangle, Qt::BrushStyle style )
+ * void fillRect ( const QRectF & rectangle, Qt::GlobalColor color )
  */
-HB_FUNC( QT_QPAINTER_FILLRECT_10 )
+HB_FUNC( QT_QPAINTER_FILLRECT_8 )
 {
    QPainter * p = hbqt_par_QPainter( 1 );
    if( p )
    {
-      ( p )->fillRect( *hbqt_par_QRect( 2 ), ( Qt::BrushStyle ) hb_parni( 3 ) );
-   }
-}
-
-/*
- * void fillRect ( int x, int y, int width, int height, Qt::BrushStyle style )
- */
-HB_FUNC( QT_QPAINTER_FILLRECT_11 )
-{
-   QPainter * p = hbqt_par_QPainter( 1 );
-   if( p )
-   {
-      ( p )->fillRect( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), ( Qt::BrushStyle ) hb_parni( 6 ) );
+      ( p )->fillRect( *hbqt_par_QRectF( 2 ), ( Qt::GlobalColor ) hb_parni( 3 ) );
    }
 }
 

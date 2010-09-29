@@ -133,17 +133,14 @@
  *     :eraseRect_2( nX, nY, nWidth, nHeight )             -> NIL
  *     :fillPath( pPath, pBrush )                          -> NIL
  *     :fillRect( pRectangle, pBrush )                     -> NIL
- *     :fillRect_1( pRectangle, pColor )                   -> NIL
- *     :fillRect_2( pRectangle, nColor )                   -> NIL
- *     :fillRect_3( pRectangle, pBrush )                   -> NIL
- *     :fillRect_4( pRectangle, pColor )                   -> NIL
- *     :fillRect_5( pRectangle, nColor )                   -> NIL
- *     :fillRect_6( nX, nY, nWidth, nHeight, pBrush )      -> NIL
- *     :fillRect_7( nX, nY, nWidth, nHeight, pColor )      -> NIL
- *     :fillRect_8( nX, nY, nWidth, nHeight, nColor )      -> NIL
- *     :fillRect_9( pRectangle, nStyle )                   -> NIL
- *     :fillRect_10( pRectangle, nStyle )                  -> NIL
- *     :fillRect_11( nX, nY, nWidth, nHeight, nStyle )     -> NIL
+ *     :fillRect_1( pRectangle, pBrush )                   -> NIL
+ *     :fillRect_2( pRectangle, pColor )                   -> NIL
+ *     :fillRect_3( pRectangle, pColor )                   -> NIL
+ *     :fillRect_4( nX, nY, nWidth, nHeight, pBrush )      -> NIL
+ *     :fillRect_5( nX, nY, nWidth, nHeight, pColor )      -> NIL
+ *     :fillRect_6( nX, nY, nWidth, nHeight, nColor )      -> NIL
+ *     :fillRect_7( pRectangle, nColor )                   -> NIL
+ *     :fillRect_8( pRectangle, nColor )                   -> NIL
  *     :font()                                             -> pQFont
  *     :fontInfo()                                         -> pQFontInfo
  *     :fontMetrics()                                      -> pQFontMetrics

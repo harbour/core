@@ -2634,12 +2634,12 @@ METHOD HqrGraphicsItem:drawChart( qPainter, qRect )
    ENDIF
 
    rc := rc:adjusted( 0,  nFHeight / 2, 0, 0 )
-   x := m_barsIdentation
+   x  := m_barsIdentation
    barWidth := ( rc:width() - m_barsIdentation * ( len( ::xData ) + 1 ) ) / len( ::xData )
    py := maxHeight / maxVal
 
    FOR EACH cv IN ::xData
-      lg := QLinearGradient( QPointF( x + barWidth / 2, 0 ), QPointF( x + barWidth, 0 ) )
+      lg := QLinearGradient( QPointF( x + barWidth / 2, 0.0 ), QPointF( x + barWidth, 0.0 ) )
       //
       lg:setSpread( QGradient_ReflectSpread )
       lg:setColorAt( 0, cv[ 3 ] )
