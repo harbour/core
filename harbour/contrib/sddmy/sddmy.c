@@ -273,7 +273,7 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
 
       hb_strncpy( pBuffer, pMyField->name, 256 - 1 );
       pBuffer[ MAX_FIELD_NAME ] = '\0';
-      hb_strUpper( pBuffer, MAX_FIELD_NAME + 1 );
+      hb_strUpper( pBuffer, strlen( pBuffer ) );
       pFieldInfo.atomName = pBuffer;
 
       pFieldInfo.uiLen = ( HB_USHORT ) pMyField->length;

@@ -955,9 +955,10 @@ static void hb_mixTagDestroy( PMIXTAG pTag )
       hb_vmDestroyBlockOrMacro( pTag->pForItem );
 
    if ( pTag->Root )
-   {
       hb_mixTagDestroyNode( pTag->Root );
-   }
+
+   if ( pTag->HotKey )
+      hb_mixKeyFree( pTag->HotKey );
 
    hb_xfree( pTag );
 }
@@ -1467,7 +1468,6 @@ static HB_ERRCODE sqlmixGoCold( SQLMIXAREAP pArea )
    if ( fRecordChanged && pArea->pTagList )
    {
       PMIXTAG      pTag;
-      PMIXKEY      pKey = NULL;
       HB_BOOL      fAdd, fDel;
       LPDBRELINFO  lpdbPendingRel;
 
@@ -1480,9 +1480,7 @@ static HB_ERRCODE sqlmixGoCold( SQLMIXAREAP pArea )
 
          if ( ! pTag->fCustom )
          {
-            pKey = hb_mixKeyEval( pKey, pTag );
-
-/*            printf( "sqlmixGoCold NEWKEY:%s rec:%d\n", pKey->val, pKey->rec); */
+            PMIXKEY pKey = hb_mixKeyEval( pKey, pTag );
 
             if ( pTag->pForItem != NULL )
                fAdd = hb_mixEvalCond( pArea, pTag->pForItem );
@@ -1509,6 +1507,8 @@ static HB_ERRCODE sqlmixGoCold( SQLMIXAREAP pArea )
 
             if ( fAdd )
                hb_mixTagAddKey( pTag, pKey );
+
+            hb_mixKeyFree( pKey );
          }
          pTag = pTag->pNext;
       }
