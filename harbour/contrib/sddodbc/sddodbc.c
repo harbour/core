@@ -631,7 +631,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 
                if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, iTargetType, buffer, 0, &iLen ) ) )
                {
-                  if( iLen > 0 )
+                  if( iLen >= 0 )
                   {
                      SQLPOINTER * val = ( SQLPOINTER * ) hb_xgrab( iLen + sizeof( O_HB_CHAR ) );
                      if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, iTargetType, val, iLen + sizeof( O_HB_CHAR ), &iLen ) ) )
