@@ -248,6 +248,7 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    METHOD   setFocus()
    METHOD   sendMessage()
    METHOD   connectWindowEvents()
+   METHOD   disconnectWindowEvents()
    METHOD   clearSlots()
 
    /* Called in the initializer - Unique in the application */
@@ -259,10 +260,9 @@ CLASS XbpWindow  INHERIT  XbpPartHandler
    /* Harbour Extension */
    METHOD   hbLayout( nTypeLayout )               SETGET
 
-   ACCESS   pWidget                               INLINE iif( empty( ::oWidget ), NIL, ::oWidget:pPtr )
-   ACCESS   pParent                               INLINE iif( empty( ::oParent ), NIL, ::oParent:oWidget:pPtr )
-
    METHOD   postCreate()
+
+   ACCESS   pParent                               INLINE iif( empty( ::oParent ), NIL, ::oParent:oWidget )
 
    ENDCLASS
 
@@ -359,6 +359,19 @@ METHOD XbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 /*----------------------------------------------------------------------*/
 
+METHOD XbpWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   DEFAULT oParent     TO ::oParent
+   DEFAULT oOwner      TO ::oOwner
+   DEFAULT aPos        TO ::aPos
+   DEFAULT aSize       TO ::sSize
+   DEFAULT aPresParams TO ::aPresParams
+   DEFAULT lVisible    TO ::visible
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD XbpWindow:setQtProperty( cProperty )
    HB_SYMBOL_UNUSED( cProperty )
    RETURN Self
@@ -367,7 +380,7 @@ METHOD XbpWindow:setQtProperty( cProperty )
 
 METHOD XbpWindow:postCreate()
 
-   ::status := iif( hbqt_isEmptyQtPointer( ::oWidget:pPtr ), XBP_STAT_FAILURE, XBP_STAT_CREATE )
+   ::status := iif( ::oWidget:isValidObject(), XBP_STAT_CREATE, XBP_STAT_FAILURE )
 
    RETURN Self
 
@@ -402,16 +415,32 @@ METHOD XbpWindow:connectWindowEvents()
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD XbpWindow:disconnectWindowEvents()
 
-   DEFAULT oParent     TO ::oParent
-   DEFAULT oOwner      TO ::oOwner
-   DEFAULT aPos        TO ::aPos
-   DEFAULT aSize       TO ::sSize
-   DEFAULT aPresParams TO ::aPresParams
-   DEFAULT lVisible    TO ::visible
+   ::oWidget:connect( QEvent_MouseButtonPress   , {|e| ::grabEvent( QEvent_MouseButtonPress   , e ) } )
+   ::oWidget:connect( QEvent_MouseButtonRelease , {|e| ::grabEvent( QEvent_MouseButtonRelease , e ) } )
+   ::oWidget:connect( QEvent_MouseMove          , {|e| ::grabEvent( QEvent_MouseMove          , e ) } )
+   ::oWidget:connect( QEvent_MouseButtonDblClick, {|e| ::grabEvent( QEvent_MouseButtonDblClick, e ) } )
+   ::oWidget:connect( QEvent_Enter              , {|e| ::grabEvent( QEvent_Enter              , e ) } )
+   ::oWidget:connect( QEvent_Leave              , {|e| ::grabEvent( QEvent_Leave              , e ) } )
+   ::oWidget:connect( QEvent_Wheel              , {|e| ::grabEvent( QEvent_Wheel              , e ) } )
 
-   RETURN Self
+   ::oWidget:connect( QEvent_FocusIn            , {|e| ::grabEvent( QEvent_FocusIn            , e ) } )
+   ::oWidget:connect( QEvent_FocusOut           , {|e| ::grabEvent( QEvent_FocusOut           , e ) } )
+   ::oWidget:connect( QEvent_DragEnter          , {|e| ::grabEvent( QEvent_DragEnter          , e ) } )
+   ::oWidget:connect( QEvent_DragLeave          , {|e| ::grabEvent( QEvent_DragLeave          , e ) } )
+   ::oWidget:connect( QEvent_DragMove           , {|e| ::grabEvent( QEvent_DragMove           , e ) } )
+   ::oWidget:connect( QEvent_Drop               , {|e| ::grabEvent( QEvent_Drop               , e ) } )
+   ::oWidget:connect( QEvent_WhatsThis          , {|e| ::grabEvent( QEvent_WhatsThis          , e ) } )
+   ::oWidget:connect( QEvent_KeyPress           , {|e| ::grabEvent( QEvent_KeyPress           , e ) } )
+
+   ::oWidget:connect( QEvent_ContextMenu        , {|e| ::grabEvent( QEvent_ContextMenu        , e ) } )
+
+   ::oWidget:connect( QEvent_Move               , {|e| ::grabEvent( QEvent_Move               , e ) } )
+*  ::oWidget:connect( QEvent_Paint              , {|e| ::grabEvent( QEvent_Paint              , e ) } )
+*  ::oWidget:connect( QEvent_Resize             , {|e| ::grabEvent( QEvent_Resize             , e ) } )
+
+      RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -426,7 +455,7 @@ METHOD XbpWindow:destroy()
    ENDIF
 
    ::XbpPartHandler:destroy()
-   ::clearSlots()
+//   ::clearSlots()
 
    IF !empty( ::qtObject )
       ::qtObject:destroy()

@@ -198,9 +198,7 @@ METHOD XbpToolbar:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF hb_isPointer( pQtObject )
-      ::oWidget := QToolBar()
-      ::oWidget:pPtr := hbqt_ptr( pQtObject )
-
+      ::oWidget := HB_QToolBar():from( pQtObject )
    ENDIF
 
    RETURN Self

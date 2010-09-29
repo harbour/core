@@ -188,25 +188,35 @@ HB_FUNC( QT_QSTATUSBAR )
 }
 
 /*
- * void addPermanentWidget ( QWidget * widget, int stretch = 0 )
+ * void addPermanentWidget ( QWidget * widget, int stretch = 0 )   [*D=1*]
  */
 HB_FUNC( QT_QSTATUSBAR_ADDPERMANENTWIDGET )
 {
    QStatusBar * p = hbqt_par_QStatusBar( 1 );
    if( p )
    {
+      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+      if( q && q->ph )
+      {
+         q->bNew = false;
+      }
       ( p )->addPermanentWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ) );
    }
 }
 
 /*
- * void addWidget ( QWidget * widget, int stretch = 0 )
+ * void addWidget ( QWidget * widget, int stretch = 0 )   [*D=1*]
  */
 HB_FUNC( QT_QSTATUSBAR_ADDWIDGET )
 {
    QStatusBar * p = hbqt_par_QStatusBar( 1 );
    if( p )
    {
+      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
+      if( q && q->ph )
+      {
+         q->bNew = false;
+      }
       ( p )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ) );
    }
 }

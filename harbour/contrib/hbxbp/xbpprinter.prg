@@ -77,7 +77,6 @@
 CLASS XbpPrinter
 
    DATA     oWidget
-   ACCESS   pWidget                               INLINE  IF( empty( ::oWidget ), NIL, ::oWidget:pPtr )
 
    DATA     comment                               READONLY
    DATA     devName                               READONLY
@@ -159,8 +158,7 @@ METHOD XbpPrinter:create( cDeviceName, nSpoolFormat, cDeviceParams )
    ENDIF
 
    ::devName := ::oWidget:printerName()
-   ::oPrintEngine := QPrintEngine()
-   ::oPrintEngine:pPtr := ::oWidget:printEngine()
+   ::oPrintEngine := ::oWidget:printEngine()
 
    #if 0
    ::oWidget:setCreator( const QString & creator )
@@ -524,10 +522,7 @@ METHOD XbpPrinter:startDoc( cDocName )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpPrinter:getEngineProperty( nProperty )
-   LOCAL xValue := 0
-   LOCAL oVariant := QVariant()
-
-   oVariant:pPtr := ::oEngine:property( nProperty )
+   LOCAL oVariant := HB_QVariant():from( ::oEngine:property( nProperty ) )
 
    DO CASE
    CASE nProperty == QPrintEngine_PPK_CollateCopies
@@ -574,6 +569,6 @@ METHOD XbpPrinter:getEngineProperty( nProperty )
    CASE nProperty == QPrintEngine_PPK_PageMargins
    ENDCASE
 
-   RETURN xValue
+   RETURN 0
 
 /*----------------------------------------------------------------------*/

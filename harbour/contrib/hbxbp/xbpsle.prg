@@ -93,6 +93,8 @@ CLASS XbpSLE INHERIT XbpWindow, XbpDataRef
    METHOD   destroy()
    METHOD   handleEvent( nEvent, mp1, mp2 )
    METHOD   execSlot( cSlot, p, p2 )
+   METHOD   connect()
+   METHOD   disconnect()
 
    METHOD   clear()                               INLINE  ::oWidget:clear()
    METHOD   copyMarked()                          INLINE  ::oWidget:copy()
@@ -127,18 +129,6 @@ METHOD XbpSLE:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpSLE:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
-
-   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   IF hb_isPointer( pQtObject )
-      ::oWidget := QLineEdit():from( pQtObject )
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD XbpSLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    LOCAL es_:= { Qt_AlignLeft, Qt_AlignRight, Qt_AlignHCenter }
 
@@ -159,18 +149,7 @@ METHOD XbpSLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oWidget:setFrame( ::border )
    ::oWidget:setMaxLength( ::bufferLength )
 
-   #if 0
-   ::oWidget:connect( QEvent_FocusIn , {|e| ::execSlot( "QEvent_FocusIn" , e ) } )
-   ::oWidget:connect( QEvent_FocusOut, {|e| ::execSlot( "QEvent_FocusOut", e ) } )
-   #endif
-
-   ::oWidget:connect( "cursorPositionChanged(int,int)" , {|i,ii| ::execSlot( "cursorPositionChanged(int,int)", i, ii ) } )
-*  ::oWidget:connect( "editingFinished()"              , {|    | ::execSlot( "editingFinished()"       ) } )
-   ::oWidget:connect( "returnPressed()"                , {|    | ::execSlot( "returnPressed()"         ) } )
-*  ::oWidget:connect( "selectionChanged()"             , {|    | ::execSlot( "selectionChanged()"      ) } )
-   ::oWidget:connect( "textChanged(QString)"           , {|s   | ::execSlot( "textChanged(QString)", s ) } )
-   ::oWidget:connect( "textEdited(QString)"            , {|s   | ::execSlot( "textEdited(QString)" , s ) } )
-
+   ::connect()
    ::setPosAndSize()
    IF ::visible
       ::show()
@@ -183,6 +162,58 @@ METHOD XbpSLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oParent:addChild( Self )
    ::postCreate()
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpSLE:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, lVisible, pQtObject )
+
+   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   IF hb_isPointer( pQtObject )
+      ::oWidget := QLineEdit():from( pQtObject )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpSLE:connect()
+   #if 0
+   ::oWidget:connect( QEvent_FocusIn                   , {|e| ::execSlot( "QEvent_FocusIn" , e ) } )
+   ::oWidget:connect( QEvent_FocusOut                  , {|e| ::execSlot( "QEvent_FocusOut", e ) } )
+   #endif
+
+   ::oWidget:connect( "cursorPositionChanged(int,int)" , {|i,ii| ::execSlot( "cursorPositionChanged(int,int)", i, ii ) } )
+*  ::oWidget:connect( "editingFinished()"              , {|    | ::execSlot( "editingFinished()"       ) } )
+   ::oWidget:connect( "returnPressed()"                , {|    | ::execSlot( "returnPressed()"         ) } )
+*  ::oWidget:connect( "selectionChanged()"             , {|    | ::execSlot( "selectionChanged()"      ) } )
+   ::oWidget:connect( "textChanged(QString)"           , {|s   | ::execSlot( "textChanged(QString)", s ) } )
+   ::oWidget:connect( "textEdited(QString)"            , {|s   | ::execSlot( "textEdited(QString)" , s ) } )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpSLE:disconnect()
+   #if 0
+   ::oWidget:disconnect( QEvent_FocusIn                   )
+   ::oWidget:disconnect( QEvent_FocusOut                  )
+   #endif
+   ::oWidget:disconnect( "cursorPositionChanged(int,int)" )
+*  ::oWidget:disconnect( "editingFinished()"              )
+   ::oWidget:disconnect( "returnPressed()"                )
+*  ::oWidget:disconnect( "selectionChanged()"             )
+   ::oWidget:disconnect( "textChanged(QString)"           )
+   ::oWidget:disconnect( "textEdited(QString)"            )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpSLE:destroy()
+
+   ::disconnect()
+   ::xbpWindow:destroy()
+
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -230,14 +261,6 @@ METHOD XbpSLE:handleEvent( nEvent, mp1, mp2 )
    HB_SYMBOL_UNUSED( mp2    )
 
    RETURN HBXBP_EVENT_UNHANDLED
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpSLE:destroy()
-
-   ::xbpWindow:destroy()
-
-   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 

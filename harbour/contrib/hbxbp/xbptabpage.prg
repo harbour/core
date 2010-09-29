@@ -179,7 +179,7 @@ METHOD XbpTabPage:destroy()
       asize( ::aChildren, len( ::aChildren ) - 1 )
    ENDIF
 
-   ::sl_tabActivate          := NIL
+   ::sl_tabActivate := NIL
    ::xbpWindow:destroy()
 
    RETURN NIL
@@ -263,6 +263,8 @@ CLASS XbpTabWidget  INHERIT  XbpWindow
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
    METHOD   execSlot( cSlot, p )
+   METHOD   connect()
+   METHOD   disconnect()
 
    ENDCLASS
 
@@ -284,10 +286,7 @@ METHOD XbpTabWidget:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
    ::oWidget:setContextMenuPolicy( Qt_CustomContextMenu )
    ::oWidget:setObjectName( "Tab_Widget" )
 
-   ::oWidget:connect( "currentChanged(int)"               , {|i| ::execSlot( "currentChanged(int)"   , i ) } )
-   ::oWidget:connect( "tabCloseRequested(int)"            , {|i| ::execSlot( "tabCloseRequested(int)", i ) } )
-   ::oWidget:connect( "customContextMenuRequested(QPoint)", {|p| ::execSlot( "customContextMenuRequested(QPoint)", p ) } )
-
+   ::connect()
    ::setPosAndSize()
    IF ::visible
       ::show()
@@ -304,8 +303,25 @@ METHOD XbpTabWidget:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisib
 
 /*----------------------------------------------------------------------*/
 
+METHOD XbpTabWidget:connect()
+   ::oWidget:connect( "currentChanged(int)"               , {|i| ::execSlot( "currentChanged(int)"   , i ) } )
+   ::oWidget:connect( "tabCloseRequested(int)"            , {|i| ::execSlot( "tabCloseRequested(int)", i ) } )
+   ::oWidget:connect( "customContextMenuRequested(QPoint)", {|p| ::execSlot( "customContextMenuRequested(QPoint)", p ) } )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpTabWidget:disconnect()
+   ::oWidget:disconnect( "currentChanged(int)"                )
+   ::oWidget:disconnect( "tabCloseRequested(int)"             )
+   ::oWidget:disconnect( "customContextMenuRequested(QPoint)" )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD XbpTabWidget:destroy()
 
+   ::disconnect()
    ::oParent:oTabWidget := NIL
    ::xbpWindow:destroy()
 

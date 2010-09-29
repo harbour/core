@@ -166,7 +166,6 @@ METHOD XbpPrintDialog:display( oXbpPrinter )
          oXbpPrinter := XbpPrinter():new()
          oXbpPrinter:oWidget := QPrinter()
       ENDIF
-//      oXbpPrinter:oWidget:pPtr      := ::pPrinter
       oXbpPrinter:oWidget           := QPrinter( ::pPrinter )
       oXbpPrinter:oPrintEngine      := QPrintEngine()
       oXbpPrinter:oPrintEngine      := oXbpPrinter:oWidget:printEngine()

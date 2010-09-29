@@ -86,6 +86,8 @@ CLASS XbpComboBox  INHERIT  XbpWindow
    METHOD   destroy()
    METHOD   handleEvent( nEvent, mp1, mp2 )       VIRTUAL
    METHOD   execSlot( cSlot, p )
+   METHOD   connect()
+   METHOD   disconnect()
 
    METHOD   listBoxFocus( lFocus )                VIRTUAL      // -> lOldFocus
    METHOD   sleSize()                             VIRTUAL      // -> aOldSize
@@ -146,10 +148,7 @@ METHOD XbpComboBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::oWidget:setEditable( ::xbpSLE:editable )
    ::oWidget:setFrame( ::xbpSLE:border )
 
-   ::oWidget:connect( "highlighted(int)"        , {|i| ::execSlot( "highlighted(int)"        , i ) } )
-   ::oWidget:connect( "activated(int)"          , {|i| ::execSlot( "activated(int)"          , i ) } )
-*  ::oWidget:connect( "currentIndexChanged(int)", {|i| ::execSlot( "currentIndexChanged(int)", i ) } )
-
+   ::connect()
    ::setPosAndSize()
    IF ::visible
       ::show()
@@ -181,22 +180,32 @@ METHOD XbpComboBox:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams,
       IF ::visible
          ::show()
       ENDIF
+      ::connect()
    ENDIF
+   ::AddAsChild( SELF )
+   RETURN Self
 
+/*----------------------------------------------------------------------*/
+
+METHOD XbpComboBox:connect()
    ::oWidget:connect( "highlighted(int)"        , {|i| ::execSlot( "highlighted(int)"        , i ) } )
    ::oWidget:connect( "activated(int)"          , {|i| ::execSlot( "activated(int)"          , i ) } )
 *  ::oWidget:connect( "currentIndexChanged(int)", {|i| ::execSlot( "currentIndexChanged(int)", i ) } )
+   RETURN Self
 
-   ::AddAsChild( SELF )
+/*----------------------------------------------------------------------*/
+
+METHOD XbpComboBox:disconnect()
+   ::oWidget:disconnect( "highlighted(int)"         )
+   ::oWidget:disconnect( "activated(int)"           )
+*  ::oWidget:disconnect( "currentIndexChanged(int)" )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpComboBox:destroy()
 
-   ::xbpSLE:destroy()
-   ::xbpListBox:destroy()
-
+   ::disconnect()
    ::xbpWindow:destroy()
 
    RETURN NIL

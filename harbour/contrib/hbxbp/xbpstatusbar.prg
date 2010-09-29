@@ -171,15 +171,8 @@ METHOD XbpStatusBar:handleEvent( nEvent, mp1, mp2 )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpStatusBar:destroy()
-   LOCAL obj
 
-   FOR EACH obj IN ::aItems
-      ::oWidget:removeWidget( obj )
-      obj:oParent := NIL
-      obj := NIL
-   NEXT
    ::aItems := {}
-
    ::xbpWindow:destroy()
 
    RETURN NIL
@@ -261,12 +254,6 @@ METHOD XbpStatusBar:getItem( nItemORcKey )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpStatusBar:clear()
-   LOCAL i
-
-   FOR i := 1 TO ::numItems
-      /* Remove off window */
-
-   NEXT
 
    ::aItems := {}
 

@@ -362,7 +362,6 @@ METHOD XbpTreeView:itemSelected( ... )
 CLASS XbpTreeViewItem  INHERIT  XbpDataRef
 
    DATA     oWidget
-   ACCESS   pWidget                               INLINE IF( hb_isObject( ::oWidget ), ::oWidget:pPtr, NIL )
 
    DATA     caption                               INIT ""
    DATA     dllName                               INIT NIL
@@ -433,7 +432,6 @@ METHOD XbpTreeViewItem:addItem( xItem, xNormalImage, xMarkedImage, xExpandedImag
       oItem:xValue := xValue
    ENDIF
 
-//   ::oWidget:addChild( oItem:oWidget:pPtr )
    ::oWidget:addChild( oItem:oWidget )
 
    aadd( ::aChilds, oItem )
@@ -505,7 +503,7 @@ METHOD XbpTreeViewItem:delItem( oItem )
    LOCAL n
 
    IF ( n := ascan( ::aChilds, {|o| o == oItem } ) ) > 0
-      ::oWidget:removeChild( ::aChilds[ n ]:oWidget:pPtr )
+      ::oWidget:removeChild( ::aChilds[ n ]:oWidget )
       ::aChilds[ n ]:oWidget := NIL
       adel( ::aChilds, n )
       asize( ::aChilds, len( ::aChilds )-1 )

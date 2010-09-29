@@ -106,7 +106,7 @@ CLASS XbpListBox  INHERIT  XbpWindow, XbpDataRef
 
    METHOD   numItems()                            INLINE  len( ::aItems )
    METHOD   addItem( cItem )
-   METHOD   clear()
+   METHOD   clear( lConnect )
    METHOD   delItem( nIndex )
    METHOD   getItem( nIndex )
    METHOD   insItem( nIndex, cItem )
@@ -119,8 +119,8 @@ CLASS XbpListBox  INHERIT  XbpWindow, XbpDataRef
 
    METHOD   getItemIndex( pItm )
    METHOD   toggleSelected( nIndex )
-   METHOD   connectAll()
-   METHOD   disConnectAll()
+   METHOD   connect()
+   METHOD   disConnect()
    METHOD   setItemColorFG( nIndex, aRGB )
 
 
@@ -183,8 +183,7 @@ METHOD XbpListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    /* Window Events */
    ::oWidget:connect( QEvent_ContextMenu, {|e| ::grabEvent( QEvent_ContextMenu, e ) } )
 
-   ::connectAll()
-
+   ::connect()
    ::setPosAndSize()
    IF ::visible
       ::show()
@@ -195,7 +194,7 @@ METHOD XbpListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpListBox:connectAll()
+METHOD XbpListBox:connect()
 
    ::oWidget:connect( "currentItemChanged(QLWItem,QLWItem)", {|p,p1| ::execSlot( "currentItemChanged(QLWItem,QLWItem)", p, p1 ) } )
    ::oWidget:connect( "currentRowChanged(int)"             , {|p,p1| ::execSlot( "currentRowChanged(int)"             , p, p1 ) } )
@@ -212,7 +211,7 @@ METHOD XbpListBox:connectAll()
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpListBox:disConnectAll()
+METHOD XbpListBox:disConnect()
 
    ::oWidget:disConnect( "currentItemChanged(QLWItem,QLWItem)" )
    ::oWidget:disConnect( "currentRowChanged(int)"              )
@@ -326,26 +325,33 @@ METHOD XbpListBox:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
 METHOD XbpListBox:destroy()
 
-   ::clear()
+
+   ::clear( .f. )
    ::xbpWindow:destroy()
 
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpListBox:clear()
+METHOD XbpListBox:clear( lConnect )
    LOCAL qItm
 
-   ::disConnectAll()
+   DEFAULT lConnect TO .t.
+
+   ::disConnect()
 
    FOR EACH qItm IN ::aItems
       qItm := NIL
    NEXT
    ::aItems := {}
    IF ::oWidget:isValidObject()
-      ::oWidget:clear()
+      IF lConnect
+         ::oWidget:clear()
+      ENDIF
    ENDIF
-   ::connectAll()
+   IF lConnect
+      ::connect()
+   ENDIF
 
    RETURN .t.
 

@@ -151,8 +151,7 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
          ::oWidget       := ::qtObject
          ::qtObject      := NIL
       ELSE
-         ::oWidget := QMainWindow()
-         ::oWidget:pPtr := hbqt_ptr( ::qtObject )
+         ::oWidget := HB_QMainWindow():from( ::qtObject )
       ENDIF
       ::oWidget:setMouseTracking( .t. )
    ELSE
@@ -241,6 +240,11 @@ METHOD XbpDialog:destroy()
    HB_TRACE( HB_TR_DEBUG,  "<<<<<<<<<<                        XbpDialog:destroy    B                      >>>>>>>>>>" )
 
 //   ::oWidget:removeEventFilter( ::pEvents )
+
+   ::disconnectWindowEvents()
+   ::oWidget:disconnect( QEvent_Close            )
+   ::oWidget:disconnect( QEvent_WindowActivate   )
+   ::oWidget:disconnect( QEvent_WindowDeactivate )
 
    hbxbp_SetEventLoop( NIL )
    ::oEventLoop:exit( 0 )
@@ -417,8 +421,7 @@ METHOD XbpDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, .T. )
 
    IF !empty( ::qtObject )
-      ::oWidget := QWidget()
-      ::oWidget:pPtr := hbqt_ptr( ::qtObject )
+      ::oWidget := HB_QWidget():from( ::qtObject )
    ELSE
       ::oWidget := QWidget()
    ENDIF
