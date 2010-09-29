@@ -7844,23 +7844,24 @@ HB_FUNC( DBFNTX ) {;}
 HB_FUNC( DBFNTX_GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
-   HB_USHORT * uiCount, uiRddId;
+   HB_USHORT * puiCount, uiRddId, * puiSuperRddId;
 
-   uiCount = ( HB_USHORT * ) hb_parptr( 1 );
+   puiCount = ( HB_USHORT * ) hb_parptr( 1 );
    pTable = ( RDDFUNCS * ) hb_parptr( 2 );
    uiRddId = hb_parni( 4 );
+   puiSuperRddId = ( HB_USHORT * ) hb_parptr( 5 );
 
    if( pTable )
    {
       HB_ERRCODE errCode;
 
-      if( uiCount )
-         * uiCount = RDDFUNCSCOUNT;
-      errCode = hb_rddInherit( pTable, &ntxTable, &ntxSuper, "DBFFPT" );
+      if( puiCount )
+         * puiCount = RDDFUNCSCOUNT;
+      errCode = hb_rddInheritEx( pTable, &ntxTable, &ntxSuper, "DBFFPT", puiSuperRddId );
       if( errCode != HB_SUCCESS )
-         errCode = hb_rddInherit( pTable, &ntxTable, &ntxSuper, "DBFDBT" );
+         errCode = hb_rddInheritEx( pTable, &ntxTable, &ntxSuper, "DBFDBT", puiSuperRddId );
       if( errCode != HB_SUCCESS )
-         errCode = hb_rddInherit( pTable, &ntxTable, &ntxSuper, "DBF" );
+         errCode = hb_rddInheritEx( pTable, &ntxTable, &ntxSuper, "DBF", puiSuperRddId );
       if( errCode == HB_SUCCESS )
       {
          /*

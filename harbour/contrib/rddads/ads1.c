@@ -270,8 +270,7 @@ static HB_BOOL adsIndexKeyCmp( ADSHANDLE hIndex, UNSIGNED8 * pszKey, UNSIGNED16 
    return HB_FALSE;
 }
 
-
-static int adsGetFileType( HB_USHORT uiRddID )
+static int adsGetRddType( HB_USHORT uiRddID )
 {
    if(      uiRddID == s_uiRddIdADSCDX )
       return ADS_CDX;
@@ -283,8 +282,30 @@ static int adsGetFileType( HB_USHORT uiRddID )
    else if( uiRddID == s_uiRddIdADSVFP )
       return ADS_VFP;
 #endif
+   else if( uiRddID == s_uiRddIdADS )
+      return ADS_DEFAULT;
 
-   return hb_ads_iFileType;
+   else if( hb_rddIsDerivedFrom( uiRddID, s_uiRddIdADSCDX ) )
+      return ADS_CDX;
+   else if( hb_rddIsDerivedFrom( uiRddID, s_uiRddIdADSNTX ) )
+      return ADS_NTX;
+   else if( hb_rddIsDerivedFrom( uiRddID, s_uiRddIdADSADT ) )
+      return ADS_ADT;
+#if ADS_LIB_VERSION >= 900
+   else if( hb_rddIsDerivedFrom( uiRddID, s_uiRddIdADSVFP ) )
+      return ADS_VFP;
+#endif
+   else if( hb_rddIsDerivedFrom( uiRddID, s_uiRddIdADS ) )
+      return ADS_DEFAULT;
+   else
+      return -1;
+}
+
+static int adsGetFileType( HB_USHORT uiRddID )
+{
+   int iType = adsGetRddType( uiRddID );
+
+   return iType > 0 ? iType : hb_ads_iFileType;
 }
 
 static const char * adsTableExt( int iFileType )
@@ -296,8 +317,8 @@ static const char * adsMemoExt( int iFileType )
 {
    switch( iFileType )
    {
-   case ADS_ADT: return ".adm";
-   case ADS_NTX: return ".dbt";
+      case ADS_ADT: return ".adm";
+      case ADS_NTX: return ".dbt";
    }
 
    return ".fpt";
@@ -307,8 +328,8 @@ static const char * adsIndexExt( int iFileType )
 {
    switch( iFileType )
    {
-   case ADS_ADT: return ".adi";
-   case ADS_NTX: return ".ntx";
+      case ADS_ADT: return ".adi";
+      case ADS_NTX: return ".ntx";
    }
 
    return ".cdx";
@@ -3206,33 +3227,31 @@ static HB_ERRCODE adsNewArea( ADSAREAP pArea )
    errCode = SUPER_NEW( ( AREAP ) pArea );
    if( errCode == HB_SUCCESS )
    {
-      if( pArea->area.rddID == s_uiRddIdADSADT )
+      switch( adsGetRddType( pArea->area.rddID ) )
       {
-         pArea->iFileType = ADS_ADT;
-         pArea->area.uiMaxFieldNameLength = ADS_MAX_FIELD_NAME;
-      }
-      else if( pArea->area.rddID == s_uiRddIdADSNTX )
-      {
-         pArea->iFileType = ADS_NTX;
-         pArea->area.uiMaxFieldNameLength = ADS_MAX_DBF_FIELD_NAME;
-      }
-      else if( pArea->area.rddID == s_uiRddIdADSCDX )
-      {
-         pArea->iFileType = ADS_CDX;
-         pArea->area.uiMaxFieldNameLength = ADS_MAX_DBF_FIELD_NAME;
-      }
+         case ADS_NTX:
+            pArea->iFileType = ADS_NTX;
+            pArea->area.uiMaxFieldNameLength = ADS_MAX_DBF_FIELD_NAME;
+            break;
+         case ADS_CDX:
+            pArea->iFileType = ADS_CDX;
+            pArea->area.uiMaxFieldNameLength = ADS_MAX_DBF_FIELD_NAME;
+            break;
+         case ADS_ADT:
+            pArea->iFileType = ADS_ADT;
+            pArea->area.uiMaxFieldNameLength = ADS_MAX_FIELD_NAME;
+            break;
 #if ADS_LIB_VERSION >= 900
-      else if( pArea->area.rddID == s_uiRddIdADSVFP )
-      {
-         pArea->iFileType = ADS_VFP;
-         pArea->area.uiMaxFieldNameLength = ADS_MAX_DBF_FIELD_NAME;
-      }
+         case ADS_VFP:
+            pArea->iFileType = ADS_VFP;
+            pArea->area.uiMaxFieldNameLength = ADS_MAX_DBF_FIELD_NAME;
+            break;
 #endif
-      else /* if( pArea->rddID == s_uiRddIdADS ) */
-      {
-         pArea->iFileType = hb_ads_iFileType;
-         pArea->area.uiMaxFieldNameLength = ( pArea->iFileType == ADS_ADT ) ?
-                                    ADS_MAX_FIELD_NAME : ADS_MAX_DBF_FIELD_NAME;
+         default: /* ADS_DEFAULT */
+            pArea->iFileType = hb_ads_iFileType;
+            pArea->area.uiMaxFieldNameLength = ( pArea->iFileType == ADS_ADT ) ?
+                                       ADS_MAX_FIELD_NAME : ADS_MAX_DBF_FIELD_NAME;
+            break;
       }
    }
    return errCode;
@@ -3712,19 +3731,11 @@ static HB_ERRCODE adsSetRel( ADSAREAP pArea, LPDBRELINFO  lpdbRelations )
 {
    UNSIGNED32 u32RetVal = ( UNSIGNED32 ) ~AE_SUCCESS;
    UNSIGNED8 *szExp;
-   HB_USHORT rddID;
 
    HB_TRACE(HB_TR_DEBUG, ("adsSetRel(%p, %p)", pArea, lpdbRelations));
 
    szExp = ( UNSIGNED8 * ) hb_itemGetCPtr( lpdbRelations->abKey );
-   rddID = lpdbRelations->lpaChild->rddID;
-   if( *szExp && ( rddID == s_uiRddIdADS ||
-                   rddID == s_uiRddIdADSADT ||
-#if ADS_LIB_VERSION >= 900
-                   rddID == s_uiRddIdADSVFP ||
-#endif
-                   rddID == s_uiRddIdADSNTX ||
-                   rddID == s_uiRddIdADSCDX ) )
+   if( *szExp && adsGetRddType( lpdbRelations->lpaChild->rddID ) >= 0 )
    {
       ADSHANDLE hIndex = ( ( ADSAREAP ) lpdbRelations->lpaChild )->hOrdCurrent;
 
@@ -5154,19 +5165,20 @@ static const RDDFUNCS adsTable = { ( DBENTRYP_BP ) adsBof,
 static void adsRegisterRDD( HB_USHORT * pusRddId )
 {
    RDDFUNCS * pTable;
-   HB_USHORT * uiCount, uiRddId;
+   HB_USHORT * puiCount, * puiSuperRddId, uiRddId;
 
-   uiCount = ( HB_USHORT * ) hb_parptr( 1 );
+   puiCount = ( HB_USHORT * ) hb_parptr( 1 );
    pTable = ( RDDFUNCS * ) hb_parptr( 2 );
    uiRddId = ( HB_USHORT ) hb_parni( 4 );
+   puiSuperRddId = ( HB_USHORT * ) hb_parptr( 5 );
 
    if( pTable )
    {
       HB_ERRCODE errCode;
 
-      if( uiCount )
-         * uiCount = RDDFUNCSCOUNT;
-      errCode = hb_rddInherit( pTable, &adsTable, &adsSuper, NULL );
+      if( puiCount )
+         * puiCount = RDDFUNCSCOUNT;
+      errCode = hb_rddInheritEx( pTable, &adsTable, &adsSuper, NULL, puiSuperRddId );
       if( errCode == HB_SUCCESS )
       {
          /*
@@ -5289,15 +5301,7 @@ ADSAREAP hb_adsGetWorkAreaPointer( void )
 
    if( pArea )
    {
-      HB_USHORT rddID = pArea->area.rddID;
-
-      if( rddID == s_uiRddIdADS ||
-          rddID == s_uiRddIdADSADT ||
-#if ADS_LIB_VERSION >= 900
-          rddID == s_uiRddIdADSVFP ||
-#endif
-          rddID == s_uiRddIdADSNTX ||
-          rddID == s_uiRddIdADSCDX )
+      if( adsGetRddType( pArea->area.rddID ) >= 0 )
          return pArea;
    }
    return NULL;

@@ -207,7 +207,7 @@ REQUEST DBFCDX
  * This function have to exist in all RDD and then name have to be in
  * format: <RDDNAME>_GETFUNCTABLE
  */
-FUNCTION RLCDX_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
+FUNCTION RLCDX_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, pSuperRddID )
 
    LOCAL cSuperRDD := "DBFCDX" /* We are inheriting from DBFCDX */
    LOCAL aMethods[ UR_METHODCOUNT ]
@@ -218,7 +218,7 @@ FUNCTION RLCDX_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    aMethods[ UR_APPEND ] := ( @RLCDX_APPEND() )
 
    RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
-                               cSuperRDD, aMethods )
+                               cSuperRDD, aMethods, pSuperRddID )
 
 INIT PROCEDURE RLCDX_INIT()
    rddRegister( "RLCDX", RDT_FULL )

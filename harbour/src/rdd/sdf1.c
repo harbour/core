@@ -1304,18 +1304,18 @@ HB_FUNC( SDF ) { ; }
 HB_FUNC( SDF_GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
-   HB_USHORT * uiCount;
+   HB_USHORT * puiCount;
 
-   uiCount = ( HB_USHORT * ) hb_parptr( 1 );
+   puiCount = ( HB_USHORT * ) hb_parptr( 1 );
    pTable = ( RDDFUNCS * ) hb_parptr( 2 );
 
-   HB_TRACE(HB_TR_DEBUG, ("SDF_GETFUNCTABLE(%p, %p)", uiCount, pTable));
+   HB_TRACE(HB_TR_DEBUG, ("SDF_GETFUNCTABLE(%p, %p)", puiCount, pTable));
 
    if( pTable )
    {
-      if( uiCount )
-         * uiCount = RDDFUNCSCOUNT;
-      hb_retni( hb_rddInherit( pTable, &sdfTable, &sdfSuper, NULL ) );
+      if( puiCount )
+         * puiCount = RDDFUNCSCOUNT;
+      hb_retni( hb_rddInheritEx( pTable, &sdfTable, &sdfSuper, NULL, NULL ) );
    }
    else
       hb_retni( HB_FAILURE );

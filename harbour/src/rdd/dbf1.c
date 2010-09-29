@@ -5776,21 +5776,21 @@ HB_FUNC( _DBF ) { ; }
 HB_FUNC( DBF_GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
-   HB_USHORT * uiCount, uiRddId;
+   HB_USHORT * puiCount, uiRddId;
 
-   uiCount = ( HB_USHORT * ) hb_parptr( 1 );
+   puiCount = ( HB_USHORT * ) hb_parptr( 1 );
    pTable = ( RDDFUNCS * ) hb_parptr( 2 );
    uiRddId = ( HB_USHORT ) hb_parni( 4 );
 
-   HB_TRACE(HB_TR_DEBUG, ("DBF_GETFUNCTABLE(%p, %p)", uiCount, pTable));
+   HB_TRACE(HB_TR_DEBUG, ("DBF_GETFUNCTABLE(%p, %p)", puiCount, pTable));
 
    if( pTable )
    {
       HB_ERRCODE errCode;
 
-      if( uiCount )
-         * uiCount = RDDFUNCSCOUNT;
-      errCode = hb_rddInherit( pTable, &dbfTable, &dbfSuper, NULL );
+      if( puiCount )
+         * puiCount = RDDFUNCSCOUNT;
+      errCode = hb_rddInheritEx( pTable, &dbfTable, &dbfSuper, NULL, NULL );
       hb_retni( errCode );
       if( errCode == HB_SUCCESS )
       {

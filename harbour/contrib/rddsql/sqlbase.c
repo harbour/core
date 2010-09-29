@@ -1236,18 +1236,20 @@ HB_FUNC( SQLBASE ) {;}
 HB_FUNC( SQLBASE_GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
-   HB_USHORT * uiCount, uiRddId;
+   HB_USHORT * puiCount, uiRddId;
 
-   uiCount = ( HB_USHORT * ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
-   * uiCount = RDDFUNCSCOUNT;
-   pTable = ( RDDFUNCS * ) hb_itemGetPtr( hb_param( 2, HB_IT_POINTER ) );
+   puiCount = ( HB_USHORT * ) hb_parptr( 1 );
+   pTable = ( RDDFUNCS * ) hb_parptr( 2 );
    uiRddId = ( HB_USHORT ) hb_parni( 4 );
 
    if ( pTable )
    {
       HB_ERRCODE errCode;
 
-      errCode = hb_rddInherit( pTable, &sqlbaseTable, &sqlbaseSuper, 0 );
+      if( puiCount )
+         * puiCount = RDDFUNCSCOUNT;
+
+      errCode = hb_rddInheritEx( pTable, &sqlbaseTable, &sqlbaseSuper, NULL, NULL );
       if ( errCode == HB_SUCCESS )
       {
          s_rddidSQLBASE = uiRddId;

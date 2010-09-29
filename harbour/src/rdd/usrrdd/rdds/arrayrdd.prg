@@ -940,7 +940,7 @@ STATIC FUNCTION AR_DUMMY()
  * This function have to exist in all RDD and then name have to be in
  * format: <RDDNAME>_GETFUNCTABLE
  */
-FUNCTION ARRAYRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
+FUNCTION ARRAYRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, pSuperRddID )
    LOCAL cSuperRDD := NIL     /* NO SUPER RDD */
    LOCAL aMyFunc[ UR_METHODCOUNT ]
 
@@ -971,7 +971,7 @@ FUNCTION ARRAYRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    aMyFunc[ UR_ORDINFO      ] := ( @AR_ORDINFO()      )
 
    RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
-                               cSuperRDD, aMyFunc )
+                               cSuperRDD, aMyFunc, pSuperRddID )
 
 INIT PROCEDURE ARRAYRDD_INIT()
    rddRegister( "ARRAYRDD", RDT_FULL )

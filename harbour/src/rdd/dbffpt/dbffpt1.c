@@ -5283,11 +5283,12 @@ HB_FUNC( DBFBLOB ) {;}
 static void hb_dbffptRegisterRDD( HB_USHORT * pusRddId )
 {
    RDDFUNCS * pTable;
-   HB_USHORT * uiCount, uiRddId;
+   HB_USHORT * puiCount, uiRddId, * puiSuperRddId;
 
-   uiCount = ( HB_USHORT * ) hb_parptr( 1 );
+   puiCount = ( HB_USHORT * ) hb_parptr( 1 );
    pTable = ( RDDFUNCS * ) hb_parptr( 2 );
-   uiRddId = hb_parni( 4 );
+   uiRddId = ( HB_USHORT ) hb_parni( 4 );
+   puiSuperRddId = ( HB_USHORT * ) hb_parptr( 5 );
 
    HB_TRACE(HB_TR_DEBUG, ("DBFFPT_GETFUNCTABLE(%p, %p)", uiCount, pTable));
 
@@ -5295,10 +5296,10 @@ static void hb_dbffptRegisterRDD( HB_USHORT * pusRddId )
    {
       HB_ERRCODE errCode;
 
-      if( uiCount )
-         * uiCount = RDDFUNCSCOUNT;
+      if( puiCount )
+         * puiCount = RDDFUNCSCOUNT;
 
-      errCode = hb_rddInherit( pTable, &fptTable, &fptSuper, "DBF" );
+      errCode = hb_rddInheritEx( pTable, &fptTable, &fptSuper, "DBF", puiSuperRddId );
       if( errCode == HB_SUCCESS )
          *pusRddId = uiRddId;
       hb_retni( errCode );

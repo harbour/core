@@ -8164,21 +8164,22 @@ HB_FUNC( DBFNSX ) {;}
 HB_FUNC( DBFNSX_GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
-   HB_USHORT * uiCount, uiRddId;
+   HB_USHORT * puiCount, uiRddId, * puiSuperRddId;
 
-   uiCount = ( HB_USHORT * ) hb_parptr( 1 );
+   puiCount = ( HB_USHORT * ) hb_parptr( 1 );
    pTable = ( RDDFUNCS * ) hb_parptr( 2 );
    uiRddId = hb_parni( 4 );
+   puiSuperRddId = ( HB_USHORT * ) hb_parptr( 5 );
 
    if( pTable )
    {
       HB_ERRCODE errCode;
 
-      if( uiCount )
-         * uiCount = RDDFUNCSCOUNT;
-      errCode = hb_rddInherit( pTable, &nsxTable, &nsxSuper, "DBFFPT" );
+      if( puiCount )
+         * puiCount = RDDFUNCSCOUNT;
+      errCode = hb_rddInheritEx( pTable, &nsxTable, &nsxSuper, "DBFFPT", puiSuperRddId );
       if( errCode != HB_SUCCESS )
-         errCode = hb_rddInherit( pTable, &nsxTable, &nsxSuper, "DBF" );
+         errCode = hb_rddInheritEx( pTable, &nsxTable, &nsxSuper, "DBF", puiSuperRddId );
       if( errCode == HB_SUCCESS )
       {
          /*

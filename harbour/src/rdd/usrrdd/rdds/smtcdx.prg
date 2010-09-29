@@ -67,9 +67,9 @@ REQUEST DBFFPT
 /* Announce our RDD for forign REQUESTs */
 ANNOUNCE SMTCDX
 
-FUNCTION SMTCDX_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
+FUNCTION SMTCDX_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, pSuperRddID )
    RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
-                               "DBFCDX", {} ) /* We are inheriting from DBFCDX */
+                               "DBFCDX", {}, pSuperRddID ) /* We are inheriting from DBFCDX */
 
 INIT PROCEDURE SMTCDX_INIT()
    rddRegister( "SMTCDX", RDT_FULL )

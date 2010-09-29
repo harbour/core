@@ -251,7 +251,7 @@ REQUEST DBFCDX
  * This function have to exist in all RDD and then name have to be in
  * format: <RDDNAME>_GETFUNCTABLE
  */
-FUNCTION HSCDX_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
+FUNCTION HSCDX_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, pSuperRddID )
    LOCAL cSuperRDD := "DBFCDX" /* We are inheriting from DBFCDX */
    LOCAL aMyFunc[ UR_METHODCOUNT ]
 
@@ -262,7 +262,7 @@ FUNCTION HSCDX_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    aMyFunc[ UR_APPEND ] := ( @_HSX_APPEND() )
 
    RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
-                               cSuperRDD, aMyFunc )
+                               cSuperRDD, aMyFunc, pSuperRddID )
 
 /*
  * Register our HSCDX at program startup

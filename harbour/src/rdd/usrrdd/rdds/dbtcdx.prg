@@ -67,9 +67,9 @@ REQUEST DBFFPT
 /* Announce our RDD for foreign REQUESTs */
 ANNOUNCE DBTCDX
 
-FUNCTION DBTCDX_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
+FUNCTION DBTCDX_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, pSuperRddID )
    RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
-                               "DBFCDX", {} ) /* We are inheriting from DBFCDX */
+                               "DBFCDX", {}, pSuperRddID ) /* We are inheriting from DBFCDX */
 
 INIT PROCEDURE DBTCDX_INIT()
    rddRegister( "DBTCDX", RDT_FULL )

@@ -1569,18 +1569,18 @@ HB_FUNC( DELIM ) { ; }
 HB_FUNC( DELIM_GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
-   HB_USHORT * uiCount;
+   HB_USHORT * puiCount;
 
-   uiCount = ( HB_USHORT * ) hb_parptr( 1 );
+   puiCount = ( HB_USHORT * ) hb_parptr( 1 );
    pTable = ( RDDFUNCS * ) hb_parptr( 2 );
 
-   HB_TRACE(HB_TR_DEBUG, ("DELIM_GETFUNCTABLE(%p, %p)", uiCount, pTable));
+   HB_TRACE(HB_TR_DEBUG, ("DELIM_GETFUNCTABLE(%p, %p)", puiCount, pTable));
 
    if( pTable )
    {
-      if( uiCount )
-         * uiCount = RDDFUNCSCOUNT;
-      hb_retni( hb_rddInherit( pTable, &delimTable, &delimSuper, NULL ) );
+      if( puiCount )
+         * puiCount = RDDFUNCSCOUNT;
+      hb_retni( hb_rddInheritEx( pTable, &delimTable, &delimSuper, NULL, NULL ) );
    }
    else
       hb_retni( HB_FAILURE );

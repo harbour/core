@@ -2173,18 +2173,21 @@ static RDDFUNCS sqlmixTable =
 HB_FUNC( SQLMIX_GETFUNCTABLE )
 {
    RDDFUNCS * pTable;
-   HB_USHORT * uiCount, uiRddId;
+   HB_USHORT * puiCount, * puiSuperRddId, uiRddId;
 
-   uiCount = ( HB_USHORT * ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
-   * uiCount = RDDFUNCSCOUNT;
-   pTable = ( RDDFUNCS * ) hb_itemGetPtr( hb_param( 2, HB_IT_POINTER ) );
+   puiCount = ( HB_USHORT * ) hb_parptr( 1 );
+   pTable = ( RDDFUNCS * ) hb_parptr( 2 );
    uiRddId = ( HB_USHORT ) hb_parni( 4 );
+   puiSuperRddId = ( HB_USHORT * ) hb_parptr( 5 );
 
    if ( pTable )
    {
       HB_ERRCODE errCode;
 
-      errCode = hb_rddInherit( pTable, &sqlmixTable, &sqlmixSuper, "SQLBASE" );
+      if( puiCount )
+         * puiCount = RDDFUNCSCOUNT;
+
+      errCode = hb_rddInheritEx( pTable, &sqlmixTable, &sqlmixSuper, "SQLBASE", puiSuperRddId );
       if ( errCode == HB_SUCCESS )
       {
          s_uiRddIdSQLMIX = uiRddId;

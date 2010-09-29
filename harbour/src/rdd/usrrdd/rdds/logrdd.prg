@@ -182,7 +182,7 @@ REQUEST DBFCDX
  * This function have to exist in all RDD and then name have to be in
  * format: <RDDNAME>_GETFUNCTABLE
  */
-FUNCTION LOGRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
+FUNCTION LOGRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, pSuperRddID )
    LOCAL cSuperRDD := hb_LogRddInherit() /* We are inheriting from a User Defined RDD */
    LOCAL aMyFunc[ UR_METHODCOUNT ]
 
@@ -199,7 +199,7 @@ FUNCTION LOGRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    aMyFunc[ UR_ZAP          ] := ( @LOGRDD_ZAP()          )
 
 RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
-                            cSuperRDD, aMyFunc )
+                            cSuperRDD, aMyFunc, pSuperRddID )
 
 INIT PROCEDURE _LOGRDD_INIT()
    rddRegister( "LOGRDD", RDT_FULL )

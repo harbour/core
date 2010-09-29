@@ -2123,7 +2123,7 @@ int hb_rddRegister( const char * szDriver, HB_USHORT uiType )
    LPRDDNODE pRddNewNode;
    PHB_DYNS pGetFuncTable;
    char szGetFuncTable[ HB_RDD_MAX_DRIVERNAME_LEN + 14 ];
-   HB_USHORT uiFunctions;
+   HB_USHORT uiFunctions = 0;
    int iResult;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_rddRegister(%s, %hu)", szDriver, uiType));
@@ -2145,6 +2145,7 @@ int hb_rddRegister( const char * szDriver, HB_USHORT uiType )
    hb_strncpy( pRddNewNode->szName, szDriver, sizeof( pRddNewNode->szName ) - 1 );
    pRddNewNode->uiType = uiType;
    pRddNewNode->rddID = s_uiRddCount;
+   pRddNewNode->rddSuperID = ( HB_USHORT ) ( -1 );
 
    /* Call <szDriver>_GETFUNCTABLE() */
    hb_vmPushDynSym( pGetFuncTable );
@@ -2153,8 +2154,9 @@ int hb_rddRegister( const char * szDriver, HB_USHORT uiType )
    hb_vmPushPointer( ( void * ) &pRddNewNode->pTable );
    hb_vmPushPointer( ( void * ) &pRddNewNode->pSuperTable );
    hb_vmPushInteger( s_uiRddCount );
-   hb_vmProc( 4 );
-   if( hb_parni( -1 ) != HB_SUCCESS )
+   hb_vmPushPointer( ( void * ) &pRddNewNode->rddSuperID );
+   hb_vmProc( 5 );
+   if( hb_parnidef( -1, HB_FAILURE ) != HB_SUCCESS )
       iResult = 3;                        /* Invalid FUNCTABLE */
    else
    {
@@ -2193,13 +2195,15 @@ int hb_rddRegister( const char * szDriver, HB_USHORT uiType )
  * pSuperTable - a current table in a RDDNODE
  * szDrvName - a driver name that will be inherited
  */
-HB_ERRCODE hb_rddInherit( RDDFUNCS * pTable, const RDDFUNCS * pSubTable, RDDFUNCS * pSuperTable, const char * szDrvName )
+HB_ERRCODE hb_rddInheritEx( RDDFUNCS * pTable, const RDDFUNCS * pSubTable,
+                            RDDFUNCS * pSuperTable, const char * szDrvName,
+                            HB_USHORT * puiSupperRddId )
 {
    LPRDDNODE pRddNode;
    HB_USHORT uiCount;
    DBENTRYP_V * pFunction, * pSubFunction;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_rddInherit(%p, %p, %p, %s)", pTable, pSubTable, pSuperTable, szDrvName));
+   HB_TRACE(HB_TR_DEBUG, ("hb_rddInheritEx(%p, %p, %p, %s, %p)", pTable, pSubTable, pSuperTable, szDrvName, puiSupperRddId));
 
    if( !pTable )
    {
@@ -2212,6 +2216,8 @@ HB_ERRCODE hb_rddInherit( RDDFUNCS * pTable, const RDDFUNCS * pSubTable, RDDFUNC
       /* no name for inherited driver - use the default one */
       memcpy( pTable, &waTable, sizeof( RDDFUNCS ) );
       memcpy( pSuperTable, &waTable, sizeof( RDDFUNCS ) );
+      if( puiSupperRddId )
+         * puiSupperRddId = ( HB_USHORT ) -1;
    }
    else
    {
@@ -2224,6 +2230,8 @@ HB_ERRCODE hb_rddInherit( RDDFUNCS * pTable, const RDDFUNCS * pSubTable, RDDFUNC
 
       memcpy( pTable, &pRddNode->pTable, sizeof( RDDFUNCS ) );
       memcpy( pSuperTable, &pRddNode->pTable, sizeof( RDDFUNCS ) );
+      if( puiSupperRddId )
+         * puiSupperRddId = pRddNode->rddID;
    }
 
    /* Copy the non NULL entries from pSubTable into pTable */
@@ -2237,6 +2245,28 @@ HB_ERRCODE hb_rddInherit( RDDFUNCS * pTable, const RDDFUNCS * pSubTable, RDDFUNC
       pSubFunction ++;
    }
    return HB_SUCCESS;
+}
+
+HB_ERRCODE hb_rddInherit( RDDFUNCS * pTable, const RDDFUNCS * pSubTable,
+                          RDDFUNCS * pSuperTable, const char * szDrvName )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_rddInherit(%p, %p, %p, %s)", pTable, pSubTable, pSuperTable, szDrvName));
+
+   return hb_rddInheritEx( pTable, pSubTable, pSuperTable, szDrvName, NULL );
+}
+
+HB_BOOL hb_rddIsDerivedFrom( HB_USHORT uiRddID, HB_USHORT uiSupperRddID )
+{
+   if( uiRddID == uiSupperRddID )
+      return HB_TRUE;
+
+   while( uiRddID < s_uiRddCount )
+   {
+      uiRddID = s_RddList[ uiRddID ]->rddSuperID;
+      if( uiRddID == uiSupperRddID )
+         return HB_TRUE;
+   }
+   return HB_FALSE;
 }
 
 /* extend the size of RDD nodes buffer to given value to avoid later

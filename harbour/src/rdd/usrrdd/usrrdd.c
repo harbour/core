@@ -2857,7 +2857,7 @@ static const HB_RDD_FUNCTABLE rddFuncTable =
 HB_FUNC( USRRDD_GETFUNCTABLE )
 {
    RDDFUNCS * pSelfTable, * pSuperTable;
-   HB_USHORT * puiCount, uiCount, uiSize;
+   HB_USHORT * puiCount, * puiSuperRddId, uiCount, uiSize;
    HB_ERRCODE uiResult;
    const char * szSuperRDD;
    PHB_ITEM pMethods;
@@ -2870,6 +2870,7 @@ HB_FUNC( USRRDD_GETFUNCTABLE )
    /* uiRddID = hb_parni( 4 ); */
    szSuperRDD = hb_parc( 5 );
    pMethods = hb_param( 6, HB_IT_ARRAY );
+   puiSuperRddId = ( HB_USHORT * ) hb_parptr( 7 );
 
    if( puiCount && pSelfTable && pSuperTable && pMethods )
    {
@@ -2896,7 +2897,7 @@ HB_FUNC( USRRDD_GETFUNCTABLE )
          ++pRddFunction;
          ++pFunction;
       }
-      uiResult = hb_rddInherit( pSelfTable, &funcTable.funcTable, pSuperTable, szSuperRDD );
+      uiResult = hb_rddInheritEx( pSelfTable, &funcTable.funcTable, pSuperTable, szSuperRDD, puiSuperRddId );
       if( uiResult == HB_SUCCESS )
       {
          pSelfTable->whoCares = ( DBENTRYP_SVP ) hb_itemNew( pMethods );
