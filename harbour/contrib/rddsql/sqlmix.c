@@ -1512,10 +1512,6 @@ static HB_ERRCODE sqlmixGoCold( SQLMIXAREAP pArea )
          }
          pTag = pTag->pNext;
       }
-
-      if ( pKey )
-         hb_mixKeyFree( pKey );
-
       pArea->sqlarea.lpdbPendingRel = lpdbPendingRel;
    }
 
