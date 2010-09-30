@@ -146,6 +146,17 @@ int hb_traceflush( int new_flush )
    return old_flush;
 }
 
+int hb_tracesysout( int new_sysout )
+{
+   int old_sysout = s_sysout;
+
+   if( new_sysout == 0 ||
+       new_sysout == 1 )
+      s_sysout = new_sysout;
+
+   return old_sysout;
+}
+
 int hb_tr_level( void )
 {
    if( s_level == -1 )

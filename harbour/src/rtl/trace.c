@@ -91,6 +91,12 @@ HB_FUNC( HB_TRACESTATE )
                                            hb_parnidef( 1, -1 ) ) );
 }
 
+HB_FUNC( HB_TRACESYSOUT )
+{
+   hb_retl( hb_tracesysout( HB_ISLOG( 1 ) ? hb_parl( 1 ) :
+                                            hb_parnidef( 1, -1 ) ) );
+}
+
 HB_FUNC( HB_TRACEFLUSH )
 {
    hb_retl( hb_traceflush( HB_ISLOG( 1 ) ? hb_parl( 1 ) :
