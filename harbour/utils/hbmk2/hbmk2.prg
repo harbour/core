@@ -5249,7 +5249,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             IF hbmk[ _HBMK_cPLAT ] == "os2"
                AEval( hbmk[ _HBMK_aICON ], {| tmp, tmp1 | cFile += 'ICON ' + hb_ntos( tmp1 ) + ' DISCARDABLE "' + PathSepToForward( tmp ) + '"' + Chr( 10 ) } )
             ELSE
-               AEval( hbmk[ _HBMK_aICON ], {| tmp, tmp1 | cFile += 'ICON' + hb_ntos( tmp1 ) + ' ICON DISCARDABLE "' + PathSepToForward( tmp ) + '"' + Chr( 10 ) } )
+               AEval( hbmk[ _HBMK_aICON ], {| tmp, tmp1 | cFile += hb_ntos( tmp1 ) + ' ICON DISCARDABLE "' + PathSepToForward( tmp ) + '"' + Chr( 10 ) } )
             ENDIF
 
             IF hbmk[ _HBMK_lINC ]
