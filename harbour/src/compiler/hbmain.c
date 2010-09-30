@@ -4155,7 +4155,11 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
             HB_COMP_PARAM->szFile = HB_COMP_PARAM->currModule;
 
          if( szBuffer )
-            hb_compFunctionAdd( HB_COMP_PARAM, "", 0, FUN_PROCEDURE | FUN_FILE_FIRST | FUN_FILE_DECL );
+            /* Generate the starting procedure frame, lower letters used
+             * intentionally to not create name conflicts when -n2 switch
+             * is used and we compile code not encapsulated in function.
+             */
+            hb_compFunctionAdd( HB_COMP_PARAM, "__hbInit", 0, FUN_PROCEDURE | FUN_FILE_FIRST | FUN_FILE_DECL );
          else
          {
             if( ! HB_COMP_PARAM->fQuiet )
