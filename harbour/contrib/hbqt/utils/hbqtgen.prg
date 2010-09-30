@@ -1239,10 +1239,10 @@ STATIC FUNCTION hbide_addReturnMethod( txt_, oM, cWidget, nInd, nCount, lClubbed
       ENDIF
 
       IF nTySame > 1 .AND. nCount == 1
-         aadd( txt_, sp + "SWITCH __objGetClsName( hb_pvalue( " + hb_ntos( oM:nArgQCast ) + " ) )" )
+         aadd( txt_, sp + "SWITCH " + hbide_getSwitch( oM, nArgToCheck ) )
       ENDIF
       IF nTySame > 1
-         aadd( txt_, sp + "CASE " + '"' + upper( oM:hArgs[ oM:nArgQCast ]:cCast ) + '"' )
+         aadd( txt_, sp + "CASE " + hbide_getCase( oM, nArgToCheck ) )
          aadd( txt_, sp + "   " + cPrefix + "RETURN " + cFun + cPostFix )
       ELSE
          aadd( txt_, sp + "IF __objGetClsName( hb_pvalue( " + hb_ntos( oM:nArgQCast ) + " ) ) == " + '"' + upper( oM:hArgs[ oM:nArgQCast ]:cCast ) + '"' )
@@ -1266,6 +1266,54 @@ STATIC FUNCTION hbide_addReturnMethod( txt_, oM, cWidget, nInd, nCount, lClubbed
    ENDIF
 
    RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_getCase( oMtd, nArgs )
+   LOCAL nFirst := oMtd:nArgQCast
+   LOCAL n, oArg, nNext := 0
+
+   FOR EACH oArg IN oMtd:hArgs
+      n := oArg:__enumIndex()
+      IF n > nFirst .AND. n <= nArgs
+         IF oArg:cTypeHB $ "PO"
+            nNext := n
+            EXIT
+         ENDIF
+      ENDIF
+   NEXT
+
+   IF nNext > 0
+      RETURN '"' + upper( oMtd:hArgs[ nFirst ]:cCast ) + upper( oMtd:hArgs[ nNext ]:cCast ) + '"'
+   ELSE
+      RETURN '"' + upper( oMtd:hArgs[ nFirst ]:cCast ) + '"'
+   ENDIF
+
+   RETURN ""
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_getSwitch( oMtd, nArgs )
+   LOCAL nFirst := oMtd:nArgQCast
+   LOCAL n, oArg, nNext := 0
+
+   FOR EACH oArg IN oMtd:hArgs
+      n := oArg:__enumIndex()
+      IF n > nFirst .AND. n <= nArgs
+         IF oArg:cTypeHB $ "PO"
+            nNext := n
+            EXIT
+         ENDIF
+      ENDIF
+   NEXT
+
+   IF nNext > 0
+      RETURN "__objGetClsName( hb_pvalue( " + hb_ntos( nFirst ) + " ) )" + " + " + "__objGetClsName( hb_pvalue( " + hb_ntos( nNext ) + " ) )"
+   ELSE
+      RETURN "__objGetClsName( hb_pvalue( " + hb_ntos( nFirst ) + " ) )"
+   ENDIF
+
+   RETURN ""
 
 /*----------------------------------------------------------------------*/
 

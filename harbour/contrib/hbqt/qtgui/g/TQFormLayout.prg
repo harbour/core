@@ -190,17 +190,17 @@ METHOD QFormLayout:insertRow( ... )
    CASE 3
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
-         SWITCH __objGetClsName( hb_pvalue( 2 ) )
-         CASE "QSTRING"
+         SWITCH __objGetClsName( hb_pvalue( 2 ) ) + __objGetClsName( hb_pvalue( 3 ) )
+         CASE "QSTRINGQLAYOUT"
             RETURN Qt_QFormLayout_insertRow_4( ::pPtr, ... )
-         CASE "QSTRING"
+         CASE "QSTRINGQWIDGET"
             RETURN Qt_QFormLayout_insertRow_3( ::pPtr, ... )
          ENDSWITCH
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
-         SWITCH __objGetClsName( hb_pvalue( 2 ) )
-         CASE "QWIDGET"
+         SWITCH __objGetClsName( hb_pvalue( 2 ) ) + __objGetClsName( hb_pvalue( 3 ) )
+         CASE "QWIDGETQLAYOUT"
             RETURN Qt_QFormLayout_insertRow_1( ::pPtr, ... )
-         CASE "QWIDGET"
+         CASE "QWIDGETQWIDGET"
             RETURN Qt_QFormLayout_insertRow( ::pPtr, ... )
          ENDSWITCH
       ENDCASE

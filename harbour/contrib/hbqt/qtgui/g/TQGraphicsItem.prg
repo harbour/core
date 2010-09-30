@@ -452,14 +452,14 @@ METHOD QGraphicsItem:mapFromItem( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         SWITCH __objGetClsName( hb_pvalue( 1 ) )
-         CASE "QGRAPHICSITEM"
+         SWITCH __objGetClsName( hb_pvalue( 1 ) ) + __objGetClsName( hb_pvalue( 2 ) )
+         CASE "QGRAPHICSITEMQPAINTERPATH"
             RETURN HB_QPainterPath():from( Qt_QGraphicsItem_mapFromItem_3( ::pPtr, ... ) )
-         CASE "QGRAPHICSITEM"
+         CASE "QGRAPHICSITEMQPOINTF"
             RETURN HB_QPointF():from( Qt_QGraphicsItem_mapFromItem( ::pPtr, ... ) )
-         CASE "QGRAPHICSITEM"
+         CASE "QGRAPHICSITEMQRECTF"
             RETURN HB_QPolygonF():from( Qt_QGraphicsItem_mapFromItem_1( ::pPtr, ... ) )
-         CASE "QGRAPHICSITEM"
+         CASE "QGRAPHICSITEMQPOLYGONF"
             RETURN HB_QPolygonF():from( Qt_QGraphicsItem_mapFromItem_2( ::pPtr, ... ) )
          ENDSWITCH
       ENDCASE
@@ -659,14 +659,14 @@ METHOD QGraphicsItem:mapToItem( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         SWITCH __objGetClsName( hb_pvalue( 1 ) )
-         CASE "QGRAPHICSITEM"
+         SWITCH __objGetClsName( hb_pvalue( 1 ) ) + __objGetClsName( hb_pvalue( 2 ) )
+         CASE "QGRAPHICSITEMQPAINTERPATH"
             RETURN HB_QPainterPath():from( Qt_QGraphicsItem_mapToItem_3( ::pPtr, ... ) )
-         CASE "QGRAPHICSITEM"
+         CASE "QGRAPHICSITEMQPOINTF"
             RETURN HB_QPointF():from( Qt_QGraphicsItem_mapToItem( ::pPtr, ... ) )
-         CASE "QGRAPHICSITEM"
+         CASE "QGRAPHICSITEMQRECTF"
             RETURN HB_QPolygonF():from( Qt_QGraphicsItem_mapToItem_1( ::pPtr, ... ) )
-         CASE "QGRAPHICSITEM"
+         CASE "QGRAPHICSITEMQPOLYGONF"
             RETURN HB_QPolygonF():from( Qt_QGraphicsItem_mapToItem_2( ::pPtr, ... ) )
          ENDSWITCH
       ENDCASE

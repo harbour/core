@@ -194,10 +194,10 @@ METHOD QHttp:post( ... )
    CASE 3
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
-         SWITCH __objGetClsName( hb_pvalue( 1 ) )
-         CASE "QSTRING"
+         SWITCH __objGetClsName( hb_pvalue( 1 ) ) + __objGetClsName( hb_pvalue( 2 ) )
+         CASE "QSTRINGQIODEVICE"
             RETURN Qt_QHttp_post( ::pPtr, ... )
-         CASE "QSTRING"
+         CASE "QSTRINGQBYTEARRAY"
             RETURN Qt_QHttp_post_1( ::pPtr, ... )
          ENDSWITCH
       ENDCASE
@@ -205,10 +205,10 @@ METHOD QHttp:post( ... )
    CASE 2
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         SWITCH __objGetClsName( hb_pvalue( 1 ) )
-         CASE "QSTRING"
+         SWITCH __objGetClsName( hb_pvalue( 1 ) ) + __objGetClsName( hb_pvalue( 2 ) )
+         CASE "QSTRINGQIODEVICE"
             RETURN Qt_QHttp_post( ::pPtr, ... )
-         CASE "QSTRING"
+         CASE "QSTRINGQBYTEARRAY"
             RETURN Qt_QHttp_post_1( ::pPtr, ... )
          ENDSWITCH
       ENDCASE
@@ -226,10 +226,10 @@ METHOD QHttp:request( ... )
    CASE 3
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
-         SWITCH __objGetClsName( hb_pvalue( 1 ) )
-         CASE "QHTTPREQUESTHEADER"
+         SWITCH __objGetClsName( hb_pvalue( 1 ) ) + __objGetClsName( hb_pvalue( 2 ) )
+         CASE "QHTTPREQUESTHEADERQIODEVICE"
             RETURN Qt_QHttp_request( ::pPtr, ... )
-         CASE "QHTTPREQUESTHEADER"
+         CASE "QHTTPREQUESTHEADERQBYTEARRAY"
             RETURN Qt_QHttp_request_1( ::pPtr, ... )
          ENDSWITCH
       ENDCASE

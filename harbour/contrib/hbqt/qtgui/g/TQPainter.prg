@@ -409,14 +409,14 @@ METHOD QPainter:drawImage( ... )
    CASE 4
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
-         SWITCH __objGetClsName( hb_pvalue( 1 ) )
-         CASE "QPOINTF"
+         SWITCH __objGetClsName( hb_pvalue( 1 ) ) + __objGetClsName( hb_pvalue( 2 ) )
+         CASE "QPOINTFQIMAGE"
             RETURN Qt_QPainter_drawImage_4( ::pPtr, ... )
-         CASE "QPOINT"
+         CASE "QPOINTQIMAGE"
             RETURN Qt_QPainter_drawImage_5( ::pPtr, ... )
-         CASE "QRECT"
+         CASE "QRECTQIMAGE"
             RETURN Qt_QPainter_drawImage_1( ::pPtr, ... )
-         CASE "QRECTF"
+         CASE "QRECTFQIMAGE"
             RETURN Qt_QPainter_drawImage( ::pPtr, ... )
          ENDSWITCH
       ENDCASE
@@ -426,14 +426,14 @@ METHOD QPainter:drawImage( ... )
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
          RETURN Qt_QPainter_drawImage_8( ::pPtr, ... )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
-         SWITCH __objGetClsName( hb_pvalue( 1 ) )
-         CASE "QRECT"
+         SWITCH __objGetClsName( hb_pvalue( 1 ) ) + __objGetClsName( hb_pvalue( 2 ) )
+         CASE "QRECTQIMAGE"
             RETURN Qt_QPainter_drawImage_1( ::pPtr, ... )
-         CASE "QPOINTF"
+         CASE "QPOINTFQIMAGE"
             RETURN Qt_QPainter_drawImage_4( ::pPtr, ... )
-         CASE "QPOINT"
+         CASE "QPOINTQIMAGE"
             RETURN Qt_QPainter_drawImage_5( ::pPtr, ... )
-         CASE "QRECTF"
+         CASE "QRECTFQIMAGE"
             RETURN Qt_QPainter_drawImage( ::pPtr, ... )
          ENDSWITCH
       ENDCASE
@@ -441,14 +441,14 @@ METHOD QPainter:drawImage( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         SWITCH __objGetClsName( hb_pvalue( 1 ) )
-         CASE "QRECTF"
+         SWITCH __objGetClsName( hb_pvalue( 1 ) ) + __objGetClsName( hb_pvalue( 2 ) )
+         CASE "QRECTFQIMAGE"
             RETURN Qt_QPainter_drawImage_6( ::pPtr, ... )
-         CASE "QRECT"
+         CASE "QRECTQIMAGE"
             RETURN Qt_QPainter_drawImage_7( ::pPtr, ... )
-         CASE "QPOINT"
+         CASE "QPOINTQIMAGE"
             RETURN Qt_QPainter_drawImage_3( ::pPtr, ... )
-         CASE "QPOINTF"
+         CASE "QPOINTFQIMAGE"
             RETURN Qt_QPainter_drawImage_2( ::pPtr, ... )
          ENDSWITCH
       ENDCASE
@@ -468,10 +468,10 @@ METHOD QPainter:drawLine( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         SWITCH __objGetClsName( hb_pvalue( 1 ) )
-         CASE "QPOINT"
+         SWITCH __objGetClsName( hb_pvalue( 1 ) ) + __objGetClsName( hb_pvalue( 2 ) )
+         CASE "QPOINTQPOINT"
             RETURN Qt_QPainter_drawLine_2( ::pPtr, ... )
-         CASE "QPOINTF"
+         CASE "QPOINTFQPOINTF"
             RETURN Qt_QPainter_drawLine_3( ::pPtr, ... )
          ENDSWITCH
       ENDCASE
@@ -527,10 +527,10 @@ METHOD QPainter:drawPicture( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         SWITCH __objGetClsName( hb_pvalue( 1 ) )
-         CASE "QPOINTF"
+         SWITCH __objGetClsName( hb_pvalue( 1 ) ) + __objGetClsName( hb_pvalue( 2 ) )
+         CASE "QPOINTFQPICTURE"
             RETURN Qt_QPainter_drawPicture( ::pPtr, ... )
-         CASE "QPOINT"
+         CASE "QPOINTQPICTURE"
             RETURN Qt_QPainter_drawPicture_1( ::pPtr, ... )
          ENDSWITCH
       ENDCASE
@@ -587,14 +587,14 @@ METHOD QPainter:drawPixmap( ... )
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
          RETURN Qt_QPainter_drawPixmap_6( ::pPtr, ... )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
-         SWITCH __objGetClsName( hb_pvalue( 1 ) )
-         CASE "QRECT"
+         SWITCH __objGetClsName( hb_pvalue( 1 ) ) + __objGetClsName( hb_pvalue( 2 ) )
+         CASE "QRECTQPIXMAP"
             RETURN Qt_QPainter_drawPixmap_1( ::pPtr, ... )
-         CASE "QPOINT"
+         CASE "QPOINTQPIXMAP"
             RETURN Qt_QPainter_drawPixmap_3( ::pPtr, ... )
-         CASE "QRECTF"
+         CASE "QRECTFQPIXMAP"
             RETURN Qt_QPainter_drawPixmap( ::pPtr, ... )
-         CASE "QPOINTF"
+         CASE "QPOINTFQPIXMAP"
             RETURN Qt_QPainter_drawPixmap_2( ::pPtr, ... )
          ENDSWITCH
       ENDCASE
@@ -602,12 +602,12 @@ METHOD QPainter:drawPixmap( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         SWITCH __objGetClsName( hb_pvalue( 1 ) )
-         CASE "QPOINTF"
+         SWITCH __objGetClsName( hb_pvalue( 1 ) ) + __objGetClsName( hb_pvalue( 2 ) )
+         CASE "QPOINTFQPIXMAP"
             RETURN Qt_QPainter_drawPixmap_4( ::pPtr, ... )
-         CASE "QRECT"
+         CASE "QRECTQPIXMAP"
             RETURN Qt_QPainter_drawPixmap_7( ::pPtr, ... )
-         CASE "QPOINT"
+         CASE "QPOINTQPIXMAP"
             RETURN Qt_QPainter_drawPixmap_5( ::pPtr, ... )
          ENDSWITCH
       ENDCASE
@@ -835,10 +835,10 @@ METHOD QPainter:drawText( ... )
    CASE 4
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
-         SWITCH __objGetClsName( hb_pvalue( 1 ) )
-         CASE "QRECT"
+         SWITCH __objGetClsName( hb_pvalue( 1 ) ) + __objGetClsName( hb_pvalue( 4 ) )
+         CASE "QRECTQRECT"
             RETURN Qt_QPainter_drawText_3( ::pPtr, ... )
-         CASE "QRECTF"
+         CASE "QRECTFQRECTF"
             RETURN Qt_QPainter_drawText_2( ::pPtr, ... )
          ENDSWITCH
       ENDCASE
@@ -892,10 +892,10 @@ METHOD QPainter:drawTiledPixmap( ... )
    CASE 3
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
-         SWITCH __objGetClsName( hb_pvalue( 1 ) )
-         CASE "QRECTF"
+         SWITCH __objGetClsName( hb_pvalue( 1 ) ) + __objGetClsName( hb_pvalue( 2 ) )
+         CASE "QRECTFQPIXMAP"
             RETURN Qt_QPainter_drawTiledPixmap( ::pPtr, ... )
-         CASE "QRECT"
+         CASE "QRECTQPIXMAP"
             RETURN Qt_QPainter_drawTiledPixmap_1( ::pPtr, ... )
          ENDSWITCH
       ENDCASE
@@ -903,10 +903,10 @@ METHOD QPainter:drawTiledPixmap( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         SWITCH __objGetClsName( hb_pvalue( 1 ) )
-         CASE "QRECTF"
+         SWITCH __objGetClsName( hb_pvalue( 1 ) ) + __objGetClsName( hb_pvalue( 2 ) )
+         CASE "QRECTFQPIXMAP"
             RETURN Qt_QPainter_drawTiledPixmap( ::pPtr, ... )
-         CASE "QRECT"
+         CASE "QRECTQPIXMAP"
             RETURN Qt_QPainter_drawTiledPixmap_1( ::pPtr, ... )
          ENDSWITCH
       ENDCASE
@@ -971,14 +971,14 @@ METHOD QPainter:fillRect( ... )
             RETURN Qt_QPainter_fillRect_7( ::pPtr, ... )
          ENDSWITCH
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         SWITCH __objGetClsName( hb_pvalue( 1 ) )
-         CASE "QRECT"
+         SWITCH __objGetClsName( hb_pvalue( 1 ) ) + __objGetClsName( hb_pvalue( 2 ) )
+         CASE "QRECTQBRUSH"
             RETURN Qt_QPainter_fillRect_1( ::pPtr, ... )
-         CASE "QRECTF"
+         CASE "QRECTFQBRUSH"
             RETURN Qt_QPainter_fillRect( ::pPtr, ... )
-         CASE "QRECT"
+         CASE "QRECTQCOLOR"
             RETURN Qt_QPainter_fillRect_2( ::pPtr, ... )
-         CASE "QRECTF"
+         CASE "QRECTFQCOLOR"
             RETURN Qt_QPainter_fillRect_3( ::pPtr, ... )
          ENDSWITCH
       ENDCASE
