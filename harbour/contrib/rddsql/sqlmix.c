@@ -1331,7 +1331,7 @@ static HB_ERRCODE sqlmixGoTop( SQLMIXAREAP pArea )
 
    retval = SELF_GOTO( ( AREAP ) pArea, pArea->pTag->CurKey ? pArea->pTag->CurKey->rec : 0 );
    if ( retval != HB_FAILURE && pArea->sqlarea.fPositioned )
-      retval = SELF_SKIPFILTER( ( AREAP ) pArea, -1 );
+      retval = SELF_SKIPFILTER( ( AREAP ) pArea, 1 );
 
    return retval;
 }
