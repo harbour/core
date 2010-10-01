@@ -296,6 +296,11 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
             pFieldInfo.uiLen = ( HB_USHORT ) PQfmod( pResult, uiCount ) - 4;
             break;
 
+         case TEXTOID:
+            pFieldInfo.uiType = HB_FT_MEMO;
+            pFieldInfo.uiLen = 10;
+            break;
+
          case NUMERICOID:
             pFieldInfo.uiType = HB_FT_DOUBLE;
             pFieldInfo.uiLen = ( PQfmod( pResult, uiCount ) - 4 ) >> 16;
