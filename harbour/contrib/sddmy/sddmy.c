@@ -443,11 +443,14 @@ static HB_ERRCODE mysqlClose( SQLBASEAREAP pArea )
 {
    SDDDATA * pSDDData = ( SDDDATA * ) pArea->pSDDData;
 
-   if( pSDDData->pResult )
+   if( pSDDData )
    {
-      mysql_free_result( pSDDData->pResult );
+      if( pSDDData->pResult )
+         mysql_free_result( pSDDData->pResult );
+
+      hb_xfree( pSDDData );
+      pArea->pSDDData = NULL;
    }
-   hb_xfree( pSDDData );
    return HB_SUCCESS;
 }
 

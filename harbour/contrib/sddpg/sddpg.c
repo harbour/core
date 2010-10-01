@@ -68,6 +68,7 @@
 #define BOOLOID                 16
 #define BYTEAOID                17
 #define CHAROID                 18
+#define NAMEOID                 19
 #define INT8OID                 20
 #define INT2OID                 21
 #define INT4OID                 23
@@ -292,13 +293,13 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
          case BPCHAROID:
          case VARCHAROID:
             pFieldInfo.uiType = HB_FT_STRING;
-            pFieldInfo.uiLen = ( HB_USHORT ) PQfsize( pResult, uiCount ) - 4;
+            pFieldInfo.uiLen = ( HB_USHORT ) PQfmod( pResult, uiCount ) - 4;
             break;
 
          case NUMERICOID:
             pFieldInfo.uiType = HB_FT_DOUBLE;
-            pFieldInfo.uiLen = ( ( PQfsize( pResult, uiCount ) - 4 ) >> 16 ) & 0xFFFF;
-            pFieldInfo.uiDec = ( PQfsize( pResult, uiCount ) - 4 ) & 0xFFFF;
+            pFieldInfo.uiLen = ( PQfmod( pResult, uiCount ) - 4 ) >> 16;
+            pFieldInfo.uiDec = ( PQfmod( pResult, uiCount ) - 4 ) & 0xFFFF;
             break;
 
          case INT2OID:
@@ -375,6 +376,11 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
             pFieldInfo.uiLen = 26;
             break;
 
+         case NAMEOID:
+            pFieldInfo.uiType = HB_FT_STRING;
+            pFieldInfo.uiLen = 63;
+            break;
+
          case BYTEAOID:
             pFieldInfo.uiType = HB_FT_STRING;
             pFieldInfo.uiLen = 0;
@@ -404,6 +410,10 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
                hb_xfree( pStr );
                break;
             }
+            case HB_FT_MEMO:
+               hb_itemPutC( pItem, NULL );
+               hb_itemSetCMemo( pItem );
+               break;
 
             case HB_FT_INTEGER:
                pItem = hb_itemPutNI( NULL, 0 );
@@ -475,11 +485,14 @@ static HB_ERRCODE pgsqlClose( SQLBASEAREAP pArea )
 {
    SDDDATA * pSDDData = ( SDDDATA * ) pArea->pSDDData;
 
-   if ( pSDDData->pResult )
+   if( pSDDData )
    {
-      PQclear( pSDDData->pResult );
+      if ( pSDDData->pResult )
+         PQclear( pSDDData->pResult );
+
+      hb_xfree( pSDDData );
+      pArea->pSDDData = NULL;
    }
-   hb_xfree( pSDDData );
    return HB_SUCCESS;
 }
 
@@ -509,6 +522,11 @@ static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
    {
       case HB_FT_STRING:
          hb_itemPutCL( pItem, pValue, ulLen );
+         break;
+
+      case HB_FT_MEMO:
+         hb_itemPutCL( pItem, pValue, ulLen );
+         hb_itemSetCMemo( pItem );
          break;
 
       case HB_FT_INTEGER:

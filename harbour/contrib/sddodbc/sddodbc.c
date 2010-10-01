@@ -581,11 +581,14 @@ static HB_ERRCODE odbcClose( SQLBASEAREAP pArea )
 {
    SDDDATA * pSDDData = ( SDDDATA * ) pArea->pSDDData;
 
-   if ( pSDDData->hStmt )
+   if( pSDDData )
    {
-      SQLFreeHandle( SQL_HANDLE_STMT, pSDDData->hStmt );
+      if( pSDDData->hStmt )
+         SQLFreeHandle( SQL_HANDLE_STMT, pSDDData->hStmt );
+
+      hb_xfree( pSDDData );
+      pArea->pSDDData = NULL;
    }
-   hb_xfree( pSDDData );
    return HB_SUCCESS;
 }
 

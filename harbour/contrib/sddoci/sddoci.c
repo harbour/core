@@ -513,11 +513,14 @@ static HB_ERRCODE ocilibClose( SQLBASEAREAP pArea )
 {
    SDDDATA * pSDDData = ( SDDDATA * ) pArea->pSDDData;
 
-   if( pSDDData->pStmt )
+   if( pSDDData )
    {
-      OCI_StatementFree( pSDDData->pStmt );
+      if( pSDDData->pStmt )
+         OCI_StatementFree( pSDDData->pStmt );
+
+      hb_xfree( pSDDData );
+      pArea->pSDDData = NULL;
    }
-   hb_xfree( pSDDData );
    return HB_SUCCESS;
 }
 

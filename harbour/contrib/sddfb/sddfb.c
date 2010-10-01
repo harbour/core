@@ -434,19 +434,23 @@ static HB_ERRCODE fbClose( SQLBASEAREAP pArea )
    SDDDATA *        pSDDData = ( SDDDATA * ) pArea->pSDDData;
    ISC_STATUS_ARRAY status;
 
-   if ( pSDDData->pSqlda )
+   if( pSDDData )
    {
-      hb_xfree( pSDDData->pSqlda );
+      if ( pSDDData->pSqlda )
+      {
+         hb_xfree( pSDDData->pSqlda );
+      }
+      if ( pSDDData->hStmt )
+      {
+         isc_dsql_free_statement( status, &pSDDData->hStmt, DSQL_drop );
+      }
+      if ( pSDDData->hTrans )
+      {
+         isc_rollback_transaction( status, &pSDDData->hTrans );
+      }
+      hb_xfree( pSDDData );
+      pArea->pSDDData = NULL;
    }
-   if ( pSDDData->hStmt )
-   {
-      isc_dsql_free_statement( status, &pSDDData->hStmt, DSQL_drop );
-   }
-   if ( pSDDData->hTrans )
-   {
-      isc_rollback_transaction( status, &pSDDData->hTrans );
-   }
-   hb_xfree( pSDDData );
    return HB_SUCCESS;
 }
 

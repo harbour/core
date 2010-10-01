@@ -412,10 +412,14 @@ static HB_ERRCODE sqlite3Close( SQLBASEAREAP pArea )
 {
    SDDDATA * pSDDData = ( SDDDATA * ) pArea->pSDDData;
 
-   if( pSDDData->pStmt )
-      sqlite3_finalize( pSDDData->pStmt );
+   if( pSDDData )
+   {
+      if( pSDDData->pStmt )
+         sqlite3_finalize( pSDDData->pStmt );
 
-   hb_xfree( pSDDData );
+      hb_xfree( pSDDData );
+      pArea->pSDDData = NULL;
+   }
    return HB_SUCCESS;
 }
 
