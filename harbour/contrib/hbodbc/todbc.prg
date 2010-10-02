@@ -77,7 +77,7 @@
 *+
 *+--------------------------------------------------------------------
 
-CREATE CLASS TODBCField FROM HBClass
+CREATE CLASS TODBCField
 
    VAR FieldID      INIT -1
    VAR FieldName    INIT ""
@@ -103,7 +103,7 @@ METHOD New() CLASS TODBCField
 *+
 *+--------------------------------------------------------------------
 
-CREATE CLASS TODBC FROM HBClass
+CREATE CLASS TODBC
 
    VAR hEnv
    VAR hDbc

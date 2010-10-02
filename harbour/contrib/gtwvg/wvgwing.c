@@ -74,7 +74,7 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#if defined( __BORLANDC__ )
+#if defined( __BORLANDC__ ) && ( __BORLANDC__ < 1552 )
 #  if !defined( NONAMELESSUNION )
 #     define NONAMELESSUNION
 #  endif

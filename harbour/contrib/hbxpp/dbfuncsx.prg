@@ -50,6 +50,8 @@
  *
  */
 
+#include "common.ch"
+
 FUNCTION _dbExport( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, cXPP_Driver, cDelimiter )
 
    DO CASE
@@ -64,3 +66,27 @@ FUNCTION _dbExport( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, cXPP_Dr
    ENDCASE
 
    RETURN __dbCopy( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, cXPP_Driver )
+
+FUNCTION xpp_dbUseArea( lNewArea, cDriver, cName, xcAlias, lShared, lReadonly )
+   LOCAL nOldArea
+   LOCAL nArea
+
+   IF ISLOGICAL( lNewArea ) .AND. lNewArea
+      IF ! ISCHARACTER( xcAlias )
+         xcAlias := ""
+      ENDIF
+
+      IF Empty( xcAlias )
+         xcAlias := cName
+      ENDIF
+
+      IF ISCHARACTER( xcAlias )
+         nOldArea := Select()
+         IF ( nArea := Select( xcAlias ) ) > 0
+             xcAlias += "_" + hb_ntos( nArea )
+         ENDIF
+         dbSelectArea( nOldArea )
+      ENDIF
+   ENDIF
+
+   RETURN dbUseArea( lNewArea, cDriver, cName, xcAlias, lShared, lReadonly )
