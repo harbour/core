@@ -1,0 +1,68 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QStringRef()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qstringref.html
+ *  $ONELINER$
+ *     Creates a new QStringRef object.
+ *  $INHERITS$
+ *     
+ *  $SYNTAX$
+ *     QStringRef( ... )
+ *     QStringRef():from( pPtr_OR_oObj_of_type_QStringRef )
+ * 
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QStringRef
+ *  $METHODS$
+ *     :at( nPosition )                                    -> oQChar
+ *     :clear()                                            -> NIL
+ *     :compare( cOther, nCs )                             -> nInt
+ *     :compare( oQStringRef, nCs )                        -> nInt
+ *     :constData()                                        -> oQChar
+ *     :count()                                            -> nInt
+ *     :data()                                             -> oQChar
+ *     :isEmpty()                                          -> lBool
+ *     :isNull()                                           -> lBool
+ *     :length()                                           -> nInt
+ *     :localeAwareCompare( cOther )                       -> nInt
+ *     :localeAwareCompare( oQStringRef )                  -> nInt
+ *     :position()                                         -> nInt
+ *     :size()                                             -> nInt
+ *     :unicode()                                          -> oQChar
+ *     :compare( oQStringRef, cS2, nCs )                   -> nInt
+ *     :compare( oQStringRef, oQStringRef, nCs )           -> nInt
+ *     :localeAwareCompare( oQStringRef, cS2 )             -> nInt
+ *     :localeAwareCompare( oQStringRef, oQStringRef )     -> nInt
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/TQStringRef.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/QStringRef.cpp
+ *     Library       : hbqtcore
+ *  $END$
+ */

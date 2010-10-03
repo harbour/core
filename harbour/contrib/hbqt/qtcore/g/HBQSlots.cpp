@@ -98,7 +98,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 5/5 [ 100.00% ] ]
+ *  Constructed[ 4/4 [ 100.00% ] ]
  *
  */
 
@@ -185,14 +185,6 @@ HB_FUNC( QT_HBQSLOTS )
    pObj = new HBQSlots() ;
 
    hb_retptrGC( hbqt_gcAllocate_HBQSlots( ( void * ) pObj, true ) );
-}
-
-/*
- * HBQSlots()
- */
-HB_FUNC( QT_HBQSLOTS_HBQSLOTS )
-{
-   hb_retptrGC( hbqt_gcAllocate_HBQSlots( new HBQSlots(), true ) );
 }
 
 /*

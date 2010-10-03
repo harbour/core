@@ -109,9 +109,9 @@
 #include "hbqt_hbqgraphicsitem.h"
 
 /*
- * HBQGraphicsItem()
- * HBQGraphicsItem( QGraphicsItem * parent )
- * ~HBQGraphicsItem()
+ * HBQGraphicsItem ()
+ * HBQGraphicsItem ( QGraphicsItem * parent )
+ * ~HBQGraphicsItem ()
  */
 
 typedef struct

@@ -362,7 +362,7 @@ METHOD HbqReportsManager:buildDesignReport()
    ::qTreeObjects:setObjectName( "ObjectsTree" )
    ::qTreeObjects:setIconSize( QSize( 12,12 ) )
    ::qTreeObjects:setIndentation( 12 )
-   ::qTreeObjects:connect( "itemClicked(QTWItem)", {|p,p1| ::execEvent( "treeObjects_clicked", p, p1 ) } )
+   ::qTreeObjects:connect( "itemClicked(QTWItem,int)", {|p,p1| ::execEvent( "treeObjects_clicked", p, p1 ) } )
 
    ::qTabL1 := QTabWidget()
    ::qSplL:addWidget( ::qTabL1 )

@@ -110,7 +110,8 @@
 
 
 /*
- *
+ * HBQTableView ( QWidget * parent = 0 )
+ * ~HBQTableView ()
  *
  */
 

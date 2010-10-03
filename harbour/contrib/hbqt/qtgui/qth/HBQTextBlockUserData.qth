@@ -72,8 +72,8 @@ New      =
 #include "hbqt_hbqsyntaxhighlighter.h"
 
 /*
- *  HBQTextBlockUserData()
- * ~HBQTextBlockUserData()
+ *  HBQTextBlockUserData ()
+ * ~HBQTextBlockUserData ()
  */
 HB_FUNC( QT_HBQTEXTBLOCKUSERDATA )
 {

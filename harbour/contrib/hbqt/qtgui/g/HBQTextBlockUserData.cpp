@@ -109,8 +109,8 @@
 #include "hbqt_hbqsyntaxhighlighter.h"
 
 /*
- *  HBQTextBlockUserData()
- * ~HBQTextBlockUserData()
+ *  HBQTextBlockUserData ()
+ * ~HBQTextBlockUserData ()
  */
 
 typedef struct

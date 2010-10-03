@@ -99,7 +99,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 25/25 [ 100.00% ] ]
+ *  Constructed[ 15/15 [ 100.00% ] ]
  *
  */
 
@@ -262,86 +262,6 @@ HB_FUNC( QT_QBRUSH )
    }
 
    hb_retptrGC( hbqt_gcAllocate_QBrush( ( void * ) pObj, true ) );
-}
-
-/*
- * QBrush ()
- */
-HB_FUNC( QT_QBRUSH_QBRUSH )
-{
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush(), true ) );
-}
-
-/*
- * QBrush ( Qt::BrushStyle style )
- */
-HB_FUNC( QT_QBRUSH_QBRUSH_1 )
-{
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( Qt::BrushStyle ) hb_parni( 2 ) ), true ) );
-}
-
-/*
- * QBrush ( const QColor & color, Qt::BrushStyle style = Qt::SolidPattern )
- */
-HB_FUNC( QT_QBRUSH_QBRUSH_2 )
-{
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( *hbqt_par_QColor( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::BrushStyle ) hb_parni( 3 ) : ( Qt::BrushStyle ) Qt::SolidPattern ) ), true ) );
-}
-
-/*
- * QBrush ( Qt::GlobalColor color, Qt::BrushStyle style = Qt::SolidPattern )
- */
-HB_FUNC( QT_QBRUSH_QBRUSH_3 )
-{
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( Qt::GlobalColor ) hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::BrushStyle ) hb_parni( 3 ) : ( Qt::BrushStyle ) Qt::SolidPattern ) ), true ) );
-}
-
-/*
- * QBrush ( const QColor & color, const QPixmap & pixmap )
- */
-HB_FUNC( QT_QBRUSH_QBRUSH_4 )
-{
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( *hbqt_par_QColor( 2 ), *hbqt_par_QPixmap( 3 ) ), true ) );
-}
-
-/*
- * QBrush ( Qt::GlobalColor color, const QPixmap & pixmap )
- */
-HB_FUNC( QT_QBRUSH_QBRUSH_5 )
-{
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( Qt::GlobalColor ) hb_parni( 2 ), *hbqt_par_QPixmap( 3 ) ), true ) );
-}
-
-/*
- * QBrush ( const QPixmap & pixmap )
- */
-HB_FUNC( QT_QBRUSH_QBRUSH_6 )
-{
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( *hbqt_par_QPixmap( 2 ) ), true ) );
-}
-
-/*
- * QBrush ( const QImage & image )
- */
-HB_FUNC( QT_QBRUSH_QBRUSH_7 )
-{
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( *hbqt_par_QImage( 2 ) ), true ) );
-}
-
-/*
- * QBrush ( const QBrush & other )
- */
-HB_FUNC( QT_QBRUSH_QBRUSH_8 )
-{
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( *hbqt_par_QBrush( 2 ) ), true ) );
-}
-
-/*
- * QBrush ( const QGradient & gradient )
- */
-HB_FUNC( QT_QBRUSH_QBRUSH_9 )
-{
-   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( *hbqt_par_QGradient( 2 ) ), true ) );
 }
 
 /*

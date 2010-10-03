@@ -72,7 +72,7 @@ New      =
 #include "hbqt_hbqsyntaxhighlighter.h"
 
 /*
- *
+ * HBQSyntaxHighlighter ( QTextDocument * textDocument )
  *
  */
 HB_FUNC( QT_HBQSYNTAXHIGHLIGHTER )

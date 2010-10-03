@@ -1,0 +1,70 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QMetaProperty()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qmetaproperty.html
+ *  $ONELINER$
+ *     Creates a new QMetaProperty object.
+ *  $INHERITS$
+ *     
+ *  $SYNTAX$
+ *     QMetaProperty( ... )
+ *     QMetaProperty():from( pPtr_OR_oObj_of_type_QMetaProperty )
+ * 
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QMetaProperty
+ *  $METHODS$
+ *     :enumerator()                                       -> oQMetaEnum
+ *     :hasNotifySignal()                                  -> lBool
+ *     :isDesignable( oQObject )                           -> lBool
+ *     :isEnumType()                                       -> lBool
+ *     :isFlagType()                                       -> lBool
+ *     :isReadable()                                       -> lBool
+ *     :isResettable()                                     -> lBool
+ *     :isScriptable( oQObject )                           -> lBool
+ *     :isStored( oQObject )                               -> lBool
+ *     :isUser( oQObject )                                 -> lBool
+ *     :isValid()                                          -> lBool
+ *     :isWritable()                                       -> lBool
+ *     :name()                                             -> cChar
+ *     :notifySignal()                                     -> oQMetaMethod
+ *     :notifySignalIndex()                                -> nInt
+ *     :read( oQObject )                                   -> oQVariant
+ *     :reset( oQObject )                                  -> lBool
+ *     :type()                                             -> nQVariant_Type
+ *     :typeName()                                         -> cChar
+ *     :userType()                                         -> nInt
+ *     :write( oQObject, oQVariant )                       -> lBool
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/TQMetaProperty.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/QMetaProperty.cpp
+ *     Library       : hbqtcore
+ *  $END$
+ */

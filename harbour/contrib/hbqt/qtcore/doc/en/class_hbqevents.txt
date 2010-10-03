@@ -26,7 +26,6 @@
  *  $RETURNS$
  *     An instance of the object of type HBQEvents
  *  $METHODS$
- *     :HBQEvents()                                        -> oHBQEvents
  *     :hbConnect( xObj, nEvent, xBlock )                  -> lBool
  *     :hbDisconnect( xObj, nEvent )                       -> lBool
  *     :hbClear()                                          -> lBool

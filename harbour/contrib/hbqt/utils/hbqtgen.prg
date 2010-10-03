@@ -494,6 +494,8 @@ CLASS HbQtSource
    DATA   cpp_                                    INIT {}
    DATA   cmntd_                                  INIT {}
    DATA   doc_                                    INIT {}
+   DATA   constructors_                           INIT {}
+
    DATA   nFuncs                                  INIT 0
    DATA   nCnvrtd                                 INIT 0
 
@@ -572,7 +574,7 @@ METHOD HbQtSource:new( oGen, cFileQth, cPathOut, cPathDoc, cProject )
       IF trim( ::code_[ i ] ) == "}"
          n1 := i
          EXIT
-      endif
+      ENDIF
    NEXT
    ::old_:={}
    FOR i := 1 TO len( ::code_ )
@@ -581,6 +583,16 @@ METHOD HbQtSource:new( oGen, cFileQth, cPathOut, cPathDoc, cProject )
       ENDIF
    NEXT
    ::code_:= ::old_
+
+   /* Pullout constructor methods */
+   #if 0
+   tmp := ::cWidget + " ("
+   FOR EACH s IN ::code_
+      IF ( n := at( tmp, s ) ) > 0 .AND. ! ( "~" $ s )
+         aadd( ::constructors_, substr( s, n ) )
+      ENDIF
+   NEXT
+   #endif
 
    /* Pull out Enumerators  */
    ::enums_:= PullOutSection( @cQth, "ENUMS"  )
@@ -593,7 +605,10 @@ METHOD HbQtSource:new( oGen, cFileQth, cPathOut, cPathDoc, cProject )
    NEXT
 
    /* Pull out Prototypes   */
-   ::protos_ := PullOutSection( @cQth, "PROTOS" )
+//   ::protos_ := PullOutSection( @cQth, "PROTOS" )
+   tmp := PullOutSection( @cQth, "PROTOS" )
+   aeval( ::constructors_, {|e| aadd( ::protos_, e ) } )
+   aeval( tmp, {|e| aadd( ::protos_, e ) } )
 
    /* Pull out Variables */
    ::varbls_ := PullOutSection( @cQth, "VARIABLES" )
@@ -1378,10 +1393,11 @@ STATIC FUNCTION hbide_methodInfo( oMtd )
 STATIC FUNCTION hbide_paramCheckStr( cType, nArg )
 
    SWITCH cType
+   CASE "PB"
+//      RETURN "( " + "hb_isBlock( hb_pvalue( " + hb_ntos( nArg ) + " ) )" + " .OR. " + "hb_isPointer( hb_pvalue( " + hb_ntos( nArg ) + " ) ) )"
+      RETURN "( " + " hb_pvalue( " + hb_ntos( nArg ) + " )" + " != NIL )"
    CASE "P"
       RETURN "hb_isPointer( hb_pvalue( " + hb_ntos( nArg ) + " ) )"
-   CASE "PB"
-      RETURN "( " + "hb_isBlock( hb_pvalue( " + hb_ntos( nArg ) + " ) )" + " .OR. " + "hb_isPointer( hb_pvalue( " + hb_ntos( nArg ) + " ) ) )"
    CASE "O"
       RETURN "hb_isObject( hb_pvalue( " + hb_ntos( nArg ) + " ) )"
    CASE "CO"

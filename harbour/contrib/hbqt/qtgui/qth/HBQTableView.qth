@@ -73,7 +73,8 @@ New      =
 
 
 /*
- *
+ * HBQTableView ( QWidget * parent = 0 )
+ * ~HBQTableView ()
  *
  */
 HB_FUNC( QT_HBQTABLEVIEW )

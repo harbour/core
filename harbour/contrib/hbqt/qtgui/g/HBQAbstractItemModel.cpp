@@ -110,8 +110,8 @@
 
 
 /*
- *
- *
+ * HBQAbstractItemModel ( ( PHB_ITEM ) hb_param( 1, HB_IT_BLOCK ) )
+ * ~HBQAbstractItemModel ()
  */
 
 typedef struct

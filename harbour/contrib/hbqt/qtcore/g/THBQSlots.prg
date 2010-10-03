@@ -103,7 +103,6 @@ CREATE CLASS HBQSlots INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_HBQSlots
 
    METHOD  new( ... )
 
-   METHOD  HBQSlots                      // (  )                                               -> oHBQSlots
    METHOD  hbConnect                     // ( xPObj, cSlot, xBBlock )                          -> lBool
    METHOD  hbDisconnect                  // ( xObj, cSlot )                                    -> lBool
    METHOD  hbIsConnected                 // ( xObj, cSlot )                                    -> lBool
@@ -121,19 +120,11 @@ METHOD HBQSlots:new( ... )
    RETURN Self
 
 
-METHOD HBQSlots:HBQSlots( ... )
-   SWITCH PCount()
-   CASE 0
-      RETURN HB_HBQSlots():from( Qt_HBQSlots_HBQSlots( ::pPtr, ... ) )
-   ENDSWITCH
-   RETURN hbqt_error()
-
-
 METHOD HBQSlots:hbConnect( ... )
    SWITCH PCount()
    CASE 3
       DO CASE
-      CASE ( hb_isBlock( hb_pvalue( 1 ) ) .OR. hb_isPointer( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. ( hb_isBlock( hb_pvalue( 3 ) ) .OR. hb_isPointer( hb_pvalue( 3 ) ) )
+      CASE (  hb_pvalue( 1 ) != NIL ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. (  hb_pvalue( 3 ) != NIL )
          RETURN Qt_HBQSlots_hbConnect( ::pPtr, ... )
       ENDCASE
       EXIT
@@ -145,7 +136,7 @@ METHOD HBQSlots:hbDisconnect( ... )
    SWITCH PCount()
    CASE 2
       DO CASE
-      CASE ( hb_isBlock( hb_pvalue( 1 ) ) .OR. hb_isPointer( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+      CASE (  hb_pvalue( 1 ) != NIL ) .AND. hb_isChar( hb_pvalue( 2 ) )
          RETURN Qt_HBQSlots_hbDisconnect( ::pPtr, ... )
       ENDCASE
       EXIT
@@ -157,7 +148,7 @@ METHOD HBQSlots:hbIsConnected( ... )
    SWITCH PCount()
    CASE 2
       DO CASE
-      CASE ( hb_isBlock( hb_pvalue( 1 ) ) .OR. hb_isPointer( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+      CASE (  hb_pvalue( 1 ) != NIL ) .AND. hb_isChar( hb_pvalue( 2 ) )
          RETURN Qt_HBQSlots_hbIsConnected( ::pPtr, ... )
       ENDCASE
       EXIT

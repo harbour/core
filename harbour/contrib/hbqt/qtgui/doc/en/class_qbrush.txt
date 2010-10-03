@@ -26,16 +26,6 @@
  *  $RETURNS$
  *     An instance of the object of type QBrush
  *  $METHODS$
- *     :QBrush()                                           -> oQBrush
- *     :QBrush( nStyle )                                   -> oQBrush
- *     :QBrush( oQColor, nStyle )                          -> oQBrush
- *     :QBrush( nColor, nStyle )                           -> oQBrush
- *     :QBrush( oQColor, oQPixmap )                        -> oQBrush
- *     :QBrush( nColor, oQPixmap )                         -> oQBrush
- *     :QBrush( oQPixmap )                                 -> oQBrush
- *     :QBrush( oQImage )                                  -> oQBrush
- *     :QBrush( oQBrush )                                  -> oQBrush
- *     :QBrush( oQGradient )                               -> oQBrush
  *     :color()                                            -> oQColor
  *     :gradient()                                         -> oQGradient
  *     :isOpaque()                                         -> lBool

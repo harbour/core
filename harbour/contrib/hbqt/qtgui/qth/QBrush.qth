@@ -178,17 +178,6 @@ HB_FUNC( QT_QBRUSH )
 </CODE>
 
 <PROTOS>
-QBrush ()
-QBrush ( Qt::BrushStyle style )
-QBrush ( const QColor & color, Qt::BrushStyle style = Qt::SolidPattern )
-QBrush ( Qt::GlobalColor color, Qt::BrushStyle style = Qt::SolidPattern )
-QBrush ( const QColor & color, const QPixmap & pixmap )
-QBrush ( Qt::GlobalColor color, const QPixmap & pixmap )
-QBrush ( const QPixmap & pixmap )
-QBrush ( const QImage & image )
-QBrush ( const QBrush & other )
-QBrush ( const QGradient & gradient )
-
 const QColor & color () const
 const QGradient * gradient () const
 bool isOpaque () const

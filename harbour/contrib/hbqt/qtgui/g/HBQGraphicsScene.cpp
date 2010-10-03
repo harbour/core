@@ -113,9 +113,9 @@
 #include "hbqt_hbqgraphicsscene.h"
 
 /*
- * HBQGraphicsScene()
- * HBQGraphicsScene( QObject * parent )
- * ~HBQGraphicsScene()
+ * HBQGraphicsScene ()
+ * HBQGraphicsScene ( QObject * parent )
+ * ~HBQGraphicsScene ()
  */
 
 typedef struct

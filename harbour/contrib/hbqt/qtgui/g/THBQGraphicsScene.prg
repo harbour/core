@@ -139,7 +139,7 @@ METHOD HBQGraphicsScene:hbSetBlock( ... )
    SWITCH PCount()
    CASE 1
       DO CASE
-      CASE ( hb_isBlock( hb_pvalue( 1 ) ) .OR. hb_isPointer( hb_pvalue( 1 ) ) )
+      CASE (  hb_pvalue( 1 ) != NIL )
          RETURN Qt_HBQGraphicsScene_hbSetBlock( ::pPtr, ... )
       ENDCASE
       EXIT

@@ -103,14 +103,6 @@ CREATE CLASS HBQString INHERIT HbQtObjectHandler FUNCTION HB_HBQString
 
    METHOD  new( ... )
 
-   METHOD  HBQString                     // (  )                                               -> oHBQString
-   METHOD  HBQString_1                   // ( oQChar, nSize )                                  -> oHBQString
-   METHOD  HBQString_2                   // ( oQChar )                                         -> oHBQString
-   METHOD  HBQString_3                   // ( nSize, oQChar )                                  -> oHBQString
-   METHOD  HBQString_4                   // ( oQLatin1String )                                 -> oHBQString
-   METHOD  HBQString_5                   // ( cOther )                                         -> oHBQString
-   METHOD  HBQString_6                   // ( cStr )                                           -> oHBQString
-   METHOD  HBQString_7                   // ( oQByteArray )                                    -> oHBQString
    METHOD  append                        // ( cStr )                                           -> cQString
    METHOD  append_1                      // ( oQStringRef )                                    -> cQString
    METHOD  append_2                      // ( oQLatin1String )                                 -> cQString
@@ -289,38 +281,6 @@ METHOD HBQString:new( ... )
    NEXT
    ::pPtr := Qt_HBQString( ... )
    RETURN Self
-
-
-METHOD HBQString:HBQString( ... )
-   RETURN HB_HBQString():from( Qt_HBQString_HBQString( ::pPtr, ... ) )
-
-
-METHOD HBQString:HBQString_1( ... )
-   RETURN HB_HBQString():from( Qt_HBQString_HBQString_1( ::pPtr, ... ) )
-
-
-METHOD HBQString:HBQString_2( ... )
-   RETURN HB_HBQString():from( Qt_HBQString_HBQString_2( ::pPtr, ... ) )
-
-
-METHOD HBQString:HBQString_3( ... )
-   RETURN HB_HBQString():from( Qt_HBQString_HBQString_3( ::pPtr, ... ) )
-
-
-METHOD HBQString:HBQString_4( ... )
-   RETURN HB_HBQString():from( Qt_HBQString_HBQString_4( ::pPtr, ... ) )
-
-
-METHOD HBQString:HBQString_5( ... )
-   RETURN HB_HBQString():from( Qt_HBQString_HBQString_5( ::pPtr, ... ) )
-
-
-METHOD HBQString:HBQString_6( ... )
-   RETURN HB_HBQString():from( Qt_HBQString_HBQString_6( ::pPtr, ... ) )
-
-
-METHOD HBQString:HBQString_7( ... )
-   RETURN HB_HBQString():from( Qt_HBQString_HBQString_7( ::pPtr, ... ) )
 
 
 METHOD HBQString:append( ... )

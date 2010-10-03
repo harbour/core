@@ -103,7 +103,6 @@ CREATE CLASS QWidget INHERIT HbQtObjectHandler, HB_QObject, HB_QPaintDevice FUNC
 
    METHOD  new( ... )
 
-   METHOD  QWidget                       // ( oQWidget, nF )                                   -> oQWidget
    METHOD  acceptDrops                   // (  )                                               -> lBool
    METHOD  actions                       // (  )                                               -> oQList_QAction
    METHOD  activateWindow                // (  )                                               -> NIL
@@ -321,26 +320,6 @@ METHOD QWidget:new( ... )
    NEXT
    ::pPtr := Qt_QWidget( ... )
    RETURN Self
-
-
-METHOD QWidget:QWidget( ... )
-   SWITCH PCount()
-   CASE 2
-      DO CASE
-      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QWidget():from( Qt_QWidget_QWidget( ::pPtr, ... ) )
-      ENDCASE
-      EXIT
-   CASE 1
-      DO CASE
-      CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QWidget():from( Qt_QWidget_QWidget( ::pPtr, ... ) )
-      ENDCASE
-      EXIT
-   CASE 0
-      RETURN HB_QWidget():from( Qt_QWidget_QWidget( ::pPtr, ... ) )
-   ENDSWITCH
-   RETURN hbqt_error()
 
 
 METHOD QWidget:acceptDrops( ... )

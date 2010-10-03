@@ -66,9 +66,9 @@ New      =
 #include "hbqt_hbqgraphicsscene.h"
 
 /*
- * HBQGraphicsScene()
- * HBQGraphicsScene( QObject * parent )
- * ~HBQGraphicsScene()
+ * HBQGraphicsScene ()
+ * HBQGraphicsScene ( QObject * parent )
+ * ~HBQGraphicsScene ()
  */
 HB_FUNC( QT_HBQGRAPHICSSCENE )
 {

@@ -107,7 +107,6 @@
  *
  *  *** Commented out protostypes ***
  *
- *  //QAbstractItemModel ( QObject * parent = 0 )
  *  // virtual QModelIndexList match ( const QModelIndex & start, int role, const QVariant & value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const
  *  // virtual QMimeData * mimeData ( const QModelIndexList & indexes ) const
  */

@@ -527,7 +527,7 @@ METHOD IdeSkeletons:updateTree()
       aadd( ::aItems, oItem )
    NEXT
 
-   ::oRoot:oWidget:sortChildren( 0 )
+   ::oRoot:oWidget:sortChildren( 0, Qt_AscendingOrder )
 
    RETURN Self
 

@@ -1,0 +1,77 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QMetaObject()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qmetaobject.html
+ *  $ONELINER$
+ *     Creates a new QMetaObject object.
+ *  $INHERITS$
+ *     
+ *  $SYNTAX$
+ *     QMetaObject( ... )
+ *     QMetaObject():from( pPtr_OR_oObj_of_type_QMetaObject )
+ * 
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QMetaObject
+ *  $METHODS$
+ *     :classInfo( nIndex )                                -> oQMetaClassInfo
+ *     :classInfoCount()                                   -> nInt
+ *     :classInfoOffset()                                  -> nInt
+ *     :className()                                        -> cChar
+ *     :constructor( nIndex )                              -> oQMetaMethod
+ *     :constructorCount()                                 -> nInt
+ *     :enumerator( nIndex )                               -> oQMetaEnum
+ *     :enumeratorCount()                                  -> nInt
+ *     :enumeratorOffset()                                 -> nInt
+ *     :indexOfClassInfo( cName )                          -> nInt
+ *     :indexOfConstructor( cConstructor )                 -> nInt
+ *     :indexOfEnumerator( cName )                         -> nInt
+ *     :indexOfMethod( cMethod )                           -> nInt
+ *     :indexOfProperty( cName )                           -> nInt
+ *     :indexOfSignal( cSignal )                           -> nInt
+ *     :indexOfSlot( cSlot )                               -> nInt
+ *     :method( nIndex )                                   -> oQMetaMethod
+ *     :methodCount()                                      -> nInt
+ *     :methodOffset()                                     -> nInt
+ *     :property( nIndex )                                 -> oQMetaProperty
+ *     :propertyCount()                                    -> nInt
+ *     :propertyOffset()                                   -> nInt
+ *     :superClass()                                       -> oQMetaObject
+ *     :userProperty()                                     -> oQMetaProperty
+ *     :checkConnectArgs( cSignal, cMethod )               -> lBool
+ *     :connectSlotsByName( oQObject )                     -> NIL
+ *     :normalizedSignature( cMethod )                     -> oQByteArray
+ *     :normalizedType( cType )                            -> oQByteArray
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtcore/TQMetaObject.prg
+ *     C++ wrappers  : contrib/hbqt/qtcore/QMetaObject.cpp
+ *     Library       : hbqtcore
+ *  $END$
+ */

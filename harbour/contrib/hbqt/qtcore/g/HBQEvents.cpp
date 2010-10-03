@@ -98,7 +98,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 4/4 [ 100.00% ] ]
+ *  Constructed[ 3/3 [ 100.00% ] ]
  *
  */
 
@@ -186,14 +186,6 @@ HB_FUNC( QT_HBQEVENTS )
    pObj = new HBQEvents() ;
 
    hb_retptrGC( hbqt_gcAllocate_HBQEvents( ( void * ) pObj, true ) );
-}
-
-/*
- * HBQEvents()
- */
-HB_FUNC( QT_HBQEVENTS_HBQEVENTS )
-{
-   hb_retptrGC( hbqt_gcAllocate_HBQEvents( new HBQEvents(), true ) );
 }
 
 /*

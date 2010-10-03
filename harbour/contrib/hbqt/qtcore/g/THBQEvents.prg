@@ -103,7 +103,6 @@ CREATE CLASS HBQEvents INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_HBQEven
 
    METHOD  new( ... )
 
-   METHOD  HBQEvents                     // (  )                                               -> oHBQEvents
    METHOD  hbConnect                     // ( xObj, nEvent, xBlock )                           -> lBool
    METHOD  hbDisconnect                  // ( xObj, nEvent )                                   -> lBool
    METHOD  hbClear                       // (  )                                               -> lBool
@@ -120,19 +119,11 @@ METHOD HBQEvents:new( ... )
    RETURN Self
 
 
-METHOD HBQEvents:HBQEvents( ... )
-   SWITCH PCount()
-   CASE 0
-      RETURN HB_HBQEvents():from( Qt_HBQEvents_HBQEvents( ::pPtr, ... ) )
-   ENDSWITCH
-   RETURN hbqt_error()
-
-
 METHOD HBQEvents:hbConnect( ... )
    SWITCH PCount()
    CASE 3
       DO CASE
-      CASE ( hb_isBlock( hb_pvalue( 1 ) ) .OR. hb_isPointer( hb_pvalue( 1 ) ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. ( hb_isBlock( hb_pvalue( 3 ) ) .OR. hb_isPointer( hb_pvalue( 3 ) ) )
+      CASE (  hb_pvalue( 1 ) != NIL ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. (  hb_pvalue( 3 ) != NIL )
          RETURN Qt_HBQEvents_hbConnect( ::pPtr, ... )
       ENDCASE
       EXIT
@@ -144,7 +135,7 @@ METHOD HBQEvents:hbDisconnect( ... )
    SWITCH PCount()
    CASE 2
       DO CASE
-      CASE ( hb_isBlock( hb_pvalue( 1 ) ) .OR. hb_isPointer( hb_pvalue( 1 ) ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+      CASE (  hb_pvalue( 1 ) != NIL ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_HBQEvents_hbDisconnect( ::pPtr, ... )
       ENDCASE
       EXIT

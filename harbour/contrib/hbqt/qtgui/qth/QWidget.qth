@@ -90,8 +90,6 @@ enum PaintDeviceMetric { PdmWidth, PdmHeight, PdmWidthMM, PdmHeightMM, ..., PdmP
 </ENUMS>
 
 <PROTOS>
-QWidget( QWidget * parent = 0, Qt::WindowFlags f = 0 )
-
 bool acceptDrops () const
 // QString accessibleDescription () const
 // QString accessibleName () const

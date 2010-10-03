@@ -26,7 +26,6 @@
  *  $RETURNS$
  *     An instance of the object of type QWidget
  *  $METHODS$
- *     :QWidget( oQWidget, nF )                            -> oQWidget
  *     :acceptDrops()                                      -> lBool
  *     :actions()                                          -> oQList_QAction
  *     :activateWindow()                                   -> NIL

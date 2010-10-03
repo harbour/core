@@ -109,7 +109,7 @@
 #include "hbqt_hbqsyntaxhighlighter.h"
 
 /*
- *
+ * HBQSyntaxHighlighter ( QTextDocument * textDocument )
  *
  */
 

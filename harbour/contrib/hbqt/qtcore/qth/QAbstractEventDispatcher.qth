@@ -85,8 +85,6 @@ HB_FUNC( QT_QABSTRACTEVENTDISPATCHER )
 </ENUMS>
 
 <PROTOS>
-QAbstractEventDispatcher ( QObject * parent = 0 )
-
 bool filterEvent ( void * message )
 virtual void flush () = 0
 virtual bool hasPendingEvents () = 0

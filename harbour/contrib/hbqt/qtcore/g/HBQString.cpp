@@ -110,7 +110,7 @@
  */
 
 /*
- *  Constructed[ 175/176 [ 99.43% ] ]
+ *  Constructed[ 167/168 [ 99.40% ] ]
  *
  *  *** Unconvered Prototypes ***
  *
@@ -235,72 +235,6 @@ HB_FUNC( QT_HBQSTRING )
    }
 
    hb_retptrGC( hbqt_gcAllocate_HBQString( ( void * ) pObj, true ) );
-}
-
-/*
- * HBQString ()
- */
-HB_FUNC( QT_HBQSTRING_HBQSTRING )
-{
-   hb_retptrGC( hbqt_gcAllocate_HBQString( new HBQString(), true ) );
-}
-
-/*
- * HBQString ( const QChar * unicode, int size )
- */
-HB_FUNC( QT_HBQSTRING_HBQSTRING_1 )
-{
-   hb_retptrGC( hbqt_gcAllocate_HBQString( new HBQString( hbqt_par_QChar( 2 ), hb_parni( 3 ) ), true ) );
-}
-
-/*
- * HBQString ( QChar ch )
- */
-HB_FUNC( QT_HBQSTRING_HBQSTRING_2 )
-{
-   hb_retptrGC( hbqt_gcAllocate_HBQString( new HBQString( *hbqt_par_QChar( 2 ) ), true ) );
-}
-
-/*
- * HBQString ( int size, QChar ch )
- */
-HB_FUNC( QT_HBQSTRING_HBQSTRING_3 )
-{
-   hb_retptrGC( hbqt_gcAllocate_HBQString( new HBQString( hb_parni( 2 ), *hbqt_par_QChar( 3 ) ), true ) );
-}
-
-/*
- * HBQString ( const QLatin1String & str )
- */
-HB_FUNC( QT_HBQSTRING_HBQSTRING_4 )
-{
-   hb_retptrGC( hbqt_gcAllocate_HBQString( new HBQString( *hbqt_par_QLatin1String( 2 ) ), true ) );
-}
-
-/*
- * HBQString ( const QString & other )
- */
-HB_FUNC( QT_HBQSTRING_HBQSTRING_5 )
-{
-      void * pText;
-   hb_retptrGC( hbqt_gcAllocate_HBQString( new HBQString( hb_parstr_utf8( 2, &pText, NULL ) ), true ) );
-      hb_strfree( pText );
-}
-
-/*
- * HBQString ( const char * str )
- */
-HB_FUNC( QT_HBQSTRING_HBQSTRING_6 )
-{
-   hb_retptrGC( hbqt_gcAllocate_HBQString( new HBQString( ( const char * ) hb_parc( 2 ) ), true ) );
-}
-
-/*
- * HBQString ( const QByteArray & ba )
- */
-HB_FUNC( QT_HBQSTRING_HBQSTRING_7 )
-{
-   hb_retptrGC( hbqt_gcAllocate_HBQString( new HBQString( *hbqt_par_QByteArray( 2 ) ), true ) );
 }
 
 /*

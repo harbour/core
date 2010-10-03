@@ -84,8 +84,6 @@ HB_FUNC( QT_QABSTRACTITEMMODEL )
 </ENUMS>
 
 <PROTOS>
-//QAbstractItemModel ( QObject * parent = 0 )
-
 virtual QModelIndex buddy ( const QModelIndex & index ) const
 virtual bool canFetchMore ( const QModelIndex & parent ) const
 virtual int columnCount ( const QModelIndex & parent = QModelIndex() ) const = 0

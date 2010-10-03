@@ -1202,8 +1202,6 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
 
    HB_SYMBOL_UNUSED( mp2 )
 
-   oXbpTreeItem := ::oCurProjItem
-
    IF     oXbpTreeItem == ::oProjRoot
       n  := -1
    ELSEIF oXbpTreeItem == ::oOpenedSources

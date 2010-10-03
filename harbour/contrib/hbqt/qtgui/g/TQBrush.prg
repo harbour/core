@@ -103,16 +103,6 @@ CREATE CLASS QBrush INHERIT HbQtObjectHandler FUNCTION HB_QBrush
 
    METHOD  new( ... )
 
-   METHOD  QBrush                        // (  )                                               -> oQBrush
-                                         // ( nStyle )                                         -> oQBrush
-                                         // ( oQColor, nStyle )                                -> oQBrush
-                                         // ( nColor, nStyle )                                 -> oQBrush
-                                         // ( oQColor, oQPixmap )                              -> oQBrush
-                                         // ( nColor, oQPixmap )                               -> oQBrush
-                                         // ( oQPixmap )                                       -> oQBrush
-                                         // ( oQImage )                                        -> oQBrush
-                                         // ( oQBrush )                                        -> oQBrush
-                                         // ( oQGradient )                                     -> oQBrush
    METHOD  color                         // (  )                                               -> oQColor
    METHOD  gradient                      // (  )                                               -> oQGradient
    METHOD  isOpaque                      // (  )                                               -> lBool
@@ -139,46 +129,6 @@ METHOD QBrush:new( ... )
    NEXT
    ::pPtr := Qt_QBrush( ... )
    RETURN Self
-
-
-METHOD QBrush:QBrush( ... )
-   SWITCH PCount()
-   CASE 2
-      DO CASE
-      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QBrush():from( Qt_QBrush_QBrush_3( ::pPtr, ... ) )
-      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QBrush():from( Qt_QBrush_QBrush_5( ::pPtr, ... ) )
-      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QBrush():from( Qt_QBrush_QBrush_2( ::pPtr, ... ) )
-      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QBrush():from( Qt_QBrush_QBrush_4( ::pPtr, ... ) )
-      ENDCASE
-      EXIT
-   CASE 1
-      DO CASE
-      CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QBrush():from( Qt_QBrush_QBrush_3( ::pPtr, ... ) )
-         // RETURN HB_QBrush():from( Qt_QBrush_QBrush_1( ::pPtr, ... ) )
-      CASE hb_isObject( hb_pvalue( 1 ) )
-         SWITCH __objGetClsName( hb_pvalue( 1 ) )
-         CASE "QIMAGE"
-            RETURN HB_QBrush():from( Qt_QBrush_QBrush_7( ::pPtr, ... ) )
-         CASE "QPIXMAP"
-            RETURN HB_QBrush():from( Qt_QBrush_QBrush_6( ::pPtr, ... ) )
-         CASE "QBRUSH"
-            RETURN HB_QBrush():from( Qt_QBrush_QBrush_8( ::pPtr, ... ) )
-         CASE "QCOLOR"
-            RETURN HB_QBrush():from( Qt_QBrush_QBrush_2( ::pPtr, ... ) )
-         CASE "QGRADIENT"
-            RETURN HB_QBrush():from( Qt_QBrush_QBrush_9( ::pPtr, ... ) )
-         ENDSWITCH
-      ENDCASE
-      EXIT
-   CASE 0
-      RETURN HB_QBrush():from( Qt_QBrush_QBrush( ::pPtr, ... ) )
-   ENDSWITCH
-   RETURN hbqt_error()
 
 
 METHOD QBrush:color( ... )

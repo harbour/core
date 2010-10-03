@@ -304,7 +304,7 @@ METHOD HBQPlainTextEdit:hbSetEventBlock( ... )
    SWITCH PCount()
    CASE 1
       DO CASE
-      CASE ( hb_isBlock( hb_pvalue( 1 ) ) .OR. hb_isPointer( hb_pvalue( 1 ) ) )
+      CASE (  hb_pvalue( 1 ) != NIL )
          RETURN Qt_HBQPlainTextEdit_hbSetEventBlock( ::pPtr, ... )
       ENDCASE
       EXIT
@@ -596,7 +596,7 @@ METHOD HBQPlainTextEdit:hbSetSelectionInfo( ... )
    SWITCH PCount()
    CASE 1
       DO CASE
-      CASE ( hb_isBlock( hb_pvalue( 1 ) ) .OR. hb_isPointer( hb_pvalue( 1 ) ) )
+      CASE (  hb_pvalue( 1 ) != NIL )
          RETURN Qt_HBQPlainTextEdit_hbSetSelectionInfo( ::pPtr, ... )
       ENDCASE
       EXIT
