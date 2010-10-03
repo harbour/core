@@ -41,6 +41,7 @@ extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QLine );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QLineF );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QList );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QLocale );
+extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QMimeData );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QModelIndex );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QObject );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QPoint );
@@ -95,6 +96,7 @@ extern HB_EXPORT void * hbqt_gcAllocate_QLine( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QLineF( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QList( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QLocale( void * pObj, bool bNew );
+extern HB_EXPORT void * hbqt_gcAllocate_QMimeData( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QModelIndex( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QObject( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QPoint( void * pObj, bool bNew );
@@ -151,6 +153,7 @@ HB_EXTERN_END
 #define hbqt_par_QLineF( n )                                    ( ( QLineF                                      * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QList( n )                                     ( ( QList< void * >                             * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QLocale( n )                                   ( ( QLocale                                     * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QMimeData( n )                                 ( ( QMimeData                                   * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QModelIndex( n )                               ( ( QModelIndex                                 * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QObject( n )                                   ( ( QObject                                     * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QPoint( n )                                    ( ( QPoint                                      * ) hbqt_gcpointer( n ) )
@@ -205,6 +208,7 @@ HB_EXTERN_END
 #define HBQT_TYPE_QLineF                                        0x24C33533
 #define HBQT_TYPE_QList                                         0xED20A97D
 #define HBQT_TYPE_QLocale                                       0x456691F0
+#define HBQT_TYPE_QMimeData                                     0xA1F425D3
 #define HBQT_TYPE_QModelIndex                                   0xA9E86353
 #define HBQT_TYPE_QObject                                       0xAC4BFC84
 #define HBQT_TYPE_QPoint                                        0x8AD48EA2

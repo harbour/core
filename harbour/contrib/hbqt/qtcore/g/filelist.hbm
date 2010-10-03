@@ -35,6 +35,7 @@ QLine.cpp
 QLineF.cpp
 QList.cpp
 QLocale.cpp
+QMimeData.cpp
 QModelIndex.cpp
 QObject.cpp
 QPoint.cpp
@@ -89,6 +90,7 @@ TQLine.prg
 TQLineF.prg
 TQList.prg
 TQLocale.prg
+TQMimeData.prg
 TQModelIndex.prg
 TQObject.prg
 TQPoint.prg

@@ -42,7 +42,7 @@ QLocale.qth
 ; QMetaObject.qth
 ; QMetaProperty.qth
 ; QMetaType.qth
-; QMimeData.qth
+QMimeData.qth
 QModelIndex.qth
 QObject.qth
 QPoint.qth

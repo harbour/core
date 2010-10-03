@@ -229,6 +229,10 @@ void * hbqt_detachgcpointer( int iParam )
       hb_vmSend( 0 );
       return hbqt_detachgcpointer( -1 );
    }
+   else
+   {
+      return NULL;
+   }
 }
 
 HB_FUNC( __HBQT_ISVALIDPOINTER )
