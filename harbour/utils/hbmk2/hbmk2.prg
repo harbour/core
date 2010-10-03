@@ -1513,8 +1513,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          IF Empty( hbmk[ _HBMK_cCCPATH ] ) .AND. ;
             Empty( hbmk[ _HBMK_cCCPREFIX ] ) .AND. ;
-            Empty( hbmk[ _HBMK_cCCPOSTFIX ] ) .AND. ;
-            !( hbmk[ _HBMK_cPLAT ] == "dos" )
+            Empty( hbmk[ _HBMK_cCCPOSTFIX ] )
 
             DO CASE
             CASE hbmk[ _HBMK_cPLAT ] == "win"
@@ -1530,6 +1529,9 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                AAdd( aCOMPDET_EMBED, { {| cPrefix, tmp1 | iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "wce", "mingwarm", "arm-mingw32ce-"      , "/opt/mingw32ce/bin"   , NIL } )
                AAdd( aCOMPDET_EMBED, { {| cPrefix, tmp1 | iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "wce", "mingwarm", "arm-wince-mingw32ce-", "/opt/mingw32ce/bin"   , NIL } )
                AAdd( aCOMPDET_EMBED, { {| cPrefix, tmp1 | iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "wce", "mingw"   , "i386-mingw32ce-"     , "/opt/x86mingw32ce/bin", NIL } )
+            CASE hbmk[ _HBMK_cPLAT ] == "dos"
+               AAdd( aCOMPDET_EMBED, { {| cPrefix, tmp1 | iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "dos", "djgpp"   , "i586-pc-msdosdjgpp-" , NIL                    , NIL } )
+               AAdd( aCOMPDET_EMBED, { {| cPrefix, tmp1 | iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "dos", "djgpp"   , "i586-pc-msdosdjgpp-" , "/usr/local"           , NIL } )
             ENDCASE
          ENDIF
 
