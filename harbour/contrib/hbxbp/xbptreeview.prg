@@ -283,17 +283,17 @@ METHOD XbpTreeView:connect()
 
 METHOD XbpTreeView:disconnect()
 
-   ::oWidget:connect( "itemCollapsed(QTWItem)"                )
-   ::oWidget:connect( "itemExpanded(QTWItem)"                 )
-*  ::oWidget:connect( "currentItemChanged(QTWItem,QTWItem)"   )
-*  ::oWidget:connect( "itemActivated(QTWItem,int)"            )
-*  ::oWidget:connect( "itemChanged(QTWItem,int)"              )
-   ::oWidget:connect( "itemClicked(QTWItem,int)"              )
-   ::oWidget:connect( "itemDoubleClicked(QTWItem,int)"        )
-   ::oWidget:connect( "itemEntered(QTWItem,int)"              )
-*  ::oWidget:connect( "itemPressed(QTWItem,int)"              )
-*  ::oWidget:connect( "itemSelectionChanged()"                )
-   ::oWidget:connect( "customContextMenuRequested(QPoint)"    )
+   ::oWidget:disconnect( "itemCollapsed(QTWItem)"                )
+   ::oWidget:disconnect( "itemExpanded(QTWItem)"                 )
+*  ::oWidget:disconnect( "currentItemChanged(QTWItem,QTWItem)"   )
+*  ::oWidget:disconnect( "itemActivated(QTWItem,int)"            )
+*  ::oWidget:disconnect( "itemChanged(QTWItem,int)"              )
+   ::oWidget:disconnect( "itemClicked(QTWItem,int)"              )
+   ::oWidget:disconnect( "itemDoubleClicked(QTWItem,int)"        )
+   ::oWidget:disconnect( "itemEntered(QTWItem,int)"              )
+*  ::oWidget:disconnect( "itemPressed(QTWItem,int)"              )
+*  ::oWidget:disconnect( "itemSelectionChanged()"                )
+   ::oWidget:disconnect( "customContextMenuRequested(QPoint)"    )
 
    RETURN Self
 
