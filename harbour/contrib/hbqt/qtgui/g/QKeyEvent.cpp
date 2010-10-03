@@ -154,7 +154,7 @@ void * hbqt_gcAllocate_QKeyEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QKEYEVENT )
 {
-   //hb_retptr( ( QKeyEvent * ) new QKeyEvent( *hbqt_par_QKeyEvent( 1 ) ) );
+   //__HB_RETPTRGC__( ( QKeyEvent * ) new QKeyEvent( *hbqt_par_QKeyEvent( 1 ) ) );
 }
 
 /*

@@ -76,15 +76,15 @@ HB_FUNC( QT_QSETTINGS )
 {
    if( hb_pcount() >= 2 && HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
-      hb_retptr( new QSettings( hbqt_par_QString( 1 ), hbqt_par_QString( 2 ), 0 ) );
+      __HB_RETPTRGC__( new QSettings( hbqt_par_QString( 1 ), hbqt_par_QString( 2 ), 0 ) );
    }
    else if( hb_pcount() >= 2 && HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) )
    {
-      hb_retptr( new QSettings( hbqt_par_QString( 1 ), ( QSettings::Format ) hb_parni( 2 ) ) );
+      __HB_RETPTRGC__( new QSettings( hbqt_par_QString( 1 ), ( QSettings::Format ) hb_parni( 2 ) ) );
    }
    else
    {
-      hb_retptr( new QSettings() );
+      __HB_RETPTRGC__( new QSettings() );
    }
 }
 </CODE>

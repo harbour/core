@@ -154,7 +154,7 @@ void * hbqt_gcAllocate_QGraphicsLayout( void * pObj, bool bNew )
 
 HB_FUNC( QT_QGRAPHICSLAYOUT )
 {
-   // hb_retptr( new QGraphicsLayout() );
+   // __HB_RETPTRGC__( new QGraphicsLayout() );
 }
 
 /*

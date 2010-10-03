@@ -73,7 +73,7 @@ Destructor = no
  */
 HB_FUNC( QT_QCLIPBOARD )
 {
-   hb_retptr( ( QClipboard* ) QApplication::clipboard() );
+   __HB_RETPTRGC__( ( QClipboard* ) QApplication::clipboard() );
 }
 </CODE>
 

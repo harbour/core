@@ -71,7 +71,7 @@ New      =
  */
 HB_FUNC( QT_QSYSTEMTRAYICON )
 {
-   hb_retptr( ( QSystemTrayIcon* ) new QSystemTrayIcon( hbqt_par_QObject( 1 ) ) );
+   __HB_RETPTRGC__( ( QSystemTrayIcon* ) new QSystemTrayIcon( hbqt_par_QObject( 1 ) ) );
 }
 </CODE>
 

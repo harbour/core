@@ -77,7 +77,7 @@ HB_FUNC( QT_QWEBHISTORYITEM )
 {
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( new QWebHistoryItem( *hbqt_par_QWebHistoryItem( 1 ) ) );
+      __HB_RETPTRGC__( new QWebHistoryItem( *hbqt_par_QWebHistoryItem( 1 ) ) );
    }
 }
 </CODE>

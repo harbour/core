@@ -73,7 +73,7 @@ New      =
  */
 HB_FUNC( QT_QTEXTLAYOUT )
 {
-   hb_retptr( ( QTextLayout* ) new QTextLayout() );
+   __HB_RETPTRGC__( ( QTextLayout* ) new QTextLayout() );
 }
 </CODE>
 

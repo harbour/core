@@ -71,7 +71,7 @@ Destructor =
  */
 HB_FUNC( QT_QHELPEVENT )
 {
-   // hb_retptr( new QHelpEvent() );
+   // __HB_RETPTRGC__( new QHelpEvent() );
 }
 </CODE>
 

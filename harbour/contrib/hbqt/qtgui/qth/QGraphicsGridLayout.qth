@@ -73,11 +73,11 @@ HB_FUNC( QT_QGRAPHICSGRIDLAYOUT )
 {
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( new QGraphicsGridLayout( hbqt_par_QGraphicsLayoutItem( 1 ) ) );
+      __HB_RETPTRGC__( new QGraphicsGridLayout( hbqt_par_QGraphicsLayoutItem( 1 ) ) );
    }
    else
    {
-      hb_retptr( new QGraphicsGridLayout() );
+      __HB_RETPTRGC__( new QGraphicsGridLayout() );
    }
 }
 </CODE>

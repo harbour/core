@@ -73,7 +73,7 @@ New      = pParent
  */
 HB_FUNC( QT_QTEXTFORMAT )
 {
-   hb_retptr( ( QTextFormat* ) new QTextFormat() );
+   __HB_RETPTRGC__( ( QTextFormat* ) new QTextFormat() );
 }
 </CODE>
 

@@ -74,7 +74,7 @@ HB_FUNC( QT_QITEMSELECTIONMODEL )
 {
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( new QItemSelectionModel( hbqt_par_QAbstractItemModel( 1 ) ) );
+      __HB_RETPTRGC__( new QItemSelectionModel( hbqt_par_QAbstractItemModel( 1 ) ) );
    }
 }
 </CODE>

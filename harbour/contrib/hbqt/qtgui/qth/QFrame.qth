@@ -69,7 +69,7 @@ New      = pParent, nFlags
  */
 HB_FUNC( QT_QFRAME )
 {
-   hb_retptr( new QFrame( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );   
+   __HB_RETPTRGC__( new QFrame( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );   
 }
 </CODE>
 

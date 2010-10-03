@@ -78,7 +78,7 @@ New      =
  */
 HB_FUNC( QT_HBQSLOTS )
 {
-   hb_retptr( new HBQSlots() );
+   __HB_RETPTRGC__( new HBQSlots() );
 }
 </CODE>
 

@@ -72,7 +72,7 @@ New      =
  */
 HB_FUNC( QT_QCONICALGRADIENT )
 {
-   hb_retptr( ( QConicalGradient* ) new QConicalGradient() );
+   __HB_RETPTRGC__( ( QConicalGradient* ) new QConicalGradient() );
 }
 </CODE>
 

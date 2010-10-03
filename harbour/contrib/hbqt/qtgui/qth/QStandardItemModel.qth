@@ -71,7 +71,7 @@ New      =
  */
 HB_FUNC( QT_QSTANDARDITEMMODEL )
 {
-   hb_retptr( ( QStandardItemModel* ) new QStandardItemModel( hbqt_par_QObject( 1 ) ) );
+   __HB_RETPTRGC__( ( QStandardItemModel* ) new QStandardItemModel( hbqt_par_QObject( 1 ) ) );
 }
 </CODE>
 

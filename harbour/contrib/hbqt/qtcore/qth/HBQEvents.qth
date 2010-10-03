@@ -79,7 +79,7 @@ New      =
  */
 HB_FUNC( QT_HBQEVENTS )
 {
-   hb_retptr( new HBQEvents() );
+   __HB_RETPTRGC__( new HBQEvents() );
 }
 </CODE>
 

@@ -70,7 +70,7 @@ New      = pParent
  */
 HB_FUNC( QT_QMESSAGEBOX )
 {
-   hb_retptr( ( QMessageBox* ) new QMessageBox() );
+   __HB_RETPTRGC__( ( QMessageBox* ) new QMessageBox() );
 }
 </CODE>
 

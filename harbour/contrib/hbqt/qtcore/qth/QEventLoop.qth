@@ -70,7 +70,7 @@ New      = pObject
  */
 HB_FUNC( QT_QEVENTLOOP )
 {
-   hb_retptr( new QEventLoop( hbqt_par_QObject( 1 ) ) );
+   __HB_RETPTRGC__( new QEventLoop( hbqt_par_QObject( 1 ) ) );
 }
 </CODE>
 

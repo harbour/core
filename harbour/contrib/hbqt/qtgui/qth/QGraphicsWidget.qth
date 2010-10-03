@@ -73,11 +73,11 @@ HB_FUNC( QT_QGRAPHICSWIDGET )
 {
    if( hb_pcount() >= 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( new QGraphicsWidget( hbqt_par_QGraphicsItem( 1 ), ( Qt::WindowFlags ) ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : 0 ) ) );
+      __HB_RETPTRGC__( new QGraphicsWidget( hbqt_par_QGraphicsItem( 1 ), ( Qt::WindowFlags ) ( HB_ISNUM( 2 ) ? hb_parni( 2 ) : 0 ) ) );
    }
    else
    {
-      hb_retptr( new QGraphicsWidget() );
+      __HB_RETPTRGC__( new QGraphicsWidget() );
    }
 }
 </CODE>

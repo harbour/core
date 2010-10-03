@@ -74,7 +74,7 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#if defined( __BORLANDC__ ) && ( __BORLANDC__ < 1552 )
+#if defined( __BORLANDC__ )
 #  if !defined( NONAMELESSUNION )
 #     define NONAMELESSUNION
 #  endif
@@ -99,6 +99,10 @@
 #include "hbwapi.h"
 
 #include <windowsx.h>
+
+#if defined( __BORLANDC__ ) && ( __BORLANDC__ >= 1552 )
+#  undef NONAMELESSUNION
+#endif
 
 #if defined( NONAMELESSUNION )
 #  define HB_WIN_V_UNION( x, z )       ((x).DUMMYUNIONNAME.z)

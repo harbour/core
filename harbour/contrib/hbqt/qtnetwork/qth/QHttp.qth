@@ -74,7 +74,7 @@ New      = pParent
  */
 HB_FUNC( QT_QHTTP )
 {
-   hb_retptr( new QHttp( hbqt_par_QObject( 1 ) ) );
+   __HB_RETPTRGC__( new QHttp( hbqt_par_QObject( 1 ) ) );
 }
 
 /*

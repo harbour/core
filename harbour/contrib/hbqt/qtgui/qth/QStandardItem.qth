@@ -74,7 +74,7 @@ New      =
  */
 HB_FUNC( QT_QSTANDARDITEM )
 {
-   hb_retptr( ( QStandardItem* ) new QStandardItem() );
+   __HB_RETPTRGC__( ( QStandardItem* ) new QStandardItem() );
 }
 </CODE>
 

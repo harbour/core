@@ -71,7 +71,7 @@ New      = pTextCodec
  */
 HB_FUNC( QT_QTEXTDECODER )
 {
-   hb_retptr( ( QTextDecoder* ) new QTextDecoder( hbqt_par_QTextCodec( 1 ) ) );
+   __HB_RETPTRGC__( ( QTextDecoder* ) new QTextDecoder( hbqt_par_QTextCodec( 1 ) ) );
 }
 </CODE>
 

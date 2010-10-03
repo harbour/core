@@ -153,7 +153,7 @@ void * hbqt_gcAllocate_QHelpEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QHELPEVENT )
 {
-   // hb_retptr( new QHelpEvent() );
+   // __HB_RETPTRGC__( new QHelpEvent() );
 }
 
 /*

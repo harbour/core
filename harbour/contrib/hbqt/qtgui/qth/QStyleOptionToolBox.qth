@@ -71,7 +71,7 @@ New      =
  */
 HB_FUNC( QT_QSTYLEOPTIONTOOLBOX )
 {
-   hb_retptr( ( QStyleOptionToolBox* ) new QStyleOptionToolBox() );
+   __HB_RETPTRGC__( ( QStyleOptionToolBox* ) new QStyleOptionToolBox() );
 }
 </CODE>
 

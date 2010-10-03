@@ -70,7 +70,7 @@ New      = pParent, nFlags
  */
 HB_FUNC( QT_QMAINWINDOW )
 {
-   hb_retptr( ( QMainWindow* ) new QMainWindow( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+   __HB_RETPTRGC__( ( QMainWindow* ) new QMainWindow( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
 }
 
 HB_FUNC( HBQT_QMAINWINDOW_SAVESETTINGS )

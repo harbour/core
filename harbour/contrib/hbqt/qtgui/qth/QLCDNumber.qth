@@ -70,7 +70,7 @@ New      = pParent
  */
 HB_FUNC( QT_QLCDNUMBER )
 {
-   hb_retptr( ( QLCDNumber * ) new QLCDNumber( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( ( QLCDNumber * ) new QLCDNumber( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

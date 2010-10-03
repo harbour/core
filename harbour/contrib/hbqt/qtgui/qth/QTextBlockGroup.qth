@@ -70,7 +70,7 @@ Destructor = no
  */
 HB_FUNC( QT_QTEXTBLOCKGROUP )
 {
-   //hb_retptr( ( QTextBlockGroup* ) new QTextBlockGroup( hbqt_par_QTextDocument( 1 ) ) );
+   //__HB_RETPTRGC__( ( QTextBlockGroup* ) new QTextBlockGroup( hbqt_par_QTextDocument( 1 ) ) );
 }
 </CODE>
 

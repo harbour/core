@@ -154,7 +154,7 @@ void * hbqt_gcAllocate_QDragMoveEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QDRAGMOVEEVENT )
 {
-   // hb_retptr( ( * ) new () );
+   // __HB_RETPTRGC__( ( * ) new () );
 }
 
 /*

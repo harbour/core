@@ -73,7 +73,7 @@ folder   = qtwebkit
  */
 HB_FUNC( QT_QWEBVIEW )
 {
-   hb_retptr( new QWebView( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( new QWebView( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

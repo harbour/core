@@ -69,7 +69,7 @@ Calls    = QT_Qbject
  */
 HB_FUNC( QT_QOBJECT )
 {
-   hb_retptr( ( QObject* ) new QObject( hbqt_par_QObject( 1 ) ) );
+   __HB_RETPTRGC__( ( QObject* ) new QObject( hbqt_par_QObject( 1 ) ) );
 }
 </CODE>
 

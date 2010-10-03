@@ -69,7 +69,7 @@ New      = pParent
  */
 HB_FUNC( QT_QTABWIDGET )
 {
-   hb_retptr( ( QTabWidget* ) new QTabWidget( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( ( QTabWidget* ) new QTabWidget( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

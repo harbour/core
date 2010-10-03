@@ -69,9 +69,9 @@ New      = pParent
  */
 HB_FUNC( QT_QTIMEEDIT )
 {
-   hb_retptr( ( QTimeEdit* ) new QTimeEdit( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( ( QTimeEdit* ) new QTimeEdit( hbqt_par_QWidget( 1 ) ) );
    #if 0
-   hb_retptr( (QTimeEdit *) new QTimeEdit( QTime( hbqt_par_QString( 1 ) ), hbqt_par_QWidget( 2 ) ) );
+   __HB_RETPTRGC__( (QTimeEdit *) new QTimeEdit( QTime( hbqt_par_QString( 1 ) ), hbqt_par_QWidget( 2 ) ) );
    #endif
 }
 </CODE>

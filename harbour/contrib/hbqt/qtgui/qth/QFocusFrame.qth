@@ -69,7 +69,7 @@ New      = pParent
  */
 HB_FUNC( QT_QFOCUSFRAME )
 {
-   hb_retptr( ( QFocusFrame* ) new QFocusFrame( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( ( QFocusFrame* ) new QFocusFrame( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

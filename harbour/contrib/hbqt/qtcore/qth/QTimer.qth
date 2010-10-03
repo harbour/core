@@ -69,7 +69,7 @@ New      = pParent
  */
 HB_FUNC( QT_QTIMER )
 {
-   hb_retptr( new QTimer( hbqt_par_QObject( 1 ) ) );
+   __HB_RETPTRGC__( new QTimer( hbqt_par_QObject( 1 ) ) );
 }
 </CODE>
 

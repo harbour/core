@@ -75,11 +75,11 @@ HB_FUNC( QT_QSCISCINTILLA )
 {
    if( HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( new QsciScintilla( hbqt_par_QWidget( 1 ) ) );
+      __HB_RETPTRGC__( new QsciScintilla( hbqt_par_QWidget( 1 ) ) );
    }
    else
    {
-      hb_retptr( new QsciScintilla() );
+      __HB_RETPTRGC__( new QsciScintilla() );
    }
 }
 </CODE>

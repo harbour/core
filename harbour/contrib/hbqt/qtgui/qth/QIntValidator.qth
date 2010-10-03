@@ -74,11 +74,11 @@ HB_FUNC( QT_QINTVALIDATOR )
 {
    if( hb_pcount() == 3 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISPOINTER( 3 ) )
    {
-      hb_retptr( new QIntValidator( hb_parni( 1 ), hb_parni( 2 ), hbqt_par_QObject( 3 ) ) );
+      __HB_RETPTRGC__( new QIntValidator( hb_parni( 1 ), hb_parni( 2 ), hbqt_par_QObject( 3 ) ) );
    }
    else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( new QIntValidator( hbqt_par_QObject( 1 ) ) );
+      __HB_RETPTRGC__( new QIntValidator( hbqt_par_QObject( 1 ) ) );
    }
 }
 </CODE>

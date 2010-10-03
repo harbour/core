@@ -80,11 +80,11 @@ HB_FUNC( QT_QITEMEDITORFACTORY )
 {
    if( HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( new QItemEditorFactory() );
+      __HB_RETPTRGC__( new QItemEditorFactory() );
    }
    else
    {
-      hb_retptr( new QItemEditorFactory( *hbqt_par_QItemEditorFactory( 1 ) ) );
+      __HB_RETPTRGC__( new QItemEditorFactory( *hbqt_par_QItemEditorFactory( 1 ) ) );
    }
 }
 </CODE>

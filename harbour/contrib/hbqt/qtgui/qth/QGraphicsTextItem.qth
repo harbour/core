@@ -79,20 +79,20 @@ HB_FUNC( QT_QGRAPHICSTEXTITEM )
    {
       if( HB_ISCHAR( 1 ) )
       {
-         hb_retptr( new QGraphicsTextItem( hbqt_par_QString( 1 ), ( HB_ISPOINTER( 2 ) ? hbqt_par_QGraphicsItem( 1 ) : 0 ) ) ); 
+         __HB_RETPTRGC__( new QGraphicsTextItem( hbqt_par_QString( 1 ), ( HB_ISPOINTER( 2 ) ? hbqt_par_QGraphicsItem( 1 ) : 0 ) ) ); 
       }
       else if( HB_ISPOINTER( 1 ) )
       {  
-         hb_retptr( new QGraphicsTextItem( hbqt_par_QGraphicsItem( 1 ) ) ); 
+         __HB_RETPTRGC__( new QGraphicsTextItem( hbqt_par_QGraphicsItem( 1 ) ) ); 
       }
       else
       {
-         hb_retptr( new QGraphicsTextItem() );
+         __HB_RETPTRGC__( new QGraphicsTextItem() );
       }
    }
    else
    {
-      hb_retptr( new QGraphicsTextItem() );
+      __HB_RETPTRGC__( new QGraphicsTextItem() );
    }   
 }
 </CODE>

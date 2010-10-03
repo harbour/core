@@ -81,19 +81,19 @@ HB_FUNC( QT_QSCILEXERFLAGSHIP )
 {
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( new QsciLexerFlagship( hbqt_par_QObject( 1 ) ) );
+      __HB_RETPTRGC__( new QsciLexerFlagship( hbqt_par_QObject( 1 ) ) );
    }
    else if( hb_pcount() == 1 && HB_ISLOG( 1 ) )
    {
-      hb_retptr( new QsciLexerFlagship( 0, hb_parl( 1 ) ) );
+      __HB_RETPTRGC__( new QsciLexerFlagship( 0, hb_parl( 1 ) ) );
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISLOG( 2 ) )
    {
-      hb_retptr( new QsciLexerFlagship( hbqt_par_QObject( 1 ), hb_parl( 2 ) ) );
+      __HB_RETPTRGC__( new QsciLexerFlagship( hbqt_par_QObject( 1 ), hb_parl( 2 ) ) );
    }
    else
    {
-      hb_retptr( new QsciLexerFlagship() );
+      __HB_RETPTRGC__( new QsciLexerFlagship() );
    }
 }
 </CODE>

@@ -154,7 +154,7 @@ void * hbqt_gcAllocate_QWheelEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QWHEELEVENT )
 {
-   // hb_retptr( ( QWheelEvent* ) new QWheelEvent() );
+   // __HB_RETPTRGC__( ( QWheelEvent* ) new QWheelEvent() );
 }
 
 /*

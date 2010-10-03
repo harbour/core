@@ -71,7 +71,7 @@ New      =
  */
 HB_FUNC( QT_QSTYLEOPTIONMENUITEM )
 {
-   hb_retptr( ( QStyleOptionMenuItem* ) new QStyleOptionMenuItem() );
+   __HB_RETPTRGC__( ( QStyleOptionMenuItem* ) new QStyleOptionMenuItem() );
 }
 </CODE>
 

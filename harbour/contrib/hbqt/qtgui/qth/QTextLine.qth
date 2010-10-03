@@ -70,7 +70,7 @@ New      =
  */
 HB_FUNC( QT_QTEXTLINE )
 {
-   hb_retptr( ( QTextLine* ) new QTextLine() );
+   __HB_RETPTRGC__( ( QTextLine* ) new QTextLine() );
 }
 </CODE>
 

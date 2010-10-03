@@ -69,7 +69,7 @@ New      = pParent
  */
 HB_FUNC( QT_QDIAL )
 {
-   hb_retptr( ( QDial* ) new QDial( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( ( QDial* ) new QDial( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

@@ -72,7 +72,7 @@ New      =
  */
 HB_FUNC( QT_QGRAPHICSSCENERESIZEEVENT )
 {
-   //hb_retptr( new QGraphicsSceneResizeEvent() );
+   //__HB_RETPTRGC__( new QGraphicsSceneResizeEvent() );
 }
 </CODE>
 

@@ -70,7 +70,7 @@ New      = pParent
  */
 HB_FUNC( QT_QGROUPBOX )
 {
-   hb_retptr( ( QGroupBox * ) new QGroupBox( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( ( QGroupBox * ) new QGroupBox( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

@@ -154,7 +154,7 @@ void * hbqt_gcAllocate_QGraphicsSceneWheelEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QGRAPHICSSCENEWHEELEVENT )
 {
-   //hb_retptr( new QGraphicsSceneWheelEvent() );
+   //__HB_RETPTRGC__( new QGraphicsSceneWheelEvent() );
 }
 
 /*

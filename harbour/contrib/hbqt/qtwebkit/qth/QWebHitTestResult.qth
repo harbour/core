@@ -75,7 +75,7 @@ folder   = qtwebkit
  */
 HB_FUNC( QT_QWEBHITTESTRESULT )
 {
-   hb_retptr( ( QWebHitTestResult* ) new QWebHitTestResult() );
+   __HB_RETPTRGC__( ( QWebHitTestResult* ) new QWebHitTestResult() );
 }
 </CODE>
 

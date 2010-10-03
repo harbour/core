@@ -73,7 +73,7 @@ Destructor =
  */
 HB_FUNC( QT_QTRANSFORM )
 {
-   hb_retptr( new QTransform() );
+   __HB_RETPTRGC__( new QTransform() );
 }
 </CODE>
 

@@ -72,7 +72,7 @@ Folder   = qscintilla
  */
 HB_FUNC( QT_HBQSCISCINTILLA )
 {
-   hb_retptr( new HBQsciScintilla( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( new HBQsciScintilla( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

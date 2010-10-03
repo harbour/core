@@ -78,7 +78,7 @@ New      =
  */
 HB_FUNC( QT_HBQTABLEVIEW )
 {
-   hb_retptr( new HBQTableView( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( new HBQTableView( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

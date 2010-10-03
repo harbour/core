@@ -86,7 +86,7 @@ Destructor = no
  */
 HB_FUNC( QT_QCHAR )
 {
-   hb_retptr( new QChar() );
+   __HB_RETPTRGC__( new QChar() );
 }
 </CODE>
 

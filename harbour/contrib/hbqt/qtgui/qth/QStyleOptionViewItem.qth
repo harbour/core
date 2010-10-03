@@ -71,7 +71,7 @@ New      =
  */
 HB_FUNC( QT_QSTYLEOPTIONVIEWITEM )
 {
-   hb_retptr( ( QStyleOptionViewItem* ) new QStyleOptionViewItem() );
+   __HB_RETPTRGC__( ( QStyleOptionViewItem* ) new QStyleOptionViewItem() );
 }
 </CODE>
 

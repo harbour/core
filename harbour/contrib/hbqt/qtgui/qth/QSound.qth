@@ -70,7 +70,7 @@ New      =
  */
 HB_FUNC( QT_QSOUND )
 {
-   hb_retptr( ( QSound* ) new QSound( hbqt_par_QString( 1 ) ) );
+   __HB_RETPTRGC__( ( QSound* ) new QSound( hbqt_par_QString( 1 ) ) );
 }
 </CODE>
 

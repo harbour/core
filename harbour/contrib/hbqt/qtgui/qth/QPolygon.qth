@@ -75,7 +75,7 @@ Destructor =
  */
 HB_FUNC( QT_QPOLYGON )
 {
-   hb_retptr( new QPolygon() );
+   __HB_RETPTRGC__( new QPolygon() );
 }
 </CODE>
 

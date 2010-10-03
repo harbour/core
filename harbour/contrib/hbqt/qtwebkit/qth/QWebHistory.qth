@@ -72,7 +72,7 @@ folder   = qtwebkit
  */
 HB_FUNC( QT_QWEBHISTORY )
 {
-   //hb_retptr( ( * ) new () );
+   //__HB_RETPTRGC__( ( * ) new () );
 }
 </CODE>
 

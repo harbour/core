@@ -153,7 +153,7 @@ void * hbqt_gcAllocate_QWebHistory( void * pObj, bool bNew )
 
 HB_FUNC( QT_QWEBHISTORY )
 {
-   //hb_retptr( ( * ) new () );
+   //__HB_RETPTRGC__( ( * ) new () );
 }
 
 /*

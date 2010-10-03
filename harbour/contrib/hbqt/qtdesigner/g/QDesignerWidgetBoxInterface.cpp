@@ -157,7 +157,7 @@ void * hbqt_gcAllocate_QDesignerWidgetBoxInterface( void * pObj, bool bNew )
 
 HB_FUNC( QT_QDESIGNERWIDGETBOXINTERFACE )
 {
-   //hb_retptr( new QDesignerWidgetBoxInterface() );
+   //__HB_RETPTRGC__( new QDesignerWidgetBoxInterface() );
 }
 
 /*

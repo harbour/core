@@ -77,11 +77,11 @@ HB_FUNC( QT_QMDISUBWINDOW )
 {
    if( hb_pcount() >= 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( new QMdiSubWindow( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+      __HB_RETPTRGC__( new QMdiSubWindow( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
    }
    else
    {
-      hb_retptr( new QMdiSubWindow() );
+      __HB_RETPTRGC__( new QMdiSubWindow() );
    }
 }
 </CODE>

@@ -73,7 +73,7 @@ Destructor =
  */
 HB_FUNC( QT_QLOCALE )
 {
-   hb_retptr( new QLocale() );
+   __HB_RETPTRGC__( new QLocale() );
 }
 </CODE>
 

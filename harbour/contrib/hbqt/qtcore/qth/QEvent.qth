@@ -70,7 +70,7 @@ New      = nType
  */
 HB_FUNC( QT_QEVENT )
 {
-   hb_retptr( ( QEvent* ) new QEvent( ( QEvent::Type ) hb_parni( 1 ) ) );
+   __HB_RETPTRGC__( ( QEvent* ) new QEvent( ( QEvent::Type ) hb_parni( 1 ) ) );
 }
 </CODE>
 

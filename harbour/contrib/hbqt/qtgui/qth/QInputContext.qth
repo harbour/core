@@ -71,7 +71,7 @@ Destructor =
  */
 HB_FUNC( QT_QINPUTCONTEXT )
 {
-   // hb_retptr( new QInputContext() );
+   // __HB_RETPTRGC__( new QInputContext() );
 }
 </CODE>
 

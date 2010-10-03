@@ -78,15 +78,15 @@ HB_FUNC( QT_HBQPLAINTEXTEDIT )
 {
    if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
    {
-      hb_retptr( new HBQPlainTextEdit() );
+      __HB_RETPTRGC__( new HBQPlainTextEdit() );
    }
    else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( new HBQPlainTextEdit( hbqt_par_QWidget( 1 ) ) );
+      __HB_RETPTRGC__( new HBQPlainTextEdit( hbqt_par_QWidget( 1 ) ) );
    }
    else
    {
-      hb_retptr( new HBQPlainTextEdit() );
+      __HB_RETPTRGC__( new HBQPlainTextEdit() );
    }
 }
 </CODE>

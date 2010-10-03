@@ -71,7 +71,7 @@ Destructor =
  */
 HB_FUNC( QT_QFILEICONPROVIDER )
 {
-   hb_retptr( new QFileIconProvider() );
+   __HB_RETPTRGC__( new QFileIconProvider() );
 }
 </CODE>
 

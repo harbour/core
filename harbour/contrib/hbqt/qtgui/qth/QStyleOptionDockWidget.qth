@@ -71,7 +71,7 @@ New      =
  */
 HB_FUNC( QT_QSTYLEOPTIONDOCKWIDGET )
 {
-   hb_retptr( ( QStyleOptionDockWidget* ) new QStyleOptionDockWidget() );
+   __HB_RETPTRGC__( ( QStyleOptionDockWidget* ) new QStyleOptionDockWidget() );
 }
 </CODE>
 

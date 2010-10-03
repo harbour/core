@@ -70,9 +70,9 @@ New      = pParent
 HB_FUNC( QT_QPAGESETUPDIALOG )
 {
    if( hb_pcount() >= 2 )
-      hb_retptr( ( QPageSetupDialog* ) new QPageSetupDialog( hbqt_par_QPrinter( 1 ), hbqt_par_QWidget( 1 ) ) );
+      __HB_RETPTRGC__( ( QPageSetupDialog* ) new QPageSetupDialog( hbqt_par_QPrinter( 1 ), hbqt_par_QWidget( 1 ) ) );
    else
-      hb_retptr( ( QPageSetupDialog* ) new QPageSetupDialog( hbqt_par_QWidget( 1 ) ) );      
+      __HB_RETPTRGC__( ( QPageSetupDialog* ) new QPageSetupDialog( hbqt_par_QWidget( 1 ) ) );      
 }
 </CODE>
 

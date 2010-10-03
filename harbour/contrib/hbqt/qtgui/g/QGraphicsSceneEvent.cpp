@@ -153,7 +153,7 @@ void * hbqt_gcAllocate_QGraphicsSceneEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QGRAPHICSSCENEEVENT )
 {
-   //hb_retptr( new QGraphicsSceneEvent() );
+   //__HB_RETPTRGC__( new QGraphicsSceneEvent() );
 }
 
 /*

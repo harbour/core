@@ -73,7 +73,7 @@ Destructor =
  */
 HB_FUNC( QT_QPAINTERPATH )
 {
-   hb_retptr( new QPainterPath() );
+   __HB_RETPTRGC__( new QPainterPath() );
 }
 </CODE>
 

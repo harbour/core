@@ -80,7 +80,7 @@ folder   = hbqtdesigner
  */
 HB_FUNC( QT_QDESIGNERFORMWINDOWCURSORINTERFACE )
 {
-   //hb_retptr( new QDesignerFormWindowCursorInterface() );
+   //__HB_RETPTRGC__( new QDesignerFormWindowCursorInterface() );
 }
 </CODE>
 

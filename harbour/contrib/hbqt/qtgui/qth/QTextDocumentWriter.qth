@@ -73,7 +73,7 @@ New      =
  */
 HB_FUNC( QT_QTEXTDOCUMENTWRITER )
 {
-   hb_retptr( ( QTextDocumentWriter* ) new QTextDocumentWriter() );
+   __HB_RETPTRGC__( ( QTextDocumentWriter* ) new QTextDocumentWriter() );
 }
 </CODE>
 

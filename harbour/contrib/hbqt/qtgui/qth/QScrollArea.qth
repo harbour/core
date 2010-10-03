@@ -69,7 +69,7 @@ New      = pParent
  */
 HB_FUNC( QT_QSCROLLAREA )
 {
-   hb_retptr( ( QScrollArea* ) new QScrollArea( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( ( QScrollArea* ) new QScrollArea( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

@@ -153,7 +153,7 @@ void * hbqt_gcAllocate_QWindowStateChangeEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QWINDOWSTATECHANGEEVENT )
 {
-   // hb_retptr( ( QWindowStateChangeEvent* ) new QWindowStateChangeEvent() );
+   // __HB_RETPTRGC__( ( QWindowStateChangeEvent* ) new QWindowStateChangeEvent() );
 }
 
 /*

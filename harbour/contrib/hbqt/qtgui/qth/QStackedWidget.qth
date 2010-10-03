@@ -78,7 +78,7 @@ New      =
  */
 HB_FUNC( QT_QSTACKEDWIDGET )
 {
-   hb_retptr( new QStackedWidget( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( new QStackedWidget( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

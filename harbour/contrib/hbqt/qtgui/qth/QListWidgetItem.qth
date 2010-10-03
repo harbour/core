@@ -73,7 +73,7 @@ New      = pParent
  */
 HB_FUNC( QT_QLISTWIDGETITEM )
 {
-   hb_retptr( new QListWidgetItem( hbqt_par_QListWidget( 1 ), hb_parni( 2 ) ) );
+   __HB_RETPTRGC__( new QListWidgetItem( hbqt_par_QListWidget( 1 ), hb_parni( 2 ) ) );
 }
 </CODE>
 

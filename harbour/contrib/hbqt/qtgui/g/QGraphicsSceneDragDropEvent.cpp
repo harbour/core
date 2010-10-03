@@ -157,7 +157,7 @@ void * hbqt_gcAllocate_QGraphicsSceneDragDropEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QGRAPHICSSCENEDRAGDROPEVENT )
 {
-   //hb_retptr( new QGraphicsSceneDragDropEvent() );
+   //__HB_RETPTRGC__( new QGraphicsSceneDragDropEvent() );
 }
 
 /*

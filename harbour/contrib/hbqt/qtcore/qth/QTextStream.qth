@@ -75,7 +75,7 @@ New      = cText, nIOMode
  */
 HB_FUNC( QT_QTEXTSTREAM )
 {
-   hb_retptr( new QTextStream( hb_parcx( 1 ), ( QIODevice::OpenMode ) ( HB_ISNUM( 2 ) ?  hb_parni( 2 ) : QIODevice::ReadWrite ) ) );
+   __HB_RETPTRGC__( new QTextStream( hb_parcx( 1 ), ( QIODevice::OpenMode ) ( HB_ISNUM( 2 ) ?  hb_parni( 2 ) : QIODevice::ReadWrite ) ) );
 }
 </CODE>
 

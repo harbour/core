@@ -72,7 +72,7 @@ New      =
  */
 HB_FUNC( QT_QGRAPHICSSCENEMOUSEEVENT )
 {
-   //hb_retptr( new QGraphicsSceneMouseEvent() );
+   //__HB_RETPTRGC__( new QGraphicsSceneMouseEvent() );
 }
 </CODE>
 

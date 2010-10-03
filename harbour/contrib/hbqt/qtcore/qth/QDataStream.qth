@@ -74,7 +74,7 @@ Destructor =
  */
 HB_FUNC( QT_QDATASTREAM )
 {
-   hb_retptr( new QDataStream() );
+   __HB_RETPTRGC__( new QDataStream() );
 }
 </CODE>
 

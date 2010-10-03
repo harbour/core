@@ -157,7 +157,7 @@ void * hbqt_gcAllocate_QDesignerObjectInspectorInterface( void * pObj, bool bNew
 
 HB_FUNC( QT_QDESIGNEROBJECTINSPECTORINTERFACE )
 {
-   //hb_retptr( new QDesignerObjectInspectorInterface() );
+   //__HB_RETPTRGC__( new QDesignerObjectInspectorInterface() );
 }
 
 /*

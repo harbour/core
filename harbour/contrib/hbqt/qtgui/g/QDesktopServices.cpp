@@ -158,7 +158,7 @@ void * hbqt_gcAllocate_QDesktopServices( void * pObj, bool bNew )
 
 HB_FUNC( QT_QDESKTOPSERVICES )
 {
-   //hb_retptr( QDesktopServices() );
+   //__HB_RETPTRGC__( QDesktopServices() );
 }
 
 /*

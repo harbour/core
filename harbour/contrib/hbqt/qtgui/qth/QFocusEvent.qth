@@ -70,7 +70,7 @@ New      =
  */
 HB_FUNC( QT_QFOCUSEVENT )
 {
-   // hb_retptr( ( QFocusEvent* ) new QFocusEvent() );
+   // __HB_RETPTRGC__( ( QFocusEvent* ) new QFocusEvent() );
 }
 </CODE>
 

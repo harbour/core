@@ -71,7 +71,7 @@ New      =
  */
 HB_FUNC( QT_QSTYLEOPTIONSIZEGRIP )
 {
-   hb_retptr( ( QStyleOptionSizeGrip* ) new QStyleOptionSizeGrip() );
+   __HB_RETPTRGC__( ( QStyleOptionSizeGrip* ) new QStyleOptionSizeGrip() );
 }
 </CODE>
 

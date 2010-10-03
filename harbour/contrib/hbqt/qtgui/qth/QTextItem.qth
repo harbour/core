@@ -71,7 +71,7 @@ New      =
  */
 HB_FUNC( QT_QTEXTITEM )
 {
-   hb_retptr( ( QTextItem* ) new QTextItem() );
+   __HB_RETPTRGC__( ( QTextItem* ) new QTextItem() );
 }
 </CODE>
 

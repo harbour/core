@@ -157,7 +157,7 @@ void * hbqt_gcAllocate_QDesignerActionEditorInterface( void * pObj, bool bNew )
 
 HB_FUNC( QT_QDESIGNERACTIONEDITORINTERFACE )
 {
-   //hb_retptr( new QDesignerActionEditorInterface() );
+   //__HB_RETPTRGC__( new QDesignerActionEditorInterface() );
 }
 
 /*

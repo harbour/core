@@ -77,11 +77,11 @@ HB_FUNC( QT_QBYTEARRAY )
 {
    if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
    {
-      hb_retptr( new QByteArray( hb_parc( 1 ) ) );
+      __HB_RETPTRGC__( new QByteArray( hb_parc( 1 ) ) );
    }
    else
    {
-      hb_retptr( new QByteArray() );
+      __HB_RETPTRGC__( new QByteArray() );
    }
 }
 </CODE>

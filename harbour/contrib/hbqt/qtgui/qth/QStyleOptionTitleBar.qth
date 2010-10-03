@@ -71,7 +71,7 @@ New      =
  */
 HB_FUNC( QT_QSTYLEOPTIONTITLEBAR )
 {
-   hb_retptr( ( QStyleOptionTitleBar* ) new QStyleOptionTitleBar() );
+   __HB_RETPTRGC__( ( QStyleOptionTitleBar* ) new QStyleOptionTitleBar() );
 }
 </CODE>
 

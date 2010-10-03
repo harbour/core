@@ -69,7 +69,7 @@ New      = pParent
  */
 HB_FUNC( QT_QDATEEDIT )
 {
-   hb_retptr( ( QDateEdit* ) new QDateEdit( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( ( QDateEdit* ) new QDateEdit( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

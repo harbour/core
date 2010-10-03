@@ -154,7 +154,7 @@ void * hbqt_gcAllocate_QMoveEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QMOVEEVENT )
 {
-   // hb_retptr( ( QMoveEvent* ) new QMoveEvent() );
+   // __HB_RETPTRGC__( ( QMoveEvent* ) new QMoveEvent() );
 }
 
 /*

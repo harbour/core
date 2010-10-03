@@ -70,7 +70,7 @@ New      = pParent
  */
 HB_FUNC( QT_QDOCKWIDGET )
 {
-   hb_retptr( new QDockWidget( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+   __HB_RETPTRGC__( new QDockWidget( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
 }
 </CODE>
 

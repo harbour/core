@@ -161,7 +161,7 @@ void * hbqt_gcAllocate_QAbstractItemDelegate( void * pObj, bool bNew )
 
 HB_FUNC( QT_QABSTRACTITEMDELEGATE )
 {
-   // hb_retptr( new QAbstractItemDelegate( 0 ) );
+   // __HB_RETPTRGC__( new QAbstractItemDelegate( 0 ) );
 }
 
 /*

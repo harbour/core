@@ -71,7 +71,7 @@ New      =
  */
 HB_FUNC( QT_QSTYLEOPTIONTAB )
 {
-   hb_retptr( ( QStyleOptionTab* ) new QStyleOptionTab() );
+   __HB_RETPTRGC__( ( QStyleOptionTab* ) new QStyleOptionTab() );
 }
 </CODE>
 

@@ -70,7 +70,7 @@ New      =
  */
 HB_FUNC( QT_QDROPEVENT )
 {
-   // hb_retptr( ( QDropEvent* ) new QDropEvent() );
+   // __HB_RETPTRGC__( ( QDropEvent* ) new QDropEvent() );
 }
 </CODE>
 

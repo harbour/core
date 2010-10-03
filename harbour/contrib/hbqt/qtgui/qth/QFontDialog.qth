@@ -71,15 +71,15 @@ HB_FUNC( QT_QFONTDIALOG )
 {
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( new QFontDialog( hbqt_par_QWidget( 1 ) ) );
+      __HB_RETPTRGC__( new QFontDialog( hbqt_par_QWidget( 1 ) ) );
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
    {
-      hb_retptr( new QFontDialog( *hbqt_par_QFont( 1 ), hbqt_par_QWidget( 2 ) ) );
+      __HB_RETPTRGC__( new QFontDialog( *hbqt_par_QFont( 1 ), hbqt_par_QWidget( 2 ) ) );
    }
    else
    {
-      hb_retptr( new QFontDialog( 0 ) );
+      __HB_RETPTRGC__( new QFontDialog( 0 ) );
    }
 }
 </CODE>

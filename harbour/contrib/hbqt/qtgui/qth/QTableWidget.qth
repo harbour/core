@@ -71,9 +71,9 @@ New      = pParent
 HB_FUNC( QT_QTABLEWIDGET )
 {
    if( hb_pcount() >= 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
-      hb_retptr( ( QTableWidget* ) new QTableWidget( hb_parni( 1 ), hb_parni( 2 ), hbqt_par_QWidget( 3 ) ) );
+      __HB_RETPTRGC__( ( QTableWidget* ) new QTableWidget( hb_parni( 1 ), hb_parni( 2 ), hbqt_par_QWidget( 3 ) ) );
    else
-      hb_retptr( ( QTableWidget* ) new QTableWidget( hbqt_par_QWidget( 1 ) ) );
+      __HB_RETPTRGC__( ( QTableWidget* ) new QTableWidget( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

@@ -70,7 +70,7 @@ New      =
  */
 HB_FUNC( QT_QSHOWEVENT )
 {
-   // hb_retptr( new QShowEvent() );
+   // __HB_RETPTRGC__( new QShowEvent() );
 }
 </CODE>
 

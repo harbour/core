@@ -70,7 +70,7 @@ New      = pParent
  */
 HB_FUNC( QT_QPRINTDIALOG )
 {
-   hb_retptr( ( QPrintDialog* ) new QPrintDialog ( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( ( QPrintDialog* ) new QPrintDialog ( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

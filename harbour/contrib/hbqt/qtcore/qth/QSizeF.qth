@@ -79,11 +79,11 @@ HB_FUNC( QT_QSIZEF )
 {
    if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
-      hb_retptr( ( QSizeF* ) new QSizeF( hb_parnd( 1 ), hb_parnd( 2 ) ) );
+      __HB_RETPTRGC__( ( QSizeF* ) new QSizeF( hb_parnd( 1 ), hb_parnd( 2 ) ) );
    }
    else
    {
-      hb_retptr( ( QSizeF* ) new QSizeF() );
+      __HB_RETPTRGC__( ( QSizeF* ) new QSizeF() );
    }
 }
 </CODE>

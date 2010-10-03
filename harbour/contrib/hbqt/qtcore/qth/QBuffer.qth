@@ -78,7 +78,7 @@ New      =
  */
 HB_FUNC( QT_QBUFFER )
 {
-   hb_retptr( new QBuffer() );
+   __HB_RETPTRGC__( new QBuffer() );
 }
 </CODE>
 

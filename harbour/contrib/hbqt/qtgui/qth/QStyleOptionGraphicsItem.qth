@@ -73,7 +73,7 @@ New      =
  */
 HB_FUNC( QT_QSTYLEOPTIONGRAPHICSITEM )
 {
-   hb_retptr( new QStyleOptionGraphicsItem() );
+   __HB_RETPTRGC__( new QStyleOptionGraphicsItem() );
 }
 </CODE>
 

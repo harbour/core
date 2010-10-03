@@ -166,7 +166,7 @@ void * hbqt_gcAllocate_QWebPluginFactory( void * pObj, bool bNew )
 
 HB_FUNC( QT_QWEBPLUGINFACTORY )
 {
-   //hb_retptr( ( QWebPluginFactory* ) new QWebPluginFactory() );
+   //__HB_RETPTRGC__( ( QWebPluginFactory* ) new QWebPluginFactory() );
 }
 
 /*

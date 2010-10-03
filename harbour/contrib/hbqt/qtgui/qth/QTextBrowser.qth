@@ -69,7 +69,7 @@ New      = pParent
  */
 HB_FUNC( QT_QTEXTBROWSER )
 {
-   hb_retptr( ( QTextBrowser* ) new QTextBrowser( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( ( QTextBrowser* ) new QTextBrowser( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

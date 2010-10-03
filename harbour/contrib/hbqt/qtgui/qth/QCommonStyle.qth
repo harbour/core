@@ -69,7 +69,7 @@ New      =
  */
 HB_FUNC( QT_QCOMMONSTYLE )
 {
-   hb_retptr( ( QCommonStyle* ) new QCommonStyle() );
+   __HB_RETPTRGC__( ( QCommonStyle* ) new QCommonStyle() );
 }
 </CODE>
 

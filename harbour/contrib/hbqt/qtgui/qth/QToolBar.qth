@@ -71,9 +71,9 @@ New      = pParent
 HB_FUNC( QT_QTOOLBAR )
 {
    if( hb_param( 1, HB_IT_STRING ) )
-      hb_retptr( ( QToolBar* ) new QToolBar( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
+      __HB_RETPTRGC__( ( QToolBar* ) new QToolBar( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
    else
-      hb_retptr( ( QToolBar* ) new QToolBar( hbqt_par_QWidget( 1 ) ) );
+      __HB_RETPTRGC__( ( QToolBar* ) new QToolBar( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

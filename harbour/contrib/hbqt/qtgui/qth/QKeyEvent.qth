@@ -71,7 +71,7 @@ New      =
  */
 HB_FUNC( QT_QKEYEVENT )
 {
-   //hb_retptr( ( QKeyEvent * ) new QKeyEvent( *hbqt_par_QKeyEvent( 1 ) ) );
+   //__HB_RETPTRGC__( ( QKeyEvent * ) new QKeyEvent( *hbqt_par_QKeyEvent( 1 ) ) );
 }
 </CODE>
 

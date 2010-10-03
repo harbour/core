@@ -71,7 +71,7 @@ HB_FUNC( QT_QACTIONGROUP )
 {
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( new QActionGroup( hbqt_par_QObject( 1 ) ) );
+      __HB_RETPTRGC__( new QActionGroup( hbqt_par_QObject( 1 ) ) );
    }
 }
 </CODE>

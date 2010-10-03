@@ -73,7 +73,7 @@ Destructor =
  */
 HB_FUNC( QT_QHTTPRESPONSEHEADER )
 {
-   hb_retptr( new QHttpResponseHeader() );
+   __HB_RETPTRGC__( new QHttpResponseHeader() );
 }
 </CODE>
 

@@ -73,7 +73,7 @@ Calls    = QT_QComboBox
  */
 HB_FUNC( QT_QCOMBOBOX )
 {
-   hb_retptr( ( QComboBox* ) new QComboBox( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( ( QComboBox* ) new QComboBox( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

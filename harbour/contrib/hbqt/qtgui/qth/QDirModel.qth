@@ -71,7 +71,7 @@ New      =
  */
 HB_FUNC( QT_QDIRMODEL )
 {
-   hb_retptr( ( QDirModel* ) new QDirModel( hbqt_par_QObject( 1 ) ) );
+   __HB_RETPTRGC__( ( QDirModel* ) new QDirModel( hbqt_par_QObject( 1 ) ) );
 }
 </CODE>
 

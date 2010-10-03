@@ -72,15 +72,15 @@ HB_FUNC( QT_QFILEDIALOG )
 {
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( new QFileDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) 0 ) );
+      __HB_RETPTRGC__( new QFileDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) 0 ) );
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) )
    {
-      hb_retptr( new QFileDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
+      __HB_RETPTRGC__( new QFileDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
    }
    else
    {
-      hb_retptr( new QFileDialog() );
+      __HB_RETPTRGC__( new QFileDialog() );
    }
 }
 </CODE>

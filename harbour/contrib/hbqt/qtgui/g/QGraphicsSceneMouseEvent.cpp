@@ -155,7 +155,7 @@ void * hbqt_gcAllocate_QGraphicsSceneMouseEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QGRAPHICSSCENEMOUSEEVENT )
 {
-   //hb_retptr( new QGraphicsSceneMouseEvent() );
+   //__HB_RETPTRGC__( new QGraphicsSceneMouseEvent() );
 }
 
 /*

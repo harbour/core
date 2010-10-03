@@ -157,7 +157,7 @@ void * hbqt_gcAllocate_QDesignerPropertyEditorInterface( void * pObj, bool bNew 
 
 HB_FUNC( QT_QDESIGNERPROPERTYEDITORINTERFACE )
 {
-   //hb_retptr( new QDesignerPropertyEditorInterface() );
+   //__HB_RETPTRGC__( new QDesignerPropertyEditorInterface() );
 }
 
 /*

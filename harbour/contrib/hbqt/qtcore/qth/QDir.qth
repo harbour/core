@@ -74,7 +74,7 @@ New      = pParent
  */
 HB_FUNC( QT_QDIR )
 {
-   hb_retptr( new QDir( hbqt_par_QString( 1 ) ) );
+   __HB_RETPTRGC__( new QDir( hbqt_par_QString( 1 ) ) );
 }
 </CODE>
 

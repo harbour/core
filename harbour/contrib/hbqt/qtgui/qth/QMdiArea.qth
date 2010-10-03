@@ -77,11 +77,11 @@ HB_FUNC( QT_QMDIAREA )
 {
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( new QMdiArea( hbqt_par_QWidget( 1 ) ) );
+      __HB_RETPTRGC__( new QMdiArea( hbqt_par_QWidget( 1 ) ) );
    }
    else
    {
-      hb_retptr( new QMdiArea() );
+      __HB_RETPTRGC__( new QMdiArea() );
    }
 }
 </CODE>

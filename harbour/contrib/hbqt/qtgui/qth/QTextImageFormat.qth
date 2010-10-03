@@ -71,7 +71,7 @@ New      =
  */
 HB_FUNC( QT_QTEXTIMAGEFORMAT )
 {
-   hb_retptr( ( QTextImageFormat* ) new QTextImageFormat() );
+   __HB_RETPTRGC__( ( QTextImageFormat* ) new QTextImageFormat() );
 }
 </CODE>
 

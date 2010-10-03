@@ -71,7 +71,7 @@ Destructor = no
  */
 HB_FUNC( QT_QSESSIONMANAGER )
 {
-   // hb_retptr( new () );
+   // __HB_RETPTRGC__( new () );
 }
 </CODE>
 

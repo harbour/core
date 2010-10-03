@@ -112,7 +112,7 @@ QVariant ( const QRegExp & regExp )
  */
 HB_FUNC( QT_QVARIANT )
 {
-   hb_retptr( ( QVariant* ) new QVariant() );
+   __HB_RETPTRGC__( ( QVariant* ) new QVariant() );
 }
 </CODE>
 

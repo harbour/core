@@ -155,7 +155,7 @@ void * hbqt_gcAllocate_QGraphicsSceneResizeEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QGRAPHICSSCENERESIZEEVENT )
 {
-   //hb_retptr( new QGraphicsSceneResizeEvent() );
+   //__HB_RETPTRGC__( new QGraphicsSceneResizeEvent() );
 }
 
 /*

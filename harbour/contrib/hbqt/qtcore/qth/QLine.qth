@@ -81,19 +81,19 @@ HB_FUNC( QT_QLINE )
 {
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( ( QLine* ) new QLine( *hbqt_par_QLine( 1 ) ) );
+      __HB_RETPTRGC__( ( QLine* ) new QLine( *hbqt_par_QLine( 1 ) ) );
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
    {
-      hb_retptr( ( QLine* ) new QLine( *hbqt_par_QPoint( 1 ), *hbqt_par_QPoint( 2 ) ) );
+      __HB_RETPTRGC__( ( QLine* ) new QLine( *hbqt_par_QPoint( 1 ), *hbqt_par_QPoint( 2 ) ) );
    }
    else if( hb_pcount() == 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
    {
-      hb_retptr( ( QLine* ) new QLine( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) ) );
+      __HB_RETPTRGC__( ( QLine* ) new QLine( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) ) );
    }
    else
    {
-      hb_retptr( ( QLine* ) new QLine() );
+      __HB_RETPTRGC__( ( QLine* ) new QLine() );
    }
 }
 </CODE>

@@ -72,7 +72,7 @@ New      = pParent
  */
 HB_FUNC( QT_QDESKTOPWIDGET )
 {
-   hb_retptr( new QDesktopWidget() );
+   __HB_RETPTRGC__( new QDesktopWidget() );
 }
 </CODE>
 

@@ -71,7 +71,7 @@ New      =
  */
 HB_FUNC( QT_QGRAPHICSLAYOUT )
 {
-   // hb_retptr( new QGraphicsLayout() );
+   // __HB_RETPTRGC__( new QGraphicsLayout() );
 }
 </CODE>
 

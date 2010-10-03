@@ -153,7 +153,7 @@ void * hbqt_gcAllocate_QAbstractTableModel( void * pObj, bool bNew )
 
 HB_FUNC( QT_QABSTRACTTABLEMODEL )
 {
-   // hb_retptr( ( QAbstractTableModel * ) new QAbstractTableModel() );
+   // __HB_RETPTRGC__( ( QAbstractTableModel * ) new QAbstractTableModel() );
 }
 
 /*

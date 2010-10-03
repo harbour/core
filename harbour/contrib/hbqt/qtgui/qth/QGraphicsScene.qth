@@ -75,23 +75,23 @@ HB_FUNC( QT_QGRAPHICSSCENE )
 {
    if( hb_pcount() >= 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
    {
-      hb_retptr( new QGraphicsScene( hb_parnd( 1 ), hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), ( HB_ISPOINTER( 5 ) ? hbqt_par_QObject( 5 ) : 0 ) ) );
+      __HB_RETPTRGC__( new QGraphicsScene( hb_parnd( 1 ), hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), ( HB_ISPOINTER( 5 ) ? hbqt_par_QObject( 5 ) : 0 ) ) );
    }
    else if( hb_pcount() >= 1 && HB_ISPOINTER( 1 ) )
    {
       HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
       if( p->type == HBQT_TYPE_QRectF )
       {
-         hb_retptr( new QGraphicsScene( *hbqt_par_QRectF( 1 ), ( HB_ISPOINTER( 2 ) ? hbqt_par_QObject( 2 ) : 0 ) ) );
+         __HB_RETPTRGC__( new QGraphicsScene( *hbqt_par_QRectF( 1 ), ( HB_ISPOINTER( 2 ) ? hbqt_par_QObject( 2 ) : 0 ) ) );
       }
       else
       {
-         hb_retptr( new QGraphicsScene( hbqt_par_QObject( 1 ) ) ); 
+         __HB_RETPTRGC__( new QGraphicsScene( hbqt_par_QObject( 1 ) ) ); 
       }
    }
    else
    {
-      hb_retptr( new QGraphicsScene() );
+      __HB_RETPTRGC__( new QGraphicsScene() );
    }
 }
 </CODE>

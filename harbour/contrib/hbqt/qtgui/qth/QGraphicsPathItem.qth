@@ -77,16 +77,16 @@ HB_FUNC( QT_QGRAPHICSPATHITEM )
       HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
       if( p->type == HBQT_TYPE_QPainterPath )
       {
-         hb_retptr( new QGraphicsPathItem( *hbqt_par_QPainterPath( 1 ), ( HB_ISPOINTER( 2 ) ? hbqt_par_QGraphicsItem( 2 ) : 0 ) ) );
+         __HB_RETPTRGC__( new QGraphicsPathItem( *hbqt_par_QPainterPath( 1 ), ( HB_ISPOINTER( 2 ) ? hbqt_par_QGraphicsItem( 2 ) : 0 ) ) );
       }
       else
       {
-         hb_retptr( new QGraphicsPathItem( hbqt_par_QGraphicsItem( 1 ) ) ); 
+         __HB_RETPTRGC__( new QGraphicsPathItem( hbqt_par_QGraphicsItem( 1 ) ) ); 
       }
    }
    else
    {
-      hb_retptr( new QGraphicsPathItem() );
+      __HB_RETPTRGC__( new QGraphicsPathItem() );
    }   
 }
 </CODE>

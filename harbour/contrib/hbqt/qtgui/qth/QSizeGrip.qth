@@ -69,7 +69,7 @@ New      = pParent
  */
 HB_FUNC( QT_QSIZEGRIP )
 {
-   hb_retptr( ( QSizeGrip* ) new QSizeGrip( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( ( QSizeGrip* ) new QSizeGrip( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

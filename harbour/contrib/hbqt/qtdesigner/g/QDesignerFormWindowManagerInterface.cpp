@@ -157,7 +157,7 @@ void * hbqt_gcAllocate_QDesignerFormWindowManagerInterface( void * pObj, bool bN
 
 HB_FUNC( QT_QDESIGNERFORMWINDOWMANAGERINTERFACE )
 {
-   //hb_retptr( new QDesignerFormWindowManagerInterface() );
+   //__HB_RETPTRGC__( new QDesignerFormWindowManagerInterface() );
 }
 
 /*

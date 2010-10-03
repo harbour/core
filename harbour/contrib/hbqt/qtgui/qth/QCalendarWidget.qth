@@ -73,7 +73,7 @@ Calls    = QT_QCalendarWidget
  */
 HB_FUNC( QT_QCALENDARWIDGET )
 {
-   hb_retptr( ( QCalendarWidget* ) new QCalendarWidget( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( ( QCalendarWidget* ) new QCalendarWidget( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

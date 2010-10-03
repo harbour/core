@@ -71,7 +71,7 @@ Destructor =
  */
 HB_FUNC( QT_QDATE )
 {
-   hb_retptr( new QDate() );
+   __HB_RETPTRGC__( new QDate() );
 }
 </CODE>
 

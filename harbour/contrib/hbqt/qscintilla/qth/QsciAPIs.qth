@@ -79,7 +79,7 @@ Folder   = hbqscintilla
  */
 HB_FUNC( QT_QSCIAPIS )
 {
-   hb_retptr( new QsciAPIs( hbqt_par_QsciLexer( 1 ) ) );
+   __HB_RETPTRGC__( new QsciAPIs( hbqt_par_QsciLexer( 1 ) ) );
 }
 </CODE>
 

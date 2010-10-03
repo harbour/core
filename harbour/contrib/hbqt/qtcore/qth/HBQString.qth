@@ -88,15 +88,15 @@ HB_FUNC( QT_HBQSTRING )
 {
    if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
    {
-      hb_retptr( new HBQString( hbqt_par_QString( 1 ) ) );
+      __HB_RETPTRGC__( new HBQString( hbqt_par_QString( 1 ) ) );
    }
    else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( new HBQString( ( const char * ) hb_parptr( 1 ) ) );
+      __HB_RETPTRGC__( new HBQString( ( const char * ) hb_parptr( 1 ) ) );
    }
    else
    {
-      hb_retptr( new HBQString() );
+      __HB_RETPTRGC__( new HBQString() );
    }
 }
 </CODE>

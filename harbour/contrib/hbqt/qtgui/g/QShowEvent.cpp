@@ -153,7 +153,7 @@ void * hbqt_gcAllocate_QShowEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSHOWEVENT )
 {
-   // hb_retptr( new QShowEvent() );
+   // __HB_RETPTRGC__( new QShowEvent() );
 }
 
 

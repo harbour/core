@@ -73,11 +73,11 @@ HB_FUNC( QT_QGRAPHICSITEMGROUP )
 {
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( new QGraphicsItemGroup( hbqt_par_QGraphicsItem( 1 ) ) );
+      __HB_RETPTRGC__( new QGraphicsItemGroup( hbqt_par_QGraphicsItem( 1 ) ) );
    }
    else
    {
-      hb_retptr( new QGraphicsItemGroup() );
+      __HB_RETPTRGC__( new QGraphicsItemGroup() );
    }
 }
 </CODE>

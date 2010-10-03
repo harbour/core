@@ -79,11 +79,11 @@ HB_FUNC( QT_QTREEWIDGETITEM )
 {
    if( hb_pcount() >= 1 && HB_ISNUM( 1 ) )
    {
-      hb_retptr( ( QTreeWidgetItem* ) new QTreeWidgetItem( hb_parni( 1 ) ) );
+      __HB_RETPTRGC__( ( QTreeWidgetItem* ) new QTreeWidgetItem( hb_parni( 1 ) ) );
    }
    else
    {
-      hb_retptr( ( QTreeWidgetItem* ) new QTreeWidgetItem( hbqt_par_QTreeWidget( 1 ), hb_parni( 2 ) ) );
+      __HB_RETPTRGC__( ( QTreeWidgetItem* ) new QTreeWidgetItem( hbqt_par_QTreeWidget( 1 ), hb_parni( 2 ) ) );
    }
 }
 </CODE>

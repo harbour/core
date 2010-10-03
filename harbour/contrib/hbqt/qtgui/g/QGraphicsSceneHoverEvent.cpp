@@ -155,7 +155,7 @@ void * hbqt_gcAllocate_QGraphicsSceneHoverEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QGRAPHICSSCENEHOVEREVENT )
 {
-   //hb_retptr( new QGraphicsSceneHoverEvent() );
+   //__HB_RETPTRGC__( new QGraphicsSceneHoverEvent() );
 }
 
 /*

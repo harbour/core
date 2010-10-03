@@ -79,15 +79,15 @@ HB_FUNC( QT_QGENERICRETURNARGUMENT )
 {
    if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
    {
-      hb_retptr( new QGenericReturnArgument( hb_parc( 1 ), 0 ) );
+      __HB_RETPTRGC__( new QGenericReturnArgument( hb_parc( 1 ), 0 ) );
    }
    else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
    {
-      hb_retptr( new QGenericReturnArgument( hb_parc( 1 ), hb_parptr( 2 ) ) );
+      __HB_RETPTRGC__( new QGenericReturnArgument( hb_parc( 1 ), hb_parptr( 2 ) ) );
    }
    else
    {
-      hb_retptr( new QGenericReturnArgument() );
+      __HB_RETPTRGC__( new QGenericReturnArgument() );
    }
 }
 </CODE>

@@ -70,7 +70,7 @@ New      = pParent
  */
 HB_FUNC( QT_QPROGRESSDIALOG )
 {
-   hb_retptr( new QProgressDialog( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( new QProgressDialog( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

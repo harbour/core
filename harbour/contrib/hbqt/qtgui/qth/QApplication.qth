@@ -101,7 +101,7 @@ HB_FUNC( HB_QT ) /* For compatibility */
 
 HB_FUNC( QT_QAPPLICATION )
 {
-   //hb_retptr( ( QApplication * ) s_app );
+   //__HB_RETPTRGC__( ( QApplication * ) s_app );
    hb_retptr ( s_app );
 }
 

@@ -76,20 +76,20 @@ HB_FUNC( QT_QGRAPHICSLINEARLAYOUT )
    {
       if( HB_ISNUM( 1 ) )
       {
-         hb_retptr( new QGraphicsLinearLayout( ( Qt::Orientation ) hb_parni( 1 ), ( HB_ISPOINTER( 2 ) ? hbqt_par_QGraphicsLayoutItem( 2 ) : 0 ) ) );   
+         __HB_RETPTRGC__( new QGraphicsLinearLayout( ( Qt::Orientation ) hb_parni( 1 ), ( HB_ISPOINTER( 2 ) ? hbqt_par_QGraphicsLayoutItem( 2 ) : 0 ) ) );   
       }
       else if( HB_ISPOINTER( 1 ) )
       {
-         hb_retptr( new QGraphicsLinearLayout( hbqt_par_QGraphicsLayoutItem( 1 ) ) );
+         __HB_RETPTRGC__( new QGraphicsLinearLayout( hbqt_par_QGraphicsLayoutItem( 1 ) ) );
       }
       else
       {
-         hb_retptr( new QGraphicsLinearLayout() );
+         __HB_RETPTRGC__( new QGraphicsLinearLayout() );
       }
    }
    else
    {
-      hb_retptr( new QGraphicsLinearLayout() );
+      __HB_RETPTRGC__( new QGraphicsLinearLayout() );
    }
 }
 </CODE>

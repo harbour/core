@@ -154,7 +154,7 @@ void * hbqt_gcAllocate_QWebHistoryInterface( void * pObj, bool bNew )
 
 HB_FUNC( QT_QWEBHISTORYINTERFACE )
 {
-   //hb_retptr( ( QWebHistoryInterface* ) new QWebHistoryInterface( hbqt_par_QObject( 1 ) ) );
+   //__HB_RETPTRGC__( ( QWebHistoryInterface* ) new QWebHistoryInterface( hbqt_par_QObject( 1 ) ) );
 }
 
 /*

@@ -256,7 +256,7 @@ void * hbqt_gcAllocate_QApplication( void * pObj, bool bNew )
 
 HB_FUNC( QT_QAPPLICATION )
 {
-   //hb_retptr( ( QApplication * ) s_app );
+   //__HB_RETPTRGC__( ( QApplication * ) s_app );
    hb_retptr ( s_app );
 }
 

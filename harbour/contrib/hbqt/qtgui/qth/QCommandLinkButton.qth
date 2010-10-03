@@ -74,7 +74,7 @@ Calls    = QT_QCommandLinkButton
  */
 HB_FUNC( QT_QCOMMANDLINKBUTTON )
 {
-   hb_retptr( ( QCommandLinkButton* ) new QCommandLinkButton( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( ( QCommandLinkButton* ) new QCommandLinkButton( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

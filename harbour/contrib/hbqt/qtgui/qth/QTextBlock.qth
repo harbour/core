@@ -73,11 +73,11 @@ HB_FUNC( QT_QTEXTBLOCK )
 {
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( new QTextBlock( *hbqt_par_QTextBlock( 1 ) ) );
+      __HB_RETPTRGC__( new QTextBlock( *hbqt_par_QTextBlock( 1 ) ) );
    }
    else
    {
-      hb_retptr( new QTextBlock() );
+      __HB_RETPTRGC__( new QTextBlock() );
    }
 }
 </CODE>

@@ -71,7 +71,7 @@ New      =
  */
 HB_FUNC( QT_QTEXTFRAGMENT )
 {
-   hb_retptr( ( QTextFragment* ) new QTextFragment() );
+   __HB_RETPTRGC__( ( QTextFragment* ) new QTextFragment() );
 }
 </CODE>
 

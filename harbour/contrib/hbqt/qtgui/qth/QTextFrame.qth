@@ -71,7 +71,7 @@ New      = pDocument
  */
 HB_FUNC( QT_QTEXTFRAME )
 {
-   hb_retptr( ( QTextFrame* ) new QTextFrame( hbqt_par_QTextDocument( 1 ) ) );
+   __HB_RETPTRGC__( ( QTextFrame* ) new QTextFrame( hbqt_par_QTextDocument( 1 ) ) );
 }
 </CODE>
 

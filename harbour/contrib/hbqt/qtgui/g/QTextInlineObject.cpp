@@ -154,7 +154,7 @@ void * hbqt_gcAllocate_QTextInlineObject( void * pObj, bool bNew )
 
 HB_FUNC( QT_QTEXTINLINEOBJECT )
 {
-   // hb_retptr( new QTextInlineObject( hb_parni( 1 ), hbqt_par_QTextEngine( 2 ) ) );
+   // __HB_RETPTRGC__( new QTextInlineObject( hb_parni( 1 ), hbqt_par_QTextEngine( 2 ) ) );
 }
 
 /*

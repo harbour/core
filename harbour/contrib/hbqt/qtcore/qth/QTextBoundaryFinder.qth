@@ -74,7 +74,7 @@ New      =
  */
 HB_FUNC( QT_QTEXTBOUNDARYFINDER )
 {
-   hb_retptr( ( QTextBoundaryFinder* ) new QTextBoundaryFinder() );
+   __HB_RETPTRGC__( ( QTextBoundaryFinder* ) new QTextBoundaryFinder() );
 }
 </CODE>
 

@@ -71,7 +71,7 @@ New      =
  */
 HB_FUNC( QT_QWINDOWSSTYLE )
 {
-   hb_retptr( ( QWindowsStyle* ) new QWindowsStyle() );
+   __HB_RETPTRGC__( ( QWindowsStyle* ) new QWindowsStyle() );
 }
 </CODE>
 

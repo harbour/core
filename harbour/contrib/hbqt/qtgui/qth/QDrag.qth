@@ -73,7 +73,7 @@ New      =
  */
 HB_FUNC( QT_QDRAG )
 {
-   hb_retptr( new QDrag( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( new QDrag( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

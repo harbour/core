@@ -71,7 +71,7 @@ Destructor =
  */
 HB_FUNC( QT_QITEMSELECTION )
 {
-   hb_retptr( new QItemSelection() );
+   __HB_RETPTRGC__( new QItemSelection() );
 }
 </CODE>
 

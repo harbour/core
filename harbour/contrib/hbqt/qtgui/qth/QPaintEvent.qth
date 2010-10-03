@@ -77,11 +77,11 @@ HB_FUNC( QT_QPAINTEVENT )
 
       if( objName == ( QString ) "QRect" )
       {
-         hb_retptr( new QPaintEvent( *hbqt_par_QRect( 1 ) ) );
+         __HB_RETPTRGC__( new QPaintEvent( *hbqt_par_QRect( 1 ) ) );
       }
       else if( objName == ( QString ) "QRegion" )
       {
-         hb_retptr( new QPaintEvent( *hbqt_par_QRegion( 1 ) ) );
+         __HB_RETPTRGC__( new QPaintEvent( *hbqt_par_QRegion( 1 ) ) );
       }
    }
 }

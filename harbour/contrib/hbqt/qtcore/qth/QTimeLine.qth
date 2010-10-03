@@ -71,7 +71,7 @@ New      =
  */
 HB_FUNC( QT_QTIMELINE )
 {
-   hb_retptr( new QTimeLine() );
+   __HB_RETPTRGC__( new QTimeLine() );
 }
 </CODE>
 

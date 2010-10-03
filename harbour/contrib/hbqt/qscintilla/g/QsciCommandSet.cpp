@@ -154,7 +154,7 @@ void * hbqt_gcAllocate_QsciCommandSet( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSCICOMMANDSET )
 {
-   //hb_retptr( new QsciCommandSet() );
+   //__HB_RETPTRGC__( new QsciCommandSet() );
 }
 
 /*

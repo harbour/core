@@ -71,7 +71,7 @@ New      =
  */
 HB_FUNC( QT_QTEXTLENGTH )
 {
-   hb_retptr( ( QTextLength* ) new QTextLength() );
+   __HB_RETPTRGC__( ( QTextLength* ) new QTextLength() );
 }
 </CODE>
 

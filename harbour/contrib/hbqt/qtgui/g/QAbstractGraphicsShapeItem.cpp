@@ -156,7 +156,7 @@ void * hbqt_gcAllocate_QAbstractGraphicsShapeItem( void * pObj, bool bNew )
 
 HB_FUNC( QT_QABSTRACTGRAPHICSSHAPEITEM )
 {
-   // hb_retptr( new QAbstractGraphicsShapeItem() );
+   // __HB_RETPTRGC__( new QAbstractGraphicsShapeItem() );
 }
 
 /*

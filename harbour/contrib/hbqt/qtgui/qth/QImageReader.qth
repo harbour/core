@@ -74,7 +74,7 @@ New      =
  */
 HB_FUNC( QT_QIMAGEREADER )
 {
-   hb_retptr( ( QImageReader* ) new QImageReader() );
+   __HB_RETPTRGC__( ( QImageReader* ) new QImageReader() );
 }
 </CODE>
 

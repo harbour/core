@@ -153,7 +153,7 @@ void * hbqt_gcAllocate_QHideEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QHIDEEVENT )
 {
-   // hb_retptr( new QHideEvent() );
+   // __HB_RETPTRGC__( new QHideEvent() );
 }
 
 

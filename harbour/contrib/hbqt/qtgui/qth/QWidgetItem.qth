@@ -70,7 +70,7 @@ New      =
  */
 HB_FUNC( QT_QWIDGETITEM )
 {
-   hb_retptr( ( QWidgetItem* ) new QWidgetItem( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( ( QWidgetItem* ) new QWidgetItem( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

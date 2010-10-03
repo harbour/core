@@ -69,7 +69,7 @@ New      = nDirection, pParent
  */
 HB_FUNC( QT_QBOXLAYOUT )
 {
-   hb_retptr( ( QBoxLayout* ) new QBoxLayout( ( QBoxLayout::Direction ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) );
+   __HB_RETPTRGC__( ( QBoxLayout* ) new QBoxLayout( ( QBoxLayout::Direction ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) );
 }
 </CODE>
 

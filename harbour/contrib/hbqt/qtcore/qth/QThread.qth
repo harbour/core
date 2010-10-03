@@ -71,7 +71,7 @@ Destructor =
  */
 HB_FUNC( QT_QTHREAD )
 {
-   hb_retptr( new QThread() );
+   __HB_RETPTRGC__( new QThread() );
 }
 </CODE>
 

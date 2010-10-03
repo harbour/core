@@ -69,7 +69,7 @@ New      = pParent
  */
 HB_FUNC( QT_QTOOLBUTTON )
 {
-   hb_retptr( ( QToolButton* ) new QToolButton( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( ( QToolButton* ) new QToolButton( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

@@ -81,7 +81,7 @@ folder   = hbqtdesigner
  */
 HB_FUNC( QT_QDESIGNERWIDGETBOXINTERFACE )
 {
-   //hb_retptr( new QDesignerWidgetBoxInterface() );
+   //__HB_RETPTRGC__( new QDesignerWidgetBoxInterface() );
 }
 </CODE>
 

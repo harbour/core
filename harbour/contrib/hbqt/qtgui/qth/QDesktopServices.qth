@@ -77,7 +77,7 @@ New      =
  */
 HB_FUNC( QT_QDESKTOPSERVICES )
 {
-   //hb_retptr( QDesktopServices() );
+   //__HB_RETPTRGC__( QDesktopServices() );
 }
 </CODE>
 

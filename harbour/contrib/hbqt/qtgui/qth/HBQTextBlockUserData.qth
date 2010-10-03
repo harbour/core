@@ -77,7 +77,7 @@ New      =
  */
 HB_FUNC( QT_HBQTEXTBLOCKUSERDATA )
 {
-   hb_retptr( new HBQTextBlockUserData() );
+   __HB_RETPTRGC__( new HBQTextBlockUserData() );
 }
 </CODE>
 

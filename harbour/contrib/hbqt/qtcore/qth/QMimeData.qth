@@ -72,7 +72,7 @@ Destructor =
  */
 HB_FUNC( QT_QMIMEDATA )
 {
-   hb_retptr( new QMimeData() );
+   __HB_RETPTRGC__( new QMimeData() );
 }
 </CODE>
 

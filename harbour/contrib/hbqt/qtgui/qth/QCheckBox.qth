@@ -75,11 +75,11 @@ HB_FUNC( QT_QCHECKBOX )
 {
    if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
    {
-      hb_retptr( ( QCheckBox* ) new QCheckBox( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
+      __HB_RETPTRGC__( ( QCheckBox* ) new QCheckBox( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
    }
    else
    {
-      hb_retptr( ( QCheckBox* ) new QCheckBox( hbqt_par_QWidget( 1 ) ) );
+      __HB_RETPTRGC__( ( QCheckBox* ) new QCheckBox( hbqt_par_QWidget( 1 ) ) );
    }
 }
 </CODE>

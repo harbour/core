@@ -70,7 +70,7 @@ Destructor =
  */
 HB_FUNC( QT_QTEXTTABLEFORMAT )
 {
-   hb_retptr( new QTextTableFormat() );
+   __HB_RETPTRGC__( new QTextTableFormat() );
 }
 </CODE>
 

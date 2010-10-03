@@ -72,7 +72,7 @@ New      =
  */
 HB_FUNC( QT_QSTYLEOPTION )
 {
-   hb_retptr( ( QStyleOption* ) new QStyleOption() );
+   __HB_RETPTRGC__( ( QStyleOption* ) new QStyleOption() );
 }
 </CODE>
 

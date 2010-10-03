@@ -71,7 +71,7 @@ New      =
  */
 HB_FUNC( QT_QBITARRAY )
 {
-   hb_retptr( new QBitArray() );
+   __HB_RETPTRGC__( new QBitArray() );
 }
 </CODE>
 

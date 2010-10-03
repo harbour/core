@@ -77,7 +77,7 @@ New      =
  */
 HB_FUNC( QT_QMETACLASSINFO )
 {
-   // hb_retptr( new QMetaClassInfo() );
+   // __HB_RETPTRGC__( new QMetaClassInfo() );
 }
 </CODE>
 

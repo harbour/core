@@ -71,7 +71,7 @@ New      = pParent
  */
 HB_FUNC( QT_QLINEEDIT )
 {
-   hb_retptr( ( QLineEdit* ) new QLineEdit( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( ( QLineEdit* ) new QLineEdit( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

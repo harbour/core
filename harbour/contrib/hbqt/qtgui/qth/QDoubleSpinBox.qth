@@ -68,7 +68,7 @@ New      = pParent
  */
 HB_FUNC( QT_QDOUBLESPINBOX )
 {
-   hb_retptr( ( QDoubleSpinBox* ) new QDoubleSpinBox( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( ( QDoubleSpinBox* ) new QDoubleSpinBox( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

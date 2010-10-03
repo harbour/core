@@ -77,19 +77,19 @@ HB_FUNC( QT_QPLAINTEXTEDIT )
 {
    if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
    {
-      hb_retptr( new QPlainTextEdit() );
+      __HB_RETPTRGC__( new QPlainTextEdit() );
    }
    else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( new QPlainTextEdit( hbqt_par_QWidget( 1 ) ) );
+      __HB_RETPTRGC__( new QPlainTextEdit( hbqt_par_QWidget( 1 ) ) );
    }
    else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
    {
-      hb_retptr( new QPlainTextEdit( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
+      __HB_RETPTRGC__( new QPlainTextEdit( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) );
    }
    else
    {
-      hb_retptr( new QPlainTextEdit() );
+      __HB_RETPTRGC__( new QPlainTextEdit() );
    }
 }
 </CODE>

@@ -610,8 +610,8 @@ METHOD HbQtSource:new( oGen, cFileQth, cPathOut, cPathDoc, cProject )
    ::areMethodsClubbed := ascan( ::cls_, {|e_| lower( e_[ 1 ] ) == "clubmethods" .AND. lower( e_[ 2 ] ) == "no"  } ) == 0
    /* Determine Constructor - but this is hacky a bit. What could be easiest ? */
    FOR i := 3 TO len( ::new_ ) - 1
-      IF left( ltrim( ::new_[ i ] ), 2 ) != "//"
-         IF "hb_retptr(" $ ::new_[ i ]
+      IF !( left( ltrim( ::new_[ i ] ), 2 ) == "//" )
+         IF "__HB_RETPTRGC__(" $ ::new_[ i ]
             ::isConstructor := .t.
             EXIT
          ENDIF
@@ -860,10 +860,10 @@ METHOD HbQtSource:build()
       endif
       aadd( ::cpp_, " " )
       FOR i := 3 TO len( ::new_ ) - 1
-          IF left( ltrim( ::new_[ i ] ), 2 ) != "//"
-             IF "hb_retptr(" $ ::new_[ i ]
+          IF !( left( ltrim( ::new_[ i ] ), 2 ) == "//" )
+             IF "__HB_RETPTRGC__(" $ ::new_[ i ]
                 s := ::new_[ i ]
-                s := trim( strtran( s, "hb_retptr(", "pObj =" ) )
+                s := trim( strtran( s, "__HB_RETPTRGC__(", "pObj =" ) )
                 s := strtran( s, ");", ";" )
                 s := strtran( s, "( "+ ::cWidget + "* )", "" )
                 aadd( ::cpp_, s )
@@ -1681,16 +1681,20 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
             oArg:cTypeHB := "N"
 
          CASE oArg:cCast == "uchar" .and. oArg:lFar .and. !( oArg:lConst )
+            /* TOFIX: Such code is not valid and should never be generated (const->non-const) [vszakats] */
+            /* TOFIX: uchar is needed by QT, char is passed [vszakats] */
             oArg:cBody   := "( char * ) hb_parc( " + cHBIdx + " )"
             oArg:cDoc    := "c" + oMtd:cDocNM
             oArg:cTypeHB := "C"
 
          CASE oArg:cCast == "uchar" .and. !( oArg:lFar ) .and. !( oArg:lConst )
+            /* TOFIX: uchar is needed by QT, char is passed [vszakats] */
             oArg:cBody   := "( char ) hb_parni( " + cHBIdx + " )"
             oArg:cDoc    := "n" + oMtd:cDocNM
             oArg:cTypeHB := "N"
 
          CASE oArg:cCast == "char" .and. oArg:lFar .and. !( oArg:lConst )
+            /* TOFIX: Such code is not valid and should never be generated (const->non-const) [vszakats] */
             oArg:cBody   := "( char * ) hb_parc( " + cHBIdx + " )"
             oArg:cDoc    := "c" + oMtd:cDocNM
             oArg:cTypeHB := "C"
@@ -1854,6 +1858,7 @@ METHOD HbQtSource:buildCppCode( oMtd )
       ENDCASE
 
    CASE oRet:cCast == "T"
+      /* TOFIX: Such code is not valid and should never be generated [vszakats] */
       oMtd:cCmd := "hb_retptr( " + oMtd:cCmn + " )"
       oMtd:cPrgRet := "p" + oMtd:cDocNMRet
 
@@ -1909,6 +1914,7 @@ METHOD HbQtSource:buildCppCode( oMtd )
       IF ( isAqtObject( oRet:cCast ) )
          oMtd:cCmd := Get_Command( oRet:cCast, oMtd:cCmn, .F. )
       ELSE
+         /* TOFIX: Such code is not valid and should never be generated [vszakats] */
          oMtd:cCmd := "hb_retptr( ( " + oRet:cCast + "* ) " + oMtd:cCmn + " )"
       ENDIF
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet

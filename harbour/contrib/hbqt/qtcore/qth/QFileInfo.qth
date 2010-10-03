@@ -77,7 +77,7 @@ Destructor =
  */
 HB_FUNC( QT_QFILEINFO )
 {
-   hb_retptr( new QFileInfo() );
+   __HB_RETPTRGC__( new QFileInfo() );
 }
 </CODE>
 

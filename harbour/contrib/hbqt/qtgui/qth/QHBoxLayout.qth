@@ -70,7 +70,7 @@ New      = pParent
  */
 HB_FUNC( QT_QHBOXLAYOUT )
 {
-   hb_retptr( ( QHBoxLayout * ) new QHBoxLayout( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( ( QHBoxLayout * ) new QHBoxLayout( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

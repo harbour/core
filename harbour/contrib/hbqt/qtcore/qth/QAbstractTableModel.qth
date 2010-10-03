@@ -70,7 +70,7 @@ New      =
  */
 HB_FUNC( QT_QABSTRACTTABLEMODEL )
 {
-   // hb_retptr( ( QAbstractTableModel * ) new QAbstractTableModel() );
+   // __HB_RETPTRGC__( ( QAbstractTableModel * ) new QAbstractTableModel() );
 }
 </CODE>
 

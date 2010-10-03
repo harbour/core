@@ -72,7 +72,7 @@ Destructor = no
  */
 HB_FUNC( QT_QTEXTCODEC )
 {
-   //hb_retptr( ( QTextCodec* ) new QTextCodec() );
+   //__HB_RETPTRGC__( ( QTextCodec* ) new QTextCodec() );
 }
 </CODE>
 

@@ -71,11 +71,11 @@ HB_FUNC( QT_QPAINTER )
 {
    if( hb_pcount() >= 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( new QPainter( hbqt_par_QPaintDevice( 1 ) ) );
+      __HB_RETPTRGC__( new QPainter( hbqt_par_QPaintDevice( 1 ) ) );
    }
    else
    {
-      hb_retptr( new QPainter() );
+      __HB_RETPTRGC__( new QPainter() );
    }
 }
 </CODE>

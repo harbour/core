@@ -71,7 +71,7 @@ New      =
  */
 HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME )
 {
-   hb_retptr( ( QStyleOptionTabWidgetFrame* ) new QStyleOptionTabWidgetFrame() );
+   __HB_RETPTRGC__( ( QStyleOptionTabWidgetFrame* ) new QStyleOptionTabWidgetFrame() );
 }
 </CODE>
 

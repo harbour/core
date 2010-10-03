@@ -34,8 +34,6 @@ extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QEvent );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QEventLoop );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QFile );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QFileInfo );
-extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QGenericArgument );
-extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QGenericReturnArgument );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QIODevice );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QLatin1Char );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QLatin1String );
@@ -43,13 +41,6 @@ extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QLine );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QLineF );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QList );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QLocale );
-extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QMetaClassInfo );
-extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QMetaEnum );
-extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QMetaMethod );
-extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QMetaObject );
-extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QMetaProperty );
-extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QMetaType );
-extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QMimeData );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QModelIndex );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QObject );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QPoint );
@@ -97,8 +88,6 @@ extern HB_EXPORT void * hbqt_gcAllocate_QEvent( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QEventLoop( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QFile( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QFileInfo( void * pObj, bool bNew );
-extern HB_EXPORT void * hbqt_gcAllocate_QGenericArgument( void * pObj, bool bNew );
-extern HB_EXPORT void * hbqt_gcAllocate_QGenericReturnArgument( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QIODevice( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QLatin1Char( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QLatin1String( void * pObj, bool bNew );
@@ -106,13 +95,6 @@ extern HB_EXPORT void * hbqt_gcAllocate_QLine( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QLineF( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QList( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QLocale( void * pObj, bool bNew );
-extern HB_EXPORT void * hbqt_gcAllocate_QMetaClassInfo( void * pObj, bool bNew );
-extern HB_EXPORT void * hbqt_gcAllocate_QMetaEnum( void * pObj, bool bNew );
-extern HB_EXPORT void * hbqt_gcAllocate_QMetaMethod( void * pObj, bool bNew );
-extern HB_EXPORT void * hbqt_gcAllocate_QMetaObject( void * pObj, bool bNew );
-extern HB_EXPORT void * hbqt_gcAllocate_QMetaProperty( void * pObj, bool bNew );
-extern HB_EXPORT void * hbqt_gcAllocate_QMetaType( void * pObj, bool bNew );
-extern HB_EXPORT void * hbqt_gcAllocate_QMimeData( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QModelIndex( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QObject( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QPoint( void * pObj, bool bNew );
@@ -162,8 +144,6 @@ HB_EXTERN_END
 #define hbqt_par_QEventLoop( n )                                ( ( QEventLoop                                  * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QFile( n )                                     ( ( QFile                                       * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QFileInfo( n )                                 ( ( QFileInfo                                   * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QGenericArgument( n )                          ( ( QGenericArgument                            * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QGenericReturnArgument( n )                    ( ( QGenericReturnArgument                      * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QIODevice( n )                                 ( ( QIODevice                                   * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QLatin1Char( n )                               ( ( QLatin1Char                                 * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QLatin1String( n )                             ( ( QLatin1String                               * ) hbqt_gcpointer( n ) )
@@ -171,13 +151,6 @@ HB_EXTERN_END
 #define hbqt_par_QLineF( n )                                    ( ( QLineF                                      * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QList( n )                                     ( ( QList< void * >                             * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QLocale( n )                                   ( ( QLocale                                     * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QMetaClassInfo( n )                            ( ( QMetaClassInfo                              * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QMetaEnum( n )                                 ( ( QMetaEnum                                   * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QMetaMethod( n )                               ( ( QMetaMethod                                 * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QMetaObject( n )                               ( ( QMetaObject                                 * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QMetaProperty( n )                             ( ( QMetaProperty                               * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QMetaType( n )                                 ( ( QMetaType                                   * ) hbqt_gcpointer( n ) )
-#define hbqt_par_QMimeData( n )                                 ( ( QMimeData                                   * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QModelIndex( n )                               ( ( QModelIndex                                 * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QObject( n )                                   ( ( QObject                                     * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QPoint( n )                                    ( ( QPoint                                      * ) hbqt_gcpointer( n ) )
@@ -225,8 +198,6 @@ HB_EXTERN_END
 #define HBQT_TYPE_QEventLoop                                    0xA79E78BB
 #define HBQT_TYPE_QFile                                         0x25776775
 #define HBQT_TYPE_QFileInfo                                     0x51B82814
-#define HBQT_TYPE_QGenericArgument                              0x7ED89228
-#define HBQT_TYPE_QGenericReturnArgument                        0xFCA684A1
 #define HBQT_TYPE_QIODevice                                     0xFFAF526C
 #define HBQT_TYPE_QLatin1Char                                   0x6E622038
 #define HBQT_TYPE_QLatin1String                                 0xB1999E84
@@ -234,13 +205,6 @@ HB_EXTERN_END
 #define HBQT_TYPE_QLineF                                        0x24C33533
 #define HBQT_TYPE_QList                                         0xED20A97D
 #define HBQT_TYPE_QLocale                                       0x456691F0
-#define HBQT_TYPE_QMetaClassInfo                                0x33015F02
-#define HBQT_TYPE_QMetaEnum                                     0x1440E706
-#define HBQT_TYPE_QMetaMethod                                   0xA4A31239
-#define HBQT_TYPE_QMetaObject                                   0x525783B5
-#define HBQT_TYPE_QMetaProperty                                 0xD53EA8C3
-#define HBQT_TYPE_QMetaType                                     0x96201E7E
-#define HBQT_TYPE_QMimeData                                     0xA1F425D3
 #define HBQT_TYPE_QModelIndex                                   0xA9E86353
 #define HBQT_TYPE_QObject                                       0xAC4BFC84
 #define HBQT_TYPE_QPoint                                        0x8AD48EA2

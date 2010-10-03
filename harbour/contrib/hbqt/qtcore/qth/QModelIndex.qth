@@ -72,7 +72,7 @@ New      =
  */
 HB_FUNC( QT_QMODELINDEX )
 {
-   hb_retptr( new QModelIndex() );
+   __HB_RETPTRGC__( new QModelIndex() );
 }
 </CODE>
 

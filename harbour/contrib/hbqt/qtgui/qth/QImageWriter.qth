@@ -73,7 +73,7 @@ New      =
  */
 HB_FUNC( QT_QIMAGEWRITER )
 {
-   hb_retptr( ( QImageWriter* ) new QImageWriter() );
+   __HB_RETPTRGC__( ( QImageWriter* ) new QImageWriter() );
 }
 </CODE>
 

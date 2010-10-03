@@ -162,7 +162,7 @@ void * hbqt_gcAllocate_QValidator( void * pObj, bool bNew )
 
 HB_FUNC( QT_QVALIDATOR )
 {
-   // hb_retptr( new QValidator() );
+   // __HB_RETPTRGC__( new QValidator() );
 }
 
 /*

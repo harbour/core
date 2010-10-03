@@ -158,7 +158,7 @@ void * hbqt_gcAllocate_QAbstractTextDocumentLayout( void * pObj, bool bNew )
 
 HB_FUNC( QT_QABSTRACTTEXTDOCUMENTLAYOUT )
 {
-   // hb_retptr( new QAbstractTextDocumentLayout( hbqt_par_QTextDocument( 1 ) ) );
+   // __HB_RETPTRGC__( new QAbstractTextDocumentLayout( hbqt_par_QTextDocument( 1 ) ) );
 }
 
 /*

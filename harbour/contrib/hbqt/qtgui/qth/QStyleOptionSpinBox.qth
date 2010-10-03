@@ -71,7 +71,7 @@ New      =
  */
 HB_FUNC( QT_QSTYLEOPTIONSPINBOX )
 {
-   hb_retptr( ( QStyleOptionSpinBox* ) new QStyleOptionSpinBox() );
+   __HB_RETPTRGC__( ( QStyleOptionSpinBox* ) new QStyleOptionSpinBox() );
 }
 </CODE>
 

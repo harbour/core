@@ -71,9 +71,9 @@ New      = pParent
 HB_FUNC( QT_QSPLITTER )
 {
    if( hb_pcount() >= 1 && HB_ISNUM( 1 ) )
-      hb_retptr( ( QSplitter* ) new QSplitter( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) );
+      __HB_RETPTRGC__( ( QSplitter* ) new QSplitter( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) );
    else
-      hb_retptr( ( QSplitter* ) new QSplitter( hbqt_par_QWidget( 1 ) ) );
+      __HB_RETPTRGC__( ( QSplitter* ) new QSplitter( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

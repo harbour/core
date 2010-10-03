@@ -69,7 +69,7 @@ New      = pParent
  */
 HB_FUNC( QT_QSIGNALMAPPER )
 {
-   hb_retptr( new QSignalMapper( hbqt_par_QObject( 1 ) ) );
+   __HB_RETPTRGC__( new QSignalMapper( hbqt_par_QObject( 1 ) ) );
 }
 </CODE>
 

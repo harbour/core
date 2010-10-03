@@ -161,7 +161,7 @@ void * hbqt_gcAllocate_QDesignerFormWindowCursorInterface( void * pObj, bool bNe
 
 HB_FUNC( QT_QDESIGNERFORMWINDOWCURSORINTERFACE )
 {
-   //hb_retptr( new QDesignerFormWindowCursorInterface() );
+   //__HB_RETPTRGC__( new QDesignerFormWindowCursorInterface() );
 }
 
 /*

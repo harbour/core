@@ -80,15 +80,15 @@ HB_FUNC( QT_QSCISTYLE )
 {
    if( HB_ISNUMERIC( 1 ) )
    {
-      hb_retptr( new QsciStyle( hb_parni( 1 ) ) );
+      __HB_RETPTRGC__( new QsciStyle( hb_parni( 1 ) ) );
    }
    else if( hb_pcount() >= 5 )
    {
-      hb_retptr( new QsciStyle( hb_parni( 1 ), hbqt_par_QString( 2 ), *hbqt_par_QColor( 3 ), *hbqt_par_QColor( 4 ), * hbqt_par_QFont( 5 ), HB_ISLOG( 6 ) ? hb_parl( 6 ) : false ) );
+      __HB_RETPTRGC__( new QsciStyle( hb_parni( 1 ), hbqt_par_QString( 2 ), *hbqt_par_QColor( 3 ), *hbqt_par_QColor( 4 ), * hbqt_par_QFont( 5 ), HB_ISLOG( 6 ) ? hb_parl( 6 ) : false ) );
    }
    else
    {
-      hb_retptr( new QsciStyle() );
+      __HB_RETPTRGC__( new QsciStyle() );
    }
 }
 </CODE>

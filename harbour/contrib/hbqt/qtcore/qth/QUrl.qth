@@ -76,15 +76,15 @@ HB_FUNC( QT_QURL )
 {
    if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
    {
-      hb_retptr( new QUrl( hbqt_par_QString( 1 ) ) );
+      __HB_RETPTRGC__( new QUrl( hbqt_par_QString( 1 ) ) );
    }
    else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( new QUrl( *hbqt_par_QUrl( 1 ) ) );
+      __HB_RETPTRGC__( new QUrl( *hbqt_par_QUrl( 1 ) ) );
    }
    else
    {
-      hb_retptr( new QUrl() );
+      __HB_RETPTRGC__( new QUrl() );
    }
 }
 /*

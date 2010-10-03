@@ -70,7 +70,7 @@ New      =
  */
 HB_FUNC( QT_QSTYLEDITEMDELEGATE )
 {
-   hb_retptr( ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) );
+   __HB_RETPTRGC__( ( QStyledItemDelegate* ) new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) );
 }
 </CODE>
 

@@ -74,7 +74,7 @@ New      =
  */
 HB_FUNC( QT_QDATETIME )
 {
-   hb_retptr( ( QDateTime* ) new QDateTime() );
+   __HB_RETPTRGC__( ( QDateTime* ) new QDateTime() );
 }
 </CODE>
 

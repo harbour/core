@@ -73,7 +73,7 @@ HB_FUNC( QT_QPLAINTEXTDOCUMENTLAYOUT )
 {
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      hb_retptr( new QPlainTextDocumentLayout( hbqt_par_QTextDocument( 1 ) ) );
+      __HB_RETPTRGC__( new QPlainTextDocumentLayout( hbqt_par_QTextDocument( 1 ) ) );
    }
 }
 </CODE>

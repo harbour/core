@@ -73,7 +73,7 @@ Destructor =
  */
 HB_FUNC( QT_QREGEXP )
 {
-   hb_retptr( new QRegExp() );
+   __HB_RETPTRGC__( new QRegExp() );
 }
 </CODE>
 

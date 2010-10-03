@@ -70,7 +70,7 @@ New      =
  */
 HB_FUNC( QT_QSTATUSBAR )
 {
-   hb_retptr( ( QStatusBar* ) new QStatusBar( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( ( QStatusBar* ) new QStatusBar( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

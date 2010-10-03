@@ -71,7 +71,7 @@ New      = pParent, nFlags
  */
 HB_FUNC( QT_QLABEL )
 {
-   hb_retptr( new QLabel( hbqt_par_QWidget( 1 ), HB_ISNUM( 2 ) ? ( Qt::WindowFlags ) hb_parni( 2 ) : ( Qt::WindowFlags ) 0 ) );
+   __HB_RETPTRGC__( new QLabel( hbqt_par_QWidget( 1 ), HB_ISNUM( 2 ) ? ( Qt::WindowFlags ) hb_parni( 2 ) : ( Qt::WindowFlags ) 0 ) );
 }
 </CODE>
 

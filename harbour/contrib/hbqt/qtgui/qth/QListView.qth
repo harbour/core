@@ -69,7 +69,7 @@ New      = pParent
  */
 HB_FUNC( QT_QLISTVIEW )
 {
-   hb_retptr( ( QListView * ) new QListView( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( ( QListView * ) new QListView( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

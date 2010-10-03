@@ -73,7 +73,7 @@ Destructor =
  */
 HB_FUNC( QT_QTEXTOPTION )
 {
-   hb_retptr( new QTextOption() );
+   __HB_RETPTRGC__( new QTextOption() );
 }
 </CODE>
 

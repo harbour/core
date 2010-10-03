@@ -71,7 +71,7 @@ New      =
  */
 HB_FUNC( QT_QTEXTCHARFORMAT )
 {
-   hb_retptr( ( QTextCharFormat* ) new QTextCharFormat() );
+   __HB_RETPTRGC__( ( QTextCharFormat* ) new QTextCharFormat() );
 }
 </CODE>
 
