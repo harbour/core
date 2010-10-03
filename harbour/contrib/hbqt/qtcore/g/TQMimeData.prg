@@ -103,27 +103,27 @@ CREATE CLASS QMimeData INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QMimeDa
 
    METHOD  new( ... )
 
-   METHOD  clear()
-   METHOD  colorData()
-   METHOD  data( cMimeType )
-   METHOD  formats()
-   METHOD  hasColor()
-   METHOD  hasFormat( cMimeType )
-   METHOD  hasHtml()
-   METHOD  hasImage()
-   METHOD  hasText()
-   METHOD  hasUrls()
-   METHOD  html()
-   METHOD  imageData()
-   METHOD  removeFormat( cMimeType )
-   METHOD  setColorData( pColor )
-   METHOD  setData( cMimeType, pData )
-   METHOD  setHtml( cHtml )
-   METHOD  setImageData( pImage )
-   METHOD  setText( cText )
-   METHOD  text()
-   METHOD  urls()
-   METHOD  hbUrlList()
+   METHOD  clear                         // (  )                                               -> NIL
+   METHOD  colorData                     // (  )                                               -> oQVariant
+   METHOD  data                          // ( cMimeType )                                      -> oQByteArray
+   METHOD  formats                       // (  )                                               -> oQStringList
+   METHOD  hasColor                      // (  )                                               -> lBool
+   METHOD  hasFormat                     // ( cMimeType )                                      -> lBool
+   METHOD  hasHtml                       // (  )                                               -> lBool
+   METHOD  hasImage                      // (  )                                               -> lBool
+   METHOD  hasText                       // (  )                                               -> lBool
+   METHOD  hasUrls                       // (  )                                               -> lBool
+   METHOD  html                          // (  )                                               -> cQString
+   METHOD  imageData                     // (  )                                               -> oQVariant
+   METHOD  removeFormat                  // ( cMimeType )                                      -> NIL
+   METHOD  setColorData                  // ( oQVariant )                                      -> NIL
+   METHOD  setData                       // ( cMimeType, oQByteArray )                         -> NIL
+   METHOD  setHtml                       // ( cHtml )                                          -> NIL
+   METHOD  setImageData                  // ( oQVariant )                                      -> NIL
+   METHOD  setText                       // ( cText )                                          -> NIL
+   METHOD  text                          // (  )                                               -> cQString
+   METHOD  urls                          // (  )                                               -> oQList_QUrl>
+   METHOD  hbUrlList                     // (  )                                               -> oQStringList
 
    ENDCLASS
 
@@ -137,86 +137,202 @@ METHOD QMimeData:new( ... )
    RETURN Self
 
 
-METHOD QMimeData:clear()
-   RETURN Qt_QMimeData_clear( ::pPtr )
+METHOD QMimeData:clear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMimeData_clear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMimeData:colorData()
-   RETURN HB_QVariant():from( Qt_QMimeData_colorData( ::pPtr ) )
+METHOD QMimeData:colorData( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QVariant():from( Qt_QMimeData_colorData( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMimeData:data( cMimeType )
-   RETURN HB_QByteArray():from( Qt_QMimeData_data( ::pPtr, cMimeType ) )
+METHOD QMimeData:data( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QByteArray():from( Qt_QMimeData_data( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMimeData:formats()
-   RETURN HB_QStringList():from( Qt_QMimeData_formats( ::pPtr ) )
+METHOD QMimeData:formats( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QMimeData_formats( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMimeData:hasColor()
-   RETURN Qt_QMimeData_hasColor( ::pPtr )
+METHOD QMimeData:hasColor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMimeData_hasColor( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMimeData:hasFormat( cMimeType )
-   RETURN Qt_QMimeData_hasFormat( ::pPtr, cMimeType )
+METHOD QMimeData:hasFormat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QMimeData_hasFormat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMimeData:hasHtml()
-   RETURN Qt_QMimeData_hasHtml( ::pPtr )
+METHOD QMimeData:hasHtml( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMimeData_hasHtml( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMimeData:hasImage()
-   RETURN Qt_QMimeData_hasImage( ::pPtr )
+METHOD QMimeData:hasImage( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMimeData_hasImage( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMimeData:hasText()
-   RETURN Qt_QMimeData_hasText( ::pPtr )
+METHOD QMimeData:hasText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMimeData_hasText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMimeData:hasUrls()
-   RETURN Qt_QMimeData_hasUrls( ::pPtr )
+METHOD QMimeData:hasUrls( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMimeData_hasUrls( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMimeData:html()
-   RETURN Qt_QMimeData_html( ::pPtr )
+METHOD QMimeData:html( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMimeData_html( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMimeData:imageData()
-   RETURN HB_QVariant():from( Qt_QMimeData_imageData( ::pPtr ) )
+METHOD QMimeData:imageData( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QVariant():from( Qt_QMimeData_imageData( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMimeData:removeFormat( cMimeType )
-   RETURN Qt_QMimeData_removeFormat( ::pPtr, cMimeType )
+METHOD QMimeData:removeFormat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QMimeData_removeFormat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMimeData:setColorData( pColor )
-   RETURN Qt_QMimeData_setColorData( ::pPtr, hbqt_ptr( pColor ) )
+METHOD QMimeData:setColorData( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMimeData_setColorData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMimeData:setData( cMimeType, pData )
-   RETURN Qt_QMimeData_setData( ::pPtr, cMimeType, hbqt_ptr( pData ) )
+METHOD QMimeData:setData( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QMimeData_setData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMimeData:setHtml( cHtml )
-   RETURN Qt_QMimeData_setHtml( ::pPtr, cHtml )
+METHOD QMimeData:setHtml( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QMimeData_setHtml( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMimeData:setImageData( pImage )
-   RETURN Qt_QMimeData_setImageData( ::pPtr, hbqt_ptr( pImage ) )
+METHOD QMimeData:setImageData( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMimeData_setImageData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMimeData:setText( cText )
-   RETURN Qt_QMimeData_setText( ::pPtr, cText )
+METHOD QMimeData:setText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QMimeData_setText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMimeData:text()
-   RETURN Qt_QMimeData_text( ::pPtr )
+METHOD QMimeData:text( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMimeData_text( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMimeData:urls()
-   RETURN HB_QList():from( Qt_QMimeData_urls( ::pPtr ) )
+METHOD QMimeData:urls( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QMimeData_urls( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMimeData:hbUrlList()
-   RETURN HB_QStringList():from( Qt_QMimeData_hbUrlList( ::pPtr ) )
+METHOD QMimeData:hbUrlList( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QMimeData_hbUrlList( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

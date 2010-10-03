@@ -103,32 +103,32 @@ CREATE CLASS QAbstractSpinBox INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_
 
    METHOD  new( ... )
 
-   METHOD  alignment()
-   METHOD  buttonSymbols()
-   METHOD  correctionMode()
-   METHOD  hasAcceptableInput()
-   METHOD  hasFrame()
-   METHOD  interpretText()
-   METHOD  isAccelerated()
-   METHOD  isReadOnly()
-   METHOD  keyboardTracking()
-   METHOD  setAccelerated( lOn )
-   METHOD  setAlignment( nFlag )
-   METHOD  setButtonSymbols( nBs )
-   METHOD  setCorrectionMode( nCm )
-   METHOD  setFrame( lBool )
-   METHOD  setKeyboardTracking( lKt )
-   METHOD  setReadOnly( lR )
-   METHOD  setSpecialValueText( cTxt )
-   METHOD  setWrapping( lW )
-   METHOD  specialValueText()
-   METHOD  stepBy( nSteps )
-   METHOD  text()
-   METHOD  wrapping()
-   METHOD  clear()
-   METHOD  selectAll()
-   METHOD  stepDown()
-   METHOD  stepUp()
+   METHOD  alignment                     // (  )                                               -> nQt_Alignment
+   METHOD  buttonSymbols                 // (  )                                               -> nButtonSymbols
+   METHOD  correctionMode                // (  )                                               -> nCorrectionMode
+   METHOD  hasAcceptableInput            // (  )                                               -> lBool
+   METHOD  hasFrame                      // (  )                                               -> lBool
+   METHOD  interpretText                 // (  )                                               -> NIL
+   METHOD  isAccelerated                 // (  )                                               -> lBool
+   METHOD  isReadOnly                    // (  )                                               -> lBool
+   METHOD  keyboardTracking              // (  )                                               -> lBool
+   METHOD  setAccelerated                // ( lOn )                                            -> NIL
+   METHOD  setAlignment                  // ( nFlag )                                          -> NIL
+   METHOD  setButtonSymbols              // ( nBs )                                            -> NIL
+   METHOD  setCorrectionMode             // ( nCm )                                            -> NIL
+   METHOD  setFrame                      // ( lBool )                                          -> NIL
+   METHOD  setKeyboardTracking           // ( lKt )                                            -> NIL
+   METHOD  setReadOnly                   // ( lR )                                             -> NIL
+   METHOD  setSpecialValueText           // ( cTxt )                                           -> NIL
+   METHOD  setWrapping                   // ( lW )                                             -> NIL
+   METHOD  specialValueText              // (  )                                               -> cQString
+   METHOD  stepBy                        // ( nSteps )                                         -> NIL
+   METHOD  text                          // (  )                                               -> cQString
+   METHOD  wrapping                      // (  )                                               -> lBool
+   METHOD  clear                         // (  )                                               -> NIL
+   METHOD  selectAll                     // (  )                                               -> NIL
+   METHOD  stepDown                      // (  )                                               -> NIL
+   METHOD  stepUp                        // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -142,106 +142,250 @@ METHOD QAbstractSpinBox:new( ... )
    RETURN Self
 
 
-METHOD QAbstractSpinBox:alignment()
-   RETURN Qt_QAbstractSpinBox_alignment( ::pPtr )
+METHOD QAbstractSpinBox:alignment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractSpinBox_alignment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSpinBox:buttonSymbols()
-   RETURN Qt_QAbstractSpinBox_buttonSymbols( ::pPtr )
+METHOD QAbstractSpinBox:buttonSymbols( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractSpinBox_buttonSymbols( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSpinBox:correctionMode()
-   RETURN Qt_QAbstractSpinBox_correctionMode( ::pPtr )
+METHOD QAbstractSpinBox:correctionMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractSpinBox_correctionMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSpinBox:hasAcceptableInput()
-   RETURN Qt_QAbstractSpinBox_hasAcceptableInput( ::pPtr )
+METHOD QAbstractSpinBox:hasAcceptableInput( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractSpinBox_hasAcceptableInput( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSpinBox:hasFrame()
-   RETURN Qt_QAbstractSpinBox_hasFrame( ::pPtr )
+METHOD QAbstractSpinBox:hasFrame( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractSpinBox_hasFrame( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSpinBox:interpretText()
-   RETURN Qt_QAbstractSpinBox_interpretText( ::pPtr )
+METHOD QAbstractSpinBox:interpretText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractSpinBox_interpretText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSpinBox:isAccelerated()
-   RETURN Qt_QAbstractSpinBox_isAccelerated( ::pPtr )
+METHOD QAbstractSpinBox:isAccelerated( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractSpinBox_isAccelerated( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSpinBox:isReadOnly()
-   RETURN Qt_QAbstractSpinBox_isReadOnly( ::pPtr )
+METHOD QAbstractSpinBox:isReadOnly( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractSpinBox_isReadOnly( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSpinBox:keyboardTracking()
-   RETURN Qt_QAbstractSpinBox_keyboardTracking( ::pPtr )
+METHOD QAbstractSpinBox:keyboardTracking( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractSpinBox_keyboardTracking( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSpinBox:setAccelerated( lOn )
-   RETURN Qt_QAbstractSpinBox_setAccelerated( ::pPtr, lOn )
+METHOD QAbstractSpinBox:setAccelerated( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractSpinBox_setAccelerated( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSpinBox:setAlignment( nFlag )
-   RETURN Qt_QAbstractSpinBox_setAlignment( ::pPtr, nFlag )
+METHOD QAbstractSpinBox:setAlignment( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractSpinBox_setAlignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSpinBox:setButtonSymbols( nBs )
-   RETURN Qt_QAbstractSpinBox_setButtonSymbols( ::pPtr, nBs )
+METHOD QAbstractSpinBox:setButtonSymbols( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractSpinBox_setButtonSymbols( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSpinBox:setCorrectionMode( nCm )
-   RETURN Qt_QAbstractSpinBox_setCorrectionMode( ::pPtr, nCm )
+METHOD QAbstractSpinBox:setCorrectionMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractSpinBox_setCorrectionMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSpinBox:setFrame( lBool )
-   RETURN Qt_QAbstractSpinBox_setFrame( ::pPtr, lBool )
+METHOD QAbstractSpinBox:setFrame( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractSpinBox_setFrame( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSpinBox:setKeyboardTracking( lKt )
-   RETURN Qt_QAbstractSpinBox_setKeyboardTracking( ::pPtr, lKt )
+METHOD QAbstractSpinBox:setKeyboardTracking( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractSpinBox_setKeyboardTracking( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSpinBox:setReadOnly( lR )
-   RETURN Qt_QAbstractSpinBox_setReadOnly( ::pPtr, lR )
+METHOD QAbstractSpinBox:setReadOnly( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractSpinBox_setReadOnly( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSpinBox:setSpecialValueText( cTxt )
-   RETURN Qt_QAbstractSpinBox_setSpecialValueText( ::pPtr, cTxt )
+METHOD QAbstractSpinBox:setSpecialValueText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractSpinBox_setSpecialValueText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSpinBox:setWrapping( lW )
-   RETURN Qt_QAbstractSpinBox_setWrapping( ::pPtr, lW )
+METHOD QAbstractSpinBox:setWrapping( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractSpinBox_setWrapping( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSpinBox:specialValueText()
-   RETURN Qt_QAbstractSpinBox_specialValueText( ::pPtr )
+METHOD QAbstractSpinBox:specialValueText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractSpinBox_specialValueText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSpinBox:stepBy( nSteps )
-   RETURN Qt_QAbstractSpinBox_stepBy( ::pPtr, nSteps )
+METHOD QAbstractSpinBox:stepBy( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractSpinBox_stepBy( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSpinBox:text()
-   RETURN Qt_QAbstractSpinBox_text( ::pPtr )
+METHOD QAbstractSpinBox:text( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractSpinBox_text( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSpinBox:wrapping()
-   RETURN Qt_QAbstractSpinBox_wrapping( ::pPtr )
+METHOD QAbstractSpinBox:wrapping( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractSpinBox_wrapping( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSpinBox:clear()
-   RETURN Qt_QAbstractSpinBox_clear( ::pPtr )
+METHOD QAbstractSpinBox:clear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractSpinBox_clear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSpinBox:selectAll()
-   RETURN Qt_QAbstractSpinBox_selectAll( ::pPtr )
+METHOD QAbstractSpinBox:selectAll( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractSpinBox_selectAll( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSpinBox:stepDown()
-   RETURN Qt_QAbstractSpinBox_stepDown( ::pPtr )
+METHOD QAbstractSpinBox:stepDown( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractSpinBox_stepDown( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSpinBox:stepUp()
-   RETURN Qt_QAbstractSpinBox_stepUp( ::pPtr )
+METHOD QAbstractSpinBox:stepUp( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractSpinBox_stepUp( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

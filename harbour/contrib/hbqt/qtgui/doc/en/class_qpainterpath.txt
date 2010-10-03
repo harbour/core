@@ -26,56 +26,61 @@
  *  $RETURNS$
  *     An instance of the object of type QPainterPath
  *  $METHODS$
- *     :addEllipse( pBoundingRectangle )                   -> NIL
- *     :addEllipse_1( nX, nY, nWidth, nHeight )            -> NIL
- *     :addEllipse_2( pCenter, nRx, nRy )                  -> NIL
- *     :addPath( pPath )                                   -> NIL
- *     :addPolygon( pPolygon )                             -> NIL
- *     :addRect( pRectangle )                              -> NIL
- *     :addRect_1( nX, nY, nWidth, nHeight )               -> NIL
- *     :addRegion( pRegion )                               -> NIL
- *     :addRoundedRect( pRect, nXRadius, nYRadius, nMode )  -> NIL
- *     :addRoundedRect_1( nX, nY, nW, nH, nXRadius, nYRadius, nMode )  -> NIL
- *     :addText( pPoint, pFont, cText )                    -> NIL
- *     :addText_1( nX, nY, pFont, cText )                  -> NIL
+ *     :addEllipse( oQRectF )                              -> NIL
+ *     :addEllipse( nX, nY, nWidth, nHeight )              -> NIL
+ *     :addEllipse( oQPointF, nRx, nRy )                   -> NIL
+ *     :addPath( oQPainterPath )                           -> NIL
+ *     :addPolygon( oQPolygonF )                           -> NIL
+ *     :addRect( oQRectF )                                 -> NIL
+ *     :addRect( nX, nY, nWidth, nHeight )                 -> NIL
+ *     :addRegion( oQRegion )                              -> NIL
+ *     :addRoundedRect( oQRectF, nXRadius, nYRadius, nMode )  -> NIL
+ *     :addRoundedRect( nX, nY, nW, nH, nXRadius, nYRadius, nMode )  -> NIL
+ *     :addText( oQPointF, oQFont, cText )                 -> NIL
+ *     :addText( nX, nY, oQFont, cText )                   -> NIL
  *     :angleAtPercent( nT )                               -> nQreal
- *     :arcMoveTo( pRectangle, nAngle )                    -> NIL
- *     :arcMoveTo_1( nX, nY, nWidth, nHeight, nAngle )     -> NIL
- *     :arcTo( pRectangle, nStartAngle, nSweepLength )     -> NIL
- *     :arcTo_1( nX, nY, nWidth, nHeight, nStartAngle, nSweepLength )  -> NIL
- *     :boundingRect()                                     -> pQRectF
+ *     :arcMoveTo( oQRectF, nAngle )                       -> NIL
+ *     :arcMoveTo( nX, nY, nWidth, nHeight, nAngle )       -> NIL
+ *     :arcTo( oQRectF, nStartAngle, nSweepLength )        -> NIL
+ *     :arcTo( nX, nY, nWidth, nHeight, nStartAngle, nSweepLength )  -> NIL
+ *     :boundingRect()                                     -> oQRectF
  *     :closeSubpath()                                     -> NIL
- *     :connectPath( pPath )                               -> NIL
- *     :contains( pPoint )                                 -> lBool
- *     :contains_1( pRectangle )                           -> lBool
- *     :contains_2( pP )                                   -> lBool
- *     :controlPointRect()                                 -> pQRectF
- *     :cubicTo( pC1, pC2, pEndPoint )                     -> NIL
- *     :cubicTo_1( nC1X, nC1Y, nC2X, nC2Y, nEndPointX, nEndPointY )  -> NIL
- *     :currentPosition()                                  -> pQPointF
+ *     :connectPath( oQPainterPath )                       -> NIL
+ *     :contains( oQPointF )                               -> lBool
+ *     :contains( oQRectF )                                -> lBool
+ *     :contains( oQPainterPath )                          -> lBool
+ *     :controlPointRect()                                 -> oQRectF
+ *     :cubicTo( oQPointF, oQPointF, oQPointF )            -> NIL
+ *     :cubicTo( nC1X, nC1Y, nC2X, nC2Y, nEndPointX, nEndPointY )  -> NIL
+ *     :currentPosition()                                  -> oQPointF
  *     :elementCount()                                     -> nInt
- *     :fillRule()                                         -> nQt::FillRule
- *     :intersects( pRectangle )                           -> lBool
- *     :intersects_1( pP )                                 -> lBool
+ *     :fillRule()                                         -> nQt_FillRule
+ *     :intersected( oQPainterPath )                       -> oQPainterPath
+ *     :intersects( oQRectF )                              -> lBool
+ *     :intersects( oQPainterPath )                        -> lBool
  *     :isEmpty()                                          -> lBool
  *     :length()                                           -> nQreal
- *     :lineTo( pEndPoint )                                -> NIL
- *     :lineTo_1( nX, nY )                                 -> NIL
- *     :moveTo( pPoint )                                   -> NIL
- *     :moveTo_1( nX, nY )                                 -> NIL
+ *     :lineTo( oQPointF )                                 -> NIL
+ *     :lineTo( nX, nY )                                   -> NIL
+ *     :moveTo( oQPointF )                                 -> NIL
+ *     :moveTo( nX, nY )                                   -> NIL
  *     :percentAtLength( nLen )                            -> nQreal
- *     :pointAtPercent( nT )                               -> pQPointF
- *     :quadTo( pC, pEndPoint )                            -> NIL
- *     :quadTo_1( nCx, nCy, nEndPointX, nEndPointY )       -> NIL
+ *     :pointAtPercent( nT )                               -> oQPointF
+ *     :quadTo( oQPointF, oQPointF )                       -> NIL
+ *     :quadTo( nCx, nCy, nEndPointX, nEndPointY )         -> NIL
  *     :setElementPositionAt( nIndex, nX, nY )             -> NIL
  *     :setFillRule( nFillRule )                           -> NIL
+ *     :simplified()                                       -> oQPainterPath
  *     :slopeAtPercent( nT )                               -> nQreal
- *     :toFillPolygon( pMatrix )                           -> pQPolygonF
- *     :toFillPolygon_1( pMatrix )                         -> pQPolygonF
- *     :toFillPolygons( pMatrix )                          -> pQList<QPolygonF>
- *     :toFillPolygons_1( pMatrix )                        -> pQList<QPolygonF>
- *     :toSubpathPolygons( pMatrix )                       -> pQList<QPolygonF>
- *     :toSubpathPolygons_1( pMatrix )                     -> pQList<QPolygonF>
+ *     :subtracted( oQPainterPath )                        -> oQPainterPath
+ *     :toFillPolygon( oQTransform )                       -> oQPolygonF
+ *     :toFillPolygon( oQMatrix )                          -> oQPolygonF
+ *     :toFillPolygons( oQTransform )                      -> oQList_QPolygonF>
+ *     :toFillPolygons( oQMatrix )                         -> oQList_QPolygonF>
+ *     :toReversed()                                       -> oQPainterPath
+ *     :toSubpathPolygons( oQTransform )                   -> oQList_QPolygonF>
+ *     :toSubpathPolygons( oQMatrix )                      -> oQList_QPolygonF>
+ *     :united( oQPainterPath )                            -> oQPainterPath
  * 
  *  $DESCRIPTION$
  * 
@@ -95,7 +100,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQPainterPath.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QPainterPath.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

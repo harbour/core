@@ -26,11 +26,11 @@
  *  $RETURNS$
  *     An instance of the object of type QGraphicsSceneContextMenuEvent
  *  $METHODS$
- *     :modifiers()                                        -> nQt::KeyboardModifiers
- *     :pos()                                              -> pQPointF
+ *     :modifiers()                                        -> nQt_KeyboardModifiers
+ *     :pos()                                              -> oQPointF
  *     :reason()                                           -> nReason
- *     :scenePos()                                         -> pQPointF
- *     :screenPos()                                        -> pQPoint
+ *     :scenePos()                                         -> oQPointF
+ *     :screenPos()                                        -> oQPoint
  * 
  *  $DESCRIPTION$
  * 
@@ -50,7 +50,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGraphicsSceneContextMenuEvent.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsSceneContextMenuEvent.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QGraphicsSceneEvent()
  *  $END$
  */

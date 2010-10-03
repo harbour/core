@@ -27,17 +27,17 @@
  *     An instance of the object of type QGraphicsSceneDragDropEvent
  *  $METHODS$
  *     :acceptProposedAction()                             -> NIL
- *     :buttons()                                          -> nQt::MouseButtons
- *     :dropAction()                                       -> nQt::DropAction
- *     :mimeData()                                         -> pQMimeData
- *     :modifiers()                                        -> nQt::KeyboardModifiers
- *     :pos()                                              -> pQPointF
- *     :possibleActions()                                  -> nQt::DropActions
- *     :proposedAction()                                   -> nQt::DropAction
- *     :scenePos()                                         -> pQPointF
- *     :screenPos()                                        -> pQPoint
+ *     :buttons()                                          -> nQt_MouseButtons
+ *     :dropAction()                                       -> nQt_DropAction
+ *     :mimeData()                                         -> oQMimeData
+ *     :modifiers()                                        -> nQt_KeyboardModifiers
+ *     :pos()                                              -> oQPointF
+ *     :possibleActions()                                  -> nQt_DropActions
+ *     :proposedAction()                                   -> nQt_DropAction
+ *     :scenePos()                                         -> oQPointF
+ *     :screenPos()                                        -> oQPoint
  *     :setDropAction( nAction )                           -> NIL
- *     :source()                                           -> pQWidget
+ *     :source()                                           -> oQWidget
  * 
  *  $DESCRIPTION$
  * 
@@ -57,7 +57,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGraphicsSceneDragDropEvent.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsSceneDragDropEvent.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QGraphicsSceneEvent()
  *  $END$
  */

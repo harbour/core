@@ -29,18 +29,18 @@
  *     :allowsErrorInteraction()                           -> lBool
  *     :allowsInteraction()                                -> lBool
  *     :cancel()                                           -> NIL
- *     :discardCommand()                                   -> pQStringList
+ *     :discardCommand()                                   -> oQStringList
  *     :isPhase2()                                         -> lBool
  *     :release()                                          -> NIL
  *     :requestPhase2()                                    -> NIL
- *     :restartCommand()                                   -> pQStringList
+ *     :restartCommand()                                   -> oQStringList
  *     :restartHint()                                      -> nRestartHint
  *     :sessionId()                                        -> cQString
  *     :sessionKey()                                       -> cQString
- *     :setDiscardCommand( pList )                         -> NIL
- *     :setManagerProperty( cName, pValue )                -> NIL
- *     :setManagerProperty_1( cName, cValue )              -> NIL
- *     :setRestartCommand( pCommand )                      -> NIL
+ *     :setDiscardCommand( oQStringList )                  -> NIL
+ *     :setManagerProperty( cName, oQStringList )          -> NIL
+ *     :setManagerProperty( cName, cValue )                -> NIL
+ *     :setRestartCommand( oQStringList )                  -> NIL
  *     :setRestartHint( nHint )                            -> NIL
  * 
  *  $DESCRIPTION$
@@ -61,7 +61,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQSessionManager.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QSessionManager.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

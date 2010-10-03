@@ -266,7 +266,7 @@ HB_FUNC( QT_QTIMER_SINGLESHOT )
    QTimer * p = hbqt_par_QTimer( 1 );
    if( p )
    {
-      ( p )->singleShot( hb_parni( 2 ), hbqt_par_QObject( 3 ), hbqt_par_char( 4 ) );
+      ( p )->singleShot( hb_parni( 2 ), hbqt_par_QObject( 3 ), ( const char * ) hb_parc( 4 ) );
    }
 }
 

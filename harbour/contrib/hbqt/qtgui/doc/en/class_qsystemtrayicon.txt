@@ -26,12 +26,12 @@
  *  $RETURNS$
  *     An instance of the object of type QSystemTrayIcon
  *  $METHODS$
- *     :contextMenu()                                      -> pQMenu
- *     :geometry()                                         -> pQRect
- *     :icon()                                             -> pQIcon
+ *     :contextMenu()                                      -> oQMenu
+ *     :geometry()                                         -> oQRect
+ *     :icon()                                             -> oQIcon
  *     :isVisible()                                        -> lBool
- *     :setContextMenu( pMenu )                            -> NIL
- *     :setIcon( pIcon )                                   -> NIL
+ *     :setContextMenu( oQMenu )                           -> NIL
+ *     :setIcon( coQIcon )                                 -> NIL
  *     :setToolTip( cTip )                                 -> NIL
  *     :showMessage( cTitle, cMessage, nIcon, nMillisecondsTimeoutHint )  -> NIL
  *     :toolTip()                                          -> cQString
@@ -59,7 +59,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQSystemTrayIcon.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QSystemTrayIcon.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

@@ -103,40 +103,42 @@ CREATE CLASS QList INHERIT HbQtObjectHandler FUNCTION HB_QList
 
    METHOD  new( ... )
 
-   METHOD  append( xValue )
-   METHOD  at( nI )
-   METHOD  back()
-   METHOD  clear()
-   METHOD  count( ... )
-   METHOD  empty()
-   METHOD  endsWith( xValue )
-   METHOD  first()
-   METHOD  front()
-   METHOD  indexOf( xValue, nFrom )
-   METHOD  insert( nI, xValue )
-   METHOD  isEmpty()
-   METHOD  last()
-   METHOD  lastIndexOf( xValue, nFrom )
-   METHOD  length()
-   METHOD  move( nFrom, nTo )
-   METHOD  pop_back()
-   METHOD  pop_front()
-   METHOD  prepend( xValue )
-   METHOD  push_back( xValue )
-   METHOD  push_front( xValue )
-   METHOD  removeAll( xValue )
-   METHOD  removeAt( nI )
-   METHOD  removeFirst()
-   METHOD  removeLast()
-   METHOD  removeOne( xValue )
-   METHOD  replace( nI, xValue )
-   METHOD  size()
-   METHOD  startsWith( xValue )
-   METHOD  swap( nI, nJ )
-   METHOD  takeAt( nI )
-   METHOD  takeFirst()
-   METHOD  takeLast()
-   METHOD  value( ... )
+   METHOD  append                        // ( xValue )                                         -> NIL
+   METHOD  at                            // ( nI )                                             -> pT
+   METHOD  back                          // (  )                                               -> pT
+   METHOD  clear                         // (  )                                               -> NIL
+   METHOD  count                         // ( xValue )                                         -> nInt
+                                         // (  )                                               -> nInt
+   METHOD  empty                         // (  )                                               -> lBool
+   METHOD  endsWith                      // ( xValue )                                         -> lBool
+   METHOD  first                         // (  )                                               -> pT
+   METHOD  front                         // (  )                                               -> pT
+   METHOD  indexOf                       // ( xValue, nFrom )                                  -> nInt
+   METHOD  insert                        // ( nI, xValue )                                     -> NIL
+   METHOD  isEmpty                       // (  )                                               -> lBool
+   METHOD  last                          // (  )                                               -> pT
+   METHOD  lastIndexOf                   // ( xValue, nFrom )                                  -> nInt
+   METHOD  length                        // (  )                                               -> nInt
+   METHOD  move                          // ( nFrom, nTo )                                     -> NIL
+   METHOD  pop_back                      // (  )                                               -> NIL
+   METHOD  pop_front                     // (  )                                               -> NIL
+   METHOD  prepend                       // ( xValue )                                         -> NIL
+   METHOD  push_back                     // ( xValue )                                         -> NIL
+   METHOD  push_front                    // ( xValue )                                         -> NIL
+   METHOD  removeAll                     // ( xValue )                                         -> nInt
+   METHOD  removeAt                      // ( nI )                                             -> NIL
+   METHOD  removeFirst                   // (  )                                               -> NIL
+   METHOD  removeLast                    // (  )                                               -> NIL
+   METHOD  removeOne                     // ( xValue )                                         -> lBool
+   METHOD  replace                       // ( nI, xValue )                                     -> NIL
+   METHOD  size                          // (  )                                               -> nInt
+   METHOD  startsWith                    // ( xValue )                                         -> lBool
+   METHOD  swap                          // ( nI, nJ )                                         -> NIL
+   METHOD  takeAt                        // ( nI )                                             -> pT
+   METHOD  takeFirst                     // (  )                                               -> pT
+   METHOD  takeLast                      // (  )                                               -> pT
+   METHOD  value                         // ( nI )                                             -> pT
+                                         // ( nI, xDefaultValue )                              -> pT
 
    ENDCLASS
 
@@ -150,27 +152,51 @@ METHOD QList:new( ... )
    RETURN Self
 
 
-METHOD QList:append( xValue )
-   RETURN Qt_QList_append( ::pPtr, xValue )
+METHOD QList:append( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isPointer( hb_pvalue( 1 ) )
+         RETURN Qt_QList_append( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:at( nI )
-   RETURN Qt_QList_at( ::pPtr, nI )
+METHOD QList:at( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QList_at( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:back()
-   RETURN Qt_QList_back( ::pPtr )
+METHOD QList:back( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QList_back( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:clear()
-   RETURN Qt_QList_clear( ::pPtr )
+METHOD QList:clear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QList_clear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QList:count( ... )
    SWITCH PCount()
    CASE 1
       DO CASE
-      CASE hb_isObject( hb_pvalue( 1 ) )
+      CASE hb_isPointer( hb_pvalue( 1 ) )
          RETURN Qt_QList_count( ::pPtr, ... )
       ENDCASE
       EXIT
@@ -180,123 +206,307 @@ METHOD QList:count( ... )
    RETURN hbqt_error()
 
 
-METHOD QList:empty()
-   RETURN Qt_QList_empty( ::pPtr )
+METHOD QList:empty( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QList_empty( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:endsWith( xValue )
-   RETURN Qt_QList_endsWith( ::pPtr, xValue )
+METHOD QList:endsWith( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isPointer( hb_pvalue( 1 ) )
+         RETURN Qt_QList_endsWith( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:first()
-   RETURN Qt_QList_first( ::pPtr )
+METHOD QList:first( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QList_first( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:front()
-   RETURN Qt_QList_front( ::pPtr )
+METHOD QList:front( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QList_front( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:indexOf( xValue, nFrom )
-   RETURN Qt_QList_indexOf( ::pPtr, xValue, nFrom )
+METHOD QList:indexOf( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isPointer( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QList_indexOf( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isPointer( hb_pvalue( 1 ) )
+         RETURN Qt_QList_indexOf( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:insert( nI, xValue )
-   RETURN Qt_QList_insert( ::pPtr, nI, xValue )
+METHOD QList:insert( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isPointer( hb_pvalue( 2 ) )
+         RETURN Qt_QList_insert( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:isEmpty()
-   RETURN Qt_QList_isEmpty( ::pPtr )
+METHOD QList:isEmpty( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QList_isEmpty( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:last()
-   RETURN Qt_QList_last( ::pPtr )
+METHOD QList:last( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QList_last( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:lastIndexOf( xValue, nFrom )
-   RETURN Qt_QList_lastIndexOf( ::pPtr, xValue, nFrom )
+METHOD QList:lastIndexOf( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isPointer( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QList_lastIndexOf( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isPointer( hb_pvalue( 1 ) )
+         RETURN Qt_QList_lastIndexOf( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:length()
-   RETURN Qt_QList_length( ::pPtr )
+METHOD QList:length( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QList_length( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:move( nFrom, nTo )
-   RETURN Qt_QList_move( ::pPtr, nFrom, nTo )
+METHOD QList:move( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QList_move( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:pop_back()
-   RETURN Qt_QList_pop_back( ::pPtr )
+METHOD QList:pop_back( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QList_pop_back( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:pop_front()
-   RETURN Qt_QList_pop_front( ::pPtr )
+METHOD QList:pop_front( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QList_pop_front( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:prepend( xValue )
-   RETURN Qt_QList_prepend( ::pPtr, xValue )
+METHOD QList:prepend( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isPointer( hb_pvalue( 1 ) )
+         RETURN Qt_QList_prepend( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:push_back( xValue )
-   RETURN Qt_QList_push_back( ::pPtr, xValue )
+METHOD QList:push_back( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isPointer( hb_pvalue( 1 ) )
+         RETURN Qt_QList_push_back( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:push_front( xValue )
-   RETURN Qt_QList_push_front( ::pPtr, xValue )
+METHOD QList:push_front( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isPointer( hb_pvalue( 1 ) )
+         RETURN Qt_QList_push_front( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:removeAll( xValue )
-   RETURN Qt_QList_removeAll( ::pPtr, xValue )
+METHOD QList:removeAll( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isPointer( hb_pvalue( 1 ) )
+         RETURN Qt_QList_removeAll( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:removeAt( nI )
-   RETURN Qt_QList_removeAt( ::pPtr, nI )
+METHOD QList:removeAt( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QList_removeAt( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:removeFirst()
-   RETURN Qt_QList_removeFirst( ::pPtr )
+METHOD QList:removeFirst( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QList_removeFirst( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:removeLast()
-   RETURN Qt_QList_removeLast( ::pPtr )
+METHOD QList:removeLast( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QList_removeLast( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:removeOne( xValue )
-   RETURN Qt_QList_removeOne( ::pPtr, xValue )
+METHOD QList:removeOne( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isPointer( hb_pvalue( 1 ) )
+         RETURN Qt_QList_removeOne( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:replace( nI, xValue )
-   RETURN Qt_QList_replace( ::pPtr, nI, xValue )
+METHOD QList:replace( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isPointer( hb_pvalue( 2 ) )
+         RETURN Qt_QList_replace( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:size()
-   RETURN Qt_QList_size( ::pPtr )
+METHOD QList:size( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QList_size( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:startsWith( xValue )
-   RETURN Qt_QList_startsWith( ::pPtr, xValue )
+METHOD QList:startsWith( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isPointer( hb_pvalue( 1 ) )
+         RETURN Qt_QList_startsWith( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:swap( nI, nJ )
-   RETURN Qt_QList_swap( ::pPtr, nI, nJ )
+METHOD QList:swap( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QList_swap( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:takeAt( nI )
-   RETURN Qt_QList_takeAt( ::pPtr, nI )
+METHOD QList:takeAt( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QList_takeAt( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:takeFirst()
-   RETURN Qt_QList_takeFirst( ::pPtr )
+METHOD QList:takeFirst( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QList_takeFirst( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QList:takeLast()
-   RETURN Qt_QList_takeLast( ::pPtr )
+METHOD QList:takeLast( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QList_takeLast( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QList:value( ... )
    SWITCH PCount()
    CASE 2
       DO CASE
-      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isPointer( hb_pvalue( 2 ) )
          RETURN Qt_QList_value_1( ::pPtr, ... )
       ENDCASE
       EXIT

@@ -26,10 +26,10 @@
  *  $RETURNS$
  *     An instance of the object of type QContextMenuEvent
  *  $METHODS$
- *     :globalPos()                                        -> pQPoint
+ *     :globalPos()                                        -> oQPoint
  *     :globalX()                                          -> nInt
  *     :globalY()                                          -> nInt
- *     :pos()                                              -> pQPoint
+ *     :pos()                                              -> oQPoint
  *     :reason()                                           -> nReason
  *     :x()                                                -> nInt
  *     :y()                                                -> nInt
@@ -52,7 +52,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQContextMenuEvent.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QContextMenuEvent.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QInputEvent()
  *  $END$
  */

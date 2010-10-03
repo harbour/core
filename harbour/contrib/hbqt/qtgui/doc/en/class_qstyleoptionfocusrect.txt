@@ -26,7 +26,7 @@
  *  $RETURNS$
  *     An instance of the object of type QStyleOptionFocusRect
  *  $METHODS$
- *     :backgroundColor()                                  -> pQColor
+ *     :backgroundColor()                                  -> oQColor
  * 
  *  $DESCRIPTION$
  * 
@@ -46,7 +46,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionFocusRect.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionFocusRect.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QStyleOption()
  *  $END$
  */

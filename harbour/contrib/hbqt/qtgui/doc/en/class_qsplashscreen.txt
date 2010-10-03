@@ -26,12 +26,12 @@
  *  $RETURNS$
  *     An instance of the object of type QSplashScreen
  *  $METHODS$
- *     :finish( pMainWin )                                 -> NIL
- *     :pixmap()                                           -> pQPixmap
+ *     :finish( oQWidget )                                 -> NIL
+ *     :pixmap()                                           -> oQPixmap
  *     :repaint()                                          -> NIL
- *     :setPixmap( pPixmap )                               -> NIL
+ *     :setPixmap( oQPixmap )                              -> NIL
  *     :clearMessage()                                     -> NIL
- *     :showMessage( cMessage, nAlignment, pColor )        -> NIL
+ *     :showMessage( cMessage, nAlignment, oQColor )       -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -51,7 +51,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQSplashScreen.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QSplashScreen.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

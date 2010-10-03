@@ -103,9 +103,10 @@ CREATE CLASS HBQEvents INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_HBQEven
 
    METHOD  new( ... )
 
-   METHOD  hbConnect( xObj, nEvent, xBlock )
-   METHOD  hbDisconnect( xObj, nEvent )
-   METHOD  hbClear()
+   METHOD  HBQEvents                     // (  )                                               -> oHBQEvents
+   METHOD  hbConnect                     // ( xObj, nEvent, xBlock )                           -> lBool
+   METHOD  hbDisconnect                  // ( xObj, nEvent )                                   -> lBool
+   METHOD  hbClear                       // (  )                                               -> lBool
 
    ENDCLASS
 
@@ -119,14 +120,42 @@ METHOD HBQEvents:new( ... )
    RETURN Self
 
 
-METHOD HBQEvents:hbConnect( xObj, nEvent, xBlock )
-   RETURN Qt_HBQEvents_hbConnect( ::pPtr, xObj, nEvent, xBlock )
+METHOD HBQEvents:HBQEvents( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_HBQEvents():from( Qt_HBQEvents_HBQEvents( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQEvents:hbDisconnect( xObj, nEvent )
-   RETURN Qt_HBQEvents_hbDisconnect( ::pPtr, xObj, nEvent )
+METHOD HBQEvents:hbConnect( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE ( hb_isBlock( hb_pvalue( 1 ) ) .OR. hb_isPointer( hb_pvalue( 1 ) ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. ( hb_isBlock( hb_pvalue( 3 ) ) .OR. hb_isPointer( hb_pvalue( 3 ) ) )
+         RETURN Qt_HBQEvents_hbConnect( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQEvents:hbClear()
-   RETURN Qt_HBQEvents_hbClear( ::pPtr )
+METHOD HBQEvents:hbDisconnect( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE ( hb_isBlock( hb_pvalue( 1 ) ) .OR. hb_isPointer( hb_pvalue( 1 ) ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_HBQEvents_hbDisconnect( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQEvents:hbClear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQEvents_hbClear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

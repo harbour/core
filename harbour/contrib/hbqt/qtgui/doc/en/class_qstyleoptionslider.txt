@@ -30,13 +30,13 @@
  *     :maximum()                                          -> nInt
  *     :minimum()                                          -> nInt
  *     :notchTarget()                                      -> nQreal
- *     :orientation()                                      -> nQt::Orientation
+ *     :orientation()                                      -> nQt_Orientation
  *     :pageStep()                                         -> nInt
  *     :singleStep()                                       -> nInt
  *     :sliderPosition()                                   -> nInt
  *     :sliderValue()                                      -> nInt
  *     :tickInterval()                                     -> nInt
- *     :tickPosition()                                     -> nQSlider::TickPosition
+ *     :tickPosition()                                     -> nQSlider_TickPosition
  *     :upsideDown()                                       -> lBool
  * 
  *  $DESCRIPTION$
@@ -57,7 +57,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionSlider.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionSlider.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QStyleOptionComplex()
  *  $END$
  */

@@ -103,191 +103,201 @@ CREATE CLASS QsciScintilla INHERIT HbQtObjectHandler FUNCTION HB_QsciScintilla
 
    METHOD  new( ... )
 
-   METHOD  annotate( ... )
-   METHOD  annotation( nLine )
-   METHOD  annotationDisplay()
-   METHOD  clearAnnotations( nLine )
-   METHOD  autoCompletionCaseSensitivity()
-   METHOD  autoCompletionFillupsEnabled()
-   METHOD  autoCompletionReplaceWord()
-   METHOD  autoCompletionShowSingle()
-   METHOD  autoCompletionSource()
-   METHOD  autoCompletionThreshold()
-   METHOD  autoIndent()
-   METHOD  backspaceUnindents()
-   METHOD  beginUndoAction()
-   METHOD  braceMatching()
-   METHOD  callTipsStyle()
-   METHOD  callTipsVisible()
-   METHOD  cancelList()
-   METHOD  caseSensitive()
-   METHOD  clearFolds()
-   METHOD  clearRegisteredImages()
-   METHOD  color()
-   METHOD  convertEols( nMode )
-   METHOD  document()
-   METHOD  endUndoAction()
-   METHOD  edgeColor()
-   METHOD  edgeColumn()
-   METHOD  edgeMode()
-   METHOD  setFont( pF )
-   METHOD  eolMode()
-   METHOD  eolVisibility()
-   METHOD  findFirst( cExpr, lRe, lCs, lWo, lWrap, lForward, nLine, nIndex, lShow )
-   METHOD  findNext()
-   METHOD  firstVisibleLine()
-   METHOD  folding()
-   METHOD  getCursorPosition( nLine, nIndex )
-   METHOD  getSelection( nLineFrom, nIndexFrom, nLineTo, nIndexTo )
-   METHOD  hasSelectedText()
-   METHOD  indentation( nLine )
-   METHOD  indentationGuides()
-   METHOD  indentationsUseTabs()
-   METHOD  indentationWidth()
-   METHOD  isCallTipActive()
-   METHOD  isListActive()
-   METHOD  isModified()
-   METHOD  isReadOnly()
-   METHOD  isRedoAvailable()
-   METHOD  isUndoAvailable()
-   METHOD  isUtf8()
-   METHOD  isWordCharacter( cCh )
-   METHOD  lineAt( pPos )
-   METHOD  lineIndexFromPosition( nPosition, nLine, nIndex )
-   METHOD  lineLength( nLine )
-   METHOD  lines()
-   METHOD  length()
-   METHOD  lexer()
-   METHOD  marginLineNumbers( nMargin )
-   METHOD  marginMarkerMask( nMargin )
-   METHOD  marginSensitivity( nMargin )
-   METHOD  marginType( nMargin )
-   METHOD  marginWidth( nMargin )
-   METHOD  markerDefine( ... )
-   METHOD  markerAdd( nLinenr, nMnr )
-   METHOD  markersAtLine( nLinenr )
-   METHOD  markerDelete( nLinenr, nMnr )
-   METHOD  markerDeleteAll( nMnr )
-   METHOD  markerDeleteHandle( nMhandle )
-   METHOD  markerLine( nMhandle )
-   METHOD  markerFindNext( nLinenr, nMask )
-   METHOD  markerFindPrevious( nLinenr, nMask )
-   METHOD  paper()
-   METHOD  positionFromLineIndex( nLine, nIndex )
-   METHOD  read( pIo )
-   METHOD  recolor( nStart, nEnd )
-   METHOD  registerImage( nId, pPm )
-   METHOD  replace( cReplaceStr )
-   METHOD  resetFoldMarginColors()
-   METHOD  setFoldMarginColors( pFore, pBack )
-   METHOD  setAnnotationDisplay( nDisplay )
-   METHOD  setAutoCompletionFillupsEnabled( lEnabled )
-   METHOD  setAutoCompletionFillups( pFillups )
-   METHOD  setAutoCompletionWordSeparators( pSeparators )
-   METHOD  setCallTipsBackgroundColor( pCol )
-   METHOD  setCallTipsForegroundColor( pCol )
-   METHOD  setCallTipsHighlightColor( pCol )
-   METHOD  setCallTipsStyle( nStyle )
-   METHOD  setCallTipsVisible( nNr )
-   METHOD  setDocument( pDocument )
-   METHOD  setEdgeColor( pCol )
-   METHOD  setEdgeColumn( nColnr )
-   METHOD  setEdgeMode( nMode )
-   METHOD  setMarginText( ... )
-   METHOD  setMarginType( nMargin, nType )
-   METHOD  clearMarginText( nLine )
-   METHOD  setMarkerBackgroundColor( pCol, nMnr )
-   METHOD  setMarkerForegroundColor( pCol, nMnr )
-   METHOD  setMatchedBraceBackgroundColor( pCol )
-   METHOD  setMatchedBraceForegroundColor( pCol )
-   METHOD  setUnmatchedBraceBackgroundColor( pCol )
-   METHOD  setUnmatchedBraceForegroundColor( pCol )
-   METHOD  setWrapVisualFlags( nEflag, nSflag, nSindent )
-   METHOD  selectedText()
-   METHOD  selectionToEol()
-   METHOD  setSelectionToEol( lFilled )
-   METHOD  showUserList( nId, pList )
-   METHOD  standardCommands()
-   METHOD  tabIndents()
-   METHOD  tabWidth()
-   METHOD  text( ... )
-   METHOD  textHeight( nLinenr )
-   METHOD  whitespaceVisibility()
-   METHOD  wordAtPoint( pPoint )
-   METHOD  wordCharacters()
-   METHOD  wrapMode()
-   METHOD  write( pIo )
-   METHOD  append( cText )
-   METHOD  autoCompleteFromAll()
-   METHOD  autoCompleteFromAPIs()
-   METHOD  autoCompleteFromDocument()
-   METHOD  callTip()
-   METHOD  clear()
-   METHOD  copy()
-   METHOD  cut()
-   METHOD  ensureCursorVisible()
-   METHOD  ensureLineVisible( nLine )
-   METHOD  foldAll( lChildren )
-   METHOD  foldLine( nLine )
-   METHOD  indent( nLine )
-   METHOD  insert( cText )
-   METHOD  insertAt( cText, nLine, nIndex )
-   METHOD  moveToMatchingBrace()
-   METHOD  paste()
-   METHOD  redo()
-   METHOD  removeSelectedText()
-   METHOD  resetSelectionBackgroundColor()
-   METHOD  resetSelectionForegroundColor()
-   METHOD  selectAll( lSelect )
-   METHOD  selectToMatchingBrace()
-   METHOD  setAutoCompletionCaseSensitivity( lCs )
-   METHOD  setAutoCompletionReplaceWord( lReplace )
-   METHOD  setAutoCompletionShowSingle( lSingle )
-   METHOD  setAutoCompletionSource( nSource )
-   METHOD  setAutoCompletionThreshold( nThresh )
-   METHOD  setAutoIndent( lAutoindent )
-   METHOD  setBraceMatching( nBm )
-   METHOD  setBackspaceUnindents( lUnindent )
-   METHOD  setCaretForegroundColor( pCol )
-   METHOD  setCaretLineBackgroundColor( pCol )
-   METHOD  setCaretLineVisible( lEnable )
-   METHOD  setCaretWidth( nWidth )
-   METHOD  setColor( pC )
-   METHOD  setCursorPosition( nLine, nIndex )
-   METHOD  setEolMode( nMode )
-   METHOD  setEolVisibility( lVisible )
-   METHOD  setFolding( nFold, nMargin )
-   METHOD  setIndentation( nLine, nIndentation )
-   METHOD  setIndentationGuides( lEnable )
-   METHOD  setIndentationGuidesBackgroundColor( pCol )
-   METHOD  setIndentationGuidesForegroundColor( pCol )
-   METHOD  setIndentationsUseTabs( lTabs )
-   METHOD  setIndentationWidth( nWidth )
-   METHOD  setLexer( pLexer )
-   METHOD  setMarginsBackgroundColor( pCol )
-   METHOD  setMarginsFont( pF )
-   METHOD  setMarginsForegroundColor( pCol )
-   METHOD  setMarginLineNumbers( nMargin, lLnrs )
-   METHOD  setMarginMarkerMask( nMargin, nMask )
-   METHOD  setMarginSensitivity( nMargin, lSens )
-   METHOD  setMarginWidth( ... )
-   METHOD  setModified( lM )
-   METHOD  setPaper( pC )
-   METHOD  setReadOnly( lRo )
-   METHOD  setSelection( nLineFrom, nIndexFrom, nLineTo, nIndexTo )
-   METHOD  setSelectionBackgroundColor( pCol )
-   METHOD  setSelectionForegroundColor( pCol )
-   METHOD  setTabIndents( lIndent )
-   METHOD  setTabWidth( nWidth )
-   METHOD  setText( cText )
-   METHOD  setUtf8( lCp )
-   METHOD  setWhitespaceVisibility( nMode )
-   METHOD  setWrapMode( nMode )
-   METHOD  undo()
-   METHOD  unindent( nLine )
-   METHOD  zoomIn( ... )
-   METHOD  zoomOut( ... )
-   METHOD  zoomTo( nSize )
+   METHOD  annotate                      // ( nLine, cText, nStyle )                           -> NIL
+                                         // ( nLine, cText, oQsciStyle )                       -> NIL
+                                         // ( nLine, oQsciStyledText )                         -> NIL
+   METHOD  annotation                    // ( nLine )                                          -> cQString
+   METHOD  annotationDisplay             // (  )                                               -> nAnnotationDisplay
+   METHOD  clearAnnotations              // ( nLine )                                          -> NIL
+   METHOD  autoCompletionCaseSensitivity // (  )                                               -> lBool
+   METHOD  autoCompletionFillupsEnabled  // (  )                                               -> lBool
+   METHOD  autoCompletionReplaceWord     // (  )                                               -> lBool
+   METHOD  autoCompletionShowSingle      // (  )                                               -> lBool
+   METHOD  autoCompletionSource          // (  )                                               -> nAutoCompletionSource
+   METHOD  autoCompletionThreshold       // (  )                                               -> nInt
+   METHOD  autoIndent                    // (  )                                               -> lBool
+   METHOD  backspaceUnindents            // (  )                                               -> lBool
+   METHOD  beginUndoAction               // (  )                                               -> NIL
+   METHOD  braceMatching                 // (  )                                               -> nBraceMatch
+   METHOD  callTipsStyle                 // (  )                                               -> nCallTipsStyle
+   METHOD  callTipsVisible               // (  )                                               -> nInt
+   METHOD  cancelList                    // (  )                                               -> NIL
+   METHOD  caseSensitive                 // (  )                                               -> lBool
+   METHOD  clearFolds                    // (  )                                               -> NIL
+   METHOD  clearRegisteredImages         // (  )                                               -> NIL
+   METHOD  color                         // (  )                                               -> oQColor
+   METHOD  convertEols                   // ( nMode )                                          -> NIL
+   METHOD  document                      // (  )                                               -> oQsciDocument
+   METHOD  endUndoAction                 // (  )                                               -> NIL
+   METHOD  edgeColor                     // (  )                                               -> oQColor
+   METHOD  edgeColumn                    // (  )                                               -> nInt
+   METHOD  edgeMode                      // (  )                                               -> nEdgeMode
+   METHOD  setFont                       // ( oQFont )                                         -> NIL
+   METHOD  eolMode                       // (  )                                               -> nEolMode
+   METHOD  eolVisibility                 // (  )                                               -> lBool
+   METHOD  findFirst                     // ( cExpr, lRe, lCs, lWo, lWrap, lForward, nLine, nIndex, lShow ) -> lBool
+   METHOD  findNext                      // (  )                                               -> lBool
+   METHOD  firstVisibleLine              // (  )                                               -> nInt
+   METHOD  folding                       // (  )                                               -> nFoldStyle
+   METHOD  getCursorPosition             // ( @nLine, @nIndex )                                -> NIL
+   METHOD  getSelection                  // ( @nLineFrom, @nIndexFrom, @nLineTo, @nIndexTo )   -> NIL
+   METHOD  hasSelectedText               // (  )                                               -> lBool
+   METHOD  indentation                   // ( nLine )                                          -> nInt
+   METHOD  indentationGuides             // (  )                                               -> lBool
+   METHOD  indentationsUseTabs           // (  )                                               -> lBool
+   METHOD  indentationWidth              // (  )                                               -> nInt
+   METHOD  isCallTipActive               // (  )                                               -> lBool
+   METHOD  isListActive                  // (  )                                               -> lBool
+   METHOD  isModified                    // (  )                                               -> lBool
+   METHOD  isReadOnly                    // (  )                                               -> lBool
+   METHOD  isRedoAvailable               // (  )                                               -> lBool
+   METHOD  isUndoAvailable               // (  )                                               -> lBool
+   METHOD  isUtf8                        // (  )                                               -> lBool
+   METHOD  isWordCharacter               // ( nCh )                                            -> lBool
+   METHOD  lineAt                        // ( oQPoint )                                        -> nInt
+   METHOD  lineIndexFromPosition         // ( nPosition, @nLine, @nIndex )                     -> NIL
+   METHOD  lineLength                    // ( nLine )                                          -> nInt
+   METHOD  lines                         // (  )                                               -> nInt
+   METHOD  length                        // (  )                                               -> nInt
+   METHOD  lexer                         // (  )                                               -> oQsciLexer
+   METHOD  marginLineNumbers             // ( nMargin )                                        -> lBool
+   METHOD  marginMarkerMask              // ( nMargin )                                        -> nInt
+   METHOD  marginSensitivity             // ( nMargin )                                        -> lBool
+   METHOD  marginType                    // ( nMargin )                                        -> nMarginType
+   METHOD  marginWidth                   // ( nMargin )                                        -> nInt
+   METHOD  markerDefine                  // ( nSym, nMnr )                                     -> nInt
+                                         // ( nCh, nMnr )                                      -> nInt
+                                         // ( oQPixmap, nMnr )                                 -> nInt
+   METHOD  markerAdd                     // ( nLinenr, nMnr )                                  -> nInt
+   METHOD  markersAtLine                 // ( nLinenr )                                        -> nUnsigned
+   METHOD  markerDelete                  // ( nLinenr, nMnr )                                  -> NIL
+   METHOD  markerDeleteAll               // ( nMnr )                                           -> NIL
+   METHOD  markerDeleteHandle            // ( nMhandle )                                       -> NIL
+   METHOD  markerLine                    // ( nMhandle )                                       -> nInt
+   METHOD  markerFindNext                // ( nLinenr, nMask )                                 -> nInt
+   METHOD  markerFindPrevious            // ( nLinenr, nMask )                                 -> nInt
+   METHOD  paper                         // (  )                                               -> oQColor
+   METHOD  positionFromLineIndex         // ( nLine, nIndex )                                  -> nInt
+   METHOD  read                          // ( oQIODevice )                                     -> lBool
+   METHOD  recolor                       // ( nStart, nEnd )                                   -> NIL
+   METHOD  registerImage                 // ( nId, oQPixmap )                                  -> NIL
+   METHOD  replace                       // ( cReplaceStr )                                    -> NIL
+   METHOD  resetFoldMarginColors         // (  )                                               -> NIL
+   METHOD  setFoldMarginColors           // ( oQColor, oQColor )                               -> NIL
+   METHOD  setAnnotationDisplay          // ( nDisplay )                                       -> NIL
+   METHOD  setAutoCompletionFillupsEnabled // ( lEnabled )                                       -> NIL
+   METHOD  setAutoCompletionFillups      // ( cFillups )                                       -> NIL
+   METHOD  setAutoCompletionWordSeparators // ( oQStringList )                                   -> NIL
+   METHOD  setCallTipsBackgroundColor    // ( oQColor )                                        -> NIL
+   METHOD  setCallTipsForegroundColor    // ( oQColor )                                        -> NIL
+   METHOD  setCallTipsHighlightColor     // ( oQColor )                                        -> NIL
+   METHOD  setCallTipsStyle              // ( nStyle )                                         -> NIL
+   METHOD  setCallTipsVisible            // ( nNr )                                            -> NIL
+   METHOD  setDocument                   // ( oQsciDocument )                                  -> NIL
+   METHOD  setEdgeColor                  // ( oQColor )                                        -> NIL
+   METHOD  setEdgeColumn                 // ( nColnr )                                         -> NIL
+   METHOD  setEdgeMode                   // ( nMode )                                          -> NIL
+   METHOD  setMarginText                 // ( nLine, cText, nStyle )                           -> NIL
+                                         // ( nLine, cText, oQsciStyle )                       -> NIL
+                                         // ( nLine, oQsciStyledText )                         -> NIL
+   METHOD  setMarginType                 // ( nMargin, nType )                                 -> NIL
+   METHOD  clearMarginText               // ( nLine )                                          -> NIL
+   METHOD  setMarkerBackgroundColor      // ( oQColor, nMnr )                                  -> NIL
+   METHOD  setMarkerForegroundColor      // ( oQColor, nMnr )                                  -> NIL
+   METHOD  setMatchedBraceBackgroundColor // ( oQColor )                                        -> NIL
+   METHOD  setMatchedBraceForegroundColor // ( oQColor )                                        -> NIL
+   METHOD  setUnmatchedBraceBackgroundColor // ( oQColor )                                        -> NIL
+   METHOD  setUnmatchedBraceForegroundColor // ( oQColor )                                        -> NIL
+   METHOD  setWrapVisualFlags            // ( nEflag, nSflag, nSindent )                       -> NIL
+   METHOD  selectedText                  // (  )                                               -> cQString
+   METHOD  selectionToEol                // (  )                                               -> lBool
+   METHOD  setSelectionToEol             // ( lFilled )                                        -> NIL
+   METHOD  showUserList                  // ( nId, oQStringList )                              -> NIL
+   METHOD  standardCommands              // (  )                                               -> oQsciCommandSet
+   METHOD  tabIndents                    // (  )                                               -> lBool
+   METHOD  tabWidth                      // (  )                                               -> nInt
+   METHOD  text                          // (  )                                               -> cQString
+                                         // ( nLine )                                          -> cQString
+   METHOD  textHeight                    // ( nLinenr )                                        -> nInt
+   METHOD  whitespaceVisibility          // (  )                                               -> nWhitespaceVisibility
+   METHOD  wordAtPoint                   // ( oQPoint )                                        -> cQString
+   METHOD  wordCharacters                // (  )                                               -> cChar
+   METHOD  wrapMode                      // (  )                                               -> nWrapMode
+   METHOD  write                         // ( oQIODevice )                                     -> lBool
+   METHOD  append                        // ( cText )                                          -> NIL
+   METHOD  autoCompleteFromAll           // (  )                                               -> NIL
+   METHOD  autoCompleteFromAPIs          // (  )                                               -> NIL
+   METHOD  autoCompleteFromDocument      // (  )                                               -> NIL
+   METHOD  callTip                       // (  )                                               -> NIL
+   METHOD  clear                         // (  )                                               -> NIL
+   METHOD  copy                          // (  )                                               -> NIL
+   METHOD  cut                           // (  )                                               -> NIL
+   METHOD  ensureCursorVisible           // (  )                                               -> NIL
+   METHOD  ensureLineVisible             // ( nLine )                                          -> NIL
+   METHOD  foldAll                       // ( lChildren )                                      -> NIL
+   METHOD  foldLine                      // ( nLine )                                          -> NIL
+   METHOD  indent                        // ( nLine )                                          -> NIL
+   METHOD  insert                        // ( cText )                                          -> NIL
+   METHOD  insertAt                      // ( cText, nLine, nIndex )                           -> NIL
+   METHOD  moveToMatchingBrace           // (  )                                               -> NIL
+   METHOD  paste                         // (  )                                               -> NIL
+   METHOD  redo                          // (  )                                               -> NIL
+   METHOD  removeSelectedText            // (  )                                               -> NIL
+   METHOD  resetSelectionBackgroundColor // (  )                                               -> NIL
+   METHOD  resetSelectionForegroundColor // (  )                                               -> NIL
+   METHOD  selectAll                     // ( lSelect )                                        -> NIL
+   METHOD  selectToMatchingBrace         // (  )                                               -> NIL
+   METHOD  setAutoCompletionCaseSensitivity // ( lCs )                                            -> NIL
+   METHOD  setAutoCompletionReplaceWord  // ( lReplace )                                       -> NIL
+   METHOD  setAutoCompletionShowSingle   // ( lSingle )                                        -> NIL
+   METHOD  setAutoCompletionSource       // ( nSource )                                        -> NIL
+   METHOD  setAutoCompletionThreshold    // ( nThresh )                                        -> NIL
+   METHOD  setAutoIndent                 // ( lAutoindent )                                    -> NIL
+   METHOD  setBraceMatching              // ( nBm )                                            -> NIL
+   METHOD  setBackspaceUnindents         // ( lUnindent )                                      -> NIL
+   METHOD  setCaretForegroundColor       // ( oQColor )                                        -> NIL
+   METHOD  setCaretLineBackgroundColor   // ( oQColor )                                        -> NIL
+   METHOD  setCaretLineVisible           // ( lEnable )                                        -> NIL
+   METHOD  setCaretWidth                 // ( nWidth )                                         -> NIL
+   METHOD  setColor                      // ( oQColor )                                        -> NIL
+   METHOD  setCursorPosition             // ( nLine, nIndex )                                  -> NIL
+   METHOD  setEolMode                    // ( nMode )                                          -> NIL
+   METHOD  setEolVisibility              // ( lVisible )                                       -> NIL
+   METHOD  setFolding                    // ( nFold, nMargin )                                 -> NIL
+   METHOD  setIndentation                // ( nLine, nIndentation )                            -> NIL
+   METHOD  setIndentationGuides          // ( lEnable )                                        -> NIL
+   METHOD  setIndentationGuidesBackgroundColor // ( oQColor )                                        -> NIL
+   METHOD  setIndentationGuidesForegroundColor // ( oQColor )                                        -> NIL
+   METHOD  setIndentationsUseTabs        // ( lTabs )                                          -> NIL
+   METHOD  setIndentationWidth           // ( nWidth )                                         -> NIL
+   METHOD  setLexer                      // ( oQsciLexer )                                     -> NIL
+   METHOD  setMarginsBackgroundColor     // ( oQColor )                                        -> NIL
+   METHOD  setMarginsFont                // ( oQFont )                                         -> NIL
+   METHOD  setMarginsForegroundColor     // ( oQColor )                                        -> NIL
+   METHOD  setMarginLineNumbers          // ( nMargin, lLnrs )                                 -> NIL
+   METHOD  setMarginMarkerMask           // ( nMargin, nMask )                                 -> NIL
+   METHOD  setMarginSensitivity          // ( nMargin, lSens )                                 -> NIL
+   METHOD  setMarginWidth                // ( nMargin, nWidth )                                -> NIL
+                                         // ( nMargin, cS )                                    -> NIL
+   METHOD  setModified                   // ( lM )                                             -> NIL
+   METHOD  setPaper                      // ( oQColor )                                        -> NIL
+   METHOD  setReadOnly                   // ( lRo )                                            -> NIL
+   METHOD  setSelection                  // ( nLineFrom, nIndexFrom, nLineTo, nIndexTo )       -> NIL
+   METHOD  setSelectionBackgroundColor   // ( oQColor )                                        -> NIL
+   METHOD  setSelectionForegroundColor   // ( oQColor )                                        -> NIL
+   METHOD  setTabIndents                 // ( lIndent )                                        -> NIL
+   METHOD  setTabWidth                   // ( nWidth )                                         -> NIL
+   METHOD  setText                       // ( cText )                                          -> NIL
+   METHOD  setUtf8                       // ( lCp )                                            -> NIL
+   METHOD  setWhitespaceVisibility       // ( nMode )                                          -> NIL
+   METHOD  setWrapMode                   // ( nMode )                                          -> NIL
+   METHOD  undo                          // (  )                                               -> NIL
+   METHOD  unindent                      // ( nLine )                                          -> NIL
+   METHOD  zoomIn                        // ( nRange )                                         -> NIL
+                                         // (  )                                               -> NIL
+   METHOD  zoomOut                       // ( nRange )                                         -> NIL
+                                         // (  )                                               -> NIL
+   METHOD  zoomTo                        // ( nSize )                                          -> NIL
 
    ENDCLASS
 
@@ -321,260 +331,588 @@ METHOD QsciScintilla:annotate( ... )
    RETURN hbqt_error()
 
 
-METHOD QsciScintilla:annotation( nLine )
-   RETURN Qt_QsciScintilla_annotation( ::pPtr, nLine )
-
-
-METHOD QsciScintilla:annotationDisplay()
-   RETURN Qt_QsciScintilla_annotationDisplay( ::pPtr )
-
-
-METHOD QsciScintilla:clearAnnotations( nLine )
-   RETURN Qt_QsciScintilla_clearAnnotations( ::pPtr, nLine )
-
-
-METHOD QsciScintilla:autoCompletionCaseSensitivity()
-   RETURN Qt_QsciScintilla_autoCompletionCaseSensitivity( ::pPtr )
-
-
-METHOD QsciScintilla:autoCompletionFillupsEnabled()
-   RETURN Qt_QsciScintilla_autoCompletionFillupsEnabled( ::pPtr )
-
-
-METHOD QsciScintilla:autoCompletionReplaceWord()
-   RETURN Qt_QsciScintilla_autoCompletionReplaceWord( ::pPtr )
-
-
-METHOD QsciScintilla:autoCompletionShowSingle()
-   RETURN Qt_QsciScintilla_autoCompletionShowSingle( ::pPtr )
-
-
-METHOD QsciScintilla:autoCompletionSource()
-   RETURN Qt_QsciScintilla_autoCompletionSource( ::pPtr )
-
-
-METHOD QsciScintilla:autoCompletionThreshold()
-   RETURN Qt_QsciScintilla_autoCompletionThreshold( ::pPtr )
-
-
-METHOD QsciScintilla:autoIndent()
-   RETURN Qt_QsciScintilla_autoIndent( ::pPtr )
-
-
-METHOD QsciScintilla:backspaceUnindents()
-   RETURN Qt_QsciScintilla_backspaceUnindents( ::pPtr )
-
-
-METHOD QsciScintilla:beginUndoAction()
-   RETURN Qt_QsciScintilla_beginUndoAction( ::pPtr )
-
-
-METHOD QsciScintilla:braceMatching()
-   RETURN Qt_QsciScintilla_braceMatching( ::pPtr )
-
-
-METHOD QsciScintilla:callTipsStyle()
-   RETURN Qt_QsciScintilla_callTipsStyle( ::pPtr )
-
-
-METHOD QsciScintilla:callTipsVisible()
-   RETURN Qt_QsciScintilla_callTipsVisible( ::pPtr )
-
-
-METHOD QsciScintilla:cancelList()
-   RETURN Qt_QsciScintilla_cancelList( ::pPtr )
-
-
-METHOD QsciScintilla:caseSensitive()
-   RETURN Qt_QsciScintilla_caseSensitive( ::pPtr )
-
-
-METHOD QsciScintilla:clearFolds()
-   RETURN Qt_QsciScintilla_clearFolds( ::pPtr )
-
-
-METHOD QsciScintilla:clearRegisteredImages()
-   RETURN Qt_QsciScintilla_clearRegisteredImages( ::pPtr )
-
-
-METHOD QsciScintilla:color()
-   RETURN HB_QColor():from( Qt_QsciScintilla_color( ::pPtr ) )
-
-
-METHOD QsciScintilla:convertEols( nMode )
-   RETURN Qt_QsciScintilla_convertEols( ::pPtr, nMode )
-
-
-METHOD QsciScintilla:document()
-   RETURN HB_QsciDocument():from( Qt_QsciScintilla_document( ::pPtr ) )
-
-
-METHOD QsciScintilla:endUndoAction()
-   RETURN Qt_QsciScintilla_endUndoAction( ::pPtr )
-
-
-METHOD QsciScintilla:edgeColor()
-   RETURN HB_QColor():from( Qt_QsciScintilla_edgeColor( ::pPtr ) )
-
-
-METHOD QsciScintilla:edgeColumn()
-   RETURN Qt_QsciScintilla_edgeColumn( ::pPtr )
-
-
-METHOD QsciScintilla:edgeMode()
-   RETURN Qt_QsciScintilla_edgeMode( ::pPtr )
-
-
-METHOD QsciScintilla:setFont( pF )
-   RETURN Qt_QsciScintilla_setFont( ::pPtr, hbqt_ptr( pF ) )
-
-
-METHOD QsciScintilla:eolMode()
-   RETURN Qt_QsciScintilla_eolMode( ::pPtr )
-
-
-METHOD QsciScintilla:eolVisibility()
-   RETURN Qt_QsciScintilla_eolVisibility( ::pPtr )
-
-
-METHOD QsciScintilla:findFirst( cExpr, lRe, lCs, lWo, lWrap, lForward, nLine, nIndex, lShow )
-   RETURN Qt_QsciScintilla_findFirst( ::pPtr, cExpr, lRe, lCs, lWo, lWrap, lForward, nLine, nIndex, lShow )
-
-
-METHOD QsciScintilla:findNext()
-   RETURN Qt_QsciScintilla_findNext( ::pPtr )
-
-
-METHOD QsciScintilla:firstVisibleLine()
-   RETURN Qt_QsciScintilla_firstVisibleLine( ::pPtr )
-
-
-METHOD QsciScintilla:folding()
-   RETURN Qt_QsciScintilla_folding( ::pPtr )
-
-
-METHOD QsciScintilla:getCursorPosition( nLine, nIndex )
-   RETURN Qt_QsciScintilla_getCursorPosition( ::pPtr, nLine, nIndex )
-
-
-METHOD QsciScintilla:getSelection( nLineFrom, nIndexFrom, nLineTo, nIndexTo )
-   RETURN Qt_QsciScintilla_getSelection( ::pPtr, nLineFrom, nIndexFrom, nLineTo, nIndexTo )
-
-
-METHOD QsciScintilla:hasSelectedText()
-   RETURN Qt_QsciScintilla_hasSelectedText( ::pPtr )
-
-
-METHOD QsciScintilla:indentation( nLine )
-   RETURN Qt_QsciScintilla_indentation( ::pPtr, nLine )
-
-
-METHOD QsciScintilla:indentationGuides()
-   RETURN Qt_QsciScintilla_indentationGuides( ::pPtr )
-
-
-METHOD QsciScintilla:indentationsUseTabs()
-   RETURN Qt_QsciScintilla_indentationsUseTabs( ::pPtr )
-
-
-METHOD QsciScintilla:indentationWidth()
-   RETURN Qt_QsciScintilla_indentationWidth( ::pPtr )
-
-
-METHOD QsciScintilla:isCallTipActive()
-   RETURN Qt_QsciScintilla_isCallTipActive( ::pPtr )
-
-
-METHOD QsciScintilla:isListActive()
-   RETURN Qt_QsciScintilla_isListActive( ::pPtr )
-
-
-METHOD QsciScintilla:isModified()
-   RETURN Qt_QsciScintilla_isModified( ::pPtr )
-
-
-METHOD QsciScintilla:isReadOnly()
-   RETURN Qt_QsciScintilla_isReadOnly( ::pPtr )
-
-
-METHOD QsciScintilla:isRedoAvailable()
-   RETURN Qt_QsciScintilla_isRedoAvailable( ::pPtr )
-
-
-METHOD QsciScintilla:isUndoAvailable()
-   RETURN Qt_QsciScintilla_isUndoAvailable( ::pPtr )
-
-
-METHOD QsciScintilla:isUtf8()
-   RETURN Qt_QsciScintilla_isUtf8( ::pPtr )
-
-
-METHOD QsciScintilla:isWordCharacter( cCh )
-   RETURN Qt_QsciScintilla_isWordCharacter( ::pPtr, cCh )
-
-
-METHOD QsciScintilla:lineAt( pPos )
-   RETURN Qt_QsciScintilla_lineAt( ::pPtr, hbqt_ptr( pPos ) )
-
-
-METHOD QsciScintilla:lineIndexFromPosition( nPosition, nLine, nIndex )
-   RETURN Qt_QsciScintilla_lineIndexFromPosition( ::pPtr, nPosition, nLine, nIndex )
-
-
-METHOD QsciScintilla:lineLength( nLine )
-   RETURN Qt_QsciScintilla_lineLength( ::pPtr, nLine )
-
-
-METHOD QsciScintilla:lines()
-   RETURN Qt_QsciScintilla_lines( ::pPtr )
-
-
-METHOD QsciScintilla:length()
-   RETURN Qt_QsciScintilla_length( ::pPtr )
-
-
-METHOD QsciScintilla:lexer()
-   RETURN HB_QsciLexer():from( Qt_QsciScintilla_lexer( ::pPtr ) )
-
-
-METHOD QsciScintilla:marginLineNumbers( nMargin )
-   RETURN Qt_QsciScintilla_marginLineNumbers( ::pPtr, nMargin )
-
-
-METHOD QsciScintilla:marginMarkerMask( nMargin )
-   RETURN Qt_QsciScintilla_marginMarkerMask( ::pPtr, nMargin )
-
-
-METHOD QsciScintilla:marginSensitivity( nMargin )
-   RETURN Qt_QsciScintilla_marginSensitivity( ::pPtr, nMargin )
-
-
-METHOD QsciScintilla:marginType( nMargin )
-   RETURN Qt_QsciScintilla_marginType( ::pPtr, nMargin )
-
-
-METHOD QsciScintilla:marginWidth( nMargin )
-   RETURN Qt_QsciScintilla_marginWidth( ::pPtr, nMargin )
+METHOD QsciScintilla:annotation( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_annotation( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:annotationDisplay( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_annotationDisplay( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:clearAnnotations( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_clearAnnotations( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QsciScintilla_clearAnnotations( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:autoCompletionCaseSensitivity( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_autoCompletionCaseSensitivity( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:autoCompletionFillupsEnabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_autoCompletionFillupsEnabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:autoCompletionReplaceWord( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_autoCompletionReplaceWord( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:autoCompletionShowSingle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_autoCompletionShowSingle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:autoCompletionSource( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_autoCompletionSource( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:autoCompletionThreshold( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_autoCompletionThreshold( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:autoIndent( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_autoIndent( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:backspaceUnindents( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_backspaceUnindents( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:beginUndoAction( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_beginUndoAction( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:braceMatching( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_braceMatching( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:callTipsStyle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_callTipsStyle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:callTipsVisible( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_callTipsVisible( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:cancelList( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_cancelList( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:caseSensitive( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_caseSensitive( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:clearFolds( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_clearFolds( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:clearRegisteredImages( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_clearRegisteredImages( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:color( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QColor():from( Qt_QsciScintilla_color( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:convertEols( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_convertEols( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:document( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QsciDocument():from( Qt_QsciScintilla_document( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:endUndoAction( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_endUndoAction( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:edgeColor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QColor():from( Qt_QsciScintilla_edgeColor( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:edgeColumn( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_edgeColumn( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:edgeMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_edgeMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setFont( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setFont( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:eolMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_eolMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:eolVisibility( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_eolVisibility( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:findFirst( ... )
+   SWITCH PCount()
+   CASE 9
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) ) .AND. hb_isLogical( hb_pvalue( 3 ) ) .AND. hb_isLogical( hb_pvalue( 4 ) ) .AND. hb_isLogical( hb_pvalue( 5 ) ) .AND. hb_isLogical( hb_pvalue( 6 ) ) .AND. hb_isNumeric( hb_pvalue( 7 ) ) .AND. hb_isNumeric( hb_pvalue( 8 ) ) .AND. hb_isLogical( hb_pvalue( 9 ) )
+         RETURN Qt_QsciScintilla_findFirst( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 8
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) ) .AND. hb_isLogical( hb_pvalue( 3 ) ) .AND. hb_isLogical( hb_pvalue( 4 ) ) .AND. hb_isLogical( hb_pvalue( 5 ) ) .AND. hb_isLogical( hb_pvalue( 6 ) ) .AND. hb_isNumeric( hb_pvalue( 7 ) ) .AND. hb_isNumeric( hb_pvalue( 8 ) )
+         RETURN Qt_QsciScintilla_findFirst( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 7
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) ) .AND. hb_isLogical( hb_pvalue( 3 ) ) .AND. hb_isLogical( hb_pvalue( 4 ) ) .AND. hb_isLogical( hb_pvalue( 5 ) ) .AND. hb_isLogical( hb_pvalue( 6 ) ) .AND. hb_isNumeric( hb_pvalue( 7 ) )
+         RETURN Qt_QsciScintilla_findFirst( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 6
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) ) .AND. hb_isLogical( hb_pvalue( 3 ) ) .AND. hb_isLogical( hb_pvalue( 4 ) ) .AND. hb_isLogical( hb_pvalue( 5 ) ) .AND. hb_isLogical( hb_pvalue( 6 ) )
+         RETURN Qt_QsciScintilla_findFirst( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 5
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) ) .AND. hb_isLogical( hb_pvalue( 3 ) ) .AND. hb_isLogical( hb_pvalue( 4 ) ) .AND. hb_isLogical( hb_pvalue( 5 ) )
+         RETURN Qt_QsciScintilla_findFirst( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:findNext( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_findNext( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:firstVisibleLine( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_firstVisibleLine( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:folding( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_folding( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:getCursorPosition( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QsciScintilla_getCursorPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:getSelection( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QsciScintilla_getSelection( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:hasSelectedText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_hasSelectedText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:indentation( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_indentation( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:indentationGuides( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_indentationGuides( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:indentationsUseTabs( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_indentationsUseTabs( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:indentationWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_indentationWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:isCallTipActive( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_isCallTipActive( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:isListActive( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_isListActive( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:isModified( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_isModified( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:isReadOnly( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_isReadOnly( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:isRedoAvailable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_isRedoAvailable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:isUndoAvailable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_isUndoAvailable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:isUtf8( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_isUtf8( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:isWordCharacter( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_isWordCharacter( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:lineAt( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_lineAt( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:lineIndexFromPosition( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QsciScintilla_lineIndexFromPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:lineLength( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_lineLength( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:lines( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_lines( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:length( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_length( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:lexer( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QsciLexer():from( Qt_QsciScintilla_lexer( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:marginLineNumbers( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_marginLineNumbers( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:marginMarkerMask( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_marginMarkerMask( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:marginSensitivity( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_marginSensitivity( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:marginType( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_marginType( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:marginWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_marginWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QsciScintilla:markerDefine( ... )
    SWITCH PCount()
    CASE 2
       DO CASE
-      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN Qt_QsciScintilla_markerDefine_1( ::pPtr, ... )
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QsciScintilla_markerDefine( ::pPtr, ... )
+         // RETURN Qt_QsciScintilla_markerDefine_1( ::pPtr, ... )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QsciScintilla_markerDefine_2( ::pPtr, ... )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
-      CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN Qt_QsciScintilla_markerDefine_1( ::pPtr, ... )
       CASE hb_isNumeric( hb_pvalue( 1 ) )
          RETURN Qt_QsciScintilla_markerDefine( ::pPtr, ... )
+         // RETURN Qt_QsciScintilla_markerDefine_1( ::pPtr, ... )
       CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QsciScintilla_markerDefine_2( ::pPtr, ... )
       ENDCASE
@@ -583,120 +921,360 @@ METHOD QsciScintilla:markerDefine( ... )
    RETURN hbqt_error()
 
 
-METHOD QsciScintilla:markerAdd( nLinenr, nMnr )
-   RETURN Qt_QsciScintilla_markerAdd( ::pPtr, nLinenr, nMnr )
+METHOD QsciScintilla:markerAdd( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QsciScintilla_markerAdd( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:markersAtLine( nLinenr )
-   RETURN Qt_QsciScintilla_markersAtLine( ::pPtr, nLinenr )
+METHOD QsciScintilla:markersAtLine( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_markersAtLine( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:markerDelete( nLinenr, nMnr )
-   RETURN Qt_QsciScintilla_markerDelete( ::pPtr, nLinenr, nMnr )
+METHOD QsciScintilla:markerDelete( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QsciScintilla_markerDelete( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_markerDelete( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:markerDeleteAll( nMnr )
-   RETURN Qt_QsciScintilla_markerDeleteAll( ::pPtr, nMnr )
+METHOD QsciScintilla:markerDeleteAll( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_markerDeleteAll( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QsciScintilla_markerDeleteAll( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:markerDeleteHandle( nMhandle )
-   RETURN Qt_QsciScintilla_markerDeleteHandle( ::pPtr, nMhandle )
+METHOD QsciScintilla:markerDeleteHandle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_markerDeleteHandle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:markerLine( nMhandle )
-   RETURN Qt_QsciScintilla_markerLine( ::pPtr, nMhandle )
+METHOD QsciScintilla:markerLine( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_markerLine( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:markerFindNext( nLinenr, nMask )
-   RETURN Qt_QsciScintilla_markerFindNext( ::pPtr, nLinenr, nMask )
+METHOD QsciScintilla:markerFindNext( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QsciScintilla_markerFindNext( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:markerFindPrevious( nLinenr, nMask )
-   RETURN Qt_QsciScintilla_markerFindPrevious( ::pPtr, nLinenr, nMask )
+METHOD QsciScintilla:markerFindPrevious( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QsciScintilla_markerFindPrevious( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:paper()
-   RETURN HB_QColor():from( Qt_QsciScintilla_paper( ::pPtr ) )
+METHOD QsciScintilla:paper( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QColor():from( Qt_QsciScintilla_paper( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:positionFromLineIndex( nLine, nIndex )
-   RETURN Qt_QsciScintilla_positionFromLineIndex( ::pPtr, nLine, nIndex )
+METHOD QsciScintilla:positionFromLineIndex( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QsciScintilla_positionFromLineIndex( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:read( pIo )
-   RETURN Qt_QsciScintilla_read( ::pPtr, hbqt_ptr( pIo ) )
+METHOD QsciScintilla:read( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_read( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:recolor( nStart, nEnd )
-   RETURN Qt_QsciScintilla_recolor( ::pPtr, nStart, nEnd )
+METHOD QsciScintilla:recolor( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QsciScintilla_recolor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_recolor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QsciScintilla_recolor( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:registerImage( nId, pPm )
-   RETURN Qt_QsciScintilla_registerImage( ::pPtr, nId, hbqt_ptr( pPm ) )
+METHOD QsciScintilla:registerImage( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QsciScintilla_registerImage( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:replace( cReplaceStr )
-   RETURN Qt_QsciScintilla_replace( ::pPtr, cReplaceStr )
+METHOD QsciScintilla:replace( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_replace( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:resetFoldMarginColors()
-   RETURN Qt_QsciScintilla_resetFoldMarginColors( ::pPtr )
+METHOD QsciScintilla:resetFoldMarginColors( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_resetFoldMarginColors( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setFoldMarginColors( pFore, pBack )
-   RETURN Qt_QsciScintilla_setFoldMarginColors( ::pPtr, hbqt_ptr( pFore ), hbqt_ptr( pBack ) )
+METHOD QsciScintilla:setFoldMarginColors( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QsciScintilla_setFoldMarginColors( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setAnnotationDisplay( nDisplay )
-   RETURN Qt_QsciScintilla_setAnnotationDisplay( ::pPtr, nDisplay )
+METHOD QsciScintilla:setAnnotationDisplay( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setAnnotationDisplay( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setAutoCompletionFillupsEnabled( lEnabled )
-   RETURN Qt_QsciScintilla_setAutoCompletionFillupsEnabled( ::pPtr, lEnabled )
+METHOD QsciScintilla:setAutoCompletionFillupsEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setAutoCompletionFillupsEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setAutoCompletionFillups( pFillups )
-   RETURN Qt_QsciScintilla_setAutoCompletionFillups( ::pPtr, hbqt_ptr( pFillups ) )
+METHOD QsciScintilla:setAutoCompletionFillups( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setAutoCompletionFillups( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setAutoCompletionWordSeparators( pSeparators )
-   RETURN Qt_QsciScintilla_setAutoCompletionWordSeparators( ::pPtr, hbqt_ptr( pSeparators ) )
+METHOD QsciScintilla:setAutoCompletionWordSeparators( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setAutoCompletionWordSeparators( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setCallTipsBackgroundColor( pCol )
-   RETURN Qt_QsciScintilla_setCallTipsBackgroundColor( ::pPtr, hbqt_ptr( pCol ) )
+METHOD QsciScintilla:setCallTipsBackgroundColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setCallTipsBackgroundColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setCallTipsForegroundColor( pCol )
-   RETURN Qt_QsciScintilla_setCallTipsForegroundColor( ::pPtr, hbqt_ptr( pCol ) )
+METHOD QsciScintilla:setCallTipsForegroundColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setCallTipsForegroundColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setCallTipsHighlightColor( pCol )
-   RETURN Qt_QsciScintilla_setCallTipsHighlightColor( ::pPtr, hbqt_ptr( pCol ) )
+METHOD QsciScintilla:setCallTipsHighlightColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setCallTipsHighlightColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setCallTipsStyle( nStyle )
-   RETURN Qt_QsciScintilla_setCallTipsStyle( ::pPtr, nStyle )
+METHOD QsciScintilla:setCallTipsStyle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setCallTipsStyle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setCallTipsVisible( nNr )
-   RETURN Qt_QsciScintilla_setCallTipsVisible( ::pPtr, nNr )
+METHOD QsciScintilla:setCallTipsVisible( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setCallTipsVisible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setDocument( pDocument )
-   RETURN Qt_QsciScintilla_setDocument( ::pPtr, hbqt_ptr( pDocument ) )
+METHOD QsciScintilla:setDocument( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setDocument( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setEdgeColor( pCol )
-   RETURN Qt_QsciScintilla_setEdgeColor( ::pPtr, hbqt_ptr( pCol ) )
+METHOD QsciScintilla:setEdgeColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setEdgeColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setEdgeColumn( nColnr )
-   RETURN Qt_QsciScintilla_setEdgeColumn( ::pPtr, nColnr )
+METHOD QsciScintilla:setEdgeColumn( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setEdgeColumn( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setEdgeMode( nMode )
-   RETURN Qt_QsciScintilla_setEdgeMode( ::pPtr, nMode )
+METHOD QsciScintilla:setEdgeMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setEdgeMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QsciScintilla:setMarginText( ... )
@@ -719,68 +1297,202 @@ METHOD QsciScintilla:setMarginText( ... )
    RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setMarginType( nMargin, nType )
-   RETURN Qt_QsciScintilla_setMarginType( ::pPtr, nMargin, nType )
+METHOD QsciScintilla:setMarginType( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QsciScintilla_setMarginType( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:clearMarginText( nLine )
-   RETURN Qt_QsciScintilla_clearMarginText( ::pPtr, nLine )
+METHOD QsciScintilla:clearMarginText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_clearMarginText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QsciScintilla_clearMarginText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setMarkerBackgroundColor( pCol, nMnr )
-   RETURN Qt_QsciScintilla_setMarkerBackgroundColor( ::pPtr, hbqt_ptr( pCol ), nMnr )
+METHOD QsciScintilla:setMarkerBackgroundColor( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QsciScintilla_setMarkerBackgroundColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setMarkerBackgroundColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setMarkerForegroundColor( pCol, nMnr )
-   RETURN Qt_QsciScintilla_setMarkerForegroundColor( ::pPtr, hbqt_ptr( pCol ), nMnr )
+METHOD QsciScintilla:setMarkerForegroundColor( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QsciScintilla_setMarkerForegroundColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setMarkerForegroundColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setMatchedBraceBackgroundColor( pCol )
-   RETURN Qt_QsciScintilla_setMatchedBraceBackgroundColor( ::pPtr, hbqt_ptr( pCol ) )
+METHOD QsciScintilla:setMatchedBraceBackgroundColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setMatchedBraceBackgroundColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setMatchedBraceForegroundColor( pCol )
-   RETURN Qt_QsciScintilla_setMatchedBraceForegroundColor( ::pPtr, hbqt_ptr( pCol ) )
+METHOD QsciScintilla:setMatchedBraceForegroundColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setMatchedBraceForegroundColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setUnmatchedBraceBackgroundColor( pCol )
-   RETURN Qt_QsciScintilla_setUnmatchedBraceBackgroundColor( ::pPtr, hbqt_ptr( pCol ) )
+METHOD QsciScintilla:setUnmatchedBraceBackgroundColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setUnmatchedBraceBackgroundColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setUnmatchedBraceForegroundColor( pCol )
-   RETURN Qt_QsciScintilla_setUnmatchedBraceForegroundColor( ::pPtr, hbqt_ptr( pCol ) )
+METHOD QsciScintilla:setUnmatchedBraceForegroundColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setUnmatchedBraceForegroundColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setWrapVisualFlags( nEflag, nSflag, nSindent )
-   RETURN Qt_QsciScintilla_setWrapVisualFlags( ::pPtr, nEflag, nSflag, nSindent )
+METHOD QsciScintilla:setWrapVisualFlags( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QsciScintilla_setWrapVisualFlags( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QsciScintilla_setWrapVisualFlags( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setWrapVisualFlags( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:selectedText()
-   RETURN Qt_QsciScintilla_selectedText( ::pPtr )
+METHOD QsciScintilla:selectedText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_selectedText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:selectionToEol()
-   RETURN Qt_QsciScintilla_selectionToEol( ::pPtr )
+METHOD QsciScintilla:selectionToEol( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_selectionToEol( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setSelectionToEol( lFilled )
-   RETURN Qt_QsciScintilla_setSelectionToEol( ::pPtr, lFilled )
+METHOD QsciScintilla:setSelectionToEol( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setSelectionToEol( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:showUserList( nId, pList )
-   RETURN Qt_QsciScintilla_showUserList( ::pPtr, nId, hbqt_ptr( pList ) )
+METHOD QsciScintilla:showUserList( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QsciScintilla_showUserList( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:standardCommands()
-   RETURN HB_QsciCommandSet():from( Qt_QsciScintilla_standardCommands( ::pPtr ) )
+METHOD QsciScintilla:standardCommands( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QsciCommandSet():from( Qt_QsciScintilla_standardCommands( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:tabIndents()
-   RETURN Qt_QsciScintilla_tabIndents( ::pPtr )
+METHOD QsciScintilla:tabIndents( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_tabIndents( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:tabWidth()
-   RETURN Qt_QsciScintilla_tabWidth( ::pPtr )
+METHOD QsciScintilla:tabWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_tabWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QsciScintilla:text( ... )
@@ -797,240 +1509,652 @@ METHOD QsciScintilla:text( ... )
    RETURN hbqt_error()
 
 
-METHOD QsciScintilla:textHeight( nLinenr )
-   RETURN Qt_QsciScintilla_textHeight( ::pPtr, nLinenr )
-
-
-METHOD QsciScintilla:whitespaceVisibility()
-   RETURN Qt_QsciScintilla_whitespaceVisibility( ::pPtr )
-
-
-METHOD QsciScintilla:wordAtPoint( pPoint )
-   RETURN Qt_QsciScintilla_wordAtPoint( ::pPtr, hbqt_ptr( pPoint ) )
-
-
-METHOD QsciScintilla:wordCharacters()
-   RETURN Qt_QsciScintilla_wordCharacters( ::pPtr )
-
-
-METHOD QsciScintilla:wrapMode()
-   RETURN Qt_QsciScintilla_wrapMode( ::pPtr )
-
-
-METHOD QsciScintilla:write( pIo )
-   RETURN Qt_QsciScintilla_write( ::pPtr, hbqt_ptr( pIo ) )
-
-
-METHOD QsciScintilla:append( cText )
-   RETURN Qt_QsciScintilla_append( ::pPtr, cText )
-
-
-METHOD QsciScintilla:autoCompleteFromAll()
-   RETURN Qt_QsciScintilla_autoCompleteFromAll( ::pPtr )
-
-
-METHOD QsciScintilla:autoCompleteFromAPIs()
-   RETURN Qt_QsciScintilla_autoCompleteFromAPIs( ::pPtr )
-
-
-METHOD QsciScintilla:autoCompleteFromDocument()
-   RETURN Qt_QsciScintilla_autoCompleteFromDocument( ::pPtr )
-
-
-METHOD QsciScintilla:callTip()
-   RETURN Qt_QsciScintilla_callTip( ::pPtr )
-
-
-METHOD QsciScintilla:clear()
-   RETURN Qt_QsciScintilla_clear( ::pPtr )
-
-
-METHOD QsciScintilla:copy()
-   RETURN Qt_QsciScintilla_copy( ::pPtr )
-
-
-METHOD QsciScintilla:cut()
-   RETURN Qt_QsciScintilla_cut( ::pPtr )
-
-
-METHOD QsciScintilla:ensureCursorVisible()
-   RETURN Qt_QsciScintilla_ensureCursorVisible( ::pPtr )
-
-
-METHOD QsciScintilla:ensureLineVisible( nLine )
-   RETURN Qt_QsciScintilla_ensureLineVisible( ::pPtr, nLine )
-
-
-METHOD QsciScintilla:foldAll( lChildren )
-   RETURN Qt_QsciScintilla_foldAll( ::pPtr, lChildren )
-
-
-METHOD QsciScintilla:foldLine( nLine )
-   RETURN Qt_QsciScintilla_foldLine( ::pPtr, nLine )
-
-
-METHOD QsciScintilla:indent( nLine )
-   RETURN Qt_QsciScintilla_indent( ::pPtr, nLine )
-
-
-METHOD QsciScintilla:insert( cText )
-   RETURN Qt_QsciScintilla_insert( ::pPtr, cText )
-
-
-METHOD QsciScintilla:insertAt( cText, nLine, nIndex )
-   RETURN Qt_QsciScintilla_insertAt( ::pPtr, cText, nLine, nIndex )
-
-
-METHOD QsciScintilla:moveToMatchingBrace()
-   RETURN Qt_QsciScintilla_moveToMatchingBrace( ::pPtr )
-
-
-METHOD QsciScintilla:paste()
-   RETURN Qt_QsciScintilla_paste( ::pPtr )
-
-
-METHOD QsciScintilla:redo()
-   RETURN Qt_QsciScintilla_redo( ::pPtr )
-
-
-METHOD QsciScintilla:removeSelectedText()
-   RETURN Qt_QsciScintilla_removeSelectedText( ::pPtr )
-
-
-METHOD QsciScintilla:resetSelectionBackgroundColor()
-   RETURN Qt_QsciScintilla_resetSelectionBackgroundColor( ::pPtr )
-
-
-METHOD QsciScintilla:resetSelectionForegroundColor()
-   RETURN Qt_QsciScintilla_resetSelectionForegroundColor( ::pPtr )
-
-
-METHOD QsciScintilla:selectAll( lSelect )
-   RETURN Qt_QsciScintilla_selectAll( ::pPtr, lSelect )
-
-
-METHOD QsciScintilla:selectToMatchingBrace()
-   RETURN Qt_QsciScintilla_selectToMatchingBrace( ::pPtr )
-
-
-METHOD QsciScintilla:setAutoCompletionCaseSensitivity( lCs )
-   RETURN Qt_QsciScintilla_setAutoCompletionCaseSensitivity( ::pPtr, lCs )
-
-
-METHOD QsciScintilla:setAutoCompletionReplaceWord( lReplace )
-   RETURN Qt_QsciScintilla_setAutoCompletionReplaceWord( ::pPtr, lReplace )
-
-
-METHOD QsciScintilla:setAutoCompletionShowSingle( lSingle )
-   RETURN Qt_QsciScintilla_setAutoCompletionShowSingle( ::pPtr, lSingle )
-
-
-METHOD QsciScintilla:setAutoCompletionSource( nSource )
-   RETURN Qt_QsciScintilla_setAutoCompletionSource( ::pPtr, nSource )
-
-
-METHOD QsciScintilla:setAutoCompletionThreshold( nThresh )
-   RETURN Qt_QsciScintilla_setAutoCompletionThreshold( ::pPtr, nThresh )
-
-
-METHOD QsciScintilla:setAutoIndent( lAutoindent )
-   RETURN Qt_QsciScintilla_setAutoIndent( ::pPtr, lAutoindent )
-
-
-METHOD QsciScintilla:setBraceMatching( nBm )
-   RETURN Qt_QsciScintilla_setBraceMatching( ::pPtr, nBm )
-
-
-METHOD QsciScintilla:setBackspaceUnindents( lUnindent )
-   RETURN Qt_QsciScintilla_setBackspaceUnindents( ::pPtr, lUnindent )
-
-
-METHOD QsciScintilla:setCaretForegroundColor( pCol )
-   RETURN Qt_QsciScintilla_setCaretForegroundColor( ::pPtr, hbqt_ptr( pCol ) )
-
-
-METHOD QsciScintilla:setCaretLineBackgroundColor( pCol )
-   RETURN Qt_QsciScintilla_setCaretLineBackgroundColor( ::pPtr, hbqt_ptr( pCol ) )
-
-
-METHOD QsciScintilla:setCaretLineVisible( lEnable )
-   RETURN Qt_QsciScintilla_setCaretLineVisible( ::pPtr, lEnable )
-
-
-METHOD QsciScintilla:setCaretWidth( nWidth )
-   RETURN Qt_QsciScintilla_setCaretWidth( ::pPtr, nWidth )
-
-
-METHOD QsciScintilla:setColor( pC )
-   RETURN Qt_QsciScintilla_setColor( ::pPtr, hbqt_ptr( pC ) )
-
-
-METHOD QsciScintilla:setCursorPosition( nLine, nIndex )
-   RETURN Qt_QsciScintilla_setCursorPosition( ::pPtr, nLine, nIndex )
-
-
-METHOD QsciScintilla:setEolMode( nMode )
-   RETURN Qt_QsciScintilla_setEolMode( ::pPtr, nMode )
-
-
-METHOD QsciScintilla:setEolVisibility( lVisible )
-   RETURN Qt_QsciScintilla_setEolVisibility( ::pPtr, lVisible )
-
-
-METHOD QsciScintilla:setFolding( nFold, nMargin )
-   RETURN Qt_QsciScintilla_setFolding( ::pPtr, nFold, nMargin )
-
-
-METHOD QsciScintilla:setIndentation( nLine, nIndentation )
-   RETURN Qt_QsciScintilla_setIndentation( ::pPtr, nLine, nIndentation )
-
-
-METHOD QsciScintilla:setIndentationGuides( lEnable )
-   RETURN Qt_QsciScintilla_setIndentationGuides( ::pPtr, lEnable )
-
-
-METHOD QsciScintilla:setIndentationGuidesBackgroundColor( pCol )
-   RETURN Qt_QsciScintilla_setIndentationGuidesBackgroundColor( ::pPtr, hbqt_ptr( pCol ) )
-
-
-METHOD QsciScintilla:setIndentationGuidesForegroundColor( pCol )
-   RETURN Qt_QsciScintilla_setIndentationGuidesForegroundColor( ::pPtr, hbqt_ptr( pCol ) )
-
-
-METHOD QsciScintilla:setIndentationsUseTabs( lTabs )
-   RETURN Qt_QsciScintilla_setIndentationsUseTabs( ::pPtr, lTabs )
-
-
-METHOD QsciScintilla:setIndentationWidth( nWidth )
-   RETURN Qt_QsciScintilla_setIndentationWidth( ::pPtr, nWidth )
-
-
-METHOD QsciScintilla:setLexer( pLexer )
-   RETURN Qt_QsciScintilla_setLexer( ::pPtr, hbqt_ptr( pLexer ) )
-
-
-METHOD QsciScintilla:setMarginsBackgroundColor( pCol )
-   RETURN Qt_QsciScintilla_setMarginsBackgroundColor( ::pPtr, hbqt_ptr( pCol ) )
-
-
-METHOD QsciScintilla:setMarginsFont( pF )
-   RETURN Qt_QsciScintilla_setMarginsFont( ::pPtr, hbqt_ptr( pF ) )
-
-
-METHOD QsciScintilla:setMarginsForegroundColor( pCol )
-   RETURN Qt_QsciScintilla_setMarginsForegroundColor( ::pPtr, hbqt_ptr( pCol ) )
-
-
-METHOD QsciScintilla:setMarginLineNumbers( nMargin, lLnrs )
-   RETURN Qt_QsciScintilla_setMarginLineNumbers( ::pPtr, nMargin, lLnrs )
-
-
-METHOD QsciScintilla:setMarginMarkerMask( nMargin, nMask )
-   RETURN Qt_QsciScintilla_setMarginMarkerMask( ::pPtr, nMargin, nMask )
-
-
-METHOD QsciScintilla:setMarginSensitivity( nMargin, lSens )
-   RETURN Qt_QsciScintilla_setMarginSensitivity( ::pPtr, nMargin, lSens )
+METHOD QsciScintilla:textHeight( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_textHeight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:whitespaceVisibility( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_whitespaceVisibility( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:wordAtPoint( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_wordAtPoint( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:wordCharacters( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_wordCharacters( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:wrapMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_wrapMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:write( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_write( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:append( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_append( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:autoCompleteFromAll( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_autoCompleteFromAll( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:autoCompleteFromAPIs( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_autoCompleteFromAPIs( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:autoCompleteFromDocument( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_autoCompleteFromDocument( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:callTip( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_callTip( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:clear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_clear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:copy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_copy( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:cut( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_cut( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:ensureCursorVisible( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_ensureCursorVisible( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:ensureLineVisible( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_ensureLineVisible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:foldAll( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_foldAll( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QsciScintilla_foldAll( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:foldLine( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_foldLine( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:indent( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_indent( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:insert( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_insert( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:insertAt( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QsciScintilla_insertAt( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:moveToMatchingBrace( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_moveToMatchingBrace( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:paste( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_paste( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:redo( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_redo( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:removeSelectedText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_removeSelectedText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:resetSelectionBackgroundColor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_resetSelectionBackgroundColor( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:resetSelectionForegroundColor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_resetSelectionForegroundColor( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:selectAll( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_selectAll( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QsciScintilla_selectAll( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:selectToMatchingBrace( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_selectToMatchingBrace( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setAutoCompletionCaseSensitivity( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setAutoCompletionCaseSensitivity( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setAutoCompletionReplaceWord( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setAutoCompletionReplaceWord( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setAutoCompletionShowSingle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setAutoCompletionShowSingle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setAutoCompletionSource( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setAutoCompletionSource( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setAutoCompletionThreshold( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setAutoCompletionThreshold( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setAutoIndent( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setAutoIndent( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setBraceMatching( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setBraceMatching( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setBackspaceUnindents( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setBackspaceUnindents( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setCaretForegroundColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setCaretForegroundColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setCaretLineBackgroundColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setCaretLineBackgroundColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setCaretLineVisible( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setCaretLineVisible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setCaretWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setCaretWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setCursorPosition( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QsciScintilla_setCursorPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setEolMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setEolMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setEolVisibility( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setEolVisibility( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setFolding( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QsciScintilla_setFolding( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setFolding( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setIndentation( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QsciScintilla_setIndentation( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setIndentationGuides( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setIndentationGuides( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setIndentationGuidesBackgroundColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setIndentationGuidesBackgroundColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setIndentationGuidesForegroundColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setIndentationGuidesForegroundColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setIndentationsUseTabs( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setIndentationsUseTabs( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setIndentationWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setIndentationWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setLexer( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setLexer( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QsciScintilla_setLexer( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setMarginsBackgroundColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setMarginsBackgroundColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setMarginsFont( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setMarginsFont( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setMarginsForegroundColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setMarginsForegroundColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setMarginLineNumbers( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QsciScintilla_setMarginLineNumbers( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setMarginMarkerMask( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QsciScintilla_setMarginMarkerMask( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QsciScintilla:setMarginSensitivity( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QsciScintilla_setMarginSensitivity( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QsciScintilla:setMarginWidth( ... )
@@ -1047,60 +2171,168 @@ METHOD QsciScintilla:setMarginWidth( ... )
    RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setModified( lM )
-   RETURN Qt_QsciScintilla_setModified( ::pPtr, lM )
+METHOD QsciScintilla:setModified( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setModified( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setPaper( pC )
-   RETURN Qt_QsciScintilla_setPaper( ::pPtr, hbqt_ptr( pC ) )
+METHOD QsciScintilla:setPaper( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setPaper( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setReadOnly( lRo )
-   RETURN Qt_QsciScintilla_setReadOnly( ::pPtr, lRo )
+METHOD QsciScintilla:setReadOnly( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setReadOnly( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setSelection( nLineFrom, nIndexFrom, nLineTo, nIndexTo )
-   RETURN Qt_QsciScintilla_setSelection( ::pPtr, nLineFrom, nIndexFrom, nLineTo, nIndexTo )
+METHOD QsciScintilla:setSelection( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QsciScintilla_setSelection( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setSelectionBackgroundColor( pCol )
-   RETURN Qt_QsciScintilla_setSelectionBackgroundColor( ::pPtr, hbqt_ptr( pCol ) )
+METHOD QsciScintilla:setSelectionBackgroundColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setSelectionBackgroundColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setSelectionForegroundColor( pCol )
-   RETURN Qt_QsciScintilla_setSelectionForegroundColor( ::pPtr, hbqt_ptr( pCol ) )
+METHOD QsciScintilla:setSelectionForegroundColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setSelectionForegroundColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setTabIndents( lIndent )
-   RETURN Qt_QsciScintilla_setTabIndents( ::pPtr, lIndent )
+METHOD QsciScintilla:setTabIndents( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setTabIndents( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setTabWidth( nWidth )
-   RETURN Qt_QsciScintilla_setTabWidth( ::pPtr, nWidth )
+METHOD QsciScintilla:setTabWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setTabWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setText( cText )
-   RETURN Qt_QsciScintilla_setText( ::pPtr, cText )
+METHOD QsciScintilla:setText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setUtf8( lCp )
-   RETURN Qt_QsciScintilla_setUtf8( ::pPtr, lCp )
+METHOD QsciScintilla:setUtf8( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setUtf8( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setWhitespaceVisibility( nMode )
-   RETURN Qt_QsciScintilla_setWhitespaceVisibility( ::pPtr, nMode )
+METHOD QsciScintilla:setWhitespaceVisibility( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setWhitespaceVisibility( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:setWrapMode( nMode )
-   RETURN Qt_QsciScintilla_setWrapMode( ::pPtr, nMode )
+METHOD QsciScintilla:setWrapMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_setWrapMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:undo()
-   RETURN Qt_QsciScintilla_undo( ::pPtr )
+METHOD QsciScintilla:undo( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciScintilla_undo( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciScintilla:unindent( nLine )
-   RETURN Qt_QsciScintilla_unindent( ::pPtr, nLine )
+METHOD QsciScintilla:unindent( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_unindent( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QsciScintilla:zoomIn( ... )
@@ -1131,6 +2363,14 @@ METHOD QsciScintilla:zoomOut( ... )
    RETURN hbqt_error()
 
 
-METHOD QsciScintilla:zoomTo( nSize )
-   RETURN Qt_QsciScintilla_zoomTo( ::pPtr, nSize )
+METHOD QsciScintilla:zoomTo( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciScintilla_zoomTo( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

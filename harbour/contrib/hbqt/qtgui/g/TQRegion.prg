@@ -103,18 +103,24 @@ CREATE CLASS QRegion INHERIT HbQtObjectHandler FUNCTION HB_QRegion
 
    METHOD  new( ... )
 
-   METHOD  boundingRect()
-   METHOD  contains( ... )
-   METHOD  intersected( ... )
-   METHOD  intersects( ... )
-   METHOD  isEmpty()
-   METHOD  numRects()
-   METHOD  setRects( pRects, nNumber )
-   METHOD  subtracted( pR )
-   METHOD  translate( ... )
-   METHOD  translated( ... )
-   METHOD  united( ... )
-   METHOD  xored( pR )
+   METHOD  boundingRect                  // (  )                                               -> oQRect
+   METHOD  contains                      // ( oQPoint )                                        -> lBool
+                                         // ( oQRect )                                         -> lBool
+   METHOD  intersected                   // ( oQRegion )                                       -> oQRegion
+                                         // ( oQRect )                                         -> oQRegion
+   METHOD  intersects                    // ( oQRegion )                                       -> lBool
+                                         // ( oQRect )                                         -> lBool
+   METHOD  isEmpty                       // (  )                                               -> lBool
+   METHOD  numRects                      // (  )                                               -> nInt
+   METHOD  setRects                      // ( oQRect, nNumber )                                -> NIL
+   METHOD  subtracted                    // ( oQRegion )                                       -> oQRegion
+   METHOD  translate                     // ( nDx, nDy )                                       -> NIL
+                                         // ( oQPoint )                                        -> NIL
+   METHOD  translated                    // ( nDx, nDy )                                       -> oQRegion
+                                         // ( oQPoint )                                        -> oQRegion
+   METHOD  united                        // ( oQRegion )                                       -> oQRegion
+                                         // ( oQRect )                                         -> oQRegion
+   METHOD  xored                         // ( oQRegion )                                       -> oQRegion
 
    ENDCLASS
 
@@ -128,8 +134,12 @@ METHOD QRegion:new( ... )
    RETURN Self
 
 
-METHOD QRegion:boundingRect()
-   RETURN HB_QRect():from( Qt_QRegion_boundingRect( ::pPtr ) )
+METHOD QRegion:boundingRect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QRegion_boundingRect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QRegion:contains( ... )
@@ -183,20 +193,44 @@ METHOD QRegion:intersects( ... )
    RETURN hbqt_error()
 
 
-METHOD QRegion:isEmpty()
-   RETURN Qt_QRegion_isEmpty( ::pPtr )
+METHOD QRegion:isEmpty( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QRegion_isEmpty( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRegion:numRects()
-   RETURN Qt_QRegion_numRects( ::pPtr )
+METHOD QRegion:numRects( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QRegion_numRects( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRegion:setRects( pRects, nNumber )
-   RETURN Qt_QRegion_setRects( ::pPtr, hbqt_ptr( pRects ), nNumber )
+METHOD QRegion:setRects( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QRegion_setRects( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRegion:subtracted( pR )
-   RETURN HB_QRegion():from( Qt_QRegion_subtracted( ::pPtr, hbqt_ptr( pR ) ) )
+METHOD QRegion:subtracted( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QRegion():from( Qt_QRegion_subtracted( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QRegion:translate( ... )
@@ -252,6 +286,14 @@ METHOD QRegion:united( ... )
    RETURN hbqt_error()
 
 
-METHOD QRegion:xored( pR )
-   RETURN HB_QRegion():from( Qt_QRegion_xored( ::pPtr, hbqt_ptr( pR ) ) )
+METHOD QRegion:xored( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QRegion():from( Qt_QRegion_xored( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

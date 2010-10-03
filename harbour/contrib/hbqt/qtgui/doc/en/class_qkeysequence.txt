@@ -28,9 +28,11 @@
  *  $METHODS$
  *     :count()                                            -> nUint
  *     :isEmpty()                                          -> lBool
- *     :matches( pSeq )                                    -> nSequenceMatch
+ *     :matches( oQKeySequence )                           -> nSequenceMatch
  *     :toString( nFormat )                                -> cQString
- *     :keyBindings( nKey )                                -> pQList<QKeySequence>
+ *     :fromString( cStr, nFormat )                        -> oQKeySequence
+ *     :keyBindings( nKey )                                -> oQList_QKeySequence>
+ *     :mnemonic( cText )                                  -> oQKeySequence
  * 
  *  $DESCRIPTION$
  * 
@@ -50,7 +52,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQKeySequence.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QKeySequence.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

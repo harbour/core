@@ -103,9 +103,10 @@ CREATE CLASS QTranslator INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QTran
 
    METHOD  new( ... )
 
-   METHOD  isEmpty()
-   METHOD  load( cFilename, cDirectory, cSearch_delimiters, cSuffix )
-   METHOD  translate( ... )
+   METHOD  isEmpty                       // (  )                                               -> lBool
+   METHOD  load                          // ( cFilename, cDirectory, cSearch_delimiters, cSuffix ) -> lBool
+   METHOD  translate                     // ( cContext, cSourceText, cDisambiguation )         -> cQString
+                                         // ( cContext, cSourceText, cDisambiguation, nN )     -> cQString
 
    ENDCLASS
 
@@ -119,31 +120,61 @@ METHOD QTranslator:new( ... )
    RETURN Self
 
 
-METHOD QTranslator:isEmpty()
-   RETURN Qt_QTranslator_isEmpty( ::pPtr )
+METHOD QTranslator:isEmpty( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTranslator_isEmpty( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTranslator:load( cFilename, cDirectory, cSearch_delimiters, cSuffix )
-   RETURN Qt_QTranslator_load( ::pPtr, cFilename, cDirectory, cSearch_delimiters, cSuffix )
+METHOD QTranslator:load( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) ) .AND. hb_isChar( hb_pvalue( 4 ) )
+         RETURN Qt_QTranslator_load( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
+         RETURN Qt_QTranslator_load( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QTranslator_load( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QTranslator_load( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTranslator:translate( ... )
    SWITCH PCount()
    CASE 4
       DO CASE
-      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
          RETURN Qt_QTranslator_translate_1( ::pPtr, ... )
       ENDCASE
       EXIT
    CASE 3
       DO CASE
-      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
          RETURN Qt_QTranslator_translate( ::pPtr, ... )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
-      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
          RETURN Qt_QTranslator_translate( ::pPtr, ... )
       ENDCASE
       EXIT

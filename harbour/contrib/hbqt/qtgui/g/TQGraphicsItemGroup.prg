@@ -103,8 +103,8 @@ CREATE CLASS QGraphicsItemGroup INHERIT HbQtObjectHandler, HB_QGraphicsItem FUNC
 
    METHOD  new( ... )
 
-   METHOD  addToGroup( pItem )
-   METHOD  removeFromGroup( pItem )
+   METHOD  addToGroup                    // ( oQGraphicsItem )                                 -> NIL
+   METHOD  removeFromGroup               // ( oQGraphicsItem )                                 -> NIL
 
    ENDCLASS
 
@@ -118,10 +118,26 @@ METHOD QGraphicsItemGroup:new( ... )
    RETURN Self
 
 
-METHOD QGraphicsItemGroup:addToGroup( pItem )
-   RETURN Qt_QGraphicsItemGroup_addToGroup( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QGraphicsItemGroup:addToGroup( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsItemGroup_addToGroup( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsItemGroup:removeFromGroup( pItem )
-   RETURN Qt_QGraphicsItemGroup_removeFromGroup( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QGraphicsItemGroup:removeFromGroup( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsItemGroup_removeFromGroup( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

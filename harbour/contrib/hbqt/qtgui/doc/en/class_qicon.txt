@@ -26,16 +26,16 @@
  *  $RETURNS$
  *     An instance of the object of type QIcon
  *  $METHODS$
- *     :actualSize( pSize, nMode, nState )                 -> pQSize
- *     :addFile( cFileName, pSize, nMode, nState )         -> NIL
- *     :addPixmap( pPixmap, nMode, nState )                -> NIL
- *     :availableSizes( nMode, nState )                    -> pQList<QSize>
+ *     :actualSize( oQSize, nMode, nState )                -> oQSize
+ *     :addFile( cFileName, oQSize, nMode, nState )        -> NIL
+ *     :addPixmap( oQPixmap, nMode, nState )               -> NIL
+ *     :availableSizes( nMode, nState )                    -> oQList_QSize>
  *     :cacheKey()                                         -> nQint64
  *     :isNull()                                           -> lBool
- *     :paint( pPainter, pRect, nAlignment, nMode, nState )  -> NIL
- *     :paint_1( pPainter, nX, nY, nW, nH, nAlignment, nMode, nState )  -> NIL
- *     :pixmap( pSize, nMode, nState )                     -> pQPixmap
- *     :pixmap_1( nW, nH, nMode, nState )                  -> pQPixmap
+ *     :paint( oQPainter, oQRect, nAlignment, nMode, nState )  -> NIL
+ *     :paint( oQPainter, nX, nY, nW, nH, nAlignment, nMode, nState )  -> NIL
+ *     :pixmap( oQSize, nMode, nState )                    -> oQPixmap
+ *     :pixmap( nW, nH, nMode, nState )                    -> oQPixmap
  * 
  *  $DESCRIPTION$
  * 
@@ -58,7 +58,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQIcon.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QIcon.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

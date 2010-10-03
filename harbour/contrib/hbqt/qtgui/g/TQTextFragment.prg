@@ -103,13 +103,13 @@ CREATE CLASS QTextFragment INHERIT HbQtObjectHandler FUNCTION HB_QTextFragment
 
    METHOD  new( ... )
 
-   METHOD  charFormat()
-   METHOD  charFormatIndex()
-   METHOD  contains( nPosition )
-   METHOD  isValid()
-   METHOD  length()
-   METHOD  position()
-   METHOD  text()
+   METHOD  charFormat                    // (  )                                               -> oQTextCharFormat
+   METHOD  charFormatIndex               // (  )                                               -> nInt
+   METHOD  contains                      // ( nPosition )                                      -> lBool
+   METHOD  isValid                       // (  )                                               -> lBool
+   METHOD  length                        // (  )                                               -> nInt
+   METHOD  position                      // (  )                                               -> nInt
+   METHOD  text                          // (  )                                               -> cQString
 
    ENDCLASS
 
@@ -123,30 +123,62 @@ METHOD QTextFragment:new( ... )
    RETURN Self
 
 
-METHOD QTextFragment:charFormat()
-   RETURN HB_QTextCharFormat():from( Qt_QTextFragment_charFormat( ::pPtr ) )
+METHOD QTextFragment:charFormat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextCharFormat():from( Qt_QTextFragment_charFormat( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFragment:charFormatIndex()
-   RETURN Qt_QTextFragment_charFormatIndex( ::pPtr )
+METHOD QTextFragment:charFormatIndex( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFragment_charFormatIndex( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFragment:contains( nPosition )
-   RETURN Qt_QTextFragment_contains( ::pPtr, nPosition )
+METHOD QTextFragment:contains( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextFragment_contains( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFragment:isValid()
-   RETURN Qt_QTextFragment_isValid( ::pPtr )
+METHOD QTextFragment:isValid( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFragment_isValid( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFragment:length()
-   RETURN Qt_QTextFragment_length( ::pPtr )
+METHOD QTextFragment:length( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFragment_length( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFragment:position()
-   RETURN Qt_QTextFragment_position( ::pPtr )
+METHOD QTextFragment:position( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFragment_position( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFragment:text()
-   RETURN Qt_QTextFragment_text( ::pPtr )
+METHOD QTextFragment:text( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFragment_text( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

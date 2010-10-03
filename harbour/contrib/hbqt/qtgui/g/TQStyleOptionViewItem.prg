@@ -103,13 +103,13 @@ CREATE CLASS QStyleOptionViewItem INHERIT HbQtObjectHandler, HB_QStyleOption FUN
 
    METHOD  new( ... )
 
-   METHOD  decorationAlignment()
-   METHOD  decorationPosition()
-   METHOD  decorationSize()
-   METHOD  displayAlignment()
-   METHOD  font()
-   METHOD  showDecorationSelected()
-   METHOD  textElideMode()
+   METHOD  decorationAlignment           // (  )                                               -> nQt_Alignment
+   METHOD  decorationPosition            // (  )                                               -> nPosition
+   METHOD  decorationSize                // (  )                                               -> oQSize
+   METHOD  displayAlignment              // (  )                                               -> nQt_Alignment
+   METHOD  font                          // (  )                                               -> oQFont
+   METHOD  showDecorationSelected        // (  )                                               -> lBool
+   METHOD  textElideMode                 // (  )                                               -> nQt_TextElideMode
 
    ENDCLASS
 
@@ -123,30 +123,58 @@ METHOD QStyleOptionViewItem:new( ... )
    RETURN Self
 
 
-METHOD QStyleOptionViewItem:decorationAlignment()
-   RETURN Qt_QStyleOptionViewItem_decorationAlignment( ::pPtr )
+METHOD QStyleOptionViewItem:decorationAlignment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionViewItem_decorationAlignment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionViewItem:decorationPosition()
-   RETURN Qt_QStyleOptionViewItem_decorationPosition( ::pPtr )
+METHOD QStyleOptionViewItem:decorationPosition( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionViewItem_decorationPosition( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionViewItem:decorationSize()
-   RETURN HB_QSize():from( Qt_QStyleOptionViewItem_decorationSize( ::pPtr ) )
+METHOD QStyleOptionViewItem:decorationSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QStyleOptionViewItem_decorationSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionViewItem:displayAlignment()
-   RETURN Qt_QStyleOptionViewItem_displayAlignment( ::pPtr )
+METHOD QStyleOptionViewItem:displayAlignment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionViewItem_displayAlignment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionViewItem:font()
-   RETURN HB_QFont():from( Qt_QStyleOptionViewItem_font( ::pPtr ) )
+METHOD QStyleOptionViewItem:font( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFont():from( Qt_QStyleOptionViewItem_font( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionViewItem:showDecorationSelected()
-   RETURN Qt_QStyleOptionViewItem_showDecorationSelected( ::pPtr )
+METHOD QStyleOptionViewItem:showDecorationSelected( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionViewItem_showDecorationSelected( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionViewItem:textElideMode()
-   RETURN Qt_QStyleOptionViewItem_textElideMode( ::pPtr )
+METHOD QStyleOptionViewItem:textElideMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionViewItem_textElideMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

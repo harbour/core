@@ -103,14 +103,14 @@ CREATE CLASS QTextFrame INHERIT HbQtObjectHandler, HB_QTextObject FUNCTION HB_QT
 
    METHOD  new( ... )
 
-   METHOD  childFrames()
-   METHOD  firstCursorPosition()
-   METHOD  firstPosition()
-   METHOD  frameFormat()
-   METHOD  lastCursorPosition()
-   METHOD  lastPosition()
-   METHOD  parentFrame()
-   METHOD  setFrameFormat( pFormat )
+   METHOD  childFrames                   // (  )                                               -> oQList_QTextFrame
+   METHOD  firstCursorPosition           // (  )                                               -> oQTextCursor
+   METHOD  firstPosition                 // (  )                                               -> nInt
+   METHOD  frameFormat                   // (  )                                               -> oQTextFrameFormat
+   METHOD  lastCursorPosition            // (  )                                               -> oQTextCursor
+   METHOD  lastPosition                  // (  )                                               -> nInt
+   METHOD  parentFrame                   // (  )                                               -> oQTextFrame
+   METHOD  setFrameFormat                // ( oQTextFrameFormat )                              -> NIL
 
    ENDCLASS
 
@@ -124,34 +124,70 @@ METHOD QTextFrame:new( ... )
    RETURN Self
 
 
-METHOD QTextFrame:childFrames()
-   RETURN HB_QList():from( Qt_QTextFrame_childFrames( ::pPtr ) )
+METHOD QTextFrame:childFrames( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QTextFrame_childFrames( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrame:firstCursorPosition()
-   RETURN HB_QTextCursor():from( Qt_QTextFrame_firstCursorPosition( ::pPtr ) )
+METHOD QTextFrame:firstCursorPosition( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextCursor():from( Qt_QTextFrame_firstCursorPosition( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrame:firstPosition()
-   RETURN Qt_QTextFrame_firstPosition( ::pPtr )
+METHOD QTextFrame:firstPosition( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFrame_firstPosition( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrame:frameFormat()
-   RETURN HB_QTextFrameFormat():from( Qt_QTextFrame_frameFormat( ::pPtr ) )
+METHOD QTextFrame:frameFormat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextFrameFormat():from( Qt_QTextFrame_frameFormat( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrame:lastCursorPosition()
-   RETURN HB_QTextCursor():from( Qt_QTextFrame_lastCursorPosition( ::pPtr ) )
+METHOD QTextFrame:lastCursorPosition( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextCursor():from( Qt_QTextFrame_lastCursorPosition( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrame:lastPosition()
-   RETURN Qt_QTextFrame_lastPosition( ::pPtr )
+METHOD QTextFrame:lastPosition( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFrame_lastPosition( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrame:parentFrame()
-   RETURN HB_QTextFrame():from( Qt_QTextFrame_parentFrame( ::pPtr ) )
+METHOD QTextFrame:parentFrame( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextFrame():from( Qt_QTextFrame_parentFrame( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrame:setFrameFormat( pFormat )
-   RETURN Qt_QTextFrame_setFrameFormat( ::pPtr, hbqt_ptr( pFormat ) )
+METHOD QTextFrame:setFrameFormat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextFrame_setFrameFormat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

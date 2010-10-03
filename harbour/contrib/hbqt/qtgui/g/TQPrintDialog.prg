@@ -103,14 +103,14 @@ CREATE CLASS QPrintDialog INHERIT HbQtObjectHandler, HB_QAbstractPrintDialog FUN
 
    METHOD  new( ... )
 
-   METHOD  done( nResult )
-   METHOD  open( pReceiver, pMember )
-   METHOD  options()
-   METHOD  printer()
-   METHOD  setOption( nOption, lOn )
-   METHOD  setOptions( nOptions )
-   METHOD  setVisible( lVisible )
-   METHOD  testOption( nOption )
+   METHOD  done                          // ( nResult )                                        -> NIL
+   METHOD  open                          // ( oQObject, cMember )                              -> NIL
+   METHOD  options                       // (  )                                               -> nPrintDialogOptions
+   METHOD  printer                       // (  )                                               -> oQPrinter
+   METHOD  setOption                     // ( nOption, lOn )                                   -> NIL
+   METHOD  setOptions                    // ( nOptions )                                       -> NIL
+   METHOD  setVisible                    // ( lVisible )                                       -> NIL
+   METHOD  testOption                    // ( nOption )                                        -> lBool
 
    ENDCLASS
 
@@ -124,34 +124,96 @@ METHOD QPrintDialog:new( ... )
    RETURN Self
 
 
-METHOD QPrintDialog:done( nResult )
-   RETURN Qt_QPrintDialog_done( ::pPtr, nResult )
+METHOD QPrintDialog:done( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPrintDialog_done( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPrintDialog:open( pReceiver, pMember )
-   RETURN Qt_QPrintDialog_open( ::pPtr, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ) )
+METHOD QPrintDialog:open( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QPrintDialog_open( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPrintDialog:options()
-   RETURN Qt_QPrintDialog_options( ::pPtr )
+METHOD QPrintDialog:options( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPrintDialog_options( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPrintDialog:printer()
-   RETURN HB_QPrinter():from( Qt_QPrintDialog_printer( ::pPtr ) )
+METHOD QPrintDialog:printer( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPrinter():from( Qt_QPrintDialog_printer( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPrintDialog:setOption( nOption, lOn )
-   RETURN Qt_QPrintDialog_setOption( ::pPtr, nOption, lOn )
+METHOD QPrintDialog:setOption( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QPrintDialog_setOption( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPrintDialog_setOption( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPrintDialog:setOptions( nOptions )
-   RETURN Qt_QPrintDialog_setOptions( ::pPtr, nOptions )
+METHOD QPrintDialog:setOptions( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPrintDialog_setOptions( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPrintDialog:setVisible( lVisible )
-   RETURN Qt_QPrintDialog_setVisible( ::pPtr, lVisible )
+METHOD QPrintDialog:setVisible( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QPrintDialog_setVisible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPrintDialog:testOption( nOption )
-   RETURN Qt_QPrintDialog_testOption( ::pPtr, nOption )
+METHOD QPrintDialog:testOption( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPrintDialog_testOption( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

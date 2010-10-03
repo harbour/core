@@ -196,11 +196,7 @@ HB_FUNC( QT_QGRIDLAYOUT_ADDITEM )
    QGridLayout * p = hbqt_par_QGridLayout( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 2 );
       ( p )->addItem( hbqt_par_QLayoutItem( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parnidef( 5, 1 ), hb_parnidef( 6, 1 ), ( Qt::Alignment ) hb_parni( 7 ) );
    }
 }
@@ -213,11 +209,7 @@ HB_FUNC( QT_QGRIDLAYOUT_ADDLAYOUT )
    QGridLayout * p = hbqt_par_QGridLayout( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 2 );
       ( p )->addLayout( hbqt_par_QLayout( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( Qt::Alignment ) hb_parni( 5 ) );
    }
 }
@@ -230,11 +222,7 @@ HB_FUNC( QT_QGRIDLAYOUT_ADDLAYOUT_1 )
    QGridLayout * p = hbqt_par_QGridLayout( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 2 );
       ( p )->addLayout( hbqt_par_QLayout( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ), ( Qt::Alignment ) hb_parni( 7 ) );
    }
 }
@@ -247,11 +235,7 @@ HB_FUNC( QT_QGRIDLAYOUT_ADDWIDGET )
    QGridLayout * p = hbqt_par_QGridLayout( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 2 );
       ( p )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( Qt::Alignment ) hb_parni( 5 ) );
    }
 }
@@ -264,11 +248,7 @@ HB_FUNC( QT_QGRIDLAYOUT_ADDWIDGET_1 )
    QGridLayout * p = hbqt_par_QGridLayout( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 2 );
       ( p )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ), ( Qt::Alignment ) hb_parni( 7 ) );
    }
 }

@@ -29,15 +29,15 @@
  *     :isShaded()                                         -> lBool
  *     :keyboardPageStep()                                 -> nInt
  *     :keyboardSingleStep()                               -> nInt
- *     :mdiArea()                                          -> pQMdiArea
+ *     :mdiArea()                                          -> oQMdiArea
  *     :setKeyboardPageStep( nStep )                       -> NIL
  *     :setKeyboardSingleStep( nStep )                     -> NIL
  *     :setOption( nOption, lOn )                          -> NIL
- *     :setSystemMenu( pSystemMenu )                       -> NIL
- *     :setWidget( pWidget )                               -> NIL
- *     :systemMenu()                                       -> pQMenu
+ *     :setSystemMenu( oQMenu )                            -> NIL
+ *     :setWidget( oQWidget )                              -> NIL
+ *     :systemMenu()                                       -> oQMenu
  *     :testOption( nOption )                              -> lBool
- *     :widget()                                           -> pQWidget
+ *     :widget()                                           -> oQWidget
  *     :showShaded()                                       -> NIL
  *     :showSystemMenu()                                   -> NIL
  * 
@@ -59,7 +59,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQMdiSubWindow.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QMdiSubWindow.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

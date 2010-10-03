@@ -35,8 +35,8 @@
  *     :pointSize()                                        -> nInt
  *     :pointSizeF()                                       -> nQreal
  *     :rawMode()                                          -> lBool
- *     :style()                                            -> nQFont::Style
- *     :styleHint()                                        -> nQFont::StyleHint
+ *     :style()                                            -> nQFont_Style
+ *     :styleHint()                                        -> nQFont_StyleHint
  *     :weight()                                           -> nInt
  * 
  *  $DESCRIPTION$
@@ -57,7 +57,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQFontInfo.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QFontInfo.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

@@ -103,14 +103,15 @@ CREATE CLASS QCursor INHERIT HbQtObjectHandler FUNCTION HB_QCursor
 
    METHOD  new( ... )
 
-   METHOD  bitmap()
-   METHOD  hotSpot()
-   METHOD  mask()
-   METHOD  pixmap()
-   METHOD  setShape( nShape )
-   METHOD  shape()
-   METHOD  pos()
-   METHOD  setPos( ... )
+   METHOD  bitmap                        // (  )                                               -> oQBitmap
+   METHOD  hotSpot                       // (  )                                               -> oQPoint
+   METHOD  mask                          // (  )                                               -> oQBitmap
+   METHOD  pixmap                        // (  )                                               -> oQPixmap
+   METHOD  setShape                      // ( nShape )                                         -> NIL
+   METHOD  shape                         // (  )                                               -> nQt_CursorShape
+   METHOD  pos                           // (  )                                               -> oQPoint
+   METHOD  setPos                        // ( nX, nY )                                         -> NIL
+                                         // ( oQPoint )                                        -> NIL
 
    ENDCLASS
 
@@ -124,32 +125,64 @@ METHOD QCursor:new( ... )
    RETURN Self
 
 
-METHOD QCursor:bitmap()
-   RETURN HB_QBitmap():from( Qt_QCursor_bitmap( ::pPtr ) )
+METHOD QCursor:bitmap( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBitmap():from( Qt_QCursor_bitmap( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCursor:hotSpot()
-   RETURN HB_QPoint():from( Qt_QCursor_hotSpot( ::pPtr ) )
+METHOD QCursor:hotSpot( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QCursor_hotSpot( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCursor:mask()
-   RETURN HB_QBitmap():from( Qt_QCursor_mask( ::pPtr ) )
+METHOD QCursor:mask( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBitmap():from( Qt_QCursor_mask( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCursor:pixmap()
-   RETURN HB_QPixmap():from( Qt_QCursor_pixmap( ::pPtr ) )
+METHOD QCursor:pixmap( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPixmap():from( Qt_QCursor_pixmap( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCursor:setShape( nShape )
-   RETURN Qt_QCursor_setShape( ::pPtr, nShape )
+METHOD QCursor:setShape( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QCursor_setShape( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCursor:shape()
-   RETURN Qt_QCursor_shape( ::pPtr )
+METHOD QCursor:shape( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCursor_shape( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCursor:pos()
-   RETURN HB_QPoint():from( Qt_QCursor_pos( ::pPtr ) )
+METHOD QCursor:pos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QCursor_pos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QCursor:setPos( ... )

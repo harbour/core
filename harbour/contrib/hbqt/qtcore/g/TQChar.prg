@@ -103,38 +103,38 @@ CREATE CLASS QChar INHERIT HbQtObjectHandler FUNCTION HB_QChar
 
    METHOD  new( ... )
 
-   METHOD  category()
-   METHOD  combiningClass()
-   METHOD  decomposition()
-   METHOD  decompositionTag()
-   METHOD  digitValue()
-   METHOD  direction()
-   METHOD  hasMirrored()
-   METHOD  isDigit()
-   METHOD  isHighSurrogate()
-   METHOD  isLetter()
-   METHOD  isLetterOrNumber()
-   METHOD  isLowSurrogate()
-   METHOD  isLower()
-   METHOD  isMark()
-   METHOD  isNull()
-   METHOD  isNumber()
-   METHOD  isPrint()
-   METHOD  isPunct()
-   METHOD  isSpace()
-   METHOD  isSymbol()
-   METHOD  isTitleCase()
-   METHOD  isUpper()
-   METHOD  joining()
-   METHOD  mirroredChar()
-   METHOD  toAscii()
-   METHOD  toCaseFolded()
-   METHOD  toLatin1()
-   METHOD  toLower()
-   METHOD  toTitleCase()
-   METHOD  toUpper()
-   METHOD  unicode()
-   METHOD  unicodeVersion()
+   METHOD  category                      // (  )                                               -> nCategory
+   METHOD  combiningClass                // (  )                                               -> nChar
+   METHOD  decomposition                 // (  )                                               -> cQString
+   METHOD  decompositionTag              // (  )                                               -> nDecomposition
+   METHOD  digitValue                    // (  )                                               -> nInt
+   METHOD  direction                     // (  )                                               -> nDirection
+   METHOD  hasMirrored                   // (  )                                               -> lBool
+   METHOD  isDigit                       // (  )                                               -> lBool
+   METHOD  isHighSurrogate               // (  )                                               -> lBool
+   METHOD  isLetter                      // (  )                                               -> lBool
+   METHOD  isLetterOrNumber              // (  )                                               -> lBool
+   METHOD  isLowSurrogate                // (  )                                               -> lBool
+   METHOD  isLower                       // (  )                                               -> lBool
+   METHOD  isMark                        // (  )                                               -> lBool
+   METHOD  isNull                        // (  )                                               -> lBool
+   METHOD  isNumber                      // (  )                                               -> lBool
+   METHOD  isPrint                       // (  )                                               -> lBool
+   METHOD  isPunct                       // (  )                                               -> lBool
+   METHOD  isSpace                       // (  )                                               -> lBool
+   METHOD  isSymbol                      // (  )                                               -> lBool
+   METHOD  isTitleCase                   // (  )                                               -> lBool
+   METHOD  isUpper                       // (  )                                               -> lBool
+   METHOD  joining                       // (  )                                               -> nJoining
+   METHOD  mirroredChar                  // (  )                                               -> oQChar
+   METHOD  toAscii                       // (  )                                               -> cChar
+   METHOD  toCaseFolded                  // (  )                                               -> oQChar
+   METHOD  toLatin1                      // (  )                                               -> cChar
+   METHOD  toLower                       // (  )                                               -> oQChar
+   METHOD  toTitleCase                   // (  )                                               -> oQChar
+   METHOD  toUpper                       // (  )                                               -> oQChar
+   METHOD  unicode                       // (  )                                               -> nUshort
+   METHOD  unicodeVersion                // (  )                                               -> nUnicodeVersion
 
    ENDCLASS
 
@@ -148,130 +148,258 @@ METHOD QChar:new( ... )
    RETURN Self
 
 
-METHOD QChar:category()
-   RETURN Qt_QChar_category( ::pPtr )
+METHOD QChar:category( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QChar_category( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:combiningClass()
-   RETURN Qt_QChar_combiningClass( ::pPtr )
+METHOD QChar:combiningClass( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QChar_combiningClass( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:decomposition()
-   RETURN Qt_QChar_decomposition( ::pPtr )
+METHOD QChar:decomposition( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QChar_decomposition( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:decompositionTag()
-   RETURN Qt_QChar_decompositionTag( ::pPtr )
+METHOD QChar:decompositionTag( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QChar_decompositionTag( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:digitValue()
-   RETURN Qt_QChar_digitValue( ::pPtr )
+METHOD QChar:digitValue( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QChar_digitValue( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:direction()
-   RETURN Qt_QChar_direction( ::pPtr )
+METHOD QChar:direction( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QChar_direction( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:hasMirrored()
-   RETURN Qt_QChar_hasMirrored( ::pPtr )
+METHOD QChar:hasMirrored( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QChar_hasMirrored( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:isDigit()
-   RETURN Qt_QChar_isDigit( ::pPtr )
+METHOD QChar:isDigit( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QChar_isDigit( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:isHighSurrogate()
-   RETURN Qt_QChar_isHighSurrogate( ::pPtr )
+METHOD QChar:isHighSurrogate( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QChar_isHighSurrogate( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:isLetter()
-   RETURN Qt_QChar_isLetter( ::pPtr )
+METHOD QChar:isLetter( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QChar_isLetter( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:isLetterOrNumber()
-   RETURN Qt_QChar_isLetterOrNumber( ::pPtr )
+METHOD QChar:isLetterOrNumber( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QChar_isLetterOrNumber( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:isLowSurrogate()
-   RETURN Qt_QChar_isLowSurrogate( ::pPtr )
+METHOD QChar:isLowSurrogate( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QChar_isLowSurrogate( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:isLower()
-   RETURN Qt_QChar_isLower( ::pPtr )
+METHOD QChar:isLower( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QChar_isLower( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:isMark()
-   RETURN Qt_QChar_isMark( ::pPtr )
+METHOD QChar:isMark( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QChar_isMark( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:isNull()
-   RETURN Qt_QChar_isNull( ::pPtr )
+METHOD QChar:isNull( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QChar_isNull( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:isNumber()
-   RETURN Qt_QChar_isNumber( ::pPtr )
+METHOD QChar:isNumber( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QChar_isNumber( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:isPrint()
-   RETURN Qt_QChar_isPrint( ::pPtr )
+METHOD QChar:isPrint( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QChar_isPrint( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:isPunct()
-   RETURN Qt_QChar_isPunct( ::pPtr )
+METHOD QChar:isPunct( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QChar_isPunct( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:isSpace()
-   RETURN Qt_QChar_isSpace( ::pPtr )
+METHOD QChar:isSpace( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QChar_isSpace( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:isSymbol()
-   RETURN Qt_QChar_isSymbol( ::pPtr )
+METHOD QChar:isSymbol( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QChar_isSymbol( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:isTitleCase()
-   RETURN Qt_QChar_isTitleCase( ::pPtr )
+METHOD QChar:isTitleCase( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QChar_isTitleCase( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:isUpper()
-   RETURN Qt_QChar_isUpper( ::pPtr )
+METHOD QChar:isUpper( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QChar_isUpper( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:joining()
-   RETURN Qt_QChar_joining( ::pPtr )
+METHOD QChar:joining( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QChar_joining( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:mirroredChar()
-   RETURN HB_QChar():from( Qt_QChar_mirroredChar( ::pPtr ) )
+METHOD QChar:mirroredChar( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QChar():from( Qt_QChar_mirroredChar( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:toAscii()
-   RETURN Qt_QChar_toAscii( ::pPtr )
+METHOD QChar:toAscii( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QChar_toAscii( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:toCaseFolded()
-   RETURN HB_QChar():from( Qt_QChar_toCaseFolded( ::pPtr ) )
+METHOD QChar:toCaseFolded( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QChar():from( Qt_QChar_toCaseFolded( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:toLatin1()
-   RETURN Qt_QChar_toLatin1( ::pPtr )
+METHOD QChar:toLatin1( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QChar_toLatin1( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:toLower()
-   RETURN HB_QChar():from( Qt_QChar_toLower( ::pPtr ) )
+METHOD QChar:toLower( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QChar():from( Qt_QChar_toLower( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:toTitleCase()
-   RETURN HB_QChar():from( Qt_QChar_toTitleCase( ::pPtr ) )
+METHOD QChar:toTitleCase( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QChar():from( Qt_QChar_toTitleCase( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:toUpper()
-   RETURN HB_QChar():from( Qt_QChar_toUpper( ::pPtr ) )
+METHOD QChar:toUpper( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QChar():from( Qt_QChar_toUpper( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:unicode()
-   RETURN Qt_QChar_unicode( ::pPtr )
+METHOD QChar:unicode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QChar_unicode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QChar:unicodeVersion()
-   RETURN Qt_QChar_unicodeVersion( ::pPtr )
+METHOD QChar:unicodeVersion( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QChar_unicodeVersion( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

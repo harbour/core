@@ -27,7 +27,7 @@
  *     An instance of the object of type QSizePolicy
  *  $METHODS$
  *     :controlType()                                      -> nControlType
- *     :expandingDirections()                              -> nQt::Orientations
+ *     :expandingDirections()                              -> nQt_Orientations
  *     :hasHeightForWidth()                                -> lBool
  *     :horizontalPolicy()                                 -> nPolicy
  *     :horizontalStretch()                                -> nInt
@@ -59,7 +59,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQSizePolicy.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QSizePolicy.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

@@ -26,19 +26,19 @@
  *  $RETURNS$
  *     An instance of the object of type QDesignerFormWindowCursorInterface
  *  $METHODS$
- *     :current()                                          -> pQWidget
- *     :formWindow()                                       -> pQDesignerFormWindowInterface
+ *     :current()                                          -> oQWidget
+ *     :formWindow()                                       -> oQDesignerFormWindowInterface
  *     :hasSelection()                                     -> lBool
- *     :isWidgetSelected( pWidget )                        -> lBool
+ *     :isWidgetSelected( oQWidget )                       -> lBool
  *     :movePosition( nOperation, nMode )                  -> lBool
  *     :position()                                         -> nInt
- *     :resetWidgetProperty( pWidget, cName )              -> NIL
- *     :selectedWidget( nIndex )                           -> pQWidget
+ *     :resetWidgetProperty( oQWidget, cName )             -> NIL
+ *     :selectedWidget( nIndex )                           -> oQWidget
  *     :selectedWidgetCount()                              -> nInt
  *     :setPosition( nPosition, nMode )                    -> NIL
- *     :setProperty( cName, pValue )                       -> NIL
- *     :setWidgetProperty( pWidget, cName, pValue )        -> NIL
- *     :widget( nIndex )                                   -> pQWidget
+ *     :setProperty( cName, oQVariant )                    -> NIL
+ *     :setWidgetProperty( oQWidget, cName, oQVariant )    -> NIL
+ *     :widget( nIndex )                                   -> oQWidget
  *     :widgetCount()                                      -> nInt
  * 
  *  $DESCRIPTION$
@@ -59,7 +59,5 @@
  *     Harbour source: contrib/hbqt/qtdesigner/TQDesignerFormWindowCursorInterface.prg
  *     C++ wrappers  : contrib/hbqt/qtdesigner/QDesignerFormWindowCursorInterface.cpp
  *     Library       : hbqtdesigner
- *  $SEEALSO$
- *     
  *  $END$
  */

@@ -103,11 +103,12 @@ CREATE CLASS QEventLoop INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QEvent
 
    METHOD  new( ... )
 
-   METHOD  exec( nFlags )
-   METHOD  exit( nReturnCode )
-   METHOD  isRunning()
-   METHOD  processEvents( ... )
-   METHOD  wakeUp()
+   METHOD  exec                          // ( nFlags )                                         -> nInt
+   METHOD  exit                          // ( nReturnCode )                                    -> NIL
+   METHOD  isRunning                     // (  )                                               -> lBool
+   METHOD  processEvents                 // ( nFlags )                                         -> lBool
+                                         // ( nFlags, nMaxTime )                               -> NIL
+   METHOD  wakeUp                        // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -121,16 +122,40 @@ METHOD QEventLoop:new( ... )
    RETURN Self
 
 
-METHOD QEventLoop:exec( nFlags )
-   RETURN Qt_QEventLoop_exec( ::pPtr, nFlags )
+METHOD QEventLoop:exec( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QEventLoop_exec( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QEventLoop_exec( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QEventLoop:exit( nReturnCode )
-   RETURN Qt_QEventLoop_exit( ::pPtr, nReturnCode )
+METHOD QEventLoop:exit( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QEventLoop_exit( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QEventLoop_exit( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QEventLoop:isRunning()
-   RETURN Qt_QEventLoop_isRunning( ::pPtr )
+METHOD QEventLoop:isRunning( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QEventLoop_isRunning( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QEventLoop:processEvents( ... )
@@ -153,6 +178,10 @@ METHOD QEventLoop:processEvents( ... )
    RETURN hbqt_error()
 
 
-METHOD QEventLoop:wakeUp()
-   RETURN Qt_QEventLoop_wakeUp( ::pPtr )
+METHOD QEventLoop:wakeUp( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QEventLoop_wakeUp( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

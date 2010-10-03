@@ -103,35 +103,35 @@ CREATE CLASS QFileSystemModel INHERIT HbQtObjectHandler, HB_QAbstractItemModel F
 
    METHOD  new( ... )
 
-   METHOD  dropMimeData( pData, nAction, nRow, nColumn, pParent )
-   METHOD  fileIcon( pIndex )
-   METHOD  fileInfo( pIndex )
-   METHOD  fileName( pIndex )
-   METHOD  filePath( pIndex )
-   METHOD  filter()
-   METHOD  index( cPath, nColumn )
-   METHOD  isDir( pIndex )
-   METHOD  isReadOnly()
-   METHOD  lastModified( pIndex )
-   METHOD  mimeTypes()
-   METHOD  mkdir( pParent, cName )
-   METHOD  myComputer( nRole )
-   METHOD  nameFilterDisables()
-   METHOD  nameFilters()
-   METHOD  permissions( pIndex )
-   METHOD  remove( pIndex )
-   METHOD  resolveSymlinks()
-   METHOD  rmdir( pIndex )
-   METHOD  rootDirectory()
-   METHOD  rootPath()
-   METHOD  setFilter( nFilters )
-   METHOD  setNameFilterDisables( lEnable )
-   METHOD  setNameFilters( pFilters )
-   METHOD  setReadOnly( lEnable )
-   METHOD  setResolveSymlinks( lEnable )
-   METHOD  setRootPath( cNewPath )
-   METHOD  size( pIndex )
-   METHOD  type( pIndex )
+   METHOD  dropMimeData                  // ( oQMimeData, nAction, nRow, nColumn, oQModelIndex ) -> lBool
+   METHOD  fileIcon                      // ( oQModelIndex )                                   -> oQIcon
+   METHOD  fileInfo                      // ( oQModelIndex )                                   -> oQFileInfo
+   METHOD  fileName                      // ( oQModelIndex )                                   -> cQString
+   METHOD  filePath                      // ( oQModelIndex )                                   -> cQString
+   METHOD  filter                        // (  )                                               -> nQDir_Filters
+   METHOD  index                         // ( cPath, nColumn )                                 -> oQModelIndex
+   METHOD  isDir                         // ( oQModelIndex )                                   -> lBool
+   METHOD  isReadOnly                    // (  )                                               -> lBool
+   METHOD  lastModified                  // ( oQModelIndex )                                   -> oQDateTime
+   METHOD  mimeTypes                     // (  )                                               -> oQStringList
+   METHOD  mkdir                         // ( oQModelIndex, cName )                            -> oQModelIndex
+   METHOD  myComputer                    // ( nRole )                                          -> oQVariant
+   METHOD  nameFilterDisables            // (  )                                               -> lBool
+   METHOD  nameFilters                   // (  )                                               -> oQStringList
+   METHOD  permissions                   // ( oQModelIndex )                                   -> nQFile_Permissions
+   METHOD  remove                        // ( oQModelIndex )                                   -> lBool
+   METHOD  resolveSymlinks               // (  )                                               -> lBool
+   METHOD  rmdir                         // ( oQModelIndex )                                   -> lBool
+   METHOD  rootDirectory                 // (  )                                               -> oQDir
+   METHOD  rootPath                      // (  )                                               -> cQString
+   METHOD  setFilter                     // ( nFilters )                                       -> NIL
+   METHOD  setNameFilterDisables         // ( lEnable )                                        -> NIL
+   METHOD  setNameFilters                // ( oQStringList )                                   -> NIL
+   METHOD  setReadOnly                   // ( lEnable )                                        -> NIL
+   METHOD  setResolveSymlinks            // ( lEnable )                                        -> NIL
+   METHOD  setRootPath                   // ( cNewPath )                                       -> oQModelIndex
+   METHOD  size                          // ( oQModelIndex )                                   -> nQint64
+   METHOD  type                          // ( oQModelIndex )                                   -> cQString
 
    ENDCLASS
 
@@ -145,118 +145,326 @@ METHOD QFileSystemModel:new( ... )
    RETURN Self
 
 
-METHOD QFileSystemModel:dropMimeData( pData, nAction, nRow, nColumn, pParent )
-   RETURN Qt_QFileSystemModel_dropMimeData( ::pPtr, hbqt_ptr( pData ), nAction, nRow, nColumn, hbqt_ptr( pParent ) )
+METHOD QFileSystemModel:dropMimeData( ... )
+   SWITCH PCount()
+   CASE 5
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isObject( hb_pvalue( 5 ) )
+         RETURN Qt_QFileSystemModel_dropMimeData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:fileIcon( pIndex )
-   RETURN HB_QIcon():from( Qt_QFileSystemModel_fileIcon( ::pPtr, hbqt_ptr( pIndex ) ) )
+METHOD QFileSystemModel:fileIcon( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QIcon():from( Qt_QFileSystemModel_fileIcon( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:fileInfo( pIndex )
-   RETURN HB_QFileInfo():from( Qt_QFileSystemModel_fileInfo( ::pPtr, hbqt_ptr( pIndex ) ) )
+METHOD QFileSystemModel:fileInfo( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QFileInfo():from( Qt_QFileSystemModel_fileInfo( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:fileName( pIndex )
-   RETURN Qt_QFileSystemModel_fileName( ::pPtr, hbqt_ptr( pIndex ) )
+METHOD QFileSystemModel:fileName( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QFileSystemModel_fileName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:filePath( pIndex )
-   RETURN Qt_QFileSystemModel_filePath( ::pPtr, hbqt_ptr( pIndex ) )
+METHOD QFileSystemModel:filePath( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QFileSystemModel_filePath( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:filter()
-   RETURN Qt_QFileSystemModel_filter( ::pPtr )
+METHOD QFileSystemModel:filter( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileSystemModel_filter( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:index( cPath, nColumn )
-   RETURN HB_QModelIndex():from( Qt_QFileSystemModel_index( ::pPtr, cPath, nColumn ) )
+METHOD QFileSystemModel:index( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QModelIndex():from( Qt_QFileSystemModel_index( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QModelIndex():from( Qt_QFileSystemModel_index( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:isDir( pIndex )
-   RETURN Qt_QFileSystemModel_isDir( ::pPtr, hbqt_ptr( pIndex ) )
+METHOD QFileSystemModel:isDir( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QFileSystemModel_isDir( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:isReadOnly()
-   RETURN Qt_QFileSystemModel_isReadOnly( ::pPtr )
+METHOD QFileSystemModel:isReadOnly( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileSystemModel_isReadOnly( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:lastModified( pIndex )
-   RETURN HB_QDateTime():from( Qt_QFileSystemModel_lastModified( ::pPtr, hbqt_ptr( pIndex ) ) )
+METHOD QFileSystemModel:lastModified( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QDateTime():from( Qt_QFileSystemModel_lastModified( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:mimeTypes()
-   RETURN HB_QStringList():from( Qt_QFileSystemModel_mimeTypes( ::pPtr ) )
+METHOD QFileSystemModel:mimeTypes( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QFileSystemModel_mimeTypes( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:mkdir( pParent, cName )
-   RETURN HB_QModelIndex():from( Qt_QFileSystemModel_mkdir( ::pPtr, hbqt_ptr( pParent ), cName ) )
+METHOD QFileSystemModel:mkdir( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN HB_QModelIndex():from( Qt_QFileSystemModel_mkdir( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:myComputer( nRole )
-   RETURN HB_QVariant():from( Qt_QFileSystemModel_myComputer( ::pPtr, nRole ) )
+METHOD QFileSystemModel:myComputer( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QVariant():from( Qt_QFileSystemModel_myComputer( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QVariant():from( Qt_QFileSystemModel_myComputer( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:nameFilterDisables()
-   RETURN Qt_QFileSystemModel_nameFilterDisables( ::pPtr )
+METHOD QFileSystemModel:nameFilterDisables( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileSystemModel_nameFilterDisables( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:nameFilters()
-   RETURN HB_QStringList():from( Qt_QFileSystemModel_nameFilters( ::pPtr ) )
+METHOD QFileSystemModel:nameFilters( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QFileSystemModel_nameFilters( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:permissions( pIndex )
-   RETURN Qt_QFileSystemModel_permissions( ::pPtr, hbqt_ptr( pIndex ) )
+METHOD QFileSystemModel:permissions( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QFileSystemModel_permissions( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:remove( pIndex )
-   RETURN Qt_QFileSystemModel_remove( ::pPtr, hbqt_ptr( pIndex ) )
+METHOD QFileSystemModel:remove( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QFileSystemModel_remove( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:resolveSymlinks()
-   RETURN Qt_QFileSystemModel_resolveSymlinks( ::pPtr )
+METHOD QFileSystemModel:resolveSymlinks( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileSystemModel_resolveSymlinks( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:rmdir( pIndex )
-   RETURN Qt_QFileSystemModel_rmdir( ::pPtr, hbqt_ptr( pIndex ) )
+METHOD QFileSystemModel:rmdir( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QFileSystemModel_rmdir( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:rootDirectory()
-   RETURN HB_QDir():from( Qt_QFileSystemModel_rootDirectory( ::pPtr ) )
+METHOD QFileSystemModel:rootDirectory( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDir():from( Qt_QFileSystemModel_rootDirectory( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:rootPath()
-   RETURN Qt_QFileSystemModel_rootPath( ::pPtr )
+METHOD QFileSystemModel:rootPath( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileSystemModel_rootPath( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:setFilter( nFilters )
-   RETURN Qt_QFileSystemModel_setFilter( ::pPtr, nFilters )
+METHOD QFileSystemModel:setFilter( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFileSystemModel_setFilter( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:setNameFilterDisables( lEnable )
-   RETURN Qt_QFileSystemModel_setNameFilterDisables( ::pPtr, lEnable )
+METHOD QFileSystemModel:setNameFilterDisables( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QFileSystemModel_setNameFilterDisables( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:setNameFilters( pFilters )
-   RETURN Qt_QFileSystemModel_setNameFilters( ::pPtr, hbqt_ptr( pFilters ) )
+METHOD QFileSystemModel:setNameFilters( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QFileSystemModel_setNameFilters( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:setReadOnly( lEnable )
-   RETURN Qt_QFileSystemModel_setReadOnly( ::pPtr, lEnable )
+METHOD QFileSystemModel:setReadOnly( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QFileSystemModel_setReadOnly( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:setResolveSymlinks( lEnable )
-   RETURN Qt_QFileSystemModel_setResolveSymlinks( ::pPtr, lEnable )
+METHOD QFileSystemModel:setResolveSymlinks( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QFileSystemModel_setResolveSymlinks( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:setRootPath( cNewPath )
-   RETURN HB_QModelIndex():from( Qt_QFileSystemModel_setRootPath( ::pPtr, cNewPath ) )
+METHOD QFileSystemModel:setRootPath( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QModelIndex():from( Qt_QFileSystemModel_setRootPath( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:size( pIndex )
-   RETURN Qt_QFileSystemModel_size( ::pPtr, hbqt_ptr( pIndex ) )
+METHOD QFileSystemModel:size( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QFileSystemModel_size( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileSystemModel:type( pIndex )
-   RETURN Qt_QFileSystemModel_type( ::pPtr, hbqt_ptr( pIndex ) )
+METHOD QFileSystemModel:type( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QFileSystemModel_type( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

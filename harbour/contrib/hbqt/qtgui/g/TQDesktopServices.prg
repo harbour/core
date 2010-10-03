@@ -103,11 +103,11 @@ CREATE CLASS QDesktopServices INHERIT HbQtObjectHandler FUNCTION HB_QDesktopServ
 
    METHOD  new( ... )
 
-   METHOD  displayName( nType )
-   METHOD  openUrl( pUrl )
-   METHOD  setUrlHandler( cScheme, pReceiver, pMethod )
-   METHOD  storageLocation( nType )
-   METHOD  unsetUrlHandler( cScheme )
+   METHOD  displayName                   // ( nType )                                          -> cQString
+   METHOD  openUrl                       // ( oQUrl )                                          -> lBool
+   METHOD  setUrlHandler                 // ( cScheme, oQObject, cMethod )                     -> NIL
+   METHOD  storageLocation               // ( nType )                                          -> cQString
+   METHOD  unsetUrlHandler               // ( cScheme )                                        -> NIL
 
    ENDCLASS
 
@@ -121,22 +121,62 @@ METHOD QDesktopServices:new( ... )
    RETURN Self
 
 
-METHOD QDesktopServices:displayName( nType )
-   RETURN Qt_QDesktopServices_displayName( ::pPtr, nType )
+METHOD QDesktopServices:displayName( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDesktopServices_displayName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesktopServices:openUrl( pUrl )
-   RETURN Qt_QDesktopServices_openUrl( ::pPtr, hbqt_ptr( pUrl ) )
+METHOD QDesktopServices:openUrl( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDesktopServices_openUrl( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesktopServices:setUrlHandler( cScheme, pReceiver, pMethod )
-   RETURN Qt_QDesktopServices_setUrlHandler( ::pPtr, cScheme, hbqt_ptr( pReceiver ), hbqt_ptr( pMethod ) )
+METHOD QDesktopServices:setUrlHandler( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
+         RETURN Qt_QDesktopServices_setUrlHandler( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesktopServices:storageLocation( nType )
-   RETURN Qt_QDesktopServices_storageLocation( ::pPtr, nType )
+METHOD QDesktopServices:storageLocation( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDesktopServices_storageLocation( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesktopServices:unsetUrlHandler( cScheme )
-   RETURN Qt_QDesktopServices_unsetUrlHandler( ::pPtr, cScheme )
+METHOD QDesktopServices:unsetUrlHandler( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QDesktopServices_unsetUrlHandler( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

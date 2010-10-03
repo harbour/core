@@ -103,16 +103,16 @@ CREATE CLASS QItemDelegate INHERIT HbQtObjectHandler, HB_QAbstractItemDelegate F
 
    METHOD  new( ... )
 
-   METHOD  hasClipping()
-   METHOD  itemEditorFactory()
-   METHOD  setClipping( lClip )
-   METHOD  setItemEditorFactory( pFactory )
-   METHOD  createEditor( pParent, pOption, pIndex )
-   METHOD  paint( pPainter, pOption, pIndex )
-   METHOD  setEditorData( pEditor, pIndex )
-   METHOD  setModelData( pEditor, pModel, pIndex )
-   METHOD  sizeHint( pOption, pIndex )
-   METHOD  updateEditorGeometry( pEditor, pOption, pIndex )
+   METHOD  hasClipping                   // (  )                                               -> lBool
+   METHOD  itemEditorFactory             // (  )                                               -> oQItemEditorFactory
+   METHOD  setClipping                   // ( lClip )                                          -> NIL
+   METHOD  setItemEditorFactory          // ( oQItemEditorFactory )                            -> NIL
+   METHOD  createEditor                  // ( oQWidget, oQStyleOptionViewItem, oQModelIndex )  -> oQWidget
+   METHOD  paint                         // ( oQPainter, oQStyleOptionViewItem, oQModelIndex ) -> NIL
+   METHOD  setEditorData                 // ( oQWidget, oQModelIndex )                         -> NIL
+   METHOD  setModelData                  // ( oQWidget, oQAbstractItemModel, oQModelIndex )    -> NIL
+   METHOD  sizeHint                      // ( oQStyleOptionViewItem, oQModelIndex )            -> oQSize
+   METHOD  updateEditorGeometry          // ( oQWidget, oQStyleOptionViewItem, oQModelIndex )  -> NIL
 
    ENDCLASS
 
@@ -126,42 +126,114 @@ METHOD QItemDelegate:new( ... )
    RETURN Self
 
 
-METHOD QItemDelegate:hasClipping()
-   RETURN Qt_QItemDelegate_hasClipping( ::pPtr )
+METHOD QItemDelegate:hasClipping( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QItemDelegate_hasClipping( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QItemDelegate:itemEditorFactory()
-   RETURN HB_QItemEditorFactory():from( Qt_QItemDelegate_itemEditorFactory( ::pPtr ) )
+METHOD QItemDelegate:itemEditorFactory( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QItemEditorFactory():from( Qt_QItemDelegate_itemEditorFactory( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QItemDelegate:setClipping( lClip )
-   RETURN Qt_QItemDelegate_setClipping( ::pPtr, lClip )
+METHOD QItemDelegate:setClipping( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QItemDelegate_setClipping( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QItemDelegate:setItemEditorFactory( pFactory )
-   RETURN Qt_QItemDelegate_setItemEditorFactory( ::pPtr, hbqt_ptr( pFactory ) )
+METHOD QItemDelegate:setItemEditorFactory( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QItemDelegate_setItemEditorFactory( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QItemDelegate:createEditor( pParent, pOption, pIndex )
-   RETURN HB_QWidget():from( Qt_QItemDelegate_createEditor( ::pPtr, hbqt_ptr( pParent ), hbqt_ptr( pOption ), hbqt_ptr( pIndex ) ) )
+METHOD QItemDelegate:createEditor( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN HB_QWidget():from( Qt_QItemDelegate_createEditor( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QItemDelegate:paint( pPainter, pOption, pIndex )
-   RETURN Qt_QItemDelegate_paint( ::pPtr, hbqt_ptr( pPainter ), hbqt_ptr( pOption ), hbqt_ptr( pIndex ) )
+METHOD QItemDelegate:paint( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QItemDelegate_paint( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QItemDelegate:setEditorData( pEditor, pIndex )
-   RETURN Qt_QItemDelegate_setEditorData( ::pPtr, hbqt_ptr( pEditor ), hbqt_ptr( pIndex ) )
+METHOD QItemDelegate:setEditorData( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QItemDelegate_setEditorData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QItemDelegate:setModelData( pEditor, pModel, pIndex )
-   RETURN Qt_QItemDelegate_setModelData( ::pPtr, hbqt_ptr( pEditor ), hbqt_ptr( pModel ), hbqt_ptr( pIndex ) )
+METHOD QItemDelegate:setModelData( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QItemDelegate_setModelData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QItemDelegate:sizeHint( pOption, pIndex )
-   RETURN HB_QSize():from( Qt_QItemDelegate_sizeHint( ::pPtr, hbqt_ptr( pOption ), hbqt_ptr( pIndex ) ) )
+METHOD QItemDelegate:sizeHint( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QSize():from( Qt_QItemDelegate_sizeHint( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QItemDelegate:updateEditorGeometry( pEditor, pOption, pIndex )
-   RETURN Qt_QItemDelegate_updateEditorGeometry( ::pPtr, hbqt_ptr( pEditor ), hbqt_ptr( pOption ), hbqt_ptr( pIndex ) )
+METHOD QItemDelegate:updateEditorGeometry( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QItemDelegate_updateEditorGeometry( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

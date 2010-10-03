@@ -333,7 +333,7 @@ METHOD XbpTabWidget:execSlot( cSlot, p )
    LOCAL qTab, nIndex, oTab, qWidget, qPoint, iIndex
 
    IF hb_isPointer( p )
-      qPoint  := ::oWidget:mapToGlobal( p )
+      qPoint  := ::oWidget:mapToGlobal( QPoint( p ) )
       qWidget := QApplication():widgetAt( qPoint )
 
       iIndex  := ascan( ::aChildren, {|o| hbqt_IsEqualGcQtPointer( o:oWidget, qWidget ) } ) - 1

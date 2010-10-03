@@ -27,8 +27,8 @@
  *     An instance of the object of type QsciScintilla
  *  $METHODS$
  *     :annotate( nLine, cText, nStyle )                   -> NIL
- *     :annotate_1( nLine, cText, pStyle )                 -> NIL
- *     :annotate_2( nLine, pText )                         -> NIL
+ *     :annotate( nLine, cText, oQsciStyle )               -> NIL
+ *     :annotate( nLine, oQsciStyledText )                 -> NIL
  *     :annotation( nLine )                                -> cQString
  *     :annotationDisplay()                                -> nAnnotationDisplay
  *     :clearAnnotations( nLine )                          -> NIL
@@ -48,14 +48,14 @@
  *     :caseSensitive()                                    -> lBool
  *     :clearFolds()                                       -> NIL
  *     :clearRegisteredImages()                            -> NIL
- *     :color()                                            -> pQColor
+ *     :color()                                            -> oQColor
  *     :convertEols( nMode )                               -> NIL
- *     :document()                                         -> pQsciDocument
+ *     :document()                                         -> oQsciDocument
  *     :endUndoAction()                                    -> NIL
- *     :edgeColor()                                        -> pQColor
+ *     :edgeColor()                                        -> oQColor
  *     :edgeColumn()                                       -> nInt
  *     :edgeMode()                                         -> nEdgeMode
- *     :setFont( pF )                                      -> NIL
+ *     :setFont( oQFont )                                  -> NIL
  *     :eolMode()                                          -> nEolMode
  *     :eolVisibility()                                    -> lBool
  *     :findFirst( cExpr, lRe, lCs, lWo, lWrap, lForward, nLine, nIndex, lShow )  -> lBool
@@ -76,21 +76,21 @@
  *     :isRedoAvailable()                                  -> lBool
  *     :isUndoAvailable()                                  -> lBool
  *     :isUtf8()                                           -> lBool
- *     :isWordCharacter( cCh )                             -> lBool
- *     :lineAt( pPos )                                     -> nInt
+ *     :isWordCharacter( nCh )                             -> lBool
+ *     :lineAt( oQPoint )                                  -> nInt
  *     :lineIndexFromPosition( nPosition, @nLine, @nIndex )  -> NIL
  *     :lineLength( nLine )                                -> nInt
  *     :lines()                                            -> nInt
  *     :length()                                           -> nInt
- *     :lexer()                                            -> pQsciLexer
+ *     :lexer()                                            -> oQsciLexer
  *     :marginLineNumbers( nMargin )                       -> lBool
  *     :marginMarkerMask( nMargin )                        -> nInt
  *     :marginSensitivity( nMargin )                       -> lBool
  *     :marginType( nMargin )                              -> nMarginType
  *     :marginWidth( nMargin )                             -> nInt
  *     :markerDefine( nSym, nMnr )                         -> nInt
- *     :markerDefine_1( cCh, nMnr )                        -> nInt
- *     :markerDefine_2( pPm, nMnr )                        -> nInt
+ *     :markerDefine( nCh, nMnr )                          -> nInt
+ *     :markerDefine( oQPixmap, nMnr )                     -> nInt
  *     :markerAdd( nLinenr, nMnr )                         -> nInt
  *     :markersAtLine( nLinenr )                           -> nUnsigned
  *     :markerDelete( nLinenr, nMnr )                      -> NIL
@@ -99,54 +99,54 @@
  *     :markerLine( nMhandle )                             -> nInt
  *     :markerFindNext( nLinenr, nMask )                   -> nInt
  *     :markerFindPrevious( nLinenr, nMask )               -> nInt
- *     :paper()                                            -> pQColor
+ *     :paper()                                            -> oQColor
  *     :positionFromLineIndex( nLine, nIndex )             -> nInt
- *     :read( pIo )                                        -> lBool
+ *     :read( oQIODevice )                                 -> lBool
  *     :recolor( nStart, nEnd )                            -> NIL
- *     :registerImage( nId, pPm )                          -> NIL
+ *     :registerImage( nId, oQPixmap )                     -> NIL
  *     :replace( cReplaceStr )                             -> NIL
  *     :resetFoldMarginColors()                            -> NIL
- *     :setFoldMarginColors( pFore, pBack )                -> NIL
+ *     :setFoldMarginColors( oQColor, oQColor )            -> NIL
  *     :setAnnotationDisplay( nDisplay )                   -> NIL
  *     :setAutoCompletionFillupsEnabled( lEnabled )        -> NIL
- *     :setAutoCompletionFillups( pFillups )               -> NIL
- *     :setAutoCompletionWordSeparators( pSeparators )     -> NIL
- *     :setCallTipsBackgroundColor( pCol )                 -> NIL
- *     :setCallTipsForegroundColor( pCol )                 -> NIL
- *     :setCallTipsHighlightColor( pCol )                  -> NIL
+ *     :setAutoCompletionFillups( cFillups )               -> NIL
+ *     :setAutoCompletionWordSeparators( oQStringList )    -> NIL
+ *     :setCallTipsBackgroundColor( oQColor )              -> NIL
+ *     :setCallTipsForegroundColor( oQColor )              -> NIL
+ *     :setCallTipsHighlightColor( oQColor )               -> NIL
  *     :setCallTipsStyle( nStyle )                         -> NIL
  *     :setCallTipsVisible( nNr )                          -> NIL
- *     :setDocument( pDocument )                           -> NIL
- *     :setEdgeColor( pCol )                               -> NIL
+ *     :setDocument( oQsciDocument )                       -> NIL
+ *     :setEdgeColor( oQColor )                            -> NIL
  *     :setEdgeColumn( nColnr )                            -> NIL
  *     :setEdgeMode( nMode )                               -> NIL
  *     :setMarginText( nLine, cText, nStyle )              -> NIL
- *     :setMarginText_1( nLine, cText, pStyle )            -> NIL
- *     :setMarginText_2( nLine, pText )                    -> NIL
+ *     :setMarginText( nLine, cText, oQsciStyle )          -> NIL
+ *     :setMarginText( nLine, oQsciStyledText )            -> NIL
  *     :setMarginType( nMargin, nType )                    -> NIL
  *     :clearMarginText( nLine )                           -> NIL
- *     :setMarkerBackgroundColor( pCol, nMnr )             -> NIL
- *     :setMarkerForegroundColor( pCol, nMnr )             -> NIL
- *     :setMatchedBraceBackgroundColor( pCol )             -> NIL
- *     :setMatchedBraceForegroundColor( pCol )             -> NIL
- *     :setUnmatchedBraceBackgroundColor( pCol )           -> NIL
- *     :setUnmatchedBraceForegroundColor( pCol )           -> NIL
+ *     :setMarkerBackgroundColor( oQColor, nMnr )          -> NIL
+ *     :setMarkerForegroundColor( oQColor, nMnr )          -> NIL
+ *     :setMatchedBraceBackgroundColor( oQColor )          -> NIL
+ *     :setMatchedBraceForegroundColor( oQColor )          -> NIL
+ *     :setUnmatchedBraceBackgroundColor( oQColor )        -> NIL
+ *     :setUnmatchedBraceForegroundColor( oQColor )        -> NIL
  *     :setWrapVisualFlags( nEflag, nSflag, nSindent )     -> NIL
  *     :selectedText()                                     -> cQString
  *     :selectionToEol()                                   -> lBool
  *     :setSelectionToEol( lFilled )                       -> NIL
- *     :showUserList( nId, pList )                         -> NIL
- *     :standardCommands()                                 -> pQsciCommandSet
+ *     :showUserList( nId, oQStringList )                  -> NIL
+ *     :standardCommands()                                 -> oQsciCommandSet
  *     :tabIndents()                                       -> lBool
  *     :tabWidth()                                         -> nInt
  *     :text()                                             -> cQString
- *     :text_1( nLine )                                    -> cQString
+ *     :text( nLine )                                      -> cQString
  *     :textHeight( nLinenr )                              -> nInt
  *     :whitespaceVisibility()                             -> nWhitespaceVisibility
- *     :wordAtPoint( pPoint )                              -> cQString
+ *     :wordAtPoint( oQPoint )                             -> cQString
  *     :wordCharacters()                                   -> cChar
  *     :wrapMode()                                         -> nWrapMode
- *     :write( pIo )                                       -> lBool
+ *     :write( oQIODevice )                                -> lBool
  *     :append( cText )                                    -> NIL
  *     :autoCompleteFromAll()                              -> NIL
  *     :autoCompleteFromAPIs()                             -> NIL
@@ -178,36 +178,36 @@
  *     :setAutoIndent( lAutoindent )                       -> NIL
  *     :setBraceMatching( nBm )                            -> NIL
  *     :setBackspaceUnindents( lUnindent )                 -> NIL
- *     :setCaretForegroundColor( pCol )                    -> NIL
- *     :setCaretLineBackgroundColor( pCol )                -> NIL
+ *     :setCaretForegroundColor( oQColor )                 -> NIL
+ *     :setCaretLineBackgroundColor( oQColor )             -> NIL
  *     :setCaretLineVisible( lEnable )                     -> NIL
  *     :setCaretWidth( nWidth )                            -> NIL
- *     :setColor( pC )                                     -> NIL
+ *     :setColor( oQColor )                                -> NIL
  *     :setCursorPosition( nLine, nIndex )                 -> NIL
  *     :setEolMode( nMode )                                -> NIL
  *     :setEolVisibility( lVisible )                       -> NIL
  *     :setFolding( nFold, nMargin )                       -> NIL
  *     :setIndentation( nLine, nIndentation )              -> NIL
  *     :setIndentationGuides( lEnable )                    -> NIL
- *     :setIndentationGuidesBackgroundColor( pCol )        -> NIL
- *     :setIndentationGuidesForegroundColor( pCol )        -> NIL
+ *     :setIndentationGuidesBackgroundColor( oQColor )     -> NIL
+ *     :setIndentationGuidesForegroundColor( oQColor )     -> NIL
  *     :setIndentationsUseTabs( lTabs )                    -> NIL
  *     :setIndentationWidth( nWidth )                      -> NIL
- *     :setLexer( pLexer )                                 -> NIL
- *     :setMarginsBackgroundColor( pCol )                  -> NIL
- *     :setMarginsFont( pF )                               -> NIL
- *     :setMarginsForegroundColor( pCol )                  -> NIL
+ *     :setLexer( oQsciLexer )                             -> NIL
+ *     :setMarginsBackgroundColor( oQColor )               -> NIL
+ *     :setMarginsFont( oQFont )                           -> NIL
+ *     :setMarginsForegroundColor( oQColor )               -> NIL
  *     :setMarginLineNumbers( nMargin, lLnrs )             -> NIL
  *     :setMarginMarkerMask( nMargin, nMask )              -> NIL
  *     :setMarginSensitivity( nMargin, lSens )             -> NIL
  *     :setMarginWidth( nMargin, nWidth )                  -> NIL
- *     :setMarginWidth_1( nMargin, cS )                    -> NIL
+ *     :setMarginWidth( nMargin, cS )                      -> NIL
  *     :setModified( lM )                                  -> NIL
- *     :setPaper( pC )                                     -> NIL
+ *     :setPaper( oQColor )                                -> NIL
  *     :setReadOnly( lRo )                                 -> NIL
  *     :setSelection( nLineFrom, nIndexFrom, nLineTo, nIndexTo )  -> NIL
- *     :setSelectionBackgroundColor( pCol )                -> NIL
- *     :setSelectionForegroundColor( pCol )                -> NIL
+ *     :setSelectionBackgroundColor( oQColor )             -> NIL
+ *     :setSelectionForegroundColor( oQColor )             -> NIL
  *     :setTabIndents( lIndent )                           -> NIL
  *     :setTabWidth( nWidth )                              -> NIL
  *     :setText( cText )                                   -> NIL
@@ -217,9 +217,9 @@
  *     :undo()                                             -> NIL
  *     :unindent( nLine )                                  -> NIL
  *     :zoomIn( nRange )                                   -> NIL
- *     :zoomIn_1()                                         -> NIL
+ *     :zoomIn()                                           -> NIL
  *     :zoomOut( nRange )                                  -> NIL
- *     :zoomOut_1()                                        -> NIL
+ *     :zoomOut()                                          -> NIL
  *     :zoomTo( nSize )                                    -> NIL
  * 
  *  $DESCRIPTION$
@@ -240,7 +240,5 @@
  *     Harbour source: contrib/hbqt/qscintilla/TQsciScintilla.prg
  *     C++ wrappers  : contrib/hbqt/qscintilla/QsciScintilla.cpp
  *     Library       : hbqscintilla
- *  $SEEALSO$
- *     
  *  $END$
  */

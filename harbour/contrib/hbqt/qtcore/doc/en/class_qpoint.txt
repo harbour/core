@@ -56,7 +56,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQPoint.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QPoint.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

@@ -103,9 +103,9 @@ CREATE CLASS QSpacerItem INHERIT HbQtObjectHandler, HB_QLayoutItem FUNCTION HB_Q
 
    METHOD  new( ... )
 
-   METHOD  changeSize( nW, nH, nHPolicy, nVPolicy )
-   METHOD  isEmpty()
-   METHOD  spacerItem()
+   METHOD  changeSize                    // ( nW, nH, nHPolicy, nVPolicy )                     -> NIL
+   METHOD  isEmpty                       // (  )                                               -> lBool
+   METHOD  spacerItem                    // (  )                                               -> oQSpacerItem
 
    ENDCLASS
 
@@ -119,14 +119,42 @@ METHOD QSpacerItem:new( ... )
    RETURN Self
 
 
-METHOD QSpacerItem:changeSize( nW, nH, nHPolicy, nVPolicy )
-   RETURN Qt_QSpacerItem_changeSize( ::pPtr, nW, nH, nHPolicy, nVPolicy )
+METHOD QSpacerItem:changeSize( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QSpacerItem_changeSize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QSpacerItem_changeSize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QSpacerItem_changeSize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSpacerItem:isEmpty()
-   RETURN Qt_QSpacerItem_isEmpty( ::pPtr )
+METHOD QSpacerItem:isEmpty( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSpacerItem_isEmpty( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSpacerItem:spacerItem()
-   RETURN HB_QSpacerItem():from( Qt_QSpacerItem_spacerItem( ::pPtr ) )
+METHOD QSpacerItem:spacerItem( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSpacerItem():from( Qt_QSpacerItem_spacerItem( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

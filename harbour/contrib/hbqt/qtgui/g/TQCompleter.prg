@@ -103,35 +103,35 @@ CREATE CLASS QCompleter INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QCompl
 
    METHOD  new( ... )
 
-   METHOD  caseSensitivity()
-   METHOD  completionColumn()
-   METHOD  completionCount()
-   METHOD  completionMode()
-   METHOD  completionModel()
-   METHOD  completionPrefix()
-   METHOD  completionRole()
-   METHOD  currentCompletion()
-   METHOD  currentIndex()
-   METHOD  currentRow()
-   METHOD  model()
-   METHOD  modelSorting()
-   METHOD  pathFromIndex( pIndex )
-   METHOD  popup()
-   METHOD  setCaseSensitivity( nCaseSensitivity )
-   METHOD  setCompletionColumn( nColumn )
-   METHOD  setCompletionMode( nMode )
-   METHOD  setCompletionRole( nRole )
-   METHOD  setCurrentRow( nRow )
-   METHOD  setModel( pModel )
-   METHOD  setModelSorting( nSorting )
-   METHOD  setPopup( pPopup )
-   METHOD  setWidget( pWidget )
-   METHOD  splitPath( cPath )
-   METHOD  widget()
-   METHOD  wrapAround()
-   METHOD  complete( pRect )
-   METHOD  setCompletionPrefix( cPrefix )
-   METHOD  setWrapAround( lWrap )
+   METHOD  caseSensitivity               // (  )                                               -> nQt_CaseSensitivity
+   METHOD  completionColumn              // (  )                                               -> nInt
+   METHOD  completionCount               // (  )                                               -> nInt
+   METHOD  completionMode                // (  )                                               -> nCompletionMode
+   METHOD  completionModel               // (  )                                               -> oQAbstractItemModel
+   METHOD  completionPrefix              // (  )                                               -> cQString
+   METHOD  completionRole                // (  )                                               -> nInt
+   METHOD  currentCompletion             // (  )                                               -> cQString
+   METHOD  currentIndex                  // (  )                                               -> oQModelIndex
+   METHOD  currentRow                    // (  )                                               -> nInt
+   METHOD  model                         // (  )                                               -> oQAbstractItemModel
+   METHOD  modelSorting                  // (  )                                               -> nModelSorting
+   METHOD  pathFromIndex                 // ( oQModelIndex )                                   -> cQString
+   METHOD  popup                         // (  )                                               -> oQAbstractItemView
+   METHOD  setCaseSensitivity            // ( nCaseSensitivity )                               -> NIL
+   METHOD  setCompletionColumn           // ( nColumn )                                        -> NIL
+   METHOD  setCompletionMode             // ( nMode )                                          -> NIL
+   METHOD  setCompletionRole             // ( nRole )                                          -> NIL
+   METHOD  setCurrentRow                 // ( nRow )                                           -> lBool
+   METHOD  setModel                      // ( oQAbstractItemModel )                            -> NIL
+   METHOD  setModelSorting               // ( nSorting )                                       -> NIL
+   METHOD  setPopup                      // ( oQAbstractItemView )                             -> NIL
+   METHOD  setWidget                     // ( oQWidget )                                       -> NIL
+   METHOD  splitPath                     // ( cPath )                                          -> oQStringList
+   METHOD  widget                        // (  )                                               -> oQWidget
+   METHOD  wrapAround                    // (  )                                               -> lBool
+   METHOD  complete                      // ( oQRect )                                         -> NIL
+   METHOD  setCompletionPrefix           // ( cPrefix )                                        -> NIL
+   METHOD  setWrapAround                 // ( lWrap )                                          -> NIL
 
    ENDCLASS
 
@@ -145,118 +145,292 @@ METHOD QCompleter:new( ... )
    RETURN Self
 
 
-METHOD QCompleter:caseSensitivity()
-   RETURN Qt_QCompleter_caseSensitivity( ::pPtr )
+METHOD QCompleter:caseSensitivity( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCompleter_caseSensitivity( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:completionColumn()
-   RETURN Qt_QCompleter_completionColumn( ::pPtr )
+METHOD QCompleter:completionColumn( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCompleter_completionColumn( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:completionCount()
-   RETURN Qt_QCompleter_completionCount( ::pPtr )
+METHOD QCompleter:completionCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCompleter_completionCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:completionMode()
-   RETURN Qt_QCompleter_completionMode( ::pPtr )
+METHOD QCompleter:completionMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCompleter_completionMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:completionModel()
-   RETURN HB_QAbstractItemModel():from( Qt_QCompleter_completionModel( ::pPtr ) )
+METHOD QCompleter:completionModel( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QAbstractItemModel():from( Qt_QCompleter_completionModel( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:completionPrefix()
-   RETURN Qt_QCompleter_completionPrefix( ::pPtr )
+METHOD QCompleter:completionPrefix( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCompleter_completionPrefix( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:completionRole()
-   RETURN Qt_QCompleter_completionRole( ::pPtr )
+METHOD QCompleter:completionRole( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCompleter_completionRole( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:currentCompletion()
-   RETURN Qt_QCompleter_currentCompletion( ::pPtr )
+METHOD QCompleter:currentCompletion( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCompleter_currentCompletion( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:currentIndex()
-   RETURN HB_QModelIndex():from( Qt_QCompleter_currentIndex( ::pPtr ) )
+METHOD QCompleter:currentIndex( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QModelIndex():from( Qt_QCompleter_currentIndex( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:currentRow()
-   RETURN Qt_QCompleter_currentRow( ::pPtr )
+METHOD QCompleter:currentRow( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCompleter_currentRow( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:model()
-   RETURN HB_QAbstractItemModel():from( Qt_QCompleter_model( ::pPtr ) )
+METHOD QCompleter:model( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QAbstractItemModel():from( Qt_QCompleter_model( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:modelSorting()
-   RETURN Qt_QCompleter_modelSorting( ::pPtr )
+METHOD QCompleter:modelSorting( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCompleter_modelSorting( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:pathFromIndex( pIndex )
-   RETURN Qt_QCompleter_pathFromIndex( ::pPtr, hbqt_ptr( pIndex ) )
+METHOD QCompleter:pathFromIndex( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QCompleter_pathFromIndex( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:popup()
-   RETURN HB_QAbstractItemView():from( Qt_QCompleter_popup( ::pPtr ) )
+METHOD QCompleter:popup( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QAbstractItemView():from( Qt_QCompleter_popup( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:setCaseSensitivity( nCaseSensitivity )
-   RETURN Qt_QCompleter_setCaseSensitivity( ::pPtr, nCaseSensitivity )
+METHOD QCompleter:setCaseSensitivity( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QCompleter_setCaseSensitivity( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:setCompletionColumn( nColumn )
-   RETURN Qt_QCompleter_setCompletionColumn( ::pPtr, nColumn )
+METHOD QCompleter:setCompletionColumn( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QCompleter_setCompletionColumn( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:setCompletionMode( nMode )
-   RETURN Qt_QCompleter_setCompletionMode( ::pPtr, nMode )
+METHOD QCompleter:setCompletionMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QCompleter_setCompletionMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:setCompletionRole( nRole )
-   RETURN Qt_QCompleter_setCompletionRole( ::pPtr, nRole )
+METHOD QCompleter:setCompletionRole( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QCompleter_setCompletionRole( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:setCurrentRow( nRow )
-   RETURN Qt_QCompleter_setCurrentRow( ::pPtr, nRow )
+METHOD QCompleter:setCurrentRow( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QCompleter_setCurrentRow( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:setModel( pModel )
-   RETURN Qt_QCompleter_setModel( ::pPtr, hbqt_ptr( pModel ) )
+METHOD QCompleter:setModel( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QCompleter_setModel( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:setModelSorting( nSorting )
-   RETURN Qt_QCompleter_setModelSorting( ::pPtr, nSorting )
+METHOD QCompleter:setModelSorting( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QCompleter_setModelSorting( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:setPopup( pPopup )
-   RETURN Qt_QCompleter_setPopup( ::pPtr, hbqt_ptr( pPopup ) )
+METHOD QCompleter:setPopup( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QCompleter_setPopup( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:setWidget( pWidget )
-   RETURN Qt_QCompleter_setWidget( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QCompleter:setWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QCompleter_setWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:splitPath( cPath )
-   RETURN HB_QStringList():from( Qt_QCompleter_splitPath( ::pPtr, cPath ) )
+METHOD QCompleter:splitPath( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QStringList():from( Qt_QCompleter_splitPath( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:widget()
-   RETURN HB_QWidget():from( Qt_QCompleter_widget( ::pPtr ) )
+METHOD QCompleter:widget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QCompleter_widget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:wrapAround()
-   RETURN Qt_QCompleter_wrapAround( ::pPtr )
+METHOD QCompleter:wrapAround( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCompleter_wrapAround( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:complete( pRect )
-   RETURN Qt_QCompleter_complete( ::pPtr, hbqt_ptr( pRect ) )
+METHOD QCompleter:complete( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QCompleter_complete( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QCompleter_complete( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:setCompletionPrefix( cPrefix )
-   RETURN Qt_QCompleter_setCompletionPrefix( ::pPtr, cPrefix )
+METHOD QCompleter:setCompletionPrefix( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QCompleter_setCompletionPrefix( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCompleter:setWrapAround( lWrap )
-   RETURN Qt_QCompleter_setWrapAround( ::pPtr, lWrap )
+METHOD QCompleter:setWrapAround( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QCompleter_setWrapAround( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

@@ -27,41 +27,42 @@
  *     An instance of the object of type QVariant
  *  $METHODS$
  *     :canConvert( nT )                                   -> lBool
- *     :canConvert_1( nT )                                 -> lBool
+ *     :canConvert( nT )                                   -> lBool
  *     :clear()                                            -> NIL
  *     :convert( nT )                                      -> lBool
  *     :isNull()                                           -> lBool
  *     :isValid()                                          -> lBool
  *     :setValue( xValue )                                 -> NIL
- *     :toBitArray()                                       -> pQBitArray
+ *     :toBitArray()                                       -> oQBitArray
  *     :toBool()                                           -> lBool
- *     :toByteArray()                                      -> pQByteArray
- *     :toChar()                                           -> pQChar
- *     :toDate()                                           -> pQDate
- *     :toDateTime()                                       -> pQDateTime
+ *     :toByteArray()                                      -> oQByteArray
+ *     :toChar()                                           -> oQChar
+ *     :toDate()                                           -> oQDate
+ *     :toDateTime()                                       -> oQDateTime
  *     :toDouble( @lOk )                                   -> nDouble
  *     :toInt( @lOk )                                      -> nInt
- *     :toLine()                                           -> pQLine
- *     :toLineF()                                          -> pQLineF
- *     :toList()                                           -> pQList<QVariant>
- *     :toLocale()                                         -> pQLocale
+ *     :toLine()                                           -> oQLine
+ *     :toLineF()                                          -> oQLineF
+ *     :toList()                                           -> oQList_QVariant>
+ *     :toLocale()                                         -> oQLocale
  *     :toLongLong( @lOk )                                 -> nQlonglong
- *     :toPoint()                                          -> pQPoint
- *     :toPointF()                                         -> pQPointF
- *     :toRect()                                           -> pQRect
- *     :toRectF()                                          -> pQRectF
- *     :toRegExp()                                         -> pQRegExp
- *     :toSize()                                           -> pQSize
- *     :toSizeF()                                          -> pQSizeF
+ *     :toPoint()                                          -> oQPoint
+ *     :toPointF()                                         -> oQPointF
+ *     :toRect()                                           -> oQRect
+ *     :toRectF()                                          -> oQRectF
+ *     :toRegExp()                                         -> oQRegExp
+ *     :toSize()                                           -> oQSize
+ *     :toSizeF()                                          -> oQSizeF
  *     :toString()                                         -> cQString
- *     :toStringList()                                     -> pQStringList
- *     :toTime()                                           -> pQTime
+ *     :toStringList()                                     -> oQStringList
+ *     :toTime()                                           -> oQTime
  *     :toUInt( @lOk )                                     -> nUint
  *     :toULongLong( @lOk )                                -> nQulonglong
- *     :toUrl()                                            -> pQUrl
+ *     :toUrl()                                            -> oQUrl
  *     :type()                                             -> nType
  *     :userType()                                         -> nInt
- *     :nameToType( pName )                                -> nType
+ *     :fromValue( xValue )                                -> oQVariant
+ *     :nameToType( cName )                                -> nType
  *     :typeToName( nTyp )                                 -> cChar
  * 
  *  $DESCRIPTION$
@@ -82,7 +83,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQVariant.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QVariant.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

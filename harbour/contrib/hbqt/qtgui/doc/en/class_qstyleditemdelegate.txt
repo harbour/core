@@ -26,13 +26,13 @@
  *  $RETURNS$
  *     An instance of the object of type QStyledItemDelegate
  *  $METHODS$
- *     :createEditor( pParent, pOption, pIndex )           -> pQWidget
- *     :displayText( pValue, pLocale )                     -> cQString
- *     :paint( pPainter, pOption, pIndex )                 -> NIL
- *     :setEditorData( pEditor, pIndex )                   -> NIL
- *     :setModelData( pEditor, pModel, pIndex )            -> NIL
- *     :sizeHint( pOption, pIndex )                        -> pQSize
- *     :updateEditorGeometry( pEditor, pOption, pIndex )   -> NIL
+ *     :createEditor( oQWidget, oQStyleOptionViewItem, oQModelIndex )  -> oQWidget
+ *     :displayText( oQVariant, oQLocale )                 -> cQString
+ *     :paint( oQPainter, oQStyleOptionViewItem, oQModelIndex )  -> NIL
+ *     :setEditorData( oQWidget, oQModelIndex )            -> NIL
+ *     :setModelData( oQWidget, oQAbstractItemModel, oQModelIndex )  -> NIL
+ *     :sizeHint( oQStyleOptionViewItem, oQModelIndex )    -> oQSize
+ *     :updateEditorGeometry( oQWidget, oQStyleOptionViewItem, oQModelIndex )  -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -52,7 +52,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStyledItemDelegate.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyledItemDelegate.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

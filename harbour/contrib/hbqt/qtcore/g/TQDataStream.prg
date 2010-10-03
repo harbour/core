@@ -103,19 +103,19 @@ CREATE CLASS QDataStream INHERIT HbQtObjectHandler FUNCTION HB_QDataStream
 
    METHOD  new( ... )
 
-   METHOD  atEnd()
-   METHOD  byteOrder()
-   METHOD  device()
-   METHOD  readRawData( cS, nLen )
-   METHOD  resetStatus()
-   METHOD  setByteOrder( nBo )
-   METHOD  setDevice( pD )
-   METHOD  setStatus( nStatus )
-   METHOD  setVersion( nV )
-   METHOD  skipRawData( nLen )
-   METHOD  status()
-   METHOD  version()
-   METHOD  writeRawData( pS, nLen )
+   METHOD  atEnd                         // (  )                                               -> lBool
+   METHOD  byteOrder                     // (  )                                               -> nByteOrder
+   METHOD  device                        // (  )                                               -> oQIODevice
+   METHOD  readRawData                   // ( cS, nLen )                                       -> nInt
+   METHOD  resetStatus                   // (  )                                               -> NIL
+   METHOD  setByteOrder                  // ( nBo )                                            -> NIL
+   METHOD  setDevice                     // ( oQIODevice )                                     -> NIL
+   METHOD  setStatus                     // ( nStatus )                                        -> NIL
+   METHOD  setVersion                    // ( nV )                                             -> NIL
+   METHOD  skipRawData                   // ( nLen )                                           -> nInt
+   METHOD  status                        // (  )                                               -> nStatus
+   METHOD  version                       // (  )                                               -> nInt
+   METHOD  writeRawData                  // ( cS, nLen )                                       -> nInt
 
    ENDCLASS
 
@@ -129,54 +129,134 @@ METHOD QDataStream:new( ... )
    RETURN Self
 
 
-METHOD QDataStream:atEnd()
-   RETURN Qt_QDataStream_atEnd( ::pPtr )
+METHOD QDataStream:atEnd( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDataStream_atEnd( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDataStream:byteOrder()
-   RETURN Qt_QDataStream_byteOrder( ::pPtr )
+METHOD QDataStream:byteOrder( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDataStream_byteOrder( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDataStream:device()
-   RETURN HB_QIODevice():from( Qt_QDataStream_device( ::pPtr ) )
+METHOD QDataStream:device( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QIODevice():from( Qt_QDataStream_device( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDataStream:readRawData( cS, nLen )
-   RETURN Qt_QDataStream_readRawData( ::pPtr, cS, nLen )
+METHOD QDataStream:readRawData( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QDataStream_readRawData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDataStream:resetStatus()
-   RETURN Qt_QDataStream_resetStatus( ::pPtr )
+METHOD QDataStream:resetStatus( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDataStream_resetStatus( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDataStream:setByteOrder( nBo )
-   RETURN Qt_QDataStream_setByteOrder( ::pPtr, nBo )
+METHOD QDataStream:setByteOrder( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDataStream_setByteOrder( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDataStream:setDevice( pD )
-   RETURN Qt_QDataStream_setDevice( ::pPtr, hbqt_ptr( pD ) )
+METHOD QDataStream:setDevice( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDataStream_setDevice( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDataStream:setStatus( nStatus )
-   RETURN Qt_QDataStream_setStatus( ::pPtr, nStatus )
+METHOD QDataStream:setStatus( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDataStream_setStatus( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDataStream:setVersion( nV )
-   RETURN Qt_QDataStream_setVersion( ::pPtr, nV )
+METHOD QDataStream:setVersion( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDataStream_setVersion( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDataStream:skipRawData( nLen )
-   RETURN Qt_QDataStream_skipRawData( ::pPtr, nLen )
+METHOD QDataStream:skipRawData( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDataStream_skipRawData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDataStream:status()
-   RETURN Qt_QDataStream_status( ::pPtr )
+METHOD QDataStream:status( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDataStream_status( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDataStream:version()
-   RETURN Qt_QDataStream_version( ::pPtr )
+METHOD QDataStream:version( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDataStream_version( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDataStream:writeRawData( pS, nLen )
-   RETURN Qt_QDataStream_writeRawData( ::pPtr, hbqt_ptr( pS ), nLen )
+METHOD QDataStream:writeRawData( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QDataStream_writeRawData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

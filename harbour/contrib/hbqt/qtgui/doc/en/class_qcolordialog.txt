@@ -26,19 +26,19 @@
  *  $RETURNS$
  *     An instance of the object of type QColorDialog
  *  $METHODS$
- *     :currentColor()                                     -> pQColor
+ *     :currentColor()                                     -> oQColor
  *     :open()                                             -> NIL
  *     :options()                                          -> nColorDialogOptions
- *     :selectedColor()                                    -> pQColor
- *     :setCurrentColor( pColor )                          -> NIL
+ *     :selectedColor()                                    -> oQColor
+ *     :setCurrentColor( oQColor )                         -> NIL
  *     :setOption( nOption, lOn )                          -> NIL
  *     :setOptions( nOptions )                             -> NIL
  *     :setVisible( lVisible )                             -> NIL
  *     :testOption( nOption )                              -> lBool
  *     :customColor( nIndex )                              -> nQRgb
  *     :customCount()                                      -> nInt
- *     :getColor( pInitial, pParent, cTitle, nOptions )    -> pQColor
- *     :getColor_1( pInitial, pParent )                    -> pQColor
+ *     :getColor( oQColor, oQWidget, cTitle, nOptions )    -> oQColor
+ *     :getColor( oQColor, oQWidget )                      -> oQColor
  *     :setCustomColor( nIndex, nColor )                   -> NIL
  *     :setStandardColor( nIndex, nColor )                 -> NIL
  * 
@@ -60,7 +60,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQColorDialog.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QColorDialog.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QDialog()
  *  $END$
  */

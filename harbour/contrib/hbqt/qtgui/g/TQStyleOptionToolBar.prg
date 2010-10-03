@@ -103,12 +103,12 @@ CREATE CLASS QStyleOptionToolBar INHERIT HbQtObjectHandler, HB_QStyleOption FUNC
 
    METHOD  new( ... )
 
-   METHOD  features()
-   METHOD  lineWidth()
-   METHOD  midLineWidth()
-   METHOD  positionOfLine()
-   METHOD  positionWithinLine()
-   METHOD  toolBarArea()
+   METHOD  features                      // (  )                                               -> nToolBarFeatures
+   METHOD  lineWidth                     // (  )                                               -> nInt
+   METHOD  midLineWidth                  // (  )                                               -> nInt
+   METHOD  positionOfLine                // (  )                                               -> nToolBarPosition
+   METHOD  positionWithinLine            // (  )                                               -> nToolBarPosition
+   METHOD  toolBarArea                   // (  )                                               -> nQt_ToolBarArea
 
    ENDCLASS
 
@@ -122,26 +122,50 @@ METHOD QStyleOptionToolBar:new( ... )
    RETURN Self
 
 
-METHOD QStyleOptionToolBar:features()
-   RETURN Qt_QStyleOptionToolBar_features( ::pPtr )
+METHOD QStyleOptionToolBar:features( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionToolBar_features( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionToolBar:lineWidth()
-   RETURN Qt_QStyleOptionToolBar_lineWidth( ::pPtr )
+METHOD QStyleOptionToolBar:lineWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionToolBar_lineWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionToolBar:midLineWidth()
-   RETURN Qt_QStyleOptionToolBar_midLineWidth( ::pPtr )
+METHOD QStyleOptionToolBar:midLineWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionToolBar_midLineWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionToolBar:positionOfLine()
-   RETURN Qt_QStyleOptionToolBar_positionOfLine( ::pPtr )
+METHOD QStyleOptionToolBar:positionOfLine( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionToolBar_positionOfLine( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionToolBar:positionWithinLine()
-   RETURN Qt_QStyleOptionToolBar_positionWithinLine( ::pPtr )
+METHOD QStyleOptionToolBar:positionWithinLine( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionToolBar_positionWithinLine( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionToolBar:toolBarArea()
-   RETURN Qt_QStyleOptionToolBar_toolBarArea( ::pPtr )
+METHOD QStyleOptionToolBar:toolBarArea( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionToolBar_toolBarArea( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

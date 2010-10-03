@@ -103,33 +103,33 @@ CREATE CLASS QTimeLine INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QTimeLi
 
    METHOD  new( ... )
 
-   METHOD  currentFrame()
-   METHOD  currentTime()
-   METHOD  currentValue()
-   METHOD  curveShape()
-   METHOD  direction()
-   METHOD  duration()
-   METHOD  endFrame()
-   METHOD  frameForTime( nMsec )
-   METHOD  loopCount()
-   METHOD  setCurveShape( nShape )
-   METHOD  setDirection( nDirection )
-   METHOD  setDuration( nDuration )
-   METHOD  setEndFrame( nFrame )
-   METHOD  setFrameRange( nStartFrame, nEndFrame )
-   METHOD  setLoopCount( nCount )
-   METHOD  setStartFrame( nFrame )
-   METHOD  setUpdateInterval( nInterval )
-   METHOD  startFrame()
-   METHOD  state()
-   METHOD  updateInterval()
-   METHOD  valueForTime( nMsec )
-   METHOD  resume()
-   METHOD  setCurrentTime( nMsec )
-   METHOD  setPaused( lPaused )
-   METHOD  start()
-   METHOD  stop()
-   METHOD  toggleDirection()
+   METHOD  currentFrame                  // (  )                                               -> nInt
+   METHOD  currentTime                   // (  )                                               -> nInt
+   METHOD  currentValue                  // (  )                                               -> nQreal
+   METHOD  curveShape                    // (  )                                               -> nCurveShape
+   METHOD  direction                     // (  )                                               -> nDirection
+   METHOD  duration                      // (  )                                               -> nInt
+   METHOD  endFrame                      // (  )                                               -> nInt
+   METHOD  frameForTime                  // ( nMsec )                                          -> nInt
+   METHOD  loopCount                     // (  )                                               -> nInt
+   METHOD  setCurveShape                 // ( nShape )                                         -> NIL
+   METHOD  setDirection                  // ( nDirection )                                     -> NIL
+   METHOD  setDuration                   // ( nDuration )                                      -> NIL
+   METHOD  setEndFrame                   // ( nFrame )                                         -> NIL
+   METHOD  setFrameRange                 // ( nStartFrame, nEndFrame )                         -> NIL
+   METHOD  setLoopCount                  // ( nCount )                                         -> NIL
+   METHOD  setStartFrame                 // ( nFrame )                                         -> NIL
+   METHOD  setUpdateInterval             // ( nInterval )                                      -> NIL
+   METHOD  startFrame                    // (  )                                               -> nInt
+   METHOD  state                         // (  )                                               -> nState
+   METHOD  updateInterval                // (  )                                               -> nInt
+   METHOD  valueForTime                  // ( nMsec )                                          -> nQreal
+   METHOD  resume                        // (  )                                               -> NIL
+   METHOD  setCurrentTime                // ( nMsec )                                          -> NIL
+   METHOD  setPaused                     // ( lPaused )                                        -> NIL
+   METHOD  start                         // (  )                                               -> NIL
+   METHOD  stop                          // (  )                                               -> NIL
+   METHOD  toggleDirection               // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -143,110 +143,266 @@ METHOD QTimeLine:new( ... )
    RETURN Self
 
 
-METHOD QTimeLine:currentFrame()
-   RETURN Qt_QTimeLine_currentFrame( ::pPtr )
+METHOD QTimeLine:currentFrame( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTimeLine_currentFrame( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimeLine:currentTime()
-   RETURN Qt_QTimeLine_currentTime( ::pPtr )
+METHOD QTimeLine:currentTime( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTimeLine_currentTime( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimeLine:currentValue()
-   RETURN Qt_QTimeLine_currentValue( ::pPtr )
+METHOD QTimeLine:currentValue( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTimeLine_currentValue( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimeLine:curveShape()
-   RETURN Qt_QTimeLine_curveShape( ::pPtr )
+METHOD QTimeLine:curveShape( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTimeLine_curveShape( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimeLine:direction()
-   RETURN Qt_QTimeLine_direction( ::pPtr )
+METHOD QTimeLine:direction( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTimeLine_direction( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimeLine:duration()
-   RETURN Qt_QTimeLine_duration( ::pPtr )
+METHOD QTimeLine:duration( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTimeLine_duration( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimeLine:endFrame()
-   RETURN Qt_QTimeLine_endFrame( ::pPtr )
+METHOD QTimeLine:endFrame( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTimeLine_endFrame( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimeLine:frameForTime( nMsec )
-   RETURN Qt_QTimeLine_frameForTime( ::pPtr, nMsec )
+METHOD QTimeLine:frameForTime( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTimeLine_frameForTime( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimeLine:loopCount()
-   RETURN Qt_QTimeLine_loopCount( ::pPtr )
+METHOD QTimeLine:loopCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTimeLine_loopCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimeLine:setCurveShape( nShape )
-   RETURN Qt_QTimeLine_setCurveShape( ::pPtr, nShape )
+METHOD QTimeLine:setCurveShape( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTimeLine_setCurveShape( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimeLine:setDirection( nDirection )
-   RETURN Qt_QTimeLine_setDirection( ::pPtr, nDirection )
+METHOD QTimeLine:setDirection( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTimeLine_setDirection( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimeLine:setDuration( nDuration )
-   RETURN Qt_QTimeLine_setDuration( ::pPtr, nDuration )
+METHOD QTimeLine:setDuration( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTimeLine_setDuration( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimeLine:setEndFrame( nFrame )
-   RETURN Qt_QTimeLine_setEndFrame( ::pPtr, nFrame )
+METHOD QTimeLine:setEndFrame( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTimeLine_setEndFrame( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimeLine:setFrameRange( nStartFrame, nEndFrame )
-   RETURN Qt_QTimeLine_setFrameRange( ::pPtr, nStartFrame, nEndFrame )
+METHOD QTimeLine:setFrameRange( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QTimeLine_setFrameRange( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimeLine:setLoopCount( nCount )
-   RETURN Qt_QTimeLine_setLoopCount( ::pPtr, nCount )
+METHOD QTimeLine:setLoopCount( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTimeLine_setLoopCount( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimeLine:setStartFrame( nFrame )
-   RETURN Qt_QTimeLine_setStartFrame( ::pPtr, nFrame )
+METHOD QTimeLine:setStartFrame( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTimeLine_setStartFrame( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimeLine:setUpdateInterval( nInterval )
-   RETURN Qt_QTimeLine_setUpdateInterval( ::pPtr, nInterval )
+METHOD QTimeLine:setUpdateInterval( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTimeLine_setUpdateInterval( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimeLine:startFrame()
-   RETURN Qt_QTimeLine_startFrame( ::pPtr )
+METHOD QTimeLine:startFrame( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTimeLine_startFrame( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimeLine:state()
-   RETURN Qt_QTimeLine_state( ::pPtr )
+METHOD QTimeLine:state( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTimeLine_state( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimeLine:updateInterval()
-   RETURN Qt_QTimeLine_updateInterval( ::pPtr )
+METHOD QTimeLine:updateInterval( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTimeLine_updateInterval( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimeLine:valueForTime( nMsec )
-   RETURN Qt_QTimeLine_valueForTime( ::pPtr, nMsec )
+METHOD QTimeLine:valueForTime( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTimeLine_valueForTime( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimeLine:resume()
-   RETURN Qt_QTimeLine_resume( ::pPtr )
+METHOD QTimeLine:resume( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTimeLine_resume( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimeLine:setCurrentTime( nMsec )
-   RETURN Qt_QTimeLine_setCurrentTime( ::pPtr, nMsec )
+METHOD QTimeLine:setCurrentTime( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTimeLine_setCurrentTime( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimeLine:setPaused( lPaused )
-   RETURN Qt_QTimeLine_setPaused( ::pPtr, lPaused )
+METHOD QTimeLine:setPaused( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTimeLine_setPaused( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimeLine:start()
-   RETURN Qt_QTimeLine_start( ::pPtr )
+METHOD QTimeLine:start( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTimeLine_start( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimeLine:stop()
-   RETURN Qt_QTimeLine_stop( ::pPtr )
+METHOD QTimeLine:stop( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTimeLine_stop( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimeLine:toggleDirection()
-   RETURN Qt_QTimeLine_toggleDirection( ::pPtr )
+METHOD QTimeLine:toggleDirection( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTimeLine_toggleDirection( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

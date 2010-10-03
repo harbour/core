@@ -26,16 +26,19 @@
  *  $RETURNS$
  *     An instance of the object of type QPolygon
  *  $METHODS$
- *     :boundingRect()                                     -> pQRect
- *     :containsPoint( pPoint, nFillRule )                 -> lBool
+ *     :boundingRect()                                     -> oQRect
+ *     :containsPoint( oQPoint, nFillRule )                -> lBool
+ *     :intersected( oQPolygon )                           -> oQPolygon
  *     :point( nIndex, @nX, @nY )                          -> NIL
- *     :point_1( nIndex )                                  -> pQPoint
- *     :putPoints( nIndex, nNPoints, pFromPolygon, nFromIndex )  -> NIL
+ *     :point( nIndex )                                    -> oQPoint
+ *     :putPoints( nIndex, nNPoints, oQPolygon, nFromIndex )  -> NIL
  *     :setPoint( nIndex, nX, nY )                         -> NIL
- *     :setPoint_1( nIndex, pPoint )                       -> NIL
+ *     :setPoint( nIndex, oQPoint )                        -> NIL
  *     :setPoints( nNPoints, @nPoints )                    -> NIL
+ *     :subtracted( oQPolygon )                            -> oQPolygon
  *     :translate( nDx, nDy )                              -> NIL
- *     :translate_1( pOffset )                             -> NIL
+ *     :translate( oQPoint )                               -> NIL
+ *     :united( oQPolygon )                                -> oQPolygon
  * 
  *  $DESCRIPTION$
  * 
@@ -55,7 +58,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQPolygon.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QPolygon.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

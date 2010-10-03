@@ -166,8 +166,10 @@ FUNCTION hbide_execPopup( aPops, aqPos, qParent )
 
    IF hb_isArray( aqPos )
       qPoint := QPoint( aqPos[ 1 ], aqPos[ 2 ] )
-   ELSE
-      qPoint := qParent:mapToGlobal( aqPos )
+   ELSEIF hb_isObject( aqPos )
+      qPoint := aqPos
+   ELSEIF hb_isPointer( aqPos )
+      qPoint := qParent:mapToGlobal( QPoint( aqPos ) )
    ENDIF
    IF ( qAct := qPop:exec( qPoint ) ):isValidObject()
       cAct := qAct:text()
@@ -1819,7 +1821,7 @@ FUNCTION hbide_popupBrwContextMenu( qTextBrowser, p )
    aadd( aMenu, { "Copy"      , {|| qTextBrowser:copy()      } } )
    aadd( aMenu, { "Print"     , {|| NIL                      } } )
 
-   RETURN hbide_execPopup( aMenu, p, qTextBrowser )
+   RETURN hbide_execPopup( aMenu, qTextBrowser:mapToGlobal( QPoint( p ) ), qTextBrowser )
 
 /*----------------------------------------------------------------------*/
 

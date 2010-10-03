@@ -31,9 +31,9 @@
  *     :columnSpan( nRow, nColumn )                        -> nInt
  *     :columnViewportPosition( nColumn )                  -> nInt
  *     :columnWidth( nColumn )                             -> nInt
- *     :gridStyle()                                        -> nQt::PenStyle
- *     :horizontalHeader()                                 -> pQHeaderView
- *     :indexAt( pPos )                                    -> pQModelIndex
+ *     :gridStyle()                                        -> nQt_PenStyle
+ *     :horizontalHeader()                                 -> oQHeaderView
+ *     :indexAt( oQPoint )                                 -> oQModelIndex
  *     :isColumnHidden( nColumn )                          -> lBool
  *     :isCornerButtonEnabled()                            -> lBool
  *     :isRowHidden( nRow )                                -> lBool
@@ -46,16 +46,16 @@
  *     :setColumnWidth( nColumn, nWidth )                  -> NIL
  *     :setCornerButtonEnabled( lEnable )                  -> NIL
  *     :setGridStyle( nStyle )                             -> NIL
- *     :setHorizontalHeader( pHeader )                     -> NIL
+ *     :setHorizontalHeader( oQHeaderView )                -> NIL
  *     :setRowHeight( nRow, nHeight )                      -> NIL
  *     :setRowHidden( nRow, lHide )                        -> NIL
  *     :setSortingEnabled( lEnable )                       -> NIL
  *     :setSpan( nRow, nColumn, nRowSpanCount, nColumnSpanCount )  -> NIL
- *     :setVerticalHeader( pHeader )                       -> NIL
+ *     :setVerticalHeader( oQHeaderView )                  -> NIL
  *     :setWordWrap( lOn )                                 -> NIL
  *     :showGrid()                                         -> lBool
  *     :sortByColumn( nColumn, nOrder )                    -> NIL
- *     :verticalHeader()                                   -> pQHeaderView
+ *     :verticalHeader()                                   -> oQHeaderView
  *     :wordWrap()                                         -> lBool
  *     :hideColumn( nColumn )                              -> NIL
  *     :hideRow( nRow )                                    -> NIL
@@ -87,7 +87,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTableView.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTableView.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractItemView()
  *  $END$
  */

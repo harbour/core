@@ -103,19 +103,19 @@ CREATE CLASS QTextOption INHERIT HbQtObjectHandler FUNCTION HB_QTextOption
 
    METHOD  new( ... )
 
-   METHOD  alignment()
-   METHOD  flags()
-   METHOD  setAlignment( nAlignment )
-   METHOD  setFlags( nFlags )
-   METHOD  setTabStop( nTabStop )
-   METHOD  setTextDirection( nDirection )
-   METHOD  setUseDesignMetrics( lEnable )
-   METHOD  setWrapMode( nMode )
-   METHOD  tabArray()
-   METHOD  tabStop()
-   METHOD  textDirection()
-   METHOD  useDesignMetrics()
-   METHOD  wrapMode()
+   METHOD  alignment                     // (  )                                               -> nQt_Alignment
+   METHOD  flags                         // (  )                                               -> nFlags
+   METHOD  setAlignment                  // ( nAlignment )                                     -> NIL
+   METHOD  setFlags                      // ( nFlags )                                         -> NIL
+   METHOD  setTabStop                    // ( nTabStop )                                       -> NIL
+   METHOD  setTextDirection              // ( nDirection )                                     -> NIL
+   METHOD  setUseDesignMetrics           // ( lEnable )                                        -> NIL
+   METHOD  setWrapMode                   // ( nMode )                                          -> NIL
+   METHOD  tabArray                      // (  )                                               -> oQList_qreal>
+   METHOD  tabStop                       // (  )                                               -> nQreal
+   METHOD  textDirection                 // (  )                                               -> nQt_LayoutDirection
+   METHOD  useDesignMetrics              // (  )                                               -> lBool
+   METHOD  wrapMode                      // (  )                                               -> nWrapMode
 
    ENDCLASS
 
@@ -129,54 +129,130 @@ METHOD QTextOption:new( ... )
    RETURN Self
 
 
-METHOD QTextOption:alignment()
-   RETURN Qt_QTextOption_alignment( ::pPtr )
+METHOD QTextOption:alignment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextOption_alignment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextOption:flags()
-   RETURN Qt_QTextOption_flags( ::pPtr )
+METHOD QTextOption:flags( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextOption_flags( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextOption:setAlignment( nAlignment )
-   RETURN Qt_QTextOption_setAlignment( ::pPtr, nAlignment )
+METHOD QTextOption:setAlignment( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextOption_setAlignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextOption:setFlags( nFlags )
-   RETURN Qt_QTextOption_setFlags( ::pPtr, nFlags )
+METHOD QTextOption:setFlags( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextOption_setFlags( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextOption:setTabStop( nTabStop )
-   RETURN Qt_QTextOption_setTabStop( ::pPtr, nTabStop )
+METHOD QTextOption:setTabStop( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextOption_setTabStop( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextOption:setTextDirection( nDirection )
-   RETURN Qt_QTextOption_setTextDirection( ::pPtr, nDirection )
+METHOD QTextOption:setTextDirection( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextOption_setTextDirection( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextOption:setUseDesignMetrics( lEnable )
-   RETURN Qt_QTextOption_setUseDesignMetrics( ::pPtr, lEnable )
+METHOD QTextOption:setUseDesignMetrics( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTextOption_setUseDesignMetrics( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextOption:setWrapMode( nMode )
-   RETURN Qt_QTextOption_setWrapMode( ::pPtr, nMode )
+METHOD QTextOption:setWrapMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextOption_setWrapMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextOption:tabArray()
-   RETURN HB_QList():from( Qt_QTextOption_tabArray( ::pPtr ) )
+METHOD QTextOption:tabArray( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QTextOption_tabArray( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextOption:tabStop()
-   RETURN Qt_QTextOption_tabStop( ::pPtr )
+METHOD QTextOption:tabStop( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextOption_tabStop( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextOption:textDirection()
-   RETURN Qt_QTextOption_textDirection( ::pPtr )
+METHOD QTextOption:textDirection( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextOption_textDirection( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextOption:useDesignMetrics()
-   RETURN Qt_QTextOption_useDesignMetrics( ::pPtr )
+METHOD QTextOption:useDesignMetrics( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextOption_useDesignMetrics( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextOption:wrapMode()
-   RETURN Qt_QTextOption_wrapMode( ::pPtr )
+METHOD QTextOption:wrapMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextOption_wrapMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

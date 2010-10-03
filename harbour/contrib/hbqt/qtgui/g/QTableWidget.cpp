@@ -441,11 +441,7 @@ HB_FUNC( QT_QTABLEWIDGET_SETCELLWIDGET )
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 4 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 4 );
       ( p )->setCellWidget( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_QWidget( 4 ) );
    }
 }
@@ -494,11 +490,7 @@ HB_FUNC( QT_QTABLEWIDGET_SETCURRENTITEM )
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 2 );
       ( p )->setCurrentItem( hbqt_par_QTableWidgetItem( 2 ) );
    }
 }
@@ -511,11 +503,7 @@ HB_FUNC( QT_QTABLEWIDGET_SETCURRENTITEM_1 )
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 2 );
       ( p )->setCurrentItem( hbqt_par_QTableWidgetItem( 2 ), ( QItemSelectionModel::SelectionFlags ) hb_parni( 3 ) );
    }
 }
@@ -528,11 +516,7 @@ HB_FUNC( QT_QTABLEWIDGET_SETHORIZONTALHEADERITEM )
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 3 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 3 );
       ( p )->setHorizontalHeaderItem( hb_parni( 2 ), hbqt_par_QTableWidgetItem( 3 ) );
    }
 }
@@ -557,11 +541,7 @@ HB_FUNC( QT_QTABLEWIDGET_SETITEM )
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 4 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 4 );
       ( p )->setItem( hb_parni( 2 ), hb_parni( 3 ), hbqt_par_QTableWidgetItem( 4 ) );
    }
 }
@@ -610,11 +590,7 @@ HB_FUNC( QT_QTABLEWIDGET_SETVERTICALHEADERITEM )
    QTableWidget * p = hbqt_par_QTableWidget( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 3 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 3 );
       ( p )->setVerticalHeaderItem( hb_parni( 2 ), hbqt_par_QTableWidgetItem( 3 ) );
    }
 }

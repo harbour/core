@@ -103,42 +103,43 @@ CREATE CLASS QTextStream INHERIT HbQtObjectHandler FUNCTION HB_QTextStream
 
    METHOD  new( ... )
 
-   METHOD  padChar()
-   METHOD  atEnd()
-   METHOD  autoDetectUnicode()
-   METHOD  codec()
-   METHOD  device()
-   METHOD  fieldAlignment()
-   METHOD  fieldWidth()
-   METHOD  flush()
-   METHOD  generateByteOrderMark()
-   METHOD  integerBase()
-   METHOD  locale()
-   METHOD  numberFlags()
-   METHOD  pos()
-   METHOD  read( nMaxlen )
-   METHOD  readAll()
-   METHOD  readLine( nMaxlen )
-   METHOD  realNumberNotation()
-   METHOD  realNumberPrecision()
-   METHOD  reset()
-   METHOD  resetStatus()
-   METHOD  seek( nPos )
-   METHOD  setAutoDetectUnicode( lEnabled )
-   METHOD  setCodec( ... )
-   METHOD  setDevice( pDevice )
-   METHOD  setFieldAlignment( nMode )
-   METHOD  setFieldWidth( nWidth )
-   METHOD  setGenerateByteOrderMark( lGenerate )
-   METHOD  setIntegerBase( nBase )
-   METHOD  setLocale( pLocale )
-   METHOD  setNumberFlags( nFlags )
-   METHOD  setPadChar( pCh )
-   METHOD  setRealNumberNotation( nNotation )
-   METHOD  setRealNumberPrecision( nPrecision )
-   METHOD  setStatus( nStatus )
-   METHOD  skipWhiteSpace()
-   METHOD  status()
+   METHOD  padChar                       // (  )                                               -> oQChar
+   METHOD  atEnd                         // (  )                                               -> lBool
+   METHOD  autoDetectUnicode             // (  )                                               -> lBool
+   METHOD  codec                         // (  )                                               -> oQTextCodec
+   METHOD  device                        // (  )                                               -> oQIODevice
+   METHOD  fieldAlignment                // (  )                                               -> nFieldAlignment
+   METHOD  fieldWidth                    // (  )                                               -> nInt
+   METHOD  flush                         // (  )                                               -> NIL
+   METHOD  generateByteOrderMark         // (  )                                               -> lBool
+   METHOD  integerBase                   // (  )                                               -> nInt
+   METHOD  locale                        // (  )                                               -> oQLocale
+   METHOD  numberFlags                   // (  )                                               -> nNumberFlags
+   METHOD  pos                           // (  )                                               -> nQint64
+   METHOD  read                          // ( nMaxlen )                                        -> cQString
+   METHOD  readAll                       // (  )                                               -> cQString
+   METHOD  readLine                      // ( nMaxlen )                                        -> cQString
+   METHOD  realNumberNotation            // (  )                                               -> nRealNumberNotation
+   METHOD  realNumberPrecision           // (  )                                               -> nInt
+   METHOD  reset                         // (  )                                               -> NIL
+   METHOD  resetStatus                   // (  )                                               -> NIL
+   METHOD  seek                          // ( nPos )                                           -> lBool
+   METHOD  setAutoDetectUnicode          // ( lEnabled )                                       -> NIL
+   METHOD  setCodec                      // ( oQTextCodec )                                    -> NIL
+                                         // ( cCodecName )                                     -> NIL
+   METHOD  setDevice                     // ( oQIODevice )                                     -> NIL
+   METHOD  setFieldAlignment             // ( nMode )                                          -> NIL
+   METHOD  setFieldWidth                 // ( nWidth )                                         -> NIL
+   METHOD  setGenerateByteOrderMark      // ( lGenerate )                                      -> NIL
+   METHOD  setIntegerBase                // ( nBase )                                          -> NIL
+   METHOD  setLocale                     // ( oQLocale )                                       -> NIL
+   METHOD  setNumberFlags                // ( nFlags )                                         -> NIL
+   METHOD  setPadChar                    // ( oQChar )                                         -> NIL
+   METHOD  setRealNumberNotation         // ( nNotation )                                      -> NIL
+   METHOD  setRealNumberPrecision        // ( nPrecision )                                     -> NIL
+   METHOD  setStatus                     // ( nStatus )                                        -> NIL
+   METHOD  skipWhiteSpace                // (  )                                               -> NIL
+   METHOD  status                        // (  )                                               -> nStatus
 
    ENDCLASS
 
@@ -152,158 +153,358 @@ METHOD QTextStream:new( ... )
    RETURN Self
 
 
-METHOD QTextStream:padChar()
-   RETURN HB_QChar():from( Qt_QTextStream_padChar( ::pPtr ) )
+METHOD QTextStream:padChar( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QChar():from( Qt_QTextStream_padChar( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextStream:atEnd()
-   RETURN Qt_QTextStream_atEnd( ::pPtr )
+METHOD QTextStream:atEnd( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextStream_atEnd( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextStream:autoDetectUnicode()
-   RETURN Qt_QTextStream_autoDetectUnicode( ::pPtr )
+METHOD QTextStream:autoDetectUnicode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextStream_autoDetectUnicode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextStream:codec()
-   RETURN HB_QTextCodec():from( Qt_QTextStream_codec( ::pPtr ) )
+METHOD QTextStream:codec( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextCodec():from( Qt_QTextStream_codec( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextStream:device()
-   RETURN HB_QIODevice():from( Qt_QTextStream_device( ::pPtr ) )
+METHOD QTextStream:device( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QIODevice():from( Qt_QTextStream_device( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextStream:fieldAlignment()
-   RETURN Qt_QTextStream_fieldAlignment( ::pPtr )
+METHOD QTextStream:fieldAlignment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextStream_fieldAlignment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextStream:fieldWidth()
-   RETURN Qt_QTextStream_fieldWidth( ::pPtr )
+METHOD QTextStream:fieldWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextStream_fieldWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextStream:flush()
-   RETURN Qt_QTextStream_flush( ::pPtr )
+METHOD QTextStream:flush( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextStream_flush( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextStream:generateByteOrderMark()
-   RETURN Qt_QTextStream_generateByteOrderMark( ::pPtr )
+METHOD QTextStream:generateByteOrderMark( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextStream_generateByteOrderMark( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextStream:integerBase()
-   RETURN Qt_QTextStream_integerBase( ::pPtr )
+METHOD QTextStream:integerBase( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextStream_integerBase( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextStream:locale()
-   RETURN HB_QLocale():from( Qt_QTextStream_locale( ::pPtr ) )
+METHOD QTextStream:locale( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QLocale():from( Qt_QTextStream_locale( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextStream:numberFlags()
-   RETURN Qt_QTextStream_numberFlags( ::pPtr )
+METHOD QTextStream:numberFlags( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextStream_numberFlags( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextStream:pos()
-   RETURN Qt_QTextStream_pos( ::pPtr )
+METHOD QTextStream:pos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextStream_pos( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextStream:read( nMaxlen )
-   RETURN Qt_QTextStream_read( ::pPtr, nMaxlen )
-
-
-METHOD QTextStream:readAll()
-   RETURN Qt_QTextStream_readAll( ::pPtr )
-
-
-METHOD QTextStream:readLine( nMaxlen )
-   RETURN Qt_QTextStream_readLine( ::pPtr, nMaxlen )
-
-
-METHOD QTextStream:realNumberNotation()
-   RETURN Qt_QTextStream_realNumberNotation( ::pPtr )
-
-
-METHOD QTextStream:realNumberPrecision()
-   RETURN Qt_QTextStream_realNumberPrecision( ::pPtr )
-
-
-METHOD QTextStream:reset()
-   RETURN Qt_QTextStream_reset( ::pPtr )
-
-
-METHOD QTextStream:resetStatus()
-   RETURN Qt_QTextStream_resetStatus( ::pPtr )
-
-
-METHOD QTextStream:seek( nPos )
-   RETURN Qt_QTextStream_seek( ::pPtr, nPos )
-
-
-METHOD QTextStream:setAutoDetectUnicode( lEnabled )
-   RETURN Qt_QTextStream_setAutoDetectUnicode( ::pPtr, lEnabled )
-
-
-METHOD QTextStream:setCodec( ... )
+METHOD QTextStream:read( ... )
    SWITCH PCount()
    CASE 1
       DO CASE
-      CASE hb_isObject( hb_pvalue( 1 ) )
-         SWITCH __objGetClsName( hb_pvalue( 1 ) )
-         CASE "QTEXTCODEC"
-            RETURN Qt_QTextStream_setCodec( ::pPtr, ... )
-         // RETURN Qt_QTextStream_setCodec_1( ::pPtr, ... )
-         ENDSWITCH
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextStream_read( ::pPtr, ... )
       ENDCASE
       EXIT
    ENDSWITCH
    RETURN hbqt_error()
 
 
-METHOD QTextStream:setDevice( pDevice )
-   RETURN Qt_QTextStream_setDevice( ::pPtr, hbqt_ptr( pDevice ) )
+METHOD QTextStream:readAll( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextStream_readAll( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextStream:setFieldAlignment( nMode )
-   RETURN Qt_QTextStream_setFieldAlignment( ::pPtr, nMode )
+METHOD QTextStream:readLine( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextStream_readLine( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QTextStream_readLine( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextStream:setFieldWidth( nWidth )
-   RETURN Qt_QTextStream_setFieldWidth( ::pPtr, nWidth )
+METHOD QTextStream:realNumberNotation( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextStream_realNumberNotation( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextStream:setGenerateByteOrderMark( lGenerate )
-   RETURN Qt_QTextStream_setGenerateByteOrderMark( ::pPtr, lGenerate )
+METHOD QTextStream:realNumberPrecision( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextStream_realNumberPrecision( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextStream:setIntegerBase( nBase )
-   RETURN Qt_QTextStream_setIntegerBase( ::pPtr, nBase )
+METHOD QTextStream:reset( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextStream_reset( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextStream:setLocale( pLocale )
-   RETURN Qt_QTextStream_setLocale( ::pPtr, hbqt_ptr( pLocale ) )
+METHOD QTextStream:resetStatus( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextStream_resetStatus( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextStream:setNumberFlags( nFlags )
-   RETURN Qt_QTextStream_setNumberFlags( ::pPtr, nFlags )
+METHOD QTextStream:seek( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextStream_seek( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextStream:setPadChar( pCh )
-   RETURN Qt_QTextStream_setPadChar( ::pPtr, hbqt_ptr( pCh ) )
+METHOD QTextStream:setAutoDetectUnicode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTextStream_setAutoDetectUnicode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextStream:setRealNumberNotation( nNotation )
-   RETURN Qt_QTextStream_setRealNumberNotation( ::pPtr, nNotation )
+METHOD QTextStream:setCodec( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QTextStream_setCodec_1( ::pPtr, ... )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextStream_setCodec( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextStream:setRealNumberPrecision( nPrecision )
-   RETURN Qt_QTextStream_setRealNumberPrecision( ::pPtr, nPrecision )
+METHOD QTextStream:setDevice( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextStream_setDevice( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextStream:setStatus( nStatus )
-   RETURN Qt_QTextStream_setStatus( ::pPtr, nStatus )
+METHOD QTextStream:setFieldAlignment( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextStream_setFieldAlignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextStream:skipWhiteSpace()
-   RETURN Qt_QTextStream_skipWhiteSpace( ::pPtr )
+METHOD QTextStream:setFieldWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextStream_setFieldWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextStream:status()
-   RETURN Qt_QTextStream_status( ::pPtr )
+METHOD QTextStream:setGenerateByteOrderMark( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTextStream_setGenerateByteOrderMark( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextStream:setIntegerBase( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextStream_setIntegerBase( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextStream:setLocale( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextStream_setLocale( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextStream:setNumberFlags( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextStream_setNumberFlags( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextStream:setPadChar( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextStream_setPadChar( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextStream:setRealNumberNotation( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextStream_setRealNumberNotation( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextStream:setRealNumberPrecision( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextStream_setRealNumberPrecision( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextStream:setStatus( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextStream_setStatus( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextStream:skipWhiteSpace( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextStream_skipWhiteSpace( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextStream:status( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextStream_status( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

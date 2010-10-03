@@ -103,13 +103,13 @@ CREATE CLASS QKeySequence INHERIT HbQtObjectHandler FUNCTION HB_QKeySequence
 
    METHOD  new( ... )
 
-   METHOD  count()
-   METHOD  isEmpty()
-   METHOD  matches( pSeq )
-   METHOD  toString( nFormat )
-   METHOD  fromString( cStr, nFormat )
-   METHOD  keyBindings( nKey )
-   METHOD  mnemonic( cText )
+   METHOD  count                         // (  )                                               -> nUint
+   METHOD  isEmpty                       // (  )                                               -> lBool
+   METHOD  matches                       // ( oQKeySequence )                                  -> nSequenceMatch
+   METHOD  toString                      // ( nFormat )                                        -> cQString
+   METHOD  fromString                    // ( cStr, nFormat )                                  -> oQKeySequence
+   METHOD  keyBindings                   // ( nKey )                                           -> oQList_QKeySequence>
+   METHOD  mnemonic                      // ( cText )                                          -> oQKeySequence
 
    ENDCLASS
 
@@ -123,30 +123,86 @@ METHOD QKeySequence:new( ... )
    RETURN Self
 
 
-METHOD QKeySequence:count()
-   RETURN Qt_QKeySequence_count( ::pPtr )
+METHOD QKeySequence:count( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QKeySequence_count( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QKeySequence:isEmpty()
-   RETURN Qt_QKeySequence_isEmpty( ::pPtr )
+METHOD QKeySequence:isEmpty( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QKeySequence_isEmpty( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QKeySequence:matches( pSeq )
-   RETURN Qt_QKeySequence_matches( ::pPtr, hbqt_ptr( pSeq ) )
+METHOD QKeySequence:matches( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QKeySequence_matches( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QKeySequence:toString( nFormat )
-   RETURN Qt_QKeySequence_toString( ::pPtr, nFormat )
+METHOD QKeySequence:toString( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QKeySequence_toString( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QKeySequence_toString( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QKeySequence:fromString( cStr, nFormat )
-   RETURN HB_QKeySequence():from( Qt_QKeySequence_fromString( ::pPtr, cStr, nFormat ) )
+METHOD QKeySequence:fromString( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QKeySequence():from( Qt_QKeySequence_fromString( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QKeySequence():from( Qt_QKeySequence_fromString( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QKeySequence:keyBindings( nKey )
-   RETURN HB_QList():from( Qt_QKeySequence_keyBindings( ::pPtr, nKey ) )
+METHOD QKeySequence:keyBindings( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QList():from( Qt_QKeySequence_keyBindings( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QKeySequence:mnemonic( cText )
-   RETURN HB_QKeySequence():from( Qt_QKeySequence_mnemonic( ::pPtr, cText ) )
+METHOD QKeySequence:mnemonic( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QKeySequence():from( Qt_QKeySequence_mnemonic( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

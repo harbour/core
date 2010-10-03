@@ -103,18 +103,18 @@ CREATE CLASS QDockWidget INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QDock
 
    METHOD  new( ... )
 
-   METHOD  allowedAreas()
-   METHOD  features()
-   METHOD  isAreaAllowed( nArea )
-   METHOD  isFloating()
-   METHOD  setAllowedAreas( nAreas )
-   METHOD  setFeatures( nFeatures )
-   METHOD  setFloating( lFloating )
-   METHOD  setTitleBarWidget( pWidget )
-   METHOD  setWidget( pWidget )
-   METHOD  titleBarWidget()
-   METHOD  toggleViewAction()
-   METHOD  widget()
+   METHOD  allowedAreas                  // (  )                                               -> nQt_DockWidgetAreas
+   METHOD  features                      // (  )                                               -> nDockWidgetFeatures
+   METHOD  isAreaAllowed                 // ( nArea )                                          -> lBool
+   METHOD  isFloating                    // (  )                                               -> lBool
+   METHOD  setAllowedAreas               // ( nAreas )                                         -> NIL
+   METHOD  setFeatures                   // ( nFeatures )                                      -> NIL
+   METHOD  setFloating                   // ( lFloating )                                      -> NIL
+   METHOD  setTitleBarWidget             // ( oQWidget )                                       -> NIL
+   METHOD  setWidget                     // ( oQWidget )                                       -> NIL
+   METHOD  titleBarWidget                // (  )                                               -> oQWidget
+   METHOD  toggleViewAction              // (  )                                               -> oQAction
+   METHOD  widget                        // (  )                                               -> oQWidget
 
    ENDCLASS
 
@@ -128,50 +128,122 @@ METHOD QDockWidget:new( ... )
    RETURN Self
 
 
-METHOD QDockWidget:allowedAreas()
-   RETURN Qt_QDockWidget_allowedAreas( ::pPtr )
+METHOD QDockWidget:allowedAreas( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDockWidget_allowedAreas( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDockWidget:features()
-   RETURN Qt_QDockWidget_features( ::pPtr )
+METHOD QDockWidget:features( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDockWidget_features( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDockWidget:isAreaAllowed( nArea )
-   RETURN Qt_QDockWidget_isAreaAllowed( ::pPtr, nArea )
+METHOD QDockWidget:isAreaAllowed( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDockWidget_isAreaAllowed( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDockWidget:isFloating()
-   RETURN Qt_QDockWidget_isFloating( ::pPtr )
+METHOD QDockWidget:isFloating( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDockWidget_isFloating( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDockWidget:setAllowedAreas( nAreas )
-   RETURN Qt_QDockWidget_setAllowedAreas( ::pPtr, nAreas )
+METHOD QDockWidget:setAllowedAreas( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDockWidget_setAllowedAreas( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDockWidget:setFeatures( nFeatures )
-   RETURN Qt_QDockWidget_setFeatures( ::pPtr, nFeatures )
+METHOD QDockWidget:setFeatures( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDockWidget_setFeatures( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDockWidget:setFloating( lFloating )
-   RETURN Qt_QDockWidget_setFloating( ::pPtr, lFloating )
+METHOD QDockWidget:setFloating( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QDockWidget_setFloating( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDockWidget:setTitleBarWidget( pWidget )
-   RETURN Qt_QDockWidget_setTitleBarWidget( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QDockWidget:setTitleBarWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDockWidget_setTitleBarWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDockWidget:setWidget( pWidget )
-   RETURN Qt_QDockWidget_setWidget( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QDockWidget:setWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDockWidget_setWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDockWidget:titleBarWidget()
-   RETURN HB_QWidget():from( Qt_QDockWidget_titleBarWidget( ::pPtr ) )
+METHOD QDockWidget:titleBarWidget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QDockWidget_titleBarWidget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDockWidget:toggleViewAction()
-   RETURN HB_QAction():from( Qt_QDockWidget_toggleViewAction( ::pPtr ) )
+METHOD QDockWidget:toggleViewAction( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QAction():from( Qt_QDockWidget_toggleViewAction( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDockWidget:widget()
-   RETURN HB_QWidget():from( Qt_QDockWidget_widget( ::pPtr ) )
+METHOD QDockWidget:widget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QDockWidget_widget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

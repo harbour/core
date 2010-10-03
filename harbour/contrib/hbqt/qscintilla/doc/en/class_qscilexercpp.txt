@@ -28,16 +28,16 @@
  *  $METHODS$
  *     :language()                                         -> cChar
  *     :lexer()                                            -> cChar
- *     :autoCompletionWordSeparators()                     -> pQStringList
+ *     :autoCompletionWordSeparators()                     -> oQStringList
  *     :blockEnd( @nStyle )                                -> cChar
  *     :blockStart( @nStyle )                              -> cChar
  *     :blockStartKeyword( @nStyle )                       -> cChar
  *     :braceStyle()                                       -> nInt
  *     :wordCharacters()                                   -> cChar
- *     :defaultColor( nStyle )                             -> pQColor
+ *     :defaultColor( nStyle )                             -> oQColor
  *     :defaultEolFill( nStyle )                           -> lBool
- *     :defaultFont( nStyle )                              -> pQFont
- *     :defaultPaper( nStyle )                             -> pQColor
+ *     :defaultFont( nStyle )                              -> oQFont
+ *     :defaultPaper( nStyle )                             -> oQColor
  *     :keywords( nSet )                                   -> cChar
  *     :description( nStyle )                              -> cQString
  *     :refreshProperties()                                -> NIL
@@ -72,7 +72,5 @@
  *     Harbour source: contrib/hbqt/qscintilla/TQsciLexerCPP.prg
  *     C++ wrappers  : contrib/hbqt/qscintilla/QsciLexerCPP.cpp
  *     Library       : hbqscintilla
- *  $SEEALSO$
- *     QsciLexer()
  *  $END$
  */

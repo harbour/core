@@ -103,34 +103,35 @@ CREATE CLASS QLabel INHERIT HbQtObjectHandler, HB_QFrame FUNCTION HB_QLabel
 
    METHOD  new( ... )
 
-   METHOD  alignment()
-   METHOD  buddy()
-   METHOD  hasScaledContents()
-   METHOD  indent()
-   METHOD  margin()
-   METHOD  movie()
-   METHOD  openExternalLinks()
-   METHOD  picture()
-   METHOD  pixmap()
-   METHOD  setAlignment( nQt_Alignment )
-   METHOD  setBuddy( pBuddy )
-   METHOD  setIndent( nInt )
-   METHOD  setMargin( nInt )
-   METHOD  setOpenExternalLinks( lOpen )
-   METHOD  setScaledContents( lBool )
-   METHOD  setTextFormat( nQt_TextFormat )
-   METHOD  setTextInteractionFlags( nFlags )
-   METHOD  setWordWrap( lOn )
-   METHOD  text()
-   METHOD  textFormat()
-   METHOD  textInteractionFlags()
-   METHOD  wordWrap()
-   METHOD  clear()
-   METHOD  setMovie( pMovie )
-   METHOD  setNum( ... )
-   METHOD  setPicture( pPicture )
-   METHOD  setPixmap( pQPixmap )
-   METHOD  setText( cQString )
+   METHOD  alignment                     // (  )                                               -> nQt_Alignment
+   METHOD  buddy                         // (  )                                               -> oQWidget
+   METHOD  hasScaledContents             // (  )                                               -> lBool
+   METHOD  indent                        // (  )                                               -> nInt
+   METHOD  margin                        // (  )                                               -> nInt
+   METHOD  movie                         // (  )                                               -> oQMovie
+   METHOD  openExternalLinks             // (  )                                               -> lBool
+   METHOD  picture                       // (  )                                               -> oQPicture
+   METHOD  pixmap                        // (  )                                               -> oQPixmap
+   METHOD  setAlignment                  // ( nQt::Alignment )                                 -> NIL
+   METHOD  setBuddy                      // ( oQWidget )                                       -> NIL
+   METHOD  setIndent                     // ( nInt )                                           -> NIL
+   METHOD  setMargin                     // ( nInt )                                           -> NIL
+   METHOD  setOpenExternalLinks          // ( lOpen )                                          -> NIL
+   METHOD  setScaledContents             // ( lBool )                                          -> NIL
+   METHOD  setTextFormat                 // ( nQt::TextFormat )                                -> NIL
+   METHOD  setTextInteractionFlags       // ( nFlags )                                         -> NIL
+   METHOD  setWordWrap                   // ( lOn )                                            -> NIL
+   METHOD  text                          // (  )                                               -> cQString
+   METHOD  textFormat                    // (  )                                               -> nQt_TextFormat
+   METHOD  textInteractionFlags          // (  )                                               -> nQt_TextInteractionFlags
+   METHOD  wordWrap                      // (  )                                               -> lBool
+   METHOD  clear                         // (  )                                               -> NIL
+   METHOD  setMovie                      // ( oQMovie )                                        -> NIL
+   METHOD  setNum                        // ( nNum )                                           -> NIL
+                                         // ( nNum )                                           -> NIL
+   METHOD  setPicture                    // ( oQPicture )                                      -> NIL
+   METHOD  setPixmap                     // ( oQPixmap )                                       -> NIL
+   METHOD  setText                       // ( cQString )                                       -> NIL
 
    ENDCLASS
 
@@ -144,100 +145,236 @@ METHOD QLabel:new( ... )
    RETURN Self
 
 
-METHOD QLabel:alignment()
-   RETURN Qt_QLabel_alignment( ::pPtr )
+METHOD QLabel:alignment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLabel_alignment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLabel:buddy()
-   RETURN HB_QWidget():from( Qt_QLabel_buddy( ::pPtr ) )
+METHOD QLabel:buddy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QLabel_buddy( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLabel:hasScaledContents()
-   RETURN Qt_QLabel_hasScaledContents( ::pPtr )
+METHOD QLabel:hasScaledContents( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLabel_hasScaledContents( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLabel:indent()
-   RETURN Qt_QLabel_indent( ::pPtr )
+METHOD QLabel:indent( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLabel_indent( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLabel:margin()
-   RETURN Qt_QLabel_margin( ::pPtr )
+METHOD QLabel:margin( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLabel_margin( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLabel:movie()
-   RETURN HB_QMovie():from( Qt_QLabel_movie( ::pPtr ) )
+METHOD QLabel:movie( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QMovie():from( Qt_QLabel_movie( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLabel:openExternalLinks()
-   RETURN Qt_QLabel_openExternalLinks( ::pPtr )
+METHOD QLabel:openExternalLinks( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLabel_openExternalLinks( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLabel:picture()
-   RETURN HB_QPicture():from( Qt_QLabel_picture( ::pPtr ) )
+METHOD QLabel:picture( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPicture():from( Qt_QLabel_picture( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLabel:pixmap()
-   RETURN HB_QPixmap():from( Qt_QLabel_pixmap( ::pPtr ) )
+METHOD QLabel:pixmap( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPixmap():from( Qt_QLabel_pixmap( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLabel:setAlignment( nQt_Alignment )
-   RETURN Qt_QLabel_setAlignment( ::pPtr, nQt_Alignment )
+METHOD QLabel:setAlignment( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLabel_setAlignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLabel:setBuddy( pBuddy )
-   RETURN Qt_QLabel_setBuddy( ::pPtr, hbqt_ptr( pBuddy ) )
+METHOD QLabel:setBuddy( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QLabel_setBuddy( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLabel:setIndent( nInt )
-   RETURN Qt_QLabel_setIndent( ::pPtr, nInt )
+METHOD QLabel:setIndent( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLabel_setIndent( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLabel:setMargin( nInt )
-   RETURN Qt_QLabel_setMargin( ::pPtr, nInt )
+METHOD QLabel:setMargin( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLabel_setMargin( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLabel:setOpenExternalLinks( lOpen )
-   RETURN Qt_QLabel_setOpenExternalLinks( ::pPtr, lOpen )
+METHOD QLabel:setOpenExternalLinks( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QLabel_setOpenExternalLinks( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLabel:setScaledContents( lBool )
-   RETURN Qt_QLabel_setScaledContents( ::pPtr, lBool )
+METHOD QLabel:setScaledContents( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QLabel_setScaledContents( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLabel:setTextFormat( nQt_TextFormat )
-   RETURN Qt_QLabel_setTextFormat( ::pPtr, nQt_TextFormat )
+METHOD QLabel:setTextFormat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLabel_setTextFormat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLabel:setTextInteractionFlags( nFlags )
-   RETURN Qt_QLabel_setTextInteractionFlags( ::pPtr, nFlags )
+METHOD QLabel:setTextInteractionFlags( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLabel_setTextInteractionFlags( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLabel:setWordWrap( lOn )
-   RETURN Qt_QLabel_setWordWrap( ::pPtr, lOn )
+METHOD QLabel:setWordWrap( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QLabel_setWordWrap( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLabel:text()
-   RETURN Qt_QLabel_text( ::pPtr )
+METHOD QLabel:text( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLabel_text( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLabel:textFormat()
-   RETURN Qt_QLabel_textFormat( ::pPtr )
+METHOD QLabel:textFormat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLabel_textFormat( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLabel:textInteractionFlags()
-   RETURN Qt_QLabel_textInteractionFlags( ::pPtr )
+METHOD QLabel:textInteractionFlags( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLabel_textInteractionFlags( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLabel:wordWrap()
-   RETURN Qt_QLabel_wordWrap( ::pPtr )
+METHOD QLabel:wordWrap( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLabel_wordWrap( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLabel:clear()
-   RETURN Qt_QLabel_clear( ::pPtr )
+METHOD QLabel:clear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLabel_clear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLabel:setMovie( pMovie )
-   RETURN Qt_QLabel_setMovie( ::pPtr, hbqt_ptr( pMovie ) )
+METHOD QLabel:setMovie( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QLabel_setMovie( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QLabel:setNum( ... )
@@ -253,14 +390,38 @@ METHOD QLabel:setNum( ... )
    RETURN hbqt_error()
 
 
-METHOD QLabel:setPicture( pPicture )
-   RETURN Qt_QLabel_setPicture( ::pPtr, hbqt_ptr( pPicture ) )
+METHOD QLabel:setPicture( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QLabel_setPicture( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLabel:setPixmap( pQPixmap )
-   RETURN Qt_QLabel_setPixmap( ::pPtr, hbqt_ptr( pQPixmap ) )
+METHOD QLabel:setPixmap( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QLabel_setPixmap( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLabel:setText( cQString )
-   RETURN Qt_QLabel_setText( ::pPtr, cQString )
+METHOD QLabel:setText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QLabel_setText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

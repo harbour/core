@@ -668,7 +668,11 @@ STATIC FUNCTION hbq_gen_ui_prg( cFile, cFuncName )
 
       ELSEIF "setText(" $ cCmd
          s := hbq_pullToolTip( cCmd )
-         AAdd( aLinesPRG, "   qObj[ " + PAD_30( STRINGIFY( cNam ) ) + " ]:setText( [" + STRIP_SQ( s ) + "] )" )
+         IF hbq_pullColumn( cCmd, @n )
+            AAdd( aLinesPRG, "   qObj[ " + PAD_30( STRINGIFY( cNam ) ) + " ]:setText( " + hb_ntos( n ) + ", [" + STRIP_SQ( s ) + "] )" )
+         ELSE
+            AAdd( aLinesPRG, "   qObj[ " + PAD_30( STRINGIFY( cNam ) ) + " ]:setText( [" + STRIP_SQ( s ) + "] )" )
+         ENDIF
 
       ELSEIF "setWhatsThis(" $ cCmd
          s := hbq_pullToolTip( cCmd )
@@ -764,6 +768,18 @@ STATIC FUNCTION hbq_occurs( cString, cCharToFind )
    NEXT
 
    RETURN nCount
+
+STATIC FUNCTION hbq_pullColumn( cCmd, nCol )
+
+   IF     "(0," $ cCmd
+      nCol := 0; RETURN .t.
+   ELSEIF "(1," $ cCmd
+      nCol := 1; RETURN .t.
+   ELSEIF "(2," $ cCmd
+      nCol := 2; RETURN .t.
+   ENDIF
+
+   RETURN .f.
 
 STATIC FUNCTION hbq_pullToolTip( cCmd )
    LOCAL n

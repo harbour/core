@@ -103,25 +103,35 @@ CREATE CLASS QMatrix INHERIT HbQtObjectHandler FUNCTION HB_QMatrix
 
    METHOD  new( ... )
 
-   METHOD  m11()
-   METHOD  m12()
-   METHOD  m21()
-   METHOD  m22()
-   METHOD  det()
-   METHOD  dx()
-   METHOD  dy()
-   METHOD  inverted( lInvertible )
-   METHOD  isIdentity()
-   METHOD  isInvertible()
-   METHOD  map( ... )
-   METHOD  mapRect( ... )
-   METHOD  mapToPolygon( pRectangle )
-   METHOD  reset()
-   METHOD  rotate( nDegrees )
-   METHOD  scale( nSx, nSy )
-   METHOD  setMatrix( nM11, nM12, nM21, nM22, nDx, nDy )
-   METHOD  shear( nSh, nSv )
-   METHOD  translate( nDx, nDy )
+   METHOD  m11                           // (  )                                               -> nQreal
+   METHOD  m12                           // (  )                                               -> nQreal
+   METHOD  m21                           // (  )                                               -> nQreal
+   METHOD  m22                           // (  )                                               -> nQreal
+   METHOD  det                           // (  )                                               -> nQreal
+   METHOD  dx                            // (  )                                               -> nQreal
+   METHOD  dy                            // (  )                                               -> nQreal
+   METHOD  inverted                      // ( @lInvertible )                                   -> oQMatrix
+   METHOD  isIdentity                    // (  )                                               -> lBool
+   METHOD  isInvertible                  // (  )                                               -> lBool
+   METHOD  map                           // ( nX, nY, @nTx, @nTy )                             -> NIL
+                                         // ( nX, nY, @nTx, @nTy )                             -> NIL
+                                         // ( oQPointF )                                       -> oQPointF
+                                         // ( oQPoint )                                        -> oQPoint
+                                         // ( oQLineF )                                        -> oQLineF
+                                         // ( oQLine )                                         -> oQLine
+                                         // ( oQPolygonF )                                     -> oQPolygonF
+                                         // ( oQPolygon )                                      -> oQPolygon
+                                         // ( oQRegion )                                       -> oQRegion
+                                         // ( oQPainterPath )                                  -> oQPainterPath
+   METHOD  mapRect                       // ( oQRectF )                                        -> oQRectF
+                                         // ( oQRect )                                         -> oQRect
+   METHOD  mapToPolygon                  // ( oQRect )                                         -> oQPolygon
+   METHOD  reset                         // (  )                                               -> NIL
+   METHOD  rotate                        // ( nDegrees )                                       -> oQMatrix
+   METHOD  scale                         // ( nSx, nSy )                                       -> oQMatrix
+   METHOD  setMatrix                     // ( nM11, nM12, nM21, nM22, nDx, nDy )               -> NIL
+   METHOD  shear                         // ( nSh, nSv )                                       -> oQMatrix
+   METHOD  translate                     // ( nDx, nDy )                                       -> oQMatrix
 
    ENDCLASS
 
@@ -135,44 +145,90 @@ METHOD QMatrix:new( ... )
    RETURN Self
 
 
-METHOD QMatrix:m11()
-   RETURN Qt_QMatrix_m11( ::pPtr )
+METHOD QMatrix:m11( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMatrix_m11( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMatrix:m12()
-   RETURN Qt_QMatrix_m12( ::pPtr )
+METHOD QMatrix:m12( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMatrix_m12( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMatrix:m21()
-   RETURN Qt_QMatrix_m21( ::pPtr )
+METHOD QMatrix:m21( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMatrix_m21( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMatrix:m22()
-   RETURN Qt_QMatrix_m22( ::pPtr )
+METHOD QMatrix:m22( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMatrix_m22( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMatrix:det()
-   RETURN Qt_QMatrix_det( ::pPtr )
+METHOD QMatrix:det( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMatrix_det( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMatrix:dx()
-   RETURN Qt_QMatrix_dx( ::pPtr )
+METHOD QMatrix:dx( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMatrix_dx( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMatrix:dy()
-   RETURN Qt_QMatrix_dy( ::pPtr )
+METHOD QMatrix:dy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMatrix_dy( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMatrix:inverted( lInvertible )
-   RETURN HB_QMatrix():from( Qt_QMatrix_inverted( ::pPtr, lInvertible ) )
+METHOD QMatrix:inverted( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN HB_QMatrix():from( Qt_QMatrix_inverted( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QMatrix():from( Qt_QMatrix_inverted( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMatrix:isIdentity()
-   RETURN Qt_QMatrix_isIdentity( ::pPtr )
+METHOD QMatrix:isIdentity( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMatrix_isIdentity( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMatrix:isInvertible()
-   RETURN Qt_QMatrix_isInvertible( ::pPtr )
+METHOD QMatrix:isInvertible( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMatrix_isInvertible( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QMatrix:map( ... )
@@ -228,30 +284,82 @@ METHOD QMatrix:mapRect( ... )
    RETURN hbqt_error()
 
 
-METHOD QMatrix:mapToPolygon( pRectangle )
-   RETURN HB_QPolygon():from( Qt_QMatrix_mapToPolygon( ::pPtr, hbqt_ptr( pRectangle ) ) )
+METHOD QMatrix:mapToPolygon( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QPolygon():from( Qt_QMatrix_mapToPolygon( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMatrix:reset()
-   RETURN Qt_QMatrix_reset( ::pPtr )
+METHOD QMatrix:reset( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMatrix_reset( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMatrix:rotate( nDegrees )
-   RETURN HB_QMatrix():from( Qt_QMatrix_rotate( ::pPtr, nDegrees ) )
+METHOD QMatrix:rotate( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QMatrix():from( Qt_QMatrix_rotate( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMatrix:scale( nSx, nSy )
-   RETURN HB_QMatrix():from( Qt_QMatrix_scale( ::pPtr, nSx, nSy ) )
+METHOD QMatrix:scale( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QMatrix():from( Qt_QMatrix_scale( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMatrix:setMatrix( nM11, nM12, nM21, nM22, nDx, nDy )
-   RETURN Qt_QMatrix_setMatrix( ::pPtr, nM11, nM12, nM21, nM22, nDx, nDy )
+METHOD QMatrix:setMatrix( ... )
+   SWITCH PCount()
+   CASE 6
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) ) .AND. hb_isNumeric( hb_pvalue( 6 ) )
+         RETURN Qt_QMatrix_setMatrix( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMatrix:shear( nSh, nSv )
-   RETURN HB_QMatrix():from( Qt_QMatrix_shear( ::pPtr, nSh, nSv ) )
+METHOD QMatrix:shear( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QMatrix():from( Qt_QMatrix_shear( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMatrix:translate( nDx, nDy )
-   RETURN HB_QMatrix():from( Qt_QMatrix_translate( ::pPtr, nDx, nDy ) )
+METHOD QMatrix:translate( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QMatrix():from( Qt_QMatrix_translate( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

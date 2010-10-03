@@ -103,20 +103,20 @@ CREATE CLASS QSpinBox INHERIT HbQtObjectHandler, HB_QAbstractSpinBox FUNCTION HB
 
    METHOD  new( ... )
 
-   METHOD  cleanText()
-   METHOD  maximum()
-   METHOD  minimum()
-   METHOD  prefix()
-   METHOD  setMaximum( nMax )
-   METHOD  setMinimum( nMin )
-   METHOD  setPrefix( cPrefix )
-   METHOD  setRange( nMinimum, nMaximum )
-   METHOD  setSingleStep( nVal )
-   METHOD  setSuffix( cSuffix )
-   METHOD  singleStep()
-   METHOD  suffix()
-   METHOD  value()
-   METHOD  setValue( nVal )
+   METHOD  cleanText                     // (  )                                               -> cQString
+   METHOD  maximum                       // (  )                                               -> nInt
+   METHOD  minimum                       // (  )                                               -> nInt
+   METHOD  prefix                        // (  )                                               -> cQString
+   METHOD  setMaximum                    // ( nMax )                                           -> NIL
+   METHOD  setMinimum                    // ( nMin )                                           -> NIL
+   METHOD  setPrefix                     // ( cPrefix )                                        -> NIL
+   METHOD  setRange                      // ( nMinimum, nMaximum )                             -> NIL
+   METHOD  setSingleStep                 // ( nVal )                                           -> NIL
+   METHOD  setSuffix                     // ( cSuffix )                                        -> NIL
+   METHOD  singleStep                    // (  )                                               -> nInt
+   METHOD  suffix                        // (  )                                               -> cQString
+   METHOD  value                         // (  )                                               -> nInt
+   METHOD  setValue                      // ( nVal )                                           -> NIL
 
    ENDCLASS
 
@@ -130,58 +130,142 @@ METHOD QSpinBox:new( ... )
    RETURN Self
 
 
-METHOD QSpinBox:cleanText()
-   RETURN Qt_QSpinBox_cleanText( ::pPtr )
+METHOD QSpinBox:cleanText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSpinBox_cleanText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSpinBox:maximum()
-   RETURN Qt_QSpinBox_maximum( ::pPtr )
+METHOD QSpinBox:maximum( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSpinBox_maximum( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSpinBox:minimum()
-   RETURN Qt_QSpinBox_minimum( ::pPtr )
+METHOD QSpinBox:minimum( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSpinBox_minimum( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSpinBox:prefix()
-   RETURN Qt_QSpinBox_prefix( ::pPtr )
+METHOD QSpinBox:prefix( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSpinBox_prefix( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSpinBox:setMaximum( nMax )
-   RETURN Qt_QSpinBox_setMaximum( ::pPtr, nMax )
+METHOD QSpinBox:setMaximum( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QSpinBox_setMaximum( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSpinBox:setMinimum( nMin )
-   RETURN Qt_QSpinBox_setMinimum( ::pPtr, nMin )
+METHOD QSpinBox:setMinimum( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QSpinBox_setMinimum( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSpinBox:setPrefix( cPrefix )
-   RETURN Qt_QSpinBox_setPrefix( ::pPtr, cPrefix )
+METHOD QSpinBox:setPrefix( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QSpinBox_setPrefix( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSpinBox:setRange( nMinimum, nMaximum )
-   RETURN Qt_QSpinBox_setRange( ::pPtr, nMinimum, nMaximum )
+METHOD QSpinBox:setRange( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QSpinBox_setRange( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSpinBox:setSingleStep( nVal )
-   RETURN Qt_QSpinBox_setSingleStep( ::pPtr, nVal )
+METHOD QSpinBox:setSingleStep( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QSpinBox_setSingleStep( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSpinBox:setSuffix( cSuffix )
-   RETURN Qt_QSpinBox_setSuffix( ::pPtr, cSuffix )
+METHOD QSpinBox:setSuffix( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QSpinBox_setSuffix( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSpinBox:singleStep()
-   RETURN Qt_QSpinBox_singleStep( ::pPtr )
+METHOD QSpinBox:singleStep( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSpinBox_singleStep( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSpinBox:suffix()
-   RETURN Qt_QSpinBox_suffix( ::pPtr )
+METHOD QSpinBox:suffix( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSpinBox_suffix( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSpinBox:value()
-   RETURN Qt_QSpinBox_value( ::pPtr )
+METHOD QSpinBox:value( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSpinBox_value( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSpinBox:setValue( nVal )
-   RETURN Qt_QSpinBox_setValue( ::pPtr, nVal )
+METHOD QSpinBox:setValue( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QSpinBox_setValue( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

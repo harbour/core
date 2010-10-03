@@ -27,23 +27,23 @@
  *     An instance of the object of type QGraphicsTextItem
  *  $METHODS$
  *     :adjustSize()                                       -> NIL
- *     :defaultTextColor()                                 -> pQColor
- *     :document()                                         -> pQTextDocument
- *     :font()                                             -> pQFont
+ *     :defaultTextColor()                                 -> oQColor
+ *     :document()                                         -> oQTextDocument
+ *     :font()                                             -> oQFont
  *     :openExternalLinks()                                -> lBool
- *     :setDefaultTextColor( pCol )                        -> NIL
- *     :setDocument( pDocument )                           -> NIL
- *     :setFont( pFont )                                   -> NIL
+ *     :setDefaultTextColor( oQColor )                     -> NIL
+ *     :setDocument( oQTextDocument )                      -> NIL
+ *     :setFont( oQFont )                                  -> NIL
  *     :setHtml( cText )                                   -> NIL
  *     :setOpenExternalLinks( lOpen )                      -> NIL
  *     :setPlainText( cText )                              -> NIL
  *     :setTabChangesFocus( lB )                           -> NIL
- *     :setTextCursor( pCursor )                           -> NIL
+ *     :setTextCursor( oQTextCursor )                      -> NIL
  *     :setTextInteractionFlags( nFlags )                  -> NIL
  *     :setTextWidth( nWidth )                             -> NIL
  *     :tabChangesFocus()                                  -> lBool
- *     :textCursor()                                       -> pQTextCursor
- *     :textInteractionFlags()                             -> nQt::TextInteractionFlags
+ *     :textCursor()                                       -> oQTextCursor
+ *     :textInteractionFlags()                             -> nQt_TextInteractionFlags
  *     :textWidth()                                        -> nQreal
  *     :toHtml()                                           -> cQString
  *     :toPlainText()                                      -> cQString
@@ -66,7 +66,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGraphicsTextItem.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsTextItem.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QObject, QGraphicsItem()
  *  $END$
  */

@@ -28,29 +28,29 @@
  *  $METHODS$
  *     :alternatingRowColors()                             -> lBool
  *     :autoScrollMargin()                                 -> nInt
- *     :closePersistentEditor( pIndex )                    -> NIL
- *     :currentIndex()                                     -> pQModelIndex
+ *     :closePersistentEditor( oQModelIndex )              -> NIL
+ *     :currentIndex()                                     -> oQModelIndex
  *     :dragDropMode()                                     -> nDragDropMode
  *     :dragDropOverwriteMode()                            -> lBool
  *     :dragEnabled()                                      -> lBool
  *     :editTriggers()                                     -> nEditTriggers
  *     :hasAutoScroll()                                    -> lBool
  *     :horizontalScrollMode()                             -> nScrollMode
- *     :iconSize()                                         -> pQSize
- *     :indexAt( pPoint )                                  -> pQModelIndex
- *     :indexWidget( pIndex )                              -> pQWidget
- *     :itemDelegate()                                     -> pQAbstractItemDelegate
- *     :itemDelegate_1( pIndex )                           -> pQAbstractItemDelegate
- *     :itemDelegateForColumn( nColumn )                   -> pQAbstractItemDelegate
- *     :itemDelegateForRow( nRow )                         -> pQAbstractItemDelegate
+ *     :iconSize()                                         -> oQSize
+ *     :indexAt( oQPoint )                                 -> oQModelIndex
+ *     :indexWidget( oQModelIndex )                        -> oQWidget
+ *     :itemDelegate()                                     -> oQAbstractItemDelegate
+ *     :itemDelegate( oQModelIndex )                       -> oQAbstractItemDelegate
+ *     :itemDelegateForColumn( nColumn )                   -> oQAbstractItemDelegate
+ *     :itemDelegateForRow( nRow )                         -> oQAbstractItemDelegate
  *     :keyboardSearch( cSearch )                          -> NIL
- *     :model()                                            -> pQAbstractItemModel
- *     :openPersistentEditor( pIndex )                     -> NIL
- *     :rootIndex()                                        -> pQModelIndex
- *     :scrollTo( pIndex, nHint )                          -> NIL
- *     :selectionBehavior()                                -> nQAbstractItemView::SelectionBehavior
- *     :selectionMode()                                    -> nQAbstractItemView::SelectionMode
- *     :selectionModel()                                   -> pQItemSelectionModel
+ *     :model()                                            -> oQAbstractItemModel
+ *     :openPersistentEditor( oQModelIndex )               -> NIL
+ *     :rootIndex()                                        -> oQModelIndex
+ *     :scrollTo( oQModelIndex, nHint )                    -> NIL
+ *     :selectionBehavior()                                -> nQAbstractItemView_SelectionBehavior
+ *     :selectionMode()                                    -> nQAbstractItemView_SelectionMode
+ *     :selectionModel()                                   -> oQItemSelectionModel
  *     :setAlternatingRowColors( lEnable )                 -> NIL
  *     :setAutoScroll( lEnable )                           -> NIL
  *     :setAutoScrollMargin( nMargin )                     -> NIL
@@ -60,35 +60,35 @@
  *     :setDropIndicatorShown( lEnable )                   -> NIL
  *     :setEditTriggers( nTriggers )                       -> NIL
  *     :setHorizontalScrollMode( nMode )                   -> NIL
- *     :setIconSize( pSize )                               -> NIL
- *     :setIndexWidget( pIndex, pWidget )                  -> NIL
- *     :setItemDelegate( pDelegate )                       -> NIL
- *     :setItemDelegateForColumn( nColumn, pDelegate )     -> NIL
- *     :setItemDelegateForRow( nRow, pDelegate )           -> NIL
- *     :setModel( pModel )                                 -> NIL
+ *     :setIconSize( oQSize )                              -> NIL
+ *     :setIndexWidget( oQModelIndex, oQWidget )           -> NIL
+ *     :setItemDelegate( oQAbstractItemDelegate )          -> NIL
+ *     :setItemDelegateForColumn( nColumn, oQAbstractItemDelegate )  -> NIL
+ *     :setItemDelegateForRow( nRow, oQAbstractItemDelegate )  -> NIL
+ *     :setModel( oQAbstractItemModel )                    -> NIL
  *     :setSelectionBehavior( nBehavior )                  -> NIL
  *     :setSelectionMode( nMode )                          -> NIL
- *     :setSelectionModel( pSelectionModel )               -> NIL
+ *     :setSelectionModel( oQItemSelectionModel )          -> NIL
  *     :setTabKeyNavigation( lEnable )                     -> NIL
  *     :setTextElideMode( nMode )                          -> NIL
  *     :setVerticalScrollMode( nMode )                     -> NIL
  *     :showDropIndicator()                                -> lBool
  *     :sizeHintForColumn( nColumn )                       -> nInt
- *     :sizeHintForIndex( pIndex )                         -> pQSize
+ *     :sizeHintForIndex( oQModelIndex )                   -> oQSize
  *     :sizeHintForRow( nRow )                             -> nInt
  *     :tabKeyNavigation()                                 -> lBool
- *     :textElideMode()                                    -> nQt::TextElideMode
+ *     :textElideMode()                                    -> nQt_TextElideMode
  *     :verticalScrollMode()                               -> nScrollMode
- *     :visualRect( pIndex )                               -> pQRect
+ *     :visualRect( oQModelIndex )                         -> oQRect
  *     :clearSelection()                                   -> NIL
- *     :edit( pIndex )                                     -> NIL
+ *     :edit( oQModelIndex )                               -> NIL
  *     :reset()                                            -> NIL
  *     :scrollToBottom()                                   -> NIL
  *     :scrollToTop()                                      -> NIL
  *     :selectAll()                                        -> NIL
- *     :setCurrentIndex( pIndex )                          -> NIL
- *     :setRootIndex( pIndex )                             -> NIL
- *     :update( pIndex )                                   -> NIL
+ *     :setCurrentIndex( oQModelIndex )                    -> NIL
+ *     :setRootIndex( oQModelIndex )                       -> NIL
+ *     :update( oQModelIndex )                             -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -108,7 +108,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQAbstractItemView.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QAbstractItemView.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractScrollArea()
  *  $END$
  */

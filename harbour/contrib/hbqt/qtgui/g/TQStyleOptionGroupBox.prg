@@ -103,12 +103,12 @@ CREATE CLASS QStyleOptionGroupBox INHERIT HbQtObjectHandler, HB_QStyleOptionComp
 
    METHOD  new( ... )
 
-   METHOD  features()
-   METHOD  lineWidth()
-   METHOD  midLineWidth()
-   METHOD  text()
-   METHOD  textAlignment()
-   METHOD  textColor()
+   METHOD  features                      // (  )                                               -> nQStyleOptionFrameV2_FrameFeatures
+   METHOD  lineWidth                     // (  )                                               -> nInt
+   METHOD  midLineWidth                  // (  )                                               -> nInt
+   METHOD  text                          // (  )                                               -> cQString
+   METHOD  textAlignment                 // (  )                                               -> nQt_Alignment
+   METHOD  textColor                     // (  )                                               -> oQColor
 
    ENDCLASS
 
@@ -122,26 +122,50 @@ METHOD QStyleOptionGroupBox:new( ... )
    RETURN Self
 
 
-METHOD QStyleOptionGroupBox:features()
-   RETURN Qt_QStyleOptionGroupBox_features( ::pPtr )
+METHOD QStyleOptionGroupBox:features( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionGroupBox_features( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionGroupBox:lineWidth()
-   RETURN Qt_QStyleOptionGroupBox_lineWidth( ::pPtr )
+METHOD QStyleOptionGroupBox:lineWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionGroupBox_lineWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionGroupBox:midLineWidth()
-   RETURN Qt_QStyleOptionGroupBox_midLineWidth( ::pPtr )
+METHOD QStyleOptionGroupBox:midLineWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionGroupBox_midLineWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionGroupBox:text()
-   RETURN Qt_QStyleOptionGroupBox_text( ::pPtr )
+METHOD QStyleOptionGroupBox:text( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionGroupBox_text( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionGroupBox:textAlignment()
-   RETURN Qt_QStyleOptionGroupBox_textAlignment( ::pPtr )
+METHOD QStyleOptionGroupBox:textAlignment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionGroupBox_textAlignment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionGroupBox:textColor()
-   RETURN HB_QColor():from( Qt_QStyleOptionGroupBox_textColor( ::pPtr ) )
+METHOD QStyleOptionGroupBox:textColor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QColor():from( Qt_QStyleOptionGroupBox_textColor( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

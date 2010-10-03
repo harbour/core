@@ -30,14 +30,14 @@
  *     :clear()                                            -> NIL
  *     :clearBit( nI )                                     -> NIL
  *     :count()                                            -> nInt
- *     :count_1( lOn )                                     -> nInt
+ *     :count( lOn )                                       -> nInt
  *     :fill( lValue, nSize )                              -> lBool
- *     :fill_1( lValue, nBegin, nEnd )                     -> NIL
+ *     :fill( lValue, nBegin, nEnd )                       -> NIL
  *     :isEmpty()                                          -> lBool
  *     :isNull()                                           -> lBool
  *     :resize( nSize )                                    -> NIL
  *     :setBit( nI )                                       -> NIL
- *     :setBit_1( nI, lValue )                             -> NIL
+ *     :setBit( nI, lValue )                               -> NIL
  *     :size()                                             -> nInt
  *     :testBit( nI )                                      -> lBool
  *     :toggleBit( nI )                                    -> lBool
@@ -61,7 +61,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQBitArray.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QBitArray.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

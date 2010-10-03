@@ -103,7 +103,7 @@ CREATE CLASS QInputEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_QInput
 
    METHOD  new( ... )
 
-   METHOD  modifiers()
+   METHOD  modifiers                     // (  )                                               -> nQt_KeyboardModifiers
 
    ENDCLASS
 
@@ -117,6 +117,10 @@ METHOD QInputEvent:new( ... )
    RETURN Self
 
 
-METHOD QInputEvent:modifiers()
-   RETURN Qt_QInputEvent_modifiers( ::pPtr )
+METHOD QInputEvent:modifiers( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QInputEvent_modifiers( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

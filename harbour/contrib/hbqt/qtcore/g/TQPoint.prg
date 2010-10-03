@@ -103,14 +103,14 @@ CREATE CLASS QPoint INHERIT HbQtObjectHandler FUNCTION HB_QPoint
 
    METHOD  new( ... )
 
-   METHOD  isNull()
-   METHOD  manhattanLength()
-   METHOD  rx()
-   METHOD  ry()
-   METHOD  setX( nX )
-   METHOD  setY( nY )
-   METHOD  x()
-   METHOD  y()
+   METHOD  isNull                        // (  )                                               -> lBool
+   METHOD  manhattanLength               // (  )                                               -> nInt
+   METHOD  rx                            // (  )                                               -> nInt
+   METHOD  ry                            // (  )                                               -> nInt
+   METHOD  setX                          // ( nX )                                             -> NIL
+   METHOD  setY                          // ( nY )                                             -> NIL
+   METHOD  x                             // (  )                                               -> nInt
+   METHOD  y                             // (  )                                               -> nInt
 
    ENDCLASS
 
@@ -124,34 +124,74 @@ METHOD QPoint:new( ... )
    RETURN Self
 
 
-METHOD QPoint:isNull()
-   RETURN Qt_QPoint_isNull( ::pPtr )
+METHOD QPoint:isNull( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPoint_isNull( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPoint:manhattanLength()
-   RETURN Qt_QPoint_manhattanLength( ::pPtr )
+METHOD QPoint:manhattanLength( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPoint_manhattanLength( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPoint:rx()
-   RETURN Qt_QPoint_rx( ::pPtr )
+METHOD QPoint:rx( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPoint_rx( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPoint:ry()
-   RETURN Qt_QPoint_ry( ::pPtr )
+METHOD QPoint:ry( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPoint_ry( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPoint:setX( nX )
-   RETURN Qt_QPoint_setX( ::pPtr, nX )
+METHOD QPoint:setX( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPoint_setX( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPoint:setY( nY )
-   RETURN Qt_QPoint_setY( ::pPtr, nY )
+METHOD QPoint:setY( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPoint_setY( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPoint:x()
-   RETURN Qt_QPoint_x( ::pPtr )
+METHOD QPoint:x( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPoint_x( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPoint:y()
-   RETURN Qt_QPoint_y( ::pPtr )
+METHOD QPoint:y( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPoint_y( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

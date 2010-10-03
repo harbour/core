@@ -907,9 +907,8 @@ METHOD HbqReportsManager:addObject( cType, qPos, qGeo )
    CASE "Gradient"
       qGrad := QLinearGradient()
       qGrad:setColorAt( 0, QColor( 195,225,255 ) )
-      qGrad:setColorAt( 1, ( QColor( Qt_darkBlue ) ):darker( 150 ) )
+      qGrad:setColorAt( 1, QColor( Qt_darkBlue ):darker( 150 ) )
       qGrad:setCoordinateMode( QGradient_StretchToDeviceMode )
-
       oHqrObject:setBrush( QBrush( "QGradient", qGrad ) )
       oHqrObject:setPen( QPen( Qt_NoPen ) )
       EXIT
@@ -1051,12 +1050,10 @@ METHOD HbqReportsManager:zoom( nMode )
    CASE HBQT_GRAPHICSVIEW_ZOOM_WYSIWYG
       ::qView:resetMatrix()
       ::qView:scale( ::nScreenDpiX / 25.4 / 10.0, ::nScreenDpiY / 25.4 / 10.0 )
-      //::qView:centerOn_1( 0.0, 0.0 )
       ::qView:centerOn( 0.0, 0.0 )
       EXIT
    CASE HBQT_GRAPHICSVIEW_ZOOM_ORIGINAL
       ::qView:resetMatrix()
-      //::qView:centerOn_1( 0.0, 0.0 )
       ::qView:centerOn( 0.0, 0.0 )
       EXIT
    ENDSWITCH

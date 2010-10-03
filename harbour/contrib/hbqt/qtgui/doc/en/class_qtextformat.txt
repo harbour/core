@@ -26,15 +26,15 @@
  *  $RETURNS$
  *     An instance of the object of type QTextFormat
  *  $METHODS$
- *     :background()                                       -> pQBrush
+ *     :background()                                       -> oQBrush
  *     :boolProperty( nPropertyId )                        -> lBool
- *     :brushProperty( nPropertyId )                       -> pQBrush
+ *     :brushProperty( nPropertyId )                       -> oQBrush
  *     :clearBackground()                                  -> NIL
  *     :clearForeground()                                  -> NIL
  *     :clearProperty( nPropertyId )                       -> NIL
- *     :colorProperty( nPropertyId )                       -> pQColor
+ *     :colorProperty( nPropertyId )                       -> oQColor
  *     :doubleProperty( nPropertyId )                      -> nQreal
- *     :foreground()                                       -> pQBrush
+ *     :foreground()                                       -> oQBrush
  *     :hasProperty( nPropertyId )                         -> lBool
  *     :intProperty( nPropertyId )                         -> nInt
  *     :isBlockFormat()                                    -> lBool
@@ -45,27 +45,27 @@
  *     :isTableCellFormat()                                -> lBool
  *     :isTableFormat()                                    -> lBool
  *     :isValid()                                          -> lBool
- *     :layoutDirection()                                  -> nQt::LayoutDirection
- *     :lengthProperty( nPropertyId )                      -> pQTextLength
- *     :merge( pOther )                                    -> NIL
+ *     :layoutDirection()                                  -> nQt_LayoutDirection
+ *     :lengthProperty( nPropertyId )                      -> oQTextLength
+ *     :merge( oQTextFormat )                              -> NIL
  *     :objectIndex()                                      -> nInt
  *     :objectType()                                       -> nInt
- *     :penProperty( nPropertyId )                         -> pQPen
- *     :property( nPropertyId )                            -> pQVariant
+ *     :penProperty( nPropertyId )                         -> oQPen
+ *     :property( nPropertyId )                            -> oQVariant
  *     :propertyCount()                                    -> nInt
- *     :setBackground( pBrush )                            -> NIL
- *     :setForeground( pBrush )                            -> NIL
+ *     :setBackground( oQBrush )                           -> NIL
+ *     :setForeground( oQBrush )                           -> NIL
  *     :setLayoutDirection( nDirection )                   -> NIL
  *     :setObjectIndex( nIndex )                           -> NIL
  *     :setObjectType( nType )                             -> NIL
- *     :setProperty( nPropertyId, pValue )                 -> NIL
+ *     :setProperty( nPropertyId, oQVariant )              -> NIL
  *     :stringProperty( nPropertyId )                      -> cQString
- *     :toBlockFormat()                                    -> pQTextBlockFormat
- *     :toCharFormat()                                     -> pQTextCharFormat
- *     :toFrameFormat()                                    -> pQTextFrameFormat
- *     :toImageFormat()                                    -> pQTextImageFormat
- *     :toListFormat()                                     -> pQTextListFormat
- *     :toTableFormat()                                    -> pQTextTableFormat
+ *     :toBlockFormat()                                    -> oQTextBlockFormat
+ *     :toCharFormat()                                     -> oQTextCharFormat
+ *     :toFrameFormat()                                    -> oQTextFrameFormat
+ *     :toImageFormat()                                    -> oQTextImageFormat
+ *     :toListFormat()                                     -> oQTextListFormat
+ *     :toTableFormat()                                    -> oQTextTableFormat
  *     :type()                                             -> nInt
  * 
  *  $DESCRIPTION$
@@ -86,7 +86,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTextFormat.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextFormat.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

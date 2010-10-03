@@ -103,13 +103,13 @@ CREATE CLASS QStyledItemDelegate INHERIT HbQtObjectHandler FUNCTION HB_QStyledIt
 
    METHOD  new( ... )
 
-   METHOD  createEditor( pParent, pOption, pIndex )
-   METHOD  displayText( pValue, pLocale )
-   METHOD  paint( pPainter, pOption, pIndex )
-   METHOD  setEditorData( pEditor, pIndex )
-   METHOD  setModelData( pEditor, pModel, pIndex )
-   METHOD  sizeHint( pOption, pIndex )
-   METHOD  updateEditorGeometry( pEditor, pOption, pIndex )
+   METHOD  createEditor                  // ( oQWidget, oQStyleOptionViewItem, oQModelIndex )  -> oQWidget
+   METHOD  displayText                   // ( oQVariant, oQLocale )                            -> cQString
+   METHOD  paint                         // ( oQPainter, oQStyleOptionViewItem, oQModelIndex ) -> NIL
+   METHOD  setEditorData                 // ( oQWidget, oQModelIndex )                         -> NIL
+   METHOD  setModelData                  // ( oQWidget, oQAbstractItemModel, oQModelIndex )    -> NIL
+   METHOD  sizeHint                      // ( oQStyleOptionViewItem, oQModelIndex )            -> oQSize
+   METHOD  updateEditorGeometry          // ( oQWidget, oQStyleOptionViewItem, oQModelIndex )  -> NIL
 
    ENDCLASS
 
@@ -123,30 +123,86 @@ METHOD QStyledItemDelegate:new( ... )
    RETURN Self
 
 
-METHOD QStyledItemDelegate:createEditor( pParent, pOption, pIndex )
-   RETURN HB_QWidget():from( Qt_QStyledItemDelegate_createEditor( ::pPtr, hbqt_ptr( pParent ), hbqt_ptr( pOption ), hbqt_ptr( pIndex ) ) )
+METHOD QStyledItemDelegate:createEditor( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN HB_QWidget():from( Qt_QStyledItemDelegate_createEditor( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyledItemDelegate:displayText( pValue, pLocale )
-   RETURN Qt_QStyledItemDelegate_displayText( ::pPtr, hbqt_ptr( pValue ), hbqt_ptr( pLocale ) )
+METHOD QStyledItemDelegate:displayText( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QStyledItemDelegate_displayText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyledItemDelegate:paint( pPainter, pOption, pIndex )
-   RETURN Qt_QStyledItemDelegate_paint( ::pPtr, hbqt_ptr( pPainter ), hbqt_ptr( pOption ), hbqt_ptr( pIndex ) )
+METHOD QStyledItemDelegate:paint( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QStyledItemDelegate_paint( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyledItemDelegate:setEditorData( pEditor, pIndex )
-   RETURN Qt_QStyledItemDelegate_setEditorData( ::pPtr, hbqt_ptr( pEditor ), hbqt_ptr( pIndex ) )
+METHOD QStyledItemDelegate:setEditorData( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QStyledItemDelegate_setEditorData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyledItemDelegate:setModelData( pEditor, pModel, pIndex )
-   RETURN Qt_QStyledItemDelegate_setModelData( ::pPtr, hbqt_ptr( pEditor ), hbqt_ptr( pModel ), hbqt_ptr( pIndex ) )
+METHOD QStyledItemDelegate:setModelData( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QStyledItemDelegate_setModelData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyledItemDelegate:sizeHint( pOption, pIndex )
-   RETURN HB_QSize():from( Qt_QStyledItemDelegate_sizeHint( ::pPtr, hbqt_ptr( pOption ), hbqt_ptr( pIndex ) ) )
+METHOD QStyledItemDelegate:sizeHint( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QSize():from( Qt_QStyledItemDelegate_sizeHint( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyledItemDelegate:updateEditorGeometry( pEditor, pOption, pIndex )
-   RETURN Qt_QStyledItemDelegate_updateEditorGeometry( ::pPtr, hbqt_ptr( pEditor ), hbqt_ptr( pOption ), hbqt_ptr( pIndex ) )
+METHOD QStyledItemDelegate:updateEditorGeometry( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QStyledItemDelegate_updateEditorGeometry( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

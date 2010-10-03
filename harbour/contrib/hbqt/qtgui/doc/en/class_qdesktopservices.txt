@@ -27,8 +27,8 @@
  *     An instance of the object of type QDesktopServices
  *  $METHODS$
  *     :displayName( nType )                               -> cQString
- *     :openUrl( pUrl )                                    -> lBool
- *     :setUrlHandler( cScheme, pReceiver, pMethod )       -> NIL
+ *     :openUrl( oQUrl )                                   -> lBool
+ *     :setUrlHandler( cScheme, oQObject, cMethod )        -> NIL
  *     :storageLocation( nType )                           -> cQString
  *     :unsetUrlHandler( cScheme )                         -> NIL
  * 
@@ -50,7 +50,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQDesktopServices.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QDesktopServices.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

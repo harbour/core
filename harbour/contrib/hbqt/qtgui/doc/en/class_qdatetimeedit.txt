@@ -27,7 +27,7 @@
  *     An instance of the object of type QDateTimeEdit
  *  $METHODS$
  *     :calendarPopup()                                    -> lBool
- *     :calendarWidget()                                   -> pQCalendarWidget
+ *     :calendarWidget()                                   -> oQCalendarWidget
  *     :clearMaximumDate()                                 -> NIL
  *     :clearMaximumDateTime()                             -> NIL
  *     :clearMaximumTime()                                 -> NIL
@@ -36,40 +36,40 @@
  *     :clearMinimumTime()                                 -> NIL
  *     :currentSection()                                   -> nSection
  *     :currentSectionIndex()                              -> nInt
- *     :date()                                             -> pQDate
- *     :dateTime()                                         -> pQDateTime
+ *     :date()                                             -> oQDate
+ *     :dateTime()                                         -> oQDateTime
  *     :displayFormat()                                    -> cQString
  *     :displayedSections()                                -> nSections
- *     :maximumDate()                                      -> pQDate
- *     :maximumDateTime()                                  -> pQDateTime
- *     :maximumTime()                                      -> pQTime
- *     :minimumDate()                                      -> pQDate
- *     :minimumDateTime()                                  -> pQDateTime
- *     :minimumTime()                                      -> pQTime
+ *     :maximumDate()                                      -> oQDate
+ *     :maximumDateTime()                                  -> oQDateTime
+ *     :maximumTime()                                      -> oQTime
+ *     :minimumDate()                                      -> oQDate
+ *     :minimumDateTime()                                  -> oQDateTime
+ *     :minimumTime()                                      -> oQTime
  *     :sectionAt( nIndex )                                -> nSection
  *     :sectionCount()                                     -> nInt
  *     :sectionText( nSection )                            -> cQString
  *     :setCalendarPopup( lEnable )                        -> NIL
- *     :setCalendarWidget( pCalendarWidget )               -> NIL
+ *     :setCalendarWidget( oQCalendarWidget )              -> NIL
  *     :setCurrentSection( nSection )                      -> NIL
  *     :setCurrentSectionIndex( nIndex )                   -> NIL
- *     :setDateRange( pMin, pMax )                         -> NIL
- *     :setDateTimeRange( pMin, pMax )                     -> NIL
+ *     :setDateRange( oQDate, oQDate )                     -> NIL
+ *     :setDateTimeRange( oQDateTime, oQDateTime )         -> NIL
  *     :setDisplayFormat( cFormat )                        -> NIL
- *     :setMaximumDate( pMax )                             -> NIL
- *     :setMaximumDateTime( pDt )                          -> NIL
- *     :setMaximumTime( pMax )                             -> NIL
- *     :setMinimumDate( pMin )                             -> NIL
- *     :setMinimumDateTime( pDt )                          -> NIL
- *     :setMinimumTime( pMin )                             -> NIL
+ *     :setMaximumDate( oQDate )                           -> NIL
+ *     :setMaximumDateTime( oQDateTime )                   -> NIL
+ *     :setMaximumTime( oQTime )                           -> NIL
+ *     :setMinimumDate( oQDate )                           -> NIL
+ *     :setMinimumDateTime( oQDateTime )                   -> NIL
+ *     :setMinimumTime( oQTime )                           -> NIL
  *     :setSelectedSection( nSection )                     -> NIL
- *     :setTimeRange( pMin, pMax )                         -> NIL
+ *     :setTimeRange( oQTime, oQTime )                     -> NIL
  *     :setTimeSpec( nSpec )                               -> NIL
- *     :time()                                             -> pQTime
- *     :timeSpec()                                         -> nQt::TimeSpec
- *     :setDate( pDate )                                   -> NIL
- *     :setDateTime( pDateTime )                           -> NIL
- *     :setTime( pTime )                                   -> NIL
+ *     :time()                                             -> oQTime
+ *     :timeSpec()                                         -> nQt_TimeSpec
+ *     :setDate( oQDate )                                  -> NIL
+ *     :setDateTime( oQDateTime )                          -> NIL
+ *     :setTime( oQTime )                                  -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -89,7 +89,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQDateTimeEdit.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QDateTimeEdit.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractSpinBox()
  *  $END$
  */

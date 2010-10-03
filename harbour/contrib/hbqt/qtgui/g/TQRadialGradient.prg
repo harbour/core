@@ -103,12 +103,14 @@ CREATE CLASS QRadialGradient INHERIT HbQtObjectHandler, HB_QGradient FUNCTION HB
 
    METHOD  new( ... )
 
-   METHOD  center()
-   METHOD  focalPoint()
-   METHOD  radius()
-   METHOD  setCenter( ... )
-   METHOD  setFocalPoint( ... )
-   METHOD  setRadius( nRadius )
+   METHOD  center                        // (  )                                               -> oQPointF
+   METHOD  focalPoint                    // (  )                                               -> oQPointF
+   METHOD  radius                        // (  )                                               -> nQreal
+   METHOD  setCenter                     // ( oQPointF )                                       -> NIL
+                                         // ( nX, nY )                                         -> NIL
+   METHOD  setFocalPoint                 // ( oQPointF )                                       -> NIL
+                                         // ( nX, nY )                                         -> NIL
+   METHOD  setRadius                     // ( nRadius )                                        -> NIL
 
    ENDCLASS
 
@@ -122,16 +124,28 @@ METHOD QRadialGradient:new( ... )
    RETURN Self
 
 
-METHOD QRadialGradient:center()
-   RETURN HB_QPointF():from( Qt_QRadialGradient_center( ::pPtr ) )
+METHOD QRadialGradient:center( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPointF():from( Qt_QRadialGradient_center( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRadialGradient:focalPoint()
-   RETURN HB_QPointF():from( Qt_QRadialGradient_focalPoint( ::pPtr ) )
+METHOD QRadialGradient:focalPoint( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPointF():from( Qt_QRadialGradient_focalPoint( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRadialGradient:radius()
-   RETURN Qt_QRadialGradient_radius( ::pPtr )
+METHOD QRadialGradient:radius( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QRadialGradient_radius( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QRadialGradient:setCenter( ... )
@@ -170,6 +184,14 @@ METHOD QRadialGradient:setFocalPoint( ... )
    RETURN hbqt_error()
 
 
-METHOD QRadialGradient:setRadius( nRadius )
-   RETURN Qt_QRadialGradient_setRadius( ::pPtr, nRadius )
+METHOD QRadialGradient:setRadius( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QRadialGradient_setRadius( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

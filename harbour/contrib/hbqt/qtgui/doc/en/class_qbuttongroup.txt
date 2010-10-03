@@ -26,17 +26,17 @@
  *  $RETURNS$
  *     An instance of the object of type QButtonGroup
  *  $METHODS$
- *     :addButton( pButton )                               -> NIL
- *     :addButton_1( pButton, nId )                        -> NIL
- *     :button( nId )                                      -> pQAbstractButton
- *     :buttons()                                          -> pQList<QAbstractButton *>
- *     :checkedButton()                                    -> pQAbstractButton
+ *     :addButton( oQAbstractButton )                      -> NIL
+ *     :addButton( oQAbstractButton, nId )                 -> NIL
+ *     :button( nId )                                      -> oQAbstractButton
+ *     :buttons()                                          -> oQList_QAbstractButton
+ *     :checkedButton()                                    -> oQAbstractButton
  *     :checkedId()                                        -> nInt
  *     :exclusive()                                        -> lBool
- *     :id( pButton )                                      -> nInt
- *     :removeButton( pButton )                            -> NIL
+ *     :id( oQAbstractButton )                             -> nInt
+ *     :removeButton( oQAbstractButton )                   -> NIL
  *     :setExclusive( lBool )                              -> NIL
- *     :setId( pButton, nId )                              -> NIL
+ *     :setId( oQAbstractButton, nId )                     -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -56,7 +56,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQButtonGroup.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QButtonGroup.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

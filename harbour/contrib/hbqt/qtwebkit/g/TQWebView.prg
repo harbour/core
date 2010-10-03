@@ -103,31 +103,32 @@ CREATE CLASS QWebView INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QWebView
 
    METHOD  new( ... )
 
-   METHOD  findText( cSubString, nOptions )
-   METHOD  history()
-   METHOD  icon()
-   METHOD  isModified()
-   METHOD  load( ... )
-   METHOD  page()
-   METHOD  pageAction( nAction )
-   METHOD  selectedText()
-   METHOD  setContent( pData, cMimeType, pBaseUrl )
-   METHOD  setHtml( cHtml, pBaseUrl )
-   METHOD  setPage( pPage )
-   METHOD  setTextSizeMultiplier( nFactor )
-   METHOD  setUrl( pUrl )
-   METHOD  setZoomFactor( nFactor )
-   METHOD  settings()
-   METHOD  textSizeMultiplier()
-   METHOD  title()
-   METHOD  triggerPageAction( nAction, lChecked )
-   METHOD  url()
-   METHOD  zoomFactor()
-   METHOD  back()
-   METHOD  forward()
-   METHOD  print( pPrinter )
-   METHOD  reload()
-   METHOD  stop()
+   METHOD  findText                      // ( cSubString, nOptions )                           -> lBool
+   METHOD  history                       // (  )                                               -> oQWebHistory
+   METHOD  icon                          // (  )                                               -> oQIcon
+   METHOD  isModified                    // (  )                                               -> lBool
+   METHOD  load                          // ( oQUrl )                                          -> NIL
+                                         // ( oQNetworkRequest, nOperation, oQByteArray )      -> NIL
+   METHOD  page                          // (  )                                               -> oQWebPage
+   METHOD  pageAction                    // ( nAction )                                        -> oQAction
+   METHOD  selectedText                  // (  )                                               -> cQString
+   METHOD  setContent                    // ( oQByteArray, cMimeType, oQUrl )                  -> NIL
+   METHOD  setHtml                       // ( cHtml, oQUrl )                                   -> NIL
+   METHOD  setPage                       // ( oQWebPage )                                      -> NIL
+   METHOD  setTextSizeMultiplier         // ( nFactor )                                        -> NIL
+   METHOD  setUrl                        // ( oQUrl )                                          -> NIL
+   METHOD  setZoomFactor                 // ( nFactor )                                        -> NIL
+   METHOD  settings                      // (  )                                               -> oQWebSettings
+   METHOD  textSizeMultiplier            // (  )                                               -> nQreal
+   METHOD  title                         // (  )                                               -> cQString
+   METHOD  triggerPageAction             // ( nAction, lChecked )                              -> NIL
+   METHOD  url                           // (  )                                               -> oQUrl
+   METHOD  zoomFactor                    // (  )                                               -> nQreal
+   METHOD  back                          // (  )                                               -> NIL
+   METHOD  forward                       // (  )                                               -> NIL
+   METHOD  print                         // ( oQPrinter )                                      -> NIL
+   METHOD  reload                        // (  )                                               -> NIL
+   METHOD  stop                          // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -141,20 +142,46 @@ METHOD QWebView:new( ... )
    RETURN Self
 
 
-METHOD QWebView:findText( cSubString, nOptions )
-   RETURN Qt_QWebView_findText( ::pPtr, cSubString, nOptions )
+METHOD QWebView:findText( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QWebView_findText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QWebView_findText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebView:history()
-   RETURN HB_QWebHistory():from( Qt_QWebView_history( ::pPtr ) )
+METHOD QWebView:history( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWebHistory():from( Qt_QWebView_history( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebView:icon()
-   RETURN HB_QIcon():from( Qt_QWebView_icon( ::pPtr ) )
+METHOD QWebView:icon( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QIcon():from( Qt_QWebView_icon( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebView:isModified()
-   RETURN Qt_QWebView_isModified( ::pPtr )
+METHOD QWebView:isModified( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebView_isModified( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWebView:load( ... )
@@ -162,6 +189,12 @@ METHOD QWebView:load( ... )
    CASE 3
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QWebView_load_1( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QWebView_load_1( ::pPtr, ... )
       ENDCASE
       EXIT
@@ -180,82 +213,222 @@ METHOD QWebView:load( ... )
    RETURN hbqt_error()
 
 
-METHOD QWebView:page()
-   RETURN HB_QWebPage():from( Qt_QWebView_page( ::pPtr ) )
+METHOD QWebView:page( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWebPage():from( Qt_QWebView_page( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebView:pageAction( nAction )
-   RETURN HB_QAction():from( Qt_QWebView_pageAction( ::pPtr, nAction ) )
+METHOD QWebView:pageAction( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QAction():from( Qt_QWebView_pageAction( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebView:selectedText()
-   RETURN Qt_QWebView_selectedText( ::pPtr )
+METHOD QWebView:selectedText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebView_selectedText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebView:setContent( pData, cMimeType, pBaseUrl )
-   RETURN Qt_QWebView_setContent( ::pPtr, hbqt_ptr( pData ), cMimeType, hbqt_ptr( pBaseUrl ) )
+METHOD QWebView:setContent( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QWebView_setContent( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QWebView_setContent( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWebView_setContent( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebView:setHtml( cHtml, pBaseUrl )
-   RETURN Qt_QWebView_setHtml( ::pPtr, cHtml, hbqt_ptr( pBaseUrl ) )
+METHOD QWebView:setHtml( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QWebView_setHtml( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QWebView_setHtml( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebView:setPage( pPage )
-   RETURN Qt_QWebView_setPage( ::pPtr, hbqt_ptr( pPage ) )
+METHOD QWebView:setPage( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWebView_setPage( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebView:setTextSizeMultiplier( nFactor )
-   RETURN Qt_QWebView_setTextSizeMultiplier( ::pPtr, nFactor )
+METHOD QWebView:setTextSizeMultiplier( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWebView_setTextSizeMultiplier( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebView:setUrl( pUrl )
-   RETURN Qt_QWebView_setUrl( ::pPtr, hbqt_ptr( pUrl ) )
+METHOD QWebView:setUrl( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWebView_setUrl( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebView:setZoomFactor( nFactor )
-   RETURN Qt_QWebView_setZoomFactor( ::pPtr, nFactor )
+METHOD QWebView:setZoomFactor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWebView_setZoomFactor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebView:settings()
-   RETURN HB_QWebSettings():from( Qt_QWebView_settings( ::pPtr ) )
+METHOD QWebView:settings( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWebSettings():from( Qt_QWebView_settings( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebView:textSizeMultiplier()
-   RETURN Qt_QWebView_textSizeMultiplier( ::pPtr )
+METHOD QWebView:textSizeMultiplier( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebView_textSizeMultiplier( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebView:title()
-   RETURN Qt_QWebView_title( ::pPtr )
+METHOD QWebView:title( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebView_title( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebView:triggerPageAction( nAction, lChecked )
-   RETURN Qt_QWebView_triggerPageAction( ::pPtr, nAction, lChecked )
+METHOD QWebView:triggerPageAction( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QWebView_triggerPageAction( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWebView_triggerPageAction( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebView:url()
-   RETURN HB_QUrl():from( Qt_QWebView_url( ::pPtr ) )
+METHOD QWebView:url( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QUrl():from( Qt_QWebView_url( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebView:zoomFactor()
-   RETURN Qt_QWebView_zoomFactor( ::pPtr )
+METHOD QWebView:zoomFactor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebView_zoomFactor( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebView:back()
-   RETURN Qt_QWebView_back( ::pPtr )
+METHOD QWebView:back( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebView_back( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebView:forward()
-   RETURN Qt_QWebView_forward( ::pPtr )
+METHOD QWebView:forward( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebView_forward( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebView:print( pPrinter )
-   RETURN Qt_QWebView_print( ::pPtr, hbqt_ptr( pPrinter ) )
+METHOD QWebView:print( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWebView_print( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebView:reload()
-   RETURN Qt_QWebView_reload( ::pPtr )
+METHOD QWebView:reload( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebView_reload( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebView:stop()
-   RETURN Qt_QWebView_stop( ::pPtr )
+METHOD QWebView:stop( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebView_stop( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

@@ -103,16 +103,16 @@ CREATE CLASS QAbstractTextDocumentLayout INHERIT HbQtObjectHandler, HB_QObject F
 
    METHOD  new( ... )
 
-   METHOD  anchorAt( pPosition )
-   METHOD  blockBoundingRect( pBlock )
-   METHOD  document()
-   METHOD  documentSize()
-   METHOD  frameBoundingRect( pFrame )
-   METHOD  hitTest( pPoint, nAccuracy )
-   METHOD  pageCount()
-   METHOD  paintDevice()
-   METHOD  registerHandler( nObjectType, pComponent )
-   METHOD  setPaintDevice( pDevice )
+   METHOD  anchorAt                      // ( oQPointF )                                       -> cQString
+   METHOD  blockBoundingRect             // ( oQTextBlock )                                    -> oQRectF
+   METHOD  document                      // (  )                                               -> oQTextDocument
+   METHOD  documentSize                  // (  )                                               -> oQSizeF
+   METHOD  frameBoundingRect             // ( oQTextFrame )                                    -> oQRectF
+   METHOD  hitTest                       // ( oQPointF, nAccuracy )                            -> nInt
+   METHOD  pageCount                     // (  )                                               -> nInt
+   METHOD  paintDevice                   // (  )                                               -> oQPaintDevice
+   METHOD  registerHandler               // ( nObjectType, oQObject )                          -> NIL
+   METHOD  setPaintDevice                // ( oQPaintDevice )                                  -> NIL
 
    ENDCLASS
 
@@ -126,42 +126,106 @@ METHOD QAbstractTextDocumentLayout:new( ... )
    RETURN Self
 
 
-METHOD QAbstractTextDocumentLayout:anchorAt( pPosition )
-   RETURN Qt_QAbstractTextDocumentLayout_anchorAt( ::pPtr, hbqt_ptr( pPosition ) )
+METHOD QAbstractTextDocumentLayout:anchorAt( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractTextDocumentLayout_anchorAt( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractTextDocumentLayout:blockBoundingRect( pBlock )
-   RETURN HB_QRectF():from( Qt_QAbstractTextDocumentLayout_blockBoundingRect( ::pPtr, hbqt_ptr( pBlock ) ) )
+METHOD QAbstractTextDocumentLayout:blockBoundingRect( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QRectF():from( Qt_QAbstractTextDocumentLayout_blockBoundingRect( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractTextDocumentLayout:document()
-   RETURN HB_QTextDocument():from( Qt_QAbstractTextDocumentLayout_document( ::pPtr ) )
+METHOD QAbstractTextDocumentLayout:document( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextDocument():from( Qt_QAbstractTextDocumentLayout_document( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractTextDocumentLayout:documentSize()
-   RETURN HB_QSizeF():from( Qt_QAbstractTextDocumentLayout_documentSize( ::pPtr ) )
+METHOD QAbstractTextDocumentLayout:documentSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSizeF():from( Qt_QAbstractTextDocumentLayout_documentSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractTextDocumentLayout:frameBoundingRect( pFrame )
-   RETURN HB_QRectF():from( Qt_QAbstractTextDocumentLayout_frameBoundingRect( ::pPtr, hbqt_ptr( pFrame ) ) )
+METHOD QAbstractTextDocumentLayout:frameBoundingRect( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QRectF():from( Qt_QAbstractTextDocumentLayout_frameBoundingRect( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractTextDocumentLayout:hitTest( pPoint, nAccuracy )
-   RETURN Qt_QAbstractTextDocumentLayout_hitTest( ::pPtr, hbqt_ptr( pPoint ), nAccuracy )
+METHOD QAbstractTextDocumentLayout:hitTest( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QAbstractTextDocumentLayout_hitTest( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractTextDocumentLayout:pageCount()
-   RETURN Qt_QAbstractTextDocumentLayout_pageCount( ::pPtr )
+METHOD QAbstractTextDocumentLayout:pageCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractTextDocumentLayout_pageCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractTextDocumentLayout:paintDevice()
-   RETURN HB_QPaintDevice():from( Qt_QAbstractTextDocumentLayout_paintDevice( ::pPtr ) )
+METHOD QAbstractTextDocumentLayout:paintDevice( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPaintDevice():from( Qt_QAbstractTextDocumentLayout_paintDevice( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractTextDocumentLayout:registerHandler( nObjectType, pComponent )
-   RETURN Qt_QAbstractTextDocumentLayout_registerHandler( ::pPtr, nObjectType, hbqt_ptr( pComponent ) )
+METHOD QAbstractTextDocumentLayout:registerHandler( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QAbstractTextDocumentLayout_registerHandler( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractTextDocumentLayout:setPaintDevice( pDevice )
-   RETURN Qt_QAbstractTextDocumentLayout_setPaintDevice( ::pPtr, hbqt_ptr( pDevice ) )
+METHOD QAbstractTextDocumentLayout:setPaintDevice( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractTextDocumentLayout_setPaintDevice( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

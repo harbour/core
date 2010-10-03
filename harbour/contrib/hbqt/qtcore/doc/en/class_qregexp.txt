@@ -27,8 +27,8 @@
  *     An instance of the object of type QRegExp
  *  $METHODS$
  *     :cap( nNth )                                        -> cQString
- *     :capturedTexts()                                    -> pQStringList
- *     :caseSensitivity()                                  -> nQt::CaseSensitivity
+ *     :capturedTexts()                                    -> oQStringList
+ *     :caseSensitivity()                                  -> nQt_CaseSensitivity
  *     :errorString()                                      -> cQString
  *     :exactMatch( cStr )                                 -> lBool
  *     :indexIn( cStr, nOffset, nCaretMode )               -> nInt
@@ -64,7 +64,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQRegExp.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QRegExp.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

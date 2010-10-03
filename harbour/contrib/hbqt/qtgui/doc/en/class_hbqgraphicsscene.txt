@@ -29,12 +29,12 @@
  *     :hbSetBlock( xBlock )                               -> NIL
  *     :pageSize()                                         -> nInt
  *     :setPageSize( nPageSize )                           -> NIL
- *     :paperRect()                                        -> pQRectF
- *     :setPaperRect( pPaperRect )                         -> NIL
+ *     :paperRect()                                        -> oQRectF
+ *     :setPaperRect( oQRectF )                            -> NIL
  *     :orientation()                                      -> nInt
  *     :setOrientation( nOrientation )                     -> NIL
- *     :geometry()                                         -> pQRectF
- *     :setGeometry( pRect )                               -> NIL
+ *     :geometry()                                         -> oQRectF
+ *     :setGeometry( oQRectF )                             -> NIL
  *     :magnetArea()                                       -> nInt
  *     :setMagnetArea( nMagnetArea )                       -> NIL
  *     :showGrid()                                         -> lBool
@@ -64,7 +64,5 @@
  *     Harbour source: contrib/hbqt/qtgui/THBQGraphicsScene.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/HBQGraphicsScene.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QGraphicsScene()
  *  $END$
  */

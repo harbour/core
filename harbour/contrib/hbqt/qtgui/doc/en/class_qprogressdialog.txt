@@ -32,13 +32,13 @@
  *     :maximum()                                          -> nInt
  *     :minimum()                                          -> nInt
  *     :minimumDuration()                                  -> nInt
- *     :open( pReceiver, pMember )                         -> NIL
+ *     :open( oQObject, cMember )                          -> NIL
  *     :setAutoClose( lClose )                             -> NIL
  *     :setAutoReset( lReset )                             -> NIL
- *     :setBar( pBar )                                     -> NIL
- *     :setCancelButton( pCancelButton )                   -> NIL
- *     :setLabel( pLabel )                                 -> NIL
- *     :sizeHint()                                         -> pQSize
+ *     :setBar( oQProgressBar )                            -> NIL
+ *     :setCancelButton( oQPushButton )                    -> NIL
+ *     :setLabel( oQLabel )                                -> NIL
+ *     :sizeHint()                                         -> oQSize
  *     :value()                                            -> nInt
  *     :wasCanceled()                                      -> lBool
  *     :cancel()                                           -> NIL
@@ -69,7 +69,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQProgressDialog.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QProgressDialog.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QDialog()
  *  $END$
  */

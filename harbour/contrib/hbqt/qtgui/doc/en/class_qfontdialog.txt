@@ -26,18 +26,18 @@
  *  $RETURNS$
  *     An instance of the object of type QFontDialog
  *  $METHODS$
- *     :currentFont()                                      -> pQFont
+ *     :currentFont()                                      -> oQFont
  *     :options()                                          -> nFontDialogOptions
- *     :selectedFont()                                     -> pQFont
- *     :setCurrentFont( pFont )                            -> NIL
+ *     :selectedFont()                                     -> oQFont
+ *     :setCurrentFont( oQFont )                           -> NIL
  *     :setOption( nOption, lOn )                          -> NIL
  *     :setOptions( nOptions )                             -> NIL
  *     :testOption( nOption )                              -> lBool
- *     :getFont( @lOk, pInitial, pParent, cTitle, nOptions )  -> pQFont
- *     :getFont_1( @lOk, pInitial, pParent, pName )        -> pQFont
- *     :getFont_2( @lOk, pInitial, pParent, cTitle )       -> pQFont
- *     :getFont_3( @lOk, pInitial, pParent )               -> pQFont
- *     :getFont_4( @lOk, pParent )                         -> pQFont
+ *     :getFont( @lOk, oQFont, oQWidget, cTitle, nOptions )  -> oQFont
+ *     :getFont( @lOk, oQFont, oQWidget, cName )           -> oQFont
+ *     :getFont( @lOk, oQFont, oQWidget, cTitle )          -> oQFont
+ *     :getFont( @lOk, oQFont, oQWidget )                  -> oQFont
+ *     :getFont( @lOk, oQWidget )                          -> oQFont
  * 
  *  $DESCRIPTION$
  * 
@@ -57,7 +57,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQFontDialog.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QFontDialog.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QDialog()
  *  $END$
  */

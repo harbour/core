@@ -103,8 +103,9 @@ CREATE CLASS QFileIconProvider INHERIT HbQtObjectHandler FUNCTION HB_QFileIconPr
 
    METHOD  new( ... )
 
-   METHOD  icon( ... )
-   METHOD  type( pInfo )
+   METHOD  icon                          // ( nType )                                          -> oQIcon
+                                         // ( oQFileInfo )                                     -> oQIcon
+   METHOD  type                          // ( oQFileInfo )                                     -> cQString
 
    ENDCLASS
 
@@ -132,6 +133,14 @@ METHOD QFileIconProvider:icon( ... )
    RETURN hbqt_error()
 
 
-METHOD QFileIconProvider:type( pInfo )
-   RETURN Qt_QFileIconProvider_type( ::pPtr, hbqt_ptr( pInfo ) )
+METHOD QFileIconProvider:type( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QFileIconProvider_type( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

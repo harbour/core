@@ -381,7 +381,7 @@ HB_FUNC( QT_QINPUTDIALOG_OPEN )
    QInputDialog * p = hbqt_par_QInputDialog( 1 );
    if( p )
    {
-      ( p )->open( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) );
+      ( p )->open( hbqt_par_QObject( 2 ), ( const char * ) hb_parc( 3 ) );
    }
 }
 

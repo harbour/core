@@ -27,19 +27,19 @@
  *     An instance of the object of type QUiLoader
  *  $METHODS$
  *     :addPluginPath( cPath )                             -> NIL
- *     :availableLayouts()                                 -> pQStringList
- *     :availableWidgets()                                 -> pQStringList
+ *     :availableLayouts()                                 -> oQStringList
+ *     :availableWidgets()                                 -> oQStringList
  *     :clearPluginPaths()                                 -> NIL
- *     :createAction( pParent, cName )                     -> pQAction
- *     :createActionGroup( pParent, cName )                -> pQActionGroup
- *     :createLayout( cClassName, pParent, cName )         -> pQLayout
- *     :createWidget( cClassName, pParent, cName )         -> pQWidget
+ *     :createAction( oQObject, cName )                    -> oQAction
+ *     :createActionGroup( oQObject, cName )               -> oQActionGroup
+ *     :createLayout( cClassName, oQObject, cName )        -> oQLayout
+ *     :createWidget( cClassName, oQWidget, cName )        -> oQWidget
  *     :isLanguageChangeEnabled()                          -> lBool
- *     :load( pDevice, pParentWidget )                     -> pQWidget
- *     :pluginPaths()                                      -> pQStringList
+ *     :load( oQIODevice, oQWidget )                       -> oQWidget
+ *     :pluginPaths()                                      -> oQStringList
  *     :setLanguageChangeEnabled( lEnabled )               -> NIL
- *     :setWorkingDirectory( pDir )                        -> NIL
- *     :workingDirectory()                                 -> pQDir
+ *     :setWorkingDirectory( oQDir )                       -> NIL
+ *     :workingDirectory()                                 -> oQDir
  * 
  *  $DESCRIPTION$
  * 
@@ -59,7 +59,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQUiLoader.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QUiLoader.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

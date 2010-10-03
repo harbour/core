@@ -103,8 +103,8 @@ CREATE CLASS QGraphicsPathItem INHERIT HbQtObjectHandler, HB_QAbstractGraphicsSh
 
    METHOD  new( ... )
 
-   METHOD  path()
-   METHOD  setPath( pPath )
+   METHOD  path                          // (  )                                               -> oQPainterPath
+   METHOD  setPath                       // ( oQPainterPath )                                  -> NIL
 
    ENDCLASS
 
@@ -118,10 +118,22 @@ METHOD QGraphicsPathItem:new( ... )
    RETURN Self
 
 
-METHOD QGraphicsPathItem:path()
-   RETURN HB_QPainterPath():from( Qt_QGraphicsPathItem_path( ::pPtr ) )
+METHOD QGraphicsPathItem:path( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPainterPath():from( Qt_QGraphicsPathItem_path( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsPathItem:setPath( pPath )
-   RETURN Qt_QGraphicsPathItem_setPath( ::pPtr, hbqt_ptr( pPath ) )
+METHOD QGraphicsPathItem:setPath( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsPathItem_setPath( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

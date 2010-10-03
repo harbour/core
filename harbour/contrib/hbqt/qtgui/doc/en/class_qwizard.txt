@@ -26,37 +26,37 @@
  *  $RETURNS$
  *     An instance of the object of type QWizard
  *  $METHODS$
- *     :addPage( pPage )                                   -> nInt
- *     :button( nWhich )                                   -> pQAbstractButton
+ *     :addPage( oQWizardPage )                            -> nInt
+ *     :button( nWhich )                                   -> oQAbstractButton
  *     :buttonText( nWhich )                               -> cQString
  *     :currentId()                                        -> nInt
- *     :currentPage()                                      -> Page
- *     :field( cName )                                     -> pQVariant
+ *     :currentPage()                                      -> oQWizardPage
+ *     :field( cName )                                     -> oQVariant
  *     :hasVisitedPage( nId )                              -> lBool
  *     :nextId()                                           -> nInt
  *     :options()                                          -> nWizardOptions
- *     :page( nId )                                        -> Page
- *     :pageIds()                                          -> pQList<int>
- *     :pixmap( nWhich )                                   -> pQPixmap
+ *     :page( nId )                                        -> oQWizardPage
+ *     :pageIds()                                          -> oQList_int>
+ *     :pixmap( nWhich )                                   -> oQPixmap
  *     :removePage( nId )                                  -> NIL
- *     :setButton( nWhich, pButton )                       -> NIL
+ *     :setButton( nWhich, oQAbstractButton )              -> NIL
  *     :setButtonText( nWhich, cText )                     -> NIL
- *     :setDefaultProperty( pClassName, pProperty, pChangedSignal )  -> NIL
- *     :setField( cName, pValue )                          -> NIL
+ *     :setDefaultProperty( cClassName, cProperty, cChangedSignal )  -> NIL
+ *     :setField( cName, oQVariant )                       -> NIL
  *     :setOption( nOption, lOn )                          -> NIL
  *     :setOptions( nOptions )                             -> NIL
- *     :setPage( nId, pPage )                              -> NIL
- *     :setPixmap( nWhich, pPixmap )                       -> NIL
+ *     :setPage( nId, oQWizardPage )                       -> NIL
+ *     :setPixmap( nWhich, oQPixmap )                      -> NIL
  *     :setStartId( nId )                                  -> NIL
  *     :setSubTitleFormat( nFormat )                       -> NIL
  *     :setTitleFormat( nFormat )                          -> NIL
  *     :setWizardStyle( nStyle )                           -> NIL
  *     :startId()                                          -> nInt
- *     :subTitleFormat()                                   -> nQt::TextFormat
+ *     :subTitleFormat()                                   -> nQt_TextFormat
  *     :testOption( nOption )                              -> lBool
- *     :titleFormat()                                      -> nQt::TextFormat
+ *     :titleFormat()                                      -> nQt_TextFormat
  *     :validateCurrentPage()                              -> lBool
- *     :visitedPages()                                     -> pQList<int>
+ *     :visitedPages()                                     -> oQList_int>
  *     :wizardStyle()                                      -> nWizardStyle
  *     :back()                                             -> NIL
  *     :next()                                             -> NIL
@@ -80,7 +80,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQWizard.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QWizard.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QDialog()
  *  $END$
  */

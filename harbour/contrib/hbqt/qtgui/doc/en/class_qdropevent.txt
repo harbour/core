@@ -27,15 +27,15 @@
  *     An instance of the object of type QDropEvent
  *  $METHODS$
  *     :acceptProposedAction()                             -> NIL
- *     :dropAction()                                       -> nQt::DropAction
- *     :keyboardModifiers()                                -> nQt::KeyboardModifiers
- *     :mimeData()                                         -> pQMimeData
- *     :mouseButtons()                                     -> nQt::MouseButtons
- *     :pos()                                              -> pQPoint
- *     :possibleActions()                                  -> nQt::DropActions
- *     :proposedAction()                                   -> nQt::DropAction
+ *     :dropAction()                                       -> nQt_DropAction
+ *     :keyboardModifiers()                                -> nQt_KeyboardModifiers
+ *     :mimeData()                                         -> oQMimeData
+ *     :mouseButtons()                                     -> nQt_MouseButtons
+ *     :pos()                                              -> oQPoint
+ *     :possibleActions()                                  -> nQt_DropActions
+ *     :proposedAction()                                   -> nQt_DropAction
  *     :setDropAction( nAction )                           -> NIL
- *     :source()                                           -> pQWidget
+ *     :source()                                           -> oQWidget
  * 
  *  $DESCRIPTION$
  * 
@@ -55,7 +55,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQDropEvent.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QDropEvent.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QEvent()
  *  $END$
  */

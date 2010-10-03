@@ -30,10 +30,10 @@
  *     :count()                                            -> nInt
  *     :invalidate()                                       -> NIL
  *     :isActivated()                                      -> lBool
- *     :itemAt( nI )                                       -> Item
+ *     :itemAt( nI )                                       -> oQGraphicsLayoutItem
  *     :removeAt( nIndex )                                 -> NIL
  *     :setContentsMargins( nLeft, nTop, nRight, nBottom )  -> NIL
- *     :widgetEvent( pE )                                  -> NIL
+ *     :widgetEvent( oQEvent )                             -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -53,7 +53,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGraphicsLayout.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsLayout.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QGraphicsLayoutItem()
  *  $END$
  */

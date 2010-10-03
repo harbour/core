@@ -103,44 +103,61 @@ CREATE CLASS QPainterPath INHERIT HbQtObjectHandler FUNCTION HB_QPainterPath
 
    METHOD  new( ... )
 
-   METHOD  addEllipse( ... )
-   METHOD  addPath( pPath )
-   METHOD  addPolygon( pPolygon )
-   METHOD  addRect( ... )
-   METHOD  addRegion( pRegion )
-   METHOD  addRoundedRect( ... )
-   METHOD  addText( ... )
-   METHOD  angleAtPercent( nT )
-   METHOD  arcMoveTo( ... )
-   METHOD  arcTo( ... )
-   METHOD  boundingRect()
-   METHOD  closeSubpath()
-   METHOD  connectPath( pPath )
-   METHOD  contains( ... )
-   METHOD  controlPointRect()
-   METHOD  cubicTo( ... )
-   METHOD  currentPosition()
-   METHOD  elementCount()
-   METHOD  fillRule()
-   METHOD  intersected( pP )
-   METHOD  intersects( ... )
-   METHOD  isEmpty()
-   METHOD  length()
-   METHOD  lineTo( ... )
-   METHOD  moveTo( ... )
-   METHOD  percentAtLength( nLen )
-   METHOD  pointAtPercent( nT )
-   METHOD  quadTo( ... )
-   METHOD  setElementPositionAt( nIndex, nX, nY )
-   METHOD  setFillRule( nFillRule )
-   METHOD  simplified()
-   METHOD  slopeAtPercent( nT )
-   METHOD  subtracted( pP )
-   METHOD  toFillPolygon( ... )
-   METHOD  toFillPolygons( ... )
-   METHOD  toReversed()
-   METHOD  toSubpathPolygons( ... )
-   METHOD  united( pP )
+   METHOD  addEllipse                    // ( oQRectF )                                        -> NIL
+                                         // ( nX, nY, nWidth, nHeight )                        -> NIL
+                                         // ( oQPointF, nRx, nRy )                             -> NIL
+   METHOD  addPath                       // ( oQPainterPath )                                  -> NIL
+   METHOD  addPolygon                    // ( oQPolygonF )                                     -> NIL
+   METHOD  addRect                       // ( oQRectF )                                        -> NIL
+                                         // ( nX, nY, nWidth, nHeight )                        -> NIL
+   METHOD  addRegion                     // ( oQRegion )                                       -> NIL
+   METHOD  addRoundedRect                // ( oQRectF, nXRadius, nYRadius, nMode )             -> NIL
+                                         // ( nX, nY, nW, nH, nXRadius, nYRadius, nMode )      -> NIL
+   METHOD  addText                       // ( oQPointF, oQFont, cText )                        -> NIL
+                                         // ( nX, nY, oQFont, cText )                          -> NIL
+   METHOD  angleAtPercent                // ( nT )                                             -> nQreal
+   METHOD  arcMoveTo                     // ( oQRectF, nAngle )                                -> NIL
+                                         // ( nX, nY, nWidth, nHeight, nAngle )                -> NIL
+   METHOD  arcTo                         // ( oQRectF, nStartAngle, nSweepLength )             -> NIL
+                                         // ( nX, nY, nWidth, nHeight, nStartAngle, nSweepLength ) -> NIL
+   METHOD  boundingRect                  // (  )                                               -> oQRectF
+   METHOD  closeSubpath                  // (  )                                               -> NIL
+   METHOD  connectPath                   // ( oQPainterPath )                                  -> NIL
+   METHOD  contains                      // ( oQPointF )                                       -> lBool
+                                         // ( oQRectF )                                        -> lBool
+                                         // ( oQPainterPath )                                  -> lBool
+   METHOD  controlPointRect              // (  )                                               -> oQRectF
+   METHOD  cubicTo                       // ( oQPointF, oQPointF, oQPointF )                   -> NIL
+                                         // ( nC1X, nC1Y, nC2X, nC2Y, nEndPointX, nEndPointY ) -> NIL
+   METHOD  currentPosition               // (  )                                               -> oQPointF
+   METHOD  elementCount                  // (  )                                               -> nInt
+   METHOD  fillRule                      // (  )                                               -> nQt_FillRule
+   METHOD  intersected                   // ( oQPainterPath )                                  -> oQPainterPath
+   METHOD  intersects                    // ( oQRectF )                                        -> lBool
+                                         // ( oQPainterPath )                                  -> lBool
+   METHOD  isEmpty                       // (  )                                               -> lBool
+   METHOD  length                        // (  )                                               -> nQreal
+   METHOD  lineTo                        // ( oQPointF )                                       -> NIL
+                                         // ( nX, nY )                                         -> NIL
+   METHOD  moveTo                        // ( oQPointF )                                       -> NIL
+                                         // ( nX, nY )                                         -> NIL
+   METHOD  percentAtLength               // ( nLen )                                           -> nQreal
+   METHOD  pointAtPercent                // ( nT )                                             -> oQPointF
+   METHOD  quadTo                        // ( oQPointF, oQPointF )                             -> NIL
+                                         // ( nCx, nCy, nEndPointX, nEndPointY )               -> NIL
+   METHOD  setElementPositionAt          // ( nIndex, nX, nY )                                 -> NIL
+   METHOD  setFillRule                   // ( nFillRule )                                      -> NIL
+   METHOD  simplified                    // (  )                                               -> oQPainterPath
+   METHOD  slopeAtPercent                // ( nT )                                             -> nQreal
+   METHOD  subtracted                    // ( oQPainterPath )                                  -> oQPainterPath
+   METHOD  toFillPolygon                 // ( oQTransform )                                    -> oQPolygonF
+                                         // ( oQMatrix )                                       -> oQPolygonF
+   METHOD  toFillPolygons                // ( oQTransform )                                    -> oQList_QPolygonF>
+                                         // ( oQMatrix )                                       -> oQList_QPolygonF>
+   METHOD  toReversed                    // (  )                                               -> oQPainterPath
+   METHOD  toSubpathPolygons             // ( oQTransform )                                    -> oQList_QPolygonF>
+                                         // ( oQMatrix )                                       -> oQList_QPolygonF>
+   METHOD  united                        // ( oQPainterPath )                                  -> oQPainterPath
 
    ENDCLASS
 
@@ -178,12 +195,28 @@ METHOD QPainterPath:addEllipse( ... )
    RETURN hbqt_error()
 
 
-METHOD QPainterPath:addPath( pPath )
-   RETURN Qt_QPainterPath_addPath( ::pPtr, hbqt_ptr( pPath ) )
+METHOD QPainterPath:addPath( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPainterPath_addPath( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainterPath:addPolygon( pPolygon )
-   RETURN Qt_QPainterPath_addPolygon( ::pPtr, hbqt_ptr( pPolygon ) )
+METHOD QPainterPath:addPolygon( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPainterPath_addPolygon( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPainterPath:addRect( ... )
@@ -204,8 +237,16 @@ METHOD QPainterPath:addRect( ... )
    RETURN hbqt_error()
 
 
-METHOD QPainterPath:addRegion( pRegion )
-   RETURN Qt_QPainterPath_addRegion( ::pPtr, hbqt_ptr( pRegion ) )
+METHOD QPainterPath:addRegion( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPainterPath_addRegion( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPainterPath:addRoundedRect( ... )
@@ -256,8 +297,16 @@ METHOD QPainterPath:addText( ... )
    RETURN hbqt_error()
 
 
-METHOD QPainterPath:angleAtPercent( nT )
-   RETURN Qt_QPainterPath_angleAtPercent( ::pPtr, nT )
+METHOD QPainterPath:angleAtPercent( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPainterPath_angleAtPercent( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPainterPath:arcMoveTo( ... )
@@ -296,16 +345,32 @@ METHOD QPainterPath:arcTo( ... )
    RETURN hbqt_error()
 
 
-METHOD QPainterPath:boundingRect()
-   RETURN HB_QRectF():from( Qt_QPainterPath_boundingRect( ::pPtr ) )
+METHOD QPainterPath:boundingRect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRectF():from( Qt_QPainterPath_boundingRect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainterPath:closeSubpath()
-   RETURN Qt_QPainterPath_closeSubpath( ::pPtr )
+METHOD QPainterPath:closeSubpath( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPainterPath_closeSubpath( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainterPath:connectPath( pPath )
-   RETURN Qt_QPainterPath_connectPath( ::pPtr, hbqt_ptr( pPath ) )
+METHOD QPainterPath:connectPath( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPainterPath_connectPath( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPainterPath:contains( ... )
@@ -327,8 +392,12 @@ METHOD QPainterPath:contains( ... )
    RETURN hbqt_error()
 
 
-METHOD QPainterPath:controlPointRect()
-   RETURN HB_QRectF():from( Qt_QPainterPath_controlPointRect( ::pPtr ) )
+METHOD QPainterPath:controlPointRect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRectF():from( Qt_QPainterPath_controlPointRect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPainterPath:cubicTo( ... )
@@ -349,20 +418,40 @@ METHOD QPainterPath:cubicTo( ... )
    RETURN hbqt_error()
 
 
-METHOD QPainterPath:currentPosition()
-   RETURN HB_QPointF():from( Qt_QPainterPath_currentPosition( ::pPtr ) )
+METHOD QPainterPath:currentPosition( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPointF():from( Qt_QPainterPath_currentPosition( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainterPath:elementCount()
-   RETURN Qt_QPainterPath_elementCount( ::pPtr )
+METHOD QPainterPath:elementCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPainterPath_elementCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainterPath:fillRule()
-   RETURN Qt_QPainterPath_fillRule( ::pPtr )
+METHOD QPainterPath:fillRule( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPainterPath_fillRule( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainterPath:intersected( pP )
-   RETURN HB_QPainterPath():from( Qt_QPainterPath_intersected( ::pPtr, hbqt_ptr( pP ) ) )
+METHOD QPainterPath:intersected( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QPainterPath():from( Qt_QPainterPath_intersected( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPainterPath:intersects( ... )
@@ -382,12 +471,20 @@ METHOD QPainterPath:intersects( ... )
    RETURN hbqt_error()
 
 
-METHOD QPainterPath:isEmpty()
-   RETURN Qt_QPainterPath_isEmpty( ::pPtr )
+METHOD QPainterPath:isEmpty( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPainterPath_isEmpty( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainterPath:length()
-   RETURN Qt_QPainterPath_length( ::pPtr )
+METHOD QPainterPath:length( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPainterPath_length( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPainterPath:lineTo( ... )
@@ -426,12 +523,28 @@ METHOD QPainterPath:moveTo( ... )
    RETURN hbqt_error()
 
 
-METHOD QPainterPath:percentAtLength( nLen )
-   RETURN Qt_QPainterPath_percentAtLength( ::pPtr, nLen )
+METHOD QPainterPath:percentAtLength( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPainterPath_percentAtLength( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainterPath:pointAtPercent( nT )
-   RETURN HB_QPointF():from( Qt_QPainterPath_pointAtPercent( ::pPtr, nT ) )
+METHOD QPainterPath:pointAtPercent( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QPointF():from( Qt_QPainterPath_pointAtPercent( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPainterPath:quadTo( ... )
@@ -452,24 +565,60 @@ METHOD QPainterPath:quadTo( ... )
    RETURN hbqt_error()
 
 
-METHOD QPainterPath:setElementPositionAt( nIndex, nX, nY )
-   RETURN Qt_QPainterPath_setElementPositionAt( ::pPtr, nIndex, nX, nY )
+METHOD QPainterPath:setElementPositionAt( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QPainterPath_setElementPositionAt( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainterPath:setFillRule( nFillRule )
-   RETURN Qt_QPainterPath_setFillRule( ::pPtr, nFillRule )
+METHOD QPainterPath:setFillRule( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPainterPath_setFillRule( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainterPath:simplified()
-   RETURN HB_QPainterPath():from( Qt_QPainterPath_simplified( ::pPtr ) )
+METHOD QPainterPath:simplified( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPainterPath():from( Qt_QPainterPath_simplified( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainterPath:slopeAtPercent( nT )
-   RETURN Qt_QPainterPath_slopeAtPercent( ::pPtr, nT )
+METHOD QPainterPath:slopeAtPercent( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPainterPath_slopeAtPercent( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainterPath:subtracted( pP )
-   RETURN HB_QPainterPath():from( Qt_QPainterPath_subtracted( ::pPtr, hbqt_ptr( pP ) ) )
+METHOD QPainterPath:subtracted( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QPainterPath():from( Qt_QPainterPath_subtracted( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPainterPath:toFillPolygon( ... )
@@ -510,8 +659,12 @@ METHOD QPainterPath:toFillPolygons( ... )
    RETURN hbqt_error()
 
 
-METHOD QPainterPath:toReversed()
-   RETURN HB_QPainterPath():from( Qt_QPainterPath_toReversed( ::pPtr ) )
+METHOD QPainterPath:toReversed( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPainterPath():from( Qt_QPainterPath_toReversed( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPainterPath:toSubpathPolygons( ... )
@@ -533,6 +686,14 @@ METHOD QPainterPath:toSubpathPolygons( ... )
    RETURN hbqt_error()
 
 
-METHOD QPainterPath:united( pP )
-   RETURN HB_QPainterPath():from( Qt_QPainterPath_united( ::pPtr, hbqt_ptr( pP ) ) )
+METHOD QPainterPath:united( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QPainterPath():from( Qt_QPainterPath_united( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

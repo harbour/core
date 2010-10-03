@@ -26,9 +26,9 @@
  *  $RETURNS$
  *     An instance of the object of type QFileIconProvider
  *  $METHODS$
- *     :icon( nType )                                      -> pQIcon
- *     :icon_1( pInfo )                                    -> pQIcon
- *     :type( pInfo )                                      -> cQString
+ *     :icon( nType )                                      -> oQIcon
+ *     :icon( oQFileInfo )                                 -> oQIcon
+ *     :type( oQFileInfo )                                 -> cQString
  * 
  *  $DESCRIPTION$
  * 
@@ -48,7 +48,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQFileIconProvider.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QFileIconProvider.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

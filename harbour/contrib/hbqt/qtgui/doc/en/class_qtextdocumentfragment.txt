@@ -27,9 +27,12 @@
  *     An instance of the object of type QTextDocumentFragment
  *  $METHODS$
  *     :isEmpty()                                          -> lBool
- *     :toHtml( pEncoding )                                -> cQString
- *     :toHtml_1()                                         -> cQString
+ *     :toHtml( oQByteArray )                              -> cQString
+ *     :toHtml()                                           -> cQString
  *     :toPlainText()                                      -> cQString
+ *     :fromHtml( cText )                                  -> oQTextDocumentFragment
+ *     :fromHtml( cText, oQTextDocument )                  -> oQTextDocumentFragment
+ *     :fromPlainText( cPlainText )                        -> oQTextDocumentFragment
  * 
  *  $DESCRIPTION$
  * 
@@ -49,7 +52,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTextDocumentFragment.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextDocumentFragment.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

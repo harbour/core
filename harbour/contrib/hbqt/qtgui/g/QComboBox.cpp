@@ -104,7 +104,7 @@
  */
 
 /*
- *  Constructed[ 59/59 [ 100.00% ] ]
+ *  Constructed[ 60/60 [ 100.00% ] ]
  *
  */
 
@@ -190,6 +190,14 @@ HB_FUNC( QT_QCOMBOBOX )
    pObj =  new QComboBox( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QComboBox( ( void * ) pObj, true ) );
+}
+
+/*
+ * QComboBox ( QWidget * parent = 0 )
+ */
+HB_FUNC( QT_QCOMBOBOX_QCOMBOBOX )
+{
+   hb_retptrGC( hbqt_gcAllocate_QComboBox( new QComboBox( hbqt_par_QWidget( 2 ) ), true ) );
 }
 
 /*
@@ -812,11 +820,7 @@ HB_FUNC( QT_QCOMBOBOX_SETVIEW )
    QComboBox * p = hbqt_par_QComboBox( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 2 );
       ( p )->setView( hbqt_par_QAbstractItemView( 2 ) );
    }
 }

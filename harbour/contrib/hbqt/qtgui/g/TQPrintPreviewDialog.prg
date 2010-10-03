@@ -103,8 +103,8 @@ CREATE CLASS QPrintPreviewDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION 
 
    METHOD  new( ... )
 
-   METHOD  open( pReceiver, pMember )
-   METHOD  printer()
+   METHOD  open                          // ( oQObject, cMember )                              -> NIL
+   METHOD  printer                       // (  )                                               -> oQPrinter
 
    ENDCLASS
 
@@ -118,10 +118,22 @@ METHOD QPrintPreviewDialog:new( ... )
    RETURN Self
 
 
-METHOD QPrintPreviewDialog:open( pReceiver, pMember )
-   RETURN Qt_QPrintPreviewDialog_open( ::pPtr, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ) )
+METHOD QPrintPreviewDialog:open( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QPrintPreviewDialog_open( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPrintPreviewDialog:printer()
-   RETURN HB_QPrinter():from( Qt_QPrintPreviewDialog_printer( ::pPtr ) )
+METHOD QPrintPreviewDialog:printer( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPrinter():from( Qt_QPrintPreviewDialog_printer( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

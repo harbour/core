@@ -47,7 +47,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionFrame.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionFrame.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     qStyleOption()
  *  $END$
  */

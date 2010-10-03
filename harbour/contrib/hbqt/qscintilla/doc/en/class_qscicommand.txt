@@ -51,7 +51,5 @@
  *     Harbour source: contrib/hbqt/qscintilla/TQsciCommand.prg
  *     C++ wrappers  : contrib/hbqt/qscintilla/QsciCommand.cpp
  *     Library       : hbqscintilla
- *  $SEEALSO$
- *     
  *  $END$
  */

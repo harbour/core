@@ -103,41 +103,45 @@ CREATE CLASS QMessageBox INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QMess
 
    METHOD  new( ... )
 
-   METHOD  addButton( ... )
-   METHOD  button( nWhich )
-   METHOD  buttonRole( pButton )
-   METHOD  buttons()
-   METHOD  clickedButton()
-   METHOD  defaultButton()
-   METHOD  detailedText()
-   METHOD  escapeButton()
-   METHOD  icon()
-   METHOD  iconPixmap()
-   METHOD  informativeText()
-   METHOD  open( pReceiver, pMember )
-   METHOD  removeButton( pButton )
-   METHOD  setDefaultButton( ... )
-   METHOD  setDetailedText( cText )
-   METHOD  setEscapeButton( ... )
-   METHOD  setIcon( nIcon )
-   METHOD  setIconPixmap( pPixmap )
-   METHOD  setInformativeText( cText )
-   METHOD  setStandardButtons( nButtons )
-   METHOD  setText( cText )
-   METHOD  setTextFormat( nFormat )
-   METHOD  setWindowModality( nWindowModality )
-   METHOD  setWindowTitle( cTitle )
-   METHOD  standardButton( pButton )
-   METHOD  standardButtons()
-   METHOD  text()
-   METHOD  textFormat()
-   METHOD  about( pParent, cTitle, cText )
-   METHOD  aboutQt( pParent, cTitle )
-   METHOD  critical( pParent, cTitle, cText, nButtons, nDefaultButton )
-   METHOD  information( pParent, cTitle, cText, nButtons, nDefaultButton )
-   METHOD  question( pParent, cTitle, cText, nButtons, nDefaultButton )
-   METHOD  warning( pParent, cTitle, cText, nButtons, nDefaultButton )
-   METHOD  exec()
+   METHOD  addButton                     // ( oQAbstractButton, nRole )                        -> NIL
+                                         // ( cText, nRole )                                   -> oQPushButton
+                                         // ( nButton )                                        -> oQPushButton
+   METHOD  button                        // ( nWhich )                                         -> oQAbstractButton
+   METHOD  buttonRole                    // ( oQAbstractButton )                               -> nButtonRole
+   METHOD  buttons                       // (  )                                               -> oQList_QAbstractButton
+   METHOD  clickedButton                 // (  )                                               -> oQAbstractButton
+   METHOD  defaultButton                 // (  )                                               -> oQPushButton
+   METHOD  detailedText                  // (  )                                               -> cQString
+   METHOD  escapeButton                  // (  )                                               -> oQAbstractButton
+   METHOD  icon                          // (  )                                               -> nIcon
+   METHOD  iconPixmap                    // (  )                                               -> oQPixmap
+   METHOD  informativeText               // (  )                                               -> cQString
+   METHOD  open                          // ( oQObject, cMember )                              -> NIL
+   METHOD  removeButton                  // ( oQAbstractButton )                               -> NIL
+   METHOD  setDefaultButton              // ( oQPushButton )                                   -> NIL
+                                         // ( nButton )                                        -> NIL
+   METHOD  setDetailedText               // ( cText )                                          -> NIL
+   METHOD  setEscapeButton               // ( oQAbstractButton )                               -> NIL
+                                         // ( nButton )                                        -> NIL
+   METHOD  setIcon                       // ( nIcon )                                          -> NIL
+   METHOD  setIconPixmap                 // ( oQPixmap )                                       -> NIL
+   METHOD  setInformativeText            // ( cText )                                          -> NIL
+   METHOD  setStandardButtons            // ( nButtons )                                       -> NIL
+   METHOD  setText                       // ( cText )                                          -> NIL
+   METHOD  setTextFormat                 // ( nFormat )                                        -> NIL
+   METHOD  setWindowModality             // ( nWindowModality )                                -> NIL
+   METHOD  setWindowTitle                // ( cTitle )                                         -> NIL
+   METHOD  standardButton                // ( oQAbstractButton )                               -> nStandardButton
+   METHOD  standardButtons               // (  )                                               -> nStandardButtons
+   METHOD  text                          // (  )                                               -> cQString
+   METHOD  textFormat                    // (  )                                               -> nQt_TextFormat
+   METHOD  about                         // ( oQWidget, cTitle, cText )                        -> NIL
+   METHOD  aboutQt                       // ( oQWidget, cTitle )                               -> NIL
+   METHOD  critical                      // ( oQWidget, cTitle, cText, nButtons, nDefaultButton ) -> nStandardButton
+   METHOD  information                   // ( oQWidget, cTitle, cText, nButtons, nDefaultButton ) -> nStandardButton
+   METHOD  question                      // ( oQWidget, cTitle, cText, nButtons, nDefaultButton ) -> nStandardButton
+   METHOD  warning                       // ( oQWidget, cTitle, cText, nButtons, nDefaultButton ) -> nStandardButton
+   METHOD  exec                          // (  )                                               -> nInt
 
    ENDCLASS
 
@@ -171,52 +175,116 @@ METHOD QMessageBox:addButton( ... )
    RETURN hbqt_error()
 
 
-METHOD QMessageBox:button( nWhich )
-   RETURN HB_QAbstractButton():from( Qt_QMessageBox_button( ::pPtr, nWhich ) )
+METHOD QMessageBox:button( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QAbstractButton():from( Qt_QMessageBox_button( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:buttonRole( pButton )
-   RETURN Qt_QMessageBox_buttonRole( ::pPtr, hbqt_ptr( pButton ) )
+METHOD QMessageBox:buttonRole( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMessageBox_buttonRole( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:buttons()
-   RETURN HB_QList():from( Qt_QMessageBox_buttons( ::pPtr ) )
+METHOD QMessageBox:buttons( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QMessageBox_buttons( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:clickedButton()
-   RETURN HB_QAbstractButton():from( Qt_QMessageBox_clickedButton( ::pPtr ) )
+METHOD QMessageBox:clickedButton( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QAbstractButton():from( Qt_QMessageBox_clickedButton( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:defaultButton()
-   RETURN HB_QPushButton():from( Qt_QMessageBox_defaultButton( ::pPtr ) )
+METHOD QMessageBox:defaultButton( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPushButton():from( Qt_QMessageBox_defaultButton( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:detailedText()
-   RETURN Qt_QMessageBox_detailedText( ::pPtr )
+METHOD QMessageBox:detailedText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMessageBox_detailedText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:escapeButton()
-   RETURN HB_QAbstractButton():from( Qt_QMessageBox_escapeButton( ::pPtr ) )
+METHOD QMessageBox:escapeButton( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QAbstractButton():from( Qt_QMessageBox_escapeButton( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:icon()
-   RETURN Qt_QMessageBox_icon( ::pPtr )
+METHOD QMessageBox:icon( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMessageBox_icon( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:iconPixmap()
-   RETURN HB_QPixmap():from( Qt_QMessageBox_iconPixmap( ::pPtr ) )
+METHOD QMessageBox:iconPixmap( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPixmap():from( Qt_QMessageBox_iconPixmap( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:informativeText()
-   RETURN Qt_QMessageBox_informativeText( ::pPtr )
+METHOD QMessageBox:informativeText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMessageBox_informativeText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:open( pReceiver, pMember )
-   RETURN Qt_QMessageBox_open( ::pPtr, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ) )
+METHOD QMessageBox:open( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QMessageBox_open( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:removeButton( pButton )
-   RETURN Qt_QMessageBox_removeButton( ::pPtr, hbqt_ptr( pButton ) )
+METHOD QMessageBox:removeButton( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMessageBox_removeButton( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QMessageBox:setDefaultButton( ... )
@@ -233,8 +301,16 @@ METHOD QMessageBox:setDefaultButton( ... )
    RETURN hbqt_error()
 
 
-METHOD QMessageBox:setDetailedText( cText )
-   RETURN Qt_QMessageBox_setDetailedText( ::pPtr, cText )
+METHOD QMessageBox:setDetailedText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QMessageBox_setDetailedText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QMessageBox:setEscapeButton( ... )
@@ -251,78 +327,268 @@ METHOD QMessageBox:setEscapeButton( ... )
    RETURN hbqt_error()
 
 
-METHOD QMessageBox:setIcon( nIcon )
-   RETURN Qt_QMessageBox_setIcon( ::pPtr, nIcon )
+METHOD QMessageBox:setIcon( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QMessageBox_setIcon( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:setIconPixmap( pPixmap )
-   RETURN Qt_QMessageBox_setIconPixmap( ::pPtr, hbqt_ptr( pPixmap ) )
+METHOD QMessageBox:setIconPixmap( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMessageBox_setIconPixmap( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:setInformativeText( cText )
-   RETURN Qt_QMessageBox_setInformativeText( ::pPtr, cText )
+METHOD QMessageBox:setInformativeText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QMessageBox_setInformativeText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:setStandardButtons( nButtons )
-   RETURN Qt_QMessageBox_setStandardButtons( ::pPtr, nButtons )
+METHOD QMessageBox:setStandardButtons( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QMessageBox_setStandardButtons( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:setText( cText )
-   RETURN Qt_QMessageBox_setText( ::pPtr, cText )
+METHOD QMessageBox:setText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QMessageBox_setText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:setTextFormat( nFormat )
-   RETURN Qt_QMessageBox_setTextFormat( ::pPtr, nFormat )
+METHOD QMessageBox:setTextFormat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QMessageBox_setTextFormat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:setWindowModality( nWindowModality )
-   RETURN Qt_QMessageBox_setWindowModality( ::pPtr, nWindowModality )
+METHOD QMessageBox:setWindowModality( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QMessageBox_setWindowModality( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:setWindowTitle( cTitle )
-   RETURN Qt_QMessageBox_setWindowTitle( ::pPtr, cTitle )
+METHOD QMessageBox:setWindowTitle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QMessageBox_setWindowTitle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:standardButton( pButton )
-   RETURN Qt_QMessageBox_standardButton( ::pPtr, hbqt_ptr( pButton ) )
+METHOD QMessageBox:standardButton( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMessageBox_standardButton( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:standardButtons()
-   RETURN Qt_QMessageBox_standardButtons( ::pPtr )
+METHOD QMessageBox:standardButtons( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMessageBox_standardButtons( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:text()
-   RETURN Qt_QMessageBox_text( ::pPtr )
+METHOD QMessageBox:text( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMessageBox_text( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:textFormat()
-   RETURN Qt_QMessageBox_textFormat( ::pPtr )
+METHOD QMessageBox:textFormat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMessageBox_textFormat( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:about( pParent, cTitle, cText )
-   RETURN Qt_QMessageBox_about( ::pPtr, hbqt_ptr( pParent ), cTitle, cText )
+METHOD QMessageBox:about( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
+         RETURN Qt_QMessageBox_about( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:aboutQt( pParent, cTitle )
-   RETURN Qt_QMessageBox_aboutQt( ::pPtr, hbqt_ptr( pParent ), cTitle )
+METHOD QMessageBox:aboutQt( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QMessageBox_aboutQt( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMessageBox_aboutQt( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:critical( pParent, cTitle, cText, nButtons, nDefaultButton )
-   RETURN Qt_QMessageBox_critical( ::pPtr, hbqt_ptr( pParent ), cTitle, cText, nButtons, nDefaultButton )
+METHOD QMessageBox:critical( ... )
+   SWITCH PCount()
+   CASE 5
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
+         RETURN Qt_QMessageBox_critical( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 4
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QMessageBox_critical( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
+         RETURN Qt_QMessageBox_critical( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:information( pParent, cTitle, cText, nButtons, nDefaultButton )
-   RETURN Qt_QMessageBox_information( ::pPtr, hbqt_ptr( pParent ), cTitle, cText, nButtons, nDefaultButton )
+METHOD QMessageBox:information( ... )
+   SWITCH PCount()
+   CASE 5
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
+         RETURN Qt_QMessageBox_information( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 4
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QMessageBox_information( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
+         RETURN Qt_QMessageBox_information( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:question( pParent, cTitle, cText, nButtons, nDefaultButton )
-   RETURN Qt_QMessageBox_question( ::pPtr, hbqt_ptr( pParent ), cTitle, cText, nButtons, nDefaultButton )
+METHOD QMessageBox:question( ... )
+   SWITCH PCount()
+   CASE 5
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
+         RETURN Qt_QMessageBox_question( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 4
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QMessageBox_question( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
+         RETURN Qt_QMessageBox_question( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:warning( pParent, cTitle, cText, nButtons, nDefaultButton )
-   RETURN Qt_QMessageBox_warning( ::pPtr, hbqt_ptr( pParent ), cTitle, cText, nButtons, nDefaultButton )
+METHOD QMessageBox:warning( ... )
+   SWITCH PCount()
+   CASE 5
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
+         RETURN Qt_QMessageBox_warning( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 4
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QMessageBox_warning( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
+         RETURN Qt_QMessageBox_warning( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMessageBox:exec()
-   RETURN Qt_QMessageBox_exec( ::pPtr )
+METHOD QMessageBox:exec( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMessageBox_exec( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

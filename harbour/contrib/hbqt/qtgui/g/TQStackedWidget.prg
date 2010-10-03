@@ -103,16 +103,16 @@ CREATE CLASS QStackedWidget INHERIT HbQtObjectHandler, HB_QFrame FUNCTION HB_QSt
 
    METHOD  new( ... )
 
-   METHOD  addWidget( pWidget )
-   METHOD  count()
-   METHOD  currentIndex()
-   METHOD  currentWidget()
-   METHOD  indexOf( pWidget )
-   METHOD  insertWidget( nIndex, pWidget )
-   METHOD  removeWidget( pWidget )
-   METHOD  widget( nIndex )
-   METHOD  setCurrentIndex( nIndex )
-   METHOD  setCurrentWidget( pWidget )
+   METHOD  addWidget                     // ( oQWidget )                                       -> nInt
+   METHOD  count                         // (  )                                               -> nInt
+   METHOD  currentIndex                  // (  )                                               -> nInt
+   METHOD  currentWidget                 // (  )                                               -> oQWidget
+   METHOD  indexOf                       // ( oQWidget )                                       -> nInt
+   METHOD  insertWidget                  // ( nIndex, oQWidget )                               -> nInt
+   METHOD  removeWidget                  // ( oQWidget )                                       -> NIL
+   METHOD  widget                        // ( nIndex )                                         -> oQWidget
+   METHOD  setCurrentIndex               // ( nIndex )                                         -> NIL
+   METHOD  setCurrentWidget              // ( oQWidget )                                       -> NIL
 
    ENDCLASS
 
@@ -126,42 +126,110 @@ METHOD QStackedWidget:new( ... )
    RETURN Self
 
 
-METHOD QStackedWidget:addWidget( pWidget )
-   RETURN Qt_QStackedWidget_addWidget( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QStackedWidget:addWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QStackedWidget_addWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStackedWidget:count()
-   RETURN Qt_QStackedWidget_count( ::pPtr )
+METHOD QStackedWidget:count( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStackedWidget_count( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStackedWidget:currentIndex()
-   RETURN Qt_QStackedWidget_currentIndex( ::pPtr )
+METHOD QStackedWidget:currentIndex( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStackedWidget_currentIndex( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStackedWidget:currentWidget()
-   RETURN HB_QWidget():from( Qt_QStackedWidget_currentWidget( ::pPtr ) )
+METHOD QStackedWidget:currentWidget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QStackedWidget_currentWidget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStackedWidget:indexOf( pWidget )
-   RETURN Qt_QStackedWidget_indexOf( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QStackedWidget:indexOf( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QStackedWidget_indexOf( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStackedWidget:insertWidget( nIndex, pWidget )
-   RETURN Qt_QStackedWidget_insertWidget( ::pPtr, nIndex, hbqt_ptr( pWidget ) )
+METHOD QStackedWidget:insertWidget( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QStackedWidget_insertWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStackedWidget:removeWidget( pWidget )
-   RETURN Qt_QStackedWidget_removeWidget( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QStackedWidget:removeWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QStackedWidget_removeWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStackedWidget:widget( nIndex )
-   RETURN HB_QWidget():from( Qt_QStackedWidget_widget( ::pPtr, nIndex ) )
+METHOD QStackedWidget:widget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QWidget():from( Qt_QStackedWidget_widget( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStackedWidget:setCurrentIndex( nIndex )
-   RETURN Qt_QStackedWidget_setCurrentIndex( ::pPtr, nIndex )
+METHOD QStackedWidget:setCurrentIndex( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QStackedWidget_setCurrentIndex( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStackedWidget:setCurrentWidget( pWidget )
-   RETURN Qt_QStackedWidget_setCurrentWidget( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QStackedWidget:setCurrentWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QStackedWidget_setCurrentWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

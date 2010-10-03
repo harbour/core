@@ -103,8 +103,8 @@ CREATE CLASS QLatin1Char INHERIT HbQtObjectHandler FUNCTION HB_QLatin1Char
 
    METHOD  new( ... )
 
-   METHOD  toLatin1()
-   METHOD  unicode()
+   METHOD  toLatin1                      // (  )                                               -> cChar
+   METHOD  unicode                       // (  )                                               -> nUshort
 
    ENDCLASS
 
@@ -118,10 +118,18 @@ METHOD QLatin1Char:new( ... )
    RETURN Self
 
 
-METHOD QLatin1Char:toLatin1()
-   RETURN Qt_QLatin1Char_toLatin1( ::pPtr )
+METHOD QLatin1Char:toLatin1( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLatin1Char_toLatin1( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLatin1Char:unicode()
-   RETURN Qt_QLatin1Char_unicode( ::pPtr )
+METHOD QLatin1Char:unicode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLatin1Char_unicode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

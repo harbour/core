@@ -26,10 +26,10 @@
  *  $RETURNS$
  *     An instance of the object of type QGraphicsGridLayout
  *  $METHODS$
- *     :addItem( pItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )  -> NIL
- *     :addItem_1( pItem, nRow, nColumn, nAlignment )      -> NIL
- *     :alignment( pItem )                                 -> nQt::Alignment
- *     :columnAlignment( nColumn )                         -> nQt::Alignment
+ *     :addItem( oQGraphicsLayoutItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )  -> NIL
+ *     :addItem( oQGraphicsLayoutItem, nRow, nColumn, nAlignment )  -> NIL
+ *     :alignment( oQGraphicsLayoutItem )                  -> nQt_Alignment
+ *     :columnAlignment( nColumn )                         -> nQt_Alignment
  *     :columnCount()                                      -> nInt
  *     :columnMaximumWidth( nColumn )                      -> nQreal
  *     :columnMinimumWidth( nColumn )                      -> nQreal
@@ -38,17 +38,17 @@
  *     :columnStretchFactor( nColumn )                     -> nInt
  *     :count()                                            -> nInt
  *     :horizontalSpacing()                                -> nQreal
- *     :itemAt( nRow, nColumn )                            -> pQGraphicsLayoutItem
- *     :itemAt_1( nIndex )                                 -> pQGraphicsLayoutItem
+ *     :itemAt( nRow, nColumn )                            -> oQGraphicsLayoutItem
+ *     :itemAt( nIndex )                                   -> oQGraphicsLayoutItem
  *     :removeAt( nIndex )                                 -> NIL
- *     :rowAlignment( nRow )                               -> nQt::Alignment
+ *     :rowAlignment( nRow )                               -> nQt_Alignment
  *     :rowCount()                                         -> nInt
  *     :rowMaximumHeight( nRow )                           -> nQreal
  *     :rowMinimumHeight( nRow )                           -> nQreal
  *     :rowPreferredHeight( nRow )                         -> nQreal
  *     :rowSpacing( nRow )                                 -> nQreal
  *     :rowStretchFactor( nRow )                           -> nInt
- *     :setAlignment( pItem, nAlignment )                  -> NIL
+ *     :setAlignment( oQGraphicsLayoutItem, nAlignment )   -> NIL
  *     :setColumnAlignment( nColumn, nAlignment )          -> NIL
  *     :setColumnFixedWidth( nColumn, nWidth )             -> NIL
  *     :setColumnMaximumWidth( nColumn, nWidth )           -> NIL
@@ -56,7 +56,7 @@
  *     :setColumnPreferredWidth( nColumn, nWidth )         -> NIL
  *     :setColumnSpacing( nColumn, nSpacing )              -> NIL
  *     :setColumnStretchFactor( nColumn, nStretch )        -> NIL
- *     :setGeometry( pRect )                               -> NIL
+ *     :setGeometry( oQRectF )                             -> NIL
  *     :setHorizontalSpacing( nSpacing )                   -> NIL
  *     :setRowAlignment( nRow, nAlignment )                -> NIL
  *     :setRowFixedHeight( nRow, nHeight )                 -> NIL
@@ -87,7 +87,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGraphicsGridLayout.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsGridLayout.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QGraphicsLayout()
  *  $END$
  */

@@ -103,8 +103,8 @@ CREATE CLASS HBQAbstractItemModel INHERIT HbQtObjectHandler, HB_QAbstractItemMod
 
    METHOD  new( ... )
 
-   METHOD  reset()
-   METHOD  index( nRow, nColumn, pParent )
+   METHOD  reset                         // (  )                                               -> NIL
+   METHOD  index                         // ( nRow, nColumn, oQModelIndex )                    -> oQModelIndex
 
    ENDCLASS
 
@@ -118,10 +118,28 @@ METHOD HBQAbstractItemModel:new( ... )
    RETURN Self
 
 
-METHOD HBQAbstractItemModel:reset()
-   RETURN Qt_HBQAbstractItemModel_reset( ::pPtr )
+METHOD HBQAbstractItemModel:reset( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQAbstractItemModel_reset( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQAbstractItemModel:index( nRow, nColumn, pParent )
-   RETURN HB_QModelIndex():from( Qt_HBQAbstractItemModel_index( ::pPtr, nRow, nColumn, hbqt_ptr( pParent ) ) )
+METHOD HBQAbstractItemModel:index( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN HB_QModelIndex():from( Qt_HBQAbstractItemModel_index( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QModelIndex():from( Qt_HBQAbstractItemModel_index( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

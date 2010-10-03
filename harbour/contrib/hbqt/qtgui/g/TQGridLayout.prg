@@ -103,30 +103,32 @@ CREATE CLASS QGridLayout INHERIT HbQtObjectHandler, HB_QLayout FUNCTION HB_QGrid
 
    METHOD  new( ... )
 
-   METHOD  addItem( pItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
-   METHOD  addLayout( ... )
-   METHOD  addWidget( ... )
-   METHOD  cellRect( nRow, nColumn )
-   METHOD  columnCount()
-   METHOD  columnMinimumWidth( nColumn )
-   METHOD  columnStretch( nColumn )
-   METHOD  getItemPosition( nIndex, nRow, nColumn, nRowSpan, nColumnSpan )
-   METHOD  horizontalSpacing()
-   METHOD  itemAtPosition( nRow, nColumn )
-   METHOD  originCorner()
-   METHOD  rowCount()
-   METHOD  rowMinimumHeight( nRow )
-   METHOD  rowStretch( nRow )
-   METHOD  setColumnMinimumWidth( nColumn, nMinSize )
-   METHOD  setColumnStretch( nColumn, nStretch )
-   METHOD  setHorizontalSpacing( nSpacing )
-   METHOD  setOriginCorner( nCorner )
-   METHOD  setRowMinimumHeight( nRow, nMinSize )
-   METHOD  setRowStretch( nRow, nStretch )
-   METHOD  setSpacing( nSpacing )
-   METHOD  setVerticalSpacing( nSpacing )
-   METHOD  spacing()
-   METHOD  verticalSpacing()
+   METHOD  addItem                       // ( oQLayoutItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment ) -> NIL
+   METHOD  addLayout                     // ( oQLayout, nRow, nColumn, nAlignment )            -> NIL
+                                         // ( oQLayout, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment ) -> NIL
+   METHOD  addWidget                     // ( oQWidget, nRow, nColumn, nAlignment )            -> NIL
+                                         // ( oQWidget, nFromRow, nFromColumn, nRowSpan, nColumnSpan, nAlignment ) -> NIL
+   METHOD  cellRect                      // ( nRow, nColumn )                                  -> oQRect
+   METHOD  columnCount                   // (  )                                               -> nInt
+   METHOD  columnMinimumWidth            // ( nColumn )                                        -> nInt
+   METHOD  columnStretch                 // ( nColumn )                                        -> nInt
+   METHOD  getItemPosition               // ( nIndex, @nRow, @nColumn, @nRowSpan, @nColumnSpan ) -> NIL
+   METHOD  horizontalSpacing             // (  )                                               -> nInt
+   METHOD  itemAtPosition                // ( nRow, nColumn )                                  -> oQLayoutItem
+   METHOD  originCorner                  // (  )                                               -> nQt_Corner
+   METHOD  rowCount                      // (  )                                               -> nInt
+   METHOD  rowMinimumHeight              // ( nRow )                                           -> nInt
+   METHOD  rowStretch                    // ( nRow )                                           -> nInt
+   METHOD  setColumnMinimumWidth         // ( nColumn, nMinSize )                              -> NIL
+   METHOD  setColumnStretch              // ( nColumn, nStretch )                              -> NIL
+   METHOD  setHorizontalSpacing          // ( nSpacing )                                       -> NIL
+   METHOD  setOriginCorner               // ( nCorner )                                        -> NIL
+   METHOD  setRowMinimumHeight           // ( nRow, nMinSize )                                 -> NIL
+   METHOD  setRowStretch                 // ( nRow, nStretch )                                 -> NIL
+   METHOD  setSpacing                    // ( nSpacing )                                       -> NIL
+   METHOD  setVerticalSpacing            // ( nSpacing )                                       -> NIL
+   METHOD  spacing                       // (  )                                               -> nInt
+   METHOD  verticalSpacing               // (  )                                               -> nInt
 
    ENDCLASS
 
@@ -140,8 +142,34 @@ METHOD QGridLayout:new( ... )
    RETURN Self
 
 
-METHOD QGridLayout:addItem( pItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
-   RETURN Qt_QGridLayout_addItem( ::pPtr, hbqt_ptr( pItem ), nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )
+METHOD QGridLayout:addItem( ... )
+   SWITCH PCount()
+   CASE 6
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) ) .AND. hb_isNumeric( hb_pvalue( 6 ) )
+         RETURN Qt_QGridLayout_addItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 5
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
+         RETURN Qt_QGridLayout_addItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 4
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QGridLayout_addItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QGridLayout_addItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGridLayout:addLayout( ... )
@@ -204,86 +232,230 @@ METHOD QGridLayout:addWidget( ... )
    RETURN hbqt_error()
 
 
-METHOD QGridLayout:cellRect( nRow, nColumn )
-   RETURN HB_QRect():from( Qt_QGridLayout_cellRect( ::pPtr, nRow, nColumn ) )
+METHOD QGridLayout:cellRect( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QRect():from( Qt_QGridLayout_cellRect( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGridLayout:columnCount()
-   RETURN Qt_QGridLayout_columnCount( ::pPtr )
+METHOD QGridLayout:columnCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGridLayout_columnCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGridLayout:columnMinimumWidth( nColumn )
-   RETURN Qt_QGridLayout_columnMinimumWidth( ::pPtr, nColumn )
+METHOD QGridLayout:columnMinimumWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGridLayout_columnMinimumWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGridLayout:columnStretch( nColumn )
-   RETURN Qt_QGridLayout_columnStretch( ::pPtr, nColumn )
+METHOD QGridLayout:columnStretch( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGridLayout_columnStretch( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGridLayout:getItemPosition( nIndex, nRow, nColumn, nRowSpan, nColumnSpan )
-   RETURN Qt_QGridLayout_getItemPosition( ::pPtr, nIndex, nRow, nColumn, nRowSpan, nColumnSpan )
+METHOD QGridLayout:getItemPosition( ... )
+   SWITCH PCount()
+   CASE 5
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
+         RETURN Qt_QGridLayout_getItemPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGridLayout:horizontalSpacing()
-   RETURN Qt_QGridLayout_horizontalSpacing( ::pPtr )
+METHOD QGridLayout:horizontalSpacing( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGridLayout_horizontalSpacing( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGridLayout:itemAtPosition( nRow, nColumn )
-   RETURN HB_QLayoutItem():from( Qt_QGridLayout_itemAtPosition( ::pPtr, nRow, nColumn ) )
+METHOD QGridLayout:itemAtPosition( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QLayoutItem():from( Qt_QGridLayout_itemAtPosition( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGridLayout:originCorner()
-   RETURN Qt_QGridLayout_originCorner( ::pPtr )
+METHOD QGridLayout:originCorner( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGridLayout_originCorner( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGridLayout:rowCount()
-   RETURN Qt_QGridLayout_rowCount( ::pPtr )
+METHOD QGridLayout:rowCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGridLayout_rowCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGridLayout:rowMinimumHeight( nRow )
-   RETURN Qt_QGridLayout_rowMinimumHeight( ::pPtr, nRow )
+METHOD QGridLayout:rowMinimumHeight( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGridLayout_rowMinimumHeight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGridLayout:rowStretch( nRow )
-   RETURN Qt_QGridLayout_rowStretch( ::pPtr, nRow )
+METHOD QGridLayout:rowStretch( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGridLayout_rowStretch( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGridLayout:setColumnMinimumWidth( nColumn, nMinSize )
-   RETURN Qt_QGridLayout_setColumnMinimumWidth( ::pPtr, nColumn, nMinSize )
+METHOD QGridLayout:setColumnMinimumWidth( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QGridLayout_setColumnMinimumWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGridLayout:setColumnStretch( nColumn, nStretch )
-   RETURN Qt_QGridLayout_setColumnStretch( ::pPtr, nColumn, nStretch )
+METHOD QGridLayout:setColumnStretch( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QGridLayout_setColumnStretch( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGridLayout:setHorizontalSpacing( nSpacing )
-   RETURN Qt_QGridLayout_setHorizontalSpacing( ::pPtr, nSpacing )
+METHOD QGridLayout:setHorizontalSpacing( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGridLayout_setHorizontalSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGridLayout:setOriginCorner( nCorner )
-   RETURN Qt_QGridLayout_setOriginCorner( ::pPtr, nCorner )
+METHOD QGridLayout:setOriginCorner( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGridLayout_setOriginCorner( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGridLayout:setRowMinimumHeight( nRow, nMinSize )
-   RETURN Qt_QGridLayout_setRowMinimumHeight( ::pPtr, nRow, nMinSize )
+METHOD QGridLayout:setRowMinimumHeight( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QGridLayout_setRowMinimumHeight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGridLayout:setRowStretch( nRow, nStretch )
-   RETURN Qt_QGridLayout_setRowStretch( ::pPtr, nRow, nStretch )
+METHOD QGridLayout:setRowStretch( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QGridLayout_setRowStretch( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGridLayout:setSpacing( nSpacing )
-   RETURN Qt_QGridLayout_setSpacing( ::pPtr, nSpacing )
+METHOD QGridLayout:setSpacing( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGridLayout_setSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGridLayout:setVerticalSpacing( nSpacing )
-   RETURN Qt_QGridLayout_setVerticalSpacing( ::pPtr, nSpacing )
+METHOD QGridLayout:setVerticalSpacing( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGridLayout_setVerticalSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGridLayout:spacing()
-   RETURN Qt_QGridLayout_spacing( ::pPtr )
+METHOD QGridLayout:spacing( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGridLayout_spacing( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGridLayout:verticalSpacing()
-   RETURN Qt_QGridLayout_verticalSpacing( ::pPtr )
+METHOD QGridLayout:verticalSpacing( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGridLayout_verticalSpacing( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

@@ -103,42 +103,43 @@ CREATE CLASS QDirModel INHERIT HbQtObjectHandler, HB_QAbstractItemModel FUNCTION
 
    METHOD  new( ... )
 
-   METHOD  columnCount( pParent )
-   METHOD  data( pIndex, nRole )
-   METHOD  dropMimeData( pData, nAction, nRow, nColumn, pParent )
-   METHOD  fileIcon( pIndex )
-   METHOD  fileInfo( pIndex )
-   METHOD  fileName( pIndex )
-   METHOD  filePath( pIndex )
-   METHOD  filter()
-   METHOD  flags( pIndex )
-   METHOD  hasChildren( pParent )
-   METHOD  headerData( nSection, nOrientation, nRole )
-   METHOD  iconProvider()
-   METHOD  index( ... )
-   METHOD  isDir( pIndex )
-   METHOD  isReadOnly()
-   METHOD  lazyChildCount()
-   METHOD  mimeTypes()
-   METHOD  mkdir( pParent, cName )
-   METHOD  nameFilters()
-   METHOD  parent( pChild )
-   METHOD  remove( pIndex )
-   METHOD  resolveSymlinks()
-   METHOD  rmdir( pIndex )
-   METHOD  rowCount( pParent )
-   METHOD  setData( pIndex, pValue, nRole )
-   METHOD  setFilter( nFilters )
-   METHOD  setIconProvider( pProvider )
-   METHOD  setLazyChildCount( lEnable )
-   METHOD  setNameFilters( pFilters )
-   METHOD  setReadOnly( lEnable )
-   METHOD  setResolveSymlinks( lEnable )
-   METHOD  setSorting( nSort )
-   METHOD  sort( nColumn, nOrder )
-   METHOD  sorting()
-   METHOD  supportedDropActions()
-   METHOD  refresh( pParent )
+   METHOD  columnCount                   // ( oQModelIndex )                                   -> nInt
+   METHOD  data                          // ( oQModelIndex, nRole )                            -> oQVariant
+   METHOD  dropMimeData                  // ( oQMimeData, nAction, nRow, nColumn, oQModelIndex ) -> lBool
+   METHOD  fileIcon                      // ( oQModelIndex )                                   -> oQIcon
+   METHOD  fileInfo                      // ( oQModelIndex )                                   -> oQFileInfo
+   METHOD  fileName                      // ( oQModelIndex )                                   -> cQString
+   METHOD  filePath                      // ( oQModelIndex )                                   -> cQString
+   METHOD  filter                        // (  )                                               -> nQDir_Filters
+   METHOD  flags                         // ( oQModelIndex )                                   -> nQt_ItemFlags
+   METHOD  hasChildren                   // ( oQModelIndex )                                   -> lBool
+   METHOD  headerData                    // ( nSection, nOrientation, nRole )                  -> oQVariant
+   METHOD  iconProvider                  // (  )                                               -> oQFileIconProvider
+   METHOD  index                         // ( nRow, nColumn, oQModelIndex )                    -> oQModelIndex
+                                         // ( cPath, nColumn )                                 -> oQModelIndex
+   METHOD  isDir                         // ( oQModelIndex )                                   -> lBool
+   METHOD  isReadOnly                    // (  )                                               -> lBool
+   METHOD  lazyChildCount                // (  )                                               -> lBool
+   METHOD  mimeTypes                     // (  )                                               -> oQStringList
+   METHOD  mkdir                         // ( oQModelIndex, cName )                            -> oQModelIndex
+   METHOD  nameFilters                   // (  )                                               -> oQStringList
+   METHOD  parent                        // ( oQModelIndex )                                   -> oQModelIndex
+   METHOD  remove                        // ( oQModelIndex )                                   -> lBool
+   METHOD  resolveSymlinks               // (  )                                               -> lBool
+   METHOD  rmdir                         // ( oQModelIndex )                                   -> lBool
+   METHOD  rowCount                      // ( oQModelIndex )                                   -> nInt
+   METHOD  setData                       // ( oQModelIndex, oQVariant, nRole )                 -> lBool
+   METHOD  setFilter                     // ( nFilters )                                       -> NIL
+   METHOD  setIconProvider               // ( oQFileIconProvider )                             -> NIL
+   METHOD  setLazyChildCount             // ( lEnable )                                        -> NIL
+   METHOD  setNameFilters                // ( oQStringList )                                   -> NIL
+   METHOD  setReadOnly                   // ( lEnable )                                        -> NIL
+   METHOD  setResolveSymlinks            // ( lEnable )                                        -> NIL
+   METHOD  setSorting                    // ( nSort )                                          -> NIL
+   METHOD  sort                          // ( nColumn, nOrder )                                -> NIL
+   METHOD  sorting                       // (  )                                               -> nQDir_SortFlags
+   METHOD  supportedDropActions          // (  )                                               -> nQt_DropActions
+   METHOD  refresh                       // ( oQModelIndex )                                   -> NIL
 
    ENDCLASS
 
@@ -152,52 +153,156 @@ METHOD QDirModel:new( ... )
    RETURN Self
 
 
-METHOD QDirModel:columnCount( pParent )
-   RETURN Qt_QDirModel_columnCount( ::pPtr, hbqt_ptr( pParent ) )
+METHOD QDirModel:columnCount( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDirModel_columnCount( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QDirModel_columnCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:data( pIndex, nRole )
-   RETURN HB_QVariant():from( Qt_QDirModel_data( ::pPtr, hbqt_ptr( pIndex ), nRole ) )
+METHOD QDirModel:data( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QVariant():from( Qt_QDirModel_data( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QVariant():from( Qt_QDirModel_data( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:dropMimeData( pData, nAction, nRow, nColumn, pParent )
-   RETURN Qt_QDirModel_dropMimeData( ::pPtr, hbqt_ptr( pData ), nAction, nRow, nColumn, hbqt_ptr( pParent ) )
+METHOD QDirModel:dropMimeData( ... )
+   SWITCH PCount()
+   CASE 5
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isObject( hb_pvalue( 5 ) )
+         RETURN Qt_QDirModel_dropMimeData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:fileIcon( pIndex )
-   RETURN HB_QIcon():from( Qt_QDirModel_fileIcon( ::pPtr, hbqt_ptr( pIndex ) ) )
+METHOD QDirModel:fileIcon( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QIcon():from( Qt_QDirModel_fileIcon( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:fileInfo( pIndex )
-   RETURN HB_QFileInfo():from( Qt_QDirModel_fileInfo( ::pPtr, hbqt_ptr( pIndex ) ) )
+METHOD QDirModel:fileInfo( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QFileInfo():from( Qt_QDirModel_fileInfo( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:fileName( pIndex )
-   RETURN Qt_QDirModel_fileName( ::pPtr, hbqt_ptr( pIndex ) )
+METHOD QDirModel:fileName( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDirModel_fileName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:filePath( pIndex )
-   RETURN Qt_QDirModel_filePath( ::pPtr, hbqt_ptr( pIndex ) )
+METHOD QDirModel:filePath( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDirModel_filePath( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:filter()
-   RETURN Qt_QDirModel_filter( ::pPtr )
+METHOD QDirModel:filter( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDirModel_filter( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:flags( pIndex )
-   RETURN Qt_QDirModel_flags( ::pPtr, hbqt_ptr( pIndex ) )
+METHOD QDirModel:flags( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDirModel_flags( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:hasChildren( pParent )
-   RETURN Qt_QDirModel_hasChildren( ::pPtr, hbqt_ptr( pParent ) )
+METHOD QDirModel:hasChildren( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDirModel_hasChildren( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QDirModel_hasChildren( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:headerData( nSection, nOrientation, nRole )
-   RETURN HB_QVariant():from( Qt_QDirModel_headerData( ::pPtr, nSection, nOrientation, nRole ) )
+METHOD QDirModel:headerData( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN HB_QVariant():from( Qt_QDirModel_headerData( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QVariant():from( Qt_QDirModel_headerData( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:iconProvider()
-   RETURN HB_QFileIconProvider():from( Qt_QDirModel_iconProvider( ::pPtr ) )
+METHOD QDirModel:iconProvider( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFileIconProvider():from( Qt_QDirModel_iconProvider( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QDirModel:index( ... )
@@ -226,94 +331,266 @@ METHOD QDirModel:index( ... )
    RETURN hbqt_error()
 
 
-METHOD QDirModel:isDir( pIndex )
-   RETURN Qt_QDirModel_isDir( ::pPtr, hbqt_ptr( pIndex ) )
+METHOD QDirModel:isDir( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDirModel_isDir( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:isReadOnly()
-   RETURN Qt_QDirModel_isReadOnly( ::pPtr )
+METHOD QDirModel:isReadOnly( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDirModel_isReadOnly( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:lazyChildCount()
-   RETURN Qt_QDirModel_lazyChildCount( ::pPtr )
+METHOD QDirModel:lazyChildCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDirModel_lazyChildCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:mimeTypes()
-   RETURN HB_QStringList():from( Qt_QDirModel_mimeTypes( ::pPtr ) )
+METHOD QDirModel:mimeTypes( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QDirModel_mimeTypes( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:mkdir( pParent, cName )
-   RETURN HB_QModelIndex():from( Qt_QDirModel_mkdir( ::pPtr, hbqt_ptr( pParent ), cName ) )
+METHOD QDirModel:mkdir( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN HB_QModelIndex():from( Qt_QDirModel_mkdir( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:nameFilters()
-   RETURN HB_QStringList():from( Qt_QDirModel_nameFilters( ::pPtr ) )
+METHOD QDirModel:nameFilters( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QDirModel_nameFilters( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:parent( pChild )
-   RETURN HB_QModelIndex():from( Qt_QDirModel_parent( ::pPtr, hbqt_ptr( pChild ) ) )
+METHOD QDirModel:parent( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QModelIndex():from( Qt_QDirModel_parent( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:remove( pIndex )
-   RETURN Qt_QDirModel_remove( ::pPtr, hbqt_ptr( pIndex ) )
+METHOD QDirModel:remove( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDirModel_remove( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:resolveSymlinks()
-   RETURN Qt_QDirModel_resolveSymlinks( ::pPtr )
+METHOD QDirModel:resolveSymlinks( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDirModel_resolveSymlinks( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:rmdir( pIndex )
-   RETURN Qt_QDirModel_rmdir( ::pPtr, hbqt_ptr( pIndex ) )
+METHOD QDirModel:rmdir( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDirModel_rmdir( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:rowCount( pParent )
-   RETURN Qt_QDirModel_rowCount( ::pPtr, hbqt_ptr( pParent ) )
+METHOD QDirModel:rowCount( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDirModel_rowCount( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QDirModel_rowCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:setData( pIndex, pValue, nRole )
-   RETURN Qt_QDirModel_setData( ::pPtr, hbqt_ptr( pIndex ), hbqt_ptr( pValue ), nRole )
+METHOD QDirModel:setData( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QDirModel_setData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QDirModel_setData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:setFilter( nFilters )
-   RETURN Qt_QDirModel_setFilter( ::pPtr, nFilters )
+METHOD QDirModel:setFilter( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDirModel_setFilter( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:setIconProvider( pProvider )
-   RETURN Qt_QDirModel_setIconProvider( ::pPtr, hbqt_ptr( pProvider ) )
+METHOD QDirModel:setIconProvider( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDirModel_setIconProvider( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:setLazyChildCount( lEnable )
-   RETURN Qt_QDirModel_setLazyChildCount( ::pPtr, lEnable )
+METHOD QDirModel:setLazyChildCount( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QDirModel_setLazyChildCount( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:setNameFilters( pFilters )
-   RETURN Qt_QDirModel_setNameFilters( ::pPtr, hbqt_ptr( pFilters ) )
+METHOD QDirModel:setNameFilters( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDirModel_setNameFilters( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:setReadOnly( lEnable )
-   RETURN Qt_QDirModel_setReadOnly( ::pPtr, lEnable )
+METHOD QDirModel:setReadOnly( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QDirModel_setReadOnly( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:setResolveSymlinks( lEnable )
-   RETURN Qt_QDirModel_setResolveSymlinks( ::pPtr, lEnable )
+METHOD QDirModel:setResolveSymlinks( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QDirModel_setResolveSymlinks( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:setSorting( nSort )
-   RETURN Qt_QDirModel_setSorting( ::pPtr, nSort )
+METHOD QDirModel:setSorting( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDirModel_setSorting( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:sort( nColumn, nOrder )
-   RETURN Qt_QDirModel_sort( ::pPtr, nColumn, nOrder )
+METHOD QDirModel:sort( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QDirModel_sort( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDirModel_sort( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:sorting()
-   RETURN Qt_QDirModel_sorting( ::pPtr )
+METHOD QDirModel:sorting( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDirModel_sorting( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:supportedDropActions()
-   RETURN Qt_QDirModel_supportedDropActions( ::pPtr )
+METHOD QDirModel:supportedDropActions( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDirModel_supportedDropActions( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDirModel:refresh( pParent )
-   RETURN Qt_QDirModel_refresh( ::pPtr, hbqt_ptr( pParent ) )
+METHOD QDirModel:refresh( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDirModel_refresh( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QDirModel_refresh( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

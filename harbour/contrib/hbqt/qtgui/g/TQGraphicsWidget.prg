@@ -103,50 +103,52 @@ CREATE CLASS QGraphicsWidget INHERIT HbQtObjectHandler, HB_QObject, HB_QGraphics
 
    METHOD  new( ... )
 
-   METHOD  actions()
-   METHOD  addAction( pAction )
-   METHOD  adjustSize()
-   METHOD  focusPolicy()
-   METHOD  focusWidget()
-   METHOD  font()
-   METHOD  getContentsMargins( nLeft, nTop, nRight, nBottom )
-   METHOD  getWindowFrameMargins( nLeft, nTop, nRight, nBottom )
-   METHOD  grabShortcut( pSequence, nContext )
-   METHOD  insertAction( pBefore, pAction )
-   METHOD  isActiveWindow()
-   METHOD  layout()
-   METHOD  layoutDirection()
-   METHOD  palette()
-   METHOD  rect()
-   METHOD  releaseShortcut( nId )
-   METHOD  removeAction( pAction )
-   METHOD  resize( ... )
-   METHOD  setAttribute( nAttribute, lOn )
-   METHOD  setContentsMargins( nLeft, nTop, nRight, nBottom )
-   METHOD  setFocusPolicy( nPolicy )
-   METHOD  setFont( pFont )
-   METHOD  setGeometry( ... )
-   METHOD  setLayout( pLayout )
-   METHOD  setLayoutDirection( nDirection )
-   METHOD  setPalette( pPalette )
-   METHOD  setShortcutAutoRepeat( nId, lEnabled )
-   METHOD  setShortcutEnabled( nId, lEnabled )
-   METHOD  setStyle( pStyle )
-   METHOD  setWindowFlags( nWFlags )
-   METHOD  setWindowFrameMargins( nLeft, nTop, nRight, nBottom )
-   METHOD  setWindowTitle( cTitle )
-   METHOD  size()
-   METHOD  style()
-   METHOD  testAttribute( nAttribute )
-   METHOD  unsetLayoutDirection()
-   METHOD  unsetWindowFrameMargins()
-   METHOD  windowFlags()
-   METHOD  windowFrameGeometry()
-   METHOD  windowFrameRect()
-   METHOD  windowTitle()
-   METHOD  windowType()
-   METHOD  setTabOrder( pFirst, pSecond )
-   METHOD  close()
+   METHOD  actions                       // (  )                                               -> oQList_QAction
+   METHOD  addAction                     // ( oQAction )                                       -> NIL
+   METHOD  adjustSize                    // (  )                                               -> NIL
+   METHOD  focusPolicy                   // (  )                                               -> nQt_FocusPolicy
+   METHOD  focusWidget                   // (  )                                               -> oQGraphicsWidget
+   METHOD  font                          // (  )                                               -> oQFont
+   METHOD  getContentsMargins            // ( @nLeft, @nTop, @nRight, @nBottom )               -> NIL
+   METHOD  getWindowFrameMargins         // ( @nLeft, @nTop, @nRight, @nBottom )               -> NIL
+   METHOD  grabShortcut                  // ( oQKeySequence, nContext )                        -> nInt
+   METHOD  insertAction                  // ( oQAction, oQAction )                             -> NIL
+   METHOD  isActiveWindow                // (  )                                               -> lBool
+   METHOD  layout                        // (  )                                               -> oQGraphicsLayout
+   METHOD  layoutDirection               // (  )                                               -> nQt_LayoutDirection
+   METHOD  palette                       // (  )                                               -> oQPalette
+   METHOD  rect                          // (  )                                               -> oQRectF
+   METHOD  releaseShortcut               // ( nId )                                            -> NIL
+   METHOD  removeAction                  // ( oQAction )                                       -> NIL
+   METHOD  resize                        // ( oQSizeF )                                        -> NIL
+                                         // ( nW, nH )                                         -> NIL
+   METHOD  setAttribute                  // ( nAttribute, lOn )                                -> NIL
+   METHOD  setContentsMargins            // ( nLeft, nTop, nRight, nBottom )                   -> NIL
+   METHOD  setFocusPolicy                // ( nPolicy )                                        -> NIL
+   METHOD  setFont                       // ( oQFont )                                         -> NIL
+   METHOD  setGeometry                   // ( oQRectF )                                        -> NIL
+                                         // ( nX, nY, nW, nH )                                 -> NIL
+   METHOD  setLayout                     // ( oQGraphicsLayout )                               -> NIL
+   METHOD  setLayoutDirection            // ( nDirection )                                     -> NIL
+   METHOD  setPalette                    // ( oQPalette )                                      -> NIL
+   METHOD  setShortcutAutoRepeat         // ( nId, lEnabled )                                  -> NIL
+   METHOD  setShortcutEnabled            // ( nId, lEnabled )                                  -> NIL
+   METHOD  setStyle                      // ( oQStyle )                                        -> NIL
+   METHOD  setWindowFlags                // ( nWFlags )                                        -> NIL
+   METHOD  setWindowFrameMargins         // ( nLeft, nTop, nRight, nBottom )                   -> NIL
+   METHOD  setWindowTitle                // ( cTitle )                                         -> NIL
+   METHOD  size                          // (  )                                               -> oQSizeF
+   METHOD  style                         // (  )                                               -> oQStyle
+   METHOD  testAttribute                 // ( nAttribute )                                     -> lBool
+   METHOD  unsetLayoutDirection          // (  )                                               -> NIL
+   METHOD  unsetWindowFrameMargins       // (  )                                               -> NIL
+   METHOD  windowFlags                   // (  )                                               -> nQt_WindowFlags
+   METHOD  windowFrameGeometry           // (  )                                               -> oQRectF
+   METHOD  windowFrameRect               // (  )                                               -> oQRectF
+   METHOD  windowTitle                   // (  )                                               -> cQString
+   METHOD  windowType                    // (  )                                               -> nQt_WindowType
+   METHOD  setTabOrder                   // ( oQGraphicsWidget, oQGraphicsWidget )             -> NIL
+   METHOD  close                         // (  )                                               -> lBool
 
    ENDCLASS
 
@@ -160,72 +162,174 @@ METHOD QGraphicsWidget:new( ... )
    RETURN Self
 
 
-METHOD QGraphicsWidget:actions()
-   RETURN HB_QList():from( Qt_QGraphicsWidget_actions( ::pPtr ) )
+METHOD QGraphicsWidget:actions( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QGraphicsWidget_actions( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:addAction( pAction )
-   RETURN Qt_QGraphicsWidget_addAction( ::pPtr, hbqt_ptr( pAction ) )
+METHOD QGraphicsWidget:addAction( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsWidget_addAction( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:adjustSize()
-   RETURN Qt_QGraphicsWidget_adjustSize( ::pPtr )
+METHOD QGraphicsWidget:adjustSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsWidget_adjustSize( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:focusPolicy()
-   RETURN Qt_QGraphicsWidget_focusPolicy( ::pPtr )
+METHOD QGraphicsWidget:focusPolicy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsWidget_focusPolicy( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:focusWidget()
-   RETURN HB_QGraphicsWidget():from( Qt_QGraphicsWidget_focusWidget( ::pPtr ) )
+METHOD QGraphicsWidget:focusWidget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QGraphicsWidget():from( Qt_QGraphicsWidget_focusWidget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:font()
-   RETURN HB_QFont():from( Qt_QGraphicsWidget_font( ::pPtr ) )
+METHOD QGraphicsWidget:font( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFont():from( Qt_QGraphicsWidget_font( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:getContentsMargins( nLeft, nTop, nRight, nBottom )
-   RETURN Qt_QGraphicsWidget_getContentsMargins( ::pPtr, nLeft, nTop, nRight, nBottom )
+METHOD QGraphicsWidget:getContentsMargins( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QGraphicsWidget_getContentsMargins( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:getWindowFrameMargins( nLeft, nTop, nRight, nBottom )
-   RETURN Qt_QGraphicsWidget_getWindowFrameMargins( ::pPtr, nLeft, nTop, nRight, nBottom )
+METHOD QGraphicsWidget:getWindowFrameMargins( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QGraphicsWidget_getWindowFrameMargins( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:grabShortcut( pSequence, nContext )
-   RETURN Qt_QGraphicsWidget_grabShortcut( ::pPtr, hbqt_ptr( pSequence ), nContext )
+METHOD QGraphicsWidget:grabShortcut( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsWidget_grabShortcut( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsWidget_grabShortcut( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:insertAction( pBefore, pAction )
-   RETURN Qt_QGraphicsWidget_insertAction( ::pPtr, hbqt_ptr( pBefore ), hbqt_ptr( pAction ) )
+METHOD QGraphicsWidget:insertAction( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsWidget_insertAction( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:isActiveWindow()
-   RETURN Qt_QGraphicsWidget_isActiveWindow( ::pPtr )
+METHOD QGraphicsWidget:isActiveWindow( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsWidget_isActiveWindow( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:layout()
-   RETURN HB_QGraphicsLayout():from( Qt_QGraphicsWidget_layout( ::pPtr ) )
+METHOD QGraphicsWidget:layout( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QGraphicsLayout():from( Qt_QGraphicsWidget_layout( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:layoutDirection()
-   RETURN Qt_QGraphicsWidget_layoutDirection( ::pPtr )
+METHOD QGraphicsWidget:layoutDirection( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsWidget_layoutDirection( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:palette()
-   RETURN HB_QPalette():from( Qt_QGraphicsWidget_palette( ::pPtr ) )
+METHOD QGraphicsWidget:palette( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPalette():from( Qt_QGraphicsWidget_palette( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:rect()
-   RETURN HB_QRectF():from( Qt_QGraphicsWidget_rect( ::pPtr ) )
+METHOD QGraphicsWidget:rect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRectF():from( Qt_QGraphicsWidget_rect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:releaseShortcut( nId )
-   RETURN Qt_QGraphicsWidget_releaseShortcut( ::pPtr, nId )
+METHOD QGraphicsWidget:releaseShortcut( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsWidget_releaseShortcut( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:removeAction( pAction )
-   RETURN Qt_QGraphicsWidget_removeAction( ::pPtr, hbqt_ptr( pAction ) )
+METHOD QGraphicsWidget:removeAction( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsWidget_removeAction( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsWidget:resize( ... )
@@ -246,20 +350,58 @@ METHOD QGraphicsWidget:resize( ... )
    RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:setAttribute( nAttribute, lOn )
-   RETURN Qt_QGraphicsWidget_setAttribute( ::pPtr, nAttribute, lOn )
+METHOD QGraphicsWidget:setAttribute( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsWidget_setAttribute( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsWidget_setAttribute( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:setContentsMargins( nLeft, nTop, nRight, nBottom )
-   RETURN Qt_QGraphicsWidget_setContentsMargins( ::pPtr, nLeft, nTop, nRight, nBottom )
+METHOD QGraphicsWidget:setContentsMargins( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QGraphicsWidget_setContentsMargins( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:setFocusPolicy( nPolicy )
-   RETURN Qt_QGraphicsWidget_setFocusPolicy( ::pPtr, nPolicy )
+METHOD QGraphicsWidget:setFocusPolicy( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsWidget_setFocusPolicy( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:setFont( pFont )
-   RETURN Qt_QGraphicsWidget_setFont( ::pPtr, hbqt_ptr( pFont ) )
+METHOD QGraphicsWidget:setFont( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsWidget_setFont( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsWidget:setGeometry( ... )
@@ -280,86 +422,226 @@ METHOD QGraphicsWidget:setGeometry( ... )
    RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:setLayout( pLayout )
-   RETURN Qt_QGraphicsWidget_setLayout( ::pPtr, hbqt_ptr( pLayout ) )
+METHOD QGraphicsWidget:setLayout( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsWidget_setLayout( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:setLayoutDirection( nDirection )
-   RETURN Qt_QGraphicsWidget_setLayoutDirection( ::pPtr, nDirection )
+METHOD QGraphicsWidget:setLayoutDirection( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsWidget_setLayoutDirection( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:setPalette( pPalette )
-   RETURN Qt_QGraphicsWidget_setPalette( ::pPtr, hbqt_ptr( pPalette ) )
+METHOD QGraphicsWidget:setPalette( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsWidget_setPalette( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:setShortcutAutoRepeat( nId, lEnabled )
-   RETURN Qt_QGraphicsWidget_setShortcutAutoRepeat( ::pPtr, nId, lEnabled )
+METHOD QGraphicsWidget:setShortcutAutoRepeat( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsWidget_setShortcutAutoRepeat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsWidget_setShortcutAutoRepeat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:setShortcutEnabled( nId, lEnabled )
-   RETURN Qt_QGraphicsWidget_setShortcutEnabled( ::pPtr, nId, lEnabled )
+METHOD QGraphicsWidget:setShortcutEnabled( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsWidget_setShortcutEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsWidget_setShortcutEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:setStyle( pStyle )
-   RETURN Qt_QGraphicsWidget_setStyle( ::pPtr, hbqt_ptr( pStyle ) )
+METHOD QGraphicsWidget:setStyle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsWidget_setStyle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:setWindowFlags( nWFlags )
-   RETURN Qt_QGraphicsWidget_setWindowFlags( ::pPtr, nWFlags )
+METHOD QGraphicsWidget:setWindowFlags( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsWidget_setWindowFlags( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:setWindowFrameMargins( nLeft, nTop, nRight, nBottom )
-   RETURN Qt_QGraphicsWidget_setWindowFrameMargins( ::pPtr, nLeft, nTop, nRight, nBottom )
+METHOD QGraphicsWidget:setWindowFrameMargins( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QGraphicsWidget_setWindowFrameMargins( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:setWindowTitle( cTitle )
-   RETURN Qt_QGraphicsWidget_setWindowTitle( ::pPtr, cTitle )
+METHOD QGraphicsWidget:setWindowTitle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsWidget_setWindowTitle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:size()
-   RETURN HB_QSizeF():from( Qt_QGraphicsWidget_size( ::pPtr ) )
+METHOD QGraphicsWidget:size( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSizeF():from( Qt_QGraphicsWidget_size( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:style()
-   RETURN HB_QStyle():from( Qt_QGraphicsWidget_style( ::pPtr ) )
+METHOD QGraphicsWidget:style( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStyle():from( Qt_QGraphicsWidget_style( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:testAttribute( nAttribute )
-   RETURN Qt_QGraphicsWidget_testAttribute( ::pPtr, nAttribute )
+METHOD QGraphicsWidget:testAttribute( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsWidget_testAttribute( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:unsetLayoutDirection()
-   RETURN Qt_QGraphicsWidget_unsetLayoutDirection( ::pPtr )
+METHOD QGraphicsWidget:unsetLayoutDirection( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsWidget_unsetLayoutDirection( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:unsetWindowFrameMargins()
-   RETURN Qt_QGraphicsWidget_unsetWindowFrameMargins( ::pPtr )
+METHOD QGraphicsWidget:unsetWindowFrameMargins( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsWidget_unsetWindowFrameMargins( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:windowFlags()
-   RETURN Qt_QGraphicsWidget_windowFlags( ::pPtr )
+METHOD QGraphicsWidget:windowFlags( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsWidget_windowFlags( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:windowFrameGeometry()
-   RETURN HB_QRectF():from( Qt_QGraphicsWidget_windowFrameGeometry( ::pPtr ) )
+METHOD QGraphicsWidget:windowFrameGeometry( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRectF():from( Qt_QGraphicsWidget_windowFrameGeometry( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:windowFrameRect()
-   RETURN HB_QRectF():from( Qt_QGraphicsWidget_windowFrameRect( ::pPtr ) )
+METHOD QGraphicsWidget:windowFrameRect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRectF():from( Qt_QGraphicsWidget_windowFrameRect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:windowTitle()
-   RETURN Qt_QGraphicsWidget_windowTitle( ::pPtr )
+METHOD QGraphicsWidget:windowTitle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsWidget_windowTitle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:windowType()
-   RETURN Qt_QGraphicsWidget_windowType( ::pPtr )
+METHOD QGraphicsWidget:windowType( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsWidget_windowType( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:setTabOrder( pFirst, pSecond )
-   RETURN Qt_QGraphicsWidget_setTabOrder( ::pPtr, hbqt_ptr( pFirst ), hbqt_ptr( pSecond ) )
+METHOD QGraphicsWidget:setTabOrder( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsWidget_setTabOrder( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsWidget:close()
-   RETURN Qt_QGraphicsWidget_close( ::pPtr )
+METHOD QGraphicsWidget:close( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsWidget_close( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

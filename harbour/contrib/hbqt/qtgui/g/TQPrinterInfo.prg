@@ -103,11 +103,11 @@ CREATE CLASS QPrinterInfo INHERIT HbQtObjectHandler FUNCTION HB_QPrinterInfo
 
    METHOD  new( ... )
 
-   METHOD  isDefault()
-   METHOD  isNull()
-   METHOD  printerName()
-   METHOD  availablePrinters()
-   METHOD  defaultPrinter()
+   METHOD  isDefault                     // (  )                                               -> lBool
+   METHOD  isNull                        // (  )                                               -> lBool
+   METHOD  printerName                   // (  )                                               -> cQString
+   METHOD  availablePrinters             // (  )                                               -> oQList_QPrinterInfo>
+   METHOD  defaultPrinter                // (  )                                               -> oQPrinterInfo
 
    ENDCLASS
 
@@ -121,22 +121,42 @@ METHOD QPrinterInfo:new( ... )
    RETURN Self
 
 
-METHOD QPrinterInfo:isDefault()
-   RETURN Qt_QPrinterInfo_isDefault( ::pPtr )
+METHOD QPrinterInfo:isDefault( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPrinterInfo_isDefault( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPrinterInfo:isNull()
-   RETURN Qt_QPrinterInfo_isNull( ::pPtr )
+METHOD QPrinterInfo:isNull( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPrinterInfo_isNull( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPrinterInfo:printerName()
-   RETURN Qt_QPrinterInfo_printerName( ::pPtr )
+METHOD QPrinterInfo:printerName( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPrinterInfo_printerName( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPrinterInfo:availablePrinters()
-   RETURN HB_QList():from( Qt_QPrinterInfo_availablePrinters( ::pPtr ) )
+METHOD QPrinterInfo:availablePrinters( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QPrinterInfo_availablePrinters( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPrinterInfo:defaultPrinter()
-   RETURN HB_QPrinterInfo():from( Qt_QPrinterInfo_defaultPrinter( ::pPtr ) )
+METHOD QPrinterInfo:defaultPrinter( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPrinterInfo():from( Qt_QPrinterInfo_defaultPrinter( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

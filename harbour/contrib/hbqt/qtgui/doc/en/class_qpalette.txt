@@ -26,40 +26,41 @@
  *  $RETURNS$
  *     An instance of the object of type QPalette
  *  $METHODS$
- *     :alternateBase()                                    -> pQBrush
- *     :base()                                             -> pQBrush
- *     :brightText()                                       -> pQBrush
- *     :brush( nGroup, nRole )                             -> pQBrush
- *     :brush_1( nRole )                                   -> pQBrush
- *     :button()                                           -> pQBrush
- *     :buttonText()                                       -> pQBrush
+ *     :alternateBase()                                    -> oQBrush
+ *     :base()                                             -> oQBrush
+ *     :brightText()                                       -> oQBrush
+ *     :brush( nGroup, nRole )                             -> oQBrush
+ *     :brush( nRole )                                     -> oQBrush
+ *     :button()                                           -> oQBrush
+ *     :buttonText()                                       -> oQBrush
  *     :cacheKey()                                         -> nQint64
- *     :color( nGroup, nRole )                             -> pQColor
- *     :color_1( nRole )                                   -> pQColor
+ *     :color( nGroup, nRole )                             -> oQColor
+ *     :color( nRole )                                     -> oQColor
  *     :currentColorGroup()                                -> nColorGroup
- *     :dark()                                             -> pQBrush
- *     :highlight()                                        -> pQBrush
- *     :highlightedText()                                  -> pQBrush
+ *     :dark()                                             -> oQBrush
+ *     :highlight()                                        -> oQBrush
+ *     :highlightedText()                                  -> oQBrush
  *     :isBrushSet( nCg, nCr )                             -> lBool
- *     :isCopyOf( pP )                                     -> lBool
+ *     :isCopyOf( oQPalette )                              -> lBool
  *     :isEqual( nCg1, nCg2 )                              -> lBool
- *     :light()                                            -> pQBrush
- *     :link()                                             -> pQBrush
- *     :linkVisited()                                      -> pQBrush
- *     :mid()                                              -> pQBrush
- *     :midlight()                                         -> pQBrush
- *     :setBrush( nRole, pBrush )                          -> NIL
- *     :setBrush_1( nGroup, nRole, pBrush )                -> NIL
- *     :setColor( nRole, pColor )                          -> NIL
- *     :setColor_1( nGroup, nRole, pColor )                -> NIL
- *     :setColorGroup( nCg, pWindowText, pButton, pLight, pDark, pMid, pText, pBright_text, pBase, pWindow )  -> NIL
+ *     :light()                                            -> oQBrush
+ *     :link()                                             -> oQBrush
+ *     :linkVisited()                                      -> oQBrush
+ *     :mid()                                              -> oQBrush
+ *     :midlight()                                         -> oQBrush
+ *     :resolve( oQPalette )                               -> oQPalette
+ *     :setBrush( nRole, oQBrush )                         -> NIL
+ *     :setBrush( nGroup, nRole, oQBrush )                 -> NIL
+ *     :setColor( nRole, oQColor )                         -> NIL
+ *     :setColor( nGroup, nRole, oQColor )                 -> NIL
+ *     :setColorGroup( nCg, oQBrush, oQBrush, oQBrush, oQBrush, oQBrush, oQBrush, oQBrush, oQBrush, oQBrush )  -> NIL
  *     :setCurrentColorGroup( nCg )                        -> NIL
- *     :shadow()                                           -> pQBrush
- *     :text()                                             -> pQBrush
- *     :toolTipBase()                                      -> pQBrush
- *     :toolTipText()                                      -> pQBrush
- *     :window()                                           -> pQBrush
- *     :windowText()                                       -> pQBrush
+ *     :shadow()                                           -> oQBrush
+ *     :text()                                             -> oQBrush
+ *     :toolTipBase()                                      -> oQBrush
+ *     :toolTipText()                                      -> oQBrush
+ *     :window()                                           -> oQBrush
+ *     :windowText()                                       -> oQBrush
  * 
  *  $DESCRIPTION$
  * 
@@ -88,7 +89,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQPalette.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QPalette.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

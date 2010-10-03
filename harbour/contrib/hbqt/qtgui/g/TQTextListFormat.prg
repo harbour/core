@@ -103,11 +103,11 @@ CREATE CLASS QTextListFormat INHERIT HbQtObjectHandler, HB_QTextFormat FUNCTION 
 
    METHOD  new( ... )
 
-   METHOD  indent()
-   METHOD  isValid()
-   METHOD  setIndent( nIndentation )
-   METHOD  setStyle( nStyle )
-   METHOD  style()
+   METHOD  indent                        // (  )                                               -> nInt
+   METHOD  isValid                       // (  )                                               -> lBool
+   METHOD  setIndent                     // ( nIndentation )                                   -> NIL
+   METHOD  setStyle                      // ( nStyle )                                         -> NIL
+   METHOD  style                         // (  )                                               -> nStyle
 
    ENDCLASS
 
@@ -121,22 +121,50 @@ METHOD QTextListFormat:new( ... )
    RETURN Self
 
 
-METHOD QTextListFormat:indent()
-   RETURN Qt_QTextListFormat_indent( ::pPtr )
+METHOD QTextListFormat:indent( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextListFormat_indent( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextListFormat:isValid()
-   RETURN Qt_QTextListFormat_isValid( ::pPtr )
+METHOD QTextListFormat:isValid( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextListFormat_isValid( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextListFormat:setIndent( nIndentation )
-   RETURN Qt_QTextListFormat_setIndent( ::pPtr, nIndentation )
+METHOD QTextListFormat:setIndent( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextListFormat_setIndent( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextListFormat:setStyle( nStyle )
-   RETURN Qt_QTextListFormat_setStyle( ::pPtr, nStyle )
+METHOD QTextListFormat:setStyle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextListFormat_setStyle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextListFormat:style()
-   RETURN Qt_QTextListFormat_style( ::pPtr )
+METHOD QTextListFormat:style( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextListFormat_style( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

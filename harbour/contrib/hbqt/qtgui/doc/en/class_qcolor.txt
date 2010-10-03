@@ -26,14 +26,22 @@
  *  $RETURNS$
  *     An instance of the object of type QColor
  *  $METHODS$
+ *     :QColor()                                           -> oQColor
+ *     :QColor( nR, nG, nB, nA )                           -> oQColor
+ *     :QColor( nColor )                                   -> oQColor
+ *     :QColor( nColor )                                   -> oQColor
+ *     :QColor( cName )                                    -> oQColor
+ *     :QColor( oQColor )                                  -> oQColor
  *     :alpha()                                            -> nInt
  *     :alphaF()                                           -> nQreal
  *     :black()                                            -> nInt
  *     :blackF()                                           -> nQreal
  *     :blue()                                             -> nInt
  *     :blueF()                                            -> nQreal
+ *     :convertTo( nColorSpec )                            -> oQColor
  *     :cyan()                                             -> nInt
  *     :cyanF()                                            -> nQreal
+ *     :darker( nFactor )                                  -> oQColor
  *     :getCmyk( @nC, @nM, @nY, @nK, @nA )                 -> NIL
  *     :getCmykF( @nC, @nM, @nY, @nK, @nA )                -> NIL
  *     :getHsv( @nH, @nS, @nV, @nA )                       -> NIL
@@ -45,6 +53,7 @@
  *     :hue()                                              -> nInt
  *     :hueF()                                             -> nQreal
  *     :isValid()                                          -> lBool
+ *     :lighter( nFactor )                                 -> oQColor
  *     :magenta()                                          -> nInt
  *     :magentaF()                                         -> nQreal
  *     :name()                                             -> cQString
@@ -68,15 +77,26 @@
  *     :setRed( nRed )                                     -> NIL
  *     :setRedF( nRed )                                    -> NIL
  *     :setRgb( nRgb )                                     -> NIL
- *     :setRgb_1( nR, nG, nB, nA )                         -> NIL
+ *     :setRgb( nR, nG, nB, nA )                           -> NIL
  *     :setRgba( nRgba )                                   -> NIL
  *     :setRgbF( nR, nG, nB, nA )                          -> NIL
  *     :spec()                                             -> nSpec
+ *     :toCmyk()                                           -> oQColor
+ *     :toHsv()                                            -> oQColor
+ *     :toRgb()                                            -> oQColor
  *     :value()                                            -> nInt
  *     :valueF()                                           -> nQreal
  *     :yellow()                                           -> nInt
  *     :yellowF()                                          -> nQreal
- *     :colorNames()                                       -> pQStringList
+ *     :colorNames()                                       -> oQStringList
+ *     :fromCmyk( nC, nM, nY, nK, nA )                     -> oQColor
+ *     :fromCmykF( nC, nM, nY, nK, nA )                    -> oQColor
+ *     :fromHsv( nH, nS, nV, nA )                          -> oQColor
+ *     :fromHsvF( nH, nS, nV, nA )                         -> oQColor
+ *     :fromRgb( nRgb )                                    -> oQColor
+ *     :fromRgb( nR, nG, nB, nA )                          -> oQColor
+ *     :fromRgbF( nR, nG, nB, nA )                         -> oQColor
+ *     :fromRgba( nRgba )                                  -> oQColor
  * 
  *  $DESCRIPTION$
  * 
@@ -103,7 +123,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQColor.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QColor.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

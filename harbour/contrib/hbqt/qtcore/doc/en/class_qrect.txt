@@ -27,55 +27,61 @@
  *     An instance of the object of type QRect
  *  $METHODS$
  *     :adjust( nDx1, nDy1, nDx2, nDy2 )                   -> NIL
+ *     :adjusted( nDx1, nDy1, nDx2, nDy2 )                 -> oQRect
  *     :bottom()                                           -> nInt
- *     :bottomLeft()                                       -> pQPoint
- *     :bottomRight()                                      -> pQPoint
- *     :center()                                           -> pQPoint
- *     :contains( pPoint, lProper )                        -> lBool
- *     :contains_1( nX, nY, lProper )                      -> lBool
- *     :contains_2( nX, nY )                               -> lBool
- *     :contains_3( pRectangle, lProper )                  -> lBool
+ *     :bottomLeft()                                       -> oQPoint
+ *     :bottomRight()                                      -> oQPoint
+ *     :center()                                           -> oQPoint
+ *     :contains( oQPoint, lProper )                       -> lBool
+ *     :contains( nX, nY, lProper )                        -> lBool
+ *     :contains( nX, nY )                                 -> lBool
+ *     :contains( oQRect, lProper )                        -> lBool
  *     :getCoords( @nX1, @nY1, @nX2, @nY2 )                -> NIL
  *     :getRect( @nX, @nY, @nWidth, @nHeight )             -> NIL
  *     :height()                                           -> nInt
- *     :intersects( pRectangle )                           -> lBool
+ *     :intersected( oQRect )                              -> oQRect
+ *     :intersects( oQRect )                               -> lBool
  *     :isEmpty()                                          -> lBool
  *     :isNull()                                           -> lBool
  *     :isValid()                                          -> lBool
  *     :left()                                             -> nInt
  *     :moveBottom( nY )                                   -> NIL
- *     :moveBottomLeft( pPosition )                        -> NIL
- *     :moveBottomRight( pPosition )                       -> NIL
- *     :moveCenter( pPosition )                            -> NIL
+ *     :moveBottomLeft( oQPoint )                          -> NIL
+ *     :moveBottomRight( oQPoint )                         -> NIL
+ *     :moveCenter( oQPoint )                              -> NIL
  *     :moveLeft( nX )                                     -> NIL
  *     :moveRight( nX )                                    -> NIL
  *     :moveTo( nX, nY )                                   -> NIL
- *     :moveTo_1( pPosition )                              -> NIL
+ *     :moveTo( oQPoint )                                  -> NIL
  *     :moveTop( nY )                                      -> NIL
- *     :moveTopLeft( pPosition )                           -> NIL
- *     :moveTopRight( pPosition )                          -> NIL
+ *     :moveTopLeft( oQPoint )                             -> NIL
+ *     :moveTopRight( oQPoint )                            -> NIL
+ *     :normalized()                                       -> oQRect
  *     :right()                                            -> nInt
  *     :setBottom( nY )                                    -> NIL
- *     :setBottomLeft( pPosition )                         -> NIL
- *     :setBottomRight( pPosition )                        -> NIL
+ *     :setBottomLeft( oQPoint )                           -> NIL
+ *     :setBottomRight( oQPoint )                          -> NIL
  *     :setCoords( nX1, nY1, nX2, nY2 )                    -> NIL
  *     :setHeight( nHeight )                               -> NIL
  *     :setLeft( nX )                                      -> NIL
  *     :setRect( nX, nY, nWidth, nHeight )                 -> NIL
  *     :setRight( nX )                                     -> NIL
- *     :setSize( pSize )                                   -> NIL
+ *     :setSize( oQSize )                                  -> NIL
  *     :setTop( nY )                                       -> NIL
- *     :setTopLeft( pPosition )                            -> NIL
- *     :setTopRight( pPosition )                           -> NIL
+ *     :setTopLeft( oQPoint )                              -> NIL
+ *     :setTopRight( oQPoint )                             -> NIL
  *     :setWidth( nWidth )                                 -> NIL
  *     :setX( nX )                                         -> NIL
  *     :setY( nY )                                         -> NIL
- *     :size()                                             -> pQSize
+ *     :size()                                             -> oQSize
  *     :top()                                              -> nInt
- *     :topLeft()                                          -> pQPoint
- *     :topRight()                                         -> pQPoint
+ *     :topLeft()                                          -> oQPoint
+ *     :topRight()                                         -> oQPoint
  *     :translate( nDx, nDy )                              -> NIL
- *     :translate_1( pOffset )                             -> NIL
+ *     :translate( oQPoint )                               -> NIL
+ *     :translated( nDx, nDy )                             -> oQRect
+ *     :translated( oQPoint )                              -> oQRect
+ *     :united( oQRect )                                   -> oQRect
  *     :width()                                            -> nInt
  *     :x()                                                -> nInt
  *     :y()                                                -> nInt
@@ -106,7 +112,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQRect.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QRect.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

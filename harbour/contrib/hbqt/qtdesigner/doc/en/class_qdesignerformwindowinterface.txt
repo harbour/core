@@ -30,39 +30,41 @@
  *     :author()                                           -> cQString
  *     :comment()                                          -> cQString
  *     :contents()                                         -> cQString
- *     :core()                                             -> pQDesignerFormEditorInterface
- *     :cursor()                                           -> pQDesignerFormWindowCursorInterface
+ *     :core()                                             -> oQDesignerFormEditorInterface
+ *     :cursor()                                           -> oQDesignerFormWindowCursorInterface
  *     :emitSelectionChanged()                             -> NIL
  *     :exportMacro()                                      -> cQString
  *     :features()                                         -> nFeature
  *     :fileName()                                         -> cQString
- *     :grid()                                             -> pQPoint
+ *     :grid()                                             -> oQPoint
  *     :hasFeature( nFeature )                             -> lBool
- *     :includeHints()                                     -> pQStringList
+ *     :includeHints()                                     -> oQStringList
  *     :isDirty()                                          -> lBool
- *     :isManaged( pWidget )                               -> lBool
+ *     :isManaged( oQWidget )                              -> lBool
  *     :layoutDefault( @nMargin, @nSpacing )               -> NIL
- *     :mainContainer()                                    -> pQWidget
+ *     :mainContainer()                                    -> oQWidget
  *     :pixmapFunction()                                   -> cQString
  *     :removeResourceFile( cPath )                        -> NIL
- *     :resourceFiles()                                    -> pQStringList
+ *     :resourceFiles()                                    -> oQStringList
  *     :setAuthor( cAuthor )                               -> NIL
  *     :setComment( cComment )                             -> NIL
- *     :setContents( pDevice )                             -> NIL
+ *     :setContents( oQIODevice )                          -> NIL
  *     :setExportMacro( cExportMacro )                     -> NIL
- *     :setIncludeHints( pIncludeHints )                   -> NIL
+ *     :setIncludeHints( oQStringList )                    -> NIL
  *     :setLayoutDefault( nMargin, nSpacing )              -> NIL
- *     :setMainContainer( pMainContainer )                 -> NIL
+ *     :setMainContainer( oQWidget )                       -> NIL
  *     :setPixmapFunction( cPixmapFunction )               -> NIL
+ *     :findFormWindow( oQWidget )                         -> oQDesignerFormWindowInterface
+ *     :findFormWindow( oQObject )                         -> oQDesignerFormWindowInterface
  *     :clearSelection( lUpdate )                          -> NIL
- *     :manageWidget( pWidget )                            -> NIL
- *     :selectWidget( pWidget, lSelect )                   -> NIL
- *     :setContents_1( cContents )                         -> NIL
+ *     :manageWidget( oQWidget )                           -> NIL
+ *     :selectWidget( oQWidget, lSelect )                  -> NIL
+ *     :setContents( cContents )                           -> NIL
  *     :setDirty( lDirty )                                 -> NIL
  *     :setFeatures( nFeatures )                           -> NIL
  *     :setFileName( cFileName )                           -> NIL
- *     :setGrid( pGrid )                                   -> NIL
- *     :unmanageWidget( pWidget )                          -> NIL
+ *     :setGrid( oQPoint )                                 -> NIL
+ *     :unmanageWidget( oQWidget )                         -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -82,7 +84,5 @@
  *     Harbour source: contrib/hbqt/qtdesigner/TQDesignerFormWindowInterface.prg
  *     C++ wrappers  : contrib/hbqt/qtdesigner/QDesignerFormWindowInterface.cpp
  *     Library       : hbqtdesigner
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

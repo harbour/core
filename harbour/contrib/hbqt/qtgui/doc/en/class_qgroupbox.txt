@@ -26,7 +26,7 @@
  *  $RETURNS$
  *     An instance of the object of type QGroupBox
  *  $METHODS$
- *     :alignment()                                        -> nQt::Alignment
+ *     :alignment()                                        -> nQt_Alignment
  *     :isCheckable()                                      -> lBool
  *     :isChecked()                                        -> lBool
  *     :isFlat()                                           -> lBool
@@ -55,7 +55,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGroupBox.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGroupBox.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

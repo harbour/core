@@ -103,13 +103,13 @@ CREATE CLASS QEvent INHERIT HbQtObjectHandler FUNCTION HB_QEvent
 
    METHOD  new( ... )
 
-   METHOD  accept()
-   METHOD  ignore()
-   METHOD  isAccepted()
-   METHOD  setAccepted( lAccepted )
-   METHOD  spontaneous()
-   METHOD  type()
-   METHOD  registerEventType( nHint )
+   METHOD  accept                        // (  )                                               -> NIL
+   METHOD  ignore                        // (  )                                               -> NIL
+   METHOD  isAccepted                    // (  )                                               -> lBool
+   METHOD  setAccepted                   // ( lAccepted )                                      -> NIL
+   METHOD  spontaneous                   // (  )                                               -> lBool
+   METHOD  type                          // (  )                                               -> nType
+   METHOD  registerEventType             // ( nHint )                                          -> nInt
 
    ENDCLASS
 
@@ -123,30 +123,68 @@ METHOD QEvent:new( ... )
    RETURN Self
 
 
-METHOD QEvent:accept()
-   RETURN Qt_QEvent_accept( ::pPtr )
+METHOD QEvent:accept( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QEvent_accept( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QEvent:ignore()
-   RETURN Qt_QEvent_ignore( ::pPtr )
+METHOD QEvent:ignore( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QEvent_ignore( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QEvent:isAccepted()
-   RETURN Qt_QEvent_isAccepted( ::pPtr )
+METHOD QEvent:isAccepted( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QEvent_isAccepted( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QEvent:setAccepted( lAccepted )
-   RETURN Qt_QEvent_setAccepted( ::pPtr, lAccepted )
+METHOD QEvent:setAccepted( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QEvent_setAccepted( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QEvent:spontaneous()
-   RETURN Qt_QEvent_spontaneous( ::pPtr )
+METHOD QEvent:spontaneous( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QEvent_spontaneous( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QEvent:type()
-   RETURN Qt_QEvent_type( ::pPtr )
+METHOD QEvent:type( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QEvent_type( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QEvent:registerEventType( nHint )
-   RETURN Qt_QEvent_registerEventType( ::pPtr, nHint )
+METHOD QEvent:registerEventType( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QEvent_registerEventType( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QEvent_registerEventType( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

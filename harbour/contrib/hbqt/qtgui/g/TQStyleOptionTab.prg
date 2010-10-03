@@ -103,13 +103,13 @@ CREATE CLASS QStyleOptionTab INHERIT HbQtObjectHandler, HB_QStyleOption FUNCTION
 
    METHOD  new( ... )
 
-   METHOD  cornerWidgets()
-   METHOD  icon()
-   METHOD  position()
-   METHOD  row()
-   METHOD  selectedPosition()
-   METHOD  shape()
-   METHOD  text()
+   METHOD  cornerWidgets                 // (  )                                               -> nCornerWidgets
+   METHOD  icon                          // (  )                                               -> oQIcon
+   METHOD  position                      // (  )                                               -> nTabPosition
+   METHOD  row                           // (  )                                               -> nInt
+   METHOD  selectedPosition              // (  )                                               -> nSelectedPosition
+   METHOD  shape                         // (  )                                               -> nQTabBar_Shape
+   METHOD  text                          // (  )                                               -> cQString
 
    ENDCLASS
 
@@ -123,30 +123,58 @@ METHOD QStyleOptionTab:new( ... )
    RETURN Self
 
 
-METHOD QStyleOptionTab:cornerWidgets()
-   RETURN Qt_QStyleOptionTab_cornerWidgets( ::pPtr )
+METHOD QStyleOptionTab:cornerWidgets( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionTab_cornerWidgets( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionTab:icon()
-   RETURN HB_QIcon():from( Qt_QStyleOptionTab_icon( ::pPtr ) )
+METHOD QStyleOptionTab:icon( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QIcon():from( Qt_QStyleOptionTab_icon( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionTab:position()
-   RETURN Qt_QStyleOptionTab_position( ::pPtr )
+METHOD QStyleOptionTab:position( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionTab_position( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionTab:row()
-   RETURN Qt_QStyleOptionTab_row( ::pPtr )
+METHOD QStyleOptionTab:row( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionTab_row( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionTab:selectedPosition()
-   RETURN Qt_QStyleOptionTab_selectedPosition( ::pPtr )
+METHOD QStyleOptionTab:selectedPosition( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionTab_selectedPosition( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionTab:shape()
-   RETURN Qt_QStyleOptionTab_shape( ::pPtr )
+METHOD QStyleOptionTab:shape( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionTab_shape( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionTab:text()
-   RETURN Qt_QStyleOptionTab_text( ::pPtr )
+METHOD QStyleOptionTab:text( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionTab_text( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

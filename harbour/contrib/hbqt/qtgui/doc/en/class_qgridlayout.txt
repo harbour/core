@@ -26,19 +26,19 @@
  *  $RETURNS$
  *     An instance of the object of type QGridLayout
  *  $METHODS$
- *     :addItem( pItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )  -> NIL
- *     :addLayout( pLayout, nRow, nColumn, nAlignment )    -> NIL
- *     :addLayout_1( pLayout, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )  -> NIL
- *     :addWidget( pWidget, nRow, nColumn, nAlignment )    -> NIL
- *     :addWidget_1( pWidget, nFromRow, nFromColumn, nRowSpan, nColumnSpan, nAlignment )  -> NIL
- *     :cellRect( nRow, nColumn )                          -> pQRect
+ *     :addItem( oQLayoutItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )  -> NIL
+ *     :addLayout( oQLayout, nRow, nColumn, nAlignment )   -> NIL
+ *     :addLayout( oQLayout, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment )  -> NIL
+ *     :addWidget( oQWidget, nRow, nColumn, nAlignment )   -> NIL
+ *     :addWidget( oQWidget, nFromRow, nFromColumn, nRowSpan, nColumnSpan, nAlignment )  -> NIL
+ *     :cellRect( nRow, nColumn )                          -> oQRect
  *     :columnCount()                                      -> nInt
  *     :columnMinimumWidth( nColumn )                      -> nInt
  *     :columnStretch( nColumn )                           -> nInt
  *     :getItemPosition( nIndex, @nRow, @nColumn, @nRowSpan, @nColumnSpan )  -> NIL
  *     :horizontalSpacing()                                -> nInt
- *     :itemAtPosition( nRow, nColumn )                    -> pQLayoutItem
- *     :originCorner()                                     -> nQt::Corner
+ *     :itemAtPosition( nRow, nColumn )                    -> oQLayoutItem
+ *     :originCorner()                                     -> nQt_Corner
  *     :rowCount()                                         -> nInt
  *     :rowMinimumHeight( nRow )                           -> nInt
  *     :rowStretch( nRow )                                 -> nInt
@@ -71,7 +71,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGridLayout.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGridLayout.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QLayout()
  *  $END$
  */

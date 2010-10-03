@@ -103,24 +103,29 @@ CREATE CLASS QPaintEngine INHERIT HbQtObjectHandler FUNCTION HB_QPaintEngine
 
    METHOD  new( ... )
 
-   METHOD  begin( pPdev )
-   METHOD  drawEllipse( ... )
-   METHOD  drawImage( pRectangle, pImage, pSr, nFlags )
-   METHOD  drawLines( ... )
-   METHOD  drawPath( pPath )
-   METHOD  drawPixmap( pR, pPm, pSr )
-   METHOD  drawPoints( ... )
-   METHOD  drawPolygon( ... )
-   METHOD  drawRects( ... )
-   METHOD  drawTextItem( pP, pTextItem )
-   METHOD  drawTiledPixmap( pRect, pPixmap, pP )
-   METHOD  end()
-   METHOD  hasFeature( nFeature )
-   METHOD  isActive()
-   METHOD  paintDevice()
-   METHOD  painter()
-   METHOD  setActive( lState )
-   METHOD  type()
+   METHOD  begin                         // ( oQPaintDevice )                                  -> lBool
+   METHOD  drawEllipse                   // ( oQRectF )                                        -> NIL
+                                         // ( oQRect )                                         -> NIL
+   METHOD  drawImage                     // ( oQRectF, oQImage, oQRectF, nFlags )              -> NIL
+   METHOD  drawLines                     // ( oQLineF, nLineCount )                            -> NIL
+                                         // ( oQLine, nLineCount )                             -> NIL
+   METHOD  drawPath                      // ( oQPainterPath )                                  -> NIL
+   METHOD  drawPixmap                    // ( oQRectF, oQPixmap, oQRectF )                     -> NIL
+   METHOD  drawPoints                    // ( oQPointF, nPointCount )                          -> NIL
+                                         // ( oQPoint, nPointCount )                           -> NIL
+   METHOD  drawPolygon                   // ( oQPointF, nPointCount, nMode )                   -> NIL
+                                         // ( oQPoint, nPointCount, nMode )                    -> NIL
+   METHOD  drawRects                     // ( oQRectF, nRectCount )                            -> NIL
+                                         // ( oQRect, nRectCount )                             -> NIL
+   METHOD  drawTextItem                  // ( oQPointF, oQTextItem )                           -> NIL
+   METHOD  drawTiledPixmap               // ( oQRectF, oQPixmap, oQPointF )                    -> NIL
+   METHOD  end                           // (  )                                               -> lBool
+   METHOD  hasFeature                    // ( nFeature )                                       -> lBool
+   METHOD  isActive                      // (  )                                               -> lBool
+   METHOD  paintDevice                   // (  )                                               -> oQPaintDevice
+   METHOD  painter                       // (  )                                               -> oQPainter
+   METHOD  setActive                     // ( lState )                                         -> NIL
+   METHOD  type                          // (  )                                               -> nType
 
    ENDCLASS
 
@@ -134,8 +139,16 @@ METHOD QPaintEngine:new( ... )
    RETURN Self
 
 
-METHOD QPaintEngine:begin( pPdev )
-   RETURN Qt_QPaintEngine_begin( ::pPtr, hbqt_ptr( pPdev ) )
+METHOD QPaintEngine:begin( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPaintEngine_begin( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPaintEngine:drawEllipse( ... )
@@ -155,8 +168,22 @@ METHOD QPaintEngine:drawEllipse( ... )
    RETURN hbqt_error()
 
 
-METHOD QPaintEngine:drawImage( pRectangle, pImage, pSr, nFlags )
-   RETURN Qt_QPaintEngine_drawImage( ::pPtr, hbqt_ptr( pRectangle ), hbqt_ptr( pImage ), hbqt_ptr( pSr ), nFlags )
+METHOD QPaintEngine:drawImage( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QPaintEngine_drawImage( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QPaintEngine_drawImage( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPaintEngine:drawLines( ... )
@@ -176,12 +203,28 @@ METHOD QPaintEngine:drawLines( ... )
    RETURN hbqt_error()
 
 
-METHOD QPaintEngine:drawPath( pPath )
-   RETURN Qt_QPaintEngine_drawPath( ::pPtr, hbqt_ptr( pPath ) )
+METHOD QPaintEngine:drawPath( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPaintEngine_drawPath( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPaintEngine:drawPixmap( pR, pPm, pSr )
-   RETURN Qt_QPaintEngine_drawPixmap( ::pPtr, hbqt_ptr( pR ), hbqt_ptr( pPm ), hbqt_ptr( pSr ) )
+METHOD QPaintEngine:drawPixmap( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QPaintEngine_drawPixmap( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPaintEngine:drawPoints( ... )
@@ -235,38 +278,90 @@ METHOD QPaintEngine:drawRects( ... )
    RETURN hbqt_error()
 
 
-METHOD QPaintEngine:drawTextItem( pP, pTextItem )
-   RETURN Qt_QPaintEngine_drawTextItem( ::pPtr, hbqt_ptr( pP ), hbqt_ptr( pTextItem ) )
+METHOD QPaintEngine:drawTextItem( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QPaintEngine_drawTextItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPaintEngine:drawTiledPixmap( pRect, pPixmap, pP )
-   RETURN Qt_QPaintEngine_drawTiledPixmap( ::pPtr, hbqt_ptr( pRect ), hbqt_ptr( pPixmap ), hbqt_ptr( pP ) )
+METHOD QPaintEngine:drawTiledPixmap( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QPaintEngine_drawTiledPixmap( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPaintEngine:end()
-   RETURN Qt_QPaintEngine_end( ::pPtr )
+METHOD QPaintEngine:end( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPaintEngine_end( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPaintEngine:hasFeature( nFeature )
-   RETURN Qt_QPaintEngine_hasFeature( ::pPtr, nFeature )
+METHOD QPaintEngine:hasFeature( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPaintEngine_hasFeature( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPaintEngine:isActive()
-   RETURN Qt_QPaintEngine_isActive( ::pPtr )
+METHOD QPaintEngine:isActive( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPaintEngine_isActive( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPaintEngine:paintDevice()
-   RETURN HB_QPaintDevice():from( Qt_QPaintEngine_paintDevice( ::pPtr ) )
+METHOD QPaintEngine:paintDevice( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPaintDevice():from( Qt_QPaintEngine_paintDevice( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPaintEngine:painter()
-   RETURN HB_QPainter():from( Qt_QPaintEngine_painter( ::pPtr ) )
+METHOD QPaintEngine:painter( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPainter():from( Qt_QPaintEngine_painter( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPaintEngine:setActive( lState )
-   RETURN Qt_QPaintEngine_setActive( ::pPtr, lState )
+METHOD QPaintEngine:setActive( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QPaintEngine_setActive( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPaintEngine:type()
-   RETURN Qt_QPaintEngine_type( ::pPtr )
+METHOD QPaintEngine:type( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPaintEngine_type( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

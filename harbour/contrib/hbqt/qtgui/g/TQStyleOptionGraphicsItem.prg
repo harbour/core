@@ -103,9 +103,9 @@ CREATE CLASS QStyleOptionGraphicsItem INHERIT HbQtObjectHandler, HB_QStyleOption
 
    METHOD  new( ... )
 
-   METHOD  exposedRect()
-   METHOD  levelOfDetail()
-   METHOD  matrix()
+   METHOD  exposedRect                   // (  )                                               -> oQRectF
+   METHOD  levelOfDetail                 // (  )                                               -> nQreal
+   METHOD  matrix                        // (  )                                               -> oQMatrix
 
    ENDCLASS
 
@@ -119,14 +119,26 @@ METHOD QStyleOptionGraphicsItem:new( ... )
    RETURN Self
 
 
-METHOD QStyleOptionGraphicsItem:exposedRect()
-   RETURN HB_QRectF():from( Qt_QStyleOptionGraphicsItem_exposedRect( ::pPtr ) )
+METHOD QStyleOptionGraphicsItem:exposedRect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRectF():from( Qt_QStyleOptionGraphicsItem_exposedRect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionGraphicsItem:levelOfDetail()
-   RETURN Qt_QStyleOptionGraphicsItem_levelOfDetail( ::pPtr )
+METHOD QStyleOptionGraphicsItem:levelOfDetail( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionGraphicsItem_levelOfDetail( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionGraphicsItem:matrix()
-   RETURN HB_QMatrix():from( Qt_QStyleOptionGraphicsItem_matrix( ::pPtr ) )
+METHOD QStyleOptionGraphicsItem:matrix( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QMatrix():from( Qt_QStyleOptionGraphicsItem_matrix( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

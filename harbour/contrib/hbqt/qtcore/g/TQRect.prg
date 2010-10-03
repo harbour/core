@@ -103,59 +103,65 @@ CREATE CLASS QRect INHERIT HbQtObjectHandler FUNCTION HB_QRect
 
    METHOD  new( ... )
 
-   METHOD  adjust( nDx1, nDy1, nDx2, nDy2 )
-   METHOD  adjusted( nDx1, nDy1, nDx2, nDy2 )
-   METHOD  bottom()
-   METHOD  bottomLeft()
-   METHOD  bottomRight()
-   METHOD  center()
-   METHOD  contains( ... )
-   METHOD  getCoords( nX1, nY1, nX2, nY2 )
-   METHOD  getRect( nX, nY, nWidth, nHeight )
-   METHOD  height()
-   METHOD  intersected( pRectangle )
-   METHOD  intersects( pRectangle )
-   METHOD  isEmpty()
-   METHOD  isNull()
-   METHOD  isValid()
-   METHOD  left()
-   METHOD  moveBottom( nY )
-   METHOD  moveBottomLeft( pPosition )
-   METHOD  moveBottomRight( pPosition )
-   METHOD  moveCenter( pPosition )
-   METHOD  moveLeft( nX )
-   METHOD  moveRight( nX )
-   METHOD  moveTo( ... )
-   METHOD  moveTop( nY )
-   METHOD  moveTopLeft( pPosition )
-   METHOD  moveTopRight( pPosition )
-   METHOD  normalized()
-   METHOD  right()
-   METHOD  setBottom( nY )
-   METHOD  setBottomLeft( pPosition )
-   METHOD  setBottomRight( pPosition )
-   METHOD  setCoords( nX1, nY1, nX2, nY2 )
-   METHOD  setHeight( nHeight )
-   METHOD  setLeft( nX )
-   METHOD  setRect( nX, nY, nWidth, nHeight )
-   METHOD  setRight( nX )
-   METHOD  setSize( pSize )
-   METHOD  setTop( nY )
-   METHOD  setTopLeft( pPosition )
-   METHOD  setTopRight( pPosition )
-   METHOD  setWidth( nWidth )
-   METHOD  setX( nX )
-   METHOD  setY( nY )
-   METHOD  size()
-   METHOD  top()
-   METHOD  topLeft()
-   METHOD  topRight()
-   METHOD  translate( ... )
-   METHOD  translated( ... )
-   METHOD  united( pRectangle )
-   METHOD  width()
-   METHOD  x()
-   METHOD  y()
+   METHOD  adjust                        // ( nDx1, nDy1, nDx2, nDy2 )                         -> NIL
+   METHOD  adjusted                      // ( nDx1, nDy1, nDx2, nDy2 )                         -> oQRect
+   METHOD  bottom                        // (  )                                               -> nInt
+   METHOD  bottomLeft                    // (  )                                               -> oQPoint
+   METHOD  bottomRight                   // (  )                                               -> oQPoint
+   METHOD  center                        // (  )                                               -> oQPoint
+   METHOD  contains                      // ( oQPoint, lProper )                               -> lBool
+                                         // ( nX, nY, lProper )                                -> lBool
+                                         // ( nX, nY )                                         -> lBool
+                                         // ( oQRect, lProper )                                -> lBool
+   METHOD  getCoords                     // ( @nX1, @nY1, @nX2, @nY2 )                         -> NIL
+   METHOD  getRect                       // ( @nX, @nY, @nWidth, @nHeight )                    -> NIL
+   METHOD  height                        // (  )                                               -> nInt
+   METHOD  intersected                   // ( oQRect )                                         -> oQRect
+   METHOD  intersects                    // ( oQRect )                                         -> lBool
+   METHOD  isEmpty                       // (  )                                               -> lBool
+   METHOD  isNull                        // (  )                                               -> lBool
+   METHOD  isValid                       // (  )                                               -> lBool
+   METHOD  left                          // (  )                                               -> nInt
+   METHOD  moveBottom                    // ( nY )                                             -> NIL
+   METHOD  moveBottomLeft                // ( oQPoint )                                        -> NIL
+   METHOD  moveBottomRight               // ( oQPoint )                                        -> NIL
+   METHOD  moveCenter                    // ( oQPoint )                                        -> NIL
+   METHOD  moveLeft                      // ( nX )                                             -> NIL
+   METHOD  moveRight                     // ( nX )                                             -> NIL
+   METHOD  moveTo                        // ( nX, nY )                                         -> NIL
+                                         // ( oQPoint )                                        -> NIL
+   METHOD  moveTop                       // ( nY )                                             -> NIL
+   METHOD  moveTopLeft                   // ( oQPoint )                                        -> NIL
+   METHOD  moveTopRight                  // ( oQPoint )                                        -> NIL
+   METHOD  normalized                    // (  )                                               -> oQRect
+   METHOD  right                         // (  )                                               -> nInt
+   METHOD  setBottom                     // ( nY )                                             -> NIL
+   METHOD  setBottomLeft                 // ( oQPoint )                                        -> NIL
+   METHOD  setBottomRight                // ( oQPoint )                                        -> NIL
+   METHOD  setCoords                     // ( nX1, nY1, nX2, nY2 )                             -> NIL
+   METHOD  setHeight                     // ( nHeight )                                        -> NIL
+   METHOD  setLeft                       // ( nX )                                             -> NIL
+   METHOD  setRect                       // ( nX, nY, nWidth, nHeight )                        -> NIL
+   METHOD  setRight                      // ( nX )                                             -> NIL
+   METHOD  setSize                       // ( oQSize )                                         -> NIL
+   METHOD  setTop                        // ( nY )                                             -> NIL
+   METHOD  setTopLeft                    // ( oQPoint )                                        -> NIL
+   METHOD  setTopRight                   // ( oQPoint )                                        -> NIL
+   METHOD  setWidth                      // ( nWidth )                                         -> NIL
+   METHOD  setX                          // ( nX )                                             -> NIL
+   METHOD  setY                          // ( nY )                                             -> NIL
+   METHOD  size                          // (  )                                               -> oQSize
+   METHOD  top                           // (  )                                               -> nInt
+   METHOD  topLeft                       // (  )                                               -> oQPoint
+   METHOD  topRight                      // (  )                                               -> oQPoint
+   METHOD  translate                     // ( nDx, nDy )                                       -> NIL
+                                         // ( oQPoint )                                        -> NIL
+   METHOD  translated                    // ( nDx, nDy )                                       -> oQRect
+                                         // ( oQPoint )                                        -> oQRect
+   METHOD  united                        // ( oQRect )                                         -> oQRect
+   METHOD  width                         // (  )                                               -> nInt
+   METHOD  x                             // (  )                                               -> nInt
+   METHOD  y                             // (  )                                               -> nInt
 
    ENDCLASS
 
@@ -169,28 +175,60 @@ METHOD QRect:new( ... )
    RETURN Self
 
 
-METHOD QRect:adjust( nDx1, nDy1, nDx2, nDy2 )
-   RETURN Qt_QRect_adjust( ::pPtr, nDx1, nDy1, nDx2, nDy2 )
+METHOD QRect:adjust( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QRect_adjust( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:adjusted( nDx1, nDy1, nDx2, nDy2 )
-   RETURN HB_QRect():from( Qt_QRect_adjusted( ::pPtr, nDx1, nDy1, nDx2, nDy2 ) )
+METHOD QRect:adjusted( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN HB_QRect():from( Qt_QRect_adjusted( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:bottom()
-   RETURN Qt_QRect_bottom( ::pPtr )
+METHOD QRect:bottom( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QRect_bottom( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:bottomLeft()
-   RETURN HB_QPoint():from( Qt_QRect_bottomLeft( ::pPtr ) )
+METHOD QRect:bottomLeft( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QRect_bottomLeft( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:bottomRight()
-   RETURN HB_QPoint():from( Qt_QRect_bottomRight( ::pPtr ) )
+METHOD QRect:bottomRight( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QRect_bottomRight( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:center()
-   RETURN HB_QPoint():from( Qt_QRect_center( ::pPtr ) )
+METHOD QRect:center( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QRect_center( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QRect:contains( ... )
@@ -229,64 +267,164 @@ METHOD QRect:contains( ... )
    RETURN hbqt_error()
 
 
-METHOD QRect:getCoords( nX1, nY1, nX2, nY2 )
-   RETURN Qt_QRect_getCoords( ::pPtr, nX1, nY1, nX2, nY2 )
+METHOD QRect:getCoords( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QRect_getCoords( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:getRect( nX, nY, nWidth, nHeight )
-   RETURN Qt_QRect_getRect( ::pPtr, nX, nY, nWidth, nHeight )
+METHOD QRect:getRect( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QRect_getRect( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:height()
-   RETURN Qt_QRect_height( ::pPtr )
+METHOD QRect:height( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QRect_height( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:intersected( pRectangle )
-   RETURN HB_QRect():from( Qt_QRect_intersected( ::pPtr, hbqt_ptr( pRectangle ) ) )
+METHOD QRect:intersected( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QRect():from( Qt_QRect_intersected( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:intersects( pRectangle )
-   RETURN Qt_QRect_intersects( ::pPtr, hbqt_ptr( pRectangle ) )
+METHOD QRect:intersects( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QRect_intersects( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:isEmpty()
-   RETURN Qt_QRect_isEmpty( ::pPtr )
+METHOD QRect:isEmpty( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QRect_isEmpty( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:isNull()
-   RETURN Qt_QRect_isNull( ::pPtr )
+METHOD QRect:isNull( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QRect_isNull( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:isValid()
-   RETURN Qt_QRect_isValid( ::pPtr )
+METHOD QRect:isValid( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QRect_isValid( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:left()
-   RETURN Qt_QRect_left( ::pPtr )
+METHOD QRect:left( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QRect_left( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:moveBottom( nY )
-   RETURN Qt_QRect_moveBottom( ::pPtr, nY )
+METHOD QRect:moveBottom( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QRect_moveBottom( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:moveBottomLeft( pPosition )
-   RETURN Qt_QRect_moveBottomLeft( ::pPtr, hbqt_ptr( pPosition ) )
+METHOD QRect:moveBottomLeft( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QRect_moveBottomLeft( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:moveBottomRight( pPosition )
-   RETURN Qt_QRect_moveBottomRight( ::pPtr, hbqt_ptr( pPosition ) )
+METHOD QRect:moveBottomRight( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QRect_moveBottomRight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:moveCenter( pPosition )
-   RETURN Qt_QRect_moveCenter( ::pPtr, hbqt_ptr( pPosition ) )
+METHOD QRect:moveCenter( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QRect_moveCenter( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:moveLeft( nX )
-   RETURN Qt_QRect_moveLeft( ::pPtr, nX )
+METHOD QRect:moveLeft( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QRect_moveLeft( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:moveRight( nX )
-   RETURN Qt_QRect_moveRight( ::pPtr, nX )
+METHOD QRect:moveRight( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QRect_moveRight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QRect:moveTo( ... )
@@ -307,100 +445,268 @@ METHOD QRect:moveTo( ... )
    RETURN hbqt_error()
 
 
-METHOD QRect:moveTop( nY )
-   RETURN Qt_QRect_moveTop( ::pPtr, nY )
+METHOD QRect:moveTop( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QRect_moveTop( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:moveTopLeft( pPosition )
-   RETURN Qt_QRect_moveTopLeft( ::pPtr, hbqt_ptr( pPosition ) )
+METHOD QRect:moveTopLeft( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QRect_moveTopLeft( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:moveTopRight( pPosition )
-   RETURN Qt_QRect_moveTopRight( ::pPtr, hbqt_ptr( pPosition ) )
+METHOD QRect:moveTopRight( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QRect_moveTopRight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:normalized()
-   RETURN HB_QRect():from( Qt_QRect_normalized( ::pPtr ) )
+METHOD QRect:normalized( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QRect_normalized( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:right()
-   RETURN Qt_QRect_right( ::pPtr )
+METHOD QRect:right( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QRect_right( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:setBottom( nY )
-   RETURN Qt_QRect_setBottom( ::pPtr, nY )
+METHOD QRect:setBottom( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QRect_setBottom( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:setBottomLeft( pPosition )
-   RETURN Qt_QRect_setBottomLeft( ::pPtr, hbqt_ptr( pPosition ) )
+METHOD QRect:setBottomLeft( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QRect_setBottomLeft( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:setBottomRight( pPosition )
-   RETURN Qt_QRect_setBottomRight( ::pPtr, hbqt_ptr( pPosition ) )
+METHOD QRect:setBottomRight( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QRect_setBottomRight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:setCoords( nX1, nY1, nX2, nY2 )
-   RETURN Qt_QRect_setCoords( ::pPtr, nX1, nY1, nX2, nY2 )
+METHOD QRect:setCoords( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QRect_setCoords( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:setHeight( nHeight )
-   RETURN Qt_QRect_setHeight( ::pPtr, nHeight )
+METHOD QRect:setHeight( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QRect_setHeight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:setLeft( nX )
-   RETURN Qt_QRect_setLeft( ::pPtr, nX )
+METHOD QRect:setLeft( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QRect_setLeft( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:setRect( nX, nY, nWidth, nHeight )
-   RETURN Qt_QRect_setRect( ::pPtr, nX, nY, nWidth, nHeight )
+METHOD QRect:setRect( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QRect_setRect( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:setRight( nX )
-   RETURN Qt_QRect_setRight( ::pPtr, nX )
+METHOD QRect:setRight( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QRect_setRight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:setSize( pSize )
-   RETURN Qt_QRect_setSize( ::pPtr, hbqt_ptr( pSize ) )
+METHOD QRect:setSize( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QRect_setSize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:setTop( nY )
-   RETURN Qt_QRect_setTop( ::pPtr, nY )
+METHOD QRect:setTop( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QRect_setTop( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:setTopLeft( pPosition )
-   RETURN Qt_QRect_setTopLeft( ::pPtr, hbqt_ptr( pPosition ) )
+METHOD QRect:setTopLeft( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QRect_setTopLeft( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:setTopRight( pPosition )
-   RETURN Qt_QRect_setTopRight( ::pPtr, hbqt_ptr( pPosition ) )
+METHOD QRect:setTopRight( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QRect_setTopRight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:setWidth( nWidth )
-   RETURN Qt_QRect_setWidth( ::pPtr, nWidth )
+METHOD QRect:setWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QRect_setWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:setX( nX )
-   RETURN Qt_QRect_setX( ::pPtr, nX )
+METHOD QRect:setX( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QRect_setX( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:setY( nY )
-   RETURN Qt_QRect_setY( ::pPtr, nY )
+METHOD QRect:setY( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QRect_setY( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:size()
-   RETURN HB_QSize():from( Qt_QRect_size( ::pPtr ) )
+METHOD QRect:size( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QRect_size( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:top()
-   RETURN Qt_QRect_top( ::pPtr )
+METHOD QRect:top( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QRect_top( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:topLeft()
-   RETURN HB_QPoint():from( Qt_QRect_topLeft( ::pPtr ) )
+METHOD QRect:topLeft( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QRect_topLeft( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:topRight()
-   RETURN HB_QPoint():from( Qt_QRect_topRight( ::pPtr ) )
+METHOD QRect:topRight( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QRect_topRight( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QRect:translate( ... )
@@ -439,18 +745,38 @@ METHOD QRect:translated( ... )
    RETURN hbqt_error()
 
 
-METHOD QRect:united( pRectangle )
-   RETURN HB_QRect():from( Qt_QRect_united( ::pPtr, hbqt_ptr( pRectangle ) ) )
+METHOD QRect:united( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QRect():from( Qt_QRect_united( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:width()
-   RETURN Qt_QRect_width( ::pPtr )
+METHOD QRect:width( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QRect_width( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:x()
-   RETURN Qt_QRect_x( ::pPtr )
+METHOD QRect:x( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QRect_x( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRect:y()
-   RETURN Qt_QRect_y( ::pPtr )
+METHOD QRect:y( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QRect_y( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

@@ -103,25 +103,26 @@ CREATE CLASS QBoxLayout INHERIT HbQtObjectHandler, HB_QLayout FUNCTION HB_QBoxLa
 
    METHOD  new( ... )
 
-   METHOD  addLayout( pLayout, nStretch )
-   METHOD  addSpacerItem( pSpacerItem )
-   METHOD  addSpacing( nSize )
-   METHOD  addStretch( nStretch )
-   METHOD  addStrut( nSize )
-   METHOD  addWidget( pWidget, nStretch, nAlignment )
-   METHOD  direction()
-   METHOD  insertLayout( nIndex, pLayout, nStretch )
-   METHOD  insertSpacerItem( nIndex, pSpacerItem )
-   METHOD  insertSpacing( nIndex, nSize )
-   METHOD  insertStretch( nIndex, nStretch )
-   METHOD  insertWidget( nIndex, pWidget, nStretch, nAlignment )
-   METHOD  invalidate()
-   METHOD  setDirection( nDirection )
-   METHOD  setSpacing( nSpacing )
-   METHOD  setStretch( nIndex, nStretch )
-   METHOD  setStretchFactor( ... )
-   METHOD  spacing()
-   METHOD  stretch( nIndex )
+   METHOD  addLayout                     // ( oQLayout, nStretch )                             -> NIL
+   METHOD  addSpacerItem                 // ( oQSpacerItem )                                   -> NIL
+   METHOD  addSpacing                    // ( nSize )                                          -> NIL
+   METHOD  addStretch                    // ( nStretch )                                       -> NIL
+   METHOD  addStrut                      // ( nSize )                                          -> NIL
+   METHOD  addWidget                     // ( oQWidget, nStretch, nAlignment )                 -> NIL
+   METHOD  direction                     // (  )                                               -> nDirection
+   METHOD  insertLayout                  // ( nIndex, oQLayout, nStretch )                     -> NIL
+   METHOD  insertSpacerItem              // ( nIndex, oQSpacerItem )                           -> NIL
+   METHOD  insertSpacing                 // ( nIndex, nSize )                                  -> NIL
+   METHOD  insertStretch                 // ( nIndex, nStretch )                               -> NIL
+   METHOD  insertWidget                  // ( nIndex, oQWidget, nStretch, nAlignment )         -> NIL
+   METHOD  invalidate                    // (  )                                               -> NIL
+   METHOD  setDirection                  // ( nDirection )                                     -> NIL
+   METHOD  setSpacing                    // ( nSpacing )                                       -> NIL
+   METHOD  setStretch                    // ( nIndex, nStretch )                               -> NIL
+   METHOD  setStretchFactor              // ( oQWidget, nStretch )                             -> lBool
+                                         // ( oQLayout, nStretch )                             -> lBool
+   METHOD  spacing                       // (  )                                               -> nInt
+   METHOD  stretch                       // ( nIndex )                                         -> nInt
 
    ENDCLASS
 
@@ -135,68 +136,232 @@ METHOD QBoxLayout:new( ... )
    RETURN Self
 
 
-METHOD QBoxLayout:addLayout( pLayout, nStretch )
-   RETURN Qt_QBoxLayout_addLayout( ::pPtr, hbqt_ptr( pLayout ), nStretch )
+METHOD QBoxLayout:addLayout( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QBoxLayout_addLayout( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QBoxLayout_addLayout( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBoxLayout:addSpacerItem( pSpacerItem )
-   RETURN Qt_QBoxLayout_addSpacerItem( ::pPtr, hbqt_ptr( pSpacerItem ) )
+METHOD QBoxLayout:addSpacerItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QBoxLayout_addSpacerItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBoxLayout:addSpacing( nSize )
-   RETURN Qt_QBoxLayout_addSpacing( ::pPtr, nSize )
+METHOD QBoxLayout:addSpacing( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QBoxLayout_addSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBoxLayout:addStretch( nStretch )
-   RETURN Qt_QBoxLayout_addStretch( ::pPtr, nStretch )
+METHOD QBoxLayout:addStretch( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QBoxLayout_addStretch( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QBoxLayout_addStretch( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBoxLayout:addStrut( nSize )
-   RETURN Qt_QBoxLayout_addStrut( ::pPtr, nSize )
+METHOD QBoxLayout:addStrut( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QBoxLayout_addStrut( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBoxLayout:addWidget( pWidget, nStretch, nAlignment )
-   RETURN Qt_QBoxLayout_addWidget( ::pPtr, hbqt_ptr( pWidget ), nStretch, nAlignment )
+METHOD QBoxLayout:addWidget( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QBoxLayout_addWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QBoxLayout_addWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QBoxLayout_addWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBoxLayout:direction()
-   RETURN Qt_QBoxLayout_direction( ::pPtr )
+METHOD QBoxLayout:direction( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QBoxLayout_direction( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBoxLayout:insertLayout( nIndex, pLayout, nStretch )
-   RETURN Qt_QBoxLayout_insertLayout( ::pPtr, nIndex, hbqt_ptr( pLayout ), nStretch )
+METHOD QBoxLayout:insertLayout( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QBoxLayout_insertLayout( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QBoxLayout_insertLayout( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBoxLayout:insertSpacerItem( nIndex, pSpacerItem )
-   RETURN Qt_QBoxLayout_insertSpacerItem( ::pPtr, nIndex, hbqt_ptr( pSpacerItem ) )
+METHOD QBoxLayout:insertSpacerItem( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QBoxLayout_insertSpacerItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBoxLayout:insertSpacing( nIndex, nSize )
-   RETURN Qt_QBoxLayout_insertSpacing( ::pPtr, nIndex, nSize )
+METHOD QBoxLayout:insertSpacing( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QBoxLayout_insertSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBoxLayout:insertStretch( nIndex, nStretch )
-   RETURN Qt_QBoxLayout_insertStretch( ::pPtr, nIndex, nStretch )
+METHOD QBoxLayout:insertStretch( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QBoxLayout_insertStretch( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QBoxLayout_insertStretch( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBoxLayout:insertWidget( nIndex, pWidget, nStretch, nAlignment )
-   RETURN Qt_QBoxLayout_insertWidget( ::pPtr, nIndex, hbqt_ptr( pWidget ), nStretch, nAlignment )
+METHOD QBoxLayout:insertWidget( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QBoxLayout_insertWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QBoxLayout_insertWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QBoxLayout_insertWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBoxLayout:invalidate()
-   RETURN Qt_QBoxLayout_invalidate( ::pPtr )
+METHOD QBoxLayout:invalidate( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QBoxLayout_invalidate( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBoxLayout:setDirection( nDirection )
-   RETURN Qt_QBoxLayout_setDirection( ::pPtr, nDirection )
+METHOD QBoxLayout:setDirection( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QBoxLayout_setDirection( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBoxLayout:setSpacing( nSpacing )
-   RETURN Qt_QBoxLayout_setSpacing( ::pPtr, nSpacing )
+METHOD QBoxLayout:setSpacing( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QBoxLayout_setSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBoxLayout:setStretch( nIndex, nStretch )
-   RETURN Qt_QBoxLayout_setStretch( ::pPtr, nIndex, nStretch )
+METHOD QBoxLayout:setStretch( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QBoxLayout_setStretch( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QBoxLayout:setStretchFactor( ... )
@@ -216,10 +381,22 @@ METHOD QBoxLayout:setStretchFactor( ... )
    RETURN hbqt_error()
 
 
-METHOD QBoxLayout:spacing()
-   RETURN Qt_QBoxLayout_spacing( ::pPtr )
+METHOD QBoxLayout:spacing( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QBoxLayout_spacing( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBoxLayout:stretch( nIndex )
-   RETURN Qt_QBoxLayout_stretch( ::pPtr, nIndex )
+METHOD QBoxLayout:stretch( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QBoxLayout_stretch( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

@@ -103,41 +103,46 @@ CREATE CLASS QCoreApplication INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_
 
    METHOD  new( ... )
 
-   METHOD  notify( pReceiver, pEvent )
-   METHOD  addLibraryPath( cPath )
-   METHOD  applicationDirPath()
-   METHOD  applicationFilePath()
-   METHOD  applicationName()
-   METHOD  applicationPid()
-   METHOD  applicationVersion()
-   METHOD  arguments()
-   METHOD  closingDown()
-   METHOD  exec()
-   METHOD  exit( nReturnCode )
-   METHOD  flush()
-   METHOD  hasPendingEvents()
-   METHOD  installTranslator( pTranslationFile )
-   METHOD  instance()
-   METHOD  libraryPaths()
-   METHOD  organizationDomain()
-   METHOD  organizationName()
-   METHOD  postEvent( ... )
-   METHOD  processEvents( ... )
-   METHOD  removeLibraryPath( cPath )
-   METHOD  removePostedEvents( ... )
-   METHOD  removeTranslator( pTranslationFile )
-   METHOD  sendEvent( pReceiver, pEvent )
-   METHOD  sendPostedEvents( ... )
-   METHOD  setApplicationName( cApplication )
-   METHOD  setApplicationVersion( cVersion )
-   METHOD  setAttribute( nAttribute, lOn )
-   METHOD  setLibraryPaths( pPaths )
-   METHOD  setOrganizationDomain( cOrgDomain )
-   METHOD  setOrganizationName( cOrgName )
-   METHOD  startingUp()
-   METHOD  testAttribute( nAttribute )
-   METHOD  translate( ... )
-   METHOD  quit()
+   METHOD  notify                        // ( oQObject, oQEvent )                              -> lBool
+   METHOD  addLibraryPath                // ( cPath )                                          -> NIL
+   METHOD  applicationDirPath            // (  )                                               -> cQString
+   METHOD  applicationFilePath           // (  )                                               -> cQString
+   METHOD  applicationName               // (  )                                               -> cQString
+   METHOD  applicationPid                // (  )                                               -> nQint64
+   METHOD  applicationVersion            // (  )                                               -> cQString
+   METHOD  arguments                     // (  )                                               -> oQStringList
+   METHOD  closingDown                   // (  )                                               -> lBool
+   METHOD  exec                          // (  )                                               -> nInt
+   METHOD  exit                          // ( nReturnCode )                                    -> NIL
+   METHOD  flush                         // (  )                                               -> NIL
+   METHOD  hasPendingEvents              // (  )                                               -> lBool
+   METHOD  installTranslator             // ( oQTranslator )                                   -> NIL
+   METHOD  instance                      // (  )                                               -> oQCoreApplication
+   METHOD  libraryPaths                  // (  )                                               -> oQStringList
+   METHOD  organizationDomain            // (  )                                               -> cQString
+   METHOD  organizationName              // (  )                                               -> cQString
+   METHOD  postEvent                     // ( oQObject, oQEvent )                              -> NIL
+                                         // ( oQObject, oQEvent, nPriority )                   -> NIL
+   METHOD  processEvents                 // ( nFlags )                                         -> NIL
+                                         // ( nFlags, nMaxtime )                               -> NIL
+   METHOD  removeLibraryPath             // ( cPath )                                          -> NIL
+   METHOD  removePostedEvents            // ( oQObject )                                       -> NIL
+                                         // ( oQObject, nEventType )                           -> NIL
+   METHOD  removeTranslator              // ( oQTranslator )                                   -> NIL
+   METHOD  sendEvent                     // ( oQObject, oQEvent )                              -> lBool
+   METHOD  sendPostedEvents              // ( oQObject, nEvent_type )                          -> NIL
+                                         // (  )                                               -> NIL
+   METHOD  setApplicationName            // ( cApplication )                                   -> NIL
+   METHOD  setApplicationVersion         // ( cVersion )                                       -> NIL
+   METHOD  setAttribute                  // ( nAttribute, lOn )                                -> NIL
+   METHOD  setLibraryPaths               // ( oQStringList )                                   -> NIL
+   METHOD  setOrganizationDomain         // ( cOrgDomain )                                     -> NIL
+   METHOD  setOrganizationName           // ( cOrgName )                                       -> NIL
+   METHOD  startingUp                    // (  )                                               -> lBool
+   METHOD  testAttribute                 // ( nAttribute )                                     -> lBool
+   METHOD  translate                     // ( cContext, cSourceText, cDisambiguation, nEncoding, nN ) -> cQString
+                                         // ( cContext, cSourceText, cDisambiguation, nEncoding ) -> cQString
+   METHOD  quit                          // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -151,76 +156,166 @@ METHOD QCoreApplication:new( ... )
    RETURN Self
 
 
-METHOD QCoreApplication:notify( pReceiver, pEvent )
-   RETURN Qt_QCoreApplication_notify( ::pPtr, hbqt_ptr( pReceiver ), hbqt_ptr( pEvent ) )
+METHOD QCoreApplication:notify( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QCoreApplication_notify( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCoreApplication:addLibraryPath( cPath )
-   RETURN Qt_QCoreApplication_addLibraryPath( ::pPtr, cPath )
+METHOD QCoreApplication:addLibraryPath( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QCoreApplication_addLibraryPath( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCoreApplication:applicationDirPath()
-   RETURN Qt_QCoreApplication_applicationDirPath( ::pPtr )
+METHOD QCoreApplication:applicationDirPath( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCoreApplication_applicationDirPath( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCoreApplication:applicationFilePath()
-   RETURN Qt_QCoreApplication_applicationFilePath( ::pPtr )
+METHOD QCoreApplication:applicationFilePath( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCoreApplication_applicationFilePath( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCoreApplication:applicationName()
-   RETURN Qt_QCoreApplication_applicationName( ::pPtr )
+METHOD QCoreApplication:applicationName( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCoreApplication_applicationName( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCoreApplication:applicationPid()
-   RETURN Qt_QCoreApplication_applicationPid( ::pPtr )
+METHOD QCoreApplication:applicationPid( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCoreApplication_applicationPid( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCoreApplication:applicationVersion()
-   RETURN Qt_QCoreApplication_applicationVersion( ::pPtr )
+METHOD QCoreApplication:applicationVersion( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCoreApplication_applicationVersion( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCoreApplication:arguments()
-   RETURN HB_QStringList():from( Qt_QCoreApplication_arguments( ::pPtr ) )
+METHOD QCoreApplication:arguments( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QCoreApplication_arguments( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCoreApplication:closingDown()
-   RETURN Qt_QCoreApplication_closingDown( ::pPtr )
+METHOD QCoreApplication:closingDown( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCoreApplication_closingDown( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCoreApplication:exec()
-   RETURN Qt_QCoreApplication_exec( ::pPtr )
+METHOD QCoreApplication:exec( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCoreApplication_exec( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCoreApplication:exit( nReturnCode )
-   RETURN Qt_QCoreApplication_exit( ::pPtr, nReturnCode )
+METHOD QCoreApplication:exit( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QCoreApplication_exit( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QCoreApplication_exit( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCoreApplication:flush()
-   RETURN Qt_QCoreApplication_flush( ::pPtr )
+METHOD QCoreApplication:flush( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCoreApplication_flush( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCoreApplication:hasPendingEvents()
-   RETURN Qt_QCoreApplication_hasPendingEvents( ::pPtr )
+METHOD QCoreApplication:hasPendingEvents( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCoreApplication_hasPendingEvents( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCoreApplication:installTranslator( pTranslationFile )
-   RETURN Qt_QCoreApplication_installTranslator( ::pPtr, hbqt_ptr( pTranslationFile ) )
+METHOD QCoreApplication:installTranslator( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QCoreApplication_installTranslator( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCoreApplication:instance()
-   RETURN HB_QCoreApplication():from( Qt_QCoreApplication_instance( ::pPtr ) )
+METHOD QCoreApplication:instance( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QCoreApplication():from( Qt_QCoreApplication_instance( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCoreApplication:libraryPaths()
-   RETURN HB_QStringList():from( Qt_QCoreApplication_libraryPaths( ::pPtr ) )
+METHOD QCoreApplication:libraryPaths( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QCoreApplication_libraryPaths( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCoreApplication:organizationDomain()
-   RETURN Qt_QCoreApplication_organizationDomain( ::pPtr )
+METHOD QCoreApplication:organizationDomain( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCoreApplication_organizationDomain( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCoreApplication:organizationName()
-   RETURN Qt_QCoreApplication_organizationName( ::pPtr )
+METHOD QCoreApplication:organizationName( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCoreApplication_organizationName( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QCoreApplication:postEvent( ... )
@@ -261,8 +356,16 @@ METHOD QCoreApplication:processEvents( ... )
    RETURN hbqt_error()
 
 
-METHOD QCoreApplication:removeLibraryPath( cPath )
-   RETURN Qt_QCoreApplication_removeLibraryPath( ::pPtr, cPath )
+METHOD QCoreApplication:removeLibraryPath( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QCoreApplication_removeLibraryPath( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QCoreApplication:removePostedEvents( ... )
@@ -283,12 +386,28 @@ METHOD QCoreApplication:removePostedEvents( ... )
    RETURN hbqt_error()
 
 
-METHOD QCoreApplication:removeTranslator( pTranslationFile )
-   RETURN Qt_QCoreApplication_removeTranslator( ::pPtr, hbqt_ptr( pTranslationFile ) )
+METHOD QCoreApplication:removeTranslator( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QCoreApplication_removeTranslator( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCoreApplication:sendEvent( pReceiver, pEvent )
-   RETURN Qt_QCoreApplication_sendEvent( ::pPtr, hbqt_ptr( pReceiver ), hbqt_ptr( pEvent ) )
+METHOD QCoreApplication:sendEvent( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QCoreApplication_sendEvent( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QCoreApplication:sendPostedEvents( ... )
@@ -305,55 +424,127 @@ METHOD QCoreApplication:sendPostedEvents( ... )
    RETURN hbqt_error()
 
 
-METHOD QCoreApplication:setApplicationName( cApplication )
-   RETURN Qt_QCoreApplication_setApplicationName( ::pPtr, cApplication )
+METHOD QCoreApplication:setApplicationName( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QCoreApplication_setApplicationName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCoreApplication:setApplicationVersion( cVersion )
-   RETURN Qt_QCoreApplication_setApplicationVersion( ::pPtr, cVersion )
+METHOD QCoreApplication:setApplicationVersion( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QCoreApplication_setApplicationVersion( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCoreApplication:setAttribute( nAttribute, lOn )
-   RETURN Qt_QCoreApplication_setAttribute( ::pPtr, nAttribute, lOn )
+METHOD QCoreApplication:setAttribute( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QCoreApplication_setAttribute( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QCoreApplication_setAttribute( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCoreApplication:setLibraryPaths( pPaths )
-   RETURN Qt_QCoreApplication_setLibraryPaths( ::pPtr, hbqt_ptr( pPaths ) )
+METHOD QCoreApplication:setLibraryPaths( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QCoreApplication_setLibraryPaths( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCoreApplication:setOrganizationDomain( cOrgDomain )
-   RETURN Qt_QCoreApplication_setOrganizationDomain( ::pPtr, cOrgDomain )
+METHOD QCoreApplication:setOrganizationDomain( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QCoreApplication_setOrganizationDomain( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCoreApplication:setOrganizationName( cOrgName )
-   RETURN Qt_QCoreApplication_setOrganizationName( ::pPtr, cOrgName )
+METHOD QCoreApplication:setOrganizationName( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QCoreApplication_setOrganizationName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCoreApplication:startingUp()
-   RETURN Qt_QCoreApplication_startingUp( ::pPtr )
+METHOD QCoreApplication:startingUp( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCoreApplication_startingUp( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCoreApplication:testAttribute( nAttribute )
-   RETURN Qt_QCoreApplication_testAttribute( ::pPtr, nAttribute )
+METHOD QCoreApplication:testAttribute( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QCoreApplication_testAttribute( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QCoreApplication:translate( ... )
    SWITCH PCount()
    CASE 5
       DO CASE
-      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
          RETURN Qt_QCoreApplication_translate( ::pPtr, ... )
       ENDCASE
       EXIT
    CASE 4
       DO CASE
-      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QCoreApplication_translate_1( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
          RETURN Qt_QCoreApplication_translate_1( ::pPtr, ... )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
-      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
          RETURN Qt_QCoreApplication_translate_1( ::pPtr, ... )
       ENDCASE
       EXIT
@@ -361,6 +552,10 @@ METHOD QCoreApplication:translate( ... )
    RETURN hbqt_error()
 
 
-METHOD QCoreApplication:quit()
-   RETURN Qt_QCoreApplication_quit( ::pPtr )
+METHOD QCoreApplication:quit( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCoreApplication_quit( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

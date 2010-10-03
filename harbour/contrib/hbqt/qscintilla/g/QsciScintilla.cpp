@@ -1269,7 +1269,7 @@ HB_FUNC( QT_QSCISCINTILLA_SETAUTOCOMPLETIONFILLUPS )
    QsciScintilla * p = hbqt_par_QsciScintilla( 1 );
    if( p )
    {
-      ( p )->setAutoCompletionFillups( hbqt_par_char( 2 ) );
+      ( p )->setAutoCompletionFillups( ( const char * ) hb_parc( 2 ) );
    }
 }
 

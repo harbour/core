@@ -26,8 +26,8 @@
  *  $RETURNS$
  *     An instance of the object of type QStyleFactory
  *  $METHODS$
- *     :create( cKey )                                     -> pQStyle
- *     :keys()                                             -> pQStringList
+ *     :create( cKey )                                     -> oQStyle
+ *     :keys()                                             -> oQStringList
  * 
  *  $DESCRIPTION$
  * 
@@ -47,7 +47,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStyleFactory.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleFactory.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

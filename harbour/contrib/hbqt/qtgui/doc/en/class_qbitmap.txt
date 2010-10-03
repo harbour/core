@@ -26,7 +26,15 @@
  *  $RETURNS$
  *     An instance of the object of type QBitmap
  *  $METHODS$
+ *     :QBitmap()                                          -> oQBitmap
+ *     :QBitmap( oQPixmap )                                -> oQBitmap
+ *     :QBitmap( nWidth, nHeight )                         -> oQBitmap
+ *     :QBitmap( oQSize )                                  -> oQBitmap
+ *     :QBitmap( cFileName, cFormat )                      -> oQBitmap
  *     :clear()                                            -> NIL
+ *     :transformed( oQTransform )                         -> oQBitmap
+ *     :transformed( oQMatrix )                            -> oQBitmap
+ *     :fromImage( oQImage, nFlags )                       -> oQBitmap
  * 
  *  $DESCRIPTION$
  * 
@@ -52,7 +60,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQBitmap.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QBitmap.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QPixmap()
  *  $END$
  */

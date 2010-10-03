@@ -103,12 +103,12 @@ CREATE CLASS QsciCommand INHERIT HbQtObjectHandler FUNCTION HB_QsciCommand
 
    METHOD  new( ... )
 
-   METHOD  setKey( nKey )
-   METHOD  setAlternateKey( nAltkey )
-   METHOD  key()
-   METHOD  alternateKey()
-   METHOD  description()
-   METHOD  validKey( nKey )
+   METHOD  setKey                        // ( nKey )                                           -> NIL
+   METHOD  setAlternateKey               // ( nAltkey )                                        -> NIL
+   METHOD  key                           // (  )                                               -> nInt
+   METHOD  alternateKey                  // (  )                                               -> nInt
+   METHOD  description                   // (  )                                               -> cQString
+   METHOD  validKey                      // ( nKey )                                           -> lBool
 
    ENDCLASS
 
@@ -122,26 +122,62 @@ METHOD QsciCommand:new( ... )
    RETURN Self
 
 
-METHOD QsciCommand:setKey( nKey )
-   RETURN Qt_QsciCommand_setKey( ::pPtr, nKey )
+METHOD QsciCommand:setKey( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciCommand_setKey( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciCommand:setAlternateKey( nAltkey )
-   RETURN Qt_QsciCommand_setAlternateKey( ::pPtr, nAltkey )
+METHOD QsciCommand:setAlternateKey( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciCommand_setAlternateKey( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciCommand:key()
-   RETURN Qt_QsciCommand_key( ::pPtr )
+METHOD QsciCommand:key( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciCommand_key( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciCommand:alternateKey()
-   RETURN Qt_QsciCommand_alternateKey( ::pPtr )
+METHOD QsciCommand:alternateKey( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciCommand_alternateKey( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciCommand:description()
-   RETURN Qt_QsciCommand_description( ::pPtr )
+METHOD QsciCommand:description( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciCommand_description( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciCommand:validKey( nKey )
-   RETURN Qt_QsciCommand_validKey( ::pPtr, nKey )
+METHOD QsciCommand:validKey( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciCommand_validKey( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

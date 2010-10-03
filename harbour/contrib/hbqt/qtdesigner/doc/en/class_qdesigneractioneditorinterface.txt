@@ -26,10 +26,10 @@
  *  $RETURNS$
  *     An instance of the object of type QDesignerActionEditorInterface
  *  $METHODS$
- *     :core()                                             -> pQDesignerFormEditorInterface
- *     :manageAction( pAction )                            -> NIL
- *     :unmanageAction( pAction )                          -> NIL
- *     :setFormWindow( pFormWindow )                       -> NIL
+ *     :core()                                             -> oQDesignerFormEditorInterface
+ *     :manageAction( oQAction )                           -> NIL
+ *     :unmanageAction( oQAction )                         -> NIL
+ *     :setFormWindow( oQDesignerFormWindowInterface )     -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -49,7 +49,5 @@
  *     Harbour source: contrib/hbqt/qtdesigner/TQDesignerActionEditorInterface.prg
  *     C++ wrappers  : contrib/hbqt/qtdesigner/QDesignerActionEditorInterface.cpp
  *     Library       : hbqtdesigner
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

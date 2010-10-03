@@ -103,12 +103,12 @@ CREATE CLASS QSplashScreen INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QSp
 
    METHOD  new( ... )
 
-   METHOD  finish( pMainWin )
-   METHOD  pixmap()
-   METHOD  repaint()
-   METHOD  setPixmap( pPixmap )
-   METHOD  clearMessage()
-   METHOD  showMessage( cMessage, nAlignment, pColor )
+   METHOD  finish                        // ( oQWidget )                                       -> NIL
+   METHOD  pixmap                        // (  )                                               -> oQPixmap
+   METHOD  repaint                       // (  )                                               -> NIL
+   METHOD  setPixmap                     // ( oQPixmap )                                       -> NIL
+   METHOD  clearMessage                  // (  )                                               -> NIL
+   METHOD  showMessage                   // ( cMessage, nAlignment, oQColor )                  -> NIL
 
    ENDCLASS
 
@@ -122,26 +122,74 @@ METHOD QSplashScreen:new( ... )
    RETURN Self
 
 
-METHOD QSplashScreen:finish( pMainWin )
-   RETURN Qt_QSplashScreen_finish( ::pPtr, hbqt_ptr( pMainWin ) )
+METHOD QSplashScreen:finish( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QSplashScreen_finish( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSplashScreen:pixmap()
-   RETURN HB_QPixmap():from( Qt_QSplashScreen_pixmap( ::pPtr ) )
+METHOD QSplashScreen:pixmap( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPixmap():from( Qt_QSplashScreen_pixmap( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSplashScreen:repaint()
-   RETURN Qt_QSplashScreen_repaint( ::pPtr )
+METHOD QSplashScreen:repaint( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSplashScreen_repaint( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSplashScreen:setPixmap( pPixmap )
-   RETURN Qt_QSplashScreen_setPixmap( ::pPtr, hbqt_ptr( pPixmap ) )
+METHOD QSplashScreen:setPixmap( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QSplashScreen_setPixmap( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSplashScreen:clearMessage()
-   RETURN Qt_QSplashScreen_clearMessage( ::pPtr )
+METHOD QSplashScreen:clearMessage( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSplashScreen_clearMessage( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSplashScreen:showMessage( cMessage, nAlignment, pColor )
-   RETURN Qt_QSplashScreen_showMessage( ::pPtr, cMessage, nAlignment, hbqt_ptr( pColor ) )
+METHOD QSplashScreen:showMessage( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QSplashScreen_showMessage( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QSplashScreen_showMessage( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QSplashScreen_showMessage( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

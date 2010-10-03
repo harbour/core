@@ -103,62 +103,63 @@ CREATE CLASS QPlainTextEdit INHERIT HbQtObjectHandler, HB_QAbstractScrollArea FU
 
    METHOD  new( ... )
 
-   METHOD  backgroundVisible()
-   METHOD  blockCount()
-   METHOD  canPaste()
-   METHOD  centerOnScroll()
-   METHOD  createStandardContextMenu()
-   METHOD  currentCharFormat()
-   METHOD  cursorForPosition( pPos )
-   METHOD  cursorRect( ... )
-   METHOD  cursorWidth()
-   METHOD  document()
-   METHOD  documentTitle()
-   METHOD  ensureCursorVisible()
-   METHOD  find( cExp, nOptions )
-   METHOD  isReadOnly()
-   METHOD  isUndoRedoEnabled()
-   METHOD  lineWrapMode()
-   METHOD  loadResource( nType, pName )
-   METHOD  maximumBlockCount()
-   METHOD  mergeCurrentCharFormat( pModifier )
-   METHOD  moveCursor( nOperation, nMode )
-   METHOD  overwriteMode()
-   METHOD  print( pPrinter )
-   METHOD  setBackgroundVisible( lVisible )
-   METHOD  setCenterOnScroll( lEnabled )
-   METHOD  setCurrentCharFormat( pFormat )
-   METHOD  setCursorWidth( nWidth )
-   METHOD  setDocument( pDocument )
-   METHOD  setDocumentTitle( cTitle )
-   METHOD  setLineWrapMode( nMode )
-   METHOD  setMaximumBlockCount( nMaximum )
-   METHOD  setOverwriteMode( lOverwrite )
-   METHOD  setReadOnly( lRo )
-   METHOD  setTabChangesFocus( lB )
-   METHOD  setTabStopWidth( nWidth )
-   METHOD  setTextCursor( pCursor )
-   METHOD  setTextInteractionFlags( nFlags )
-   METHOD  setUndoRedoEnabled( lEnable )
-   METHOD  setWordWrapMode( nPolicy )
-   METHOD  tabChangesFocus()
-   METHOD  tabStopWidth()
-   METHOD  textCursor()
-   METHOD  textInteractionFlags()
-   METHOD  toPlainText()
-   METHOD  wordWrapMode()
-   METHOD  appendHtml( cHtml )
-   METHOD  appendPlainText( cText )
-   METHOD  centerCursor()
-   METHOD  clear()
-   METHOD  copy()
-   METHOD  cut()
-   METHOD  insertPlainText( cText )
-   METHOD  paste()
-   METHOD  redo()
-   METHOD  selectAll()
-   METHOD  setPlainText( cText )
-   METHOD  undo()
+   METHOD  backgroundVisible             // (  )                                               -> lBool
+   METHOD  blockCount                    // (  )                                               -> nInt
+   METHOD  canPaste                      // (  )                                               -> lBool
+   METHOD  centerOnScroll                // (  )                                               -> lBool
+   METHOD  createStandardContextMenu     // (  )                                               -> oQMenu
+   METHOD  currentCharFormat             // (  )                                               -> oQTextCharFormat
+   METHOD  cursorForPosition             // ( oQPoint )                                        -> oQTextCursor
+   METHOD  cursorRect                    // ( oQTextCursor )                                   -> oQRect
+                                         // (  )                                               -> oQRect
+   METHOD  cursorWidth                   // (  )                                               -> nInt
+   METHOD  document                      // (  )                                               -> oQTextDocument
+   METHOD  documentTitle                 // (  )                                               -> cQString
+   METHOD  ensureCursorVisible           // (  )                                               -> NIL
+   METHOD  find                          // ( cExp, nOptions )                                 -> lBool
+   METHOD  isReadOnly                    // (  )                                               -> lBool
+   METHOD  isUndoRedoEnabled             // (  )                                               -> lBool
+   METHOD  lineWrapMode                  // (  )                                               -> nLineWrapMode
+   METHOD  loadResource                  // ( nType, oQUrl )                                   -> oQVariant
+   METHOD  maximumBlockCount             // (  )                                               -> nInt
+   METHOD  mergeCurrentCharFormat        // ( oQTextCharFormat )                               -> NIL
+   METHOD  moveCursor                    // ( nOperation, nMode )                              -> NIL
+   METHOD  overwriteMode                 // (  )                                               -> lBool
+   METHOD  print                         // ( oQPrinter )                                      -> NIL
+   METHOD  setBackgroundVisible          // ( lVisible )                                       -> NIL
+   METHOD  setCenterOnScroll             // ( lEnabled )                                       -> NIL
+   METHOD  setCurrentCharFormat          // ( oQTextCharFormat )                               -> NIL
+   METHOD  setCursorWidth                // ( nWidth )                                         -> NIL
+   METHOD  setDocument                   // ( oQTextDocument )                                 -> NIL
+   METHOD  setDocumentTitle              // ( cTitle )                                         -> NIL
+   METHOD  setLineWrapMode               // ( nMode )                                          -> NIL
+   METHOD  setMaximumBlockCount          // ( nMaximum )                                       -> NIL
+   METHOD  setOverwriteMode              // ( lOverwrite )                                     -> NIL
+   METHOD  setReadOnly                   // ( lRo )                                            -> NIL
+   METHOD  setTabChangesFocus            // ( lB )                                             -> NIL
+   METHOD  setTabStopWidth               // ( nWidth )                                         -> NIL
+   METHOD  setTextCursor                 // ( oQTextCursor )                                   -> NIL
+   METHOD  setTextInteractionFlags       // ( nFlags )                                         -> NIL
+   METHOD  setUndoRedoEnabled            // ( lEnable )                                        -> NIL
+   METHOD  setWordWrapMode               // ( nPolicy )                                        -> NIL
+   METHOD  tabChangesFocus               // (  )                                               -> lBool
+   METHOD  tabStopWidth                  // (  )                                               -> nInt
+   METHOD  textCursor                    // (  )                                               -> oQTextCursor
+   METHOD  textInteractionFlags          // (  )                                               -> nQt_TextInteractionFlags
+   METHOD  toPlainText                   // (  )                                               -> cQString
+   METHOD  wordWrapMode                  // (  )                                               -> nQTextOption_WrapMode
+   METHOD  appendHtml                    // ( cHtml )                                          -> NIL
+   METHOD  appendPlainText               // ( cText )                                          -> NIL
+   METHOD  centerCursor                  // (  )                                               -> NIL
+   METHOD  clear                         // (  )                                               -> NIL
+   METHOD  copy                          // (  )                                               -> NIL
+   METHOD  cut                           // (  )                                               -> NIL
+   METHOD  insertPlainText               // ( cText )                                          -> NIL
+   METHOD  paste                         // (  )                                               -> NIL
+   METHOD  redo                          // (  )                                               -> NIL
+   METHOD  selectAll                     // (  )                                               -> NIL
+   METHOD  setPlainText                  // ( cText )                                          -> NIL
+   METHOD  undo                          // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -172,32 +173,64 @@ METHOD QPlainTextEdit:new( ... )
    RETURN Self
 
 
-METHOD QPlainTextEdit:backgroundVisible()
-   RETURN Qt_QPlainTextEdit_backgroundVisible( ::pPtr )
+METHOD QPlainTextEdit:backgroundVisible( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPlainTextEdit_backgroundVisible( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPlainTextEdit:blockCount()
-   RETURN Qt_QPlainTextEdit_blockCount( ::pPtr )
+METHOD QPlainTextEdit:blockCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPlainTextEdit_blockCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPlainTextEdit:canPaste()
-   RETURN Qt_QPlainTextEdit_canPaste( ::pPtr )
+METHOD QPlainTextEdit:canPaste( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPlainTextEdit_canPaste( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPlainTextEdit:centerOnScroll()
-   RETURN Qt_QPlainTextEdit_centerOnScroll( ::pPtr )
+METHOD QPlainTextEdit:centerOnScroll( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPlainTextEdit_centerOnScroll( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPlainTextEdit:createStandardContextMenu()
-   RETURN HB_QMenu():from( Qt_QPlainTextEdit_createStandardContextMenu( ::pPtr ) )
+METHOD QPlainTextEdit:createStandardContextMenu( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QMenu():from( Qt_QPlainTextEdit_createStandardContextMenu( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPlainTextEdit:currentCharFormat()
-   RETURN HB_QTextCharFormat():from( Qt_QPlainTextEdit_currentCharFormat( ::pPtr ) )
+METHOD QPlainTextEdit:currentCharFormat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextCharFormat():from( Qt_QPlainTextEdit_currentCharFormat( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPlainTextEdit:cursorForPosition( pPos )
-   RETURN HB_QTextCursor():from( Qt_QPlainTextEdit_cursorForPosition( ::pPtr, hbqt_ptr( pPos ) ) )
+METHOD QPlainTextEdit:cursorForPosition( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QTextCursor():from( Qt_QPlainTextEdit_cursorForPosition( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPlainTextEdit:cursorRect( ... )
@@ -214,194 +247,498 @@ METHOD QPlainTextEdit:cursorRect( ... )
    RETURN hbqt_error()
 
 
-METHOD QPlainTextEdit:cursorWidth()
-   RETURN Qt_QPlainTextEdit_cursorWidth( ::pPtr )
-
-
-METHOD QPlainTextEdit:document()
-   RETURN HB_QTextDocument():from( Qt_QPlainTextEdit_document( ::pPtr ) )
-
-
-METHOD QPlainTextEdit:documentTitle()
-   RETURN Qt_QPlainTextEdit_documentTitle( ::pPtr )
-
-
-METHOD QPlainTextEdit:ensureCursorVisible()
-   RETURN Qt_QPlainTextEdit_ensureCursorVisible( ::pPtr )
-
-
-METHOD QPlainTextEdit:find( cExp, nOptions )
-   RETURN Qt_QPlainTextEdit_find( ::pPtr, cExp, nOptions )
-
-
-METHOD QPlainTextEdit:isReadOnly()
-   RETURN Qt_QPlainTextEdit_isReadOnly( ::pPtr )
-
-
-METHOD QPlainTextEdit:isUndoRedoEnabled()
-   RETURN Qt_QPlainTextEdit_isUndoRedoEnabled( ::pPtr )
-
-
-METHOD QPlainTextEdit:lineWrapMode()
-   RETURN Qt_QPlainTextEdit_lineWrapMode( ::pPtr )
-
-
-METHOD QPlainTextEdit:loadResource( nType, pName )
-   RETURN HB_QVariant():from( Qt_QPlainTextEdit_loadResource( ::pPtr, nType, hbqt_ptr( pName ) ) )
-
-
-METHOD QPlainTextEdit:maximumBlockCount()
-   RETURN Qt_QPlainTextEdit_maximumBlockCount( ::pPtr )
-
-
-METHOD QPlainTextEdit:mergeCurrentCharFormat( pModifier )
-   RETURN Qt_QPlainTextEdit_mergeCurrentCharFormat( ::pPtr, hbqt_ptr( pModifier ) )
-
-
-METHOD QPlainTextEdit:moveCursor( nOperation, nMode )
-   RETURN Qt_QPlainTextEdit_moveCursor( ::pPtr, nOperation, nMode )
-
-
-METHOD QPlainTextEdit:overwriteMode()
-   RETURN Qt_QPlainTextEdit_overwriteMode( ::pPtr )
-
-
-METHOD QPlainTextEdit:print( pPrinter )
-   RETURN Qt_QPlainTextEdit_print( ::pPtr, hbqt_ptr( pPrinter ) )
-
-
-METHOD QPlainTextEdit:setBackgroundVisible( lVisible )
-   RETURN Qt_QPlainTextEdit_setBackgroundVisible( ::pPtr, lVisible )
-
-
-METHOD QPlainTextEdit:setCenterOnScroll( lEnabled )
-   RETURN Qt_QPlainTextEdit_setCenterOnScroll( ::pPtr, lEnabled )
-
-
-METHOD QPlainTextEdit:setCurrentCharFormat( pFormat )
-   RETURN Qt_QPlainTextEdit_setCurrentCharFormat( ::pPtr, hbqt_ptr( pFormat ) )
-
-
-METHOD QPlainTextEdit:setCursorWidth( nWidth )
-   RETURN Qt_QPlainTextEdit_setCursorWidth( ::pPtr, nWidth )
-
-
-METHOD QPlainTextEdit:setDocument( pDocument )
-   RETURN Qt_QPlainTextEdit_setDocument( ::pPtr, hbqt_ptr( pDocument ) )
-
-
-METHOD QPlainTextEdit:setDocumentTitle( cTitle )
-   RETURN Qt_QPlainTextEdit_setDocumentTitle( ::pPtr, cTitle )
-
-
-METHOD QPlainTextEdit:setLineWrapMode( nMode )
-   RETURN Qt_QPlainTextEdit_setLineWrapMode( ::pPtr, nMode )
-
-
-METHOD QPlainTextEdit:setMaximumBlockCount( nMaximum )
-   RETURN Qt_QPlainTextEdit_setMaximumBlockCount( ::pPtr, nMaximum )
-
-
-METHOD QPlainTextEdit:setOverwriteMode( lOverwrite )
-   RETURN Qt_QPlainTextEdit_setOverwriteMode( ::pPtr, lOverwrite )
-
-
-METHOD QPlainTextEdit:setReadOnly( lRo )
-   RETURN Qt_QPlainTextEdit_setReadOnly( ::pPtr, lRo )
-
-
-METHOD QPlainTextEdit:setTabChangesFocus( lB )
-   RETURN Qt_QPlainTextEdit_setTabChangesFocus( ::pPtr, lB )
-
-
-METHOD QPlainTextEdit:setTabStopWidth( nWidth )
-   RETURN Qt_QPlainTextEdit_setTabStopWidth( ::pPtr, nWidth )
-
-
-METHOD QPlainTextEdit:setTextCursor( pCursor )
-   RETURN Qt_QPlainTextEdit_setTextCursor( ::pPtr, hbqt_ptr( pCursor ) )
-
-
-METHOD QPlainTextEdit:setTextInteractionFlags( nFlags )
-   RETURN Qt_QPlainTextEdit_setTextInteractionFlags( ::pPtr, nFlags )
-
-
-METHOD QPlainTextEdit:setUndoRedoEnabled( lEnable )
-   RETURN Qt_QPlainTextEdit_setUndoRedoEnabled( ::pPtr, lEnable )
-
-
-METHOD QPlainTextEdit:setWordWrapMode( nPolicy )
-   RETURN Qt_QPlainTextEdit_setWordWrapMode( ::pPtr, nPolicy )
-
-
-METHOD QPlainTextEdit:tabChangesFocus()
-   RETURN Qt_QPlainTextEdit_tabChangesFocus( ::pPtr )
-
-
-METHOD QPlainTextEdit:tabStopWidth()
-   RETURN Qt_QPlainTextEdit_tabStopWidth( ::pPtr )
-
-
-METHOD QPlainTextEdit:textCursor()
-   RETURN HB_QTextCursor():from( Qt_QPlainTextEdit_textCursor( ::pPtr ) )
-
-
-METHOD QPlainTextEdit:textInteractionFlags()
-   RETURN Qt_QPlainTextEdit_textInteractionFlags( ::pPtr )
-
-
-METHOD QPlainTextEdit:toPlainText()
-   RETURN Qt_QPlainTextEdit_toPlainText( ::pPtr )
-
-
-METHOD QPlainTextEdit:wordWrapMode()
-   RETURN Qt_QPlainTextEdit_wordWrapMode( ::pPtr )
-
-
-METHOD QPlainTextEdit:appendHtml( cHtml )
-   RETURN Qt_QPlainTextEdit_appendHtml( ::pPtr, cHtml )
-
-
-METHOD QPlainTextEdit:appendPlainText( cText )
-   RETURN Qt_QPlainTextEdit_appendPlainText( ::pPtr, cText )
-
-
-METHOD QPlainTextEdit:centerCursor()
-   RETURN Qt_QPlainTextEdit_centerCursor( ::pPtr )
-
-
-METHOD QPlainTextEdit:clear()
-   RETURN Qt_QPlainTextEdit_clear( ::pPtr )
-
-
-METHOD QPlainTextEdit:copy()
-   RETURN Qt_QPlainTextEdit_copy( ::pPtr )
-
-
-METHOD QPlainTextEdit:cut()
-   RETURN Qt_QPlainTextEdit_cut( ::pPtr )
-
-
-METHOD QPlainTextEdit:insertPlainText( cText )
-   RETURN Qt_QPlainTextEdit_insertPlainText( ::pPtr, cText )
-
-
-METHOD QPlainTextEdit:paste()
-   RETURN Qt_QPlainTextEdit_paste( ::pPtr )
-
-
-METHOD QPlainTextEdit:redo()
-   RETURN Qt_QPlainTextEdit_redo( ::pPtr )
-
-
-METHOD QPlainTextEdit:selectAll()
-   RETURN Qt_QPlainTextEdit_selectAll( ::pPtr )
-
-
-METHOD QPlainTextEdit:setPlainText( cText )
-   RETURN Qt_QPlainTextEdit_setPlainText( ::pPtr, cText )
-
-
-METHOD QPlainTextEdit:undo()
-   RETURN Qt_QPlainTextEdit_undo( ::pPtr )
+METHOD QPlainTextEdit:cursorWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPlainTextEdit_cursorWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:document( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextDocument():from( Qt_QPlainTextEdit_document( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:documentTitle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPlainTextEdit_documentTitle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:ensureCursorVisible( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPlainTextEdit_ensureCursorVisible( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:find( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QPlainTextEdit_find( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QPlainTextEdit_find( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:isReadOnly( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPlainTextEdit_isReadOnly( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:isUndoRedoEnabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPlainTextEdit_isUndoRedoEnabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:lineWrapMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPlainTextEdit_lineWrapMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:loadResource( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QVariant():from( Qt_QPlainTextEdit_loadResource( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:maximumBlockCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPlainTextEdit_maximumBlockCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:mergeCurrentCharFormat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPlainTextEdit_mergeCurrentCharFormat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:moveCursor( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QPlainTextEdit_moveCursor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPlainTextEdit_moveCursor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:overwriteMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPlainTextEdit_overwriteMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:print( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPlainTextEdit_print( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:setBackgroundVisible( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QPlainTextEdit_setBackgroundVisible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:setCenterOnScroll( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QPlainTextEdit_setCenterOnScroll( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:setCurrentCharFormat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPlainTextEdit_setCurrentCharFormat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:setCursorWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPlainTextEdit_setCursorWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:setDocument( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPlainTextEdit_setDocument( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:setDocumentTitle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QPlainTextEdit_setDocumentTitle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:setLineWrapMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPlainTextEdit_setLineWrapMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:setMaximumBlockCount( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPlainTextEdit_setMaximumBlockCount( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:setOverwriteMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QPlainTextEdit_setOverwriteMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:setReadOnly( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QPlainTextEdit_setReadOnly( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:setTabChangesFocus( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QPlainTextEdit_setTabChangesFocus( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:setTabStopWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPlainTextEdit_setTabStopWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:setTextCursor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPlainTextEdit_setTextCursor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:setTextInteractionFlags( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPlainTextEdit_setTextInteractionFlags( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:setUndoRedoEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QPlainTextEdit_setUndoRedoEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:setWordWrapMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPlainTextEdit_setWordWrapMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:tabChangesFocus( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPlainTextEdit_tabChangesFocus( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:tabStopWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPlainTextEdit_tabStopWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:textCursor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextCursor():from( Qt_QPlainTextEdit_textCursor( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:textInteractionFlags( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPlainTextEdit_textInteractionFlags( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:toPlainText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPlainTextEdit_toPlainText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:wordWrapMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPlainTextEdit_wordWrapMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:appendHtml( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QPlainTextEdit_appendHtml( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:appendPlainText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QPlainTextEdit_appendPlainText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:centerCursor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPlainTextEdit_centerCursor( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:clear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPlainTextEdit_clear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:copy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPlainTextEdit_copy( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:cut( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPlainTextEdit_cut( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:insertPlainText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QPlainTextEdit_insertPlainText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:paste( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPlainTextEdit_paste( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:redo( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPlainTextEdit_redo( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:selectAll( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPlainTextEdit_selectAll( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:setPlainText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QPlainTextEdit_setPlainText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QPlainTextEdit:undo( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPlainTextEdit_undo( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

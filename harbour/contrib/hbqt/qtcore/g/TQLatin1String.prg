@@ -103,7 +103,7 @@ CREATE CLASS QLatin1String INHERIT HbQtObjectHandler FUNCTION HB_QLatin1String
 
    METHOD  new( ... )
 
-   METHOD  latin1()
+   METHOD  latin1                        // (  )                                               -> cChar
 
    ENDCLASS
 
@@ -117,6 +117,10 @@ METHOD QLatin1String:new( ... )
    RETURN Self
 
 
-METHOD QLatin1String:latin1()
-   RETURN Qt_QLatin1String_latin1( ::pPtr )
+METHOD QLatin1String:latin1( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLatin1String_latin1( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

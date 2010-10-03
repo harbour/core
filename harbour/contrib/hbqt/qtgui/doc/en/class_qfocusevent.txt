@@ -28,7 +28,7 @@
  *  $METHODS$
  *     :gotFocus()                                         -> lBool
  *     :lostFocus()                                        -> lBool
- *     :reason()                                           -> nQt::FocusReason
+ *     :reason()                                           -> nQt_FocusReason
  * 
  *  $DESCRIPTION$
  * 
@@ -48,7 +48,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQFocusEvent.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QFocusEvent.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QEvent()
  *  $END$
  */

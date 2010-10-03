@@ -26,10 +26,10 @@
  *  $RETURNS$
  *     An instance of the object of type QItemEditorFactory
  *  $METHODS$
- *     :createEditor( nType, pParent )                     -> pQWidget
- *     :registerEditor( nType, pCreator )                  -> NIL
- *     :valuePropertyName( nType )                         -> pQByteArray
- *     :setDefaultFactory( pFactory )                      -> NIL
+ *     :createEditor( nType, oQWidget )                    -> oQWidget
+ *     :registerEditor( nType, oQItemEditorCreatorBase )   -> NIL
+ *     :valuePropertyName( nType )                         -> oQByteArray
+ *     :setDefaultFactory( oQItemEditorFactory )           -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -49,7 +49,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQItemEditorFactory.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QItemEditorFactory.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

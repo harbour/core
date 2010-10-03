@@ -209,7 +209,7 @@ METHOD XbpTreeView:execSlot( cSlot, p )
          qPos := QPoint( p )
          IF ( qItem := ::oWidget:itemAt( qPos ) ):isValidObject()
             IF ( n := ascan( ::aItems, {|o| hbqt_IsEqualGcQtPointer( o:oWidget, qItem ) } ) ) > 0
-               qPt := ::oWidget:mapToGlobal( p )
+               qPt := ::oWidget:mapToGlobal( QPoint( p ) )
                eval( ::hb_contextMenu, { qPt:x(), qPt:y() }, NIL, ::aItems[ n ] )
             ENDIF
          ENDIF

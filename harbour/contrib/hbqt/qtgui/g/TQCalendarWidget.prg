@@ -103,44 +103,44 @@ CREATE CLASS QCalendarWidget INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_Q
 
    METHOD  new( ... )
 
-   METHOD  dateEditAcceptDelay()
-   METHOD  dateTextFormat( pDate )
-   METHOD  firstDayOfWeek()
-   METHOD  headerTextFormat()
-   METHOD  horizontalHeaderFormat()
-   METHOD  isDateEditEnabled()
-   METHOD  isGridVisible()
-   METHOD  isNavigationBarVisible()
-   METHOD  maximumDate()
-   METHOD  minimumDate()
-   METHOD  monthShown()
-   METHOD  selectedDate()
-   METHOD  selectionMode()
-   METHOD  setDateEditAcceptDelay( nDelay )
-   METHOD  setDateEditEnabled( lEnable )
-   METHOD  setDateTextFormat( pDate, pFormat )
-   METHOD  setFirstDayOfWeek( nDayOfWeek )
-   METHOD  setHeaderTextFormat( pFormat )
-   METHOD  setHorizontalHeaderFormat( nFormat )
-   METHOD  setMaximumDate( pDate )
-   METHOD  setMinimumDate( pDate )
-   METHOD  setSelectionMode( nMode )
-   METHOD  setVerticalHeaderFormat( nFormat )
-   METHOD  setWeekdayTextFormat( nDayOfWeek, pFormat )
-   METHOD  verticalHeaderFormat()
-   METHOD  weekdayTextFormat( nDayOfWeek )
-   METHOD  yearShown()
-   METHOD  setCurrentPage( nYear, nMonth )
-   METHOD  setDateRange( pMin, pMax )
-   METHOD  setGridVisible( lShow )
-   METHOD  setNavigationBarVisible( lVisible )
-   METHOD  setSelectedDate( pDate )
-   METHOD  showNextMonth()
-   METHOD  showNextYear()
-   METHOD  showPreviousMonth()
-   METHOD  showPreviousYear()
-   METHOD  showSelectedDate()
-   METHOD  showToday()
+   METHOD  dateEditAcceptDelay           // (  )                                               -> nInt
+   METHOD  dateTextFormat                // ( oQDate )                                         -> oQTextCharFormat
+   METHOD  firstDayOfWeek                // (  )                                               -> nQt_DayOfWeek
+   METHOD  headerTextFormat              // (  )                                               -> oQTextCharFormat
+   METHOD  horizontalHeaderFormat        // (  )                                               -> nHorizontalHeaderFormat
+   METHOD  isDateEditEnabled             // (  )                                               -> lBool
+   METHOD  isGridVisible                 // (  )                                               -> lBool
+   METHOD  isNavigationBarVisible        // (  )                                               -> lBool
+   METHOD  maximumDate                   // (  )                                               -> oQDate
+   METHOD  minimumDate                   // (  )                                               -> oQDate
+   METHOD  monthShown                    // (  )                                               -> nInt
+   METHOD  selectedDate                  // (  )                                               -> oQDate
+   METHOD  selectionMode                 // (  )                                               -> nSelectionMode
+   METHOD  setDateEditAcceptDelay        // ( nDelay )                                         -> NIL
+   METHOD  setDateEditEnabled            // ( lEnable )                                        -> NIL
+   METHOD  setDateTextFormat             // ( oQDate, oQTextCharFormat )                       -> NIL
+   METHOD  setFirstDayOfWeek             // ( nDayOfWeek )                                     -> NIL
+   METHOD  setHeaderTextFormat           // ( oQTextCharFormat )                               -> NIL
+   METHOD  setHorizontalHeaderFormat     // ( nFormat )                                        -> NIL
+   METHOD  setMaximumDate                // ( oQDate )                                         -> NIL
+   METHOD  setMinimumDate                // ( oQDate )                                         -> NIL
+   METHOD  setSelectionMode              // ( nMode )                                          -> NIL
+   METHOD  setVerticalHeaderFormat       // ( nFormat )                                        -> NIL
+   METHOD  setWeekdayTextFormat          // ( nDayOfWeek, oQTextCharFormat )                   -> NIL
+   METHOD  verticalHeaderFormat          // (  )                                               -> nVerticalHeaderFormat
+   METHOD  weekdayTextFormat             // ( nDayOfWeek )                                     -> oQTextCharFormat
+   METHOD  yearShown                     // (  )                                               -> nInt
+   METHOD  setCurrentPage                // ( nYear, nMonth )                                  -> NIL
+   METHOD  setDateRange                  // ( oQDate, oQDate )                                 -> NIL
+   METHOD  setGridVisible                // ( lShow )                                          -> NIL
+   METHOD  setNavigationBarVisible       // ( lVisible )                                       -> NIL
+   METHOD  setSelectedDate               // ( oQDate )                                         -> NIL
+   METHOD  showNextMonth                 // (  )                                               -> NIL
+   METHOD  showNextYear                  // (  )                                               -> NIL
+   METHOD  showPreviousMonth             // (  )                                               -> NIL
+   METHOD  showPreviousYear              // (  )                                               -> NIL
+   METHOD  showSelectedDate              // (  )                                               -> NIL
+   METHOD  showToday                     // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -154,154 +154,378 @@ METHOD QCalendarWidget:new( ... )
    RETURN Self
 
 
-METHOD QCalendarWidget:dateEditAcceptDelay()
-   RETURN Qt_QCalendarWidget_dateEditAcceptDelay( ::pPtr )
-
-
-METHOD QCalendarWidget:dateTextFormat( pDate )
-   RETURN HB_QTextCharFormat():from( Qt_QCalendarWidget_dateTextFormat( ::pPtr, hbqt_ptr( pDate ) ) )
-
-
-METHOD QCalendarWidget:firstDayOfWeek()
-   RETURN Qt_QCalendarWidget_firstDayOfWeek( ::pPtr )
-
-
-METHOD QCalendarWidget:headerTextFormat()
-   RETURN HB_QTextCharFormat():from( Qt_QCalendarWidget_headerTextFormat( ::pPtr ) )
-
-
-METHOD QCalendarWidget:horizontalHeaderFormat()
-   RETURN Qt_QCalendarWidget_horizontalHeaderFormat( ::pPtr )
-
-
-METHOD QCalendarWidget:isDateEditEnabled()
-   RETURN Qt_QCalendarWidget_isDateEditEnabled( ::pPtr )
-
-
-METHOD QCalendarWidget:isGridVisible()
-   RETURN Qt_QCalendarWidget_isGridVisible( ::pPtr )
-
-
-METHOD QCalendarWidget:isNavigationBarVisible()
-   RETURN Qt_QCalendarWidget_isNavigationBarVisible( ::pPtr )
-
-
-METHOD QCalendarWidget:maximumDate()
-   RETURN HB_QDate():from( Qt_QCalendarWidget_maximumDate( ::pPtr ) )
-
-
-METHOD QCalendarWidget:minimumDate()
-   RETURN HB_QDate():from( Qt_QCalendarWidget_minimumDate( ::pPtr ) )
-
-
-METHOD QCalendarWidget:monthShown()
-   RETURN Qt_QCalendarWidget_monthShown( ::pPtr )
-
-
-METHOD QCalendarWidget:selectedDate()
-   RETURN HB_QDate():from( Qt_QCalendarWidget_selectedDate( ::pPtr ) )
-
-
-METHOD QCalendarWidget:selectionMode()
-   RETURN Qt_QCalendarWidget_selectionMode( ::pPtr )
-
-
-METHOD QCalendarWidget:setDateEditAcceptDelay( nDelay )
-   RETURN Qt_QCalendarWidget_setDateEditAcceptDelay( ::pPtr, nDelay )
-
-
-METHOD QCalendarWidget:setDateEditEnabled( lEnable )
-   RETURN Qt_QCalendarWidget_setDateEditEnabled( ::pPtr, lEnable )
-
-
-METHOD QCalendarWidget:setDateTextFormat( pDate, pFormat )
-   RETURN Qt_QCalendarWidget_setDateTextFormat( ::pPtr, hbqt_ptr( pDate ), hbqt_ptr( pFormat ) )
-
-
-METHOD QCalendarWidget:setFirstDayOfWeek( nDayOfWeek )
-   RETURN Qt_QCalendarWidget_setFirstDayOfWeek( ::pPtr, nDayOfWeek )
-
-
-METHOD QCalendarWidget:setHeaderTextFormat( pFormat )
-   RETURN Qt_QCalendarWidget_setHeaderTextFormat( ::pPtr, hbqt_ptr( pFormat ) )
-
-
-METHOD QCalendarWidget:setHorizontalHeaderFormat( nFormat )
-   RETURN Qt_QCalendarWidget_setHorizontalHeaderFormat( ::pPtr, nFormat )
-
-
-METHOD QCalendarWidget:setMaximumDate( pDate )
-   RETURN Qt_QCalendarWidget_setMaximumDate( ::pPtr, hbqt_ptr( pDate ) )
-
-
-METHOD QCalendarWidget:setMinimumDate( pDate )
-   RETURN Qt_QCalendarWidget_setMinimumDate( ::pPtr, hbqt_ptr( pDate ) )
-
-
-METHOD QCalendarWidget:setSelectionMode( nMode )
-   RETURN Qt_QCalendarWidget_setSelectionMode( ::pPtr, nMode )
-
-
-METHOD QCalendarWidget:setVerticalHeaderFormat( nFormat )
-   RETURN Qt_QCalendarWidget_setVerticalHeaderFormat( ::pPtr, nFormat )
-
-
-METHOD QCalendarWidget:setWeekdayTextFormat( nDayOfWeek, pFormat )
-   RETURN Qt_QCalendarWidget_setWeekdayTextFormat( ::pPtr, nDayOfWeek, hbqt_ptr( pFormat ) )
-
-
-METHOD QCalendarWidget:verticalHeaderFormat()
-   RETURN Qt_QCalendarWidget_verticalHeaderFormat( ::pPtr )
-
-
-METHOD QCalendarWidget:weekdayTextFormat( nDayOfWeek )
-   RETURN HB_QTextCharFormat():from( Qt_QCalendarWidget_weekdayTextFormat( ::pPtr, nDayOfWeek ) )
-
-
-METHOD QCalendarWidget:yearShown()
-   RETURN Qt_QCalendarWidget_yearShown( ::pPtr )
-
-
-METHOD QCalendarWidget:setCurrentPage( nYear, nMonth )
-   RETURN Qt_QCalendarWidget_setCurrentPage( ::pPtr, nYear, nMonth )
-
-
-METHOD QCalendarWidget:setDateRange( pMin, pMax )
-   RETURN Qt_QCalendarWidget_setDateRange( ::pPtr, hbqt_ptr( pMin ), hbqt_ptr( pMax ) )
-
-
-METHOD QCalendarWidget:setGridVisible( lShow )
-   RETURN Qt_QCalendarWidget_setGridVisible( ::pPtr, lShow )
-
-
-METHOD QCalendarWidget:setNavigationBarVisible( lVisible )
-   RETURN Qt_QCalendarWidget_setNavigationBarVisible( ::pPtr, lVisible )
-
-
-METHOD QCalendarWidget:setSelectedDate( pDate )
-   RETURN Qt_QCalendarWidget_setSelectedDate( ::pPtr, hbqt_ptr( pDate ) )
-
-
-METHOD QCalendarWidget:showNextMonth()
-   RETURN Qt_QCalendarWidget_showNextMonth( ::pPtr )
-
-
-METHOD QCalendarWidget:showNextYear()
-   RETURN Qt_QCalendarWidget_showNextYear( ::pPtr )
-
-
-METHOD QCalendarWidget:showPreviousMonth()
-   RETURN Qt_QCalendarWidget_showPreviousMonth( ::pPtr )
-
-
-METHOD QCalendarWidget:showPreviousYear()
-   RETURN Qt_QCalendarWidget_showPreviousYear( ::pPtr )
-
-
-METHOD QCalendarWidget:showSelectedDate()
-   RETURN Qt_QCalendarWidget_showSelectedDate( ::pPtr )
-
-
-METHOD QCalendarWidget:showToday()
-   RETURN Qt_QCalendarWidget_showToday( ::pPtr )
+METHOD QCalendarWidget:dateEditAcceptDelay( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCalendarWidget_dateEditAcceptDelay( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:dateTextFormat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QTextCharFormat():from( Qt_QCalendarWidget_dateTextFormat( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:firstDayOfWeek( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCalendarWidget_firstDayOfWeek( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:headerTextFormat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextCharFormat():from( Qt_QCalendarWidget_headerTextFormat( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:horizontalHeaderFormat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCalendarWidget_horizontalHeaderFormat( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:isDateEditEnabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCalendarWidget_isDateEditEnabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:isGridVisible( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCalendarWidget_isGridVisible( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:isNavigationBarVisible( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCalendarWidget_isNavigationBarVisible( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:maximumDate( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDate():from( Qt_QCalendarWidget_maximumDate( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:minimumDate( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDate():from( Qt_QCalendarWidget_minimumDate( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:monthShown( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCalendarWidget_monthShown( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:selectedDate( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDate():from( Qt_QCalendarWidget_selectedDate( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:selectionMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCalendarWidget_selectionMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:setDateEditAcceptDelay( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QCalendarWidget_setDateEditAcceptDelay( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:setDateEditEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QCalendarWidget_setDateEditEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:setDateTextFormat( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QCalendarWidget_setDateTextFormat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:setFirstDayOfWeek( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QCalendarWidget_setFirstDayOfWeek( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:setHeaderTextFormat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QCalendarWidget_setHeaderTextFormat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:setHorizontalHeaderFormat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QCalendarWidget_setHorizontalHeaderFormat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:setMaximumDate( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QCalendarWidget_setMaximumDate( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:setMinimumDate( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QCalendarWidget_setMinimumDate( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:setSelectionMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QCalendarWidget_setSelectionMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:setVerticalHeaderFormat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QCalendarWidget_setVerticalHeaderFormat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:setWeekdayTextFormat( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QCalendarWidget_setWeekdayTextFormat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:verticalHeaderFormat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCalendarWidget_verticalHeaderFormat( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:weekdayTextFormat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QTextCharFormat():from( Qt_QCalendarWidget_weekdayTextFormat( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:yearShown( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCalendarWidget_yearShown( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:setCurrentPage( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QCalendarWidget_setCurrentPage( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:setDateRange( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QCalendarWidget_setDateRange( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:setGridVisible( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QCalendarWidget_setGridVisible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:setNavigationBarVisible( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QCalendarWidget_setNavigationBarVisible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:setSelectedDate( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QCalendarWidget_setSelectedDate( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:showNextMonth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCalendarWidget_showNextMonth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:showNextYear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCalendarWidget_showNextYear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:showPreviousMonth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCalendarWidget_showPreviousMonth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:showPreviousYear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCalendarWidget_showPreviousYear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:showSelectedDate( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCalendarWidget_showSelectedDate( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QCalendarWidget:showToday( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCalendarWidget_showToday( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

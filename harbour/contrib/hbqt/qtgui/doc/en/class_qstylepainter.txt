@@ -26,14 +26,14 @@
  *  $RETURNS$
  *     An instance of the object of type QStylePainter
  *  $METHODS$
- *     :begin( pWidget )                                   -> lBool
- *     :begin_1( pPd, pWidget )                            -> lBool
- *     :drawComplexControl( nCc, pOption )                 -> NIL
- *     :drawControl( nCe, pOption )                        -> NIL
- *     :drawItemPixmap( pRect, nFlags, pPixmap )           -> NIL
- *     :drawItemText( pRect, nFlags, pPal, lEnabled, cText, nTextRole )  -> NIL
- *     :drawPrimitive( nPe, pOption )                      -> NIL
- *     :style()                                            -> pQStyle
+ *     :begin( oQWidget )                                  -> lBool
+ *     :begin( oQPaintDevice, oQWidget )                   -> lBool
+ *     :drawComplexControl( nCc, oQStyleOptionComplex )    -> NIL
+ *     :drawControl( nCe, oQStyleOption )                  -> NIL
+ *     :drawItemPixmap( oQRect, nFlags, oQPixmap )         -> NIL
+ *     :drawItemText( oQRect, nFlags, oQPalette, lEnabled, cText, nTextRole )  -> NIL
+ *     :drawPrimitive( nPe, oQStyleOption )                -> NIL
+ *     :style()                                            -> oQStyle
  * 
  *  $DESCRIPTION$
  * 
@@ -53,7 +53,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStylePainter.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStylePainter.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QPainter()
  *  $END$
  */

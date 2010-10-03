@@ -103,46 +103,48 @@ CREATE CLASS QGraphicsGridLayout INHERIT HbQtObjectHandler, HB_QGraphicsLayout F
 
    METHOD  new( ... )
 
-   METHOD  addItem( ... )
-   METHOD  alignment( pItem )
-   METHOD  columnAlignment( nColumn )
-   METHOD  columnCount()
-   METHOD  columnMaximumWidth( nColumn )
-   METHOD  columnMinimumWidth( nColumn )
-   METHOD  columnPreferredWidth( nColumn )
-   METHOD  columnSpacing( nColumn )
-   METHOD  columnStretchFactor( nColumn )
-   METHOD  count()
-   METHOD  horizontalSpacing()
-   METHOD  itemAt( ... )
-   METHOD  removeAt( nIndex )
-   METHOD  rowAlignment( nRow )
-   METHOD  rowCount()
-   METHOD  rowMaximumHeight( nRow )
-   METHOD  rowMinimumHeight( nRow )
-   METHOD  rowPreferredHeight( nRow )
-   METHOD  rowSpacing( nRow )
-   METHOD  rowStretchFactor( nRow )
-   METHOD  setAlignment( pItem, nAlignment )
-   METHOD  setColumnAlignment( nColumn, nAlignment )
-   METHOD  setColumnFixedWidth( nColumn, nWidth )
-   METHOD  setColumnMaximumWidth( nColumn, nWidth )
-   METHOD  setColumnMinimumWidth( nColumn, nWidth )
-   METHOD  setColumnPreferredWidth( nColumn, nWidth )
-   METHOD  setColumnSpacing( nColumn, nSpacing )
-   METHOD  setColumnStretchFactor( nColumn, nStretch )
-   METHOD  setGeometry( pRect )
-   METHOD  setHorizontalSpacing( nSpacing )
-   METHOD  setRowAlignment( nRow, nAlignment )
-   METHOD  setRowFixedHeight( nRow, nHeight )
-   METHOD  setRowMaximumHeight( nRow, nHeight )
-   METHOD  setRowMinimumHeight( nRow, nHeight )
-   METHOD  setRowPreferredHeight( nRow, nHeight )
-   METHOD  setRowSpacing( nRow, nSpacing )
-   METHOD  setRowStretchFactor( nRow, nStretch )
-   METHOD  setSpacing( nSpacing )
-   METHOD  setVerticalSpacing( nSpacing )
-   METHOD  verticalSpacing()
+   METHOD  addItem                       // ( oQGraphicsLayoutItem, nRow, nColumn, nRowSpan, nColumnSpan, nAlignment ) -> NIL
+                                         // ( oQGraphicsLayoutItem, nRow, nColumn, nAlignment ) -> NIL
+   METHOD  alignment                     // ( oQGraphicsLayoutItem )                           -> nQt_Alignment
+   METHOD  columnAlignment               // ( nColumn )                                        -> nQt_Alignment
+   METHOD  columnCount                   // (  )                                               -> nInt
+   METHOD  columnMaximumWidth            // ( nColumn )                                        -> nQreal
+   METHOD  columnMinimumWidth            // ( nColumn )                                        -> nQreal
+   METHOD  columnPreferredWidth          // ( nColumn )                                        -> nQreal
+   METHOD  columnSpacing                 // ( nColumn )                                        -> nQreal
+   METHOD  columnStretchFactor           // ( nColumn )                                        -> nInt
+   METHOD  count                         // (  )                                               -> nInt
+   METHOD  horizontalSpacing             // (  )                                               -> nQreal
+   METHOD  itemAt                        // ( nRow, nColumn )                                  -> oQGraphicsLayoutItem
+                                         // ( nIndex )                                         -> oQGraphicsLayoutItem
+   METHOD  removeAt                      // ( nIndex )                                         -> NIL
+   METHOD  rowAlignment                  // ( nRow )                                           -> nQt_Alignment
+   METHOD  rowCount                      // (  )                                               -> nInt
+   METHOD  rowMaximumHeight              // ( nRow )                                           -> nQreal
+   METHOD  rowMinimumHeight              // ( nRow )                                           -> nQreal
+   METHOD  rowPreferredHeight            // ( nRow )                                           -> nQreal
+   METHOD  rowSpacing                    // ( nRow )                                           -> nQreal
+   METHOD  rowStretchFactor              // ( nRow )                                           -> nInt
+   METHOD  setAlignment                  // ( oQGraphicsLayoutItem, nAlignment )               -> NIL
+   METHOD  setColumnAlignment            // ( nColumn, nAlignment )                            -> NIL
+   METHOD  setColumnFixedWidth           // ( nColumn, nWidth )                                -> NIL
+   METHOD  setColumnMaximumWidth         // ( nColumn, nWidth )                                -> NIL
+   METHOD  setColumnMinimumWidth         // ( nColumn, nWidth )                                -> NIL
+   METHOD  setColumnPreferredWidth       // ( nColumn, nWidth )                                -> NIL
+   METHOD  setColumnSpacing              // ( nColumn, nSpacing )                              -> NIL
+   METHOD  setColumnStretchFactor        // ( nColumn, nStretch )                              -> NIL
+   METHOD  setGeometry                   // ( oQRectF )                                        -> NIL
+   METHOD  setHorizontalSpacing          // ( nSpacing )                                       -> NIL
+   METHOD  setRowAlignment               // ( nRow, nAlignment )                               -> NIL
+   METHOD  setRowFixedHeight             // ( nRow, nHeight )                                  -> NIL
+   METHOD  setRowMaximumHeight           // ( nRow, nHeight )                                  -> NIL
+   METHOD  setRowMinimumHeight           // ( nRow, nHeight )                                  -> NIL
+   METHOD  setRowPreferredHeight         // ( nRow, nHeight )                                  -> NIL
+   METHOD  setRowSpacing                 // ( nRow, nSpacing )                                 -> NIL
+   METHOD  setRowStretchFactor           // ( nRow, nStretch )                                 -> NIL
+   METHOD  setSpacing                    // ( nSpacing )                                       -> NIL
+   METHOD  setVerticalSpacing            // ( nSpacing )                                       -> NIL
+   METHOD  verticalSpacing               // (  )                                               -> nQreal
 
    ENDCLASS
 
@@ -186,44 +188,112 @@ METHOD QGraphicsGridLayout:addItem( ... )
    RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:alignment( pItem )
-   RETURN Qt_QGraphicsGridLayout_alignment( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QGraphicsGridLayout:alignment( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsGridLayout_alignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:columnAlignment( nColumn )
-   RETURN Qt_QGraphicsGridLayout_columnAlignment( ::pPtr, nColumn )
+METHOD QGraphicsGridLayout:columnAlignment( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsGridLayout_columnAlignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:columnCount()
-   RETURN Qt_QGraphicsGridLayout_columnCount( ::pPtr )
+METHOD QGraphicsGridLayout:columnCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsGridLayout_columnCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:columnMaximumWidth( nColumn )
-   RETURN Qt_QGraphicsGridLayout_columnMaximumWidth( ::pPtr, nColumn )
+METHOD QGraphicsGridLayout:columnMaximumWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsGridLayout_columnMaximumWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:columnMinimumWidth( nColumn )
-   RETURN Qt_QGraphicsGridLayout_columnMinimumWidth( ::pPtr, nColumn )
+METHOD QGraphicsGridLayout:columnMinimumWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsGridLayout_columnMinimumWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:columnPreferredWidth( nColumn )
-   RETURN Qt_QGraphicsGridLayout_columnPreferredWidth( ::pPtr, nColumn )
+METHOD QGraphicsGridLayout:columnPreferredWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsGridLayout_columnPreferredWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:columnSpacing( nColumn )
-   RETURN Qt_QGraphicsGridLayout_columnSpacing( ::pPtr, nColumn )
+METHOD QGraphicsGridLayout:columnSpacing( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsGridLayout_columnSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:columnStretchFactor( nColumn )
-   RETURN Qt_QGraphicsGridLayout_columnStretchFactor( ::pPtr, nColumn )
+METHOD QGraphicsGridLayout:columnStretchFactor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsGridLayout_columnStretchFactor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:count()
-   RETURN Qt_QGraphicsGridLayout_count( ::pPtr )
+METHOD QGraphicsGridLayout:count( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsGridLayout_count( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:horizontalSpacing()
-   RETURN Qt_QGraphicsGridLayout_horizontalSpacing( ::pPtr )
+METHOD QGraphicsGridLayout:horizontalSpacing( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsGridLayout_horizontalSpacing( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsGridLayout:itemAt( ... )
@@ -244,114 +314,330 @@ METHOD QGraphicsGridLayout:itemAt( ... )
    RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:removeAt( nIndex )
-   RETURN Qt_QGraphicsGridLayout_removeAt( ::pPtr, nIndex )
+METHOD QGraphicsGridLayout:removeAt( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsGridLayout_removeAt( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:rowAlignment( nRow )
-   RETURN Qt_QGraphicsGridLayout_rowAlignment( ::pPtr, nRow )
+METHOD QGraphicsGridLayout:rowAlignment( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsGridLayout_rowAlignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:rowCount()
-   RETURN Qt_QGraphicsGridLayout_rowCount( ::pPtr )
+METHOD QGraphicsGridLayout:rowCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsGridLayout_rowCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:rowMaximumHeight( nRow )
-   RETURN Qt_QGraphicsGridLayout_rowMaximumHeight( ::pPtr, nRow )
+METHOD QGraphicsGridLayout:rowMaximumHeight( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsGridLayout_rowMaximumHeight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:rowMinimumHeight( nRow )
-   RETURN Qt_QGraphicsGridLayout_rowMinimumHeight( ::pPtr, nRow )
+METHOD QGraphicsGridLayout:rowMinimumHeight( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsGridLayout_rowMinimumHeight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:rowPreferredHeight( nRow )
-   RETURN Qt_QGraphicsGridLayout_rowPreferredHeight( ::pPtr, nRow )
+METHOD QGraphicsGridLayout:rowPreferredHeight( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsGridLayout_rowPreferredHeight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:rowSpacing( nRow )
-   RETURN Qt_QGraphicsGridLayout_rowSpacing( ::pPtr, nRow )
+METHOD QGraphicsGridLayout:rowSpacing( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsGridLayout_rowSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:rowStretchFactor( nRow )
-   RETURN Qt_QGraphicsGridLayout_rowStretchFactor( ::pPtr, nRow )
+METHOD QGraphicsGridLayout:rowStretchFactor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsGridLayout_rowStretchFactor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:setAlignment( pItem, nAlignment )
-   RETURN Qt_QGraphicsGridLayout_setAlignment( ::pPtr, hbqt_ptr( pItem ), nAlignment )
+METHOD QGraphicsGridLayout:setAlignment( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsGridLayout_setAlignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:setColumnAlignment( nColumn, nAlignment )
-   RETURN Qt_QGraphicsGridLayout_setColumnAlignment( ::pPtr, nColumn, nAlignment )
+METHOD QGraphicsGridLayout:setColumnAlignment( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsGridLayout_setColumnAlignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:setColumnFixedWidth( nColumn, nWidth )
-   RETURN Qt_QGraphicsGridLayout_setColumnFixedWidth( ::pPtr, nColumn, nWidth )
+METHOD QGraphicsGridLayout:setColumnFixedWidth( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsGridLayout_setColumnFixedWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:setColumnMaximumWidth( nColumn, nWidth )
-   RETURN Qt_QGraphicsGridLayout_setColumnMaximumWidth( ::pPtr, nColumn, nWidth )
+METHOD QGraphicsGridLayout:setColumnMaximumWidth( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsGridLayout_setColumnMaximumWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:setColumnMinimumWidth( nColumn, nWidth )
-   RETURN Qt_QGraphicsGridLayout_setColumnMinimumWidth( ::pPtr, nColumn, nWidth )
+METHOD QGraphicsGridLayout:setColumnMinimumWidth( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsGridLayout_setColumnMinimumWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:setColumnPreferredWidth( nColumn, nWidth )
-   RETURN Qt_QGraphicsGridLayout_setColumnPreferredWidth( ::pPtr, nColumn, nWidth )
+METHOD QGraphicsGridLayout:setColumnPreferredWidth( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsGridLayout_setColumnPreferredWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:setColumnSpacing( nColumn, nSpacing )
-   RETURN Qt_QGraphicsGridLayout_setColumnSpacing( ::pPtr, nColumn, nSpacing )
+METHOD QGraphicsGridLayout:setColumnSpacing( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsGridLayout_setColumnSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:setColumnStretchFactor( nColumn, nStretch )
-   RETURN Qt_QGraphicsGridLayout_setColumnStretchFactor( ::pPtr, nColumn, nStretch )
+METHOD QGraphicsGridLayout:setColumnStretchFactor( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsGridLayout_setColumnStretchFactor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:setGeometry( pRect )
-   RETURN Qt_QGraphicsGridLayout_setGeometry( ::pPtr, hbqt_ptr( pRect ) )
+METHOD QGraphicsGridLayout:setGeometry( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsGridLayout_setGeometry( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:setHorizontalSpacing( nSpacing )
-   RETURN Qt_QGraphicsGridLayout_setHorizontalSpacing( ::pPtr, nSpacing )
+METHOD QGraphicsGridLayout:setHorizontalSpacing( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsGridLayout_setHorizontalSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:setRowAlignment( nRow, nAlignment )
-   RETURN Qt_QGraphicsGridLayout_setRowAlignment( ::pPtr, nRow, nAlignment )
+METHOD QGraphicsGridLayout:setRowAlignment( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsGridLayout_setRowAlignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:setRowFixedHeight( nRow, nHeight )
-   RETURN Qt_QGraphicsGridLayout_setRowFixedHeight( ::pPtr, nRow, nHeight )
+METHOD QGraphicsGridLayout:setRowFixedHeight( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsGridLayout_setRowFixedHeight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:setRowMaximumHeight( nRow, nHeight )
-   RETURN Qt_QGraphicsGridLayout_setRowMaximumHeight( ::pPtr, nRow, nHeight )
+METHOD QGraphicsGridLayout:setRowMaximumHeight( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsGridLayout_setRowMaximumHeight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:setRowMinimumHeight( nRow, nHeight )
-   RETURN Qt_QGraphicsGridLayout_setRowMinimumHeight( ::pPtr, nRow, nHeight )
+METHOD QGraphicsGridLayout:setRowMinimumHeight( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsGridLayout_setRowMinimumHeight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:setRowPreferredHeight( nRow, nHeight )
-   RETURN Qt_QGraphicsGridLayout_setRowPreferredHeight( ::pPtr, nRow, nHeight )
+METHOD QGraphicsGridLayout:setRowPreferredHeight( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsGridLayout_setRowPreferredHeight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:setRowSpacing( nRow, nSpacing )
-   RETURN Qt_QGraphicsGridLayout_setRowSpacing( ::pPtr, nRow, nSpacing )
+METHOD QGraphicsGridLayout:setRowSpacing( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsGridLayout_setRowSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:setRowStretchFactor( nRow, nStretch )
-   RETURN Qt_QGraphicsGridLayout_setRowStretchFactor( ::pPtr, nRow, nStretch )
+METHOD QGraphicsGridLayout:setRowStretchFactor( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsGridLayout_setRowStretchFactor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:setSpacing( nSpacing )
-   RETURN Qt_QGraphicsGridLayout_setSpacing( ::pPtr, nSpacing )
+METHOD QGraphicsGridLayout:setSpacing( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsGridLayout_setSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:setVerticalSpacing( nSpacing )
-   RETURN Qt_QGraphicsGridLayout_setVerticalSpacing( ::pPtr, nSpacing )
+METHOD QGraphicsGridLayout:setVerticalSpacing( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsGridLayout_setVerticalSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsGridLayout:verticalSpacing()
-   RETURN Qt_QGraphicsGridLayout_verticalSpacing( ::pPtr )
+METHOD QGraphicsGridLayout:verticalSpacing( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsGridLayout_verticalSpacing( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

@@ -533,7 +533,7 @@ HB_FUNC( QT_QIODEVICE_WRITE )
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
    {
-      hb_retnint( ( p )->write( hbqt_par_char( 2 ), hb_parnint( 3 ) ) );
+      hb_retnint( ( p )->write( ( const char * ) hb_parc( 2 ), hb_parnint( 3 ) ) );
    }
 }
 
@@ -545,7 +545,7 @@ HB_FUNC( QT_QIODEVICE_WRITE_1 )
    QIODevice * p = hbqt_par_QIODevice( 1 );
    if( p )
    {
-      hb_retnint( ( p )->write( hbqt_par_char( 2 ) ) );
+      hb_retnint( ( p )->write( ( const char * ) hb_parc( 2 ) ) );
    }
 }
 

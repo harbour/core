@@ -103,16 +103,16 @@ CREATE CLASS QNetworkRequest INHERIT HbQtObjectHandler FUNCTION HB_QNetworkReque
 
    METHOD  new( ... )
 
-   METHOD  attribute( nCode, pDefaultValue )
-   METHOD  hasRawHeader( pHeaderName )
-   METHOD  header( nHeader )
-   METHOD  rawHeader( pHeaderName )
-   METHOD  rawHeaderList()
-   METHOD  setAttribute( nCode, pValue )
-   METHOD  setHeader( nHeader, pValue )
-   METHOD  setRawHeader( pHeaderName, pHeaderValue )
-   METHOD  setUrl( pUrl )
-   METHOD  url()
+   METHOD  attribute                     // ( nCode, oQVariant )                               -> oQVariant
+   METHOD  hasRawHeader                  // ( oQByteArray )                                    -> lBool
+   METHOD  header                        // ( nHeader )                                        -> oQVariant
+   METHOD  rawHeader                     // ( oQByteArray )                                    -> oQByteArray
+   METHOD  rawHeaderList                 // (  )                                               -> oQList_QByteArray>
+   METHOD  setAttribute                  // ( nCode, oQVariant )                               -> NIL
+   METHOD  setHeader                     // ( nHeader, oQVariant )                             -> NIL
+   METHOD  setRawHeader                  // ( oQByteArray, oQByteArray )                       -> NIL
+   METHOD  setUrl                        // ( oQUrl )                                          -> NIL
+   METHOD  url                           // (  )                                               -> oQUrl
 
    ENDCLASS
 
@@ -126,42 +126,120 @@ METHOD QNetworkRequest:new( ... )
    RETURN Self
 
 
-METHOD QNetworkRequest:attribute( nCode, pDefaultValue )
-   RETURN HB_QVariant():from( Qt_QNetworkRequest_attribute( ::pPtr, nCode, hbqt_ptr( pDefaultValue ) ) )
+METHOD QNetworkRequest:attribute( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QVariant():from( Qt_QNetworkRequest_attribute( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QVariant():from( Qt_QNetworkRequest_attribute( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QNetworkRequest:hasRawHeader( pHeaderName )
-   RETURN Qt_QNetworkRequest_hasRawHeader( ::pPtr, hbqt_ptr( pHeaderName ) )
+METHOD QNetworkRequest:hasRawHeader( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QNetworkRequest_hasRawHeader( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QNetworkRequest:header( nHeader )
-   RETURN HB_QVariant():from( Qt_QNetworkRequest_header( ::pPtr, nHeader ) )
+METHOD QNetworkRequest:header( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QVariant():from( Qt_QNetworkRequest_header( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QNetworkRequest:rawHeader( pHeaderName )
-   RETURN HB_QByteArray():from( Qt_QNetworkRequest_rawHeader( ::pPtr, hbqt_ptr( pHeaderName ) ) )
+METHOD QNetworkRequest:rawHeader( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QByteArray():from( Qt_QNetworkRequest_rawHeader( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QNetworkRequest:rawHeaderList()
-   RETURN HB_QList():from( Qt_QNetworkRequest_rawHeaderList( ::pPtr ) )
+METHOD QNetworkRequest:rawHeaderList( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QNetworkRequest_rawHeaderList( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QNetworkRequest:setAttribute( nCode, pValue )
-   RETURN Qt_QNetworkRequest_setAttribute( ::pPtr, nCode, hbqt_ptr( pValue ) )
+METHOD QNetworkRequest:setAttribute( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QNetworkRequest_setAttribute( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QNetworkRequest:setHeader( nHeader, pValue )
-   RETURN Qt_QNetworkRequest_setHeader( ::pPtr, nHeader, hbqt_ptr( pValue ) )
+METHOD QNetworkRequest:setHeader( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QNetworkRequest_setHeader( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QNetworkRequest:setRawHeader( pHeaderName, pHeaderValue )
-   RETURN Qt_QNetworkRequest_setRawHeader( ::pPtr, hbqt_ptr( pHeaderName ), hbqt_ptr( pHeaderValue ) )
+METHOD QNetworkRequest:setRawHeader( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QNetworkRequest_setRawHeader( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QNetworkRequest:setUrl( pUrl )
-   RETURN Qt_QNetworkRequest_setUrl( ::pPtr, hbqt_ptr( pUrl ) )
+METHOD QNetworkRequest:setUrl( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QNetworkRequest_setUrl( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QNetworkRequest:url()
-   RETURN HB_QUrl():from( Qt_QNetworkRequest_url( ::pPtr ) )
+METHOD QNetworkRequest:url( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QUrl():from( Qt_QNetworkRequest_url( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

@@ -26,35 +26,35 @@
  *  $RETURNS$
  *     An instance of the object of type QStyle
  *  $METHODS$
- *     :combinedLayoutSpacing( nControls1, nControls2, nOrientation, pOption, pWidget )  -> nInt
- *     :drawComplexControl( nControl, pOption, pPainter, pWidget )  -> NIL
- *     :drawControl( nElement, pOption, pPainter, pWidget )  -> NIL
- *     :drawItemPixmap( pPainter, pRectangle, nAlignment, pPixmap )  -> NIL
- *     :drawItemText( pPainter, pRectangle, nAlignment, pPalette, lEnabled, cText, nTextRole )  -> NIL
- *     :drawPrimitive( nElement, pOption, pPainter, pWidget )  -> NIL
- *     :generatedIconPixmap( nIconMode, pPixmap, pOption )  -> pQPixmap
- *     :hitTestComplexControl( nControl, pOption, pPosition, pWidget )  -> nSubControl
- *     :itemPixmapRect( pRectangle, nAlignment, pPixmap )  -> pQRect
- *     :itemTextRect( pMetrics, pRectangle, nAlignment, lEnabled, cText )  -> pQRect
- *     :layoutSpacing( nControl1, nControl2, nOrientation, pOption, pWidget )  -> nInt
- *     :pixelMetric( nMetric, pOption, pWidget )           -> nInt
- *     :polish( pWidget )                                  -> NIL
- *     :polish_1( pApplication )                           -> NIL
- *     :polish_2( pPalette )                               -> NIL
- *     :sizeFromContents( nType, pOption, pContentsSize, pWidget )  -> pQSize
- *     :standardIcon( nStandardIcon, pOption, pWidget )    -> pQIcon
- *     :standardPalette()                                  -> pQPalette
- *     :styleHint( nHint, pOption, pWidget, pReturnData )  -> nInt
- *     :subControlRect( nControl, pOption, nSubControl, pWidget )  -> pQRect
- *     :subElementRect( nElement, pOption, pWidget )       -> pQRect
- *     :unpolish( pWidget )                                -> NIL
- *     :unpolish_1( pApplication )                         -> NIL
- *     :alignedRect( nDirection, nAlignment, pSize, pRectangle )  -> pQRect
+ *     :combinedLayoutSpacing( nControls1, nControls2, nOrientation, oQStyleOption, oQWidget )  -> nInt
+ *     :drawComplexControl( nControl, oQStyleOptionComplex, oQPainter, oQWidget )  -> NIL
+ *     :drawControl( nElement, oQStyleOption, oQPainter, oQWidget )  -> NIL
+ *     :drawItemPixmap( oQPainter, oQRect, nAlignment, oQPixmap )  -> NIL
+ *     :drawItemText( oQPainter, oQRect, nAlignment, oQPalette, lEnabled, cText, nTextRole )  -> NIL
+ *     :drawPrimitive( nElement, oQStyleOption, oQPainter, oQWidget )  -> NIL
+ *     :generatedIconPixmap( nIconMode, oQPixmap, oQStyleOption )  -> oQPixmap
+ *     :hitTestComplexControl( nControl, oQStyleOptionComplex, oQPoint, oQWidget )  -> nSubControl
+ *     :itemPixmapRect( oQRect, nAlignment, oQPixmap )     -> oQRect
+ *     :itemTextRect( oQFontMetrics, oQRect, nAlignment, lEnabled, cText )  -> oQRect
+ *     :layoutSpacing( nControl1, nControl2, nOrientation, oQStyleOption, oQWidget )  -> nInt
+ *     :pixelMetric( nMetric, oQStyleOption, oQWidget )    -> nInt
+ *     :polish( oQWidget )                                 -> NIL
+ *     :polish( oQApplication )                            -> NIL
+ *     :polish( oQPalette )                                -> NIL
+ *     :sizeFromContents( nType, oQStyleOption, oQSize, oQWidget )  -> oQSize
+ *     :standardIcon( nStandardIcon, oQStyleOption, oQWidget )  -> oQIcon
+ *     :standardPalette()                                  -> oQPalette
+ *     :styleHint( nHint, oQStyleOption, oQWidget, oQStyleHintReturn )  -> nInt
+ *     :subControlRect( nControl, oQStyleOptionComplex, nSubControl, oQWidget )  -> oQRect
+ *     :subElementRect( nElement, oQStyleOption, oQWidget )  -> oQRect
+ *     :unpolish( oQWidget )                               -> NIL
+ *     :unpolish( oQApplication )                          -> NIL
+ *     :alignedRect( nDirection, nAlignment, oQSize, oQRect )  -> oQRect
  *     :sliderPositionFromValue( nMin, nMax, nLogicalValue, nSpan, lUpsideDown )  -> nInt
  *     :sliderValueFromPosition( nMin, nMax, nPosition, nSpan, lUpsideDown )  -> nInt
- *     :visualAlignment( nDirection, nAlignment )          -> nQt::Alignment
- *     :visualPos( nDirection, pBoundingRectangle, pLogicalPosition )  -> pQPoint
- *     :visualRect( nDirection, pBoundingRectangle, pLogicalRectangle )  -> pQRect
+ *     :visualAlignment( nDirection, nAlignment )          -> nQt_Alignment
+ *     :visualPos( nDirection, oQRect, oQPoint )           -> oQPoint
+ *     :visualRect( nDirection, oQRect, oQRect )           -> oQRect
  * 
  *  $DESCRIPTION$
  * 
@@ -74,7 +74,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStyle.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyle.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

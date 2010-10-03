@@ -26,28 +26,29 @@
  *  $RETURNS$
  *     An instance of the object of type QTextDocument
  *  $METHODS$
- *     :addResource( nType, pName, pResource )             -> NIL
+ *     :addResource( nType, oQUrl, oQVariant )             -> NIL
  *     :adjustSize()                                       -> NIL
- *     :begin()                                            -> pQTextBlock
+ *     :begin()                                            -> oQTextBlock
  *     :blockCount()                                       -> nInt
- *     :characterAt( nPos )                                -> pQChar
+ *     :characterAt( nPos )                                -> oQChar
  *     :characterCount()                                   -> nInt
  *     :clear()                                            -> NIL
- *     :defaultFont()                                      -> pQFont
+ *     :clone( oQObject )                                  -> oQTextDocument
+ *     :defaultFont()                                      -> oQFont
  *     :defaultStyleSheet()                                -> cQString
- *     :defaultTextOption()                                -> pQTextOption
- *     :documentLayout()                                   -> pQAbstractTextDocumentLayout
+ *     :defaultTextOption()                                -> oQTextOption
+ *     :documentLayout()                                   -> oQAbstractTextDocumentLayout
  *     :documentMargin()                                   -> nQreal
- *     :drawContents( pP, pRect )                          -> NIL
- *     :end()                                              -> pQTextBlock
- *     :find( cSubString, pCursor, nOptions )              -> pQTextCursor
- *     :find_1( pExpr, pCursor, nOptions )                 -> pQTextCursor
- *     :find_2( cSubString, nPosition, nOptions )          -> pQTextCursor
- *     :find_3( pExpr, nPosition, nOptions )               -> pQTextCursor
- *     :findBlock( nPos )                                  -> pQTextBlock
- *     :findBlockByLineNumber( nLineNumber )               -> pQTextBlock
- *     :findBlockByNumber( nBlockNumber )                  -> pQTextBlock
- *     :firstBlock()                                       -> pQTextBlock
+ *     :drawContents( oQPainter, oQRectF )                 -> NIL
+ *     :end()                                              -> oQTextBlock
+ *     :find( cSubString, oQTextCursor, nOptions )         -> oQTextCursor
+ *     :find( oQRegExp, oQTextCursor, nOptions )           -> oQTextCursor
+ *     :find( cSubString, nPosition, nOptions )            -> oQTextCursor
+ *     :find( oQRegExp, nPosition, nOptions )              -> oQTextCursor
+ *     :findBlock( nPos )                                  -> oQTextBlock
+ *     :findBlockByLineNumber( nLineNumber )               -> oQTextBlock
+ *     :findBlockByNumber( nBlockNumber )                  -> oQTextBlock
+ *     :firstBlock()                                       -> oQTextBlock
  *     :idealWidth()                                       -> nQreal
  *     :indentWidth()                                      -> nQreal
  *     :isEmpty()                                          -> lBool
@@ -55,43 +56,43 @@
  *     :isRedoAvailable()                                  -> lBool
  *     :isUndoAvailable()                                  -> lBool
  *     :isUndoRedoEnabled()                                -> lBool
- *     :lastBlock()                                        -> pQTextBlock
+ *     :lastBlock()                                        -> oQTextBlock
  *     :lineCount()                                        -> nInt
  *     :markContentsDirty( nPosition, nLength )            -> NIL
  *     :maximumBlockCount()                                -> nInt
  *     :metaInformation( nInfo )                           -> cQString
- *     :object( nObjectIndex )                             -> pQTextObject
- *     :objectForFormat( pF )                              -> pQTextObject
+ *     :object( nObjectIndex )                             -> oQTextObject
+ *     :objectForFormat( oQTextFormat )                    -> oQTextObject
  *     :pageCount()                                        -> nInt
- *     :pageSize()                                         -> pQSizeF
- *     :print( pPrinter )                                  -> NIL
- *     :redo( pCursor )                                    -> NIL
- *     :resource( nType, pName )                           -> pQVariant
+ *     :pageSize()                                         -> oQSizeF
+ *     :print( oQPrinter )                                 -> NIL
+ *     :redo( oQTextCursor )                               -> NIL
+ *     :resource( nType, oQUrl )                           -> oQVariant
  *     :revision()                                         -> nInt
- *     :rootFrame()                                        -> pQTextFrame
- *     :setDefaultFont( pFont )                            -> NIL
+ *     :rootFrame()                                        -> oQTextFrame
+ *     :setDefaultFont( oQFont )                           -> NIL
  *     :setDefaultStyleSheet( cSheet )                     -> NIL
- *     :setDefaultTextOption( pOption )                    -> NIL
- *     :setDocumentLayout( pLayout )                       -> NIL
+ *     :setDefaultTextOption( oQTextOption )               -> NIL
+ *     :setDocumentLayout( oQAbstractTextDocumentLayout )  -> NIL
  *     :setDocumentMargin( nMargin )                       -> NIL
  *     :setHtml( cHtml )                                   -> NIL
  *     :setIndentWidth( nWidth )                           -> NIL
  *     :setMaximumBlockCount( nMaximum )                   -> NIL
  *     :setMetaInformation( nInfo, cString )               -> NIL
- *     :setPageSize( pSize )                               -> NIL
+ *     :setPageSize( oQSizeF )                             -> NIL
  *     :setPlainText( cText )                              -> NIL
  *     :setTextWidth( nWidth )                             -> NIL
  *     :setUndoRedoEnabled( lEnable )                      -> NIL
  *     :setUseDesignMetrics( lB )                          -> NIL
- *     :size()                                             -> pQSizeF
+ *     :size()                                             -> oQSizeF
  *     :textWidth()                                        -> nQreal
- *     :toHtml( pEncoding )                                -> cQString
+ *     :toHtml( oQByteArray )                              -> cQString
  *     :toPlainText()                                      -> cQString
- *     :undo( pCursor )                                    -> NIL
+ *     :undo( oQTextCursor )                               -> NIL
  *     :useDesignMetrics()                                 -> lBool
- *     :redo_1()                                           -> NIL
+ *     :redo()                                             -> NIL
  *     :setModified( lM )                                  -> NIL
- *     :undo_1()                                           -> NIL
+ *     :undo()                                             -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -111,7 +112,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTextDocument.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextDocument.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

@@ -129,6 +129,14 @@ enum Spec { Rgb, Hsv, Cmyk, Invalid }
 </ENUMS>
 
 <PROTOS>
+QColor ()
+QColor ( int r, int g, int b, int a = 255 )
+QColor ( QRgb color )
+QColor ( Qt::GlobalColor color )
+QColor ( const QString & name )
+//QColor ( const char * name )
+QColor ( const QColor & color )
+
 int alpha () const
 qreal alphaF () const
 int black () const

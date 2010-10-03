@@ -26,23 +26,23 @@
  *  $RETURNS$
  *     An instance of the object of type QLayoutItem
  *  $METHODS$
- *     :alignment()                                        -> nQt::Alignment
- *     :controlTypes()                                     -> nQSizePolicy::ControlTypes
- *     :expandingDirections()                              -> nQt::Orientations
- *     :geometry()                                         -> pQRect
+ *     :alignment()                                        -> nQt_Alignment
+ *     :controlTypes()                                     -> nQSizePolicy_ControlTypes
+ *     :expandingDirections()                              -> nQt_Orientations
+ *     :geometry()                                         -> oQRect
  *     :hasHeightForWidth()                                -> lBool
  *     :heightForWidth( nW )                               -> nInt
  *     :invalidate()                                       -> NIL
  *     :isEmpty()                                          -> lBool
- *     :layout()                                           -> pQLayout
- *     :maximumSize()                                      -> pQSize
+ *     :layout()                                           -> oQLayout
+ *     :maximumSize()                                      -> oQSize
  *     :minimumHeightForWidth( nW )                        -> nInt
- *     :minimumSize()                                      -> pQSize
+ *     :minimumSize()                                      -> oQSize
  *     :setAlignment( nAlignment )                         -> NIL
- *     :setGeometry( pR )                                  -> NIL
- *     :sizeHint()                                         -> pQSize
- *     :spacerItem()                                       -> pQSpacerItem
- *     :widget()                                           -> pQWidget
+ *     :setGeometry( oQRect )                              -> NIL
+ *     :sizeHint()                                         -> oQSize
+ *     :spacerItem()                                       -> oQSpacerItem
+ *     :widget()                                           -> oQWidget
  * 
  *  $DESCRIPTION$
  * 
@@ -62,7 +62,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQLayoutItem.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QLayoutItem.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

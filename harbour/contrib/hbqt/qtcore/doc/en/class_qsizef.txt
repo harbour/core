@@ -26,6 +26,8 @@
  *  $RETURNS$
  *     An instance of the object of type QSizeF
  *  $METHODS$
+ *     :boundedTo( oQSizeF )                               -> oQSizeF
+ *     :expandedTo( oQSizeF )                              -> oQSizeF
  *     :height()                                           -> nQreal
  *     :isEmpty()                                          -> lBool
  *     :isNull()                                           -> lBool
@@ -33,10 +35,10 @@
  *     :rheight()                                          -> nQreal
  *     :rwidth()                                           -> nQreal
  *     :scale( nWidth, nHeight, nMode )                    -> NIL
- *     :scale_1( pSize, nMode )                            -> NIL
+ *     :scale( oQSizeF, nMode )                            -> NIL
  *     :setHeight( nHeight )                               -> NIL
  *     :setWidth( nWidth )                                 -> NIL
- *     :toSize()                                           -> pQSize
+ *     :toSize()                                           -> oQSize
  *     :transpose()                                        -> NIL
  *     :width()                                            -> nQreal
  * 
@@ -60,7 +62,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQSizeF.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QSizeF.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

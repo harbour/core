@@ -103,15 +103,16 @@ CREATE CLASS QTimer INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QTimer
 
    METHOD  new( ... )
 
-   METHOD  interval()
-   METHOD  isActive()
-   METHOD  isSingleShot()
-   METHOD  setInterval( nMsec )
-   METHOD  setSingleShot( lSingleShot )
-   METHOD  timerId()
-   METHOD  singleShot( nMsec, pReceiver, pMember )
-   METHOD  start( ... )
-   METHOD  stop()
+   METHOD  interval                      // (  )                                               -> nInt
+   METHOD  isActive                      // (  )                                               -> lBool
+   METHOD  isSingleShot                  // (  )                                               -> lBool
+   METHOD  setInterval                   // ( nMsec )                                          -> NIL
+   METHOD  setSingleShot                 // ( lSingleShot )                                    -> NIL
+   METHOD  timerId                       // (  )                                               -> nInt
+   METHOD  singleShot                    // ( nMsec, oQObject, cMember )                       -> NIL
+   METHOD  start                         // (  )                                               -> NIL
+   METHOD  stop                          // (  )                                               -> NIL
+                                         // ( nMsec )                                          -> NIL
 
    ENDCLASS
 
@@ -125,32 +126,72 @@ METHOD QTimer:new( ... )
    RETURN Self
 
 
-METHOD QTimer:interval()
-   RETURN Qt_QTimer_interval( ::pPtr )
+METHOD QTimer:interval( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTimer_interval( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimer:isActive()
-   RETURN Qt_QTimer_isActive( ::pPtr )
+METHOD QTimer:isActive( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTimer_isActive( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimer:isSingleShot()
-   RETURN Qt_QTimer_isSingleShot( ::pPtr )
+METHOD QTimer:isSingleShot( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTimer_isSingleShot( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimer:setInterval( nMsec )
-   RETURN Qt_QTimer_setInterval( ::pPtr, nMsec )
+METHOD QTimer:setInterval( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTimer_setInterval( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimer:setSingleShot( lSingleShot )
-   RETURN Qt_QTimer_setSingleShot( ::pPtr, lSingleShot )
+METHOD QTimer:setSingleShot( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTimer_setSingleShot( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimer:timerId()
-   RETURN Qt_QTimer_timerId( ::pPtr )
+METHOD QTimer:timerId( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTimer_timerId( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTimer:singleShot( nMsec, pReceiver, pMember )
-   RETURN Qt_QTimer_singleShot( ::pPtr, nMsec, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ) )
+METHOD QTimer:singleShot( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
+         RETURN Qt_QTimer_singleShot( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTimer:start( ... )
@@ -167,6 +208,10 @@ METHOD QTimer:start( ... )
    RETURN hbqt_error()
 
 
-METHOD QTimer:stop()
-   RETURN Qt_QTimer_stop( ::pPtr )
+METHOD QTimer:stop( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTimer_stop( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

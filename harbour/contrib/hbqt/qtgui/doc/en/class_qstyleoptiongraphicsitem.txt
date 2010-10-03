@@ -26,9 +26,9 @@
  *  $RETURNS$
  *     An instance of the object of type QStyleOptionGraphicsItem
  *  $METHODS$
- *     :exposedRect()                                      -> pQRectF
+ *     :exposedRect()                                      -> oQRectF
  *     :levelOfDetail()                                    -> nQreal
- *     :matrix()                                           -> pQMatrix
+ *     :matrix()                                           -> oQMatrix
  * 
  *  $DESCRIPTION$
  * 
@@ -48,7 +48,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionGraphicsItem.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionGraphicsItem.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QStyleOption()
  *  $END$
  */

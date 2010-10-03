@@ -28,20 +28,22 @@
  *  $METHODS$
  *     :accessibleDescription()                            -> cQString
  *     :accessibleText()                                   -> cQString
- *     :appendRow( pItem )                                 -> NIL
- *     :background()                                       -> pQBrush
- *     :checkState()                                       -> nQt::CheckState
+ *     :appendRow( oQStandardItem )                        -> NIL
+ *     :background()                                       -> oQBrush
+ *     :checkState()                                       -> nQt_CheckState
+ *     :child( nRow, nColumn )                             -> oQStandardItem
+ *     :clone()                                            -> oQStandardItem
  *     :column()                                           -> nInt
  *     :columnCount()                                      -> nInt
- *     :data( nRole )                                      -> pQVariant
- *     :flags()                                            -> nQt::ItemFlags
- *     :font()                                             -> pQFont
- *     :foreground()                                       -> pQBrush
+ *     :data( nRole )                                      -> oQVariant
+ *     :flags()                                            -> nQt_ItemFlags
+ *     :font()                                             -> oQFont
+ *     :foreground()                                       -> oQBrush
  *     :hasChildren()                                      -> lBool
- *     :icon()                                             -> pQIcon
- *     :index()                                            -> pQModelIndex
+ *     :icon()                                             -> oQIcon
+ *     :index()                                            -> oQModelIndex
  *     :insertColumns( nColumn, nCount )                   -> NIL
- *     :insertRow( nRow, pItem )                           -> NIL
+ *     :insertRow( nRow, oQStandardItem )                  -> NIL
  *     :insertRows( nRow, nCount )                         -> NIL
  *     :isCheckable()                                      -> lBool
  *     :isDragEnabled()                                    -> lBool
@@ -50,8 +52,9 @@
  *     :isEnabled()                                        -> lBool
  *     :isSelectable()                                     -> lBool
  *     :isTristate()                                       -> lBool
- *     :model()                                            -> Model
- *     :read( pIn )                                        -> NIL
+ *     :model()                                            -> oQStandardItemModel
+ *     :parent()                                           -> oQStandardItem
+ *     :read( oQDataStream )                               -> NIL
  *     :removeColumn( nColumn )                            -> NIL
  *     :removeColumns( nColumn, nCount )                   -> NIL
  *     :removeRow( nRow )                                  -> NIL
@@ -60,41 +63,42 @@
  *     :rowCount()                                         -> nInt
  *     :setAccessibleDescription( cAccessibleDescription )  -> NIL
  *     :setAccessibleText( cAccessibleText )               -> NIL
- *     :setBackground( pBrush )                            -> NIL
+ *     :setBackground( oQBrush )                           -> NIL
  *     :setCheckState( nState )                            -> NIL
  *     :setCheckable( lCheckable )                         -> NIL
- *     :setChild( nRow, nColumn, pItem )                   -> NIL
- *     :setChild_1( nRow, pItem )                          -> NIL
+ *     :setChild( nRow, nColumn, oQStandardItem )          -> NIL
+ *     :setChild( nRow, oQStandardItem )                   -> NIL
  *     :setColumnCount( nColumns )                         -> NIL
- *     :setData( pValue, nRole )                           -> NIL
+ *     :setData( oQVariant, nRole )                        -> NIL
  *     :setDragEnabled( lDragEnabled )                     -> NIL
  *     :setDropEnabled( lDropEnabled )                     -> NIL
  *     :setEditable( lEditable )                           -> NIL
  *     :setEnabled( lEnabled )                             -> NIL
  *     :setFlags( nFlags )                                 -> NIL
- *     :setFont( pFont )                                   -> NIL
- *     :setForeground( pBrush )                            -> NIL
- *     :setIcon( pIcon )                                   -> NIL
+ *     :setFont( oQFont )                                  -> NIL
+ *     :setForeground( oQBrush )                           -> NIL
+ *     :setIcon( coQIcon )                                 -> NIL
  *     :setRowCount( nRows )                               -> NIL
  *     :setSelectable( lSelectable )                       -> NIL
- *     :setSizeHint( pSize )                               -> NIL
+ *     :setSizeHint( oQSize )                              -> NIL
  *     :setStatusTip( cStatusTip )                         -> NIL
  *     :setText( cText )                                   -> NIL
  *     :setTextAlignment( nAlignment )                     -> NIL
  *     :setToolTip( cToolTip )                             -> NIL
  *     :setTristate( lTristate )                           -> NIL
  *     :setWhatsThis( cWhatsThis )                         -> NIL
- *     :sizeHint()                                         -> pQSize
+ *     :sizeHint()                                         -> oQSize
  *     :sortChildren( nColumn, nOrder )                    -> NIL
  *     :statusTip()                                        -> cQString
- *     :takeColumn( nColumn )                              -> pQList<QStandardItem *>
- *     :takeRow( nRow )                                    -> pQList<QStandardItem *>
+ *     :takeChild( nRow, nColumn )                         -> oQStandardItem
+ *     :takeColumn( nColumn )                              -> oQList_QStandardItem
+ *     :takeRow( nRow )                                    -> oQList_QStandardItem
  *     :text()                                             -> cQString
- *     :textAlignment()                                    -> nQt::Alignment
+ *     :textAlignment()                                    -> nQt_Alignment
  *     :toolTip()                                          -> cQString
  *     :type()                                             -> nInt
  *     :whatsThis()                                        -> cQString
- *     :write( pOut )                                      -> NIL
+ *     :write( oQDataStream )                              -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -114,7 +118,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStandardItem.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStandardItem.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

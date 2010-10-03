@@ -103,14 +103,14 @@ CREATE CLASS QWebHistoryItem INHERIT HbQtObjectHandler FUNCTION HB_QWebHistoryIt
 
    METHOD  new( ... )
 
-   METHOD  icon()
-   METHOD  isValid()
-   METHOD  lastVisited()
-   METHOD  originalUrl()
-   METHOD  setUserData( pUserData )
-   METHOD  title()
-   METHOD  url()
-   METHOD  userData()
+   METHOD  icon                          // (  )                                               -> oQIcon
+   METHOD  isValid                       // (  )                                               -> lBool
+   METHOD  lastVisited                   // (  )                                               -> oQDateTime
+   METHOD  originalUrl                   // (  )                                               -> oQUrl
+   METHOD  setUserData                   // ( oQVariant )                                      -> NIL
+   METHOD  title                         // (  )                                               -> cQString
+   METHOD  url                           // (  )                                               -> oQUrl
+   METHOD  userData                      // (  )                                               -> oQVariant
 
    ENDCLASS
 
@@ -124,34 +124,70 @@ METHOD QWebHistoryItem:new( ... )
    RETURN Self
 
 
-METHOD QWebHistoryItem:icon()
-   RETURN HB_QIcon():from( Qt_QWebHistoryItem_icon( ::pPtr ) )
+METHOD QWebHistoryItem:icon( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QIcon():from( Qt_QWebHistoryItem_icon( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHistoryItem:isValid()
-   RETURN Qt_QWebHistoryItem_isValid( ::pPtr )
+METHOD QWebHistoryItem:isValid( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebHistoryItem_isValid( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHistoryItem:lastVisited()
-   RETURN HB_QDateTime():from( Qt_QWebHistoryItem_lastVisited( ::pPtr ) )
+METHOD QWebHistoryItem:lastVisited( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDateTime():from( Qt_QWebHistoryItem_lastVisited( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHistoryItem:originalUrl()
-   RETURN HB_QUrl():from( Qt_QWebHistoryItem_originalUrl( ::pPtr ) )
+METHOD QWebHistoryItem:originalUrl( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QUrl():from( Qt_QWebHistoryItem_originalUrl( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHistoryItem:setUserData( pUserData )
-   RETURN Qt_QWebHistoryItem_setUserData( ::pPtr, hbqt_ptr( pUserData ) )
+METHOD QWebHistoryItem:setUserData( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWebHistoryItem_setUserData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHistoryItem:title()
-   RETURN Qt_QWebHistoryItem_title( ::pPtr )
+METHOD QWebHistoryItem:title( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebHistoryItem_title( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHistoryItem:url()
-   RETURN HB_QUrl():from( Qt_QWebHistoryItem_url( ::pPtr ) )
+METHOD QWebHistoryItem:url( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QUrl():from( Qt_QWebHistoryItem_url( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHistoryItem:userData()
-   RETURN HB_QVariant():from( Qt_QWebHistoryItem_userData( ::pPtr ) )
+METHOD QWebHistoryItem:userData( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QVariant():from( Qt_QWebHistoryItem_userData( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

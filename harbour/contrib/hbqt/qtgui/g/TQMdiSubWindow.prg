@@ -103,20 +103,20 @@ CREATE CLASS QMdiSubWindow INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QMd
 
    METHOD  new( ... )
 
-   METHOD  isShaded()
-   METHOD  keyboardPageStep()
-   METHOD  keyboardSingleStep()
-   METHOD  mdiArea()
-   METHOD  setKeyboardPageStep( nStep )
-   METHOD  setKeyboardSingleStep( nStep )
-   METHOD  setOption( nOption, lOn )
-   METHOD  setSystemMenu( pSystemMenu )
-   METHOD  setWidget( pWidget )
-   METHOD  systemMenu()
-   METHOD  testOption( nOption )
-   METHOD  widget()
-   METHOD  showShaded()
-   METHOD  showSystemMenu()
+   METHOD  isShaded                      // (  )                                               -> lBool
+   METHOD  keyboardPageStep              // (  )                                               -> nInt
+   METHOD  keyboardSingleStep            // (  )                                               -> nInt
+   METHOD  mdiArea                       // (  )                                               -> oQMdiArea
+   METHOD  setKeyboardPageStep           // ( nStep )                                          -> NIL
+   METHOD  setKeyboardSingleStep         // ( nStep )                                          -> NIL
+   METHOD  setOption                     // ( nOption, lOn )                                   -> NIL
+   METHOD  setSystemMenu                 // ( oQMenu )                                         -> NIL
+   METHOD  setWidget                     // ( oQWidget )                                       -> NIL
+   METHOD  systemMenu                    // (  )                                               -> oQMenu
+   METHOD  testOption                    // ( nOption )                                        -> lBool
+   METHOD  widget                        // (  )                                               -> oQWidget
+   METHOD  showShaded                    // (  )                                               -> NIL
+   METHOD  showSystemMenu                // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -130,58 +130,144 @@ METHOD QMdiSubWindow:new( ... )
    RETURN Self
 
 
-METHOD QMdiSubWindow:isShaded()
-   RETURN Qt_QMdiSubWindow_isShaded( ::pPtr )
+METHOD QMdiSubWindow:isShaded( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMdiSubWindow_isShaded( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiSubWindow:keyboardPageStep()
-   RETURN Qt_QMdiSubWindow_keyboardPageStep( ::pPtr )
+METHOD QMdiSubWindow:keyboardPageStep( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMdiSubWindow_keyboardPageStep( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiSubWindow:keyboardSingleStep()
-   RETURN Qt_QMdiSubWindow_keyboardSingleStep( ::pPtr )
+METHOD QMdiSubWindow:keyboardSingleStep( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMdiSubWindow_keyboardSingleStep( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiSubWindow:mdiArea()
-   RETURN HB_QMdiArea():from( Qt_QMdiSubWindow_mdiArea( ::pPtr ) )
+METHOD QMdiSubWindow:mdiArea( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QMdiArea():from( Qt_QMdiSubWindow_mdiArea( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiSubWindow:setKeyboardPageStep( nStep )
-   RETURN Qt_QMdiSubWindow_setKeyboardPageStep( ::pPtr, nStep )
+METHOD QMdiSubWindow:setKeyboardPageStep( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QMdiSubWindow_setKeyboardPageStep( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiSubWindow:setKeyboardSingleStep( nStep )
-   RETURN Qt_QMdiSubWindow_setKeyboardSingleStep( ::pPtr, nStep )
+METHOD QMdiSubWindow:setKeyboardSingleStep( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QMdiSubWindow_setKeyboardSingleStep( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiSubWindow:setOption( nOption, lOn )
-   RETURN Qt_QMdiSubWindow_setOption( ::pPtr, nOption, lOn )
+METHOD QMdiSubWindow:setOption( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QMdiSubWindow_setOption( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QMdiSubWindow_setOption( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiSubWindow:setSystemMenu( pSystemMenu )
-   RETURN Qt_QMdiSubWindow_setSystemMenu( ::pPtr, hbqt_ptr( pSystemMenu ) )
+METHOD QMdiSubWindow:setSystemMenu( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMdiSubWindow_setSystemMenu( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiSubWindow:setWidget( pWidget )
-   RETURN Qt_QMdiSubWindow_setWidget( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QMdiSubWindow:setWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMdiSubWindow_setWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiSubWindow:systemMenu()
-   RETURN HB_QMenu():from( Qt_QMdiSubWindow_systemMenu( ::pPtr ) )
+METHOD QMdiSubWindow:systemMenu( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QMenu():from( Qt_QMdiSubWindow_systemMenu( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiSubWindow:testOption( nOption )
-   RETURN Qt_QMdiSubWindow_testOption( ::pPtr, nOption )
+METHOD QMdiSubWindow:testOption( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QMdiSubWindow_testOption( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiSubWindow:widget()
-   RETURN HB_QWidget():from( Qt_QMdiSubWindow_widget( ::pPtr ) )
+METHOD QMdiSubWindow:widget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QMdiSubWindow_widget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiSubWindow:showShaded()
-   RETURN Qt_QMdiSubWindow_showShaded( ::pPtr )
+METHOD QMdiSubWindow:showShaded( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMdiSubWindow_showShaded( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiSubWindow:showSystemMenu()
-   RETURN Qt_QMdiSubWindow_showSystemMenu( ::pPtr )
+METHOD QMdiSubWindow:showSystemMenu( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMdiSubWindow_showSystemMenu( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

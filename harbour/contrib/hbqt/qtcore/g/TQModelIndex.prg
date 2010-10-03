@@ -103,17 +103,17 @@ CREATE CLASS QModelIndex INHERIT HbQtObjectHandler FUNCTION HB_QModelIndex
 
    METHOD  new( ... )
 
-   METHOD  child( nRow, nColumn )
-   METHOD  column()
-   METHOD  data( nRole )
-   METHOD  flags()
-   METHOD  internalId()
-   METHOD  internalPointer()
-   METHOD  isValid()
-   METHOD  model()
-   METHOD  parent()
-   METHOD  row()
-   METHOD  sibling( nRow, nColumn )
+   METHOD  child                         // ( nRow, nColumn )                                  -> oQModelIndex
+   METHOD  column                        // (  )                                               -> nInt
+   METHOD  data                          // ( nRole )                                          -> oQVariant
+   METHOD  flags                         // (  )                                               -> nQt_ItemFlags
+   METHOD  internalId                    // (  )                                               -> nQint64
+   METHOD  internalPointer               // (  )                                               -> NIL
+   METHOD  isValid                       // (  )                                               -> lBool
+   METHOD  model                         // (  )                                               -> oQAbstractItemModel
+   METHOD  parent                        // (  )                                               -> oQModelIndex
+   METHOD  row                           // (  )                                               -> nInt
+   METHOD  sibling                       // ( nRow, nColumn )                                  -> oQModelIndex
 
    ENDCLASS
 
@@ -127,46 +127,104 @@ METHOD QModelIndex:new( ... )
    RETURN Self
 
 
-METHOD QModelIndex:child( nRow, nColumn )
-   RETURN HB_QModelIndex():from( Qt_QModelIndex_child( ::pPtr, nRow, nColumn ) )
+METHOD QModelIndex:child( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QModelIndex():from( Qt_QModelIndex_child( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QModelIndex:column()
-   RETURN Qt_QModelIndex_column( ::pPtr )
+METHOD QModelIndex:column( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QModelIndex_column( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QModelIndex:data( nRole )
-   RETURN HB_QVariant():from( Qt_QModelIndex_data( ::pPtr, nRole ) )
+METHOD QModelIndex:data( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QVariant():from( Qt_QModelIndex_data( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QVariant():from( Qt_QModelIndex_data( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QModelIndex:flags()
-   RETURN Qt_QModelIndex_flags( ::pPtr )
+METHOD QModelIndex:flags( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QModelIndex_flags( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QModelIndex:internalId()
-   RETURN Qt_QModelIndex_internalId( ::pPtr )
+METHOD QModelIndex:internalId( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QModelIndex_internalId( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QModelIndex:internalPointer()
-   RETURN Qt_QModelIndex_internalPointer( ::pPtr )
+METHOD QModelIndex:internalPointer( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QModelIndex_internalPointer( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QModelIndex:isValid()
-   RETURN Qt_QModelIndex_isValid( ::pPtr )
+METHOD QModelIndex:isValid( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QModelIndex_isValid( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QModelIndex:model()
-   RETURN HB_QAbstractItemModel():from( Qt_QModelIndex_model( ::pPtr ) )
+METHOD QModelIndex:model( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QAbstractItemModel():from( Qt_QModelIndex_model( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QModelIndex:parent()
-   RETURN HB_QModelIndex():from( Qt_QModelIndex_parent( ::pPtr ) )
+METHOD QModelIndex:parent( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QModelIndex():from( Qt_QModelIndex_parent( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QModelIndex:row()
-   RETURN Qt_QModelIndex_row( ::pPtr )
+METHOD QModelIndex:row( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QModelIndex_row( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QModelIndex:sibling( nRow, nColumn )
-   RETURN HB_QModelIndex():from( Qt_QModelIndex_sibling( ::pPtr, nRow, nColumn ) )
+METHOD QModelIndex:sibling( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QModelIndex():from( Qt_QModelIndex_sibling( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

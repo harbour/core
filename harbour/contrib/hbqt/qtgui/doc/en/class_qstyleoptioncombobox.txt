@@ -26,12 +26,12 @@
  *  $RETURNS$
  *     An instance of the object of type QStyleOptionComboBox
  *  $METHODS$
- *     :currentIcon()                                      -> pQIcon
+ *     :currentIcon()                                      -> oQIcon
  *     :currentText()                                      -> cQString
  *     :editable()                                         -> lBool
  *     :frame()                                            -> lBool
- *     :iconSize()                                         -> pQSize
- *     :popupRect()                                        -> pQRect
+ *     :iconSize()                                         -> oQSize
+ *     :popupRect()                                        -> oQRect
  * 
  *  $DESCRIPTION$
  * 
@@ -51,7 +51,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionComboBox.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionComboBox.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QStyleOption()
  *  $END$
  */

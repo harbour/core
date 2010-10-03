@@ -103,34 +103,35 @@ CREATE CLASS QTextLayout INHERIT HbQtObjectHandler FUNCTION HB_QTextLayout
 
    METHOD  new( ... )
 
-   METHOD  beginLayout()
-   METHOD  boundingRect()
-   METHOD  cacheEnabled()
-   METHOD  clearAdditionalFormats()
-   METHOD  clearLayout()
-   METHOD  createLine()
-   METHOD  drawCursor( ... )
-   METHOD  endLayout()
-   METHOD  font()
-   METHOD  isValidCursorPosition( nPos )
-   METHOD  lineAt( nI )
-   METHOD  lineCount()
-   METHOD  lineForTextPosition( nPos )
-   METHOD  maximumWidth()
-   METHOD  minimumWidth()
-   METHOD  nextCursorPosition( nOldPos, nMode )
-   METHOD  position()
-   METHOD  preeditAreaPosition()
-   METHOD  preeditAreaText()
-   METHOD  previousCursorPosition( nOldPos, nMode )
-   METHOD  setCacheEnabled( lEnable )
-   METHOD  setFont( pFont )
-   METHOD  setPosition( pP )
-   METHOD  setPreeditArea( nPosition, cText )
-   METHOD  setText( cString )
-   METHOD  setTextOption( pOption )
-   METHOD  text()
-   METHOD  textOption()
+   METHOD  beginLayout                   // (  )                                               -> NIL
+   METHOD  boundingRect                  // (  )                                               -> oQRectF
+   METHOD  cacheEnabled                  // (  )                                               -> lBool
+   METHOD  clearAdditionalFormats        // (  )                                               -> NIL
+   METHOD  clearLayout                   // (  )                                               -> NIL
+   METHOD  createLine                    // (  )                                               -> oQTextLine
+   METHOD  drawCursor                    // ( oQPainter, oQPointF, nCursorPosition, nWidth )   -> NIL
+                                         // ( oQPainter, oQPointF, nCursorPosition )           -> NIL
+   METHOD  endLayout                     // (  )                                               -> NIL
+   METHOD  font                          // (  )                                               -> oQFont
+   METHOD  isValidCursorPosition         // ( nPos )                                           -> lBool
+   METHOD  lineAt                        // ( nI )                                             -> oQTextLine
+   METHOD  lineCount                     // (  )                                               -> nInt
+   METHOD  lineForTextPosition           // ( nPos )                                           -> oQTextLine
+   METHOD  maximumWidth                  // (  )                                               -> nQreal
+   METHOD  minimumWidth                  // (  )                                               -> nQreal
+   METHOD  nextCursorPosition            // ( nOldPos, nMode )                                 -> nInt
+   METHOD  position                      // (  )                                               -> oQPointF
+   METHOD  preeditAreaPosition           // (  )                                               -> nInt
+   METHOD  preeditAreaText               // (  )                                               -> cQString
+   METHOD  previousCursorPosition        // ( nOldPos, nMode )                                 -> nInt
+   METHOD  setCacheEnabled               // ( lEnable )                                        -> NIL
+   METHOD  setFont                       // ( oQFont )                                         -> NIL
+   METHOD  setPosition                   // ( oQPointF )                                       -> NIL
+   METHOD  setPreeditArea                // ( nPosition, cText )                               -> NIL
+   METHOD  setText                       // ( cString )                                        -> NIL
+   METHOD  setTextOption                 // ( oQTextOption )                                   -> NIL
+   METHOD  text                          // (  )                                               -> cQString
+   METHOD  textOption                    // (  )                                               -> oQTextOption
 
    ENDCLASS
 
@@ -144,28 +145,52 @@ METHOD QTextLayout:new( ... )
    RETURN Self
 
 
-METHOD QTextLayout:beginLayout()
-   RETURN Qt_QTextLayout_beginLayout( ::pPtr )
+METHOD QTextLayout:beginLayout( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextLayout_beginLayout( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextLayout:boundingRect()
-   RETURN HB_QRectF():from( Qt_QTextLayout_boundingRect( ::pPtr ) )
+METHOD QTextLayout:boundingRect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRectF():from( Qt_QTextLayout_boundingRect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextLayout:cacheEnabled()
-   RETURN Qt_QTextLayout_cacheEnabled( ::pPtr )
+METHOD QTextLayout:cacheEnabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextLayout_cacheEnabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextLayout:clearAdditionalFormats()
-   RETURN Qt_QTextLayout_clearAdditionalFormats( ::pPtr )
+METHOD QTextLayout:clearAdditionalFormats( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextLayout_clearAdditionalFormats( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextLayout:clearLayout()
-   RETURN Qt_QTextLayout_clearLayout( ::pPtr )
+METHOD QTextLayout:clearLayout( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextLayout_clearLayout( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextLayout:createLine()
-   RETURN HB_QTextLine():from( Qt_QTextLayout_createLine( ::pPtr ) )
+METHOD QTextLayout:createLine( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextLine():from( Qt_QTextLayout_createLine( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTextLayout:drawCursor( ... )
@@ -186,86 +211,226 @@ METHOD QTextLayout:drawCursor( ... )
    RETURN hbqt_error()
 
 
-METHOD QTextLayout:endLayout()
-   RETURN Qt_QTextLayout_endLayout( ::pPtr )
+METHOD QTextLayout:endLayout( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextLayout_endLayout( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextLayout:font()
-   RETURN HB_QFont():from( Qt_QTextLayout_font( ::pPtr ) )
+METHOD QTextLayout:font( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFont():from( Qt_QTextLayout_font( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextLayout:isValidCursorPosition( nPos )
-   RETURN Qt_QTextLayout_isValidCursorPosition( ::pPtr, nPos )
+METHOD QTextLayout:isValidCursorPosition( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextLayout_isValidCursorPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextLayout:lineAt( nI )
-   RETURN HB_QTextLine():from( Qt_QTextLayout_lineAt( ::pPtr, nI ) )
+METHOD QTextLayout:lineAt( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QTextLine():from( Qt_QTextLayout_lineAt( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextLayout:lineCount()
-   RETURN Qt_QTextLayout_lineCount( ::pPtr )
+METHOD QTextLayout:lineCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextLayout_lineCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextLayout:lineForTextPosition( nPos )
-   RETURN HB_QTextLine():from( Qt_QTextLayout_lineForTextPosition( ::pPtr, nPos ) )
+METHOD QTextLayout:lineForTextPosition( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QTextLine():from( Qt_QTextLayout_lineForTextPosition( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextLayout:maximumWidth()
-   RETURN Qt_QTextLayout_maximumWidth( ::pPtr )
+METHOD QTextLayout:maximumWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextLayout_maximumWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextLayout:minimumWidth()
-   RETURN Qt_QTextLayout_minimumWidth( ::pPtr )
+METHOD QTextLayout:minimumWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextLayout_minimumWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextLayout:nextCursorPosition( nOldPos, nMode )
-   RETURN Qt_QTextLayout_nextCursorPosition( ::pPtr, nOldPos, nMode )
+METHOD QTextLayout:nextCursorPosition( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QTextLayout_nextCursorPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextLayout_nextCursorPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextLayout:position()
-   RETURN HB_QPointF():from( Qt_QTextLayout_position( ::pPtr ) )
+METHOD QTextLayout:position( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPointF():from( Qt_QTextLayout_position( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextLayout:preeditAreaPosition()
-   RETURN Qt_QTextLayout_preeditAreaPosition( ::pPtr )
+METHOD QTextLayout:preeditAreaPosition( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextLayout_preeditAreaPosition( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextLayout:preeditAreaText()
-   RETURN Qt_QTextLayout_preeditAreaText( ::pPtr )
+METHOD QTextLayout:preeditAreaText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextLayout_preeditAreaText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextLayout:previousCursorPosition( nOldPos, nMode )
-   RETURN Qt_QTextLayout_previousCursorPosition( ::pPtr, nOldPos, nMode )
+METHOD QTextLayout:previousCursorPosition( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QTextLayout_previousCursorPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextLayout_previousCursorPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextLayout:setCacheEnabled( lEnable )
-   RETURN Qt_QTextLayout_setCacheEnabled( ::pPtr, lEnable )
+METHOD QTextLayout:setCacheEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTextLayout_setCacheEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextLayout:setFont( pFont )
-   RETURN Qt_QTextLayout_setFont( ::pPtr, hbqt_ptr( pFont ) )
+METHOD QTextLayout:setFont( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextLayout_setFont( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextLayout:setPosition( pP )
-   RETURN Qt_QTextLayout_setPosition( ::pPtr, hbqt_ptr( pP ) )
+METHOD QTextLayout:setPosition( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextLayout_setPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextLayout:setPreeditArea( nPosition, cText )
-   RETURN Qt_QTextLayout_setPreeditArea( ::pPtr, nPosition, cText )
+METHOD QTextLayout:setPreeditArea( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QTextLayout_setPreeditArea( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextLayout:setText( cString )
-   RETURN Qt_QTextLayout_setText( ::pPtr, cString )
+METHOD QTextLayout:setText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QTextLayout_setText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextLayout:setTextOption( pOption )
-   RETURN Qt_QTextLayout_setTextOption( ::pPtr, hbqt_ptr( pOption ) )
+METHOD QTextLayout:setTextOption( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextLayout_setTextOption( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextLayout:text()
-   RETURN Qt_QTextLayout_text( ::pPtr )
+METHOD QTextLayout:text( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextLayout_text( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextLayout:textOption()
-   RETURN HB_QTextOption():from( Qt_QTextLayout_textOption( ::pPtr ) )
+METHOD QTextLayout:textOption( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextOption():from( Qt_QTextLayout_textOption( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

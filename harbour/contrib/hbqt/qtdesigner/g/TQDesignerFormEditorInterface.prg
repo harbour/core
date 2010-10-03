@@ -103,16 +103,16 @@ CREATE CLASS QDesignerFormEditorInterface INHERIT HbQtObjectHandler, HB_QObject 
 
    METHOD  new( ... )
 
-   METHOD  actionEditor()
-   METHOD  formWindowManager()
-   METHOD  objectInspector()
-   METHOD  propertyEditor()
-   METHOD  setActionEditor( pActionEditor )
-   METHOD  setObjectInspector( pObjectInspector )
-   METHOD  setPropertyEditor( pPropertyEditor )
-   METHOD  setWidgetBox( pWidgetBox )
-   METHOD  topLevel()
-   METHOD  widgetBox()
+   METHOD  actionEditor                  // (  )                                               -> oQDesignerActionEditorInterface
+   METHOD  formWindowManager             // (  )                                               -> oQDesignerFormWindowManagerInterface
+   METHOD  objectInspector               // (  )                                               -> oQDesignerObjectInspectorInterface
+   METHOD  propertyEditor                // (  )                                               -> oQDesignerPropertyEditorInterface
+   METHOD  setActionEditor               // ( oQDesignerActionEditorInterface )                -> NIL
+   METHOD  setObjectInspector            // ( oQDesignerObjectInspectorInterface )             -> NIL
+   METHOD  setPropertyEditor             // ( oQDesignerPropertyEditorInterface )              -> NIL
+   METHOD  setWidgetBox                  // ( oQDesignerWidgetBoxInterface )                   -> NIL
+   METHOD  topLevel                      // (  )                                               -> oQWidget
+   METHOD  widgetBox                     // (  )                                               -> oQDesignerWidgetBoxInterface
 
    ENDCLASS
 
@@ -126,42 +126,98 @@ METHOD QDesignerFormEditorInterface:new( ... )
    RETURN Self
 
 
-METHOD QDesignerFormEditorInterface:actionEditor()
-   RETURN HB_QDesignerActionEditorInterface():from( Qt_QDesignerFormEditorInterface_actionEditor( ::pPtr ) )
+METHOD QDesignerFormEditorInterface:actionEditor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDesignerActionEditorInterface():from( Qt_QDesignerFormEditorInterface_actionEditor( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormEditorInterface:formWindowManager()
-   RETURN HB_QDesignerFormWindowManagerInterface():from( Qt_QDesignerFormEditorInterface_formWindowManager( ::pPtr ) )
+METHOD QDesignerFormEditorInterface:formWindowManager( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDesignerFormWindowManagerInterface():from( Qt_QDesignerFormEditorInterface_formWindowManager( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormEditorInterface:objectInspector()
-   RETURN HB_QDesignerObjectInspectorInterface():from( Qt_QDesignerFormEditorInterface_objectInspector( ::pPtr ) )
+METHOD QDesignerFormEditorInterface:objectInspector( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDesignerObjectInspectorInterface():from( Qt_QDesignerFormEditorInterface_objectInspector( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormEditorInterface:propertyEditor()
-   RETURN HB_QDesignerPropertyEditorInterface():from( Qt_QDesignerFormEditorInterface_propertyEditor( ::pPtr ) )
+METHOD QDesignerFormEditorInterface:propertyEditor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDesignerPropertyEditorInterface():from( Qt_QDesignerFormEditorInterface_propertyEditor( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormEditorInterface:setActionEditor( pActionEditor )
-   RETURN Qt_QDesignerFormEditorInterface_setActionEditor( ::pPtr, hbqt_ptr( pActionEditor ) )
+METHOD QDesignerFormEditorInterface:setActionEditor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerFormEditorInterface_setActionEditor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormEditorInterface:setObjectInspector( pObjectInspector )
-   RETURN Qt_QDesignerFormEditorInterface_setObjectInspector( ::pPtr, hbqt_ptr( pObjectInspector ) )
+METHOD QDesignerFormEditorInterface:setObjectInspector( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerFormEditorInterface_setObjectInspector( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormEditorInterface:setPropertyEditor( pPropertyEditor )
-   RETURN Qt_QDesignerFormEditorInterface_setPropertyEditor( ::pPtr, hbqt_ptr( pPropertyEditor ) )
+METHOD QDesignerFormEditorInterface:setPropertyEditor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerFormEditorInterface_setPropertyEditor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormEditorInterface:setWidgetBox( pWidgetBox )
-   RETURN Qt_QDesignerFormEditorInterface_setWidgetBox( ::pPtr, hbqt_ptr( pWidgetBox ) )
+METHOD QDesignerFormEditorInterface:setWidgetBox( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerFormEditorInterface_setWidgetBox( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormEditorInterface:topLevel()
-   RETURN HB_QWidget():from( Qt_QDesignerFormEditorInterface_topLevel( ::pPtr ) )
+METHOD QDesignerFormEditorInterface:topLevel( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QDesignerFormEditorInterface_topLevel( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormEditorInterface:widgetBox()
-   RETURN HB_QDesignerWidgetBoxInterface():from( Qt_QDesignerFormEditorInterface_widgetBox( ::pPtr ) )
+METHOD QDesignerFormEditorInterface:widgetBox( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDesignerWidgetBoxInterface():from( Qt_QDesignerFormEditorInterface_widgetBox( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

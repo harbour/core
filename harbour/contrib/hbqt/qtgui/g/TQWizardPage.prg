@@ -103,23 +103,23 @@ CREATE CLASS QWizardPage INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QWiza
 
    METHOD  new( ... )
 
-   METHOD  buttonText( nWhich )
-   METHOD  cleanupPage()
-   METHOD  initializePage()
-   METHOD  isCommitPage()
-   METHOD  isComplete()
-   METHOD  isFinalPage()
-   METHOD  nextId()
-   METHOD  pixmap( nWhich )
-   METHOD  setButtonText( nWhich, cText )
-   METHOD  setCommitPage( lCommitPage )
-   METHOD  setFinalPage( lFinalPage )
-   METHOD  setPixmap( nWhich, pPixmap )
-   METHOD  setSubTitle( cSubTitle )
-   METHOD  setTitle( cTitle )
-   METHOD  subTitle()
-   METHOD  title()
-   METHOD  validatePage()
+   METHOD  buttonText                    // ( nWhich )                                         -> cQString
+   METHOD  cleanupPage                   // (  )                                               -> NIL
+   METHOD  initializePage                // (  )                                               -> NIL
+   METHOD  isCommitPage                  // (  )                                               -> lBool
+   METHOD  isComplete                    // (  )                                               -> lBool
+   METHOD  isFinalPage                   // (  )                                               -> lBool
+   METHOD  nextId                        // (  )                                               -> nInt
+   METHOD  pixmap                        // ( nWhich )                                         -> oQPixmap
+   METHOD  setButtonText                 // ( nWhich, cText )                                  -> NIL
+   METHOD  setCommitPage                 // ( lCommitPage )                                    -> NIL
+   METHOD  setFinalPage                  // ( lFinalPage )                                     -> NIL
+   METHOD  setPixmap                     // ( nWhich, oQPixmap )                               -> NIL
+   METHOD  setSubTitle                   // ( cSubTitle )                                      -> NIL
+   METHOD  setTitle                      // ( cTitle )                                         -> NIL
+   METHOD  subTitle                      // (  )                                               -> cQString
+   METHOD  title                         // (  )                                               -> cQString
+   METHOD  validatePage                  // (  )                                               -> lBool
 
    ENDCLASS
 
@@ -133,70 +133,170 @@ METHOD QWizardPage:new( ... )
    RETURN Self
 
 
-METHOD QWizardPage:buttonText( nWhich )
-   RETURN Qt_QWizardPage_buttonText( ::pPtr, nWhich )
+METHOD QWizardPage:buttonText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWizardPage_buttonText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWizardPage:cleanupPage()
-   RETURN Qt_QWizardPage_cleanupPage( ::pPtr )
+METHOD QWizardPage:cleanupPage( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWizardPage_cleanupPage( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWizardPage:initializePage()
-   RETURN Qt_QWizardPage_initializePage( ::pPtr )
+METHOD QWizardPage:initializePage( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWizardPage_initializePage( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWizardPage:isCommitPage()
-   RETURN Qt_QWizardPage_isCommitPage( ::pPtr )
+METHOD QWizardPage:isCommitPage( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWizardPage_isCommitPage( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWizardPage:isComplete()
-   RETURN Qt_QWizardPage_isComplete( ::pPtr )
+METHOD QWizardPage:isComplete( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWizardPage_isComplete( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWizardPage:isFinalPage()
-   RETURN Qt_QWizardPage_isFinalPage( ::pPtr )
+METHOD QWizardPage:isFinalPage( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWizardPage_isFinalPage( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWizardPage:nextId()
-   RETURN Qt_QWizardPage_nextId( ::pPtr )
+METHOD QWizardPage:nextId( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWizardPage_nextId( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWizardPage:pixmap( nWhich )
-   RETURN HB_QPixmap():from( Qt_QWizardPage_pixmap( ::pPtr, nWhich ) )
+METHOD QWizardPage:pixmap( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QPixmap():from( Qt_QWizardPage_pixmap( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWizardPage:setButtonText( nWhich, cText )
-   RETURN Qt_QWizardPage_setButtonText( ::pPtr, nWhich, cText )
+METHOD QWizardPage:setButtonText( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QWizardPage_setButtonText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWizardPage:setCommitPage( lCommitPage )
-   RETURN Qt_QWizardPage_setCommitPage( ::pPtr, lCommitPage )
+METHOD QWizardPage:setCommitPage( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QWizardPage_setCommitPage( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWizardPage:setFinalPage( lFinalPage )
-   RETURN Qt_QWizardPage_setFinalPage( ::pPtr, lFinalPage )
+METHOD QWizardPage:setFinalPage( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QWizardPage_setFinalPage( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWizardPage:setPixmap( nWhich, pPixmap )
-   RETURN Qt_QWizardPage_setPixmap( ::pPtr, nWhich, hbqt_ptr( pPixmap ) )
+METHOD QWizardPage:setPixmap( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QWizardPage_setPixmap( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWizardPage:setSubTitle( cSubTitle )
-   RETURN Qt_QWizardPage_setSubTitle( ::pPtr, cSubTitle )
+METHOD QWizardPage:setSubTitle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QWizardPage_setSubTitle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWizardPage:setTitle( cTitle )
-   RETURN Qt_QWizardPage_setTitle( ::pPtr, cTitle )
+METHOD QWizardPage:setTitle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QWizardPage_setTitle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWizardPage:subTitle()
-   RETURN Qt_QWizardPage_subTitle( ::pPtr )
+METHOD QWizardPage:subTitle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWizardPage_subTitle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWizardPage:title()
-   RETURN Qt_QWizardPage_title( ::pPtr )
+METHOD QWizardPage:title( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWizardPage_title( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWizardPage:validatePage()
-   RETURN Qt_QWizardPage_validatePage( ::pPtr )
+METHOD QWizardPage:validatePage( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWizardPage_validatePage( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

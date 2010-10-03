@@ -103,10 +103,11 @@ CREATE CLASS QConicalGradient INHERIT HbQtObjectHandler, HB_QGradient FUNCTION H
 
    METHOD  new( ... )
 
-   METHOD  angle()
-   METHOD  center()
-   METHOD  setAngle( nAngle )
-   METHOD  setCenter( ... )
+   METHOD  angle                         // (  )                                               -> nQreal
+   METHOD  center                        // (  )                                               -> oQPointF
+   METHOD  setAngle                      // ( nAngle )                                         -> NIL
+   METHOD  setCenter                     // ( oQPointF )                                       -> NIL
+                                         // ( nX, nY )                                         -> NIL
 
    ENDCLASS
 
@@ -120,16 +121,32 @@ METHOD QConicalGradient:new( ... )
    RETURN Self
 
 
-METHOD QConicalGradient:angle()
-   RETURN Qt_QConicalGradient_angle( ::pPtr )
+METHOD QConicalGradient:angle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QConicalGradient_angle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QConicalGradient:center()
-   RETURN HB_QPointF():from( Qt_QConicalGradient_center( ::pPtr ) )
+METHOD QConicalGradient:center( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPointF():from( Qt_QConicalGradient_center( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QConicalGradient:setAngle( nAngle )
-   RETURN Qt_QConicalGradient_setAngle( ::pPtr, nAngle )
+METHOD QConicalGradient:setAngle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QConicalGradient_setAngle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QConicalGradient:setCenter( ... )

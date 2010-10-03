@@ -27,34 +27,34 @@
  *     An instance of the object of type QLayout
  *  $METHODS$
  *     :activate()                                         -> lBool
- *     :addItem( pItem )                                   -> NIL
- *     :addWidget( pW )                                    -> NIL
- *     :contentsRect()                                     -> pQRect
+ *     :addItem( oQLayoutItem )                            -> NIL
+ *     :addWidget( oQWidget )                              -> NIL
+ *     :contentsRect()                                     -> oQRect
  *     :count()                                            -> nInt
- *     :expandingDirections()                              -> nQt::Orientations
+ *     :expandingDirections()                              -> nQt_Orientations
  *     :getContentsMargins( @nLeft, @nTop, @nRight, @nBottom )  -> NIL
- *     :indexOf( pWidget )                                 -> nInt
+ *     :indexOf( oQWidget )                                -> nInt
  *     :isEnabled()                                        -> lBool
- *     :itemAt( nIndex )                                   -> Item
- *     :maximumSize()                                      -> pQSize
- *     :menuBar()                                          -> pQWidget
- *     :minimumSize()                                      -> pQSize
- *     :parentWidget()                                     -> pQWidget
- *     :removeItem( pItem )                                -> NIL
- *     :removeWidget( pWidget )                            -> NIL
- *     :setAlignment( pW, nAlignment )                     -> lBool
- *     :setAlignment_1( nAlignment )                       -> NIL
- *     :setAlignment_2( pL, nAlignment )                   -> lBool
+ *     :itemAt( nIndex )                                   -> oQLayoutItem
+ *     :maximumSize()                                      -> oQSize
+ *     :menuBar()                                          -> oQWidget
+ *     :minimumSize()                                      -> oQSize
+ *     :parentWidget()                                     -> oQWidget
+ *     :removeItem( oQLayoutItem )                         -> NIL
+ *     :removeWidget( oQWidget )                           -> NIL
+ *     :setAlignment( oQWidget, nAlignment )               -> lBool
+ *     :setAlignment( nAlignment )                         -> NIL
+ *     :setAlignment( oQLayout, nAlignment )               -> lBool
  *     :setContentsMargins( nLeft, nTop, nRight, nBottom )  -> NIL
  *     :setEnabled( lEnable )                              -> NIL
- *     :setMenuBar( pWidget )                              -> NIL
+ *     :setMenuBar( oQWidget )                             -> NIL
  *     :setSizeConstraint( nSizeConstraint )               -> NIL
  *     :setSpacing( nInt )                                 -> NIL
  *     :sizeConstraint()                                   -> nSizeConstraint
  *     :spacing()                                          -> nInt
- *     :takeAt( nIndex )                                   -> Item
+ *     :takeAt( nIndex )                                   -> oQLayoutItem
  *     :update()                                           -> NIL
- *     :closestAcceptableSize( pWidget, pSize )            -> pQSize
+ *     :closestAcceptableSize( oQWidget, oQSize )          -> oQSize
  * 
  *  $DESCRIPTION$
  * 
@@ -74,7 +74,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQLayout.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QLayout.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QObject, QLayoutItem()
  *  $END$
  */

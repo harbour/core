@@ -1156,7 +1156,7 @@ METHOD HbIde:updateProjectTree( aPrj )
       oItem:oWidget:setIcon( 0, hbide_image( hbide_imageForFileType( oSource:ext ) ) )
       aadd( ::aProjData, { oItem, "Source File", oP, oSource:original, oProject:title } )
    NEXT
-   oP:oWidget:sortChildren( 0 )
+   oP:oWidget:sortChildren( 0, Qt_AscendingOrder )
 
    RETURN Self
 

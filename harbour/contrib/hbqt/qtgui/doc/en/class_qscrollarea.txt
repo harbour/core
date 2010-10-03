@@ -26,14 +26,14 @@
  *  $RETURNS$
  *     An instance of the object of type QScrollArea
  *  $METHODS$
- *     :alignment()                                        -> nQt::Alignment
+ *     :alignment()                                        -> nQt_Alignment
  *     :ensureVisible( nX, nY, nXmargin, nYmargin )        -> NIL
- *     :ensureWidgetVisible( pChildWidget, nXmargin, nYmargin )  -> NIL
+ *     :ensureWidgetVisible( oQWidget, nXmargin, nYmargin )  -> NIL
  *     :setAlignment( nQt::Alignment )                     -> NIL
- *     :setWidget( pWidget )                               -> NIL
+ *     :setWidget( oQWidget )                              -> NIL
  *     :setWidgetResizable( lResizable )                   -> NIL
- *     :takeWidget()                                       -> pQWidget
- *     :widget()                                           -> pQWidget
+ *     :takeWidget()                                       -> oQWidget
+ *     :widget()                                           -> oQWidget
  *     :widgetResizable()                                  -> lBool
  * 
  *  $DESCRIPTION$
@@ -54,7 +54,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQScrollArea.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QScrollArea.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractScrollArea()
  *  $END$
  */

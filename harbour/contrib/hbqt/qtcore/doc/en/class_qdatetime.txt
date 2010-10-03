@@ -26,20 +26,32 @@
  *  $RETURNS$
  *     An instance of the object of type QDateTime
  *  $METHODS$
- *     :date()                                             -> pQDate
- *     :daysTo( pOther )                                   -> nInt
+ *     :addDays( nNdays )                                  -> oQDateTime
+ *     :addMSecs( nMsecs )                                 -> oQDateTime
+ *     :addMonths( nNmonths )                              -> oQDateTime
+ *     :addSecs( nS )                                      -> oQDateTime
+ *     :addYears( nNyears )                                -> oQDateTime
+ *     :date()                                             -> oQDate
+ *     :daysTo( oQDateTime )                               -> nInt
  *     :isNull()                                           -> lBool
  *     :isValid()                                          -> lBool
- *     :secsTo( pOther )                                   -> nInt
- *     :setDate( pDate )                                   -> NIL
- *     :setTime( pTime )                                   -> NIL
+ *     :secsTo( oQDateTime )                               -> nInt
+ *     :setDate( oQDate )                                  -> NIL
+ *     :setTime( oQTime )                                  -> NIL
  *     :setTimeSpec( nSpec )                               -> NIL
- *     :setTime_t( nSeconds )                              -> NIL
- *     :time()                                             -> pQTime
- *     :timeSpec()                                         -> nQt::TimeSpec
+ *     :setTime( nSeconds )                                -> NIL
+ *     :time()                                             -> oQTime
+ *     :timeSpec()                                         -> nQt_TimeSpec
+ *     :toLocalTime()                                      -> oQDateTime
  *     :toString( cFormat )                                -> cQString
- *     :toString_1( nFormat )                              -> cQString
- *     :toTime_t()                                         -> nUint
+ *     :toString( nFormat )                                -> cQString
+ *     :toTimeSpec( nSpecification )                       -> oQDateTime
+ *     :toTime()                                           -> nUint
+ *     :toUTC()                                            -> oQDateTime
+ *     :currentDateTime()                                  -> oQDateTime
+ *     :fromString( cString, nFormat )                     -> oQDateTime
+ *     :fromString( cString, cFormat )                     -> oQDateTime
+ *     :fromTime( nSeconds )                               -> oQDateTime
  * 
  *  $DESCRIPTION$
  * 
@@ -59,7 +71,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQDateTime.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QDateTime.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

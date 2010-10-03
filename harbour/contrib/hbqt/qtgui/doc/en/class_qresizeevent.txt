@@ -26,8 +26,8 @@
  *  $RETURNS$
  *     An instance of the object of type QResizeEvent
  *  $METHODS$
- *     :oldSize()                                          -> pQSize
- *     :size()                                             -> pQSize
+ *     :oldSize()                                          -> oQSize
+ *     :size()                                             -> oQSize
  * 
  *  $DESCRIPTION$
  * 
@@ -47,7 +47,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQResizeEvent.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QResizeEvent.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QEvent()
  *  $END$
  */

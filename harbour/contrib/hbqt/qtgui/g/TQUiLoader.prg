@@ -103,20 +103,20 @@ CREATE CLASS QUiLoader INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QUiLoad
 
    METHOD  new( ... )
 
-   METHOD  addPluginPath( cPath )
-   METHOD  availableLayouts()
-   METHOD  availableWidgets()
-   METHOD  clearPluginPaths()
-   METHOD  createAction( pParent, cName )
-   METHOD  createActionGroup( pParent, cName )
-   METHOD  createLayout( cClassName, pParent, cName )
-   METHOD  createWidget( cClassName, pParent, cName )
-   METHOD  isLanguageChangeEnabled()
-   METHOD  load( pDevice, pParentWidget )
-   METHOD  pluginPaths()
-   METHOD  setLanguageChangeEnabled( lEnabled )
-   METHOD  setWorkingDirectory( pDir )
-   METHOD  workingDirectory()
+   METHOD  addPluginPath                 // ( cPath )                                          -> NIL
+   METHOD  availableLayouts              // (  )                                               -> oQStringList
+   METHOD  availableWidgets              // (  )                                               -> oQStringList
+   METHOD  clearPluginPaths              // (  )                                               -> NIL
+   METHOD  createAction                  // ( oQObject, cName )                                -> oQAction
+   METHOD  createActionGroup             // ( oQObject, cName )                                -> oQActionGroup
+   METHOD  createLayout                  // ( cClassName, oQObject, cName )                    -> oQLayout
+   METHOD  createWidget                  // ( cClassName, oQWidget, cName )                    -> oQWidget
+   METHOD  isLanguageChangeEnabled       // (  )                                               -> lBool
+   METHOD  load                          // ( oQIODevice, oQWidget )                           -> oQWidget
+   METHOD  pluginPaths                   // (  )                                               -> oQStringList
+   METHOD  setLanguageChangeEnabled      // ( lEnabled )                                       -> NIL
+   METHOD  setWorkingDirectory           // ( oQDir )                                          -> NIL
+   METHOD  workingDirectory              // (  )                                               -> oQDir
 
    ENDCLASS
 
@@ -130,58 +130,192 @@ METHOD QUiLoader:new( ... )
    RETURN Self
 
 
-METHOD QUiLoader:addPluginPath( cPath )
-   RETURN Qt_QUiLoader_addPluginPath( ::pPtr, cPath )
+METHOD QUiLoader:addPluginPath( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QUiLoader_addPluginPath( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUiLoader:availableLayouts()
-   RETURN HB_QStringList():from( Qt_QUiLoader_availableLayouts( ::pPtr ) )
+METHOD QUiLoader:availableLayouts( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QUiLoader_availableLayouts( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUiLoader:availableWidgets()
-   RETURN HB_QStringList():from( Qt_QUiLoader_availableWidgets( ::pPtr ) )
+METHOD QUiLoader:availableWidgets( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QUiLoader_availableWidgets( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUiLoader:clearPluginPaths()
-   RETURN Qt_QUiLoader_clearPluginPaths( ::pPtr )
+METHOD QUiLoader:clearPluginPaths( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QUiLoader_clearPluginPaths( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUiLoader:createAction( pParent, cName )
-   RETURN HB_QAction():from( Qt_QUiLoader_createAction( ::pPtr, hbqt_ptr( pParent ), cName ) )
+METHOD QUiLoader:createAction( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN HB_QAction():from( Qt_QUiLoader_createAction( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QAction():from( Qt_QUiLoader_createAction( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QAction():from( Qt_QUiLoader_createAction( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUiLoader:createActionGroup( pParent, cName )
-   RETURN HB_QActionGroup():from( Qt_QUiLoader_createActionGroup( ::pPtr, hbqt_ptr( pParent ), cName ) )
+METHOD QUiLoader:createActionGroup( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN HB_QActionGroup():from( Qt_QUiLoader_createActionGroup( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QActionGroup():from( Qt_QUiLoader_createActionGroup( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QActionGroup():from( Qt_QUiLoader_createActionGroup( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUiLoader:createLayout( cClassName, pParent, cName )
-   RETURN HB_QLayout():from( Qt_QUiLoader_createLayout( ::pPtr, cClassName, hbqt_ptr( pParent ), cName ) )
+METHOD QUiLoader:createLayout( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
+         RETURN HB_QLayout():from( Qt_QUiLoader_createLayout( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QLayout():from( Qt_QUiLoader_createLayout( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QLayout():from( Qt_QUiLoader_createLayout( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUiLoader:createWidget( cClassName, pParent, cName )
-   RETURN HB_QWidget():from( Qt_QUiLoader_createWidget( ::pPtr, cClassName, hbqt_ptr( pParent ), cName ) )
+METHOD QUiLoader:createWidget( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
+         RETURN HB_QWidget():from( Qt_QUiLoader_createWidget( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QWidget():from( Qt_QUiLoader_createWidget( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QWidget():from( Qt_QUiLoader_createWidget( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUiLoader:isLanguageChangeEnabled()
-   RETURN Qt_QUiLoader_isLanguageChangeEnabled( ::pPtr )
+METHOD QUiLoader:isLanguageChangeEnabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QUiLoader_isLanguageChangeEnabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUiLoader:load( pDevice, pParentWidget )
-   RETURN HB_QWidget():from( Qt_QUiLoader_load( ::pPtr, hbqt_ptr( pDevice ), hbqt_ptr( pParentWidget ) ) )
+METHOD QUiLoader:load( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QWidget():from( Qt_QUiLoader_load( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QWidget():from( Qt_QUiLoader_load( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUiLoader:pluginPaths()
-   RETURN HB_QStringList():from( Qt_QUiLoader_pluginPaths( ::pPtr ) )
+METHOD QUiLoader:pluginPaths( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QUiLoader_pluginPaths( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUiLoader:setLanguageChangeEnabled( lEnabled )
-   RETURN Qt_QUiLoader_setLanguageChangeEnabled( ::pPtr, lEnabled )
+METHOD QUiLoader:setLanguageChangeEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QUiLoader_setLanguageChangeEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUiLoader:setWorkingDirectory( pDir )
-   RETURN Qt_QUiLoader_setWorkingDirectory( ::pPtr, hbqt_ptr( pDir ) )
+METHOD QUiLoader:setWorkingDirectory( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QUiLoader_setWorkingDirectory( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUiLoader:workingDirectory()
-   RETURN HB_QDir():from( Qt_QUiLoader_workingDirectory( ::pPtr ) )
+METHOD QUiLoader:workingDirectory( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDir():from( Qt_QUiLoader_workingDirectory( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

@@ -69,7 +69,7 @@ New      =
 
 <CODE>
 #include <QtCore/QMetaObject>
-
+#include <QtCore/QMetaClassInfo>
 
 /*
  * 

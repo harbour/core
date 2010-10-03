@@ -103,12 +103,12 @@ CREATE CLASS QStyleOptionProgressBar INHERIT HbQtObjectHandler, HB_QStyleOption 
 
    METHOD  new( ... )
 
-   METHOD  maximum()
-   METHOD  minimum()
-   METHOD  progress()
-   METHOD  text()
-   METHOD  textAlignment()
-   METHOD  textVisible()
+   METHOD  maximum                       // (  )                                               -> nInt
+   METHOD  minimum                       // (  )                                               -> nInt
+   METHOD  progress                      // (  )                                               -> nInt
+   METHOD  text                          // (  )                                               -> cQString
+   METHOD  textAlignment                 // (  )                                               -> nQt_Alignment
+   METHOD  textVisible                   // (  )                                               -> lBool
 
    ENDCLASS
 
@@ -122,26 +122,50 @@ METHOD QStyleOptionProgressBar:new( ... )
    RETURN Self
 
 
-METHOD QStyleOptionProgressBar:maximum()
-   RETURN Qt_QStyleOptionProgressBar_maximum( ::pPtr )
+METHOD QStyleOptionProgressBar:maximum( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionProgressBar_maximum( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionProgressBar:minimum()
-   RETURN Qt_QStyleOptionProgressBar_minimum( ::pPtr )
+METHOD QStyleOptionProgressBar:minimum( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionProgressBar_minimum( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionProgressBar:progress()
-   RETURN Qt_QStyleOptionProgressBar_progress( ::pPtr )
+METHOD QStyleOptionProgressBar:progress( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionProgressBar_progress( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionProgressBar:text()
-   RETURN Qt_QStyleOptionProgressBar_text( ::pPtr )
+METHOD QStyleOptionProgressBar:text( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionProgressBar_text( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionProgressBar:textAlignment()
-   RETURN Qt_QStyleOptionProgressBar_textAlignment( ::pPtr )
+METHOD QStyleOptionProgressBar:textAlignment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionProgressBar_textAlignment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionProgressBar:textVisible()
-   RETURN Qt_QStyleOptionProgressBar_textVisible( ::pPtr )
+METHOD QStyleOptionProgressBar:textVisible( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionProgressBar_textVisible( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

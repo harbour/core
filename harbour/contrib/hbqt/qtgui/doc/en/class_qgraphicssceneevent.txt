@@ -26,7 +26,7 @@
  *  $RETURNS$
  *     An instance of the object of type QGraphicsSceneEvent
  *  $METHODS$
- *     :widget()                                           -> pQWidget
+ *     :widget()                                           -> oQWidget
  * 
  *  $DESCRIPTION$
  * 
@@ -46,7 +46,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGraphicsSceneEvent.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsSceneEvent.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QEvent()
  *  $END$
  */

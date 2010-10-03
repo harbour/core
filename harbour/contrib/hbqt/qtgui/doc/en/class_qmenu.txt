@@ -26,33 +26,35 @@
  *  $RETURNS$
  *     An instance of the object of type QMenu
  *  $METHODS$
- *     :actionAt( pPt )                                    -> pQAction
- *     :actionGeometry( pAct )                             -> pQRect
- *     :activeAction()                                     -> pQAction
- *     :addAction( cText )                                 -> pQAction
- *     :addAction_1( pIcon, cText )                        -> pQAction
- *     :addAction_2( cText, pReceiver, pMember, pShortcut )  -> pQAction
- *     :addAction_3( pIcon, cText, pReceiver, pMember, pShortcut )  -> pQAction
- *     :addAction_4( pAction )                             -> NIL
- *     :addMenu( pMenu )                                   -> pQAction
- *     :addSeparator()                                     -> pQAction
+ *     :actionAt( oQPoint )                                -> oQAction
+ *     :actionGeometry( oQAction )                         -> oQRect
+ *     :activeAction()                                     -> oQAction
+ *     :addAction( cText )                                 -> oQAction
+ *     :addAction( coQIcon, cText )                        -> oQAction
+ *     :addAction( cText, oQObject, cMember, oQKeySequence )  -> oQAction
+ *     :addAction( coQIcon, cText, oQObject, cMember, oQKeySequence )  -> oQAction
+ *     :addAction( oQAction )                              -> NIL
+ *     :addMenu( oQMenu )                                  -> oQAction
+ *     :addMenu( cTitle )                                  -> oQMenu
+ *     :addMenu( coQIcon, cTitle )                         -> oQMenu
+ *     :addSeparator()                                     -> oQAction
  *     :clear()                                            -> NIL
- *     :defaultAction()                                    -> pQAction
- *     :exec()                                             -> pQAction
- *     :exec_1( pP, pAction )                              -> pQAction
+ *     :defaultAction()                                    -> oQAction
+ *     :exec()                                             -> oQAction
+ *     :exec( oQPoint, oQAction )                          -> oQAction
  *     :hideTearOffMenu()                                  -> NIL
- *     :icon()                                             -> pQIcon
- *     :insertMenu( pBefore, pMenu )                       -> pQAction
- *     :insertSeparator( pBefore )                         -> pQAction
+ *     :icon()                                             -> oQIcon
+ *     :insertMenu( oQAction, oQMenu )                     -> oQAction
+ *     :insertSeparator( oQAction )                        -> oQAction
  *     :isEmpty()                                          -> lBool
  *     :isTearOffEnabled()                                 -> lBool
  *     :isTearOffMenuVisible()                             -> lBool
- *     :menuAction()                                       -> pQAction
- *     :popup( pP, pAtAction )                             -> NIL
+ *     :menuAction()                                       -> oQAction
+ *     :popup( oQPoint, oQAction )                         -> NIL
  *     :separatorsCollapsible()                            -> lBool
- *     :setActiveAction( pAct )                            -> NIL
- *     :setDefaultAction( pAct )                           -> NIL
- *     :setIcon( pIcon )                                   -> NIL
+ *     :setActiveAction( oQAction )                        -> NIL
+ *     :setDefaultAction( oQAction )                       -> NIL
+ *     :setIcon( coQIcon )                                 -> NIL
  *     :setSeparatorsCollapsible( lCollapse )              -> NIL
  *     :setTearOffEnabled( lBool )                         -> NIL
  *     :setTitle( cTitle )                                 -> NIL
@@ -76,7 +78,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQMenu.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QMenu.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

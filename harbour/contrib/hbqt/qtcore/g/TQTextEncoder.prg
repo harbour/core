@@ -103,7 +103,8 @@ CREATE CLASS QTextEncoder INHERIT HbQtObjectHandler FUNCTION HB_QTextEncoder
 
    METHOD  new( ... )
 
-   METHOD  fromUnicode( ... )
+   METHOD  fromUnicode                   // ( cStr )                                           -> oQByteArray
+                                         // ( oQChar, nLen )                                   -> oQByteArray
 
    ENDCLASS
 

@@ -103,19 +103,19 @@ CREATE CLASS QClipboard INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QClipb
 
    METHOD  new( ... )
 
-   METHOD  clear( nMode )
-   METHOD  image( nMode )
-   METHOD  ownsClipboard()
-   METHOD  ownsFindBuffer()
-   METHOD  ownsSelection()
-   METHOD  pixmap( nMode )
-   METHOD  setImage( pImage, nMode )
-   METHOD  setMimeData( pSrc, nMode )
-   METHOD  setPixmap( pPixmap, nMode )
-   METHOD  setText( cText, nMode )
-   METHOD  supportsFindBuffer()
-   METHOD  supportsSelection()
-   METHOD  text( nMode )
+   METHOD  clear                         // ( nMode )                                          -> NIL
+   METHOD  image                         // ( nMode )                                          -> oQImage
+   METHOD  ownsClipboard                 // (  )                                               -> lBool
+   METHOD  ownsFindBuffer                // (  )                                               -> lBool
+   METHOD  ownsSelection                 // (  )                                               -> lBool
+   METHOD  pixmap                        // ( nMode )                                          -> oQPixmap
+   METHOD  setImage                      // ( oQImage, nMode )                                 -> NIL
+   METHOD  setMimeData                   // ( oQMimeData, nMode )                              -> NIL
+   METHOD  setPixmap                     // ( oQPixmap, nMode )                                -> NIL
+   METHOD  setText                       // ( cText, nMode )                                   -> NIL
+   METHOD  supportsFindBuffer            // (  )                                               -> lBool
+   METHOD  supportsSelection             // (  )                                               -> lBool
+   METHOD  text                          // ( nMode )                                          -> cQString
 
    ENDCLASS
 
@@ -129,54 +129,170 @@ METHOD QClipboard:new( ... )
    RETURN Self
 
 
-METHOD QClipboard:clear( nMode )
-   RETURN Qt_QClipboard_clear( ::pPtr, nMode )
+METHOD QClipboard:clear( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QClipboard_clear( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QClipboard_clear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QClipboard:image( nMode )
-   RETURN HB_QImage():from( Qt_QClipboard_image( ::pPtr, nMode ) )
+METHOD QClipboard:image( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QImage():from( Qt_QClipboard_image( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QImage():from( Qt_QClipboard_image( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QClipboard:ownsClipboard()
-   RETURN Qt_QClipboard_ownsClipboard( ::pPtr )
+METHOD QClipboard:ownsClipboard( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QClipboard_ownsClipboard( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QClipboard:ownsFindBuffer()
-   RETURN Qt_QClipboard_ownsFindBuffer( ::pPtr )
+METHOD QClipboard:ownsFindBuffer( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QClipboard_ownsFindBuffer( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QClipboard:ownsSelection()
-   RETURN Qt_QClipboard_ownsSelection( ::pPtr )
+METHOD QClipboard:ownsSelection( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QClipboard_ownsSelection( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QClipboard:pixmap( nMode )
-   RETURN HB_QPixmap():from( Qt_QClipboard_pixmap( ::pPtr, nMode ) )
+METHOD QClipboard:pixmap( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QPixmap():from( Qt_QClipboard_pixmap( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QPixmap():from( Qt_QClipboard_pixmap( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QClipboard:setImage( pImage, nMode )
-   RETURN Qt_QClipboard_setImage( ::pPtr, hbqt_ptr( pImage ), nMode )
+METHOD QClipboard:setImage( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QClipboard_setImage( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QClipboard_setImage( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QClipboard:setMimeData( pSrc, nMode )
-   RETURN Qt_QClipboard_setMimeData( ::pPtr, hbqt_ptr( pSrc ), nMode )
+METHOD QClipboard:setMimeData( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QClipboard_setMimeData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QClipboard_setMimeData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QClipboard:setPixmap( pPixmap, nMode )
-   RETURN Qt_QClipboard_setPixmap( ::pPtr, hbqt_ptr( pPixmap ), nMode )
+METHOD QClipboard:setPixmap( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QClipboard_setPixmap( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QClipboard_setPixmap( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QClipboard:setText( cText, nMode )
-   RETURN Qt_QClipboard_setText( ::pPtr, cText, nMode )
+METHOD QClipboard:setText( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QClipboard_setText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QClipboard_setText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QClipboard:supportsFindBuffer()
-   RETURN Qt_QClipboard_supportsFindBuffer( ::pPtr )
+METHOD QClipboard:supportsFindBuffer( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QClipboard_supportsFindBuffer( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QClipboard:supportsSelection()
-   RETURN Qt_QClipboard_supportsSelection( ::pPtr )
+METHOD QClipboard:supportsSelection( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QClipboard_supportsSelection( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QClipboard:text( nMode )
-   RETURN Qt_QClipboard_text( ::pPtr, nMode )
+METHOD QClipboard:text( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QClipboard_text( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QClipboard_text( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

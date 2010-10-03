@@ -26,7 +26,7 @@
  *  $RETURNS$
  *     An instance of the object of type QAbstractSpinBox
  *  $METHODS$
- *     :alignment()                                        -> nQt::Alignment
+ *     :alignment()                                        -> nQt_Alignment
  *     :buttonSymbols()                                    -> nButtonSymbols
  *     :correctionMode()                                   -> nCorrectionMode
  *     :hasAcceptableInput()                               -> lBool
@@ -71,7 +71,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQAbstractSpinBox.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QAbstractSpinBox.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

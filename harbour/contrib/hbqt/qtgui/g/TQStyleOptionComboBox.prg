@@ -103,12 +103,12 @@ CREATE CLASS QStyleOptionComboBox INHERIT HbQtObjectHandler, HB_QStyleOption FUN
 
    METHOD  new( ... )
 
-   METHOD  currentIcon()
-   METHOD  currentText()
-   METHOD  editable()
-   METHOD  frame()
-   METHOD  iconSize()
-   METHOD  popupRect()
+   METHOD  currentIcon                   // (  )                                               -> oQIcon
+   METHOD  currentText                   // (  )                                               -> cQString
+   METHOD  editable                      // (  )                                               -> lBool
+   METHOD  frame                         // (  )                                               -> lBool
+   METHOD  iconSize                      // (  )                                               -> oQSize
+   METHOD  popupRect                     // (  )                                               -> oQRect
 
    ENDCLASS
 
@@ -122,26 +122,50 @@ METHOD QStyleOptionComboBox:new( ... )
    RETURN Self
 
 
-METHOD QStyleOptionComboBox:currentIcon()
-   RETURN HB_QIcon():from( Qt_QStyleOptionComboBox_currentIcon( ::pPtr ) )
+METHOD QStyleOptionComboBox:currentIcon( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QIcon():from( Qt_QStyleOptionComboBox_currentIcon( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionComboBox:currentText()
-   RETURN Qt_QStyleOptionComboBox_currentText( ::pPtr )
+METHOD QStyleOptionComboBox:currentText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionComboBox_currentText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionComboBox:editable()
-   RETURN Qt_QStyleOptionComboBox_editable( ::pPtr )
+METHOD QStyleOptionComboBox:editable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionComboBox_editable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionComboBox:frame()
-   RETURN Qt_QStyleOptionComboBox_frame( ::pPtr )
+METHOD QStyleOptionComboBox:frame( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionComboBox_frame( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionComboBox:iconSize()
-   RETURN HB_QSize():from( Qt_QStyleOptionComboBox_iconSize( ::pPtr ) )
+METHOD QStyleOptionComboBox:iconSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QStyleOptionComboBox_iconSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionComboBox:popupRect()
-   RETURN HB_QRect():from( Qt_QStyleOptionComboBox_popupRect( ::pPtr ) )
+METHOD QStyleOptionComboBox:popupRect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QStyleOptionComboBox_popupRect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

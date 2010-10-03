@@ -204,7 +204,7 @@ METHOD IdeFunctions:buildHeader()
    oTbl:verticalHeader():hide()
 
    qHdr := oTbl:horizontalHeader()
-   qHdr:stretchLastSection( .t. )
+   qHdr:setStretchLastSection( .t. )
 
    oTbl:setColumnCount( 1 )
 

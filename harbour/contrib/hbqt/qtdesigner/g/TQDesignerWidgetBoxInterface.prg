@@ -103,10 +103,10 @@ CREATE CLASS QDesignerWidgetBoxInterface INHERIT HbQtObjectHandler, HB_QWidget F
 
    METHOD  new( ... )
 
-   METHOD  fileName()
-   METHOD  load()
-   METHOD  save()
-   METHOD  setFileName( cFileName )
+   METHOD  fileName                      // (  )                                               -> cQString
+   METHOD  load                          // (  )                                               -> lBool
+   METHOD  save                          // (  )                                               -> lBool
+   METHOD  setFileName                   // ( cFileName )                                      -> NIL
 
    ENDCLASS
 
@@ -120,18 +120,38 @@ METHOD QDesignerWidgetBoxInterface:new( ... )
    RETURN Self
 
 
-METHOD QDesignerWidgetBoxInterface:fileName()
-   RETURN Qt_QDesignerWidgetBoxInterface_fileName( ::pPtr )
+METHOD QDesignerWidgetBoxInterface:fileName( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDesignerWidgetBoxInterface_fileName( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerWidgetBoxInterface:load()
-   RETURN Qt_QDesignerWidgetBoxInterface_load( ::pPtr )
+METHOD QDesignerWidgetBoxInterface:load( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDesignerWidgetBoxInterface_load( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerWidgetBoxInterface:save()
-   RETURN Qt_QDesignerWidgetBoxInterface_save( ::pPtr )
+METHOD QDesignerWidgetBoxInterface:save( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDesignerWidgetBoxInterface_save( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerWidgetBoxInterface:setFileName( cFileName )
-   RETURN Qt_QDesignerWidgetBoxInterface_setFileName( ::pPtr, cFileName )
+METHOD QDesignerWidgetBoxInterface:setFileName( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerWidgetBoxInterface_setFileName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

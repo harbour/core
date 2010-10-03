@@ -103,8 +103,8 @@ CREATE CLASS QDesignerObjectInspectorInterface INHERIT HbQtObjectHandler, HB_QWi
 
    METHOD  new( ... )
 
-   METHOD  core()
-   METHOD  setFormWindow( pFormWindow )
+   METHOD  core                          // (  )                                               -> oQDesignerFormEditorInterface
+   METHOD  setFormWindow                 // ( oQDesignerFormWindowInterface )                  -> NIL
 
    ENDCLASS
 
@@ -118,10 +118,22 @@ METHOD QDesignerObjectInspectorInterface:new( ... )
    RETURN Self
 
 
-METHOD QDesignerObjectInspectorInterface:core()
-   RETURN HB_QDesignerFormEditorInterface():from( Qt_QDesignerObjectInspectorInterface_core( ::pPtr ) )
+METHOD QDesignerObjectInspectorInterface:core( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDesignerFormEditorInterface():from( Qt_QDesignerObjectInspectorInterface_core( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerObjectInspectorInterface:setFormWindow( pFormWindow )
-   RETURN Qt_QDesignerObjectInspectorInterface_setFormWindow( ::pPtr, hbqt_ptr( pFormWindow ) )
+METHOD QDesignerObjectInspectorInterface:setFormWindow( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerObjectInspectorInterface_setFormWindow( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

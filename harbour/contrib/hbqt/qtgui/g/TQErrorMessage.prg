@@ -103,7 +103,8 @@ CREATE CLASS QErrorMessage INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QEr
 
    METHOD  new( ... )
 
-   METHOD  showMessage( ... )
+   METHOD  showMessage                   // ( cMessage )                                       -> NIL
+                                         // ( cMessage, cType )                                -> NIL
 
    ENDCLASS
 

@@ -31,7 +31,7 @@
  *     :maxPage()                                          -> nInt
  *     :minPage()                                          -> nInt
  *     :printRange()                                       -> nPrintRange
- *     :printer()                                          -> pQPrinter
+ *     :printer()                                          -> oQPrinter
  *     :setFromTo( nFrom, nTo )                            -> NIL
  *     :setMinMax( nMin, nMax )                            -> NIL
  *     :setPrintRange( nRange )                            -> NIL
@@ -55,7 +55,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQAbstractPrintDialog.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QAbstractPrintDialog.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QDialog()
  *  $END$
  */

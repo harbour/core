@@ -26,12 +26,12 @@
  *  $RETURNS$
  *     An instance of the object of type QStyleOption
  *  $METHODS$
- *     :initFrom( pWidget )                                -> NIL
- *     :direction()                                        -> nQt::LayoutDirection
- *     :fontMetrics()                                      -> pQFontMetrics
- *     :palette()                                          -> pQPalette
- *     :rect()                                             -> pQRect
- *     :state()                                            -> nQStyle::State
+ *     :initFrom( oQWidget )                               -> NIL
+ *     :direction()                                        -> nQt_LayoutDirection
+ *     :fontMetrics()                                      -> oQFontMetrics
+ *     :palette()                                          -> oQPalette
+ *     :rect()                                             -> oQRect
+ *     :state()                                            -> nQStyle_State
  *     :type()                                             -> nInt
  *     :version()                                          -> nInt
  * 
@@ -53,7 +53,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStyleOption.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOption.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

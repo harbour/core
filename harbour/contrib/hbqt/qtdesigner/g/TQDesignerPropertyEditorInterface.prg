@@ -103,13 +103,13 @@ CREATE CLASS QDesignerPropertyEditorInterface INHERIT HbQtObjectHandler, HB_QWid
 
    METHOD  new( ... )
 
-   METHOD  core()
-   METHOD  currentPropertyName()
-   METHOD  isReadOnly()
-   METHOD  object()
-   METHOD  setObject( pObject )
-   METHOD  setPropertyValue( cName, pValue, lChanged )
-   METHOD  setReadOnly( lReadOnly )
+   METHOD  core                          // (  )                                               -> oQDesignerFormEditorInterface
+   METHOD  currentPropertyName           // (  )                                               -> cQString
+   METHOD  isReadOnly                    // (  )                                               -> lBool
+   METHOD  object                        // (  )                                               -> oQObject
+   METHOD  setObject                     // ( oQObject )                                       -> NIL
+   METHOD  setPropertyValue              // ( cName, oQVariant, lChanged )                     -> NIL
+   METHOD  setReadOnly                   // ( lReadOnly )                                      -> NIL
 
    ENDCLASS
 
@@ -123,30 +123,76 @@ METHOD QDesignerPropertyEditorInterface:new( ... )
    RETURN Self
 
 
-METHOD QDesignerPropertyEditorInterface:core()
-   RETURN HB_QDesignerFormEditorInterface():from( Qt_QDesignerPropertyEditorInterface_core( ::pPtr ) )
+METHOD QDesignerPropertyEditorInterface:core( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDesignerFormEditorInterface():from( Qt_QDesignerPropertyEditorInterface_core( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerPropertyEditorInterface:currentPropertyName()
-   RETURN Qt_QDesignerPropertyEditorInterface_currentPropertyName( ::pPtr )
+METHOD QDesignerPropertyEditorInterface:currentPropertyName( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDesignerPropertyEditorInterface_currentPropertyName( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerPropertyEditorInterface:isReadOnly()
-   RETURN Qt_QDesignerPropertyEditorInterface_isReadOnly( ::pPtr )
+METHOD QDesignerPropertyEditorInterface:isReadOnly( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDesignerPropertyEditorInterface_isReadOnly( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerPropertyEditorInterface:object()
-   RETURN HB_QObject():from( Qt_QDesignerPropertyEditorInterface_object( ::pPtr ) )
+METHOD QDesignerPropertyEditorInterface:object( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QObject():from( Qt_QDesignerPropertyEditorInterface_object( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerPropertyEditorInterface:setObject( pObject )
-   RETURN Qt_QDesignerPropertyEditorInterface_setObject( ::pPtr, hbqt_ptr( pObject ) )
+METHOD QDesignerPropertyEditorInterface:setObject( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerPropertyEditorInterface_setObject( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerPropertyEditorInterface:setPropertyValue( cName, pValue, lChanged )
-   RETURN Qt_QDesignerPropertyEditorInterface_setPropertyValue( ::pPtr, cName, hbqt_ptr( pValue ), lChanged )
+METHOD QDesignerPropertyEditorInterface:setPropertyValue( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isLogical( hb_pvalue( 3 ) )
+         RETURN Qt_QDesignerPropertyEditorInterface_setPropertyValue( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QDesignerPropertyEditorInterface_setPropertyValue( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerPropertyEditorInterface:setReadOnly( lReadOnly )
-   RETURN Qt_QDesignerPropertyEditorInterface_setReadOnly( ::pPtr, lReadOnly )
+METHOD QDesignerPropertyEditorInterface:setReadOnly( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerPropertyEditorInterface_setReadOnly( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

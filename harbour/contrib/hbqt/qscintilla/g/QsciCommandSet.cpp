@@ -165,7 +165,7 @@ HB_FUNC( QT_QSCICOMMANDSET_READSETTINGS )
    QsciCommandSet * p = hbqt_par_QsciCommandSet( 1 );
    if( p )
    {
-      hb_retl( ( p )->readSettings( *hbqt_par_QSettings( 2 ), hbqt_par_char( 3 ) ) );
+      hb_retl( ( p )->readSettings( *hbqt_par_QSettings( 2 ), ( const char * ) hb_parc( 3 ) ) );
    }
 }
 
@@ -177,7 +177,7 @@ HB_FUNC( QT_QSCICOMMANDSET_WRITESETTINGS )
    QsciCommandSet * p = hbqt_par_QsciCommandSet( 1 );
    if( p )
    {
-      hb_retl( ( p )->writeSettings( *hbqt_par_QSettings( 2 ), hbqt_par_char( 3 ) ) );
+      hb_retl( ( p )->writeSettings( *hbqt_par_QSettings( 2 ), ( const char * ) hb_parc( 3 ) ) );
    }
 }
 

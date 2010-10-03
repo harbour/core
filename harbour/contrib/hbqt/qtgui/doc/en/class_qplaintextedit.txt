@@ -30,30 +30,30 @@
  *     :blockCount()                                       -> nInt
  *     :canPaste()                                         -> lBool
  *     :centerOnScroll()                                   -> lBool
- *     :createStandardContextMenu()                        -> pQMenu
- *     :currentCharFormat()                                -> pQTextCharFormat
- *     :cursorForPosition( pPos )                          -> pQTextCursor
- *     :cursorRect( pCursor )                              -> pQRect
- *     :cursorRect_1()                                     -> pQRect
+ *     :createStandardContextMenu()                        -> oQMenu
+ *     :currentCharFormat()                                -> oQTextCharFormat
+ *     :cursorForPosition( oQPoint )                       -> oQTextCursor
+ *     :cursorRect( oQTextCursor )                         -> oQRect
+ *     :cursorRect()                                       -> oQRect
  *     :cursorWidth()                                      -> nInt
- *     :document()                                         -> pQTextDocument
+ *     :document()                                         -> oQTextDocument
  *     :documentTitle()                                    -> cQString
  *     :ensureCursorVisible()                              -> NIL
  *     :find( cExp, nOptions )                             -> lBool
  *     :isReadOnly()                                       -> lBool
  *     :isUndoRedoEnabled()                                -> lBool
  *     :lineWrapMode()                                     -> nLineWrapMode
- *     :loadResource( nType, pName )                       -> pQVariant
+ *     :loadResource( nType, oQUrl )                       -> oQVariant
  *     :maximumBlockCount()                                -> nInt
- *     :mergeCurrentCharFormat( pModifier )                -> NIL
+ *     :mergeCurrentCharFormat( oQTextCharFormat )         -> NIL
  *     :moveCursor( nOperation, nMode )                    -> NIL
  *     :overwriteMode()                                    -> lBool
- *     :print( pPrinter )                                  -> NIL
+ *     :print( oQPrinter )                                 -> NIL
  *     :setBackgroundVisible( lVisible )                   -> NIL
  *     :setCenterOnScroll( lEnabled )                      -> NIL
- *     :setCurrentCharFormat( pFormat )                    -> NIL
+ *     :setCurrentCharFormat( oQTextCharFormat )           -> NIL
  *     :setCursorWidth( nWidth )                           -> NIL
- *     :setDocument( pDocument )                           -> NIL
+ *     :setDocument( oQTextDocument )                      -> NIL
  *     :setDocumentTitle( cTitle )                         -> NIL
  *     :setLineWrapMode( nMode )                           -> NIL
  *     :setMaximumBlockCount( nMaximum )                   -> NIL
@@ -61,16 +61,16 @@
  *     :setReadOnly( lRo )                                 -> NIL
  *     :setTabChangesFocus( lB )                           -> NIL
  *     :setTabStopWidth( nWidth )                          -> NIL
- *     :setTextCursor( pCursor )                           -> NIL
+ *     :setTextCursor( oQTextCursor )                      -> NIL
  *     :setTextInteractionFlags( nFlags )                  -> NIL
  *     :setUndoRedoEnabled( lEnable )                      -> NIL
  *     :setWordWrapMode( nPolicy )                         -> NIL
  *     :tabChangesFocus()                                  -> lBool
  *     :tabStopWidth()                                     -> nInt
- *     :textCursor()                                       -> pQTextCursor
- *     :textInteractionFlags()                             -> nQt::TextInteractionFlags
+ *     :textCursor()                                       -> oQTextCursor
+ *     :textInteractionFlags()                             -> nQt_TextInteractionFlags
  *     :toPlainText()                                      -> cQString
- *     :wordWrapMode()                                     -> nQTextOption::WrapMode
+ *     :wordWrapMode()                                     -> nQTextOption_WrapMode
  *     :appendHtml( cHtml )                                -> NIL
  *     :appendPlainText( cText )                           -> NIL
  *     :centerCursor()                                     -> NIL
@@ -102,7 +102,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQPlainTextEdit.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QPlainTextEdit.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractScrollArea()
  *  $END$
  */

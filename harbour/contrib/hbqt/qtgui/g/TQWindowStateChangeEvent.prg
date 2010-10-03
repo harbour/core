@@ -103,7 +103,7 @@ CREATE CLASS QWindowStateChangeEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTI
 
    METHOD  new( ... )
 
-   METHOD  oldState()
+   METHOD  oldState                      // (  )                                               -> nQt_WindowStates
 
    ENDCLASS
 
@@ -117,6 +117,10 @@ METHOD QWindowStateChangeEvent:new( ... )
    RETURN Self
 
 
-METHOD QWindowStateChangeEvent:oldState()
-   RETURN Qt_QWindowStateChangeEvent_oldState( ::pPtr )
+METHOD QWindowStateChangeEvent:oldState( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWindowStateChangeEvent_oldState( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

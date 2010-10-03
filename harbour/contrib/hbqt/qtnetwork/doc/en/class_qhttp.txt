@@ -29,23 +29,23 @@
  *     :bytesAvailable()                                   -> nQint64
  *     :clearPendingRequests()                             -> NIL
  *     :close()                                            -> nInt
- *     :currentDestinationDevice()                         -> pQIODevice
+ *     :currentDestinationDevice()                         -> oQIODevice
  *     :currentId()                                        -> nInt
- *     :currentRequest()                                   -> RequestHeader
- *     :currentSourceDevice()                              -> pQIODevice
+ *     :currentRequest()                                   -> oQHttpRequestHeader
+ *     :currentSourceDevice()                              -> oQIODevice
  *     :error()                                            -> nError
  *     :errorString()                                      -> cQString
- *     :get( cPath, pTo )                                  -> nInt
+ *     :get( cPath, oQIODevice )                           -> nInt
  *     :hasPendingRequests()                               -> lBool
  *     :head( cPath )                                      -> nInt
- *     :lastResponse()                                     -> ResponseHeader
- *     :post( cPath, pData, pTo )                          -> nInt
- *     :post_1( cPath, pData, pTo )                        -> nInt
- *     :readAll()                                          -> pQByteArray
- *     :request( pHeader, pData, pTo )                     -> nInt
- *     :request_1( pHeader, pData, pTo )                   -> nInt
+ *     :lastResponse()                                     -> oQHttpResponseHeader
+ *     :post( cPath, oQIODevice, oQIODevice )              -> nInt
+ *     :post( cPath, oQByteArray, oQIODevice )             -> nInt
+ *     :readAll()                                          -> oQByteArray
+ *     :request( oQHttpRequestHeader, oQIODevice, oQIODevice )  -> nInt
+ *     :request( oQHttpRequestHeader, oQByteArray, oQIODevice )  -> nInt
  *     :setHost( cHostName, nPort )                        -> nInt
- *     :setHost_1( cHostName, nMode, nPort )               -> nInt
+ *     :setHost( cHostName, nMode, nPort )                 -> nInt
  *     :setProxy( cHost, nPort, cUsername, cPassword )     -> nInt
  *     :setUser( cUserName, cPassword )                    -> nInt
  *     :state()                                            -> nState
@@ -69,7 +69,5 @@
  *     Harbour source: contrib/hbqt/qtnetwork/TQHttp.prg
  *     C++ wrappers  : contrib/hbqt/qtnetwork/QHttp.cpp
  *     Library       : hbqtnetwork
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

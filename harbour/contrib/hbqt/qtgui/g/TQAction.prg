@@ -103,56 +103,56 @@ CREATE CLASS QAction INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QAction
 
    METHOD  new( ... )
 
-   METHOD  actionGroup()
-   METHOD  activate( nEvent )
-   METHOD  associatedWidgets()
-   METHOD  autoRepeat()
-   METHOD  data()
-   METHOD  font()
-   METHOD  icon()
-   METHOD  iconText()
-   METHOD  isCheckable()
-   METHOD  isChecked()
-   METHOD  isEnabled()
-   METHOD  isIconVisibleInMenu()
-   METHOD  isSeparator()
-   METHOD  isVisible()
-   METHOD  menu()
-   METHOD  menuRole()
-   METHOD  parentWidget()
-   METHOD  setActionGroup( pGroup )
-   METHOD  setAutoRepeat( lBool )
-   METHOD  setCheckable( lBool )
-   METHOD  setData( pUserData )
-   METHOD  setFont( pFont )
-   METHOD  setIcon( pIcon )
-   METHOD  setIconText( cText )
-   METHOD  setIconVisibleInMenu( lVisible )
-   METHOD  setMenu( pMenu )
-   METHOD  setMenuRole( nMenuRole )
-   METHOD  setSeparator( lB )
-   METHOD  setShortcut( pShortcut )
-   METHOD  setShortcutContext( nContext )
-   METHOD  setShortcuts( nKey )
-   METHOD  setStatusTip( cStatusTip )
-   METHOD  setText( cText )
-   METHOD  setToolTip( cTip )
-   METHOD  setWhatsThis( cWhat )
-   METHOD  shortcut()
-   METHOD  shortcutContext()
-   METHOD  shortcuts()
-   METHOD  showStatusText( pWidget )
-   METHOD  statusTip()
-   METHOD  text()
-   METHOD  toolTip()
-   METHOD  whatsThis()
-   METHOD  hover()
-   METHOD  setChecked( lBool )
-   METHOD  setDisabled( lB )
-   METHOD  setEnabled( lBool )
-   METHOD  setVisible( lBool )
-   METHOD  toggle()
-   METHOD  trigger()
+   METHOD  actionGroup                   // (  )                                               -> oQActionGroup
+   METHOD  activate                      // ( nEvent )                                         -> NIL
+   METHOD  associatedWidgets             // (  )                                               -> oQList_QWidget
+   METHOD  autoRepeat                    // (  )                                               -> lBool
+   METHOD  data                          // (  )                                               -> oQVariant
+   METHOD  font                          // (  )                                               -> oQFont
+   METHOD  icon                          // (  )                                               -> oQIcon
+   METHOD  iconText                      // (  )                                               -> cQString
+   METHOD  isCheckable                   // (  )                                               -> lBool
+   METHOD  isChecked                     // (  )                                               -> lBool
+   METHOD  isEnabled                     // (  )                                               -> lBool
+   METHOD  isIconVisibleInMenu           // (  )                                               -> lBool
+   METHOD  isSeparator                   // (  )                                               -> lBool
+   METHOD  isVisible                     // (  )                                               -> lBool
+   METHOD  menu                          // (  )                                               -> oQMenu
+   METHOD  menuRole                      // (  )                                               -> nMenuRole
+   METHOD  parentWidget                  // (  )                                               -> oQWidget
+   METHOD  setActionGroup                // ( oQActionGroup )                                  -> NIL
+   METHOD  setAutoRepeat                 // ( lBool )                                          -> NIL
+   METHOD  setCheckable                  // ( lBool )                                          -> NIL
+   METHOD  setData                       // ( oQVariant )                                      -> NIL
+   METHOD  setFont                       // ( oQFont )                                         -> NIL
+   METHOD  setIcon                       // ( coQIcon )                                        -> NIL
+   METHOD  setIconText                   // ( cText )                                          -> NIL
+   METHOD  setIconVisibleInMenu          // ( lVisible )                                       -> NIL
+   METHOD  setMenu                       // ( oQMenu )                                         -> NIL
+   METHOD  setMenuRole                   // ( nMenuRole )                                      -> NIL
+   METHOD  setSeparator                  // ( lB )                                             -> NIL
+   METHOD  setShortcut                   // ( oQKeySequence )                                  -> NIL
+   METHOD  setShortcutContext            // ( nContext )                                       -> NIL
+   METHOD  setShortcuts                  // ( nKey )                                           -> NIL
+   METHOD  setStatusTip                  // ( cStatusTip )                                     -> NIL
+   METHOD  setText                       // ( cText )                                          -> NIL
+   METHOD  setToolTip                    // ( cTip )                                           -> NIL
+   METHOD  setWhatsThis                  // ( cWhat )                                          -> NIL
+   METHOD  shortcut                      // (  )                                               -> oQKeySequence
+   METHOD  shortcutContext               // (  )                                               -> nQt_ShortcutContext
+   METHOD  shortcuts                     // (  )                                               -> oQList_QKeySequence>
+   METHOD  showStatusText                // ( oQWidget )                                       -> lBool
+   METHOD  statusTip                     // (  )                                               -> cQString
+   METHOD  text                          // (  )                                               -> cQString
+   METHOD  toolTip                       // (  )                                               -> cQString
+   METHOD  whatsThis                     // (  )                                               -> cQString
+   METHOD  hover                         // (  )                                               -> NIL
+   METHOD  setChecked                    // ( lBool )                                          -> NIL
+   METHOD  setDisabled                   // ( lB )                                             -> NIL
+   METHOD  setEnabled                    // ( lBool )                                          -> NIL
+   METHOD  setVisible                    // ( lBool )                                          -> NIL
+   METHOD  toggle                        // (  )                                               -> NIL
+   METHOD  trigger                       // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -166,202 +166,500 @@ METHOD QAction:new( ... )
    RETURN Self
 
 
-METHOD QAction:actionGroup()
-   RETURN HB_QActionGroup():from( Qt_QAction_actionGroup( ::pPtr ) )
-
-
-METHOD QAction:activate( nEvent )
-   RETURN Qt_QAction_activate( ::pPtr, nEvent )
-
-
-METHOD QAction:associatedWidgets()
-   RETURN HB_QList():from( Qt_QAction_associatedWidgets( ::pPtr ) )
-
-
-METHOD QAction:autoRepeat()
-   RETURN Qt_QAction_autoRepeat( ::pPtr )
-
-
-METHOD QAction:data()
-   RETURN HB_QVariant():from( Qt_QAction_data( ::pPtr ) )
-
-
-METHOD QAction:font()
-   RETURN HB_QFont():from( Qt_QAction_font( ::pPtr ) )
-
-
-METHOD QAction:icon()
-   RETURN HB_QIcon():from( Qt_QAction_icon( ::pPtr ) )
-
-
-METHOD QAction:iconText()
-   RETURN Qt_QAction_iconText( ::pPtr )
-
-
-METHOD QAction:isCheckable()
-   RETURN Qt_QAction_isCheckable( ::pPtr )
-
-
-METHOD QAction:isChecked()
-   RETURN Qt_QAction_isChecked( ::pPtr )
-
-
-METHOD QAction:isEnabled()
-   RETURN Qt_QAction_isEnabled( ::pPtr )
-
-
-METHOD QAction:isIconVisibleInMenu()
-   RETURN Qt_QAction_isIconVisibleInMenu( ::pPtr )
-
-
-METHOD QAction:isSeparator()
-   RETURN Qt_QAction_isSeparator( ::pPtr )
-
-
-METHOD QAction:isVisible()
-   RETURN Qt_QAction_isVisible( ::pPtr )
-
-
-METHOD QAction:menu()
-   RETURN HB_QMenu():from( Qt_QAction_menu( ::pPtr ) )
-
-
-METHOD QAction:menuRole()
-   RETURN Qt_QAction_menuRole( ::pPtr )
-
-
-METHOD QAction:parentWidget()
-   RETURN HB_QWidget():from( Qt_QAction_parentWidget( ::pPtr ) )
-
-
-METHOD QAction:setActionGroup( pGroup )
-   RETURN Qt_QAction_setActionGroup( ::pPtr, hbqt_ptr( pGroup ) )
-
-
-METHOD QAction:setAutoRepeat( lBool )
-   RETURN Qt_QAction_setAutoRepeat( ::pPtr, lBool )
-
-
-METHOD QAction:setCheckable( lBool )
-   RETURN Qt_QAction_setCheckable( ::pPtr, lBool )
-
-
-METHOD QAction:setData( pUserData )
-   RETURN Qt_QAction_setData( ::pPtr, hbqt_ptr( pUserData ) )
-
-
-METHOD QAction:setFont( pFont )
-   RETURN Qt_QAction_setFont( ::pPtr, hbqt_ptr( pFont ) )
-
-
-METHOD QAction:setIcon( pIcon )
-   RETURN Qt_QAction_setIcon( ::pPtr, hbqt_ptr( pIcon ) )
-
-
-METHOD QAction:setIconText( cText )
-   RETURN Qt_QAction_setIconText( ::pPtr, cText )
-
-
-METHOD QAction:setIconVisibleInMenu( lVisible )
-   RETURN Qt_QAction_setIconVisibleInMenu( ::pPtr, lVisible )
-
-
-METHOD QAction:setMenu( pMenu )
-   RETURN Qt_QAction_setMenu( ::pPtr, hbqt_ptr( pMenu ) )
-
-
-METHOD QAction:setMenuRole( nMenuRole )
-   RETURN Qt_QAction_setMenuRole( ::pPtr, nMenuRole )
-
-
-METHOD QAction:setSeparator( lB )
-   RETURN Qt_QAction_setSeparator( ::pPtr, lB )
-
-
-METHOD QAction:setShortcut( pShortcut )
-   RETURN Qt_QAction_setShortcut( ::pPtr, hbqt_ptr( pShortcut ) )
-
-
-METHOD QAction:setShortcutContext( nContext )
-   RETURN Qt_QAction_setShortcutContext( ::pPtr, nContext )
-
-
-METHOD QAction:setShortcuts( nKey )
-   RETURN Qt_QAction_setShortcuts( ::pPtr, nKey )
-
-
-METHOD QAction:setStatusTip( cStatusTip )
-   RETURN Qt_QAction_setStatusTip( ::pPtr, cStatusTip )
-
-
-METHOD QAction:setText( cText )
-   RETURN Qt_QAction_setText( ::pPtr, cText )
-
-
-METHOD QAction:setToolTip( cTip )
-   RETURN Qt_QAction_setToolTip( ::pPtr, cTip )
-
-
-METHOD QAction:setWhatsThis( cWhat )
-   RETURN Qt_QAction_setWhatsThis( ::pPtr, cWhat )
-
-
-METHOD QAction:shortcut()
-   RETURN HB_QKeySequence():from( Qt_QAction_shortcut( ::pPtr ) )
-
-
-METHOD QAction:shortcutContext()
-   RETURN Qt_QAction_shortcutContext( ::pPtr )
-
-
-METHOD QAction:shortcuts()
-   RETURN HB_QList():from( Qt_QAction_shortcuts( ::pPtr ) )
-
-
-METHOD QAction:showStatusText( pWidget )
-   RETURN Qt_QAction_showStatusText( ::pPtr, hbqt_ptr( pWidget ) )
-
-
-METHOD QAction:statusTip()
-   RETURN Qt_QAction_statusTip( ::pPtr )
-
-
-METHOD QAction:text()
-   RETURN Qt_QAction_text( ::pPtr )
-
-
-METHOD QAction:toolTip()
-   RETURN Qt_QAction_toolTip( ::pPtr )
-
-
-METHOD QAction:whatsThis()
-   RETURN Qt_QAction_whatsThis( ::pPtr )
-
-
-METHOD QAction:hover()
-   RETURN Qt_QAction_hover( ::pPtr )
-
-
-METHOD QAction:setChecked( lBool )
-   RETURN Qt_QAction_setChecked( ::pPtr, lBool )
-
-
-METHOD QAction:setDisabled( lB )
-   RETURN Qt_QAction_setDisabled( ::pPtr, lB )
-
-
-METHOD QAction:setEnabled( lBool )
-   RETURN Qt_QAction_setEnabled( ::pPtr, lBool )
-
-
-METHOD QAction:setVisible( lBool )
-   RETURN Qt_QAction_setVisible( ::pPtr, lBool )
-
-
-METHOD QAction:toggle()
-   RETURN Qt_QAction_toggle( ::pPtr )
-
-
-METHOD QAction:trigger()
-   RETURN Qt_QAction_trigger( ::pPtr )
+METHOD QAction:actionGroup( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QActionGroup():from( Qt_QAction_actionGroup( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:activate( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAction_activate( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:associatedWidgets( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QAction_associatedWidgets( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:autoRepeat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAction_autoRepeat( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:data( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QVariant():from( Qt_QAction_data( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:font( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFont():from( Qt_QAction_font( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:icon( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QIcon():from( Qt_QAction_icon( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:iconText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAction_iconText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:isCheckable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAction_isCheckable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:isChecked( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAction_isChecked( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:isEnabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAction_isEnabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:isIconVisibleInMenu( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAction_isIconVisibleInMenu( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:isSeparator( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAction_isSeparator( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:isVisible( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAction_isVisible( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:menu( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QMenu():from( Qt_QAction_menu( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:menuRole( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAction_menuRole( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:parentWidget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QAction_parentWidget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:setActionGroup( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QAction_setActionGroup( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:setAutoRepeat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QAction_setAutoRepeat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:setCheckable( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QAction_setCheckable( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:setData( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QAction_setData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:setFont( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QAction_setFont( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:setIcon( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) )
+         RETURN Qt_QAction_setIcon( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:setIconText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QAction_setIconText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:setIconVisibleInMenu( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QAction_setIconVisibleInMenu( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:setMenu( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QAction_setMenu( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:setMenuRole( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAction_setMenuRole( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:setSeparator( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QAction_setSeparator( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:setShortcut( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QAction_setShortcut( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:setShortcutContext( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAction_setShortcutContext( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:setShortcuts( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAction_setShortcuts( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:setStatusTip( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QAction_setStatusTip( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:setText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QAction_setText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:setToolTip( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QAction_setToolTip( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:setWhatsThis( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QAction_setWhatsThis( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:shortcut( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QKeySequence():from( Qt_QAction_shortcut( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:shortcutContext( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAction_shortcutContext( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:shortcuts( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QAction_shortcuts( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:showStatusText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QAction_showStatusText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QAction_showStatusText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:statusTip( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAction_statusTip( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:text( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAction_text( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:toolTip( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAction_toolTip( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:whatsThis( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAction_whatsThis( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:hover( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAction_hover( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:setChecked( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QAction_setChecked( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:setDisabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QAction_setDisabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:setEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QAction_setEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:setVisible( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QAction_setVisible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:toggle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAction_toggle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QAction:trigger( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAction_trigger( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

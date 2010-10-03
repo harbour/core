@@ -103,8 +103,8 @@ CREATE CLASS QPaintEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_QPaint
 
    METHOD  new( ... )
 
-   METHOD  rect()
-   METHOD  region()
+   METHOD  rect                          // (  )                                               -> oQRect
+   METHOD  region                        // (  )                                               -> oQRegion
 
    ENDCLASS
 
@@ -118,10 +118,18 @@ METHOD QPaintEvent:new( ... )
    RETURN Self
 
 
-METHOD QPaintEvent:rect()
-   RETURN HB_QRect():from( Qt_QPaintEvent_rect( ::pPtr ) )
+METHOD QPaintEvent:rect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QPaintEvent_rect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPaintEvent:region()
-   RETURN HB_QRegion():from( Qt_QPaintEvent_region( ::pPtr ) )
+METHOD QPaintEvent:region( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRegion():from( Qt_QPaintEvent_region( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

@@ -103,43 +103,44 @@ CREATE CLASS QVariant INHERIT HbQtObjectHandler FUNCTION HB_QVariant
 
    METHOD  new( ... )
 
-   METHOD  canConvert( ... )
-   METHOD  clear()
-   METHOD  convert( nT )
-   METHOD  isNull()
-   METHOD  isValid()
-   METHOD  setValue( xValue )
-   METHOD  toBitArray()
-   METHOD  toBool()
-   METHOD  toByteArray()
-   METHOD  toChar()
-   METHOD  toDate()
-   METHOD  toDateTime()
-   METHOD  toDouble( lOk )
-   METHOD  toInt( lOk )
-   METHOD  toLine()
-   METHOD  toLineF()
-   METHOD  toList()
-   METHOD  toLocale()
-   METHOD  toLongLong( lOk )
-   METHOD  toPoint()
-   METHOD  toPointF()
-   METHOD  toRect()
-   METHOD  toRectF()
-   METHOD  toRegExp()
-   METHOD  toSize()
-   METHOD  toSizeF()
-   METHOD  toString()
-   METHOD  toStringList()
-   METHOD  toTime()
-   METHOD  toUInt( lOk )
-   METHOD  toULongLong( lOk )
-   METHOD  toUrl()
-   METHOD  type()
-   METHOD  userType()
-   METHOD  fromValue( xValue )
-   METHOD  nameToType( pName )
-   METHOD  typeToName( nTyp )
+   METHOD  canConvert                    // ( nT )                                             -> lBool
+                                         // ( nT )                                             -> lBool
+   METHOD  clear                         // (  )                                               -> NIL
+   METHOD  convert                       // ( nT )                                             -> lBool
+   METHOD  isNull                        // (  )                                               -> lBool
+   METHOD  isValid                       // (  )                                               -> lBool
+   METHOD  setValue                      // ( xValue )                                         -> NIL
+   METHOD  toBitArray                    // (  )                                               -> oQBitArray
+   METHOD  toBool                        // (  )                                               -> lBool
+   METHOD  toByteArray                   // (  )                                               -> oQByteArray
+   METHOD  toChar                        // (  )                                               -> oQChar
+   METHOD  toDate                        // (  )                                               -> oQDate
+   METHOD  toDateTime                    // (  )                                               -> oQDateTime
+   METHOD  toDouble                      // ( @lOk )                                           -> nDouble
+   METHOD  toInt                         // ( @lOk )                                           -> nInt
+   METHOD  toLine                        // (  )                                               -> oQLine
+   METHOD  toLineF                       // (  )                                               -> oQLineF
+   METHOD  toList                        // (  )                                               -> oQList_QVariant>
+   METHOD  toLocale                      // (  )                                               -> oQLocale
+   METHOD  toLongLong                    // ( @lOk )                                           -> nQlonglong
+   METHOD  toPoint                       // (  )                                               -> oQPoint
+   METHOD  toPointF                      // (  )                                               -> oQPointF
+   METHOD  toRect                        // (  )                                               -> oQRect
+   METHOD  toRectF                       // (  )                                               -> oQRectF
+   METHOD  toRegExp                      // (  )                                               -> oQRegExp
+   METHOD  toSize                        // (  )                                               -> oQSize
+   METHOD  toSizeF                       // (  )                                               -> oQSizeF
+   METHOD  toString                      // (  )                                               -> cQString
+   METHOD  toStringList                  // (  )                                               -> oQStringList
+   METHOD  toTime                        // (  )                                               -> oQTime
+   METHOD  toUInt                        // ( @lOk )                                           -> nUint
+   METHOD  toULongLong                   // ( @lOk )                                           -> nQulonglong
+   METHOD  toUrl                         // (  )                                               -> oQUrl
+   METHOD  type                          // (  )                                               -> nType
+   METHOD  userType                      // (  )                                               -> nInt
+   METHOD  fromValue                     // ( xValue )                                         -> oQVariant
+   METHOD  nameToType                    // ( cName )                                          -> nType
+   METHOD  typeToName                    // ( nTyp )                                           -> cChar
 
    ENDCLASS
 
@@ -158,158 +159,348 @@ METHOD QVariant:canConvert( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         SWITCH __objGetClsName( hb_pvalue( 1 ) )
-         CASE "QVARIANT::TYPE"
-            RETURN Qt_QVariant_canConvert( ::pPtr, ... )
-         CASE "QVARIANT::TYPE"
-            RETURN Qt_QVariant_canConvert_1( ::pPtr, ... )
-         ENDSWITCH
+         RETURN Qt_QVariant_canConvert( ::pPtr, ... )
+         // RETURN Qt_QVariant_canConvert_1( ::pPtr, ... )
       ENDCASE
       EXIT
    ENDSWITCH
    RETURN hbqt_error()
 
 
-METHOD QVariant:clear()
-   RETURN Qt_QVariant_clear( ::pPtr )
-
-
-METHOD QVariant:convert( nT )
-   RETURN Qt_QVariant_convert( ::pPtr, nT )
-
-
-METHOD QVariant:isNull()
-   RETURN Qt_QVariant_isNull( ::pPtr )
-
-
-METHOD QVariant:isValid()
-   RETURN Qt_QVariant_isValid( ::pPtr )
-
-
-METHOD QVariant:setValue( xValue )
-   RETURN Qt_QVariant_setValue( ::pPtr, xValue )
-
-
-METHOD QVariant:toBitArray()
-   RETURN HB_QBitArray():from( Qt_QVariant_toBitArray( ::pPtr ) )
-
-
-METHOD QVariant:toBool()
-   RETURN Qt_QVariant_toBool( ::pPtr )
-
-
-METHOD QVariant:toByteArray()
-   RETURN HB_QByteArray():from( Qt_QVariant_toByteArray( ::pPtr ) )
-
-
-METHOD QVariant:toChar()
-   RETURN HB_QChar():from( Qt_QVariant_toChar( ::pPtr ) )
-
-
-METHOD QVariant:toDate()
-   RETURN HB_QDate():from( Qt_QVariant_toDate( ::pPtr ) )
-
-
-METHOD QVariant:toDateTime()
-   RETURN HB_QDateTime():from( Qt_QVariant_toDateTime( ::pPtr ) )
-
-
-METHOD QVariant:toDouble( lOk )
-   RETURN Qt_QVariant_toDouble( ::pPtr, lOk )
-
-
-METHOD QVariant:toInt( lOk )
-   RETURN Qt_QVariant_toInt( ::pPtr, lOk )
-
-
-METHOD QVariant:toLine()
-   RETURN HB_QLine():from( Qt_QVariant_toLine( ::pPtr ) )
-
-
-METHOD QVariant:toLineF()
-   RETURN HB_QLineF():from( Qt_QVariant_toLineF( ::pPtr ) )
-
-
-METHOD QVariant:toList()
-   RETURN HB_QList():from( Qt_QVariant_toList( ::pPtr ) )
-
-
-METHOD QVariant:toLocale()
-   RETURN HB_QLocale():from( Qt_QVariant_toLocale( ::pPtr ) )
-
-
-METHOD QVariant:toLongLong( lOk )
-   RETURN Qt_QVariant_toLongLong( ::pPtr, lOk )
-
-
-METHOD QVariant:toPoint()
-   RETURN HB_QPoint():from( Qt_QVariant_toPoint( ::pPtr ) )
-
-
-METHOD QVariant:toPointF()
-   RETURN HB_QPointF():from( Qt_QVariant_toPointF( ::pPtr ) )
-
-
-METHOD QVariant:toRect()
-   RETURN HB_QRect():from( Qt_QVariant_toRect( ::pPtr ) )
-
-
-METHOD QVariant:toRectF()
-   RETURN HB_QRectF():from( Qt_QVariant_toRectF( ::pPtr ) )
-
-
-METHOD QVariant:toRegExp()
-   RETURN HB_QRegExp():from( Qt_QVariant_toRegExp( ::pPtr ) )
-
-
-METHOD QVariant:toSize()
-   RETURN HB_QSize():from( Qt_QVariant_toSize( ::pPtr ) )
-
-
-METHOD QVariant:toSizeF()
-   RETURN HB_QSizeF():from( Qt_QVariant_toSizeF( ::pPtr ) )
-
-
-METHOD QVariant:toString()
-   RETURN Qt_QVariant_toString( ::pPtr )
-
-
-METHOD QVariant:toStringList()
-   RETURN HB_QStringList():from( Qt_QVariant_toStringList( ::pPtr ) )
-
-
-METHOD QVariant:toTime()
-   RETURN HB_QTime():from( Qt_QVariant_toTime( ::pPtr ) )
-
-
-METHOD QVariant:toUInt( lOk )
-   RETURN Qt_QVariant_toUInt( ::pPtr, lOk )
-
-
-METHOD QVariant:toULongLong( lOk )
-   RETURN Qt_QVariant_toULongLong( ::pPtr, lOk )
-
-
-METHOD QVariant:toUrl()
-   RETURN HB_QUrl():from( Qt_QVariant_toUrl( ::pPtr ) )
-
-
-METHOD QVariant:type()
-   RETURN Qt_QVariant_type( ::pPtr )
-
-
-METHOD QVariant:userType()
-   RETURN Qt_QVariant_userType( ::pPtr )
-
-
-METHOD QVariant:fromValue( xValue )
-   RETURN HB_QVariant():from( Qt_QVariant_fromValue( ::pPtr, xValue ) )
-
-
-METHOD QVariant:nameToType( pName )
-   RETURN Qt_QVariant_nameToType( ::pPtr, hbqt_ptr( pName ) )
-
-
-METHOD QVariant:typeToName( nTyp )
-   RETURN Qt_QVariant_typeToName( ::pPtr, nTyp )
+METHOD QVariant:clear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QVariant_clear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:convert( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QVariant_convert( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:isNull( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QVariant_isNull( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:isValid( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QVariant_isValid( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:setValue( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isPointer( hb_pvalue( 1 ) )
+         RETURN Qt_QVariant_setValue( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:toBitArray( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBitArray():from( Qt_QVariant_toBitArray( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:toBool( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QVariant_toBool( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:toByteArray( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QByteArray():from( Qt_QVariant_toByteArray( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:toChar( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QChar():from( Qt_QVariant_toChar( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:toDate( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDate():from( Qt_QVariant_toDate( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:toDateTime( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDateTime():from( Qt_QVariant_toDateTime( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:toDouble( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QVariant_toDouble( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QVariant_toDouble( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:toInt( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QVariant_toInt( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QVariant_toInt( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:toLine( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QLine():from( Qt_QVariant_toLine( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:toLineF( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QLineF():from( Qt_QVariant_toLineF( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:toList( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QVariant_toList( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:toLocale( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QLocale():from( Qt_QVariant_toLocale( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:toLongLong( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QVariant_toLongLong( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QVariant_toLongLong( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:toPoint( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QVariant_toPoint( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:toPointF( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPointF():from( Qt_QVariant_toPointF( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:toRect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QVariant_toRect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:toRectF( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRectF():from( Qt_QVariant_toRectF( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:toRegExp( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRegExp():from( Qt_QVariant_toRegExp( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:toSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QVariant_toSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:toSizeF( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSizeF():from( Qt_QVariant_toSizeF( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:toString( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QVariant_toString( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:toStringList( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QVariant_toStringList( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:toTime( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTime():from( Qt_QVariant_toTime( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:toUInt( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QVariant_toUInt( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QVariant_toUInt( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:toULongLong( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QVariant_toULongLong( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QVariant_toULongLong( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:toUrl( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QUrl():from( Qt_QVariant_toUrl( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:type( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QVariant_type( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:userType( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QVariant_userType( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:fromValue( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isPointer( hb_pvalue( 1 ) )
+         RETURN HB_QVariant():from( Qt_QVariant_fromValue( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:nameToType( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QVariant_nameToType( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QVariant:typeToName( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QVariant_typeToName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

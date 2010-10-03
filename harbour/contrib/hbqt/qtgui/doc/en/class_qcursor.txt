@@ -26,15 +26,15 @@
  *  $RETURNS$
  *     An instance of the object of type QCursor
  *  $METHODS$
- *     :bitmap()                                           -> pQBitmap
- *     :hotSpot()                                          -> pQPoint
- *     :mask()                                             -> pQBitmap
- *     :pixmap()                                           -> pQPixmap
+ *     :bitmap()                                           -> oQBitmap
+ *     :hotSpot()                                          -> oQPoint
+ *     :mask()                                             -> oQBitmap
+ *     :pixmap()                                           -> oQPixmap
  *     :setShape( nShape )                                 -> NIL
- *     :shape()                                            -> nQt::CursorShape
- *     :pos()                                              -> pQPoint
+ *     :shape()                                            -> nQt_CursorShape
+ *     :pos()                                              -> oQPoint
  *     :setPos( nX, nY )                                   -> NIL
- *     :setPos_1( pP )                                     -> NIL
+ *     :setPos( oQPoint )                                  -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -59,7 +59,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQCursor.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QCursor.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

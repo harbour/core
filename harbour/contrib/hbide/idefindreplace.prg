@@ -273,7 +273,7 @@ METHOD IdeSearchReplace:create( oIde )
    ::oUI:q_buttonPrev:setToolTip( "Find Previous" )
    ::oUI:q_buttonPrev:connect( "clicked()", {|| ::find( ::cFind, .t. ), ::oIde:manageFocusInEditor() } )
 
-   ::oUI:q_checkReplace:setChecked( 0 )
+   ::oUI:q_checkReplace:setChecked( .f. )
    ::oUI:q_checkReplace:connect( "stateChanged(int)", {|i| ;
                                ::oUI:q_comboReplace:setEnabled( i == 2 ), ;
                                ::oUI:q_buttonReplace:setEnabled( i == 2 ), ;
@@ -975,7 +975,7 @@ METHOD IdeFindInFiles:execContextMenu( p )
       qMenu:addAction( "Zoom In"  )
       qMenu:addAction( "Zoom Out" )
 
-      IF ( qAct := qMenu:exec( ::oUI:q_editResults:mapToGlobal( p ) ) ):isValidObject()
+      IF ( qAct := qMenu:exec( ::oUI:q_editResults:mapToGlobal( QPoint( p ) ) ) ):isValidObject()
          cAct := qAct:text()
 
          SWITCH cAct

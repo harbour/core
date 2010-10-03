@@ -30,22 +30,22 @@
  *     :clearHistory()                                     -> NIL
  *     :forwardHistoryCount()                              -> nInt
  *     :historyTitle( nI )                                 -> cQString
- *     :historyUrl( nI )                                   -> pQUrl
+ *     :historyUrl( nI )                                   -> oQUrl
  *     :isBackwardAvailable()                              -> lBool
  *     :isForwardAvailable()                               -> lBool
- *     :loadResource( nType, pName )                       -> pQVariant
+ *     :loadResource( nType, oQUrl )                       -> oQVariant
  *     :openExternalLinks()                                -> lBool
  *     :openLinks()                                        -> lBool
- *     :searchPaths()                                      -> pQStringList
+ *     :searchPaths()                                      -> oQStringList
  *     :setOpenExternalLinks( lOpen )                      -> NIL
  *     :setOpenLinks( lOpen )                              -> NIL
- *     :setSearchPaths( pPaths )                           -> NIL
- *     :source()                                           -> pQUrl
+ *     :setSearchPaths( oQStringList )                     -> NIL
+ *     :source()                                           -> oQUrl
  *     :backward()                                         -> NIL
  *     :forward()                                          -> NIL
  *     :home()                                             -> NIL
  *     :reload()                                           -> NIL
- *     :setSource( pName )                                 -> NIL
+ *     :setSource( oQUrl )                                 -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -65,7 +65,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTextBrowser.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextBrowser.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QTextEdit()
  *  $END$
  */

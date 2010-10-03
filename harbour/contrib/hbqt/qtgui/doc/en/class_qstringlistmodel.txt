@@ -26,14 +26,14 @@
  *  $RETURNS$
  *     An instance of the object of type QStringListModel
  *  $METHODS$
- *     :data( pIndex, nRole )                              -> pQVariant
- *     :flags( pIndex )                                    -> nQt::ItemFlags
- *     :insertRows( nRow, nCount, pParent )                -> lBool
- *     :removeRows( nRow, nCount, pParent )                -> lBool
- *     :rowCount( pParent )                                -> nInt
- *     :setData( pIndex, pValue, nRole )                   -> lBool
- *     :setStringList( pStrings )                          -> NIL
- *     :stringList()                                       -> pQStringList
+ *     :data( oQModelIndex, nRole )                        -> oQVariant
+ *     :flags( oQModelIndex )                              -> nQt_ItemFlags
+ *     :insertRows( nRow, nCount, oQModelIndex )           -> lBool
+ *     :removeRows( nRow, nCount, oQModelIndex )           -> lBool
+ *     :rowCount( oQModelIndex )                           -> nInt
+ *     :setData( oQModelIndex, oQVariant, nRole )          -> lBool
+ *     :setStringList( oQStringList )                      -> NIL
+ *     :stringList()                                       -> oQStringList
  * 
  *  $DESCRIPTION$
  * 
@@ -53,7 +53,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStringListModel.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStringListModel.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractListModel()
  *  $END$
  */

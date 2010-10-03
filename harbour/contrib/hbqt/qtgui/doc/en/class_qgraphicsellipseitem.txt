@@ -26,9 +26,9 @@
  *  $RETURNS$
  *     An instance of the object of type QGraphicsEllipseItem
  *  $METHODS$
- *     :rect()                                             -> pQRectF
- *     :setRect( pRect )                                   -> NIL
- *     :setRect_1( nX, nY, nWidth, nHeight )               -> NIL
+ *     :rect()                                             -> oQRectF
+ *     :setRect( oQRectF )                                 -> NIL
+ *     :setRect( nX, nY, nWidth, nHeight )                 -> NIL
  *     :setSpanAngle( nAngle )                             -> NIL
  *     :setStartAngle( nAngle )                            -> NIL
  *     :spanAngle()                                        -> nInt
@@ -52,7 +52,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGraphicsEllipseItem.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsEllipseItem.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractGraphicsShapeItem()
  *  $END$
  */

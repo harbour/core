@@ -26,12 +26,15 @@
  *  $RETURNS$
  *     An instance of the object of type QDate
  *  $METHODS$
+ *     :addDays( nNdays )                                  -> oQDate
+ *     :addMonths( nNmonths )                              -> oQDate
+ *     :addYears( nNyears )                                -> oQDate
  *     :day()                                              -> nInt
  *     :dayOfWeek()                                        -> nInt
  *     :dayOfYear()                                        -> nInt
  *     :daysInMonth()                                      -> nInt
  *     :daysInYear()                                       -> nInt
- *     :daysTo( pD )                                       -> nInt
+ *     :daysTo( oQDate )                                   -> nInt
  *     :getDate( @nYear, @nMonth, @nDay )                  -> NIL
  *     :isNull()                                           -> lBool
  *     :isValid()                                          -> lBool
@@ -39,7 +42,7 @@
  *     :setDate( nYear, nMonth, nDay )                     -> lBool
  *     :toJulianDay()                                      -> nInt
  *     :toString( cFormat )                                -> cQString
- *     :toString_1( nFormat )                              -> cQString
+ *     :toString( nFormat )                                -> cQString
  *     :weekNumber( @nYearNumber )                         -> nInt
  *     :year()                                             -> nInt
  * 
@@ -61,7 +64,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQDate.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QDate.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

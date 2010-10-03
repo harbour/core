@@ -26,53 +26,57 @@
  *  $RETURNS$
  *     An instance of the object of type QTreeWidgetItem
  *  $METHODS$
- *     :addChild( pChild )                                 -> NIL
- *     :background( nColumn )                              -> pQBrush
- *     :checkState( nColumn )                              -> nQt::CheckState
+ *     :addChild( oQTreeWidgetItem )                       -> NIL
+ *     :background( nColumn )                              -> oQBrush
+ *     :checkState( nColumn )                              -> nQt_CheckState
+ *     :child( nIndex )                                    -> oQTreeWidgetItem
  *     :childCount()                                       -> nInt
- *     :childIndicatorPolicy()                             -> nQTreeWidgetItem::ChildIndicatorPolicy
+ *     :childIndicatorPolicy()                             -> nQTreeWidgetItem_ChildIndicatorPolicy
+ *     :clone()                                            -> oQTreeWidgetItem
  *     :columnCount()                                      -> nInt
- *     :data( nColumn, nRole )                             -> pQVariant
- *     :flags()                                            -> nQt::ItemFlags
- *     :font( nColumn )                                    -> pQFont
- *     :foreground( nColumn )                              -> pQBrush
- *     :icon( nColumn )                                    -> pQIcon
- *     :indexOfChild( pChild )                             -> nInt
- *     :insertChild( nIndex, pChild )                      -> NIL
+ *     :data( nColumn, nRole )                             -> oQVariant
+ *     :flags()                                            -> nQt_ItemFlags
+ *     :font( nColumn )                                    -> oQFont
+ *     :foreground( nColumn )                              -> oQBrush
+ *     :icon( nColumn )                                    -> oQIcon
+ *     :indexOfChild( oQTreeWidgetItem )                   -> nInt
+ *     :insertChild( nIndex, oQTreeWidgetItem )            -> NIL
  *     :isDisabled()                                       -> lBool
  *     :isExpanded()                                       -> lBool
  *     :isFirstColumnSpanned()                             -> lBool
  *     :isHidden()                                         -> lBool
  *     :isSelected()                                       -> lBool
- *     :read( pIn )                                        -> NIL
- *     :removeChild( pChild )                              -> NIL
- *     :setBackground( nColumn, pBrush )                   -> NIL
+ *     :parent()                                           -> oQTreeWidgetItem
+ *     :read( oQDataStream )                               -> NIL
+ *     :removeChild( oQTreeWidgetItem )                    -> NIL
+ *     :setBackground( nColumn, oQBrush )                  -> NIL
  *     :setCheckState( nColumn, nState )                   -> NIL
  *     :setChildIndicatorPolicy( nPolicy )                 -> NIL
- *     :setData( nColumn, nRole, pValue )                  -> NIL
+ *     :setData( nColumn, nRole, oQVariant )               -> NIL
  *     :setDisabled( lDisabled )                           -> NIL
  *     :setExpanded( lExpand )                             -> NIL
  *     :setFirstColumnSpanned( lSpan )                     -> NIL
  *     :setFlags( nFlags )                                 -> NIL
- *     :setFont( nColumn, pFont )                          -> NIL
- *     :setForeground( nColumn, pBrush )                   -> NIL
+ *     :setFont( nColumn, oQFont )                         -> NIL
+ *     :setForeground( nColumn, oQBrush )                  -> NIL
  *     :setHidden( lHide )                                 -> NIL
- *     :setIcon( nColumn, pIcon )                          -> NIL
+ *     :setIcon( nColumn, coQIcon )                        -> NIL
  *     :setSelected( lSelect )                             -> NIL
- *     :setSizeHint( nColumn, pSize )                      -> NIL
+ *     :setSizeHint( nColumn, oQSize )                     -> NIL
  *     :setStatusTip( nColumn, cStatusTip )                -> NIL
  *     :setText( nColumn, cText )                          -> NIL
  *     :setTextAlignment( nColumn, nAlignment )            -> NIL
  *     :setToolTip( nColumn, cToolTip )                    -> NIL
  *     :setWhatsThis( nColumn, cWhatsThis )                -> NIL
- *     :sizeHint( nColumn )                                -> pQSize
+ *     :sizeHint( nColumn )                                -> oQSize
  *     :sortChildren( nColumn, nOrder )                    -> NIL
  *     :statusTip( nColumn )                               -> cQString
- *     :takeChildren()                                     -> pQList<QTreeWidgetItem *>
+ *     :takeChild( nIndex )                                -> oQTreeWidgetItem
+ *     :takeChildren()                                     -> oQList_QTreeWidgetItem
  *     :text( nColumn )                                    -> cQString
  *     :textAlignment( nColumn )                           -> nInt
  *     :toolTip( nColumn )                                 -> cQString
- *     :treeWidget()                                       -> pQTreeWidget
+ *     :treeWidget()                                       -> oQTreeWidget
  *     :type()                                             -> nInt
  *     :whatsThis( nColumn )                               -> cQString
  * 
@@ -94,7 +98,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTreeWidgetItem.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTreeWidgetItem.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

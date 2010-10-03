@@ -32,7 +32,7 @@
  *     :isSliderDown()                                     -> lBool
  *     :maximum()                                          -> nInt
  *     :minimum()                                          -> nInt
- *     :orientation()                                      -> nQt::Orientation
+ *     :orientation()                                      -> nQt_Orientation
  *     :pageStep()                                         -> nInt
  *     :setInvertedAppearance( lBool )                     -> NIL
  *     :setInvertedControls( lBool )                       -> NIL
@@ -69,7 +69,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQAbstractSlider.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QAbstractSlider.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

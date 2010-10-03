@@ -54,7 +54,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQDoubleValidator.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QDoubleValidator.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QValidator()
  *  $END$
  */

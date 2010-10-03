@@ -103,74 +103,74 @@ CREATE CLASS HBQGraphicsItem INHERIT HbQtObjectHandler, HB_QGraphicsItem FUNCTIO
 
    METHOD  new( ... )
 
-   METHOD  hbSetBlock( xBlock )
-   METHOD  boundingRect()
-   METHOD  paint( pPainter, pOption, pWidget )
-   METHOD  determineResizeMode( pPos )
-   METHOD  adjustRect( pRect )
-   METHOD  prepare( pPainter )
-   METHOD  pen()
-   METHOD  setPen( pPen )
-   METHOD  brush()
-   METHOD  setBrush( pBrush )
-   METHOD  backgroundBrush()
-   METHOD  setBackgroundBrush( pBrush )
-   METHOD  font()
-   METHOD  setFont( pFont )
-   METHOD  lineStyle()
-   METHOD  setLineStyle( nLineStyle )
-   METHOD  startAngle()
-   METHOD  setStartAngle( nStartAngle )
-   METHOD  spanAngle()
-   METHOD  setSpanAngle( nSpanAngle )
-   METHOD  width()
-   METHOD  setWidth( nWidth )
-   METHOD  height()
-   METHOD  setHeight( nHeight )
-   METHOD  opacity()
-   METHOD  setOpacity( nOpacity )
-   METHOD  geometry()
-   METHOD  setGeometry( pRect )
-   METHOD  objectType()
-   METHOD  setObjectType( cType )
-   METHOD  objectName()
-   METHOD  setObjectName( cName )
-   METHOD  text()
-   METHOD  setText( cType )
-   METHOD  paintType()
-   METHOD  setPaintType( nPaintType )
-   METHOD  frameType()
-   METHOD  setFrameType( nFrameType )
-   METHOD  drawTextType()
-   METHOD  setDrawTextType( nDrawTextType )
-   METHOD  pixmap()
-   METHOD  setPixmap( pPixmap )
-   METHOD  textColor()
-   METHOD  setTextColor( pColor )
-   METHOD  borderWidth()
-   METHOD  setBorderWidth( nBWidth )
-   METHOD  borderColor()
-   METHOD  setBorderColor( pColor )
-   METHOD  sizePolicy()
-   METHOD  setSizePolicy( nSizePolicy )
-   METHOD  textFlags()
-   METHOD  setTextFlags( nTextFlags )
-   METHOD  resizeFlags()
-   METHOD  setResizeFlags( nResizeFlags )
-   METHOD  resizeHandle()
-   METHOD  setResizeHandle( nResizeHandle )
-   METHOD  barsIdentation()
-   METHOD  setBarsIdentation( nBarsIdentation )
-   METHOD  drawBorder()
-   METHOD  setDrawBorder( lDrawBorder )
-   METHOD  showGrid()
-   METHOD  setShowGrid( lShowGrid )
-   METHOD  showLabels()
-   METHOD  setShowLabels( lShowLabels )
-   METHOD  toColorFactor()
-   METHOD  setToColorFactor( nToColorFactor )
-   METHOD  setBarValues( pList )
-   METHOD  setLegendColorRectWidth( nLegendColorRectWidth )
+   METHOD  hbSetBlock                    // ( xBlock )                                         -> NIL
+   METHOD  boundingRect                  // (  )                                               -> oQRectF
+   METHOD  paint                         // ( oQPainter, oQStyleOptionGraphicsItem, oQWidget ) -> NIL
+   METHOD  determineResizeMode           // ( oQPointF )                                       -> nInt
+   METHOD  adjustRect                    // ( oQRectF )                                        -> oQRectF
+   METHOD  prepare                       // ( oQPainter )                                      -> NIL
+   METHOD  pen                           // (  )                                               -> oQPen
+   METHOD  setPen                        // ( oQPen )                                          -> NIL
+   METHOD  brush                         // (  )                                               -> oQBrush
+   METHOD  setBrush                      // ( oQBrush )                                        -> NIL
+   METHOD  backgroundBrush               // (  )                                               -> oQBrush
+   METHOD  setBackgroundBrush            // ( oQBrush )                                        -> NIL
+   METHOD  font                          // (  )                                               -> oQFont
+   METHOD  setFont                       // ( oQFont )                                         -> NIL
+   METHOD  lineStyle                     // (  )                                               -> nInt
+   METHOD  setLineStyle                  // ( nLineStyle )                                     -> NIL
+   METHOD  startAngle                    // (  )                                               -> nInt
+   METHOD  setStartAngle                 // ( nStartAngle )                                    -> NIL
+   METHOD  spanAngle                     // (  )                                               -> nInt
+   METHOD  setSpanAngle                  // ( nSpanAngle )                                     -> NIL
+   METHOD  width                         // (  )                                               -> nQreal
+   METHOD  setWidth                      // ( nWidth )                                         -> NIL
+   METHOD  height                        // (  )                                               -> nQreal
+   METHOD  setHeight                     // ( nHeight )                                        -> NIL
+   METHOD  opacity                       // (  )                                               -> nInt
+   METHOD  setOpacity                    // ( nOpacity )                                       -> NIL
+   METHOD  geometry                      // (  )                                               -> oQRectF
+   METHOD  setGeometry                   // ( oQRectF )                                        -> NIL
+   METHOD  objectType                    // (  )                                               -> cQString
+   METHOD  setObjectType                 // ( cType )                                          -> NIL
+   METHOD  objectName                    // (  )                                               -> cQString
+   METHOD  setObjectName                 // ( cName )                                          -> NIL
+   METHOD  text                          // (  )                                               -> cQString
+   METHOD  setText                       // ( cType )                                          -> NIL
+   METHOD  paintType                     // (  )                                               -> nInt
+   METHOD  setPaintType                  // ( nPaintType )                                     -> NIL
+   METHOD  frameType                     // (  )                                               -> nInt
+   METHOD  setFrameType                  // ( nFrameType )                                     -> NIL
+   METHOD  drawTextType                  // (  )                                               -> nInt
+   METHOD  setDrawTextType               // ( nDrawTextType )                                  -> NIL
+   METHOD  pixmap                        // (  )                                               -> oQPixmap
+   METHOD  setPixmap                     // ( oQPixmap )                                       -> NIL
+   METHOD  textColor                     // (  )                                               -> oQColor
+   METHOD  setTextColor                  // ( oQColor )                                        -> NIL
+   METHOD  borderWidth                   // (  )                                               -> nInt
+   METHOD  setBorderWidth                // ( nBWidth )                                        -> NIL
+   METHOD  borderColor                   // (  )                                               -> oQColor
+   METHOD  setBorderColor                // ( oQColor )                                        -> NIL
+   METHOD  sizePolicy                    // (  )                                               -> nInt
+   METHOD  setSizePolicy                 // ( nSizePolicy )                                    -> NIL
+   METHOD  textFlags                     // (  )                                               -> nInt
+   METHOD  setTextFlags                  // ( nTextFlags )                                     -> NIL
+   METHOD  resizeFlags                   // (  )                                               -> nInt
+   METHOD  setResizeFlags                // ( nResizeFlags )                                   -> NIL
+   METHOD  resizeHandle                  // (  )                                               -> nInt
+   METHOD  setResizeHandle               // ( nResizeHandle )                                  -> NIL
+   METHOD  barsIdentation                // (  )                                               -> nInt
+   METHOD  setBarsIdentation             // ( nBarsIdentation )                                -> NIL
+   METHOD  drawBorder                    // (  )                                               -> lBool
+   METHOD  setDrawBorder                 // ( lDrawBorder )                                    -> NIL
+   METHOD  showGrid                      // (  )                                               -> lBool
+   METHOD  setShowGrid                   // ( lShowGrid )                                      -> NIL
+   METHOD  showLabels                    // (  )                                               -> lBool
+   METHOD  setShowLabels                 // ( lShowLabels )                                    -> NIL
+   METHOD  toColorFactor                 // (  )                                               -> nQreal
+   METHOD  setToColorFactor              // ( nToColorFactor )                                 -> NIL
+   METHOD  setBarValues                  // ( oQStringList )                                   -> NIL
+   METHOD  setLegendColorRectWidth       // ( nLegendColorRectWidth )                          -> NIL
 
    ENDCLASS
 
@@ -184,274 +184,700 @@ METHOD HBQGraphicsItem:new( ... )
    RETURN Self
 
 
-METHOD HBQGraphicsItem:hbSetBlock( xBlock )
-   RETURN Qt_HBQGraphicsItem_hbSetBlock( ::pPtr, xBlock )
+METHOD HBQGraphicsItem:hbSetBlock( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE ( hb_isBlock( hb_pvalue( 1 ) ) .OR. hb_isPointer( hb_pvalue( 1 ) ) )
+         RETURN Qt_HBQGraphicsItem_hbSetBlock( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:boundingRect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRectF():from( Qt_HBQGraphicsItem_boundingRect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:paint( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_HBQGraphicsItem_paint( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_HBQGraphicsItem_paint( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:determineResizeMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_determineResizeMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:adjustRect( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QRectF():from( Qt_HBQGraphicsItem_adjustRect( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:prepare( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_prepare( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:pen( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPen():from( Qt_HBQGraphicsItem_pen( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setPen( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setPen( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:brush( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_HBQGraphicsItem_brush( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
 
-
-METHOD HBQGraphicsItem:boundingRect()
-   RETURN HB_QRectF():from( Qt_HBQGraphicsItem_boundingRect( ::pPtr ) )
-
-
-METHOD HBQGraphicsItem:paint( pPainter, pOption, pWidget )
-   RETURN Qt_HBQGraphicsItem_paint( ::pPtr, hbqt_ptr( pPainter ), hbqt_ptr( pOption ), hbqt_ptr( pWidget ) )
-
-
-METHOD HBQGraphicsItem:determineResizeMode( pPos )
-   RETURN Qt_HBQGraphicsItem_determineResizeMode( ::pPtr, hbqt_ptr( pPos ) )
-
-
-METHOD HBQGraphicsItem:adjustRect( pRect )
-   RETURN HB_QRectF():from( Qt_HBQGraphicsItem_adjustRect( ::pPtr, hbqt_ptr( pRect ) ) )
-
-
-METHOD HBQGraphicsItem:prepare( pPainter )
-   RETURN Qt_HBQGraphicsItem_prepare( ::pPtr, hbqt_ptr( pPainter ) )
-
-
-METHOD HBQGraphicsItem:pen()
-   RETURN HB_QPen():from( Qt_HBQGraphicsItem_pen( ::pPtr ) )
-
-
-METHOD HBQGraphicsItem:setPen( pPen )
-   RETURN Qt_HBQGraphicsItem_setPen( ::pPtr, hbqt_ptr( pPen ) )
-
-
-METHOD HBQGraphicsItem:brush()
-   RETURN HB_QBrush():from( Qt_HBQGraphicsItem_brush( ::pPtr ) )
-
-
-METHOD HBQGraphicsItem:setBrush( pBrush )
-   RETURN Qt_HBQGraphicsItem_setBrush( ::pPtr, hbqt_ptr( pBrush ) )
-
-
-METHOD HBQGraphicsItem:backgroundBrush()
-   RETURN HB_QBrush():from( Qt_HBQGraphicsItem_backgroundBrush( ::pPtr ) )
-
-
-METHOD HBQGraphicsItem:setBackgroundBrush( pBrush )
-   RETURN Qt_HBQGraphicsItem_setBackgroundBrush( ::pPtr, hbqt_ptr( pBrush ) )
-
-
-METHOD HBQGraphicsItem:font()
-   RETURN HB_QFont():from( Qt_HBQGraphicsItem_font( ::pPtr ) )
-
-
-METHOD HBQGraphicsItem:setFont( pFont )
-   RETURN Qt_HBQGraphicsItem_setFont( ::pPtr, hbqt_ptr( pFont ) )
-
-
-METHOD HBQGraphicsItem:lineStyle()
-   RETURN Qt_HBQGraphicsItem_lineStyle( ::pPtr )
-
-
-METHOD HBQGraphicsItem:setLineStyle( nLineStyle )
-   RETURN Qt_HBQGraphicsItem_setLineStyle( ::pPtr, nLineStyle )
-
-
-METHOD HBQGraphicsItem:startAngle()
-   RETURN Qt_HBQGraphicsItem_startAngle( ::pPtr )
-
-
-METHOD HBQGraphicsItem:setStartAngle( nStartAngle )
-   RETURN Qt_HBQGraphicsItem_setStartAngle( ::pPtr, nStartAngle )
-
-
-METHOD HBQGraphicsItem:spanAngle()
-   RETURN Qt_HBQGraphicsItem_spanAngle( ::pPtr )
-
-
-METHOD HBQGraphicsItem:setSpanAngle( nSpanAngle )
-   RETURN Qt_HBQGraphicsItem_setSpanAngle( ::pPtr, nSpanAngle )
-
-
-METHOD HBQGraphicsItem:width()
-   RETURN Qt_HBQGraphicsItem_width( ::pPtr )
-
-
-METHOD HBQGraphicsItem:setWidth( nWidth )
-   RETURN Qt_HBQGraphicsItem_setWidth( ::pPtr, nWidth )
-
-
-METHOD HBQGraphicsItem:height()
-   RETURN Qt_HBQGraphicsItem_height( ::pPtr )
-
-
-METHOD HBQGraphicsItem:setHeight( nHeight )
-   RETURN Qt_HBQGraphicsItem_setHeight( ::pPtr, nHeight )
-
-
-METHOD HBQGraphicsItem:opacity()
-   RETURN Qt_HBQGraphicsItem_opacity( ::pPtr )
-
-
-METHOD HBQGraphicsItem:setOpacity( nOpacity )
-   RETURN Qt_HBQGraphicsItem_setOpacity( ::pPtr, nOpacity )
-
-
-METHOD HBQGraphicsItem:geometry()
-   RETURN HB_QRectF():from( Qt_HBQGraphicsItem_geometry( ::pPtr ) )
-
-
-METHOD HBQGraphicsItem:setGeometry( pRect )
-   RETURN Qt_HBQGraphicsItem_setGeometry( ::pPtr, hbqt_ptr( pRect ) )
-
-
-METHOD HBQGraphicsItem:objectType()
-   RETURN Qt_HBQGraphicsItem_objectType( ::pPtr )
-
-
-METHOD HBQGraphicsItem:setObjectType( cType )
-   RETURN Qt_HBQGraphicsItem_setObjectType( ::pPtr, cType )
-
-
-METHOD HBQGraphicsItem:objectName()
-   RETURN Qt_HBQGraphicsItem_objectName( ::pPtr )
-
-
-METHOD HBQGraphicsItem:setObjectName( cName )
-   RETURN Qt_HBQGraphicsItem_setObjectName( ::pPtr, cName )
-
-
-METHOD HBQGraphicsItem:text()
-   RETURN Qt_HBQGraphicsItem_text( ::pPtr )
-
-
-METHOD HBQGraphicsItem:setText( cType )
-   RETURN Qt_HBQGraphicsItem_setText( ::pPtr, cType )
-
-
-METHOD HBQGraphicsItem:paintType()
-   RETURN Qt_HBQGraphicsItem_paintType( ::pPtr )
-
-
-METHOD HBQGraphicsItem:setPaintType( nPaintType )
-   RETURN Qt_HBQGraphicsItem_setPaintType( ::pPtr, nPaintType )
-
-
-METHOD HBQGraphicsItem:frameType()
-   RETURN Qt_HBQGraphicsItem_frameType( ::pPtr )
-
-
-METHOD HBQGraphicsItem:setFrameType( nFrameType )
-   RETURN Qt_HBQGraphicsItem_setFrameType( ::pPtr, nFrameType )
-
-
-METHOD HBQGraphicsItem:drawTextType()
-   RETURN Qt_HBQGraphicsItem_drawTextType( ::pPtr )
-
-
-METHOD HBQGraphicsItem:setDrawTextType( nDrawTextType )
-   RETURN Qt_HBQGraphicsItem_setDrawTextType( ::pPtr, nDrawTextType )
-
-
-METHOD HBQGraphicsItem:pixmap()
-   RETURN HB_QPixmap():from( Qt_HBQGraphicsItem_pixmap( ::pPtr ) )
-
-
-METHOD HBQGraphicsItem:setPixmap( pPixmap )
-   RETURN Qt_HBQGraphicsItem_setPixmap( ::pPtr, hbqt_ptr( pPixmap ) )
-
-
-METHOD HBQGraphicsItem:textColor()
-   RETURN HB_QColor():from( Qt_HBQGraphicsItem_textColor( ::pPtr ) )
-
-
-METHOD HBQGraphicsItem:setTextColor( pColor )
-   RETURN Qt_HBQGraphicsItem_setTextColor( ::pPtr, hbqt_ptr( pColor ) )
-
-
-METHOD HBQGraphicsItem:borderWidth()
-   RETURN Qt_HBQGraphicsItem_borderWidth( ::pPtr )
-
-
-METHOD HBQGraphicsItem:setBorderWidth( nBWidth )
-   RETURN Qt_HBQGraphicsItem_setBorderWidth( ::pPtr, nBWidth )
-
-
-METHOD HBQGraphicsItem:borderColor()
-   RETURN HB_QColor():from( Qt_HBQGraphicsItem_borderColor( ::pPtr ) )
-
-
-METHOD HBQGraphicsItem:setBorderColor( pColor )
-   RETURN Qt_HBQGraphicsItem_setBorderColor( ::pPtr, hbqt_ptr( pColor ) )
-
-
-METHOD HBQGraphicsItem:sizePolicy()
-   RETURN Qt_HBQGraphicsItem_sizePolicy( ::pPtr )
-
-
-METHOD HBQGraphicsItem:setSizePolicy( nSizePolicy )
-   RETURN Qt_HBQGraphicsItem_setSizePolicy( ::pPtr, nSizePolicy )
-
-
-METHOD HBQGraphicsItem:textFlags()
-   RETURN Qt_HBQGraphicsItem_textFlags( ::pPtr )
-
-
-METHOD HBQGraphicsItem:setTextFlags( nTextFlags )
-   RETURN Qt_HBQGraphicsItem_setTextFlags( ::pPtr, nTextFlags )
-
-
-METHOD HBQGraphicsItem:resizeFlags()
-   RETURN Qt_HBQGraphicsItem_resizeFlags( ::pPtr )
-
-
-METHOD HBQGraphicsItem:setResizeFlags( nResizeFlags )
-   RETURN Qt_HBQGraphicsItem_setResizeFlags( ::pPtr, nResizeFlags )
-
-
-METHOD HBQGraphicsItem:resizeHandle()
-   RETURN Qt_HBQGraphicsItem_resizeHandle( ::pPtr )
-
-
-METHOD HBQGraphicsItem:setResizeHandle( nResizeHandle )
-   RETURN Qt_HBQGraphicsItem_setResizeHandle( ::pPtr, nResizeHandle )
-
-
-METHOD HBQGraphicsItem:barsIdentation()
-   RETURN Qt_HBQGraphicsItem_barsIdentation( ::pPtr )
-
-
-METHOD HBQGraphicsItem:setBarsIdentation( nBarsIdentation )
-   RETURN Qt_HBQGraphicsItem_setBarsIdentation( ::pPtr, nBarsIdentation )
-
-
-METHOD HBQGraphicsItem:drawBorder()
-   RETURN Qt_HBQGraphicsItem_drawBorder( ::pPtr )
-
-
-METHOD HBQGraphicsItem:setDrawBorder( lDrawBorder )
-   RETURN Qt_HBQGraphicsItem_setDrawBorder( ::pPtr, lDrawBorder )
-
-
-METHOD HBQGraphicsItem:showGrid()
-   RETURN Qt_HBQGraphicsItem_showGrid( ::pPtr )
-
-
-METHOD HBQGraphicsItem:setShowGrid( lShowGrid )
-   RETURN Qt_HBQGraphicsItem_setShowGrid( ::pPtr, lShowGrid )
-
-
-METHOD HBQGraphicsItem:showLabels()
-   RETURN Qt_HBQGraphicsItem_showLabels( ::pPtr )
-
-
-METHOD HBQGraphicsItem:setShowLabels( lShowLabels )
-   RETURN Qt_HBQGraphicsItem_setShowLabels( ::pPtr, lShowLabels )
-
-
-METHOD HBQGraphicsItem:toColorFactor()
-   RETURN Qt_HBQGraphicsItem_toColorFactor( ::pPtr )
-
-
-METHOD HBQGraphicsItem:setToColorFactor( nToColorFactor )
-   RETURN Qt_HBQGraphicsItem_setToColorFactor( ::pPtr, nToColorFactor )
-
-
-METHOD HBQGraphicsItem:setBarValues( pList )
-   RETURN Qt_HBQGraphicsItem_setBarValues( ::pPtr, hbqt_ptr( pList ) )
-
-
-METHOD HBQGraphicsItem:setLegendColorRectWidth( nLegendColorRectWidth )
-   RETURN Qt_HBQGraphicsItem_setLegendColorRectWidth( ::pPtr, nLegendColorRectWidth )
+METHOD HBQGraphicsItem:setBrush( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setBrush( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:backgroundBrush( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_HBQGraphicsItem_backgroundBrush( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setBackgroundBrush( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setBackgroundBrush( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:font( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFont():from( Qt_HBQGraphicsItem_font( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setFont( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setFont( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:lineStyle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQGraphicsItem_lineStyle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setLineStyle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setLineStyle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:startAngle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQGraphicsItem_startAngle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setStartAngle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setStartAngle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:spanAngle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQGraphicsItem_spanAngle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setSpanAngle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setSpanAngle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:width( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQGraphicsItem_width( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:height( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQGraphicsItem_height( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setHeight( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setHeight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:opacity( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQGraphicsItem_opacity( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setOpacity( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setOpacity( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:geometry( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRectF():from( Qt_HBQGraphicsItem_geometry( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setGeometry( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setGeometry( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:objectType( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQGraphicsItem_objectType( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setObjectType( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setObjectType( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:objectName( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQGraphicsItem_objectName( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setObjectName( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setObjectName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:text( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQGraphicsItem_text( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:paintType( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQGraphicsItem_paintType( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setPaintType( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setPaintType( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:frameType( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQGraphicsItem_frameType( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setFrameType( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setFrameType( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:drawTextType( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQGraphicsItem_drawTextType( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setDrawTextType( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setDrawTextType( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:pixmap( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPixmap():from( Qt_HBQGraphicsItem_pixmap( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setPixmap( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setPixmap( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:textColor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QColor():from( Qt_HBQGraphicsItem_textColor( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setTextColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setTextColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:borderWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQGraphicsItem_borderWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setBorderWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setBorderWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:borderColor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QColor():from( Qt_HBQGraphicsItem_borderColor( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setBorderColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setBorderColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:sizePolicy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQGraphicsItem_sizePolicy( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setSizePolicy( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setSizePolicy( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:textFlags( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQGraphicsItem_textFlags( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setTextFlags( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setTextFlags( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:resizeFlags( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQGraphicsItem_resizeFlags( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setResizeFlags( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setResizeFlags( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:resizeHandle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQGraphicsItem_resizeHandle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setResizeHandle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setResizeHandle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:barsIdentation( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQGraphicsItem_barsIdentation( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setBarsIdentation( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setBarsIdentation( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:drawBorder( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQGraphicsItem_drawBorder( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setDrawBorder( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setDrawBorder( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:showGrid( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQGraphicsItem_showGrid( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setShowGrid( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setShowGrid( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:showLabels( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQGraphicsItem_showLabels( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setShowLabels( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setShowLabels( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:toColorFactor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQGraphicsItem_toColorFactor( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setToColorFactor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setToColorFactor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setBarValues( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setBarValues( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQGraphicsItem:setLegendColorRectWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsItem_setLegendColorRectWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

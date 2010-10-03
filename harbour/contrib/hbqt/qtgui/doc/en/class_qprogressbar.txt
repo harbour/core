@@ -26,20 +26,20 @@
  *  $RETURNS$
  *     An instance of the object of type QProgressBar
  *  $METHODS$
- *     :alignment()                                        -> nQt::Alignment
+ *     :alignment()                                        -> nQt_Alignment
  *     :format()                                           -> cQString
  *     :invertedAppearance()                               -> lBool
  *     :isTextVisible()                                    -> lBool
  *     :maximum()                                          -> nInt
  *     :minimum()                                          -> nInt
- *     :orientation()                                      -> nQt::Orientation
+ *     :orientation()                                      -> nQt_Orientation
  *     :setAlignment( nAlignment )                         -> NIL
  *     :setFormat( cFormat )                               -> NIL
  *     :setInvertedAppearance( lInvert )                   -> NIL
  *     :setTextDirection( nTextDirection )                 -> NIL
  *     :setTextVisible( lVisible )                         -> NIL
  *     :text()                                             -> cQString
- *     :textDirection()                                    -> nQProgressBar::Direction
+ *     :textDirection()                                    -> nQProgressBar_Direction
  *     :value()                                            -> nInt
  *     :reset()                                            -> NIL
  *     :setMaximum( nMaximum )                             -> NIL
@@ -66,7 +66,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQProgressBar.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QProgressBar.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

@@ -103,10 +103,10 @@ CREATE CLASS QPlainTextDocumentLayout INHERIT HbQtObjectHandler, HB_QAbstractTex
 
    METHOD  new( ... )
 
-   METHOD  cursorWidth()
-   METHOD  ensureBlockLayout( pBlock )
-   METHOD  requestUpdate()
-   METHOD  setCursorWidth( nWidth )
+   METHOD  cursorWidth                   // (  )                                               -> nInt
+   METHOD  ensureBlockLayout             // ( oQTextBlock )                                    -> NIL
+   METHOD  requestUpdate                 // (  )                                               -> NIL
+   METHOD  setCursorWidth                // ( nWidth )                                         -> NIL
 
    ENDCLASS
 
@@ -120,18 +120,42 @@ METHOD QPlainTextDocumentLayout:new( ... )
    RETURN Self
 
 
-METHOD QPlainTextDocumentLayout:cursorWidth()
-   RETURN Qt_QPlainTextDocumentLayout_cursorWidth( ::pPtr )
+METHOD QPlainTextDocumentLayout:cursorWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPlainTextDocumentLayout_cursorWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPlainTextDocumentLayout:ensureBlockLayout( pBlock )
-   RETURN Qt_QPlainTextDocumentLayout_ensureBlockLayout( ::pPtr, hbqt_ptr( pBlock ) )
+METHOD QPlainTextDocumentLayout:ensureBlockLayout( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPlainTextDocumentLayout_ensureBlockLayout( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPlainTextDocumentLayout:requestUpdate()
-   RETURN Qt_QPlainTextDocumentLayout_requestUpdate( ::pPtr )
+METHOD QPlainTextDocumentLayout:requestUpdate( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPlainTextDocumentLayout_requestUpdate( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPlainTextDocumentLayout:setCursorWidth( nWidth )
-   RETURN Qt_QPlainTextDocumentLayout_setCursorWidth( ::pPtr, nWidth )
+METHOD QPlainTextDocumentLayout:setCursorWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPlainTextDocumentLayout_setCursorWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

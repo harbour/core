@@ -103,15 +103,15 @@ CREATE CLASS QDoubleValidator INHERIT HbQtObjectHandler, HB_QValidator FUNCTION 
 
    METHOD  new( ... )
 
-   METHOD  bottom()
-   METHOD  decimals()
-   METHOD  notation()
-   METHOD  setBottom( nDouble )
-   METHOD  setDecimals( nInt )
-   METHOD  setNotation( nNotation )
-   METHOD  setRange( nMinimum, nMaximum, nDecimals )
-   METHOD  setTop( nDouble )
-   METHOD  top()
+   METHOD  bottom                        // (  )                                               -> nDouble
+   METHOD  decimals                      // (  )                                               -> nInt
+   METHOD  notation                      // (  )                                               -> nNotation
+   METHOD  setBottom                     // ( nDouble )                                        -> NIL
+   METHOD  setDecimals                   // ( nInt )                                           -> NIL
+   METHOD  setNotation                   // ( nNotation )                                      -> NIL
+   METHOD  setRange                      // ( nMinimum, nMaximum, nDecimals )                  -> NIL
+   METHOD  setTop                        // ( nDouble )                                        -> NIL
+   METHOD  top                           // (  )                                               -> nDouble
 
    ENDCLASS
 
@@ -125,38 +125,100 @@ METHOD QDoubleValidator:new( ... )
    RETURN Self
 
 
-METHOD QDoubleValidator:bottom()
-   RETURN Qt_QDoubleValidator_bottom( ::pPtr )
+METHOD QDoubleValidator:bottom( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDoubleValidator_bottom( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDoubleValidator:decimals()
-   RETURN Qt_QDoubleValidator_decimals( ::pPtr )
+METHOD QDoubleValidator:decimals( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDoubleValidator_decimals( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDoubleValidator:notation()
-   RETURN Qt_QDoubleValidator_notation( ::pPtr )
+METHOD QDoubleValidator:notation( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDoubleValidator_notation( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDoubleValidator:setBottom( nDouble )
-   RETURN Qt_QDoubleValidator_setBottom( ::pPtr, nDouble )
+METHOD QDoubleValidator:setBottom( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDoubleValidator_setBottom( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDoubleValidator:setDecimals( nInt )
-   RETURN Qt_QDoubleValidator_setDecimals( ::pPtr, nInt )
+METHOD QDoubleValidator:setDecimals( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDoubleValidator_setDecimals( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDoubleValidator:setNotation( nNotation )
-   RETURN Qt_QDoubleValidator_setNotation( ::pPtr, nNotation )
+METHOD QDoubleValidator:setNotation( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDoubleValidator_setNotation( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDoubleValidator:setRange( nMinimum, nMaximum, nDecimals )
-   RETURN Qt_QDoubleValidator_setRange( ::pPtr, nMinimum, nMaximum, nDecimals )
+METHOD QDoubleValidator:setRange( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QDoubleValidator_setRange( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QDoubleValidator_setRange( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDoubleValidator:setTop( nDouble )
-   RETURN Qt_QDoubleValidator_setTop( ::pPtr, nDouble )
+METHOD QDoubleValidator:setTop( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDoubleValidator_setTop( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDoubleValidator:top()
-   RETURN Qt_QDoubleValidator_top( ::pPtr )
+METHOD QDoubleValidator:top( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDoubleValidator_top( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

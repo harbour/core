@@ -26,12 +26,12 @@
  *  $RETURNS$
  *     An instance of the object of type HBQSyntaxHighlighter
  *  $METHODS$
- *     :hbSetMultiLineCommentFormat( pFormat )             -> NIL
- *     :hbSetSingleLineCommentFormat( pFormat )            -> NIL
- *     :hbSetRule( cName, cPattern, pFormat )              -> NIL
- *     :hbSetFormat( cName, pFormat )                      -> NIL
- *     :hbSetFormatColumnSelection( nStart, nCount, pColor )  -> NIL
- *     :hbSetRuleWithRegExp( cName, pReg, pFormat )        -> NIL
+ *     :hbSetMultiLineCommentFormat( oQTextCharFormat )    -> NIL
+ *     :hbSetSingleLineCommentFormat( oQTextCharFormat )   -> NIL
+ *     :hbSetRule( cName, cPattern, oQTextCharFormat )     -> NIL
+ *     :hbSetFormat( cName, oQTextCharFormat )             -> NIL
+ *     :hbSetFormatColumnSelection( nStart, nCount, oQColor )  -> NIL
+ *     :hbSetRuleWithRegExp( cName, oQRegExp, oQTextCharFormat )  -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -51,7 +51,5 @@
  *     Harbour source: contrib/hbqt/qtgui/THBQSyntaxHighlighter.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/HBQSyntaxHighlighter.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QSyntaxHighlighter()
  *  $END$
  */

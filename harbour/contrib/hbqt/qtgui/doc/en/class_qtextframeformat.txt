@@ -27,10 +27,10 @@
  *     An instance of the object of type QTextFrameFormat
  *  $METHODS$
  *     :border()                                           -> nQreal
- *     :borderBrush()                                      -> pQBrush
+ *     :borderBrush()                                      -> oQBrush
  *     :borderStyle()                                      -> nBorderStyle
  *     :bottomMargin()                                     -> nQreal
- *     :height()                                           -> pQTextLength
+ *     :height()                                           -> oQTextLength
  *     :isValid()                                          -> lBool
  *     :leftMargin()                                       -> nQreal
  *     :margin()                                           -> nQreal
@@ -39,11 +39,11 @@
  *     :position()                                         -> nPosition
  *     :rightMargin()                                      -> nQreal
  *     :setBorder( nWidth )                                -> NIL
- *     :setBorderBrush( pBrush )                           -> NIL
+ *     :setBorderBrush( oQBrush )                          -> NIL
  *     :setBorderStyle( nStyle )                           -> NIL
  *     :setBottomMargin( nMargin )                         -> NIL
- *     :setHeight( pHeight )                               -> NIL
- *     :setHeight_1( nHeight )                             -> NIL
+ *     :setHeight( oQTextLength )                          -> NIL
+ *     :setHeight( nHeight )                               -> NIL
  *     :setLeftMargin( nMargin )                           -> NIL
  *     :setMargin( nMargin )                               -> NIL
  *     :setPadding( nWidth )                               -> NIL
@@ -51,10 +51,10 @@
  *     :setPosition( nPolicy )                             -> NIL
  *     :setRightMargin( nMargin )                          -> NIL
  *     :setTopMargin( nMargin )                            -> NIL
- *     :setWidth( pWidth )                                 -> NIL
- *     :setWidth_1( nWidth )                               -> NIL
+ *     :setWidth( oQTextLength )                           -> NIL
+ *     :setWidth( nWidth )                                 -> NIL
  *     :topMargin()                                        -> nQreal
- *     :width()                                            -> pQTextLength
+ *     :width()                                            -> oQTextLength
  * 
  *  $DESCRIPTION$
  * 
@@ -74,7 +74,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTextFrameFormat.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextFrameFormat.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QTextFormat()
  *  $END$
  */

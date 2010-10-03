@@ -26,8 +26,8 @@
  *  $RETURNS$
  *     An instance of the object of type QPrintPreviewDialog
  *  $METHODS$
- *     :open( pReceiver, pMember )                         -> NIL
- *     :printer()                                          -> pQPrinter
+ *     :open( oQObject, cMember )                          -> NIL
+ *     :printer()                                          -> oQPrinter
  * 
  *  $DESCRIPTION$
  * 
@@ -47,7 +47,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQPrintPreviewDialog.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QPrintPreviewDialog.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QDialog()
  *  $END$
  */

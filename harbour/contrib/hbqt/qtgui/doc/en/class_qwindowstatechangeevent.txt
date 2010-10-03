@@ -26,7 +26,7 @@
  *  $RETURNS$
  *     An instance of the object of type QWindowStateChangeEvent
  *  $METHODS$
- *     :oldState()                                         -> nQt::WindowStates
+ *     :oldState()                                         -> nQt_WindowStates
  * 
  *  $DESCRIPTION$
  * 
@@ -46,7 +46,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQWindowStateChangeEvent.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QWindowStateChangeEvent.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QEvent()
  *  $END$
  */

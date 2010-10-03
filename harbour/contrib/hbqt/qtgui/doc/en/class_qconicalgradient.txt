@@ -27,10 +27,10 @@
  *     An instance of the object of type QConicalGradient
  *  $METHODS$
  *     :angle()                                            -> nQreal
- *     :center()                                           -> pQPointF
+ *     :center()                                           -> oQPointF
  *     :setAngle( nAngle )                                 -> NIL
- *     :setCenter( pCenter )                               -> NIL
- *     :setCenter_1( nX, nY )                              -> NIL
+ *     :setCenter( oQPointF )                              -> NIL
+ *     :setCenter( nX, nY )                                -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -50,7 +50,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQConicalGradient.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QConicalGradient.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QGradient()
  *  $END$
  */

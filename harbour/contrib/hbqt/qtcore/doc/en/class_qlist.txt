@@ -31,7 +31,7 @@
  *     :back()                                             -> pT
  *     :clear()                                            -> NIL
  *     :count( xValue )                                    -> nInt
- *     :count_1()                                          -> nInt
+ *     :count()                                            -> nInt
  *     :empty()                                            -> lBool
  *     :endsWith( xValue )                                 -> lBool
  *     :first()                                            -> pT
@@ -43,11 +43,11 @@
  *     :lastIndexOf( xValue, nFrom )                       -> nInt
  *     :length()                                           -> nInt
  *     :move( nFrom, nTo )                                 -> NIL
- *     :pop_back()                                         -> NIL
- *     :pop_front()                                        -> NIL
+ *     :pop()                                              -> NIL
+ *     :pop()                                              -> NIL
  *     :prepend( xValue )                                  -> NIL
- *     :push_back( xValue )                                -> NIL
- *     :push_front( xValue )                               -> NIL
+ *     :push( xValue )                                     -> NIL
+ *     :push( xValue )                                     -> NIL
  *     :removeAll( xValue )                                -> nInt
  *     :removeAt( nI )                                     -> NIL
  *     :removeFirst()                                      -> NIL
@@ -61,7 +61,7 @@
  *     :takeFirst()                                        -> pT
  *     :takeLast()                                         -> pT
  *     :value( nI )                                        -> pT
- *     :value_1( nI, xDefaultValue )                       -> pT
+ *     :value( nI, xDefaultValue )                         -> pT
  * 
  *  $DESCRIPTION$
  * 
@@ -81,7 +81,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQList.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QList.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

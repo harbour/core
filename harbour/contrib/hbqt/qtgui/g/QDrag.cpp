@@ -281,11 +281,7 @@ HB_FUNC( QT_QDRAG_SETMIMEDATA )
    QDrag * p = hbqt_par_QDrag( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 2 );
       ( p )->setMimeData( hbqt_par_QMimeData( 2 ) );
    }
 }

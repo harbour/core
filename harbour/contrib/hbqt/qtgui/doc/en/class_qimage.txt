@@ -27,10 +27,17 @@
  *     An instance of the object of type QImage
  *  $METHODS$
  *     :allGray()                                          -> lBool
- *     :bits()                                             -> pUchar
+ *     :alphaChannel()                                     -> oQImage
+ *     :bits()                                             -> cUchar
  *     :bytesPerLine()                                     -> nInt
  *     :cacheKey()                                         -> nQint64
  *     :color( nI )                                        -> nQRgb
+ *     :convertToFormat( nFormat, nFlags )                 -> oQImage
+ *     :copy( oQRect )                                     -> oQImage
+ *     :copy( nX, nY, nWidth, nHeight )                    -> oQImage
+ *     :createAlphaMask( nFlags )                          -> oQImage
+ *     :createHeuristicMask( lClipTight )                  -> oQImage
+ *     :createMaskFromColor( nColor, nMode )               -> oQImage
  *     :depth()                                            -> nInt
  *     :dotsPerMeterX()                                    -> nInt
  *     :dotsPerMeterY()                                    -> nInt
@@ -41,33 +48,41 @@
  *     :invertPixels( nMode )                              -> NIL
  *     :isGrayscale()                                      -> lBool
  *     :isNull()                                           -> lBool
- *     :load( cFileName, pFormat )                         -> lBool
- *     :load_1( pDevice, pFormat )                         -> lBool
- *     :loadFromData( pData, pFormat )                     -> lBool
+ *     :load( cFileName, cFormat )                         -> lBool
+ *     :load( oQIODevice, cFormat )                        -> lBool
+ *     :loadFromData( oQByteArray, cFormat )               -> lBool
+ *     :mirrored( lHorizontal, lVertical )                 -> oQImage
  *     :numBytes()                                         -> nInt
  *     :numColors()                                        -> nInt
- *     :offset()                                           -> pQPoint
- *     :pixel( pPosition )                                 -> nQRgb
- *     :pixel_1( nX, nY )                                  -> nQRgb
- *     :pixelIndex( pPosition )                            -> nInt
- *     :pixelIndex_1( nX, nY )                             -> nInt
- *     :rect()                                             -> pQRect
- *     :save( cFileName, pFormat, nQuality )               -> lBool
- *     :save_1( pDevice, pFormat, nQuality )               -> lBool
- *     :scanLine( nI )                                     -> pUchar
+ *     :offset()                                           -> oQPoint
+ *     :pixel( oQPoint )                                   -> nQRgb
+ *     :pixel( nX, nY )                                    -> nQRgb
+ *     :pixelIndex( oQPoint )                              -> nInt
+ *     :pixelIndex( nX, nY )                               -> nInt
+ *     :rect()                                             -> oQRect
+ *     :rgbSwapped()                                       -> oQImage
+ *     :save( cFileName, cFormat, nQuality )               -> lBool
+ *     :save( oQIODevice, cFormat, nQuality )              -> lBool
+ *     :scaled( oQSize, nAspectRatioMode, nTransformMode )  -> oQImage
+ *     :scaled( nWidth, nHeight, nAspectRatioMode, nTransformMode )  -> oQImage
+ *     :scaledToHeight( nHeight, nMode )                   -> oQImage
+ *     :scaledToWidth( nWidth, nMode )                     -> oQImage
+ *     :scanLine( nI )                                     -> cUchar
  *     :setColor( nIndex, nColorValue )                    -> NIL
  *     :setDotsPerMeterX( nX )                             -> NIL
  *     :setDotsPerMeterY( nY )                             -> NIL
  *     :setNumColors( nNumColors )                         -> NIL
- *     :setOffset( pOffset )                               -> NIL
- *     :setPixel( pPosition, nIndex_or_rgb )               -> NIL
- *     :setPixel_1( nX, nY, nIndex_or_rgb )                -> NIL
+ *     :setOffset( oQPoint )                               -> NIL
+ *     :setPixel( oQPoint, nIndex_or_rgb )                 -> NIL
+ *     :setPixel( nX, nY, nIndex_or_rgb )                  -> NIL
  *     :setText( cKey, cText )                             -> NIL
- *     :size()                                             -> pQSize
+ *     :size()                                             -> oQSize
  *     :text( cKey )                                       -> cQString
- *     :textKeys()                                         -> pQStringList
- *     :valid( pPos )                                      -> lBool
- *     :valid_1( nX, nY )                                  -> lBool
+ *     :textKeys()                                         -> oQStringList
+ *     :transformed( oQMatrix, nMode )                     -> oQImage
+ *     :transformed( oQTransform, nMode )                  -> oQImage
+ *     :valid( oQPoint )                                   -> lBool
+ *     :valid( nX, nY )                                    -> lBool
  *     :width()                                            -> nInt
  * 
  *  $DESCRIPTION$
@@ -97,7 +112,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQImage.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QImage.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

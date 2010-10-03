@@ -26,34 +26,34 @@
  *  $RETURNS$
  *     An instance of the object of type QStandardItemModel
  *  $METHODS$
- *     :appendRow( pItem )                                 -> NIL
+ *     :appendRow( oQStandardItem )                        -> NIL
  *     :clear()                                            -> NIL
- *     :findItems( cText, nFlags, nColumn )                -> pQList<QStandardItem *>
- *     :horizontalHeaderItem( nColumn )                    -> pQStandardItem
- *     :indexFromItem( pItem )                             -> pQModelIndex
- *     :insertColumn( nColumn, pParent )                   -> lBool
- *     :insertRow( nRow, pParent )                         -> lBool
- *     :insertRow_1( nRow, pItem )                         -> NIL
- *     :invisibleRootItem()                                -> pQStandardItem
- *     :item( nRow, nColumn )                              -> pQStandardItem
- *     :itemFromIndex( pIndex )                            -> pQStandardItem
+ *     :findItems( cText, nFlags, nColumn )                -> oQList_QStandardItem
+ *     :horizontalHeaderItem( nColumn )                    -> oQStandardItem
+ *     :indexFromItem( oQStandardItem )                    -> oQModelIndex
+ *     :insertColumn( nColumn, oQModelIndex )              -> lBool
+ *     :insertRow( nRow, oQModelIndex )                    -> lBool
+ *     :insertRow( nRow, oQStandardItem )                  -> NIL
+ *     :invisibleRootItem()                                -> oQStandardItem
+ *     :item( nRow, nColumn )                              -> oQStandardItem
+ *     :itemFromIndex( oQModelIndex )                      -> oQStandardItem
  *     :setColumnCount( nColumns )                         -> NIL
- *     :setHorizontalHeaderItem( nColumn, pItem )          -> NIL
- *     :setHorizontalHeaderLabels( pLabels )               -> NIL
- *     :setItem( nRow, nColumn, pItem )                    -> NIL
- *     :setItem_1( nRow, pItem )                           -> NIL
- *     :setItemPrototype( pItem )                          -> NIL
+ *     :setHorizontalHeaderItem( nColumn, oQStandardItem )  -> NIL
+ *     :setHorizontalHeaderLabels( oQStringList )          -> NIL
+ *     :setItem( nRow, nColumn, oQStandardItem )           -> NIL
+ *     :setItem( nRow, oQStandardItem )                    -> NIL
+ *     :setItemPrototype( oQStandardItem )                 -> NIL
  *     :setRowCount( nRows )                               -> NIL
  *     :setSortRole( nRole )                               -> NIL
- *     :setVerticalHeaderItem( nRow, pItem )               -> NIL
- *     :setVerticalHeaderLabels( pLabels )                 -> NIL
+ *     :setVerticalHeaderItem( nRow, oQStandardItem )      -> NIL
+ *     :setVerticalHeaderLabels( oQStringList )            -> NIL
  *     :sortRole()                                         -> nInt
- *     :takeColumn( nColumn )                              -> pQList<QStandardItem *>
- *     :takeHorizontalHeaderItem( nColumn )                -> pQStandardItem
- *     :takeItem( nRow, nColumn )                          -> pQStandardItem
- *     :takeRow( nRow )                                    -> pQList<QStandardItem *>
- *     :takeVerticalHeaderItem( nRow )                     -> pQStandardItem
- *     :verticalHeaderItem( nRow )                         -> pQStandardItem
+ *     :takeColumn( nColumn )                              -> oQList_QStandardItem
+ *     :takeHorizontalHeaderItem( nColumn )                -> oQStandardItem
+ *     :takeItem( nRow, nColumn )                          -> oQStandardItem
+ *     :takeRow( nRow )                                    -> oQList_QStandardItem
+ *     :takeVerticalHeaderItem( nRow )                     -> oQStandardItem
+ *     :verticalHeaderItem( nRow )                         -> oQStandardItem
  * 
  *  $DESCRIPTION$
  * 
@@ -73,7 +73,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStandardItemModel.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStandardItemModel.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractItemModeL()
  *  $END$
  */

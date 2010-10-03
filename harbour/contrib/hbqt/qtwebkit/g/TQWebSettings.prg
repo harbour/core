@@ -103,31 +103,31 @@ CREATE CLASS QWebSettings INHERIT HbQtObjectHandler FUNCTION HB_QWebSettings
 
    METHOD  new( ... )
 
-   METHOD  fontFamily( nWhich )
-   METHOD  fontSize( nType )
-   METHOD  resetAttribute( nAttribute )
-   METHOD  resetFontFamily( nWhich )
-   METHOD  resetFontSize( nType )
-   METHOD  setAttribute( nAttribute, lOn )
-   METHOD  setFontFamily( nWhich, cFamily )
-   METHOD  setFontSize( nType, nSize )
-   METHOD  setUserStyleSheetUrl( pLocation )
-   METHOD  testAttribute( nAttribute )
-   METHOD  userStyleSheetUrl()
-   METHOD  clearIconDatabase()
-   METHOD  globalSettings()
-   METHOD  iconDatabasePath()
-   METHOD  iconForUrl( pUrl )
-   METHOD  maximumPagesInCache()
-   METHOD  offlineStorageDefaultQuota()
-   METHOD  offlineStoragePath()
-   METHOD  setIconDatabasePath( cPath )
-   METHOD  setMaximumPagesInCache( nPages )
-   METHOD  setObjectCacheCapacities( nCacheMinDeadCapacity, nCacheMaxDead, nTotalCapacity )
-   METHOD  setOfflineStorageDefaultQuota( nMaximumSize )
-   METHOD  setOfflineStoragePath( cPath )
-   METHOD  setWebGraphic( nType, pGraphic )
-   METHOD  webGraphic( nType )
+   METHOD  fontFamily                    // ( nWhich )                                         -> cQString
+   METHOD  fontSize                      // ( nType )                                          -> nInt
+   METHOD  resetAttribute                // ( nAttribute )                                     -> NIL
+   METHOD  resetFontFamily               // ( nWhich )                                         -> NIL
+   METHOD  resetFontSize                 // ( nType )                                          -> NIL
+   METHOD  setAttribute                  // ( nAttribute, lOn )                                -> NIL
+   METHOD  setFontFamily                 // ( nWhich, cFamily )                                -> NIL
+   METHOD  setFontSize                   // ( nType, nSize )                                   -> NIL
+   METHOD  setUserStyleSheetUrl          // ( oQUrl )                                          -> NIL
+   METHOD  testAttribute                 // ( nAttribute )                                     -> lBool
+   METHOD  userStyleSheetUrl             // (  )                                               -> oQUrl
+   METHOD  clearIconDatabase             // (  )                                               -> NIL
+   METHOD  globalSettings                // (  )                                               -> oQWebSettings
+   METHOD  iconDatabasePath              // (  )                                               -> cQString
+   METHOD  iconForUrl                    // ( oQUrl )                                          -> oQIcon
+   METHOD  maximumPagesInCache           // (  )                                               -> nInt
+   METHOD  offlineStorageDefaultQuota    // (  )                                               -> nQint64
+   METHOD  offlineStoragePath            // (  )                                               -> cQString
+   METHOD  setIconDatabasePath           // ( cPath )                                          -> NIL
+   METHOD  setMaximumPagesInCache        // ( nPages )                                         -> NIL
+   METHOD  setObjectCacheCapacities      // ( nCacheMinDeadCapacity, nCacheMaxDead, nTotalCapacity ) -> NIL
+   METHOD  setOfflineStorageDefaultQuota // ( nMaximumSize )                                   -> NIL
+   METHOD  setOfflineStoragePath         // ( cPath )                                          -> NIL
+   METHOD  setWebGraphic                 // ( nType, oQPixmap )                                -> NIL
+   METHOD  webGraphic                    // ( nType )                                          -> oQPixmap
 
    ENDCLASS
 
@@ -141,102 +141,274 @@ METHOD QWebSettings:new( ... )
    RETURN Self
 
 
-METHOD QWebSettings:fontFamily( nWhich )
-   RETURN Qt_QWebSettings_fontFamily( ::pPtr, nWhich )
+METHOD QWebSettings:fontFamily( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWebSettings_fontFamily( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSettings:fontSize( nType )
-   RETURN Qt_QWebSettings_fontSize( ::pPtr, nType )
+METHOD QWebSettings:fontSize( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWebSettings_fontSize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSettings:resetAttribute( nAttribute )
-   RETURN Qt_QWebSettings_resetAttribute( ::pPtr, nAttribute )
+METHOD QWebSettings:resetAttribute( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWebSettings_resetAttribute( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSettings:resetFontFamily( nWhich )
-   RETURN Qt_QWebSettings_resetFontFamily( ::pPtr, nWhich )
+METHOD QWebSettings:resetFontFamily( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWebSettings_resetFontFamily( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSettings:resetFontSize( nType )
-   RETURN Qt_QWebSettings_resetFontSize( ::pPtr, nType )
+METHOD QWebSettings:resetFontSize( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWebSettings_resetFontSize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSettings:setAttribute( nAttribute, lOn )
-   RETURN Qt_QWebSettings_setAttribute( ::pPtr, nAttribute, lOn )
+METHOD QWebSettings:setAttribute( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QWebSettings_setAttribute( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSettings:setFontFamily( nWhich, cFamily )
-   RETURN Qt_QWebSettings_setFontFamily( ::pPtr, nWhich, cFamily )
+METHOD QWebSettings:setFontFamily( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QWebSettings_setFontFamily( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSettings:setFontSize( nType, nSize )
-   RETURN Qt_QWebSettings_setFontSize( ::pPtr, nType, nSize )
+METHOD QWebSettings:setFontSize( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QWebSettings_setFontSize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSettings:setUserStyleSheetUrl( pLocation )
-   RETURN Qt_QWebSettings_setUserStyleSheetUrl( ::pPtr, hbqt_ptr( pLocation ) )
+METHOD QWebSettings:setUserStyleSheetUrl( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWebSettings_setUserStyleSheetUrl( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSettings:testAttribute( nAttribute )
-   RETURN Qt_QWebSettings_testAttribute( ::pPtr, nAttribute )
+METHOD QWebSettings:testAttribute( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWebSettings_testAttribute( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSettings:userStyleSheetUrl()
-   RETURN HB_QUrl():from( Qt_QWebSettings_userStyleSheetUrl( ::pPtr ) )
+METHOD QWebSettings:userStyleSheetUrl( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QUrl():from( Qt_QWebSettings_userStyleSheetUrl( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSettings:clearIconDatabase()
-   RETURN Qt_QWebSettings_clearIconDatabase( ::pPtr )
+METHOD QWebSettings:clearIconDatabase( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebSettings_clearIconDatabase( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSettings:globalSettings()
-   RETURN HB_QWebSettings():from( Qt_QWebSettings_globalSettings( ::pPtr ) )
+METHOD QWebSettings:globalSettings( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWebSettings():from( Qt_QWebSettings_globalSettings( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSettings:iconDatabasePath()
-   RETURN Qt_QWebSettings_iconDatabasePath( ::pPtr )
+METHOD QWebSettings:iconDatabasePath( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebSettings_iconDatabasePath( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSettings:iconForUrl( pUrl )
-   RETURN HB_QIcon():from( Qt_QWebSettings_iconForUrl( ::pPtr, hbqt_ptr( pUrl ) ) )
+METHOD QWebSettings:iconForUrl( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QIcon():from( Qt_QWebSettings_iconForUrl( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSettings:maximumPagesInCache()
-   RETURN Qt_QWebSettings_maximumPagesInCache( ::pPtr )
+METHOD QWebSettings:maximumPagesInCache( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebSettings_maximumPagesInCache( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSettings:offlineStorageDefaultQuota()
-   RETURN Qt_QWebSettings_offlineStorageDefaultQuota( ::pPtr )
+METHOD QWebSettings:offlineStorageDefaultQuota( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebSettings_offlineStorageDefaultQuota( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSettings:offlineStoragePath()
-   RETURN Qt_QWebSettings_offlineStoragePath( ::pPtr )
+METHOD QWebSettings:offlineStoragePath( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebSettings_offlineStoragePath( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSettings:setIconDatabasePath( cPath )
-   RETURN Qt_QWebSettings_setIconDatabasePath( ::pPtr, cPath )
+METHOD QWebSettings:setIconDatabasePath( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QWebSettings_setIconDatabasePath( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSettings:setMaximumPagesInCache( nPages )
-   RETURN Qt_QWebSettings_setMaximumPagesInCache( ::pPtr, nPages )
+METHOD QWebSettings:setMaximumPagesInCache( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWebSettings_setMaximumPagesInCache( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSettings:setObjectCacheCapacities( nCacheMinDeadCapacity, nCacheMaxDead, nTotalCapacity )
-   RETURN Qt_QWebSettings_setObjectCacheCapacities( ::pPtr, nCacheMinDeadCapacity, nCacheMaxDead, nTotalCapacity )
+METHOD QWebSettings:setObjectCacheCapacities( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QWebSettings_setObjectCacheCapacities( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSettings:setOfflineStorageDefaultQuota( nMaximumSize )
-   RETURN Qt_QWebSettings_setOfflineStorageDefaultQuota( ::pPtr, nMaximumSize )
+METHOD QWebSettings:setOfflineStorageDefaultQuota( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWebSettings_setOfflineStorageDefaultQuota( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSettings:setOfflineStoragePath( cPath )
-   RETURN Qt_QWebSettings_setOfflineStoragePath( ::pPtr, cPath )
+METHOD QWebSettings:setOfflineStoragePath( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QWebSettings_setOfflineStoragePath( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSettings:setWebGraphic( nType, pGraphic )
-   RETURN Qt_QWebSettings_setWebGraphic( ::pPtr, nType, hbqt_ptr( pGraphic ) )
+METHOD QWebSettings:setWebGraphic( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QWebSettings_setWebGraphic( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSettings:webGraphic( nType )
-   RETURN HB_QPixmap():from( Qt_QWebSettings_webGraphic( ::pPtr, nType ) )
+METHOD QWebSettings:webGraphic( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QPixmap():from( Qt_QWebSettings_webGraphic( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

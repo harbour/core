@@ -28,7 +28,8 @@
  *  $METHODS$
  *     :addHistoryEntry( cUrl )                            -> NIL
  *     :historyContains( cUrl )                            -> lBool
- *     :setDefaultInterface( pDefaultInterface )           -> NIL
+ *     :defaultInterface()                                 -> oQWebHistoryInterface
+ *     :setDefaultInterface( oQWebHistoryInterface )       -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -48,7 +49,5 @@
  *     Harbour source: contrib/hbqt/qtwebkit/TQWebHistoryInterface.prg
  *     C++ wrappers  : contrib/hbqt/qtwebkit/QWebHistoryInterface.cpp
  *     Library       : hbqtwebkit
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

@@ -103,16 +103,20 @@ CREATE CLASS QMenuBar INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QMenuBar
 
    METHOD  new( ... )
 
-   METHOD  activeAction()
-   METHOD  addAction( ... )
-   METHOD  addMenu( ... )
-   METHOD  addSeparator()
-   METHOD  clear()
-   METHOD  insertMenu( pBefore, pMenu )
-   METHOD  insertSeparator( pBefore )
-   METHOD  isDefaultUp()
-   METHOD  setActiveAction( pAct )
-   METHOD  setDefaultUp( lBool )
+   METHOD  activeAction                  // (  )                                               -> oQAction
+   METHOD  addAction                     // ( cText )                                          -> oQAction
+                                         // ( cText, oQObject, cMember )                       -> oQAction
+                                         // ( oQAction )                                       -> NIL
+   METHOD  addMenu                       // ( oQMenu )                                         -> oQAction
+                                         // ( cTitle )                                         -> oQMenu
+                                         // ( coQIcon, cTitle )                                -> oQMenu
+   METHOD  addSeparator                  // (  )                                               -> oQAction
+   METHOD  clear                         // (  )                                               -> NIL
+   METHOD  insertMenu                    // ( oQAction, oQMenu )                               -> oQAction
+   METHOD  insertSeparator               // ( oQAction )                                       -> oQAction
+   METHOD  isDefaultUp                   // (  )                                               -> lBool
+   METHOD  setActiveAction               // ( oQAction )                                       -> NIL
+   METHOD  setDefaultUp                  // ( lBool )                                          -> NIL
 
    ENDCLASS
 
@@ -126,15 +130,19 @@ METHOD QMenuBar:new( ... )
    RETURN Self
 
 
-METHOD QMenuBar:activeAction()
-   RETURN HB_QAction():from( Qt_QMenuBar_activeAction( ::pPtr ) )
+METHOD QMenuBar:activeAction( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QAction():from( Qt_QMenuBar_activeAction( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QMenuBar:addAction( ... )
    SWITCH PCount()
    CASE 3
       DO CASE
-      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
          RETURN HB_QAction():from( Qt_QMenuBar_addAction_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
@@ -170,30 +178,74 @@ METHOD QMenuBar:addMenu( ... )
    RETURN hbqt_error()
 
 
-METHOD QMenuBar:addSeparator()
-   RETURN HB_QAction():from( Qt_QMenuBar_addSeparator( ::pPtr ) )
+METHOD QMenuBar:addSeparator( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QAction():from( Qt_QMenuBar_addSeparator( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMenuBar:clear()
-   RETURN Qt_QMenuBar_clear( ::pPtr )
+METHOD QMenuBar:clear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMenuBar_clear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMenuBar:insertMenu( pBefore, pMenu )
-   RETURN HB_QAction():from( Qt_QMenuBar_insertMenu( ::pPtr, hbqt_ptr( pBefore ), hbqt_ptr( pMenu ) ) )
+METHOD QMenuBar:insertMenu( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QAction():from( Qt_QMenuBar_insertMenu( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMenuBar:insertSeparator( pBefore )
-   RETURN HB_QAction():from( Qt_QMenuBar_insertSeparator( ::pPtr, hbqt_ptr( pBefore ) ) )
+METHOD QMenuBar:insertSeparator( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QAction():from( Qt_QMenuBar_insertSeparator( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMenuBar:isDefaultUp()
-   RETURN Qt_QMenuBar_isDefaultUp( ::pPtr )
+METHOD QMenuBar:isDefaultUp( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMenuBar_isDefaultUp( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMenuBar:setActiveAction( pAct )
-   RETURN Qt_QMenuBar_setActiveAction( ::pPtr, hbqt_ptr( pAct ) )
+METHOD QMenuBar:setActiveAction( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMenuBar_setActiveAction( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMenuBar:setDefaultUp( lBool )
-   RETURN Qt_QMenuBar_setDefaultUp( ::pPtr, lBool )
+METHOD QMenuBar:setDefaultUp( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QMenuBar_setDefaultUp( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

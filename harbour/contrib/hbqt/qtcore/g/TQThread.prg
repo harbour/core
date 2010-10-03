@@ -103,20 +103,20 @@ CREATE CLASS QThread INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QThread
 
    METHOD  new( ... )
 
-   METHOD  exit( nReturnCode )
-   METHOD  isFinished()
-   METHOD  isRunning()
-   METHOD  priority()
-   METHOD  setPriority( nPriority )
-   METHOD  setStackSize( nStackSize )
-   METHOD  stackSize()
-   METHOD  wait( nTime )
-   METHOD  currentThread()
-   METHOD  idealThreadCount()
-   METHOD  yieldCurrentThread()
-   METHOD  quit()
-   METHOD  start( nPriority )
-   METHOD  terminate()
+   METHOD  exit                          // ( nReturnCode )                                    -> NIL
+   METHOD  isFinished                    // (  )                                               -> lBool
+   METHOD  isRunning                     // (  )                                               -> lBool
+   METHOD  priority                      // (  )                                               -> nPriority
+   METHOD  setPriority                   // ( nPriority )                                      -> NIL
+   METHOD  setStackSize                  // ( nStackSize )                                     -> NIL
+   METHOD  stackSize                     // (  )                                               -> nUint
+   METHOD  wait                          // ( nTime )                                          -> lBool
+   METHOD  currentThread                 // (  )                                               -> oQThread
+   METHOD  idealThreadCount              // (  )                                               -> nInt
+   METHOD  yieldCurrentThread            // (  )                                               -> NIL
+   METHOD  quit                          // (  )                                               -> NIL
+   METHOD  start                         // ( nPriority )                                      -> NIL
+   METHOD  terminate                     // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -130,58 +130,140 @@ METHOD QThread:new( ... )
    RETURN Self
 
 
-METHOD QThread:exit( nReturnCode )
-   RETURN Qt_QThread_exit( ::pPtr, nReturnCode )
+METHOD QThread:exit( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QThread_exit( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QThread_exit( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QThread:isFinished()
-   RETURN Qt_QThread_isFinished( ::pPtr )
+METHOD QThread:isFinished( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QThread_isFinished( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QThread:isRunning()
-   RETURN Qt_QThread_isRunning( ::pPtr )
+METHOD QThread:isRunning( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QThread_isRunning( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QThread:priority()
-   RETURN Qt_QThread_priority( ::pPtr )
+METHOD QThread:priority( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QThread_priority( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QThread:setPriority( nPriority )
-   RETURN Qt_QThread_setPriority( ::pPtr, nPriority )
+METHOD QThread:setPriority( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QThread_setPriority( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QThread:setStackSize( nStackSize )
-   RETURN Qt_QThread_setStackSize( ::pPtr, nStackSize )
+METHOD QThread:setStackSize( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QThread_setStackSize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QThread:stackSize()
-   RETURN Qt_QThread_stackSize( ::pPtr )
+METHOD QThread:stackSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QThread_stackSize( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QThread:wait( nTime )
-   RETURN Qt_QThread_wait( ::pPtr, nTime )
+METHOD QThread:wait( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QThread_wait( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QThread_wait( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QThread:currentThread()
-   RETURN HB_QThread():from( Qt_QThread_currentThread( ::pPtr ) )
+METHOD QThread:currentThread( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QThread():from( Qt_QThread_currentThread( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QThread:idealThreadCount()
-   RETURN Qt_QThread_idealThreadCount( ::pPtr )
+METHOD QThread:idealThreadCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QThread_idealThreadCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QThread:yieldCurrentThread()
-   RETURN Qt_QThread_yieldCurrentThread( ::pPtr )
+METHOD QThread:yieldCurrentThread( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QThread_yieldCurrentThread( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QThread:quit()
-   RETURN Qt_QThread_quit( ::pPtr )
+METHOD QThread:quit( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QThread_quit( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QThread:start( nPriority )
-   RETURN Qt_QThread_start( ::pPtr, nPriority )
+METHOD QThread:start( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QThread_start( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QThread_start( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QThread:terminate()
-   RETURN Qt_QThread_terminate( ::pPtr )
+METHOD QThread:terminate( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QThread_terminate( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

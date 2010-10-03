@@ -103,30 +103,30 @@ CREATE CLASS QProgressDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_Q
 
    METHOD  new( ... )
 
-   METHOD  autoClose()
-   METHOD  autoReset()
-   METHOD  labelText()
-   METHOD  maximum()
-   METHOD  minimum()
-   METHOD  minimumDuration()
-   METHOD  open( pReceiver, pMember )
-   METHOD  setAutoClose( lClose )
-   METHOD  setAutoReset( lReset )
-   METHOD  setBar( pBar )
-   METHOD  setCancelButton( pCancelButton )
-   METHOD  setLabel( pLabel )
-   METHOD  sizeHint()
-   METHOD  value()
-   METHOD  wasCanceled()
-   METHOD  cancel()
-   METHOD  reset()
-   METHOD  setCancelButtonText( cCancelButtonText )
-   METHOD  setLabelText( cText )
-   METHOD  setMaximum( nMaximum )
-   METHOD  setMinimum( nMinimum )
-   METHOD  setMinimumDuration( nMs )
-   METHOD  setRange( nMinimum, nMaximum )
-   METHOD  setValue( nProgress )
+   METHOD  autoClose                     // (  )                                               -> lBool
+   METHOD  autoReset                     // (  )                                               -> lBool
+   METHOD  labelText                     // (  )                                               -> cQString
+   METHOD  maximum                       // (  )                                               -> nInt
+   METHOD  minimum                       // (  )                                               -> nInt
+   METHOD  minimumDuration               // (  )                                               -> nInt
+   METHOD  open                          // ( oQObject, cMember )                              -> NIL
+   METHOD  setAutoClose                  // ( lClose )                                         -> NIL
+   METHOD  setAutoReset                  // ( lReset )                                         -> NIL
+   METHOD  setBar                        // ( oQProgressBar )                                  -> NIL
+   METHOD  setCancelButton               // ( oQPushButton )                                   -> NIL
+   METHOD  setLabel                      // ( oQLabel )                                        -> NIL
+   METHOD  sizeHint                      // (  )                                               -> oQSize
+   METHOD  value                         // (  )                                               -> nInt
+   METHOD  wasCanceled                   // (  )                                               -> lBool
+   METHOD  cancel                        // (  )                                               -> NIL
+   METHOD  reset                         // (  )                                               -> NIL
+   METHOD  setCancelButtonText           // ( cCancelButtonText )                              -> NIL
+   METHOD  setLabelText                  // ( cText )                                          -> NIL
+   METHOD  setMaximum                    // ( nMaximum )                                       -> NIL
+   METHOD  setMinimum                    // ( nMinimum )                                       -> NIL
+   METHOD  setMinimumDuration            // ( nMs )                                            -> NIL
+   METHOD  setRange                      // ( nMinimum, nMaximum )                             -> NIL
+   METHOD  setValue                      // ( nProgress )                                      -> NIL
 
    ENDCLASS
 
@@ -140,98 +140,246 @@ METHOD QProgressDialog:new( ... )
    RETURN Self
 
 
-METHOD QProgressDialog:autoClose()
-   RETURN Qt_QProgressDialog_autoClose( ::pPtr )
+METHOD QProgressDialog:autoClose( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QProgressDialog_autoClose( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProgressDialog:autoReset()
-   RETURN Qt_QProgressDialog_autoReset( ::pPtr )
+METHOD QProgressDialog:autoReset( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QProgressDialog_autoReset( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProgressDialog:labelText()
-   RETURN Qt_QProgressDialog_labelText( ::pPtr )
+METHOD QProgressDialog:labelText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QProgressDialog_labelText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProgressDialog:maximum()
-   RETURN Qt_QProgressDialog_maximum( ::pPtr )
+METHOD QProgressDialog:maximum( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QProgressDialog_maximum( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProgressDialog:minimum()
-   RETURN Qt_QProgressDialog_minimum( ::pPtr )
+METHOD QProgressDialog:minimum( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QProgressDialog_minimum( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProgressDialog:minimumDuration()
-   RETURN Qt_QProgressDialog_minimumDuration( ::pPtr )
+METHOD QProgressDialog:minimumDuration( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QProgressDialog_minimumDuration( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProgressDialog:open( pReceiver, pMember )
-   RETURN Qt_QProgressDialog_open( ::pPtr, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ) )
+METHOD QProgressDialog:open( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QProgressDialog_open( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProgressDialog:setAutoClose( lClose )
-   RETURN Qt_QProgressDialog_setAutoClose( ::pPtr, lClose )
+METHOD QProgressDialog:setAutoClose( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QProgressDialog_setAutoClose( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProgressDialog:setAutoReset( lReset )
-   RETURN Qt_QProgressDialog_setAutoReset( ::pPtr, lReset )
+METHOD QProgressDialog:setAutoReset( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QProgressDialog_setAutoReset( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProgressDialog:setBar( pBar )
-   RETURN Qt_QProgressDialog_setBar( ::pPtr, hbqt_ptr( pBar ) )
+METHOD QProgressDialog:setBar( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QProgressDialog_setBar( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProgressDialog:setCancelButton( pCancelButton )
-   RETURN Qt_QProgressDialog_setCancelButton( ::pPtr, hbqt_ptr( pCancelButton ) )
+METHOD QProgressDialog:setCancelButton( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QProgressDialog_setCancelButton( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProgressDialog:setLabel( pLabel )
-   RETURN Qt_QProgressDialog_setLabel( ::pPtr, hbqt_ptr( pLabel ) )
+METHOD QProgressDialog:setLabel( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QProgressDialog_setLabel( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProgressDialog:sizeHint()
-   RETURN HB_QSize():from( Qt_QProgressDialog_sizeHint( ::pPtr ) )
+METHOD QProgressDialog:sizeHint( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QProgressDialog_sizeHint( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProgressDialog:value()
-   RETURN Qt_QProgressDialog_value( ::pPtr )
+METHOD QProgressDialog:value( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QProgressDialog_value( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProgressDialog:wasCanceled()
-   RETURN Qt_QProgressDialog_wasCanceled( ::pPtr )
+METHOD QProgressDialog:wasCanceled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QProgressDialog_wasCanceled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProgressDialog:cancel()
-   RETURN Qt_QProgressDialog_cancel( ::pPtr )
+METHOD QProgressDialog:cancel( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QProgressDialog_cancel( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProgressDialog:reset()
-   RETURN Qt_QProgressDialog_reset( ::pPtr )
+METHOD QProgressDialog:reset( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QProgressDialog_reset( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProgressDialog:setCancelButtonText( cCancelButtonText )
-   RETURN Qt_QProgressDialog_setCancelButtonText( ::pPtr, cCancelButtonText )
+METHOD QProgressDialog:setCancelButtonText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QProgressDialog_setCancelButtonText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProgressDialog:setLabelText( cText )
-   RETURN Qt_QProgressDialog_setLabelText( ::pPtr, cText )
+METHOD QProgressDialog:setLabelText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QProgressDialog_setLabelText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProgressDialog:setMaximum( nMaximum )
-   RETURN Qt_QProgressDialog_setMaximum( ::pPtr, nMaximum )
+METHOD QProgressDialog:setMaximum( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QProgressDialog_setMaximum( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProgressDialog:setMinimum( nMinimum )
-   RETURN Qt_QProgressDialog_setMinimum( ::pPtr, nMinimum )
+METHOD QProgressDialog:setMinimum( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QProgressDialog_setMinimum( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProgressDialog:setMinimumDuration( nMs )
-   RETURN Qt_QProgressDialog_setMinimumDuration( ::pPtr, nMs )
+METHOD QProgressDialog:setMinimumDuration( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QProgressDialog_setMinimumDuration( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProgressDialog:setRange( nMinimum, nMaximum )
-   RETURN Qt_QProgressDialog_setRange( ::pPtr, nMinimum, nMaximum )
+METHOD QProgressDialog:setRange( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QProgressDialog_setRange( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProgressDialog:setValue( nProgress )
-   RETURN Qt_QProgressDialog_setValue( ::pPtr, nProgress )
+METHOD QProgressDialog:setValue( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QProgressDialog_setValue( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

@@ -103,45 +103,55 @@ CREATE CLASS QTransform INHERIT HbQtObjectHandler FUNCTION HB_QTransform
 
    METHOD  new( ... )
 
-   METHOD  m11()
-   METHOD  m12()
-   METHOD  m13()
-   METHOD  m21()
-   METHOD  m22()
-   METHOD  m23()
-   METHOD  m31()
-   METHOD  m32()
-   METHOD  m33()
-   METHOD  adjoint()
-   METHOD  det()
-   METHOD  determinant()
-   METHOD  dx()
-   METHOD  dy()
-   METHOD  inverted( lInvertible )
-   METHOD  isAffine()
-   METHOD  isIdentity()
-   METHOD  isInvertible()
-   METHOD  isRotating()
-   METHOD  isScaling()
-   METHOD  isTranslating()
-   METHOD  map( ... )
-   METHOD  mapRect( ... )
-   METHOD  mapToPolygon( pRectangle )
-   METHOD  reset()
-   METHOD  rotate( nAngle, nAxis )
-   METHOD  rotateRadians( nAngle, nAxis )
-   METHOD  scale( nSx, nSy )
-   METHOD  setMatrix( nM11, nM12, nM13, nM21, nM22, nM23, nM31, nM32, nM33 )
-   METHOD  shear( nSh, nSv )
-   METHOD  toAffine()
-   METHOD  translate( nDx, nDy )
-   METHOD  transposed()
-   METHOD  type()
-   METHOD  fromScale( nSx, nSy )
-   METHOD  fromTranslate( nDx, nDy )
-   METHOD  quadToQuad( pOne, pTwo, pTrans )
-   METHOD  quadToSquare( pQuad, pTrans )
-   METHOD  squareToQuad( pQuad, pTrans )
+   METHOD  m11                           // (  )                                               -> nQreal
+   METHOD  m12                           // (  )                                               -> nQreal
+   METHOD  m13                           // (  )                                               -> nQreal
+   METHOD  m21                           // (  )                                               -> nQreal
+   METHOD  m22                           // (  )                                               -> nQreal
+   METHOD  m23                           // (  )                                               -> nQreal
+   METHOD  m31                           // (  )                                               -> nQreal
+   METHOD  m32                           // (  )                                               -> nQreal
+   METHOD  m33                           // (  )                                               -> nQreal
+   METHOD  adjoint                       // (  )                                               -> oQTransform
+   METHOD  det                           // (  )                                               -> nQreal
+   METHOD  determinant                   // (  )                                               -> nQreal
+   METHOD  dx                            // (  )                                               -> nQreal
+   METHOD  dy                            // (  )                                               -> nQreal
+   METHOD  inverted                      // ( @lInvertible )                                   -> oQTransform
+   METHOD  isAffine                      // (  )                                               -> lBool
+   METHOD  isIdentity                    // (  )                                               -> lBool
+   METHOD  isInvertible                  // (  )                                               -> lBool
+   METHOD  isRotating                    // (  )                                               -> lBool
+   METHOD  isScaling                     // (  )                                               -> lBool
+   METHOD  isTranslating                 // (  )                                               -> lBool
+   METHOD  map                           // ( nX, nY, @nTx, @nTy )                             -> NIL
+                                         // ( oQPointF )                                       -> oQPointF
+                                         // ( oQPoint )                                        -> oQPoint
+                                         // ( oQLine )                                         -> oQLine
+                                         // ( oQLineF )                                        -> oQLineF
+                                         // ( oQPolygonF )                                     -> oQPolygonF
+                                         // ( oQPolygon )                                      -> oQPolygon
+                                         // ( oQRegion )                                       -> oQRegion
+                                         // ( oQPainterPath )                                  -> oQPainterPath
+                                         // ( nX, nY, @nTx, @nTy )                             -> NIL
+   METHOD  mapRect                       // ( oQRectF )                                        -> oQRectF
+                                         // ( oQRect )                                         -> oQRect
+   METHOD  mapToPolygon                  // ( oQRect )                                         -> oQPolygon
+   METHOD  reset                         // (  )                                               -> NIL
+   METHOD  rotate                        // ( nAngle, nAxis )                                  -> oQTransform
+   METHOD  rotateRadians                 // ( nAngle, nAxis )                                  -> oQTransform
+   METHOD  scale                         // ( nSx, nSy )                                       -> oQTransform
+   METHOD  setMatrix                     // ( nM11, nM12, nM13, nM21, nM22, nM23, nM31, nM32, nM33 ) -> NIL
+   METHOD  shear                         // ( nSh, nSv )                                       -> oQTransform
+   METHOD  toAffine                      // (  )                                               -> oQMatrix
+   METHOD  translate                     // ( nDx, nDy )                                       -> oQTransform
+   METHOD  transposed                    // (  )                                               -> oQTransform
+   METHOD  type                          // (  )                                               -> nTransformationType
+   METHOD  fromScale                     // ( nSx, nSy )                                       -> oQTransform
+   METHOD  fromTranslate                 // ( nDx, nDy )                                       -> oQTransform
+   METHOD  quadToQuad                    // ( oQPolygonF, oQPolygonF, oQTransform )            -> lBool
+   METHOD  quadToSquare                  // ( oQPolygonF, oQTransform )                        -> lBool
+   METHOD  squareToQuad                  // ( oQPolygonF, oQTransform )                        -> lBool
 
    ENDCLASS
 
@@ -155,88 +165,178 @@ METHOD QTransform:new( ... )
    RETURN Self
 
 
-METHOD QTransform:m11()
-   RETURN Qt_QTransform_m11( ::pPtr )
+METHOD QTransform:m11( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTransform_m11( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:m12()
-   RETURN Qt_QTransform_m12( ::pPtr )
+METHOD QTransform:m12( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTransform_m12( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:m13()
-   RETURN Qt_QTransform_m13( ::pPtr )
+METHOD QTransform:m13( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTransform_m13( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:m21()
-   RETURN Qt_QTransform_m21( ::pPtr )
+METHOD QTransform:m21( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTransform_m21( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:m22()
-   RETURN Qt_QTransform_m22( ::pPtr )
+METHOD QTransform:m22( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTransform_m22( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:m23()
-   RETURN Qt_QTransform_m23( ::pPtr )
+METHOD QTransform:m23( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTransform_m23( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:m31()
-   RETURN Qt_QTransform_m31( ::pPtr )
+METHOD QTransform:m31( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTransform_m31( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:m32()
-   RETURN Qt_QTransform_m32( ::pPtr )
+METHOD QTransform:m32( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTransform_m32( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:m33()
-   RETURN Qt_QTransform_m33( ::pPtr )
+METHOD QTransform:m33( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTransform_m33( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:adjoint()
-   RETURN HB_QTransform():from( Qt_QTransform_adjoint( ::pPtr ) )
+METHOD QTransform:adjoint( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTransform():from( Qt_QTransform_adjoint( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:det()
-   RETURN Qt_QTransform_det( ::pPtr )
+METHOD QTransform:det( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTransform_det( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:determinant()
-   RETURN Qt_QTransform_determinant( ::pPtr )
+METHOD QTransform:determinant( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTransform_determinant( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:dx()
-   RETURN Qt_QTransform_dx( ::pPtr )
+METHOD QTransform:dx( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTransform_dx( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:dy()
-   RETURN Qt_QTransform_dy( ::pPtr )
+METHOD QTransform:dy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTransform_dy( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:inverted( lInvertible )
-   RETURN HB_QTransform():from( Qt_QTransform_inverted( ::pPtr, lInvertible ) )
+METHOD QTransform:inverted( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN HB_QTransform():from( Qt_QTransform_inverted( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QTransform():from( Qt_QTransform_inverted( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:isAffine()
-   RETURN Qt_QTransform_isAffine( ::pPtr )
+METHOD QTransform:isAffine( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTransform_isAffine( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:isIdentity()
-   RETURN Qt_QTransform_isIdentity( ::pPtr )
+METHOD QTransform:isIdentity( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTransform_isIdentity( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:isInvertible()
-   RETURN Qt_QTransform_isInvertible( ::pPtr )
+METHOD QTransform:isInvertible( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTransform_isInvertible( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:isRotating()
-   RETURN Qt_QTransform_isRotating( ::pPtr )
+METHOD QTransform:isRotating( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTransform_isRotating( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:isScaling()
-   RETURN Qt_QTransform_isScaling( ::pPtr )
+METHOD QTransform:isScaling( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTransform_isScaling( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:isTranslating()
-   RETURN Qt_QTransform_isTranslating( ::pPtr )
+METHOD QTransform:isTranslating( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTransform_isTranslating( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTransform:map( ... )
@@ -292,66 +392,190 @@ METHOD QTransform:mapRect( ... )
    RETURN hbqt_error()
 
 
-METHOD QTransform:mapToPolygon( pRectangle )
-   RETURN HB_QPolygon():from( Qt_QTransform_mapToPolygon( ::pPtr, hbqt_ptr( pRectangle ) ) )
+METHOD QTransform:mapToPolygon( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QPolygon():from( Qt_QTransform_mapToPolygon( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:reset()
-   RETURN Qt_QTransform_reset( ::pPtr )
+METHOD QTransform:reset( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTransform_reset( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:rotate( nAngle, nAxis )
-   RETURN HB_QTransform():from( Qt_QTransform_rotate( ::pPtr, nAngle, nAxis ) )
+METHOD QTransform:rotate( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QTransform():from( Qt_QTransform_rotate( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QTransform():from( Qt_QTransform_rotate( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:rotateRadians( nAngle, nAxis )
-   RETURN HB_QTransform():from( Qt_QTransform_rotateRadians( ::pPtr, nAngle, nAxis ) )
+METHOD QTransform:rotateRadians( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QTransform():from( Qt_QTransform_rotateRadians( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QTransform():from( Qt_QTransform_rotateRadians( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:scale( nSx, nSy )
-   RETURN HB_QTransform():from( Qt_QTransform_scale( ::pPtr, nSx, nSy ) )
+METHOD QTransform:scale( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QTransform():from( Qt_QTransform_scale( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:setMatrix( nM11, nM12, nM13, nM21, nM22, nM23, nM31, nM32, nM33 )
-   RETURN Qt_QTransform_setMatrix( ::pPtr, nM11, nM12, nM13, nM21, nM22, nM23, nM31, nM32, nM33 )
+METHOD QTransform:setMatrix( ... )
+   SWITCH PCount()
+   CASE 9
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) ) .AND. hb_isNumeric( hb_pvalue( 6 ) ) .AND. hb_isNumeric( hb_pvalue( 7 ) ) .AND. hb_isNumeric( hb_pvalue( 8 ) ) .AND. hb_isNumeric( hb_pvalue( 9 ) )
+         RETURN Qt_QTransform_setMatrix( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:shear( nSh, nSv )
-   RETURN HB_QTransform():from( Qt_QTransform_shear( ::pPtr, nSh, nSv ) )
+METHOD QTransform:shear( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QTransform():from( Qt_QTransform_shear( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:toAffine()
-   RETURN HB_QMatrix():from( Qt_QTransform_toAffine( ::pPtr ) )
+METHOD QTransform:toAffine( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QMatrix():from( Qt_QTransform_toAffine( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:translate( nDx, nDy )
-   RETURN HB_QTransform():from( Qt_QTransform_translate( ::pPtr, nDx, nDy ) )
+METHOD QTransform:translate( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QTransform():from( Qt_QTransform_translate( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:transposed()
-   RETURN HB_QTransform():from( Qt_QTransform_transposed( ::pPtr ) )
+METHOD QTransform:transposed( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTransform():from( Qt_QTransform_transposed( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:type()
-   RETURN Qt_QTransform_type( ::pPtr )
+METHOD QTransform:type( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTransform_type( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:fromScale( nSx, nSy )
-   RETURN HB_QTransform():from( Qt_QTransform_fromScale( ::pPtr, nSx, nSy ) )
+METHOD QTransform:fromScale( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QTransform():from( Qt_QTransform_fromScale( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:fromTranslate( nDx, nDy )
-   RETURN HB_QTransform():from( Qt_QTransform_fromTranslate( ::pPtr, nDx, nDy ) )
+METHOD QTransform:fromTranslate( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QTransform():from( Qt_QTransform_fromTranslate( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:quadToQuad( pOne, pTwo, pTrans )
-   RETURN Qt_QTransform_quadToQuad( ::pPtr, hbqt_ptr( pOne ), hbqt_ptr( pTwo ), hbqt_ptr( pTrans ) )
+METHOD QTransform:quadToQuad( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QTransform_quadToQuad( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:quadToSquare( pQuad, pTrans )
-   RETURN Qt_QTransform_quadToSquare( ::pPtr, hbqt_ptr( pQuad ), hbqt_ptr( pTrans ) )
+METHOD QTransform:quadToSquare( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QTransform_quadToSquare( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTransform:squareToQuad( pQuad, pTrans )
-   RETURN Qt_QTransform_squareToQuad( ::pPtr, hbqt_ptr( pQuad ), hbqt_ptr( pTrans ) )
+METHOD QTransform:squareToQuad( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QTransform_squareToQuad( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

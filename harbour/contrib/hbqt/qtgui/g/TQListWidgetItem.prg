@@ -103,41 +103,41 @@ CREATE CLASS QListWidgetItem INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_Q
 
    METHOD  new( ... )
 
-   METHOD  background()
-   METHOD  checkState()
-   METHOD  clone()
-   METHOD  data( nRole )
-   METHOD  flags()
-   METHOD  font()
-   METHOD  foreground()
-   METHOD  icon()
-   METHOD  isHidden()
-   METHOD  isSelected()
-   METHOD  listWidget()
-   METHOD  read( pIn )
-   METHOD  setBackground( pBrush )
-   METHOD  setCheckState( nState )
-   METHOD  setData( nRole, pValue )
-   METHOD  setFlags( nFlags )
-   METHOD  setFont( pFont )
-   METHOD  setForeground( pBrush )
-   METHOD  setHidden( lHide )
-   METHOD  setIcon( pIcon )
-   METHOD  setSelected( lSelect )
-   METHOD  setSizeHint( pSize )
-   METHOD  setStatusTip( cStatusTip )
-   METHOD  setText( cText )
-   METHOD  setTextAlignment( nAlignment )
-   METHOD  setToolTip( cToolTip )
-   METHOD  setWhatsThis( cWhatsThis )
-   METHOD  sizeHint()
-   METHOD  statusTip()
-   METHOD  text()
-   METHOD  textAlignment()
-   METHOD  toolTip()
-   METHOD  type()
-   METHOD  whatsThis()
-   METHOD  write( pOut )
+   METHOD  background                    // (  )                                               -> oQBrush
+   METHOD  checkState                    // (  )                                               -> nQt_CheckState
+   METHOD  clone                         // (  )                                               -> oQListWidgetItem
+   METHOD  data                          // ( nRole )                                          -> oQVariant
+   METHOD  flags                         // (  )                                               -> nQt_ItemFlags
+   METHOD  font                          // (  )                                               -> oQFont
+   METHOD  foreground                    // (  )                                               -> oQBrush
+   METHOD  icon                          // (  )                                               -> oQIcon
+   METHOD  isHidden                      // (  )                                               -> lBool
+   METHOD  isSelected                    // (  )                                               -> lBool
+   METHOD  listWidget                    // (  )                                               -> oQListWidget
+   METHOD  read                          // ( oQDataStream )                                   -> NIL
+   METHOD  setBackground                 // ( oQBrush )                                        -> NIL
+   METHOD  setCheckState                 // ( nState )                                         -> NIL
+   METHOD  setData                       // ( nRole, oQVariant )                               -> NIL
+   METHOD  setFlags                      // ( nFlags )                                         -> NIL
+   METHOD  setFont                       // ( oQFont )                                         -> NIL
+   METHOD  setForeground                 // ( oQBrush )                                        -> NIL
+   METHOD  setHidden                     // ( lHide )                                          -> NIL
+   METHOD  setIcon                       // ( coQIcon )                                        -> NIL
+   METHOD  setSelected                   // ( lSelect )                                        -> NIL
+   METHOD  setSizeHint                   // ( oQSize )                                         -> NIL
+   METHOD  setStatusTip                  // ( cStatusTip )                                     -> NIL
+   METHOD  setText                       // ( cText )                                          -> NIL
+   METHOD  setTextAlignment              // ( nAlignment )                                     -> NIL
+   METHOD  setToolTip                    // ( cToolTip )                                       -> NIL
+   METHOD  setWhatsThis                  // ( cWhatsThis )                                     -> NIL
+   METHOD  sizeHint                      // (  )                                               -> oQSize
+   METHOD  statusTip                     // (  )                                               -> cQString
+   METHOD  text                          // (  )                                               -> cQString
+   METHOD  textAlignment                 // (  )                                               -> nInt
+   METHOD  toolTip                       // (  )                                               -> cQString
+   METHOD  type                          // (  )                                               -> nInt
+   METHOD  whatsThis                     // (  )                                               -> cQString
+   METHOD  write                         // ( oQDataStream )                                   -> NIL
 
    ENDCLASS
 
@@ -151,142 +151,354 @@ METHOD QListWidgetItem:new( ... )
    RETURN Self
 
 
-METHOD QListWidgetItem:background()
-   RETURN HB_QBrush():from( Qt_QListWidgetItem_background( ::pPtr ) )
-
-
-METHOD QListWidgetItem:checkState()
-   RETURN Qt_QListWidgetItem_checkState( ::pPtr )
-
-
-METHOD QListWidgetItem:clone()
-   RETURN HB_QListWidgetItem():from( Qt_QListWidgetItem_clone( ::pPtr ) )
-
-
-METHOD QListWidgetItem:data( nRole )
-   RETURN HB_QVariant():from( Qt_QListWidgetItem_data( ::pPtr, nRole ) )
-
-
-METHOD QListWidgetItem:flags()
-   RETURN Qt_QListWidgetItem_flags( ::pPtr )
-
-
-METHOD QListWidgetItem:font()
-   RETURN HB_QFont():from( Qt_QListWidgetItem_font( ::pPtr ) )
-
-
-METHOD QListWidgetItem:foreground()
-   RETURN HB_QBrush():from( Qt_QListWidgetItem_foreground( ::pPtr ) )
-
-
-METHOD QListWidgetItem:icon()
-   RETURN HB_QIcon():from( Qt_QListWidgetItem_icon( ::pPtr ) )
-
-
-METHOD QListWidgetItem:isHidden()
-   RETURN Qt_QListWidgetItem_isHidden( ::pPtr )
-
-
-METHOD QListWidgetItem:isSelected()
-   RETURN Qt_QListWidgetItem_isSelected( ::pPtr )
-
-
-METHOD QListWidgetItem:listWidget()
-   RETURN HB_QListWidget():from( Qt_QListWidgetItem_listWidget( ::pPtr ) )
-
-
-METHOD QListWidgetItem:read( pIn )
-   RETURN Qt_QListWidgetItem_read( ::pPtr, hbqt_ptr( pIn ) )
-
-
-METHOD QListWidgetItem:setBackground( pBrush )
-   RETURN Qt_QListWidgetItem_setBackground( ::pPtr, hbqt_ptr( pBrush ) )
-
-
-METHOD QListWidgetItem:setCheckState( nState )
-   RETURN Qt_QListWidgetItem_setCheckState( ::pPtr, nState )
-
-
-METHOD QListWidgetItem:setData( nRole, pValue )
-   RETURN Qt_QListWidgetItem_setData( ::pPtr, nRole, hbqt_ptr( pValue ) )
-
-
-METHOD QListWidgetItem:setFlags( nFlags )
-   RETURN Qt_QListWidgetItem_setFlags( ::pPtr, nFlags )
-
-
-METHOD QListWidgetItem:setFont( pFont )
-   RETURN Qt_QListWidgetItem_setFont( ::pPtr, hbqt_ptr( pFont ) )
-
-
-METHOD QListWidgetItem:setForeground( pBrush )
-   RETURN Qt_QListWidgetItem_setForeground( ::pPtr, hbqt_ptr( pBrush ) )
-
-
-METHOD QListWidgetItem:setHidden( lHide )
-   RETURN Qt_QListWidgetItem_setHidden( ::pPtr, lHide )
-
-
-METHOD QListWidgetItem:setIcon( pIcon )
-   RETURN Qt_QListWidgetItem_setIcon( ::pPtr, hbqt_ptr( pIcon ) )
-
-
-METHOD QListWidgetItem:setSelected( lSelect )
-   RETURN Qt_QListWidgetItem_setSelected( ::pPtr, lSelect )
-
-
-METHOD QListWidgetItem:setSizeHint( pSize )
-   RETURN Qt_QListWidgetItem_setSizeHint( ::pPtr, hbqt_ptr( pSize ) )
-
-
-METHOD QListWidgetItem:setStatusTip( cStatusTip )
-   RETURN Qt_QListWidgetItem_setStatusTip( ::pPtr, cStatusTip )
-
-
-METHOD QListWidgetItem:setText( cText )
-   RETURN Qt_QListWidgetItem_setText( ::pPtr, cText )
-
-
-METHOD QListWidgetItem:setTextAlignment( nAlignment )
-   RETURN Qt_QListWidgetItem_setTextAlignment( ::pPtr, nAlignment )
-
-
-METHOD QListWidgetItem:setToolTip( cToolTip )
-   RETURN Qt_QListWidgetItem_setToolTip( ::pPtr, cToolTip )
-
-
-METHOD QListWidgetItem:setWhatsThis( cWhatsThis )
-   RETURN Qt_QListWidgetItem_setWhatsThis( ::pPtr, cWhatsThis )
-
-
-METHOD QListWidgetItem:sizeHint()
-   RETURN HB_QSize():from( Qt_QListWidgetItem_sizeHint( ::pPtr ) )
-
-
-METHOD QListWidgetItem:statusTip()
-   RETURN Qt_QListWidgetItem_statusTip( ::pPtr )
-
-
-METHOD QListWidgetItem:text()
-   RETURN Qt_QListWidgetItem_text( ::pPtr )
-
-
-METHOD QListWidgetItem:textAlignment()
-   RETURN Qt_QListWidgetItem_textAlignment( ::pPtr )
-
-
-METHOD QListWidgetItem:toolTip()
-   RETURN Qt_QListWidgetItem_toolTip( ::pPtr )
-
-
-METHOD QListWidgetItem:type()
-   RETURN Qt_QListWidgetItem_type( ::pPtr )
-
-
-METHOD QListWidgetItem:whatsThis()
-   RETURN Qt_QListWidgetItem_whatsThis( ::pPtr )
-
-
-METHOD QListWidgetItem:write( pOut )
-   RETURN Qt_QListWidgetItem_write( ::pPtr, hbqt_ptr( pOut ) )
+METHOD QListWidgetItem:background( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QListWidgetItem_background( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:checkState( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QListWidgetItem_checkState( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:clone( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QListWidgetItem():from( Qt_QListWidgetItem_clone( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:data( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QVariant():from( Qt_QListWidgetItem_data( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:flags( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QListWidgetItem_flags( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:font( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFont():from( Qt_QListWidgetItem_font( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:foreground( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QListWidgetItem_foreground( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:icon( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QIcon():from( Qt_QListWidgetItem_icon( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:isHidden( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QListWidgetItem_isHidden( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:isSelected( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QListWidgetItem_isSelected( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:listWidget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QListWidget():from( Qt_QListWidgetItem_listWidget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:read( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QListWidgetItem_read( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:setBackground( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QListWidgetItem_setBackground( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:setCheckState( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QListWidgetItem_setCheckState( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:setData( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QListWidgetItem_setData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:setFlags( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QListWidgetItem_setFlags( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:setFont( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QListWidgetItem_setFont( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:setForeground( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QListWidgetItem_setForeground( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:setHidden( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QListWidgetItem_setHidden( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:setIcon( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) )
+         RETURN Qt_QListWidgetItem_setIcon( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:setSelected( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QListWidgetItem_setSelected( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:setSizeHint( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QListWidgetItem_setSizeHint( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:setStatusTip( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QListWidgetItem_setStatusTip( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:setText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QListWidgetItem_setText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:setTextAlignment( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QListWidgetItem_setTextAlignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:setToolTip( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QListWidgetItem_setToolTip( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:setWhatsThis( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QListWidgetItem_setWhatsThis( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:sizeHint( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QListWidgetItem_sizeHint( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:statusTip( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QListWidgetItem_statusTip( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:text( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QListWidgetItem_text( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:textAlignment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QListWidgetItem_textAlignment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:toolTip( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QListWidgetItem_toolTip( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:type( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QListWidgetItem_type( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:whatsThis( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QListWidgetItem_whatsThis( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QListWidgetItem:write( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QListWidgetItem_write( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

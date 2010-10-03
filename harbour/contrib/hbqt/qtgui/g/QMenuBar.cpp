@@ -228,7 +228,7 @@ HB_FUNC( QT_QMENUBAR_ADDACTION_1 )
    if( p )
    {
       void * pText;
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( hb_parstr_utf8( 2, &pText, NULL ), hbqt_par_QObject( 3 ), hbqt_par_char( 4 ) ), false ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( hb_parstr_utf8( 2, &pText, NULL ), hbqt_par_QObject( 3 ), ( const char * ) hb_parc( 4 ) ), false ) );
       hb_strfree( pText );
    }
 }

@@ -103,8 +103,8 @@ CREATE CLASS QCommandLinkButton INHERIT HbQtObjectHandler, HB_QPushButton FUNCTI
 
    METHOD  new( ... )
 
-   METHOD  description()
-   METHOD  setDescription( cDescription )
+   METHOD  description                   // (  )                                               -> cQString
+   METHOD  setDescription                // ( cDescription )                                   -> NIL
 
    ENDCLASS
 
@@ -118,10 +118,22 @@ METHOD QCommandLinkButton:new( ... )
    RETURN Self
 
 
-METHOD QCommandLinkButton:description()
-   RETURN Qt_QCommandLinkButton_description( ::pPtr )
+METHOD QCommandLinkButton:description( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCommandLinkButton_description( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCommandLinkButton:setDescription( cDescription )
-   RETURN Qt_QCommandLinkButton_setDescription( ::pPtr, cDescription )
+METHOD QCommandLinkButton:setDescription( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QCommandLinkButton_setDescription( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

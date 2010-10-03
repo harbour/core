@@ -103,32 +103,39 @@ CREATE CLASS QMenu INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QMenu
 
    METHOD  new( ... )
 
-   METHOD  actionAt( pPt )
-   METHOD  actionGeometry( pAct )
-   METHOD  activeAction()
-   METHOD  addAction( ... )
-   METHOD  addMenu( ... )
-   METHOD  addSeparator()
-   METHOD  clear()
-   METHOD  defaultAction()
-   METHOD  exec( ... )
-   METHOD  hideTearOffMenu()
-   METHOD  icon()
-   METHOD  insertMenu( pBefore, pMenu )
-   METHOD  insertSeparator( pBefore )
-   METHOD  isEmpty()
-   METHOD  isTearOffEnabled()
-   METHOD  isTearOffMenuVisible()
-   METHOD  menuAction()
-   METHOD  popup( pP, pAtAction )
-   METHOD  separatorsCollapsible()
-   METHOD  setActiveAction( pAct )
-   METHOD  setDefaultAction( pAct )
-   METHOD  setIcon( pIcon )
-   METHOD  setSeparatorsCollapsible( lCollapse )
-   METHOD  setTearOffEnabled( lBool )
-   METHOD  setTitle( cTitle )
-   METHOD  title()
+   METHOD  actionAt                      // ( oQPoint )                                        -> oQAction
+   METHOD  actionGeometry                // ( oQAction )                                       -> oQRect
+   METHOD  activeAction                  // (  )                                               -> oQAction
+   METHOD  addAction                     // ( cText )                                          -> oQAction
+                                         // ( coQIcon, cText )                                 -> oQAction
+                                         // ( cText, oQObject, cMember, oQKeySequence )        -> oQAction
+                                         // ( coQIcon, cText, oQObject, cMember, oQKeySequence ) -> oQAction
+                                         // ( oQAction )                                       -> NIL
+   METHOD  addMenu                       // ( oQMenu )                                         -> oQAction
+                                         // ( cTitle )                                         -> oQMenu
+                                         // ( coQIcon, cTitle )                                -> oQMenu
+   METHOD  addSeparator                  // (  )                                               -> oQAction
+   METHOD  clear                         // (  )                                               -> NIL
+   METHOD  defaultAction                 // (  )                                               -> oQAction
+   METHOD  exec                          // (  )                                               -> oQAction
+                                         // ( oQPoint, oQAction )                              -> oQAction
+   METHOD  hideTearOffMenu               // (  )                                               -> NIL
+   METHOD  icon                          // (  )                                               -> oQIcon
+   METHOD  insertMenu                    // ( oQAction, oQMenu )                               -> oQAction
+   METHOD  insertSeparator               // ( oQAction )                                       -> oQAction
+   METHOD  isEmpty                       // (  )                                               -> lBool
+   METHOD  isTearOffEnabled              // (  )                                               -> lBool
+   METHOD  isTearOffMenuVisible          // (  )                                               -> lBool
+   METHOD  menuAction                    // (  )                                               -> oQAction
+   METHOD  popup                         // ( oQPoint, oQAction )                              -> NIL
+   METHOD  separatorsCollapsible         // (  )                                               -> lBool
+   METHOD  setActiveAction               // ( oQAction )                                       -> NIL
+   METHOD  setDefaultAction              // ( oQAction )                                       -> NIL
+   METHOD  setIcon                       // ( coQIcon )                                        -> NIL
+   METHOD  setSeparatorsCollapsible      // ( lCollapse )                                      -> NIL
+   METHOD  setTearOffEnabled             // ( lBool )                                          -> NIL
+   METHOD  setTitle                      // ( cTitle )                                         -> NIL
+   METHOD  title                         // (  )                                               -> cQString
 
    ENDCLASS
 
@@ -142,37 +149,57 @@ METHOD QMenu:new( ... )
    RETURN Self
 
 
-METHOD QMenu:actionAt( pPt )
-   RETURN HB_QAction():from( Qt_QMenu_actionAt( ::pPtr, hbqt_ptr( pPt ) ) )
+METHOD QMenu:actionAt( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QAction():from( Qt_QMenu_actionAt( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMenu:actionGeometry( pAct )
-   RETURN HB_QRect():from( Qt_QMenu_actionGeometry( ::pPtr, hbqt_ptr( pAct ) ) )
+METHOD QMenu:actionGeometry( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QRect():from( Qt_QMenu_actionGeometry( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMenu:activeAction()
-   RETURN HB_QAction():from( Qt_QMenu_activeAction( ::pPtr ) )
+METHOD QMenu:activeAction( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QAction():from( Qt_QMenu_activeAction( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QMenu:addAction( ... )
    SWITCH PCount()
    CASE 5
       DO CASE
-      CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) ) .AND. hb_isObject( hb_pvalue( 5 ) )
+      CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isChar( hb_pvalue( 4 ) ) .AND. hb_isObject( hb_pvalue( 5 ) )
          RETURN HB_QAction():from( Qt_QMenu_addAction_3( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 4
       DO CASE
-      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
          RETURN HB_QAction():from( Qt_QMenu_addAction_2( ::pPtr, ... ) )
-      CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
+      CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isChar( hb_pvalue( 4 ) )
          RETURN HB_QAction():from( Qt_QMenu_addAction_3( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 3
       DO CASE
-      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
          RETURN HB_QAction():from( Qt_QMenu_addAction_2( ::pPtr, ... ) )
       ENDCASE
       EXIT
@@ -214,16 +241,28 @@ METHOD QMenu:addMenu( ... )
    RETURN hbqt_error()
 
 
-METHOD QMenu:addSeparator()
-   RETURN HB_QAction():from( Qt_QMenu_addSeparator( ::pPtr ) )
+METHOD QMenu:addSeparator( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QAction():from( Qt_QMenu_addSeparator( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMenu:clear()
-   RETURN Qt_QMenu_clear( ::pPtr )
+METHOD QMenu:clear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMenu_clear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMenu:defaultAction()
-   RETURN HB_QAction():from( Qt_QMenu_defaultAction( ::pPtr ) )
+METHOD QMenu:defaultAction( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QAction():from( Qt_QMenu_defaultAction( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QMenu:exec( ... )
@@ -246,70 +285,180 @@ METHOD QMenu:exec( ... )
    RETURN hbqt_error()
 
 
-METHOD QMenu:hideTearOffMenu()
-   RETURN Qt_QMenu_hideTearOffMenu( ::pPtr )
+METHOD QMenu:hideTearOffMenu( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMenu_hideTearOffMenu( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMenu:icon()
-   RETURN HB_QIcon():from( Qt_QMenu_icon( ::pPtr ) )
+METHOD QMenu:icon( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QIcon():from( Qt_QMenu_icon( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMenu:insertMenu( pBefore, pMenu )
-   RETURN HB_QAction():from( Qt_QMenu_insertMenu( ::pPtr, hbqt_ptr( pBefore ), hbqt_ptr( pMenu ) ) )
+METHOD QMenu:insertMenu( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QAction():from( Qt_QMenu_insertMenu( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMenu:insertSeparator( pBefore )
-   RETURN HB_QAction():from( Qt_QMenu_insertSeparator( ::pPtr, hbqt_ptr( pBefore ) ) )
+METHOD QMenu:insertSeparator( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QAction():from( Qt_QMenu_insertSeparator( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMenu:isEmpty()
-   RETURN Qt_QMenu_isEmpty( ::pPtr )
+METHOD QMenu:isEmpty( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMenu_isEmpty( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMenu:isTearOffEnabled()
-   RETURN Qt_QMenu_isTearOffEnabled( ::pPtr )
+METHOD QMenu:isTearOffEnabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMenu_isTearOffEnabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMenu:isTearOffMenuVisible()
-   RETURN Qt_QMenu_isTearOffMenuVisible( ::pPtr )
+METHOD QMenu:isTearOffMenuVisible( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMenu_isTearOffMenuVisible( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMenu:menuAction()
-   RETURN HB_QAction():from( Qt_QMenu_menuAction( ::pPtr ) )
+METHOD QMenu:menuAction( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QAction():from( Qt_QMenu_menuAction( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMenu:popup( pP, pAtAction )
-   RETURN Qt_QMenu_popup( ::pPtr, hbqt_ptr( pP ), hbqt_ptr( pAtAction ) )
+METHOD QMenu:popup( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QMenu_popup( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMenu_popup( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMenu:separatorsCollapsible()
-   RETURN Qt_QMenu_separatorsCollapsible( ::pPtr )
+METHOD QMenu:separatorsCollapsible( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMenu_separatorsCollapsible( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMenu:setActiveAction( pAct )
-   RETURN Qt_QMenu_setActiveAction( ::pPtr, hbqt_ptr( pAct ) )
+METHOD QMenu:setActiveAction( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMenu_setActiveAction( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMenu:setDefaultAction( pAct )
-   RETURN Qt_QMenu_setDefaultAction( ::pPtr, hbqt_ptr( pAct ) )
+METHOD QMenu:setDefaultAction( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMenu_setDefaultAction( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMenu:setIcon( pIcon )
-   RETURN Qt_QMenu_setIcon( ::pPtr, hbqt_ptr( pIcon ) )
+METHOD QMenu:setIcon( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) )
+         RETURN Qt_QMenu_setIcon( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMenu:setSeparatorsCollapsible( lCollapse )
-   RETURN Qt_QMenu_setSeparatorsCollapsible( ::pPtr, lCollapse )
+METHOD QMenu:setSeparatorsCollapsible( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QMenu_setSeparatorsCollapsible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMenu:setTearOffEnabled( lBool )
-   RETURN Qt_QMenu_setTearOffEnabled( ::pPtr, lBool )
+METHOD QMenu:setTearOffEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QMenu_setTearOffEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMenu:setTitle( cTitle )
-   RETURN Qt_QMenu_setTitle( ::pPtr, cTitle )
+METHOD QMenu:setTitle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QMenu_setTitle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMenu:title()
-   RETURN Qt_QMenu_title( ::pPtr )
+METHOD QMenu:title( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMenu_title( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

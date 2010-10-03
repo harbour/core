@@ -26,13 +26,13 @@
  *  $RETURNS$
  *     An instance of the object of type QRadialGradient
  *  $METHODS$
- *     :center()                                           -> pQPointF
- *     :focalPoint()                                       -> pQPointF
+ *     :center()                                           -> oQPointF
+ *     :focalPoint()                                       -> oQPointF
  *     :radius()                                           -> nQreal
- *     :setCenter( pCenter )                               -> NIL
- *     :setCenter_1( nX, nY )                              -> NIL
- *     :setFocalPoint( pFocalPoint )                       -> NIL
- *     :setFocalPoint_1( nX, nY )                          -> NIL
+ *     :setCenter( oQPointF )                              -> NIL
+ *     :setCenter( nX, nY )                                -> NIL
+ *     :setFocalPoint( oQPointF )                          -> NIL
+ *     :setFocalPoint( nX, nY )                            -> NIL
  *     :setRadius( nRadius )                               -> NIL
  * 
  *  $DESCRIPTION$
@@ -58,7 +58,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQRadialGradient.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QRadialGradient.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QGradient()
  *  $END$
  */

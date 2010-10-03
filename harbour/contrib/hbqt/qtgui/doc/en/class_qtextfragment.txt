@@ -26,7 +26,7 @@
  *  $RETURNS$
  *     An instance of the object of type QTextFragment
  *  $METHODS$
- *     :charFormat()                                       -> pQTextCharFormat
+ *     :charFormat()                                       -> oQTextCharFormat
  *     :charFormatIndex()                                  -> nInt
  *     :contains( nPosition )                              -> lBool
  *     :isValid()                                          -> lBool
@@ -52,7 +52,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTextFragment.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextFragment.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

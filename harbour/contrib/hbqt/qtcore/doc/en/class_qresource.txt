@@ -27,19 +27,19 @@
  *     An instance of the object of type QResource
  *  $METHODS$
  *     :absoluteFilePath()                                 -> cQString
- *     :data()                                             -> pUchar
+ *     :data()                                             -> cUchar
  *     :fileName()                                         -> cQString
  *     :isCompressed()                                     -> lBool
  *     :isValid()                                          -> lBool
- *     :locale()                                           -> pQLocale
+ *     :locale()                                           -> oQLocale
  *     :setFileName( cFile )                               -> NIL
- *     :setLocale( pLocale )                               -> NIL
+ *     :setLocale( oQLocale )                              -> NIL
  *     :size()                                             -> nQint64
  *     :registerResource( cRccFileName, cMapRoot )         -> lBool
- *     :registerResource_1( pRccData, cMapRoot )           -> lBool
- *     :searchPaths()                                      -> pQStringList
+ *     :registerResource_1( ouchar, cMapRoot )             -> lBool
+ *     :searchPaths()                                      -> oQStringList
  *     :unregisterResource( cRccFileName, cMapRoot )       -> lBool
- *     :unregisterResource_1( pRccData, cMapRoot )         -> lBool
+ *     :unregisterResource_1( ouchar, cMapRoot )           -> lBool
  * 
  *  $DESCRIPTION$
  * 
@@ -59,7 +59,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQResource.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QResource.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

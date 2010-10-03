@@ -103,8 +103,8 @@ CREATE CLASS QValidator INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QValid
 
    METHOD  new( ... )
 
-   METHOD  locale()
-   METHOD  setLocale( pLocale )
+   METHOD  locale                        // (  )                                               -> oQLocale
+   METHOD  setLocale                     // ( oQLocale )                                       -> NIL
 
    ENDCLASS
 
@@ -118,10 +118,22 @@ METHOD QValidator:new( ... )
    RETURN Self
 
 
-METHOD QValidator:locale()
-   RETURN HB_QLocale():from( Qt_QValidator_locale( ::pPtr ) )
+METHOD QValidator:locale( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QLocale():from( Qt_QValidator_locale( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QValidator:setLocale( pLocale )
-   RETURN Qt_QValidator_setLocale( ::pPtr, hbqt_ptr( pLocale ) )
+METHOD QValidator:setLocale( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QValidator_setLocale( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

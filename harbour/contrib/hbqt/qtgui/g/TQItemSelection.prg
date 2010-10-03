@@ -103,9 +103,9 @@ CREATE CLASS QItemSelection INHERIT HbQtObjectHandler, HB_QList FUNCTION HB_QIte
 
    METHOD  new( ... )
 
-   METHOD  contains( pIndex )
-   METHOD  merge( pOther, nCommand )
-   METHOD  select( pTopLeft, pBottomRight )
+   METHOD  contains                      // ( oQModelIndex )                                   -> lBool
+   METHOD  merge                         // ( oQItemSelection, nCommand )                      -> NIL
+   METHOD  select                        // ( oQModelIndex, oQModelIndex )                     -> NIL
 
    ENDCLASS
 
@@ -119,14 +119,38 @@ METHOD QItemSelection:new( ... )
    RETURN Self
 
 
-METHOD QItemSelection:contains( pIndex )
-   RETURN Qt_QItemSelection_contains( ::pPtr, hbqt_ptr( pIndex ) )
+METHOD QItemSelection:contains( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QItemSelection_contains( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QItemSelection:merge( pOther, nCommand )
-   RETURN Qt_QItemSelection_merge( ::pPtr, hbqt_ptr( pOther ), nCommand )
+METHOD QItemSelection:merge( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QItemSelection_merge( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QItemSelection:select( pTopLeft, pBottomRight )
-   RETURN Qt_QItemSelection_select( ::pPtr, hbqt_ptr( pTopLeft ), hbqt_ptr( pBottomRight ) )
+METHOD QItemSelection:select( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QItemSelection_select( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

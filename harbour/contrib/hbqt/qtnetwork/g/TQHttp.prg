@@ -103,27 +103,30 @@ CREATE CLASS QHttp INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QHttp
 
    METHOD  new( ... )
 
-   METHOD  bytesAvailable()
-   METHOD  clearPendingRequests()
-   METHOD  close()
-   METHOD  currentDestinationDevice()
-   METHOD  currentId()
-   METHOD  currentRequest()
-   METHOD  currentSourceDevice()
-   METHOD  error()
-   METHOD  errorString()
-   METHOD  get( cPath, pTo )
-   METHOD  hasPendingRequests()
-   METHOD  head( cPath )
-   METHOD  lastResponse()
-   METHOD  post( ... )
-   METHOD  readAll()
-   METHOD  request( ... )
-   METHOD  setHost( ... )
-   METHOD  setProxy( cHost, nPort, cUsername, cPassword )
-   METHOD  setUser( cUserName, cPassword )
-   METHOD  state()
-   METHOD  abort()
+   METHOD  bytesAvailable                // (  )                                               -> nQint64
+   METHOD  clearPendingRequests          // (  )                                               -> NIL
+   METHOD  close                         // (  )                                               -> nInt
+   METHOD  currentDestinationDevice      // (  )                                               -> oQIODevice
+   METHOD  currentId                     // (  )                                               -> nInt
+   METHOD  currentRequest                // (  )                                               -> oQHttpRequestHeader
+   METHOD  currentSourceDevice           // (  )                                               -> oQIODevice
+   METHOD  error                         // (  )                                               -> nError
+   METHOD  errorString                   // (  )                                               -> cQString
+   METHOD  get                           // ( cPath, oQIODevice )                              -> nInt
+   METHOD  hasPendingRequests            // (  )                                               -> lBool
+   METHOD  head                          // ( cPath )                                          -> nInt
+   METHOD  lastResponse                  // (  )                                               -> oQHttpResponseHeader
+   METHOD  post                          // ( cPath, oQIODevice, oQIODevice )                  -> nInt
+                                         // ( cPath, oQByteArray, oQIODevice )                 -> nInt
+   METHOD  readAll                       // (  )                                               -> oQByteArray
+   METHOD  request                       // ( oQHttpRequestHeader, oQIODevice, oQIODevice )    -> nInt
+                                         // ( oQHttpRequestHeader, oQByteArray, oQIODevice )   -> nInt
+   METHOD  setHost                       // ( cHostName, nPort )                               -> nInt
+                                         // ( cHostName, nMode, nPort )                        -> nInt
+   METHOD  setProxy                      // ( cHost, nPort, cUsername, cPassword )             -> nInt
+   METHOD  setUser                       // ( cUserName, cPassword )                           -> nInt
+   METHOD  state                         // (  )                                               -> nState
+   METHOD  abort                         // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -137,56 +140,122 @@ METHOD QHttp:new( ... )
    RETURN Self
 
 
-METHOD QHttp:bytesAvailable()
-   RETURN Qt_QHttp_bytesAvailable( ::pPtr )
+METHOD QHttp:bytesAvailable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHttp_bytesAvailable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttp:clearPendingRequests()
-   RETURN Qt_QHttp_clearPendingRequests( ::pPtr )
+METHOD QHttp:clearPendingRequests( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHttp_clearPendingRequests( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttp:close()
-   RETURN Qt_QHttp_close( ::pPtr )
+METHOD QHttp:close( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHttp_close( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttp:currentDestinationDevice()
-   RETURN HB_QIODevice():from( Qt_QHttp_currentDestinationDevice( ::pPtr ) )
+METHOD QHttp:currentDestinationDevice( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QIODevice():from( Qt_QHttp_currentDestinationDevice( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttp:currentId()
-   RETURN Qt_QHttp_currentId( ::pPtr )
+METHOD QHttp:currentId( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHttp_currentId( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttp:currentRequest()
-   RETURN HB_QHttpRequestHeader():from( Qt_QHttp_currentRequest( ::pPtr ) )
+METHOD QHttp:currentRequest( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QHttpRequestHeader():from( Qt_QHttp_currentRequest( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttp:currentSourceDevice()
-   RETURN HB_QIODevice():from( Qt_QHttp_currentSourceDevice( ::pPtr ) )
+METHOD QHttp:currentSourceDevice( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QIODevice():from( Qt_QHttp_currentSourceDevice( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttp:error()
-   RETURN Qt_QHttp_error( ::pPtr )
+METHOD QHttp:error( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHttp_error( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttp:errorString()
-   RETURN Qt_QHttp_errorString( ::pPtr )
+METHOD QHttp:errorString( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHttp_errorString( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttp:get( cPath, pTo )
-   RETURN Qt_QHttp_get( ::pPtr, cPath, hbqt_ptr( pTo ) )
+METHOD QHttp:get( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QHttp_get( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QHttp_get( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttp:hasPendingRequests()
-   RETURN Qt_QHttp_hasPendingRequests( ::pPtr )
+METHOD QHttp:hasPendingRequests( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHttp_hasPendingRequests( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttp:head( cPath )
-   RETURN Qt_QHttp_head( ::pPtr, cPath )
+METHOD QHttp:head( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QHttp_head( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttp:lastResponse()
-   RETURN HB_QHttpResponseHeader():from( Qt_QHttp_lastResponse( ::pPtr ) )
+METHOD QHttp:lastResponse( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QHttpResponseHeader():from( Qt_QHttp_lastResponse( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QHttp:post( ... )
@@ -194,10 +263,10 @@ METHOD QHttp:post( ... )
    CASE 3
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
-         SWITCH __objGetClsName( hb_pvalue( 1 ) ) + __objGetClsName( hb_pvalue( 2 ) )
-         CASE "QSTRINGQIODEVICE"
+         SWITCH __objGetClsName( hb_pvalue( 2 ) ) + __objGetClsName( hb_pvalue( 3 ) )
+         CASE "QIODEVICEQIODEVICE"
             RETURN Qt_QHttp_post( ::pPtr, ... )
-         CASE "QSTRINGQBYTEARRAY"
+         CASE "QBYTEARRAYQIODEVICE"
             RETURN Qt_QHttp_post_1( ::pPtr, ... )
          ENDSWITCH
       ENDCASE
@@ -205,10 +274,10 @@ METHOD QHttp:post( ... )
    CASE 2
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         SWITCH __objGetClsName( hb_pvalue( 1 ) ) + __objGetClsName( hb_pvalue( 2 ) )
-         CASE "QSTRINGQIODEVICE"
+         SWITCH __objGetClsName( hb_pvalue( 2 ) )
+         CASE "QIODEVICE"
             RETURN Qt_QHttp_post( ::pPtr, ... )
-         CASE "QSTRINGQBYTEARRAY"
+         CASE "QBYTEARRAY"
             RETURN Qt_QHttp_post_1( ::pPtr, ... )
          ENDSWITCH
       ENDCASE
@@ -217,8 +286,12 @@ METHOD QHttp:post( ... )
    RETURN hbqt_error()
 
 
-METHOD QHttp:readAll()
-   RETURN HB_QByteArray():from( Qt_QHttp_readAll( ::pPtr ) )
+METHOD QHttp:readAll( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QByteArray():from( Qt_QHttp_readAll( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QHttp:request( ... )
@@ -237,7 +310,12 @@ METHOD QHttp:request( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN Qt_QHttp_request_1( ::pPtr, ... )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) ) + __objGetClsName( hb_pvalue( 2 ) )
+         CASE "QHTTPREQUESTHEADERQIODEVICE"
+            RETURN Qt_QHttp_request( ::pPtr, ... )
+         CASE "QHTTPREQUESTHEADERQBYTEARRAY"
+            RETURN Qt_QHttp_request_1( ::pPtr, ... )
+         ENDSWITCH
       ENDCASE
       EXIT
    CASE 1
@@ -261,12 +339,8 @@ METHOD QHttp:setHost( ... )
    CASE 2
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         SWITCH __objGetClsName( hb_pvalue( 1 ) )
-         CASE "QSTRING"
-            RETURN Qt_QHttp_setHost( ::pPtr, ... )
-         CASE "QSTRING"
-            RETURN Qt_QHttp_setHost_1( ::pPtr, ... )
-         ENDSWITCH
+         RETURN Qt_QHttp_setHost( ::pPtr, ... )
+         // RETURN Qt_QHttp_setHost_1( ::pPtr, ... )
       ENDCASE
       EXIT
    CASE 1
@@ -279,18 +353,60 @@ METHOD QHttp:setHost( ... )
    RETURN hbqt_error()
 
 
-METHOD QHttp:setProxy( cHost, nPort, cUsername, cPassword )
-   RETURN Qt_QHttp_setProxy( ::pPtr, cHost, nPort, cUsername, cPassword )
+METHOD QHttp:setProxy( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) ) .AND. hb_isChar( hb_pvalue( 4 ) )
+         RETURN Qt_QHttp_setProxy( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
+         RETURN Qt_QHttp_setProxy( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QHttp_setProxy( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttp:setUser( cUserName, cPassword )
-   RETURN Qt_QHttp_setUser( ::pPtr, cUserName, cPassword )
+METHOD QHttp:setUser( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QHttp_setUser( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QHttp_setUser( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttp:state()
-   RETURN Qt_QHttp_state( ::pPtr )
+METHOD QHttp:state( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHttp_state( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttp:abort()
-   RETURN Qt_QHttp_abort( ::pPtr )
+METHOD QHttp:abort( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHttp_abort( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

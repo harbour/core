@@ -103,10 +103,10 @@ CREATE CLASS QTextObject INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QText
 
    METHOD  new( ... )
 
-   METHOD  document()
-   METHOD  format()
-   METHOD  formatIndex()
-   METHOD  objectIndex()
+   METHOD  document                      // (  )                                               -> oQTextDocument
+   METHOD  format                        // (  )                                               -> oQTextFormat
+   METHOD  formatIndex                   // (  )                                               -> nInt
+   METHOD  objectIndex                   // (  )                                               -> nInt
 
    ENDCLASS
 
@@ -120,18 +120,34 @@ METHOD QTextObject:new( ... )
    RETURN Self
 
 
-METHOD QTextObject:document()
-   RETURN HB_QTextDocument():from( Qt_QTextObject_document( ::pPtr ) )
+METHOD QTextObject:document( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextDocument():from( Qt_QTextObject_document( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextObject:format()
-   RETURN HB_QTextFormat():from( Qt_QTextObject_format( ::pPtr ) )
+METHOD QTextObject:format( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextFormat():from( Qt_QTextObject_format( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextObject:formatIndex()
-   RETURN Qt_QTextObject_formatIndex( ::pPtr )
+METHOD QTextObject:formatIndex( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextObject_formatIndex( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextObject:objectIndex()
-   RETURN Qt_QTextObject_objectIndex( ::pPtr )
+METHOD QTextObject:objectIndex( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextObject_objectIndex( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

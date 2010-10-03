@@ -126,6 +126,12 @@ HB_FUNC( QT_QBITMAP )
 </ENUMS>
 
 <PROTOS>
+QBitmap ()
+QBitmap ( const QPixmap & pixmap )
+QBitmap ( int width, int height )
+QBitmap ( const QSize & size )
+QBitmap ( const QString & fileName, const char * format = 0 )
+
 void clear ()
 QBitmap transformed ( const QTransform & matrix ) const
 QBitmap transformed ( const QMatrix & matrix ) const

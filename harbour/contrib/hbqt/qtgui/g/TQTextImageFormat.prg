@@ -103,13 +103,13 @@ CREATE CLASS QTextImageFormat INHERIT HbQtObjectHandler, HB_QTextCharFormat FUNC
 
    METHOD  new( ... )
 
-   METHOD  height()
-   METHOD  isValid()
-   METHOD  name()
-   METHOD  setHeight( nHeight )
-   METHOD  setName( cName )
-   METHOD  setWidth( nWidth )
-   METHOD  width()
+   METHOD  height                        // (  )                                               -> nQreal
+   METHOD  isValid                       // (  )                                               -> lBool
+   METHOD  name                          // (  )                                               -> cQString
+   METHOD  setHeight                     // ( nHeight )                                        -> NIL
+   METHOD  setName                       // ( cName )                                          -> NIL
+   METHOD  setWidth                      // ( nWidth )                                         -> NIL
+   METHOD  width                         // (  )                                               -> nQreal
 
    ENDCLASS
 
@@ -123,30 +123,70 @@ METHOD QTextImageFormat:new( ... )
    RETURN Self
 
 
-METHOD QTextImageFormat:height()
-   RETURN Qt_QTextImageFormat_height( ::pPtr )
+METHOD QTextImageFormat:height( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextImageFormat_height( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextImageFormat:isValid()
-   RETURN Qt_QTextImageFormat_isValid( ::pPtr )
+METHOD QTextImageFormat:isValid( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextImageFormat_isValid( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextImageFormat:name()
-   RETURN Qt_QTextImageFormat_name( ::pPtr )
+METHOD QTextImageFormat:name( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextImageFormat_name( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextImageFormat:setHeight( nHeight )
-   RETURN Qt_QTextImageFormat_setHeight( ::pPtr, nHeight )
+METHOD QTextImageFormat:setHeight( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextImageFormat_setHeight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextImageFormat:setName( cName )
-   RETURN Qt_QTextImageFormat_setName( ::pPtr, cName )
+METHOD QTextImageFormat:setName( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QTextImageFormat_setName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextImageFormat:setWidth( nWidth )
-   RETURN Qt_QTextImageFormat_setWidth( ::pPtr, nWidth )
+METHOD QTextImageFormat:setWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextImageFormat_setWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextImageFormat:width()
-   RETURN Qt_QTextImageFormat_width( ::pPtr )
+METHOD QTextImageFormat:width( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextImageFormat_width( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

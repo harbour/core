@@ -28,6 +28,7 @@
  *  $METHODS$
  *     :changeSize( nW, nH, nHPolicy, nVPolicy )           -> NIL
  *     :isEmpty()                                          -> lBool
+ *     :spacerItem()                                       -> oQSpacerItem
  * 
  *  $DESCRIPTION$
  * 
@@ -47,7 +48,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQSpacerItem.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QSpacerItem.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QLayoutItem()
  *  $END$
  */

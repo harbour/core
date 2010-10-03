@@ -26,16 +26,16 @@
  *  $RETURNS$
  *     An instance of the object of type QNetworkRequest
  *  $METHODS$
- *     :attribute( nCode, pDefaultValue )                  -> pQVariant
- *     :hasRawHeader( pHeaderName )                        -> lBool
- *     :header( nHeader )                                  -> pQVariant
- *     :rawHeader( pHeaderName )                           -> pQByteArray
- *     :rawHeaderList()                                    -> pQList<QByteArray>
- *     :setAttribute( nCode, pValue )                      -> NIL
- *     :setHeader( nHeader, pValue )                       -> NIL
- *     :setRawHeader( pHeaderName, pHeaderValue )          -> NIL
- *     :setUrl( pUrl )                                     -> NIL
- *     :url()                                              -> pQUrl
+ *     :attribute( nCode, oQVariant )                      -> oQVariant
+ *     :hasRawHeader( oQByteArray )                        -> lBool
+ *     :header( nHeader )                                  -> oQVariant
+ *     :rawHeader( oQByteArray )                           -> oQByteArray
+ *     :rawHeaderList()                                    -> oQList_QByteArray>
+ *     :setAttribute( nCode, oQVariant )                   -> NIL
+ *     :setHeader( nHeader, oQVariant )                    -> NIL
+ *     :setRawHeader( oQByteArray, oQByteArray )           -> NIL
+ *     :setUrl( oQUrl )                                    -> NIL
+ *     :url()                                              -> oQUrl
  * 
  *  $DESCRIPTION$
  * 
@@ -55,7 +55,5 @@
  *     Harbour source: contrib/hbqt/qtnetwork/TQNetworkRequest.prg
  *     C++ wrappers  : contrib/hbqt/qtnetwork/QNetworkRequest.cpp
  *     Library       : hbqtnetwork
- *  $SEEALSO$
- *     
  *  $END$
  */

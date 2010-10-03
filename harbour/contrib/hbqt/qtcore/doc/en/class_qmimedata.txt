@@ -27,9 +27,9 @@
  *     An instance of the object of type QMimeData
  *  $METHODS$
  *     :clear()                                            -> NIL
- *     :colorData()                                        -> pQVariant
- *     :data( cMimeType )                                  -> pQByteArray
- *     :formats()                                          -> pQStringList
+ *     :colorData()                                        -> oQVariant
+ *     :data( cMimeType )                                  -> oQByteArray
+ *     :formats()                                          -> oQStringList
  *     :hasColor()                                         -> lBool
  *     :hasFormat( cMimeType )                             -> lBool
  *     :hasHtml()                                          -> lBool
@@ -37,16 +37,16 @@
  *     :hasText()                                          -> lBool
  *     :hasUrls()                                          -> lBool
  *     :html()                                             -> cQString
- *     :imageData()                                        -> pQVariant
+ *     :imageData()                                        -> oQVariant
  *     :removeFormat( cMimeType )                          -> NIL
- *     :setColorData( pColor )                             -> NIL
- *     :setData( cMimeType, pData )                        -> NIL
+ *     :setColorData( oQVariant )                          -> NIL
+ *     :setData( cMimeType, oQByteArray )                  -> NIL
  *     :setHtml( cHtml )                                   -> NIL
- *     :setImageData( pImage )                             -> NIL
+ *     :setImageData( oQVariant )                          -> NIL
  *     :setText( cText )                                   -> NIL
  *     :text()                                             -> cQString
- *     :urls()                                             -> pQList<QUrl>
- *     :hbUrlList()                                        -> pQStringList
+ *     :urls()                                             -> oQList_QUrl>
+ *     :hbUrlList()                                        -> oQStringList
  * 
  *  $DESCRIPTION$
  * 
@@ -66,7 +66,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQMimeData.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QMimeData.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

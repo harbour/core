@@ -103,32 +103,32 @@ CREATE CLASS QMdiArea INHERIT HbQtObjectHandler, HB_QAbstractScrollArea FUNCTION
 
    METHOD  new( ... )
 
-   METHOD  activationOrder()
-   METHOD  activeSubWindow()
-   METHOD  addSubWindow( pWidget, nWindowFlags )
-   METHOD  background()
-   METHOD  currentSubWindow()
-   METHOD  documentMode()
-   METHOD  removeSubWindow( pWidget )
-   METHOD  setActivationOrder( nOrder )
-   METHOD  setBackground( pBackground )
-   METHOD  setDocumentMode( lEnabled )
-   METHOD  setOption( nOption, lOn )
-   METHOD  setTabPosition( nPosition )
-   METHOD  setTabShape( nShape )
-   METHOD  setViewMode( nMode )
-   METHOD  subWindowList( nOrder )
-   METHOD  tabPosition()
-   METHOD  tabShape()
-   METHOD  testOption( nOption )
-   METHOD  viewMode()
-   METHOD  activateNextSubWindow()
-   METHOD  activatePreviousSubWindow()
-   METHOD  cascadeSubWindows()
-   METHOD  closeActiveSubWindow()
-   METHOD  closeAllSubWindows()
-   METHOD  setActiveSubWindow( pWindow )
-   METHOD  tileSubWindows()
+   METHOD  activationOrder               // (  )                                               -> nWindowOrder
+   METHOD  activeSubWindow               // (  )                                               -> oQMdiSubWindow
+   METHOD  addSubWindow                  // ( oQWidget, nWindowFlags )                         -> oQMdiSubWindow
+   METHOD  background                    // (  )                                               -> oQBrush
+   METHOD  currentSubWindow              // (  )                                               -> oQMdiSubWindow
+   METHOD  documentMode                  // (  )                                               -> lBool
+   METHOD  removeSubWindow               // ( oQWidget )                                       -> NIL
+   METHOD  setActivationOrder            // ( nOrder )                                         -> NIL
+   METHOD  setBackground                 // ( oQBrush )                                        -> NIL
+   METHOD  setDocumentMode               // ( lEnabled )                                       -> NIL
+   METHOD  setOption                     // ( nOption, lOn )                                   -> NIL
+   METHOD  setTabPosition                // ( nPosition )                                      -> NIL
+   METHOD  setTabShape                   // ( nShape )                                         -> NIL
+   METHOD  setViewMode                   // ( nMode )                                          -> NIL
+   METHOD  subWindowList                 // ( nOrder )                                         -> oQList_QMdiSubWindow
+   METHOD  tabPosition                   // (  )                                               -> nQTabWidget_TabPosition
+   METHOD  tabShape                      // (  )                                               -> nQTabWidget_TabShape
+   METHOD  testOption                    // ( nOption )                                        -> lBool
+   METHOD  viewMode                      // (  )                                               -> nViewMode
+   METHOD  activateNextSubWindow         // (  )                                               -> NIL
+   METHOD  activatePreviousSubWindow     // (  )                                               -> NIL
+   METHOD  cascadeSubWindows             // (  )                                               -> NIL
+   METHOD  closeActiveSubWindow          // (  )                                               -> NIL
+   METHOD  closeAllSubWindows            // (  )                                               -> NIL
+   METHOD  setActiveSubWindow            // ( oQMdiSubWindow )                                 -> NIL
+   METHOD  tileSubWindows                // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -142,106 +142,272 @@ METHOD QMdiArea:new( ... )
    RETURN Self
 
 
-METHOD QMdiArea:activationOrder()
-   RETURN Qt_QMdiArea_activationOrder( ::pPtr )
+METHOD QMdiArea:activationOrder( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMdiArea_activationOrder( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiArea:activeSubWindow()
-   RETURN HB_QMdiSubWindow():from( Qt_QMdiArea_activeSubWindow( ::pPtr ) )
+METHOD QMdiArea:activeSubWindow( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QMdiSubWindow():from( Qt_QMdiArea_activeSubWindow( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiArea:addSubWindow( pWidget, nWindowFlags )
-   RETURN HB_QMdiSubWindow():from( Qt_QMdiArea_addSubWindow( ::pPtr, hbqt_ptr( pWidget ), nWindowFlags ) )
+METHOD QMdiArea:addSubWindow( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QMdiSubWindow():from( Qt_QMdiArea_addSubWindow( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QMdiSubWindow():from( Qt_QMdiArea_addSubWindow( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiArea:background()
-   RETURN HB_QBrush():from( Qt_QMdiArea_background( ::pPtr ) )
+METHOD QMdiArea:background( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QMdiArea_background( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiArea:currentSubWindow()
-   RETURN HB_QMdiSubWindow():from( Qt_QMdiArea_currentSubWindow( ::pPtr ) )
+METHOD QMdiArea:currentSubWindow( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QMdiSubWindow():from( Qt_QMdiArea_currentSubWindow( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiArea:documentMode()
-   RETURN Qt_QMdiArea_documentMode( ::pPtr )
+METHOD QMdiArea:documentMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMdiArea_documentMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiArea:removeSubWindow( pWidget )
-   RETURN Qt_QMdiArea_removeSubWindow( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QMdiArea:removeSubWindow( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMdiArea_removeSubWindow( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiArea:setActivationOrder( nOrder )
-   RETURN Qt_QMdiArea_setActivationOrder( ::pPtr, nOrder )
+METHOD QMdiArea:setActivationOrder( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QMdiArea_setActivationOrder( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiArea:setBackground( pBackground )
-   RETURN Qt_QMdiArea_setBackground( ::pPtr, hbqt_ptr( pBackground ) )
+METHOD QMdiArea:setBackground( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMdiArea_setBackground( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiArea:setDocumentMode( lEnabled )
-   RETURN Qt_QMdiArea_setDocumentMode( ::pPtr, lEnabled )
+METHOD QMdiArea:setDocumentMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QMdiArea_setDocumentMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiArea:setOption( nOption, lOn )
-   RETURN Qt_QMdiArea_setOption( ::pPtr, nOption, lOn )
+METHOD QMdiArea:setOption( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QMdiArea_setOption( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QMdiArea_setOption( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiArea:setTabPosition( nPosition )
-   RETURN Qt_QMdiArea_setTabPosition( ::pPtr, nPosition )
+METHOD QMdiArea:setTabPosition( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QMdiArea_setTabPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiArea:setTabShape( nShape )
-   RETURN Qt_QMdiArea_setTabShape( ::pPtr, nShape )
+METHOD QMdiArea:setTabShape( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QMdiArea_setTabShape( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiArea:setViewMode( nMode )
-   RETURN Qt_QMdiArea_setViewMode( ::pPtr, nMode )
+METHOD QMdiArea:setViewMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QMdiArea_setViewMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiArea:subWindowList( nOrder )
-   RETURN HB_QList():from( Qt_QMdiArea_subWindowList( ::pPtr, nOrder ) )
+METHOD QMdiArea:subWindowList( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QList():from( Qt_QMdiArea_subWindowList( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QList():from( Qt_QMdiArea_subWindowList( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiArea:tabPosition()
-   RETURN Qt_QMdiArea_tabPosition( ::pPtr )
+METHOD QMdiArea:tabPosition( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMdiArea_tabPosition( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiArea:tabShape()
-   RETURN Qt_QMdiArea_tabShape( ::pPtr )
+METHOD QMdiArea:tabShape( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMdiArea_tabShape( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiArea:testOption( nOption )
-   RETURN Qt_QMdiArea_testOption( ::pPtr, nOption )
+METHOD QMdiArea:testOption( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QMdiArea_testOption( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiArea:viewMode()
-   RETURN Qt_QMdiArea_viewMode( ::pPtr )
+METHOD QMdiArea:viewMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMdiArea_viewMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiArea:activateNextSubWindow()
-   RETURN Qt_QMdiArea_activateNextSubWindow( ::pPtr )
+METHOD QMdiArea:activateNextSubWindow( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMdiArea_activateNextSubWindow( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiArea:activatePreviousSubWindow()
-   RETURN Qt_QMdiArea_activatePreviousSubWindow( ::pPtr )
+METHOD QMdiArea:activatePreviousSubWindow( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMdiArea_activatePreviousSubWindow( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiArea:cascadeSubWindows()
-   RETURN Qt_QMdiArea_cascadeSubWindows( ::pPtr )
+METHOD QMdiArea:cascadeSubWindows( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMdiArea_cascadeSubWindows( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiArea:closeActiveSubWindow()
-   RETURN Qt_QMdiArea_closeActiveSubWindow( ::pPtr )
+METHOD QMdiArea:closeActiveSubWindow( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMdiArea_closeActiveSubWindow( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiArea:closeAllSubWindows()
-   RETURN Qt_QMdiArea_closeAllSubWindows( ::pPtr )
+METHOD QMdiArea:closeAllSubWindows( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMdiArea_closeAllSubWindows( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiArea:setActiveSubWindow( pWindow )
-   RETURN Qt_QMdiArea_setActiveSubWindow( ::pPtr, hbqt_ptr( pWindow ) )
+METHOD QMdiArea:setActiveSubWindow( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMdiArea_setActiveSubWindow( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMdiArea:tileSubWindows()
-   RETURN Qt_QMdiArea_tileSubWindows( ::pPtr )
+METHOD QMdiArea:tileSubWindows( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMdiArea_tileSubWindows( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

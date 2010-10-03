@@ -26,10 +26,10 @@
  *  $RETURNS$
  *     An instance of the object of type QAbstractGraphicsShapeItem
  *  $METHODS$
- *     :brush()                                            -> pQBrush
- *     :pen()                                              -> pQPen
- *     :setBrush( pBrush )                                 -> NIL
- *     :setPen( pPen )                                     -> NIL
+ *     :brush()                                            -> oQBrush
+ *     :pen()                                              -> oQPen
+ *     :setBrush( oQBrush )                                -> NIL
+ *     :setPen( oQPen )                                    -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -49,7 +49,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQAbstractGraphicsShapeItem.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QAbstractGraphicsShapeItem.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QGraphicsItem()
  *  $END$
  */

@@ -29,11 +29,11 @@
  *     :autoDefault()                                      -> lBool
  *     :isDefault()                                        -> lBool
  *     :isFlat()                                           -> lBool
- *     :menu()                                             -> pQMenu
+ *     :menu()                                             -> oQMenu
  *     :setAutoDefault( lBool )                            -> NIL
  *     :setDefault( lBool )                                -> NIL
  *     :setFlat( lBool )                                   -> NIL
- *     :setMenu( pMenu )                                   -> NIL
+ *     :setMenu( oQMenu )                                  -> NIL
  *     :showMenu()                                         -> NIL
  * 
  *  $DESCRIPTION$
@@ -54,7 +54,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQPushButton.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QPushButton.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractButton()
  *  $END$
  */

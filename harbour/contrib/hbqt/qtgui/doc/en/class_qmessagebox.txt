@@ -26,44 +26,44 @@
  *  $RETURNS$
  *     An instance of the object of type QMessageBox
  *  $METHODS$
- *     :addButton( pButton, nRole )                        -> NIL
- *     :addButton_1( cText, nRole )                        -> pQPushButton
- *     :addButton_2( nButton )                             -> pQPushButton
- *     :button( nWhich )                                   -> pQAbstractButton
- *     :buttonRole( pButton )                              -> nButtonRole
- *     :buttons()                                          -> pQList<QAbstractButton *>
- *     :clickedButton()                                    -> pQAbstractButton
- *     :defaultButton()                                    -> pQPushButton
+ *     :addButton( oQAbstractButton, nRole )               -> NIL
+ *     :addButton( cText, nRole )                          -> oQPushButton
+ *     :addButton( nButton )                               -> oQPushButton
+ *     :button( nWhich )                                   -> oQAbstractButton
+ *     :buttonRole( oQAbstractButton )                     -> nButtonRole
+ *     :buttons()                                          -> oQList_QAbstractButton
+ *     :clickedButton()                                    -> oQAbstractButton
+ *     :defaultButton()                                    -> oQPushButton
  *     :detailedText()                                     -> cQString
- *     :escapeButton()                                     -> pQAbstractButton
+ *     :escapeButton()                                     -> oQAbstractButton
  *     :icon()                                             -> nIcon
- *     :iconPixmap()                                       -> pQPixmap
+ *     :iconPixmap()                                       -> oQPixmap
  *     :informativeText()                                  -> cQString
- *     :open( pReceiver, pMember )                         -> NIL
- *     :removeButton( pButton )                            -> NIL
- *     :setDefaultButton( pButton )                        -> NIL
- *     :setDefaultButton_1( nButton )                      -> NIL
+ *     :open( oQObject, cMember )                          -> NIL
+ *     :removeButton( oQAbstractButton )                   -> NIL
+ *     :setDefaultButton( oQPushButton )                   -> NIL
+ *     :setDefaultButton( nButton )                        -> NIL
  *     :setDetailedText( cText )                           -> NIL
- *     :setEscapeButton( pButton )                         -> NIL
- *     :setEscapeButton_1( nButton )                       -> NIL
+ *     :setEscapeButton( oQAbstractButton )                -> NIL
+ *     :setEscapeButton( nButton )                         -> NIL
  *     :setIcon( nIcon )                                   -> NIL
- *     :setIconPixmap( pPixmap )                           -> NIL
+ *     :setIconPixmap( oQPixmap )                          -> NIL
  *     :setInformativeText( cText )                        -> NIL
  *     :setStandardButtons( nButtons )                     -> NIL
  *     :setText( cText )                                   -> NIL
  *     :setTextFormat( nFormat )                           -> NIL
  *     :setWindowModality( nWindowModality )               -> NIL
  *     :setWindowTitle( cTitle )                           -> NIL
- *     :standardButton( pButton )                          -> nStandardButton
+ *     :standardButton( oQAbstractButton )                 -> nStandardButton
  *     :standardButtons()                                  -> nStandardButtons
  *     :text()                                             -> cQString
- *     :textFormat()                                       -> nQt::TextFormat
- *     :about( pParent, cTitle, cText )                    -> NIL
- *     :aboutQt( pParent, cTitle )                         -> NIL
- *     :critical( pParent, cTitle, cText, nButtons, nDefaultButton )  -> nStandardButton
- *     :information( pParent, cTitle, cText, nButtons, nDefaultButton )  -> nStandardButton
- *     :question( pParent, cTitle, cText, nButtons, nDefaultButton )  -> nStandardButton
- *     :warning( pParent, cTitle, cText, nButtons, nDefaultButton )  -> nStandardButton
+ *     :textFormat()                                       -> nQt_TextFormat
+ *     :about( oQWidget, cTitle, cText )                   -> NIL
+ *     :aboutQt( oQWidget, cTitle )                        -> NIL
+ *     :critical( oQWidget, cTitle, cText, nButtons, nDefaultButton )  -> nStandardButton
+ *     :information( oQWidget, cTitle, cText, nButtons, nDefaultButton )  -> nStandardButton
+ *     :question( oQWidget, cTitle, cText, nButtons, nDefaultButton )  -> nStandardButton
+ *     :warning( oQWidget, cTitle, cText, nButtons, nDefaultButton )  -> nStandardButton
  *     :exec()                                             -> nInt
  * 
  *  $DESCRIPTION$
@@ -84,7 +84,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQMessageBox.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QMessageBox.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QDialog()
  *  $END$
  */

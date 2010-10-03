@@ -843,7 +843,7 @@ METHOD XbpBrowse:execSlot( nEvent, p1, p2, p3 )
 
    DO CASE
    CASE nEvent == __ev_contextMenuRequested__
-      oPoint := ::oTableView:mapToGlobal( p1 )
+      oPoint := ::oTableView:mapToGlobal( QPoint( p1 ) )
       ::hbContextMenu( { oPoint:x(), oPoint:y() } )
 
    CASE nEvent == __editor_commitData__

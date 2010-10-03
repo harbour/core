@@ -26,14 +26,14 @@
  *  $RETURNS$
  *     An instance of the object of type QFrame
  *  $METHODS$
- *     :frameRect()                                        -> pQRect
+ *     :frameRect()                                        -> oQRect
  *     :frameShadow()                                      -> nShadow
  *     :frameShape()                                       -> nShape
  *     :frameStyle()                                       -> nInt
  *     :frameWidth()                                       -> nInt
  *     :lineWidth()                                        -> nInt
  *     :midLineWidth()                                     -> nInt
- *     :setFrameRect( pQRect )                             -> NIL
+ *     :setFrameRect( oQRect )                             -> NIL
  *     :setFrameShadow( nShadow )                          -> NIL
  *     :setFrameShape( nShape )                            -> NIL
  *     :setFrameStyle( nStyle )                            -> NIL
@@ -58,7 +58,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQFrame.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QFrame.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

@@ -103,45 +103,61 @@ CREATE CLASS QLocale INHERIT HbQtObjectHandler FUNCTION HB_QLocale
 
    METHOD  new( ... )
 
-   METHOD  amText()
-   METHOD  country()
-   METHOD  dateFormat( nFormat )
-   METHOD  dateTimeFormat( nFormat )
-   METHOD  dayName( nDay, nType )
-   METHOD  decimalPoint()
-   METHOD  exponential()
-   METHOD  groupSeparator()
-   METHOD  language()
-   METHOD  measurementSystem()
-   METHOD  monthName( nMonth, nType )
-   METHOD  name()
-   METHOD  negativeSign()
-   METHOD  numberOptions()
-   METHOD  percent()
-   METHOD  pmText()
-   METHOD  positiveSign()
-   METHOD  setNumberOptions( nOptions )
-   METHOD  standaloneDayName( nDay, nType )
-   METHOD  standaloneMonthName( nMonth, nType )
-   METHOD  timeFormat( nFormat )
-   METHOD  toDate( ... )
-   METHOD  toDateTime( ... )
-   METHOD  toDouble( cS, lOk )
-   METHOD  toFloat( cS, lOk )
-   METHOD  toInt( cS, lOk, nBase )
-   METHOD  toLongLong( cS, lOk, nBase )
-   METHOD  toShort( cS, lOk, nBase )
-   METHOD  toString( ... )
-   METHOD  toTime( ... )
-   METHOD  toUInt( cS, lOk, nBase )
-   METHOD  toULongLong( cS, lOk, nBase )
-   METHOD  toUShort( cS, lOk, nBase )
-   METHOD  zeroDigit()
-   METHOD  c()
-   METHOD  countryToString( nCountry )
-   METHOD  languageToString( nLanguage )
-   METHOD  setDefault( pLocale )
-   METHOD  system()
+   METHOD  amText                        // (  )                                               -> cQString
+   METHOD  country                       // (  )                                               -> nCountry
+   METHOD  dateFormat                    // ( nFormat )                                        -> cQString
+   METHOD  dateTimeFormat                // ( nFormat )                                        -> cQString
+   METHOD  dayName                       // ( nDay, nType )                                    -> cQString
+   METHOD  decimalPoint                  // (  )                                               -> oQChar
+   METHOD  exponential                   // (  )                                               -> oQChar
+   METHOD  groupSeparator                // (  )                                               -> oQChar
+   METHOD  language                      // (  )                                               -> nLanguage
+   METHOD  measurementSystem             // (  )                                               -> nMeasurementSystem
+   METHOD  monthName                     // ( nMonth, nType )                                  -> cQString
+   METHOD  name                          // (  )                                               -> cQString
+   METHOD  negativeSign                  // (  )                                               -> oQChar
+   METHOD  numberOptions                 // (  )                                               -> nNumberOptions
+   METHOD  percent                       // (  )                                               -> oQChar
+   METHOD  pmText                        // (  )                                               -> cQString
+   METHOD  positiveSign                  // (  )                                               -> oQChar
+   METHOD  setNumberOptions              // ( nOptions )                                       -> NIL
+   METHOD  standaloneDayName             // ( nDay, nType )                                    -> cQString
+   METHOD  standaloneMonthName           // ( nMonth, nType )                                  -> cQString
+   METHOD  timeFormat                    // ( nFormat )                                        -> cQString
+   METHOD  toDate                        // ( cString, nFormat )                               -> oQDate
+                                         // ( cString, cFormat )                               -> oQDate
+   METHOD  toDateTime                    // ( cString, nFormat )                               -> oQDateTime
+                                         // ( cString, cFormat )                               -> oQDateTime
+   METHOD  toDouble                      // ( cS, @lOk )                                       -> nDouble
+   METHOD  toFloat                       // ( cS, @lOk )                                       -> nFloat
+   METHOD  toInt                         // ( cS, @lOk, nBase )                                -> nInt
+   METHOD  toLongLong                    // ( cS, @lOk, nBase )                                -> nQlonglong
+   METHOD  toShort                       // ( cS, @lOk, nBase )                                -> nShort
+   METHOD  toString                      // ( nI )                                             -> cQString
+                                         // ( oQDate, cFormat )                                -> cQString
+                                         // ( oQDate, nFormat )                                -> cQString
+                                         // ( oQTime, cFormat )                                -> cQString
+                                         // ( oQTime, nFormat )                                -> cQString
+                                         // ( oQDateTime, nFormat )                            -> cQString
+                                         // ( oQDateTime, cFormat )                            -> cQString
+                                         // ( nI )                                             -> cQString
+                                         // ( nI, nF, nPrec )                                  -> cQString
+                                         // ( nI )                                             -> cQString
+                                         // ( nI )                                             -> cQString
+                                         // ( nI )                                             -> cQString
+                                         // ( nI )                                             -> cQString
+                                         // ( nI, nF, nPrec )                                  -> cQString
+   METHOD  toTime                        // ( cString, nFormat )                               -> oQTime
+                                         // ( cString, cFormat )                               -> oQTime
+   METHOD  toUInt                        // ( cS, @lOk, nBase )                                -> nUint
+   METHOD  toULongLong                   // ( cS, @lOk, nBase )                                -> nQlonglong
+   METHOD  toUShort                      // ( cS, @lOk, nBase )                                -> nUshort
+   METHOD  zeroDigit                     // (  )                                               -> oQChar
+   METHOD  c                             // (  )                                               -> oQLocale
+   METHOD  countryToString               // ( nCountry )                                       -> cQString
+   METHOD  languageToString              // ( nLanguage )                                      -> cQString
+   METHOD  setDefault                    // ( oQLocale )                                       -> NIL
+   METHOD  system                        // (  )                                               -> oQLocale
 
    ENDCLASS
 
@@ -155,88 +171,234 @@ METHOD QLocale:new( ... )
    RETURN Self
 
 
-METHOD QLocale:amText()
-   RETURN Qt_QLocale_amText( ::pPtr )
+METHOD QLocale:amText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLocale_amText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:country()
-   RETURN Qt_QLocale_country( ::pPtr )
+METHOD QLocale:country( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLocale_country( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:dateFormat( nFormat )
-   RETURN Qt_QLocale_dateFormat( ::pPtr, nFormat )
+METHOD QLocale:dateFormat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLocale_dateFormat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QLocale_dateFormat( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:dateTimeFormat( nFormat )
-   RETURN Qt_QLocale_dateTimeFormat( ::pPtr, nFormat )
+METHOD QLocale:dateTimeFormat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLocale_dateTimeFormat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QLocale_dateTimeFormat( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:dayName( nDay, nType )
-   RETURN Qt_QLocale_dayName( ::pPtr, nDay, nType )
+METHOD QLocale:dayName( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QLocale_dayName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLocale_dayName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:decimalPoint()
-   RETURN HB_QChar():from( Qt_QLocale_decimalPoint( ::pPtr ) )
+METHOD QLocale:decimalPoint( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QChar():from( Qt_QLocale_decimalPoint( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:exponential()
-   RETURN HB_QChar():from( Qt_QLocale_exponential( ::pPtr ) )
+METHOD QLocale:exponential( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QChar():from( Qt_QLocale_exponential( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:groupSeparator()
-   RETURN HB_QChar():from( Qt_QLocale_groupSeparator( ::pPtr ) )
+METHOD QLocale:groupSeparator( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QChar():from( Qt_QLocale_groupSeparator( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:language()
-   RETURN Qt_QLocale_language( ::pPtr )
+METHOD QLocale:language( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLocale_language( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:measurementSystem()
-   RETURN Qt_QLocale_measurementSystem( ::pPtr )
+METHOD QLocale:measurementSystem( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLocale_measurementSystem( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:monthName( nMonth, nType )
-   RETURN Qt_QLocale_monthName( ::pPtr, nMonth, nType )
+METHOD QLocale:monthName( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QLocale_monthName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLocale_monthName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:name()
-   RETURN Qt_QLocale_name( ::pPtr )
+METHOD QLocale:name( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLocale_name( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:negativeSign()
-   RETURN HB_QChar():from( Qt_QLocale_negativeSign( ::pPtr ) )
+METHOD QLocale:negativeSign( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QChar():from( Qt_QLocale_negativeSign( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:numberOptions()
-   RETURN Qt_QLocale_numberOptions( ::pPtr )
+METHOD QLocale:numberOptions( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLocale_numberOptions( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:percent()
-   RETURN HB_QChar():from( Qt_QLocale_percent( ::pPtr ) )
+METHOD QLocale:percent( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QChar():from( Qt_QLocale_percent( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:pmText()
-   RETURN Qt_QLocale_pmText( ::pPtr )
+METHOD QLocale:pmText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLocale_pmText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:positiveSign()
-   RETURN HB_QChar():from( Qt_QLocale_positiveSign( ::pPtr ) )
+METHOD QLocale:positiveSign( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QChar():from( Qt_QLocale_positiveSign( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:setNumberOptions( nOptions )
-   RETURN Qt_QLocale_setNumberOptions( ::pPtr, nOptions )
+METHOD QLocale:setNumberOptions( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLocale_setNumberOptions( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:standaloneDayName( nDay, nType )
-   RETURN Qt_QLocale_standaloneDayName( ::pPtr, nDay, nType )
+METHOD QLocale:standaloneDayName( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QLocale_standaloneDayName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLocale_standaloneDayName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:standaloneMonthName( nMonth, nType )
-   RETURN Qt_QLocale_standaloneMonthName( ::pPtr, nMonth, nType )
+METHOD QLocale:standaloneMonthName( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QLocale_standaloneMonthName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLocale_standaloneMonthName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:timeFormat( nFormat )
-   RETURN Qt_QLocale_timeFormat( ::pPtr, nFormat )
+METHOD QLocale:timeFormat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLocale_timeFormat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QLocale_timeFormat( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QLocale:toDate( ... )
@@ -279,54 +441,145 @@ METHOD QLocale:toDateTime( ... )
    RETURN hbqt_error()
 
 
-METHOD QLocale:toDouble( cS, lOk )
-   RETURN Qt_QLocale_toDouble( ::pPtr, cS, lOk )
+METHOD QLocale:toDouble( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QLocale_toDouble( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QLocale_toDouble( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:toFloat( cS, lOk )
-   RETURN Qt_QLocale_toFloat( ::pPtr, cS, lOk )
+METHOD QLocale:toFloat( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QLocale_toFloat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QLocale_toFloat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:toInt( cS, lOk, nBase )
-   RETURN Qt_QLocale_toInt( ::pPtr, cS, lOk, nBase )
+METHOD QLocale:toInt( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QLocale_toInt( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QLocale_toInt( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QLocale_toInt( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:toLongLong( cS, lOk, nBase )
-   RETURN Qt_QLocale_toLongLong( ::pPtr, cS, lOk, nBase )
+METHOD QLocale:toLongLong( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QLocale_toLongLong( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QLocale_toLongLong( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QLocale_toLongLong( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:toShort( cS, lOk, nBase )
-   RETURN Qt_QLocale_toShort( ::pPtr, cS, lOk, nBase )
+METHOD QLocale:toShort( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QLocale_toShort( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QLocale_toShort( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QLocale_toShort( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QLocale:toString( ... )
    SWITCH PCount()
    CASE 3
       DO CASE
-      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
          RETURN Qt_QLocale_toString_13( ::pPtr, ... )
          // RETURN Qt_QLocale_toString_8( ::pPtr, ... )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QLocale_toString_8( ::pPtr, ... )
+         // RETURN Qt_QLocale_toString_13( ::pPtr, ... )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) )
          CASE "QDATE"
             RETURN Qt_QLocale_toString_1( ::pPtr, ... )
-         CASE "QDATETIME"
-            RETURN Qt_QLocale_toString_6( ::pPtr, ... )
          CASE "QTIME"
             RETURN Qt_QLocale_toString_3( ::pPtr, ... )
+         CASE "QDATETIME"
+            RETURN Qt_QLocale_toString_6( ::pPtr, ... )
          ENDSWITCH
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QTIME"
+            RETURN Qt_QLocale_toString_4( ::pPtr, ... )
          CASE "QDATE"
             RETURN Qt_QLocale_toString_2( ::pPtr, ... )
          CASE "QDATETIME"
             RETURN Qt_QLocale_toString_5( ::pPtr, ... )
-         CASE "QTIME"
-            RETURN Qt_QLocale_toString_4( ::pPtr, ... )
          ENDSWITCH
       ENDCASE
       EXIT
@@ -376,38 +629,134 @@ METHOD QLocale:toTime( ... )
    RETURN hbqt_error()
 
 
-METHOD QLocale:toUInt( cS, lOk, nBase )
-   RETURN Qt_QLocale_toUInt( ::pPtr, cS, lOk, nBase )
+METHOD QLocale:toUInt( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QLocale_toUInt( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QLocale_toUInt( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QLocale_toUInt( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:toULongLong( cS, lOk, nBase )
-   RETURN Qt_QLocale_toULongLong( ::pPtr, cS, lOk, nBase )
+METHOD QLocale:toULongLong( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QLocale_toULongLong( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QLocale_toULongLong( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QLocale_toULongLong( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:toUShort( cS, lOk, nBase )
-   RETURN Qt_QLocale_toUShort( ::pPtr, cS, lOk, nBase )
+METHOD QLocale:toUShort( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QLocale_toUShort( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QLocale_toUShort( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QLocale_toUShort( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:zeroDigit()
-   RETURN HB_QChar():from( Qt_QLocale_zeroDigit( ::pPtr ) )
+METHOD QLocale:zeroDigit( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QChar():from( Qt_QLocale_zeroDigit( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:c()
-   RETURN HB_QLocale():from( Qt_QLocale_c( ::pPtr ) )
+METHOD QLocale:c( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QLocale():from( Qt_QLocale_c( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:countryToString( nCountry )
-   RETURN Qt_QLocale_countryToString( ::pPtr, nCountry )
+METHOD QLocale:countryToString( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLocale_countryToString( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:languageToString( nLanguage )
-   RETURN Qt_QLocale_languageToString( ::pPtr, nLanguage )
+METHOD QLocale:languageToString( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLocale_languageToString( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:setDefault( pLocale )
-   RETURN Qt_QLocale_setDefault( ::pPtr, hbqt_ptr( pLocale ) )
+METHOD QLocale:setDefault( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QLocale_setDefault( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLocale:system()
-   RETURN HB_QLocale():from( Qt_QLocale_system( ::pPtr ) )
+METHOD QLocale:system( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QLocale():from( Qt_QLocale_system( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

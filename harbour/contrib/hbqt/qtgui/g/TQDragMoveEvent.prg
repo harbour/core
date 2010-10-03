@@ -103,9 +103,11 @@ CREATE CLASS QDragMoveEvent INHERIT HbQtObjectHandler, HB_QDropEvent FUNCTION HB
 
    METHOD  new( ... )
 
-   METHOD  accept( ... )
-   METHOD  answerRect()
-   METHOD  ignore( ... )
+   METHOD  accept                        // ( oQRect )                                         -> NIL
+                                         // (  )                                               -> NIL
+   METHOD  answerRect                    // (  )                                               -> oQRect
+   METHOD  ignore                        // ( oQRect )                                         -> NIL
+                                         // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -133,8 +135,12 @@ METHOD QDragMoveEvent:accept( ... )
    RETURN hbqt_error()
 
 
-METHOD QDragMoveEvent:answerRect()
-   RETURN HB_QRect():from( Qt_QDragMoveEvent_answerRect( ::pPtr ) )
+METHOD QDragMoveEvent:answerRect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QDragMoveEvent_answerRect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QDragMoveEvent:ignore( ... )

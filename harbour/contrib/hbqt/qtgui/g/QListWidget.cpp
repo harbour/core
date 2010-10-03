@@ -209,11 +209,7 @@ HB_FUNC( QT_QLISTWIDGET_ADDITEM_1 )
    QListWidget * p = hbqt_par_QListWidget( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 2 );
       ( p )->addItem( hbqt_par_QListWidgetItem( 2 ) );
    }
 }
@@ -312,11 +308,7 @@ HB_FUNC( QT_QLISTWIDGET_INSERTITEM )
    QListWidget * p = hbqt_par_QListWidget( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 3 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 3 );
       ( p )->insertItem( hb_parni( 2 ), hbqt_par_QListWidgetItem( 3 ) );
    }
 }

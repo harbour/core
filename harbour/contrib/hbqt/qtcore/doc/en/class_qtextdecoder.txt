@@ -26,7 +26,7 @@
  *  $RETURNS$
  *     An instance of the object of type QTextDecoder
  *  $METHODS$
- *     :toUnicode( pChars, nLen )                          -> cQString
+ *     :toUnicode( cChars, nLen )                          -> cQString
  * 
  *  $DESCRIPTION$
  * 
@@ -46,7 +46,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQTextDecoder.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QTextDecoder.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

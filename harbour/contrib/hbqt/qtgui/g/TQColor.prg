@@ -103,69 +103,77 @@ CREATE CLASS QColor INHERIT HbQtObjectHandler FUNCTION HB_QColor
 
    METHOD  new( ... )
 
-   METHOD  alpha()
-   METHOD  alphaF()
-   METHOD  black()
-   METHOD  blackF()
-   METHOD  blue()
-   METHOD  blueF()
-   METHOD  convertTo( nColorSpec )
-   METHOD  cyan()
-   METHOD  cyanF()
-   METHOD  darker( nFactor )
-   METHOD  getCmyk( nC, nM, nY, nK, nA )
-   METHOD  getCmykF( nC, nM, nY, nK, nA )
-   METHOD  getHsv( nH, nS, nV, nA )
-   METHOD  getHsvF( nH, nS, nV, nA )
-   METHOD  getRgb( nR, nG, nB, nA )
-   METHOD  getRgbF( nR, nG, nB, nA )
-   METHOD  green()
-   METHOD  greenF()
-   METHOD  hue()
-   METHOD  hueF()
-   METHOD  isValid()
-   METHOD  lighter( nFactor )
-   METHOD  magenta()
-   METHOD  magentaF()
-   METHOD  name()
-   METHOD  red()
-   METHOD  redF()
-   METHOD  rgb()
-   METHOD  rgba()
-   METHOD  saturation()
-   METHOD  saturationF()
-   METHOD  setAlpha( nAlpha )
-   METHOD  setAlphaF( nAlpha )
-   METHOD  setBlue( nBlue )
-   METHOD  setBlueF( nBlue )
-   METHOD  setCmyk( nC, nM, nY, nK, nA )
-   METHOD  setCmykF( nC, nM, nY, nK, nA )
-   METHOD  setGreen( nGreen )
-   METHOD  setGreenF( nGreen )
-   METHOD  setHsv( nH, nS, nV, nA )
-   METHOD  setHsvF( nH, nS, nV, nA )
-   METHOD  setNamedColor( cName )
-   METHOD  setRed( nRed )
-   METHOD  setRedF( nRed )
-   METHOD  setRgb( ... )
-   METHOD  setRgba( nRgba )
-   METHOD  setRgbF( nR, nG, nB, nA )
-   METHOD  spec()
-   METHOD  toCmyk()
-   METHOD  toHsv()
-   METHOD  toRgb()
-   METHOD  value()
-   METHOD  valueF()
-   METHOD  yellow()
-   METHOD  yellowF()
-   METHOD  colorNames()
-   METHOD  fromCmyk( nC, nM, nY, nK, nA )
-   METHOD  fromCmykF( nC, nM, nY, nK, nA )
-   METHOD  fromHsv( nH, nS, nV, nA )
-   METHOD  fromHsvF( nH, nS, nV, nA )
-   METHOD  fromRgb( ... )
-   METHOD  fromRgbF( nR, nG, nB, nA )
-   METHOD  fromRgba( nRgba )
+   METHOD  QColor                        // (  )                                               -> oQColor
+                                         // ( nR, nG, nB, nA )                                 -> oQColor
+                                         // ( nColor )                                         -> oQColor
+                                         // ( nColor )                                         -> oQColor
+                                         // ( cName )                                          -> oQColor
+                                         // ( oQColor )                                        -> oQColor
+   METHOD  alpha                         // (  )                                               -> nInt
+   METHOD  alphaF                        // (  )                                               -> nQreal
+   METHOD  black                         // (  )                                               -> nInt
+   METHOD  blackF                        // (  )                                               -> nQreal
+   METHOD  blue                          // (  )                                               -> nInt
+   METHOD  blueF                         // (  )                                               -> nQreal
+   METHOD  convertTo                     // ( nColorSpec )                                     -> oQColor
+   METHOD  cyan                          // (  )                                               -> nInt
+   METHOD  cyanF                         // (  )                                               -> nQreal
+   METHOD  darker                        // ( nFactor )                                        -> oQColor
+   METHOD  getCmyk                       // ( @nC, @nM, @nY, @nK, @nA )                        -> NIL
+   METHOD  getCmykF                      // ( @nC, @nM, @nY, @nK, @nA )                        -> NIL
+   METHOD  getHsv                        // ( @nH, @nS, @nV, @nA )                             -> NIL
+   METHOD  getHsvF                       // ( @nH, @nS, @nV, @nA )                             -> NIL
+   METHOD  getRgb                        // ( @nR, @nG, @nB, @nA )                             -> NIL
+   METHOD  getRgbF                       // ( @nR, @nG, @nB, @nA )                             -> NIL
+   METHOD  green                         // (  )                                               -> nInt
+   METHOD  greenF                        // (  )                                               -> nQreal
+   METHOD  hue                           // (  )                                               -> nInt
+   METHOD  hueF                          // (  )                                               -> nQreal
+   METHOD  isValid                       // (  )                                               -> lBool
+   METHOD  lighter                       // ( nFactor )                                        -> oQColor
+   METHOD  magenta                       // (  )                                               -> nInt
+   METHOD  magentaF                      // (  )                                               -> nQreal
+   METHOD  name                          // (  )                                               -> cQString
+   METHOD  red                           // (  )                                               -> nInt
+   METHOD  redF                          // (  )                                               -> nQreal
+   METHOD  rgb                           // (  )                                               -> nQRgb
+   METHOD  rgba                          // (  )                                               -> nQRgb
+   METHOD  saturation                    // (  )                                               -> nInt
+   METHOD  saturationF                   // (  )                                               -> nQreal
+   METHOD  setAlpha                      // ( nAlpha )                                         -> NIL
+   METHOD  setAlphaF                     // ( nAlpha )                                         -> NIL
+   METHOD  setBlue                       // ( nBlue )                                          -> NIL
+   METHOD  setBlueF                      // ( nBlue )                                          -> NIL
+   METHOD  setCmyk                       // ( nC, nM, nY, nK, nA )                             -> NIL
+   METHOD  setCmykF                      // ( nC, nM, nY, nK, nA )                             -> NIL
+   METHOD  setGreen                      // ( nGreen )                                         -> NIL
+   METHOD  setGreenF                     // ( nGreen )                                         -> NIL
+   METHOD  setHsv                        // ( nH, nS, nV, nA )                                 -> NIL
+   METHOD  setHsvF                       // ( nH, nS, nV, nA )                                 -> NIL
+   METHOD  setNamedColor                 // ( cName )                                          -> NIL
+   METHOD  setRed                        // ( nRed )                                           -> NIL
+   METHOD  setRedF                       // ( nRed )                                           -> NIL
+   METHOD  setRgb                        // ( nRgb )                                           -> NIL
+                                         // ( nR, nG, nB, nA )                                 -> NIL
+   METHOD  setRgba                       // ( nRgba )                                          -> NIL
+   METHOD  setRgbF                       // ( nR, nG, nB, nA )                                 -> NIL
+   METHOD  spec                          // (  )                                               -> nSpec
+   METHOD  toCmyk                        // (  )                                               -> oQColor
+   METHOD  toHsv                         // (  )                                               -> oQColor
+   METHOD  toRgb                         // (  )                                               -> oQColor
+   METHOD  value                         // (  )                                               -> nInt
+   METHOD  valueF                        // (  )                                               -> nQreal
+   METHOD  yellow                        // (  )                                               -> nInt
+   METHOD  yellowF                       // (  )                                               -> nQreal
+   METHOD  colorNames                    // (  )                                               -> oQStringList
+   METHOD  fromCmyk                      // ( nC, nM, nY, nK, nA )                             -> oQColor
+   METHOD  fromCmykF                     // ( nC, nM, nY, nK, nA )                             -> oQColor
+   METHOD  fromHsv                       // ( nH, nS, nV, nA )                                 -> oQColor
+   METHOD  fromHsvF                      // ( nH, nS, nV, nA )                                 -> oQColor
+   METHOD  fromRgb                       // ( nRgb )                                           -> oQColor
+                                         // ( nR, nG, nB, nA )                                 -> oQColor
+   METHOD  fromRgbF                      // ( nR, nG, nB, nA )                                 -> oQColor
+   METHOD  fromRgba                      // ( nRgba )                                          -> oQColor
 
    ENDCLASS
 
@@ -179,180 +187,539 @@ METHOD QColor:new( ... )
    RETURN Self
 
 
-METHOD QColor:alpha()
-   RETURN Qt_QColor_alpha( ::pPtr )
-
-
-METHOD QColor:alphaF()
-   RETURN Qt_QColor_alphaF( ::pPtr )
-
-
-METHOD QColor:black()
-   RETURN Qt_QColor_black( ::pPtr )
-
-
-METHOD QColor:blackF()
-   RETURN Qt_QColor_blackF( ::pPtr )
-
-
-METHOD QColor:blue()
-   RETURN Qt_QColor_blue( ::pPtr )
-
-
-METHOD QColor:blueF()
-   RETURN Qt_QColor_blueF( ::pPtr )
-
-
-METHOD QColor:convertTo( nColorSpec )
-   RETURN HB_QColor():from( Qt_QColor_convertTo( ::pPtr, nColorSpec ) )
-
-
-METHOD QColor:cyan()
-   RETURN Qt_QColor_cyan( ::pPtr )
-
-
-METHOD QColor:cyanF()
-   RETURN Qt_QColor_cyanF( ::pPtr )
-
-
-METHOD QColor:darker( nFactor )
-   RETURN HB_QColor():from( Qt_QColor_darker( ::pPtr, nFactor ) )
-
-
-METHOD QColor:getCmyk( nC, nM, nY, nK, nA )
-   RETURN Qt_QColor_getCmyk( ::pPtr, nC, nM, nY, nK, nA )
-
-
-METHOD QColor:getCmykF( nC, nM, nY, nK, nA )
-   RETURN Qt_QColor_getCmykF( ::pPtr, nC, nM, nY, nK, nA )
-
-
-METHOD QColor:getHsv( nH, nS, nV, nA )
-   RETURN Qt_QColor_getHsv( ::pPtr, nH, nS, nV, nA )
-
-
-METHOD QColor:getHsvF( nH, nS, nV, nA )
-   RETURN Qt_QColor_getHsvF( ::pPtr, nH, nS, nV, nA )
-
-
-METHOD QColor:getRgb( nR, nG, nB, nA )
-   RETURN Qt_QColor_getRgb( ::pPtr, nR, nG, nB, nA )
-
-
-METHOD QColor:getRgbF( nR, nG, nB, nA )
-   RETURN Qt_QColor_getRgbF( ::pPtr, nR, nG, nB, nA )
-
-
-METHOD QColor:green()
-   RETURN Qt_QColor_green( ::pPtr )
-
-
-METHOD QColor:greenF()
-   RETURN Qt_QColor_greenF( ::pPtr )
-
-
-METHOD QColor:hue()
-   RETURN Qt_QColor_hue( ::pPtr )
-
-
-METHOD QColor:hueF()
-   RETURN Qt_QColor_hueF( ::pPtr )
-
-
-METHOD QColor:isValid()
-   RETURN Qt_QColor_isValid( ::pPtr )
-
-
-METHOD QColor:lighter( nFactor )
-   RETURN HB_QColor():from( Qt_QColor_lighter( ::pPtr, nFactor ) )
-
-
-METHOD QColor:magenta()
-   RETURN Qt_QColor_magenta( ::pPtr )
-
-
-METHOD QColor:magentaF()
-   RETURN Qt_QColor_magentaF( ::pPtr )
-
-
-METHOD QColor:name()
-   RETURN Qt_QColor_name( ::pPtr )
-
-
-METHOD QColor:red()
-   RETURN Qt_QColor_red( ::pPtr )
-
-
-METHOD QColor:redF()
-   RETURN Qt_QColor_redF( ::pPtr )
-
-
-METHOD QColor:rgb()
-   RETURN Qt_QColor_rgb( ::pPtr )
-
-
-METHOD QColor:rgba()
-   RETURN Qt_QColor_rgba( ::pPtr )
-
-
-METHOD QColor:saturation()
-   RETURN Qt_QColor_saturation( ::pPtr )
-
-
-METHOD QColor:saturationF()
-   RETURN Qt_QColor_saturationF( ::pPtr )
-
-
-METHOD QColor:setAlpha( nAlpha )
-   RETURN Qt_QColor_setAlpha( ::pPtr, nAlpha )
-
-
-METHOD QColor:setAlphaF( nAlpha )
-   RETURN Qt_QColor_setAlphaF( ::pPtr, nAlpha )
-
-
-METHOD QColor:setBlue( nBlue )
-   RETURN Qt_QColor_setBlue( ::pPtr, nBlue )
-
-
-METHOD QColor:setBlueF( nBlue )
-   RETURN Qt_QColor_setBlueF( ::pPtr, nBlue )
-
-
-METHOD QColor:setCmyk( nC, nM, nY, nK, nA )
-   RETURN Qt_QColor_setCmyk( ::pPtr, nC, nM, nY, nK, nA )
-
-
-METHOD QColor:setCmykF( nC, nM, nY, nK, nA )
-   RETURN Qt_QColor_setCmykF( ::pPtr, nC, nM, nY, nK, nA )
-
-
-METHOD QColor:setGreen( nGreen )
-   RETURN Qt_QColor_setGreen( ::pPtr, nGreen )
-
-
-METHOD QColor:setGreenF( nGreen )
-   RETURN Qt_QColor_setGreenF( ::pPtr, nGreen )
-
-
-METHOD QColor:setHsv( nH, nS, nV, nA )
-   RETURN Qt_QColor_setHsv( ::pPtr, nH, nS, nV, nA )
-
-
-METHOD QColor:setHsvF( nH, nS, nV, nA )
-   RETURN Qt_QColor_setHsvF( ::pPtr, nH, nS, nV, nA )
-
-
-METHOD QColor:setNamedColor( cName )
-   RETURN Qt_QColor_setNamedColor( ::pPtr, cName )
-
-
-METHOD QColor:setRed( nRed )
-   RETURN Qt_QColor_setRed( ::pPtr, nRed )
-
-
-METHOD QColor:setRedF( nRed )
-   RETURN Qt_QColor_setRedF( ::pPtr, nRed )
+METHOD QColor:QColor( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN HB_QColor():from( Qt_QColor_QColor_1( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN HB_QColor():from( Qt_QColor_QColor_1( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QColor():from( Qt_QColor_QColor_4( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QColor():from( Qt_QColor_QColor_2( ::pPtr, ... ) )
+         // RETURN HB_QColor():from( Qt_QColor_QColor_3( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QColor():from( Qt_QColor_QColor_5( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QColor():from( Qt_QColor_QColor( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:alpha( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColor_alpha( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:alphaF( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColor_alphaF( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:black( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColor_black( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:blackF( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColor_blackF( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:blue( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColor_blue( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:blueF( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColor_blueF( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:convertTo( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QColor():from( Qt_QColor_convertTo( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:cyan( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColor_cyan( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:cyanF( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColor_cyanF( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:darker( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QColor():from( Qt_QColor_darker( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QColor():from( Qt_QColor_darker( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:getCmyk( ... )
+   SWITCH PCount()
+   CASE 5
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
+         RETURN Qt_QColor_getCmyk( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QColor_getCmyk( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:getCmykF( ... )
+   SWITCH PCount()
+   CASE 5
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
+         RETURN Qt_QColor_getCmykF( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QColor_getCmykF( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:getHsv( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QColor_getHsv( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QColor_getHsv( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:getHsvF( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QColor_getHsvF( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QColor_getHsvF( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:getRgb( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QColor_getRgb( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QColor_getRgb( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:getRgbF( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QColor_getRgbF( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QColor_getRgbF( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:green( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColor_green( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:greenF( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColor_greenF( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:hue( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColor_hue( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:hueF( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColor_hueF( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:isValid( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColor_isValid( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:lighter( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QColor():from( Qt_QColor_lighter( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QColor():from( Qt_QColor_lighter( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:magenta( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColor_magenta( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:magentaF( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColor_magentaF( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:name( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColor_name( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:red( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColor_red( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:redF( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColor_redF( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:rgb( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColor_rgb( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:rgba( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColor_rgba( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:saturation( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColor_saturation( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:saturationF( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColor_saturationF( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:setAlpha( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QColor_setAlpha( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:setAlphaF( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QColor_setAlphaF( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:setBlue( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QColor_setBlue( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:setBlueF( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QColor_setBlueF( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:setCmyk( ... )
+   SWITCH PCount()
+   CASE 5
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
+         RETURN Qt_QColor_setCmyk( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QColor_setCmyk( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:setCmykF( ... )
+   SWITCH PCount()
+   CASE 5
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
+         RETURN Qt_QColor_setCmykF( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QColor_setCmykF( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:setGreen( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QColor_setGreen( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:setGreenF( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QColor_setGreenF( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:setHsv( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QColor_setHsv( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QColor_setHsv( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:setHsvF( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QColor_setHsvF( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QColor_setHsvF( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:setNamedColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QColor_setNamedColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:setRed( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QColor_setRed( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QColor:setRedF( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QColor_setRedF( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QColor:setRgb( ... )
@@ -379,64 +746,178 @@ METHOD QColor:setRgb( ... )
    RETURN hbqt_error()
 
 
-METHOD QColor:setRgba( nRgba )
-   RETURN Qt_QColor_setRgba( ::pPtr, nRgba )
+METHOD QColor:setRgba( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QColor_setRgba( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QColor:setRgbF( nR, nG, nB, nA )
-   RETURN Qt_QColor_setRgbF( ::pPtr, nR, nG, nB, nA )
+METHOD QColor:setRgbF( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QColor_setRgbF( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QColor_setRgbF( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QColor:spec()
-   RETURN Qt_QColor_spec( ::pPtr )
+METHOD QColor:spec( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColor_spec( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QColor:toCmyk()
-   RETURN HB_QColor():from( Qt_QColor_toCmyk( ::pPtr ) )
+METHOD QColor:toCmyk( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QColor():from( Qt_QColor_toCmyk( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QColor:toHsv()
-   RETURN HB_QColor():from( Qt_QColor_toHsv( ::pPtr ) )
+METHOD QColor:toHsv( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QColor():from( Qt_QColor_toHsv( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QColor:toRgb()
-   RETURN HB_QColor():from( Qt_QColor_toRgb( ::pPtr ) )
+METHOD QColor:toRgb( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QColor():from( Qt_QColor_toRgb( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QColor:value()
-   RETURN Qt_QColor_value( ::pPtr )
+METHOD QColor:value( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColor_value( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QColor:valueF()
-   RETURN Qt_QColor_valueF( ::pPtr )
+METHOD QColor:valueF( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColor_valueF( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QColor:yellow()
-   RETURN Qt_QColor_yellow( ::pPtr )
+METHOD QColor:yellow( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColor_yellow( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QColor:yellowF()
-   RETURN Qt_QColor_yellowF( ::pPtr )
+METHOD QColor:yellowF( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColor_yellowF( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QColor:colorNames()
-   RETURN HB_QStringList():from( Qt_QColor_colorNames( ::pPtr ) )
+METHOD QColor:colorNames( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QColor_colorNames( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QColor:fromCmyk( nC, nM, nY, nK, nA )
-   RETURN HB_QColor():from( Qt_QColor_fromCmyk( ::pPtr, nC, nM, nY, nK, nA ) )
+METHOD QColor:fromCmyk( ... )
+   SWITCH PCount()
+   CASE 5
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
+         RETURN HB_QColor():from( Qt_QColor_fromCmyk( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN HB_QColor():from( Qt_QColor_fromCmyk( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QColor:fromCmykF( nC, nM, nY, nK, nA )
-   RETURN HB_QColor():from( Qt_QColor_fromCmykF( ::pPtr, nC, nM, nY, nK, nA ) )
+METHOD QColor:fromCmykF( ... )
+   SWITCH PCount()
+   CASE 5
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
+         RETURN HB_QColor():from( Qt_QColor_fromCmykF( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN HB_QColor():from( Qt_QColor_fromCmykF( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QColor:fromHsv( nH, nS, nV, nA )
-   RETURN HB_QColor():from( Qt_QColor_fromHsv( ::pPtr, nH, nS, nV, nA ) )
+METHOD QColor:fromHsv( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN HB_QColor():from( Qt_QColor_fromHsv( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN HB_QColor():from( Qt_QColor_fromHsv( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QColor:fromHsvF( nH, nS, nV, nA )
-   RETURN HB_QColor():from( Qt_QColor_fromHsvF( ::pPtr, nH, nS, nV, nA ) )
+METHOD QColor:fromHsvF( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN HB_QColor():from( Qt_QColor_fromHsvF( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN HB_QColor():from( Qt_QColor_fromHsvF( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QColor:fromRgb( ... )
@@ -463,10 +944,32 @@ METHOD QColor:fromRgb( ... )
    RETURN hbqt_error()
 
 
-METHOD QColor:fromRgbF( nR, nG, nB, nA )
-   RETURN HB_QColor():from( Qt_QColor_fromRgbF( ::pPtr, nR, nG, nB, nA ) )
+METHOD QColor:fromRgbF( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN HB_QColor():from( Qt_QColor_fromRgbF( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN HB_QColor():from( Qt_QColor_fromRgbF( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QColor:fromRgba( nRgba )
-   RETURN HB_QColor():from( Qt_QColor_fromRgba( ::pPtr, nRgba ) )
+METHOD QColor:fromRgba( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QColor():from( Qt_QColor_fromRgba( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

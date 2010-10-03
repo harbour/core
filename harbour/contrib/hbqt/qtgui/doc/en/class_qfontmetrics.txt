@@ -28,29 +28,29 @@
  *  $METHODS$
  *     :ascent()                                           -> nInt
  *     :averageCharWidth()                                 -> nInt
- *     :boundingRect( pCh )                                -> pQRect
- *     :boundingRect_1( cText )                            -> pQRect
- *     :boundingRect_2( nX, nY, nWidth, nHeight, nFlags, cText, nTabStops, @nTabArray )  -> pQRect
- *     :boundingRect_3( pRect, nFlags, cText, nTabStops, @nTabArray )  -> pQRect
+ *     :boundingRect( oQChar )                             -> oQRect
+ *     :boundingRect( cText )                              -> oQRect
+ *     :boundingRect( nX, nY, nWidth, nHeight, nFlags, cText, nTabStops, @nTabArray )  -> oQRect
+ *     :boundingRect( oQRect, nFlags, cText, nTabStops, @nTabArray )  -> oQRect
  *     :descent()                                          -> nInt
  *     :elidedText( cText, nMode, nWidth, nFlags )         -> cQString
  *     :height()                                           -> nInt
- *     :inFont( pCh )                                      -> lBool
+ *     :inFont( oQChar )                                   -> lBool
  *     :leading()                                          -> nInt
- *     :leftBearing( pCh )                                 -> nInt
+ *     :leftBearing( oQChar )                              -> nInt
  *     :lineSpacing()                                      -> nInt
  *     :lineWidth()                                        -> nInt
  *     :maxWidth()                                         -> nInt
  *     :minLeftBearing()                                   -> nInt
  *     :minRightBearing()                                  -> nInt
  *     :overlinePos()                                      -> nInt
- *     :rightBearing( pCh )                                -> nInt
- *     :size( nFlags, cText, nTabStops, @nTabArray )       -> pQSize
+ *     :rightBearing( oQChar )                             -> nInt
+ *     :size( nFlags, cText, nTabStops, @nTabArray )       -> oQSize
  *     :strikeOutPos()                                     -> nInt
- *     :tightBoundingRect( cText )                         -> pQRect
+ *     :tightBoundingRect( cText )                         -> oQRect
  *     :underlinePos()                                     -> nInt
  *     :width( cText, nLen )                               -> nInt
- *     :width_1( pCh )                                     -> nInt
+ *     :width( oQChar )                                    -> nInt
  *     :xHeight()                                          -> nInt
  * 
  *  $DESCRIPTION$
@@ -74,7 +74,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQFontMetrics.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QFontMetrics.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

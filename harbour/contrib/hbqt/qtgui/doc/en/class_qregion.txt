@@ -26,16 +26,24 @@
  *  $RETURNS$
  *     An instance of the object of type QRegion
  *  $METHODS$
- *     :boundingRect()                                     -> pQRect
- *     :contains( pP )                                     -> lBool
- *     :contains_1( pR )                                   -> lBool
- *     :intersects( pRegion )                              -> lBool
- *     :intersects_1( pRect )                              -> lBool
+ *     :boundingRect()                                     -> oQRect
+ *     :contains( oQPoint )                                -> lBool
+ *     :contains( oQRect )                                 -> lBool
+ *     :intersected( oQRegion )                            -> oQRegion
+ *     :intersected( oQRect )                              -> oQRegion
+ *     :intersects( oQRegion )                             -> lBool
+ *     :intersects( oQRect )                               -> lBool
  *     :isEmpty()                                          -> lBool
  *     :numRects()                                         -> nInt
- *     :setRects( pRects, nNumber )                        -> NIL
+ *     :setRects( oQRect, nNumber )                        -> NIL
+ *     :subtracted( oQRegion )                             -> oQRegion
  *     :translate( nDx, nDy )                              -> NIL
- *     :translate_1( pPoint )                              -> NIL
+ *     :translate( oQPoint )                               -> NIL
+ *     :translated( nDx, nDy )                             -> oQRegion
+ *     :translated( oQPoint )                              -> oQRegion
+ *     :united( oQRegion )                                 -> oQRegion
+ *     :united( oQRect )                                   -> oQRegion
+ *     :xored( oQRegion )                                  -> oQRegion
  * 
  *  $DESCRIPTION$
  * 
@@ -62,7 +70,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQRegion.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QRegion.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

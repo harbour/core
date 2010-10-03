@@ -103,64 +103,64 @@ CREATE CLASS QFont INHERIT HbQtObjectHandler FUNCTION HB_QFont
 
    METHOD  new( ... )
 
-   METHOD  bold()
-   METHOD  capitalization()
-   METHOD  defaultFamily()
-   METHOD  exactMatch()
-   METHOD  family()
-   METHOD  fixedPitch()
-   METHOD  fromString( cDescrip )
-   METHOD  italic()
-   METHOD  kerning()
-   METHOD  key()
-   METHOD  lastResortFamily()
-   METHOD  lastResortFont()
-   METHOD  letterSpacing()
-   METHOD  letterSpacingType()
-   METHOD  overline()
-   METHOD  pixelSize()
-   METHOD  pointSize()
-   METHOD  pointSizeF()
-   METHOD  rawMode()
-   METHOD  rawName()
-   METHOD  setBold( lEnable )
-   METHOD  setCapitalization( nCaps )
-   METHOD  setFamily( cFamily )
-   METHOD  setFixedPitch( lEnable )
-   METHOD  setItalic( lEnable )
-   METHOD  setKerning( lEnable )
-   METHOD  setLetterSpacing( nType, nSpacing )
-   METHOD  setOverline( lEnable )
-   METHOD  setPixelSize( nPixelSize )
-   METHOD  setPointSize( nPointSize )
-   METHOD  setPointSizeF( nPointSize )
-   METHOD  setRawMode( lEnable )
-   METHOD  setRawName( cName )
-   METHOD  setStretch( nFactor )
-   METHOD  setStrikeOut( lEnable )
-   METHOD  setStyle( nStyle )
-   METHOD  setStyleHint( nHint, nStrategy )
-   METHOD  setStyleStrategy( nS )
-   METHOD  setUnderline( lEnable )
-   METHOD  setWeight( nWeight )
-   METHOD  setWordSpacing( nSpacing )
-   METHOD  stretch()
-   METHOD  strikeOut()
-   METHOD  style()
-   METHOD  styleHint()
-   METHOD  styleStrategy()
-   METHOD  toString()
-   METHOD  underline()
-   METHOD  weight()
-   METHOD  wordSpacing()
-   METHOD  cleanup()
-   METHOD  initialize()
-   METHOD  insertSubstitution( cFamilyName, cSubstituteName )
-   METHOD  insertSubstitutions( cFamilyName, pSubstituteNames )
-   METHOD  removeSubstitution( cFamilyName )
-   METHOD  substitute( cFamilyName )
-   METHOD  substitutes( cFamilyName )
-   METHOD  substitutions()
+   METHOD  bold                          // (  )                                               -> lBool
+   METHOD  capitalization                // (  )                                               -> nCapitalization
+   METHOD  defaultFamily                 // (  )                                               -> cQString
+   METHOD  exactMatch                    // (  )                                               -> lBool
+   METHOD  family                        // (  )                                               -> cQString
+   METHOD  fixedPitch                    // (  )                                               -> lBool
+   METHOD  fromString                    // ( cDescrip )                                       -> lBool
+   METHOD  italic                        // (  )                                               -> lBool
+   METHOD  kerning                       // (  )                                               -> lBool
+   METHOD  key                           // (  )                                               -> cQString
+   METHOD  lastResortFamily              // (  )                                               -> cQString
+   METHOD  lastResortFont                // (  )                                               -> cQString
+   METHOD  letterSpacing                 // (  )                                               -> nQreal
+   METHOD  letterSpacingType             // (  )                                               -> nSpacingType
+   METHOD  overline                      // (  )                                               -> lBool
+   METHOD  pixelSize                     // (  )                                               -> nInt
+   METHOD  pointSize                     // (  )                                               -> nInt
+   METHOD  pointSizeF                    // (  )                                               -> nQreal
+   METHOD  rawMode                       // (  )                                               -> lBool
+   METHOD  rawName                       // (  )                                               -> cQString
+   METHOD  setBold                       // ( lEnable )                                        -> NIL
+   METHOD  setCapitalization             // ( nCaps )                                          -> NIL
+   METHOD  setFamily                     // ( cFamily )                                        -> NIL
+   METHOD  setFixedPitch                 // ( lEnable )                                        -> NIL
+   METHOD  setItalic                     // ( lEnable )                                        -> NIL
+   METHOD  setKerning                    // ( lEnable )                                        -> NIL
+   METHOD  setLetterSpacing              // ( nType, nSpacing )                                -> NIL
+   METHOD  setOverline                   // ( lEnable )                                        -> NIL
+   METHOD  setPixelSize                  // ( nPixelSize )                                     -> NIL
+   METHOD  setPointSize                  // ( nPointSize )                                     -> NIL
+   METHOD  setPointSizeF                 // ( nPointSize )                                     -> NIL
+   METHOD  setRawMode                    // ( lEnable )                                        -> NIL
+   METHOD  setRawName                    // ( cName )                                          -> NIL
+   METHOD  setStretch                    // ( nFactor )                                        -> NIL
+   METHOD  setStrikeOut                  // ( lEnable )                                        -> NIL
+   METHOD  setStyle                      // ( nStyle )                                         -> NIL
+   METHOD  setStyleHint                  // ( nHint, nStrategy )                               -> NIL
+   METHOD  setStyleStrategy              // ( nS )                                             -> NIL
+   METHOD  setUnderline                  // ( lEnable )                                        -> NIL
+   METHOD  setWeight                     // ( nWeight )                                        -> NIL
+   METHOD  setWordSpacing                // ( nSpacing )                                       -> NIL
+   METHOD  stretch                       // (  )                                               -> nInt
+   METHOD  strikeOut                     // (  )                                               -> lBool
+   METHOD  style                         // (  )                                               -> nStyle
+   METHOD  styleHint                     // (  )                                               -> nStyleHint
+   METHOD  styleStrategy                 // (  )                                               -> nStyleStrategy
+   METHOD  toString                      // (  )                                               -> cQString
+   METHOD  underline                     // (  )                                               -> lBool
+   METHOD  weight                        // (  )                                               -> nInt
+   METHOD  wordSpacing                   // (  )                                               -> nQreal
+   METHOD  cleanup                       // (  )                                               -> NIL
+   METHOD  initialize                    // (  )                                               -> NIL
+   METHOD  insertSubstitution            // ( cFamilyName, cSubstituteName )                   -> NIL
+   METHOD  insertSubstitutions           // ( cFamilyName, oQStringList )                      -> NIL
+   METHOD  removeSubstitution            // ( cFamilyName )                                    -> NIL
+   METHOD  substitute                    // ( cFamilyName )                                    -> cQString
+   METHOD  substitutes                   // ( cFamilyName )                                    -> oQStringList
+   METHOD  substitutions                 // (  )                                               -> oQStringList
 
    ENDCLASS
 
@@ -174,234 +174,580 @@ METHOD QFont:new( ... )
    RETURN Self
 
 
-METHOD QFont:bold()
-   RETURN Qt_QFont_bold( ::pPtr )
-
-
-METHOD QFont:capitalization()
-   RETURN Qt_QFont_capitalization( ::pPtr )
-
-
-METHOD QFont:defaultFamily()
-   RETURN Qt_QFont_defaultFamily( ::pPtr )
-
-
-METHOD QFont:exactMatch()
-   RETURN Qt_QFont_exactMatch( ::pPtr )
-
-
-METHOD QFont:family()
-   RETURN Qt_QFont_family( ::pPtr )
-
-
-METHOD QFont:fixedPitch()
-   RETURN Qt_QFont_fixedPitch( ::pPtr )
-
-
-METHOD QFont:fromString( cDescrip )
-   RETURN Qt_QFont_fromString( ::pPtr, cDescrip )
-
-
-METHOD QFont:italic()
-   RETURN Qt_QFont_italic( ::pPtr )
-
-
-METHOD QFont:kerning()
-   RETURN Qt_QFont_kerning( ::pPtr )
-
-
-METHOD QFont:key()
-   RETURN Qt_QFont_key( ::pPtr )
-
-
-METHOD QFont:lastResortFamily()
-   RETURN Qt_QFont_lastResortFamily( ::pPtr )
-
-
-METHOD QFont:lastResortFont()
-   RETURN Qt_QFont_lastResortFont( ::pPtr )
-
-
-METHOD QFont:letterSpacing()
-   RETURN Qt_QFont_letterSpacing( ::pPtr )
-
-
-METHOD QFont:letterSpacingType()
-   RETURN Qt_QFont_letterSpacingType( ::pPtr )
-
-
-METHOD QFont:overline()
-   RETURN Qt_QFont_overline( ::pPtr )
-
-
-METHOD QFont:pixelSize()
-   RETURN Qt_QFont_pixelSize( ::pPtr )
-
-
-METHOD QFont:pointSize()
-   RETURN Qt_QFont_pointSize( ::pPtr )
-
-
-METHOD QFont:pointSizeF()
-   RETURN Qt_QFont_pointSizeF( ::pPtr )
-
-
-METHOD QFont:rawMode()
-   RETURN Qt_QFont_rawMode( ::pPtr )
-
-
-METHOD QFont:rawName()
-   RETURN Qt_QFont_rawName( ::pPtr )
-
-
-METHOD QFont:setBold( lEnable )
-   RETURN Qt_QFont_setBold( ::pPtr, lEnable )
-
-
-METHOD QFont:setCapitalization( nCaps )
-   RETURN Qt_QFont_setCapitalization( ::pPtr, nCaps )
-
-
-METHOD QFont:setFamily( cFamily )
-   RETURN Qt_QFont_setFamily( ::pPtr, cFamily )
-
-
-METHOD QFont:setFixedPitch( lEnable )
-   RETURN Qt_QFont_setFixedPitch( ::pPtr, lEnable )
-
-
-METHOD QFont:setItalic( lEnable )
-   RETURN Qt_QFont_setItalic( ::pPtr, lEnable )
-
-
-METHOD QFont:setKerning( lEnable )
-   RETURN Qt_QFont_setKerning( ::pPtr, lEnable )
-
-
-METHOD QFont:setLetterSpacing( nType, nSpacing )
-   RETURN Qt_QFont_setLetterSpacing( ::pPtr, nType, nSpacing )
-
-
-METHOD QFont:setOverline( lEnable )
-   RETURN Qt_QFont_setOverline( ::pPtr, lEnable )
-
-
-METHOD QFont:setPixelSize( nPixelSize )
-   RETURN Qt_QFont_setPixelSize( ::pPtr, nPixelSize )
-
-
-METHOD QFont:setPointSize( nPointSize )
-   RETURN Qt_QFont_setPointSize( ::pPtr, nPointSize )
-
-
-METHOD QFont:setPointSizeF( nPointSize )
-   RETURN Qt_QFont_setPointSizeF( ::pPtr, nPointSize )
-
-
-METHOD QFont:setRawMode( lEnable )
-   RETURN Qt_QFont_setRawMode( ::pPtr, lEnable )
-
-
-METHOD QFont:setRawName( cName )
-   RETURN Qt_QFont_setRawName( ::pPtr, cName )
-
-
-METHOD QFont:setStretch( nFactor )
-   RETURN Qt_QFont_setStretch( ::pPtr, nFactor )
-
-
-METHOD QFont:setStrikeOut( lEnable )
-   RETURN Qt_QFont_setStrikeOut( ::pPtr, lEnable )
-
-
-METHOD QFont:setStyle( nStyle )
-   RETURN Qt_QFont_setStyle( ::pPtr, nStyle )
-
-
-METHOD QFont:setStyleHint( nHint, nStrategy )
-   RETURN Qt_QFont_setStyleHint( ::pPtr, nHint, nStrategy )
-
-
-METHOD QFont:setStyleStrategy( nS )
-   RETURN Qt_QFont_setStyleStrategy( ::pPtr, nS )
-
-
-METHOD QFont:setUnderline( lEnable )
-   RETURN Qt_QFont_setUnderline( ::pPtr, lEnable )
-
-
-METHOD QFont:setWeight( nWeight )
-   RETURN Qt_QFont_setWeight( ::pPtr, nWeight )
-
-
-METHOD QFont:setWordSpacing( nSpacing )
-   RETURN Qt_QFont_setWordSpacing( ::pPtr, nSpacing )
-
-
-METHOD QFont:stretch()
-   RETURN Qt_QFont_stretch( ::pPtr )
-
-
-METHOD QFont:strikeOut()
-   RETURN Qt_QFont_strikeOut( ::pPtr )
-
-
-METHOD QFont:style()
-   RETURN Qt_QFont_style( ::pPtr )
-
-
-METHOD QFont:styleHint()
-   RETURN Qt_QFont_styleHint( ::pPtr )
-
-
-METHOD QFont:styleStrategy()
-   RETURN Qt_QFont_styleStrategy( ::pPtr )
-
-
-METHOD QFont:toString()
-   RETURN Qt_QFont_toString( ::pPtr )
-
-
-METHOD QFont:underline()
-   RETURN Qt_QFont_underline( ::pPtr )
-
-
-METHOD QFont:weight()
-   RETURN Qt_QFont_weight( ::pPtr )
-
-
-METHOD QFont:wordSpacing()
-   RETURN Qt_QFont_wordSpacing( ::pPtr )
-
-
-METHOD QFont:cleanup()
-   RETURN Qt_QFont_cleanup( ::pPtr )
-
-
-METHOD QFont:initialize()
-   RETURN Qt_QFont_initialize( ::pPtr )
-
-
-METHOD QFont:insertSubstitution( cFamilyName, cSubstituteName )
-   RETURN Qt_QFont_insertSubstitution( ::pPtr, cFamilyName, cSubstituteName )
-
-
-METHOD QFont:insertSubstitutions( cFamilyName, pSubstituteNames )
-   RETURN Qt_QFont_insertSubstitutions( ::pPtr, cFamilyName, hbqt_ptr( pSubstituteNames ) )
-
-
-METHOD QFont:removeSubstitution( cFamilyName )
-   RETURN Qt_QFont_removeSubstitution( ::pPtr, cFamilyName )
-
-
-METHOD QFont:substitute( cFamilyName )
-   RETURN Qt_QFont_substitute( ::pPtr, cFamilyName )
-
-
-METHOD QFont:substitutes( cFamilyName )
-   RETURN HB_QStringList():from( Qt_QFont_substitutes( ::pPtr, cFamilyName ) )
-
-
-METHOD QFont:substitutions()
-   RETURN HB_QStringList():from( Qt_QFont_substitutions( ::pPtr ) )
+METHOD QFont:bold( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_bold( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:capitalization( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_capitalization( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:defaultFamily( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_defaultFamily( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:exactMatch( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_exactMatch( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:family( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_family( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:fixedPitch( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_fixedPitch( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:fromString( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QFont_fromString( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:italic( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_italic( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:kerning( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_kerning( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:key( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_key( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:lastResortFamily( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_lastResortFamily( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:lastResortFont( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_lastResortFont( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:letterSpacing( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_letterSpacing( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:letterSpacingType( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_letterSpacingType( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:overline( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_overline( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:pixelSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_pixelSize( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:pointSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_pointSize( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:pointSizeF( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_pointSizeF( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:rawMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_rawMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:rawName( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_rawName( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:setBold( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QFont_setBold( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:setCapitalization( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFont_setCapitalization( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:setFamily( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QFont_setFamily( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:setFixedPitch( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QFont_setFixedPitch( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:setItalic( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QFont_setItalic( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:setKerning( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QFont_setKerning( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:setLetterSpacing( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QFont_setLetterSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:setOverline( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QFont_setOverline( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:setPixelSize( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFont_setPixelSize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:setPointSize( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFont_setPointSize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:setPointSizeF( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFont_setPointSizeF( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:setRawMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QFont_setRawMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:setRawName( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QFont_setRawName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:setStretch( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFont_setStretch( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:setStrikeOut( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QFont_setStrikeOut( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:setStyle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFont_setStyle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:setStyleHint( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QFont_setStyleHint( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFont_setStyleHint( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:setStyleStrategy( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFont_setStyleStrategy( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:setUnderline( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QFont_setUnderline( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:setWeight( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFont_setWeight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:setWordSpacing( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFont_setWordSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:stretch( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_stretch( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:strikeOut( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_strikeOut( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:style( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_style( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:styleHint( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_styleHint( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:styleStrategy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_styleStrategy( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:toString( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_toString( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:underline( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_underline( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:weight( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_weight( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:wordSpacing( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_wordSpacing( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:cleanup( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_cleanup( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:initialize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFont_initialize( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:insertSubstitution( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QFont_insertSubstitution( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:insertSubstitutions( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QFont_insertSubstitutions( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:removeSubstitution( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QFont_removeSubstitution( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:substitute( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QFont_substitute( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:substitutes( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QStringList():from( Qt_QFont_substitutes( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFont:substitutions( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QFont_substitutions( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

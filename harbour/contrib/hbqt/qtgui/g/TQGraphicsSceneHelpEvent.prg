@@ -103,8 +103,8 @@ CREATE CLASS QGraphicsSceneHelpEvent INHERIT HbQtObjectHandler, HB_QGraphicsScen
 
    METHOD  new( ... )
 
-   METHOD  scenePos()
-   METHOD  screenPos()
+   METHOD  scenePos                      // (  )                                               -> oQPointF
+   METHOD  screenPos                     // (  )                                               -> oQPoint
 
    ENDCLASS
 
@@ -118,10 +118,18 @@ METHOD QGraphicsSceneHelpEvent:new( ... )
    RETURN Self
 
 
-METHOD QGraphicsSceneHelpEvent:scenePos()
-   RETURN HB_QPointF():from( Qt_QGraphicsSceneHelpEvent_scenePos( ::pPtr ) )
+METHOD QGraphicsSceneHelpEvent:scenePos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPointF():from( Qt_QGraphicsSceneHelpEvent_scenePos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsSceneHelpEvent:screenPos()
-   RETURN HB_QPoint():from( Qt_QGraphicsSceneHelpEvent_screenPos( ::pPtr ) )
+METHOD QGraphicsSceneHelpEvent:screenPos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QGraphicsSceneHelpEvent_screenPos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

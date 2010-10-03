@@ -103,10 +103,10 @@ CREATE CLASS QDesignerActionEditorInterface INHERIT HbQtObjectHandler, HB_QWidge
 
    METHOD  new( ... )
 
-   METHOD  core()
-   METHOD  manageAction( pAction )
-   METHOD  unmanageAction( pAction )
-   METHOD  setFormWindow( pFormWindow )
+   METHOD  core                          // (  )                                               -> oQDesignerFormEditorInterface
+   METHOD  manageAction                  // ( oQAction )                                       -> NIL
+   METHOD  unmanageAction                // ( oQAction )                                       -> NIL
+   METHOD  setFormWindow                 // ( oQDesignerFormWindowInterface )                  -> NIL
 
    ENDCLASS
 
@@ -120,18 +120,46 @@ METHOD QDesignerActionEditorInterface:new( ... )
    RETURN Self
 
 
-METHOD QDesignerActionEditorInterface:core()
-   RETURN HB_QDesignerFormEditorInterface():from( Qt_QDesignerActionEditorInterface_core( ::pPtr ) )
+METHOD QDesignerActionEditorInterface:core( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDesignerFormEditorInterface():from( Qt_QDesignerActionEditorInterface_core( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerActionEditorInterface:manageAction( pAction )
-   RETURN Qt_QDesignerActionEditorInterface_manageAction( ::pPtr, hbqt_ptr( pAction ) )
+METHOD QDesignerActionEditorInterface:manageAction( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerActionEditorInterface_manageAction( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerActionEditorInterface:unmanageAction( pAction )
-   RETURN Qt_QDesignerActionEditorInterface_unmanageAction( ::pPtr, hbqt_ptr( pAction ) )
+METHOD QDesignerActionEditorInterface:unmanageAction( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerActionEditorInterface_unmanageAction( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerActionEditorInterface:setFormWindow( pFormWindow )
-   RETURN Qt_QDesignerActionEditorInterface_setFormWindow( ::pPtr, hbqt_ptr( pFormWindow ) )
+METHOD QDesignerActionEditorInterface:setFormWindow( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerActionEditorInterface_setFormWindow( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

@@ -48,7 +48,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTextLength.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextLength.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

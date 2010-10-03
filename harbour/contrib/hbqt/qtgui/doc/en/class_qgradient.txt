@@ -27,7 +27,7 @@
  *     An instance of the object of type QGradient
  *  $METHODS$
  *     :coordinateMode()                                   -> nCoordinateMode
- *     :setColorAt( nPosition, pColor )                    -> NIL
+ *     :setColorAt( nPosition, oQColor )                   -> NIL
  *     :setCoordinateMode( nMode )                         -> NIL
  *     :setSpread( nMethod )                               -> NIL
  *     :spread()                                           -> nSpread
@@ -51,7 +51,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGradient.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGradient.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

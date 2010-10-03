@@ -444,7 +444,7 @@ HB_FUNC( QT_QPIXMAP_LOAD )
    if( p )
    {
       void * pText;
-      hb_retl( ( p )->load( hb_parstr_utf8( 2, &pText, NULL ), hbqt_par_char( 3 ), ( HB_ISNUM( 4 ) ? ( Qt::ImageConversionFlags ) hb_parni( 4 ) : ( Qt::ImageConversionFlags ) Qt::AutoColor ) ) );
+      hb_retl( ( p )->load( hb_parstr_utf8( 2, &pText, NULL ), ( const char * ) hb_parc( 3 ), ( HB_ISNUM( 4 ) ? ( Qt::ImageConversionFlags ) hb_parni( 4 ) : ( Qt::ImageConversionFlags ) Qt::AutoColor ) ) );
       hb_strfree( pText );
    }
 }
@@ -457,7 +457,7 @@ HB_FUNC( QT_QPIXMAP_LOADFROMDATA )
    QPixmap * p = hbqt_par_QPixmap( 1 );
    if( p )
    {
-      hb_retl( ( p )->loadFromData( *hbqt_par_QByteArray( 2 ), hbqt_par_char( 3 ), ( HB_ISNUM( 4 ) ? ( Qt::ImageConversionFlags ) hb_parni( 4 ) : ( Qt::ImageConversionFlags ) Qt::AutoColor ) ) );
+      hb_retl( ( p )->loadFromData( *hbqt_par_QByteArray( 2 ), ( const char * ) hb_parc( 3 ), ( HB_ISNUM( 4 ) ? ( Qt::ImageConversionFlags ) hb_parni( 4 ) : ( Qt::ImageConversionFlags ) Qt::AutoColor ) ) );
    }
 }
 
@@ -494,7 +494,7 @@ HB_FUNC( QT_QPIXMAP_SAVE )
    if( p )
    {
       void * pText;
-      hb_retl( ( p )->save( hb_parstr_utf8( 2, &pText, NULL ), hbqt_par_char( 3 ), hb_parnidef( 4, -1 ) ) );
+      hb_retl( ( p )->save( hb_parstr_utf8( 2, &pText, NULL ), ( const char * ) hb_parc( 3 ), hb_parnidef( 4, -1 ) ) );
       hb_strfree( pText );
    }
 }
@@ -507,7 +507,7 @@ HB_FUNC( QT_QPIXMAP_SAVE_1 )
    QPixmap * p = hbqt_par_QPixmap( 1 );
    if( p )
    {
-      hb_retl( ( p )->save( hbqt_par_QIODevice( 2 ), hbqt_par_char( 3 ), hb_parnidef( 4, -1 ) ) );
+      hb_retl( ( p )->save( hbqt_par_QIODevice( 2 ), ( const char * ) hb_parc( 3 ), hb_parnidef( 4, -1 ) ) );
    }
 }
 

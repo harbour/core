@@ -103,7 +103,7 @@ CREATE CLASS QStyleOptionSizeGrip INHERIT HbQtObjectHandler, HB_QStyleOptionComp
 
    METHOD  new( ... )
 
-   METHOD  corner()
+   METHOD  corner                        // (  )                                               -> nQt_Corner
 
    ENDCLASS
 
@@ -117,6 +117,10 @@ METHOD QStyleOptionSizeGrip:new( ... )
    RETURN Self
 
 
-METHOD QStyleOptionSizeGrip:corner()
-   RETURN Qt_QStyleOptionSizeGrip_corner( ::pPtr )
+METHOD QStyleOptionSizeGrip:corner( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionSizeGrip_corner( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

@@ -26,27 +26,27 @@
  *  $RETURNS$
  *     An instance of the object of type QMovie
  *  $METHODS$
- *     :backgroundColor()                                  -> pQColor
+ *     :backgroundColor()                                  -> oQColor
  *     :cacheMode()                                        -> nCacheMode
  *     :currentFrameNumber()                               -> nInt
- *     :currentImage()                                     -> pQImage
- *     :currentPixmap()                                    -> pQPixmap
- *     :device()                                           -> pQIODevice
+ *     :currentImage()                                     -> oQImage
+ *     :currentPixmap()                                    -> oQPixmap
+ *     :device()                                           -> oQIODevice
  *     :fileName()                                         -> cQString
- *     :format()                                           -> pQByteArray
+ *     :format()                                           -> oQByteArray
  *     :frameCount()                                       -> nInt
- *     :frameRect()                                        -> pQRect
+ *     :frameRect()                                        -> oQRect
  *     :isValid()                                          -> lBool
  *     :jumpToFrame( nFrameNumber )                        -> lBool
  *     :loopCount()                                        -> nInt
  *     :nextFrameDelay()                                   -> nInt
- *     :scaledSize()                                       -> pQSize
- *     :setBackgroundColor( pColor )                       -> NIL
+ *     :scaledSize()                                       -> oQSize
+ *     :setBackgroundColor( oQColor )                      -> NIL
  *     :setCacheMode( nMode )                              -> NIL
- *     :setDevice( pDevice )                               -> NIL
+ *     :setDevice( oQIODevice )                            -> NIL
  *     :setFileName( cFileName )                           -> NIL
- *     :setFormat( pFormat )                               -> NIL
- *     :setScaledSize( pSize )                             -> NIL
+ *     :setFormat( oQByteArray )                           -> NIL
+ *     :setScaledSize( oQSize )                            -> NIL
  *     :speed()                                            -> nInt
  *     :state()                                            -> nMovieState
  *     :jumpToNextFrame()                                  -> lBool
@@ -73,7 +73,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQMovie.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QMovie.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

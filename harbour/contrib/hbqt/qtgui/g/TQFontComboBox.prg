@@ -103,12 +103,12 @@ CREATE CLASS QFontComboBox INHERIT HbQtObjectHandler, HB_QComboBox FUNCTION HB_Q
 
    METHOD  new( ... )
 
-   METHOD  currentFont()
-   METHOD  fontFilters()
-   METHOD  setFontFilters( nFilters )
-   METHOD  setWritingSystem( nScript )
-   METHOD  writingSystem()
-   METHOD  setCurrentFont( pFont )
+   METHOD  currentFont                   // (  )                                               -> oQFont
+   METHOD  fontFilters                   // (  )                                               -> nFontFilters
+   METHOD  setFontFilters                // ( nFilters )                                       -> NIL
+   METHOD  setWritingSystem              // ( nScript )                                        -> NIL
+   METHOD  writingSystem                 // (  )                                               -> nQFontDatabase_WritingSystem
+   METHOD  setCurrentFont                // ( oQFont )                                         -> NIL
 
    ENDCLASS
 
@@ -122,26 +122,62 @@ METHOD QFontComboBox:new( ... )
    RETURN Self
 
 
-METHOD QFontComboBox:currentFont()
-   RETURN HB_QFont():from( Qt_QFontComboBox_currentFont( ::pPtr ) )
+METHOD QFontComboBox:currentFont( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFont():from( Qt_QFontComboBox_currentFont( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontComboBox:fontFilters()
-   RETURN Qt_QFontComboBox_fontFilters( ::pPtr )
+METHOD QFontComboBox:fontFilters( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFontComboBox_fontFilters( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontComboBox:setFontFilters( nFilters )
-   RETURN Qt_QFontComboBox_setFontFilters( ::pPtr, nFilters )
+METHOD QFontComboBox:setFontFilters( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFontComboBox_setFontFilters( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontComboBox:setWritingSystem( nScript )
-   RETURN Qt_QFontComboBox_setWritingSystem( ::pPtr, nScript )
+METHOD QFontComboBox:setWritingSystem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFontComboBox_setWritingSystem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontComboBox:writingSystem()
-   RETURN Qt_QFontComboBox_writingSystem( ::pPtr )
+METHOD QFontComboBox:writingSystem( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFontComboBox_writingSystem( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontComboBox:setCurrentFont( pFont )
-   RETURN Qt_QFontComboBox_setCurrentFont( ::pPtr, hbqt_ptr( pFont ) )
+METHOD QFontComboBox:setCurrentFont( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QFontComboBox_setCurrentFont( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

@@ -103,11 +103,11 @@ CREATE CLASS QHttpRequestHeader INHERIT HbQtObjectHandler, HB_QHttpHeader FUNCTI
 
    METHOD  new( ... )
 
-   METHOD  majorVersion()
-   METHOD  method()
-   METHOD  minorVersion()
-   METHOD  path()
-   METHOD  setRequest( cMethod, cPath, nMajorVer, nMinorVer )
+   METHOD  majorVersion                  // (  )                                               -> nInt
+   METHOD  method                        // (  )                                               -> cQString
+   METHOD  minorVersion                  // (  )                                               -> nInt
+   METHOD  path                          // (  )                                               -> cQString
+   METHOD  setRequest                    // ( cMethod, cPath, nMajorVer, nMinorVer )           -> NIL
 
    ENDCLASS
 
@@ -121,22 +121,58 @@ METHOD QHttpRequestHeader:new( ... )
    RETURN Self
 
 
-METHOD QHttpRequestHeader:majorVersion()
-   RETURN Qt_QHttpRequestHeader_majorVersion( ::pPtr )
+METHOD QHttpRequestHeader:majorVersion( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHttpRequestHeader_majorVersion( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttpRequestHeader:method()
-   RETURN Qt_QHttpRequestHeader_method( ::pPtr )
+METHOD QHttpRequestHeader:method( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHttpRequestHeader_method( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttpRequestHeader:minorVersion()
-   RETURN Qt_QHttpRequestHeader_minorVersion( ::pPtr )
+METHOD QHttpRequestHeader:minorVersion( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHttpRequestHeader_minorVersion( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttpRequestHeader:path()
-   RETURN Qt_QHttpRequestHeader_path( ::pPtr )
+METHOD QHttpRequestHeader:path( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHttpRequestHeader_path( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttpRequestHeader:setRequest( cMethod, cPath, nMajorVer, nMinorVer )
-   RETURN Qt_QHttpRequestHeader_setRequest( ::pPtr, cMethod, cPath, nMajorVer, nMinorVer )
+METHOD QHttpRequestHeader:setRequest( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QHttpRequestHeader_setRequest( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QHttpRequestHeader_setRequest( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QHttpRequestHeader_setRequest( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

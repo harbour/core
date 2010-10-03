@@ -26,15 +26,15 @@
  *  $RETURNS$
  *     An instance of the object of type QActionGroup
  *  $METHODS$
- *     :actions()                                          -> pQList<QAction *>
- *     :addAction( pAction )                               -> pQAction
- *     :addAction_1( cText )                               -> pQAction
- *     :addAction_2( pIcon, cText )                        -> pQAction
- *     :checkedAction()                                    -> pQAction
+ *     :actions()                                          -> oQList_QAction
+ *     :addAction( oQAction )                              -> oQAction
+ *     :addAction( cText )                                 -> oQAction
+ *     :addAction( coQIcon, cText )                        -> oQAction
+ *     :checkedAction()                                    -> oQAction
  *     :isEnabled()                                        -> lBool
  *     :isExclusive()                                      -> lBool
  *     :isVisible()                                        -> lBool
- *     :removeAction( pAction )                            -> NIL
+ *     :removeAction( oQAction )                           -> NIL
  *     :setDisabled( lB )                                  -> NIL
  *     :setEnabled( lBool )                                -> NIL
  *     :setExclusive( lBool )                              -> NIL
@@ -58,7 +58,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQActionGroup.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QActionGroup.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

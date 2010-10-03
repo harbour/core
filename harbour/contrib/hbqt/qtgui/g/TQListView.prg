@@ -103,35 +103,35 @@ CREATE CLASS QListView INHERIT HbQtObjectHandler, HB_QAbstractItemView FUNCTION 
 
    METHOD  new( ... )
 
-   METHOD  batchSize()
-   METHOD  clearPropertyFlags()
-   METHOD  flow()
-   METHOD  gridSize()
-   METHOD  isRowHidden( nRow )
-   METHOD  isSelectionRectVisible()
-   METHOD  isWrapping()
-   METHOD  layoutMode()
-   METHOD  modelColumn()
-   METHOD  movement()
-   METHOD  resizeMode()
-   METHOD  setBatchSize( nBatchSize )
-   METHOD  setFlow( nFlow )
-   METHOD  setGridSize( pSize )
-   METHOD  setLayoutMode( nMode )
-   METHOD  setModelColumn( nColumn )
-   METHOD  setMovement( nMovement )
-   METHOD  setResizeMode( nMode )
-   METHOD  setRowHidden( nRow, lHide )
-   METHOD  setSelectionRectVisible( lShow )
-   METHOD  setSpacing( nSpace )
-   METHOD  setUniformItemSizes( lEnable )
-   METHOD  setViewMode( nMode )
-   METHOD  setWordWrap( lOn )
-   METHOD  setWrapping( lEnable )
-   METHOD  spacing()
-   METHOD  uniformItemSizes()
-   METHOD  viewMode()
-   METHOD  wordWrap()
+   METHOD  batchSize                     // (  )                                               -> nInt
+   METHOD  clearPropertyFlags            // (  )                                               -> NIL
+   METHOD  flow                          // (  )                                               -> nFlow
+   METHOD  gridSize                      // (  )                                               -> oQSize
+   METHOD  isRowHidden                   // ( nRow )                                           -> lBool
+   METHOD  isSelectionRectVisible        // (  )                                               -> lBool
+   METHOD  isWrapping                    // (  )                                               -> lBool
+   METHOD  layoutMode                    // (  )                                               -> nLayoutMode
+   METHOD  modelColumn                   // (  )                                               -> nInt
+   METHOD  movement                      // (  )                                               -> nMovement
+   METHOD  resizeMode                    // (  )                                               -> nResizeMode
+   METHOD  setBatchSize                  // ( nBatchSize )                                     -> NIL
+   METHOD  setFlow                       // ( nFlow )                                          -> NIL
+   METHOD  setGridSize                   // ( oQSize )                                         -> NIL
+   METHOD  setLayoutMode                 // ( nMode )                                          -> NIL
+   METHOD  setModelColumn                // ( nColumn )                                        -> NIL
+   METHOD  setMovement                   // ( nMovement )                                      -> NIL
+   METHOD  setResizeMode                 // ( nMode )                                          -> NIL
+   METHOD  setRowHidden                  // ( nRow, lHide )                                    -> NIL
+   METHOD  setSelectionRectVisible       // ( lShow )                                          -> NIL
+   METHOD  setSpacing                    // ( nSpace )                                         -> NIL
+   METHOD  setUniformItemSizes           // ( lEnable )                                        -> NIL
+   METHOD  setViewMode                   // ( nMode )                                          -> NIL
+   METHOD  setWordWrap                   // ( lOn )                                            -> NIL
+   METHOD  setWrapping                   // ( lEnable )                                        -> NIL
+   METHOD  spacing                       // (  )                                               -> nInt
+   METHOD  uniformItemSizes              // (  )                                               -> lBool
+   METHOD  viewMode                      // (  )                                               -> nViewMode
+   METHOD  wordWrap                      // (  )                                               -> lBool
 
    ENDCLASS
 
@@ -145,118 +145,294 @@ METHOD QListView:new( ... )
    RETURN Self
 
 
-METHOD QListView:batchSize()
-   RETURN Qt_QListView_batchSize( ::pPtr )
+METHOD QListView:batchSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QListView_batchSize( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:clearPropertyFlags()
-   RETURN Qt_QListView_clearPropertyFlags( ::pPtr )
+METHOD QListView:clearPropertyFlags( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QListView_clearPropertyFlags( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:flow()
-   RETURN Qt_QListView_flow( ::pPtr )
+METHOD QListView:flow( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QListView_flow( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:gridSize()
-   RETURN HB_QSize():from( Qt_QListView_gridSize( ::pPtr ) )
+METHOD QListView:gridSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QListView_gridSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:isRowHidden( nRow )
-   RETURN Qt_QListView_isRowHidden( ::pPtr, nRow )
+METHOD QListView:isRowHidden( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QListView_isRowHidden( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:isSelectionRectVisible()
-   RETURN Qt_QListView_isSelectionRectVisible( ::pPtr )
+METHOD QListView:isSelectionRectVisible( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QListView_isSelectionRectVisible( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:isWrapping()
-   RETURN Qt_QListView_isWrapping( ::pPtr )
+METHOD QListView:isWrapping( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QListView_isWrapping( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:layoutMode()
-   RETURN Qt_QListView_layoutMode( ::pPtr )
+METHOD QListView:layoutMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QListView_layoutMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:modelColumn()
-   RETURN Qt_QListView_modelColumn( ::pPtr )
+METHOD QListView:modelColumn( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QListView_modelColumn( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:movement()
-   RETURN Qt_QListView_movement( ::pPtr )
+METHOD QListView:movement( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QListView_movement( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:resizeMode()
-   RETURN Qt_QListView_resizeMode( ::pPtr )
+METHOD QListView:resizeMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QListView_resizeMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:setBatchSize( nBatchSize )
-   RETURN Qt_QListView_setBatchSize( ::pPtr, nBatchSize )
+METHOD QListView:setBatchSize( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QListView_setBatchSize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:setFlow( nFlow )
-   RETURN Qt_QListView_setFlow( ::pPtr, nFlow )
+METHOD QListView:setFlow( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QListView_setFlow( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:setGridSize( pSize )
-   RETURN Qt_QListView_setGridSize( ::pPtr, hbqt_ptr( pSize ) )
+METHOD QListView:setGridSize( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QListView_setGridSize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:setLayoutMode( nMode )
-   RETURN Qt_QListView_setLayoutMode( ::pPtr, nMode )
+METHOD QListView:setLayoutMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QListView_setLayoutMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:setModelColumn( nColumn )
-   RETURN Qt_QListView_setModelColumn( ::pPtr, nColumn )
+METHOD QListView:setModelColumn( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QListView_setModelColumn( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:setMovement( nMovement )
-   RETURN Qt_QListView_setMovement( ::pPtr, nMovement )
+METHOD QListView:setMovement( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QListView_setMovement( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:setResizeMode( nMode )
-   RETURN Qt_QListView_setResizeMode( ::pPtr, nMode )
+METHOD QListView:setResizeMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QListView_setResizeMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:setRowHidden( nRow, lHide )
-   RETURN Qt_QListView_setRowHidden( ::pPtr, nRow, lHide )
+METHOD QListView:setRowHidden( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QListView_setRowHidden( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:setSelectionRectVisible( lShow )
-   RETURN Qt_QListView_setSelectionRectVisible( ::pPtr, lShow )
+METHOD QListView:setSelectionRectVisible( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QListView_setSelectionRectVisible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:setSpacing( nSpace )
-   RETURN Qt_QListView_setSpacing( ::pPtr, nSpace )
+METHOD QListView:setSpacing( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QListView_setSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:setUniformItemSizes( lEnable )
-   RETURN Qt_QListView_setUniformItemSizes( ::pPtr, lEnable )
+METHOD QListView:setUniformItemSizes( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QListView_setUniformItemSizes( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:setViewMode( nMode )
-   RETURN Qt_QListView_setViewMode( ::pPtr, nMode )
+METHOD QListView:setViewMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QListView_setViewMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:setWordWrap( lOn )
-   RETURN Qt_QListView_setWordWrap( ::pPtr, lOn )
+METHOD QListView:setWordWrap( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QListView_setWordWrap( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:setWrapping( lEnable )
-   RETURN Qt_QListView_setWrapping( ::pPtr, lEnable )
+METHOD QListView:setWrapping( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QListView_setWrapping( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:spacing()
-   RETURN Qt_QListView_spacing( ::pPtr )
+METHOD QListView:spacing( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QListView_spacing( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:uniformItemSizes()
-   RETURN Qt_QListView_uniformItemSizes( ::pPtr )
+METHOD QListView:uniformItemSizes( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QListView_uniformItemSizes( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:viewMode()
-   RETURN Qt_QListView_viewMode( ::pPtr )
+METHOD QListView:viewMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QListView_viewMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListView:wordWrap()
-   RETURN Qt_QListView_wordWrap( ::pPtr )
+METHOD QListView:wordWrap( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QListView_wordWrap( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

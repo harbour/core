@@ -27,7 +27,7 @@
  *     An instance of the object of type QLCDNumber
  *  $METHODS$
  *     :checkOverflow( nNum )                              -> lBool
- *     :checkOverflow_1( nNum )                            -> lBool
+ *     :checkOverflow( nNum )                              -> lBool
  *     :intValue()                                         -> nInt
  *     :mode()                                             -> nMode
  *     :numDigits()                                        -> nInt
@@ -38,8 +38,8 @@
  *     :smallDecimalPoint()                                -> lBool
  *     :value()                                            -> nDouble
  *     :display( cS )                                      -> NIL
- *     :display_1( nNum )                                  -> NIL
- *     :display_2( nNum )                                  -> NIL
+ *     :display( nNum )                                    -> NIL
+ *     :display( nNum )                                    -> NIL
  *     :setBinMode()                                       -> NIL
  *     :setDecMode()                                       -> NIL
  *     :setHexMode()                                       -> NIL
@@ -64,7 +64,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQLCDNumber.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QLCDNumber.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QFrame()
  *  $END$
  */

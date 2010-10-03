@@ -27,7 +27,7 @@
  *     An instance of the object of type HBQAbstractItemModel
  *  $METHODS$
  *     :reset()                                            -> NIL
- *     :index( nRow, nColumn, pParent )                    -> pQModelIndex
+ *     :index( nRow, nColumn, oQModelIndex )               -> oQModelIndex
  * 
  *  $DESCRIPTION$
  * 
@@ -47,7 +47,5 @@
  *     Harbour source: contrib/hbqt/qtgui/THBQAbstractItemModel.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/HBQAbstractItemModel.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractItemModel()
  *  $END$
  */

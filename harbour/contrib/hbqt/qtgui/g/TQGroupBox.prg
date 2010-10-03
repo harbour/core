@@ -103,16 +103,16 @@ CREATE CLASS QGroupBox INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QGroupB
 
    METHOD  new( ... )
 
-   METHOD  alignment()
-   METHOD  isCheckable()
-   METHOD  isChecked()
-   METHOD  isFlat()
-   METHOD  setAlignment( nAlignment )
-   METHOD  setCheckable( lCheckable )
-   METHOD  setFlat( lFlat )
-   METHOD  setTitle( cTitle )
-   METHOD  title()
-   METHOD  setChecked( lChecked )
+   METHOD  alignment                     // (  )                                               -> nQt_Alignment
+   METHOD  isCheckable                   // (  )                                               -> lBool
+   METHOD  isChecked                     // (  )                                               -> lBool
+   METHOD  isFlat                        // (  )                                               -> lBool
+   METHOD  setAlignment                  // ( nAlignment )                                     -> NIL
+   METHOD  setCheckable                  // ( lCheckable )                                     -> NIL
+   METHOD  setFlat                       // ( lFlat )                                          -> NIL
+   METHOD  setTitle                      // ( cTitle )                                         -> NIL
+   METHOD  title                         // (  )                                               -> cQString
+   METHOD  setChecked                    // ( lChecked )                                       -> NIL
 
    ENDCLASS
 
@@ -126,42 +126,102 @@ METHOD QGroupBox:new( ... )
    RETURN Self
 
 
-METHOD QGroupBox:alignment()
-   RETURN Qt_QGroupBox_alignment( ::pPtr )
+METHOD QGroupBox:alignment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGroupBox_alignment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGroupBox:isCheckable()
-   RETURN Qt_QGroupBox_isCheckable( ::pPtr )
+METHOD QGroupBox:isCheckable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGroupBox_isCheckable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGroupBox:isChecked()
-   RETURN Qt_QGroupBox_isChecked( ::pPtr )
+METHOD QGroupBox:isChecked( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGroupBox_isChecked( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGroupBox:isFlat()
-   RETURN Qt_QGroupBox_isFlat( ::pPtr )
+METHOD QGroupBox:isFlat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGroupBox_isFlat( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGroupBox:setAlignment( nAlignment )
-   RETURN Qt_QGroupBox_setAlignment( ::pPtr, nAlignment )
+METHOD QGroupBox:setAlignment( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGroupBox_setAlignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGroupBox:setCheckable( lCheckable )
-   RETURN Qt_QGroupBox_setCheckable( ::pPtr, lCheckable )
+METHOD QGroupBox:setCheckable( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QGroupBox_setCheckable( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGroupBox:setFlat( lFlat )
-   RETURN Qt_QGroupBox_setFlat( ::pPtr, lFlat )
+METHOD QGroupBox:setFlat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QGroupBox_setFlat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGroupBox:setTitle( cTitle )
-   RETURN Qt_QGroupBox_setTitle( ::pPtr, cTitle )
+METHOD QGroupBox:setTitle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QGroupBox_setTitle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGroupBox:title()
-   RETURN Qt_QGroupBox_title( ::pPtr )
+METHOD QGroupBox:title( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGroupBox_title( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGroupBox:setChecked( lChecked )
-   RETURN Qt_QGroupBox_setChecked( ::pPtr, lChecked )
+METHOD QGroupBox:setChecked( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QGroupBox_setChecked( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

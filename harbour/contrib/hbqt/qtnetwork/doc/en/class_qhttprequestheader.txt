@@ -50,7 +50,5 @@
  *     Harbour source: contrib/hbqt/qtnetwork/TQHttpRequestHeader.prg
  *     C++ wrappers  : contrib/hbqt/qtnetwork/QHttpRequestHeader.cpp
  *     Library       : hbqtnetwork
- *  $SEEALSO$
- *     QHttpHeader()
  *  $END$
  */

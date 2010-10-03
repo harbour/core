@@ -26,7 +26,7 @@
  *  $RETURNS$
  *     An instance of the object of type QWebPluginFactory
  *  $METHODS$
- *     :create( cMimeType, pUrl, pArgumentNames, pArgumentValues )  -> pQObject
+ *     :create( cMimeType, oQUrl, oQStringList, oQStringList )  -> oQObject
  *     :refreshPlugins()                                   -> NIL
  *     :supportsExtension( nExtension )                    -> lBool
  * 
@@ -48,7 +48,5 @@
  *     Harbour source: contrib/hbqt/qtwebkit/TQWebPluginFactory.prg
  *     C++ wrappers  : contrib/hbqt/qtwebkit/QWebPluginFactory.cpp
  *     Library       : hbqtwebkit
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

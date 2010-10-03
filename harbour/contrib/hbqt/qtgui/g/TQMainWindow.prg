@@ -103,52 +103,55 @@ CREATE CLASS QMainWindow INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QMain
 
    METHOD  new( ... )
 
-   METHOD  addDockWidget( ... )
-   METHOD  addToolBar( ... )
-   METHOD  addToolBarBreak( nArea )
-   METHOD  centralWidget()
-   METHOD  corner( nCorner )
-   METHOD  createPopupMenu()
-   METHOD  dockOptions()
-   METHOD  dockWidgetArea( pDockwidget )
-   METHOD  documentMode()
-   METHOD  iconSize()
-   METHOD  insertToolBar( pBefore, pToolbar )
-   METHOD  insertToolBarBreak( pBefore )
-   METHOD  isAnimated()
-   METHOD  isDockNestingEnabled()
-   METHOD  menuBar()
-   METHOD  menuWidget()
-   METHOD  removeDockWidget( pDockwidget )
-   METHOD  removeToolBar( pToolbar )
-   METHOD  removeToolBarBreak( pBefore )
-   METHOD  restoreDockWidget( pDockwidget )
-   METHOD  restoreState( pState, nVersion )
-   METHOD  saveState( nVersion )
-   METHOD  setCentralWidget( pWidget )
-   METHOD  setCorner( nCorner, nArea )
-   METHOD  setDockOptions( nOptions )
-   METHOD  setDocumentMode( lEnabled )
-   METHOD  setIconSize( pIconSize )
-   METHOD  setMenuBar( pMenuBar )
-   METHOD  setMenuWidget( pMenuBar )
-   METHOD  setStatusBar( pStatusbar )
-   METHOD  setTabPosition( nAreas, nTabPosition )
-   METHOD  setTabShape( nTabShape )
-   METHOD  setToolButtonStyle( nToolButtonStyle )
-   METHOD  setUnifiedTitleAndToolBarOnMac( lSet )
-   METHOD  splitDockWidget( pFirst, pSecond, nOrientation )
-   METHOD  statusBar()
-   METHOD  tabPosition( nArea )
-   METHOD  tabShape()
-   METHOD  tabifiedDockWidgets( pDockwidget )
-   METHOD  tabifyDockWidget( pFirst, pSecond )
-   METHOD  toolBarArea( pToolbar )
-   METHOD  toolBarBreak( pToolbar )
-   METHOD  toolButtonStyle()
-   METHOD  unifiedTitleAndToolBarOnMac()
-   METHOD  setAnimated( lEnabled )
-   METHOD  setDockNestingEnabled( lEnabled )
+   METHOD  addDockWidget                 // ( nArea, oQDockWidget )                            -> NIL
+                                         // ( nArea, oQDockWidget, nOrientation )              -> NIL
+   METHOD  addToolBar                    // ( nArea, oQToolBar )                               -> NIL
+                                         // ( oQToolBar )                                      -> NIL
+                                         // ( cTitle )                                         -> oQToolBar
+   METHOD  addToolBarBreak               // ( nArea )                                          -> NIL
+   METHOD  centralWidget                 // (  )                                               -> oQWidget
+   METHOD  corner                        // ( nCorner )                                        -> nQt_DockWidgetArea
+   METHOD  createPopupMenu               // (  )                                               -> oQMenu
+   METHOD  dockOptions                   // (  )                                               -> nDockOptions
+   METHOD  dockWidgetArea                // ( oQDockWidget )                                   -> nQt_DockWidgetArea
+   METHOD  documentMode                  // (  )                                               -> lBool
+   METHOD  iconSize                      // (  )                                               -> oQSize
+   METHOD  insertToolBar                 // ( oQToolBar, oQToolBar )                           -> NIL
+   METHOD  insertToolBarBreak            // ( oQToolBar )                                      -> NIL
+   METHOD  isAnimated                    // (  )                                               -> lBool
+   METHOD  isDockNestingEnabled          // (  )                                               -> lBool
+   METHOD  menuBar                       // (  )                                               -> oQMenuBar
+   METHOD  menuWidget                    // (  )                                               -> oQWidget
+   METHOD  removeDockWidget              // ( oQDockWidget )                                   -> NIL
+   METHOD  removeToolBar                 // ( oQToolBar )                                      -> NIL
+   METHOD  removeToolBarBreak            // ( oQToolBar )                                      -> NIL
+   METHOD  restoreDockWidget             // ( oQDockWidget )                                   -> lBool
+   METHOD  restoreState                  // ( oQByteArray, nVersion )                          -> lBool
+   METHOD  saveState                     // ( nVersion )                                       -> oQByteArray
+   METHOD  setCentralWidget              // ( oQWidget )                                       -> NIL
+   METHOD  setCorner                     // ( nCorner, nArea )                                 -> NIL
+   METHOD  setDockOptions                // ( nOptions )                                       -> NIL
+   METHOD  setDocumentMode               // ( lEnabled )                                       -> NIL
+   METHOD  setIconSize                   // ( oQSize )                                         -> NIL
+   METHOD  setMenuBar                    // ( oQMenuBar )                                      -> NIL
+   METHOD  setMenuWidget                 // ( oQWidget )                                       -> NIL
+   METHOD  setStatusBar                  // ( oQStatusBar )                                    -> NIL
+   METHOD  setTabPosition                // ( nAreas, nTabPosition )                           -> NIL
+   METHOD  setTabShape                   // ( nTabShape )                                      -> NIL
+   METHOD  setToolButtonStyle            // ( nToolButtonStyle )                               -> NIL
+   METHOD  setUnifiedTitleAndToolBarOnMac // ( lSet )                                           -> NIL
+   METHOD  splitDockWidget               // ( oQDockWidget, oQDockWidget, nOrientation )       -> NIL
+   METHOD  statusBar                     // (  )                                               -> oQStatusBar
+   METHOD  tabPosition                   // ( nArea )                                          -> nQTabWidget_TabPosition
+   METHOD  tabShape                      // (  )                                               -> nQTabWidget_TabShape
+   METHOD  tabifiedDockWidgets           // ( oQDockWidget )                                   -> oQList_QDockWidget
+   METHOD  tabifyDockWidget              // ( oQDockWidget, oQDockWidget )                     -> NIL
+   METHOD  toolBarArea                   // ( oQToolBar )                                      -> nQt_ToolBarArea
+   METHOD  toolBarBreak                  // ( oQToolBar )                                      -> lBool
+   METHOD  toolButtonStyle               // (  )                                               -> nQt_ToolButtonStyle
+   METHOD  unifiedTitleAndToolBarOnMac   // (  )                                               -> lBool
+   METHOD  setAnimated                   // ( lEnabled )                                       -> NIL
+   METHOD  setDockNestingEnabled         // ( lEnabled )                                       -> NIL
 
    ENDCLASS
 
@@ -200,178 +203,488 @@ METHOD QMainWindow:addToolBar( ... )
    RETURN hbqt_error()
 
 
-METHOD QMainWindow:addToolBarBreak( nArea )
-   RETURN Qt_QMainWindow_addToolBarBreak( ::pPtr, nArea )
+METHOD QMainWindow:addToolBarBreak( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QMainWindow_addToolBarBreak( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QMainWindow_addToolBarBreak( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:centralWidget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QMainWindow_centralWidget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:corner( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QMainWindow_corner( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:createPopupMenu( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QMenu():from( Qt_QMainWindow_createPopupMenu( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:dockOptions( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMainWindow_dockOptions( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:dockWidgetArea( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMainWindow_dockWidgetArea( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:documentMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMainWindow_documentMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:iconSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QMainWindow_iconSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:insertToolBar( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QMainWindow_insertToolBar( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:insertToolBarBreak( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMainWindow_insertToolBarBreak( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
 
-
-METHOD QMainWindow:centralWidget()
-   RETURN HB_QWidget():from( Qt_QMainWindow_centralWidget( ::pPtr ) )
-
-
-METHOD QMainWindow:corner( nCorner )
-   RETURN Qt_QMainWindow_corner( ::pPtr, nCorner )
-
-
-METHOD QMainWindow:createPopupMenu()
-   RETURN HB_QMenu():from( Qt_QMainWindow_createPopupMenu( ::pPtr ) )
-
-
-METHOD QMainWindow:dockOptions()
-   RETURN Qt_QMainWindow_dockOptions( ::pPtr )
-
-
-METHOD QMainWindow:dockWidgetArea( pDockwidget )
-   RETURN Qt_QMainWindow_dockWidgetArea( ::pPtr, hbqt_ptr( pDockwidget ) )
-
-
-METHOD QMainWindow:documentMode()
-   RETURN Qt_QMainWindow_documentMode( ::pPtr )
-
-
-METHOD QMainWindow:iconSize()
-   RETURN HB_QSize():from( Qt_QMainWindow_iconSize( ::pPtr ) )
-
-
-METHOD QMainWindow:insertToolBar( pBefore, pToolbar )
-   RETURN Qt_QMainWindow_insertToolBar( ::pPtr, hbqt_ptr( pBefore ), hbqt_ptr( pToolbar ) )
-
-
-METHOD QMainWindow:insertToolBarBreak( pBefore )
-   RETURN Qt_QMainWindow_insertToolBarBreak( ::pPtr, hbqt_ptr( pBefore ) )
-
-
-METHOD QMainWindow:isAnimated()
-   RETURN Qt_QMainWindow_isAnimated( ::pPtr )
-
-
-METHOD QMainWindow:isDockNestingEnabled()
-   RETURN Qt_QMainWindow_isDockNestingEnabled( ::pPtr )
-
-
-METHOD QMainWindow:menuBar()
-   RETURN HB_QMenuBar():from( Qt_QMainWindow_menuBar( ::pPtr ) )
-
-
-METHOD QMainWindow:menuWidget()
-   RETURN HB_QWidget():from( Qt_QMainWindow_menuWidget( ::pPtr ) )
-
-
-METHOD QMainWindow:removeDockWidget( pDockwidget )
-   RETURN Qt_QMainWindow_removeDockWidget( ::pPtr, hbqt_ptr( pDockwidget ) )
-
-
-METHOD QMainWindow:removeToolBar( pToolbar )
-   RETURN Qt_QMainWindow_removeToolBar( ::pPtr, hbqt_ptr( pToolbar ) )
-
-
-METHOD QMainWindow:removeToolBarBreak( pBefore )
-   RETURN Qt_QMainWindow_removeToolBarBreak( ::pPtr, hbqt_ptr( pBefore ) )
-
-
-METHOD QMainWindow:restoreDockWidget( pDockwidget )
-   RETURN Qt_QMainWindow_restoreDockWidget( ::pPtr, hbqt_ptr( pDockwidget ) )
-
-
-METHOD QMainWindow:restoreState( pState, nVersion )
-   RETURN Qt_QMainWindow_restoreState( ::pPtr, hbqt_ptr( pState ), nVersion )
-
-
-METHOD QMainWindow:saveState( nVersion )
-   RETURN HB_QByteArray():from( Qt_QMainWindow_saveState( ::pPtr, nVersion ) )
-
-
-METHOD QMainWindow:setCentralWidget( pWidget )
-   RETURN Qt_QMainWindow_setCentralWidget( ::pPtr, hbqt_ptr( pWidget ) )
-
-
-METHOD QMainWindow:setCorner( nCorner, nArea )
-   RETURN Qt_QMainWindow_setCorner( ::pPtr, nCorner, nArea )
-
-
-METHOD QMainWindow:setDockOptions( nOptions )
-   RETURN Qt_QMainWindow_setDockOptions( ::pPtr, nOptions )
-
-
-METHOD QMainWindow:setDocumentMode( lEnabled )
-   RETURN Qt_QMainWindow_setDocumentMode( ::pPtr, lEnabled )
-
-
-METHOD QMainWindow:setIconSize( pIconSize )
-   RETURN Qt_QMainWindow_setIconSize( ::pPtr, hbqt_ptr( pIconSize ) )
-
-
-METHOD QMainWindow:setMenuBar( pMenuBar )
-   RETURN Qt_QMainWindow_setMenuBar( ::pPtr, hbqt_ptr( pMenuBar ) )
-
-
-METHOD QMainWindow:setMenuWidget( pMenuBar )
-   RETURN Qt_QMainWindow_setMenuWidget( ::pPtr, hbqt_ptr( pMenuBar ) )
-
-
-METHOD QMainWindow:setStatusBar( pStatusbar )
-   RETURN Qt_QMainWindow_setStatusBar( ::pPtr, hbqt_ptr( pStatusbar ) )
-
-
-METHOD QMainWindow:setTabPosition( nAreas, nTabPosition )
-   RETURN Qt_QMainWindow_setTabPosition( ::pPtr, nAreas, nTabPosition )
-
-
-METHOD QMainWindow:setTabShape( nTabShape )
-   RETURN Qt_QMainWindow_setTabShape( ::pPtr, nTabShape )
-
-
-METHOD QMainWindow:setToolButtonStyle( nToolButtonStyle )
-   RETURN Qt_QMainWindow_setToolButtonStyle( ::pPtr, nToolButtonStyle )
-
-
-METHOD QMainWindow:setUnifiedTitleAndToolBarOnMac( lSet )
-   RETURN Qt_QMainWindow_setUnifiedTitleAndToolBarOnMac( ::pPtr, lSet )
-
-
-METHOD QMainWindow:splitDockWidget( pFirst, pSecond, nOrientation )
-   RETURN Qt_QMainWindow_splitDockWidget( ::pPtr, hbqt_ptr( pFirst ), hbqt_ptr( pSecond ), nOrientation )
-
-
-METHOD QMainWindow:statusBar()
-   RETURN HB_QStatusBar():from( Qt_QMainWindow_statusBar( ::pPtr ) )
-
-
-METHOD QMainWindow:tabPosition( nArea )
-   RETURN Qt_QMainWindow_tabPosition( ::pPtr, nArea )
-
-
-METHOD QMainWindow:tabShape()
-   RETURN Qt_QMainWindow_tabShape( ::pPtr )
-
-
-METHOD QMainWindow:tabifiedDockWidgets( pDockwidget )
-   RETURN HB_QList():from( Qt_QMainWindow_tabifiedDockWidgets( ::pPtr, hbqt_ptr( pDockwidget ) ) )
-
-
-METHOD QMainWindow:tabifyDockWidget( pFirst, pSecond )
-   RETURN Qt_QMainWindow_tabifyDockWidget( ::pPtr, hbqt_ptr( pFirst ), hbqt_ptr( pSecond ) )
-
-
-METHOD QMainWindow:toolBarArea( pToolbar )
-   RETURN Qt_QMainWindow_toolBarArea( ::pPtr, hbqt_ptr( pToolbar ) )
-
-
-METHOD QMainWindow:toolBarBreak( pToolbar )
-   RETURN Qt_QMainWindow_toolBarBreak( ::pPtr, hbqt_ptr( pToolbar ) )
-
-
-METHOD QMainWindow:toolButtonStyle()
-   RETURN Qt_QMainWindow_toolButtonStyle( ::pPtr )
-
-
-METHOD QMainWindow:unifiedTitleAndToolBarOnMac()
-   RETURN Qt_QMainWindow_unifiedTitleAndToolBarOnMac( ::pPtr )
-
-
-METHOD QMainWindow:setAnimated( lEnabled )
-   RETURN Qt_QMainWindow_setAnimated( ::pPtr, lEnabled )
-
-
-METHOD QMainWindow:setDockNestingEnabled( lEnabled )
-   RETURN Qt_QMainWindow_setDockNestingEnabled( ::pPtr, lEnabled )
+METHOD QMainWindow:isAnimated( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMainWindow_isAnimated( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:isDockNestingEnabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMainWindow_isDockNestingEnabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:menuBar( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QMenuBar():from( Qt_QMainWindow_menuBar( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:menuWidget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QMainWindow_menuWidget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:removeDockWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMainWindow_removeDockWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:removeToolBar( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMainWindow_removeToolBar( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:removeToolBarBreak( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMainWindow_removeToolBarBreak( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:restoreDockWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMainWindow_restoreDockWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:restoreState( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QMainWindow_restoreState( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMainWindow_restoreState( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:saveState( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QByteArray():from( Qt_QMainWindow_saveState( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QByteArray():from( Qt_QMainWindow_saveState( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:setCentralWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMainWindow_setCentralWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:setCorner( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QMainWindow_setCorner( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:setDockOptions( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QMainWindow_setDockOptions( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:setDocumentMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QMainWindow_setDocumentMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:setIconSize( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMainWindow_setIconSize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:setMenuBar( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMainWindow_setMenuBar( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:setMenuWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMainWindow_setMenuWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:setStatusBar( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMainWindow_setStatusBar( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:setTabPosition( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QMainWindow_setTabPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:setTabShape( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QMainWindow_setTabShape( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:setToolButtonStyle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QMainWindow_setToolButtonStyle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:setUnifiedTitleAndToolBarOnMac( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QMainWindow_setUnifiedTitleAndToolBarOnMac( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:splitDockWidget( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QMainWindow_splitDockWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:statusBar( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStatusBar():from( Qt_QMainWindow_statusBar( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:tabPosition( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QMainWindow_tabPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:tabShape( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMainWindow_tabShape( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:tabifiedDockWidgets( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QList():from( Qt_QMainWindow_tabifiedDockWidgets( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:tabifyDockWidget( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QMainWindow_tabifyDockWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:toolBarArea( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMainWindow_toolBarArea( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:toolBarBreak( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMainWindow_toolBarBreak( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:toolButtonStyle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMainWindow_toolButtonStyle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:unifiedTitleAndToolBarOnMac( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMainWindow_unifiedTitleAndToolBarOnMac( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:setAnimated( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QMainWindow_setAnimated( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QMainWindow:setDockNestingEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QMainWindow_setDockNestingEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

@@ -103,14 +103,14 @@ CREATE CLASS QPageSetupDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_
 
    METHOD  new( ... )
 
-   METHOD  exec()
-   METHOD  open( pReceiver, pMember )
-   METHOD  options()
-   METHOD  printer()
-   METHOD  setOption( nOption, lOn )
-   METHOD  setOptions( nOptions )
-   METHOD  setVisible( lVisible )
-   METHOD  testOption( nOption )
+   METHOD  exec                          // (  )                                               -> nInt
+   METHOD  open                          // ( oQObject, cMember )                              -> NIL
+   METHOD  options                       // (  )                                               -> nPageSetupDialogOptions
+   METHOD  printer                       // (  )                                               -> oQPrinter
+   METHOD  setOption                     // ( nOption, lOn )                                   -> NIL
+   METHOD  setOptions                    // ( nOptions )                                       -> NIL
+   METHOD  setVisible                    // ( lVisible )                                       -> NIL
+   METHOD  testOption                    // ( nOption )                                        -> lBool
 
    ENDCLASS
 
@@ -124,34 +124,92 @@ METHOD QPageSetupDialog:new( ... )
    RETURN Self
 
 
-METHOD QPageSetupDialog:exec()
-   RETURN Qt_QPageSetupDialog_exec( ::pPtr )
+METHOD QPageSetupDialog:exec( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPageSetupDialog_exec( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPageSetupDialog:open( pReceiver, pMember )
-   RETURN Qt_QPageSetupDialog_open( ::pPtr, hbqt_ptr( pReceiver ), hbqt_ptr( pMember ) )
+METHOD QPageSetupDialog:open( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QPageSetupDialog_open( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPageSetupDialog:options()
-   RETURN Qt_QPageSetupDialog_options( ::pPtr )
+METHOD QPageSetupDialog:options( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPageSetupDialog_options( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPageSetupDialog:printer()
-   RETURN HB_QPrinter():from( Qt_QPageSetupDialog_printer( ::pPtr ) )
+METHOD QPageSetupDialog:printer( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPrinter():from( Qt_QPageSetupDialog_printer( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPageSetupDialog:setOption( nOption, lOn )
-   RETURN Qt_QPageSetupDialog_setOption( ::pPtr, nOption, lOn )
+METHOD QPageSetupDialog:setOption( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QPageSetupDialog_setOption( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPageSetupDialog_setOption( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPageSetupDialog:setOptions( nOptions )
-   RETURN Qt_QPageSetupDialog_setOptions( ::pPtr, nOptions )
+METHOD QPageSetupDialog:setOptions( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPageSetupDialog_setOptions( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPageSetupDialog:setVisible( lVisible )
-   RETURN Qt_QPageSetupDialog_setVisible( ::pPtr, lVisible )
+METHOD QPageSetupDialog:setVisible( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QPageSetupDialog_setVisible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPageSetupDialog:testOption( nOption )
-   RETURN Qt_QPageSetupDialog_testOption( ::pPtr, nOption )
+METHOD QPageSetupDialog:testOption( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPageSetupDialog_testOption( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

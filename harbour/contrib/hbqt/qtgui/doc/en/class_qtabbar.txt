@@ -31,9 +31,9 @@
  *     :currentIndex()                                     -> nInt
  *     :documentMode()                                     -> lBool
  *     :drawBase()                                         -> lBool
- *     :elideMode()                                        -> nQt::TextElideMode
+ *     :elideMode()                                        -> nQt_TextElideMode
  *     :expanding()                                        -> lBool
- *     :iconSize()                                         -> pQSize
+ *     :iconSize()                                         -> oQSize
  *     :insertTab( nIndex, cText )                         -> nInt
  *     :isMovable()                                        -> lBool
  *     :isTabEnabled( nIndex )                             -> lBool
@@ -44,27 +44,27 @@
  *     :setDrawBase( lDrawTheBase )                        -> NIL
  *     :setElideMode( nQt::TextElideMode )                 -> NIL
  *     :setExpanding( lEnabled )                           -> NIL
- *     :setIconSize( pSize )                               -> NIL
+ *     :setIconSize( oQSize )                              -> NIL
  *     :setMovable( lMovable )                             -> NIL
  *     :setSelectionBehaviorOnRemove( nBehavior )          -> NIL
  *     :setShape( nShape )                                 -> NIL
- *     :setTabButton( nIndex, nPosition, pWidget )         -> NIL
- *     :setTabData( nIndex, pData )                        -> NIL
+ *     :setTabButton( nIndex, nPosition, oQWidget )        -> NIL
+ *     :setTabData( nIndex, oQVariant )                    -> NIL
  *     :setTabEnabled( nIndex, lEnabled )                  -> NIL
  *     :setTabText( nIndex, cText )                        -> NIL
- *     :setTabTextColor( nIndex, pColor )                  -> NIL
+ *     :setTabTextColor( nIndex, oQColor )                 -> NIL
  *     :setTabToolTip( nIndex, cTip )                      -> NIL
  *     :setTabWhatsThis( nIndex, cText )                   -> NIL
  *     :setTabsClosable( lClosable )                       -> NIL
  *     :setUsesScrollButtons( lUseButtons )                -> NIL
  *     :shape()                                            -> nShape
- *     :tabAt( pPosition )                                 -> nInt
- *     :tabButton( nIndex, nPosition )                     -> pQWidget
- *     :tabData( nIndex )                                  -> pQVariant
- *     :tabIcon( nIndex )                                  -> pQIcon
- *     :tabRect( nIndex )                                  -> pQRect
+ *     :tabAt( oQPoint )                                   -> nInt
+ *     :tabButton( nIndex, nPosition )                     -> oQWidget
+ *     :tabData( nIndex )                                  -> oQVariant
+ *     :tabIcon( nIndex )                                  -> oQIcon
+ *     :tabRect( nIndex )                                  -> oQRect
  *     :tabText( nIndex )                                  -> cQString
- *     :tabTextColor( nIndex )                             -> pQColor
+ *     :tabTextColor( nIndex )                             -> oQColor
  *     :tabToolTip( nIndex )                               -> cQString
  *     :tabWhatsThis( nIndex )                             -> cQString
  *     :tabsClosable()                                     -> lBool
@@ -89,7 +89,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTabBar.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTabBar.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

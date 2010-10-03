@@ -26,13 +26,13 @@
  *  $RETURNS$
  *     An instance of the object of type QGraphicsSceneWheelEvent
  *  $METHODS$
- *     :buttons()                                          -> nQt::MouseButtons
+ *     :buttons()                                          -> nQt_MouseButtons
  *     :delta()                                            -> nInt
- *     :modifiers()                                        -> nQt::KeyboardModifiers
- *     :orientation()                                      -> nQt::Orientation
- *     :pos()                                              -> pQPointF
- *     :scenePos()                                         -> pQPointF
- *     :screenPos()                                        -> pQPoint
+ *     :modifiers()                                        -> nQt_KeyboardModifiers
+ *     :orientation()                                      -> nQt_Orientation
+ *     :pos()                                              -> oQPointF
+ *     :scenePos()                                         -> oQPointF
+ *     :screenPos()                                        -> oQPoint
  * 
  *  $DESCRIPTION$
  * 
@@ -52,7 +52,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGraphicsSceneWheelEvent.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsSceneWheelEvent.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QGraphicsSceneEvent()
  *  $END$
  */

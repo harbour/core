@@ -26,36 +26,36 @@
  *  $RETURNS$
  *     An instance of the object of type QAbstractItemModel
  *  $METHODS$
- *     :buddy( pIndex )                                    -> pQModelIndex
- *     :canFetchMore( pParent )                            -> lBool
- *     :columnCount( pParent )                             -> nInt
- *     :data( pIndex, nRole )                              -> pQVariant
- *     :dropMimeData( pData, nAction, nRow, nColumn, pParent )  -> lBool
- *     :fetchMore( pParent )                               -> NIL
- *     :flags( pIndex )                                    -> nQt::ItemFlags
- *     :hasChildren( pParent )                             -> lBool
- *     :hasIndex( nRow, nColumn, pParent )                 -> lBool
- *     :headerData( nSection, nOrientation, nRole )        -> pQVariant
- *     :index( nRow, nColumn, pParent )                    -> pQModelIndex
- *     :insertColumn( nColumn, pParent )                   -> lBool
- *     :insertColumns( nColumn, nCount, pParent )          -> lBool
- *     :insertRow( nRow, pParent )                         -> lBool
- *     :insertRows( nRow, nCount, pParent )                -> lBool
- *     :mimeTypes()                                        -> pQStringList
- *     :parent( pIndex )                                   -> pQModelIndex
- *     :removeColumn( nColumn, pParent )                   -> lBool
- *     :removeColumns( nColumn, nCount, pParent )          -> lBool
- *     :removeRow( nRow, pParent )                         -> lBool
- *     :removeRows( nRow, nCount, pParent )                -> lBool
- *     :rowCount( pParent )                                -> nInt
- *     :setData( pIndex, pValue, nRole )                   -> lBool
- *     :setHeaderData( nSection, nOrientation, pValue, nRole )  -> lBool
+ *     :buddy( oQModelIndex )                              -> oQModelIndex
+ *     :canFetchMore( oQModelIndex )                       -> lBool
+ *     :columnCount( oQModelIndex )                        -> nInt
+ *     :data( oQModelIndex, nRole )                        -> oQVariant
+ *     :dropMimeData( oQMimeData, nAction, nRow, nColumn, oQModelIndex )  -> lBool
+ *     :fetchMore( oQModelIndex )                          -> NIL
+ *     :flags( oQModelIndex )                              -> nQt_ItemFlags
+ *     :hasChildren( oQModelIndex )                        -> lBool
+ *     :hasIndex( nRow, nColumn, oQModelIndex )            -> lBool
+ *     :headerData( nSection, nOrientation, nRole )        -> oQVariant
+ *     :index( nRow, nColumn, oQModelIndex )               -> oQModelIndex
+ *     :insertColumn( nColumn, oQModelIndex )              -> lBool
+ *     :insertColumns( nColumn, nCount, oQModelIndex )     -> lBool
+ *     :insertRow( nRow, oQModelIndex )                    -> lBool
+ *     :insertRows( nRow, nCount, oQModelIndex )           -> lBool
+ *     :mimeTypes()                                        -> oQStringList
+ *     :parent( oQModelIndex )                             -> oQModelIndex
+ *     :removeColumn( nColumn, oQModelIndex )              -> lBool
+ *     :removeColumns( nColumn, nCount, oQModelIndex )     -> lBool
+ *     :removeRow( nRow, oQModelIndex )                    -> lBool
+ *     :removeRows( nRow, nCount, oQModelIndex )           -> lBool
+ *     :rowCount( oQModelIndex )                           -> nInt
+ *     :setData( oQModelIndex, oQVariant, nRole )          -> lBool
+ *     :setHeaderData( nSection, nOrientation, oQVariant, nRole )  -> lBool
  *     :setSupportedDragActions( nActions )                -> NIL
- *     :sibling( nRow, nColumn, pIndex )                   -> pQModelIndex
+ *     :sibling( nRow, nColumn, oQModelIndex )             -> oQModelIndex
  *     :sort( nColumn, nOrder )                            -> NIL
- *     :span( pIndex )                                     -> pQSize
- *     :supportedDragActions()                             -> nQt::DropActions
- *     :supportedDropActions()                             -> nQt::DropActions
+ *     :span( oQModelIndex )                               -> oQSize
+ *     :supportedDragActions()                             -> nQt_DropActions
+ *     :supportedDropActions()                             -> nQt_DropActions
  *     :revert()                                           -> NIL
  *     :submit()                                           -> lBool
  * 
@@ -77,7 +77,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQAbstractItemModel.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QAbstractItemModel.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

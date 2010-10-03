@@ -105,7 +105,7 @@
  */
 
 /*
- *  Constructed[ 206/208 [ 99.04% ] ]
+ *  Constructed[ 207/209 [ 99.04% ] ]
  *
  *  *** Unconvered Prototypes ***
  *
@@ -229,6 +229,14 @@ HB_FUNC( QT_QWIDGET )
    }
 
    hb_retptrGC( hbqt_gcAllocate_QWidget( ( void * ) pObj, true ) );
+}
+
+/*
+ * QWidget( QWidget * parent = 0, Qt::WindowFlags f = 0 )
+ */
+HB_FUNC( QT_QWIDGET_QWIDGET )
+{
+   hb_retptrGC( hbqt_gcAllocate_QWidget( new QWidget( hbqt_par_QWidget( 2 ), ( Qt::WindowFlags ) hb_parni( 3 ) ), true ) );
 }
 
 /*

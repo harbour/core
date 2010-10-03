@@ -27,7 +27,7 @@
  *     An instance of the object of type QWidgetItem
  *  $METHODS$
  *     :isEmpty()                                          -> lBool
- *     :widget()                                           -> pQWidget
+ *     :widget()                                           -> oQWidget
  * 
  *  $DESCRIPTION$
  * 
@@ -47,7 +47,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQWidgetItem.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QWidgetItem.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QLayoutItem()
  *  $END$
  */

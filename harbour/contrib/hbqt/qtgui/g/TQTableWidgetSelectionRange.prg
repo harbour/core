@@ -103,12 +103,12 @@ CREATE CLASS QTableWidgetSelectionRange INHERIT HbQtObjectHandler FUNCTION HB_QT
 
    METHOD  new( ... )
 
-   METHOD  bottomRow()
-   METHOD  columnCount()
-   METHOD  leftColumn()
-   METHOD  rightColumn()
-   METHOD  rowCount()
-   METHOD  topRow()
+   METHOD  bottomRow                     // (  )                                               -> nInt
+   METHOD  columnCount                   // (  )                                               -> nInt
+   METHOD  leftColumn                    // (  )                                               -> nInt
+   METHOD  rightColumn                   // (  )                                               -> nInt
+   METHOD  rowCount                      // (  )                                               -> nInt
+   METHOD  topRow                        // (  )                                               -> nInt
 
    ENDCLASS
 
@@ -122,26 +122,50 @@ METHOD QTableWidgetSelectionRange:new( ... )
    RETURN Self
 
 
-METHOD QTableWidgetSelectionRange:bottomRow()
-   RETURN Qt_QTableWidgetSelectionRange_bottomRow( ::pPtr )
+METHOD QTableWidgetSelectionRange:bottomRow( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTableWidgetSelectionRange_bottomRow( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTableWidgetSelectionRange:columnCount()
-   RETURN Qt_QTableWidgetSelectionRange_columnCount( ::pPtr )
+METHOD QTableWidgetSelectionRange:columnCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTableWidgetSelectionRange_columnCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTableWidgetSelectionRange:leftColumn()
-   RETURN Qt_QTableWidgetSelectionRange_leftColumn( ::pPtr )
+METHOD QTableWidgetSelectionRange:leftColumn( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTableWidgetSelectionRange_leftColumn( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTableWidgetSelectionRange:rightColumn()
-   RETURN Qt_QTableWidgetSelectionRange_rightColumn( ::pPtr )
+METHOD QTableWidgetSelectionRange:rightColumn( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTableWidgetSelectionRange_rightColumn( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTableWidgetSelectionRange:rowCount()
-   RETURN Qt_QTableWidgetSelectionRange_rowCount( ::pPtr )
+METHOD QTableWidgetSelectionRange:rowCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTableWidgetSelectionRange_rowCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTableWidgetSelectionRange:topRow()
-   RETURN Qt_QTableWidgetSelectionRange_topRow( ::pPtr )
+METHOD QTableWidgetSelectionRange:topRow( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTableWidgetSelectionRange_topRow( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

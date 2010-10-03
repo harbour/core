@@ -663,7 +663,7 @@ HB_FUNC( QT_QCOREAPPLICATION_TRANSLATE )
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
    {
-      hb_retstr_utf8( ( p )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), ( QCoreApplication::Encoding ) hb_parni( 5 ), hb_parni( 6 ) ).toUtf8().data() );
+      hb_retstr_utf8( ( p )->translate( ( const char * ) hb_parc( 2 ), ( const char * ) hb_parc( 3 ), ( const char * ) hb_parc( 4 ), ( QCoreApplication::Encoding ) hb_parni( 5 ), hb_parni( 6 ) ).toUtf8().data() );
    }
 }
 
@@ -675,7 +675,7 @@ HB_FUNC( QT_QCOREAPPLICATION_TRANSLATE_1 )
    QCoreApplication * p = hbqt_par_QCoreApplication( 1 );
    if( p )
    {
-      hb_retstr_utf8( ( p )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), ( HB_ISNUM( 5 ) ? ( QCoreApplication::Encoding ) hb_parni( 5 ) : ( QCoreApplication::Encoding ) QCoreApplication::CodecForTr ) ).toUtf8().data() );
+      hb_retstr_utf8( ( p )->translate( ( const char * ) hb_parc( 2 ), ( const char * ) hb_parc( 3 ), ( const char * ) hb_parc( 4 ), ( HB_ISNUM( 5 ) ? ( QCoreApplication::Encoding ) hb_parni( 5 ) : ( QCoreApplication::Encoding ) QCoreApplication::CodecForTr ) ).toUtf8().data() );
    }
 }
 

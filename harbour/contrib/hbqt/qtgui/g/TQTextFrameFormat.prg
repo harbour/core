@@ -103,33 +103,35 @@ CREATE CLASS QTextFrameFormat INHERIT HbQtObjectHandler, HB_QTextFormat FUNCTION
 
    METHOD  new( ... )
 
-   METHOD  border()
-   METHOD  borderBrush()
-   METHOD  borderStyle()
-   METHOD  bottomMargin()
-   METHOD  height()
-   METHOD  isValid()
-   METHOD  leftMargin()
-   METHOD  margin()
-   METHOD  padding()
-   METHOD  pageBreakPolicy()
-   METHOD  position()
-   METHOD  rightMargin()
-   METHOD  setBorder( nWidth )
-   METHOD  setBorderBrush( pBrush )
-   METHOD  setBorderStyle( nStyle )
-   METHOD  setBottomMargin( nMargin )
-   METHOD  setHeight( ... )
-   METHOD  setLeftMargin( nMargin )
-   METHOD  setMargin( nMargin )
-   METHOD  setPadding( nWidth )
-   METHOD  setPageBreakPolicy( nPolicy )
-   METHOD  setPosition( nPolicy )
-   METHOD  setRightMargin( nMargin )
-   METHOD  setTopMargin( nMargin )
-   METHOD  setWidth( ... )
-   METHOD  topMargin()
-   METHOD  width()
+   METHOD  border                        // (  )                                               -> nQreal
+   METHOD  borderBrush                   // (  )                                               -> oQBrush
+   METHOD  borderStyle                   // (  )                                               -> nBorderStyle
+   METHOD  bottomMargin                  // (  )                                               -> nQreal
+   METHOD  height                        // (  )                                               -> oQTextLength
+   METHOD  isValid                       // (  )                                               -> lBool
+   METHOD  leftMargin                    // (  )                                               -> nQreal
+   METHOD  margin                        // (  )                                               -> nQreal
+   METHOD  padding                       // (  )                                               -> nQreal
+   METHOD  pageBreakPolicy               // (  )                                               -> nPageBreakFlags
+   METHOD  position                      // (  )                                               -> nPosition
+   METHOD  rightMargin                   // (  )                                               -> nQreal
+   METHOD  setBorder                     // ( nWidth )                                         -> NIL
+   METHOD  setBorderBrush                // ( oQBrush )                                        -> NIL
+   METHOD  setBorderStyle                // ( nStyle )                                         -> NIL
+   METHOD  setBottomMargin               // ( nMargin )                                        -> NIL
+   METHOD  setHeight                     // ( oQTextLength )                                   -> NIL
+                                         // ( nHeight )                                        -> NIL
+   METHOD  setLeftMargin                 // ( nMargin )                                        -> NIL
+   METHOD  setMargin                     // ( nMargin )                                        -> NIL
+   METHOD  setPadding                    // ( nWidth )                                         -> NIL
+   METHOD  setPageBreakPolicy            // ( nPolicy )                                        -> NIL
+   METHOD  setPosition                   // ( nPolicy )                                        -> NIL
+   METHOD  setRightMargin                // ( nMargin )                                        -> NIL
+   METHOD  setTopMargin                  // ( nMargin )                                        -> NIL
+   METHOD  setWidth                      // ( oQTextLength )                                   -> NIL
+                                         // ( nWidth )                                         -> NIL
+   METHOD  topMargin                     // (  )                                               -> nQreal
+   METHOD  width                         // (  )                                               -> oQTextLength
 
    ENDCLASS
 
@@ -143,68 +145,148 @@ METHOD QTextFrameFormat:new( ... )
    RETURN Self
 
 
-METHOD QTextFrameFormat:border()
-   RETURN Qt_QTextFrameFormat_border( ::pPtr )
+METHOD QTextFrameFormat:border( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFrameFormat_border( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrameFormat:borderBrush()
-   RETURN HB_QBrush():from( Qt_QTextFrameFormat_borderBrush( ::pPtr ) )
+METHOD QTextFrameFormat:borderBrush( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QTextFrameFormat_borderBrush( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrameFormat:borderStyle()
-   RETURN Qt_QTextFrameFormat_borderStyle( ::pPtr )
+METHOD QTextFrameFormat:borderStyle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFrameFormat_borderStyle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrameFormat:bottomMargin()
-   RETURN Qt_QTextFrameFormat_bottomMargin( ::pPtr )
+METHOD QTextFrameFormat:bottomMargin( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFrameFormat_bottomMargin( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrameFormat:height()
-   RETURN HB_QTextLength():from( Qt_QTextFrameFormat_height( ::pPtr ) )
+METHOD QTextFrameFormat:height( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextLength():from( Qt_QTextFrameFormat_height( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrameFormat:isValid()
-   RETURN Qt_QTextFrameFormat_isValid( ::pPtr )
+METHOD QTextFrameFormat:isValid( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFrameFormat_isValid( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrameFormat:leftMargin()
-   RETURN Qt_QTextFrameFormat_leftMargin( ::pPtr )
+METHOD QTextFrameFormat:leftMargin( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFrameFormat_leftMargin( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrameFormat:margin()
-   RETURN Qt_QTextFrameFormat_margin( ::pPtr )
+METHOD QTextFrameFormat:margin( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFrameFormat_margin( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrameFormat:padding()
-   RETURN Qt_QTextFrameFormat_padding( ::pPtr )
+METHOD QTextFrameFormat:padding( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFrameFormat_padding( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrameFormat:pageBreakPolicy()
-   RETURN Qt_QTextFrameFormat_pageBreakPolicy( ::pPtr )
+METHOD QTextFrameFormat:pageBreakPolicy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFrameFormat_pageBreakPolicy( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrameFormat:position()
-   RETURN Qt_QTextFrameFormat_position( ::pPtr )
+METHOD QTextFrameFormat:position( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFrameFormat_position( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrameFormat:rightMargin()
-   RETURN Qt_QTextFrameFormat_rightMargin( ::pPtr )
+METHOD QTextFrameFormat:rightMargin( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFrameFormat_rightMargin( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrameFormat:setBorder( nWidth )
-   RETURN Qt_QTextFrameFormat_setBorder( ::pPtr, nWidth )
+METHOD QTextFrameFormat:setBorder( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextFrameFormat_setBorder( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrameFormat:setBorderBrush( pBrush )
-   RETURN Qt_QTextFrameFormat_setBorderBrush( ::pPtr, hbqt_ptr( pBrush ) )
+METHOD QTextFrameFormat:setBorderBrush( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextFrameFormat_setBorderBrush( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrameFormat:setBorderStyle( nStyle )
-   RETURN Qt_QTextFrameFormat_setBorderStyle( ::pPtr, nStyle )
+METHOD QTextFrameFormat:setBorderStyle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextFrameFormat_setBorderStyle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrameFormat:setBottomMargin( nMargin )
-   RETURN Qt_QTextFrameFormat_setBottomMargin( ::pPtr, nMargin )
+METHOD QTextFrameFormat:setBottomMargin( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextFrameFormat_setBottomMargin( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTextFrameFormat:setHeight( ... )
@@ -221,32 +303,88 @@ METHOD QTextFrameFormat:setHeight( ... )
    RETURN hbqt_error()
 
 
-METHOD QTextFrameFormat:setLeftMargin( nMargin )
-   RETURN Qt_QTextFrameFormat_setLeftMargin( ::pPtr, nMargin )
+METHOD QTextFrameFormat:setLeftMargin( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextFrameFormat_setLeftMargin( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrameFormat:setMargin( nMargin )
-   RETURN Qt_QTextFrameFormat_setMargin( ::pPtr, nMargin )
+METHOD QTextFrameFormat:setMargin( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextFrameFormat_setMargin( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrameFormat:setPadding( nWidth )
-   RETURN Qt_QTextFrameFormat_setPadding( ::pPtr, nWidth )
+METHOD QTextFrameFormat:setPadding( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextFrameFormat_setPadding( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrameFormat:setPageBreakPolicy( nPolicy )
-   RETURN Qt_QTextFrameFormat_setPageBreakPolicy( ::pPtr, nPolicy )
+METHOD QTextFrameFormat:setPageBreakPolicy( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextFrameFormat_setPageBreakPolicy( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrameFormat:setPosition( nPolicy )
-   RETURN Qt_QTextFrameFormat_setPosition( ::pPtr, nPolicy )
+METHOD QTextFrameFormat:setPosition( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextFrameFormat_setPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrameFormat:setRightMargin( nMargin )
-   RETURN Qt_QTextFrameFormat_setRightMargin( ::pPtr, nMargin )
+METHOD QTextFrameFormat:setRightMargin( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextFrameFormat_setRightMargin( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrameFormat:setTopMargin( nMargin )
-   RETURN Qt_QTextFrameFormat_setTopMargin( ::pPtr, nMargin )
+METHOD QTextFrameFormat:setTopMargin( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextFrameFormat_setTopMargin( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTextFrameFormat:setWidth( ... )
@@ -263,10 +401,18 @@ METHOD QTextFrameFormat:setWidth( ... )
    RETURN hbqt_error()
 
 
-METHOD QTextFrameFormat:topMargin()
-   RETURN Qt_QTextFrameFormat_topMargin( ::pPtr )
+METHOD QTextFrameFormat:topMargin( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFrameFormat_topMargin( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextFrameFormat:width()
-   RETURN HB_QTextLength():from( Qt_QTextFrameFormat_width( ::pPtr ) )
+METHOD QTextFrameFormat:width( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextLength():from( Qt_QTextFrameFormat_width( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

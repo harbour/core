@@ -26,18 +26,18 @@
  *  $RETURNS$
  *     An instance of the object of type QDesktopWidget
  *  $METHODS$
- *     :availableGeometry( nScreen )                       -> pQRect
- *     :availableGeometry_1( pWidget )                     -> pQRect
- *     :availableGeometry_2( pP )                          -> pQRect
+ *     :availableGeometry( nScreen )                       -> oQRect
+ *     :availableGeometry( oQWidget )                      -> oQRect
+ *     :availableGeometry( oQPoint )                       -> oQRect
  *     :isVirtualDesktop()                                 -> lBool
  *     :numScreens()                                       -> nInt
  *     :primaryScreen()                                    -> nInt
- *     :screen( nScreen )                                  -> pQWidget
- *     :screenGeometry( nScreen )                          -> pQRect
- *     :screenGeometry_1( pWidget )                        -> pQRect
- *     :screenGeometry_2( pP )                             -> pQRect
- *     :screenNumber( pWidget )                            -> nInt
- *     :screenNumber_1( pPoint )                           -> nInt
+ *     :screen( nScreen )                                  -> oQWidget
+ *     :screenGeometry( nScreen )                          -> oQRect
+ *     :screenGeometry( oQWidget )                         -> oQRect
+ *     :screenGeometry( oQPoint )                          -> oQRect
+ *     :screenNumber( oQWidget )                           -> nInt
+ *     :screenNumber( oQPoint )                            -> nInt
  * 
  *  $DESCRIPTION$
  * 
@@ -57,7 +57,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQDesktopWidget.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QDesktopWidget.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

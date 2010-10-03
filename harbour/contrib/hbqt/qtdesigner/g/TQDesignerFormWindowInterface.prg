@@ -103,43 +103,45 @@ CREATE CLASS QDesignerFormWindowInterface INHERIT HbQtObjectHandler, HB_QWidget 
 
    METHOD  new( ... )
 
-   METHOD  addResourceFile( cPath )
-   METHOD  author()
-   METHOD  comment()
-   METHOD  contents()
-   METHOD  core()
-   METHOD  cursor()
-   METHOD  emitSelectionChanged()
-   METHOD  exportMacro()
-   METHOD  features()
-   METHOD  fileName()
-   METHOD  grid()
-   METHOD  hasFeature( nFeature )
-   METHOD  includeHints()
-   METHOD  isDirty()
-   METHOD  isManaged( pWidget )
-   METHOD  layoutDefault( nMargin, nSpacing )
-   METHOD  mainContainer()
-   METHOD  pixmapFunction()
-   METHOD  removeResourceFile( cPath )
-   METHOD  resourceFiles()
-   METHOD  setAuthor( cAuthor )
-   METHOD  setComment( cComment )
-   METHOD  setContents( ... )
-   METHOD  setExportMacro( cExportMacro )
-   METHOD  setIncludeHints( pIncludeHints )
-   METHOD  setLayoutDefault( nMargin, nSpacing )
-   METHOD  setMainContainer( pMainContainer )
-   METHOD  setPixmapFunction( cPixmapFunction )
-   METHOD  findFormWindow( ... )
-   METHOD  clearSelection( lUpdate )
-   METHOD  manageWidget( pWidget )
-   METHOD  selectWidget( pWidget, lSelect )
-   METHOD  setDirty( lDirty )
-   METHOD  setFeatures( nFeatures )
-   METHOD  setFileName( cFileName )
-   METHOD  setGrid( pGrid )
-   METHOD  unmanageWidget( pWidget )
+   METHOD  addResourceFile               // ( cPath )                                          -> NIL
+   METHOD  author                        // (  )                                               -> cQString
+   METHOD  comment                       // (  )                                               -> cQString
+   METHOD  contents                      // (  )                                               -> cQString
+   METHOD  core                          // (  )                                               -> oQDesignerFormEditorInterface
+   METHOD  cursor                        // (  )                                               -> oQDesignerFormWindowCursorInterface
+   METHOD  emitSelectionChanged          // (  )                                               -> NIL
+   METHOD  exportMacro                   // (  )                                               -> cQString
+   METHOD  features                      // (  )                                               -> nFeature
+   METHOD  fileName                      // (  )                                               -> cQString
+   METHOD  grid                          // (  )                                               -> oQPoint
+   METHOD  hasFeature                    // ( nFeature )                                       -> lBool
+   METHOD  includeHints                  // (  )                                               -> oQStringList
+   METHOD  isDirty                       // (  )                                               -> lBool
+   METHOD  isManaged                     // ( oQWidget )                                       -> lBool
+   METHOD  layoutDefault                 // ( @nMargin, @nSpacing )                            -> NIL
+   METHOD  mainContainer                 // (  )                                               -> oQWidget
+   METHOD  pixmapFunction                // (  )                                               -> cQString
+   METHOD  removeResourceFile            // ( cPath )                                          -> NIL
+   METHOD  resourceFiles                 // (  )                                               -> oQStringList
+   METHOD  setAuthor                     // ( cAuthor )                                        -> NIL
+   METHOD  setComment                    // ( cComment )                                       -> NIL
+   METHOD  setContents                   // ( oQIODevice )                                     -> NIL
+   METHOD  setExportMacro                // ( cExportMacro )                                   -> NIL
+   METHOD  setIncludeHints               // ( oQStringList )                                   -> NIL
+   METHOD  setLayoutDefault              // ( nMargin, nSpacing )                              -> NIL
+   METHOD  setMainContainer              // ( oQWidget )                                       -> NIL
+   METHOD  setPixmapFunction             // ( cPixmapFunction )                                -> NIL
+   METHOD  findFormWindow                // ( oQWidget )                                       -> oQDesignerFormWindowInterface
+                                         // ( oQObject )                                       -> oQDesignerFormWindowInterface
+   METHOD  clearSelection                // ( lUpdate )                                        -> NIL
+   METHOD  manageWidget                  // ( oQWidget )                                       -> NIL
+   METHOD  selectWidget                  // ( oQWidget, lSelect )                              -> NIL
+                                         // ( cContents )                                      -> NIL
+   METHOD  setDirty                      // ( lDirty )                                         -> NIL
+   METHOD  setFeatures                   // ( nFeatures )                                      -> NIL
+   METHOD  setFileName                   // ( cFileName )                                      -> NIL
+   METHOD  setGrid                       // ( oQPoint )                                        -> NIL
+   METHOD  unmanageWidget                // ( oQWidget )                                       -> NIL
 
    ENDCLASS
 
@@ -153,92 +155,208 @@ METHOD QDesignerFormWindowInterface:new( ... )
    RETURN Self
 
 
-METHOD QDesignerFormWindowInterface:addResourceFile( cPath )
-   RETURN Qt_QDesignerFormWindowInterface_addResourceFile( ::pPtr, cPath )
+METHOD QDesignerFormWindowInterface:addResourceFile( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerFormWindowInterface_addResourceFile( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:author()
-   RETURN Qt_QDesignerFormWindowInterface_author( ::pPtr )
+METHOD QDesignerFormWindowInterface:author( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDesignerFormWindowInterface_author( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:comment()
-   RETURN Qt_QDesignerFormWindowInterface_comment( ::pPtr )
+METHOD QDesignerFormWindowInterface:comment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDesignerFormWindowInterface_comment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:contents()
-   RETURN Qt_QDesignerFormWindowInterface_contents( ::pPtr )
+METHOD QDesignerFormWindowInterface:contents( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDesignerFormWindowInterface_contents( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:core()
-   RETURN HB_QDesignerFormEditorInterface():from( Qt_QDesignerFormWindowInterface_core( ::pPtr ) )
+METHOD QDesignerFormWindowInterface:core( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDesignerFormEditorInterface():from( Qt_QDesignerFormWindowInterface_core( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:cursor()
-   RETURN HB_QDesignerFormWindowCursorInterface():from( Qt_QDesignerFormWindowInterface_cursor( ::pPtr ) )
+METHOD QDesignerFormWindowInterface:cursor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDesignerFormWindowCursorInterface():from( Qt_QDesignerFormWindowInterface_cursor( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:emitSelectionChanged()
-   RETURN Qt_QDesignerFormWindowInterface_emitSelectionChanged( ::pPtr )
+METHOD QDesignerFormWindowInterface:emitSelectionChanged( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDesignerFormWindowInterface_emitSelectionChanged( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:exportMacro()
-   RETURN Qt_QDesignerFormWindowInterface_exportMacro( ::pPtr )
+METHOD QDesignerFormWindowInterface:exportMacro( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDesignerFormWindowInterface_exportMacro( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:features()
-   RETURN Qt_QDesignerFormWindowInterface_features( ::pPtr )
+METHOD QDesignerFormWindowInterface:features( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDesignerFormWindowInterface_features( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:fileName()
-   RETURN Qt_QDesignerFormWindowInterface_fileName( ::pPtr )
+METHOD QDesignerFormWindowInterface:fileName( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDesignerFormWindowInterface_fileName( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:grid()
-   RETURN HB_QPoint():from( Qt_QDesignerFormWindowInterface_grid( ::pPtr ) )
+METHOD QDesignerFormWindowInterface:grid( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QDesignerFormWindowInterface_grid( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:hasFeature( nFeature )
-   RETURN Qt_QDesignerFormWindowInterface_hasFeature( ::pPtr, nFeature )
+METHOD QDesignerFormWindowInterface:hasFeature( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerFormWindowInterface_hasFeature( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:includeHints()
-   RETURN HB_QStringList():from( Qt_QDesignerFormWindowInterface_includeHints( ::pPtr ) )
+METHOD QDesignerFormWindowInterface:includeHints( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QDesignerFormWindowInterface_includeHints( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:isDirty()
-   RETURN Qt_QDesignerFormWindowInterface_isDirty( ::pPtr )
+METHOD QDesignerFormWindowInterface:isDirty( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDesignerFormWindowInterface_isDirty( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:isManaged( pWidget )
-   RETURN Qt_QDesignerFormWindowInterface_isManaged( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QDesignerFormWindowInterface:isManaged( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerFormWindowInterface_isManaged( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:layoutDefault( nMargin, nSpacing )
-   RETURN Qt_QDesignerFormWindowInterface_layoutDefault( ::pPtr, nMargin, nSpacing )
+METHOD QDesignerFormWindowInterface:layoutDefault( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QDesignerFormWindowInterface_layoutDefault( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:mainContainer()
-   RETURN HB_QWidget():from( Qt_QDesignerFormWindowInterface_mainContainer( ::pPtr ) )
+METHOD QDesignerFormWindowInterface:mainContainer( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QDesignerFormWindowInterface_mainContainer( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:pixmapFunction()
-   RETURN Qt_QDesignerFormWindowInterface_pixmapFunction( ::pPtr )
+METHOD QDesignerFormWindowInterface:pixmapFunction( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDesignerFormWindowInterface_pixmapFunction( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:removeResourceFile( cPath )
-   RETURN Qt_QDesignerFormWindowInterface_removeResourceFile( ::pPtr, cPath )
+METHOD QDesignerFormWindowInterface:removeResourceFile( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerFormWindowInterface_removeResourceFile( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:resourceFiles()
-   RETURN HB_QStringList():from( Qt_QDesignerFormWindowInterface_resourceFiles( ::pPtr ) )
+METHOD QDesignerFormWindowInterface:resourceFiles( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QDesignerFormWindowInterface_resourceFiles( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:setAuthor( cAuthor )
-   RETURN Qt_QDesignerFormWindowInterface_setAuthor( ::pPtr, cAuthor )
+METHOD QDesignerFormWindowInterface:setAuthor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerFormWindowInterface_setAuthor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:setComment( cComment )
-   RETURN Qt_QDesignerFormWindowInterface_setComment( ::pPtr, cComment )
+METHOD QDesignerFormWindowInterface:setComment( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerFormWindowInterface_setComment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:setContents( ... )
@@ -255,24 +373,64 @@ METHOD QDesignerFormWindowInterface:setContents( ... )
    RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:setExportMacro( cExportMacro )
-   RETURN Qt_QDesignerFormWindowInterface_setExportMacro( ::pPtr, cExportMacro )
+METHOD QDesignerFormWindowInterface:setExportMacro( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerFormWindowInterface_setExportMacro( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:setIncludeHints( pIncludeHints )
-   RETURN Qt_QDesignerFormWindowInterface_setIncludeHints( ::pPtr, hbqt_ptr( pIncludeHints ) )
+METHOD QDesignerFormWindowInterface:setIncludeHints( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerFormWindowInterface_setIncludeHints( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:setLayoutDefault( nMargin, nSpacing )
-   RETURN Qt_QDesignerFormWindowInterface_setLayoutDefault( ::pPtr, nMargin, nSpacing )
+METHOD QDesignerFormWindowInterface:setLayoutDefault( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QDesignerFormWindowInterface_setLayoutDefault( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:setMainContainer( pMainContainer )
-   RETURN Qt_QDesignerFormWindowInterface_setMainContainer( ::pPtr, hbqt_ptr( pMainContainer ) )
+METHOD QDesignerFormWindowInterface:setMainContainer( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerFormWindowInterface_setMainContainer( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:setPixmapFunction( cPixmapFunction )
-   RETURN Qt_QDesignerFormWindowInterface_setPixmapFunction( ::pPtr, cPixmapFunction )
+METHOD QDesignerFormWindowInterface:setPixmapFunction( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerFormWindowInterface_setPixmapFunction( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QDesignerFormWindowInterface:findFormWindow( ... )
@@ -292,34 +450,106 @@ METHOD QDesignerFormWindowInterface:findFormWindow( ... )
    RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:clearSelection( lUpdate )
-   RETURN Qt_QDesignerFormWindowInterface_clearSelection( ::pPtr, lUpdate )
+METHOD QDesignerFormWindowInterface:clearSelection( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerFormWindowInterface_clearSelection( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QDesignerFormWindowInterface_clearSelection( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:manageWidget( pWidget )
-   RETURN Qt_QDesignerFormWindowInterface_manageWidget( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QDesignerFormWindowInterface:manageWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerFormWindowInterface_manageWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:selectWidget( pWidget, lSelect )
-   RETURN Qt_QDesignerFormWindowInterface_selectWidget( ::pPtr, hbqt_ptr( pWidget ), lSelect )
+METHOD QDesignerFormWindowInterface:selectWidget( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QDesignerFormWindowInterface_selectWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerFormWindowInterface_selectWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:setDirty( lDirty )
-   RETURN Qt_QDesignerFormWindowInterface_setDirty( ::pPtr, lDirty )
+METHOD QDesignerFormWindowInterface:setDirty( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerFormWindowInterface_setDirty( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:setFeatures( nFeatures )
-   RETURN Qt_QDesignerFormWindowInterface_setFeatures( ::pPtr, nFeatures )
+METHOD QDesignerFormWindowInterface:setFeatures( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerFormWindowInterface_setFeatures( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:setFileName( cFileName )
-   RETURN Qt_QDesignerFormWindowInterface_setFileName( ::pPtr, cFileName )
+METHOD QDesignerFormWindowInterface:setFileName( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerFormWindowInterface_setFileName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:setGrid( pGrid )
-   RETURN Qt_QDesignerFormWindowInterface_setGrid( ::pPtr, hbqt_ptr( pGrid ) )
+METHOD QDesignerFormWindowInterface:setGrid( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerFormWindowInterface_setGrid( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowInterface:unmanageWidget( pWidget )
-   RETURN Qt_QDesignerFormWindowInterface_unmanageWidget( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QDesignerFormWindowInterface:unmanageWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerFormWindowInterface_unmanageWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

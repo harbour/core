@@ -103,10 +103,10 @@ CREATE CLASS QWebHistoryInterface INHERIT HbQtObjectHandler, HB_QObject FUNCTION
 
    METHOD  new( ... )
 
-   METHOD  addHistoryEntry( cUrl )
-   METHOD  historyContains( cUrl )
-   METHOD  defaultInterface()
-   METHOD  setDefaultInterface( pDefaultInterface )
+   METHOD  addHistoryEntry               // ( cUrl )                                           -> NIL
+   METHOD  historyContains               // ( cUrl )                                           -> lBool
+   METHOD  defaultInterface              // (  )                                               -> oQWebHistoryInterface
+   METHOD  setDefaultInterface           // ( oQWebHistoryInterface )                          -> NIL
 
    ENDCLASS
 
@@ -120,18 +120,46 @@ METHOD QWebHistoryInterface:new( ... )
    RETURN Self
 
 
-METHOD QWebHistoryInterface:addHistoryEntry( cUrl )
-   RETURN Qt_QWebHistoryInterface_addHistoryEntry( ::pPtr, cUrl )
+METHOD QWebHistoryInterface:addHistoryEntry( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QWebHistoryInterface_addHistoryEntry( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHistoryInterface:historyContains( cUrl )
-   RETURN Qt_QWebHistoryInterface_historyContains( ::pPtr, cUrl )
+METHOD QWebHistoryInterface:historyContains( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QWebHistoryInterface_historyContains( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHistoryInterface:defaultInterface()
-   RETURN HB_QWebHistoryInterface():from( Qt_QWebHistoryInterface_defaultInterface( ::pPtr ) )
+METHOD QWebHistoryInterface:defaultInterface( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWebHistoryInterface():from( Qt_QWebHistoryInterface_defaultInterface( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHistoryInterface:setDefaultInterface( pDefaultInterface )
-   RETURN Qt_QWebHistoryInterface_setDefaultInterface( ::pPtr, hbqt_ptr( pDefaultInterface ) )
+METHOD QWebHistoryInterface:setDefaultInterface( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWebHistoryInterface_setDefaultInterface( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

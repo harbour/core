@@ -26,22 +26,22 @@
  *  $RETURNS$
  *     An instance of the object of type QGraphicsLinearLayout
  *  $METHODS$
- *     :addItem( pItem )                                   -> NIL
+ *     :addItem( oQGraphicsLayoutItem )                    -> NIL
  *     :addStretch( nStretch )                             -> NIL
- *     :alignment( pItem )                                 -> nQt::Alignment
- *     :insertItem( nIndex, pItem )                        -> NIL
+ *     :alignment( oQGraphicsLayoutItem )                  -> nQt_Alignment
+ *     :insertItem( nIndex, oQGraphicsLayoutItem )         -> NIL
  *     :insertStretch( nIndex, nStretch )                  -> NIL
  *     :itemSpacing( nIndex )                              -> nQreal
- *     :orientation()                                      -> nQt::Orientation
+ *     :orientation()                                      -> nQt_Orientation
  *     :removeAt( nIndex )                                 -> NIL
- *     :removeItem( pItem )                                -> NIL
- *     :setAlignment( pItem, nAlignment )                  -> NIL
+ *     :removeItem( oQGraphicsLayoutItem )                 -> NIL
+ *     :setAlignment( oQGraphicsLayoutItem, nAlignment )   -> NIL
  *     :setItemSpacing( nIndex, nSpacing )                 -> NIL
  *     :setOrientation( nOrientation )                     -> NIL
  *     :setSpacing( nSpacing )                             -> NIL
- *     :setStretchFactor( pItem, nStretch )                -> NIL
+ *     :setStretchFactor( oQGraphicsLayoutItem, nStretch )  -> NIL
  *     :spacing()                                          -> nQreal
- *     :stretchFactor( pItem )                             -> nInt
+ *     :stretchFactor( oQGraphicsLayoutItem )              -> nInt
  * 
  *  $DESCRIPTION$
  * 
@@ -61,7 +61,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGraphicsLinearLayout.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsLinearLayout.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QGraphicsLayout()
  *  $END$
  */

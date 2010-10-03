@@ -26,13 +26,13 @@
  *  $RETURNS$
  *     An instance of the object of type QMouseEvent
  *  $METHODS$
- *     :button()                                           -> nQt::MouseButton
- *     :buttons()                                          -> nQt::MouseButtons
- *     :globalPos()                                        -> pQPoint
+ *     :button()                                           -> nQt_MouseButton
+ *     :buttons()                                          -> nQt_MouseButtons
+ *     :globalPos()                                        -> oQPoint
  *     :globalX()                                          -> nInt
  *     :globalY()                                          -> nInt
- *     :pos()                                              -> pQPoint
- *     :posF()                                             -> pQPointF
+ *     :pos()                                              -> oQPoint
+ *     :posF()                                             -> oQPointF
  *     :x()                                                -> nInt
  *     :y()                                                -> nInt
  * 
@@ -54,7 +54,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQMouseEvent.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QMouseEvent.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QInputEvent()
  *  $END$
  */

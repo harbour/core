@@ -103,25 +103,25 @@ CREATE CLASS QTextBlockFormat INHERIT HbQtObjectHandler, HB_QTextFormat FUNCTION
 
    METHOD  new( ... )
 
-   METHOD  alignment()
-   METHOD  bottomMargin()
-   METHOD  indent()
-   METHOD  isValid()
-   METHOD  leftMargin()
-   METHOD  nonBreakableLines()
-   METHOD  pageBreakPolicy()
-   METHOD  rightMargin()
-   METHOD  setAlignment( nAlignment )
-   METHOD  setBottomMargin( nMargin )
-   METHOD  setIndent( nIndentation )
-   METHOD  setLeftMargin( nMargin )
-   METHOD  setNonBreakableLines( lB )
-   METHOD  setPageBreakPolicy( nPolicy )
-   METHOD  setRightMargin( nMargin )
-   METHOD  setTextIndent( nIndent )
-   METHOD  setTopMargin( nMargin )
-   METHOD  textIndent()
-   METHOD  topMargin()
+   METHOD  alignment                     // (  )                                               -> nQt_Alignment
+   METHOD  bottomMargin                  // (  )                                               -> nQreal
+   METHOD  indent                        // (  )                                               -> nInt
+   METHOD  isValid                       // (  )                                               -> lBool
+   METHOD  leftMargin                    // (  )                                               -> nQreal
+   METHOD  nonBreakableLines             // (  )                                               -> lBool
+   METHOD  pageBreakPolicy               // (  )                                               -> nPageBreakFlags
+   METHOD  rightMargin                   // (  )                                               -> nQreal
+   METHOD  setAlignment                  // ( nAlignment )                                     -> NIL
+   METHOD  setBottomMargin               // ( nMargin )                                        -> NIL
+   METHOD  setIndent                     // ( nIndentation )                                   -> NIL
+   METHOD  setLeftMargin                 // ( nMargin )                                        -> NIL
+   METHOD  setNonBreakableLines          // ( lB )                                             -> NIL
+   METHOD  setPageBreakPolicy            // ( nPolicy )                                        -> NIL
+   METHOD  setRightMargin                // ( nMargin )                                        -> NIL
+   METHOD  setTextIndent                 // ( nIndent )                                        -> NIL
+   METHOD  setTopMargin                  // ( nMargin )                                        -> NIL
+   METHOD  textIndent                    // (  )                                               -> nQreal
+   METHOD  topMargin                     // (  )                                               -> nQreal
 
    ENDCLASS
 
@@ -135,78 +135,190 @@ METHOD QTextBlockFormat:new( ... )
    RETURN Self
 
 
-METHOD QTextBlockFormat:alignment()
-   RETURN Qt_QTextBlockFormat_alignment( ::pPtr )
+METHOD QTextBlockFormat:alignment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextBlockFormat_alignment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlockFormat:bottomMargin()
-   RETURN Qt_QTextBlockFormat_bottomMargin( ::pPtr )
+METHOD QTextBlockFormat:bottomMargin( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextBlockFormat_bottomMargin( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlockFormat:indent()
-   RETURN Qt_QTextBlockFormat_indent( ::pPtr )
+METHOD QTextBlockFormat:indent( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextBlockFormat_indent( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlockFormat:isValid()
-   RETURN Qt_QTextBlockFormat_isValid( ::pPtr )
+METHOD QTextBlockFormat:isValid( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextBlockFormat_isValid( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlockFormat:leftMargin()
-   RETURN Qt_QTextBlockFormat_leftMargin( ::pPtr )
+METHOD QTextBlockFormat:leftMargin( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextBlockFormat_leftMargin( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlockFormat:nonBreakableLines()
-   RETURN Qt_QTextBlockFormat_nonBreakableLines( ::pPtr )
+METHOD QTextBlockFormat:nonBreakableLines( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextBlockFormat_nonBreakableLines( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlockFormat:pageBreakPolicy()
-   RETURN Qt_QTextBlockFormat_pageBreakPolicy( ::pPtr )
+METHOD QTextBlockFormat:pageBreakPolicy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextBlockFormat_pageBreakPolicy( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlockFormat:rightMargin()
-   RETURN Qt_QTextBlockFormat_rightMargin( ::pPtr )
+METHOD QTextBlockFormat:rightMargin( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextBlockFormat_rightMargin( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlockFormat:setAlignment( nAlignment )
-   RETURN Qt_QTextBlockFormat_setAlignment( ::pPtr, nAlignment )
+METHOD QTextBlockFormat:setAlignment( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextBlockFormat_setAlignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlockFormat:setBottomMargin( nMargin )
-   RETURN Qt_QTextBlockFormat_setBottomMargin( ::pPtr, nMargin )
+METHOD QTextBlockFormat:setBottomMargin( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextBlockFormat_setBottomMargin( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlockFormat:setIndent( nIndentation )
-   RETURN Qt_QTextBlockFormat_setIndent( ::pPtr, nIndentation )
+METHOD QTextBlockFormat:setIndent( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextBlockFormat_setIndent( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlockFormat:setLeftMargin( nMargin )
-   RETURN Qt_QTextBlockFormat_setLeftMargin( ::pPtr, nMargin )
+METHOD QTextBlockFormat:setLeftMargin( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextBlockFormat_setLeftMargin( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlockFormat:setNonBreakableLines( lB )
-   RETURN Qt_QTextBlockFormat_setNonBreakableLines( ::pPtr, lB )
+METHOD QTextBlockFormat:setNonBreakableLines( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTextBlockFormat_setNonBreakableLines( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlockFormat:setPageBreakPolicy( nPolicy )
-   RETURN Qt_QTextBlockFormat_setPageBreakPolicy( ::pPtr, nPolicy )
+METHOD QTextBlockFormat:setPageBreakPolicy( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextBlockFormat_setPageBreakPolicy( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlockFormat:setRightMargin( nMargin )
-   RETURN Qt_QTextBlockFormat_setRightMargin( ::pPtr, nMargin )
+METHOD QTextBlockFormat:setRightMargin( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextBlockFormat_setRightMargin( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlockFormat:setTextIndent( nIndent )
-   RETURN Qt_QTextBlockFormat_setTextIndent( ::pPtr, nIndent )
+METHOD QTextBlockFormat:setTextIndent( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextBlockFormat_setTextIndent( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlockFormat:setTopMargin( nMargin )
-   RETURN Qt_QTextBlockFormat_setTopMargin( ::pPtr, nMargin )
+METHOD QTextBlockFormat:setTopMargin( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextBlockFormat_setTopMargin( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlockFormat:textIndent()
-   RETURN Qt_QTextBlockFormat_textIndent( ::pPtr )
+METHOD QTextBlockFormat:textIndent( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextBlockFormat_textIndent( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlockFormat:topMargin()
-   RETURN Qt_QTextBlockFormat_topMargin( ::pPtr )
+METHOD QTextBlockFormat:topMargin( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextBlockFormat_topMargin( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

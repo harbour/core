@@ -26,11 +26,11 @@
  *  $RETURNS$
  *     An instance of the object of type QBuffer
  *  $METHODS$
- *     :buffer()                                           -> pQByteArray
- *     :data()                                             -> pQByteArray
- *     :setBuffer( pByteArray )                            -> NIL
- *     :setData( pData, nSize )                            -> NIL
- *     :setData_1( pData )                                 -> NIL
+ *     :buffer()                                           -> oQByteArray
+ *     :data()                                             -> oQByteArray
+ *     :setBuffer( oQByteArray )                           -> NIL
+ *     :setData( cData, nSize )                            -> NIL
+ *     :setData( oQByteArray )                             -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -50,7 +50,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQBuffer.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QBuffer.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     QIODevice()
  *  $END$
  */

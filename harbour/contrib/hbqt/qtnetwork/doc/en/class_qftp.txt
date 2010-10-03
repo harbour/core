@@ -32,19 +32,19 @@
  *     :close()                                            -> nInt
  *     :connectToHost( cHost, nPort )                      -> nInt
  *     :currentCommand()                                   -> nCommand
- *     :currentDevice()                                    -> pQIODevice
+ *     :currentDevice()                                    -> oQIODevice
  *     :currentId()                                        -> nInt
  *     :error()                                            -> nError
  *     :errorString()                                      -> cQString
- *     :get( cFile, pDev, nType )                          -> nInt
+ *     :get( cFile, oQIODevice, nType )                    -> nInt
  *     :hasPendingCommands()                               -> lBool
  *     :list( cDir )                                       -> nInt
  *     :login( cUser, cPassword )                          -> nInt
  *     :mkdir( cDir )                                      -> nInt
- *     :put( pDev, cFile, nType )                          -> nInt
- *     :put_1( pData, cFile, nType )                       -> nInt
+ *     :put( oQIODevice, cFile, nType )                    -> nInt
+ *     :put( oQByteArray, cFile, nType )                   -> nInt
  *     :rawCommand( cCommand )                             -> nInt
- *     :readAll()                                          -> pQByteArray
+ *     :readAll()                                          -> oQByteArray
  *     :remove( cFile )                                    -> nInt
  *     :rename( cOldname, cNewname )                       -> nInt
  *     :rmdir( cDir )                                      -> nInt
@@ -71,7 +71,5 @@
  *     Harbour source: contrib/hbqt/qtnetwork/TQFtp.prg
  *     C++ wrappers  : contrib/hbqt/qtnetwork/QFtp.cpp
  *     Library       : hbqtnetwork
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

@@ -26,7 +26,7 @@
  *  $RETURNS$
  *     An instance of the object of type QTextBlockFormat
  *  $METHODS$
- *     :alignment()                                        -> nQt::Alignment
+ *     :alignment()                                        -> nQt_Alignment
  *     :bottomMargin()                                     -> nQreal
  *     :indent()                                           -> nInt
  *     :isValid()                                          -> lBool
@@ -64,7 +64,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTextBlockFormat.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextBlockFormat.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QTextFormat()
  *  $END$
  */

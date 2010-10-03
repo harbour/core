@@ -26,8 +26,8 @@
  *  $RETURNS$
  *     An instance of the object of type QGraphicsSceneHelpEvent
  *  $METHODS$
- *     :scenePos()                                         -> pQPointF
- *     :screenPos()                                        -> pQPoint
+ *     :scenePos()                                         -> oQPointF
+ *     :screenPos()                                        -> oQPoint
  * 
  *  $DESCRIPTION$
  * 
@@ -47,7 +47,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGraphicsSceneHelpEvent.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsSceneHelpEvent.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QGraphicsSceneEvent()
  *  $END$
  */

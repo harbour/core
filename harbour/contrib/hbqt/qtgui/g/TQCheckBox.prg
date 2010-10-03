@@ -103,10 +103,10 @@ CREATE CLASS QCheckBox INHERIT HbQtObjectHandler, HB_QAbstractButton FUNCTION HB
 
    METHOD  new( ... )
 
-   METHOD  checkState()
-   METHOD  isTristate()
-   METHOD  setCheckState( nState )
-   METHOD  setTristate( lY )
+   METHOD  checkState                    // (  )                                               -> nQt_CheckState
+   METHOD  isTristate                    // (  )                                               -> lBool
+   METHOD  setCheckState                 // ( nState )                                         -> NIL
+   METHOD  setTristate                   // ( lY )                                             -> NIL
 
    ENDCLASS
 
@@ -120,18 +120,44 @@ METHOD QCheckBox:new( ... )
    RETURN Self
 
 
-METHOD QCheckBox:checkState()
-   RETURN Qt_QCheckBox_checkState( ::pPtr )
+METHOD QCheckBox:checkState( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCheckBox_checkState( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCheckBox:isTristate()
-   RETURN Qt_QCheckBox_isTristate( ::pPtr )
+METHOD QCheckBox:isTristate( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QCheckBox_isTristate( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCheckBox:setCheckState( nState )
-   RETURN Qt_QCheckBox_setCheckState( ::pPtr, nState )
+METHOD QCheckBox:setCheckState( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QCheckBox_setCheckState( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QCheckBox:setTristate( lY )
-   RETURN Qt_QCheckBox_setTristate( ::pPtr, lY )
+METHOD QCheckBox:setTristate( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QCheckBox_setTristate( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QCheckBox_setTristate( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

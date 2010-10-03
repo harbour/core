@@ -871,7 +871,9 @@ METHOD IdeBrowseManager:loadTables()
       ENDIF
    NEXT
 
-   ::qStack:setCurrentWidget( oCurPanel )
+   IF hb_isObject( oCurPanel )
+      ::qStack:setCurrentWidget( oCurPanel )
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/

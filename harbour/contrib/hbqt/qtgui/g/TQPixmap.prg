@@ -103,37 +103,46 @@ CREATE CLASS QPixmap INHERIT HbQtObjectHandler, HB_QPaintDevice FUNCTION HB_QPix
 
    METHOD  new( ... )
 
-   METHOD  alphaChannel()
-   METHOD  cacheKey()
-   METHOD  copy( ... )
-   METHOD  createHeuristicMask( lClipTight )
-   METHOD  createMaskFromColor( ... )
-   METHOD  depth()
-   METHOD  detach()
-   METHOD  fill( ... )
-   METHOD  hasAlpha()
-   METHOD  hasAlphaChannel()
-   METHOD  height()
-   METHOD  isNull()
-   METHOD  isQBitmap()
-   METHOD  load( cFileName, pFormat, nFlags )
-   METHOD  loadFromData( pData, pFormat, nFlags )
-   METHOD  mask()
-   METHOD  rect()
-   METHOD  save( ... )
-   METHOD  scaled( ... )
-   METHOD  scaledToHeight( nHeight, nMode )
-   METHOD  scaledToWidth( nWidth, nMode )
-   METHOD  setAlphaChannel( pAlphaChannel )
-   METHOD  setMask( pMask )
-   METHOD  size()
-   METHOD  toImage()
-   METHOD  transformed( ... )
-   METHOD  width()
-   METHOD  defaultDepth()
-   METHOD  fromImage( pImage, nFlags )
-   METHOD  grabWidget( ... )
-   METHOD  trueMatrix( ... )
+   METHOD  alphaChannel                  // (  )                                               -> oQPixmap
+   METHOD  cacheKey                      // (  )                                               -> nQint64
+   METHOD  copy                          // ( oQRect )                                         -> oQPixmap
+                                         // ( nX, nY, nWidth, nHeight )                        -> oQPixmap
+   METHOD  createHeuristicMask           // ( lClipTight )                                     -> oQBitmap
+   METHOD  createMaskFromColor           // ( oQColor, nMode )                                 -> oQBitmap
+                                         // ( oQColor )                                        -> oQBitmap
+   METHOD  depth                         // (  )                                               -> nInt
+   METHOD  detach                        // (  )                                               -> NIL
+   METHOD  fill                          // ( oQColor )                                        -> NIL
+                                         // ( oQWidget, oQPoint )                              -> NIL
+                                         // ( oQWidget, nX, nY )                               -> NIL
+   METHOD  hasAlpha                      // (  )                                               -> lBool
+   METHOD  hasAlphaChannel               // (  )                                               -> lBool
+   METHOD  height                        // (  )                                               -> nInt
+   METHOD  isNull                        // (  )                                               -> lBool
+   METHOD  isQBitmap                     // (  )                                               -> lBool
+   METHOD  load                          // ( cFileName, cFormat, nFlags )                     -> lBool
+   METHOD  loadFromData                  // ( oQByteArray, cFormat, nFlags )                   -> lBool
+   METHOD  mask                          // (  )                                               -> oQBitmap
+   METHOD  rect                          // (  )                                               -> oQRect
+   METHOD  save                          // ( cFileName, cFormat, nQuality )                   -> lBool
+                                         // ( oQIODevice, cFormat, nQuality )                  -> lBool
+   METHOD  scaled                        // ( nWidth, nHeight, nAspectRatioMode, nTransformMode ) -> oQPixmap
+                                         // ( oQSize, nAspectRatioMode, nTransformMode )       -> oQPixmap
+   METHOD  scaledToHeight                // ( nHeight, nMode )                                 -> oQPixmap
+   METHOD  scaledToWidth                 // ( nWidth, nMode )                                  -> oQPixmap
+   METHOD  setAlphaChannel               // ( oQPixmap )                                       -> NIL
+   METHOD  setMask                       // ( oQBitmap )                                       -> NIL
+   METHOD  size                          // (  )                                               -> oQSize
+   METHOD  toImage                       // (  )                                               -> oQImage
+   METHOD  transformed                   // ( oQTransform, nMode )                             -> oQPixmap
+                                         // ( oQMatrix, nMode )                                -> oQPixmap
+   METHOD  width                         // (  )                                               -> nInt
+   METHOD  defaultDepth                  // (  )                                               -> nInt
+   METHOD  fromImage                     // ( oQImage, nFlags )                                -> oQPixmap
+   METHOD  grabWidget                    // ( oQWidget, oQRect )                               -> oQPixmap
+                                         // ( oQWidget, nX, nY, nWidth, nHeight )              -> oQPixmap
+   METHOD  trueMatrix                    // ( oQTransform, nWidth, nHeight )                   -> oQTransform
+                                         // ( oQMatrix, nW, nH )                               -> oQMatrix
 
    ENDCLASS
 
@@ -147,12 +156,20 @@ METHOD QPixmap:new( ... )
    RETURN Self
 
 
-METHOD QPixmap:alphaChannel()
-   RETURN HB_QPixmap():from( Qt_QPixmap_alphaChannel( ::pPtr ) )
+METHOD QPixmap:alphaChannel( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPixmap():from( Qt_QPixmap_alphaChannel( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPixmap:cacheKey()
-   RETURN Qt_QPixmap_cacheKey( ::pPtr )
+METHOD QPixmap:cacheKey( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPixmap_cacheKey( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPixmap:copy( ... )
@@ -175,8 +192,18 @@ METHOD QPixmap:copy( ... )
    RETURN hbqt_error()
 
 
-METHOD QPixmap:createHeuristicMask( lClipTight )
-   RETURN HB_QBitmap():from( Qt_QPixmap_createHeuristicMask( ::pPtr, lClipTight ) )
+METHOD QPixmap:createHeuristicMask( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN HB_QBitmap():from( Qt_QPixmap_createHeuristicMask( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QBitmap():from( Qt_QPixmap_createHeuristicMask( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPixmap:createMaskFromColor( ... )
@@ -197,12 +224,20 @@ METHOD QPixmap:createMaskFromColor( ... )
    RETURN hbqt_error()
 
 
-METHOD QPixmap:depth()
-   RETURN Qt_QPixmap_depth( ::pPtr )
+METHOD QPixmap:depth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPixmap_depth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPixmap:detach()
-   RETURN Qt_QPixmap_detach( ::pPtr )
+METHOD QPixmap:detach( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPixmap_detach( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPixmap:fill( ... )
@@ -231,49 +266,125 @@ METHOD QPixmap:fill( ... )
    RETURN hbqt_error()
 
 
-METHOD QPixmap:hasAlpha()
-   RETURN Qt_QPixmap_hasAlpha( ::pPtr )
+METHOD QPixmap:hasAlpha( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPixmap_hasAlpha( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPixmap:hasAlphaChannel()
-   RETURN Qt_QPixmap_hasAlphaChannel( ::pPtr )
+METHOD QPixmap:hasAlphaChannel( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPixmap_hasAlphaChannel( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPixmap:height()
-   RETURN Qt_QPixmap_height( ::pPtr )
+METHOD QPixmap:height( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPixmap_height( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPixmap:isNull()
-   RETURN Qt_QPixmap_isNull( ::pPtr )
+METHOD QPixmap:isNull( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPixmap_isNull( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPixmap:isQBitmap()
-   RETURN Qt_QPixmap_isQBitmap( ::pPtr )
+METHOD QPixmap:isQBitmap( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPixmap_isQBitmap( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPixmap:load( cFileName, pFormat, nFlags )
-   RETURN Qt_QPixmap_load( ::pPtr, cFileName, hbqt_ptr( pFormat ), nFlags )
+METHOD QPixmap:load( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QPixmap_load( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QPixmap_load( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QPixmap_load( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPixmap:loadFromData( pData, pFormat, nFlags )
-   RETURN Qt_QPixmap_loadFromData( ::pPtr, hbqt_ptr( pData ), hbqt_ptr( pFormat ), nFlags )
+METHOD QPixmap:loadFromData( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QPixmap_loadFromData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QPixmap_loadFromData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPixmap_loadFromData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPixmap:mask()
-   RETURN HB_QBitmap():from( Qt_QPixmap_mask( ::pPtr ) )
+METHOD QPixmap:mask( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBitmap():from( Qt_QPixmap_mask( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPixmap:rect()
-   RETURN HB_QRect():from( Qt_QPixmap_rect( ::pPtr ) )
+METHOD QPixmap:rect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QPixmap_rect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPixmap:save( ... )
    SWITCH PCount()
    CASE 3
       DO CASE
-      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
          RETURN Qt_QPixmap_save( ::pPtr, ... )
-      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QPixmap_save_1( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QPixmap_save( ::pPtr, ... )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
          RETURN Qt_QPixmap_save_1( ::pPtr, ... )
       ENDCASE
       EXIT
@@ -299,6 +410,8 @@ METHOD QPixmap:scaled( ... )
       EXIT
    CASE 3
       DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN HB_QPixmap():from( Qt_QPixmap_scaled( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
          RETURN HB_QPixmap():from( Qt_QPixmap_scaled_1( ::pPtr, ... ) )
       ENDCASE
@@ -307,6 +420,8 @@ METHOD QPixmap:scaled( ... )
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN HB_QPixmap():from( Qt_QPixmap_scaled( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QPixmap():from( Qt_QPixmap_scaled_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
@@ -319,28 +434,80 @@ METHOD QPixmap:scaled( ... )
    RETURN hbqt_error()
 
 
-METHOD QPixmap:scaledToHeight( nHeight, nMode )
-   RETURN HB_QPixmap():from( Qt_QPixmap_scaledToHeight( ::pPtr, nHeight, nMode ) )
+METHOD QPixmap:scaledToHeight( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QPixmap():from( Qt_QPixmap_scaledToHeight( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QPixmap():from( Qt_QPixmap_scaledToHeight( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPixmap:scaledToWidth( nWidth, nMode )
-   RETURN HB_QPixmap():from( Qt_QPixmap_scaledToWidth( ::pPtr, nWidth, nMode ) )
+METHOD QPixmap:scaledToWidth( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QPixmap():from( Qt_QPixmap_scaledToWidth( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QPixmap():from( Qt_QPixmap_scaledToWidth( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPixmap:setAlphaChannel( pAlphaChannel )
-   RETURN Qt_QPixmap_setAlphaChannel( ::pPtr, hbqt_ptr( pAlphaChannel ) )
+METHOD QPixmap:setAlphaChannel( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPixmap_setAlphaChannel( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPixmap:setMask( pMask )
-   RETURN Qt_QPixmap_setMask( ::pPtr, hbqt_ptr( pMask ) )
+METHOD QPixmap:setMask( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPixmap_setMask( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPixmap:size()
-   RETURN HB_QSize():from( Qt_QPixmap_size( ::pPtr ) )
+METHOD QPixmap:size( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QPixmap_size( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPixmap:toImage()
-   RETURN HB_QImage():from( Qt_QPixmap_toImage( ::pPtr ) )
+METHOD QPixmap:toImage( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QImage():from( Qt_QPixmap_toImage( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPixmap:transformed( ... )
@@ -371,16 +538,38 @@ METHOD QPixmap:transformed( ... )
    RETURN hbqt_error()
 
 
-METHOD QPixmap:width()
-   RETURN Qt_QPixmap_width( ::pPtr )
+METHOD QPixmap:width( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPixmap_width( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPixmap:defaultDepth()
-   RETURN Qt_QPixmap_defaultDepth( ::pPtr )
+METHOD QPixmap:defaultDepth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPixmap_defaultDepth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPixmap:fromImage( pImage, nFlags )
-   RETURN HB_QPixmap():from( Qt_QPixmap_fromImage( ::pPtr, hbqt_ptr( pImage ), nFlags ) )
+METHOD QPixmap:fromImage( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QPixmap():from( Qt_QPixmap_fromImage( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QPixmap():from( Qt_QPixmap_fromImage( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPixmap:grabWidget( ... )
@@ -391,8 +580,22 @@ METHOD QPixmap:grabWidget( ... )
          RETURN HB_QPixmap():from( Qt_QPixmap_grabWidget_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
+   CASE 4
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN HB_QPixmap():from( Qt_QPixmap_grabWidget_1( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN HB_QPixmap():from( Qt_QPixmap_grabWidget_1( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
    CASE 2
       DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QPixmap():from( Qt_QPixmap_grabWidget_1( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
          RETURN HB_QPixmap():from( Qt_QPixmap_grabWidget( ::pPtr, ... ) )
       ENDCASE

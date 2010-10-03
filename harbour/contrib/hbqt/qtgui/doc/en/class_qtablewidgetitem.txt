@@ -26,40 +26,41 @@
  *  $RETURNS$
  *     An instance of the object of type QTableWidgetItem
  *  $METHODS$
- *     :background()                                       -> pQBrush
- *     :checkState()                                       -> nQt::CheckState
+ *     :background()                                       -> oQBrush
+ *     :checkState()                                       -> nQt_CheckState
+ *     :clone()                                            -> oQTableWidgetItem
  *     :column()                                           -> nInt
- *     :data( nRole )                                      -> pQVariant
- *     :flags()                                            -> nQt::ItemFlags
- *     :font()                                             -> pQFont
- *     :foreground()                                       -> pQBrush
- *     :icon()                                             -> pQIcon
+ *     :data( nRole )                                      -> oQVariant
+ *     :flags()                                            -> nQt_ItemFlags
+ *     :font()                                             -> oQFont
+ *     :foreground()                                       -> oQBrush
+ *     :icon()                                             -> oQIcon
  *     :isSelected()                                       -> lBool
- *     :read( pIn )                                        -> NIL
+ *     :read( oQDataStream )                               -> NIL
  *     :row()                                              -> nInt
- *     :setBackground( pBrush )                            -> NIL
+ *     :setBackground( oQBrush )                           -> NIL
  *     :setCheckState( nState )                            -> NIL
- *     :setData( nRole, pValue )                           -> NIL
+ *     :setData( nRole, oQVariant )                        -> NIL
  *     :setFlags( nFlags )                                 -> NIL
- *     :setFont( pFont )                                   -> NIL
- *     :setForeground( pBrush )                            -> NIL
- *     :setIcon( pIcon )                                   -> NIL
+ *     :setFont( oQFont )                                  -> NIL
+ *     :setForeground( oQBrush )                           -> NIL
+ *     :setIcon( coQIcon )                                 -> NIL
  *     :setSelected( lSelect )                             -> NIL
- *     :setSizeHint( pSize )                               -> NIL
+ *     :setSizeHint( oQSize )                              -> NIL
  *     :setStatusTip( cStatusTip )                         -> NIL
  *     :setText( cText )                                   -> NIL
  *     :setTextAlignment( nAlignment )                     -> NIL
  *     :setToolTip( cToolTip )                             -> NIL
  *     :setWhatsThis( cWhatsThis )                         -> NIL
- *     :sizeHint()                                         -> pQSize
+ *     :sizeHint()                                         -> oQSize
  *     :statusTip()                                        -> cQString
- *     :tableWidget()                                      -> pQTableWidget
+ *     :tableWidget()                                      -> oQTableWidget
  *     :text()                                             -> cQString
  *     :textAlignment()                                    -> nInt
  *     :toolTip()                                          -> cQString
  *     :type()                                             -> nInt
  *     :whatsThis()                                        -> cQString
- *     :write( pOut )                                      -> NIL
+ *     :write( oQDataStream )                              -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -79,7 +80,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTableWidgetItem.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTableWidgetItem.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

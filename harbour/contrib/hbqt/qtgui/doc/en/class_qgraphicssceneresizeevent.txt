@@ -26,8 +26,8 @@
  *  $RETURNS$
  *     An instance of the object of type QGraphicsSceneResizeEvent
  *  $METHODS$
- *     :newSize()                                          -> pQSizeF
- *     :oldSize()                                          -> pQSizeF
+ *     :newSize()                                          -> oQSizeF
+ *     :oldSize()                                          -> oQSizeF
  * 
  *  $DESCRIPTION$
  * 
@@ -47,7 +47,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGraphicsSceneResizeEvent.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsSceneResizeEvent.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QGraphicsSceneEvent()
  *  $END$
  */

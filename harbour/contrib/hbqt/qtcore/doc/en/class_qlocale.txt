@@ -31,54 +31,56 @@
  *     :dateFormat( nFormat )                              -> cQString
  *     :dateTimeFormat( nFormat )                          -> cQString
  *     :dayName( nDay, nType )                             -> cQString
- *     :decimalPoint()                                     -> pQChar
- *     :exponential()                                      -> pQChar
- *     :groupSeparator()                                   -> pQChar
+ *     :decimalPoint()                                     -> oQChar
+ *     :exponential()                                      -> oQChar
+ *     :groupSeparator()                                   -> oQChar
  *     :language()                                         -> nLanguage
  *     :measurementSystem()                                -> nMeasurementSystem
  *     :monthName( nMonth, nType )                         -> cQString
  *     :name()                                             -> cQString
- *     :negativeSign()                                     -> pQChar
+ *     :negativeSign()                                     -> oQChar
  *     :numberOptions()                                    -> nNumberOptions
- *     :percent()                                          -> pQChar
+ *     :percent()                                          -> oQChar
  *     :pmText()                                           -> cQString
- *     :positiveSign()                                     -> pQChar
+ *     :positiveSign()                                     -> oQChar
  *     :setNumberOptions( nOptions )                       -> NIL
  *     :standaloneDayName( nDay, nType )                   -> cQString
  *     :standaloneMonthName( nMonth, nType )               -> cQString
  *     :timeFormat( nFormat )                              -> cQString
- *     :toDate( cString, nFormat )                         -> pQDate
- *     :toDate_1( cString, cFormat )                       -> pQDate
- *     :toDateTime( cString, nFormat )                     -> pQDateTime
- *     :toDateTime_1( cString, cFormat )                   -> pQDateTime
+ *     :toDate( cString, nFormat )                         -> oQDate
+ *     :toDate( cString, cFormat )                         -> oQDate
+ *     :toDateTime( cString, nFormat )                     -> oQDateTime
+ *     :toDateTime( cString, cFormat )                     -> oQDateTime
  *     :toDouble( cS, @lOk )                               -> nDouble
  *     :toFloat( cS, @lOk )                                -> nFloat
  *     :toInt( cS, @lOk, nBase )                           -> nInt
  *     :toLongLong( cS, @lOk, nBase )                      -> nQlonglong
  *     :toShort( cS, @lOk, nBase )                         -> nShort
  *     :toString( nI )                                     -> cQString
- *     :toString_1( pDate, cFormat )                       -> cQString
- *     :toString_2( pDate, nFormat )                       -> cQString
- *     :toString_3( pTime, cFormat )                       -> cQString
- *     :toString_4( pTime, nFormat )                       -> cQString
- *     :toString_5( pDateTime, nFormat )                   -> cQString
- *     :toString_6( pDateTime, cFormat )                   -> cQString
- *     :toString_7( nI )                                   -> cQString
- *     :toString_8( nI, cF, nPrec )                        -> cQString
- *     :toString_9( nI )                                   -> cQString
- *     :toString_10( nI )                                  -> cQString
- *     :toString_11( nI )                                  -> cQString
- *     :toString_12( nI )                                  -> cQString
- *     :toString_13( nI, cF, nPrec )                       -> cQString
- *     :toTime( cString, nFormat )                         -> pQTime
- *     :toTime_1( cString, cFormat )                       -> pQTime
+ *     :toString( oQDate, cFormat )                        -> cQString
+ *     :toString( oQDate, nFormat )                        -> cQString
+ *     :toString( oQTime, cFormat )                        -> cQString
+ *     :toString( oQTime, nFormat )                        -> cQString
+ *     :toString( oQDateTime, nFormat )                    -> cQString
+ *     :toString( oQDateTime, cFormat )                    -> cQString
+ *     :toString( nI )                                     -> cQString
+ *     :toString( nI, nF, nPrec )                          -> cQString
+ *     :toString( nI )                                     -> cQString
+ *     :toString( nI )                                     -> cQString
+ *     :toString( nI )                                     -> cQString
+ *     :toString( nI )                                     -> cQString
+ *     :toString( nI, nF, nPrec )                          -> cQString
+ *     :toTime( cString, nFormat )                         -> oQTime
+ *     :toTime( cString, cFormat )                         -> oQTime
  *     :toUInt( cS, @lOk, nBase )                          -> nUint
  *     :toULongLong( cS, @lOk, nBase )                     -> nQlonglong
  *     :toUShort( cS, @lOk, nBase )                        -> nUshort
- *     :zeroDigit()                                        -> pQChar
+ *     :zeroDigit()                                        -> oQChar
+ *     :c()                                                -> oQLocale
  *     :countryToString( nCountry )                        -> cQString
  *     :languageToString( nLanguage )                      -> cQString
- *     :setDefault( pLocale )                              -> NIL
+ *     :setDefault( oQLocale )                             -> NIL
+ *     :system()                                           -> oQLocale
  * 
  *  $DESCRIPTION$
  * 
@@ -98,7 +100,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQLocale.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QLocale.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

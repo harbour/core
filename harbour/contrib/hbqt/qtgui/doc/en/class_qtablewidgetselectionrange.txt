@@ -51,7 +51,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTableWidgetSelectionRange.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTableWidgetSelectionRange.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

@@ -86,11 +86,11 @@ enum Type { Void, Bool, Int, UInt, ..., User }
 </ENUMS>
 
 <PROTOS>
-void * construct ( int type, const void * copy = 0 )
-void destroy ( int type, void * data )
+//void * construct ( int type, const void * copy = 0 )
+//void destroy ( int type, void * data )
 bool isRegistered ( int type )
-bool load ( QDataStream & stream, int type, void * data )
-bool save ( QDataStream & stream, int type, const void * data )
+//bool load ( QDataStream & stream, int type, void * data )
+//bool save ( QDataStream & stream, int type, const void * data )
 int type ( const char * typeName )
 const char * typeName ( int type )
 void unregisterType ( const char * typeName )

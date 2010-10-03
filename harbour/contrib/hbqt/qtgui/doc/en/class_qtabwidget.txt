@@ -26,29 +26,29 @@
  *  $RETURNS$
  *     An instance of the object of type QTabWidget
  *  $METHODS$
- *     :addTab( pPage, cLabel )                            -> nInt
- *     :addTab_1( pPage, pIcon, cLabel )                   -> nInt
+ *     :addTab( oQWidget, cLabel )                         -> nInt
+ *     :addTab( oQWidget, coQIcon, cLabel )                -> nInt
  *     :clear()                                            -> NIL
- *     :cornerWidget( nCorner )                            -> pQWidget
+ *     :cornerWidget( nCorner )                            -> oQWidget
  *     :count()                                            -> nInt
  *     :currentIndex()                                     -> nInt
- *     :currentWidget()                                    -> pQWidget
+ *     :currentWidget()                                    -> oQWidget
  *     :documentMode()                                     -> lBool
- *     :elideMode()                                        -> nQt::TextElideMode
- *     :iconSize()                                         -> pQSize
- *     :indexOf( pW )                                      -> nInt
- *     :insertTab( nIndex, pPage, cLabel )                 -> nInt
- *     :insertTab_1( nIndex, pPage, pIcon, cLabel )        -> nInt
+ *     :elideMode()                                        -> nQt_TextElideMode
+ *     :iconSize()                                         -> oQSize
+ *     :indexOf( oQWidget )                                -> nInt
+ *     :insertTab( nIndex, oQWidget, cLabel )              -> nInt
+ *     :insertTab( nIndex, oQWidget, coQIcon, cLabel )     -> nInt
  *     :isMovable()                                        -> lBool
  *     :isTabEnabled( nIndex )                             -> lBool
  *     :removeTab( nIndex )                                -> NIL
- *     :setCornerWidget( pWidget, nCorner )                -> NIL
+ *     :setCornerWidget( oQWidget, nCorner )               -> NIL
  *     :setDocumentMode( lSet )                            -> NIL
  *     :setElideMode( nQt::TextElideMode )                 -> NIL
- *     :setIconSize( pSize )                               -> NIL
+ *     :setIconSize( oQSize )                              -> NIL
  *     :setMovable( lMovable )                             -> NIL
  *     :setTabEnabled( nIndex, lEnable )                   -> NIL
- *     :setTabIcon( nIndex, pIcon )                        -> NIL
+ *     :setTabIcon( nIndex, coQIcon )                      -> NIL
  *     :setTabPosition( nTabPosition )                     -> NIL
  *     :setTabShape( nS )                                  -> NIL
  *     :setTabText( nIndex, cLabel )                       -> NIL
@@ -56,7 +56,7 @@
  *     :setTabWhatsThis( nIndex, cText )                   -> NIL
  *     :setTabsClosable( lCloseable )                      -> NIL
  *     :setUsesScrollButtons( lUseButtons )                -> NIL
- *     :tabIcon( nIndex )                                  -> pQIcon
+ *     :tabIcon( nIndex )                                  -> oQIcon
  *     :tabPosition()                                      -> nTabPosition
  *     :tabShape()                                         -> nTabShape
  *     :tabText( nIndex )                                  -> cQString
@@ -64,9 +64,9 @@
  *     :tabWhatsThis( nIndex )                             -> cQString
  *     :tabsClosable()                                     -> lBool
  *     :usesScrollButtons()                                -> lBool
- *     :widget( nIndex )                                   -> pQWidget
+ *     :widget( nIndex )                                   -> oQWidget
  *     :setCurrentIndex( nIndex )                          -> NIL
- *     :setCurrentWidget( pWidget )                        -> NIL
+ *     :setCurrentWidget( oQWidget )                       -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -86,7 +86,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTabWidget.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTabWidget.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

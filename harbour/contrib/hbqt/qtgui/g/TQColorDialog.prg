@@ -103,20 +103,21 @@ CREATE CLASS QColorDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QCol
 
    METHOD  new( ... )
 
-   METHOD  currentColor()
-   METHOD  open()
-   METHOD  options()
-   METHOD  selectedColor()
-   METHOD  setCurrentColor( pColor )
-   METHOD  setOption( nOption, lOn )
-   METHOD  setOptions( nOptions )
-   METHOD  setVisible( lVisible )
-   METHOD  testOption( nOption )
-   METHOD  customColor( nIndex )
-   METHOD  customCount()
-   METHOD  getColor( ... )
-   METHOD  setCustomColor( nIndex, nColor )
-   METHOD  setStandardColor( nIndex, nColor )
+   METHOD  currentColor                  // (  )                                               -> oQColor
+   METHOD  open                          // (  )                                               -> NIL
+   METHOD  options                       // (  )                                               -> nColorDialogOptions
+   METHOD  selectedColor                 // (  )                                               -> oQColor
+   METHOD  setCurrentColor               // ( oQColor )                                        -> NIL
+   METHOD  setOption                     // ( nOption, lOn )                                   -> NIL
+   METHOD  setOptions                    // ( nOptions )                                       -> NIL
+   METHOD  setVisible                    // ( lVisible )                                       -> NIL
+   METHOD  testOption                    // ( nOption )                                        -> lBool
+   METHOD  customColor                   // ( nIndex )                                         -> nQRgb
+   METHOD  customCount                   // (  )                                               -> nInt
+   METHOD  getColor                      // ( oQColor, oQWidget, cTitle, nOptions )            -> oQColor
+                                         // ( oQColor, oQWidget )                              -> oQColor
+   METHOD  setCustomColor                // ( nIndex, nColor )                                 -> NIL
+   METHOD  setStandardColor              // ( nIndex, nColor )                                 -> NIL
 
    ENDCLASS
 
@@ -130,48 +131,122 @@ METHOD QColorDialog:new( ... )
    RETURN Self
 
 
-METHOD QColorDialog:currentColor()
-   RETURN HB_QColor():from( Qt_QColorDialog_currentColor( ::pPtr ) )
+METHOD QColorDialog:currentColor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QColor():from( Qt_QColorDialog_currentColor( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QColorDialog:open()
-   RETURN Qt_QColorDialog_open( ::pPtr )
+METHOD QColorDialog:open( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColorDialog_open( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QColorDialog:options()
-   RETURN Qt_QColorDialog_options( ::pPtr )
+METHOD QColorDialog:options( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColorDialog_options( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QColorDialog:selectedColor()
-   RETURN HB_QColor():from( Qt_QColorDialog_selectedColor( ::pPtr ) )
+METHOD QColorDialog:selectedColor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QColor():from( Qt_QColorDialog_selectedColor( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QColorDialog:setCurrentColor( pColor )
-   RETURN Qt_QColorDialog_setCurrentColor( ::pPtr, hbqt_ptr( pColor ) )
+METHOD QColorDialog:setCurrentColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QColorDialog_setCurrentColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QColorDialog:setOption( nOption, lOn )
-   RETURN Qt_QColorDialog_setOption( ::pPtr, nOption, lOn )
+METHOD QColorDialog:setOption( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QColorDialog_setOption( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QColorDialog_setOption( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QColorDialog:setOptions( nOptions )
-   RETURN Qt_QColorDialog_setOptions( ::pPtr, nOptions )
+METHOD QColorDialog:setOptions( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QColorDialog_setOptions( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QColorDialog:setVisible( lVisible )
-   RETURN Qt_QColorDialog_setVisible( ::pPtr, lVisible )
+METHOD QColorDialog:setVisible( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QColorDialog_setVisible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QColorDialog:testOption( nOption )
-   RETURN Qt_QColorDialog_testOption( ::pPtr, nOption )
+METHOD QColorDialog:testOption( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QColorDialog_testOption( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QColorDialog:customColor( nIndex )
-   RETURN Qt_QColorDialog_customColor( ::pPtr, nIndex )
+METHOD QColorDialog:customColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QColorDialog_customColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QColorDialog:customCount()
-   RETURN Qt_QColorDialog_customCount( ::pPtr )
+METHOD QColorDialog:customCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QColorDialog_customCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QColorDialog:getColor( ... )
@@ -194,16 +269,38 @@ METHOD QColorDialog:getColor( ... )
          RETURN HB_QColor():from( Qt_QColorDialog_getColor_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QColor():from( Qt_QColorDialog_getColor_1( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
    CASE 0
       RETURN HB_QColor():from( Qt_QColorDialog_getColor_1( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
 
-METHOD QColorDialog:setCustomColor( nIndex, nColor )
-   RETURN Qt_QColorDialog_setCustomColor( ::pPtr, nIndex, nColor )
+METHOD QColorDialog:setCustomColor( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QColorDialog_setCustomColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QColorDialog:setStandardColor( nIndex, nColor )
-   RETURN Qt_QColorDialog_setStandardColor( ::pPtr, nIndex, nColor )
+METHOD QColorDialog:setStandardColor( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QColorDialog_setStandardColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

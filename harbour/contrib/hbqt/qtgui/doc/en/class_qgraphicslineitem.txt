@@ -26,11 +26,11 @@
  *  $RETURNS$
  *     An instance of the object of type QGraphicsLineItem
  *  $METHODS$
- *     :line()                                             -> pQLineF
- *     :pen()                                              -> pQPen
- *     :setLine( pLine )                                   -> NIL
- *     :setLine_1( nX1, nY1, nX2, nY2 )                    -> NIL
- *     :setPen( pPen )                                     -> NIL
+ *     :line()                                             -> oQLineF
+ *     :pen()                                              -> oQPen
+ *     :setLine( oQLineF )                                 -> NIL
+ *     :setLine( nX1, nY1, nX2, nY2 )                      -> NIL
+ *     :setPen( oQPen )                                    -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -50,7 +50,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGraphicsLineItem.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsLineItem.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QGraphicsItem()
  *  $END$
  */

@@ -103,61 +103,61 @@ CREATE CLASS QLineEdit INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QLineEd
 
    METHOD  new( ... )
 
-   METHOD  alignment()
-   METHOD  backspace()
-   METHOD  completer()
-   METHOD  createStandardContextMenu()
-   METHOD  cursorBackward( lMark, nSteps )
-   METHOD  cursorForward( lMark, nSteps )
-   METHOD  cursorPosition()
-   METHOD  cursorPositionAt( pPos )
-   METHOD  cursorWordBackward( lMark )
-   METHOD  cursorWordForward( lMark )
-   METHOD  del()
-   METHOD  deselect()
-   METHOD  displayText()
-   METHOD  dragEnabled()
-   METHOD  echoMode()
-   METHOD  end( lMark )
-   METHOD  getTextMargins( nLeft, nTop, nRight, nBottom )
-   METHOD  hasAcceptableInput()
-   METHOD  hasFrame()
-   METHOD  hasSelectedText()
-   METHOD  home( lMark )
-   METHOD  inputMask()
-   METHOD  insert( cNewText )
-   METHOD  isModified()
-   METHOD  isReadOnly()
-   METHOD  isRedoAvailable()
-   METHOD  isUndoAvailable()
-   METHOD  maxLength()
-   METHOD  minimumSizeHint()
-   METHOD  selectedText()
-   METHOD  selectionStart()
-   METHOD  setAlignment( nFlag )
-   METHOD  setCompleter( pC )
-   METHOD  setCursorPosition( nInt )
-   METHOD  setDragEnabled( lB )
-   METHOD  setEchoMode( nEchoMode )
-   METHOD  setFrame( lBool )
-   METHOD  setInputMask( cInputMask )
-   METHOD  setMaxLength( nInt )
-   METHOD  setModified( lBool )
-   METHOD  setReadOnly( lBool )
-   METHOD  setSelection( nStart, nLength )
-   METHOD  setTextMargins( nLeft, nTop, nRight, nBottom )
-   METHOD  setValidator( pV )
-   METHOD  sizeHint()
-   METHOD  text()
-   METHOD  validator()
-   METHOD  clear()
-   METHOD  copy()
-   METHOD  cut()
-   METHOD  paste()
-   METHOD  redo()
-   METHOD  selectAll()
-   METHOD  setText( cQString )
-   METHOD  undo()
+   METHOD  alignment                     // (  )                                               -> nQt_Alignment
+   METHOD  backspace                     // (  )                                               -> NIL
+   METHOD  completer                     // (  )                                               -> oQCompleter
+   METHOD  createStandardContextMenu     // (  )                                               -> oQMenu
+   METHOD  cursorBackward                // ( lMark, nSteps )                                  -> NIL
+   METHOD  cursorForward                 // ( lMark, nSteps )                                  -> NIL
+   METHOD  cursorPosition                // (  )                                               -> nInt
+   METHOD  cursorPositionAt              // ( oQPoint )                                        -> nInt
+   METHOD  cursorWordBackward            // ( lMark )                                          -> NIL
+   METHOD  cursorWordForward             // ( lMark )                                          -> NIL
+   METHOD  del                           // (  )                                               -> NIL
+   METHOD  deselect                      // (  )                                               -> NIL
+   METHOD  displayText                   // (  )                                               -> cQString
+   METHOD  dragEnabled                   // (  )                                               -> lBool
+   METHOD  echoMode                      // (  )                                               -> nEchoMode
+   METHOD  end                           // ( lMark )                                          -> NIL
+   METHOD  getTextMargins                // ( @nLeft, @nTop, @nRight, @nBottom )               -> NIL
+   METHOD  hasAcceptableInput            // (  )                                               -> lBool
+   METHOD  hasFrame                      // (  )                                               -> lBool
+   METHOD  hasSelectedText               // (  )                                               -> lBool
+   METHOD  home                          // ( lMark )                                          -> NIL
+   METHOD  inputMask                     // (  )                                               -> cQString
+   METHOD  insert                        // ( cNewText )                                       -> NIL
+   METHOD  isModified                    // (  )                                               -> lBool
+   METHOD  isReadOnly                    // (  )                                               -> lBool
+   METHOD  isRedoAvailable               // (  )                                               -> lBool
+   METHOD  isUndoAvailable               // (  )                                               -> lBool
+   METHOD  maxLength                     // (  )                                               -> nInt
+   METHOD  minimumSizeHint               // (  )                                               -> oQSize
+   METHOD  selectedText                  // (  )                                               -> cQString
+   METHOD  selectionStart                // (  )                                               -> nInt
+   METHOD  setAlignment                  // ( nFlag )                                          -> NIL
+   METHOD  setCompleter                  // ( oQCompleter )                                    -> NIL
+   METHOD  setCursorPosition             // ( nInt )                                           -> NIL
+   METHOD  setDragEnabled                // ( lB )                                             -> NIL
+   METHOD  setEchoMode                   // ( nEchoMode )                                      -> NIL
+   METHOD  setFrame                      // ( lBool )                                          -> NIL
+   METHOD  setInputMask                  // ( cInputMask )                                     -> NIL
+   METHOD  setMaxLength                  // ( nInt )                                           -> NIL
+   METHOD  setModified                   // ( lBool )                                          -> NIL
+   METHOD  setReadOnly                   // ( lBool )                                          -> NIL
+   METHOD  setSelection                  // ( nStart, nLength )                                -> NIL
+   METHOD  setTextMargins                // ( nLeft, nTop, nRight, nBottom )                   -> NIL
+   METHOD  setValidator                  // ( oQValidator )                                    -> NIL
+   METHOD  sizeHint                      // (  )                                               -> oQSize
+   METHOD  text                          // (  )                                               -> cQString
+   METHOD  validator                     // (  )                                               -> oQValidator
+   METHOD  clear                         // (  )                                               -> NIL
+   METHOD  copy                          // (  )                                               -> NIL
+   METHOD  cut                           // (  )                                               -> NIL
+   METHOD  paste                         // (  )                                               -> NIL
+   METHOD  redo                          // (  )                                               -> NIL
+   METHOD  selectAll                     // (  )                                               -> NIL
+   METHOD  setText                       // ( cQString )                                       -> NIL
+   METHOD  undo                          // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -171,222 +171,546 @@ METHOD QLineEdit:new( ... )
    RETURN Self
 
 
-METHOD QLineEdit:alignment()
-   RETURN Qt_QLineEdit_alignment( ::pPtr )
-
-
-METHOD QLineEdit:backspace()
-   RETURN Qt_QLineEdit_backspace( ::pPtr )
-
-
-METHOD QLineEdit:completer()
-   RETURN HB_QCompleter():from( Qt_QLineEdit_completer( ::pPtr ) )
-
-
-METHOD QLineEdit:createStandardContextMenu()
-   RETURN HB_QMenu():from( Qt_QLineEdit_createStandardContextMenu( ::pPtr ) )
-
-
-METHOD QLineEdit:cursorBackward( lMark, nSteps )
-   RETURN Qt_QLineEdit_cursorBackward( ::pPtr, lMark, nSteps )
-
-
-METHOD QLineEdit:cursorForward( lMark, nSteps )
-   RETURN Qt_QLineEdit_cursorForward( ::pPtr, lMark, nSteps )
-
-
-METHOD QLineEdit:cursorPosition()
-   RETURN Qt_QLineEdit_cursorPosition( ::pPtr )
-
-
-METHOD QLineEdit:cursorPositionAt( pPos )
-   RETURN Qt_QLineEdit_cursorPositionAt( ::pPtr, hbqt_ptr( pPos ) )
-
-
-METHOD QLineEdit:cursorWordBackward( lMark )
-   RETURN Qt_QLineEdit_cursorWordBackward( ::pPtr, lMark )
-
-
-METHOD QLineEdit:cursorWordForward( lMark )
-   RETURN Qt_QLineEdit_cursorWordForward( ::pPtr, lMark )
-
-
-METHOD QLineEdit:del()
-   RETURN Qt_QLineEdit_del( ::pPtr )
-
-
-METHOD QLineEdit:deselect()
-   RETURN Qt_QLineEdit_deselect( ::pPtr )
-
-
-METHOD QLineEdit:displayText()
-   RETURN Qt_QLineEdit_displayText( ::pPtr )
-
-
-METHOD QLineEdit:dragEnabled()
-   RETURN Qt_QLineEdit_dragEnabled( ::pPtr )
-
-
-METHOD QLineEdit:echoMode()
-   RETURN Qt_QLineEdit_echoMode( ::pPtr )
-
-
-METHOD QLineEdit:end( lMark )
-   RETURN Qt_QLineEdit_end( ::pPtr, lMark )
-
-
-METHOD QLineEdit:getTextMargins( nLeft, nTop, nRight, nBottom )
-   RETURN Qt_QLineEdit_getTextMargins( ::pPtr, nLeft, nTop, nRight, nBottom )
-
-
-METHOD QLineEdit:hasAcceptableInput()
-   RETURN Qt_QLineEdit_hasAcceptableInput( ::pPtr )
-
-
-METHOD QLineEdit:hasFrame()
-   RETURN Qt_QLineEdit_hasFrame( ::pPtr )
-
-
-METHOD QLineEdit:hasSelectedText()
-   RETURN Qt_QLineEdit_hasSelectedText( ::pPtr )
-
-
-METHOD QLineEdit:home( lMark )
-   RETURN Qt_QLineEdit_home( ::pPtr, lMark )
-
-
-METHOD QLineEdit:inputMask()
-   RETURN Qt_QLineEdit_inputMask( ::pPtr )
-
-
-METHOD QLineEdit:insert( cNewText )
-   RETURN Qt_QLineEdit_insert( ::pPtr, cNewText )
-
-
-METHOD QLineEdit:isModified()
-   RETURN Qt_QLineEdit_isModified( ::pPtr )
-
-
-METHOD QLineEdit:isReadOnly()
-   RETURN Qt_QLineEdit_isReadOnly( ::pPtr )
-
-
-METHOD QLineEdit:isRedoAvailable()
-   RETURN Qt_QLineEdit_isRedoAvailable( ::pPtr )
-
-
-METHOD QLineEdit:isUndoAvailable()
-   RETURN Qt_QLineEdit_isUndoAvailable( ::pPtr )
-
-
-METHOD QLineEdit:maxLength()
-   RETURN Qt_QLineEdit_maxLength( ::pPtr )
-
-
-METHOD QLineEdit:minimumSizeHint()
-   RETURN HB_QSize():from( Qt_QLineEdit_minimumSizeHint( ::pPtr ) )
-
-
-METHOD QLineEdit:selectedText()
-   RETURN Qt_QLineEdit_selectedText( ::pPtr )
-
-
-METHOD QLineEdit:selectionStart()
-   RETURN Qt_QLineEdit_selectionStart( ::pPtr )
-
-
-METHOD QLineEdit:setAlignment( nFlag )
-   RETURN Qt_QLineEdit_setAlignment( ::pPtr, nFlag )
-
-
-METHOD QLineEdit:setCompleter( pC )
-   RETURN Qt_QLineEdit_setCompleter( ::pPtr, hbqt_ptr( pC ) )
-
-
-METHOD QLineEdit:setCursorPosition( nInt )
-   RETURN Qt_QLineEdit_setCursorPosition( ::pPtr, nInt )
-
-
-METHOD QLineEdit:setDragEnabled( lB )
-   RETURN Qt_QLineEdit_setDragEnabled( ::pPtr, lB )
-
-
-METHOD QLineEdit:setEchoMode( nEchoMode )
-   RETURN Qt_QLineEdit_setEchoMode( ::pPtr, nEchoMode )
-
-
-METHOD QLineEdit:setFrame( lBool )
-   RETURN Qt_QLineEdit_setFrame( ::pPtr, lBool )
-
-
-METHOD QLineEdit:setInputMask( cInputMask )
-   RETURN Qt_QLineEdit_setInputMask( ::pPtr, cInputMask )
-
-
-METHOD QLineEdit:setMaxLength( nInt )
-   RETURN Qt_QLineEdit_setMaxLength( ::pPtr, nInt )
-
-
-METHOD QLineEdit:setModified( lBool )
-   RETURN Qt_QLineEdit_setModified( ::pPtr, lBool )
-
-
-METHOD QLineEdit:setReadOnly( lBool )
-   RETURN Qt_QLineEdit_setReadOnly( ::pPtr, lBool )
-
-
-METHOD QLineEdit:setSelection( nStart, nLength )
-   RETURN Qt_QLineEdit_setSelection( ::pPtr, nStart, nLength )
-
-
-METHOD QLineEdit:setTextMargins( nLeft, nTop, nRight, nBottom )
-   RETURN Qt_QLineEdit_setTextMargins( ::pPtr, nLeft, nTop, nRight, nBottom )
-
-
-METHOD QLineEdit:setValidator( pV )
-   RETURN Qt_QLineEdit_setValidator( ::pPtr, hbqt_ptr( pV ) )
-
-
-METHOD QLineEdit:sizeHint()
-   RETURN HB_QSize():from( Qt_QLineEdit_sizeHint( ::pPtr ) )
-
-
-METHOD QLineEdit:text()
-   RETURN Qt_QLineEdit_text( ::pPtr )
-
-
-METHOD QLineEdit:validator()
-   RETURN HB_QValidator():from( Qt_QLineEdit_validator( ::pPtr ) )
-
-
-METHOD QLineEdit:clear()
-   RETURN Qt_QLineEdit_clear( ::pPtr )
-
-
-METHOD QLineEdit:copy()
-   RETURN Qt_QLineEdit_copy( ::pPtr )
-
-
-METHOD QLineEdit:cut()
-   RETURN Qt_QLineEdit_cut( ::pPtr )
-
-
-METHOD QLineEdit:paste()
-   RETURN Qt_QLineEdit_paste( ::pPtr )
-
-
-METHOD QLineEdit:redo()
-   RETURN Qt_QLineEdit_redo( ::pPtr )
-
-
-METHOD QLineEdit:selectAll()
-   RETURN Qt_QLineEdit_selectAll( ::pPtr )
-
-
-METHOD QLineEdit:setText( cQString )
-   RETURN Qt_QLineEdit_setText( ::pPtr, cQString )
-
-
-METHOD QLineEdit:undo()
-   RETURN Qt_QLineEdit_undo( ::pPtr )
+METHOD QLineEdit:alignment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineEdit_alignment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:backspace( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineEdit_backspace( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:completer( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QCompleter():from( Qt_QLineEdit_completer( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:createStandardContextMenu( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QMenu():from( Qt_QLineEdit_createStandardContextMenu( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:cursorBackward( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QLineEdit_cursorBackward( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QLineEdit_cursorBackward( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:cursorForward( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QLineEdit_cursorForward( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QLineEdit_cursorForward( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:cursorPosition( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineEdit_cursorPosition( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:cursorPositionAt( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QLineEdit_cursorPositionAt( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:cursorWordBackward( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QLineEdit_cursorWordBackward( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:cursorWordForward( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QLineEdit_cursorWordForward( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:del( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineEdit_del( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:deselect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineEdit_deselect( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:displayText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineEdit_displayText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:dragEnabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineEdit_dragEnabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:echoMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineEdit_echoMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:end( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QLineEdit_end( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:getTextMargins( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QLineEdit_getTextMargins( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:hasAcceptableInput( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineEdit_hasAcceptableInput( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:hasFrame( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineEdit_hasFrame( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:hasSelectedText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineEdit_hasSelectedText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:home( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QLineEdit_home( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:inputMask( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineEdit_inputMask( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:insert( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QLineEdit_insert( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:isModified( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineEdit_isModified( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:isReadOnly( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineEdit_isReadOnly( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:isRedoAvailable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineEdit_isRedoAvailable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:isUndoAvailable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineEdit_isUndoAvailable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:maxLength( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineEdit_maxLength( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:minimumSizeHint( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QLineEdit_minimumSizeHint( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:selectedText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineEdit_selectedText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:selectionStart( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineEdit_selectionStart( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:setAlignment( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLineEdit_setAlignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:setCompleter( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QLineEdit_setCompleter( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:setCursorPosition( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLineEdit_setCursorPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:setDragEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QLineEdit_setDragEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:setEchoMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLineEdit_setEchoMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:setFrame( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QLineEdit_setFrame( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:setInputMask( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QLineEdit_setInputMask( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:setMaxLength( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLineEdit_setMaxLength( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:setModified( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QLineEdit_setModified( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:setReadOnly( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QLineEdit_setReadOnly( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:setSelection( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QLineEdit_setSelection( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:setTextMargins( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QLineEdit_setTextMargins( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:setValidator( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QLineEdit_setValidator( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:sizeHint( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QLineEdit_sizeHint( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:text( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineEdit_text( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:validator( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QValidator():from( Qt_QLineEdit_validator( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:clear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineEdit_clear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:copy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineEdit_copy( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:cut( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineEdit_cut( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:paste( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineEdit_paste( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:redo( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineEdit_redo( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:selectAll( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineEdit_selectAll( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:setText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QLineEdit_setText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QLineEdit:undo( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineEdit_undo( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

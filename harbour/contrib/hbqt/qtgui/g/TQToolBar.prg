@@ -103,29 +103,34 @@ CREATE CLASS QToolBar INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QToolBar
 
    METHOD  new( ... )
 
-   METHOD  actionAt( ... )
-   METHOD  addAction( ... )
-   METHOD  addSeparator()
-   METHOD  addWidget( pWidget )
-   METHOD  allowedAreas()
-   METHOD  clear()
-   METHOD  iconSize()
-   METHOD  insertSeparator( pBefore )
-   METHOD  insertWidget( pBefore, pWidget )
-   METHOD  isAreaAllowed( nArea )
-   METHOD  isFloatable()
-   METHOD  isFloating()
-   METHOD  isMovable()
-   METHOD  orientation()
-   METHOD  setAllowedAreas( nAreas )
-   METHOD  setFloatable( lFloatable )
-   METHOD  setMovable( lMovable )
-   METHOD  setOrientation( nOrientation )
-   METHOD  toggleViewAction()
-   METHOD  toolButtonStyle()
-   METHOD  widgetForAction( pAction )
-   METHOD  setIconSize( pIconSize )
-   METHOD  setToolButtonStyle( nToolButtonStyle )
+   METHOD  actionAt                      // ( oQPoint )                                        -> oQAction
+                                         // ( nX, nY )                                         -> oQAction
+   METHOD  addAction                     // ( oQAction )                                       -> NIL
+                                         // ( cText )                                          -> oQAction
+                                         // ( coQIcon, cText )                                 -> oQAction
+                                         // ( cText, oQObject, cMember )                       -> oQAction
+                                         // ( coQIcon, cText, oQObject, cMember )              -> oQAction
+   METHOD  addSeparator                  // (  )                                               -> oQAction
+   METHOD  addWidget                     // ( oQWidget )                                       -> oQAction
+   METHOD  allowedAreas                  // (  )                                               -> nQt_ToolBarAreas
+   METHOD  clear                         // (  )                                               -> NIL
+   METHOD  iconSize                      // (  )                                               -> oQSize
+   METHOD  insertSeparator               // ( oQAction )                                       -> oQAction
+   METHOD  insertWidget                  // ( oQAction, oQWidget )                             -> oQAction
+   METHOD  isAreaAllowed                 // ( nArea )                                          -> lBool
+   METHOD  isFloatable                   // (  )                                               -> lBool
+   METHOD  isFloating                    // (  )                                               -> lBool
+   METHOD  isMovable                     // (  )                                               -> lBool
+   METHOD  orientation                   // (  )                                               -> nQt_Orientation
+   METHOD  setAllowedAreas               // ( nAreas )                                         -> NIL
+   METHOD  setFloatable                  // ( lFloatable )                                     -> NIL
+   METHOD  setMovable                    // ( lMovable )                                       -> NIL
+   METHOD  setOrientation                // ( nOrientation )                                   -> NIL
+   METHOD  toggleViewAction              // (  )                                               -> oQAction
+   METHOD  toolButtonStyle               // (  )                                               -> nQt_ToolButtonStyle
+   METHOD  widgetForAction               // ( oQAction )                                       -> oQWidget
+   METHOD  setIconSize                   // ( oQSize )                                         -> NIL
+   METHOD  setToolButtonStyle            // ( nToolButtonStyle )                               -> NIL
 
    ENDCLASS
 
@@ -161,13 +166,13 @@ METHOD QToolBar:addAction( ... )
    SWITCH PCount()
    CASE 4
       DO CASE
-      CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
+      CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isChar( hb_pvalue( 4 ) )
          RETURN HB_QAction():from( Qt_QToolBar_addAction_4( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 3
       DO CASE
-      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
          RETURN HB_QAction():from( Qt_QToolBar_addAction_3( ::pPtr, ... ) )
       ENDCASE
       EXIT
@@ -189,86 +194,214 @@ METHOD QToolBar:addAction( ... )
    RETURN hbqt_error()
 
 
-METHOD QToolBar:addSeparator()
-   RETURN HB_QAction():from( Qt_QToolBar_addSeparator( ::pPtr ) )
+METHOD QToolBar:addSeparator( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QAction():from( Qt_QToolBar_addSeparator( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBar:addWidget( pWidget )
-   RETURN HB_QAction():from( Qt_QToolBar_addWidget( ::pPtr, hbqt_ptr( pWidget ) ) )
+METHOD QToolBar:addWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QAction():from( Qt_QToolBar_addWidget( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBar:allowedAreas()
-   RETURN Qt_QToolBar_allowedAreas( ::pPtr )
+METHOD QToolBar:allowedAreas( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QToolBar_allowedAreas( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBar:clear()
-   RETURN Qt_QToolBar_clear( ::pPtr )
+METHOD QToolBar:clear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QToolBar_clear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBar:iconSize()
-   RETURN HB_QSize():from( Qt_QToolBar_iconSize( ::pPtr ) )
+METHOD QToolBar:iconSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QToolBar_iconSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBar:insertSeparator( pBefore )
-   RETURN HB_QAction():from( Qt_QToolBar_insertSeparator( ::pPtr, hbqt_ptr( pBefore ) ) )
+METHOD QToolBar:insertSeparator( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QAction():from( Qt_QToolBar_insertSeparator( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBar:insertWidget( pBefore, pWidget )
-   RETURN HB_QAction():from( Qt_QToolBar_insertWidget( ::pPtr, hbqt_ptr( pBefore ), hbqt_ptr( pWidget ) ) )
+METHOD QToolBar:insertWidget( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QAction():from( Qt_QToolBar_insertWidget( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBar:isAreaAllowed( nArea )
-   RETURN Qt_QToolBar_isAreaAllowed( ::pPtr, nArea )
+METHOD QToolBar:isAreaAllowed( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QToolBar_isAreaAllowed( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBar:isFloatable()
-   RETURN Qt_QToolBar_isFloatable( ::pPtr )
+METHOD QToolBar:isFloatable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QToolBar_isFloatable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBar:isFloating()
-   RETURN Qt_QToolBar_isFloating( ::pPtr )
+METHOD QToolBar:isFloating( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QToolBar_isFloating( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBar:isMovable()
-   RETURN Qt_QToolBar_isMovable( ::pPtr )
+METHOD QToolBar:isMovable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QToolBar_isMovable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBar:orientation()
-   RETURN Qt_QToolBar_orientation( ::pPtr )
+METHOD QToolBar:orientation( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QToolBar_orientation( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBar:setAllowedAreas( nAreas )
-   RETURN Qt_QToolBar_setAllowedAreas( ::pPtr, nAreas )
+METHOD QToolBar:setAllowedAreas( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QToolBar_setAllowedAreas( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBar:setFloatable( lFloatable )
-   RETURN Qt_QToolBar_setFloatable( ::pPtr, lFloatable )
+METHOD QToolBar:setFloatable( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QToolBar_setFloatable( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBar:setMovable( lMovable )
-   RETURN Qt_QToolBar_setMovable( ::pPtr, lMovable )
+METHOD QToolBar:setMovable( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QToolBar_setMovable( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBar:setOrientation( nOrientation )
-   RETURN Qt_QToolBar_setOrientation( ::pPtr, nOrientation )
+METHOD QToolBar:setOrientation( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QToolBar_setOrientation( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBar:toggleViewAction()
-   RETURN HB_QAction():from( Qt_QToolBar_toggleViewAction( ::pPtr ) )
+METHOD QToolBar:toggleViewAction( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QAction():from( Qt_QToolBar_toggleViewAction( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBar:toolButtonStyle()
-   RETURN Qt_QToolBar_toolButtonStyle( ::pPtr )
+METHOD QToolBar:toolButtonStyle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QToolBar_toolButtonStyle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBar:widgetForAction( pAction )
-   RETURN HB_QWidget():from( Qt_QToolBar_widgetForAction( ::pPtr, hbqt_ptr( pAction ) ) )
+METHOD QToolBar:widgetForAction( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QWidget():from( Qt_QToolBar_widgetForAction( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBar:setIconSize( pIconSize )
-   RETURN Qt_QToolBar_setIconSize( ::pPtr, hbqt_ptr( pIconSize ) )
+METHOD QToolBar:setIconSize( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QToolBar_setIconSize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBar:setToolButtonStyle( nToolButtonStyle )
-   RETURN Qt_QToolBar_setToolButtonStyle( ::pPtr, nToolButtonStyle )
+METHOD QToolBar:setToolButtonStyle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QToolBar_setToolButtonStyle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

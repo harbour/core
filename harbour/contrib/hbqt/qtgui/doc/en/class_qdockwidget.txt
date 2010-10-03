@@ -26,18 +26,18 @@
  *  $RETURNS$
  *     An instance of the object of type QDockWidget
  *  $METHODS$
- *     :allowedAreas()                                     -> nQt::DockWidgetAreas
+ *     :allowedAreas()                                     -> nQt_DockWidgetAreas
  *     :features()                                         -> nDockWidgetFeatures
  *     :isAreaAllowed( nArea )                             -> lBool
  *     :isFloating()                                       -> lBool
  *     :setAllowedAreas( nAreas )                          -> NIL
  *     :setFeatures( nFeatures )                           -> NIL
  *     :setFloating( lFloating )                           -> NIL
- *     :setTitleBarWidget( pWidget )                       -> NIL
- *     :setWidget( pWidget )                               -> NIL
- *     :titleBarWidget()                                   -> pQWidget
- *     :toggleViewAction()                                 -> pQAction
- *     :widget()                                           -> pQWidget
+ *     :setTitleBarWidget( oQWidget )                      -> NIL
+ *     :setWidget( oQWidget )                              -> NIL
+ *     :titleBarWidget()                                   -> oQWidget
+ *     :toggleViewAction()                                 -> oQAction
+ *     :widget()                                           -> oQWidget
  * 
  *  $DESCRIPTION$
  * 
@@ -57,7 +57,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQDockWidget.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QDockWidget.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

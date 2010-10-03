@@ -103,22 +103,22 @@ CREATE CLASS QGraphicsLinearLayout INHERIT HbQtObjectHandler, HB_QGraphicsLayout
 
    METHOD  new( ... )
 
-   METHOD  addItem( pItem )
-   METHOD  addStretch( nStretch )
-   METHOD  alignment( pItem )
-   METHOD  insertItem( nIndex, pItem )
-   METHOD  insertStretch( nIndex, nStretch )
-   METHOD  itemSpacing( nIndex )
-   METHOD  orientation()
-   METHOD  removeAt( nIndex )
-   METHOD  removeItem( pItem )
-   METHOD  setAlignment( pItem, nAlignment )
-   METHOD  setItemSpacing( nIndex, nSpacing )
-   METHOD  setOrientation( nOrientation )
-   METHOD  setSpacing( nSpacing )
-   METHOD  setStretchFactor( pItem, nStretch )
-   METHOD  spacing()
-   METHOD  stretchFactor( pItem )
+   METHOD  addItem                       // ( oQGraphicsLayoutItem )                           -> NIL
+   METHOD  addStretch                    // ( nStretch )                                       -> NIL
+   METHOD  alignment                     // ( oQGraphicsLayoutItem )                           -> nQt_Alignment
+   METHOD  insertItem                    // ( nIndex, oQGraphicsLayoutItem )                   -> NIL
+   METHOD  insertStretch                 // ( nIndex, nStretch )                               -> NIL
+   METHOD  itemSpacing                   // ( nIndex )                                         -> nQreal
+   METHOD  orientation                   // (  )                                               -> nQt_Orientation
+   METHOD  removeAt                      // ( nIndex )                                         -> NIL
+   METHOD  removeItem                    // ( oQGraphicsLayoutItem )                           -> NIL
+   METHOD  setAlignment                  // ( oQGraphicsLayoutItem, nAlignment )               -> NIL
+   METHOD  setItemSpacing                // ( nIndex, nSpacing )                               -> NIL
+   METHOD  setOrientation                // ( nOrientation )                                   -> NIL
+   METHOD  setSpacing                    // ( nSpacing )                                       -> NIL
+   METHOD  setStretchFactor              // ( oQGraphicsLayoutItem, nStretch )                 -> NIL
+   METHOD  spacing                       // (  )                                               -> nQreal
+   METHOD  stretchFactor                 // ( oQGraphicsLayoutItem )                           -> nInt
 
    ENDCLASS
 
@@ -132,66 +132,194 @@ METHOD QGraphicsLinearLayout:new( ... )
    RETURN Self
 
 
-METHOD QGraphicsLinearLayout:addItem( pItem )
-   RETURN Qt_QGraphicsLinearLayout_addItem( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QGraphicsLinearLayout:addItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsLinearLayout_addItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLinearLayout:addStretch( nStretch )
-   RETURN Qt_QGraphicsLinearLayout_addStretch( ::pPtr, nStretch )
+METHOD QGraphicsLinearLayout:addStretch( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsLinearLayout_addStretch( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QGraphicsLinearLayout_addStretch( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLinearLayout:alignment( pItem )
-   RETURN Qt_QGraphicsLinearLayout_alignment( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QGraphicsLinearLayout:alignment( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsLinearLayout_alignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLinearLayout:insertItem( nIndex, pItem )
-   RETURN Qt_QGraphicsLinearLayout_insertItem( ::pPtr, nIndex, hbqt_ptr( pItem ) )
+METHOD QGraphicsLinearLayout:insertItem( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsLinearLayout_insertItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLinearLayout:insertStretch( nIndex, nStretch )
-   RETURN Qt_QGraphicsLinearLayout_insertStretch( ::pPtr, nIndex, nStretch )
+METHOD QGraphicsLinearLayout:insertStretch( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsLinearLayout_insertStretch( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsLinearLayout_insertStretch( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLinearLayout:itemSpacing( nIndex )
-   RETURN Qt_QGraphicsLinearLayout_itemSpacing( ::pPtr, nIndex )
+METHOD QGraphicsLinearLayout:itemSpacing( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsLinearLayout_itemSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLinearLayout:orientation()
-   RETURN Qt_QGraphicsLinearLayout_orientation( ::pPtr )
+METHOD QGraphicsLinearLayout:orientation( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsLinearLayout_orientation( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLinearLayout:removeAt( nIndex )
-   RETURN Qt_QGraphicsLinearLayout_removeAt( ::pPtr, nIndex )
+METHOD QGraphicsLinearLayout:removeAt( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsLinearLayout_removeAt( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLinearLayout:removeItem( pItem )
-   RETURN Qt_QGraphicsLinearLayout_removeItem( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QGraphicsLinearLayout:removeItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsLinearLayout_removeItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLinearLayout:setAlignment( pItem, nAlignment )
-   RETURN Qt_QGraphicsLinearLayout_setAlignment( ::pPtr, hbqt_ptr( pItem ), nAlignment )
+METHOD QGraphicsLinearLayout:setAlignment( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsLinearLayout_setAlignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLinearLayout:setItemSpacing( nIndex, nSpacing )
-   RETURN Qt_QGraphicsLinearLayout_setItemSpacing( ::pPtr, nIndex, nSpacing )
+METHOD QGraphicsLinearLayout:setItemSpacing( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsLinearLayout_setItemSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLinearLayout:setOrientation( nOrientation )
-   RETURN Qt_QGraphicsLinearLayout_setOrientation( ::pPtr, nOrientation )
+METHOD QGraphicsLinearLayout:setOrientation( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsLinearLayout_setOrientation( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLinearLayout:setSpacing( nSpacing )
-   RETURN Qt_QGraphicsLinearLayout_setSpacing( ::pPtr, nSpacing )
+METHOD QGraphicsLinearLayout:setSpacing( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsLinearLayout_setSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLinearLayout:setStretchFactor( pItem, nStretch )
-   RETURN Qt_QGraphicsLinearLayout_setStretchFactor( ::pPtr, hbqt_ptr( pItem ), nStretch )
+METHOD QGraphicsLinearLayout:setStretchFactor( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsLinearLayout_setStretchFactor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLinearLayout:spacing()
-   RETURN Qt_QGraphicsLinearLayout_spacing( ::pPtr )
+METHOD QGraphicsLinearLayout:spacing( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsLinearLayout_spacing( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLinearLayout:stretchFactor( pItem )
-   RETURN Qt_QGraphicsLinearLayout_stretchFactor( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QGraphicsLinearLayout:stretchFactor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsLinearLayout_stretchFactor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

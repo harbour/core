@@ -103,17 +103,19 @@ CREATE CLASS QActionGroup INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QAct
 
    METHOD  new( ... )
 
-   METHOD  actions()
-   METHOD  addAction( ... )
-   METHOD  checkedAction()
-   METHOD  isEnabled()
-   METHOD  isExclusive()
-   METHOD  isVisible()
-   METHOD  removeAction( pAction )
-   METHOD  setDisabled( lB )
-   METHOD  setEnabled( lBool )
-   METHOD  setExclusive( lBool )
-   METHOD  setVisible( lBool )
+   METHOD  actions                       // (  )                                               -> oQList_QAction
+   METHOD  addAction                     // ( oQAction )                                       -> oQAction
+                                         // ( cText )                                          -> oQAction
+                                         // ( coQIcon, cText )                                 -> oQAction
+   METHOD  checkedAction                 // (  )                                               -> oQAction
+   METHOD  isEnabled                     // (  )                                               -> lBool
+   METHOD  isExclusive                   // (  )                                               -> lBool
+   METHOD  isVisible                     // (  )                                               -> lBool
+   METHOD  removeAction                  // ( oQAction )                                       -> NIL
+   METHOD  setDisabled                   // ( lB )                                             -> NIL
+   METHOD  setEnabled                    // ( lBool )                                          -> NIL
+   METHOD  setExclusive                  // ( lBool )                                          -> NIL
+   METHOD  setVisible                    // ( lBool )                                          -> NIL
 
    ENDCLASS
 
@@ -127,8 +129,12 @@ METHOD QActionGroup:new( ... )
    RETURN Self
 
 
-METHOD QActionGroup:actions()
-   RETURN HB_QList():from( Qt_QActionGroup_actions( ::pPtr ) )
+METHOD QActionGroup:actions( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QActionGroup_actions( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QActionGroup:addAction( ... )
@@ -151,38 +157,94 @@ METHOD QActionGroup:addAction( ... )
    RETURN hbqt_error()
 
 
-METHOD QActionGroup:checkedAction()
-   RETURN HB_QAction():from( Qt_QActionGroup_checkedAction( ::pPtr ) )
+METHOD QActionGroup:checkedAction( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QAction():from( Qt_QActionGroup_checkedAction( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QActionGroup:isEnabled()
-   RETURN Qt_QActionGroup_isEnabled( ::pPtr )
+METHOD QActionGroup:isEnabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QActionGroup_isEnabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QActionGroup:isExclusive()
-   RETURN Qt_QActionGroup_isExclusive( ::pPtr )
+METHOD QActionGroup:isExclusive( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QActionGroup_isExclusive( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QActionGroup:isVisible()
-   RETURN Qt_QActionGroup_isVisible( ::pPtr )
+METHOD QActionGroup:isVisible( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QActionGroup_isVisible( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QActionGroup:removeAction( pAction )
-   RETURN Qt_QActionGroup_removeAction( ::pPtr, hbqt_ptr( pAction ) )
+METHOD QActionGroup:removeAction( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QActionGroup_removeAction( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QActionGroup:setDisabled( lB )
-   RETURN Qt_QActionGroup_setDisabled( ::pPtr, lB )
+METHOD QActionGroup:setDisabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QActionGroup_setDisabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QActionGroup:setEnabled( lBool )
-   RETURN Qt_QActionGroup_setEnabled( ::pPtr, lBool )
+METHOD QActionGroup:setEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QActionGroup_setEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QActionGroup:setExclusive( lBool )
-   RETURN Qt_QActionGroup_setExclusive( ::pPtr, lBool )
+METHOD QActionGroup:setExclusive( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QActionGroup_setExclusive( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QActionGroup:setVisible( lBool )
-   RETURN Qt_QActionGroup_setVisible( ::pPtr, lBool )
+METHOD QActionGroup:setVisible( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QActionGroup_setVisible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

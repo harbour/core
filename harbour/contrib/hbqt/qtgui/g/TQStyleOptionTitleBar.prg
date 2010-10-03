@@ -103,10 +103,10 @@ CREATE CLASS QStyleOptionTitleBar INHERIT HbQtObjectHandler, HB_QStyleOptionComp
 
    METHOD  new( ... )
 
-   METHOD  icon()
-   METHOD  text()
-   METHOD  titleBarFlags()
-   METHOD  titleBarState()
+   METHOD  icon                          // (  )                                               -> oQIcon
+   METHOD  text                          // (  )                                               -> cQString
+   METHOD  titleBarFlags                 // (  )                                               -> nQt_WindowFlags
+   METHOD  titleBarState                 // (  )                                               -> nInt
 
    ENDCLASS
 
@@ -120,18 +120,34 @@ METHOD QStyleOptionTitleBar:new( ... )
    RETURN Self
 
 
-METHOD QStyleOptionTitleBar:icon()
-   RETURN HB_QIcon():from( Qt_QStyleOptionTitleBar_icon( ::pPtr ) )
+METHOD QStyleOptionTitleBar:icon( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QIcon():from( Qt_QStyleOptionTitleBar_icon( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionTitleBar:text()
-   RETURN Qt_QStyleOptionTitleBar_text( ::pPtr )
+METHOD QStyleOptionTitleBar:text( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionTitleBar_text( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionTitleBar:titleBarFlags()
-   RETURN Qt_QStyleOptionTitleBar_titleBarFlags( ::pPtr )
+METHOD QStyleOptionTitleBar:titleBarFlags( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionTitleBar_titleBarFlags( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionTitleBar:titleBarState()
-   RETURN Qt_QStyleOptionTitleBar_titleBarState( ::pPtr )
+METHOD QStyleOptionTitleBar:titleBarState( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionTitleBar_titleBarState( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

@@ -103,8 +103,8 @@ CREATE CLASS QStyleFactory INHERIT HbQtObjectHandler FUNCTION HB_QStyleFactory
 
    METHOD  new( ... )
 
-   METHOD  create( cKey )
-   METHOD  keys()
+   METHOD  create                        // ( cKey )                                           -> oQStyle
+   METHOD  keys                          // (  )                                               -> oQStringList
 
    ENDCLASS
 
@@ -118,10 +118,22 @@ METHOD QStyleFactory:new( ... )
    RETURN Self
 
 
-METHOD QStyleFactory:create( cKey )
-   RETURN HB_QStyle():from( Qt_QStyleFactory_create( ::pPtr, cKey ) )
+METHOD QStyleFactory:create( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QStyle():from( Qt_QStyleFactory_create( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleFactory:keys()
-   RETURN HB_QStringList():from( Qt_QStyleFactory_keys( ::pPtr ) )
+METHOD QStyleFactory:keys( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QStyleFactory_keys( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

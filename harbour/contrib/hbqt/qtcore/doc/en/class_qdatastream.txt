@@ -28,17 +28,17 @@
  *  $METHODS$
  *     :atEnd()                                            -> lBool
  *     :byteOrder()                                        -> nByteOrder
- *     :device()                                           -> pQIODevice
+ *     :device()                                           -> oQIODevice
  *     :readRawData( cS, nLen )                            -> nInt
  *     :resetStatus()                                      -> NIL
  *     :setByteOrder( nBo )                                -> NIL
- *     :setDevice( pD )                                    -> NIL
+ *     :setDevice( oQIODevice )                            -> NIL
  *     :setStatus( nStatus )                               -> NIL
  *     :setVersion( nV )                                   -> NIL
  *     :skipRawData( nLen )                                -> nInt
  *     :status()                                           -> nStatus
  *     :version()                                          -> nInt
- *     :writeRawData( pS, nLen )                           -> nInt
+ *     :writeRawData( cS, nLen )                           -> nInt
  * 
  *  $DESCRIPTION$
  * 
@@ -58,7 +58,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQDataStream.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QDataStream.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

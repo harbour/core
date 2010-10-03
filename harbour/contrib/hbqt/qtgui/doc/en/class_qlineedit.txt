@@ -26,14 +26,14 @@
  *  $RETURNS$
  *     An instance of the object of type QLineEdit
  *  $METHODS$
- *     :alignment()                                        -> nQt::Alignment
+ *     :alignment()                                        -> nQt_Alignment
  *     :backspace()                                        -> NIL
- *     :completer()                                        -> pQCompleter
- *     :createStandardContextMenu()                        -> pQMenu
+ *     :completer()                                        -> oQCompleter
+ *     :createStandardContextMenu()                        -> oQMenu
  *     :cursorBackward( lMark, nSteps )                    -> NIL
  *     :cursorForward( lMark, nSteps )                     -> NIL
  *     :cursorPosition()                                   -> nInt
- *     :cursorPositionAt( pPos )                           -> nInt
+ *     :cursorPositionAt( oQPoint )                        -> nInt
  *     :cursorWordBackward( lMark )                        -> NIL
  *     :cursorWordForward( lMark )                         -> NIL
  *     :del()                                              -> NIL
@@ -54,11 +54,11 @@
  *     :isRedoAvailable()                                  -> lBool
  *     :isUndoAvailable()                                  -> lBool
  *     :maxLength()                                        -> nInt
- *     :minimumSizeHint()                                  -> pQSize
+ *     :minimumSizeHint()                                  -> oQSize
  *     :selectedText()                                     -> cQString
  *     :selectionStart()                                   -> nInt
  *     :setAlignment( nFlag )                              -> NIL
- *     :setCompleter( pC )                                 -> NIL
+ *     :setCompleter( oQCompleter )                        -> NIL
  *     :setCursorPosition( nInt )                          -> NIL
  *     :setDragEnabled( lB )                               -> NIL
  *     :setEchoMode( nEchoMode )                           -> NIL
@@ -69,10 +69,10 @@
  *     :setReadOnly( lBool )                               -> NIL
  *     :setSelection( nStart, nLength )                    -> NIL
  *     :setTextMargins( nLeft, nTop, nRight, nBottom )     -> NIL
- *     :setValidator( pV )                                 -> NIL
- *     :sizeHint()                                         -> pQSize
+ *     :setValidator( oQValidator )                        -> NIL
+ *     :sizeHint()                                         -> oQSize
  *     :text()                                             -> cQString
- *     :validator()                                        -> pQValidator
+ *     :validator()                                        -> oQValidator
  *     :clear()                                            -> NIL
  *     :copy()                                             -> NIL
  *     :cut()                                              -> NIL
@@ -100,7 +100,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQLineEdit.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QLineEdit.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

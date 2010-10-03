@@ -26,15 +26,15 @@
  *  $RETURNS$
  *     An instance of the object of type QStyleOptionHeader
  *  $METHODS$
- *     :icon()                                             -> pQIcon
- *     :iconAlignment()                                    -> nQt::Alignment
- *     :orientation()                                      -> nQt::Orientation
+ *     :icon()                                             -> oQIcon
+ *     :iconAlignment()                                    -> nQt_Alignment
+ *     :orientation()                                      -> nQt_Orientation
  *     :position()                                         -> nSectionPosition
  *     :section()                                          -> nInt
  *     :selectedPosition()                                 -> nSelectedPosition
  *     :sortIndicator()                                    -> nSortIndicator
  *     :text()                                             -> cQString
- *     :textAlignment()                                    -> nQt::Alignment
+ *     :textAlignment()                                    -> nQt_Alignment
  * 
  *  $DESCRIPTION$
  * 
@@ -54,7 +54,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionHeader.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionHeader.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QStyleOption()
  *  $END$
  */

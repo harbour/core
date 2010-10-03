@@ -103,28 +103,29 @@ CREATE CLASS QFontDatabase INHERIT HbQtObjectHandler FUNCTION HB_QFontDatabase
 
    METHOD  new( ... )
 
-   METHOD  bold( cFamily, cStyle )
-   METHOD  families( nWritingSystem )
-   METHOD  font( cFamily, cStyle, nPointSize )
-   METHOD  isBitmapScalable( cFamily, cStyle )
-   METHOD  isFixedPitch( cFamily, cStyle )
-   METHOD  isScalable( cFamily, cStyle )
-   METHOD  isSmoothlyScalable( cFamily, cStyle )
-   METHOD  italic( cFamily, cStyle )
-   METHOD  pointSizes( cFamily, cStyle )
-   METHOD  smoothSizes( cFamily, cStyle )
-   METHOD  styleString( ... )
-   METHOD  styles( cFamily )
-   METHOD  weight( cFamily, cStyle )
-   METHOD  addApplicationFont( cFileName )
-   METHOD  addApplicationFontFromData( pFontData )
-   METHOD  applicationFontFamilies( nId )
-   METHOD  removeAllApplicationFonts()
-   METHOD  removeApplicationFont( nId )
-   METHOD  standardSizes()
-   METHOD  supportsThreadedFontRendering()
-   METHOD  writingSystemName( nWritingSystem )
-   METHOD  writingSystemSample( nWritingSystem )
+   METHOD  bold                          // ( cFamily, cStyle )                                -> lBool
+   METHOD  families                      // ( nWritingSystem )                                 -> oQStringList
+   METHOD  font                          // ( cFamily, cStyle, nPointSize )                    -> oQFont
+   METHOD  isBitmapScalable              // ( cFamily, cStyle )                                -> lBool
+   METHOD  isFixedPitch                  // ( cFamily, cStyle )                                -> lBool
+   METHOD  isScalable                    // ( cFamily, cStyle )                                -> lBool
+   METHOD  isSmoothlyScalable            // ( cFamily, cStyle )                                -> lBool
+   METHOD  italic                        // ( cFamily, cStyle )                                -> lBool
+   METHOD  pointSizes                    // ( cFamily, cStyle )                                -> oQList_int>
+   METHOD  smoothSizes                   // ( cFamily, cStyle )                                -> oQList_int>
+   METHOD  styleString                   // ( oQFont )                                         -> cQString
+                                         // ( oQFontInfo )                                     -> cQString
+   METHOD  styles                        // ( cFamily )                                        -> oQStringList
+   METHOD  weight                        // ( cFamily, cStyle )                                -> nInt
+   METHOD  addApplicationFont            // ( cFileName )                                      -> nInt
+   METHOD  addApplicationFontFromData    // ( oQByteArray )                                    -> nInt
+   METHOD  applicationFontFamilies       // ( nId )                                            -> oQStringList
+   METHOD  removeAllApplicationFonts     // (  )                                               -> lBool
+   METHOD  removeApplicationFont         // ( nId )                                            -> lBool
+   METHOD  standardSizes                 // (  )                                               -> oQList_int>
+   METHOD  supportsThreadedFontRendering // (  )                                               -> lBool
+   METHOD  writingSystemName             // ( nWritingSystem )                                 -> cQString
+   METHOD  writingSystemSample           // ( nWritingSystem )                                 -> cQString
 
    ENDCLASS
 
@@ -138,44 +139,156 @@ METHOD QFontDatabase:new( ... )
    RETURN Self
 
 
-METHOD QFontDatabase:bold( cFamily, cStyle )
-   RETURN Qt_QFontDatabase_bold( ::pPtr, cFamily, cStyle )
+METHOD QFontDatabase:bold( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QFontDatabase_bold( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontDatabase:families( nWritingSystem )
-   RETURN HB_QStringList():from( Qt_QFontDatabase_families( ::pPtr, nWritingSystem ) )
+METHOD QFontDatabase:families( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QStringList():from( Qt_QFontDatabase_families( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QFontDatabase_families( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontDatabase:font( cFamily, cStyle, nPointSize )
-   RETURN HB_QFont():from( Qt_QFontDatabase_font( ::pPtr, cFamily, cStyle, nPointSize ) )
+METHOD QFontDatabase:font( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN HB_QFont():from( Qt_QFontDatabase_font( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontDatabase:isBitmapScalable( cFamily, cStyle )
-   RETURN Qt_QFontDatabase_isBitmapScalable( ::pPtr, cFamily, cStyle )
+METHOD QFontDatabase:isBitmapScalable( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QFontDatabase_isBitmapScalable( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QFontDatabase_isBitmapScalable( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontDatabase:isFixedPitch( cFamily, cStyle )
-   RETURN Qt_QFontDatabase_isFixedPitch( ::pPtr, cFamily, cStyle )
+METHOD QFontDatabase:isFixedPitch( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QFontDatabase_isFixedPitch( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QFontDatabase_isFixedPitch( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontDatabase:isScalable( cFamily, cStyle )
-   RETURN Qt_QFontDatabase_isScalable( ::pPtr, cFamily, cStyle )
+METHOD QFontDatabase:isScalable( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QFontDatabase_isScalable( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QFontDatabase_isScalable( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontDatabase:isSmoothlyScalable( cFamily, cStyle )
-   RETURN Qt_QFontDatabase_isSmoothlyScalable( ::pPtr, cFamily, cStyle )
+METHOD QFontDatabase:isSmoothlyScalable( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QFontDatabase_isSmoothlyScalable( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QFontDatabase_isSmoothlyScalable( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontDatabase:italic( cFamily, cStyle )
-   RETURN Qt_QFontDatabase_italic( ::pPtr, cFamily, cStyle )
+METHOD QFontDatabase:italic( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QFontDatabase_italic( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontDatabase:pointSizes( cFamily, cStyle )
-   RETURN HB_QList():from( Qt_QFontDatabase_pointSizes( ::pPtr, cFamily, cStyle ) )
+METHOD QFontDatabase:pointSizes( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN HB_QList():from( Qt_QFontDatabase_pointSizes( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QList():from( Qt_QFontDatabase_pointSizes( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontDatabase:smoothSizes( cFamily, cStyle )
-   RETURN HB_QList():from( Qt_QFontDatabase_smoothSizes( ::pPtr, cFamily, cStyle ) )
+METHOD QFontDatabase:smoothSizes( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN HB_QList():from( Qt_QFontDatabase_smoothSizes( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QFontDatabase:styleString( ... )
@@ -195,46 +308,122 @@ METHOD QFontDatabase:styleString( ... )
    RETURN hbqt_error()
 
 
-METHOD QFontDatabase:styles( cFamily )
-   RETURN HB_QStringList():from( Qt_QFontDatabase_styles( ::pPtr, cFamily ) )
+METHOD QFontDatabase:styles( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QStringList():from( Qt_QFontDatabase_styles( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontDatabase:weight( cFamily, cStyle )
-   RETURN Qt_QFontDatabase_weight( ::pPtr, cFamily, cStyle )
+METHOD QFontDatabase:weight( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QFontDatabase_weight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontDatabase:addApplicationFont( cFileName )
-   RETURN Qt_QFontDatabase_addApplicationFont( ::pPtr, cFileName )
+METHOD QFontDatabase:addApplicationFont( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QFontDatabase_addApplicationFont( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontDatabase:addApplicationFontFromData( pFontData )
-   RETURN Qt_QFontDatabase_addApplicationFontFromData( ::pPtr, hbqt_ptr( pFontData ) )
+METHOD QFontDatabase:addApplicationFontFromData( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QFontDatabase_addApplicationFontFromData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontDatabase:applicationFontFamilies( nId )
-   RETURN HB_QStringList():from( Qt_QFontDatabase_applicationFontFamilies( ::pPtr, nId ) )
+METHOD QFontDatabase:applicationFontFamilies( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QStringList():from( Qt_QFontDatabase_applicationFontFamilies( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontDatabase:removeAllApplicationFonts()
-   RETURN Qt_QFontDatabase_removeAllApplicationFonts( ::pPtr )
+METHOD QFontDatabase:removeAllApplicationFonts( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFontDatabase_removeAllApplicationFonts( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontDatabase:removeApplicationFont( nId )
-   RETURN Qt_QFontDatabase_removeApplicationFont( ::pPtr, nId )
+METHOD QFontDatabase:removeApplicationFont( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFontDatabase_removeApplicationFont( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontDatabase:standardSizes()
-   RETURN HB_QList():from( Qt_QFontDatabase_standardSizes( ::pPtr ) )
+METHOD QFontDatabase:standardSizes( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QFontDatabase_standardSizes( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontDatabase:supportsThreadedFontRendering()
-   RETURN Qt_QFontDatabase_supportsThreadedFontRendering( ::pPtr )
+METHOD QFontDatabase:supportsThreadedFontRendering( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFontDatabase_supportsThreadedFontRendering( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontDatabase:writingSystemName( nWritingSystem )
-   RETURN Qt_QFontDatabase_writingSystemName( ::pPtr, nWritingSystem )
+METHOD QFontDatabase:writingSystemName( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFontDatabase_writingSystemName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontDatabase:writingSystemSample( nWritingSystem )
-   RETURN Qt_QFontDatabase_writingSystemSample( ::pPtr, nWritingSystem )
+METHOD QFontDatabase:writingSystemSample( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFontDatabase_writingSystemSample( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

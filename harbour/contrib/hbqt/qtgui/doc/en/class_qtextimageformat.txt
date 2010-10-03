@@ -52,7 +52,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTextImageFormat.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextImageFormat.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QTextCharFormat()
  *  $END$
  */

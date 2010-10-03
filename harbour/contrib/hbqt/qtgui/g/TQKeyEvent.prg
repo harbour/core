@@ -103,15 +103,15 @@ CREATE CLASS QKeyEvent INHERIT HbQtObjectHandler, HB_QInputEvent FUNCTION HB_QKe
 
    METHOD  new( ... )
 
-   METHOD  count()
-   METHOD  isAutoRepeat()
-   METHOD  key()
-   METHOD  matches( nKey )
-   METHOD  modifiers()
-   METHOD  nativeModifiers()
-   METHOD  nativeScanCode()
-   METHOD  nativeVirtualKey()
-   METHOD  text()
+   METHOD  count                         // (  )                                               -> nInt
+   METHOD  isAutoRepeat                  // (  )                                               -> lBool
+   METHOD  key                           // (  )                                               -> nInt
+   METHOD  matches                       // ( nKey )                                           -> lBool
+   METHOD  modifiers                     // (  )                                               -> nQt_KeyboardModifiers
+   METHOD  nativeModifiers               // (  )                                               -> nQuint32
+   METHOD  nativeScanCode                // (  )                                               -> nQuint32
+   METHOD  nativeVirtualKey              // (  )                                               -> nQuint32
+   METHOD  text                          // (  )                                               -> cQString
 
    ENDCLASS
 
@@ -125,38 +125,78 @@ METHOD QKeyEvent:new( ... )
    RETURN Self
 
 
-METHOD QKeyEvent:count()
-   RETURN Qt_QKeyEvent_count( ::pPtr )
+METHOD QKeyEvent:count( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QKeyEvent_count( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QKeyEvent:isAutoRepeat()
-   RETURN Qt_QKeyEvent_isAutoRepeat( ::pPtr )
+METHOD QKeyEvent:isAutoRepeat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QKeyEvent_isAutoRepeat( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QKeyEvent:key()
-   RETURN Qt_QKeyEvent_key( ::pPtr )
+METHOD QKeyEvent:key( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QKeyEvent_key( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QKeyEvent:matches( nKey )
-   RETURN Qt_QKeyEvent_matches( ::pPtr, nKey )
+METHOD QKeyEvent:matches( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QKeyEvent_matches( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QKeyEvent:modifiers()
-   RETURN Qt_QKeyEvent_modifiers( ::pPtr )
+METHOD QKeyEvent:modifiers( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QKeyEvent_modifiers( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QKeyEvent:nativeModifiers()
-   RETURN Qt_QKeyEvent_nativeModifiers( ::pPtr )
+METHOD QKeyEvent:nativeModifiers( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QKeyEvent_nativeModifiers( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QKeyEvent:nativeScanCode()
-   RETURN Qt_QKeyEvent_nativeScanCode( ::pPtr )
+METHOD QKeyEvent:nativeScanCode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QKeyEvent_nativeScanCode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QKeyEvent:nativeVirtualKey()
-   RETURN Qt_QKeyEvent_nativeVirtualKey( ::pPtr )
+METHOD QKeyEvent:nativeVirtualKey( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QKeyEvent_nativeVirtualKey( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QKeyEvent:text()
-   RETURN Qt_QKeyEvent_text( ::pPtr )
+METHOD QKeyEvent:text( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QKeyEvent_text( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

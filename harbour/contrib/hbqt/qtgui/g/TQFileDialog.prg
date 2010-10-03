@@ -103,51 +103,52 @@ CREATE CLASS QFileDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QFile
 
    METHOD  new( ... )
 
-   METHOD  acceptMode()
-   METHOD  confirmOverwrite()
-   METHOD  defaultSuffix()
-   METHOD  directory()
-   METHOD  fileMode()
-   METHOD  filter()
-   METHOD  history()
-   METHOD  iconProvider()
-   METHOD  isNameFilterDetailsVisible()
-   METHOD  isReadOnly()
-   METHOD  itemDelegate()
-   METHOD  labelText( nLabel )
-   METHOD  nameFilters()
-   METHOD  options()
-   METHOD  proxyModel()
-   METHOD  resolveSymlinks()
-   METHOD  restoreState( pState )
-   METHOD  saveState()
-   METHOD  selectFile( cFilename )
-   METHOD  selectNameFilter( cFilter )
-   METHOD  selectedFiles()
-   METHOD  selectedNameFilter()
-   METHOD  setAcceptMode( nMode )
-   METHOD  setConfirmOverwrite( lEnabled )
-   METHOD  setDefaultSuffix( cSuffix )
-   METHOD  setDirectory( ... )
-   METHOD  setFileMode( nMode )
-   METHOD  setFilter( nFilters )
-   METHOD  setHistory( pPaths )
-   METHOD  setIconProvider( pProvider )
-   METHOD  setItemDelegate( pDelegate )
-   METHOD  setLabelText( nLabel, cText )
-   METHOD  setNameFilter( cFilter )
-   METHOD  setNameFilterDetailsVisible( lEnabled )
-   METHOD  setNameFilters( pFilters )
-   METHOD  setOption( nOption, lOn )
-   METHOD  setOptions( nOptions )
-   METHOD  setProxyModel( pProxyModel )
-   METHOD  setReadOnly( lEnabled )
-   METHOD  setResolveSymlinks( lEnabled )
-   METHOD  setViewMode( nMode )
-   METHOD  sidebarUrls()
-   METHOD  testOption( nOption )
-   METHOD  viewMode()
-   METHOD  getExistingDirectory( pParent, cCaption, cDir, nOptions )
+   METHOD  acceptMode                    // (  )                                               -> nAcceptMode
+   METHOD  confirmOverwrite              // (  )                                               -> lBool
+   METHOD  defaultSuffix                 // (  )                                               -> cQString
+   METHOD  directory                     // (  )                                               -> oQDir
+   METHOD  fileMode                      // (  )                                               -> nFileMode
+   METHOD  filter                        // (  )                                               -> nQDir_Filters
+   METHOD  history                       // (  )                                               -> oQStringList
+   METHOD  iconProvider                  // (  )                                               -> oQFileIconProvider
+   METHOD  isNameFilterDetailsVisible    // (  )                                               -> lBool
+   METHOD  isReadOnly                    // (  )                                               -> lBool
+   METHOD  itemDelegate                  // (  )                                               -> oQAbstractItemDelegate
+   METHOD  labelText                     // ( nLabel )                                         -> cQString
+   METHOD  nameFilters                   // (  )                                               -> oQStringList
+   METHOD  options                       // (  )                                               -> nOptions
+   METHOD  proxyModel                    // (  )                                               -> oQAbstractProxyModel
+   METHOD  resolveSymlinks               // (  )                                               -> lBool
+   METHOD  restoreState                  // ( oQByteArray )                                    -> lBool
+   METHOD  saveState                     // (  )                                               -> oQByteArray
+   METHOD  selectFile                    // ( cFilename )                                      -> NIL
+   METHOD  selectNameFilter              // ( cFilter )                                        -> NIL
+   METHOD  selectedFiles                 // (  )                                               -> oQStringList
+   METHOD  selectedNameFilter            // (  )                                               -> cQString
+   METHOD  setAcceptMode                 // ( nMode )                                          -> NIL
+   METHOD  setConfirmOverwrite           // ( lEnabled )                                       -> NIL
+   METHOD  setDefaultSuffix              // ( cSuffix )                                        -> NIL
+   METHOD  setDirectory                  // ( cDirectory )                                     -> NIL
+                                         // ( oQDir )                                          -> NIL
+   METHOD  setFileMode                   // ( nMode )                                          -> NIL
+   METHOD  setFilter                     // ( nFilters )                                       -> NIL
+   METHOD  setHistory                    // ( oQStringList )                                   -> NIL
+   METHOD  setIconProvider               // ( oQFileIconProvider )                             -> NIL
+   METHOD  setItemDelegate               // ( oQAbstractItemDelegate )                         -> NIL
+   METHOD  setLabelText                  // ( nLabel, cText )                                  -> NIL
+   METHOD  setNameFilter                 // ( cFilter )                                        -> NIL
+   METHOD  setNameFilterDetailsVisible   // ( lEnabled )                                       -> NIL
+   METHOD  setNameFilters                // ( oQStringList )                                   -> NIL
+   METHOD  setOption                     // ( nOption, lOn )                                   -> NIL
+   METHOD  setOptions                    // ( nOptions )                                       -> NIL
+   METHOD  setProxyModel                 // ( oQAbstractProxyModel )                           -> NIL
+   METHOD  setReadOnly                   // ( lEnabled )                                       -> NIL
+   METHOD  setResolveSymlinks            // ( lEnabled )                                       -> NIL
+   METHOD  setViewMode                   // ( nMode )                                          -> NIL
+   METHOD  sidebarUrls                   // (  )                                               -> oQList_QUrl>
+   METHOD  testOption                    // ( nOption )                                        -> lBool
+   METHOD  viewMode                      // (  )                                               -> nViewMode
+   METHOD  getExistingDirectory          // ( oQWidget, cCaption, cDir, nOptions )             -> cQString
 
    ENDCLASS
 
@@ -161,104 +162,232 @@ METHOD QFileDialog:new( ... )
    RETURN Self
 
 
-METHOD QFileDialog:acceptMode()
-   RETURN Qt_QFileDialog_acceptMode( ::pPtr )
+METHOD QFileDialog:acceptMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileDialog_acceptMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:confirmOverwrite()
-   RETURN Qt_QFileDialog_confirmOverwrite( ::pPtr )
+METHOD QFileDialog:confirmOverwrite( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileDialog_confirmOverwrite( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:defaultSuffix()
-   RETURN Qt_QFileDialog_defaultSuffix( ::pPtr )
+METHOD QFileDialog:defaultSuffix( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileDialog_defaultSuffix( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:directory()
-   RETURN HB_QDir():from( Qt_QFileDialog_directory( ::pPtr ) )
+METHOD QFileDialog:directory( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDir():from( Qt_QFileDialog_directory( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:fileMode()
-   RETURN Qt_QFileDialog_fileMode( ::pPtr )
+METHOD QFileDialog:fileMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileDialog_fileMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:filter()
-   RETURN Qt_QFileDialog_filter( ::pPtr )
+METHOD QFileDialog:filter( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileDialog_filter( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:history()
-   RETURN HB_QStringList():from( Qt_QFileDialog_history( ::pPtr ) )
+METHOD QFileDialog:history( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QFileDialog_history( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:iconProvider()
-   RETURN HB_QFileIconProvider():from( Qt_QFileDialog_iconProvider( ::pPtr ) )
+METHOD QFileDialog:iconProvider( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFileIconProvider():from( Qt_QFileDialog_iconProvider( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:isNameFilterDetailsVisible()
-   RETURN Qt_QFileDialog_isNameFilterDetailsVisible( ::pPtr )
+METHOD QFileDialog:isNameFilterDetailsVisible( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileDialog_isNameFilterDetailsVisible( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:isReadOnly()
-   RETURN Qt_QFileDialog_isReadOnly( ::pPtr )
+METHOD QFileDialog:isReadOnly( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileDialog_isReadOnly( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:itemDelegate()
-   RETURN HB_QAbstractItemDelegate():from( Qt_QFileDialog_itemDelegate( ::pPtr ) )
+METHOD QFileDialog:itemDelegate( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QAbstractItemDelegate():from( Qt_QFileDialog_itemDelegate( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:labelText( nLabel )
-   RETURN Qt_QFileDialog_labelText( ::pPtr, nLabel )
+METHOD QFileDialog:labelText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFileDialog_labelText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:nameFilters()
-   RETURN HB_QStringList():from( Qt_QFileDialog_nameFilters( ::pPtr ) )
+METHOD QFileDialog:nameFilters( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QFileDialog_nameFilters( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:options()
-   RETURN Qt_QFileDialog_options( ::pPtr )
+METHOD QFileDialog:options( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileDialog_options( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:proxyModel()
-   RETURN HB_QAbstractProxyModel():from( Qt_QFileDialog_proxyModel( ::pPtr ) )
+METHOD QFileDialog:proxyModel( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QAbstractProxyModel():from( Qt_QFileDialog_proxyModel( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:resolveSymlinks()
-   RETURN Qt_QFileDialog_resolveSymlinks( ::pPtr )
+METHOD QFileDialog:resolveSymlinks( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileDialog_resolveSymlinks( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:restoreState( pState )
-   RETURN Qt_QFileDialog_restoreState( ::pPtr, hbqt_ptr( pState ) )
+METHOD QFileDialog:restoreState( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QFileDialog_restoreState( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:saveState()
-   RETURN HB_QByteArray():from( Qt_QFileDialog_saveState( ::pPtr ) )
+METHOD QFileDialog:saveState( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QByteArray():from( Qt_QFileDialog_saveState( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:selectFile( cFilename )
-   RETURN Qt_QFileDialog_selectFile( ::pPtr, cFilename )
+METHOD QFileDialog:selectFile( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QFileDialog_selectFile( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:selectNameFilter( cFilter )
-   RETURN Qt_QFileDialog_selectNameFilter( ::pPtr, cFilter )
+METHOD QFileDialog:selectNameFilter( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QFileDialog_selectNameFilter( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:selectedFiles()
-   RETURN HB_QStringList():from( Qt_QFileDialog_selectedFiles( ::pPtr ) )
+METHOD QFileDialog:selectedFiles( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QFileDialog_selectedFiles( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:selectedNameFilter()
-   RETURN Qt_QFileDialog_selectedNameFilter( ::pPtr )
+METHOD QFileDialog:selectedNameFilter( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileDialog_selectedNameFilter( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:setAcceptMode( nMode )
-   RETURN Qt_QFileDialog_setAcceptMode( ::pPtr, nMode )
+METHOD QFileDialog:setAcceptMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFileDialog_setAcceptMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:setConfirmOverwrite( lEnabled )
-   RETURN Qt_QFileDialog_setConfirmOverwrite( ::pPtr, lEnabled )
+METHOD QFileDialog:setConfirmOverwrite( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QFileDialog_setConfirmOverwrite( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:setDefaultSuffix( cSuffix )
-   RETURN Qt_QFileDialog_setDefaultSuffix( ::pPtr, cSuffix )
+METHOD QFileDialog:setDefaultSuffix( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QFileDialog_setDefaultSuffix( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QFileDialog:setDirectory( ... )
@@ -275,78 +404,248 @@ METHOD QFileDialog:setDirectory( ... )
    RETURN hbqt_error()
 
 
-METHOD QFileDialog:setFileMode( nMode )
-   RETURN Qt_QFileDialog_setFileMode( ::pPtr, nMode )
+METHOD QFileDialog:setFileMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFileDialog_setFileMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:setFilter( nFilters )
-   RETURN Qt_QFileDialog_setFilter( ::pPtr, nFilters )
+METHOD QFileDialog:setFilter( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFileDialog_setFilter( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:setHistory( pPaths )
-   RETURN Qt_QFileDialog_setHistory( ::pPtr, hbqt_ptr( pPaths ) )
+METHOD QFileDialog:setHistory( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QFileDialog_setHistory( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:setIconProvider( pProvider )
-   RETURN Qt_QFileDialog_setIconProvider( ::pPtr, hbqt_ptr( pProvider ) )
+METHOD QFileDialog:setIconProvider( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QFileDialog_setIconProvider( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:setItemDelegate( pDelegate )
-   RETURN Qt_QFileDialog_setItemDelegate( ::pPtr, hbqt_ptr( pDelegate ) )
+METHOD QFileDialog:setItemDelegate( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QFileDialog_setItemDelegate( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:setLabelText( nLabel, cText )
-   RETURN Qt_QFileDialog_setLabelText( ::pPtr, nLabel, cText )
+METHOD QFileDialog:setLabelText( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QFileDialog_setLabelText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:setNameFilter( cFilter )
-   RETURN Qt_QFileDialog_setNameFilter( ::pPtr, cFilter )
+METHOD QFileDialog:setNameFilter( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QFileDialog_setNameFilter( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:setNameFilterDetailsVisible( lEnabled )
-   RETURN Qt_QFileDialog_setNameFilterDetailsVisible( ::pPtr, lEnabled )
+METHOD QFileDialog:setNameFilterDetailsVisible( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QFileDialog_setNameFilterDetailsVisible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:setNameFilters( pFilters )
-   RETURN Qt_QFileDialog_setNameFilters( ::pPtr, hbqt_ptr( pFilters ) )
+METHOD QFileDialog:setNameFilters( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QFileDialog_setNameFilters( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:setOption( nOption, lOn )
-   RETURN Qt_QFileDialog_setOption( ::pPtr, nOption, lOn )
+METHOD QFileDialog:setOption( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QFileDialog_setOption( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFileDialog_setOption( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:setOptions( nOptions )
-   RETURN Qt_QFileDialog_setOptions( ::pPtr, nOptions )
+METHOD QFileDialog:setOptions( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFileDialog_setOptions( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:setProxyModel( pProxyModel )
-   RETURN Qt_QFileDialog_setProxyModel( ::pPtr, hbqt_ptr( pProxyModel ) )
+METHOD QFileDialog:setProxyModel( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QFileDialog_setProxyModel( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:setReadOnly( lEnabled )
-   RETURN Qt_QFileDialog_setReadOnly( ::pPtr, lEnabled )
+METHOD QFileDialog:setReadOnly( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QFileDialog_setReadOnly( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:setResolveSymlinks( lEnabled )
-   RETURN Qt_QFileDialog_setResolveSymlinks( ::pPtr, lEnabled )
+METHOD QFileDialog:setResolveSymlinks( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QFileDialog_setResolveSymlinks( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:setViewMode( nMode )
-   RETURN Qt_QFileDialog_setViewMode( ::pPtr, nMode )
+METHOD QFileDialog:setViewMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFileDialog_setViewMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:sidebarUrls()
-   RETURN HB_QList():from( Qt_QFileDialog_sidebarUrls( ::pPtr ) )
+METHOD QFileDialog:sidebarUrls( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QFileDialog_sidebarUrls( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:testOption( nOption )
-   RETURN Qt_QFileDialog_testOption( ::pPtr, nOption )
+METHOD QFileDialog:testOption( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFileDialog_testOption( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:viewMode()
-   RETURN Qt_QFileDialog_viewMode( ::pPtr )
+METHOD QFileDialog:viewMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileDialog_viewMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileDialog:getExistingDirectory( pParent, cCaption, cDir, nOptions )
-   RETURN Qt_QFileDialog_getExistingDirectory( ::pPtr, hbqt_ptr( pParent ), cCaption, cDir, nOptions )
+METHOD QFileDialog:getExistingDirectory( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QFileDialog_getExistingDirectory( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
+         RETURN Qt_QFileDialog_getExistingDirectory( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QFileDialog_getExistingDirectory( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QFileDialog_getExistingDirectory( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QFileDialog_getExistingDirectory( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

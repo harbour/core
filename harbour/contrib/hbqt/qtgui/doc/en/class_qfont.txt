@@ -79,11 +79,11 @@
  *     :cleanup()                                          -> NIL
  *     :initialize()                                       -> NIL
  *     :insertSubstitution( cFamilyName, cSubstituteName )  -> NIL
- *     :insertSubstitutions( cFamilyName, pSubstituteNames )  -> NIL
+ *     :insertSubstitutions( cFamilyName, oQStringList )   -> NIL
  *     :removeSubstitution( cFamilyName )                  -> NIL
  *     :substitute( cFamilyName )                          -> cQString
- *     :substitutes( cFamilyName )                         -> pQStringList
- *     :substitutions()                                    -> pQStringList
+ *     :substitutes( cFamilyName )                         -> oQStringList
+ *     :substitutions()                                    -> oQStringList
  * 
  *  $DESCRIPTION$
  * 
@@ -110,7 +110,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQFont.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QFont.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

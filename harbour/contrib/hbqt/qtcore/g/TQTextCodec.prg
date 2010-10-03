@@ -103,23 +103,27 @@ CREATE CLASS QTextCodec INHERIT HbQtObjectHandler FUNCTION HB_QTextCodec
 
    METHOD  new( ... )
 
-   METHOD  aliases()
-   METHOD  canEncode( ... )
-   METHOD  fromUnicode( cStr )
-   METHOD  makeDecoder()
-   METHOD  makeEncoder()
-   METHOD  mibEnum()
-   METHOD  name()
-   METHOD  toUnicode( ... )
-   METHOD  codecForCStrings()
-   METHOD  codecForHtml( ... )
-   METHOD  codecForLocale()
-   METHOD  codecForMib( nMib )
-   METHOD  codecForName( ... )
-   METHOD  codecForTr()
-   METHOD  setCodecForCStrings( pCodec )
-   METHOD  setCodecForLocale( pC )
-   METHOD  setCodecForTr( pC )
+   METHOD  aliases                       // (  )                                               -> oQList_QByteArray>
+   METHOD  canEncode                     // ( oQChar )                                         -> lBool
+                                         // ( cS )                                             -> lBool
+   METHOD  fromUnicode                   // ( cStr )                                           -> oQByteArray
+   METHOD  makeDecoder                   // (  )                                               -> oQTextDecoder
+   METHOD  makeEncoder                   // (  )                                               -> oQTextEncoder
+   METHOD  mibEnum                       // (  )                                               -> nInt
+   METHOD  name                          // (  )                                               -> oQByteArray
+   METHOD  toUnicode                     // ( oQByteArray )                                    -> cQString
+                                         // ( cChars )                                         -> cQString
+   METHOD  codecForCStrings              // (  )                                               -> oQTextCodec
+   METHOD  codecForHtml                  // ( oQByteArray, oQTextCodec )                       -> oQTextCodec
+                                         // ( oQByteArray )                                    -> oQTextCodec
+   METHOD  codecForLocale                // (  )                                               -> oQTextCodec
+   METHOD  codecForMib                   // ( nMib )                                           -> oQTextCodec
+   METHOD  codecForName                  // ( oQByteArray )                                    -> oQTextCodec
+                                         // ( cName )                                          -> oQTextCodec
+   METHOD  codecForTr                    // (  )                                               -> oQTextCodec
+   METHOD  setCodecForCStrings           // ( oQTextCodec )                                    -> NIL
+   METHOD  setCodecForLocale             // ( oQTextCodec )                                    -> NIL
+   METHOD  setCodecForTr                 // ( oQTextCodec )                                    -> NIL
 
    ENDCLASS
 
@@ -133,8 +137,12 @@ METHOD QTextCodec:new( ... )
    RETURN Self
 
 
-METHOD QTextCodec:aliases()
-   RETURN HB_QList():from( Qt_QTextCodec_aliases( ::pPtr ) )
+METHOD QTextCodec:aliases( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QTextCodec_aliases( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTextCodec:canEncode( ... )
@@ -151,44 +159,70 @@ METHOD QTextCodec:canEncode( ... )
    RETURN hbqt_error()
 
 
-METHOD QTextCodec:fromUnicode( cStr )
-   RETURN HB_QByteArray():from( Qt_QTextCodec_fromUnicode( ::pPtr, cStr ) )
-
-
-METHOD QTextCodec:makeDecoder()
-   RETURN HB_QTextDecoder():from( Qt_QTextCodec_makeDecoder( ::pPtr ) )
-
-
-METHOD QTextCodec:makeEncoder()
-   RETURN HB_QTextEncoder():from( Qt_QTextCodec_makeEncoder( ::pPtr ) )
-
-
-METHOD QTextCodec:mibEnum()
-   RETURN Qt_QTextCodec_mibEnum( ::pPtr )
-
-
-METHOD QTextCodec:name()
-   RETURN HB_QByteArray():from( Qt_QTextCodec_name( ::pPtr ) )
-
-
-METHOD QTextCodec:toUnicode( ... )
+METHOD QTextCodec:fromUnicode( ... )
    SWITCH PCount()
    CASE 1
       DO CASE
-      CASE hb_isObject( hb_pvalue( 1 ) )
-         SWITCH __objGetClsName( hb_pvalue( 1 ) )
-         CASE "QBYTEARRAY"
-            RETURN Qt_QTextCodec_toUnicode( ::pPtr, ... )
-         // RETURN Qt_QTextCodec_toUnicode_1( ::pPtr, ... )
-         ENDSWITCH
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QByteArray():from( Qt_QTextCodec_fromUnicode( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
    RETURN hbqt_error()
 
 
-METHOD QTextCodec:codecForCStrings()
-   RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForCStrings( ::pPtr ) )
+METHOD QTextCodec:makeDecoder( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextDecoder():from( Qt_QTextCodec_makeDecoder( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCodec:makeEncoder( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextEncoder():from( Qt_QTextCodec_makeEncoder( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCodec:mibEnum( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextCodec_mibEnum( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCodec:name( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QByteArray():from( Qt_QTextCodec_name( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCodec:toUnicode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCodec_toUnicode_1( ::pPtr, ... )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCodec_toUnicode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCodec:codecForCStrings( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForCStrings( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTextCodec:codecForHtml( ... )
@@ -209,42 +243,80 @@ METHOD QTextCodec:codecForHtml( ... )
    RETURN hbqt_error()
 
 
-METHOD QTextCodec:codecForLocale()
-   RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForLocale( ::pPtr ) )
+METHOD QTextCodec:codecForLocale( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForLocale( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextCodec:codecForMib( nMib )
-   RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForMib( ::pPtr, nMib ) )
-
-
-METHOD QTextCodec:codecForName( ... )
+METHOD QTextCodec:codecForMib( ... )
    SWITCH PCount()
    CASE 1
       DO CASE
-      CASE hb_isObject( hb_pvalue( 1 ) )
-         SWITCH __objGetClsName( hb_pvalue( 1 ) )
-         CASE "QBYTEARRAY"
-            RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForName( ::pPtr, ... ) )
-         // RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForName_1( ::pPtr, ... ) )
-         ENDSWITCH
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForMib( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
    RETURN hbqt_error()
 
 
-METHOD QTextCodec:codecForTr()
-   RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForTr( ::pPtr ) )
+METHOD QTextCodec:codecForName( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForName_1( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForName( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextCodec:setCodecForCStrings( pCodec )
-   RETURN Qt_QTextCodec_setCodecForCStrings( ::pPtr, hbqt_ptr( pCodec ) )
+METHOD QTextCodec:codecForTr( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForTr( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextCodec:setCodecForLocale( pC )
-   RETURN Qt_QTextCodec_setCodecForLocale( ::pPtr, hbqt_ptr( pC ) )
+METHOD QTextCodec:setCodecForCStrings( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCodec_setCodecForCStrings( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextCodec:setCodecForTr( pC )
-   RETURN Qt_QTextCodec_setCodecForTr( ::pPtr, hbqt_ptr( pC ) )
+METHOD QTextCodec:setCodecForLocale( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCodec_setCodecForLocale( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCodec:setCodecForTr( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCodec_setCodecForTr( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

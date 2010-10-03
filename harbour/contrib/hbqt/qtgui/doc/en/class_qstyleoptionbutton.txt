@@ -27,8 +27,8 @@
  *     An instance of the object of type QStyleOptionButton
  *  $METHODS$
  *     :features()                                         -> nButtonFeatures
- *     :icon()                                             -> pQIcon
- *     :iconSize()                                         -> pQSize
+ *     :icon()                                             -> oQIcon
+ *     :iconSize()                                         -> oQSize
  *     :text()                                             -> cQString
  * 
  *  $DESCRIPTION$
@@ -49,7 +49,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionButton.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionButton.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QStyleOption()
  *  $END$
  */

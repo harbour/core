@@ -26,8 +26,8 @@
  *  $RETURNS$
  *     An instance of the object of type QRegExpValidator
  *  $METHODS$
- *     :regExp()                                           -> pQRegExp
- *     :setRegExp( pRx )                                   -> NIL
+ *     :regExp()                                           -> oQRegExp
+ *     :setRegExp( oQRegExp )                              -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -47,7 +47,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQRegExpValidator.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QRegExpValidator.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QValidator()
  *  $END$
  */

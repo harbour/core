@@ -26,13 +26,13 @@
  *  $RETURNS$
  *     An instance of the object of type QGraphicsSceneHoverEvent
  *  $METHODS$
- *     :lastPos()                                          -> pQPointF
- *     :lastScenePos()                                     -> pQPointF
- *     :lastScreenPos()                                    -> pQPoint
- *     :modifiers()                                        -> nQt::KeyboardModifiers
- *     :pos()                                              -> pQPointF
- *     :scenePos()                                         -> pQPointF
- *     :screenPos()                                        -> pQPoint
+ *     :lastPos()                                          -> oQPointF
+ *     :lastScenePos()                                     -> oQPointF
+ *     :lastScreenPos()                                    -> oQPoint
+ *     :modifiers()                                        -> nQt_KeyboardModifiers
+ *     :pos()                                              -> oQPointF
+ *     :scenePos()                                         -> oQPointF
+ *     :screenPos()                                        -> oQPoint
  * 
  *  $DESCRIPTION$
  * 
@@ -52,7 +52,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGraphicsSceneHoverEvent.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsSceneHoverEvent.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QGraphicsSceneEvent()
  *  $END$
  */

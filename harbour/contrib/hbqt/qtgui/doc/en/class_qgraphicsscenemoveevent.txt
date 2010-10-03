@@ -26,8 +26,8 @@
  *  $RETURNS$
  *     An instance of the object of type QGraphicsSceneMoveEvent
  *  $METHODS$
- *     :newPos()                                           -> pQPointF
- *     :oldPos()                                           -> pQPointF
+ *     :newPos()                                           -> oQPointF
+ *     :oldPos()                                           -> oQPointF
  * 
  *  $DESCRIPTION$
  * 
@@ -47,7 +47,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGraphicsSceneMoveEvent.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsSceneMoveEvent.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QGraphicsSceneEvent()
  *  $END$
  */

@@ -28,7 +28,7 @@
  *  $METHODS$
  *     :cascadingSectionResizes()                          -> lBool
  *     :count()                                            -> nInt
- *     :defaultAlignment()                                 -> nQt::Alignment
+ *     :defaultAlignment()                                 -> nQt_Alignment
  *     :defaultSectionSize()                               -> nInt
  *     :hiddenSectionCount()                               -> nInt
  *     :hideSection( nLogicalIndex )                       -> NIL
@@ -40,17 +40,17 @@
  *     :length()                                           -> nInt
  *     :logicalIndex( nVisualIndex )                       -> nInt
  *     :logicalIndexAt( nPosition )                        -> nInt
- *     :logicalIndexAt_1( nX, nY )                         -> nInt
- *     :logicalIndexAt_2( pPos )                           -> nInt
+ *     :logicalIndexAt( nX, nY )                           -> nInt
+ *     :logicalIndexAt( oQPoint )                          -> nInt
  *     :minimumSectionSize()                               -> nInt
  *     :moveSection( nFrom, nTo )                          -> NIL
  *     :offset()                                           -> nInt
- *     :orientation()                                      -> nQt::Orientation
+ *     :orientation()                                      -> nQt_Orientation
  *     :resizeMode( nLogicalIndex )                        -> nResizeMode
  *     :resizeSection( nLogicalIndex, nSize )              -> NIL
  *     :resizeSections( nMode )                            -> NIL
- *     :restoreState( pState )                             -> lBool
- *     :saveState()                                        -> pQByteArray
+ *     :restoreState( oQByteArray )                        -> lBool
+ *     :saveState()                                        -> oQByteArray
  *     :sectionPosition( nLogicalIndex )                   -> nInt
  *     :sectionSize( nLogicalIndex )                       -> nInt
  *     :sectionSizeHint( nLogicalIndex )                   -> nInt
@@ -65,14 +65,14 @@
  *     :setMinimumSectionSize( nSize )                     -> NIL
  *     :setMovable( lMovable )                             -> NIL
  *     :setResizeMode( nMode )                             -> NIL
- *     :setResizeMode_1( nLogicalIndex, nMode )            -> NIL
+ *     :setResizeMode( nLogicalIndex, nMode )              -> NIL
  *     :setSectionHidden( nLogicalIndex, lHide )           -> NIL
  *     :setSortIndicator( nLogicalIndex, nOrder )          -> NIL
  *     :setSortIndicatorShown( lShow )                     -> NIL
  *     :setStretchLastSection( lStretch )                  -> NIL
  *     :showSection( nLogicalIndex )                       -> NIL
- *     :sizeHint()                                         -> pQSize
- *     :sortIndicatorOrder()                               -> nQt::SortOrder
+ *     :sizeHint()                                         -> oQSize
+ *     :sortIndicatorOrder()                               -> nQt_SortOrder
  *     :sortIndicatorSection()                             -> nInt
  *     :stretchLastSection()                               -> lBool
  *     :stretchSectionCount()                              -> nInt
@@ -102,7 +102,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQHeaderView.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QHeaderView.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractItemView()
  *  $END$
  */

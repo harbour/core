@@ -507,7 +507,7 @@ HB_FUNC( QT_QIMAGE_LOAD )
    if( p )
    {
       void * pText;
-      hb_retl( ( p )->load( hb_parstr_utf8( 2, &pText, NULL ), hbqt_par_char( 3 ) ) );
+      hb_retl( ( p )->load( hb_parstr_utf8( 2, &pText, NULL ), ( const char * ) hb_parc( 3 ) ) );
       hb_strfree( pText );
    }
 }
@@ -520,7 +520,7 @@ HB_FUNC( QT_QIMAGE_LOAD_1 )
    QImage * p = hbqt_par_QImage( 1 );
    if( p )
    {
-      hb_retl( ( p )->load( hbqt_par_QIODevice( 2 ), hbqt_par_char( 3 ) ) );
+      hb_retl( ( p )->load( hbqt_par_QIODevice( 2 ), ( const char * ) hb_parc( 3 ) ) );
    }
 }
 
@@ -532,7 +532,7 @@ HB_FUNC( QT_QIMAGE_LOADFROMDATA )
    QImage * p = hbqt_par_QImage( 1 );
    if( p )
    {
-      hb_retl( ( p )->loadFromData( *hbqt_par_QByteArray( 2 ), hbqt_par_char( 3 ) ) );
+      hb_retl( ( p )->loadFromData( *hbqt_par_QByteArray( 2 ), ( const char * ) hb_parc( 3 ) ) );
    }
 }
 
@@ -665,7 +665,7 @@ HB_FUNC( QT_QIMAGE_SAVE )
    if( p )
    {
       void * pText;
-      hb_retl( ( p )->save( hb_parstr_utf8( 2, &pText, NULL ), hbqt_par_char( 3 ), hb_parnidef( 4, -1 ) ) );
+      hb_retl( ( p )->save( hb_parstr_utf8( 2, &pText, NULL ), ( const char * ) hb_parc( 3 ), hb_parnidef( 4, -1 ) ) );
       hb_strfree( pText );
    }
 }
@@ -678,7 +678,7 @@ HB_FUNC( QT_QIMAGE_SAVE_1 )
    QImage * p = hbqt_par_QImage( 1 );
    if( p )
    {
-      hb_retl( ( p )->save( hbqt_par_QIODevice( 2 ), hbqt_par_char( 3 ), hb_parnidef( 4, -1 ) ) );
+      hb_retl( ( p )->save( hbqt_par_QIODevice( 2 ), ( const char * ) hb_parc( 3 ), hb_parnidef( 4, -1 ) ) );
    }
 }
 

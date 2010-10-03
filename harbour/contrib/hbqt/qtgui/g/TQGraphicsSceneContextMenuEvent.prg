@@ -103,11 +103,11 @@ CREATE CLASS QGraphicsSceneContextMenuEvent INHERIT HbQtObjectHandler, HB_QGraph
 
    METHOD  new( ... )
 
-   METHOD  modifiers()
-   METHOD  pos()
-   METHOD  reason()
-   METHOD  scenePos()
-   METHOD  screenPos()
+   METHOD  modifiers                     // (  )                                               -> nQt_KeyboardModifiers
+   METHOD  pos                           // (  )                                               -> oQPointF
+   METHOD  reason                        // (  )                                               -> nReason
+   METHOD  scenePos                      // (  )                                               -> oQPointF
+   METHOD  screenPos                     // (  )                                               -> oQPoint
 
    ENDCLASS
 
@@ -121,22 +121,42 @@ METHOD QGraphicsSceneContextMenuEvent:new( ... )
    RETURN Self
 
 
-METHOD QGraphicsSceneContextMenuEvent:modifiers()
-   RETURN Qt_QGraphicsSceneContextMenuEvent_modifiers( ::pPtr )
+METHOD QGraphicsSceneContextMenuEvent:modifiers( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsSceneContextMenuEvent_modifiers( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsSceneContextMenuEvent:pos()
-   RETURN HB_QPointF():from( Qt_QGraphicsSceneContextMenuEvent_pos( ::pPtr ) )
+METHOD QGraphicsSceneContextMenuEvent:pos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPointF():from( Qt_QGraphicsSceneContextMenuEvent_pos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsSceneContextMenuEvent:reason()
-   RETURN Qt_QGraphicsSceneContextMenuEvent_reason( ::pPtr )
+METHOD QGraphicsSceneContextMenuEvent:reason( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsSceneContextMenuEvent_reason( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsSceneContextMenuEvent:scenePos()
-   RETURN HB_QPointF():from( Qt_QGraphicsSceneContextMenuEvent_scenePos( ::pPtr ) )
+METHOD QGraphicsSceneContextMenuEvent:scenePos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPointF():from( Qt_QGraphicsSceneContextMenuEvent_scenePos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsSceneContextMenuEvent:screenPos()
-   RETURN HB_QPoint():from( Qt_QGraphicsSceneContextMenuEvent_screenPos( ::pPtr ) )
+METHOD QGraphicsSceneContextMenuEvent:screenPos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QGraphicsSceneContextMenuEvent_screenPos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

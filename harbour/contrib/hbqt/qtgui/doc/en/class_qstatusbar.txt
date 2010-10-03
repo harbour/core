@@ -26,13 +26,13 @@
  *  $RETURNS$
  *     An instance of the object of type QStatusBar
  *  $METHODS$
- *     :addPermanentWidget( pWidget, nStretch )            -> NIL
- *     :addWidget( pWidget, nStretch )                     -> NIL
+ *     :addPermanentWidget( oQWidget, nStretch )           -> NIL
+ *     :addWidget( oQWidget, nStretch )                    -> NIL
  *     :currentMessage()                                   -> cQString
- *     :insertPermanentWidget( nIndex, pWidget, nStretch )  -> nInt
- *     :insertWidget( nIndex, pWidget, nStretch )          -> nInt
+ *     :insertPermanentWidget( nIndex, oQWidget, nStretch )  -> nInt
+ *     :insertWidget( nIndex, oQWidget, nStretch )         -> nInt
  *     :isSizeGripEnabled()                                -> lBool
- *     :removeWidget( pWidget )                            -> NIL
+ *     :removeWidget( oQWidget )                           -> NIL
  *     :setSizeGripEnabled( lBool )                        -> NIL
  *     :clearMessage()                                     -> NIL
  *     :showMessage( cMessage, nTimeout )                  -> NIL
@@ -55,7 +55,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStatusBar.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStatusBar.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

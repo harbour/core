@@ -103,30 +103,30 @@ CREATE CLASS QAbstractSlider INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_Q
 
    METHOD  new( ... )
 
-   METHOD  hasTracking()
-   METHOD  invertedAppearance()
-   METHOD  invertedControls()
-   METHOD  isSliderDown()
-   METHOD  maximum()
-   METHOD  minimum()
-   METHOD  orientation()
-   METHOD  pageStep()
-   METHOD  setInvertedAppearance( lBool )
-   METHOD  setInvertedControls( lBool )
-   METHOD  setMaximum( nInt )
-   METHOD  setMinimum( nInt )
-   METHOD  setPageStep( nInt )
-   METHOD  setRange( nMin, nMax )
-   METHOD  setSingleStep( nInt )
-   METHOD  setSliderDown( lBool )
-   METHOD  setSliderPosition( nInt )
-   METHOD  setTracking( lEnable )
-   METHOD  singleStep()
-   METHOD  sliderPosition()
-   METHOD  triggerAction( nAction )
-   METHOD  value()
-   METHOD  setOrientation( nQt_Orientation )
-   METHOD  setValue( nInt )
+   METHOD  hasTracking                   // (  )                                               -> lBool
+   METHOD  invertedAppearance            // (  )                                               -> lBool
+   METHOD  invertedControls              // (  )                                               -> lBool
+   METHOD  isSliderDown                  // (  )                                               -> lBool
+   METHOD  maximum                       // (  )                                               -> nInt
+   METHOD  minimum                       // (  )                                               -> nInt
+   METHOD  orientation                   // (  )                                               -> nQt_Orientation
+   METHOD  pageStep                      // (  )                                               -> nInt
+   METHOD  setInvertedAppearance         // ( lBool )                                          -> NIL
+   METHOD  setInvertedControls           // ( lBool )                                          -> NIL
+   METHOD  setMaximum                    // ( nInt )                                           -> NIL
+   METHOD  setMinimum                    // ( nInt )                                           -> NIL
+   METHOD  setPageStep                   // ( nInt )                                           -> NIL
+   METHOD  setRange                      // ( nMin, nMax )                                     -> NIL
+   METHOD  setSingleStep                 // ( nInt )                                           -> NIL
+   METHOD  setSliderDown                 // ( lBool )                                          -> NIL
+   METHOD  setSliderPosition             // ( nInt )                                           -> NIL
+   METHOD  setTracking                   // ( lEnable )                                        -> NIL
+   METHOD  singleStep                    // (  )                                               -> nInt
+   METHOD  sliderPosition                // (  )                                               -> nInt
+   METHOD  triggerAction                 // ( nAction )                                        -> NIL
+   METHOD  value                         // (  )                                               -> nInt
+   METHOD  setOrientation                // ( nQt::Orientation )                               -> NIL
+   METHOD  setValue                      // ( nInt )                                           -> NIL
 
    ENDCLASS
 
@@ -140,98 +140,246 @@ METHOD QAbstractSlider:new( ... )
    RETURN Self
 
 
-METHOD QAbstractSlider:hasTracking()
-   RETURN Qt_QAbstractSlider_hasTracking( ::pPtr )
+METHOD QAbstractSlider:hasTracking( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractSlider_hasTracking( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSlider:invertedAppearance()
-   RETURN Qt_QAbstractSlider_invertedAppearance( ::pPtr )
+METHOD QAbstractSlider:invertedAppearance( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractSlider_invertedAppearance( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSlider:invertedControls()
-   RETURN Qt_QAbstractSlider_invertedControls( ::pPtr )
+METHOD QAbstractSlider:invertedControls( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractSlider_invertedControls( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSlider:isSliderDown()
-   RETURN Qt_QAbstractSlider_isSliderDown( ::pPtr )
+METHOD QAbstractSlider:isSliderDown( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractSlider_isSliderDown( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSlider:maximum()
-   RETURN Qt_QAbstractSlider_maximum( ::pPtr )
+METHOD QAbstractSlider:maximum( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractSlider_maximum( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSlider:minimum()
-   RETURN Qt_QAbstractSlider_minimum( ::pPtr )
+METHOD QAbstractSlider:minimum( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractSlider_minimum( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSlider:orientation()
-   RETURN Qt_QAbstractSlider_orientation( ::pPtr )
+METHOD QAbstractSlider:orientation( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractSlider_orientation( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSlider:pageStep()
-   RETURN Qt_QAbstractSlider_pageStep( ::pPtr )
+METHOD QAbstractSlider:pageStep( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractSlider_pageStep( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSlider:setInvertedAppearance( lBool )
-   RETURN Qt_QAbstractSlider_setInvertedAppearance( ::pPtr, lBool )
+METHOD QAbstractSlider:setInvertedAppearance( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractSlider_setInvertedAppearance( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSlider:setInvertedControls( lBool )
-   RETURN Qt_QAbstractSlider_setInvertedControls( ::pPtr, lBool )
+METHOD QAbstractSlider:setInvertedControls( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractSlider_setInvertedControls( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSlider:setMaximum( nInt )
-   RETURN Qt_QAbstractSlider_setMaximum( ::pPtr, nInt )
+METHOD QAbstractSlider:setMaximum( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractSlider_setMaximum( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSlider:setMinimum( nInt )
-   RETURN Qt_QAbstractSlider_setMinimum( ::pPtr, nInt )
+METHOD QAbstractSlider:setMinimum( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractSlider_setMinimum( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSlider:setPageStep( nInt )
-   RETURN Qt_QAbstractSlider_setPageStep( ::pPtr, nInt )
+METHOD QAbstractSlider:setPageStep( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractSlider_setPageStep( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSlider:setRange( nMin, nMax )
-   RETURN Qt_QAbstractSlider_setRange( ::pPtr, nMin, nMax )
+METHOD QAbstractSlider:setRange( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QAbstractSlider_setRange( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSlider:setSingleStep( nInt )
-   RETURN Qt_QAbstractSlider_setSingleStep( ::pPtr, nInt )
+METHOD QAbstractSlider:setSingleStep( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractSlider_setSingleStep( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSlider:setSliderDown( lBool )
-   RETURN Qt_QAbstractSlider_setSliderDown( ::pPtr, lBool )
+METHOD QAbstractSlider:setSliderDown( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractSlider_setSliderDown( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSlider:setSliderPosition( nInt )
-   RETURN Qt_QAbstractSlider_setSliderPosition( ::pPtr, nInt )
+METHOD QAbstractSlider:setSliderPosition( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractSlider_setSliderPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSlider:setTracking( lEnable )
-   RETURN Qt_QAbstractSlider_setTracking( ::pPtr, lEnable )
+METHOD QAbstractSlider:setTracking( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractSlider_setTracking( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSlider:singleStep()
-   RETURN Qt_QAbstractSlider_singleStep( ::pPtr )
+METHOD QAbstractSlider:singleStep( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractSlider_singleStep( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSlider:sliderPosition()
-   RETURN Qt_QAbstractSlider_sliderPosition( ::pPtr )
+METHOD QAbstractSlider:sliderPosition( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractSlider_sliderPosition( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSlider:triggerAction( nAction )
-   RETURN Qt_QAbstractSlider_triggerAction( ::pPtr, nAction )
+METHOD QAbstractSlider:triggerAction( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractSlider_triggerAction( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSlider:value()
-   RETURN Qt_QAbstractSlider_value( ::pPtr )
+METHOD QAbstractSlider:value( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractSlider_value( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSlider:setOrientation( nQt_Orientation )
-   RETURN Qt_QAbstractSlider_setOrientation( ::pPtr, nQt_Orientation )
+METHOD QAbstractSlider:setOrientation( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractSlider_setOrientation( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractSlider:setValue( nInt )
-   RETURN Qt_QAbstractSlider_setValue( ::pPtr, nInt )
+METHOD QAbstractSlider:setValue( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractSlider_setValue( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

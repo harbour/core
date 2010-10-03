@@ -27,18 +27,18 @@
  *     An instance of the object of type QWebHitTestResult
  *  $METHODS$
  *     :alternateText()                                    -> cQString
- *     :boundingRect()                                     -> pQRect
- *     :frame()                                            -> pQWebFrame
- *     :imageUrl()                                         -> pQUrl
+ *     :boundingRect()                                     -> oQRect
+ *     :frame()                                            -> oQWebFrame
+ *     :imageUrl()                                         -> oQUrl
  *     :isContentEditable()                                -> lBool
  *     :isContentSelected()                                -> lBool
  *     :isNull()                                           -> lBool
- *     :linkTargetFrame()                                  -> pQWebFrame
+ *     :linkTargetFrame()                                  -> oQWebFrame
  *     :linkText()                                         -> cQString
- *     :linkTitle()                                        -> pQUrl
- *     :linkUrl()                                          -> pQUrl
- *     :pixmap()                                           -> pQPixmap
- *     :pos()                                              -> pQPoint
+ *     :linkTitle()                                        -> oQUrl
+ *     :linkUrl()                                          -> oQUrl
+ *     :pixmap()                                           -> oQPixmap
+ *     :pos()                                              -> oQPoint
  *     :title()                                            -> cQString
  * 
  *  $DESCRIPTION$
@@ -59,7 +59,5 @@
  *     Harbour source: contrib/hbqt/qtwebkit/TQWebHitTestResult.prg
  *     C++ wrappers  : contrib/hbqt/qtwebkit/QWebHitTestResult.cpp
  *     Library       : hbqtwebkit
- *  $SEEALSO$
- *     
  *  $END$
  */

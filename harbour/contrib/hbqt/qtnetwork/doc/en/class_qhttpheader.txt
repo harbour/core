@@ -27,14 +27,14 @@
  *     An instance of the object of type QHttpHeader
  *  $METHODS$
  *     :addValue( cKey, cValue )                           -> NIL
- *     :allValues( cKey )                                  -> pQStringList
+ *     :allValues( cKey )                                  -> oQStringList
  *     :contentLength()                                    -> nUint
  *     :contentType()                                      -> cQString
  *     :hasContentLength()                                 -> lBool
  *     :hasContentType()                                   -> lBool
  *     :hasKey( cKey )                                     -> lBool
  *     :isValid()                                          -> lBool
- *     :keys()                                             -> pQStringList
+ *     :keys()                                             -> oQStringList
  *     :majorVersion()                                     -> nInt
  *     :minorVersion()                                     -> nInt
  *     :removeAllValues( cKey )                            -> NIL
@@ -63,7 +63,5 @@
  *     Harbour source: contrib/hbqt/qtnetwork/TQHttpHeader.prg
  *     C++ wrappers  : contrib/hbqt/qtnetwork/QHttpHeader.cpp
  *     Library       : hbqtnetwork
- *  $SEEALSO$
- *     
  *  $END$
  */

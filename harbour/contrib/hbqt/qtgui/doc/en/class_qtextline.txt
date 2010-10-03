@@ -28,19 +28,19 @@
  *  $METHODS$
  *     :ascent()                                           -> nQreal
  *     :cursorToX( @nCursorPos, nEdge )                    -> nQreal
- *     :cursorToX_1( nCursorPos, nEdge )                   -> nQreal
+ *     :cursorToX( nCursorPos, nEdge )                     -> nQreal
  *     :descent()                                          -> nQreal
  *     :height()                                           -> nQreal
  *     :isValid()                                          -> lBool
  *     :lineNumber()                                       -> nInt
- *     :naturalTextRect()                                  -> pQRectF
+ *     :naturalTextRect()                                  -> oQRectF
  *     :naturalTextWidth()                                 -> nQreal
- *     :position()                                         -> pQPointF
- *     :rect()                                             -> pQRectF
+ *     :position()                                         -> oQPointF
+ *     :rect()                                             -> oQRectF
  *     :setLineWidth( nWidth )                             -> NIL
  *     :setNumColumns( nNumColumns )                       -> NIL
- *     :setNumColumns_1( nNumColumns, nAlignmentWidth )    -> NIL
- *     :setPosition( pPos )                                -> NIL
+ *     :setNumColumns( nNumColumns, nAlignmentWidth )      -> NIL
+ *     :setPosition( oQPointF )                            -> NIL
  *     :textLength()                                       -> nInt
  *     :textStart()                                        -> nInt
  *     :width()                                            -> nQreal
@@ -66,7 +66,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTextLine.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextLine.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

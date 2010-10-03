@@ -26,9 +26,9 @@
  *  $RETURNS$
  *     An instance of the object of type QStyleOptionTitleBar
  *  $METHODS$
- *     :icon()                                             -> pQIcon
+ *     :icon()                                             -> oQIcon
  *     :text()                                             -> cQString
- *     :titleBarFlags()                                    -> nQt::WindowFlags
+ *     :titleBarFlags()                                    -> nQt_WindowFlags
  *     :titleBarState()                                    -> nInt
  * 
  *  $DESCRIPTION$
@@ -49,7 +49,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionTitleBar.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionTitleBar.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QStyleOptionComplex()
  *  $END$
  */

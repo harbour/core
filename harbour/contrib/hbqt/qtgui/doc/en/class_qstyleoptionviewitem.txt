@@ -26,13 +26,13 @@
  *  $RETURNS$
  *     An instance of the object of type QStyleOptionViewItem
  *  $METHODS$
- *     :decorationAlignment()                              -> nQt::Alignment
+ *     :decorationAlignment()                              -> nQt_Alignment
  *     :decorationPosition()                               -> nPosition
- *     :decorationSize()                                   -> pQSize
- *     :displayAlignment()                                 -> nQt::Alignment
- *     :font()                                             -> pQFont
+ *     :decorationSize()                                   -> oQSize
+ *     :displayAlignment()                                 -> nQt_Alignment
+ *     :font()                                             -> oQFont
  *     :showDecorationSelected()                           -> lBool
- *     :textElideMode()                                    -> nQt::TextElideMode
+ *     :textElideMode()                                    -> nQt_TextElideMode
  * 
  *  $DESCRIPTION$
  * 
@@ -52,7 +52,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionViewItem.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionViewItem.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QStyleOption()
  *  $END$
  */

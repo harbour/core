@@ -26,10 +26,10 @@
  *  $RETURNS$
  *     An instance of the object of type QHelpEvent
  *  $METHODS$
- *     :globalPos()                                        -> pQPoint
+ *     :globalPos()                                        -> oQPoint
  *     :globalX()                                          -> nInt
  *     :globalY()                                          -> nInt
- *     :pos()                                              -> pQPoint
+ *     :pos()                                              -> oQPoint
  *     :x()                                                -> nInt
  *     :y()                                                -> nInt
  * 
@@ -51,7 +51,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQHelpEvent.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QHelpEvent.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

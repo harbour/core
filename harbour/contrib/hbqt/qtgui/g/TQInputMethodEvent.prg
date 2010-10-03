@@ -103,11 +103,11 @@ CREATE CLASS QInputMethodEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_
 
    METHOD  new( ... )
 
-   METHOD  commitString()
-   METHOD  preeditString()
-   METHOD  replacementLength()
-   METHOD  replacementStart()
-   METHOD  setCommitString( cCommitString, nReplaceFrom, nReplaceLength )
+   METHOD  commitString                  // (  )                                               -> cQString
+   METHOD  preeditString                 // (  )                                               -> cQString
+   METHOD  replacementLength             // (  )                                               -> nInt
+   METHOD  replacementStart              // (  )                                               -> nInt
+   METHOD  setCommitString               // ( cCommitString, nReplaceFrom, nReplaceLength )    -> NIL
 
    ENDCLASS
 
@@ -121,22 +121,58 @@ METHOD QInputMethodEvent:new( ... )
    RETURN Self
 
 
-METHOD QInputMethodEvent:commitString()
-   RETURN Qt_QInputMethodEvent_commitString( ::pPtr )
+METHOD QInputMethodEvent:commitString( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QInputMethodEvent_commitString( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QInputMethodEvent:preeditString()
-   RETURN Qt_QInputMethodEvent_preeditString( ::pPtr )
+METHOD QInputMethodEvent:preeditString( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QInputMethodEvent_preeditString( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QInputMethodEvent:replacementLength()
-   RETURN Qt_QInputMethodEvent_replacementLength( ::pPtr )
+METHOD QInputMethodEvent:replacementLength( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QInputMethodEvent_replacementLength( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QInputMethodEvent:replacementStart()
-   RETURN Qt_QInputMethodEvent_replacementStart( ::pPtr )
+METHOD QInputMethodEvent:replacementStart( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QInputMethodEvent_replacementStart( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QInputMethodEvent:setCommitString( cCommitString, nReplaceFrom, nReplaceLength )
-   RETURN Qt_QInputMethodEvent_setCommitString( ::pPtr, cCommitString, nReplaceFrom, nReplaceLength )
+METHOD QInputMethodEvent:setCommitString( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QInputMethodEvent_setCommitString( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QInputMethodEvent_setCommitString( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QInputMethodEvent_setCommitString( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

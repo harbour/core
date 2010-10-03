@@ -103,10 +103,10 @@ CREATE CLASS QGraphicsSimpleTextItem INHERIT HbQtObjectHandler, HB_QAbstractGrap
 
    METHOD  new( ... )
 
-   METHOD  font()
-   METHOD  setFont( pFont )
-   METHOD  setText( cText )
-   METHOD  text()
+   METHOD  font                          // (  )                                               -> oQFont
+   METHOD  setFont                       // ( oQFont )                                         -> NIL
+   METHOD  setText                       // ( cText )                                          -> NIL
+   METHOD  text                          // (  )                                               -> cQString
 
    ENDCLASS
 
@@ -120,18 +120,42 @@ METHOD QGraphicsSimpleTextItem:new( ... )
    RETURN Self
 
 
-METHOD QGraphicsSimpleTextItem:font()
-   RETURN HB_QFont():from( Qt_QGraphicsSimpleTextItem_font( ::pPtr ) )
+METHOD QGraphicsSimpleTextItem:font( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFont():from( Qt_QGraphicsSimpleTextItem_font( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsSimpleTextItem:setFont( pFont )
-   RETURN Qt_QGraphicsSimpleTextItem_setFont( ::pPtr, hbqt_ptr( pFont ) )
+METHOD QGraphicsSimpleTextItem:setFont( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsSimpleTextItem_setFont( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsSimpleTextItem:setText( cText )
-   RETURN Qt_QGraphicsSimpleTextItem_setText( ::pPtr, cText )
+METHOD QGraphicsSimpleTextItem:setText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsSimpleTextItem_setText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsSimpleTextItem:text()
-   RETURN Qt_QGraphicsSimpleTextItem_text( ::pPtr )
+METHOD QGraphicsSimpleTextItem:text( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsSimpleTextItem_text( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

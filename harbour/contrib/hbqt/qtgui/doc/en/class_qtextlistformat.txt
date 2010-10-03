@@ -50,7 +50,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTextListFormat.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextListFormat.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QTextFormat()
  *  $END$
  */

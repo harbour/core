@@ -501,7 +501,7 @@ HB_FUNC( QT_QFILE_DECODENAME )
    QFile * p = hbqt_par_QFile( 1 );
    if( p )
    {
-      hb_retstr_utf8( ( p )->decodeName( hbqt_par_char( 2 ) ).toUtf8().data() );
+      hb_retstr_utf8( ( p )->decodeName( ( const char * ) hb_parc( 2 ) ).toUtf8().data() );
    }
 }
 

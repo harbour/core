@@ -103,55 +103,64 @@ CREATE CLASS QImage INHERIT HbQtObjectHandler FUNCTION HB_QImage
 
    METHOD  new( ... )
 
-   METHOD  allGray()
-   METHOD  alphaChannel()
-   METHOD  bits()
-   METHOD  bytesPerLine()
-   METHOD  cacheKey()
-   METHOD  color( nI )
-   METHOD  convertToFormat( nFormat, nFlags )
-   METHOD  copy( ... )
-   METHOD  createAlphaMask( nFlags )
-   METHOD  createHeuristicMask( lClipTight )
-   METHOD  createMaskFromColor( nColor, nMode )
-   METHOD  depth()
-   METHOD  dotsPerMeterX()
-   METHOD  dotsPerMeterY()
-   METHOD  fill( nPixelValue )
-   METHOD  format()
-   METHOD  hasAlphaChannel()
-   METHOD  height()
-   METHOD  invertPixels( nMode )
-   METHOD  isGrayscale()
-   METHOD  isNull()
-   METHOD  load( ... )
-   METHOD  loadFromData( pData, pFormat )
-   METHOD  mirrored( lHorizontal, lVertical )
-   METHOD  numBytes()
-   METHOD  numColors()
-   METHOD  offset()
-   METHOD  pixel( ... )
-   METHOD  pixelIndex( ... )
-   METHOD  rect()
-   METHOD  rgbSwapped()
-   METHOD  save( ... )
-   METHOD  scaled( ... )
-   METHOD  scaledToHeight( nHeight, nMode )
-   METHOD  scaledToWidth( nWidth, nMode )
-   METHOD  scanLine( nI )
-   METHOD  setColor( nIndex, nColorValue )
-   METHOD  setDotsPerMeterX( nX )
-   METHOD  setDotsPerMeterY( nY )
-   METHOD  setNumColors( nNumColors )
-   METHOD  setOffset( pOffset )
-   METHOD  setPixel( ... )
-   METHOD  setText( cKey, cText )
-   METHOD  size()
-   METHOD  text( cKey )
-   METHOD  textKeys()
-   METHOD  transformed( ... )
-   METHOD  valid( ... )
-   METHOD  width()
+   METHOD  allGray                       // (  )                                               -> lBool
+   METHOD  alphaChannel                  // (  )                                               -> oQImage
+   METHOD  bits                          // (  )                                               -> cUchar
+   METHOD  bytesPerLine                  // (  )                                               -> nInt
+   METHOD  cacheKey                      // (  )                                               -> nQint64
+   METHOD  color                         // ( nI )                                             -> nQRgb
+   METHOD  convertToFormat               // ( nFormat, nFlags )                                -> oQImage
+   METHOD  copy                          // ( oQRect )                                         -> oQImage
+                                         // ( nX, nY, nWidth, nHeight )                        -> oQImage
+   METHOD  createAlphaMask               // ( nFlags )                                         -> oQImage
+   METHOD  createHeuristicMask           // ( lClipTight )                                     -> oQImage
+   METHOD  createMaskFromColor           // ( nColor, nMode )                                  -> oQImage
+   METHOD  depth                         // (  )                                               -> nInt
+   METHOD  dotsPerMeterX                 // (  )                                               -> nInt
+   METHOD  dotsPerMeterY                 // (  )                                               -> nInt
+   METHOD  fill                          // ( nPixelValue )                                    -> NIL
+   METHOD  format                        // (  )                                               -> nFormat
+   METHOD  hasAlphaChannel               // (  )                                               -> lBool
+   METHOD  height                        // (  )                                               -> nInt
+   METHOD  invertPixels                  // ( nMode )                                          -> NIL
+   METHOD  isGrayscale                   // (  )                                               -> lBool
+   METHOD  isNull                        // (  )                                               -> lBool
+   METHOD  load                          // ( cFileName, cFormat )                             -> lBool
+                                         // ( oQIODevice, cFormat )                            -> lBool
+   METHOD  loadFromData                  // ( oQByteArray, cFormat )                           -> lBool
+   METHOD  mirrored                      // ( lHorizontal, lVertical )                         -> oQImage
+   METHOD  numBytes                      // (  )                                               -> nInt
+   METHOD  numColors                     // (  )                                               -> nInt
+   METHOD  offset                        // (  )                                               -> oQPoint
+   METHOD  pixel                         // ( oQPoint )                                        -> nQRgb
+                                         // ( nX, nY )                                         -> nQRgb
+   METHOD  pixelIndex                    // ( oQPoint )                                        -> nInt
+                                         // ( nX, nY )                                         -> nInt
+   METHOD  rect                          // (  )                                               -> oQRect
+   METHOD  rgbSwapped                    // (  )                                               -> oQImage
+   METHOD  save                          // ( cFileName, cFormat, nQuality )                   -> lBool
+                                         // ( oQIODevice, cFormat, nQuality )                  -> lBool
+   METHOD  scaled                        // ( oQSize, nAspectRatioMode, nTransformMode )       -> oQImage
+                                         // ( nWidth, nHeight, nAspectRatioMode, nTransformMode ) -> oQImage
+   METHOD  scaledToHeight                // ( nHeight, nMode )                                 -> oQImage
+   METHOD  scaledToWidth                 // ( nWidth, nMode )                                  -> oQImage
+   METHOD  scanLine                      // ( nI )                                             -> cUchar
+   METHOD  setColor                      // ( nIndex, nColorValue )                            -> NIL
+   METHOD  setDotsPerMeterX              // ( nX )                                             -> NIL
+   METHOD  setDotsPerMeterY              // ( nY )                                             -> NIL
+   METHOD  setNumColors                  // ( nNumColors )                                     -> NIL
+   METHOD  setOffset                     // ( oQPoint )                                        -> NIL
+   METHOD  setPixel                      // ( oQPoint, nIndex_or_rgb )                         -> NIL
+                                         // ( nX, nY, nIndex_or_rgb )                          -> NIL
+   METHOD  setText                       // ( cKey, cText )                                    -> NIL
+   METHOD  size                          // (  )                                               -> oQSize
+   METHOD  text                          // ( cKey )                                           -> cQString
+   METHOD  textKeys                      // (  )                                               -> oQStringList
+   METHOD  transformed                   // ( oQMatrix, nMode )                                -> oQImage
+                                         // ( oQTransform, nMode )                             -> oQImage
+   METHOD  valid                         // ( oQPoint )                                        -> lBool
+                                         // ( nX, nY )                                         -> lBool
+   METHOD  width                         // (  )                                               -> nInt
 
    ENDCLASS
 
@@ -165,32 +174,74 @@ METHOD QImage:new( ... )
    RETURN Self
 
 
-METHOD QImage:allGray()
-   RETURN Qt_QImage_allGray( ::pPtr )
+METHOD QImage:allGray( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QImage_allGray( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:alphaChannel()
-   RETURN HB_QImage():from( Qt_QImage_alphaChannel( ::pPtr ) )
+METHOD QImage:alphaChannel( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QImage():from( Qt_QImage_alphaChannel( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:bits()
-   RETURN Qt_QImage_bits( ::pPtr )
+METHOD QImage:bits( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QImage_bits( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:bytesPerLine()
-   RETURN Qt_QImage_bytesPerLine( ::pPtr )
+METHOD QImage:bytesPerLine( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QImage_bytesPerLine( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:cacheKey()
-   RETURN Qt_QImage_cacheKey( ::pPtr )
+METHOD QImage:cacheKey( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QImage_cacheKey( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:color( nI )
-   RETURN Qt_QImage_color( ::pPtr, nI )
+METHOD QImage:color( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QImage_color( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:convertToFormat( nFormat, nFlags )
-   RETURN HB_QImage():from( Qt_QImage_convertToFormat( ::pPtr, nFormat, nFlags ) )
+METHOD QImage:convertToFormat( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QImage():from( Qt_QImage_convertToFormat( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QImage():from( Qt_QImage_convertToFormat( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QImage:copy( ... )
@@ -213,65 +264,149 @@ METHOD QImage:copy( ... )
    RETURN hbqt_error()
 
 
-METHOD QImage:createAlphaMask( nFlags )
-   RETURN HB_QImage():from( Qt_QImage_createAlphaMask( ::pPtr, nFlags ) )
+METHOD QImage:createAlphaMask( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QImage():from( Qt_QImage_createAlphaMask( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QImage():from( Qt_QImage_createAlphaMask( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:createHeuristicMask( lClipTight )
-   RETURN HB_QImage():from( Qt_QImage_createHeuristicMask( ::pPtr, lClipTight ) )
+METHOD QImage:createHeuristicMask( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN HB_QImage():from( Qt_QImage_createHeuristicMask( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QImage():from( Qt_QImage_createHeuristicMask( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:createMaskFromColor( nColor, nMode )
-   RETURN HB_QImage():from( Qt_QImage_createMaskFromColor( ::pPtr, nColor, nMode ) )
+METHOD QImage:createMaskFromColor( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QImage():from( Qt_QImage_createMaskFromColor( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QImage():from( Qt_QImage_createMaskFromColor( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:depth()
-   RETURN Qt_QImage_depth( ::pPtr )
+METHOD QImage:depth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QImage_depth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:dotsPerMeterX()
-   RETURN Qt_QImage_dotsPerMeterX( ::pPtr )
+METHOD QImage:dotsPerMeterX( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QImage_dotsPerMeterX( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:dotsPerMeterY()
-   RETURN Qt_QImage_dotsPerMeterY( ::pPtr )
+METHOD QImage:dotsPerMeterY( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QImage_dotsPerMeterY( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:fill( nPixelValue )
-   RETURN Qt_QImage_fill( ::pPtr, nPixelValue )
+METHOD QImage:fill( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QImage_fill( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:format()
-   RETURN Qt_QImage_format( ::pPtr )
+METHOD QImage:format( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QImage_format( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:hasAlphaChannel()
-   RETURN Qt_QImage_hasAlphaChannel( ::pPtr )
+METHOD QImage:hasAlphaChannel( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QImage_hasAlphaChannel( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:height()
-   RETURN Qt_QImage_height( ::pPtr )
+METHOD QImage:height( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QImage_height( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:invertPixels( nMode )
-   RETURN Qt_QImage_invertPixels( ::pPtr, nMode )
+METHOD QImage:invertPixels( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QImage_invertPixels( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QImage_invertPixels( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:isGrayscale()
-   RETURN Qt_QImage_isGrayscale( ::pPtr )
+METHOD QImage:isGrayscale( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QImage_isGrayscale( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:isNull()
-   RETURN Qt_QImage_isNull( ::pPtr )
+METHOD QImage:isNull( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QImage_isNull( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QImage:load( ... )
    SWITCH PCount()
    CASE 2
       DO CASE
-      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
          RETURN Qt_QImage_load( ::pPtr, ... )
-      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
          RETURN Qt_QImage_load_1( ::pPtr, ... )
       ENDCASE
       EXIT
@@ -285,24 +420,66 @@ METHOD QImage:load( ... )
    RETURN hbqt_error()
 
 
-METHOD QImage:loadFromData( pData, pFormat )
-   RETURN Qt_QImage_loadFromData( ::pPtr, hbqt_ptr( pData ), hbqt_ptr( pFormat ) )
+METHOD QImage:loadFromData( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QImage_loadFromData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QImage_loadFromData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:mirrored( lHorizontal, lVertical )
-   RETURN HB_QImage():from( Qt_QImage_mirrored( ::pPtr, lHorizontal, lVertical ) )
+METHOD QImage:mirrored( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN HB_QImage():from( Qt_QImage_mirrored( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN HB_QImage():from( Qt_QImage_mirrored( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QImage():from( Qt_QImage_mirrored( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:numBytes()
-   RETURN Qt_QImage_numBytes( ::pPtr )
+METHOD QImage:numBytes( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QImage_numBytes( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:numColors()
-   RETURN Qt_QImage_numColors( ::pPtr )
+METHOD QImage:numColors( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QImage_numColors( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:offset()
-   RETURN HB_QPoint():from( Qt_QImage_offset( ::pPtr ) )
+METHOD QImage:offset( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QImage_offset( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QImage:pixel( ... )
@@ -341,21 +518,37 @@ METHOD QImage:pixelIndex( ... )
    RETURN hbqt_error()
 
 
-METHOD QImage:rect()
-   RETURN HB_QRect():from( Qt_QImage_rect( ::pPtr ) )
+METHOD QImage:rect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QImage_rect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:rgbSwapped()
-   RETURN HB_QImage():from( Qt_QImage_rgbSwapped( ::pPtr ) )
+METHOD QImage:rgbSwapped( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QImage():from( Qt_QImage_rgbSwapped( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QImage:save( ... )
    SWITCH PCount()
    CASE 3
       DO CASE
-      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
          RETURN Qt_QImage_save( ::pPtr, ... )
-      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QImage_save_1( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QImage_save( ::pPtr, ... )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
          RETURN Qt_QImage_save_1( ::pPtr, ... )
       ENDCASE
       EXIT
@@ -381,6 +574,8 @@ METHOD QImage:scaled( ... )
       EXIT
    CASE 3
       DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN HB_QImage():from( Qt_QImage_scaled_1( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
          RETURN HB_QImage():from( Qt_QImage_scaled( ::pPtr, ... ) )
       ENDCASE
@@ -389,6 +584,8 @@ METHOD QImage:scaled( ... )
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN HB_QImage():from( Qt_QImage_scaled_1( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QImage():from( Qt_QImage_scaled( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
@@ -401,36 +598,112 @@ METHOD QImage:scaled( ... )
    RETURN hbqt_error()
 
 
-METHOD QImage:scaledToHeight( nHeight, nMode )
-   RETURN HB_QImage():from( Qt_QImage_scaledToHeight( ::pPtr, nHeight, nMode ) )
+METHOD QImage:scaledToHeight( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QImage():from( Qt_QImage_scaledToHeight( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QImage():from( Qt_QImage_scaledToHeight( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:scaledToWidth( nWidth, nMode )
-   RETURN HB_QImage():from( Qt_QImage_scaledToWidth( ::pPtr, nWidth, nMode ) )
+METHOD QImage:scaledToWidth( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QImage():from( Qt_QImage_scaledToWidth( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QImage():from( Qt_QImage_scaledToWidth( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:scanLine( nI )
-   RETURN Qt_QImage_scanLine( ::pPtr, nI )
+METHOD QImage:scanLine( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QImage_scanLine( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:setColor( nIndex, nColorValue )
-   RETURN Qt_QImage_setColor( ::pPtr, nIndex, nColorValue )
+METHOD QImage:setColor( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QImage_setColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:setDotsPerMeterX( nX )
-   RETURN Qt_QImage_setDotsPerMeterX( ::pPtr, nX )
+METHOD QImage:setDotsPerMeterX( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QImage_setDotsPerMeterX( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:setDotsPerMeterY( nY )
-   RETURN Qt_QImage_setDotsPerMeterY( ::pPtr, nY )
+METHOD QImage:setDotsPerMeterY( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QImage_setDotsPerMeterY( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:setNumColors( nNumColors )
-   RETURN Qt_QImage_setNumColors( ::pPtr, nNumColors )
+METHOD QImage:setNumColors( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QImage_setNumColors( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:setOffset( pOffset )
-   RETURN Qt_QImage_setOffset( ::pPtr, hbqt_ptr( pOffset ) )
+METHOD QImage:setOffset( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QImage_setOffset( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QImage:setPixel( ... )
@@ -451,20 +724,46 @@ METHOD QImage:setPixel( ... )
    RETURN hbqt_error()
 
 
-METHOD QImage:setText( cKey, cText )
-   RETURN Qt_QImage_setText( ::pPtr, cKey, cText )
+METHOD QImage:setText( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QImage_setText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:size()
-   RETURN HB_QSize():from( Qt_QImage_size( ::pPtr ) )
+METHOD QImage:size( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QImage_size( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:text( cKey )
-   RETURN Qt_QImage_text( ::pPtr, cKey )
+METHOD QImage:text( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QImage_text( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QImage_text( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImage:textKeys()
-   RETURN HB_QStringList():from( Qt_QImage_textKeys( ::pPtr ) )
+METHOD QImage:textKeys( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QImage_textKeys( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QImage:transformed( ... )
@@ -513,6 +812,10 @@ METHOD QImage:valid( ... )
    RETURN hbqt_error()
 
 
-METHOD QImage:width()
-   RETURN Qt_QImage_width( ::pPtr )
+METHOD QImage:width( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QImage_width( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

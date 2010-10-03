@@ -29,12 +29,12 @@
  *     :style()                                            -> nInt
  *     :setDescription( cDescription )                     -> NIL
  *     :description()                                      -> cQString
- *     :setColor( pColor )                                 -> NIL
- *     :color()                                            -> pQColor
- *     :setPaper( pPaper )                                 -> NIL
- *     :paper()                                            -> pQColor
- *     :setFont( pFont )                                   -> NIL
- *     :font()                                             -> pQFont
+ *     :setColor( oQColor )                                -> NIL
+ *     :color()                                            -> oQColor
+ *     :setPaper( oQColor )                                -> NIL
+ *     :paper()                                            -> oQColor
+ *     :setFont( oQFont )                                  -> NIL
+ *     :font()                                             -> oQFont
  *     :setEolFill( lFill )                                -> NIL
  *     :eolFill()                                          -> lBool
  *     :setTextCase( nText_case )                          -> NIL
@@ -65,7 +65,5 @@
  *     Harbour source: contrib/hbqt/qscintilla/TQsciStyle.prg
  *     C++ wrappers  : contrib/hbqt/qscintilla/QsciStyle.cpp
  *     Library       : hbqscintilla
- *  $SEEALSO$
- *     
  *  $END$
  */

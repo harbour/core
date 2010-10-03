@@ -340,7 +340,7 @@ HB_FUNC( QT_QDATASTREAM_WRITERAWDATA )
    QDataStream * p = hbqt_par_QDataStream( 1 );
    if( p )
    {
-      hb_retni( ( p )->writeRawData( hbqt_par_char( 2 ), hb_parni( 3 ) ) );
+      hb_retni( ( p )->writeRawData( ( const char * ) hb_parc( 2 ), hb_parni( 3 ) ) );
    }
 }
 

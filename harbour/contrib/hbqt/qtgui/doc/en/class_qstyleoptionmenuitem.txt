@@ -28,12 +28,12 @@
  *  $METHODS$
  *     :checkType()                                        -> nCheckType
  *     :checked()                                          -> lBool
- *     :font()                                             -> pQFont
- *     :icon()                                             -> pQIcon
+ *     :font()                                             -> oQFont
+ *     :icon()                                             -> oQIcon
  *     :maxIconWidth()                                     -> nInt
  *     :menuHasCheckableItems()                            -> lBool
  *     :menuItemType()                                     -> nMenuItemType
- *     :menuRect()                                         -> pQRect
+ *     :menuRect()                                         -> oQRect
  *     :tabWidth()                                         -> nInt
  *     :text()                                             -> cQString
  * 
@@ -55,7 +55,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionMenuItem.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionMenuItem.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QStyleOption()
  *  $END$
  */

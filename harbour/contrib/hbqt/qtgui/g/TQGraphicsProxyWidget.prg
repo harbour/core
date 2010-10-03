@@ -103,10 +103,10 @@ CREATE CLASS QGraphicsProxyWidget INHERIT HbQtObjectHandler, HB_QGraphicsWidget 
 
    METHOD  new( ... )
 
-   METHOD  createProxyForChildWidget( pChild )
-   METHOD  setWidget( pWidget )
-   METHOD  subWidgetRect( pWidget )
-   METHOD  widget()
+   METHOD  createProxyForChildWidget     // ( oQWidget )                                       -> oQGraphicsProxyWidget
+   METHOD  setWidget                     // ( oQWidget )                                       -> NIL
+   METHOD  subWidgetRect                 // ( oQWidget )                                       -> oQRectF
+   METHOD  widget                        // (  )                                               -> oQWidget
 
    ENDCLASS
 
@@ -120,18 +120,46 @@ METHOD QGraphicsProxyWidget:new( ... )
    RETURN Self
 
 
-METHOD QGraphicsProxyWidget:createProxyForChildWidget( pChild )
-   RETURN HB_QGraphicsProxyWidget():from( Qt_QGraphicsProxyWidget_createProxyForChildWidget( ::pPtr, hbqt_ptr( pChild ) ) )
+METHOD QGraphicsProxyWidget:createProxyForChildWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QGraphicsProxyWidget():from( Qt_QGraphicsProxyWidget_createProxyForChildWidget( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsProxyWidget:setWidget( pWidget )
-   RETURN Qt_QGraphicsProxyWidget_setWidget( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QGraphicsProxyWidget:setWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsProxyWidget_setWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsProxyWidget:subWidgetRect( pWidget )
-   RETURN HB_QRectF():from( Qt_QGraphicsProxyWidget_subWidgetRect( ::pPtr, hbqt_ptr( pWidget ) ) )
+METHOD QGraphicsProxyWidget:subWidgetRect( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QRectF():from( Qt_QGraphicsProxyWidget_subWidgetRect( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsProxyWidget:widget()
-   RETURN HB_QWidget():from( Qt_QGraphicsProxyWidget_widget( ::pPtr ) )
+METHOD QGraphicsProxyWidget:widget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QGraphicsProxyWidget_widget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

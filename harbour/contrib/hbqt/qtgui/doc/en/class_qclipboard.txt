@@ -27,14 +27,14 @@
  *     An instance of the object of type QClipboard
  *  $METHODS$
  *     :clear( nMode )                                     -> NIL
- *     :image( nMode )                                     -> pQImage
+ *     :image( nMode )                                     -> oQImage
  *     :ownsClipboard()                                    -> lBool
  *     :ownsFindBuffer()                                   -> lBool
  *     :ownsSelection()                                    -> lBool
- *     :pixmap( nMode )                                    -> pQPixmap
- *     :setImage( pImage, nMode )                          -> NIL
- *     :setMimeData( pSrc, nMode )                         -> NIL
- *     :setPixmap( pPixmap, nMode )                        -> NIL
+ *     :pixmap( nMode )                                    -> oQPixmap
+ *     :setImage( oQImage, nMode )                         -> NIL
+ *     :setMimeData( oQMimeData, nMode )                   -> NIL
+ *     :setPixmap( oQPixmap, nMode )                       -> NIL
  *     :setText( cText, nMode )                            -> NIL
  *     :supportsFindBuffer()                               -> lBool
  *     :supportsSelection()                                -> lBool
@@ -58,7 +58,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQClipboard.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QClipboard.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

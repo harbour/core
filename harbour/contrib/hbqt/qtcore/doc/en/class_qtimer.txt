@@ -32,10 +32,10 @@
  *     :setInterval( nMsec )                               -> NIL
  *     :setSingleShot( lSingleShot )                       -> NIL
  *     :timerId()                                          -> nInt
- *     :singleShot( nMsec, pReceiver, pMember )            -> NIL
+ *     :singleShot( nMsec, oQObject, cMember )             -> NIL
  *     :start()                                            -> NIL
  *     :stop()                                             -> NIL
- *     :start_1( nMsec )                                   -> NIL
+ *     :start( nMsec )                                     -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -55,7 +55,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQTimer.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QTimer.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

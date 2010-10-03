@@ -103,15 +103,16 @@ CREATE CLASS QTextDocumentWriter INHERIT HbQtObjectHandler FUNCTION HB_QTextDocu
 
    METHOD  new( ... )
 
-   METHOD  codec()
-   METHOD  device()
-   METHOD  fileName()
-   METHOD  format()
-   METHOD  setCodec( pCodec )
-   METHOD  setDevice( pDevice )
-   METHOD  setFileName( cFileName )
-   METHOD  setFormat( pFormat )
-   METHOD  write( ... )
+   METHOD  codec                         // (  )                                               -> oQTextCodec
+   METHOD  device                        // (  )                                               -> oQIODevice
+   METHOD  fileName                      // (  )                                               -> cQString
+   METHOD  format                        // (  )                                               -> oQByteArray
+   METHOD  setCodec                      // ( oQTextCodec )                                    -> NIL
+   METHOD  setDevice                     // ( oQIODevice )                                     -> NIL
+   METHOD  setFileName                   // ( cFileName )                                      -> NIL
+   METHOD  setFormat                     // ( oQByteArray )                                    -> NIL
+   METHOD  write                         // ( oQTextDocument )                                 -> lBool
+                                         // ( oQTextDocumentFragment )                         -> lBool
 
    ENDCLASS
 
@@ -125,36 +126,84 @@ METHOD QTextDocumentWriter:new( ... )
    RETURN Self
 
 
-METHOD QTextDocumentWriter:codec()
-   RETURN HB_QTextCodec():from( Qt_QTextDocumentWriter_codec( ::pPtr ) )
+METHOD QTextDocumentWriter:codec( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextCodec():from( Qt_QTextDocumentWriter_codec( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocumentWriter:device()
-   RETURN HB_QIODevice():from( Qt_QTextDocumentWriter_device( ::pPtr ) )
+METHOD QTextDocumentWriter:device( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QIODevice():from( Qt_QTextDocumentWriter_device( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocumentWriter:fileName()
-   RETURN Qt_QTextDocumentWriter_fileName( ::pPtr )
+METHOD QTextDocumentWriter:fileName( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextDocumentWriter_fileName( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocumentWriter:format()
-   RETURN HB_QByteArray():from( Qt_QTextDocumentWriter_format( ::pPtr ) )
+METHOD QTextDocumentWriter:format( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QByteArray():from( Qt_QTextDocumentWriter_format( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocumentWriter:setCodec( pCodec )
-   RETURN Qt_QTextDocumentWriter_setCodec( ::pPtr, hbqt_ptr( pCodec ) )
+METHOD QTextDocumentWriter:setCodec( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextDocumentWriter_setCodec( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocumentWriter:setDevice( pDevice )
-   RETURN Qt_QTextDocumentWriter_setDevice( ::pPtr, hbqt_ptr( pDevice ) )
+METHOD QTextDocumentWriter:setDevice( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextDocumentWriter_setDevice( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocumentWriter:setFileName( cFileName )
-   RETURN Qt_QTextDocumentWriter_setFileName( ::pPtr, cFileName )
+METHOD QTextDocumentWriter:setFileName( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QTextDocumentWriter_setFileName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocumentWriter:setFormat( pFormat )
-   RETURN Qt_QTextDocumentWriter_setFormat( ::pPtr, hbqt_ptr( pFormat ) )
+METHOD QTextDocumentWriter:setFormat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextDocumentWriter_setFormat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTextDocumentWriter:write( ... )

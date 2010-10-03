@@ -26,7 +26,7 @@
  *  $RETURNS$
  *     An instance of the object of type QAbstractTableModel
  *  $METHODS$
- *     :index( nRow, nColumn, pParent )                    -> pQModelIndex
+ *     :index( nRow, nColumn, oQModelIndex )               -> oQModelIndex
  * 
  *  $DESCRIPTION$
  * 
@@ -46,7 +46,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQAbstractTableModel.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QAbstractTableModel.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     QAbstractItemModel()
  *  $END$
  */

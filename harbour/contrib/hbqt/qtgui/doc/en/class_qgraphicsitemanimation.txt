@@ -29,18 +29,18 @@
  *     :clear()                                            -> NIL
  *     :horizontalScaleAt( nStep )                         -> nQreal
  *     :horizontalShearAt( nStep )                         -> nQreal
- *     :item()                                             -> pQGraphicsItem
- *     :matrixAt( nStep )                                  -> pQMatrix
- *     :posAt( nStep )                                     -> pQPointF
+ *     :item()                                             -> oQGraphicsItem
+ *     :matrixAt( nStep )                                  -> oQMatrix
+ *     :posAt( nStep )                                     -> oQPointF
  *     :rotationAt( nStep )                                -> nQreal
- *     :setItem( pItem )                                   -> NIL
- *     :setPosAt( nStep, pPoint )                          -> NIL
+ *     :setItem( oQGraphicsItem )                          -> NIL
+ *     :setPosAt( nStep, oQPointF )                        -> NIL
  *     :setRotationAt( nStep, nAngle )                     -> NIL
  *     :setScaleAt( nStep, nSx, nSy )                      -> NIL
  *     :setShearAt( nStep, nSh, nSv )                      -> NIL
- *     :setTimeLine( pTimeLine )                           -> NIL
+ *     :setTimeLine( oQTimeLine )                          -> NIL
  *     :setTranslationAt( nStep, nDx, nDy )                -> NIL
- *     :timeLine()                                         -> pQTimeLine
+ *     :timeLine()                                         -> oQTimeLine
  *     :verticalScaleAt( nStep )                           -> nQreal
  *     :verticalShearAt( nStep )                           -> nQreal
  *     :xTranslationAt( nStep )                            -> nQreal
@@ -65,7 +65,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGraphicsItemAnimation.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsItemAnimation.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

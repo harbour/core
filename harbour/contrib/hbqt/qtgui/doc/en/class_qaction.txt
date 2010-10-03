@@ -26,13 +26,13 @@
  *  $RETURNS$
  *     An instance of the object of type QAction
  *  $METHODS$
- *     :actionGroup()                                      -> Group
+ *     :actionGroup()                                      -> oQActionGroup
  *     :activate( nEvent )                                 -> NIL
- *     :associatedWidgets()                                -> pQList<QWidget *>
+ *     :associatedWidgets()                                -> oQList_QWidget
  *     :autoRepeat()                                       -> lBool
- *     :data()                                             -> pQVariant
- *     :font()                                             -> pQFont
- *     :icon()                                             -> pQIcon
+ *     :data()                                             -> oQVariant
+ *     :font()                                             -> oQFont
+ *     :icon()                                             -> oQIcon
  *     :iconText()                                         -> cQString
  *     :isCheckable()                                      -> lBool
  *     :isChecked()                                        -> lBool
@@ -40,31 +40,31 @@
  *     :isIconVisibleInMenu()                              -> lBool
  *     :isSeparator()                                      -> lBool
  *     :isVisible()                                        -> lBool
- *     :menu()                                             -> pQMenu
+ *     :menu()                                             -> oQMenu
  *     :menuRole()                                         -> nMenuRole
- *     :parentWidget()                                     -> pQWidget
- *     :setActionGroup( pGroup )                           -> NIL
+ *     :parentWidget()                                     -> oQWidget
+ *     :setActionGroup( oQActionGroup )                    -> NIL
  *     :setAutoRepeat( lBool )                             -> NIL
  *     :setCheckable( lBool )                              -> NIL
- *     :setData( pUserData )                               -> NIL
- *     :setFont( pFont )                                   -> NIL
- *     :setIcon( pIcon )                                   -> NIL
+ *     :setData( oQVariant )                               -> NIL
+ *     :setFont( oQFont )                                  -> NIL
+ *     :setIcon( coQIcon )                                 -> NIL
  *     :setIconText( cText )                               -> NIL
  *     :setIconVisibleInMenu( lVisible )                   -> NIL
- *     :setMenu( pMenu )                                   -> NIL
+ *     :setMenu( oQMenu )                                  -> NIL
  *     :setMenuRole( nMenuRole )                           -> NIL
  *     :setSeparator( lB )                                 -> NIL
- *     :setShortcut( pShortcut )                           -> NIL
+ *     :setShortcut( oQKeySequence )                       -> NIL
  *     :setShortcutContext( nContext )                     -> NIL
  *     :setShortcuts( nKey )                               -> NIL
  *     :setStatusTip( cStatusTip )                         -> NIL
  *     :setText( cText )                                   -> NIL
  *     :setToolTip( cTip )                                 -> NIL
  *     :setWhatsThis( cWhat )                              -> NIL
- *     :shortcut()                                         -> pQKeySequence
- *     :shortcutContext()                                  -> nQt::ShortcutContext
- *     :shortcuts()                                        -> pQList<QKeySequence>
- *     :showStatusText( pWidget )                          -> lBool
+ *     :shortcut()                                         -> oQKeySequence
+ *     :shortcutContext()                                  -> nQt_ShortcutContext
+ *     :shortcuts()                                        -> oQList_QKeySequence>
+ *     :showStatusText( oQWidget )                         -> lBool
  *     :statusTip()                                        -> cQString
  *     :text()                                             -> cQString
  *     :toolTip()                                          -> cQString
@@ -95,7 +95,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQAction.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QAction.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

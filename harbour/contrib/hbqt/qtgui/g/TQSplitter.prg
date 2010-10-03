@@ -103,27 +103,27 @@ CREATE CLASS QSplitter INHERIT HbQtObjectHandler, HB_QFrame FUNCTION HB_QSplitte
 
    METHOD  new( ... )
 
-   METHOD  addWidget( pWidget )
-   METHOD  childrenCollapsible()
-   METHOD  count()
-   METHOD  getRange( nIndex, nMin, nMax )
-   METHOD  handleWidth()
-   METHOD  indexOf( pWidget )
-   METHOD  insertWidget( nIndex, pWidget )
-   METHOD  isCollapsible( nIndex )
-   METHOD  opaqueResize()
-   METHOD  orientation()
-   METHOD  refresh()
-   METHOD  restoreState( pState )
-   METHOD  saveState()
-   METHOD  setChildrenCollapsible( lBool )
-   METHOD  setCollapsible( nIndex, lCollapse )
-   METHOD  setHandleWidth( nInt )
-   METHOD  setOpaqueResize( lOpaque )
-   METHOD  setOrientation( nQt_Orientation )
-   METHOD  setStretchFactor( nIndex, nStretch )
-   METHOD  sizes()
-   METHOD  widget( nIndex )
+   METHOD  addWidget                     // ( oQWidget )                                       -> NIL
+   METHOD  childrenCollapsible           // (  )                                               -> lBool
+   METHOD  count                         // (  )                                               -> nInt
+   METHOD  getRange                      // ( nIndex, @nMin, @nMax )                           -> NIL
+   METHOD  handleWidth                   // (  )                                               -> nInt
+   METHOD  indexOf                       // ( oQWidget )                                       -> nInt
+   METHOD  insertWidget                  // ( nIndex, oQWidget )                               -> NIL
+   METHOD  isCollapsible                 // ( nIndex )                                         -> lBool
+   METHOD  opaqueResize                  // (  )                                               -> lBool
+   METHOD  orientation                   // (  )                                               -> nQt_Orientation
+   METHOD  refresh                       // (  )                                               -> NIL
+   METHOD  restoreState                  // ( oQByteArray )                                    -> lBool
+   METHOD  saveState                     // (  )                                               -> oQByteArray
+   METHOD  setChildrenCollapsible        // ( lBool )                                          -> NIL
+   METHOD  setCollapsible                // ( nIndex, lCollapse )                              -> NIL
+   METHOD  setHandleWidth                // ( nInt )                                           -> NIL
+   METHOD  setOpaqueResize               // ( lOpaque )                                        -> NIL
+   METHOD  setOrientation                // ( nQt::Orientation )                               -> NIL
+   METHOD  setStretchFactor              // ( nIndex, nStretch )                               -> NIL
+   METHOD  sizes                         // (  )                                               -> oQList_int>
+   METHOD  widget                        // ( nIndex )                                         -> oQWidget
 
    ENDCLASS
 
@@ -137,86 +137,224 @@ METHOD QSplitter:new( ... )
    RETURN Self
 
 
-METHOD QSplitter:addWidget( pWidget )
-   RETURN Qt_QSplitter_addWidget( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QSplitter:addWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QSplitter_addWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSplitter:childrenCollapsible()
-   RETURN Qt_QSplitter_childrenCollapsible( ::pPtr )
+METHOD QSplitter:childrenCollapsible( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSplitter_childrenCollapsible( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSplitter:count()
-   RETURN Qt_QSplitter_count( ::pPtr )
+METHOD QSplitter:count( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSplitter_count( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSplitter:getRange( nIndex, nMin, nMax )
-   RETURN Qt_QSplitter_getRange( ::pPtr, nIndex, nMin, nMax )
+METHOD QSplitter:getRange( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QSplitter_getRange( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSplitter:handleWidth()
-   RETURN Qt_QSplitter_handleWidth( ::pPtr )
+METHOD QSplitter:handleWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSplitter_handleWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSplitter:indexOf( pWidget )
-   RETURN Qt_QSplitter_indexOf( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QSplitter:indexOf( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QSplitter_indexOf( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSplitter:insertWidget( nIndex, pWidget )
-   RETURN Qt_QSplitter_insertWidget( ::pPtr, nIndex, hbqt_ptr( pWidget ) )
+METHOD QSplitter:insertWidget( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QSplitter_insertWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSplitter:isCollapsible( nIndex )
-   RETURN Qt_QSplitter_isCollapsible( ::pPtr, nIndex )
+METHOD QSplitter:isCollapsible( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QSplitter_isCollapsible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSplitter:opaqueResize()
-   RETURN Qt_QSplitter_opaqueResize( ::pPtr )
+METHOD QSplitter:opaqueResize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSplitter_opaqueResize( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSplitter:orientation()
-   RETURN Qt_QSplitter_orientation( ::pPtr )
+METHOD QSplitter:orientation( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSplitter_orientation( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSplitter:refresh()
-   RETURN Qt_QSplitter_refresh( ::pPtr )
+METHOD QSplitter:refresh( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSplitter_refresh( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSplitter:restoreState( pState )
-   RETURN Qt_QSplitter_restoreState( ::pPtr, hbqt_ptr( pState ) )
+METHOD QSplitter:restoreState( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QSplitter_restoreState( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSplitter:saveState()
-   RETURN HB_QByteArray():from( Qt_QSplitter_saveState( ::pPtr ) )
+METHOD QSplitter:saveState( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QByteArray():from( Qt_QSplitter_saveState( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSplitter:setChildrenCollapsible( lBool )
-   RETURN Qt_QSplitter_setChildrenCollapsible( ::pPtr, lBool )
+METHOD QSplitter:setChildrenCollapsible( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QSplitter_setChildrenCollapsible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSplitter:setCollapsible( nIndex, lCollapse )
-   RETURN Qt_QSplitter_setCollapsible( ::pPtr, nIndex, lCollapse )
+METHOD QSplitter:setCollapsible( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QSplitter_setCollapsible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSplitter:setHandleWidth( nInt )
-   RETURN Qt_QSplitter_setHandleWidth( ::pPtr, nInt )
+METHOD QSplitter:setHandleWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QSplitter_setHandleWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSplitter:setOpaqueResize( lOpaque )
-   RETURN Qt_QSplitter_setOpaqueResize( ::pPtr, lOpaque )
+METHOD QSplitter:setOpaqueResize( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QSplitter_setOpaqueResize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QSplitter_setOpaqueResize( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSplitter:setOrientation( nQt_Orientation )
-   RETURN Qt_QSplitter_setOrientation( ::pPtr, nQt_Orientation )
+METHOD QSplitter:setOrientation( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QSplitter_setOrientation( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSplitter:setStretchFactor( nIndex, nStretch )
-   RETURN Qt_QSplitter_setStretchFactor( ::pPtr, nIndex, nStretch )
+METHOD QSplitter:setStretchFactor( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QSplitter_setStretchFactor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSplitter:sizes()
-   RETURN HB_QList():from( Qt_QSplitter_sizes( ::pPtr ) )
+METHOD QSplitter:sizes( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QSplitter_sizes( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSplitter:widget( nIndex )
-   RETURN HB_QWidget():from( Qt_QSplitter_widget( ::pPtr, nIndex ) )
+METHOD QSplitter:widget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QWidget():from( Qt_QSplitter_widget( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

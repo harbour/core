@@ -49,8 +49,13 @@
  *     :isTitleCase()                                      -> lBool
  *     :isUpper()                                          -> lBool
  *     :joining()                                          -> nJoining
+ *     :mirroredChar()                                     -> oQChar
  *     :toAscii()                                          -> cChar
+ *     :toCaseFolded()                                     -> oQChar
  *     :toLatin1()                                         -> cChar
+ *     :toLower()                                          -> oQChar
+ *     :toTitleCase()                                      -> oQChar
+ *     :toUpper()                                          -> oQChar
  *     :unicode()                                          -> nUshort
  *     :unicodeVersion()                                   -> nUnicodeVersion
  * 
@@ -72,7 +77,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQChar.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QChar.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

@@ -103,33 +103,39 @@ CREATE CLASS QStringList INHERIT HbQtObjectHandler, HB_QList FUNCTION HB_QString
 
    METHOD  new( ... )
 
-   METHOD  append( cValue )
-   METHOD  filter( ... )
-   METHOD  indexOf( ... )
-   METHOD  join( cSeparator )
-   METHOD  lastIndexOf( ... )
-   METHOD  removeDuplicates()
-   METHOD  sort()
-   METHOD  at( nI )
-   METHOD  back()
-   METHOD  count( cValue )
-   METHOD  endsWith( cValue )
-   METHOD  first()
-   METHOD  front()
-   METHOD  insert( nI, cValue )
-   METHOD  last()
-   METHOD  mid( nPos, nLength )
-   METHOD  prepend( cValue )
-   METHOD  push_back( cValue )
-   METHOD  push_front( cValue )
-   METHOD  removeAll( cValue )
-   METHOD  removeOne( cValue )
-   METHOD  replace( nI, cValue )
-   METHOD  startsWith( cValue )
-   METHOD  takeAt( nI )
-   METHOD  takeFirst()
-   METHOD  takeLast()
-   METHOD  value( ... )
+   METHOD  append                        // ( cValue )                                         -> NIL
+   METHOD  filter                        // ( cStr, nCs )                                      -> oQStringList
+                                         // ( oQRegExp )                                       -> oQStringList
+   METHOD  indexOf                       // ( cValue, nFrom )                                  -> nInt
+                                         // ( oQRegExp, nFrom )                                -> nInt
+                                         // ( oQRegExp, nFrom )                                -> nInt
+   METHOD  join                          // ( cSeparator )                                     -> cQString
+   METHOD  lastIndexOf                   // ( oQRegExp, nFrom )                                -> nInt
+                                         // ( cValue, nFrom )                                  -> nInt
+                                         // ( oQRegExp, nFrom )                                -> nInt
+   METHOD  removeDuplicates              // (  )                                               -> nInt
+   METHOD  sort                          // (  )                                               -> NIL
+   METHOD  at                            // ( nI )                                             -> cQString
+   METHOD  back                          // (  )                                               -> cQString
+   METHOD  count                         // ( cValue )                                         -> nInt
+   METHOD  endsWith                      // ( cValue )                                         -> lBool
+   METHOD  first                         // (  )                                               -> cQString
+   METHOD  front                         // (  )                                               -> cQString
+   METHOD  insert                        // ( nI, cValue )                                     -> NIL
+   METHOD  last                          // (  )                                               -> cQString
+   METHOD  mid                           // ( nPos, nLength )                                  -> oQList_QString>
+   METHOD  prepend                       // ( cValue )                                         -> NIL
+   METHOD  push_back                     // ( cValue )                                         -> NIL
+   METHOD  push_front                    // ( cValue )                                         -> NIL
+   METHOD  removeAll                     // ( cValue )                                         -> nInt
+   METHOD  removeOne                     // ( cValue )                                         -> lBool
+   METHOD  replace                       // ( nI, cValue )                                     -> NIL
+   METHOD  startsWith                    // ( cValue )                                         -> lBool
+   METHOD  takeAt                        // ( nI )                                             -> cQString
+   METHOD  takeFirst                     // (  )                                               -> cQString
+   METHOD  takeLast                      // (  )                                               -> cQString
+   METHOD  value                         // ( nI )                                             -> cQString
+                                         // ( nI, cDefaultValue )                              -> cQString
 
    ENDCLASS
 
@@ -143,8 +149,16 @@ METHOD QStringList:new( ... )
    RETURN Self
 
 
-METHOD QStringList:append( cValue )
-   RETURN Qt_QStringList_append( ::pPtr, cValue )
+METHOD QStringList:append( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QStringList_append( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QStringList:filter( ... )
@@ -199,8 +213,16 @@ METHOD QStringList:indexOf( ... )
    RETURN hbqt_error()
 
 
-METHOD QStringList:join( cSeparator )
-   RETURN Qt_QStringList_join( ::pPtr, cSeparator )
+METHOD QStringList:join( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QStringList_join( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QStringList:lastIndexOf( ... )
@@ -235,88 +257,230 @@ METHOD QStringList:lastIndexOf( ... )
    RETURN hbqt_error()
 
 
-METHOD QStringList:removeDuplicates()
-   RETURN Qt_QStringList_removeDuplicates( ::pPtr )
+METHOD QStringList:removeDuplicates( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStringList_removeDuplicates( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStringList:sort()
-   RETURN Qt_QStringList_sort( ::pPtr )
+METHOD QStringList:sort( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStringList_sort( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStringList:at( nI )
-   RETURN Qt_QStringList_at( ::pPtr, nI )
+METHOD QStringList:at( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QStringList_at( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStringList:back()
-   RETURN Qt_QStringList_back( ::pPtr )
+METHOD QStringList:back( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStringList_back( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStringList:count( cValue )
-   RETURN Qt_QStringList_count( ::pPtr, cValue )
+METHOD QStringList:count( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QStringList_count( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStringList:endsWith( cValue )
-   RETURN Qt_QStringList_endsWith( ::pPtr, cValue )
+METHOD QStringList:endsWith( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QStringList_endsWith( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStringList:first()
-   RETURN Qt_QStringList_first( ::pPtr )
+METHOD QStringList:first( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStringList_first( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStringList:front()
-   RETURN Qt_QStringList_front( ::pPtr )
+METHOD QStringList:front( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStringList_front( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStringList:insert( nI, cValue )
-   RETURN Qt_QStringList_insert( ::pPtr, nI, cValue )
+METHOD QStringList:insert( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QStringList_insert( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStringList:last()
-   RETURN Qt_QStringList_last( ::pPtr )
+METHOD QStringList:last( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStringList_last( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStringList:mid( nPos, nLength )
-   RETURN HB_QList():from( Qt_QStringList_mid( ::pPtr, nPos, nLength ) )
+METHOD QStringList:mid( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QList():from( Qt_QStringList_mid( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QList():from( Qt_QStringList_mid( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStringList:prepend( cValue )
-   RETURN Qt_QStringList_prepend( ::pPtr, cValue )
+METHOD QStringList:prepend( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QStringList_prepend( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStringList:push_back( cValue )
-   RETURN Qt_QStringList_push_back( ::pPtr, cValue )
+METHOD QStringList:push_back( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QStringList_push_back( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStringList:push_front( cValue )
-   RETURN Qt_QStringList_push_front( ::pPtr, cValue )
+METHOD QStringList:push_front( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QStringList_push_front( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStringList:removeAll( cValue )
-   RETURN Qt_QStringList_removeAll( ::pPtr, cValue )
+METHOD QStringList:removeAll( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QStringList_removeAll( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStringList:removeOne( cValue )
-   RETURN Qt_QStringList_removeOne( ::pPtr, cValue )
+METHOD QStringList:removeOne( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QStringList_removeOne( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStringList:replace( nI, cValue )
-   RETURN Qt_QStringList_replace( ::pPtr, nI, cValue )
+METHOD QStringList:replace( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QStringList_replace( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStringList:startsWith( cValue )
-   RETURN Qt_QStringList_startsWith( ::pPtr, cValue )
+METHOD QStringList:startsWith( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QStringList_startsWith( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStringList:takeAt( nI )
-   RETURN Qt_QStringList_takeAt( ::pPtr, nI )
+METHOD QStringList:takeAt( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QStringList_takeAt( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStringList:takeFirst()
-   RETURN Qt_QStringList_takeFirst( ::pPtr )
+METHOD QStringList:takeFirst( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStringList_takeFirst( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStringList:takeLast()
-   RETURN Qt_QStringList_takeLast( ::pPtr )
+METHOD QStringList:takeLast( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStringList_takeLast( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QStringList:value( ... )

@@ -223,7 +223,7 @@ HB_FUNC( QT_QTRANSLATOR_TRANSLATE )
    QTranslator * p = hbqt_par_QTranslator( 1 );
    if( p )
    {
-      hb_retstr_utf8( ( p )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ) ).toUtf8().data() );
+      hb_retstr_utf8( ( p )->translate( ( const char * ) hb_parc( 2 ), ( const char * ) hb_parc( 3 ), ( const char * ) hb_parc( 4 ) ).toUtf8().data() );
    }
 }
 
@@ -235,7 +235,7 @@ HB_FUNC( QT_QTRANSLATOR_TRANSLATE_1 )
    QTranslator * p = hbqt_par_QTranslator( 1 );
    if( p )
    {
-      hb_retstr_utf8( ( p )->translate( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ), hb_parni( 5 ) ).toUtf8().data() );
+      hb_retstr_utf8( ( p )->translate( ( const char * ) hb_parc( 2 ), ( const char * ) hb_parc( 3 ), ( const char * ) hb_parc( 4 ), hb_parni( 5 ) ).toUtf8().data() );
    }
 }
 

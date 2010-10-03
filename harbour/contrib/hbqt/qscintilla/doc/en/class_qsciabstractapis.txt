@@ -26,8 +26,8 @@
  *  $RETURNS$
  *     An instance of the object of type QsciAbstractAPIs
  *  $METHODS$
- *     :lexer()                                            -> pQsciLexer
- *     :updateAutoCompletionList( pContext, pList )        -> NIL
+ *     :lexer()                                            -> oQsciLexer
+ *     :updateAutoCompletionList( oQStringList, oQStringList )  -> NIL
  *     :autoCompletionSelected( cSelection )               -> NIL
  * 
  *  $DESCRIPTION$
@@ -48,7 +48,5 @@
  *     Harbour source: contrib/hbqt/qscintilla/TQsciAbstractAPIs.prg
  *     C++ wrappers  : contrib/hbqt/qscintilla/QsciAbstractAPIs.cpp
  *     Library       : hbqscintilla
- *  $SEEALSO$
- *     
  *  $END$
  */

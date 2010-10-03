@@ -27,29 +27,29 @@
  *     An instance of the object of type QWebView
  *  $METHODS$
  *     :findText( cSubString, nOptions )                   -> lBool
- *     :history()                                          -> pQWebHistory
- *     :icon()                                             -> pQIcon
+ *     :history()                                          -> oQWebHistory
+ *     :icon()                                             -> oQIcon
  *     :isModified()                                       -> lBool
- *     :load( pUrl )                                       -> NIL
- *     :load_1( pRequest, nOperation, pBody )              -> NIL
- *     :page()                                             -> pQWebPage
- *     :pageAction( nAction )                              -> pQAction
+ *     :load( oQUrl )                                      -> NIL
+ *     :load( oQNetworkRequest, nOperation, oQByteArray )  -> NIL
+ *     :page()                                             -> oQWebPage
+ *     :pageAction( nAction )                              -> oQAction
  *     :selectedText()                                     -> cQString
- *     :setContent( pData, cMimeType, pBaseUrl )           -> NIL
- *     :setHtml( cHtml, pBaseUrl )                         -> NIL
- *     :setPage( pPage )                                   -> NIL
+ *     :setContent( oQByteArray, cMimeType, oQUrl )        -> NIL
+ *     :setHtml( cHtml, oQUrl )                            -> NIL
+ *     :setPage( oQWebPage )                               -> NIL
  *     :setTextSizeMultiplier( nFactor )                   -> NIL
- *     :setUrl( pUrl )                                     -> NIL
+ *     :setUrl( oQUrl )                                    -> NIL
  *     :setZoomFactor( nFactor )                           -> NIL
- *     :settings()                                         -> pQWebSettings
+ *     :settings()                                         -> oQWebSettings
  *     :textSizeMultiplier()                               -> nQreal
  *     :title()                                            -> cQString
  *     :triggerPageAction( nAction, lChecked )             -> NIL
- *     :url()                                              -> pQUrl
+ *     :url()                                              -> oQUrl
  *     :zoomFactor()                                       -> nQreal
  *     :back()                                             -> NIL
  *     :forward()                                          -> NIL
- *     :print( pPrinter )                                  -> NIL
+ *     :print( oQPrinter )                                 -> NIL
  *     :reload()                                           -> NIL
  *     :stop()                                             -> NIL
  * 
@@ -71,7 +71,5 @@
  *     Harbour source: contrib/hbqt/qtwebkit/TQWebView.prg
  *     C++ wrappers  : contrib/hbqt/qtwebkit/QWebView.cpp
  *     Library       : hbqtwebkit
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

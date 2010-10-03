@@ -27,15 +27,15 @@
  *     An instance of the object of type QItemDelegate
  *  $METHODS$
  *     :hasClipping()                                      -> lBool
- *     :itemEditorFactory()                                -> pQItemEditorFactory
+ *     :itemEditorFactory()                                -> oQItemEditorFactory
  *     :setClipping( lClip )                               -> NIL
- *     :setItemEditorFactory( pFactory )                   -> NIL
- *     :createEditor( pParent, pOption, pIndex )           -> pQWidget
- *     :paint( pPainter, pOption, pIndex )                 -> NIL
- *     :setEditorData( pEditor, pIndex )                   -> NIL
- *     :setModelData( pEditor, pModel, pIndex )            -> NIL
- *     :sizeHint( pOption, pIndex )                        -> pQSize
- *     :updateEditorGeometry( pEditor, pOption, pIndex )   -> NIL
+ *     :setItemEditorFactory( oQItemEditorFactory )        -> NIL
+ *     :createEditor( oQWidget, oQStyleOptionViewItem, oQModelIndex )  -> oQWidget
+ *     :paint( oQPainter, oQStyleOptionViewItem, oQModelIndex )  -> NIL
+ *     :setEditorData( oQWidget, oQModelIndex )            -> NIL
+ *     :setModelData( oQWidget, oQAbstractItemModel, oQModelIndex )  -> NIL
+ *     :sizeHint( oQStyleOptionViewItem, oQModelIndex )    -> oQSize
+ *     :updateEditorGeometry( oQWidget, oQStyleOptionViewItem, oQModelIndex )  -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -55,7 +55,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQItemDelegate.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QItemDelegate.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractItemDelegate()
  *  $END$
  */

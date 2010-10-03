@@ -103,23 +103,23 @@ CREATE CLASS QWebHistory INHERIT HbQtObjectHandler FUNCTION HB_QWebHistory
 
    METHOD  new( ... )
 
-   METHOD  back()
-   METHOD  backItem()
-   METHOD  backItems( nMaxItems )
-   METHOD  canGoBack()
-   METHOD  canGoForward()
-   METHOD  clear()
-   METHOD  count()
-   METHOD  currentItem()
-   METHOD  currentItemIndex()
-   METHOD  forward()
-   METHOD  forwardItem()
-   METHOD  forwardItems( nMaxItems )
-   METHOD  goToItem( pItem )
-   METHOD  itemAt( nI )
-   METHOD  items()
-   METHOD  maximumItemCount()
-   METHOD  setMaximumItemCount( nCount )
+   METHOD  back                          // (  )                                               -> NIL
+   METHOD  backItem                      // (  )                                               -> oQWebHistoryItem
+   METHOD  backItems                     // ( nMaxItems )                                      -> oQList_QWebHistoryItem>
+   METHOD  canGoBack                     // (  )                                               -> lBool
+   METHOD  canGoForward                  // (  )                                               -> lBool
+   METHOD  clear                         // (  )                                               -> NIL
+   METHOD  count                         // (  )                                               -> nInt
+   METHOD  currentItem                   // (  )                                               -> oQWebHistoryItem
+   METHOD  currentItemIndex              // (  )                                               -> nInt
+   METHOD  forward                       // (  )                                               -> NIL
+   METHOD  forwardItem                   // (  )                                               -> oQWebHistoryItem
+   METHOD  forwardItems                  // ( nMaxItems )                                      -> oQList_QWebHistoryItem>
+   METHOD  goToItem                      // ( oQWebHistoryItem )                               -> NIL
+   METHOD  itemAt                        // ( nI )                                             -> oQWebHistoryItem
+   METHOD  items                         // (  )                                               -> oQList_QWebHistoryItem>
+   METHOD  maximumItemCount              // (  )                                               -> nInt
+   METHOD  setMaximumItemCount           // ( nCount )                                         -> NIL
 
    ENDCLASS
 
@@ -133,70 +133,158 @@ METHOD QWebHistory:new( ... )
    RETURN Self
 
 
-METHOD QWebHistory:back()
-   RETURN Qt_QWebHistory_back( ::pPtr )
+METHOD QWebHistory:back( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebHistory_back( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHistory:backItem()
-   RETURN HB_QWebHistoryItem():from( Qt_QWebHistory_backItem( ::pPtr ) )
+METHOD QWebHistory:backItem( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWebHistoryItem():from( Qt_QWebHistory_backItem( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHistory:backItems( nMaxItems )
-   RETURN HB_QList():from( Qt_QWebHistory_backItems( ::pPtr, nMaxItems ) )
+METHOD QWebHistory:backItems( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QList():from( Qt_QWebHistory_backItems( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHistory:canGoBack()
-   RETURN Qt_QWebHistory_canGoBack( ::pPtr )
+METHOD QWebHistory:canGoBack( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebHistory_canGoBack( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHistory:canGoForward()
-   RETURN Qt_QWebHistory_canGoForward( ::pPtr )
+METHOD QWebHistory:canGoForward( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebHistory_canGoForward( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHistory:clear()
-   RETURN Qt_QWebHistory_clear( ::pPtr )
+METHOD QWebHistory:clear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebHistory_clear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHistory:count()
-   RETURN Qt_QWebHistory_count( ::pPtr )
+METHOD QWebHistory:count( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebHistory_count( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHistory:currentItem()
-   RETURN HB_QWebHistoryItem():from( Qt_QWebHistory_currentItem( ::pPtr ) )
+METHOD QWebHistory:currentItem( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWebHistoryItem():from( Qt_QWebHistory_currentItem( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHistory:currentItemIndex()
-   RETURN Qt_QWebHistory_currentItemIndex( ::pPtr )
+METHOD QWebHistory:currentItemIndex( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebHistory_currentItemIndex( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHistory:forward()
-   RETURN Qt_QWebHistory_forward( ::pPtr )
+METHOD QWebHistory:forward( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebHistory_forward( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHistory:forwardItem()
-   RETURN HB_QWebHistoryItem():from( Qt_QWebHistory_forwardItem( ::pPtr ) )
+METHOD QWebHistory:forwardItem( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWebHistoryItem():from( Qt_QWebHistory_forwardItem( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHistory:forwardItems( nMaxItems )
-   RETURN HB_QList():from( Qt_QWebHistory_forwardItems( ::pPtr, nMaxItems ) )
+METHOD QWebHistory:forwardItems( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QList():from( Qt_QWebHistory_forwardItems( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHistory:goToItem( pItem )
-   RETURN Qt_QWebHistory_goToItem( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QWebHistory:goToItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWebHistory_goToItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHistory:itemAt( nI )
-   RETURN HB_QWebHistoryItem():from( Qt_QWebHistory_itemAt( ::pPtr, nI ) )
+METHOD QWebHistory:itemAt( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QWebHistoryItem():from( Qt_QWebHistory_itemAt( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHistory:items()
-   RETURN HB_QList():from( Qt_QWebHistory_items( ::pPtr ) )
+METHOD QWebHistory:items( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QWebHistory_items( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHistory:maximumItemCount()
-   RETURN Qt_QWebHistory_maximumItemCount( ::pPtr )
+METHOD QWebHistory:maximumItemCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebHistory_maximumItemCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHistory:setMaximumItemCount( nCount )
-   RETURN Qt_QWebHistory_setMaximumItemCount( ::pPtr, nCount )
+METHOD QWebHistory:setMaximumItemCount( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWebHistory_setMaximumItemCount( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

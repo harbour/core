@@ -103,8 +103,8 @@ CREATE CLASS QStyleOptionFrame INHERIT HbQtObjectHandler, qStyleOption FUNCTION 
 
    METHOD  new( ... )
 
-   METHOD  lineWidth()
-   METHOD  midLineWidth()
+   METHOD  lineWidth                     // (  )                                               -> nInt
+   METHOD  midLineWidth                  // (  )                                               -> nInt
 
    ENDCLASS
 
@@ -118,10 +118,18 @@ METHOD QStyleOptionFrame:new( ... )
    RETURN Self
 
 
-METHOD QStyleOptionFrame:lineWidth()
-   RETURN Qt_QStyleOptionFrame_lineWidth( ::pPtr )
+METHOD QStyleOptionFrame:lineWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionFrame_lineWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionFrame:midLineWidth()
-   RETURN Qt_QStyleOptionFrame_midLineWidth( ::pPtr )
+METHOD QStyleOptionFrame:midLineWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionFrame_midLineWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

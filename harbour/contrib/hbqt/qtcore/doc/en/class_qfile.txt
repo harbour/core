@@ -36,9 +36,9 @@
  *     :handle()                                           -> nInt
  *     :isSequential()                                     -> lBool
  *     :link( cLinkName )                                  -> lBool
- *     :map( nOffset, nSize, nFlags )                      -> pUchar
+ *     :map( nOffset, nSize, nFlags )                      -> cUchar
  *     :open( nMode )                                      -> lBool
- *     :open_1( nFd, nMode )                               -> lBool
+ *     :open( nFd, nMode )                                 -> lBool
  *     :permissions()                                      -> nPermissions
  *     :remove()                                           -> lBool
  *     :rename( cNewName )                                 -> lBool
@@ -48,17 +48,17 @@
  *     :size()                                             -> nQint64
  *     :symLinkTarget()                                    -> cQString
  *     :unsetError()                                       -> NIL
- *     :copy_1( cFileName, cNewName )                      -> lBool
- *     :decodeName( pLocalFileName )                       -> cQString
- *     :encodeName( cFileName )                            -> pQByteArray
- *     :exists_1( cFileName )                              -> lBool
- *     :link_1( cFileName, cLinkName )                     -> lBool
- *     :permissions_1( cFileName )                         -> nPermissions
- *     :remove_1( cFileName )                              -> lBool
- *     :rename_1( cOldName, cNewName )                     -> lBool
- *     :resize_1( cFileName, nSz )                         -> lBool
- *     :setPermissions_1( cFileName, nPermissions )        -> lBool
- *     :symLinkTarget_1( cFileName )                       -> cQString
+ *     :copy( cFileName, cNewName )                        -> lBool
+ *     :decodeName( cLocalFileName )                       -> cQString
+ *     :encodeName( cFileName )                            -> oQByteArray
+ *     :exists( cFileName )                                -> lBool
+ *     :link( cFileName, cLinkName )                       -> lBool
+ *     :permissions( cFileName )                           -> nPermissions
+ *     :remove( cFileName )                                -> lBool
+ *     :rename( cOldName, cNewName )                       -> lBool
+ *     :resize( cFileName, nSz )                           -> lBool
+ *     :setPermissions( cFileName, nPermissions )          -> lBool
+ *     :symLinkTarget( cFileName )                         -> cQString
  * 
  *  $DESCRIPTION$
  * 
@@ -78,7 +78,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQFile.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QFile.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     QIODevice()
  *  $END$
  */

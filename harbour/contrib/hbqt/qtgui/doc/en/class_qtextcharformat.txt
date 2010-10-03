@@ -27,9 +27,9 @@
  *     An instance of the object of type QTextCharFormat
  *  $METHODS$
  *     :anchorHref()                                       -> cQString
- *     :anchorNames()                                      -> pQStringList
- *     :font()                                             -> pQFont
- *     :fontCapitalization()                               -> nQFont::Capitalization
+ *     :anchorNames()                                      -> oQStringList
+ *     :font()                                             -> oQFont
+ *     :fontCapitalization()                               -> nQFont_Capitalization
  *     :fontFamily()                                       -> cQString
  *     :fontFixedPitch()                                   -> lBool
  *     :fontItalic()                                       -> lBool
@@ -38,8 +38,8 @@
  *     :fontOverline()                                     -> lBool
  *     :fontPointSize()                                    -> nQreal
  *     :fontStrikeOut()                                    -> lBool
- *     :fontStyleHint()                                    -> nQFont::StyleHint
- *     :fontStyleStrategy()                                -> nQFont::StyleStrategy
+ *     :fontStyleHint()                                    -> nQFont_StyleHint
+ *     :fontStyleStrategy()                                -> nQFont_StyleStrategy
  *     :fontUnderline()                                    -> lBool
  *     :fontWeight()                                       -> nInt
  *     :fontWordSpacing()                                  -> nQreal
@@ -47,8 +47,8 @@
  *     :isValid()                                          -> lBool
  *     :setAnchor( lAnchor )                               -> NIL
  *     :setAnchorHref( cValue )                            -> NIL
- *     :setAnchorNames( pNames )                           -> NIL
- *     :setFont( pFont )                                   -> NIL
+ *     :setAnchorNames( oQStringList )                     -> NIL
+ *     :setFont( oQFont )                                  -> NIL
  *     :setFontCapitalization( nCapitalization )           -> NIL
  *     :setFontFamily( cFamily )                           -> NIL
  *     :setFontFixedPitch( lFixedPitch )                   -> NIL
@@ -63,14 +63,14 @@
  *     :setFontUnderline( lUnderline )                     -> NIL
  *     :setFontWeight( nWeight )                           -> NIL
  *     :setFontWordSpacing( nSpacing )                     -> NIL
- *     :setTextOutline( pPen )                             -> NIL
+ *     :setTextOutline( oQPen )                            -> NIL
  *     :setToolTip( cText )                                -> NIL
- *     :setUnderlineColor( pColor )                        -> NIL
+ *     :setUnderlineColor( oQColor )                       -> NIL
  *     :setUnderlineStyle( nStyle )                        -> NIL
  *     :setVerticalAlignment( nAlignment )                 -> NIL
- *     :textOutline()                                      -> pQPen
+ *     :textOutline()                                      -> oQPen
  *     :toolTip()                                          -> cQString
- *     :underlineColor()                                   -> pQColor
+ *     :underlineColor()                                   -> oQColor
  *     :underlineStyle()                                   -> nUnderlineStyle
  *     :verticalAlignment()                                -> nVerticalAlignment
  * 
@@ -92,7 +92,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTextCharFormat.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextCharFormat.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QTextFormat()
  *  $END$
  */

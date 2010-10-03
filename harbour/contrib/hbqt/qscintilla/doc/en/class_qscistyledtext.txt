@@ -47,7 +47,5 @@
  *     Harbour source: contrib/hbqt/qscintilla/TQsciStyledText.prg
  *     C++ wrappers  : contrib/hbqt/qscintilla/QsciStyledText.cpp
  *     Library       : hbqscintilla
- *  $SEEALSO$
- *     
  *  $END$
  */

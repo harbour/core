@@ -103,41 +103,41 @@ CREATE CLASS QWizard INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QWizard
 
    METHOD  new( ... )
 
-   METHOD  addPage( pPage )
-   METHOD  button( nWhich )
-   METHOD  buttonText( nWhich )
-   METHOD  currentId()
-   METHOD  currentPage()
-   METHOD  field( cName )
-   METHOD  hasVisitedPage( nId )
-   METHOD  nextId()
-   METHOD  options()
-   METHOD  page( nId )
-   METHOD  pageIds()
-   METHOD  pixmap( nWhich )
-   METHOD  removePage( nId )
-   METHOD  setButton( nWhich, pButton )
-   METHOD  setButtonText( nWhich, cText )
-   METHOD  setDefaultProperty( pClassName, pProperty, pChangedSignal )
-   METHOD  setField( cName, pValue )
-   METHOD  setOption( nOption, lOn )
-   METHOD  setOptions( nOptions )
-   METHOD  setPage( nId, pPage )
-   METHOD  setPixmap( nWhich, pPixmap )
-   METHOD  setStartId( nId )
-   METHOD  setSubTitleFormat( nFormat )
-   METHOD  setTitleFormat( nFormat )
-   METHOD  setWizardStyle( nStyle )
-   METHOD  startId()
-   METHOD  subTitleFormat()
-   METHOD  testOption( nOption )
-   METHOD  titleFormat()
-   METHOD  validateCurrentPage()
-   METHOD  visitedPages()
-   METHOD  wizardStyle()
-   METHOD  back()
-   METHOD  next()
-   METHOD  restart()
+   METHOD  addPage                       // ( oQWizardPage )                                   -> nInt
+   METHOD  button                        // ( nWhich )                                         -> oQAbstractButton
+   METHOD  buttonText                    // ( nWhich )                                         -> cQString
+   METHOD  currentId                     // (  )                                               -> nInt
+   METHOD  currentPage                   // (  )                                               -> oQWizardPage
+   METHOD  field                         // ( cName )                                          -> oQVariant
+   METHOD  hasVisitedPage                // ( nId )                                            -> lBool
+   METHOD  nextId                        // (  )                                               -> nInt
+   METHOD  options                       // (  )                                               -> nWizardOptions
+   METHOD  page                          // ( nId )                                            -> oQWizardPage
+   METHOD  pageIds                       // (  )                                               -> oQList_int>
+   METHOD  pixmap                        // ( nWhich )                                         -> oQPixmap
+   METHOD  removePage                    // ( nId )                                            -> NIL
+   METHOD  setButton                     // ( nWhich, oQAbstractButton )                       -> NIL
+   METHOD  setButtonText                 // ( nWhich, cText )                                  -> NIL
+   METHOD  setDefaultProperty            // ( cClassName, cProperty, cChangedSignal )          -> NIL
+   METHOD  setField                      // ( cName, oQVariant )                               -> NIL
+   METHOD  setOption                     // ( nOption, lOn )                                   -> NIL
+   METHOD  setOptions                    // ( nOptions )                                       -> NIL
+   METHOD  setPage                       // ( nId, oQWizardPage )                              -> NIL
+   METHOD  setPixmap                     // ( nWhich, oQPixmap )                               -> NIL
+   METHOD  setStartId                    // ( nId )                                            -> NIL
+   METHOD  setSubTitleFormat             // ( nFormat )                                        -> NIL
+   METHOD  setTitleFormat                // ( nFormat )                                        -> NIL
+   METHOD  setWizardStyle                // ( nStyle )                                         -> NIL
+   METHOD  startId                       // (  )                                               -> nInt
+   METHOD  subTitleFormat                // (  )                                               -> nQt_TextFormat
+   METHOD  testOption                    // ( nOption )                                        -> lBool
+   METHOD  titleFormat                   // (  )                                               -> nQt_TextFormat
+   METHOD  validateCurrentPage           // (  )                                               -> lBool
+   METHOD  visitedPages                  // (  )                                               -> oQList_int>
+   METHOD  wizardStyle                   // (  )                                               -> nWizardStyle
+   METHOD  back                          // (  )                                               -> NIL
+   METHOD  next                          // (  )                                               -> NIL
+   METHOD  restart                       // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -151,142 +151,372 @@ METHOD QWizard:new( ... )
    RETURN Self
 
 
-METHOD QWizard:addPage( pPage )
-   RETURN Qt_QWizard_addPage( ::pPtr, hbqt_ptr( pPage ) )
-
-
-METHOD QWizard:button( nWhich )
-   RETURN HB_QAbstractButton():from( Qt_QWizard_button( ::pPtr, nWhich ) )
-
-
-METHOD QWizard:buttonText( nWhich )
-   RETURN Qt_QWizard_buttonText( ::pPtr, nWhich )
-
-
-METHOD QWizard:currentId()
-   RETURN Qt_QWizard_currentId( ::pPtr )
-
-
-METHOD QWizard:currentPage()
-   RETURN HB_QWizardPage():from( Qt_QWizard_currentPage( ::pPtr ) )
-
-
-METHOD QWizard:field( cName )
-   RETURN HB_QVariant():from( Qt_QWizard_field( ::pPtr, cName ) )
-
-
-METHOD QWizard:hasVisitedPage( nId )
-   RETURN Qt_QWizard_hasVisitedPage( ::pPtr, nId )
-
-
-METHOD QWizard:nextId()
-   RETURN Qt_QWizard_nextId( ::pPtr )
-
-
-METHOD QWizard:options()
-   RETURN Qt_QWizard_options( ::pPtr )
-
-
-METHOD QWizard:page( nId )
-   RETURN HB_QWizardPage():from( Qt_QWizard_page( ::pPtr, nId ) )
-
-
-METHOD QWizard:pageIds()
-   RETURN HB_QList():from( Qt_QWizard_pageIds( ::pPtr ) )
-
-
-METHOD QWizard:pixmap( nWhich )
-   RETURN HB_QPixmap():from( Qt_QWizard_pixmap( ::pPtr, nWhich ) )
-
-
-METHOD QWizard:removePage( nId )
-   RETURN Qt_QWizard_removePage( ::pPtr, nId )
-
-
-METHOD QWizard:setButton( nWhich, pButton )
-   RETURN Qt_QWizard_setButton( ::pPtr, nWhich, hbqt_ptr( pButton ) )
-
-
-METHOD QWizard:setButtonText( nWhich, cText )
-   RETURN Qt_QWizard_setButtonText( ::pPtr, nWhich, cText )
-
-
-METHOD QWizard:setDefaultProperty( pClassName, pProperty, pChangedSignal )
-   RETURN Qt_QWizard_setDefaultProperty( ::pPtr, hbqt_ptr( pClassName ), hbqt_ptr( pProperty ), hbqt_ptr( pChangedSignal ) )
-
-
-METHOD QWizard:setField( cName, pValue )
-   RETURN Qt_QWizard_setField( ::pPtr, cName, hbqt_ptr( pValue ) )
-
-
-METHOD QWizard:setOption( nOption, lOn )
-   RETURN Qt_QWizard_setOption( ::pPtr, nOption, lOn )
-
-
-METHOD QWizard:setOptions( nOptions )
-   RETURN Qt_QWizard_setOptions( ::pPtr, nOptions )
-
-
-METHOD QWizard:setPage( nId, pPage )
-   RETURN Qt_QWizard_setPage( ::pPtr, nId, hbqt_ptr( pPage ) )
-
-
-METHOD QWizard:setPixmap( nWhich, pPixmap )
-   RETURN Qt_QWizard_setPixmap( ::pPtr, nWhich, hbqt_ptr( pPixmap ) )
-
-
-METHOD QWizard:setStartId( nId )
-   RETURN Qt_QWizard_setStartId( ::pPtr, nId )
-
-
-METHOD QWizard:setSubTitleFormat( nFormat )
-   RETURN Qt_QWizard_setSubTitleFormat( ::pPtr, nFormat )
-
-
-METHOD QWizard:setTitleFormat( nFormat )
-   RETURN Qt_QWizard_setTitleFormat( ::pPtr, nFormat )
-
-
-METHOD QWizard:setWizardStyle( nStyle )
-   RETURN Qt_QWizard_setWizardStyle( ::pPtr, nStyle )
-
-
-METHOD QWizard:startId()
-   RETURN Qt_QWizard_startId( ::pPtr )
-
-
-METHOD QWizard:subTitleFormat()
-   RETURN Qt_QWizard_subTitleFormat( ::pPtr )
-
-
-METHOD QWizard:testOption( nOption )
-   RETURN Qt_QWizard_testOption( ::pPtr, nOption )
-
-
-METHOD QWizard:titleFormat()
-   RETURN Qt_QWizard_titleFormat( ::pPtr )
-
-
-METHOD QWizard:validateCurrentPage()
-   RETURN Qt_QWizard_validateCurrentPage( ::pPtr )
-
-
-METHOD QWizard:visitedPages()
-   RETURN HB_QList():from( Qt_QWizard_visitedPages( ::pPtr ) )
-
-
-METHOD QWizard:wizardStyle()
-   RETURN Qt_QWizard_wizardStyle( ::pPtr )
-
-
-METHOD QWizard:back()
-   RETURN Qt_QWizard_back( ::pPtr )
-
-
-METHOD QWizard:next()
-   RETURN Qt_QWizard_next( ::pPtr )
-
-
-METHOD QWizard:restart()
-   RETURN Qt_QWizard_restart( ::pPtr )
+METHOD QWizard:addPage( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWizard_addPage( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:button( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QAbstractButton():from( Qt_QWizard_button( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:buttonText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWizard_buttonText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:currentId( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWizard_currentId( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:currentPage( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWizardPage():from( Qt_QWizard_currentPage( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:field( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QVariant():from( Qt_QWizard_field( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:hasVisitedPage( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWizard_hasVisitedPage( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:nextId( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWizard_nextId( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:options( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWizard_options( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:page( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QWizardPage():from( Qt_QWizard_page( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:pageIds( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QWizard_pageIds( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:pixmap( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QPixmap():from( Qt_QWizard_pixmap( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:removePage( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWizard_removePage( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:setButton( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QWizard_setButton( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:setButtonText( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QWizard_setButtonText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:setDefaultProperty( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
+         RETURN Qt_QWizard_setDefaultProperty( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:setField( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QWizard_setField( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:setOption( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QWizard_setOption( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWizard_setOption( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:setOptions( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWizard_setOptions( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:setPage( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QWizard_setPage( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:setPixmap( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QWizard_setPixmap( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:setStartId( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWizard_setStartId( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:setSubTitleFormat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWizard_setSubTitleFormat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:setTitleFormat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWizard_setTitleFormat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:setWizardStyle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWizard_setWizardStyle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:startId( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWizard_startId( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:subTitleFormat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWizard_subTitleFormat( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:testOption( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWizard_testOption( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:titleFormat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWizard_titleFormat( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:validateCurrentPage( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWizard_validateCurrentPage( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:visitedPages( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QWizard_visitedPages( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:wizardStyle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWizard_wizardStyle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:back( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWizard_back( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:next( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWizard_next( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWizard:restart( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWizard_restart( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

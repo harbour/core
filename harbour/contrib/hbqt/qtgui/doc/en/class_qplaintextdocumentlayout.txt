@@ -27,7 +27,7 @@
  *     An instance of the object of type QPlainTextDocumentLayout
  *  $METHODS$
  *     :cursorWidth()                                      -> nInt
- *     :ensureBlockLayout( pBlock )                        -> NIL
+ *     :ensureBlockLayout( oQTextBlock )                   -> NIL
  *     :requestUpdate()                                    -> NIL
  *     :setCursorWidth( nWidth )                           -> NIL
  * 
@@ -49,7 +49,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQPlainTextDocumentLayout.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QPlainTextDocumentLayout.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractTextDocumentLayout()
  *  $END$
  */

@@ -26,12 +26,12 @@
  *  $RETURNS$
  *     An instance of the object of type QAbstractProxyModel
  *  $METHODS$
- *     :mapFromSource( pSourceIndex )                      -> pQModelIndex
- *     :mapSelectionFromSource( pSourceSelection )         -> pQItemSelection
- *     :mapSelectionToSource( pProxySelection )            -> pQItemSelection
- *     :mapToSource( pProxyIndex )                         -> pQModelIndex
- *     :setSourceModel( pSourceModel )                     -> NIL
- *     :sourceModel()                                      -> pQAbstractItemModel
+ *     :mapFromSource( oQModelIndex )                      -> oQModelIndex
+ *     :mapSelectionFromSource( oQItemSelection )          -> oQItemSelection
+ *     :mapSelectionToSource( oQItemSelection )            -> oQItemSelection
+ *     :mapToSource( oQModelIndex )                        -> oQModelIndex
+ *     :setSourceModel( oQAbstractItemModel )              -> NIL
+ *     :sourceModel()                                      -> oQAbstractItemModel
  * 
  *  $DESCRIPTION$
  * 
@@ -51,7 +51,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQAbstractProxyModel.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QAbstractProxyModel.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractItemModel()
  *  $END$
  */

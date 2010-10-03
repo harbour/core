@@ -103,173 +103,181 @@ CREATE CLASS HBQString INHERIT HbQtObjectHandler FUNCTION HB_HBQString
 
    METHOD  new( ... )
 
-   METHOD  append( cStr )
-   METHOD  append_1( pReference )
-   METHOD  append_2( pStr )
-   METHOD  append_3( pBa )
-   METHOD  append_4( pStr )
-   METHOD  append_5( pCh )
-   METHOD  arg( cA, nFieldWidth, pFillChar )
-   METHOD  arg_1( cA1, cA2 )
-   METHOD  arg_2( cA1, cA2, cA3 )
-   METHOD  arg_3( cA1, cA2, cA3, cA4 )
-   METHOD  arg_4( cA1, cA2, cA3, cA4, cA5 )
-   METHOD  arg_5( cA1, cA2, cA3, cA4, cA5, cA6 )
-   METHOD  arg_6( cA1, cA2, cA3, cA4, cA5, cA6, cA7 )
-   METHOD  arg_7( cA1, cA2, cA3, cA4, cA5, cA6, cA7, cA8 )
-   METHOD  arg_8( cA1, cA2, cA3, cA4, cA5, cA6, cA7, cA8, cA9 )
-   METHOD  arg_9( nA, nFieldWidth, nBase, pFillChar )
-   METHOD  arg_10( nA, nFieldWidth, nBase, pFillChar )
-   METHOD  arg_11( nA, nFieldWidth, nBase, pFillChar )
-   METHOD  arg_12( nA, nFieldWidth, nBase, pFillChar )
-   METHOD  arg_13( nA, nFieldWidth, nBase, pFillChar )
-   METHOD  arg_14( nA, nFieldWidth, nBase, pFillChar )
-   METHOD  arg_15( nA, nFieldWidth, nBase, pFillChar )
-   METHOD  arg_16( nA, nFieldWidth, nBase, pFillChar )
-   METHOD  arg_17( pA, nFieldWidth, pFillChar )
-   METHOD  arg_18( cA, nFieldWidth, pFillChar )
-   METHOD  arg_19( nA, nFieldWidth, cFormat, nPrecision, pFillChar )
-   METHOD  at( nPosition )
-   METHOD  capacity()
-   METHOD  chop( nN )
-   METHOD  clear()
-   METHOD  compare( cOther )
-   METHOD  compare_1( cOther, nCs )
-   METHOD  compare_2( pOther, nCs )
-   METHOD  compare_3( pRef, nCs )
-   METHOD  constData()
-   METHOD  count( cStr, nCs )
-   METHOD  count_1( pCh, nCs )
-   METHOD  count_2( pRx )
-   METHOD  count_3()
-   METHOD  data()
-   METHOD  data_1()
-   METHOD  endsWith( cS, nCs )
-   METHOD  endsWith_1( pS, nCs )
-   METHOD  endsWith_2( pC, nCs )
-   METHOD  fill( pCh, nSize )
-   METHOD  indexOf( cStr, nFrom, nCs )
-   METHOD  indexOf_1( pStr, nFrom, nCs )
-   METHOD  indexOf_2( pCh, nFrom, nCs )
-   METHOD  indexOf_3( pRx, nFrom )
-   METHOD  indexOf_4( pRx, nFrom )
-   METHOD  insert( nPosition, cStr )
-   METHOD  insert_1( nPosition, pStr )
-   METHOD  insert_2( nPosition, pUnicode, nSize )
-   METHOD  insert_3( nPosition, pCh )
-   METHOD  isEmpty()
-   METHOD  isNull()
-   METHOD  lastIndexOf( cStr, nFrom, nCs )
-   METHOD  lastIndexOf_1( pStr, nFrom, nCs )
-   METHOD  lastIndexOf_2( pCh, nFrom, nCs )
-   METHOD  lastIndexOf_3( pRx, nFrom )
-   METHOD  lastIndexOf_4( pRx, nFrom )
-   METHOD  left( nN )
-   METHOD  leftJustified( nWidth, pFill, lTruncate )
-   METHOD  leftRef( nN )
-   METHOD  length()
-   METHOD  localeAwareCompare( pOther )
-   METHOD  localeAwareCompare_1( cOther )
-   METHOD  mid( nPosition, nN )
-   METHOD  midRef( nPosition, nN )
-   METHOD  normalized( nMode )
-   METHOD  normalized_1( nMode, nVersion )
-   METHOD  prepend( cStr )
-   METHOD  prepend_1( pStr )
-   METHOD  prepend_2( pBa )
-   METHOD  prepend_3( pStr )
-   METHOD  prepend_4( pCh )
-   METHOD  push_back( cOther )
-   METHOD  push_back_1( pCh )
-   METHOD  push_front( cOther )
-   METHOD  push_front_1( pCh )
-   METHOD  remove( nPosition, nN )
-   METHOD  remove_1( pCh, nCs )
-   METHOD  remove_2( cStr, nCs )
-   METHOD  remove_3( pRx )
-   METHOD  repeated( nTimes )
-   METHOD  replace( nPosition, nN, cAfter )
-   METHOD  replace_1( nPosition, nN, pUnicode, nSize )
-   METHOD  replace_2( nPosition, nN, pAfter )
-   METHOD  replace_3( cBefore, cAfter, nCs )
-   METHOD  replace_4( pBefore, nBlen, pAfter, nAlen, nCs )
-   METHOD  replace_5( pCh, cAfter, nCs )
-   METHOD  replace_6( pBefore, pAfter, nCs )
-   METHOD  replace_7( pBefore, pAfter, nCs )
-   METHOD  replace_8( pBefore, cAfter, nCs )
-   METHOD  replace_9( cBefore, pAfter, nCs )
-   METHOD  replace_10( pC, pAfter, nCs )
-   METHOD  replace_11( pRx, cAfter )
-   METHOD  reserve( nSize )
-   METHOD  resize( nSize )
-   METHOD  right( nN )
-   METHOD  rightJustified( nWidth, pFill, lTruncate )
-   METHOD  rightRef( nN )
-   METHOD  section( pSep, nStart, nEnd, nFlags )
-   METHOD  section_1( cSep, nStart, nEnd, nFlags )
-   METHOD  section_2( pReg, nStart, nEnd, nFlags )
-   METHOD  setNum( nN, nBase )
-   METHOD  setNum_1( nN, nBase )
-   METHOD  setNum_2( nN, nBase )
-   METHOD  setNum_3( nN, nBase )
-   METHOD  setNum_4( nN, nBase )
-   METHOD  setNum_5( nN, nBase )
-   METHOD  setNum_6( nN, nBase )
-   METHOD  setNum_7( nN, nBase )
-   METHOD  setNum_8( nN, cFormat, nPrecision )
-   METHOD  setNum_9( nN, cFormat, nPrecision )
-   METHOD  setUnicode( pUnicode, nSize )
-   METHOD  setUtf16( nUnicode, nSize )
-   METHOD  simplified()
-   METHOD  size()
-   METHOD  split( cSep, nBehavior, nCs )
-   METHOD  split_1( pSep, nBehavior, nCs )
-   METHOD  split_2( pRx, nBehavior )
-   METHOD  squeeze()
-   METHOD  startsWith( cS, nCs )
-   METHOD  startsWith_1( pS, nCs )
-   METHOD  startsWith_2( pC, nCs )
-   METHOD  toAscii()
-   METHOD  toCaseFolded()
-   METHOD  toDouble( lOk )
-   METHOD  toFloat( lOk )
-   METHOD  toInt( lOk, nBase )
-   METHOD  toLatin1()
-   METHOD  toLocal8Bit()
-   METHOD  toLong( lOk, nBase )
-   METHOD  toLongLong( lOk, nBase )
-   METHOD  toLower()
-   METHOD  toShort( lOk, nBase )
-   METHOD  toUInt( lOk, nBase )
-   METHOD  toULong( lOk, nBase )
-   METHOD  toULongLong( lOk, nBase )
-   METHOD  toUShort( lOk, nBase )
-   METHOD  toUpper()
-   METHOD  toUtf8()
-   METHOD  trimmed()
-   METHOD  truncate( nPosition )
-   METHOD  unicode()
-   METHOD  compare_4( cS1, cS2, nCs )
-   METHOD  compare_5( cS1, cS2 )
-   METHOD  compare_6( cS1, pS2, nCs )
-   METHOD  compare_7( pS1, cS2, nCs )
-   METHOD  compare_8( cS1, pS2, nCs )
-   METHOD  fromAscii( pStr, nSize )
-   METHOD  fromLatin1( pStr, nSize )
-   METHOD  fromLocal8Bit( pStr, nSize )
-   METHOD  fromRawData( pUnicode, nSize )
-   METHOD  fromUcs4( nUnicode, nSize )
-   METHOD  fromUtf8( pStr, nSize )
-   METHOD  fromUtf16( nUnicode, nSize )
-   METHOD  localeAwareCompare_2( cS1, cS2 )
-   METHOD  localeAwareCompare_3( cS1, pS2 )
-   METHOD  number( nN, nBase )
-   METHOD  number_1( nN, cFormat, nPrecision )
-   METHOD  number_2( nN, nBase )
-   METHOD  number_3( nN, nBase )
-   METHOD  number_4( nN, nBase )
-   METHOD  number_5( nN, nBase )
-   METHOD  number_6( nN, nBase )
+   METHOD  HBQString                     // (  )                                               -> oHBQString
+   METHOD  HBQString_1                   // ( oQChar, nSize )                                  -> oHBQString
+   METHOD  HBQString_2                   // ( oQChar )                                         -> oHBQString
+   METHOD  HBQString_3                   // ( nSize, oQChar )                                  -> oHBQString
+   METHOD  HBQString_4                   // ( oQLatin1String )                                 -> oHBQString
+   METHOD  HBQString_5                   // ( cOther )                                         -> oHBQString
+   METHOD  HBQString_6                   // ( cStr )                                           -> oHBQString
+   METHOD  HBQString_7                   // ( oQByteArray )                                    -> oHBQString
+   METHOD  append                        // ( cStr )                                           -> cQString
+   METHOD  append_1                      // ( oQStringRef )                                    -> cQString
+   METHOD  append_2                      // ( oQLatin1String )                                 -> cQString
+   METHOD  append_3                      // ( oQByteArray )                                    -> cQString
+   METHOD  append_4                      // ( cStr )                                           -> cQString
+   METHOD  append_5                      // ( oQChar )                                         -> cQString
+   METHOD  arg                           // ( cA, nFieldWidth, oQChar )                        -> cQString
+   METHOD  arg_1                         // ( cA1, cA2 )                                       -> cQString
+   METHOD  arg_2                         // ( cA1, cA2, cA3 )                                  -> cQString
+   METHOD  arg_3                         // ( cA1, cA2, cA3, cA4 )                             -> cQString
+   METHOD  arg_4                         // ( cA1, cA2, cA3, cA4, cA5 )                        -> cQString
+   METHOD  arg_5                         // ( cA1, cA2, cA3, cA4, cA5, cA6 )                   -> cQString
+   METHOD  arg_6                         // ( cA1, cA2, cA3, cA4, cA5, cA6, cA7 )              -> cQString
+   METHOD  arg_7                         // ( cA1, cA2, cA3, cA4, cA5, cA6, cA7, cA8 )         -> cQString
+   METHOD  arg_8                         // ( cA1, cA2, cA3, cA4, cA5, cA6, cA7, cA8, cA9 )    -> cQString
+   METHOD  arg_9                         // ( nA, nFieldWidth, nBase, oQChar )                 -> cQString
+   METHOD  arg_10                        // ( nA, nFieldWidth, nBase, oQChar )                 -> cQString
+   METHOD  arg_11                        // ( nA, nFieldWidth, nBase, oQChar )                 -> cQString
+   METHOD  arg_12                        // ( nA, nFieldWidth, nBase, oQChar )                 -> cQString
+   METHOD  arg_13                        // ( nA, nFieldWidth, nBase, oQChar )                 -> cQString
+   METHOD  arg_14                        // ( nA, nFieldWidth, nBase, oQChar )                 -> cQString
+   METHOD  arg_15                        // ( nA, nFieldWidth, nBase, oQChar )                 -> cQString
+   METHOD  arg_16                        // ( nA, nFieldWidth, nBase, oQChar )                 -> cQString
+   METHOD  arg_17                        // ( oQChar, nFieldWidth, oQChar )                    -> cQString
+   METHOD  arg_18                        // ( nA, nFieldWidth, oQChar )                        -> cQString
+   METHOD  arg_19                        // ( nA, nFieldWidth, nFormat, nPrecision, oQChar )   -> cQString
+   METHOD  at                            // ( nPosition )                                      -> oQChar
+   METHOD  capacity                      // (  )                                               -> nInt
+   METHOD  chop                          // ( nN )                                             -> NIL
+   METHOD  clear                         // (  )                                               -> NIL
+   METHOD  compare                       // ( cOther )                                         -> nInt
+   METHOD  compare_1                     // ( cOther, nCs )                                    -> nInt
+   METHOD  compare_2                     // ( oQLatin1String, nCs )                            -> nInt
+   METHOD  compare_3                     // ( oQStringRef, nCs )                               -> nInt
+   METHOD  constData                     // (  )                                               -> oQChar
+   METHOD  count                         // ( cStr, nCs )                                      -> nInt
+   METHOD  count_1                       // ( oQChar, nCs )                                    -> nInt
+   METHOD  count_2                       // ( oQRegExp )                                       -> nInt
+   METHOD  count_3                       // (  )                                               -> nInt
+   METHOD  data                          // (  )                                               -> oQChar
+   METHOD  data_1                        // (  )                                               -> oQChar
+   METHOD  endsWith                      // ( cS, nCs )                                        -> lBool
+   METHOD  endsWith_1                    // ( oQLatin1String, nCs )                            -> lBool
+   METHOD  endsWith_2                    // ( oQChar, nCs )                                    -> lBool
+   METHOD  fill                          // ( oQChar, nSize )                                  -> cQString
+   METHOD  indexOf                       // ( cStr, nFrom, nCs )                               -> nInt
+   METHOD  indexOf_1                     // ( oQLatin1String, nFrom, nCs )                     -> nInt
+   METHOD  indexOf_2                     // ( oQChar, nFrom, nCs )                             -> nInt
+   METHOD  indexOf_3                     // ( oQRegExp, nFrom )                                -> nInt
+   METHOD  indexOf_4                     // ( oQRegExp, nFrom )                                -> nInt
+   METHOD  insert                        // ( nPosition, cStr )                                -> cQString
+   METHOD  insert_1                      // ( nPosition, oQLatin1String )                      -> cQString
+   METHOD  insert_2                      // ( nPosition, oQChar, nSize )                       -> cQString
+   METHOD  insert_3                      // ( nPosition, oQChar )                              -> cQString
+   METHOD  isEmpty                       // (  )                                               -> lBool
+   METHOD  isNull                        // (  )                                               -> lBool
+   METHOD  lastIndexOf                   // ( cStr, nFrom, nCs )                               -> nInt
+   METHOD  lastIndexOf_1                 // ( oQLatin1String, nFrom, nCs )                     -> nInt
+   METHOD  lastIndexOf_2                 // ( oQChar, nFrom, nCs )                             -> nInt
+   METHOD  lastIndexOf_3                 // ( oQRegExp, nFrom )                                -> nInt
+   METHOD  lastIndexOf_4                 // ( oQRegExp, nFrom )                                -> nInt
+   METHOD  left                          // ( nN )                                             -> cQString
+   METHOD  leftJustified                 // ( nWidth, oQChar, lTruncate )                      -> cQString
+   METHOD  leftRef                       // ( nN )                                             -> oQStringRef
+   METHOD  length                        // (  )                                               -> nInt
+   METHOD  localeAwareCompare            // ( oQStringRef )                                    -> nInt
+   METHOD  localeAwareCompare_1          // ( cOther )                                         -> nInt
+   METHOD  mid                           // ( nPosition, nN )                                  -> cQString
+   METHOD  midRef                        // ( nPosition, nN )                                  -> oQStringRef
+   METHOD  normalized                    // ( nMode )                                          -> cQString
+   METHOD  normalized_1                  // ( nMode, nVersion )                                -> cQString
+   METHOD  prepend                       // ( cStr )                                           -> cQString
+   METHOD  prepend_1                     // ( oQLatin1String )                                 -> cQString
+   METHOD  prepend_2                     // ( oQByteArray )                                    -> cQString
+   METHOD  prepend_3                     // ( cStr )                                           -> cQString
+   METHOD  prepend_4                     // ( oQChar )                                         -> cQString
+   METHOD  push_back                     // ( cOther )                                         -> NIL
+   METHOD  push_back_1                   // ( oQChar )                                         -> NIL
+   METHOD  push_front                    // ( cOther )                                         -> NIL
+   METHOD  push_front_1                  // ( oQChar )                                         -> NIL
+   METHOD  remove                        // ( nPosition, nN )                                  -> cQString
+   METHOD  remove_1                      // ( oQChar, nCs )                                    -> cQString
+   METHOD  remove_2                      // ( cStr, nCs )                                      -> cQString
+   METHOD  remove_3                      // ( oQRegExp )                                       -> cQString
+   METHOD  repeated                      // ( nTimes )                                         -> cQString
+   METHOD  replace                       // ( nPosition, nN, cAfter )                          -> cQString
+   METHOD  replace_1                     // ( nPosition, nN, oQChar, nSize )                   -> cQString
+   METHOD  replace_2                     // ( nPosition, nN, oQChar )                          -> cQString
+   METHOD  replace_3                     // ( cBefore, cAfter, nCs )                           -> cQString
+   METHOD  replace_4                     // ( oQChar, nBlen, oQChar, nAlen, nCs )              -> cQString
+   METHOD  replace_5                     // ( oQChar, cAfter, nCs )                            -> cQString
+   METHOD  replace_6                     // ( oQChar, oQChar, nCs )                            -> cQString
+   METHOD  replace_7                     // ( oQLatin1String, oQLatin1String, nCs )            -> cQString
+   METHOD  replace_8                     // ( oQLatin1String, cAfter, nCs )                    -> cQString
+   METHOD  replace_9                     // ( cBefore, oQLatin1String, nCs )                   -> cQString
+   METHOD  replace_10                    // ( oQChar, oQLatin1String, nCs )                    -> cQString
+   METHOD  replace_11                    // ( oQRegExp, cAfter )                               -> cQString
+   METHOD  reserve                       // ( nSize )                                          -> NIL
+   METHOD  resize                        // ( nSize )                                          -> NIL
+   METHOD  right                         // ( nN )                                             -> cQString
+   METHOD  rightJustified                // ( nWidth, oQChar, lTruncate )                      -> cQString
+   METHOD  rightRef                      // ( nN )                                             -> oQStringRef
+   METHOD  section                       // ( oQChar, nStart, nEnd, nFlags )                   -> cQString
+   METHOD  section_1                     // ( cSep, nStart, nEnd, nFlags )                     -> cQString
+   METHOD  section_2                     // ( oQRegExp, nStart, nEnd, nFlags )                 -> cQString
+   METHOD  setNum                        // ( nN, nBase )                                      -> cQString
+   METHOD  setNum_1                      // ( nN, nBase )                                      -> cQString
+   METHOD  setNum_2                      // ( nN, nBase )                                      -> cQString
+   METHOD  setNum_3                      // ( nN, nBase )                                      -> cQString
+   METHOD  setNum_4                      // ( nN, nBase )                                      -> cQString
+   METHOD  setNum_5                      // ( nN, nBase )                                      -> cQString
+   METHOD  setNum_6                      // ( nN, nBase )                                      -> cQString
+   METHOD  setNum_7                      // ( nN, nBase )                                      -> cQString
+   METHOD  setNum_8                      // ( nN, nFormat, nPrecision )                        -> cQString
+   METHOD  setNum_9                      // ( nN, nFormat, nPrecision )                        -> cQString
+   METHOD  setUnicode                    // ( oQChar, nSize )                                  -> cQString
+   METHOD  setUtf16                      // ( @nUnicode, nSize )                               -> cQString
+   METHOD  simplified                    // (  )                                               -> cQString
+   METHOD  size                          // (  )                                               -> nInt
+   METHOD  split                         // ( cSep, nBehavior, nCs )                           -> oQStringList
+   METHOD  split_1                       // ( oQChar, nBehavior, nCs )                         -> oQStringList
+   METHOD  split_2                       // ( oQRegExp, nBehavior )                            -> oQStringList
+   METHOD  squeeze                       // (  )                                               -> NIL
+   METHOD  startsWith                    // ( cS, nCs )                                        -> lBool
+   METHOD  startsWith_1                  // ( oQLatin1String, nCs )                            -> lBool
+   METHOD  startsWith_2                  // ( oQChar, nCs )                                    -> lBool
+   METHOD  toAscii                       // (  )                                               -> oQByteArray
+   METHOD  toCaseFolded                  // (  )                                               -> cQString
+   METHOD  toDouble                      // ( @lOk )                                           -> nDouble
+   METHOD  toFloat                       // ( @lOk )                                           -> nFloat
+   METHOD  toInt                         // ( @lOk, nBase )                                    -> nInt
+   METHOD  toLatin1                      // (  )                                               -> oQByteArray
+   METHOD  toLocal8Bit                   // (  )                                               -> oQByteArray
+   METHOD  toLong                        // ( @lOk, nBase )                                    -> nLong
+   METHOD  toLongLong                    // ( @lOk, nBase )                                    -> nQlonglong
+   METHOD  toLower                       // (  )                                               -> cQString
+   METHOD  toShort                       // ( @lOk, nBase )                                    -> nShort
+   METHOD  toUInt                        // ( @lOk, nBase )                                    -> nUint
+   METHOD  toULong                       // ( @lOk, nBase )                                    -> nUlong
+   METHOD  toULongLong                   // ( @lOk, nBase )                                    -> nQulonglong
+   METHOD  toUShort                      // ( @lOk, nBase )                                    -> nUshort
+   METHOD  toUpper                       // (  )                                               -> cQString
+   METHOD  toUtf8                        // (  )                                               -> oQByteArray
+   METHOD  trimmed                       // (  )                                               -> cQString
+   METHOD  truncate                      // ( nPosition )                                      -> NIL
+   METHOD  unicode                       // (  )                                               -> oQChar
+   METHOD  compare_4                     // ( cS1, cS2, nCs )                                  -> nInt
+   METHOD  compare_5                     // ( cS1, cS2 )                                       -> nInt
+   METHOD  compare_6                     // ( cS1, oQLatin1String, nCs )                       -> nInt
+   METHOD  compare_7                     // ( oQLatin1String, cS2, nCs )                       -> nInt
+   METHOD  compare_8                     // ( cS1, oQStringRef, nCs )                          -> nInt
+   METHOD  fromAscii                     // ( cStr, nSize )                                    -> cQString
+   METHOD  fromLatin1                    // ( cStr, nSize )                                    -> cQString
+   METHOD  fromLocal8Bit                 // ( cStr, nSize )                                    -> cQString
+   METHOD  fromRawData                   // ( oQChar, nSize )                                  -> cQString
+   METHOD  fromUcs4                      // ( @nUnicode, nSize )                               -> cQString
+   METHOD  fromUtf8                      // ( cStr, nSize )                                    -> cQString
+   METHOD  fromUtf16                     // ( @nUnicode, nSize )                               -> cQString
+   METHOD  localeAwareCompare_2          // ( cS1, cS2 )                                       -> nInt
+   METHOD  localeAwareCompare_3          // ( cS1, oQStringRef )                               -> nInt
+   METHOD  number                        // ( nN, nBase )                                      -> cQString
+   METHOD  number_1                      // ( nN, nFormat, nPrecision )                        -> cQString
+   METHOD  number_2                      // ( nN, nBase )                                      -> cQString
+   METHOD  number_3                      // ( nN, nBase )                                      -> cQString
+   METHOD  number_4                      // ( nN, nBase )                                      -> cQString
+   METHOD  number_5                      // ( nN, nBase )                                      -> cQString
+   METHOD  number_6                      // ( nN, nBase )                                      -> cQString
 
    ENDCLASS
 
@@ -283,670 +291,702 @@ METHOD HBQString:new( ... )
    RETURN Self
 
 
-METHOD HBQString:append( cStr )
-   RETURN Qt_HBQString_append( ::pPtr, cStr )
+METHOD HBQString:HBQString( ... )
+   RETURN HB_HBQString():from( Qt_HBQString_HBQString( ::pPtr, ... ) )
 
 
-METHOD HBQString:append_1( pReference )
-   RETURN Qt_HBQString_append_1( ::pPtr, hbqt_ptr( pReference ) )
+METHOD HBQString:HBQString_1( ... )
+   RETURN HB_HBQString():from( Qt_HBQString_HBQString_1( ::pPtr, ... ) )
 
 
-METHOD HBQString:append_2( pStr )
-   RETURN Qt_HBQString_append_2( ::pPtr, hbqt_ptr( pStr ) )
+METHOD HBQString:HBQString_2( ... )
+   RETURN HB_HBQString():from( Qt_HBQString_HBQString_2( ::pPtr, ... ) )
 
 
-METHOD HBQString:append_3( pBa )
-   RETURN Qt_HBQString_append_3( ::pPtr, hbqt_ptr( pBa ) )
+METHOD HBQString:HBQString_3( ... )
+   RETURN HB_HBQString():from( Qt_HBQString_HBQString_3( ::pPtr, ... ) )
 
 
-METHOD HBQString:append_4( pStr )
-   RETURN Qt_HBQString_append_4( ::pPtr, hbqt_ptr( pStr ) )
+METHOD HBQString:HBQString_4( ... )
+   RETURN HB_HBQString():from( Qt_HBQString_HBQString_4( ::pPtr, ... ) )
 
 
-METHOD HBQString:append_5( pCh )
-   RETURN Qt_HBQString_append_5( ::pPtr, hbqt_ptr( pCh ) )
+METHOD HBQString:HBQString_5( ... )
+   RETURN HB_HBQString():from( Qt_HBQString_HBQString_5( ::pPtr, ... ) )
 
 
-METHOD HBQString:arg( cA, nFieldWidth, pFillChar )
-   RETURN Qt_HBQString_arg( ::pPtr, cA, nFieldWidth, hbqt_ptr( pFillChar ) )
+METHOD HBQString:HBQString_6( ... )
+   RETURN HB_HBQString():from( Qt_HBQString_HBQString_6( ::pPtr, ... ) )
 
 
-METHOD HBQString:arg_1( cA1, cA2 )
-   RETURN Qt_HBQString_arg_1( ::pPtr, cA1, cA2 )
+METHOD HBQString:HBQString_7( ... )
+   RETURN HB_HBQString():from( Qt_HBQString_HBQString_7( ::pPtr, ... ) )
 
 
-METHOD HBQString:arg_2( cA1, cA2, cA3 )
-   RETURN Qt_HBQString_arg_2( ::pPtr, cA1, cA2, cA3 )
+METHOD HBQString:append( ... )
+   RETURN Qt_HBQString_append( ::pPtr, ... )
 
 
-METHOD HBQString:arg_3( cA1, cA2, cA3, cA4 )
-   RETURN Qt_HBQString_arg_3( ::pPtr, cA1, cA2, cA3, cA4 )
+METHOD HBQString:append_1( ... )
+   RETURN Qt_HBQString_append_1( ::pPtr, ... )
 
 
-METHOD HBQString:arg_4( cA1, cA2, cA3, cA4, cA5 )
-   RETURN Qt_HBQString_arg_4( ::pPtr, cA1, cA2, cA3, cA4, cA5 )
+METHOD HBQString:append_2( ... )
+   RETURN Qt_HBQString_append_2( ::pPtr, ... )
 
 
-METHOD HBQString:arg_5( cA1, cA2, cA3, cA4, cA5, cA6 )
-   RETURN Qt_HBQString_arg_5( ::pPtr, cA1, cA2, cA3, cA4, cA5, cA6 )
+METHOD HBQString:append_3( ... )
+   RETURN Qt_HBQString_append_3( ::pPtr, ... )
 
 
-METHOD HBQString:arg_6( cA1, cA2, cA3, cA4, cA5, cA6, cA7 )
-   RETURN Qt_HBQString_arg_6( ::pPtr, cA1, cA2, cA3, cA4, cA5, cA6, cA7 )
+METHOD HBQString:append_4( ... )
+   RETURN Qt_HBQString_append_4( ::pPtr, ... )
 
 
-METHOD HBQString:arg_7( cA1, cA2, cA3, cA4, cA5, cA6, cA7, cA8 )
-   RETURN Qt_HBQString_arg_7( ::pPtr, cA1, cA2, cA3, cA4, cA5, cA6, cA7, cA8 )
+METHOD HBQString:append_5( ... )
+   RETURN Qt_HBQString_append_5( ::pPtr, ... )
 
 
-METHOD HBQString:arg_8( cA1, cA2, cA3, cA4, cA5, cA6, cA7, cA8, cA9 )
-   RETURN Qt_HBQString_arg_8( ::pPtr, cA1, cA2, cA3, cA4, cA5, cA6, cA7, cA8, cA9 )
+METHOD HBQString:arg( ... )
+   RETURN Qt_HBQString_arg( ::pPtr, ... )
 
 
-METHOD HBQString:arg_9( nA, nFieldWidth, nBase, pFillChar )
-   RETURN Qt_HBQString_arg_9( ::pPtr, nA, nFieldWidth, nBase, hbqt_ptr( pFillChar ) )
+METHOD HBQString:arg_1( ... )
+   RETURN Qt_HBQString_arg_1( ::pPtr, ... )
 
 
-METHOD HBQString:arg_10( nA, nFieldWidth, nBase, pFillChar )
-   RETURN Qt_HBQString_arg_10( ::pPtr, nA, nFieldWidth, nBase, hbqt_ptr( pFillChar ) )
+METHOD HBQString:arg_2( ... )
+   RETURN Qt_HBQString_arg_2( ::pPtr, ... )
 
 
-METHOD HBQString:arg_11( nA, nFieldWidth, nBase, pFillChar )
-   RETURN Qt_HBQString_arg_11( ::pPtr, nA, nFieldWidth, nBase, hbqt_ptr( pFillChar ) )
+METHOD HBQString:arg_3( ... )
+   RETURN Qt_HBQString_arg_3( ::pPtr, ... )
 
 
-METHOD HBQString:arg_12( nA, nFieldWidth, nBase, pFillChar )
-   RETURN Qt_HBQString_arg_12( ::pPtr, nA, nFieldWidth, nBase, hbqt_ptr( pFillChar ) )
+METHOD HBQString:arg_4( ... )
+   RETURN Qt_HBQString_arg_4( ::pPtr, ... )
 
 
-METHOD HBQString:arg_13( nA, nFieldWidth, nBase, pFillChar )
-   RETURN Qt_HBQString_arg_13( ::pPtr, nA, nFieldWidth, nBase, hbqt_ptr( pFillChar ) )
+METHOD HBQString:arg_5( ... )
+   RETURN Qt_HBQString_arg_5( ::pPtr, ... )
 
 
-METHOD HBQString:arg_14( nA, nFieldWidth, nBase, pFillChar )
-   RETURN Qt_HBQString_arg_14( ::pPtr, nA, nFieldWidth, nBase, hbqt_ptr( pFillChar ) )
+METHOD HBQString:arg_6( ... )
+   RETURN Qt_HBQString_arg_6( ::pPtr, ... )
 
 
-METHOD HBQString:arg_15( nA, nFieldWidth, nBase, pFillChar )
-   RETURN Qt_HBQString_arg_15( ::pPtr, nA, nFieldWidth, nBase, hbqt_ptr( pFillChar ) )
+METHOD HBQString:arg_7( ... )
+   RETURN Qt_HBQString_arg_7( ::pPtr, ... )
 
 
-METHOD HBQString:arg_16( nA, nFieldWidth, nBase, pFillChar )
-   RETURN Qt_HBQString_arg_16( ::pPtr, nA, nFieldWidth, nBase, hbqt_ptr( pFillChar ) )
+METHOD HBQString:arg_8( ... )
+   RETURN Qt_HBQString_arg_8( ::pPtr, ... )
 
 
-METHOD HBQString:arg_17( pA, nFieldWidth, pFillChar )
-   RETURN Qt_HBQString_arg_17( ::pPtr, hbqt_ptr( pA ), nFieldWidth, hbqt_ptr( pFillChar ) )
+METHOD HBQString:arg_9( ... )
+   RETURN Qt_HBQString_arg_9( ::pPtr, ... )
 
 
-METHOD HBQString:arg_18( cA, nFieldWidth, pFillChar )
-   RETURN Qt_HBQString_arg_18( ::pPtr, cA, nFieldWidth, hbqt_ptr( pFillChar ) )
+METHOD HBQString:arg_10( ... )
+   RETURN Qt_HBQString_arg_10( ::pPtr, ... )
 
 
-METHOD HBQString:arg_19( nA, nFieldWidth, cFormat, nPrecision, pFillChar )
-   RETURN Qt_HBQString_arg_19( ::pPtr, nA, nFieldWidth, cFormat, nPrecision, hbqt_ptr( pFillChar ) )
+METHOD HBQString:arg_11( ... )
+   RETURN Qt_HBQString_arg_11( ::pPtr, ... )
 
 
-METHOD HBQString:at( nPosition )
-   RETURN HB_QChar():from( Qt_HBQString_at( ::pPtr, nPosition ) )
+METHOD HBQString:arg_12( ... )
+   RETURN Qt_HBQString_arg_12( ::pPtr, ... )
 
 
-METHOD HBQString:capacity()
-   RETURN Qt_HBQString_capacity( ::pPtr )
+METHOD HBQString:arg_13( ... )
+   RETURN Qt_HBQString_arg_13( ::pPtr, ... )
 
 
-METHOD HBQString:chop( nN )
-   RETURN Qt_HBQString_chop( ::pPtr, nN )
+METHOD HBQString:arg_14( ... )
+   RETURN Qt_HBQString_arg_14( ::pPtr, ... )
 
 
-METHOD HBQString:clear()
-   RETURN Qt_HBQString_clear( ::pPtr )
+METHOD HBQString:arg_15( ... )
+   RETURN Qt_HBQString_arg_15( ::pPtr, ... )
 
 
-METHOD HBQString:compare( cOther )
-   RETURN Qt_HBQString_compare( ::pPtr, cOther )
+METHOD HBQString:arg_16( ... )
+   RETURN Qt_HBQString_arg_16( ::pPtr, ... )
 
 
-METHOD HBQString:compare_1( cOther, nCs )
-   RETURN Qt_HBQString_compare_1( ::pPtr, cOther, nCs )
+METHOD HBQString:arg_17( ... )
+   RETURN Qt_HBQString_arg_17( ::pPtr, ... )
 
 
-METHOD HBQString:compare_2( pOther, nCs )
-   RETURN Qt_HBQString_compare_2( ::pPtr, hbqt_ptr( pOther ), nCs )
+METHOD HBQString:arg_18( ... )
+   RETURN Qt_HBQString_arg_18( ::pPtr, ... )
 
 
-METHOD HBQString:compare_3( pRef, nCs )
-   RETURN Qt_HBQString_compare_3( ::pPtr, hbqt_ptr( pRef ), nCs )
+METHOD HBQString:arg_19( ... )
+   RETURN Qt_HBQString_arg_19( ::pPtr, ... )
 
 
-METHOD HBQString:constData()
-   RETURN HB_QChar():from( Qt_HBQString_constData( ::pPtr ) )
+METHOD HBQString:at( ... )
+   RETURN HB_QChar():from( Qt_HBQString_at( ::pPtr, ... ) )
 
 
-METHOD HBQString:count( cStr, nCs )
-   RETURN Qt_HBQString_count( ::pPtr, cStr, nCs )
+METHOD HBQString:capacity( ... )
+   RETURN Qt_HBQString_capacity( ::pPtr, ... )
 
 
-METHOD HBQString:count_1( pCh, nCs )
-   RETURN Qt_HBQString_count_1( ::pPtr, hbqt_ptr( pCh ), nCs )
+METHOD HBQString:chop( ... )
+   RETURN Qt_HBQString_chop( ::pPtr, ... )
 
 
-METHOD HBQString:count_2( pRx )
-   RETURN Qt_HBQString_count_2( ::pPtr, hbqt_ptr( pRx ) )
+METHOD HBQString:clear( ... )
+   RETURN Qt_HBQString_clear( ::pPtr, ... )
 
 
-METHOD HBQString:count_3()
-   RETURN Qt_HBQString_count_3( ::pPtr )
+METHOD HBQString:compare( ... )
+   RETURN Qt_HBQString_compare( ::pPtr, ... )
 
 
-METHOD HBQString:data()
-   RETURN HB_QChar():from( Qt_HBQString_data( ::pPtr ) )
+METHOD HBQString:compare_1( ... )
+   RETURN Qt_HBQString_compare_1( ::pPtr, ... )
 
 
-METHOD HBQString:data_1()
-   RETURN HB_QChar():from( Qt_HBQString_data_1( ::pPtr ) )
+METHOD HBQString:compare_2( ... )
+   RETURN Qt_HBQString_compare_2( ::pPtr, ... )
 
 
-METHOD HBQString:endsWith( cS, nCs )
-   RETURN Qt_HBQString_endsWith( ::pPtr, cS, nCs )
+METHOD HBQString:compare_3( ... )
+   RETURN Qt_HBQString_compare_3( ::pPtr, ... )
 
 
-METHOD HBQString:endsWith_1( pS, nCs )
-   RETURN Qt_HBQString_endsWith_1( ::pPtr, hbqt_ptr( pS ), nCs )
+METHOD HBQString:constData( ... )
+   RETURN HB_QChar():from( Qt_HBQString_constData( ::pPtr, ... ) )
 
 
-METHOD HBQString:endsWith_2( pC, nCs )
-   RETURN Qt_HBQString_endsWith_2( ::pPtr, hbqt_ptr( pC ), nCs )
+METHOD HBQString:count( ... )
+   RETURN Qt_HBQString_count( ::pPtr, ... )
 
 
-METHOD HBQString:fill( pCh, nSize )
-   RETURN Qt_HBQString_fill( ::pPtr, hbqt_ptr( pCh ), nSize )
+METHOD HBQString:count_1( ... )
+   RETURN Qt_HBQString_count_1( ::pPtr, ... )
 
 
-METHOD HBQString:indexOf( cStr, nFrom, nCs )
-   RETURN Qt_HBQString_indexOf( ::pPtr, cStr, nFrom, nCs )
+METHOD HBQString:count_2( ... )
+   RETURN Qt_HBQString_count_2( ::pPtr, ... )
 
 
-METHOD HBQString:indexOf_1( pStr, nFrom, nCs )
-   RETURN Qt_HBQString_indexOf_1( ::pPtr, hbqt_ptr( pStr ), nFrom, nCs )
+METHOD HBQString:count_3( ... )
+   RETURN Qt_HBQString_count_3( ::pPtr, ... )
 
 
-METHOD HBQString:indexOf_2( pCh, nFrom, nCs )
-   RETURN Qt_HBQString_indexOf_2( ::pPtr, hbqt_ptr( pCh ), nFrom, nCs )
+METHOD HBQString:data( ... )
+   RETURN HB_QChar():from( Qt_HBQString_data( ::pPtr, ... ) )
 
 
-METHOD HBQString:indexOf_3( pRx, nFrom )
-   RETURN Qt_HBQString_indexOf_3( ::pPtr, hbqt_ptr( pRx ), nFrom )
+METHOD HBQString:data_1( ... )
+   RETURN HB_QChar():from( Qt_HBQString_data_1( ::pPtr, ... ) )
 
 
-METHOD HBQString:indexOf_4( pRx, nFrom )
-   RETURN Qt_HBQString_indexOf_4( ::pPtr, hbqt_ptr( pRx ), nFrom )
+METHOD HBQString:endsWith( ... )
+   RETURN Qt_HBQString_endsWith( ::pPtr, ... )
 
 
-METHOD HBQString:insert( nPosition, cStr )
-   RETURN Qt_HBQString_insert( ::pPtr, nPosition, cStr )
+METHOD HBQString:endsWith_1( ... )
+   RETURN Qt_HBQString_endsWith_1( ::pPtr, ... )
 
 
-METHOD HBQString:insert_1( nPosition, pStr )
-   RETURN Qt_HBQString_insert_1( ::pPtr, nPosition, hbqt_ptr( pStr ) )
+METHOD HBQString:endsWith_2( ... )
+   RETURN Qt_HBQString_endsWith_2( ::pPtr, ... )
 
 
-METHOD HBQString:insert_2( nPosition, pUnicode, nSize )
-   RETURN Qt_HBQString_insert_2( ::pPtr, nPosition, hbqt_ptr( pUnicode ), nSize )
+METHOD HBQString:fill( ... )
+   RETURN Qt_HBQString_fill( ::pPtr, ... )
 
 
-METHOD HBQString:insert_3( nPosition, pCh )
-   RETURN Qt_HBQString_insert_3( ::pPtr, nPosition, hbqt_ptr( pCh ) )
+METHOD HBQString:indexOf( ... )
+   RETURN Qt_HBQString_indexOf( ::pPtr, ... )
 
 
-METHOD HBQString:isEmpty()
-   RETURN Qt_HBQString_isEmpty( ::pPtr )
+METHOD HBQString:indexOf_1( ... )
+   RETURN Qt_HBQString_indexOf_1( ::pPtr, ... )
 
 
-METHOD HBQString:isNull()
-   RETURN Qt_HBQString_isNull( ::pPtr )
+METHOD HBQString:indexOf_2( ... )
+   RETURN Qt_HBQString_indexOf_2( ::pPtr, ... )
 
 
-METHOD HBQString:lastIndexOf( cStr, nFrom, nCs )
-   RETURN Qt_HBQString_lastIndexOf( ::pPtr, cStr, nFrom, nCs )
+METHOD HBQString:indexOf_3( ... )
+   RETURN Qt_HBQString_indexOf_3( ::pPtr, ... )
 
 
-METHOD HBQString:lastIndexOf_1( pStr, nFrom, nCs )
-   RETURN Qt_HBQString_lastIndexOf_1( ::pPtr, hbqt_ptr( pStr ), nFrom, nCs )
+METHOD HBQString:indexOf_4( ... )
+   RETURN Qt_HBQString_indexOf_4( ::pPtr, ... )
 
 
-METHOD HBQString:lastIndexOf_2( pCh, nFrom, nCs )
-   RETURN Qt_HBQString_lastIndexOf_2( ::pPtr, hbqt_ptr( pCh ), nFrom, nCs )
+METHOD HBQString:insert( ... )
+   RETURN Qt_HBQString_insert( ::pPtr, ... )
 
 
-METHOD HBQString:lastIndexOf_3( pRx, nFrom )
-   RETURN Qt_HBQString_lastIndexOf_3( ::pPtr, hbqt_ptr( pRx ), nFrom )
+METHOD HBQString:insert_1( ... )
+   RETURN Qt_HBQString_insert_1( ::pPtr, ... )
 
 
-METHOD HBQString:lastIndexOf_4( pRx, nFrom )
-   RETURN Qt_HBQString_lastIndexOf_4( ::pPtr, hbqt_ptr( pRx ), nFrom )
+METHOD HBQString:insert_2( ... )
+   RETURN Qt_HBQString_insert_2( ::pPtr, ... )
 
 
-METHOD HBQString:left( nN )
-   RETURN Qt_HBQString_left( ::pPtr, nN )
+METHOD HBQString:insert_3( ... )
+   RETURN Qt_HBQString_insert_3( ::pPtr, ... )
 
 
-METHOD HBQString:leftJustified( nWidth, pFill, lTruncate )
-   RETURN Qt_HBQString_leftJustified( ::pPtr, nWidth, hbqt_ptr( pFill ), lTruncate )
+METHOD HBQString:isEmpty( ... )
+   RETURN Qt_HBQString_isEmpty( ::pPtr, ... )
 
 
-METHOD HBQString:leftRef( nN )
-   RETURN HB_QStringRef():from( Qt_HBQString_leftRef( ::pPtr, nN ) )
+METHOD HBQString:isNull( ... )
+   RETURN Qt_HBQString_isNull( ::pPtr, ... )
 
 
-METHOD HBQString:length()
-   RETURN Qt_HBQString_length( ::pPtr )
+METHOD HBQString:lastIndexOf( ... )
+   RETURN Qt_HBQString_lastIndexOf( ::pPtr, ... )
 
 
-METHOD HBQString:localeAwareCompare( pOther )
-   RETURN Qt_HBQString_localeAwareCompare( ::pPtr, hbqt_ptr( pOther ) )
+METHOD HBQString:lastIndexOf_1( ... )
+   RETURN Qt_HBQString_lastIndexOf_1( ::pPtr, ... )
 
 
-METHOD HBQString:localeAwareCompare_1( cOther )
-   RETURN Qt_HBQString_localeAwareCompare_1( ::pPtr, cOther )
+METHOD HBQString:lastIndexOf_2( ... )
+   RETURN Qt_HBQString_lastIndexOf_2( ::pPtr, ... )
 
 
-METHOD HBQString:mid( nPosition, nN )
-   RETURN Qt_HBQString_mid( ::pPtr, nPosition, nN )
+METHOD HBQString:lastIndexOf_3( ... )
+   RETURN Qt_HBQString_lastIndexOf_3( ::pPtr, ... )
 
 
-METHOD HBQString:midRef( nPosition, nN )
-   RETURN HB_QStringRef():from( Qt_HBQString_midRef( ::pPtr, nPosition, nN ) )
+METHOD HBQString:lastIndexOf_4( ... )
+   RETURN Qt_HBQString_lastIndexOf_4( ::pPtr, ... )
 
 
-METHOD HBQString:normalized( nMode )
-   RETURN Qt_HBQString_normalized( ::pPtr, nMode )
+METHOD HBQString:left( ... )
+   RETURN Qt_HBQString_left( ::pPtr, ... )
 
 
-METHOD HBQString:normalized_1( nMode, nVersion )
-   RETURN Qt_HBQString_normalized_1( ::pPtr, nMode, nVersion )
+METHOD HBQString:leftJustified( ... )
+   RETURN Qt_HBQString_leftJustified( ::pPtr, ... )
 
 
-METHOD HBQString:prepend( cStr )
-   RETURN Qt_HBQString_prepend( ::pPtr, cStr )
+METHOD HBQString:leftRef( ... )
+   RETURN HB_QStringRef():from( Qt_HBQString_leftRef( ::pPtr, ... ) )
 
 
-METHOD HBQString:prepend_1( pStr )
-   RETURN Qt_HBQString_prepend_1( ::pPtr, hbqt_ptr( pStr ) )
+METHOD HBQString:length( ... )
+   RETURN Qt_HBQString_length( ::pPtr, ... )
 
 
-METHOD HBQString:prepend_2( pBa )
-   RETURN Qt_HBQString_prepend_2( ::pPtr, hbqt_ptr( pBa ) )
+METHOD HBQString:localeAwareCompare( ... )
+   RETURN Qt_HBQString_localeAwareCompare( ::pPtr, ... )
 
 
-METHOD HBQString:prepend_3( pStr )
-   RETURN Qt_HBQString_prepend_3( ::pPtr, hbqt_ptr( pStr ) )
+METHOD HBQString:localeAwareCompare_1( ... )
+   RETURN Qt_HBQString_localeAwareCompare_1( ::pPtr, ... )
 
 
-METHOD HBQString:prepend_4( pCh )
-   RETURN Qt_HBQString_prepend_4( ::pPtr, hbqt_ptr( pCh ) )
+METHOD HBQString:mid( ... )
+   RETURN Qt_HBQString_mid( ::pPtr, ... )
 
 
-METHOD HBQString:push_back( cOther )
-   RETURN Qt_HBQString_push_back( ::pPtr, cOther )
+METHOD HBQString:midRef( ... )
+   RETURN HB_QStringRef():from( Qt_HBQString_midRef( ::pPtr, ... ) )
 
 
-METHOD HBQString:push_back_1( pCh )
-   RETURN Qt_HBQString_push_back_1( ::pPtr, hbqt_ptr( pCh ) )
+METHOD HBQString:normalized( ... )
+   RETURN Qt_HBQString_normalized( ::pPtr, ... )
 
 
-METHOD HBQString:push_front( cOther )
-   RETURN Qt_HBQString_push_front( ::pPtr, cOther )
+METHOD HBQString:normalized_1( ... )
+   RETURN Qt_HBQString_normalized_1( ::pPtr, ... )
 
 
-METHOD HBQString:push_front_1( pCh )
-   RETURN Qt_HBQString_push_front_1( ::pPtr, hbqt_ptr( pCh ) )
+METHOD HBQString:prepend( ... )
+   RETURN Qt_HBQString_prepend( ::pPtr, ... )
 
 
-METHOD HBQString:remove( nPosition, nN )
-   RETURN Qt_HBQString_remove( ::pPtr, nPosition, nN )
+METHOD HBQString:prepend_1( ... )
+   RETURN Qt_HBQString_prepend_1( ::pPtr, ... )
 
 
-METHOD HBQString:remove_1( pCh, nCs )
-   RETURN Qt_HBQString_remove_1( ::pPtr, hbqt_ptr( pCh ), nCs )
+METHOD HBQString:prepend_2( ... )
+   RETURN Qt_HBQString_prepend_2( ::pPtr, ... )
 
 
-METHOD HBQString:remove_2( cStr, nCs )
-   RETURN Qt_HBQString_remove_2( ::pPtr, cStr, nCs )
+METHOD HBQString:prepend_3( ... )
+   RETURN Qt_HBQString_prepend_3( ::pPtr, ... )
 
 
-METHOD HBQString:remove_3( pRx )
-   RETURN Qt_HBQString_remove_3( ::pPtr, hbqt_ptr( pRx ) )
+METHOD HBQString:prepend_4( ... )
+   RETURN Qt_HBQString_prepend_4( ::pPtr, ... )
 
 
-METHOD HBQString:repeated( nTimes )
-   RETURN Qt_HBQString_repeated( ::pPtr, nTimes )
+METHOD HBQString:push_back( ... )
+   RETURN Qt_HBQString_push_back( ::pPtr, ... )
 
 
-METHOD HBQString:replace( nPosition, nN, cAfter )
-   RETURN Qt_HBQString_replace( ::pPtr, nPosition, nN, cAfter )
+METHOD HBQString:push_back_1( ... )
+   RETURN Qt_HBQString_push_back_1( ::pPtr, ... )
 
 
-METHOD HBQString:replace_1( nPosition, nN, pUnicode, nSize )
-   RETURN Qt_HBQString_replace_1( ::pPtr, nPosition, nN, hbqt_ptr( pUnicode ), nSize )
+METHOD HBQString:push_front( ... )
+   RETURN Qt_HBQString_push_front( ::pPtr, ... )
 
 
-METHOD HBQString:replace_2( nPosition, nN, pAfter )
-   RETURN Qt_HBQString_replace_2( ::pPtr, nPosition, nN, hbqt_ptr( pAfter ) )
+METHOD HBQString:push_front_1( ... )
+   RETURN Qt_HBQString_push_front_1( ::pPtr, ... )
 
 
-METHOD HBQString:replace_3( cBefore, cAfter, nCs )
-   RETURN Qt_HBQString_replace_3( ::pPtr, cBefore, cAfter, nCs )
+METHOD HBQString:remove( ... )
+   RETURN Qt_HBQString_remove( ::pPtr, ... )
 
 
-METHOD HBQString:replace_4( pBefore, nBlen, pAfter, nAlen, nCs )
-   RETURN Qt_HBQString_replace_4( ::pPtr, hbqt_ptr( pBefore ), nBlen, hbqt_ptr( pAfter ), nAlen, nCs )
+METHOD HBQString:remove_1( ... )
+   RETURN Qt_HBQString_remove_1( ::pPtr, ... )
 
 
-METHOD HBQString:replace_5( pCh, cAfter, nCs )
-   RETURN Qt_HBQString_replace_5( ::pPtr, hbqt_ptr( pCh ), cAfter, nCs )
+METHOD HBQString:remove_2( ... )
+   RETURN Qt_HBQString_remove_2( ::pPtr, ... )
 
 
-METHOD HBQString:replace_6( pBefore, pAfter, nCs )
-   RETURN Qt_HBQString_replace_6( ::pPtr, hbqt_ptr( pBefore ), hbqt_ptr( pAfter ), nCs )
+METHOD HBQString:remove_3( ... )
+   RETURN Qt_HBQString_remove_3( ::pPtr, ... )
 
 
-METHOD HBQString:replace_7( pBefore, pAfter, nCs )
-   RETURN Qt_HBQString_replace_7( ::pPtr, hbqt_ptr( pBefore ), hbqt_ptr( pAfter ), nCs )
+METHOD HBQString:repeated( ... )
+   RETURN Qt_HBQString_repeated( ::pPtr, ... )
 
 
-METHOD HBQString:replace_8( pBefore, cAfter, nCs )
-   RETURN Qt_HBQString_replace_8( ::pPtr, hbqt_ptr( pBefore ), cAfter, nCs )
+METHOD HBQString:replace( ... )
+   RETURN Qt_HBQString_replace( ::pPtr, ... )
 
 
-METHOD HBQString:replace_9( cBefore, pAfter, nCs )
-   RETURN Qt_HBQString_replace_9( ::pPtr, cBefore, hbqt_ptr( pAfter ), nCs )
+METHOD HBQString:replace_1( ... )
+   RETURN Qt_HBQString_replace_1( ::pPtr, ... )
 
 
-METHOD HBQString:replace_10( pC, pAfter, nCs )
-   RETURN Qt_HBQString_replace_10( ::pPtr, hbqt_ptr( pC ), hbqt_ptr( pAfter ), nCs )
+METHOD HBQString:replace_2( ... )
+   RETURN Qt_HBQString_replace_2( ::pPtr, ... )
 
 
-METHOD HBQString:replace_11( pRx, cAfter )
-   RETURN Qt_HBQString_replace_11( ::pPtr, hbqt_ptr( pRx ), cAfter )
+METHOD HBQString:replace_3( ... )
+   RETURN Qt_HBQString_replace_3( ::pPtr, ... )
 
 
-METHOD HBQString:reserve( nSize )
-   RETURN Qt_HBQString_reserve( ::pPtr, nSize )
+METHOD HBQString:replace_4( ... )
+   RETURN Qt_HBQString_replace_4( ::pPtr, ... )
 
 
-METHOD HBQString:resize( nSize )
-   RETURN Qt_HBQString_resize( ::pPtr, nSize )
+METHOD HBQString:replace_5( ... )
+   RETURN Qt_HBQString_replace_5( ::pPtr, ... )
 
 
-METHOD HBQString:right( nN )
-   RETURN Qt_HBQString_right( ::pPtr, nN )
+METHOD HBQString:replace_6( ... )
+   RETURN Qt_HBQString_replace_6( ::pPtr, ... )
 
 
-METHOD HBQString:rightJustified( nWidth, pFill, lTruncate )
-   RETURN Qt_HBQString_rightJustified( ::pPtr, nWidth, hbqt_ptr( pFill ), lTruncate )
+METHOD HBQString:replace_7( ... )
+   RETURN Qt_HBQString_replace_7( ::pPtr, ... )
 
 
-METHOD HBQString:rightRef( nN )
-   RETURN HB_QStringRef():from( Qt_HBQString_rightRef( ::pPtr, nN ) )
+METHOD HBQString:replace_8( ... )
+   RETURN Qt_HBQString_replace_8( ::pPtr, ... )
 
 
-METHOD HBQString:section( pSep, nStart, nEnd, nFlags )
-   RETURN Qt_HBQString_section( ::pPtr, hbqt_ptr( pSep ), nStart, nEnd, nFlags )
+METHOD HBQString:replace_9( ... )
+   RETURN Qt_HBQString_replace_9( ::pPtr, ... )
 
 
-METHOD HBQString:section_1( cSep, nStart, nEnd, nFlags )
-   RETURN Qt_HBQString_section_1( ::pPtr, cSep, nStart, nEnd, nFlags )
+METHOD HBQString:replace_10( ... )
+   RETURN Qt_HBQString_replace_10( ::pPtr, ... )
 
 
-METHOD HBQString:section_2( pReg, nStart, nEnd, nFlags )
-   RETURN Qt_HBQString_section_2( ::pPtr, hbqt_ptr( pReg ), nStart, nEnd, nFlags )
+METHOD HBQString:replace_11( ... )
+   RETURN Qt_HBQString_replace_11( ::pPtr, ... )
 
 
-METHOD HBQString:setNum( nN, nBase )
-   RETURN Qt_HBQString_setNum( ::pPtr, nN, nBase )
+METHOD HBQString:reserve( ... )
+   RETURN Qt_HBQString_reserve( ::pPtr, ... )
 
 
-METHOD HBQString:setNum_1( nN, nBase )
-   RETURN Qt_HBQString_setNum_1( ::pPtr, nN, nBase )
+METHOD HBQString:resize( ... )
+   RETURN Qt_HBQString_resize( ::pPtr, ... )
 
 
-METHOD HBQString:setNum_2( nN, nBase )
-   RETURN Qt_HBQString_setNum_2( ::pPtr, nN, nBase )
+METHOD HBQString:right( ... )
+   RETURN Qt_HBQString_right( ::pPtr, ... )
 
 
-METHOD HBQString:setNum_3( nN, nBase )
-   RETURN Qt_HBQString_setNum_3( ::pPtr, nN, nBase )
+METHOD HBQString:rightJustified( ... )
+   RETURN Qt_HBQString_rightJustified( ::pPtr, ... )
 
 
-METHOD HBQString:setNum_4( nN, nBase )
-   RETURN Qt_HBQString_setNum_4( ::pPtr, nN, nBase )
+METHOD HBQString:rightRef( ... )
+   RETURN HB_QStringRef():from( Qt_HBQString_rightRef( ::pPtr, ... ) )
 
 
-METHOD HBQString:setNum_5( nN, nBase )
-   RETURN Qt_HBQString_setNum_5( ::pPtr, nN, nBase )
+METHOD HBQString:section( ... )
+   RETURN Qt_HBQString_section( ::pPtr, ... )
 
 
-METHOD HBQString:setNum_6( nN, nBase )
-   RETURN Qt_HBQString_setNum_6( ::pPtr, nN, nBase )
+METHOD HBQString:section_1( ... )
+   RETURN Qt_HBQString_section_1( ::pPtr, ... )
 
 
-METHOD HBQString:setNum_7( nN, nBase )
-   RETURN Qt_HBQString_setNum_7( ::pPtr, nN, nBase )
+METHOD HBQString:section_2( ... )
+   RETURN Qt_HBQString_section_2( ::pPtr, ... )
 
 
-METHOD HBQString:setNum_8( nN, cFormat, nPrecision )
-   RETURN Qt_HBQString_setNum_8( ::pPtr, nN, cFormat, nPrecision )
+METHOD HBQString:setNum( ... )
+   RETURN Qt_HBQString_setNum( ::pPtr, ... )
 
 
-METHOD HBQString:setNum_9( nN, cFormat, nPrecision )
-   RETURN Qt_HBQString_setNum_9( ::pPtr, nN, cFormat, nPrecision )
+METHOD HBQString:setNum_1( ... )
+   RETURN Qt_HBQString_setNum_1( ::pPtr, ... )
 
 
-METHOD HBQString:setUnicode( pUnicode, nSize )
-   RETURN Qt_HBQString_setUnicode( ::pPtr, hbqt_ptr( pUnicode ), nSize )
+METHOD HBQString:setNum_2( ... )
+   RETURN Qt_HBQString_setNum_2( ::pPtr, ... )
 
 
-METHOD HBQString:setUtf16( nUnicode, nSize )
-   RETURN Qt_HBQString_setUtf16( ::pPtr, nUnicode, nSize )
+METHOD HBQString:setNum_3( ... )
+   RETURN Qt_HBQString_setNum_3( ::pPtr, ... )
 
 
-METHOD HBQString:simplified()
-   RETURN Qt_HBQString_simplified( ::pPtr )
+METHOD HBQString:setNum_4( ... )
+   RETURN Qt_HBQString_setNum_4( ::pPtr, ... )
 
 
-METHOD HBQString:size()
-   RETURN Qt_HBQString_size( ::pPtr )
+METHOD HBQString:setNum_5( ... )
+   RETURN Qt_HBQString_setNum_5( ::pPtr, ... )
 
 
-METHOD HBQString:split( cSep, nBehavior, nCs )
-   RETURN HB_QStringList():from( Qt_HBQString_split( ::pPtr, cSep, nBehavior, nCs ) )
+METHOD HBQString:setNum_6( ... )
+   RETURN Qt_HBQString_setNum_6( ::pPtr, ... )
 
 
-METHOD HBQString:split_1( pSep, nBehavior, nCs )
-   RETURN HB_QStringList():from( Qt_HBQString_split_1( ::pPtr, hbqt_ptr( pSep ), nBehavior, nCs ) )
+METHOD HBQString:setNum_7( ... )
+   RETURN Qt_HBQString_setNum_7( ::pPtr, ... )
 
 
-METHOD HBQString:split_2( pRx, nBehavior )
-   RETURN HB_QStringList():from( Qt_HBQString_split_2( ::pPtr, hbqt_ptr( pRx ), nBehavior ) )
+METHOD HBQString:setNum_8( ... )
+   RETURN Qt_HBQString_setNum_8( ::pPtr, ... )
 
 
-METHOD HBQString:squeeze()
-   RETURN Qt_HBQString_squeeze( ::pPtr )
+METHOD HBQString:setNum_9( ... )
+   RETURN Qt_HBQString_setNum_9( ::pPtr, ... )
 
 
-METHOD HBQString:startsWith( cS, nCs )
-   RETURN Qt_HBQString_startsWith( ::pPtr, cS, nCs )
+METHOD HBQString:setUnicode( ... )
+   RETURN Qt_HBQString_setUnicode( ::pPtr, ... )
 
 
-METHOD HBQString:startsWith_1( pS, nCs )
-   RETURN Qt_HBQString_startsWith_1( ::pPtr, hbqt_ptr( pS ), nCs )
+METHOD HBQString:setUtf16( ... )
+   RETURN Qt_HBQString_setUtf16( ::pPtr, ... )
 
 
-METHOD HBQString:startsWith_2( pC, nCs )
-   RETURN Qt_HBQString_startsWith_2( ::pPtr, hbqt_ptr( pC ), nCs )
+METHOD HBQString:simplified( ... )
+   RETURN Qt_HBQString_simplified( ::pPtr, ... )
 
 
-METHOD HBQString:toAscii()
-   RETURN HB_QByteArray():from( Qt_HBQString_toAscii( ::pPtr ) )
+METHOD HBQString:size( ... )
+   RETURN Qt_HBQString_size( ::pPtr, ... )
 
 
-METHOD HBQString:toCaseFolded()
-   RETURN Qt_HBQString_toCaseFolded( ::pPtr )
+METHOD HBQString:split( ... )
+   RETURN HB_QStringList():from( Qt_HBQString_split( ::pPtr, ... ) )
 
 
-METHOD HBQString:toDouble( lOk )
-   RETURN Qt_HBQString_toDouble( ::pPtr, lOk )
+METHOD HBQString:split_1( ... )
+   RETURN HB_QStringList():from( Qt_HBQString_split_1( ::pPtr, ... ) )
 
 
-METHOD HBQString:toFloat( lOk )
-   RETURN Qt_HBQString_toFloat( ::pPtr, lOk )
+METHOD HBQString:split_2( ... )
+   RETURN HB_QStringList():from( Qt_HBQString_split_2( ::pPtr, ... ) )
 
 
-METHOD HBQString:toInt( lOk, nBase )
-   RETURN Qt_HBQString_toInt( ::pPtr, lOk, nBase )
+METHOD HBQString:squeeze( ... )
+   RETURN Qt_HBQString_squeeze( ::pPtr, ... )
 
 
-METHOD HBQString:toLatin1()
-   RETURN HB_QByteArray():from( Qt_HBQString_toLatin1( ::pPtr ) )
+METHOD HBQString:startsWith( ... )
+   RETURN Qt_HBQString_startsWith( ::pPtr, ... )
 
 
-METHOD HBQString:toLocal8Bit()
-   RETURN HB_QByteArray():from( Qt_HBQString_toLocal8Bit( ::pPtr ) )
+METHOD HBQString:startsWith_1( ... )
+   RETURN Qt_HBQString_startsWith_1( ::pPtr, ... )
 
 
-METHOD HBQString:toLong( lOk, nBase )
-   RETURN Qt_HBQString_toLong( ::pPtr, lOk, nBase )
+METHOD HBQString:startsWith_2( ... )
+   RETURN Qt_HBQString_startsWith_2( ::pPtr, ... )
 
 
-METHOD HBQString:toLongLong( lOk, nBase )
-   RETURN Qt_HBQString_toLongLong( ::pPtr, lOk, nBase )
+METHOD HBQString:toAscii( ... )
+   RETURN HB_QByteArray():from( Qt_HBQString_toAscii( ::pPtr, ... ) )
 
 
-METHOD HBQString:toLower()
-   RETURN Qt_HBQString_toLower( ::pPtr )
+METHOD HBQString:toCaseFolded( ... )
+   RETURN Qt_HBQString_toCaseFolded( ::pPtr, ... )
 
 
-METHOD HBQString:toShort( lOk, nBase )
-   RETURN Qt_HBQString_toShort( ::pPtr, lOk, nBase )
+METHOD HBQString:toDouble( ... )
+   RETURN Qt_HBQString_toDouble( ::pPtr, ... )
 
 
-METHOD HBQString:toUInt( lOk, nBase )
-   RETURN Qt_HBQString_toUInt( ::pPtr, lOk, nBase )
+METHOD HBQString:toFloat( ... )
+   RETURN Qt_HBQString_toFloat( ::pPtr, ... )
 
 
-METHOD HBQString:toULong( lOk, nBase )
-   RETURN Qt_HBQString_toULong( ::pPtr, lOk, nBase )
+METHOD HBQString:toInt( ... )
+   RETURN Qt_HBQString_toInt( ::pPtr, ... )
 
 
-METHOD HBQString:toULongLong( lOk, nBase )
-   RETURN Qt_HBQString_toULongLong( ::pPtr, lOk, nBase )
+METHOD HBQString:toLatin1( ... )
+   RETURN HB_QByteArray():from( Qt_HBQString_toLatin1( ::pPtr, ... ) )
 
 
-METHOD HBQString:toUShort( lOk, nBase )
-   RETURN Qt_HBQString_toUShort( ::pPtr, lOk, nBase )
+METHOD HBQString:toLocal8Bit( ... )
+   RETURN HB_QByteArray():from( Qt_HBQString_toLocal8Bit( ::pPtr, ... ) )
 
 
-METHOD HBQString:toUpper()
-   RETURN Qt_HBQString_toUpper( ::pPtr )
+METHOD HBQString:toLong( ... )
+   RETURN Qt_HBQString_toLong( ::pPtr, ... )
 
 
-METHOD HBQString:toUtf8()
-   RETURN HB_QByteArray():from( Qt_HBQString_toUtf8( ::pPtr ) )
+METHOD HBQString:toLongLong( ... )
+   RETURN Qt_HBQString_toLongLong( ::pPtr, ... )
 
 
-METHOD HBQString:trimmed()
-   RETURN Qt_HBQString_trimmed( ::pPtr )
+METHOD HBQString:toLower( ... )
+   RETURN Qt_HBQString_toLower( ::pPtr, ... )
 
 
-METHOD HBQString:truncate( nPosition )
-   RETURN Qt_HBQString_truncate( ::pPtr, nPosition )
+METHOD HBQString:toShort( ... )
+   RETURN Qt_HBQString_toShort( ::pPtr, ... )
 
 
-METHOD HBQString:unicode()
-   RETURN HB_QChar():from( Qt_HBQString_unicode( ::pPtr ) )
+METHOD HBQString:toUInt( ... )
+   RETURN Qt_HBQString_toUInt( ::pPtr, ... )
 
 
-METHOD HBQString:compare_4( cS1, cS2, nCs )
-   RETURN Qt_HBQString_compare_4( ::pPtr, cS1, cS2, nCs )
+METHOD HBQString:toULong( ... )
+   RETURN Qt_HBQString_toULong( ::pPtr, ... )
 
 
-METHOD HBQString:compare_5( cS1, cS2 )
-   RETURN Qt_HBQString_compare_5( ::pPtr, cS1, cS2 )
+METHOD HBQString:toULongLong( ... )
+   RETURN Qt_HBQString_toULongLong( ::pPtr, ... )
 
 
-METHOD HBQString:compare_6( cS1, pS2, nCs )
-   RETURN Qt_HBQString_compare_6( ::pPtr, cS1, hbqt_ptr( pS2 ), nCs )
+METHOD HBQString:toUShort( ... )
+   RETURN Qt_HBQString_toUShort( ::pPtr, ... )
 
 
-METHOD HBQString:compare_7( pS1, cS2, nCs )
-   RETURN Qt_HBQString_compare_7( ::pPtr, hbqt_ptr( pS1 ), cS2, nCs )
+METHOD HBQString:toUpper( ... )
+   RETURN Qt_HBQString_toUpper( ::pPtr, ... )
 
 
-METHOD HBQString:compare_8( cS1, pS2, nCs )
-   RETURN Qt_HBQString_compare_8( ::pPtr, cS1, hbqt_ptr( pS2 ), nCs )
+METHOD HBQString:toUtf8( ... )
+   RETURN HB_QByteArray():from( Qt_HBQString_toUtf8( ::pPtr, ... ) )
 
 
-METHOD HBQString:fromAscii( pStr, nSize )
-   RETURN Qt_HBQString_fromAscii( ::pPtr, hbqt_ptr( pStr ), nSize )
+METHOD HBQString:trimmed( ... )
+   RETURN Qt_HBQString_trimmed( ::pPtr, ... )
 
 
-METHOD HBQString:fromLatin1( pStr, nSize )
-   RETURN Qt_HBQString_fromLatin1( ::pPtr, hbqt_ptr( pStr ), nSize )
+METHOD HBQString:truncate( ... )
+   RETURN Qt_HBQString_truncate( ::pPtr, ... )
 
 
-METHOD HBQString:fromLocal8Bit( pStr, nSize )
-   RETURN Qt_HBQString_fromLocal8Bit( ::pPtr, hbqt_ptr( pStr ), nSize )
+METHOD HBQString:unicode( ... )
+   RETURN HB_QChar():from( Qt_HBQString_unicode( ::pPtr, ... ) )
 
 
-METHOD HBQString:fromRawData( pUnicode, nSize )
-   RETURN Qt_HBQString_fromRawData( ::pPtr, hbqt_ptr( pUnicode ), nSize )
+METHOD HBQString:compare_4( ... )
+   RETURN Qt_HBQString_compare_4( ::pPtr, ... )
 
 
-METHOD HBQString:fromUcs4( nUnicode, nSize )
-   RETURN Qt_HBQString_fromUcs4( ::pPtr, nUnicode, nSize )
+METHOD HBQString:compare_5( ... )
+   RETURN Qt_HBQString_compare_5( ::pPtr, ... )
 
 
-METHOD HBQString:fromUtf8( pStr, nSize )
-   RETURN Qt_HBQString_fromUtf8( ::pPtr, hbqt_ptr( pStr ), nSize )
+METHOD HBQString:compare_6( ... )
+   RETURN Qt_HBQString_compare_6( ::pPtr, ... )
 
 
-METHOD HBQString:fromUtf16( nUnicode, nSize )
-   RETURN Qt_HBQString_fromUtf16( ::pPtr, nUnicode, nSize )
+METHOD HBQString:compare_7( ... )
+   RETURN Qt_HBQString_compare_7( ::pPtr, ... )
 
 
-METHOD HBQString:localeAwareCompare_2( cS1, cS2 )
-   RETURN Qt_HBQString_localeAwareCompare_2( ::pPtr, cS1, cS2 )
+METHOD HBQString:compare_8( ... )
+   RETURN Qt_HBQString_compare_8( ::pPtr, ... )
 
 
-METHOD HBQString:localeAwareCompare_3( cS1, pS2 )
-   RETURN Qt_HBQString_localeAwareCompare_3( ::pPtr, cS1, hbqt_ptr( pS2 ) )
+METHOD HBQString:fromAscii( ... )
+   RETURN Qt_HBQString_fromAscii( ::pPtr, ... )
 
 
-METHOD HBQString:number( nN, nBase )
-   RETURN Qt_HBQString_number( ::pPtr, nN, nBase )
+METHOD HBQString:fromLatin1( ... )
+   RETURN Qt_HBQString_fromLatin1( ::pPtr, ... )
 
 
-METHOD HBQString:number_1( nN, cFormat, nPrecision )
-   RETURN Qt_HBQString_number_1( ::pPtr, nN, cFormat, nPrecision )
+METHOD HBQString:fromLocal8Bit( ... )
+   RETURN Qt_HBQString_fromLocal8Bit( ::pPtr, ... )
 
 
-METHOD HBQString:number_2( nN, nBase )
-   RETURN Qt_HBQString_number_2( ::pPtr, nN, nBase )
+METHOD HBQString:fromRawData( ... )
+   RETURN Qt_HBQString_fromRawData( ::pPtr, ... )
 
 
-METHOD HBQString:number_3( nN, nBase )
-   RETURN Qt_HBQString_number_3( ::pPtr, nN, nBase )
+METHOD HBQString:fromUcs4( ... )
+   RETURN Qt_HBQString_fromUcs4( ::pPtr, ... )
 
 
-METHOD HBQString:number_4( nN, nBase )
-   RETURN Qt_HBQString_number_4( ::pPtr, nN, nBase )
+METHOD HBQString:fromUtf8( ... )
+   RETURN Qt_HBQString_fromUtf8( ::pPtr, ... )
 
 
-METHOD HBQString:number_5( nN, nBase )
-   RETURN Qt_HBQString_number_5( ::pPtr, nN, nBase )
+METHOD HBQString:fromUtf16( ... )
+   RETURN Qt_HBQString_fromUtf16( ::pPtr, ... )
 
 
-METHOD HBQString:number_6( nN, nBase )
-   RETURN Qt_HBQString_number_6( ::pPtr, nN, nBase )
+METHOD HBQString:localeAwareCompare_2( ... )
+   RETURN Qt_HBQString_localeAwareCompare_2( ::pPtr, ... )
+
+
+METHOD HBQString:localeAwareCompare_3( ... )
+   RETURN Qt_HBQString_localeAwareCompare_3( ::pPtr, ... )
+
+
+METHOD HBQString:number( ... )
+   RETURN Qt_HBQString_number( ::pPtr, ... )
+
+
+METHOD HBQString:number_1( ... )
+   RETURN Qt_HBQString_number_1( ::pPtr, ... )
+
+
+METHOD HBQString:number_2( ... )
+   RETURN Qt_HBQString_number_2( ::pPtr, ... )
+
+
+METHOD HBQString:number_3( ... )
+   RETURN Qt_HBQString_number_3( ::pPtr, ... )
+
+
+METHOD HBQString:number_4( ... )
+   RETURN Qt_HBQString_number_4( ::pPtr, ... )
+
+
+METHOD HBQString:number_5( ... )
+   RETURN Qt_HBQString_number_5( ::pPtr, ... )
+
+
+METHOD HBQString:number_6( ... )
+   RETURN Qt_HBQString_number_6( ::pPtr, ... )
 

@@ -103,42 +103,45 @@ CREATE CLASS QTreeWidget INHERIT HbQtObjectHandler, HB_QTreeView FUNCTION HB_QTr
 
    METHOD  new( ... )
 
-   METHOD  addTopLevelItem( pItem )
-   METHOD  closePersistentEditor( pItem, nColumn )
-   METHOD  columnCount()
-   METHOD  currentColumn()
-   METHOD  currentItem()
-   METHOD  editItem( pItem, nColumn )
-   METHOD  findItems( cText, nFlags, nColumn )
-   METHOD  headerItem()
-   METHOD  indexOfTopLevelItem( pItem )
-   METHOD  insertTopLevelItem( nIndex, pItem )
-   METHOD  invisibleRootItem()
-   METHOD  isFirstItemColumnSpanned( pItem )
-   METHOD  itemAbove( pItem )
-   METHOD  itemAt( ... )
-   METHOD  itemBelow( pItem )
-   METHOD  itemWidget( pItem, nColumn )
-   METHOD  openPersistentEditor( pItem, nColumn )
-   METHOD  removeItemWidget( pItem, nColumn )
-   METHOD  selectedItems()
-   METHOD  setColumnCount( nColumns )
-   METHOD  setCurrentItem( ... )
-   METHOD  setFirstItemColumnSpanned( pItem, lSpan )
-   METHOD  setHeaderItem( pItem )
-   METHOD  setHeaderLabel( cLabel )
-   METHOD  setHeaderLabels( pLabels )
-   METHOD  setItemWidget( pItem, nColumn, pWidget )
-   METHOD  sortColumn()
-   METHOD  sortItems( nColumn, nOrder )
-   METHOD  takeTopLevelItem( nIndex )
-   METHOD  topLevelItem( nIndex )
-   METHOD  topLevelItemCount()
-   METHOD  visualItemRect( pItem )
-   METHOD  clear()
-   METHOD  collapseItem( pItem )
-   METHOD  expandItem( pItem )
-   METHOD  scrollToItem( pItem, nHint )
+   METHOD  addTopLevelItem               // ( oQTreeWidgetItem )                               -> NIL
+   METHOD  closePersistentEditor         // ( oQTreeWidgetItem, nColumn )                      -> NIL
+   METHOD  columnCount                   // (  )                                               -> nInt
+   METHOD  currentColumn                 // (  )                                               -> nInt
+   METHOD  currentItem                   // (  )                                               -> oQTreeWidgetItem
+   METHOD  editItem                      // ( oQTreeWidgetItem, nColumn )                      -> NIL
+   METHOD  findItems                     // ( cText, nFlags, nColumn )                         -> oQList_QTreeWidgetItem
+   METHOD  headerItem                    // (  )                                               -> oQTreeWidgetItem
+   METHOD  indexOfTopLevelItem           // ( oQTreeWidgetItem )                               -> nInt
+   METHOD  insertTopLevelItem            // ( nIndex, oQTreeWidgetItem )                       -> NIL
+   METHOD  invisibleRootItem             // (  )                                               -> oQTreeWidgetItem
+   METHOD  isFirstItemColumnSpanned      // ( oQTreeWidgetItem )                               -> lBool
+   METHOD  itemAbove                     // ( oQTreeWidgetItem )                               -> oQTreeWidgetItem
+   METHOD  itemAt                        // ( oQPoint )                                        -> oQTreeWidgetItem
+                                         // ( nX, nY )                                         -> oQTreeWidgetItem
+   METHOD  itemBelow                     // ( oQTreeWidgetItem )                               -> oQTreeWidgetItem
+   METHOD  itemWidget                    // ( oQTreeWidgetItem, nColumn )                      -> oQWidget
+   METHOD  openPersistentEditor          // ( oQTreeWidgetItem, nColumn )                      -> NIL
+   METHOD  removeItemWidget              // ( oQTreeWidgetItem, nColumn )                      -> NIL
+   METHOD  selectedItems                 // (  )                                               -> oQList_QTreeWidgetItem
+   METHOD  setColumnCount                // ( nColumns )                                       -> NIL
+   METHOD  setCurrentItem                // ( oQTreeWidgetItem )                               -> NIL
+                                         // ( oQTreeWidgetItem, nColumn )                      -> NIL
+                                         // ( oQTreeWidgetItem, nColumn, nCommand )            -> NIL
+   METHOD  setFirstItemColumnSpanned     // ( oQTreeWidgetItem, lSpan )                        -> NIL
+   METHOD  setHeaderItem                 // ( oQTreeWidgetItem )                               -> NIL
+   METHOD  setHeaderLabel                // ( cLabel )                                         -> NIL
+   METHOD  setHeaderLabels               // ( oQStringList )                                   -> NIL
+   METHOD  setItemWidget                 // ( oQTreeWidgetItem, nColumn, oQWidget )            -> NIL
+   METHOD  sortColumn                    // (  )                                               -> nInt
+   METHOD  sortItems                     // ( nColumn, nOrder )                                -> NIL
+   METHOD  takeTopLevelItem              // ( nIndex )                                         -> oQTreeWidgetItem
+   METHOD  topLevelItem                  // ( nIndex )                                         -> oQTreeWidgetItem
+   METHOD  topLevelItemCount             // (  )                                               -> nInt
+   METHOD  visualItemRect                // ( oQTreeWidgetItem )                               -> oQRect
+   METHOD  clear                         // (  )                                               -> NIL
+   METHOD  collapseItem                  // ( oQTreeWidgetItem )                               -> NIL
+   METHOD  expandItem                    // ( oQTreeWidgetItem )                               -> NIL
+   METHOD  scrollToItem                  // ( oQTreeWidgetItem, nHint )                        -> NIL
 
    ENDCLASS
 
@@ -152,56 +155,158 @@ METHOD QTreeWidget:new( ... )
    RETURN Self
 
 
-METHOD QTreeWidget:addTopLevelItem( pItem )
-   RETURN Qt_QTreeWidget_addTopLevelItem( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QTreeWidget:addTopLevelItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidget_addTopLevelItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:closePersistentEditor( pItem, nColumn )
-   RETURN Qt_QTreeWidget_closePersistentEditor( ::pPtr, hbqt_ptr( pItem ), nColumn )
+METHOD QTreeWidget:closePersistentEditor( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QTreeWidget_closePersistentEditor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidget_closePersistentEditor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:columnCount()
-   RETURN Qt_QTreeWidget_columnCount( ::pPtr )
+METHOD QTreeWidget:columnCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeWidget_columnCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:currentColumn()
-   RETURN Qt_QTreeWidget_currentColumn( ::pPtr )
+METHOD QTreeWidget:currentColumn( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeWidget_currentColumn( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:currentItem()
-   RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_currentItem( ::pPtr ) )
+METHOD QTreeWidget:currentItem( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_currentItem( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:editItem( pItem, nColumn )
-   RETURN Qt_QTreeWidget_editItem( ::pPtr, hbqt_ptr( pItem ), nColumn )
+METHOD QTreeWidget:editItem( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QTreeWidget_editItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidget_editItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:findItems( cText, nFlags, nColumn )
-   RETURN HB_QList():from( Qt_QTreeWidget_findItems( ::pPtr, cText, nFlags, nColumn ) )
+METHOD QTreeWidget:findItems( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN HB_QList():from( Qt_QTreeWidget_findItems( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QList():from( Qt_QTreeWidget_findItems( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:headerItem()
-   RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_headerItem( ::pPtr ) )
+METHOD QTreeWidget:headerItem( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_headerItem( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:indexOfTopLevelItem( pItem )
-   RETURN Qt_QTreeWidget_indexOfTopLevelItem( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QTreeWidget:indexOfTopLevelItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidget_indexOfTopLevelItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:insertTopLevelItem( nIndex, pItem )
-   RETURN Qt_QTreeWidget_insertTopLevelItem( ::pPtr, nIndex, hbqt_ptr( pItem ) )
+METHOD QTreeWidget:insertTopLevelItem( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QTreeWidget_insertTopLevelItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:invisibleRootItem()
-   RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_invisibleRootItem( ::pPtr ) )
+METHOD QTreeWidget:invisibleRootItem( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_invisibleRootItem( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:isFirstItemColumnSpanned( pItem )
-   RETURN Qt_QTreeWidget_isFirstItemColumnSpanned( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QTreeWidget:isFirstItemColumnSpanned( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidget_isFirstItemColumnSpanned( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:itemAbove( pItem )
-   RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_itemAbove( ::pPtr, hbqt_ptr( pItem ) ) )
+METHOD QTreeWidget:itemAbove( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_itemAbove( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTreeWidget:itemAt( ... )
@@ -222,28 +327,78 @@ METHOD QTreeWidget:itemAt( ... )
    RETURN hbqt_error()
 
 
-METHOD QTreeWidget:itemBelow( pItem )
-   RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_itemBelow( ::pPtr, hbqt_ptr( pItem ) ) )
+METHOD QTreeWidget:itemBelow( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_itemBelow( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:itemWidget( pItem, nColumn )
-   RETURN HB_QWidget():from( Qt_QTreeWidget_itemWidget( ::pPtr, hbqt_ptr( pItem ), nColumn ) )
+METHOD QTreeWidget:itemWidget( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QWidget():from( Qt_QTreeWidget_itemWidget( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:openPersistentEditor( pItem, nColumn )
-   RETURN Qt_QTreeWidget_openPersistentEditor( ::pPtr, hbqt_ptr( pItem ), nColumn )
+METHOD QTreeWidget:openPersistentEditor( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QTreeWidget_openPersistentEditor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidget_openPersistentEditor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:removeItemWidget( pItem, nColumn )
-   RETURN Qt_QTreeWidget_removeItemWidget( ::pPtr, hbqt_ptr( pItem ), nColumn )
+METHOD QTreeWidget:removeItemWidget( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QTreeWidget_removeItemWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:selectedItems()
-   RETURN HB_QList():from( Qt_QTreeWidget_selectedItems( ::pPtr ) )
+METHOD QTreeWidget:selectedItems( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QTreeWidget_selectedItems( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:setColumnCount( nColumns )
-   RETURN Qt_QTreeWidget_setColumnCount( ::pPtr, nColumns )
+METHOD QTreeWidget:setColumnCount( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidget_setColumnCount( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTreeWidget:setCurrentItem( ... )
@@ -270,62 +425,176 @@ METHOD QTreeWidget:setCurrentItem( ... )
    RETURN hbqt_error()
 
 
-METHOD QTreeWidget:setFirstItemColumnSpanned( pItem, lSpan )
-   RETURN Qt_QTreeWidget_setFirstItemColumnSpanned( ::pPtr, hbqt_ptr( pItem ), lSpan )
+METHOD QTreeWidget:setFirstItemColumnSpanned( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QTreeWidget_setFirstItemColumnSpanned( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:setHeaderItem( pItem )
-   RETURN Qt_QTreeWidget_setHeaderItem( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QTreeWidget:setHeaderItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidget_setHeaderItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:setHeaderLabel( cLabel )
-   RETURN Qt_QTreeWidget_setHeaderLabel( ::pPtr, cLabel )
+METHOD QTreeWidget:setHeaderLabel( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidget_setHeaderLabel( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:setHeaderLabels( pLabels )
-   RETURN Qt_QTreeWidget_setHeaderLabels( ::pPtr, hbqt_ptr( pLabels ) )
+METHOD QTreeWidget:setHeaderLabels( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidget_setHeaderLabels( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:setItemWidget( pItem, nColumn, pWidget )
-   RETURN Qt_QTreeWidget_setItemWidget( ::pPtr, hbqt_ptr( pItem ), nColumn, hbqt_ptr( pWidget ) )
+METHOD QTreeWidget:setItemWidget( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QTreeWidget_setItemWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:sortColumn()
-   RETURN Qt_QTreeWidget_sortColumn( ::pPtr )
+METHOD QTreeWidget:sortColumn( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeWidget_sortColumn( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:sortItems( nColumn, nOrder )
-   RETURN Qt_QTreeWidget_sortItems( ::pPtr, nColumn, nOrder )
+METHOD QTreeWidget:sortItems( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QTreeWidget_sortItems( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:takeTopLevelItem( nIndex )
-   RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_takeTopLevelItem( ::pPtr, nIndex ) )
+METHOD QTreeWidget:takeTopLevelItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_takeTopLevelItem( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:topLevelItem( nIndex )
-   RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_topLevelItem( ::pPtr, nIndex ) )
+METHOD QTreeWidget:topLevelItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_topLevelItem( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:topLevelItemCount()
-   RETURN Qt_QTreeWidget_topLevelItemCount( ::pPtr )
+METHOD QTreeWidget:topLevelItemCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeWidget_topLevelItemCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:visualItemRect( pItem )
-   RETURN HB_QRect():from( Qt_QTreeWidget_visualItemRect( ::pPtr, hbqt_ptr( pItem ) ) )
+METHOD QTreeWidget:visualItemRect( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QRect():from( Qt_QTreeWidget_visualItemRect( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:clear()
-   RETURN Qt_QTreeWidget_clear( ::pPtr )
+METHOD QTreeWidget:clear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeWidget_clear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:collapseItem( pItem )
-   RETURN Qt_QTreeWidget_collapseItem( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QTreeWidget:collapseItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidget_collapseItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:expandItem( pItem )
-   RETURN Qt_QTreeWidget_expandItem( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QTreeWidget:expandItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidget_expandItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTreeWidget:scrollToItem( pItem, nHint )
-   RETURN Qt_QTreeWidget_scrollToItem( ::pPtr, hbqt_ptr( pItem ), nHint )
+METHOD QTreeWidget:scrollToItem( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QTreeWidget_scrollToItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidget_scrollToItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

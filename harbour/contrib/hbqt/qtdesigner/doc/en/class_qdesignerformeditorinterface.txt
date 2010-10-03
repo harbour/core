@@ -26,16 +26,16 @@
  *  $RETURNS$
  *     An instance of the object of type QDesignerFormEditorInterface
  *  $METHODS$
- *     :actionEditor()                                     -> pQDesignerActionEditorInterface
- *     :formWindowManager()                                -> pQDesignerFormWindowManagerInterface
- *     :objectInspector()                                  -> pQDesignerObjectInspectorInterface
- *     :propertyEditor()                                   -> pQDesignerPropertyEditorInterface
- *     :setActionEditor( pActionEditor )                   -> NIL
- *     :setObjectInspector( pObjectInspector )             -> NIL
- *     :setPropertyEditor( pPropertyEditor )               -> NIL
- *     :setWidgetBox( pWidgetBox )                         -> NIL
- *     :topLevel()                                         -> pQWidget
- *     :widgetBox()                                        -> pQDesignerWidgetBoxInterface
+ *     :actionEditor()                                     -> oQDesignerActionEditorInterface
+ *     :formWindowManager()                                -> oQDesignerFormWindowManagerInterface
+ *     :objectInspector()                                  -> oQDesignerObjectInspectorInterface
+ *     :propertyEditor()                                   -> oQDesignerPropertyEditorInterface
+ *     :setActionEditor( oQDesignerActionEditorInterface )  -> NIL
+ *     :setObjectInspector( oQDesignerObjectInspectorInterface )  -> NIL
+ *     :setPropertyEditor( oQDesignerPropertyEditorInterface )  -> NIL
+ *     :setWidgetBox( oQDesignerWidgetBoxInterface )       -> NIL
+ *     :topLevel()                                         -> oQWidget
+ *     :widgetBox()                                        -> oQDesignerWidgetBoxInterface
  * 
  *  $DESCRIPTION$
  * 
@@ -55,7 +55,5 @@
  *     Harbour source: contrib/hbqt/qtdesigner/TQDesignerFormEditorInterface.prg
  *     C++ wrappers  : contrib/hbqt/qtdesigner/QDesignerFormEditorInterface.cpp
  *     Library       : hbqtdesigner
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

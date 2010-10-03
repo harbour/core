@@ -103,20 +103,21 @@ CREATE CLASS QSizeF INHERIT HbQtObjectHandler FUNCTION HB_QSizeF
 
    METHOD  new( ... )
 
-   METHOD  boundedTo( pOtherSize )
-   METHOD  expandedTo( pOtherSize )
-   METHOD  height()
-   METHOD  isEmpty()
-   METHOD  isNull()
-   METHOD  isValid()
-   METHOD  rheight()
-   METHOD  rwidth()
-   METHOD  scale( ... )
-   METHOD  setHeight( nHeight )
-   METHOD  setWidth( nWidth )
-   METHOD  toSize()
-   METHOD  transpose()
-   METHOD  width()
+   METHOD  boundedTo                     // ( oQSizeF )                                        -> oQSizeF
+   METHOD  expandedTo                    // ( oQSizeF )                                        -> oQSizeF
+   METHOD  height                        // (  )                                               -> nQreal
+   METHOD  isEmpty                       // (  )                                               -> lBool
+   METHOD  isNull                        // (  )                                               -> lBool
+   METHOD  isValid                       // (  )                                               -> lBool
+   METHOD  rheight                       // (  )                                               -> nQreal
+   METHOD  rwidth                        // (  )                                               -> nQreal
+   METHOD  scale                         // ( nWidth, nHeight, nMode )                         -> NIL
+                                         // ( oQSizeF, nMode )                                 -> NIL
+   METHOD  setHeight                     // ( nHeight )                                        -> NIL
+   METHOD  setWidth                      // ( nWidth )                                         -> NIL
+   METHOD  toSize                        // (  )                                               -> oQSize
+   METHOD  transpose                     // (  )                                               -> NIL
+   METHOD  width                         // (  )                                               -> nQreal
 
    ENDCLASS
 
@@ -130,36 +131,76 @@ METHOD QSizeF:new( ... )
    RETURN Self
 
 
-METHOD QSizeF:boundedTo( pOtherSize )
-   RETURN HB_QSizeF():from( Qt_QSizeF_boundedTo( ::pPtr, hbqt_ptr( pOtherSize ) ) )
+METHOD QSizeF:boundedTo( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QSizeF():from( Qt_QSizeF_boundedTo( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSizeF:expandedTo( pOtherSize )
-   RETURN HB_QSizeF():from( Qt_QSizeF_expandedTo( ::pPtr, hbqt_ptr( pOtherSize ) ) )
+METHOD QSizeF:expandedTo( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QSizeF():from( Qt_QSizeF_expandedTo( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSizeF:height()
-   RETURN Qt_QSizeF_height( ::pPtr )
+METHOD QSizeF:height( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSizeF_height( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSizeF:isEmpty()
-   RETURN Qt_QSizeF_isEmpty( ::pPtr )
+METHOD QSizeF:isEmpty( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSizeF_isEmpty( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSizeF:isNull()
-   RETURN Qt_QSizeF_isNull( ::pPtr )
+METHOD QSizeF:isNull( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSizeF_isNull( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSizeF:isValid()
-   RETURN Qt_QSizeF_isValid( ::pPtr )
+METHOD QSizeF:isValid( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSizeF_isValid( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSizeF:rheight()
-   RETURN Qt_QSizeF_rheight( ::pPtr )
+METHOD QSizeF:rheight( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSizeF_rheight( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSizeF:rwidth()
-   RETURN Qt_QSizeF_rwidth( ::pPtr )
+METHOD QSizeF:rwidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSizeF_rwidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QSizeF:scale( ... )
@@ -180,22 +221,50 @@ METHOD QSizeF:scale( ... )
    RETURN hbqt_error()
 
 
-METHOD QSizeF:setHeight( nHeight )
-   RETURN Qt_QSizeF_setHeight( ::pPtr, nHeight )
+METHOD QSizeF:setHeight( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QSizeF_setHeight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSizeF:setWidth( nWidth )
-   RETURN Qt_QSizeF_setWidth( ::pPtr, nWidth )
+METHOD QSizeF:setWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QSizeF_setWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSizeF:toSize()
-   RETURN HB_QSize():from( Qt_QSizeF_toSize( ::pPtr ) )
+METHOD QSizeF:toSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QSizeF_toSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSizeF:transpose()
-   RETURN Qt_QSizeF_transpose( ::pPtr )
+METHOD QSizeF:transpose( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSizeF_transpose( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSizeF:width()
-   RETURN Qt_QSizeF_width( ::pPtr )
+METHOD QSizeF:width( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSizeF_width( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

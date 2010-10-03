@@ -103,20 +103,20 @@ CREATE CLASS QDesignerFormWindowCursorInterface INHERIT HbQtObjectHandler FUNCTI
 
    METHOD  new( ... )
 
-   METHOD  current()
-   METHOD  formWindow()
-   METHOD  hasSelection()
-   METHOD  isWidgetSelected( pWidget )
-   METHOD  movePosition( nOperation, nMode )
-   METHOD  position()
-   METHOD  resetWidgetProperty( pWidget, cName )
-   METHOD  selectedWidget( nIndex )
-   METHOD  selectedWidgetCount()
-   METHOD  setPosition( nPosition, nMode )
-   METHOD  setProperty( cName, pValue )
-   METHOD  setWidgetProperty( pWidget, cName, pValue )
-   METHOD  widget( nIndex )
-   METHOD  widgetCount()
+   METHOD  current                       // (  )                                               -> oQWidget
+   METHOD  formWindow                    // (  )                                               -> oQDesignerFormWindowInterface
+   METHOD  hasSelection                  // (  )                                               -> lBool
+   METHOD  isWidgetSelected              // ( oQWidget )                                       -> lBool
+   METHOD  movePosition                  // ( nOperation, nMode )                              -> lBool
+   METHOD  position                      // (  )                                               -> nInt
+   METHOD  resetWidgetProperty           // ( oQWidget, cName )                                -> NIL
+   METHOD  selectedWidget                // ( nIndex )                                         -> oQWidget
+   METHOD  selectedWidgetCount           // (  )                                               -> nInt
+   METHOD  setPosition                   // ( nPosition, nMode )                               -> NIL
+   METHOD  setProperty                   // ( cName, oQVariant )                               -> NIL
+   METHOD  setWidgetProperty             // ( oQWidget, cName, oQVariant )                     -> NIL
+   METHOD  widget                        // ( nIndex )                                         -> oQWidget
+   METHOD  widgetCount                   // (  )                                               -> nInt
 
    ENDCLASS
 
@@ -130,58 +130,158 @@ METHOD QDesignerFormWindowCursorInterface:new( ... )
    RETURN Self
 
 
-METHOD QDesignerFormWindowCursorInterface:current()
-   RETURN HB_QWidget():from( Qt_QDesignerFormWindowCursorInterface_current( ::pPtr ) )
+METHOD QDesignerFormWindowCursorInterface:current( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QDesignerFormWindowCursorInterface_current( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowCursorInterface:formWindow()
-   RETURN HB_QDesignerFormWindowInterface():from( Qt_QDesignerFormWindowCursorInterface_formWindow( ::pPtr ) )
+METHOD QDesignerFormWindowCursorInterface:formWindow( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDesignerFormWindowInterface():from( Qt_QDesignerFormWindowCursorInterface_formWindow( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowCursorInterface:hasSelection()
-   RETURN Qt_QDesignerFormWindowCursorInterface_hasSelection( ::pPtr )
+METHOD QDesignerFormWindowCursorInterface:hasSelection( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDesignerFormWindowCursorInterface_hasSelection( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowCursorInterface:isWidgetSelected( pWidget )
-   RETURN Qt_QDesignerFormWindowCursorInterface_isWidgetSelected( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QDesignerFormWindowCursorInterface:isWidgetSelected( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerFormWindowCursorInterface_isWidgetSelected( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowCursorInterface:movePosition( nOperation, nMode )
-   RETURN Qt_QDesignerFormWindowCursorInterface_movePosition( ::pPtr, nOperation, nMode )
+METHOD QDesignerFormWindowCursorInterface:movePosition( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QDesignerFormWindowCursorInterface_movePosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerFormWindowCursorInterface_movePosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowCursorInterface:position()
-   RETURN Qt_QDesignerFormWindowCursorInterface_position( ::pPtr )
+METHOD QDesignerFormWindowCursorInterface:position( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDesignerFormWindowCursorInterface_position( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowCursorInterface:resetWidgetProperty( pWidget, cName )
-   RETURN Qt_QDesignerFormWindowCursorInterface_resetWidgetProperty( ::pPtr, hbqt_ptr( pWidget ), cName )
+METHOD QDesignerFormWindowCursorInterface:resetWidgetProperty( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QDesignerFormWindowCursorInterface_resetWidgetProperty( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowCursorInterface:selectedWidget( nIndex )
-   RETURN HB_QWidget():from( Qt_QDesignerFormWindowCursorInterface_selectedWidget( ::pPtr, nIndex ) )
+METHOD QDesignerFormWindowCursorInterface:selectedWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QWidget():from( Qt_QDesignerFormWindowCursorInterface_selectedWidget( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowCursorInterface:selectedWidgetCount()
-   RETURN Qt_QDesignerFormWindowCursorInterface_selectedWidgetCount( ::pPtr )
+METHOD QDesignerFormWindowCursorInterface:selectedWidgetCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDesignerFormWindowCursorInterface_selectedWidgetCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowCursorInterface:setPosition( nPosition, nMode )
-   RETURN Qt_QDesignerFormWindowCursorInterface_setPosition( ::pPtr, nPosition, nMode )
+METHOD QDesignerFormWindowCursorInterface:setPosition( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QDesignerFormWindowCursorInterface_setPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDesignerFormWindowCursorInterface_setPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowCursorInterface:setProperty( cName, pValue )
-   RETURN Qt_QDesignerFormWindowCursorInterface_setProperty( ::pPtr, cName, hbqt_ptr( pValue ) )
+METHOD QDesignerFormWindowCursorInterface:setProperty( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QDesignerFormWindowCursorInterface_setProperty( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowCursorInterface:setWidgetProperty( pWidget, cName, pValue )
-   RETURN Qt_QDesignerFormWindowCursorInterface_setWidgetProperty( ::pPtr, hbqt_ptr( pWidget ), cName, hbqt_ptr( pValue ) )
+METHOD QDesignerFormWindowCursorInterface:setWidgetProperty( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QDesignerFormWindowCursorInterface_setWidgetProperty( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowCursorInterface:widget( nIndex )
-   RETURN HB_QWidget():from( Qt_QDesignerFormWindowCursorInterface_widget( ::pPtr, nIndex ) )
+METHOD QDesignerFormWindowCursorInterface:widget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QWidget():from( Qt_QDesignerFormWindowCursorInterface_widget( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesignerFormWindowCursorInterface:widgetCount()
-   RETURN Qt_QDesignerFormWindowCursorInterface_widgetCount( ::pPtr )
+METHOD QDesignerFormWindowCursorInterface:widgetCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDesignerFormWindowCursorInterface_widgetCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

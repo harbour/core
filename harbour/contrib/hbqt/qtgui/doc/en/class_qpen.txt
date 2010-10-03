@@ -26,17 +26,17 @@
  *  $RETURNS$
  *     An instance of the object of type QPen
  *  $METHODS$
- *     :brush()                                            -> pQBrush
- *     :capStyle()                                         -> nQt::PenCapStyle
- *     :color()                                            -> pQColor
+ *     :brush()                                            -> oQBrush
+ *     :capStyle()                                         -> nQt_PenCapStyle
+ *     :color()                                            -> oQColor
  *     :dashOffset()                                       -> nQreal
  *     :isCosmetic()                                       -> lBool
  *     :isSolid()                                          -> lBool
- *     :joinStyle()                                        -> nQt::PenJoinStyle
+ *     :joinStyle()                                        -> nQt_PenJoinStyle
  *     :miterLimit()                                       -> nQreal
- *     :setBrush( pBrush )                                 -> NIL
+ *     :setBrush( oQBrush )                                -> NIL
  *     :setCapStyle( nStyle )                              -> NIL
- *     :setColor( pColor )                                 -> NIL
+ *     :setColor( oQColor )                                -> NIL
  *     :setCosmetic( lCosmetic )                           -> NIL
  *     :setDashOffset( nOffset )                           -> NIL
  *     :setJoinStyle( nStyle )                             -> NIL
@@ -44,7 +44,7 @@
  *     :setStyle( nStyle )                                 -> NIL
  *     :setWidth( nWidth )                                 -> NIL
  *     :setWidthF( nWidth )                                -> NIL
- *     :style()                                            -> nQt::PenStyle
+ *     :style()                                            -> nQt_PenStyle
  *     :width()                                            -> nInt
  *     :widthF()                                           -> nQreal
  * 
@@ -76,7 +76,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQPen.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QPen.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

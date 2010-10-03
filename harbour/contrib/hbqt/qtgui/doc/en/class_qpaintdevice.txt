@@ -32,7 +32,7 @@
  *     :logicalDpiX()                                      -> nInt
  *     :logicalDpiY()                                      -> nInt
  *     :numColors()                                        -> nInt
- *     :paintEngine()                                      -> pQPaintEngine
+ *     :paintEngine()                                      -> oQPaintEngine
  *     :paintingActive()                                   -> lBool
  *     :physicalDpiX()                                     -> nInt
  *     :physicalDpiY()                                     -> nInt
@@ -57,7 +57,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQPaintDevice.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QPaintDevice.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

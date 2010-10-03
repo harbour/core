@@ -199,11 +199,7 @@ HB_FUNC( QT_QTREEWIDGET_ADDTOPLEVELITEM )
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 2 );
       ( p )->addTopLevelItem( hbqt_par_QTreeWidgetItem( 2 ) );
    }
 }
@@ -458,11 +454,7 @@ HB_FUNC( QT_QTREEWIDGET_SETCURRENTITEM )
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 2 );
       ( p )->setCurrentItem( hbqt_par_QTreeWidgetItem( 2 ) );
    }
 }
@@ -475,11 +467,7 @@ HB_FUNC( QT_QTREEWIDGET_SETCURRENTITEM_1 )
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 2 );
       ( p )->setCurrentItem( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ) );
    }
 }
@@ -492,11 +480,7 @@ HB_FUNC( QT_QTREEWIDGET_SETCURRENTITEM_2 )
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 2 );
       ( p )->setCurrentItem( hbqt_par_QTreeWidgetItem( 2 ), hb_parni( 3 ), ( QItemSelectionModel::SelectionFlags ) hb_parni( 4 ) );
    }
 }
@@ -521,11 +505,7 @@ HB_FUNC( QT_QTREEWIDGET_SETHEADERITEM )
    QTreeWidget * p = hbqt_par_QTreeWidget( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 2 );
       ( p )->setHeaderItem( hbqt_par_QTreeWidgetItem( 2 ) );
    }
 }

@@ -103,15 +103,15 @@ CREATE CLASS QWheelEvent INHERIT HbQtObjectHandler, HB_QInputEvent FUNCTION HB_Q
 
    METHOD  new( ... )
 
-   METHOD  buttons()
-   METHOD  delta()
-   METHOD  globalPos()
-   METHOD  globalX()
-   METHOD  globalY()
-   METHOD  orientation()
-   METHOD  pos()
-   METHOD  x()
-   METHOD  y()
+   METHOD  buttons                       // (  )                                               -> nQt_MouseButtons
+   METHOD  delta                         // (  )                                               -> nInt
+   METHOD  globalPos                     // (  )                                               -> oQPoint
+   METHOD  globalX                       // (  )                                               -> nInt
+   METHOD  globalY                       // (  )                                               -> nInt
+   METHOD  orientation                   // (  )                                               -> nQt_Orientation
+   METHOD  pos                           // (  )                                               -> oQPoint
+   METHOD  x                             // (  )                                               -> nInt
+   METHOD  y                             // (  )                                               -> nInt
 
    ENDCLASS
 
@@ -125,38 +125,74 @@ METHOD QWheelEvent:new( ... )
    RETURN Self
 
 
-METHOD QWheelEvent:buttons()
-   RETURN Qt_QWheelEvent_buttons( ::pPtr )
+METHOD QWheelEvent:buttons( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWheelEvent_buttons( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWheelEvent:delta()
-   RETURN Qt_QWheelEvent_delta( ::pPtr )
+METHOD QWheelEvent:delta( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWheelEvent_delta( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWheelEvent:globalPos()
-   RETURN HB_QPoint():from( Qt_QWheelEvent_globalPos( ::pPtr ) )
+METHOD QWheelEvent:globalPos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QWheelEvent_globalPos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWheelEvent:globalX()
-   RETURN Qt_QWheelEvent_globalX( ::pPtr )
+METHOD QWheelEvent:globalX( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWheelEvent_globalX( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWheelEvent:globalY()
-   RETURN Qt_QWheelEvent_globalY( ::pPtr )
+METHOD QWheelEvent:globalY( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWheelEvent_globalY( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWheelEvent:orientation()
-   RETURN Qt_QWheelEvent_orientation( ::pPtr )
+METHOD QWheelEvent:orientation( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWheelEvent_orientation( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWheelEvent:pos()
-   RETURN HB_QPoint():from( Qt_QWheelEvent_pos( ::pPtr ) )
+METHOD QWheelEvent:pos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QWheelEvent_pos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWheelEvent:x()
-   RETURN Qt_QWheelEvent_x( ::pPtr )
+METHOD QWheelEvent:x( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWheelEvent_x( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWheelEvent:y()
-   RETURN Qt_QWheelEvent_y( ::pPtr )
+METHOD QWheelEvent:y( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWheelEvent_y( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

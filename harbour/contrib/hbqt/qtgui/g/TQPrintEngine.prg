@@ -103,12 +103,12 @@ CREATE CLASS QPrintEngine INHERIT HbQtObjectHandler FUNCTION HB_QPrintEngine
 
    METHOD  new( ... )
 
-   METHOD  abort()
-   METHOD  metric( nId )
-   METHOD  newPage()
-   METHOD  printerState()
-   METHOD  property( nKey )
-   METHOD  setProperty( nKey, pValue )
+   METHOD  abort                         // (  )                                               -> lBool
+   METHOD  metric                        // ( nId )                                            -> nInt
+   METHOD  newPage                       // (  )                                               -> lBool
+   METHOD  printerState                  // (  )                                               -> nQPrinter_PrinterState
+   METHOD  property                      // ( nKey )                                           -> oQVariant
+   METHOD  setProperty                   // ( nKey, oQVariant )                                -> NIL
 
    ENDCLASS
 
@@ -122,26 +122,62 @@ METHOD QPrintEngine:new( ... )
    RETURN Self
 
 
-METHOD QPrintEngine:abort()
-   RETURN Qt_QPrintEngine_abort( ::pPtr )
+METHOD QPrintEngine:abort( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPrintEngine_abort( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPrintEngine:metric( nId )
-   RETURN Qt_QPrintEngine_metric( ::pPtr, nId )
+METHOD QPrintEngine:metric( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPrintEngine_metric( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPrintEngine:newPage()
-   RETURN Qt_QPrintEngine_newPage( ::pPtr )
+METHOD QPrintEngine:newPage( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPrintEngine_newPage( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPrintEngine:printerState()
-   RETURN Qt_QPrintEngine_printerState( ::pPtr )
+METHOD QPrintEngine:printerState( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPrintEngine_printerState( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPrintEngine:property( nKey )
-   RETURN HB_QVariant():from( Qt_QPrintEngine_property( ::pPtr, nKey ) )
+METHOD QPrintEngine:property( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QVariant():from( Qt_QPrintEngine_property( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPrintEngine:setProperty( nKey, pValue )
-   RETURN Qt_QPrintEngine_setProperty( ::pPtr, nKey, hbqt_ptr( pValue ) )
+METHOD QPrintEngine:setProperty( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QPrintEngine_setProperty( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

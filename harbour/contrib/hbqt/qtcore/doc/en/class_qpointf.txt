@@ -31,7 +31,7 @@
  *     :ry()                                               -> nQreal
  *     :setX( nX )                                         -> NIL
  *     :setY( nY )                                         -> NIL
- *     :toPoint()                                          -> pQPoint
+ *     :toPoint()                                          -> oQPoint
  *     :x()                                                -> nQreal
  *     :y()                                                -> nQreal
  * 
@@ -56,7 +56,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQPointF.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QPointF.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

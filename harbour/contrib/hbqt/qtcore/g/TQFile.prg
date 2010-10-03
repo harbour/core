@@ -103,29 +103,39 @@ CREATE CLASS QFile INHERIT HbQtObjectHandler, HB_QIODevice FUNCTION HB_QFile
 
    METHOD  new( ... )
 
-   METHOD  atEnd()
-   METHOD  close()
-   METHOD  copy( ... )
-   METHOD  error()
-   METHOD  exists( ... )
-   METHOD  fileName()
-   METHOD  flush()
-   METHOD  handle()
-   METHOD  isSequential()
-   METHOD  link( ... )
-   METHOD  map( nOffset, nSize, nFlags )
-   METHOD  open( ... )
-   METHOD  permissions( ... )
-   METHOD  remove( ... )
-   METHOD  rename( ... )
-   METHOD  resize( ... )
-   METHOD  setFileName( cName )
-   METHOD  setPermissions( ... )
-   METHOD  size()
-   METHOD  symLinkTarget( ... )
-   METHOD  unsetError()
-   METHOD  decodeName( pLocalFileName )
-   METHOD  encodeName( cFileName )
+   METHOD  atEnd                         // (  )                                               -> lBool
+   METHOD  close                         // (  )                                               -> NIL
+   METHOD  copy                          // ( cNewName )                                       -> lBool
+   METHOD  error                         // (  )                                               -> nFileError
+   METHOD  exists                        // (  )                                               -> lBool
+   METHOD  fileName                      // (  )                                               -> cQString
+   METHOD  flush                         // (  )                                               -> lBool
+   METHOD  handle                        // (  )                                               -> nInt
+   METHOD  isSequential                  // (  )                                               -> lBool
+   METHOD  link                          // ( cLinkName )                                      -> lBool
+   METHOD  map                           // ( nOffset, nSize, nFlags )                         -> cUchar
+   METHOD  open                          // ( nMode )                                          -> lBool
+                                         // ( nFd, nMode )                                     -> lBool
+   METHOD  permissions                   // (  )                                               -> nPermissions
+   METHOD  remove                        // (  )                                               -> lBool
+   METHOD  rename                        // ( cNewName )                                       -> lBool
+   METHOD  resize                        // ( nSz )                                            -> lBool
+   METHOD  setFileName                   // ( cName )                                          -> NIL
+   METHOD  setPermissions                // ( nPermissions )                                   -> lBool
+   METHOD  size                          // (  )                                               -> nQint64
+   METHOD  symLinkTarget                 // (  )                                               -> cQString
+   METHOD  unsetError                    // (  )                                               -> NIL
+                                         // ( cFileName, cNewName )                            -> lBool
+   METHOD  decodeName                    // ( cLocalFileName )                                 -> cQString
+   METHOD  encodeName                    // ( cFileName )                                      -> oQByteArray
+                                         // ( cFileName )                                      -> lBool
+                                         // ( cFileName, cLinkName )                           -> lBool
+                                         // ( cFileName )                                      -> nPermissions
+                                         // ( cFileName )                                      -> lBool
+                                         // ( cOldName, cNewName )                             -> lBool
+                                         // ( cFileName, nSz )                                 -> lBool
+                                         // ( cFileName, nPermissions )                        -> lBool
+                                         // ( cFileName )                                      -> cQString
 
    ENDCLASS
 
@@ -139,12 +149,20 @@ METHOD QFile:new( ... )
    RETURN Self
 
 
-METHOD QFile:atEnd()
-   RETURN Qt_QFile_atEnd( ::pPtr )
+METHOD QFile:atEnd( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFile_atEnd( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFile:close()
-   RETURN Qt_QFile_close( ::pPtr )
+METHOD QFile:close( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFile_close( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QFile:copy( ... )
@@ -165,8 +183,12 @@ METHOD QFile:copy( ... )
    RETURN hbqt_error()
 
 
-METHOD QFile:error()
-   RETURN Qt_QFile_error( ::pPtr )
+METHOD QFile:error( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFile_error( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QFile:exists( ... )
@@ -183,20 +205,36 @@ METHOD QFile:exists( ... )
    RETURN hbqt_error()
 
 
-METHOD QFile:fileName()
-   RETURN Qt_QFile_fileName( ::pPtr )
+METHOD QFile:fileName( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFile_fileName( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFile:flush()
-   RETURN Qt_QFile_flush( ::pPtr )
+METHOD QFile:flush( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFile_flush( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFile:handle()
-   RETURN Qt_QFile_handle( ::pPtr )
+METHOD QFile:handle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFile_handle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFile:isSequential()
-   RETURN Qt_QFile_isSequential( ::pPtr )
+METHOD QFile:isSequential( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFile_isSequential( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QFile:link( ... )
@@ -217,8 +255,22 @@ METHOD QFile:link( ... )
    RETURN hbqt_error()
 
 
-METHOD QFile:map( nOffset, nSize, nFlags )
-   RETURN Qt_QFile_map( ::pPtr, nOffset, nSize, nFlags )
+METHOD QFile:map( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QFile_map( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QFile_map( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QFile:open( ... )
@@ -303,8 +355,16 @@ METHOD QFile:resize( ... )
    RETURN hbqt_error()
 
 
-METHOD QFile:setFileName( cName )
-   RETURN Qt_QFile_setFileName( ::pPtr, cName )
+METHOD QFile:setFileName( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QFile_setFileName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QFile:setPermissions( ... )
@@ -325,8 +385,12 @@ METHOD QFile:setPermissions( ... )
    RETURN hbqt_error()
 
 
-METHOD QFile:size()
-   RETURN Qt_QFile_size( ::pPtr )
+METHOD QFile:size( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFile_size( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QFile:symLinkTarget( ... )
@@ -343,14 +407,34 @@ METHOD QFile:symLinkTarget( ... )
    RETURN hbqt_error()
 
 
-METHOD QFile:unsetError()
-   RETURN Qt_QFile_unsetError( ::pPtr )
+METHOD QFile:unsetError( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFile_unsetError( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFile:decodeName( pLocalFileName )
-   RETURN Qt_QFile_decodeName( ::pPtr, hbqt_ptr( pLocalFileName ) )
+METHOD QFile:decodeName( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QFile_decodeName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFile:encodeName( cFileName )
-   RETURN HB_QByteArray():from( Qt_QFile_encodeName( ::pPtr, cFileName ) )
+METHOD QFile:encodeName( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QByteArray():from( Qt_QFile_encodeName( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

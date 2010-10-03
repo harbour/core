@@ -26,13 +26,14 @@
  *  $RETURNS$
  *     An instance of the object of type QTextFrame
  *  $METHODS$
- *     :childFrames()                                      -> pQList<QTextFrame *>
- *     :firstCursorPosition()                              -> pQTextCursor
+ *     :childFrames()                                      -> oQList_QTextFrame
+ *     :firstCursorPosition()                              -> oQTextCursor
  *     :firstPosition()                                    -> nInt
- *     :frameFormat()                                      -> Format
- *     :lastCursorPosition()                               -> pQTextCursor
+ *     :frameFormat()                                      -> oQTextFrameFormat
+ *     :lastCursorPosition()                               -> oQTextCursor
  *     :lastPosition()                                     -> nInt
- *     :setFrameFormat( pFormat )                          -> NIL
+ *     :parentFrame()                                      -> oQTextFrame
+ *     :setFrameFormat( oQTextFrameFormat )                -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -52,7 +53,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTextFrame.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextFrame.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QTextObject()
  *  $END$
  */

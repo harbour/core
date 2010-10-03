@@ -103,8 +103,9 @@ CREATE CLASS QGraphicsRectItem INHERIT HbQtObjectHandler, HB_QAbstractGraphicsSh
 
    METHOD  new( ... )
 
-   METHOD  rect()
-   METHOD  setRect( ... )
+   METHOD  rect                          // (  )                                               -> oQRectF
+   METHOD  setRect                       // ( oQRectF )                                        -> NIL
+                                         // ( nX, nY, nWidth, nHeight )                        -> NIL
 
    ENDCLASS
 
@@ -118,8 +119,12 @@ METHOD QGraphicsRectItem:new( ... )
    RETURN Self
 
 
-METHOD QGraphicsRectItem:rect()
-   RETURN HB_QRectF():from( Qt_QGraphicsRectItem_rect( ::pPtr ) )
+METHOD QGraphicsRectItem:rect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRectF():from( Qt_QGraphicsRectItem_rect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsRectItem:setRect( ... )

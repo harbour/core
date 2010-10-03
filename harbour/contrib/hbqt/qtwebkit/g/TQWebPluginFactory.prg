@@ -103,9 +103,9 @@ CREATE CLASS QWebPluginFactory INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB
 
    METHOD  new( ... )
 
-   METHOD  create( cMimeType, pUrl, pArgumentNames, pArgumentValues )
-   METHOD  refreshPlugins()
-   METHOD  supportsExtension( nExtension )
+   METHOD  create                        // ( cMimeType, oQUrl, oQStringList, oQStringList )   -> oQObject
+   METHOD  refreshPlugins                // (  )                                               -> NIL
+   METHOD  supportsExtension             // ( nExtension )                                     -> lBool
 
    ENDCLASS
 
@@ -119,14 +119,34 @@ METHOD QWebPluginFactory:new( ... )
    RETURN Self
 
 
-METHOD QWebPluginFactory:create( cMimeType, pUrl, pArgumentNames, pArgumentValues )
-   RETURN HB_QObject():from( Qt_QWebPluginFactory_create( ::pPtr, cMimeType, hbqt_ptr( pUrl ), hbqt_ptr( pArgumentNames ), hbqt_ptr( pArgumentValues ) ) )
+METHOD QWebPluginFactory:create( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
+         RETURN HB_QObject():from( Qt_QWebPluginFactory_create( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPluginFactory:refreshPlugins()
-   RETURN Qt_QWebPluginFactory_refreshPlugins( ::pPtr )
+METHOD QWebPluginFactory:refreshPlugins( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebPluginFactory_refreshPlugins( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPluginFactory:supportsExtension( nExtension )
-   RETURN Qt_QWebPluginFactory_supportsExtension( ::pPtr, nExtension )
+METHOD QWebPluginFactory:supportsExtension( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWebPluginFactory_supportsExtension( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

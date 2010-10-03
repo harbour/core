@@ -50,7 +50,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQIntValidator.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QIntValidator.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QValidator()
  *  $END$
  */

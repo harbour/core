@@ -26,37 +26,37 @@
  *  $RETURNS$
  *     An instance of the object of type QFormLayout
  *  $METHODS$
- *     :addRow( pLabel, pField )                           -> NIL
- *     :addRow_1( pWidget )                                -> NIL
- *     :addRow_2( cLabelText, pField )                     -> NIL
+ *     :addRow( oQWidget, oQWidget )                       -> NIL
+ *     :addRow( oQWidget )                                 -> NIL
+ *     :addRow( cLabelText, oQWidget )                     -> NIL
  *     :fieldGrowthPolicy()                                -> nFieldGrowthPolicy
- *     :formAlignment()                                    -> nQt::Alignment
+ *     :formAlignment()                                    -> nQt_Alignment
  *     :getItemPosition( nIndex, @nRowPtr, @nRolePtr )     -> NIL
- *     :getLayoutPosition( pLayout, @nRowPtr, @nRolePtr )  -> NIL
- *     :getWidgetPosition( pWidget, @nRowPtr, @nRolePtr )  -> NIL
+ *     :getLayoutPosition( oQLayout, @nRowPtr, @nRolePtr )  -> NIL
+ *     :getWidgetPosition( oQWidget, @nRowPtr, @nRolePtr )  -> NIL
  *     :horizontalSpacing()                                -> nInt
- *     :insertRow( nRow, pLabel, pField )                  -> NIL
- *     :insertRow_1( nRow, pLabel, pField )                -> NIL
- *     :insertRow_2( nRow, pWidget )                       -> NIL
- *     :insertRow_3( nRow, cLabelText, pField )            -> NIL
- *     :insertRow_4( nRow, cLabelText, pField )            -> NIL
- *     :insertRow_5( nRow, pLayout )                       -> NIL
- *     :itemAt( nRow, nRole )                              -> pQLayoutItem
- *     :labelAlignment()                                   -> nQt::Alignment
- *     :labelForField( pField )                            -> pQWidget
- *     :labelForField_1( pField )                          -> pQWidget
+ *     :insertRow( nRow, oQWidget, oQWidget )              -> NIL
+ *     :insertRow( nRow, oQWidget, oQLayout )              -> NIL
+ *     :insertRow( nRow, oQWidget )                        -> NIL
+ *     :insertRow( nRow, cLabelText, oQWidget )            -> NIL
+ *     :insertRow( nRow, cLabelText, oQLayout )            -> NIL
+ *     :insertRow( nRow, oQLayout )                        -> NIL
+ *     :itemAt( nRow, nRole )                              -> oQLayoutItem
+ *     :labelAlignment()                                   -> nQt_Alignment
+ *     :labelForField( oQWidget )                          -> oQWidget
+ *     :labelForField( oQLayout )                          -> oQWidget
  *     :rowCount()                                         -> nInt
  *     :rowWrapPolicy()                                    -> nRowWrapPolicy
  *     :setFieldGrowthPolicy( nPolicy )                    -> NIL
  *     :setFormAlignment( nAlignment )                     -> NIL
  *     :setHorizontalSpacing( nSpacing )                   -> NIL
- *     :setItem( nRow, nRole, pItem )                      -> NIL
+ *     :setItem( nRow, nRole, oQLayoutItem )               -> NIL
  *     :setLabelAlignment( nAlignment )                    -> NIL
- *     :setLayout( nRow, nRole, pLayout )                  -> NIL
+ *     :setLayout( nRow, nRole, oQLayout )                 -> NIL
  *     :setRowWrapPolicy( nPolicy )                        -> NIL
  *     :setSpacing( nSpacing )                             -> NIL
  *     :setVerticalSpacing( nSpacing )                     -> NIL
- *     :setWidget( nRow, nRole, pWidget )                  -> NIL
+ *     :setWidget( nRow, nRole, oQWidget )                 -> NIL
  *     :spacing()                                          -> nInt
  *     :verticalSpacing()                                  -> nInt
  * 
@@ -78,7 +78,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQFormLayout.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QFormLayout.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QLayout()
  *  $END$
  */

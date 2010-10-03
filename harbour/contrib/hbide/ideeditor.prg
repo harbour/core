@@ -388,7 +388,7 @@ METHOD IdeEditsManager:addSourceInTree( cSourceFile, cView )
    aadd( ::aProjData, { oItem, "Opened Source", oParent, ;
                                    cSourceFile, hbide_pathNormalized( cSourceFile ) } )
 
-   ::oEditTree:oWidget:sortItems( 0 )
+   ::oEditTree:oWidget:sortItems( 0, Qt_AscendingOrder )
 
    RETURN Self
 

@@ -26,16 +26,16 @@
  *  $RETURNS$
  *     An instance of the object of type QTextDocumentWriter
  *  $METHODS$
- *     :codec()                                            -> pQTextCodec
- *     :device()                                           -> pQIODevice
+ *     :codec()                                            -> oQTextCodec
+ *     :device()                                           -> oQIODevice
  *     :fileName()                                         -> cQString
- *     :format()                                           -> pQByteArray
- *     :setCodec( pCodec )                                 -> NIL
- *     :setDevice( pDevice )                               -> NIL
+ *     :format()                                           -> oQByteArray
+ *     :setCodec( oQTextCodec )                            -> NIL
+ *     :setDevice( oQIODevice )                            -> NIL
  *     :setFileName( cFileName )                           -> NIL
- *     :setFormat( pFormat )                               -> NIL
- *     :write( pDocument )                                 -> lBool
- *     :write_1( pFragment )                               -> lBool
+ *     :setFormat( oQByteArray )                           -> NIL
+ *     :write( oQTextDocument )                            -> lBool
+ *     :write( oQTextDocumentFragment )                    -> lBool
  * 
  *  $DESCRIPTION$
  * 
@@ -55,7 +55,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTextDocumentWriter.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextDocumentWriter.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

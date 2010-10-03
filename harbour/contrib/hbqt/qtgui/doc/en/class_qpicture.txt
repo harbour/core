@@ -26,16 +26,16 @@
  *  $RETURNS$
  *     An instance of the object of type QPicture
  *  $METHODS$
- *     :boundingRect()                                     -> pQRect
+ *     :boundingRect()                                     -> oQRect
  *     :data()                                             -> cChar
  *     :isNull()                                           -> lBool
- *     :load( cFileName, pFormat )                         -> lBool
- *     :load_1( pDev, pFormat )                            -> lBool
- *     :play( pPainter )                                   -> lBool
- *     :save( cFileName, pFormat )                         -> lBool
- *     :save_1( pDev, pFormat )                            -> lBool
- *     :setBoundingRect( pR )                              -> NIL
- *     :setData( pData, nSize )                            -> NIL
+ *     :load( cFileName, cFormat )                         -> lBool
+ *     :load( oQIODevice, cFormat )                        -> lBool
+ *     :play( oQPainter )                                  -> lBool
+ *     :save( cFileName, cFormat )                         -> lBool
+ *     :save( oQIODevice, cFormat )                        -> lBool
+ *     :setBoundingRect( oQRect )                          -> NIL
+ *     :setData( cData, nSize )                            -> NIL
  *     :size()                                             -> nUint
  * 
  *  $DESCRIPTION$
@@ -59,7 +59,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQPicture.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QPicture.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QPaintDevice()
  *  $END$
  */

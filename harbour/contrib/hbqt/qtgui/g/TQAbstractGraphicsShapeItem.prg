@@ -103,10 +103,10 @@ CREATE CLASS QAbstractGraphicsShapeItem INHERIT HbQtObjectHandler, HB_QGraphicsI
 
    METHOD  new( ... )
 
-   METHOD  brush()
-   METHOD  pen()
-   METHOD  setBrush( pBrush )
-   METHOD  setPen( pPen )
+   METHOD  brush                         // (  )                                               -> oQBrush
+   METHOD  pen                           // (  )                                               -> oQPen
+   METHOD  setBrush                      // ( oQBrush )                                        -> NIL
+   METHOD  setPen                        // ( oQPen )                                          -> NIL
 
    ENDCLASS
 
@@ -120,18 +120,42 @@ METHOD QAbstractGraphicsShapeItem:new( ... )
    RETURN Self
 
 
-METHOD QAbstractGraphicsShapeItem:brush()
-   RETURN HB_QBrush():from( Qt_QAbstractGraphicsShapeItem_brush( ::pPtr ) )
+METHOD QAbstractGraphicsShapeItem:brush( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QAbstractGraphicsShapeItem_brush( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractGraphicsShapeItem:pen()
-   RETURN HB_QPen():from( Qt_QAbstractGraphicsShapeItem_pen( ::pPtr ) )
+METHOD QAbstractGraphicsShapeItem:pen( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPen():from( Qt_QAbstractGraphicsShapeItem_pen( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractGraphicsShapeItem:setBrush( pBrush )
-   RETURN Qt_QAbstractGraphicsShapeItem_setBrush( ::pPtr, hbqt_ptr( pBrush ) )
+METHOD QAbstractGraphicsShapeItem:setBrush( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractGraphicsShapeItem_setBrush( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractGraphicsShapeItem:setPen( pPen )
-   RETURN Qt_QAbstractGraphicsShapeItem_setPen( ::pPtr, hbqt_ptr( pPen ) )
+METHOD QAbstractGraphicsShapeItem:setPen( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractGraphicsShapeItem_setPen( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

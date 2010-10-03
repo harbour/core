@@ -34,6 +34,7 @@
  *     :setStackSize( nStackSize )                         -> NIL
  *     :stackSize()                                        -> nUint
  *     :wait( nTime )                                      -> lBool
+ *     :currentThread()                                    -> oQThread
  *     :idealThreadCount()                                 -> nInt
  *     :yieldCurrentThread()                               -> NIL
  *     :quit()                                             -> NIL
@@ -58,7 +59,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQThread.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QThread.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

@@ -103,27 +103,27 @@ CREATE CLASS QPen INHERIT HbQtObjectHandler FUNCTION HB_QPen
 
    METHOD  new( ... )
 
-   METHOD  brush()
-   METHOD  capStyle()
-   METHOD  color()
-   METHOD  dashOffset()
-   METHOD  isCosmetic()
-   METHOD  isSolid()
-   METHOD  joinStyle()
-   METHOD  miterLimit()
-   METHOD  setBrush( pBrush )
-   METHOD  setCapStyle( nStyle )
-   METHOD  setColor( pColor )
-   METHOD  setCosmetic( lCosmetic )
-   METHOD  setDashOffset( nOffset )
-   METHOD  setJoinStyle( nStyle )
-   METHOD  setMiterLimit( nLimit )
-   METHOD  setStyle( nStyle )
-   METHOD  setWidth( nWidth )
-   METHOD  setWidthF( nWidth )
-   METHOD  style()
-   METHOD  width()
-   METHOD  widthF()
+   METHOD  brush                         // (  )                                               -> oQBrush
+   METHOD  capStyle                      // (  )                                               -> nQt_PenCapStyle
+   METHOD  color                         // (  )                                               -> oQColor
+   METHOD  dashOffset                    // (  )                                               -> nQreal
+   METHOD  isCosmetic                    // (  )                                               -> lBool
+   METHOD  isSolid                       // (  )                                               -> lBool
+   METHOD  joinStyle                     // (  )                                               -> nQt_PenJoinStyle
+   METHOD  miterLimit                    // (  )                                               -> nQreal
+   METHOD  setBrush                      // ( oQBrush )                                        -> NIL
+   METHOD  setCapStyle                   // ( nStyle )                                         -> NIL
+   METHOD  setColor                      // ( oQColor )                                        -> NIL
+   METHOD  setCosmetic                   // ( lCosmetic )                                      -> NIL
+   METHOD  setDashOffset                 // ( nOffset )                                        -> NIL
+   METHOD  setJoinStyle                  // ( nStyle )                                         -> NIL
+   METHOD  setMiterLimit                 // ( nLimit )                                         -> NIL
+   METHOD  setStyle                      // ( nStyle )                                         -> NIL
+   METHOD  setWidth                      // ( nWidth )                                         -> NIL
+   METHOD  setWidthF                     // ( nWidth )                                         -> NIL
+   METHOD  style                         // (  )                                               -> nQt_PenStyle
+   METHOD  width                         // (  )                                               -> nInt
+   METHOD  widthF                        // (  )                                               -> nQreal
 
    ENDCLASS
 
@@ -137,86 +137,210 @@ METHOD QPen:new( ... )
    RETURN Self
 
 
-METHOD QPen:brush()
-   RETURN HB_QBrush():from( Qt_QPen_brush( ::pPtr ) )
+METHOD QPen:brush( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QPen_brush( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPen:capStyle()
-   RETURN Qt_QPen_capStyle( ::pPtr )
+METHOD QPen:capStyle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPen_capStyle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPen:color()
-   RETURN HB_QColor():from( Qt_QPen_color( ::pPtr ) )
+METHOD QPen:color( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QColor():from( Qt_QPen_color( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPen:dashOffset()
-   RETURN Qt_QPen_dashOffset( ::pPtr )
+METHOD QPen:dashOffset( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPen_dashOffset( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPen:isCosmetic()
-   RETURN Qt_QPen_isCosmetic( ::pPtr )
+METHOD QPen:isCosmetic( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPen_isCosmetic( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPen:isSolid()
-   RETURN Qt_QPen_isSolid( ::pPtr )
+METHOD QPen:isSolid( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPen_isSolid( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPen:joinStyle()
-   RETURN Qt_QPen_joinStyle( ::pPtr )
+METHOD QPen:joinStyle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPen_joinStyle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPen:miterLimit()
-   RETURN Qt_QPen_miterLimit( ::pPtr )
+METHOD QPen:miterLimit( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPen_miterLimit( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPen:setBrush( pBrush )
-   RETURN Qt_QPen_setBrush( ::pPtr, hbqt_ptr( pBrush ) )
+METHOD QPen:setBrush( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPen_setBrush( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPen:setCapStyle( nStyle )
-   RETURN Qt_QPen_setCapStyle( ::pPtr, nStyle )
+METHOD QPen:setCapStyle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPen_setCapStyle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPen:setColor( pColor )
-   RETURN Qt_QPen_setColor( ::pPtr, hbqt_ptr( pColor ) )
+METHOD QPen:setColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPen_setColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPen:setCosmetic( lCosmetic )
-   RETURN Qt_QPen_setCosmetic( ::pPtr, lCosmetic )
+METHOD QPen:setCosmetic( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QPen_setCosmetic( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPen:setDashOffset( nOffset )
-   RETURN Qt_QPen_setDashOffset( ::pPtr, nOffset )
+METHOD QPen:setDashOffset( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPen_setDashOffset( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPen:setJoinStyle( nStyle )
-   RETURN Qt_QPen_setJoinStyle( ::pPtr, nStyle )
+METHOD QPen:setJoinStyle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPen_setJoinStyle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPen:setMiterLimit( nLimit )
-   RETURN Qt_QPen_setMiterLimit( ::pPtr, nLimit )
+METHOD QPen:setMiterLimit( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPen_setMiterLimit( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPen:setStyle( nStyle )
-   RETURN Qt_QPen_setStyle( ::pPtr, nStyle )
+METHOD QPen:setStyle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPen_setStyle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPen:setWidth( nWidth )
-   RETURN Qt_QPen_setWidth( ::pPtr, nWidth )
+METHOD QPen:setWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPen_setWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPen:setWidthF( nWidth )
-   RETURN Qt_QPen_setWidthF( ::pPtr, nWidth )
+METHOD QPen:setWidthF( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPen_setWidthF( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPen:style()
-   RETURN Qt_QPen_style( ::pPtr )
+METHOD QPen:style( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPen_style( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPen:width()
-   RETURN Qt_QPen_width( ::pPtr )
+METHOD QPen:width( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPen_width( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPen:widthF()
-   RETURN Qt_QPen_widthF( ::pPtr )
+METHOD QPen:widthF( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPen_widthF( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

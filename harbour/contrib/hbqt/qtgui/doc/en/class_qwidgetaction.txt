@@ -26,10 +26,10 @@
  *  $RETURNS$
  *     An instance of the object of type QWidgetAction
  *  $METHODS$
- *     :defaultWidget()                                    -> pQWidget
- *     :releaseWidget( pWidget )                           -> NIL
- *     :requestWidget( pParent )                           -> pQWidget
- *     :setDefaultWidget( pWidget )                        -> NIL
+ *     :defaultWidget()                                    -> oQWidget
+ *     :releaseWidget( oQWidget )                          -> NIL
+ *     :requestWidget( oQWidget )                          -> oQWidget
+ *     :setDefaultWidget( oQWidget )                       -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -49,7 +49,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQWidgetAction.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QWidgetAction.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAction()
  *  $END$
  */

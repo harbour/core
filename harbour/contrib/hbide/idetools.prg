@@ -267,7 +267,7 @@ METHOD IdeToolsManager:show()
       oTbl := ::oUI:q_tableButtons
       //
       oTbl:verticalHeader():hide()
-      oTbl:horizontalHeader():stretchLastSection( .t. )
+      oTbl:horizontalHeader():setStretchLastSection( .t. )
       oTbl:setAlternatingRowColors( .t. )
       oTbl:setColumnCount( len( hdr_ ) )
       oTbl:setShowGrid( .t. )

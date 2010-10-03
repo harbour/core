@@ -28,28 +28,28 @@
  *  $METHODS$
  *     :ascent()                                           -> nQreal
  *     :averageCharWidth()                                 -> nQreal
- *     :boundingRect( cText )                              -> pQRectF
- *     :boundingRect_1( pCh )                              -> pQRectF
- *     :boundingRect_2( pRect, nFlags, cText, nTabStops, @nTabArray )  -> pQRectF
+ *     :boundingRect( cText )                              -> oQRectF
+ *     :boundingRect( oQChar )                             -> oQRectF
+ *     :boundingRect( oQRectF, nFlags, cText, nTabStops, @nTabArray )  -> oQRectF
  *     :descent()                                          -> nQreal
  *     :elidedText( cText, nMode, nWidth, nFlags )         -> cQString
  *     :height()                                           -> nQreal
- *     :inFont( pCh )                                      -> lBool
+ *     :inFont( oQChar )                                   -> lBool
  *     :leading()                                          -> nQreal
- *     :leftBearing( pCh )                                 -> nQreal
+ *     :leftBearing( oQChar )                              -> nQreal
  *     :lineSpacing()                                      -> nQreal
  *     :lineWidth()                                        -> nQreal
  *     :maxWidth()                                         -> nQreal
  *     :minLeftBearing()                                   -> nQreal
  *     :minRightBearing()                                  -> nQreal
  *     :overlinePos()                                      -> nQreal
- *     :rightBearing( pCh )                                -> nQreal
- *     :size( nFlags, cText, nTabStops, @nTabArray )       -> pQSizeF
+ *     :rightBearing( oQChar )                             -> nQreal
+ *     :size( nFlags, cText, nTabStops, @nTabArray )       -> oQSizeF
  *     :strikeOutPos()                                     -> nQreal
- *     :tightBoundingRect( cText )                         -> pQRectF
+ *     :tightBoundingRect( cText )                         -> oQRectF
  *     :underlinePos()                                     -> nQreal
  *     :width( cText )                                     -> nQreal
- *     :width_1( pCh )                                     -> nQreal
+ *     :width( oQChar )                                    -> nQreal
  *     :xHeight()                                          -> nQreal
  * 
  *  $DESCRIPTION$
@@ -74,7 +74,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQFontMetricsF.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QFontMetricsF.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

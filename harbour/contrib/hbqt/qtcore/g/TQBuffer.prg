@@ -103,10 +103,11 @@ CREATE CLASS QBuffer INHERIT HbQtObjectHandler, HB_QIODevice FUNCTION HB_QBuffer
 
    METHOD  new( ... )
 
-   METHOD  buffer()
-   METHOD  data()
-   METHOD  setBuffer( pByteArray )
-   METHOD  setData( ... )
+   METHOD  buffer                        // (  )                                               -> oQByteArray
+   METHOD  data                          // (  )                                               -> oQByteArray
+   METHOD  setBuffer                     // ( oQByteArray )                                    -> NIL
+   METHOD  setData                       // ( cData, nSize )                                   -> NIL
+                                         // ( oQByteArray )                                    -> NIL
 
    ENDCLASS
 
@@ -120,23 +121,39 @@ METHOD QBuffer:new( ... )
    RETURN Self
 
 
-METHOD QBuffer:buffer()
-   RETURN HB_QByteArray():from( Qt_QBuffer_buffer( ::pPtr ) )
+METHOD QBuffer:buffer( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QByteArray():from( Qt_QBuffer_buffer( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBuffer:data()
-   RETURN HB_QByteArray():from( Qt_QBuffer_data( ::pPtr ) )
+METHOD QBuffer:data( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QByteArray():from( Qt_QBuffer_data( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBuffer:setBuffer( pByteArray )
-   RETURN Qt_QBuffer_setBuffer( ::pPtr, hbqt_ptr( pByteArray ) )
+METHOD QBuffer:setBuffer( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QBuffer_setBuffer( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QBuffer:setData( ... )
    SWITCH PCount()
    CASE 2
       DO CASE
-      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QBuffer_setData( ::pPtr, ... )
       ENDCASE
       EXIT

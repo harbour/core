@@ -26,8 +26,8 @@
  *  $RETURNS$
  *     An instance of the object of type QDesignerObjectInspectorInterface
  *  $METHODS$
- *     :core()                                             -> pQDesignerFormEditorInterface
- *     :setFormWindow( pFormWindow )                       -> NIL
+ *     :core()                                             -> oQDesignerFormEditorInterface
+ *     :setFormWindow( oQDesignerFormWindowInterface )     -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -47,7 +47,5 @@
  *     Harbour source: contrib/hbqt/qtdesigner/TQDesignerObjectInspectorInterface.prg
  *     C++ wrappers  : contrib/hbqt/qtdesigner/QDesignerObjectInspectorInterface.cpp
  *     Library       : hbqtdesigner
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

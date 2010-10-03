@@ -320,7 +320,7 @@ HB_FUNC( QT_QFONTDIALOG_GETFONT_1 )
 
    if( p )
    {
-      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->getFont( &iOk, *hbqt_par_QFont( 3 ), hbqt_par_QWidget( 4 ), hbqt_par_char( 5 ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->getFont( &iOk, *hbqt_par_QFont( 3 ), hbqt_par_QWidget( 4 ), ( const char * ) hb_parc( 5 ) ) ), true ) );
    }
 
    hb_stornl( iOk, 2 );

@@ -26,7 +26,7 @@
  *  $RETURNS$
  *     An instance of the object of type QCheckBox
  *  $METHODS$
- *     :checkState()                                       -> nQt::CheckState
+ *     :checkState()                                       -> nQt_CheckState
  *     :isTristate()                                       -> lBool
  *     :setCheckState( nState )                            -> NIL
  *     :setTristate( lY )                                  -> NIL
@@ -49,7 +49,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQCheckBox.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QCheckBox.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractButton()
  *  $END$
  */

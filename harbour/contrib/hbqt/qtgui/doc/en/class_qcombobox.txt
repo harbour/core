@@ -26,61 +26,62 @@
  *  $RETURNS$
  *     An instance of the object of type QComboBox
  *  $METHODS$
- *     :addItem( cText, pUserData )                        -> NIL
- *     :addItem_1( pIcon, cText, pUserData )               -> NIL
- *     :addItems( pTexts )                                 -> NIL
- *     :completer()                                        -> pQCompleter
+ *     :QComboBox( oQWidget )                              -> oQComboBox
+ *     :addItem( cText, oQVariant )                        -> NIL
+ *     :addItem( coQIcon, cText, oQVariant )               -> NIL
+ *     :addItems( oQStringList )                           -> NIL
+ *     :completer()                                        -> oQCompleter
  *     :count()                                            -> nInt
  *     :currentIndex()                                     -> nInt
  *     :currentText()                                      -> cQString
  *     :duplicatesEnabled()                                -> lBool
- *     :findData( pData, nRole, nFlags )                   -> nInt
+ *     :findData( oQVariant, nRole, nFlags )               -> nInt
  *     :findText( cText, nFlags )                          -> nInt
  *     :hasFrame()                                         -> lBool
  *     :hidePopup()                                        -> NIL
- *     :iconSize()                                         -> pQSize
- *     :insertItem( nIndex, cText, pUserData )             -> NIL
- *     :insertItem_1( nIndex, pIcon, cText, pUserData )    -> NIL
- *     :insertItems( nIndex, pList )                       -> NIL
+ *     :iconSize()                                         -> oQSize
+ *     :insertItem( nIndex, cText, oQVariant )             -> NIL
+ *     :insertItem( nIndex, coQIcon, cText, oQVariant )    -> NIL
+ *     :insertItems( nIndex, oQStringList )                -> NIL
  *     :insertPolicy()                                     -> nInsertPolicy
  *     :insertSeparator( nIndex )                          -> NIL
  *     :isEditable()                                       -> lBool
- *     :itemData( nIndex, nRole )                          -> pQVariant
- *     :itemDelegate()                                     -> pQAbstractItemDelegate
- *     :itemIcon( nIndex )                                 -> pQIcon
+ *     :itemData( nIndex, nRole )                          -> oQVariant
+ *     :itemDelegate()                                     -> oQAbstractItemDelegate
+ *     :itemIcon( nIndex )                                 -> oQIcon
  *     :itemText( nIndex )                                 -> cQString
- *     :lineEdit()                                         -> pQLineEdit
+ *     :lineEdit()                                         -> oQLineEdit
  *     :maxCount()                                         -> nInt
  *     :maxVisibleItems()                                  -> nInt
  *     :minimumContentsLength()                            -> nInt
- *     :model()                                            -> pQAbstractItemModel
+ *     :model()                                            -> oQAbstractItemModel
  *     :modelColumn()                                      -> nInt
  *     :removeItem( nIndex )                               -> NIL
- *     :rootModelIndex()                                   -> pQModelIndex
- *     :setCompleter( pCompleter )                         -> NIL
+ *     :rootModelIndex()                                   -> oQModelIndex
+ *     :setCompleter( oQCompleter )                        -> NIL
  *     :setDuplicatesEnabled( lEnable )                    -> NIL
  *     :setEditable( lEditable )                           -> NIL
  *     :setFrame( lBool )                                  -> NIL
- *     :setIconSize( pSize )                               -> NIL
+ *     :setIconSize( oQSize )                              -> NIL
  *     :setInsertPolicy( nPolicy )                         -> NIL
- *     :setItemData( nIndex, pValue, nRole )               -> NIL
- *     :setItemDelegate( pDelegate )                       -> NIL
- *     :setItemIcon( nIndex, pIcon )                       -> NIL
+ *     :setItemData( nIndex, oQVariant, nRole )            -> NIL
+ *     :setItemDelegate( oQAbstractItemDelegate )          -> NIL
+ *     :setItemIcon( nIndex, coQIcon )                     -> NIL
  *     :setItemText( nIndex, cText )                       -> NIL
- *     :setLineEdit( pEdit )                               -> NIL
+ *     :setLineEdit( oQLineEdit )                          -> NIL
  *     :setMaxCount( nMax )                                -> NIL
  *     :setMaxVisibleItems( nMaxItems )                    -> NIL
  *     :setMinimumContentsLength( nCharacters )            -> NIL
- *     :setModel( pModel )                                 -> NIL
+ *     :setModel( oQAbstractItemModel )                    -> NIL
  *     :setModelColumn( nVisibleColumn )                   -> NIL
- *     :setRootModelIndex( pIndex )                        -> NIL
+ *     :setRootModelIndex( oQModelIndex )                  -> NIL
  *     :setSizeAdjustPolicy( nPolicy )                     -> NIL
- *     :setValidator( pValidator )                         -> NIL
- *     :setView( pItemView )                               -> NIL
+ *     :setValidator( oQValidator )                        -> NIL
+ *     :setView( oQAbstractItemView )                      -> NIL
  *     :showPopup()                                        -> NIL
  *     :sizeAdjustPolicy()                                 -> nSizeAdjustPolicy
- *     :validator()                                        -> pQValidator
- *     :view()                                             -> pQAbstractItemView
+ *     :validator()                                        -> oQValidator
+ *     :view()                                             -> oQAbstractItemView
  *     :clear()                                            -> NIL
  *     :clearEditText()                                    -> NIL
  *     :setCurrentIndex( nIndex )                          -> NIL
@@ -104,7 +105,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQComboBox.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QComboBox.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

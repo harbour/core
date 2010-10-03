@@ -29,9 +29,9 @@
  *     :language()                                         -> cChar
  *     :lexer()                                            -> cChar
  *     :lexerId()                                          -> nInt
- *     :apis()                                             -> pQsciAbstractAPIs
+ *     :apis()                                             -> oQsciAbstractAPIs
  *     :autoCompletionFillups()                            -> cChar
- *     :autoCompletionWordSeparators()                     -> pQStringList
+ *     :autoCompletionWordSeparators()                     -> oQStringList
  *     :autoIndentStyle()                                  -> nInt
  *     :blockEnd( @nStyle )                                -> cChar
  *     :blockLookback()                                    -> nInt
@@ -39,37 +39,37 @@
  *     :blockStartKeyword( @nStyle )                       -> cChar
  *     :braceStyle()                                       -> nInt
  *     :caseSensitive()                                    -> lBool
- *     :color( nStyle )                                    -> pQColor
+ *     :color( nStyle )                                    -> oQColor
  *     :eolFill( nStyle )                                  -> lBool
- *     :font( nStyle )                                     -> pQFont
+ *     :font( nStyle )                                     -> oQFont
  *     :indentationGuideView()                             -> nInt
  *     :keywords( nSet )                                   -> cChar
  *     :defaultStyle()                                     -> nInt
  *     :description( nStyle )                              -> cQString
- *     :paper( nStyle )                                    -> pQColor
- *     :defaultColor()                                     -> pQColor
- *     :defaultColor_1( nStyle )                           -> pQColor
+ *     :paper( nStyle )                                    -> oQColor
+ *     :defaultColor()                                     -> oQColor
+ *     :defaultColor( nStyle )                             -> oQColor
  *     :defaultEolFill( nStyle )                           -> lBool
- *     :defaultFont()                                      -> pQFont
- *     :defaultFont_1( nStyle )                            -> pQFont
- *     :defaultPaper()                                     -> pQColor
- *     :defaultPaper_1( nStyle )                           -> pQColor
- *     :editor()                                           -> pQsciScintilla
- *     :setEditor( pEditor )                               -> NIL
- *     :readSettings( pQs, pPrefix )                       -> lBool
+ *     :defaultFont()                                      -> oQFont
+ *     :defaultFont( nStyle )                              -> oQFont
+ *     :defaultPaper()                                     -> oQColor
+ *     :defaultPaper( nStyle )                             -> oQColor
+ *     :editor()                                           -> oQsciScintilla
+ *     :setEditor( oQsciScintilla )                        -> NIL
+ *     :readSettings( oQSettings, cPrefix )                -> lBool
  *     :refreshProperties()                                -> NIL
  *     :styleBitsNeeded()                                  -> nInt
  *     :wordCharacters()                                   -> cChar
- *     :writeSettings( pQs, pPrefix )                      -> lBool
- *     :setAPIs( pApis )                                   -> NIL
- *     :setDefaultColor( pC )                              -> NIL
- *     :setDefaultFont( pF )                               -> NIL
- *     :setDefaultPaper( pC )                              -> NIL
+ *     :writeSettings( oQSettings, cPrefix )               -> lBool
+ *     :setAPIs( oQsciAbstractAPIs )                       -> NIL
+ *     :setDefaultColor( oQColor )                         -> NIL
+ *     :setDefaultFont( oQFont )                           -> NIL
+ *     :setDefaultPaper( oQColor )                         -> NIL
  *     :setAutoIndentStyle( nAutoindentstyle )             -> NIL
- *     :setColor( pC, nStyle )                             -> NIL
+ *     :setColor( oQColor, nStyle )                        -> NIL
  *     :setEolFill( lEoffill, nStyle )                     -> NIL
- *     :setFont( pF, nStyle )                              -> NIL
- *     :setPaper( pC, nStyle )                             -> NIL
+ *     :setFont( oQFont, nStyle )                          -> NIL
+ *     :setPaper( oQColor, nStyle )                        -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -89,7 +89,5 @@
  *     Harbour source: contrib/hbqt/qscintilla/TQsciLexer.prg
  *     C++ wrappers  : contrib/hbqt/qscintilla/QsciLexer.cpp
  *     Library       : hbqscintilla
- *  $SEEALSO$
- *     
  *  $END$
  */

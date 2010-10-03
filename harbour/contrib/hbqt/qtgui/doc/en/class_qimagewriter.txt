@@ -28,23 +28,23 @@
  *  $METHODS$
  *     :canWrite()                                         -> lBool
  *     :compression()                                      -> nInt
- *     :device()                                           -> pQIODevice
+ *     :device()                                           -> oQIODevice
  *     :error()                                            -> nImageWriterError
  *     :errorString()                                      -> cQString
  *     :fileName()                                         -> cQString
- *     :format()                                           -> pQByteArray
+ *     :format()                                           -> oQByteArray
  *     :gamma()                                            -> nFloat
  *     :quality()                                          -> nInt
  *     :setCompression( nCompression )                     -> NIL
- *     :setDevice( pDevice )                               -> NIL
+ *     :setDevice( oQIODevice )                            -> NIL
  *     :setFileName( cFileName )                           -> NIL
- *     :setFormat( pFormat )                               -> NIL
+ *     :setFormat( oQByteArray )                           -> NIL
  *     :setGamma( nGamma )                                 -> NIL
  *     :setQuality( nQuality )                             -> NIL
  *     :setText( cKey, cText )                             -> NIL
  *     :supportsOption( nOption )                          -> lBool
- *     :write( pImage )                                    -> lBool
- *     :supportedImageFormats()                            -> pQList<QByteArray>
+ *     :write( oQImage )                                   -> lBool
+ *     :supportedImageFormats()                            -> oQList_QByteArray>
  * 
  *  $DESCRIPTION$
  * 
@@ -64,7 +64,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQImageWriter.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QImageWriter.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

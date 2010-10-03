@@ -27,20 +27,20 @@
  *     An instance of the object of type QWebHistory
  *  $METHODS$
  *     :back()                                             -> NIL
- *     :backItem()                                         -> Item
- *     :backItems( nMaxItems )                             -> pQList<QWebHistoryItem>
+ *     :backItem()                                         -> oQWebHistoryItem
+ *     :backItems( nMaxItems )                             -> oQList_QWebHistoryItem>
  *     :canGoBack()                                        -> lBool
  *     :canGoForward()                                     -> lBool
  *     :clear()                                            -> NIL
  *     :count()                                            -> nInt
- *     :currentItem()                                      -> Item
+ *     :currentItem()                                      -> oQWebHistoryItem
  *     :currentItemIndex()                                 -> nInt
  *     :forward()                                          -> NIL
- *     :forwardItem()                                      -> Item
- *     :forwardItems( nMaxItems )                          -> pQList<QWebHistoryItem>
- *     :goToItem( pItem )                                  -> NIL
- *     :itemAt( nI )                                       -> Item
- *     :items()                                            -> pQList<QWebHistoryItem>
+ *     :forwardItem()                                      -> oQWebHistoryItem
+ *     :forwardItems( nMaxItems )                          -> oQList_QWebHistoryItem>
+ *     :goToItem( oQWebHistoryItem )                       -> NIL
+ *     :itemAt( nI )                                       -> oQWebHistoryItem
+ *     :items()                                            -> oQList_QWebHistoryItem>
  *     :maximumItemCount()                                 -> nInt
  *     :setMaximumItemCount( nCount )                      -> NIL
  * 
@@ -62,7 +62,5 @@
  *     Harbour source: contrib/hbqt/qtwebkit/TQWebHistory.prg
  *     C++ wrappers  : contrib/hbqt/qtwebkit/QWebHistory.cpp
  *     Library       : hbqtwebkit
- *  $SEEALSO$
- *     
  *  $END$
  */

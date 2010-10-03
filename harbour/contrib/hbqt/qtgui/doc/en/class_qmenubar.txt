@@ -26,19 +26,19 @@
  *  $RETURNS$
  *     An instance of the object of type QMenuBar
  *  $METHODS$
- *     :activeAction()                                     -> pQAction
- *     :addAction( cText )                                 -> pQAction
- *     :addAction_1( cText, pReceiver, pMember )           -> pQAction
- *     :addAction_2( pAction )                             -> NIL
- *     :addMenu( pMenu )                                   -> pQAction
- *     :addMenu_1( cTitle )                                -> pQMenu
- *     :addMenu_2( pIcon, cTitle )                         -> pQMenu
- *     :addSeparator()                                     -> pQAction
+ *     :activeAction()                                     -> oQAction
+ *     :addAction( cText )                                 -> oQAction
+ *     :addAction( cText, oQObject, cMember )              -> oQAction
+ *     :addAction( oQAction )                              -> NIL
+ *     :addMenu( oQMenu )                                  -> oQAction
+ *     :addMenu( cTitle )                                  -> oQMenu
+ *     :addMenu( coQIcon, cTitle )                         -> oQMenu
+ *     :addSeparator()                                     -> oQAction
  *     :clear()                                            -> NIL
- *     :insertMenu( pBefore, pMenu )                       -> pQAction
- *     :insertSeparator( pBefore )                         -> pQAction
+ *     :insertMenu( oQAction, oQMenu )                     -> oQAction
+ *     :insertSeparator( oQAction )                        -> oQAction
  *     :isDefaultUp()                                      -> lBool
- *     :setActiveAction( pAct )                            -> NIL
+ *     :setActiveAction( oQAction )                        -> NIL
  *     :setDefaultUp( lBool )                              -> NIL
  * 
  *  $DESCRIPTION$
@@ -59,7 +59,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQMenuBar.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QMenuBar.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

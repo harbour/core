@@ -27,7 +27,7 @@
  *     An instance of the object of type QErrorMessage
  *  $METHODS$
  *     :showMessage( cMessage )                            -> NIL
- *     :showMessage_1( cMessage, cType )                   -> NIL
+ *     :showMessage( cMessage, cType )                     -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -47,7 +47,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQErrorMessage.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QErrorMessage.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QDialog()
  *  $END$
  */

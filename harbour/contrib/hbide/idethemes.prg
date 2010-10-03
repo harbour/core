@@ -348,7 +348,7 @@ METHOD IdeThemes:buildSyntaxFormat( aAttr )
    ENDIF
    qFormat:setFontUnderline( aAttr[ THM_ATR_ULINE ] )
    //
-   qFormat:setForeground( QBrush( "QColor", QColor( aAttr[ THM_ATR_R ], aAttr[ THM_ATR_G ], aAttr[ THM_ATR_B ] ) ) )
+   qFormat:setForeground( QBrush( QColor( aAttr[ THM_ATR_R ], aAttr[ THM_ATR_G ], aAttr[ THM_ATR_B ] ) ) )
 
    RETURN qFormat
 
@@ -409,7 +409,7 @@ METHOD IdeThemes:setMultiLineCommentRule( qHiliter, cTheme )
 METHOD IdeThemes:setSyntaxRule( qHiliter, cName, cPattern, lCaseSensitive, aAttr )
    LOCAL qRegExp := QRegExp()
 
-   qRegExp:setCaseSensitivity( lCaseSensitive )
+   qRegExp:setCaseSensitivity( iif( lCaseSensitive, Qt_CaseSensitive, Qt_CaseInsensitive ) )
    qRegExp:setPattern( cPattern )
 
    qHiliter:hbSetRuleWithRegExp( cName, qRegExp, ::buildSyntaxFormat( aAttr ) )
@@ -498,9 +498,9 @@ METHOD IdeThemes:mergeUserDictionaries( qHiliter, cTheme )
             qFormat:setFontWeight( 1000 )
          ENDIF
          qFormat:setFontUnderline( aAttr[ THM_ATR_ULINE ] )
-         qFormat:setForeground( QBrush( "QColor", QColor( aAttr[ THM_ATR_R ], aAttr[ THM_ATR_G ], aAttr[ THM_ATR_B ] ) ) )
+         qFormat:setForeground( QBrush( QColor( aAttr[ THM_ATR_R ], aAttr[ THM_ATR_G ], aAttr[ THM_ATR_B ] ) ) )
          IF !empty( oDict:qBgColor )
-            qFormat:setBackground( QBrush( "QColor", oDict:qBgColor ) )
+            qFormat:setBackground( QBrush( oDict:qBgColor ) )
          ENDIF
 
          qHiliter:hbSetRuleWithRegExp( cName, qRegExp, qFormat )
@@ -995,7 +995,7 @@ STATIC FUNCTION hbide_setSyntaxAttrbs( qHiliter, cPattern, cName, nR, nG, nB, lI
    IF hb_isLogical( lUnderline )
       qFormat:setFontUnderline( lUnderline )
    ENDIF
-   qFormat:setForeGround( QBrush( "QColor", QColor( nR, nG, nB ) ) )
+   qFormat:setForeGround( QBrush( QColor( nR, nG, nB ) ) )
 
    qHiliter:hbSetRule( cName, cPattern, qFormat )
 

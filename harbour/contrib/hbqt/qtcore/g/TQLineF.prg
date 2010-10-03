@@ -103,31 +103,33 @@ CREATE CLASS QLineF INHERIT HbQtObjectHandler FUNCTION HB_QLineF
 
    METHOD  new( ... )
 
-   METHOD  p1()
-   METHOD  p2()
-   METHOD  x1()
-   METHOD  x2()
-   METHOD  y1()
-   METHOD  y2()
-   METHOD  angle()
-   METHOD  angleTo( pLine )
-   METHOD  dx()
-   METHOD  dy()
-   METHOD  intersect( pLine, pIntersectionPoint )
-   METHOD  isNull()
-   METHOD  length()
-   METHOD  normalVector()
-   METHOD  pointAt( nT )
-   METHOD  setP1( pP1 )
-   METHOD  setP2( pP2 )
-   METHOD  setAngle( nAngle )
-   METHOD  setLength( nLength )
-   METHOD  setLine( nX1, nY1, nX2, nY2 )
-   METHOD  setPoints( pP1, pP2 )
-   METHOD  toLine()
-   METHOD  translate( ... )
-   METHOD  translated( ... )
-   METHOD  unitVector()
+   METHOD  p1                            // (  )                                               -> oQPointF
+   METHOD  p2                            // (  )                                               -> oQPointF
+   METHOD  x1                            // (  )                                               -> nQreal
+   METHOD  x2                            // (  )                                               -> nQreal
+   METHOD  y1                            // (  )                                               -> nQreal
+   METHOD  y2                            // (  )                                               -> nQreal
+   METHOD  angle                         // (  )                                               -> nQreal
+   METHOD  angleTo                       // ( oQLineF )                                        -> nQreal
+   METHOD  dx                            // (  )                                               -> nQreal
+   METHOD  dy                            // (  )                                               -> nQreal
+   METHOD  intersect                     // ( oQLineF, oQPointF )                              -> nIntersectType
+   METHOD  isNull                        // (  )                                               -> lBool
+   METHOD  length                        // (  )                                               -> nQreal
+   METHOD  normalVector                  // (  )                                               -> oQLineF
+   METHOD  pointAt                       // ( nT )                                             -> oQPointF
+   METHOD  setP1                         // ( oQPointF )                                       -> NIL
+   METHOD  setP2                         // ( oQPointF )                                       -> NIL
+   METHOD  setAngle                      // ( nAngle )                                         -> NIL
+   METHOD  setLength                     // ( nLength )                                        -> NIL
+   METHOD  setLine                       // ( nX1, nY1, nX2, nY2 )                             -> NIL
+   METHOD  setPoints                     // ( oQPointF, oQPointF )                             -> NIL
+   METHOD  toLine                        // (  )                                               -> oQLine
+   METHOD  translate                     // ( oQPointF )                                       -> NIL
+                                         // ( nDx, nDy )                                       -> NIL
+   METHOD  translated                    // ( oQPointF )                                       -> oQLineF
+                                         // ( nDx, nDy )                                       -> oQLineF
+   METHOD  unitVector                    // (  )                                               -> oQLineF
 
    ENDCLASS
 
@@ -141,92 +143,216 @@ METHOD QLineF:new( ... )
    RETURN Self
 
 
-METHOD QLineF:p1()
-   RETURN HB_QPointF():from( Qt_QLineF_p1( ::pPtr ) )
+METHOD QLineF:p1( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPointF():from( Qt_QLineF_p1( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLineF:p2()
-   RETURN HB_QPointF():from( Qt_QLineF_p2( ::pPtr ) )
+METHOD QLineF:p2( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPointF():from( Qt_QLineF_p2( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLineF:x1()
-   RETURN Qt_QLineF_x1( ::pPtr )
+METHOD QLineF:x1( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineF_x1( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLineF:x2()
-   RETURN Qt_QLineF_x2( ::pPtr )
+METHOD QLineF:x2( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineF_x2( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLineF:y1()
-   RETURN Qt_QLineF_y1( ::pPtr )
+METHOD QLineF:y1( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineF_y1( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLineF:y2()
-   RETURN Qt_QLineF_y2( ::pPtr )
+METHOD QLineF:y2( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineF_y2( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLineF:angle()
-   RETURN Qt_QLineF_angle( ::pPtr )
+METHOD QLineF:angle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineF_angle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLineF:angleTo( pLine )
-   RETURN Qt_QLineF_angleTo( ::pPtr, hbqt_ptr( pLine ) )
+METHOD QLineF:angleTo( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QLineF_angleTo( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLineF:dx()
-   RETURN Qt_QLineF_dx( ::pPtr )
+METHOD QLineF:dx( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineF_dx( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLineF:dy()
-   RETURN Qt_QLineF_dy( ::pPtr )
+METHOD QLineF:dy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineF_dy( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLineF:intersect( pLine, pIntersectionPoint )
-   RETURN Qt_QLineF_intersect( ::pPtr, hbqt_ptr( pLine ), hbqt_ptr( pIntersectionPoint ) )
+METHOD QLineF:intersect( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QLineF_intersect( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLineF:isNull()
-   RETURN Qt_QLineF_isNull( ::pPtr )
+METHOD QLineF:isNull( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineF_isNull( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLineF:length()
-   RETURN Qt_QLineF_length( ::pPtr )
+METHOD QLineF:length( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLineF_length( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLineF:normalVector()
-   RETURN HB_QLineF():from( Qt_QLineF_normalVector( ::pPtr ) )
+METHOD QLineF:normalVector( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QLineF():from( Qt_QLineF_normalVector( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLineF:pointAt( nT )
-   RETURN HB_QPointF():from( Qt_QLineF_pointAt( ::pPtr, nT ) )
+METHOD QLineF:pointAt( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QPointF():from( Qt_QLineF_pointAt( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLineF:setP1( pP1 )
-   RETURN Qt_QLineF_setP1( ::pPtr, hbqt_ptr( pP1 ) )
+METHOD QLineF:setP1( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QLineF_setP1( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLineF:setP2( pP2 )
-   RETURN Qt_QLineF_setP2( ::pPtr, hbqt_ptr( pP2 ) )
+METHOD QLineF:setP2( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QLineF_setP2( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLineF:setAngle( nAngle )
-   RETURN Qt_QLineF_setAngle( ::pPtr, nAngle )
+METHOD QLineF:setAngle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLineF_setAngle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLineF:setLength( nLength )
-   RETURN Qt_QLineF_setLength( ::pPtr, nLength )
+METHOD QLineF:setLength( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLineF_setLength( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLineF:setLine( nX1, nY1, nX2, nY2 )
-   RETURN Qt_QLineF_setLine( ::pPtr, nX1, nY1, nX2, nY2 )
+METHOD QLineF:setLine( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QLineF_setLine( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLineF:setPoints( pP1, pP2 )
-   RETURN Qt_QLineF_setPoints( ::pPtr, hbqt_ptr( pP1 ), hbqt_ptr( pP2 ) )
+METHOD QLineF:setPoints( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QLineF_setPoints( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLineF:toLine()
-   RETURN HB_QLine():from( Qt_QLineF_toLine( ::pPtr ) )
+METHOD QLineF:toLine( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QLine():from( Qt_QLineF_toLine( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QLineF:translate( ... )
@@ -265,6 +391,10 @@ METHOD QLineF:translated( ... )
    RETURN hbqt_error()
 
 
-METHOD QLineF:unitVector()
-   RETURN HB_QLineF():from( Qt_QLineF_unitVector( ::pPtr ) )
+METHOD QLineF:unitVector( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QLineF():from( Qt_QLineF_unitVector( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

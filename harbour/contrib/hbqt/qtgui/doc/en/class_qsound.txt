@@ -52,7 +52,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQSound.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QSound.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

@@ -103,13 +103,13 @@ CREATE CLASS QAbstractItemDelegate INHERIT HbQtObjectHandler, HB_QObject FUNCTIO
 
    METHOD  new( ... )
 
-   METHOD  createEditor( pParent, pOption, pIndex )
-   METHOD  editorEvent( pEvent, pModel, pOption, pIndex )
-   METHOD  paint( pPainter, pOption, pIndex )
-   METHOD  setEditorData( pEditor, pIndex )
-   METHOD  setModelData( pEditor, pModel, pIndex )
-   METHOD  sizeHint( pOption, pIndex )
-   METHOD  updateEditorGeometry( pEditor, pOption, pIndex )
+   METHOD  createEditor                  // ( oQWidget, oQStyleOptionViewItem, oQModelIndex )  -> oQWidget
+   METHOD  editorEvent                   // ( oQEvent, oQAbstractItemModel, oQStyleOptionViewItem, oQModelIndex ) -> lBool
+   METHOD  paint                         // ( oQPainter, oQStyleOptionViewItem, oQModelIndex ) -> NIL
+   METHOD  setEditorData                 // ( oQWidget, oQModelIndex )                         -> NIL
+   METHOD  setModelData                  // ( oQWidget, oQAbstractItemModel, oQModelIndex )    -> NIL
+   METHOD  sizeHint                      // ( oQStyleOptionViewItem, oQModelIndex )            -> oQSize
+   METHOD  updateEditorGeometry          // ( oQWidget, oQStyleOptionViewItem, oQModelIndex )  -> NIL
 
    ENDCLASS
 
@@ -123,30 +123,86 @@ METHOD QAbstractItemDelegate:new( ... )
    RETURN Self
 
 
-METHOD QAbstractItemDelegate:createEditor( pParent, pOption, pIndex )
-   RETURN HB_QWidget():from( Qt_QAbstractItemDelegate_createEditor( ::pPtr, hbqt_ptr( pParent ), hbqt_ptr( pOption ), hbqt_ptr( pIndex ) ) )
+METHOD QAbstractItemDelegate:createEditor( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN HB_QWidget():from( Qt_QAbstractItemDelegate_createEditor( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemDelegate:editorEvent( pEvent, pModel, pOption, pIndex )
-   RETURN Qt_QAbstractItemDelegate_editorEvent( ::pPtr, hbqt_ptr( pEvent ), hbqt_ptr( pModel ), hbqt_ptr( pOption ), hbqt_ptr( pIndex ) )
+METHOD QAbstractItemDelegate:editorEvent( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
+         RETURN Qt_QAbstractItemDelegate_editorEvent( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemDelegate:paint( pPainter, pOption, pIndex )
-   RETURN Qt_QAbstractItemDelegate_paint( ::pPtr, hbqt_ptr( pPainter ), hbqt_ptr( pOption ), hbqt_ptr( pIndex ) )
+METHOD QAbstractItemDelegate:paint( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QAbstractItemDelegate_paint( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemDelegate:setEditorData( pEditor, pIndex )
-   RETURN Qt_QAbstractItemDelegate_setEditorData( ::pPtr, hbqt_ptr( pEditor ), hbqt_ptr( pIndex ) )
+METHOD QAbstractItemDelegate:setEditorData( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QAbstractItemDelegate_setEditorData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemDelegate:setModelData( pEditor, pModel, pIndex )
-   RETURN Qt_QAbstractItemDelegate_setModelData( ::pPtr, hbqt_ptr( pEditor ), hbqt_ptr( pModel ), hbqt_ptr( pIndex ) )
+METHOD QAbstractItemDelegate:setModelData( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QAbstractItemDelegate_setModelData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemDelegate:sizeHint( pOption, pIndex )
-   RETURN HB_QSize():from( Qt_QAbstractItemDelegate_sizeHint( ::pPtr, hbqt_ptr( pOption ), hbqt_ptr( pIndex ) ) )
+METHOD QAbstractItemDelegate:sizeHint( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QSize():from( Qt_QAbstractItemDelegate_sizeHint( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemDelegate:updateEditorGeometry( pEditor, pOption, pIndex )
-   RETURN Qt_QAbstractItemDelegate_updateEditorGeometry( ::pPtr, hbqt_ptr( pEditor ), hbqt_ptr( pOption ), hbqt_ptr( pIndex ) )
+METHOD QAbstractItemDelegate:updateEditorGeometry( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QAbstractItemDelegate_updateEditorGeometry( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

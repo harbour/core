@@ -103,11 +103,13 @@ CREATE CLASS QTextDocumentFragment INHERIT HbQtObjectHandler FUNCTION HB_QTextDo
 
    METHOD  new( ... )
 
-   METHOD  isEmpty()
-   METHOD  toHtml( ... )
-   METHOD  toPlainText()
-   METHOD  fromHtml( ... )
-   METHOD  fromPlainText( cPlainText )
+   METHOD  isEmpty                       // (  )                                               -> lBool
+   METHOD  toHtml                        // ( oQByteArray )                                    -> cQString
+                                         // (  )                                               -> cQString
+   METHOD  toPlainText                   // (  )                                               -> cQString
+   METHOD  fromHtml                      // ( cText )                                          -> oQTextDocumentFragment
+                                         // ( cText, oQTextDocument )                          -> oQTextDocumentFragment
+   METHOD  fromPlainText                 // ( cPlainText )                                     -> oQTextDocumentFragment
 
    ENDCLASS
 
@@ -121,8 +123,12 @@ METHOD QTextDocumentFragment:new( ... )
    RETURN Self
 
 
-METHOD QTextDocumentFragment:isEmpty()
-   RETURN Qt_QTextDocumentFragment_isEmpty( ::pPtr )
+METHOD QTextDocumentFragment:isEmpty( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextDocumentFragment_isEmpty( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTextDocumentFragment:toHtml( ... )
@@ -139,8 +145,12 @@ METHOD QTextDocumentFragment:toHtml( ... )
    RETURN hbqt_error()
 
 
-METHOD QTextDocumentFragment:toPlainText()
-   RETURN Qt_QTextDocumentFragment_toPlainText( ::pPtr )
+METHOD QTextDocumentFragment:toPlainText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextDocumentFragment_toPlainText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTextDocumentFragment:fromHtml( ... )
@@ -161,6 +171,14 @@ METHOD QTextDocumentFragment:fromHtml( ... )
    RETURN hbqt_error()
 
 
-METHOD QTextDocumentFragment:fromPlainText( cPlainText )
-   RETURN HB_QTextDocumentFragment():from( Qt_QTextDocumentFragment_fromPlainText( ::pPtr, cPlainText ) )
+METHOD QTextDocumentFragment:fromPlainText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QTextDocumentFragment():from( Qt_QTextDocumentFragment_fromPlainText( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

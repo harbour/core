@@ -103,13 +103,18 @@ CREATE CLASS QDesktopWidget INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QD
 
    METHOD  new( ... )
 
-   METHOD  availableGeometry( ... )
-   METHOD  isVirtualDesktop()
-   METHOD  numScreens()
-   METHOD  primaryScreen()
-   METHOD  screen( nScreen )
-   METHOD  screenGeometry( ... )
-   METHOD  screenNumber( ... )
+   METHOD  availableGeometry             // ( nScreen )                                        -> oQRect
+                                         // ( oQWidget )                                       -> oQRect
+                                         // ( oQPoint )                                        -> oQRect
+   METHOD  isVirtualDesktop              // (  )                                               -> lBool
+   METHOD  numScreens                    // (  )                                               -> nInt
+   METHOD  primaryScreen                 // (  )                                               -> nInt
+   METHOD  screen                        // ( nScreen )                                        -> oQWidget
+   METHOD  screenGeometry                // ( nScreen )                                        -> oQRect
+                                         // ( oQWidget )                                       -> oQRect
+                                         // ( oQPoint )                                        -> oQRect
+   METHOD  screenNumber                  // ( oQWidget )                                       -> nInt
+                                         // ( oQPoint )                                        -> nInt
 
    ENDCLASS
 
@@ -144,20 +149,42 @@ METHOD QDesktopWidget:availableGeometry( ... )
    RETURN hbqt_error()
 
 
-METHOD QDesktopWidget:isVirtualDesktop()
-   RETURN Qt_QDesktopWidget_isVirtualDesktop( ::pPtr )
+METHOD QDesktopWidget:isVirtualDesktop( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDesktopWidget_isVirtualDesktop( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesktopWidget:numScreens()
-   RETURN Qt_QDesktopWidget_numScreens( ::pPtr )
+METHOD QDesktopWidget:numScreens( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDesktopWidget_numScreens( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesktopWidget:primaryScreen()
-   RETURN Qt_QDesktopWidget_primaryScreen( ::pPtr )
+METHOD QDesktopWidget:primaryScreen( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDesktopWidget_primaryScreen( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDesktopWidget:screen( nScreen )
-   RETURN HB_QWidget():from( Qt_QDesktopWidget_screen( ::pPtr, nScreen ) )
+METHOD QDesktopWidget:screen( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QWidget():from( Qt_QDesktopWidget_screen( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QDesktopWidget_screen( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QDesktopWidget:screenGeometry( ... )

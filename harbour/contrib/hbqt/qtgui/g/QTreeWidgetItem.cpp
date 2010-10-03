@@ -208,11 +208,7 @@ HB_FUNC( QT_QTREEWIDGETITEM_ADDCHILD )
    QTreeWidgetItem * p = hbqt_par_QTreeWidgetItem( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 2 );
       ( p )->addChild( hbqt_par_QTreeWidgetItem( 2 ) );
    }
 }

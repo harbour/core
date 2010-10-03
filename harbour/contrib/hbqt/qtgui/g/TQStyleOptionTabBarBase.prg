@@ -103,9 +103,9 @@ CREATE CLASS QStyleOptionTabBarBase INHERIT HbQtObjectHandler, HB_QStyleOption F
 
    METHOD  new( ... )
 
-   METHOD  selectedTabRect()
-   METHOD  shape()
-   METHOD  tabBarRect()
+   METHOD  selectedTabRect               // (  )                                               -> oQRect
+   METHOD  shape                         // (  )                                               -> nQTabBar_Shape
+   METHOD  tabBarRect                    // (  )                                               -> oQRect
 
    ENDCLASS
 
@@ -119,14 +119,26 @@ METHOD QStyleOptionTabBarBase:new( ... )
    RETURN Self
 
 
-METHOD QStyleOptionTabBarBase:selectedTabRect()
-   RETURN HB_QRect():from( Qt_QStyleOptionTabBarBase_selectedTabRect( ::pPtr ) )
+METHOD QStyleOptionTabBarBase:selectedTabRect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QStyleOptionTabBarBase_selectedTabRect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionTabBarBase:shape()
-   RETURN Qt_QStyleOptionTabBarBase_shape( ::pPtr )
+METHOD QStyleOptionTabBarBase:shape( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionTabBarBase_shape( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionTabBarBase:tabBarRect()
-   RETURN HB_QRect():from( Qt_QStyleOptionTabBarBase_tabBarRect( ::pPtr ) )
+METHOD QStyleOptionTabBarBase:tabBarRect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QStyleOptionTabBarBase_tabBarRect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

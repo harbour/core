@@ -26,8 +26,8 @@
  *  $RETURNS$
  *     An instance of the object of type QItemEditorCreatorBase
  *  $METHODS$
- *     :createWidget( pParent )                            -> pQWidget
- *     :valuePropertyName()                                -> pQByteArray
+ *     :createWidget( oQWidget )                           -> oQWidget
+ *     :valuePropertyName()                                -> oQByteArray
  * 
  *  $DESCRIPTION$
  * 
@@ -47,7 +47,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQItemEditorCreatorBase.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QItemEditorCreatorBase.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

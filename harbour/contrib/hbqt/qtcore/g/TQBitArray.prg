@@ -103,19 +103,22 @@ CREATE CLASS QBitArray INHERIT HbQtObjectHandler FUNCTION HB_QBitArray
 
    METHOD  new( ... )
 
-   METHOD  at( nI )
-   METHOD  clear()
-   METHOD  clearBit( nI )
-   METHOD  count( ... )
-   METHOD  fill( ... )
-   METHOD  isEmpty()
-   METHOD  isNull()
-   METHOD  resize( nSize )
-   METHOD  setBit( ... )
-   METHOD  size()
-   METHOD  testBit( nI )
-   METHOD  toggleBit( nI )
-   METHOD  truncate( nPos )
+   METHOD  at                            // ( nI )                                             -> lBool
+   METHOD  clear                         // (  )                                               -> NIL
+   METHOD  clearBit                      // ( nI )                                             -> NIL
+   METHOD  count                         // (  )                                               -> nInt
+                                         // ( lOn )                                            -> nInt
+   METHOD  fill                          // ( lValue, nSize )                                  -> lBool
+                                         // ( lValue, nBegin, nEnd )                           -> NIL
+   METHOD  isEmpty                       // (  )                                               -> lBool
+   METHOD  isNull                        // (  )                                               -> lBool
+   METHOD  resize                        // ( nSize )                                          -> NIL
+   METHOD  setBit                        // ( nI )                                             -> NIL
+                                         // ( nI, lValue )                                     -> NIL
+   METHOD  size                          // (  )                                               -> nInt
+   METHOD  testBit                       // ( nI )                                             -> lBool
+   METHOD  toggleBit                     // ( nI )                                             -> lBool
+   METHOD  truncate                      // ( nPos )                                           -> NIL
 
    ENDCLASS
 
@@ -129,16 +132,36 @@ METHOD QBitArray:new( ... )
    RETURN Self
 
 
-METHOD QBitArray:at( nI )
-   RETURN Qt_QBitArray_at( ::pPtr, nI )
+METHOD QBitArray:at( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QBitArray_at( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBitArray:clear()
-   RETURN Qt_QBitArray_clear( ::pPtr )
+METHOD QBitArray:clear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QBitArray_clear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBitArray:clearBit( nI )
-   RETURN Qt_QBitArray_clearBit( ::pPtr, nI )
+METHOD QBitArray:clearBit( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QBitArray_clearBit( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QBitArray:count( ... )
@@ -179,16 +202,32 @@ METHOD QBitArray:fill( ... )
    RETURN hbqt_error()
 
 
-METHOD QBitArray:isEmpty()
-   RETURN Qt_QBitArray_isEmpty( ::pPtr )
+METHOD QBitArray:isEmpty( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QBitArray_isEmpty( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBitArray:isNull()
-   RETURN Qt_QBitArray_isNull( ::pPtr )
+METHOD QBitArray:isNull( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QBitArray_isNull( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBitArray:resize( nSize )
-   RETURN Qt_QBitArray_resize( ::pPtr, nSize )
+METHOD QBitArray:resize( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QBitArray_resize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QBitArray:setBit( ... )
@@ -209,18 +248,46 @@ METHOD QBitArray:setBit( ... )
    RETURN hbqt_error()
 
 
-METHOD QBitArray:size()
-   RETURN Qt_QBitArray_size( ::pPtr )
+METHOD QBitArray:size( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QBitArray_size( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBitArray:testBit( nI )
-   RETURN Qt_QBitArray_testBit( ::pPtr, nI )
+METHOD QBitArray:testBit( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QBitArray_testBit( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBitArray:toggleBit( nI )
-   RETURN Qt_QBitArray_toggleBit( ::pPtr, nI )
+METHOD QBitArray:toggleBit( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QBitArray_toggleBit( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBitArray:truncate( nPos )
-   RETURN Qt_QBitArray_truncate( ::pPtr, nPos )
+METHOD QBitArray:truncate( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QBitArray_truncate( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

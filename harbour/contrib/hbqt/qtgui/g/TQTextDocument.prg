@@ -103,68 +103,73 @@ CREATE CLASS QTextDocument INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QTe
 
    METHOD  new( ... )
 
-   METHOD  addResource( nType, pName, pResource )
-   METHOD  adjustSize()
-   METHOD  begin()
-   METHOD  blockCount()
-   METHOD  characterAt( nPos )
-   METHOD  characterCount()
-   METHOD  clear()
-   METHOD  clone( pParent )
-   METHOD  defaultFont()
-   METHOD  defaultStyleSheet()
-   METHOD  defaultTextOption()
-   METHOD  documentLayout()
-   METHOD  documentMargin()
-   METHOD  drawContents( pP, pRect )
-   METHOD  end()
-   METHOD  find( ... )
-   METHOD  findBlock( nPos )
-   METHOD  findBlockByLineNumber( nLineNumber )
-   METHOD  findBlockByNumber( nBlockNumber )
-   METHOD  firstBlock()
-   METHOD  idealWidth()
-   METHOD  indentWidth()
-   METHOD  isEmpty()
-   METHOD  isModified()
-   METHOD  isRedoAvailable()
-   METHOD  isUndoAvailable()
-   METHOD  isUndoRedoEnabled()
-   METHOD  lastBlock()
-   METHOD  lineCount()
-   METHOD  markContentsDirty( nPosition, nLength )
-   METHOD  maximumBlockCount()
-   METHOD  metaInformation( nInfo )
-   METHOD  object( nObjectIndex )
-   METHOD  objectForFormat( pF )
-   METHOD  pageCount()
-   METHOD  pageSize()
-   METHOD  print( pPrinter )
-   METHOD  redo( ... )
-   METHOD  resource( nType, pName )
-   METHOD  revision()
-   METHOD  rootFrame()
-   METHOD  setDefaultFont( pFont )
-   METHOD  setDefaultStyleSheet( cSheet )
-   METHOD  setDefaultTextOption( pOption )
-   METHOD  setDocumentLayout( pLayout )
-   METHOD  setDocumentMargin( nMargin )
-   METHOD  setHtml( cHtml )
-   METHOD  setIndentWidth( nWidth )
-   METHOD  setMaximumBlockCount( nMaximum )
-   METHOD  setMetaInformation( nInfo, cString )
-   METHOD  setPageSize( pSize )
-   METHOD  setPlainText( cText )
-   METHOD  setTextWidth( nWidth )
-   METHOD  setUndoRedoEnabled( lEnable )
-   METHOD  setUseDesignMetrics( lB )
-   METHOD  size()
-   METHOD  textWidth()
-   METHOD  toHtml( pEncoding )
-   METHOD  toPlainText()
-   METHOD  undo( ... )
-   METHOD  useDesignMetrics()
-   METHOD  setModified( lM )
+   METHOD  addResource                   // ( nType, oQUrl, oQVariant )                        -> NIL
+   METHOD  adjustSize                    // (  )                                               -> NIL
+   METHOD  begin                         // (  )                                               -> oQTextBlock
+   METHOD  blockCount                    // (  )                                               -> nInt
+   METHOD  characterAt                   // ( nPos )                                           -> oQChar
+   METHOD  characterCount                // (  )                                               -> nInt
+   METHOD  clear                         // (  )                                               -> NIL
+   METHOD  clone                         // ( oQObject )                                       -> oQTextDocument
+   METHOD  defaultFont                   // (  )                                               -> oQFont
+   METHOD  defaultStyleSheet             // (  )                                               -> cQString
+   METHOD  defaultTextOption             // (  )                                               -> oQTextOption
+   METHOD  documentLayout                // (  )                                               -> oQAbstractTextDocumentLayout
+   METHOD  documentMargin                // (  )                                               -> nQreal
+   METHOD  drawContents                  // ( oQPainter, oQRectF )                             -> NIL
+   METHOD  end                           // (  )                                               -> oQTextBlock
+   METHOD  find                          // ( cSubString, oQTextCursor, nOptions )             -> oQTextCursor
+                                         // ( oQRegExp, oQTextCursor, nOptions )               -> oQTextCursor
+                                         // ( cSubString, nPosition, nOptions )                -> oQTextCursor
+                                         // ( oQRegExp, nPosition, nOptions )                  -> oQTextCursor
+   METHOD  findBlock                     // ( nPos )                                           -> oQTextBlock
+   METHOD  findBlockByLineNumber         // ( nLineNumber )                                    -> oQTextBlock
+   METHOD  findBlockByNumber             // ( nBlockNumber )                                   -> oQTextBlock
+   METHOD  firstBlock                    // (  )                                               -> oQTextBlock
+   METHOD  idealWidth                    // (  )                                               -> nQreal
+   METHOD  indentWidth                   // (  )                                               -> nQreal
+   METHOD  isEmpty                       // (  )                                               -> lBool
+   METHOD  isModified                    // (  )                                               -> lBool
+   METHOD  isRedoAvailable               // (  )                                               -> lBool
+   METHOD  isUndoAvailable               // (  )                                               -> lBool
+   METHOD  isUndoRedoEnabled             // (  )                                               -> lBool
+   METHOD  lastBlock                     // (  )                                               -> oQTextBlock
+   METHOD  lineCount                     // (  )                                               -> nInt
+   METHOD  markContentsDirty             // ( nPosition, nLength )                             -> NIL
+   METHOD  maximumBlockCount             // (  )                                               -> nInt
+   METHOD  metaInformation               // ( nInfo )                                          -> cQString
+   METHOD  object                        // ( nObjectIndex )                                   -> oQTextObject
+   METHOD  objectForFormat               // ( oQTextFormat )                                   -> oQTextObject
+   METHOD  pageCount                     // (  )                                               -> nInt
+   METHOD  pageSize                      // (  )                                               -> oQSizeF
+   METHOD  print                         // ( oQPrinter )                                      -> NIL
+   METHOD  redo                          // ( oQTextCursor )                                   -> NIL
+   METHOD  resource                      // ( nType, oQUrl )                                   -> oQVariant
+   METHOD  revision                      // (  )                                               -> nInt
+   METHOD  rootFrame                     // (  )                                               -> oQTextFrame
+   METHOD  setDefaultFont                // ( oQFont )                                         -> NIL
+   METHOD  setDefaultStyleSheet          // ( cSheet )                                         -> NIL
+   METHOD  setDefaultTextOption          // ( oQTextOption )                                   -> NIL
+   METHOD  setDocumentLayout             // ( oQAbstractTextDocumentLayout )                   -> NIL
+   METHOD  setDocumentMargin             // ( nMargin )                                        -> NIL
+   METHOD  setHtml                       // ( cHtml )                                          -> NIL
+   METHOD  setIndentWidth                // ( nWidth )                                         -> NIL
+   METHOD  setMaximumBlockCount          // ( nMaximum )                                       -> NIL
+   METHOD  setMetaInformation            // ( nInfo, cString )                                 -> NIL
+   METHOD  setPageSize                   // ( oQSizeF )                                        -> NIL
+   METHOD  setPlainText                  // ( cText )                                          -> NIL
+   METHOD  setTextWidth                  // ( nWidth )                                         -> NIL
+   METHOD  setUndoRedoEnabled            // ( lEnable )                                        -> NIL
+   METHOD  setUseDesignMetrics           // ( lB )                                             -> NIL
+   METHOD  size                          // (  )                                               -> oQSizeF
+   METHOD  textWidth                     // (  )                                               -> nQreal
+   METHOD  toHtml                        // ( oQByteArray )                                    -> cQString
+   METHOD  toPlainText                   // (  )                                               -> cQString
+   METHOD  undo                          // ( oQTextCursor )                                   -> NIL
+   METHOD  useDesignMetrics              // (  )                                               -> lBool
+                                         // (  )                                               -> NIL
+   METHOD  setModified                   // ( lM )                                             -> NIL
+                                         // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -178,64 +183,148 @@ METHOD QTextDocument:new( ... )
    RETURN Self
 
 
-METHOD QTextDocument:addResource( nType, pName, pResource )
-   RETURN Qt_QTextDocument_addResource( ::pPtr, nType, hbqt_ptr( pName ), hbqt_ptr( pResource ) )
+METHOD QTextDocument:addResource( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QTextDocument_addResource( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:adjustSize()
-   RETURN Qt_QTextDocument_adjustSize( ::pPtr )
+METHOD QTextDocument:adjustSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextDocument_adjustSize( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:begin()
-   RETURN HB_QTextBlock():from( Qt_QTextDocument_begin( ::pPtr ) )
+METHOD QTextDocument:begin( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextBlock():from( Qt_QTextDocument_begin( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:blockCount()
-   RETURN Qt_QTextDocument_blockCount( ::pPtr )
+METHOD QTextDocument:blockCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextDocument_blockCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:characterAt( nPos )
-   RETURN HB_QChar():from( Qt_QTextDocument_characterAt( ::pPtr, nPos ) )
+METHOD QTextDocument:characterAt( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QChar():from( Qt_QTextDocument_characterAt( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:characterCount()
-   RETURN Qt_QTextDocument_characterCount( ::pPtr )
+METHOD QTextDocument:characterCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextDocument_characterCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:clear()
-   RETURN Qt_QTextDocument_clear( ::pPtr )
+METHOD QTextDocument:clear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextDocument_clear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:clone( pParent )
-   RETURN HB_QTextDocument():from( Qt_QTextDocument_clone( ::pPtr, hbqt_ptr( pParent ) ) )
+METHOD QTextDocument:clone( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QTextDocument():from( Qt_QTextDocument_clone( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QTextDocument():from( Qt_QTextDocument_clone( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:defaultFont()
-   RETURN HB_QFont():from( Qt_QTextDocument_defaultFont( ::pPtr ) )
+METHOD QTextDocument:defaultFont( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFont():from( Qt_QTextDocument_defaultFont( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:defaultStyleSheet()
-   RETURN Qt_QTextDocument_defaultStyleSheet( ::pPtr )
+METHOD QTextDocument:defaultStyleSheet( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextDocument_defaultStyleSheet( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:defaultTextOption()
-   RETURN HB_QTextOption():from( Qt_QTextDocument_defaultTextOption( ::pPtr ) )
+METHOD QTextDocument:defaultTextOption( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextOption():from( Qt_QTextDocument_defaultTextOption( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:documentLayout()
-   RETURN HB_QAbstractTextDocumentLayout():from( Qt_QTextDocument_documentLayout( ::pPtr ) )
+METHOD QTextDocument:documentLayout( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QAbstractTextDocumentLayout():from( Qt_QTextDocument_documentLayout( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:documentMargin()
-   RETURN Qt_QTextDocument_documentMargin( ::pPtr )
+METHOD QTextDocument:documentMargin( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextDocument_documentMargin( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:drawContents( pP, pRect )
-   RETURN Qt_QTextDocument_drawContents( ::pPtr, hbqt_ptr( pP ), hbqt_ptr( pRect ) )
+METHOD QTextDocument:drawContents( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QTextDocument_drawContents( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextDocument_drawContents( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:end()
-   RETURN HB_QTextBlock():from( Qt_QTextDocument_end( ::pPtr ) )
+METHOD QTextDocument:end( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextBlock():from( Qt_QTextDocument_end( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTextDocument:find( ... )
@@ -254,8 +343,12 @@ METHOD QTextDocument:find( ... )
       EXIT
    CASE 2
       DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QTextCursor():from( Qt_QTextDocument_find_2( ::pPtr, ... ) )
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
          RETURN HB_QTextCursor():from( Qt_QTextDocument_find( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QTextCursor():from( Qt_QTextDocument_find_3( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
          RETURN HB_QTextCursor():from( Qt_QTextDocument_find_1( ::pPtr, ... ) )
       ENDCASE
@@ -272,88 +365,204 @@ METHOD QTextDocument:find( ... )
    RETURN hbqt_error()
 
 
-METHOD QTextDocument:findBlock( nPos )
-   RETURN HB_QTextBlock():from( Qt_QTextDocument_findBlock( ::pPtr, nPos ) )
+METHOD QTextDocument:findBlock( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QTextBlock():from( Qt_QTextDocument_findBlock( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:findBlockByLineNumber( nLineNumber )
-   RETURN HB_QTextBlock():from( Qt_QTextDocument_findBlockByLineNumber( ::pPtr, nLineNumber ) )
+METHOD QTextDocument:findBlockByLineNumber( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QTextBlock():from( Qt_QTextDocument_findBlockByLineNumber( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:findBlockByNumber( nBlockNumber )
-   RETURN HB_QTextBlock():from( Qt_QTextDocument_findBlockByNumber( ::pPtr, nBlockNumber ) )
+METHOD QTextDocument:findBlockByNumber( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QTextBlock():from( Qt_QTextDocument_findBlockByNumber( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:firstBlock()
-   RETURN HB_QTextBlock():from( Qt_QTextDocument_firstBlock( ::pPtr ) )
+METHOD QTextDocument:firstBlock( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextBlock():from( Qt_QTextDocument_firstBlock( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:idealWidth()
-   RETURN Qt_QTextDocument_idealWidth( ::pPtr )
+METHOD QTextDocument:idealWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextDocument_idealWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:indentWidth()
-   RETURN Qt_QTextDocument_indentWidth( ::pPtr )
+METHOD QTextDocument:indentWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextDocument_indentWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:isEmpty()
-   RETURN Qt_QTextDocument_isEmpty( ::pPtr )
+METHOD QTextDocument:isEmpty( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextDocument_isEmpty( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:isModified()
-   RETURN Qt_QTextDocument_isModified( ::pPtr )
+METHOD QTextDocument:isModified( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextDocument_isModified( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:isRedoAvailable()
-   RETURN Qt_QTextDocument_isRedoAvailable( ::pPtr )
+METHOD QTextDocument:isRedoAvailable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextDocument_isRedoAvailable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:isUndoAvailable()
-   RETURN Qt_QTextDocument_isUndoAvailable( ::pPtr )
+METHOD QTextDocument:isUndoAvailable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextDocument_isUndoAvailable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:isUndoRedoEnabled()
-   RETURN Qt_QTextDocument_isUndoRedoEnabled( ::pPtr )
+METHOD QTextDocument:isUndoRedoEnabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextDocument_isUndoRedoEnabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:lastBlock()
-   RETURN HB_QTextBlock():from( Qt_QTextDocument_lastBlock( ::pPtr ) )
+METHOD QTextDocument:lastBlock( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextBlock():from( Qt_QTextDocument_lastBlock( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:lineCount()
-   RETURN Qt_QTextDocument_lineCount( ::pPtr )
+METHOD QTextDocument:lineCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextDocument_lineCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:markContentsDirty( nPosition, nLength )
-   RETURN Qt_QTextDocument_markContentsDirty( ::pPtr, nPosition, nLength )
+METHOD QTextDocument:markContentsDirty( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QTextDocument_markContentsDirty( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:maximumBlockCount()
-   RETURN Qt_QTextDocument_maximumBlockCount( ::pPtr )
+METHOD QTextDocument:maximumBlockCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextDocument_maximumBlockCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:metaInformation( nInfo )
-   RETURN Qt_QTextDocument_metaInformation( ::pPtr, nInfo )
+METHOD QTextDocument:metaInformation( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextDocument_metaInformation( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:object( nObjectIndex )
-   RETURN HB_QTextObject():from( Qt_QTextDocument_object( ::pPtr, nObjectIndex ) )
+METHOD QTextDocument:object( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QTextObject():from( Qt_QTextDocument_object( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:objectForFormat( pF )
-   RETURN HB_QTextObject():from( Qt_QTextDocument_objectForFormat( ::pPtr, hbqt_ptr( pF ) ) )
+METHOD QTextDocument:objectForFormat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QTextObject():from( Qt_QTextDocument_objectForFormat( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:pageCount()
-   RETURN Qt_QTextDocument_pageCount( ::pPtr )
+METHOD QTextDocument:pageCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextDocument_pageCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:pageSize()
-   RETURN HB_QSizeF():from( Qt_QTextDocument_pageSize( ::pPtr ) )
+METHOD QTextDocument:pageSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSizeF():from( Qt_QTextDocument_pageSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:print( pPrinter )
-   RETURN Qt_QTextDocument_print( ::pPtr, hbqt_ptr( pPrinter ) )
+METHOD QTextDocument:print( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextDocument_print( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTextDocument:redo( ... )
@@ -370,88 +579,238 @@ METHOD QTextDocument:redo( ... )
    RETURN hbqt_error()
 
 
-METHOD QTextDocument:resource( nType, pName )
-   RETURN HB_QVariant():from( Qt_QTextDocument_resource( ::pPtr, nType, hbqt_ptr( pName ) ) )
+METHOD QTextDocument:resource( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QVariant():from( Qt_QTextDocument_resource( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:revision()
-   RETURN Qt_QTextDocument_revision( ::pPtr )
+METHOD QTextDocument:revision( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextDocument_revision( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:rootFrame()
-   RETURN HB_QTextFrame():from( Qt_QTextDocument_rootFrame( ::pPtr ) )
+METHOD QTextDocument:rootFrame( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextFrame():from( Qt_QTextDocument_rootFrame( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:setDefaultFont( pFont )
-   RETURN Qt_QTextDocument_setDefaultFont( ::pPtr, hbqt_ptr( pFont ) )
+METHOD QTextDocument:setDefaultFont( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextDocument_setDefaultFont( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:setDefaultStyleSheet( cSheet )
-   RETURN Qt_QTextDocument_setDefaultStyleSheet( ::pPtr, cSheet )
+METHOD QTextDocument:setDefaultStyleSheet( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QTextDocument_setDefaultStyleSheet( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:setDefaultTextOption( pOption )
-   RETURN Qt_QTextDocument_setDefaultTextOption( ::pPtr, hbqt_ptr( pOption ) )
+METHOD QTextDocument:setDefaultTextOption( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextDocument_setDefaultTextOption( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:setDocumentLayout( pLayout )
-   RETURN Qt_QTextDocument_setDocumentLayout( ::pPtr, hbqt_ptr( pLayout ) )
+METHOD QTextDocument:setDocumentLayout( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextDocument_setDocumentLayout( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:setDocumentMargin( nMargin )
-   RETURN Qt_QTextDocument_setDocumentMargin( ::pPtr, nMargin )
+METHOD QTextDocument:setDocumentMargin( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextDocument_setDocumentMargin( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:setHtml( cHtml )
-   RETURN Qt_QTextDocument_setHtml( ::pPtr, cHtml )
+METHOD QTextDocument:setHtml( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QTextDocument_setHtml( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:setIndentWidth( nWidth )
-   RETURN Qt_QTextDocument_setIndentWidth( ::pPtr, nWidth )
+METHOD QTextDocument:setIndentWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextDocument_setIndentWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:setMaximumBlockCount( nMaximum )
-   RETURN Qt_QTextDocument_setMaximumBlockCount( ::pPtr, nMaximum )
+METHOD QTextDocument:setMaximumBlockCount( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextDocument_setMaximumBlockCount( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:setMetaInformation( nInfo, cString )
-   RETURN Qt_QTextDocument_setMetaInformation( ::pPtr, nInfo, cString )
+METHOD QTextDocument:setMetaInformation( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QTextDocument_setMetaInformation( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:setPageSize( pSize )
-   RETURN Qt_QTextDocument_setPageSize( ::pPtr, hbqt_ptr( pSize ) )
+METHOD QTextDocument:setPageSize( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextDocument_setPageSize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:setPlainText( cText )
-   RETURN Qt_QTextDocument_setPlainText( ::pPtr, cText )
+METHOD QTextDocument:setPlainText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QTextDocument_setPlainText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:setTextWidth( nWidth )
-   RETURN Qt_QTextDocument_setTextWidth( ::pPtr, nWidth )
+METHOD QTextDocument:setTextWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextDocument_setTextWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:setUndoRedoEnabled( lEnable )
-   RETURN Qt_QTextDocument_setUndoRedoEnabled( ::pPtr, lEnable )
+METHOD QTextDocument:setUndoRedoEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTextDocument_setUndoRedoEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:setUseDesignMetrics( lB )
-   RETURN Qt_QTextDocument_setUseDesignMetrics( ::pPtr, lB )
+METHOD QTextDocument:setUseDesignMetrics( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTextDocument_setUseDesignMetrics( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:size()
-   RETURN HB_QSizeF():from( Qt_QTextDocument_size( ::pPtr ) )
+METHOD QTextDocument:size( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSizeF():from( Qt_QTextDocument_size( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:textWidth()
-   RETURN Qt_QTextDocument_textWidth( ::pPtr )
+METHOD QTextDocument:textWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextDocument_textWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:toHtml( pEncoding )
-   RETURN Qt_QTextDocument_toHtml( ::pPtr, hbqt_ptr( pEncoding ) )
+METHOD QTextDocument:toHtml( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextDocument_toHtml( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QTextDocument_toHtml( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:toPlainText()
-   RETURN Qt_QTextDocument_toPlainText( ::pPtr )
+METHOD QTextDocument:toPlainText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextDocument_toPlainText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTextDocument:undo( ... )
@@ -468,10 +827,24 @@ METHOD QTextDocument:undo( ... )
    RETURN hbqt_error()
 
 
-METHOD QTextDocument:useDesignMetrics()
-   RETURN Qt_QTextDocument_useDesignMetrics( ::pPtr )
+METHOD QTextDocument:useDesignMetrics( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextDocument_useDesignMetrics( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextDocument:setModified( lM )
-   RETURN Qt_QTextDocument_setModified( ::pPtr, lM )
+METHOD QTextDocument:setModified( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTextDocument_setModified( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QTextDocument_setModified( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

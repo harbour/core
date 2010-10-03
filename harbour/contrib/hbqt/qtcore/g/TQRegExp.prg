@@ -103,25 +103,25 @@ CREATE CLASS QRegExp INHERIT HbQtObjectHandler FUNCTION HB_QRegExp
 
    METHOD  new( ... )
 
-   METHOD  cap( nNth )
-   METHOD  capturedTexts()
-   METHOD  caseSensitivity()
-   METHOD  errorString()
-   METHOD  exactMatch( cStr )
-   METHOD  indexIn( cStr, nOffset, nCaretMode )
-   METHOD  isEmpty()
-   METHOD  isMinimal()
-   METHOD  isValid()
-   METHOD  lastIndexIn( cStr, nOffset, nCaretMode )
-   METHOD  matchedLength()
-   METHOD  numCaptures()
-   METHOD  pattern()
-   METHOD  patternSyntax()
-   METHOD  pos( nNth )
-   METHOD  setCaseSensitivity( nCs )
-   METHOD  setMinimal( lMinimal )
-   METHOD  setPattern( cPattern )
-   METHOD  setPatternSyntax( nSyntax )
+   METHOD  cap                           // ( nNth )                                           -> cQString
+   METHOD  capturedTexts                 // (  )                                               -> oQStringList
+   METHOD  caseSensitivity               // (  )                                               -> nQt_CaseSensitivity
+   METHOD  errorString                   // (  )                                               -> cQString
+   METHOD  exactMatch                    // ( cStr )                                           -> lBool
+   METHOD  indexIn                       // ( cStr, nOffset, nCaretMode )                      -> nInt
+   METHOD  isEmpty                       // (  )                                               -> lBool
+   METHOD  isMinimal                     // (  )                                               -> lBool
+   METHOD  isValid                       // (  )                                               -> lBool
+   METHOD  lastIndexIn                   // ( cStr, nOffset, nCaretMode )                      -> nInt
+   METHOD  matchedLength                 // (  )                                               -> nInt
+   METHOD  numCaptures                   // (  )                                               -> nInt
+   METHOD  pattern                       // (  )                                               -> cQString
+   METHOD  patternSyntax                 // (  )                                               -> nPatternSyntax
+   METHOD  pos                           // ( nNth )                                           -> nInt
+   METHOD  setCaseSensitivity            // ( nCs )                                            -> NIL
+   METHOD  setMinimal                    // ( lMinimal )                                       -> NIL
+   METHOD  setPattern                    // ( cPattern )                                       -> NIL
+   METHOD  setPatternSyntax              // ( nSyntax )                                        -> NIL
 
    ENDCLASS
 
@@ -135,78 +135,218 @@ METHOD QRegExp:new( ... )
    RETURN Self
 
 
-METHOD QRegExp:cap( nNth )
-   RETURN Qt_QRegExp_cap( ::pPtr, nNth )
+METHOD QRegExp:cap( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QRegExp_cap( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QRegExp_cap( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRegExp:capturedTexts()
-   RETURN HB_QStringList():from( Qt_QRegExp_capturedTexts( ::pPtr ) )
+METHOD QRegExp:capturedTexts( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QRegExp_capturedTexts( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRegExp:caseSensitivity()
-   RETURN Qt_QRegExp_caseSensitivity( ::pPtr )
+METHOD QRegExp:caseSensitivity( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QRegExp_caseSensitivity( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRegExp:errorString()
-   RETURN Qt_QRegExp_errorString( ::pPtr )
+METHOD QRegExp:errorString( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QRegExp_errorString( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRegExp:exactMatch( cStr )
-   RETURN Qt_QRegExp_exactMatch( ::pPtr, cStr )
+METHOD QRegExp:exactMatch( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QRegExp_exactMatch( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRegExp:indexIn( cStr, nOffset, nCaretMode )
-   RETURN Qt_QRegExp_indexIn( ::pPtr, cStr, nOffset, nCaretMode )
+METHOD QRegExp:indexIn( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QRegExp_indexIn( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QRegExp_indexIn( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QRegExp_indexIn( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRegExp:isEmpty()
-   RETURN Qt_QRegExp_isEmpty( ::pPtr )
+METHOD QRegExp:isEmpty( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QRegExp_isEmpty( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRegExp:isMinimal()
-   RETURN Qt_QRegExp_isMinimal( ::pPtr )
+METHOD QRegExp:isMinimal( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QRegExp_isMinimal( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRegExp:isValid()
-   RETURN Qt_QRegExp_isValid( ::pPtr )
+METHOD QRegExp:isValid( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QRegExp_isValid( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRegExp:lastIndexIn( cStr, nOffset, nCaretMode )
-   RETURN Qt_QRegExp_lastIndexIn( ::pPtr, cStr, nOffset, nCaretMode )
+METHOD QRegExp:lastIndexIn( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QRegExp_lastIndexIn( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QRegExp_lastIndexIn( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QRegExp_lastIndexIn( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRegExp:matchedLength()
-   RETURN Qt_QRegExp_matchedLength( ::pPtr )
+METHOD QRegExp:matchedLength( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QRegExp_matchedLength( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRegExp:numCaptures()
-   RETURN Qt_QRegExp_numCaptures( ::pPtr )
+METHOD QRegExp:numCaptures( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QRegExp_numCaptures( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRegExp:pattern()
-   RETURN Qt_QRegExp_pattern( ::pPtr )
+METHOD QRegExp:pattern( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QRegExp_pattern( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRegExp:patternSyntax()
-   RETURN Qt_QRegExp_patternSyntax( ::pPtr )
+METHOD QRegExp:patternSyntax( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QRegExp_patternSyntax( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRegExp:pos( nNth )
-   RETURN Qt_QRegExp_pos( ::pPtr, nNth )
+METHOD QRegExp:pos( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QRegExp_pos( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QRegExp_pos( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRegExp:setCaseSensitivity( nCs )
-   RETURN Qt_QRegExp_setCaseSensitivity( ::pPtr, nCs )
+METHOD QRegExp:setCaseSensitivity( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QRegExp_setCaseSensitivity( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRegExp:setMinimal( lMinimal )
-   RETURN Qt_QRegExp_setMinimal( ::pPtr, lMinimal )
+METHOD QRegExp:setMinimal( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QRegExp_setMinimal( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRegExp:setPattern( cPattern )
-   RETURN Qt_QRegExp_setPattern( ::pPtr, cPattern )
+METHOD QRegExp:setPattern( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QRegExp_setPattern( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRegExp:setPatternSyntax( nSyntax )
-   RETURN Qt_QRegExp_setPatternSyntax( ::pPtr, nSyntax )
+METHOD QRegExp:setPatternSyntax( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QRegExp_setPatternSyntax( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

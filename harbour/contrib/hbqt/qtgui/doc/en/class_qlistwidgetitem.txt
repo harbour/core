@@ -26,40 +26,41 @@
  *  $RETURNS$
  *     An instance of the object of type QListWidgetItem
  *  $METHODS$
- *     :background()                                       -> pQBrush
- *     :checkState()                                       -> nQt::CheckState
- *     :data( nRole )                                      -> pQVariant
- *     :flags()                                            -> nQt::ItemFlags
- *     :font()                                             -> pQFont
- *     :foreground()                                       -> pQBrush
- *     :icon()                                             -> pQIcon
+ *     :background()                                       -> oQBrush
+ *     :checkState()                                       -> nQt_CheckState
+ *     :clone()                                            -> oQListWidgetItem
+ *     :data( nRole )                                      -> oQVariant
+ *     :flags()                                            -> nQt_ItemFlags
+ *     :font()                                             -> oQFont
+ *     :foreground()                                       -> oQBrush
+ *     :icon()                                             -> oQIcon
  *     :isHidden()                                         -> lBool
  *     :isSelected()                                       -> lBool
- *     :listWidget()                                       -> pQListWidget
- *     :read( pIn )                                        -> NIL
- *     :setBackground( pBrush )                            -> NIL
+ *     :listWidget()                                       -> oQListWidget
+ *     :read( oQDataStream )                               -> NIL
+ *     :setBackground( oQBrush )                           -> NIL
  *     :setCheckState( nState )                            -> NIL
- *     :setData( nRole, pValue )                           -> NIL
+ *     :setData( nRole, oQVariant )                        -> NIL
  *     :setFlags( nFlags )                                 -> NIL
- *     :setFont( pFont )                                   -> NIL
- *     :setForeground( pBrush )                            -> NIL
+ *     :setFont( oQFont )                                  -> NIL
+ *     :setForeground( oQBrush )                           -> NIL
  *     :setHidden( lHide )                                 -> NIL
- *     :setIcon( pIcon )                                   -> NIL
+ *     :setIcon( coQIcon )                                 -> NIL
  *     :setSelected( lSelect )                             -> NIL
- *     :setSizeHint( pSize )                               -> NIL
+ *     :setSizeHint( oQSize )                              -> NIL
  *     :setStatusTip( cStatusTip )                         -> NIL
  *     :setText( cText )                                   -> NIL
  *     :setTextAlignment( nAlignment )                     -> NIL
  *     :setToolTip( cToolTip )                             -> NIL
  *     :setWhatsThis( cWhatsThis )                         -> NIL
- *     :sizeHint()                                         -> pQSize
+ *     :sizeHint()                                         -> oQSize
  *     :statusTip()                                        -> cQString
  *     :text()                                             -> cQString
  *     :textAlignment()                                    -> nInt
  *     :toolTip()                                          -> cQString
  *     :type()                                             -> nInt
  *     :whatsThis()                                        -> cQString
- *     :write( pOut )                                      -> NIL
+ *     :write( oQDataStream )                              -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -79,7 +80,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQListWidgetItem.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QListWidgetItem.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

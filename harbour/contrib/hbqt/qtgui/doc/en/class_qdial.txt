@@ -52,7 +52,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQDial.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QDial.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractSlider()
  *  $END$
  */

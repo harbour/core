@@ -27,19 +27,19 @@
  *     An instance of the object of type HBQGraphicsItem
  *  $METHODS$
  *     :hbSetBlock( xBlock )                               -> NIL
- *     :boundingRect()                                     -> pQRectF
- *     :paint( pPainter, pOption, pWidget )                -> NIL
- *     :determineResizeMode( pPos )                        -> nInt
- *     :adjustRect( pRect )                                -> pQRectF
- *     :prepare( pPainter )                                -> NIL
- *     :pen()                                              -> pQPen
- *     :setPen( pPen )                                     -> NIL
- *     :brush()                                            -> pQBrush
- *     :setBrush( pBrush )                                 -> NIL
- *     :backgroundBrush()                                  -> pQBrush
- *     :setBackgroundBrush( pBrush )                       -> NIL
- *     :font()                                             -> pQFont
- *     :setFont( pFont )                                   -> NIL
+ *     :boundingRect()                                     -> oQRectF
+ *     :paint( oQPainter, oQStyleOptionGraphicsItem, oQWidget )  -> NIL
+ *     :determineResizeMode( oQPointF )                    -> nInt
+ *     :adjustRect( oQRectF )                              -> oQRectF
+ *     :prepare( oQPainter )                               -> NIL
+ *     :pen()                                              -> oQPen
+ *     :setPen( oQPen )                                    -> NIL
+ *     :brush()                                            -> oQBrush
+ *     :setBrush( oQBrush )                                -> NIL
+ *     :backgroundBrush()                                  -> oQBrush
+ *     :setBackgroundBrush( oQBrush )                      -> NIL
+ *     :font()                                             -> oQFont
+ *     :setFont( oQFont )                                  -> NIL
  *     :lineStyle()                                        -> nInt
  *     :setLineStyle( nLineStyle )                         -> NIL
  *     :startAngle()                                       -> nInt
@@ -52,8 +52,8 @@
  *     :setHeight( nHeight )                               -> NIL
  *     :opacity()                                          -> nInt
  *     :setOpacity( nOpacity )                             -> NIL
- *     :geometry()                                         -> pQRectF
- *     :setGeometry( pRect )                               -> NIL
+ *     :geometry()                                         -> oQRectF
+ *     :setGeometry( oQRectF )                             -> NIL
  *     :objectType()                                       -> cQString
  *     :setObjectType( cType )                             -> NIL
  *     :objectName()                                       -> cQString
@@ -66,14 +66,14 @@
  *     :setFrameType( nFrameType )                         -> NIL
  *     :drawTextType()                                     -> nInt
  *     :setDrawTextType( nDrawTextType )                   -> NIL
- *     :pixmap()                                           -> pQPixmap
- *     :setPixmap( pPixmap )                               -> NIL
- *     :textColor()                                        -> pQColor
- *     :setTextColor( pColor )                             -> NIL
+ *     :pixmap()                                           -> oQPixmap
+ *     :setPixmap( oQPixmap )                              -> NIL
+ *     :textColor()                                        -> oQColor
+ *     :setTextColor( oQColor )                            -> NIL
  *     :borderWidth()                                      -> nInt
  *     :setBorderWidth( nBWidth )                          -> NIL
- *     :borderColor()                                      -> pQColor
- *     :setBorderColor( pColor )                           -> NIL
+ *     :borderColor()                                      -> oQColor
+ *     :setBorderColor( oQColor )                          -> NIL
  *     :sizePolicy()                                       -> nInt
  *     :setSizePolicy( nSizePolicy )                       -> NIL
  *     :textFlags()                                        -> nInt
@@ -92,7 +92,7 @@
  *     :setShowLabels( lShowLabels )                       -> NIL
  *     :toColorFactor()                                    -> nQreal
  *     :setToColorFactor( nToColorFactor )                 -> NIL
- *     :setBarValues( pList )                              -> NIL
+ *     :setBarValues( oQStringList )                       -> NIL
  *     :setLegendColorRectWidth( nLegendColorRectWidth )   -> NIL
  * 
  *  $DESCRIPTION$
@@ -113,7 +113,5 @@
  *     Harbour source: contrib/hbqt/qtgui/THBQGraphicsItem.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/HBQGraphicsItem.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QGraphicsItem()
  *  $END$
  */

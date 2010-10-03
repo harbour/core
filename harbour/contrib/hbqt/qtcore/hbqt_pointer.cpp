@@ -207,6 +207,30 @@ HB_FUNC( HBQT_PTR )
    hb_itemReturn( pParam );
 }
 
+void * hbqt_detachgcpointer( int iParam )
+{
+   HBQT_GC_T * p;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hbqt_detachgcpointer( %d )", iParam ) );
+
+   p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), iParam );
+
+   if( p && p->ph )
+   {
+      p->bNew = false;
+      return NULL;
+   }
+   else if( HB_ISOBJECT( iParam ) )
+   {
+      PHB_ITEM pObj = hb_param( iParam, HB_IT_ANY );
+
+      hb_vmPushSymbol( hb_dynsymSymbol( hb_dynsymFindName( "PPTR" ) ) );
+      hb_vmPush( pObj );
+      hb_vmSend( 0 );
+      return hbqt_detachgcpointer( -1 );
+   }
+}
+
 HB_FUNC( __HBQT_ISVALIDPOINTER )
 {
    HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );

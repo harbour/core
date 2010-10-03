@@ -103,97 +103,185 @@ CREATE CLASS QPainter INHERIT HbQtObjectHandler FUNCTION HB_QPainter
 
    METHOD  new( ... )
 
-   METHOD  background()
-   METHOD  backgroundMode()
-   METHOD  begin( pDevice )
-   METHOD  boundingRect( ... )
-   METHOD  brush()
-   METHOD  brushOrigin()
-   METHOD  clipPath()
-   METHOD  clipRegion()
-   METHOD  combinedMatrix()
-   METHOD  combinedTransform()
-   METHOD  compositionMode()
-   METHOD  device()
-   METHOD  deviceMatrix()
-   METHOD  deviceTransform()
-   METHOD  drawArc( ... )
-   METHOD  drawChord( ... )
-   METHOD  drawConvexPolygon( ... )
-   METHOD  drawEllipse( ... )
-   METHOD  drawImage( ... )
-   METHOD  drawLine( ... )
-   METHOD  drawLines( ... )
-   METHOD  drawPath( pPath )
-   METHOD  drawPicture( ... )
-   METHOD  drawPie( ... )
-   METHOD  drawPixmap( ... )
-   METHOD  drawPoint( ... )
-   METHOD  drawPoints( ... )
-   METHOD  drawPolygon( ... )
-   METHOD  drawPolyline( ... )
-   METHOD  drawRect( ... )
-   METHOD  drawRects( ... )
-   METHOD  drawRoundedRect( ... )
-   METHOD  drawText( ... )
-   METHOD  drawTiledPixmap( ... )
-   METHOD  end()
-   METHOD  eraseRect( ... )
-   METHOD  fillPath( pPath, pBrush )
-   METHOD  fillRect( ... )
-   METHOD  font()
-   METHOD  fontInfo()
-   METHOD  fontMetrics()
-   METHOD  hasClipping()
-   METHOD  initFrom( pWidget )
-   METHOD  isActive()
-   METHOD  layoutDirection()
-   METHOD  opacity()
-   METHOD  paintEngine()
-   METHOD  pen()
-   METHOD  renderHints()
-   METHOD  resetMatrix()
-   METHOD  resetTransform()
-   METHOD  restore()
-   METHOD  rotate( nAngle )
-   METHOD  save()
-   METHOD  scale( nSx, nSy )
-   METHOD  setBackground( pBrush )
-   METHOD  setBackgroundMode( nMode )
-   METHOD  setBrush( ... )
-   METHOD  setBrushOrigin( ... )
-   METHOD  setClipPath( pPath, nOperation )
-   METHOD  setClipRect( ... )
-   METHOD  setClipRegion( pRegion, nOperation )
-   METHOD  setClipping( lEnable )
-   METHOD  setCompositionMode( nMode )
-   METHOD  setFont( pFont )
-   METHOD  setLayoutDirection( nDirection )
-   METHOD  setOpacity( nOpacity )
-   METHOD  setPen( ... )
-   METHOD  setRenderHint( nHint, lOn )
-   METHOD  setRenderHints( nHints, lOn )
-   METHOD  setTransform( pTransform, lCombine )
-   METHOD  setViewTransformEnabled( lEnable )
-   METHOD  setViewport( ... )
-   METHOD  setWindow( ... )
-   METHOD  setWorldMatrix( pMatrix, lCombine )
-   METHOD  setWorldMatrixEnabled( lEnable )
-   METHOD  setWorldTransform( pMatrix, lCombine )
-   METHOD  shear( nSh, nSv )
-   METHOD  strokePath( pPath, pPen )
-   METHOD  testRenderHint( nHint )
-   METHOD  transform()
-   METHOD  translate( ... )
-   METHOD  viewTransformEnabled()
-   METHOD  viewport()
-   METHOD  window()
-   METHOD  worldMatrix()
-   METHOD  worldMatrixEnabled()
-   METHOD  worldTransform()
-   METHOD  redirected( pDevice, pOffset )
-   METHOD  restoreRedirected( pDevice )
-   METHOD  setRedirected( pDevice, pReplacement, pOffset )
+   METHOD  background                    // (  )                                               -> oQBrush
+   METHOD  backgroundMode                // (  )                                               -> nQt_BGMode
+   METHOD  begin                         // ( oQPaintDevice )                                  -> lBool
+   METHOD  boundingRect                  // ( oQRectF, nFlags, cText )                         -> oQRectF
+                                         // ( oQRect, nFlags, cText )                          -> oQRect
+                                         // ( nX, nY, nW, nH, nFlags, cText )                  -> oQRect
+                                         // ( oQRectF, cText, oQTextOption )                   -> oQRectF
+   METHOD  brush                         // (  )                                               -> oQBrush
+   METHOD  brushOrigin                   // (  )                                               -> oQPoint
+   METHOD  clipPath                      // (  )                                               -> oQPainterPath
+   METHOD  clipRegion                    // (  )                                               -> oQRegion
+   METHOD  combinedMatrix                // (  )                                               -> oQMatrix
+   METHOD  combinedTransform             // (  )                                               -> oQTransform
+   METHOD  compositionMode               // (  )                                               -> nCompositionMode
+   METHOD  device                        // (  )                                               -> oQPaintDevice
+   METHOD  deviceMatrix                  // (  )                                               -> oQMatrix
+   METHOD  deviceTransform               // (  )                                               -> oQTransform
+   METHOD  drawArc                       // ( oQRectF, nStartAngle, nSpanAngle )               -> NIL
+                                         // ( oQRect, nStartAngle, nSpanAngle )                -> NIL
+                                         // ( nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle ) -> NIL
+   METHOD  drawChord                     // ( oQRectF, nStartAngle, nSpanAngle )               -> NIL
+                                         // ( oQRect, nStartAngle, nSpanAngle )                -> NIL
+                                         // ( nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle ) -> NIL
+   METHOD  drawConvexPolygon             // ( oQPointF, nPointCount )                          -> NIL
+                                         // ( oQPoint, nPointCount )                           -> NIL
+                                         // ( oQPolygonF )                                     -> NIL
+                                         // ( oQPolygon )                                      -> NIL
+   METHOD  drawEllipse                   // ( oQRectF )                                        -> NIL
+                                         // ( oQRect )                                         -> NIL
+                                         // ( nX, nY, nWidth, nHeight )                        -> NIL
+                                         // ( oQPointF, nRx, nRy )                             -> NIL
+                                         // ( oQPoint, nRx, nRy )                              -> NIL
+   METHOD  drawImage                     // ( oQRectF, oQImage, oQRectF, nFlags )              -> NIL
+                                         // ( oQRect, oQImage, oQRect, nFlags )                -> NIL
+                                         // ( oQPointF, oQImage )                              -> NIL
+                                         // ( oQPoint, oQImage )                               -> NIL
+                                         // ( oQPointF, oQImage, oQRectF, nFlags )             -> NIL
+                                         // ( oQPoint, oQImage, oQRect, nFlags )               -> NIL
+                                         // ( oQRectF, oQImage )                               -> NIL
+                                         // ( oQRect, oQImage )                                -> NIL
+                                         // ( nX, nY, oQImage, nSx, nSy, nSw, nSh, nFlags )    -> NIL
+   METHOD  drawLine                      // ( oQLineF )                                        -> NIL
+                                         // ( oQLine )                                         -> NIL
+                                         // ( oQPoint, oQPoint )                               -> NIL
+                                         // ( oQPointF, oQPointF )                             -> NIL
+                                         // ( nX1, nY1, nX2, nY2 )                             -> NIL
+   METHOD  drawLines                     // ( oQLineF, nLineCount )                            -> NIL
+                                         // ( oQLine, nLineCount )                             -> NIL
+                                         // ( oQPointF, nLineCount )                           -> NIL
+                                         // ( oQPoint, nLineCount )                            -> NIL
+   METHOD  drawPath                      // ( oQPainterPath )                                  -> NIL
+   METHOD  drawPicture                   // ( oQPointF, oQPicture )                            -> NIL
+                                         // ( oQPoint, oQPicture )                             -> NIL
+                                         // ( nX, nY, oQPicture )                              -> NIL
+   METHOD  drawPie                       // ( oQRectF, nStartAngle, nSpanAngle )               -> NIL
+                                         // ( oQRect, nStartAngle, nSpanAngle )                -> NIL
+                                         // ( nX, nY, nWidth, nHeight, nStartAngle, nSpanAngle ) -> NIL
+   METHOD  drawPixmap                    // ( oQRectF, oQPixmap, oQRectF )                     -> NIL
+                                         // ( oQRect, oQPixmap, oQRect )                       -> NIL
+                                         // ( oQPointF, oQPixmap, oQRectF )                    -> NIL
+                                         // ( oQPoint, oQPixmap, oQRect )                      -> NIL
+                                         // ( oQPointF, oQPixmap )                             -> NIL
+                                         // ( oQPoint, oQPixmap )                              -> NIL
+                                         // ( nX, nY, oQPixmap )                               -> NIL
+                                         // ( oQRect, oQPixmap )                               -> NIL
+                                         // ( nX, nY, nWidth, nHeight, oQPixmap )              -> NIL
+                                         // ( nX, nY, nW, nH, oQPixmap, nSx, nSy, nSw, nSh )   -> NIL
+                                         // ( nX, nY, oQPixmap, nSx, nSy, nSw, nSh )           -> NIL
+   METHOD  drawPoint                     // ( oQPointF )                                       -> NIL
+                                         // ( oQPoint )                                        -> NIL
+                                         // ( nX, nY )                                         -> NIL
+   METHOD  drawPoints                    // ( oQPointF, nPointCount )                          -> NIL
+                                         // ( oQPoint, nPointCount )                           -> NIL
+                                         // ( oQPolygonF )                                     -> NIL
+                                         // ( oQPolygon )                                      -> NIL
+   METHOD  drawPolygon                   // ( oQPointF, nPointCount, nFillRule )               -> NIL
+                                         // ( oQPoint, nPointCount, nFillRule )                -> NIL
+                                         // ( oQPolygonF, nFillRule )                          -> NIL
+                                         // ( oQPolygon, nFillRule )                           -> NIL
+   METHOD  drawPolyline                  // ( oQPointF, nPointCount )                          -> NIL
+                                         // ( oQPoint, nPointCount )                           -> NIL
+                                         // ( oQPolygonF )                                     -> NIL
+                                         // ( oQPolygon )                                      -> NIL
+   METHOD  drawRect                      // ( oQRectF )                                        -> NIL
+                                         // ( oQRect )                                         -> NIL
+                                         // ( nX, nY, nWidth, nHeight )                        -> NIL
+   METHOD  drawRects                     // ( oQRectF, nRectCount )                            -> NIL
+                                         // ( oQRect, nRectCount )                             -> NIL
+   METHOD  drawRoundedRect               // ( oQRectF, nXRadius, nYRadius, nMode )             -> NIL
+                                         // ( oQRect, nXRadius, nYRadius, nMode )              -> NIL
+                                         // ( nX, nY, nW, nH, nXRadius, nYRadius, nMode )      -> NIL
+   METHOD  drawText                      // ( oQPointF, cText )                                -> NIL
+                                         // ( oQPoint, cText )                                 -> NIL
+                                         // ( oQRectF, nFlags, cText, oQRectF )                -> NIL
+                                         // ( oQRect, nFlags, cText, oQRect )                  -> NIL
+                                         // ( nX, nY, cText )                                  -> NIL
+                                         // ( nX, nY, nWidth, nHeight, nFlags, cText, oQRect ) -> NIL
+                                         // ( oQRectF, cText, oQTextOption )                   -> NIL
+   METHOD  drawTiledPixmap               // ( oQRectF, oQPixmap, oQPointF )                    -> NIL
+                                         // ( oQRect, oQPixmap, oQPoint )                      -> NIL
+                                         // ( nX, nY, nWidth, nHeight, oQPixmap, nSx, nSy )    -> NIL
+   METHOD  end                           // (  )                                               -> lBool
+   METHOD  eraseRect                     // ( oQRectF )                                        -> NIL
+                                         // ( oQRect )                                         -> NIL
+                                         // ( nX, nY, nWidth, nHeight )                        -> NIL
+   METHOD  fillPath                      // ( oQPainterPath, oQBrush )                         -> NIL
+   METHOD  fillRect                      // ( oQRectF, oQBrush )                               -> NIL
+                                         // ( oQRect, oQBrush )                                -> NIL
+                                         // ( oQRect, oQColor )                                -> NIL
+                                         // ( oQRectF, oQColor )                               -> NIL
+                                         // ( nX, nY, nWidth, nHeight, oQBrush )               -> NIL
+                                         // ( nX, nY, nWidth, nHeight, oQColor )               -> NIL
+                                         // ( nX, nY, nWidth, nHeight, nColor )                -> NIL
+                                         // ( oQRect, nColor )                                 -> NIL
+                                         // ( oQRectF, nColor )                                -> NIL
+   METHOD  font                          // (  )                                               -> oQFont
+   METHOD  fontInfo                      // (  )                                               -> oQFontInfo
+   METHOD  fontMetrics                   // (  )                                               -> oQFontMetrics
+   METHOD  hasClipping                   // (  )                                               -> lBool
+   METHOD  initFrom                      // ( oQWidget )                                       -> NIL
+   METHOD  isActive                      // (  )                                               -> lBool
+   METHOD  layoutDirection               // (  )                                               -> nQt_LayoutDirection
+   METHOD  opacity                       // (  )                                               -> nQreal
+   METHOD  paintEngine                   // (  )                                               -> oQPaintEngine
+   METHOD  pen                           // (  )                                               -> oQPen
+   METHOD  renderHints                   // (  )                                               -> nRenderHints
+   METHOD  resetMatrix                   // (  )                                               -> NIL
+   METHOD  resetTransform                // (  )                                               -> NIL
+   METHOD  restore                       // (  )                                               -> NIL
+   METHOD  rotate                        // ( nAngle )                                         -> NIL
+   METHOD  save                          // (  )                                               -> NIL
+   METHOD  scale                         // ( nSx, nSy )                                       -> NIL
+   METHOD  setBackground                 // ( oQBrush )                                        -> NIL
+   METHOD  setBackgroundMode             // ( nMode )                                          -> NIL
+   METHOD  setBrush                      // ( oQBrush )                                        -> NIL
+                                         // ( nStyle )                                         -> NIL
+   METHOD  setBrushOrigin                // ( oQPointF )                                       -> NIL
+                                         // ( oQPoint )                                        -> NIL
+                                         // ( nX, nY )                                         -> NIL
+   METHOD  setClipPath                   // ( oQPainterPath, nOperation )                      -> NIL
+   METHOD  setClipRect                   // ( oQRectF, nOperation )                            -> NIL
+                                         // ( nX, nY, nWidth, nHeight, nOperation )            -> NIL
+                                         // ( oQRect, nOperation )                             -> NIL
+   METHOD  setClipRegion                 // ( oQRegion, nOperation )                           -> NIL
+   METHOD  setClipping                   // ( lEnable )                                        -> NIL
+   METHOD  setCompositionMode            // ( nMode )                                          -> NIL
+   METHOD  setFont                       // ( oQFont )                                         -> NIL
+   METHOD  setLayoutDirection            // ( nDirection )                                     -> NIL
+   METHOD  setOpacity                    // ( nOpacity )                                       -> NIL
+   METHOD  setPen                        // ( oQPen )                                          -> NIL
+                                         // ( oQColor )                                        -> NIL
+                                         // ( nStyle )                                         -> NIL
+   METHOD  setRenderHint                 // ( nHint, lOn )                                     -> NIL
+   METHOD  setRenderHints                // ( nHints, lOn )                                    -> NIL
+   METHOD  setTransform                  // ( oQTransform, lCombine )                          -> NIL
+   METHOD  setViewTransformEnabled       // ( lEnable )                                        -> NIL
+   METHOD  setViewport                   // ( oQRect )                                         -> NIL
+                                         // ( nX, nY, nWidth, nHeight )                        -> NIL
+   METHOD  setWindow                     // ( oQRect )                                         -> NIL
+                                         // ( nX, nY, nWidth, nHeight )                        -> NIL
+   METHOD  setWorldMatrix                // ( oQMatrix, lCombine )                             -> NIL
+   METHOD  setWorldMatrixEnabled         // ( lEnable )                                        -> NIL
+   METHOD  setWorldTransform             // ( oQTransform, lCombine )                          -> NIL
+   METHOD  shear                         // ( nSh, nSv )                                       -> NIL
+   METHOD  strokePath                    // ( oQPainterPath, oQPen )                           -> NIL
+   METHOD  testRenderHint                // ( nHint )                                          -> lBool
+   METHOD  transform                     // (  )                                               -> oQTransform
+   METHOD  translate                     // ( oQPointF )                                       -> NIL
+                                         // ( oQPoint )                                        -> NIL
+                                         // ( nDx, nDy )                                       -> NIL
+   METHOD  viewTransformEnabled          // (  )                                               -> lBool
+   METHOD  viewport                      // (  )                                               -> oQRect
+   METHOD  window                        // (  )                                               -> oQRect
+   METHOD  worldMatrix                   // (  )                                               -> oQMatrix
+   METHOD  worldMatrixEnabled            // (  )                                               -> lBool
+   METHOD  worldTransform                // (  )                                               -> oQTransform
+   METHOD  redirected                    // ( oQPaintDevice, oQPoint )                         -> oQPaintDevice
+   METHOD  restoreRedirected             // ( oQPaintDevice )                                  -> NIL
+   METHOD  setRedirected                 // ( oQPaintDevice, oQPaintDevice, oQPoint )          -> NIL
 
    ENDCLASS
 
@@ -207,16 +295,32 @@ METHOD QPainter:new( ... )
    RETURN Self
 
 
-METHOD QPainter:background()
-   RETURN HB_QBrush():from( Qt_QPainter_background( ::pPtr ) )
+METHOD QPainter:background( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QPainter_background( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:backgroundMode()
-   RETURN Qt_QPainter_backgroundMode( ::pPtr )
+METHOD QPainter:backgroundMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPainter_backgroundMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:begin( pDevice )
-   RETURN Qt_QPainter_begin( ::pPtr, hbqt_ptr( pDevice ) )
+METHOD QPainter:begin( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPainter_begin( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPainter:boundingRect( ... )
@@ -250,44 +354,84 @@ METHOD QPainter:boundingRect( ... )
    RETURN hbqt_error()
 
 
-METHOD QPainter:brush()
-   RETURN HB_QBrush():from( Qt_QPainter_brush( ::pPtr ) )
+METHOD QPainter:brush( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QPainter_brush( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:brushOrigin()
-   RETURN HB_QPoint():from( Qt_QPainter_brushOrigin( ::pPtr ) )
+METHOD QPainter:brushOrigin( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QPainter_brushOrigin( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:clipPath()
-   RETURN HB_QPainterPath():from( Qt_QPainter_clipPath( ::pPtr ) )
+METHOD QPainter:clipPath( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPainterPath():from( Qt_QPainter_clipPath( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:clipRegion()
-   RETURN HB_QRegion():from( Qt_QPainter_clipRegion( ::pPtr ) )
+METHOD QPainter:clipRegion( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRegion():from( Qt_QPainter_clipRegion( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:combinedMatrix()
-   RETURN HB_QMatrix():from( Qt_QPainter_combinedMatrix( ::pPtr ) )
+METHOD QPainter:combinedMatrix( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QMatrix():from( Qt_QPainter_combinedMatrix( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:combinedTransform()
-   RETURN HB_QTransform():from( Qt_QPainter_combinedTransform( ::pPtr ) )
+METHOD QPainter:combinedTransform( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTransform():from( Qt_QPainter_combinedTransform( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:compositionMode()
-   RETURN Qt_QPainter_compositionMode( ::pPtr )
+METHOD QPainter:compositionMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPainter_compositionMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:device()
-   RETURN HB_QPaintDevice():from( Qt_QPainter_device( ::pPtr ) )
+METHOD QPainter:device( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPaintDevice():from( Qt_QPainter_device( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:deviceMatrix()
-   RETURN HB_QMatrix():from( Qt_QPainter_deviceMatrix( ::pPtr ) )
+METHOD QPainter:deviceMatrix( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QMatrix():from( Qt_QPainter_deviceMatrix( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:deviceTransform()
-   RETURN HB_QTransform():from( Qt_QPainter_deviceTransform( ::pPtr ) )
+METHOD QPainter:deviceTransform( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTransform():from( Qt_QPainter_deviceTransform( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPainter:drawArc( ... )
@@ -406,18 +550,38 @@ METHOD QPainter:drawImage( ... )
          RETURN Qt_QPainter_drawImage_8( ::pPtr, ... )
       ENDCASE
       EXIT
+   CASE 7
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) ) .AND. hb_isNumeric( hb_pvalue( 6 ) ) .AND. hb_isNumeric( hb_pvalue( 7 ) )
+         RETURN Qt_QPainter_drawImage_8( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 6
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) ) .AND. hb_isNumeric( hb_pvalue( 6 ) )
+         RETURN Qt_QPainter_drawImage_8( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 5
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
+         RETURN Qt_QPainter_drawImage_8( ::pPtr, ... )
+      ENDCASE
+      EXIT
    CASE 4
       DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QPainter_drawImage_8( ::pPtr, ... )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) ) + __objGetClsName( hb_pvalue( 2 ) )
          CASE "QPOINTFQIMAGE"
             RETURN Qt_QPainter_drawImage_4( ::pPtr, ... )
-         CASE "QPOINTQIMAGE"
-            RETURN Qt_QPainter_drawImage_5( ::pPtr, ... )
          CASE "QRECTQIMAGE"
             RETURN Qt_QPainter_drawImage_1( ::pPtr, ... )
          CASE "QRECTFQIMAGE"
             RETURN Qt_QPainter_drawImage( ::pPtr, ... )
+         CASE "QPOINTQIMAGE"
+            RETURN Qt_QPainter_drawImage_5( ::pPtr, ... )
          ENDSWITCH
       ENDCASE
       EXIT
@@ -512,8 +676,16 @@ METHOD QPainter:drawLines( ... )
    RETURN hbqt_error()
 
 
-METHOD QPainter:drawPath( pPath )
-   RETURN Qt_QPainter_drawPath( ::pPtr, hbqt_ptr( pPath ) )
+METHOD QPainter:drawPath( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPainter_drawPath( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPainter:drawPicture( ... )
@@ -883,6 +1055,12 @@ METHOD QPainter:drawTiledPixmap( ... )
          RETURN Qt_QPainter_drawTiledPixmap_2( ::pPtr, ... )
       ENDCASE
       EXIT
+   CASE 6
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isObject( hb_pvalue( 5 ) ) .AND. hb_isNumeric( hb_pvalue( 6 ) )
+         RETURN Qt_QPainter_drawTiledPixmap_2( ::pPtr, ... )
+      ENDCASE
+      EXIT
    CASE 5
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isObject( hb_pvalue( 5 ) )
@@ -915,8 +1093,12 @@ METHOD QPainter:drawTiledPixmap( ... )
    RETURN hbqt_error()
 
 
-METHOD QPainter:end()
-   RETURN Qt_QPainter_end( ::pPtr )
+METHOD QPainter:end( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPainter_end( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPainter:eraseRect( ... )
@@ -942,8 +1124,16 @@ METHOD QPainter:eraseRect( ... )
    RETURN hbqt_error()
 
 
-METHOD QPainter:fillPath( pPath, pBrush )
-   RETURN Qt_QPainter_fillPath( ::pPtr, hbqt_ptr( pPath ), hbqt_ptr( pBrush ) )
+METHOD QPainter:fillPath( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QPainter_fillPath( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPainter:fillRect( ... )
@@ -987,80 +1177,176 @@ METHOD QPainter:fillRect( ... )
    RETURN hbqt_error()
 
 
-METHOD QPainter:font()
-   RETURN HB_QFont():from( Qt_QPainter_font( ::pPtr ) )
+METHOD QPainter:font( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFont():from( Qt_QPainter_font( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:fontInfo()
-   RETURN HB_QFontInfo():from( Qt_QPainter_fontInfo( ::pPtr ) )
+METHOD QPainter:fontInfo( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFontInfo():from( Qt_QPainter_fontInfo( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:fontMetrics()
-   RETURN HB_QFontMetrics():from( Qt_QPainter_fontMetrics( ::pPtr ) )
+METHOD QPainter:fontMetrics( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFontMetrics():from( Qt_QPainter_fontMetrics( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:hasClipping()
-   RETURN Qt_QPainter_hasClipping( ::pPtr )
+METHOD QPainter:hasClipping( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPainter_hasClipping( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:initFrom( pWidget )
-   RETURN Qt_QPainter_initFrom( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QPainter:initFrom( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPainter_initFrom( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:isActive()
-   RETURN Qt_QPainter_isActive( ::pPtr )
+METHOD QPainter:isActive( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPainter_isActive( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:layoutDirection()
-   RETURN Qt_QPainter_layoutDirection( ::pPtr )
+METHOD QPainter:layoutDirection( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPainter_layoutDirection( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:opacity()
-   RETURN Qt_QPainter_opacity( ::pPtr )
+METHOD QPainter:opacity( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPainter_opacity( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:paintEngine()
-   RETURN HB_QPaintEngine():from( Qt_QPainter_paintEngine( ::pPtr ) )
+METHOD QPainter:paintEngine( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPaintEngine():from( Qt_QPainter_paintEngine( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:pen()
-   RETURN HB_QPen():from( Qt_QPainter_pen( ::pPtr ) )
+METHOD QPainter:pen( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPen():from( Qt_QPainter_pen( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:renderHints()
-   RETURN Qt_QPainter_renderHints( ::pPtr )
+METHOD QPainter:renderHints( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPainter_renderHints( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:resetMatrix()
-   RETURN Qt_QPainter_resetMatrix( ::pPtr )
+METHOD QPainter:resetMatrix( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPainter_resetMatrix( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:resetTransform()
-   RETURN Qt_QPainter_resetTransform( ::pPtr )
+METHOD QPainter:resetTransform( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPainter_resetTransform( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:restore()
-   RETURN Qt_QPainter_restore( ::pPtr )
+METHOD QPainter:restore( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPainter_restore( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:rotate( nAngle )
-   RETURN Qt_QPainter_rotate( ::pPtr, nAngle )
+METHOD QPainter:rotate( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPainter_rotate( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:save()
-   RETURN Qt_QPainter_save( ::pPtr )
+METHOD QPainter:save( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPainter_save( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:scale( nSx, nSy )
-   RETURN Qt_QPainter_scale( ::pPtr, nSx, nSy )
+METHOD QPainter:scale( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QPainter_scale( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:setBackground( pBrush )
-   RETURN Qt_QPainter_setBackground( ::pPtr, hbqt_ptr( pBrush ) )
+METHOD QPainter:setBackground( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPainter_setBackground( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:setBackgroundMode( nMode )
-   RETURN Qt_QPainter_setBackgroundMode( ::pPtr, nMode )
+METHOD QPainter:setBackgroundMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPainter_setBackgroundMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPainter:setBrush( ... )
@@ -1100,8 +1386,22 @@ METHOD QPainter:setBrushOrigin( ... )
    RETURN hbqt_error()
 
 
-METHOD QPainter:setClipPath( pPath, nOperation )
-   RETURN Qt_QPainter_setClipPath( ::pPtr, hbqt_ptr( pPath ), nOperation )
+METHOD QPainter:setClipPath( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QPainter_setClipPath( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPainter_setClipPath( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPainter:setClipRect( ... )
@@ -1144,28 +1444,82 @@ METHOD QPainter:setClipRect( ... )
    RETURN hbqt_error()
 
 
-METHOD QPainter:setClipRegion( pRegion, nOperation )
-   RETURN Qt_QPainter_setClipRegion( ::pPtr, hbqt_ptr( pRegion ), nOperation )
+METHOD QPainter:setClipRegion( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QPainter_setClipRegion( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPainter_setClipRegion( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:setClipping( lEnable )
-   RETURN Qt_QPainter_setClipping( ::pPtr, lEnable )
+METHOD QPainter:setClipping( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QPainter_setClipping( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:setCompositionMode( nMode )
-   RETURN Qt_QPainter_setCompositionMode( ::pPtr, nMode )
+METHOD QPainter:setCompositionMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPainter_setCompositionMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:setFont( pFont )
-   RETURN Qt_QPainter_setFont( ::pPtr, hbqt_ptr( pFont ) )
+METHOD QPainter:setFont( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPainter_setFont( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:setLayoutDirection( nDirection )
-   RETURN Qt_QPainter_setLayoutDirection( ::pPtr, nDirection )
+METHOD QPainter:setLayoutDirection( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPainter_setLayoutDirection( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:setOpacity( nOpacity )
-   RETURN Qt_QPainter_setOpacity( ::pPtr, nOpacity )
+METHOD QPainter:setOpacity( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPainter_setOpacity( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPainter:setPen( ... )
@@ -1187,20 +1541,70 @@ METHOD QPainter:setPen( ... )
    RETURN hbqt_error()
 
 
-METHOD QPainter:setRenderHint( nHint, lOn )
-   RETURN Qt_QPainter_setRenderHint( ::pPtr, nHint, lOn )
+METHOD QPainter:setRenderHint( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QPainter_setRenderHint( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPainter_setRenderHint( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:setRenderHints( nHints, lOn )
-   RETURN Qt_QPainter_setRenderHints( ::pPtr, nHints, lOn )
+METHOD QPainter:setRenderHints( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QPainter_setRenderHints( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPainter_setRenderHints( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:setTransform( pTransform, lCombine )
-   RETURN Qt_QPainter_setTransform( ::pPtr, hbqt_ptr( pTransform ), lCombine )
+METHOD QPainter:setTransform( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QPainter_setTransform( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPainter_setTransform( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:setViewTransformEnabled( lEnable )
-   RETURN Qt_QPainter_setViewTransformEnabled( ::pPtr, lEnable )
+METHOD QPainter:setViewTransformEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QPainter_setViewTransformEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPainter:setViewport( ... )
@@ -1239,32 +1643,96 @@ METHOD QPainter:setWindow( ... )
    RETURN hbqt_error()
 
 
-METHOD QPainter:setWorldMatrix( pMatrix, lCombine )
-   RETURN Qt_QPainter_setWorldMatrix( ::pPtr, hbqt_ptr( pMatrix ), lCombine )
+METHOD QPainter:setWorldMatrix( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QPainter_setWorldMatrix( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPainter_setWorldMatrix( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:setWorldMatrixEnabled( lEnable )
-   RETURN Qt_QPainter_setWorldMatrixEnabled( ::pPtr, lEnable )
+METHOD QPainter:setWorldMatrixEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QPainter_setWorldMatrixEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:setWorldTransform( pMatrix, lCombine )
-   RETURN Qt_QPainter_setWorldTransform( ::pPtr, hbqt_ptr( pMatrix ), lCombine )
+METHOD QPainter:setWorldTransform( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QPainter_setWorldTransform( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPainter_setWorldTransform( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:shear( nSh, nSv )
-   RETURN Qt_QPainter_shear( ::pPtr, nSh, nSv )
+METHOD QPainter:shear( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QPainter_shear( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:strokePath( pPath, pPen )
-   RETURN Qt_QPainter_strokePath( ::pPtr, hbqt_ptr( pPath ), hbqt_ptr( pPen ) )
+METHOD QPainter:strokePath( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QPainter_strokePath( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:testRenderHint( nHint )
-   RETURN Qt_QPainter_testRenderHint( ::pPtr, nHint )
+METHOD QPainter:testRenderHint( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPainter_testRenderHint( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:transform()
-   RETURN HB_QTransform():from( Qt_QPainter_transform( ::pPtr ) )
+METHOD QPainter:transform( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTransform():from( Qt_QPainter_transform( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPainter:translate( ... )
@@ -1290,38 +1758,98 @@ METHOD QPainter:translate( ... )
    RETURN hbqt_error()
 
 
-METHOD QPainter:viewTransformEnabled()
-   RETURN Qt_QPainter_viewTransformEnabled( ::pPtr )
+METHOD QPainter:viewTransformEnabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPainter_viewTransformEnabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:viewport()
-   RETURN HB_QRect():from( Qt_QPainter_viewport( ::pPtr ) )
+METHOD QPainter:viewport( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QPainter_viewport( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:window()
-   RETURN HB_QRect():from( Qt_QPainter_window( ::pPtr ) )
+METHOD QPainter:window( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QPainter_window( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:worldMatrix()
-   RETURN HB_QMatrix():from( Qt_QPainter_worldMatrix( ::pPtr ) )
+METHOD QPainter:worldMatrix( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QMatrix():from( Qt_QPainter_worldMatrix( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:worldMatrixEnabled()
-   RETURN Qt_QPainter_worldMatrixEnabled( ::pPtr )
+METHOD QPainter:worldMatrixEnabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPainter_worldMatrixEnabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:worldTransform()
-   RETURN HB_QTransform():from( Qt_QPainter_worldTransform( ::pPtr ) )
+METHOD QPainter:worldTransform( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTransform():from( Qt_QPainter_worldTransform( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:redirected( pDevice, pOffset )
-   RETURN HB_QPaintDevice():from( Qt_QPainter_redirected( ::pPtr, hbqt_ptr( pDevice ), hbqt_ptr( pOffset ) ) )
+METHOD QPainter:redirected( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QPaintDevice():from( Qt_QPainter_redirected( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QPaintDevice():from( Qt_QPainter_redirected( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:restoreRedirected( pDevice )
-   RETURN Qt_QPainter_restoreRedirected( ::pPtr, hbqt_ptr( pDevice ) )
+METHOD QPainter:restoreRedirected( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPainter_restoreRedirected( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPainter:setRedirected( pDevice, pReplacement, pOffset )
-   RETURN Qt_QPainter_setRedirected( ::pPtr, hbqt_ptr( pDevice ), hbqt_ptr( pReplacement ), hbqt_ptr( pOffset ) )
+METHOD QPainter:setRedirected( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QPainter_setRedirected( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QPainter_setRedirected( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

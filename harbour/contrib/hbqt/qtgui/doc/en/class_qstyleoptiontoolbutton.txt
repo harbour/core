@@ -26,14 +26,14 @@
  *  $RETURNS$
  *     An instance of the object of type QStyleOptionToolButton
  *  $METHODS$
- *     :arrowType()                                        -> nQt::ArrowType
+ *     :arrowType()                                        -> nQt_ArrowType
  *     :features()                                         -> nToolButtonFeatures
- *     :font()                                             -> pQFont
- *     :icon()                                             -> pQIcon
- *     :iconSize()                                         -> pQSize
- *     :pos()                                              -> pQPoint
+ *     :font()                                             -> oQFont
+ *     :icon()                                             -> oQIcon
+ *     :iconSize()                                         -> oQSize
+ *     :pos()                                              -> oQPoint
  *     :text()                                             -> cQString
- *     :toolButtonStyle()                                  -> nQt::ToolButtonStyle
+ *     :toolButtonStyle()                                  -> nQt_ToolButtonStyle
  * 
  *  $DESCRIPTION$
  * 
@@ -53,7 +53,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionToolButton.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionToolButton.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QStyleOptionComplex()
  *  $END$
  */

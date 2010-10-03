@@ -199,7 +199,7 @@ HB_FUNC( QT_QPRINTPREVIEWDIALOG_OPEN )
    QPrintPreviewDialog * p = hbqt_par_QPrintPreviewDialog( 1 );
    if( p )
    {
-      ( p )->open( hbqt_par_QObject( 2 ), hbqt_par_char( 3 ) );
+      ( p )->open( hbqt_par_QObject( 2 ), ( const char * ) hb_parc( 3 ) );
    }
 }
 

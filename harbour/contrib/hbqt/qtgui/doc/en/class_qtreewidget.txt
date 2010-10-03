@@ -26,45 +26,45 @@
  *  $RETURNS$
  *     An instance of the object of type QTreeWidget
  *  $METHODS$
- *     :addTopLevelItem( pItem )                           -> NIL
- *     :closePersistentEditor( pItem, nColumn )            -> NIL
+ *     :addTopLevelItem( oQTreeWidgetItem )                -> NIL
+ *     :closePersistentEditor( oQTreeWidgetItem, nColumn )  -> NIL
  *     :columnCount()                                      -> nInt
  *     :currentColumn()                                    -> nInt
- *     :currentItem()                                      -> Item
- *     :editItem( pItem, nColumn )                         -> NIL
- *     :findItems( cText, nFlags, nColumn )                -> pQList<QTreeWidgetItem *>
- *     :headerItem()                                       -> Item
- *     :indexOfTopLevelItem( pItem )                       -> nInt
- *     :insertTopLevelItem( nIndex, pItem )                -> NIL
- *     :invisibleRootItem()                                -> Item
- *     :isFirstItemColumnSpanned( pItem )                  -> lBool
- *     :itemAbove( pItem )                                 -> Item
- *     :itemAt( pP )                                       -> Item
- *     :itemAt_1( nX, nY )                                 -> Item
- *     :itemBelow( pItem )                                 -> Item
- *     :itemWidget( pItem, nColumn )                       -> pQWidget
- *     :openPersistentEditor( pItem, nColumn )             -> NIL
- *     :removeItemWidget( pItem, nColumn )                 -> NIL
- *     :selectedItems()                                    -> pQList<QTreeWidgetItem *>
+ *     :currentItem()                                      -> oQTreeWidgetItem
+ *     :editItem( oQTreeWidgetItem, nColumn )              -> NIL
+ *     :findItems( cText, nFlags, nColumn )                -> oQList_QTreeWidgetItem
+ *     :headerItem()                                       -> oQTreeWidgetItem
+ *     :indexOfTopLevelItem( oQTreeWidgetItem )            -> nInt
+ *     :insertTopLevelItem( nIndex, oQTreeWidgetItem )     -> NIL
+ *     :invisibleRootItem()                                -> oQTreeWidgetItem
+ *     :isFirstItemColumnSpanned( oQTreeWidgetItem )       -> lBool
+ *     :itemAbove( oQTreeWidgetItem )                      -> oQTreeWidgetItem
+ *     :itemAt( oQPoint )                                  -> oQTreeWidgetItem
+ *     :itemAt( nX, nY )                                   -> oQTreeWidgetItem
+ *     :itemBelow( oQTreeWidgetItem )                      -> oQTreeWidgetItem
+ *     :itemWidget( oQTreeWidgetItem, nColumn )            -> oQWidget
+ *     :openPersistentEditor( oQTreeWidgetItem, nColumn )  -> NIL
+ *     :removeItemWidget( oQTreeWidgetItem, nColumn )      -> NIL
+ *     :selectedItems()                                    -> oQList_QTreeWidgetItem
  *     :setColumnCount( nColumns )                         -> NIL
- *     :setCurrentItem( pItem )                            -> NIL
- *     :setCurrentItem_1( pItem, nColumn )                 -> NIL
- *     :setCurrentItem_2( pItem, nColumn, nCommand )       -> NIL
- *     :setFirstItemColumnSpanned( pItem, lSpan )          -> NIL
- *     :setHeaderItem( pItem )                             -> NIL
+ *     :setCurrentItem( oQTreeWidgetItem )                 -> NIL
+ *     :setCurrentItem( oQTreeWidgetItem, nColumn )        -> NIL
+ *     :setCurrentItem( oQTreeWidgetItem, nColumn, nCommand )  -> NIL
+ *     :setFirstItemColumnSpanned( oQTreeWidgetItem, lSpan )  -> NIL
+ *     :setHeaderItem( oQTreeWidgetItem )                  -> NIL
  *     :setHeaderLabel( cLabel )                           -> NIL
- *     :setHeaderLabels( pLabels )                         -> NIL
- *     :setItemWidget( pItem, nColumn, pWidget )           -> NIL
+ *     :setHeaderLabels( oQStringList )                    -> NIL
+ *     :setItemWidget( oQTreeWidgetItem, nColumn, oQWidget )  -> NIL
  *     :sortColumn()                                       -> nInt
  *     :sortItems( nColumn, nOrder )                       -> NIL
- *     :takeTopLevelItem( nIndex )                         -> Item
- *     :topLevelItem( nIndex )                             -> Item
+ *     :takeTopLevelItem( nIndex )                         -> oQTreeWidgetItem
+ *     :topLevelItem( nIndex )                             -> oQTreeWidgetItem
  *     :topLevelItemCount()                                -> nInt
- *     :visualItemRect( pItem )                            -> pQRect
+ *     :visualItemRect( oQTreeWidgetItem )                 -> oQRect
  *     :clear()                                            -> NIL
- *     :collapseItem( pItem )                              -> NIL
- *     :expandItem( pItem )                                -> NIL
- *     :scrollToItem( pItem, nHint )                       -> NIL
+ *     :collapseItem( oQTreeWidgetItem )                   -> NIL
+ *     :expandItem( oQTreeWidgetItem )                     -> NIL
+ *     :scrollToItem( oQTreeWidgetItem, nHint )            -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -84,7 +84,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTreeWidget.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTreeWidget.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QTreeView()
  *  $END$
  */

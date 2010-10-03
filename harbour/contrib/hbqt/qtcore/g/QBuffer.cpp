@@ -235,7 +235,7 @@ HB_FUNC( QT_QBUFFER_SETDATA )
    QBuffer * p = hbqt_par_QBuffer( 1 );
    if( p )
    {
-      ( p )->setData( hbqt_par_char( 2 ), hb_parni( 3 ) );
+      ( p )->setData( ( const char * ) hb_parc( 2 ), hb_parni( 3 ) );
    }
 }
 

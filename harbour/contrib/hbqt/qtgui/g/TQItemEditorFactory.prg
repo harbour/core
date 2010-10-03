@@ -103,10 +103,10 @@ CREATE CLASS QItemEditorFactory INHERIT HbQtObjectHandler FUNCTION HB_QItemEdito
 
    METHOD  new( ... )
 
-   METHOD  createEditor( nType, pParent )
-   METHOD  registerEditor( nType, pCreator )
-   METHOD  valuePropertyName( nType )
-   METHOD  setDefaultFactory( pFactory )
+   METHOD  createEditor                  // ( nType, oQWidget )                                -> oQWidget
+   METHOD  registerEditor                // ( nType, oQItemEditorCreatorBase )                 -> NIL
+   METHOD  valuePropertyName             // ( nType )                                          -> oQByteArray
+   METHOD  setDefaultFactory             // ( oQItemEditorFactory )                            -> NIL
 
    ENDCLASS
 
@@ -120,18 +120,50 @@ METHOD QItemEditorFactory:new( ... )
    RETURN Self
 
 
-METHOD QItemEditorFactory:createEditor( nType, pParent )
-   RETURN HB_QWidget():from( Qt_QItemEditorFactory_createEditor( ::pPtr, nType, hbqt_ptr( pParent ) ) )
+METHOD QItemEditorFactory:createEditor( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QWidget():from( Qt_QItemEditorFactory_createEditor( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QItemEditorFactory:registerEditor( nType, pCreator )
-   RETURN Qt_QItemEditorFactory_registerEditor( ::pPtr, nType, hbqt_ptr( pCreator ) )
+METHOD QItemEditorFactory:registerEditor( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QItemEditorFactory_registerEditor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QItemEditorFactory:valuePropertyName( nType )
-   RETURN HB_QByteArray():from( Qt_QItemEditorFactory_valuePropertyName( ::pPtr, nType ) )
+METHOD QItemEditorFactory:valuePropertyName( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QByteArray():from( Qt_QItemEditorFactory_valuePropertyName( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QItemEditorFactory:setDefaultFactory( pFactory )
-   RETURN Qt_QItemEditorFactory_setDefaultFactory( ::pPtr, hbqt_ptr( pFactory ) )
+METHOD QItemEditorFactory:setDefaultFactory( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QItemEditorFactory_setDefaultFactory( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

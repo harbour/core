@@ -26,8 +26,8 @@
  *  $RETURNS$
  *     An instance of the object of type QGraphicsSimpleTextItem
  *  $METHODS$
- *     :font()                                             -> pQFont
- *     :setFont( pFont )                                   -> NIL
+ *     :font()                                             -> oQFont
+ *     :setFont( oQFont )                                  -> NIL
  *     :setText( cText )                                   -> NIL
  *     :text()                                             -> cQString
  * 
@@ -49,7 +49,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGraphicsSimpleTextItem.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsSimpleTextItem.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractGraphicsShapeItem()
  *  $END$
  */

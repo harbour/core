@@ -103,16 +103,19 @@ CREATE CLASS QPolygon INHERIT HbQtObjectHandler FUNCTION HB_QPolygon
 
    METHOD  new( ... )
 
-   METHOD  boundingRect()
-   METHOD  containsPoint( pPoint, nFillRule )
-   METHOD  intersected( pR )
-   METHOD  point( ... )
-   METHOD  putPoints( nIndex, nNPoints, pFromPolygon, nFromIndex )
-   METHOD  setPoint( ... )
-   METHOD  setPoints( nNPoints, nPoints )
-   METHOD  subtracted( pR )
-   METHOD  translate( ... )
-   METHOD  united( pR )
+   METHOD  boundingRect                  // (  )                                               -> oQRect
+   METHOD  containsPoint                 // ( oQPoint, nFillRule )                             -> lBool
+   METHOD  intersected                   // ( oQPolygon )                                      -> oQPolygon
+   METHOD  point                         // ( nIndex, @nX, @nY )                               -> NIL
+                                         // ( nIndex )                                         -> oQPoint
+   METHOD  putPoints                     // ( nIndex, nNPoints, oQPolygon, nFromIndex )        -> NIL
+   METHOD  setPoint                      // ( nIndex, nX, nY )                                 -> NIL
+                                         // ( nIndex, oQPoint )                                -> NIL
+   METHOD  setPoints                     // ( nNPoints, @nPoints )                             -> NIL
+   METHOD  subtracted                    // ( oQPolygon )                                      -> oQPolygon
+   METHOD  translate                     // ( nDx, nDy )                                       -> NIL
+                                         // ( oQPoint )                                        -> NIL
+   METHOD  united                        // ( oQPolygon )                                      -> oQPolygon
 
    ENDCLASS
 
@@ -126,16 +129,36 @@ METHOD QPolygon:new( ... )
    RETURN Self
 
 
-METHOD QPolygon:boundingRect()
-   RETURN HB_QRect():from( Qt_QPolygon_boundingRect( ::pPtr ) )
+METHOD QPolygon:boundingRect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QPolygon_boundingRect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPolygon:containsPoint( pPoint, nFillRule )
-   RETURN Qt_QPolygon_containsPoint( ::pPtr, hbqt_ptr( pPoint ), nFillRule )
+METHOD QPolygon:containsPoint( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QPolygon_containsPoint( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPolygon:intersected( pR )
-   RETURN HB_QPolygon():from( Qt_QPolygon_intersected( ::pPtr, hbqt_ptr( pR ) ) )
+METHOD QPolygon:intersected( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QPolygon():from( Qt_QPolygon_intersected( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPolygon:point( ... )
@@ -156,8 +179,22 @@ METHOD QPolygon:point( ... )
    RETURN hbqt_error()
 
 
-METHOD QPolygon:putPoints( nIndex, nNPoints, pFromPolygon, nFromIndex )
-   RETURN Qt_QPolygon_putPoints( ::pPtr, nIndex, nNPoints, hbqt_ptr( pFromPolygon ), nFromIndex )
+METHOD QPolygon:putPoints( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QPolygon_putPoints( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QPolygon_putPoints( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPolygon:setPoint( ... )
@@ -178,12 +215,28 @@ METHOD QPolygon:setPoint( ... )
    RETURN hbqt_error()
 
 
-METHOD QPolygon:setPoints( nNPoints, nPoints )
-   RETURN Qt_QPolygon_setPoints( ::pPtr, nNPoints, nPoints )
+METHOD QPolygon:setPoints( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QPolygon_setPoints( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPolygon:subtracted( pR )
-   RETURN HB_QPolygon():from( Qt_QPolygon_subtracted( ::pPtr, hbqt_ptr( pR ) ) )
+METHOD QPolygon:subtracted( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QPolygon():from( Qt_QPolygon_subtracted( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPolygon:translate( ... )
@@ -204,6 +257,14 @@ METHOD QPolygon:translate( ... )
    RETURN hbqt_error()
 
 
-METHOD QPolygon:united( pR )
-   RETURN HB_QPolygon():from( Qt_QPolygon_united( ::pPtr, hbqt_ptr( pR ) ) )
+METHOD QPolygon:united( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QPolygon():from( Qt_QPolygon_united( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

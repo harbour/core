@@ -103,8 +103,8 @@ CREATE CLASS QWidgetItem INHERIT HbQtObjectHandler, HB_QLayoutItem FUNCTION HB_Q
 
    METHOD  new( ... )
 
-   METHOD  isEmpty()
-   METHOD  widget()
+   METHOD  isEmpty                       // (  )                                               -> lBool
+   METHOD  widget                        // (  )                                               -> oQWidget
 
    ENDCLASS
 
@@ -118,10 +118,18 @@ METHOD QWidgetItem:new( ... )
    RETURN Self
 
 
-METHOD QWidgetItem:isEmpty()
-   RETURN Qt_QWidgetItem_isEmpty( ::pPtr )
+METHOD QWidgetItem:isEmpty( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidgetItem_isEmpty( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidgetItem:widget()
-   RETURN HB_QWidget():from( Qt_QWidgetItem_widget( ::pPtr ) )
+METHOD QWidgetItem:widget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QWidgetItem_widget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

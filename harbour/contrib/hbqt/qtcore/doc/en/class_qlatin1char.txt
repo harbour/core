@@ -47,7 +47,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQLatin1Char.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QLatin1Char.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

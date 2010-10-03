@@ -103,8 +103,8 @@ CREATE CLASS QResizeEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_QResi
 
    METHOD  new( ... )
 
-   METHOD  oldSize()
-   METHOD  size()
+   METHOD  oldSize                       // (  )                                               -> oQSize
+   METHOD  size                          // (  )                                               -> oQSize
 
    ENDCLASS
 
@@ -118,10 +118,18 @@ METHOD QResizeEvent:new( ... )
    RETURN Self
 
 
-METHOD QResizeEvent:oldSize()
-   RETURN HB_QSize():from( Qt_QResizeEvent_oldSize( ::pPtr ) )
+METHOD QResizeEvent:oldSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QResizeEvent_oldSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QResizeEvent:size()
-   RETURN HB_QSize():from( Qt_QResizeEvent_size( ::pPtr ) )
+METHOD QResizeEvent:size( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QResizeEvent_size( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

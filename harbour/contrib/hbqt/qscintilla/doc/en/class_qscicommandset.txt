@@ -26,9 +26,9 @@
  *  $RETURNS$
  *     An instance of the object of type QsciCommandSet
  *  $METHODS$
- *     :readSettings( pQs, pPrefix )                       -> lBool
- *     :writeSettings( pQs, pPrefix )                      -> lBool
- *     :commands()                                         -> pQList< QsciCommand * > &
+ *     :readSettings( oQSettings, cPrefix )                -> lBool
+ *     :writeSettings( oQSettings, cPrefix )               -> lBool
+ *     :commands()                                         -> oQList_ QsciCommand * > &
  *     :clearKeys()                                        -> NIL
  *     :clearAlternateKeys()                               -> NIL
  * 
@@ -50,7 +50,5 @@
  *     Harbour source: contrib/hbqt/qscintilla/TQsciCommandSet.prg
  *     C++ wrappers  : contrib/hbqt/qscintilla/QsciCommandSet.cpp
  *     Library       : hbqscintilla
- *  $SEEALSO$
- *     
  *  $END$
  */

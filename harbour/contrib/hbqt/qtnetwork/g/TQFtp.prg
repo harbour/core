@@ -103,31 +103,32 @@ CREATE CLASS QFtp INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QFtp
 
    METHOD  new( ... )
 
-   METHOD  bytesAvailable()
-   METHOD  cd( cDir )
-   METHOD  clearPendingCommands()
-   METHOD  close()
-   METHOD  connectToHost( cHost, nPort )
-   METHOD  currentCommand()
-   METHOD  currentDevice()
-   METHOD  currentId()
-   METHOD  error()
-   METHOD  errorString()
-   METHOD  get( cFile, pDev, nType )
-   METHOD  hasPendingCommands()
-   METHOD  list( cDir )
-   METHOD  login( cUser, cPassword )
-   METHOD  mkdir( cDir )
-   METHOD  put( ... )
-   METHOD  rawCommand( cCommand )
-   METHOD  readAll()
-   METHOD  remove( cFile )
-   METHOD  rename( cOldname, cNewname )
-   METHOD  rmdir( cDir )
-   METHOD  setProxy( cHost, nPort )
-   METHOD  setTransferMode( nMode )
-   METHOD  state()
-   METHOD  abort()
+   METHOD  bytesAvailable                // (  )                                               -> nQint64
+   METHOD  cd                            // ( cDir )                                           -> nInt
+   METHOD  clearPendingCommands          // (  )                                               -> NIL
+   METHOD  close                         // (  )                                               -> nInt
+   METHOD  connectToHost                 // ( cHost, nPort )                                   -> nInt
+   METHOD  currentCommand                // (  )                                               -> nCommand
+   METHOD  currentDevice                 // (  )                                               -> oQIODevice
+   METHOD  currentId                     // (  )                                               -> nInt
+   METHOD  error                         // (  )                                               -> nError
+   METHOD  errorString                   // (  )                                               -> cQString
+   METHOD  get                           // ( cFile, oQIODevice, nType )                       -> nInt
+   METHOD  hasPendingCommands            // (  )                                               -> lBool
+   METHOD  list                          // ( cDir )                                           -> nInt
+   METHOD  login                         // ( cUser, cPassword )                               -> nInt
+   METHOD  mkdir                         // ( cDir )                                           -> nInt
+   METHOD  put                           // ( oQIODevice, cFile, nType )                       -> nInt
+                                         // ( oQByteArray, cFile, nType )                      -> nInt
+   METHOD  rawCommand                    // ( cCommand )                                       -> nInt
+   METHOD  readAll                       // (  )                                               -> oQByteArray
+   METHOD  remove                        // ( cFile )                                          -> nInt
+   METHOD  rename                        // ( cOldname, cNewname )                             -> nInt
+   METHOD  rmdir                         // ( cDir )                                           -> nInt
+   METHOD  setProxy                      // ( cHost, nPort )                                   -> nInt
+   METHOD  setTransferMode               // ( nMode )                                          -> nInt
+   METHOD  state                         // (  )                                               -> nState
+   METHOD  abort                         // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -141,64 +142,176 @@ METHOD QFtp:new( ... )
    RETURN Self
 
 
-METHOD QFtp:bytesAvailable()
-   RETURN Qt_QFtp_bytesAvailable( ::pPtr )
+METHOD QFtp:bytesAvailable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFtp_bytesAvailable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFtp:cd( cDir )
-   RETURN Qt_QFtp_cd( ::pPtr, cDir )
+METHOD QFtp:cd( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QFtp_cd( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFtp:clearPendingCommands()
-   RETURN Qt_QFtp_clearPendingCommands( ::pPtr )
+METHOD QFtp:clearPendingCommands( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFtp_clearPendingCommands( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFtp:close()
-   RETURN Qt_QFtp_close( ::pPtr )
+METHOD QFtp:close( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFtp_close( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFtp:connectToHost( cHost, nPort )
-   RETURN Qt_QFtp_connectToHost( ::pPtr, cHost, nPort )
+METHOD QFtp:connectToHost( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QFtp_connectToHost( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QFtp_connectToHost( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFtp:currentCommand()
-   RETURN Qt_QFtp_currentCommand( ::pPtr )
+METHOD QFtp:currentCommand( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFtp_currentCommand( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFtp:currentDevice()
-   RETURN HB_QIODevice():from( Qt_QFtp_currentDevice( ::pPtr ) )
+METHOD QFtp:currentDevice( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QIODevice():from( Qt_QFtp_currentDevice( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFtp:currentId()
-   RETURN Qt_QFtp_currentId( ::pPtr )
+METHOD QFtp:currentId( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFtp_currentId( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFtp:error()
-   RETURN Qt_QFtp_error( ::pPtr )
+METHOD QFtp:error( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFtp_error( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFtp:errorString()
-   RETURN Qt_QFtp_errorString( ::pPtr )
+METHOD QFtp:errorString( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFtp_errorString( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFtp:get( cFile, pDev, nType )
-   RETURN Qt_QFtp_get( ::pPtr, cFile, hbqt_ptr( pDev ), nType )
+METHOD QFtp:get( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QFtp_get( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QFtp_get( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QFtp_get( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFtp:hasPendingCommands()
-   RETURN Qt_QFtp_hasPendingCommands( ::pPtr )
+METHOD QFtp:hasPendingCommands( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFtp_hasPendingCommands( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFtp:list( cDir )
-   RETURN Qt_QFtp_list( ::pPtr, cDir )
+METHOD QFtp:list( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QFtp_list( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QFtp_list( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFtp:login( cUser, cPassword )
-   RETURN Qt_QFtp_login( ::pPtr, cUser, cPassword )
+METHOD QFtp:login( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QFtp_login( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QFtp_login( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QFtp_login( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFtp:mkdir( cDir )
-   RETURN Qt_QFtp_mkdir( ::pPtr, cDir )
+METHOD QFtp:mkdir( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QFtp_mkdir( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QFtp:put( ... )
@@ -229,38 +342,98 @@ METHOD QFtp:put( ... )
    RETURN hbqt_error()
 
 
-METHOD QFtp:rawCommand( cCommand )
-   RETURN Qt_QFtp_rawCommand( ::pPtr, cCommand )
+METHOD QFtp:rawCommand( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QFtp_rawCommand( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFtp:readAll()
-   RETURN HB_QByteArray():from( Qt_QFtp_readAll( ::pPtr ) )
+METHOD QFtp:readAll( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QByteArray():from( Qt_QFtp_readAll( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFtp:remove( cFile )
-   RETURN Qt_QFtp_remove( ::pPtr, cFile )
+METHOD QFtp:remove( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QFtp_remove( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFtp:rename( cOldname, cNewname )
-   RETURN Qt_QFtp_rename( ::pPtr, cOldname, cNewname )
+METHOD QFtp:rename( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QFtp_rename( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFtp:rmdir( cDir )
-   RETURN Qt_QFtp_rmdir( ::pPtr, cDir )
+METHOD QFtp:rmdir( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QFtp_rmdir( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFtp:setProxy( cHost, nPort )
-   RETURN Qt_QFtp_setProxy( ::pPtr, cHost, nPort )
+METHOD QFtp:setProxy( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QFtp_setProxy( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFtp:setTransferMode( nMode )
-   RETURN Qt_QFtp_setTransferMode( ::pPtr, nMode )
+METHOD QFtp:setTransferMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFtp_setTransferMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFtp:state()
-   RETURN Qt_QFtp_state( ::pPtr )
+METHOD QFtp:state( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFtp_state( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFtp:abort()
-   RETURN Qt_QFtp_abort( ::pPtr )
+METHOD QFtp:abort( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFtp_abort( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

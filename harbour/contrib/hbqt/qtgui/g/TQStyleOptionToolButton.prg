@@ -103,14 +103,14 @@ CREATE CLASS QStyleOptionToolButton INHERIT HbQtObjectHandler, HB_QStyleOptionCo
 
    METHOD  new( ... )
 
-   METHOD  arrowType()
-   METHOD  features()
-   METHOD  font()
-   METHOD  icon()
-   METHOD  iconSize()
-   METHOD  pos()
-   METHOD  text()
-   METHOD  toolButtonStyle()
+   METHOD  arrowType                     // (  )                                               -> nQt_ArrowType
+   METHOD  features                      // (  )                                               -> nToolButtonFeatures
+   METHOD  font                          // (  )                                               -> oQFont
+   METHOD  icon                          // (  )                                               -> oQIcon
+   METHOD  iconSize                      // (  )                                               -> oQSize
+   METHOD  pos                           // (  )                                               -> oQPoint
+   METHOD  text                          // (  )                                               -> cQString
+   METHOD  toolButtonStyle               // (  )                                               -> nQt_ToolButtonStyle
 
    ENDCLASS
 
@@ -124,34 +124,66 @@ METHOD QStyleOptionToolButton:new( ... )
    RETURN Self
 
 
-METHOD QStyleOptionToolButton:arrowType()
-   RETURN Qt_QStyleOptionToolButton_arrowType( ::pPtr )
+METHOD QStyleOptionToolButton:arrowType( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionToolButton_arrowType( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionToolButton:features()
-   RETURN Qt_QStyleOptionToolButton_features( ::pPtr )
+METHOD QStyleOptionToolButton:features( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionToolButton_features( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionToolButton:font()
-   RETURN HB_QFont():from( Qt_QStyleOptionToolButton_font( ::pPtr ) )
+METHOD QStyleOptionToolButton:font( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFont():from( Qt_QStyleOptionToolButton_font( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionToolButton:icon()
-   RETURN HB_QIcon():from( Qt_QStyleOptionToolButton_icon( ::pPtr ) )
+METHOD QStyleOptionToolButton:icon( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QIcon():from( Qt_QStyleOptionToolButton_icon( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionToolButton:iconSize()
-   RETURN HB_QSize():from( Qt_QStyleOptionToolButton_iconSize( ::pPtr ) )
+METHOD QStyleOptionToolButton:iconSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QStyleOptionToolButton_iconSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionToolButton:pos()
-   RETURN HB_QPoint():from( Qt_QStyleOptionToolButton_pos( ::pPtr ) )
+METHOD QStyleOptionToolButton:pos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QStyleOptionToolButton_pos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionToolButton:text()
-   RETURN Qt_QStyleOptionToolButton_text( ::pPtr )
+METHOD QStyleOptionToolButton:text( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionToolButton_text( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionToolButton:toolButtonStyle()
-   RETURN Qt_QStyleOptionToolButton_toolButtonStyle( ::pPtr )
+METHOD QStyleOptionToolButton:toolButtonStyle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionToolButton_toolButtonStyle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

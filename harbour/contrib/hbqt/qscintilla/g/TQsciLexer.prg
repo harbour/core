@@ -103,47 +103,50 @@ CREATE CLASS QsciLexer INHERIT HbQtObjectHandler FUNCTION HB_QsciLexer
 
    METHOD  new( ... )
 
-   METHOD  language()
-   METHOD  lexer()
-   METHOD  lexerId()
-   METHOD  apis()
-   METHOD  autoCompletionFillups()
-   METHOD  autoCompletionWordSeparators()
-   METHOD  autoIndentStyle()
-   METHOD  blockEnd( nStyle )
-   METHOD  blockLookback()
-   METHOD  blockStart( nStyle )
-   METHOD  blockStartKeyword( nStyle )
-   METHOD  braceStyle()
-   METHOD  caseSensitive()
-   METHOD  color( nStyle )
-   METHOD  eolFill( nStyle )
-   METHOD  font( nStyle )
-   METHOD  indentationGuideView()
-   METHOD  keywords( nSet )
-   METHOD  defaultStyle()
-   METHOD  description( nStyle )
-   METHOD  paper( nStyle )
-   METHOD  defaultColor( ... )
-   METHOD  defaultEolFill( nStyle )
-   METHOD  defaultFont( ... )
-   METHOD  defaultPaper( ... )
-   METHOD  editor()
-   METHOD  setEditor( pEditor )
-   METHOD  readSettings( pQs, pPrefix )
-   METHOD  refreshProperties()
-   METHOD  styleBitsNeeded()
-   METHOD  wordCharacters()
-   METHOD  writeSettings( pQs, pPrefix )
-   METHOD  setAPIs( pApis )
-   METHOD  setDefaultColor( pC )
-   METHOD  setDefaultFont( pF )
-   METHOD  setDefaultPaper( pC )
-   METHOD  setAutoIndentStyle( nAutoindentstyle )
-   METHOD  setColor( pC, nStyle )
-   METHOD  setEolFill( lEoffill, nStyle )
-   METHOD  setFont( pF, nStyle )
-   METHOD  setPaper( pC, nStyle )
+   METHOD  language                      // (  )                                               -> cChar
+   METHOD  lexer                         // (  )                                               -> cChar
+   METHOD  lexerId                       // (  )                                               -> nInt
+   METHOD  apis                          // (  )                                               -> oQsciAbstractAPIs
+   METHOD  autoCompletionFillups         // (  )                                               -> cChar
+   METHOD  autoCompletionWordSeparators  // (  )                                               -> oQStringList
+   METHOD  autoIndentStyle               // (  )                                               -> nInt
+   METHOD  blockEnd                      // ( @nStyle )                                        -> cChar
+   METHOD  blockLookback                 // (  )                                               -> nInt
+   METHOD  blockStart                    // ( @nStyle )                                        -> cChar
+   METHOD  blockStartKeyword             // ( @nStyle )                                        -> cChar
+   METHOD  braceStyle                    // (  )                                               -> nInt
+   METHOD  caseSensitive                 // (  )                                               -> lBool
+   METHOD  color                         // ( nStyle )                                         -> oQColor
+   METHOD  eolFill                       // ( nStyle )                                         -> lBool
+   METHOD  font                          // ( nStyle )                                         -> oQFont
+   METHOD  indentationGuideView          // (  )                                               -> nInt
+   METHOD  keywords                      // ( nSet )                                           -> cChar
+   METHOD  defaultStyle                  // (  )                                               -> nInt
+   METHOD  description                   // ( nStyle )                                         -> cQString
+   METHOD  paper                         // ( nStyle )                                         -> oQColor
+   METHOD  defaultColor                  // (  )                                               -> oQColor
+                                         // ( nStyle )                                         -> oQColor
+   METHOD  defaultEolFill                // ( nStyle )                                         -> lBool
+   METHOD  defaultFont                   // (  )                                               -> oQFont
+                                         // ( nStyle )                                         -> oQFont
+   METHOD  defaultPaper                  // (  )                                               -> oQColor
+                                         // ( nStyle )                                         -> oQColor
+   METHOD  editor                        // (  )                                               -> oQsciScintilla
+   METHOD  setEditor                     // ( oQsciScintilla )                                 -> NIL
+   METHOD  readSettings                  // ( oQSettings, cPrefix )                            -> lBool
+   METHOD  refreshProperties             // (  )                                               -> NIL
+   METHOD  styleBitsNeeded               // (  )                                               -> nInt
+   METHOD  wordCharacters                // (  )                                               -> cChar
+   METHOD  writeSettings                 // ( oQSettings, cPrefix )                            -> lBool
+   METHOD  setAPIs                       // ( oQsciAbstractAPIs )                              -> NIL
+   METHOD  setDefaultColor               // ( oQColor )                                        -> NIL
+   METHOD  setDefaultFont                // ( oQFont )                                         -> NIL
+   METHOD  setDefaultPaper               // ( oQColor )                                        -> NIL
+   METHOD  setAutoIndentStyle            // ( nAutoindentstyle )                               -> NIL
+   METHOD  setColor                      // ( oQColor, nStyle )                                -> NIL
+   METHOD  setEolFill                    // ( lEoffill, nStyle )                               -> NIL
+   METHOD  setFont                       // ( oQFont, nStyle )                                 -> NIL
+   METHOD  setPaper                      // ( oQColor, nStyle )                                -> NIL
 
    ENDCLASS
 
@@ -157,88 +160,214 @@ METHOD QsciLexer:new( ... )
    RETURN Self
 
 
-METHOD QsciLexer:language()
-   RETURN Qt_QsciLexer_language( ::pPtr )
+METHOD QsciLexer:language( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexer_language( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:lexer()
-   RETURN Qt_QsciLexer_lexer( ::pPtr )
+METHOD QsciLexer:lexer( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexer_lexer( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:lexerId()
-   RETURN Qt_QsciLexer_lexerId( ::pPtr )
+METHOD QsciLexer:lexerId( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexer_lexerId( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:apis()
-   RETURN HB_QsciAbstractAPIs():from( Qt_QsciLexer_apis( ::pPtr ) )
+METHOD QsciLexer:apis( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QsciAbstractAPIs():from( Qt_QsciLexer_apis( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:autoCompletionFillups()
-   RETURN Qt_QsciLexer_autoCompletionFillups( ::pPtr )
+METHOD QsciLexer:autoCompletionFillups( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexer_autoCompletionFillups( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:autoCompletionWordSeparators()
-   RETURN HB_QStringList():from( Qt_QsciLexer_autoCompletionWordSeparators( ::pPtr ) )
+METHOD QsciLexer:autoCompletionWordSeparators( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QsciLexer_autoCompletionWordSeparators( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:autoIndentStyle()
-   RETURN Qt_QsciLexer_autoIndentStyle( ::pPtr )
+METHOD QsciLexer:autoIndentStyle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexer_autoIndentStyle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:blockEnd( nStyle )
-   RETURN Qt_QsciLexer_blockEnd( ::pPtr, nStyle )
+METHOD QsciLexer:blockEnd( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexer_blockEnd( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QsciLexer_blockEnd( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:blockLookback()
-   RETURN Qt_QsciLexer_blockLookback( ::pPtr )
+METHOD QsciLexer:blockLookback( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexer_blockLookback( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:blockStart( nStyle )
-   RETURN Qt_QsciLexer_blockStart( ::pPtr, nStyle )
+METHOD QsciLexer:blockStart( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexer_blockStart( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QsciLexer_blockStart( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:blockStartKeyword( nStyle )
-   RETURN Qt_QsciLexer_blockStartKeyword( ::pPtr, nStyle )
+METHOD QsciLexer:blockStartKeyword( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexer_blockStartKeyword( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QsciLexer_blockStartKeyword( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:braceStyle()
-   RETURN Qt_QsciLexer_braceStyle( ::pPtr )
+METHOD QsciLexer:braceStyle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexer_braceStyle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:caseSensitive()
-   RETURN Qt_QsciLexer_caseSensitive( ::pPtr )
+METHOD QsciLexer:caseSensitive( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexer_caseSensitive( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:color( nStyle )
-   RETURN HB_QColor():from( Qt_QsciLexer_color( ::pPtr, nStyle ) )
+METHOD QsciLexer:color( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QColor():from( Qt_QsciLexer_color( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:eolFill( nStyle )
-   RETURN Qt_QsciLexer_eolFill( ::pPtr, nStyle )
+METHOD QsciLexer:eolFill( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexer_eolFill( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:font( nStyle )
-   RETURN HB_QFont():from( Qt_QsciLexer_font( ::pPtr, nStyle ) )
+METHOD QsciLexer:font( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QFont():from( Qt_QsciLexer_font( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:indentationGuideView()
-   RETURN Qt_QsciLexer_indentationGuideView( ::pPtr )
+METHOD QsciLexer:indentationGuideView( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexer_indentationGuideView( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:keywords( nSet )
-   RETURN Qt_QsciLexer_keywords( ::pPtr, nSet )
+METHOD QsciLexer:keywords( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexer_keywords( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:defaultStyle()
-   RETURN Qt_QsciLexer_defaultStyle( ::pPtr )
+METHOD QsciLexer:defaultStyle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexer_defaultStyle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:description( nStyle )
-   RETURN Qt_QsciLexer_description( ::pPtr, nStyle )
+METHOD QsciLexer:description( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexer_description( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:paper( nStyle )
-   RETURN HB_QColor():from( Qt_QsciLexer_paper( ::pPtr, nStyle ) )
+METHOD QsciLexer:paper( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QColor():from( Qt_QsciLexer_paper( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QsciLexer:defaultColor( ... )
@@ -255,8 +384,16 @@ METHOD QsciLexer:defaultColor( ... )
    RETURN hbqt_error()
 
 
-METHOD QsciLexer:defaultEolFill( nStyle )
-   RETURN Qt_QsciLexer_defaultEolFill( ::pPtr, nStyle )
+METHOD QsciLexer:defaultEolFill( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexer_defaultEolFill( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QsciLexer:defaultFont( ... )
@@ -287,66 +424,214 @@ METHOD QsciLexer:defaultPaper( ... )
    RETURN hbqt_error()
 
 
-METHOD QsciLexer:editor()
-   RETURN HB_QsciScintilla():from( Qt_QsciLexer_editor( ::pPtr ) )
+METHOD QsciLexer:editor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QsciScintilla():from( Qt_QsciLexer_editor( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:setEditor( pEditor )
-   RETURN Qt_QsciLexer_setEditor( ::pPtr, hbqt_ptr( pEditor ) )
+METHOD QsciLexer:setEditor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexer_setEditor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:readSettings( pQs, pPrefix )
-   RETURN Qt_QsciLexer_readSettings( ::pPtr, hbqt_ptr( pQs ), hbqt_ptr( pPrefix ) )
+METHOD QsciLexer:readSettings( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QsciLexer_readSettings( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexer_readSettings( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:refreshProperties()
-   RETURN Qt_QsciLexer_refreshProperties( ::pPtr )
+METHOD QsciLexer:refreshProperties( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexer_refreshProperties( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:styleBitsNeeded()
-   RETURN Qt_QsciLexer_styleBitsNeeded( ::pPtr )
+METHOD QsciLexer:styleBitsNeeded( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexer_styleBitsNeeded( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:wordCharacters()
-   RETURN Qt_QsciLexer_wordCharacters( ::pPtr )
+METHOD QsciLexer:wordCharacters( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexer_wordCharacters( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:writeSettings( pQs, pPrefix )
-   RETURN Qt_QsciLexer_writeSettings( ::pPtr, hbqt_ptr( pQs ), hbqt_ptr( pPrefix ) )
+METHOD QsciLexer:writeSettings( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QsciLexer_writeSettings( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexer_writeSettings( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:setAPIs( pApis )
-   RETURN Qt_QsciLexer_setAPIs( ::pPtr, hbqt_ptr( pApis ) )
+METHOD QsciLexer:setAPIs( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexer_setAPIs( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:setDefaultColor( pC )
-   RETURN Qt_QsciLexer_setDefaultColor( ::pPtr, hbqt_ptr( pC ) )
+METHOD QsciLexer:setDefaultColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexer_setDefaultColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:setDefaultFont( pF )
-   RETURN Qt_QsciLexer_setDefaultFont( ::pPtr, hbqt_ptr( pF ) )
+METHOD QsciLexer:setDefaultFont( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexer_setDefaultFont( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:setDefaultPaper( pC )
-   RETURN Qt_QsciLexer_setDefaultPaper( ::pPtr, hbqt_ptr( pC ) )
+METHOD QsciLexer:setDefaultPaper( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexer_setDefaultPaper( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:setAutoIndentStyle( nAutoindentstyle )
-   RETURN Qt_QsciLexer_setAutoIndentStyle( ::pPtr, nAutoindentstyle )
+METHOD QsciLexer:setAutoIndentStyle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexer_setAutoIndentStyle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:setColor( pC, nStyle )
-   RETURN Qt_QsciLexer_setColor( ::pPtr, hbqt_ptr( pC ), nStyle )
+METHOD QsciLexer:setColor( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QsciLexer_setColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexer_setColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:setEolFill( lEoffill, nStyle )
-   RETURN Qt_QsciLexer_setEolFill( ::pPtr, lEoffill, nStyle )
+METHOD QsciLexer:setEolFill( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QsciLexer_setEolFill( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexer_setEolFill( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:setFont( pF, nStyle )
-   RETURN Qt_QsciLexer_setFont( ::pPtr, hbqt_ptr( pF ), nStyle )
+METHOD QsciLexer:setFont( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QsciLexer_setFont( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexer_setFont( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexer:setPaper( pC, nStyle )
-   RETURN Qt_QsciLexer_setPaper( ::pPtr, hbqt_ptr( pC ), nStyle )
+METHOD QsciLexer:setPaper( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QsciLexer_setPaper( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexer_setPaper( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

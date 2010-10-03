@@ -1385,7 +1385,7 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
 
    CASE "treeWidget_itemSelectionChanged"
       qItem  := ::oUI:q_treeWidget:currentItem()
-      IF ( nIndex := ascan( ::aTree, qItem:text() ) ) > 0
+      IF ( nIndex := ascan( ::aTree, qItem:text( 0 ) ) ) > 0
          ::oUI:q_stackedWidget:setCurrentIndex( nIndex - 1 )
       ENDIF
       EXIT
@@ -1845,7 +1845,7 @@ METHOD IdeSetup:buildKeywords()
    oTbl := ::oUI:q_tableVar
 
    oTbl:verticalHeader():hide()
-   oTbl:horizontalHeader():stretchLastSection( .t. )
+   oTbl:horizontalHeader():setStretchLastSection( .t. )
 
    oTbl:setAlternatingRowColors( .t. )
    oTbl:setColumnCount( len( hdr_ ) )
@@ -1913,7 +1913,7 @@ METHOD IdeSetup:setBaseColor()
    ::qOrgPalette := oApp:palette()
 
    qColor := QColor( Qt_red )
-   qBrush := QBrush( "QColor", qColor )
+   qBrush := QBrush( qColor )
 
    qPalette := oApp:palette()
    qPalette:setBrush( QPalette_Window, qBrush )

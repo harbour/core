@@ -103,8 +103,8 @@ CREATE CLASS QsciStyledText INHERIT HbQtObjectHandler FUNCTION HB_QsciStyledText
 
    METHOD  new( ... )
 
-   METHOD  text()
-   METHOD  style()
+   METHOD  text                          // (  )                                               -> cQString
+   METHOD  style                         // (  )                                               -> nInt
 
    ENDCLASS
 
@@ -118,10 +118,18 @@ METHOD QsciStyledText:new( ... )
    RETURN Self
 
 
-METHOD QsciStyledText:text()
-   RETURN Qt_QsciStyledText_text( ::pPtr )
+METHOD QsciStyledText:text( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciStyledText_text( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciStyledText:style()
-   RETURN Qt_QsciStyledText_style( ::pPtr )
+METHOD QsciStyledText:style( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciStyledText_style( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

@@ -103,19 +103,19 @@ CREATE CLASS QFrame INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QFrame
 
    METHOD  new( ... )
 
-   METHOD  frameRect()
-   METHOD  frameShadow()
-   METHOD  frameShape()
-   METHOD  frameStyle()
-   METHOD  frameWidth()
-   METHOD  lineWidth()
-   METHOD  midLineWidth()
-   METHOD  setFrameRect( pQRect )
-   METHOD  setFrameShadow( nShadow )
-   METHOD  setFrameShape( nShape )
-   METHOD  setFrameStyle( nStyle )
-   METHOD  setLineWidth( nInt )
-   METHOD  setMidLineWidth( nInt )
+   METHOD  frameRect                     // (  )                                               -> oQRect
+   METHOD  frameShadow                   // (  )                                               -> nShadow
+   METHOD  frameShape                    // (  )                                               -> nShape
+   METHOD  frameStyle                    // (  )                                               -> nInt
+   METHOD  frameWidth                    // (  )                                               -> nInt
+   METHOD  lineWidth                     // (  )                                               -> nInt
+   METHOD  midLineWidth                  // (  )                                               -> nInt
+   METHOD  setFrameRect                  // ( oQRect )                                         -> NIL
+   METHOD  setFrameShadow                // ( nShadow )                                        -> NIL
+   METHOD  setFrameShape                 // ( nShape )                                         -> NIL
+   METHOD  setFrameStyle                 // ( nStyle )                                         -> NIL
+   METHOD  setLineWidth                  // ( nInt )                                           -> NIL
+   METHOD  setMidLineWidth               // ( nInt )                                           -> NIL
 
    ENDCLASS
 
@@ -129,54 +129,130 @@ METHOD QFrame:new( ... )
    RETURN Self
 
 
-METHOD QFrame:frameRect()
-   RETURN HB_QRect():from( Qt_QFrame_frameRect( ::pPtr ) )
+METHOD QFrame:frameRect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QFrame_frameRect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFrame:frameShadow()
-   RETURN Qt_QFrame_frameShadow( ::pPtr )
+METHOD QFrame:frameShadow( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFrame_frameShadow( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFrame:frameShape()
-   RETURN Qt_QFrame_frameShape( ::pPtr )
+METHOD QFrame:frameShape( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFrame_frameShape( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFrame:frameStyle()
-   RETURN Qt_QFrame_frameStyle( ::pPtr )
+METHOD QFrame:frameStyle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFrame_frameStyle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFrame:frameWidth()
-   RETURN Qt_QFrame_frameWidth( ::pPtr )
+METHOD QFrame:frameWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFrame_frameWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFrame:lineWidth()
-   RETURN Qt_QFrame_lineWidth( ::pPtr )
+METHOD QFrame:lineWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFrame_lineWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFrame:midLineWidth()
-   RETURN Qt_QFrame_midLineWidth( ::pPtr )
+METHOD QFrame:midLineWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFrame_midLineWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFrame:setFrameRect( pQRect )
-   RETURN Qt_QFrame_setFrameRect( ::pPtr, hbqt_ptr( pQRect ) )
+METHOD QFrame:setFrameRect( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QFrame_setFrameRect( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFrame:setFrameShadow( nShadow )
-   RETURN Qt_QFrame_setFrameShadow( ::pPtr, nShadow )
+METHOD QFrame:setFrameShadow( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFrame_setFrameShadow( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFrame:setFrameShape( nShape )
-   RETURN Qt_QFrame_setFrameShape( ::pPtr, nShape )
+METHOD QFrame:setFrameShape( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFrame_setFrameShape( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFrame:setFrameStyle( nStyle )
-   RETURN Qt_QFrame_setFrameStyle( ::pPtr, nStyle )
+METHOD QFrame:setFrameStyle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFrame_setFrameStyle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFrame:setLineWidth( nInt )
-   RETURN Qt_QFrame_setLineWidth( ::pPtr, nInt )
+METHOD QFrame:setLineWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFrame_setLineWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFrame:setMidLineWidth( nInt )
-   RETURN Qt_QFrame_setMidLineWidth( ::pPtr, nInt )
+METHOD QFrame:setMidLineWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFrame_setMidLineWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

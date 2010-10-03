@@ -27,34 +27,34 @@
  *     An instance of the object of type QTextLayout
  *  $METHODS$
  *     :beginLayout()                                      -> NIL
- *     :boundingRect()                                     -> pQRectF
+ *     :boundingRect()                                     -> oQRectF
  *     :cacheEnabled()                                     -> lBool
  *     :clearAdditionalFormats()                           -> NIL
  *     :clearLayout()                                      -> NIL
- *     :createLine()                                       -> pQTextLine
- *     :drawCursor( pPainter, pPosition, nCursorPosition, nWidth )  -> NIL
- *     :drawCursor_1( pPainter, pPosition, nCursorPosition )  -> NIL
+ *     :createLine()                                       -> oQTextLine
+ *     :drawCursor( oQPainter, oQPointF, nCursorPosition, nWidth )  -> NIL
+ *     :drawCursor( oQPainter, oQPointF, nCursorPosition )  -> NIL
  *     :endLayout()                                        -> NIL
- *     :font()                                             -> pQFont
+ *     :font()                                             -> oQFont
  *     :isValidCursorPosition( nPos )                      -> lBool
- *     :lineAt( nI )                                       -> pQTextLine
+ *     :lineAt( nI )                                       -> oQTextLine
  *     :lineCount()                                        -> nInt
- *     :lineForTextPosition( nPos )                        -> pQTextLine
+ *     :lineForTextPosition( nPos )                        -> oQTextLine
  *     :maximumWidth()                                     -> nQreal
  *     :minimumWidth()                                     -> nQreal
  *     :nextCursorPosition( nOldPos, nMode )               -> nInt
- *     :position()                                         -> pQPointF
+ *     :position()                                         -> oQPointF
  *     :preeditAreaPosition()                              -> nInt
  *     :preeditAreaText()                                  -> cQString
  *     :previousCursorPosition( nOldPos, nMode )           -> nInt
  *     :setCacheEnabled( lEnable )                         -> NIL
- *     :setFont( pFont )                                   -> NIL
- *     :setPosition( pP )                                  -> NIL
+ *     :setFont( oQFont )                                  -> NIL
+ *     :setPosition( oQPointF )                            -> NIL
  *     :setPreeditArea( nPosition, cText )                 -> NIL
  *     :setText( cString )                                 -> NIL
- *     :setTextOption( pOption )                           -> NIL
+ *     :setTextOption( oQTextOption )                      -> NIL
  *     :text()                                             -> cQString
- *     :textOption()                                       -> pQTextOption
+ *     :textOption()                                       -> oQTextOption
  * 
  *  $DESCRIPTION$
  * 
@@ -74,7 +74,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTextLayout.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextLayout.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

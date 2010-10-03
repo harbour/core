@@ -26,15 +26,15 @@
  *  $RETURNS$
  *     An instance of the object of type QTextList
  *  $METHODS$
- *     :add( pBlock )                                      -> NIL
+ *     :add( oQTextBlock )                                 -> NIL
  *     :count()                                            -> nInt
- *     :format()                                           -> Format
- *     :item( nI )                                         -> pQTextBlock
- *     :itemNumber( pBlock )                               -> nInt
- *     :itemText( pBlock )                                 -> cQString
- *     :remove( pBlock )                                   -> NIL
+ *     :format()                                           -> oQTextListFormat
+ *     :item( nI )                                         -> oQTextBlock
+ *     :itemNumber( oQTextBlock )                          -> nInt
+ *     :itemText( oQTextBlock )                            -> cQString
+ *     :remove( oQTextBlock )                              -> NIL
  *     :removeItem( nI )                                   -> NIL
- *     :setFormat( pFormat )                               -> NIL
+ *     :setFormat( oQTextListFormat )                      -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -54,7 +54,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTextList.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextList.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QTextBlockGroup()
  *  $END$
  */

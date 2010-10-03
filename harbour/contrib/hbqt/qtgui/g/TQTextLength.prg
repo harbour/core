@@ -103,9 +103,9 @@ CREATE CLASS QTextLength INHERIT HbQtObjectHandler FUNCTION HB_QTextLength
 
    METHOD  new( ... )
 
-   METHOD  rawValue()
-   METHOD  type()
-   METHOD  value( nMaximumLength )
+   METHOD  rawValue                      // (  )                                               -> nQreal
+   METHOD  type                          // (  )                                               -> nType
+   METHOD  value                         // ( nMaximumLength )                                 -> nQreal
 
    ENDCLASS
 
@@ -119,14 +119,30 @@ METHOD QTextLength:new( ... )
    RETURN Self
 
 
-METHOD QTextLength:rawValue()
-   RETURN Qt_QTextLength_rawValue( ::pPtr )
+METHOD QTextLength:rawValue( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextLength_rawValue( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextLength:type()
-   RETURN Qt_QTextLength_type( ::pPtr )
+METHOD QTextLength:type( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextLength_type( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextLength:value( nMaximumLength )
-   RETURN Qt_QTextLength_value( ::pPtr, nMaximumLength )
+METHOD QTextLength:value( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextLength_value( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

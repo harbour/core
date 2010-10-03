@@ -26,9 +26,9 @@
  *  $RETURNS$
  *     An instance of the object of type QGraphicsRectItem
  *  $METHODS$
- *     :rect()                                             -> pQRectF
- *     :setRect( pRectangle )                              -> NIL
- *     :setRect_1( nX, nY, nWidth, nHeight )               -> NIL
+ *     :rect()                                             -> oQRectF
+ *     :setRect( oQRectF )                                 -> NIL
+ *     :setRect( nX, nY, nWidth, nHeight )                 -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -48,7 +48,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGraphicsRectItem.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsRectItem.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractGraphicsShapeItem()
  *  $END$
  */

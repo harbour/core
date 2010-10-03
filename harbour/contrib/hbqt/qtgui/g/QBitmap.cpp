@@ -99,7 +99,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 4/4 [ 100.00% ] ]
+ *  Constructed[ 9/9 [ 100.00% ] ]
  *
  *
  *  *** Commented out protostypes ***
@@ -216,6 +216,48 @@ HB_FUNC( QT_QBITMAP )
    }
 
    hb_retptrGC( hbqt_gcAllocate_QBitmap( ( void * ) pObj, true ) );
+}
+
+/*
+ * QBitmap ()
+ */
+HB_FUNC( QT_QBITMAP_QBITMAP )
+{
+   hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap(), true ) );
+}
+
+/*
+ * QBitmap ( const QPixmap & pixmap )
+ */
+HB_FUNC( QT_QBITMAP_QBITMAP_1 )
+{
+   hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap( *hbqt_par_QPixmap( 2 ) ), true ) );
+}
+
+/*
+ * QBitmap ( int width, int height )
+ */
+HB_FUNC( QT_QBITMAP_QBITMAP_2 )
+{
+   hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap( hb_parni( 2 ), hb_parni( 3 ) ), true ) );
+}
+
+/*
+ * QBitmap ( const QSize & size )
+ */
+HB_FUNC( QT_QBITMAP_QBITMAP_3 )
+{
+   hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap( *hbqt_par_QSize( 2 ) ), true ) );
+}
+
+/*
+ * QBitmap ( const QString & fileName, const char * format = 0 )
+ */
+HB_FUNC( QT_QBITMAP_QBITMAP_4 )
+{
+      void * pText;
+   hb_retptrGC( hbqt_gcAllocate_QBitmap( new QBitmap( hb_parstr_utf8( 2, &pText, NULL ), ( const char * ) hb_parc( 3 ) ), true ) );
+      hb_strfree( pText );
 }
 
 /*

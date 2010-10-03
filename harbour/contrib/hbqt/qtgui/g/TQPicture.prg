@@ -103,15 +103,17 @@ CREATE CLASS QPicture INHERIT HbQtObjectHandler, HB_QPaintDevice FUNCTION HB_QPi
 
    METHOD  new( ... )
 
-   METHOD  boundingRect()
-   METHOD  data()
-   METHOD  isNull()
-   METHOD  load( ... )
-   METHOD  play( pPainter )
-   METHOD  save( ... )
-   METHOD  setBoundingRect( pR )
-   METHOD  setData( pData, nSize )
-   METHOD  size()
+   METHOD  boundingRect                  // (  )                                               -> oQRect
+   METHOD  data                          // (  )                                               -> cChar
+   METHOD  isNull                        // (  )                                               -> lBool
+   METHOD  load                          // ( cFileName, cFormat )                             -> lBool
+                                         // ( oQIODevice, cFormat )                            -> lBool
+   METHOD  play                          // ( oQPainter )                                      -> lBool
+   METHOD  save                          // ( cFileName, cFormat )                             -> lBool
+                                         // ( oQIODevice, cFormat )                            -> lBool
+   METHOD  setBoundingRect               // ( oQRect )                                         -> NIL
+   METHOD  setData                       // ( cData, nSize )                                   -> NIL
+   METHOD  size                          // (  )                                               -> nUint
 
    ENDCLASS
 
@@ -125,25 +127,37 @@ METHOD QPicture:new( ... )
    RETURN Self
 
 
-METHOD QPicture:boundingRect()
-   RETURN HB_QRect():from( Qt_QPicture_boundingRect( ::pPtr ) )
+METHOD QPicture:boundingRect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QPicture_boundingRect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPicture:data()
-   RETURN Qt_QPicture_data( ::pPtr )
+METHOD QPicture:data( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPicture_data( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPicture:isNull()
-   RETURN Qt_QPicture_isNull( ::pPtr )
+METHOD QPicture:isNull( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPicture_isNull( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPicture:load( ... )
    SWITCH PCount()
    CASE 2
       DO CASE
-      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
          RETURN Qt_QPicture_load( ::pPtr, ... )
-      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
          RETURN Qt_QPicture_load_1( ::pPtr, ... )
       ENDCASE
       EXIT
@@ -159,17 +173,25 @@ METHOD QPicture:load( ... )
    RETURN hbqt_error()
 
 
-METHOD QPicture:play( pPainter )
-   RETURN Qt_QPicture_play( ::pPtr, hbqt_ptr( pPainter ) )
+METHOD QPicture:play( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPicture_play( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPicture:save( ... )
    SWITCH PCount()
    CASE 2
       DO CASE
-      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
          RETURN Qt_QPicture_save( ::pPtr, ... )
-      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
          RETURN Qt_QPicture_save_1( ::pPtr, ... )
       ENDCASE
       EXIT
@@ -185,14 +207,34 @@ METHOD QPicture:save( ... )
    RETURN hbqt_error()
 
 
-METHOD QPicture:setBoundingRect( pR )
-   RETURN Qt_QPicture_setBoundingRect( ::pPtr, hbqt_ptr( pR ) )
+METHOD QPicture:setBoundingRect( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPicture_setBoundingRect( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPicture:setData( pData, nSize )
-   RETURN Qt_QPicture_setData( ::pPtr, hbqt_ptr( pData ), nSize )
+METHOD QPicture:setData( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QPicture_setData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPicture:size()
-   RETURN Qt_QPicture_size( ::pPtr )
+METHOD QPicture:size( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPicture_size( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

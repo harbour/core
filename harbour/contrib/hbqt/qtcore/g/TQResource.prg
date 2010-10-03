@@ -103,20 +103,20 @@ CREATE CLASS QResource INHERIT HbQtObjectHandler FUNCTION HB_QResource
 
    METHOD  new( ... )
 
-   METHOD  absoluteFilePath()
-   METHOD  data()
-   METHOD  fileName()
-   METHOD  isCompressed()
-   METHOD  isValid()
-   METHOD  locale()
-   METHOD  setFileName( cFile )
-   METHOD  setLocale( pLocale )
-   METHOD  size()
-   METHOD  registerResource( cRccFileName, cMapRoot )
-   METHOD  registerResource_1( pRccData, cMapRoot )
-   METHOD  searchPaths()
-   METHOD  unregisterResource( cRccFileName, cMapRoot )
-   METHOD  unregisterResource_1( pRccData, cMapRoot )
+   METHOD  absoluteFilePath              // (  )                                               -> cQString
+   METHOD  data                          // (  )                                               -> cUchar
+   METHOD  fileName                      // (  )                                               -> cQString
+   METHOD  isCompressed                  // (  )                                               -> lBool
+   METHOD  isValid                       // (  )                                               -> lBool
+   METHOD  locale                        // (  )                                               -> oQLocale
+   METHOD  setFileName                   // ( cFile )                                          -> NIL
+   METHOD  setLocale                     // ( oQLocale )                                       -> NIL
+   METHOD  size                          // (  )                                               -> nQint64
+   METHOD  registerResource              // ( cRccFileName, cMapRoot )                         -> lBool
+   METHOD  registerResource_1            // ( ouchar, cMapRoot )                               -> lBool
+   METHOD  searchPaths                   // (  )                                               -> oQStringList
+   METHOD  unregisterResource            // ( cRccFileName, cMapRoot )                         -> lBool
+   METHOD  unregisterResource_1          // ( ouchar, cMapRoot )                               -> lBool
 
    ENDCLASS
 
@@ -130,58 +130,58 @@ METHOD QResource:new( ... )
    RETURN Self
 
 
-METHOD QResource:absoluteFilePath()
-   RETURN Qt_QResource_absoluteFilePath( ::pPtr )
+METHOD QResource:absoluteFilePath( ... )
+   RETURN Qt_QResource_absoluteFilePath( ::pPtr, ... )
 
 
-METHOD QResource:data()
-   RETURN Qt_QResource_data( ::pPtr )
+METHOD QResource:data( ... )
+   RETURN Qt_QResource_data( ::pPtr, ... )
 
 
-METHOD QResource:fileName()
-   RETURN Qt_QResource_fileName( ::pPtr )
+METHOD QResource:fileName( ... )
+   RETURN Qt_QResource_fileName( ::pPtr, ... )
 
 
-METHOD QResource:isCompressed()
-   RETURN Qt_QResource_isCompressed( ::pPtr )
+METHOD QResource:isCompressed( ... )
+   RETURN Qt_QResource_isCompressed( ::pPtr, ... )
 
 
-METHOD QResource:isValid()
-   RETURN Qt_QResource_isValid( ::pPtr )
+METHOD QResource:isValid( ... )
+   RETURN Qt_QResource_isValid( ::pPtr, ... )
 
 
-METHOD QResource:locale()
-   RETURN HB_QLocale():from( Qt_QResource_locale( ::pPtr ) )
+METHOD QResource:locale( ... )
+   RETURN HB_QLocale():from( Qt_QResource_locale( ::pPtr, ... ) )
 
 
-METHOD QResource:setFileName( cFile )
-   RETURN Qt_QResource_setFileName( ::pPtr, cFile )
+METHOD QResource:setFileName( ... )
+   RETURN Qt_QResource_setFileName( ::pPtr, ... )
 
 
-METHOD QResource:setLocale( pLocale )
-   RETURN Qt_QResource_setLocale( ::pPtr, hbqt_ptr( pLocale ) )
+METHOD QResource:setLocale( ... )
+   RETURN Qt_QResource_setLocale( ::pPtr, ... )
 
 
-METHOD QResource:size()
-   RETURN Qt_QResource_size( ::pPtr )
+METHOD QResource:size( ... )
+   RETURN Qt_QResource_size( ::pPtr, ... )
 
 
-METHOD QResource:registerResource( cRccFileName, cMapRoot )
-   RETURN Qt_QResource_registerResource( ::pPtr, cRccFileName, cMapRoot )
+METHOD QResource:registerResource( ... )
+   RETURN Qt_QResource_registerResource( ::pPtr, ... )
 
 
-METHOD QResource:registerResource_1( pRccData, cMapRoot )
-   RETURN Qt_QResource_registerResource_1( ::pPtr, hbqt_ptr( pRccData ), cMapRoot )
+METHOD QResource:registerResource_1( ... )
+   RETURN Qt_QResource_registerResource_1( ::pPtr, ... )
 
 
-METHOD QResource:searchPaths()
-   RETURN HB_QStringList():from( Qt_QResource_searchPaths( ::pPtr ) )
+METHOD QResource:searchPaths( ... )
+   RETURN HB_QStringList():from( Qt_QResource_searchPaths( ::pPtr, ... ) )
 
 
-METHOD QResource:unregisterResource( cRccFileName, cMapRoot )
-   RETURN Qt_QResource_unregisterResource( ::pPtr, cRccFileName, cMapRoot )
+METHOD QResource:unregisterResource( ... )
+   RETURN Qt_QResource_unregisterResource( ::pPtr, ... )
 
 
-METHOD QResource:unregisterResource_1( pRccData, cMapRoot )
-   RETURN Qt_QResource_unregisterResource_1( ::pPtr, hbqt_ptr( pRccData ), cMapRoot )
+METHOD QResource:unregisterResource_1( ... )
+   RETURN Qt_QResource_unregisterResource_1( ::pPtr, ... )
 

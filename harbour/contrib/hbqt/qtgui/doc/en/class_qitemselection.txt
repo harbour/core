@@ -26,9 +26,9 @@
  *  $RETURNS$
  *     An instance of the object of type QItemSelection
  *  $METHODS$
- *     :contains( pIndex )                                 -> lBool
- *     :merge( pOther, nCommand )                          -> NIL
- *     :select( pTopLeft, pBottomRight )                   -> NIL
+ *     :contains( oQModelIndex )                           -> lBool
+ *     :merge( oQItemSelection, nCommand )                 -> NIL
+ *     :select( oQModelIndex, oQModelIndex )               -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -48,7 +48,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQItemSelection.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QItemSelection.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QList()
  *  $END$
  */

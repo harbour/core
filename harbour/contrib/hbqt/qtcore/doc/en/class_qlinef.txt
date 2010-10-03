@@ -26,29 +26,33 @@
  *  $RETURNS$
  *     An instance of the object of type QLineF
  *  $METHODS$
- *     :p1()                                               -> pQPointF
- *     :p2()                                               -> pQPointF
+ *     :p1()                                               -> oQPointF
+ *     :p2()                                               -> oQPointF
  *     :x1()                                               -> nQreal
  *     :x2()                                               -> nQreal
  *     :y1()                                               -> nQreal
  *     :y2()                                               -> nQreal
  *     :angle()                                            -> nQreal
- *     :angleTo( pLine )                                   -> nQreal
+ *     :angleTo( oQLineF )                                 -> nQreal
  *     :dx()                                               -> nQreal
  *     :dy()                                               -> nQreal
- *     :intersect( pLine, pIntersectionPoint )             -> nIntersectType
+ *     :intersect( oQLineF, oQPointF )                     -> nIntersectType
  *     :isNull()                                           -> lBool
  *     :length()                                           -> nQreal
- *     :pointAt( nT )                                      -> pQPointF
- *     :setP1( pP1 )                                       -> NIL
- *     :setP2( pP2 )                                       -> NIL
+ *     :normalVector()                                     -> oQLineF
+ *     :pointAt( nT )                                      -> oQPointF
+ *     :setP1( oQPointF )                                  -> NIL
+ *     :setP2( oQPointF )                                  -> NIL
  *     :setAngle( nAngle )                                 -> NIL
  *     :setLength( nLength )                               -> NIL
  *     :setLine( nX1, nY1, nX2, nY2 )                      -> NIL
- *     :setPoints( pP1, pP2 )                              -> NIL
- *     :toLine()                                           -> pQLine
- *     :translate( pOffset )                               -> NIL
- *     :translate_1( nDx, nDy )                            -> NIL
+ *     :setPoints( oQPointF, oQPointF )                    -> NIL
+ *     :toLine()                                           -> oQLine
+ *     :translate( oQPointF )                              -> NIL
+ *     :translate( nDx, nDy )                              -> NIL
+ *     :translated( oQPointF )                             -> oQLineF
+ *     :translated( nDx, nDy )                             -> oQLineF
+ *     :unitVector()                                       -> oQLineF
  * 
  *  $DESCRIPTION$
  * 
@@ -68,7 +72,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQLineF.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QLineF.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

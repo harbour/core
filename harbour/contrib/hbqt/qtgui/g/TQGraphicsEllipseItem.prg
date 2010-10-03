@@ -103,12 +103,13 @@ CREATE CLASS QGraphicsEllipseItem INHERIT HbQtObjectHandler, HB_QAbstractGraphic
 
    METHOD  new( ... )
 
-   METHOD  rect()
-   METHOD  setRect( ... )
-   METHOD  setSpanAngle( nAngle )
-   METHOD  setStartAngle( nAngle )
-   METHOD  spanAngle()
-   METHOD  startAngle()
+   METHOD  rect                          // (  )                                               -> oQRectF
+   METHOD  setRect                       // ( oQRectF )                                        -> NIL
+                                         // ( nX, nY, nWidth, nHeight )                        -> NIL
+   METHOD  setSpanAngle                  // ( nAngle )                                         -> NIL
+   METHOD  setStartAngle                 // ( nAngle )                                         -> NIL
+   METHOD  spanAngle                     // (  )                                               -> nInt
+   METHOD  startAngle                    // (  )                                               -> nInt
 
    ENDCLASS
 
@@ -122,8 +123,12 @@ METHOD QGraphicsEllipseItem:new( ... )
    RETURN Self
 
 
-METHOD QGraphicsEllipseItem:rect()
-   RETURN HB_QRectF():from( Qt_QGraphicsEllipseItem_rect( ::pPtr ) )
+METHOD QGraphicsEllipseItem:rect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRectF():from( Qt_QGraphicsEllipseItem_rect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsEllipseItem:setRect( ... )
@@ -144,18 +149,42 @@ METHOD QGraphicsEllipseItem:setRect( ... )
    RETURN hbqt_error()
 
 
-METHOD QGraphicsEllipseItem:setSpanAngle( nAngle )
-   RETURN Qt_QGraphicsEllipseItem_setSpanAngle( ::pPtr, nAngle )
+METHOD QGraphicsEllipseItem:setSpanAngle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsEllipseItem_setSpanAngle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsEllipseItem:setStartAngle( nAngle )
-   RETURN Qt_QGraphicsEllipseItem_setStartAngle( ::pPtr, nAngle )
+METHOD QGraphicsEllipseItem:setStartAngle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsEllipseItem_setStartAngle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsEllipseItem:spanAngle()
-   RETURN Qt_QGraphicsEllipseItem_spanAngle( ::pPtr )
+METHOD QGraphicsEllipseItem:spanAngle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsEllipseItem_spanAngle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsEllipseItem:startAngle()
-   RETURN Qt_QGraphicsEllipseItem_startAngle( ::pPtr )
+METHOD QGraphicsEllipseItem:startAngle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsEllipseItem_startAngle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

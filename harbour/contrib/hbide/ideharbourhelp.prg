@@ -373,7 +373,7 @@ METHOD IdeHarbourHelp:setParameters()
    oUI:q_plainTests:setLineWrapMode( QTextEdit_NoWrap )
    #endif
 
-   oUI:q_treeDoc:expandsOnDoubleClick( .f. )
+   oUI:q_treeDoc:setExpandsOnDoubleClick( .f. )
 
    oUI:q_browserView:setOpenLinks( .t. )
    oUI:q_browserView:setOpenExternalLinks( .t. )
@@ -452,10 +452,11 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
       EXIT
 
    CASE "editIndex_textChanged"
-      nLen := len( p )
-      cLower := lower( p )
-      IF ( n := ascan( ::aFunctions, {|e_| left( e_[ 6 ], nLen ) == cLower } ) ) > 0
-         ::oUI:q_listIndex:setCurrentItem( ::aFunctions[ n, 5 ] )
+      IF ( nLen := len( p ) ) > 0
+         cLower := lower( p )
+         IF ( n := ascan( ::aFunctions, {|e_| left( e_[ 6 ], nLen ) == cLower } ) ) > 0
+            ::oUI:q_listIndex:setCurrentItem( ::aFunctions[ n, 5 ] )
+         ENDIF
       ENDIF
       EXIT
 
@@ -1237,25 +1238,28 @@ METHOD IdeHarbourHelp:buildView( oFunc )
       aadd( aHtm, v + s + w )
       aadd( aHtm, z )
    ENDIF
-HB_TRACE( HB_TR_ALWAYS, 12100, oFunc:cSeeAlso )
-   a_:= hb_atokens( oFunc:cSeeAlso, "," )
-   IF !empty( a_ )
-      aadd( aHtm, x + "SeeAlso"        + y )
-      aadd( aHtm, "<tr><td>" )
 
-      FOR EACH s IN a_
-         s := alltrim( s )
-         IF ( n := at( "(", s ) ) > 0
-            s1 := substr( s, 1, n-1 )
-         ELSE
-            s1 := s
-         ENDIF
-         aadd( aHtm, '<a href="' + s1 + '">' + s + "</a>" + ;
-                                     iif( s:__enumIndex() == len( a_ ), "", ",&nbsp;" ) )
-      NEXT
-      aadd( aHtm, "</td></tr>" )
-      aadd( aHtm, z )
+   IF ! empty( oFunc:cSeeAlso )
+      a_:= hb_atokens( oFunc:cSeeAlso, "," )
+      IF !empty( a_ )
+         aadd( aHtm, x + "SeeAlso"        + y )
+         aadd( aHtm, "<tr><td>" )
+
+         FOR EACH s IN a_
+            s := alltrim( s )
+            IF ( n := at( "(", s ) ) > 0
+               s1 := substr( s, 1, n-1 )
+            ELSE
+               s1 := s
+            ENDIF
+            aadd( aHtm, '<a href="' + s1 + '">' + s + "</a>" + ;
+                                        iif( s:__enumIndex() == len( a_ ), "", ",&nbsp;" ) )
+         NEXT
+         aadd( aHtm, "</td></tr>" )
+         aadd( aHtm, z )
+      ENDIF
    ENDIF
+
    IF !empty( oFunc:cPlatforms )
       aadd( aHtm, x + "Platforms"      + y )
       aadd( aHtm, v + oFunc:cPlatforms + w )

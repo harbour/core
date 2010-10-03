@@ -33,11 +33,11 @@
  *     :isComplete()                                       -> lBool
  *     :isFinalPage()                                      -> lBool
  *     :nextId()                                           -> nInt
- *     :pixmap( nWhich )                                   -> pQPixmap
+ *     :pixmap( nWhich )                                   -> oQPixmap
  *     :setButtonText( nWhich, cText )                     -> NIL
  *     :setCommitPage( lCommitPage )                       -> NIL
  *     :setFinalPage( lFinalPage )                         -> NIL
- *     :setPixmap( nWhich, pPixmap )                       -> NIL
+ *     :setPixmap( nWhich, oQPixmap )                      -> NIL
  *     :setSubTitle( cSubTitle )                           -> NIL
  *     :setTitle( cTitle )                                 -> NIL
  *     :subTitle()                                         -> cQString
@@ -62,7 +62,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQWizardPage.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QWizardPage.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

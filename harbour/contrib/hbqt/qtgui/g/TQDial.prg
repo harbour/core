@@ -103,13 +103,13 @@ CREATE CLASS QDial INHERIT HbQtObjectHandler, HB_QAbstractSlider FUNCTION HB_QDi
 
    METHOD  new( ... )
 
-   METHOD  notchSize()
-   METHOD  notchTarget()
-   METHOD  notchesVisible()
-   METHOD  setNotchTarget( nTarget )
-   METHOD  wrapping()
-   METHOD  setNotchesVisible( lVisible )
-   METHOD  setWrapping( lOn )
+   METHOD  notchSize                     // (  )                                               -> nInt
+   METHOD  notchTarget                   // (  )                                               -> nQreal
+   METHOD  notchesVisible                // (  )                                               -> lBool
+   METHOD  setNotchTarget                // ( nTarget )                                        -> NIL
+   METHOD  wrapping                      // (  )                                               -> lBool
+   METHOD  setNotchesVisible             // ( lVisible )                                       -> NIL
+   METHOD  setWrapping                   // ( lOn )                                            -> NIL
 
    ENDCLASS
 
@@ -123,30 +123,70 @@ METHOD QDial:new( ... )
    RETURN Self
 
 
-METHOD QDial:notchSize()
-   RETURN Qt_QDial_notchSize( ::pPtr )
+METHOD QDial:notchSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDial_notchSize( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDial:notchTarget()
-   RETURN Qt_QDial_notchTarget( ::pPtr )
+METHOD QDial:notchTarget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDial_notchTarget( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDial:notchesVisible()
-   RETURN Qt_QDial_notchesVisible( ::pPtr )
+METHOD QDial:notchesVisible( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDial_notchesVisible( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDial:setNotchTarget( nTarget )
-   RETURN Qt_QDial_setNotchTarget( ::pPtr, nTarget )
+METHOD QDial:setNotchTarget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDial_setNotchTarget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDial:wrapping()
-   RETURN Qt_QDial_wrapping( ::pPtr )
+METHOD QDial:wrapping( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDial_wrapping( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDial:setNotchesVisible( lVisible )
-   RETURN Qt_QDial_setNotchesVisible( ::pPtr, lVisible )
+METHOD QDial:setNotchesVisible( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QDial_setNotchesVisible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDial:setWrapping( lOn )
-   RETURN Qt_QDial_setWrapping( ::pPtr, lOn )
+METHOD QDial:setWrapping( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QDial_setWrapping( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

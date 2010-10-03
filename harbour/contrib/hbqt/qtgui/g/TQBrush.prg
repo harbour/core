@@ -103,19 +103,31 @@ CREATE CLASS QBrush INHERIT HbQtObjectHandler FUNCTION HB_QBrush
 
    METHOD  new( ... )
 
-   METHOD  color()
-   METHOD  isOpaque()
-   METHOD  matrix()
-   METHOD  setColor( ... )
-   METHOD  setMatrix( pMatrix )
-   METHOD  setStyle( nStyle )
-   METHOD  setTexture( pPixmap )
-   METHOD  setTextureImage( pImage )
-   METHOD  setTransform( pMatrix )
-   METHOD  style()
-   METHOD  texture()
-   METHOD  textureImage()
-   METHOD  transform()
+   METHOD  QBrush                        // (  )                                               -> oQBrush
+                                         // ( nStyle )                                         -> oQBrush
+                                         // ( oQColor, nStyle )                                -> oQBrush
+                                         // ( nColor, nStyle )                                 -> oQBrush
+                                         // ( oQColor, oQPixmap )                              -> oQBrush
+                                         // ( nColor, oQPixmap )                               -> oQBrush
+                                         // ( oQPixmap )                                       -> oQBrush
+                                         // ( oQImage )                                        -> oQBrush
+                                         // ( oQBrush )                                        -> oQBrush
+                                         // ( oQGradient )                                     -> oQBrush
+   METHOD  color                         // (  )                                               -> oQColor
+   METHOD  gradient                      // (  )                                               -> oQGradient
+   METHOD  isOpaque                      // (  )                                               -> lBool
+   METHOD  matrix                        // (  )                                               -> oQMatrix
+   METHOD  setColor                      // ( oQColor )                                        -> NIL
+                                         // ( nColor )                                         -> NIL
+   METHOD  setMatrix                     // ( oQMatrix )                                       -> NIL
+   METHOD  setStyle                      // ( nStyle )                                         -> NIL
+   METHOD  setTexture                    // ( oQPixmap )                                       -> NIL
+   METHOD  setTextureImage               // ( oQImage )                                        -> NIL
+   METHOD  setTransform                  // ( oQTransform )                                    -> NIL
+   METHOD  style                         // (  )                                               -> nQt_BrushStyle
+   METHOD  texture                       // (  )                                               -> oQPixmap
+   METHOD  textureImage                  // (  )                                               -> oQImage
+   METHOD  transform                     // (  )                                               -> oQTransform
 
    ENDCLASS
 
@@ -129,16 +141,76 @@ METHOD QBrush:new( ... )
    RETURN Self
 
 
-METHOD QBrush:color()
-   RETURN HB_QColor():from( Qt_QBrush_color( ::pPtr ) )
+METHOD QBrush:QBrush( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QBrush():from( Qt_QBrush_QBrush_3( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QBrush():from( Qt_QBrush_QBrush_5( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QBrush():from( Qt_QBrush_QBrush_2( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QBrush():from( Qt_QBrush_QBrush_4( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QBrush():from( Qt_QBrush_QBrush_3( ::pPtr, ... ) )
+         // RETURN HB_QBrush():from( Qt_QBrush_QBrush_1( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QIMAGE"
+            RETURN HB_QBrush():from( Qt_QBrush_QBrush_7( ::pPtr, ... ) )
+         CASE "QPIXMAP"
+            RETURN HB_QBrush():from( Qt_QBrush_QBrush_6( ::pPtr, ... ) )
+         CASE "QBRUSH"
+            RETURN HB_QBrush():from( Qt_QBrush_QBrush_8( ::pPtr, ... ) )
+         CASE "QCOLOR"
+            RETURN HB_QBrush():from( Qt_QBrush_QBrush_2( ::pPtr, ... ) )
+         CASE "QGRADIENT"
+            RETURN HB_QBrush():from( Qt_QBrush_QBrush_9( ::pPtr, ... ) )
+         ENDSWITCH
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QBrush_QBrush( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBrush:isOpaque()
-   RETURN Qt_QBrush_isOpaque( ::pPtr )
+METHOD QBrush:color( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QColor():from( Qt_QBrush_color( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBrush:matrix()
-   RETURN HB_QMatrix():from( Qt_QBrush_matrix( ::pPtr ) )
+METHOD QBrush:gradient( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QGradient():from( Qt_QBrush_gradient( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QBrush:isOpaque( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QBrush_isOpaque( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QBrush:matrix( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QMatrix():from( Qt_QBrush_matrix( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QBrush:setColor( ... )
@@ -155,38 +227,94 @@ METHOD QBrush:setColor( ... )
    RETURN hbqt_error()
 
 
-METHOD QBrush:setMatrix( pMatrix )
-   RETURN Qt_QBrush_setMatrix( ::pPtr, hbqt_ptr( pMatrix ) )
+METHOD QBrush:setMatrix( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QBrush_setMatrix( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBrush:setStyle( nStyle )
-   RETURN Qt_QBrush_setStyle( ::pPtr, nStyle )
+METHOD QBrush:setStyle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QBrush_setStyle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBrush:setTexture( pPixmap )
-   RETURN Qt_QBrush_setTexture( ::pPtr, hbqt_ptr( pPixmap ) )
+METHOD QBrush:setTexture( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QBrush_setTexture( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBrush:setTextureImage( pImage )
-   RETURN Qt_QBrush_setTextureImage( ::pPtr, hbqt_ptr( pImage ) )
+METHOD QBrush:setTextureImage( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QBrush_setTextureImage( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBrush:setTransform( pMatrix )
-   RETURN Qt_QBrush_setTransform( ::pPtr, hbqt_ptr( pMatrix ) )
+METHOD QBrush:setTransform( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QBrush_setTransform( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBrush:style()
-   RETURN Qt_QBrush_style( ::pPtr )
+METHOD QBrush:style( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QBrush_style( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBrush:texture()
-   RETURN HB_QPixmap():from( Qt_QBrush_texture( ::pPtr ) )
+METHOD QBrush:texture( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPixmap():from( Qt_QBrush_texture( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBrush:textureImage()
-   RETURN HB_QImage():from( Qt_QBrush_textureImage( ::pPtr ) )
+METHOD QBrush:textureImage( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QImage():from( Qt_QBrush_textureImage( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QBrush:transform()
-   RETURN HB_QTransform():from( Qt_QBrush_transform( ::pPtr ) )
+METHOD QBrush:transform( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTransform():from( Qt_QBrush_transform( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

@@ -26,14 +26,17 @@
  *  $RETURNS$
  *     An instance of the object of type QModelIndex
  *  $METHODS$
+ *     :child( nRow, nColumn )                             -> oQModelIndex
  *     :column()                                           -> nInt
- *     :data( nRole )                                      -> pQVariant
- *     :flags()                                            -> nQt::ItemFlags
+ *     :data( nRole )                                      -> oQVariant
+ *     :flags()                                            -> nQt_ItemFlags
  *     :internalId()                                       -> nQint64
  *     :internalPointer()                                  -> NIL
  *     :isValid()                                          -> lBool
- *     :model()                                            -> pQAbstractItemModel
+ *     :model()                                            -> oQAbstractItemModel
+ *     :parent()                                           -> oQModelIndex
  *     :row()                                              -> nInt
+ *     :sibling( nRow, nColumn )                           -> oQModelIndex
  * 
  *  $DESCRIPTION$
  * 
@@ -53,7 +56,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQModelIndex.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QModelIndex.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

@@ -26,8 +26,8 @@
  *  $RETURNS$
  *     An instance of the object of type QTextEncoder
  *  $METHODS$
- *     :fromUnicode( cStr )                                -> pQByteArray
- *     :fromUnicode_1( pUc, nLen )                         -> pQByteArray
+ *     :fromUnicode( cStr )                                -> oQByteArray
+ *     :fromUnicode( oQChar, nLen )                        -> oQByteArray
  * 
  *  $DESCRIPTION$
  * 
@@ -47,7 +47,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQTextEncoder.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QTextEncoder.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

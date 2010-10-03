@@ -26,35 +26,35 @@
  *  $RETURNS$
  *     An instance of the object of type QFileSystemModel
  *  $METHODS$
- *     :dropMimeData( pData, nAction, nRow, nColumn, pParent )  -> lBool
- *     :fileIcon( pIndex )                                 -> pQIcon
- *     :fileInfo( pIndex )                                 -> pQFileInfo
- *     :fileName( pIndex )                                 -> cQString
- *     :filePath( pIndex )                                 -> cQString
- *     :filter()                                           -> nQDir::Filters
- *     :index( cPath, nColumn )                            -> pQModelIndex
- *     :isDir( pIndex )                                    -> lBool
+ *     :dropMimeData( oQMimeData, nAction, nRow, nColumn, oQModelIndex )  -> lBool
+ *     :fileIcon( oQModelIndex )                           -> oQIcon
+ *     :fileInfo( oQModelIndex )                           -> oQFileInfo
+ *     :fileName( oQModelIndex )                           -> cQString
+ *     :filePath( oQModelIndex )                           -> cQString
+ *     :filter()                                           -> nQDir_Filters
+ *     :index( cPath, nColumn )                            -> oQModelIndex
+ *     :isDir( oQModelIndex )                              -> lBool
  *     :isReadOnly()                                       -> lBool
- *     :lastModified( pIndex )                             -> pQDateTime
- *     :mimeTypes()                                        -> pQStringList
- *     :mkdir( pParent, cName )                            -> pQModelIndex
- *     :myComputer( nRole )                                -> pQVariant
+ *     :lastModified( oQModelIndex )                       -> oQDateTime
+ *     :mimeTypes()                                        -> oQStringList
+ *     :mkdir( oQModelIndex, cName )                       -> oQModelIndex
+ *     :myComputer( nRole )                                -> oQVariant
  *     :nameFilterDisables()                               -> lBool
- *     :nameFilters()                                      -> pQStringList
- *     :permissions( pIndex )                              -> nQFile::Permissions
- *     :remove( pIndex )                                   -> lBool
+ *     :nameFilters()                                      -> oQStringList
+ *     :permissions( oQModelIndex )                        -> nQFile_Permissions
+ *     :remove( oQModelIndex )                             -> lBool
  *     :resolveSymlinks()                                  -> lBool
- *     :rmdir( pIndex )                                    -> lBool
- *     :rootDirectory()                                    -> pQDir
+ *     :rmdir( oQModelIndex )                              -> lBool
+ *     :rootDirectory()                                    -> oQDir
  *     :rootPath()                                         -> cQString
  *     :setFilter( nFilters )                              -> NIL
  *     :setNameFilterDisables( lEnable )                   -> NIL
- *     :setNameFilters( pFilters )                         -> NIL
+ *     :setNameFilters( oQStringList )                     -> NIL
  *     :setReadOnly( lEnable )                             -> NIL
  *     :setResolveSymlinks( lEnable )                      -> NIL
- *     :setRootPath( cNewPath )                            -> pQModelIndex
- *     :size( pIndex )                                     -> nQint64
- *     :type( pIndex )                                     -> cQString
+ *     :setRootPath( cNewPath )                            -> oQModelIndex
+ *     :size( oQModelIndex )                               -> nQint64
+ *     :type( oQModelIndex )                               -> cQString
  * 
  *  $DESCRIPTION$
  * 
@@ -74,7 +74,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQFileSystemModel.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QFileSystemModel.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractItemModel()
  *  $END$
  */

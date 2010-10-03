@@ -103,14 +103,14 @@ CREATE CLASS QStyleOption INHERIT HbQtObjectHandler FUNCTION HB_QStyleOption
 
    METHOD  new( ... )
 
-   METHOD  initFrom( pWidget )
-   METHOD  direction()
-   METHOD  fontMetrics()
-   METHOD  palette()
-   METHOD  rect()
-   METHOD  state()
-   METHOD  type()
-   METHOD  version()
+   METHOD  initFrom                      // ( oQWidget )                                       -> NIL
+   METHOD  direction                     // (  )                                               -> nQt_LayoutDirection
+   METHOD  fontMetrics                   // (  )                                               -> oQFontMetrics
+   METHOD  palette                       // (  )                                               -> oQPalette
+   METHOD  rect                          // (  )                                               -> oQRect
+   METHOD  state                         // (  )                                               -> nQStyle_State
+   METHOD  type                          // (  )                                               -> nInt
+   METHOD  version                       // (  )                                               -> nInt
 
    ENDCLASS
 
@@ -124,34 +124,70 @@ METHOD QStyleOption:new( ... )
    RETURN Self
 
 
-METHOD QStyleOption:initFrom( pWidget )
-   RETURN Qt_QStyleOption_initFrom( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QStyleOption:initFrom( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QStyleOption_initFrom( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOption:direction()
-   RETURN Qt_QStyleOption_direction( ::pPtr )
+METHOD QStyleOption:direction( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOption_direction( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOption:fontMetrics()
-   RETURN HB_QFontMetrics():from( Qt_QStyleOption_fontMetrics( ::pPtr ) )
+METHOD QStyleOption:fontMetrics( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFontMetrics():from( Qt_QStyleOption_fontMetrics( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOption:palette()
-   RETURN HB_QPalette():from( Qt_QStyleOption_palette( ::pPtr ) )
+METHOD QStyleOption:palette( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPalette():from( Qt_QStyleOption_palette( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOption:rect()
-   RETURN HB_QRect():from( Qt_QStyleOption_rect( ::pPtr ) )
+METHOD QStyleOption:rect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QStyleOption_rect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOption:state()
-   RETURN Qt_QStyleOption_state( ::pPtr )
+METHOD QStyleOption:state( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOption_state( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOption:type()
-   RETURN Qt_QStyleOption_type( ::pPtr )
+METHOD QStyleOption:type( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOption_type( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOption:version()
-   RETURN Qt_QStyleOption_version( ::pPtr )
+METHOD QStyleOption:version( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOption_version( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

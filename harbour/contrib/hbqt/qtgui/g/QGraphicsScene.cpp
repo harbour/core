@@ -265,11 +265,7 @@ HB_FUNC( QT_QGRAPHICSSCENE_ADDITEM )
    QGraphicsScene * p = hbqt_par_QGraphicsScene( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 2 );
       ( p )->addItem( hbqt_par_QGraphicsItem( 2 ) );
    }
 }

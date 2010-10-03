@@ -103,55 +103,55 @@ CREATE CLASS QTreeView INHERIT HbQtObjectHandler, HB_QAbstractItemView FUNCTION 
 
    METHOD  new( ... )
 
-   METHOD  allColumnsShowFocus()
-   METHOD  autoExpandDelay()
-   METHOD  columnAt( nX )
-   METHOD  columnViewportPosition( nColumn )
-   METHOD  columnWidth( nColumn )
-   METHOD  expandsOnDoubleClick()
-   METHOD  header()
-   METHOD  indentation()
-   METHOD  indexAbove( pIndex )
-   METHOD  indexBelow( pIndex )
-   METHOD  isAnimated()
-   METHOD  isColumnHidden( nColumn )
-   METHOD  isExpanded( pIndex )
-   METHOD  isFirstColumnSpanned( nRow, pParent )
-   METHOD  isHeaderHidden()
-   METHOD  isRowHidden( nRow, pParent )
-   METHOD  isSortingEnabled()
-   METHOD  itemsExpandable()
-   METHOD  rootIsDecorated()
-   METHOD  scrollTo( pIndex, nHint )
-   METHOD  setAllColumnsShowFocus( lEnable )
-   METHOD  setAnimated( lEnable )
-   METHOD  setAutoExpandDelay( nDelay )
-   METHOD  setColumnHidden( nColumn, lHide )
-   METHOD  setColumnWidth( nColumn, nWidth )
-   METHOD  setExpanded( pIndex, lExpanded )
-   METHOD  setExpandsOnDoubleClick( lEnable )
-   METHOD  setFirstColumnSpanned( nRow, pParent, lSpan )
-   METHOD  setHeader( pHeader )
-   METHOD  setHeaderHidden( lHide )
-   METHOD  setIndentation( nI )
-   METHOD  setItemsExpandable( lEnable )
-   METHOD  setRootIsDecorated( lShow )
-   METHOD  setRowHidden( nRow, pParent, lHide )
-   METHOD  setSortingEnabled( lEnable )
-   METHOD  setUniformRowHeights( lUniform )
-   METHOD  setWordWrap( lOn )
-   METHOD  sortByColumn( nColumn, nOrder )
-   METHOD  uniformRowHeights()
-   METHOD  visualRect( pIndex )
-   METHOD  wordWrap()
-   METHOD  collapse( pIndex )
-   METHOD  collapseAll()
-   METHOD  expand( pIndex )
-   METHOD  expandAll()
-   METHOD  expandToDepth( nDepth )
-   METHOD  hideColumn( nColumn )
-   METHOD  resizeColumnToContents( nColumn )
-   METHOD  showColumn( nColumn )
+   METHOD  allColumnsShowFocus           // (  )                                               -> lBool
+   METHOD  autoExpandDelay               // (  )                                               -> nInt
+   METHOD  columnAt                      // ( nX )                                             -> nInt
+   METHOD  columnViewportPosition        // ( nColumn )                                        -> nInt
+   METHOD  columnWidth                   // ( nColumn )                                        -> nInt
+   METHOD  expandsOnDoubleClick          // (  )                                               -> lBool
+   METHOD  header                        // (  )                                               -> oQHeaderView
+   METHOD  indentation                   // (  )                                               -> nInt
+   METHOD  indexAbove                    // ( oQModelIndex )                                   -> oQModelIndex
+   METHOD  indexBelow                    // ( oQModelIndex )                                   -> oQModelIndex
+   METHOD  isAnimated                    // (  )                                               -> lBool
+   METHOD  isColumnHidden                // ( nColumn )                                        -> lBool
+   METHOD  isExpanded                    // ( oQModelIndex )                                   -> lBool
+   METHOD  isFirstColumnSpanned          // ( nRow, oQModelIndex )                             -> lBool
+   METHOD  isHeaderHidden                // (  )                                               -> lBool
+   METHOD  isRowHidden                   // ( nRow, oQModelIndex )                             -> lBool
+   METHOD  isSortingEnabled              // (  )                                               -> lBool
+   METHOD  itemsExpandable               // (  )                                               -> lBool
+   METHOD  rootIsDecorated               // (  )                                               -> lBool
+   METHOD  scrollTo                      // ( oQModelIndex, nHint )                            -> NIL
+   METHOD  setAllColumnsShowFocus        // ( lEnable )                                        -> NIL
+   METHOD  setAnimated                   // ( lEnable )                                        -> NIL
+   METHOD  setAutoExpandDelay            // ( nDelay )                                         -> NIL
+   METHOD  setColumnHidden               // ( nColumn, lHide )                                 -> NIL
+   METHOD  setColumnWidth                // ( nColumn, nWidth )                                -> NIL
+   METHOD  setExpanded                   // ( oQModelIndex, lExpanded )                        -> NIL
+   METHOD  setExpandsOnDoubleClick       // ( lEnable )                                        -> NIL
+   METHOD  setFirstColumnSpanned         // ( nRow, oQModelIndex, lSpan )                      -> NIL
+   METHOD  setHeader                     // ( oQHeaderView )                                   -> NIL
+   METHOD  setHeaderHidden               // ( lHide )                                          -> NIL
+   METHOD  setIndentation                // ( nI )                                             -> NIL
+   METHOD  setItemsExpandable            // ( lEnable )                                        -> NIL
+   METHOD  setRootIsDecorated            // ( lShow )                                          -> NIL
+   METHOD  setRowHidden                  // ( nRow, oQModelIndex, lHide )                      -> NIL
+   METHOD  setSortingEnabled             // ( lEnable )                                        -> NIL
+   METHOD  setUniformRowHeights          // ( lUniform )                                       -> NIL
+   METHOD  setWordWrap                   // ( lOn )                                            -> NIL
+   METHOD  sortByColumn                  // ( nColumn, nOrder )                                -> NIL
+   METHOD  uniformRowHeights             // (  )                                               -> lBool
+   METHOD  visualRect                    // ( oQModelIndex )                                   -> oQRect
+   METHOD  wordWrap                      // (  )                                               -> lBool
+   METHOD  collapse                      // ( oQModelIndex )                                   -> NIL
+   METHOD  collapseAll                   // (  )                                               -> NIL
+   METHOD  expand                        // ( oQModelIndex )                                   -> NIL
+   METHOD  expandAll                     // (  )                                               -> NIL
+   METHOD  expandToDepth                 // ( nDepth )                                         -> NIL
+   METHOD  hideColumn                    // ( nColumn )                                        -> NIL
+   METHOD  resizeColumnToContents        // ( nColumn )                                        -> NIL
+   METHOD  showColumn                    // ( nColumn )                                        -> NIL
 
    ENDCLASS
 
@@ -165,198 +165,540 @@ METHOD QTreeView:new( ... )
    RETURN Self
 
 
-METHOD QTreeView:allColumnsShowFocus()
-   RETURN Qt_QTreeView_allColumnsShowFocus( ::pPtr )
-
-
-METHOD QTreeView:autoExpandDelay()
-   RETURN Qt_QTreeView_autoExpandDelay( ::pPtr )
-
-
-METHOD QTreeView:columnAt( nX )
-   RETURN Qt_QTreeView_columnAt( ::pPtr, nX )
-
-
-METHOD QTreeView:columnViewportPosition( nColumn )
-   RETURN Qt_QTreeView_columnViewportPosition( ::pPtr, nColumn )
-
-
-METHOD QTreeView:columnWidth( nColumn )
-   RETURN Qt_QTreeView_columnWidth( ::pPtr, nColumn )
-
-
-METHOD QTreeView:expandsOnDoubleClick()
-   RETURN Qt_QTreeView_expandsOnDoubleClick( ::pPtr )
-
-
-METHOD QTreeView:header()
-   RETURN HB_QHeaderView():from( Qt_QTreeView_header( ::pPtr ) )
-
-
-METHOD QTreeView:indentation()
-   RETURN Qt_QTreeView_indentation( ::pPtr )
-
-
-METHOD QTreeView:indexAbove( pIndex )
-   RETURN HB_QModelIndex():from( Qt_QTreeView_indexAbove( ::pPtr, hbqt_ptr( pIndex ) ) )
-
-
-METHOD QTreeView:indexBelow( pIndex )
-   RETURN HB_QModelIndex():from( Qt_QTreeView_indexBelow( ::pPtr, hbqt_ptr( pIndex ) ) )
-
-
-METHOD QTreeView:isAnimated()
-   RETURN Qt_QTreeView_isAnimated( ::pPtr )
-
-
-METHOD QTreeView:isColumnHidden( nColumn )
-   RETURN Qt_QTreeView_isColumnHidden( ::pPtr, nColumn )
-
-
-METHOD QTreeView:isExpanded( pIndex )
-   RETURN Qt_QTreeView_isExpanded( ::pPtr, hbqt_ptr( pIndex ) )
-
-
-METHOD QTreeView:isFirstColumnSpanned( nRow, pParent )
-   RETURN Qt_QTreeView_isFirstColumnSpanned( ::pPtr, nRow, hbqt_ptr( pParent ) )
-
-
-METHOD QTreeView:isHeaderHidden()
-   RETURN Qt_QTreeView_isHeaderHidden( ::pPtr )
-
-
-METHOD QTreeView:isRowHidden( nRow, pParent )
-   RETURN Qt_QTreeView_isRowHidden( ::pPtr, nRow, hbqt_ptr( pParent ) )
-
-
-METHOD QTreeView:isSortingEnabled()
-   RETURN Qt_QTreeView_isSortingEnabled( ::pPtr )
-
-
-METHOD QTreeView:itemsExpandable()
-   RETURN Qt_QTreeView_itemsExpandable( ::pPtr )
-
-
-METHOD QTreeView:rootIsDecorated()
-   RETURN Qt_QTreeView_rootIsDecorated( ::pPtr )
-
-
-METHOD QTreeView:scrollTo( pIndex, nHint )
-   RETURN Qt_QTreeView_scrollTo( ::pPtr, hbqt_ptr( pIndex ), nHint )
-
-
-METHOD QTreeView:setAllColumnsShowFocus( lEnable )
-   RETURN Qt_QTreeView_setAllColumnsShowFocus( ::pPtr, lEnable )
-
-
-METHOD QTreeView:setAnimated( lEnable )
-   RETURN Qt_QTreeView_setAnimated( ::pPtr, lEnable )
-
-
-METHOD QTreeView:setAutoExpandDelay( nDelay )
-   RETURN Qt_QTreeView_setAutoExpandDelay( ::pPtr, nDelay )
-
-
-METHOD QTreeView:setColumnHidden( nColumn, lHide )
-   RETURN Qt_QTreeView_setColumnHidden( ::pPtr, nColumn, lHide )
-
-
-METHOD QTreeView:setColumnWidth( nColumn, nWidth )
-   RETURN Qt_QTreeView_setColumnWidth( ::pPtr, nColumn, nWidth )
-
-
-METHOD QTreeView:setExpanded( pIndex, lExpanded )
-   RETURN Qt_QTreeView_setExpanded( ::pPtr, hbqt_ptr( pIndex ), lExpanded )
-
-
-METHOD QTreeView:setExpandsOnDoubleClick( lEnable )
-   RETURN Qt_QTreeView_setExpandsOnDoubleClick( ::pPtr, lEnable )
-
-
-METHOD QTreeView:setFirstColumnSpanned( nRow, pParent, lSpan )
-   RETURN Qt_QTreeView_setFirstColumnSpanned( ::pPtr, nRow, hbqt_ptr( pParent ), lSpan )
-
-
-METHOD QTreeView:setHeader( pHeader )
-   RETURN Qt_QTreeView_setHeader( ::pPtr, hbqt_ptr( pHeader ) )
-
-
-METHOD QTreeView:setHeaderHidden( lHide )
-   RETURN Qt_QTreeView_setHeaderHidden( ::pPtr, lHide )
-
-
-METHOD QTreeView:setIndentation( nI )
-   RETURN Qt_QTreeView_setIndentation( ::pPtr, nI )
-
-
-METHOD QTreeView:setItemsExpandable( lEnable )
-   RETURN Qt_QTreeView_setItemsExpandable( ::pPtr, lEnable )
-
-
-METHOD QTreeView:setRootIsDecorated( lShow )
-   RETURN Qt_QTreeView_setRootIsDecorated( ::pPtr, lShow )
-
-
-METHOD QTreeView:setRowHidden( nRow, pParent, lHide )
-   RETURN Qt_QTreeView_setRowHidden( ::pPtr, nRow, hbqt_ptr( pParent ), lHide )
-
-
-METHOD QTreeView:setSortingEnabled( lEnable )
-   RETURN Qt_QTreeView_setSortingEnabled( ::pPtr, lEnable )
-
-
-METHOD QTreeView:setUniformRowHeights( lUniform )
-   RETURN Qt_QTreeView_setUniformRowHeights( ::pPtr, lUniform )
-
-
-METHOD QTreeView:setWordWrap( lOn )
-   RETURN Qt_QTreeView_setWordWrap( ::pPtr, lOn )
-
-
-METHOD QTreeView:sortByColumn( nColumn, nOrder )
-   RETURN Qt_QTreeView_sortByColumn( ::pPtr, nColumn, nOrder )
-
-
-METHOD QTreeView:uniformRowHeights()
-   RETURN Qt_QTreeView_uniformRowHeights( ::pPtr )
-
-
-METHOD QTreeView:visualRect( pIndex )
-   RETURN HB_QRect():from( Qt_QTreeView_visualRect( ::pPtr, hbqt_ptr( pIndex ) ) )
-
-
-METHOD QTreeView:wordWrap()
-   RETURN Qt_QTreeView_wordWrap( ::pPtr )
-
-
-METHOD QTreeView:collapse( pIndex )
-   RETURN Qt_QTreeView_collapse( ::pPtr, hbqt_ptr( pIndex ) )
-
-
-METHOD QTreeView:collapseAll()
-   RETURN Qt_QTreeView_collapseAll( ::pPtr )
-
-
-METHOD QTreeView:expand( pIndex )
-   RETURN Qt_QTreeView_expand( ::pPtr, hbqt_ptr( pIndex ) )
-
-
-METHOD QTreeView:expandAll()
-   RETURN Qt_QTreeView_expandAll( ::pPtr )
-
-
-METHOD QTreeView:expandToDepth( nDepth )
-   RETURN Qt_QTreeView_expandToDepth( ::pPtr, nDepth )
-
-
-METHOD QTreeView:hideColumn( nColumn )
-   RETURN Qt_QTreeView_hideColumn( ::pPtr, nColumn )
-
-
-METHOD QTreeView:resizeColumnToContents( nColumn )
-   RETURN Qt_QTreeView_resizeColumnToContents( ::pPtr, nColumn )
-
-
-METHOD QTreeView:showColumn( nColumn )
-   RETURN Qt_QTreeView_showColumn( ::pPtr, nColumn )
+METHOD QTreeView:allColumnsShowFocus( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeView_allColumnsShowFocus( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:autoExpandDelay( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeView_autoExpandDelay( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:columnAt( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeView_columnAt( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:columnViewportPosition( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeView_columnViewportPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:columnWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeView_columnWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:expandsOnDoubleClick( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeView_expandsOnDoubleClick( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:header( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QHeaderView():from( Qt_QTreeView_header( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:indentation( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeView_indentation( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:indexAbove( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QModelIndex():from( Qt_QTreeView_indexAbove( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:indexBelow( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QModelIndex():from( Qt_QTreeView_indexBelow( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:isAnimated( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeView_isAnimated( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:isColumnHidden( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeView_isColumnHidden( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:isExpanded( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeView_isExpanded( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:isFirstColumnSpanned( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QTreeView_isFirstColumnSpanned( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:isHeaderHidden( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeView_isHeaderHidden( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:isRowHidden( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QTreeView_isRowHidden( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:isSortingEnabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeView_isSortingEnabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:itemsExpandable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeView_itemsExpandable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:rootIsDecorated( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeView_rootIsDecorated( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:scrollTo( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QTreeView_scrollTo( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeView_scrollTo( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:setAllColumnsShowFocus( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeView_setAllColumnsShowFocus( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:setAnimated( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeView_setAnimated( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:setAutoExpandDelay( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeView_setAutoExpandDelay( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:setColumnHidden( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QTreeView_setColumnHidden( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:setColumnWidth( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QTreeView_setColumnWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:setExpanded( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QTreeView_setExpanded( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:setExpandsOnDoubleClick( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeView_setExpandsOnDoubleClick( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:setFirstColumnSpanned( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isLogical( hb_pvalue( 3 ) )
+         RETURN Qt_QTreeView_setFirstColumnSpanned( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:setHeader( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeView_setHeader( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:setHeaderHidden( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeView_setHeaderHidden( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:setIndentation( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeView_setIndentation( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:setItemsExpandable( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeView_setItemsExpandable( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:setRootIsDecorated( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeView_setRootIsDecorated( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:setRowHidden( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isLogical( hb_pvalue( 3 ) )
+         RETURN Qt_QTreeView_setRowHidden( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:setSortingEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeView_setSortingEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:setUniformRowHeights( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeView_setUniformRowHeights( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:setWordWrap( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeView_setWordWrap( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:sortByColumn( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QTreeView_sortByColumn( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:uniformRowHeights( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeView_uniformRowHeights( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:visualRect( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QRect():from( Qt_QTreeView_visualRect( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:wordWrap( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeView_wordWrap( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:collapse( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeView_collapse( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:collapseAll( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeView_collapseAll( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:expand( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeView_expand( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:expandAll( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeView_expandAll( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:expandToDepth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeView_expandToDepth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:hideColumn( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeView_hideColumn( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:resizeColumnToContents( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeView_resizeColumnToContents( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeView:showColumn( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeView_showColumn( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

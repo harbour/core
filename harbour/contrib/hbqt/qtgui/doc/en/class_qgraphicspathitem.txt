@@ -26,8 +26,8 @@
  *  $RETURNS$
  *     An instance of the object of type QGraphicsPathItem
  *  $METHODS$
- *     :path()                                             -> pQPainterPath
- *     :setPath( pPath )                                   -> NIL
+ *     :path()                                             -> oQPainterPath
+ *     :setPath( oQPainterPath )                           -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -47,7 +47,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGraphicsPathItem.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsPathItem.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractGraphicsShapeItem()
  *  $END$
  */

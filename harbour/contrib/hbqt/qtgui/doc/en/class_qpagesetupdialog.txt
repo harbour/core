@@ -27,9 +27,9 @@
  *     An instance of the object of type QPageSetupDialog
  *  $METHODS$
  *     :exec()                                             -> nInt
- *     :open( pReceiver, pMember )                         -> NIL
+ *     :open( oQObject, cMember )                          -> NIL
  *     :options()                                          -> nPageSetupDialogOptions
- *     :printer()                                          -> pQPrinter
+ *     :printer()                                          -> oQPrinter
  *     :setOption( nOption, lOn )                          -> NIL
  *     :setOptions( nOptions )                             -> NIL
  *     :setVisible( lVisible )                             -> NIL
@@ -53,7 +53,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQPageSetupDialog.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QPageSetupDialog.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QDialog()
  *  $END$
  */

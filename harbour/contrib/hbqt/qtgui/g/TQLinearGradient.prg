@@ -103,10 +103,12 @@ CREATE CLASS QLinearGradient INHERIT HbQtObjectHandler, HB_QGradient FUNCTION HB
 
    METHOD  new( ... )
 
-   METHOD  finalStop()
-   METHOD  setFinalStop( ... )
-   METHOD  setStart( ... )
-   METHOD  start()
+   METHOD  finalStop                     // (  )                                               -> oQPointF
+   METHOD  setFinalStop                  // ( oQPointF )                                       -> NIL
+                                         // ( nX, nY )                                         -> NIL
+   METHOD  setStart                      // ( oQPointF )                                       -> NIL
+                                         // ( nX, nY )                                         -> NIL
+   METHOD  start                         // (  )                                               -> oQPointF
 
    ENDCLASS
 
@@ -120,8 +122,12 @@ METHOD QLinearGradient:new( ... )
    RETURN Self
 
 
-METHOD QLinearGradient:finalStop()
-   RETURN HB_QPointF():from( Qt_QLinearGradient_finalStop( ::pPtr ) )
+METHOD QLinearGradient:finalStop( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPointF():from( Qt_QLinearGradient_finalStop( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QLinearGradient:setFinalStop( ... )
@@ -160,6 +166,10 @@ METHOD QLinearGradient:setStart( ... )
    RETURN hbqt_error()
 
 
-METHOD QLinearGradient:start()
-   RETURN HB_QPointF():from( Qt_QLinearGradient_start( ::pPtr ) )
+METHOD QLinearGradient:start( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPointF():from( Qt_QLinearGradient_start( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

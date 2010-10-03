@@ -103,15 +103,15 @@ CREATE CLASS QScrollArea INHERIT HbQtObjectHandler, HB_QAbstractScrollArea FUNCT
 
    METHOD  new( ... )
 
-   METHOD  alignment()
-   METHOD  ensureVisible( nX, nY, nXmargin, nYmargin )
-   METHOD  ensureWidgetVisible( pChildWidget, nXmargin, nYmargin )
-   METHOD  setAlignment( nQt_Alignment )
-   METHOD  setWidget( pWidget )
-   METHOD  setWidgetResizable( lResizable )
-   METHOD  takeWidget()
-   METHOD  widget()
-   METHOD  widgetResizable()
+   METHOD  alignment                     // (  )                                               -> nQt_Alignment
+   METHOD  ensureVisible                 // ( nX, nY, nXmargin, nYmargin )                     -> NIL
+   METHOD  ensureWidgetVisible           // ( oQWidget, nXmargin, nYmargin )                   -> NIL
+   METHOD  setAlignment                  // ( nQt::Alignment )                                 -> NIL
+   METHOD  setWidget                     // ( oQWidget )                                       -> NIL
+   METHOD  setWidgetResizable            // ( lResizable )                                     -> NIL
+   METHOD  takeWidget                    // (  )                                               -> oQWidget
+   METHOD  widget                        // (  )                                               -> oQWidget
+   METHOD  widgetResizable               // (  )                                               -> lBool
 
    ENDCLASS
 
@@ -125,38 +125,118 @@ METHOD QScrollArea:new( ... )
    RETURN Self
 
 
-METHOD QScrollArea:alignment()
-   RETURN Qt_QScrollArea_alignment( ::pPtr )
+METHOD QScrollArea:alignment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QScrollArea_alignment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QScrollArea:ensureVisible( nX, nY, nXmargin, nYmargin )
-   RETURN Qt_QScrollArea_ensureVisible( ::pPtr, nX, nY, nXmargin, nYmargin )
+METHOD QScrollArea:ensureVisible( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QScrollArea_ensureVisible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QScrollArea_ensureVisible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QScrollArea_ensureVisible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QScrollArea:ensureWidgetVisible( pChildWidget, nXmargin, nYmargin )
-   RETURN Qt_QScrollArea_ensureWidgetVisible( ::pPtr, hbqt_ptr( pChildWidget ), nXmargin, nYmargin )
+METHOD QScrollArea:ensureWidgetVisible( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QScrollArea_ensureWidgetVisible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QScrollArea_ensureWidgetVisible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QScrollArea_ensureWidgetVisible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QScrollArea:setAlignment( nQt_Alignment )
-   RETURN Qt_QScrollArea_setAlignment( ::pPtr, nQt_Alignment )
+METHOD QScrollArea:setAlignment( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QScrollArea_setAlignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QScrollArea:setWidget( pWidget )
-   RETURN Qt_QScrollArea_setWidget( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QScrollArea:setWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QScrollArea_setWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QScrollArea:setWidgetResizable( lResizable )
-   RETURN Qt_QScrollArea_setWidgetResizable( ::pPtr, lResizable )
+METHOD QScrollArea:setWidgetResizable( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QScrollArea_setWidgetResizable( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QScrollArea:takeWidget()
-   RETURN HB_QWidget():from( Qt_QScrollArea_takeWidget( ::pPtr ) )
+METHOD QScrollArea:takeWidget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QScrollArea_takeWidget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QScrollArea:widget()
-   RETURN HB_QWidget():from( Qt_QScrollArea_widget( ::pPtr ) )
+METHOD QScrollArea:widget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QScrollArea_widget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QScrollArea:widgetResizable()
-   RETURN Qt_QScrollArea_widgetResizable( ::pPtr )
+METHOD QScrollArea:widgetResizable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QScrollArea_widgetResizable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

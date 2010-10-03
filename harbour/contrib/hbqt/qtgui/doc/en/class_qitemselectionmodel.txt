@@ -26,21 +26,21 @@
  *  $RETURNS$
  *     An instance of the object of type QItemSelectionModel
  *  $METHODS$
- *     :columnIntersectsSelection( nColumn, pParent )      -> lBool
- *     :currentIndex()                                     -> pQModelIndex
+ *     :columnIntersectsSelection( nColumn, oQModelIndex )  -> lBool
+ *     :currentIndex()                                     -> oQModelIndex
  *     :hasSelection()                                     -> lBool
- *     :isColumnSelected( nColumn, pParent )               -> lBool
- *     :isRowSelected( nRow, pParent )                     -> lBool
- *     :isSelected( pIndex )                               -> lBool
- *     :model()                                            -> pQAbstractItemModel
- *     :rowIntersectsSelection( nRow, pParent )            -> lBool
- *     :selection()                                        -> pQItemSelection
+ *     :isColumnSelected( nColumn, oQModelIndex )          -> lBool
+ *     :isRowSelected( nRow, oQModelIndex )                -> lBool
+ *     :isSelected( oQModelIndex )                         -> lBool
+ *     :model()                                            -> oQAbstractItemModel
+ *     :rowIntersectsSelection( nRow, oQModelIndex )       -> lBool
+ *     :selection()                                        -> oQItemSelection
  *     :clear()                                            -> NIL
  *     :clearSelection()                                   -> NIL
  *     :reset()                                            -> NIL
- *     :select( pIndex, nCommand )                         -> NIL
- *     :select_1( pSelection, nCommand )                   -> NIL
- *     :setCurrentIndex( pIndex, nCommand )                -> NIL
+ *     :select( oQModelIndex, nCommand )                   -> NIL
+ *     :select( oQItemSelection, nCommand )                -> NIL
+ *     :setCurrentIndex( oQModelIndex, nCommand )          -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -60,7 +60,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQItemSelectionModel.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QItemSelectionModel.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

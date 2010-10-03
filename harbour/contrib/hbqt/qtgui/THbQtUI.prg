@@ -532,8 +532,11 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
 
          ELSEIF "setText(" $ cCmd
             s := hbq_pullToolTip( cCmd )
-            ::qObj[ cNam ]:setText( s )
-
+            IF hbq_pullColumn( cCmd, @n )
+               ::qObj[ cNam ]:setText( n, s )
+            ELSE
+               ::qObj[ cNam ]:setText( s )
+            ENDIF
          ELSEIF "setWhatsThis(" $ cCmd
             s := hbq_pullToolTip( cCmd )
             ::qObj[ cNam ]:setWhatsThis( s )
@@ -552,6 +555,20 @@ METHOD HbQtUI:build( cFileOrBuffer, qParent )
    NEXT
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbq_pullColumn( cCmd, nCol )
+
+   IF     "(0," $ cCmd
+      nCol := 0; RETURN .t.
+   ELSEIF "(1," $ cCmd
+      nCol := 1; RETURN .t.
+   ELSEIF "(2," $ cCmd
+      nCol := 2; RETURN .t.
+   ENDIF
+
+   RETURN .f.
 
 /*----------------------------------------------------------------------*/
 

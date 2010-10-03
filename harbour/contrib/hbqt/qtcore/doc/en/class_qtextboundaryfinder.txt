@@ -56,7 +56,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQTextBoundaryFinder.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QTextBoundaryFinder.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

@@ -273,7 +273,7 @@ HB_FUNC( QT_QMENU_ADDACTION_2 )
    if( p )
    {
       void * pText;
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( hb_parstr_utf8( 2, &pText, NULL ), hbqt_par_QObject( 3 ), hbqt_par_char( 4 ), *hbqt_par_QKeySequence( 5 ) ), false ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( hb_parstr_utf8( 2, &pText, NULL ), hbqt_par_QObject( 3 ), ( const char * ) hb_parc( 4 ), *hbqt_par_QKeySequence( 5 ) ), false ) );
       hb_strfree( pText );
    }
 }
@@ -287,7 +287,7 @@ HB_FUNC( QT_QMENU_ADDACTION_3 )
    if( p )
    {
       void * pText;
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( ( HB_ISCHAR( 2 ) ? QIcon( hbqt_par_QString( 2 ) ) : *hbqt_par_QIcon( 2 )), hb_parstr_utf8( 3, &pText, NULL ), hbqt_par_QObject( 4 ), hbqt_par_char( 5 ), *hbqt_par_QKeySequence( 6 ) ), false ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( ( HB_ISCHAR( 2 ) ? QIcon( hbqt_par_QString( 2 ) ) : *hbqt_par_QIcon( 2 )), hb_parstr_utf8( 3, &pText, NULL ), hbqt_par_QObject( 4 ), ( const char * ) hb_parc( 5 ), *hbqt_par_QKeySequence( 6 ) ), false ) );
       hb_strfree( pText );
    }
 }

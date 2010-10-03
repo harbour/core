@@ -27,13 +27,15 @@
  *     An instance of the object of type QStringList
  *  $METHODS$
  *     :append( cValue )                                   -> NIL
+ *     :filter( cStr, nCs )                                -> oQStringList
+ *     :filter( oQRegExp )                                 -> oQStringList
  *     :indexOf( cValue, nFrom )                           -> nInt
- *     :indexOf_1( pRx, nFrom )                            -> nInt
- *     :indexOf_2( pRx, nFrom )                            -> nInt
+ *     :indexOf( oQRegExp, nFrom )                         -> nInt
+ *     :indexOf( oQRegExp, nFrom )                         -> nInt
  *     :join( cSeparator )                                 -> cQString
- *     :lastIndexOf( pRx, nFrom )                          -> nInt
- *     :lastIndexOf_1( cValue, nFrom )                     -> nInt
- *     :lastIndexOf_2( pRx, nFrom )                        -> nInt
+ *     :lastIndexOf( oQRegExp, nFrom )                     -> nInt
+ *     :lastIndexOf( cValue, nFrom )                       -> nInt
+ *     :lastIndexOf( oQRegExp, nFrom )                     -> nInt
  *     :removeDuplicates()                                 -> nInt
  *     :sort()                                             -> NIL
  *     :at( nI )                                           -> cQString
@@ -44,10 +46,10 @@
  *     :front()                                            -> cQString
  *     :insert( nI, cValue )                               -> NIL
  *     :last()                                             -> cQString
- *     :mid( nPos, nLength )                               -> pQList<QString>
+ *     :mid( nPos, nLength )                               -> oQList_QString>
  *     :prepend( cValue )                                  -> NIL
- *     :push_back( cValue )                                -> NIL
- *     :push_front( cValue )                               -> NIL
+ *     :push( cValue )                                     -> NIL
+ *     :push( cValue )                                     -> NIL
  *     :removeAll( cValue )                                -> nInt
  *     :removeOne( cValue )                                -> lBool
  *     :replace( nI, cValue )                              -> NIL
@@ -56,7 +58,7 @@
  *     :takeFirst()                                        -> cQString
  *     :takeLast()                                         -> cQString
  *     :value( nI )                                        -> cQString
- *     :value_1( nI, cDefaultValue )                       -> cQString
+ *     :value( nI, cDefaultValue )                         -> cQString
  * 
  *  $DESCRIPTION$
  * 
@@ -76,7 +78,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQStringList.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QStringList.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     QList()
  *  $END$
  */

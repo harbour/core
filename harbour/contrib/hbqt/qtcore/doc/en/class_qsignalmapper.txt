@@ -26,15 +26,15 @@
  *  $RETURNS$
  *     An instance of the object of type QSignalMapper
  *  $METHODS$
- *     :mapping( nId )                                     -> pQObject
- *     :mapping_1( cId )                                   -> pQObject
- *     :mapping_2( pObject )                               -> pQObject
- *     :removeMappings( pSender )                          -> NIL
- *     :setMapping( pSender, nId )                         -> NIL
- *     :setMapping_1( pSender, cText )                     -> NIL
- *     :setMapping_2( pSender, pObject )                   -> NIL
+ *     :mapping( nId )                                     -> oQObject
+ *     :mapping( cId )                                     -> oQObject
+ *     :mapping( oQObject )                                -> oQObject
+ *     :removeMappings( oQObject )                         -> NIL
+ *     :setMapping( oQObject, nId )                        -> NIL
+ *     :setMapping( oQObject, cText )                      -> NIL
+ *     :setMapping( oQObject, oQObject )                   -> NIL
  *     :map()                                              -> NIL
- *     :map_1( pSender )                                   -> NIL
+ *     :map( oQObject )                                    -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -54,7 +54,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQSignalMapper.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QSignalMapper.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

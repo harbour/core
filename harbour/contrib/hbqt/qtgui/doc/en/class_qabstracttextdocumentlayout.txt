@@ -26,16 +26,16 @@
  *  $RETURNS$
  *     An instance of the object of type QAbstractTextDocumentLayout
  *  $METHODS$
- *     :anchorAt( pPosition )                              -> cQString
- *     :blockBoundingRect( pBlock )                        -> pQRectF
- *     :document()                                         -> pQTextDocument
- *     :documentSize()                                     -> pQSizeF
- *     :frameBoundingRect( pFrame )                        -> pQRectF
- *     :hitTest( pPoint, nAccuracy )                       -> nInt
+ *     :anchorAt( oQPointF )                               -> cQString
+ *     :blockBoundingRect( oQTextBlock )                   -> oQRectF
+ *     :document()                                         -> oQTextDocument
+ *     :documentSize()                                     -> oQSizeF
+ *     :frameBoundingRect( oQTextFrame )                   -> oQRectF
+ *     :hitTest( oQPointF, nAccuracy )                     -> nInt
  *     :pageCount()                                        -> nInt
- *     :paintDevice()                                      -> pQPaintDevice
- *     :registerHandler( nObjectType, pComponent )         -> NIL
- *     :setPaintDevice( pDevice )                          -> NIL
+ *     :paintDevice()                                      -> oQPaintDevice
+ *     :registerHandler( nObjectType, oQObject )           -> NIL
+ *     :setPaintDevice( oQPaintDevice )                    -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -55,7 +55,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQAbstractTextDocumentLayout.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QAbstractTextDocumentLayout.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

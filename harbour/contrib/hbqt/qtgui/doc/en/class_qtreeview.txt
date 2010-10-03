@@ -32,44 +32,44 @@
  *     :columnViewportPosition( nColumn )                  -> nInt
  *     :columnWidth( nColumn )                             -> nInt
  *     :expandsOnDoubleClick()                             -> lBool
- *     :header()                                           -> pQHeaderView
+ *     :header()                                           -> oQHeaderView
  *     :indentation()                                      -> nInt
- *     :indexAbove( pIndex )                               -> pQModelIndex
- *     :indexBelow( pIndex )                               -> pQModelIndex
+ *     :indexAbove( oQModelIndex )                         -> oQModelIndex
+ *     :indexBelow( oQModelIndex )                         -> oQModelIndex
  *     :isAnimated()                                       -> lBool
  *     :isColumnHidden( nColumn )                          -> lBool
- *     :isExpanded( pIndex )                               -> lBool
- *     :isFirstColumnSpanned( nRow, pParent )              -> lBool
+ *     :isExpanded( oQModelIndex )                         -> lBool
+ *     :isFirstColumnSpanned( nRow, oQModelIndex )         -> lBool
  *     :isHeaderHidden()                                   -> lBool
- *     :isRowHidden( nRow, pParent )                       -> lBool
+ *     :isRowHidden( nRow, oQModelIndex )                  -> lBool
  *     :isSortingEnabled()                                 -> lBool
  *     :itemsExpandable()                                  -> lBool
  *     :rootIsDecorated()                                  -> lBool
- *     :scrollTo( pIndex, nHint )                          -> NIL
+ *     :scrollTo( oQModelIndex, nHint )                    -> NIL
  *     :setAllColumnsShowFocus( lEnable )                  -> NIL
  *     :setAnimated( lEnable )                             -> NIL
  *     :setAutoExpandDelay( nDelay )                       -> NIL
  *     :setColumnHidden( nColumn, lHide )                  -> NIL
  *     :setColumnWidth( nColumn, nWidth )                  -> NIL
- *     :setExpanded( pIndex, lExpanded )                   -> NIL
+ *     :setExpanded( oQModelIndex, lExpanded )             -> NIL
  *     :setExpandsOnDoubleClick( lEnable )                 -> NIL
- *     :setFirstColumnSpanned( nRow, pParent, lSpan )      -> NIL
- *     :setHeader( pHeader )                               -> NIL
+ *     :setFirstColumnSpanned( nRow, oQModelIndex, lSpan )  -> NIL
+ *     :setHeader( oQHeaderView )                          -> NIL
  *     :setHeaderHidden( lHide )                           -> NIL
  *     :setIndentation( nI )                               -> NIL
  *     :setItemsExpandable( lEnable )                      -> NIL
  *     :setRootIsDecorated( lShow )                        -> NIL
- *     :setRowHidden( nRow, pParent, lHide )               -> NIL
+ *     :setRowHidden( nRow, oQModelIndex, lHide )          -> NIL
  *     :setSortingEnabled( lEnable )                       -> NIL
  *     :setUniformRowHeights( lUniform )                   -> NIL
  *     :setWordWrap( lOn )                                 -> NIL
  *     :sortByColumn( nColumn, nOrder )                    -> NIL
  *     :uniformRowHeights()                                -> lBool
- *     :visualRect( pIndex )                               -> pQRect
+ *     :visualRect( oQModelIndex )                         -> oQRect
  *     :wordWrap()                                         -> lBool
- *     :collapse( pIndex )                                 -> NIL
+ *     :collapse( oQModelIndex )                           -> NIL
  *     :collapseAll()                                      -> NIL
- *     :expand( pIndex )                                   -> NIL
+ *     :expand( oQModelIndex )                             -> NIL
  *     :expandAll()                                        -> NIL
  *     :expandToDepth( nDepth )                            -> NIL
  *     :hideColumn( nColumn )                              -> NIL
@@ -94,7 +94,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTreeView.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTreeView.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractItemView()
  *  $END$
  */

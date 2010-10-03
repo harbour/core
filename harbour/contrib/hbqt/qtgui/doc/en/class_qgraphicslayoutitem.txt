@@ -26,39 +26,40 @@
  *  $RETURNS$
  *     An instance of the object of type QGraphicsLayoutItem
  *  $METHODS$
- *     :contentsRect()                                     -> pQRectF
- *     :effectiveSizeHint( nWhich, pConstraint )           -> pQSizeF
- *     :geometry()                                         -> pQRectF
+ *     :contentsRect()                                     -> oQRectF
+ *     :effectiveSizeHint( nWhich, oQSizeF )               -> oQSizeF
+ *     :geometry()                                         -> oQRectF
  *     :getContentsMargins( @nLeft, @nTop, @nRight, @nBottom )  -> NIL
- *     :graphicsItem()                                     -> pQGraphicsItem
+ *     :graphicsItem()                                     -> oQGraphicsItem
  *     :isLayout()                                         -> lBool
  *     :maximumHeight()                                    -> nQreal
- *     :maximumSize()                                      -> pQSizeF
+ *     :maximumSize()                                      -> oQSizeF
  *     :maximumWidth()                                     -> nQreal
  *     :minimumHeight()                                    -> nQreal
- *     :minimumSize()                                      -> pQSizeF
+ *     :minimumSize()                                      -> oQSizeF
  *     :minimumWidth()                                     -> nQreal
  *     :ownedByLayout()                                    -> lBool
+ *     :parentLayoutItem()                                 -> oQGraphicsLayoutItem
  *     :preferredHeight()                                  -> nQreal
- *     :preferredSize()                                    -> pQSizeF
+ *     :preferredSize()                                    -> oQSizeF
  *     :preferredWidth()                                   -> nQreal
- *     :setGeometry( pRect )                               -> NIL
+ *     :setGeometry( oQRectF )                             -> NIL
  *     :setMaximumHeight( nHeight )                        -> NIL
- *     :setMaximumSize( pSize )                            -> NIL
- *     :setMaximumSize_1( nW, nH )                         -> NIL
+ *     :setMaximumSize( oQSizeF )                          -> NIL
+ *     :setMaximumSize( nW, nH )                           -> NIL
  *     :setMaximumWidth( nWidth )                          -> NIL
  *     :setMinimumHeight( nHeight )                        -> NIL
- *     :setMinimumSize( pSize )                            -> NIL
- *     :setMinimumSize_1( nW, nH )                         -> NIL
+ *     :setMinimumSize( oQSizeF )                          -> NIL
+ *     :setMinimumSize( nW, nH )                           -> NIL
  *     :setMinimumWidth( nWidth )                          -> NIL
- *     :setParentLayoutItem( pParent )                     -> NIL
+ *     :setParentLayoutItem( oQGraphicsLayoutItem )        -> NIL
  *     :setPreferredHeight( nHeight )                      -> NIL
- *     :setPreferredSize( pSize )                          -> NIL
- *     :setPreferredSize_1( nW, nH )                       -> NIL
+ *     :setPreferredSize( oQSizeF )                        -> NIL
+ *     :setPreferredSize( nW, nH )                         -> NIL
  *     :setPreferredWidth( nWidth )                        -> NIL
- *     :setSizePolicy( pPolicy )                           -> NIL
- *     :setSizePolicy_1( nHPolicy, nVPolicy, nControlType )  -> NIL
- *     :sizePolicy()                                       -> pQSizePolicy
+ *     :setSizePolicy( oQSizePolicy )                      -> NIL
+ *     :setSizePolicy( nHPolicy, nVPolicy, nControlType )  -> NIL
+ *     :sizePolicy()                                       -> oQSizePolicy
  *     :updateGeometry()                                   -> NIL
  * 
  *  $DESCRIPTION$
@@ -79,7 +80,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGraphicsLayoutItem.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsLayoutItem.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

@@ -103,8 +103,8 @@ CREATE CLASS QStyleOptionComplex INHERIT HbQtObjectHandler, HB_QStyleOption FUNC
 
    METHOD  new( ... )
 
-   METHOD  activeSubControls()
-   METHOD  subControls()
+   METHOD  activeSubControls             // (  )                                               -> nQStyle_SubControls
+   METHOD  subControls                   // (  )                                               -> nQStyle_SubControls
 
    ENDCLASS
 
@@ -118,10 +118,18 @@ METHOD QStyleOptionComplex:new( ... )
    RETURN Self
 
 
-METHOD QStyleOptionComplex:activeSubControls()
-   RETURN Qt_QStyleOptionComplex_activeSubControls( ::pPtr )
+METHOD QStyleOptionComplex:activeSubControls( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionComplex_activeSubControls( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionComplex:subControls()
-   RETURN Qt_QStyleOptionComplex_subControls( ::pPtr )
+METHOD QStyleOptionComplex:subControls( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionComplex_subControls( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

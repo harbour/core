@@ -32,7 +32,7 @@
  *     :port()                                             -> nInt
  *     :scheme()                                           -> cQString
  *     :setDatabaseQuota( nQuota )                         -> NIL
- *     :allOrigins()                                       -> pQList<QWebSecurityOrigin>
+ *     :allOrigins()                                       -> oQList_QWebSecurityOrigin>
  * 
  *  $DESCRIPTION$
  * 
@@ -52,7 +52,5 @@
  *     Harbour source: contrib/hbqt/qtwebkit/TQWebSecurityOrigin.prg
  *     C++ wrappers  : contrib/hbqt/qtwebkit/QWebSecurityOrigin.cpp
  *     Library       : hbqtwebkit
- *  $SEEALSO$
- *     
  *  $END$
  */

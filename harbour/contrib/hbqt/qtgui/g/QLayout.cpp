@@ -181,11 +181,7 @@ HB_FUNC( QT_QLAYOUT_ADDITEM )
    QLayout * p = hbqt_par_QLayout( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 2 );
       ( p )->addItem( hbqt_par_QLayoutItem( 2 ) );
    }
 }
@@ -198,11 +194,7 @@ HB_FUNC( QT_QLAYOUT_ADDWIDGET )
    QLayout * p = hbqt_par_QLayout( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 2 );
       ( p )->addWidget( hbqt_par_QWidget( 2 ) );
    }
 }

@@ -26,51 +26,52 @@
  *  $RETURNS$
  *     An instance of the object of type QUrl
  *  $METHODS$
- *     :addEncodedQueryItem( pKey, pValue )                -> NIL
+ *     :addEncodedQueryItem( oQByteArray, oQByteArray )    -> NIL
  *     :addQueryItem( cKey, cValue )                       -> NIL
- *     :allEncodedQueryItemValues( pKey )                  -> pQList<QByteArray>
- *     :allQueryItemValues( cKey )                         -> pQStringList
+ *     :allEncodedQueryItemValues( oQByteArray )           -> oQList_QByteArray>
+ *     :allQueryItemValues( cKey )                         -> oQStringList
  *     :authority()                                        -> cQString
  *     :clear()                                            -> NIL
- *     :encodedFragment()                                  -> pQByteArray
- *     :encodedHost()                                      -> pQByteArray
- *     :encodedPassword()                                  -> pQByteArray
- *     :encodedPath()                                      -> pQByteArray
- *     :encodedQuery()                                     -> pQByteArray
- *     :encodedQueryItemValue( pKey )                      -> pQByteArray
- *     :encodedUserName()                                  -> pQByteArray
+ *     :encodedFragment()                                  -> oQByteArray
+ *     :encodedHost()                                      -> oQByteArray
+ *     :encodedPassword()                                  -> oQByteArray
+ *     :encodedPath()                                      -> oQByteArray
+ *     :encodedQuery()                                     -> oQByteArray
+ *     :encodedQueryItemValue( oQByteArray )               -> oQByteArray
+ *     :encodedUserName()                                  -> oQByteArray
  *     :errorString()                                      -> cQString
  *     :fragment()                                         -> cQString
- *     :hasEncodedQueryItem( pKey )                        -> lBool
+ *     :hasEncodedQueryItem( oQByteArray )                 -> lBool
  *     :hasFragment()                                      -> lBool
  *     :hasQuery()                                         -> lBool
  *     :hasQueryItem( cKey )                               -> lBool
  *     :host()                                             -> cQString
  *     :isEmpty()                                          -> lBool
- *     :isParentOf( pChildUrl )                            -> lBool
+ *     :isParentOf( oQUrl )                                -> lBool
  *     :isRelative()                                       -> lBool
  *     :isValid()                                          -> lBool
  *     :password()                                         -> cQString
  *     :path()                                             -> cQString
  *     :port()                                             -> nInt
- *     :port_1( nDefaultPort )                             -> nInt
+ *     :port( nDefaultPort )                               -> nInt
  *     :queryItemValue( cKey )                             -> cQString
  *     :queryPairDelimiter()                               -> cChar
  *     :queryValueDelimiter()                              -> cChar
- *     :removeAllEncodedQueryItems( pKey )                 -> NIL
+ *     :removeAllEncodedQueryItems( oQByteArray )          -> NIL
  *     :removeAllQueryItems( cKey )                        -> NIL
- *     :removeEncodedQueryItem( pKey )                     -> NIL
+ *     :removeEncodedQueryItem( oQByteArray )              -> NIL
  *     :removeQueryItem( cKey )                            -> NIL
+ *     :resolved( oQUrl )                                  -> oQUrl
  *     :scheme()                                           -> cQString
  *     :setAuthority( cAuthority )                         -> NIL
- *     :setEncodedFragment( pFragment )                    -> NIL
- *     :setEncodedHost( pHost )                            -> NIL
- *     :setEncodedPassword( pPassword )                    -> NIL
- *     :setEncodedPath( pPath )                            -> NIL
- *     :setEncodedQuery( pQuery )                          -> NIL
- *     :setEncodedUrl( pEncodedUrl )                       -> NIL
- *     :setEncodedUrl_1( pEncodedUrl, nParsingMode )       -> NIL
- *     :setEncodedUserName( pUserName )                    -> NIL
+ *     :setEncodedFragment( oQByteArray )                  -> NIL
+ *     :setEncodedHost( oQByteArray )                      -> NIL
+ *     :setEncodedPassword( oQByteArray )                  -> NIL
+ *     :setEncodedPath( oQByteArray )                      -> NIL
+ *     :setEncodedQuery( oQByteArray )                     -> NIL
+ *     :setEncodedUrl( oQByteArray )                       -> NIL
+ *     :setEncodedUrl( oQByteArray, nParsingMode )         -> NIL
+ *     :setEncodedUserName( oQByteArray )                  -> NIL
  *     :setFragment( cFragment )                           -> NIL
  *     :setHost( cHost )                                   -> NIL
  *     :setPassword( cPassword )                           -> NIL
@@ -78,20 +79,23 @@
  *     :setPort( nPort )                                   -> NIL
  *     :setScheme( cScheme )                               -> NIL
  *     :setUrl( cUrl )                                     -> NIL
- *     :setUrl_1( cUrl, nParsingMode )                     -> NIL
+ *     :setUrl( cUrl, nParsingMode )                       -> NIL
  *     :setUserInfo( cUserInfo )                           -> NIL
  *     :setUserName( cUserName )                           -> NIL
- *     :toEncoded( nOptions )                              -> pQByteArray
+ *     :toEncoded( nOptions )                              -> oQByteArray
  *     :toLocalFile()                                      -> cQString
  *     :toString( nOptions )                               -> cQString
  *     :userInfo()                                         -> cQString
  *     :userName()                                         -> cQString
- *     :fromAce( pDomain )                                 -> cQString
- *     :fromPercentEncoding( pInput )                      -> cQString
- *     :idnWhitelist()                                     -> pQStringList
- *     :setIdnWhitelist( pList )                           -> NIL
- *     :toAce( cDomain )                                   -> pQByteArray
- *     :toPercentEncoding( cInput, pExclude, pInclude )    -> pQByteArray
+ *     :fromAce( oQByteArray )                             -> cQString
+ *     :fromEncoded( oQByteArray )                         -> oQUrl
+ *     :fromEncoded( oQByteArray, nParsingMode )           -> oQUrl
+ *     :fromLocalFile( cLocalFile )                        -> oQUrl
+ *     :fromPercentEncoding( oQByteArray )                 -> cQString
+ *     :idnWhitelist()                                     -> oQStringList
+ *     :setIdnWhitelist( oQStringList )                    -> NIL
+ *     :toAce( cDomain )                                   -> oQByteArray
+ *     :toPercentEncoding( cInput, oQByteArray, oQByteArray )  -> oQByteArray
  * 
  *  $DESCRIPTION$
  * 
@@ -111,7 +115,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQUrl.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QUrl.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

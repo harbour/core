@@ -26,20 +26,31 @@
  *  $RETURNS$
  *     An instance of the object of type QBrush
  *  $METHODS$
- *     :color()                                            -> pQColor
+ *     :QBrush()                                           -> oQBrush
+ *     :QBrush( nStyle )                                   -> oQBrush
+ *     :QBrush( oQColor, nStyle )                          -> oQBrush
+ *     :QBrush( nColor, nStyle )                           -> oQBrush
+ *     :QBrush( oQColor, oQPixmap )                        -> oQBrush
+ *     :QBrush( nColor, oQPixmap )                         -> oQBrush
+ *     :QBrush( oQPixmap )                                 -> oQBrush
+ *     :QBrush( oQImage )                                  -> oQBrush
+ *     :QBrush( oQBrush )                                  -> oQBrush
+ *     :QBrush( oQGradient )                               -> oQBrush
+ *     :color()                                            -> oQColor
+ *     :gradient()                                         -> oQGradient
  *     :isOpaque()                                         -> lBool
- *     :matrix()                                           -> pQMatrix
- *     :setColor( pColor )                                 -> NIL
- *     :setColor_1( nColor )                               -> NIL
- *     :setMatrix( pMatrix )                               -> NIL
+ *     :matrix()                                           -> oQMatrix
+ *     :setColor( oQColor )                                -> NIL
+ *     :setColor( nColor )                                 -> NIL
+ *     :setMatrix( oQMatrix )                              -> NIL
  *     :setStyle( nStyle )                                 -> NIL
- *     :setTexture( pPixmap )                              -> NIL
- *     :setTextureImage( pImage )                          -> NIL
- *     :setTransform( pMatrix )                            -> NIL
- *     :style()                                            -> nQt::BrushStyle
- *     :texture()                                          -> pQPixmap
- *     :textureImage()                                     -> pQImage
- *     :transform()                                        -> pQTransform
+ *     :setTexture( oQPixmap )                             -> NIL
+ *     :setTextureImage( oQImage )                         -> NIL
+ *     :setTransform( oQTransform )                        -> NIL
+ *     :style()                                            -> nQt_BrushStyle
+ *     :texture()                                          -> oQPixmap
+ *     :textureImage()                                     -> oQImage
+ *     :transform()                                        -> oQTransform
  * 
  *  $DESCRIPTION$
  * 
@@ -70,7 +81,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQBrush.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QBrush.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

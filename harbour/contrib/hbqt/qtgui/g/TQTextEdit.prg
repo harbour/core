@@ -103,85 +103,87 @@ CREATE CLASS QTextEdit INHERIT HbQtObjectHandler, HB_QAbstractScrollArea FUNCTIO
 
    METHOD  new( ... )
 
-   METHOD  acceptRichText()
-   METHOD  alignment()
-   METHOD  anchorAt( pPos )
-   METHOD  autoFormatting()
-   METHOD  canPaste()
-   METHOD  createStandardContextMenu( ... )
-   METHOD  currentCharFormat()
-   METHOD  currentFont()
-   METHOD  cursorForPosition( pPos )
-   METHOD  cursorRect( ... )
-   METHOD  cursorWidth()
-   METHOD  document()
-   METHOD  documentTitle()
-   METHOD  ensureCursorVisible()
-   METHOD  find( cExp, nOptions )
-   METHOD  fontFamily()
-   METHOD  fontItalic()
-   METHOD  fontPointSize()
-   METHOD  fontUnderline()
-   METHOD  fontWeight()
-   METHOD  isReadOnly()
-   METHOD  isUndoRedoEnabled()
-   METHOD  lineWrapColumnOrWidth()
-   METHOD  lineWrapMode()
-   METHOD  loadResource( nType, pName )
-   METHOD  mergeCurrentCharFormat( pModifier )
-   METHOD  moveCursor( nOperation, nMode )
-   METHOD  overwriteMode()
-   METHOD  print( pPrinter )
-   METHOD  setAcceptRichText( lAccept )
-   METHOD  setAutoFormatting( nFeatures )
-   METHOD  setCurrentCharFormat( pFormat )
-   METHOD  setCursorWidth( nWidth )
-   METHOD  setDocument( pDocument )
-   METHOD  setDocumentTitle( cTitle )
-   METHOD  setLineWrapColumnOrWidth( nW )
-   METHOD  setLineWrapMode( nMode )
-   METHOD  setOverwriteMode( lOverwrite )
-   METHOD  setReadOnly( lRo )
-   METHOD  setTabChangesFocus( lB )
-   METHOD  setTabStopWidth( nWidth )
-   METHOD  setTextCursor( pCursor )
-   METHOD  setTextInteractionFlags( nFlags )
-   METHOD  setUndoRedoEnabled( lEnable )
-   METHOD  setWordWrapMode( nPolicy )
-   METHOD  tabChangesFocus()
-   METHOD  tabStopWidth()
-   METHOD  textBackgroundColor()
-   METHOD  textColor()
-   METHOD  textCursor()
-   METHOD  textInteractionFlags()
-   METHOD  toHtml()
-   METHOD  toPlainText()
-   METHOD  wordWrapMode()
-   METHOD  append( cText )
-   METHOD  clear()
-   METHOD  copy()
-   METHOD  cut()
-   METHOD  insertHtml( cText )
-   METHOD  insertPlainText( cText )
-   METHOD  paste()
-   METHOD  redo()
-   METHOD  scrollToAnchor( cName )
-   METHOD  selectAll()
-   METHOD  setAlignment( nA )
-   METHOD  setCurrentFont( pF )
-   METHOD  setFontFamily( cFontFamily )
-   METHOD  setFontItalic( lItalic )
-   METHOD  setFontPointSize( nS )
-   METHOD  setFontUnderline( lUnderline )
-   METHOD  setFontWeight( nWeight )
-   METHOD  setHtml( cText )
-   METHOD  setPlainText( cText )
-   METHOD  setText( cText )
-   METHOD  setTextBackgroundColor( pC )
-   METHOD  setTextColor( pC )
-   METHOD  undo()
-   METHOD  zoomIn( nRange )
-   METHOD  zoomOut( nRange )
+   METHOD  acceptRichText                // (  )                                               -> lBool
+   METHOD  alignment                     // (  )                                               -> nQt_Alignment
+   METHOD  anchorAt                      // ( oQPoint )                                        -> cQString
+   METHOD  autoFormatting                // (  )                                               -> nAutoFormatting
+   METHOD  canPaste                      // (  )                                               -> lBool
+   METHOD  createStandardContextMenu     // (  )                                               -> oQMenu
+                                         // ( oQPoint )                                        -> oQMenu
+   METHOD  currentCharFormat             // (  )                                               -> oQTextCharFormat
+   METHOD  currentFont                   // (  )                                               -> oQFont
+   METHOD  cursorForPosition             // ( oQPoint )                                        -> oQTextCursor
+   METHOD  cursorRect                    // ( oQTextCursor )                                   -> oQRect
+                                         // (  )                                               -> oQRect
+   METHOD  cursorWidth                   // (  )                                               -> nInt
+   METHOD  document                      // (  )                                               -> oQTextDocument
+   METHOD  documentTitle                 // (  )                                               -> cQString
+   METHOD  ensureCursorVisible           // (  )                                               -> NIL
+   METHOD  find                          // ( cExp, nOptions )                                 -> lBool
+   METHOD  fontFamily                    // (  )                                               -> cQString
+   METHOD  fontItalic                    // (  )                                               -> lBool
+   METHOD  fontPointSize                 // (  )                                               -> nQreal
+   METHOD  fontUnderline                 // (  )                                               -> lBool
+   METHOD  fontWeight                    // (  )                                               -> nInt
+   METHOD  isReadOnly                    // (  )                                               -> lBool
+   METHOD  isUndoRedoEnabled             // (  )                                               -> lBool
+   METHOD  lineWrapColumnOrWidth         // (  )                                               -> nInt
+   METHOD  lineWrapMode                  // (  )                                               -> nLineWrapMode
+   METHOD  loadResource                  // ( nType, oQUrl )                                   -> oQVariant
+   METHOD  mergeCurrentCharFormat        // ( oQTextCharFormat )                               -> NIL
+   METHOD  moveCursor                    // ( nOperation, nMode )                              -> NIL
+   METHOD  overwriteMode                 // (  )                                               -> lBool
+   METHOD  print                         // ( oQPrinter )                                      -> NIL
+   METHOD  setAcceptRichText             // ( lAccept )                                        -> NIL
+   METHOD  setAutoFormatting             // ( nFeatures )                                      -> NIL
+   METHOD  setCurrentCharFormat          // ( oQTextCharFormat )                               -> NIL
+   METHOD  setCursorWidth                // ( nWidth )                                         -> NIL
+   METHOD  setDocument                   // ( oQTextDocument )                                 -> NIL
+   METHOD  setDocumentTitle              // ( cTitle )                                         -> NIL
+   METHOD  setLineWrapColumnOrWidth      // ( nW )                                             -> NIL
+   METHOD  setLineWrapMode               // ( nMode )                                          -> NIL
+   METHOD  setOverwriteMode              // ( lOverwrite )                                     -> NIL
+   METHOD  setReadOnly                   // ( lRo )                                            -> NIL
+   METHOD  setTabChangesFocus            // ( lB )                                             -> NIL
+   METHOD  setTabStopWidth               // ( nWidth )                                         -> NIL
+   METHOD  setTextCursor                 // ( oQTextCursor )                                   -> NIL
+   METHOD  setTextInteractionFlags       // ( nFlags )                                         -> NIL
+   METHOD  setUndoRedoEnabled            // ( lEnable )                                        -> NIL
+   METHOD  setWordWrapMode               // ( nPolicy )                                        -> NIL
+   METHOD  tabChangesFocus               // (  )                                               -> lBool
+   METHOD  tabStopWidth                  // (  )                                               -> nInt
+   METHOD  textBackgroundColor           // (  )                                               -> oQColor
+   METHOD  textColor                     // (  )                                               -> oQColor
+   METHOD  textCursor                    // (  )                                               -> oQTextCursor
+   METHOD  textInteractionFlags          // (  )                                               -> nQt_TextInteractionFlags
+   METHOD  toHtml                        // (  )                                               -> cQString
+   METHOD  toPlainText                   // (  )                                               -> cQString
+   METHOD  wordWrapMode                  // (  )                                               -> nQTextOption_WrapMode
+   METHOD  append                        // ( cText )                                          -> NIL
+   METHOD  clear                         // (  )                                               -> NIL
+   METHOD  copy                          // (  )                                               -> NIL
+   METHOD  cut                           // (  )                                               -> NIL
+   METHOD  insertHtml                    // ( cText )                                          -> NIL
+   METHOD  insertPlainText               // ( cText )                                          -> NIL
+   METHOD  paste                         // (  )                                               -> NIL
+   METHOD  redo                          // (  )                                               -> NIL
+   METHOD  scrollToAnchor                // ( cName )                                          -> NIL
+   METHOD  selectAll                     // (  )                                               -> NIL
+   METHOD  setAlignment                  // ( nA )                                             -> NIL
+   METHOD  setCurrentFont                // ( oQFont )                                         -> NIL
+   METHOD  setFontFamily                 // ( cFontFamily )                                    -> NIL
+   METHOD  setFontItalic                 // ( lItalic )                                        -> NIL
+   METHOD  setFontPointSize              // ( nS )                                             -> NIL
+   METHOD  setFontUnderline              // ( lUnderline )                                     -> NIL
+   METHOD  setFontWeight                 // ( nWeight )                                        -> NIL
+   METHOD  setHtml                       // ( cText )                                          -> NIL
+   METHOD  setPlainText                  // ( cText )                                          -> NIL
+   METHOD  setText                       // ( cText )                                          -> NIL
+   METHOD  setTextBackgroundColor        // ( oQColor )                                        -> NIL
+   METHOD  setTextColor                  // ( oQColor )                                        -> NIL
+   METHOD  undo                          // (  )                                               -> NIL
+   METHOD  zoomIn                        // ( nRange )                                         -> NIL
+   METHOD  zoomOut                       // ( nRange )                                         -> NIL
 
    ENDCLASS
 
@@ -195,24 +197,48 @@ METHOD QTextEdit:new( ... )
    RETURN Self
 
 
-METHOD QTextEdit:acceptRichText()
-   RETURN Qt_QTextEdit_acceptRichText( ::pPtr )
+METHOD QTextEdit:acceptRichText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_acceptRichText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextEdit:alignment()
-   RETURN Qt_QTextEdit_alignment( ::pPtr )
+METHOD QTextEdit:alignment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_alignment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextEdit:anchorAt( pPos )
-   RETURN Qt_QTextEdit_anchorAt( ::pPtr, hbqt_ptr( pPos ) )
+METHOD QTextEdit:anchorAt( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_anchorAt( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextEdit:autoFormatting()
-   RETURN Qt_QTextEdit_autoFormatting( ::pPtr )
+METHOD QTextEdit:autoFormatting( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_autoFormatting( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextEdit:canPaste()
-   RETURN Qt_QTextEdit_canPaste( ::pPtr )
+METHOD QTextEdit:canPaste( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_canPaste( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTextEdit:createStandardContextMenu( ... )
@@ -229,16 +255,32 @@ METHOD QTextEdit:createStandardContextMenu( ... )
    RETURN hbqt_error()
 
 
-METHOD QTextEdit:currentCharFormat()
-   RETURN HB_QTextCharFormat():from( Qt_QTextEdit_currentCharFormat( ::pPtr ) )
+METHOD QTextEdit:currentCharFormat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextCharFormat():from( Qt_QTextEdit_currentCharFormat( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextEdit:currentFont()
-   RETURN HB_QFont():from( Qt_QTextEdit_currentFont( ::pPtr ) )
+METHOD QTextEdit:currentFont( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFont():from( Qt_QTextEdit_currentFont( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextEdit:cursorForPosition( pPos )
-   RETURN HB_QTextCursor():from( Qt_QTextEdit_cursorForPosition( ::pPtr, hbqt_ptr( pPos ) ) )
+METHOD QTextEdit:cursorForPosition( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QTextCursor():from( Qt_QTextEdit_cursorForPosition( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTextEdit:cursorRect( ... )
@@ -255,278 +297,726 @@ METHOD QTextEdit:cursorRect( ... )
    RETURN hbqt_error()
 
 
-METHOD QTextEdit:cursorWidth()
-   RETURN Qt_QTextEdit_cursorWidth( ::pPtr )
-
-
-METHOD QTextEdit:document()
-   RETURN HB_QTextDocument():from( Qt_QTextEdit_document( ::pPtr ) )
-
-
-METHOD QTextEdit:documentTitle()
-   RETURN Qt_QTextEdit_documentTitle( ::pPtr )
-
-
-METHOD QTextEdit:ensureCursorVisible()
-   RETURN Qt_QTextEdit_ensureCursorVisible( ::pPtr )
-
-
-METHOD QTextEdit:find( cExp, nOptions )
-   RETURN Qt_QTextEdit_find( ::pPtr, cExp, nOptions )
-
-
-METHOD QTextEdit:fontFamily()
-   RETURN Qt_QTextEdit_fontFamily( ::pPtr )
-
-
-METHOD QTextEdit:fontItalic()
-   RETURN Qt_QTextEdit_fontItalic( ::pPtr )
-
-
-METHOD QTextEdit:fontPointSize()
-   RETURN Qt_QTextEdit_fontPointSize( ::pPtr )
-
-
-METHOD QTextEdit:fontUnderline()
-   RETURN Qt_QTextEdit_fontUnderline( ::pPtr )
-
-
-METHOD QTextEdit:fontWeight()
-   RETURN Qt_QTextEdit_fontWeight( ::pPtr )
-
-
-METHOD QTextEdit:isReadOnly()
-   RETURN Qt_QTextEdit_isReadOnly( ::pPtr )
-
-
-METHOD QTextEdit:isUndoRedoEnabled()
-   RETURN Qt_QTextEdit_isUndoRedoEnabled( ::pPtr )
-
-
-METHOD QTextEdit:lineWrapColumnOrWidth()
-   RETURN Qt_QTextEdit_lineWrapColumnOrWidth( ::pPtr )
-
-
-METHOD QTextEdit:lineWrapMode()
-   RETURN Qt_QTextEdit_lineWrapMode( ::pPtr )
-
-
-METHOD QTextEdit:loadResource( nType, pName )
-   RETURN HB_QVariant():from( Qt_QTextEdit_loadResource( ::pPtr, nType, hbqt_ptr( pName ) ) )
-
-
-METHOD QTextEdit:mergeCurrentCharFormat( pModifier )
-   RETURN Qt_QTextEdit_mergeCurrentCharFormat( ::pPtr, hbqt_ptr( pModifier ) )
-
-
-METHOD QTextEdit:moveCursor( nOperation, nMode )
-   RETURN Qt_QTextEdit_moveCursor( ::pPtr, nOperation, nMode )
-
-
-METHOD QTextEdit:overwriteMode()
-   RETURN Qt_QTextEdit_overwriteMode( ::pPtr )
-
-
-METHOD QTextEdit:print( pPrinter )
-   RETURN Qt_QTextEdit_print( ::pPtr, hbqt_ptr( pPrinter ) )
-
-
-METHOD QTextEdit:setAcceptRichText( lAccept )
-   RETURN Qt_QTextEdit_setAcceptRichText( ::pPtr, lAccept )
-
-
-METHOD QTextEdit:setAutoFormatting( nFeatures )
-   RETURN Qt_QTextEdit_setAutoFormatting( ::pPtr, nFeatures )
-
-
-METHOD QTextEdit:setCurrentCharFormat( pFormat )
-   RETURN Qt_QTextEdit_setCurrentCharFormat( ::pPtr, hbqt_ptr( pFormat ) )
-
-
-METHOD QTextEdit:setCursorWidth( nWidth )
-   RETURN Qt_QTextEdit_setCursorWidth( ::pPtr, nWidth )
-
-
-METHOD QTextEdit:setDocument( pDocument )
-   RETURN Qt_QTextEdit_setDocument( ::pPtr, hbqt_ptr( pDocument ) )
-
-
-METHOD QTextEdit:setDocumentTitle( cTitle )
-   RETURN Qt_QTextEdit_setDocumentTitle( ::pPtr, cTitle )
-
-
-METHOD QTextEdit:setLineWrapColumnOrWidth( nW )
-   RETURN Qt_QTextEdit_setLineWrapColumnOrWidth( ::pPtr, nW )
-
-
-METHOD QTextEdit:setLineWrapMode( nMode )
-   RETURN Qt_QTextEdit_setLineWrapMode( ::pPtr, nMode )
-
-
-METHOD QTextEdit:setOverwriteMode( lOverwrite )
-   RETURN Qt_QTextEdit_setOverwriteMode( ::pPtr, lOverwrite )
-
-
-METHOD QTextEdit:setReadOnly( lRo )
-   RETURN Qt_QTextEdit_setReadOnly( ::pPtr, lRo )
-
-
-METHOD QTextEdit:setTabChangesFocus( lB )
-   RETURN Qt_QTextEdit_setTabChangesFocus( ::pPtr, lB )
-
-
-METHOD QTextEdit:setTabStopWidth( nWidth )
-   RETURN Qt_QTextEdit_setTabStopWidth( ::pPtr, nWidth )
-
-
-METHOD QTextEdit:setTextCursor( pCursor )
-   RETURN Qt_QTextEdit_setTextCursor( ::pPtr, hbqt_ptr( pCursor ) )
-
-
-METHOD QTextEdit:setTextInteractionFlags( nFlags )
-   RETURN Qt_QTextEdit_setTextInteractionFlags( ::pPtr, nFlags )
-
-
-METHOD QTextEdit:setUndoRedoEnabled( lEnable )
-   RETURN Qt_QTextEdit_setUndoRedoEnabled( ::pPtr, lEnable )
-
-
-METHOD QTextEdit:setWordWrapMode( nPolicy )
-   RETURN Qt_QTextEdit_setWordWrapMode( ::pPtr, nPolicy )
-
-
-METHOD QTextEdit:tabChangesFocus()
-   RETURN Qt_QTextEdit_tabChangesFocus( ::pPtr )
-
-
-METHOD QTextEdit:tabStopWidth()
-   RETURN Qt_QTextEdit_tabStopWidth( ::pPtr )
-
-
-METHOD QTextEdit:textBackgroundColor()
-   RETURN HB_QColor():from( Qt_QTextEdit_textBackgroundColor( ::pPtr ) )
-
-
-METHOD QTextEdit:textColor()
-   RETURN HB_QColor():from( Qt_QTextEdit_textColor( ::pPtr ) )
-
-
-METHOD QTextEdit:textCursor()
-   RETURN HB_QTextCursor():from( Qt_QTextEdit_textCursor( ::pPtr ) )
-
-
-METHOD QTextEdit:textInteractionFlags()
-   RETURN Qt_QTextEdit_textInteractionFlags( ::pPtr )
-
-
-METHOD QTextEdit:toHtml()
-   RETURN Qt_QTextEdit_toHtml( ::pPtr )
-
-
-METHOD QTextEdit:toPlainText()
-   RETURN Qt_QTextEdit_toPlainText( ::pPtr )
-
-
-METHOD QTextEdit:wordWrapMode()
-   RETURN Qt_QTextEdit_wordWrapMode( ::pPtr )
-
-
-METHOD QTextEdit:append( cText )
-   RETURN Qt_QTextEdit_append( ::pPtr, cText )
-
-
-METHOD QTextEdit:clear()
-   RETURN Qt_QTextEdit_clear( ::pPtr )
-
-
-METHOD QTextEdit:copy()
-   RETURN Qt_QTextEdit_copy( ::pPtr )
-
-
-METHOD QTextEdit:cut()
-   RETURN Qt_QTextEdit_cut( ::pPtr )
-
-
-METHOD QTextEdit:insertHtml( cText )
-   RETURN Qt_QTextEdit_insertHtml( ::pPtr, cText )
-
-
-METHOD QTextEdit:insertPlainText( cText )
-   RETURN Qt_QTextEdit_insertPlainText( ::pPtr, cText )
-
-
-METHOD QTextEdit:paste()
-   RETURN Qt_QTextEdit_paste( ::pPtr )
-
-
-METHOD QTextEdit:redo()
-   RETURN Qt_QTextEdit_redo( ::pPtr )
-
-
-METHOD QTextEdit:scrollToAnchor( cName )
-   RETURN Qt_QTextEdit_scrollToAnchor( ::pPtr, cName )
-
-
-METHOD QTextEdit:selectAll()
-   RETURN Qt_QTextEdit_selectAll( ::pPtr )
-
-
-METHOD QTextEdit:setAlignment( nA )
-   RETURN Qt_QTextEdit_setAlignment( ::pPtr, nA )
-
-
-METHOD QTextEdit:setCurrentFont( pF )
-   RETURN Qt_QTextEdit_setCurrentFont( ::pPtr, hbqt_ptr( pF ) )
-
-
-METHOD QTextEdit:setFontFamily( cFontFamily )
-   RETURN Qt_QTextEdit_setFontFamily( ::pPtr, cFontFamily )
-
-
-METHOD QTextEdit:setFontItalic( lItalic )
-   RETURN Qt_QTextEdit_setFontItalic( ::pPtr, lItalic )
-
-
-METHOD QTextEdit:setFontPointSize( nS )
-   RETURN Qt_QTextEdit_setFontPointSize( ::pPtr, nS )
-
-
-METHOD QTextEdit:setFontUnderline( lUnderline )
-   RETURN Qt_QTextEdit_setFontUnderline( ::pPtr, lUnderline )
-
-
-METHOD QTextEdit:setFontWeight( nWeight )
-   RETURN Qt_QTextEdit_setFontWeight( ::pPtr, nWeight )
-
-
-METHOD QTextEdit:setHtml( cText )
-   RETURN Qt_QTextEdit_setHtml( ::pPtr, cText )
-
-
-METHOD QTextEdit:setPlainText( cText )
-   RETURN Qt_QTextEdit_setPlainText( ::pPtr, cText )
-
-
-METHOD QTextEdit:setText( cText )
-   RETURN Qt_QTextEdit_setText( ::pPtr, cText )
-
-
-METHOD QTextEdit:setTextBackgroundColor( pC )
-   RETURN Qt_QTextEdit_setTextBackgroundColor( ::pPtr, hbqt_ptr( pC ) )
-
-
-METHOD QTextEdit:setTextColor( pC )
-   RETURN Qt_QTextEdit_setTextColor( ::pPtr, hbqt_ptr( pC ) )
-
-
-METHOD QTextEdit:undo()
-   RETURN Qt_QTextEdit_undo( ::pPtr )
-
-
-METHOD QTextEdit:zoomIn( nRange )
-   RETURN Qt_QTextEdit_zoomIn( ::pPtr, nRange )
-
-
-METHOD QTextEdit:zoomOut( nRange )
-   RETURN Qt_QTextEdit_zoomOut( ::pPtr, nRange )
+METHOD QTextEdit:cursorWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_cursorWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:document( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextDocument():from( Qt_QTextEdit_document( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:documentTitle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_documentTitle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:ensureCursorVisible( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_ensureCursorVisible( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:find( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QTextEdit_find( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_find( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:fontFamily( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_fontFamily( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:fontItalic( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_fontItalic( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:fontPointSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_fontPointSize( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:fontUnderline( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_fontUnderline( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:fontWeight( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_fontWeight( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:isReadOnly( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_isReadOnly( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:isUndoRedoEnabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_isUndoRedoEnabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:lineWrapColumnOrWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_lineWrapColumnOrWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:lineWrapMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_lineWrapMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:loadResource( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QVariant():from( Qt_QTextEdit_loadResource( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:mergeCurrentCharFormat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_mergeCurrentCharFormat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:moveCursor( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QTextEdit_moveCursor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_moveCursor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:overwriteMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_overwriteMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:print( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_print( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setAcceptRichText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setAcceptRichText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setAutoFormatting( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setAutoFormatting( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setCurrentCharFormat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setCurrentCharFormat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setCursorWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setCursorWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setDocument( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setDocument( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setDocumentTitle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setDocumentTitle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setLineWrapColumnOrWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setLineWrapColumnOrWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setLineWrapMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setLineWrapMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setOverwriteMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setOverwriteMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setReadOnly( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setReadOnly( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setTabChangesFocus( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setTabChangesFocus( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setTabStopWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setTabStopWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setTextCursor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setTextCursor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setTextInteractionFlags( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setTextInteractionFlags( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setUndoRedoEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setUndoRedoEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setWordWrapMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setWordWrapMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:tabChangesFocus( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_tabChangesFocus( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:tabStopWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_tabStopWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:textBackgroundColor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QColor():from( Qt_QTextEdit_textBackgroundColor( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:textColor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QColor():from( Qt_QTextEdit_textColor( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:textCursor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextCursor():from( Qt_QTextEdit_textCursor( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:textInteractionFlags( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_textInteractionFlags( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:toHtml( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_toHtml( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:toPlainText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_toPlainText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:wordWrapMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_wordWrapMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:append( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_append( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:clear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_clear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:copy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_copy( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:cut( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_cut( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:insertHtml( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_insertHtml( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:insertPlainText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_insertPlainText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:paste( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_paste( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:redo( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_redo( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:scrollToAnchor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_scrollToAnchor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:selectAll( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_selectAll( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setAlignment( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setAlignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setCurrentFont( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setCurrentFont( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setFontFamily( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setFontFamily( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setFontItalic( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setFontItalic( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setFontPointSize( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setFontPointSize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setFontUnderline( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setFontUnderline( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setFontWeight( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setFontWeight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setHtml( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setHtml( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setPlainText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setPlainText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setTextBackgroundColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setTextBackgroundColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:setTextColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_setTextColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:undo( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextEdit_undo( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:zoomIn( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_zoomIn( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QTextEdit_zoomIn( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextEdit:zoomOut( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextEdit_zoomOut( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QTextEdit_zoomOut( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

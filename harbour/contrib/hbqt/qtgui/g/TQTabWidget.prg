@@ -103,45 +103,47 @@ CREATE CLASS QTabWidget INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QTabWi
 
    METHOD  new( ... )
 
-   METHOD  addTab( ... )
-   METHOD  clear()
-   METHOD  cornerWidget( nCorner )
-   METHOD  count()
-   METHOD  currentIndex()
-   METHOD  currentWidget()
-   METHOD  documentMode()
-   METHOD  elideMode()
-   METHOD  iconSize()
-   METHOD  indexOf( pW )
-   METHOD  insertTab( ... )
-   METHOD  isMovable()
-   METHOD  isTabEnabled( nIndex )
-   METHOD  removeTab( nIndex )
-   METHOD  setCornerWidget( pWidget, nCorner )
-   METHOD  setDocumentMode( lSet )
-   METHOD  setElideMode( nQt_TextElideMode )
-   METHOD  setIconSize( pSize )
-   METHOD  setMovable( lMovable )
-   METHOD  setTabEnabled( nIndex, lEnable )
-   METHOD  setTabIcon( nIndex, pIcon )
-   METHOD  setTabPosition( nTabPosition )
-   METHOD  setTabShape( nS )
-   METHOD  setTabText( nIndex, cLabel )
-   METHOD  setTabToolTip( nIndex, cTip )
-   METHOD  setTabWhatsThis( nIndex, cText )
-   METHOD  setTabsClosable( lCloseable )
-   METHOD  setUsesScrollButtons( lUseButtons )
-   METHOD  tabIcon( nIndex )
-   METHOD  tabPosition()
-   METHOD  tabShape()
-   METHOD  tabText( nIndex )
-   METHOD  tabToolTip( nIndex )
-   METHOD  tabWhatsThis( nIndex )
-   METHOD  tabsClosable()
-   METHOD  usesScrollButtons()
-   METHOD  widget( nIndex )
-   METHOD  setCurrentIndex( nIndex )
-   METHOD  setCurrentWidget( pWidget )
+   METHOD  addTab                        // ( oQWidget, cLabel )                               -> nInt
+                                         // ( oQWidget, coQIcon, cLabel )                      -> nInt
+   METHOD  clear                         // (  )                                               -> NIL
+   METHOD  cornerWidget                  // ( nCorner )                                        -> oQWidget
+   METHOD  count                         // (  )                                               -> nInt
+   METHOD  currentIndex                  // (  )                                               -> nInt
+   METHOD  currentWidget                 // (  )                                               -> oQWidget
+   METHOD  documentMode                  // (  )                                               -> lBool
+   METHOD  elideMode                     // (  )                                               -> nQt_TextElideMode
+   METHOD  iconSize                      // (  )                                               -> oQSize
+   METHOD  indexOf                       // ( oQWidget )                                       -> nInt
+   METHOD  insertTab                     // ( nIndex, oQWidget, cLabel )                       -> nInt
+                                         // ( nIndex, oQWidget, coQIcon, cLabel )              -> nInt
+   METHOD  isMovable                     // (  )                                               -> lBool
+   METHOD  isTabEnabled                  // ( nIndex )                                         -> lBool
+   METHOD  removeTab                     // ( nIndex )                                         -> NIL
+   METHOD  setCornerWidget               // ( oQWidget, nCorner )                              -> NIL
+   METHOD  setDocumentMode               // ( lSet )                                           -> NIL
+   METHOD  setElideMode                  // ( nQt::TextElideMode )                             -> NIL
+   METHOD  setIconSize                   // ( oQSize )                                         -> NIL
+   METHOD  setMovable                    // ( lMovable )                                       -> NIL
+   METHOD  setTabEnabled                 // ( nIndex, lEnable )                                -> NIL
+   METHOD  setTabIcon                    // ( nIndex, coQIcon )                                -> NIL
+   METHOD  setTabPosition                // ( nTabPosition )                                   -> NIL
+   METHOD  setTabShape                   // ( nS )                                             -> NIL
+   METHOD  setTabText                    // ( nIndex, cLabel )                                 -> NIL
+   METHOD  setTabToolTip                 // ( nIndex, cTip )                                   -> NIL
+   METHOD  setTabWhatsThis               // ( nIndex, cText )                                  -> NIL
+   METHOD  setTabsClosable               // ( lCloseable )                                     -> NIL
+   METHOD  setUsesScrollButtons          // ( lUseButtons )                                    -> NIL
+   METHOD  tabIcon                       // ( nIndex )                                         -> oQIcon
+   METHOD  tabPosition                   // (  )                                               -> nTabPosition
+   METHOD  tabShape                      // (  )                                               -> nTabShape
+   METHOD  tabText                       // ( nIndex )                                         -> cQString
+   METHOD  tabToolTip                    // ( nIndex )                                         -> cQString
+   METHOD  tabWhatsThis                  // ( nIndex )                                         -> cQString
+   METHOD  tabsClosable                  // (  )                                               -> lBool
+   METHOD  usesScrollButtons             // (  )                                               -> lBool
+   METHOD  widget                        // ( nIndex )                                         -> oQWidget
+   METHOD  setCurrentIndex               // ( nIndex )                                         -> NIL
+   METHOD  setCurrentWidget              // ( oQWidget )                                       -> NIL
 
    ENDCLASS
 
@@ -173,40 +175,86 @@ METHOD QTabWidget:addTab( ... )
    RETURN hbqt_error()
 
 
-METHOD QTabWidget:clear()
-   RETURN Qt_QTabWidget_clear( ::pPtr )
+METHOD QTabWidget:clear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTabWidget_clear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:cornerWidget( nCorner )
-   RETURN HB_QWidget():from( Qt_QTabWidget_cornerWidget( ::pPtr, nCorner ) )
+METHOD QTabWidget:cornerWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QWidget():from( Qt_QTabWidget_cornerWidget( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QTabWidget_cornerWidget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:count()
-   RETURN Qt_QTabWidget_count( ::pPtr )
+METHOD QTabWidget:count( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTabWidget_count( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:currentIndex()
-   RETURN Qt_QTabWidget_currentIndex( ::pPtr )
+METHOD QTabWidget:currentIndex( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTabWidget_currentIndex( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:currentWidget()
-   RETURN HB_QWidget():from( Qt_QTabWidget_currentWidget( ::pPtr ) )
+METHOD QTabWidget:currentWidget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QTabWidget_currentWidget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:documentMode()
-   RETURN Qt_QTabWidget_documentMode( ::pPtr )
+METHOD QTabWidget:documentMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTabWidget_documentMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:elideMode()
-   RETURN Qt_QTabWidget_elideMode( ::pPtr )
+METHOD QTabWidget:elideMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTabWidget_elideMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:iconSize()
-   RETURN HB_QSize():from( Qt_QTabWidget_iconSize( ::pPtr ) )
+METHOD QTabWidget:iconSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QTabWidget_iconSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:indexOf( pW )
-   RETURN Qt_QTabWidget_indexOf( ::pPtr, hbqt_ptr( pW ) )
+METHOD QTabWidget:indexOf( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTabWidget_indexOf( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTabWidget:insertTab( ... )
@@ -227,114 +275,324 @@ METHOD QTabWidget:insertTab( ... )
    RETURN hbqt_error()
 
 
-METHOD QTabWidget:isMovable()
-   RETURN Qt_QTabWidget_isMovable( ::pPtr )
+METHOD QTabWidget:isMovable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTabWidget_isMovable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:isTabEnabled( nIndex )
-   RETURN Qt_QTabWidget_isTabEnabled( ::pPtr, nIndex )
+METHOD QTabWidget:isTabEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTabWidget_isTabEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:removeTab( nIndex )
-   RETURN Qt_QTabWidget_removeTab( ::pPtr, nIndex )
+METHOD QTabWidget:removeTab( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTabWidget_removeTab( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:setCornerWidget( pWidget, nCorner )
-   RETURN Qt_QTabWidget_setCornerWidget( ::pPtr, hbqt_ptr( pWidget ), nCorner )
+METHOD QTabWidget:setCornerWidget( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QTabWidget_setCornerWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTabWidget_setCornerWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:setDocumentMode( lSet )
-   RETURN Qt_QTabWidget_setDocumentMode( ::pPtr, lSet )
+METHOD QTabWidget:setDocumentMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTabWidget_setDocumentMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:setElideMode( nQt_TextElideMode )
-   RETURN Qt_QTabWidget_setElideMode( ::pPtr, nQt_TextElideMode )
+METHOD QTabWidget:setElideMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTabWidget_setElideMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:setIconSize( pSize )
-   RETURN Qt_QTabWidget_setIconSize( ::pPtr, hbqt_ptr( pSize ) )
+METHOD QTabWidget:setIconSize( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTabWidget_setIconSize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:setMovable( lMovable )
-   RETURN Qt_QTabWidget_setMovable( ::pPtr, lMovable )
+METHOD QTabWidget:setMovable( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTabWidget_setMovable( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:setTabEnabled( nIndex, lEnable )
-   RETURN Qt_QTabWidget_setTabEnabled( ::pPtr, nIndex, lEnable )
+METHOD QTabWidget:setTabEnabled( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QTabWidget_setTabEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:setTabIcon( nIndex, pIcon )
-   RETURN Qt_QTabWidget_setTabIcon( ::pPtr, nIndex, hbqt_ptr( pIcon ) )
+METHOD QTabWidget:setTabIcon( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. ( hb_isObject( hb_pvalue( 2 ) ) .OR. hb_isChar( hb_pvalue( 2 ) ) )
+         RETURN Qt_QTabWidget_setTabIcon( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:setTabPosition( nTabPosition )
-   RETURN Qt_QTabWidget_setTabPosition( ::pPtr, nTabPosition )
+METHOD QTabWidget:setTabPosition( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTabWidget_setTabPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:setTabShape( nS )
-   RETURN Qt_QTabWidget_setTabShape( ::pPtr, nS )
+METHOD QTabWidget:setTabShape( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTabWidget_setTabShape( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:setTabText( nIndex, cLabel )
-   RETURN Qt_QTabWidget_setTabText( ::pPtr, nIndex, cLabel )
+METHOD QTabWidget:setTabText( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QTabWidget_setTabText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:setTabToolTip( nIndex, cTip )
-   RETURN Qt_QTabWidget_setTabToolTip( ::pPtr, nIndex, cTip )
+METHOD QTabWidget:setTabToolTip( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QTabWidget_setTabToolTip( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:setTabWhatsThis( nIndex, cText )
-   RETURN Qt_QTabWidget_setTabWhatsThis( ::pPtr, nIndex, cText )
+METHOD QTabWidget:setTabWhatsThis( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QTabWidget_setTabWhatsThis( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:setTabsClosable( lCloseable )
-   RETURN Qt_QTabWidget_setTabsClosable( ::pPtr, lCloseable )
+METHOD QTabWidget:setTabsClosable( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTabWidget_setTabsClosable( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:setUsesScrollButtons( lUseButtons )
-   RETURN Qt_QTabWidget_setUsesScrollButtons( ::pPtr, lUseButtons )
+METHOD QTabWidget:setUsesScrollButtons( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTabWidget_setUsesScrollButtons( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:tabIcon( nIndex )
-   RETURN HB_QIcon():from( Qt_QTabWidget_tabIcon( ::pPtr, nIndex ) )
+METHOD QTabWidget:tabIcon( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QIcon():from( Qt_QTabWidget_tabIcon( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:tabPosition()
-   RETURN Qt_QTabWidget_tabPosition( ::pPtr )
+METHOD QTabWidget:tabPosition( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTabWidget_tabPosition( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:tabShape()
-   RETURN Qt_QTabWidget_tabShape( ::pPtr )
+METHOD QTabWidget:tabShape( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTabWidget_tabShape( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:tabText( nIndex )
-   RETURN Qt_QTabWidget_tabText( ::pPtr, nIndex )
+METHOD QTabWidget:tabText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTabWidget_tabText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:tabToolTip( nIndex )
-   RETURN Qt_QTabWidget_tabToolTip( ::pPtr, nIndex )
+METHOD QTabWidget:tabToolTip( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTabWidget_tabToolTip( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:tabWhatsThis( nIndex )
-   RETURN Qt_QTabWidget_tabWhatsThis( ::pPtr, nIndex )
+METHOD QTabWidget:tabWhatsThis( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTabWidget_tabWhatsThis( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:tabsClosable()
-   RETURN Qt_QTabWidget_tabsClosable( ::pPtr )
+METHOD QTabWidget:tabsClosable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTabWidget_tabsClosable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:usesScrollButtons()
-   RETURN Qt_QTabWidget_usesScrollButtons( ::pPtr )
+METHOD QTabWidget:usesScrollButtons( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTabWidget_usesScrollButtons( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:widget( nIndex )
-   RETURN HB_QWidget():from( Qt_QTabWidget_widget( ::pPtr, nIndex ) )
+METHOD QTabWidget:widget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QWidget():from( Qt_QTabWidget_widget( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:setCurrentIndex( nIndex )
-   RETURN Qt_QTabWidget_setCurrentIndex( ::pPtr, nIndex )
+METHOD QTabWidget:setCurrentIndex( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTabWidget_setCurrentIndex( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTabWidget:setCurrentWidget( pWidget )
-   RETURN Qt_QTabWidget_setCurrentWidget( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QTabWidget:setCurrentWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTabWidget_setCurrentWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

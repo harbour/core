@@ -52,7 +52,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQEvent.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QEvent.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

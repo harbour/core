@@ -103,11 +103,11 @@ CREATE CLASS QsciCommandSet INHERIT HbQtObjectHandler FUNCTION HB_QsciCommandSet
 
    METHOD  new( ... )
 
-   METHOD  readSettings( pQs, pPrefix )
-   METHOD  writeSettings( pQs, pPrefix )
-   METHOD  commands()
-   METHOD  clearKeys()
-   METHOD  clearAlternateKeys()
+   METHOD  readSettings                  // ( oQSettings, cPrefix )                            -> lBool
+   METHOD  writeSettings                 // ( oQSettings, cPrefix )                            -> lBool
+   METHOD  commands                      // (  )                                               -> oQList_ QsciCommand * > &
+   METHOD  clearKeys                     // (  )                                               -> NIL
+   METHOD  clearAlternateKeys            // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -121,22 +121,62 @@ METHOD QsciCommandSet:new( ... )
    RETURN Self
 
 
-METHOD QsciCommandSet:readSettings( pQs, pPrefix )
-   RETURN Qt_QsciCommandSet_readSettings( ::pPtr, hbqt_ptr( pQs ), hbqt_ptr( pPrefix ) )
+METHOD QsciCommandSet:readSettings( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QsciCommandSet_readSettings( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciCommandSet_readSettings( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciCommandSet:writeSettings( pQs, pPrefix )
-   RETURN Qt_QsciCommandSet_writeSettings( ::pPtr, hbqt_ptr( pQs ), hbqt_ptr( pPrefix ) )
+METHOD QsciCommandSet:writeSettings( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QsciCommandSet_writeSettings( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciCommandSet_writeSettings( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciCommandSet:commands()
-   RETURN HB_QList():from( Qt_QsciCommandSet_commands( ::pPtr ) )
+METHOD QsciCommandSet:commands( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QsciCommandSet_commands( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciCommandSet:clearKeys()
-   RETURN Qt_QsciCommandSet_clearKeys( ::pPtr )
+METHOD QsciCommandSet:clearKeys( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciCommandSet_clearKeys( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciCommandSet:clearAlternateKeys()
-   RETURN Qt_QsciCommandSet_clearAlternateKeys( ::pPtr )
+METHOD QsciCommandSet:clearAlternateKeys( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciCommandSet_clearAlternateKeys( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

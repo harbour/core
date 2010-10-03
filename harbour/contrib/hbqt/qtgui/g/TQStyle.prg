@@ -103,32 +103,35 @@ CREATE CLASS QStyle INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QStyle
 
    METHOD  new( ... )
 
-   METHOD  combinedLayoutSpacing( nControls1, nControls2, nOrientation, pOption, pWidget )
-   METHOD  drawComplexControl( nControl, pOption, pPainter, pWidget )
-   METHOD  drawControl( nElement, pOption, pPainter, pWidget )
-   METHOD  drawItemPixmap( pPainter, pRectangle, nAlignment, pPixmap )
-   METHOD  drawItemText( pPainter, pRectangle, nAlignment, pPalette, lEnabled, cText, nTextRole )
-   METHOD  drawPrimitive( nElement, pOption, pPainter, pWidget )
-   METHOD  generatedIconPixmap( nIconMode, pPixmap, pOption )
-   METHOD  hitTestComplexControl( nControl, pOption, pPosition, pWidget )
-   METHOD  itemPixmapRect( pRectangle, nAlignment, pPixmap )
-   METHOD  itemTextRect( pMetrics, pRectangle, nAlignment, lEnabled, cText )
-   METHOD  layoutSpacing( nControl1, nControl2, nOrientation, pOption, pWidget )
-   METHOD  pixelMetric( nMetric, pOption, pWidget )
-   METHOD  polish( ... )
-   METHOD  sizeFromContents( nType, pOption, pContentsSize, pWidget )
-   METHOD  standardIcon( nStandardIcon, pOption, pWidget )
-   METHOD  standardPalette()
-   METHOD  styleHint( nHint, pOption, pWidget, pReturnData )
-   METHOD  subControlRect( nControl, pOption, nSubControl, pWidget )
-   METHOD  subElementRect( nElement, pOption, pWidget )
-   METHOD  unpolish( ... )
-   METHOD  alignedRect( nDirection, nAlignment, pSize, pRectangle )
-   METHOD  sliderPositionFromValue( nMin, nMax, nLogicalValue, nSpan, lUpsideDown )
-   METHOD  sliderValueFromPosition( nMin, nMax, nPosition, nSpan, lUpsideDown )
-   METHOD  visualAlignment( nDirection, nAlignment )
-   METHOD  visualPos( nDirection, pBoundingRectangle, pLogicalPosition )
-   METHOD  visualRect( nDirection, pBoundingRectangle, pLogicalRectangle )
+   METHOD  combinedLayoutSpacing         // ( nControls1, nControls2, nOrientation, oQStyleOption, oQWidget ) -> nInt
+   METHOD  drawComplexControl            // ( nControl, oQStyleOptionComplex, oQPainter, oQWidget ) -> NIL
+   METHOD  drawControl                   // ( nElement, oQStyleOption, oQPainter, oQWidget )   -> NIL
+   METHOD  drawItemPixmap                // ( oQPainter, oQRect, nAlignment, oQPixmap )        -> NIL
+   METHOD  drawItemText                  // ( oQPainter, oQRect, nAlignment, oQPalette, lEnabled, cText, nTextRole ) -> NIL
+   METHOD  drawPrimitive                 // ( nElement, oQStyleOption, oQPainter, oQWidget )   -> NIL
+   METHOD  generatedIconPixmap           // ( nIconMode, oQPixmap, oQStyleOption )             -> oQPixmap
+   METHOD  hitTestComplexControl         // ( nControl, oQStyleOptionComplex, oQPoint, oQWidget ) -> nSubControl
+   METHOD  itemPixmapRect                // ( oQRect, nAlignment, oQPixmap )                   -> oQRect
+   METHOD  itemTextRect                  // ( oQFontMetrics, oQRect, nAlignment, lEnabled, cText ) -> oQRect
+   METHOD  layoutSpacing                 // ( nControl1, nControl2, nOrientation, oQStyleOption, oQWidget ) -> nInt
+   METHOD  pixelMetric                   // ( nMetric, oQStyleOption, oQWidget )               -> nInt
+   METHOD  polish                        // ( oQWidget )                                       -> NIL
+                                         // ( oQApplication )                                  -> NIL
+                                         // ( oQPalette )                                      -> NIL
+   METHOD  sizeFromContents              // ( nType, oQStyleOption, oQSize, oQWidget )         -> oQSize
+   METHOD  standardIcon                  // ( nStandardIcon, oQStyleOption, oQWidget )         -> oQIcon
+   METHOD  standardPalette               // (  )                                               -> oQPalette
+   METHOD  styleHint                     // ( nHint, oQStyleOption, oQWidget, oQStyleHintReturn ) -> nInt
+   METHOD  subControlRect                // ( nControl, oQStyleOptionComplex, nSubControl, oQWidget ) -> oQRect
+   METHOD  subElementRect                // ( nElement, oQStyleOption, oQWidget )              -> oQRect
+   METHOD  unpolish                      // ( oQWidget )                                       -> NIL
+                                         // ( oQApplication )                                  -> NIL
+   METHOD  alignedRect                   // ( nDirection, nAlignment, oQSize, oQRect )         -> oQRect
+   METHOD  sliderPositionFromValue       // ( nMin, nMax, nLogicalValue, nSpan, lUpsideDown )  -> nInt
+   METHOD  sliderValueFromPosition       // ( nMin, nMax, nPosition, nSpan, lUpsideDown )      -> nInt
+   METHOD  visualAlignment               // ( nDirection, nAlignment )                         -> nQt_Alignment
+   METHOD  visualPos                     // ( nDirection, oQRect, oQPoint )                    -> oQPoint
+   METHOD  visualRect                    // ( nDirection, oQRect, oQRect )                     -> oQRect
 
    ENDCLASS
 
@@ -142,52 +145,214 @@ METHOD QStyle:new( ... )
    RETURN Self
 
 
-METHOD QStyle:combinedLayoutSpacing( nControls1, nControls2, nOrientation, pOption, pWidget )
-   RETURN Qt_QStyle_combinedLayoutSpacing( ::pPtr, nControls1, nControls2, nOrientation, hbqt_ptr( pOption ), hbqt_ptr( pWidget ) )
+METHOD QStyle:combinedLayoutSpacing( ... )
+   SWITCH PCount()
+   CASE 5
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) ) .AND. hb_isObject( hb_pvalue( 5 ) )
+         RETURN Qt_QStyle_combinedLayoutSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
+         RETURN Qt_QStyle_combinedLayoutSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QStyle_combinedLayoutSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyle:drawComplexControl( nControl, pOption, pPainter, pWidget )
-   RETURN Qt_QStyle_drawComplexControl( ::pPtr, nControl, hbqt_ptr( pOption ), hbqt_ptr( pPainter ), hbqt_ptr( pWidget ) )
+METHOD QStyle:drawComplexControl( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
+         RETURN Qt_QStyle_drawComplexControl( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QStyle_drawComplexControl( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyle:drawControl( nElement, pOption, pPainter, pWidget )
-   RETURN Qt_QStyle_drawControl( ::pPtr, nElement, hbqt_ptr( pOption ), hbqt_ptr( pPainter ), hbqt_ptr( pWidget ) )
+METHOD QStyle:drawControl( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
+         RETURN Qt_QStyle_drawControl( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QStyle_drawControl( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyle:drawItemPixmap( pPainter, pRectangle, nAlignment, pPixmap )
-   RETURN Qt_QStyle_drawItemPixmap( ::pPtr, hbqt_ptr( pPainter ), hbqt_ptr( pRectangle ), nAlignment, hbqt_ptr( pPixmap ) )
+METHOD QStyle:drawItemPixmap( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
+         RETURN Qt_QStyle_drawItemPixmap( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyle:drawItemText( pPainter, pRectangle, nAlignment, pPalette, lEnabled, cText, nTextRole )
-   RETURN Qt_QStyle_drawItemText( ::pPtr, hbqt_ptr( pPainter ), hbqt_ptr( pRectangle ), nAlignment, hbqt_ptr( pPalette ), lEnabled, cText, nTextRole )
+METHOD QStyle:drawItemText( ... )
+   SWITCH PCount()
+   CASE 7
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) ) .AND. hb_isLogical( hb_pvalue( 5 ) ) .AND. hb_isChar( hb_pvalue( 6 ) ) .AND. hb_isNumeric( hb_pvalue( 7 ) )
+         RETURN Qt_QStyle_drawItemText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 6
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) ) .AND. hb_isLogical( hb_pvalue( 5 ) ) .AND. hb_isChar( hb_pvalue( 6 ) )
+         RETURN Qt_QStyle_drawItemText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyle:drawPrimitive( nElement, pOption, pPainter, pWidget )
-   RETURN Qt_QStyle_drawPrimitive( ::pPtr, nElement, hbqt_ptr( pOption ), hbqt_ptr( pPainter ), hbqt_ptr( pWidget ) )
+METHOD QStyle:drawPrimitive( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
+         RETURN Qt_QStyle_drawPrimitive( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QStyle_drawPrimitive( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyle:generatedIconPixmap( nIconMode, pPixmap, pOption )
-   RETURN HB_QPixmap():from( Qt_QStyle_generatedIconPixmap( ::pPtr, nIconMode, hbqt_ptr( pPixmap ), hbqt_ptr( pOption ) ) )
+METHOD QStyle:generatedIconPixmap( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN HB_QPixmap():from( Qt_QStyle_generatedIconPixmap( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyle:hitTestComplexControl( nControl, pOption, pPosition, pWidget )
-   RETURN Qt_QStyle_hitTestComplexControl( ::pPtr, nControl, hbqt_ptr( pOption ), hbqt_ptr( pPosition ), hbqt_ptr( pWidget ) )
+METHOD QStyle:hitTestComplexControl( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
+         RETURN Qt_QStyle_hitTestComplexControl( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QStyle_hitTestComplexControl( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyle:itemPixmapRect( pRectangle, nAlignment, pPixmap )
-   RETURN HB_QRect():from( Qt_QStyle_itemPixmapRect( ::pPtr, hbqt_ptr( pRectangle ), nAlignment, hbqt_ptr( pPixmap ) ) )
+METHOD QStyle:itemPixmapRect( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN HB_QRect():from( Qt_QStyle_itemPixmapRect( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyle:itemTextRect( pMetrics, pRectangle, nAlignment, lEnabled, cText )
-   RETURN HB_QRect():from( Qt_QStyle_itemTextRect( ::pPtr, hbqt_ptr( pMetrics ), hbqt_ptr( pRectangle ), nAlignment, lEnabled, cText ) )
+METHOD QStyle:itemTextRect( ... )
+   SWITCH PCount()
+   CASE 5
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isLogical( hb_pvalue( 4 ) ) .AND. hb_isChar( hb_pvalue( 5 ) )
+         RETURN HB_QRect():from( Qt_QStyle_itemTextRect( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyle:layoutSpacing( nControl1, nControl2, nOrientation, pOption, pWidget )
-   RETURN Qt_QStyle_layoutSpacing( ::pPtr, nControl1, nControl2, nOrientation, hbqt_ptr( pOption ), hbqt_ptr( pWidget ) )
+METHOD QStyle:layoutSpacing( ... )
+   SWITCH PCount()
+   CASE 5
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) ) .AND. hb_isObject( hb_pvalue( 5 ) )
+         RETURN Qt_QStyle_layoutSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
+         RETURN Qt_QStyle_layoutSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QStyle_layoutSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyle:pixelMetric( nMetric, pOption, pWidget )
-   RETURN Qt_QStyle_pixelMetric( ::pPtr, nMetric, hbqt_ptr( pOption ), hbqt_ptr( pWidget ) )
+METHOD QStyle:pixelMetric( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QStyle_pixelMetric( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QStyle_pixelMetric( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QStyle_pixelMetric( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QStyle:polish( ... )
@@ -209,28 +374,120 @@ METHOD QStyle:polish( ... )
    RETURN hbqt_error()
 
 
-METHOD QStyle:sizeFromContents( nType, pOption, pContentsSize, pWidget )
-   RETURN HB_QSize():from( Qt_QStyle_sizeFromContents( ::pPtr, nType, hbqt_ptr( pOption ), hbqt_ptr( pContentsSize ), hbqt_ptr( pWidget ) ) )
+METHOD QStyle:sizeFromContents( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
+         RETURN HB_QSize():from( Qt_QStyle_sizeFromContents( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN HB_QSize():from( Qt_QStyle_sizeFromContents( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyle:standardIcon( nStandardIcon, pOption, pWidget )
-   RETURN HB_QIcon():from( Qt_QStyle_standardIcon( ::pPtr, nStandardIcon, hbqt_ptr( pOption ), hbqt_ptr( pWidget ) ) )
+METHOD QStyle:standardIcon( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN HB_QIcon():from( Qt_QStyle_standardIcon( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QIcon():from( Qt_QStyle_standardIcon( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QIcon():from( Qt_QStyle_standardIcon( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyle:standardPalette()
-   RETURN HB_QPalette():from( Qt_QStyle_standardPalette( ::pPtr ) )
+METHOD QStyle:standardPalette( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPalette():from( Qt_QStyle_standardPalette( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyle:styleHint( nHint, pOption, pWidget, pReturnData )
-   RETURN Qt_QStyle_styleHint( ::pPtr, nHint, hbqt_ptr( pOption ), hbqt_ptr( pWidget ), hbqt_ptr( pReturnData ) )
+METHOD QStyle:styleHint( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
+         RETURN Qt_QStyle_styleHint( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QStyle_styleHint( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QStyle_styleHint( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QStyle_styleHint( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyle:subControlRect( nControl, pOption, nSubControl, pWidget )
-   RETURN HB_QRect():from( Qt_QStyle_subControlRect( ::pPtr, nControl, hbqt_ptr( pOption ), nSubControl, hbqt_ptr( pWidget ) ) )
+METHOD QStyle:subControlRect( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
+         RETURN HB_QRect():from( Qt_QStyle_subControlRect( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN HB_QRect():from( Qt_QStyle_subControlRect( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyle:subElementRect( nElement, pOption, pWidget )
-   RETURN HB_QRect():from( Qt_QStyle_subElementRect( ::pPtr, nElement, hbqt_ptr( pOption ), hbqt_ptr( pWidget ) ) )
+METHOD QStyle:subElementRect( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN HB_QRect():from( Qt_QStyle_subElementRect( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QRect():from( Qt_QStyle_subElementRect( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QStyle:unpolish( ... )
@@ -250,26 +507,86 @@ METHOD QStyle:unpolish( ... )
    RETURN hbqt_error()
 
 
-METHOD QStyle:alignedRect( nDirection, nAlignment, pSize, pRectangle )
-   RETURN HB_QRect():from( Qt_QStyle_alignedRect( ::pPtr, nDirection, nAlignment, hbqt_ptr( pSize ), hbqt_ptr( pRectangle ) ) )
+METHOD QStyle:alignedRect( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
+         RETURN HB_QRect():from( Qt_QStyle_alignedRect( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyle:sliderPositionFromValue( nMin, nMax, nLogicalValue, nSpan, lUpsideDown )
-   RETURN Qt_QStyle_sliderPositionFromValue( ::pPtr, nMin, nMax, nLogicalValue, nSpan, lUpsideDown )
+METHOD QStyle:sliderPositionFromValue( ... )
+   SWITCH PCount()
+   CASE 5
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isLogical( hb_pvalue( 5 ) )
+         RETURN Qt_QStyle_sliderPositionFromValue( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QStyle_sliderPositionFromValue( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyle:sliderValueFromPosition( nMin, nMax, nPosition, nSpan, lUpsideDown )
-   RETURN Qt_QStyle_sliderValueFromPosition( ::pPtr, nMin, nMax, nPosition, nSpan, lUpsideDown )
+METHOD QStyle:sliderValueFromPosition( ... )
+   SWITCH PCount()
+   CASE 5
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isLogical( hb_pvalue( 5 ) )
+         RETURN Qt_QStyle_sliderValueFromPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QStyle_sliderValueFromPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyle:visualAlignment( nDirection, nAlignment )
-   RETURN Qt_QStyle_visualAlignment( ::pPtr, nDirection, nAlignment )
+METHOD QStyle:visualAlignment( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QStyle_visualAlignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyle:visualPos( nDirection, pBoundingRectangle, pLogicalPosition )
-   RETURN HB_QPoint():from( Qt_QStyle_visualPos( ::pPtr, nDirection, hbqt_ptr( pBoundingRectangle ), hbqt_ptr( pLogicalPosition ) ) )
+METHOD QStyle:visualPos( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN HB_QPoint():from( Qt_QStyle_visualPos( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyle:visualRect( nDirection, pBoundingRectangle, pLogicalRectangle )
-   RETURN HB_QRect():from( Qt_QStyle_visualRect( ::pPtr, nDirection, hbqt_ptr( pBoundingRectangle ), hbqt_ptr( pLogicalRectangle ) ) )
+METHOD QStyle:visualRect( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN HB_QRect():from( Qt_QStyle_visualRect( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

@@ -72,7 +72,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQTimeLine.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QTimeLine.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

@@ -34,12 +34,13 @@
  *     :setAttribute( nAttribute, lOn )                    -> NIL
  *     :setFontFamily( nWhich, cFamily )                   -> NIL
  *     :setFontSize( nType, nSize )                        -> NIL
- *     :setUserStyleSheetUrl( pLocation )                  -> NIL
+ *     :setUserStyleSheetUrl( oQUrl )                      -> NIL
  *     :testAttribute( nAttribute )                        -> lBool
- *     :userStyleSheetUrl()                                -> pQUrl
+ *     :userStyleSheetUrl()                                -> oQUrl
  *     :clearIconDatabase()                                -> NIL
+ *     :globalSettings()                                   -> oQWebSettings
  *     :iconDatabasePath()                                 -> cQString
- *     :iconForUrl( pUrl )                                 -> pQIcon
+ *     :iconForUrl( oQUrl )                                -> oQIcon
  *     :maximumPagesInCache()                              -> nInt
  *     :offlineStorageDefaultQuota()                       -> nQint64
  *     :offlineStoragePath()                               -> cQString
@@ -48,8 +49,8 @@
  *     :setObjectCacheCapacities( nCacheMinDeadCapacity, nCacheMaxDead, nTotalCapacity )  -> NIL
  *     :setOfflineStorageDefaultQuota( nMaximumSize )      -> NIL
  *     :setOfflineStoragePath( cPath )                     -> NIL
- *     :setWebGraphic( nType, pGraphic )                   -> NIL
- *     :webGraphic( nType )                                -> pQPixmap
+ *     :setWebGraphic( nType, oQPixmap )                   -> NIL
+ *     :webGraphic( nType )                                -> oQPixmap
  * 
  *  $DESCRIPTION$
  * 
@@ -69,7 +70,5 @@
  *     Harbour source: contrib/hbqt/qtwebkit/TQWebSettings.prg
  *     C++ wrappers  : contrib/hbqt/qtwebkit/QWebSettings.cpp
  *     Library       : hbqtwebkit
- *  $SEEALSO$
- *     
  *  $END$
  */

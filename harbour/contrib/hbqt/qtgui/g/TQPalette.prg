@@ -103,37 +103,41 @@ CREATE CLASS QPalette INHERIT HbQtObjectHandler FUNCTION HB_QPalette
 
    METHOD  new( ... )
 
-   METHOD  alternateBase()
-   METHOD  base()
-   METHOD  brightText()
-   METHOD  brush( ... )
-   METHOD  button()
-   METHOD  buttonText()
-   METHOD  cacheKey()
-   METHOD  color( ... )
-   METHOD  currentColorGroup()
-   METHOD  dark()
-   METHOD  highlight()
-   METHOD  highlightedText()
-   METHOD  isBrushSet( nCg, nCr )
-   METHOD  isCopyOf( pP )
-   METHOD  isEqual( nCg1, nCg2 )
-   METHOD  light()
-   METHOD  link()
-   METHOD  linkVisited()
-   METHOD  mid()
-   METHOD  midlight()
-   METHOD  resolve( pOther )
-   METHOD  setBrush( ... )
-   METHOD  setColor( ... )
-   METHOD  setColorGroup( nCg, pWindowText, pButton, pLight, pDark, pMid, pText, pBright_text, pBase, pWindow )
-   METHOD  setCurrentColorGroup( nCg )
-   METHOD  shadow()
-   METHOD  text()
-   METHOD  toolTipBase()
-   METHOD  toolTipText()
-   METHOD  window()
-   METHOD  windowText()
+   METHOD  alternateBase                 // (  )                                               -> oQBrush
+   METHOD  base                          // (  )                                               -> oQBrush
+   METHOD  brightText                    // (  )                                               -> oQBrush
+   METHOD  brush                         // ( nGroup, nRole )                                  -> oQBrush
+                                         // ( nRole )                                          -> oQBrush
+   METHOD  button                        // (  )                                               -> oQBrush
+   METHOD  buttonText                    // (  )                                               -> oQBrush
+   METHOD  cacheKey                      // (  )                                               -> nQint64
+   METHOD  color                         // ( nGroup, nRole )                                  -> oQColor
+                                         // ( nRole )                                          -> oQColor
+   METHOD  currentColorGroup             // (  )                                               -> nColorGroup
+   METHOD  dark                          // (  )                                               -> oQBrush
+   METHOD  highlight                     // (  )                                               -> oQBrush
+   METHOD  highlightedText               // (  )                                               -> oQBrush
+   METHOD  isBrushSet                    // ( nCg, nCr )                                       -> lBool
+   METHOD  isCopyOf                      // ( oQPalette )                                      -> lBool
+   METHOD  isEqual                       // ( nCg1, nCg2 )                                     -> lBool
+   METHOD  light                         // (  )                                               -> oQBrush
+   METHOD  link                          // (  )                                               -> oQBrush
+   METHOD  linkVisited                   // (  )                                               -> oQBrush
+   METHOD  mid                           // (  )                                               -> oQBrush
+   METHOD  midlight                      // (  )                                               -> oQBrush
+   METHOD  resolve                       // ( oQPalette )                                      -> oQPalette
+   METHOD  setBrush                      // ( nRole, oQBrush )                                 -> NIL
+                                         // ( nGroup, nRole, oQBrush )                         -> NIL
+   METHOD  setColor                      // ( nRole, oQColor )                                 -> NIL
+                                         // ( nGroup, nRole, oQColor )                         -> NIL
+   METHOD  setColorGroup                 // ( nCg, oQBrush, oQBrush, oQBrush, oQBrush, oQBrush, oQBrush, oQBrush, oQBrush, oQBrush ) -> NIL
+   METHOD  setCurrentColorGroup          // ( nCg )                                            -> NIL
+   METHOD  shadow                        // (  )                                               -> oQBrush
+   METHOD  text                          // (  )                                               -> oQBrush
+   METHOD  toolTipBase                   // (  )                                               -> oQBrush
+   METHOD  toolTipText                   // (  )                                               -> oQBrush
+   METHOD  window                        // (  )                                               -> oQBrush
+   METHOD  windowText                    // (  )                                               -> oQBrush
 
    ENDCLASS
 
@@ -147,16 +151,28 @@ METHOD QPalette:new( ... )
    RETURN Self
 
 
-METHOD QPalette:alternateBase()
-   RETURN HB_QBrush():from( Qt_QPalette_alternateBase( ::pPtr ) )
+METHOD QPalette:alternateBase( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QPalette_alternateBase( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPalette:base()
-   RETURN HB_QBrush():from( Qt_QPalette_base( ::pPtr ) )
+METHOD QPalette:base( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QPalette_base( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPalette:brightText()
-   RETURN HB_QBrush():from( Qt_QPalette_brightText( ::pPtr ) )
+METHOD QPalette:brightText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QPalette_brightText( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPalette:brush( ... )
@@ -177,16 +193,28 @@ METHOD QPalette:brush( ... )
    RETURN hbqt_error()
 
 
-METHOD QPalette:button()
-   RETURN HB_QBrush():from( Qt_QPalette_button( ::pPtr ) )
+METHOD QPalette:button( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QPalette_button( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPalette:buttonText()
-   RETURN HB_QBrush():from( Qt_QPalette_buttonText( ::pPtr ) )
+METHOD QPalette:buttonText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QPalette_buttonText( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPalette:cacheKey()
-   RETURN Qt_QPalette_cacheKey( ::pPtr )
+METHOD QPalette:cacheKey( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPalette_cacheKey( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPalette:color( ... )
@@ -207,56 +235,124 @@ METHOD QPalette:color( ... )
    RETURN hbqt_error()
 
 
-METHOD QPalette:currentColorGroup()
-   RETURN Qt_QPalette_currentColorGroup( ::pPtr )
+METHOD QPalette:currentColorGroup( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPalette_currentColorGroup( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPalette:dark()
-   RETURN HB_QBrush():from( Qt_QPalette_dark( ::pPtr ) )
+METHOD QPalette:dark( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QPalette_dark( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPalette:highlight()
-   RETURN HB_QBrush():from( Qt_QPalette_highlight( ::pPtr ) )
+METHOD QPalette:highlight( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QPalette_highlight( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPalette:highlightedText()
-   RETURN HB_QBrush():from( Qt_QPalette_highlightedText( ::pPtr ) )
+METHOD QPalette:highlightedText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QPalette_highlightedText( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPalette:isBrushSet( nCg, nCr )
-   RETURN Qt_QPalette_isBrushSet( ::pPtr, nCg, nCr )
+METHOD QPalette:isBrushSet( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QPalette_isBrushSet( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPalette:isCopyOf( pP )
-   RETURN Qt_QPalette_isCopyOf( ::pPtr, hbqt_ptr( pP ) )
+METHOD QPalette:isCopyOf( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPalette_isCopyOf( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPalette:isEqual( nCg1, nCg2 )
-   RETURN Qt_QPalette_isEqual( ::pPtr, nCg1, nCg2 )
+METHOD QPalette:isEqual( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QPalette_isEqual( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPalette:light()
-   RETURN HB_QBrush():from( Qt_QPalette_light( ::pPtr ) )
+METHOD QPalette:light( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QPalette_light( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPalette:link()
-   RETURN HB_QBrush():from( Qt_QPalette_link( ::pPtr ) )
+METHOD QPalette:link( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QPalette_link( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPalette:linkVisited()
-   RETURN HB_QBrush():from( Qt_QPalette_linkVisited( ::pPtr ) )
+METHOD QPalette:linkVisited( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QPalette_linkVisited( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPalette:mid()
-   RETURN HB_QBrush():from( Qt_QPalette_mid( ::pPtr ) )
+METHOD QPalette:mid( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QPalette_mid( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPalette:midlight()
-   RETURN HB_QBrush():from( Qt_QPalette_midlight( ::pPtr ) )
+METHOD QPalette:midlight( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QPalette_midlight( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPalette:resolve( pOther )
-   RETURN HB_QPalette():from( Qt_QPalette_resolve( ::pPtr, hbqt_ptr( pOther ) ) )
+METHOD QPalette:resolve( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QPalette():from( Qt_QPalette_resolve( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPalette:setBrush( ... )
@@ -295,34 +391,74 @@ METHOD QPalette:setColor( ... )
    RETURN hbqt_error()
 
 
-METHOD QPalette:setColorGroup( nCg, pWindowText, pButton, pLight, pDark, pMid, pText, pBright_text, pBase, pWindow )
-   RETURN Qt_QPalette_setColorGroup( ::pPtr, nCg, hbqt_ptr( pWindowText ), hbqt_ptr( pButton ), hbqt_ptr( pLight ), hbqt_ptr( pDark ), hbqt_ptr( pMid ), hbqt_ptr( pText ), hbqt_ptr( pBright_text ), hbqt_ptr( pBase ), hbqt_ptr( pWindow ) )
+METHOD QPalette:setColorGroup( ... )
+   SWITCH PCount()
+   CASE 10
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) ) .AND. hb_isObject( hb_pvalue( 5 ) ) .AND. hb_isObject( hb_pvalue( 6 ) ) .AND. hb_isObject( hb_pvalue( 7 ) ) .AND. hb_isObject( hb_pvalue( 8 ) ) .AND. hb_isObject( hb_pvalue( 9 ) ) .AND. hb_isObject( hb_pvalue( 10 ) )
+         RETURN Qt_QPalette_setColorGroup( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPalette:setCurrentColorGroup( nCg )
-   RETURN Qt_QPalette_setCurrentColorGroup( ::pPtr, nCg )
+METHOD QPalette:setCurrentColorGroup( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QPalette_setCurrentColorGroup( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPalette:shadow()
-   RETURN HB_QBrush():from( Qt_QPalette_shadow( ::pPtr ) )
+METHOD QPalette:shadow( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QPalette_shadow( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPalette:text()
-   RETURN HB_QBrush():from( Qt_QPalette_text( ::pPtr ) )
+METHOD QPalette:text( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QPalette_text( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPalette:toolTipBase()
-   RETURN HB_QBrush():from( Qt_QPalette_toolTipBase( ::pPtr ) )
+METHOD QPalette:toolTipBase( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QPalette_toolTipBase( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPalette:toolTipText()
-   RETURN HB_QBrush():from( Qt_QPalette_toolTipText( ::pPtr ) )
+METHOD QPalette:toolTipText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QPalette_toolTipText( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPalette:window()
-   RETURN HB_QBrush():from( Qt_QPalette_window( ::pPtr ) )
+METHOD QPalette:window( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QPalette_window( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPalette:windowText()
-   RETURN HB_QBrush():from( Qt_QPalette_windowText( ::pPtr ) )
+METHOD QPalette:windowText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QPalette_windowText( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

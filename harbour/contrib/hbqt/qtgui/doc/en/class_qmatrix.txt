@@ -33,23 +33,28 @@
  *     :det()                                              -> nQreal
  *     :dx()                                               -> nQreal
  *     :dy()                                               -> nQreal
+ *     :inverted( @lInvertible )                           -> oQMatrix
  *     :isIdentity()                                       -> lBool
  *     :isInvertible()                                     -> lBool
  *     :map( nX, nY, @nTx, @nTy )                          -> NIL
- *     :map_1( nX, nY, @nTx, @nTy )                        -> NIL
- *     :map_2( pPoint )                                    -> pQPointF
- *     :map_3( pPoint )                                    -> pQPoint
- *     :map_4( pLine )                                     -> pQLineF
- *     :map_5( pLine )                                     -> pQLine
- *     :map_6( pPolygon )                                  -> pQPolygonF
- *     :map_7( pPolygon )                                  -> pQPolygon
- *     :map_8( pRegion )                                   -> pQRegion
- *     :map_9( pPath )                                     -> pQPainterPath
- *     :mapRect( pRectangle )                              -> pQRectF
- *     :mapRect_1( pRectangle )                            -> pQRect
- *     :mapToPolygon( pRectangle )                         -> pQPolygon
+ *     :map( nX, nY, @nTx, @nTy )                          -> NIL
+ *     :map( oQPointF )                                    -> oQPointF
+ *     :map( oQPoint )                                     -> oQPoint
+ *     :map( oQLineF )                                     -> oQLineF
+ *     :map( oQLine )                                      -> oQLine
+ *     :map( oQPolygonF )                                  -> oQPolygonF
+ *     :map( oQPolygon )                                   -> oQPolygon
+ *     :map( oQRegion )                                    -> oQRegion
+ *     :map( oQPainterPath )                               -> oQPainterPath
+ *     :mapRect( oQRectF )                                 -> oQRectF
+ *     :mapRect( oQRect )                                  -> oQRect
+ *     :mapToPolygon( oQRect )                             -> oQPolygon
  *     :reset()                                            -> NIL
+ *     :rotate( nDegrees )                                 -> oQMatrix
+ *     :scale( nSx, nSy )                                  -> oQMatrix
  *     :setMatrix( nM11, nM12, nM21, nM22, nDx, nDy )      -> NIL
+ *     :shear( nSh, nSv )                                  -> oQMatrix
+ *     :translate( nDx, nDy )                              -> oQMatrix
  * 
  *  $DESCRIPTION$
  * 
@@ -69,7 +74,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQMatrix.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QMatrix.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

@@ -28,15 +28,15 @@
  *  $METHODS$
  *     :ascent()                                           -> nQreal
  *     :descent()                                          -> nQreal
- *     :format()                                           -> pQTextFormat
+ *     :format()                                           -> oQTextFormat
  *     :formatIndex()                                      -> nInt
  *     :height()                                           -> nQreal
  *     :isValid()                                          -> lBool
- *     :rect()                                             -> pQRectF
+ *     :rect()                                             -> oQRectF
  *     :setAscent( nA )                                    -> NIL
  *     :setDescent( nD )                                   -> NIL
  *     :setWidth( nW )                                     -> NIL
- *     :textDirection()                                    -> nQt::LayoutDirection
+ *     :textDirection()                                    -> nQt_LayoutDirection
  *     :textPosition()                                     -> nInt
  *     :width()                                            -> nQreal
  * 
@@ -58,7 +58,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTextInlineObject.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextInlineObject.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

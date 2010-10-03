@@ -47,7 +47,5 @@
  *     Harbour source: contrib/hbqt/qtgui/THBQTextBlockUserData.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/HBQTextBlockUserData.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

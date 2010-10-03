@@ -33,11 +33,13 @@
  *     :rheight()                                          -> nInt
  *     :rwidth()                                           -> nInt
  *     :scale( nWidth, nHeight, nMode )                    -> NIL
- *     :scale_1( pSize, nMode )                            -> NIL
+ *     :scale( oQSize, nMode )                             -> NIL
  *     :setHeight( nHeight )                               -> NIL
  *     :setWidth( nWidth )                                 -> NIL
  *     :transpose()                                        -> NIL
  *     :width()                                            -> nInt
+ *     :boundedTo( oQSize )                                -> oQSize
+ *     :expandedTo( oQSize )                               -> oQSize
  * 
  *  $DESCRIPTION$
  * 
@@ -60,7 +62,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQSize.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QSize.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

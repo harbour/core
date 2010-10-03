@@ -26,12 +26,12 @@
  *  $RETURNS$
  *     An instance of the object of type QStyleOptionTabWidgetFrame
  *  $METHODS$
- *     :leftCornerWidgetSize()                             -> pQSize
+ *     :leftCornerWidgetSize()                             -> oQSize
  *     :lineWidth()                                        -> nInt
  *     :midLineWidth()                                     -> nInt
- *     :rightCornerWidgetSize()                            -> pQSize
- *     :shape()                                            -> nQTabBar::Shape
- *     :tabBarSize()                                       -> pQSize
+ *     :rightCornerWidgetSize()                            -> oQSize
+ *     :shape()                                            -> nQTabBar_Shape
+ *     :tabBarSize()                                       -> oQSize
  * 
  *  $DESCRIPTION$
  * 
@@ -51,7 +51,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionTabWidgetFrame.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionTabWidgetFrame.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QStyleOption()
  *  $END$
  */

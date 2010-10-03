@@ -30,9 +30,9 @@
  *     :autoRepeat()                                       -> lBool
  *     :autoRepeatDelay()                                  -> nInt
  *     :autoRepeatInterval()                               -> nInt
- *     :group()                                            -> pQButtonGroup
- *     :icon()                                             -> pQIcon
- *     :iconSize()                                         -> pQSize
+ *     :group()                                            -> oQButtonGroup
+ *     :icon()                                             -> oQIcon
+ *     :iconSize()                                         -> oQSize
  *     :isCheckable()                                      -> lBool
  *     :isChecked()                                        -> lBool
  *     :isDown()                                           -> lBool
@@ -42,15 +42,15 @@
  *     :setAutoRepeatInterval( nInt )                      -> NIL
  *     :setCheckable( lBool )                              -> NIL
  *     :setDown( lBool )                                   -> NIL
- *     :setIcon( pIcon )                                   -> NIL
- *     :setShortcut( pKey )                                -> NIL
+ *     :setIcon( coQIcon )                                 -> NIL
+ *     :setShortcut( oQKeySequence )                       -> NIL
  *     :setText( cText )                                   -> NIL
- *     :shortcut()                                         -> pQKeySequence
+ *     :shortcut()                                         -> oQKeySequence
  *     :text()                                             -> cQString
  *     :animateClick( nMsec )                              -> NIL
  *     :click()                                            -> NIL
  *     :setChecked( lBool )                                -> NIL
- *     :setIconSize( pSize )                               -> NIL
+ *     :setIconSize( oQSize )                              -> NIL
  *     :toggle()                                           -> NIL
  * 
  *  $DESCRIPTION$
@@ -71,7 +71,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQAbstractButton.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QAbstractButton.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

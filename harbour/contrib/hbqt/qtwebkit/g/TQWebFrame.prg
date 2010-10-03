@@ -103,42 +103,44 @@ CREATE CLASS QWebFrame INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QWebFra
 
    METHOD  new( ... )
 
-   METHOD  addToJavaScriptWindowObject( ... )
-   METHOD  childFrames()
-   METHOD  contentsSize()
-   METHOD  frameName()
-   METHOD  geometry()
-   METHOD  hitTestContent( pPos )
-   METHOD  icon()
-   METHOD  load( pUrl )
-   METHOD  page()
-   METHOD  parentFrame()
-   METHOD  pos()
-   METHOD  render( ... )
-   METHOD  renderTreeDump()
-   METHOD  scroll( nDx, nDy )
-   METHOD  scrollBarMaximum( nOrientation )
-   METHOD  scrollBarMinimum( nOrientation )
-   METHOD  scrollBarPolicy( nOrientation )
-   METHOD  scrollBarValue( nOrientation )
-   METHOD  scrollPosition()
-   METHOD  securityOrigin()
-   METHOD  setContent( pData, cMimeType, pBaseUrl )
-   METHOD  setHtml( cHtml, pBaseUrl )
-   METHOD  setScrollBarPolicy( nOrientation, nPolicy )
-   METHOD  setScrollBarValue( nOrientation, nValue )
-   METHOD  setScrollPosition( pPos )
-   METHOD  setTextSizeMultiplier( nFactor )
-   METHOD  setUrl( pUrl )
-   METHOD  setZoomFactor( nFactor )
-   METHOD  textSizeMultiplier()
-   METHOD  title()
-   METHOD  toHtml()
-   METHOD  toPlainText()
-   METHOD  url()
-   METHOD  zoomFactor()
-   METHOD  evaluateJavaScript( cScriptSource )
-   METHOD  print( pPrinter )
+   METHOD  addToJavaScriptWindowObject   // ( cName, oQObject )                                -> NIL
+                                         // ( cName, oQObject, nOwn )                          -> NIL
+   METHOD  childFrames                   // (  )                                               -> oQList_QWebFrame
+   METHOD  contentsSize                  // (  )                                               -> oQSize
+   METHOD  frameName                     // (  )                                               -> cQString
+   METHOD  geometry                      // (  )                                               -> oQRect
+   METHOD  hitTestContent                // ( oQPoint )                                        -> oQWebHitTestResult
+   METHOD  icon                          // (  )                                               -> oQIcon
+   METHOD  load                          // ( oQUrl )                                          -> NIL
+   METHOD  page                          // (  )                                               -> oQWebPage
+   METHOD  parentFrame                   // (  )                                               -> oQWebFrame
+   METHOD  pos                           // (  )                                               -> oQPoint
+   METHOD  render                        // ( oQPainter, oQRegion )                            -> NIL
+                                         // ( oQPainter )                                      -> NIL
+   METHOD  renderTreeDump                // (  )                                               -> cQString
+   METHOD  scroll                        // ( nDx, nDy )                                       -> NIL
+   METHOD  scrollBarMaximum              // ( nOrientation )                                   -> nInt
+   METHOD  scrollBarMinimum              // ( nOrientation )                                   -> nInt
+   METHOD  scrollBarPolicy               // ( nOrientation )                                   -> nQt_ScrollBarPolicy
+   METHOD  scrollBarValue                // ( nOrientation )                                   -> nInt
+   METHOD  scrollPosition                // (  )                                               -> oQPoint
+   METHOD  securityOrigin                // (  )                                               -> oQWebSecurityOrigin
+   METHOD  setContent                    // ( oQByteArray, cMimeType, oQUrl )                  -> NIL
+   METHOD  setHtml                       // ( cHtml, oQUrl )                                   -> NIL
+   METHOD  setScrollBarPolicy            // ( nOrientation, nPolicy )                          -> NIL
+   METHOD  setScrollBarValue             // ( nOrientation, nValue )                           -> NIL
+   METHOD  setScrollPosition             // ( oQPoint )                                        -> NIL
+   METHOD  setTextSizeMultiplier         // ( nFactor )                                        -> NIL
+   METHOD  setUrl                        // ( oQUrl )                                          -> NIL
+   METHOD  setZoomFactor                 // ( nFactor )                                        -> NIL
+   METHOD  textSizeMultiplier            // (  )                                               -> nQreal
+   METHOD  title                         // (  )                                               -> cQString
+   METHOD  toHtml                        // (  )                                               -> cQString
+   METHOD  toPlainText                   // (  )                                               -> cQString
+   METHOD  url                           // (  )                                               -> oQUrl
+   METHOD  zoomFactor                    // (  )                                               -> nQreal
+   METHOD  evaluateJavaScript            // ( cScriptSource )                                  -> oQVariant
+   METHOD  print                         // ( oQPrinter )                                      -> NIL
 
    ENDCLASS
 
@@ -170,44 +172,92 @@ METHOD QWebFrame:addToJavaScriptWindowObject( ... )
    RETURN hbqt_error()
 
 
-METHOD QWebFrame:childFrames()
-   RETURN HB_QList():from( Qt_QWebFrame_childFrames( ::pPtr ) )
+METHOD QWebFrame:childFrames( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QWebFrame_childFrames( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:contentsSize()
-   RETURN HB_QSize():from( Qt_QWebFrame_contentsSize( ::pPtr ) )
+METHOD QWebFrame:contentsSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QWebFrame_contentsSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:frameName()
-   RETURN Qt_QWebFrame_frameName( ::pPtr )
+METHOD QWebFrame:frameName( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebFrame_frameName( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:geometry()
-   RETURN HB_QRect():from( Qt_QWebFrame_geometry( ::pPtr ) )
+METHOD QWebFrame:geometry( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QWebFrame_geometry( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:hitTestContent( pPos )
-   RETURN HB_QWebHitTestResult():from( Qt_QWebFrame_hitTestContent( ::pPtr, hbqt_ptr( pPos ) ) )
+METHOD QWebFrame:hitTestContent( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QWebHitTestResult():from( Qt_QWebFrame_hitTestContent( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:icon()
-   RETURN HB_QIcon():from( Qt_QWebFrame_icon( ::pPtr ) )
+METHOD QWebFrame:icon( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QIcon():from( Qt_QWebFrame_icon( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:load( pUrl )
-   RETURN Qt_QWebFrame_load( ::pPtr, hbqt_ptr( pUrl ) )
+METHOD QWebFrame:load( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWebFrame_load( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:page()
-   RETURN HB_QWebPage():from( Qt_QWebFrame_page( ::pPtr ) )
+METHOD QWebFrame:page( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWebPage():from( Qt_QWebFrame_page( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:parentFrame()
-   RETURN HB_QWebFrame():from( Qt_QWebFrame_parentFrame( ::pPtr ) )
+METHOD QWebFrame:parentFrame( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWebFrame():from( Qt_QWebFrame_parentFrame( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:pos()
-   RETURN HB_QPoint():from( Qt_QWebFrame_pos( ::pPtr ) )
+METHOD QWebFrame:pos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QWebFrame_pos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWebFrame:render( ... )
@@ -228,98 +278,272 @@ METHOD QWebFrame:render( ... )
    RETURN hbqt_error()
 
 
-METHOD QWebFrame:renderTreeDump()
-   RETURN Qt_QWebFrame_renderTreeDump( ::pPtr )
+METHOD QWebFrame:renderTreeDump( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebFrame_renderTreeDump( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:scroll( nDx, nDy )
-   RETURN Qt_QWebFrame_scroll( ::pPtr, nDx, nDy )
+METHOD QWebFrame:scroll( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QWebFrame_scroll( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:scrollBarMaximum( nOrientation )
-   RETURN Qt_QWebFrame_scrollBarMaximum( ::pPtr, nOrientation )
+METHOD QWebFrame:scrollBarMaximum( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWebFrame_scrollBarMaximum( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:scrollBarMinimum( nOrientation )
-   RETURN Qt_QWebFrame_scrollBarMinimum( ::pPtr, nOrientation )
+METHOD QWebFrame:scrollBarMinimum( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWebFrame_scrollBarMinimum( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:scrollBarPolicy( nOrientation )
-   RETURN Qt_QWebFrame_scrollBarPolicy( ::pPtr, nOrientation )
+METHOD QWebFrame:scrollBarPolicy( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWebFrame_scrollBarPolicy( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:scrollBarValue( nOrientation )
-   RETURN Qt_QWebFrame_scrollBarValue( ::pPtr, nOrientation )
+METHOD QWebFrame:scrollBarValue( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWebFrame_scrollBarValue( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:scrollPosition()
-   RETURN HB_QPoint():from( Qt_QWebFrame_scrollPosition( ::pPtr ) )
+METHOD QWebFrame:scrollPosition( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QWebFrame_scrollPosition( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:securityOrigin()
-   RETURN HB_QWebSecurityOrigin():from( Qt_QWebFrame_securityOrigin( ::pPtr ) )
+METHOD QWebFrame:securityOrigin( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWebSecurityOrigin():from( Qt_QWebFrame_securityOrigin( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:setContent( pData, cMimeType, pBaseUrl )
-   RETURN Qt_QWebFrame_setContent( ::pPtr, hbqt_ptr( pData ), cMimeType, hbqt_ptr( pBaseUrl ) )
+METHOD QWebFrame:setContent( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QWebFrame_setContent( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QWebFrame_setContent( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWebFrame_setContent( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:setHtml( cHtml, pBaseUrl )
-   RETURN Qt_QWebFrame_setHtml( ::pPtr, cHtml, hbqt_ptr( pBaseUrl ) )
+METHOD QWebFrame:setHtml( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QWebFrame_setHtml( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QWebFrame_setHtml( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:setScrollBarPolicy( nOrientation, nPolicy )
-   RETURN Qt_QWebFrame_setScrollBarPolicy( ::pPtr, nOrientation, nPolicy )
+METHOD QWebFrame:setScrollBarPolicy( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QWebFrame_setScrollBarPolicy( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:setScrollBarValue( nOrientation, nValue )
-   RETURN Qt_QWebFrame_setScrollBarValue( ::pPtr, nOrientation, nValue )
+METHOD QWebFrame:setScrollBarValue( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QWebFrame_setScrollBarValue( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:setScrollPosition( pPos )
-   RETURN Qt_QWebFrame_setScrollPosition( ::pPtr, hbqt_ptr( pPos ) )
+METHOD QWebFrame:setScrollPosition( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWebFrame_setScrollPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:setTextSizeMultiplier( nFactor )
-   RETURN Qt_QWebFrame_setTextSizeMultiplier( ::pPtr, nFactor )
+METHOD QWebFrame:setTextSizeMultiplier( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWebFrame_setTextSizeMultiplier( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:setUrl( pUrl )
-   RETURN Qt_QWebFrame_setUrl( ::pPtr, hbqt_ptr( pUrl ) )
+METHOD QWebFrame:setUrl( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWebFrame_setUrl( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:setZoomFactor( nFactor )
-   RETURN Qt_QWebFrame_setZoomFactor( ::pPtr, nFactor )
+METHOD QWebFrame:setZoomFactor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWebFrame_setZoomFactor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:textSizeMultiplier()
-   RETURN Qt_QWebFrame_textSizeMultiplier( ::pPtr )
+METHOD QWebFrame:textSizeMultiplier( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebFrame_textSizeMultiplier( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:title()
-   RETURN Qt_QWebFrame_title( ::pPtr )
+METHOD QWebFrame:title( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebFrame_title( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:toHtml()
-   RETURN Qt_QWebFrame_toHtml( ::pPtr )
+METHOD QWebFrame:toHtml( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebFrame_toHtml( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:toPlainText()
-   RETURN Qt_QWebFrame_toPlainText( ::pPtr )
+METHOD QWebFrame:toPlainText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebFrame_toPlainText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:url()
-   RETURN HB_QUrl():from( Qt_QWebFrame_url( ::pPtr ) )
+METHOD QWebFrame:url( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QUrl():from( Qt_QWebFrame_url( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:zoomFactor()
-   RETURN Qt_QWebFrame_zoomFactor( ::pPtr )
+METHOD QWebFrame:zoomFactor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebFrame_zoomFactor( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:evaluateJavaScript( cScriptSource )
-   RETURN HB_QVariant():from( Qt_QWebFrame_evaluateJavaScript( ::pPtr, cScriptSource ) )
+METHOD QWebFrame:evaluateJavaScript( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QVariant():from( Qt_QWebFrame_evaluateJavaScript( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebFrame:print( pPrinter )
-   RETURN Qt_QWebFrame_print( ::pPtr, hbqt_ptr( pPrinter ) )
+METHOD QWebFrame:print( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWebFrame_print( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

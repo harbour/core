@@ -26,8 +26,8 @@
  *  $RETURNS$
  *     An instance of the object of type QValidator
  *  $METHODS$
- *     :locale()                                           -> pQLocale
- *     :setLocale( pLocale )                               -> NIL
+ *     :locale()                                           -> oQLocale
+ *     :setLocale( oQLocale )                              -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -47,7 +47,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQValidator.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QValidator.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

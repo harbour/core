@@ -29,49 +29,49 @@
  *     :acceptMode()                                       -> nAcceptMode
  *     :confirmOverwrite()                                 -> lBool
  *     :defaultSuffix()                                    -> cQString
- *     :directory()                                        -> pQDir
+ *     :directory()                                        -> oQDir
  *     :fileMode()                                         -> nFileMode
- *     :filter()                                           -> nQDir::Filters
- *     :history()                                          -> pQStringList
- *     :iconProvider()                                     -> pQFileIconProvider
+ *     :filter()                                           -> nQDir_Filters
+ *     :history()                                          -> oQStringList
+ *     :iconProvider()                                     -> oQFileIconProvider
  *     :isNameFilterDetailsVisible()                       -> lBool
  *     :isReadOnly()                                       -> lBool
- *     :itemDelegate()                                     -> pQAbstractItemDelegate
+ *     :itemDelegate()                                     -> oQAbstractItemDelegate
  *     :labelText( nLabel )                                -> cQString
- *     :nameFilters()                                      -> pQStringList
+ *     :nameFilters()                                      -> oQStringList
  *     :options()                                          -> nOptions
- *     :proxyModel()                                       -> pQAbstractProxyModel
+ *     :proxyModel()                                       -> oQAbstractProxyModel
  *     :resolveSymlinks()                                  -> lBool
- *     :restoreState( pState )                             -> lBool
- *     :saveState()                                        -> pQByteArray
+ *     :restoreState( oQByteArray )                        -> lBool
+ *     :saveState()                                        -> oQByteArray
  *     :selectFile( cFilename )                            -> NIL
  *     :selectNameFilter( cFilter )                        -> NIL
- *     :selectedFiles()                                    -> pQStringList
+ *     :selectedFiles()                                    -> oQStringList
  *     :selectedNameFilter()                               -> cQString
  *     :setAcceptMode( nMode )                             -> NIL
  *     :setConfirmOverwrite( lEnabled )                    -> NIL
  *     :setDefaultSuffix( cSuffix )                        -> NIL
  *     :setDirectory( cDirectory )                         -> NIL
- *     :setDirectory_1( pDirectory )                       -> NIL
+ *     :setDirectory( oQDir )                              -> NIL
  *     :setFileMode( nMode )                               -> NIL
  *     :setFilter( nFilters )                              -> NIL
- *     :setHistory( pPaths )                               -> NIL
- *     :setIconProvider( pProvider )                       -> NIL
- *     :setItemDelegate( pDelegate )                       -> NIL
+ *     :setHistory( oQStringList )                         -> NIL
+ *     :setIconProvider( oQFileIconProvider )              -> NIL
+ *     :setItemDelegate( oQAbstractItemDelegate )          -> NIL
  *     :setLabelText( nLabel, cText )                      -> NIL
  *     :setNameFilter( cFilter )                           -> NIL
  *     :setNameFilterDetailsVisible( lEnabled )            -> NIL
- *     :setNameFilters( pFilters )                         -> NIL
+ *     :setNameFilters( oQStringList )                     -> NIL
  *     :setOption( nOption, lOn )                          -> NIL
  *     :setOptions( nOptions )                             -> NIL
- *     :setProxyModel( pProxyModel )                       -> NIL
+ *     :setProxyModel( oQAbstractProxyModel )              -> NIL
  *     :setReadOnly( lEnabled )                            -> NIL
  *     :setResolveSymlinks( lEnabled )                     -> NIL
  *     :setViewMode( nMode )                               -> NIL
- *     :sidebarUrls()                                      -> pQList<QUrl>
+ *     :sidebarUrls()                                      -> oQList_QUrl>
  *     :testOption( nOption )                              -> lBool
  *     :viewMode()                                         -> nViewMode
- *     :getExistingDirectory( pParent, cCaption, cDir, nOptions )  -> cQString
+ *     :getExistingDirectory( oQWidget, cCaption, cDir, nOptions )  -> cQString
  * 
  *  $DESCRIPTION$
  * 
@@ -91,7 +91,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQFileDialog.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QFileDialog.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QDialog()
  *  $END$
  */

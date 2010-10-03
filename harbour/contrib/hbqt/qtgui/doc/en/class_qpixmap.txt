@@ -26,34 +26,46 @@
  *  $RETURNS$
  *     An instance of the object of type QPixmap
  *  $METHODS$
+ *     :alphaChannel()                                     -> oQPixmap
  *     :cacheKey()                                         -> nQint64
- *     :createHeuristicMask( lClipTight )                  -> pQBitmap
- *     :createMaskFromColor( pMaskColor, nMode )           -> pQBitmap
- *     :createMaskFromColor_1( pMaskColor )                -> pQBitmap
+ *     :copy( oQRect )                                     -> oQPixmap
+ *     :copy( nX, nY, nWidth, nHeight )                    -> oQPixmap
+ *     :createHeuristicMask( lClipTight )                  -> oQBitmap
+ *     :createMaskFromColor( oQColor, nMode )              -> oQBitmap
+ *     :createMaskFromColor( oQColor )                     -> oQBitmap
  *     :depth()                                            -> nInt
  *     :detach()                                           -> NIL
- *     :fill( pColor )                                     -> NIL
- *     :fill_1( pWidget, pOffset )                         -> NIL
- *     :fill_2( pWidget, nX, nY )                          -> NIL
+ *     :fill( oQColor )                                    -> NIL
+ *     :fill( oQWidget, oQPoint )                          -> NIL
+ *     :fill( oQWidget, nX, nY )                           -> NIL
  *     :hasAlpha()                                         -> lBool
  *     :hasAlphaChannel()                                  -> lBool
  *     :height()                                           -> nInt
  *     :isNull()                                           -> lBool
  *     :isQBitmap()                                        -> lBool
- *     :load( cFileName, pFormat, nFlags )                 -> lBool
- *     :loadFromData( pData, pFormat, nFlags )             -> lBool
- *     :mask()                                             -> pQBitmap
- *     :rect()                                             -> pQRect
- *     :save( cFileName, pFormat, nQuality )               -> lBool
- *     :save_1( pDevice, pFormat, nQuality )               -> lBool
- *     :setAlphaChannel( pAlphaChannel )                   -> NIL
- *     :setMask( pMask )                                   -> NIL
- *     :size()                                             -> pQSize
- *     :toImage()                                          -> pQImage
+ *     :load( cFileName, cFormat, nFlags )                 -> lBool
+ *     :loadFromData( oQByteArray, cFormat, nFlags )       -> lBool
+ *     :mask()                                             -> oQBitmap
+ *     :rect()                                             -> oQRect
+ *     :save( cFileName, cFormat, nQuality )               -> lBool
+ *     :save( oQIODevice, cFormat, nQuality )              -> lBool
+ *     :scaled( nWidth, nHeight, nAspectRatioMode, nTransformMode )  -> oQPixmap
+ *     :scaled( oQSize, nAspectRatioMode, nTransformMode )  -> oQPixmap
+ *     :scaledToHeight( nHeight, nMode )                   -> oQPixmap
+ *     :scaledToWidth( nWidth, nMode )                     -> oQPixmap
+ *     :setAlphaChannel( oQPixmap )                        -> NIL
+ *     :setMask( oQBitmap )                                -> NIL
+ *     :size()                                             -> oQSize
+ *     :toImage()                                          -> oQImage
+ *     :transformed( oQTransform, nMode )                  -> oQPixmap
+ *     :transformed( oQMatrix, nMode )                     -> oQPixmap
  *     :width()                                            -> nInt
  *     :defaultDepth()                                     -> nInt
- *     :trueMatrix( pMatrix, nWidth, nHeight )             -> pQTransform
- *     :trueMatrix_1( pM, nW, nH )                         -> pQMatrix
+ *     :fromImage( oQImage, nFlags )                       -> oQPixmap
+ *     :grabWidget( oQWidget, oQRect )                     -> oQPixmap
+ *     :grabWidget( oQWidget, nX, nY, nWidth, nHeight )    -> oQPixmap
+ *     :trueMatrix( oQTransform, nWidth, nHeight )         -> oQTransform
+ *     :trueMatrix( oQMatrix, nW, nH )                     -> oQMatrix
  * 
  *  $DESCRIPTION$
  * 
@@ -77,7 +89,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQPixmap.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QPixmap.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QPaintDevice()
  *  $END$
  */

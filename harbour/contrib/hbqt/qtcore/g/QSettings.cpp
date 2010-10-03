@@ -505,7 +505,7 @@ HB_FUNC( QT_QSETTINGS_SETINICODEC_1 )
    QSettings * p = hbqt_par_QSettings( 1 );
    if( p )
    {
-      ( p )->setIniCodec( hbqt_par_char( 2 ) );
+      ( p )->setIniCodec( ( const char * ) hb_parc( 2 ) );
    }
 }
 

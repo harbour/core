@@ -26,17 +26,17 @@
  *  $RETURNS$
  *     An instance of the object of type QLabel
  *  $METHODS$
- *     :alignment()                                        -> nQt::Alignment
- *     :buddy()                                            -> pQWidget
+ *     :alignment()                                        -> nQt_Alignment
+ *     :buddy()                                            -> oQWidget
  *     :hasScaledContents()                                -> lBool
  *     :indent()                                           -> nInt
  *     :margin()                                           -> nInt
- *     :movie()                                            -> pQMovie
+ *     :movie()                                            -> oQMovie
  *     :openExternalLinks()                                -> lBool
- *     :picture()                                          -> pQPicture
- *     :pixmap()                                           -> pQPixmap
+ *     :picture()                                          -> oQPicture
+ *     :pixmap()                                           -> oQPixmap
  *     :setAlignment( nQt::Alignment )                     -> NIL
- *     :setBuddy( pBuddy )                                 -> NIL
+ *     :setBuddy( oQWidget )                               -> NIL
  *     :setIndent( nInt )                                  -> NIL
  *     :setMargin( nInt )                                  -> NIL
  *     :setOpenExternalLinks( lOpen )                      -> NIL
@@ -45,15 +45,15 @@
  *     :setTextInteractionFlags( nFlags )                  -> NIL
  *     :setWordWrap( lOn )                                 -> NIL
  *     :text()                                             -> cQString
- *     :textFormat()                                       -> nQt::TextFormat
- *     :textInteractionFlags()                             -> nQt::TextInteractionFlags
+ *     :textFormat()                                       -> nQt_TextFormat
+ *     :textInteractionFlags()                             -> nQt_TextInteractionFlags
  *     :wordWrap()                                         -> lBool
  *     :clear()                                            -> NIL
- *     :setMovie( pMovie )                                 -> NIL
+ *     :setMovie( oQMovie )                                -> NIL
  *     :setNum( nNum )                                     -> NIL
- *     :setNum_1( nNum )                                   -> NIL
- *     :setPicture( pPicture )                             -> NIL
- *     :setPixmap( pQPixmap )                              -> NIL
+ *     :setNum( nNum )                                     -> NIL
+ *     :setPicture( oQPicture )                            -> NIL
+ *     :setPixmap( oQPixmap )                              -> NIL
  *     :setText( cQString )                                -> NIL
  * 
  *  $DESCRIPTION$
@@ -74,7 +74,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQLabel.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QLabel.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QFrame()
  *  $END$
  */

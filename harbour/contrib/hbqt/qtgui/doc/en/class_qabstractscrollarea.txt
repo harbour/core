@@ -26,20 +26,20 @@
  *  $RETURNS$
  *     An instance of the object of type QAbstractScrollArea
  *  $METHODS$
- *     :addScrollBarWidget( pWidget, nAlignment )          -> NIL
- *     :cornerWidget()                                     -> pQWidget
- *     :horizontalScrollBar()                              -> pQScrollBar
- *     :horizontalScrollBarPolicy()                        -> nQt::ScrollBarPolicy
- *     :maximumViewportSize()                              -> pQSize
- *     :setCornerWidget( pWidget )                         -> NIL
- *     :setHorizontalScrollBar( pScrollBar )               -> NIL
+ *     :addScrollBarWidget( oQWidget, nAlignment )         -> NIL
+ *     :cornerWidget()                                     -> oQWidget
+ *     :horizontalScrollBar()                              -> oQScrollBar
+ *     :horizontalScrollBarPolicy()                        -> nQt_ScrollBarPolicy
+ *     :maximumViewportSize()                              -> oQSize
+ *     :setCornerWidget( oQWidget )                        -> NIL
+ *     :setHorizontalScrollBar( oQScrollBar )              -> NIL
  *     :setHorizontalScrollBarPolicy( nQt::ScrollBarPolicy )  -> NIL
- *     :setVerticalScrollBar( pScrollBar )                 -> NIL
+ *     :setVerticalScrollBar( oQScrollBar )                -> NIL
  *     :setVerticalScrollBarPolicy( nQt::ScrollBarPolicy )  -> NIL
- *     :setViewport( pWidget )                             -> NIL
- *     :verticalScrollBar()                                -> pQScrollBar
- *     :verticalScrollBarPolicy()                          -> nQt::ScrollBarPolicy
- *     :viewport()                                         -> pQWidget
+ *     :setViewport( oQWidget )                            -> NIL
+ *     :verticalScrollBar()                                -> oQScrollBar
+ *     :verticalScrollBarPolicy()                          -> nQt_ScrollBarPolicy
+ *     :viewport()                                         -> oQWidget
  * 
  *  $DESCRIPTION$
  * 
@@ -59,7 +59,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQAbstractScrollArea.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QAbstractScrollArea.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QFrame()
  *  $END$
  */

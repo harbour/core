@@ -103,16 +103,16 @@ CREATE CLASS QDialog INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QDialog
 
    METHOD  new( ... )
 
-   METHOD  isSizeGripEnabled()
-   METHOD  result()
-   METHOD  setModal( lModal )
-   METHOD  setResult( nI )
-   METHOD  setSizeGripEnabled( lBool )
-   METHOD  accept()
-   METHOD  done( nR )
-   METHOD  exec()
-   METHOD  open()
-   METHOD  reject()
+   METHOD  isSizeGripEnabled             // (  )                                               -> lBool
+   METHOD  result                        // (  )                                               -> nInt
+   METHOD  setModal                      // ( lModal )                                         -> NIL
+   METHOD  setResult                     // ( nI )                                             -> NIL
+   METHOD  setSizeGripEnabled            // ( lBool )                                          -> NIL
+   METHOD  accept                        // (  )                                               -> NIL
+   METHOD  done                          // ( nR )                                             -> NIL
+   METHOD  exec                          // (  )                                               -> nInt
+   METHOD  open                          // (  )                                               -> NIL
+   METHOD  reject                        // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -126,42 +126,98 @@ METHOD QDialog:new( ... )
    RETURN Self
 
 
-METHOD QDialog:isSizeGripEnabled()
-   RETURN Qt_QDialog_isSizeGripEnabled( ::pPtr )
+METHOD QDialog:isSizeGripEnabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDialog_isSizeGripEnabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDialog:result()
-   RETURN Qt_QDialog_result( ::pPtr )
+METHOD QDialog:result( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDialog_result( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDialog:setModal( lModal )
-   RETURN Qt_QDialog_setModal( ::pPtr, lModal )
+METHOD QDialog:setModal( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QDialog_setModal( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDialog:setResult( nI )
-   RETURN Qt_QDialog_setResult( ::pPtr, nI )
+METHOD QDialog:setResult( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDialog_setResult( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDialog:setSizeGripEnabled( lBool )
-   RETURN Qt_QDialog_setSizeGripEnabled( ::pPtr, lBool )
+METHOD QDialog:setSizeGripEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QDialog_setSizeGripEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDialog:accept()
-   RETURN Qt_QDialog_accept( ::pPtr )
+METHOD QDialog:accept( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDialog_accept( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDialog:done( nR )
-   RETURN Qt_QDialog_done( ::pPtr, nR )
+METHOD QDialog:done( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDialog_done( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDialog:exec()
-   RETURN Qt_QDialog_exec( ::pPtr )
+METHOD QDialog:exec( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDialog_exec( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDialog:open()
-   RETURN Qt_QDialog_open( ::pPtr )
+METHOD QDialog:open( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDialog_open( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDialog:reject()
-   RETURN Qt_QDialog_reject( ::pPtr )
+METHOD QDialog:reject( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDialog_reject( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

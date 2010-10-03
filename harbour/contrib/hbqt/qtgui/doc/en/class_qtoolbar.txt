@@ -26,33 +26,33 @@
  *  $RETURNS$
  *     An instance of the object of type QToolBar
  *  $METHODS$
- *     :actionAt( pP )                                     -> pQAction
- *     :actionAt_1( nX, nY )                               -> pQAction
- *     :addAction( pAction )                               -> NIL
- *     :addAction_1( cText )                               -> pQAction
- *     :addAction_2( pIcon, cText )                        -> pQAction
- *     :addAction_3( cText, pReceiver, pMember )           -> pQAction
- *     :addAction_4( pIcon, cText, pReceiver, pMember )    -> pQAction
- *     :addSeparator()                                     -> pQAction
- *     :addWidget( pWidget )                               -> pQAction
- *     :allowedAreas()                                     -> nQt::ToolBarAreas
+ *     :actionAt( oQPoint )                                -> oQAction
+ *     :actionAt( nX, nY )                                 -> oQAction
+ *     :addAction( oQAction )                              -> NIL
+ *     :addAction( cText )                                 -> oQAction
+ *     :addAction( coQIcon, cText )                        -> oQAction
+ *     :addAction( cText, oQObject, cMember )              -> oQAction
+ *     :addAction( coQIcon, cText, oQObject, cMember )     -> oQAction
+ *     :addSeparator()                                     -> oQAction
+ *     :addWidget( oQWidget )                              -> oQAction
+ *     :allowedAreas()                                     -> nQt_ToolBarAreas
  *     :clear()                                            -> NIL
- *     :iconSize()                                         -> pQSize
- *     :insertSeparator( pBefore )                         -> pQAction
- *     :insertWidget( pBefore, pWidget )                   -> pQAction
+ *     :iconSize()                                         -> oQSize
+ *     :insertSeparator( oQAction )                        -> oQAction
+ *     :insertWidget( oQAction, oQWidget )                 -> oQAction
  *     :isAreaAllowed( nArea )                             -> lBool
  *     :isFloatable()                                      -> lBool
  *     :isFloating()                                       -> lBool
  *     :isMovable()                                        -> lBool
- *     :orientation()                                      -> nQt::Orientation
+ *     :orientation()                                      -> nQt_Orientation
  *     :setAllowedAreas( nAreas )                          -> NIL
  *     :setFloatable( lFloatable )                         -> NIL
  *     :setMovable( lMovable )                             -> NIL
  *     :setOrientation( nOrientation )                     -> NIL
- *     :toggleViewAction()                                 -> pQAction
- *     :toolButtonStyle()                                  -> nQt::ToolButtonStyle
- *     :widgetForAction( pAction )                         -> pQWidget
- *     :setIconSize( pIconSize )                           -> NIL
+ *     :toggleViewAction()                                 -> oQAction
+ *     :toolButtonStyle()                                  -> nQt_ToolButtonStyle
+ *     :widgetForAction( oQAction )                        -> oQWidget
+ *     :setIconSize( oQSize )                              -> NIL
  *     :setToolButtonStyle( nToolButtonStyle )             -> NIL
  * 
  *  $DESCRIPTION$
@@ -73,7 +73,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQToolBar.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QToolBar.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

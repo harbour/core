@@ -103,27 +103,27 @@ CREATE CLASS QGraphicsTextItem INHERIT HbQtObjectHandler, HB_QObject, HB_QGraphi
 
    METHOD  new( ... )
 
-   METHOD  adjustSize()
-   METHOD  defaultTextColor()
-   METHOD  document()
-   METHOD  font()
-   METHOD  openExternalLinks()
-   METHOD  setDefaultTextColor( pCol )
-   METHOD  setDocument( pDocument )
-   METHOD  setFont( pFont )
-   METHOD  setHtml( cText )
-   METHOD  setOpenExternalLinks( lOpen )
-   METHOD  setPlainText( cText )
-   METHOD  setTabChangesFocus( lB )
-   METHOD  setTextCursor( pCursor )
-   METHOD  setTextInteractionFlags( nFlags )
-   METHOD  setTextWidth( nWidth )
-   METHOD  tabChangesFocus()
-   METHOD  textCursor()
-   METHOD  textInteractionFlags()
-   METHOD  textWidth()
-   METHOD  toHtml()
-   METHOD  toPlainText()
+   METHOD  adjustSize                    // (  )                                               -> NIL
+   METHOD  defaultTextColor              // (  )                                               -> oQColor
+   METHOD  document                      // (  )                                               -> oQTextDocument
+   METHOD  font                          // (  )                                               -> oQFont
+   METHOD  openExternalLinks             // (  )                                               -> lBool
+   METHOD  setDefaultTextColor           // ( oQColor )                                        -> NIL
+   METHOD  setDocument                   // ( oQTextDocument )                                 -> NIL
+   METHOD  setFont                       // ( oQFont )                                         -> NIL
+   METHOD  setHtml                       // ( cText )                                          -> NIL
+   METHOD  setOpenExternalLinks          // ( lOpen )                                          -> NIL
+   METHOD  setPlainText                  // ( cText )                                          -> NIL
+   METHOD  setTabChangesFocus            // ( lB )                                             -> NIL
+   METHOD  setTextCursor                 // ( oQTextCursor )                                   -> NIL
+   METHOD  setTextInteractionFlags       // ( nFlags )                                         -> NIL
+   METHOD  setTextWidth                  // ( nWidth )                                         -> NIL
+   METHOD  tabChangesFocus               // (  )                                               -> lBool
+   METHOD  textCursor                    // (  )                                               -> oQTextCursor
+   METHOD  textInteractionFlags          // (  )                                               -> nQt_TextInteractionFlags
+   METHOD  textWidth                     // (  )                                               -> nQreal
+   METHOD  toHtml                        // (  )                                               -> cQString
+   METHOD  toPlainText                   // (  )                                               -> cQString
 
    ENDCLASS
 
@@ -137,86 +137,210 @@ METHOD QGraphicsTextItem:new( ... )
    RETURN Self
 
 
-METHOD QGraphicsTextItem:adjustSize()
-   RETURN Qt_QGraphicsTextItem_adjustSize( ::pPtr )
+METHOD QGraphicsTextItem:adjustSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsTextItem_adjustSize( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsTextItem:defaultTextColor()
-   RETURN HB_QColor():from( Qt_QGraphicsTextItem_defaultTextColor( ::pPtr ) )
+METHOD QGraphicsTextItem:defaultTextColor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QColor():from( Qt_QGraphicsTextItem_defaultTextColor( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsTextItem:document()
-   RETURN HB_QTextDocument():from( Qt_QGraphicsTextItem_document( ::pPtr ) )
+METHOD QGraphicsTextItem:document( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextDocument():from( Qt_QGraphicsTextItem_document( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsTextItem:font()
-   RETURN HB_QFont():from( Qt_QGraphicsTextItem_font( ::pPtr ) )
+METHOD QGraphicsTextItem:font( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFont():from( Qt_QGraphicsTextItem_font( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsTextItem:openExternalLinks()
-   RETURN Qt_QGraphicsTextItem_openExternalLinks( ::pPtr )
+METHOD QGraphicsTextItem:openExternalLinks( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsTextItem_openExternalLinks( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsTextItem:setDefaultTextColor( pCol )
-   RETURN Qt_QGraphicsTextItem_setDefaultTextColor( ::pPtr, hbqt_ptr( pCol ) )
+METHOD QGraphicsTextItem:setDefaultTextColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsTextItem_setDefaultTextColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsTextItem:setDocument( pDocument )
-   RETURN Qt_QGraphicsTextItem_setDocument( ::pPtr, hbqt_ptr( pDocument ) )
+METHOD QGraphicsTextItem:setDocument( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsTextItem_setDocument( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsTextItem:setFont( pFont )
-   RETURN Qt_QGraphicsTextItem_setFont( ::pPtr, hbqt_ptr( pFont ) )
+METHOD QGraphicsTextItem:setFont( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsTextItem_setFont( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsTextItem:setHtml( cText )
-   RETURN Qt_QGraphicsTextItem_setHtml( ::pPtr, cText )
+METHOD QGraphicsTextItem:setHtml( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsTextItem_setHtml( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsTextItem:setOpenExternalLinks( lOpen )
-   RETURN Qt_QGraphicsTextItem_setOpenExternalLinks( ::pPtr, lOpen )
+METHOD QGraphicsTextItem:setOpenExternalLinks( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsTextItem_setOpenExternalLinks( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsTextItem:setPlainText( cText )
-   RETURN Qt_QGraphicsTextItem_setPlainText( ::pPtr, cText )
+METHOD QGraphicsTextItem:setPlainText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsTextItem_setPlainText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsTextItem:setTabChangesFocus( lB )
-   RETURN Qt_QGraphicsTextItem_setTabChangesFocus( ::pPtr, lB )
+METHOD QGraphicsTextItem:setTabChangesFocus( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsTextItem_setTabChangesFocus( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsTextItem:setTextCursor( pCursor )
-   RETURN Qt_QGraphicsTextItem_setTextCursor( ::pPtr, hbqt_ptr( pCursor ) )
+METHOD QGraphicsTextItem:setTextCursor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsTextItem_setTextCursor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsTextItem:setTextInteractionFlags( nFlags )
-   RETURN Qt_QGraphicsTextItem_setTextInteractionFlags( ::pPtr, nFlags )
+METHOD QGraphicsTextItem:setTextInteractionFlags( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsTextItem_setTextInteractionFlags( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsTextItem:setTextWidth( nWidth )
-   RETURN Qt_QGraphicsTextItem_setTextWidth( ::pPtr, nWidth )
+METHOD QGraphicsTextItem:setTextWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsTextItem_setTextWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsTextItem:tabChangesFocus()
-   RETURN Qt_QGraphicsTextItem_tabChangesFocus( ::pPtr )
+METHOD QGraphicsTextItem:tabChangesFocus( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsTextItem_tabChangesFocus( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsTextItem:textCursor()
-   RETURN HB_QTextCursor():from( Qt_QGraphicsTextItem_textCursor( ::pPtr ) )
+METHOD QGraphicsTextItem:textCursor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextCursor():from( Qt_QGraphicsTextItem_textCursor( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsTextItem:textInteractionFlags()
-   RETURN Qt_QGraphicsTextItem_textInteractionFlags( ::pPtr )
+METHOD QGraphicsTextItem:textInteractionFlags( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsTextItem_textInteractionFlags( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsTextItem:textWidth()
-   RETURN Qt_QGraphicsTextItem_textWidth( ::pPtr )
+METHOD QGraphicsTextItem:textWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsTextItem_textWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsTextItem:toHtml()
-   RETURN Qt_QGraphicsTextItem_toHtml( ::pPtr )
+METHOD QGraphicsTextItem:toHtml( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsTextItem_toHtml( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsTextItem:toPlainText()
-   RETURN Qt_QGraphicsTextItem_toPlainText( ::pPtr )
+METHOD QGraphicsTextItem:toPlainText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsTextItem_toPlainText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

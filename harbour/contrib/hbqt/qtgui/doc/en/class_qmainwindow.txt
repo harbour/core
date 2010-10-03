@@ -26,52 +26,52 @@
  *  $RETURNS$
  *     An instance of the object of type QMainWindow
  *  $METHODS$
- *     :addDockWidget( nArea, pDockwidget )                -> NIL
- *     :addDockWidget_1( nArea, pDockwidget, nOrientation )  -> NIL
- *     :addToolBar( nArea, pToolbar )                      -> NIL
- *     :addToolBar_1( pToolbar )                           -> NIL
- *     :addToolBar_2( cTitle )                             -> pQToolBar
+ *     :addDockWidget( nArea, oQDockWidget )               -> NIL
+ *     :addDockWidget( nArea, oQDockWidget, nOrientation )  -> NIL
+ *     :addToolBar( nArea, oQToolBar )                     -> NIL
+ *     :addToolBar( oQToolBar )                            -> NIL
+ *     :addToolBar( cTitle )                               -> oQToolBar
  *     :addToolBarBreak( nArea )                           -> NIL
- *     :centralWidget()                                    -> pQWidget
- *     :corner( nCorner )                                  -> nQt::DockWidgetArea
- *     :createPopupMenu()                                  -> pQMenu
+ *     :centralWidget()                                    -> oQWidget
+ *     :corner( nCorner )                                  -> nQt_DockWidgetArea
+ *     :createPopupMenu()                                  -> oQMenu
  *     :dockOptions()                                      -> nDockOptions
- *     :dockWidgetArea( pDockwidget )                      -> nQt::DockWidgetArea
+ *     :dockWidgetArea( oQDockWidget )                     -> nQt_DockWidgetArea
  *     :documentMode()                                     -> lBool
- *     :iconSize()                                         -> pQSize
- *     :insertToolBar( pBefore, pToolbar )                 -> NIL
- *     :insertToolBarBreak( pBefore )                      -> NIL
+ *     :iconSize()                                         -> oQSize
+ *     :insertToolBar( oQToolBar, oQToolBar )              -> NIL
+ *     :insertToolBarBreak( oQToolBar )                    -> NIL
  *     :isAnimated()                                       -> lBool
  *     :isDockNestingEnabled()                             -> lBool
- *     :menuBar()                                          -> pQMenuBar
- *     :menuWidget()                                       -> pQWidget
- *     :removeDockWidget( pDockwidget )                    -> NIL
- *     :removeToolBar( pToolbar )                          -> NIL
- *     :removeToolBarBreak( pBefore )                      -> NIL
- *     :restoreDockWidget( pDockwidget )                   -> lBool
- *     :restoreState( pState, nVersion )                   -> lBool
- *     :saveState( nVersion )                              -> pQByteArray
- *     :setCentralWidget( pWidget )                        -> NIL
+ *     :menuBar()                                          -> oQMenuBar
+ *     :menuWidget()                                       -> oQWidget
+ *     :removeDockWidget( oQDockWidget )                   -> NIL
+ *     :removeToolBar( oQToolBar )                         -> NIL
+ *     :removeToolBarBreak( oQToolBar )                    -> NIL
+ *     :restoreDockWidget( oQDockWidget )                  -> lBool
+ *     :restoreState( oQByteArray, nVersion )              -> lBool
+ *     :saveState( nVersion )                              -> oQByteArray
+ *     :setCentralWidget( oQWidget )                       -> NIL
  *     :setCorner( nCorner, nArea )                        -> NIL
  *     :setDockOptions( nOptions )                         -> NIL
  *     :setDocumentMode( lEnabled )                        -> NIL
- *     :setIconSize( pIconSize )                           -> NIL
- *     :setMenuBar( pMenuBar )                             -> NIL
- *     :setMenuWidget( pMenuBar )                          -> NIL
- *     :setStatusBar( pStatusbar )                         -> NIL
+ *     :setIconSize( oQSize )                              -> NIL
+ *     :setMenuBar( oQMenuBar )                            -> NIL
+ *     :setMenuWidget( oQWidget )                          -> NIL
+ *     :setStatusBar( oQStatusBar )                        -> NIL
  *     :setTabPosition( nAreas, nTabPosition )             -> NIL
  *     :setTabShape( nTabShape )                           -> NIL
  *     :setToolButtonStyle( nToolButtonStyle )             -> NIL
  *     :setUnifiedTitleAndToolBarOnMac( lSet )             -> NIL
- *     :splitDockWidget( pFirst, pSecond, nOrientation )   -> NIL
- *     :statusBar()                                        -> pQStatusBar
- *     :tabPosition( nArea )                               -> nQTabWidget::TabPosition
- *     :tabShape()                                         -> nQTabWidget::TabShape
- *     :tabifiedDockWidgets( pDockwidget )                 -> pQList<QDockWidget *>
- *     :tabifyDockWidget( pFirst, pSecond )                -> NIL
- *     :toolBarArea( pToolbar )                            -> nQt::ToolBarArea
- *     :toolBarBreak( pToolbar )                           -> lBool
- *     :toolButtonStyle()                                  -> nQt::ToolButtonStyle
+ *     :splitDockWidget( oQDockWidget, oQDockWidget, nOrientation )  -> NIL
+ *     :statusBar()                                        -> oQStatusBar
+ *     :tabPosition( nArea )                               -> nQTabWidget_TabPosition
+ *     :tabShape()                                         -> nQTabWidget_TabShape
+ *     :tabifiedDockWidgets( oQDockWidget )                -> oQList_QDockWidget
+ *     :tabifyDockWidget( oQDockWidget, oQDockWidget )     -> NIL
+ *     :toolBarArea( oQToolBar )                           -> nQt_ToolBarArea
+ *     :toolBarBreak( oQToolBar )                          -> lBool
+ *     :toolButtonStyle()                                  -> nQt_ToolButtonStyle
  *     :unifiedTitleAndToolBarOnMac()                      -> lBool
  *     :setAnimated( lEnabled )                            -> NIL
  *     :setDockNestingEnabled( lEnabled )                  -> NIL
@@ -94,7 +94,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQMainWindow.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QMainWindow.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

@@ -103,16 +103,16 @@ CREATE CLASS QStatusBar INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QStatu
 
    METHOD  new( ... )
 
-   METHOD  addPermanentWidget( pWidget, nStretch )
-   METHOD  addWidget( pWidget, nStretch )
-   METHOD  currentMessage()
-   METHOD  insertPermanentWidget( nIndex, pWidget, nStretch )
-   METHOD  insertWidget( nIndex, pWidget, nStretch )
-   METHOD  isSizeGripEnabled()
-   METHOD  removeWidget( pWidget )
-   METHOD  setSizeGripEnabled( lBool )
-   METHOD  clearMessage()
-   METHOD  showMessage( cMessage, nTimeout )
+   METHOD  addPermanentWidget            // ( oQWidget, nStretch )                             -> NIL
+   METHOD  addWidget                     // ( oQWidget, nStretch )                             -> NIL
+   METHOD  currentMessage                // (  )                                               -> cQString
+   METHOD  insertPermanentWidget         // ( nIndex, oQWidget, nStretch )                     -> nInt
+   METHOD  insertWidget                  // ( nIndex, oQWidget, nStretch )                     -> nInt
+   METHOD  isSizeGripEnabled             // (  )                                               -> lBool
+   METHOD  removeWidget                  // ( oQWidget )                                       -> NIL
+   METHOD  setSizeGripEnabled            // ( lBool )                                          -> NIL
+   METHOD  clearMessage                  // (  )                                               -> NIL
+   METHOD  showMessage                   // ( cMessage, nTimeout )                             -> NIL
 
    ENDCLASS
 
@@ -126,42 +126,140 @@ METHOD QStatusBar:new( ... )
    RETURN Self
 
 
-METHOD QStatusBar:addPermanentWidget( pWidget, nStretch )
-   RETURN Qt_QStatusBar_addPermanentWidget( ::pPtr, hbqt_ptr( pWidget ), nStretch )
+METHOD QStatusBar:addPermanentWidget( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QStatusBar_addPermanentWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QStatusBar_addPermanentWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStatusBar:addWidget( pWidget, nStretch )
-   RETURN Qt_QStatusBar_addWidget( ::pPtr, hbqt_ptr( pWidget ), nStretch )
+METHOD QStatusBar:addWidget( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QStatusBar_addWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QStatusBar_addWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStatusBar:currentMessage()
-   RETURN Qt_QStatusBar_currentMessage( ::pPtr )
+METHOD QStatusBar:currentMessage( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStatusBar_currentMessage( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStatusBar:insertPermanentWidget( nIndex, pWidget, nStretch )
-   RETURN Qt_QStatusBar_insertPermanentWidget( ::pPtr, nIndex, hbqt_ptr( pWidget ), nStretch )
+METHOD QStatusBar:insertPermanentWidget( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QStatusBar_insertPermanentWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QStatusBar_insertPermanentWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStatusBar:insertWidget( nIndex, pWidget, nStretch )
-   RETURN Qt_QStatusBar_insertWidget( ::pPtr, nIndex, hbqt_ptr( pWidget ), nStretch )
+METHOD QStatusBar:insertWidget( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QStatusBar_insertWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QStatusBar_insertWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStatusBar:isSizeGripEnabled()
-   RETURN Qt_QStatusBar_isSizeGripEnabled( ::pPtr )
+METHOD QStatusBar:isSizeGripEnabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStatusBar_isSizeGripEnabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStatusBar:removeWidget( pWidget )
-   RETURN Qt_QStatusBar_removeWidget( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QStatusBar:removeWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QStatusBar_removeWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStatusBar:setSizeGripEnabled( lBool )
-   RETURN Qt_QStatusBar_setSizeGripEnabled( ::pPtr, lBool )
+METHOD QStatusBar:setSizeGripEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QStatusBar_setSizeGripEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStatusBar:clearMessage()
-   RETURN Qt_QStatusBar_clearMessage( ::pPtr )
+METHOD QStatusBar:clearMessage( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStatusBar_clearMessage( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStatusBar:showMessage( cMessage, nTimeout )
-   RETURN Qt_QStatusBar_showMessage( ::pPtr, cMessage, nTimeout )
+METHOD QStatusBar:showMessage( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QStatusBar_showMessage( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QStatusBar_showMessage( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

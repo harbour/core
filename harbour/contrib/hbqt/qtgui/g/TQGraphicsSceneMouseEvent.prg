@@ -103,18 +103,18 @@ CREATE CLASS QGraphicsSceneMouseEvent INHERIT HbQtObjectHandler, HB_QGraphicsSce
 
    METHOD  new( ... )
 
-   METHOD  button()
-   METHOD  buttonDownPos( nButton )
-   METHOD  buttonDownScenePos( nButton )
-   METHOD  buttonDownScreenPos( nButton )
-   METHOD  buttons()
-   METHOD  lastPos()
-   METHOD  lastScenePos()
-   METHOD  lastScreenPos()
-   METHOD  modifiers()
-   METHOD  pos()
-   METHOD  scenePos()
-   METHOD  screenPos()
+   METHOD  button                        // (  )                                               -> nQt_MouseButton
+   METHOD  buttonDownPos                 // ( nButton )                                        -> oQPointF
+   METHOD  buttonDownScenePos            // ( nButton )                                        -> oQPointF
+   METHOD  buttonDownScreenPos           // ( nButton )                                        -> oQPoint
+   METHOD  buttons                       // (  )                                               -> nQt_MouseButtons
+   METHOD  lastPos                       // (  )                                               -> oQPointF
+   METHOD  lastScenePos                  // (  )                                               -> oQPointF
+   METHOD  lastScreenPos                 // (  )                                               -> oQPoint
+   METHOD  modifiers                     // (  )                                               -> nQt_KeyboardModifiers
+   METHOD  pos                           // (  )                                               -> oQPointF
+   METHOD  scenePos                      // (  )                                               -> oQPointF
+   METHOD  screenPos                     // (  )                                               -> oQPoint
 
    ENDCLASS
 
@@ -128,50 +128,110 @@ METHOD QGraphicsSceneMouseEvent:new( ... )
    RETURN Self
 
 
-METHOD QGraphicsSceneMouseEvent:button()
-   RETURN Qt_QGraphicsSceneMouseEvent_button( ::pPtr )
+METHOD QGraphicsSceneMouseEvent:button( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsSceneMouseEvent_button( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsSceneMouseEvent:buttonDownPos( nButton )
-   RETURN HB_QPointF():from( Qt_QGraphicsSceneMouseEvent_buttonDownPos( ::pPtr, nButton ) )
+METHOD QGraphicsSceneMouseEvent:buttonDownPos( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QPointF():from( Qt_QGraphicsSceneMouseEvent_buttonDownPos( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsSceneMouseEvent:buttonDownScenePos( nButton )
-   RETURN HB_QPointF():from( Qt_QGraphicsSceneMouseEvent_buttonDownScenePos( ::pPtr, nButton ) )
+METHOD QGraphicsSceneMouseEvent:buttonDownScenePos( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QPointF():from( Qt_QGraphicsSceneMouseEvent_buttonDownScenePos( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsSceneMouseEvent:buttonDownScreenPos( nButton )
-   RETURN HB_QPoint():from( Qt_QGraphicsSceneMouseEvent_buttonDownScreenPos( ::pPtr, nButton ) )
+METHOD QGraphicsSceneMouseEvent:buttonDownScreenPos( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QPoint():from( Qt_QGraphicsSceneMouseEvent_buttonDownScreenPos( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsSceneMouseEvent:buttons()
-   RETURN Qt_QGraphicsSceneMouseEvent_buttons( ::pPtr )
+METHOD QGraphicsSceneMouseEvent:buttons( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsSceneMouseEvent_buttons( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsSceneMouseEvent:lastPos()
-   RETURN HB_QPointF():from( Qt_QGraphicsSceneMouseEvent_lastPos( ::pPtr ) )
+METHOD QGraphicsSceneMouseEvent:lastPos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPointF():from( Qt_QGraphicsSceneMouseEvent_lastPos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsSceneMouseEvent:lastScenePos()
-   RETURN HB_QPointF():from( Qt_QGraphicsSceneMouseEvent_lastScenePos( ::pPtr ) )
+METHOD QGraphicsSceneMouseEvent:lastScenePos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPointF():from( Qt_QGraphicsSceneMouseEvent_lastScenePos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsSceneMouseEvent:lastScreenPos()
-   RETURN HB_QPoint():from( Qt_QGraphicsSceneMouseEvent_lastScreenPos( ::pPtr ) )
+METHOD QGraphicsSceneMouseEvent:lastScreenPos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QGraphicsSceneMouseEvent_lastScreenPos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsSceneMouseEvent:modifiers()
-   RETURN Qt_QGraphicsSceneMouseEvent_modifiers( ::pPtr )
+METHOD QGraphicsSceneMouseEvent:modifiers( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsSceneMouseEvent_modifiers( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsSceneMouseEvent:pos()
-   RETURN HB_QPointF():from( Qt_QGraphicsSceneMouseEvent_pos( ::pPtr ) )
+METHOD QGraphicsSceneMouseEvent:pos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPointF():from( Qt_QGraphicsSceneMouseEvent_pos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsSceneMouseEvent:scenePos()
-   RETURN HB_QPointF():from( Qt_QGraphicsSceneMouseEvent_scenePos( ::pPtr ) )
+METHOD QGraphicsSceneMouseEvent:scenePos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPointF():from( Qt_QGraphicsSceneMouseEvent_scenePos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsSceneMouseEvent:screenPos()
-   RETURN HB_QPoint():from( Qt_QGraphicsSceneMouseEvent_screenPos( ::pPtr ) )
+METHOD QGraphicsSceneMouseEvent:screenPos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QGraphicsSceneMouseEvent_screenPos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

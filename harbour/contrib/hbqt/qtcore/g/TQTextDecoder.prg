@@ -103,7 +103,7 @@ CREATE CLASS QTextDecoder INHERIT HbQtObjectHandler FUNCTION HB_QTextDecoder
 
    METHOD  new( ... )
 
-   METHOD  toUnicode( pChars, nLen )
+   METHOD  toUnicode                     // ( cChars, nLen )                                   -> cQString
 
    ENDCLASS
 
@@ -117,6 +117,14 @@ METHOD QTextDecoder:new( ... )
    RETURN Self
 
 
-METHOD QTextDecoder:toUnicode( pChars, nLen )
-   RETURN Qt_QTextDecoder_toUnicode( ::pPtr, hbqt_ptr( pChars ), nLen )
+METHOD QTextDecoder:toUnicode( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QTextDecoder_toUnicode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

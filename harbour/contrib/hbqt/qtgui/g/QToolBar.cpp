@@ -223,11 +223,7 @@ HB_FUNC( QT_QTOOLBAR_ADDACTION )
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 2 );
       ( p )->addAction( hbqt_par_QAction( 2 ) );
    }
 }
@@ -269,7 +265,7 @@ HB_FUNC( QT_QTOOLBAR_ADDACTION_3 )
    if( p )
    {
       void * pText;
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( hb_parstr_utf8( 2, &pText, NULL ), hbqt_par_QObject( 3 ), hbqt_par_char( 4 ) ), false ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( hb_parstr_utf8( 2, &pText, NULL ), hbqt_par_QObject( 3 ), ( const char * ) hb_parc( 4 ) ), false ) );
       hb_strfree( pText );
    }
 }
@@ -282,13 +278,9 @@ HB_FUNC( QT_QTOOLBAR_ADDACTION_4 )
    QToolBar * p = hbqt_par_QToolBar( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 4 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 4 );
       void * pText;
-      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( ( HB_ISCHAR( 2 ) ? QIcon( hbqt_par_QString( 2 ) ) : *hbqt_par_QIcon( 2 )), hb_parstr_utf8( 3, &pText, NULL ), hbqt_par_QObject( 4 ), hbqt_par_char( 5 ) ), false ) );
+      hb_retptrGC( hbqt_gcAllocate_QAction( ( p )->addAction( ( HB_ISCHAR( 2 ) ? QIcon( hbqt_par_QString( 2 ) ) : *hbqt_par_QIcon( 2 )), hb_parstr_utf8( 3, &pText, NULL ), hbqt_par_QObject( 4 ), ( const char * ) hb_parc( 5 ) ), false ) );
       hb_strfree( pText );
    }
 }

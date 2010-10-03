@@ -103,59 +103,59 @@ CREATE CLASS QTreeWidgetItem INHERIT HbQtObjectHandler FUNCTION HB_QTreeWidgetIt
 
    METHOD  new( ... )
 
-   METHOD  addChild( pChild )
-   METHOD  background( nColumn )
-   METHOD  checkState( nColumn )
-   METHOD  child( nIndex )
-   METHOD  childCount()
-   METHOD  childIndicatorPolicy()
-   METHOD  clone()
-   METHOD  columnCount()
-   METHOD  data( nColumn, nRole )
-   METHOD  flags()
-   METHOD  font( nColumn )
-   METHOD  foreground( nColumn )
-   METHOD  icon( nColumn )
-   METHOD  indexOfChild( pChild )
-   METHOD  insertChild( nIndex, pChild )
-   METHOD  isDisabled()
-   METHOD  isExpanded()
-   METHOD  isFirstColumnSpanned()
-   METHOD  isHidden()
-   METHOD  isSelected()
-   METHOD  parent()
-   METHOD  read( pIn )
-   METHOD  removeChild( pChild )
-   METHOD  setBackground( nColumn, pBrush )
-   METHOD  setCheckState( nColumn, nState )
-   METHOD  setChildIndicatorPolicy( nPolicy )
-   METHOD  setData( nColumn, nRole, pValue )
-   METHOD  setDisabled( lDisabled )
-   METHOD  setExpanded( lExpand )
-   METHOD  setFirstColumnSpanned( lSpan )
-   METHOD  setFlags( nFlags )
-   METHOD  setFont( nColumn, pFont )
-   METHOD  setForeground( nColumn, pBrush )
-   METHOD  setHidden( lHide )
-   METHOD  setIcon( nColumn, pIcon )
-   METHOD  setSelected( lSelect )
-   METHOD  setSizeHint( nColumn, pSize )
-   METHOD  setStatusTip( nColumn, cStatusTip )
-   METHOD  setText( nColumn, cText )
-   METHOD  setTextAlignment( nColumn, nAlignment )
-   METHOD  setToolTip( nColumn, cToolTip )
-   METHOD  setWhatsThis( nColumn, cWhatsThis )
-   METHOD  sizeHint( nColumn )
-   METHOD  sortChildren( nColumn, nOrder )
-   METHOD  statusTip( nColumn )
-   METHOD  takeChild( nIndex )
-   METHOD  takeChildren()
-   METHOD  text( nColumn )
-   METHOD  textAlignment( nColumn )
-   METHOD  toolTip( nColumn )
-   METHOD  treeWidget()
-   METHOD  type()
-   METHOD  whatsThis( nColumn )
+   METHOD  addChild                      // ( oQTreeWidgetItem )                               -> NIL
+   METHOD  background                    // ( nColumn )                                        -> oQBrush
+   METHOD  checkState                    // ( nColumn )                                        -> nQt_CheckState
+   METHOD  child                         // ( nIndex )                                         -> oQTreeWidgetItem
+   METHOD  childCount                    // (  )                                               -> nInt
+   METHOD  childIndicatorPolicy          // (  )                                               -> nQTreeWidgetItem_ChildIndicatorPolicy
+   METHOD  clone                         // (  )                                               -> oQTreeWidgetItem
+   METHOD  columnCount                   // (  )                                               -> nInt
+   METHOD  data                          // ( nColumn, nRole )                                 -> oQVariant
+   METHOD  flags                         // (  )                                               -> nQt_ItemFlags
+   METHOD  font                          // ( nColumn )                                        -> oQFont
+   METHOD  foreground                    // ( nColumn )                                        -> oQBrush
+   METHOD  icon                          // ( nColumn )                                        -> oQIcon
+   METHOD  indexOfChild                  // ( oQTreeWidgetItem )                               -> nInt
+   METHOD  insertChild                   // ( nIndex, oQTreeWidgetItem )                       -> NIL
+   METHOD  isDisabled                    // (  )                                               -> lBool
+   METHOD  isExpanded                    // (  )                                               -> lBool
+   METHOD  isFirstColumnSpanned          // (  )                                               -> lBool
+   METHOD  isHidden                      // (  )                                               -> lBool
+   METHOD  isSelected                    // (  )                                               -> lBool
+   METHOD  parent                        // (  )                                               -> oQTreeWidgetItem
+   METHOD  read                          // ( oQDataStream )                                   -> NIL
+   METHOD  removeChild                   // ( oQTreeWidgetItem )                               -> NIL
+   METHOD  setBackground                 // ( nColumn, oQBrush )                               -> NIL
+   METHOD  setCheckState                 // ( nColumn, nState )                                -> NIL
+   METHOD  setChildIndicatorPolicy       // ( nPolicy )                                        -> NIL
+   METHOD  setData                       // ( nColumn, nRole, oQVariant )                      -> NIL
+   METHOD  setDisabled                   // ( lDisabled )                                      -> NIL
+   METHOD  setExpanded                   // ( lExpand )                                        -> NIL
+   METHOD  setFirstColumnSpanned         // ( lSpan )                                          -> NIL
+   METHOD  setFlags                      // ( nFlags )                                         -> NIL
+   METHOD  setFont                       // ( nColumn, oQFont )                                -> NIL
+   METHOD  setForeground                 // ( nColumn, oQBrush )                               -> NIL
+   METHOD  setHidden                     // ( lHide )                                          -> NIL
+   METHOD  setIcon                       // ( nColumn, coQIcon )                               -> NIL
+   METHOD  setSelected                   // ( lSelect )                                        -> NIL
+   METHOD  setSizeHint                   // ( nColumn, oQSize )                                -> NIL
+   METHOD  setStatusTip                  // ( nColumn, cStatusTip )                            -> NIL
+   METHOD  setText                       // ( nColumn, cText )                                 -> NIL
+   METHOD  setTextAlignment              // ( nColumn, nAlignment )                            -> NIL
+   METHOD  setToolTip                    // ( nColumn, cToolTip )                              -> NIL
+   METHOD  setWhatsThis                  // ( nColumn, cWhatsThis )                            -> NIL
+   METHOD  sizeHint                      // ( nColumn )                                        -> oQSize
+   METHOD  sortChildren                  // ( nColumn, nOrder )                                -> NIL
+   METHOD  statusTip                     // ( nColumn )                                        -> cQString
+   METHOD  takeChild                     // ( nIndex )                                         -> oQTreeWidgetItem
+   METHOD  takeChildren                  // (  )                                               -> oQList_QTreeWidgetItem
+   METHOD  text                          // ( nColumn )                                        -> cQString
+   METHOD  textAlignment                 // ( nColumn )                                        -> nInt
+   METHOD  toolTip                       // ( nColumn )                                        -> cQString
+   METHOD  treeWidget                    // (  )                                               -> oQTreeWidget
+   METHOD  type                          // (  )                                               -> nInt
+   METHOD  whatsThis                     // ( nColumn )                                        -> cQString
 
    ENDCLASS
 
@@ -169,214 +169,582 @@ METHOD QTreeWidgetItem:new( ... )
    RETURN Self
 
 
-METHOD QTreeWidgetItem:addChild( pChild )
-   RETURN Qt_QTreeWidgetItem_addChild( ::pPtr, hbqt_ptr( pChild ) )
-
-
-METHOD QTreeWidgetItem:background( nColumn )
-   RETURN HB_QBrush():from( Qt_QTreeWidgetItem_background( ::pPtr, nColumn ) )
-
-
-METHOD QTreeWidgetItem:checkState( nColumn )
-   RETURN Qt_QTreeWidgetItem_checkState( ::pPtr, nColumn )
-
-
-METHOD QTreeWidgetItem:child( nIndex )
-   RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidgetItem_child( ::pPtr, nIndex ) )
-
-
-METHOD QTreeWidgetItem:childCount()
-   RETURN Qt_QTreeWidgetItem_childCount( ::pPtr )
-
-
-METHOD QTreeWidgetItem:childIndicatorPolicy()
-   RETURN Qt_QTreeWidgetItem_childIndicatorPolicy( ::pPtr )
-
-
-METHOD QTreeWidgetItem:clone()
-   RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidgetItem_clone( ::pPtr ) )
-
-
-METHOD QTreeWidgetItem:columnCount()
-   RETURN Qt_QTreeWidgetItem_columnCount( ::pPtr )
-
-
-METHOD QTreeWidgetItem:data( nColumn, nRole )
-   RETURN HB_QVariant():from( Qt_QTreeWidgetItem_data( ::pPtr, nColumn, nRole ) )
-
-
-METHOD QTreeWidgetItem:flags()
-   RETURN Qt_QTreeWidgetItem_flags( ::pPtr )
-
-
-METHOD QTreeWidgetItem:font( nColumn )
-   RETURN HB_QFont():from( Qt_QTreeWidgetItem_font( ::pPtr, nColumn ) )
-
-
-METHOD QTreeWidgetItem:foreground( nColumn )
-   RETURN HB_QBrush():from( Qt_QTreeWidgetItem_foreground( ::pPtr, nColumn ) )
-
-
-METHOD QTreeWidgetItem:icon( nColumn )
-   RETURN HB_QIcon():from( Qt_QTreeWidgetItem_icon( ::pPtr, nColumn ) )
-
-
-METHOD QTreeWidgetItem:indexOfChild( pChild )
-   RETURN Qt_QTreeWidgetItem_indexOfChild( ::pPtr, hbqt_ptr( pChild ) )
-
-
-METHOD QTreeWidgetItem:insertChild( nIndex, pChild )
-   RETURN Qt_QTreeWidgetItem_insertChild( ::pPtr, nIndex, hbqt_ptr( pChild ) )
-
-
-METHOD QTreeWidgetItem:isDisabled()
-   RETURN Qt_QTreeWidgetItem_isDisabled( ::pPtr )
-
-
-METHOD QTreeWidgetItem:isExpanded()
-   RETURN Qt_QTreeWidgetItem_isExpanded( ::pPtr )
-
-
-METHOD QTreeWidgetItem:isFirstColumnSpanned()
-   RETURN Qt_QTreeWidgetItem_isFirstColumnSpanned( ::pPtr )
-
-
-METHOD QTreeWidgetItem:isHidden()
-   RETURN Qt_QTreeWidgetItem_isHidden( ::pPtr )
-
-
-METHOD QTreeWidgetItem:isSelected()
-   RETURN Qt_QTreeWidgetItem_isSelected( ::pPtr )
-
-
-METHOD QTreeWidgetItem:parent()
-   RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidgetItem_parent( ::pPtr ) )
-
-
-METHOD QTreeWidgetItem:read( pIn )
-   RETURN Qt_QTreeWidgetItem_read( ::pPtr, hbqt_ptr( pIn ) )
-
-
-METHOD QTreeWidgetItem:removeChild( pChild )
-   RETURN Qt_QTreeWidgetItem_removeChild( ::pPtr, hbqt_ptr( pChild ) )
-
-
-METHOD QTreeWidgetItem:setBackground( nColumn, pBrush )
-   RETURN Qt_QTreeWidgetItem_setBackground( ::pPtr, nColumn, hbqt_ptr( pBrush ) )
-
-
-METHOD QTreeWidgetItem:setCheckState( nColumn, nState )
-   RETURN Qt_QTreeWidgetItem_setCheckState( ::pPtr, nColumn, nState )
-
-
-METHOD QTreeWidgetItem:setChildIndicatorPolicy( nPolicy )
-   RETURN Qt_QTreeWidgetItem_setChildIndicatorPolicy( ::pPtr, nPolicy )
-
-
-METHOD QTreeWidgetItem:setData( nColumn, nRole, pValue )
-   RETURN Qt_QTreeWidgetItem_setData( ::pPtr, nColumn, nRole, hbqt_ptr( pValue ) )
-
-
-METHOD QTreeWidgetItem:setDisabled( lDisabled )
-   RETURN Qt_QTreeWidgetItem_setDisabled( ::pPtr, lDisabled )
-
-
-METHOD QTreeWidgetItem:setExpanded( lExpand )
-   RETURN Qt_QTreeWidgetItem_setExpanded( ::pPtr, lExpand )
-
-
-METHOD QTreeWidgetItem:setFirstColumnSpanned( lSpan )
-   RETURN Qt_QTreeWidgetItem_setFirstColumnSpanned( ::pPtr, lSpan )
-
-
-METHOD QTreeWidgetItem:setFlags( nFlags )
-   RETURN Qt_QTreeWidgetItem_setFlags( ::pPtr, nFlags )
-
-
-METHOD QTreeWidgetItem:setFont( nColumn, pFont )
-   RETURN Qt_QTreeWidgetItem_setFont( ::pPtr, nColumn, hbqt_ptr( pFont ) )
-
-
-METHOD QTreeWidgetItem:setForeground( nColumn, pBrush )
-   RETURN Qt_QTreeWidgetItem_setForeground( ::pPtr, nColumn, hbqt_ptr( pBrush ) )
-
-
-METHOD QTreeWidgetItem:setHidden( lHide )
-   RETURN Qt_QTreeWidgetItem_setHidden( ::pPtr, lHide )
-
-
-METHOD QTreeWidgetItem:setIcon( nColumn, pIcon )
-   RETURN Qt_QTreeWidgetItem_setIcon( ::pPtr, nColumn, hbqt_ptr( pIcon ) )
-
-
-METHOD QTreeWidgetItem:setSelected( lSelect )
-   RETURN Qt_QTreeWidgetItem_setSelected( ::pPtr, lSelect )
-
-
-METHOD QTreeWidgetItem:setSizeHint( nColumn, pSize )
-   RETURN Qt_QTreeWidgetItem_setSizeHint( ::pPtr, nColumn, hbqt_ptr( pSize ) )
-
-
-METHOD QTreeWidgetItem:setStatusTip( nColumn, cStatusTip )
-   RETURN Qt_QTreeWidgetItem_setStatusTip( ::pPtr, nColumn, cStatusTip )
-
-
-METHOD QTreeWidgetItem:setText( nColumn, cText )
-   RETURN Qt_QTreeWidgetItem_setText( ::pPtr, nColumn, cText )
-
-
-METHOD QTreeWidgetItem:setTextAlignment( nColumn, nAlignment )
-   RETURN Qt_QTreeWidgetItem_setTextAlignment( ::pPtr, nColumn, nAlignment )
-
-
-METHOD QTreeWidgetItem:setToolTip( nColumn, cToolTip )
-   RETURN Qt_QTreeWidgetItem_setToolTip( ::pPtr, nColumn, cToolTip )
-
-
-METHOD QTreeWidgetItem:setWhatsThis( nColumn, cWhatsThis )
-   RETURN Qt_QTreeWidgetItem_setWhatsThis( ::pPtr, nColumn, cWhatsThis )
-
-
-METHOD QTreeWidgetItem:sizeHint( nColumn )
-   RETURN HB_QSize():from( Qt_QTreeWidgetItem_sizeHint( ::pPtr, nColumn ) )
-
-
-METHOD QTreeWidgetItem:sortChildren( nColumn, nOrder )
-   RETURN Qt_QTreeWidgetItem_sortChildren( ::pPtr, nColumn, nOrder )
-
-
-METHOD QTreeWidgetItem:statusTip( nColumn )
-   RETURN Qt_QTreeWidgetItem_statusTip( ::pPtr, nColumn )
-
-
-METHOD QTreeWidgetItem:takeChild( nIndex )
-   RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidgetItem_takeChild( ::pPtr, nIndex ) )
-
-
-METHOD QTreeWidgetItem:takeChildren()
-   RETURN HB_QList():from( Qt_QTreeWidgetItem_takeChildren( ::pPtr ) )
-
-
-METHOD QTreeWidgetItem:text( nColumn )
-   RETURN Qt_QTreeWidgetItem_text( ::pPtr, nColumn )
-
-
-METHOD QTreeWidgetItem:textAlignment( nColumn )
-   RETURN Qt_QTreeWidgetItem_textAlignment( ::pPtr, nColumn )
-
-
-METHOD QTreeWidgetItem:toolTip( nColumn )
-   RETURN Qt_QTreeWidgetItem_toolTip( ::pPtr, nColumn )
-
-
-METHOD QTreeWidgetItem:treeWidget()
-   RETURN HB_QTreeWidget():from( Qt_QTreeWidgetItem_treeWidget( ::pPtr ) )
-
-
-METHOD QTreeWidgetItem:type()
-   RETURN Qt_QTreeWidgetItem_type( ::pPtr )
-
-
-METHOD QTreeWidgetItem:whatsThis( nColumn )
-   RETURN Qt_QTreeWidgetItem_whatsThis( ::pPtr, nColumn )
+METHOD QTreeWidgetItem:addChild( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidgetItem_addChild( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:background( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QBrush():from( Qt_QTreeWidgetItem_background( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:checkState( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidgetItem_checkState( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:child( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidgetItem_child( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:childCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeWidgetItem_childCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:childIndicatorPolicy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeWidgetItem_childIndicatorPolicy( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:clone( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidgetItem_clone( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:columnCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeWidgetItem_columnCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:data( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QVariant():from( Qt_QTreeWidgetItem_data( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:flags( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeWidgetItem_flags( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:font( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QFont():from( Qt_QTreeWidgetItem_font( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:foreground( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QBrush():from( Qt_QTreeWidgetItem_foreground( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:icon( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QIcon():from( Qt_QTreeWidgetItem_icon( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:indexOfChild( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidgetItem_indexOfChild( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:insertChild( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QTreeWidgetItem_insertChild( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:isDisabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeWidgetItem_isDisabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:isExpanded( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeWidgetItem_isExpanded( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:isFirstColumnSpanned( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeWidgetItem_isFirstColumnSpanned( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:isHidden( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeWidgetItem_isHidden( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:isSelected( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeWidgetItem_isSelected( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:parent( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidgetItem_parent( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:read( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidgetItem_read( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:removeChild( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidgetItem_removeChild( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:setBackground( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QTreeWidgetItem_setBackground( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:setCheckState( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QTreeWidgetItem_setCheckState( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:setChildIndicatorPolicy( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidgetItem_setChildIndicatorPolicy( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:setData( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QTreeWidgetItem_setData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:setDisabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidgetItem_setDisabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:setExpanded( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidgetItem_setExpanded( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:setFirstColumnSpanned( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidgetItem_setFirstColumnSpanned( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:setFlags( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidgetItem_setFlags( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:setFont( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QTreeWidgetItem_setFont( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:setForeground( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QTreeWidgetItem_setForeground( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:setHidden( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidgetItem_setHidden( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:setIcon( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. ( hb_isObject( hb_pvalue( 2 ) ) .OR. hb_isChar( hb_pvalue( 2 ) ) )
+         RETURN Qt_QTreeWidgetItem_setIcon( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:setSelected( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidgetItem_setSelected( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:setSizeHint( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QTreeWidgetItem_setSizeHint( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:setStatusTip( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QTreeWidgetItem_setStatusTip( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:setText( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QTreeWidgetItem_setText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:setTextAlignment( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QTreeWidgetItem_setTextAlignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:setToolTip( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QTreeWidgetItem_setToolTip( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:setWhatsThis( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QTreeWidgetItem_setWhatsThis( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:sizeHint( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QSize():from( Qt_QTreeWidgetItem_sizeHint( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:sortChildren( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QTreeWidgetItem_sortChildren( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:statusTip( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidgetItem_statusTip( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:takeChild( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidgetItem_takeChild( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:takeChildren( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QTreeWidgetItem_takeChildren( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:text( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidgetItem_text( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:textAlignment( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidgetItem_textAlignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:toolTip( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidgetItem_toolTip( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:treeWidget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTreeWidget():from( Qt_QTreeWidgetItem_treeWidget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:type( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTreeWidgetItem_type( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTreeWidgetItem:whatsThis( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTreeWidgetItem_whatsThis( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

@@ -26,12 +26,15 @@
  *  $RETURNS$
  *     An instance of the object of type QPolygonF
  *  $METHODS$
- *     :boundingRect()                                     -> pQRectF
- *     :containsPoint( pPoint, nFillRule )                 -> lBool
+ *     :boundingRect()                                     -> oQRectF
+ *     :containsPoint( oQPointF, nFillRule )               -> lBool
+ *     :intersected( oQPolygonF )                          -> oQPolygonF
  *     :isClosed()                                         -> lBool
- *     :toPolygon()                                        -> pQPolygon
- *     :translate( pOffset )                               -> NIL
- *     :translate_1( nDx, nDy )                            -> NIL
+ *     :subtracted( oQPolygonF )                           -> oQPolygonF
+ *     :toPolygon()                                        -> oQPolygon
+ *     :translate( oQPointF )                              -> NIL
+ *     :translate( nDx, nDy )                              -> NIL
+ *     :united( oQPolygonF )                               -> oQPolygonF
  * 
  *  $DESCRIPTION$
  * 
@@ -51,7 +54,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQPolygonF.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QPolygonF.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

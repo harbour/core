@@ -103,14 +103,14 @@ CREATE CLASS QStringListModel INHERIT HbQtObjectHandler, HB_QAbstractListModel F
 
    METHOD  new( ... )
 
-   METHOD  data( pIndex, nRole )
-   METHOD  flags( pIndex )
-   METHOD  insertRows( nRow, nCount, pParent )
-   METHOD  removeRows( nRow, nCount, pParent )
-   METHOD  rowCount( pParent )
-   METHOD  setData( pIndex, pValue, nRole )
-   METHOD  setStringList( pStrings )
-   METHOD  stringList()
+   METHOD  data                          // ( oQModelIndex, nRole )                            -> oQVariant
+   METHOD  flags                         // ( oQModelIndex )                                   -> nQt_ItemFlags
+   METHOD  insertRows                    // ( nRow, nCount, oQModelIndex )                     -> lBool
+   METHOD  removeRows                    // ( nRow, nCount, oQModelIndex )                     -> lBool
+   METHOD  rowCount                      // ( oQModelIndex )                                   -> nInt
+   METHOD  setData                       // ( oQModelIndex, oQVariant, nRole )                 -> lBool
+   METHOD  setStringList                 // ( oQStringList )                                   -> NIL
+   METHOD  stringList                    // (  )                                               -> oQStringList
 
    ENDCLASS
 
@@ -124,34 +124,114 @@ METHOD QStringListModel:new( ... )
    RETURN Self
 
 
-METHOD QStringListModel:data( pIndex, nRole )
-   RETURN HB_QVariant():from( Qt_QStringListModel_data( ::pPtr, hbqt_ptr( pIndex ), nRole ) )
+METHOD QStringListModel:data( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QVariant():from( Qt_QStringListModel_data( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStringListModel:flags( pIndex )
-   RETURN Qt_QStringListModel_flags( ::pPtr, hbqt_ptr( pIndex ) )
+METHOD QStringListModel:flags( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QStringListModel_flags( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStringListModel:insertRows( nRow, nCount, pParent )
-   RETURN Qt_QStringListModel_insertRows( ::pPtr, nRow, nCount, hbqt_ptr( pParent ) )
+METHOD QStringListModel:insertRows( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QStringListModel_insertRows( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QStringListModel_insertRows( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStringListModel:removeRows( nRow, nCount, pParent )
-   RETURN Qt_QStringListModel_removeRows( ::pPtr, nRow, nCount, hbqt_ptr( pParent ) )
+METHOD QStringListModel:removeRows( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QStringListModel_removeRows( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QStringListModel_removeRows( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStringListModel:rowCount( pParent )
-   RETURN Qt_QStringListModel_rowCount( ::pPtr, hbqt_ptr( pParent ) )
+METHOD QStringListModel:rowCount( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QStringListModel_rowCount( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QStringListModel_rowCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStringListModel:setData( pIndex, pValue, nRole )
-   RETURN Qt_QStringListModel_setData( ::pPtr, hbqt_ptr( pIndex ), hbqt_ptr( pValue ), nRole )
+METHOD QStringListModel:setData( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QStringListModel_setData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QStringListModel_setData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStringListModel:setStringList( pStrings )
-   RETURN Qt_QStringListModel_setStringList( ::pPtr, hbqt_ptr( pStrings ) )
+METHOD QStringListModel:setStringList( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QStringListModel_setStringList( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStringListModel:stringList()
-   RETURN HB_QStringList():from( Qt_QStringListModel_stringList( ::pPtr ) )
+METHOD QStringListModel:stringList( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QStringListModel_stringList( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

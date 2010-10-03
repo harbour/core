@@ -30,7 +30,7 @@
  *     :minimum()                                          -> nInt
  *     :progress()                                         -> nInt
  *     :text()                                             -> cQString
- *     :textAlignment()                                    -> nQt::Alignment
+ *     :textAlignment()                                    -> nQt_Alignment
  *     :textVisible()                                      -> lBool
  * 
  *  $DESCRIPTION$
@@ -51,7 +51,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionProgressBar.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionProgressBar.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QStyleOption()
  *  $END$
  */

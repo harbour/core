@@ -103,25 +103,25 @@ CREATE CLASS QImageWriter INHERIT HbQtObjectHandler FUNCTION HB_QImageWriter
 
    METHOD  new( ... )
 
-   METHOD  canWrite()
-   METHOD  compression()
-   METHOD  device()
-   METHOD  error()
-   METHOD  errorString()
-   METHOD  fileName()
-   METHOD  format()
-   METHOD  gamma()
-   METHOD  quality()
-   METHOD  setCompression( nCompression )
-   METHOD  setDevice( pDevice )
-   METHOD  setFileName( cFileName )
-   METHOD  setFormat( pFormat )
-   METHOD  setGamma( nGamma )
-   METHOD  setQuality( nQuality )
-   METHOD  setText( cKey, cText )
-   METHOD  supportsOption( nOption )
-   METHOD  write( pImage )
-   METHOD  supportedImageFormats()
+   METHOD  canWrite                      // (  )                                               -> lBool
+   METHOD  compression                   // (  )                                               -> nInt
+   METHOD  device                        // (  )                                               -> oQIODevice
+   METHOD  error                         // (  )                                               -> nImageWriterError
+   METHOD  errorString                   // (  )                                               -> cQString
+   METHOD  fileName                      // (  )                                               -> cQString
+   METHOD  format                        // (  )                                               -> oQByteArray
+   METHOD  gamma                         // (  )                                               -> nFloat
+   METHOD  quality                       // (  )                                               -> nInt
+   METHOD  setCompression                // ( nCompression )                                   -> NIL
+   METHOD  setDevice                     // ( oQIODevice )                                     -> NIL
+   METHOD  setFileName                   // ( cFileName )                                      -> NIL
+   METHOD  setFormat                     // ( oQByteArray )                                    -> NIL
+   METHOD  setGamma                      // ( nGamma )                                         -> NIL
+   METHOD  setQuality                    // ( nQuality )                                       -> NIL
+   METHOD  setText                       // ( cKey, cText )                                    -> NIL
+   METHOD  supportsOption                // ( nOption )                                        -> lBool
+   METHOD  write                         // ( oQImage )                                        -> lBool
+   METHOD  supportedImageFormats         // (  )                                               -> oQList_QByteArray>
 
    ENDCLASS
 
@@ -135,78 +135,190 @@ METHOD QImageWriter:new( ... )
    RETURN Self
 
 
-METHOD QImageWriter:canWrite()
-   RETURN Qt_QImageWriter_canWrite( ::pPtr )
+METHOD QImageWriter:canWrite( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QImageWriter_canWrite( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImageWriter:compression()
-   RETURN Qt_QImageWriter_compression( ::pPtr )
+METHOD QImageWriter:compression( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QImageWriter_compression( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImageWriter:device()
-   RETURN HB_QIODevice():from( Qt_QImageWriter_device( ::pPtr ) )
+METHOD QImageWriter:device( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QIODevice():from( Qt_QImageWriter_device( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImageWriter:error()
-   RETURN Qt_QImageWriter_error( ::pPtr )
+METHOD QImageWriter:error( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QImageWriter_error( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImageWriter:errorString()
-   RETURN Qt_QImageWriter_errorString( ::pPtr )
+METHOD QImageWriter:errorString( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QImageWriter_errorString( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImageWriter:fileName()
-   RETURN Qt_QImageWriter_fileName( ::pPtr )
+METHOD QImageWriter:fileName( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QImageWriter_fileName( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImageWriter:format()
-   RETURN HB_QByteArray():from( Qt_QImageWriter_format( ::pPtr ) )
+METHOD QImageWriter:format( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QByteArray():from( Qt_QImageWriter_format( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImageWriter:gamma()
-   RETURN Qt_QImageWriter_gamma( ::pPtr )
+METHOD QImageWriter:gamma( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QImageWriter_gamma( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImageWriter:quality()
-   RETURN Qt_QImageWriter_quality( ::pPtr )
+METHOD QImageWriter:quality( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QImageWriter_quality( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImageWriter:setCompression( nCompression )
-   RETURN Qt_QImageWriter_setCompression( ::pPtr, nCompression )
+METHOD QImageWriter:setCompression( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QImageWriter_setCompression( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImageWriter:setDevice( pDevice )
-   RETURN Qt_QImageWriter_setDevice( ::pPtr, hbqt_ptr( pDevice ) )
+METHOD QImageWriter:setDevice( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QImageWriter_setDevice( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImageWriter:setFileName( cFileName )
-   RETURN Qt_QImageWriter_setFileName( ::pPtr, cFileName )
+METHOD QImageWriter:setFileName( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QImageWriter_setFileName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImageWriter:setFormat( pFormat )
-   RETURN Qt_QImageWriter_setFormat( ::pPtr, hbqt_ptr( pFormat ) )
+METHOD QImageWriter:setFormat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QImageWriter_setFormat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImageWriter:setGamma( nGamma )
-   RETURN Qt_QImageWriter_setGamma( ::pPtr, nGamma )
+METHOD QImageWriter:setGamma( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QImageWriter_setGamma( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImageWriter:setQuality( nQuality )
-   RETURN Qt_QImageWriter_setQuality( ::pPtr, nQuality )
+METHOD QImageWriter:setQuality( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QImageWriter_setQuality( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImageWriter:setText( cKey, cText )
-   RETURN Qt_QImageWriter_setText( ::pPtr, cKey, cText )
+METHOD QImageWriter:setText( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QImageWriter_setText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImageWriter:supportsOption( nOption )
-   RETURN Qt_QImageWriter_supportsOption( ::pPtr, nOption )
+METHOD QImageWriter:supportsOption( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QImageWriter_supportsOption( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImageWriter:write( pImage )
-   RETURN Qt_QImageWriter_write( ::pPtr, hbqt_ptr( pImage ) )
+METHOD QImageWriter:write( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QImageWriter_write( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QImageWriter:supportedImageFormats()
-   RETURN HB_QList():from( Qt_QImageWriter_supportedImageFormats( ::pPtr ) )
+METHOD QImageWriter:supportedImageFormats( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QImageWriter_supportedImageFormats( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

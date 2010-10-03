@@ -103,23 +103,23 @@ CREATE CLASS QLayoutItem INHERIT HbQtObjectHandler FUNCTION HB_QLayoutItem
 
    METHOD  new( ... )
 
-   METHOD  alignment()
-   METHOD  controlTypes()
-   METHOD  expandingDirections()
-   METHOD  geometry()
-   METHOD  hasHeightForWidth()
-   METHOD  heightForWidth( nW )
-   METHOD  invalidate()
-   METHOD  isEmpty()
-   METHOD  layout()
-   METHOD  maximumSize()
-   METHOD  minimumHeightForWidth( nW )
-   METHOD  minimumSize()
-   METHOD  setAlignment( nAlignment )
-   METHOD  setGeometry( pR )
-   METHOD  sizeHint()
-   METHOD  spacerItem()
-   METHOD  widget()
+   METHOD  alignment                     // (  )                                               -> nQt_Alignment
+   METHOD  controlTypes                  // (  )                                               -> nQSizePolicy_ControlTypes
+   METHOD  expandingDirections           // (  )                                               -> nQt_Orientations
+   METHOD  geometry                      // (  )                                               -> oQRect
+   METHOD  hasHeightForWidth             // (  )                                               -> lBool
+   METHOD  heightForWidth                // ( nW )                                             -> nInt
+   METHOD  invalidate                    // (  )                                               -> NIL
+   METHOD  isEmpty                       // (  )                                               -> lBool
+   METHOD  layout                        // (  )                                               -> oQLayout
+   METHOD  maximumSize                   // (  )                                               -> oQSize
+   METHOD  minimumHeightForWidth         // ( nW )                                             -> nInt
+   METHOD  minimumSize                   // (  )                                               -> oQSize
+   METHOD  setAlignment                  // ( nAlignment )                                     -> NIL
+   METHOD  setGeometry                   // ( oQRect )                                         -> NIL
+   METHOD  sizeHint                      // (  )                                               -> oQSize
+   METHOD  spacerItem                    // (  )                                               -> oQSpacerItem
+   METHOD  widget                        // (  )                                               -> oQWidget
 
    ENDCLASS
 
@@ -133,70 +133,154 @@ METHOD QLayoutItem:new( ... )
    RETURN Self
 
 
-METHOD QLayoutItem:alignment()
-   RETURN Qt_QLayoutItem_alignment( ::pPtr )
+METHOD QLayoutItem:alignment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLayoutItem_alignment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayoutItem:controlTypes()
-   RETURN Qt_QLayoutItem_controlTypes( ::pPtr )
+METHOD QLayoutItem:controlTypes( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLayoutItem_controlTypes( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayoutItem:expandingDirections()
-   RETURN Qt_QLayoutItem_expandingDirections( ::pPtr )
+METHOD QLayoutItem:expandingDirections( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLayoutItem_expandingDirections( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayoutItem:geometry()
-   RETURN HB_QRect():from( Qt_QLayoutItem_geometry( ::pPtr ) )
+METHOD QLayoutItem:geometry( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QLayoutItem_geometry( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayoutItem:hasHeightForWidth()
-   RETURN Qt_QLayoutItem_hasHeightForWidth( ::pPtr )
+METHOD QLayoutItem:hasHeightForWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLayoutItem_hasHeightForWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayoutItem:heightForWidth( nW )
-   RETURN Qt_QLayoutItem_heightForWidth( ::pPtr, nW )
+METHOD QLayoutItem:heightForWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLayoutItem_heightForWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayoutItem:invalidate()
-   RETURN Qt_QLayoutItem_invalidate( ::pPtr )
+METHOD QLayoutItem:invalidate( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLayoutItem_invalidate( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayoutItem:isEmpty()
-   RETURN Qt_QLayoutItem_isEmpty( ::pPtr )
+METHOD QLayoutItem:isEmpty( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLayoutItem_isEmpty( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayoutItem:layout()
-   RETURN HB_QLayout():from( Qt_QLayoutItem_layout( ::pPtr ) )
+METHOD QLayoutItem:layout( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QLayout():from( Qt_QLayoutItem_layout( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayoutItem:maximumSize()
-   RETURN HB_QSize():from( Qt_QLayoutItem_maximumSize( ::pPtr ) )
+METHOD QLayoutItem:maximumSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QLayoutItem_maximumSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayoutItem:minimumHeightForWidth( nW )
-   RETURN Qt_QLayoutItem_minimumHeightForWidth( ::pPtr, nW )
+METHOD QLayoutItem:minimumHeightForWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLayoutItem_minimumHeightForWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayoutItem:minimumSize()
-   RETURN HB_QSize():from( Qt_QLayoutItem_minimumSize( ::pPtr ) )
+METHOD QLayoutItem:minimumSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QLayoutItem_minimumSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayoutItem:setAlignment( nAlignment )
-   RETURN Qt_QLayoutItem_setAlignment( ::pPtr, nAlignment )
+METHOD QLayoutItem:setAlignment( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLayoutItem_setAlignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayoutItem:setGeometry( pR )
-   RETURN Qt_QLayoutItem_setGeometry( ::pPtr, hbqt_ptr( pR ) )
+METHOD QLayoutItem:setGeometry( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QLayoutItem_setGeometry( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayoutItem:sizeHint()
-   RETURN HB_QSize():from( Qt_QLayoutItem_sizeHint( ::pPtr ) )
+METHOD QLayoutItem:sizeHint( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QLayoutItem_sizeHint( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayoutItem:spacerItem()
-   RETURN HB_QSpacerItem():from( Qt_QLayoutItem_spacerItem( ::pPtr ) )
+METHOD QLayoutItem:spacerItem( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSpacerItem():from( Qt_QLayoutItem_spacerItem( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayoutItem:widget()
-   RETURN HB_QWidget():from( Qt_QLayoutItem_widget( ::pPtr ) )
+METHOD QLayoutItem:widget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QLayoutItem_widget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

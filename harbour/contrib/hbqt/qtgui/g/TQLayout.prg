@@ -103,33 +103,35 @@ CREATE CLASS QLayout INHERIT HbQtObjectHandler, HB_QObject, HB_QLayoutItem FUNCT
 
    METHOD  new( ... )
 
-   METHOD  activate()
-   METHOD  addItem( pItem )
-   METHOD  addWidget( pW )
-   METHOD  contentsRect()
-   METHOD  count()
-   METHOD  expandingDirections()
-   METHOD  getContentsMargins( nLeft, nTop, nRight, nBottom )
-   METHOD  indexOf( pWidget )
-   METHOD  isEnabled()
-   METHOD  itemAt( nIndex )
-   METHOD  maximumSize()
-   METHOD  menuBar()
-   METHOD  minimumSize()
-   METHOD  parentWidget()
-   METHOD  removeItem( pItem )
-   METHOD  removeWidget( pWidget )
-   METHOD  setAlignment( ... )
-   METHOD  setContentsMargins( nLeft, nTop, nRight, nBottom )
-   METHOD  setEnabled( lEnable )
-   METHOD  setMenuBar( pWidget )
-   METHOD  setSizeConstraint( nSizeConstraint )
-   METHOD  setSpacing( nInt )
-   METHOD  sizeConstraint()
-   METHOD  spacing()
-   METHOD  takeAt( nIndex )
-   METHOD  update()
-   METHOD  closestAcceptableSize( pWidget, pSize )
+   METHOD  activate                      // (  )                                               -> lBool
+   METHOD  addItem                       // ( oQLayoutItem )                                   -> NIL
+   METHOD  addWidget                     // ( oQWidget )                                       -> NIL
+   METHOD  contentsRect                  // (  )                                               -> oQRect
+   METHOD  count                         // (  )                                               -> nInt
+   METHOD  expandingDirections           // (  )                                               -> nQt_Orientations
+   METHOD  getContentsMargins            // ( @nLeft, @nTop, @nRight, @nBottom )               -> NIL
+   METHOD  indexOf                       // ( oQWidget )                                       -> nInt
+   METHOD  isEnabled                     // (  )                                               -> lBool
+   METHOD  itemAt                        // ( nIndex )                                         -> oQLayoutItem
+   METHOD  maximumSize                   // (  )                                               -> oQSize
+   METHOD  menuBar                       // (  )                                               -> oQWidget
+   METHOD  minimumSize                   // (  )                                               -> oQSize
+   METHOD  parentWidget                  // (  )                                               -> oQWidget
+   METHOD  removeItem                    // ( oQLayoutItem )                                   -> NIL
+   METHOD  removeWidget                  // ( oQWidget )                                       -> NIL
+   METHOD  setAlignment                  // ( oQWidget, nAlignment )                           -> lBool
+                                         // ( nAlignment )                                     -> NIL
+                                         // ( oQLayout, nAlignment )                           -> lBool
+   METHOD  setContentsMargins            // ( nLeft, nTop, nRight, nBottom )                   -> NIL
+   METHOD  setEnabled                    // ( lEnable )                                        -> NIL
+   METHOD  setMenuBar                    // ( oQWidget )                                       -> NIL
+   METHOD  setSizeConstraint             // ( nSizeConstraint )                                -> NIL
+   METHOD  setSpacing                    // ( nInt )                                           -> NIL
+   METHOD  sizeConstraint                // (  )                                               -> nSizeConstraint
+   METHOD  spacing                       // (  )                                               -> nInt
+   METHOD  takeAt                        // ( nIndex )                                         -> oQLayoutItem
+   METHOD  update                        // (  )                                               -> NIL
+   METHOD  closestAcceptableSize         // ( oQWidget, oQSize )                               -> oQSize
 
    ENDCLASS
 
@@ -143,68 +145,160 @@ METHOD QLayout:new( ... )
    RETURN Self
 
 
-METHOD QLayout:activate()
-   RETURN Qt_QLayout_activate( ::pPtr )
+METHOD QLayout:activate( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLayout_activate( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayout:addItem( pItem )
-   RETURN Qt_QLayout_addItem( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QLayout:addItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QLayout_addItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayout:addWidget( pW )
-   RETURN Qt_QLayout_addWidget( ::pPtr, hbqt_ptr( pW ) )
+METHOD QLayout:addWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QLayout_addWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayout:contentsRect()
-   RETURN HB_QRect():from( Qt_QLayout_contentsRect( ::pPtr ) )
+METHOD QLayout:contentsRect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QLayout_contentsRect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayout:count()
-   RETURN Qt_QLayout_count( ::pPtr )
+METHOD QLayout:count( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLayout_count( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayout:expandingDirections()
-   RETURN Qt_QLayout_expandingDirections( ::pPtr )
+METHOD QLayout:expandingDirections( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLayout_expandingDirections( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayout:getContentsMargins( nLeft, nTop, nRight, nBottom )
-   RETURN Qt_QLayout_getContentsMargins( ::pPtr, nLeft, nTop, nRight, nBottom )
+METHOD QLayout:getContentsMargins( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QLayout_getContentsMargins( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayout:indexOf( pWidget )
-   RETURN Qt_QLayout_indexOf( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QLayout:indexOf( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QLayout_indexOf( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayout:isEnabled()
-   RETURN Qt_QLayout_isEnabled( ::pPtr )
+METHOD QLayout:isEnabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLayout_isEnabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayout:itemAt( nIndex )
-   RETURN HB_QLayoutItem():from( Qt_QLayout_itemAt( ::pPtr, nIndex ) )
+METHOD QLayout:itemAt( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QLayoutItem():from( Qt_QLayout_itemAt( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayout:maximumSize()
-   RETURN HB_QSize():from( Qt_QLayout_maximumSize( ::pPtr ) )
+METHOD QLayout:maximumSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QLayout_maximumSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayout:menuBar()
-   RETURN HB_QWidget():from( Qt_QLayout_menuBar( ::pPtr ) )
+METHOD QLayout:menuBar( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QLayout_menuBar( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayout:minimumSize()
-   RETURN HB_QSize():from( Qt_QLayout_minimumSize( ::pPtr ) )
+METHOD QLayout:minimumSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QLayout_minimumSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayout:parentWidget()
-   RETURN HB_QWidget():from( Qt_QLayout_parentWidget( ::pPtr ) )
+METHOD QLayout:parentWidget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QLayout_parentWidget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayout:removeItem( pItem )
-   RETURN Qt_QLayout_removeItem( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QLayout:removeItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QLayout_removeItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayout:removeWidget( pWidget )
-   RETURN Qt_QLayout_removeWidget( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QLayout:removeWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QLayout_removeWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QLayout:setAlignment( ... )
@@ -230,42 +324,110 @@ METHOD QLayout:setAlignment( ... )
    RETURN hbqt_error()
 
 
-METHOD QLayout:setContentsMargins( nLeft, nTop, nRight, nBottom )
-   RETURN Qt_QLayout_setContentsMargins( ::pPtr, nLeft, nTop, nRight, nBottom )
+METHOD QLayout:setContentsMargins( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QLayout_setContentsMargins( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayout:setEnabled( lEnable )
-   RETURN Qt_QLayout_setEnabled( ::pPtr, lEnable )
+METHOD QLayout:setEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QLayout_setEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayout:setMenuBar( pWidget )
-   RETURN Qt_QLayout_setMenuBar( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QLayout:setMenuBar( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QLayout_setMenuBar( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayout:setSizeConstraint( nSizeConstraint )
-   RETURN Qt_QLayout_setSizeConstraint( ::pPtr, nSizeConstraint )
+METHOD QLayout:setSizeConstraint( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLayout_setSizeConstraint( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayout:setSpacing( nInt )
-   RETURN Qt_QLayout_setSpacing( ::pPtr, nInt )
+METHOD QLayout:setSpacing( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLayout_setSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayout:sizeConstraint()
-   RETURN Qt_QLayout_sizeConstraint( ::pPtr )
+METHOD QLayout:sizeConstraint( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLayout_sizeConstraint( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayout:spacing()
-   RETURN Qt_QLayout_spacing( ::pPtr )
+METHOD QLayout:spacing( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLayout_spacing( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayout:takeAt( nIndex )
-   RETURN HB_QLayoutItem():from( Qt_QLayout_takeAt( ::pPtr, nIndex ) )
+METHOD QLayout:takeAt( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QLayoutItem():from( Qt_QLayout_takeAt( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayout:update()
-   RETURN Qt_QLayout_update( ::pPtr )
+METHOD QLayout:update( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLayout_update( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLayout:closestAcceptableSize( pWidget, pSize )
-   RETURN HB_QSize():from( Qt_QLayout_closestAcceptableSize( ::pPtr, hbqt_ptr( pWidget ), hbqt_ptr( pSize ) ) )
+METHOD QLayout:closestAcceptableSize( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QSize():from( Qt_QLayout_closestAcceptableSize( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

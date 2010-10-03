@@ -26,7 +26,7 @@
  *  $RETURNS$
  *     An instance of the object of type QStyleOptionToolBox
  *  $METHODS$
- *     :icon()                                             -> pQIcon
+ *     :icon()                                             -> oQIcon
  *     :text()                                             -> cQString
  * 
  *  $DESCRIPTION$
@@ -47,7 +47,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionToolBox.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionToolBox.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QStyleOption()
  *  $END$
  */

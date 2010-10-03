@@ -26,16 +26,16 @@
  *  $RETURNS$
  *     An instance of the object of type QStackedWidget
  *  $METHODS$
- *     :addWidget( pWidget )                               -> nInt
+ *     :addWidget( oQWidget )                              -> nInt
  *     :count()                                            -> nInt
  *     :currentIndex()                                     -> nInt
- *     :currentWidget()                                    -> pQWidget
- *     :indexOf( pWidget )                                 -> nInt
- *     :insertWidget( nIndex, pWidget )                    -> nInt
- *     :removeWidget( pWidget )                            -> NIL
- *     :widget( nIndex )                                   -> pQWidget
+ *     :currentWidget()                                    -> oQWidget
+ *     :indexOf( oQWidget )                                -> nInt
+ *     :insertWidget( nIndex, oQWidget )                   -> nInt
+ *     :removeWidget( oQWidget )                           -> NIL
+ *     :widget( nIndex )                                   -> oQWidget
  *     :setCurrentIndex( nIndex )                          -> NIL
- *     :setCurrentWidget( pWidget )                        -> NIL
+ *     :setCurrentWidget( oQWidget )                       -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -55,7 +55,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStackedWidget.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStackedWidget.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QFrame()
  *  $END$
  */

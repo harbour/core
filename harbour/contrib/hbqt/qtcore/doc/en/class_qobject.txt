@@ -29,25 +29,26 @@
  *     :blockSignals( lBlock )                             -> lBool
  *     :dumpObjectInfo()                                   -> NIL
  *     :dumpObjectTree()                                   -> NIL
- *     :dynamicPropertyNames()                             -> pQList<QByteArray>
- *     :event( pE )                                        -> lBool
- *     :eventFilter( pWatched, pEvent )                    -> lBool
- *     :inherits( pClassName )                             -> lBool
- *     :installEventFilter( pFilterObj )                   -> NIL
+ *     :dynamicPropertyNames()                             -> oQList_QByteArray>
+ *     :event( oQEvent )                                   -> lBool
+ *     :eventFilter( oQObject, oQEvent )                   -> lBool
+ *     :inherits( cClassName )                             -> lBool
+ *     :installEventFilter( oQObject )                     -> NIL
  *     :isWidgetType()                                     -> lBool
  *     :killTimer( nId )                                   -> NIL
- *     :moveToThread( pTargetThread )                      -> NIL
+ *     :moveToThread( oQThread )                           -> NIL
  *     :objectName()                                       -> cQString
- *     :property( pName )                                  -> pQVariant
- *     :removeEventFilter( pObj )                          -> NIL
+ *     :parent()                                           -> oQObject
+ *     :property( cName )                                  -> oQVariant
+ *     :removeEventFilter( oQObject )                      -> NIL
  *     :setObjectName( cName )                             -> NIL
- *     :setParent( pParent )                               -> NIL
- *     :setProperty( pName, pValue )                       -> lBool
+ *     :setParent( oQObject )                              -> NIL
+ *     :setProperty( cName, oQVariant )                    -> lBool
  *     :signalsBlocked()                                   -> lBool
  *     :startTimer( nInterval )                            -> nInt
- *     :thread()                                           -> pQThread
- *     :tr( pSourceText, pDisambiguation, nN )             -> cQString
- *     :trUtf8( pSourceText, pDisambiguation, nN )         -> cQString
+ *     :thread()                                           -> oQThread
+ *     :tr( cSourceText, cDisambiguation, nN )             -> cQString
+ *     :trUtf8( cSourceText, cDisambiguation, nN )         -> cQString
  *     :deleteLater()                                      -> NIL
  * 
  *  $DESCRIPTION$
@@ -68,7 +69,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQObject.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QObject.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

@@ -103,9 +103,9 @@ CREATE CLASS QsciAbstractAPIs INHERIT HbQtObjectHandler FUNCTION HB_QsciAbstract
 
    METHOD  new( ... )
 
-   METHOD  lexer()
-   METHOD  updateAutoCompletionList( pContext, pList )
-   METHOD  autoCompletionSelected( cSelection )
+   METHOD  lexer                         // (  )                                               -> oQsciLexer
+   METHOD  updateAutoCompletionList      // ( oQStringList, oQStringList )                     -> NIL
+   METHOD  autoCompletionSelected        // ( cSelection )                                     -> NIL
 
    ENDCLASS
 
@@ -119,14 +119,34 @@ METHOD QsciAbstractAPIs:new( ... )
    RETURN Self
 
 
-METHOD QsciAbstractAPIs:lexer()
-   RETURN HB_QsciLexer():from( Qt_QsciAbstractAPIs_lexer( ::pPtr ) )
+METHOD QsciAbstractAPIs:lexer( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QsciLexer():from( Qt_QsciAbstractAPIs_lexer( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciAbstractAPIs:updateAutoCompletionList( pContext, pList )
-   RETURN Qt_QsciAbstractAPIs_updateAutoCompletionList( ::pPtr, hbqt_ptr( pContext ), hbqt_ptr( pList ) )
+METHOD QsciAbstractAPIs:updateAutoCompletionList( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QsciAbstractAPIs_updateAutoCompletionList( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciAbstractAPIs:autoCompletionSelected( cSelection )
-   RETURN Qt_QsciAbstractAPIs_autoCompletionSelected( ::pPtr, cSelection )
+METHOD QsciAbstractAPIs:autoCompletionSelected( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QsciAbstractAPIs_autoCompletionSelected( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

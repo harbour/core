@@ -44,15 +44,15 @@
  *     :outputFileName()                                   -> cQString
  *     :outputFormat()                                     -> nOutputFormat
  *     :pageOrder()                                        -> nPageOrder
- *     :pageRect()                                         -> pQRect
- *     :pageRect_1( nUnit )                                -> pQRectF
- *     :paintEngine()                                      -> pQPaintEngine
- *     :paperRect()                                        -> pQRect
- *     :paperRect_1( nUnit )                               -> pQRectF
+ *     :pageRect()                                         -> oQRect
+ *     :pageRect( nUnit )                                  -> oQRectF
+ *     :paintEngine()                                      -> oQPaintEngine
+ *     :paperRect()                                        -> oQRect
+ *     :paperRect( nUnit )                                 -> oQRectF
  *     :paperSize()                                        -> nPaperSize
- *     :paperSize_1( nUnit )                               -> pQSizeF
+ *     :paperSize( nUnit )                                 -> oQSizeF
  *     :paperSource()                                      -> nPaperSource
- *     :printEngine()                                      -> pQPrintEngine
+ *     :printEngine()                                      -> oQPrintEngine
  *     :printProgram()                                     -> cQString
  *     :printRange()                                       -> nPrintRange
  *     :printerName()                                      -> cQString
@@ -74,13 +74,13 @@
  *     :setPageMargins( nLeft, nTop, nRight, nBottom, nUnit )  -> NIL
  *     :setPageOrder( nPageOrder )                         -> NIL
  *     :setPaperSize( nNewPaperSize )                      -> NIL
- *     :setPaperSize_1( pPaperSize, nUnit )                -> NIL
+ *     :setPaperSize( oQSizeF, nUnit )                     -> NIL
  *     :setPaperSource( nSource )                          -> NIL
  *     :setPrintProgram( cPrintProg )                      -> NIL
  *     :setPrintRange( nRange )                            -> NIL
  *     :setPrinterName( cName )                            -> NIL
  *     :setResolution( nDpi )                              -> NIL
- *     :supportedResolutions()                             -> pQList<int>
+ *     :supportedResolutions()                             -> oQList_int>
  *     :toPage()                                           -> nInt
  * 
  *  $DESCRIPTION$
@@ -101,7 +101,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQPrinter.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QPrinter.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QPaintDevice()
  *  $END$
  */

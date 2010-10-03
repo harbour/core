@@ -103,73 +103,80 @@ CREATE CLASS QApplication INHERIT HbQtObjectHandler, HB_QCoreApplication FUNCTIO
 
    METHOD  new( ... )
 
-   METHOD  commitData( pManager )
-   METHOD  isSessionRestored()
-   METHOD  saveState( pManager )
-   METHOD  sessionId()
-   METHOD  sessionKey()
-   METHOD  styleSheet()
-   METHOD  activeModalWidget()
-   METHOD  activePopupWidget()
-   METHOD  activeWindow()
-   METHOD  alert( pWidget, nMsec )
-   METHOD  beep()
-   METHOD  changeOverrideCursor( pCursor )
-   METHOD  clipboard()
-   METHOD  colorSpec()
-   METHOD  cursorFlashTime()
-   METHOD  desktop()
-   METHOD  desktopSettingsAware()
-   METHOD  doubleClickInterval()
-   METHOD  exec()
-   METHOD  focusWidget()
-   METHOD  font( ... )
-   METHOD  fontMetrics()
-   METHOD  globalStrut()
-   METHOD  isEffectEnabled( nEffect )
-   METHOD  isLeftToRight()
-   METHOD  isRightToLeft()
-   METHOD  keyboardInputDirection()
-   METHOD  keyboardInputInterval()
-   METHOD  keyboardInputLocale()
-   METHOD  keyboardModifiers()
-   METHOD  layoutDirection()
-   METHOD  mouseButtons()
-   METHOD  overrideCursor()
-   METHOD  palette( ... )
-   METHOD  quitOnLastWindowClosed()
-   METHOD  restoreOverrideCursor()
-   METHOD  setActiveWindow( pActive )
-   METHOD  setColorSpec( nSpec )
-   METHOD  setCursorFlashTime( nInt )
-   METHOD  setDesktopSettingsAware( lOn )
-   METHOD  setDoubleClickInterval( nInt )
-   METHOD  setEffectEnabled( nEffect, lEnable )
-   METHOD  setFont( pFont, pClassName )
-   METHOD  setGlobalStrut( pQSize )
-   METHOD  setGraphicsSystem( cSystem )
-   METHOD  setKeyboardInputInterval( nInt )
-   METHOD  setLayoutDirection( nDirection )
-   METHOD  setOverrideCursor( pCursor )
-   METHOD  setPalette( pPalette, pClassName )
-   METHOD  setQuitOnLastWindowClosed( lQuit )
-   METHOD  setStartDragDistance( nL )
-   METHOD  setStartDragTime( nMs )
-   METHOD  setStyle( ... )
-   METHOD  setWheelScrollLines( nInt )
-   METHOD  setWindowIcon( pIcon )
-   METHOD  startDragDistance()
-   METHOD  startDragTime()
-   METHOD  style()
-   METHOD  syncX()
-   METHOD  topLevelAt( ... )
-   METHOD  type()
-   METHOD  wheelScrollLines()
-   METHOD  widgetAt( ... )
-   METHOD  windowIcon()
-   METHOD  aboutQt()
-   METHOD  closeAllWindows()
-   METHOD  setStyleSheet( cSheet )
+   METHOD  commitData                    // ( oQSessionManager )                               -> NIL
+   METHOD  isSessionRestored             // (  )                                               -> lBool
+   METHOD  saveState                     // ( oQSessionManager )                               -> NIL
+   METHOD  sessionId                     // (  )                                               -> cQString
+   METHOD  sessionKey                    // (  )                                               -> cQString
+   METHOD  styleSheet                    // (  )                                               -> cQString
+   METHOD  activeModalWidget             // (  )                                               -> oQWidget
+   METHOD  activePopupWidget             // (  )                                               -> oQWidget
+   METHOD  activeWindow                  // (  )                                               -> oQWidget
+   METHOD  alert                         // ( oQWidget, nMsec )                                -> NIL
+   METHOD  beep                          // (  )                                               -> NIL
+   METHOD  changeOverrideCursor          // ( oQCursor )                                       -> NIL
+   METHOD  clipboard                     // (  )                                               -> oQClipboard
+   METHOD  colorSpec                     // (  )                                               -> nInt
+   METHOD  cursorFlashTime               // (  )                                               -> nInt
+   METHOD  desktop                       // (  )                                               -> oQDesktopWidget
+   METHOD  desktopSettingsAware          // (  )                                               -> lBool
+   METHOD  doubleClickInterval           // (  )                                               -> nInt
+   METHOD  exec                          // (  )                                               -> nInt
+   METHOD  focusWidget                   // (  )                                               -> oQWidget
+   METHOD  font                          // (  )                                               -> oQFont
+                                         // ( oQWidget )                                       -> oQFont
+                                         // ( cClassName )                                     -> oQFont
+   METHOD  fontMetrics                   // (  )                                               -> oQFontMetrics
+   METHOD  globalStrut                   // (  )                                               -> oQSize
+   METHOD  isEffectEnabled               // ( nEffect )                                        -> lBool
+   METHOD  isLeftToRight                 // (  )                                               -> lBool
+   METHOD  isRightToLeft                 // (  )                                               -> lBool
+   METHOD  keyboardInputDirection        // (  )                                               -> nQt_LayoutDirection
+   METHOD  keyboardInputInterval         // (  )                                               -> nInt
+   METHOD  keyboardInputLocale           // (  )                                               -> oQLocale
+   METHOD  keyboardModifiers             // (  )                                               -> nQt_KeyboardModifiers
+   METHOD  layoutDirection               // (  )                                               -> nQt_LayoutDirection
+   METHOD  mouseButtons                  // (  )                                               -> nQt_MouseButtons
+   METHOD  overrideCursor                // (  )                                               -> oQCursor
+   METHOD  palette                       // (  )                                               -> oQPalette
+                                         // ( oQWidget )                                       -> oQPalette
+                                         // ( cClassName )                                     -> oQPalette
+   METHOD  quitOnLastWindowClosed        // (  )                                               -> lBool
+   METHOD  restoreOverrideCursor         // (  )                                               -> NIL
+   METHOD  setActiveWindow               // ( oQWidget )                                       -> NIL
+   METHOD  setColorSpec                  // ( nSpec )                                          -> NIL
+   METHOD  setCursorFlashTime            // ( nInt )                                           -> NIL
+   METHOD  setDesktopSettingsAware       // ( lOn )                                            -> NIL
+   METHOD  setDoubleClickInterval        // ( nInt )                                           -> NIL
+   METHOD  setEffectEnabled              // ( nEffect, lEnable )                               -> NIL
+   METHOD  setFont                       // ( oQFont, cClassName )                             -> NIL
+   METHOD  setGlobalStrut                // ( oQSize )                                         -> NIL
+   METHOD  setGraphicsSystem             // ( cSystem )                                        -> NIL
+   METHOD  setKeyboardInputInterval      // ( nInt )                                           -> NIL
+   METHOD  setLayoutDirection            // ( nDirection )                                     -> NIL
+   METHOD  setOverrideCursor             // ( oQCursor )                                       -> NIL
+   METHOD  setPalette                    // ( oQPalette, cClassName )                          -> NIL
+   METHOD  setQuitOnLastWindowClosed     // ( lQuit )                                          -> NIL
+   METHOD  setStartDragDistance          // ( nL )                                             -> NIL
+   METHOD  setStartDragTime              // ( nMs )                                            -> NIL
+   METHOD  setStyle                      // ( oQStyle )                                        -> NIL
+                                         // ( cStyle )                                         -> oQStyle
+   METHOD  setWheelScrollLines           // ( nInt )                                           -> NIL
+   METHOD  setWindowIcon                 // ( coQIcon )                                        -> NIL
+   METHOD  startDragDistance             // (  )                                               -> nInt
+   METHOD  startDragTime                 // (  )                                               -> nInt
+   METHOD  style                         // (  )                                               -> oQStyle
+   METHOD  syncX                         // (  )                                               -> NIL
+   METHOD  topLevelAt                    // ( oQPoint )                                        -> oQWidget
+                                         // ( nX, nY )                                         -> oQWidget
+   METHOD  type                          // (  )                                               -> nType
+   METHOD  wheelScrollLines              // (  )                                               -> nInt
+   METHOD  widgetAt                      // ( oQPoint )                                        -> oQWidget
+                                         // ( nX, nY )                                         -> oQWidget
+   METHOD  windowIcon                    // (  )                                               -> oQIcon
+   METHOD  aboutQt                       // (  )                                               -> NIL
+   METHOD  closeAllWindows               // (  )                                               -> NIL
+   METHOD  setStyleSheet                 // ( cSheet )                                         -> NIL
 
    ENDCLASS
 
@@ -183,96 +190,196 @@ METHOD QApplication:new( ... )
    RETURN Self
 
 
-METHOD QApplication:commitData( pManager )
-   RETURN Qt_QApplication_commitData( ::pPtr, hbqt_ptr( pManager ) )
+METHOD QApplication:commitData( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QApplication_commitData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:isSessionRestored()
-   RETURN Qt_QApplication_isSessionRestored( ::pPtr )
+METHOD QApplication:isSessionRestored( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QApplication_isSessionRestored( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:saveState( pManager )
-   RETURN Qt_QApplication_saveState( ::pPtr, hbqt_ptr( pManager ) )
+METHOD QApplication:saveState( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QApplication_saveState( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:sessionId()
-   RETURN Qt_QApplication_sessionId( ::pPtr )
+METHOD QApplication:sessionId( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QApplication_sessionId( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:sessionKey()
-   RETURN Qt_QApplication_sessionKey( ::pPtr )
+METHOD QApplication:sessionKey( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QApplication_sessionKey( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:styleSheet()
-   RETURN Qt_QApplication_styleSheet( ::pPtr )
+METHOD QApplication:styleSheet( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QApplication_styleSheet( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:activeModalWidget()
-   RETURN HB_QWidget():from( Qt_QApplication_activeModalWidget( ::pPtr ) )
+METHOD QApplication:activeModalWidget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QApplication_activeModalWidget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:activePopupWidget()
-   RETURN HB_QWidget():from( Qt_QApplication_activePopupWidget( ::pPtr ) )
+METHOD QApplication:activePopupWidget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QApplication_activePopupWidget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:activeWindow()
-   RETURN HB_QWidget():from( Qt_QApplication_activeWindow( ::pPtr ) )
+METHOD QApplication:activeWindow( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QApplication_activeWindow( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:alert( pWidget, nMsec )
-   RETURN Qt_QApplication_alert( ::pPtr, hbqt_ptr( pWidget ), nMsec )
+METHOD QApplication:alert( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QApplication_alert( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QApplication_alert( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:beep()
-   RETURN Qt_QApplication_beep( ::pPtr )
+METHOD QApplication:beep( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QApplication_beep( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:changeOverrideCursor( pCursor )
-   RETURN Qt_QApplication_changeOverrideCursor( ::pPtr, hbqt_ptr( pCursor ) )
+METHOD QApplication:changeOverrideCursor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QApplication_changeOverrideCursor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:clipboard()
-   RETURN HB_QClipboard():from( Qt_QApplication_clipboard( ::pPtr ) )
+METHOD QApplication:clipboard( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QClipboard():from( Qt_QApplication_clipboard( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:colorSpec()
-   RETURN Qt_QApplication_colorSpec( ::pPtr )
+METHOD QApplication:colorSpec( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QApplication_colorSpec( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:cursorFlashTime()
-   RETURN Qt_QApplication_cursorFlashTime( ::pPtr )
+METHOD QApplication:cursorFlashTime( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QApplication_cursorFlashTime( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:desktop()
-   RETURN HB_QDesktopWidget():from( Qt_QApplication_desktop( ::pPtr ) )
+METHOD QApplication:desktop( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDesktopWidget():from( Qt_QApplication_desktop( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:desktopSettingsAware()
-   RETURN Qt_QApplication_desktopSettingsAware( ::pPtr )
+METHOD QApplication:desktopSettingsAware( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QApplication_desktopSettingsAware( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:doubleClickInterval()
-   RETURN Qt_QApplication_doubleClickInterval( ::pPtr )
+METHOD QApplication:doubleClickInterval( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QApplication_doubleClickInterval( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:exec()
-   RETURN Qt_QApplication_exec( ::pPtr )
+METHOD QApplication:exec( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QApplication_exec( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:focusWidget()
-   RETURN HB_QWidget():from( Qt_QApplication_focusWidget( ::pPtr ) )
+METHOD QApplication:focusWidget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QApplication_focusWidget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QApplication:font( ... )
    SWITCH PCount()
    CASE 1
       DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QFont():from( Qt_QApplication_font_2( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) )
-         SWITCH __objGetClsName( hb_pvalue( 1 ) )
-         CASE "QWIDGET"
-            RETURN HB_QFont():from( Qt_QApplication_font_1( ::pPtr, ... ) )
-         // RETURN HB_QFont():from( Qt_QApplication_font_2( ::pPtr, ... ) )
-         ENDSWITCH
+         RETURN HB_QFont():from( Qt_QApplication_font_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
@@ -281,64 +388,114 @@ METHOD QApplication:font( ... )
    RETURN hbqt_error()
 
 
-METHOD QApplication:fontMetrics()
-   RETURN HB_QFontMetrics():from( Qt_QApplication_fontMetrics( ::pPtr ) )
+METHOD QApplication:fontMetrics( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFontMetrics():from( Qt_QApplication_fontMetrics( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:globalStrut()
-   RETURN HB_QSize():from( Qt_QApplication_globalStrut( ::pPtr ) )
+METHOD QApplication:globalStrut( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QApplication_globalStrut( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:isEffectEnabled( nEffect )
-   RETURN Qt_QApplication_isEffectEnabled( ::pPtr, nEffect )
+METHOD QApplication:isEffectEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QApplication_isEffectEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:isLeftToRight()
-   RETURN Qt_QApplication_isLeftToRight( ::pPtr )
+METHOD QApplication:isLeftToRight( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QApplication_isLeftToRight( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:isRightToLeft()
-   RETURN Qt_QApplication_isRightToLeft( ::pPtr )
+METHOD QApplication:isRightToLeft( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QApplication_isRightToLeft( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:keyboardInputDirection()
-   RETURN Qt_QApplication_keyboardInputDirection( ::pPtr )
+METHOD QApplication:keyboardInputDirection( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QApplication_keyboardInputDirection( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:keyboardInputInterval()
-   RETURN Qt_QApplication_keyboardInputInterval( ::pPtr )
+METHOD QApplication:keyboardInputInterval( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QApplication_keyboardInputInterval( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:keyboardInputLocale()
-   RETURN HB_QLocale():from( Qt_QApplication_keyboardInputLocale( ::pPtr ) )
+METHOD QApplication:keyboardInputLocale( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QLocale():from( Qt_QApplication_keyboardInputLocale( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:keyboardModifiers()
-   RETURN Qt_QApplication_keyboardModifiers( ::pPtr )
+METHOD QApplication:keyboardModifiers( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QApplication_keyboardModifiers( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:layoutDirection()
-   RETURN Qt_QApplication_layoutDirection( ::pPtr )
+METHOD QApplication:layoutDirection( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QApplication_layoutDirection( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:mouseButtons()
-   RETURN Qt_QApplication_mouseButtons( ::pPtr )
+METHOD QApplication:mouseButtons( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QApplication_mouseButtons( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:overrideCursor()
-   RETURN HB_QCursor():from( Qt_QApplication_overrideCursor( ::pPtr ) )
+METHOD QApplication:overrideCursor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QCursor():from( Qt_QApplication_overrideCursor( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QApplication:palette( ... )
    SWITCH PCount()
    CASE 1
       DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QPalette():from( Qt_QApplication_palette_2( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) )
-         SWITCH __objGetClsName( hb_pvalue( 1 ) )
-         CASE "QWIDGET"
-            RETURN HB_QPalette():from( Qt_QApplication_palette_1( ::pPtr, ... ) )
-         // RETURN HB_QPalette():from( Qt_QApplication_palette_2( ::pPtr, ... ) )
-         ENDSWITCH
+         RETURN HB_QPalette():from( Qt_QApplication_palette_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
@@ -347,76 +504,230 @@ METHOD QApplication:palette( ... )
    RETURN hbqt_error()
 
 
-METHOD QApplication:quitOnLastWindowClosed()
-   RETURN Qt_QApplication_quitOnLastWindowClosed( ::pPtr )
+METHOD QApplication:quitOnLastWindowClosed( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QApplication_quitOnLastWindowClosed( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:restoreOverrideCursor()
-   RETURN Qt_QApplication_restoreOverrideCursor( ::pPtr )
+METHOD QApplication:restoreOverrideCursor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QApplication_restoreOverrideCursor( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:setActiveWindow( pActive )
-   RETURN Qt_QApplication_setActiveWindow( ::pPtr, hbqt_ptr( pActive ) )
+METHOD QApplication:setActiveWindow( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QApplication_setActiveWindow( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:setColorSpec( nSpec )
-   RETURN Qt_QApplication_setColorSpec( ::pPtr, nSpec )
+METHOD QApplication:setColorSpec( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QApplication_setColorSpec( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:setCursorFlashTime( nInt )
-   RETURN Qt_QApplication_setCursorFlashTime( ::pPtr, nInt )
+METHOD QApplication:setCursorFlashTime( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QApplication_setCursorFlashTime( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:setDesktopSettingsAware( lOn )
-   RETURN Qt_QApplication_setDesktopSettingsAware( ::pPtr, lOn )
+METHOD QApplication:setDesktopSettingsAware( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QApplication_setDesktopSettingsAware( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:setDoubleClickInterval( nInt )
-   RETURN Qt_QApplication_setDoubleClickInterval( ::pPtr, nInt )
+METHOD QApplication:setDoubleClickInterval( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QApplication_setDoubleClickInterval( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:setEffectEnabled( nEffect, lEnable )
-   RETURN Qt_QApplication_setEffectEnabled( ::pPtr, nEffect, lEnable )
+METHOD QApplication:setEffectEnabled( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QApplication_setEffectEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QApplication_setEffectEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:setFont( pFont, pClassName )
-   RETURN Qt_QApplication_setFont( ::pPtr, hbqt_ptr( pFont ), hbqt_ptr( pClassName ) )
+METHOD QApplication:setFont( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QApplication_setFont( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QApplication_setFont( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:setGlobalStrut( pQSize )
-   RETURN Qt_QApplication_setGlobalStrut( ::pPtr, hbqt_ptr( pQSize ) )
+METHOD QApplication:setGlobalStrut( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QApplication_setGlobalStrut( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:setGraphicsSystem( cSystem )
-   RETURN Qt_QApplication_setGraphicsSystem( ::pPtr, cSystem )
+METHOD QApplication:setGraphicsSystem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QApplication_setGraphicsSystem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:setKeyboardInputInterval( nInt )
-   RETURN Qt_QApplication_setKeyboardInputInterval( ::pPtr, nInt )
+METHOD QApplication:setKeyboardInputInterval( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QApplication_setKeyboardInputInterval( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:setLayoutDirection( nDirection )
-   RETURN Qt_QApplication_setLayoutDirection( ::pPtr, nDirection )
+METHOD QApplication:setLayoutDirection( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QApplication_setLayoutDirection( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:setOverrideCursor( pCursor )
-   RETURN Qt_QApplication_setOverrideCursor( ::pPtr, hbqt_ptr( pCursor ) )
+METHOD QApplication:setOverrideCursor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QApplication_setOverrideCursor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:setPalette( pPalette, pClassName )
-   RETURN Qt_QApplication_setPalette( ::pPtr, hbqt_ptr( pPalette ), hbqt_ptr( pClassName ) )
+METHOD QApplication:setPalette( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QApplication_setPalette( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QApplication_setPalette( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:setQuitOnLastWindowClosed( lQuit )
-   RETURN Qt_QApplication_setQuitOnLastWindowClosed( ::pPtr, lQuit )
+METHOD QApplication:setQuitOnLastWindowClosed( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QApplication_setQuitOnLastWindowClosed( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:setStartDragDistance( nL )
-   RETURN Qt_QApplication_setStartDragDistance( ::pPtr, nL )
+METHOD QApplication:setStartDragDistance( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QApplication_setStartDragDistance( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:setStartDragTime( nMs )
-   RETURN Qt_QApplication_setStartDragTime( ::pPtr, nMs )
+METHOD QApplication:setStartDragTime( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QApplication_setStartDragTime( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QApplication:setStyle( ... )
@@ -433,28 +744,60 @@ METHOD QApplication:setStyle( ... )
    RETURN hbqt_error()
 
 
-METHOD QApplication:setWheelScrollLines( nInt )
-   RETURN Qt_QApplication_setWheelScrollLines( ::pPtr, nInt )
+METHOD QApplication:setWheelScrollLines( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QApplication_setWheelScrollLines( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:setWindowIcon( pIcon )
-   RETURN Qt_QApplication_setWindowIcon( ::pPtr, hbqt_ptr( pIcon ) )
+METHOD QApplication:setWindowIcon( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) )
+         RETURN Qt_QApplication_setWindowIcon( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:startDragDistance()
-   RETURN Qt_QApplication_startDragDistance( ::pPtr )
+METHOD QApplication:startDragDistance( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QApplication_startDragDistance( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:startDragTime()
-   RETURN Qt_QApplication_startDragTime( ::pPtr )
+METHOD QApplication:startDragTime( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QApplication_startDragTime( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:style()
-   RETURN HB_QStyle():from( Qt_QApplication_style( ::pPtr ) )
+METHOD QApplication:style( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStyle():from( Qt_QApplication_style( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:syncX()
-   RETURN Qt_QApplication_syncX( ::pPtr )
+METHOD QApplication:syncX( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QApplication_syncX( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QApplication:topLevelAt( ... )
@@ -475,12 +818,20 @@ METHOD QApplication:topLevelAt( ... )
    RETURN hbqt_error()
 
 
-METHOD QApplication:type()
-   RETURN Qt_QApplication_type( ::pPtr )
+METHOD QApplication:type( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QApplication_type( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:wheelScrollLines()
-   RETURN Qt_QApplication_wheelScrollLines( ::pPtr )
+METHOD QApplication:wheelScrollLines( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QApplication_wheelScrollLines( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QApplication:widgetAt( ... )
@@ -501,18 +852,38 @@ METHOD QApplication:widgetAt( ... )
    RETURN hbqt_error()
 
 
-METHOD QApplication:windowIcon()
-   RETURN HB_QIcon():from( Qt_QApplication_windowIcon( ::pPtr ) )
+METHOD QApplication:windowIcon( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QIcon():from( Qt_QApplication_windowIcon( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:aboutQt()
-   RETURN Qt_QApplication_aboutQt( ::pPtr )
+METHOD QApplication:aboutQt( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QApplication_aboutQt( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:closeAllWindows()
-   RETURN Qt_QApplication_closeAllWindows( ::pPtr )
+METHOD QApplication:closeAllWindows( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QApplication_closeAllWindows( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QApplication:setStyleSheet( cSheet )
-   RETURN Qt_QApplication_setStyleSheet( ::pPtr, cSheet )
+METHOD QApplication:setStyleSheet( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QApplication_setStyleSheet( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

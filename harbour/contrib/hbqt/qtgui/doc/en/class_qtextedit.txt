@@ -27,19 +27,19 @@
  *     An instance of the object of type QTextEdit
  *  $METHODS$
  *     :acceptRichText()                                   -> lBool
- *     :alignment()                                        -> nQt::Alignment
- *     :anchorAt( pPos )                                   -> cQString
+ *     :alignment()                                        -> nQt_Alignment
+ *     :anchorAt( oQPoint )                                -> cQString
  *     :autoFormatting()                                   -> nAutoFormatting
  *     :canPaste()                                         -> lBool
- *     :createStandardContextMenu()                        -> pQMenu
- *     :createStandardContextMenu_1( pPosition )           -> pQMenu
- *     :currentCharFormat()                                -> pQTextCharFormat
- *     :currentFont()                                      -> pQFont
- *     :cursorForPosition( pPos )                          -> pQTextCursor
- *     :cursorRect( pCursor )                              -> pQRect
- *     :cursorRect_1()                                     -> pQRect
+ *     :createStandardContextMenu()                        -> oQMenu
+ *     :createStandardContextMenu( oQPoint )               -> oQMenu
+ *     :currentCharFormat()                                -> oQTextCharFormat
+ *     :currentFont()                                      -> oQFont
+ *     :cursorForPosition( oQPoint )                       -> oQTextCursor
+ *     :cursorRect( oQTextCursor )                         -> oQRect
+ *     :cursorRect()                                       -> oQRect
  *     :cursorWidth()                                      -> nInt
- *     :document()                                         -> pQTextDocument
+ *     :document()                                         -> oQTextDocument
  *     :documentTitle()                                    -> cQString
  *     :ensureCursorVisible()                              -> NIL
  *     :find( cExp, nOptions )                             -> lBool
@@ -52,16 +52,16 @@
  *     :isUndoRedoEnabled()                                -> lBool
  *     :lineWrapColumnOrWidth()                            -> nInt
  *     :lineWrapMode()                                     -> nLineWrapMode
- *     :loadResource( nType, pName )                       -> pQVariant
- *     :mergeCurrentCharFormat( pModifier )                -> NIL
+ *     :loadResource( nType, oQUrl )                       -> oQVariant
+ *     :mergeCurrentCharFormat( oQTextCharFormat )         -> NIL
  *     :moveCursor( nOperation, nMode )                    -> NIL
  *     :overwriteMode()                                    -> lBool
- *     :print( pPrinter )                                  -> NIL
+ *     :print( oQPrinter )                                 -> NIL
  *     :setAcceptRichText( lAccept )                       -> NIL
  *     :setAutoFormatting( nFeatures )                     -> NIL
- *     :setCurrentCharFormat( pFormat )                    -> NIL
+ *     :setCurrentCharFormat( oQTextCharFormat )           -> NIL
  *     :setCursorWidth( nWidth )                           -> NIL
- *     :setDocument( pDocument )                           -> NIL
+ *     :setDocument( oQTextDocument )                      -> NIL
  *     :setDocumentTitle( cTitle )                         -> NIL
  *     :setLineWrapColumnOrWidth( nW )                     -> NIL
  *     :setLineWrapMode( nMode )                           -> NIL
@@ -69,19 +69,19 @@
  *     :setReadOnly( lRo )                                 -> NIL
  *     :setTabChangesFocus( lB )                           -> NIL
  *     :setTabStopWidth( nWidth )                          -> NIL
- *     :setTextCursor( pCursor )                           -> NIL
+ *     :setTextCursor( oQTextCursor )                      -> NIL
  *     :setTextInteractionFlags( nFlags )                  -> NIL
  *     :setUndoRedoEnabled( lEnable )                      -> NIL
  *     :setWordWrapMode( nPolicy )                         -> NIL
  *     :tabChangesFocus()                                  -> lBool
  *     :tabStopWidth()                                     -> nInt
- *     :textBackgroundColor()                              -> pQColor
- *     :textColor()                                        -> pQColor
- *     :textCursor()                                       -> pQTextCursor
- *     :textInteractionFlags()                             -> nQt::TextInteractionFlags
+ *     :textBackgroundColor()                              -> oQColor
+ *     :textColor()                                        -> oQColor
+ *     :textCursor()                                       -> oQTextCursor
+ *     :textInteractionFlags()                             -> nQt_TextInteractionFlags
  *     :toHtml()                                           -> cQString
  *     :toPlainText()                                      -> cQString
- *     :wordWrapMode()                                     -> nQTextOption::WrapMode
+ *     :wordWrapMode()                                     -> nQTextOption_WrapMode
  *     :append( cText )                                    -> NIL
  *     :clear()                                            -> NIL
  *     :copy()                                             -> NIL
@@ -93,7 +93,7 @@
  *     :scrollToAnchor( cName )                            -> NIL
  *     :selectAll()                                        -> NIL
  *     :setAlignment( nA )                                 -> NIL
- *     :setCurrentFont( pF )                               -> NIL
+ *     :setCurrentFont( oQFont )                           -> NIL
  *     :setFontFamily( cFontFamily )                       -> NIL
  *     :setFontItalic( lItalic )                           -> NIL
  *     :setFontPointSize( nS )                             -> NIL
@@ -102,8 +102,8 @@
  *     :setHtml( cText )                                   -> NIL
  *     :setPlainText( cText )                              -> NIL
  *     :setText( cText )                                   -> NIL
- *     :setTextBackgroundColor( pC )                       -> NIL
- *     :setTextColor( pC )                                 -> NIL
+ *     :setTextBackgroundColor( oQColor )                  -> NIL
+ *     :setTextColor( oQColor )                            -> NIL
  *     :undo()                                             -> NIL
  *     :zoomIn( nRange )                                   -> NIL
  *     :zoomOut( nRange )                                  -> NIL
@@ -126,7 +126,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTextEdit.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextEdit.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractScrollArea()
  *  $END$
  */

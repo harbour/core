@@ -103,16 +103,17 @@ CREATE CLASS QButtonGroup INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QBut
 
    METHOD  new( ... )
 
-   METHOD  addButton( ... )
-   METHOD  button( nId )
-   METHOD  buttons()
-   METHOD  checkedButton()
-   METHOD  checkedId()
-   METHOD  exclusive()
-   METHOD  id( pButton )
-   METHOD  removeButton( pButton )
-   METHOD  setExclusive( lBool )
-   METHOD  setId( pButton, nId )
+   METHOD  addButton                     // ( oQAbstractButton )                               -> NIL
+                                         // ( oQAbstractButton, nId )                          -> NIL
+   METHOD  button                        // ( nId )                                            -> oQAbstractButton
+   METHOD  buttons                       // (  )                                               -> oQList_QAbstractButton
+   METHOD  checkedButton                 // (  )                                               -> oQAbstractButton
+   METHOD  checkedId                     // (  )                                               -> nInt
+   METHOD  exclusive                     // (  )                                               -> lBool
+   METHOD  id                            // ( oQAbstractButton )                               -> nInt
+   METHOD  removeButton                  // ( oQAbstractButton )                               -> NIL
+   METHOD  setExclusive                  // ( lBool )                                          -> NIL
+   METHOD  setId                         // ( oQAbstractButton, nId )                          -> NIL
 
    ENDCLASS
 
@@ -144,38 +145,94 @@ METHOD QButtonGroup:addButton( ... )
    RETURN hbqt_error()
 
 
-METHOD QButtonGroup:button( nId )
-   RETURN HB_QAbstractButton():from( Qt_QButtonGroup_button( ::pPtr, nId ) )
+METHOD QButtonGroup:button( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QAbstractButton():from( Qt_QButtonGroup_button( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QButtonGroup:buttons()
-   RETURN HB_QList():from( Qt_QButtonGroup_buttons( ::pPtr ) )
+METHOD QButtonGroup:buttons( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QButtonGroup_buttons( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QButtonGroup:checkedButton()
-   RETURN HB_QAbstractButton():from( Qt_QButtonGroup_checkedButton( ::pPtr ) )
+METHOD QButtonGroup:checkedButton( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QAbstractButton():from( Qt_QButtonGroup_checkedButton( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QButtonGroup:checkedId()
-   RETURN Qt_QButtonGroup_checkedId( ::pPtr )
+METHOD QButtonGroup:checkedId( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QButtonGroup_checkedId( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QButtonGroup:exclusive()
-   RETURN Qt_QButtonGroup_exclusive( ::pPtr )
+METHOD QButtonGroup:exclusive( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QButtonGroup_exclusive( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QButtonGroup:id( pButton )
-   RETURN Qt_QButtonGroup_id( ::pPtr, hbqt_ptr( pButton ) )
+METHOD QButtonGroup:id( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QButtonGroup_id( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QButtonGroup:removeButton( pButton )
-   RETURN Qt_QButtonGroup_removeButton( ::pPtr, hbqt_ptr( pButton ) )
+METHOD QButtonGroup:removeButton( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QButtonGroup_removeButton( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QButtonGroup:setExclusive( lBool )
-   RETURN Qt_QButtonGroup_setExclusive( ::pPtr, lBool )
+METHOD QButtonGroup:setExclusive( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QButtonGroup_setExclusive( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QButtonGroup:setId( pButton, nId )
-   RETURN Qt_QButtonGroup_setId( ::pPtr, hbqt_ptr( pButton ), nId )
+METHOD QButtonGroup:setId( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QButtonGroup_setId( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

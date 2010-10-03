@@ -103,11 +103,11 @@ CREATE CLASS QHttpResponseHeader INHERIT HbQtObjectHandler, HB_QHttpHeader FUNCT
 
    METHOD  new( ... )
 
-   METHOD  majorVersion()
-   METHOD  minorVersion()
-   METHOD  reasonPhrase()
-   METHOD  setStatusLine( nCode, cText, nMajorVer, nMinorVer )
-   METHOD  statusCode()
+   METHOD  majorVersion                  // (  )                                               -> nInt
+   METHOD  minorVersion                  // (  )                                               -> nInt
+   METHOD  reasonPhrase                  // (  )                                               -> cQString
+   METHOD  setStatusLine                 // ( nCode, cText, nMajorVer, nMinorVer )             -> NIL
+   METHOD  statusCode                    // (  )                                               -> nInt
 
    ENDCLASS
 
@@ -121,22 +121,64 @@ METHOD QHttpResponseHeader:new( ... )
    RETURN Self
 
 
-METHOD QHttpResponseHeader:majorVersion()
-   RETURN Qt_QHttpResponseHeader_majorVersion( ::pPtr )
+METHOD QHttpResponseHeader:majorVersion( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHttpResponseHeader_majorVersion( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttpResponseHeader:minorVersion()
-   RETURN Qt_QHttpResponseHeader_minorVersion( ::pPtr )
+METHOD QHttpResponseHeader:minorVersion( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHttpResponseHeader_minorVersion( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttpResponseHeader:reasonPhrase()
-   RETURN Qt_QHttpResponseHeader_reasonPhrase( ::pPtr )
+METHOD QHttpResponseHeader:reasonPhrase( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHttpResponseHeader_reasonPhrase( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttpResponseHeader:setStatusLine( nCode, cText, nMajorVer, nMinorVer )
-   RETURN Qt_QHttpResponseHeader_setStatusLine( ::pPtr, nCode, cText, nMajorVer, nMinorVer )
+METHOD QHttpResponseHeader:setStatusLine( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QHttpResponseHeader_setStatusLine( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QHttpResponseHeader_setStatusLine( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QHttpResponseHeader_setStatusLine( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QHttpResponseHeader_setStatusLine( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttpResponseHeader:statusCode()
-   RETURN Qt_QHttpResponseHeader_statusCode( ::pPtr )
+METHOD QHttpResponseHeader:statusCode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHttpResponseHeader_statusCode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

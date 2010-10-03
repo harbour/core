@@ -103,12 +103,12 @@ CREATE CLASS QTextItem INHERIT HbQtObjectHandler FUNCTION HB_QTextItem
 
    METHOD  new( ... )
 
-   METHOD  ascent()
-   METHOD  descent()
-   METHOD  font()
-   METHOD  renderFlags()
-   METHOD  text()
-   METHOD  width()
+   METHOD  ascent                        // (  )                                               -> nQreal
+   METHOD  descent                       // (  )                                               -> nQreal
+   METHOD  font                          // (  )                                               -> oQFont
+   METHOD  renderFlags                   // (  )                                               -> nRenderFlags
+   METHOD  text                          // (  )                                               -> cQString
+   METHOD  width                         // (  )                                               -> nQreal
 
    ENDCLASS
 
@@ -122,26 +122,50 @@ METHOD QTextItem:new( ... )
    RETURN Self
 
 
-METHOD QTextItem:ascent()
-   RETURN Qt_QTextItem_ascent( ::pPtr )
+METHOD QTextItem:ascent( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextItem_ascent( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextItem:descent()
-   RETURN Qt_QTextItem_descent( ::pPtr )
+METHOD QTextItem:descent( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextItem_descent( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextItem:font()
-   RETURN HB_QFont():from( Qt_QTextItem_font( ::pPtr ) )
+METHOD QTextItem:font( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFont():from( Qt_QTextItem_font( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextItem:renderFlags()
-   RETURN Qt_QTextItem_renderFlags( ::pPtr )
+METHOD QTextItem:renderFlags( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextItem_renderFlags( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextItem:text()
-   RETURN Qt_QTextItem_text( ::pPtr )
+METHOD QTextItem:text( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextItem_text( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextItem:width()
-   RETURN Qt_QTextItem_width( ::pPtr )
+METHOD QTextItem:width( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextItem_width( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

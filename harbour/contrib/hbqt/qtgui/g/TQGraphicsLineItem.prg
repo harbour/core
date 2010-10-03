@@ -103,10 +103,11 @@ CREATE CLASS QGraphicsLineItem INHERIT HbQtObjectHandler, HB_QGraphicsItem FUNCT
 
    METHOD  new( ... )
 
-   METHOD  line()
-   METHOD  pen()
-   METHOD  setLine( ... )
-   METHOD  setPen( pPen )
+   METHOD  line                          // (  )                                               -> oQLineF
+   METHOD  pen                           // (  )                                               -> oQPen
+   METHOD  setLine                       // ( oQLineF )                                        -> NIL
+                                         // ( nX1, nY1, nX2, nY2 )                             -> NIL
+   METHOD  setPen                        // ( oQPen )                                          -> NIL
 
    ENDCLASS
 
@@ -120,12 +121,20 @@ METHOD QGraphicsLineItem:new( ... )
    RETURN Self
 
 
-METHOD QGraphicsLineItem:line()
-   RETURN HB_QLineF():from( Qt_QGraphicsLineItem_line( ::pPtr ) )
+METHOD QGraphicsLineItem:line( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QLineF():from( Qt_QGraphicsLineItem_line( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLineItem:pen()
-   RETURN HB_QPen():from( Qt_QGraphicsLineItem_pen( ::pPtr ) )
+METHOD QGraphicsLineItem:pen( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPen():from( Qt_QGraphicsLineItem_pen( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsLineItem:setLine( ... )
@@ -146,6 +155,14 @@ METHOD QGraphicsLineItem:setLine( ... )
    RETURN hbqt_error()
 
 
-METHOD QGraphicsLineItem:setPen( pPen )
-   RETURN Qt_QGraphicsLineItem_setPen( ::pPtr, hbqt_ptr( pPen ) )
+METHOD QGraphicsLineItem:setPen( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsLineItem_setPen( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

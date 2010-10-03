@@ -103,8 +103,8 @@ CREATE CLASS QGraphicsSceneResizeEvent INHERIT HbQtObjectHandler, HB_QGraphicsSc
 
    METHOD  new( ... )
 
-   METHOD  newSize()
-   METHOD  oldSize()
+   METHOD  newSize                       // (  )                                               -> oQSizeF
+   METHOD  oldSize                       // (  )                                               -> oQSizeF
 
    ENDCLASS
 
@@ -118,10 +118,18 @@ METHOD QGraphicsSceneResizeEvent:new( ... )
    RETURN Self
 
 
-METHOD QGraphicsSceneResizeEvent:newSize()
-   RETURN HB_QSizeF():from( Qt_QGraphicsSceneResizeEvent_newSize( ::pPtr ) )
+METHOD QGraphicsSceneResizeEvent:newSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSizeF():from( Qt_QGraphicsSceneResizeEvent_newSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsSceneResizeEvent:oldSize()
-   RETURN HB_QSizeF():from( Qt_QGraphicsSceneResizeEvent_oldSize( ::pPtr ) )
+METHOD QGraphicsSceneResizeEvent:oldSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSizeF():from( Qt_QGraphicsSceneResizeEvent_oldSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

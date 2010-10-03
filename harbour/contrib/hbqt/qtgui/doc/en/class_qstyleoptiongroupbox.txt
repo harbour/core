@@ -26,12 +26,12 @@
  *  $RETURNS$
  *     An instance of the object of type QStyleOptionGroupBox
  *  $METHODS$
- *     :features()                                         -> nQStyleOptionFrameV2::FrameFeatures
+ *     :features()                                         -> nQStyleOptionFrameV2_FrameFeatures
  *     :lineWidth()                                        -> nInt
  *     :midLineWidth()                                     -> nInt
  *     :text()                                             -> cQString
- *     :textAlignment()                                    -> nQt::Alignment
- *     :textColor()                                        -> pQColor
+ *     :textAlignment()                                    -> nQt_Alignment
+ *     :textColor()                                        -> oQColor
  * 
  *  $DESCRIPTION$
  * 
@@ -51,7 +51,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionGroupBox.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionGroupBox.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QStyleOptionComplex()
  *  $END$
  */

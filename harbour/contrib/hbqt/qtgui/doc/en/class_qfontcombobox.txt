@@ -26,12 +26,12 @@
  *  $RETURNS$
  *     An instance of the object of type QFontComboBox
  *  $METHODS$
- *     :currentFont()                                      -> pQFont
+ *     :currentFont()                                      -> oQFont
  *     :fontFilters()                                      -> nFontFilters
  *     :setFontFilters( nFilters )                         -> NIL
  *     :setWritingSystem( nScript )                        -> NIL
- *     :writingSystem()                                    -> nQFontDatabase::WritingSystem
- *     :setCurrentFont( pFont )                            -> NIL
+ *     :writingSystem()                                    -> nQFontDatabase_WritingSystem
+ *     :setCurrentFont( oQFont )                           -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -51,7 +51,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQFontComboBox.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QFontComboBox.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QComboBox()
  *  $END$
  */

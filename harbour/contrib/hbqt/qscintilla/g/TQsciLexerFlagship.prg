@@ -103,33 +103,33 @@ CREATE CLASS QsciLexerFlagship INHERIT HbQtObjectHandler, HB_QsciLexer FUNCTION 
 
    METHOD  new( ... )
 
-   METHOD  language()
-   METHOD  lexer()
-   METHOD  autoCompletionWordSeparators()
-   METHOD  blockEnd( nStyle )
-   METHOD  blockStart( nStyle )
-   METHOD  blockStartKeyword( nStyle )
-   METHOD  braceStyle()
-   METHOD  wordCharacters()
-   METHOD  defaultColor( nStyle )
-   METHOD  defaultEolFill( nStyle )
-   METHOD  defaultFont( nStyle )
-   METHOD  defaultPaper( nStyle )
-   METHOD  keywords( nSet )
-   METHOD  description( nStyle )
-   METHOD  refreshProperties()
-   METHOD  foldAtElse()
-   METHOD  foldComments()
-   METHOD  foldCompact()
-   METHOD  foldPreprocessor()
-   METHOD  stylePreprocessor()
-   METHOD  setDollarsAllowed( lAllowed )
-   METHOD  dollarsAllowed()
-   METHOD  setFoldAtElse( lFold )
-   METHOD  setFoldComments( lFold )
-   METHOD  setFoldCompact( lFold )
-   METHOD  setFoldPreprocessor( lFold )
-   METHOD  setStylePreprocessor( lStyle )
+   METHOD  language                      // (  )                                               -> cChar
+   METHOD  lexer                         // (  )                                               -> cChar
+   METHOD  autoCompletionWordSeparators  // (  )                                               -> oQStringList
+   METHOD  blockEnd                      // ( @nStyle )                                        -> cChar
+   METHOD  blockStart                    // ( @nStyle )                                        -> cChar
+   METHOD  blockStartKeyword             // ( @nStyle )                                        -> cChar
+   METHOD  braceStyle                    // (  )                                               -> nInt
+   METHOD  wordCharacters                // (  )                                               -> cChar
+   METHOD  defaultColor                  // ( nStyle )                                         -> oQColor
+   METHOD  defaultEolFill                // ( nStyle )                                         -> lBool
+   METHOD  defaultFont                   // ( nStyle )                                         -> oQFont
+   METHOD  defaultPaper                  // ( nStyle )                                         -> oQColor
+   METHOD  keywords                      // ( nSet )                                           -> cChar
+   METHOD  description                   // ( nStyle )                                         -> cQString
+   METHOD  refreshProperties             // (  )                                               -> NIL
+   METHOD  foldAtElse                    // (  )                                               -> lBool
+   METHOD  foldComments                  // (  )                                               -> lBool
+   METHOD  foldCompact                   // (  )                                               -> lBool
+   METHOD  foldPreprocessor              // (  )                                               -> lBool
+   METHOD  stylePreprocessor             // (  )                                               -> lBool
+   METHOD  setDollarsAllowed             // ( lAllowed )                                       -> NIL
+   METHOD  dollarsAllowed                // (  )                                               -> lBool
+   METHOD  setFoldAtElse                 // ( lFold )                                          -> NIL
+   METHOD  setFoldComments               // ( lFold )                                          -> NIL
+   METHOD  setFoldCompact                // ( lFold )                                          -> NIL
+   METHOD  setFoldPreprocessor           // ( lFold )                                          -> NIL
+   METHOD  setStylePreprocessor          // ( lStyle )                                         -> NIL
 
    ENDCLASS
 
@@ -143,110 +143,284 @@ METHOD QsciLexerFlagship:new( ... )
    RETURN Self
 
 
-METHOD QsciLexerFlagship:language()
-   RETURN Qt_QsciLexerFlagship_language( ::pPtr )
+METHOD QsciLexerFlagship:language( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexerFlagship_language( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerFlagship:lexer()
-   RETURN Qt_QsciLexerFlagship_lexer( ::pPtr )
+METHOD QsciLexerFlagship:lexer( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexerFlagship_lexer( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerFlagship:autoCompletionWordSeparators()
-   RETURN HB_QStringList():from( Qt_QsciLexerFlagship_autoCompletionWordSeparators( ::pPtr ) )
+METHOD QsciLexerFlagship:autoCompletionWordSeparators( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QsciLexerFlagship_autoCompletionWordSeparators( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerFlagship:blockEnd( nStyle )
-   RETURN Qt_QsciLexerFlagship_blockEnd( ::pPtr, nStyle )
+METHOD QsciLexerFlagship:blockEnd( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexerFlagship_blockEnd( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QsciLexerFlagship_blockEnd( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerFlagship:blockStart( nStyle )
-   RETURN Qt_QsciLexerFlagship_blockStart( ::pPtr, nStyle )
+METHOD QsciLexerFlagship:blockStart( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexerFlagship_blockStart( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QsciLexerFlagship_blockStart( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerFlagship:blockStartKeyword( nStyle )
-   RETURN Qt_QsciLexerFlagship_blockStartKeyword( ::pPtr, nStyle )
+METHOD QsciLexerFlagship:blockStartKeyword( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexerFlagship_blockStartKeyword( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QsciLexerFlagship_blockStartKeyword( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerFlagship:braceStyle()
-   RETURN Qt_QsciLexerFlagship_braceStyle( ::pPtr )
+METHOD QsciLexerFlagship:braceStyle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexerFlagship_braceStyle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerFlagship:wordCharacters()
-   RETURN Qt_QsciLexerFlagship_wordCharacters( ::pPtr )
+METHOD QsciLexerFlagship:wordCharacters( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexerFlagship_wordCharacters( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerFlagship:defaultColor( nStyle )
-   RETURN HB_QColor():from( Qt_QsciLexerFlagship_defaultColor( ::pPtr, nStyle ) )
+METHOD QsciLexerFlagship:defaultColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QColor():from( Qt_QsciLexerFlagship_defaultColor( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerFlagship:defaultEolFill( nStyle )
-   RETURN Qt_QsciLexerFlagship_defaultEolFill( ::pPtr, nStyle )
+METHOD QsciLexerFlagship:defaultEolFill( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexerFlagship_defaultEolFill( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerFlagship:defaultFont( nStyle )
-   RETURN HB_QFont():from( Qt_QsciLexerFlagship_defaultFont( ::pPtr, nStyle ) )
+METHOD QsciLexerFlagship:defaultFont( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QFont():from( Qt_QsciLexerFlagship_defaultFont( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerFlagship:defaultPaper( nStyle )
-   RETURN HB_QColor():from( Qt_QsciLexerFlagship_defaultPaper( ::pPtr, nStyle ) )
+METHOD QsciLexerFlagship:defaultPaper( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QColor():from( Qt_QsciLexerFlagship_defaultPaper( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerFlagship:keywords( nSet )
-   RETURN Qt_QsciLexerFlagship_keywords( ::pPtr, nSet )
+METHOD QsciLexerFlagship:keywords( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexerFlagship_keywords( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerFlagship:description( nStyle )
-   RETURN Qt_QsciLexerFlagship_description( ::pPtr, nStyle )
+METHOD QsciLexerFlagship:description( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexerFlagship_description( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerFlagship:refreshProperties()
-   RETURN Qt_QsciLexerFlagship_refreshProperties( ::pPtr )
+METHOD QsciLexerFlagship:refreshProperties( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexerFlagship_refreshProperties( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerFlagship:foldAtElse()
-   RETURN Qt_QsciLexerFlagship_foldAtElse( ::pPtr )
+METHOD QsciLexerFlagship:foldAtElse( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexerFlagship_foldAtElse( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerFlagship:foldComments()
-   RETURN Qt_QsciLexerFlagship_foldComments( ::pPtr )
+METHOD QsciLexerFlagship:foldComments( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexerFlagship_foldComments( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerFlagship:foldCompact()
-   RETURN Qt_QsciLexerFlagship_foldCompact( ::pPtr )
+METHOD QsciLexerFlagship:foldCompact( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexerFlagship_foldCompact( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerFlagship:foldPreprocessor()
-   RETURN Qt_QsciLexerFlagship_foldPreprocessor( ::pPtr )
+METHOD QsciLexerFlagship:foldPreprocessor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexerFlagship_foldPreprocessor( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerFlagship:stylePreprocessor()
-   RETURN Qt_QsciLexerFlagship_stylePreprocessor( ::pPtr )
+METHOD QsciLexerFlagship:stylePreprocessor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexerFlagship_stylePreprocessor( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerFlagship:setDollarsAllowed( lAllowed )
-   RETURN Qt_QsciLexerFlagship_setDollarsAllowed( ::pPtr, lAllowed )
+METHOD QsciLexerFlagship:setDollarsAllowed( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexerFlagship_setDollarsAllowed( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerFlagship:dollarsAllowed()
-   RETURN Qt_QsciLexerFlagship_dollarsAllowed( ::pPtr )
+METHOD QsciLexerFlagship:dollarsAllowed( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexerFlagship_dollarsAllowed( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerFlagship:setFoldAtElse( lFold )
-   RETURN Qt_QsciLexerFlagship_setFoldAtElse( ::pPtr, lFold )
+METHOD QsciLexerFlagship:setFoldAtElse( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexerFlagship_setFoldAtElse( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerFlagship:setFoldComments( lFold )
-   RETURN Qt_QsciLexerFlagship_setFoldComments( ::pPtr, lFold )
+METHOD QsciLexerFlagship:setFoldComments( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexerFlagship_setFoldComments( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerFlagship:setFoldCompact( lFold )
-   RETURN Qt_QsciLexerFlagship_setFoldCompact( ::pPtr, lFold )
+METHOD QsciLexerFlagship:setFoldCompact( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexerFlagship_setFoldCompact( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerFlagship:setFoldPreprocessor( lFold )
-   RETURN Qt_QsciLexerFlagship_setFoldPreprocessor( ::pPtr, lFold )
+METHOD QsciLexerFlagship:setFoldPreprocessor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexerFlagship_setFoldPreprocessor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerFlagship:setStylePreprocessor( lStyle )
-   RETURN Qt_QsciLexerFlagship_setStylePreprocessor( ::pPtr, lStyle )
+METHOD QsciLexerFlagship:setStylePreprocessor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexerFlagship_setStylePreprocessor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

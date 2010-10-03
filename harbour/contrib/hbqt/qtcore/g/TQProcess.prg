@@ -103,35 +103,39 @@ CREATE CLASS QProcess INHERIT HbQtObjectHandler, HB_QIODevice FUNCTION HB_QProce
 
    METHOD  new( ... )
 
-   METHOD  close()
-   METHOD  closeReadChannel( nChannel )
-   METHOD  closeWriteChannel()
-   METHOD  environment()
-   METHOD  error()
-   METHOD  exitCode()
-   METHOD  exitStatus()
-   METHOD  processChannelMode()
-   METHOD  readAllStandardError()
-   METHOD  readAllStandardOutput()
-   METHOD  readChannel()
-   METHOD  setEnvironment( pEnvironment )
-   METHOD  setProcessChannelMode( nMode )
-   METHOD  setReadChannel( nChannel )
-   METHOD  setStandardErrorFile( cFileName, nMode )
-   METHOD  setStandardInputFile( cFileName )
-   METHOD  setStandardOutputFile( cFileName, nMode )
-   METHOD  setStandardOutputProcess( pDestination )
-   METHOD  setWorkingDirectory( cDir )
-   METHOD  start( ... )
-   METHOD  state()
-   METHOD  waitForFinished( nMsecs )
-   METHOD  waitForStarted( nMsecs )
-   METHOD  workingDirectory()
-   METHOD  execute( ... )
-   METHOD  startDetached( ... )
-   METHOD  systemEnvironment()
-   METHOD  kill()
-   METHOD  terminate()
+   METHOD  close                         // (  )                                               -> NIL
+   METHOD  closeReadChannel              // ( nChannel )                                       -> NIL
+   METHOD  closeWriteChannel             // (  )                                               -> NIL
+   METHOD  environment                   // (  )                                               -> oQStringList
+   METHOD  error                         // (  )                                               -> nQProcess_ProcessError
+   METHOD  exitCode                      // (  )                                               -> nInt
+   METHOD  exitStatus                    // (  )                                               -> nQProcess_ExitStatus
+   METHOD  processChannelMode            // (  )                                               -> nProcessChannelMode
+   METHOD  readAllStandardError          // (  )                                               -> oQByteArray
+   METHOD  readAllStandardOutput         // (  )                                               -> oQByteArray
+   METHOD  readChannel                   // (  )                                               -> nProcessChannel
+   METHOD  setEnvironment                // ( oQStringList )                                   -> NIL
+   METHOD  setProcessChannelMode         // ( nMode )                                          -> NIL
+   METHOD  setReadChannel                // ( nChannel )                                       -> NIL
+   METHOD  setStandardErrorFile          // ( cFileName, nMode )                               -> NIL
+   METHOD  setStandardInputFile          // ( cFileName )                                      -> NIL
+   METHOD  setStandardOutputFile         // ( cFileName, nMode )                               -> NIL
+   METHOD  setStandardOutputProcess      // ( oQProcess )                                      -> NIL
+   METHOD  setWorkingDirectory           // ( cDir )                                           -> NIL
+   METHOD  start                         // ( cProgram, oQStringList, nMode )                  -> NIL
+                                         // ( cProgram, nMode )                                -> NIL
+   METHOD  state                         // (  )                                               -> nQProcess_ProcessState
+   METHOD  waitForFinished               // ( nMsecs )                                         -> lBool
+   METHOD  waitForStarted                // ( nMsecs )                                         -> lBool
+   METHOD  workingDirectory              // (  )                                               -> cQString
+   METHOD  execute                       // ( cProgram, oQStringList )                         -> nInt
+                                         // ( cProgram )                                       -> nInt
+   METHOD  startDetached                 // ( cProgram, oQStringList, cWorkingDirectory, @nPid ) -> lBool
+                                         // ( cProgram, oQStringList )                         -> lBool
+                                         // ( cProgram )                                       -> lBool
+   METHOD  systemEnvironment             // (  )                                               -> oQStringList
+   METHOD  kill                          // (  )                                               -> NIL
+   METHOD  terminate                     // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -145,80 +149,204 @@ METHOD QProcess:new( ... )
    RETURN Self
 
 
-METHOD QProcess:close()
-   RETURN Qt_QProcess_close( ::pPtr )
+METHOD QProcess:close( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QProcess_close( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProcess:closeReadChannel( nChannel )
-   RETURN Qt_QProcess_closeReadChannel( ::pPtr, nChannel )
+METHOD QProcess:closeReadChannel( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QProcess_closeReadChannel( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProcess:closeWriteChannel()
-   RETURN Qt_QProcess_closeWriteChannel( ::pPtr )
+METHOD QProcess:closeWriteChannel( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QProcess_closeWriteChannel( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProcess:environment()
-   RETURN HB_QStringList():from( Qt_QProcess_environment( ::pPtr ) )
+METHOD QProcess:environment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QProcess_environment( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProcess:error()
-   RETURN Qt_QProcess_error( ::pPtr )
+METHOD QProcess:error( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QProcess_error( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProcess:exitCode()
-   RETURN Qt_QProcess_exitCode( ::pPtr )
+METHOD QProcess:exitCode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QProcess_exitCode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProcess:exitStatus()
-   RETURN Qt_QProcess_exitStatus( ::pPtr )
+METHOD QProcess:exitStatus( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QProcess_exitStatus( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProcess:processChannelMode()
-   RETURN Qt_QProcess_processChannelMode( ::pPtr )
+METHOD QProcess:processChannelMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QProcess_processChannelMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProcess:readAllStandardError()
-   RETURN HB_QByteArray():from( Qt_QProcess_readAllStandardError( ::pPtr ) )
+METHOD QProcess:readAllStandardError( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QByteArray():from( Qt_QProcess_readAllStandardError( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProcess:readAllStandardOutput()
-   RETURN HB_QByteArray():from( Qt_QProcess_readAllStandardOutput( ::pPtr ) )
+METHOD QProcess:readAllStandardOutput( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QByteArray():from( Qt_QProcess_readAllStandardOutput( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProcess:readChannel()
-   RETURN Qt_QProcess_readChannel( ::pPtr )
+METHOD QProcess:readChannel( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QProcess_readChannel( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProcess:setEnvironment( pEnvironment )
-   RETURN Qt_QProcess_setEnvironment( ::pPtr, hbqt_ptr( pEnvironment ) )
+METHOD QProcess:setEnvironment( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QProcess_setEnvironment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProcess:setProcessChannelMode( nMode )
-   RETURN Qt_QProcess_setProcessChannelMode( ::pPtr, nMode )
+METHOD QProcess:setProcessChannelMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QProcess_setProcessChannelMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProcess:setReadChannel( nChannel )
-   RETURN Qt_QProcess_setReadChannel( ::pPtr, nChannel )
+METHOD QProcess:setReadChannel( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QProcess_setReadChannel( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProcess:setStandardErrorFile( cFileName, nMode )
-   RETURN Qt_QProcess_setStandardErrorFile( ::pPtr, cFileName, nMode )
+METHOD QProcess:setStandardErrorFile( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QProcess_setStandardErrorFile( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QProcess_setStandardErrorFile( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProcess:setStandardInputFile( cFileName )
-   RETURN Qt_QProcess_setStandardInputFile( ::pPtr, cFileName )
+METHOD QProcess:setStandardInputFile( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QProcess_setStandardInputFile( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProcess:setStandardOutputFile( cFileName, nMode )
-   RETURN Qt_QProcess_setStandardOutputFile( ::pPtr, cFileName, nMode )
+METHOD QProcess:setStandardOutputFile( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QProcess_setStandardOutputFile( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QProcess_setStandardOutputFile( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProcess:setStandardOutputProcess( pDestination )
-   RETURN Qt_QProcess_setStandardOutputProcess( ::pPtr, hbqt_ptr( pDestination ) )
+METHOD QProcess:setStandardOutputProcess( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QProcess_setStandardOutputProcess( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProcess:setWorkingDirectory( cDir )
-   RETURN Qt_QProcess_setWorkingDirectory( ::pPtr, cDir )
+METHOD QProcess:setWorkingDirectory( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QProcess_setWorkingDirectory( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QProcess:start( ... )
@@ -247,20 +375,48 @@ METHOD QProcess:start( ... )
    RETURN hbqt_error()
 
 
-METHOD QProcess:state()
-   RETURN Qt_QProcess_state( ::pPtr )
+METHOD QProcess:state( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QProcess_state( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProcess:waitForFinished( nMsecs )
-   RETURN Qt_QProcess_waitForFinished( ::pPtr, nMsecs )
+METHOD QProcess:waitForFinished( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QProcess_waitForFinished( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QProcess_waitForFinished( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProcess:waitForStarted( nMsecs )
-   RETURN Qt_QProcess_waitForStarted( ::pPtr, nMsecs )
+METHOD QProcess:waitForStarted( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QProcess_waitForStarted( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QProcess_waitForStarted( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProcess:workingDirectory()
-   RETURN Qt_QProcess_workingDirectory( ::pPtr )
+METHOD QProcess:workingDirectory( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QProcess_workingDirectory( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QProcess:execute( ... )
@@ -311,14 +467,26 @@ METHOD QProcess:startDetached( ... )
    RETURN hbqt_error()
 
 
-METHOD QProcess:systemEnvironment()
-   RETURN HB_QStringList():from( Qt_QProcess_systemEnvironment( ::pPtr ) )
+METHOD QProcess:systemEnvironment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QProcess_systemEnvironment( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProcess:kill()
-   RETURN Qt_QProcess_kill( ::pPtr )
+METHOD QProcess:kill( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QProcess_kill( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QProcess:terminate()
-   RETURN Qt_QProcess_terminate( ::pPtr )
+METHOD QProcess:terminate( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QProcess_terminate( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

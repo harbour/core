@@ -103,13 +103,13 @@ CREATE CLASS QWebSecurityOrigin INHERIT HbQtObjectHandler FUNCTION HB_QWebSecuri
 
    METHOD  new( ... )
 
-   METHOD  databaseQuota()
-   METHOD  databaseUsage()
-   METHOD  host()
-   METHOD  port()
-   METHOD  scheme()
-   METHOD  setDatabaseQuota( nQuota )
-   METHOD  allOrigins()
+   METHOD  databaseQuota                 // (  )                                               -> nQint64
+   METHOD  databaseUsage                 // (  )                                               -> nQint64
+   METHOD  host                          // (  )                                               -> cQString
+   METHOD  port                          // (  )                                               -> nInt
+   METHOD  scheme                        // (  )                                               -> cQString
+   METHOD  setDatabaseQuota              // ( nQuota )                                         -> NIL
+   METHOD  allOrigins                    // (  )                                               -> oQList_QWebSecurityOrigin>
 
    ENDCLASS
 
@@ -123,30 +123,62 @@ METHOD QWebSecurityOrigin:new( ... )
    RETURN Self
 
 
-METHOD QWebSecurityOrigin:databaseQuota()
-   RETURN Qt_QWebSecurityOrigin_databaseQuota( ::pPtr )
+METHOD QWebSecurityOrigin:databaseQuota( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebSecurityOrigin_databaseQuota( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSecurityOrigin:databaseUsage()
-   RETURN Qt_QWebSecurityOrigin_databaseUsage( ::pPtr )
+METHOD QWebSecurityOrigin:databaseUsage( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebSecurityOrigin_databaseUsage( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSecurityOrigin:host()
-   RETURN Qt_QWebSecurityOrigin_host( ::pPtr )
+METHOD QWebSecurityOrigin:host( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebSecurityOrigin_host( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSecurityOrigin:port()
-   RETURN Qt_QWebSecurityOrigin_port( ::pPtr )
+METHOD QWebSecurityOrigin:port( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebSecurityOrigin_port( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSecurityOrigin:scheme()
-   RETURN Qt_QWebSecurityOrigin_scheme( ::pPtr )
+METHOD QWebSecurityOrigin:scheme( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebSecurityOrigin_scheme( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSecurityOrigin:setDatabaseQuota( nQuota )
-   RETURN Qt_QWebSecurityOrigin_setDatabaseQuota( ::pPtr, nQuota )
+METHOD QWebSecurityOrigin:setDatabaseQuota( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWebSecurityOrigin_setDatabaseQuota( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebSecurityOrigin:allOrigins()
-   RETURN HB_QList():from( Qt_QWebSecurityOrigin_allOrigins( ::pPtr ) )
+METHOD QWebSecurityOrigin:allOrigins( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QWebSecurityOrigin_allOrigins( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

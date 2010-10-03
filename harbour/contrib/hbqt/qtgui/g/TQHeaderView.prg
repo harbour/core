@@ -103,60 +103,63 @@ CREATE CLASS QHeaderView INHERIT HbQtObjectHandler, HB_QAbstractItemView FUNCTIO
 
    METHOD  new( ... )
 
-   METHOD  cascadingSectionResizes()
-   METHOD  count()
-   METHOD  defaultAlignment()
-   METHOD  defaultSectionSize()
-   METHOD  hiddenSectionCount()
-   METHOD  hideSection( nLogicalIndex )
-   METHOD  highlightSections()
-   METHOD  isClickable()
-   METHOD  isMovable()
-   METHOD  isSectionHidden( nLogicalIndex )
-   METHOD  isSortIndicatorShown()
-   METHOD  length()
-   METHOD  logicalIndex( nVisualIndex )
-   METHOD  logicalIndexAt( ... )
-   METHOD  minimumSectionSize()
-   METHOD  moveSection( nFrom, nTo )
-   METHOD  offset()
-   METHOD  orientation()
-   METHOD  resizeMode( nLogicalIndex )
-   METHOD  resizeSection( nLogicalIndex, nSize )
-   METHOD  resizeSections( nMode )
-   METHOD  restoreState( pState )
-   METHOD  saveState()
-   METHOD  sectionPosition( nLogicalIndex )
-   METHOD  sectionSize( nLogicalIndex )
-   METHOD  sectionSizeHint( nLogicalIndex )
-   METHOD  sectionViewportPosition( nLogicalIndex )
-   METHOD  sectionsHidden()
-   METHOD  sectionsMoved()
-   METHOD  setCascadingSectionResizes( lEnable )
-   METHOD  setClickable( lClickable )
-   METHOD  setDefaultAlignment( nAlignment )
-   METHOD  setDefaultSectionSize( nSize )
-   METHOD  setHighlightSections( lHighlight )
-   METHOD  setMinimumSectionSize( nSize )
-   METHOD  setMovable( lMovable )
-   METHOD  setResizeMode( ... )
-   METHOD  setSectionHidden( nLogicalIndex, lHide )
-   METHOD  setSortIndicator( nLogicalIndex, nOrder )
-   METHOD  setSortIndicatorShown( lShow )
-   METHOD  setStretchLastSection( lStretch )
-   METHOD  showSection( nLogicalIndex )
-   METHOD  sizeHint()
-   METHOD  sortIndicatorOrder()
-   METHOD  sortIndicatorSection()
-   METHOD  stretchLastSection()
-   METHOD  stretchSectionCount()
-   METHOD  swapSections( nFirst, nSecond )
-   METHOD  visualIndex( nLogicalIndex )
-   METHOD  visualIndexAt( nPosition )
-   METHOD  headerDataChanged( nOrientation, nLogicalFirst, nLogicalLast )
-   METHOD  setOffset( nOffset )
-   METHOD  setOffsetToLastSection()
-   METHOD  setOffsetToSectionPosition( nVisualIndex )
+   METHOD  cascadingSectionResizes       // (  )                                               -> lBool
+   METHOD  count                         // (  )                                               -> nInt
+   METHOD  defaultAlignment              // (  )                                               -> nQt_Alignment
+   METHOD  defaultSectionSize            // (  )                                               -> nInt
+   METHOD  hiddenSectionCount            // (  )                                               -> nInt
+   METHOD  hideSection                   // ( nLogicalIndex )                                  -> NIL
+   METHOD  highlightSections             // (  )                                               -> lBool
+   METHOD  isClickable                   // (  )                                               -> lBool
+   METHOD  isMovable                     // (  )                                               -> lBool
+   METHOD  isSectionHidden               // ( nLogicalIndex )                                  -> lBool
+   METHOD  isSortIndicatorShown          // (  )                                               -> lBool
+   METHOD  length                        // (  )                                               -> nInt
+   METHOD  logicalIndex                  // ( nVisualIndex )                                   -> nInt
+   METHOD  logicalIndexAt                // ( nPosition )                                      -> nInt
+                                         // ( nX, nY )                                         -> nInt
+                                         // ( oQPoint )                                        -> nInt
+   METHOD  minimumSectionSize            // (  )                                               -> nInt
+   METHOD  moveSection                   // ( nFrom, nTo )                                     -> NIL
+   METHOD  offset                        // (  )                                               -> nInt
+   METHOD  orientation                   // (  )                                               -> nQt_Orientation
+   METHOD  resizeMode                    // ( nLogicalIndex )                                  -> nResizeMode
+   METHOD  resizeSection                 // ( nLogicalIndex, nSize )                           -> NIL
+   METHOD  resizeSections                // ( nMode )                                          -> NIL
+   METHOD  restoreState                  // ( oQByteArray )                                    -> lBool
+   METHOD  saveState                     // (  )                                               -> oQByteArray
+   METHOD  sectionPosition               // ( nLogicalIndex )                                  -> nInt
+   METHOD  sectionSize                   // ( nLogicalIndex )                                  -> nInt
+   METHOD  sectionSizeHint               // ( nLogicalIndex )                                  -> nInt
+   METHOD  sectionViewportPosition       // ( nLogicalIndex )                                  -> nInt
+   METHOD  sectionsHidden                // (  )                                               -> lBool
+   METHOD  sectionsMoved                 // (  )                                               -> lBool
+   METHOD  setCascadingSectionResizes    // ( lEnable )                                        -> NIL
+   METHOD  setClickable                  // ( lClickable )                                     -> NIL
+   METHOD  setDefaultAlignment           // ( nAlignment )                                     -> NIL
+   METHOD  setDefaultSectionSize         // ( nSize )                                          -> NIL
+   METHOD  setHighlightSections          // ( lHighlight )                                     -> NIL
+   METHOD  setMinimumSectionSize         // ( nSize )                                          -> NIL
+   METHOD  setMovable                    // ( lMovable )                                       -> NIL
+   METHOD  setResizeMode                 // ( nMode )                                          -> NIL
+                                         // ( nLogicalIndex, nMode )                           -> NIL
+   METHOD  setSectionHidden              // ( nLogicalIndex, lHide )                           -> NIL
+   METHOD  setSortIndicator              // ( nLogicalIndex, nOrder )                          -> NIL
+   METHOD  setSortIndicatorShown         // ( lShow )                                          -> NIL
+   METHOD  setStretchLastSection         // ( lStretch )                                       -> NIL
+   METHOD  showSection                   // ( nLogicalIndex )                                  -> NIL
+   METHOD  sizeHint                      // (  )                                               -> oQSize
+   METHOD  sortIndicatorOrder            // (  )                                               -> nQt_SortOrder
+   METHOD  sortIndicatorSection          // (  )                                               -> nInt
+   METHOD  stretchLastSection            // (  )                                               -> lBool
+   METHOD  stretchSectionCount           // (  )                                               -> nInt
+   METHOD  swapSections                  // ( nFirst, nSecond )                                -> NIL
+   METHOD  visualIndex                   // ( nLogicalIndex )                                  -> nInt
+   METHOD  visualIndexAt                 // ( nPosition )                                      -> nInt
+   METHOD  headerDataChanged             // ( nOrientation, nLogicalFirst, nLogicalLast )      -> NIL
+   METHOD  setOffset                     // ( nOffset )                                        -> NIL
+   METHOD  setOffsetToLastSection        // (  )                                               -> NIL
+   METHOD  setOffsetToSectionPosition    // ( nVisualIndex )                                   -> NIL
 
    ENDCLASS
 
@@ -170,56 +173,120 @@ METHOD QHeaderView:new( ... )
    RETURN Self
 
 
-METHOD QHeaderView:cascadingSectionResizes()
-   RETURN Qt_QHeaderView_cascadingSectionResizes( ::pPtr )
+METHOD QHeaderView:cascadingSectionResizes( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHeaderView_cascadingSectionResizes( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:count()
-   RETURN Qt_QHeaderView_count( ::pPtr )
+METHOD QHeaderView:count( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHeaderView_count( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:defaultAlignment()
-   RETURN Qt_QHeaderView_defaultAlignment( ::pPtr )
+METHOD QHeaderView:defaultAlignment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHeaderView_defaultAlignment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:defaultSectionSize()
-   RETURN Qt_QHeaderView_defaultSectionSize( ::pPtr )
+METHOD QHeaderView:defaultSectionSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHeaderView_defaultSectionSize( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:hiddenSectionCount()
-   RETURN Qt_QHeaderView_hiddenSectionCount( ::pPtr )
+METHOD QHeaderView:hiddenSectionCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHeaderView_hiddenSectionCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:hideSection( nLogicalIndex )
-   RETURN Qt_QHeaderView_hideSection( ::pPtr, nLogicalIndex )
+METHOD QHeaderView:hideSection( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QHeaderView_hideSection( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:highlightSections()
-   RETURN Qt_QHeaderView_highlightSections( ::pPtr )
+METHOD QHeaderView:highlightSections( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHeaderView_highlightSections( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:isClickable()
-   RETURN Qt_QHeaderView_isClickable( ::pPtr )
+METHOD QHeaderView:isClickable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHeaderView_isClickable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:isMovable()
-   RETURN Qt_QHeaderView_isMovable( ::pPtr )
+METHOD QHeaderView:isMovable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHeaderView_isMovable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:isSectionHidden( nLogicalIndex )
-   RETURN Qt_QHeaderView_isSectionHidden( ::pPtr, nLogicalIndex )
+METHOD QHeaderView:isSectionHidden( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QHeaderView_isSectionHidden( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:isSortIndicatorShown()
-   RETURN Qt_QHeaderView_isSortIndicatorShown( ::pPtr )
+METHOD QHeaderView:isSortIndicatorShown( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHeaderView_isSortIndicatorShown( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:length()
-   RETURN Qt_QHeaderView_length( ::pPtr )
+METHOD QHeaderView:length( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHeaderView_length( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:logicalIndex( nVisualIndex )
-   RETURN Qt_QHeaderView_logicalIndex( ::pPtr, nVisualIndex )
+METHOD QHeaderView:logicalIndex( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QHeaderView_logicalIndex( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QHeaderView:logicalIndexAt( ... )
@@ -242,92 +309,244 @@ METHOD QHeaderView:logicalIndexAt( ... )
    RETURN hbqt_error()
 
 
-METHOD QHeaderView:minimumSectionSize()
-   RETURN Qt_QHeaderView_minimumSectionSize( ::pPtr )
+METHOD QHeaderView:minimumSectionSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHeaderView_minimumSectionSize( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:moveSection( nFrom, nTo )
-   RETURN Qt_QHeaderView_moveSection( ::pPtr, nFrom, nTo )
+METHOD QHeaderView:moveSection( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QHeaderView_moveSection( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:offset()
-   RETURN Qt_QHeaderView_offset( ::pPtr )
+METHOD QHeaderView:offset( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHeaderView_offset( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:orientation()
-   RETURN Qt_QHeaderView_orientation( ::pPtr )
+METHOD QHeaderView:orientation( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHeaderView_orientation( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:resizeMode( nLogicalIndex )
-   RETURN Qt_QHeaderView_resizeMode( ::pPtr, nLogicalIndex )
+METHOD QHeaderView:resizeMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QHeaderView_resizeMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:resizeSection( nLogicalIndex, nSize )
-   RETURN Qt_QHeaderView_resizeSection( ::pPtr, nLogicalIndex, nSize )
+METHOD QHeaderView:resizeSection( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QHeaderView_resizeSection( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:resizeSections( nMode )
-   RETURN Qt_QHeaderView_resizeSections( ::pPtr, nMode )
+METHOD QHeaderView:resizeSections( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QHeaderView_resizeSections( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:restoreState( pState )
-   RETURN Qt_QHeaderView_restoreState( ::pPtr, hbqt_ptr( pState ) )
+METHOD QHeaderView:restoreState( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QHeaderView_restoreState( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:saveState()
-   RETURN HB_QByteArray():from( Qt_QHeaderView_saveState( ::pPtr ) )
+METHOD QHeaderView:saveState( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QByteArray():from( Qt_QHeaderView_saveState( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:sectionPosition( nLogicalIndex )
-   RETURN Qt_QHeaderView_sectionPosition( ::pPtr, nLogicalIndex )
+METHOD QHeaderView:sectionPosition( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QHeaderView_sectionPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:sectionSize( nLogicalIndex )
-   RETURN Qt_QHeaderView_sectionSize( ::pPtr, nLogicalIndex )
+METHOD QHeaderView:sectionSize( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QHeaderView_sectionSize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:sectionSizeHint( nLogicalIndex )
-   RETURN Qt_QHeaderView_sectionSizeHint( ::pPtr, nLogicalIndex )
+METHOD QHeaderView:sectionSizeHint( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QHeaderView_sectionSizeHint( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:sectionViewportPosition( nLogicalIndex )
-   RETURN Qt_QHeaderView_sectionViewportPosition( ::pPtr, nLogicalIndex )
+METHOD QHeaderView:sectionViewportPosition( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QHeaderView_sectionViewportPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:sectionsHidden()
-   RETURN Qt_QHeaderView_sectionsHidden( ::pPtr )
+METHOD QHeaderView:sectionsHidden( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHeaderView_sectionsHidden( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:sectionsMoved()
-   RETURN Qt_QHeaderView_sectionsMoved( ::pPtr )
+METHOD QHeaderView:sectionsMoved( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHeaderView_sectionsMoved( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:setCascadingSectionResizes( lEnable )
-   RETURN Qt_QHeaderView_setCascadingSectionResizes( ::pPtr, lEnable )
+METHOD QHeaderView:setCascadingSectionResizes( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QHeaderView_setCascadingSectionResizes( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:setClickable( lClickable )
-   RETURN Qt_QHeaderView_setClickable( ::pPtr, lClickable )
+METHOD QHeaderView:setClickable( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QHeaderView_setClickable( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:setDefaultAlignment( nAlignment )
-   RETURN Qt_QHeaderView_setDefaultAlignment( ::pPtr, nAlignment )
+METHOD QHeaderView:setDefaultAlignment( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QHeaderView_setDefaultAlignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:setDefaultSectionSize( nSize )
-   RETURN Qt_QHeaderView_setDefaultSectionSize( ::pPtr, nSize )
+METHOD QHeaderView:setDefaultSectionSize( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QHeaderView_setDefaultSectionSize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:setHighlightSections( lHighlight )
-   RETURN Qt_QHeaderView_setHighlightSections( ::pPtr, lHighlight )
+METHOD QHeaderView:setHighlightSections( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QHeaderView_setHighlightSections( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:setMinimumSectionSize( nSize )
-   RETURN Qt_QHeaderView_setMinimumSectionSize( ::pPtr, nSize )
+METHOD QHeaderView:setMinimumSectionSize( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QHeaderView_setMinimumSectionSize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:setMovable( lMovable )
-   RETURN Qt_QHeaderView_setMovable( ::pPtr, lMovable )
+METHOD QHeaderView:setMovable( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QHeaderView_setMovable( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QHeaderView:setResizeMode( ... )
@@ -348,70 +567,182 @@ METHOD QHeaderView:setResizeMode( ... )
    RETURN hbqt_error()
 
 
-METHOD QHeaderView:setSectionHidden( nLogicalIndex, lHide )
-   RETURN Qt_QHeaderView_setSectionHidden( ::pPtr, nLogicalIndex, lHide )
+METHOD QHeaderView:setSectionHidden( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QHeaderView_setSectionHidden( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:setSortIndicator( nLogicalIndex, nOrder )
-   RETURN Qt_QHeaderView_setSortIndicator( ::pPtr, nLogicalIndex, nOrder )
+METHOD QHeaderView:setSortIndicator( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QHeaderView_setSortIndicator( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:setSortIndicatorShown( lShow )
-   RETURN Qt_QHeaderView_setSortIndicatorShown( ::pPtr, lShow )
+METHOD QHeaderView:setSortIndicatorShown( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QHeaderView_setSortIndicatorShown( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:setStretchLastSection( lStretch )
-   RETURN Qt_QHeaderView_setStretchLastSection( ::pPtr, lStretch )
+METHOD QHeaderView:setStretchLastSection( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QHeaderView_setStretchLastSection( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:showSection( nLogicalIndex )
-   RETURN Qt_QHeaderView_showSection( ::pPtr, nLogicalIndex )
+METHOD QHeaderView:showSection( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QHeaderView_showSection( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:sizeHint()
-   RETURN HB_QSize():from( Qt_QHeaderView_sizeHint( ::pPtr ) )
+METHOD QHeaderView:sizeHint( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QHeaderView_sizeHint( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:sortIndicatorOrder()
-   RETURN Qt_QHeaderView_sortIndicatorOrder( ::pPtr )
+METHOD QHeaderView:sortIndicatorOrder( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHeaderView_sortIndicatorOrder( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:sortIndicatorSection()
-   RETURN Qt_QHeaderView_sortIndicatorSection( ::pPtr )
+METHOD QHeaderView:sortIndicatorSection( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHeaderView_sortIndicatorSection( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:stretchLastSection()
-   RETURN Qt_QHeaderView_stretchLastSection( ::pPtr )
+METHOD QHeaderView:stretchLastSection( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHeaderView_stretchLastSection( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:stretchSectionCount()
-   RETURN Qt_QHeaderView_stretchSectionCount( ::pPtr )
+METHOD QHeaderView:stretchSectionCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHeaderView_stretchSectionCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:swapSections( nFirst, nSecond )
-   RETURN Qt_QHeaderView_swapSections( ::pPtr, nFirst, nSecond )
+METHOD QHeaderView:swapSections( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QHeaderView_swapSections( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:visualIndex( nLogicalIndex )
-   RETURN Qt_QHeaderView_visualIndex( ::pPtr, nLogicalIndex )
+METHOD QHeaderView:visualIndex( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QHeaderView_visualIndex( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:visualIndexAt( nPosition )
-   RETURN Qt_QHeaderView_visualIndexAt( ::pPtr, nPosition )
+METHOD QHeaderView:visualIndexAt( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QHeaderView_visualIndexAt( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:headerDataChanged( nOrientation, nLogicalFirst, nLogicalLast )
-   RETURN Qt_QHeaderView_headerDataChanged( ::pPtr, nOrientation, nLogicalFirst, nLogicalLast )
+METHOD QHeaderView:headerDataChanged( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QHeaderView_headerDataChanged( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:setOffset( nOffset )
-   RETURN Qt_QHeaderView_setOffset( ::pPtr, nOffset )
+METHOD QHeaderView:setOffset( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QHeaderView_setOffset( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:setOffsetToLastSection()
-   RETURN Qt_QHeaderView_setOffsetToLastSection( ::pPtr )
+METHOD QHeaderView:setOffsetToLastSection( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHeaderView_setOffsetToLastSection( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHeaderView:setOffsetToSectionPosition( nVisualIndex )
-   RETURN Qt_QHeaderView_setOffsetToSectionPosition( ::pPtr, nVisualIndex )
+METHOD QHeaderView:setOffsetToSectionPosition( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QHeaderView_setOffsetToSectionPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

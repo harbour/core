@@ -103,22 +103,25 @@ CREATE CLASS QLCDNumber INHERIT HbQtObjectHandler, HB_QFrame FUNCTION HB_QLCDNum
 
    METHOD  new( ... )
 
-   METHOD  checkOverflow( ... )
-   METHOD  intValue()
-   METHOD  mode()
-   METHOD  numDigits()
-   METHOD  segmentStyle()
-   METHOD  setMode( nMode )
-   METHOD  setNumDigits( nNDigits )
-   METHOD  setSegmentStyle( nSegmentStyle )
-   METHOD  smallDecimalPoint()
-   METHOD  value()
-   METHOD  display( ... )
-   METHOD  setBinMode()
-   METHOD  setDecMode()
-   METHOD  setHexMode()
-   METHOD  setOctMode()
-   METHOD  setSmallDecimalPoint( lBool )
+   METHOD  checkOverflow                 // ( nNum )                                           -> lBool
+                                         // ( nNum )                                           -> lBool
+   METHOD  intValue                      // (  )                                               -> nInt
+   METHOD  mode                          // (  )                                               -> nMode
+   METHOD  numDigits                     // (  )                                               -> nInt
+   METHOD  segmentStyle                  // (  )                                               -> nSegmentStyle
+   METHOD  setMode                       // ( nMode )                                          -> NIL
+   METHOD  setNumDigits                  // ( nNDigits )                                       -> NIL
+   METHOD  setSegmentStyle               // ( nSegmentStyle )                                  -> NIL
+   METHOD  smallDecimalPoint             // (  )                                               -> lBool
+   METHOD  value                         // (  )                                               -> nDouble
+   METHOD  display                       // ( cS )                                             -> NIL
+                                         // ( nNum )                                           -> NIL
+                                         // ( nNum )                                           -> NIL
+   METHOD  setBinMode                    // (  )                                               -> NIL
+   METHOD  setDecMode                    // (  )                                               -> NIL
+   METHOD  setHexMode                    // (  )                                               -> NIL
+   METHOD  setOctMode                    // (  )                                               -> NIL
+   METHOD  setSmallDecimalPoint          // ( lBool )                                          -> NIL
 
    ENDCLASS
 
@@ -145,40 +148,88 @@ METHOD QLCDNumber:checkOverflow( ... )
    RETURN hbqt_error()
 
 
-METHOD QLCDNumber:intValue()
-   RETURN Qt_QLCDNumber_intValue( ::pPtr )
+METHOD QLCDNumber:intValue( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLCDNumber_intValue( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLCDNumber:mode()
-   RETURN Qt_QLCDNumber_mode( ::pPtr )
+METHOD QLCDNumber:mode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLCDNumber_mode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLCDNumber:numDigits()
-   RETURN Qt_QLCDNumber_numDigits( ::pPtr )
+METHOD QLCDNumber:numDigits( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLCDNumber_numDigits( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLCDNumber:segmentStyle()
-   RETURN Qt_QLCDNumber_segmentStyle( ::pPtr )
+METHOD QLCDNumber:segmentStyle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLCDNumber_segmentStyle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLCDNumber:setMode( nMode )
-   RETURN Qt_QLCDNumber_setMode( ::pPtr, nMode )
+METHOD QLCDNumber:setMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLCDNumber_setMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLCDNumber:setNumDigits( nNDigits )
-   RETURN Qt_QLCDNumber_setNumDigits( ::pPtr, nNDigits )
+METHOD QLCDNumber:setNumDigits( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLCDNumber_setNumDigits( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLCDNumber:setSegmentStyle( nSegmentStyle )
-   RETURN Qt_QLCDNumber_setSegmentStyle( ::pPtr, nSegmentStyle )
+METHOD QLCDNumber:setSegmentStyle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QLCDNumber_setSegmentStyle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLCDNumber:smallDecimalPoint()
-   RETURN Qt_QLCDNumber_smallDecimalPoint( ::pPtr )
+METHOD QLCDNumber:smallDecimalPoint( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLCDNumber_smallDecimalPoint( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLCDNumber:value()
-   RETURN Qt_QLCDNumber_value( ::pPtr )
+METHOD QLCDNumber:value( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLCDNumber_value( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QLCDNumber:display( ... )
@@ -196,22 +247,46 @@ METHOD QLCDNumber:display( ... )
    RETURN hbqt_error()
 
 
-METHOD QLCDNumber:setBinMode()
-   RETURN Qt_QLCDNumber_setBinMode( ::pPtr )
+METHOD QLCDNumber:setBinMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLCDNumber_setBinMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLCDNumber:setDecMode()
-   RETURN Qt_QLCDNumber_setDecMode( ::pPtr )
+METHOD QLCDNumber:setDecMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLCDNumber_setDecMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLCDNumber:setHexMode()
-   RETURN Qt_QLCDNumber_setHexMode( ::pPtr )
+METHOD QLCDNumber:setHexMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLCDNumber_setHexMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLCDNumber:setOctMode()
-   RETURN Qt_QLCDNumber_setOctMode( ::pPtr )
+METHOD QLCDNumber:setOctMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QLCDNumber_setOctMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QLCDNumber:setSmallDecimalPoint( lBool )
-   RETURN Qt_QLCDNumber_setSmallDecimalPoint( ::pPtr, lBool )
+METHOD QLCDNumber:setSmallDecimalPoint( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QLCDNumber_setSmallDecimalPoint( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

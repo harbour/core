@@ -103,14 +103,15 @@ CREATE CLASS QGraphicsPixmapItem INHERIT HbQtObjectHandler, HB_QGraphicsItem FUN
 
    METHOD  new( ... )
 
-   METHOD  offset()
-   METHOD  pixmap()
-   METHOD  setOffset( ... )
-   METHOD  setPixmap( pPixmap )
-   METHOD  setShapeMode( nMode )
-   METHOD  setTransformationMode( nMode )
-   METHOD  shapeMode()
-   METHOD  transformationMode()
+   METHOD  offset                        // (  )                                               -> oQPointF
+   METHOD  pixmap                        // (  )                                               -> oQPixmap
+   METHOD  setOffset                     // ( oQPointF )                                       -> NIL
+                                         // ( nX, nY )                                         -> NIL
+   METHOD  setPixmap                     // ( oQPixmap )                                       -> NIL
+   METHOD  setShapeMode                  // ( nMode )                                          -> NIL
+   METHOD  setTransformationMode         // ( nMode )                                          -> NIL
+   METHOD  shapeMode                     // (  )                                               -> nShapeMode
+   METHOD  transformationMode            // (  )                                               -> nQt_TransformationMode
 
    ENDCLASS
 
@@ -124,12 +125,20 @@ METHOD QGraphicsPixmapItem:new( ... )
    RETURN Self
 
 
-METHOD QGraphicsPixmapItem:offset()
-   RETURN HB_QPointF():from( Qt_QGraphicsPixmapItem_offset( ::pPtr ) )
+METHOD QGraphicsPixmapItem:offset( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPointF():from( Qt_QGraphicsPixmapItem_offset( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsPixmapItem:pixmap()
-   RETURN HB_QPixmap():from( Qt_QGraphicsPixmapItem_pixmap( ::pPtr ) )
+METHOD QGraphicsPixmapItem:pixmap( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPixmap():from( Qt_QGraphicsPixmapItem_pixmap( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsPixmapItem:setOffset( ... )
@@ -150,22 +159,54 @@ METHOD QGraphicsPixmapItem:setOffset( ... )
    RETURN hbqt_error()
 
 
-METHOD QGraphicsPixmapItem:setPixmap( pPixmap )
-   RETURN Qt_QGraphicsPixmapItem_setPixmap( ::pPtr, hbqt_ptr( pPixmap ) )
+METHOD QGraphicsPixmapItem:setPixmap( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsPixmapItem_setPixmap( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsPixmapItem:setShapeMode( nMode )
-   RETURN Qt_QGraphicsPixmapItem_setShapeMode( ::pPtr, nMode )
+METHOD QGraphicsPixmapItem:setShapeMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsPixmapItem_setShapeMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsPixmapItem:setTransformationMode( nMode )
-   RETURN Qt_QGraphicsPixmapItem_setTransformationMode( ::pPtr, nMode )
+METHOD QGraphicsPixmapItem:setTransformationMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsPixmapItem_setTransformationMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsPixmapItem:shapeMode()
-   RETURN Qt_QGraphicsPixmapItem_shapeMode( ::pPtr )
+METHOD QGraphicsPixmapItem:shapeMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsPixmapItem_shapeMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsPixmapItem:transformationMode()
-   RETURN Qt_QGraphicsPixmapItem_transformationMode( ::pPtr )
+METHOD QGraphicsPixmapItem:transformationMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsPixmapItem_transformationMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

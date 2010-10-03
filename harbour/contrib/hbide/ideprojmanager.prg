@@ -1000,13 +1000,13 @@ METHOD IdeProjManager:setCurrentProject( cProjectName )
       /* Reset Old Color */
       IF !empty( cOldProject )
          IF !empty( oItem := hbide_findProjTreeItem( ::oIDE, cOldProject, "Project Name" ) )
-            oItem:oWidget:setForeground( 0, QBrush( "QColor", QColor( 0,0,0 ) ) )
+            oItem:oWidget:setForeground( 0, QBrush( QColor( 0,0,0 ) ) )
          ENDIF
       ENDIF
       /* Set New Color */
       IF !empty( ::cWrkProject )
          IF !empty( oItem := hbide_findProjTreeItem( ::oIDE, ::cWrkProject, "Project Name" ) )
-            oItem:oWidget:setForeground( 0, QBrush( "QColor", QColor( 255,0,0 ) ) )
+            oItem:oWidget:setForeground( 0, QBrush( QColor( 255,0,0 ) ) )
             ::oProjTree:oWidget:setCurrentItem( oItem:oWidget )
          ENDIF
          ::loadProperties( ::getProjectFileNameFromTitle( ::cWrkProject ), .f., .f., .f. )

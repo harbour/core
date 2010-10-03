@@ -103,13 +103,14 @@ CREATE CLASS QStylePainter INHERIT HbQtObjectHandler, HB_QPainter FUNCTION HB_QS
 
    METHOD  new( ... )
 
-   METHOD  begin( ... )
-   METHOD  drawComplexControl( nCc, pOption )
-   METHOD  drawControl( nCe, pOption )
-   METHOD  drawItemPixmap( pRect, nFlags, pPixmap )
-   METHOD  drawItemText( pRect, nFlags, pPal, lEnabled, cText, nTextRole )
-   METHOD  drawPrimitive( nPe, pOption )
-   METHOD  style()
+   METHOD  begin                         // ( oQWidget )                                       -> lBool
+                                         // ( oQPaintDevice, oQWidget )                        -> lBool
+   METHOD  drawComplexControl            // ( nCc, oQStyleOptionComplex )                      -> NIL
+   METHOD  drawControl                   // ( nCe, oQStyleOption )                             -> NIL
+   METHOD  drawItemPixmap                // ( oQRect, nFlags, oQPixmap )                       -> NIL
+   METHOD  drawItemText                  // ( oQRect, nFlags, oQPalette, lEnabled, cText, nTextRole ) -> NIL
+   METHOD  drawPrimitive                 // ( nPe, oQStyleOption )                             -> NIL
+   METHOD  style                         // (  )                                               -> oQStyle
 
    ENDCLASS
 
@@ -141,26 +142,76 @@ METHOD QStylePainter:begin( ... )
    RETURN hbqt_error()
 
 
-METHOD QStylePainter:drawComplexControl( nCc, pOption )
-   RETURN Qt_QStylePainter_drawComplexControl( ::pPtr, nCc, hbqt_ptr( pOption ) )
+METHOD QStylePainter:drawComplexControl( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QStylePainter_drawComplexControl( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStylePainter:drawControl( nCe, pOption )
-   RETURN Qt_QStylePainter_drawControl( ::pPtr, nCe, hbqt_ptr( pOption ) )
+METHOD QStylePainter:drawControl( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QStylePainter_drawControl( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStylePainter:drawItemPixmap( pRect, nFlags, pPixmap )
-   RETURN Qt_QStylePainter_drawItemPixmap( ::pPtr, hbqt_ptr( pRect ), nFlags, hbqt_ptr( pPixmap ) )
+METHOD QStylePainter:drawItemPixmap( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QStylePainter_drawItemPixmap( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStylePainter:drawItemText( pRect, nFlags, pPal, lEnabled, cText, nTextRole )
-   RETURN Qt_QStylePainter_drawItemText( ::pPtr, hbqt_ptr( pRect ), nFlags, hbqt_ptr( pPal ), lEnabled, cText, nTextRole )
+METHOD QStylePainter:drawItemText( ... )
+   SWITCH PCount()
+   CASE 6
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isLogical( hb_pvalue( 4 ) ) .AND. hb_isChar( hb_pvalue( 5 ) ) .AND. hb_isNumeric( hb_pvalue( 6 ) )
+         RETURN Qt_QStylePainter_drawItemText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 5
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isLogical( hb_pvalue( 4 ) ) .AND. hb_isChar( hb_pvalue( 5 ) )
+         RETURN Qt_QStylePainter_drawItemText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStylePainter:drawPrimitive( nPe, pOption )
-   RETURN Qt_QStylePainter_drawPrimitive( ::pPtr, nPe, hbqt_ptr( pOption ) )
+METHOD QStylePainter:drawPrimitive( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QStylePainter_drawPrimitive( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStylePainter:style()
-   RETURN HB_QStyle():from( Qt_QStylePainter_style( ::pPtr ) )
+METHOD QStylePainter:style( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStyle():from( Qt_QStylePainter_style( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

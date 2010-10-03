@@ -103,34 +103,34 @@ CREATE CLASS QMovie INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QMovie
 
    METHOD  new( ... )
 
-   METHOD  backgroundColor()
-   METHOD  cacheMode()
-   METHOD  currentFrameNumber()
-   METHOD  currentImage()
-   METHOD  currentPixmap()
-   METHOD  device()
-   METHOD  fileName()
-   METHOD  format()
-   METHOD  frameCount()
-   METHOD  frameRect()
-   METHOD  isValid()
-   METHOD  jumpToFrame( nFrameNumber )
-   METHOD  loopCount()
-   METHOD  nextFrameDelay()
-   METHOD  scaledSize()
-   METHOD  setBackgroundColor( pColor )
-   METHOD  setCacheMode( nMode )
-   METHOD  setDevice( pDevice )
-   METHOD  setFileName( cFileName )
-   METHOD  setFormat( pFormat )
-   METHOD  setScaledSize( pSize )
-   METHOD  speed()
-   METHOD  state()
-   METHOD  jumpToNextFrame()
-   METHOD  setPaused( lPaused )
-   METHOD  setSpeed( nPercentSpeed )
-   METHOD  start()
-   METHOD  stop()
+   METHOD  backgroundColor               // (  )                                               -> oQColor
+   METHOD  cacheMode                     // (  )                                               -> nCacheMode
+   METHOD  currentFrameNumber            // (  )                                               -> nInt
+   METHOD  currentImage                  // (  )                                               -> oQImage
+   METHOD  currentPixmap                 // (  )                                               -> oQPixmap
+   METHOD  device                        // (  )                                               -> oQIODevice
+   METHOD  fileName                      // (  )                                               -> cQString
+   METHOD  format                        // (  )                                               -> oQByteArray
+   METHOD  frameCount                    // (  )                                               -> nInt
+   METHOD  frameRect                     // (  )                                               -> oQRect
+   METHOD  isValid                       // (  )                                               -> lBool
+   METHOD  jumpToFrame                   // ( nFrameNumber )                                   -> lBool
+   METHOD  loopCount                     // (  )                                               -> nInt
+   METHOD  nextFrameDelay                // (  )                                               -> nInt
+   METHOD  scaledSize                    // (  )                                               -> oQSize
+   METHOD  setBackgroundColor            // ( oQColor )                                        -> NIL
+   METHOD  setCacheMode                  // ( nMode )                                          -> NIL
+   METHOD  setDevice                     // ( oQIODevice )                                     -> NIL
+   METHOD  setFileName                   // ( cFileName )                                      -> NIL
+   METHOD  setFormat                     // ( oQByteArray )                                    -> NIL
+   METHOD  setScaledSize                 // ( oQSize )                                         -> NIL
+   METHOD  speed                         // (  )                                               -> nInt
+   METHOD  state                         // (  )                                               -> nMovieState
+   METHOD  jumpToNextFrame               // (  )                                               -> lBool
+   METHOD  setPaused                     // ( lPaused )                                        -> NIL
+   METHOD  setSpeed                      // ( nPercentSpeed )                                  -> NIL
+   METHOD  start                         // (  )                                               -> NIL
+   METHOD  stop                          // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -144,114 +144,262 @@ METHOD QMovie:new( ... )
    RETURN Self
 
 
-METHOD QMovie:backgroundColor()
-   RETURN HB_QColor():from( Qt_QMovie_backgroundColor( ::pPtr ) )
+METHOD QMovie:backgroundColor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QColor():from( Qt_QMovie_backgroundColor( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMovie:cacheMode()
-   RETURN Qt_QMovie_cacheMode( ::pPtr )
+METHOD QMovie:cacheMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMovie_cacheMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMovie:currentFrameNumber()
-   RETURN Qt_QMovie_currentFrameNumber( ::pPtr )
+METHOD QMovie:currentFrameNumber( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMovie_currentFrameNumber( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMovie:currentImage()
-   RETURN HB_QImage():from( Qt_QMovie_currentImage( ::pPtr ) )
+METHOD QMovie:currentImage( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QImage():from( Qt_QMovie_currentImage( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMovie:currentPixmap()
-   RETURN HB_QPixmap():from( Qt_QMovie_currentPixmap( ::pPtr ) )
+METHOD QMovie:currentPixmap( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPixmap():from( Qt_QMovie_currentPixmap( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMovie:device()
-   RETURN HB_QIODevice():from( Qt_QMovie_device( ::pPtr ) )
+METHOD QMovie:device( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QIODevice():from( Qt_QMovie_device( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMovie:fileName()
-   RETURN Qt_QMovie_fileName( ::pPtr )
+METHOD QMovie:fileName( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMovie_fileName( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMovie:format()
-   RETURN HB_QByteArray():from( Qt_QMovie_format( ::pPtr ) )
+METHOD QMovie:format( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QByteArray():from( Qt_QMovie_format( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMovie:frameCount()
-   RETURN Qt_QMovie_frameCount( ::pPtr )
+METHOD QMovie:frameCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMovie_frameCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMovie:frameRect()
-   RETURN HB_QRect():from( Qt_QMovie_frameRect( ::pPtr ) )
+METHOD QMovie:frameRect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QMovie_frameRect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMovie:isValid()
-   RETURN Qt_QMovie_isValid( ::pPtr )
+METHOD QMovie:isValid( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMovie_isValid( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMovie:jumpToFrame( nFrameNumber )
-   RETURN Qt_QMovie_jumpToFrame( ::pPtr, nFrameNumber )
+METHOD QMovie:jumpToFrame( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QMovie_jumpToFrame( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMovie:loopCount()
-   RETURN Qt_QMovie_loopCount( ::pPtr )
+METHOD QMovie:loopCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMovie_loopCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMovie:nextFrameDelay()
-   RETURN Qt_QMovie_nextFrameDelay( ::pPtr )
+METHOD QMovie:nextFrameDelay( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMovie_nextFrameDelay( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMovie:scaledSize()
-   RETURN HB_QSize():from( Qt_QMovie_scaledSize( ::pPtr ) )
+METHOD QMovie:scaledSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QMovie_scaledSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMovie:setBackgroundColor( pColor )
-   RETURN Qt_QMovie_setBackgroundColor( ::pPtr, hbqt_ptr( pColor ) )
+METHOD QMovie:setBackgroundColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMovie_setBackgroundColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMovie:setCacheMode( nMode )
-   RETURN Qt_QMovie_setCacheMode( ::pPtr, nMode )
+METHOD QMovie:setCacheMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QMovie_setCacheMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMovie:setDevice( pDevice )
-   RETURN Qt_QMovie_setDevice( ::pPtr, hbqt_ptr( pDevice ) )
+METHOD QMovie:setDevice( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMovie_setDevice( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMovie:setFileName( cFileName )
-   RETURN Qt_QMovie_setFileName( ::pPtr, cFileName )
+METHOD QMovie:setFileName( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QMovie_setFileName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMovie:setFormat( pFormat )
-   RETURN Qt_QMovie_setFormat( ::pPtr, hbqt_ptr( pFormat ) )
+METHOD QMovie:setFormat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMovie_setFormat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMovie:setScaledSize( pSize )
-   RETURN Qt_QMovie_setScaledSize( ::pPtr, hbqt_ptr( pSize ) )
+METHOD QMovie:setScaledSize( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QMovie_setScaledSize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMovie:speed()
-   RETURN Qt_QMovie_speed( ::pPtr )
+METHOD QMovie:speed( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMovie_speed( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMovie:state()
-   RETURN Qt_QMovie_state( ::pPtr )
+METHOD QMovie:state( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMovie_state( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMovie:jumpToNextFrame()
-   RETURN Qt_QMovie_jumpToNextFrame( ::pPtr )
+METHOD QMovie:jumpToNextFrame( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMovie_jumpToNextFrame( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMovie:setPaused( lPaused )
-   RETURN Qt_QMovie_setPaused( ::pPtr, lPaused )
+METHOD QMovie:setPaused( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QMovie_setPaused( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMovie:setSpeed( nPercentSpeed )
-   RETURN Qt_QMovie_setSpeed( ::pPtr, nPercentSpeed )
+METHOD QMovie:setSpeed( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QMovie_setSpeed( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMovie:start()
-   RETURN Qt_QMovie_start( ::pPtr )
+METHOD QMovie:start( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMovie_start( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMovie:stop()
-   RETURN Qt_QMovie_stop( ::pPtr )
+METHOD QMovie:stop( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMovie_stop( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

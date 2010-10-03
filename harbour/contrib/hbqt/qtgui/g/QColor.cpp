@@ -103,11 +103,12 @@
  */
 
 /*
- *  Constructed[ 65/65 [ 100.00% ] ]
+ *  Constructed[ 71/71 [ 100.00% ] ]
  *
  *
  *  *** Commented out protostypes ***
  *
+ *  //QColor ( const char * name )
  *  //bool allowX11ColorNames ()
  *  //void setAllowX11ColorNames ( bool enabled )
  */
@@ -222,6 +223,56 @@ HB_FUNC( QT_QCOLOR )
    }
 
    hb_retptrGC( hbqt_gcAllocate_QColor( ( void * ) pObj, true ) );
+}
+
+/*
+ * QColor ()
+ */
+HB_FUNC( QT_QCOLOR_QCOLOR )
+{
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor(), true ) );
+}
+
+/*
+ * QColor ( int r, int g, int b, int a = 255 )
+ */
+HB_FUNC( QT_QCOLOR_QCOLOR_1 )
+{
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parnidef( 5, 255 ) ), true ) );
+}
+
+/*
+ * QColor ( QRgb color )
+ */
+HB_FUNC( QT_QCOLOR_QCOLOR_2 )
+{
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hb_parnl( 2 ) ), true ) );
+}
+
+/*
+ * QColor ( Qt::GlobalColor color )
+ */
+HB_FUNC( QT_QCOLOR_QCOLOR_3 )
+{
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( Qt::GlobalColor ) hb_parni( 2 ) ), true ) );
+}
+
+/*
+ * QColor ( const QString & name )
+ */
+HB_FUNC( QT_QCOLOR_QCOLOR_4 )
+{
+      void * pText;
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( hb_parstr_utf8( 2, &pText, NULL ) ), true ) );
+      hb_strfree( pText );
+}
+
+/*
+ * QColor ( const QColor & color )
+ */
+HB_FUNC( QT_QCOLOR_QCOLOR_5 )
+{
+   hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( *hbqt_par_QColor( 2 ) ), true ) );
 }
 
 /*

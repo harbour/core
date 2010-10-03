@@ -103,9 +103,9 @@ CREATE CLASS QStyleOptionSpinBox INHERIT HbQtObjectHandler, HB_QStyleOptionCompl
 
    METHOD  new( ... )
 
-   METHOD  buttonSymbols()
-   METHOD  frame()
-   METHOD  stepEnabled()
+   METHOD  buttonSymbols                 // (  )                                               -> nQAbstractSpinBox_ButtonSymbols
+   METHOD  frame                         // (  )                                               -> lBool
+   METHOD  stepEnabled                   // (  )                                               -> nQAbstractSpinBox_StepEnabled
 
    ENDCLASS
 
@@ -119,14 +119,26 @@ METHOD QStyleOptionSpinBox:new( ... )
    RETURN Self
 
 
-METHOD QStyleOptionSpinBox:buttonSymbols()
-   RETURN Qt_QStyleOptionSpinBox_buttonSymbols( ::pPtr )
+METHOD QStyleOptionSpinBox:buttonSymbols( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionSpinBox_buttonSymbols( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionSpinBox:frame()
-   RETURN Qt_QStyleOptionSpinBox_frame( ::pPtr )
+METHOD QStyleOptionSpinBox:frame( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionSpinBox_frame( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionSpinBox:stepEnabled()
-   RETURN Qt_QStyleOptionSpinBox_stepEnabled( ::pPtr )
+METHOD QStyleOptionSpinBox:stepEnabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionSpinBox_stepEnabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

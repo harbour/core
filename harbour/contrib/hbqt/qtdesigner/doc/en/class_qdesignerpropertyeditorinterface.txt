@@ -26,12 +26,12 @@
  *  $RETURNS$
  *     An instance of the object of type QDesignerPropertyEditorInterface
  *  $METHODS$
- *     :core()                                             -> pQDesignerFormEditorInterface
+ *     :core()                                             -> oQDesignerFormEditorInterface
  *     :currentPropertyName()                              -> cQString
  *     :isReadOnly()                                       -> lBool
- *     :object()                                           -> pQObject
- *     :setObject( pObject )                               -> NIL
- *     :setPropertyValue( cName, pValue, lChanged )        -> NIL
+ *     :object()                                           -> oQObject
+ *     :setObject( oQObject )                              -> NIL
+ *     :setPropertyValue( cName, oQVariant, lChanged )     -> NIL
  *     :setReadOnly( lReadOnly )                           -> NIL
  * 
  *  $DESCRIPTION$
@@ -52,7 +52,5 @@
  *     Harbour source: contrib/hbqt/qtdesigner/TQDesignerPropertyEditorInterface.prg
  *     C++ wrappers  : contrib/hbqt/qtdesigner/QDesignerPropertyEditorInterface.cpp
  *     Library       : hbqtdesigner
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

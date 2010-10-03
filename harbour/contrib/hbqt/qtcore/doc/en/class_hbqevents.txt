@@ -26,6 +26,7 @@
  *  $RETURNS$
  *     An instance of the object of type HBQEvents
  *  $METHODS$
+ *     :HBQEvents()                                        -> oHBQEvents
  *     :hbConnect( xObj, nEvent, xBlock )                  -> lBool
  *     :hbDisconnect( xObj, nEvent )                       -> lBool
  *     :hbClear()                                          -> lBool
@@ -48,7 +49,5 @@
  *     Harbour source: contrib/hbqt/qtcore/THBQEvents.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/HBQEvents.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

@@ -103,14 +103,18 @@ CREATE CLASS QFontDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QFont
 
    METHOD  new( ... )
 
-   METHOD  currentFont()
-   METHOD  options()
-   METHOD  selectedFont()
-   METHOD  setCurrentFont( pFont )
-   METHOD  setOption( nOption, lOn )
-   METHOD  setOptions( nOptions )
-   METHOD  testOption( nOption )
-   METHOD  getFont( ... )
+   METHOD  currentFont                   // (  )                                               -> oQFont
+   METHOD  options                       // (  )                                               -> nFontDialogOptions
+   METHOD  selectedFont                  // (  )                                               -> oQFont
+   METHOD  setCurrentFont                // ( oQFont )                                         -> NIL
+   METHOD  setOption                     // ( nOption, lOn )                                   -> NIL
+   METHOD  setOptions                    // ( nOptions )                                       -> NIL
+   METHOD  testOption                    // ( nOption )                                        -> lBool
+   METHOD  getFont                       // ( @lOk, oQFont, oQWidget, cTitle, nOptions )       -> oQFont
+                                         // ( @lOk, oQFont, oQWidget, cName )                  -> oQFont
+                                         // ( @lOk, oQFont, oQWidget, cTitle )                 -> oQFont
+                                         // ( @lOk, oQFont, oQWidget )                         -> oQFont
+                                         // ( @lOk, oQWidget )                                 -> oQFont
 
    ENDCLASS
 
@@ -124,32 +128,82 @@ METHOD QFontDialog:new( ... )
    RETURN Self
 
 
-METHOD QFontDialog:currentFont()
-   RETURN HB_QFont():from( Qt_QFontDialog_currentFont( ::pPtr ) )
+METHOD QFontDialog:currentFont( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFont():from( Qt_QFontDialog_currentFont( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontDialog:options()
-   RETURN Qt_QFontDialog_options( ::pPtr )
+METHOD QFontDialog:options( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFontDialog_options( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontDialog:selectedFont()
-   RETURN HB_QFont():from( Qt_QFontDialog_selectedFont( ::pPtr ) )
+METHOD QFontDialog:selectedFont( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFont():from( Qt_QFontDialog_selectedFont( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontDialog:setCurrentFont( pFont )
-   RETURN Qt_QFontDialog_setCurrentFont( ::pPtr, hbqt_ptr( pFont ) )
+METHOD QFontDialog:setCurrentFont( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QFontDialog_setCurrentFont( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontDialog:setOption( nOption, lOn )
-   RETURN Qt_QFontDialog_setOption( ::pPtr, nOption, lOn )
+METHOD QFontDialog:setOption( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QFontDialog_setOption( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFontDialog_setOption( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontDialog:setOptions( nOptions )
-   RETURN Qt_QFontDialog_setOptions( ::pPtr, nOptions )
+METHOD QFontDialog:setOptions( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFontDialog_setOptions( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFontDialog:testOption( nOption )
-   RETURN Qt_QFontDialog_testOption( ::pPtr, nOption )
+METHOD QFontDialog:testOption( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFontDialog_testOption( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QFontDialog:getFont( ... )
@@ -163,9 +217,12 @@ METHOD QFontDialog:getFont( ... )
    CASE 4
       DO CASE
       CASE hb_isLogical( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isChar( hb_pvalue( 4 ) )
-         RETURN HB_QFont():from( Qt_QFontDialog_getFont_2( ::pPtr, ... ) )
-      CASE hb_isLogical( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
-         RETURN HB_QFont():from( Qt_QFontDialog_getFont_1( ::pPtr, ... ) )
+         SWITCH __objGetClsName( hb_pvalue( 2 ) ) + __objGetClsName( hb_pvalue( 3 ) )
+         CASE "QFONTQWIDGET"
+            RETURN HB_QFont():from( Qt_QFontDialog_getFont_1( ::pPtr, ... ) )
+         CASE "QFONTQWIDGET"
+            RETURN HB_QFont():from( Qt_QFontDialog_getFont_2( ::pPtr, ... ) )
+         ENDSWITCH
       ENDCASE
       EXIT
    CASE 3

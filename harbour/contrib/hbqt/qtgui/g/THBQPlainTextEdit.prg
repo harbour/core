@@ -103,60 +103,62 @@ CREATE CLASS HBQPlainTextEdit INHERIT HbQtObjectHandler, HB_QPlainTextEdit FUNCT
 
    METHOD  new( ... )
 
-   METHOD  hbGetIndex( pCrQTextCursor )
-   METHOD  hbGetLine( pCrQTextCursor )
-   METHOD  hbLineNumberAreaWidth()
-   METHOD  hbGetSpaces()
-   METHOD  hbSetSpaces( nNewSpaces )
-   METHOD  hbBookmarks( nBlock )
-   METHOD  hbNextBookmark( nBlock )
-   METHOD  hbPrevBookmark( nBlock )
-   METHOD  hbGotoBookmark( nBlock )
-   METHOD  hbNumberBlockVisible( ... )
-   METHOD  hbHighlightCurrentLine( ... )
-   METHOD  hbSetEventBlock( xBlock )
-   METHOD  hbUpdateLineNumberAreaWidth( nNewBlockCount )
-   METHOD  hbCaseUpper()
-   METHOD  hbCaseLower()
-   METHOD  hbEscapeQuotes()
-   METHOD  hbEscapeDQuotes()
-   METHOD  hbUnescapeQuotes()
-   METHOD  hbUnescapeDQuotes()
-   METHOD  hbConvertQuotes()
-   METHOD  hbConvertDQuotes()
-   METHOD  hbBlockComment()
-   METHOD  hbStreamComment()
-   METHOD  hbDuplicateLine()
-   METHOD  hbReplaceSelection( cTxt )
-   METHOD  hbBlockIndent( nSteps )
-   METHOD  hbDeleteLine()
-   METHOD  hbMoveLine( nIDirection )
-   METHOD  hbGetSelectedText()
-   METHOD  hbTextUnderCursor( lBCodeComplete )
-   METHOD  hbShowPrototype( cTip, nRows, nCols )
-   METHOD  hbSetCompleter( pCompleter )
-   METHOD  hbSetFldsCompleter( pCompleter )
-   METHOD  hbSetCurrentLineColor( pColor )
-   METHOD  hbSetLineAreaBkColor( pColor )
-   METHOD  hbRefresh()
-   METHOD  hbCut( nKey )
-   METHOD  hbCopy()
-   METHOD  hbPaste()
-   METHOD  hbSetSelectionMode( nMode, lOn )
-   METHOD  hbGetSelectionInfo()
-   METHOD  hbSetSelectionInfo( xSelectionInfo )
-   METHOD  hbSetSelectionColor( pColor )
-   METHOD  hbSetMatchBraces( lAll )
-   METHOD  hbGetViewportInfo()
-   METHOD  hbApplyKey( nKey, nModifiers, cTxt )
-   METHOD  hbHighlightArea( nTop, nLeft, nBottom, nRight, nMode )
-   METHOD  hbTogglePersistentSelection()
-   METHOD  hbHorzRulerVisible( lVisible )
-   METHOD  hbSetProtoStyle( cCss )
-   METHOD  hbSelectAll()
-   METHOD  hbSetFieldsListActive( lActive )
-   METHOD  hbToggleCodeCompetion()
-   METHOD  hbToggleCompetionTips()
+   METHOD  hbGetIndex                    // ( oQTextCursor )                                   -> nInt
+   METHOD  hbGetLine                     // ( oQTextCursor )                                   -> nInt
+   METHOD  hbLineNumberAreaWidth         // (  )                                               -> nInt
+   METHOD  hbGetSpaces                   // (  )                                               -> nInt
+   METHOD  hbSetSpaces                   // ( nNewSpaces )                                     -> NIL
+   METHOD  hbBookmarks                   // ( nBlock )                                         -> NIL
+   METHOD  hbNextBookmark                // ( nBlock )                                         -> NIL
+   METHOD  hbPrevBookmark                // ( nBlock )                                         -> NIL
+   METHOD  hbGotoBookmark                // ( nBlock )                                         -> NIL
+   METHOD  hbNumberBlockVisible          // ( lB )                                             -> NIL
+                                         // (  )                                               -> lBool
+   METHOD  hbHighlightCurrentLine        // ( lB )                                             -> NIL
+                                         // (  )                                               -> lBool
+   METHOD  hbSetEventBlock               // ( xBlock )                                         -> NIL
+   METHOD  hbUpdateLineNumberAreaWidth   // ( nNewBlockCount )                                 -> NIL
+   METHOD  hbCaseUpper                   // (  )                                               -> NIL
+   METHOD  hbCaseLower                   // (  )                                               -> NIL
+   METHOD  hbEscapeQuotes                // (  )                                               -> NIL
+   METHOD  hbEscapeDQuotes               // (  )                                               -> NIL
+   METHOD  hbUnescapeQuotes              // (  )                                               -> NIL
+   METHOD  hbUnescapeDQuotes             // (  )                                               -> NIL
+   METHOD  hbConvertQuotes               // (  )                                               -> NIL
+   METHOD  hbConvertDQuotes              // (  )                                               -> NIL
+   METHOD  hbBlockComment                // (  )                                               -> NIL
+   METHOD  hbStreamComment               // (  )                                               -> NIL
+   METHOD  hbDuplicateLine               // (  )                                               -> NIL
+   METHOD  hbReplaceSelection            // ( cTxt )                                           -> NIL
+   METHOD  hbBlockIndent                 // ( nSteps )                                         -> NIL
+   METHOD  hbDeleteLine                  // (  )                                               -> NIL
+   METHOD  hbMoveLine                    // ( nIDirection )                                    -> NIL
+   METHOD  hbGetSelectedText             // (  )                                               -> cQString
+   METHOD  hbTextUnderCursor             // ( lBCodeComplete )                                 -> cQString
+   METHOD  hbShowPrototype               // ( cTip, nRows, nCols )                             -> NIL
+   METHOD  hbSetCompleter                // ( oQCompleter )                                    -> NIL
+   METHOD  hbSetFldsCompleter            // ( oQCompleter )                                    -> NIL
+   METHOD  hbSetCurrentLineColor         // ( oQColor )                                        -> NIL
+   METHOD  hbSetLineAreaBkColor          // ( oQColor )                                        -> NIL
+   METHOD  hbRefresh                     // (  )                                               -> NIL
+   METHOD  hbCut                         // ( nKey )                                           -> NIL
+   METHOD  hbCopy                        // (  )                                               -> NIL
+   METHOD  hbPaste                       // (  )                                               -> NIL
+   METHOD  hbSetSelectionMode            // ( nMode, lOn )                                     -> NIL
+   METHOD  hbGetSelectionInfo            // (  )                                               -> NIL
+   METHOD  hbSetSelectionInfo            // ( xSelectionInfo )                                 -> NIL
+   METHOD  hbSetSelectionColor           // ( oQColor )                                        -> NIL
+   METHOD  hbSetMatchBraces              // ( lAll )                                           -> NIL
+   METHOD  hbGetViewportInfo             // (  )                                               -> NIL
+   METHOD  hbApplyKey                    // ( nKey, nModifiers, cTxt )                         -> NIL
+   METHOD  hbHighlightArea               // ( nTop, nLeft, nBottom, nRight, nMode )            -> NIL
+   METHOD  hbTogglePersistentSelection   // (  )                                               -> NIL
+   METHOD  hbHorzRulerVisible            // ( lVisible )                                       -> NIL
+   METHOD  hbSetProtoStyle               // ( cCss )                                           -> NIL
+   METHOD  hbSelectAll                   // (  )                                               -> NIL
+   METHOD  hbSetFieldsListActive         // ( lActive )                                        -> NIL
+   METHOD  hbToggleCodeCompetion         // (  )                                               -> NIL
+   METHOD  hbToggleCompetionTips         // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -170,40 +172,104 @@ METHOD HBQPlainTextEdit:new( ... )
    RETURN Self
 
 
-METHOD HBQPlainTextEdit:hbGetIndex( pCrQTextCursor )
-   RETURN Qt_HBQPlainTextEdit_hbGetIndex( ::pPtr, hbqt_ptr( pCrQTextCursor ) )
+METHOD HBQPlainTextEdit:hbGetIndex( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_HBQPlainTextEdit_hbGetIndex( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQPlainTextEdit:hbGetLine( pCrQTextCursor )
-   RETURN Qt_HBQPlainTextEdit_hbGetLine( ::pPtr, hbqt_ptr( pCrQTextCursor ) )
+METHOD HBQPlainTextEdit:hbGetLine( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_HBQPlainTextEdit_hbGetLine( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQPlainTextEdit:hbLineNumberAreaWidth()
-   RETURN Qt_HBQPlainTextEdit_hbLineNumberAreaWidth( ::pPtr )
+METHOD HBQPlainTextEdit:hbLineNumberAreaWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQPlainTextEdit_hbLineNumberAreaWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQPlainTextEdit:hbGetSpaces()
-   RETURN Qt_HBQPlainTextEdit_hbGetSpaces( ::pPtr )
+METHOD HBQPlainTextEdit:hbGetSpaces( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQPlainTextEdit_hbGetSpaces( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQPlainTextEdit:hbSetSpaces( nNewSpaces )
-   RETURN Qt_HBQPlainTextEdit_hbSetSpaces( ::pPtr, nNewSpaces )
+METHOD HBQPlainTextEdit:hbSetSpaces( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQPlainTextEdit_hbSetSpaces( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQPlainTextEdit:hbBookmarks( nBlock )
-   RETURN Qt_HBQPlainTextEdit_hbBookmarks( ::pPtr, nBlock )
+METHOD HBQPlainTextEdit:hbBookmarks( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQPlainTextEdit_hbBookmarks( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQPlainTextEdit:hbNextBookmark( nBlock )
-   RETURN Qt_HBQPlainTextEdit_hbNextBookmark( ::pPtr, nBlock )
+METHOD HBQPlainTextEdit:hbNextBookmark( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQPlainTextEdit_hbNextBookmark( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQPlainTextEdit:hbPrevBookmark( nBlock )
-   RETURN Qt_HBQPlainTextEdit_hbPrevBookmark( ::pPtr, nBlock )
+METHOD HBQPlainTextEdit:hbPrevBookmark( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQPlainTextEdit_hbPrevBookmark( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQPlainTextEdit:hbGotoBookmark( nBlock )
-   RETURN Qt_HBQPlainTextEdit_hbGotoBookmark( ::pPtr, nBlock )
+METHOD HBQPlainTextEdit:hbGotoBookmark( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQPlainTextEdit_hbGotoBookmark( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD HBQPlainTextEdit:hbNumberBlockVisible( ... )
@@ -234,174 +300,436 @@ METHOD HBQPlainTextEdit:hbHighlightCurrentLine( ... )
    RETURN hbqt_error()
 
 
-METHOD HBQPlainTextEdit:hbSetEventBlock( xBlock )
-   RETURN Qt_HBQPlainTextEdit_hbSetEventBlock( ::pPtr, xBlock )
-
-
-METHOD HBQPlainTextEdit:hbUpdateLineNumberAreaWidth( nNewBlockCount )
-   RETURN Qt_HBQPlainTextEdit_hbUpdateLineNumberAreaWidth( ::pPtr, nNewBlockCount )
-
-
-METHOD HBQPlainTextEdit:hbCaseUpper()
-   RETURN Qt_HBQPlainTextEdit_hbCaseUpper( ::pPtr )
-
-
-METHOD HBQPlainTextEdit:hbCaseLower()
-   RETURN Qt_HBQPlainTextEdit_hbCaseLower( ::pPtr )
-
-
-METHOD HBQPlainTextEdit:hbEscapeQuotes()
-   RETURN Qt_HBQPlainTextEdit_hbEscapeQuotes( ::pPtr )
-
-
-METHOD HBQPlainTextEdit:hbEscapeDQuotes()
-   RETURN Qt_HBQPlainTextEdit_hbEscapeDQuotes( ::pPtr )
-
-
-METHOD HBQPlainTextEdit:hbUnescapeQuotes()
-   RETURN Qt_HBQPlainTextEdit_hbUnescapeQuotes( ::pPtr )
-
-
-METHOD HBQPlainTextEdit:hbUnescapeDQuotes()
-   RETURN Qt_HBQPlainTextEdit_hbUnescapeDQuotes( ::pPtr )
-
-
-METHOD HBQPlainTextEdit:hbConvertQuotes()
-   RETURN Qt_HBQPlainTextEdit_hbConvertQuotes( ::pPtr )
-
-
-METHOD HBQPlainTextEdit:hbConvertDQuotes()
-   RETURN Qt_HBQPlainTextEdit_hbConvertDQuotes( ::pPtr )
-
-
-METHOD HBQPlainTextEdit:hbBlockComment()
-   RETURN Qt_HBQPlainTextEdit_hbBlockComment( ::pPtr )
-
-
-METHOD HBQPlainTextEdit:hbStreamComment()
-   RETURN Qt_HBQPlainTextEdit_hbStreamComment( ::pPtr )
-
-
-METHOD HBQPlainTextEdit:hbDuplicateLine()
-   RETURN Qt_HBQPlainTextEdit_hbDuplicateLine( ::pPtr )
-
-
-METHOD HBQPlainTextEdit:hbReplaceSelection( cTxt )
-   RETURN Qt_HBQPlainTextEdit_hbReplaceSelection( ::pPtr, cTxt )
-
-
-METHOD HBQPlainTextEdit:hbBlockIndent( nSteps )
-   RETURN Qt_HBQPlainTextEdit_hbBlockIndent( ::pPtr, nSteps )
-
-
-METHOD HBQPlainTextEdit:hbDeleteLine()
-   RETURN Qt_HBQPlainTextEdit_hbDeleteLine( ::pPtr )
-
-
-METHOD HBQPlainTextEdit:hbMoveLine( nIDirection )
-   RETURN Qt_HBQPlainTextEdit_hbMoveLine( ::pPtr, nIDirection )
-
-
-METHOD HBQPlainTextEdit:hbGetSelectedText()
-   RETURN Qt_HBQPlainTextEdit_hbGetSelectedText( ::pPtr )
-
-
-METHOD HBQPlainTextEdit:hbTextUnderCursor( lBCodeComplete )
-   RETURN Qt_HBQPlainTextEdit_hbTextUnderCursor( ::pPtr, lBCodeComplete )
-
-
-METHOD HBQPlainTextEdit:hbShowPrototype( cTip, nRows, nCols )
-   RETURN Qt_HBQPlainTextEdit_hbShowPrototype( ::pPtr, cTip, nRows, nCols )
-
-
-METHOD HBQPlainTextEdit:hbSetCompleter( pCompleter )
-   RETURN Qt_HBQPlainTextEdit_hbSetCompleter( ::pPtr, hbqt_ptr( pCompleter ) )
-
-
-METHOD HBQPlainTextEdit:hbSetFldsCompleter( pCompleter )
-   RETURN Qt_HBQPlainTextEdit_hbSetFldsCompleter( ::pPtr, hbqt_ptr( pCompleter ) )
-
-
-METHOD HBQPlainTextEdit:hbSetCurrentLineColor( pColor )
-   RETURN Qt_HBQPlainTextEdit_hbSetCurrentLineColor( ::pPtr, hbqt_ptr( pColor ) )
-
-
-METHOD HBQPlainTextEdit:hbSetLineAreaBkColor( pColor )
-   RETURN Qt_HBQPlainTextEdit_hbSetLineAreaBkColor( ::pPtr, hbqt_ptr( pColor ) )
-
-
-METHOD HBQPlainTextEdit:hbRefresh()
-   RETURN Qt_HBQPlainTextEdit_hbRefresh( ::pPtr )
-
-
-METHOD HBQPlainTextEdit:hbCut( nKey )
-   RETURN Qt_HBQPlainTextEdit_hbCut( ::pPtr, nKey )
-
-
-METHOD HBQPlainTextEdit:hbCopy()
-   RETURN Qt_HBQPlainTextEdit_hbCopy( ::pPtr )
-
-
-METHOD HBQPlainTextEdit:hbPaste()
-   RETURN Qt_HBQPlainTextEdit_hbPaste( ::pPtr )
-
-
-METHOD HBQPlainTextEdit:hbSetSelectionMode( nMode, lOn )
-   RETURN Qt_HBQPlainTextEdit_hbSetSelectionMode( ::pPtr, nMode, lOn )
-
-
-METHOD HBQPlainTextEdit:hbGetSelectionInfo()
-   RETURN Qt_HBQPlainTextEdit_hbGetSelectionInfo( ::pPtr )
-
-
-METHOD HBQPlainTextEdit:hbSetSelectionInfo( xSelectionInfo )
-   RETURN Qt_HBQPlainTextEdit_hbSetSelectionInfo( ::pPtr, xSelectionInfo )
-
-
-METHOD HBQPlainTextEdit:hbSetSelectionColor( pColor )
-   RETURN Qt_HBQPlainTextEdit_hbSetSelectionColor( ::pPtr, hbqt_ptr( pColor ) )
-
-
-METHOD HBQPlainTextEdit:hbSetMatchBraces( lAll )
-   RETURN Qt_HBQPlainTextEdit_hbSetMatchBraces( ::pPtr, lAll )
-
-
-METHOD HBQPlainTextEdit:hbGetViewportInfo()
-   RETURN Qt_HBQPlainTextEdit_hbGetViewportInfo( ::pPtr )
-
-
-METHOD HBQPlainTextEdit:hbApplyKey( nKey, nModifiers, cTxt )
-   RETURN Qt_HBQPlainTextEdit_hbApplyKey( ::pPtr, nKey, nModifiers, cTxt )
-
-
-METHOD HBQPlainTextEdit:hbHighlightArea( nTop, nLeft, nBottom, nRight, nMode )
-   RETURN Qt_HBQPlainTextEdit_hbHighlightArea( ::pPtr, nTop, nLeft, nBottom, nRight, nMode )
-
-
-METHOD HBQPlainTextEdit:hbTogglePersistentSelection()
-   RETURN Qt_HBQPlainTextEdit_hbTogglePersistentSelection( ::pPtr )
-
-
-METHOD HBQPlainTextEdit:hbHorzRulerVisible( lVisible )
-   RETURN Qt_HBQPlainTextEdit_hbHorzRulerVisible( ::pPtr, lVisible )
-
-
-METHOD HBQPlainTextEdit:hbSetProtoStyle( cCss )
-   RETURN Qt_HBQPlainTextEdit_hbSetProtoStyle( ::pPtr, cCss )
-
-
-METHOD HBQPlainTextEdit:hbSelectAll()
-   RETURN Qt_HBQPlainTextEdit_hbSelectAll( ::pPtr )
-
-
-METHOD HBQPlainTextEdit:hbSetFieldsListActive( lActive )
-   RETURN Qt_HBQPlainTextEdit_hbSetFieldsListActive( ::pPtr, lActive )
-
-
-METHOD HBQPlainTextEdit:hbToggleCodeCompetion()
-   RETURN Qt_HBQPlainTextEdit_hbToggleCodeCompetion( ::pPtr )
-
-
-METHOD HBQPlainTextEdit:hbToggleCompetionTips()
-   RETURN Qt_HBQPlainTextEdit_hbToggleCompetionTips( ::pPtr )
+METHOD HBQPlainTextEdit:hbSetEventBlock( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE ( hb_isBlock( hb_pvalue( 1 ) ) .OR. hb_isPointer( hb_pvalue( 1 ) ) )
+         RETURN Qt_HBQPlainTextEdit_hbSetEventBlock( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbUpdateLineNumberAreaWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQPlainTextEdit_hbUpdateLineNumberAreaWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbCaseUpper( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQPlainTextEdit_hbCaseUpper( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbCaseLower( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQPlainTextEdit_hbCaseLower( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbEscapeQuotes( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQPlainTextEdit_hbEscapeQuotes( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbEscapeDQuotes( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQPlainTextEdit_hbEscapeDQuotes( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbUnescapeQuotes( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQPlainTextEdit_hbUnescapeQuotes( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbUnescapeDQuotes( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQPlainTextEdit_hbUnescapeDQuotes( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbConvertQuotes( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQPlainTextEdit_hbConvertQuotes( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbConvertDQuotes( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQPlainTextEdit_hbConvertDQuotes( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbBlockComment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQPlainTextEdit_hbBlockComment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbStreamComment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQPlainTextEdit_hbStreamComment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbDuplicateLine( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQPlainTextEdit_hbDuplicateLine( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbReplaceSelection( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_HBQPlainTextEdit_hbReplaceSelection( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbBlockIndent( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQPlainTextEdit_hbBlockIndent( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbDeleteLine( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQPlainTextEdit_hbDeleteLine( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbMoveLine( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQPlainTextEdit_hbMoveLine( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbGetSelectedText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQPlainTextEdit_hbGetSelectedText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbTextUnderCursor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_HBQPlainTextEdit_hbTextUnderCursor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbShowPrototype( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_HBQPlainTextEdit_hbShowPrototype( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbSetCompleter( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_HBQPlainTextEdit_hbSetCompleter( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbSetFldsCompleter( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_HBQPlainTextEdit_hbSetFldsCompleter( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbSetCurrentLineColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_HBQPlainTextEdit_hbSetCurrentLineColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbSetLineAreaBkColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_HBQPlainTextEdit_hbSetLineAreaBkColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbRefresh( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQPlainTextEdit_hbRefresh( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbCut( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQPlainTextEdit_hbCut( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbCopy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQPlainTextEdit_hbCopy( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbPaste( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQPlainTextEdit_hbPaste( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbSetSelectionMode( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_HBQPlainTextEdit_hbSetSelectionMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbGetSelectionInfo( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQPlainTextEdit_hbGetSelectionInfo( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbSetSelectionInfo( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE ( hb_isBlock( hb_pvalue( 1 ) ) .OR. hb_isPointer( hb_pvalue( 1 ) ) )
+         RETURN Qt_HBQPlainTextEdit_hbSetSelectionInfo( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbSetSelectionColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_HBQPlainTextEdit_hbSetSelectionColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbSetMatchBraces( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_HBQPlainTextEdit_hbSetMatchBraces( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbGetViewportInfo( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQPlainTextEdit_hbGetViewportInfo( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbApplyKey( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
+         RETURN Qt_HBQPlainTextEdit_hbApplyKey( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_HBQPlainTextEdit_hbApplyKey( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbHighlightArea( ... )
+   SWITCH PCount()
+   CASE 5
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
+         RETURN Qt_HBQPlainTextEdit_hbHighlightArea( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbTogglePersistentSelection( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQPlainTextEdit_hbTogglePersistentSelection( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbHorzRulerVisible( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_HBQPlainTextEdit_hbHorzRulerVisible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbSetProtoStyle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_HBQPlainTextEdit_hbSetProtoStyle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbSelectAll( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQPlainTextEdit_hbSelectAll( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbSetFieldsListActive( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_HBQPlainTextEdit_hbSetFieldsListActive( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbToggleCodeCompetion( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQPlainTextEdit_hbToggleCodeCompetion( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQPlainTextEdit:hbToggleCompetionTips( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQPlainTextEdit_hbToggleCompetionTips( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

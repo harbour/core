@@ -26,7 +26,7 @@
  *  $RETURNS$
  *     An instance of the object of type QFileInfo
  *  $METHODS$
- *     :absoluteDir()                                      -> pQDir
+ *     :absoluteDir()                                      -> oQDir
  *     :absoluteFilePath()                                 -> cQString
  *     :absolutePath()                                     -> cQString
  *     :baseName()                                         -> cQString
@@ -36,8 +36,8 @@
  *     :canonicalPath()                                    -> cQString
  *     :completeBaseName()                                 -> cQString
  *     :completeSuffix()                                   -> cQString
- *     :created()                                          -> pQDateTime
- *     :dir()                                              -> pQDir
+ *     :created()                                          -> oQDateTime
+ *     :dir()                                              -> oQDir
  *     :exists()                                           -> lBool
  *     :fileName()                                         -> cQString
  *     :filePath()                                         -> cQString
@@ -54,19 +54,19 @@
  *     :isRoot()                                           -> lBool
  *     :isSymLink()                                        -> lBool
  *     :isWritable()                                       -> lBool
- *     :lastModified()                                     -> pQDateTime
- *     :lastRead()                                         -> pQDateTime
+ *     :lastModified()                                     -> oQDateTime
+ *     :lastRead()                                         -> oQDateTime
  *     :makeAbsolute()                                     -> lBool
  *     :owner()                                            -> cQString
  *     :ownerId()                                          -> nUint
  *     :path()                                             -> cQString
  *     :permission( nPermissions )                         -> lBool
- *     :permissions()                                      -> nQFile::Permissions
+ *     :permissions()                                      -> nQFile_Permissions
  *     :refresh()                                          -> NIL
  *     :setCaching( lEnable )                              -> NIL
  *     :setFile( cFile )                                   -> NIL
- *     :setFile_1( pFile )                                 -> NIL
- *     :setFile_2( pDir, cFile )                           -> NIL
+ *     :setFile( oQFile )                                  -> NIL
+ *     :setFile( oQDir, cFile )                            -> NIL
  *     :size()                                             -> nQint64
  *     :suffix()                                           -> cQString
  *     :symLinkTarget()                                    -> cQString
@@ -89,7 +89,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQFileInfo.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QFileInfo.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

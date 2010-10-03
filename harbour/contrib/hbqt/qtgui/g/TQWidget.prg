@@ -103,191 +103,213 @@ CREATE CLASS QWidget INHERIT HbQtObjectHandler, HB_QObject, HB_QPaintDevice FUNC
 
    METHOD  new( ... )
 
-   METHOD  acceptDrops()
-   METHOD  actions()
-   METHOD  activateWindow()
-   METHOD  addAction( pAction )
-   METHOD  adjustSize()
-   METHOD  autoFillBackground()
-   METHOD  backgroundRole()
-   METHOD  baseSize()
-   METHOD  childAt( ... )
-   METHOD  childrenRect()
-   METHOD  childrenRegion()
-   METHOD  clearFocus()
-   METHOD  clearMask()
-   METHOD  contentsRect()
-   METHOD  contextMenuPolicy()
-   METHOD  cursor()
-   METHOD  ensurePolished()
-   METHOD  focusPolicy()
-   METHOD  focusProxy()
-   METHOD  focusWidget()
-   METHOD  font()
-   METHOD  fontInfo()
-   METHOD  fontMetrics()
-   METHOD  foregroundRole()
-   METHOD  frameGeometry()
-   METHOD  frameSize()
-   METHOD  geometry()
-   METHOD  getContentsMargins( nLeft, nTop, nRight, nBottom )
-   METHOD  grabKeyboard()
-   METHOD  grabMouse( ... )
-   METHOD  grabShortcut( pKey, nContext )
-   METHOD  hasFocus()
-   METHOD  hasMouseTracking()
-   METHOD  height()
-   METHOD  heightForWidth( nW )
-   METHOD  inputMethodQuery( nQuery )
-   METHOD  insertAction( pBefore, pAction )
-   METHOD  isActiveWindow()
-   METHOD  isAncestorOf( pChild )
-   METHOD  isEnabled()
-   METHOD  isEnabledTo( pAncestor )
-   METHOD  isFullScreen()
-   METHOD  isHidden()
-   METHOD  isMaximized()
-   METHOD  isMinimized()
-   METHOD  isModal()
-   METHOD  isVisible()
-   METHOD  isVisibleTo( pAncestor )
-   METHOD  isWindow()
-   METHOD  isWindowModified()
-   METHOD  layout()
-   METHOD  layoutDirection()
-   METHOD  locale()
-   METHOD  mapFrom( pParent, pPos )
-   METHOD  mapFromGlobal( pPos )
-   METHOD  mapFromParent( pPos )
-   METHOD  mapTo( pParent, pPos )
-   METHOD  mapToGlobal( pPos )
-   METHOD  mapToParent( pPos )
-   METHOD  mask()
-   METHOD  maximumHeight()
-   METHOD  maximumSize()
-   METHOD  maximumWidth()
-   METHOD  minimumHeight()
-   METHOD  minimumSize()
-   METHOD  minimumSizeHint()
-   METHOD  minimumWidth()
-   METHOD  move( ... )
-   METHOD  nativeParentWidget()
-   METHOD  nextInFocusChain()
-   METHOD  normalGeometry()
-   METHOD  overrideWindowFlags( nFlags )
-   METHOD  paintEngine()
-   METHOD  palette()
-   METHOD  parentWidget()
-   METHOD  pos()
-   METHOD  rect()
-   METHOD  releaseKeyboard()
-   METHOD  releaseMouse()
-   METHOD  releaseShortcut( nId )
-   METHOD  removeAction( pAction )
-   METHOD  repaint( ... )
-   METHOD  resize( ... )
-   METHOD  restoreGeometry( pGeometry )
-   METHOD  saveGeometry()
-   METHOD  scroll( ... )
-   METHOD  setAcceptDrops( lOn )
-   METHOD  setAttribute( nAttribute, lOn )
-   METHOD  setAutoFillBackground( lEnabled )
-   METHOD  setBackgroundRole( nRole )
-   METHOD  setBaseSize( ... )
-   METHOD  setContentsMargins( nLeft, nTop, nRight, nBottom )
-   METHOD  setContextMenuPolicy( nPolicy )
-   METHOD  setCursor( pQCursor )
-   METHOD  setFixedHeight( nH )
-   METHOD  setFixedSize( ... )
-   METHOD  setFixedWidth( nW )
-   METHOD  setFocus( ... )
-   METHOD  setFocusPolicy( nPolicy )
-   METHOD  setFocusProxy( pW )
-   METHOD  setFont( pQFont )
-   METHOD  setForegroundRole( nRole )
-   METHOD  setGeometry( ... )
-   METHOD  setLayout( pLayout )
-   METHOD  setLayoutDirection( nDirection )
-   METHOD  setLocale( pLocale )
-   METHOD  setMask( ... )
-   METHOD  setMaximumHeight( nMaxh )
-   METHOD  setMaximumSize( ... )
-   METHOD  setMaximumWidth( nMaxw )
-   METHOD  setMinimumHeight( nMinh )
-   METHOD  setMinimumSize( ... )
-   METHOD  setMinimumWidth( nMinw )
-   METHOD  setMouseTracking( lEnable )
-   METHOD  setPalette( pQPalette )
-   METHOD  setParent( ... )
-   METHOD  setShortcutAutoRepeat( nId, lEnable )
-   METHOD  setShortcutEnabled( nId, lEnable )
-   METHOD  setSizeIncrement( ... )
-   METHOD  setSizePolicy( ... )
-   METHOD  setStatusTip( cQString )
-   METHOD  setStyle( pStyle )
-   METHOD  setToolTip( cQString )
-   METHOD  setUpdatesEnabled( lEnable )
-   METHOD  setWhatsThis( cQString )
-   METHOD  setWindowFilePath( cFilePath )
-   METHOD  setWindowFlags( nType )
-   METHOD  setWindowIcon( pIcon )
-   METHOD  setWindowIconText( cQString )
-   METHOD  setWindowModality( nWindowModality )
-   METHOD  setWindowOpacity( nLevel )
-   METHOD  setWindowRole( cRole )
-   METHOD  setWindowState( nWindowState )
-   METHOD  size()
-   METHOD  sizeHint()
-   METHOD  sizeIncrement()
-   METHOD  sizePolicy()
-   METHOD  stackUnder( pW )
-   METHOD  statusTip()
-   METHOD  style()
-   METHOD  styleSheet()
-   METHOD  testAttribute( nAttribute )
-   METHOD  toolTip()
-   METHOD  underMouse()
-   METHOD  unsetCursor()
-   METHOD  unsetLayoutDirection()
-   METHOD  unsetLocale()
-   METHOD  update( ... )
-   METHOD  updateGeometry()
-   METHOD  updatesEnabled()
-   METHOD  visibleRegion()
-   METHOD  whatsThis()
-   METHOD  width()
-   METHOD  window()
-   METHOD  windowFilePath()
-   METHOD  windowFlags()
-   METHOD  windowIcon()
-   METHOD  windowIconText()
-   METHOD  windowModality()
-   METHOD  windowOpacity()
-   METHOD  windowRole()
-   METHOD  windowState()
-   METHOD  windowTitle()
-   METHOD  windowType()
-   METHOD  x()
-   METHOD  y()
-   METHOD  keyboardGrabber()
-   METHOD  mouseGrabber()
-   METHOD  setTabOrder( pFirst, pSecond )
-   METHOD  close()
-   METHOD  hide()
-   METHOD  lower()
-   METHOD  raise()
-   METHOD  setDisabled( lDisable )
-   METHOD  setEnabled( lEnable )
-   METHOD  setHidden( lHidden )
-   METHOD  setStyleSheet( cStyleSheet )
-   METHOD  setVisible( lVisible )
-   METHOD  setWindowModified( lModified )
-   METHOD  setWindowTitle( cTitle )
-   METHOD  show()
-   METHOD  showFullScreen()
-   METHOD  showMaximized()
-   METHOD  showMinimized()
-   METHOD  showNormal()
+   METHOD  QWidget                       // ( oQWidget, nF )                                   -> oQWidget
+   METHOD  acceptDrops                   // (  )                                               -> lBool
+   METHOD  actions                       // (  )                                               -> oQList_QAction
+   METHOD  activateWindow                // (  )                                               -> NIL
+   METHOD  addAction                     // ( oQAction )                                       -> NIL
+   METHOD  adjustSize                    // (  )                                               -> NIL
+   METHOD  autoFillBackground            // (  )                                               -> lBool
+   METHOD  backgroundRole                // (  )                                               -> nQPalette_ColorRole
+   METHOD  baseSize                      // (  )                                               -> oQSize
+   METHOD  childAt                       // ( nX, nY )                                         -> oQWidget
+                                         // ( oQPoint )                                        -> oQWidget
+   METHOD  childrenRect                  // (  )                                               -> oQRect
+   METHOD  childrenRegion                // (  )                                               -> oQRegion
+   METHOD  clearFocus                    // (  )                                               -> NIL
+   METHOD  clearMask                     // (  )                                               -> NIL
+   METHOD  contentsRect                  // (  )                                               -> oQRect
+   METHOD  contextMenuPolicy             // (  )                                               -> nQt_ContextMenuPolicy
+   METHOD  cursor                        // (  )                                               -> oQCursor
+   METHOD  ensurePolished                // (  )                                               -> NIL
+   METHOD  focusPolicy                   // (  )                                               -> nQt_FocusPolicy
+   METHOD  focusProxy                    // (  )                                               -> oQWidget
+   METHOD  focusWidget                   // (  )                                               -> oQWidget
+   METHOD  font                          // (  )                                               -> oQFont
+   METHOD  fontInfo                      // (  )                                               -> oQFontInfo
+   METHOD  fontMetrics                   // (  )                                               -> oQFontMetrics
+   METHOD  foregroundRole                // (  )                                               -> nQPalette_ColorRole
+   METHOD  frameGeometry                 // (  )                                               -> oQRect
+   METHOD  frameSize                     // (  )                                               -> oQSize
+   METHOD  geometry                      // (  )                                               -> oQRect
+   METHOD  getContentsMargins            // ( @nLeft, @nTop, @nRight, @nBottom )               -> NIL
+   METHOD  grabKeyboard                  // (  )                                               -> NIL
+   METHOD  grabMouse                     // (  )                                               -> NIL
+                                         // ( oQCursor )                                       -> NIL
+   METHOD  grabShortcut                  // ( oQKeySequence, nContext )                        -> nInt
+   METHOD  hasFocus                      // (  )                                               -> lBool
+   METHOD  hasMouseTracking              // (  )                                               -> lBool
+   METHOD  height                        // (  )                                               -> nInt
+   METHOD  heightForWidth                // ( nW )                                             -> nInt
+   METHOD  inputMethodQuery              // ( nQuery )                                         -> oQVariant
+   METHOD  insertAction                  // ( oQAction, oQAction )                             -> NIL
+   METHOD  isActiveWindow                // (  )                                               -> lBool
+   METHOD  isAncestorOf                  // ( oQWidget )                                       -> lBool
+   METHOD  isEnabled                     // (  )                                               -> lBool
+   METHOD  isEnabledTo                   // ( oQWidget )                                       -> lBool
+   METHOD  isFullScreen                  // (  )                                               -> lBool
+   METHOD  isHidden                      // (  )                                               -> lBool
+   METHOD  isMaximized                   // (  )                                               -> lBool
+   METHOD  isMinimized                   // (  )                                               -> lBool
+   METHOD  isModal                       // (  )                                               -> lBool
+   METHOD  isVisible                     // (  )                                               -> lBool
+   METHOD  isVisibleTo                   // ( oQWidget )                                       -> lBool
+   METHOD  isWindow                      // (  )                                               -> lBool
+   METHOD  isWindowModified              // (  )                                               -> lBool
+   METHOD  layout                        // (  )                                               -> oQLayout
+   METHOD  layoutDirection               // (  )                                               -> nQt_LayoutDirection
+   METHOD  locale                        // (  )                                               -> oQLocale
+   METHOD  mapFrom                       // ( oQWidget, oQPoint )                              -> oQPoint
+   METHOD  mapFromGlobal                 // ( oQPoint )                                        -> oQPoint
+   METHOD  mapFromParent                 // ( oQPoint )                                        -> oQPoint
+   METHOD  mapTo                         // ( oQWidget, oQPoint )                              -> oQPoint
+   METHOD  mapToGlobal                   // ( oQPoint )                                        -> oQPoint
+   METHOD  mapToParent                   // ( oQPoint )                                        -> oQPoint
+   METHOD  mask                          // (  )                                               -> oQRegion
+   METHOD  maximumHeight                 // (  )                                               -> nInt
+   METHOD  maximumSize                   // (  )                                               -> oQSize
+   METHOD  maximumWidth                  // (  )                                               -> nInt
+   METHOD  minimumHeight                 // (  )                                               -> nInt
+   METHOD  minimumSize                   // (  )                                               -> oQSize
+   METHOD  minimumSizeHint               // (  )                                               -> oQSize
+   METHOD  minimumWidth                  // (  )                                               -> nInt
+   METHOD  move                          // ( nX, nY )                                         -> NIL
+                                         // ( oQPoint )                                        -> NIL
+   METHOD  nativeParentWidget            // (  )                                               -> oQWidget
+   METHOD  nextInFocusChain              // (  )                                               -> oQWidget
+   METHOD  normalGeometry                // (  )                                               -> oQRect
+   METHOD  overrideWindowFlags           // ( nFlags )                                         -> NIL
+   METHOD  paintEngine                   // (  )                                               -> oQPaintEngine
+   METHOD  palette                       // (  )                                               -> oQPalette
+   METHOD  parentWidget                  // (  )                                               -> oQWidget
+   METHOD  pos                           // (  )                                               -> oQPoint
+   METHOD  rect                          // (  )                                               -> oQRect
+   METHOD  releaseKeyboard               // (  )                                               -> NIL
+   METHOD  releaseMouse                  // (  )                                               -> NIL
+   METHOD  releaseShortcut               // ( nId )                                            -> NIL
+   METHOD  removeAction                  // ( oQAction )                                       -> NIL
+   METHOD  repaint                       // ( nX, nY, nW, nH )                                 -> NIL
+                                         // ( oQRect )                                         -> NIL
+                                         // ( oQRegion )                                       -> NIL
+   METHOD  resize                        // ( nW, nH )                                         -> NIL
+                                         // ( oQSize )                                         -> NIL
+   METHOD  restoreGeometry               // ( oQByteArray )                                    -> lBool
+   METHOD  saveGeometry                  // (  )                                               -> oQByteArray
+   METHOD  scroll                        // ( nDx, nDy )                                       -> NIL
+                                         // ( nDx, nDy, oQRect )                               -> NIL
+   METHOD  setAcceptDrops                // ( lOn )                                            -> NIL
+   METHOD  setAttribute                  // ( nAttribute, lOn )                                -> NIL
+   METHOD  setAutoFillBackground         // ( lEnabled )                                       -> NIL
+   METHOD  setBackgroundRole             // ( nRole )                                          -> NIL
+   METHOD  setBaseSize                   // ( oQSize )                                         -> NIL
+                                         // ( nBasew, nBaseh )                                 -> NIL
+   METHOD  setContentsMargins            // ( nLeft, nTop, nRight, nBottom )                   -> NIL
+   METHOD  setContextMenuPolicy          // ( nPolicy )                                        -> NIL
+   METHOD  setCursor                     // ( oQCursor )                                       -> NIL
+   METHOD  setFixedHeight                // ( nH )                                             -> NIL
+   METHOD  setFixedSize                  // ( oQSize )                                         -> NIL
+                                         // ( nW, nH )                                         -> NIL
+   METHOD  setFixedWidth                 // ( nW )                                             -> NIL
+   METHOD  setFocus                      // ( nReason )                                        -> NIL
+   METHOD  setFocusPolicy                // ( nPolicy )                                        -> NIL
+   METHOD  setFocusProxy                 // ( oQWidget )                                       -> NIL
+   METHOD  setFont                       // ( oQFont )                                         -> NIL
+   METHOD  setForegroundRole             // ( nRole )                                          -> NIL
+   METHOD  setGeometry                   // ( oQRect )                                         -> NIL
+                                         // ( nX, nY, nW, nH )                                 -> NIL
+   METHOD  setLayout                     // ( oQLayout )                                       -> NIL
+   METHOD  setLayoutDirection            // ( nDirection )                                     -> NIL
+   METHOD  setLocale                     // ( oQLocale )                                       -> NIL
+   METHOD  setMask                       // ( oQBitmap )                                       -> NIL
+                                         // ( oQRegion )                                       -> NIL
+   METHOD  setMaximumHeight              // ( nMaxh )                                          -> NIL
+   METHOD  setMaximumSize                // ( oQSize )                                         -> NIL
+                                         // ( nMaxw, nMaxh )                                   -> NIL
+   METHOD  setMaximumWidth               // ( nMaxw )                                          -> NIL
+   METHOD  setMinimumHeight              // ( nMinh )                                          -> NIL
+   METHOD  setMinimumSize                // ( oQSize )                                         -> NIL
+                                         // ( nMinw, nMinh )                                   -> NIL
+   METHOD  setMinimumWidth               // ( nMinw )                                          -> NIL
+   METHOD  setMouseTracking              // ( lEnable )                                        -> NIL
+   METHOD  setPalette                    // ( oQPalette )                                      -> NIL
+   METHOD  setParent                     // ( oQWidget )                                       -> NIL
+                                         // ( oQWidget, nF )                                   -> NIL
+   METHOD  setShortcutAutoRepeat         // ( nId, lEnable )                                   -> NIL
+   METHOD  setShortcutEnabled            // ( nId, lEnable )                                   -> NIL
+   METHOD  setSizeIncrement              // ( oQSize )                                         -> NIL
+                                         // ( nW, nH )                                         -> NIL
+   METHOD  setSizePolicy                 // ( oQSizePolicy )                                   -> NIL
+                                         // ( nHorizontal, nVertical )                         -> NIL
+   METHOD  setStatusTip                  // ( cQString )                                       -> NIL
+   METHOD  setStyle                      // ( oQStyle )                                        -> NIL
+   METHOD  setToolTip                    // ( cQString )                                       -> NIL
+   METHOD  setUpdatesEnabled             // ( lEnable )                                        -> NIL
+   METHOD  setWhatsThis                  // ( cQString )                                       -> NIL
+   METHOD  setWindowFilePath             // ( cFilePath )                                      -> NIL
+   METHOD  setWindowFlags                // ( nType )                                          -> NIL
+   METHOD  setWindowIcon                 // ( coQIcon )                                        -> NIL
+   METHOD  setWindowIconText             // ( cQString )                                       -> NIL
+   METHOD  setWindowModality             // ( nWindowModality )                                -> NIL
+   METHOD  setWindowOpacity              // ( nLevel )                                         -> NIL
+   METHOD  setWindowRole                 // ( cRole )                                          -> NIL
+   METHOD  setWindowState                // ( nWindowState )                                   -> NIL
+   METHOD  size                          // (  )                                               -> oQSize
+   METHOD  sizeHint                      // (  )                                               -> oQSize
+   METHOD  sizeIncrement                 // (  )                                               -> oQSize
+   METHOD  sizePolicy                    // (  )                                               -> oQSizePolicy
+   METHOD  stackUnder                    // ( oQWidget )                                       -> NIL
+   METHOD  statusTip                     // (  )                                               -> cQString
+   METHOD  style                         // (  )                                               -> oQStyle
+   METHOD  styleSheet                    // (  )                                               -> cQString
+   METHOD  testAttribute                 // ( nAttribute )                                     -> lBool
+   METHOD  toolTip                       // (  )                                               -> cQString
+   METHOD  underMouse                    // (  )                                               -> lBool
+   METHOD  unsetCursor                   // (  )                                               -> NIL
+   METHOD  unsetLayoutDirection          // (  )                                               -> NIL
+   METHOD  unsetLocale                   // (  )                                               -> NIL
+   METHOD  update                        // ( nX, nY, nW, nH )                                 -> NIL
+                                         // ( oQRect )                                         -> NIL
+                                         // ( oQRegion )                                       -> NIL
+   METHOD  updateGeometry                // (  )                                               -> NIL
+   METHOD  updatesEnabled                // (  )                                               -> lBool
+   METHOD  visibleRegion                 // (  )                                               -> oQRegion
+   METHOD  whatsThis                     // (  )                                               -> cQString
+   METHOD  width                         // (  )                                               -> nInt
+   METHOD  window                        // (  )                                               -> oQWidget
+   METHOD  windowFilePath                // (  )                                               -> cQString
+   METHOD  windowFlags                   // (  )                                               -> nQt_WindowFlags
+   METHOD  windowIcon                    // (  )                                               -> oQIcon
+   METHOD  windowIconText                // (  )                                               -> cQString
+   METHOD  windowModality                // (  )                                               -> nQt_WindowModality
+   METHOD  windowOpacity                 // (  )                                               -> nQreal
+   METHOD  windowRole                    // (  )                                               -> cQString
+   METHOD  windowState                   // (  )                                               -> nQt_WindowStates
+   METHOD  windowTitle                   // (  )                                               -> cQString
+   METHOD  windowType                    // (  )                                               -> nQt_WindowType
+   METHOD  x                             // (  )                                               -> nInt
+   METHOD  y                             // (  )                                               -> nInt
+   METHOD  keyboardGrabber               // (  )                                               -> oQWidget
+   METHOD  mouseGrabber                  // (  )                                               -> oQWidget
+   METHOD  setTabOrder                   // ( oQWidget, oQWidget )                             -> NIL
+   METHOD  close                         // (  )                                               -> lBool
+   METHOD  hide                          // (  )                                               -> NIL
+   METHOD  lower                         // (  )                                               -> NIL
+   METHOD  raise                         // (  )                                               -> NIL
+                                         // (  )                                               -> NIL
+   METHOD  setDisabled                   // ( lDisable )                                       -> NIL
+   METHOD  setEnabled                    // ( lEnable )                                        -> NIL
+                                         // (  )                                               -> NIL
+   METHOD  setHidden                     // ( lHidden )                                        -> NIL
+   METHOD  setStyleSheet                 // ( cStyleSheet )                                    -> NIL
+   METHOD  setVisible                    // ( lVisible )                                       -> NIL
+   METHOD  setWindowModified             // ( lModified )                                      -> NIL
+   METHOD  setWindowTitle                // ( cTitle )                                         -> NIL
+   METHOD  show                          // (  )                                               -> NIL
+   METHOD  showFullScreen                // (  )                                               -> NIL
+   METHOD  showMaximized                 // (  )                                               -> NIL
+   METHOD  showMinimized                 // (  )                                               -> NIL
+   METHOD  showNormal                    // (  )                                               -> NIL
+                                         // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -301,36 +323,92 @@ METHOD QWidget:new( ... )
    RETURN Self
 
 
-METHOD QWidget:acceptDrops()
-   RETURN Qt_QWidget_acceptDrops( ::pPtr )
+METHOD QWidget:QWidget( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QWidget():from( Qt_QWidget_QWidget( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QWidget():from( Qt_QWidget_QWidget( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QWidget_QWidget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:actions()
-   RETURN HB_QList():from( Qt_QWidget_actions( ::pPtr ) )
+METHOD QWidget:acceptDrops( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_acceptDrops( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:activateWindow()
-   RETURN Qt_QWidget_activateWindow( ::pPtr )
+METHOD QWidget:actions( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QWidget_actions( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:addAction( pAction )
-   RETURN Qt_QWidget_addAction( ::pPtr, hbqt_ptr( pAction ) )
+METHOD QWidget:activateWindow( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_activateWindow( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:adjustSize()
-   RETURN Qt_QWidget_adjustSize( ::pPtr )
+METHOD QWidget:addAction( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_addAction( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:autoFillBackground()
-   RETURN Qt_QWidget_autoFillBackground( ::pPtr )
+METHOD QWidget:adjustSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_adjustSize( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:backgroundRole()
-   RETURN Qt_QWidget_backgroundRole( ::pPtr )
+METHOD QWidget:autoFillBackground( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_autoFillBackground( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:baseSize()
-   RETURN HB_QSize():from( Qt_QWidget_baseSize( ::pPtr ) )
+METHOD QWidget:backgroundRole( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_backgroundRole( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:baseSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QWidget_baseSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:childAt( ... )
@@ -351,84 +429,168 @@ METHOD QWidget:childAt( ... )
    RETURN hbqt_error()
 
 
-METHOD QWidget:childrenRect()
-   RETURN HB_QRect():from( Qt_QWidget_childrenRect( ::pPtr ) )
+METHOD QWidget:childrenRect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QWidget_childrenRect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:childrenRegion()
-   RETURN HB_QRegion():from( Qt_QWidget_childrenRegion( ::pPtr ) )
+METHOD QWidget:childrenRegion( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRegion():from( Qt_QWidget_childrenRegion( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:clearFocus()
-   RETURN Qt_QWidget_clearFocus( ::pPtr )
+METHOD QWidget:clearFocus( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_clearFocus( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:clearMask()
-   RETURN Qt_QWidget_clearMask( ::pPtr )
+METHOD QWidget:clearMask( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_clearMask( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:contentsRect()
-   RETURN HB_QRect():from( Qt_QWidget_contentsRect( ::pPtr ) )
+METHOD QWidget:contentsRect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QWidget_contentsRect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:contextMenuPolicy()
-   RETURN Qt_QWidget_contextMenuPolicy( ::pPtr )
+METHOD QWidget:contextMenuPolicy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_contextMenuPolicy( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:cursor()
-   RETURN HB_QCursor():from( Qt_QWidget_cursor( ::pPtr ) )
+METHOD QWidget:cursor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QCursor():from( Qt_QWidget_cursor( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:ensurePolished()
-   RETURN Qt_QWidget_ensurePolished( ::pPtr )
+METHOD QWidget:ensurePolished( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_ensurePolished( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:focusPolicy()
-   RETURN Qt_QWidget_focusPolicy( ::pPtr )
+METHOD QWidget:focusPolicy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_focusPolicy( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:focusProxy()
-   RETURN HB_QWidget():from( Qt_QWidget_focusProxy( ::pPtr ) )
+METHOD QWidget:focusProxy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QWidget_focusProxy( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:focusWidget()
-   RETURN HB_QWidget():from( Qt_QWidget_focusWidget( ::pPtr ) )
+METHOD QWidget:focusWidget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QWidget_focusWidget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:font()
-   RETURN HB_QFont():from( Qt_QWidget_font( ::pPtr ) )
+METHOD QWidget:font( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFont():from( Qt_QWidget_font( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:fontInfo()
-   RETURN HB_QFontInfo():from( Qt_QWidget_fontInfo( ::pPtr ) )
+METHOD QWidget:fontInfo( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFontInfo():from( Qt_QWidget_fontInfo( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:fontMetrics()
-   RETURN HB_QFontMetrics():from( Qt_QWidget_fontMetrics( ::pPtr ) )
+METHOD QWidget:fontMetrics( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFontMetrics():from( Qt_QWidget_fontMetrics( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:foregroundRole()
-   RETURN Qt_QWidget_foregroundRole( ::pPtr )
+METHOD QWidget:foregroundRole( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_foregroundRole( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:frameGeometry()
-   RETURN HB_QRect():from( Qt_QWidget_frameGeometry( ::pPtr ) )
+METHOD QWidget:frameGeometry( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QWidget_frameGeometry( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:frameSize()
-   RETURN HB_QSize():from( Qt_QWidget_frameSize( ::pPtr ) )
+METHOD QWidget:frameSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QWidget_frameSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:geometry()
-   RETURN HB_QRect():from( Qt_QWidget_geometry( ::pPtr ) )
+METHOD QWidget:geometry( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QWidget_geometry( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:getContentsMargins( nLeft, nTop, nRight, nBottom )
-   RETURN Qt_QWidget_getContentsMargins( ::pPtr, nLeft, nTop, nRight, nBottom )
+METHOD QWidget:getContentsMargins( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QWidget_getContentsMargins( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:grabKeyboard()
-   RETURN Qt_QWidget_grabKeyboard( ::pPtr )
+METHOD QWidget:grabKeyboard( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_grabKeyboard( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:grabMouse( ... )
@@ -445,152 +607,358 @@ METHOD QWidget:grabMouse( ... )
    RETURN hbqt_error()
 
 
-METHOD QWidget:grabShortcut( pKey, nContext )
-   RETURN Qt_QWidget_grabShortcut( ::pPtr, hbqt_ptr( pKey ), nContext )
-
-
-METHOD QWidget:hasFocus()
-   RETURN Qt_QWidget_hasFocus( ::pPtr )
-
-
-METHOD QWidget:hasMouseTracking()
-   RETURN Qt_QWidget_hasMouseTracking( ::pPtr )
-
-
-METHOD QWidget:height()
-   RETURN Qt_QWidget_height( ::pPtr )
-
-
-METHOD QWidget:heightForWidth( nW )
-   RETURN Qt_QWidget_heightForWidth( ::pPtr, nW )
-
-
-METHOD QWidget:inputMethodQuery( nQuery )
-   RETURN HB_QVariant():from( Qt_QWidget_inputMethodQuery( ::pPtr, nQuery ) )
-
-
-METHOD QWidget:insertAction( pBefore, pAction )
-   RETURN Qt_QWidget_insertAction( ::pPtr, hbqt_ptr( pBefore ), hbqt_ptr( pAction ) )
-
-
-METHOD QWidget:isActiveWindow()
-   RETURN Qt_QWidget_isActiveWindow( ::pPtr )
-
-
-METHOD QWidget:isAncestorOf( pChild )
-   RETURN Qt_QWidget_isAncestorOf( ::pPtr, hbqt_ptr( pChild ) )
-
-
-METHOD QWidget:isEnabled()
-   RETURN Qt_QWidget_isEnabled( ::pPtr )
-
-
-METHOD QWidget:isEnabledTo( pAncestor )
-   RETURN Qt_QWidget_isEnabledTo( ::pPtr, hbqt_ptr( pAncestor ) )
-
-
-METHOD QWidget:isFullScreen()
-   RETURN Qt_QWidget_isFullScreen( ::pPtr )
-
-
-METHOD QWidget:isHidden()
-   RETURN Qt_QWidget_isHidden( ::pPtr )
-
-
-METHOD QWidget:isMaximized()
-   RETURN Qt_QWidget_isMaximized( ::pPtr )
-
-
-METHOD QWidget:isMinimized()
-   RETURN Qt_QWidget_isMinimized( ::pPtr )
-
-
-METHOD QWidget:isModal()
-   RETURN Qt_QWidget_isModal( ::pPtr )
-
-
-METHOD QWidget:isVisible()
-   RETURN Qt_QWidget_isVisible( ::pPtr )
-
-
-METHOD QWidget:isVisibleTo( pAncestor )
-   RETURN Qt_QWidget_isVisibleTo( ::pPtr, hbqt_ptr( pAncestor ) )
-
-
-METHOD QWidget:isWindow()
-   RETURN Qt_QWidget_isWindow( ::pPtr )
-
-
-METHOD QWidget:isWindowModified()
-   RETURN Qt_QWidget_isWindowModified( ::pPtr )
-
-
-METHOD QWidget:layout()
-   RETURN HB_QLayout():from( Qt_QWidget_layout( ::pPtr ) )
-
-
-METHOD QWidget:layoutDirection()
-   RETURN Qt_QWidget_layoutDirection( ::pPtr )
-
-
-METHOD QWidget:locale()
-   RETURN HB_QLocale():from( Qt_QWidget_locale( ::pPtr ) )
-
-
-METHOD QWidget:mapFrom( pParent, pPos )
-   RETURN HB_QPoint():from( Qt_QWidget_mapFrom( ::pPtr, hbqt_ptr( pParent ), hbqt_ptr( pPos ) ) )
-
-
-METHOD QWidget:mapFromGlobal( pPos )
-   RETURN HB_QPoint():from( Qt_QWidget_mapFromGlobal( ::pPtr, hbqt_ptr( pPos ) ) )
-
-
-METHOD QWidget:mapFromParent( pPos )
-   RETURN HB_QPoint():from( Qt_QWidget_mapFromParent( ::pPtr, hbqt_ptr( pPos ) ) )
-
-
-METHOD QWidget:mapTo( pParent, pPos )
-   RETURN HB_QPoint():from( Qt_QWidget_mapTo( ::pPtr, hbqt_ptr( pParent ), hbqt_ptr( pPos ) ) )
-
-
-METHOD QWidget:mapToGlobal( pPos )
-   RETURN HB_QPoint():from( Qt_QWidget_mapToGlobal( ::pPtr, hbqt_ptr( pPos ) ) )
-
-
-METHOD QWidget:mapToParent( pPos )
-   RETURN HB_QPoint():from( Qt_QWidget_mapToParent( ::pPtr, hbqt_ptr( pPos ) ) )
-
-
-METHOD QWidget:mask()
-   RETURN HB_QRegion():from( Qt_QWidget_mask( ::pPtr ) )
-
-
-METHOD QWidget:maximumHeight()
-   RETURN Qt_QWidget_maximumHeight( ::pPtr )
-
-
-METHOD QWidget:maximumSize()
-   RETURN HB_QSize():from( Qt_QWidget_maximumSize( ::pPtr ) )
-
-
-METHOD QWidget:maximumWidth()
-   RETURN Qt_QWidget_maximumWidth( ::pPtr )
-
-
-METHOD QWidget:minimumHeight()
-   RETURN Qt_QWidget_minimumHeight( ::pPtr )
-
-
-METHOD QWidget:minimumSize()
-   RETURN HB_QSize():from( Qt_QWidget_minimumSize( ::pPtr ) )
-
-
-METHOD QWidget:minimumSizeHint()
-   RETURN HB_QSize():from( Qt_QWidget_minimumSizeHint( ::pPtr ) )
-
-
-METHOD QWidget:minimumWidth()
-   RETURN Qt_QWidget_minimumWidth( ::pPtr )
+METHOD QWidget:grabShortcut( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QWidget_grabShortcut( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_grabShortcut( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:hasFocus( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_hasFocus( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:hasMouseTracking( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_hasMouseTracking( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:height( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_height( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:heightForWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_heightForWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:inputMethodQuery( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QVariant():from( Qt_QWidget_inputMethodQuery( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:insertAction( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QWidget_insertAction( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:isActiveWindow( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_isActiveWindow( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:isAncestorOf( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_isAncestorOf( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:isEnabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_isEnabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:isEnabledTo( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_isEnabledTo( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:isFullScreen( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_isFullScreen( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:isHidden( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_isHidden( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:isMaximized( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_isMaximized( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:isMinimized( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_isMinimized( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:isModal( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_isModal( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:isVisible( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_isVisible( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:isVisibleTo( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_isVisibleTo( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:isWindow( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_isWindow( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:isWindowModified( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_isWindowModified( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:layout( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QLayout():from( Qt_QWidget_layout( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:layoutDirection( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_layoutDirection( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:locale( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QLocale():from( Qt_QWidget_locale( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:mapFrom( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QPoint():from( Qt_QWidget_mapFrom( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:mapFromGlobal( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QPoint():from( Qt_QWidget_mapFromGlobal( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:mapFromParent( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QPoint():from( Qt_QWidget_mapFromParent( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:mapTo( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QPoint():from( Qt_QWidget_mapTo( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:mapToGlobal( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QPoint():from( Qt_QWidget_mapToGlobal( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:mapToParent( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QPoint():from( Qt_QWidget_mapToParent( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:mask( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRegion():from( Qt_QWidget_mask( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:maximumHeight( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_maximumHeight( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:maximumSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QWidget_maximumSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:maximumWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_maximumWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:minimumHeight( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_minimumHeight( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:minimumSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QWidget_minimumSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:minimumSizeHint( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QWidget_minimumSizeHint( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:minimumWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_minimumWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:move( ... )
@@ -611,56 +979,120 @@ METHOD QWidget:move( ... )
    RETURN hbqt_error()
 
 
-METHOD QWidget:nativeParentWidget()
-   RETURN HB_QWidget():from( Qt_QWidget_nativeParentWidget( ::pPtr ) )
+METHOD QWidget:nativeParentWidget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QWidget_nativeParentWidget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:nextInFocusChain()
-   RETURN HB_QWidget():from( Qt_QWidget_nextInFocusChain( ::pPtr ) )
+METHOD QWidget:nextInFocusChain( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QWidget_nextInFocusChain( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:normalGeometry()
-   RETURN HB_QRect():from( Qt_QWidget_normalGeometry( ::pPtr ) )
+METHOD QWidget:normalGeometry( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QWidget_normalGeometry( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:overrideWindowFlags( nFlags )
-   RETURN Qt_QWidget_overrideWindowFlags( ::pPtr, nFlags )
+METHOD QWidget:overrideWindowFlags( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_overrideWindowFlags( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:paintEngine()
-   RETURN HB_QPaintEngine():from( Qt_QWidget_paintEngine( ::pPtr ) )
+METHOD QWidget:paintEngine( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPaintEngine():from( Qt_QWidget_paintEngine( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:palette()
-   RETURN HB_QPalette():from( Qt_QWidget_palette( ::pPtr ) )
+METHOD QWidget:palette( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPalette():from( Qt_QWidget_palette( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:parentWidget()
-   RETURN HB_QWidget():from( Qt_QWidget_parentWidget( ::pPtr ) )
+METHOD QWidget:parentWidget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QWidget_parentWidget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:pos()
-   RETURN HB_QPoint():from( Qt_QWidget_pos( ::pPtr ) )
+METHOD QWidget:pos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QWidget_pos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:rect()
-   RETURN HB_QRect():from( Qt_QWidget_rect( ::pPtr ) )
+METHOD QWidget:rect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QWidget_rect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:releaseKeyboard()
-   RETURN Qt_QWidget_releaseKeyboard( ::pPtr )
+METHOD QWidget:releaseKeyboard( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_releaseKeyboard( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:releaseMouse()
-   RETURN Qt_QWidget_releaseMouse( ::pPtr )
+METHOD QWidget:releaseMouse( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_releaseMouse( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:releaseShortcut( nId )
-   RETURN Qt_QWidget_releaseShortcut( ::pPtr, nId )
+METHOD QWidget:releaseShortcut( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_releaseShortcut( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:removeAction( pAction )
-   RETURN Qt_QWidget_removeAction( ::pPtr, hbqt_ptr( pAction ) )
+METHOD QWidget:removeAction( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_removeAction( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:repaint( ... )
@@ -706,12 +1138,24 @@ METHOD QWidget:resize( ... )
    RETURN hbqt_error()
 
 
-METHOD QWidget:restoreGeometry( pGeometry )
-   RETURN Qt_QWidget_restoreGeometry( ::pPtr, hbqt_ptr( pGeometry ) )
+METHOD QWidget:restoreGeometry( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_restoreGeometry( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:saveGeometry()
-   RETURN HB_QByteArray():from( Qt_QWidget_saveGeometry( ::pPtr ) )
+METHOD QWidget:saveGeometry( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QByteArray():from( Qt_QWidget_saveGeometry( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:scroll( ... )
@@ -732,20 +1176,58 @@ METHOD QWidget:scroll( ... )
    RETURN hbqt_error()
 
 
-METHOD QWidget:setAcceptDrops( lOn )
-   RETURN Qt_QWidget_setAcceptDrops( ::pPtr, lOn )
+METHOD QWidget:setAcceptDrops( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setAcceptDrops( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:setAttribute( nAttribute, lOn )
-   RETURN Qt_QWidget_setAttribute( ::pPtr, nAttribute, lOn )
+METHOD QWidget:setAttribute( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QWidget_setAttribute( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setAttribute( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:setAutoFillBackground( lEnabled )
-   RETURN Qt_QWidget_setAutoFillBackground( ::pPtr, lEnabled )
+METHOD QWidget:setAutoFillBackground( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setAutoFillBackground( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:setBackgroundRole( nRole )
-   RETURN Qt_QWidget_setBackgroundRole( ::pPtr, nRole )
+METHOD QWidget:setBackgroundRole( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setBackgroundRole( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:setBaseSize( ... )
@@ -766,20 +1248,52 @@ METHOD QWidget:setBaseSize( ... )
    RETURN hbqt_error()
 
 
-METHOD QWidget:setContentsMargins( nLeft, nTop, nRight, nBottom )
-   RETURN Qt_QWidget_setContentsMargins( ::pPtr, nLeft, nTop, nRight, nBottom )
+METHOD QWidget:setContentsMargins( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QWidget_setContentsMargins( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:setContextMenuPolicy( nPolicy )
-   RETURN Qt_QWidget_setContextMenuPolicy( ::pPtr, nPolicy )
+METHOD QWidget:setContextMenuPolicy( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setContextMenuPolicy( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:setCursor( pQCursor )
-   RETURN Qt_QWidget_setCursor( ::pPtr, hbqt_ptr( pQCursor ) )
+METHOD QWidget:setCursor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setCursor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:setFixedHeight( nH )
-   RETURN Qt_QWidget_setFixedHeight( ::pPtr, nH )
+METHOD QWidget:setFixedHeight( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setFixedHeight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:setFixedSize( ... )
@@ -800,8 +1314,16 @@ METHOD QWidget:setFixedSize( ... )
    RETURN hbqt_error()
 
 
-METHOD QWidget:setFixedWidth( nW )
-   RETURN Qt_QWidget_setFixedWidth( ::pPtr, nW )
+METHOD QWidget:setFixedWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setFixedWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:setFocus( ... )
@@ -818,20 +1340,52 @@ METHOD QWidget:setFocus( ... )
    RETURN hbqt_error()
 
 
-METHOD QWidget:setFocusPolicy( nPolicy )
-   RETURN Qt_QWidget_setFocusPolicy( ::pPtr, nPolicy )
+METHOD QWidget:setFocusPolicy( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setFocusPolicy( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:setFocusProxy( pW )
-   RETURN Qt_QWidget_setFocusProxy( ::pPtr, hbqt_ptr( pW ) )
+METHOD QWidget:setFocusProxy( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setFocusProxy( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:setFont( pQFont )
-   RETURN Qt_QWidget_setFont( ::pPtr, hbqt_ptr( pQFont ) )
+METHOD QWidget:setFont( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setFont( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:setForegroundRole( nRole )
-   RETURN Qt_QWidget_setForegroundRole( ::pPtr, nRole )
+METHOD QWidget:setForegroundRole( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setForegroundRole( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:setGeometry( ... )
@@ -852,16 +1406,40 @@ METHOD QWidget:setGeometry( ... )
    RETURN hbqt_error()
 
 
-METHOD QWidget:setLayout( pLayout )
-   RETURN Qt_QWidget_setLayout( ::pPtr, hbqt_ptr( pLayout ) )
+METHOD QWidget:setLayout( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setLayout( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:setLayoutDirection( nDirection )
-   RETURN Qt_QWidget_setLayoutDirection( ::pPtr, nDirection )
+METHOD QWidget:setLayoutDirection( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setLayoutDirection( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:setLocale( pLocale )
-   RETURN Qt_QWidget_setLocale( ::pPtr, hbqt_ptr( pLocale ) )
+METHOD QWidget:setLocale( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setLocale( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:setMask( ... )
@@ -881,8 +1459,16 @@ METHOD QWidget:setMask( ... )
    RETURN hbqt_error()
 
 
-METHOD QWidget:setMaximumHeight( nMaxh )
-   RETURN Qt_QWidget_setMaximumHeight( ::pPtr, nMaxh )
+METHOD QWidget:setMaximumHeight( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setMaximumHeight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:setMaximumSize( ... )
@@ -903,12 +1489,28 @@ METHOD QWidget:setMaximumSize( ... )
    RETURN hbqt_error()
 
 
-METHOD QWidget:setMaximumWidth( nMaxw )
-   RETURN Qt_QWidget_setMaximumWidth( ::pPtr, nMaxw )
+METHOD QWidget:setMaximumWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setMaximumWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:setMinimumHeight( nMinh )
-   RETURN Qt_QWidget_setMinimumHeight( ::pPtr, nMinh )
+METHOD QWidget:setMinimumHeight( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setMinimumHeight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:setMinimumSize( ... )
@@ -929,16 +1531,40 @@ METHOD QWidget:setMinimumSize( ... )
    RETURN hbqt_error()
 
 
-METHOD QWidget:setMinimumWidth( nMinw )
-   RETURN Qt_QWidget_setMinimumWidth( ::pPtr, nMinw )
+METHOD QWidget:setMinimumWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setMinimumWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:setMouseTracking( lEnable )
-   RETURN Qt_QWidget_setMouseTracking( ::pPtr, lEnable )
+METHOD QWidget:setMouseTracking( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setMouseTracking( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:setPalette( pQPalette )
-   RETURN Qt_QWidget_setPalette( ::pPtr, hbqt_ptr( pQPalette ) )
+METHOD QWidget:setPalette( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setPalette( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:setParent( ... )
@@ -959,12 +1585,40 @@ METHOD QWidget:setParent( ... )
    RETURN hbqt_error()
 
 
-METHOD QWidget:setShortcutAutoRepeat( nId, lEnable )
-   RETURN Qt_QWidget_setShortcutAutoRepeat( ::pPtr, nId, lEnable )
+METHOD QWidget:setShortcutAutoRepeat( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QWidget_setShortcutAutoRepeat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setShortcutAutoRepeat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:setShortcutEnabled( nId, lEnable )
-   RETURN Qt_QWidget_setShortcutEnabled( ::pPtr, nId, lEnable )
+METHOD QWidget:setShortcutEnabled( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QWidget_setShortcutEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setShortcutEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:setSizeIncrement( ... )
@@ -1003,112 +1657,280 @@ METHOD QWidget:setSizePolicy( ... )
    RETURN hbqt_error()
 
 
-METHOD QWidget:setStatusTip( cQString )
-   RETURN Qt_QWidget_setStatusTip( ::pPtr, cQString )
+METHOD QWidget:setStatusTip( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setStatusTip( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:setStyle( pStyle )
-   RETURN Qt_QWidget_setStyle( ::pPtr, hbqt_ptr( pStyle ) )
+METHOD QWidget:setStyle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setStyle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:setToolTip( cQString )
-   RETURN Qt_QWidget_setToolTip( ::pPtr, cQString )
+METHOD QWidget:setToolTip( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setToolTip( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:setUpdatesEnabled( lEnable )
-   RETURN Qt_QWidget_setUpdatesEnabled( ::pPtr, lEnable )
+METHOD QWidget:setUpdatesEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setUpdatesEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:setWhatsThis( cQString )
-   RETURN Qt_QWidget_setWhatsThis( ::pPtr, cQString )
+METHOD QWidget:setWhatsThis( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setWhatsThis( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:setWindowFilePath( cFilePath )
-   RETURN Qt_QWidget_setWindowFilePath( ::pPtr, cFilePath )
+METHOD QWidget:setWindowFilePath( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setWindowFilePath( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:setWindowFlags( nType )
-   RETURN Qt_QWidget_setWindowFlags( ::pPtr, nType )
+METHOD QWidget:setWindowFlags( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setWindowFlags( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:setWindowIcon( pIcon )
-   RETURN Qt_QWidget_setWindowIcon( ::pPtr, hbqt_ptr( pIcon ) )
+METHOD QWidget:setWindowIcon( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) )
+         RETURN Qt_QWidget_setWindowIcon( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:setWindowIconText( cQString )
-   RETURN Qt_QWidget_setWindowIconText( ::pPtr, cQString )
+METHOD QWidget:setWindowIconText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setWindowIconText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:setWindowModality( nWindowModality )
-   RETURN Qt_QWidget_setWindowModality( ::pPtr, nWindowModality )
+METHOD QWidget:setWindowModality( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setWindowModality( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:setWindowOpacity( nLevel )
-   RETURN Qt_QWidget_setWindowOpacity( ::pPtr, nLevel )
+METHOD QWidget:setWindowOpacity( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setWindowOpacity( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:setWindowRole( cRole )
-   RETURN Qt_QWidget_setWindowRole( ::pPtr, cRole )
+METHOD QWidget:setWindowRole( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setWindowRole( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:setWindowState( nWindowState )
-   RETURN Qt_QWidget_setWindowState( ::pPtr, nWindowState )
+METHOD QWidget:setWindowState( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setWindowState( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:size()
-   RETURN HB_QSize():from( Qt_QWidget_size( ::pPtr ) )
+METHOD QWidget:size( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QWidget_size( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:sizeHint()
-   RETURN HB_QSize():from( Qt_QWidget_sizeHint( ::pPtr ) )
+METHOD QWidget:sizeHint( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QWidget_sizeHint( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:sizeIncrement()
-   RETURN HB_QSize():from( Qt_QWidget_sizeIncrement( ::pPtr ) )
+METHOD QWidget:sizeIncrement( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QWidget_sizeIncrement( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:sizePolicy()
-   RETURN HB_QSizePolicy():from( Qt_QWidget_sizePolicy( ::pPtr ) )
+METHOD QWidget:sizePolicy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSizePolicy():from( Qt_QWidget_sizePolicy( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:stackUnder( pW )
-   RETURN Qt_QWidget_stackUnder( ::pPtr, hbqt_ptr( pW ) )
+METHOD QWidget:stackUnder( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_stackUnder( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:statusTip()
-   RETURN Qt_QWidget_statusTip( ::pPtr )
+METHOD QWidget:statusTip( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_statusTip( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:style()
-   RETURN HB_QStyle():from( Qt_QWidget_style( ::pPtr ) )
+METHOD QWidget:style( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStyle():from( Qt_QWidget_style( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:styleSheet()
-   RETURN Qt_QWidget_styleSheet( ::pPtr )
+METHOD QWidget:styleSheet( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_styleSheet( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:testAttribute( nAttribute )
-   RETURN Qt_QWidget_testAttribute( ::pPtr, nAttribute )
+METHOD QWidget:testAttribute( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_testAttribute( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:toolTip()
-   RETURN Qt_QWidget_toolTip( ::pPtr )
+METHOD QWidget:toolTip( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_toolTip( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:underMouse()
-   RETURN Qt_QWidget_underMouse( ::pPtr )
+METHOD QWidget:underMouse( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_underMouse( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:unsetCursor()
-   RETURN Qt_QWidget_unsetCursor( ::pPtr )
+METHOD QWidget:unsetCursor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_unsetCursor( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:unsetLayoutDirection()
-   RETURN Qt_QWidget_unsetLayoutDirection( ::pPtr )
+METHOD QWidget:unsetLayoutDirection( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_unsetLayoutDirection( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWidget:unsetLocale()
-   RETURN Qt_QWidget_unsetLocale( ::pPtr )
+METHOD QWidget:unsetLocale( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_unsetLocale( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QWidget:update( ... )
@@ -1136,150 +1958,330 @@ METHOD QWidget:update( ... )
    RETURN hbqt_error()
 
 
-METHOD QWidget:updateGeometry()
-   RETURN Qt_QWidget_updateGeometry( ::pPtr )
-
-
-METHOD QWidget:updatesEnabled()
-   RETURN Qt_QWidget_updatesEnabled( ::pPtr )
-
-
-METHOD QWidget:visibleRegion()
-   RETURN HB_QRegion():from( Qt_QWidget_visibleRegion( ::pPtr ) )
-
-
-METHOD QWidget:whatsThis()
-   RETURN Qt_QWidget_whatsThis( ::pPtr )
-
-
-METHOD QWidget:width()
-   RETURN Qt_QWidget_width( ::pPtr )
-
-
-METHOD QWidget:window()
-   RETURN HB_QWidget():from( Qt_QWidget_window( ::pPtr ) )
-
-
-METHOD QWidget:windowFilePath()
-   RETURN Qt_QWidget_windowFilePath( ::pPtr )
-
-
-METHOD QWidget:windowFlags()
-   RETURN Qt_QWidget_windowFlags( ::pPtr )
-
-
-METHOD QWidget:windowIcon()
-   RETURN HB_QIcon():from( Qt_QWidget_windowIcon( ::pPtr ) )
-
-
-METHOD QWidget:windowIconText()
-   RETURN Qt_QWidget_windowIconText( ::pPtr )
-
-
-METHOD QWidget:windowModality()
-   RETURN Qt_QWidget_windowModality( ::pPtr )
-
-
-METHOD QWidget:windowOpacity()
-   RETURN Qt_QWidget_windowOpacity( ::pPtr )
-
-
-METHOD QWidget:windowRole()
-   RETURN Qt_QWidget_windowRole( ::pPtr )
-
-
-METHOD QWidget:windowState()
-   RETURN Qt_QWidget_windowState( ::pPtr )
-
-
-METHOD QWidget:windowTitle()
-   RETURN Qt_QWidget_windowTitle( ::pPtr )
-
-
-METHOD QWidget:windowType()
-   RETURN Qt_QWidget_windowType( ::pPtr )
-
-
-METHOD QWidget:x()
-   RETURN Qt_QWidget_x( ::pPtr )
-
-
-METHOD QWidget:y()
-   RETURN Qt_QWidget_y( ::pPtr )
-
-
-METHOD QWidget:keyboardGrabber()
-   RETURN HB_QWidget():from( Qt_QWidget_keyboardGrabber( ::pPtr ) )
-
-
-METHOD QWidget:mouseGrabber()
-   RETURN HB_QWidget():from( Qt_QWidget_mouseGrabber( ::pPtr ) )
-
-
-METHOD QWidget:setTabOrder( pFirst, pSecond )
-   RETURN Qt_QWidget_setTabOrder( ::pPtr, hbqt_ptr( pFirst ), hbqt_ptr( pSecond ) )
-
-
-METHOD QWidget:close()
-   RETURN Qt_QWidget_close( ::pPtr )
-
-
-METHOD QWidget:hide()
-   RETURN Qt_QWidget_hide( ::pPtr )
-
-
-METHOD QWidget:lower()
-   RETURN Qt_QWidget_lower( ::pPtr )
-
-
-METHOD QWidget:raise()
-   RETURN Qt_QWidget_raise( ::pPtr )
-
-
-METHOD QWidget:setDisabled( lDisable )
-   RETURN Qt_QWidget_setDisabled( ::pPtr, lDisable )
-
-
-METHOD QWidget:setEnabled( lEnable )
-   RETURN Qt_QWidget_setEnabled( ::pPtr, lEnable )
-
-
-METHOD QWidget:setHidden( lHidden )
-   RETURN Qt_QWidget_setHidden( ::pPtr, lHidden )
-
-
-METHOD QWidget:setStyleSheet( cStyleSheet )
-   RETURN Qt_QWidget_setStyleSheet( ::pPtr, cStyleSheet )
-
-
-METHOD QWidget:setVisible( lVisible )
-   RETURN Qt_QWidget_setVisible( ::pPtr, lVisible )
-
-
-METHOD QWidget:setWindowModified( lModified )
-   RETURN Qt_QWidget_setWindowModified( ::pPtr, lModified )
-
-
-METHOD QWidget:setWindowTitle( cTitle )
-   RETURN Qt_QWidget_setWindowTitle( ::pPtr, cTitle )
-
-
-METHOD QWidget:show()
-   RETURN Qt_QWidget_show( ::pPtr )
-
-
-METHOD QWidget:showFullScreen()
-   RETURN Qt_QWidget_showFullScreen( ::pPtr )
-
-
-METHOD QWidget:showMaximized()
-   RETURN Qt_QWidget_showMaximized( ::pPtr )
-
-
-METHOD QWidget:showMinimized()
-   RETURN Qt_QWidget_showMinimized( ::pPtr )
-
-
-METHOD QWidget:showNormal()
-   RETURN Qt_QWidget_showNormal( ::pPtr )
+METHOD QWidget:updateGeometry( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_updateGeometry( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:updatesEnabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_updatesEnabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:visibleRegion( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRegion():from( Qt_QWidget_visibleRegion( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:whatsThis( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_whatsThis( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:width( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_width( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:window( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QWidget_window( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:windowFilePath( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_windowFilePath( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:windowFlags( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_windowFlags( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:windowIcon( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QIcon():from( Qt_QWidget_windowIcon( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:windowIconText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_windowIconText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:windowModality( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_windowModality( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:windowOpacity( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_windowOpacity( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:windowRole( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_windowRole( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:windowState( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_windowState( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:windowTitle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_windowTitle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:windowType( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_windowType( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:x( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_x( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:y( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_y( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:keyboardGrabber( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QWidget_keyboardGrabber( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:mouseGrabber( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QWidget_mouseGrabber( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:setTabOrder( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QWidget_setTabOrder( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:close( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_close( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:hide( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_hide( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:lower( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_lower( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:raise( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_raise( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:setDisabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setDisabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:setEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:setHidden( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setHidden( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:setStyleSheet( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setStyleSheet( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:setVisible( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setVisible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:setWindowModified( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setWindowModified( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:setWindowTitle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QWidget_setWindowTitle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:show( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_show( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:showFullScreen( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_showFullScreen( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:showMaximized( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_showMaximized( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:showMinimized( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_showMinimized( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QWidget:showNormal( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWidget_showNormal( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

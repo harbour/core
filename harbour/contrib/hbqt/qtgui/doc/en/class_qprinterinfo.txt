@@ -29,7 +29,8 @@
  *     :isDefault()                                        -> lBool
  *     :isNull()                                           -> lBool
  *     :printerName()                                      -> cQString
- *     :availablePrinters()                                -> pQList<QPrinterInfo>
+ *     :availablePrinters()                                -> oQList_QPrinterInfo>
+ *     :defaultPrinter()                                   -> oQPrinterInfo
  * 
  *  $DESCRIPTION$
  * 
@@ -49,7 +50,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQPrinterInfo.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QPrinterInfo.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

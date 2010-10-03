@@ -103,8 +103,8 @@ CREATE CLASS HBQTextBlockUserData INHERIT HbQtObjectHandler FUNCTION HB_HBQTextB
 
    METHOD  new( ... )
 
-   METHOD  hbSetState( nState )
-   METHOD  hbState()
+   METHOD  hbSetState                    // ( nState )                                         -> nInt
+   METHOD  hbState                       // (  )                                               -> nInt
 
    ENDCLASS
 
@@ -118,10 +118,22 @@ METHOD HBQTextBlockUserData:new( ... )
    RETURN Self
 
 
-METHOD HBQTextBlockUserData:hbSetState( nState )
-   RETURN Qt_HBQTextBlockUserData_hbSetState( ::pPtr, nState )
+METHOD HBQTextBlockUserData:hbSetState( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQTextBlockUserData_hbSetState( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQTextBlockUserData:hbState()
-   RETURN Qt_HBQTextBlockUserData_hbState( ::pPtr )
+METHOD HBQTextBlockUserData:hbState( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQTextBlockUserData_hbState( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

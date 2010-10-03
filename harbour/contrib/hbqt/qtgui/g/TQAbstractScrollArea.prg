@@ -103,20 +103,20 @@ CREATE CLASS QAbstractScrollArea INHERIT HbQtObjectHandler, HB_QFrame FUNCTION H
 
    METHOD  new( ... )
 
-   METHOD  addScrollBarWidget( pWidget, nAlignment )
-   METHOD  cornerWidget()
-   METHOD  horizontalScrollBar()
-   METHOD  horizontalScrollBarPolicy()
-   METHOD  maximumViewportSize()
-   METHOD  setCornerWidget( pWidget )
-   METHOD  setHorizontalScrollBar( pScrollBar )
-   METHOD  setHorizontalScrollBarPolicy( nQt_ScrollBarPolicy )
-   METHOD  setVerticalScrollBar( pScrollBar )
-   METHOD  setVerticalScrollBarPolicy( nQt_ScrollBarPolicy )
-   METHOD  setViewport( pWidget )
-   METHOD  verticalScrollBar()
-   METHOD  verticalScrollBarPolicy()
-   METHOD  viewport()
+   METHOD  addScrollBarWidget            // ( oQWidget, nAlignment )                           -> NIL
+   METHOD  cornerWidget                  // (  )                                               -> oQWidget
+   METHOD  horizontalScrollBar           // (  )                                               -> oQScrollBar
+   METHOD  horizontalScrollBarPolicy     // (  )                                               -> nQt_ScrollBarPolicy
+   METHOD  maximumViewportSize           // (  )                                               -> oQSize
+   METHOD  setCornerWidget               // ( oQWidget )                                       -> NIL
+   METHOD  setHorizontalScrollBar        // ( oQScrollBar )                                    -> NIL
+   METHOD  setHorizontalScrollBarPolicy  // ( nQt::ScrollBarPolicy )                           -> NIL
+   METHOD  setVerticalScrollBar          // ( oQScrollBar )                                    -> NIL
+   METHOD  setVerticalScrollBarPolicy    // ( nQt::ScrollBarPolicy )                           -> NIL
+   METHOD  setViewport                   // ( oQWidget )                                       -> NIL
+   METHOD  verticalScrollBar             // (  )                                               -> oQScrollBar
+   METHOD  verticalScrollBarPolicy       // (  )                                               -> nQt_ScrollBarPolicy
+   METHOD  viewport                      // (  )                                               -> oQWidget
 
    ENDCLASS
 
@@ -130,58 +130,142 @@ METHOD QAbstractScrollArea:new( ... )
    RETURN Self
 
 
-METHOD QAbstractScrollArea:addScrollBarWidget( pWidget, nAlignment )
-   RETURN Qt_QAbstractScrollArea_addScrollBarWidget( ::pPtr, hbqt_ptr( pWidget ), nAlignment )
+METHOD QAbstractScrollArea:addScrollBarWidget( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QAbstractScrollArea_addScrollBarWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractScrollArea:cornerWidget()
-   RETURN HB_QWidget():from( Qt_QAbstractScrollArea_cornerWidget( ::pPtr ) )
+METHOD QAbstractScrollArea:cornerWidget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QAbstractScrollArea_cornerWidget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractScrollArea:horizontalScrollBar()
-   RETURN HB_QScrollBar():from( Qt_QAbstractScrollArea_horizontalScrollBar( ::pPtr ) )
+METHOD QAbstractScrollArea:horizontalScrollBar( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QScrollBar():from( Qt_QAbstractScrollArea_horizontalScrollBar( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractScrollArea:horizontalScrollBarPolicy()
-   RETURN Qt_QAbstractScrollArea_horizontalScrollBarPolicy( ::pPtr )
+METHOD QAbstractScrollArea:horizontalScrollBarPolicy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractScrollArea_horizontalScrollBarPolicy( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractScrollArea:maximumViewportSize()
-   RETURN HB_QSize():from( Qt_QAbstractScrollArea_maximumViewportSize( ::pPtr ) )
+METHOD QAbstractScrollArea:maximumViewportSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QAbstractScrollArea_maximumViewportSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractScrollArea:setCornerWidget( pWidget )
-   RETURN Qt_QAbstractScrollArea_setCornerWidget( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QAbstractScrollArea:setCornerWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractScrollArea_setCornerWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractScrollArea:setHorizontalScrollBar( pScrollBar )
-   RETURN Qt_QAbstractScrollArea_setHorizontalScrollBar( ::pPtr, hbqt_ptr( pScrollBar ) )
+METHOD QAbstractScrollArea:setHorizontalScrollBar( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractScrollArea_setHorizontalScrollBar( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractScrollArea:setHorizontalScrollBarPolicy( nQt_ScrollBarPolicy )
-   RETURN Qt_QAbstractScrollArea_setHorizontalScrollBarPolicy( ::pPtr, nQt_ScrollBarPolicy )
+METHOD QAbstractScrollArea:setHorizontalScrollBarPolicy( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractScrollArea_setHorizontalScrollBarPolicy( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractScrollArea:setVerticalScrollBar( pScrollBar )
-   RETURN Qt_QAbstractScrollArea_setVerticalScrollBar( ::pPtr, hbqt_ptr( pScrollBar ) )
+METHOD QAbstractScrollArea:setVerticalScrollBar( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractScrollArea_setVerticalScrollBar( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractScrollArea:setVerticalScrollBarPolicy( nQt_ScrollBarPolicy )
-   RETURN Qt_QAbstractScrollArea_setVerticalScrollBarPolicy( ::pPtr, nQt_ScrollBarPolicy )
+METHOD QAbstractScrollArea:setVerticalScrollBarPolicy( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractScrollArea_setVerticalScrollBarPolicy( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractScrollArea:setViewport( pWidget )
-   RETURN Qt_QAbstractScrollArea_setViewport( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QAbstractScrollArea:setViewport( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractScrollArea_setViewport( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractScrollArea:verticalScrollBar()
-   RETURN HB_QScrollBar():from( Qt_QAbstractScrollArea_verticalScrollBar( ::pPtr ) )
+METHOD QAbstractScrollArea:verticalScrollBar( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QScrollBar():from( Qt_QAbstractScrollArea_verticalScrollBar( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractScrollArea:verticalScrollBarPolicy()
-   RETURN Qt_QAbstractScrollArea_verticalScrollBarPolicy( ::pPtr )
+METHOD QAbstractScrollArea:verticalScrollBarPolicy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractScrollArea_verticalScrollBarPolicy( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractScrollArea:viewport()
-   RETURN HB_QWidget():from( Qt_QAbstractScrollArea_viewport( ::pPtr ) )
+METHOD QAbstractScrollArea:viewport( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QAbstractScrollArea_viewport( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

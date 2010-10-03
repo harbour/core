@@ -103,53 +103,53 @@ CREATE CLASS QTextCharFormat INHERIT HbQtObjectHandler, HB_QTextFormat FUNCTION 
 
    METHOD  new( ... )
 
-   METHOD  anchorHref()
-   METHOD  anchorNames()
-   METHOD  font()
-   METHOD  fontCapitalization()
-   METHOD  fontFamily()
-   METHOD  fontFixedPitch()
-   METHOD  fontItalic()
-   METHOD  fontKerning()
-   METHOD  fontLetterSpacing()
-   METHOD  fontOverline()
-   METHOD  fontPointSize()
-   METHOD  fontStrikeOut()
-   METHOD  fontStyleHint()
-   METHOD  fontStyleStrategy()
-   METHOD  fontUnderline()
-   METHOD  fontWeight()
-   METHOD  fontWordSpacing()
-   METHOD  isAnchor()
-   METHOD  isValid()
-   METHOD  setAnchor( lAnchor )
-   METHOD  setAnchorHref( cValue )
-   METHOD  setAnchorNames( pNames )
-   METHOD  setFont( pFont )
-   METHOD  setFontCapitalization( nCapitalization )
-   METHOD  setFontFamily( cFamily )
-   METHOD  setFontFixedPitch( lFixedPitch )
-   METHOD  setFontItalic( lItalic )
-   METHOD  setFontKerning( lEnable )
-   METHOD  setFontLetterSpacing( nSpacing )
-   METHOD  setFontOverline( lOverline )
-   METHOD  setFontPointSize( nSize )
-   METHOD  setFontStrikeOut( lStrikeOut )
-   METHOD  setFontStyleHint( nHint, nStrategy )
-   METHOD  setFontStyleStrategy( nStrategy )
-   METHOD  setFontUnderline( lUnderline )
-   METHOD  setFontWeight( nWeight )
-   METHOD  setFontWordSpacing( nSpacing )
-   METHOD  setTextOutline( pPen )
-   METHOD  setToolTip( cText )
-   METHOD  setUnderlineColor( pColor )
-   METHOD  setUnderlineStyle( nStyle )
-   METHOD  setVerticalAlignment( nAlignment )
-   METHOD  textOutline()
-   METHOD  toolTip()
-   METHOD  underlineColor()
-   METHOD  underlineStyle()
-   METHOD  verticalAlignment()
+   METHOD  anchorHref                    // (  )                                               -> cQString
+   METHOD  anchorNames                   // (  )                                               -> oQStringList
+   METHOD  font                          // (  )                                               -> oQFont
+   METHOD  fontCapitalization            // (  )                                               -> nQFont_Capitalization
+   METHOD  fontFamily                    // (  )                                               -> cQString
+   METHOD  fontFixedPitch                // (  )                                               -> lBool
+   METHOD  fontItalic                    // (  )                                               -> lBool
+   METHOD  fontKerning                   // (  )                                               -> lBool
+   METHOD  fontLetterSpacing             // (  )                                               -> nQreal
+   METHOD  fontOverline                  // (  )                                               -> lBool
+   METHOD  fontPointSize                 // (  )                                               -> nQreal
+   METHOD  fontStrikeOut                 // (  )                                               -> lBool
+   METHOD  fontStyleHint                 // (  )                                               -> nQFont_StyleHint
+   METHOD  fontStyleStrategy             // (  )                                               -> nQFont_StyleStrategy
+   METHOD  fontUnderline                 // (  )                                               -> lBool
+   METHOD  fontWeight                    // (  )                                               -> nInt
+   METHOD  fontWordSpacing               // (  )                                               -> nQreal
+   METHOD  isAnchor                      // (  )                                               -> lBool
+   METHOD  isValid                       // (  )                                               -> lBool
+   METHOD  setAnchor                     // ( lAnchor )                                        -> NIL
+   METHOD  setAnchorHref                 // ( cValue )                                         -> NIL
+   METHOD  setAnchorNames                // ( oQStringList )                                   -> NIL
+   METHOD  setFont                       // ( oQFont )                                         -> NIL
+   METHOD  setFontCapitalization         // ( nCapitalization )                                -> NIL
+   METHOD  setFontFamily                 // ( cFamily )                                        -> NIL
+   METHOD  setFontFixedPitch             // ( lFixedPitch )                                    -> NIL
+   METHOD  setFontItalic                 // ( lItalic )                                        -> NIL
+   METHOD  setFontKerning                // ( lEnable )                                        -> NIL
+   METHOD  setFontLetterSpacing          // ( nSpacing )                                       -> NIL
+   METHOD  setFontOverline               // ( lOverline )                                      -> NIL
+   METHOD  setFontPointSize              // ( nSize )                                          -> NIL
+   METHOD  setFontStrikeOut              // ( lStrikeOut )                                     -> NIL
+   METHOD  setFontStyleHint              // ( nHint, nStrategy )                               -> NIL
+   METHOD  setFontStyleStrategy          // ( nStrategy )                                      -> NIL
+   METHOD  setFontUnderline              // ( lUnderline )                                     -> NIL
+   METHOD  setFontWeight                 // ( nWeight )                                        -> NIL
+   METHOD  setFontWordSpacing            // ( nSpacing )                                       -> NIL
+   METHOD  setTextOutline                // ( oQPen )                                          -> NIL
+   METHOD  setToolTip                    // ( cText )                                          -> NIL
+   METHOD  setUnderlineColor             // ( oQColor )                                        -> NIL
+   METHOD  setUnderlineStyle             // ( nStyle )                                         -> NIL
+   METHOD  setVerticalAlignment          // ( nAlignment )                                     -> NIL
+   METHOD  textOutline                   // (  )                                               -> oQPen
+   METHOD  toolTip                       // (  )                                               -> cQString
+   METHOD  underlineColor                // (  )                                               -> oQColor
+   METHOD  underlineStyle                // (  )                                               -> nUnderlineStyle
+   METHOD  verticalAlignment             // (  )                                               -> nVerticalAlignment
 
    ENDCLASS
 
@@ -163,190 +163,476 @@ METHOD QTextCharFormat:new( ... )
    RETURN Self
 
 
-METHOD QTextCharFormat:anchorHref()
-   RETURN Qt_QTextCharFormat_anchorHref( ::pPtr )
-
-
-METHOD QTextCharFormat:anchorNames()
-   RETURN HB_QStringList():from( Qt_QTextCharFormat_anchorNames( ::pPtr ) )
-
-
-METHOD QTextCharFormat:font()
-   RETURN HB_QFont():from( Qt_QTextCharFormat_font( ::pPtr ) )
-
-
-METHOD QTextCharFormat:fontCapitalization()
-   RETURN Qt_QTextCharFormat_fontCapitalization( ::pPtr )
-
-
-METHOD QTextCharFormat:fontFamily()
-   RETURN Qt_QTextCharFormat_fontFamily( ::pPtr )
-
-
-METHOD QTextCharFormat:fontFixedPitch()
-   RETURN Qt_QTextCharFormat_fontFixedPitch( ::pPtr )
-
-
-METHOD QTextCharFormat:fontItalic()
-   RETURN Qt_QTextCharFormat_fontItalic( ::pPtr )
-
-
-METHOD QTextCharFormat:fontKerning()
-   RETURN Qt_QTextCharFormat_fontKerning( ::pPtr )
-
-
-METHOD QTextCharFormat:fontLetterSpacing()
-   RETURN Qt_QTextCharFormat_fontLetterSpacing( ::pPtr )
-
-
-METHOD QTextCharFormat:fontOverline()
-   RETURN Qt_QTextCharFormat_fontOverline( ::pPtr )
-
-
-METHOD QTextCharFormat:fontPointSize()
-   RETURN Qt_QTextCharFormat_fontPointSize( ::pPtr )
-
-
-METHOD QTextCharFormat:fontStrikeOut()
-   RETURN Qt_QTextCharFormat_fontStrikeOut( ::pPtr )
-
-
-METHOD QTextCharFormat:fontStyleHint()
-   RETURN Qt_QTextCharFormat_fontStyleHint( ::pPtr )
-
-
-METHOD QTextCharFormat:fontStyleStrategy()
-   RETURN Qt_QTextCharFormat_fontStyleStrategy( ::pPtr )
-
-
-METHOD QTextCharFormat:fontUnderline()
-   RETURN Qt_QTextCharFormat_fontUnderline( ::pPtr )
-
-
-METHOD QTextCharFormat:fontWeight()
-   RETURN Qt_QTextCharFormat_fontWeight( ::pPtr )
-
-
-METHOD QTextCharFormat:fontWordSpacing()
-   RETURN Qt_QTextCharFormat_fontWordSpacing( ::pPtr )
-
-
-METHOD QTextCharFormat:isAnchor()
-   RETURN Qt_QTextCharFormat_isAnchor( ::pPtr )
-
-
-METHOD QTextCharFormat:isValid()
-   RETURN Qt_QTextCharFormat_isValid( ::pPtr )
-
-
-METHOD QTextCharFormat:setAnchor( lAnchor )
-   RETURN Qt_QTextCharFormat_setAnchor( ::pPtr, lAnchor )
-
-
-METHOD QTextCharFormat:setAnchorHref( cValue )
-   RETURN Qt_QTextCharFormat_setAnchorHref( ::pPtr, cValue )
-
-
-METHOD QTextCharFormat:setAnchorNames( pNames )
-   RETURN Qt_QTextCharFormat_setAnchorNames( ::pPtr, hbqt_ptr( pNames ) )
-
-
-METHOD QTextCharFormat:setFont( pFont )
-   RETURN Qt_QTextCharFormat_setFont( ::pPtr, hbqt_ptr( pFont ) )
-
-
-METHOD QTextCharFormat:setFontCapitalization( nCapitalization )
-   RETURN Qt_QTextCharFormat_setFontCapitalization( ::pPtr, nCapitalization )
-
-
-METHOD QTextCharFormat:setFontFamily( cFamily )
-   RETURN Qt_QTextCharFormat_setFontFamily( ::pPtr, cFamily )
-
-
-METHOD QTextCharFormat:setFontFixedPitch( lFixedPitch )
-   RETURN Qt_QTextCharFormat_setFontFixedPitch( ::pPtr, lFixedPitch )
-
-
-METHOD QTextCharFormat:setFontItalic( lItalic )
-   RETURN Qt_QTextCharFormat_setFontItalic( ::pPtr, lItalic )
-
-
-METHOD QTextCharFormat:setFontKerning( lEnable )
-   RETURN Qt_QTextCharFormat_setFontKerning( ::pPtr, lEnable )
-
-
-METHOD QTextCharFormat:setFontLetterSpacing( nSpacing )
-   RETURN Qt_QTextCharFormat_setFontLetterSpacing( ::pPtr, nSpacing )
-
-
-METHOD QTextCharFormat:setFontOverline( lOverline )
-   RETURN Qt_QTextCharFormat_setFontOverline( ::pPtr, lOverline )
-
-
-METHOD QTextCharFormat:setFontPointSize( nSize )
-   RETURN Qt_QTextCharFormat_setFontPointSize( ::pPtr, nSize )
-
-
-METHOD QTextCharFormat:setFontStrikeOut( lStrikeOut )
-   RETURN Qt_QTextCharFormat_setFontStrikeOut( ::pPtr, lStrikeOut )
-
-
-METHOD QTextCharFormat:setFontStyleHint( nHint, nStrategy )
-   RETURN Qt_QTextCharFormat_setFontStyleHint( ::pPtr, nHint, nStrategy )
-
-
-METHOD QTextCharFormat:setFontStyleStrategy( nStrategy )
-   RETURN Qt_QTextCharFormat_setFontStyleStrategy( ::pPtr, nStrategy )
-
-
-METHOD QTextCharFormat:setFontUnderline( lUnderline )
-   RETURN Qt_QTextCharFormat_setFontUnderline( ::pPtr, lUnderline )
-
-
-METHOD QTextCharFormat:setFontWeight( nWeight )
-   RETURN Qt_QTextCharFormat_setFontWeight( ::pPtr, nWeight )
-
-
-METHOD QTextCharFormat:setFontWordSpacing( nSpacing )
-   RETURN Qt_QTextCharFormat_setFontWordSpacing( ::pPtr, nSpacing )
-
-
-METHOD QTextCharFormat:setTextOutline( pPen )
-   RETURN Qt_QTextCharFormat_setTextOutline( ::pPtr, hbqt_ptr( pPen ) )
-
-
-METHOD QTextCharFormat:setToolTip( cText )
-   RETURN Qt_QTextCharFormat_setToolTip( ::pPtr, cText )
-
-
-METHOD QTextCharFormat:setUnderlineColor( pColor )
-   RETURN Qt_QTextCharFormat_setUnderlineColor( ::pPtr, hbqt_ptr( pColor ) )
-
-
-METHOD QTextCharFormat:setUnderlineStyle( nStyle )
-   RETURN Qt_QTextCharFormat_setUnderlineStyle( ::pPtr, nStyle )
-
-
-METHOD QTextCharFormat:setVerticalAlignment( nAlignment )
-   RETURN Qt_QTextCharFormat_setVerticalAlignment( ::pPtr, nAlignment )
-
-
-METHOD QTextCharFormat:textOutline()
-   RETURN HB_QPen():from( Qt_QTextCharFormat_textOutline( ::pPtr ) )
-
-
-METHOD QTextCharFormat:toolTip()
-   RETURN Qt_QTextCharFormat_toolTip( ::pPtr )
-
-
-METHOD QTextCharFormat:underlineColor()
-   RETURN HB_QColor():from( Qt_QTextCharFormat_underlineColor( ::pPtr ) )
-
-
-METHOD QTextCharFormat:underlineStyle()
-   RETURN Qt_QTextCharFormat_underlineStyle( ::pPtr )
-
-
-METHOD QTextCharFormat:verticalAlignment()
-   RETURN Qt_QTextCharFormat_verticalAlignment( ::pPtr )
+METHOD QTextCharFormat:anchorHref( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextCharFormat_anchorHref( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:anchorNames( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QTextCharFormat_anchorNames( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:font( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFont():from( Qt_QTextCharFormat_font( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:fontCapitalization( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextCharFormat_fontCapitalization( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:fontFamily( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextCharFormat_fontFamily( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:fontFixedPitch( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextCharFormat_fontFixedPitch( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:fontItalic( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextCharFormat_fontItalic( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:fontKerning( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextCharFormat_fontKerning( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:fontLetterSpacing( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextCharFormat_fontLetterSpacing( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:fontOverline( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextCharFormat_fontOverline( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:fontPointSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextCharFormat_fontPointSize( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:fontStrikeOut( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextCharFormat_fontStrikeOut( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:fontStyleHint( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextCharFormat_fontStyleHint( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:fontStyleStrategy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextCharFormat_fontStyleStrategy( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:fontUnderline( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextCharFormat_fontUnderline( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:fontWeight( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextCharFormat_fontWeight( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:fontWordSpacing( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextCharFormat_fontWordSpacing( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:isAnchor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextCharFormat_isAnchor( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:isValid( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextCharFormat_isValid( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:setAnchor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCharFormat_setAnchor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:setAnchorHref( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCharFormat_setAnchorHref( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:setAnchorNames( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCharFormat_setAnchorNames( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:setFont( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCharFormat_setFont( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:setFontCapitalization( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCharFormat_setFontCapitalization( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:setFontFamily( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCharFormat_setFontFamily( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:setFontFixedPitch( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCharFormat_setFontFixedPitch( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:setFontItalic( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCharFormat_setFontItalic( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:setFontKerning( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCharFormat_setFontKerning( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:setFontLetterSpacing( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCharFormat_setFontLetterSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:setFontOverline( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCharFormat_setFontOverline( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:setFontPointSize( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCharFormat_setFontPointSize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:setFontStrikeOut( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCharFormat_setFontStrikeOut( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:setFontStyleHint( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QTextCharFormat_setFontStyleHint( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCharFormat_setFontStyleHint( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:setFontStyleStrategy( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCharFormat_setFontStyleStrategy( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:setFontUnderline( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCharFormat_setFontUnderline( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:setFontWeight( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCharFormat_setFontWeight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:setFontWordSpacing( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCharFormat_setFontWordSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:setTextOutline( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCharFormat_setTextOutline( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:setToolTip( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCharFormat_setToolTip( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:setUnderlineColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCharFormat_setUnderlineColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:setUnderlineStyle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCharFormat_setUnderlineStyle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:setVerticalAlignment( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextCharFormat_setVerticalAlignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:textOutline( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPen():from( Qt_QTextCharFormat_textOutline( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:toolTip( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextCharFormat_toolTip( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:underlineColor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QColor():from( Qt_QTextCharFormat_underlineColor( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:underlineStyle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextCharFormat_underlineStyle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextCharFormat:verticalAlignment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextCharFormat_verticalAlignment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

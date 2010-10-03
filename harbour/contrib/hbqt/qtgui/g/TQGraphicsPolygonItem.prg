@@ -103,10 +103,10 @@ CREATE CLASS QGraphicsPolygonItem INHERIT HbQtObjectHandler, HB_QAbstractGraphic
 
    METHOD  new( ... )
 
-   METHOD  fillRule()
-   METHOD  polygon()
-   METHOD  setFillRule( nRule )
-   METHOD  setPolygon( pPolygon )
+   METHOD  fillRule                      // (  )                                               -> nQt_FillRule
+   METHOD  polygon                       // (  )                                               -> oQPolygonF
+   METHOD  setFillRule                   // ( nRule )                                          -> NIL
+   METHOD  setPolygon                    // ( oQPolygonF )                                     -> NIL
 
    ENDCLASS
 
@@ -120,18 +120,42 @@ METHOD QGraphicsPolygonItem:new( ... )
    RETURN Self
 
 
-METHOD QGraphicsPolygonItem:fillRule()
-   RETURN Qt_QGraphicsPolygonItem_fillRule( ::pPtr )
+METHOD QGraphicsPolygonItem:fillRule( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsPolygonItem_fillRule( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsPolygonItem:polygon()
-   RETURN HB_QPolygonF():from( Qt_QGraphicsPolygonItem_polygon( ::pPtr ) )
+METHOD QGraphicsPolygonItem:polygon( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPolygonF():from( Qt_QGraphicsPolygonItem_polygon( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsPolygonItem:setFillRule( nRule )
-   RETURN Qt_QGraphicsPolygonItem_setFillRule( ::pPtr, nRule )
+METHOD QGraphicsPolygonItem:setFillRule( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsPolygonItem_setFillRule( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsPolygonItem:setPolygon( pPolygon )
-   RETURN Qt_QGraphicsPolygonItem_setPolygon( ::pPtr, hbqt_ptr( pPolygon ) )
+METHOD QGraphicsPolygonItem:setPolygon( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsPolygonItem_setPolygon( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

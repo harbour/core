@@ -26,19 +26,27 @@
  *  $RETURNS$
  *     An instance of the object of type QTextCodec
  *  $METHODS$
- *     :aliases()                                          -> pQList<QByteArray>
- *     :canEncode( pCh )                                   -> lBool
- *     :canEncode_1( cS )                                  -> lBool
- *     :fromUnicode( cStr )                                -> pQByteArray
- *     :makeDecoder()                                      -> pQTextDecoder
- *     :makeEncoder()                                      -> pQTextEncoder
+ *     :aliases()                                          -> oQList_QByteArray>
+ *     :canEncode( oQChar )                                -> lBool
+ *     :canEncode( cS )                                    -> lBool
+ *     :fromUnicode( cStr )                                -> oQByteArray
+ *     :makeDecoder()                                      -> oQTextDecoder
+ *     :makeEncoder()                                      -> oQTextEncoder
  *     :mibEnum()                                          -> nInt
- *     :name()                                             -> pQByteArray
- *     :toUnicode( pA )                                    -> cQString
- *     :toUnicode_1( pChars )                              -> cQString
- *     :setCodecForCStrings( pCodec )                      -> NIL
- *     :setCodecForLocale( pC )                            -> NIL
- *     :setCodecForTr( pC )                                -> NIL
+ *     :name()                                             -> oQByteArray
+ *     :toUnicode( oQByteArray )                           -> cQString
+ *     :toUnicode( cChars )                                -> cQString
+ *     :codecForCStrings()                                 -> oQTextCodec
+ *     :codecForHtml( oQByteArray, oQTextCodec )           -> oQTextCodec
+ *     :codecForHtml( oQByteArray )                        -> oQTextCodec
+ *     :codecForLocale()                                   -> oQTextCodec
+ *     :codecForMib( nMib )                                -> oQTextCodec
+ *     :codecForName( oQByteArray )                        -> oQTextCodec
+ *     :codecForName( cName )                              -> oQTextCodec
+ *     :codecForTr()                                       -> oQTextCodec
+ *     :setCodecForCStrings( oQTextCodec )                 -> NIL
+ *     :setCodecForLocale( oQTextCodec )                   -> NIL
+ *     :setCodecForTr( oQTextCodec )                       -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -58,7 +66,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQTextCodec.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QTextCodec.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

@@ -26,26 +26,26 @@
  *  $RETURNS$
  *     An instance of the object of type QToolBox
  *  $METHODS$
- *     :addItem( pWidget, pIconSet, cText )                -> nInt
- *     :addItem_1( pW, cText )                             -> nInt
+ *     :addItem( oQWidget, coQIcon, cText )                -> nInt
+ *     :addItem( oQWidget, cText )                         -> nInt
  *     :count()                                            -> nInt
  *     :currentIndex()                                     -> nInt
- *     :currentWidget()                                    -> pQWidget
- *     :indexOf( pWidget )                                 -> nInt
- *     :insertItem( nIndex, pWidget, pIcon, cText )        -> nInt
- *     :insertItem_1( nIndex, pWidget, cText )             -> nInt
+ *     :currentWidget()                                    -> oQWidget
+ *     :indexOf( oQWidget )                                -> nInt
+ *     :insertItem( nIndex, oQWidget, coQIcon, cText )     -> nInt
+ *     :insertItem( nIndex, oQWidget, cText )              -> nInt
  *     :isItemEnabled( nIndex )                            -> lBool
- *     :itemIcon( nIndex )                                 -> pQIcon
+ *     :itemIcon( nIndex )                                 -> oQIcon
  *     :itemText( nIndex )                                 -> cQString
  *     :itemToolTip( nIndex )                              -> cQString
  *     :removeItem( nIndex )                               -> NIL
  *     :setItemEnabled( nIndex, lEnabled )                 -> NIL
- *     :setItemIcon( nIndex, pIcon )                       -> NIL
+ *     :setItemIcon( nIndex, coQIcon )                     -> NIL
  *     :setItemText( nIndex, cText )                       -> NIL
  *     :setItemToolTip( nIndex, cToolTip )                 -> NIL
- *     :widget( nIndex )                                   -> pQWidget
+ *     :widget( nIndex )                                   -> oQWidget
  *     :setCurrentIndex( nIndex )                          -> NIL
- *     :setCurrentWidget( pWidget )                        -> NIL
+ *     :setCurrentWidget( oQWidget )                       -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -65,7 +65,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQToolBox.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QToolBox.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QFrame()
  *  $END$
  */

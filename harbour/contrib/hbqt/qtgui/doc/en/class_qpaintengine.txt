@@ -26,27 +26,27 @@
  *  $RETURNS$
  *     An instance of the object of type QPaintEngine
  *  $METHODS$
- *     :begin( pPdev )                                     -> lBool
- *     :drawEllipse( pRect )                               -> NIL
- *     :drawEllipse_1( pRect )                             -> NIL
- *     :drawImage( pRectangle, pImage, pSr, nFlags )       -> NIL
- *     :drawLines( pLines, nLineCount )                    -> NIL
- *     :drawLines_1( pLines, nLineCount )                  -> NIL
- *     :drawPath( pPath )                                  -> NIL
- *     :drawPixmap( pR, pPm, pSr )                         -> NIL
- *     :drawPoints( pPoints, nPointCount )                 -> NIL
- *     :drawPoints_1( pPoints, nPointCount )               -> NIL
- *     :drawPolygon( pPoints, nPointCount, nMode )         -> NIL
- *     :drawPolygon_1( pPoints, nPointCount, nMode )       -> NIL
- *     :drawRects( pRects, nRectCount )                    -> NIL
- *     :drawRects_1( pRects, nRectCount )                  -> NIL
- *     :drawTextItem( pP, pTextItem )                      -> NIL
- *     :drawTiledPixmap( pRect, pPixmap, pP )              -> NIL
+ *     :begin( oQPaintDevice )                             -> lBool
+ *     :drawEllipse( oQRectF )                             -> NIL
+ *     :drawEllipse( oQRect )                              -> NIL
+ *     :drawImage( oQRectF, oQImage, oQRectF, nFlags )     -> NIL
+ *     :drawLines( oQLineF, nLineCount )                   -> NIL
+ *     :drawLines( oQLine, nLineCount )                    -> NIL
+ *     :drawPath( oQPainterPath )                          -> NIL
+ *     :drawPixmap( oQRectF, oQPixmap, oQRectF )           -> NIL
+ *     :drawPoints( oQPointF, nPointCount )                -> NIL
+ *     :drawPoints( oQPoint, nPointCount )                 -> NIL
+ *     :drawPolygon( oQPointF, nPointCount, nMode )        -> NIL
+ *     :drawPolygon( oQPoint, nPointCount, nMode )         -> NIL
+ *     :drawRects( oQRectF, nRectCount )                   -> NIL
+ *     :drawRects( oQRect, nRectCount )                    -> NIL
+ *     :drawTextItem( oQPointF, oQTextItem )               -> NIL
+ *     :drawTiledPixmap( oQRectF, oQPixmap, oQPointF )     -> NIL
  *     :end()                                              -> lBool
  *     :hasFeature( nFeature )                             -> lBool
  *     :isActive()                                         -> lBool
- *     :paintDevice()                                      -> pQPaintDevice
- *     :painter()                                          -> pQPainter
+ *     :paintDevice()                                      -> oQPaintDevice
+ *     :painter()                                          -> oQPainter
  *     :setActive( lState )                                -> NIL
  *     :type()                                             -> nType
  * 
@@ -68,7 +68,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQPaintEngine.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QPaintEngine.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

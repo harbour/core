@@ -114,6 +114,15 @@ typedef iterator
 </ENUMS>
 
 <PROTOS>
+HBQString ()
+HBQString ( const QChar * unicode, int size )
+HBQString ( QChar ch )
+HBQString ( int size, QChar ch )
+HBQString ( const QLatin1String & str )
+HBQString ( const QString & other )
+HBQString ( const char * str )
+HBQString ( const QByteArray & ba )
+
 QString & append ( const QString & str )
 QString & append ( const QStringRef & reference )
 QString & append ( const QLatin1String & str )

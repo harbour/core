@@ -103,15 +103,15 @@ CREATE CLASS QPushButton INHERIT HbQtObjectHandler, HB_QAbstractButton FUNCTION 
 
    METHOD  new( ... )
 
-   METHOD  autoDefault()
-   METHOD  isDefault()
-   METHOD  isFlat()
-   METHOD  menu()
-   METHOD  setAutoDefault( lBool )
-   METHOD  setDefault( lBool )
-   METHOD  setFlat( lBool )
-   METHOD  setMenu( pMenu )
-   METHOD  showMenu()
+   METHOD  autoDefault                   // (  )                                               -> lBool
+   METHOD  isDefault                     // (  )                                               -> lBool
+   METHOD  isFlat                        // (  )                                               -> lBool
+   METHOD  menu                          // (  )                                               -> oQMenu
+   METHOD  setAutoDefault                // ( lBool )                                          -> NIL
+   METHOD  setDefault                    // ( lBool )                                          -> NIL
+   METHOD  setFlat                       // ( lBool )                                          -> NIL
+   METHOD  setMenu                       // ( oQMenu )                                         -> NIL
+   METHOD  showMenu                      // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -125,38 +125,90 @@ METHOD QPushButton:new( ... )
    RETURN Self
 
 
-METHOD QPushButton:autoDefault()
-   RETURN Qt_QPushButton_autoDefault( ::pPtr )
+METHOD QPushButton:autoDefault( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPushButton_autoDefault( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPushButton:isDefault()
-   RETURN Qt_QPushButton_isDefault( ::pPtr )
+METHOD QPushButton:isDefault( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPushButton_isDefault( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPushButton:isFlat()
-   RETURN Qt_QPushButton_isFlat( ::pPtr )
+METHOD QPushButton:isFlat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPushButton_isFlat( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPushButton:menu()
-   RETURN HB_QMenu():from( Qt_QPushButton_menu( ::pPtr ) )
+METHOD QPushButton:menu( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QMenu():from( Qt_QPushButton_menu( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPushButton:setAutoDefault( lBool )
-   RETURN Qt_QPushButton_setAutoDefault( ::pPtr, lBool )
+METHOD QPushButton:setAutoDefault( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QPushButton_setAutoDefault( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPushButton:setDefault( lBool )
-   RETURN Qt_QPushButton_setDefault( ::pPtr, lBool )
+METHOD QPushButton:setDefault( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QPushButton_setDefault( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPushButton:setFlat( lBool )
-   RETURN Qt_QPushButton_setFlat( ::pPtr, lBool )
+METHOD QPushButton:setFlat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QPushButton_setFlat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPushButton:setMenu( pMenu )
-   RETURN Qt_QPushButton_setMenu( ::pPtr, hbqt_ptr( pMenu ) )
+METHOD QPushButton:setMenu( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QPushButton_setMenu( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPushButton:showMenu()
-   RETURN Qt_QPushButton_showMenu( ::pPtr )
+METHOD QPushButton:showMenu( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPushButton_showMenu( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

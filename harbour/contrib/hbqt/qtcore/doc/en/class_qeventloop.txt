@@ -30,7 +30,7 @@
  *     :exit( nReturnCode )                                -> NIL
  *     :isRunning()                                        -> lBool
  *     :processEvents( nFlags )                            -> lBool
- *     :processEvents_1( nFlags, nMaxTime )                -> NIL
+ *     :processEvents( nFlags, nMaxTime )                  -> NIL
  *     :wakeUp()                                           -> NIL
  * 
  *  $DESCRIPTION$
@@ -51,7 +51,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQEventLoop.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QEventLoop.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

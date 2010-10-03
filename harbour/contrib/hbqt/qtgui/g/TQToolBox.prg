@@ -103,24 +103,26 @@ CREATE CLASS QToolBox INHERIT HbQtObjectHandler, HB_QFrame FUNCTION HB_QToolBox
 
    METHOD  new( ... )
 
-   METHOD  addItem( ... )
-   METHOD  count()
-   METHOD  currentIndex()
-   METHOD  currentWidget()
-   METHOD  indexOf( pWidget )
-   METHOD  insertItem( ... )
-   METHOD  isItemEnabled( nIndex )
-   METHOD  itemIcon( nIndex )
-   METHOD  itemText( nIndex )
-   METHOD  itemToolTip( nIndex )
-   METHOD  removeItem( nIndex )
-   METHOD  setItemEnabled( nIndex, lEnabled )
-   METHOD  setItemIcon( nIndex, pIcon )
-   METHOD  setItemText( nIndex, cText )
-   METHOD  setItemToolTip( nIndex, cToolTip )
-   METHOD  widget( nIndex )
-   METHOD  setCurrentIndex( nIndex )
-   METHOD  setCurrentWidget( pWidget )
+   METHOD  addItem                       // ( oQWidget, coQIcon, cText )                       -> nInt
+                                         // ( oQWidget, cText )                                -> nInt
+   METHOD  count                         // (  )                                               -> nInt
+   METHOD  currentIndex                  // (  )                                               -> nInt
+   METHOD  currentWidget                 // (  )                                               -> oQWidget
+   METHOD  indexOf                       // ( oQWidget )                                       -> nInt
+   METHOD  insertItem                    // ( nIndex, oQWidget, coQIcon, cText )               -> nInt
+                                         // ( nIndex, oQWidget, cText )                        -> nInt
+   METHOD  isItemEnabled                 // ( nIndex )                                         -> lBool
+   METHOD  itemIcon                      // ( nIndex )                                         -> oQIcon
+   METHOD  itemText                      // ( nIndex )                                         -> cQString
+   METHOD  itemToolTip                   // ( nIndex )                                         -> cQString
+   METHOD  removeItem                    // ( nIndex )                                         -> NIL
+   METHOD  setItemEnabled                // ( nIndex, lEnabled )                               -> NIL
+   METHOD  setItemIcon                   // ( nIndex, coQIcon )                                -> NIL
+   METHOD  setItemText                   // ( nIndex, cText )                                  -> NIL
+   METHOD  setItemToolTip                // ( nIndex, cToolTip )                               -> NIL
+   METHOD  widget                        // ( nIndex )                                         -> oQWidget
+   METHOD  setCurrentIndex               // ( nIndex )                                         -> NIL
+   METHOD  setCurrentWidget              // ( oQWidget )                                       -> NIL
 
    ENDCLASS
 
@@ -152,20 +154,40 @@ METHOD QToolBox:addItem( ... )
    RETURN hbqt_error()
 
 
-METHOD QToolBox:count()
-   RETURN Qt_QToolBox_count( ::pPtr )
+METHOD QToolBox:count( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QToolBox_count( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBox:currentIndex()
-   RETURN Qt_QToolBox_currentIndex( ::pPtr )
+METHOD QToolBox:currentIndex( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QToolBox_currentIndex( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBox:currentWidget()
-   RETURN HB_QWidget():from( Qt_QToolBox_currentWidget( ::pPtr ) )
+METHOD QToolBox:currentWidget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QToolBox_currentWidget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBox:indexOf( pWidget )
-   RETURN Qt_QToolBox_indexOf( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QToolBox:indexOf( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QToolBox_indexOf( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QToolBox:insertItem( ... )
@@ -186,50 +208,146 @@ METHOD QToolBox:insertItem( ... )
    RETURN hbqt_error()
 
 
-METHOD QToolBox:isItemEnabled( nIndex )
-   RETURN Qt_QToolBox_isItemEnabled( ::pPtr, nIndex )
+METHOD QToolBox:isItemEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QToolBox_isItemEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBox:itemIcon( nIndex )
-   RETURN HB_QIcon():from( Qt_QToolBox_itemIcon( ::pPtr, nIndex ) )
+METHOD QToolBox:itemIcon( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QIcon():from( Qt_QToolBox_itemIcon( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBox:itemText( nIndex )
-   RETURN Qt_QToolBox_itemText( ::pPtr, nIndex )
+METHOD QToolBox:itemText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QToolBox_itemText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBox:itemToolTip( nIndex )
-   RETURN Qt_QToolBox_itemToolTip( ::pPtr, nIndex )
+METHOD QToolBox:itemToolTip( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QToolBox_itemToolTip( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBox:removeItem( nIndex )
-   RETURN Qt_QToolBox_removeItem( ::pPtr, nIndex )
+METHOD QToolBox:removeItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QToolBox_removeItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBox:setItemEnabled( nIndex, lEnabled )
-   RETURN Qt_QToolBox_setItemEnabled( ::pPtr, nIndex, lEnabled )
+METHOD QToolBox:setItemEnabled( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QToolBox_setItemEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBox:setItemIcon( nIndex, pIcon )
-   RETURN Qt_QToolBox_setItemIcon( ::pPtr, nIndex, hbqt_ptr( pIcon ) )
+METHOD QToolBox:setItemIcon( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. ( hb_isObject( hb_pvalue( 2 ) ) .OR. hb_isChar( hb_pvalue( 2 ) ) )
+         RETURN Qt_QToolBox_setItemIcon( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBox:setItemText( nIndex, cText )
-   RETURN Qt_QToolBox_setItemText( ::pPtr, nIndex, cText )
+METHOD QToolBox:setItemText( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QToolBox_setItemText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBox:setItemToolTip( nIndex, cToolTip )
-   RETURN Qt_QToolBox_setItemToolTip( ::pPtr, nIndex, cToolTip )
+METHOD QToolBox:setItemToolTip( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QToolBox_setItemToolTip( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBox:widget( nIndex )
-   RETURN HB_QWidget():from( Qt_QToolBox_widget( ::pPtr, nIndex ) )
+METHOD QToolBox:widget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QWidget():from( Qt_QToolBox_widget( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBox:setCurrentIndex( nIndex )
-   RETURN Qt_QToolBox_setCurrentIndex( ::pPtr, nIndex )
+METHOD QToolBox:setCurrentIndex( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QToolBox_setCurrentIndex( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolBox:setCurrentWidget( pWidget )
-   RETURN Qt_QToolBox_setCurrentWidget( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QToolBox:setCurrentWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QToolBox_setCurrentWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

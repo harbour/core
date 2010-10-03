@@ -103,7 +103,7 @@ CREATE CLASS QStyleOptionFocusRect INHERIT HbQtObjectHandler, HB_QStyleOption FU
 
    METHOD  new( ... )
 
-   METHOD  backgroundColor()
+   METHOD  backgroundColor               // (  )                                               -> oQColor
 
    ENDCLASS
 
@@ -117,6 +117,10 @@ METHOD QStyleOptionFocusRect:new( ... )
    RETURN Self
 
 
-METHOD QStyleOptionFocusRect:backgroundColor()
-   RETURN HB_QColor():from( Qt_QStyleOptionFocusRect_backgroundColor( ::pPtr ) )
+METHOD QStyleOptionFocusRect:backgroundColor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QColor():from( Qt_QStyleOptionFocusRect_backgroundColor( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

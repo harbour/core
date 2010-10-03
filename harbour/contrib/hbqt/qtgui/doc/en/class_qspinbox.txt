@@ -59,7 +59,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQSpinBox.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QSpinBox.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractSpinBox()
  *  $END$
  */

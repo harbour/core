@@ -103,11 +103,11 @@ CREATE CLASS QIntValidator INHERIT HbQtObjectHandler, HB_QValidator FUNCTION HB_
 
    METHOD  new( ... )
 
-   METHOD  bottom()
-   METHOD  setBottom( nInt )
-   METHOD  setRange( nBottom, nTop )
-   METHOD  setTop( nInt )
-   METHOD  top()
+   METHOD  bottom                        // (  )                                               -> nInt
+   METHOD  setBottom                     // ( nInt )                                           -> NIL
+   METHOD  setRange                      // ( nBottom, nTop )                                  -> NIL
+   METHOD  setTop                        // ( nInt )                                           -> NIL
+   METHOD  top                           // (  )                                               -> nInt
 
    ENDCLASS
 
@@ -121,22 +121,54 @@ METHOD QIntValidator:new( ... )
    RETURN Self
 
 
-METHOD QIntValidator:bottom()
-   RETURN Qt_QIntValidator_bottom( ::pPtr )
+METHOD QIntValidator:bottom( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QIntValidator_bottom( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QIntValidator:setBottom( nInt )
-   RETURN Qt_QIntValidator_setBottom( ::pPtr, nInt )
+METHOD QIntValidator:setBottom( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QIntValidator_setBottom( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QIntValidator:setRange( nBottom, nTop )
-   RETURN Qt_QIntValidator_setRange( ::pPtr, nBottom, nTop )
+METHOD QIntValidator:setRange( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QIntValidator_setRange( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QIntValidator:setTop( nInt )
-   RETURN Qt_QIntValidator_setTop( ::pPtr, nInt )
+METHOD QIntValidator:setTop( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QIntValidator_setTop( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QIntValidator:top()
-   RETURN Qt_QIntValidator_top( ::pPtr )
+METHOD QIntValidator:top( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QIntValidator_top( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

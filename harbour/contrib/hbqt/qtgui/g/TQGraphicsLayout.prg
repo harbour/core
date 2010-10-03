@@ -103,14 +103,14 @@ CREATE CLASS QGraphicsLayout INHERIT HbQtObjectHandler, HB_QGraphicsLayoutItem F
 
    METHOD  new( ... )
 
-   METHOD  activate()
-   METHOD  count()
-   METHOD  invalidate()
-   METHOD  isActivated()
-   METHOD  itemAt( nI )
-   METHOD  removeAt( nIndex )
-   METHOD  setContentsMargins( nLeft, nTop, nRight, nBottom )
-   METHOD  widgetEvent( pE )
+   METHOD  activate                      // (  )                                               -> NIL
+   METHOD  count                         // (  )                                               -> nInt
+   METHOD  invalidate                    // (  )                                               -> NIL
+   METHOD  isActivated                   // (  )                                               -> lBool
+   METHOD  itemAt                        // ( nI )                                             -> oQGraphicsLayoutItem
+   METHOD  removeAt                      // ( nIndex )                                         -> NIL
+   METHOD  setContentsMargins            // ( nLeft, nTop, nRight, nBottom )                   -> NIL
+   METHOD  widgetEvent                   // ( oQEvent )                                        -> NIL
 
    ENDCLASS
 
@@ -124,34 +124,82 @@ METHOD QGraphicsLayout:new( ... )
    RETURN Self
 
 
-METHOD QGraphicsLayout:activate()
-   RETURN Qt_QGraphicsLayout_activate( ::pPtr )
+METHOD QGraphicsLayout:activate( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsLayout_activate( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayout:count()
-   RETURN Qt_QGraphicsLayout_count( ::pPtr )
+METHOD QGraphicsLayout:count( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsLayout_count( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayout:invalidate()
-   RETURN Qt_QGraphicsLayout_invalidate( ::pPtr )
+METHOD QGraphicsLayout:invalidate( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsLayout_invalidate( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayout:isActivated()
-   RETURN Qt_QGraphicsLayout_isActivated( ::pPtr )
+METHOD QGraphicsLayout:isActivated( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsLayout_isActivated( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayout:itemAt( nI )
-   RETURN HB_QGraphicsLayoutItem():from( Qt_QGraphicsLayout_itemAt( ::pPtr, nI ) )
+METHOD QGraphicsLayout:itemAt( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QGraphicsLayoutItem():from( Qt_QGraphicsLayout_itemAt( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayout:removeAt( nIndex )
-   RETURN Qt_QGraphicsLayout_removeAt( ::pPtr, nIndex )
+METHOD QGraphicsLayout:removeAt( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsLayout_removeAt( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayout:setContentsMargins( nLeft, nTop, nRight, nBottom )
-   RETURN Qt_QGraphicsLayout_setContentsMargins( ::pPtr, nLeft, nTop, nRight, nBottom )
+METHOD QGraphicsLayout:setContentsMargins( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QGraphicsLayout_setContentsMargins( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayout:widgetEvent( pE )
-   RETURN Qt_QGraphicsLayout_widgetEvent( ::pPtr, hbqt_ptr( pE ) )
+METHOD QGraphicsLayout:widgetEvent( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsLayout_widgetEvent( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

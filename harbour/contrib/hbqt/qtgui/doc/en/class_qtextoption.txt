@@ -26,7 +26,7 @@
  *  $RETURNS$
  *     An instance of the object of type QTextOption
  *  $METHODS$
- *     :alignment()                                        -> nQt::Alignment
+ *     :alignment()                                        -> nQt_Alignment
  *     :flags()                                            -> nFlags
  *     :setAlignment( nAlignment )                         -> NIL
  *     :setFlags( nFlags )                                 -> NIL
@@ -34,9 +34,9 @@
  *     :setTextDirection( nDirection )                     -> NIL
  *     :setUseDesignMetrics( lEnable )                     -> NIL
  *     :setWrapMode( nMode )                               -> NIL
- *     :tabArray()                                         -> pQList<qreal>
+ *     :tabArray()                                         -> oQList_qreal>
  *     :tabStop()                                          -> nQreal
- *     :textDirection()                                    -> nQt::LayoutDirection
+ *     :textDirection()                                    -> nQt_LayoutDirection
  *     :useDesignMetrics()                                 -> lBool
  *     :wrapMode()                                         -> nWrapMode
  * 
@@ -58,7 +58,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTextOption.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextOption.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

@@ -103,33 +103,38 @@ CREATE CLASS QListWidget INHERIT HbQtObjectHandler, HB_QListView FUNCTION HB_QLi
 
    METHOD  new( ... )
 
-   METHOD  addItem( ... )
-   METHOD  addItems( pLabels )
-   METHOD  closePersistentEditor( pItem )
-   METHOD  count()
-   METHOD  currentItem()
-   METHOD  currentRow()
-   METHOD  editItem( pItem )
-   METHOD  findItems( cText, nFlags )
-   METHOD  insertItem( ... )
-   METHOD  insertItems( nRow, pLabels )
-   METHOD  isSortingEnabled()
-   METHOD  item( nRow )
-   METHOD  itemAt( ... )
-   METHOD  itemWidget( pItem )
-   METHOD  openPersistentEditor( pItem )
-   METHOD  removeItemWidget( pItem )
-   METHOD  row( pItem )
-   METHOD  selectedItems()
-   METHOD  setCurrentItem( ... )
-   METHOD  setCurrentRow( ... )
-   METHOD  setItemWidget( pItem, pWidget )
-   METHOD  setSortingEnabled( lEnable )
-   METHOD  sortItems( nOrder )
-   METHOD  takeItem( nRow )
-   METHOD  visualItemRect( pItem )
-   METHOD  clear()
-   METHOD  scrollToItem( pItem, nHint )
+   METHOD  addItem                       // ( cLabel )                                         -> NIL
+                                         // ( oQListWidgetItem )                               -> NIL
+   METHOD  addItems                      // ( oQStringList )                                   -> NIL
+   METHOD  closePersistentEditor         // ( oQListWidgetItem )                               -> NIL
+   METHOD  count                         // (  )                                               -> nInt
+   METHOD  currentItem                   // (  )                                               -> oQListWidgetItem
+   METHOD  currentRow                    // (  )                                               -> nInt
+   METHOD  editItem                      // ( oQListWidgetItem )                               -> NIL
+   METHOD  findItems                     // ( cText, nFlags )                                  -> oQList_QListWidgetItem
+   METHOD  insertItem                    // ( nRow, oQListWidgetItem )                         -> NIL
+                                         // ( nRow, cLabel )                                   -> NIL
+   METHOD  insertItems                   // ( nRow, oQStringList )                             -> NIL
+   METHOD  isSortingEnabled              // (  )                                               -> lBool
+   METHOD  item                          // ( nRow )                                           -> oQListWidgetItem
+   METHOD  itemAt                        // ( oQPoint )                                        -> oQListWidgetItem
+                                         // ( nX, nY )                                         -> oQListWidgetItem
+   METHOD  itemWidget                    // ( oQListWidgetItem )                               -> oQWidget
+   METHOD  openPersistentEditor          // ( oQListWidgetItem )                               -> NIL
+   METHOD  removeItemWidget              // ( oQListWidgetItem )                               -> NIL
+   METHOD  row                           // ( oQListWidgetItem )                               -> nInt
+   METHOD  selectedItems                 // (  )                                               -> oQList_QListWidgetItem
+   METHOD  setCurrentItem                // ( oQListWidgetItem )                               -> NIL
+                                         // ( oQListWidgetItem, nCommand )                     -> NIL
+   METHOD  setCurrentRow                 // ( nRow )                                           -> NIL
+                                         // ( nRow, nCommand )                                 -> NIL
+   METHOD  setItemWidget                 // ( oQListWidgetItem, oQWidget )                     -> NIL
+   METHOD  setSortingEnabled             // ( lEnable )                                        -> NIL
+   METHOD  sortItems                     // ( nOrder )                                         -> NIL
+   METHOD  takeItem                      // ( nRow )                                           -> oQListWidgetItem
+   METHOD  visualItemRect                // ( oQListWidgetItem )                               -> oQRect
+   METHOD  clear                         // (  )                                               -> NIL
+   METHOD  scrollToItem                  // ( oQListWidgetItem, nHint )                        -> NIL
 
    ENDCLASS
 
@@ -157,32 +162,76 @@ METHOD QListWidget:addItem( ... )
    RETURN hbqt_error()
 
 
-METHOD QListWidget:addItems( pLabels )
-   RETURN Qt_QListWidget_addItems( ::pPtr, hbqt_ptr( pLabels ) )
+METHOD QListWidget:addItems( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QListWidget_addItems( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListWidget:closePersistentEditor( pItem )
-   RETURN Qt_QListWidget_closePersistentEditor( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QListWidget:closePersistentEditor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QListWidget_closePersistentEditor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListWidget:count()
-   RETURN Qt_QListWidget_count( ::pPtr )
+METHOD QListWidget:count( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QListWidget_count( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListWidget:currentItem()
-   RETURN HB_QListWidgetItem():from( Qt_QListWidget_currentItem( ::pPtr ) )
+METHOD QListWidget:currentItem( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QListWidgetItem():from( Qt_QListWidget_currentItem( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListWidget:currentRow()
-   RETURN Qt_QListWidget_currentRow( ::pPtr )
+METHOD QListWidget:currentRow( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QListWidget_currentRow( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListWidget:editItem( pItem )
-   RETURN Qt_QListWidget_editItem( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QListWidget:editItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QListWidget_editItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListWidget:findItems( cText, nFlags )
-   RETURN HB_QList():from( Qt_QListWidget_findItems( ::pPtr, cText, nFlags ) )
+METHOD QListWidget:findItems( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QList():from( Qt_QListWidget_findItems( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QListWidget:insertItem( ... )
@@ -199,16 +248,36 @@ METHOD QListWidget:insertItem( ... )
    RETURN hbqt_error()
 
 
-METHOD QListWidget:insertItems( nRow, pLabels )
-   RETURN Qt_QListWidget_insertItems( ::pPtr, nRow, hbqt_ptr( pLabels ) )
+METHOD QListWidget:insertItems( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QListWidget_insertItems( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListWidget:isSortingEnabled()
-   RETURN Qt_QListWidget_isSortingEnabled( ::pPtr )
+METHOD QListWidget:isSortingEnabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QListWidget_isSortingEnabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListWidget:item( nRow )
-   RETURN HB_QListWidgetItem():from( Qt_QListWidget_item( ::pPtr, nRow ) )
+METHOD QListWidget:item( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QListWidgetItem():from( Qt_QListWidget_item( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QListWidget:itemAt( ... )
@@ -229,24 +298,60 @@ METHOD QListWidget:itemAt( ... )
    RETURN hbqt_error()
 
 
-METHOD QListWidget:itemWidget( pItem )
-   RETURN HB_QWidget():from( Qt_QListWidget_itemWidget( ::pPtr, hbqt_ptr( pItem ) ) )
+METHOD QListWidget:itemWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QWidget():from( Qt_QListWidget_itemWidget( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListWidget:openPersistentEditor( pItem )
-   RETURN Qt_QListWidget_openPersistentEditor( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QListWidget:openPersistentEditor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QListWidget_openPersistentEditor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListWidget:removeItemWidget( pItem )
-   RETURN Qt_QListWidget_removeItemWidget( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QListWidget:removeItemWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QListWidget_removeItemWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListWidget:row( pItem )
-   RETURN Qt_QListWidget_row( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QListWidget:row( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QListWidget_row( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListWidget:selectedItems()
-   RETURN HB_QList():from( Qt_QListWidget_selectedItems( ::pPtr ) )
+METHOD QListWidget:selectedItems( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QListWidget_selectedItems( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QListWidget:setCurrentItem( ... )
@@ -285,30 +390,90 @@ METHOD QListWidget:setCurrentRow( ... )
    RETURN hbqt_error()
 
 
-METHOD QListWidget:setItemWidget( pItem, pWidget )
-   RETURN Qt_QListWidget_setItemWidget( ::pPtr, hbqt_ptr( pItem ), hbqt_ptr( pWidget ) )
+METHOD QListWidget:setItemWidget( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QListWidget_setItemWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListWidget:setSortingEnabled( lEnable )
-   RETURN Qt_QListWidget_setSortingEnabled( ::pPtr, lEnable )
+METHOD QListWidget:setSortingEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QListWidget_setSortingEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListWidget:sortItems( nOrder )
-   RETURN Qt_QListWidget_sortItems( ::pPtr, nOrder )
+METHOD QListWidget:sortItems( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QListWidget_sortItems( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QListWidget_sortItems( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListWidget:takeItem( nRow )
-   RETURN HB_QListWidgetItem():from( Qt_QListWidget_takeItem( ::pPtr, nRow ) )
+METHOD QListWidget:takeItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QListWidgetItem():from( Qt_QListWidget_takeItem( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListWidget:visualItemRect( pItem )
-   RETURN HB_QRect():from( Qt_QListWidget_visualItemRect( ::pPtr, hbqt_ptr( pItem ) ) )
+METHOD QListWidget:visualItemRect( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QRect():from( Qt_QListWidget_visualItemRect( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListWidget:clear()
-   RETURN Qt_QListWidget_clear( ::pPtr )
+METHOD QListWidget:clear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QListWidget_clear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QListWidget:scrollToItem( pItem, nHint )
-   RETURN Qt_QListWidget_scrollToItem( ::pPtr, hbqt_ptr( pItem ), nHint )
+METHOD QListWidget:scrollToItem( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QListWidget_scrollToItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QListWidget_scrollToItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

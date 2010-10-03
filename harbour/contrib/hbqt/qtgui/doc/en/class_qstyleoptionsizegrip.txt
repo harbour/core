@@ -26,7 +26,7 @@
  *  $RETURNS$
  *     An instance of the object of type QStyleOptionSizeGrip
  *  $METHODS$
- *     :corner()                                           -> nQt::Corner
+ *     :corner()                                           -> nQt_Corner
  * 
  *  $DESCRIPTION$
  * 
@@ -46,7 +46,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionSizeGrip.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionSizeGrip.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QStyleOptionComplex()
  *  $END$
  */

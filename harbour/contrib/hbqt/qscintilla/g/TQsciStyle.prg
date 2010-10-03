@@ -103,26 +103,26 @@ CREATE CLASS QsciStyle INHERIT HbQtObjectHandler FUNCTION HB_QsciStyle
 
    METHOD  new( ... )
 
-   METHOD  style()
-   METHOD  setDescription( cDescription )
-   METHOD  description()
-   METHOD  setColor( pColor )
-   METHOD  color()
-   METHOD  setPaper( pPaper )
-   METHOD  paper()
-   METHOD  setFont( pFont )
-   METHOD  font()
-   METHOD  setEolFill( lFill )
-   METHOD  eolFill()
-   METHOD  setTextCase( nText_case )
-   METHOD  textCase()
-   METHOD  setVisible( lVisible )
-   METHOD  visible()
-   METHOD  setChangeable( lChangeable )
-   METHOD  changeable()
-   METHOD  setHotspot( lHotspot )
-   METHOD  hotspot()
-   METHOD  refresh()
+   METHOD  style                         // (  )                                               -> nInt
+   METHOD  setDescription                // ( cDescription )                                   -> NIL
+   METHOD  description                   // (  )                                               -> cQString
+   METHOD  setColor                      // ( oQColor )                                        -> NIL
+   METHOD  color                         // (  )                                               -> oQColor
+   METHOD  setPaper                      // ( oQColor )                                        -> NIL
+   METHOD  paper                         // (  )                                               -> oQColor
+   METHOD  setFont                       // ( oQFont )                                         -> NIL
+   METHOD  font                          // (  )                                               -> oQFont
+   METHOD  setEolFill                    // ( lFill )                                          -> NIL
+   METHOD  eolFill                       // (  )                                               -> lBool
+   METHOD  setTextCase                   // ( nText_case )                                     -> NIL
+   METHOD  textCase                      // (  )                                               -> nTextCase
+   METHOD  setVisible                    // ( lVisible )                                       -> NIL
+   METHOD  visible                       // (  )                                               -> lBool
+   METHOD  setChangeable                 // ( lChangeable )                                    -> NIL
+   METHOD  changeable                    // (  )                                               -> lBool
+   METHOD  setHotspot                    // ( lHotspot )                                       -> NIL
+   METHOD  hotspot                       // (  )                                               -> lBool
+   METHOD  refresh                       // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -136,82 +136,198 @@ METHOD QsciStyle:new( ... )
    RETURN Self
 
 
-METHOD QsciStyle:style()
-   RETURN Qt_QsciStyle_style( ::pPtr )
+METHOD QsciStyle:style( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciStyle_style( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciStyle:setDescription( cDescription )
-   RETURN Qt_QsciStyle_setDescription( ::pPtr, cDescription )
+METHOD QsciStyle:setDescription( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QsciStyle_setDescription( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciStyle:description()
-   RETURN Qt_QsciStyle_description( ::pPtr )
+METHOD QsciStyle:description( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciStyle_description( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciStyle:setColor( pColor )
-   RETURN Qt_QsciStyle_setColor( ::pPtr, hbqt_ptr( pColor ) )
+METHOD QsciStyle:setColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciStyle_setColor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciStyle:color()
-   RETURN HB_QColor():from( Qt_QsciStyle_color( ::pPtr ) )
+METHOD QsciStyle:color( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QColor():from( Qt_QsciStyle_color( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciStyle:setPaper( pPaper )
-   RETURN Qt_QsciStyle_setPaper( ::pPtr, hbqt_ptr( pPaper ) )
+METHOD QsciStyle:setPaper( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciStyle_setPaper( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciStyle:paper()
-   RETURN HB_QColor():from( Qt_QsciStyle_paper( ::pPtr ) )
+METHOD QsciStyle:paper( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QColor():from( Qt_QsciStyle_paper( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciStyle:setFont( pFont )
-   RETURN Qt_QsciStyle_setFont( ::pPtr, hbqt_ptr( pFont ) )
+METHOD QsciStyle:setFont( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciStyle_setFont( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciStyle:font()
-   RETURN HB_QFont():from( Qt_QsciStyle_font( ::pPtr ) )
+METHOD QsciStyle:font( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFont():from( Qt_QsciStyle_font( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciStyle:setEolFill( lFill )
-   RETURN Qt_QsciStyle_setEolFill( ::pPtr, lFill )
+METHOD QsciStyle:setEolFill( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciStyle_setEolFill( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciStyle:eolFill()
-   RETURN Qt_QsciStyle_eolFill( ::pPtr )
+METHOD QsciStyle:eolFill( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciStyle_eolFill( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciStyle:setTextCase( nText_case )
-   RETURN Qt_QsciStyle_setTextCase( ::pPtr, nText_case )
+METHOD QsciStyle:setTextCase( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciStyle_setTextCase( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciStyle:textCase()
-   RETURN Qt_QsciStyle_textCase( ::pPtr )
+METHOD QsciStyle:textCase( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciStyle_textCase( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciStyle:setVisible( lVisible )
-   RETURN Qt_QsciStyle_setVisible( ::pPtr, lVisible )
+METHOD QsciStyle:setVisible( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciStyle_setVisible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciStyle:visible()
-   RETURN Qt_QsciStyle_visible( ::pPtr )
+METHOD QsciStyle:visible( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciStyle_visible( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciStyle:setChangeable( lChangeable )
-   RETURN Qt_QsciStyle_setChangeable( ::pPtr, lChangeable )
+METHOD QsciStyle:setChangeable( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciStyle_setChangeable( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciStyle:changeable()
-   RETURN Qt_QsciStyle_changeable( ::pPtr )
+METHOD QsciStyle:changeable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciStyle_changeable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciStyle:setHotspot( lHotspot )
-   RETURN Qt_QsciStyle_setHotspot( ::pPtr, lHotspot )
+METHOD QsciStyle:setHotspot( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciStyle_setHotspot( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciStyle:hotspot()
-   RETURN Qt_QsciStyle_hotspot( ::pPtr )
+METHOD QsciStyle:hotspot( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciStyle_hotspot( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciStyle:refresh()
-   RETURN Qt_QsciStyle_refresh( ::pPtr )
+METHOD QsciStyle:refresh( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciStyle_refresh( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

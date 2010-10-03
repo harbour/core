@@ -99,12 +99,8 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 14/14 [ 100.00% ] ]
+ *  Constructed[ 25/25 [ 100.00% ] ]
  *
- *
- *  *** Commented out protostypes ***
- *
- *  //const QGradient * gradient () const
  */
 
 #include <QtCore/QPointer>
@@ -193,19 +189,19 @@ HB_FUNC( QT_QBRUSH )
          {
             pObj = new QBrush( *hbqt_par_QBrush( 1 ) ) ;
          }
-         if( q->type == HBQT_TYPE_QPixmap )
+         else if( q->type == HBQT_TYPE_QPixmap )
          {
             pObj = new QBrush( *hbqt_par_QPixmap( 1 ) ) ;
          }
-         if( q->type == HBQT_TYPE_QImage )
+         else if( q->type == HBQT_TYPE_QImage )
          {
             pObj = new QBrush( *hbqt_par_QImage( 1 ) ) ;
          }
-         if( q->type == HBQT_TYPE_QGradient )
+         else if( q->type == HBQT_TYPE_QGradient )
          {
             pObj = new QBrush( *hbqt_par_QGradient( 1 ) ) ;
          }
-         if( q->type == HBQT_TYPE_QColor )
+         else if( q->type == HBQT_TYPE_QColor )
          {
             pObj = new QBrush( *hbqt_par_QColor( 1 ), Qt::SolidPattern ) ;
          }
@@ -269,6 +265,86 @@ HB_FUNC( QT_QBRUSH )
 }
 
 /*
+ * QBrush ()
+ */
+HB_FUNC( QT_QBRUSH_QBRUSH )
+{
+   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush(), true ) );
+}
+
+/*
+ * QBrush ( Qt::BrushStyle style )
+ */
+HB_FUNC( QT_QBRUSH_QBRUSH_1 )
+{
+   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( Qt::BrushStyle ) hb_parni( 2 ) ), true ) );
+}
+
+/*
+ * QBrush ( const QColor & color, Qt::BrushStyle style = Qt::SolidPattern )
+ */
+HB_FUNC( QT_QBRUSH_QBRUSH_2 )
+{
+   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( *hbqt_par_QColor( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::BrushStyle ) hb_parni( 3 ) : ( Qt::BrushStyle ) Qt::SolidPattern ) ), true ) );
+}
+
+/*
+ * QBrush ( Qt::GlobalColor color, Qt::BrushStyle style = Qt::SolidPattern )
+ */
+HB_FUNC( QT_QBRUSH_QBRUSH_3 )
+{
+   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( Qt::GlobalColor ) hb_parni( 2 ), ( HB_ISNUM( 3 ) ? ( Qt::BrushStyle ) hb_parni( 3 ) : ( Qt::BrushStyle ) Qt::SolidPattern ) ), true ) );
+}
+
+/*
+ * QBrush ( const QColor & color, const QPixmap & pixmap )
+ */
+HB_FUNC( QT_QBRUSH_QBRUSH_4 )
+{
+   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( *hbqt_par_QColor( 2 ), *hbqt_par_QPixmap( 3 ) ), true ) );
+}
+
+/*
+ * QBrush ( Qt::GlobalColor color, const QPixmap & pixmap )
+ */
+HB_FUNC( QT_QBRUSH_QBRUSH_5 )
+{
+   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( ( Qt::GlobalColor ) hb_parni( 2 ), *hbqt_par_QPixmap( 3 ) ), true ) );
+}
+
+/*
+ * QBrush ( const QPixmap & pixmap )
+ */
+HB_FUNC( QT_QBRUSH_QBRUSH_6 )
+{
+   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( *hbqt_par_QPixmap( 2 ) ), true ) );
+}
+
+/*
+ * QBrush ( const QImage & image )
+ */
+HB_FUNC( QT_QBRUSH_QBRUSH_7 )
+{
+   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( *hbqt_par_QImage( 2 ) ), true ) );
+}
+
+/*
+ * QBrush ( const QBrush & other )
+ */
+HB_FUNC( QT_QBRUSH_QBRUSH_8 )
+{
+   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( *hbqt_par_QBrush( 2 ) ), true ) );
+}
+
+/*
+ * QBrush ( const QGradient & gradient )
+ */
+HB_FUNC( QT_QBRUSH_QBRUSH_9 )
+{
+   hb_retptrGC( hbqt_gcAllocate_QBrush( new QBrush( *hbqt_par_QGradient( 2 ) ), true ) );
+}
+
+/*
  * const QColor & color () const
  */
 HB_FUNC( QT_QBRUSH_COLOR )
@@ -277,6 +353,18 @@ HB_FUNC( QT_QBRUSH_COLOR )
    if( p )
    {
       hb_retptrGC( hbqt_gcAllocate_QColor( new QColor( ( p )->color() ), true ) );
+   }
+}
+
+/*
+ * const QGradient * gradient () const
+ */
+HB_FUNC( QT_QBRUSH_GRADIENT )
+{
+   QBrush * p = hbqt_par_QBrush( 1 );
+   if( p )
+   {
+      hb_retptrGC( hbqt_gcAllocate_QGradient( new QGradient( *( ( p )->gradient() ) ), true ) );
    }
 }
 

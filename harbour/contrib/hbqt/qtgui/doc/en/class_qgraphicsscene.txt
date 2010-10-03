@@ -26,75 +26,75 @@
  *  $RETURNS$
  *     An instance of the object of type QGraphicsScene
  *  $METHODS$
- *     :activeWindow()                                     -> pQGraphicsWidget
- *     :addEllipse( pRect, pPen, pBrush )                  -> pQGraphicsEllipseItem
- *     :addEllipse_1( nX, nY, nW, nH, pPen, pBrush )       -> pQGraphicsEllipseItem
- *     :addItem( pItem )                                   -> NIL
- *     :addLine( pLine, pPen )                             -> pQGraphicsLineItem
- *     :addLine_1( nX1, nY1, nX2, nY2, pPen )              -> pQGraphicsLineItem
- *     :addPath( pPath, pPen, pBrush )                     -> pQGraphicsPathItem
- *     :addPixmap( pPixmap )                               -> pQGraphicsPixmapItem
- *     :addPolygon( pPolygon, pPen, pBrush )               -> pQGraphicsPolygonItem
- *     :addRect( pRect, pPen, pBrush )                     -> pQGraphicsRectItem
- *     :addRect_1( nX, nY, nW, nH, pPen, pBrush )          -> pQGraphicsRectItem
- *     :addSimpleText( cText, pFont )                      -> pQGraphicsSimpleTextItem
- *     :addText( cText, pFont )                            -> pQGraphicsTextItem
- *     :addWidget( pWidget, nWFlags )                      -> pQGraphicsProxyWidget
- *     :backgroundBrush()                                  -> pQBrush
+ *     :activeWindow()                                     -> oQGraphicsWidget
+ *     :addEllipse( oQRectF, oQPen, oQBrush )              -> oQGraphicsEllipseItem
+ *     :addEllipse( nX, nY, nW, nH, oQPen, oQBrush )       -> oQGraphicsEllipseItem
+ *     :addItem( oQGraphicsItem )                          -> NIL
+ *     :addLine( oQLineF, oQPen )                          -> oQGraphicsLineItem
+ *     :addLine( nX1, nY1, nX2, nY2, oQPen )               -> oQGraphicsLineItem
+ *     :addPath( oQPainterPath, oQPen, oQBrush )           -> oQGraphicsPathItem
+ *     :addPixmap( oQPixmap )                              -> oQGraphicsPixmapItem
+ *     :addPolygon( oQPolygonF, oQPen, oQBrush )           -> oQGraphicsPolygonItem
+ *     :addRect( oQRectF, oQPen, oQBrush )                 -> oQGraphicsRectItem
+ *     :addRect( nX, nY, nW, nH, oQPen, oQBrush )          -> oQGraphicsRectItem
+ *     :addSimpleText( cText, oQFont )                     -> oQGraphicsSimpleTextItem
+ *     :addText( cText, oQFont )                           -> oQGraphicsTextItem
+ *     :addWidget( oQWidget, nWFlags )                     -> oQGraphicsProxyWidget
+ *     :backgroundBrush()                                  -> oQBrush
  *     :bspTreeDepth()                                     -> nInt
  *     :clearFocus()                                       -> NIL
- *     :collidingItems( pItem, nMode )                     -> pQList<QGraphicsItem *>
- *     :destroyItemGroup( pGroup )                         -> NIL
- *     :focusItem()                                        -> pQGraphicsItem
- *     :font()                                             -> pQFont
- *     :foregroundBrush()                                  -> pQBrush
+ *     :collidingItems( oQGraphicsItem, nMode )            -> oQList_QGraphicsItem
+ *     :destroyItemGroup( oQGraphicsItemGroup )            -> NIL
+ *     :focusItem()                                        -> oQGraphicsItem
+ *     :font()                                             -> oQFont
+ *     :foregroundBrush()                                  -> oQBrush
  *     :hasFocus()                                         -> lBool
  *     :height()                                           -> nQreal
  *     :invalidate( nX, nY, nW, nH, nLayers )              -> NIL
  *     :isSortCacheEnabled()                               -> lBool
- *     :itemAt( pPosition )                                -> pQGraphicsItem
- *     :itemAt_1( nX, nY )                                 -> pQGraphicsItem
+ *     :itemAt( oQPointF )                                 -> oQGraphicsItem
+ *     :itemAt( nX, nY )                                   -> oQGraphicsItem
  *     :itemIndexMethod()                                  -> nItemIndexMethod
- *     :items()                                            -> pQList<QGraphicsItem *>
- *     :items_1( pPos )                                    -> pQList<QGraphicsItem *>
- *     :items_2( nX, nY, nW, nH, nMode )                   -> pQList<QGraphicsItem *>
- *     :items_3( pRectangle, nMode )                       -> pQList<QGraphicsItem *>
- *     :items_4( pPolygon, nMode )                         -> pQList<QGraphicsItem *>
- *     :items_5( pPath, nMode )                            -> pQList<QGraphicsItem *>
- *     :itemsBoundingRect()                                -> pQRectF
- *     :mouseGrabberItem()                                 -> pQGraphicsItem
- *     :palette()                                          -> pQPalette
- *     :removeItem( pItem )                                -> NIL
- *     :render( pPainter, pTarget, pSource, nAspectRatioMode )  -> NIL
- *     :sceneRect()                                        -> pQRectF
- *     :selectedItems()                                    -> pQList<QGraphicsItem *>
- *     :selectionArea()                                    -> pQPainterPath
- *     :setActiveWindow( pWidget )                         -> NIL
- *     :setBackgroundBrush( pBrush )                       -> NIL
+ *     :items()                                            -> oQList_QGraphicsItem
+ *     :items( oQPointF )                                  -> oQList_QGraphicsItem
+ *     :items( nX, nY, nW, nH, nMode )                     -> oQList_QGraphicsItem
+ *     :items( oQRectF, nMode )                            -> oQList_QGraphicsItem
+ *     :items( oQPolygonF, nMode )                         -> oQList_QGraphicsItem
+ *     :items( oQPainterPath, nMode )                      -> oQList_QGraphicsItem
+ *     :itemsBoundingRect()                                -> oQRectF
+ *     :mouseGrabberItem()                                 -> oQGraphicsItem
+ *     :palette()                                          -> oQPalette
+ *     :removeItem( oQGraphicsItem )                       -> NIL
+ *     :render( oQPainter, oQRectF, oQRectF, nAspectRatioMode )  -> NIL
+ *     :sceneRect()                                        -> oQRectF
+ *     :selectedItems()                                    -> oQList_QGraphicsItem
+ *     :selectionArea()                                    -> oQPainterPath
+ *     :setActiveWindow( oQGraphicsWidget )                -> NIL
+ *     :setBackgroundBrush( oQBrush )                      -> NIL
  *     :setBspTreeDepth( nDepth )                          -> NIL
  *     :setFocus( nFocusReason )                           -> NIL
- *     :setFocusItem( pItem, nFocusReason )                -> NIL
- *     :setFont( pFont )                                   -> NIL
- *     :setForegroundBrush( pBrush )                       -> NIL
+ *     :setFocusItem( oQGraphicsItem, nFocusReason )       -> NIL
+ *     :setFont( oQFont )                                  -> NIL
+ *     :setForegroundBrush( oQBrush )                      -> NIL
  *     :setItemIndexMethod( nMethod )                      -> NIL
- *     :setPalette( pPalette )                             -> NIL
- *     :setSceneRect( pRect )                              -> NIL
- *     :setSceneRect_1( nX, nY, nW, nH )                   -> NIL
- *     :setSelectionArea( pPath )                          -> NIL
- *     :setSelectionArea_1( pPath, nMode )                 -> NIL
+ *     :setPalette( oQPalette )                            -> NIL
+ *     :setSceneRect( oQRectF )                            -> NIL
+ *     :setSceneRect( nX, nY, nW, nH )                     -> NIL
+ *     :setSelectionArea( oQPainterPath )                  -> NIL
+ *     :setSelectionArea( oQPainterPath, nMode )           -> NIL
  *     :setSortCacheEnabled( lEnabled )                    -> NIL
  *     :setStickyFocus( lEnabled )                         -> NIL
- *     :setStyle( pStyle )                                 -> NIL
+ *     :setStyle( oQStyle )                                -> NIL
  *     :stickyFocus()                                      -> lBool
- *     :style()                                            -> pQStyle
+ *     :style()                                            -> oQStyle
  *     :update( nX, nY, nW, nH )                           -> NIL
- *     :views()                                            -> pQList<QGraphicsView *>
+ *     :views()                                            -> oQList_QGraphicsView
  *     :width()                                            -> nQreal
  *     :advance()                                          -> NIL
  *     :clear()                                            -> NIL
  *     :clearSelection()                                   -> NIL
- *     :invalidate_1( pRect, nLayers )                     -> NIL
- *     :update_1( pRect )                                  -> NIL
+ *     :invalidate( oQRectF, nLayers )                     -> NIL
+ *     :update( oQRectF )                                  -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -114,7 +114,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGraphicsScene.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsScene.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

@@ -103,20 +103,20 @@ CREATE CLASS QSystemTrayIcon INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_Q
 
    METHOD  new( ... )
 
-   METHOD  contextMenu()
-   METHOD  geometry()
-   METHOD  icon()
-   METHOD  isVisible()
-   METHOD  setContextMenu( pMenu )
-   METHOD  setIcon( pIcon )
-   METHOD  setToolTip( cTip )
-   METHOD  showMessage( cTitle, cMessage, nIcon, nMillisecondsTimeoutHint )
-   METHOD  toolTip()
-   METHOD  isSystemTrayAvailable()
-   METHOD  supportsMessages()
-   METHOD  hide()
-   METHOD  setVisible( lVisible )
-   METHOD  show()
+   METHOD  contextMenu                   // (  )                                               -> oQMenu
+   METHOD  geometry                      // (  )                                               -> oQRect
+   METHOD  icon                          // (  )                                               -> oQIcon
+   METHOD  isVisible                     // (  )                                               -> lBool
+   METHOD  setContextMenu                // ( oQMenu )                                         -> NIL
+   METHOD  setIcon                       // ( coQIcon )                                        -> NIL
+   METHOD  setToolTip                    // ( cTip )                                           -> NIL
+   METHOD  showMessage                   // ( cTitle, cMessage, nIcon, nMillisecondsTimeoutHint ) -> NIL
+   METHOD  toolTip                       // (  )                                               -> cQString
+   METHOD  isSystemTrayAvailable         // (  )                                               -> lBool
+   METHOD  supportsMessages              // (  )                                               -> lBool
+   METHOD  hide                          // (  )                                               -> NIL
+   METHOD  setVisible                    // ( lVisible )                                       -> NIL
+   METHOD  show                          // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -130,58 +130,146 @@ METHOD QSystemTrayIcon:new( ... )
    RETURN Self
 
 
-METHOD QSystemTrayIcon:contextMenu()
-   RETURN HB_QMenu():from( Qt_QSystemTrayIcon_contextMenu( ::pPtr ) )
+METHOD QSystemTrayIcon:contextMenu( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QMenu():from( Qt_QSystemTrayIcon_contextMenu( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSystemTrayIcon:geometry()
-   RETURN HB_QRect():from( Qt_QSystemTrayIcon_geometry( ::pPtr ) )
+METHOD QSystemTrayIcon:geometry( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QSystemTrayIcon_geometry( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSystemTrayIcon:icon()
-   RETURN HB_QIcon():from( Qt_QSystemTrayIcon_icon( ::pPtr ) )
+METHOD QSystemTrayIcon:icon( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QIcon():from( Qt_QSystemTrayIcon_icon( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSystemTrayIcon:isVisible()
-   RETURN Qt_QSystemTrayIcon_isVisible( ::pPtr )
+METHOD QSystemTrayIcon:isVisible( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSystemTrayIcon_isVisible( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSystemTrayIcon:setContextMenu( pMenu )
-   RETURN Qt_QSystemTrayIcon_setContextMenu( ::pPtr, hbqt_ptr( pMenu ) )
+METHOD QSystemTrayIcon:setContextMenu( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QSystemTrayIcon_setContextMenu( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSystemTrayIcon:setIcon( pIcon )
-   RETURN Qt_QSystemTrayIcon_setIcon( ::pPtr, hbqt_ptr( pIcon ) )
+METHOD QSystemTrayIcon:setIcon( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) )
+         RETURN Qt_QSystemTrayIcon_setIcon( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSystemTrayIcon:setToolTip( cTip )
-   RETURN Qt_QSystemTrayIcon_setToolTip( ::pPtr, cTip )
+METHOD QSystemTrayIcon:setToolTip( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QSystemTrayIcon_setToolTip( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSystemTrayIcon:showMessage( cTitle, cMessage, nIcon, nMillisecondsTimeoutHint )
-   RETURN Qt_QSystemTrayIcon_showMessage( ::pPtr, cTitle, cMessage, nIcon, nMillisecondsTimeoutHint )
+METHOD QSystemTrayIcon:showMessage( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QSystemTrayIcon_showMessage( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QSystemTrayIcon_showMessage( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QSystemTrayIcon_showMessage( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSystemTrayIcon:toolTip()
-   RETURN Qt_QSystemTrayIcon_toolTip( ::pPtr )
+METHOD QSystemTrayIcon:toolTip( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSystemTrayIcon_toolTip( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSystemTrayIcon:isSystemTrayAvailable()
-   RETURN Qt_QSystemTrayIcon_isSystemTrayAvailable( ::pPtr )
+METHOD QSystemTrayIcon:isSystemTrayAvailable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSystemTrayIcon_isSystemTrayAvailable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSystemTrayIcon:supportsMessages()
-   RETURN Qt_QSystemTrayIcon_supportsMessages( ::pPtr )
+METHOD QSystemTrayIcon:supportsMessages( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSystemTrayIcon_supportsMessages( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSystemTrayIcon:hide()
-   RETURN Qt_QSystemTrayIcon_hide( ::pPtr )
+METHOD QSystemTrayIcon:hide( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSystemTrayIcon_hide( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSystemTrayIcon:setVisible( lVisible )
-   RETURN Qt_QSystemTrayIcon_setVisible( ::pPtr, lVisible )
+METHOD QSystemTrayIcon:setVisible( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QSystemTrayIcon_setVisible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSystemTrayIcon:show()
-   RETURN Qt_QSystemTrayIcon_show( ::pPtr )
+METHOD QSystemTrayIcon:show( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSystemTrayIcon_show( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

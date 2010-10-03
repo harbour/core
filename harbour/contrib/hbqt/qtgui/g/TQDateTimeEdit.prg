@@ -103,50 +103,50 @@ CREATE CLASS QDateTimeEdit INHERIT HbQtObjectHandler, HB_QAbstractSpinBox FUNCTI
 
    METHOD  new( ... )
 
-   METHOD  calendarPopup()
-   METHOD  calendarWidget()
-   METHOD  clearMaximumDate()
-   METHOD  clearMaximumDateTime()
-   METHOD  clearMaximumTime()
-   METHOD  clearMinimumDate()
-   METHOD  clearMinimumDateTime()
-   METHOD  clearMinimumTime()
-   METHOD  currentSection()
-   METHOD  currentSectionIndex()
-   METHOD  date()
-   METHOD  dateTime()
-   METHOD  displayFormat()
-   METHOD  displayedSections()
-   METHOD  maximumDate()
-   METHOD  maximumDateTime()
-   METHOD  maximumTime()
-   METHOD  minimumDate()
-   METHOD  minimumDateTime()
-   METHOD  minimumTime()
-   METHOD  sectionAt( nIndex )
-   METHOD  sectionCount()
-   METHOD  sectionText( nSection )
-   METHOD  setCalendarPopup( lEnable )
-   METHOD  setCalendarWidget( pCalendarWidget )
-   METHOD  setCurrentSection( nSection )
-   METHOD  setCurrentSectionIndex( nIndex )
-   METHOD  setDateRange( pMin, pMax )
-   METHOD  setDateTimeRange( pMin, pMax )
-   METHOD  setDisplayFormat( cFormat )
-   METHOD  setMaximumDate( pMax )
-   METHOD  setMaximumDateTime( pDt )
-   METHOD  setMaximumTime( pMax )
-   METHOD  setMinimumDate( pMin )
-   METHOD  setMinimumDateTime( pDt )
-   METHOD  setMinimumTime( pMin )
-   METHOD  setSelectedSection( nSection )
-   METHOD  setTimeRange( pMin, pMax )
-   METHOD  setTimeSpec( nSpec )
-   METHOD  time()
-   METHOD  timeSpec()
-   METHOD  setDate( pDate )
-   METHOD  setDateTime( pDateTime )
-   METHOD  setTime( pTime )
+   METHOD  calendarPopup                 // (  )                                               -> lBool
+   METHOD  calendarWidget                // (  )                                               -> oQCalendarWidget
+   METHOD  clearMaximumDate              // (  )                                               -> NIL
+   METHOD  clearMaximumDateTime          // (  )                                               -> NIL
+   METHOD  clearMaximumTime              // (  )                                               -> NIL
+   METHOD  clearMinimumDate              // (  )                                               -> NIL
+   METHOD  clearMinimumDateTime          // (  )                                               -> NIL
+   METHOD  clearMinimumTime              // (  )                                               -> NIL
+   METHOD  currentSection                // (  )                                               -> nSection
+   METHOD  currentSectionIndex           // (  )                                               -> nInt
+   METHOD  date                          // (  )                                               -> oQDate
+   METHOD  dateTime                      // (  )                                               -> oQDateTime
+   METHOD  displayFormat                 // (  )                                               -> cQString
+   METHOD  displayedSections             // (  )                                               -> nSections
+   METHOD  maximumDate                   // (  )                                               -> oQDate
+   METHOD  maximumDateTime               // (  )                                               -> oQDateTime
+   METHOD  maximumTime                   // (  )                                               -> oQTime
+   METHOD  minimumDate                   // (  )                                               -> oQDate
+   METHOD  minimumDateTime               // (  )                                               -> oQDateTime
+   METHOD  minimumTime                   // (  )                                               -> oQTime
+   METHOD  sectionAt                     // ( nIndex )                                         -> nSection
+   METHOD  sectionCount                  // (  )                                               -> nInt
+   METHOD  sectionText                   // ( nSection )                                       -> cQString
+   METHOD  setCalendarPopup              // ( lEnable )                                        -> NIL
+   METHOD  setCalendarWidget             // ( oQCalendarWidget )                               -> NIL
+   METHOD  setCurrentSection             // ( nSection )                                       -> NIL
+   METHOD  setCurrentSectionIndex        // ( nIndex )                                         -> NIL
+   METHOD  setDateRange                  // ( oQDate, oQDate )                                 -> NIL
+   METHOD  setDateTimeRange              // ( oQDateTime, oQDateTime )                         -> NIL
+   METHOD  setDisplayFormat              // ( cFormat )                                        -> NIL
+   METHOD  setMaximumDate                // ( oQDate )                                         -> NIL
+   METHOD  setMaximumDateTime            // ( oQDateTime )                                     -> NIL
+   METHOD  setMaximumTime                // ( oQTime )                                         -> NIL
+   METHOD  setMinimumDate                // ( oQDate )                                         -> NIL
+   METHOD  setMinimumDateTime            // ( oQDateTime )                                     -> NIL
+   METHOD  setMinimumTime                // ( oQTime )                                         -> NIL
+   METHOD  setSelectedSection            // ( nSection )                                       -> NIL
+   METHOD  setTimeRange                  // ( oQTime, oQTime )                                 -> NIL
+   METHOD  setTimeSpec                   // ( nSpec )                                          -> NIL
+   METHOD  time                          // (  )                                               -> oQTime
+   METHOD  timeSpec                      // (  )                                               -> nQt_TimeSpec
+   METHOD  setDate                       // ( oQDate )                                         -> NIL
+   METHOD  setDateTime                   // ( oQDateTime )                                     -> NIL
+   METHOD  setTime                       // ( oQTime )                                         -> NIL
 
    ENDCLASS
 
@@ -160,178 +160,438 @@ METHOD QDateTimeEdit:new( ... )
    RETURN Self
 
 
-METHOD QDateTimeEdit:calendarPopup()
-   RETURN Qt_QDateTimeEdit_calendarPopup( ::pPtr )
-
-
-METHOD QDateTimeEdit:calendarWidget()
-   RETURN HB_QCalendarWidget():from( Qt_QDateTimeEdit_calendarWidget( ::pPtr ) )
-
-
-METHOD QDateTimeEdit:clearMaximumDate()
-   RETURN Qt_QDateTimeEdit_clearMaximumDate( ::pPtr )
-
-
-METHOD QDateTimeEdit:clearMaximumDateTime()
-   RETURN Qt_QDateTimeEdit_clearMaximumDateTime( ::pPtr )
-
-
-METHOD QDateTimeEdit:clearMaximumTime()
-   RETURN Qt_QDateTimeEdit_clearMaximumTime( ::pPtr )
-
-
-METHOD QDateTimeEdit:clearMinimumDate()
-   RETURN Qt_QDateTimeEdit_clearMinimumDate( ::pPtr )
-
-
-METHOD QDateTimeEdit:clearMinimumDateTime()
-   RETURN Qt_QDateTimeEdit_clearMinimumDateTime( ::pPtr )
-
-
-METHOD QDateTimeEdit:clearMinimumTime()
-   RETURN Qt_QDateTimeEdit_clearMinimumTime( ::pPtr )
-
-
-METHOD QDateTimeEdit:currentSection()
-   RETURN Qt_QDateTimeEdit_currentSection( ::pPtr )
-
-
-METHOD QDateTimeEdit:currentSectionIndex()
-   RETURN Qt_QDateTimeEdit_currentSectionIndex( ::pPtr )
-
-
-METHOD QDateTimeEdit:date()
-   RETURN HB_QDate():from( Qt_QDateTimeEdit_date( ::pPtr ) )
-
-
-METHOD QDateTimeEdit:dateTime()
-   RETURN HB_QDateTime():from( Qt_QDateTimeEdit_dateTime( ::pPtr ) )
-
-
-METHOD QDateTimeEdit:displayFormat()
-   RETURN Qt_QDateTimeEdit_displayFormat( ::pPtr )
-
-
-METHOD QDateTimeEdit:displayedSections()
-   RETURN Qt_QDateTimeEdit_displayedSections( ::pPtr )
-
-
-METHOD QDateTimeEdit:maximumDate()
-   RETURN HB_QDate():from( Qt_QDateTimeEdit_maximumDate( ::pPtr ) )
-
-
-METHOD QDateTimeEdit:maximumDateTime()
-   RETURN HB_QDateTime():from( Qt_QDateTimeEdit_maximumDateTime( ::pPtr ) )
-
-
-METHOD QDateTimeEdit:maximumTime()
-   RETURN HB_QTime():from( Qt_QDateTimeEdit_maximumTime( ::pPtr ) )
-
-
-METHOD QDateTimeEdit:minimumDate()
-   RETURN HB_QDate():from( Qt_QDateTimeEdit_minimumDate( ::pPtr ) )
-
-
-METHOD QDateTimeEdit:minimumDateTime()
-   RETURN HB_QDateTime():from( Qt_QDateTimeEdit_minimumDateTime( ::pPtr ) )
-
-
-METHOD QDateTimeEdit:minimumTime()
-   RETURN HB_QTime():from( Qt_QDateTimeEdit_minimumTime( ::pPtr ) )
-
-
-METHOD QDateTimeEdit:sectionAt( nIndex )
-   RETURN Qt_QDateTimeEdit_sectionAt( ::pPtr, nIndex )
-
-
-METHOD QDateTimeEdit:sectionCount()
-   RETURN Qt_QDateTimeEdit_sectionCount( ::pPtr )
-
-
-METHOD QDateTimeEdit:sectionText( nSection )
-   RETURN Qt_QDateTimeEdit_sectionText( ::pPtr, nSection )
-
-
-METHOD QDateTimeEdit:setCalendarPopup( lEnable )
-   RETURN Qt_QDateTimeEdit_setCalendarPopup( ::pPtr, lEnable )
-
-
-METHOD QDateTimeEdit:setCalendarWidget( pCalendarWidget )
-   RETURN Qt_QDateTimeEdit_setCalendarWidget( ::pPtr, hbqt_ptr( pCalendarWidget ) )
-
-
-METHOD QDateTimeEdit:setCurrentSection( nSection )
-   RETURN Qt_QDateTimeEdit_setCurrentSection( ::pPtr, nSection )
-
-
-METHOD QDateTimeEdit:setCurrentSectionIndex( nIndex )
-   RETURN Qt_QDateTimeEdit_setCurrentSectionIndex( ::pPtr, nIndex )
-
-
-METHOD QDateTimeEdit:setDateRange( pMin, pMax )
-   RETURN Qt_QDateTimeEdit_setDateRange( ::pPtr, hbqt_ptr( pMin ), hbqt_ptr( pMax ) )
-
-
-METHOD QDateTimeEdit:setDateTimeRange( pMin, pMax )
-   RETURN Qt_QDateTimeEdit_setDateTimeRange( ::pPtr, hbqt_ptr( pMin ), hbqt_ptr( pMax ) )
-
-
-METHOD QDateTimeEdit:setDisplayFormat( cFormat )
-   RETURN Qt_QDateTimeEdit_setDisplayFormat( ::pPtr, cFormat )
-
-
-METHOD QDateTimeEdit:setMaximumDate( pMax )
-   RETURN Qt_QDateTimeEdit_setMaximumDate( ::pPtr, hbqt_ptr( pMax ) )
-
-
-METHOD QDateTimeEdit:setMaximumDateTime( pDt )
-   RETURN Qt_QDateTimeEdit_setMaximumDateTime( ::pPtr, hbqt_ptr( pDt ) )
-
-
-METHOD QDateTimeEdit:setMaximumTime( pMax )
-   RETURN Qt_QDateTimeEdit_setMaximumTime( ::pPtr, hbqt_ptr( pMax ) )
-
-
-METHOD QDateTimeEdit:setMinimumDate( pMin )
-   RETURN Qt_QDateTimeEdit_setMinimumDate( ::pPtr, hbqt_ptr( pMin ) )
-
-
-METHOD QDateTimeEdit:setMinimumDateTime( pDt )
-   RETURN Qt_QDateTimeEdit_setMinimumDateTime( ::pPtr, hbqt_ptr( pDt ) )
-
-
-METHOD QDateTimeEdit:setMinimumTime( pMin )
-   RETURN Qt_QDateTimeEdit_setMinimumTime( ::pPtr, hbqt_ptr( pMin ) )
-
-
-METHOD QDateTimeEdit:setSelectedSection( nSection )
-   RETURN Qt_QDateTimeEdit_setSelectedSection( ::pPtr, nSection )
-
-
-METHOD QDateTimeEdit:setTimeRange( pMin, pMax )
-   RETURN Qt_QDateTimeEdit_setTimeRange( ::pPtr, hbqt_ptr( pMin ), hbqt_ptr( pMax ) )
-
-
-METHOD QDateTimeEdit:setTimeSpec( nSpec )
-   RETURN Qt_QDateTimeEdit_setTimeSpec( ::pPtr, nSpec )
-
-
-METHOD QDateTimeEdit:time()
-   RETURN HB_QTime():from( Qt_QDateTimeEdit_time( ::pPtr ) )
-
-
-METHOD QDateTimeEdit:timeSpec()
-   RETURN Qt_QDateTimeEdit_timeSpec( ::pPtr )
-
-
-METHOD QDateTimeEdit:setDate( pDate )
-   RETURN Qt_QDateTimeEdit_setDate( ::pPtr, hbqt_ptr( pDate ) )
-
-
-METHOD QDateTimeEdit:setDateTime( pDateTime )
-   RETURN Qt_QDateTimeEdit_setDateTime( ::pPtr, hbqt_ptr( pDateTime ) )
-
-
-METHOD QDateTimeEdit:setTime( pTime )
-   RETURN Qt_QDateTimeEdit_setTime( ::pPtr, hbqt_ptr( pTime ) )
+METHOD QDateTimeEdit:calendarPopup( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDateTimeEdit_calendarPopup( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:calendarWidget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QCalendarWidget():from( Qt_QDateTimeEdit_calendarWidget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:clearMaximumDate( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDateTimeEdit_clearMaximumDate( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:clearMaximumDateTime( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDateTimeEdit_clearMaximumDateTime( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:clearMaximumTime( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDateTimeEdit_clearMaximumTime( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:clearMinimumDate( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDateTimeEdit_clearMinimumDate( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:clearMinimumDateTime( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDateTimeEdit_clearMinimumDateTime( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:clearMinimumTime( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDateTimeEdit_clearMinimumTime( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:currentSection( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDateTimeEdit_currentSection( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:currentSectionIndex( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDateTimeEdit_currentSectionIndex( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:date( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDate():from( Qt_QDateTimeEdit_date( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:dateTime( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDateTime():from( Qt_QDateTimeEdit_dateTime( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:displayFormat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDateTimeEdit_displayFormat( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:displayedSections( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDateTimeEdit_displayedSections( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:maximumDate( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDate():from( Qt_QDateTimeEdit_maximumDate( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:maximumDateTime( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDateTime():from( Qt_QDateTimeEdit_maximumDateTime( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:maximumTime( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTime():from( Qt_QDateTimeEdit_maximumTime( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:minimumDate( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDate():from( Qt_QDateTimeEdit_minimumDate( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:minimumDateTime( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDateTime():from( Qt_QDateTimeEdit_minimumDateTime( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:minimumTime( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTime():from( Qt_QDateTimeEdit_minimumTime( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:sectionAt( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDateTimeEdit_sectionAt( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:sectionCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDateTimeEdit_sectionCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:sectionText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDateTimeEdit_sectionText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:setCalendarPopup( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QDateTimeEdit_setCalendarPopup( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:setCalendarWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDateTimeEdit_setCalendarWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:setCurrentSection( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDateTimeEdit_setCurrentSection( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:setCurrentSectionIndex( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDateTimeEdit_setCurrentSectionIndex( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:setDateRange( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QDateTimeEdit_setDateRange( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:setDateTimeRange( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QDateTimeEdit_setDateTimeRange( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:setDisplayFormat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QDateTimeEdit_setDisplayFormat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:setMaximumDate( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDateTimeEdit_setMaximumDate( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:setMaximumDateTime( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDateTimeEdit_setMaximumDateTime( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:setMaximumTime( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDateTimeEdit_setMaximumTime( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:setMinimumDate( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDateTimeEdit_setMinimumDate( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:setMinimumDateTime( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDateTimeEdit_setMinimumDateTime( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:setMinimumTime( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDateTimeEdit_setMinimumTime( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:setSelectedSection( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDateTimeEdit_setSelectedSection( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:setTimeRange( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QDateTimeEdit_setTimeRange( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:setTimeSpec( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDateTimeEdit_setTimeSpec( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:time( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTime():from( Qt_QDateTimeEdit_time( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:timeSpec( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDateTimeEdit_timeSpec( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:setDate( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDateTimeEdit_setDate( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:setDateTime( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDateTimeEdit_setDateTime( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QDateTimeEdit:setTime( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDateTimeEdit_setTime( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

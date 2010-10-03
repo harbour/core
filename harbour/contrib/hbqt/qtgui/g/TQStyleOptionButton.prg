@@ -103,10 +103,10 @@ CREATE CLASS QStyleOptionButton INHERIT HbQtObjectHandler, HB_QStyleOption FUNCT
 
    METHOD  new( ... )
 
-   METHOD  features()
-   METHOD  icon()
-   METHOD  iconSize()
-   METHOD  text()
+   METHOD  features                      // (  )                                               -> nButtonFeatures
+   METHOD  icon                          // (  )                                               -> oQIcon
+   METHOD  iconSize                      // (  )                                               -> oQSize
+   METHOD  text                          // (  )                                               -> cQString
 
    ENDCLASS
 
@@ -120,18 +120,34 @@ METHOD QStyleOptionButton:new( ... )
    RETURN Self
 
 
-METHOD QStyleOptionButton:features()
-   RETURN Qt_QStyleOptionButton_features( ::pPtr )
+METHOD QStyleOptionButton:features( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionButton_features( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionButton:icon()
-   RETURN HB_QIcon():from( Qt_QStyleOptionButton_icon( ::pPtr ) )
+METHOD QStyleOptionButton:icon( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QIcon():from( Qt_QStyleOptionButton_icon( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionButton:iconSize()
-   RETURN HB_QSize():from( Qt_QStyleOptionButton_iconSize( ::pPtr ) )
+METHOD QStyleOptionButton:iconSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QStyleOptionButton_iconSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionButton:text()
-   RETURN Qt_QStyleOptionButton_text( ::pPtr )
+METHOD QStyleOptionButton:text( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionButton_text( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

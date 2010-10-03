@@ -26,21 +26,26 @@
  *  $RETURNS$
  *     An instance of the object of type QTime
  *  $METHODS$
+ *     :addMSecs( nMs )                                    -> oQTime
+ *     :addSecs( nS )                                      -> oQTime
  *     :elapsed()                                          -> nInt
  *     :hour()                                             -> nInt
  *     :isNull()                                           -> lBool
  *     :isValid()                                          -> lBool
  *     :minute()                                           -> nInt
  *     :msec()                                             -> nInt
- *     :msecsTo( pT )                                      -> nInt
+ *     :msecsTo( oQTime )                                  -> nInt
  *     :restart()                                          -> nInt
  *     :second()                                           -> nInt
- *     :secsTo( pT )                                       -> nInt
+ *     :secsTo( oQTime )                                   -> nInt
  *     :setHMS( nH, nM, nS, nMs )                          -> lBool
  *     :start()                                            -> NIL
  *     :toString( cFormat )                                -> cQString
- *     :toString_1( nFormat )                              -> cQString
- *     :isValid_1( nH, nM, nS, nMs )                       -> lBool
+ *     :toString( nFormat )                                -> cQString
+ *     :currentTime()                                      -> oQTime
+ *     :fromString( cString, nFormat )                     -> oQTime
+ *     :fromString( cString, cFormat )                     -> oQTime
+ *     :isValid( nH, nM, nS, nMs )                         -> lBool
  * 
  *  $DESCRIPTION$
  * 
@@ -60,7 +65,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQTime.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QTime.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

@@ -103,47 +103,47 @@ CREATE CLASS QTextFormat INHERIT HbQtObjectHandler FUNCTION HB_QTextFormat
 
    METHOD  new( ... )
 
-   METHOD  background()
-   METHOD  boolProperty( nPropertyId )
-   METHOD  brushProperty( nPropertyId )
-   METHOD  clearBackground()
-   METHOD  clearForeground()
-   METHOD  clearProperty( nPropertyId )
-   METHOD  colorProperty( nPropertyId )
-   METHOD  doubleProperty( nPropertyId )
-   METHOD  foreground()
-   METHOD  hasProperty( nPropertyId )
-   METHOD  intProperty( nPropertyId )
-   METHOD  isBlockFormat()
-   METHOD  isCharFormat()
-   METHOD  isFrameFormat()
-   METHOD  isImageFormat()
-   METHOD  isListFormat()
-   METHOD  isTableCellFormat()
-   METHOD  isTableFormat()
-   METHOD  isValid()
-   METHOD  layoutDirection()
-   METHOD  lengthProperty( nPropertyId )
-   METHOD  merge( pOther )
-   METHOD  objectIndex()
-   METHOD  objectType()
-   METHOD  penProperty( nPropertyId )
-   METHOD  property( nPropertyId )
-   METHOD  propertyCount()
-   METHOD  setBackground( pBrush )
-   METHOD  setForeground( pBrush )
-   METHOD  setLayoutDirection( nDirection )
-   METHOD  setObjectIndex( nIndex )
-   METHOD  setObjectType( nType )
-   METHOD  setProperty( nPropertyId, pValue )
-   METHOD  stringProperty( nPropertyId )
-   METHOD  toBlockFormat()
-   METHOD  toCharFormat()
-   METHOD  toFrameFormat()
-   METHOD  toImageFormat()
-   METHOD  toListFormat()
-   METHOD  toTableFormat()
-   METHOD  type()
+   METHOD  background                    // (  )                                               -> oQBrush
+   METHOD  boolProperty                  // ( nPropertyId )                                    -> lBool
+   METHOD  brushProperty                 // ( nPropertyId )                                    -> oQBrush
+   METHOD  clearBackground               // (  )                                               -> NIL
+   METHOD  clearForeground               // (  )                                               -> NIL
+   METHOD  clearProperty                 // ( nPropertyId )                                    -> NIL
+   METHOD  colorProperty                 // ( nPropertyId )                                    -> oQColor
+   METHOD  doubleProperty                // ( nPropertyId )                                    -> nQreal
+   METHOD  foreground                    // (  )                                               -> oQBrush
+   METHOD  hasProperty                   // ( nPropertyId )                                    -> lBool
+   METHOD  intProperty                   // ( nPropertyId )                                    -> nInt
+   METHOD  isBlockFormat                 // (  )                                               -> lBool
+   METHOD  isCharFormat                  // (  )                                               -> lBool
+   METHOD  isFrameFormat                 // (  )                                               -> lBool
+   METHOD  isImageFormat                 // (  )                                               -> lBool
+   METHOD  isListFormat                  // (  )                                               -> lBool
+   METHOD  isTableCellFormat             // (  )                                               -> lBool
+   METHOD  isTableFormat                 // (  )                                               -> lBool
+   METHOD  isValid                       // (  )                                               -> lBool
+   METHOD  layoutDirection               // (  )                                               -> nQt_LayoutDirection
+   METHOD  lengthProperty                // ( nPropertyId )                                    -> oQTextLength
+   METHOD  merge                         // ( oQTextFormat )                                   -> NIL
+   METHOD  objectIndex                   // (  )                                               -> nInt
+   METHOD  objectType                    // (  )                                               -> nInt
+   METHOD  penProperty                   // ( nPropertyId )                                    -> oQPen
+   METHOD  property                      // ( nPropertyId )                                    -> oQVariant
+   METHOD  propertyCount                 // (  )                                               -> nInt
+   METHOD  setBackground                 // ( oQBrush )                                        -> NIL
+   METHOD  setForeground                 // ( oQBrush )                                        -> NIL
+   METHOD  setLayoutDirection            // ( nDirection )                                     -> NIL
+   METHOD  setObjectIndex                // ( nIndex )                                         -> NIL
+   METHOD  setObjectType                 // ( nType )                                          -> NIL
+   METHOD  setProperty                   // ( nPropertyId, oQVariant )                         -> NIL
+   METHOD  stringProperty                // ( nPropertyId )                                    -> cQString
+   METHOD  toBlockFormat                 // (  )                                               -> oQTextBlockFormat
+   METHOD  toCharFormat                  // (  )                                               -> oQTextCharFormat
+   METHOD  toFrameFormat                 // (  )                                               -> oQTextFrameFormat
+   METHOD  toImageFormat                 // (  )                                               -> oQTextImageFormat
+   METHOD  toListFormat                  // (  )                                               -> oQTextListFormat
+   METHOD  toTableFormat                 // (  )                                               -> oQTextTableFormat
+   METHOD  type                          // (  )                                               -> nInt
 
    ENDCLASS
 
@@ -157,166 +157,402 @@ METHOD QTextFormat:new( ... )
    RETURN Self
 
 
-METHOD QTextFormat:background()
-   RETURN HB_QBrush():from( Qt_QTextFormat_background( ::pPtr ) )
-
-
-METHOD QTextFormat:boolProperty( nPropertyId )
-   RETURN Qt_QTextFormat_boolProperty( ::pPtr, nPropertyId )
-
-
-METHOD QTextFormat:brushProperty( nPropertyId )
-   RETURN HB_QBrush():from( Qt_QTextFormat_brushProperty( ::pPtr, nPropertyId ) )
-
-
-METHOD QTextFormat:clearBackground()
-   RETURN Qt_QTextFormat_clearBackground( ::pPtr )
-
-
-METHOD QTextFormat:clearForeground()
-   RETURN Qt_QTextFormat_clearForeground( ::pPtr )
-
-
-METHOD QTextFormat:clearProperty( nPropertyId )
-   RETURN Qt_QTextFormat_clearProperty( ::pPtr, nPropertyId )
-
-
-METHOD QTextFormat:colorProperty( nPropertyId )
-   RETURN HB_QColor():from( Qt_QTextFormat_colorProperty( ::pPtr, nPropertyId ) )
-
-
-METHOD QTextFormat:doubleProperty( nPropertyId )
-   RETURN Qt_QTextFormat_doubleProperty( ::pPtr, nPropertyId )
-
-
-METHOD QTextFormat:foreground()
-   RETURN HB_QBrush():from( Qt_QTextFormat_foreground( ::pPtr ) )
-
-
-METHOD QTextFormat:hasProperty( nPropertyId )
-   RETURN Qt_QTextFormat_hasProperty( ::pPtr, nPropertyId )
-
-
-METHOD QTextFormat:intProperty( nPropertyId )
-   RETURN Qt_QTextFormat_intProperty( ::pPtr, nPropertyId )
-
-
-METHOD QTextFormat:isBlockFormat()
-   RETURN Qt_QTextFormat_isBlockFormat( ::pPtr )
-
-
-METHOD QTextFormat:isCharFormat()
-   RETURN Qt_QTextFormat_isCharFormat( ::pPtr )
-
-
-METHOD QTextFormat:isFrameFormat()
-   RETURN Qt_QTextFormat_isFrameFormat( ::pPtr )
-
-
-METHOD QTextFormat:isImageFormat()
-   RETURN Qt_QTextFormat_isImageFormat( ::pPtr )
-
-
-METHOD QTextFormat:isListFormat()
-   RETURN Qt_QTextFormat_isListFormat( ::pPtr )
-
-
-METHOD QTextFormat:isTableCellFormat()
-   RETURN Qt_QTextFormat_isTableCellFormat( ::pPtr )
-
-
-METHOD QTextFormat:isTableFormat()
-   RETURN Qt_QTextFormat_isTableFormat( ::pPtr )
-
-
-METHOD QTextFormat:isValid()
-   RETURN Qt_QTextFormat_isValid( ::pPtr )
-
-
-METHOD QTextFormat:layoutDirection()
-   RETURN Qt_QTextFormat_layoutDirection( ::pPtr )
-
-
-METHOD QTextFormat:lengthProperty( nPropertyId )
-   RETURN HB_QTextLength():from( Qt_QTextFormat_lengthProperty( ::pPtr, nPropertyId ) )
-
-
-METHOD QTextFormat:merge( pOther )
-   RETURN Qt_QTextFormat_merge( ::pPtr, hbqt_ptr( pOther ) )
-
-
-METHOD QTextFormat:objectIndex()
-   RETURN Qt_QTextFormat_objectIndex( ::pPtr )
-
-
-METHOD QTextFormat:objectType()
-   RETURN Qt_QTextFormat_objectType( ::pPtr )
-
-
-METHOD QTextFormat:penProperty( nPropertyId )
-   RETURN HB_QPen():from( Qt_QTextFormat_penProperty( ::pPtr, nPropertyId ) )
-
-
-METHOD QTextFormat:property( nPropertyId )
-   RETURN HB_QVariant():from( Qt_QTextFormat_property( ::pPtr, nPropertyId ) )
-
-
-METHOD QTextFormat:propertyCount()
-   RETURN Qt_QTextFormat_propertyCount( ::pPtr )
-
-
-METHOD QTextFormat:setBackground( pBrush )
-   RETURN Qt_QTextFormat_setBackground( ::pPtr, hbqt_ptr( pBrush ) )
-
-
-METHOD QTextFormat:setForeground( pBrush )
-   RETURN Qt_QTextFormat_setForeground( ::pPtr, hbqt_ptr( pBrush ) )
-
-
-METHOD QTextFormat:setLayoutDirection( nDirection )
-   RETURN Qt_QTextFormat_setLayoutDirection( ::pPtr, nDirection )
-
-
-METHOD QTextFormat:setObjectIndex( nIndex )
-   RETURN Qt_QTextFormat_setObjectIndex( ::pPtr, nIndex )
-
-
-METHOD QTextFormat:setObjectType( nType )
-   RETURN Qt_QTextFormat_setObjectType( ::pPtr, nType )
-
-
-METHOD QTextFormat:setProperty( nPropertyId, pValue )
-   RETURN Qt_QTextFormat_setProperty( ::pPtr, nPropertyId, hbqt_ptr( pValue ) )
-
-
-METHOD QTextFormat:stringProperty( nPropertyId )
-   RETURN Qt_QTextFormat_stringProperty( ::pPtr, nPropertyId )
-
-
-METHOD QTextFormat:toBlockFormat()
-   RETURN HB_QTextBlockFormat():from( Qt_QTextFormat_toBlockFormat( ::pPtr ) )
-
-
-METHOD QTextFormat:toCharFormat()
-   RETURN HB_QTextCharFormat():from( Qt_QTextFormat_toCharFormat( ::pPtr ) )
-
-
-METHOD QTextFormat:toFrameFormat()
-   RETURN HB_QTextFrameFormat():from( Qt_QTextFormat_toFrameFormat( ::pPtr ) )
-
-
-METHOD QTextFormat:toImageFormat()
-   RETURN HB_QTextImageFormat():from( Qt_QTextFormat_toImageFormat( ::pPtr ) )
-
-
-METHOD QTextFormat:toListFormat()
-   RETURN HB_QTextListFormat():from( Qt_QTextFormat_toListFormat( ::pPtr ) )
-
-
-METHOD QTextFormat:toTableFormat()
-   RETURN HB_QTextTableFormat():from( Qt_QTextFormat_toTableFormat( ::pPtr ) )
-
-
-METHOD QTextFormat:type()
-   RETURN Qt_QTextFormat_type( ::pPtr )
+METHOD QTextFormat:background( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QTextFormat_background( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:boolProperty( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextFormat_boolProperty( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:brushProperty( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QBrush():from( Qt_QTextFormat_brushProperty( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:clearBackground( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFormat_clearBackground( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:clearForeground( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFormat_clearForeground( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:clearProperty( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextFormat_clearProperty( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:colorProperty( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QColor():from( Qt_QTextFormat_colorProperty( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:doubleProperty( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextFormat_doubleProperty( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:foreground( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QTextFormat_foreground( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:hasProperty( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextFormat_hasProperty( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:intProperty( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextFormat_intProperty( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:isBlockFormat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFormat_isBlockFormat( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:isCharFormat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFormat_isCharFormat( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:isFrameFormat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFormat_isFrameFormat( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:isImageFormat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFormat_isImageFormat( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:isListFormat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFormat_isListFormat( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:isTableCellFormat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFormat_isTableCellFormat( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:isTableFormat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFormat_isTableFormat( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:isValid( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFormat_isValid( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:layoutDirection( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFormat_layoutDirection( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:lengthProperty( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QTextLength():from( Qt_QTextFormat_lengthProperty( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:merge( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextFormat_merge( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:objectIndex( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFormat_objectIndex( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:objectType( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFormat_objectType( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:penProperty( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QPen():from( Qt_QTextFormat_penProperty( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:property( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QVariant():from( Qt_QTextFormat_property( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:propertyCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFormat_propertyCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:setBackground( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextFormat_setBackground( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:setForeground( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextFormat_setForeground( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:setLayoutDirection( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextFormat_setLayoutDirection( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:setObjectIndex( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextFormat_setObjectIndex( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:setObjectType( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextFormat_setObjectType( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:setProperty( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QTextFormat_setProperty( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:stringProperty( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextFormat_stringProperty( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:toBlockFormat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextBlockFormat():from( Qt_QTextFormat_toBlockFormat( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:toCharFormat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextCharFormat():from( Qt_QTextFormat_toCharFormat( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:toFrameFormat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextFrameFormat():from( Qt_QTextFormat_toFrameFormat( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:toImageFormat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextImageFormat():from( Qt_QTextFormat_toImageFormat( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:toListFormat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextListFormat():from( Qt_QTextFormat_toListFormat( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:toTableFormat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextTableFormat():from( Qt_QTextFormat_toTableFormat( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QTextFormat:type( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextFormat_type( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

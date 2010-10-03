@@ -26,17 +26,17 @@
  *  $RETURNS$
  *     An instance of the object of type QDrag
  *  $METHODS$
- *     :exec( nSupportedActions )                          -> nQt::DropAction
- *     :exec_1( nSupportedActions, nDefaultDropAction )    -> nQt::DropAction
- *     :hotSpot()                                          -> pQPoint
- *     :mimeData()                                         -> pQMimeData
- *     :pixmap()                                           -> pQPixmap
- *     :setDragCursor( pCursor, nAction )                  -> NIL
- *     :setHotSpot( pHotspot )                             -> NIL
- *     :setMimeData( pData )                               -> NIL
- *     :setPixmap( pPixmap )                               -> NIL
- *     :source()                                           -> pQWidget
- *     :target()                                           -> pQWidget
+ *     :exec( nSupportedActions )                          -> nQt_DropAction
+ *     :exec( nSupportedActions, nDefaultDropAction )      -> nQt_DropAction
+ *     :hotSpot()                                          -> oQPoint
+ *     :mimeData()                                         -> oQMimeData
+ *     :pixmap()                                           -> oQPixmap
+ *     :setDragCursor( oQPixmap, nAction )                 -> NIL
+ *     :setHotSpot( oQPoint )                              -> NIL
+ *     :setMimeData( oQMimeData )                          -> NIL
+ *     :setPixmap( oQPixmap )                              -> NIL
+ *     :source()                                           -> oQWidget
+ *     :target()                                           -> oQWidget
  * 
  *  $DESCRIPTION$
  * 
@@ -56,7 +56,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQDrag.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QDrag.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

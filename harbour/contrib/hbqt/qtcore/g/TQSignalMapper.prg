@@ -103,10 +103,15 @@ CREATE CLASS QSignalMapper INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QSi
 
    METHOD  new( ... )
 
-   METHOD  mapping( ... )
-   METHOD  removeMappings( pSender )
-   METHOD  setMapping( ... )
-   METHOD  map( ... )
+   METHOD  mapping                       // ( nId )                                            -> oQObject
+                                         // ( cId )                                            -> oQObject
+                                         // ( oQObject )                                       -> oQObject
+   METHOD  removeMappings                // ( oQObject )                                       -> NIL
+   METHOD  setMapping                    // ( oQObject, nId )                                  -> NIL
+                                         // ( oQObject, cText )                                -> NIL
+                                         // ( oQObject, oQObject )                             -> NIL
+   METHOD  map                           // (  )                                               -> NIL
+                                         // ( oQObject )                                       -> NIL
 
    ENDCLASS
 
@@ -136,8 +141,16 @@ METHOD QSignalMapper:mapping( ... )
    RETURN hbqt_error()
 
 
-METHOD QSignalMapper:removeMappings( pSender )
-   RETURN Qt_QSignalMapper_removeMappings( ::pPtr, hbqt_ptr( pSender ) )
+METHOD QSignalMapper:removeMappings( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QSignalMapper_removeMappings( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QSignalMapper:setMapping( ... )

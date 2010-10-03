@@ -103,62 +103,75 @@ CREATE CLASS QGraphicsScene INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QG
 
    METHOD  new( ... )
 
-   METHOD  activeWindow()
-   METHOD  addEllipse( ... )
-   METHOD  addItem( pItem )
-   METHOD  addLine( ... )
-   METHOD  addPath( pPath, pPen, pBrush )
-   METHOD  addPixmap( pPixmap )
-   METHOD  addPolygon( pPolygon, pPen, pBrush )
-   METHOD  addRect( ... )
-   METHOD  addSimpleText( cText, pFont )
-   METHOD  addText( cText, pFont )
-   METHOD  addWidget( pWidget, nWFlags )
-   METHOD  backgroundBrush()
-   METHOD  bspTreeDepth()
-   METHOD  clearFocus()
-   METHOD  collidingItems( pItem, nMode )
-   METHOD  destroyItemGroup( pGroup )
-   METHOD  focusItem()
-   METHOD  font()
-   METHOD  foregroundBrush()
-   METHOD  hasFocus()
-   METHOD  height()
-   METHOD  invalidate( ... )
-   METHOD  isSortCacheEnabled()
-   METHOD  itemAt( ... )
-   METHOD  itemIndexMethod()
-   METHOD  items( ... )
-   METHOD  itemsBoundingRect()
-   METHOD  mouseGrabberItem()
-   METHOD  palette()
-   METHOD  removeItem( pItem )
-   METHOD  render( pPainter, pTarget, pSource, nAspectRatioMode )
-   METHOD  sceneRect()
-   METHOD  selectedItems()
-   METHOD  selectionArea()
-   METHOD  setActiveWindow( pWidget )
-   METHOD  setBackgroundBrush( pBrush )
-   METHOD  setBspTreeDepth( nDepth )
-   METHOD  setFocus( nFocusReason )
-   METHOD  setFocusItem( pItem, nFocusReason )
-   METHOD  setFont( pFont )
-   METHOD  setForegroundBrush( pBrush )
-   METHOD  setItemIndexMethod( nMethod )
-   METHOD  setPalette( pPalette )
-   METHOD  setSceneRect( ... )
-   METHOD  setSelectionArea( ... )
-   METHOD  setSortCacheEnabled( lEnabled )
-   METHOD  setStickyFocus( lEnabled )
-   METHOD  setStyle( pStyle )
-   METHOD  stickyFocus()
-   METHOD  style()
-   METHOD  update( ... )
-   METHOD  views()
-   METHOD  width()
-   METHOD  advance()
-   METHOD  clear()
-   METHOD  clearSelection()
+   METHOD  activeWindow                  // (  )                                               -> oQGraphicsWidget
+   METHOD  addEllipse                    // ( oQRectF, oQPen, oQBrush )                        -> oQGraphicsEllipseItem
+                                         // ( nX, nY, nW, nH, oQPen, oQBrush )                 -> oQGraphicsEllipseItem
+   METHOD  addItem                       // ( oQGraphicsItem )                                 -> NIL
+   METHOD  addLine                       // ( oQLineF, oQPen )                                 -> oQGraphicsLineItem
+                                         // ( nX1, nY1, nX2, nY2, oQPen )                      -> oQGraphicsLineItem
+   METHOD  addPath                       // ( oQPainterPath, oQPen, oQBrush )                  -> oQGraphicsPathItem
+   METHOD  addPixmap                     // ( oQPixmap )                                       -> oQGraphicsPixmapItem
+   METHOD  addPolygon                    // ( oQPolygonF, oQPen, oQBrush )                     -> oQGraphicsPolygonItem
+   METHOD  addRect                       // ( oQRectF, oQPen, oQBrush )                        -> oQGraphicsRectItem
+                                         // ( nX, nY, nW, nH, oQPen, oQBrush )                 -> oQGraphicsRectItem
+   METHOD  addSimpleText                 // ( cText, oQFont )                                  -> oQGraphicsSimpleTextItem
+   METHOD  addText                       // ( cText, oQFont )                                  -> oQGraphicsTextItem
+   METHOD  addWidget                     // ( oQWidget, nWFlags )                              -> oQGraphicsProxyWidget
+   METHOD  backgroundBrush               // (  )                                               -> oQBrush
+   METHOD  bspTreeDepth                  // (  )                                               -> nInt
+   METHOD  clearFocus                    // (  )                                               -> NIL
+   METHOD  collidingItems                // ( oQGraphicsItem, nMode )                          -> oQList_QGraphicsItem
+   METHOD  destroyItemGroup              // ( oQGraphicsItemGroup )                            -> NIL
+   METHOD  focusItem                     // (  )                                               -> oQGraphicsItem
+   METHOD  font                          // (  )                                               -> oQFont
+   METHOD  foregroundBrush               // (  )                                               -> oQBrush
+   METHOD  hasFocus                      // (  )                                               -> lBool
+   METHOD  height                        // (  )                                               -> nQreal
+   METHOD  invalidate                    // ( nX, nY, nW, nH, nLayers )                        -> NIL
+   METHOD  isSortCacheEnabled            // (  )                                               -> lBool
+   METHOD  itemAt                        // ( oQPointF )                                       -> oQGraphicsItem
+                                         // ( nX, nY )                                         -> oQGraphicsItem
+   METHOD  itemIndexMethod               // (  )                                               -> nItemIndexMethod
+   METHOD  items                         // (  )                                               -> oQList_QGraphicsItem
+                                         // ( oQPointF )                                       -> oQList_QGraphicsItem
+                                         // ( nX, nY, nW, nH, nMode )                          -> oQList_QGraphicsItem
+                                         // ( oQRectF, nMode )                                 -> oQList_QGraphicsItem
+                                         // ( oQPolygonF, nMode )                              -> oQList_QGraphicsItem
+                                         // ( oQPainterPath, nMode )                           -> oQList_QGraphicsItem
+   METHOD  itemsBoundingRect             // (  )                                               -> oQRectF
+   METHOD  mouseGrabberItem              // (  )                                               -> oQGraphicsItem
+   METHOD  palette                       // (  )                                               -> oQPalette
+   METHOD  removeItem                    // ( oQGraphicsItem )                                 -> NIL
+   METHOD  render                        // ( oQPainter, oQRectF, oQRectF, nAspectRatioMode )  -> NIL
+   METHOD  sceneRect                     // (  )                                               -> oQRectF
+   METHOD  selectedItems                 // (  )                                               -> oQList_QGraphicsItem
+   METHOD  selectionArea                 // (  )                                               -> oQPainterPath
+   METHOD  setActiveWindow               // ( oQGraphicsWidget )                               -> NIL
+   METHOD  setBackgroundBrush            // ( oQBrush )                                        -> NIL
+   METHOD  setBspTreeDepth               // ( nDepth )                                         -> NIL
+   METHOD  setFocus                      // ( nFocusReason )                                   -> NIL
+   METHOD  setFocusItem                  // ( oQGraphicsItem, nFocusReason )                   -> NIL
+   METHOD  setFont                       // ( oQFont )                                         -> NIL
+   METHOD  setForegroundBrush            // ( oQBrush )                                        -> NIL
+   METHOD  setItemIndexMethod            // ( nMethod )                                        -> NIL
+   METHOD  setPalette                    // ( oQPalette )                                      -> NIL
+   METHOD  setSceneRect                  // ( oQRectF )                                        -> NIL
+                                         // ( nX, nY, nW, nH )                                 -> NIL
+   METHOD  setSelectionArea              // ( oQPainterPath )                                  -> NIL
+                                         // ( oQPainterPath, nMode )                           -> NIL
+   METHOD  setSortCacheEnabled           // ( lEnabled )                                       -> NIL
+   METHOD  setStickyFocus                // ( lEnabled )                                       -> NIL
+   METHOD  setStyle                      // ( oQStyle )                                        -> NIL
+   METHOD  stickyFocus                   // (  )                                               -> lBool
+   METHOD  style                         // (  )                                               -> oQStyle
+   METHOD  update                        // ( nX, nY, nW, nH )                                 -> NIL
+   METHOD  views                         // (  )                                               -> oQList_QGraphicsView
+   METHOD  width                         // (  )                                               -> nQreal
+   METHOD  advance                       // (  )                                               -> NIL
+   METHOD  clear                         // (  )                                               -> NIL
+   METHOD  clearSelection                // (  )                                               -> NIL
+                                         // ( oQRectF, nLayers )                               -> NIL
+                                         // ( oQRectF )                                        -> NIL
 
    ENDCLASS
 
@@ -172,8 +185,12 @@ METHOD QGraphicsScene:new( ... )
    RETURN Self
 
 
-METHOD QGraphicsScene:activeWindow()
-   RETURN HB_QGraphicsWidget():from( Qt_QGraphicsScene_activeWindow( ::pPtr ) )
+METHOD QGraphicsScene:activeWindow( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QGraphicsWidget():from( Qt_QGraphicsScene_activeWindow( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsScene:addEllipse( ... )
@@ -181,6 +198,12 @@ METHOD QGraphicsScene:addEllipse( ... )
    CASE 6
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isObject( hb_pvalue( 5 ) ) .AND. hb_isObject( hb_pvalue( 6 ) )
+         RETURN HB_QGraphicsEllipseItem():from( Qt_QGraphicsScene_addEllipse_1( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 5
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isObject( hb_pvalue( 5 ) )
          RETURN HB_QGraphicsEllipseItem():from( Qt_QGraphicsScene_addEllipse_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
@@ -196,6 +219,12 @@ METHOD QGraphicsScene:addEllipse( ... )
          RETURN HB_QGraphicsEllipseItem():from( Qt_QGraphicsScene_addEllipse( ::pPtr, ... ) )
       ENDCASE
       EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QGraphicsEllipseItem():from( Qt_QGraphicsScene_addEllipse( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
@@ -206,8 +235,16 @@ METHOD QGraphicsScene:addEllipse( ... )
    RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:addItem( pItem )
-   RETURN Qt_QGraphicsScene_addItem( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QGraphicsScene:addItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsScene_addItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsScene:addLine( ... )
@@ -240,16 +277,64 @@ METHOD QGraphicsScene:addLine( ... )
    RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:addPath( pPath, pPen, pBrush )
-   RETURN HB_QGraphicsPathItem():from( Qt_QGraphicsScene_addPath( ::pPtr, hbqt_ptr( pPath ), hbqt_ptr( pPen ), hbqt_ptr( pBrush ) ) )
+METHOD QGraphicsScene:addPath( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN HB_QGraphicsPathItem():from( Qt_QGraphicsScene_addPath( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QGraphicsPathItem():from( Qt_QGraphicsScene_addPath( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QGraphicsPathItem():from( Qt_QGraphicsScene_addPath( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:addPixmap( pPixmap )
-   RETURN HB_QGraphicsPixmapItem():from( Qt_QGraphicsScene_addPixmap( ::pPtr, hbqt_ptr( pPixmap ) ) )
+METHOD QGraphicsScene:addPixmap( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QGraphicsPixmapItem():from( Qt_QGraphicsScene_addPixmap( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:addPolygon( pPolygon, pPen, pBrush )
-   RETURN HB_QGraphicsPolygonItem():from( Qt_QGraphicsScene_addPolygon( ::pPtr, hbqt_ptr( pPolygon ), hbqt_ptr( pPen ), hbqt_ptr( pBrush ) ) )
+METHOD QGraphicsScene:addPolygon( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN HB_QGraphicsPolygonItem():from( Qt_QGraphicsScene_addPolygon( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QGraphicsPolygonItem():from( Qt_QGraphicsScene_addPolygon( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QGraphicsPolygonItem():from( Qt_QGraphicsScene_addPolygon( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsScene:addRect( ... )
@@ -257,6 +342,12 @@ METHOD QGraphicsScene:addRect( ... )
    CASE 6
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isObject( hb_pvalue( 5 ) ) .AND. hb_isObject( hb_pvalue( 6 ) )
+         RETURN HB_QGraphicsRectItem():from( Qt_QGraphicsScene_addRect_1( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 5
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isObject( hb_pvalue( 5 ) )
          RETURN HB_QGraphicsRectItem():from( Qt_QGraphicsScene_addRect_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
@@ -272,6 +363,12 @@ METHOD QGraphicsScene:addRect( ... )
          RETURN HB_QGraphicsRectItem():from( Qt_QGraphicsScene_addRect( ::pPtr, ... ) )
       ENDCASE
       EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QGraphicsRectItem():from( Qt_QGraphicsScene_addRect( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
@@ -282,56 +379,152 @@ METHOD QGraphicsScene:addRect( ... )
    RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:addSimpleText( cText, pFont )
-   RETURN HB_QGraphicsSimpleTextItem():from( Qt_QGraphicsScene_addSimpleText( ::pPtr, cText, hbqt_ptr( pFont ) ) )
+METHOD QGraphicsScene:addSimpleText( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QGraphicsSimpleTextItem():from( Qt_QGraphicsScene_addSimpleText( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QGraphicsSimpleTextItem():from( Qt_QGraphicsScene_addSimpleText( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:addText( cText, pFont )
-   RETURN HB_QGraphicsTextItem():from( Qt_QGraphicsScene_addText( ::pPtr, cText, hbqt_ptr( pFont ) ) )
+METHOD QGraphicsScene:addText( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QGraphicsTextItem():from( Qt_QGraphicsScene_addText( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QGraphicsTextItem():from( Qt_QGraphicsScene_addText( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:addWidget( pWidget, nWFlags )
-   RETURN HB_QGraphicsProxyWidget():from( Qt_QGraphicsScene_addWidget( ::pPtr, hbqt_ptr( pWidget ), nWFlags ) )
+METHOD QGraphicsScene:addWidget( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QGraphicsProxyWidget():from( Qt_QGraphicsScene_addWidget( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QGraphicsProxyWidget():from( Qt_QGraphicsScene_addWidget( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:backgroundBrush()
-   RETURN HB_QBrush():from( Qt_QGraphicsScene_backgroundBrush( ::pPtr ) )
+METHOD QGraphicsScene:backgroundBrush( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QGraphicsScene_backgroundBrush( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:bspTreeDepth()
-   RETURN Qt_QGraphicsScene_bspTreeDepth( ::pPtr )
+METHOD QGraphicsScene:bspTreeDepth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsScene_bspTreeDepth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:clearFocus()
-   RETURN Qt_QGraphicsScene_clearFocus( ::pPtr )
+METHOD QGraphicsScene:clearFocus( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsScene_clearFocus( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:collidingItems( pItem, nMode )
-   RETURN HB_QList():from( Qt_QGraphicsScene_collidingItems( ::pPtr, hbqt_ptr( pItem ), nMode ) )
+METHOD QGraphicsScene:collidingItems( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QList():from( Qt_QGraphicsScene_collidingItems( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QList():from( Qt_QGraphicsScene_collidingItems( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:destroyItemGroup( pGroup )
-   RETURN Qt_QGraphicsScene_destroyItemGroup( ::pPtr, hbqt_ptr( pGroup ) )
+METHOD QGraphicsScene:destroyItemGroup( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsScene_destroyItemGroup( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:focusItem()
-   RETURN HB_QGraphicsItem():from( Qt_QGraphicsScene_focusItem( ::pPtr ) )
+METHOD QGraphicsScene:focusItem( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QGraphicsItem():from( Qt_QGraphicsScene_focusItem( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:font()
-   RETURN HB_QFont():from( Qt_QGraphicsScene_font( ::pPtr ) )
+METHOD QGraphicsScene:font( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFont():from( Qt_QGraphicsScene_font( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:foregroundBrush()
-   RETURN HB_QBrush():from( Qt_QGraphicsScene_foregroundBrush( ::pPtr ) )
+METHOD QGraphicsScene:foregroundBrush( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QGraphicsScene_foregroundBrush( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:hasFocus()
-   RETURN Qt_QGraphicsScene_hasFocus( ::pPtr )
+METHOD QGraphicsScene:hasFocus( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsScene_hasFocus( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:height()
-   RETURN Qt_QGraphicsScene_height( ::pPtr )
+METHOD QGraphicsScene:height( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsScene_height( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsScene:invalidate( ... )
@@ -354,14 +547,24 @@ METHOD QGraphicsScene:invalidate( ... )
          RETURN Qt_QGraphicsScene_invalidate_1( ::pPtr, ... )
       ENDCASE
       EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsScene_invalidate_1( ::pPtr, ... )
+      ENDCASE
+      EXIT
    CASE 0
       RETURN Qt_QGraphicsScene_invalidate_1( ::pPtr, ... )
    ENDSWITCH
    RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:isSortCacheEnabled()
-   RETURN Qt_QGraphicsScene_isSortCacheEnabled( ::pPtr )
+METHOD QGraphicsScene:isSortCacheEnabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsScene_isSortCacheEnabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsScene:itemAt( ... )
@@ -382,8 +585,12 @@ METHOD QGraphicsScene:itemAt( ... )
    RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:itemIndexMethod()
-   RETURN Qt_QGraphicsScene_itemIndexMethod( ::pPtr )
+METHOD QGraphicsScene:itemIndexMethod( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsScene_itemIndexMethod( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsScene:items( ... )
@@ -434,72 +641,210 @@ METHOD QGraphicsScene:items( ... )
    RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:itemsBoundingRect()
-   RETURN HB_QRectF():from( Qt_QGraphicsScene_itemsBoundingRect( ::pPtr ) )
+METHOD QGraphicsScene:itemsBoundingRect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRectF():from( Qt_QGraphicsScene_itemsBoundingRect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:mouseGrabberItem()
-   RETURN HB_QGraphicsItem():from( Qt_QGraphicsScene_mouseGrabberItem( ::pPtr ) )
+METHOD QGraphicsScene:mouseGrabberItem( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QGraphicsItem():from( Qt_QGraphicsScene_mouseGrabberItem( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:palette()
-   RETURN HB_QPalette():from( Qt_QGraphicsScene_palette( ::pPtr ) )
+METHOD QGraphicsScene:palette( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPalette():from( Qt_QGraphicsScene_palette( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:removeItem( pItem )
-   RETURN Qt_QGraphicsScene_removeItem( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QGraphicsScene:removeItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsScene_removeItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:render( pPainter, pTarget, pSource, nAspectRatioMode )
-   RETURN Qt_QGraphicsScene_render( ::pPtr, hbqt_ptr( pPainter ), hbqt_ptr( pTarget ), hbqt_ptr( pSource ), nAspectRatioMode )
+METHOD QGraphicsScene:render( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QGraphicsScene_render( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QGraphicsScene_render( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsScene_render( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsScene_render( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:sceneRect()
-   RETURN HB_QRectF():from( Qt_QGraphicsScene_sceneRect( ::pPtr ) )
+METHOD QGraphicsScene:sceneRect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRectF():from( Qt_QGraphicsScene_sceneRect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:selectedItems()
-   RETURN HB_QList():from( Qt_QGraphicsScene_selectedItems( ::pPtr ) )
+METHOD QGraphicsScene:selectedItems( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QGraphicsScene_selectedItems( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:selectionArea()
-   RETURN HB_QPainterPath():from( Qt_QGraphicsScene_selectionArea( ::pPtr ) )
+METHOD QGraphicsScene:selectionArea( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPainterPath():from( Qt_QGraphicsScene_selectionArea( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:setActiveWindow( pWidget )
-   RETURN Qt_QGraphicsScene_setActiveWindow( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QGraphicsScene:setActiveWindow( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsScene_setActiveWindow( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:setBackgroundBrush( pBrush )
-   RETURN Qt_QGraphicsScene_setBackgroundBrush( ::pPtr, hbqt_ptr( pBrush ) )
+METHOD QGraphicsScene:setBackgroundBrush( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsScene_setBackgroundBrush( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:setBspTreeDepth( nDepth )
-   RETURN Qt_QGraphicsScene_setBspTreeDepth( ::pPtr, nDepth )
+METHOD QGraphicsScene:setBspTreeDepth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsScene_setBspTreeDepth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:setFocus( nFocusReason )
-   RETURN Qt_QGraphicsScene_setFocus( ::pPtr, nFocusReason )
+METHOD QGraphicsScene:setFocus( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsScene_setFocus( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QGraphicsScene_setFocus( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:setFocusItem( pItem, nFocusReason )
-   RETURN Qt_QGraphicsScene_setFocusItem( ::pPtr, hbqt_ptr( pItem ), nFocusReason )
+METHOD QGraphicsScene:setFocusItem( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QGraphicsScene_setFocusItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsScene_setFocusItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:setFont( pFont )
-   RETURN Qt_QGraphicsScene_setFont( ::pPtr, hbqt_ptr( pFont ) )
+METHOD QGraphicsScene:setFont( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsScene_setFont( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:setForegroundBrush( pBrush )
-   RETURN Qt_QGraphicsScene_setForegroundBrush( ::pPtr, hbqt_ptr( pBrush ) )
+METHOD QGraphicsScene:setForegroundBrush( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsScene_setForegroundBrush( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:setItemIndexMethod( nMethod )
-   RETURN Qt_QGraphicsScene_setItemIndexMethod( ::pPtr, nMethod )
+METHOD QGraphicsScene:setItemIndexMethod( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsScene_setItemIndexMethod( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:setPalette( pPalette )
-   RETURN Qt_QGraphicsScene_setPalette( ::pPtr, hbqt_ptr( pPalette ) )
+METHOD QGraphicsScene:setPalette( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsScene_setPalette( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsScene:setSceneRect( ... )
@@ -538,24 +883,56 @@ METHOD QGraphicsScene:setSelectionArea( ... )
    RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:setSortCacheEnabled( lEnabled )
-   RETURN Qt_QGraphicsScene_setSortCacheEnabled( ::pPtr, lEnabled )
+METHOD QGraphicsScene:setSortCacheEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsScene_setSortCacheEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:setStickyFocus( lEnabled )
-   RETURN Qt_QGraphicsScene_setStickyFocus( ::pPtr, lEnabled )
+METHOD QGraphicsScene:setStickyFocus( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsScene_setStickyFocus( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:setStyle( pStyle )
-   RETURN Qt_QGraphicsScene_setStyle( ::pPtr, hbqt_ptr( pStyle ) )
+METHOD QGraphicsScene:setStyle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsScene_setStyle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:stickyFocus()
-   RETURN Qt_QGraphicsScene_stickyFocus( ::pPtr )
+METHOD QGraphicsScene:stickyFocus( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsScene_stickyFocus( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:style()
-   RETURN HB_QStyle():from( Qt_QGraphicsScene_style( ::pPtr ) )
+METHOD QGraphicsScene:style( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStyle():from( Qt_QGraphicsScene_style( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsScene:update( ... )
@@ -578,22 +955,42 @@ METHOD QGraphicsScene:update( ... )
    RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:views()
-   RETURN HB_QList():from( Qt_QGraphicsScene_views( ::pPtr ) )
+METHOD QGraphicsScene:views( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QGraphicsScene_views( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:width()
-   RETURN Qt_QGraphicsScene_width( ::pPtr )
+METHOD QGraphicsScene:width( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsScene_width( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:advance()
-   RETURN Qt_QGraphicsScene_advance( ::pPtr )
+METHOD QGraphicsScene:advance( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsScene_advance( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:clear()
-   RETURN Qt_QGraphicsScene_clear( ::pPtr )
+METHOD QGraphicsScene:clear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsScene_clear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsScene:clearSelection()
-   RETURN Qt_QGraphicsScene_clearSelection( ::pPtr )
+METHOD QGraphicsScene:clearSelection( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsScene_clearSelection( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

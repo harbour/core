@@ -103,63 +103,66 @@ CREATE CLASS QComboBox INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QComboB
 
    METHOD  new( ... )
 
-   METHOD  addItem( ... )
-   METHOD  addItems( pTexts )
-   METHOD  completer()
-   METHOD  count()
-   METHOD  currentIndex()
-   METHOD  currentText()
-   METHOD  duplicatesEnabled()
-   METHOD  findData( pData, nRole, nFlags )
-   METHOD  findText( cText, nFlags )
-   METHOD  hasFrame()
-   METHOD  hidePopup()
-   METHOD  iconSize()
-   METHOD  insertItem( ... )
-   METHOD  insertItems( nIndex, pList )
-   METHOD  insertPolicy()
-   METHOD  insertSeparator( nIndex )
-   METHOD  isEditable()
-   METHOD  itemData( nIndex, nRole )
-   METHOD  itemDelegate()
-   METHOD  itemIcon( nIndex )
-   METHOD  itemText( nIndex )
-   METHOD  lineEdit()
-   METHOD  maxCount()
-   METHOD  maxVisibleItems()
-   METHOD  minimumContentsLength()
-   METHOD  model()
-   METHOD  modelColumn()
-   METHOD  removeItem( nIndex )
-   METHOD  rootModelIndex()
-   METHOD  setCompleter( pCompleter )
-   METHOD  setDuplicatesEnabled( lEnable )
-   METHOD  setEditable( lEditable )
-   METHOD  setFrame( lBool )
-   METHOD  setIconSize( pSize )
-   METHOD  setInsertPolicy( nPolicy )
-   METHOD  setItemData( nIndex, pValue, nRole )
-   METHOD  setItemDelegate( pDelegate )
-   METHOD  setItemIcon( nIndex, pIcon )
-   METHOD  setItemText( nIndex, cText )
-   METHOD  setLineEdit( pEdit )
-   METHOD  setMaxCount( nMax )
-   METHOD  setMaxVisibleItems( nMaxItems )
-   METHOD  setMinimumContentsLength( nCharacters )
-   METHOD  setModel( pModel )
-   METHOD  setModelColumn( nVisibleColumn )
-   METHOD  setRootModelIndex( pIndex )
-   METHOD  setSizeAdjustPolicy( nPolicy )
-   METHOD  setValidator( pValidator )
-   METHOD  setView( pItemView )
-   METHOD  showPopup()
-   METHOD  sizeAdjustPolicy()
-   METHOD  validator()
-   METHOD  view()
-   METHOD  clear()
-   METHOD  clearEditText()
-   METHOD  setCurrentIndex( nIndex )
-   METHOD  setEditText( cText )
+   METHOD  QComboBox                     // ( oQWidget )                                       -> oQComboBox
+   METHOD  addItem                       // ( cText, oQVariant )                               -> NIL
+                                         // ( coQIcon, cText, oQVariant )                      -> NIL
+   METHOD  addItems                      // ( oQStringList )                                   -> NIL
+   METHOD  completer                     // (  )                                               -> oQCompleter
+   METHOD  count                         // (  )                                               -> nInt
+   METHOD  currentIndex                  // (  )                                               -> nInt
+   METHOD  currentText                   // (  )                                               -> cQString
+   METHOD  duplicatesEnabled             // (  )                                               -> lBool
+   METHOD  findData                      // ( oQVariant, nRole, nFlags )                       -> nInt
+   METHOD  findText                      // ( cText, nFlags )                                  -> nInt
+   METHOD  hasFrame                      // (  )                                               -> lBool
+   METHOD  hidePopup                     // (  )                                               -> NIL
+   METHOD  iconSize                      // (  )                                               -> oQSize
+   METHOD  insertItem                    // ( nIndex, cText, oQVariant )                       -> NIL
+                                         // ( nIndex, coQIcon, cText, oQVariant )              -> NIL
+   METHOD  insertItems                   // ( nIndex, oQStringList )                           -> NIL
+   METHOD  insertPolicy                  // (  )                                               -> nInsertPolicy
+   METHOD  insertSeparator               // ( nIndex )                                         -> NIL
+   METHOD  isEditable                    // (  )                                               -> lBool
+   METHOD  itemData                      // ( nIndex, nRole )                                  -> oQVariant
+   METHOD  itemDelegate                  // (  )                                               -> oQAbstractItemDelegate
+   METHOD  itemIcon                      // ( nIndex )                                         -> oQIcon
+   METHOD  itemText                      // ( nIndex )                                         -> cQString
+   METHOD  lineEdit                      // (  )                                               -> oQLineEdit
+   METHOD  maxCount                      // (  )                                               -> nInt
+   METHOD  maxVisibleItems               // (  )                                               -> nInt
+   METHOD  minimumContentsLength         // (  )                                               -> nInt
+   METHOD  model                         // (  )                                               -> oQAbstractItemModel
+   METHOD  modelColumn                   // (  )                                               -> nInt
+   METHOD  removeItem                    // ( nIndex )                                         -> NIL
+   METHOD  rootModelIndex                // (  )                                               -> oQModelIndex
+   METHOD  setCompleter                  // ( oQCompleter )                                    -> NIL
+   METHOD  setDuplicatesEnabled          // ( lEnable )                                        -> NIL
+   METHOD  setEditable                   // ( lEditable )                                      -> NIL
+   METHOD  setFrame                      // ( lBool )                                          -> NIL
+   METHOD  setIconSize                   // ( oQSize )                                         -> NIL
+   METHOD  setInsertPolicy               // ( nPolicy )                                        -> NIL
+   METHOD  setItemData                   // ( nIndex, oQVariant, nRole )                       -> NIL
+   METHOD  setItemDelegate               // ( oQAbstractItemDelegate )                         -> NIL
+   METHOD  setItemIcon                   // ( nIndex, coQIcon )                                -> NIL
+   METHOD  setItemText                   // ( nIndex, cText )                                  -> NIL
+   METHOD  setLineEdit                   // ( oQLineEdit )                                     -> NIL
+   METHOD  setMaxCount                   // ( nMax )                                           -> NIL
+   METHOD  setMaxVisibleItems            // ( nMaxItems )                                      -> NIL
+   METHOD  setMinimumContentsLength      // ( nCharacters )                                    -> NIL
+   METHOD  setModel                      // ( oQAbstractItemModel )                            -> NIL
+   METHOD  setModelColumn                // ( nVisibleColumn )                                 -> NIL
+   METHOD  setRootModelIndex             // ( oQModelIndex )                                   -> NIL
+   METHOD  setSizeAdjustPolicy           // ( nPolicy )                                        -> NIL
+   METHOD  setValidator                  // ( oQValidator )                                    -> NIL
+   METHOD  setView                       // ( oQAbstractItemView )                             -> NIL
+   METHOD  showPopup                     // (  )                                               -> NIL
+   METHOD  sizeAdjustPolicy              // (  )                                               -> nSizeAdjustPolicy
+   METHOD  validator                     // (  )                                               -> oQValidator
+   METHOD  view                          // (  )                                               -> oQAbstractItemView
+   METHOD  clear                         // (  )                                               -> NIL
+   METHOD  clearEditText                 // (  )                                               -> NIL
+   METHOD  setCurrentIndex               // ( nIndex )                                         -> NIL
+   METHOD  setEditText                   // ( cText )                                          -> NIL
 
    ENDCLASS
 
@@ -171,6 +174,20 @@ METHOD QComboBox:new( ... )
    NEXT
    ::pPtr := Qt_QComboBox( ... )
    RETURN Self
+
+
+METHOD QComboBox:QComboBox( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QComboBox():from( Qt_QComboBox_QComboBox( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QComboBox():from( Qt_QComboBox_QComboBox( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QComboBox:addItem( ... )
@@ -199,48 +216,122 @@ METHOD QComboBox:addItem( ... )
    RETURN hbqt_error()
 
 
-METHOD QComboBox:addItems( pTexts )
-   RETURN Qt_QComboBox_addItems( ::pPtr, hbqt_ptr( pTexts ) )
+METHOD QComboBox:addItems( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QComboBox_addItems( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QComboBox:completer()
-   RETURN HB_QCompleter():from( Qt_QComboBox_completer( ::pPtr ) )
+METHOD QComboBox:completer( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QCompleter():from( Qt_QComboBox_completer( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QComboBox:count()
-   RETURN Qt_QComboBox_count( ::pPtr )
+METHOD QComboBox:count( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QComboBox_count( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QComboBox:currentIndex()
-   RETURN Qt_QComboBox_currentIndex( ::pPtr )
+METHOD QComboBox:currentIndex( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QComboBox_currentIndex( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QComboBox:currentText()
-   RETURN Qt_QComboBox_currentText( ::pPtr )
+METHOD QComboBox:currentText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QComboBox_currentText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QComboBox:duplicatesEnabled()
-   RETURN Qt_QComboBox_duplicatesEnabled( ::pPtr )
+METHOD QComboBox:duplicatesEnabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QComboBox_duplicatesEnabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QComboBox:findData( pData, nRole, nFlags )
-   RETURN Qt_QComboBox_findData( ::pPtr, hbqt_ptr( pData ), nRole, nFlags )
+METHOD QComboBox:findData( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QComboBox_findData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QComboBox_findData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QComboBox_findData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QComboBox:findText( cText, nFlags )
-   RETURN Qt_QComboBox_findText( ::pPtr, cText, nFlags )
+METHOD QComboBox:findText( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QComboBox_findText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QComboBox_findText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QComboBox:hasFrame()
-   RETURN Qt_QComboBox_hasFrame( ::pPtr )
+METHOD QComboBox:hasFrame( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QComboBox_hasFrame( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QComboBox:hidePopup()
-   RETURN Qt_QComboBox_hidePopup( ::pPtr )
+METHOD QComboBox:hidePopup( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QComboBox_hidePopup( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QComboBox:iconSize()
-   RETURN HB_QSize():from( Qt_QComboBox_iconSize( ::pPtr ) )
+METHOD QComboBox:iconSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QComboBox_iconSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QComboBox:insertItem( ... )
@@ -269,178 +360,478 @@ METHOD QComboBox:insertItem( ... )
    RETURN hbqt_error()
 
 
-METHOD QComboBox:insertItems( nIndex, pList )
-   RETURN Qt_QComboBox_insertItems( ::pPtr, nIndex, hbqt_ptr( pList ) )
-
-
-METHOD QComboBox:insertPolicy()
-   RETURN Qt_QComboBox_insertPolicy( ::pPtr )
-
-
-METHOD QComboBox:insertSeparator( nIndex )
-   RETURN Qt_QComboBox_insertSeparator( ::pPtr, nIndex )
-
-
-METHOD QComboBox:isEditable()
-   RETURN Qt_QComboBox_isEditable( ::pPtr )
-
-
-METHOD QComboBox:itemData( nIndex, nRole )
-   RETURN HB_QVariant():from( Qt_QComboBox_itemData( ::pPtr, nIndex, nRole ) )
-
-
-METHOD QComboBox:itemDelegate()
-   RETURN HB_QAbstractItemDelegate():from( Qt_QComboBox_itemDelegate( ::pPtr ) )
-
-
-METHOD QComboBox:itemIcon( nIndex )
-   RETURN HB_QIcon():from( Qt_QComboBox_itemIcon( ::pPtr, nIndex ) )
-
-
-METHOD QComboBox:itemText( nIndex )
-   RETURN Qt_QComboBox_itemText( ::pPtr, nIndex )
-
-
-METHOD QComboBox:lineEdit()
-   RETURN HB_QLineEdit():from( Qt_QComboBox_lineEdit( ::pPtr ) )
-
-
-METHOD QComboBox:maxCount()
-   RETURN Qt_QComboBox_maxCount( ::pPtr )
-
-
-METHOD QComboBox:maxVisibleItems()
-   RETURN Qt_QComboBox_maxVisibleItems( ::pPtr )
-
-
-METHOD QComboBox:minimumContentsLength()
-   RETURN Qt_QComboBox_minimumContentsLength( ::pPtr )
-
-
-METHOD QComboBox:model()
-   RETURN HB_QAbstractItemModel():from( Qt_QComboBox_model( ::pPtr ) )
-
-
-METHOD QComboBox:modelColumn()
-   RETURN Qt_QComboBox_modelColumn( ::pPtr )
-
-
-METHOD QComboBox:removeItem( nIndex )
-   RETURN Qt_QComboBox_removeItem( ::pPtr, nIndex )
-
-
-METHOD QComboBox:rootModelIndex()
-   RETURN HB_QModelIndex():from( Qt_QComboBox_rootModelIndex( ::pPtr ) )
-
-
-METHOD QComboBox:setCompleter( pCompleter )
-   RETURN Qt_QComboBox_setCompleter( ::pPtr, hbqt_ptr( pCompleter ) )
-
-
-METHOD QComboBox:setDuplicatesEnabled( lEnable )
-   RETURN Qt_QComboBox_setDuplicatesEnabled( ::pPtr, lEnable )
-
-
-METHOD QComboBox:setEditable( lEditable )
-   RETURN Qt_QComboBox_setEditable( ::pPtr, lEditable )
-
-
-METHOD QComboBox:setFrame( lBool )
-   RETURN Qt_QComboBox_setFrame( ::pPtr, lBool )
-
-
-METHOD QComboBox:setIconSize( pSize )
-   RETURN Qt_QComboBox_setIconSize( ::pPtr, hbqt_ptr( pSize ) )
-
-
-METHOD QComboBox:setInsertPolicy( nPolicy )
-   RETURN Qt_QComboBox_setInsertPolicy( ::pPtr, nPolicy )
-
-
-METHOD QComboBox:setItemData( nIndex, pValue, nRole )
-   RETURN Qt_QComboBox_setItemData( ::pPtr, nIndex, hbqt_ptr( pValue ), nRole )
-
-
-METHOD QComboBox:setItemDelegate( pDelegate )
-   RETURN Qt_QComboBox_setItemDelegate( ::pPtr, hbqt_ptr( pDelegate ) )
-
-
-METHOD QComboBox:setItemIcon( nIndex, pIcon )
-   RETURN Qt_QComboBox_setItemIcon( ::pPtr, nIndex, hbqt_ptr( pIcon ) )
-
-
-METHOD QComboBox:setItemText( nIndex, cText )
-   RETURN Qt_QComboBox_setItemText( ::pPtr, nIndex, cText )
-
-
-METHOD QComboBox:setLineEdit( pEdit )
-   RETURN Qt_QComboBox_setLineEdit( ::pPtr, hbqt_ptr( pEdit ) )
-
-
-METHOD QComboBox:setMaxCount( nMax )
-   RETURN Qt_QComboBox_setMaxCount( ::pPtr, nMax )
-
-
-METHOD QComboBox:setMaxVisibleItems( nMaxItems )
-   RETURN Qt_QComboBox_setMaxVisibleItems( ::pPtr, nMaxItems )
-
-
-METHOD QComboBox:setMinimumContentsLength( nCharacters )
-   RETURN Qt_QComboBox_setMinimumContentsLength( ::pPtr, nCharacters )
-
-
-METHOD QComboBox:setModel( pModel )
-   RETURN Qt_QComboBox_setModel( ::pPtr, hbqt_ptr( pModel ) )
-
-
-METHOD QComboBox:setModelColumn( nVisibleColumn )
-   RETURN Qt_QComboBox_setModelColumn( ::pPtr, nVisibleColumn )
-
-
-METHOD QComboBox:setRootModelIndex( pIndex )
-   RETURN Qt_QComboBox_setRootModelIndex( ::pPtr, hbqt_ptr( pIndex ) )
-
-
-METHOD QComboBox:setSizeAdjustPolicy( nPolicy )
-   RETURN Qt_QComboBox_setSizeAdjustPolicy( ::pPtr, nPolicy )
-
-
-METHOD QComboBox:setValidator( pValidator )
-   RETURN Qt_QComboBox_setValidator( ::pPtr, hbqt_ptr( pValidator ) )
-
-
-METHOD QComboBox:setView( pItemView )
-   RETURN Qt_QComboBox_setView( ::pPtr, hbqt_ptr( pItemView ) )
-
-
-METHOD QComboBox:showPopup()
-   RETURN Qt_QComboBox_showPopup( ::pPtr )
-
-
-METHOD QComboBox:sizeAdjustPolicy()
-   RETURN Qt_QComboBox_sizeAdjustPolicy( ::pPtr )
-
-
-METHOD QComboBox:validator()
-   RETURN HB_QValidator():from( Qt_QComboBox_validator( ::pPtr ) )
-
-
-METHOD QComboBox:view()
-   RETURN HB_QAbstractItemView():from( Qt_QComboBox_view( ::pPtr ) )
-
-
-METHOD QComboBox:clear()
-   RETURN Qt_QComboBox_clear( ::pPtr )
-
-
-METHOD QComboBox:clearEditText()
-   RETURN Qt_QComboBox_clearEditText( ::pPtr )
-
-
-METHOD QComboBox:setCurrentIndex( nIndex )
-   RETURN Qt_QComboBox_setCurrentIndex( ::pPtr, nIndex )
-
-
-METHOD QComboBox:setEditText( cText )
-   RETURN Qt_QComboBox_setEditText( ::pPtr, cText )
+METHOD QComboBox:insertItems( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QComboBox_insertItems( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:insertPolicy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QComboBox_insertPolicy( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:insertSeparator( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QComboBox_insertSeparator( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:isEditable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QComboBox_isEditable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:itemData( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QVariant():from( Qt_QComboBox_itemData( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QVariant():from( Qt_QComboBox_itemData( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:itemDelegate( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QAbstractItemDelegate():from( Qt_QComboBox_itemDelegate( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:itemIcon( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QIcon():from( Qt_QComboBox_itemIcon( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:itemText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QComboBox_itemText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:lineEdit( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QLineEdit():from( Qt_QComboBox_lineEdit( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:maxCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QComboBox_maxCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:maxVisibleItems( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QComboBox_maxVisibleItems( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:minimumContentsLength( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QComboBox_minimumContentsLength( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:model( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QAbstractItemModel():from( Qt_QComboBox_model( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:modelColumn( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QComboBox_modelColumn( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:removeItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QComboBox_removeItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:rootModelIndex( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QModelIndex():from( Qt_QComboBox_rootModelIndex( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:setCompleter( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QComboBox_setCompleter( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:setDuplicatesEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QComboBox_setDuplicatesEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:setEditable( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QComboBox_setEditable( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:setFrame( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QComboBox_setFrame( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:setIconSize( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QComboBox_setIconSize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:setInsertPolicy( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QComboBox_setInsertPolicy( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:setItemData( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QComboBox_setItemData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QComboBox_setItemData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:setItemDelegate( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QComboBox_setItemDelegate( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:setItemIcon( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. ( hb_isObject( hb_pvalue( 2 ) ) .OR. hb_isChar( hb_pvalue( 2 ) ) )
+         RETURN Qt_QComboBox_setItemIcon( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:setItemText( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QComboBox_setItemText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:setLineEdit( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QComboBox_setLineEdit( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:setMaxCount( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QComboBox_setMaxCount( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:setMaxVisibleItems( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QComboBox_setMaxVisibleItems( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:setMinimumContentsLength( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QComboBox_setMinimumContentsLength( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:setModel( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QComboBox_setModel( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:setModelColumn( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QComboBox_setModelColumn( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:setRootModelIndex( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QComboBox_setRootModelIndex( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:setSizeAdjustPolicy( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QComboBox_setSizeAdjustPolicy( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:setValidator( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QComboBox_setValidator( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:setView( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QComboBox_setView( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:showPopup( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QComboBox_showPopup( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:sizeAdjustPolicy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QComboBox_sizeAdjustPolicy( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:validator( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QValidator():from( Qt_QComboBox_validator( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:view( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QAbstractItemView():from( Qt_QComboBox_view( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:clear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QComboBox_clear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:clearEditText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QComboBox_clearEditText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:setCurrentIndex( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QComboBox_setCurrentIndex( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QComboBox:setEditText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QComboBox_setEditText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

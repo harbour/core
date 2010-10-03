@@ -282,7 +282,7 @@ HB_FUNC( QT_QOBJECT_INHERITS )
    QObject * p = hbqt_par_QObject( 1 );
    if( p )
    {
-      hb_retl( ( p )->inherits( hbqt_par_char( 2 ) ) );
+      hb_retl( ( p )->inherits( ( const char * ) hb_parc( 2 ) ) );
    }
 }
 
@@ -366,7 +366,7 @@ HB_FUNC( QT_QOBJECT_PROPERTY )
    QObject * p = hbqt_par_QObject( 1 );
    if( p )
    {
-      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->property( hbqt_par_char( 2 ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QVariant( new QVariant( ( p )->property( ( const char * ) hb_parc( 2 ) ) ), true ) );
    }
 }
 
@@ -416,7 +416,7 @@ HB_FUNC( QT_QOBJECT_SETPROPERTY )
    QObject * p = hbqt_par_QObject( 1 );
    if( p )
    {
-      hb_retl( ( p )->setProperty( hbqt_par_char( 2 ), *hbqt_par_QVariant( 3 ) ) );
+      hb_retl( ( p )->setProperty( ( const char * ) hb_parc( 2 ), *hbqt_par_QVariant( 3 ) ) );
    }
 }
 
@@ -464,7 +464,7 @@ HB_FUNC( QT_QOBJECT_TR )
    QObject * p = hbqt_par_QObject( 1 );
    if( p )
    {
-      hb_retstr_utf8( ( p )->tr( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hb_parnidef( 4, -1 ) ).toUtf8().data() );
+      hb_retstr_utf8( ( p )->tr( ( const char * ) hb_parc( 2 ), ( const char * ) hb_parc( 3 ), hb_parnidef( 4, -1 ) ).toUtf8().data() );
    }
 }
 
@@ -476,7 +476,7 @@ HB_FUNC( QT_QOBJECT_TRUTF8 )
    QObject * p = hbqt_par_QObject( 1 );
    if( p )
    {
-      hb_retstr_utf8( ( p )->trUtf8( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hb_parnidef( 4, -1 ) ).toUtf8().data() );
+      hb_retstr_utf8( ( p )->trUtf8( ( const char * ) hb_parc( 2 ), ( const char * ) hb_parc( 3 ), hb_parnidef( 4, -1 ) ).toUtf8().data() );
    }
 }
 

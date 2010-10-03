@@ -26,30 +26,32 @@
  *  $RETURNS$
  *     An instance of the object of type QTextBlock
  *  $METHODS$
- *     :blockFormat()                                      -> Format
+ *     :blockFormat()                                      -> oQTextBlockFormat
  *     :blockFormatIndex()                                 -> nInt
  *     :blockNumber()                                      -> nInt
- *     :charFormat()                                       -> pQTextCharFormat
+ *     :charFormat()                                       -> oQTextCharFormat
  *     :charFormatIndex()                                  -> nInt
  *     :clearLayout()                                      -> NIL
  *     :contains( nPosition )                              -> lBool
- *     :document()                                         -> pQTextDocument
+ *     :document()                                         -> oQTextDocument
  *     :firstLineNumber()                                  -> nInt
  *     :isValid()                                          -> lBool
  *     :isVisible()                                        -> lBool
- *     :layout()                                           -> pQTextLayout
+ *     :layout()                                           -> oQTextLayout
  *     :length()                                           -> nInt
  *     :lineCount()                                        -> nInt
+ *     :next()                                             -> oQTextBlock
  *     :position()                                         -> nInt
+ *     :previous()                                         -> oQTextBlock
  *     :revision()                                         -> nInt
  *     :setLineCount( nCount )                             -> NIL
  *     :setRevision( nRev )                                -> NIL
- *     :setUserData( pData )                               -> NIL
+ *     :setUserData( oHBQTextBlockUserData )               -> NIL
  *     :setUserState( nState )                             -> NIL
  *     :setVisible( lVisible )                             -> NIL
  *     :text()                                             -> cQString
- *     :textList()                                         -> pQTextList
- *     :userData()                                         -> pHBQTextBlockUserData
+ *     :textList()                                         -> oQTextList
+ *     :userData()                                         -> oHBQTextBlockUserData
  *     :userState()                                        -> nInt
  * 
  *  $DESCRIPTION$
@@ -70,7 +72,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTextBlock.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextBlock.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

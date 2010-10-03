@@ -26,18 +26,18 @@
  *  $RETURNS$
  *     An instance of the object of type QGraphicsSceneMouseEvent
  *  $METHODS$
- *     :button()                                           -> nQt::MouseButton
- *     :buttonDownPos( nButton )                           -> pQPointF
- *     :buttonDownScenePos( nButton )                      -> pQPointF
- *     :buttonDownScreenPos( nButton )                     -> pQPoint
- *     :buttons()                                          -> nQt::MouseButtons
- *     :lastPos()                                          -> pQPointF
- *     :lastScenePos()                                     -> pQPointF
- *     :lastScreenPos()                                    -> pQPoint
- *     :modifiers()                                        -> nQt::KeyboardModifiers
- *     :pos()                                              -> pQPointF
- *     :scenePos()                                         -> pQPointF
- *     :screenPos()                                        -> pQPoint
+ *     :button()                                           -> nQt_MouseButton
+ *     :buttonDownPos( nButton )                           -> oQPointF
+ *     :buttonDownScenePos( nButton )                      -> oQPointF
+ *     :buttonDownScreenPos( nButton )                     -> oQPoint
+ *     :buttons()                                          -> nQt_MouseButtons
+ *     :lastPos()                                          -> oQPointF
+ *     :lastScenePos()                                     -> oQPointF
+ *     :lastScreenPos()                                    -> oQPoint
+ *     :modifiers()                                        -> nQt_KeyboardModifiers
+ *     :pos()                                              -> oQPointF
+ *     :scenePos()                                         -> oQPointF
+ *     :screenPos()                                        -> oQPoint
  * 
  *  $DESCRIPTION$
  * 
@@ -57,7 +57,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGraphicsSceneMouseEvent.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsSceneMouseEvent.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QGraphicsSceneEvent()
  *  $END$
  */

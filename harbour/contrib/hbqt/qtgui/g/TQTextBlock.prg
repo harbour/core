@@ -103,33 +103,33 @@ CREATE CLASS QTextBlock INHERIT HbQtObjectHandler FUNCTION HB_QTextBlock
 
    METHOD  new( ... )
 
-   METHOD  blockFormat()
-   METHOD  blockFormatIndex()
-   METHOD  blockNumber()
-   METHOD  charFormat()
-   METHOD  charFormatIndex()
-   METHOD  clearLayout()
-   METHOD  contains( nPosition )
-   METHOD  document()
-   METHOD  firstLineNumber()
-   METHOD  isValid()
-   METHOD  isVisible()
-   METHOD  layout()
-   METHOD  length()
-   METHOD  lineCount()
-   METHOD  next()
-   METHOD  position()
-   METHOD  previous()
-   METHOD  revision()
-   METHOD  setLineCount( nCount )
-   METHOD  setRevision( nRev )
-   METHOD  setUserData( pData )
-   METHOD  setUserState( nState )
-   METHOD  setVisible( lVisible )
-   METHOD  text()
-   METHOD  textList()
-   METHOD  userData()
-   METHOD  userState()
+   METHOD  blockFormat                   // (  )                                               -> oQTextBlockFormat
+   METHOD  blockFormatIndex              // (  )                                               -> nInt
+   METHOD  blockNumber                   // (  )                                               -> nInt
+   METHOD  charFormat                    // (  )                                               -> oQTextCharFormat
+   METHOD  charFormatIndex               // (  )                                               -> nInt
+   METHOD  clearLayout                   // (  )                                               -> NIL
+   METHOD  contains                      // ( nPosition )                                      -> lBool
+   METHOD  document                      // (  )                                               -> oQTextDocument
+   METHOD  firstLineNumber               // (  )                                               -> nInt
+   METHOD  isValid                       // (  )                                               -> lBool
+   METHOD  isVisible                     // (  )                                               -> lBool
+   METHOD  layout                        // (  )                                               -> oQTextLayout
+   METHOD  length                        // (  )                                               -> nInt
+   METHOD  lineCount                     // (  )                                               -> nInt
+   METHOD  next                          // (  )                                               -> oQTextBlock
+   METHOD  position                      // (  )                                               -> nInt
+   METHOD  previous                      // (  )                                               -> oQTextBlock
+   METHOD  revision                      // (  )                                               -> nInt
+   METHOD  setLineCount                  // ( nCount )                                         -> NIL
+   METHOD  setRevision                   // ( nRev )                                           -> NIL
+   METHOD  setUserData                   // ( oHBQTextBlockUserData )                          -> NIL
+   METHOD  setUserState                  // ( nState )                                         -> NIL
+   METHOD  setVisible                    // ( lVisible )                                       -> NIL
+   METHOD  text                          // (  )                                               -> cQString
+   METHOD  textList                      // (  )                                               -> oQTextList
+   METHOD  userData                      // (  )                                               -> oHBQTextBlockUserData
+   METHOD  userState                     // (  )                                               -> nInt
 
    ENDCLASS
 
@@ -143,110 +143,242 @@ METHOD QTextBlock:new( ... )
    RETURN Self
 
 
-METHOD QTextBlock:blockFormat()
-   RETURN HB_QTextBlockFormat():from( Qt_QTextBlock_blockFormat( ::pPtr ) )
+METHOD QTextBlock:blockFormat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextBlockFormat():from( Qt_QTextBlock_blockFormat( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlock:blockFormatIndex()
-   RETURN Qt_QTextBlock_blockFormatIndex( ::pPtr )
+METHOD QTextBlock:blockFormatIndex( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextBlock_blockFormatIndex( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlock:blockNumber()
-   RETURN Qt_QTextBlock_blockNumber( ::pPtr )
+METHOD QTextBlock:blockNumber( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextBlock_blockNumber( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlock:charFormat()
-   RETURN HB_QTextCharFormat():from( Qt_QTextBlock_charFormat( ::pPtr ) )
+METHOD QTextBlock:charFormat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextCharFormat():from( Qt_QTextBlock_charFormat( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlock:charFormatIndex()
-   RETURN Qt_QTextBlock_charFormatIndex( ::pPtr )
+METHOD QTextBlock:charFormatIndex( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextBlock_charFormatIndex( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlock:clearLayout()
-   RETURN Qt_QTextBlock_clearLayout( ::pPtr )
+METHOD QTextBlock:clearLayout( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextBlock_clearLayout( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlock:contains( nPosition )
-   RETURN Qt_QTextBlock_contains( ::pPtr, nPosition )
+METHOD QTextBlock:contains( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextBlock_contains( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlock:document()
-   RETURN HB_QTextDocument():from( Qt_QTextBlock_document( ::pPtr ) )
+METHOD QTextBlock:document( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextDocument():from( Qt_QTextBlock_document( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlock:firstLineNumber()
-   RETURN Qt_QTextBlock_firstLineNumber( ::pPtr )
+METHOD QTextBlock:firstLineNumber( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextBlock_firstLineNumber( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlock:isValid()
-   RETURN Qt_QTextBlock_isValid( ::pPtr )
+METHOD QTextBlock:isValid( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextBlock_isValid( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlock:isVisible()
-   RETURN Qt_QTextBlock_isVisible( ::pPtr )
+METHOD QTextBlock:isVisible( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextBlock_isVisible( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlock:layout()
-   RETURN HB_QTextLayout():from( Qt_QTextBlock_layout( ::pPtr ) )
+METHOD QTextBlock:layout( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextLayout():from( Qt_QTextBlock_layout( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlock:length()
-   RETURN Qt_QTextBlock_length( ::pPtr )
+METHOD QTextBlock:length( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextBlock_length( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlock:lineCount()
-   RETURN Qt_QTextBlock_lineCount( ::pPtr )
+METHOD QTextBlock:lineCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextBlock_lineCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlock:next()
-   RETURN HB_QTextBlock():from( Qt_QTextBlock_next( ::pPtr ) )
+METHOD QTextBlock:next( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextBlock():from( Qt_QTextBlock_next( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlock:position()
-   RETURN Qt_QTextBlock_position( ::pPtr )
+METHOD QTextBlock:position( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextBlock_position( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlock:previous()
-   RETURN HB_QTextBlock():from( Qt_QTextBlock_previous( ::pPtr ) )
+METHOD QTextBlock:previous( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextBlock():from( Qt_QTextBlock_previous( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlock:revision()
-   RETURN Qt_QTextBlock_revision( ::pPtr )
+METHOD QTextBlock:revision( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextBlock_revision( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlock:setLineCount( nCount )
-   RETURN Qt_QTextBlock_setLineCount( ::pPtr, nCount )
+METHOD QTextBlock:setLineCount( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextBlock_setLineCount( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlock:setRevision( nRev )
-   RETURN Qt_QTextBlock_setRevision( ::pPtr, nRev )
+METHOD QTextBlock:setRevision( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextBlock_setRevision( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlock:setUserData( pData )
-   RETURN Qt_QTextBlock_setUserData( ::pPtr, hbqt_ptr( pData ) )
+METHOD QTextBlock:setUserData( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextBlock_setUserData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlock:setUserState( nState )
-   RETURN Qt_QTextBlock_setUserState( ::pPtr, nState )
+METHOD QTextBlock:setUserState( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextBlock_setUserState( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlock:setVisible( lVisible )
-   RETURN Qt_QTextBlock_setVisible( ::pPtr, lVisible )
+METHOD QTextBlock:setVisible( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QTextBlock_setVisible( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlock:text()
-   RETURN Qt_QTextBlock_text( ::pPtr )
+METHOD QTextBlock:text( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextBlock_text( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlock:textList()
-   RETURN HB_QTextList():from( Qt_QTextBlock_textList( ::pPtr ) )
+METHOD QTextBlock:textList( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextList():from( Qt_QTextBlock_textList( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlock:userData()
-   RETURN HB_HBQTextBlockUserData():from( Qt_QTextBlock_userData( ::pPtr ) )
+METHOD QTextBlock:userData( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_HBQTextBlockUserData():from( Qt_QTextBlock_userData( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextBlock:userState()
-   RETURN Qt_QTextBlock_userState( ::pPtr )
+METHOD QTextBlock:userState( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextBlock_userState( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

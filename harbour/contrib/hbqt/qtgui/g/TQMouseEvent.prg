@@ -103,15 +103,15 @@ CREATE CLASS QMouseEvent INHERIT HbQtObjectHandler, HB_QInputEvent FUNCTION HB_Q
 
    METHOD  new( ... )
 
-   METHOD  button()
-   METHOD  buttons()
-   METHOD  globalPos()
-   METHOD  globalX()
-   METHOD  globalY()
-   METHOD  pos()
-   METHOD  posF()
-   METHOD  x()
-   METHOD  y()
+   METHOD  button                        // (  )                                               -> nQt_MouseButton
+   METHOD  buttons                       // (  )                                               -> nQt_MouseButtons
+   METHOD  globalPos                     // (  )                                               -> oQPoint
+   METHOD  globalX                       // (  )                                               -> nInt
+   METHOD  globalY                       // (  )                                               -> nInt
+   METHOD  pos                           // (  )                                               -> oQPoint
+   METHOD  posF                          // (  )                                               -> oQPointF
+   METHOD  x                             // (  )                                               -> nInt
+   METHOD  y                             // (  )                                               -> nInt
 
    ENDCLASS
 
@@ -125,38 +125,74 @@ METHOD QMouseEvent:new( ... )
    RETURN Self
 
 
-METHOD QMouseEvent:button()
-   RETURN Qt_QMouseEvent_button( ::pPtr )
+METHOD QMouseEvent:button( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMouseEvent_button( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMouseEvent:buttons()
-   RETURN Qt_QMouseEvent_buttons( ::pPtr )
+METHOD QMouseEvent:buttons( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMouseEvent_buttons( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMouseEvent:globalPos()
-   RETURN HB_QPoint():from( Qt_QMouseEvent_globalPos( ::pPtr ) )
+METHOD QMouseEvent:globalPos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QMouseEvent_globalPos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMouseEvent:globalX()
-   RETURN Qt_QMouseEvent_globalX( ::pPtr )
+METHOD QMouseEvent:globalX( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMouseEvent_globalX( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMouseEvent:globalY()
-   RETURN Qt_QMouseEvent_globalY( ::pPtr )
+METHOD QMouseEvent:globalY( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMouseEvent_globalY( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMouseEvent:pos()
-   RETURN HB_QPoint():from( Qt_QMouseEvent_pos( ::pPtr ) )
+METHOD QMouseEvent:pos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QMouseEvent_pos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMouseEvent:posF()
-   RETURN HB_QPointF():from( Qt_QMouseEvent_posF( ::pPtr ) )
+METHOD QMouseEvent:posF( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPointF():from( Qt_QMouseEvent_posF( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMouseEvent:x()
-   RETURN Qt_QMouseEvent_x( ::pPtr )
+METHOD QMouseEvent:x( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMouseEvent_x( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QMouseEvent:y()
-   RETURN Qt_QMouseEvent_y( ::pPtr )
+METHOD QMouseEvent:y( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QMouseEvent_y( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

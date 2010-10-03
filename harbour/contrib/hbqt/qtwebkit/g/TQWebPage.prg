@@ -103,37 +103,37 @@ CREATE CLASS QWebPage INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QWebPage
 
    METHOD  new( ... )
 
-   METHOD  action( nAction )
-   METHOD  bytesReceived()
-   METHOD  createStandardContextMenu()
-   METHOD  currentFrame()
-   METHOD  findText( cSubString, nOptions )
-   METHOD  focusNextPrevChild( lNext )
-   METHOD  forwardUnsupportedContent()
-   METHOD  history()
-   METHOD  inputMethodQuery( nProperty )
-   METHOD  isContentEditable()
-   METHOD  isModified()
-   METHOD  linkDelegationPolicy()
-   METHOD  mainFrame()
-   METHOD  palette()
-   METHOD  pluginFactory()
-   METHOD  selectedText()
-   METHOD  setContentEditable( lEditable )
-   METHOD  setForwardUnsupportedContent( lForward )
-   METHOD  setLinkDelegationPolicy( nPolicy )
-   METHOD  setPalette( pPalette )
-   METHOD  setPluginFactory( pFactory )
-   METHOD  setView( pView )
-   METHOD  setViewportSize( pSize )
-   METHOD  settings()
-   METHOD  supportsExtension( nExtension )
-   METHOD  swallowContextMenuEvent( pEvent )
-   METHOD  totalBytes()
-   METHOD  triggerAction( nAction, lChecked )
-   METHOD  updatePositionDependentActions( pPos )
-   METHOD  view()
-   METHOD  viewportSize()
+   METHOD  action                        // ( nAction )                                        -> oQAction
+   METHOD  bytesReceived                 // (  )                                               -> nQuint64
+   METHOD  createStandardContextMenu     // (  )                                               -> oQMenu
+   METHOD  currentFrame                  // (  )                                               -> oQWebFrame
+   METHOD  findText                      // ( cSubString, nOptions )                           -> lBool
+   METHOD  focusNextPrevChild            // ( lNext )                                          -> lBool
+   METHOD  forwardUnsupportedContent     // (  )                                               -> lBool
+   METHOD  history                       // (  )                                               -> oQWebHistory
+   METHOD  inputMethodQuery              // ( nProperty )                                      -> oQVariant
+   METHOD  isContentEditable             // (  )                                               -> lBool
+   METHOD  isModified                    // (  )                                               -> lBool
+   METHOD  linkDelegationPolicy          // (  )                                               -> nLinkDelegationPolicy
+   METHOD  mainFrame                     // (  )                                               -> oQWebFrame
+   METHOD  palette                       // (  )                                               -> oQPalette
+   METHOD  pluginFactory                 // (  )                                               -> oQWebPluginFactory
+   METHOD  selectedText                  // (  )                                               -> cQString
+   METHOD  setContentEditable            // ( lEditable )                                      -> NIL
+   METHOD  setForwardUnsupportedContent  // ( lForward )                                       -> NIL
+   METHOD  setLinkDelegationPolicy       // ( nPolicy )                                        -> NIL
+   METHOD  setPalette                    // ( oQPalette )                                      -> NIL
+   METHOD  setPluginFactory              // ( oQWebPluginFactory )                             -> NIL
+   METHOD  setView                       // ( oQWidget )                                       -> NIL
+   METHOD  setViewportSize               // ( oQSize )                                         -> NIL
+   METHOD  settings                      // (  )                                               -> oQWebSettings
+   METHOD  supportsExtension             // ( nExtension )                                     -> lBool
+   METHOD  swallowContextMenuEvent       // ( oQContextMenuEvent )                             -> lBool
+   METHOD  totalBytes                    // (  )                                               -> nQuint64
+   METHOD  triggerAction                 // ( nAction, lChecked )                              -> NIL
+   METHOD  updatePositionDependentActions // ( oQPoint )                                        -> NIL
+   METHOD  view                          // (  )                                               -> oQWidget
+   METHOD  viewportSize                  // (  )                                               -> oQSize
 
    ENDCLASS
 
@@ -147,126 +147,322 @@ METHOD QWebPage:new( ... )
    RETURN Self
 
 
-METHOD QWebPage:action( nAction )
-   RETURN HB_QAction():from( Qt_QWebPage_action( ::pPtr, nAction ) )
+METHOD QWebPage:action( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QAction():from( Qt_QWebPage_action( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:bytesReceived()
-   RETURN Qt_QWebPage_bytesReceived( ::pPtr )
+METHOD QWebPage:bytesReceived( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebPage_bytesReceived( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:createStandardContextMenu()
-   RETURN HB_QMenu():from( Qt_QWebPage_createStandardContextMenu( ::pPtr ) )
+METHOD QWebPage:createStandardContextMenu( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QMenu():from( Qt_QWebPage_createStandardContextMenu( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:currentFrame()
-   RETURN HB_QWebFrame():from( Qt_QWebPage_currentFrame( ::pPtr ) )
+METHOD QWebPage:currentFrame( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWebFrame():from( Qt_QWebPage_currentFrame( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:findText( cSubString, nOptions )
-   RETURN Qt_QWebPage_findText( ::pPtr, cSubString, nOptions )
+METHOD QWebPage:findText( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QWebPage_findText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QWebPage_findText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:focusNextPrevChild( lNext )
-   RETURN Qt_QWebPage_focusNextPrevChild( ::pPtr, lNext )
+METHOD QWebPage:focusNextPrevChild( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QWebPage_focusNextPrevChild( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:forwardUnsupportedContent()
-   RETURN Qt_QWebPage_forwardUnsupportedContent( ::pPtr )
+METHOD QWebPage:forwardUnsupportedContent( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebPage_forwardUnsupportedContent( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:history()
-   RETURN HB_QWebHistory():from( Qt_QWebPage_history( ::pPtr ) )
+METHOD QWebPage:history( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWebHistory():from( Qt_QWebPage_history( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:inputMethodQuery( nProperty )
-   RETURN HB_QVariant():from( Qt_QWebPage_inputMethodQuery( ::pPtr, nProperty ) )
+METHOD QWebPage:inputMethodQuery( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QVariant():from( Qt_QWebPage_inputMethodQuery( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:isContentEditable()
-   RETURN Qt_QWebPage_isContentEditable( ::pPtr )
+METHOD QWebPage:isContentEditable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebPage_isContentEditable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:isModified()
-   RETURN Qt_QWebPage_isModified( ::pPtr )
+METHOD QWebPage:isModified( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebPage_isModified( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:linkDelegationPolicy()
-   RETURN Qt_QWebPage_linkDelegationPolicy( ::pPtr )
+METHOD QWebPage:linkDelegationPolicy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebPage_linkDelegationPolicy( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:mainFrame()
-   RETURN HB_QWebFrame():from( Qt_QWebPage_mainFrame( ::pPtr ) )
+METHOD QWebPage:mainFrame( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWebFrame():from( Qt_QWebPage_mainFrame( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:palette()
-   RETURN HB_QPalette():from( Qt_QWebPage_palette( ::pPtr ) )
+METHOD QWebPage:palette( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPalette():from( Qt_QWebPage_palette( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:pluginFactory()
-   RETURN HB_QWebPluginFactory():from( Qt_QWebPage_pluginFactory( ::pPtr ) )
+METHOD QWebPage:pluginFactory( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWebPluginFactory():from( Qt_QWebPage_pluginFactory( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:selectedText()
-   RETURN Qt_QWebPage_selectedText( ::pPtr )
+METHOD QWebPage:selectedText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebPage_selectedText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:setContentEditable( lEditable )
-   RETURN Qt_QWebPage_setContentEditable( ::pPtr, lEditable )
+METHOD QWebPage:setContentEditable( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QWebPage_setContentEditable( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:setForwardUnsupportedContent( lForward )
-   RETURN Qt_QWebPage_setForwardUnsupportedContent( ::pPtr, lForward )
+METHOD QWebPage:setForwardUnsupportedContent( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QWebPage_setForwardUnsupportedContent( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:setLinkDelegationPolicy( nPolicy )
-   RETURN Qt_QWebPage_setLinkDelegationPolicy( ::pPtr, nPolicy )
+METHOD QWebPage:setLinkDelegationPolicy( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWebPage_setLinkDelegationPolicy( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:setPalette( pPalette )
-   RETURN Qt_QWebPage_setPalette( ::pPtr, hbqt_ptr( pPalette ) )
+METHOD QWebPage:setPalette( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWebPage_setPalette( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:setPluginFactory( pFactory )
-   RETURN Qt_QWebPage_setPluginFactory( ::pPtr, hbqt_ptr( pFactory ) )
+METHOD QWebPage:setPluginFactory( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWebPage_setPluginFactory( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:setView( pView )
-   RETURN Qt_QWebPage_setView( ::pPtr, hbqt_ptr( pView ) )
+METHOD QWebPage:setView( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWebPage_setView( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:setViewportSize( pSize )
-   RETURN Qt_QWebPage_setViewportSize( ::pPtr, hbqt_ptr( pSize ) )
+METHOD QWebPage:setViewportSize( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWebPage_setViewportSize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:settings()
-   RETURN HB_QWebSettings():from( Qt_QWebPage_settings( ::pPtr ) )
+METHOD QWebPage:settings( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWebSettings():from( Qt_QWebPage_settings( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:supportsExtension( nExtension )
-   RETURN Qt_QWebPage_supportsExtension( ::pPtr, nExtension )
+METHOD QWebPage:supportsExtension( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWebPage_supportsExtension( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:swallowContextMenuEvent( pEvent )
-   RETURN Qt_QWebPage_swallowContextMenuEvent( ::pPtr, hbqt_ptr( pEvent ) )
+METHOD QWebPage:swallowContextMenuEvent( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWebPage_swallowContextMenuEvent( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:totalBytes()
-   RETURN Qt_QWebPage_totalBytes( ::pPtr )
+METHOD QWebPage:totalBytes( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebPage_totalBytes( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:triggerAction( nAction, lChecked )
-   RETURN Qt_QWebPage_triggerAction( ::pPtr, nAction, lChecked )
+METHOD QWebPage:triggerAction( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
+         RETURN Qt_QWebPage_triggerAction( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QWebPage_triggerAction( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:updatePositionDependentActions( pPos )
-   RETURN Qt_QWebPage_updatePositionDependentActions( ::pPtr, hbqt_ptr( pPos ) )
+METHOD QWebPage:updatePositionDependentActions( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QWebPage_updatePositionDependentActions( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:view()
-   RETURN HB_QWidget():from( Qt_QWebPage_view( ::pPtr ) )
+METHOD QWebPage:view( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QWebPage_view( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebPage:viewportSize()
-   RETURN HB_QSize():from( Qt_QWebPage_viewportSize( ::pPtr ) )
+METHOD QWebPage:viewportSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QWebPage_viewportSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

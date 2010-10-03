@@ -103,8 +103,8 @@ CREATE CLASS QRegExpValidator INHERIT HbQtObjectHandler, HB_QValidator FUNCTION 
 
    METHOD  new( ... )
 
-   METHOD  regExp()
-   METHOD  setRegExp( pRx )
+   METHOD  regExp                        // (  )                                               -> oQRegExp
+   METHOD  setRegExp                     // ( oQRegExp )                                       -> NIL
 
    ENDCLASS
 
@@ -118,10 +118,22 @@ METHOD QRegExpValidator:new( ... )
    RETURN Self
 
 
-METHOD QRegExpValidator:regExp()
-   RETURN HB_QRegExp():from( Qt_QRegExpValidator_regExp( ::pPtr ) )
+METHOD QRegExpValidator:regExp( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRegExp():from( Qt_QRegExpValidator_regExp( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QRegExpValidator:setRegExp( pRx )
-   RETURN Qt_QRegExpValidator_setRegExp( ::pPtr, hbqt_ptr( pRx ) )
+METHOD QRegExpValidator:setRegExp( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QRegExpValidator_setRegExp( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

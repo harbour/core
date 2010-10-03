@@ -103,16 +103,16 @@ CREATE CLASS QAbstractPrintDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION
 
    METHOD  new( ... )
 
-   METHOD  exec()
-   METHOD  fromPage()
-   METHOD  maxPage()
-   METHOD  minPage()
-   METHOD  printRange()
-   METHOD  printer()
-   METHOD  setFromTo( nFrom, nTo )
-   METHOD  setMinMax( nMin, nMax )
-   METHOD  setPrintRange( nRange )
-   METHOD  toPage()
+   METHOD  exec                          // (  )                                               -> nInt
+   METHOD  fromPage                      // (  )                                               -> nInt
+   METHOD  maxPage                       // (  )                                               -> nInt
+   METHOD  minPage                       // (  )                                               -> nInt
+   METHOD  printRange                    // (  )                                               -> nPrintRange
+   METHOD  printer                       // (  )                                               -> oQPrinter
+   METHOD  setFromTo                     // ( nFrom, nTo )                                     -> NIL
+   METHOD  setMinMax                     // ( nMin, nMax )                                     -> NIL
+   METHOD  setPrintRange                 // ( nRange )                                         -> NIL
+   METHOD  toPage                        // (  )                                               -> nInt
 
    ENDCLASS
 
@@ -126,42 +126,94 @@ METHOD QAbstractPrintDialog:new( ... )
    RETURN Self
 
 
-METHOD QAbstractPrintDialog:exec()
-   RETURN Qt_QAbstractPrintDialog_exec( ::pPtr )
+METHOD QAbstractPrintDialog:exec( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractPrintDialog_exec( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractPrintDialog:fromPage()
-   RETURN Qt_QAbstractPrintDialog_fromPage( ::pPtr )
+METHOD QAbstractPrintDialog:fromPage( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractPrintDialog_fromPage( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractPrintDialog:maxPage()
-   RETURN Qt_QAbstractPrintDialog_maxPage( ::pPtr )
+METHOD QAbstractPrintDialog:maxPage( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractPrintDialog_maxPage( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractPrintDialog:minPage()
-   RETURN Qt_QAbstractPrintDialog_minPage( ::pPtr )
+METHOD QAbstractPrintDialog:minPage( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractPrintDialog_minPage( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractPrintDialog:printRange()
-   RETURN Qt_QAbstractPrintDialog_printRange( ::pPtr )
+METHOD QAbstractPrintDialog:printRange( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractPrintDialog_printRange( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractPrintDialog:printer()
-   RETURN HB_QPrinter():from( Qt_QAbstractPrintDialog_printer( ::pPtr ) )
+METHOD QAbstractPrintDialog:printer( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPrinter():from( Qt_QAbstractPrintDialog_printer( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractPrintDialog:setFromTo( nFrom, nTo )
-   RETURN Qt_QAbstractPrintDialog_setFromTo( ::pPtr, nFrom, nTo )
+METHOD QAbstractPrintDialog:setFromTo( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QAbstractPrintDialog_setFromTo( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractPrintDialog:setMinMax( nMin, nMax )
-   RETURN Qt_QAbstractPrintDialog_setMinMax( ::pPtr, nMin, nMax )
+METHOD QAbstractPrintDialog:setMinMax( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QAbstractPrintDialog_setMinMax( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractPrintDialog:setPrintRange( nRange )
-   RETURN Qt_QAbstractPrintDialog_setPrintRange( ::pPtr, nRange )
+METHOD QAbstractPrintDialog:setPrintRange( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractPrintDialog_setPrintRange( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractPrintDialog:toPage()
-   RETURN Qt_QAbstractPrintDialog_toPage( ::pPtr )
+METHOD QAbstractPrintDialog:toPage( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractPrintDialog_toPage( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

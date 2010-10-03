@@ -103,31 +103,39 @@ CREATE CLASS QFormLayout INHERIT HbQtObjectHandler, HB_QLayout FUNCTION HB_QForm
 
    METHOD  new( ... )
 
-   METHOD  addRow( ... )
-   METHOD  fieldGrowthPolicy()
-   METHOD  formAlignment()
-   METHOD  getItemPosition( nIndex, nRowPtr, nRolePtr )
-   METHOD  getLayoutPosition( pLayout, nRowPtr, nRolePtr )
-   METHOD  getWidgetPosition( pWidget, nRowPtr, nRolePtr )
-   METHOD  horizontalSpacing()
-   METHOD  insertRow( ... )
-   METHOD  itemAt( nRow, nRole )
-   METHOD  labelAlignment()
-   METHOD  labelForField( ... )
-   METHOD  rowCount()
-   METHOD  rowWrapPolicy()
-   METHOD  setFieldGrowthPolicy( nPolicy )
-   METHOD  setFormAlignment( nAlignment )
-   METHOD  setHorizontalSpacing( nSpacing )
-   METHOD  setItem( nRow, nRole, pItem )
-   METHOD  setLabelAlignment( nAlignment )
-   METHOD  setLayout( nRow, nRole, pLayout )
-   METHOD  setRowWrapPolicy( nPolicy )
-   METHOD  setSpacing( nSpacing )
-   METHOD  setVerticalSpacing( nSpacing )
-   METHOD  setWidget( nRow, nRole, pWidget )
-   METHOD  spacing()
-   METHOD  verticalSpacing()
+   METHOD  addRow                        // ( oQWidget, oQWidget )                             -> NIL
+                                         // ( oQWidget )                                       -> NIL
+                                         // ( cLabelText, oQWidget )                           -> NIL
+   METHOD  fieldGrowthPolicy             // (  )                                               -> nFieldGrowthPolicy
+   METHOD  formAlignment                 // (  )                                               -> nQt_Alignment
+   METHOD  getItemPosition               // ( nIndex, @nRowPtr, @nRolePtr )                    -> NIL
+   METHOD  getLayoutPosition             // ( oQLayout, @nRowPtr, @nRolePtr )                  -> NIL
+   METHOD  getWidgetPosition             // ( oQWidget, @nRowPtr, @nRolePtr )                  -> NIL
+   METHOD  horizontalSpacing             // (  )                                               -> nInt
+   METHOD  insertRow                     // ( nRow, oQWidget, oQWidget )                       -> NIL
+                                         // ( nRow, oQWidget, oQLayout )                       -> NIL
+                                         // ( nRow, oQWidget )                                 -> NIL
+                                         // ( nRow, cLabelText, oQWidget )                     -> NIL
+                                         // ( nRow, cLabelText, oQLayout )                     -> NIL
+                                         // ( nRow, oQLayout )                                 -> NIL
+   METHOD  itemAt                        // ( nRow, nRole )                                    -> oQLayoutItem
+   METHOD  labelAlignment                // (  )                                               -> nQt_Alignment
+   METHOD  labelForField                 // ( oQWidget )                                       -> oQWidget
+                                         // ( oQLayout )                                       -> oQWidget
+   METHOD  rowCount                      // (  )                                               -> nInt
+   METHOD  rowWrapPolicy                 // (  )                                               -> nRowWrapPolicy
+   METHOD  setFieldGrowthPolicy          // ( nPolicy )                                        -> NIL
+   METHOD  setFormAlignment              // ( nAlignment )                                     -> NIL
+   METHOD  setHorizontalSpacing          // ( nSpacing )                                       -> NIL
+   METHOD  setItem                       // ( nRow, nRole, oQLayoutItem )                      -> NIL
+   METHOD  setLabelAlignment             // ( nAlignment )                                     -> NIL
+   METHOD  setLayout                     // ( nRow, nRole, oQLayout )                          -> NIL
+   METHOD  setRowWrapPolicy              // ( nPolicy )                                        -> NIL
+   METHOD  setSpacing                    // ( nSpacing )                                       -> NIL
+   METHOD  setVerticalSpacing            // ( nSpacing )                                       -> NIL
+   METHOD  setWidget                     // ( nRow, nRole, oQWidget )                          -> NIL
+   METHOD  spacing                       // (  )                                               -> nInt
+   METHOD  verticalSpacing               // (  )                                               -> nInt
 
    ENDCLASS
 
@@ -161,28 +169,64 @@ METHOD QFormLayout:addRow( ... )
    RETURN hbqt_error()
 
 
-METHOD QFormLayout:fieldGrowthPolicy()
-   RETURN Qt_QFormLayout_fieldGrowthPolicy( ::pPtr )
+METHOD QFormLayout:fieldGrowthPolicy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFormLayout_fieldGrowthPolicy( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFormLayout:formAlignment()
-   RETURN Qt_QFormLayout_formAlignment( ::pPtr )
+METHOD QFormLayout:formAlignment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFormLayout_formAlignment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFormLayout:getItemPosition( nIndex, nRowPtr, nRolePtr )
-   RETURN Qt_QFormLayout_getItemPosition( ::pPtr, nIndex, nRowPtr, nRolePtr )
+METHOD QFormLayout:getItemPosition( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QFormLayout_getItemPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFormLayout:getLayoutPosition( pLayout, nRowPtr, nRolePtr )
-   RETURN Qt_QFormLayout_getLayoutPosition( ::pPtr, hbqt_ptr( pLayout ), nRowPtr, nRolePtr )
+METHOD QFormLayout:getLayoutPosition( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QFormLayout_getLayoutPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFormLayout:getWidgetPosition( pWidget, nRowPtr, nRolePtr )
-   RETURN Qt_QFormLayout_getWidgetPosition( ::pPtr, hbqt_ptr( pWidget ), nRowPtr, nRolePtr )
+METHOD QFormLayout:getWidgetPosition( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QFormLayout_getWidgetPosition( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFormLayout:horizontalSpacing()
-   RETURN Qt_QFormLayout_horizontalSpacing( ::pPtr )
+METHOD QFormLayout:horizontalSpacing( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFormLayout_horizontalSpacing( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QFormLayout:insertRow( ... )
@@ -190,10 +234,10 @@ METHOD QFormLayout:insertRow( ... )
    CASE 3
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
-         SWITCH __objGetClsName( hb_pvalue( 2 ) ) + __objGetClsName( hb_pvalue( 3 ) )
-         CASE "QSTRINGQLAYOUT"
+         SWITCH __objGetClsName( hb_pvalue( 3 ) )
+         CASE "QLAYOUT"
             RETURN Qt_QFormLayout_insertRow_4( ::pPtr, ... )
-         CASE "QSTRINGQWIDGET"
+         CASE "QWIDGET"
             RETURN Qt_QFormLayout_insertRow_3( ::pPtr, ... )
          ENDSWITCH
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
@@ -220,12 +264,24 @@ METHOD QFormLayout:insertRow( ... )
    RETURN hbqt_error()
 
 
-METHOD QFormLayout:itemAt( nRow, nRole )
-   RETURN HB_QLayoutItem():from( Qt_QFormLayout_itemAt( ::pPtr, nRow, nRole ) )
+METHOD QFormLayout:itemAt( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QLayoutItem():from( Qt_QFormLayout_itemAt( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFormLayout:labelAlignment()
-   RETURN Qt_QFormLayout_labelAlignment( ::pPtr )
+METHOD QFormLayout:labelAlignment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFormLayout_labelAlignment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QFormLayout:labelForField( ... )
@@ -245,58 +301,154 @@ METHOD QFormLayout:labelForField( ... )
    RETURN hbqt_error()
 
 
-METHOD QFormLayout:rowCount()
-   RETURN Qt_QFormLayout_rowCount( ::pPtr )
+METHOD QFormLayout:rowCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFormLayout_rowCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFormLayout:rowWrapPolicy()
-   RETURN Qt_QFormLayout_rowWrapPolicy( ::pPtr )
+METHOD QFormLayout:rowWrapPolicy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFormLayout_rowWrapPolicy( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFormLayout:setFieldGrowthPolicy( nPolicy )
-   RETURN Qt_QFormLayout_setFieldGrowthPolicy( ::pPtr, nPolicy )
+METHOD QFormLayout:setFieldGrowthPolicy( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFormLayout_setFieldGrowthPolicy( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFormLayout:setFormAlignment( nAlignment )
-   RETURN Qt_QFormLayout_setFormAlignment( ::pPtr, nAlignment )
+METHOD QFormLayout:setFormAlignment( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFormLayout_setFormAlignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFormLayout:setHorizontalSpacing( nSpacing )
-   RETURN Qt_QFormLayout_setHorizontalSpacing( ::pPtr, nSpacing )
+METHOD QFormLayout:setHorizontalSpacing( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFormLayout_setHorizontalSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFormLayout:setItem( nRow, nRole, pItem )
-   RETURN Qt_QFormLayout_setItem( ::pPtr, nRow, nRole, hbqt_ptr( pItem ) )
+METHOD QFormLayout:setItem( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QFormLayout_setItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFormLayout:setLabelAlignment( nAlignment )
-   RETURN Qt_QFormLayout_setLabelAlignment( ::pPtr, nAlignment )
+METHOD QFormLayout:setLabelAlignment( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFormLayout_setLabelAlignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFormLayout:setLayout( nRow, nRole, pLayout )
-   RETURN Qt_QFormLayout_setLayout( ::pPtr, nRow, nRole, hbqt_ptr( pLayout ) )
+METHOD QFormLayout:setLayout( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QFormLayout_setLayout( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFormLayout:setRowWrapPolicy( nPolicy )
-   RETURN Qt_QFormLayout_setRowWrapPolicy( ::pPtr, nPolicy )
+METHOD QFormLayout:setRowWrapPolicy( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFormLayout_setRowWrapPolicy( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFormLayout:setSpacing( nSpacing )
-   RETURN Qt_QFormLayout_setSpacing( ::pPtr, nSpacing )
+METHOD QFormLayout:setSpacing( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFormLayout_setSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFormLayout:setVerticalSpacing( nSpacing )
-   RETURN Qt_QFormLayout_setVerticalSpacing( ::pPtr, nSpacing )
+METHOD QFormLayout:setVerticalSpacing( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFormLayout_setVerticalSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFormLayout:setWidget( nRow, nRole, pWidget )
-   RETURN Qt_QFormLayout_setWidget( ::pPtr, nRow, nRole, hbqt_ptr( pWidget ) )
+METHOD QFormLayout:setWidget( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QFormLayout_setWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFormLayout:spacing()
-   RETURN Qt_QFormLayout_spacing( ::pPtr )
+METHOD QFormLayout:spacing( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFormLayout_spacing( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFormLayout:verticalSpacing()
-   RETURN Qt_QFormLayout_verticalSpacing( ::pPtr )
+METHOD QFormLayout:verticalSpacing( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFormLayout_verticalSpacing( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

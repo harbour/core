@@ -26,47 +26,47 @@
  *  $RETURNS$
  *     An instance of the object of type QTableWidget
  *  $METHODS$
- *     :cellWidget( nRow, nColumn )                        -> pQWidget
- *     :closePersistentEditor( pItem )                     -> NIL
- *     :column( pItem )                                    -> nInt
+ *     :cellWidget( nRow, nColumn )                        -> oQWidget
+ *     :closePersistentEditor( oQTableWidgetItem )         -> NIL
+ *     :column( oQTableWidgetItem )                        -> nInt
  *     :columnCount()                                      -> nInt
  *     :currentColumn()                                    -> nInt
- *     :currentItem()                                      -> Item
+ *     :currentItem()                                      -> oQTableWidgetItem
  *     :currentRow()                                       -> nInt
- *     :editItem( pItem )                                  -> NIL
- *     :findItems( cText, nFlags )                         -> pQList<QTableWidgetItem *>
- *     :horizontalHeaderItem( nColumn )                    -> Item
- *     :item( nRow, nColumn )                              -> Item
- *     :itemAt( pPoint )                                   -> Item
- *     :itemAt_1( nAx, nAy )                               -> Item
- *     :itemPrototype()                                    -> Item
- *     :openPersistentEditor( pItem )                      -> NIL
+ *     :editItem( oQTableWidgetItem )                      -> NIL
+ *     :findItems( cText, nFlags )                         -> oQList_QTableWidgetItem
+ *     :horizontalHeaderItem( nColumn )                    -> oQTableWidgetItem
+ *     :item( nRow, nColumn )                              -> oQTableWidgetItem
+ *     :itemAt( oQPoint )                                  -> oQTableWidgetItem
+ *     :itemAt( nAx, nAy )                                 -> oQTableWidgetItem
+ *     :itemPrototype()                                    -> oQTableWidgetItem
+ *     :openPersistentEditor( oQTableWidgetItem )          -> NIL
  *     :removeCellWidget( nRow, nColumn )                  -> NIL
- *     :row( pItem )                                       -> nInt
+ *     :row( oQTableWidgetItem )                           -> nInt
  *     :rowCount()                                         -> nInt
- *     :selectedItems()                                    -> pQList<QTableWidgetItem *>
- *     :selectedRanges()                                   -> pQList<QTableWidgetSelectionRange>
- *     :setCellWidget( nRow, nColumn, pWidget )            -> NIL
+ *     :selectedItems()                                    -> oQList_QTableWidgetItem
+ *     :selectedRanges()                                   -> oQList_QTableWidgetSelectionRange>
+ *     :setCellWidget( nRow, nColumn, oQWidget )           -> NIL
  *     :setColumnCount( nColumns )                         -> NIL
  *     :setCurrentCell( nRow, nColumn )                    -> NIL
- *     :setCurrentCell_1( nRow, nColumn, nCommand )        -> NIL
- *     :setCurrentItem( pItem )                            -> NIL
- *     :setCurrentItem_1( pItem, nCommand )                -> NIL
- *     :setHorizontalHeaderItem( nColumn, pItem )          -> NIL
- *     :setHorizontalHeaderLabels( pLabels )               -> NIL
- *     :setItem( nRow, nColumn, pItem )                    -> NIL
- *     :setItemPrototype( pItem )                          -> NIL
- *     :setRangeSelected( pRange, lSelect )                -> NIL
+ *     :setCurrentCell( nRow, nColumn, nCommand )          -> NIL
+ *     :setCurrentItem( oQTableWidgetItem )                -> NIL
+ *     :setCurrentItem( oQTableWidgetItem, nCommand )      -> NIL
+ *     :setHorizontalHeaderItem( nColumn, oQTableWidgetItem )  -> NIL
+ *     :setHorizontalHeaderLabels( oQStringList )          -> NIL
+ *     :setItem( nRow, nColumn, oQTableWidgetItem )        -> NIL
+ *     :setItemPrototype( oQTableWidgetItem )              -> NIL
+ *     :setRangeSelected( oQTableWidgetSelectionRange, lSelect )  -> NIL
  *     :setRowCount( nRows )                               -> NIL
- *     :setVerticalHeaderItem( nRow, pItem )               -> NIL
- *     :setVerticalHeaderLabels( pLabels )                 -> NIL
+ *     :setVerticalHeaderItem( nRow, oQTableWidgetItem )   -> NIL
+ *     :setVerticalHeaderLabels( oQStringList )            -> NIL
  *     :sortItems( nColumn, nOrder )                       -> NIL
- *     :takeHorizontalHeaderItem( nColumn )                -> Item
- *     :takeItem( nRow, nColumn )                          -> Item
- *     :takeVerticalHeaderItem( nRow )                     -> Item
- *     :verticalHeaderItem( nRow )                         -> Item
+ *     :takeHorizontalHeaderItem( nColumn )                -> oQTableWidgetItem
+ *     :takeItem( nRow, nColumn )                          -> oQTableWidgetItem
+ *     :takeVerticalHeaderItem( nRow )                     -> oQTableWidgetItem
+ *     :verticalHeaderItem( nRow )                         -> oQTableWidgetItem
  *     :visualColumn( nLogicalColumn )                     -> nInt
- *     :visualItemRect( pItem )                            -> pQRect
+ *     :visualItemRect( oQTableWidgetItem )                -> oQRect
  *     :visualRow( nLogicalRow )                           -> nInt
  *     :clear()                                            -> NIL
  *     :clearContents()                                    -> NIL
@@ -74,7 +74,7 @@
  *     :insertRow( nRow )                                  -> NIL
  *     :removeColumn( nColumn )                            -> NIL
  *     :removeRow( nRow )                                  -> NIL
- *     :scrollToItem( pItem, nHint )                       -> NIL
+ *     :scrollToItem( oQTableWidgetItem, nHint )           -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -94,7 +94,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTableWidget.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTableWidget.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QTableView()
  *  $END$
  */

@@ -103,48 +103,50 @@ CREATE CLASS QFileInfo INHERIT HbQtObjectHandler FUNCTION HB_QFileInfo
 
    METHOD  new( ... )
 
-   METHOD  absoluteDir()
-   METHOD  absoluteFilePath()
-   METHOD  absolutePath()
-   METHOD  baseName()
-   METHOD  bundleName()
-   METHOD  caching()
-   METHOD  canonicalFilePath()
-   METHOD  canonicalPath()
-   METHOD  completeBaseName()
-   METHOD  completeSuffix()
-   METHOD  created()
-   METHOD  dir()
-   METHOD  exists()
-   METHOD  fileName()
-   METHOD  filePath()
-   METHOD  group()
-   METHOD  groupId()
-   METHOD  isAbsolute()
-   METHOD  isBundle()
-   METHOD  isDir()
-   METHOD  isExecutable()
-   METHOD  isFile()
-   METHOD  isHidden()
-   METHOD  isReadable()
-   METHOD  isRelative()
-   METHOD  isRoot()
-   METHOD  isSymLink()
-   METHOD  isWritable()
-   METHOD  lastModified()
-   METHOD  lastRead()
-   METHOD  makeAbsolute()
-   METHOD  owner()
-   METHOD  ownerId()
-   METHOD  path()
-   METHOD  permission( nPermissions )
-   METHOD  permissions()
-   METHOD  refresh()
-   METHOD  setCaching( lEnable )
-   METHOD  setFile( ... )
-   METHOD  size()
-   METHOD  suffix()
-   METHOD  symLinkTarget()
+   METHOD  absoluteDir                   // (  )                                               -> oQDir
+   METHOD  absoluteFilePath              // (  )                                               -> cQString
+   METHOD  absolutePath                  // (  )                                               -> cQString
+   METHOD  baseName                      // (  )                                               -> cQString
+   METHOD  bundleName                    // (  )                                               -> cQString
+   METHOD  caching                       // (  )                                               -> lBool
+   METHOD  canonicalFilePath             // (  )                                               -> cQString
+   METHOD  canonicalPath                 // (  )                                               -> cQString
+   METHOD  completeBaseName              // (  )                                               -> cQString
+   METHOD  completeSuffix                // (  )                                               -> cQString
+   METHOD  created                       // (  )                                               -> oQDateTime
+   METHOD  dir                           // (  )                                               -> oQDir
+   METHOD  exists                        // (  )                                               -> lBool
+   METHOD  fileName                      // (  )                                               -> cQString
+   METHOD  filePath                      // (  )                                               -> cQString
+   METHOD  group                         // (  )                                               -> cQString
+   METHOD  groupId                       // (  )                                               -> nUint
+   METHOD  isAbsolute                    // (  )                                               -> lBool
+   METHOD  isBundle                      // (  )                                               -> lBool
+   METHOD  isDir                         // (  )                                               -> lBool
+   METHOD  isExecutable                  // (  )                                               -> lBool
+   METHOD  isFile                        // (  )                                               -> lBool
+   METHOD  isHidden                      // (  )                                               -> lBool
+   METHOD  isReadable                    // (  )                                               -> lBool
+   METHOD  isRelative                    // (  )                                               -> lBool
+   METHOD  isRoot                        // (  )                                               -> lBool
+   METHOD  isSymLink                     // (  )                                               -> lBool
+   METHOD  isWritable                    // (  )                                               -> lBool
+   METHOD  lastModified                  // (  )                                               -> oQDateTime
+   METHOD  lastRead                      // (  )                                               -> oQDateTime
+   METHOD  makeAbsolute                  // (  )                                               -> lBool
+   METHOD  owner                         // (  )                                               -> cQString
+   METHOD  ownerId                       // (  )                                               -> nUint
+   METHOD  path                          // (  )                                               -> cQString
+   METHOD  permission                    // ( nPermissions )                                   -> lBool
+   METHOD  permissions                   // (  )                                               -> nQFile_Permissions
+   METHOD  refresh                       // (  )                                               -> NIL
+   METHOD  setCaching                    // ( lEnable )                                        -> NIL
+   METHOD  setFile                       // ( cFile )                                          -> NIL
+                                         // ( oQFile )                                         -> NIL
+                                         // ( oQDir, cFile )                                   -> NIL
+   METHOD  size                          // (  )                                               -> nQint64
+   METHOD  suffix                        // (  )                                               -> cQString
+   METHOD  symLinkTarget                 // (  )                                               -> cQString
 
    ENDCLASS
 
@@ -158,156 +160,316 @@ METHOD QFileInfo:new( ... )
    RETURN Self
 
 
-METHOD QFileInfo:absoluteDir()
-   RETURN HB_QDir():from( Qt_QFileInfo_absoluteDir( ::pPtr ) )
+METHOD QFileInfo:absoluteDir( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDir():from( Qt_QFileInfo_absoluteDir( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFileInfo:absoluteFilePath( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_absoluteFilePath( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFileInfo:absolutePath( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_absolutePath( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFileInfo:baseName( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_baseName( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFileInfo:bundleName( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_bundleName( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFileInfo:caching( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_caching( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFileInfo:canonicalFilePath( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_canonicalFilePath( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFileInfo:canonicalPath( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_canonicalPath( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFileInfo:completeBaseName( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_completeBaseName( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFileInfo:completeSuffix( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_completeSuffix( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFileInfo:created( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDateTime():from( Qt_QFileInfo_created( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFileInfo:dir( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDir():from( Qt_QFileInfo_dir( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFileInfo:exists( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_exists( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileInfo:absoluteFilePath()
-   RETURN Qt_QFileInfo_absoluteFilePath( ::pPtr )
+METHOD QFileInfo:fileName( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_fileName( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileInfo:absolutePath()
-   RETURN Qt_QFileInfo_absolutePath( ::pPtr )
+METHOD QFileInfo:filePath( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_filePath( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileInfo:baseName()
-   RETURN Qt_QFileInfo_baseName( ::pPtr )
+METHOD QFileInfo:group( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_group( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileInfo:bundleName()
-   RETURN Qt_QFileInfo_bundleName( ::pPtr )
+METHOD QFileInfo:groupId( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_groupId( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileInfo:caching()
-   RETURN Qt_QFileInfo_caching( ::pPtr )
+METHOD QFileInfo:isAbsolute( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_isAbsolute( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileInfo:canonicalFilePath()
-   RETURN Qt_QFileInfo_canonicalFilePath( ::pPtr )
+METHOD QFileInfo:isBundle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_isBundle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileInfo:canonicalPath()
-   RETURN Qt_QFileInfo_canonicalPath( ::pPtr )
+METHOD QFileInfo:isDir( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_isDir( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileInfo:completeBaseName()
-   RETURN Qt_QFileInfo_completeBaseName( ::pPtr )
+METHOD QFileInfo:isExecutable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_isExecutable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileInfo:completeSuffix()
-   RETURN Qt_QFileInfo_completeSuffix( ::pPtr )
+METHOD QFileInfo:isFile( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_isFile( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileInfo:created()
-   RETURN HB_QDateTime():from( Qt_QFileInfo_created( ::pPtr ) )
-
-
-METHOD QFileInfo:dir()
-   RETURN HB_QDir():from( Qt_QFileInfo_dir( ::pPtr ) )
-
-
-METHOD QFileInfo:exists()
-   RETURN Qt_QFileInfo_exists( ::pPtr )
-
-
-METHOD QFileInfo:fileName()
-   RETURN Qt_QFileInfo_fileName( ::pPtr )
-
-
-METHOD QFileInfo:filePath()
-   RETURN Qt_QFileInfo_filePath( ::pPtr )
-
-
-METHOD QFileInfo:group()
-   RETURN Qt_QFileInfo_group( ::pPtr )
-
-
-METHOD QFileInfo:groupId()
-   RETURN Qt_QFileInfo_groupId( ::pPtr )
-
-
-METHOD QFileInfo:isAbsolute()
-   RETURN Qt_QFileInfo_isAbsolute( ::pPtr )
-
-
-METHOD QFileInfo:isBundle()
-   RETURN Qt_QFileInfo_isBundle( ::pPtr )
-
-
-METHOD QFileInfo:isDir()
-   RETURN Qt_QFileInfo_isDir( ::pPtr )
-
-
-METHOD QFileInfo:isExecutable()
-   RETURN Qt_QFileInfo_isExecutable( ::pPtr )
-
-
-METHOD QFileInfo:isFile()
-   RETURN Qt_QFileInfo_isFile( ::pPtr )
-
-
-METHOD QFileInfo:isHidden()
-   RETURN Qt_QFileInfo_isHidden( ::pPtr )
-
-
-METHOD QFileInfo:isReadable()
-   RETURN Qt_QFileInfo_isReadable( ::pPtr )
-
-
-METHOD QFileInfo:isRelative()
-   RETURN Qt_QFileInfo_isRelative( ::pPtr )
-
-
-METHOD QFileInfo:isRoot()
-   RETURN Qt_QFileInfo_isRoot( ::pPtr )
-
-
-METHOD QFileInfo:isSymLink()
-   RETURN Qt_QFileInfo_isSymLink( ::pPtr )
-
-
-METHOD QFileInfo:isWritable()
-   RETURN Qt_QFileInfo_isWritable( ::pPtr )
-
-
-METHOD QFileInfo:lastModified()
-   RETURN HB_QDateTime():from( Qt_QFileInfo_lastModified( ::pPtr ) )
-
-
-METHOD QFileInfo:lastRead()
-   RETURN HB_QDateTime():from( Qt_QFileInfo_lastRead( ::pPtr ) )
-
-
-METHOD QFileInfo:makeAbsolute()
-   RETURN Qt_QFileInfo_makeAbsolute( ::pPtr )
-
-
-METHOD QFileInfo:owner()
-   RETURN Qt_QFileInfo_owner( ::pPtr )
-
-
-METHOD QFileInfo:ownerId()
-   RETURN Qt_QFileInfo_ownerId( ::pPtr )
-
-
-METHOD QFileInfo:path()
-   RETURN Qt_QFileInfo_path( ::pPtr )
-
-
-METHOD QFileInfo:permission( nPermissions )
-   RETURN Qt_QFileInfo_permission( ::pPtr, nPermissions )
-
-
-METHOD QFileInfo:permissions()
-   RETURN Qt_QFileInfo_permissions( ::pPtr )
-
-
-METHOD QFileInfo:refresh()
-   RETURN Qt_QFileInfo_refresh( ::pPtr )
-
-
-METHOD QFileInfo:setCaching( lEnable )
-   RETURN Qt_QFileInfo_setCaching( ::pPtr, lEnable )
+METHOD QFileInfo:isHidden( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_isHidden( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFileInfo:isReadable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_isReadable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFileInfo:isRelative( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_isRelative( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFileInfo:isRoot( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_isRoot( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFileInfo:isSymLink( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_isSymLink( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFileInfo:isWritable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_isWritable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFileInfo:lastModified( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDateTime():from( Qt_QFileInfo_lastModified( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFileInfo:lastRead( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDateTime():from( Qt_QFileInfo_lastRead( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFileInfo:makeAbsolute( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_makeAbsolute( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFileInfo:owner( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_owner( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFileInfo:ownerId( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_ownerId( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFileInfo:path( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_path( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFileInfo:permission( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QFileInfo_permission( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFileInfo:permissions( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_permissions( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFileInfo:refresh( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_refresh( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QFileInfo:setCaching( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QFileInfo_setCaching( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QFileInfo:setFile( ... )
@@ -330,14 +492,26 @@ METHOD QFileInfo:setFile( ... )
    RETURN hbqt_error()
 
 
-METHOD QFileInfo:size()
-   RETURN Qt_QFileInfo_size( ::pPtr )
+METHOD QFileInfo:size( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_size( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileInfo:suffix()
-   RETURN Qt_QFileInfo_suffix( ::pPtr )
+METHOD QFileInfo:suffix( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_suffix( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFileInfo:symLinkTarget()
-   RETURN Qt_QFileInfo_symLinkTarget( ::pPtr )
+METHOD QFileInfo:symLinkTarget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFileInfo_symLinkTarget( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

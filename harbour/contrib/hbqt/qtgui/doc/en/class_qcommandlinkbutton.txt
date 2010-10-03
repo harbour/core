@@ -47,7 +47,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQCommandLinkButton.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QCommandLinkButton.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QPushButton()
  *  $END$
  */

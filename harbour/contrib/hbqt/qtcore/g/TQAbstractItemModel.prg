@@ -103,38 +103,38 @@ CREATE CLASS QAbstractItemModel INHERIT HbQtObjectHandler, HB_QObject FUNCTION H
 
    METHOD  new( ... )
 
-   METHOD  buddy( pIndex )
-   METHOD  canFetchMore( pParent )
-   METHOD  columnCount( pParent )
-   METHOD  data( pIndex, nRole )
-   METHOD  dropMimeData( pData, nAction, nRow, nColumn, pParent )
-   METHOD  fetchMore( pParent )
-   METHOD  flags( pIndex )
-   METHOD  hasChildren( pParent )
-   METHOD  hasIndex( nRow, nColumn, pParent )
-   METHOD  headerData( nSection, nOrientation, nRole )
-   METHOD  index( nRow, nColumn, pParent )
-   METHOD  insertColumn( nColumn, pParent )
-   METHOD  insertColumns( nColumn, nCount, pParent )
-   METHOD  insertRow( nRow, pParent )
-   METHOD  insertRows( nRow, nCount, pParent )
-   METHOD  mimeTypes()
-   METHOD  parent( pIndex )
-   METHOD  removeColumn( nColumn, pParent )
-   METHOD  removeColumns( nColumn, nCount, pParent )
-   METHOD  removeRow( nRow, pParent )
-   METHOD  removeRows( nRow, nCount, pParent )
-   METHOD  rowCount( pParent )
-   METHOD  setData( pIndex, pValue, nRole )
-   METHOD  setHeaderData( nSection, nOrientation, pValue, nRole )
-   METHOD  setSupportedDragActions( nActions )
-   METHOD  sibling( nRow, nColumn, pIndex )
-   METHOD  sort( nColumn, nOrder )
-   METHOD  span( pIndex )
-   METHOD  supportedDragActions()
-   METHOD  supportedDropActions()
-   METHOD  revert()
-   METHOD  submit()
+   METHOD  buddy                         // ( oQModelIndex )                                   -> oQModelIndex
+   METHOD  canFetchMore                  // ( oQModelIndex )                                   -> lBool
+   METHOD  columnCount                   // ( oQModelIndex )                                   -> nInt
+   METHOD  data                          // ( oQModelIndex, nRole )                            -> oQVariant
+   METHOD  dropMimeData                  // ( oQMimeData, nAction, nRow, nColumn, oQModelIndex ) -> lBool
+   METHOD  fetchMore                     // ( oQModelIndex )                                   -> NIL
+   METHOD  flags                         // ( oQModelIndex )                                   -> nQt_ItemFlags
+   METHOD  hasChildren                   // ( oQModelIndex )                                   -> lBool
+   METHOD  hasIndex                      // ( nRow, nColumn, oQModelIndex )                    -> lBool
+   METHOD  headerData                    // ( nSection, nOrientation, nRole )                  -> oQVariant
+   METHOD  index                         // ( nRow, nColumn, oQModelIndex )                    -> oQModelIndex
+   METHOD  insertColumn                  // ( nColumn, oQModelIndex )                          -> lBool
+   METHOD  insertColumns                 // ( nColumn, nCount, oQModelIndex )                  -> lBool
+   METHOD  insertRow                     // ( nRow, oQModelIndex )                             -> lBool
+   METHOD  insertRows                    // ( nRow, nCount, oQModelIndex )                     -> lBool
+   METHOD  mimeTypes                     // (  )                                               -> oQStringList
+   METHOD  parent                        // ( oQModelIndex )                                   -> oQModelIndex
+   METHOD  removeColumn                  // ( nColumn, oQModelIndex )                          -> lBool
+   METHOD  removeColumns                 // ( nColumn, nCount, oQModelIndex )                  -> lBool
+   METHOD  removeRow                     // ( nRow, oQModelIndex )                             -> lBool
+   METHOD  removeRows                    // ( nRow, nCount, oQModelIndex )                     -> lBool
+   METHOD  rowCount                      // ( oQModelIndex )                                   -> nInt
+   METHOD  setData                       // ( oQModelIndex, oQVariant, nRole )                 -> lBool
+   METHOD  setHeaderData                 // ( nSection, nOrientation, oQVariant, nRole )       -> lBool
+   METHOD  setSupportedDragActions       // ( nActions )                                       -> NIL
+   METHOD  sibling                       // ( nRow, nColumn, oQModelIndex )                    -> oQModelIndex
+   METHOD  sort                          // ( nColumn, nOrder )                                -> NIL
+   METHOD  span                          // ( oQModelIndex )                                   -> oQSize
+   METHOD  supportedDragActions          // (  )                                               -> nQt_DropActions
+   METHOD  supportedDropActions          // (  )                                               -> nQt_DropActions
+   METHOD  revert                        // (  )                                               -> NIL
+   METHOD  submit                        // (  )                                               -> lBool
 
    ENDCLASS
 
@@ -148,130 +148,462 @@ METHOD QAbstractItemModel:new( ... )
    RETURN Self
 
 
-METHOD QAbstractItemModel:buddy( pIndex )
-   RETURN HB_QModelIndex():from( Qt_QAbstractItemModel_buddy( ::pPtr, hbqt_ptr( pIndex ) ) )
+METHOD QAbstractItemModel:buddy( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QModelIndex():from( Qt_QAbstractItemModel_buddy( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:canFetchMore( pParent )
-   RETURN Qt_QAbstractItemModel_canFetchMore( ::pPtr, hbqt_ptr( pParent ) )
+METHOD QAbstractItemModel:canFetchMore( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractItemModel_canFetchMore( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:columnCount( pParent )
-   RETURN Qt_QAbstractItemModel_columnCount( ::pPtr, hbqt_ptr( pParent ) )
+METHOD QAbstractItemModel:columnCount( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractItemModel_columnCount( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QAbstractItemModel_columnCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:data( pIndex, nRole )
-   RETURN HB_QVariant():from( Qt_QAbstractItemModel_data( ::pPtr, hbqt_ptr( pIndex ), nRole ) )
+METHOD QAbstractItemModel:data( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QVariant():from( Qt_QAbstractItemModel_data( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QVariant():from( Qt_QAbstractItemModel_data( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:dropMimeData( pData, nAction, nRow, nColumn, pParent )
-   RETURN Qt_QAbstractItemModel_dropMimeData( ::pPtr, hbqt_ptr( pData ), nAction, nRow, nColumn, hbqt_ptr( pParent ) )
+METHOD QAbstractItemModel:dropMimeData( ... )
+   SWITCH PCount()
+   CASE 5
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isObject( hb_pvalue( 5 ) )
+         RETURN Qt_QAbstractItemModel_dropMimeData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:fetchMore( pParent )
-   RETURN Qt_QAbstractItemModel_fetchMore( ::pPtr, hbqt_ptr( pParent ) )
+METHOD QAbstractItemModel:fetchMore( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractItemModel_fetchMore( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:flags( pIndex )
-   RETURN Qt_QAbstractItemModel_flags( ::pPtr, hbqt_ptr( pIndex ) )
+METHOD QAbstractItemModel:flags( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractItemModel_flags( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:hasChildren( pParent )
-   RETURN Qt_QAbstractItemModel_hasChildren( ::pPtr, hbqt_ptr( pParent ) )
+METHOD QAbstractItemModel:hasChildren( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractItemModel_hasChildren( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QAbstractItemModel_hasChildren( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:hasIndex( nRow, nColumn, pParent )
-   RETURN Qt_QAbstractItemModel_hasIndex( ::pPtr, nRow, nColumn, hbqt_ptr( pParent ) )
+METHOD QAbstractItemModel:hasIndex( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QAbstractItemModel_hasIndex( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QAbstractItemModel_hasIndex( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:headerData( nSection, nOrientation, nRole )
-   RETURN HB_QVariant():from( Qt_QAbstractItemModel_headerData( ::pPtr, nSection, nOrientation, nRole ) )
+METHOD QAbstractItemModel:headerData( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN HB_QVariant():from( Qt_QAbstractItemModel_headerData( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QVariant():from( Qt_QAbstractItemModel_headerData( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:index( nRow, nColumn, pParent )
-   RETURN HB_QModelIndex():from( Qt_QAbstractItemModel_index( ::pPtr, nRow, nColumn, hbqt_ptr( pParent ) ) )
+METHOD QAbstractItemModel:index( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN HB_QModelIndex():from( Qt_QAbstractItemModel_index( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QModelIndex():from( Qt_QAbstractItemModel_index( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:insertColumn( nColumn, pParent )
-   RETURN Qt_QAbstractItemModel_insertColumn( ::pPtr, nColumn, hbqt_ptr( pParent ) )
+METHOD QAbstractItemModel:insertColumn( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QAbstractItemModel_insertColumn( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractItemModel_insertColumn( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:insertColumns( nColumn, nCount, pParent )
-   RETURN Qt_QAbstractItemModel_insertColumns( ::pPtr, nColumn, nCount, hbqt_ptr( pParent ) )
+METHOD QAbstractItemModel:insertColumns( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QAbstractItemModel_insertColumns( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QAbstractItemModel_insertColumns( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:insertRow( nRow, pParent )
-   RETURN Qt_QAbstractItemModel_insertRow( ::pPtr, nRow, hbqt_ptr( pParent ) )
+METHOD QAbstractItemModel:insertRow( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QAbstractItemModel_insertRow( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractItemModel_insertRow( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:insertRows( nRow, nCount, pParent )
-   RETURN Qt_QAbstractItemModel_insertRows( ::pPtr, nRow, nCount, hbqt_ptr( pParent ) )
+METHOD QAbstractItemModel:insertRows( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QAbstractItemModel_insertRows( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QAbstractItemModel_insertRows( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:mimeTypes()
-   RETURN HB_QStringList():from( Qt_QAbstractItemModel_mimeTypes( ::pPtr ) )
+METHOD QAbstractItemModel:mimeTypes( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QAbstractItemModel_mimeTypes( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:parent( pIndex )
-   RETURN HB_QModelIndex():from( Qt_QAbstractItemModel_parent( ::pPtr, hbqt_ptr( pIndex ) ) )
+METHOD QAbstractItemModel:parent( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QModelIndex():from( Qt_QAbstractItemModel_parent( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:removeColumn( nColumn, pParent )
-   RETURN Qt_QAbstractItemModel_removeColumn( ::pPtr, nColumn, hbqt_ptr( pParent ) )
+METHOD QAbstractItemModel:removeColumn( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QAbstractItemModel_removeColumn( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractItemModel_removeColumn( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:removeColumns( nColumn, nCount, pParent )
-   RETURN Qt_QAbstractItemModel_removeColumns( ::pPtr, nColumn, nCount, hbqt_ptr( pParent ) )
+METHOD QAbstractItemModel:removeColumns( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QAbstractItemModel_removeColumns( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QAbstractItemModel_removeColumns( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:removeRow( nRow, pParent )
-   RETURN Qt_QAbstractItemModel_removeRow( ::pPtr, nRow, hbqt_ptr( pParent ) )
+METHOD QAbstractItemModel:removeRow( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QAbstractItemModel_removeRow( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractItemModel_removeRow( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:removeRows( nRow, nCount, pParent )
-   RETURN Qt_QAbstractItemModel_removeRows( ::pPtr, nRow, nCount, hbqt_ptr( pParent ) )
+METHOD QAbstractItemModel:removeRows( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QAbstractItemModel_removeRows( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QAbstractItemModel_removeRows( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:rowCount( pParent )
-   RETURN Qt_QAbstractItemModel_rowCount( ::pPtr, hbqt_ptr( pParent ) )
+METHOD QAbstractItemModel:rowCount( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractItemModel_rowCount( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QAbstractItemModel_rowCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:setData( pIndex, pValue, nRole )
-   RETURN Qt_QAbstractItemModel_setData( ::pPtr, hbqt_ptr( pIndex ), hbqt_ptr( pValue ), nRole )
+METHOD QAbstractItemModel:setData( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QAbstractItemModel_setData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QAbstractItemModel_setData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:setHeaderData( nSection, nOrientation, pValue, nRole )
-   RETURN Qt_QAbstractItemModel_setHeaderData( ::pPtr, nSection, nOrientation, hbqt_ptr( pValue ), nRole )
+METHOD QAbstractItemModel:setHeaderData( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QAbstractItemModel_setHeaderData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_QAbstractItemModel_setHeaderData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:setSupportedDragActions( nActions )
-   RETURN Qt_QAbstractItemModel_setSupportedDragActions( ::pPtr, nActions )
+METHOD QAbstractItemModel:setSupportedDragActions( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractItemModel_setSupportedDragActions( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:sibling( nRow, nColumn, pIndex )
-   RETURN HB_QModelIndex():from( Qt_QAbstractItemModel_sibling( ::pPtr, nRow, nColumn, hbqt_ptr( pIndex ) ) )
+METHOD QAbstractItemModel:sibling( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN HB_QModelIndex():from( Qt_QAbstractItemModel_sibling( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:sort( nColumn, nOrder )
-   RETURN Qt_QAbstractItemModel_sort( ::pPtr, nColumn, nOrder )
+METHOD QAbstractItemModel:sort( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QAbstractItemModel_sort( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractItemModel_sort( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:span( pIndex )
-   RETURN HB_QSize():from( Qt_QAbstractItemModel_span( ::pPtr, hbqt_ptr( pIndex ) ) )
+METHOD QAbstractItemModel:span( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QSize():from( Qt_QAbstractItemModel_span( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:supportedDragActions()
-   RETURN Qt_QAbstractItemModel_supportedDragActions( ::pPtr )
+METHOD QAbstractItemModel:supportedDragActions( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractItemModel_supportedDragActions( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:supportedDropActions()
-   RETURN Qt_QAbstractItemModel_supportedDropActions( ::pPtr )
+METHOD QAbstractItemModel:supportedDropActions( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractItemModel_supportedDropActions( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:revert()
-   RETURN Qt_QAbstractItemModel_revert( ::pPtr )
+METHOD QAbstractItemModel:revert( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractItemModel_revert( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractItemModel:submit()
-   RETURN Qt_QAbstractItemModel_submit( ::pPtr )
+METHOD QAbstractItemModel:submit( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractItemModel_submit( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

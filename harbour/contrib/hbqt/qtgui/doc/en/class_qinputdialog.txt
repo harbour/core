@@ -27,7 +27,7 @@
  *     An instance of the object of type QInputDialog
  *  $METHODS$
  *     :cancelButtonText()                                 -> cQString
- *     :comboBoxItems()                                    -> pQStringList
+ *     :comboBoxItems()                                    -> oQStringList
  *     :done( nResult )                                    -> NIL
  *     :doubleDecimals()                                   -> nInt
  *     :doubleMaximum()                                    -> nDouble
@@ -41,11 +41,11 @@
  *     :isComboBoxEditable()                               -> lBool
  *     :labelText()                                        -> cQString
  *     :okButtonText()                                     -> cQString
- *     :open( pReceiver, pMember )                         -> NIL
+ *     :open( oQObject, cMember )                          -> NIL
  *     :options()                                          -> nInputDialogOptions
  *     :setCancelButtonText( cText )                       -> NIL
  *     :setComboBoxEditable( lEditable )                   -> NIL
- *     :setComboBoxItems( pItems )                         -> NIL
+ *     :setComboBoxItems( oQStringList )                   -> NIL
  *     :setDoubleDecimals( nDecimals )                     -> NIL
  *     :setDoubleMaximum( nMax )                           -> NIL
  *     :setDoubleMinimum( nMin )                           -> NIL
@@ -64,12 +64,12 @@
  *     :setTextEchoMode( nMode )                           -> NIL
  *     :setTextValue( cText )                              -> NIL
  *     :testOption( nOption )                              -> lBool
- *     :textEchoMode()                                     -> nQLineEdit::EchoMode
+ *     :textEchoMode()                                     -> nQLineEdit_EchoMode
  *     :textValue()                                        -> cQString
- *     :getDouble( pParent, cTitle, cLabel, nValue, nMin, nMax, nDecimals, @lOk, nFlags )  -> nDouble
- *     :getInt( pParent, cTitle, cLabel, nValue, nMin, nMax, nStep, @lOk, nFlags )  -> nInt
- *     :getItem( pParent, cTitle, cLabel, pItems, nCurrent, lEditable, @lOk, nFlags )  -> cQString
- *     :getText( pParent, cTitle, cLabel, nMode, cText, @lOk, nFlags )  -> cQString
+ *     :getDouble( oQWidget, cTitle, cLabel, nValue, nMin, nMax, nDecimals, @lOk, nFlags )  -> nDouble
+ *     :getInt( oQWidget, cTitle, cLabel, nValue, nMin, nMax, nStep, @lOk, nFlags )  -> nInt
+ *     :getItem( oQWidget, cTitle, cLabel, oQStringList, nCurrent, lEditable, @lOk, nFlags )  -> cQString
+ *     :getText( oQWidget, cTitle, cLabel, nMode, cText, @lOk, nFlags )  -> cQString
  * 
  *  $DESCRIPTION$
  * 
@@ -89,7 +89,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQInputDialog.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QInputDialog.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QDialog()
  *  $END$
  */

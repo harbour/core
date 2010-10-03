@@ -26,15 +26,15 @@
  *  $RETURNS$
  *     An instance of the object of type QGraphicsPixmapItem
  *  $METHODS$
- *     :offset()                                           -> pQPointF
- *     :pixmap()                                           -> pQPixmap
- *     :setOffset( pOffset )                               -> NIL
- *     :setOffset_1( nX, nY )                              -> NIL
- *     :setPixmap( pPixmap )                               -> NIL
+ *     :offset()                                           -> oQPointF
+ *     :pixmap()                                           -> oQPixmap
+ *     :setOffset( oQPointF )                              -> NIL
+ *     :setOffset( nX, nY )                                -> NIL
+ *     :setPixmap( oQPixmap )                              -> NIL
  *     :setShapeMode( nMode )                              -> NIL
  *     :setTransformationMode( nMode )                     -> NIL
  *     :shapeMode()                                        -> nShapeMode
- *     :transformationMode()                               -> nQt::TransformationMode
+ *     :transformationMode()                               -> nQt_TransformationMode
  * 
  *  $DESCRIPTION$
  * 
@@ -54,7 +54,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGraphicsPixmapItem.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsPixmapItem.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QGraphicsItem()
  *  $END$
  */

@@ -29,9 +29,9 @@
  *     :abort()                                            -> lBool
  *     :metric( nId )                                      -> nInt
  *     :newPage()                                          -> lBool
- *     :printerState()                                     -> nQPrinter::PrinterState
- *     :property( nKey )                                   -> pQVariant
- *     :setProperty( nKey, pValue )                        -> NIL
+ *     :printerState()                                     -> nQPrinter_PrinterState
+ *     :property( nKey )                                   -> oQVariant
+ *     :setProperty( nKey, oQVariant )                     -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -51,7 +51,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQPrintEngine.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QPrintEngine.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

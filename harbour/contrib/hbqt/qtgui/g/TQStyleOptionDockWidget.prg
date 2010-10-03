@@ -103,10 +103,10 @@ CREATE CLASS QStyleOptionDockWidget INHERIT HbQtObjectHandler, HB_QStyleOption F
 
    METHOD  new( ... )
 
-   METHOD  closable()
-   METHOD  floatable()
-   METHOD  movable()
-   METHOD  title()
+   METHOD  closable                      // (  )                                               -> lBool
+   METHOD  floatable                     // (  )                                               -> lBool
+   METHOD  movable                       // (  )                                               -> lBool
+   METHOD  title                         // (  )                                               -> cQString
 
    ENDCLASS
 
@@ -120,18 +120,34 @@ METHOD QStyleOptionDockWidget:new( ... )
    RETURN Self
 
 
-METHOD QStyleOptionDockWidget:closable()
-   RETURN Qt_QStyleOptionDockWidget_closable( ::pPtr )
+METHOD QStyleOptionDockWidget:closable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionDockWidget_closable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionDockWidget:floatable()
-   RETURN Qt_QStyleOptionDockWidget_floatable( ::pPtr )
+METHOD QStyleOptionDockWidget:floatable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionDockWidget_floatable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionDockWidget:movable()
-   RETURN Qt_QStyleOptionDockWidget_movable( ::pPtr )
+METHOD QStyleOptionDockWidget:movable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionDockWidget_movable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionDockWidget:title()
-   RETURN Qt_QStyleOptionDockWidget_title( ::pPtr )
+METHOD QStyleOptionDockWidget:title( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionDockWidget_title( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

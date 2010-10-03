@@ -199,11 +199,7 @@ HB_FUNC( QT_QBOXLAYOUT_ADDLAYOUT )
    QBoxLayout * p = hbqt_par_QBoxLayout( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 2 );
       ( p )->addLayout( hbqt_par_QLayout( 2 ), hb_parni( 3 ) );
    }
 }
@@ -216,11 +212,7 @@ HB_FUNC( QT_QBOXLAYOUT_ADDSPACERITEM )
    QBoxLayout * p = hbqt_par_QBoxLayout( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 2 );
       ( p )->addSpacerItem( hbqt_par_QSpacerItem( 2 ) );
    }
 }
@@ -269,11 +261,7 @@ HB_FUNC( QT_QBOXLAYOUT_ADDWIDGET )
    QBoxLayout * p = hbqt_par_QBoxLayout( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 2 );
       ( p )->addWidget( hbqt_par_QWidget( 2 ), hb_parni( 3 ), ( Qt::Alignment ) hb_parni( 4 ) );
    }
 }

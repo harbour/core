@@ -27,11 +27,11 @@
  *     An instance of the object of type QStyleOptionTab
  *  $METHODS$
  *     :cornerWidgets()                                    -> nCornerWidgets
- *     :icon()                                             -> pQIcon
+ *     :icon()                                             -> oQIcon
  *     :position()                                         -> nTabPosition
  *     :row()                                              -> nInt
  *     :selectedPosition()                                 -> nSelectedPosition
- *     :shape()                                            -> nQTabBar::Shape
+ *     :shape()                                            -> nQTabBar_Shape
  *     :text()                                             -> cQString
  * 
  *  $DESCRIPTION$
@@ -52,7 +52,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionTab.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionTab.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QStyleOption()
  *  $END$
  */

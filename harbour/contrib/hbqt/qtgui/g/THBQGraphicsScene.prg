@@ -103,25 +103,25 @@ CREATE CLASS HBQGraphicsScene INHERIT HbQtObjectHandler, HB_QGraphicsScene FUNCT
 
    METHOD  new( ... )
 
-   METHOD  hbSetBlock( xBlock )
-   METHOD  pageSize()
-   METHOD  setPageSize( nPageSize )
-   METHOD  paperRect()
-   METHOD  setPaperRect( pPaperRect )
-   METHOD  orientation()
-   METHOD  setOrientation( nOrientation )
-   METHOD  geometry()
-   METHOD  setGeometry( pRect )
-   METHOD  magnetArea()
-   METHOD  setMagnetArea( nMagnetArea )
-   METHOD  showGrid()
-   METHOD  setShowGrid( lShowGrid )
-   METHOD  setLeftMagnet( lMagneted )
-   METHOD  setRightMagnet( lMagneted )
-   METHOD  setTopMagnet( lMagneted )
-   METHOD  setBottomMagnet( lMagneted )
-   METHOD  setHorizontalMagnet( lMagneted )
-   METHOD  setVerticalMagnet( lMagneted )
+   METHOD  hbSetBlock                    // ( xBlock )                                         -> NIL
+   METHOD  pageSize                      // (  )                                               -> nInt
+   METHOD  setPageSize                   // ( nPageSize )                                      -> NIL
+   METHOD  paperRect                     // (  )                                               -> oQRectF
+   METHOD  setPaperRect                  // ( oQRectF )                                        -> NIL
+   METHOD  orientation                   // (  )                                               -> nInt
+   METHOD  setOrientation                // ( nOrientation )                                   -> NIL
+   METHOD  geometry                      // (  )                                               -> oQRectF
+   METHOD  setGeometry                   // ( oQRectF )                                        -> NIL
+   METHOD  magnetArea                    // (  )                                               -> nInt
+   METHOD  setMagnetArea                 // ( nMagnetArea )                                    -> NIL
+   METHOD  showGrid                      // (  )                                               -> lBool
+   METHOD  setShowGrid                   // ( lShowGrid )                                      -> NIL
+   METHOD  setLeftMagnet                 // ( lMagneted )                                      -> NIL
+   METHOD  setRightMagnet                // ( lMagneted )                                      -> NIL
+   METHOD  setTopMagnet                  // ( lMagneted )                                      -> NIL
+   METHOD  setBottomMagnet               // ( lMagneted )                                      -> NIL
+   METHOD  setHorizontalMagnet           // ( lMagneted )                                      -> NIL
+   METHOD  setVerticalMagnet             // ( lMagneted )                                      -> NIL
 
    ENDCLASS
 
@@ -135,78 +135,206 @@ METHOD HBQGraphicsScene:new( ... )
    RETURN Self
 
 
-METHOD HBQGraphicsScene:hbSetBlock( xBlock )
-   RETURN Qt_HBQGraphicsScene_hbSetBlock( ::pPtr, xBlock )
+METHOD HBQGraphicsScene:hbSetBlock( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE ( hb_isBlock( hb_pvalue( 1 ) ) .OR. hb_isPointer( hb_pvalue( 1 ) ) )
+         RETURN Qt_HBQGraphicsScene_hbSetBlock( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQGraphicsScene:pageSize()
-   RETURN Qt_HBQGraphicsScene_pageSize( ::pPtr )
+METHOD HBQGraphicsScene:pageSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQGraphicsScene_pageSize( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQGraphicsScene:setPageSize( nPageSize )
-   RETURN Qt_HBQGraphicsScene_setPageSize( ::pPtr, nPageSize )
+METHOD HBQGraphicsScene:setPageSize( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsScene_setPageSize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQGraphicsScene:paperRect()
-   RETURN HB_QRectF():from( Qt_HBQGraphicsScene_paperRect( ::pPtr ) )
+METHOD HBQGraphicsScene:paperRect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRectF():from( Qt_HBQGraphicsScene_paperRect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQGraphicsScene:setPaperRect( pPaperRect )
-   RETURN Qt_HBQGraphicsScene_setPaperRect( ::pPtr, hbqt_ptr( pPaperRect ) )
+METHOD HBQGraphicsScene:setPaperRect( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsScene_setPaperRect( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQGraphicsScene:orientation()
-   RETURN Qt_HBQGraphicsScene_orientation( ::pPtr )
+METHOD HBQGraphicsScene:orientation( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQGraphicsScene_orientation( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQGraphicsScene:setOrientation( nOrientation )
-   RETURN Qt_HBQGraphicsScene_setOrientation( ::pPtr, nOrientation )
+METHOD HBQGraphicsScene:setOrientation( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsScene_setOrientation( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQGraphicsScene:geometry()
-   RETURN HB_QRectF():from( Qt_HBQGraphicsScene_geometry( ::pPtr ) )
+METHOD HBQGraphicsScene:geometry( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRectF():from( Qt_HBQGraphicsScene_geometry( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQGraphicsScene:setGeometry( pRect )
-   RETURN Qt_HBQGraphicsScene_setGeometry( ::pPtr, hbqt_ptr( pRect ) )
+METHOD HBQGraphicsScene:setGeometry( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsScene_setGeometry( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQGraphicsScene:magnetArea()
-   RETURN Qt_HBQGraphicsScene_magnetArea( ::pPtr )
+METHOD HBQGraphicsScene:magnetArea( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQGraphicsScene_magnetArea( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQGraphicsScene:setMagnetArea( nMagnetArea )
-   RETURN Qt_HBQGraphicsScene_setMagnetArea( ::pPtr, nMagnetArea )
+METHOD HBQGraphicsScene:setMagnetArea( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsScene_setMagnetArea( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQGraphicsScene:showGrid()
-   RETURN Qt_HBQGraphicsScene_showGrid( ::pPtr )
+METHOD HBQGraphicsScene:showGrid( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQGraphicsScene_showGrid( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQGraphicsScene:setShowGrid( lShowGrid )
-   RETURN Qt_HBQGraphicsScene_setShowGrid( ::pPtr, lShowGrid )
+METHOD HBQGraphicsScene:setShowGrid( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsScene_setShowGrid( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQGraphicsScene:setLeftMagnet( lMagneted )
-   RETURN Qt_HBQGraphicsScene_setLeftMagnet( ::pPtr, lMagneted )
+METHOD HBQGraphicsScene:setLeftMagnet( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsScene_setLeftMagnet( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQGraphicsScene:setRightMagnet( lMagneted )
-   RETURN Qt_HBQGraphicsScene_setRightMagnet( ::pPtr, lMagneted )
+METHOD HBQGraphicsScene:setRightMagnet( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsScene_setRightMagnet( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQGraphicsScene:setTopMagnet( lMagneted )
-   RETURN Qt_HBQGraphicsScene_setTopMagnet( ::pPtr, lMagneted )
+METHOD HBQGraphicsScene:setTopMagnet( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsScene_setTopMagnet( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQGraphicsScene:setBottomMagnet( lMagneted )
-   RETURN Qt_HBQGraphicsScene_setBottomMagnet( ::pPtr, lMagneted )
+METHOD HBQGraphicsScene:setBottomMagnet( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsScene_setBottomMagnet( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQGraphicsScene:setHorizontalMagnet( lMagneted )
-   RETURN Qt_HBQGraphicsScene_setHorizontalMagnet( ::pPtr, lMagneted )
+METHOD HBQGraphicsScene:setHorizontalMagnet( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsScene_setHorizontalMagnet( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQGraphicsScene:setVerticalMagnet( lMagneted )
-   RETURN Qt_HBQGraphicsScene_setVerticalMagnet( ::pPtr, lMagneted )
+METHOD HBQGraphicsScene:setVerticalMagnet( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_HBQGraphicsScene_setVerticalMagnet( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

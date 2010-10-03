@@ -103,8 +103,8 @@ CREATE CLASS QStyleOptionToolBox INHERIT HbQtObjectHandler, HB_QStyleOption FUNC
 
    METHOD  new( ... )
 
-   METHOD  icon()
-   METHOD  text()
+   METHOD  icon                          // (  )                                               -> oQIcon
+   METHOD  text                          // (  )                                               -> cQString
 
    ENDCLASS
 
@@ -118,10 +118,18 @@ METHOD QStyleOptionToolBox:new( ... )
    RETURN Self
 
 
-METHOD QStyleOptionToolBox:icon()
-   RETURN HB_QIcon():from( Qt_QStyleOptionToolBox_icon( ::pPtr ) )
+METHOD QStyleOptionToolBox:icon( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QIcon():from( Qt_QStyleOptionToolBox_icon( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionToolBox:text()
-   RETURN Qt_QStyleOptionToolBox_text( ::pPtr )
+METHOD QStyleOptionToolBox:text( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionToolBox_text( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

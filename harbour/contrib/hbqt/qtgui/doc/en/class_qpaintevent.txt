@@ -26,8 +26,8 @@
  *  $RETURNS$
  *     An instance of the object of type QPaintEvent
  *  $METHODS$
- *     :rect()                                             -> pQRect
- *     :region()                                           -> pQRegion
+ *     :rect()                                             -> oQRect
+ *     :region()                                           -> oQRegion
  * 
  *  $DESCRIPTION$
  * 
@@ -47,7 +47,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQPaintEvent.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QPaintEvent.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QEvent()
  *  $END$
  */

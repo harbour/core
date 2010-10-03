@@ -103,8 +103,8 @@ CREATE CLASS QFocusFrame INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QFocu
 
    METHOD  new( ... )
 
-   METHOD  setWidget( pWidget )
-   METHOD  widget()
+   METHOD  setWidget                     // ( oQWidget )                                       -> NIL
+   METHOD  widget                        // (  )                                               -> oQWidget
 
    ENDCLASS
 
@@ -118,10 +118,22 @@ METHOD QFocusFrame:new( ... )
    RETURN Self
 
 
-METHOD QFocusFrame:setWidget( pWidget )
-   RETURN Qt_QFocusFrame_setWidget( ::pPtr, hbqt_ptr( pWidget ) )
+METHOD QFocusFrame:setWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QFocusFrame_setWidget( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFocusFrame:widget()
-   RETURN HB_QWidget():from( Qt_QFocusFrame_widget( ::pPtr ) )
+METHOD QFocusFrame:widget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QFocusFrame_widget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

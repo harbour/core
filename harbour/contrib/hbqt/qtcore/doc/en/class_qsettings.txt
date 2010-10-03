@@ -26,13 +26,13 @@
  *  $RETURNS$
  *     An instance of the object of type QSettings
  *  $METHODS$
- *     :allKeys()                                          -> pQStringList
+ *     :allKeys()                                          -> oQStringList
  *     :applicationName()                                  -> cQString
  *     :beginGroup( cPrefix )                              -> NIL
  *     :beginReadArray( cPrefix )                          -> nInt
  *     :beginWriteArray( cPrefix, nSize )                  -> NIL
- *     :childGroups()                                      -> pQStringList
- *     :childKeys()                                        -> pQStringList
+ *     :childGroups()                                      -> oQStringList
+ *     :childKeys()                                        -> oQStringList
  *     :clear()                                            -> NIL
  *     :contains( cKey )                                   -> lBool
  *     :endArray()                                         -> NIL
@@ -41,19 +41,19 @@
  *     :fileName()                                         -> cQString
  *     :format()                                           -> nFormat
  *     :group()                                            -> cQString
- *     :iniCodec()                                         -> pQTextCodec
+ *     :iniCodec()                                         -> oQTextCodec
  *     :isWritable()                                       -> lBool
  *     :organizationName()                                 -> cQString
  *     :remove( cKey )                                     -> NIL
  *     :scope()                                            -> nScope
  *     :setArrayIndex( nI )                                -> NIL
  *     :setFallbacksEnabled( lB )                          -> NIL
- *     :setIniCodec( pCodec )                              -> NIL
- *     :setIniCodec_1( pCodecName )                        -> NIL
- *     :setValue( cKey, pValue )                           -> NIL
+ *     :setIniCodec( oQTextCodec )                         -> NIL
+ *     :setIniCodec( cCodecName )                          -> NIL
+ *     :setValue( cKey, oQVariant )                        -> NIL
  *     :status()                                           -> nStatus
  *     :sync()                                             -> NIL
- *     :value( cKey, pDefaultValue )                       -> pQVariant
+ *     :value( cKey, oQVariant )                           -> oQVariant
  *     :defaultFormat()                                    -> nFormat
  *     :setDefaultFormat( nFormat )                        -> NIL
  *     :setPath( nFormat, nScope, cPath )                  -> NIL
@@ -76,7 +76,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQSettings.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QSettings.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

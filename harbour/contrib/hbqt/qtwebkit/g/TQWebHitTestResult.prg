@@ -103,20 +103,20 @@ CREATE CLASS QWebHitTestResult INHERIT HbQtObjectHandler FUNCTION HB_QWebHitTest
 
    METHOD  new( ... )
 
-   METHOD  alternateText()
-   METHOD  boundingRect()
-   METHOD  frame()
-   METHOD  imageUrl()
-   METHOD  isContentEditable()
-   METHOD  isContentSelected()
-   METHOD  isNull()
-   METHOD  linkTargetFrame()
-   METHOD  linkText()
-   METHOD  linkTitle()
-   METHOD  linkUrl()
-   METHOD  pixmap()
-   METHOD  pos()
-   METHOD  title()
+   METHOD  alternateText                 // (  )                                               -> cQString
+   METHOD  boundingRect                  // (  )                                               -> oQRect
+   METHOD  frame                         // (  )                                               -> oQWebFrame
+   METHOD  imageUrl                      // (  )                                               -> oQUrl
+   METHOD  isContentEditable             // (  )                                               -> lBool
+   METHOD  isContentSelected             // (  )                                               -> lBool
+   METHOD  isNull                        // (  )                                               -> lBool
+   METHOD  linkTargetFrame               // (  )                                               -> oQWebFrame
+   METHOD  linkText                      // (  )                                               -> cQString
+   METHOD  linkTitle                     // (  )                                               -> oQUrl
+   METHOD  linkUrl                       // (  )                                               -> oQUrl
+   METHOD  pixmap                        // (  )                                               -> oQPixmap
+   METHOD  pos                           // (  )                                               -> oQPoint
+   METHOD  title                         // (  )                                               -> cQString
 
    ENDCLASS
 
@@ -130,58 +130,114 @@ METHOD QWebHitTestResult:new( ... )
    RETURN Self
 
 
-METHOD QWebHitTestResult:alternateText()
-   RETURN Qt_QWebHitTestResult_alternateText( ::pPtr )
+METHOD QWebHitTestResult:alternateText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebHitTestResult_alternateText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHitTestResult:boundingRect()
-   RETURN HB_QRect():from( Qt_QWebHitTestResult_boundingRect( ::pPtr ) )
+METHOD QWebHitTestResult:boundingRect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRect():from( Qt_QWebHitTestResult_boundingRect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHitTestResult:frame()
-   RETURN HB_QWebFrame():from( Qt_QWebHitTestResult_frame( ::pPtr ) )
+METHOD QWebHitTestResult:frame( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWebFrame():from( Qt_QWebHitTestResult_frame( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHitTestResult:imageUrl()
-   RETURN HB_QUrl():from( Qt_QWebHitTestResult_imageUrl( ::pPtr ) )
+METHOD QWebHitTestResult:imageUrl( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QUrl():from( Qt_QWebHitTestResult_imageUrl( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHitTestResult:isContentEditable()
-   RETURN Qt_QWebHitTestResult_isContentEditable( ::pPtr )
+METHOD QWebHitTestResult:isContentEditable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebHitTestResult_isContentEditable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHitTestResult:isContentSelected()
-   RETURN Qt_QWebHitTestResult_isContentSelected( ::pPtr )
+METHOD QWebHitTestResult:isContentSelected( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebHitTestResult_isContentSelected( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHitTestResult:isNull()
-   RETURN Qt_QWebHitTestResult_isNull( ::pPtr )
+METHOD QWebHitTestResult:isNull( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebHitTestResult_isNull( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHitTestResult:linkTargetFrame()
-   RETURN HB_QWebFrame():from( Qt_QWebHitTestResult_linkTargetFrame( ::pPtr ) )
+METHOD QWebHitTestResult:linkTargetFrame( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWebFrame():from( Qt_QWebHitTestResult_linkTargetFrame( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHitTestResult:linkText()
-   RETURN Qt_QWebHitTestResult_linkText( ::pPtr )
+METHOD QWebHitTestResult:linkText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebHitTestResult_linkText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHitTestResult:linkTitle()
-   RETURN HB_QUrl():from( Qt_QWebHitTestResult_linkTitle( ::pPtr ) )
+METHOD QWebHitTestResult:linkTitle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QUrl():from( Qt_QWebHitTestResult_linkTitle( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHitTestResult:linkUrl()
-   RETURN HB_QUrl():from( Qt_QWebHitTestResult_linkUrl( ::pPtr ) )
+METHOD QWebHitTestResult:linkUrl( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QUrl():from( Qt_QWebHitTestResult_linkUrl( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHitTestResult:pixmap()
-   RETURN HB_QPixmap():from( Qt_QWebHitTestResult_pixmap( ::pPtr ) )
+METHOD QWebHitTestResult:pixmap( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPixmap():from( Qt_QWebHitTestResult_pixmap( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHitTestResult:pos()
-   RETURN HB_QPoint():from( Qt_QWebHitTestResult_pos( ::pPtr ) )
+METHOD QWebHitTestResult:pos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QWebHitTestResult_pos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QWebHitTestResult:title()
-   RETURN Qt_QWebHitTestResult_title( ::pPtr )
+METHOD QWebHitTestResult:title( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QWebHitTestResult_title( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

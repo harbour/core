@@ -26,11 +26,11 @@
  *  $RETURNS$
  *     An instance of the object of type QDragMoveEvent
  *  $METHODS$
- *     :accept( pRectangle )                               -> NIL
- *     :accept_1()                                         -> NIL
- *     :answerRect()                                       -> pQRect
- *     :ignore( pRectangle )                               -> NIL
- *     :ignore_1()                                         -> NIL
+ *     :accept( oQRect )                                   -> NIL
+ *     :accept()                                           -> NIL
+ *     :answerRect()                                       -> oQRect
+ *     :ignore( oQRect )                                   -> NIL
+ *     :ignore()                                           -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -50,7 +50,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQDragMoveEvent.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QDragMoveEvent.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QDropEvent()
  *  $END$
  */

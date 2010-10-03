@@ -103,14 +103,16 @@ CREATE CLASS QIcon INHERIT HbQtObjectHandler FUNCTION HB_QIcon
 
    METHOD  new( ... )
 
-   METHOD  actualSize( pSize, nMode, nState )
-   METHOD  addFile( cFileName, pSize, nMode, nState )
-   METHOD  addPixmap( pPixmap, nMode, nState )
-   METHOD  availableSizes( nMode, nState )
-   METHOD  cacheKey()
-   METHOD  isNull()
-   METHOD  paint( ... )
-   METHOD  pixmap( ... )
+   METHOD  actualSize                    // ( oQSize, nMode, nState )                          -> oQSize
+   METHOD  addFile                       // ( cFileName, oQSize, nMode, nState )               -> NIL
+   METHOD  addPixmap                     // ( oQPixmap, nMode, nState )                        -> NIL
+   METHOD  availableSizes                // ( nMode, nState )                                  -> oQList_QSize>
+   METHOD  cacheKey                      // (  )                                               -> nQint64
+   METHOD  isNull                        // (  )                                               -> lBool
+   METHOD  paint                         // ( oQPainter, oQRect, nAlignment, nMode, nState )   -> NIL
+                                         // ( oQPainter, nX, nY, nW, nH, nAlignment, nMode, nState ) -> NIL
+   METHOD  pixmap                        // ( oQSize, nMode, nState )                          -> oQPixmap
+                                         // ( nW, nH, nMode, nState )                          -> oQPixmap
 
    ENDCLASS
 
@@ -124,28 +126,118 @@ METHOD QIcon:new( ... )
    RETURN Self
 
 
-METHOD QIcon:actualSize( pSize, nMode, nState )
-   RETURN HB_QSize():from( Qt_QIcon_actualSize( ::pPtr, hbqt_ptr( pSize ), nMode, nState ) )
+METHOD QIcon:actualSize( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN HB_QSize():from( Qt_QIcon_actualSize( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QSize():from( Qt_QIcon_actualSize( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QSize():from( Qt_QIcon_actualSize( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QIcon:addFile( cFileName, pSize, nMode, nState )
-   RETURN Qt_QIcon_addFile( ::pPtr, cFileName, hbqt_ptr( pSize ), nMode, nState )
+METHOD QIcon:addFile( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QIcon_addFile( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QIcon_addFile( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QIcon_addFile( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QIcon_addFile( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QIcon:addPixmap( pPixmap, nMode, nState )
-   RETURN Qt_QIcon_addPixmap( ::pPtr, hbqt_ptr( pPixmap ), nMode, nState )
+METHOD QIcon:addPixmap( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QIcon_addPixmap( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QIcon_addPixmap( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QIcon_addPixmap( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QIcon:availableSizes( nMode, nState )
-   RETURN HB_QList():from( Qt_QIcon_availableSizes( ::pPtr, nMode, nState ) )
+METHOD QIcon:availableSizes( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QList():from( Qt_QIcon_availableSizes( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QList():from( Qt_QIcon_availableSizes( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QList():from( Qt_QIcon_availableSizes( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QIcon:cacheKey()
-   RETURN Qt_QIcon_cacheKey( ::pPtr )
+METHOD QIcon:cacheKey( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QIcon_cacheKey( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QIcon:isNull()
-   RETURN Qt_QIcon_isNull( ::pPtr )
+METHOD QIcon:isNull( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QIcon_isNull( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QIcon:paint( ... )
@@ -156,11 +248,35 @@ METHOD QIcon:paint( ... )
          RETURN Qt_QIcon_paint_1( ::pPtr, ... )
       ENDCASE
       EXIT
+   CASE 7
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) ) .AND. hb_isNumeric( hb_pvalue( 6 ) ) .AND. hb_isNumeric( hb_pvalue( 7 ) )
+         RETURN Qt_QIcon_paint_1( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 6
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) ) .AND. hb_isNumeric( hb_pvalue( 6 ) )
+         RETURN Qt_QIcon_paint_1( ::pPtr, ... )
+      ENDCASE
+      EXIT
    CASE 5
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
          RETURN Qt_QIcon_paint_1( ::pPtr, ... )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
+         RETURN Qt_QIcon_paint( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 4
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QIcon_paint( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
          RETURN Qt_QIcon_paint( ::pPtr, ... )
       ENDCASE
       EXIT
@@ -184,6 +300,8 @@ METHOD QIcon:pixmap( ... )
       EXIT
    CASE 3
       DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN HB_QPixmap():from( Qt_QIcon_pixmap_1( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
          RETURN HB_QPixmap():from( Qt_QIcon_pixmap( ::pPtr, ... ) )
       ENDCASE
@@ -192,6 +310,8 @@ METHOD QIcon:pixmap( ... )
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN HB_QPixmap():from( Qt_QIcon_pixmap_1( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QPixmap():from( Qt_QIcon_pixmap( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1

@@ -103,7 +103,7 @@ CREATE CLASS QAbstractListModel INHERIT HbQtObjectHandler, HB_QAbstractItemModel
 
    METHOD  new( ... )
 
-   METHOD  index( nRow, nColumn, pParent )
+   METHOD  index                         // ( nRow, nColumn, oQModelIndex )                    -> oQModelIndex
 
    ENDCLASS
 
@@ -117,6 +117,26 @@ METHOD QAbstractListModel:new( ... )
    RETURN Self
 
 
-METHOD QAbstractListModel:index( nRow, nColumn, pParent )
-   RETURN HB_QModelIndex():from( Qt_QAbstractListModel_index( ::pPtr, nRow, nColumn, hbqt_ptr( pParent ) ) )
+METHOD QAbstractListModel:index( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN HB_QModelIndex():from( Qt_QAbstractListModel_index( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QModelIndex():from( Qt_QAbstractListModel_index( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QModelIndex():from( Qt_QAbstractListModel_index( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

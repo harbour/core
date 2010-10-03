@@ -103,9 +103,9 @@ CREATE CLASS QFocusEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_QFocus
 
    METHOD  new( ... )
 
-   METHOD  gotFocus()
-   METHOD  lostFocus()
-   METHOD  reason()
+   METHOD  gotFocus                      // (  )                                               -> lBool
+   METHOD  lostFocus                     // (  )                                               -> lBool
+   METHOD  reason                        // (  )                                               -> nQt_FocusReason
 
    ENDCLASS
 
@@ -119,14 +119,26 @@ METHOD QFocusEvent:new( ... )
    RETURN Self
 
 
-METHOD QFocusEvent:gotFocus()
-   RETURN Qt_QFocusEvent_gotFocus( ::pPtr )
+METHOD QFocusEvent:gotFocus( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFocusEvent_gotFocus( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFocusEvent:lostFocus()
-   RETURN Qt_QFocusEvent_lostFocus( ::pPtr )
+METHOD QFocusEvent:lostFocus( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFocusEvent_lostFocus( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QFocusEvent:reason()
-   RETURN Qt_QFocusEvent_reason( ::pPtr )
+METHOD QFocusEvent:reason( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QFocusEvent_reason( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

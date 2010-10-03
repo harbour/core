@@ -55,7 +55,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQDialog.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QDialog.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

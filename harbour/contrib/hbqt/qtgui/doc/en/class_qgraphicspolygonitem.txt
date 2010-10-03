@@ -26,10 +26,10 @@
  *  $RETURNS$
  *     An instance of the object of type QGraphicsPolygonItem
  *  $METHODS$
- *     :fillRule()                                         -> nQt::FillRule
- *     :polygon()                                          -> pQPolygonF
+ *     :fillRule()                                         -> nQt_FillRule
+ *     :polygon()                                          -> oQPolygonF
  *     :setFillRule( nRule )                               -> NIL
- *     :setPolygon( pPolygon )                             -> NIL
+ *     :setPolygon( oQPolygonF )                           -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -49,7 +49,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGraphicsPolygonItem.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsPolygonItem.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractGraphicsShapeItem()
  *  $END$
  */

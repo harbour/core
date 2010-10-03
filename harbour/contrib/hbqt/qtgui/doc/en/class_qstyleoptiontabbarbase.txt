@@ -26,9 +26,9 @@
  *  $RETURNS$
  *     An instance of the object of type QStyleOptionTabBarBase
  *  $METHODS$
- *     :selectedTabRect()                                  -> pQRect
- *     :shape()                                            -> nQTabBar::Shape
- *     :tabBarRect()                                       -> pQRect
+ *     :selectedTabRect()                                  -> oQRect
+ *     :shape()                                            -> nQTabBar_Shape
+ *     :tabBarRect()                                       -> oQRect
  * 
  *  $DESCRIPTION$
  * 
@@ -48,7 +48,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionTabBarBase.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionTabBarBase.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QStyleOption()
  *  $END$
  */

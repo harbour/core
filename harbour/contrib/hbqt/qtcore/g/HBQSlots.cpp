@@ -98,7 +98,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 4/4 [ 100.00% ] ]
+ *  Constructed[ 5/5 [ 100.00% ] ]
  *
  */
 
@@ -188,6 +188,14 @@ HB_FUNC( QT_HBQSLOTS )
 }
 
 /*
+ * HBQSlots()
+ */
+HB_FUNC( QT_HBQSLOTS_HBQSLOTS )
+{
+   hb_retptrGC( hbqt_gcAllocate_HBQSlots( new HBQSlots(), true ) );
+}
+
+/*
  * bool hbConnect( PHB_ITEM pObj, const char * slot, PHB_ITEM bBlock )
  */
 HB_FUNC( QT_HBQSLOTS_HBCONNECT )
@@ -195,7 +203,7 @@ HB_FUNC( QT_HBQSLOTS_HBCONNECT )
    HBQSlots * p = hbqt_par_HBQSlots( 1 );
    if( p )
    {
-      hb_retl( ( p )->hbConnect( hb_param( 2, HB_IT_ANY ), hbqt_par_char( 3 ), hb_param( 4, HB_IT_ANY ) ) );
+      hb_retl( ( p )->hbConnect( hb_param( 2, HB_IT_ANY ), ( const char * ) hb_parc( 3 ), hb_param( 4, HB_IT_ANY ) ) );
    }
 }
 
@@ -207,7 +215,7 @@ HB_FUNC( QT_HBQSLOTS_HBDISCONNECT )
    HBQSlots * p = hbqt_par_HBQSlots( 1 );
    if( p )
    {
-      hb_retl( ( p )->hbDisconnect( hb_param( 2, HB_IT_ANY ), hbqt_par_char( 3 ) ) );
+      hb_retl( ( p )->hbDisconnect( hb_param( 2, HB_IT_ANY ), ( const char * ) hb_parc( 3 ) ) );
    }
 }
 
@@ -219,7 +227,7 @@ HB_FUNC( QT_HBQSLOTS_HBISCONNECTED )
    HBQSlots * p = hbqt_par_HBQSlots( 1 );
    if( p )
    {
-      hb_retl( ( p )->hbIsConnected( hb_param( 2, HB_IT_ANY ), hbqt_par_char( 3 ) ) );
+      hb_retl( ( p )->hbIsConnected( hb_param( 2, HB_IT_ANY ), ( const char * ) hb_parc( 3 ) ) );
    }
 }
 

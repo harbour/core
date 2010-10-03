@@ -103,33 +103,33 @@ CREATE CLASS QsciLexerCPP INHERIT HbQtObjectHandler, HB_QsciLexer FUNCTION HB_Qs
 
    METHOD  new( ... )
 
-   METHOD  language()
-   METHOD  lexer()
-   METHOD  autoCompletionWordSeparators()
-   METHOD  blockEnd( nStyle )
-   METHOD  blockStart( nStyle )
-   METHOD  blockStartKeyword( nStyle )
-   METHOD  braceStyle()
-   METHOD  wordCharacters()
-   METHOD  defaultColor( nStyle )
-   METHOD  defaultEolFill( nStyle )
-   METHOD  defaultFont( nStyle )
-   METHOD  defaultPaper( nStyle )
-   METHOD  keywords( nSet )
-   METHOD  description( nStyle )
-   METHOD  refreshProperties()
-   METHOD  foldAtElse()
-   METHOD  foldComments()
-   METHOD  foldCompact()
-   METHOD  foldPreprocessor()
-   METHOD  stylePreprocessor()
-   METHOD  setDollarsAllowed( lAllowed )
-   METHOD  dollarsAllowed()
-   METHOD  setFoldAtElse( lFold )
-   METHOD  setFoldComments( lFold )
-   METHOD  setFoldCompact( lFold )
-   METHOD  setFoldPreprocessor( lFold )
-   METHOD  setStylePreprocessor( lStyle )
+   METHOD  language                      // (  )                                               -> cChar
+   METHOD  lexer                         // (  )                                               -> cChar
+   METHOD  autoCompletionWordSeparators  // (  )                                               -> oQStringList
+   METHOD  blockEnd                      // ( @nStyle )                                        -> cChar
+   METHOD  blockStart                    // ( @nStyle )                                        -> cChar
+   METHOD  blockStartKeyword             // ( @nStyle )                                        -> cChar
+   METHOD  braceStyle                    // (  )                                               -> nInt
+   METHOD  wordCharacters                // (  )                                               -> cChar
+   METHOD  defaultColor                  // ( nStyle )                                         -> oQColor
+   METHOD  defaultEolFill                // ( nStyle )                                         -> lBool
+   METHOD  defaultFont                   // ( nStyle )                                         -> oQFont
+   METHOD  defaultPaper                  // ( nStyle )                                         -> oQColor
+   METHOD  keywords                      // ( nSet )                                           -> cChar
+   METHOD  description                   // ( nStyle )                                         -> cQString
+   METHOD  refreshProperties             // (  )                                               -> NIL
+   METHOD  foldAtElse                    // (  )                                               -> lBool
+   METHOD  foldComments                  // (  )                                               -> lBool
+   METHOD  foldCompact                   // (  )                                               -> lBool
+   METHOD  foldPreprocessor              // (  )                                               -> lBool
+   METHOD  stylePreprocessor             // (  )                                               -> lBool
+   METHOD  setDollarsAllowed             // ( lAllowed )                                       -> NIL
+   METHOD  dollarsAllowed                // (  )                                               -> lBool
+   METHOD  setFoldAtElse                 // ( lFold )                                          -> NIL
+   METHOD  setFoldComments               // ( lFold )                                          -> NIL
+   METHOD  setFoldCompact                // ( lFold )                                          -> NIL
+   METHOD  setFoldPreprocessor           // ( lFold )                                          -> NIL
+   METHOD  setStylePreprocessor          // ( lStyle )                                         -> NIL
 
    ENDCLASS
 
@@ -143,110 +143,284 @@ METHOD QsciLexerCPP:new( ... )
    RETURN Self
 
 
-METHOD QsciLexerCPP:language()
-   RETURN Qt_QsciLexerCPP_language( ::pPtr )
+METHOD QsciLexerCPP:language( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexerCPP_language( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerCPP:lexer()
-   RETURN Qt_QsciLexerCPP_lexer( ::pPtr )
+METHOD QsciLexerCPP:lexer( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexerCPP_lexer( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerCPP:autoCompletionWordSeparators()
-   RETURN HB_QStringList():from( Qt_QsciLexerCPP_autoCompletionWordSeparators( ::pPtr ) )
+METHOD QsciLexerCPP:autoCompletionWordSeparators( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QsciLexerCPP_autoCompletionWordSeparators( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerCPP:blockEnd( nStyle )
-   RETURN Qt_QsciLexerCPP_blockEnd( ::pPtr, nStyle )
+METHOD QsciLexerCPP:blockEnd( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexerCPP_blockEnd( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QsciLexerCPP_blockEnd( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerCPP:blockStart( nStyle )
-   RETURN Qt_QsciLexerCPP_blockStart( ::pPtr, nStyle )
+METHOD QsciLexerCPP:blockStart( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexerCPP_blockStart( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QsciLexerCPP_blockStart( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerCPP:blockStartKeyword( nStyle )
-   RETURN Qt_QsciLexerCPP_blockStartKeyword( ::pPtr, nStyle )
+METHOD QsciLexerCPP:blockStartKeyword( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexerCPP_blockStartKeyword( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QsciLexerCPP_blockStartKeyword( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerCPP:braceStyle()
-   RETURN Qt_QsciLexerCPP_braceStyle( ::pPtr )
+METHOD QsciLexerCPP:braceStyle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexerCPP_braceStyle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerCPP:wordCharacters()
-   RETURN Qt_QsciLexerCPP_wordCharacters( ::pPtr )
+METHOD QsciLexerCPP:wordCharacters( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexerCPP_wordCharacters( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerCPP:defaultColor( nStyle )
-   RETURN HB_QColor():from( Qt_QsciLexerCPP_defaultColor( ::pPtr, nStyle ) )
+METHOD QsciLexerCPP:defaultColor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QColor():from( Qt_QsciLexerCPP_defaultColor( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerCPP:defaultEolFill( nStyle )
-   RETURN Qt_QsciLexerCPP_defaultEolFill( ::pPtr, nStyle )
+METHOD QsciLexerCPP:defaultEolFill( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexerCPP_defaultEolFill( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerCPP:defaultFont( nStyle )
-   RETURN HB_QFont():from( Qt_QsciLexerCPP_defaultFont( ::pPtr, nStyle ) )
+METHOD QsciLexerCPP:defaultFont( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QFont():from( Qt_QsciLexerCPP_defaultFont( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerCPP:defaultPaper( nStyle )
-   RETURN HB_QColor():from( Qt_QsciLexerCPP_defaultPaper( ::pPtr, nStyle ) )
+METHOD QsciLexerCPP:defaultPaper( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QColor():from( Qt_QsciLexerCPP_defaultPaper( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerCPP:keywords( nSet )
-   RETURN Qt_QsciLexerCPP_keywords( ::pPtr, nSet )
+METHOD QsciLexerCPP:keywords( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexerCPP_keywords( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerCPP:description( nStyle )
-   RETURN Qt_QsciLexerCPP_description( ::pPtr, nStyle )
+METHOD QsciLexerCPP:description( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexerCPP_description( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerCPP:refreshProperties()
-   RETURN Qt_QsciLexerCPP_refreshProperties( ::pPtr )
+METHOD QsciLexerCPP:refreshProperties( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexerCPP_refreshProperties( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerCPP:foldAtElse()
-   RETURN Qt_QsciLexerCPP_foldAtElse( ::pPtr )
+METHOD QsciLexerCPP:foldAtElse( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexerCPP_foldAtElse( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerCPP:foldComments()
-   RETURN Qt_QsciLexerCPP_foldComments( ::pPtr )
+METHOD QsciLexerCPP:foldComments( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexerCPP_foldComments( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerCPP:foldCompact()
-   RETURN Qt_QsciLexerCPP_foldCompact( ::pPtr )
+METHOD QsciLexerCPP:foldCompact( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexerCPP_foldCompact( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerCPP:foldPreprocessor()
-   RETURN Qt_QsciLexerCPP_foldPreprocessor( ::pPtr )
+METHOD QsciLexerCPP:foldPreprocessor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexerCPP_foldPreprocessor( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerCPP:stylePreprocessor()
-   RETURN Qt_QsciLexerCPP_stylePreprocessor( ::pPtr )
+METHOD QsciLexerCPP:stylePreprocessor( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexerCPP_stylePreprocessor( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerCPP:setDollarsAllowed( lAllowed )
-   RETURN Qt_QsciLexerCPP_setDollarsAllowed( ::pPtr, lAllowed )
+METHOD QsciLexerCPP:setDollarsAllowed( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexerCPP_setDollarsAllowed( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerCPP:dollarsAllowed()
-   RETURN Qt_QsciLexerCPP_dollarsAllowed( ::pPtr )
+METHOD QsciLexerCPP:dollarsAllowed( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciLexerCPP_dollarsAllowed( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerCPP:setFoldAtElse( lFold )
-   RETURN Qt_QsciLexerCPP_setFoldAtElse( ::pPtr, lFold )
+METHOD QsciLexerCPP:setFoldAtElse( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexerCPP_setFoldAtElse( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerCPP:setFoldComments( lFold )
-   RETURN Qt_QsciLexerCPP_setFoldComments( ::pPtr, lFold )
+METHOD QsciLexerCPP:setFoldComments( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexerCPP_setFoldComments( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerCPP:setFoldCompact( lFold )
-   RETURN Qt_QsciLexerCPP_setFoldCompact( ::pPtr, lFold )
+METHOD QsciLexerCPP:setFoldCompact( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexerCPP_setFoldCompact( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerCPP:setFoldPreprocessor( lFold )
-   RETURN Qt_QsciLexerCPP_setFoldPreprocessor( ::pPtr, lFold )
+METHOD QsciLexerCPP:setFoldPreprocessor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexerCPP_setFoldPreprocessor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciLexerCPP:setStylePreprocessor( lStyle )
-   RETURN Qt_QsciLexerCPP_setStylePreprocessor( ::pPtr, lStyle )
+METHOD QsciLexerCPP:setStylePreprocessor( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QsciLexerCPP_setStylePreprocessor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

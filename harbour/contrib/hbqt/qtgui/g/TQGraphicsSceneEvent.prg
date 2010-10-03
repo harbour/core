@@ -103,7 +103,7 @@ CREATE CLASS QGraphicsSceneEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION H
 
    METHOD  new( ... )
 
-   METHOD  widget()
+   METHOD  widget                        // (  )                                               -> oQWidget
 
    ENDCLASS
 
@@ -117,6 +117,10 @@ METHOD QGraphicsSceneEvent:new( ... )
    RETURN Self
 
 
-METHOD QGraphicsSceneEvent:widget()
-   RETURN HB_QWidget():from( Qt_QGraphicsSceneEvent_widget( ::pPtr ) )
+METHOD QGraphicsSceneEvent:widget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QGraphicsSceneEvent_widget( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

@@ -29,7 +29,7 @@
  *     :batchSize()                                        -> nInt
  *     :clearPropertyFlags()                               -> NIL
  *     :flow()                                             -> nFlow
- *     :gridSize()                                         -> pQSize
+ *     :gridSize()                                         -> oQSize
  *     :isRowHidden( nRow )                                -> lBool
  *     :isSelectionRectVisible()                           -> lBool
  *     :isWrapping()                                       -> lBool
@@ -39,7 +39,7 @@
  *     :resizeMode()                                       -> nResizeMode
  *     :setBatchSize( nBatchSize )                         -> NIL
  *     :setFlow( nFlow )                                   -> NIL
- *     :setGridSize( pSize )                               -> NIL
+ *     :setGridSize( oQSize )                              -> NIL
  *     :setLayoutMode( nMode )                             -> NIL
  *     :setModelColumn( nColumn )                          -> NIL
  *     :setMovement( nMovement )                           -> NIL
@@ -74,7 +74,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQListView.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QListView.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractItemView()
  *  $END$
  */

@@ -563,7 +563,7 @@ METHOD IdeShortcuts:buildUI()
 
    oTbl := ::oUI:q_tableMacros                              /* Build Table Header */
    oTbl:verticalHeader():hide()
-   oTbl:horizontalHeader():stretchLastSection( .t. )
+   oTbl:horizontalHeader():setStretchLastSection( .t. )
    oTbl:setAlternatingRowColors( .t. )
    oTbl:setColumnCount( len( hdr_ ) )
    oTbl:setShowGrid( .t. )
@@ -669,14 +669,13 @@ METHOD IdeShortcuts:populateMethods()
 
          IF left( a_[ 1 ], 1 ) == " "
             qItem:setText( alltrim( a_[ 1 ] ) )
-            qItem:setForeground( QBrush( "QColor", QColor( 255,0,0 ) ) )
-            qItem:setBackground( QBrush( "QColor", QColor( 255,255,200 ) ) )
+            qItem:setForeground( QBrush( QColor( 255,0,0 ) ) )
+            qItem:setBackground( QBrush( QColor( 255,255,200 ) ) )
             qItem:setTextAlignment( Qt_AlignHCenter )
          ELSE
             qItem:setText( a_[ 1 ] )
          ENDIF
          aadd( ::aMtdItms, qItem )
-         //qLW:addItem_1( qItem )
          qLW:addItem( qItem )
       ENDIF
    NEXT

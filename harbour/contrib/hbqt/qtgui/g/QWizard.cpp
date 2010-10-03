@@ -391,7 +391,7 @@ HB_FUNC( QT_QWIZARD_SETDEFAULTPROPERTY )
    QWizard * p = hbqt_par_QWizard( 1 );
    if( p )
    {
-      ( p )->setDefaultProperty( hbqt_par_char( 2 ), hbqt_par_char( 3 ), hbqt_par_char( 4 ) );
+      ( p )->setDefaultProperty( ( const char * ) hb_parc( 2 ), ( const char * ) hb_parc( 3 ), ( const char * ) hb_parc( 4 ) );
    }
 }
 

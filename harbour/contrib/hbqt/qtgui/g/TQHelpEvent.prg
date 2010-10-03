@@ -103,12 +103,12 @@ CREATE CLASS QHelpEvent INHERIT HbQtObjectHandler FUNCTION HB_QHelpEvent
 
    METHOD  new( ... )
 
-   METHOD  globalPos()
-   METHOD  globalX()
-   METHOD  globalY()
-   METHOD  pos()
-   METHOD  x()
-   METHOD  y()
+   METHOD  globalPos                     // (  )                                               -> oQPoint
+   METHOD  globalX                       // (  )                                               -> nInt
+   METHOD  globalY                       // (  )                                               -> nInt
+   METHOD  pos                           // (  )                                               -> oQPoint
+   METHOD  x                             // (  )                                               -> nInt
+   METHOD  y                             // (  )                                               -> nInt
 
    ENDCLASS
 
@@ -122,26 +122,50 @@ METHOD QHelpEvent:new( ... )
    RETURN Self
 
 
-METHOD QHelpEvent:globalPos()
-   RETURN HB_QPoint():from( Qt_QHelpEvent_globalPos( ::pPtr ) )
+METHOD QHelpEvent:globalPos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QHelpEvent_globalPos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHelpEvent:globalX()
-   RETURN Qt_QHelpEvent_globalX( ::pPtr )
+METHOD QHelpEvent:globalX( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHelpEvent_globalX( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHelpEvent:globalY()
-   RETURN Qt_QHelpEvent_globalY( ::pPtr )
+METHOD QHelpEvent:globalY( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHelpEvent_globalY( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHelpEvent:pos()
-   RETURN HB_QPoint():from( Qt_QHelpEvent_pos( ::pPtr ) )
+METHOD QHelpEvent:pos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QHelpEvent_pos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHelpEvent:x()
-   RETURN Qt_QHelpEvent_x( ::pPtr )
+METHOD QHelpEvent:x( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHelpEvent_x( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHelpEvent:y()
-   RETURN Qt_QHelpEvent_y( ::pPtr )
+METHOD QHelpEvent:y( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHelpEvent_y( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

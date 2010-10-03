@@ -103,20 +103,20 @@ CREATE CLASS QsciAPIs INHERIT HbQtObjectHandler, HB_QsciAbstractAPIs FUNCTION HB
 
    METHOD  new( ... )
 
-   METHOD  add( cEntry )
-   METHOD  clear()
-   METHOD  load( cFname )
-   METHOD  remove( cEntry )
-   METHOD  prepare()
-   METHOD  cancelPreparation()
-   METHOD  defaultPreparedName()
-   METHOD  isPrepared( cFname )
-   METHOD  loadPrepared( cFname )
-   METHOD  savePrepared( cFname )
-   METHOD  updateAutoCompletionList( pContext, pList )
-   METHOD  autoCompletionSelected( cSel )
-   METHOD  event( pE )
-   METHOD  installedAPIFiles()
+   METHOD  add                           // ( cEntry )                                         -> NIL
+   METHOD  clear                         // (  )                                               -> NIL
+   METHOD  load                          // ( cFname )                                         -> lBool
+   METHOD  remove                        // ( cEntry )                                         -> NIL
+   METHOD  prepare                       // (  )                                               -> NIL
+   METHOD  cancelPreparation             // (  )                                               -> NIL
+   METHOD  defaultPreparedName           // (  )                                               -> cQString
+   METHOD  isPrepared                    // ( cFname )                                         -> lBool
+   METHOD  loadPrepared                  // ( cFname )                                         -> lBool
+   METHOD  savePrepared                  // ( cFname )                                         -> lBool
+   METHOD  updateAutoCompletionList      // ( oQStringList, oQStringList )                     -> NIL
+   METHOD  autoCompletionSelected        // ( cSel )                                           -> NIL
+   METHOD  event                         // ( oQEvent )                                        -> lBool
+   METHOD  installedAPIFiles             // (  )                                               -> oQStringList
 
    ENDCLASS
 
@@ -130,58 +130,156 @@ METHOD QsciAPIs:new( ... )
    RETURN Self
 
 
-METHOD QsciAPIs:add( cEntry )
-   RETURN Qt_QsciAPIs_add( ::pPtr, cEntry )
+METHOD QsciAPIs:add( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QsciAPIs_add( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciAPIs:clear()
-   RETURN Qt_QsciAPIs_clear( ::pPtr )
+METHOD QsciAPIs:clear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciAPIs_clear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciAPIs:load( cFname )
-   RETURN Qt_QsciAPIs_load( ::pPtr, cFname )
+METHOD QsciAPIs:load( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QsciAPIs_load( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciAPIs:remove( cEntry )
-   RETURN Qt_QsciAPIs_remove( ::pPtr, cEntry )
+METHOD QsciAPIs:remove( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QsciAPIs_remove( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciAPIs:prepare()
-   RETURN Qt_QsciAPIs_prepare( ::pPtr )
+METHOD QsciAPIs:prepare( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciAPIs_prepare( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciAPIs:cancelPreparation()
-   RETURN Qt_QsciAPIs_cancelPreparation( ::pPtr )
+METHOD QsciAPIs:cancelPreparation( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciAPIs_cancelPreparation( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciAPIs:defaultPreparedName()
-   RETURN Qt_QsciAPIs_defaultPreparedName( ::pPtr )
+METHOD QsciAPIs:defaultPreparedName( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QsciAPIs_defaultPreparedName( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciAPIs:isPrepared( cFname )
-   RETURN Qt_QsciAPIs_isPrepared( ::pPtr, cFname )
+METHOD QsciAPIs:isPrepared( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QsciAPIs_isPrepared( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QsciAPIs_isPrepared( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciAPIs:loadPrepared( cFname )
-   RETURN Qt_QsciAPIs_loadPrepared( ::pPtr, cFname )
+METHOD QsciAPIs:loadPrepared( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QsciAPIs_loadPrepared( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QsciAPIs_loadPrepared( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciAPIs:savePrepared( cFname )
-   RETURN Qt_QsciAPIs_savePrepared( ::pPtr, cFname )
+METHOD QsciAPIs:savePrepared( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QsciAPIs_savePrepared( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QsciAPIs_savePrepared( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciAPIs:updateAutoCompletionList( pContext, pList )
-   RETURN Qt_QsciAPIs_updateAutoCompletionList( ::pPtr, hbqt_ptr( pContext ), hbqt_ptr( pList ) )
+METHOD QsciAPIs:updateAutoCompletionList( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QsciAPIs_updateAutoCompletionList( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciAPIs:autoCompletionSelected( cSel )
-   RETURN Qt_QsciAPIs_autoCompletionSelected( ::pPtr, cSel )
+METHOD QsciAPIs:autoCompletionSelected( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QsciAPIs_autoCompletionSelected( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciAPIs:event( pE )
-   RETURN Qt_QsciAPIs_event( ::pPtr, hbqt_ptr( pE ) )
+METHOD QsciAPIs:event( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QsciAPIs_event( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QsciAPIs:installedAPIFiles()
-   RETURN HB_QStringList():from( Qt_QsciAPIs_installedAPIFiles( ::pPtr ) )
+METHOD QsciAPIs:installedAPIFiles( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QsciAPIs_installedAPIFiles( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

@@ -103,16 +103,16 @@ CREATE CLASS QDropEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_QDropEv
 
    METHOD  new( ... )
 
-   METHOD  acceptProposedAction()
-   METHOD  dropAction()
-   METHOD  keyboardModifiers()
-   METHOD  mimeData()
-   METHOD  mouseButtons()
-   METHOD  pos()
-   METHOD  possibleActions()
-   METHOD  proposedAction()
-   METHOD  setDropAction( nAction )
-   METHOD  source()
+   METHOD  acceptProposedAction          // (  )                                               -> NIL
+   METHOD  dropAction                    // (  )                                               -> nQt_DropAction
+   METHOD  keyboardModifiers             // (  )                                               -> nQt_KeyboardModifiers
+   METHOD  mimeData                      // (  )                                               -> oQMimeData
+   METHOD  mouseButtons                  // (  )                                               -> nQt_MouseButtons
+   METHOD  pos                           // (  )                                               -> oQPoint
+   METHOD  possibleActions               // (  )                                               -> nQt_DropActions
+   METHOD  proposedAction                // (  )                                               -> nQt_DropAction
+   METHOD  setDropAction                 // ( nAction )                                        -> NIL
+   METHOD  source                        // (  )                                               -> oQWidget
 
    ENDCLASS
 
@@ -126,42 +126,86 @@ METHOD QDropEvent:new( ... )
    RETURN Self
 
 
-METHOD QDropEvent:acceptProposedAction()
-   RETURN Qt_QDropEvent_acceptProposedAction( ::pPtr )
+METHOD QDropEvent:acceptProposedAction( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDropEvent_acceptProposedAction( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDropEvent:dropAction()
-   RETURN Qt_QDropEvent_dropAction( ::pPtr )
+METHOD QDropEvent:dropAction( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDropEvent_dropAction( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDropEvent:keyboardModifiers()
-   RETURN Qt_QDropEvent_keyboardModifiers( ::pPtr )
+METHOD QDropEvent:keyboardModifiers( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDropEvent_keyboardModifiers( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDropEvent:mimeData()
-   RETURN HB_QMimeData():from( Qt_QDropEvent_mimeData( ::pPtr ) )
+METHOD QDropEvent:mimeData( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QMimeData():from( Qt_QDropEvent_mimeData( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDropEvent:mouseButtons()
-   RETURN Qt_QDropEvent_mouseButtons( ::pPtr )
+METHOD QDropEvent:mouseButtons( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDropEvent_mouseButtons( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDropEvent:pos()
-   RETURN HB_QPoint():from( Qt_QDropEvent_pos( ::pPtr ) )
+METHOD QDropEvent:pos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QDropEvent_pos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDropEvent:possibleActions()
-   RETURN Qt_QDropEvent_possibleActions( ::pPtr )
+METHOD QDropEvent:possibleActions( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDropEvent_possibleActions( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDropEvent:proposedAction()
-   RETURN Qt_QDropEvent_proposedAction( ::pPtr )
+METHOD QDropEvent:proposedAction( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDropEvent_proposedAction( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDropEvent:setDropAction( nAction )
-   RETURN Qt_QDropEvent_setDropAction( ::pPtr, nAction )
+METHOD QDropEvent:setDropAction( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDropEvent_setDropAction( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDropEvent:source()
-   RETURN HB_QWidget():from( Qt_QDropEvent_source( ::pPtr ) )
+METHOD QDropEvent:source( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QDropEvent_source( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

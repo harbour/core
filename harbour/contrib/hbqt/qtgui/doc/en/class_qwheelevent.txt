@@ -26,13 +26,13 @@
  *  $RETURNS$
  *     An instance of the object of type QWheelEvent
  *  $METHODS$
- *     :buttons()                                          -> nQt::MouseButtons
+ *     :buttons()                                          -> nQt_MouseButtons
  *     :delta()                                            -> nInt
- *     :globalPos()                                        -> pQPoint
+ *     :globalPos()                                        -> oQPoint
  *     :globalX()                                          -> nInt
  *     :globalY()                                          -> nInt
- *     :orientation()                                      -> nQt::Orientation
- *     :pos()                                              -> pQPoint
+ *     :orientation()                                      -> nQt_Orientation
+ *     :pos()                                              -> oQPoint
  *     :x()                                                -> nInt
  *     :y()                                                -> nInt
  * 
@@ -54,7 +54,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQWheelEvent.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QWheelEvent.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QInputEvent()
  *  $END$
  */

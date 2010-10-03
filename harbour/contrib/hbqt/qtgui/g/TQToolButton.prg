@@ -103,19 +103,19 @@ CREATE CLASS QToolButton INHERIT HbQtObjectHandler, HB_QAbstractButton FUNCTION 
 
    METHOD  new( ... )
 
-   METHOD  arrowType()
-   METHOD  autoRaise()
-   METHOD  defaultAction()
-   METHOD  menu()
-   METHOD  popupMode()
-   METHOD  setArrowType( nType )
-   METHOD  setAutoRaise( lEnable )
-   METHOD  setMenu( pMenu )
-   METHOD  setPopupMode( nMode )
-   METHOD  toolButtonStyle()
-   METHOD  setDefaultAction( pAction )
-   METHOD  setToolButtonStyle( nStyle )
-   METHOD  showMenu()
+   METHOD  arrowType                     // (  )                                               -> nQt_ArrowType
+   METHOD  autoRaise                     // (  )                                               -> lBool
+   METHOD  defaultAction                 // (  )                                               -> oQAction
+   METHOD  menu                          // (  )                                               -> oQMenu
+   METHOD  popupMode                     // (  )                                               -> nToolButtonPopupMode
+   METHOD  setArrowType                  // ( nType )                                          -> NIL
+   METHOD  setAutoRaise                  // ( lEnable )                                        -> NIL
+   METHOD  setMenu                       // ( oQMenu )                                         -> NIL
+   METHOD  setPopupMode                  // ( nMode )                                          -> NIL
+   METHOD  toolButtonStyle               // (  )                                               -> nQt_ToolButtonStyle
+   METHOD  setDefaultAction              // ( oQAction )                                       -> NIL
+   METHOD  setToolButtonStyle            // ( nStyle )                                         -> NIL
+   METHOD  showMenu                      // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -129,54 +129,130 @@ METHOD QToolButton:new( ... )
    RETURN Self
 
 
-METHOD QToolButton:arrowType()
-   RETURN Qt_QToolButton_arrowType( ::pPtr )
+METHOD QToolButton:arrowType( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QToolButton_arrowType( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolButton:autoRaise()
-   RETURN Qt_QToolButton_autoRaise( ::pPtr )
+METHOD QToolButton:autoRaise( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QToolButton_autoRaise( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolButton:defaultAction()
-   RETURN HB_QAction():from( Qt_QToolButton_defaultAction( ::pPtr ) )
+METHOD QToolButton:defaultAction( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QAction():from( Qt_QToolButton_defaultAction( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolButton:menu()
-   RETURN HB_QMenu():from( Qt_QToolButton_menu( ::pPtr ) )
+METHOD QToolButton:menu( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QMenu():from( Qt_QToolButton_menu( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolButton:popupMode()
-   RETURN Qt_QToolButton_popupMode( ::pPtr )
+METHOD QToolButton:popupMode( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QToolButton_popupMode( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolButton:setArrowType( nType )
-   RETURN Qt_QToolButton_setArrowType( ::pPtr, nType )
+METHOD QToolButton:setArrowType( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QToolButton_setArrowType( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolButton:setAutoRaise( lEnable )
-   RETURN Qt_QToolButton_setAutoRaise( ::pPtr, lEnable )
+METHOD QToolButton:setAutoRaise( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QToolButton_setAutoRaise( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolButton:setMenu( pMenu )
-   RETURN Qt_QToolButton_setMenu( ::pPtr, hbqt_ptr( pMenu ) )
+METHOD QToolButton:setMenu( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QToolButton_setMenu( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolButton:setPopupMode( nMode )
-   RETURN Qt_QToolButton_setPopupMode( ::pPtr, nMode )
+METHOD QToolButton:setPopupMode( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QToolButton_setPopupMode( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolButton:toolButtonStyle()
-   RETURN Qt_QToolButton_toolButtonStyle( ::pPtr )
+METHOD QToolButton:toolButtonStyle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QToolButton_toolButtonStyle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolButton:setDefaultAction( pAction )
-   RETURN Qt_QToolButton_setDefaultAction( ::pPtr, hbqt_ptr( pAction ) )
+METHOD QToolButton:setDefaultAction( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QToolButton_setDefaultAction( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolButton:setToolButtonStyle( nStyle )
-   RETURN Qt_QToolButton_setToolButtonStyle( ::pPtr, nStyle )
+METHOD QToolButton:setToolButtonStyle( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QToolButton_setToolButtonStyle( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QToolButton:showMenu()
-   RETURN Qt_QToolButton_showMenu( ::pPtr )
+METHOD QToolButton:showMenu( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QToolButton_showMenu( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

@@ -103,16 +103,17 @@ CREATE CLASS QDrag INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QDrag
 
    METHOD  new( ... )
 
-   METHOD  exec( ... )
-   METHOD  hotSpot()
-   METHOD  mimeData()
-   METHOD  pixmap()
-   METHOD  setDragCursor( pCursor, nAction )
-   METHOD  setHotSpot( pHotspot )
-   METHOD  setMimeData( pData )
-   METHOD  setPixmap( pPixmap )
-   METHOD  source()
-   METHOD  target()
+   METHOD  exec                          // ( nSupportedActions )                              -> nQt_DropAction
+                                         // ( nSupportedActions, nDefaultDropAction )          -> nQt_DropAction
+   METHOD  hotSpot                       // (  )                                               -> oQPoint
+   METHOD  mimeData                      // (  )                                               -> oQMimeData
+   METHOD  pixmap                        // (  )                                               -> oQPixmap
+   METHOD  setDragCursor                 // ( oQPixmap, nAction )                              -> NIL
+   METHOD  setHotSpot                    // ( oQPoint )                                        -> NIL
+   METHOD  setMimeData                   // ( oQMimeData )                                     -> NIL
+   METHOD  setPixmap                     // ( oQPixmap )                                       -> NIL
+   METHOD  source                        // (  )                                               -> oQWidget
+   METHOD  target                        // (  )                                               -> oQWidget
 
    ENDCLASS
 
@@ -146,38 +147,90 @@ METHOD QDrag:exec( ... )
    RETURN hbqt_error()
 
 
-METHOD QDrag:hotSpot()
-   RETURN HB_QPoint():from( Qt_QDrag_hotSpot( ::pPtr ) )
+METHOD QDrag:hotSpot( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QDrag_hotSpot( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDrag:mimeData()
-   RETURN HB_QMimeData():from( Qt_QDrag_mimeData( ::pPtr ) )
+METHOD QDrag:mimeData( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QMimeData():from( Qt_QDrag_mimeData( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDrag:pixmap()
-   RETURN HB_QPixmap():from( Qt_QDrag_pixmap( ::pPtr ) )
+METHOD QDrag:pixmap( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPixmap():from( Qt_QDrag_pixmap( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDrag:setDragCursor( pCursor, nAction )
-   RETURN Qt_QDrag_setDragCursor( ::pPtr, hbqt_ptr( pCursor ), nAction )
+METHOD QDrag:setDragCursor( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QDrag_setDragCursor( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDrag:setHotSpot( pHotspot )
-   RETURN Qt_QDrag_setHotSpot( ::pPtr, hbqt_ptr( pHotspot ) )
+METHOD QDrag:setHotSpot( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDrag_setHotSpot( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDrag:setMimeData( pData )
-   RETURN Qt_QDrag_setMimeData( ::pPtr, hbqt_ptr( pData ) )
+METHOD QDrag:setMimeData( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDrag_setMimeData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDrag:setPixmap( pPixmap )
-   RETURN Qt_QDrag_setPixmap( ::pPtr, hbqt_ptr( pPixmap ) )
+METHOD QDrag:setPixmap( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDrag_setPixmap( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDrag:source()
-   RETURN HB_QWidget():from( Qt_QDrag_source( ::pPtr ) )
+METHOD QDrag:source( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QDrag_source( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDrag:target()
-   RETURN HB_QWidget():from( Qt_QDrag_target( ::pPtr ) )
+METHOD QDrag:target( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QWidget():from( Qt_QDrag_target( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

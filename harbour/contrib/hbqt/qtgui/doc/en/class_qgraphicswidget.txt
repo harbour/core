@@ -26,50 +26,51 @@
  *  $RETURNS$
  *     An instance of the object of type QGraphicsWidget
  *  $METHODS$
- *     :actions()                                          -> pQList<QAction *>
- *     :addAction( pAction )                               -> NIL
+ *     :actions()                                          -> oQList_QAction
+ *     :addAction( oQAction )                              -> NIL
  *     :adjustSize()                                       -> NIL
- *     :focusPolicy()                                      -> nQt::FocusPolicy
- *     :font()                                             -> pQFont
+ *     :focusPolicy()                                      -> nQt_FocusPolicy
+ *     :focusWidget()                                      -> oQGraphicsWidget
+ *     :font()                                             -> oQFont
  *     :getContentsMargins( @nLeft, @nTop, @nRight, @nBottom )  -> NIL
  *     :getWindowFrameMargins( @nLeft, @nTop, @nRight, @nBottom )  -> NIL
- *     :grabShortcut( pSequence, nContext )                -> nInt
- *     :insertAction( pBefore, pAction )                   -> NIL
+ *     :grabShortcut( oQKeySequence, nContext )            -> nInt
+ *     :insertAction( oQAction, oQAction )                 -> NIL
  *     :isActiveWindow()                                   -> lBool
- *     :layout()                                           -> pQGraphicsLayout
- *     :layoutDirection()                                  -> nQt::LayoutDirection
- *     :palette()                                          -> pQPalette
- *     :rect()                                             -> pQRectF
+ *     :layout()                                           -> oQGraphicsLayout
+ *     :layoutDirection()                                  -> nQt_LayoutDirection
+ *     :palette()                                          -> oQPalette
+ *     :rect()                                             -> oQRectF
  *     :releaseShortcut( nId )                             -> NIL
- *     :removeAction( pAction )                            -> NIL
- *     :resize( pSize )                                    -> NIL
- *     :resize_1( nW, nH )                                 -> NIL
+ *     :removeAction( oQAction )                           -> NIL
+ *     :resize( oQSizeF )                                  -> NIL
+ *     :resize( nW, nH )                                   -> NIL
  *     :setAttribute( nAttribute, lOn )                    -> NIL
  *     :setContentsMargins( nLeft, nTop, nRight, nBottom )  -> NIL
  *     :setFocusPolicy( nPolicy )                          -> NIL
- *     :setFont( pFont )                                   -> NIL
- *     :setGeometry( pRect )                               -> NIL
- *     :setGeometry_1( nX, nY, nW, nH )                    -> NIL
- *     :setLayout( pLayout )                               -> NIL
+ *     :setFont( oQFont )                                  -> NIL
+ *     :setGeometry( oQRectF )                             -> NIL
+ *     :setGeometry( nX, nY, nW, nH )                      -> NIL
+ *     :setLayout( oQGraphicsLayout )                      -> NIL
  *     :setLayoutDirection( nDirection )                   -> NIL
- *     :setPalette( pPalette )                             -> NIL
+ *     :setPalette( oQPalette )                            -> NIL
  *     :setShortcutAutoRepeat( nId, lEnabled )             -> NIL
  *     :setShortcutEnabled( nId, lEnabled )                -> NIL
- *     :setStyle( pStyle )                                 -> NIL
+ *     :setStyle( oQStyle )                                -> NIL
  *     :setWindowFlags( nWFlags )                          -> NIL
  *     :setWindowFrameMargins( nLeft, nTop, nRight, nBottom )  -> NIL
  *     :setWindowTitle( cTitle )                           -> NIL
- *     :size()                                             -> pQSizeF
- *     :style()                                            -> pQStyle
+ *     :size()                                             -> oQSizeF
+ *     :style()                                            -> oQStyle
  *     :testAttribute( nAttribute )                        -> lBool
  *     :unsetLayoutDirection()                             -> NIL
  *     :unsetWindowFrameMargins()                          -> NIL
- *     :windowFlags()                                      -> nQt::WindowFlags
- *     :windowFrameGeometry()                              -> pQRectF
- *     :windowFrameRect()                                  -> pQRectF
+ *     :windowFlags()                                      -> nQt_WindowFlags
+ *     :windowFrameGeometry()                              -> oQRectF
+ *     :windowFrameRect()                                  -> oQRectF
  *     :windowTitle()                                      -> cQString
- *     :windowType()                                       -> nQt::WindowType
- *     :setTabOrder( pFirst, pSecond )                     -> NIL
+ *     :windowType()                                       -> nQt_WindowType
+ *     :setTabOrder( oQGraphicsWidget, oQGraphicsWidget )  -> NIL
  *     :close()                                            -> lBool
  * 
  *  $DESCRIPTION$
@@ -90,7 +91,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGraphicsWidget.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsWidget.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QObject, QGraphicsItem, QGraphicsLayoutItem()
  *  $END$
  */

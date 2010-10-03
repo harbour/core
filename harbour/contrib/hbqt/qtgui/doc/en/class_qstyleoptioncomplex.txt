@@ -26,8 +26,8 @@
  *  $RETURNS$
  *     An instance of the object of type QStyleOptionComplex
  *  $METHODS$
- *     :activeSubControls()                                -> nQStyle::SubControls
- *     :subControls()                                      -> nQStyle::SubControls
+ *     :activeSubControls()                                -> nQStyle_SubControls
+ *     :subControls()                                      -> nQStyle_SubControls
  * 
  *  $DESCRIPTION$
  * 
@@ -47,7 +47,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionComplex.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionComplex.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QStyleOption()
  *  $END$
  */

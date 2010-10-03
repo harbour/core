@@ -103,10 +103,11 @@ CREATE CLASS HBQSlots INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_HBQSlots
 
    METHOD  new( ... )
 
-   METHOD  hbConnect( xPObj, pSlot, xBBlock )
-   METHOD  hbDisconnect( xObj, pSlot )
-   METHOD  hbIsConnected( xObj, pSlot )
-   METHOD  hbClear()
+   METHOD  HBQSlots                      // (  )                                               -> oHBQSlots
+   METHOD  hbConnect                     // ( xPObj, cSlot, xBBlock )                          -> lBool
+   METHOD  hbDisconnect                  // ( xObj, cSlot )                                    -> lBool
+   METHOD  hbIsConnected                 // ( xObj, cSlot )                                    -> lBool
+   METHOD  hbClear                       // (  )                                               -> lBool
 
    ENDCLASS
 
@@ -120,18 +121,54 @@ METHOD HBQSlots:new( ... )
    RETURN Self
 
 
-METHOD HBQSlots:hbConnect( xPObj, pSlot, xBBlock )
-   RETURN Qt_HBQSlots_hbConnect( ::pPtr, xPObj, hbqt_ptr( pSlot ), xBBlock )
+METHOD HBQSlots:HBQSlots( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_HBQSlots():from( Qt_HBQSlots_HBQSlots( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQSlots:hbDisconnect( xObj, pSlot )
-   RETURN Qt_HBQSlots_hbDisconnect( ::pPtr, xObj, hbqt_ptr( pSlot ) )
+METHOD HBQSlots:hbConnect( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE ( hb_isBlock( hb_pvalue( 1 ) ) .OR. hb_isPointer( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. ( hb_isBlock( hb_pvalue( 3 ) ) .OR. hb_isPointer( hb_pvalue( 3 ) ) )
+         RETURN Qt_HBQSlots_hbConnect( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQSlots:hbIsConnected( xObj, pSlot )
-   RETURN Qt_HBQSlots_hbIsConnected( ::pPtr, xObj, hbqt_ptr( pSlot ) )
+METHOD HBQSlots:hbDisconnect( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE ( hb_isBlock( hb_pvalue( 1 ) ) .OR. hb_isPointer( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_HBQSlots_hbDisconnect( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQSlots:hbClear()
-   RETURN Qt_HBQSlots_hbClear( ::pPtr )
+METHOD HBQSlots:hbIsConnected( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE ( hb_isBlock( hb_pvalue( 1 ) ) .OR. hb_isPointer( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_HBQSlots_hbIsConnected( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD HBQSlots:hbClear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_HBQSlots_hbClear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

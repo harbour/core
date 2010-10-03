@@ -103,78 +103,79 @@ CREATE CLASS QStandardItem INHERIT HbQtObjectHandler FUNCTION HB_QStandardItem
 
    METHOD  new( ... )
 
-   METHOD  accessibleDescription()
-   METHOD  accessibleText()
-   METHOD  appendRow( pItem )
-   METHOD  background()
-   METHOD  checkState()
-   METHOD  child( nRow, nColumn )
-   METHOD  clone()
-   METHOD  column()
-   METHOD  columnCount()
-   METHOD  data( nRole )
-   METHOD  flags()
-   METHOD  font()
-   METHOD  foreground()
-   METHOD  hasChildren()
-   METHOD  icon()
-   METHOD  index()
-   METHOD  insertColumns( nColumn, nCount )
-   METHOD  insertRow( nRow, pItem )
-   METHOD  insertRows( nRow, nCount )
-   METHOD  isCheckable()
-   METHOD  isDragEnabled()
-   METHOD  isDropEnabled()
-   METHOD  isEditable()
-   METHOD  isEnabled()
-   METHOD  isSelectable()
-   METHOD  isTristate()
-   METHOD  model()
-   METHOD  parent()
-   METHOD  read( pIn )
-   METHOD  removeColumn( nColumn )
-   METHOD  removeColumns( nColumn, nCount )
-   METHOD  removeRow( nRow )
-   METHOD  removeRows( nRow, nCount )
-   METHOD  row()
-   METHOD  rowCount()
-   METHOD  setAccessibleDescription( cAccessibleDescription )
-   METHOD  setAccessibleText( cAccessibleText )
-   METHOD  setBackground( pBrush )
-   METHOD  setCheckState( nState )
-   METHOD  setCheckable( lCheckable )
-   METHOD  setChild( ... )
-   METHOD  setColumnCount( nColumns )
-   METHOD  setData( pValue, nRole )
-   METHOD  setDragEnabled( lDragEnabled )
-   METHOD  setDropEnabled( lDropEnabled )
-   METHOD  setEditable( lEditable )
-   METHOD  setEnabled( lEnabled )
-   METHOD  setFlags( nFlags )
-   METHOD  setFont( pFont )
-   METHOD  setForeground( pBrush )
-   METHOD  setIcon( pIcon )
-   METHOD  setRowCount( nRows )
-   METHOD  setSelectable( lSelectable )
-   METHOD  setSizeHint( pSize )
-   METHOD  setStatusTip( cStatusTip )
-   METHOD  setText( cText )
-   METHOD  setTextAlignment( nAlignment )
-   METHOD  setToolTip( cToolTip )
-   METHOD  setTristate( lTristate )
-   METHOD  setWhatsThis( cWhatsThis )
-   METHOD  sizeHint()
-   METHOD  sortChildren( nColumn, nOrder )
-   METHOD  statusTip()
-   METHOD  takeChild( nRow, nColumn )
-   METHOD  takeColumn( nColumn )
-   METHOD  takeRow( nRow )
-   METHOD  text()
-   METHOD  textAlignment()
-   METHOD  toolTip()
-   METHOD  type()
-   METHOD  whatsThis()
-   METHOD  write( pOut )
+   METHOD  accessibleDescription         // (  )                                               -> cQString
+   METHOD  accessibleText                // (  )                                               -> cQString
+   METHOD  appendRow                     // ( oQStandardItem )                                 -> NIL
+   METHOD  background                    // (  )                                               -> oQBrush
+   METHOD  checkState                    // (  )                                               -> nQt_CheckState
+   METHOD  child                         // ( nRow, nColumn )                                  -> oQStandardItem
+   METHOD  clone                         // (  )                                               -> oQStandardItem
+   METHOD  column                        // (  )                                               -> nInt
+   METHOD  columnCount                   // (  )                                               -> nInt
+   METHOD  data                          // ( nRole )                                          -> oQVariant
+   METHOD  flags                         // (  )                                               -> nQt_ItemFlags
+   METHOD  font                          // (  )                                               -> oQFont
+   METHOD  foreground                    // (  )                                               -> oQBrush
+   METHOD  hasChildren                   // (  )                                               -> lBool
+   METHOD  icon                          // (  )                                               -> oQIcon
+   METHOD  index                         // (  )                                               -> oQModelIndex
+   METHOD  insertColumns                 // ( nColumn, nCount )                                -> NIL
+   METHOD  insertRow                     // ( nRow, oQStandardItem )                           -> NIL
+   METHOD  insertRows                    // ( nRow, nCount )                                   -> NIL
+   METHOD  isCheckable                   // (  )                                               -> lBool
+   METHOD  isDragEnabled                 // (  )                                               -> lBool
+   METHOD  isDropEnabled                 // (  )                                               -> lBool
+   METHOD  isEditable                    // (  )                                               -> lBool
+   METHOD  isEnabled                     // (  )                                               -> lBool
+   METHOD  isSelectable                  // (  )                                               -> lBool
+   METHOD  isTristate                    // (  )                                               -> lBool
+   METHOD  model                         // (  )                                               -> oQStandardItemModel
+   METHOD  parent                        // (  )                                               -> oQStandardItem
+   METHOD  read                          // ( oQDataStream )                                   -> NIL
+   METHOD  removeColumn                  // ( nColumn )                                        -> NIL
+   METHOD  removeColumns                 // ( nColumn, nCount )                                -> NIL
+   METHOD  removeRow                     // ( nRow )                                           -> NIL
+   METHOD  removeRows                    // ( nRow, nCount )                                   -> NIL
+   METHOD  row                           // (  )                                               -> nInt
+   METHOD  rowCount                      // (  )                                               -> nInt
+   METHOD  setAccessibleDescription      // ( cAccessibleDescription )                         -> NIL
+   METHOD  setAccessibleText             // ( cAccessibleText )                                -> NIL
+   METHOD  setBackground                 // ( oQBrush )                                        -> NIL
+   METHOD  setCheckState                 // ( nState )                                         -> NIL
+   METHOD  setCheckable                  // ( lCheckable )                                     -> NIL
+   METHOD  setChild                      // ( nRow, nColumn, oQStandardItem )                  -> NIL
+                                         // ( nRow, oQStandardItem )                           -> NIL
+   METHOD  setColumnCount                // ( nColumns )                                       -> NIL
+   METHOD  setData                       // ( oQVariant, nRole )                               -> NIL
+   METHOD  setDragEnabled                // ( lDragEnabled )                                   -> NIL
+   METHOD  setDropEnabled                // ( lDropEnabled )                                   -> NIL
+   METHOD  setEditable                   // ( lEditable )                                      -> NIL
+   METHOD  setEnabled                    // ( lEnabled )                                       -> NIL
+   METHOD  setFlags                      // ( nFlags )                                         -> NIL
+   METHOD  setFont                       // ( oQFont )                                         -> NIL
+   METHOD  setForeground                 // ( oQBrush )                                        -> NIL
+   METHOD  setIcon                       // ( coQIcon )                                        -> NIL
+   METHOD  setRowCount                   // ( nRows )                                          -> NIL
+   METHOD  setSelectable                 // ( lSelectable )                                    -> NIL
+   METHOD  setSizeHint                   // ( oQSize )                                         -> NIL
+   METHOD  setStatusTip                  // ( cStatusTip )                                     -> NIL
+   METHOD  setText                       // ( cText )                                          -> NIL
+   METHOD  setTextAlignment              // ( nAlignment )                                     -> NIL
+   METHOD  setToolTip                    // ( cToolTip )                                       -> NIL
+   METHOD  setTristate                   // ( lTristate )                                      -> NIL
+   METHOD  setWhatsThis                  // ( cWhatsThis )                                     -> NIL
+   METHOD  sizeHint                      // (  )                                               -> oQSize
+   METHOD  sortChildren                  // ( nColumn, nOrder )                                -> NIL
+   METHOD  statusTip                     // (  )                                               -> cQString
+   METHOD  takeChild                     // ( nRow, nColumn )                                  -> oQStandardItem
+   METHOD  takeColumn                    // ( nColumn )                                        -> oQList_QStandardItem
+   METHOD  takeRow                       // ( nRow )                                           -> oQList_QStandardItem
+   METHOD  text                          // (  )                                               -> cQString
+   METHOD  textAlignment                 // (  )                                               -> nQt_Alignment
+   METHOD  toolTip                       // (  )                                               -> cQString
+   METHOD  type                          // (  )                                               -> nInt
+   METHOD  whatsThis                     // (  )                                               -> cQString
+   METHOD  write                         // ( oQDataStream )                                   -> NIL
 
    ENDCLASS
 
@@ -188,164 +189,396 @@ METHOD QStandardItem:new( ... )
    RETURN Self
 
 
-METHOD QStandardItem:accessibleDescription()
-   RETURN Qt_QStandardItem_accessibleDescription( ::pPtr )
-
-
-METHOD QStandardItem:accessibleText()
-   RETURN Qt_QStandardItem_accessibleText( ::pPtr )
-
-
-METHOD QStandardItem:appendRow( pItem )
-   RETURN Qt_QStandardItem_appendRow( ::pPtr, hbqt_ptr( pItem ) )
-
-
-METHOD QStandardItem:background()
-   RETURN HB_QBrush():from( Qt_QStandardItem_background( ::pPtr ) )
-
-
-METHOD QStandardItem:checkState()
-   RETURN Qt_QStandardItem_checkState( ::pPtr )
-
-
-METHOD QStandardItem:child( nRow, nColumn )
-   RETURN HB_QStandardItem():from( Qt_QStandardItem_child( ::pPtr, nRow, nColumn ) )
-
-
-METHOD QStandardItem:clone()
-   RETURN HB_QStandardItem():from( Qt_QStandardItem_clone( ::pPtr ) )
-
-
-METHOD QStandardItem:column()
-   RETURN Qt_QStandardItem_column( ::pPtr )
-
-
-METHOD QStandardItem:columnCount()
-   RETURN Qt_QStandardItem_columnCount( ::pPtr )
-
-
-METHOD QStandardItem:data( nRole )
-   RETURN HB_QVariant():from( Qt_QStandardItem_data( ::pPtr, nRole ) )
-
-
-METHOD QStandardItem:flags()
-   RETURN Qt_QStandardItem_flags( ::pPtr )
-
-
-METHOD QStandardItem:font()
-   RETURN HB_QFont():from( Qt_QStandardItem_font( ::pPtr ) )
-
-
-METHOD QStandardItem:foreground()
-   RETURN HB_QBrush():from( Qt_QStandardItem_foreground( ::pPtr ) )
-
-
-METHOD QStandardItem:hasChildren()
-   RETURN Qt_QStandardItem_hasChildren( ::pPtr )
-
-
-METHOD QStandardItem:icon()
-   RETURN HB_QIcon():from( Qt_QStandardItem_icon( ::pPtr ) )
-
-
-METHOD QStandardItem:index()
-   RETURN HB_QModelIndex():from( Qt_QStandardItem_index( ::pPtr ) )
-
-
-METHOD QStandardItem:insertColumns( nColumn, nCount )
-   RETURN Qt_QStandardItem_insertColumns( ::pPtr, nColumn, nCount )
-
-
-METHOD QStandardItem:insertRow( nRow, pItem )
-   RETURN Qt_QStandardItem_insertRow( ::pPtr, nRow, hbqt_ptr( pItem ) )
-
-
-METHOD QStandardItem:insertRows( nRow, nCount )
-   RETURN Qt_QStandardItem_insertRows( ::pPtr, nRow, nCount )
-
-
-METHOD QStandardItem:isCheckable()
-   RETURN Qt_QStandardItem_isCheckable( ::pPtr )
-
-
-METHOD QStandardItem:isDragEnabled()
-   RETURN Qt_QStandardItem_isDragEnabled( ::pPtr )
-
-
-METHOD QStandardItem:isDropEnabled()
-   RETURN Qt_QStandardItem_isDropEnabled( ::pPtr )
-
-
-METHOD QStandardItem:isEditable()
-   RETURN Qt_QStandardItem_isEditable( ::pPtr )
-
-
-METHOD QStandardItem:isEnabled()
-   RETURN Qt_QStandardItem_isEnabled( ::pPtr )
-
-
-METHOD QStandardItem:isSelectable()
-   RETURN Qt_QStandardItem_isSelectable( ::pPtr )
-
-
-METHOD QStandardItem:isTristate()
-   RETURN Qt_QStandardItem_isTristate( ::pPtr )
-
-
-METHOD QStandardItem:model()
-   RETURN HB_QStandardItemModel():from( Qt_QStandardItem_model( ::pPtr ) )
-
-
-METHOD QStandardItem:parent()
-   RETURN HB_QStandardItem():from( Qt_QStandardItem_parent( ::pPtr ) )
-
-
-METHOD QStandardItem:read( pIn )
-   RETURN Qt_QStandardItem_read( ::pPtr, hbqt_ptr( pIn ) )
-
-
-METHOD QStandardItem:removeColumn( nColumn )
-   RETURN Qt_QStandardItem_removeColumn( ::pPtr, nColumn )
-
-
-METHOD QStandardItem:removeColumns( nColumn, nCount )
-   RETURN Qt_QStandardItem_removeColumns( ::pPtr, nColumn, nCount )
-
-
-METHOD QStandardItem:removeRow( nRow )
-   RETURN Qt_QStandardItem_removeRow( ::pPtr, nRow )
-
-
-METHOD QStandardItem:removeRows( nRow, nCount )
-   RETURN Qt_QStandardItem_removeRows( ::pPtr, nRow, nCount )
-
-
-METHOD QStandardItem:row()
-   RETURN Qt_QStandardItem_row( ::pPtr )
-
-
-METHOD QStandardItem:rowCount()
-   RETURN Qt_QStandardItem_rowCount( ::pPtr )
-
-
-METHOD QStandardItem:setAccessibleDescription( cAccessibleDescription )
-   RETURN Qt_QStandardItem_setAccessibleDescription( ::pPtr, cAccessibleDescription )
-
-
-METHOD QStandardItem:setAccessibleText( cAccessibleText )
-   RETURN Qt_QStandardItem_setAccessibleText( ::pPtr, cAccessibleText )
-
-
-METHOD QStandardItem:setBackground( pBrush )
-   RETURN Qt_QStandardItem_setBackground( ::pPtr, hbqt_ptr( pBrush ) )
-
-
-METHOD QStandardItem:setCheckState( nState )
-   RETURN Qt_QStandardItem_setCheckState( ::pPtr, nState )
-
-
-METHOD QStandardItem:setCheckable( lCheckable )
-   RETURN Qt_QStandardItem_setCheckable( ::pPtr, lCheckable )
+METHOD QStandardItem:accessibleDescription( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStandardItem_accessibleDescription( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:accessibleText( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStandardItem_accessibleText( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:appendRow( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_appendRow( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:background( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QStandardItem_background( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:checkState( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStandardItem_checkState( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:child( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QStandardItem():from( Qt_QStandardItem_child( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QStandardItem():from( Qt_QStandardItem_child( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:clone( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStandardItem():from( Qt_QStandardItem_clone( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:column( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStandardItem_column( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:columnCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStandardItem_columnCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:data( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QVariant():from( Qt_QStandardItem_data( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QVariant():from( Qt_QStandardItem_data( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:flags( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStandardItem_flags( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:font( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QFont():from( Qt_QStandardItem_font( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:foreground( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QBrush():from( Qt_QStandardItem_foreground( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:hasChildren( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStandardItem_hasChildren( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:icon( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QIcon():from( Qt_QStandardItem_icon( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:index( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QModelIndex():from( Qt_QStandardItem_index( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:insertColumns( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QStandardItem_insertColumns( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:insertRow( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QStandardItem_insertRow( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:insertRows( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QStandardItem_insertRows( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:isCheckable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStandardItem_isCheckable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:isDragEnabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStandardItem_isDragEnabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:isDropEnabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStandardItem_isDropEnabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:isEditable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStandardItem_isEditable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:isEnabled( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStandardItem_isEnabled( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:isSelectable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStandardItem_isSelectable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:isTristate( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStandardItem_isTristate( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:model( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStandardItemModel():from( Qt_QStandardItem_model( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:parent( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStandardItem():from( Qt_QStandardItem_parent( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:read( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_read( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:removeColumn( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_removeColumn( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:removeColumns( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QStandardItem_removeColumns( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:removeRow( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_removeRow( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:removeRows( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QStandardItem_removeRows( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:row( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStandardItem_row( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:rowCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStandardItem_rowCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:setAccessibleDescription( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_setAccessibleDescription( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:setAccessibleText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_setAccessibleText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:setBackground( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_setBackground( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:setCheckState( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_setCheckState( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QStandardItem:setCheckable( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_setCheckable( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QStandardItem:setChild( ... )
@@ -366,126 +599,364 @@ METHOD QStandardItem:setChild( ... )
    RETURN hbqt_error()
 
 
-METHOD QStandardItem:setColumnCount( nColumns )
-   RETURN Qt_QStandardItem_setColumnCount( ::pPtr, nColumns )
+METHOD QStandardItem:setColumnCount( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_setColumnCount( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:setData( pValue, nRole )
-   RETURN Qt_QStandardItem_setData( ::pPtr, hbqt_ptr( pValue ), nRole )
+METHOD QStandardItem:setData( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QStandardItem_setData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_setData( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:setDragEnabled( lDragEnabled )
-   RETURN Qt_QStandardItem_setDragEnabled( ::pPtr, lDragEnabled )
+METHOD QStandardItem:setDragEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_setDragEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:setDropEnabled( lDropEnabled )
-   RETURN Qt_QStandardItem_setDropEnabled( ::pPtr, lDropEnabled )
+METHOD QStandardItem:setDropEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_setDropEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:setEditable( lEditable )
-   RETURN Qt_QStandardItem_setEditable( ::pPtr, lEditable )
+METHOD QStandardItem:setEditable( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_setEditable( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:setEnabled( lEnabled )
-   RETURN Qt_QStandardItem_setEnabled( ::pPtr, lEnabled )
+METHOD QStandardItem:setEnabled( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_setEnabled( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:setFlags( nFlags )
-   RETURN Qt_QStandardItem_setFlags( ::pPtr, nFlags )
+METHOD QStandardItem:setFlags( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_setFlags( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:setFont( pFont )
-   RETURN Qt_QStandardItem_setFont( ::pPtr, hbqt_ptr( pFont ) )
+METHOD QStandardItem:setFont( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_setFont( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:setForeground( pBrush )
-   RETURN Qt_QStandardItem_setForeground( ::pPtr, hbqt_ptr( pBrush ) )
+METHOD QStandardItem:setForeground( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_setForeground( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:setIcon( pIcon )
-   RETURN Qt_QStandardItem_setIcon( ::pPtr, hbqt_ptr( pIcon ) )
+METHOD QStandardItem:setIcon( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) )
+         RETURN Qt_QStandardItem_setIcon( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:setRowCount( nRows )
-   RETURN Qt_QStandardItem_setRowCount( ::pPtr, nRows )
+METHOD QStandardItem:setRowCount( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_setRowCount( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:setSelectable( lSelectable )
-   RETURN Qt_QStandardItem_setSelectable( ::pPtr, lSelectable )
+METHOD QStandardItem:setSelectable( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_setSelectable( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:setSizeHint( pSize )
-   RETURN Qt_QStandardItem_setSizeHint( ::pPtr, hbqt_ptr( pSize ) )
+METHOD QStandardItem:setSizeHint( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_setSizeHint( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:setStatusTip( cStatusTip )
-   RETURN Qt_QStandardItem_setStatusTip( ::pPtr, cStatusTip )
+METHOD QStandardItem:setStatusTip( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_setStatusTip( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:setText( cText )
-   RETURN Qt_QStandardItem_setText( ::pPtr, cText )
+METHOD QStandardItem:setText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_setText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:setTextAlignment( nAlignment )
-   RETURN Qt_QStandardItem_setTextAlignment( ::pPtr, nAlignment )
+METHOD QStandardItem:setTextAlignment( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_setTextAlignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:setToolTip( cToolTip )
-   RETURN Qt_QStandardItem_setToolTip( ::pPtr, cToolTip )
+METHOD QStandardItem:setToolTip( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_setToolTip( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:setTristate( lTristate )
-   RETURN Qt_QStandardItem_setTristate( ::pPtr, lTristate )
+METHOD QStandardItem:setTristate( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_setTristate( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:setWhatsThis( cWhatsThis )
-   RETURN Qt_QStandardItem_setWhatsThis( ::pPtr, cWhatsThis )
+METHOD QStandardItem:setWhatsThis( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_setWhatsThis( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:sizeHint()
-   RETURN HB_QSize():from( Qt_QStandardItem_sizeHint( ::pPtr ) )
+METHOD QStandardItem:sizeHint( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QStandardItem_sizeHint( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:sortChildren( nColumn, nOrder )
-   RETURN Qt_QStandardItem_sortChildren( ::pPtr, nColumn, nOrder )
+METHOD QStandardItem:sortChildren( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QStandardItem_sortChildren( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_sortChildren( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:statusTip()
-   RETURN Qt_QStandardItem_statusTip( ::pPtr )
+METHOD QStandardItem:statusTip( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStandardItem_statusTip( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:takeChild( nRow, nColumn )
-   RETURN HB_QStandardItem():from( Qt_QStandardItem_takeChild( ::pPtr, nRow, nColumn ) )
+METHOD QStandardItem:takeChild( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QStandardItem():from( Qt_QStandardItem_takeChild( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QStandardItem():from( Qt_QStandardItem_takeChild( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:takeColumn( nColumn )
-   RETURN HB_QList():from( Qt_QStandardItem_takeColumn( ::pPtr, nColumn ) )
+METHOD QStandardItem:takeColumn( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QList():from( Qt_QStandardItem_takeColumn( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:takeRow( nRow )
-   RETURN HB_QList():from( Qt_QStandardItem_takeRow( ::pPtr, nRow ) )
+METHOD QStandardItem:takeRow( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QList():from( Qt_QStandardItem_takeRow( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:text()
-   RETURN Qt_QStandardItem_text( ::pPtr )
+METHOD QStandardItem:text( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStandardItem_text( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:textAlignment()
-   RETURN Qt_QStandardItem_textAlignment( ::pPtr )
+METHOD QStandardItem:textAlignment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStandardItem_textAlignment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:toolTip()
-   RETURN Qt_QStandardItem_toolTip( ::pPtr )
+METHOD QStandardItem:toolTip( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStandardItem_toolTip( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:type()
-   RETURN Qt_QStandardItem_type( ::pPtr )
+METHOD QStandardItem:type( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStandardItem_type( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:whatsThis()
-   RETURN Qt_QStandardItem_whatsThis( ::pPtr )
+METHOD QStandardItem:whatsThis( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStandardItem_whatsThis( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItem:write( pOut )
-   RETURN Qt_QStandardItem_write( ::pPtr, hbqt_ptr( pOut ) )
+METHOD QStandardItem:write( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItem_write( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

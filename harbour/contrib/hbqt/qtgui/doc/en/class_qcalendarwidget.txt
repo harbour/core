@@ -27,37 +27,37 @@
  *     An instance of the object of type QCalendarWidget
  *  $METHODS$
  *     :dateEditAcceptDelay()                              -> nInt
- *     :dateTextFormat( pDate )                            -> pQTextCharFormat
- *     :firstDayOfWeek()                                   -> nQt::DayOfWeek
- *     :headerTextFormat()                                 -> pQTextCharFormat
+ *     :dateTextFormat( oQDate )                           -> oQTextCharFormat
+ *     :firstDayOfWeek()                                   -> nQt_DayOfWeek
+ *     :headerTextFormat()                                 -> oQTextCharFormat
  *     :horizontalHeaderFormat()                           -> nHorizontalHeaderFormat
  *     :isDateEditEnabled()                                -> lBool
  *     :isGridVisible()                                    -> lBool
  *     :isNavigationBarVisible()                           -> lBool
- *     :maximumDate()                                      -> pQDate
- *     :minimumDate()                                      -> pQDate
+ *     :maximumDate()                                      -> oQDate
+ *     :minimumDate()                                      -> oQDate
  *     :monthShown()                                       -> nInt
- *     :selectedDate()                                     -> pQDate
+ *     :selectedDate()                                     -> oQDate
  *     :selectionMode()                                    -> nSelectionMode
  *     :setDateEditAcceptDelay( nDelay )                   -> NIL
  *     :setDateEditEnabled( lEnable )                      -> NIL
- *     :setDateTextFormat( pDate, pFormat )                -> NIL
+ *     :setDateTextFormat( oQDate, oQTextCharFormat )      -> NIL
  *     :setFirstDayOfWeek( nDayOfWeek )                    -> NIL
- *     :setHeaderTextFormat( pFormat )                     -> NIL
+ *     :setHeaderTextFormat( oQTextCharFormat )            -> NIL
  *     :setHorizontalHeaderFormat( nFormat )               -> NIL
- *     :setMaximumDate( pDate )                            -> NIL
- *     :setMinimumDate( pDate )                            -> NIL
+ *     :setMaximumDate( oQDate )                           -> NIL
+ *     :setMinimumDate( oQDate )                           -> NIL
  *     :setSelectionMode( nMode )                          -> NIL
  *     :setVerticalHeaderFormat( nFormat )                 -> NIL
- *     :setWeekdayTextFormat( nDayOfWeek, pFormat )        -> NIL
+ *     :setWeekdayTextFormat( nDayOfWeek, oQTextCharFormat )  -> NIL
  *     :verticalHeaderFormat()                             -> nVerticalHeaderFormat
- *     :weekdayTextFormat( nDayOfWeek )                    -> pQTextCharFormat
+ *     :weekdayTextFormat( nDayOfWeek )                    -> oQTextCharFormat
  *     :yearShown()                                        -> nInt
  *     :setCurrentPage( nYear, nMonth )                    -> NIL
- *     :setDateRange( pMin, pMax )                         -> NIL
+ *     :setDateRange( oQDate, oQDate )                     -> NIL
  *     :setGridVisible( lShow )                            -> NIL
  *     :setNavigationBarVisible( lVisible )                -> NIL
- *     :setSelectedDate( pDate )                           -> NIL
+ *     :setSelectedDate( oQDate )                          -> NIL
  *     :showNextMonth()                                    -> NIL
  *     :showNextYear()                                     -> NIL
  *     :showPreviousMonth()                                -> NIL
@@ -83,7 +83,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQCalendarWidget.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QCalendarWidget.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

@@ -26,8 +26,8 @@
  *  $RETURNS$
  *     An instance of the object of type HBQPlainTextEdit
  *  $METHODS$
- *     :hbGetIndex( pCrQTextCursor )                       -> nInt
- *     :hbGetLine( pCrQTextCursor )                        -> nInt
+ *     :hbGetIndex( oQTextCursor )                         -> nInt
+ *     :hbGetLine( oQTextCursor )                          -> nInt
  *     :hbLineNumberAreaWidth()                            -> nInt
  *     :hbGetSpaces()                                      -> nInt
  *     :hbSetSpaces( nNewSpaces )                          -> NIL
@@ -36,9 +36,9 @@
  *     :hbPrevBookmark( nBlock )                           -> NIL
  *     :hbGotoBookmark( nBlock )                           -> NIL
  *     :hbNumberBlockVisible( lB )                         -> NIL
- *     :hbNumberBlockVisible_1()                           -> lBool
+ *     :hbNumberBlockVisible()                             -> lBool
  *     :hbHighlightCurrentLine( lB )                       -> NIL
- *     :hbHighlightCurrentLine_1()                         -> lBool
+ *     :hbHighlightCurrentLine()                           -> lBool
  *     :hbSetEventBlock( xBlock )                          -> NIL
  *     :hbUpdateLineNumberAreaWidth( nNewBlockCount )      -> NIL
  *     :hbCaseUpper()                                      -> NIL
@@ -59,10 +59,10 @@
  *     :hbGetSelectedText()                                -> cQString
  *     :hbTextUnderCursor( lBCodeComplete )                -> cQString
  *     :hbShowPrototype( cTip, nRows, nCols )              -> NIL
- *     :hbSetCompleter( pCompleter )                       -> NIL
- *     :hbSetFldsCompleter( pCompleter )                   -> NIL
- *     :hbSetCurrentLineColor( pColor )                    -> NIL
- *     :hbSetLineAreaBkColor( pColor )                     -> NIL
+ *     :hbSetCompleter( oQCompleter )                      -> NIL
+ *     :hbSetFldsCompleter( oQCompleter )                  -> NIL
+ *     :hbSetCurrentLineColor( oQColor )                   -> NIL
+ *     :hbSetLineAreaBkColor( oQColor )                    -> NIL
  *     :hbRefresh()                                        -> NIL
  *     :hbCut( nKey )                                      -> NIL
  *     :hbCopy()                                           -> NIL
@@ -70,7 +70,7 @@
  *     :hbSetSelectionMode( nMode, lOn )                   -> NIL
  *     :hbGetSelectionInfo()                               -> NIL
  *     :hbSetSelectionInfo( xSelectionInfo )               -> NIL
- *     :hbSetSelectionColor( pColor )                      -> NIL
+ *     :hbSetSelectionColor( oQColor )                     -> NIL
  *     :hbSetMatchBraces( lAll )                           -> NIL
  *     :hbGetViewportInfo()                                -> NIL
  *     :hbApplyKey( nKey, nModifiers, cTxt )               -> NIL
@@ -101,7 +101,5 @@
  *     Harbour source: contrib/hbqt/qtgui/THBQPlainTextEdit.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/HBQPlainTextEdit.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QPlainTextEdit()
  *  $END$
  */

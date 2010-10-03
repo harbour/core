@@ -103,19 +103,19 @@ CREATE CLASS QTextInlineObject INHERIT HbQtObjectHandler FUNCTION HB_QTextInline
 
    METHOD  new( ... )
 
-   METHOD  ascent()
-   METHOD  descent()
-   METHOD  format()
-   METHOD  formatIndex()
-   METHOD  height()
-   METHOD  isValid()
-   METHOD  rect()
-   METHOD  setAscent( nA )
-   METHOD  setDescent( nD )
-   METHOD  setWidth( nW )
-   METHOD  textDirection()
-   METHOD  textPosition()
-   METHOD  width()
+   METHOD  ascent                        // (  )                                               -> nQreal
+   METHOD  descent                       // (  )                                               -> nQreal
+   METHOD  format                        // (  )                                               -> oQTextFormat
+   METHOD  formatIndex                   // (  )                                               -> nInt
+   METHOD  height                        // (  )                                               -> nQreal
+   METHOD  isValid                       // (  )                                               -> lBool
+   METHOD  rect                          // (  )                                               -> oQRectF
+   METHOD  setAscent                     // ( nA )                                             -> NIL
+   METHOD  setDescent                    // ( nD )                                             -> NIL
+   METHOD  setWidth                      // ( nW )                                             -> NIL
+   METHOD  textDirection                 // (  )                                               -> nQt_LayoutDirection
+   METHOD  textPosition                  // (  )                                               -> nInt
+   METHOD  width                         // (  )                                               -> nQreal
 
    ENDCLASS
 
@@ -129,54 +129,118 @@ METHOD QTextInlineObject:new( ... )
    RETURN Self
 
 
-METHOD QTextInlineObject:ascent()
-   RETURN Qt_QTextInlineObject_ascent( ::pPtr )
+METHOD QTextInlineObject:ascent( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextInlineObject_ascent( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextInlineObject:descent()
-   RETURN Qt_QTextInlineObject_descent( ::pPtr )
+METHOD QTextInlineObject:descent( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextInlineObject_descent( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextInlineObject:format()
-   RETURN HB_QTextFormat():from( Qt_QTextInlineObject_format( ::pPtr ) )
+METHOD QTextInlineObject:format( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextFormat():from( Qt_QTextInlineObject_format( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextInlineObject:formatIndex()
-   RETURN Qt_QTextInlineObject_formatIndex( ::pPtr )
+METHOD QTextInlineObject:formatIndex( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextInlineObject_formatIndex( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextInlineObject:height()
-   RETURN Qt_QTextInlineObject_height( ::pPtr )
+METHOD QTextInlineObject:height( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextInlineObject_height( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextInlineObject:isValid()
-   RETURN Qt_QTextInlineObject_isValid( ::pPtr )
+METHOD QTextInlineObject:isValid( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextInlineObject_isValid( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextInlineObject:rect()
-   RETURN HB_QRectF():from( Qt_QTextInlineObject_rect( ::pPtr ) )
+METHOD QTextInlineObject:rect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRectF():from( Qt_QTextInlineObject_rect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextInlineObject:setAscent( nA )
-   RETURN Qt_QTextInlineObject_setAscent( ::pPtr, nA )
+METHOD QTextInlineObject:setAscent( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextInlineObject_setAscent( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextInlineObject:setDescent( nD )
-   RETURN Qt_QTextInlineObject_setDescent( ::pPtr, nD )
+METHOD QTextInlineObject:setDescent( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextInlineObject_setDescent( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextInlineObject:setWidth( nW )
-   RETURN Qt_QTextInlineObject_setWidth( ::pPtr, nW )
+METHOD QTextInlineObject:setWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextInlineObject_setWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextInlineObject:textDirection()
-   RETURN Qt_QTextInlineObject_textDirection( ::pPtr )
+METHOD QTextInlineObject:textDirection( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextInlineObject_textDirection( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextInlineObject:textPosition()
-   RETURN Qt_QTextInlineObject_textPosition( ::pPtr )
+METHOD QTextInlineObject:textPosition( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextInlineObject_textPosition( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextInlineObject:width()
-   RETURN Qt_QTextInlineObject_width( ::pPtr )
+METHOD QTextInlineObject:width( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextInlineObject_width( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

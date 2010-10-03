@@ -49,7 +49,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQSlider.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QSlider.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractSlider()
  *  $END$
  */

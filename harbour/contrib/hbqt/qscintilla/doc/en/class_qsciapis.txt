@@ -36,10 +36,10 @@
  *     :isPrepared( cFname )                               -> lBool
  *     :loadPrepared( cFname )                             -> lBool
  *     :savePrepared( cFname )                             -> lBool
- *     :updateAutoCompletionList( pContext, pList )        -> NIL
+ *     :updateAutoCompletionList( oQStringList, oQStringList )  -> NIL
  *     :autoCompletionSelected( cSel )                     -> NIL
- *     :event( pE )                                        -> lBool
- *     :installedAPIFiles()                                -> pQStringList
+ *     :event( oQEvent )                                   -> lBool
+ *     :installedAPIFiles()                                -> oQStringList
  * 
  *  $DESCRIPTION$
  * 
@@ -59,7 +59,5 @@
  *     Harbour source: contrib/hbqt/qscintilla/TQsciAPIs.prg
  *     C++ wrappers  : contrib/hbqt/qscintilla/QsciAPIs.cpp
  *     Library       : hbqscintilla
- *  $SEEALSO$
- *     QsciAbstractAPIs()
  *  $END$
  */

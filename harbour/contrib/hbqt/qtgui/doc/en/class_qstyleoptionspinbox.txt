@@ -26,9 +26,9 @@
  *  $RETURNS$
  *     An instance of the object of type QStyleOptionSpinBox
  *  $METHODS$
- *     :buttonSymbols()                                    -> nQAbstractSpinBox::ButtonSymbols
+ *     :buttonSymbols()                                    -> nQAbstractSpinBox_ButtonSymbols
  *     :frame()                                            -> lBool
- *     :stepEnabled()                                      -> nQAbstractSpinBox::StepEnabled
+ *     :stepEnabled()                                      -> nQAbstractSpinBox_StepEnabled
  * 
  *  $DESCRIPTION$
  * 
@@ -48,7 +48,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQStyleOptionSpinBox.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QStyleOptionSpinBox.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QStyleOptionComplex()
  *  $END$
  */

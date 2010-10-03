@@ -103,14 +103,15 @@ CREATE CLASS QPolygonF INHERIT HbQtObjectHandler FUNCTION HB_QPolygonF
 
    METHOD  new( ... )
 
-   METHOD  boundingRect()
-   METHOD  containsPoint( pPoint, nFillRule )
-   METHOD  intersected( pR )
-   METHOD  isClosed()
-   METHOD  subtracted( pR )
-   METHOD  toPolygon()
-   METHOD  translate( ... )
-   METHOD  united( pR )
+   METHOD  boundingRect                  // (  )                                               -> oQRectF
+   METHOD  containsPoint                 // ( oQPointF, nFillRule )                            -> lBool
+   METHOD  intersected                   // ( oQPolygonF )                                     -> oQPolygonF
+   METHOD  isClosed                      // (  )                                               -> lBool
+   METHOD  subtracted                    // ( oQPolygonF )                                     -> oQPolygonF
+   METHOD  toPolygon                     // (  )                                               -> oQPolygon
+   METHOD  translate                     // ( oQPointF )                                       -> NIL
+                                         // ( nDx, nDy )                                       -> NIL
+   METHOD  united                        // ( oQPolygonF )                                     -> oQPolygonF
 
    ENDCLASS
 
@@ -124,28 +125,64 @@ METHOD QPolygonF:new( ... )
    RETURN Self
 
 
-METHOD QPolygonF:boundingRect()
-   RETURN HB_QRectF():from( Qt_QPolygonF_boundingRect( ::pPtr ) )
+METHOD QPolygonF:boundingRect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRectF():from( Qt_QPolygonF_boundingRect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPolygonF:containsPoint( pPoint, nFillRule )
-   RETURN Qt_QPolygonF_containsPoint( ::pPtr, hbqt_ptr( pPoint ), nFillRule )
+METHOD QPolygonF:containsPoint( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QPolygonF_containsPoint( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPolygonF:intersected( pR )
-   RETURN HB_QPolygonF():from( Qt_QPolygonF_intersected( ::pPtr, hbqt_ptr( pR ) ) )
+METHOD QPolygonF:intersected( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QPolygonF():from( Qt_QPolygonF_intersected( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPolygonF:isClosed()
-   RETURN Qt_QPolygonF_isClosed( ::pPtr )
+METHOD QPolygonF:isClosed( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QPolygonF_isClosed( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPolygonF:subtracted( pR )
-   RETURN HB_QPolygonF():from( Qt_QPolygonF_subtracted( ::pPtr, hbqt_ptr( pR ) ) )
+METHOD QPolygonF:subtracted( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QPolygonF():from( Qt_QPolygonF_subtracted( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QPolygonF:toPolygon()
-   RETURN HB_QPolygon():from( Qt_QPolygonF_toPolygon( ::pPtr ) )
+METHOD QPolygonF:toPolygon( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPolygon():from( Qt_QPolygonF_toPolygon( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QPolygonF:translate( ... )
@@ -166,6 +203,14 @@ METHOD QPolygonF:translate( ... )
    RETURN hbqt_error()
 
 
-METHOD QPolygonF:united( pR )
-   RETURN HB_QPolygonF():from( Qt_QPolygonF_united( ::pPtr, hbqt_ptr( pR ) ) )
+METHOD QPolygonF:united( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QPolygonF():from( Qt_QPolygonF_united( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

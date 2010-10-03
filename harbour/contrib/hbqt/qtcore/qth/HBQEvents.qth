@@ -87,6 +87,8 @@ HB_FUNC( QT_HBQEVENTS )
 </ENUMS>
 
 <PROTOS>
+HBQEvents()
+
 bool hbConnect( PHB_ITEM obj, int event, PHB_ITEM block )
 bool hbDisconnect( PHB_ITEM obj, int event )
 bool hbClear()

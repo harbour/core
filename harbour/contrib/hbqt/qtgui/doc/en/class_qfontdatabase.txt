@@ -27,25 +27,25 @@
  *     An instance of the object of type QFontDatabase
  *  $METHODS$
  *     :bold( cFamily, cStyle )                            -> lBool
- *     :families( nWritingSystem )                         -> pQStringList
- *     :font( cFamily, cStyle, nPointSize )                -> pQFont
+ *     :families( nWritingSystem )                         -> oQStringList
+ *     :font( cFamily, cStyle, nPointSize )                -> oQFont
  *     :isBitmapScalable( cFamily, cStyle )                -> lBool
  *     :isFixedPitch( cFamily, cStyle )                    -> lBool
  *     :isScalable( cFamily, cStyle )                      -> lBool
  *     :isSmoothlyScalable( cFamily, cStyle )              -> lBool
  *     :italic( cFamily, cStyle )                          -> lBool
- *     :pointSizes( cFamily, cStyle )                      -> pQList<int>
- *     :smoothSizes( cFamily, cStyle )                     -> pQList<int>
- *     :styleString( pFont )                               -> cQString
- *     :styleString_1( pFontInfo )                         -> cQString
- *     :styles( cFamily )                                  -> pQStringList
+ *     :pointSizes( cFamily, cStyle )                      -> oQList_int>
+ *     :smoothSizes( cFamily, cStyle )                     -> oQList_int>
+ *     :styleString( oQFont )                              -> cQString
+ *     :styleString( oQFontInfo )                          -> cQString
+ *     :styles( cFamily )                                  -> oQStringList
  *     :weight( cFamily, cStyle )                          -> nInt
  *     :addApplicationFont( cFileName )                    -> nInt
- *     :addApplicationFontFromData( pFontData )            -> nInt
- *     :applicationFontFamilies( nId )                     -> pQStringList
+ *     :addApplicationFontFromData( oQByteArray )          -> nInt
+ *     :applicationFontFamilies( nId )                     -> oQStringList
  *     :removeAllApplicationFonts()                        -> lBool
  *     :removeApplicationFont( nId )                       -> lBool
- *     :standardSizes()                                    -> pQList<int>
+ *     :standardSizes()                                    -> oQList_int>
  *     :supportsThreadedFontRendering()                    -> lBool
  *     :writingSystemName( nWritingSystem )                -> cQString
  *     :writingSystemSample( nWritingSystem )              -> cQString
@@ -68,7 +68,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQFontDatabase.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QFontDatabase.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

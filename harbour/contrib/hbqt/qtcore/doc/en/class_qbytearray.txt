@@ -26,55 +26,103 @@
  *  $RETURNS$
  *     An instance of the object of type QByteArray
  *  $METHODS$
+ *     :append( oQByteArray )                              -> oQByteArray
+ *     :append_1( cStr )                                   -> oQByteArray
+ *     :append_2( cStr )                                   -> oQByteArray
+ *     :append_3( cStr, nLen )                             -> oQByteArray
+ *     :append_4( nCh )                                    -> oQByteArray
  *     :at( nI )                                           -> cChar
  *     :capacity()                                         -> nInt
  *     :chop( nN )                                         -> NIL
  *     :clear()                                            -> NIL
  *     :constData()                                        -> cChar
- *     :count( pBa )                                       -> nInt
- *     :count_1( pStr )                                    -> nInt
- *     :count_2( cCh )                                     -> nInt
+ *     :count( oQByteArray )                               -> nInt
+ *     :count_1( cStr )                                    -> nInt
+ *     :count_2( nCh )                                     -> nInt
  *     :count_3()                                          -> nInt
  *     :data()                                             -> cChar
  *     :data_1()                                           -> cChar
- *     :endsWith( pBa )                                    -> lBool
- *     :endsWith_1( pStr )                                 -> lBool
- *     :endsWith_2( cCh )                                  -> lBool
- *     :indexOf( pBa, nFrom )                              -> nInt
+ *     :endsWith( oQByteArray )                            -> lBool
+ *     :endsWith_1( cStr )                                 -> lBool
+ *     :endsWith_2( nCh )                                  -> lBool
+ *     :fill( nCh, nSize )                                 -> oQByteArray
+ *     :indexOf( oQByteArray, nFrom )                      -> nInt
  *     :indexOf_1( cStr, nFrom )                           -> nInt
- *     :indexOf_2( pStr, nFrom )                           -> nInt
- *     :indexOf_3( cCh, nFrom )                            -> nInt
+ *     :indexOf_2( cStr, nFrom )                           -> nInt
+ *     :indexOf_3( nCh, nFrom )                            -> nInt
+ *     :insert( nI, oQByteArray )                          -> oQByteArray
+ *     :insert_1( nI, cStr )                               -> oQByteArray
+ *     :insert_2( nI, cStr )                               -> oQByteArray
+ *     :insert_3( nI, nCh )                                -> oQByteArray
  *     :isEmpty()                                          -> lBool
  *     :isNull()                                           -> lBool
- *     :lastIndexOf( pBa, nFrom )                          -> nInt
+ *     :lastIndexOf( oQByteArray, nFrom )                  -> nInt
  *     :lastIndexOf_1( cStr, nFrom )                       -> nInt
- *     :lastIndexOf_2( pStr, nFrom )                       -> nInt
- *     :lastIndexOf_3( cCh, nFrom )                        -> nInt
+ *     :lastIndexOf_2( cStr, nFrom )                       -> nInt
+ *     :lastIndexOf_3( nCh, nFrom )                        -> nInt
+ *     :left( nLen )                                       -> oQByteArray
+ *     :leftJustified( nWidth, nFill, lTruncate )          -> oQByteArray
  *     :length()                                           -> nInt
- *     :push_back( pOther )                                -> NIL
- *     :push_back_1( pStr )                                -> NIL
- *     :push_back_2( cCh )                                 -> NIL
- *     :push_front( pOther )                               -> NIL
- *     :push_front_1( pStr )                               -> NIL
- *     :push_front_2( cCh )                                -> NIL
+ *     :mid( nPos, nLen )                                  -> oQByteArray
+ *     :prepend( oQByteArray )                             -> oQByteArray
+ *     :prepend_1( cStr )                                  -> oQByteArray
+ *     :prepend_2( nCh )                                   -> oQByteArray
+ *     :push_back( oQByteArray )                           -> NIL
+ *     :push_back_1( cStr )                                -> NIL
+ *     :push_back_2( nCh )                                 -> NIL
+ *     :push_front( oQByteArray )                          -> NIL
+ *     :push_front_1( cStr )                               -> NIL
+ *     :push_front_2( nCh )                                -> NIL
+ *     :remove( nPos, nLen )                               -> oQByteArray
+ *     :repeated( nTimes )                                 -> oQByteArray
+ *     :replace( nPos, nLen, oQByteArray )                 -> oQByteArray
+ *     :replace_1( nPos, nLen, cAfter )                    -> oQByteArray
+ *     :replace_2( oQByteArray, oQByteArray )              -> oQByteArray
+ *     :replace_3( cBefore, oQByteArray )                  -> oQByteArray
+ *     :replace_4( cBefore, nBsize, cAfter, nAsize )       -> oQByteArray
+ *     :replace_5( oQByteArray, cAfter )                   -> oQByteArray
+ *     :replace_6( cBefore, oQByteArray )                  -> oQByteArray
+ *     :replace_7( cBefore, cAfter )                       -> oQByteArray
+ *     :replace_8( cBefore, cAfter )                       -> oQByteArray
+ *     :replace_9( nBefore, oQByteArray )                  -> oQByteArray
+ *     :replace_10( nBefore, cAfter )                      -> oQByteArray
+ *     :replace_11( nBefore, cAfter )                      -> oQByteArray
+ *     :replace_12( nBefore, nAfter )                      -> oQByteArray
  *     :reserve( nSize )                                   -> NIL
  *     :resize( nSize )                                    -> NIL
+ *     :right( nLen )                                      -> oQByteArray
+ *     :rightJustified( nWidth, nFill, lTruncate )         -> oQByteArray
+ *     :setNum( nN, nBase )                                -> oQByteArray
+ *     :setNum_1( nN, nBase )                              -> oQByteArray
+ *     :setNum_2( nN, nBase )                              -> oQByteArray
+ *     :setNum_3( nN, nBase )                              -> oQByteArray
+ *     :setNum_4( nN, nBase )                              -> oQByteArray
+ *     :setNum_5( nN, nBase )                              -> oQByteArray
+ *     :setNum_6( nN, nF, nPrec )                          -> oQByteArray
+ *     :setNum_7( nN, nF, nPrec )                          -> oQByteArray
+ *     :simplified()                                       -> oQByteArray
  *     :size()                                             -> nInt
- *     :split( cSep )                                      -> pQList<QByteArray>
+ *     :split( nSep )                                      -> oQList_QByteArray>
  *     :squeeze()                                          -> NIL
- *     :startsWith( pBa )                                  -> lBool
- *     :startsWith_1( pStr )                               -> lBool
- *     :startsWith_2( cCh )                                -> lBool
+ *     :startsWith( oQByteArray )                          -> lBool
+ *     :startsWith_1( cStr )                               -> lBool
+ *     :startsWith_2( nCh )                                -> lBool
+ *     :toBase64()                                         -> oQByteArray
  *     :toDouble( @lOk )                                   -> nDouble
  *     :toFloat( @lOk )                                    -> nFloat
+ *     :toHex()                                            -> oQByteArray
  *     :toInt( @lOk, nBase )                               -> nInt
  *     :toLong( @lOk, nBase )                              -> nLong
  *     :toLongLong( @lOk, nBase )                          -> nQlonglong
+ *     :toLower()                                          -> oQByteArray
+ *     :toPercentEncoding( oQByteArray, oQByteArray, nPercent )  -> oQByteArray
  *     :toShort( @lOk, nBase )                             -> nShort
  *     :toUInt( @lOk, nBase )                              -> nUint
  *     :toULong( @lOk, nBase )                             -> nUlong
  *     :toULongLong( @lOk, nBase )                         -> nQulonglong
  *     :toUShort( @lOk, nBase )                            -> nUshort
+ *     :toUpper()                                          -> oQByteArray
+ *     :trimmed()                                          -> oQByteArray
  *     :truncate( nPos )                                   -> NIL
  * 
  *  $DESCRIPTION$
@@ -95,7 +143,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQByteArray.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QByteArray.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

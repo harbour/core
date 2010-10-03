@@ -477,7 +477,7 @@ HB_FUNC( QT_QTEXTSTREAM_SETCODEC_1 )
    QTextStream * p = hbqt_par_QTextStream( 1 );
    if( p )
    {
-      ( p )->setCodec( hbqt_par_char( 2 ) );
+      ( p )->setCodec( ( const char * ) hb_parc( 2 ) );
    }
 }
 

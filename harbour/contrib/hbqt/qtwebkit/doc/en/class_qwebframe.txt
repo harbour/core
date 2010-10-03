@@ -26,43 +26,44 @@
  *  $RETURNS$
  *     An instance of the object of type QWebFrame
  *  $METHODS$
- *     :addToJavaScriptWindowObject( cName, pObject )      -> NIL
- *     :addToJavaScriptWindowObject_1( cName, pObject, nOwn )  -> NIL
- *     :childFrames()                                      -> pQList<QWebFrame *>
- *     :contentsSize()                                     -> pQSize
+ *     :addToJavaScriptWindowObject( cName, oQObject )     -> NIL
+ *     :addToJavaScriptWindowObject( cName, oQObject, nOwn )  -> NIL
+ *     :childFrames()                                      -> oQList_QWebFrame
+ *     :contentsSize()                                     -> oQSize
  *     :frameName()                                        -> cQString
- *     :geometry()                                         -> pQRect
- *     :hitTestContent( pPos )                             -> pQWebHitTestResult
- *     :icon()                                             -> pQIcon
- *     :load( pUrl )                                       -> NIL
- *     :page()                                             -> pQWebPage
- *     :pos()                                              -> pQPoint
- *     :render( pPainter, pClip )                          -> NIL
- *     :render_1( pPainter )                               -> NIL
+ *     :geometry()                                         -> oQRect
+ *     :hitTestContent( oQPoint )                          -> oQWebHitTestResult
+ *     :icon()                                             -> oQIcon
+ *     :load( oQUrl )                                      -> NIL
+ *     :page()                                             -> oQWebPage
+ *     :parentFrame()                                      -> oQWebFrame
+ *     :pos()                                              -> oQPoint
+ *     :render( oQPainter, oQRegion )                      -> NIL
+ *     :render( oQPainter )                                -> NIL
  *     :renderTreeDump()                                   -> cQString
  *     :scroll( nDx, nDy )                                 -> NIL
  *     :scrollBarMaximum( nOrientation )                   -> nInt
  *     :scrollBarMinimum( nOrientation )                   -> nInt
- *     :scrollBarPolicy( nOrientation )                    -> nQt::ScrollBarPolicy
+ *     :scrollBarPolicy( nOrientation )                    -> nQt_ScrollBarPolicy
  *     :scrollBarValue( nOrientation )                     -> nInt
- *     :scrollPosition()                                   -> pQPoint
- *     :securityOrigin()                                   -> pQWebSecurityOrigin
- *     :setContent( pData, cMimeType, pBaseUrl )           -> NIL
- *     :setHtml( cHtml, pBaseUrl )                         -> NIL
+ *     :scrollPosition()                                   -> oQPoint
+ *     :securityOrigin()                                   -> oQWebSecurityOrigin
+ *     :setContent( oQByteArray, cMimeType, oQUrl )        -> NIL
+ *     :setHtml( cHtml, oQUrl )                            -> NIL
  *     :setScrollBarPolicy( nOrientation, nPolicy )        -> NIL
  *     :setScrollBarValue( nOrientation, nValue )          -> NIL
- *     :setScrollPosition( pPos )                          -> NIL
+ *     :setScrollPosition( oQPoint )                       -> NIL
  *     :setTextSizeMultiplier( nFactor )                   -> NIL
- *     :setUrl( pUrl )                                     -> NIL
+ *     :setUrl( oQUrl )                                    -> NIL
  *     :setZoomFactor( nFactor )                           -> NIL
  *     :textSizeMultiplier()                               -> nQreal
  *     :title()                                            -> cQString
  *     :toHtml()                                           -> cQString
  *     :toPlainText()                                      -> cQString
- *     :url()                                              -> pQUrl
+ *     :url()                                              -> oQUrl
  *     :zoomFactor()                                       -> nQreal
- *     :evaluateJavaScript( cScriptSource )                -> pQVariant
- *     :print( pPrinter )                                  -> NIL
+ *     :evaluateJavaScript( cScriptSource )                -> oQVariant
+ *     :print( oQPrinter )                                 -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -82,7 +83,5 @@
  *     Harbour source: contrib/hbqt/qtwebkit/TQWebFrame.prg
  *     C++ wrappers  : contrib/hbqt/qtwebkit/QWebFrame.cpp
  *     Library       : hbqtwebkit
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

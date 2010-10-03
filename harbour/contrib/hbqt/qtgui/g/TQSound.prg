@@ -103,13 +103,13 @@ CREATE CLASS QSound INHERIT HbQtObjectHandler FUNCTION HB_QSound
 
    METHOD  new( ... )
 
-   METHOD  fileName()
-   METHOD  isFinished()
-   METHOD  loops()
-   METHOD  loopsRemaining()
-   METHOD  setLoops( nNumber )
-   METHOD  isAvailable()
-   METHOD  play( cFilename )
+   METHOD  fileName                      // (  )                                               -> cQString
+   METHOD  isFinished                    // (  )                                               -> lBool
+   METHOD  loops                         // (  )                                               -> nInt
+   METHOD  loopsRemaining                // (  )                                               -> nInt
+   METHOD  setLoops                      // ( nNumber )                                        -> NIL
+   METHOD  isAvailable                   // (  )                                               -> lBool
+   METHOD  play                          // ( cFilename )                                      -> NIL
 
    ENDCLASS
 
@@ -123,30 +123,66 @@ METHOD QSound:new( ... )
    RETURN Self
 
 
-METHOD QSound:fileName()
-   RETURN Qt_QSound_fileName( ::pPtr )
+METHOD QSound:fileName( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSound_fileName( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSound:isFinished()
-   RETURN Qt_QSound_isFinished( ::pPtr )
+METHOD QSound:isFinished( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSound_isFinished( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSound:loops()
-   RETURN Qt_QSound_loops( ::pPtr )
+METHOD QSound:loops( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSound_loops( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSound:loopsRemaining()
-   RETURN Qt_QSound_loopsRemaining( ::pPtr )
+METHOD QSound:loopsRemaining( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSound_loopsRemaining( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSound:setLoops( nNumber )
-   RETURN Qt_QSound_setLoops( ::pPtr, nNumber )
+METHOD QSound:setLoops( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QSound_setLoops( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSound:isAvailable()
-   RETURN Qt_QSound_isAvailable( ::pPtr )
+METHOD QSound:isAvailable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSound_isAvailable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSound:play( cFilename )
-   RETURN Qt_QSound_play( ::pPtr, cFilename )
+METHOD QSound:play( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QSound_play( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

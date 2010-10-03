@@ -148,10 +148,10 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    IF !empty( ::qtObject )
       IF hb_isObject( ::qtObject )
          ::isViaQtObject := .t.
-         ::oWidget       := ::qtObject
+         ::oWidget       := ::qtObject:oWidget
          ::qtObject      := NIL
       ELSE
-         ::oWidget := HB_QMainWindow():from( ::qtObject )
+         ::oWidget := HB_QMainWindow():from( ::qtObject:oWidget )
       ENDIF
       ::oWidget:setMouseTracking( .t. )
    ELSE

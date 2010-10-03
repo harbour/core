@@ -41,24 +41,24 @@
  *     :open( nMode )                                      -> lBool
  *     :openMode()                                         -> nOpenMode
  *     :peek( cData, nMaxSize )                            -> nQint64
- *     :peek_1( nMaxSize )                                 -> pQByteArray
+ *     :peek( nMaxSize )                                   -> oQByteArray
  *     :pos()                                              -> nQint64
- *     :putChar( cC )                                      -> lBool
+ *     :putChar( nC )                                      -> lBool
  *     :read( cData, nMaxSize )                            -> nQint64
- *     :read_1( nMaxSize )                                 -> pQByteArray
- *     :readAll()                                          -> pQByteArray
+ *     :read( nMaxSize )                                   -> oQByteArray
+ *     :readAll()                                          -> oQByteArray
  *     :readLine( cData, nMaxSize )                        -> nQint64
- *     :readLine_1( nMaxSize )                             -> pQByteArray
+ *     :readLine( nMaxSize )                               -> oQByteArray
  *     :reset()                                            -> lBool
  *     :seek( nPos )                                       -> lBool
  *     :setTextModeEnabled( lEnabled )                     -> NIL
  *     :size()                                             -> nQint64
- *     :ungetChar( cC )                                    -> NIL
+ *     :ungetChar( nC )                                    -> NIL
  *     :waitForBytesWritten( nMsecs )                      -> lBool
  *     :waitForReadyRead( nMsecs )                         -> lBool
- *     :write( pData, nMaxSize )                           -> nQint64
- *     :write_1( pData )                                   -> nQint64
- *     :write_2( pByteArray )                              -> nQint64
+ *     :write( cData, nMaxSize )                           -> nQint64
+ *     :write( cData )                                     -> nQint64
+ *     :write( oQByteArray )                               -> nQint64
  * 
  *  $DESCRIPTION$
  * 
@@ -78,7 +78,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQIODevice.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QIODevice.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

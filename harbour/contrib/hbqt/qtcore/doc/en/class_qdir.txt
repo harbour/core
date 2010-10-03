@@ -33,10 +33,10 @@
  *     :cdUp()                                             -> lBool
  *     :count()                                            -> nUint
  *     :dirName()                                          -> cQString
- *     :entryList( pNameFilters, nFilters, nSort )         -> pQStringList
- *     :entryList_1( nFilters, nSort )                     -> pQStringList
+ *     :entryList( oQStringList, nFilters, nSort )         -> oQStringList
+ *     :entryList( nFilters, nSort )                       -> oQStringList
  *     :exists( cName )                                    -> lBool
- *     :exists_1()                                         -> lBool
+ *     :exists()                                           -> lBool
  *     :filePath( cFileName )                              -> cQString
  *     :filter()                                           -> nFilters
  *     :isAbsolute()                                       -> lBool
@@ -46,7 +46,7 @@
  *     :makeAbsolute()                                     -> lBool
  *     :mkdir( cDirName )                                  -> lBool
  *     :mkpath( cDirPath )                                 -> lBool
- *     :nameFilters()                                      -> pQStringList
+ *     :nameFilters()                                      -> oQStringList
  *     :path()                                             -> cQString
  *     :refresh()                                          -> NIL
  *     :relativeFilePath( cFileName )                      -> cQString
@@ -55,24 +55,28 @@
  *     :rmdir( cDirName )                                  -> lBool
  *     :rmpath( cDirPath )                                 -> lBool
  *     :setFilter( nFilters )                              -> NIL
- *     :setNameFilters( pNameFilters )                     -> NIL
+ *     :setNameFilters( oQStringList )                     -> NIL
  *     :setPath( cPath )                                   -> NIL
  *     :setSorting( nSort )                                -> NIL
  *     :sorting()                                          -> nSortFlags
  *     :addSearchPath( cPrefix, cPath )                    -> NIL
  *     :cleanPath( cPath )                                 -> cQString
+ *     :current()                                          -> oQDir
  *     :currentPath()                                      -> cQString
  *     :fromNativeSeparators( cPathName )                  -> cQString
+ *     :home()                                             -> oQDir
  *     :homePath()                                         -> cQString
  *     :isAbsolutePath( cPath )                            -> lBool
  *     :isRelativePath( cPath )                            -> lBool
  *     :match( cFilter, cFileName )                        -> lBool
- *     :match_1( pFilters, cFileName )                     -> lBool
+ *     :match( oQStringList, cFileName )                   -> lBool
+ *     :root()                                             -> oQDir
  *     :rootPath()                                         -> cQString
- *     :searchPaths( cPrefix )                             -> pQStringList
- *     :separator()                                        -> pQChar
+ *     :searchPaths( cPrefix )                             -> oQStringList
+ *     :separator()                                        -> oQChar
  *     :setCurrent( cPath )                                -> lBool
- *     :setSearchPaths( cPrefix, pSearchPaths )            -> NIL
+ *     :setSearchPaths( cPrefix, oQStringList )            -> NIL
+ *     :temp()                                             -> oQDir
  *     :tempPath()                                         -> cQString
  *     :toNativeSeparators( cPathName )                    -> cQString
  * 
@@ -94,7 +98,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQDir.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QDir.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

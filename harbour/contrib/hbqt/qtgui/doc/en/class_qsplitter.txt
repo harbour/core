@@ -26,27 +26,27 @@
  *  $RETURNS$
  *     An instance of the object of type QSplitter
  *  $METHODS$
- *     :addWidget( pWidget )                               -> NIL
+ *     :addWidget( oQWidget )                              -> NIL
  *     :childrenCollapsible()                              -> lBool
  *     :count()                                            -> nInt
  *     :getRange( nIndex, @nMin, @nMax )                   -> NIL
  *     :handleWidth()                                      -> nInt
- *     :indexOf( pWidget )                                 -> nInt
- *     :insertWidget( nIndex, pWidget )                    -> NIL
+ *     :indexOf( oQWidget )                                -> nInt
+ *     :insertWidget( nIndex, oQWidget )                   -> NIL
  *     :isCollapsible( nIndex )                            -> lBool
  *     :opaqueResize()                                     -> lBool
- *     :orientation()                                      -> nQt::Orientation
+ *     :orientation()                                      -> nQt_Orientation
  *     :refresh()                                          -> NIL
- *     :restoreState( pState )                             -> lBool
- *     :saveState()                                        -> pQByteArray
+ *     :restoreState( oQByteArray )                        -> lBool
+ *     :saveState()                                        -> oQByteArray
  *     :setChildrenCollapsible( lBool )                    -> NIL
  *     :setCollapsible( nIndex, lCollapse )                -> NIL
  *     :setHandleWidth( nInt )                             -> NIL
  *     :setOpaqueResize( lOpaque )                         -> NIL
  *     :setOrientation( nQt::Orientation )                 -> NIL
  *     :setStretchFactor( nIndex, nStretch )               -> NIL
- *     :sizes()                                            -> pQList<int>
- *     :widget( nIndex )                                   -> pQWidget
+ *     :sizes()                                            -> oQList_int>
+ *     :widget( nIndex )                                   -> oQWidget
  * 
  *  $DESCRIPTION$
  * 
@@ -66,7 +66,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQSplitter.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QSplitter.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QFrame()
  *  $END$
  */

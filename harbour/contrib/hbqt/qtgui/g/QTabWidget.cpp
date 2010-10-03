@@ -200,11 +200,7 @@ HB_FUNC( QT_QTABWIDGET_ADDTAB )
    QTabWidget * p = hbqt_par_QTabWidget( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 2 );
       void * pText;
       hb_retni( ( p )->addTab( hbqt_par_QWidget( 2 ), hb_parstr_utf8( 3, &pText, NULL ) ) );
       hb_strfree( pText );
@@ -219,11 +215,7 @@ HB_FUNC( QT_QTABWIDGET_ADDTAB_1 )
    QTabWidget * p = hbqt_par_QTabWidget( 1 );
    if( p )
    {
-      HBQT_GC_T * q = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 2 );
-      if( q && q->ph )
-      {
-         q->bNew = false;
-      }
+      hbqt_detachgcpointer( 2 );
       void * pText;
       hb_retni( ( p )->addTab( hbqt_par_QWidget( 2 ), ( HB_ISCHAR( 3 ) ? QIcon( hbqt_par_QString( 3 ) ) : *hbqt_par_QIcon( 3 )), hb_parstr_utf8( 4, &pText, NULL ) ) );
       hb_strfree( pText );

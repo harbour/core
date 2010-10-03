@@ -26,33 +26,33 @@
  *  $RETURNS$
  *     An instance of the object of type QCompleter
  *  $METHODS$
- *     :caseSensitivity()                                  -> nQt::CaseSensitivity
+ *     :caseSensitivity()                                  -> nQt_CaseSensitivity
  *     :completionColumn()                                 -> nInt
  *     :completionCount()                                  -> nInt
  *     :completionMode()                                   -> nCompletionMode
- *     :completionModel()                                  -> pQAbstractItemModel
+ *     :completionModel()                                  -> oQAbstractItemModel
  *     :completionPrefix()                                 -> cQString
  *     :completionRole()                                   -> nInt
  *     :currentCompletion()                                -> cQString
- *     :currentIndex()                                     -> pQModelIndex
+ *     :currentIndex()                                     -> oQModelIndex
  *     :currentRow()                                       -> nInt
- *     :model()                                            -> pQAbstractItemModel
+ *     :model()                                            -> oQAbstractItemModel
  *     :modelSorting()                                     -> nModelSorting
- *     :pathFromIndex( pIndex )                            -> cQString
- *     :popup()                                            -> pQAbstractItemView
+ *     :pathFromIndex( oQModelIndex )                      -> cQString
+ *     :popup()                                            -> oQAbstractItemView
  *     :setCaseSensitivity( nCaseSensitivity )             -> NIL
  *     :setCompletionColumn( nColumn )                     -> NIL
  *     :setCompletionMode( nMode )                         -> NIL
  *     :setCompletionRole( nRole )                         -> NIL
  *     :setCurrentRow( nRow )                              -> lBool
- *     :setModel( pModel )                                 -> NIL
+ *     :setModel( oQAbstractItemModel )                    -> NIL
  *     :setModelSorting( nSorting )                        -> NIL
- *     :setPopup( pPopup )                                 -> NIL
- *     :setWidget( pWidget )                               -> NIL
- *     :splitPath( cPath )                                 -> pQStringList
- *     :widget()                                           -> pQWidget
+ *     :setPopup( oQAbstractItemView )                     -> NIL
+ *     :setWidget( oQWidget )                              -> NIL
+ *     :splitPath( cPath )                                 -> oQStringList
+ *     :widget()                                           -> oQWidget
  *     :wrapAround()                                       -> lBool
- *     :complete( pRect )                                  -> NIL
+ *     :complete( oQRect )                                 -> NIL
  *     :setCompletionPrefix( cPrefix )                     -> NIL
  *     :setWrapAround( lWrap )                             -> NIL
  * 
@@ -74,7 +74,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQCompleter.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QCompleter.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

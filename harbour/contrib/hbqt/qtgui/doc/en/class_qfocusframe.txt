@@ -26,8 +26,8 @@
  *  $RETURNS$
  *     An instance of the object of type QFocusFrame
  *  $METHODS$
- *     :setWidget( pWidget )                               -> NIL
- *     :widget()                                           -> pQWidget
+ *     :setWidget( oQWidget )                              -> NIL
+ *     :widget()                                           -> oQWidget
  * 
  *  $DESCRIPTION$
  * 
@@ -47,7 +47,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQFocusFrame.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QFocusFrame.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QWidget()
  *  $END$
  */

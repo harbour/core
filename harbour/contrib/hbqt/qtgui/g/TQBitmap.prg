@@ -103,9 +103,15 @@ CREATE CLASS QBitmap INHERIT HbQtObjectHandler, HB_QPixmap FUNCTION HB_QBitmap
 
    METHOD  new( ... )
 
-   METHOD  clear()
-   METHOD  transformed( ... )
-   METHOD  fromImage( pImage, nFlags )
+   METHOD  QBitmap                       // (  )                                               -> oQBitmap
+                                         // ( oQPixmap )                                       -> oQBitmap
+                                         // ( nWidth, nHeight )                                -> oQBitmap
+                                         // ( oQSize )                                         -> oQBitmap
+                                         // ( cFileName, cFormat )                             -> oQBitmap
+   METHOD  clear                         // (  )                                               -> NIL
+   METHOD  transformed                   // ( oQTransform )                                    -> oQBitmap
+                                         // ( oQMatrix )                                       -> oQBitmap
+   METHOD  fromImage                     // ( oQImage, nFlags )                                -> oQBitmap
 
    ENDCLASS
 
@@ -119,8 +125,41 @@ METHOD QBitmap:new( ... )
    RETURN Self
 
 
-METHOD QBitmap:clear()
-   RETURN Qt_QBitmap_clear( ::pPtr )
+METHOD QBitmap:QBitmap( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN HB_QBitmap():from( Qt_QBitmap_QBitmap_4( ::pPtr, ... ) )
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QBitmap():from( Qt_QBitmap_QBitmap_2( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QBitmap():from( Qt_QBitmap_QBitmap_4( ::pPtr, ... ) )
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         SWITCH __objGetClsName( hb_pvalue( 1 ) )
+         CASE "QPIXMAP"
+            RETURN HB_QBitmap():from( Qt_QBitmap_QBitmap_1( ::pPtr, ... ) )
+         CASE "QSIZE"
+            RETURN HB_QBitmap():from( Qt_QBitmap_QBitmap_3( ::pPtr, ... ) )
+         ENDSWITCH
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QBitmap():from( Qt_QBitmap_QBitmap( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
+
+
+METHOD QBitmap:clear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QBitmap_clear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QBitmap:transformed( ... )
@@ -140,6 +179,20 @@ METHOD QBitmap:transformed( ... )
    RETURN hbqt_error()
 
 
-METHOD QBitmap:fromImage( pImage, nFlags )
-   RETURN HB_QBitmap():from( Qt_QBitmap_fromImage( ::pPtr, hbqt_ptr( pImage ), nFlags ) )
+METHOD QBitmap:fromImage( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QBitmap():from( Qt_QBitmap_fromImage( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QBitmap():from( Qt_QBitmap_fromImage( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

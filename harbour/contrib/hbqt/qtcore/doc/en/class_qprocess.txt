@@ -29,34 +29,34 @@
  *     :close()                                            -> NIL
  *     :closeReadChannel( nChannel )                       -> NIL
  *     :closeWriteChannel()                                -> NIL
- *     :environment()                                      -> pQStringList
- *     :error()                                            -> nQProcess::ProcessError
+ *     :environment()                                      -> oQStringList
+ *     :error()                                            -> nQProcess_ProcessError
  *     :exitCode()                                         -> nInt
- *     :exitStatus()                                       -> nQProcess::ExitStatus
+ *     :exitStatus()                                       -> nQProcess_ExitStatus
  *     :processChannelMode()                               -> nProcessChannelMode
- *     :readAllStandardError()                             -> pQByteArray
- *     :readAllStandardOutput()                            -> pQByteArray
+ *     :readAllStandardError()                             -> oQByteArray
+ *     :readAllStandardOutput()                            -> oQByteArray
  *     :readChannel()                                      -> nProcessChannel
- *     :setEnvironment( pEnvironment )                     -> NIL
+ *     :setEnvironment( oQStringList )                     -> NIL
  *     :setProcessChannelMode( nMode )                     -> NIL
  *     :setReadChannel( nChannel )                         -> NIL
  *     :setStandardErrorFile( cFileName, nMode )           -> NIL
  *     :setStandardInputFile( cFileName )                  -> NIL
  *     :setStandardOutputFile( cFileName, nMode )          -> NIL
- *     :setStandardOutputProcess( pDestination )           -> NIL
+ *     :setStandardOutputProcess( oQProcess )              -> NIL
  *     :setWorkingDirectory( cDir )                        -> NIL
- *     :start( cProgram, pArguments, nMode )               -> NIL
- *     :start_1( cProgram, nMode )                         -> NIL
- *     :state()                                            -> nQProcess::ProcessState
+ *     :start( cProgram, oQStringList, nMode )             -> NIL
+ *     :start( cProgram, nMode )                           -> NIL
+ *     :state()                                            -> nQProcess_ProcessState
  *     :waitForFinished( nMsecs )                          -> lBool
  *     :waitForStarted( nMsecs )                           -> lBool
  *     :workingDirectory()                                 -> cQString
- *     :execute( cProgram, pArguments )                    -> nInt
- *     :execute_1( cProgram )                              -> nInt
- *     :startDetached( cProgram, pArguments, cWorkingDirectory, @nPid )  -> lBool
- *     :startDetached_1( cProgram, pArguments )            -> lBool
- *     :startDetached_2( cProgram )                        -> lBool
- *     :systemEnvironment()                                -> pQStringList
+ *     :execute( cProgram, oQStringList )                  -> nInt
+ *     :execute( cProgram )                                -> nInt
+ *     :startDetached( cProgram, oQStringList, cWorkingDirectory, @nPid )  -> lBool
+ *     :startDetached( cProgram, oQStringList )            -> lBool
+ *     :startDetached( cProgram )                          -> lBool
+ *     :systemEnvironment()                                -> oQStringList
  *     :kill()                                             -> NIL
  *     :terminate()                                        -> NIL
  * 
@@ -78,7 +78,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQProcess.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QProcess.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     QIODevice()
  *  $END$
  */

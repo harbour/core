@@ -103,13 +103,13 @@ CREATE CLASS QContextMenuEvent INHERIT HbQtObjectHandler, HB_QInputEvent FUNCTIO
 
    METHOD  new( ... )
 
-   METHOD  globalPos()
-   METHOD  globalX()
-   METHOD  globalY()
-   METHOD  pos()
-   METHOD  reason()
-   METHOD  x()
-   METHOD  y()
+   METHOD  globalPos                     // (  )                                               -> oQPoint
+   METHOD  globalX                       // (  )                                               -> nInt
+   METHOD  globalY                       // (  )                                               -> nInt
+   METHOD  pos                           // (  )                                               -> oQPoint
+   METHOD  reason                        // (  )                                               -> nReason
+   METHOD  x                             // (  )                                               -> nInt
+   METHOD  y                             // (  )                                               -> nInt
 
    ENDCLASS
 
@@ -123,30 +123,58 @@ METHOD QContextMenuEvent:new( ... )
    RETURN Self
 
 
-METHOD QContextMenuEvent:globalPos()
-   RETURN HB_QPoint():from( Qt_QContextMenuEvent_globalPos( ::pPtr ) )
+METHOD QContextMenuEvent:globalPos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QContextMenuEvent_globalPos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QContextMenuEvent:globalX()
-   RETURN Qt_QContextMenuEvent_globalX( ::pPtr )
+METHOD QContextMenuEvent:globalX( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QContextMenuEvent_globalX( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QContextMenuEvent:globalY()
-   RETURN Qt_QContextMenuEvent_globalY( ::pPtr )
+METHOD QContextMenuEvent:globalY( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QContextMenuEvent_globalY( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QContextMenuEvent:pos()
-   RETURN HB_QPoint():from( Qt_QContextMenuEvent_pos( ::pPtr ) )
+METHOD QContextMenuEvent:pos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QContextMenuEvent_pos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QContextMenuEvent:reason()
-   RETURN Qt_QContextMenuEvent_reason( ::pPtr )
+METHOD QContextMenuEvent:reason( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QContextMenuEvent_reason( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QContextMenuEvent:x()
-   RETURN Qt_QContextMenuEvent_x( ::pPtr )
+METHOD QContextMenuEvent:x( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QContextMenuEvent_x( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QContextMenuEvent:y()
-   RETURN Qt_QContextMenuEvent_y( ::pPtr )
+METHOD QContextMenuEvent:y( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QContextMenuEvent_y( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

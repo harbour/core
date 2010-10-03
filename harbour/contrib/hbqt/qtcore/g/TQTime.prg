@@ -103,23 +103,26 @@ CREATE CLASS QTime INHERIT HbQtObjectHandler FUNCTION HB_QTime
 
    METHOD  new( ... )
 
-   METHOD  addMSecs( nMs )
-   METHOD  addSecs( nS )
-   METHOD  elapsed()
-   METHOD  hour()
-   METHOD  isNull()
-   METHOD  isValid( ... )
-   METHOD  minute()
-   METHOD  msec()
-   METHOD  msecsTo( pT )
-   METHOD  restart()
-   METHOD  second()
-   METHOD  secsTo( pT )
-   METHOD  setHMS( nH, nM, nS, nMs )
-   METHOD  start()
-   METHOD  toString( ... )
-   METHOD  currentTime()
-   METHOD  fromString( ... )
+   METHOD  addMSecs                      // ( nMs )                                            -> oQTime
+   METHOD  addSecs                       // ( nS )                                             -> oQTime
+   METHOD  elapsed                       // (  )                                               -> nInt
+   METHOD  hour                          // (  )                                               -> nInt
+   METHOD  isNull                        // (  )                                               -> lBool
+   METHOD  isValid                       // (  )                                               -> lBool
+   METHOD  minute                        // (  )                                               -> nInt
+   METHOD  msec                          // (  )                                               -> nInt
+   METHOD  msecsTo                       // ( oQTime )                                         -> nInt
+   METHOD  restart                       // (  )                                               -> nInt
+   METHOD  second                        // (  )                                               -> nInt
+   METHOD  secsTo                        // ( oQTime )                                         -> nInt
+   METHOD  setHMS                        // ( nH, nM, nS, nMs )                                -> lBool
+   METHOD  start                         // (  )                                               -> NIL
+   METHOD  toString                      // ( cFormat )                                        -> cQString
+                                         // ( nFormat )                                        -> cQString
+   METHOD  currentTime                   // (  )                                               -> oQTime
+   METHOD  fromString                    // ( cString, nFormat )                               -> oQTime
+                                         // ( cString, cFormat )                               -> oQTime
+                                         // ( nH, nM, nS, nMs )                                -> lBool
 
    ENDCLASS
 
@@ -133,24 +136,52 @@ METHOD QTime:new( ... )
    RETURN Self
 
 
-METHOD QTime:addMSecs( nMs )
-   RETURN HB_QTime():from( Qt_QTime_addMSecs( ::pPtr, nMs ) )
+METHOD QTime:addMSecs( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QTime():from( Qt_QTime_addMSecs( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTime:addSecs( nS )
-   RETURN HB_QTime():from( Qt_QTime_addSecs( ::pPtr, nS ) )
+METHOD QTime:addSecs( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QTime():from( Qt_QTime_addSecs( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTime:elapsed()
-   RETURN Qt_QTime_elapsed( ::pPtr )
+METHOD QTime:elapsed( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTime_elapsed( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTime:hour()
-   RETURN Qt_QTime_hour( ::pPtr )
+METHOD QTime:hour( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTime_hour( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTime:isNull()
-   RETURN Qt_QTime_isNull( ::pPtr )
+METHOD QTime:isNull( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTime_isNull( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTime:isValid( ... )
@@ -173,36 +204,86 @@ METHOD QTime:isValid( ... )
    RETURN hbqt_error()
 
 
-METHOD QTime:minute()
-   RETURN Qt_QTime_minute( ::pPtr )
+METHOD QTime:minute( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTime_minute( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTime:msec()
-   RETURN Qt_QTime_msec( ::pPtr )
+METHOD QTime:msec( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTime_msec( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTime:msecsTo( pT )
-   RETURN Qt_QTime_msecsTo( ::pPtr, hbqt_ptr( pT ) )
+METHOD QTime:msecsTo( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTime_msecsTo( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTime:restart()
-   RETURN Qt_QTime_restart( ::pPtr )
+METHOD QTime:restart( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTime_restart( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTime:second()
-   RETURN Qt_QTime_second( ::pPtr )
+METHOD QTime:second( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTime_second( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTime:secsTo( pT )
-   RETURN Qt_QTime_secsTo( ::pPtr, hbqt_ptr( pT ) )
+METHOD QTime:secsTo( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTime_secsTo( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTime:setHMS( nH, nM, nS, nMs )
-   RETURN Qt_QTime_setHMS( ::pPtr, nH, nM, nS, nMs )
+METHOD QTime:setHMS( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QTime_setHMS( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QTime_setHMS( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTime:start()
-   RETURN Qt_QTime_start( ::pPtr )
+METHOD QTime:start( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTime_start( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTime:toString( ... )
@@ -221,8 +302,12 @@ METHOD QTime:toString( ... )
    RETURN hbqt_error()
 
 
-METHOD QTime:currentTime()
-   RETURN HB_QTime():from( Qt_QTime_currentTime( ::pPtr ) )
+METHOD QTime:currentTime( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTime():from( Qt_QTime_currentTime( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QTime:fromString( ... )

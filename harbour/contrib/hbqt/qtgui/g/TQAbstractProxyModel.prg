@@ -103,12 +103,12 @@ CREATE CLASS QAbstractProxyModel INHERIT HbQtObjectHandler, HB_QAbstractItemMode
 
    METHOD  new( ... )
 
-   METHOD  mapFromSource( pSourceIndex )
-   METHOD  mapSelectionFromSource( pSourceSelection )
-   METHOD  mapSelectionToSource( pProxySelection )
-   METHOD  mapToSource( pProxyIndex )
-   METHOD  setSourceModel( pSourceModel )
-   METHOD  sourceModel()
+   METHOD  mapFromSource                 // ( oQModelIndex )                                   -> oQModelIndex
+   METHOD  mapSelectionFromSource        // ( oQItemSelection )                                -> oQItemSelection
+   METHOD  mapSelectionToSource          // ( oQItemSelection )                                -> oQItemSelection
+   METHOD  mapToSource                   // ( oQModelIndex )                                   -> oQModelIndex
+   METHOD  setSourceModel                // ( oQAbstractItemModel )                            -> NIL
+   METHOD  sourceModel                   // (  )                                               -> oQAbstractItemModel
 
    ENDCLASS
 
@@ -122,26 +122,70 @@ METHOD QAbstractProxyModel:new( ... )
    RETURN Self
 
 
-METHOD QAbstractProxyModel:mapFromSource( pSourceIndex )
-   RETURN HB_QModelIndex():from( Qt_QAbstractProxyModel_mapFromSource( ::pPtr, hbqt_ptr( pSourceIndex ) ) )
+METHOD QAbstractProxyModel:mapFromSource( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QModelIndex():from( Qt_QAbstractProxyModel_mapFromSource( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractProxyModel:mapSelectionFromSource( pSourceSelection )
-   RETURN HB_QItemSelection():from( Qt_QAbstractProxyModel_mapSelectionFromSource( ::pPtr, hbqt_ptr( pSourceSelection ) ) )
+METHOD QAbstractProxyModel:mapSelectionFromSource( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QItemSelection():from( Qt_QAbstractProxyModel_mapSelectionFromSource( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractProxyModel:mapSelectionToSource( pProxySelection )
-   RETURN HB_QItemSelection():from( Qt_QAbstractProxyModel_mapSelectionToSource( ::pPtr, hbqt_ptr( pProxySelection ) ) )
+METHOD QAbstractProxyModel:mapSelectionToSource( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QItemSelection():from( Qt_QAbstractProxyModel_mapSelectionToSource( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractProxyModel:mapToSource( pProxyIndex )
-   RETURN HB_QModelIndex():from( Qt_QAbstractProxyModel_mapToSource( ::pPtr, hbqt_ptr( pProxyIndex ) ) )
+METHOD QAbstractProxyModel:mapToSource( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QModelIndex():from( Qt_QAbstractProxyModel_mapToSource( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractProxyModel:setSourceModel( pSourceModel )
-   RETURN Qt_QAbstractProxyModel_setSourceModel( ::pPtr, hbqt_ptr( pSourceModel ) )
+METHOD QAbstractProxyModel:setSourceModel( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractProxyModel_setSourceModel( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractProxyModel:sourceModel()
-   RETURN HB_QAbstractItemModel():from( Qt_QAbstractProxyModel_sourceModel( ::pPtr ) )
+METHOD QAbstractProxyModel:sourceModel( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QAbstractItemModel():from( Qt_QAbstractProxyModel_sourceModel( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

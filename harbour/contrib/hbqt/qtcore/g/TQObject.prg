@@ -103,30 +103,30 @@ CREATE CLASS QObject INHERIT HbQtObjectHandler FUNCTION HB_QObject
 
    METHOD  new( ... )
 
-   METHOD  blockSignals( lBlock )
-   METHOD  dumpObjectInfo()
-   METHOD  dumpObjectTree()
-   METHOD  dynamicPropertyNames()
-   METHOD  event( pE )
-   METHOD  eventFilter( pWatched, pEvent )
-   METHOD  inherits( pClassName )
-   METHOD  installEventFilter( pFilterObj )
-   METHOD  isWidgetType()
-   METHOD  killTimer( nId )
-   METHOD  moveToThread( pTargetThread )
-   METHOD  objectName()
-   METHOD  parent()
-   METHOD  property( pName )
-   METHOD  removeEventFilter( pObj )
-   METHOD  setObjectName( cName )
-   METHOD  setParent( pParent )
-   METHOD  setProperty( pName, pValue )
-   METHOD  signalsBlocked()
-   METHOD  startTimer( nInterval )
-   METHOD  thread()
-   METHOD  tr( pSourceText, pDisambiguation, nN )
-   METHOD  trUtf8( pSourceText, pDisambiguation, nN )
-   METHOD  deleteLater()
+   METHOD  blockSignals                  // ( lBlock )                                         -> lBool
+   METHOD  dumpObjectInfo                // (  )                                               -> NIL
+   METHOD  dumpObjectTree                // (  )                                               -> NIL
+   METHOD  dynamicPropertyNames          // (  )                                               -> oQList_QByteArray>
+   METHOD  event                         // ( oQEvent )                                        -> lBool
+   METHOD  eventFilter                   // ( oQObject, oQEvent )                              -> lBool
+   METHOD  inherits                      // ( cClassName )                                     -> lBool
+   METHOD  installEventFilter            // ( oQObject )                                       -> NIL
+   METHOD  isWidgetType                  // (  )                                               -> lBool
+   METHOD  killTimer                     // ( nId )                                            -> NIL
+   METHOD  moveToThread                  // ( oQThread )                                       -> NIL
+   METHOD  objectName                    // (  )                                               -> cQString
+   METHOD  parent                        // (  )                                               -> oQObject
+   METHOD  property                      // ( cName )                                          -> oQVariant
+   METHOD  removeEventFilter             // ( oQObject )                                       -> NIL
+   METHOD  setObjectName                 // ( cName )                                          -> NIL
+   METHOD  setParent                     // ( oQObject )                                       -> NIL
+   METHOD  setProperty                   // ( cName, oQVariant )                               -> lBool
+   METHOD  signalsBlocked                // (  )                                               -> lBool
+   METHOD  startTimer                    // ( nInterval )                                      -> nInt
+   METHOD  thread                        // (  )                                               -> oQThread
+   METHOD  tr                            // ( cSourceText, cDisambiguation, nN )               -> cQString
+   METHOD  trUtf8                        // ( cSourceText, cDisambiguation, nN )               -> cQString
+   METHOD  deleteLater                   // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -140,98 +140,278 @@ METHOD QObject:new( ... )
    RETURN Self
 
 
-METHOD QObject:blockSignals( lBlock )
-   RETURN Qt_QObject_blockSignals( ::pPtr, lBlock )
+METHOD QObject:blockSignals( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QObject_blockSignals( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QObject:dumpObjectInfo()
-   RETURN Qt_QObject_dumpObjectInfo( ::pPtr )
+METHOD QObject:dumpObjectInfo( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QObject_dumpObjectInfo( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QObject:dumpObjectTree()
-   RETURN Qt_QObject_dumpObjectTree( ::pPtr )
+METHOD QObject:dumpObjectTree( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QObject_dumpObjectTree( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QObject:dynamicPropertyNames()
-   RETURN HB_QList():from( Qt_QObject_dynamicPropertyNames( ::pPtr ) )
+METHOD QObject:dynamicPropertyNames( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QList():from( Qt_QObject_dynamicPropertyNames( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QObject:event( pE )
-   RETURN Qt_QObject_event( ::pPtr, hbqt_ptr( pE ) )
+METHOD QObject:event( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QObject_event( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QObject:eventFilter( pWatched, pEvent )
-   RETURN Qt_QObject_eventFilter( ::pPtr, hbqt_ptr( pWatched ), hbqt_ptr( pEvent ) )
+METHOD QObject:eventFilter( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QObject_eventFilter( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QObject:inherits( pClassName )
-   RETURN Qt_QObject_inherits( ::pPtr, hbqt_ptr( pClassName ) )
+METHOD QObject:inherits( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QObject_inherits( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QObject:installEventFilter( pFilterObj )
-   RETURN Qt_QObject_installEventFilter( ::pPtr, hbqt_ptr( pFilterObj ) )
+METHOD QObject:installEventFilter( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QObject_installEventFilter( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QObject:isWidgetType()
-   RETURN Qt_QObject_isWidgetType( ::pPtr )
+METHOD QObject:isWidgetType( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QObject_isWidgetType( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QObject:killTimer( nId )
-   RETURN Qt_QObject_killTimer( ::pPtr, nId )
+METHOD QObject:killTimer( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QObject_killTimer( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QObject:moveToThread( pTargetThread )
-   RETURN Qt_QObject_moveToThread( ::pPtr, hbqt_ptr( pTargetThread ) )
+METHOD QObject:moveToThread( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QObject_moveToThread( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QObject:objectName()
-   RETURN Qt_QObject_objectName( ::pPtr )
+METHOD QObject:objectName( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QObject_objectName( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QObject:parent()
-   RETURN HB_QObject():from( Qt_QObject_parent( ::pPtr ) )
+METHOD QObject:parent( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QObject():from( Qt_QObject_parent( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QObject:property( pName )
-   RETURN HB_QVariant():from( Qt_QObject_property( ::pPtr, hbqt_ptr( pName ) ) )
+METHOD QObject:property( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QVariant():from( Qt_QObject_property( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QObject:removeEventFilter( pObj )
-   RETURN Qt_QObject_removeEventFilter( ::pPtr, hbqt_ptr( pObj ) )
+METHOD QObject:removeEventFilter( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QObject_removeEventFilter( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QObject:setObjectName( cName )
-   RETURN Qt_QObject_setObjectName( ::pPtr, cName )
+METHOD QObject:setObjectName( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QObject_setObjectName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QObject:setParent( pParent )
-   RETURN Qt_QObject_setParent( ::pPtr, hbqt_ptr( pParent ) )
+METHOD QObject:setParent( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QObject_setParent( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QObject:setProperty( pName, pValue )
-   RETURN Qt_QObject_setProperty( ::pPtr, hbqt_ptr( pName ), hbqt_ptr( pValue ) )
+METHOD QObject:setProperty( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QObject_setProperty( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QObject:signalsBlocked()
-   RETURN Qt_QObject_signalsBlocked( ::pPtr )
+METHOD QObject:signalsBlocked( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QObject_signalsBlocked( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QObject:startTimer( nInterval )
-   RETURN Qt_QObject_startTimer( ::pPtr, nInterval )
+METHOD QObject:startTimer( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QObject_startTimer( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QObject:thread()
-   RETURN HB_QThread():from( Qt_QObject_thread( ::pPtr ) )
+METHOD QObject:thread( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QThread():from( Qt_QObject_thread( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QObject:tr( pSourceText, pDisambiguation, nN )
-   RETURN Qt_QObject_tr( ::pPtr, hbqt_ptr( pSourceText ), hbqt_ptr( pDisambiguation ), nN )
+METHOD QObject:tr( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QObject_tr( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QObject_tr( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QObject_tr( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QObject:trUtf8( pSourceText, pDisambiguation, nN )
-   RETURN Qt_QObject_trUtf8( ::pPtr, hbqt_ptr( pSourceText ), hbqt_ptr( pDisambiguation ), nN )
+METHOD QObject:trUtf8( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN Qt_QObject_trUtf8( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QObject_trUtf8( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QObject_trUtf8( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QObject:deleteLater()
-   RETURN Qt_QObject_deleteLater( ::pPtr )
+METHOD QObject:deleteLater( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QObject_deleteLater( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

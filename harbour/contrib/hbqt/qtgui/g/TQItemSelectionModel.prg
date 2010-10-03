@@ -103,20 +103,21 @@ CREATE CLASS QItemSelectionModel INHERIT HbQtObjectHandler, HB_QObject FUNCTION 
 
    METHOD  new( ... )
 
-   METHOD  columnIntersectsSelection( nColumn, pParent )
-   METHOD  currentIndex()
-   METHOD  hasSelection()
-   METHOD  isColumnSelected( nColumn, pParent )
-   METHOD  isRowSelected( nRow, pParent )
-   METHOD  isSelected( pIndex )
-   METHOD  model()
-   METHOD  rowIntersectsSelection( nRow, pParent )
-   METHOD  selection()
-   METHOD  clear()
-   METHOD  clearSelection()
-   METHOD  reset()
-   METHOD  select( ... )
-   METHOD  setCurrentIndex( pIndex, nCommand )
+   METHOD  columnIntersectsSelection     // ( nColumn, oQModelIndex )                          -> lBool
+   METHOD  currentIndex                  // (  )                                               -> oQModelIndex
+   METHOD  hasSelection                  // (  )                                               -> lBool
+   METHOD  isColumnSelected              // ( nColumn, oQModelIndex )                          -> lBool
+   METHOD  isRowSelected                 // ( nRow, oQModelIndex )                             -> lBool
+   METHOD  isSelected                    // ( oQModelIndex )                                   -> lBool
+   METHOD  model                         // (  )                                               -> oQAbstractItemModel
+   METHOD  rowIntersectsSelection        // ( nRow, oQModelIndex )                             -> lBool
+   METHOD  selection                     // (  )                                               -> oQItemSelection
+   METHOD  clear                         // (  )                                               -> NIL
+   METHOD  clearSelection                // (  )                                               -> NIL
+   METHOD  reset                         // (  )                                               -> NIL
+   METHOD  select                        // ( oQModelIndex, nCommand )                         -> NIL
+                                         // ( oQItemSelection, nCommand )                      -> NIL
+   METHOD  setCurrentIndex               // ( oQModelIndex, nCommand )                         -> NIL
 
    ENDCLASS
 
@@ -130,52 +131,120 @@ METHOD QItemSelectionModel:new( ... )
    RETURN Self
 
 
-METHOD QItemSelectionModel:columnIntersectsSelection( nColumn, pParent )
-   RETURN Qt_QItemSelectionModel_columnIntersectsSelection( ::pPtr, nColumn, hbqt_ptr( pParent ) )
+METHOD QItemSelectionModel:columnIntersectsSelection( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QItemSelectionModel_columnIntersectsSelection( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QItemSelectionModel:currentIndex()
-   RETURN HB_QModelIndex():from( Qt_QItemSelectionModel_currentIndex( ::pPtr ) )
+METHOD QItemSelectionModel:currentIndex( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QModelIndex():from( Qt_QItemSelectionModel_currentIndex( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QItemSelectionModel:hasSelection()
-   RETURN Qt_QItemSelectionModel_hasSelection( ::pPtr )
+METHOD QItemSelectionModel:hasSelection( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QItemSelectionModel_hasSelection( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QItemSelectionModel:isColumnSelected( nColumn, pParent )
-   RETURN Qt_QItemSelectionModel_isColumnSelected( ::pPtr, nColumn, hbqt_ptr( pParent ) )
+METHOD QItemSelectionModel:isColumnSelected( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QItemSelectionModel_isColumnSelected( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QItemSelectionModel:isRowSelected( nRow, pParent )
-   RETURN Qt_QItemSelectionModel_isRowSelected( ::pPtr, nRow, hbqt_ptr( pParent ) )
+METHOD QItemSelectionModel:isRowSelected( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QItemSelectionModel_isRowSelected( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QItemSelectionModel:isSelected( pIndex )
-   RETURN Qt_QItemSelectionModel_isSelected( ::pPtr, hbqt_ptr( pIndex ) )
+METHOD QItemSelectionModel:isSelected( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QItemSelectionModel_isSelected( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QItemSelectionModel:model()
-   RETURN HB_QAbstractItemModel():from( Qt_QItemSelectionModel_model( ::pPtr ) )
+METHOD QItemSelectionModel:model( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QAbstractItemModel():from( Qt_QItemSelectionModel_model( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QItemSelectionModel:rowIntersectsSelection( nRow, pParent )
-   RETURN Qt_QItemSelectionModel_rowIntersectsSelection( ::pPtr, nRow, hbqt_ptr( pParent ) )
+METHOD QItemSelectionModel:rowIntersectsSelection( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QItemSelectionModel_rowIntersectsSelection( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QItemSelectionModel:selection()
-   RETURN HB_QItemSelection():from( Qt_QItemSelectionModel_selection( ::pPtr ) )
+METHOD QItemSelectionModel:selection( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QItemSelection():from( Qt_QItemSelectionModel_selection( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QItemSelectionModel:clear()
-   RETURN Qt_QItemSelectionModel_clear( ::pPtr )
+METHOD QItemSelectionModel:clear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QItemSelectionModel_clear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QItemSelectionModel:clearSelection()
-   RETURN Qt_QItemSelectionModel_clearSelection( ::pPtr )
+METHOD QItemSelectionModel:clearSelection( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QItemSelectionModel_clearSelection( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QItemSelectionModel:reset()
-   RETURN Qt_QItemSelectionModel_reset( ::pPtr )
+METHOD QItemSelectionModel:reset( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QItemSelectionModel_reset( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QItemSelectionModel:select( ... )
@@ -195,6 +264,14 @@ METHOD QItemSelectionModel:select( ... )
    RETURN hbqt_error()
 
 
-METHOD QItemSelectionModel:setCurrentIndex( pIndex, nCommand )
-   RETURN Qt_QItemSelectionModel_setCurrentIndex( ::pPtr, hbqt_ptr( pIndex ), nCommand )
+METHOD QItemSelectionModel:setCurrentIndex( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN Qt_QItemSelectionModel_setCurrentIndex( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

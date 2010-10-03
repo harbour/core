@@ -103,18 +103,18 @@ CREATE CLASS QStyleOptionSlider INHERIT HbQtObjectHandler, HB_QStyleOptionComple
 
    METHOD  new( ... )
 
-   METHOD  dialWrapping()
-   METHOD  maximum()
-   METHOD  minimum()
-   METHOD  notchTarget()
-   METHOD  orientation()
-   METHOD  pageStep()
-   METHOD  singleStep()
-   METHOD  sliderPosition()
-   METHOD  sliderValue()
-   METHOD  tickInterval()
-   METHOD  tickPosition()
-   METHOD  upsideDown()
+   METHOD  dialWrapping                  // (  )                                               -> lBool
+   METHOD  maximum                       // (  )                                               -> nInt
+   METHOD  minimum                       // (  )                                               -> nInt
+   METHOD  notchTarget                   // (  )                                               -> nQreal
+   METHOD  orientation                   // (  )                                               -> nQt_Orientation
+   METHOD  pageStep                      // (  )                                               -> nInt
+   METHOD  singleStep                    // (  )                                               -> nInt
+   METHOD  sliderPosition                // (  )                                               -> nInt
+   METHOD  sliderValue                   // (  )                                               -> nInt
+   METHOD  tickInterval                  // (  )                                               -> nInt
+   METHOD  tickPosition                  // (  )                                               -> nQSlider_TickPosition
+   METHOD  upsideDown                    // (  )                                               -> lBool
 
    ENDCLASS
 
@@ -128,50 +128,98 @@ METHOD QStyleOptionSlider:new( ... )
    RETURN Self
 
 
-METHOD QStyleOptionSlider:dialWrapping()
-   RETURN Qt_QStyleOptionSlider_dialWrapping( ::pPtr )
+METHOD QStyleOptionSlider:dialWrapping( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionSlider_dialWrapping( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionSlider:maximum()
-   RETURN Qt_QStyleOptionSlider_maximum( ::pPtr )
+METHOD QStyleOptionSlider:maximum( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionSlider_maximum( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionSlider:minimum()
-   RETURN Qt_QStyleOptionSlider_minimum( ::pPtr )
+METHOD QStyleOptionSlider:minimum( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionSlider_minimum( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionSlider:notchTarget()
-   RETURN Qt_QStyleOptionSlider_notchTarget( ::pPtr )
+METHOD QStyleOptionSlider:notchTarget( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionSlider_notchTarget( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionSlider:orientation()
-   RETURN Qt_QStyleOptionSlider_orientation( ::pPtr )
+METHOD QStyleOptionSlider:orientation( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionSlider_orientation( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionSlider:pageStep()
-   RETURN Qt_QStyleOptionSlider_pageStep( ::pPtr )
+METHOD QStyleOptionSlider:pageStep( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionSlider_pageStep( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionSlider:singleStep()
-   RETURN Qt_QStyleOptionSlider_singleStep( ::pPtr )
+METHOD QStyleOptionSlider:singleStep( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionSlider_singleStep( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionSlider:sliderPosition()
-   RETURN Qt_QStyleOptionSlider_sliderPosition( ::pPtr )
+METHOD QStyleOptionSlider:sliderPosition( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionSlider_sliderPosition( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionSlider:sliderValue()
-   RETURN Qt_QStyleOptionSlider_sliderValue( ::pPtr )
+METHOD QStyleOptionSlider:sliderValue( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionSlider_sliderValue( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionSlider:tickInterval()
-   RETURN Qt_QStyleOptionSlider_tickInterval( ::pPtr )
+METHOD QStyleOptionSlider:tickInterval( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionSlider_tickInterval( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionSlider:tickPosition()
-   RETURN Qt_QStyleOptionSlider_tickPosition( ::pPtr )
+METHOD QStyleOptionSlider:tickPosition( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionSlider_tickPosition( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionSlider:upsideDown()
-   RETURN Qt_QStyleOptionSlider_upsideDown( ::pPtr )
+METHOD QStyleOptionSlider:upsideDown( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionSlider_upsideDown( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

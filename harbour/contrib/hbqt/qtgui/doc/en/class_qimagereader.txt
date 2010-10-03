@@ -27,44 +27,44 @@
  *     An instance of the object of type QImageReader
  *  $METHODS$
  *     :autoDetectImageFormat()                            -> lBool
- *     :backgroundColor()                                  -> pQColor
+ *     :backgroundColor()                                  -> oQColor
  *     :canRead()                                          -> lBool
- *     :clipRect()                                         -> pQRect
+ *     :clipRect()                                         -> oQRect
  *     :currentImageNumber()                               -> nInt
- *     :currentImageRect()                                 -> pQRect
- *     :device()                                           -> pQIODevice
+ *     :currentImageRect()                                 -> oQRect
+ *     :device()                                           -> oQIODevice
  *     :error()                                            -> nImageReaderError
  *     :errorString()                                      -> cQString
  *     :fileName()                                         -> cQString
- *     :format()                                           -> pQByteArray
+ *     :format()                                           -> oQByteArray
  *     :imageCount()                                       -> nInt
- *     :imageFormat()                                      -> nQImage::Format
+ *     :imageFormat()                                      -> nQImage_Format
  *     :jumpToImage( nImageNumber )                        -> lBool
  *     :jumpToNextImage()                                  -> lBool
  *     :loopCount()                                        -> nInt
  *     :nextImageDelay()                                   -> nInt
  *     :quality()                                          -> nInt
- *     :read()                                             -> pQImage
- *     :read_1( pImage )                                   -> lBool
- *     :scaledClipRect()                                   -> pQRect
- *     :scaledSize()                                       -> pQSize
+ *     :read()                                             -> oQImage
+ *     :read( oQImage )                                    -> lBool
+ *     :scaledClipRect()                                   -> oQRect
+ *     :scaledSize()                                       -> oQSize
  *     :setAutoDetectImageFormat( lEnabled )               -> NIL
- *     :setBackgroundColor( pColor )                       -> NIL
- *     :setClipRect( pRect )                               -> NIL
- *     :setDevice( pDevice )                               -> NIL
+ *     :setBackgroundColor( oQColor )                      -> NIL
+ *     :setClipRect( oQRect )                              -> NIL
+ *     :setDevice( oQIODevice )                            -> NIL
  *     :setFileName( cFileName )                           -> NIL
- *     :setFormat( pFormat )                               -> NIL
+ *     :setFormat( oQByteArray )                           -> NIL
  *     :setQuality( nQuality )                             -> NIL
- *     :setScaledClipRect( pRect )                         -> NIL
- *     :setScaledSize( pSize )                             -> NIL
- *     :size()                                             -> pQSize
+ *     :setScaledClipRect( oQRect )                        -> NIL
+ *     :setScaledSize( oQSize )                            -> NIL
+ *     :size()                                             -> oQSize
  *     :supportsAnimation()                                -> lBool
  *     :supportsOption( nOption )                          -> lBool
  *     :text( cKey )                                       -> cQString
- *     :textKeys()                                         -> pQStringList
- *     :imageFormat_1( cFileName )                         -> pQByteArray
- *     :imageFormat_2( pDevice )                           -> pQByteArray
- *     :supportedImageFormats()                            -> pQList<QByteArray>
+ *     :textKeys()                                         -> oQStringList
+ *     :imageFormat( cFileName )                           -> oQByteArray
+ *     :imageFormat( oQIODevice )                          -> oQByteArray
+ *     :supportedImageFormats()                            -> oQList_QByteArray>
  * 
  *  $DESCRIPTION$
  * 
@@ -84,7 +84,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQImageReader.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QImageReader.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

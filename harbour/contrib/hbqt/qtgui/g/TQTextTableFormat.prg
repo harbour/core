@@ -103,17 +103,17 @@ CREATE CLASS QTextTableFormat INHERIT HbQtObjectHandler, HB_QTextFrameFormat FUN
 
    METHOD  new( ... )
 
-   METHOD  alignment()
-   METHOD  cellPadding()
-   METHOD  cellSpacing()
-   METHOD  clearColumnWidthConstraints()
-   METHOD  columns()
-   METHOD  headerRowCount()
-   METHOD  isValid()
-   METHOD  setAlignment( nAlignment )
-   METHOD  setCellPadding( nPadding )
-   METHOD  setCellSpacing( nSpacing )
-   METHOD  setHeaderRowCount( nCount )
+   METHOD  alignment                     // (  )                                               -> nQt_Alignment
+   METHOD  cellPadding                   // (  )                                               -> nQreal
+   METHOD  cellSpacing                   // (  )                                               -> nQreal
+   METHOD  clearColumnWidthConstraints   // (  )                                               -> NIL
+   METHOD  columns                       // (  )                                               -> nInt
+   METHOD  headerRowCount                // (  )                                               -> nInt
+   METHOD  isValid                       // (  )                                               -> lBool
+   METHOD  setAlignment                  // ( nAlignment )                                     -> NIL
+   METHOD  setCellPadding                // ( nPadding )                                       -> NIL
+   METHOD  setCellSpacing                // ( nSpacing )                                       -> NIL
+   METHOD  setHeaderRowCount             // ( nCount )                                         -> NIL
 
    ENDCLASS
 
@@ -127,46 +127,106 @@ METHOD QTextTableFormat:new( ... )
    RETURN Self
 
 
-METHOD QTextTableFormat:alignment()
-   RETURN Qt_QTextTableFormat_alignment( ::pPtr )
+METHOD QTextTableFormat:alignment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextTableFormat_alignment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextTableFormat:cellPadding()
-   RETURN Qt_QTextTableFormat_cellPadding( ::pPtr )
+METHOD QTextTableFormat:cellPadding( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextTableFormat_cellPadding( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextTableFormat:cellSpacing()
-   RETURN Qt_QTextTableFormat_cellSpacing( ::pPtr )
+METHOD QTextTableFormat:cellSpacing( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextTableFormat_cellSpacing( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextTableFormat:clearColumnWidthConstraints()
-   RETURN Qt_QTextTableFormat_clearColumnWidthConstraints( ::pPtr )
+METHOD QTextTableFormat:clearColumnWidthConstraints( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextTableFormat_clearColumnWidthConstraints( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextTableFormat:columns()
-   RETURN Qt_QTextTableFormat_columns( ::pPtr )
+METHOD QTextTableFormat:columns( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextTableFormat_columns( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextTableFormat:headerRowCount()
-   RETURN Qt_QTextTableFormat_headerRowCount( ::pPtr )
+METHOD QTextTableFormat:headerRowCount( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextTableFormat_headerRowCount( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextTableFormat:isValid()
-   RETURN Qt_QTextTableFormat_isValid( ::pPtr )
+METHOD QTextTableFormat:isValid( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextTableFormat_isValid( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextTableFormat:setAlignment( nAlignment )
-   RETURN Qt_QTextTableFormat_setAlignment( ::pPtr, nAlignment )
+METHOD QTextTableFormat:setAlignment( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextTableFormat_setAlignment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextTableFormat:setCellPadding( nPadding )
-   RETURN Qt_QTextTableFormat_setCellPadding( ::pPtr, nPadding )
+METHOD QTextTableFormat:setCellPadding( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextTableFormat_setCellPadding( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextTableFormat:setCellSpacing( nSpacing )
-   RETURN Qt_QTextTableFormat_setCellSpacing( ::pPtr, nSpacing )
+METHOD QTextTableFormat:setCellSpacing( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextTableFormat_setCellSpacing( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextTableFormat:setHeaderRowCount( nCount )
-   RETURN Qt_QTextTableFormat_setHeaderRowCount( ::pPtr, nCount )
+METHOD QTextTableFormat:setHeaderRowCount( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextTableFormat_setHeaderRowCount( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

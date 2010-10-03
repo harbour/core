@@ -26,17 +26,17 @@
  *  $RETURNS$
  *     An instance of the object of type QToolButton
  *  $METHODS$
- *     :arrowType()                                        -> nQt::ArrowType
+ *     :arrowType()                                        -> nQt_ArrowType
  *     :autoRaise()                                        -> lBool
- *     :defaultAction()                                    -> pQAction
- *     :menu()                                             -> pQMenu
+ *     :defaultAction()                                    -> oQAction
+ *     :menu()                                             -> oQMenu
  *     :popupMode()                                        -> nToolButtonPopupMode
  *     :setArrowType( nType )                              -> NIL
  *     :setAutoRaise( lEnable )                            -> NIL
- *     :setMenu( pMenu )                                   -> NIL
+ *     :setMenu( oQMenu )                                  -> NIL
  *     :setPopupMode( nMode )                              -> NIL
- *     :toolButtonStyle()                                  -> nQt::ToolButtonStyle
- *     :setDefaultAction( pAction )                        -> NIL
+ *     :toolButtonStyle()                                  -> nQt_ToolButtonStyle
+ *     :setDefaultAction( oQAction )                       -> NIL
  *     :setToolButtonStyle( nStyle )                       -> NIL
  *     :showMenu()                                         -> NIL
  * 
@@ -58,7 +58,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQToolButton.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QToolButton.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractButton()
  *  $END$
  */

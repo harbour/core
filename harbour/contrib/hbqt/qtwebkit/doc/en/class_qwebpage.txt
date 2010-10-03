@@ -26,37 +26,37 @@
  *  $RETURNS$
  *     An instance of the object of type QWebPage
  *  $METHODS$
- *     :action( nAction )                                  -> pQAction
+ *     :action( nAction )                                  -> oQAction
  *     :bytesReceived()                                    -> nQuint64
- *     :createStandardContextMenu()                        -> pQMenu
- *     :currentFrame()                                     -> pQWebFrame
+ *     :createStandardContextMenu()                        -> oQMenu
+ *     :currentFrame()                                     -> oQWebFrame
  *     :findText( cSubString, nOptions )                   -> lBool
  *     :focusNextPrevChild( lNext )                        -> lBool
  *     :forwardUnsupportedContent()                        -> lBool
- *     :history()                                          -> pQWebHistory
- *     :inputMethodQuery( nProperty )                      -> pQVariant
+ *     :history()                                          -> oQWebHistory
+ *     :inputMethodQuery( nProperty )                      -> oQVariant
  *     :isContentEditable()                                -> lBool
  *     :isModified()                                       -> lBool
  *     :linkDelegationPolicy()                             -> nLinkDelegationPolicy
- *     :mainFrame()                                        -> pQWebFrame
- *     :palette()                                          -> pQPalette
- *     :pluginFactory()                                    -> pQWebPluginFactory
+ *     :mainFrame()                                        -> oQWebFrame
+ *     :palette()                                          -> oQPalette
+ *     :pluginFactory()                                    -> oQWebPluginFactory
  *     :selectedText()                                     -> cQString
  *     :setContentEditable( lEditable )                    -> NIL
  *     :setForwardUnsupportedContent( lForward )           -> NIL
  *     :setLinkDelegationPolicy( nPolicy )                 -> NIL
- *     :setPalette( pPalette )                             -> NIL
- *     :setPluginFactory( pFactory )                       -> NIL
- *     :setView( pView )                                   -> NIL
- *     :setViewportSize( pSize )                           -> NIL
- *     :settings()                                         -> pQWebSettings
+ *     :setPalette( oQPalette )                            -> NIL
+ *     :setPluginFactory( oQWebPluginFactory )             -> NIL
+ *     :setView( oQWidget )                                -> NIL
+ *     :setViewportSize( oQSize )                          -> NIL
+ *     :settings()                                         -> oQWebSettings
  *     :supportsExtension( nExtension )                    -> lBool
- *     :swallowContextMenuEvent( pEvent )                  -> lBool
+ *     :swallowContextMenuEvent( oQContextMenuEvent )      -> lBool
  *     :totalBytes()                                       -> nQuint64
  *     :triggerAction( nAction, lChecked )                 -> NIL
- *     :updatePositionDependentActions( pPos )             -> NIL
- *     :view()                                             -> pQWidget
- *     :viewportSize()                                     -> pQSize
+ *     :updatePositionDependentActions( oQPoint )          -> NIL
+ *     :view()                                             -> oQWidget
+ *     :viewportSize()                                     -> oQSize
  * 
  *  $DESCRIPTION$
  * 
@@ -76,7 +76,5 @@
  *     Harbour source: contrib/hbqt/qtwebkit/TQWebPage.prg
  *     C++ wrappers  : contrib/hbqt/qtwebkit/QWebPage.cpp
  *     Library       : hbqtwebkit
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

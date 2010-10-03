@@ -26,43 +26,43 @@
  *  $RETURNS$
  *     An instance of the object of type QDirModel
  *  $METHODS$
- *     :columnCount( pParent )                             -> nInt
- *     :data( pIndex, nRole )                              -> pQVariant
- *     :dropMimeData( pData, nAction, nRow, nColumn, pParent )  -> lBool
- *     :fileIcon( pIndex )                                 -> pQIcon
- *     :fileInfo( pIndex )                                 -> pQFileInfo
- *     :fileName( pIndex )                                 -> cQString
- *     :filePath( pIndex )                                 -> cQString
- *     :filter()                                           -> nQDir::Filters
- *     :flags( pIndex )                                    -> nQt::ItemFlags
- *     :hasChildren( pParent )                             -> lBool
- *     :headerData( nSection, nOrientation, nRole )        -> pQVariant
- *     :iconProvider()                                     -> pQFileIconProvider
- *     :index( nRow, nColumn, pParent )                    -> pQModelIndex
- *     :index_1( cPath, nColumn )                          -> pQModelIndex
- *     :isDir( pIndex )                                    -> lBool
+ *     :columnCount( oQModelIndex )                        -> nInt
+ *     :data( oQModelIndex, nRole )                        -> oQVariant
+ *     :dropMimeData( oQMimeData, nAction, nRow, nColumn, oQModelIndex )  -> lBool
+ *     :fileIcon( oQModelIndex )                           -> oQIcon
+ *     :fileInfo( oQModelIndex )                           -> oQFileInfo
+ *     :fileName( oQModelIndex )                           -> cQString
+ *     :filePath( oQModelIndex )                           -> cQString
+ *     :filter()                                           -> nQDir_Filters
+ *     :flags( oQModelIndex )                              -> nQt_ItemFlags
+ *     :hasChildren( oQModelIndex )                        -> lBool
+ *     :headerData( nSection, nOrientation, nRole )        -> oQVariant
+ *     :iconProvider()                                     -> oQFileIconProvider
+ *     :index( nRow, nColumn, oQModelIndex )               -> oQModelIndex
+ *     :index( cPath, nColumn )                            -> oQModelIndex
+ *     :isDir( oQModelIndex )                              -> lBool
  *     :isReadOnly()                                       -> lBool
  *     :lazyChildCount()                                   -> lBool
- *     :mimeTypes()                                        -> pQStringList
- *     :mkdir( pParent, cName )                            -> pQModelIndex
- *     :nameFilters()                                      -> pQStringList
- *     :parent( pChild )                                   -> pQModelIndex
- *     :remove( pIndex )                                   -> lBool
+ *     :mimeTypes()                                        -> oQStringList
+ *     :mkdir( oQModelIndex, cName )                       -> oQModelIndex
+ *     :nameFilters()                                      -> oQStringList
+ *     :parent( oQModelIndex )                             -> oQModelIndex
+ *     :remove( oQModelIndex )                             -> lBool
  *     :resolveSymlinks()                                  -> lBool
- *     :rmdir( pIndex )                                    -> lBool
- *     :rowCount( pParent )                                -> nInt
- *     :setData( pIndex, pValue, nRole )                   -> lBool
+ *     :rmdir( oQModelIndex )                              -> lBool
+ *     :rowCount( oQModelIndex )                           -> nInt
+ *     :setData( oQModelIndex, oQVariant, nRole )          -> lBool
  *     :setFilter( nFilters )                              -> NIL
- *     :setIconProvider( pProvider )                       -> NIL
+ *     :setIconProvider( oQFileIconProvider )              -> NIL
  *     :setLazyChildCount( lEnable )                       -> NIL
- *     :setNameFilters( pFilters )                         -> NIL
+ *     :setNameFilters( oQStringList )                     -> NIL
  *     :setReadOnly( lEnable )                             -> NIL
  *     :setResolveSymlinks( lEnable )                      -> NIL
  *     :setSorting( nSort )                                -> NIL
  *     :sort( nColumn, nOrder )                            -> NIL
- *     :sorting()                                          -> nQDir::SortFlags
- *     :supportedDropActions()                             -> nQt::DropActions
- *     :refresh( pParent )                                 -> NIL
+ *     :sorting()                                          -> nQDir_SortFlags
+ *     :supportedDropActions()                             -> nQt_DropActions
+ *     :refresh( oQModelIndex )                            -> NIL
  * 
  *  $DESCRIPTION$
  * 
@@ -82,7 +82,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQDirModel.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QDirModel.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QAbstractItemModel()
  *  $END$
  */

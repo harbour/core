@@ -26,7 +26,7 @@
  *  $RETURNS$
  *     An instance of the object of type QTextTableFormat
  *  $METHODS$
- *     :alignment()                                        -> nQt::Alignment
+ *     :alignment()                                        -> nQt_Alignment
  *     :cellPadding()                                      -> nQreal
  *     :cellSpacing()                                      -> nQreal
  *     :clearColumnWidthConstraints()                      -> NIL
@@ -56,7 +56,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTextTableFormat.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextTableFormat.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QTextFrameFormat()
  *  $END$
  */

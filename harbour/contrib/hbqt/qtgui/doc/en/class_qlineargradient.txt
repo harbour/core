@@ -26,12 +26,12 @@
  *  $RETURNS$
  *     An instance of the object of type QLinearGradient
  *  $METHODS$
- *     :finalStop()                                        -> pQPointF
- *     :setFinalStop( pStop )                              -> NIL
- *     :setFinalStop_1( nX, nY )                           -> NIL
- *     :setStart( pStart )                                 -> NIL
- *     :setStart_1( nX, nY )                               -> NIL
- *     :start()                                            -> pQPointF
+ *     :finalStop()                                        -> oQPointF
+ *     :setFinalStop( oQPointF )                           -> NIL
+ *     :setFinalStop( nX, nY )                             -> NIL
+ *     :setStart( oQPointF )                               -> NIL
+ *     :setStart( nX, nY )                                 -> NIL
+ *     :start()                                            -> oQPointF
  * 
  *  $DESCRIPTION$
  * 
@@ -55,7 +55,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQLinearGradient.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QLinearGradient.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QGradient()
  *  $END$
  */

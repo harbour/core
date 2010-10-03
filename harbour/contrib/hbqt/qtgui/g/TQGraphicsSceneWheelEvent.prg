@@ -103,13 +103,13 @@ CREATE CLASS QGraphicsSceneWheelEvent INHERIT HbQtObjectHandler, HB_QGraphicsSce
 
    METHOD  new( ... )
 
-   METHOD  buttons()
-   METHOD  delta()
-   METHOD  modifiers()
-   METHOD  orientation()
-   METHOD  pos()
-   METHOD  scenePos()
-   METHOD  screenPos()
+   METHOD  buttons                       // (  )                                               -> nQt_MouseButtons
+   METHOD  delta                         // (  )                                               -> nInt
+   METHOD  modifiers                     // (  )                                               -> nQt_KeyboardModifiers
+   METHOD  orientation                   // (  )                                               -> nQt_Orientation
+   METHOD  pos                           // (  )                                               -> oQPointF
+   METHOD  scenePos                      // (  )                                               -> oQPointF
+   METHOD  screenPos                     // (  )                                               -> oQPoint
 
    ENDCLASS
 
@@ -123,30 +123,58 @@ METHOD QGraphicsSceneWheelEvent:new( ... )
    RETURN Self
 
 
-METHOD QGraphicsSceneWheelEvent:buttons()
-   RETURN Qt_QGraphicsSceneWheelEvent_buttons( ::pPtr )
+METHOD QGraphicsSceneWheelEvent:buttons( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsSceneWheelEvent_buttons( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsSceneWheelEvent:delta()
-   RETURN Qt_QGraphicsSceneWheelEvent_delta( ::pPtr )
+METHOD QGraphicsSceneWheelEvent:delta( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsSceneWheelEvent_delta( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsSceneWheelEvent:modifiers()
-   RETURN Qt_QGraphicsSceneWheelEvent_modifiers( ::pPtr )
+METHOD QGraphicsSceneWheelEvent:modifiers( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsSceneWheelEvent_modifiers( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsSceneWheelEvent:orientation()
-   RETURN Qt_QGraphicsSceneWheelEvent_orientation( ::pPtr )
+METHOD QGraphicsSceneWheelEvent:orientation( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsSceneWheelEvent_orientation( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsSceneWheelEvent:pos()
-   RETURN HB_QPointF():from( Qt_QGraphicsSceneWheelEvent_pos( ::pPtr ) )
+METHOD QGraphicsSceneWheelEvent:pos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPointF():from( Qt_QGraphicsSceneWheelEvent_pos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsSceneWheelEvent:scenePos()
-   RETURN HB_QPointF():from( Qt_QGraphicsSceneWheelEvent_scenePos( ::pPtr ) )
+METHOD QGraphicsSceneWheelEvent:scenePos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPointF():from( Qt_QGraphicsSceneWheelEvent_scenePos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsSceneWheelEvent:screenPos()
-   RETURN HB_QPoint():from( Qt_QGraphicsSceneWheelEvent_screenPos( ::pPtr ) )
+METHOD QGraphicsSceneWheelEvent:screenPos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPoint():from( Qt_QGraphicsSceneWheelEvent_screenPos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

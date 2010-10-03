@@ -103,37 +103,41 @@ CREATE CLASS QGraphicsLayoutItem INHERIT HbQtObjectHandler FUNCTION HB_QGraphics
 
    METHOD  new( ... )
 
-   METHOD  contentsRect()
-   METHOD  effectiveSizeHint( nWhich, pConstraint )
-   METHOD  geometry()
-   METHOD  getContentsMargins( nLeft, nTop, nRight, nBottom )
-   METHOD  graphicsItem()
-   METHOD  isLayout()
-   METHOD  maximumHeight()
-   METHOD  maximumSize()
-   METHOD  maximumWidth()
-   METHOD  minimumHeight()
-   METHOD  minimumSize()
-   METHOD  minimumWidth()
-   METHOD  ownedByLayout()
-   METHOD  parentLayoutItem()
-   METHOD  preferredHeight()
-   METHOD  preferredSize()
-   METHOD  preferredWidth()
-   METHOD  setGeometry( pRect )
-   METHOD  setMaximumHeight( nHeight )
-   METHOD  setMaximumSize( ... )
-   METHOD  setMaximumWidth( nWidth )
-   METHOD  setMinimumHeight( nHeight )
-   METHOD  setMinimumSize( ... )
-   METHOD  setMinimumWidth( nWidth )
-   METHOD  setParentLayoutItem( pParent )
-   METHOD  setPreferredHeight( nHeight )
-   METHOD  setPreferredSize( ... )
-   METHOD  setPreferredWidth( nWidth )
-   METHOD  setSizePolicy( ... )
-   METHOD  sizePolicy()
-   METHOD  updateGeometry()
+   METHOD  contentsRect                  // (  )                                               -> oQRectF
+   METHOD  effectiveSizeHint             // ( nWhich, oQSizeF )                                -> oQSizeF
+   METHOD  geometry                      // (  )                                               -> oQRectF
+   METHOD  getContentsMargins            // ( @nLeft, @nTop, @nRight, @nBottom )               -> NIL
+   METHOD  graphicsItem                  // (  )                                               -> oQGraphicsItem
+   METHOD  isLayout                      // (  )                                               -> lBool
+   METHOD  maximumHeight                 // (  )                                               -> nQreal
+   METHOD  maximumSize                   // (  )                                               -> oQSizeF
+   METHOD  maximumWidth                  // (  )                                               -> nQreal
+   METHOD  minimumHeight                 // (  )                                               -> nQreal
+   METHOD  minimumSize                   // (  )                                               -> oQSizeF
+   METHOD  minimumWidth                  // (  )                                               -> nQreal
+   METHOD  ownedByLayout                 // (  )                                               -> lBool
+   METHOD  parentLayoutItem              // (  )                                               -> oQGraphicsLayoutItem
+   METHOD  preferredHeight               // (  )                                               -> nQreal
+   METHOD  preferredSize                 // (  )                                               -> oQSizeF
+   METHOD  preferredWidth                // (  )                                               -> nQreal
+   METHOD  setGeometry                   // ( oQRectF )                                        -> NIL
+   METHOD  setMaximumHeight              // ( nHeight )                                        -> NIL
+   METHOD  setMaximumSize                // ( oQSizeF )                                        -> NIL
+                                         // ( nW, nH )                                         -> NIL
+   METHOD  setMaximumWidth               // ( nWidth )                                         -> NIL
+   METHOD  setMinimumHeight              // ( nHeight )                                        -> NIL
+   METHOD  setMinimumSize                // ( oQSizeF )                                        -> NIL
+                                         // ( nW, nH )                                         -> NIL
+   METHOD  setMinimumWidth               // ( nWidth )                                         -> NIL
+   METHOD  setParentLayoutItem           // ( oQGraphicsLayoutItem )                           -> NIL
+   METHOD  setPreferredHeight            // ( nHeight )                                        -> NIL
+   METHOD  setPreferredSize              // ( oQSizeF )                                        -> NIL
+                                         // ( nW, nH )                                         -> NIL
+   METHOD  setPreferredWidth             // ( nWidth )                                         -> NIL
+   METHOD  setSizePolicy                 // ( oQSizePolicy )                                   -> NIL
+                                         // ( nHPolicy, nVPolicy, nControlType )               -> NIL
+   METHOD  sizePolicy                    // (  )                                               -> oQSizePolicy
+   METHOD  updateGeometry                // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -147,80 +151,178 @@ METHOD QGraphicsLayoutItem:new( ... )
    RETURN Self
 
 
-METHOD QGraphicsLayoutItem:contentsRect()
-   RETURN HB_QRectF():from( Qt_QGraphicsLayoutItem_contentsRect( ::pPtr ) )
+METHOD QGraphicsLayoutItem:contentsRect( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRectF():from( Qt_QGraphicsLayoutItem_contentsRect( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayoutItem:effectiveSizeHint( nWhich, pConstraint )
-   RETURN HB_QSizeF():from( Qt_QGraphicsLayoutItem_effectiveSizeHint( ::pPtr, nWhich, hbqt_ptr( pConstraint ) ) )
+METHOD QGraphicsLayoutItem:effectiveSizeHint( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QSizeF():from( Qt_QGraphicsLayoutItem_effectiveSizeHint( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QSizeF():from( Qt_QGraphicsLayoutItem_effectiveSizeHint( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayoutItem:geometry()
-   RETURN HB_QRectF():from( Qt_QGraphicsLayoutItem_geometry( ::pPtr ) )
+METHOD QGraphicsLayoutItem:geometry( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QRectF():from( Qt_QGraphicsLayoutItem_geometry( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayoutItem:getContentsMargins( nLeft, nTop, nRight, nBottom )
-   RETURN Qt_QGraphicsLayoutItem_getContentsMargins( ::pPtr, nLeft, nTop, nRight, nBottom )
+METHOD QGraphicsLayoutItem:getContentsMargins( ... )
+   SWITCH PCount()
+   CASE 4
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
+         RETURN Qt_QGraphicsLayoutItem_getContentsMargins( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayoutItem:graphicsItem()
-   RETURN HB_QGraphicsItem():from( Qt_QGraphicsLayoutItem_graphicsItem( ::pPtr ) )
+METHOD QGraphicsLayoutItem:graphicsItem( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QGraphicsItem():from( Qt_QGraphicsLayoutItem_graphicsItem( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayoutItem:isLayout()
-   RETURN Qt_QGraphicsLayoutItem_isLayout( ::pPtr )
+METHOD QGraphicsLayoutItem:isLayout( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsLayoutItem_isLayout( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayoutItem:maximumHeight()
-   RETURN Qt_QGraphicsLayoutItem_maximumHeight( ::pPtr )
+METHOD QGraphicsLayoutItem:maximumHeight( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsLayoutItem_maximumHeight( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayoutItem:maximumSize()
-   RETURN HB_QSizeF():from( Qt_QGraphicsLayoutItem_maximumSize( ::pPtr ) )
+METHOD QGraphicsLayoutItem:maximumSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSizeF():from( Qt_QGraphicsLayoutItem_maximumSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayoutItem:maximumWidth()
-   RETURN Qt_QGraphicsLayoutItem_maximumWidth( ::pPtr )
+METHOD QGraphicsLayoutItem:maximumWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsLayoutItem_maximumWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayoutItem:minimumHeight()
-   RETURN Qt_QGraphicsLayoutItem_minimumHeight( ::pPtr )
+METHOD QGraphicsLayoutItem:minimumHeight( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsLayoutItem_minimumHeight( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayoutItem:minimumSize()
-   RETURN HB_QSizeF():from( Qt_QGraphicsLayoutItem_minimumSize( ::pPtr ) )
+METHOD QGraphicsLayoutItem:minimumSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSizeF():from( Qt_QGraphicsLayoutItem_minimumSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayoutItem:minimumWidth()
-   RETURN Qt_QGraphicsLayoutItem_minimumWidth( ::pPtr )
+METHOD QGraphicsLayoutItem:minimumWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsLayoutItem_minimumWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayoutItem:ownedByLayout()
-   RETURN Qt_QGraphicsLayoutItem_ownedByLayout( ::pPtr )
+METHOD QGraphicsLayoutItem:ownedByLayout( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsLayoutItem_ownedByLayout( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayoutItem:parentLayoutItem()
-   RETURN HB_QGraphicsLayoutItem():from( Qt_QGraphicsLayoutItem_parentLayoutItem( ::pPtr ) )
+METHOD QGraphicsLayoutItem:parentLayoutItem( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QGraphicsLayoutItem():from( Qt_QGraphicsLayoutItem_parentLayoutItem( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayoutItem:preferredHeight()
-   RETURN Qt_QGraphicsLayoutItem_preferredHeight( ::pPtr )
+METHOD QGraphicsLayoutItem:preferredHeight( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsLayoutItem_preferredHeight( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayoutItem:preferredSize()
-   RETURN HB_QSizeF():from( Qt_QGraphicsLayoutItem_preferredSize( ::pPtr ) )
+METHOD QGraphicsLayoutItem:preferredSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSizeF():from( Qt_QGraphicsLayoutItem_preferredSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayoutItem:preferredWidth()
-   RETURN Qt_QGraphicsLayoutItem_preferredWidth( ::pPtr )
+METHOD QGraphicsLayoutItem:preferredWidth( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsLayoutItem_preferredWidth( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayoutItem:setGeometry( pRect )
-   RETURN Qt_QGraphicsLayoutItem_setGeometry( ::pPtr, hbqt_ptr( pRect ) )
+METHOD QGraphicsLayoutItem:setGeometry( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsLayoutItem_setGeometry( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayoutItem:setMaximumHeight( nHeight )
-   RETURN Qt_QGraphicsLayoutItem_setMaximumHeight( ::pPtr, nHeight )
+METHOD QGraphicsLayoutItem:setMaximumHeight( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsLayoutItem_setMaximumHeight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsLayoutItem:setMaximumSize( ... )
@@ -241,12 +343,28 @@ METHOD QGraphicsLayoutItem:setMaximumSize( ... )
    RETURN hbqt_error()
 
 
-METHOD QGraphicsLayoutItem:setMaximumWidth( nWidth )
-   RETURN Qt_QGraphicsLayoutItem_setMaximumWidth( ::pPtr, nWidth )
+METHOD QGraphicsLayoutItem:setMaximumWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsLayoutItem_setMaximumWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayoutItem:setMinimumHeight( nHeight )
-   RETURN Qt_QGraphicsLayoutItem_setMinimumHeight( ::pPtr, nHeight )
+METHOD QGraphicsLayoutItem:setMinimumHeight( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsLayoutItem_setMinimumHeight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsLayoutItem:setMinimumSize( ... )
@@ -267,16 +385,40 @@ METHOD QGraphicsLayoutItem:setMinimumSize( ... )
    RETURN hbqt_error()
 
 
-METHOD QGraphicsLayoutItem:setMinimumWidth( nWidth )
-   RETURN Qt_QGraphicsLayoutItem_setMinimumWidth( ::pPtr, nWidth )
+METHOD QGraphicsLayoutItem:setMinimumWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsLayoutItem_setMinimumWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayoutItem:setParentLayoutItem( pParent )
-   RETURN Qt_QGraphicsLayoutItem_setParentLayoutItem( ::pPtr, hbqt_ptr( pParent ) )
+METHOD QGraphicsLayoutItem:setParentLayoutItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsLayoutItem_setParentLayoutItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayoutItem:setPreferredHeight( nHeight )
-   RETURN Qt_QGraphicsLayoutItem_setPreferredHeight( ::pPtr, nHeight )
+METHOD QGraphicsLayoutItem:setPreferredHeight( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsLayoutItem_setPreferredHeight( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsLayoutItem:setPreferredSize( ... )
@@ -297,8 +439,16 @@ METHOD QGraphicsLayoutItem:setPreferredSize( ... )
    RETURN hbqt_error()
 
 
-METHOD QGraphicsLayoutItem:setPreferredWidth( nWidth )
-   RETURN Qt_QGraphicsLayoutItem_setPreferredWidth( ::pPtr, nWidth )
+METHOD QGraphicsLayoutItem:setPreferredWidth( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QGraphicsLayoutItem_setPreferredWidth( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QGraphicsLayoutItem:setSizePolicy( ... )
@@ -325,10 +475,18 @@ METHOD QGraphicsLayoutItem:setSizePolicy( ... )
    RETURN hbqt_error()
 
 
-METHOD QGraphicsLayoutItem:sizePolicy()
-   RETURN HB_QSizePolicy():from( Qt_QGraphicsLayoutItem_sizePolicy( ::pPtr ) )
+METHOD QGraphicsLayoutItem:sizePolicy( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSizePolicy():from( Qt_QGraphicsLayoutItem_sizePolicy( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsLayoutItem:updateGeometry()
-   RETURN Qt_QGraphicsLayoutItem_updateGeometry( ::pPtr )
+METHOD QGraphicsLayoutItem:updateGeometry( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QGraphicsLayoutItem_updateGeometry( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

@@ -532,7 +532,7 @@ HB_FUNC( QT_QAPPLICATION_FONT_2 )
    QApplication * p = hbqt_par_QApplication( 1 );
    if( p )
    {
-      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font( hbqt_par_char( 2 ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QFont( new QFont( ( p )->font( ( const char * ) hb_parc( 2 ) ) ), true ) );
    }
 }
 
@@ -712,7 +712,7 @@ HB_FUNC( QT_QAPPLICATION_PALETTE_2 )
    QApplication * p = hbqt_par_QApplication( 1 );
    if( p )
    {
-      hb_retptrGC( hbqt_gcAllocate_QPalette( new QPalette( ( p )->palette( hbqt_par_char( 2 ) ) ), true ) );
+      hb_retptrGC( hbqt_gcAllocate_QPalette( new QPalette( ( p )->palette( ( const char * ) hb_parc( 2 ) ) ), true ) );
    }
 }
 
@@ -820,7 +820,7 @@ HB_FUNC( QT_QAPPLICATION_SETFONT )
    QApplication * p = hbqt_par_QApplication( 1 );
    if( p )
    {
-      ( p )->setFont( *hbqt_par_QFont( 2 ), hbqt_par_char( 3 ) );
+      ( p )->setFont( *hbqt_par_QFont( 2 ), ( const char * ) hb_parc( 3 ) );
    }
 }
 
@@ -894,7 +894,7 @@ HB_FUNC( QT_QAPPLICATION_SETPALETTE )
    QApplication * p = hbqt_par_QApplication( 1 );
    if( p )
    {
-      ( p )->setPalette( *hbqt_par_QPalette( 2 ), hbqt_par_char( 3 ) );
+      ( p )->setPalette( *hbqt_par_QPalette( 2 ), ( const char * ) hb_parc( 3 ) );
    }
 }
 

@@ -103,32 +103,32 @@ CREATE CLASS QAbstractButton INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_Q
 
    METHOD  new( ... )
 
-   METHOD  autoExclusive()
-   METHOD  autoRepeat()
-   METHOD  autoRepeatDelay()
-   METHOD  autoRepeatInterval()
-   METHOD  group()
-   METHOD  icon()
-   METHOD  iconSize()
-   METHOD  isCheckable()
-   METHOD  isChecked()
-   METHOD  isDown()
-   METHOD  setAutoExclusive( lBool )
-   METHOD  setAutoRepeat( lBool )
-   METHOD  setAutoRepeatDelay( nInt )
-   METHOD  setAutoRepeatInterval( nInt )
-   METHOD  setCheckable( lBool )
-   METHOD  setDown( lBool )
-   METHOD  setIcon( pIcon )
-   METHOD  setShortcut( pKey )
-   METHOD  setText( cText )
-   METHOD  shortcut()
-   METHOD  text()
-   METHOD  animateClick( nMsec )
-   METHOD  click()
-   METHOD  setChecked( lBool )
-   METHOD  setIconSize( pSize )
-   METHOD  toggle()
+   METHOD  autoExclusive                 // (  )                                               -> lBool
+   METHOD  autoRepeat                    // (  )                                               -> lBool
+   METHOD  autoRepeatDelay               // (  )                                               -> nInt
+   METHOD  autoRepeatInterval            // (  )                                               -> nInt
+   METHOD  group                         // (  )                                               -> oQButtonGroup
+   METHOD  icon                          // (  )                                               -> oQIcon
+   METHOD  iconSize                      // (  )                                               -> oQSize
+   METHOD  isCheckable                   // (  )                                               -> lBool
+   METHOD  isChecked                     // (  )                                               -> lBool
+   METHOD  isDown                        // (  )                                               -> lBool
+   METHOD  setAutoExclusive              // ( lBool )                                          -> NIL
+   METHOD  setAutoRepeat                 // ( lBool )                                          -> NIL
+   METHOD  setAutoRepeatDelay            // ( nInt )                                           -> NIL
+   METHOD  setAutoRepeatInterval         // ( nInt )                                           -> NIL
+   METHOD  setCheckable                  // ( lBool )                                          -> NIL
+   METHOD  setDown                       // ( lBool )                                          -> NIL
+   METHOD  setIcon                       // ( coQIcon )                                        -> NIL
+   METHOD  setShortcut                   // ( oQKeySequence )                                  -> NIL
+   METHOD  setText                       // ( cText )                                          -> NIL
+   METHOD  shortcut                      // (  )                                               -> oQKeySequence
+   METHOD  text                          // (  )                                               -> cQString
+   METHOD  animateClick                  // ( nMsec )                                          -> NIL
+   METHOD  click                         // (  )                                               -> NIL
+   METHOD  setChecked                    // ( lBool )                                          -> NIL
+   METHOD  setIconSize                   // ( oQSize )                                         -> NIL
+   METHOD  toggle                        // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -142,106 +142,260 @@ METHOD QAbstractButton:new( ... )
    RETURN Self
 
 
-METHOD QAbstractButton:autoExclusive()
-   RETURN Qt_QAbstractButton_autoExclusive( ::pPtr )
+METHOD QAbstractButton:autoExclusive( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractButton_autoExclusive( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractButton:autoRepeat()
-   RETURN Qt_QAbstractButton_autoRepeat( ::pPtr )
+METHOD QAbstractButton:autoRepeat( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractButton_autoRepeat( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractButton:autoRepeatDelay()
-   RETURN Qt_QAbstractButton_autoRepeatDelay( ::pPtr )
+METHOD QAbstractButton:autoRepeatDelay( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractButton_autoRepeatDelay( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractButton:autoRepeatInterval()
-   RETURN Qt_QAbstractButton_autoRepeatInterval( ::pPtr )
+METHOD QAbstractButton:autoRepeatInterval( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractButton_autoRepeatInterval( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractButton:group()
-   RETURN HB_QButtonGroup():from( Qt_QAbstractButton_group( ::pPtr ) )
+METHOD QAbstractButton:group( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QButtonGroup():from( Qt_QAbstractButton_group( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractButton:icon()
-   RETURN HB_QIcon():from( Qt_QAbstractButton_icon( ::pPtr ) )
+METHOD QAbstractButton:icon( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QIcon():from( Qt_QAbstractButton_icon( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractButton:iconSize()
-   RETURN HB_QSize():from( Qt_QAbstractButton_iconSize( ::pPtr ) )
+METHOD QAbstractButton:iconSize( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QSize():from( Qt_QAbstractButton_iconSize( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractButton:isCheckable()
-   RETURN Qt_QAbstractButton_isCheckable( ::pPtr )
+METHOD QAbstractButton:isCheckable( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractButton_isCheckable( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractButton:isChecked()
-   RETURN Qt_QAbstractButton_isChecked( ::pPtr )
+METHOD QAbstractButton:isChecked( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractButton_isChecked( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractButton:isDown()
-   RETURN Qt_QAbstractButton_isDown( ::pPtr )
+METHOD QAbstractButton:isDown( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractButton_isDown( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractButton:setAutoExclusive( lBool )
-   RETURN Qt_QAbstractButton_setAutoExclusive( ::pPtr, lBool )
+METHOD QAbstractButton:setAutoExclusive( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractButton_setAutoExclusive( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractButton:setAutoRepeat( lBool )
-   RETURN Qt_QAbstractButton_setAutoRepeat( ::pPtr, lBool )
+METHOD QAbstractButton:setAutoRepeat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractButton_setAutoRepeat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractButton:setAutoRepeatDelay( nInt )
-   RETURN Qt_QAbstractButton_setAutoRepeatDelay( ::pPtr, nInt )
+METHOD QAbstractButton:setAutoRepeatDelay( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractButton_setAutoRepeatDelay( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractButton:setAutoRepeatInterval( nInt )
-   RETURN Qt_QAbstractButton_setAutoRepeatInterval( ::pPtr, nInt )
+METHOD QAbstractButton:setAutoRepeatInterval( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractButton_setAutoRepeatInterval( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractButton:setCheckable( lBool )
-   RETURN Qt_QAbstractButton_setCheckable( ::pPtr, lBool )
+METHOD QAbstractButton:setCheckable( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractButton_setCheckable( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractButton:setDown( lBool )
-   RETURN Qt_QAbstractButton_setDown( ::pPtr, lBool )
+METHOD QAbstractButton:setDown( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractButton_setDown( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractButton:setIcon( pIcon )
-   RETURN Qt_QAbstractButton_setIcon( ::pPtr, hbqt_ptr( pIcon ) )
+METHOD QAbstractButton:setIcon( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) )
+         RETURN Qt_QAbstractButton_setIcon( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractButton:setShortcut( pKey )
-   RETURN Qt_QAbstractButton_setShortcut( ::pPtr, hbqt_ptr( pKey ) )
+METHOD QAbstractButton:setShortcut( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractButton_setShortcut( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractButton:setText( cText )
-   RETURN Qt_QAbstractButton_setText( ::pPtr, cText )
+METHOD QAbstractButton:setText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractButton_setText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractButton:shortcut()
-   RETURN HB_QKeySequence():from( Qt_QAbstractButton_shortcut( ::pPtr ) )
+METHOD QAbstractButton:shortcut( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QKeySequence():from( Qt_QAbstractButton_shortcut( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractButton:text()
-   RETURN Qt_QAbstractButton_text( ::pPtr )
+METHOD QAbstractButton:text( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractButton_text( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractButton:animateClick( nMsec )
-   RETURN Qt_QAbstractButton_animateClick( ::pPtr, nMsec )
+METHOD QAbstractButton:animateClick( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractButton_animateClick( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QAbstractButton_animateClick( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractButton:click()
-   RETURN Qt_QAbstractButton_click( ::pPtr )
+METHOD QAbstractButton:click( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractButton_click( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractButton:setChecked( lBool )
-   RETURN Qt_QAbstractButton_setChecked( ::pPtr, lBool )
+METHOD QAbstractButton:setChecked( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isLogical( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractButton_setChecked( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractButton:setIconSize( pSize )
-   RETURN Qt_QAbstractButton_setIconSize( ::pPtr, hbqt_ptr( pSize ) )
+METHOD QAbstractButton:setIconSize( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QAbstractButton_setIconSize( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QAbstractButton:toggle()
-   RETURN Qt_QAbstractButton_toggle( ::pPtr )
+METHOD QAbstractButton:toggle( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QAbstractButton_toggle( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

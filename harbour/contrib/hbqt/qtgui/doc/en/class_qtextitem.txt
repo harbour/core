@@ -28,7 +28,7 @@
  *  $METHODS$
  *     :ascent()                                           -> nQreal
  *     :descent()                                          -> nQreal
- *     :font()                                             -> pQFont
+ *     :font()                                             -> oQFont
  *     :renderFlags()                                      -> nRenderFlags
  *     :text()                                             -> cQString
  *     :width()                                            -> nQreal
@@ -51,7 +51,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTextItem.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextItem.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

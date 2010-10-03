@@ -103,15 +103,15 @@ CREATE CLASS QStyleOptionHeader INHERIT HbQtObjectHandler, HB_QStyleOption FUNCT
 
    METHOD  new( ... )
 
-   METHOD  icon()
-   METHOD  iconAlignment()
-   METHOD  orientation()
-   METHOD  position()
-   METHOD  section()
-   METHOD  selectedPosition()
-   METHOD  sortIndicator()
-   METHOD  text()
-   METHOD  textAlignment()
+   METHOD  icon                          // (  )                                               -> oQIcon
+   METHOD  iconAlignment                 // (  )                                               -> nQt_Alignment
+   METHOD  orientation                   // (  )                                               -> nQt_Orientation
+   METHOD  position                      // (  )                                               -> nSectionPosition
+   METHOD  section                       // (  )                                               -> nInt
+   METHOD  selectedPosition              // (  )                                               -> nSelectedPosition
+   METHOD  sortIndicator                 // (  )                                               -> nSortIndicator
+   METHOD  text                          // (  )                                               -> cQString
+   METHOD  textAlignment                 // (  )                                               -> nQt_Alignment
 
    ENDCLASS
 
@@ -125,38 +125,74 @@ METHOD QStyleOptionHeader:new( ... )
    RETURN Self
 
 
-METHOD QStyleOptionHeader:icon()
-   RETURN HB_QIcon():from( Qt_QStyleOptionHeader_icon( ::pPtr ) )
+METHOD QStyleOptionHeader:icon( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QIcon():from( Qt_QStyleOptionHeader_icon( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionHeader:iconAlignment()
-   RETURN Qt_QStyleOptionHeader_iconAlignment( ::pPtr )
+METHOD QStyleOptionHeader:iconAlignment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionHeader_iconAlignment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionHeader:orientation()
-   RETURN Qt_QStyleOptionHeader_orientation( ::pPtr )
+METHOD QStyleOptionHeader:orientation( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionHeader_orientation( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionHeader:position()
-   RETURN Qt_QStyleOptionHeader_position( ::pPtr )
+METHOD QStyleOptionHeader:position( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionHeader_position( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionHeader:section()
-   RETURN Qt_QStyleOptionHeader_section( ::pPtr )
+METHOD QStyleOptionHeader:section( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionHeader_section( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionHeader:selectedPosition()
-   RETURN Qt_QStyleOptionHeader_selectedPosition( ::pPtr )
+METHOD QStyleOptionHeader:selectedPosition( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionHeader_selectedPosition( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionHeader:sortIndicator()
-   RETURN Qt_QStyleOptionHeader_sortIndicator( ::pPtr )
+METHOD QStyleOptionHeader:sortIndicator( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionHeader_sortIndicator( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionHeader:text()
-   RETURN Qt_QStyleOptionHeader_text( ::pPtr )
+METHOD QStyleOptionHeader:text( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionHeader_text( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStyleOptionHeader:textAlignment()
-   RETURN Qt_QStyleOptionHeader_textAlignment( ::pPtr )
+METHOD QStyleOptionHeader:textAlignment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStyleOptionHeader_textAlignment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

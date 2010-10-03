@@ -103,8 +103,8 @@ CREATE CLASS QGraphicsSceneMoveEvent INHERIT HbQtObjectHandler, HB_QGraphicsScen
 
    METHOD  new( ... )
 
-   METHOD  newPos()
-   METHOD  oldPos()
+   METHOD  newPos                        // (  )                                               -> oQPointF
+   METHOD  oldPos                        // (  )                                               -> oQPointF
 
    ENDCLASS
 
@@ -118,10 +118,18 @@ METHOD QGraphicsSceneMoveEvent:new( ... )
    RETURN Self
 
 
-METHOD QGraphicsSceneMoveEvent:newPos()
-   RETURN HB_QPointF():from( Qt_QGraphicsSceneMoveEvent_newPos( ::pPtr ) )
+METHOD QGraphicsSceneMoveEvent:newPos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPointF():from( Qt_QGraphicsSceneMoveEvent_newPos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QGraphicsSceneMoveEvent:oldPos()
-   RETURN HB_QPointF():from( Qt_QGraphicsSceneMoveEvent_oldPos( ::pPtr ) )
+METHOD QGraphicsSceneMoveEvent:oldPos( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QPointF():from( Qt_QGraphicsSceneMoveEvent_oldPos( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

@@ -103,15 +103,15 @@ CREATE CLASS QTextList INHERIT HbQtObjectHandler, HB_QTextBlockGroup FUNCTION HB
 
    METHOD  new( ... )
 
-   METHOD  add( pBlock )
-   METHOD  count()
-   METHOD  format()
-   METHOD  item( nI )
-   METHOD  itemNumber( pBlock )
-   METHOD  itemText( pBlock )
-   METHOD  remove( pBlock )
-   METHOD  removeItem( nI )
-   METHOD  setFormat( pFormat )
+   METHOD  add                           // ( oQTextBlock )                                    -> NIL
+   METHOD  count                         // (  )                                               -> nInt
+   METHOD  format                        // (  )                                               -> oQTextListFormat
+   METHOD  item                          // ( nI )                                             -> oQTextBlock
+   METHOD  itemNumber                    // ( oQTextBlock )                                    -> nInt
+   METHOD  itemText                      // ( oQTextBlock )                                    -> cQString
+   METHOD  remove                        // ( oQTextBlock )                                    -> NIL
+   METHOD  removeItem                    // ( nI )                                             -> NIL
+   METHOD  setFormat                     // ( oQTextListFormat )                               -> NIL
 
    ENDCLASS
 
@@ -125,38 +125,102 @@ METHOD QTextList:new( ... )
    RETURN Self
 
 
-METHOD QTextList:add( pBlock )
-   RETURN Qt_QTextList_add( ::pPtr, hbqt_ptr( pBlock ) )
+METHOD QTextList:add( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextList_add( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextList:count()
-   RETURN Qt_QTextList_count( ::pPtr )
+METHOD QTextList:count( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QTextList_count( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextList:format()
-   RETURN HB_QTextListFormat():from( Qt_QTextList_format( ::pPtr ) )
+METHOD QTextList:format( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextListFormat():from( Qt_QTextList_format( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextList:item( nI )
-   RETURN HB_QTextBlock():from( Qt_QTextList_item( ::pPtr, nI ) )
+METHOD QTextList:item( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QTextBlock():from( Qt_QTextList_item( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextList:itemNumber( pBlock )
-   RETURN Qt_QTextList_itemNumber( ::pPtr, hbqt_ptr( pBlock ) )
+METHOD QTextList:itemNumber( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextList_itemNumber( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextList:itemText( pBlock )
-   RETURN Qt_QTextList_itemText( ::pPtr, hbqt_ptr( pBlock ) )
+METHOD QTextList:itemText( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextList_itemText( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextList:remove( pBlock )
-   RETURN Qt_QTextList_remove( ::pPtr, hbqt_ptr( pBlock ) )
+METHOD QTextList:remove( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextList_remove( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextList:removeItem( nI )
-   RETURN Qt_QTextList_removeItem( ::pPtr, nI )
+METHOD QTextList:removeItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QTextList_removeItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QTextList:setFormat( pFormat )
-   RETURN Qt_QTextList_setFormat( ::pPtr, hbqt_ptr( pFormat ) )
+METHOD QTextList:setFormat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QTextList_setFormat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

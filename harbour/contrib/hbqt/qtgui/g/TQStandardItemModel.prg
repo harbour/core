@@ -103,32 +103,34 @@ CREATE CLASS QStandardItemModel INHERIT HbQtObjectHandler, HB_QAbstractItemModeL
 
    METHOD  new( ... )
 
-   METHOD  appendRow( pItem )
-   METHOD  clear()
-   METHOD  findItems( cText, nFlags, nColumn )
-   METHOD  horizontalHeaderItem( nColumn )
-   METHOD  indexFromItem( pItem )
-   METHOD  insertColumn( nColumn, pParent )
-   METHOD  insertRow( ... )
-   METHOD  invisibleRootItem()
-   METHOD  item( nRow, nColumn )
-   METHOD  itemFromIndex( pIndex )
-   METHOD  setColumnCount( nColumns )
-   METHOD  setHorizontalHeaderItem( nColumn, pItem )
-   METHOD  setHorizontalHeaderLabels( pLabels )
-   METHOD  setItem( ... )
-   METHOD  setItemPrototype( pItem )
-   METHOD  setRowCount( nRows )
-   METHOD  setSortRole( nRole )
-   METHOD  setVerticalHeaderItem( nRow, pItem )
-   METHOD  setVerticalHeaderLabels( pLabels )
-   METHOD  sortRole()
-   METHOD  takeColumn( nColumn )
-   METHOD  takeHorizontalHeaderItem( nColumn )
-   METHOD  takeItem( nRow, nColumn )
-   METHOD  takeRow( nRow )
-   METHOD  takeVerticalHeaderItem( nRow )
-   METHOD  verticalHeaderItem( nRow )
+   METHOD  appendRow                     // ( oQStandardItem )                                 -> NIL
+   METHOD  clear                         // (  )                                               -> NIL
+   METHOD  findItems                     // ( cText, nFlags, nColumn )                         -> oQList_QStandardItem
+   METHOD  horizontalHeaderItem          // ( nColumn )                                        -> oQStandardItem
+   METHOD  indexFromItem                 // ( oQStandardItem )                                 -> oQModelIndex
+   METHOD  insertColumn                  // ( nColumn, oQModelIndex )                          -> lBool
+   METHOD  insertRow                     // ( nRow, oQModelIndex )                             -> lBool
+                                         // ( nRow, oQStandardItem )                           -> NIL
+   METHOD  invisibleRootItem             // (  )                                               -> oQStandardItem
+   METHOD  item                          // ( nRow, nColumn )                                  -> oQStandardItem
+   METHOD  itemFromIndex                 // ( oQModelIndex )                                   -> oQStandardItem
+   METHOD  setColumnCount                // ( nColumns )                                       -> NIL
+   METHOD  setHorizontalHeaderItem       // ( nColumn, oQStandardItem )                        -> NIL
+   METHOD  setHorizontalHeaderLabels     // ( oQStringList )                                   -> NIL
+   METHOD  setItem                       // ( nRow, nColumn, oQStandardItem )                  -> NIL
+                                         // ( nRow, oQStandardItem )                           -> NIL
+   METHOD  setItemPrototype              // ( oQStandardItem )                                 -> NIL
+   METHOD  setRowCount                   // ( nRows )                                          -> NIL
+   METHOD  setSortRole                   // ( nRole )                                          -> NIL
+   METHOD  setVerticalHeaderItem         // ( nRow, oQStandardItem )                           -> NIL
+   METHOD  setVerticalHeaderLabels       // ( oQStringList )                                   -> NIL
+   METHOD  sortRole                      // (  )                                               -> nInt
+   METHOD  takeColumn                    // ( nColumn )                                        -> oQList_QStandardItem
+   METHOD  takeHorizontalHeaderItem      // ( nColumn )                                        -> oQStandardItem
+   METHOD  takeItem                      // ( nRow, nColumn )                                  -> oQStandardItem
+   METHOD  takeRow                       // ( nRow )                                           -> oQList_QStandardItem
+   METHOD  takeVerticalHeaderItem        // ( nRow )                                           -> oQStandardItem
+   METHOD  verticalHeaderItem            // ( nRow )                                           -> oQStandardItem
 
    ENDCLASS
 
@@ -142,28 +144,90 @@ METHOD QStandardItemModel:new( ... )
    RETURN Self
 
 
-METHOD QStandardItemModel:appendRow( pItem )
-   RETURN Qt_QStandardItemModel_appendRow( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QStandardItemModel:appendRow( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItemModel_appendRow( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItemModel:clear()
-   RETURN Qt_QStandardItemModel_clear( ::pPtr )
+METHOD QStandardItemModel:clear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStandardItemModel_clear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItemModel:findItems( cText, nFlags, nColumn )
-   RETURN HB_QList():from( Qt_QStandardItemModel_findItems( ::pPtr, cText, nFlags, nColumn ) )
+METHOD QStandardItemModel:findItems( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
+         RETURN HB_QList():from( Qt_QStandardItemModel_findItems( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QList():from( Qt_QStandardItemModel_findItems( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QList():from( Qt_QStandardItemModel_findItems( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItemModel:horizontalHeaderItem( nColumn )
-   RETURN HB_QStandardItem():from( Qt_QStandardItemModel_horizontalHeaderItem( ::pPtr, nColumn ) )
+METHOD QStandardItemModel:horizontalHeaderItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QStandardItem():from( Qt_QStandardItemModel_horizontalHeaderItem( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItemModel:indexFromItem( pItem )
-   RETURN HB_QModelIndex():from( Qt_QStandardItemModel_indexFromItem( ::pPtr, hbqt_ptr( pItem ) ) )
+METHOD QStandardItemModel:indexFromItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QModelIndex():from( Qt_QStandardItemModel_indexFromItem( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItemModel:insertColumn( nColumn, pParent )
-   RETURN Qt_QStandardItemModel_insertColumn( ::pPtr, nColumn, hbqt_ptr( pParent ) )
+METHOD QStandardItemModel:insertColumn( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QStandardItemModel_insertColumn( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItemModel_insertColumn( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QStandardItemModel:insertRow( ... )
@@ -189,28 +253,78 @@ METHOD QStandardItemModel:insertRow( ... )
    RETURN hbqt_error()
 
 
-METHOD QStandardItemModel:invisibleRootItem()
-   RETURN HB_QStandardItem():from( Qt_QStandardItemModel_invisibleRootItem( ::pPtr ) )
+METHOD QStandardItemModel:invisibleRootItem( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStandardItem():from( Qt_QStandardItemModel_invisibleRootItem( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItemModel:item( nRow, nColumn )
-   RETURN HB_QStandardItem():from( Qt_QStandardItemModel_item( ::pPtr, nRow, nColumn ) )
+METHOD QStandardItemModel:item( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QStandardItem():from( Qt_QStandardItemModel_item( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QStandardItem():from( Qt_QStandardItemModel_item( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItemModel:itemFromIndex( pIndex )
-   RETURN HB_QStandardItem():from( Qt_QStandardItemModel_itemFromIndex( ::pPtr, hbqt_ptr( pIndex ) ) )
+METHOD QStandardItemModel:itemFromIndex( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QStandardItem():from( Qt_QStandardItemModel_itemFromIndex( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItemModel:setColumnCount( nColumns )
-   RETURN Qt_QStandardItemModel_setColumnCount( ::pPtr, nColumns )
+METHOD QStandardItemModel:setColumnCount( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItemModel_setColumnCount( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItemModel:setHorizontalHeaderItem( nColumn, pItem )
-   RETURN Qt_QStandardItemModel_setHorizontalHeaderItem( ::pPtr, nColumn, hbqt_ptr( pItem ) )
+METHOD QStandardItemModel:setHorizontalHeaderItem( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QStandardItemModel_setHorizontalHeaderItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItemModel:setHorizontalHeaderLabels( pLabels )
-   RETURN Qt_QStandardItemModel_setHorizontalHeaderLabels( ::pPtr, hbqt_ptr( pLabels ) )
+METHOD QStandardItemModel:setHorizontalHeaderLabels( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItemModel_setHorizontalHeaderLabels( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QStandardItemModel:setItem( ... )
@@ -231,50 +345,148 @@ METHOD QStandardItemModel:setItem( ... )
    RETURN hbqt_error()
 
 
-METHOD QStandardItemModel:setItemPrototype( pItem )
-   RETURN Qt_QStandardItemModel_setItemPrototype( ::pPtr, hbqt_ptr( pItem ) )
+METHOD QStandardItemModel:setItemPrototype( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItemModel_setItemPrototype( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItemModel:setRowCount( nRows )
-   RETURN Qt_QStandardItemModel_setRowCount( ::pPtr, nRows )
+METHOD QStandardItemModel:setRowCount( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItemModel_setRowCount( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItemModel:setSortRole( nRole )
-   RETURN Qt_QStandardItemModel_setSortRole( ::pPtr, nRole )
+METHOD QStandardItemModel:setSortRole( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItemModel_setSortRole( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItemModel:setVerticalHeaderItem( nRow, pItem )
-   RETURN Qt_QStandardItemModel_setVerticalHeaderItem( ::pPtr, nRow, hbqt_ptr( pItem ) )
+METHOD QStandardItemModel:setVerticalHeaderItem( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QStandardItemModel_setVerticalHeaderItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItemModel:setVerticalHeaderLabels( pLabels )
-   RETURN Qt_QStandardItemModel_setVerticalHeaderLabels( ::pPtr, hbqt_ptr( pLabels ) )
+METHOD QStandardItemModel:setVerticalHeaderLabels( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QStandardItemModel_setVerticalHeaderLabels( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItemModel:sortRole()
-   RETURN Qt_QStandardItemModel_sortRole( ::pPtr )
+METHOD QStandardItemModel:sortRole( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QStandardItemModel_sortRole( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItemModel:takeColumn( nColumn )
-   RETURN HB_QList():from( Qt_QStandardItemModel_takeColumn( ::pPtr, nColumn ) )
+METHOD QStandardItemModel:takeColumn( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QList():from( Qt_QStandardItemModel_takeColumn( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItemModel:takeHorizontalHeaderItem( nColumn )
-   RETURN HB_QStandardItem():from( Qt_QStandardItemModel_takeHorizontalHeaderItem( ::pPtr, nColumn ) )
+METHOD QStandardItemModel:takeHorizontalHeaderItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QStandardItem():from( Qt_QStandardItemModel_takeHorizontalHeaderItem( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItemModel:takeItem( nRow, nColumn )
-   RETURN HB_QStandardItem():from( Qt_QStandardItemModel_takeItem( ::pPtr, nRow, nColumn ) )
+METHOD QStandardItemModel:takeItem( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
+         RETURN HB_QStandardItem():from( Qt_QStandardItemModel_takeItem( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QStandardItem():from( Qt_QStandardItemModel_takeItem( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItemModel:takeRow( nRow )
-   RETURN HB_QList():from( Qt_QStandardItemModel_takeRow( ::pPtr, nRow ) )
+METHOD QStandardItemModel:takeRow( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QList():from( Qt_QStandardItemModel_takeRow( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItemModel:takeVerticalHeaderItem( nRow )
-   RETURN HB_QStandardItem():from( Qt_QStandardItemModel_takeVerticalHeaderItem( ::pPtr, nRow ) )
+METHOD QStandardItemModel:takeVerticalHeaderItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QStandardItem():from( Qt_QStandardItemModel_takeVerticalHeaderItem( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QStandardItemModel:verticalHeaderItem( nRow )
-   RETURN HB_QStandardItem():from( Qt_QStandardItemModel_verticalHeaderItem( ::pPtr, nRow ) )
+METHOD QStandardItemModel:verticalHeaderItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QStandardItem():from( Qt_QStandardItemModel_verticalHeaderItem( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

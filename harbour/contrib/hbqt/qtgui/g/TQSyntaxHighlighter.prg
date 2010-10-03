@@ -103,9 +103,9 @@ CREATE CLASS QSyntaxHighlighter INHERIT HbQtObjectHandler, HB_QObject FUNCTION H
 
    METHOD  new( ... )
 
-   METHOD  document()
-   METHOD  setDocument( pDoc )
-   METHOD  rehighlight()
+   METHOD  document                      // (  )                                               -> oQTextDocument
+   METHOD  setDocument                   // ( oQTextDocument )                                 -> NIL
+   METHOD  rehighlight                   // (  )                                               -> NIL
 
    ENDCLASS
 
@@ -119,14 +119,30 @@ METHOD QSyntaxHighlighter:new( ... )
    RETURN Self
 
 
-METHOD QSyntaxHighlighter:document()
-   RETURN HB_QTextDocument():from( Qt_QSyntaxHighlighter_document( ::pPtr ) )
+METHOD QSyntaxHighlighter:document( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTextDocument():from( Qt_QSyntaxHighlighter_document( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSyntaxHighlighter:setDocument( pDoc )
-   RETURN Qt_QSyntaxHighlighter_setDocument( ::pPtr, hbqt_ptr( pDoc ) )
+METHOD QSyntaxHighlighter:setDocument( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QSyntaxHighlighter_setDocument( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QSyntaxHighlighter:rehighlight()
-   RETURN Qt_QSyntaxHighlighter_rehighlight( ::pPtr )
+METHOD QSyntaxHighlighter:rehighlight( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QSyntaxHighlighter_rehighlight( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 

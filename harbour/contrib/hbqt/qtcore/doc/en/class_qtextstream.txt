@@ -26,17 +26,17 @@
  *  $RETURNS$
  *     An instance of the object of type QTextStream
  *  $METHODS$
- *     :padChar()                                          -> pQChar
+ *     :padChar()                                          -> oQChar
  *     :atEnd()                                            -> lBool
  *     :autoDetectUnicode()                                -> lBool
- *     :codec()                                            -> pQTextCodec
- *     :device()                                           -> pQIODevice
+ *     :codec()                                            -> oQTextCodec
+ *     :device()                                           -> oQIODevice
  *     :fieldAlignment()                                   -> nFieldAlignment
  *     :fieldWidth()                                       -> nInt
  *     :flush()                                            -> NIL
  *     :generateByteOrderMark()                            -> lBool
  *     :integerBase()                                      -> nInt
- *     :locale()                                           -> pQLocale
+ *     :locale()                                           -> oQLocale
  *     :numberFlags()                                      -> nNumberFlags
  *     :pos()                                              -> nQint64
  *     :read( nMaxlen )                                    -> cQString
@@ -48,16 +48,16 @@
  *     :resetStatus()                                      -> NIL
  *     :seek( nPos )                                       -> lBool
  *     :setAutoDetectUnicode( lEnabled )                   -> NIL
- *     :setCodec( pCodec )                                 -> NIL
- *     :setCodec_1( pCodecName )                           -> NIL
- *     :setDevice( pDevice )                               -> NIL
+ *     :setCodec( oQTextCodec )                            -> NIL
+ *     :setCodec( cCodecName )                             -> NIL
+ *     :setDevice( oQIODevice )                            -> NIL
  *     :setFieldAlignment( nMode )                         -> NIL
  *     :setFieldWidth( nWidth )                            -> NIL
  *     :setGenerateByteOrderMark( lGenerate )              -> NIL
  *     :setIntegerBase( nBase )                            -> NIL
- *     :setLocale( pLocale )                               -> NIL
+ *     :setLocale( oQLocale )                              -> NIL
  *     :setNumberFlags( nFlags )                           -> NIL
- *     :setPadChar( pCh )                                  -> NIL
+ *     :setPadChar( oQChar )                               -> NIL
  *     :setRealNumberNotation( nNotation )                 -> NIL
  *     :setRealNumberPrecision( nPrecision )               -> NIL
  *     :setStatus( nStatus )                               -> NIL
@@ -82,7 +82,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQTextStream.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QTextStream.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     
  *  $END$
  */

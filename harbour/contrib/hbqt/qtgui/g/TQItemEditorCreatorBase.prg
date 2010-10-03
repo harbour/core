@@ -103,8 +103,8 @@ CREATE CLASS QItemEditorCreatorBase INHERIT HbQtObjectHandler FUNCTION HB_QItemE
 
    METHOD  new( ... )
 
-   METHOD  createWidget( pParent )
-   METHOD  valuePropertyName()
+   METHOD  createWidget                  // ( oQWidget )                                       -> oQWidget
+   METHOD  valuePropertyName             // (  )                                               -> oQByteArray
 
    ENDCLASS
 
@@ -118,10 +118,22 @@ METHOD QItemEditorCreatorBase:new( ... )
    RETURN Self
 
 
-METHOD QItemEditorCreatorBase:createWidget( pParent )
-   RETURN HB_QWidget():from( Qt_QItemEditorCreatorBase_createWidget( ::pPtr, hbqt_ptr( pParent ) ) )
+METHOD QItemEditorCreatorBase:createWidget( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QWidget():from( Qt_QItemEditorCreatorBase_createWidget( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QItemEditorCreatorBase:valuePropertyName()
-   RETURN HB_QByteArray():from( Qt_QItemEditorCreatorBase_valuePropertyName( ::pPtr ) )
+METHOD QItemEditorCreatorBase:valuePropertyName( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QByteArray():from( Qt_QItemEditorCreatorBase_valuePropertyName( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 

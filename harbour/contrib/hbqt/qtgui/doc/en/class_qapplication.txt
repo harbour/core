@@ -26,77 +26,77 @@
  *  $RETURNS$
  *     An instance of the object of type QApplication
  *  $METHODS$
- *     :commitData( pManager )                             -> NIL
+ *     :commitData( oQSessionManager )                     -> NIL
  *     :isSessionRestored()                                -> lBool
- *     :saveState( pManager )                              -> NIL
+ *     :saveState( oQSessionManager )                      -> NIL
  *     :sessionId()                                        -> cQString
  *     :sessionKey()                                       -> cQString
  *     :styleSheet()                                       -> cQString
- *     :activeModalWidget()                                -> pQWidget
- *     :activePopupWidget()                                -> pQWidget
- *     :activeWindow()                                     -> pQWidget
- *     :alert( pWidget, nMsec )                            -> NIL
+ *     :activeModalWidget()                                -> oQWidget
+ *     :activePopupWidget()                                -> oQWidget
+ *     :activeWindow()                                     -> oQWidget
+ *     :alert( oQWidget, nMsec )                           -> NIL
  *     :beep()                                             -> NIL
- *     :changeOverrideCursor( pCursor )                    -> NIL
- *     :clipboard()                                        -> pQClipboard
+ *     :changeOverrideCursor( oQCursor )                   -> NIL
+ *     :clipboard()                                        -> oQClipboard
  *     :colorSpec()                                        -> nInt
  *     :cursorFlashTime()                                  -> nInt
- *     :desktop()                                          -> pQDesktopWidget
+ *     :desktop()                                          -> oQDesktopWidget
  *     :desktopSettingsAware()                             -> lBool
  *     :doubleClickInterval()                              -> nInt
  *     :exec()                                             -> nInt
- *     :focusWidget()                                      -> pQWidget
- *     :font()                                             -> pQFont
- *     :font_1( pWidget )                                  -> pQFont
- *     :font_2( pClassName )                               -> pQFont
- *     :fontMetrics()                                      -> pQFontMetrics
- *     :globalStrut()                                      -> pQSize
+ *     :focusWidget()                                      -> oQWidget
+ *     :font()                                             -> oQFont
+ *     :font( oQWidget )                                   -> oQFont
+ *     :font( cClassName )                                 -> oQFont
+ *     :fontMetrics()                                      -> oQFontMetrics
+ *     :globalStrut()                                      -> oQSize
  *     :isEffectEnabled( nEffect )                         -> lBool
  *     :isLeftToRight()                                    -> lBool
  *     :isRightToLeft()                                    -> lBool
- *     :keyboardInputDirection()                           -> nQt::LayoutDirection
+ *     :keyboardInputDirection()                           -> nQt_LayoutDirection
  *     :keyboardInputInterval()                            -> nInt
- *     :keyboardInputLocale()                              -> pQLocale
- *     :keyboardModifiers()                                -> nQt::KeyboardModifiers
- *     :layoutDirection()                                  -> nQt::LayoutDirection
- *     :mouseButtons()                                     -> nQt::MouseButtons
- *     :overrideCursor()                                   -> pQCursor
- *     :palette()                                          -> pQPalette
- *     :palette_1( pWidget )                               -> pQPalette
- *     :palette_2( pClassName )                            -> pQPalette
+ *     :keyboardInputLocale()                              -> oQLocale
+ *     :keyboardModifiers()                                -> nQt_KeyboardModifiers
+ *     :layoutDirection()                                  -> nQt_LayoutDirection
+ *     :mouseButtons()                                     -> nQt_MouseButtons
+ *     :overrideCursor()                                   -> oQCursor
+ *     :palette()                                          -> oQPalette
+ *     :palette( oQWidget )                                -> oQPalette
+ *     :palette( cClassName )                              -> oQPalette
  *     :quitOnLastWindowClosed()                           -> lBool
  *     :restoreOverrideCursor()                            -> NIL
- *     :setActiveWindow( pActive )                         -> NIL
+ *     :setActiveWindow( oQWidget )                        -> NIL
  *     :setColorSpec( nSpec )                              -> NIL
  *     :setCursorFlashTime( nInt )                         -> NIL
  *     :setDesktopSettingsAware( lOn )                     -> NIL
  *     :setDoubleClickInterval( nInt )                     -> NIL
  *     :setEffectEnabled( nEffect, lEnable )               -> NIL
- *     :setFont( pFont, pClassName )                       -> NIL
- *     :setGlobalStrut( pQSize )                           -> NIL
+ *     :setFont( oQFont, cClassName )                      -> NIL
+ *     :setGlobalStrut( oQSize )                           -> NIL
  *     :setGraphicsSystem( cSystem )                       -> NIL
  *     :setKeyboardInputInterval( nInt )                   -> NIL
  *     :setLayoutDirection( nDirection )                   -> NIL
- *     :setOverrideCursor( pCursor )                       -> NIL
- *     :setPalette( pPalette, pClassName )                 -> NIL
+ *     :setOverrideCursor( oQCursor )                      -> NIL
+ *     :setPalette( oQPalette, cClassName )                -> NIL
  *     :setQuitOnLastWindowClosed( lQuit )                 -> NIL
  *     :setStartDragDistance( nL )                         -> NIL
  *     :setStartDragTime( nMs )                            -> NIL
- *     :setStyle( pStyle )                                 -> NIL
- *     :setStyle_1( cStyle )                               -> pQStyle
+ *     :setStyle( oQStyle )                                -> NIL
+ *     :setStyle( cStyle )                                 -> oQStyle
  *     :setWheelScrollLines( nInt )                        -> NIL
- *     :setWindowIcon( pIcon )                             -> NIL
+ *     :setWindowIcon( coQIcon )                           -> NIL
  *     :startDragDistance()                                -> nInt
  *     :startDragTime()                                    -> nInt
- *     :style()                                            -> pQStyle
+ *     :style()                                            -> oQStyle
  *     :syncX()                                            -> NIL
- *     :topLevelAt( pPoint )                               -> pQWidget
- *     :topLevelAt_1( nX, nY )                             -> pQWidget
+ *     :topLevelAt( oQPoint )                              -> oQWidget
+ *     :topLevelAt( nX, nY )                               -> oQWidget
  *     :type()                                             -> nType
  *     :wheelScrollLines()                                 -> nInt
- *     :widgetAt( pPoint )                                 -> pQWidget
- *     :widgetAt_1( nX, nY )                               -> pQWidget
- *     :windowIcon()                                       -> pQIcon
+ *     :widgetAt( oQPoint )                                -> oQWidget
+ *     :widgetAt( nX, nY )                                 -> oQWidget
+ *     :windowIcon()                                       -> oQIcon
  *     :aboutQt()                                          -> NIL
  *     :closeAllWindows()                                  -> NIL
  *     :setStyleSheet( cSheet )                            -> NIL
@@ -119,7 +119,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQApplication.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QApplication.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QCoreApplication()
  *  $END$
  */

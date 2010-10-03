@@ -448,7 +448,7 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
       ::oEM:aActions[ 19, 2 ]:setEnabled( len( ::oEditor:aEdits ) == 0 .OR. ::oEditor:nSplOrient == -1 .OR. ::oEditor:nSplOrient == 2 )
       ::oEM:aActions[ 21, 2 ]:setEnabled( n > 0 )
 
-      IF ! ( qAct := ::oEM:qContextMenu:exec( qEdit:mapToGlobal( p ) ) ):isValidObject()
+      IF ! ( qAct := ::oEM:qContextMenu:exec( qEdit:mapToGlobal( QPoint( p ) ) ) ):isValidObject()
          RETURN Self
       ENDIF
 
@@ -1718,7 +1718,7 @@ METHOD IdeEdit:highlightAll( cText )
    qCursor   := QTextCursor( "QTextDocument", qDoc )
    qFormat   := qCursor:charFormat()
    qFormatHL := qFormat
-   qFormatHL:setBackground( QBrush( "QColor", QColor( Qt_yellow ) ) )
+   qFormatHL:setBackground( QBrush( QColor( Qt_yellow ) ) )
 
    DO WHILE .t.
       qCursor := qDoc:find( cText, qCursor, 0 )
@@ -1840,6 +1840,7 @@ METHOD IdeEdit:printPreview()
 
    qDlg:setWindowTitle( "hbIDE Preview Dialog" )
    qDlg:connect( "paintRequested(QPrinter)", {|p| ::paintRequested( p ) } )
+ * qDlg:setWindowState( Qt_WindowMaximized )
    qDlg:exec()
    qDlg:disconnect( "paintRequested(QPrinter)" )
 

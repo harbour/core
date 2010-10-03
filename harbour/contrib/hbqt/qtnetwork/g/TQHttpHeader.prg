@@ -103,24 +103,24 @@ CREATE CLASS QHttpHeader INHERIT HbQtObjectHandler FUNCTION HB_QHttpHeader
 
    METHOD  new( ... )
 
-   METHOD  addValue( cKey, cValue )
-   METHOD  allValues( cKey )
-   METHOD  contentLength()
-   METHOD  contentType()
-   METHOD  hasContentLength()
-   METHOD  hasContentType()
-   METHOD  hasKey( cKey )
-   METHOD  isValid()
-   METHOD  keys()
-   METHOD  majorVersion()
-   METHOD  minorVersion()
-   METHOD  removeAllValues( cKey )
-   METHOD  removeValue( cKey )
-   METHOD  setContentLength( nLen )
-   METHOD  setContentType( cType )
-   METHOD  setValue( cKey, cValue )
-   METHOD  toString()
-   METHOD  value( cKey )
+   METHOD  addValue                      // ( cKey, cValue )                                   -> NIL
+   METHOD  allValues                     // ( cKey )                                           -> oQStringList
+   METHOD  contentLength                 // (  )                                               -> nUint
+   METHOD  contentType                   // (  )                                               -> cQString
+   METHOD  hasContentLength              // (  )                                               -> lBool
+   METHOD  hasContentType                // (  )                                               -> lBool
+   METHOD  hasKey                        // ( cKey )                                           -> lBool
+   METHOD  isValid                       // (  )                                               -> lBool
+   METHOD  keys                          // (  )                                               -> oQStringList
+   METHOD  majorVersion                  // (  )                                               -> nInt
+   METHOD  minorVersion                  // (  )                                               -> nInt
+   METHOD  removeAllValues               // ( cKey )                                           -> NIL
+   METHOD  removeValue                   // ( cKey )                                           -> NIL
+   METHOD  setContentLength              // ( nLen )                                           -> NIL
+   METHOD  setContentType                // ( cType )                                          -> NIL
+   METHOD  setValue                      // ( cKey, cValue )                                   -> NIL
+   METHOD  toString                      // (  )                                               -> cQString
+   METHOD  value                         // ( cKey )                                           -> cQString
 
    ENDCLASS
 
@@ -134,74 +134,182 @@ METHOD QHttpHeader:new( ... )
    RETURN Self
 
 
-METHOD QHttpHeader:addValue( cKey, cValue )
-   RETURN Qt_QHttpHeader_addValue( ::pPtr, cKey, cValue )
+METHOD QHttpHeader:addValue( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QHttpHeader_addValue( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttpHeader:allValues( cKey )
-   RETURN HB_QStringList():from( Qt_QHttpHeader_allValues( ::pPtr, cKey ) )
+METHOD QHttpHeader:allValues( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QStringList():from( Qt_QHttpHeader_allValues( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttpHeader:contentLength()
-   RETURN Qt_QHttpHeader_contentLength( ::pPtr )
+METHOD QHttpHeader:contentLength( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHttpHeader_contentLength( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttpHeader:contentType()
-   RETURN Qt_QHttpHeader_contentType( ::pPtr )
+METHOD QHttpHeader:contentType( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHttpHeader_contentType( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttpHeader:hasContentLength()
-   RETURN Qt_QHttpHeader_hasContentLength( ::pPtr )
+METHOD QHttpHeader:hasContentLength( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHttpHeader_hasContentLength( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttpHeader:hasContentType()
-   RETURN Qt_QHttpHeader_hasContentType( ::pPtr )
+METHOD QHttpHeader:hasContentType( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHttpHeader_hasContentType( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttpHeader:hasKey( cKey )
-   RETURN Qt_QHttpHeader_hasKey( ::pPtr, cKey )
+METHOD QHttpHeader:hasKey( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QHttpHeader_hasKey( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttpHeader:isValid()
-   RETURN Qt_QHttpHeader_isValid( ::pPtr )
+METHOD QHttpHeader:isValid( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHttpHeader_isValid( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttpHeader:keys()
-   RETURN HB_QStringList():from( Qt_QHttpHeader_keys( ::pPtr ) )
+METHOD QHttpHeader:keys( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QHttpHeader_keys( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttpHeader:majorVersion()
-   RETURN Qt_QHttpHeader_majorVersion( ::pPtr )
+METHOD QHttpHeader:majorVersion( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHttpHeader_majorVersion( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttpHeader:minorVersion()
-   RETURN Qt_QHttpHeader_minorVersion( ::pPtr )
+METHOD QHttpHeader:minorVersion( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHttpHeader_minorVersion( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttpHeader:removeAllValues( cKey )
-   RETURN Qt_QHttpHeader_removeAllValues( ::pPtr, cKey )
+METHOD QHttpHeader:removeAllValues( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QHttpHeader_removeAllValues( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttpHeader:removeValue( cKey )
-   RETURN Qt_QHttpHeader_removeValue( ::pPtr, cKey )
+METHOD QHttpHeader:removeValue( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QHttpHeader_removeValue( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttpHeader:setContentLength( nLen )
-   RETURN Qt_QHttpHeader_setContentLength( ::pPtr, nLen )
+METHOD QHttpHeader:setContentLength( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QHttpHeader_setContentLength( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttpHeader:setContentType( cType )
-   RETURN Qt_QHttpHeader_setContentType( ::pPtr, cType )
+METHOD QHttpHeader:setContentType( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QHttpHeader_setContentType( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttpHeader:setValue( cKey, cValue )
-   RETURN Qt_QHttpHeader_setValue( ::pPtr, cKey, cValue )
+METHOD QHttpHeader:setValue( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QHttpHeader_setValue( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttpHeader:toString()
-   RETURN Qt_QHttpHeader_toString( ::pPtr )
+METHOD QHttpHeader:toString( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QHttpHeader_toString( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QHttpHeader:value( cKey )
-   RETURN Qt_QHttpHeader_value( ::pPtr, cKey )
+METHOD QHttpHeader:value( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QHttpHeader_value( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

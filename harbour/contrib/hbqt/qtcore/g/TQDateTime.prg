@@ -103,30 +103,32 @@ CREATE CLASS QDateTime INHERIT HbQtObjectHandler FUNCTION HB_QDateTime
 
    METHOD  new( ... )
 
-   METHOD  addDays( nNdays )
-   METHOD  addMSecs( nMsecs )
-   METHOD  addMonths( nNmonths )
-   METHOD  addSecs( nS )
-   METHOD  addYears( nNyears )
-   METHOD  date()
-   METHOD  daysTo( pOther )
-   METHOD  isNull()
-   METHOD  isValid()
-   METHOD  secsTo( pOther )
-   METHOD  setDate( pDate )
-   METHOD  setTime( pTime )
-   METHOD  setTimeSpec( nSpec )
-   METHOD  setTime_t( nSeconds )
-   METHOD  time()
-   METHOD  timeSpec()
-   METHOD  toLocalTime()
-   METHOD  toString( ... )
-   METHOD  toTimeSpec( nSpecification )
-   METHOD  toTime_t()
-   METHOD  toUTC()
-   METHOD  currentDateTime()
-   METHOD  fromString( ... )
-   METHOD  fromTime_t( nSeconds )
+   METHOD  addDays                       // ( nNdays )                                         -> oQDateTime
+   METHOD  addMSecs                      // ( nMsecs )                                         -> oQDateTime
+   METHOD  addMonths                     // ( nNmonths )                                       -> oQDateTime
+   METHOD  addSecs                       // ( nS )                                             -> oQDateTime
+   METHOD  addYears                      // ( nNyears )                                        -> oQDateTime
+   METHOD  date                          // (  )                                               -> oQDate
+   METHOD  daysTo                        // ( oQDateTime )                                     -> nInt
+   METHOD  isNull                        // (  )                                               -> lBool
+   METHOD  isValid                       // (  )                                               -> lBool
+   METHOD  secsTo                        // ( oQDateTime )                                     -> nInt
+   METHOD  setDate                       // ( oQDate )                                         -> NIL
+   METHOD  setTime                       // ( oQTime )                                         -> NIL
+   METHOD  setTimeSpec                   // ( nSpec )                                          -> NIL
+   METHOD  setTime_t                     // ( nSeconds )                                       -> NIL
+   METHOD  time                          // (  )                                               -> oQTime
+   METHOD  timeSpec                      // (  )                                               -> nQt_TimeSpec
+   METHOD  toLocalTime                   // (  )                                               -> oQDateTime
+   METHOD  toString                      // ( cFormat )                                        -> cQString
+                                         // ( nFormat )                                        -> cQString
+   METHOD  toTimeSpec                    // ( nSpecification )                                 -> oQDateTime
+   METHOD  toTime_t                      // (  )                                               -> nUint
+   METHOD  toUTC                         // (  )                                               -> oQDateTime
+   METHOD  currentDateTime               // (  )                                               -> oQDateTime
+   METHOD  fromString                    // ( cString, nFormat )                               -> oQDateTime
+                                         // ( cString, cFormat )                               -> oQDateTime
+   METHOD  fromTime_t                    // ( nSeconds )                                       -> oQDateTime
 
    ENDCLASS
 
@@ -140,72 +142,184 @@ METHOD QDateTime:new( ... )
    RETURN Self
 
 
-METHOD QDateTime:addDays( nNdays )
-   RETURN HB_QDateTime():from( Qt_QDateTime_addDays( ::pPtr, nNdays ) )
+METHOD QDateTime:addDays( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QDateTime():from( Qt_QDateTime_addDays( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDateTime:addMSecs( nMsecs )
-   RETURN HB_QDateTime():from( Qt_QDateTime_addMSecs( ::pPtr, nMsecs ) )
+METHOD QDateTime:addMSecs( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QDateTime():from( Qt_QDateTime_addMSecs( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDateTime:addMonths( nNmonths )
-   RETURN HB_QDateTime():from( Qt_QDateTime_addMonths( ::pPtr, nNmonths ) )
+METHOD QDateTime:addMonths( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QDateTime():from( Qt_QDateTime_addMonths( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDateTime:addSecs( nS )
-   RETURN HB_QDateTime():from( Qt_QDateTime_addSecs( ::pPtr, nS ) )
+METHOD QDateTime:addSecs( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QDateTime():from( Qt_QDateTime_addSecs( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDateTime:addYears( nNyears )
-   RETURN HB_QDateTime():from( Qt_QDateTime_addYears( ::pPtr, nNyears ) )
+METHOD QDateTime:addYears( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QDateTime():from( Qt_QDateTime_addYears( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDateTime:date()
-   RETURN HB_QDate():from( Qt_QDateTime_date( ::pPtr ) )
+METHOD QDateTime:date( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDate():from( Qt_QDateTime_date( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDateTime:daysTo( pOther )
-   RETURN Qt_QDateTime_daysTo( ::pPtr, hbqt_ptr( pOther ) )
+METHOD QDateTime:daysTo( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDateTime_daysTo( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDateTime:isNull()
-   RETURN Qt_QDateTime_isNull( ::pPtr )
+METHOD QDateTime:isNull( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDateTime_isNull( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDateTime:isValid()
-   RETURN Qt_QDateTime_isValid( ::pPtr )
+METHOD QDateTime:isValid( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDateTime_isValid( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDateTime:secsTo( pOther )
-   RETURN Qt_QDateTime_secsTo( ::pPtr, hbqt_ptr( pOther ) )
+METHOD QDateTime:secsTo( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDateTime_secsTo( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDateTime:setDate( pDate )
-   RETURN Qt_QDateTime_setDate( ::pPtr, hbqt_ptr( pDate ) )
+METHOD QDateTime:setDate( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDateTime_setDate( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDateTime:setTime( pTime )
-   RETURN Qt_QDateTime_setTime( ::pPtr, hbqt_ptr( pTime ) )
+METHOD QDateTime:setTime( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QDateTime_setTime( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDateTime:setTimeSpec( nSpec )
-   RETURN Qt_QDateTime_setTimeSpec( ::pPtr, nSpec )
+METHOD QDateTime:setTimeSpec( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDateTime_setTimeSpec( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDateTime:setTime_t( nSeconds )
-   RETURN Qt_QDateTime_setTime_t( ::pPtr, nSeconds )
+METHOD QDateTime:setTime_t( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QDateTime_setTime_t( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDateTime:time()
-   RETURN HB_QTime():from( Qt_QDateTime_time( ::pPtr ) )
+METHOD QDateTime:time( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QTime():from( Qt_QDateTime_time( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDateTime:timeSpec()
-   RETURN Qt_QDateTime_timeSpec( ::pPtr )
+METHOD QDateTime:timeSpec( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDateTime_timeSpec( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDateTime:toLocalTime()
-   RETURN HB_QDateTime():from( Qt_QDateTime_toLocalTime( ::pPtr ) )
+METHOD QDateTime:toLocalTime( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDateTime():from( Qt_QDateTime_toLocalTime( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QDateTime:toString( ... )
@@ -224,20 +338,40 @@ METHOD QDateTime:toString( ... )
    RETURN hbqt_error()
 
 
-METHOD QDateTime:toTimeSpec( nSpecification )
-   RETURN HB_QDateTime():from( Qt_QDateTime_toTimeSpec( ::pPtr, nSpecification ) )
+METHOD QDateTime:toTimeSpec( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QDateTime():from( Qt_QDateTime_toTimeSpec( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDateTime:toTime_t()
-   RETURN Qt_QDateTime_toTime_t( ::pPtr )
+METHOD QDateTime:toTime_t( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QDateTime_toTime_t( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDateTime:toUTC()
-   RETURN HB_QDateTime():from( Qt_QDateTime_toUTC( ::pPtr ) )
+METHOD QDateTime:toUTC( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDateTime():from( Qt_QDateTime_toUTC( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QDateTime:currentDateTime()
-   RETURN HB_QDateTime():from( Qt_QDateTime_currentDateTime( ::pPtr ) )
+METHOD QDateTime:currentDateTime( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QDateTime():from( Qt_QDateTime_currentDateTime( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QDateTime:fromString( ... )
@@ -260,6 +394,14 @@ METHOD QDateTime:fromString( ... )
    RETURN hbqt_error()
 
 
-METHOD QDateTime:fromTime_t( nSeconds )
-   RETURN HB_QDateTime():from( Qt_QDateTime_fromTime_t( ::pPtr, nSeconds ) )
+METHOD QDateTime:fromTime_t( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QDateTime():from( Qt_QDateTime_fromTime_t( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

@@ -690,7 +690,7 @@ HB_FUNC( QT_QVARIANT_NAMETOTYPE )
    QVariant * p = hbqt_par_QVariant( 1 );
    if( p )
    {
-      hb_retni( ( QVariant::Type ) ( p )->nameToType( hbqt_par_char( 2 ) ) );
+      hb_retni( ( QVariant::Type ) ( p )->nameToType( ( const char * ) hb_parc( 2 ) ) );
    }
 }
 

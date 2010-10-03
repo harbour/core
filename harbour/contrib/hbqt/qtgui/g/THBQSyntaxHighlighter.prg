@@ -103,12 +103,12 @@ CREATE CLASS HBQSyntaxHighlighter INHERIT HbQtObjectHandler, HB_QSyntaxHighlight
 
    METHOD  new( ... )
 
-   METHOD  hbSetMultiLineCommentFormat( pFormat )
-   METHOD  hbSetSingleLineCommentFormat( pFormat )
-   METHOD  hbSetRule( cName, cPattern, pFormat )
-   METHOD  hbSetFormat( cName, pFormat )
-   METHOD  hbSetFormatColumnSelection( nStart, nCount, pColor )
-   METHOD  hbSetRuleWithRegExp( cName, pReg, pFormat )
+   METHOD  hbSetMultiLineCommentFormat   // ( oQTextCharFormat )                               -> NIL
+   METHOD  hbSetSingleLineCommentFormat  // ( oQTextCharFormat )                               -> NIL
+   METHOD  hbSetRule                     // ( cName, cPattern, oQTextCharFormat )              -> NIL
+   METHOD  hbSetFormat                   // ( cName, oQTextCharFormat )                        -> NIL
+   METHOD  hbSetFormatColumnSelection    // ( nStart, nCount, oQColor )                        -> NIL
+   METHOD  hbSetRuleWithRegExp           // ( cName, oQRegExp, oQTextCharFormat )              -> NIL
 
    ENDCLASS
 
@@ -122,26 +122,74 @@ METHOD HBQSyntaxHighlighter:new( ... )
    RETURN Self
 
 
-METHOD HBQSyntaxHighlighter:hbSetMultiLineCommentFormat( pFormat )
-   RETURN Qt_HBQSyntaxHighlighter_hbSetMultiLineCommentFormat( ::pPtr, hbqt_ptr( pFormat ) )
+METHOD HBQSyntaxHighlighter:hbSetMultiLineCommentFormat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_HBQSyntaxHighlighter_hbSetMultiLineCommentFormat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQSyntaxHighlighter:hbSetSingleLineCommentFormat( pFormat )
-   RETURN Qt_HBQSyntaxHighlighter_hbSetSingleLineCommentFormat( ::pPtr, hbqt_ptr( pFormat ) )
+METHOD HBQSyntaxHighlighter:hbSetSingleLineCommentFormat( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_HBQSyntaxHighlighter_hbSetSingleLineCommentFormat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQSyntaxHighlighter:hbSetRule( cName, cPattern, pFormat )
-   RETURN Qt_HBQSyntaxHighlighter_hbSetRule( ::pPtr, cName, cPattern, hbqt_ptr( pFormat ) )
+METHOD HBQSyntaxHighlighter:hbSetRule( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_HBQSyntaxHighlighter_hbSetRule( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQSyntaxHighlighter:hbSetFormat( cName, pFormat )
-   RETURN Qt_HBQSyntaxHighlighter_hbSetFormat( ::pPtr, cName, hbqt_ptr( pFormat ) )
+METHOD HBQSyntaxHighlighter:hbSetFormat( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_HBQSyntaxHighlighter_hbSetFormat( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQSyntaxHighlighter:hbSetFormatColumnSelection( nStart, nCount, pColor )
-   RETURN Qt_HBQSyntaxHighlighter_hbSetFormatColumnSelection( ::pPtr, nStart, nCount, hbqt_ptr( pColor ) )
+METHOD HBQSyntaxHighlighter:hbSetFormatColumnSelection( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_HBQSyntaxHighlighter_hbSetFormatColumnSelection( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD HBQSyntaxHighlighter:hbSetRuleWithRegExp( cName, pReg, pFormat )
-   RETURN Qt_HBQSyntaxHighlighter_hbSetRuleWithRegExp( ::pPtr, cName, hbqt_ptr( pReg ), hbqt_ptr( pFormat ) )
+METHOD HBQSyntaxHighlighter:hbSetRuleWithRegExp( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN Qt_HBQSyntaxHighlighter_hbSetRuleWithRegExp( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

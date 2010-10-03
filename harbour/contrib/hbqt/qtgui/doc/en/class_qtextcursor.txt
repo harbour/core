@@ -32,55 +32,55 @@
  *     :atEnd()                                            -> lBool
  *     :atStart()                                          -> lBool
  *     :beginEditBlock()                                   -> NIL
- *     :block()                                            -> pQTextBlock
- *     :blockCharFormat()                                  -> pQTextCharFormat
- *     :blockFormat()                                      -> pQTextBlockFormat
+ *     :block()                                            -> oQTextBlock
+ *     :blockCharFormat()                                  -> oQTextCharFormat
+ *     :blockFormat()                                      -> oQTextBlockFormat
  *     :blockNumber()                                      -> nInt
- *     :charFormat()                                       -> pQTextCharFormat
+ *     :charFormat()                                       -> oQTextCharFormat
  *     :clearSelection()                                   -> NIL
  *     :columnNumber()                                     -> nInt
- *     :createList( pFormat )                              -> pQTextList
- *     :createList_1( nStyle )                             -> pQTextList
- *     :currentFrame()                                     -> pQTextFrame
- *     :currentList()                                      -> pQTextList
+ *     :createList( oQTextListFormat )                     -> oQTextList
+ *     :createList( nStyle )                               -> oQTextList
+ *     :currentFrame()                                     -> oQTextFrame
+ *     :currentList()                                      -> oQTextList
  *     :deleteChar()                                       -> NIL
  *     :deletePreviousChar()                               -> NIL
- *     :document()                                         -> pQTextDocument
+ *     :document()                                         -> oQTextDocument
  *     :endEditBlock()                                     -> NIL
  *     :hasComplexSelection()                              -> lBool
  *     :hasSelection()                                     -> lBool
  *     :insertBlock()                                      -> NIL
- *     :insertBlock_1( pFormat )                           -> NIL
- *     :insertBlock_2( pFormat, pCharFormat )              -> NIL
- *     :insertFragment( pFragment )                        -> NIL
- *     :insertFrame( pFormat )                             -> pQTextFrame
+ *     :insertBlock( oQTextBlockFormat )                   -> NIL
+ *     :insertBlock( oQTextBlockFormat, oQTextCharFormat )  -> NIL
+ *     :insertFragment( oQTextDocumentFragment )           -> NIL
+ *     :insertFrame( oQTextFrameFormat )                   -> oQTextFrame
  *     :insertHtml( cHtml )                                -> NIL
  *     :insertImage( cName )                               -> NIL
- *     :insertImage_1( pFormat )                           -> NIL
- *     :insertImage_2( pFormat, nAlignment )               -> NIL
- *     :insertImage_3( pImage, cName )                     -> NIL
- *     :insertList( pFormat )                              -> pQTextList
- *     :insertList_1( nStyle )                             -> pQTextList
+ *     :insertImage( oQTextImageFormat )                   -> NIL
+ *     :insertImage( oQTextImageFormat, nAlignment )       -> NIL
+ *     :insertImage( oQImage, cName )                      -> NIL
+ *     :insertList( oQTextListFormat )                     -> oQTextList
+ *     :insertList( nStyle )                               -> oQTextList
  *     :insertText( cText )                                -> NIL
- *     :insertText_1( cText, pFormat )                     -> NIL
- *     :isCopyOf( pOther )                                 -> lBool
+ *     :insertText( cText, oQTextCharFormat )              -> NIL
+ *     :isCopyOf( oQTextCursor )                           -> lBool
  *     :isNull()                                           -> lBool
  *     :joinPreviousEditBlock()                            -> NIL
- *     :mergeBlockCharFormat( pModifier )                  -> NIL
- *     :mergeBlockFormat( pModifier )                      -> NIL
- *     :mergeCharFormat( pModifier )                       -> NIL
+ *     :mergeBlockCharFormat( oQTextCharFormat )           -> NIL
+ *     :mergeBlockFormat( oQTextBlockFormat )              -> NIL
+ *     :mergeCharFormat( oQTextCharFormat )                -> NIL
  *     :movePosition( nOperation, nMode, nN )              -> lBool
  *     :position()                                         -> nInt
  *     :removeSelectedText()                               -> NIL
  *     :select( nSelection )                               -> NIL
  *     :selectedTableCells( @nFirstRow, @nNumRows, @nFirstColumn, @nNumColumns )  -> NIL
  *     :selectedText()                                     -> cQString
- *     :selection()                                        -> pQTextDocumentFragment
+ *     :selection()                                        -> oQTextDocumentFragment
  *     :selectionEnd()                                     -> nInt
  *     :selectionStart()                                   -> nInt
- *     :setBlockCharFormat( pFormat )                      -> NIL
- *     :setBlockFormat( pFormat )                          -> NIL
- *     :setCharFormat( pFormat )                           -> NIL
+ *     :setBlockCharFormat( oQTextCharFormat )             -> NIL
+ *     :setBlockFormat( oQTextBlockFormat )                -> NIL
+ *     :setCharFormat( oQTextCharFormat )                  -> NIL
  *     :setPosition( nPos, nM )                            -> NIL
  *     :setVisualNavigation( lB )                          -> NIL
  *     :visualNavigation()                                 -> lBool
@@ -108,7 +108,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQTextCursor.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QTextCursor.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     
  *  $END$
  */

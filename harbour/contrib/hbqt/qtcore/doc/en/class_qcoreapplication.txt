@@ -26,44 +26,45 @@
  *  $RETURNS$
  *     An instance of the object of type QCoreApplication
  *  $METHODS$
- *     :notify( pReceiver, pEvent )                        -> lBool
+ *     :notify( oQObject, oQEvent )                        -> lBool
  *     :addLibraryPath( cPath )                            -> NIL
  *     :applicationDirPath()                               -> cQString
  *     :applicationFilePath()                              -> cQString
  *     :applicationName()                                  -> cQString
  *     :applicationPid()                                   -> nQint64
  *     :applicationVersion()                               -> cQString
- *     :arguments()                                        -> pQStringList
+ *     :arguments()                                        -> oQStringList
  *     :closingDown()                                      -> lBool
  *     :exec()                                             -> nInt
  *     :exit( nReturnCode )                                -> NIL
  *     :flush()                                            -> NIL
  *     :hasPendingEvents()                                 -> lBool
- *     :installTranslator( pTranslationFile )              -> NIL
- *     :libraryPaths()                                     -> pQStringList
+ *     :installTranslator( oQTranslator )                  -> NIL
+ *     :instance()                                         -> oQCoreApplication
+ *     :libraryPaths()                                     -> oQStringList
  *     :organizationDomain()                               -> cQString
  *     :organizationName()                                 -> cQString
- *     :postEvent( pReceiver, pEvent )                     -> NIL
- *     :postEvent_1( pReceiver, pEvent, nPriority )        -> NIL
+ *     :postEvent( oQObject, oQEvent )                     -> NIL
+ *     :postEvent( oQObject, oQEvent, nPriority )          -> NIL
  *     :processEvents( nFlags )                            -> NIL
- *     :processEvents_1( nFlags, nMaxtime )                -> NIL
+ *     :processEvents( nFlags, nMaxtime )                  -> NIL
  *     :removeLibraryPath( cPath )                         -> NIL
- *     :removePostedEvents( pReceiver )                    -> NIL
- *     :removePostedEvents_1( pReceiver, nEventType )      -> NIL
- *     :removeTranslator( pTranslationFile )               -> NIL
- *     :sendEvent( pReceiver, pEvent )                     -> lBool
- *     :sendPostedEvents( pReceiver, nEvent_type )         -> NIL
- *     :sendPostedEvents_1()                               -> NIL
+ *     :removePostedEvents( oQObject )                     -> NIL
+ *     :removePostedEvents( oQObject, nEventType )         -> NIL
+ *     :removeTranslator( oQTranslator )                   -> NIL
+ *     :sendEvent( oQObject, oQEvent )                     -> lBool
+ *     :sendPostedEvents( oQObject, nEvent_type )          -> NIL
+ *     :sendPostedEvents()                                 -> NIL
  *     :setApplicationName( cApplication )                 -> NIL
  *     :setApplicationVersion( cVersion )                  -> NIL
  *     :setAttribute( nAttribute, lOn )                    -> NIL
- *     :setLibraryPaths( pPaths )                          -> NIL
+ *     :setLibraryPaths( oQStringList )                    -> NIL
  *     :setOrganizationDomain( cOrgDomain )                -> NIL
  *     :setOrganizationName( cOrgName )                    -> NIL
  *     :startingUp()                                       -> lBool
  *     :testAttribute( nAttribute )                        -> lBool
- *     :translate( pContext, pSourceText, pDisambiguation, nEncoding, nN )  -> cQString
- *     :translate_1( pContext, pSourceText, pDisambiguation, nEncoding )  -> cQString
+ *     :translate( cContext, cSourceText, cDisambiguation, nEncoding, nN )  -> cQString
+ *     :translate( cContext, cSourceText, cDisambiguation, nEncoding )  -> cQString
  *     :quit()                                             -> NIL
  * 
  *  $DESCRIPTION$
@@ -84,7 +85,5 @@
  *     Harbour source: contrib/hbqt/qtcore/TQCoreApplication.prg
  *     C++ wrappers  : contrib/hbqt/qtcore/QCoreApplication.cpp
  *     Library       : hbqtcore
- *  $SEEALSO$
- *     QObject()
  *  $END$
  */

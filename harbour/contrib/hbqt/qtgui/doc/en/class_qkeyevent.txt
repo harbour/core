@@ -30,7 +30,7 @@
  *     :isAutoRepeat()                                     -> lBool
  *     :key()                                              -> nInt
  *     :matches( nKey )                                    -> lBool
- *     :modifiers()                                        -> nQt::KeyboardModifiers
+ *     :modifiers()                                        -> nQt_KeyboardModifiers
  *     :nativeModifiers()                                  -> nQuint32
  *     :nativeScanCode()                                   -> nQuint32
  *     :nativeVirtualKey()                                 -> nQuint32
@@ -54,7 +54,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQKeyEvent.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QKeyEvent.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QInputEvent()
  *  $END$
  */

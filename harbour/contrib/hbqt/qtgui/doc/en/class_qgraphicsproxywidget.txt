@@ -26,9 +26,10 @@
  *  $RETURNS$
  *     An instance of the object of type QGraphicsProxyWidget
  *  $METHODS$
- *     :setWidget( pWidget )                               -> NIL
- *     :subWidgetRect( pWidget )                           -> pQRectF
- *     :widget()                                           -> pQWidget
+ *     :createProxyForChildWidget( oQWidget )              -> oQGraphicsProxyWidget
+ *     :setWidget( oQWidget )                              -> NIL
+ *     :subWidgetRect( oQWidget )                          -> oQRectF
+ *     :widget()                                           -> oQWidget
  * 
  *  $DESCRIPTION$
  * 
@@ -48,7 +49,5 @@
  *     Harbour source: contrib/hbqt/qtgui/TQGraphicsProxyWidget.prg
  *     C++ wrappers  : contrib/hbqt/qtgui/QGraphicsProxyWidget.cpp
  *     Library       : hbqtgui
- *  $SEEALSO$
- *     QGraphicsWidget()
  *  $END$
  */

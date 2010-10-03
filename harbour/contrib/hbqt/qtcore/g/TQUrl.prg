@@ -103,72 +103,76 @@ CREATE CLASS QUrl INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QUrl
 
    METHOD  new( ... )
 
-   METHOD  addEncodedQueryItem( pKey, pValue )
-   METHOD  addQueryItem( cKey, cValue )
-   METHOD  allEncodedQueryItemValues( pKey )
-   METHOD  allQueryItemValues( cKey )
-   METHOD  authority()
-   METHOD  clear()
-   METHOD  encodedFragment()
-   METHOD  encodedHost()
-   METHOD  encodedPassword()
-   METHOD  encodedPath()
-   METHOD  encodedQuery()
-   METHOD  encodedQueryItemValue( pKey )
-   METHOD  encodedUserName()
-   METHOD  errorString()
-   METHOD  fragment()
-   METHOD  hasEncodedQueryItem( pKey )
-   METHOD  hasFragment()
-   METHOD  hasQuery()
-   METHOD  hasQueryItem( cKey )
-   METHOD  host()
-   METHOD  isEmpty()
-   METHOD  isParentOf( pChildUrl )
-   METHOD  isRelative()
-   METHOD  isValid()
-   METHOD  password()
-   METHOD  path()
-   METHOD  port( ... )
-   METHOD  queryItemValue( cKey )
-   METHOD  queryPairDelimiter()
-   METHOD  queryValueDelimiter()
-   METHOD  removeAllEncodedQueryItems( pKey )
-   METHOD  removeAllQueryItems( cKey )
-   METHOD  removeEncodedQueryItem( pKey )
-   METHOD  removeQueryItem( cKey )
-   METHOD  resolved( pRelative )
-   METHOD  scheme()
-   METHOD  setAuthority( cAuthority )
-   METHOD  setEncodedFragment( pFragment )
-   METHOD  setEncodedHost( pHost )
-   METHOD  setEncodedPassword( pPassword )
-   METHOD  setEncodedPath( pPath )
-   METHOD  setEncodedQuery( pQuery )
-   METHOD  setEncodedUrl( ... )
-   METHOD  setEncodedUserName( pUserName )
-   METHOD  setFragment( cFragment )
-   METHOD  setHost( cHost )
-   METHOD  setPassword( cPassword )
-   METHOD  setPath( cPath )
-   METHOD  setPort( nPort )
-   METHOD  setScheme( cScheme )
-   METHOD  setUrl( ... )
-   METHOD  setUserInfo( cUserInfo )
-   METHOD  setUserName( cUserName )
-   METHOD  toEncoded( nOptions )
-   METHOD  toLocalFile()
-   METHOD  toString( nOptions )
-   METHOD  userInfo()
-   METHOD  userName()
-   METHOD  fromAce( pDomain )
-   METHOD  fromEncoded( ... )
-   METHOD  fromLocalFile( cLocalFile )
-   METHOD  fromPercentEncoding( pInput )
-   METHOD  idnWhitelist()
-   METHOD  setIdnWhitelist( pList )
-   METHOD  toAce( cDomain )
-   METHOD  toPercentEncoding( cInput, pExclude, pInclude )
+   METHOD  addEncodedQueryItem           // ( oQByteArray, oQByteArray )                       -> NIL
+   METHOD  addQueryItem                  // ( cKey, cValue )                                   -> NIL
+   METHOD  allEncodedQueryItemValues     // ( oQByteArray )                                    -> oQList_QByteArray>
+   METHOD  allQueryItemValues            // ( cKey )                                           -> oQStringList
+   METHOD  authority                     // (  )                                               -> cQString
+   METHOD  clear                         // (  )                                               -> NIL
+   METHOD  encodedFragment               // (  )                                               -> oQByteArray
+   METHOD  encodedHost                   // (  )                                               -> oQByteArray
+   METHOD  encodedPassword               // (  )                                               -> oQByteArray
+   METHOD  encodedPath                   // (  )                                               -> oQByteArray
+   METHOD  encodedQuery                  // (  )                                               -> oQByteArray
+   METHOD  encodedQueryItemValue         // ( oQByteArray )                                    -> oQByteArray
+   METHOD  encodedUserName               // (  )                                               -> oQByteArray
+   METHOD  errorString                   // (  )                                               -> cQString
+   METHOD  fragment                      // (  )                                               -> cQString
+   METHOD  hasEncodedQueryItem           // ( oQByteArray )                                    -> lBool
+   METHOD  hasFragment                   // (  )                                               -> lBool
+   METHOD  hasQuery                      // (  )                                               -> lBool
+   METHOD  hasQueryItem                  // ( cKey )                                           -> lBool
+   METHOD  host                          // (  )                                               -> cQString
+   METHOD  isEmpty                       // (  )                                               -> lBool
+   METHOD  isParentOf                    // ( oQUrl )                                          -> lBool
+   METHOD  isRelative                    // (  )                                               -> lBool
+   METHOD  isValid                       // (  )                                               -> lBool
+   METHOD  password                      // (  )                                               -> cQString
+   METHOD  path                          // (  )                                               -> cQString
+   METHOD  port                          // (  )                                               -> nInt
+                                         // ( nDefaultPort )                                   -> nInt
+   METHOD  queryItemValue                // ( cKey )                                           -> cQString
+   METHOD  queryPairDelimiter            // (  )                                               -> cChar
+   METHOD  queryValueDelimiter           // (  )                                               -> cChar
+   METHOD  removeAllEncodedQueryItems    // ( oQByteArray )                                    -> NIL
+   METHOD  removeAllQueryItems           // ( cKey )                                           -> NIL
+   METHOD  removeEncodedQueryItem        // ( oQByteArray )                                    -> NIL
+   METHOD  removeQueryItem               // ( cKey )                                           -> NIL
+   METHOD  resolved                      // ( oQUrl )                                          -> oQUrl
+   METHOD  scheme                        // (  )                                               -> cQString
+   METHOD  setAuthority                  // ( cAuthority )                                     -> NIL
+   METHOD  setEncodedFragment            // ( oQByteArray )                                    -> NIL
+   METHOD  setEncodedHost                // ( oQByteArray )                                    -> NIL
+   METHOD  setEncodedPassword            // ( oQByteArray )                                    -> NIL
+   METHOD  setEncodedPath                // ( oQByteArray )                                    -> NIL
+   METHOD  setEncodedQuery               // ( oQByteArray )                                    -> NIL
+   METHOD  setEncodedUrl                 // ( oQByteArray )                                    -> NIL
+                                         // ( oQByteArray, nParsingMode )                      -> NIL
+   METHOD  setEncodedUserName            // ( oQByteArray )                                    -> NIL
+   METHOD  setFragment                   // ( cFragment )                                      -> NIL
+   METHOD  setHost                       // ( cHost )                                          -> NIL
+   METHOD  setPassword                   // ( cPassword )                                      -> NIL
+   METHOD  setPath                       // ( cPath )                                          -> NIL
+   METHOD  setPort                       // ( nPort )                                          -> NIL
+   METHOD  setScheme                     // ( cScheme )                                        -> NIL
+   METHOD  setUrl                        // ( cUrl )                                           -> NIL
+                                         // ( cUrl, nParsingMode )                             -> NIL
+   METHOD  setUserInfo                   // ( cUserInfo )                                      -> NIL
+   METHOD  setUserName                   // ( cUserName )                                      -> NIL
+   METHOD  toEncoded                     // ( nOptions )                                       -> oQByteArray
+   METHOD  toLocalFile                   // (  )                                               -> cQString
+   METHOD  toString                      // ( nOptions )                                       -> cQString
+   METHOD  userInfo                      // (  )                                               -> cQString
+   METHOD  userName                      // (  )                                               -> cQString
+   METHOD  fromAce                       // ( oQByteArray )                                    -> cQString
+   METHOD  fromEncoded                   // ( oQByteArray )                                    -> oQUrl
+                                         // ( oQByteArray, nParsingMode )                      -> oQUrl
+   METHOD  fromLocalFile                 // ( cLocalFile )                                     -> oQUrl
+   METHOD  fromPercentEncoding           // ( oQByteArray )                                    -> cQString
+   METHOD  idnWhitelist                  // (  )                                               -> oQStringList
+   METHOD  setIdnWhitelist               // ( oQStringList )                                   -> NIL
+   METHOD  toAce                         // ( cDomain )                                        -> oQByteArray
+   METHOD  toPercentEncoding             // ( cInput, oQByteArray, oQByteArray )               -> oQByteArray
 
    ENDCLASS
 
@@ -182,108 +186,244 @@ METHOD QUrl:new( ... )
    RETURN Self
 
 
-METHOD QUrl:addEncodedQueryItem( pKey, pValue )
-   RETURN Qt_QUrl_addEncodedQueryItem( ::pPtr, hbqt_ptr( pKey ), hbqt_ptr( pValue ) )
+METHOD QUrl:addEncodedQueryItem( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN Qt_QUrl_addEncodedQueryItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:addQueryItem( cKey, cValue )
-   RETURN Qt_QUrl_addQueryItem( ::pPtr, cKey, cValue )
+METHOD QUrl:addQueryItem( ... )
+   SWITCH PCount()
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
+         RETURN Qt_QUrl_addQueryItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:allEncodedQueryItemValues( pKey )
-   RETURN HB_QList():from( Qt_QUrl_allEncodedQueryItemValues( ::pPtr, hbqt_ptr( pKey ) ) )
+METHOD QUrl:allEncodedQueryItemValues( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QList():from( Qt_QUrl_allEncodedQueryItemValues( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:allQueryItemValues( cKey )
-   RETURN HB_QStringList():from( Qt_QUrl_allQueryItemValues( ::pPtr, cKey ) )
+METHOD QUrl:allQueryItemValues( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QStringList():from( Qt_QUrl_allQueryItemValues( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:authority()
-   RETURN Qt_QUrl_authority( ::pPtr )
+METHOD QUrl:authority( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QUrl_authority( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:clear()
-   RETURN Qt_QUrl_clear( ::pPtr )
+METHOD QUrl:clear( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QUrl_clear( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:encodedFragment()
-   RETURN HB_QByteArray():from( Qt_QUrl_encodedFragment( ::pPtr ) )
+METHOD QUrl:encodedFragment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QByteArray():from( Qt_QUrl_encodedFragment( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:encodedHost()
-   RETURN HB_QByteArray():from( Qt_QUrl_encodedHost( ::pPtr ) )
+METHOD QUrl:encodedHost( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QByteArray():from( Qt_QUrl_encodedHost( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:encodedPassword()
-   RETURN HB_QByteArray():from( Qt_QUrl_encodedPassword( ::pPtr ) )
+METHOD QUrl:encodedPassword( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QByteArray():from( Qt_QUrl_encodedPassword( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:encodedPath()
-   RETURN HB_QByteArray():from( Qt_QUrl_encodedPath( ::pPtr ) )
+METHOD QUrl:encodedPath( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QByteArray():from( Qt_QUrl_encodedPath( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:encodedQuery()
-   RETURN HB_QByteArray():from( Qt_QUrl_encodedQuery( ::pPtr ) )
+METHOD QUrl:encodedQuery( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QByteArray():from( Qt_QUrl_encodedQuery( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:encodedQueryItemValue( pKey )
-   RETURN HB_QByteArray():from( Qt_QUrl_encodedQueryItemValue( ::pPtr, hbqt_ptr( pKey ) ) )
+METHOD QUrl:encodedQueryItemValue( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QByteArray():from( Qt_QUrl_encodedQueryItemValue( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:encodedUserName()
-   RETURN HB_QByteArray():from( Qt_QUrl_encodedUserName( ::pPtr ) )
+METHOD QUrl:encodedUserName( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QByteArray():from( Qt_QUrl_encodedUserName( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:errorString()
-   RETURN Qt_QUrl_errorString( ::pPtr )
+METHOD QUrl:errorString( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QUrl_errorString( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:fragment()
-   RETURN Qt_QUrl_fragment( ::pPtr )
+METHOD QUrl:fragment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QUrl_fragment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:hasEncodedQueryItem( pKey )
-   RETURN Qt_QUrl_hasEncodedQueryItem( ::pPtr, hbqt_ptr( pKey ) )
+METHOD QUrl:hasEncodedQueryItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QUrl_hasEncodedQueryItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:hasFragment()
-   RETURN Qt_QUrl_hasFragment( ::pPtr )
+METHOD QUrl:hasFragment( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QUrl_hasFragment( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:hasQuery()
-   RETURN Qt_QUrl_hasQuery( ::pPtr )
+METHOD QUrl:hasQuery( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QUrl_hasQuery( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:hasQueryItem( cKey )
-   RETURN Qt_QUrl_hasQueryItem( ::pPtr, cKey )
+METHOD QUrl:hasQueryItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QUrl_hasQueryItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:host()
-   RETURN Qt_QUrl_host( ::pPtr )
+METHOD QUrl:host( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QUrl_host( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:isEmpty()
-   RETURN Qt_QUrl_isEmpty( ::pPtr )
+METHOD QUrl:isEmpty( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QUrl_isEmpty( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:isParentOf( pChildUrl )
-   RETURN Qt_QUrl_isParentOf( ::pPtr, hbqt_ptr( pChildUrl ) )
+METHOD QUrl:isParentOf( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QUrl_isParentOf( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:isRelative()
-   RETURN Qt_QUrl_isRelative( ::pPtr )
+METHOD QUrl:isRelative( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QUrl_isRelative( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:isValid()
-   RETURN Qt_QUrl_isValid( ::pPtr )
+METHOD QUrl:isValid( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QUrl_isValid( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:password()
-   RETURN Qt_QUrl_password( ::pPtr )
+METHOD QUrl:password( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QUrl_password( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:path()
-   RETURN Qt_QUrl_path( ::pPtr )
+METHOD QUrl:path( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QUrl_path( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QUrl:port( ... )
@@ -300,64 +440,172 @@ METHOD QUrl:port( ... )
    RETURN hbqt_error()
 
 
-METHOD QUrl:queryItemValue( cKey )
-   RETURN Qt_QUrl_queryItemValue( ::pPtr, cKey )
+METHOD QUrl:queryItemValue( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QUrl_queryItemValue( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:queryPairDelimiter()
-   RETURN Qt_QUrl_queryPairDelimiter( ::pPtr )
+METHOD QUrl:queryPairDelimiter( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QUrl_queryPairDelimiter( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:queryValueDelimiter()
-   RETURN Qt_QUrl_queryValueDelimiter( ::pPtr )
+METHOD QUrl:queryValueDelimiter( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QUrl_queryValueDelimiter( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:removeAllEncodedQueryItems( pKey )
-   RETURN Qt_QUrl_removeAllEncodedQueryItems( ::pPtr, hbqt_ptr( pKey ) )
+METHOD QUrl:removeAllEncodedQueryItems( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QUrl_removeAllEncodedQueryItems( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:removeAllQueryItems( cKey )
-   RETURN Qt_QUrl_removeAllQueryItems( ::pPtr, cKey )
+METHOD QUrl:removeAllQueryItems( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QUrl_removeAllQueryItems( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:removeEncodedQueryItem( pKey )
-   RETURN Qt_QUrl_removeEncodedQueryItem( ::pPtr, hbqt_ptr( pKey ) )
+METHOD QUrl:removeEncodedQueryItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QUrl_removeEncodedQueryItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:removeQueryItem( cKey )
-   RETURN Qt_QUrl_removeQueryItem( ::pPtr, cKey )
+METHOD QUrl:removeQueryItem( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QUrl_removeQueryItem( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:resolved( pRelative )
-   RETURN HB_QUrl():from( Qt_QUrl_resolved( ::pPtr, hbqt_ptr( pRelative ) ) )
+METHOD QUrl:resolved( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN HB_QUrl():from( Qt_QUrl_resolved( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:scheme()
-   RETURN Qt_QUrl_scheme( ::pPtr )
+METHOD QUrl:scheme( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QUrl_scheme( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:setAuthority( cAuthority )
-   RETURN Qt_QUrl_setAuthority( ::pPtr, cAuthority )
+METHOD QUrl:setAuthority( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QUrl_setAuthority( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:setEncodedFragment( pFragment )
-   RETURN Qt_QUrl_setEncodedFragment( ::pPtr, hbqt_ptr( pFragment ) )
+METHOD QUrl:setEncodedFragment( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QUrl_setEncodedFragment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:setEncodedHost( pHost )
-   RETURN Qt_QUrl_setEncodedHost( ::pPtr, hbqt_ptr( pHost ) )
+METHOD QUrl:setEncodedHost( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QUrl_setEncodedHost( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:setEncodedPassword( pPassword )
-   RETURN Qt_QUrl_setEncodedPassword( ::pPtr, hbqt_ptr( pPassword ) )
+METHOD QUrl:setEncodedPassword( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QUrl_setEncodedPassword( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:setEncodedPath( pPath )
-   RETURN Qt_QUrl_setEncodedPath( ::pPtr, hbqt_ptr( pPath ) )
+METHOD QUrl:setEncodedPath( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QUrl_setEncodedPath( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:setEncodedQuery( pQuery )
-   RETURN Qt_QUrl_setEncodedQuery( ::pPtr, hbqt_ptr( pQuery ) )
+METHOD QUrl:setEncodedQuery( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QUrl_setEncodedQuery( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QUrl:setEncodedUrl( ... )
@@ -378,32 +626,88 @@ METHOD QUrl:setEncodedUrl( ... )
    RETURN hbqt_error()
 
 
-METHOD QUrl:setEncodedUserName( pUserName )
-   RETURN Qt_QUrl_setEncodedUserName( ::pPtr, hbqt_ptr( pUserName ) )
+METHOD QUrl:setEncodedUserName( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QUrl_setEncodedUserName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:setFragment( cFragment )
-   RETURN Qt_QUrl_setFragment( ::pPtr, cFragment )
+METHOD QUrl:setFragment( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QUrl_setFragment( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:setHost( cHost )
-   RETURN Qt_QUrl_setHost( ::pPtr, cHost )
+METHOD QUrl:setHost( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QUrl_setHost( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:setPassword( cPassword )
-   RETURN Qt_QUrl_setPassword( ::pPtr, cPassword )
+METHOD QUrl:setPassword( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QUrl_setPassword( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:setPath( cPath )
-   RETURN Qt_QUrl_setPath( ::pPtr, cPath )
+METHOD QUrl:setPath( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QUrl_setPath( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:setPort( nPort )
-   RETURN Qt_QUrl_setPort( ::pPtr, nPort )
+METHOD QUrl:setPort( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QUrl_setPort( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:setScheme( cScheme )
-   RETURN Qt_QUrl_setScheme( ::pPtr, cScheme )
+METHOD QUrl:setScheme( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QUrl_setScheme( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QUrl:setUrl( ... )
@@ -424,36 +728,92 @@ METHOD QUrl:setUrl( ... )
    RETURN hbqt_error()
 
 
-METHOD QUrl:setUserInfo( cUserInfo )
-   RETURN Qt_QUrl_setUserInfo( ::pPtr, cUserInfo )
+METHOD QUrl:setUserInfo( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QUrl_setUserInfo( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:setUserName( cUserName )
-   RETURN Qt_QUrl_setUserName( ::pPtr, cUserName )
+METHOD QUrl:setUserName( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN Qt_QUrl_setUserName( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:toEncoded( nOptions )
-   RETURN HB_QByteArray():from( Qt_QUrl_toEncoded( ::pPtr, nOptions ) )
+METHOD QUrl:toEncoded( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN HB_QByteArray():from( Qt_QUrl_toEncoded( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN HB_QByteArray():from( Qt_QUrl_toEncoded( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:toLocalFile()
-   RETURN Qt_QUrl_toLocalFile( ::pPtr )
+METHOD QUrl:toLocalFile( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QUrl_toLocalFile( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:toString( nOptions )
-   RETURN Qt_QUrl_toString( ::pPtr, nOptions )
+METHOD QUrl:toString( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isNumeric( hb_pvalue( 1 ) )
+         RETURN Qt_QUrl_toString( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   CASE 0
+      RETURN Qt_QUrl_toString( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:userInfo()
-   RETURN Qt_QUrl_userInfo( ::pPtr )
+METHOD QUrl:userInfo( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QUrl_userInfo( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:userName()
-   RETURN Qt_QUrl_userName( ::pPtr )
+METHOD QUrl:userName( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN Qt_QUrl_userName( ::pPtr, ... )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:fromAce( pDomain )
-   RETURN Qt_QUrl_fromAce( ::pPtr, hbqt_ptr( pDomain ) )
+METHOD QUrl:fromAce( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QUrl_fromAce( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
 METHOD QUrl:fromEncoded( ... )
@@ -474,26 +834,82 @@ METHOD QUrl:fromEncoded( ... )
    RETURN hbqt_error()
 
 
-METHOD QUrl:fromLocalFile( cLocalFile )
-   RETURN HB_QUrl():from( Qt_QUrl_fromLocalFile( ::pPtr, cLocalFile ) )
+METHOD QUrl:fromLocalFile( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QUrl():from( Qt_QUrl_fromLocalFile( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:fromPercentEncoding( pInput )
-   RETURN Qt_QUrl_fromPercentEncoding( ::pPtr, hbqt_ptr( pInput ) )
+METHOD QUrl:fromPercentEncoding( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QUrl_fromPercentEncoding( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:idnWhitelist()
-   RETURN HB_QStringList():from( Qt_QUrl_idnWhitelist( ::pPtr ) )
+METHOD QUrl:idnWhitelist( ... )
+   SWITCH PCount()
+   CASE 0
+      RETURN HB_QStringList():from( Qt_QUrl_idnWhitelist( ::pPtr, ... ) )
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:setIdnWhitelist( pList )
-   RETURN Qt_QUrl_setIdnWhitelist( ::pPtr, hbqt_ptr( pList ) )
+METHOD QUrl:setIdnWhitelist( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isObject( hb_pvalue( 1 ) )
+         RETURN Qt_QUrl_setIdnWhitelist( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:toAce( cDomain )
-   RETURN HB_QByteArray():from( Qt_QUrl_toAce( ::pPtr, cDomain ) )
+METHOD QUrl:toAce( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QByteArray():from( Qt_QUrl_toAce( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 
 
-METHOD QUrl:toPercentEncoding( cInput, pExclude, pInclude )
-   RETURN HB_QByteArray():from( Qt_QUrl_toPercentEncoding( ::pPtr, cInput, hbqt_ptr( pExclude ), hbqt_ptr( pInclude ) ) )
+METHOD QUrl:toPercentEncoding( ... )
+   SWITCH PCount()
+   CASE 3
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
+         RETURN HB_QByteArray():from( Qt_QUrl_toPercentEncoding( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 2
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
+         RETURN HB_QByteArray():from( Qt_QUrl_toPercentEncoding( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   CASE 1
+      DO CASE
+      CASE hb_isChar( hb_pvalue( 1 ) )
+         RETURN HB_QByteArray():from( Qt_QUrl_toPercentEncoding( ::pPtr, ... ) )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

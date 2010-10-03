@@ -188,7 +188,7 @@ HB_FUNC( QT_QTEXTDECODER_TOUNICODE )
    QTextDecoder * p = hbqt_par_QTextDecoder( 1 );
    if( p )
    {
-      hb_retstr_utf8( ( p )->toUnicode( hbqt_par_char( 2 ), hb_parni( 3 ) ).toUtf8().data() );
+      hb_retstr_utf8( ( p )->toUnicode( ( const char * ) hb_parc( 2 ), hb_parni( 3 ) ).toUtf8().data() );
    }
 }
 
