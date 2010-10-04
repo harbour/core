@@ -876,7 +876,7 @@ static HB_ERRCODE adsxSysName( ADSXAREAP pArea, HB_BYTE * pBuffer )
       u32RetVal = AdsGetTableType( pArea->adsarea.hTable, &u16TableType );
       if( u32RetVal != AE_SUCCESS )
       {
-         HB_TRACE(HB_TR_DEBUG, ("Error in adsxSysName: %lu  pArea->hTable %p\n", ( HB_ULONG ) u32RetVal, ( void * ) ( HB_PTRDIFF ) pArea->hTable));
+         HB_TRACE(HB_TR_DEBUG, ("Error in adsxSysName: %lu  pArea->adsarea.hTable %p\n", ( HB_ULONG ) u32RetVal, ( void * ) ( HB_PTRDIFF ) pArea->adsarea.hTable));
          u16TableType = ( UNSIGNED16 ) pArea->adsarea.iFileType;
       }
    }

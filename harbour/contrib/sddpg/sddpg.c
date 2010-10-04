@@ -275,6 +275,7 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
    SELF_SETFIELDEXTENT( ( AREAP ) pArea, uiFields );
 
    pItemEof = hb_itemArrayNew( uiFields );
+   pItem = hb_itemNew( NULL );
 
    pBuffer = ( char* ) hb_xgrab( 256 );
 
@@ -411,7 +412,7 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
                memset( pStr, ' ', pFieldInfo.uiLen );
                pStr[ pFieldInfo.uiLen ] = '\0';
 
-               pItem = hb_itemPutCL( NULL, pStr, pFieldInfo.uiLen );
+               hb_itemPutCL( pItem, pStr, pFieldInfo.uiLen );
                hb_xfree( pStr );
                break;
             }
@@ -421,33 +422,32 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
                break;
 
             case HB_FT_INTEGER:
-               pItem = hb_itemPutNI( NULL, 0 );
+               hb_itemPutNI( pItem, 0 );
                break;
 
             case HB_FT_LONG:
-               pItem = hb_itemPutNL( NULL, 0 );
+               hb_itemPutNL( pItem, 0 );
                break;
 
             case HB_FT_DOUBLE:
-               pItem = hb_itemPutND( NULL, 0.0 );
+               hb_itemPutND( pItem, 0.0 );
                break;
 
             case HB_FT_LOGICAL:
-               pItem = hb_itemPutL( NULL, HB_FALSE );
+               hb_itemPutL( pItem, HB_FALSE );
                break;
 
             case HB_FT_DATE:
-               pItem = hb_itemPutDS( NULL, NULL );
+               hb_itemPutDS( pItem, NULL );
                break;
 
             default:
-               pItem = hb_itemNew( NULL );
+               hb_itemClear( pItem );
                bError = HB_TRUE;
                break;
          }
 
          hb_arraySetForward( pItemEof, uiCount + 1, pItem );
-         hb_itemRelease( pItem );
 
 /*         if ( pFieldInfo.uiType == HB_IT_DOUBLE || pFieldInfo.uiType == HB_IT_INTEGER )
          {
@@ -463,6 +463,8 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
    }
 
    hb_xfree( pBuffer );
+
+   hb_itemRelease( pItem );
 
    if ( bError )
    {
