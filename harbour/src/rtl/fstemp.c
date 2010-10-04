@@ -120,15 +120,17 @@ static HB_BOOL fsGetTempDirByCase( char * pszName, const char * pszTempDir )
       }
    }
 
-#  if defined( __DJGPP__ )
    if( fOK )
    {
+#  if defined( __DJGPP__ )
       /* convert '/' to '\' */
       char * pszDelim;
       while( ( pszDelim = strchr( pszName, '/' ) ) != NULL )
          *pszDelim = '\\';
-   }
 #  endif
+      if( ! hb_fsDirExists( pszTempDir ) )
+         fOK = HB_FALSE;
+   }
 
    return fOK;
 }
@@ -365,13 +367,19 @@ HB_ERRCODE hb_fsTempDir( char * pszTempDir )
       if( pszTempDirEnv )
          hb_xfree( pszTempDirEnv );
 
-      if( pszTempDir[ 0 ] != '\0' )
+      if( nResult == 0 && pszTempDir[ 0 ] != '\0' )
       {
          int len = ( int ) strlen( pszTempDir );
          if( pszTempDir[ len - 1 ] != HB_OS_PATH_DELIM_CHR )
          {
             pszTempDir[ len ] = HB_OS_PATH_DELIM_CHR;
             pszTempDir[ len + 1 ] = '\0';
+         }
+         else
+         {
+            pszTempDir[ 0 ] = '.';
+            pszTempDir[ 1 ] = HB_OS_PATH_DELIM_CHR;
+            pszTempDir[ 2 ] = '\0';
          }
       }
    }
@@ -388,29 +396,18 @@ HB_ERRCODE hb_fsTempDir( char * pszTempDir )
    }
 #else
    {
+#elif !defined( HB_OS_OS2 )
       char szBuffer[ L_tmpnam ];
 
       if( tmpnam( szBuffer ) != NULL )
       {
-#        if defined( __DJGPP__ )
-         {
-            /* convert '/' to '\' */
-            char * pszDelim;
-            while( ( pszDelim = strchr( szBuffer, '/' ) ) != NULL )
-               *pszDelim = '\\';
-         }
-#        endif
-
-         {
-            PHB_FNAME pTempName = hb_fsFNameSplit( szBuffer );
-            hb_strncpy( pszTempDir, pTempName->szPath, HB_PATH_MAX - 1 );
-            hb_xfree( pTempName );
-
-            if( hb_fsDirExists( pszTempDir ) )
-               nResult = 0;
-         }
+         PHB_FNAME pTempName = hb_fsFNameSplit( szBuffer );
+         if( fsGetTempDirByCase( pszTempDir, pTempName->szPath ) )
+            nResult = 0;
+         hb_xfree( pTempName );
       }
       if( nResult != 0 )
+#endif
       {
          static const char * env_tmp[] = { "TEMP", "TMP", "TMPDIR", NULL };
 
@@ -427,7 +424,7 @@ HB_ERRCODE hb_fsTempDir( char * pszTempDir )
                hb_xfree( pszTempDirEnv );
             }
          }
-         if( pszTempDir[ 0 ] != '\0' )
+         if( nResult == 0 && pszTempDir[ 0 ] != '\0' )
          {
             int len = ( int ) strlen( pszTempDir );
             if( pszTempDir[ len - 1 ] != HB_OS_PATH_DELIM_CHR )
