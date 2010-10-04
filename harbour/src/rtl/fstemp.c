@@ -396,7 +396,7 @@ HB_ERRCODE hb_fsTempDir( char * pszTempDir )
    }
 #else
    {
-#elif !defined( HB_OS_OS2 )
+#if !defined( HB_OS_OS2 )
       char szBuffer[ L_tmpnam ];
 
       if( tmpnam( szBuffer ) != NULL )
