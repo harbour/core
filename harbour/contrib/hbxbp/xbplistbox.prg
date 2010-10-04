@@ -175,6 +175,7 @@ METHOD XbpListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    IF ! ::vertScroll
       ::oWidget:setVerticalScrollBarPolicy( Qt_ScrollBarAlwaysOff )
    ENDIF
+   ::oWidget:setContextMenuPolicy( Qt_CustomContextMenu )
 
    ::connect()
    ::setPosAndSize()
@@ -192,7 +193,7 @@ METHOD XbpListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 METHOD XbpListBox:connect()
 
-   ::oWidget:connect( QEvent_ContextMenu, {|e| ::grabEvent( QEvent_ContextMenu, e ) } )
+//   ::oWidget:connect( QEvent_ContextMenu, {|e| ::grabEvent( QEvent_ContextMenu, e ) } )
 
    ::oWidget:connect( "currentItemChanged(QLWItem,QLWItem)", {|p,p1| ::execSlot( "currentItemChanged(QLWItem,QLWItem)", p, p1 ) } )
    ::oWidget:connect( "currentRowChanged(int)"             , {|p,p1| ::execSlot( "currentRowChanged(int)"             , p, p1 ) } )
@@ -205,13 +206,15 @@ METHOD XbpListBox:connect()
    ::oWidget:connect( "itemPressed(QLWItem)"               , {|p,p1| ::execSlot( "itemPressed(QLWItem)"               , p, p1 ) } )
    ::oWidget:connect( "itemSelectionChanged()"             , {|p,p1| ::execSlot( "itemSelectionChanged()"             , p, p1 ) } )
 
+   ::oWidget:connect( "customContextMenuRequested(QPoint)" , {|p1  | ::execSlot( "customContextMenuRequested(QPoint)" , p1    ) } )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpListBox:disConnect()
 
-   ::oWidget:disconnect( QEvent_ContextMenu )
+//   ::oWidget:disconnect( QEvent_ContextMenu )
 
    ::oWidget:disConnect( "currentItemChanged(QLWItem,QLWItem)" )
    ::oWidget:disConnect( "currentRowChanged(int)"              )
@@ -223,6 +226,8 @@ METHOD XbpListBox:disConnect()
    ::oWidget:disConnect( "itemEntered(QLWItem)"                )
    ::oWidget:disConnect( "itemPressed(QLWItem)"                )
    ::oWidget:disConnect( "itemSelectionChanged()"              )
+
+   ::oWidget:disconnect( "customContextMenuRequested(QPoint)"  )
 
    RETURN Self
 
@@ -264,7 +269,20 @@ METHOD XbpListBox:getItemIndex( pItm )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpListBox:execSlot( cSlot, p )
-   LOCAL qItm, nIndex
+   LOCAL qPos, qItm, nIndex, n, qPt
+
+   IF cSlot == "customContextMenuRequested(QPoint)"
+      IF hb_isBlock( ::hb_contextMenu )
+         qPos := QPoint( p )
+         IF ( qItm := ::oWidget:itemAt( qPos ) ):isValidObject()
+            IF ( n := ascan( ::aItems, {|o| hbqt_IsEqualGcQtPointer( o, qItm ) } ) ) > 0
+               qPt := ::oWidget:mapToGlobal( QPoint( p ) )
+               eval( ::hb_contextMenu, { qPt:x(), qPt:y() }, NIL, ::aItems[ n ] )
+            ENDIF
+         ENDIF
+      ENDIF
+      RETURN Self
+   ENDIF
 
    IF hb_isPointer( p )
       IF ( nIndex := ::getItemIndex( p ) ) > 0
@@ -276,18 +294,8 @@ METHOD XbpListBox:execSlot( cSlot, p )
    ENDIF
 
    SWITCH cSlot
-   CASE "currentItemChanged(QLWItem,QLWItem)"
-      EXIT
    CASE "currentRowChanged(int)"
       ::nCurSelected := p + 1
-      EXIT
-   CASE "currentTextChanged(QString)"
-      EXIT
-   CASE "itemActivated(QLWItem)"
-      EXIT
-   CASE "itemChanged(QLWItem)"
-      EXIT
-   CASE "itemPressed(QLWItem)"
       EXIT
    CASE "itemClicked(QLWItem)"
       ::toggleSelected( nIndex )
@@ -299,8 +307,20 @@ METHOD XbpListBox:execSlot( cSlot, p )
    CASE "itemEntered(QLWItem)"
       ::oWidget:setToolTip( qItm:text() )
       EXIT
+   #if 0
+   CASE "currentItemChanged(QLWItem,QLWItem)"
+      EXIT
+   CASE "currentTextChanged(QString)"
+      EXIT
+   CASE "itemActivated(QLWItem)"
+      EXIT
+   CASE "itemChanged(QLWItem)"
+      EXIT
+   CASE "itemPressed(QLWItem)"
+      EXIT
    CASE "itemSelectionChanged()"
       EXIT
+   #endif
    ENDSWITCH
 
    RETURN Self
@@ -324,7 +344,6 @@ METHOD XbpListBox:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 /*----------------------------------------------------------------------*/
 
 METHOD XbpListBox:destroy()
-
 
    ::clear( .f. )
    ::xbpWindow:destroy()
