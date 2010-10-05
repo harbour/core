@@ -141,6 +141,7 @@ PROCEDURE _APPMAIN( cFile, ... )
                      IF cFile == NIL
                         ERRORLEVEL( 1 )
                      ENDIF
+                     EXIT
                   OTHERWISE
                      s_cDirBase := hb_DirBase()
                      hb_argShift( .T. )
@@ -353,6 +354,9 @@ STATIC PROCEDURE hbrun_Err( oErr, cCommand )
    cMessage := "Sorry, could not execute:;;" + cCommand + ";;"
    IF oErr:ClassName == "ERROR"
       cMessage += oErr:Description
+      IF !Empty( oErr:Operation )
+         cMessage += " " + oErr:Operation
+      ENDIF
       IF ISARRAY( oErr:Args ) .AND. Len( oErr:Args ) > 0
          cMessage += ";Arguments:"
          FOR EACH xArg IN oErr:Args
@@ -382,7 +386,7 @@ STATIC PROCEDURE hbrun_Exec( cCommand )
 
    BEGIN SEQUENCE WITH {|oErr| hbrun_Err( oErr, cCommand ) }
 
-      cHRB := HB_COMPILEFROMBUF( cFunc, HB_ARGV( 0 ), "-n", "-q2", s_aIncDir )
+      cHRB := HB_COMPILEFROMBUF( cFunc, HB_ARGV( 0 ), "-n2", "-q2", s_aIncDir )
       IF cHRB == NIL
          EVAL( ErrorBlock(), "Syntax error." )
       ELSE
@@ -467,7 +471,11 @@ STATIC FUNCTION hbrun_HistoryFileName()
 #endif
 
    IF ! Empty( GetEnv( cEnvVar ) )
+#if defined( __PLATFORM__DOS )
+      cDir := GetEnv( cEnvVar ) + hb_ps() + "~harbour"
+#else
       cDir := GetEnv( cEnvVar ) + hb_ps() + ".harbour"
+#endif
    ELSE
       cDir := hb_dirBase()
    ENDIF
@@ -482,55 +490,48 @@ STATIC FUNCTION hbrun_FindInPath( cFileName )
    LOCAL cDir
    LOCAL cName
    LOCAL cExt
-
-   LOCAL cDirPATH
+   LOCAL cFullName
+   LOCAL aExt
 
    hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
+   aExt := iif( Empty( cExt ), { ".hbs", ".hrb" }, { cExt } )
 
-   FOR EACH cExt IN iif( Empty( cExt ), { ".hbs", ".hrb" }, { cExt } )
-
+   FOR EACH cExt IN aExt
       /* Check original filename (in supplied path or current dir) */
-      IF hb_FileExists( cFileName := hb_FNameMerge( cDir, cName, cExt ) )
-         RETURN cFileName
+      IF hb_FileExists( cFullName := hb_FNameMerge( cDir, cName, cExt ) )
+         RETURN cFullName
+      ENDIF
+   NEXT
+
+   IF Empty( cDir )
+      IF ! Empty( cDir := hb_DirBase() )
+         /* Check in the dir of this executable. */
+         FOR EACH cExt IN aExt
+            IF hb_FileExists( cFullName := hb_FNameMerge( cDir, cName, cExt ) )
+               RETURN cFullName
+            ENDIF
+         NEXT
       ENDIF
 
-      IF Empty( cDir )
-
-         /* Check in the dir of this executable. */
-         IF ! Empty( hb_DirBase() )
-            IF hb_FileExists( cFileName := hb_FNameMerge( hb_DirBase(), cName, cExt ) )
-               RETURN cFileName
-            ENDIF
-         ENDIF
-
+      FOR EACH cExt IN aExt
          /* Check in the PATH. */
          #if defined( __PLATFORM__WINDOWS ) .OR. ;
              defined( __PLATFORM__DOS ) .OR. ;
              defined( __PLATFORM__OS2 )
-         FOR EACH cDirPATH IN hb_ATokens( GetEnv( "PATH" ), hb_osPathListSeparator(), .T., .T. )
+         FOR EACH cDir IN hb_ATokens( GetEnv( "PATH" ), hb_osPathListSeparator(), .T., .T. )
+            IF Left( cDir, 1 ) == '"' .AND. Right( cDir, 1 ) == '"'
+               cDir := SubStr( cDir, 2, Len( cDir ) - 2 )
+            ENDIF
          #else
-         FOR EACH cDirPATH IN hb_ATokens( GetEnv( "PATH" ), hb_osPathListSeparator() )
+         FOR EACH cDir IN hb_ATokens( GetEnv( "PATH" ), hb_osPathListSeparator() )
          #endif
-            IF ! Empty( cDirPATH )
-               IF hb_FileExists( cFileName := hb_FNameMerge( hbrun_DirAddPathSep( hbrun_StrStripQuote( cDirPATH ) ), cName, cExt ) )
-                  RETURN cFileName
+            IF ! Empty( cDir )
+               IF hb_FileExists( cFullName := hb_FNameMerge( cDir ), cName, cExt )
+                  RETURN cFullName
                ENDIF
             ENDIF
          NEXT
-      ENDIF
-   NEXT
-
-   RETURN NIL
-
-STATIC FUNCTION hbrun_DirAddPathSep( cDir )
-
-   IF ! Empty( cDir ) .AND. !( Right( cDir, 1 ) == hb_ps() )
-      cDir += hb_ps()
+      NEXT
    ENDIF
 
-   RETURN cDir
-
-STATIC FUNCTION hbrun_StrStripQuote( cString )
-   RETURN iif( Left( cString, 1 ) == '"' .AND. Right( cString, 1 ) == '"',;
-               SubStr( cString, 2, Len( cString ) - 2 ),;
-               cString )
+   RETURN cFileName
