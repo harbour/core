@@ -2307,7 +2307,11 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                                                    pWVT->fontWeight, pWVT->fontQuality, iVal );
                   if( hFont )
                   {
+#if !defined( UNICODE )
+                     if( pWVT->hFont && pWVT->hFont != pWVT->hFontBox )
+#else
                      if( pWVT->hFont )
+#endif
                         DeleteObject( pWVT->hFont );
                      pWVT->hFont = hFont;
                      pWVT->CodePage = iVal;
@@ -2354,7 +2358,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                                                    pWVT->fontWeight, pWVT->fontQuality, iVal );
                   if( hFont )
                   {
-                     if( pWVT->hFontBox )
+                     if( pWVT->hFontBox && pWVT->hFontBox != pWVT->hFont )
                         DeleteObject( pWVT->hFontBox );
                      pWVT->hFontBox = hFont;
                      pWVT->boxCodePage = iVal;

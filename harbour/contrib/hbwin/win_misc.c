@@ -205,6 +205,15 @@ HB_FUNC( WIN_WIDETOANSI )
    hb_retclen_buffer( lpDstMB, ( HB_SIZE ) dwLength );
 }
 
+HB_FUNC( WIN_UNICODE )
+{
+#if defined( UNICODE )
+   hb_retl( HB_TRUE );
+#else
+   hb_retl( HB_FALSE );
+#endif
+}
+
 HB_FUNC( WIN_N2P )
 {
    hb_retptr( ( void * ) ( HB_PTRDIFF ) hb_parnint( 1 ) );
