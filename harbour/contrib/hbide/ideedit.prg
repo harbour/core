@@ -2288,7 +2288,7 @@ METHOD IdeEdit:resumePrototype()
    ::isSuspended := .f.
    IF !empty( ::qEdit )
       IF ::getLineNo() == ::nProtoLine .AND. ::getColumnNo() >= ::nProtoCol
-         ::qEdit:hbShowPrototype( ::cProto )
+         ::qEdit:hbShowPrototype( ::cProto, ::nProtoRows, ::nProtoCols )
       ENDIF
    ENDIF
 
@@ -2300,7 +2300,7 @@ METHOD IdeEdit:suspendPrototype()
 
    ::isSuspended := .t.
    IF !empty( ::qEdit )
-      ::qEdit:hbShowPrototype( "" )
+      ::qEdit:hbShowPrototype( "", 0, 0 )
    ENDIF
 
    RETURN Self
@@ -2330,7 +2330,7 @@ METHOD IdeEdit:hidePrototype()
       ::cProto     := ""
       ::nProtoCols := 10
       ::nProtoRows := 1
-      ::qEdit:hbShowPrototype( "" )
+      ::qEdit:hbShowPrototype( "", 0, 0 )
    ENDIF
    RETURN Self
 
