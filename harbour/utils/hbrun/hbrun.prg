@@ -140,8 +140,8 @@ PROCEDURE _APPMAIN( cFile, ... )
                                              s_aIncDir, "-I" + FNameDirGet( cFile ), "-D" + "__HBSCRIPT__HBRUN", cFile )
                      IF cFile == NIL
                         ERRORLEVEL( 1 )
+                        EXIT
                      ENDIF
-                     EXIT
                   OTHERWISE
                      s_cDirBase := hb_DirBase()
                      hb_argShift( .T. )
