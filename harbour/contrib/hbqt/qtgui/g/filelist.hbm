@@ -178,6 +178,7 @@ QShowEvent.cpp
 QSizeGrip.cpp
 QSizePolicy.cpp
 QSlider.cpp
+QSortFilterProxyModel.cpp
 QSound.cpp
 QSpacerItem.cpp
 QSpinBox.cpp
@@ -440,6 +441,7 @@ TQShowEvent.prg
 TQSizeGrip.prg
 TQSizePolicy.prg
 TQSlider.prg
+TQSortFilterProxyModel.prg
 TQSound.prg
 TQSpacerItem.prg
 TQSpinBox.prg

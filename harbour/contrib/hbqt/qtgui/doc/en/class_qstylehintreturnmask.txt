@@ -1,0 +1,50 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QStyleHintReturnMask()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qstylehintreturnmask.html
+ *  $ONELINER$
+ *     Creates a new QStyleHintReturnMask object.
+ *  $INHERITS$
+ *     QStyleHintReturn
+ *  $SYNTAX$
+ *     QStyleHintReturnMask( ... )
+ *     QStyleHintReturnMask():from( pPtr_OR_oObj_of_type_QStyleHintReturnMask )
+ * 
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QStyleHintReturnMask
+ *  $METHODS$
+ *     :QStyleHintReturnMask()                             -> oQStyleHintReturnMask
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQStyleHintReturnMask.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QStyleHintReturnMask.cpp
+ *     Library       : hbqtgui
+ *  $END$
+ */

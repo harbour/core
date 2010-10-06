@@ -184,6 +184,7 @@ extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QShowEvent );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QSizeGrip );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QSizePolicy );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QSlider );
+extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QSortFilterProxyModel );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QSound );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QSpacerItem );
 extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_QSpinBox );
@@ -446,6 +447,7 @@ extern HB_EXPORT void * hbqt_gcAllocate_QShowEvent( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QSizeGrip( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QSizePolicy( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QSlider( void * pObj, bool bNew );
+extern HB_EXPORT void * hbqt_gcAllocate_QSortFilterProxyModel( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QSound( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QSpacerItem( void * pObj, bool bNew );
 extern HB_EXPORT void * hbqt_gcAllocate_QSpinBox( void * pObj, bool bNew );
@@ -710,6 +712,7 @@ HB_EXTERN_END
 #define hbqt_par_QSizeGrip( n )                                 ( ( QSizeGrip                                   * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QSizePolicy( n )                               ( ( QSizePolicy                                 * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QSlider( n )                                   ( ( QSlider                                     * ) hbqt_gcpointer( n ) )
+#define hbqt_par_QSortFilterProxyModel( n )                     ( ( QSortFilterProxyModel                       * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QSound( n )                                    ( ( QSound                                      * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QSpacerItem( n )                               ( ( QSpacerItem                                 * ) hbqt_gcpointer( n ) )
 #define hbqt_par_QSpinBox( n )                                  ( ( QSpinBox                                    * ) hbqt_gcpointer( n ) )
@@ -972,6 +975,7 @@ HB_EXTERN_END
 #define HBQT_TYPE_QSizeGrip                                     0x626D8234
 #define HBQT_TYPE_QSizePolicy                                   0x3CC69948
 #define HBQT_TYPE_QSlider                                       0x06AC376A
+#define HBQT_TYPE_QSortFilterProxyModel                         0x248C7DF1
 #define HBQT_TYPE_QSound                                        0x9F8928F7
 #define HBQT_TYPE_QSpacerItem                                   0x7DF1ACDC
 #define HBQT_TYPE_QSpinBox                                      0xF87A2C0F

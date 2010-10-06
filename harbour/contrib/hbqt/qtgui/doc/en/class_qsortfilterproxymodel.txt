@@ -1,0 +1,73 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QSortFilterProxyModel()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qsortfilterproxymodel.html
+ *  $ONELINER$
+ *     Creates a new QSortFilterProxyModel object.
+ *  $INHERITS$
+ *     QAbstractProxyModel
+ *  $SYNTAX$
+ *     QSortFilterProxyModel( ... )
+ *     QSortFilterProxyModel():from( pPtr_OR_oObj_of_type_QSortFilterProxyModel )
+ * 
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QSortFilterProxyModel
+ *  $METHODS$
+ *     :dynamicSortFilter()                                -> lBool
+ *     :filterCaseSensitivity()                            -> nQt_CaseSensitivity
+ *     :filterKeyColumn()                                  -> nInt
+ *     :filterRegExp()                                     -> oQRegExp
+ *     :filterRole()                                       -> nInt
+ *     :isSortLocaleAware()                                -> lBool
+ *     :mapFromSource( oQModelIndex )                      -> oQModelIndex
+ *     :mapToSource( oQModelIndex )                        -> oQModelIndex
+ *     :setDynamicSortFilter( lEnable )                    -> NIL
+ *     :setFilterCaseSensitivity( nCs )                    -> NIL
+ *     :setFilterKeyColumn( nColumn )                      -> NIL
+ *     :setFilterRegExp( oQRegExp )                        -> NIL
+ *     :setFilterRole( nRole )                             -> NIL
+ *     :setSortCaseSensitivity( nCs )                      -> NIL
+ *     :setSortLocaleAware( lOn )                          -> NIL
+ *     :setSortRole( nRole )                               -> NIL
+ *     :sortCaseSensitivity()                              -> nQt_CaseSensitivity
+ *     :sortColumn()                                       -> nInt
+ *     :sortOrder()                                        -> nQt_SortOrder
+ *     :sortRole()                                         -> nInt
+ *     :invalidate()                                       -> NIL
+ *     :setFilterFixedString( cPattern )                   -> NIL
+ *     :setFilterRegExp( cPattern )                        -> NIL
+ *     :setFilterWildcard( cPattern )                      -> NIL
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQSortFilterProxyModel.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QSortFilterProxyModel.cpp
+ *     Library       : hbqtgui
+ *  $END$
+ */

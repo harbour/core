@@ -1,0 +1,50 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QStyleHintReturnVariant()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qstylehintreturnvariant.html
+ *  $ONELINER$
+ *     Creates a new QStyleHintReturnVariant object.
+ *  $INHERITS$
+ *     QStyleHintReturn
+ *  $SYNTAX$
+ *     QStyleHintReturnVariant( ... )
+ *     QStyleHintReturnVariant():from( pPtr_OR_oObj_of_type_QStyleHintReturnVariant )
+ * 
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QStyleHintReturnVariant
+ *  $METHODS$
+ *     :QStyleHintReturnVariant()                          -> oQStyleHintReturnVariant
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQStyleHintReturnVariant.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QStyleHintReturnVariant.cpp
+ *     Library       : hbqtgui
+ *  $END$
+ */

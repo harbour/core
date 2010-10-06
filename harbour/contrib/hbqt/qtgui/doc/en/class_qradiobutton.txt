@@ -1,0 +1,51 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $TEMPLATE$
+ *     Class
+ *  $NAME$
+ *     QRadioButton()
+ *  $CATEGORY$
+ *     Harbour Bindings for Qt
+ *  $SUBCATEGORY$
+ *     GUI
+ *  $EXTERNALLINK$
+ *     http://doc.trolltech.com/4.5/qradiobutton.html
+ *  $ONELINER$
+ *     Creates a new QRadioButton object.
+ *  $INHERITS$
+ *     QAbstractButton
+ *  $SYNTAX$
+ *     QRadioButton( ... )
+ *     QRadioButton():from( pPtr_OR_oObj_of_type_QRadioButton )
+ * 
+ *  $ARGUMENTS$
+ * 
+ *  $RETURNS$
+ *     An instance of the object of type QRadioButton
+ *  $METHODS$
+ *     :QRadioButton( oQWidget )                           -> oQRadioButton
+ *     :QRadioButton( cText, oQWidget )                    -> oQRadioButton
+ * 
+ *  $DESCRIPTION$
+ * 
+ *  $EXAMPLES$
+ * 
+ *  $TESTS$
+ * 
+ *  $STATUS$
+ *     R
+ *  $COMPLIANCE$
+ *     Not Clipper compatible
+ *  $PLATFORMS$
+ *     Windows, Linux, Mac OS X, OS/2
+ *  $VERSION$
+ *     4.5 or upper
+ *  $FILES$
+ *     Harbour source: contrib/hbqt/qtgui/TQRadioButton.prg
+ *     C++ wrappers  : contrib/hbqt/qtgui/QRadioButton.cpp
+ *     Library       : hbqtgui
+ *  $END$
+ */
