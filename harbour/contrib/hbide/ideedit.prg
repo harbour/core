@@ -1536,7 +1536,13 @@ METHOD IdeEdit:paste()
    IF ::lReadOnly
       RETURN Self
    ENDIF
+
+   ::qEdit:hbGetSelectionInfo()
+   IF ::aSelectionInfo[ 1 ] > -1 //.AND. ::aSelectionInfo[ 1 ] == ::aSelectionInfo[ 3 ]
+      ::qEdit:hbCut( Qt_Key_Delete )
+   ENDIF
    ::qEdit:hbPaste()
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
