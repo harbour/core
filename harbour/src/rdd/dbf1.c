@@ -1794,6 +1794,10 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
    HB_BOOL fError;
    char * pszVal;
    HB_SIZE nLen;
+   HB_MAXINT lVal;
+   double dVal;
+   HB_BOOL fDbl;
+   int iLen;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfGetValue(%p, %hu, %p)", pArea, uiIndex, pItem));
 
@@ -1854,17 +1858,11 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
 
       case HB_FT_DATE:
          if( pField->uiLen == 3 )
-         {
             hb_itemPutDL( pItem, HB_GET_LE_UINT24( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] ) );
-         }
          else if( pField->uiLen == 4 )
-         {
             hb_itemPutDL( pItem, HB_GET_LE_UINT32( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] ) );
-         }
          else
-         {
             hb_itemPutDS( pItem, ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ] );
-         }
          break;
 
       case HB_FT_TIME:
@@ -1887,37 +1885,35 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
       case HB_FT_ROWVER:
          if( pField->uiDec )
          {
-            double dValue;
-            int iLen;
             switch( pField->uiLen )
             {
                case 1:
-                  dValue = ( HB_SCHAR ) pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ];
+                  dVal = ( HB_SCHAR ) pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ];
                   iLen = 4;
                   break;
                case 2:
-                  dValue = HB_GET_LE_INT16( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] );
+                  dVal = HB_GET_LE_INT16( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] );
                   iLen = 6;
                   break;
                case 3:
-                  dValue = HB_GET_LE_INT24( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] );
+                  dVal = HB_GET_LE_INT24( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] );
                   iLen = 10;
                   break;
                case 4:
-                  dValue = HB_GET_LE_INT32( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] );
+                  dVal = HB_GET_LE_INT32( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] );
                   iLen = 10;
                   break;
                case 8:
-                  dValue = ( double ) HB_GET_LE_INT64( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] );
+                  dVal = ( double ) HB_GET_LE_INT64( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] );
                   iLen = 20;
                   break;
                default:
-                  dValue = 0;
+                  dVal = 0;
                   iLen = 0;
                   fError = HB_TRUE;
                   break;
             }
-            hb_itemPutNDLen( pItem, hb_numDecConv( dValue, ( int ) pField->uiDec ),
+            hb_itemPutNDLen( pItem, hb_numDecConv( dVal, ( int ) pField->uiDec ),
                              iLen, ( int ) pField->uiDec );
          }
          else
@@ -1958,54 +1954,59 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
          break;
 
       case HB_FT_LONG:
-      case HB_FT_FLOAT:
          /* DBASE documentation defines maximum numeric field size as 20
           * but Clipper allows to create longer fields so I remove this
           * limit, Druzus
           */
          /*
          if( pField->uiLen > 20 )
-            fError = HB_TRUE;
-         else
-         */
          {
-            HB_MAXINT lVal;
-            double dVal;
-            HB_BOOL fDbl;
-
-            fDbl = hb_strnToNum( (const char *) pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
-                                 pField->uiLen, &lVal, &dVal );
-
-            if( pField->uiDec )
-            {
-               hb_itemPutNDLen( pItem, fDbl ? dVal : ( double ) lVal,
-                                ( int ) ( pField->uiLen - pField->uiDec - 1 ),
-                                ( int ) pField->uiDec );
-            }
-            else if( fDbl )
-            {
-               hb_itemPutNDLen( pItem, dVal, ( int ) pField->uiLen, 0 );
-            }
-            else
-            {
-               hb_itemPutNIntLen( pItem, lVal, ( int ) pField->uiLen );
-            }
+            fError = HB_TRUE;
+            break;
          }
+         */
+         fDbl = hb_strnToNum( ( const char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
+                              pField->uiLen, &lVal, &dVal );
+
+         if( pField->uiDec )
+            hb_itemPutNDLen( pItem, fDbl ? dVal : ( double ) lVal,
+                             ( int ) ( pField->uiLen - pField->uiDec - 1 ),
+                             ( int ) pField->uiDec );
+         else if( fDbl )
+            hb_itemPutNDLen( pItem, dVal, ( int ) pField->uiLen, 0 );
+         else
+            hb_itemPutNIntLen( pItem, lVal, ( int ) pField->uiLen );
+         break;
+
+      case HB_FT_FLOAT:
+         pszVal = ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ];
+         dVal = hb_strVal( pszVal, pField->uiLen );
+         nLen = pField->uiLen;
+         while( --nLen && HB_ISDIGIT( pszVal[ nLen ] ) ) { ; }
+         if( nLen && ( pszVal[ nLen ] == '+' || pszVal[ nLen ] == '-' ) &&
+             ( pszVal[ nLen - 1 ] == 'e' || pszVal[ nLen - 1 ] == 'E' ) )
+         {
+            HB_USHORT uiLen = ( HB_USHORT ) nLen;
+            int iExp = 0;
+
+            while( ++uiLen < pField->uiLen )
+               iExp = iExp * 10 + ( pszVal[ uiLen ] - '0' );
+            if( pszVal[ nLen ] == '-' )
+               iExp = -iExp;
+            dVal = hb_numExpConv( dVal, -iExp );
+         }
+         hb_itemPutNDLen( pItem, dVal,
+                          ( int ) ( pField->uiLen - pField->uiDec - 1 ),
+                          ( int ) pField->uiDec );
          break;
 
       case HB_FT_ANY:
          if( pField->uiLen == 3 )
-         {
             hb_itemPutDL( pItem, hb_sxPtoD( ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ] ) );
-         }
          else if( pField->uiLen == 4 )
-         {
             hb_itemPutNIntLen( pItem, ( HB_MAXINT ) HB_GET_LE_INT32( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] ), 10 );
-         }
          else
-         {
             fError = HB_TRUE;
-         }
          break;
 
       case HB_FT_MEMO:

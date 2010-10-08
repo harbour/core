@@ -537,6 +537,16 @@ double hb_numDecConv( double dNum, int iDec )
       return hb_numRound( dNum, 0 );
 }
 
+double hb_numExpConv( double dNum, int iExp )
+{
+   if( iExp > 0 )
+      return dNum / hb_numPow10( iExp );
+   else if( iExp < 0 )
+      return dNum * hb_numPow10( -iExp );
+   else
+      return dNum;
+}
+
 static HB_BOOL hb_str2number( HB_BOOL fPCode, const char * szNum, HB_SIZE nLen, HB_MAXINT * lVal, double * dVal, int * piDec, int * piWidth )
 {
    HB_BOOL fDbl = HB_FALSE, fDec = HB_FALSE, fNeg, fHex = HB_FALSE;
