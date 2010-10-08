@@ -4916,7 +4916,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   cFile += ''                                                                     + Chr( 10 )
                ENDIF
 
-               IF lHBMAINDLLP
+               IF lHBMAINDLLP .and. .F.
                   cFile += 'HB_EXPORT_ATTR PHB_FUNC dll_hb_vmProcAddress( const char * szFuncName )' + Chr( 10 )
                   cFile += '{'                                                                       + Chr( 10 )
                   cFile += '   return hb_vmProcAddress( szFuncName );'                               + Chr( 10 )

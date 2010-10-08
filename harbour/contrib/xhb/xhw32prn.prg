@@ -58,6 +58,9 @@
 FUNCTION WIN32PRN()
 RETURN NIL
 
+FUNCTION WIN32BMP()
+RETURN NIL
+
 #else
 
 #include "hbclass.ch"

@@ -67,7 +67,7 @@
 
 #if !defined( ADS_LINUX )
 static PHB_ITEM s_pItmCobCallBack = NULL;
-#endif
+#endif /* !ADS_LINUX */
 
 int       hb_ads_iFileType = ADS_CDX;
 int       hb_ads_iLockType = ADS_PROPRIETARY_LOCKING;
@@ -1373,7 +1373,6 @@ HB_FUNC( ADSCONVERTTABLE )
 }
 
 #if !defined( ADS_LINUX )
-
 UNSIGNED32 WINAPI hb_adsShowPercentageCB( UNSIGNED16 usPercentDone )
 {
    if( s_pItmCobCallBack && HB_IS_BLOCK( s_pItmCobCallBack ) )
@@ -1394,9 +1393,11 @@ UNSIGNED32 WINAPI hb_adsShowPercentageCB( UNSIGNED16 usPercentDone )
 
    return 0;
 }
+#endif /* !ADS_LINUX */
 
 HB_FUNC( ADSREGCALLBACK )
 {
+#if !defined( ADS_LINUX )
    /* NOTE: current implementation is not thread safe.
             ADS can register multiple callbacks, but one per thread/connection.
             To be thread safe, we need multiple connections.
@@ -1421,12 +1422,14 @@ HB_FUNC( ADSREGCALLBACK )
          s_pItmCobCallBack = NULL;
       }
    }
+#endif /* !ADS_LINUX */
 
    hb_retl( HB_FALSE );
 }
 
 HB_FUNC( ADSCLRCALLBACK )
 {
+#if !defined( ADS_LINUX )
    if( s_pItmCobCallBack )
    {
       hb_itemRelease( s_pItmCobCallBack );
@@ -1434,9 +1437,10 @@ HB_FUNC( ADSCLRCALLBACK )
    }
 
    hb_retnl( AdsClearProgressCallback() );
+#else
+   hb_retnl( 0 );
+#endif /* ADS_LINUX */
 }
-
-#endif
 
 HB_FUNC( ADSISINDEXED )
 {
