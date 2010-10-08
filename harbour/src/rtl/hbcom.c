@@ -1768,7 +1768,13 @@ long hb_comSend( int iPort, const void * data, long len, HB_MAXINT timeout )
 
          fResult = WriteFile( pCom->hComm, data, ( DWORD ) len, &dwWritten, NULL );
          lSent = fResult ? ( long ) dwWritten : -1;
-         hb_comSetOsError( pCom, !fResult );
+         if( lSent == 0 )
+         {
+            hb_comSetComError( pCom, HB_COM_ERR_TIMEOUT );
+            lSent = -1;
+         }
+         else
+            hb_comSetOsError( pCom, !fResult );
       }
       else
          hb_comSetOsError( pCom, HB_TRUE );
@@ -1799,7 +1805,13 @@ long hb_comRecv( int iPort, void * data, long len, HB_MAXINT timeout )
 
          fResult = ReadFile( pCom->hComm, data, ( DWORD ) len, &dwRead, NULL );
          lReceived = fResult ? ( long ) dwRead : -1;
-         hb_comSetOsError( pCom, !fResult );
+         if( lReceived == 0 )
+         {
+            hb_comSetComError( pCom, HB_COM_ERR_TIMEOUT );
+            lReceived = -1;
+         }
+         else
+            hb_comSetOsError( pCom, !fResult );
       }
       else
          hb_comSetOsError( pCom, HB_TRUE );
@@ -2537,7 +2549,13 @@ long hb_comSend( int iPort, const void * data, long len, HB_MAXINT timeout )
             lSent = ( long ) ulWritten;
       }
 
-      hb_comSetOsError( pCom, rc );
+      if( lSent == 0 )
+      {
+         hb_comSetComError( pCom, HB_COM_ERR_TIMEOUT );
+         lSent = -1;
+      }
+      else
+         hb_comSetOsError( pCom, rc );
 
       hb_vmLock();
    }
@@ -2601,7 +2619,13 @@ long hb_comRecv( int iPort, void * data, long len, HB_MAXINT timeout )
             lReceived = ( long ) ulRead;
       }
 
-      hb_comSetOsError( pCom, rc );
+      if( lReceived == 0 )
+      {
+         hb_comSetComError( pCom, HB_COM_ERR_TIMEOUT );
+         lReceived = -1;
+      }
+      else
+         hb_comSetOsError( pCom, rc );
 
       hb_vmLock();
    }
