@@ -121,6 +121,7 @@ HB_EXTERN_BEGIN
 #define HB_FF_AUTOINC         0x0008 /* Column is autoincrementing */
 #define HB_FF_COMPRESSED      0x0010 /* Column is compressed */
 #define HB_FF_ENCRYPTED       0x0020 /* Column is encrypted */
+#define HB_FF_UNICODE         0x0040 /* Column stores Unicode strings */
 
 
 
