@@ -65,6 +65,8 @@ C_SOURCES := \
    msgtr857.c \
    msgtrwin.c \
    msgsrwin.c \
+   msgsv.c \
+   msgsvwin.c \
    msgua866.c \
    msguados.c \
    msguakoi.c \

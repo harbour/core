@@ -162,7 +162,6 @@ static HB_LANG s_lang =
       "array dimension",
       "not an array",
       "conditional",
-      "Invalid self",
 
       /* Internal error names */
 
