@@ -167,7 +167,7 @@ STATIC FUNCTION Xbp_ArrayToFileFilter( aFilter )
 
 METHOD XbpFileDialog:open( cDefaultFile, lCenter, lAllowMultiple, lCreateNewFiles )
    LOCAL cFiles := NIL
-   LOCAL i, oList, nResult, cPath, cFile, cExt
+   LOCAL i, oList, nResult, cPath, cFile, cExt, qFocus
 
    HB_SYMBOL_UNUSED( lCreateNewFiles )
 
@@ -219,14 +219,16 @@ METHOD XbpFileDialog:open( cDefaultFile, lCenter, lAllowMultiple, lCreateNewFile
       ::setPos()
    ENDIF
 
+   qFocus := QApplication():focusWidget()
    nResult := ::oWidget:exec()
+   qFocus:setFocus( 0 )
 
    RETURN IF( nResult == QDialog_Accepted, ::extractFileNames( lAllowMultiple ), NIL )
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpFileDialog:saveAs( cDefaultFile, lFileList, lCenter )
-   LOCAL nResult, i, oList
+   LOCAL nResult, i, oList, qFocus
 
    DEFAULT lFileList TO .T.
 
@@ -265,7 +267,10 @@ METHOD XbpFileDialog:saveAs( cDefaultFile, lFileList, lCenter )
    IF !( lCenter )
       ::setPos()
    ENDIF
+
+   qFocus := QApplication():focusWidget()
    nResult := ::oWidget:exec()
+   qFocus:setFocus( 0 )
 
    RETURN IF( nResult == QDialog_Accepted, ::extractFileNames(), NIL )
 

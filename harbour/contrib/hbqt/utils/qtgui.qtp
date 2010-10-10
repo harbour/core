@@ -178,6 +178,7 @@ QShowEvent.qth
 QSizeGrip.qth
 QSizePolicy.qth
 QSlider.qth
+QSortFilterProxyModel.qth
 QSound.qth
 QSpacerItem.qth
 QSpinBox.qth
