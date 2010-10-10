@@ -113,6 +113,7 @@
 
 
 /*
+ * QGraphicsSceneDragDropEvent ()
  * ~QGraphicsSceneDragDropEvent ()
  */
 

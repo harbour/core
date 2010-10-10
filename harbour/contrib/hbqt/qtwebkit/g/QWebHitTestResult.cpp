@@ -174,7 +174,7 @@ HB_FUNC( QT_QWEBHITTESTRESULT )
 {
    QWebHitTestResult * pObj = NULL;
 
-   pObj =  new QWebHitTestResult() ;
+   pObj = new QWebHitTestResult() ;
 
    hb_retptrGC( hbqt_gcAllocate_QWebHitTestResult( ( void * ) pObj, true ) );
 }

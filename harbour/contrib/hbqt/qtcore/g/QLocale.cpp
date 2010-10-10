@@ -122,7 +122,7 @@
 
 /* QLocale ()
  * QLocale ( const QString & name )
- * QLocale ( Language language, Country country = AnyCountry )
+ * QLocale ( QLocale::Language language, QLocale::Country country = AnyCountry )
  * QLocale ( const QLocale & other )
  */
 

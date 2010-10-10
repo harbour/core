@@ -36,10 +36,6 @@
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$
- *     oLinearGradiant := QLinearGradiant():new()
- *     oLinearGradiant := QLinearGradiant():new( pQLinearGradient )
- *     oLinearGradiant := QLinearGradiant():new( pQPointF_start, pQPointF_finalStop )
- *     oLinearGradiant := QLinearGradiant():new( nX1, nY1, nX2, nY2 )
  * 
  *  $TESTS$
  * 

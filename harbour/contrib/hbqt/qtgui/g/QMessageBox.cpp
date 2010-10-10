@@ -190,7 +190,7 @@ HB_FUNC( QT_QMESSAGEBOX )
 {
    QMessageBox * pObj = NULL;
 
-   pObj =  new QMessageBox() ;
+   pObj = new QMessageBox() ;
 
    hb_retptrGC( hbqt_gcAllocate_QMessageBox( ( void * ) pObj, true ) );
 }

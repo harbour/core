@@ -47,10 +47,6 @@
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$
- *     oLine := QLine():new()
- *     oLine := QLine():new( pQLine )
- *     oLine := QLine():new( pQPoint_p1, pQPoint_p2 )
- *     oLine := QLine():new( nX1, nY1, nX2, nY2 )
  * 
  *  $TESTS$
  * 

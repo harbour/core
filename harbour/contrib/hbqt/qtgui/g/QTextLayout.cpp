@@ -185,7 +185,7 @@ HB_FUNC( QT_QTEXTLAYOUT )
 {
    QTextLayout * pObj = NULL;
 
-   pObj =  new QTextLayout() ;
+   pObj = new QTextLayout() ;
 
    hb_retptrGC( hbqt_gcAllocate_QTextLayout( ( void * ) pObj, true ) );
 }

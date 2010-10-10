@@ -182,23 +182,23 @@ HB_FUNC( QT_QRADIALGRADIENT )
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj =  new QRadialGradient( *hbqt_par_QRadialGradient( 1 ) ) ;
+      pObj = new QRadialGradient( *hbqt_par_QRadialGradient( 1 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) )
    {
-      pObj =  new QRadialGradient( *hbqt_par_QPointF( 1 ), hb_parnd( 2 ) ) ;
+      pObj = new QRadialGradient( *hbqt_par_QPointF( 1 ), hb_parnd( 2 ) ) ;
    }
    else if( hb_pcount() == 3 && HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) && HB_ISPOINTER( 3 ) )
    {
-      pObj =  new QRadialGradient( *hbqt_par_QPointF( 1 ), hb_parnd( 2 ), *hbqt_par_QPointF( 3 ) ) ;
+      pObj = new QRadialGradient( *hbqt_par_QPointF( 1 ), hb_parnd( 2 ), *hbqt_par_QPointF( 3 ) ) ;
    }
    else if( hb_pcount() == 5 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) && HB_ISNUM( 5 ) )
    {
-      pObj =  new QRadialGradient( hb_parnd( 1 ), hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) ) ;
+      pObj = new QRadialGradient( hb_parnd( 1 ), hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) ) ;
    }
    else
    {
-      pObj =  new QRadialGradient() ;
+      pObj = new QRadialGradient() ;
    }
 
    hb_retptrGC( hbqt_gcAllocate_QRadialGradient( ( void * ) pObj, true ) );

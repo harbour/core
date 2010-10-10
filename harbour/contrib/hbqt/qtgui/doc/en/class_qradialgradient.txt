@@ -38,11 +38,6 @@
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$
- *     oRadialGradient := QRadialGradient():new()
- *     oRadialGradient := QRadialGradient():new( pQRadialGradient )
- *     oRadialGradient := QRadialGradient():new( pQPointF_center, nRadius )
- *     oRadialGradient := QRadialGradient():new( pQPointF_center, nRadius, pQPointF_focalPoint )
- *     oRadialGradient := QRadialGradient():new( nCx, nCy, nRadius, nFx, nFy )
  * 
  *  $TESTS$
  * 

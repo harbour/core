@@ -193,11 +193,11 @@ HB_FUNC( QT_QCOLORDIALOG )
 
    if( hb_pcount() >= 1 && HB_ISNUM( 1 ) )
    {
-      pObj =  new QColorDialog( hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) ;
+      pObj = new QColorDialog( hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) ;
    }
    else
    {
-      pObj =  new QColorDialog( hbqt_par_QWidget( 1 ) ) ;
+      pObj = new QColorDialog( hbqt_par_QWidget( 1 ) ) ;
    }
 
    hb_retptrGC( hbqt_gcAllocate_QColorDialog( ( void * ) pObj, true ) );

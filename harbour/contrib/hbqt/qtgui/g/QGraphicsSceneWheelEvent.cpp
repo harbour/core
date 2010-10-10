@@ -110,6 +110,7 @@
 #include <QtCore/QPoint>
 
 /*
+ * QGraphicsScreenWheelEvent ()
  * ~QGraphicsSceneWheelEvent ()
  */
 

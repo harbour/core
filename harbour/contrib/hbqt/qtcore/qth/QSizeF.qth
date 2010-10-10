@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * QT Source Generator for Harbour
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,11 +60,6 @@ Type     = PlainObject
 New      = 
 </CLASS>
 
-<DOC>
-oSizeF := QSizeF():new()
-oSizeF := QSizeF():new( nWidth, nHeight )
-</DOC>
-
 <CODE>
 #include <QtCore/QSizeF>
 
@@ -79,11 +74,11 @@ HB_FUNC( QT_QSIZEF )
 {
    if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
-      __HB_RETPTRGC__( ( QSizeF* ) new QSizeF( hb_parnd( 1 ), hb_parnd( 2 ) ) );
+      __HB_RETPTRGC__( new QSizeF( hb_parnd( 1 ), hb_parnd( 2 ) ) );
    }
    else
    {
-      __HB_RETPTRGC__( ( QSizeF* ) new QSizeF() );
+      __HB_RETPTRGC__( new QSizeF() );
    }
 }
 </CODE>

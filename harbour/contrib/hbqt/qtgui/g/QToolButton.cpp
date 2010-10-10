@@ -186,7 +186,7 @@ HB_FUNC( QT_QTOOLBUTTON )
 {
    QToolButton * pObj = NULL;
 
-   pObj =  new QToolButton( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QToolButton( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QToolButton( ( void * ) pObj, true ) );
 }

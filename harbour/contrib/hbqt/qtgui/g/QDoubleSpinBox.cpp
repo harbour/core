@@ -110,6 +110,7 @@
 
 /*
  * QDoubleSpinBox ( QWidget * parent = 0 )
+ * ~QDoubleSpinBox ()
  */
 
 typedef struct
@@ -181,7 +182,7 @@ HB_FUNC( QT_QDOUBLESPINBOX )
 {
    QDoubleSpinBox * pObj = NULL;
 
-   pObj =  new QDoubleSpinBox( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QDoubleSpinBox( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QDoubleSpinBox( ( void * ) pObj, true ) );
 }

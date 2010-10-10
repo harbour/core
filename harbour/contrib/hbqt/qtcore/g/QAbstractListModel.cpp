@@ -153,7 +153,7 @@ void * hbqt_gcAllocate_QAbstractListModel( void * pObj, bool bNew )
 
 HB_FUNC( QT_QABSTRACTLISTMODEL )
 {
-   //__HB_RETPTRGC__( ( QAbstractListModel* ) new QAbstractListModel() );
+   //__HB_RETPTRGC__( new QAbstractListModel() );
 }
 
 /*

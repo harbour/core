@@ -184,11 +184,11 @@ HB_FUNC( QT_QBUTTONGROUP )
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj =  new QButtonGroup( hbqt_par_QObject( 1 ) ) ;
+      pObj = new QButtonGroup( hbqt_par_QObject( 1 ) ) ;
    }
    else
    {
-      pObj =  new QButtonGroup() ;
+      pObj = new QButtonGroup() ;
    }
 
    hb_retptrGC( hbqt_gcAllocate_QButtonGroup( ( void * ) pObj, true ) );

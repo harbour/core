@@ -181,11 +181,11 @@ HB_FUNC( QT_QPEN )
 
    if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
    {
-      pObj =  new QPen( ( Qt::PenStyle ) hb_parni( 1 ) ) ;
+      pObj = new QPen( ( Qt::PenStyle ) hb_parni( 1 ) ) ;
    }
    else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj =  new QPen( *hbqt_par_QPen( 1 ) ) ;
+      pObj = new QPen( *hbqt_par_QPen( 1 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
    {
@@ -193,11 +193,11 @@ HB_FUNC( QT_QPEN )
 
       if( objName == ( QString ) "QColor" )
       {
-         pObj =  new QPen( *hbqt_par_QColor( 2 ) ) ;
+         pObj = new QPen( *hbqt_par_QColor( 2 ) ) ;
       }
       else
       {
-         pObj =  new QPen() ;
+         pObj = new QPen() ;
       }
    }
    else if( hb_pcount() >= 2 && HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) )
@@ -206,11 +206,11 @@ HB_FUNC( QT_QPEN )
       Qt::PenCapStyle iCap = HB_ISNUM( 4 ) ? ( Qt::PenCapStyle ) hb_parni( 4 ) : Qt::SquareCap;
       Qt::PenJoinStyle iJoin = HB_ISNUM( 5 ) ? ( Qt::PenJoinStyle ) hb_parni( 5 ) : Qt::BevelJoin;
 
-      pObj =  new QPen( *hbqt_par_QBrush( 1 ), hb_parnd( 2 ), iStyle, iCap, iJoin ) ;
+      pObj = new QPen( *hbqt_par_QBrush( 1 ), hb_parnd( 2 ), iStyle, iCap, iJoin ) ;
    }
    else
    {
-      pObj =  new QPen() ;
+      pObj = new QPen() ;
    }
 
    hb_retptrGC( hbqt_gcAllocate_QPen( ( void * ) pObj, true ) );

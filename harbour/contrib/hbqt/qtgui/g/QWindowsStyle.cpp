@@ -183,7 +183,7 @@ HB_FUNC( QT_QWINDOWSSTYLE )
 {
    QWindowsStyle * pObj = NULL;
 
-   pObj =  new QWindowsStyle() ;
+   pObj = new QWindowsStyle() ;
 
    hb_retptrGC( hbqt_gcAllocate_QWindowsStyle( ( void * ) pObj, true ) );
 }

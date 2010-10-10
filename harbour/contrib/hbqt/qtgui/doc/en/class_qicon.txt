@@ -40,9 +40,6 @@
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$
- *     oIcon := QIcon():new()
- *     oIcon := QIcon():new( cFileName )
- *     oIcon := QIcon():new( pQPixmap )
  * 
  *  $TESTS$
  * 

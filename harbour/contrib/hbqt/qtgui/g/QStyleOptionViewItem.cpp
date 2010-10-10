@@ -177,7 +177,7 @@ HB_FUNC( QT_QSTYLEOPTIONVIEWITEM )
 {
    QStyleOptionViewItem * pObj = NULL;
 
-   pObj =  new QStyleOptionViewItem() ;
+   pObj = new QStyleOptionViewItem() ;
 
    hb_retptrGC( hbqt_gcAllocate_QStyleOptionViewItem( ( void * ) pObj, true ) );
 }

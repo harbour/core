@@ -173,9 +173,6 @@ HB_FUNC( HB_QT ) /* For compatibility */
 static void hbqtgui_Exit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
-
-   //s_app->quit();
-   //s_app = NULL;
 }
 
 static void hbqtgui_Init( void * cargo )

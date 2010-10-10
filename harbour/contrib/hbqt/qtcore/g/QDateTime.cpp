@@ -173,7 +173,7 @@ HB_FUNC( QT_QDATETIME )
 {
    QDateTime * pObj = NULL;
 
-   pObj =  new QDateTime() ;
+   pObj = new QDateTime() ;
 
    hb_retptrGC( hbqt_gcAllocate_QDateTime( ( void * ) pObj, true ) );
 }

@@ -88,11 +88,6 @@
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$
- *     oTextCursor := QTextCursor():new()
- *     oTextCursor := QTextCursor():new( pQTextCursor )
- *     oTextCursor := QTextCursor():new( "QTextDocument", pQTextDocument )
- *     oTextCursor := QTextCursor():new( "QTextBlock"   , pQTextBlock    )
- *     oTextCursor := QTextCursor():new( "QTextFrame"   , pQTextFrame    )
  * 
  *  $TESTS$
  * 

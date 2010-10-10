@@ -194,7 +194,7 @@ HB_FUNC( QT_QFORMLAYOUT )
 {
    QFormLayout * pObj = NULL;
 
-   pObj = ( QFormLayout * ) new QFormLayout( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QFormLayout( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QFormLayout( ( void * ) pObj, true ) );
 }

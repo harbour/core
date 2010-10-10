@@ -191,7 +191,7 @@ HB_FUNC( QT_QDIRMODEL )
 {
    QDirModel * pObj = NULL;
 
-   pObj =  new QDirModel( hbqt_par_QObject( 1 ) ) ;
+   pObj = new QDirModel( hbqt_par_QObject( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QDirModel( ( void * ) pObj, true ) );
 }

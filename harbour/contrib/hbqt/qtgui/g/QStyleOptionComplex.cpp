@@ -176,7 +176,7 @@ HB_FUNC( QT_QSTYLEOPTIONCOMPLEX )
 {
    QStyleOptionComplex * pObj = NULL;
 
-   pObj =  new QStyleOptionComplex() ;
+   pObj = new QStyleOptionComplex() ;
 
    hb_retptrGC( hbqt_gcAllocate_QStyleOptionComplex( ( void * ) pObj, true ) );
 }

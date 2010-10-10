@@ -180,7 +180,7 @@ HB_FUNC( QT_QSTYLEOPTIONTAB )
 {
    QStyleOptionTab * pObj = NULL;
 
-   pObj =  new QStyleOptionTab() ;
+   pObj = new QStyleOptionTab() ;
 
    hb_retptrGC( hbqt_gcAllocate_QStyleOptionTab( ( void * ) pObj, true ) );
 }

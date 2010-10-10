@@ -109,6 +109,7 @@
 
 
 /*
+ * QGraphicsSceneEvent ()
  * ~QGraphicsSceneEvent ()
  */
 

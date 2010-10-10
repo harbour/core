@@ -178,7 +178,7 @@ HB_FUNC( QT_QCONICALGRADIENT )
 {
    QConicalGradient * pObj = NULL;
 
-   pObj =  new QConicalGradient() ;
+   pObj = new QConicalGradient() ;
 
    hb_retptrGC( hbqt_gcAllocate_QConicalGradient( ( void * ) pObj, true ) );
 }

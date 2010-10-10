@@ -180,19 +180,19 @@ HB_FUNC( QT_QLINEARGRADIENT )
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj =  new QLinearGradient( *hbqt_par_QLinearGradient( 1 ) ) ;
+      pObj = new QLinearGradient( *hbqt_par_QLinearGradient( 1 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
    {
-      pObj =  new QLinearGradient( *hbqt_par_QPointF( 1 ), *hbqt_par_QPointF( 2 ) ) ;
+      pObj = new QLinearGradient( *hbqt_par_QPointF( 1 ), *hbqt_par_QPointF( 2 ) ) ;
    }
    else if( hb_pcount() == 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
    {
-      pObj =  new QLinearGradient( hb_parnd( 1 ), hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ) ) ;
+      pObj = new QLinearGradient( hb_parnd( 1 ), hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ) ) ;
    }
    else
    {
-      pObj =  new QLinearGradient() ;
+      pObj = new QLinearGradient() ;
    }
 
    hb_retptrGC( hbqt_gcAllocate_QLinearGradient( ( void * ) pObj, true ) );

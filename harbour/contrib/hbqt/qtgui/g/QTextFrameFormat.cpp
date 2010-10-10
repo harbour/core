@@ -180,7 +180,7 @@ HB_FUNC( QT_QTEXTFRAMEFORMAT )
 {
    QTextFrameFormat * pObj = NULL;
 
-   pObj =  new QTextFrameFormat() ;
+   pObj = new QTextFrameFormat() ;
 
    hb_retptrGC( hbqt_gcAllocate_QTextFrameFormat( ( void * ) pObj, true ) );
 }

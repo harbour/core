@@ -114,6 +114,7 @@
 
 /*
  * QProgressBar ( QWidget * parent = 0 )
+ * ~QProgressBar ()
  */
 
 typedef struct
@@ -185,7 +186,7 @@ HB_FUNC( QT_QPROGRESSBAR )
 {
    QProgressBar * pObj = NULL;
 
-   pObj =  new QProgressBar( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QProgressBar( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QProgressBar( ( void * ) pObj, true ) );
 }

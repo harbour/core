@@ -88,15 +88,6 @@
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$
- *     oImage := QImage()
- *     oImage := QImage( pQSize, cFormat )
- *     oImage := QImage( iWidth, iHeight, cFormat )
- *     oImage := QImage( @cData, iWidth, iHeight, cFormat )
- *     oImage := QImage( cData , iWidth, iHeight, cFormat )
- *     oImage := QImage( @cData, iWidth, iHeight, iBytesPerLine, cFormat )
- *     oImage := QImage( cData , iWidth, iHeight, iBytesPerLine, cFormat )
- *     oImage := QImage( cFileName [, cFormat ] )
- *     oImage := QImage( pQImage )
  * 
  *  $TESTS$
  * 

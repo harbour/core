@@ -108,6 +108,7 @@
 
 
 /*
+ * QResource ()
  * QResource ( const QString & file = QString(), const QLocale & locale = QLocale() )
  * ~QResource ()
  */
@@ -170,7 +171,7 @@ HB_FUNC( QT_QRESOURCE )
 {
    QResource * pObj = NULL;
 
-   pObj =  new QResource() ;
+   pObj = new QResource() ;
 
    hb_retptrGC( hbqt_gcAllocate_QResource( ( void * ) pObj, true ) );
 }

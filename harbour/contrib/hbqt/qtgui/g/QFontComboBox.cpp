@@ -187,7 +187,7 @@ HB_FUNC( QT_QFONTCOMBOBOX )
 {
    QFontComboBox * pObj = NULL;
 
-   pObj = ( QFontComboBox * ) new QFontComboBox( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QFontComboBox( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QFontComboBox( ( void * ) pObj, true ) );
 }

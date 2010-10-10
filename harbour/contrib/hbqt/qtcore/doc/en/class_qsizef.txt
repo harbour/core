@@ -45,8 +45,6 @@
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$
- *     oSizeF := QSizeF():new()
- *     oSizeF := QSizeF():new( nWidth, nHeight )
  * 
  *  $TESTS$
  * 

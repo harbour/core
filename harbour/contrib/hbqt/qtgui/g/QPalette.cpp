@@ -183,19 +183,19 @@ HB_FUNC( QT_QPALETTE )
 
    if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
    {
-      pObj =  new QPalette( ( Qt::GlobalColor ) hb_parni( 1 ) ) ;
+      pObj = new QPalette( ( Qt::GlobalColor ) hb_parni( 1 ) ) ;
    }
    else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj =  new QPalette( *hbqt_par_QPalette( 1 ) ) ;
+      pObj = new QPalette( *hbqt_par_QPalette( 1 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
    {
-      pObj =  new QPalette( *hbqt_par_QColor( 1 ), *hbqt_par_QColor( 2 ) ) ;
+      pObj = new QPalette( *hbqt_par_QColor( 1 ), *hbqt_par_QColor( 2 ) ) ;
    }
    else
    {
-      pObj =  new QPalette() ;
+      pObj = new QPalette() ;
    }
 
    hb_retptrGC( hbqt_gcAllocate_QPalette( ( void * ) pObj, true ) );

@@ -44,9 +44,6 @@
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$
- *     oSize := QSize():new()
- *     oSize := QSize():new( pSize )
- *     oSize := QSize():new( nWidth, nHeight )
  * 
  *  $TESTS$
  * 

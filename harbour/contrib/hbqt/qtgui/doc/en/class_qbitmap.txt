@@ -39,12 +39,6 @@
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$
- *     oBitmap := QBitmap():new()
- *     oBitmap := QBitmap():new( pBitmap_other )
- *     oBitmap := QBitmap():new( nWidth, nHeight )
- *     oBitmap := QBitmap():new( "QPixmap", pQPixmap )
- *     oBitmap := QBitmap():new( "QSize"  , pQSize )
- *     oBitmap := QBitmap():new( cImageFilename, [ cFormat ] )
  * 
  *  $TESTS$
  * 

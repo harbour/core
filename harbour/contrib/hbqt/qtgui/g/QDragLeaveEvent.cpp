@@ -153,7 +153,7 @@ void * hbqt_gcAllocate_QDragLeaveEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QDRAGLEAVEEVENT )
 {
-   // __HB_RETPTRGC__( ( * ) new () );
+   // __HB_RETPTRGC__( new QDragLeaveEvent() );
 }
 
 

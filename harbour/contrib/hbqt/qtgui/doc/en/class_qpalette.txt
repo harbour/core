@@ -65,15 +65,6 @@
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$
- *     oPalette := QPalette():new()
- *     oPalette := QPalette():new( nQt_color )
- *     oPalette := QPalette():new( pQPalette )
- *     oPalette := QPalette():new( pQColorButton, pQColorWindow )
- *     /* TODO
- *      * oPalette := QPalette():new( pQBrush_windowText, pQBrush_button, pQBrush_light, pQBrush_dark, ;
- *      *                             pQBrush_mid, pQBrush_text, pQBrush_bright_text, pQBrush_base, ;
- *      *                             pQBrush_window )
- *      */
  * 
  *  $TESTS$
  * 

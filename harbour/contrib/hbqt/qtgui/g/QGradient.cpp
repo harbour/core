@@ -120,7 +120,7 @@
 
 
 /*
- *
+ * QGradient ()
  */
 
 typedef struct

@@ -182,7 +182,7 @@ HB_FUNC( QT_QTABLEVIEW )
 {
    QTableView * pObj = NULL;
 
-   pObj =  new QTableView( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QTableView( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QTableView( ( void * ) pObj, true ) );
 }

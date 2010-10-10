@@ -124,7 +124,7 @@
 
 /*
  * QProcess ( QObject * parent = 0 )
- * virtual ~QProcess ()
+ * ~QProcess ()
  */
 
 typedef struct
@@ -198,11 +198,11 @@ HB_FUNC( QT_QPROCESS )
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj =  new QProcess( hbqt_par_QObject( 1 ) ) ;
+      pObj = new QProcess( hbqt_par_QObject( 1 ) ) ;
    }
    else
    {
-      pObj =  new QProcess() ;
+      pObj = new QProcess() ;
    }
 
    hb_retptrGC( hbqt_gcAllocate_QProcess( ( void * ) pObj, true ) );

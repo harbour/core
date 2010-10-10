@@ -113,7 +113,7 @@
 
 
 /*
- *
+ * QSessionManager ()
  */
 
 typedef struct
@@ -157,7 +157,7 @@ void * hbqt_gcAllocate_QSessionManager( void * pObj, bool bNew )
 
 HB_FUNC( QT_QSESSIONMANAGER )
 {
-   // __HB_RETPTRGC__( new () );
+   // __HB_RETPTRGC__( new QSessionManager() );
 }
 
 /*

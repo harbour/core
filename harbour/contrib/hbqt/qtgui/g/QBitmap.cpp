@@ -181,38 +181,38 @@ HB_FUNC( QT_QBITMAP )
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj =  new QBitmap( *hbqt_par_QBitmap( 1 ) ) ;
+      pObj = new QBitmap( *hbqt_par_QBitmap( 1 ) ) ;
    }
    else if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
    {
-      pObj =  new QBitmap( hbqt_par_QString( 1 ), ( const char * ) 0 ) ;
+      pObj = new QBitmap( hbqt_par_QString( 1 ), ( const char * ) 0 ) ;
    }
    else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
-      pObj =  new QBitmap( hbqt_par_QString( 1 ), hb_parc( 2 ) ) ;
+      pObj = new QBitmap( hbqt_par_QString( 1 ), hb_parc( 2 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
-      pObj =  new QBitmap( hb_parni( 1 ), hb_parni( 2 ) ) ;
+      pObj = new QBitmap( hb_parni( 1 ), hb_parni( 2 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
    {
       if(      ( QString ) "QPixmap" == hbqt_par_QString( 1 ) )
       {
-         pObj =  new QBitmap( *hbqt_par_QPixmap( 2 ) ) ;
+         pObj = new QBitmap( *hbqt_par_QPixmap( 2 ) ) ;
       }
       else if( ( QString ) "QSize"   == hbqt_par_QString( 1 ) )
       {
-         pObj =  new QBitmap( *hbqt_par_QSize( 2 ) ) ;
+         pObj = new QBitmap( *hbqt_par_QSize( 2 ) ) ;
       }
       else
       {
-         pObj =  new QBitmap() ;
+         pObj = new QBitmap() ;
       }
    }
    else
    {
-      pObj =  new QBitmap() ;
+      pObj = new QBitmap() ;
    }
 
    hb_retptrGC( hbqt_gcAllocate_QBitmap( ( void * ) pObj, true ) );

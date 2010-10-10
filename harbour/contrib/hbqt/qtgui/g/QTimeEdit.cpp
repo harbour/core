@@ -182,10 +182,7 @@ HB_FUNC( QT_QTIMEEDIT )
 {
    QTimeEdit * pObj = NULL;
 
-   pObj =  new QTimeEdit( hbqt_par_QWidget( 1 ) ) ;
-   #if 0
-   pObj = (QTimeEdit *) new QTimeEdit( QTime( hbqt_par_QString( 1 ) ), hbqt_par_QWidget( 2 ) ) ;
-   #endif
+   pObj = new QTimeEdit( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QTimeEdit( ( void * ) pObj, true ) );
 }

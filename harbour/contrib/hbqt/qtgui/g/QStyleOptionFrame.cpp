@@ -176,7 +176,7 @@ HB_FUNC( QT_QSTYLEOPTIONFRAME )
 {
    QStyleOptionFrame * pObj = NULL;
 
-   pObj =  new QStyleOptionFrame() ;
+   pObj = new QStyleOptionFrame() ;
 
    hb_retptrGC( hbqt_gcAllocate_QStyleOptionFrame( ( void * ) pObj, true ) );
 }

@@ -194,7 +194,7 @@ HB_FUNC( QT_QPRINTDIALOG )
 {
    QPrintDialog * pObj = NULL;
 
-   pObj =  new QPrintDialog ( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QPrintDialog ( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QPrintDialog( ( void * ) pObj, true ) );
 }

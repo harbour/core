@@ -124,8 +124,8 @@
 #include <QtCore/QVariant>
 
 /*
- * Q_INVOKABLE QObject ( QObject * parent = 0 )
- * virtual ~QObject ()
+ * QObject ( QObject * parent = 0 )
+ * ~QObject ()
  */
 
 typedef struct
@@ -197,7 +197,7 @@ HB_FUNC( QT_QOBJECT )
 {
    QObject * pObj = NULL;
 
-   pObj =  new QObject( hbqt_par_QObject( 1 ) ) ;
+   pObj = new QObject( hbqt_par_QObject( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QObject( ( void * ) pObj, true ) );
 }

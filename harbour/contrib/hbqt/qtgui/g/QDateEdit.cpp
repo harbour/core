@@ -182,7 +182,7 @@ HB_FUNC( QT_QDATEEDIT )
 {
    QDateEdit * pObj = NULL;
 
-   pObj =  new QDateEdit( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QDateEdit( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QDateEdit( ( void * ) pObj, true ) );
 }

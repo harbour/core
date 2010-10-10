@@ -89,14 +89,6 @@
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$
- *     oRect := QRect():new()
- *     oRect := QRect():new( pQRect_other )
- *     oRect := QRect():new( pQPoint_topLeft, pQPoint_bottomRight )
- *     oRect := QRect():new( nX, nY, nWidth, nHeight )
- *     /* TODO:
- *      *
- *      * oRect := QRect():new( pQPoint_topLeft, pQSize_size )
- *      */
  * 
  *  $TESTS$
  * 

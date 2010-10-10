@@ -120,7 +120,7 @@
 #include <QtCore/QMimeData>
 
 /*
- *
+ * QApplication::clipboard()
  *
  */
 
@@ -167,7 +167,7 @@ HB_FUNC( QT_QCLIPBOARD )
 {
    QClipboard * pObj = NULL;
 
-   pObj =  QApplication::clipboard() ;
+   pObj = QApplication::clipboard() ;
 
    hb_retptrGC( hbqt_gcAllocate_QClipboard( ( void * ) pObj, true ) );
 }

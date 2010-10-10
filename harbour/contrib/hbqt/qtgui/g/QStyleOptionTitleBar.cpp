@@ -176,7 +176,7 @@ HB_FUNC( QT_QSTYLEOPTIONTITLEBAR )
 {
    QStyleOptionTitleBar * pObj = NULL;
 
-   pObj =  new QStyleOptionTitleBar() ;
+   pObj = new QStyleOptionTitleBar() ;
 
    hb_retptrGC( hbqt_gcAllocate_QStyleOptionTitleBar( ( void * ) pObj, true ) );
 }

@@ -59,6 +59,7 @@ QObject  = no
 Inherit  = QGraphicsSceneEvent
 Type     = 
 New      = 
+Constructor = no
 </CLASS>
 
 <CODE>
@@ -68,6 +69,7 @@ New      =
 
 
 /*
+ * QGraphicsSceneContextMenuEvent ()
  * ~QGraphicsSceneContextMenuEvent ()
  */
 HB_FUNC( QT_QGRAPHICSSCENECONTEXTMENUEVENT )

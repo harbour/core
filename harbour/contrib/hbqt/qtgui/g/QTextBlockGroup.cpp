@@ -160,7 +160,7 @@ void * hbqt_gcAllocate_QTextBlockGroup( void * pObj, bool bNew )
 
 HB_FUNC( QT_QTEXTBLOCKGROUP )
 {
-   //__HB_RETPTRGC__( ( QTextBlockGroup* ) new QTextBlockGroup( hbqt_par_QTextDocument( 1 ) ) );
+   //__HB_RETPTRGC__( new QTextBlockGroup( hbqt_par_QTextDocument( 1 ) ) );
 }
 
 

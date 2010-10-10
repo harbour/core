@@ -112,6 +112,7 @@
 #include <QtGui/QPaintDevice>
 
 /*
+ * QPaintDevice ()
  * virtual ~QPaintDevice ()
  */
 

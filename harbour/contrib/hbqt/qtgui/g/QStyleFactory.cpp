@@ -109,7 +109,8 @@
 
 
 /*
- *
+ * QStyleFactory ()
+ * ~QStyleFactory()
  */
 
 typedef struct

@@ -175,19 +175,19 @@ HB_FUNC( QT_QRECT )
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj =  new QRect( *hbqt_par_QRect( 1 ) ) ;
+      pObj = new QRect( *hbqt_par_QRect( 1 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
    {
-      pObj =  new QRect( *hbqt_par_QPoint( 1 ), *hbqt_par_QPoint( 2 ) ) ;
+      pObj = new QRect( *hbqt_par_QPoint( 1 ), *hbqt_par_QPoint( 2 ) ) ;
    }
    else if( hb_pcount() == 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
    {
-      pObj =  new QRect( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) ) ;
+      pObj = new QRect( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) ) ;
    }
    else
    {
-      pObj =  new QRect() ;
+      pObj = new QRect() ;
    }
 
    hb_retptrGC( hbqt_gcAllocate_QRect( ( void * ) pObj, true ) );

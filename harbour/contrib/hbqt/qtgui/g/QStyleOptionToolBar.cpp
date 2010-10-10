@@ -179,7 +179,7 @@ HB_FUNC( QT_QSTYLEOPTIONTOOLBAR )
 {
    QStyleOptionToolBar * pObj = NULL;
 
-   pObj =  new QStyleOptionToolBar() ;
+   pObj = new QStyleOptionToolBar() ;
 
    hb_retptrGC( hbqt_gcAllocate_QStyleOptionToolBar( ( void * ) pObj, true ) );
 }

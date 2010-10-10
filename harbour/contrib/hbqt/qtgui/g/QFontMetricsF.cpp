@@ -176,22 +176,22 @@ HB_FUNC( QT_QFONTMETRICSF )
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj =  new QFontMetricsF( *hbqt_par_QFontMetricsF( 1 ) ) ;
+      pObj = new QFontMetricsF( *hbqt_par_QFontMetricsF( 1 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
    {
       if( hbqt_par_QString( 1 ) == ( QString ) "QFont" )
       {
-         pObj =  new QFontMetricsF( *hbqt_par_QFont( 2 ) ) ;
+         pObj = new QFontMetricsF( *hbqt_par_QFont( 2 ) ) ;
       }
       else if( hbqt_par_QString( 1 ) == ( QString ) "QFontMetrics" )
       {
-         pObj =  new QFontMetricsF( *hbqt_par_QFontMetrics( 2 ) ) ;
+         pObj = new QFontMetricsF( *hbqt_par_QFontMetrics( 2 ) ) ;
       }
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
    {
-      pObj =  new QFontMetricsF( *hbqt_par_QFont( 1 ), hbqt_par_QPaintDevice( 2 ) ) ;
+      pObj = new QFontMetricsF( *hbqt_par_QFont( 1 ), hbqt_par_QPaintDevice( 2 ) ) ;
    }
 
    hb_retptrGC( hbqt_gcAllocate_QFontMetricsF( ( void * ) pObj, true ) );

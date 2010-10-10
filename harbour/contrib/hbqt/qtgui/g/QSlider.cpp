@@ -188,9 +188,9 @@ HB_FUNC( QT_QSLIDER )
    QSlider * pObj = NULL;
 
    if( hb_pcount() >= 1 && HB_ISNUM( 1 ) )
-      pObj =  new QSlider( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) ;
+      pObj = new QSlider( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) ;
    else
-      pObj =  new QSlider( hbqt_par_QWidget( 1 ) ) ;
+      pObj = new QSlider( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QSlider( ( void * ) pObj, true ) );
 }

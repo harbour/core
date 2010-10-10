@@ -176,7 +176,7 @@ HB_FUNC( QT_QSTYLEOPTIONCOMBOBOX )
 {
    QStyleOptionComboBox * pObj = NULL;
 
-   pObj =  new QStyleOptionComboBox() ;
+   pObj = new QStyleOptionComboBox() ;
 
    hb_retptrGC( hbqt_gcAllocate_QStyleOptionComboBox( ( void * ) pObj, true ) );
 }

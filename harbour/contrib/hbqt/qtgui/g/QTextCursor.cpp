@@ -191,7 +191,7 @@ HB_FUNC( QT_QTEXTCURSOR )
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj =  new QTextCursor( *hbqt_par_QTextCursor( 1 ) ) ;
+      pObj = new QTextCursor( *hbqt_par_QTextCursor( 1 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
    {
@@ -199,24 +199,24 @@ HB_FUNC( QT_QTEXTCURSOR )
 
       if( object == ( QString ) "QTextDocument" )
       {
-         pObj =  new QTextCursor( hbqt_par_QTextDocument( 2 ) ) ;
+         pObj = new QTextCursor( hbqt_par_QTextDocument( 2 ) ) ;
       }
       if( object == ( QString ) "QTextBlock" )
       {
-         pObj =  new QTextCursor( *hbqt_par_QTextBlock( 2 ) ) ;
+         pObj = new QTextCursor( *hbqt_par_QTextBlock( 2 ) ) ;
       }
       if( object == ( QString ) "QTextFrame" )
       {
-         pObj =  new QTextCursor( hbqt_par_QTextFrame( 2 ) ) ;
+         pObj = new QTextCursor( hbqt_par_QTextFrame( 2 ) ) ;
       }
       else
       {
-         pObj =  new QTextCursor() ;
+         pObj = new QTextCursor() ;
       }
    }
    else
    {
-      pObj =  new QTextCursor() ;
+      pObj = new QTextCursor() ;
    }
 
    hb_retptrGC( hbqt_gcAllocate_QTextCursor( ( void * ) pObj, true ) );

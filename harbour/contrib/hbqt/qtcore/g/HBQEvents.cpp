@@ -109,8 +109,8 @@
 
 
 /*
- * HBQEvents()
- * ~HBQEvents()
+ * HBQEvents ()
+ * ~HBQEvents ()
  *
  */
 

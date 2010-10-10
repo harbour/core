@@ -111,6 +111,7 @@
  * QLine ()
  * QLine ( const QPoint & p1, const QPoint & p2 )
  * QLine ( int x1, int y1, int x2, int y2 )
+ * QLine ( const QLine & other )
  */
 
 typedef struct
@@ -173,19 +174,19 @@ HB_FUNC( QT_QLINE )
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj =  new QLine( *hbqt_par_QLine( 1 ) ) ;
+      pObj = new QLine( *hbqt_par_QLine( 1 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
    {
-      pObj =  new QLine( *hbqt_par_QPoint( 1 ), *hbqt_par_QPoint( 2 ) ) ;
+      pObj = new QLine( *hbqt_par_QPoint( 1 ), *hbqt_par_QPoint( 2 ) ) ;
    }
    else if( hb_pcount() == 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
    {
-      pObj =  new QLine( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) ) ;
+      pObj = new QLine( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ) ) ;
    }
    else
    {
-      pObj =  new QLine() ;
+      pObj = new QLine() ;
    }
 
    hb_retptrGC( hbqt_gcAllocate_QLine( ( void * ) pObj, true ) );

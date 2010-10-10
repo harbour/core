@@ -176,7 +176,7 @@ HB_FUNC( QT_QSTYLEOPTIONTABBARBASE )
 {
    QStyleOptionTabBarBase * pObj = NULL;
 
-   pObj =  new QStyleOptionTabBarBase() ;
+   pObj = new QStyleOptionTabBarBase() ;
 
    hb_retptrGC( hbqt_gcAllocate_QStyleOptionTabBarBase( ( void * ) pObj, true ) );
 }

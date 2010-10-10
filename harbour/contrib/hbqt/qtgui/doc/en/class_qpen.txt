@@ -51,16 +51,6 @@
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$
- *     oPen := QPen():new()
- *     oPen := QPen():new( pQPen_other )
- *     oPen := QPen():new( nQt_PenStyle )
- *     oPen := QPen():new( "QColor", pQColor )
- *     oPen := QPen():new( pQBrush, nWidth, [ nQt_PenStyle = Qt_SolidLine ], ;
- *                                          [ nQt_CapStyle = Qt_SquareCap ], ;
- *                                          [ nQt_PenJointStyle = Qt_BevelJoin ] )
- *     /* TODO
- *      * oPen := QPen():new( pQPen )
- *      */
  * 
  *  $TESTS$
  * 

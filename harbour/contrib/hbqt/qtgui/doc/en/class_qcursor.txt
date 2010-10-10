@@ -39,11 +39,6 @@
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$
- *     oCursor := QCursor():new()
- *     oCursor := QCursor():new( pQCursor )
- *     oCursor := QCursor():new( nQt_CursorShape )
- *     oCursor := QCursor():new( "QPixmap", pQPixmap, [ nHotX = -1 ] , [ nHotY = -1 ] )
- *     oCursor := QCursor():new( pQBitmap, pQBitmapAsMask, [ nHotX = -1 ], [ nHotY = -1 ] )
  * 
  *  $TESTS$
  * 

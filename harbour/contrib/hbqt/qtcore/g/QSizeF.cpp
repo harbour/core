@@ -174,11 +174,11 @@ HB_FUNC( QT_QSIZEF )
 
    if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
-      pObj =  new QSizeF( hb_parnd( 1 ), hb_parnd( 2 ) ) ;
+      pObj = new QSizeF( hb_parnd( 1 ), hb_parnd( 2 ) ) ;
    }
    else
    {
-      pObj =  new QSizeF() ;
+      pObj = new QSizeF() ;
    }
 
    hb_retptrGC( hbqt_gcAllocate_QSizeF( ( void * ) pObj, true ) );

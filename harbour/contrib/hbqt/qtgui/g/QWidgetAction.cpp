@@ -182,7 +182,7 @@ HB_FUNC( QT_QWIDGETACTION )
 {
    QWidgetAction * pObj = NULL;
 
-   pObj =  new QWidgetAction( hbqt_par_QObject( 1 ) ) ;
+   pObj = new QWidgetAction( hbqt_par_QObject( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QWidgetAction( ( void * ) pObj, true ) );
 }

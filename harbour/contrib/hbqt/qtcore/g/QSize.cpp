@@ -109,6 +109,7 @@
 
 /*
  * QSize ()
+ * QSize ( const QSize & size )
  * QSize ( int width, int height )
  * ~QSize ()
  */
@@ -173,15 +174,15 @@ HB_FUNC( QT_QSIZE )
 
    if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
-      pObj =  new QSize( hb_parni( 1 ), hb_parni( 2 ) ) ;
+      pObj = new QSize( hb_parni( 1 ), hb_parni( 2 ) ) ;
    }
    else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj =  new QSize( *hbqt_par_QSize( 1 ) ) ;
+      pObj = new QSize( *hbqt_par_QSize( 1 ) ) ;
    }
    else
    {
-      pObj =  new QSize() ;
+      pObj = new QSize() ;
    }
 
    hb_retptrGC( hbqt_gcAllocate_QSize( ( void * ) pObj, true ) );

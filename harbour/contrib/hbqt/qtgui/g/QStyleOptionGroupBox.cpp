@@ -176,7 +176,7 @@ HB_FUNC( QT_QSTYLEOPTIONGROUPBOX )
 {
    QStyleOptionGroupBox * pObj = NULL;
 
-   pObj =  new QStyleOptionGroupBox() ;
+   pObj = new QStyleOptionGroupBox() ;
 
    hb_retptrGC( hbqt_gcAllocate_QStyleOptionGroupBox( ( void * ) pObj, true ) );
 }

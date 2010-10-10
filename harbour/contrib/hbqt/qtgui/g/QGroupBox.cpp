@@ -183,7 +183,7 @@ HB_FUNC( QT_QGROUPBOX )
 {
    QGroupBox * pObj = NULL;
 
-   pObj = ( QGroupBox * ) new QGroupBox( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QGroupBox( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QGroupBox( ( void * ) pObj, true ) );
 }

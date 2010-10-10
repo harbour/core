@@ -176,7 +176,7 @@ HB_FUNC( QT_QSTYLEOPTIONSLIDER )
 {
    QStyleOptionSlider * pObj = NULL;
 
-   pObj =  new QStyleOptionSlider() ;
+   pObj = new QStyleOptionSlider() ;
 
    hb_retptrGC( hbqt_gcAllocate_QStyleOptionSlider( ( void * ) pObj, true ) );
 }

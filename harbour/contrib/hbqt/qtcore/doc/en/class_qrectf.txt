@@ -90,14 +90,6 @@
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$
- *     oRectF := QRectF():new()
- *     oRectF := QRectF():new( pQRectF_other )
- *     oRectF := QRectF():new( pQPoint_topLeft, pQPoint_bottomRight )
- *     oRectF := QRectF():new( nX, nY, nWidth, nHeight )
- *     /* TODO:
- *      *
- *      * oRect := QRectF():new( pQPoint_topLeft, pQSize_size )
- *      */
  * 
  *  $TESTS$
  * 

@@ -194,7 +194,7 @@ HB_FUNC( QT_QTREEVIEW )
 {
    QTreeView * pObj = NULL;
 
-   pObj =  new QTreeView( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QTreeView( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QTreeView( ( void * ) pObj, true ) );
 }

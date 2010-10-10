@@ -187,7 +187,7 @@ HB_FUNC( QT_QSTYLEDITEMDELEGATE )
 {
    QStyledItemDelegate * pObj = NULL;
 
-   pObj =  new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) ;
+   pObj = new QStyledItemDelegate( hbqt_par_QObject( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QStyledItemDelegate( ( void * ) pObj, true ) );
 }

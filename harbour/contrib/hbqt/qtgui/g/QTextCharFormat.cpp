@@ -176,7 +176,7 @@ HB_FUNC( QT_QTEXTCHARFORMAT )
 {
    QTextCharFormat * pObj = NULL;
 
-   pObj =  new QTextCharFormat() ;
+   pObj = new QTextCharFormat() ;
 
    hb_retptrGC( hbqt_gcAllocate_QTextCharFormat( ( void * ) pObj, true ) );
 }

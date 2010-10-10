@@ -109,6 +109,7 @@
 
 
 /*
+ * QItemEditorCreatorBase ()
  * virtual ~QItemEditorCreatorBase ()
  *
  */

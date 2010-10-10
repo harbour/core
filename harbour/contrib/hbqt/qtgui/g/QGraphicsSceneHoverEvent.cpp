@@ -111,6 +111,7 @@
 
 
 /*
+ * QGraphicsSceneHoverEvent ()
  * ~QGraphicsSceneHoverEvent ()
  */
 

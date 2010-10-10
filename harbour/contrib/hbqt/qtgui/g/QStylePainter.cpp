@@ -172,7 +172,7 @@ HB_FUNC( QT_QSTYLEPAINTER )
 {
    QStylePainter * pObj = NULL;
 
-   pObj =  new QStylePainter() ;
+   pObj = new QStylePainter() ;
 
    hb_retptrGC( hbqt_gcAllocate_QStylePainter( ( void * ) pObj, true ) );
 }

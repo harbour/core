@@ -111,6 +111,7 @@
 
 
 /*
+ * QGraphicsSceneHelpEvent ()
  * ~QGraphicsSceneHelpEvent ()
  */
 

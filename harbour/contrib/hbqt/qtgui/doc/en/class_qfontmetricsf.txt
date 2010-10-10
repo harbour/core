@@ -55,10 +55,6 @@
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$
- *     oFontMetricsF := QFontMetricsF():new( pQFontMetricsF )
- *     oFontMetricsF := QFontMetricsF():new( "QFontMetrics", pQFontMetrics )
- *     oFontMetricsF := QFontMetricsF():new( "QFont", pQFont )
- *     oFontMetricsF := QFontMetricsF():new( pQFont, pQPaintDevice )
  * 
  *  $TESTS$
  * 

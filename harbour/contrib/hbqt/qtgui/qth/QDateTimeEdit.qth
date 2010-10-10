@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * QT Source Generator for Harbour
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -71,7 +71,7 @@ New      = pParent
  */
 HB_FUNC( QT_QDATETIMEEDIT )
 {
-   __HB_RETPTRGC__( ( QDateTimeEdit* ) new QDateTimeEdit( hbqt_par_QWidget( 1 ) ) );
+   __HB_RETPTRGC__( new QDateTimeEdit( hbqt_par_QWidget( 1 ) ) );
 }
 </CODE>
 

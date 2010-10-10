@@ -182,7 +182,7 @@ HB_FUNC( QT_QDIAL )
 {
    QDial * pObj = NULL;
 
-   pObj =  new QDial( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QDial( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QDial( ( void * ) pObj, true ) );
 }

@@ -190,11 +190,11 @@ HB_FUNC( QT_QTREEWIDGETITEM )
 
    if( hb_pcount() >= 1 && HB_ISNUM( 1 ) )
    {
-      pObj =  new QTreeWidgetItem( hb_parni( 1 ) ) ;
+      pObj = new QTreeWidgetItem( hb_parni( 1 ) ) ;
    }
    else
    {
-      pObj =  new QTreeWidgetItem( hbqt_par_QTreeWidget( 1 ), hb_parni( 2 ) ) ;
+      pObj = new QTreeWidgetItem( hbqt_par_QTreeWidget( 1 ), hb_parni( 2 ) ) ;
    }
 
    hb_retptrGC( hbqt_gcAllocate_QTreeWidgetItem( ( void * ) pObj, true ) );

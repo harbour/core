@@ -48,13 +48,6 @@
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$
- *     oRegion := QRegion():new()
- *     oRegion := QRegion():new( pQRegion_other )
- *     oRegion := QRegion():new( nX, nY, nW, nH, [ nQRegion_RegionType = QRegion_Rectangle ] )
- *     oRegion := QRegion():new( "QPolygon", pQPolygon, [ nQt_FillRule = Qt_OddEvenFill ] )
- *     oRegion := QRegion():new( "QBitmap" , pQBitmap )
- *     oRegion := QRegion():new( "QRect"   , pQRect, [ nQRegion_RegionType = QRegion_Rectangle ] ) )
- *     oRegion := QRegion():new( pQRect, nQRegion_RegionType )
  * 
  *  $TESTS$
  * 

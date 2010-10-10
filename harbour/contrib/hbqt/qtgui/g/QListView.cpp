@@ -190,7 +190,7 @@ HB_FUNC( QT_QLISTVIEW )
 {
    QListView * pObj = NULL;
 
-   pObj = ( QListView * ) new QListView( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QListView( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QListView( ( void * ) pObj, true ) );
 }

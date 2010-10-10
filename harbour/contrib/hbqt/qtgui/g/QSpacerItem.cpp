@@ -109,7 +109,7 @@
 
 
 /* QSpacerItem ( int w, int h, QSizePolicy::Policy hPolicy = QSizePolicy::Minimum, QSizePolicy::Policy vPolicy = QSizePolicy::Minimum )
- *
+ * ~QSpacerItem ()
  */
 
 typedef struct

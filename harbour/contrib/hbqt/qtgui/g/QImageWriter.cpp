@@ -177,7 +177,7 @@ HB_FUNC( QT_QIMAGEWRITER )
 {
    QImageWriter * pObj = NULL;
 
-   pObj =  new QImageWriter() ;
+   pObj = new QImageWriter() ;
 
    hb_retptrGC( hbqt_gcAllocate_QImageWriter( ( void * ) pObj, true ) );
 }

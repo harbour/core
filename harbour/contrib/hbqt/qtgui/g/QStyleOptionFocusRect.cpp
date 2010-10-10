@@ -176,7 +176,7 @@ HB_FUNC( QT_QSTYLEOPTIONFOCUSRECT )
 {
    QStyleOptionFocusRect * pObj = NULL;
 
-   pObj =  new QStyleOptionFocusRect() ;
+   pObj = new QStyleOptionFocusRect() ;
 
    hb_retptrGC( hbqt_gcAllocate_QStyleOptionFocusRect( ( void * ) pObj, true ) );
 }

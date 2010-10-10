@@ -170,7 +170,7 @@ HB_FUNC( QT_QWIDGETITEM )
 {
    QWidgetItem * pObj = NULL;
 
-   pObj =  new QWidgetItem( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QWidgetItem( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QWidgetItem( ( void * ) pObj, true ) );
 }

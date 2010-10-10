@@ -188,7 +188,7 @@ HB_FUNC( QT_QINPUTDIALOG )
 {
    QInputDialog * pObj = NULL;
 
-   pObj = ( QInputDialog * ) new QInputDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
+   pObj = new QInputDialog( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QInputDialog( ( void * ) pObj, true ) );
 }

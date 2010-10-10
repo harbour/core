@@ -191,7 +191,7 @@ HB_FUNC( QT_QCALENDARWIDGET )
 {
    QCalendarWidget * pObj = NULL;
 
-   pObj =  new QCalendarWidget( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QCalendarWidget( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QCalendarWidget( ( void * ) pObj, true ) );
 }

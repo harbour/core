@@ -183,7 +183,7 @@ HB_FUNC( QT_QHBOXLAYOUT )
 {
    QHBoxLayout * pObj = NULL;
 
-   pObj = ( QHBoxLayout * ) new QHBoxLayout( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QHBoxLayout( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QHBoxLayout( ( void * ) pObj, true ) );
 }

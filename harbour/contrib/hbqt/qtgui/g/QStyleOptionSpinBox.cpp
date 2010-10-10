@@ -176,7 +176,7 @@ HB_FUNC( QT_QSTYLEOPTIONSPINBOX )
 {
    QStyleOptionSpinBox * pObj = NULL;
 
-   pObj =  new QStyleOptionSpinBox() ;
+   pObj = new QStyleOptionSpinBox() ;
 
    hb_retptrGC( hbqt_gcAllocate_QStyleOptionSpinBox( ( void * ) pObj, true ) );
 }

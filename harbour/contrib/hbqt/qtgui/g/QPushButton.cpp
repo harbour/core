@@ -184,7 +184,7 @@ HB_FUNC( QT_QPUSHBUTTON )
 {
    QPushButton * pObj = NULL;
 
-    pObj =  new QPushButton( hbqt_par_QWidget( 1 ) ) ;
+    pObj = new QPushButton( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QPushButton( ( void * ) pObj, true ) );
 }

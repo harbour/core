@@ -181,7 +181,7 @@ HB_FUNC( QT_QSPINBOX )
 {
    QSpinBox * pObj = NULL;
 
-   pObj =  new QSpinBox( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QSpinBox( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QSpinBox( ( void * ) pObj, true ) );
 }

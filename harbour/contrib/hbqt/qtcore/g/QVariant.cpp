@@ -225,7 +225,7 @@ HB_FUNC( QT_QVARIANT )
 {
    QVariant * pObj = NULL;
 
-   pObj =  new QVariant() ;
+   pObj = new QVariant() ;
 
    hb_retptrGC( hbqt_gcAllocate_QVariant( ( void * ) pObj, true ) );
 }

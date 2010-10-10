@@ -176,7 +176,7 @@ HB_FUNC( QT_QSTYLEOPTIONDOCKWIDGET )
 {
    QStyleOptionDockWidget * pObj = NULL;
 
-   pObj =  new QStyleOptionDockWidget() ;
+   pObj = new QStyleOptionDockWidget() ;
 
    hb_retptrGC( hbqt_gcAllocate_QStyleOptionDockWidget( ( void * ) pObj, true ) );
 }

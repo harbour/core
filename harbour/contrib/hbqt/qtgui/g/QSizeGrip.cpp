@@ -182,7 +182,7 @@ HB_FUNC( QT_QSIZEGRIP )
 {
    QSizeGrip * pObj = NULL;
 
-   pObj =  new QSizeGrip( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QSizeGrip( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QSizeGrip( ( void * ) pObj, true ) );
 }

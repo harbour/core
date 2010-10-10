@@ -181,7 +181,7 @@ HB_FUNC( QT_QCOMMONSTYLE )
 {
    QCommonStyle * pObj = NULL;
 
-   pObj =  new QCommonStyle() ;
+   pObj = new QCommonStyle() ;
 
    hb_retptrGC( hbqt_gcAllocate_QCommonStyle( ( void * ) pObj, true ) );
 }

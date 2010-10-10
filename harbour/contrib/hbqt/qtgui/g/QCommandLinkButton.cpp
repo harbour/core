@@ -183,7 +183,7 @@ HB_FUNC( QT_QCOMMANDLINKBUTTON )
 {
    QCommandLinkButton * pObj = NULL;
 
-   pObj =  new QCommandLinkButton( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QCommandLinkButton( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QCommandLinkButton( ( void * ) pObj, true ) );
 }

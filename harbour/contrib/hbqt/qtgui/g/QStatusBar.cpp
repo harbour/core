@@ -182,7 +182,7 @@ HB_FUNC( QT_QSTATUSBAR )
 {
    QStatusBar * pObj = NULL;
 
-   pObj =  new QStatusBar( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QStatusBar( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QStatusBar( ( void * ) pObj, true ) );
 }

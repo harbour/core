@@ -188,9 +188,9 @@ HB_FUNC( QT_QPAGESETUPDIALOG )
    QPageSetupDialog * pObj = NULL;
 
    if( hb_pcount() >= 2 )
-      pObj =  new QPageSetupDialog( hbqt_par_QPrinter( 1 ), hbqt_par_QWidget( 1 ) ) ;
+      pObj = new QPageSetupDialog( hbqt_par_QPrinter( 1 ), hbqt_par_QWidget( 1 ) ) ;
    else
-      pObj =  new QPageSetupDialog( hbqt_par_QWidget( 1 ) ) ;
+      pObj = new QPageSetupDialog( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QPageSetupDialog( ( void * ) pObj, true ) );
 }

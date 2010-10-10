@@ -109,8 +109,8 @@
 
 
 /*
- * HBQSlots()
- * ~HBQSlots()
+ * HBQSlots ()
+ * ~HBQSlots ()
  */
 
 typedef struct

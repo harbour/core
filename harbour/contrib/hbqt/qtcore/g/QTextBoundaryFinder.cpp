@@ -179,7 +179,7 @@ HB_FUNC( QT_QTEXTBOUNDARYFINDER )
 {
    QTextBoundaryFinder * pObj = NULL;
 
-   pObj =  new QTextBoundaryFinder() ;
+   pObj = new QTextBoundaryFinder() ;
 
    hb_retptrGC( hbqt_gcAllocate_QTextBoundaryFinder( ( void * ) pObj, true ) );
 }

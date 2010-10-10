@@ -177,7 +177,7 @@ HB_FUNC( QT_QSTYLEOPTIONPROGRESSBAR )
 {
    QStyleOptionProgressBar * pObj = NULL;
 
-   pObj =  new QStyleOptionProgressBar() ;
+   pObj = new QStyleOptionProgressBar() ;
 
    hb_retptrGC( hbqt_gcAllocate_QStyleOptionProgressBar( ( void * ) pObj, true ) );
 }

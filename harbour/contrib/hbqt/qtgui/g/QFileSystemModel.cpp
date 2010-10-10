@@ -192,7 +192,7 @@ HB_FUNC( QT_QFILESYSTEMMODEL )
 {
    QFileSystemModel * pObj = NULL;
 
-   pObj = ( QFileSystemModel * ) new QFileSystemModel() ;
+   pObj = new QFileSystemModel() ;
 
    hb_retptrGC( hbqt_gcAllocate_QFileSystemModel( ( void * ) pObj, true ) );
 }

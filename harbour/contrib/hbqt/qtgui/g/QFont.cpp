@@ -194,31 +194,31 @@ HB_FUNC( QT_QFONT )
 
    if(      hb_pcount() == 1 && HB_ISCHAR( 1 ) )
    {
-      pObj =  new QFont( hbqt_par_QString( 1 ), -1, -1, false ) ;
+      pObj = new QFont( hbqt_par_QString( 1 ), -1, -1, false ) ;
    }
    else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) )
    {
-      pObj =  new QFont( hbqt_par_QString( 1 ), hb_parni( 2 ), -1, false ) ;
+      pObj = new QFont( hbqt_par_QString( 1 ), hb_parni( 2 ), -1, false ) ;
    }
    else if( hb_pcount() == 3 && HB_ISCHAR( 1 ) && HB_ISNUM( 2 )  && HB_ISNUM( 3 ) )
    {
-      pObj =  new QFont( hbqt_par_QString( 1 ), hb_parni( 2 ), hb_parni( 3 ), false ) ;
+      pObj = new QFont( hbqt_par_QString( 1 ), hb_parni( 2 ), hb_parni( 3 ), false ) ;
    }
    else if( hb_pcount() == 4 && HB_ISCHAR( 1 ) && HB_ISNUM( 2 )  && HB_ISNUM( 3 ) && HB_ISLOG( 4 ) )
    {
-      pObj =  new QFont( hbqt_par_QString( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ) ) ;
+      pObj = new QFont( hbqt_par_QString( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ) ) ;
    }
    else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj =  new QFont( *hbqt_par_QFont( 1 ) ) ;
+      pObj = new QFont( *hbqt_par_QFont( 1 ) ) ;
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
    {
-      pObj =  new QFont( *hbqt_par_QFont( 1 ), hbqt_par_QPaintDevice( 2 ) ) ;
+      pObj = new QFont( *hbqt_par_QFont( 1 ), hbqt_par_QPaintDevice( 2 ) ) ;
    }
    else
    {
-      pObj =  new QFont() ;
+      pObj = new QFont() ;
    }
 
    hb_retptrGC( hbqt_gcAllocate_QFont( ( void * ) pObj, true ) );

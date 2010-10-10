@@ -182,7 +182,7 @@ HB_FUNC( QT_QSOUND )
 {
    QSound * pObj = NULL;
 
-   pObj =  new QSound( hbqt_par_QString( 1 ) ) ;
+   pObj = new QSound( hbqt_par_QString( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QSound( ( void * ) pObj, true ) );
 }

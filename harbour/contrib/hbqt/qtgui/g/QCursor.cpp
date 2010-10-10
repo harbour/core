@@ -184,11 +184,11 @@ HB_FUNC( QT_QCURSOR )
 
    if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
    {
-      pObj =  new QCursor( ( Qt::CursorShape ) hb_parni( 1 ) ) ;
+      pObj = new QCursor( ( Qt::CursorShape ) hb_parni( 1 ) ) ;
    }
    else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj =  new QCursor( *hbqt_par_QCursor( 1 ) ) ;
+      pObj = new QCursor( *hbqt_par_QCursor( 1 ) ) ;
    }
    else if( hb_pcount() >= 2 && HB_ISCHAR( 1 ) && HB_ISPOINTER( 2 ) )
    {
@@ -196,20 +196,20 @@ HB_FUNC( QT_QCURSOR )
 
       if( objName == ( QString ) "QPixmap" )
       {
-         pObj =  new QCursor( *hbqt_par_QPixmap( 2 ), HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1, HB_ISNUM( 4 ) ? hb_parni( 4 ) : -1 ) ;
+         pObj = new QCursor( *hbqt_par_QPixmap( 2 ), HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1, HB_ISNUM( 4 ) ? hb_parni( 4 ) : -1 ) ;
       }
       else
       {
-         pObj =  new QCursor() ;
+         pObj = new QCursor() ;
       }
    }
    else if( hb_pcount() >= 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
    {
-      pObj =  new QCursor( *hbqt_par_QBitmap( 1 ), *hbqt_par_QBitmap( 2 ), HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1, HB_ISNUM( 4 ) ? hb_parni( 4 ) : -1 ) ;
+      pObj = new QCursor( *hbqt_par_QBitmap( 1 ), *hbqt_par_QBitmap( 2 ), HB_ISNUM( 3 ) ? hb_parni( 3 ) : -1, HB_ISNUM( 4 ) ? hb_parni( 4 ) : -1 ) ;
    }
    else
    {
-      pObj =  new QCursor() ;
+      pObj = new QCursor() ;
    }
 
    hb_retptrGC( hbqt_gcAllocate_QCursor( ( void * ) pObj, true ) );

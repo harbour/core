@@ -171,7 +171,7 @@ HB_FUNC( QT_QTEXTFRAGMENT )
 {
    QTextFragment * pObj = NULL;
 
-   pObj =  new QTextFragment() ;
+   pObj = new QTextFragment() ;
 
    hb_retptrGC( hbqt_gcAllocate_QTextFragment( ( void * ) pObj, true ) );
 }

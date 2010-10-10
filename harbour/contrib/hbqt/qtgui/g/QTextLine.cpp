@@ -179,7 +179,7 @@ HB_FUNC( QT_QTEXTLINE )
 {
    QTextLine * pObj = NULL;
 
-   pObj =  new QTextLine() ;
+   pObj = new QTextLine() ;
 
    hb_retptrGC( hbqt_gcAllocate_QTextLine( ( void * ) pObj, true ) );
 }

@@ -183,7 +183,7 @@ HB_FUNC( QT_QSCROLLBAR )
 {
    QScrollBar * pObj = NULL;
 
-   pObj =  new QScrollBar( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QScrollBar( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QScrollBar( ( void * ) pObj, true ) );
 }

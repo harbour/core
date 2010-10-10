@@ -59,6 +59,7 @@ QObject  = no
 Inherit  = QGraphicsSceneEvent
 Type     = 
 New      = 
+Constructor = no
 </CLASS>
 
 <CODE>
@@ -67,6 +68,7 @@ New      =
 #include <QtCore/QPoint>
 
 /*
+ * QGraphicsScreenWheelEvent ()
  * ~QGraphicsSceneWheelEvent ()
  */
 HB_FUNC( QT_QGRAPHICSSCENEWHEELEVENT )

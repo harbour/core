@@ -173,7 +173,7 @@ HB_FUNC( QT_QTEXTDOCUMENTWRITER )
 {
    QTextDocumentWriter * pObj = NULL;
 
-   pObj =  new QTextDocumentWriter() ;
+   pObj = new QTextDocumentWriter() ;
 
    hb_retptrGC( hbqt_gcAllocate_QTextDocumentWriter( ( void * ) pObj, true ) );
 }

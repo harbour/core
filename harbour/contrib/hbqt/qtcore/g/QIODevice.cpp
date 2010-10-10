@@ -115,7 +115,7 @@
 /*
  * QIODevice ()
  * QIODevice ( QObject * parent )
- * virtual ~QIODevice ()
+ * ~QIODevice ()
  */
 
 typedef struct

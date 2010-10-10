@@ -174,7 +174,7 @@ HB_FUNC( QT_QTEXTENCODER )
 {
    QTextEncoder * pObj = NULL;
 
-   pObj =  new QTextEncoder( hbqt_par_QTextCodec( 1 ) ) ;
+   pObj = new QTextEncoder( hbqt_par_QTextCodec( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QTextEncoder( ( void * ) pObj, true ) );
 }

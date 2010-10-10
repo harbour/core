@@ -109,7 +109,7 @@
 
 
 /*
- *
+ * QTextObject ()
  */
 
 typedef struct

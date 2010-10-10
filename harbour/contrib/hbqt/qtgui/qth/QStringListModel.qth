@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * QT Source Generator for Harbour
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -70,7 +70,7 @@ New      =
  */
 HB_FUNC( QT_QSTRINGLISTMODEL )
 {
-   __HB_RETPTRGC__( ( QStringListModel* ) new QStringListModel() );
+   __HB_RETPTRGC__( new QStringListModel() );
 }
 </CODE>
 

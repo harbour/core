@@ -101,13 +101,6 @@
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$
- *     oColor := QColor():new()                       // You will supply other parameter later
- *     oColor := QColor():new( nQt_Color )            // R: hbqtgui.ch
- *     oColor := QColor():new( nRGB )                 // ( nR + ( nG * 256 ) + ( nB * 256 * 256 ) )
- *     oColor := QColor():new( cColorName )           // #RRGGBB
- *     oColor := QColor():new( pQColor )              // Pointer to previously obtained QColor
- *     oColor := QColor():new( nR, nG, nB )           // Red Green Blue values
- *     oColor := QColor():new( nR, nG, nB, nAlpha )   // Red Green Blue values with Alpha Channel
  * 
  *  $TESTS$
  * 

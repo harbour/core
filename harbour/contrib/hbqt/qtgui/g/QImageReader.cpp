@@ -178,7 +178,7 @@ HB_FUNC( QT_QIMAGEREADER )
 {
    QImageReader * pObj = NULL;
 
-   pObj =  new QImageReader() ;
+   pObj = new QImageReader() ;
 
    hb_retptrGC( hbqt_gcAllocate_QImageReader( ( void * ) pObj, true ) );
 }

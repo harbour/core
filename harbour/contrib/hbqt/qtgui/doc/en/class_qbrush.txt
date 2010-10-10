@@ -45,17 +45,6 @@
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$
- *     oBrush := QBrush()
- *     oBrush := QBrush( pQBrush )
- *     oBrush := QBrush( nQt_GlobalColor )
- *     oBrush := QBrush( nQt_GlobalColor, nQt_BrushStyle )
- *     oBrush := QBrush( pQColor, nQt_BrushStyle )
- *     oBrush := QBrush( pQColor, pQPixmap )
- *     oBrush := QBrush( nQt_GlobalColor, pQPixmap )
- *     oBrush := QBrush( "QPixmap"  , pQPixmap )
- *     oBrush := QBrush( "QImage"   , pQImage )
- *     oBrush := QBrush( "QGradient", pQGradient )
- *     oBrush := QBrush( "QColor"   , pQColor, [ nQt_BrushStyle = Qt_SolidPattern ] )
  * 
  *  $TESTS$
  * 

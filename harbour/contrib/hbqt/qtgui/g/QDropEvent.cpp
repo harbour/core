@@ -153,7 +153,7 @@ void * hbqt_gcAllocate_QDropEvent( void * pObj, bool bNew )
 
 HB_FUNC( QT_QDROPEVENT )
 {
-   // __HB_RETPTRGC__( ( QDropEvent* ) new QDropEvent() );
+   // __HB_RETPTRGC__( new QDropEvent() );
 }
 
 /*

@@ -38,9 +38,6 @@
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$
- *     oPointF := QPointF():new()
- *     oPointF := QPointF():new( nX, nY )
- *     oPointF := QPointF():new( pQPoint )
  * 
  *  $TESTS$
  * 

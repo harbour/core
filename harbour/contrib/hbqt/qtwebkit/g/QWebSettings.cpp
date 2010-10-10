@@ -119,7 +119,7 @@
 
 
 /*
- *
+ * QWebSettings ()
  */
 
 typedef struct
@@ -163,7 +163,7 @@ void * hbqt_gcAllocate_QWebSettings( void * pObj, bool bNew )
 
 HB_FUNC( QT_QWEBSETTINGS )
 {
-   //__HB_RETPTRGC__( ( QWebSettings* ) new QWebSettings() );
+   //__HB_RETPTRGC__( new QWebSettings() );
 }
 
 /*

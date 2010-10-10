@@ -109,7 +109,7 @@
 
 
 /*
- *
+ * QWebHistory ()
  */
 
 typedef struct
@@ -153,7 +153,7 @@ void * hbqt_gcAllocate_QWebHistory( void * pObj, bool bNew )
 
 HB_FUNC( QT_QWEBHISTORY )
 {
-   //__HB_RETPTRGC__( ( * ) new () );
+   //__HB_RETPTRGC__( new QWebHistory () );
 }
 
 /*

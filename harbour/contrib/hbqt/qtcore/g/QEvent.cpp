@@ -113,7 +113,7 @@
 
 /*
  * QEvent ( Type type )
- * virtual ~QEvent ()
+ * ~QEvent ()
  */
 
 typedef struct
@@ -174,7 +174,7 @@ HB_FUNC( QT_QEVENT )
 {
    QEvent * pObj = NULL;
 
-   pObj =  new QEvent( ( QEvent::Type ) hb_parni( 1 ) ) ;
+   pObj = new QEvent( ( QEvent::Type ) hb_parni( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QEvent( ( void * ) pObj, true ) );
 }

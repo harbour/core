@@ -195,7 +195,7 @@ HB_FUNC( QT_QTEXTDOCUMENT )
 {
    QTextDocument * pObj = NULL;
 
-   pObj =  new QTextDocument( hbqt_par_QObject( 1 ) ) ;
+   pObj = new QTextDocument( hbqt_par_QObject( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QTextDocument( ( void * ) pObj, true ) );
 }

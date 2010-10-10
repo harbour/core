@@ -181,7 +181,7 @@ HB_FUNC( QT_QTEXTBROWSER )
 {
    QTextBrowser * pObj = NULL;
 
-   pObj =  new QTextBrowser( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QTextBrowser( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QTextBrowser( ( void * ) pObj, true ) );
 }

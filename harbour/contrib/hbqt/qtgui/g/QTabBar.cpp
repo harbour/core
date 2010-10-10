@@ -195,7 +195,7 @@ HB_FUNC( QT_QTABBAR )
 {
    QTabBar * pObj = NULL;
 
-   pObj =  new QTabBar( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QTabBar( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QTabBar( ( void * ) pObj, true ) );
 }

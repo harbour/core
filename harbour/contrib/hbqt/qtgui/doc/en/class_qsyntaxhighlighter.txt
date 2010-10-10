@@ -33,9 +33,6 @@
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$
- *     oSynHiliter := HBQSyntaxHighlighter():new( pObject )
- *     oSynHiliter := HBQSyntaxHighlighter():new( "QTextDocument", pQTextDocument )
- *     oSynHiliter := HBQSyntaxHighlighter():new( "QTextEdit", pQTextEdit )
  * 
  *  $TESTS$
  * 

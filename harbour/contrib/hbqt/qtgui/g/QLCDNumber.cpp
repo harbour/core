@@ -188,7 +188,7 @@ HB_FUNC( QT_QLCDNUMBER )
 {
    QLCDNumber * pObj = NULL;
 
-   pObj = ( QLCDNumber * ) new QLCDNumber( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QLCDNumber( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QLCDNumber( ( void * ) pObj, true ) );
 }

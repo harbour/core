@@ -59,6 +59,7 @@ QObject  = no
 Inherit  = QGraphicsSceneEvent
 Type     = 
 New      = 
+Constructor = no
 </CLASS>
 
 <CODE>

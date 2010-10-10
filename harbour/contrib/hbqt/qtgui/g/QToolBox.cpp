@@ -182,7 +182,7 @@ HB_FUNC( QT_QTOOLBOX )
 {
    QToolBox * pObj = NULL;
 
-   pObj =  new QToolBox( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
+   pObj = new QToolBox( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QToolBox( ( void * ) pObj, true ) );
 }

@@ -183,9 +183,9 @@ HB_FUNC( QT_QRADIOBUTTON )
    QRadioButton * pObj = NULL;
 
    if( HB_ISCHAR( 1 ) )
-      pObj =  new QRadioButton( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) ;
+      pObj = new QRadioButton( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) ;
    else
-      pObj =  new QRadioButton( hbqt_par_QWidget( 1 ) ) ;
+      pObj = new QRadioButton( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QRadioButton( ( void * ) pObj, true ) );
 }

@@ -182,13 +182,13 @@ HB_FUNC( QT_QKEYSEQUENCE )
    QKeySequence * pObj = NULL;
 
    if( HB_ISPOINTER( 1 ) )
-      pObj = ( QKeySequence * ) new QKeySequence( *hbqt_par_QKeySequence( 1 ) ) ;
+      pObj = new QKeySequence( *hbqt_par_QKeySequence( 1 ) ) ;
    else if( HB_ISCHAR( 1 ) )
-      pObj = ( QKeySequence * ) new QKeySequence( hbqt_par_QString( 1 ) ) ;
+      pObj = new QKeySequence( hbqt_par_QString( 1 ) ) ;
    else if( HB_ISNUM( 1 ) )
-      pObj = ( QKeySequence * ) new QKeySequence( hb_parni( 1 ) ) ;
+      pObj = new QKeySequence( hb_parni( 1 ) ) ;
    else
-      pObj = ( QKeySequence * ) new QKeySequence() ;
+      pObj = new QKeySequence() ;
 
    hb_retptrGC( hbqt_gcAllocate_QKeySequence( ( void * ) pObj, true ) );
 }

@@ -193,7 +193,7 @@ HB_FUNC( QT_QSTANDARDITEMMODEL )
 {
    QStandardItemModel * pObj = NULL;
 
-   pObj =  new QStandardItemModel( hbqt_par_QObject( 1 ) ) ;
+   pObj = new QStandardItemModel( hbqt_par_QObject( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QStandardItemModel( ( void * ) pObj, true ) );
 }

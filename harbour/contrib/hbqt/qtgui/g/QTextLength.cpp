@@ -175,7 +175,7 @@ HB_FUNC( QT_QTEXTLENGTH )
 {
    QTextLength * pObj = NULL;
 
-   pObj =  new QTextLength() ;
+   pObj = new QTextLength() ;
 
    hb_retptrGC( hbqt_gcAllocate_QTextLength( ( void * ) pObj, true ) );
 }

@@ -178,7 +178,7 @@ HB_FUNC( QT_QSTYLEOPTIONTOOLBUTTON )
 {
    QStyleOptionToolButton * pObj = NULL;
 
-   pObj =  new QStyleOptionToolButton() ;
+   pObj = new QStyleOptionToolButton() ;
 
    hb_retptrGC( hbqt_gcAllocate_QStyleOptionToolButton( ( void * ) pObj, true ) );
 }

@@ -179,7 +179,7 @@ HB_FUNC( QT_QSTYLEOPTIONHEADER )
 {
    QStyleOptionHeader * pObj = NULL;
 
-   pObj =  new QStyleOptionHeader() ;
+   pObj = new QStyleOptionHeader() ;
 
    hb_retptrGC( hbqt_gcAllocate_QStyleOptionHeader( ( void * ) pObj, true ) );
 }

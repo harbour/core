@@ -88,13 +88,6 @@
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$
- *     oFont := QFont():new()
- *     oFont := QFont():new( cFontName )
- *     oFont := QFont():new( cFontName, nPointSize )
- *     oFont := QFont():new( cFontName, nPointSize, nWeight )
- *     oFont := QFont():new( cFontName, nPointSize, nWeight, lItalic )
- *     oFont := QFont():new( pFont )
- *     oFont := QFont():new( pFont, pPaintDevice )
  * 
  *  $TESTS$
  * 

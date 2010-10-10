@@ -182,7 +182,7 @@ HB_FUNC( QT_QERRORMESSAGE )
 {
    QErrorMessage * pObj = NULL;
 
-   pObj =  new QErrorMessage( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QErrorMessage( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QErrorMessage( ( void * ) pObj, true ) );
 }

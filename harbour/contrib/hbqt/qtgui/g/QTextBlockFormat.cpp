@@ -185,11 +185,11 @@ HB_FUNC( QT_QTEXTBLOCKFORMAT )
 
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj =  new QTextBlockFormat( *hbqt_par_QTextBlockFormat( 1 ) ) ;
+      pObj = new QTextBlockFormat( *hbqt_par_QTextBlockFormat( 1 ) ) ;
    }
    else
    {
-      pObj =  new QTextBlockFormat() ;
+      pObj = new QTextBlockFormat() ;
    }
 
    hb_retptrGC( hbqt_gcAllocate_QTextBlockFormat( ( void * ) pObj, true ) );

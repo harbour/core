@@ -188,7 +188,7 @@ HB_FUNC( QT_QSYSTEMTRAYICON )
 {
    QSystemTrayIcon * pObj = NULL;
 
-   pObj =  new QSystemTrayIcon( hbqt_par_QObject( 1 ) ) ;
+   pObj = new QSystemTrayIcon( hbqt_par_QObject( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QSystemTrayIcon( ( void * ) pObj, true ) );
 }

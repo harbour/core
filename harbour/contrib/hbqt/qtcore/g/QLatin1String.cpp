@@ -169,7 +169,7 @@ HB_FUNC( QT_QLATIN1STRING )
 {
    QLatin1String * pObj = NULL;
 
-   pObj =  new QLatin1String( hb_parcx( 1 ) ) ;
+   pObj = new QLatin1String( hb_parcx( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QLatin1String( ( void * ) pObj, true ) );
 }

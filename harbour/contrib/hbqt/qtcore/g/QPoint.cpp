@@ -109,6 +109,7 @@
 
 /*
  * QPoint ()
+ * QPoint ( const QPoint & point )
  * QPoint ( int x, int y )
  * ~QPoint ()
  */
@@ -173,15 +174,15 @@ HB_FUNC( QT_QPOINT )
 
    if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
-      pObj =  new QPoint( hb_parni( 1 ), hb_parni( 2 ) ) ;
+      pObj = new QPoint( hb_parni( 1 ), hb_parni( 2 ) ) ;
    }
    else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj =  new QPoint( *hbqt_par_QPoint( 1 ) ) ;
+      pObj = new QPoint( *hbqt_par_QPoint( 1 ) ) ;
    }
    else
    {
-      pObj =  new QPoint() ;
+      pObj = new QPoint() ;
    }
 
    hb_retptrGC( hbqt_gcAllocate_QPoint( ( void * ) pObj, true ) );

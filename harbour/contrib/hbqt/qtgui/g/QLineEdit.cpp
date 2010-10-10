@@ -188,7 +188,7 @@ HB_FUNC( QT_QLINEEDIT )
 {
    QLineEdit * pObj = NULL;
 
-   pObj =  new QLineEdit( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QLineEdit( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QLineEdit( ( void * ) pObj, true ) );
 }

@@ -186,7 +186,7 @@ HB_FUNC( QT_QSTRINGLIST )
 {
    QStringList * pObj = NULL;
 
-   pObj =  new QStringList() ;
+   pObj = new QStringList() ;
 
    hb_retptrGC( hbqt_gcAllocate_QStringList( ( void * ) pObj, true ) );
 }

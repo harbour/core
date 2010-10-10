@@ -187,7 +187,7 @@ HB_FUNC( QT_QTABWIDGET )
 {
    QTabWidget * pObj = NULL;
 
-   pObj =  new QTabWidget( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QTabWidget( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QTabWidget( ( void * ) pObj, true ) );
 }

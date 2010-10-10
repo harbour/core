@@ -70,10 +70,6 @@
  *  $DESCRIPTION$
  * 
  *  $EXAMPLES$
- *     oPixmap := QPixmap():new()
- *     oPixmap := QPixmap():new( nWidth, nHeight )
- *     oPixmap := QPixmap():new( cImageFilename )
- *     oPixmap := QPixmap():new( pQPixmap )
  * 
  *  $TESTS$
  * 

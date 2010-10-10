@@ -188,7 +188,7 @@ HB_FUNC( QT_QTEXTFRAME )
 {
    QTextFrame * pObj = NULL;
 
-   pObj =  new QTextFrame( hbqt_par_QTextDocument( 1 ) ) ;
+   pObj = new QTextFrame( hbqt_par_QTextDocument( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QTextFrame( ( void * ) pObj, true ) );
 }

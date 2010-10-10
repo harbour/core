@@ -186,7 +186,7 @@ HB_FUNC( QT_QBOXLAYOUT )
 {
    QBoxLayout * pObj = NULL;
 
-   pObj =  new QBoxLayout( ( QBoxLayout::Direction ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) ;
+   pObj = new QBoxLayout( ( QBoxLayout::Direction ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QBoxLayout( ( void * ) pObj, true ) );
 }

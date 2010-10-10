@@ -59,6 +59,7 @@ QObject  = no
 Inherit  = QGraphicsSceneEvent
 Type     = 
 New      = 
+Constructor = no
 </CLASS>
 
 <CODE>
@@ -69,7 +70,8 @@ New      =
 #include <QtCore/QPoint>
 
 
-/*
+/* 
+ * QGraphicsSceneDragDropEvent ()
  * ~QGraphicsSceneDragDropEvent ()
  */
 HB_FUNC( QT_QGRAPHICSSCENEDRAGDROPEVENT )

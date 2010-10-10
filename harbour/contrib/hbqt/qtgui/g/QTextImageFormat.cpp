@@ -171,7 +171,7 @@ HB_FUNC( QT_QTEXTIMAGEFORMAT )
 {
    QTextImageFormat * pObj = NULL;
 
-   pObj =  new QTextImageFormat() ;
+   pObj = new QTextImageFormat() ;
 
    hb_retptrGC( hbqt_gcAllocate_QTextImageFormat( ( void * ) pObj, true ) );
 }

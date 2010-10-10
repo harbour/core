@@ -190,7 +190,7 @@ HB_FUNC( QT_QTEXTFORMAT )
 {
    QTextFormat * pObj = NULL;
 
-   pObj =  new QTextFormat() ;
+   pObj = new QTextFormat() ;
 
    hb_retptrGC( hbqt_gcAllocate_QTextFormat( ( void * ) pObj, true ) );
 }

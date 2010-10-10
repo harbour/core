@@ -125,7 +125,7 @@
  * QStandardItem ( const QString & text )
  * QStandardItem ( const QIcon & icon, const QString & text )
  * QStandardItem ( int rows, int columns = 1 )
- * virtual ~QStandardItem ()
+ * ~QStandardItem ()
  */
 
 typedef struct
@@ -186,7 +186,7 @@ HB_FUNC( QT_QSTANDARDITEM )
 {
    QStandardItem * pObj = NULL;
 
-   pObj =  new QStandardItem() ;
+   pObj = new QStandardItem() ;
 
    hb_retptrGC( hbqt_gcAllocate_QStandardItem( ( void * ) pObj, true ) );
 }

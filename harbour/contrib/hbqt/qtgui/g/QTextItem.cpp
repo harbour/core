@@ -114,7 +114,7 @@
 
 
 /*
- *
+ * QTextItem ()
  *
  */
 
@@ -176,7 +176,7 @@ HB_FUNC( QT_QTEXTITEM )
 {
    QTextItem * pObj = NULL;
 
-   pObj =  new QTextItem() ;
+   pObj = new QTextItem() ;
 
    hb_retptrGC( hbqt_gcAllocate_QTextItem( ( void * ) pObj, true ) );
 }

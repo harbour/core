@@ -171,7 +171,7 @@ HB_FUNC( QT_QINPUTEVENT )
 {
    QInputEvent * pObj = NULL;
 
-   pObj =  new QInputEvent( ( QEvent::Type ) hb_parni( 1 ), ( Qt::KeyboardModifiers ) hb_parni( 2 ) ) ;
+   pObj = new QInputEvent( ( QEvent::Type ) hb_parni( 1 ), ( Qt::KeyboardModifiers ) hb_parni( 2 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QInputEvent( ( void * ) pObj, true ) );
 }

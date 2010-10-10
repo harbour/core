@@ -178,7 +178,7 @@ HB_FUNC( QT_QSTYLEOPTIONMENUITEM )
 {
    QStyleOptionMenuItem * pObj = NULL;
 
-   pObj =  new QStyleOptionMenuItem() ;
+   pObj = new QStyleOptionMenuItem() ;
 
    hb_retptrGC( hbqt_gcAllocate_QStyleOptionMenuItem( ( void * ) pObj, true ) );
 }

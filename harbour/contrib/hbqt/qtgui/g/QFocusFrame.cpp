@@ -182,7 +182,7 @@ HB_FUNC( QT_QFOCUSFRAME )
 {
    QFocusFrame * pObj = NULL;
 
-   pObj =  new QFocusFrame( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QFocusFrame( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QFocusFrame( ( void * ) pObj, true ) );
 }

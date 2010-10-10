@@ -182,7 +182,7 @@ HB_FUNC( QT_QSCROLLAREA )
 {
    QScrollArea * pObj = NULL;
 
-   pObj =  new QScrollArea( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QScrollArea( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QScrollArea( ( void * ) pObj, true ) );
 }

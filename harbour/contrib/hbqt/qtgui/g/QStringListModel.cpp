@@ -182,7 +182,7 @@ HB_FUNC( QT_QSTRINGLISTMODEL )
 {
    QStringListModel * pObj = NULL;
 
-   pObj =  new QStringListModel() ;
+   pObj = new QStringListModel() ;
 
    hb_retptrGC( hbqt_gcAllocate_QStringListModel( ( void * ) pObj, true ) );
 }

@@ -111,6 +111,7 @@
 /*
  * HBQGraphicsItem ()
  * HBQGraphicsItem ( QGraphicsItem * parent )
+ * HBQGraphicsItem ( int type, QGraphicsItem * parent )
  * ~HBQGraphicsItem ()
  */
 

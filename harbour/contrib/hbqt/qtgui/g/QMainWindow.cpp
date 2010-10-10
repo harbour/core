@@ -202,7 +202,7 @@ HB_FUNC( QT_QMAINWINDOW )
 {
    QMainWindow * pObj = NULL;
 
-   pObj =  new QMainWindow( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
+   pObj = new QMainWindow( hbqt_par_QWidget( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QMainWindow( ( void * ) pObj, true ) );
 }

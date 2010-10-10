@@ -176,7 +176,7 @@ HB_FUNC( QT_QSTYLEOPTIONSIZEGRIP )
 {
    QStyleOptionSizeGrip * pObj = NULL;
 
-   pObj =  new QStyleOptionSizeGrip() ;
+   pObj = new QStyleOptionSizeGrip() ;
 
    hb_retptrGC( hbqt_gcAllocate_QStyleOptionSizeGrip( ( void * ) pObj, true ) );
 }

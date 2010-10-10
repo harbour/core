@@ -187,7 +187,7 @@ HB_FUNC( QT_QCOMBOBOX )
 {
    QComboBox * pObj = NULL;
 
-   pObj =  new QComboBox( hbqt_par_QWidget( 1 ) ) ;
+   pObj = new QComboBox( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QComboBox( ( void * ) pObj, true ) );
 }

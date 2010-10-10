@@ -111,6 +111,7 @@
  * QPointF ()
  * QPointF ( const QPoint & point )
  * QPointF ( qreal x, qreal y )
+ * ~QPointF ()
  */
 
 typedef struct
@@ -173,15 +174,15 @@ HB_FUNC( QT_QPOINTF )
 
    if( hb_pcount() == 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
-      pObj =  new QPointF( ( qreal ) hb_parnd( 1 ), ( qreal ) hb_parnd( 2 ) ) ;
+      pObj = new QPointF( ( qreal ) hb_parnd( 1 ), ( qreal ) hb_parnd( 2 ) ) ;
    }
    else if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      pObj =  new QPointF( *hbqt_par_QPoint( 1 ) ) ;
+      pObj = new QPointF( *hbqt_par_QPoint( 1 ) ) ;
    }
    else
    {
-      pObj =  new QPointF() ;
+      pObj = new QPointF() ;
    }
 
    hb_retptrGC( hbqt_gcAllocate_QPointF( ( void * ) pObj, true ) );

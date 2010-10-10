@@ -184,9 +184,9 @@ HB_FUNC( QT_QTOOLBAR )
    QToolBar * pObj = NULL;
 
    if( hb_param( 1, HB_IT_STRING ) )
-      pObj =  new QToolBar( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) ;
+      pObj = new QToolBar( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) ;
    else
-      pObj =  new QToolBar( hbqt_par_QWidget( 1 ) ) ;
+      pObj = new QToolBar( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QToolBar( ( void * ) pObj, true ) );
 }

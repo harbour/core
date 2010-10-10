@@ -111,6 +111,7 @@
 /*
  * QCheckBox ( QWidget * parent = 0 )
  * QCheckBox ( const QString & text, QWidget * parent = 0 )
+ * ~QCheckBox ()
  */
 
 typedef struct
@@ -184,11 +185,11 @@ HB_FUNC( QT_QCHECKBOX )
 
    if( hb_pcount() >= 1 && HB_ISCHAR( 1 ) )
    {
-      pObj =  new QCheckBox( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) ;
+      pObj = new QCheckBox( hbqt_par_QString( 1 ), hbqt_par_QWidget( 2 ) ) ;
    }
    else
    {
-      pObj =  new QCheckBox( hbqt_par_QWidget( 1 ) ) ;
+      pObj = new QCheckBox( hbqt_par_QWidget( 1 ) ) ;
    }
 
    hb_retptrGC( hbqt_gcAllocate_QCheckBox( ( void * ) pObj, true ) );

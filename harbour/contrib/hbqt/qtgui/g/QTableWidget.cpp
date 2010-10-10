@@ -184,9 +184,9 @@ HB_FUNC( QT_QTABLEWIDGET )
    QTableWidget * pObj = NULL;
 
    if( hb_pcount() >= 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
-      pObj =  new QTableWidget( hb_parni( 1 ), hb_parni( 2 ), hbqt_par_QWidget( 3 ) ) ;
+      pObj = new QTableWidget( hb_parni( 1 ), hb_parni( 2 ), hbqt_par_QWidget( 3 ) ) ;
    else
-      pObj =  new QTableWidget( hbqt_par_QWidget( 1 ) ) ;
+      pObj = new QTableWidget( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_QTableWidget( ( void * ) pObj, true ) );
 }

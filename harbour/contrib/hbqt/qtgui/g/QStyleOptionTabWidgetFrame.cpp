@@ -176,7 +176,7 @@ HB_FUNC( QT_QSTYLEOPTIONTABWIDGETFRAME )
 {
    QStyleOptionTabWidgetFrame * pObj = NULL;
 
-   pObj =  new QStyleOptionTabWidgetFrame() ;
+   pObj = new QStyleOptionTabWidgetFrame() ;
 
    hb_retptrGC( hbqt_gcAllocate_QStyleOptionTabWidgetFrame( ( void * ) pObj, true ) );
 }

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * QT Source Generator for Harbour
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,18 +60,6 @@ Type     = PlainObject
 New      = 
 </CLASS>
 
-<DOC>
-oRectF := QRectF():new()
-oRectF := QRectF():new( pQRectF_other )
-oRectF := QRectF():new( pQPoint_topLeft, pQPoint_bottomRight )
-oRectF := QRectF():new( nX, nY, nWidth, nHeight )
-
-/* TODO:
- *
- * oRect := QRectF():new( pQPoint_topLeft, pQSize_size )
- */
-</DOC>
-
 <CODE>
 #include <QtCore/QRectF>
 
@@ -88,19 +76,19 @@ HB_FUNC( QT_QRECTF )
 {
    if( hb_pcount() == 1 && HB_ISPOINTER( 1 ) )
    {
-      __HB_RETPTRGC__( ( QRectF* ) new QRectF( *hbqt_par_QRectF( 1 ) ) );
+      __HB_RETPTRGC__( new QRectF( *hbqt_par_QRectF( 1 ) ) );
    }
    else if( hb_pcount() == 2 && HB_ISPOINTER( 1 ) && HB_ISPOINTER( 2 ) )
    {
-      __HB_RETPTRGC__( ( QRectF* ) new QRectF( *hbqt_par_QPoint( 1 ), *hbqt_par_QPoint( 2 ) ) );
+      __HB_RETPTRGC__( new QRectF( *hbqt_par_QPoint( 1 ), *hbqt_par_QPoint( 2 ) ) );
    }
    else if( hb_pcount() == 4 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) && HB_ISNUM( 4 ) )
    {
-      __HB_RETPTRGC__( ( QRectF* ) new QRectF( hb_parnd( 1 ), hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ) ) );
+      __HB_RETPTRGC__( new QRectF( hb_parnd( 1 ), hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ) ) );
    }
    else
    {
-      __HB_RETPTRGC__( ( QRectF* ) new QRectF() );
+      __HB_RETPTRGC__( new QRectF() );
    }
 }
 </CODE>

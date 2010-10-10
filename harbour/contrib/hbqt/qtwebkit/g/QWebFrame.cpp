@@ -162,7 +162,7 @@ void * hbqt_gcAllocate_QWebFrame( void * pObj, bool bNew )
 
 HB_FUNC( QT_QWEBFRAME )
 {
-   // __HB_RETPTRGC__( ( QWebFrame* ) new QWebFrame() );
+   // __HB_RETPTRGC__( new QWebFrame() );
 }
 
 /*
