@@ -858,7 +858,7 @@ STATIC FUNCTION hbide_qCursorDownInsert( qCursor )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:copyBlockContents( aCord )
-   LOCAL nT, nL, nB, nR, nW, i, cLine, nMode, qClip, oLine
+   LOCAL nT, nL, nB, nR, nW, i, cLine, nMode, qClip
    LOCAL cClip := ""
 
    HB_TRACE( HB_TR_DEBUG, "IdeEdit:copyBlockContents( aCord )" )
@@ -871,7 +871,9 @@ METHOD IdeEdit:copyBlockContents( aCord )
    nW := nR - nL
    FOR i := nT TO nB
       cLine := ::getLine( i + 1 )
-      oLine := cLine
+      cLine := strtran( cLine, chr( 13 ) )
+      cLine := strtran( cLine, chr( 10 ) )
+
       IF nMode == selectionMode_stream
          IF aCord[ 1 ] > aCord[ 3 ]  // Selection - bottom to top
             IF i == nT .AND. i == nB
@@ -900,7 +902,7 @@ METHOD IdeEdit:copyBlockContents( aCord )
       ENDIF
 
       aadd( ::aBlockCopyContents, cLine )
-      cClip += cLine + iif( nT == nB, "", iif( i < nB, hb_eol(), iif( cLine == oLine, hb_eol(), "" ) ) )
+      cClip += cLine + iif( nT == nB, "", iif( i < nB, hb_eol(), "" ) )
    NEXT
 
    hbide_blockContents( { nMode, ::aBlockCopyContents } )
