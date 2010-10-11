@@ -897,6 +897,18 @@ FUNCTION hbide_getNextUniqueID()
    RETURN ++s_nCount
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION hbide_getNextIDasString( cString )
+
+   STATIC hIDs := {=>}
+
+   IF ! hb_hHasKey( hIDs, cString )
+      hIDs[ cString ] := 0
+   ENDIF
+
+   RETURN cString + "_" + hb_ntos( ++hIDs[ cString ] )
+
+/*----------------------------------------------------------------------*/
 /*
  * Check if cFilename has a extension... and add cDefaultExt if not exist.
  * 01/01/2010 - 20:48:10 - vailtom

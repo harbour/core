@@ -1057,7 +1057,8 @@ METHOD HbIde:manageFocusInEditor()
    LOCAL qEdit
 
    IF !empty( qEdit := ::oEM:getEditCurrent() )
-      qEdit:setFocus()
+//      HB_TRACE( HB_TR_ALWAYS, 1000001 )
+      qEdit:setFocus( 0 )
    ENDIF
 
    RETURN self

@@ -103,6 +103,7 @@ CREATE CLASS HBQTableView INHERIT HbQtObjectHandler, HB_QTableView FUNCTION HB_H
 
    METHOD  new( ... )
 
+   METHOD  hbSetBlock                    // ( xBlock )                                         -> NIL
 
    ENDCLASS
 
@@ -114,4 +115,16 @@ METHOD HBQTableView:new( ... )
    NEXT
    ::pPtr := Qt_HBQTableView( ... )
    RETURN Self
+
+
+METHOD HBQTableView:hbSetBlock( ... )
+   SWITCH PCount()
+   CASE 1
+      DO CASE
+      CASE (  hb_pvalue( 1 ) != NIL )
+         RETURN Qt_HBQTableView_hbSetBlock( ::pPtr, ... )
+      ENDCASE
+      EXIT
+   ENDSWITCH
+   RETURN hbqt_error()
 

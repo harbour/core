@@ -136,6 +136,7 @@ METHOD HbqToolbar:create( cName, oParent )
    ::oWidget:setIconSize( ::size )
    ::oWidget:setMovable( ::moveable )
    ::oWidget:setFloatable( ::floatable )
+   ::oWidget:setFocusPolicy( Qt_NoFocus )
 
    RETURN Self
 
@@ -209,9 +210,7 @@ METHOD HbqToolbar:execEvent( cEvent, p, p1 )
 METHOD HbqToolbar:addWidget( cName, qWidget )
    LOCAL qAction
 
-   STATIC nID := 0
-
-   DEFAULT cName TO "IdeToolButtonWidget_" + hb_ntos( ++nID )
+   DEFAULT cName TO hbide_getNextIDasString( "IdeToolButtonWidget" )
 
    qAction := QWidgetAction( ::oWidget )
    qAction:setDefaultWidget( qWidget )
@@ -226,18 +225,17 @@ METHOD HbqToolbar:addWidget( cName, qWidget )
 METHOD HbqToolbar:addToolButton( cName, cDesc, cImage, bAction, lCheckable, lDragEnabled )
    LOCAL oButton
 
-   STATIC nID := 0
-
-   DEFAULT cName        TO "IdeToolButton_" + hb_ntos( ++nID )
+   DEFAULT cName        TO hbide_getNextIDasString( "IdeToolButton" )
    DEFAULT cDesc        TO ""
    DEFAULT lCheckable   TO .f.
    DEFAULT lDragEnabled TO .f.
 
-   oButton := QToolButton( ::oWidget )
+   oButton := QToolButton() // ::oWidget )
    oButton:setObjectName( cName )
    oButton:setTooltip( cDesc )
    oButton:setIcon( cImage )
    oButton:setCheckable( lCheckable )
+   oButton:setFocusPolicy( Qt_NoFocus )
 
    IF lDragEnabled
       oButton:connect( QEvent_MouseButtonPress  , {|p| ::execEvent( "QEvent_MousePress"  , p, cName ) } )

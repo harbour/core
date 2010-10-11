@@ -2120,63 +2120,6 @@
 
 /*----------------------------------------------------------------------*/
 
-/*
- *   DEFINES HBQt CODEBLOCKs
- *
- *   Format:
- *   HBQT_(Qt class initials)_(Qt overloaded member)
- */
-
-#define HBQT_QAIM_data                            1001
-#define HBQT_QAIM_flags                           1003
-#define HBQT_QAIM_headerData                      2001
-#define HBQT_QAIM_rowCount                        3001
-#define HBQT_QAIM_columnCount                     3002
-
-/*----------------------------------------------------------------------*/
-
-#define HBQT_GRAPHICSITEM_NONE                    0
-#define HBQT_GRAPHICSITEM_RECT                    1
-#define HBQT_GRAPHICSITEM_LINE                    2
-#define HBQT_GRAPHICSITEM_ELLIPSE                 3
-#define HBQT_GRAPHICSITEM_ARC                     4
-#define HBQT_GRAPHICSITEM_CHORD                   5
-#define HBQT_GRAPHICSITEM_POLYGON                 6
-#define HBQT_GRAPHICSITEM_PIE                     7
-#define HBQT_GRAPHICSITEM_PATH                    8
-#define HBQT_GRAPHICSITEM_CHART                   9
-#define HBQT_GRAPHICSITEM_GRADIENT                10
-#define HBQT_GRAPHICSITEM_PICTURE                 11
-#define HBQT_GRAPHICSITEM_BARCODE                 12
-#define HBQT_GRAPHICSITEM_TEXT                    13
-#define HBQT_GRAPHICSITEM_SIMPLETEXT              14
-#define HBQT_GRAPHICSITEM_ROUNDRECT               15
-
-#define HBQT_GRAPHICSITEM_LINE_HORIZONTAL         0
-#define HBQT_GRAPHICSITEM_LINE_VERTICAL           1
-#define HBQT_GRAPHICSITEM_LINE_BACKWARDDIAGONAL   2
-#define HBQT_GRAPHICSITEM_LINE_FORWARDDIAGONAL    3
-
-#define HBQT_GRAPHICSITEM_TEXT_DRAW_NONE          0
-#define HBQT_GRAPHICSITEM_TEXT_DRAW_TOP           1
-#define HBQT_GRAPHICSITEM_TEXT_DRAW_BOTTOM        2
-#define HBQT_GRAPHICSITEM_TEXT_DRAW_ABOVE         3
-#define HBQT_GRAPHICSITEM_TEXT_DRAW_BELOW         4
-
-#define HBQT_GRAPHICSITEM_TEXT_SIZEPOLICY_NONE    0
-#define HBQT_GRAPHICSITEM_TEXT_SIZEPOLICY_AUTO    1
-#define HBQT_GRAPHICSITEM_TEXT_SIZEPOLICY_STRETCH 2
-
-#define HBQT_GRAPHICSITEM_IMAGE_NO_FRAME          0
-#define HBQT_GRAPHICSITEM_IMAGE_PICTURE_BIND      1
-#define HBQT_GRAPHICSITEM_IMAGE_PICTURE_BOX       2
-
-#define HBQT_GRAPHICSITEM_RESIZE_ITEM_TO_PICTURE  1
-#define HBQT_GRAPHICSITEM_CENTER_PICTURE_TO_ITEM  2
-#define HBQT_GRAPHICSITEM_RESIZE_PICTURE_TO_ITEM_KEEP_ASPECT_RATIO     3
-#define HBQT_GRAPHICSITEM_RESIZE_PICTURE_TO_ITEM_IGNORE_ASPECT_RATIO   4
-
-
 #define QGraphicsScene_BspTreeIndex                          0
 #define QGraphicsScene_NoIndex                               -1
 
@@ -2308,6 +2251,70 @@
 #define QPainter_SmoothPixmapTransform                       0x04
 #define QPainter_HighQualityAntialiasing                     0x08
 #define QPainter_NonCosmeticDefaultPen                       0x10
+
+/*----------------------------------------------------------------------*/
+//                        HBQT Defined Constants
+/*----------------------------------------------------------------------*/
+/*
+ *   DEFINES HBQt CODEBLOCKs
+ *
+ *   Format:
+ *   HBQT_(Qt class initials)_(Qt overloaded member)
+ */
+
+#define HBQT_QAIM_data                            1001
+#define HBQT_QAIM_flags                           1003
+#define HBQT_QAIM_headerData                      2001
+#define HBQT_QAIM_rowCount                        3001
+#define HBQT_QAIM_columnCount                     3002
+
+/*----------------------------------------------------------------------*/
+
+#define HBQT_GRAPHICSITEM_NONE                    0
+#define HBQT_GRAPHICSITEM_RECT                    1
+#define HBQT_GRAPHICSITEM_LINE                    2
+#define HBQT_GRAPHICSITEM_ELLIPSE                 3
+#define HBQT_GRAPHICSITEM_ARC                     4
+#define HBQT_GRAPHICSITEM_CHORD                   5
+#define HBQT_GRAPHICSITEM_POLYGON                 6
+#define HBQT_GRAPHICSITEM_PIE                     7
+#define HBQT_GRAPHICSITEM_PATH                    8
+#define HBQT_GRAPHICSITEM_CHART                   9
+#define HBQT_GRAPHICSITEM_GRADIENT                10
+#define HBQT_GRAPHICSITEM_PICTURE                 11
+#define HBQT_GRAPHICSITEM_BARCODE                 12
+#define HBQT_GRAPHICSITEM_TEXT                    13
+#define HBQT_GRAPHICSITEM_SIMPLETEXT              14
+#define HBQT_GRAPHICSITEM_ROUNDRECT               15
+
+#define HBQT_GRAPHICSITEM_LINE_HORIZONTAL         0
+#define HBQT_GRAPHICSITEM_LINE_VERTICAL           1
+#define HBQT_GRAPHICSITEM_LINE_BACKWARDDIAGONAL   2
+#define HBQT_GRAPHICSITEM_LINE_FORWARDDIAGONAL    3
+
+#define HBQT_GRAPHICSITEM_TEXT_DRAW_NONE          0
+#define HBQT_GRAPHICSITEM_TEXT_DRAW_TOP           1
+#define HBQT_GRAPHICSITEM_TEXT_DRAW_BOTTOM        2
+#define HBQT_GRAPHICSITEM_TEXT_DRAW_ABOVE         3
+#define HBQT_GRAPHICSITEM_TEXT_DRAW_BELOW         4
+
+#define HBQT_GRAPHICSITEM_TEXT_SIZEPOLICY_NONE    0
+#define HBQT_GRAPHICSITEM_TEXT_SIZEPOLICY_AUTO    1
+#define HBQT_GRAPHICSITEM_TEXT_SIZEPOLICY_STRETCH 2
+
+#define HBQT_GRAPHICSITEM_IMAGE_NO_FRAME          0
+#define HBQT_GRAPHICSITEM_IMAGE_PICTURE_BIND      1
+#define HBQT_GRAPHICSITEM_IMAGE_PICTURE_BOX       2
+
+#define HBQT_GRAPHICSITEM_RESIZE_ITEM_TO_PICTURE  1
+#define HBQT_GRAPHICSITEM_CENTER_PICTURE_TO_ITEM  2
+#define HBQT_GRAPHICSITEM_RESIZE_PICTURE_TO_ITEM_KEEP_ASPECT_RATIO     3
+#define HBQT_GRAPHICSITEM_RESIZE_PICTURE_TO_ITEM_IGNORE_ASPECT_RATIO   4
+
+/*----------------------------------------------------------------------*/
+//              HBQTableView:hbSetBlock() fired constants
+
+#define HBQT_HBQTABLEVIEW_scrollContentsBy        1
 
 /*----------------------------------------------------------------------*/
 

@@ -281,6 +281,8 @@ METHOD IdeEdit:create( oIde, oEditor, nMode )
    ::qEdit:ensureCursorVisible()
    ::qEdit:setContextMenuPolicy( Qt_CustomContextMenu )
    ::qEdit:setTabChangesFocus( .f. )
+   ::qEdit:setFocusPolicy( Qt_StrongFocus )
+   ::qEdit:setObjectName( hbide_getNextIDasString( "HBQPlainTextEdit" ) )
 
    ::setFont()
 
@@ -871,7 +873,7 @@ METHOD IdeEdit:copyBlockContents( aCord )
       cLine := ::getLine( i + 1 )
       oLine := cLine
       IF nMode == selectionMode_stream
-         IF aCord[ 1 ] > aCord[ 3 ]
+         IF aCord[ 1 ] > aCord[ 3 ]  // Selection - bottom to top
             IF i == nT .AND. i == nB
                cLine := substr( cLine, min( aCord[ 2 ], aCord[ 4 ] ) + 1, nW )
             ELSEIF i == aCord[ 1 ]
@@ -879,7 +881,7 @@ METHOD IdeEdit:copyBlockContents( aCord )
             ELSEIF i == aCord[ 3 ]
                cLine := substr( cLine, aCord[ 4 ] + 1 )
             ENDIF
-         ELSE
+         ELSE                        // Selection - top to bottom or same row
             IF i == nT .AND. i == nB
                cLine := substr( cLine, min( aCord[ 2 ], aCord[ 4 ] ) + 1, nW )
             ELSEIF i == aCord[ 1 ]
@@ -898,10 +900,8 @@ METHOD IdeEdit:copyBlockContents( aCord )
       ENDIF
 
       aadd( ::aBlockCopyContents, cLine )
-      cClip += cLine + iif( i < nB, hb_eol(), iif( cLine == oLine, hb_eol(), "" ) )
+      cClip += cLine + iif( nT == nB, "", iif( i < nB, hb_eol(), iif( cLine == oLine, hb_eol(), "" ) ) )
    NEXT
-
- * HB_TRACE( HB_TR_DEBUG, "copyBlockContents", cClip )
 
    hbide_blockContents( { nMode, ::aBlockCopyContents } )
 
@@ -919,12 +919,7 @@ METHOD IdeEdit:pasteBlockContents( nMode )
    IF ::lReadOnly
       RETURN Self
    ENDIF
-
-// aCopy := hbide_memoToArray( QClipboard():text() )
-   aCopy := hb_ATokens( StrTran( RTrim( QClipboard():text() ), Chr( 13 ) + Chr( 10 ), _EOL ), _EOL )
-   IF empty( aCopy[ len( aCopy ) ] )
-      hb_adel( aCopy, len( aCopy ), .t. )
-   ENDIF
+   aCopy := hb_ATokens( StrTran( QClipboard():text(), Chr( 13 ) + Chr( 10 ), _EOL ), _EOL )
    IF empty( aCopy )
       RETURN Self
    ENDIF
@@ -946,8 +941,8 @@ METHOD IdeEdit:pasteBlockContents( nMode )
 
    qCursor:beginEditBlock()
    //
-   DO CASE
-   CASE nPasteMode == selectionMode_column
+   SWITCH nPasteMode
+   CASE selectionMode_column
       FOR i := 1 TO len( aCopy )
          qCursor:insertText( aCopy[ i ] )
          IF i < len( aCopy )
@@ -962,23 +957,23 @@ METHOD IdeEdit:pasteBlockContents( nMode )
             qCursor:movePosition( QTextCursor_Right      , QTextCursor_MoveAnchor, nCol )
          ENDIF
       NEXT
-
-   CASE nPasteMode == selectionMode_stream
+      EXIT
+   CASE selectionMode_stream
       FOR i := 1 TO len( aCopy )
          qCursor:insertText( aCopy[ i ] )
          IF i < len( aCopy )
             qCursor:insertText( hb_eol() )
          ENDIF
       NEXT
-
-   CASE nPasteMode == selectionMode_line
+      EXIT
+   CASE selectionMode_line
       qCursor:movePosition( QTextCursor_StartOfLine, QTextCursor_MoveAnchor       )
       FOR i := 1 TO len( aCopy )
          qCursor:insertText( aCopy[ i ] )
          qCursor:insertBlock()
       NEXT
-
-   ENDCASE
+      EXIT
+   ENDSWITCH
    //
    qCursor:endEditBlock()
    ::qEdit:ensureCursorVisible()
@@ -1441,8 +1436,11 @@ METHOD IdeEdit:toggleHorzRuler()
 /* Fired by icon */
 
 METHOD IdeEdit:toggleSelectionMode()
+   LOCAL qFocus
    IF ::oIde:lCurEditsMdi
+      qFocus := QApplication():focusWidget()
       ::qEdit:hbSetSelectionMode( iif( ::oDK:setButtonState( "SelectionMode" ), 2, 1 ), .f. )
+      qFocus:setFocus( 0 )
    ELSE
       ::qEdit:hbSetSelectionMode( iif( ::oAC:getAction( "TB_SelectionMode" ):isChecked(), 2, 1 ), .f. )
    ENDIF

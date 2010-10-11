@@ -427,7 +427,9 @@ METHOD XbpDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
    ENDIF
 
    ::oWidget:setMouseTracking( .T. )
-   ::oWidget:setFocusPolicy( Qt_StrongFocus )
+   // ::oWidget:setFocusPolicy( Qt_StrongFocus )
+   ::oWidget:setFocusPolicy( Qt_NoFocus )
+   ::oWidget:setObjectName( hbxbp_getNextID( "XBaseDrawingArea" ) )
 
    ::setQtProperty()  /* Using it for one-to-one style sheet management */
 

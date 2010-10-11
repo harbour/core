@@ -150,6 +150,7 @@ METHOD IdeSourcesManager:saveNamedSource( cSource )
    RETURN lSaved
 
 /*----------------------------------------------------------------------*/
+
 METHOD IdeSourcesManager:editSource( cSourceFile, nPos, nHPos, nVPos, cTheme, cView, lAlert, lVisible, aBookMarks )
    LOCAL lNew
 

@@ -87,6 +87,7 @@ HB_FUNC( QT_HBQTABLEVIEW )
 </ENUMS>
 
 <PROTOS>
+void hbSetBlock( PHB_ITEM block )
 </PROTOS>
 
 <SLOTS>

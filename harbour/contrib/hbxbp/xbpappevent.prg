@@ -173,7 +173,7 @@ FUNCTION XbpQKeyEventToAppEvent( pEvent )
    LOCAL c := 0
    LOCAL key, kbm, txt, x, oKeyEvent
 
-   oKeyEvent := QKeyEvent():from( pEvent )
+   oKeyEvent := HB_QKeyEvent():from( pEvent )
 
    key := oKeyEvent:key()
    kbm := oKeyEvent:modifiers()

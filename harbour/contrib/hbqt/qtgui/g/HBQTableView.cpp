@@ -99,7 +99,7 @@
 /*----------------------------------------------------------------------*/
 
 /*
- *  Constructed[ 0/0 [ 0% ] ]
+ *  Constructed[ 1/1 [ 100.00% ] ]
  *
  */
 
@@ -187,6 +187,18 @@ HB_FUNC( QT_HBQTABLEVIEW )
    pObj = new HBQTableView( hbqt_par_QWidget( 1 ) ) ;
 
    hb_retptrGC( hbqt_gcAllocate_HBQTableView( ( void * ) pObj, true ) );
+}
+
+/*
+ * void hbSetBlock( PHB_ITEM block )
+ */
+HB_FUNC( QT_HBQTABLEVIEW_HBSETBLOCK )
+{
+   HBQTableView * p = hbqt_par_HBQTableView( 1 );
+   if( p )
+   {
+      ( p )->hbSetBlock( hb_param( 2, HB_IT_ANY ) );
+   }
 }
 
 

@@ -137,7 +137,8 @@ METHOD XbpTabPage:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget := QWidget()
    ::oWidget:setContextMenuPolicy( Qt_CustomContextMenu )
-   ::oWidget:setObjectName( "Tab_Page" )
+   ::oWidget:setObjectName( hbxbp_getNextID( "XBaseTabPage" ) )
+   ::oWidget:setFocusPolicy( Qt_NoFocus )
 
    oPar:oWidget:addTab( ::oWidget, ::caption )
 
@@ -284,7 +285,8 @@ METHOD XbpTabWidget:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
    ::oWidget := QTabWidget( ::pParent )
    ::oWidget:setContextMenuPolicy( Qt_CustomContextMenu )
-   ::oWidget:setObjectName( "Tab_Widget" )
+   ::oWidget:setObjectName( hbxbp_getNextID( "XbaseTabWidget" ) )
+   ::oWidget:setFocusPolicy( Qt_NoFocus )
 
    ::connect()
    ::setPosAndSize()

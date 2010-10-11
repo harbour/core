@@ -183,10 +183,12 @@ METHOD XbpDataRef:setData( xValue, mp2 )
       ENDIF
    #endif
    CASE cClass == "XBPSPINBUTTON"
-      ::oWidget:setValue( ::sl_editBuffer )
+      IF hb_isNumeric( ::sl_editBuffer )
+         ::oWidget:setValue( ::sl_editBuffer )
+      ENDIF
 
    CASE cClass == "XBPSCROLLBAR"
-      IF ::sl_editBuffer <> NIL
+      IF hb_isNumeric( ::sl_editBuffer )
          ::oWidget:setValue( ::sl_editBuffer )
       ENDIF
 

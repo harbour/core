@@ -392,3 +392,15 @@ FUNCTION hbxbp_ConvertAFactFromXBP( cMode, xValue )
    RETURN xValue
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION hbxbp_getNextID( cString )
+
+   STATIC hIDs := {=>}
+
+   IF ! hb_hHasKey( hIDs, cString )
+      hIDs[ cString ] := 0
+   ENDIF
+
+   RETURN cString + "_" + hb_ntos( ++hIDs[ cString ] )
+
+/*----------------------------------------------------------------------*/

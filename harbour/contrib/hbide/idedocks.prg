@@ -628,9 +628,10 @@ HB_TRACE( HB_TR_DEBUG, "projectTree_dropEvent" )
       ENDIF
       EXIT
 
-   CASE "mdiArea_subWindowActivated"
+   CASE "x_mdiArea_subWindowActivated"
       IF ! empty( ::oIde:aMdies )
          IF ( n := ascan( ::oIde:aMdies, {|e| hbqt_IsEqualGcQtPointer( e, p ) } ) )  > 0
+
             ::setView( ::oIde:aMdies[ n ]:objectName() )
 
             IF ! ::oIde:aMdies[ n ]:objectName() == "Stats" .AND. ! empty( ::oEM ) .AND. ! empty( oEdit := ::oEM:getEditorCurrent() )
@@ -694,6 +695,19 @@ HB_TRACE( HB_TR_DEBUG, "projectTree_dropEvent" )
          IF ( n := ascan( ::oIde:aMdies, {|o| o == p } ) )  > 0
             ::aViewsInfo[ n, 3 ] := p1[ 1 ]
             ::aViewsInfo[ n, 4 ] := p1[ 2 ]
+         ENDIF
+         IF p1[ 2 ] >= 8 .AND. ::cWrkView != p:objectName()
+            ::setView( p:objectName() )
+            IF p:objectName() != "Stats" .AND. ! empty( ::oEM ) .AND. ! empty( oEdit := ::oEM:getEditorCurrent() )
+               oEdit:setDocumentProperties()
+               oEdit:qCoEdit:relayMarkButtons()
+               oEdit:qCoEdit:toggleLineNumbers()
+               oEdit:qCoEdit:toggleHorzRuler()
+               oEdit:qCoEdit:toggleCurrentLineHighlightMode()
+               oEdit:qCoEdit:dispStatusInfo()
+               ::oUpDn:show()
+               oEdit:changeThumbnail()
+            ENDIF
          ENDIF
       ENDIF
       EXIT
@@ -1011,7 +1025,7 @@ METHOD IdeDocks:buildMdiToolbar()
    qTBar:addToolButton( "Copy"      , "Copy"                       , hbide_image( "copy"          ), {|| ::oEM:copy()                        }, .f. )
    qTBar:addToolButton( "Paste"     , "Paste"                      , hbide_image( "paste"         ), {|| ::oEM:paste()                       }, .f. )
    qTBar:addToolButton( "SelectAll" , "Select all"                 , hbide_image( "selectall"     ), {|| ::oEM:selectAll()                   }, .f. )
-   qTBar:addToolButton( "SelectionMode", "Selection mode"          , hbide_image( "stream"        ), {|| ::oEM:toggleSelectionMode()         }, .t. )
+   qTBar:addToolButton( "SelectionMode", "Selection mode"          , hbide_image( "stream"        ), {|| ::oEM:toggleSelectionMode(), ::oIDE:manageFocusInEditor() }, .t. )
    qTBar:addWidget( "Label1", sp1 )
    qTBar:addToolButton( "Find"      , "Find / Replace"             , hbide_image( "find"          ), {|| ::oEM:find()                        }, .f. )
    qTBar:addToolButton( "BookMark"  , "Toggle Mark"                , hbide_image( "bookmark"      ), {|| ::oEM:setMark()                     }, .f. )

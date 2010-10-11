@@ -52,6 +52,9 @@
 
 #include "hbqt.h"
 
+#include "hbapiitm.h"
+#include "hbvm.h"
+
 #if QT_VERSION >= 0x040500
 
 #include "hbqt_hbqtableview.h"
@@ -60,50 +63,86 @@
 
 HBQTableView::HBQTableView( QWidget * parent ) : QTableView( parent )
 {
+   block = NULL;
 }
 
 HBQTableView::~HBQTableView()
 {
+   if( block )
+   {
+      hb_itemRelease( block );
+      block = NULL;
+   }
 }
 
-void HBQTableView::keyPressEvent( QKeyEvent * event )
+void HBQTableView::hbSetBlock( PHB_ITEM b )
 {
-   emit sg_keyPressEvent( event );
-}
-
-void HBQTableView::mouseDoubleClickEvent( QMouseEvent * event )
-{
-   emit sg_mouseDoubleClickEvent( event );
-}
-
-void HBQTableView::mouseMoveEvent( QMouseEvent * event )
-{
-   emit sg_mouseMoveEvent( event );
+   if( b )
+   {
+      if( block )
+      {
+         hb_itemRelease( block );
+      }
+      block = hb_itemNew( b );
+   }
 }
 
 void HBQTableView::mousePressEvent( QMouseEvent * event )
 {
-   emit sg_mousePressEvent( event );
+   if( block )
+   {
+      PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::MouseButtonPress );
+      PHB_ITEM p1  = hb_itemPutPtr( NULL, event );
+      hb_vmEvalBlockV( block, 2, p0, p1 );
+      hb_itemRelease( p0 );
+      hb_itemRelease( p1 );
+   }
+   QTableView::mousePressEvent( event );
 }
 
-void HBQTableView::mouseReleaseEvent( QMouseEvent * event )
+void HBQTableView::mouseDoubleClickEvent( QMouseEvent * event )
 {
-   emit sg_mouseReleaseEvent( event );
+   if( block )
+   {
+      PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::MouseButtonDblClick );
+      PHB_ITEM p1  = hb_itemPutPtr( NULL, event );
+      hb_vmEvalBlockV( block, 2, p0, p1 );
+      hb_itemRelease( p0 );
+      hb_itemRelease( p1 );
+   }
+   QTableView::mouseDoubleClickEvent( event );
 }
 
 void HBQTableView::wheelEvent( QWheelEvent * event )
 {
-   emit sg_wheelEvent( event );
+   if( block )
+   {
+      PHB_ITEM p0  = hb_itemPutNI( NULL, QEvent::Wheel );
+      PHB_ITEM p1  = hb_itemPutPtr( NULL, event );
+      hb_vmEvalBlockV( block, 2, p0, p1 );
+      hb_itemRelease( p0 );
+      hb_itemRelease( p1 );
+   }
+   QTableView::wheelEvent( event );
 }
 
-void HBQTableView::resizeEvent( QResizeEvent * event )
+void HBQTableView::scrollContentsBy( int x, int y )
 {
-   emit sg_resizeEvent( event );
+   if( block )
+   {
+      PHB_ITEM p0  = hb_itemPutNI( NULL, HBQT_HBQTABLEVIEW_scrollContentsBy );
+      PHB_ITEM p1  = hb_itemPutNI( NULL, x );
+      PHB_ITEM p2  = hb_itemPutNI( NULL, y );
+      hb_vmEvalBlockV( block, 3, p0, p1, p2 );
+      hb_itemRelease( p0 );
+      hb_itemRelease( p1 );
+      hb_itemRelease( p2 );
+   }
+   QTableView::scrollContentsBy( x, y );
 }
 
 QModelIndex HBQTableView::moveCursor( HBQTableView::CursorAction cursorAction, Qt::KeyboardModifiers modifiers )
 {
-// HB_TRACE( HB_TR_DEBUG, ( "HBQTableView::moveCursor( action=%i %i )", cursorAction, QAbstractItemView::MoveDown ) );
    return QTableView::moveCursor( cursorAction, modifiers );
 }
 
@@ -112,15 +151,8 @@ QModelIndex HBQTableView::navigate( int cursorAction )
    return moveCursor( ( HBQTableView::CursorAction ) cursorAction, ( Qt::KeyboardModifiers ) 0 );
 }
 
-void HBQTableView::scrollContentsBy( int x, int y )
-{
-   emit sg_scrollContentsBy( x, y );
-}
-
 void HBQTableView::scrollTo( const QModelIndex & index, QAbstractItemView::ScrollHint hint )
 {
-// HB_TRACE( HB_TR_DEBUG, ( "HBQTableView::scrollTo( row = %i col = %i )", index.row(), index.column() ) );
-
    QTableView::scrollTo( index, hint );
 }
 

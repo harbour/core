@@ -56,8 +56,12 @@
 #include "hbqtgui.h"
 
 #include <QtGui/QTableView>
+#include <QtGui/QMouseEvent>
+
+#define HBQT_HBQTABLEVIEW_scrollContentsBy        1
 
 /*----------------------------------------------------------------------*/
+
 class HBQTableView : public QTableView
 {
    Q_OBJECT
@@ -66,31 +70,19 @@ public:
    HBQTableView( QWidget * parent = 0 );
    virtual ~HBQTableView();
 
+   PHB_ITEM block;
+
 public slots:
-   void keyPressEvent( QKeyEvent * event );
-   void mouseDoubleClickEvent( QMouseEvent * event );
-   void mouseMoveEvent( QMouseEvent * event );
+   void hbSetBlock( PHB_ITEM b );
+
    void mousePressEvent( QMouseEvent * event );
-   void mouseReleaseEvent( QMouseEvent * event );
+   void mouseDoubleClickEvent( QMouseEvent * event );
    void wheelEvent( QWheelEvent * event );
-   void resizeEvent( QResizeEvent * event );
    void scrollContentsBy( int x, int y );
+
    void scrollTo( const QModelIndex & index, QAbstractItemView::ScrollHint hint = QAbstractItemView::EnsureVisible );
-
    QModelIndex navigate( int cursorAction );
-
    QModelIndex moveCursor( HBQTableView::CursorAction cursorAction, Qt::KeyboardModifiers modifiers );
-
-signals:
-   void sg_keyPressEvent( QKeyEvent * event );
-   void sg_mouseMoveEvent( QMouseEvent * event );
-   void sg_mouseDoubleClickEvent( QMouseEvent * event );
-   void sg_mousePressEvent( QMouseEvent * event );
-   void sg_mouseReleaseEvent( QMouseEvent * event );
-   void sg_wheelEvent( QWheelEvent * event );
-   void sg_resizeEvent( QResizeEvent * event );
-   void sg_moveCursor( HBQTableView::CursorAction cursorAction, Qt::KeyboardModifiers modifiers );
-   void sg_scrollContentsBy( int x, int y );
 };
 
 /*----------------------------------------------------------------------*/
