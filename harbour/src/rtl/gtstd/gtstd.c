@@ -399,10 +399,7 @@ static int hb_gt_std_ReadKey( PHB_GT pGT, int iEventMask )
          {
             HB_BYTE bChar;
             if( hb_fsRead( pGTSTD->hStdin, &bChar, 1 ) == 1 )
-            {
                ch = pGTSTD->keyTransTbl[ bChar ];
-               exit;
-            }
          }
          else /* Remove from the input queue */
             ReadConsoleInput( ( HANDLE ) hb_fsGetOsHandle( pGTSTD->hStdin ), &ir, 1, &dwEvents );
