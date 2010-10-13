@@ -333,6 +333,7 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
    SELF_SETFIELDEXTENT( ( AREAP ) pArea, uiFields );
 
    pItemEof = hb_itemArrayNew( uiFields );
+   pItem = hb_itemNew( NULL );
 
    /* HB_TRACE( HB_TR_ALWAYS, ("fieldcount=%d", iNameLen) ); */
 
@@ -355,6 +356,7 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
       if( ! col )
       {
          hb_itemRelease( pItemEof );
+         hb_itemRelease( pItem );
          szError = ocilibGetError( NULL );
          OCI_StatementFree( st );
          hb_errRT_OCIDD( EG_OPEN, ESQLDD_STMTDESCR + 1001, szError, pArea->szQuery, 0 );
@@ -432,45 +434,45 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
                memset( pStr, ' ', pFieldInfo.uiLen );
                pStr[ pFieldInfo.uiLen ] = '\0';
 
-               pItem = hb_itemPutCLPtr( NULL, pStr, pFieldInfo.uiLen );
+               hb_itemPutCLPtr( pItem, pStr, pFieldInfo.uiLen );
                break;
             }
             case HB_FT_MEMO:
             case HB_FT_VARLENGTH:
             case HB_FT_BLOB:
-               pItem = hb_itemPutC( NULL, NULL );
+               hb_itemPutC( pItem, NULL );
                break;
 
             case HB_FT_INTEGER:
-               pItem = hb_itemPutNI( NULL, 0 );
+               hb_itemPutNI( pItem, 0 );
                break;
 
             case HB_FT_LONG:
                if( pFieldInfo.uiDec == 0 )
-                  pItem = hb_itemPutNLLen( NULL, 0, pFieldInfo.uiLen );
+                  hb_itemPutNLLen( pItem, 0, pFieldInfo.uiLen );
                else
-                  pItem = hb_itemPutNDLen( NULL, 0.0, pFieldInfo.uiLen, pFieldInfo.uiDec );
+                  hb_itemPutNDLen( pItem, 0.0, pFieldInfo.uiLen, pFieldInfo.uiDec );
                break;
 
             case HB_FT_DOUBLE:
-               pItem = hb_itemPutNDLen( NULL, 0.0, pFieldInfo.uiLen, pFieldInfo.uiDec );
+               hb_itemPutNDLen( pItem, 0.0, pFieldInfo.uiLen, pFieldInfo.uiDec );
                break;
 
             case HB_FT_LOGICAL:
-               pItem = hb_itemPutL( NULL, HB_FALSE );
+               hb_itemPutL( pItem, HB_FALSE );
                break;
 
             case HB_FT_DATE:
-               pItem = hb_itemPutDL( NULL, 0 );
+               hb_itemPutDL( pItem, 0 );
                break;
 
             case HB_FT_TIME:
             case HB_FT_TIMESTAMP:
-               pItem = hb_itemPutTDT( NULL, 0, 0 );
+               hb_itemPutTDT( pItem, 0, 0 );
                break;
 
             default:
-               pItem = hb_itemNew( NULL );
+               hb_itemClear( pItem );
                bError = HB_TRUE;
          }
 
@@ -484,6 +486,8 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
       if( bError )
          break;
    }
+
+   hb_itemRelease( pItem );
 
    if( bError )
    {

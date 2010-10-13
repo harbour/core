@@ -60,6 +60,8 @@
 #include "hbapiitm.h"
 #include "hbapifs.h"
 
+#include "xhb.h"
+
 #if defined( HB_OS_WIN )
    #include <windows.h>
 #endif

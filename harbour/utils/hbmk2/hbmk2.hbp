@@ -21,4 +21,4 @@ hbmk2.prg
 
 hbmk2.%{hb_lng}.po
 -hbl=hbmk2.%{hb_lng}.hbl
--lng=hu_HU,pt_BR
+-lng=es_PE,hu_HU,pt_BR
