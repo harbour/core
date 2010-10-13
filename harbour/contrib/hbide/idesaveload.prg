@@ -1663,7 +1663,7 @@ METHOD IdeSetup:viewIt( cFileName, lSaveAs, lSave, lReadOnly, lApplyHiliter )
    LOCAL oUI
 
    oUI := hbide_getUI( "editor", ::oUI:oWidget )
-   oUI:setWindowFlags( Qt_Sheet )
+   oUI:setWindowFlags( Qt_Sheet + Qt_CustomizeWindowHint + Qt_WindowTitleHint + Qt_WindowContextHelpButtonHint )
 
    oUI:q_plainText:setReadOnly( lReadOnly )
    oUI:q_buttonSaveAs:setEnabled( lSaveAs )
