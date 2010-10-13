@@ -182,7 +182,7 @@ METHOD IdeHome:execEvent( nMode, p )
       ENDIF
 
    CASE nMode == browserStat_anchorClicked
-      qUrl  := QUrl():from( p )
+      qUrl  := HB_QUrl():from( p )
       cText := lower( qUrl:toString() )
 
       IF "prj-" $ cText
@@ -250,7 +250,7 @@ METHOD IdeHome:print()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeHome:paintRequested( pPrinter )
-   LOCAL qPrinter := QPrinter():configure( pPrinter )
+   LOCAL qPrinter := HB_QPrinter():from( pPrinter )
 
    ::qCurBrowser:print( qPrinter )
 
@@ -289,7 +289,7 @@ METHOD IdeHome:buildWelcomeTab()
    ::qWelcomeBrowser := qBrw
    ::qCurBrowser     := qBrw
 
-   qBrw:connect( "anchorClicked(QUrl)"               , {|p| ::execEvent( browserStat_anchorClicked, p ) } )
+   qBrw:connect( "anchorClicked(QUrl)"               , {|p| ::execEvent( browserStat_anchorClicked          , p ) } )
    qBrw:connect( "customContextMenuRequested(QPoint)", {|p| ::execEvent( browserWelcome_contextMenuRequested, p ) } )
 
    qSList := QStringList()

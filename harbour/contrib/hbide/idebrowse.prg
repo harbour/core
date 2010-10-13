@@ -493,12 +493,12 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
 
    SWITCH cEvent
    CASE "dockDbu_dragEnterEvent"
-      qEvent := QDragEnterEvent():from( p )
+      qEvent := HB_QDragEnterEvent():from( p )
       qEvent:acceptProposedAction()
       EXIT
 
    CASE "dockDbu_dropEvent"
-      qEvent := QDropEvent():from( p )
+      qEvent := HB_QDropEvent():from( p )
       qMime := qEvent:mimeData()
       IF qMime:hasUrls()
          qList := qMime:hbUrlList()

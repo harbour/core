@@ -566,8 +566,8 @@ METHOD XbpBrowse:connect()
 
    ::oWidget          : connect( QEvent_Resize                       , {|       | ::execSlot( __ev_frame_resized__                   ) } )
 
-   ::qDelegate        : connect( "closeEditor(QWidget,int)"          , {|p,p1   | ::execSlot( __editor_closeEditor__, p, p1          ) } )
-   ::qDelegate        : connect( "commitData(QWidget)"               , {|p      | ::execSlot( __editor_commitData__ , p              ) } )
+HB_TRACE( HB_TR_ALWAYS,    ::qDelegate        : connect( "closeEditor(QWidget,int)"          , {|p,p1   | ::execSlot( __editor_closeEditor__, p, p1          ) } ))
+HB_TRACE( HB_TR_ALWAYS,    ::qDelegate        : connect( "commitData(QWidget)"               , {|p      | ::execSlot( __editor_commitData__ , p              ) } ))
 
    RETURN Self
 
@@ -976,6 +976,7 @@ METHOD XbpBrowse:manageCommitData( pWidget )
    LOCAL oCol    := ::columns[ ::colPos ]
    LOCAL cTyp    := valtype( eval( oCol:block ) )
 
+   HB_TRACE( HB_TR_ALWAYS, cTxt )
    DO CASE
    CASE cTyp == "C"
       oCol:setData( cTxt )
@@ -994,7 +995,7 @@ METHOD XbpBrowse:manageCommitData( pWidget )
 METHOD XbpBrowse:manageEditorClosed( pWidget, nHint )
 
    HB_QLineEdit():from( pWidget ):close()
-
+HB_TRACE( HB_TR_ALWAYS, nHint, QAbstractItemDelegate_NoHint, QAbstractItemDelegate_SubmitModelCache )
    DO CASE
    CASE nHint == QAbstractItemDelegate_NoHint                 /* 0  RETURN is presses    */
 

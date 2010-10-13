@@ -430,7 +430,7 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
       EXIT
 
    CASE "browserView_anchorClicked"
-      qUrl := QUrl():from( p )
+      qUrl := HB_QUrl():from( p )
       cText := lower( qUrl:toString() )
       nLen := len( cText )
       IF ( n := ascan( ::aFunctions, {|e_| left( e_[ 6 ], nLen ) == cText } ) ) > 0
@@ -1313,7 +1313,7 @@ METHOD IdeHarbourHelp:print()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeHarbourHelp:paintRequested( pPrinter )
-   LOCAL qPrinter := QPrinter():configure( pPrinter )
+   LOCAL qPrinter := HB_QPrinter():from( pPrinter )
 
    ::oUI:q_browserView:print( qPrinter )
 

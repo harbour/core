@@ -428,7 +428,7 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
 
    SWITCH cEvent
    CASE "graphicsScene_block"
-      qEvent := QGraphicsSceneDragDropEvent():from( p1 )
+      qEvent := HB_QGraphicsSceneDragDropEvent():from( p1 )
 
       DO CASE
       CASE p == 21001
@@ -507,7 +507,7 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
       EXIT
 
    CASE "treeObjects_clicked"
-      qItem := QTreeWidgetItem():from( p )
+      qItem := HB_QTreeWidgetItem():from( p )
       IF hb_hHasKey( ::hItems, qItem:text( 0 ) )
          ::qScene:clearSelection()
          //::hItems[ qItem:text( 0 ) ]:setSelected( .t. )
@@ -532,7 +532,7 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
          EXIT
       ENDIF
 
-      qEvent := QMouseEvent():from( p )
+      qEvent := HB_QMouseEvent():from( p )
       qRC := QRect( ::qPos:x() - 5, ::qPos:y() - 5, 10, 10 ):normalized()
 
       IF qRC:contains( qEvent:pos() )
@@ -564,7 +564,7 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
       ::pAct  := NIL
       EXIT
    CASE "QEvent_MousePressMenu"
-      qEvent := QMouseEvent():from( p )
+      qEvent := HB_QMouseEvent():from( p )
       ::qPos := qEvent:pos()
       ::qAct := ::qShapesMenu:actionAt( qEvent:pos() )
       EXIT
@@ -1065,7 +1065,7 @@ METHOD HbqReportsManager:zoom( nMode )
 METHOD HbqReportsManager:contextMenuScene( p1 )
    LOCAL qMenu, qEvent, qAct
 
-   qEvent := QGraphicsSceneContextMenuEvent():from( p1 )
+   qEvent := HB_QGraphicsSceneContextMenuEvent():from( p1 )
 
    qMenu := QMenu( ::qView )
    qMenu:addAction( "Refresh"  )
@@ -1089,7 +1089,7 @@ METHOD HbqReportsManager:contextMenuItem( p1, p2 )
 
    HB_SYMBOL_UNUSED( p2 )
 
-   qEvent := QGraphicsSceneContextMenuEvent():from( p1 )
+   qEvent := HB_QGraphicsSceneContextMenuEvent():from( p1 )
 
    qMenu := QMenu()
    qMenu:addAction( "Cut"  )
@@ -1531,7 +1531,7 @@ METHOD HbqReportsManager:printPreview( qPrinter )
 /*----------------------------------------------------------------------*/
 
 METHOD HbqReportsManager:paintRequested( pPrinter )
-   LOCAL qPrinter := QPrinter():from( pPrinter )
+   LOCAL qPrinter := HB_QPrinter():from( pPrinter )
 
    ::printReport( qPrinter )
 
@@ -1799,7 +1799,7 @@ METHOD HqrGraphicsItem:execEvent( cEvent, p, p1, p2 )
          ::oRM:objectSelected( Self )
 
       CASE p == 21017
-         //qPainter := QPainter():from( p1 )
+         //qPainter := HB_QPainter():from( p1 )
          qPainter := HB_QPainter():from( p1 )
          qRect    := HB_QRectF():from( p2 )
          ::draw( qPainter, qRect )
@@ -1815,19 +1815,19 @@ METHOD HqrGraphicsItem:execEvent( cEvent, p, p1, p2 )
 /*----------------------------------------------------------------------*/
 
 METHOD HqrGraphicsItem:contextMenu( p1, p2 )
-   LOCAL qMenu, qEvent, pAct
+   LOCAL qMenu, qEvent, qAct
 
    HB_SYMBOL_UNUSED( p2 )
 
-   qEvent := QGraphicsSceneContextMenuEvent():from( p1 )
+   qEvent := HB_QGraphicsSceneContextMenuEvent():from( p1 )
 
    qMenu := QMenu()
    qMenu:addAction( "Cut"  )
    qMenu:addAction( "Copy" )
 
-   pAct := qMenu:exec( qEvent:screenPos() )
-   IF pAct:isValidObject()
-      SWITCH ( QAction():configure( pAct ) ):text()
+   qAct := qMenu:exec( qEvent:screenPos() )
+   IF qAct:isValidObject()
+      SWITCH qAct:text()
       CASE "Cut"
          EXIT
       CASE "Copy"

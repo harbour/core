@@ -128,7 +128,7 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
 
       IF Empty( ::pEvents )
          ::pEvents := Qt_Events_New()
-         ::installEventFilter( HBQEvents():from( ::pEvents ) )
+         ::installEventFilter( HB_HBQEvents():from( ::pEvents ) )
       ENDIF
       RETURN Qt_Events_Connect( ::pEvents, ::pPtr, cnEvent, bBlock )
 

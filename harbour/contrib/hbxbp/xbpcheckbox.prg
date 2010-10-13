@@ -134,7 +134,7 @@ METHOD XbpCheckBox:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams,
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF hb_isPointer( pQtObject )
-      ::oWidget := QCheckBox():from( pQtObject )
+      ::oWidget := HB_QCheckBox():from( pQtObject )
    ENDIF
 
    RETURN Self

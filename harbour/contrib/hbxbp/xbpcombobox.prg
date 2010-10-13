@@ -164,7 +164,7 @@ METHOD XbpComboBox:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams,
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF hb_isPointer( pQtObject )
-      ::oWidget := QComboBox():from( pQtObject )
+      ::oWidget := HB_QComboBox():from( pQtObject )
    ELSE
       ::oSLE := XbpSLE():new():create( ::oParent, ::oOwner, ::aPos, ::aSize, ::aPresParams, ::lVisible )
       ::oLB  := XbpListBox():new():create( ::oParent, ::oOwner, ::aPos, ::aSize, ::aPresParams, ::lVisible )

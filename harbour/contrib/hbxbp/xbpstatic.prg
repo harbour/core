@@ -253,62 +253,34 @@ METHOD XbpStatic:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, l
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF hb_isPointer( pQtObject )
-      DO CASE
-      CASE ::type == XBPSTATIC_TYPE_TEXT
-         ::oWidget := QLabel():from( pQtObject )
-
-      CASE ::type == XBPSTATIC_TYPE_GROUPBOX
-         ::oWidget := QGroupBox():from( pQtObject )
-
-      CASE ::type == XBPSTATIC_TYPE_RAISEDBOX
-         ::oWidget := QFrame():from( pQtObject )
-
-      CASE ::type == XBPSTATIC_TYPE_RECESSEDBOX
-         ::oWidget := QFrame():from( pQtObject )
-
-      CASE ::type == XBPSTATIC_TYPE_RAISEDRECT
-         ::oWidget := QFrame():from( pQtObject )
-
-      CASE ::type == XBPSTATIC_TYPE_RECESSEDRECT
-         ::oWidget := QFrame():from( pQtObject )
-
-      CASE ::type == XBPSTATIC_TYPE_FGNDFRAME     // rectangle in foreground color, not filled
-         ::oWidget := QFrame():from( pQtObject )
-
-      CASE ::type == XBPSTATIC_TYPE_BGNDFRAME
-         ::oWidget := QFrame():from( pQtObject )
-
-      CASE ::type == XBPSTATIC_TYPE_FGNDRECT
-         ::oWidget := QFrame():from( pQtObject )
-
-      CASE ::type == XBPSTATIC_TYPE_BGNDRECT
-         ::oWidget := QFrame():from( pQtObject )
-
-      CASE ::type == XBPSTATIC_TYPE_HALFTONERECT
-         ::oWidget := QFrame():from( pQtObject )
-
-      CASE ::type == XBPSTATIC_TYPE_HALFTONEFRAME
-         ::oWidget := QFrame():from( pQtObject )
-
-      CASE ::type == XBPSTATIC_TYPE_RAISEDLINE
-         ::oWidget := QFrame():from( pQtObject )
-
-      CASE ::type == XBPSTATIC_TYPE_RECESSEDLINE
-         ::oWidget := QFrame():from( pQtObject )
-
-      CASE ::type == XBPSTATIC_TYPE_ICON
-         ::oWidget := QLabel():from( pQtObject )
-
-      CASE ::type == XBPSTATIC_TYPE_SYSICON
-         ::oWidget := QLabel():from( pQtObject )
-
-      CASE ::type == XBPSTATIC_TYPE_BITMAP
-         ::oWidget := QLabel():from( pQtObject )
-
+      SWITCH ::type
+      CASE XBPSTATIC_TYPE_ICON
+      CASE XBPSTATIC_TYPE_SYSICON
+      CASE XBPSTATIC_TYPE_BITMAP
+      CASE XBPSTATIC_TYPE_TEXT
+         ::oWidget := HB_QLabel():from( pQtObject )
+         EXIT
+      CASE XBPSTATIC_TYPE_GROUPBOX
+         ::oWidget := HB_QGroupBox():from( pQtObject )
+         EXIT
+      CASE XBPSTATIC_TYPE_RAISEDBOX
+      CASE XBPSTATIC_TYPE_RECESSEDBOX
+      CASE XBPSTATIC_TYPE_RAISEDRECT
+      CASE XBPSTATIC_TYPE_RECESSEDRECT
+      CASE XBPSTATIC_TYPE_FGNDFRAME     // rectangle in foreground color, not filled
+      CASE XBPSTATIC_TYPE_BGNDFRAME
+      CASE XBPSTATIC_TYPE_FGNDRECT
+      CASE XBPSTATIC_TYPE_BGNDRECT
+      CASE XBPSTATIC_TYPE_HALFTONERECT
+      CASE XBPSTATIC_TYPE_HALFTONEFRAME
+      CASE XBPSTATIC_TYPE_RAISEDLINE
+      CASE XBPSTATIC_TYPE_RECESSEDLINE
+         ::oWidget := HB_QFrame():from( pQtObject )
+         EXIT
       OTHERWISE
-         ::oWidget := QFrame():from( pQtObject )
-
-      ENDCASE
+         ::oWidget := HB_QFrame():from( pQtObject )
+         EXIT
+      ENDSWITCH
    ENDIF
 
    RETURN Self

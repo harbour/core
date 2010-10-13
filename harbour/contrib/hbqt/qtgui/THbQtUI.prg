@@ -246,13 +246,13 @@ METHOD HbQtUI:loadUI( cUiFull, qParent )
       pWidget    := qUiLoader:load( qFile, qParent )
       DO CASE
       CASE ::widgets[ 1,1 ] == "QWidget"
-         oWidget    := QWidget():from( pWidget )
+         oWidget    := HB_QWidget():from( pWidget )
       CASE ::widgets[ 1,1 ] == "QDialog"
-         oWidget    := QDialog():from( pWidget )
+         oWidget    := HB_QDialog():from( pWidget )
       CASE ::widgets[ 1,1 ] == "QMainWindow"
-         oWidget    := QMainWindow():from( pWidget )
+         oWidget    := HB_QMainWindow():from( pWidget )
       OTHERWISE
-         oWidget    := QWidget():from( pWidget )
+         oWidget    := HB_QWidget():from( pWidget )
       ENDCASE
       #endif
       qFile:close()

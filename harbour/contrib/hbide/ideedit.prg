@@ -604,7 +604,7 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
    SWITCH nEvent
    CASE QEvent_KeyPress
 
-      qEvent := QKeyEvent():from( p )
+      qEvent := HB_QKeyEvent():from( p )
 
       key    := qEvent:key()
       kbm    := qEvent:modifiers()
@@ -1856,7 +1856,7 @@ METHOD IdeEdit:printPreview()
 
 METHOD IdeEdit:paintRequested( pPrinter )
    LOCAL qPrinter
-   qPrinter := QPrinter():from( pPrinter )
+   qPrinter := HB_QPrinter():from( pPrinter )
    ::qEdit:print( qPrinter )
    RETURN Self
 
