@@ -257,7 +257,11 @@ REQUEST hbmk_KEYW
 
 #define _COMPEMBED_BASE_        ( "comp" + hb_ps() )
 
-#define _WORKDIR_BASE_          ".hbmk"
+#if defined( __PLATFORM__DOS )
+   #define _WORKDIR_BASE_          "~hbmk"
+#else
+   #define _WORKDIR_BASE_          ".hbmk"
+#endif
 #define _WORKDIR_DEF_           ( _WORKDIR_BASE_ + hb_ps() + hbmk[ _HBMK_cPLAT ] + hb_ps() + hbmk[ _HBMK_cCOMP ] )
 
 #define _BCC_BIN_DETECT()       FindInPath( "bcc32.exe" )

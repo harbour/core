@@ -205,7 +205,7 @@ HB_FUNC( HB_ZIPFILECREATE )
          int iMethod = hb_parnidef( 7, Z_DEFLATED );
          int iLevel = hb_parnidef( 8, Z_DEFAULT_COMPRESSION );
          long lJulian, lMillisec;
-         int iYear, iMonth, iDay, iHour, iMinute, iSecond;
+         int iYear, iMonth, iDay, iHour, iMinute, iSecond, iMSec;
 
          zip_fileinfo zfi;
 
@@ -215,12 +215,12 @@ HB_FUNC( HB_ZIPFILECREATE )
          {
             hb_partdt( &lJulian, &lMillisec, 3 );
             hb_dateDecode( lJulian, &iYear, &iMonth, &iDay );
-            hb_timeDecode( lMillisec, &iHour, &iMinute, &iSecond, NULL );
+            hb_timeDecode( lMillisec, &iHour, &iMinute, &iSecond, &iMSec );
          }
          else
          {
             hb_dateDecode( hb_pardl( 3 ), &iYear, &iMonth, &iDay );
-            hb_timeStrGet( hb_parc( 4 ), &iHour, &iMinute, &iSecond, NULL );
+            hb_timeStrGet( hb_parc( 4 ), &iHour, &iMinute, &iSecond, &iMSec );
          }
 
          zfi.tmz_date.tm_hour = iHour;
@@ -233,6 +233,10 @@ HB_FUNC( HB_ZIPFILECREATE )
 
          zfi.internal_fa = hb_parnl( 5 );
          zfi.external_fa = hb_parnl( 6 );
+#if !defined( HB_OS_UNIX )
+         if( ( zfi.external_fa & 0xFFFF0000 ) == 0 )
+            zfi.external_fa = hb_translateExtAttr( szZipName, zfi.external_fa );
+#endif
 
          hb_retni( zipOpenNewFileInZip3( hZip, szZipName, &zfi,
                                          NULL, 0, NULL, 0,
@@ -434,10 +438,13 @@ HB_FUNC( HB_UNZIPFILEINFO )
                                     ufi.tmu_date.tm_sec, 0 );
 
          hb_stortdt( lJulian, lMillisec, 3 );
-         hb_snprintf( buf, sizeof( buf ), "%02d:%02d:%02d",
-                      ufi.tmu_date.tm_hour, ufi.tmu_date.tm_min,
-                      ufi.tmu_date.tm_sec );
-         hb_storc( buf, 4 );
+         if( HB_ISBYREF( 4 ) )
+         {
+            hb_snprintf( buf, sizeof( buf ), "%02d:%02d:%02d",
+                         ufi.tmu_date.tm_hour, ufi.tmu_date.tm_min,
+                         ufi.tmu_date.tm_sec );
+            hb_storc( buf, 4 );
+         }
          hb_stornl( ufi.internal_fa, 5 );
          hb_stornl( ufi.external_fa, 6 );
          hb_stornl( ufi.compression_method, 7 );
@@ -590,53 +597,12 @@ static HB_BOOL hb_zipGetFileInfoFromHandle( HB_FHANDLE hFile, HB_U32 * pulCRC, H
 static HB_BOOL hb_zipGetFileInfo( const char * szFileName, HB_U32 * pulCRC, HB_BOOL * pfText )
 {
    HB_FHANDLE hFile;
-   HB_BOOL fText = pfText != NULL, fResult = HB_FALSE;
-   HB_U32 ulCRC = 0;
+   HB_BOOL fResult = HB_FALSE;
 
    hFile = hb_fsOpen( szFileName, FO_READ );
-
+   fResult = hb_zipGetFileInfoFromHandle( hFile, pulCRC, pfText );
    if( hFile != FS_ERROR )
-   {
-      unsigned char * pString = ( unsigned char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
-      HB_SIZE nRead, u;
-
-      do
-      {
-         nRead = hb_fsReadLarge( hFile, pString, HB_Z_IOBUF_SIZE );
-         if( nRead > 0 )
-         {
-            ulCRC = crc32( ulCRC, pString, ( uInt ) nRead );
-            if( fText )
-            {
-               for( u = 0; u < nRead; ++u )
-               {
-                  if( pString[ u ] < 0x20 ?
-                      ( pString[ u ] != HB_CHAR_HT &&
-                        pString[ u ] != HB_CHAR_LF &&
-                        pString[ u ] != HB_CHAR_CR &&
-                        pString[ u ] != HB_CHAR_EOF ) :
-                      ( pString[ u ] >= 0x7f && pString[ u ] < 0xA0 &&
-                        pString[ u ] != ( unsigned char ) HB_CHAR_SOFT1 ) )
-                  {
-                     fText = HB_FALSE;
-                     break;
-                  }
-               }
-            }
-         }
-      }
-      while( nRead == HB_Z_IOBUF_SIZE );
-
-      fResult = ( hb_fsError() == 0 );
-
-      hb_xfree( pString );
       hb_fsClose( hFile );
-   }
-
-   if( pulCRC )
-      *pulCRC = ulCRC;
-   if( pfText )
-      *pfText = fText;
 
    return fResult;
 }
