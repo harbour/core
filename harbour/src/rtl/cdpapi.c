@@ -1172,7 +1172,6 @@ HB_SIZE hb_cdpStrAsU16Len( PHB_CODEPAGE cdp, HB_BOOL fCtrl,
    if( cdp == &s_utf8_codepage )
    {
       nSrc = hb_cdpUTF8StringLength( pSrc, nSrc );
-      return ( nMax && nSrc > nMax ) ? nMax : nSrc;
    }
    else if( cdp->nMultiUC )
    {
@@ -1215,7 +1214,7 @@ HB_SIZE hb_cdpStrAsU16Len( PHB_CODEPAGE cdp, HB_BOOL fCtrl,
       return ulD;
    }
 
-   return nSrc;
+   return ( nMax && nSrc > nMax ) ? nMax : nSrc;
 }
 
 #undef HB_CDP_ENDIAN_SWAP

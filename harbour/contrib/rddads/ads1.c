@@ -2162,7 +2162,7 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
             }
             else
             {
-               hb_itemPutStrLenU16( pItem, HB_CDP_ENDIAN_LITTLE, ( HB_WCHAR * ) pBuffer, u32Length );
+               hb_itemPutStrLenU16( pItem, HB_CDP_ENDIAN_LITTLE, ( const HB_WCHAR * ) pBuffer, u32Length );
                break;
             }
          }

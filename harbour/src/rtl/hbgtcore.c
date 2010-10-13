@@ -1572,7 +1572,8 @@ static HB_BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
       }
       case HB_GTI_SETWIN:  /* restore screen buffer, cursor shape and possition */
-         if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY ) && hb_arrayLen( pInfo->pNewVal ) == 8 )
+         if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY ) &&
+             hb_arrayLen( pInfo->pNewVal ) == 8 )
          {
             HB_GTSELF_DISPBEGIN( pGT );
             if( hb_arrayGetCLen( pInfo->pNewVal, 7 ) > 0 )
@@ -1662,10 +1663,10 @@ static HB_BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
                             int iClrNorm, int iClrHigh, double dDelay )
 {
-   int iOptions = ( int ) hb_arrayLen( pOptions );
-   int iRet = 0;
+   int iRet = 0, iOptions;
 
-   if( HB_IS_STRING( pMessage ) && iOptions > 0 )
+   if( pMessage && HB_IS_STRING( pMessage ) &&
+       pOptions && ( iOptions = ( int ) hb_arrayLen( pOptions ) ) > 0 )
    {
       const char * szMessage = hb_itemGetCPtr( pMessage );
       HB_UINT nLen = ( HB_UINT ) hb_itemGetCLen( pMessage );

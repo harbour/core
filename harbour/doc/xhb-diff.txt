@@ -2037,7 +2037,7 @@ The NTX format in [x]Harbour has also many other extensions like support
 for multitag indexes or using record number as hidden part of index key
 and many others which are unique to [x]Harbour. In practice all of CDX
 extensions are supported by NTX in [x]Harbour.
-The NSX format in [x]Harbour is also limited be default to 4GB but like
+The NSX format in [x]Harbour is also limited by default to 4GB but like
 in NTX enabling 64bit locking extend it to 4TB. It also supports common
 to NTX and CDX set of features.
 
@@ -2085,9 +2085,7 @@ to IP4 protocols only and is the base low level code used for .prg level
 rewritten from scratch, it's MT safe and was designed to hide platform
 differences in BSD socket implementation. It also works in DOS builds
 using WATT-32 library.
-
-In the future Harbour will have new .prg level API for sockets based on
-Harbour C socket API.
+This API is available for users also at PRG level by hb_socket*() functions.
 
 
 
@@ -2165,12 +2163,32 @@ runtime gettext support as optional user I18N interface.
 ==================
 Harbour RTL gives support at .prg level to ZLIB (HB_Z*()) and GZIP
 (HB_GZ*()) functions. In xHarbour RTL only ZLIB compression/decompression
-is available with by: HB_COMPRESS(), HB_UNCOMPRESS(), HB_COMPRESSBUFLEN(),
-HB_COMPRESSERROR() and HB_COMPRESSERRORDESC().
+is available by: HB_COMPRESS(), HB_UNCOMPRESS(), HB_COMPRESSBUFLEN(),
+HB_COMPRESSERROR() and HB_COMPRESSERRORDESC() functions.
 In Harbour these functions are available in XHB library.
 Original Harbour ZLIB API is different. It does not have any non MT safe
 extensions, it's protected against possible overflows and it's more closer
 to original ZLIB one.
+
+
+
+###    SERIAL PORT SUPPORT    ###
+=================================
+Harbour gives common multiplatform PRG and C level API for serial port
+communication by hb_com*() functions in core libraries. It also implements
+few other known in Clipper serial port interfaces in contrib libraries
+like CT3 COM_*() functions in hbct library or basic support for Telepathy
+interface in hbtpathy library. All such implementations use at low level
+code the core hb_com*() interface so they can work on all platforms.
+xHarbour CVS contains only telepath library with some very basic Telepathy
+interface which is not available for all platforms.
+xHarbour.com distribute also library compatible with CT3 COM*() interface
+but only for MS-Windows builds.
+It's also possible to ask on xHarbour.news group for HBCOM library.
+AFAIK binaries are available for MS-Windows and Linux.
+In Harbour the interface given by HBCOM library is also available
+inside HBCOMM contrib library which internally uses hb_com*() core
+API so it's portable between different OS-es.
 
 
 

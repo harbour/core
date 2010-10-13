@@ -3632,10 +3632,13 @@ static HB_BOOL hb_gt_trm_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_ADDKEYMAP:
-         iVal = hb_arrayGetNI( pInfo->pNewVal, 1 );
-         szVal = hb_arrayGetCPtr( pInfo->pNewVal, 2 );
-         if( iVal && szVal && *szVal )
-            addKeyMap( pTerm, SET_CLIPKEY( iVal ), szVal );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY )
+         {
+            iVal = hb_arrayGetNI( pInfo->pNewVal, 1 );
+            szVal = hb_arrayGetCPtr( pInfo->pNewVal, 2 );
+            if( iVal && szVal && *szVal )
+               addKeyMap( pTerm, SET_CLIPKEY( iVal ), szVal );
+         }
          break;
 
       case HB_GTI_PALETTE:

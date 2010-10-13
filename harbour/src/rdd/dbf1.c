@@ -55,6 +55,7 @@
 #include "hbrdddbf.h"
 #include "hbdbsort.h"
 #include "hbapiitm.h"
+#include "hbapistr.h"
 #include "hbapierr.h"
 #include "hbapilng.h"
 #include "hbset.h"
@@ -83,6 +84,7 @@ static RDDFUNCS dbfSuper;
 
 #define HB_BLANK_SKIP         100
 #define HB_BLANK_AUTOINC      101
+#define HB_BLANK_UNISPACE     102
 
 
 /*
@@ -289,7 +291,14 @@ static void hb_dbfSetBlankRecord( DBFAREAP pArea, int iType )
       }
       else
       {
-         memset( pPtr, bFill, nSize );
+         if( bFill == HB_BLANK_UNISPACE )
+         {
+            HB_SIZE n;
+            for( n = 0; n < nSize; n += 2 )
+               HB_PUT_LE_UINT16( &pPtr[ n ], ' ' );
+         }
+         else
+            memset( pPtr, bFill, nSize );
          pPtr += nSize;
          nSize = 0;
          if( bNext == HB_BLANK_SKIP )
@@ -1563,6 +1572,13 @@ static HB_ERRCODE hb_dbfAddField( DBFAREAP pArea, LPDBFIELDINFO pFieldInfo )
    /* Update field offset */
    pArea->pFieldOffset[ pArea->area.uiFieldCount ] = pArea->uiRecordLen;
    pArea->uiRecordLen += pFieldInfo->uiLen;
+   if( ( pFieldInfo->uiFlags & HB_FF_UNICODE ) != 0 )
+   {
+      if( pFieldInfo->uiType == HB_FT_STRING )
+         pArea->uiRecordLen += pFieldInfo->uiLen;
+      else if( pFieldInfo->uiType == HB_FT_VARLENGTH )
+         pArea->uiRecordLen += pFieldInfo->uiLen + 2;
+   }
    if( pArea->pFieldOffset[ pArea->area.uiFieldCount ] > pArea->uiRecordLen )
       return HB_FAILURE;
    else
@@ -1818,7 +1834,13 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
    {
       case HB_FT_STRING:
          nLen = pField->uiLen;
-         if( ( pField->uiFlags & HB_FF_BINARY ) == 0 )
+         if( ( pField->uiFlags & HB_FF_UNICODE ) != 0 )
+         {
+            hb_itemPutStrLenU16( pItem, HB_CDP_ENDIAN_LITTLE,
+                                 ( const HB_WCHAR * ) &pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ],
+                                 nLen );
+         }
+         else if( ( pField->uiFlags & HB_FF_BINARY ) == 0 )
          {
             pszVal = hb_cdpnDup( ( const char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
                                  &nLen, pArea->area.cdPage, hb_vmCDP() );
@@ -1833,20 +1855,32 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
 
       case HB_FT_VARLENGTH:
          nLen = pField->uiLen;
-         if( hb_dbfGetNullFlag( pArea, pArea->pFieldBits[ uiIndex ].uiLengthBit ) )
+         if( ( pField->uiFlags & HB_FF_UNICODE ) != 0 )
          {
-            nLen = ( HB_UCHAR ) pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] + nLen - 1 ];
-            /* protection against corrupted files */
-            if( nLen > ( HB_SIZE ) pField->uiLen )
-               nLen = pField->uiLen;
+            nLen = HB_GET_LE_UINT16( &pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] + ( nLen << 1 ) ] );
+            if( nLen == 0xFFFF )
+               nLen = 0;
+            hb_itemPutStrLenU16( pItem, HB_CDP_ENDIAN_LITTLE,
+                                 ( const HB_WCHAR * ) &pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ],
+                                 nLen );
          }
-         if( ( pField->uiFlags & HB_FF_BINARY ) == 0 )
-            pszVal = hb_cdpnDup( ( const char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
-                                 &nLen, pArea->area.cdPage, hb_vmCDP() );
          else
-            pszVal = ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ];
+         {
+            if( hb_dbfGetNullFlag( pArea, pArea->pFieldBits[ uiIndex ].uiLengthBit ) )
+            {
+               nLen = ( HB_UCHAR ) pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] + nLen - 1 ];
+               /* protection against corrupted files */
+               if( nLen > ( HB_SIZE ) pField->uiLen )
+                  nLen = pField->uiLen;
+            }
+            if( ( pField->uiFlags & HB_FF_BINARY ) == 0 )
+               pszVal = hb_cdpnDup( ( const char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
+                                    &nLen, pArea->area.cdPage, hb_vmCDP() );
+            else
+               pszVal = ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ];
 
-         hb_itemPutCLPtr( pItem, pszVal, nLen );
+            hb_itemPutCLPtr( pItem, pszVal, nLen );
+         }
          break;
 
       case HB_FT_LOGICAL:
@@ -2245,52 +2279,77 @@ static HB_ERRCODE hb_dbfPutValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
    {
       if( HB_IS_MEMO( pItem ) || HB_IS_STRING( pItem ) )
       {
-         pszPtr = hb_itemGetCPtr( pItem );
-         nSize = hb_itemGetCLen( pItem );
          nLen = pField->uiLen;
-
          if( pField->uiType == HB_FT_STRING )
          {
-            if( ( pField->uiFlags & HB_FF_BINARY ) == 0 )
+            if( ( pField->uiFlags & HB_FF_UNICODE ) != 0 )
             {
-               hb_cdpnDup2( pszPtr, nSize,
-                            ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
-                            &nLen, hb_vmCDP(), pArea->area.cdPage );
+               HB_WCHAR * pwBuffer = ( HB_WCHAR * ) &pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ];
+               nLen = hb_itemCopyStrU16( pItem, HB_CDP_ENDIAN_LITTLE,
+                                         pwBuffer, nLen );
+               while( nLen < ( HB_SIZE ) pField->uiLen )
+               {
+                  HB_PUT_LE_UINT16( &pwBuffer[ nLen ], ' ' );
+                  ++nLen;
+               }
             }
             else
             {
-               if( nLen > nSize )
-                  nLen = nSize;
-               memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
-                       hb_itemGetCPtr( pItem ), nLen );
+               pszPtr = hb_itemGetCPtr( pItem );
+               nSize = hb_itemGetCLen( pItem );
+               if( ( pField->uiFlags & HB_FF_BINARY ) == 0 )
+               {
+                  hb_cdpnDup2( pszPtr, nSize,
+                               ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
+                               &nLen, hb_vmCDP(), pArea->area.cdPage );
+               }
+               else
+               {
+                  if( nLen > nSize )
+                     nLen = nSize;
+                  memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ],
+                          hb_itemGetCPtr( pItem ), nLen );
+               }
+               if( nLen < ( HB_SIZE ) pField->uiLen )
+                  memset( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] + nLen,
+                          ' ', pField->uiLen - nLen );
             }
-            if( nLen < ( HB_SIZE ) pField->uiLen )
-               memset( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] + nLen,
-                       ' ', pField->uiLen - nLen );
          }
          else if( pField->uiType == HB_FT_VARLENGTH )
          {
-            if( ( pField->uiFlags & HB_FF_BINARY ) == 0 )
+            if( ( pField->uiFlags & HB_FF_UNICODE ) != 0 )
             {
-               if( nLen > ( HB_SIZE ) sizeof( szBuffer ) )
-                  nLen = sizeof( szBuffer );
-               pszPtr = hb_cdpnDup2( pszPtr, nSize, szBuffer, &nLen,
-                                     hb_vmCDP(), pArea->area.cdPage );
+               HB_WCHAR * pwBuffer = ( HB_WCHAR * ) &pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ];
+               nLen = hb_itemCopyStrU16( pItem, HB_CDP_ENDIAN_LITTLE,
+                                         pwBuffer, nLen );
+               HB_PUT_LE_UINT16( &pwBuffer[ pField->uiLen ], nLen );
             }
             else
             {
-               if( nLen > nSize )
-                  nLen = nSize;
-            }
-            memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ], pszPtr, nLen );
+               pszPtr = hb_itemGetCPtr( pItem );
+               nSize = hb_itemGetCLen( pItem );
+               if( ( pField->uiFlags & HB_FF_BINARY ) == 0 )
+               {
+                  if( nLen > ( HB_SIZE ) sizeof( szBuffer ) )
+                     nLen = sizeof( szBuffer );
+                  pszPtr = hb_cdpnDup2( pszPtr, nSize, szBuffer, &nLen,
+                                        hb_vmCDP(), pArea->area.cdPage );
+               }
+               else
+               {
+                  if( nLen > nSize )
+                     nLen = nSize;
+               }
+               memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ], pszPtr, nLen );
 
-            if( nLen < ( HB_SIZE ) pField->uiLen )
-            {
-               pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] + pField->uiLen - 1 ] = ( HB_BYTE ) nLen;
-               hb_dbfSetNullFlag( pArea->pRecord, pArea->uiNullOffset, pArea->pFieldBits[ uiIndex ].uiLengthBit );
+               if( nLen < ( HB_SIZE ) pField->uiLen )
+               {
+                  pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] + pField->uiLen - 1 ] = ( HB_BYTE ) nLen;
+                  hb_dbfSetNullFlag( pArea->pRecord, pArea->uiNullOffset, pArea->pFieldBits[ uiIndex ].uiLengthBit );
+               }
+               else
+                  hb_dbfClearNullFlag( pArea->pRecord, pArea->uiNullOffset, pArea->pFieldBits[ uiIndex ].uiLengthBit );
             }
-            else
-               hb_dbfClearNullFlag( pArea->pRecord, pArea->uiNullOffset, pArea->pFieldBits[ uiIndex ].uiLengthBit );
          }
          else
             errCode = EDBF_DATATYPE;
@@ -2731,7 +2790,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
 {
    HB_ERRCODE errCode = HB_SUCCESS;
    HB_SIZE nSize;
-   HB_USHORT uiCount;
+   HB_USHORT uiCount, uiLen;
    HB_BOOL fError, fRawBlob;
    DBFFIELD * pThisField;
    HB_BYTE * pBuffer;
@@ -2872,10 +2931,19 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
       switch( pField->uiType )
       {
          case HB_FT_STRING:
-            pThisField->bType = 'C';
-            pThisField->bLen = ( HB_BYTE ) pField->uiLen;
-            pThisField->bDec = ( HB_BYTE ) ( pField->uiLen >> 8 );
-            pArea->uiRecordLen += pField->uiLen;
+            uiLen = pField->uiLen;
+            if( ( pField->uiFlags & HB_FF_UNICODE ) != 0 )
+            {
+               pThisField->bType = '\x1A';
+               uiLen <<= 1;
+            }
+            else
+            {
+               pThisField->bType = 'C';
+            }
+            pThisField->bLen = ( HB_BYTE ) uiLen;
+            pThisField->bDec = ( HB_BYTE ) ( uiLen >> 8 );
+            pArea->uiRecordLen += uiLen;
             break;
 
          case HB_FT_LOGICAL:
@@ -2885,7 +2953,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             break;
 
          case HB_FT_MEMO:
-            pThisField->bType = 'M';
+            pThisField->bType = ( pField->uiFlags & HB_FF_UNICODE ) ? '\x1C' : 'M';
             if( pField->uiLen != 4 || pArea->bMemoType == DB_MEMO_SMT )
                pField->uiLen = 10;
             pThisField->bLen = ( HB_BYTE ) pField->uiLen;
@@ -2993,16 +3061,28 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             break;
 
          case HB_FT_VARLENGTH:
-            if( pField->uiLen > 255 )
-               pField->uiLen = 255;
-            else if( pField->uiLen == 0 )
+            if( pField->uiLen == 0 )
                pField->uiLen = 1;
-            if( pArea->bTableType == DB_DBF_VFP && ( pField->uiFlags & HB_FF_BINARY ) == 0 )
-               pThisField->bType = 'V';
+            if( ( pField->uiFlags & HB_FF_UNICODE ) != 0 )
+            {
+               if( pField->uiLen > 32766 )
+                  pField->uiLen = 32766;
+               pThisField->bType = '\x1B';
+               uiLen = ( pField->uiLen + 1 ) << 1;
+            }
             else
-               pThisField->bType = 'Q';
-            pThisField->bLen = ( HB_BYTE ) pField->uiLen;
-            pArea->uiRecordLen += pField->uiLen;
+            {
+               if( pField->uiLen > 255 )
+                  pField->uiLen = 255;
+               if( pArea->bTableType == DB_DBF_VFP && ( pField->uiFlags & HB_FF_BINARY ) == 0 )
+                  pThisField->bType = 'V';
+               else
+                  pThisField->bType = 'Q';
+               uiLen = pField->uiLen;
+            }
+            pThisField->bLen = ( HB_BYTE ) uiLen;
+            pThisField->bDec = ( HB_BYTE ) ( uiLen >> 8 );
+            pArea->uiRecordLen += uiLen;
             hb_dbfAllocNullFlag( pArea, uiCount, HB_TRUE );
             break;
 
@@ -4026,6 +4106,24 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
             pArea->fHasMemo = HB_TRUE;
             break;
 
+         case '\x1A':
+            dbFieldInfo.uiType = HB_FT_STRING;
+            dbFieldInfo.uiFlags |= HB_FF_UNICODE;
+            dbFieldInfo.uiLen = ( pField->bLen + pField->bDec * 256 ) >> 1;
+            break;
+
+         case '\x1B':
+            dbFieldInfo.uiType = HB_FT_VARLENGTH;
+            dbFieldInfo.uiFlags |= HB_FF_UNICODE;
+            dbFieldInfo.uiLen = ( ( pField->bLen + pField->bDec * 256 ) >> 1 ) - 1;
+            break;
+
+         case '\x1C':
+            dbFieldInfo.uiType = HB_FT_MEMO;
+            dbFieldInfo.uiFlags |= HB_FF_UNICODE;
+            pArea->fHasMemo = HB_TRUE;
+            break;
+
          case '0':
             if( /* pArea->bTableType == DB_DBF_VFP && */
                 ( pField->bFieldFlags & HB_FF_HIDDEN ) != 0 )
@@ -4302,7 +4400,7 @@ void hb_dbfTranslateRec( DBFAREAP pArea, HB_BYTE * pBuffer, PHB_CODEPAGE cdp_src
 
    for( uiIndex = 0, pField = pArea->area.lpFields; uiIndex < pArea->area.uiFieldCount; uiIndex++, pField++ )
    {
-      if( ( pField->uiFlags & HB_FF_BINARY ) == 0 &&
+      if( ( pField->uiFlags & ( HB_FF_BINARY | HB_FF_UNICODE ) ) == 0 &&
           ( pField->uiType == HB_FT_STRING || pField->uiType == HB_FT_VARLENGTH ) )
       {
          if( pTmpBuf == NULL )

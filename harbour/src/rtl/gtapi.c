@@ -1051,7 +1051,7 @@ HB_ERRCODE hb_gtInfo( int iType, PHB_GT_INFO pInfo )
 }
 
 int hb_gtAlert( PHB_ITEM pMessage, PHB_ITEM pOptions,
-                          int iClrNorm, int iClrHigh, double dDelay )
+                int iClrNorm, int iClrHigh, double dDelay )
 {
    int iResult = 0;
    PHB_GT pGT;
