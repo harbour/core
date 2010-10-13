@@ -780,7 +780,7 @@ msgstr "especifique un nuevo destino de compilación. <script> puede ser módulo
 #: hbmk2.prg:7960
 #, c-format
 msgid "Options accepting macros also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. \"-cflag=`wx-config --cflags`\", or ldflags={unix&gcc}\"`wx-config --libs`\"."
-msgstr "Tambien acepta Opciones de macros sustitución de comandos. Incluya comando dentro de ``, y, si el comando contiene espacios, también entre comillas dobles. F.e. \ "-CFLAG =` wx-config - cflags '\ ", o ldflags={unix y gcc}\"`wx-config - libs`\"."
+msgstr "Tambien acepta Opciones de macros sustitución de comandos. Incluya comando dentro de ``, y, si el comando contiene espacios, también entre comillas dobles. F.e. \"-cflag==`wx-config -cflags`\", o ldflags={unix&gcc}\"`wx-config --libs`\"."
 
 #: hbmk2.prg:6872
 #, c-format

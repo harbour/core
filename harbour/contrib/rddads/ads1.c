@@ -2415,7 +2415,7 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
 #if ADS_LIB_VERSION >= 1000
             else if( ( pField->uiFlags & HB_FF_UNICODE ) != 0 )
             {
-               HB_WCHAR * pwBuffer = hb_xgrab( ( ++u32Length ) << 1 );
+               HB_WCHAR * pwBuffer = ( HB_WCHAR * ) hb_xgrab( ( ++u32Length ) << 1 );
                u32RetVal = AdsGetStringW( pArea->hTable, ADSFIELD( uiIndex ), ( WCHAR * ) pwBuffer, &u32Length, ADS_NONE );
                if( u32RetVal != AE_SUCCESS )
                   hb_itemPutC( pItem, NULL );
