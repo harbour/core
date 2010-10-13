@@ -1408,7 +1408,7 @@ METHOD IdeFindInFiles:print()
 METHOD IdeFindInFiles:paintRequested( pPrinter )
    LOCAL qPrinter
 
-   qPrinter := QPrinter():configure( pPrinter )
+   qPrinter := HB_QPrinter():from( pPrinter )
 
    ::oUI:q_editResults:print( qPrinter )
 
