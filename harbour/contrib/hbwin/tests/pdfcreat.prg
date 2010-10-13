@@ -56,6 +56,7 @@ LOCAL oPC, nTime, cDefaultPrinter, cFilename, oPrinter, nEvent := 0
    oPrinter:EndDoc()
    oPrinter:Destroy()
 #else
+   oPrinter := NIL
    ? "Do some printing to PDFCreator printer and press any key..."
    INKEY(0)
 #endif

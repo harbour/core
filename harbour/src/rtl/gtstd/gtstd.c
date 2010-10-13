@@ -383,12 +383,30 @@ static int hb_gt_std_ReadKey( PHB_GT pGT, int iEventMask )
          ch = pGTSTD->keyTransTbl[ bChar ];
    }
 #elif defined( HB_OS_WIN )
-   if( !pGTSTD->fStdinConsole ||
-       WaitForSingleObject( ( HANDLE ) hb_fsGetOsHandle( pGTSTD->hStdin ), 0 ) == 0x0000 )
+   if( ! pGTSTD->fStdinConsole )
    {
       HB_BYTE bChar;
       if( hb_fsRead( pGTSTD->hStdin, &bChar, 1 ) == 1 )
          ch = pGTSTD->keyTransTbl[ bChar ];
+   }
+   else if( WaitForSingleObject( ( HANDLE ) hb_fsGetOsHandle( pGTSTD->hStdin ), 0 ) == WAIT_OBJECT_0 )
+   {
+      INPUT_RECORD  ir;
+      DWORD         dwEvents;
+      while( PeekConsoleInput( ( HANDLE ) hb_fsGetOsHandle( pGTSTD->hStdin ), &ir, 1, &dwEvents ) && dwEvents == 1 )
+      {
+         if( ir.EventType == KEY_EVENT && ir.Event.KeyEvent.bKeyDown )
+         {
+            HB_BYTE bChar;
+            if( hb_fsRead( pGTSTD->hStdin, &bChar, 1 ) == 1 )
+            {
+               ch = pGTSTD->keyTransTbl[ bChar ];
+               exit;
+            }
+         }
+         else /* Remove from the input queue */
+            ReadConsoleInput( ( HANDLE ) hb_fsGetOsHandle( pGTSTD->hStdin ), &ir, 1, &dwEvents );
+      }
    }
 #elif defined( __WATCOMC__ )
    if( pGTSTD->fStdinConsole )
