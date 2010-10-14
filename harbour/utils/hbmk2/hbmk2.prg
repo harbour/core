@@ -1816,6 +1816,12 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    l_cHB_INSTALL_ADD := PathNormalize( DirAddPathSep( l_cHB_INSTALL_PREFIX ) )
    AAdd( hbmk[ _HBMK_aLIBPATH ], l_cHB_INSTALL_ADD + "contrib" + hb_ps() + "%{hb_name}" )
    AAdd( hbmk[ _HBMK_aLIBPATH ], l_cHB_INSTALL_ADD + "addons" + hb_ps() + "%{hb_name}" )
+#if defined( __PLATFORM__UNIX )
+   IF hb_DirExists( "/opt/harbour" )
+      AAdd( hbmk[ _HBMK_aLIBPATH ], "/opt/harbour/contrib/%{hb_name}" )
+      AAdd( hbmk[ _HBMK_aLIBPATH ], "/opt/harbour/addons/%{hb_name}" )
+   ENDIF
+#endif
 
    /* Build with shared libs by default, if we're installed to default system locations. */
 
