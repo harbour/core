@@ -407,12 +407,12 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
 
       /* Method 1: using IProvideClassInfo2 */
 
-      hr = iDisp->lpVtbl->QueryInterface( iDisp, &IID_IProvideClassInfo2, ( void** ) ( void* ) &iPCI2 );
+      hr = HB_VTBL( iDisp )->QueryInterface( HB_THIS_( iDisp ) HB_ID_REF( IID_IProvideClassInfo2 ), ( void** ) ( void* ) &iPCI2 );
       if( hr == 0 )
       {
          HB_TRACE( HB_TR_DEBUG, ("_get_default_sink IProvideClassInfo2 OK") );
-         hr = iPCI2->lpVtbl->GetGUID( iPCI2, GUIDKIND_DEFAULT_SOURCE_DISP_IID, piid );
-         iPCI2->lpVtbl->Release( iPCI2 );
+         hr = HB_VTBL( iPCI2 )->GetGUID( HB_THIS_( iPCI2 ) GUIDKIND_DEFAULT_SOURCE_DISP_IID, piid );
+         HB_VTBL( iPCI2 )->Release( HB_THIS( iPCI2 ) );
 
          if( hr == 0 )
             return 0;
@@ -425,44 +425,44 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
 
       /* Method 2: using IProvideClassInfo and searching for default source in ITypeInfo */
 
-      hr = iDisp->lpVtbl->QueryInterface( iDisp, &IID_IProvideClassInfo, ( void** ) ( void* ) &iPCI );
+      hr = HB_VTBL( iDisp )->QueryInterface( HB_THIS_( iDisp ) HB_ID_REF( IID_IProvideClassInfo ), ( void** ) ( void* ) &iPCI );
       if( hr == 0 )
       {
          HB_TRACE( HB_TR_DEBUG, ("_get_default_sink IProvideClassInfo OK") );
 
-         hr = iPCI->lpVtbl->GetClassInfo( iPCI, &iTI );
+         hr = HB_VTBL( iPCI )->GetClassInfo( HB_THIS_( iPCI ) &iTI );
          if( hr == 0 )
          {
-            hr = iTI->lpVtbl->GetTypeAttr( iTI, &pTypeAttr );
+            hr = HB_VTBL( iTI )->GetTypeAttr( HB_THIS_( iTI ) &pTypeAttr );
             if( hr == 0 )
             {
                for( i = 0; i < pTypeAttr->cImplTypes; i++ )
                {
-                  hr = iTI->lpVtbl->GetImplTypeFlags( iTI, i, &iFlags );
+                  hr = HB_VTBL( iTI )->GetImplTypeFlags( HB_THIS_( iTI ) i, &iFlags );
                   if( hr == 0 && ( iFlags & IMPLTYPEFLAG_FDEFAULT ) && ( iFlags & IMPLTYPEFLAG_FSOURCE ) )
                   {
-                     if( iTI->lpVtbl->GetRefTypeOfImplType( iTI, i, &hRefType ) == S_OK &&
-                         iTI->lpVtbl->GetRefTypeInfo( iTI, hRefType, &iTISink ) == S_OK )
+                     if( HB_VTBL( iTI )->GetRefTypeOfImplType( HB_THIS_( iTI ) i, &hRefType ) == S_OK &&
+                         HB_VTBL( iTI )->GetRefTypeInfo( HB_THIS_( iTI ) hRefType, &iTISink ) == S_OK )
                      {
                         HB_TRACE( HB_TR_DEBUG, ("_get_default_sink Method 2: default source is found") );
 
-                        hr = iTISink->lpVtbl->GetTypeAttr( iTISink, &pTypeAttr );
+                        hr = HB_VTBL( iTISink )->GetTypeAttr( HB_THIS_( iTISink ) &pTypeAttr );
                         if( hr == 0 )
                         {
                            * piid = pTypeAttr->guid;
-                           iTISink->lpVtbl->ReleaseTypeAttr( iTISink, pTypeAttr );
+                           HB_VTBL( iTISink )->ReleaseTypeAttr( HB_THIS_( iTISink ) pTypeAttr );
 
-                           iTI->lpVtbl->ReleaseTypeAttr( iTI, pTypeAttr );
-                           iPCI->lpVtbl->Release( iPCI );
+                           HB_VTBL( iTI )->ReleaseTypeAttr( HB_THIS_( iTI ) pTypeAttr );
+                           HB_VTBL( iPCI )->Release( HB_THIS( iPCI ) );
                            return 0;
                         }
                      }
                   }
                }
-               iTI->lpVtbl->ReleaseTypeAttr( iTI, pTypeAttr );
+               HB_VTBL( iTI )->ReleaseTypeAttr( HB_THIS_( iTI ) pTypeAttr );
             }
          }
-         iPCI->lpVtbl->Release( iPCI );
+         HB_VTBL( iPCI )->Release( HB_THIS( iPCI ) );
       }
       else
       {
@@ -473,24 +473,24 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
 
    /* Method 3: using CoClass */
 
-   hr = iDisp->lpVtbl->GetTypeInfo( iDisp, 0, LOCALE_SYSTEM_DEFAULT, &iTI );
+   hr = HB_VTBL( iDisp )->GetTypeInfo( HB_THIS_( iDisp ) 0, LOCALE_SYSTEM_DEFAULT, &iTI );
    if( hr == 0 )
    {
       ITypeLib *   iTL;
       TYPEATTR *   pTypeAttr2;
 
-      hr = iTI->lpVtbl->GetContainingTypeLib( iTI, &iTL, NULL );
-      iTI->lpVtbl->Release( iTI );
+      hr = HB_VTBL( iTI )->GetContainingTypeLib( HB_THIS_( iTI ) &iTL, NULL );
+      HB_VTBL( iTI )->Release( HB_THIS( iTI ) );
 
       if( hr == 0 )
       {
-         int iCount = iTL->lpVtbl->GetTypeInfoCount( iTL );
+         int iCount = HB_VTBL( iTL )->GetTypeInfoCount( HB_THIS( iTL ) );
          for( i = 0; i < iCount; i++ )
          {
-            hr = iTL->lpVtbl->GetTypeInfo( iTL, i, &iTI );
+            hr = HB_VTBL( iTL )->GetTypeInfo( HB_THIS_( iTL ) i, &iTI );
             if( hr == S_OK )
             {
-               hr = iTI->lpVtbl->GetTypeAttr( iTI, &pTypeAttr );
+               hr = HB_VTBL( iTI )->GetTypeAttr( HB_THIS_( iTI ) &pTypeAttr );
                if( hr == S_OK )
                {
                   if( pTypeAttr->typekind == TKIND_COCLASS )
@@ -499,12 +499,12 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
                      {
                         if( szEvent )
                         {
-                           if( iTI->lpVtbl->GetRefTypeOfImplType( iTI, j, &hRefType ) == S_OK &&
-                               iTI->lpVtbl->GetRefTypeInfo( iTI, hRefType, &iTISink ) == S_OK )
+                           if( HB_VTBL( iTI )->GetRefTypeOfImplType( HB_THIS_( iTI ) j, &hRefType ) == S_OK &&
+                               HB_VTBL( iTI )->GetRefTypeInfo( HB_THIS_( iTI ) hRefType, &iTISink ) == S_OK )
                            {
                               BSTR  bstr;
 
-                              hr = iTISink->lpVtbl->GetDocumentation( iTISink, -1, &bstr, NULL, NULL, NULL );
+                              hr = HB_VTBL( iTISink )->GetDocumentation( HB_THIS_( iTISink ) -1, &bstr, NULL, NULL, NULL );
                               if( hr == S_OK )
                               {
                                  char  str[ 256 ];
@@ -514,33 +514,33 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
                                  str[ iLen - 1 ] = '\0';
                                  if( ! strcmp( szEvent, str ) )
                                  {
-                                    hr = iTISink->lpVtbl->GetTypeAttr( iTISink, &pTypeAttr2 );
+                                    hr = HB_VTBL( iTISink )->GetTypeAttr( HB_THIS_( iTISink ) &pTypeAttr2 );
                                     if( hr == S_OK )
                                     {
                                        * piid = pTypeAttr2->guid;
-                                       iTISink->lpVtbl->ReleaseTypeAttr( iTISink, pTypeAttr2 );
+                                       HB_VTBL( iTISink )->ReleaseTypeAttr( HB_THIS_( iTISink ) pTypeAttr2 );
 
-                                       iTISink->lpVtbl->Release( iTISink );
-                                       iTI->lpVtbl->ReleaseTypeAttr( iTI, pTypeAttr );
-                                       iTI->lpVtbl->Release( iTI );
-                                       iTL->lpVtbl->Release( iTL );
+                                       HB_VTBL( iTISink )->Release( HB_THIS( iTISink ) );
+                                       HB_VTBL( iTI )->ReleaseTypeAttr( HB_THIS_( iTI ) pTypeAttr );
+                                       HB_VTBL( iTI )->Release( HB_THIS( iTI ) );
+                                       HB_VTBL( iTL )->Release( HB_THIS( iTL ) );
                                        return 0;
                                     }
                                  }
 
                               }
-                              iTISink->lpVtbl->Release( iTISink );
+                              HB_VTBL( iTISink )->Release( HB_THIS( iTISink ) );
                            }
                         }
                         else /* szEvent == NULL */
                         {
-                           hr = iTI->lpVtbl->GetImplTypeFlags( iTI, j, &iFlags );
+                           hr = HB_VTBL( iTI )->GetImplTypeFlags( HB_THIS_( iTI ) j, &iFlags );
                            if( hr == S_OK && ( iFlags & IMPLTYPEFLAG_FDEFAULT ) && ( iFlags & IMPLTYPEFLAG_FSOURCE ) )
                            {
-                              if( iTI->lpVtbl->GetRefTypeOfImplType( iTI, j, &hRefType ) == S_OK &&
-                                  iTI->lpVtbl->GetRefTypeInfo( iTI, hRefType, &iTISink ) == S_OK )
+                              if( HB_VTBL( iTI )->GetRefTypeOfImplType( HB_THIS_( iTI ) j, &hRefType ) == S_OK &&
+                                  HB_VTBL( iTI )->GetRefTypeInfo( HB_THIS_( iTI ) hRefType, &iTISink ) == S_OK )
                               {
-                                 hr = iTISink->lpVtbl->GetTypeAttr( iTISink, &pTypeAttr2 );
+                                 hr = HB_VTBL( iTISink )->GetTypeAttr( HB_THIS_( iTISink ) &pTypeAttr2 );
                                  if( hr == S_OK )
                                  {
 #if 0
@@ -549,17 +549,17 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
                                     char  str[ 256 ];
                                     int   iLen;
 
-                                    iTISink->lpVtbl->GetDocumentation( iTISink, -1, &bstr, NULL, NULL, NULL );
+                                    HB_VTBL( iTISink )->GetDocumentation( HB_THIS_( iTISink ) -1, &bstr, NULL, NULL, NULL );
                                     iLen = WideCharToMultiByte( CP_ACP, 0, bstr, -1, str, sizeof( str ), NULL, NULL );
                                     str[ iLen - 1 ] = '\0';
                                     HB_TRACE( HB_TR_DEBUG, ("_get_default_sink Method 3: iFlags=%d guid=%s class=%s", iFlags, GUID2String( &( pTypeAttr2->guid ) ), str) );
 #endif
                                     * piid = pTypeAttr2->guid;
-                                    iTISink->lpVtbl->ReleaseTypeAttr( iTISink, pTypeAttr2 );
+                                    HB_VTBL( iTISink )->ReleaseTypeAttr( HB_THIS_( iTISink ) pTypeAttr2 );
 
-                                    iTI->lpVtbl->ReleaseTypeAttr( iTI, pTypeAttr );
-                                    iTI->lpVtbl->Release( iTI );
-                                    iTL->lpVtbl->Release( iTL );
+                                    HB_VTBL( iTI )->ReleaseTypeAttr( HB_THIS_( iTI ) pTypeAttr );
+                                    HB_VTBL( iTI )->Release( HB_THIS( iTI ) );
+                                    HB_VTBL( iTL )->Release( HB_THIS( iTL ) );
                                     return 0;
                                  }
                               }
@@ -567,15 +567,36 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
                         }
                      }
                   }
-                  iTI->lpVtbl->ReleaseTypeAttr( iTI, pTypeAttr );
+                  HB_VTBL( iTI )->ReleaseTypeAttr( HB_THIS_( iTI ) pTypeAttr );
                }
-               iTI->lpVtbl->Release( iTI );
+               HB_VTBL( iTI )->Release( HB_THIS( iTI ) );
             }
          }
-         iTL->lpVtbl->Release( iTL );
+         HB_VTBL( iTL )->Release( HB_THIS( iTL ) );
       }
    }
    return E_NOINTERFACE;
+}
+
+
+static void hb_sink_destruct( void * cargo )
+{
+   ISink * pSink = ( ISink * ) cargo;
+
+   if( pSink->pConnectionPoint )
+   {
+      IConnectionPoint*    pConnectionPoint = pSink->pConnectionPoint;
+      DWORD                dwCookie = pSink->dwCookie;
+
+      /* Unadvise() may activate pSink destructor so clear these
+       * items as protection against recursive Unadvise call.
+       */
+      pSink->pConnectionPoint = NULL;
+      pSink->dwCookie = 0;
+
+      HB_VTBL( pConnectionPoint )->Unadvise( HB_THIS_( pConnectionPoint ) dwCookie );
+      HB_VTBL( pConnectionPoint )->Release( HB_THIS( pConnectionPoint ) );
+   }
 }
 
 
@@ -619,6 +640,7 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler [, cIID] ) --> pSink */
 
                if( lOleError == S_OK )
                {
+                  PHB_ITEM pOleItem;
                   DWORD dwCookie = 0;
                   ISink * pSink;
 
@@ -635,7 +657,11 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler [, cIID] ) --> pSink */
                   pSink->pConnectionPoint = pCP;
                   pSink->dwCookie = dwCookie;
 
-                  hb_oleItemPut( hb_stackReturnItem(), ( IDispatch* ) pDisp );
+                  pOleItem = hb_oleItemPut( hb_stackReturnItem(), ( IDispatch* ) pDisp );
+                  /* bind call back handler item with returned object */
+                  hb_oleItemSetCallBack( pOleItem, &pSink->pItemHandler );
+                  /* add additional destructor */
+                  hb_oleItemSetDestructor( pOleItem, hb_sink_destruct, ( void * ) pSink );
                }
                HB_VTBL( pCPC )->Release( HB_THIS( pCPC ) );
             }

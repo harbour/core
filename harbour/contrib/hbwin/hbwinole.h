@@ -142,6 +142,7 @@
 HB_EXTERN_BEGIN
 
 typedef HB_BOOL ( * HB_OLEOBJ_FUNC )( VARIANT*, PHB_ITEM );
+typedef void ( * HB_OLE_DESTRUCTOR_FUNC )( void * );
 
 extern HB_EXPORT HB_BOOL    hb_oleInit( void );
 extern HB_EXPORT HRESULT    hb_oleGetError( void );
@@ -161,6 +162,7 @@ extern HB_EXPORT void       hb_oleItemSetCallBack( PHB_ITEM pItem, PHB_ITEM * pC
 extern HB_EXPORT HB_BOOL    hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, PHB_ITEM pParam,
                                               DISPPARAMS * pParams, VARIANT* pVarResult,
                                               HB_OLEOBJ_FUNC pObjFunc, HB_USHORT uiClass );
+extern HB_EXPORT void       hb_oleItemSetDestructor( PHB_ITEM pItem, HB_OLE_DESTRUCTOR_FUNC pFunc, void * cargo );
 
 /* activex control */
 extern HB_EXPORT HB_BOOL    hb_oleAxInit( void );

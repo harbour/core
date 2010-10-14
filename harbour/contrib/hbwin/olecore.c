@@ -82,6 +82,8 @@ typedef struct
 {
    IDispatch*  pDisp;
    PHB_ITEM*   pCallBack;
+   HB_OLE_DESTRUCTOR_FUNC pDestructorFunc;
+   void *      cargo;
 } HB_OLE;
 
 typedef struct
@@ -140,6 +142,11 @@ static HB_GARBAGE_FUNC( hb_ole_destructor )
          *pOle->pCallBack = NULL;
          pOle->pCallBack = NULL;
          hb_itemRelease( pCallBack );
+      }
+      if( pOle->pDestructorFunc )
+      {
+         pOle->pDestructorFunc( pOle->cargo );
+         pOle->pDestructorFunc = NULL;
       }
       HB_VTBL( pDisp )->Release( HB_THIS( pDisp ) );
    }
@@ -221,7 +228,8 @@ PHB_ITEM hb_oleItemPut( PHB_ITEM pItem, IDispatch* pDisp )
 
    pOle->pDisp = pDisp;
    pOle->pCallBack = NULL;
-
+   pOle->pDestructorFunc = NULL;
+   pOle->cargo = NULL;
    return hb_itemPutPtrGC( pItem, pOle );
 }
 
@@ -251,6 +259,18 @@ void hb_oleItemSetCallBack( PHB_ITEM pItem, PHB_ITEM* pCallBack )
          pOle->pCallBack = pCallBack;
          hb_gcUnlock( *pCallBack );
       }
+   }
+}
+
+
+void hb_oleItemSetDestructor( PHB_ITEM pItem, HB_OLE_DESTRUCTOR_FUNC pFunc, void * cargo )
+{
+   HB_OLE * pOle = ( HB_OLE * ) hb_itemGetPtrGC( pItem, &s_gcOleFuncs );
+
+   if( pOle )
+   {
+      pOle->pDestructorFunc = pFunc;
+      pOle->cargo = cargo;
    }
 }
 
