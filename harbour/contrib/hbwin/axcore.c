@@ -51,6 +51,8 @@
  */
 
 #include "hbwinole.h"
+#include <olectl.h>
+
 #include "hbapistr.h"
 #if defined( HB_OS_WIN_CE )
    #include "hbwince.h"
@@ -381,9 +383,10 @@ static char * GUID2String( GUID * pID )
    wchar_t      olestr[ 128 ];
    int          iLen;
 
-   StringFromGUID2( pID, olestr, 256 );
-   iLen = WideCharToMultiByte( CP_ACP, 0, olestr, -1, strguid, 256, NULL, NULL );
-   strguid[ iLen - 1 ] = 0;
+   StringFromGUID2( pID, olestr, HB_SIZEOFARRAY( olestr ) );
+   iLen = WideCharToMultiByte( CP_ACP, 0, olestr, -1, strguid, sizeof( strguid ), NULL, NULL );
+   if( iLen )
+      strguid[ iLen - 1 ] = 0;
    return strguid;
 }
 #endif
@@ -401,7 +404,7 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
    {
       IProvideClassInfo2 * iPCI2;
       IProvideClassInfo *  iPCI;
-  
+
       /* Method 1: using IProvideClassInfo2 */
 
       hr = iDisp->lpVtbl->QueryInterface( iDisp, &IID_IProvideClassInfo2, ( void** ) ( void* ) &iPCI2 );
@@ -415,34 +418,36 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
             return 0;
       }
       else
+      {
          HB_TRACE( HB_TR_DEBUG, ("_get_default_sink IProvideClassInfo2 obtain error %08X", hr) );
-    
-    
+      }
+
+
       /* Method 2: using IProvideClassInfo and searching for default source in ITypeInfo */
-    
+
       hr = iDisp->lpVtbl->QueryInterface( iDisp, &IID_IProvideClassInfo, ( void** ) ( void* ) &iPCI );
       if( hr == 0 )
       {
          HB_TRACE( HB_TR_DEBUG, ("_get_default_sink IProvideClassInfo OK") );
-    
+
          hr = iPCI->lpVtbl->GetClassInfo( iPCI, &iTI );
          if( hr == 0 )
          {
             hr = iTI->lpVtbl->GetTypeAttr( iTI, &pTypeAttr );
-            if( hr == 0 ) 
+            if( hr == 0 )
             {
                for( i = 0; i < pTypeAttr->cImplTypes; i++ )
                {
                   hr = iTI->lpVtbl->GetImplTypeFlags( iTI, i, &iFlags );
                   if( hr == 0 && ( iFlags & IMPLTYPEFLAG_FDEFAULT ) && ( iFlags & IMPLTYPEFLAG_FSOURCE ) )
                   {
-                     if( iTI->lpVtbl->GetRefTypeOfImplType( iTI, i, &hRefType ) == S_OK && 
+                     if( iTI->lpVtbl->GetRefTypeOfImplType( iTI, i, &hRefType ) == S_OK &&
                          iTI->lpVtbl->GetRefTypeInfo( iTI, hRefType, &iTISink ) == S_OK )
                      {
                         HB_TRACE( HB_TR_DEBUG, ("_get_default_sink Method 2: default source is found") );
 
                         hr = iTISink->lpVtbl->GetTypeAttr( iTISink, &pTypeAttr );
-                        if( hr == 0 ) 
+                        if( hr == 0 )
                         {
                            * piid = pTypeAttr->guid;
                            iTISink->lpVtbl->ReleaseTypeAttr( iTISink, pTypeAttr );
@@ -460,7 +465,9 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
          iPCI->lpVtbl->Release( iPCI );
       }
       else
+      {
          HB_TRACE( HB_TR_DEBUG, ("_get_default_sink IProvideClassInfo obtain error %08X", hr) );
+      }
    }
 
 
@@ -471,7 +478,7 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
    {
       ITypeLib *   iTL;
       TYPEATTR *   pTypeAttr2;
-    
+
       hr = iTI->lpVtbl->GetContainingTypeLib( iTI, &iTL, NULL );
       iTI->lpVtbl->Release( iTI );
 
@@ -484,7 +491,7 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
             if( hr == S_OK )
             {
                hr = iTI->lpVtbl->GetTypeAttr( iTI, &pTypeAttr );
-               if( hr == S_OK ) 
+               if( hr == S_OK )
                {
                   if( pTypeAttr->typekind == TKIND_COCLASS )
                   {
@@ -492,17 +499,17 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
                      {
                         if( szEvent )
                         {
-                           if( iTI->lpVtbl->GetRefTypeOfImplType( iTI, j, &hRefType ) == S_OK && 
+                           if( iTI->lpVtbl->GetRefTypeOfImplType( iTI, j, &hRefType ) == S_OK &&
                                iTI->lpVtbl->GetRefTypeInfo( iTI, hRefType, &iTISink ) == S_OK )
                            {
                               BSTR  bstr;
-                          
+
                               hr = iTISink->lpVtbl->GetDocumentation( iTISink, -1, &bstr, NULL, NULL, NULL );
                               if( hr == S_OK )
                               {
                                  char  str[ 256 ];
                                  int   iLen;
-                          
+
                                  iLen = WideCharToMultiByte( CP_ACP, 0, bstr, -1, str, sizeof( str ), NULL, NULL );
                                  str[ iLen - 1 ] = '\0';
                                  if( ! strcmp( szEvent, str ) )
@@ -512,7 +519,7 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
                                     {
                                        * piid = pTypeAttr2->guid;
                                        iTISink->lpVtbl->ReleaseTypeAttr( iTISink, pTypeAttr2 );
-                          
+
                                        iTISink->lpVtbl->Release( iTISink );
                                        iTI->lpVtbl->ReleaseTypeAttr( iTI, pTypeAttr );
                                        iTI->lpVtbl->Release( iTI );
@@ -520,28 +527,28 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
                                        return 0;
                                     }
                                  }
-                                 
+
                               }
                               iTISink->lpVtbl->Release( iTISink );
                            }
                         }
                         else /* szEvent == NULL */
                         {
-	                   hr = iTI->lpVtbl->GetImplTypeFlags( iTI, j, &iFlags );
-	                   if( hr == S_OK && ( iFlags & IMPLTYPEFLAG_FDEFAULT ) && ( iFlags & IMPLTYPEFLAG_FSOURCE ) )
-	                   {
-                              if( iTI->lpVtbl->GetRefTypeOfImplType( iTI, j, &hRefType ) == S_OK && 
+                           hr = iTI->lpVtbl->GetImplTypeFlags( iTI, j, &iFlags );
+                           if( hr == S_OK && ( iFlags & IMPLTYPEFLAG_FDEFAULT ) && ( iFlags & IMPLTYPEFLAG_FSOURCE ) )
+                           {
+                              if( iTI->lpVtbl->GetRefTypeOfImplType( iTI, j, &hRefType ) == S_OK &&
                                   iTI->lpVtbl->GetRefTypeInfo( iTI, hRefType, &iTISink ) == S_OK )
                               {
                                  hr = iTISink->lpVtbl->GetTypeAttr( iTISink, &pTypeAttr2 );
                                  if( hr == S_OK )
                                  {
-#if 0 
+#if 0
 /* Debug code. You can also comment out iFlags condition, to list more interfaces [Mindaugas] */
                                     BSTR bstr;
                                     char  str[ 256 ];
                                     int   iLen;
-                          
+
                                     iTISink->lpVtbl->GetDocumentation( iTISink, -1, &bstr, NULL, NULL, NULL );
                                     iLen = WideCharToMultiByte( CP_ACP, 0, bstr, -1, str, sizeof( str ), NULL, NULL );
                                     str[ iLen - 1 ] = '\0';
@@ -556,7 +563,7 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
                                     return 0;
                                  }
                               }
-	                   }
+                           }
                         }
                      }
                   }

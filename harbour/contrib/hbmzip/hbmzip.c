@@ -144,6 +144,36 @@ static unzFile hb_unzipfileParam( int iParam )
 }
 
 
+static HB_FATTR hb_translateExtAttr( const char* szFileName, HB_FATTR ulExtAttr )
+{
+   int iLen;
+
+   iLen = ( int ) strlen( szFileName );
+   if( iLen > 4 )
+   {
+      if( hb_stricmp( szFileName + iLen - 4, ".exe" ) == 0 ||
+          hb_stricmp( szFileName + iLen - 4, ".com" ) == 0 ||
+          hb_stricmp( szFileName + iLen - 4, ".bat" ) == 0 ||
+          hb_stricmp( szFileName + iLen - 4, ".cmd" ) == 0 ||
+          hb_stricmp( szFileName + iLen - 3, ".sh" ) == 0 )
+      {
+         ulExtAttr |= 0x00490000; /* --x--x--x */
+      }
+   }
+
+   if( ulExtAttr | HB_FA_READONLY )
+      ulExtAttr |= 0x01240000;  /* r--r--r-- */
+   else
+      ulExtAttr |= 0x01B60000;  /* rw-rw-rw- */
+
+   if( ulExtAttr & HB_FA_DIRECTORY )
+      ulExtAttr |= 0x40000000;
+   else
+      ulExtAttr |= 0x80000000;
+
+   return ulExtAttr;
+}
+
 
 /* HB_ZipOpen( cFileName, [ iMode = HB_ZIP_CREATE ], [ @cGlobalComment ] ) --> hZip */
 HB_FUNC( HB_ZIPOPEN )
@@ -622,36 +652,6 @@ HB_FUNC( HB_ZIPFILECRC32 )
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-static HB_FATTR hb_translateExtAttr( const char* szFileName, HB_FATTR ulExtAttr )
-{
-   int iLen;
-
-   iLen = ( int ) strlen( szFileName );
-   if( iLen > 4 )
-   {
-      if( hb_stricmp( szFileName + iLen - 4, ".exe" ) == 0 ||
-          hb_stricmp( szFileName + iLen - 4, ".com" ) == 0 ||
-          hb_stricmp( szFileName + iLen - 4, ".bat" ) == 0 ||
-          hb_stricmp( szFileName + iLen - 4, ".cmd" ) == 0 ||
-          hb_stricmp( szFileName + iLen - 3, ".sh" ) == 0 )
-      {
-         ulExtAttr |= 0x00490000; /* --x--x--x */
-      }
-   }
-
-   if( ulExtAttr | HB_FA_READONLY )
-      ulExtAttr |= 0x01240000;  /* r--r--r-- */
-   else
-      ulExtAttr |= 0x01B60000;  /* rw-rw-rw- */
-
-   if( ulExtAttr & HB_FA_DIRECTORY )
-      ulExtAttr |= 0x40000000;
-   else
-      ulExtAttr |= 0x80000000;
-
-   return ulExtAttr;
 }
 
 static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* szName, const char* szPassword, const char* szComment )

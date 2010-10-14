@@ -457,8 +457,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/hbi18n
 %{_bindir}/hbformat
 %{_bindir}/hbmk2
-%{_bindir}/hbmk2.hu_HU.hbl
-%{_bindir}/hbmk2.pt_BR.hbl
+%{_bindir}/hbmk2.*.hbl
 %{_bindir}/hbxpatch.hbs
 %{_bindir}/hbmk2l2d.hbs
 %{_mandir}/man1/*.1*

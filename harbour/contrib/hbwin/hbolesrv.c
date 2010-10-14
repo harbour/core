@@ -54,6 +54,7 @@
 
 #include "hbwinole.h"
 #include <olectl.h>
+#include <tchar.h>
 
 #define MAX_CLSID_SIZE        64
 #define MAX_CLSNAME_SIZE      256
