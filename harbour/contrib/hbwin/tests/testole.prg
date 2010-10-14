@@ -34,6 +34,7 @@ PROCEDURE Main()
       ? "a) Read ADODB table"
       ? "b) SOAP Toolkit client"
       ? "c) PocketSOAP client"
+      ? "d) Internet Explorer with callback"
       ? "0) Quit"
       ? "> "
 
@@ -64,6 +65,8 @@ PROCEDURE Main()
          Exm_SOAP()
       ELSEIF nOption == Asc( "c" )
          Exm_PocketSOAP()
+      ELSEIF nOption == Asc( "d" )
+         Exm_IExplorer2()
       ELSEIF nOption == Asc( "0" )
          EXIT
       ENDIF
@@ -223,6 +226,23 @@ STATIC PROCEDURE Exm_IExplorer()
    IF ( oIE := win_oleCreateObject( "InternetExplorer.Application" ) ) != NIL
       oIE:Visible := .T.
       oIE:Navigate( "http://harbour-project.org" )
+   ELSE
+      ? "Error. IExplorer not available.", win_oleErrorText()
+   ENDIF
+
+   RETURN
+
+
+STATIC PROCEDURE Exm_IExplorer2()
+   LOCAL oIE
+
+   IF ( oIE := win_oleCreateObject( "InternetExplorer.Application" ) ) != NIL
+      oIE:__hSink := __AxRegisterHandler( oIE:__hObj, {|...| QOUT(...)})
+      oIE:Visible := .T.
+      oIE:Navigate( "http://harbour-project.org" )
+      WHILE oIE:ReadyState != 4
+         HB_IDLESLEEP( 0 )
+      ENDDO
    ELSE
       ? "Error. IExplorer not available.", win_oleErrorText()
    ENDIF

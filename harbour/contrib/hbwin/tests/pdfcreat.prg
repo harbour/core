@@ -31,7 +31,7 @@ LOCAL oPC, nTime, cDefaultPrinter, cFilename, oPrinter, nEvent := 0
    cFilename := HB_PROGNAME()
 
    /* Setup event notification */
-   oPC:__hSink := __AxRegisterHandler( oPC:__hObj, {|X| nEvent := X}, "{58B69879-9ED8-468D-879F-787161FA105F}")
+   oPC:__hSink := __AxRegisterHandler( oPC:__hObj, {|X| nEvent := X} )
 
    oPC:cStart( "/NoProcessingAtStartup" )
    oPC:_cOption( "UseAutosave", 1 )
