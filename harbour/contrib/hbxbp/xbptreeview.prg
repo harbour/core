@@ -207,7 +207,7 @@ METHOD XbpTreeView:execSlot( cSlot, p )
    CASE cSlot == "customContextMenuRequested(QPoint)"
       IF hb_isBlock( ::hb_contextMenu )
          qPos := QPoint( p )
-         IF ( qItem := ::oWidget:itemAt( qPos ) ):isValidObject()
+         IF ( qItem := ::oWidget:itemAt( qPos ) ):hasValidPointer()
             IF ( n := ascan( ::aItems, {|o| hbqt_IsEqualGcQtPointer( o:oWidget, qItem ) } ) ) > 0
                qPt := ::oWidget:mapToGlobal( QPoint( p ) )
                eval( ::hb_contextMenu, { qPt:x(), qPt:y() }, NIL, ::aItems[ n ] )

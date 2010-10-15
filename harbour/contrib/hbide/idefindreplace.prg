@@ -975,7 +975,7 @@ METHOD IdeFindInFiles:execContextMenu( p )
       qMenu:addAction( "Zoom In"  )
       qMenu:addAction( "Zoom Out" )
 
-      IF ( qAct := qMenu:exec( ::oUI:q_editResults:mapToGlobal( QPoint( p ) ) ) ):isValidObject()
+      IF ( qAct := qMenu:exec( ::oUI:q_editResults:mapToGlobal( QPoint( p ) ) ) ):hasValidPointer()
          cAct := qAct:text()
 
          SWITCH cAct

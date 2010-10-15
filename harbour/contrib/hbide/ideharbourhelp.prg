@@ -490,7 +490,7 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
 
    CASE "buttonUp_clicked"
       IF ::nCurInHist > 1 .AND. ::nCurInHist <= len( ::aHistory )
-         IF ( qTWItem := ::oUI:q_treeDoc:itemAbove( ::oUI:q_treeDoc:currentItem( 0 ) ) ):isValidObject()
+         IF ( qTWItem := ::oUI:q_treeDoc:itemAbove( ::oUI:q_treeDoc:currentItem( 0 ) ) ):hasValidPointer()
             ::oUI:q_treeDoc:setCurrentItem( qTWItem, 0 )
          ENDIF
       ENDIF

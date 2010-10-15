@@ -528,7 +528,7 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
       EXIT
 
    CASE "QEvent_MouseMoveMenu"
-      IF empty( ::qPos ) .OR. empty( ::qAct ) .OR. ! ::qAct:isValidObject()
+      IF empty( ::qPos ) .OR. empty( ::qAct ) .OR. ! ::qAct:hasValidPointer()
          EXIT
       ENDIF
 
@@ -1071,7 +1071,7 @@ METHOD HbqReportsManager:contextMenuScene( p1 )
    qMenu:addAction( "Refresh"  )
    qMenu:addAction( "Zoom+" )
 
-   IF ( qAct := qMenu:exec( qEvent:screenPos() ) ):isValidObject()
+   IF ( qAct := qMenu:exec( qEvent:screenPos() ) ):hasValidPointer()
       SWITCH qAct:text()
       CASE "Refresh"
          EXIT
@@ -1095,7 +1095,7 @@ METHOD HbqReportsManager:contextMenuItem( p1, p2 )
    qMenu:addAction( "Cut"  )
    qMenu:addAction( "Copy" )
 
-   IF ( qAct := qMenu:exec( qEvent:screenPos() ) ):isValidObject()
+   IF ( qAct := qMenu:exec( qEvent:screenPos() ) ):hasValidPointer()
       SWITCH qAct:text()
       CASE "Cut"
          EXIT
@@ -1826,7 +1826,7 @@ METHOD HqrGraphicsItem:contextMenu( p1, p2 )
    qMenu:addAction( "Copy" )
 
    qAct := qMenu:exec( qEvent:screenPos() )
-   IF qAct:isValidObject()
+   IF qAct:hasValidPointer()
       SWITCH qAct:text()
       CASE "Cut"
          EXIT

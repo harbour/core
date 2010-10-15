@@ -381,7 +381,7 @@ METHOD XbpWindow:setQtProperty( cProperty )
 
 METHOD XbpWindow:postCreate()
 
-   ::status := iif( ::oWidget:isValidObject(), XBP_STAT_CREATE, XBP_STAT_FAILURE )
+   ::status := iif( ::oWidget:hasValidPointer(), XBP_STAT_CREATE, XBP_STAT_FAILURE )
 
    RETURN Self
 

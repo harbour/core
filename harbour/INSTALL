@@ -659,7 +659,7 @@ HARBOUR
                                  NOTE: In current implementation it's
                                  appended to compiler directory name, so all
                                  filesystem/platform name rules and limits
-                                 apply. (Back)slashes will be stripped from 
+                                 apply. (Back)slashes will be stripped from
                                  the name though.
    - HB_BUILD_PKG=yes            Create release package. Default: no
                                  Requires 'clean install' in root source dir.
@@ -1439,6 +1439,7 @@ HARBOUR
          ftp://ftp.netlabs.org/pub/gcc/libc-0_6_3-csd3.exe
          http://os2ports.smedley.info/index.php?page=gcc
          http://os2ports.smedley.info/index.php?page=gcc44
+         http://download.smedley.info/gcc-4.4.5-os2-20101004.zip
       DJGPP [dos, *nix, free, open-source]
          http://www.delorie.com/djgpp/
       Open Watcom [win, dos, os2, linux, free, open-source]

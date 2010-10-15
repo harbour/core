@@ -188,6 +188,22 @@ void * hbqt_pPtrFromObj( int iParam )
    }
 }
 
+HB_FUNC( HBQT_ISOBJECT )
+{
+   PHB_ITEM pParam = hb_param( 1, HB_IT_OBJECT );
+
+   if( pParam )
+   {
+      hb_vmPushSymbol( hb_dynsymSymbol( hb_dynsymFindName( "PPTR" ) ) );
+      hb_vmPush( pParam );
+      hb_vmSend( 0 );
+
+      hb_retl( hb_param( -1, HB_IT_POINTER ) != NULL );
+   }
+   else
+      hb_retl( HB_FALSE );
+}
+
 HB_FUNC( HBQT_PTR )
 {
    PHB_ITEM pParam = hb_param( 1, HB_IT_ANY );

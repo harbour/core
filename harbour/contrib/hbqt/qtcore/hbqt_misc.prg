@@ -62,7 +62,8 @@ CLASS HbQtObjectHandler
    VAR    pEvents
 
    METHOD from( xObject )
-   METHOD isValidObject()
+   METHOD fromPointer( pPtr )
+   METHOD hasValidPointer()
 
    METHOD connect( cnEvent, bBlock )
    METHOD disconnect( cnEvent )
@@ -73,17 +74,34 @@ ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbQtObjectHandler:isValidObject()
-   RETURN __hbqt_IsValidPointer( ::pPtr )
-
-/*----------------------------------------------------------------------*/
-
+/* NOTE: Deprecated: passing raw pointers to this function
+   TODO: Generate RTE when non QT object is passed.
+   TODO: Move thid to class implementation level so that proper object
+         type checking can be done. */
 METHOD HbQtObjectHandler:from( xObject )
    LOCAL pPtr
    IF hb_isPointer( pPtr := hbqt_ptr( xObject ) )
       ::pPtr := pPtr
    ENDIF
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+/* TODO: Drop this function when all raw QT pointers are fully eliminated from .prg level. */
+METHOD HbQtObjectHandler:fromPointer( pPtr )
+   IF hb_isPointer( pPtr )
+      ::pPtr := pPtr
+   ELSE
+      hbqt_Error()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+/* TODO: Drop this function, as it's not desired to have invalid QT pointers wrapped
+         into valid .prg level QT objects. */
+METHOD HbQtObjectHandler:hasValidPointer()
+   RETURN __hbqt_IsValidPointer( ::pPtr )
 
 /*----------------------------------------------------------------------*/
 

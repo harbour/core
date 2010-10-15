@@ -450,7 +450,7 @@ METHOD IdeEdit:execEvent( nMode, oEdit, p, p1 )
       ::oEM:aActions[ 19, 2 ]:setEnabled( len( ::oEditor:aEdits ) == 0 .OR. ::oEditor:nSplOrient == -1 .OR. ::oEditor:nSplOrient == 2 )
       ::oEM:aActions[ 21, 2 ]:setEnabled( n > 0 )
 
-      IF ! ( qAct := ::oEM:qContextMenu:exec( qEdit:mapToGlobal( QPoint( p ) ) ) ):isValidObject()
+      IF ! ( qAct := ::oEM:qContextMenu:exec( qEdit:mapToGlobal( QPoint( p ) ) ) ):hasValidPointer()
          RETURN Self
       ENDIF
 

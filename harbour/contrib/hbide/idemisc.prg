@@ -171,7 +171,7 @@ FUNCTION hbide_execPopup( aPops, aqPos, qParent )
    ELSEIF hb_isPointer( aqPos )
       qPoint := qParent:mapToGlobal( QPoint( aqPos ) )
    ENDIF
-   IF ( qAct := qPop:exec( qPoint ) ):isValidObject()
+   IF ( qAct := qPop:exec( qPoint ) ):hasValidPointer()
       cAct := qAct:text()
       FOR EACH a_ IN aPops
          IF hb_isObject( a_[ 1 ] )
