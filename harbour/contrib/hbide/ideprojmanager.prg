@@ -849,7 +849,7 @@ METHOD IdeProjManager:synchronizeAlienProject( cProjFileName )
    ENDSWITCH
 
    oProcess := QProcess()
-   oProcess:start_1( cCmd )
+   oProcess:start( cCmd )
    oProcess:waitForFinished()
 
    RETURN cHbp

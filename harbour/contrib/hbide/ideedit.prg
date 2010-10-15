@@ -1538,7 +1538,7 @@ METHOD IdeEdit:paste()
    ENDIF
 
    ::qEdit:hbGetSelectionInfo()
-   IF ::aSelectionInfo[ 1 ] > -1 //.AND. ::aSelectionInfo[ 1 ] == ::aSelectionInfo[ 3 ]
+   IF ::aSelectionInfo[ 1 ] > -1
       ::qEdit:hbCut( Qt_Key_Delete )
    ENDIF
    ::qEdit:hbPaste()

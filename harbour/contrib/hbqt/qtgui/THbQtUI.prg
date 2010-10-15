@@ -295,7 +295,7 @@ METHOD HbQtUI:OnError( ... )
          Eval( ErrorBlock(), oError )
       ENDIF
    ELSE
-      IF ::oWidget:isValidObject()
+      IF ::oWidget:hasValidPointer()
          xReturn := ::oWidget:&cMsg( ... )
       ENDIF
    ENDIF
