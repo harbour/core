@@ -1704,14 +1704,12 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
 
          CASE oArg:cCast == "uchar" .and. oArg:lFar .and. !( oArg:lConst )
             /* TOFIX: Such code is not valid and should never be generated (const->non-const) [vszakats] */
-            /* TOFIX: uchar is needed by QT, char is passed [vszakats] */
-            oArg:cBody   := "( char * ) hb_parc( " + cHBIdx + " )"
+            oArg:cBody   := "( uchar * ) hb_parc( " + cHBIdx + " )"
             oArg:cDoc    := "c" + oMtd:cDocNM
             oArg:cTypeHB := "C"
 
          CASE oArg:cCast == "uchar" .and. !( oArg:lFar ) .and. !( oArg:lConst )
-            /* TOFIX: uchar is needed by QT, char is passed [vszakats] */
-            oArg:cBody   := "( char ) hb_parni( " + cHBIdx + " )"
+            oArg:cBody   := "( uchar ) hb_parni( " + cHBIdx + " )"
             oArg:cDoc    := "n" + oMtd:cDocNM
             oArg:cTypeHB := "N"
 
