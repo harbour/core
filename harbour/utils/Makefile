@@ -17,6 +17,8 @@ ifneq ($(HB_BUILD_PARTS),compiler)
       hbtest \
       hbformat \
 
+   DIRS += $(HB_UTIL_ADDONS)
+
 endif
 
 endif
