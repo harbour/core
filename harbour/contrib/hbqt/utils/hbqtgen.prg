@@ -1056,10 +1056,16 @@ METHOD HbQtSource:buildClass()
    aadd( txt_, "FUNCTION " + ::cWidget + "( ... )" )
    aadd( txt_, "   RETURN HB_" + ::cWidget + "():new( ... )" )
    aadd( txt_, "" )
+   aadd( txt_, "FUNCTION " + ::cWidget + "From( ... )" )
+   aadd( txt_, "   RETURN HB_" + ::cWidget + "():from( ... )" )
+   aadd( txt_, "" )
+   aadd( txt_, "FUNCTION " + ::cWidget + "FromPointer( ... )" )
+   aadd( txt_, "   RETURN HB_" + ::cWidget + "():fromPointer( ... )" )
+   aadd( txt_, "" )
    aadd( txt_, "" )
 
    n := ascan( ::cls_, {|e_| left( lower( e_[ 1 ] ), 7 ) == "inherit" .and. !empty( e_[ 2 ] ) } )
-   s := "CREATE CLASS " + ::cWidget + " INHERIT HbQtObjectHandler" + iif( n > 0, ", " + strtran( ::cls_[ n, 2 ], "Q", "HB_Q" ), "" ) + " FUNCTION HB_" + ::cWidget
+   s := "CREATE CLASS " + ::cWidget + " INHERIT HbQtObjectHandler" + iif( n > 0, ", " + strtran( ::cls_[ n, 2 ], "Q", "HB_Q" ), "" ) + " STATIC FUNCTION HB_" + ::cWidget
 
    aadd( txt_, s                                            )
    aadd( txt_, "   "                                        )
