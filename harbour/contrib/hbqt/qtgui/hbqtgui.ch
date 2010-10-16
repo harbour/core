@@ -2252,6 +2252,19 @@
 #define QPainter_HighQualityAntialiasing                     0x08
 #define QPainter_NonCosmeticDefaultPen                       0x10
 
+#define QComboBox_NoInsert                                   0    // The string will not be inserted into the combobox.
+#define QComboBox_InsertAtTop                                1    // The string will be inserted as the first item in the combobox.
+#define QComboBox_InsertAtCurrent                            2    // The current item will be replaced by the string.
+#define QComboBox_InsertAtBottom                             3    // The string will be inserted after the last item in the combobox.
+#define QComboBox_InsertAfterCurrent                         4    // The string is inserted after the current item in the combobox.
+#define QComboBox_InsertBeforeCurrent                        5    // The string is inserted before the current item in the combobox.
+#define QComboBox_InsertAlphabetically                       6    // The string is inserted in the alphabetic order in the combobox.
+
+#define QComboBox_AdjustToContents                           0    // The combobox will always adjust to the contents
+#define QComboBox_AdjustToContentsOnFirstShow                1    // The combobox will adjust to its contents the first time it is shown.
+#define QComboBox_AdjustToMinimumContentsLength              2    // Use AdjustToContents or AdjustToContentsOnFirstShow instead.
+#define QComboBox_AdjustToMinimumContentsLengthWithIcon      3    // The combobox will adjust to minimumContentsLength plus space for an icon. For performance reasons use this policy on large models.
+
 /*----------------------------------------------------------------------*/
 //                        HBQT Defined Constants
 /*----------------------------------------------------------------------*/
@@ -2261,7 +2274,6 @@
  *   Format:
  *   HBQT_(Qt class initials)_(Qt overloaded member)
  */
-
 #define HBQT_QAIM_data                            1001
 #define HBQT_QAIM_flags                           1003
 #define HBQT_QAIM_headerData                      2001
