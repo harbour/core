@@ -98,6 +98,12 @@
 FUNCTION QTransform( ... )
    RETURN HB_QTransform():new( ... )
 
+FUNCTION QTransformFrom( ... )
+   RETURN HB_QTransform():from( ... )
+
+FUNCTION QTransformFromPointer( ... )
+   RETURN HB_QTransform():fromPointer( ... )
+
 
 CREATE CLASS QTransform INHERIT HbQtObjectHandler FUNCTION HB_QTransform
 
@@ -240,7 +246,7 @@ METHOD QTransform:m33( ... )
 METHOD QTransform:adjoint( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTransform():from( Qt_QTransform_adjoint( ::pPtr, ... ) )
+      RETURN QTransformFromPointer( Qt_QTransform_adjoint( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -282,11 +288,11 @@ METHOD QTransform:inverted( ... )
    CASE 1
       DO CASE
       CASE hb_isLogical( hb_pvalue( 1 ) )
-         RETURN HB_QTransform():from( Qt_QTransform_inverted( ::pPtr, ... ) )
+         RETURN QTransformFromPointer( Qt_QTransform_inverted( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QTransform():from( Qt_QTransform_inverted( ::pPtr, ... ) )
+      RETURN QTransformFromPointer( Qt_QTransform_inverted( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -353,21 +359,21 @@ METHOD QTransform:map( ... )
       CASE hb_isObject( hb_pvalue( 1 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) )
          CASE "QPOINTF"
-            RETURN HB_QPointF():from( Qt_QTransform_map_1( ::pPtr, ... ) )
+            RETURN QPointFFromPointer( Qt_QTransform_map_1( ::pPtr, ... ) )
          CASE "QREGION"
-            RETURN HB_QRegion():from( Qt_QTransform_map_7( ::pPtr, ... ) )
+            RETURN QRegionFromPointer( Qt_QTransform_map_7( ::pPtr, ... ) )
          CASE "QPOINT"
-            RETURN HB_QPoint():from( Qt_QTransform_map_2( ::pPtr, ... ) )
+            RETURN QPointFromPointer( Qt_QTransform_map_2( ::pPtr, ... ) )
          CASE "QLINE"
-            RETURN HB_QLine():from( Qt_QTransform_map_3( ::pPtr, ... ) )
+            RETURN QLineFromPointer( Qt_QTransform_map_3( ::pPtr, ... ) )
          CASE "QPOLYGONF"
-            RETURN HB_QPolygonF():from( Qt_QTransform_map_5( ::pPtr, ... ) )
+            RETURN QPolygonFFromPointer( Qt_QTransform_map_5( ::pPtr, ... ) )
          CASE "QPAINTERPATH"
-            RETURN HB_QPainterPath():from( Qt_QTransform_map_8( ::pPtr, ... ) )
+            RETURN QPainterPathFromPointer( Qt_QTransform_map_8( ::pPtr, ... ) )
          CASE "QPOLYGON"
-            RETURN HB_QPolygon():from( Qt_QTransform_map_6( ::pPtr, ... ) )
+            RETURN QPolygonFromPointer( Qt_QTransform_map_6( ::pPtr, ... ) )
          CASE "QLINEF"
-            RETURN HB_QLineF():from( Qt_QTransform_map_4( ::pPtr, ... ) )
+            RETURN QLineFFromPointer( Qt_QTransform_map_4( ::pPtr, ... ) )
          ENDSWITCH
       ENDCASE
       EXIT
@@ -382,9 +388,9 @@ METHOD QTransform:mapRect( ... )
       CASE hb_isObject( hb_pvalue( 1 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) )
          CASE "QRECTF"
-            RETURN HB_QRectF():from( Qt_QTransform_mapRect( ::pPtr, ... ) )
+            RETURN QRectFFromPointer( Qt_QTransform_mapRect( ::pPtr, ... ) )
          CASE "QRECT"
-            RETURN HB_QRect():from( Qt_QTransform_mapRect_1( ::pPtr, ... ) )
+            RETURN QRectFromPointer( Qt_QTransform_mapRect_1( ::pPtr, ... ) )
          ENDSWITCH
       ENDCASE
       EXIT
@@ -397,7 +403,7 @@ METHOD QTransform:mapToPolygon( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QPolygon():from( Qt_QTransform_mapToPolygon( ::pPtr, ... ) )
+         RETURN QPolygonFromPointer( Qt_QTransform_mapToPolygon( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -417,13 +423,13 @@ METHOD QTransform:rotate( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QTransform():from( Qt_QTransform_rotate( ::pPtr, ... ) )
+         RETURN QTransformFromPointer( Qt_QTransform_rotate( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QTransform():from( Qt_QTransform_rotate( ::pPtr, ... ) )
+         RETURN QTransformFromPointer( Qt_QTransform_rotate( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -435,13 +441,13 @@ METHOD QTransform:rotateRadians( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QTransform():from( Qt_QTransform_rotateRadians( ::pPtr, ... ) )
+         RETURN QTransformFromPointer( Qt_QTransform_rotateRadians( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QTransform():from( Qt_QTransform_rotateRadians( ::pPtr, ... ) )
+         RETURN QTransformFromPointer( Qt_QTransform_rotateRadians( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -453,7 +459,7 @@ METHOD QTransform:scale( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QTransform():from( Qt_QTransform_scale( ::pPtr, ... ) )
+         RETURN QTransformFromPointer( Qt_QTransform_scale( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -477,7 +483,7 @@ METHOD QTransform:shear( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QTransform():from( Qt_QTransform_shear( ::pPtr, ... ) )
+         RETURN QTransformFromPointer( Qt_QTransform_shear( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -487,7 +493,7 @@ METHOD QTransform:shear( ... )
 METHOD QTransform:toAffine( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMatrix():from( Qt_QTransform_toAffine( ::pPtr, ... ) )
+      RETURN QMatrixFromPointer( Qt_QTransform_toAffine( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -497,7 +503,7 @@ METHOD QTransform:translate( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QTransform():from( Qt_QTransform_translate( ::pPtr, ... ) )
+         RETURN QTransformFromPointer( Qt_QTransform_translate( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -507,7 +513,7 @@ METHOD QTransform:translate( ... )
 METHOD QTransform:transposed( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTransform():from( Qt_QTransform_transposed( ::pPtr, ... ) )
+      RETURN QTransformFromPointer( Qt_QTransform_transposed( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -525,7 +531,7 @@ METHOD QTransform:fromScale( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QTransform():from( Qt_QTransform_fromScale( ::pPtr, ... ) )
+         RETURN QTransformFromPointer( Qt_QTransform_fromScale( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -537,7 +543,7 @@ METHOD QTransform:fromTranslate( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QTransform():from( Qt_QTransform_fromTranslate( ::pPtr, ... ) )
+         RETURN QTransformFromPointer( Qt_QTransform_fromTranslate( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

@@ -98,6 +98,12 @@
 FUNCTION QFocusFrame( ... )
    RETURN HB_QFocusFrame():new( ... )
 
+FUNCTION QFocusFrameFrom( ... )
+   RETURN HB_QFocusFrame():from( ... )
+
+FUNCTION QFocusFrameFromPointer( ... )
+   RETURN HB_QFocusFrame():fromPointer( ... )
+
 
 CREATE CLASS QFocusFrame INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QFocusFrame
 
@@ -133,7 +139,7 @@ METHOD QFocusFrame:setWidget( ... )
 METHOD QFocusFrame:widget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QFocusFrame_widget( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QFocusFrame_widget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

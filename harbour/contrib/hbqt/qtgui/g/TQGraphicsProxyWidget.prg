@@ -98,6 +98,12 @@
 FUNCTION QGraphicsProxyWidget( ... )
    RETURN HB_QGraphicsProxyWidget():new( ... )
 
+FUNCTION QGraphicsProxyWidgetFrom( ... )
+   RETURN HB_QGraphicsProxyWidget():from( ... )
+
+FUNCTION QGraphicsProxyWidgetFromPointer( ... )
+   RETURN HB_QGraphicsProxyWidget():fromPointer( ... )
+
 
 CREATE CLASS QGraphicsProxyWidget INHERIT HbQtObjectHandler, HB_QGraphicsWidget FUNCTION HB_QGraphicsProxyWidget
 
@@ -125,7 +131,7 @@ METHOD QGraphicsProxyWidget:createProxyForChildWidget( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QGraphicsProxyWidget():from( Qt_QGraphicsProxyWidget_createProxyForChildWidget( ::pPtr, ... ) )
+         RETURN QGraphicsProxyWidgetFromPointer( Qt_QGraphicsProxyWidget_createProxyForChildWidget( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -149,7 +155,7 @@ METHOD QGraphicsProxyWidget:subWidgetRect( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QRectF():from( Qt_QGraphicsProxyWidget_subWidgetRect( ::pPtr, ... ) )
+         RETURN QRectFFromPointer( Qt_QGraphicsProxyWidget_subWidgetRect( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -159,7 +165,7 @@ METHOD QGraphicsProxyWidget:subWidgetRect( ... )
 METHOD QGraphicsProxyWidget:widget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QGraphicsProxyWidget_widget( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QGraphicsProxyWidget_widget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

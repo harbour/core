@@ -428,8 +428,6 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
 
    SWITCH cEvent
    CASE "graphicsScene_block"
-      qEvent := HB_QGraphicsSceneDragDropEvent():from( p1 )
-
       DO CASE
       CASE p == 21001
          ::nScreenDpiX := p1
@@ -445,14 +443,15 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
          ::contextMenuScene( p1 )
 
       CASE p == QEvent_GraphicsSceneDragEnter
-         qEvent:acceptProposedAction()
+         QGraphicsSceneDragDropEventFromPointer( p1 ):acceptProposedAction()
 
       CASE p == QEvent_GraphicsSceneDragMove
-         qEvent:acceptProposedAction()
+         QGraphicsSceneDragDropEventFromPointer( p1 ):acceptProposedAction()
 
       CASE p == QEvent_GraphicsSceneDragLeave
 
       CASE p == QEvent_GraphicsSceneDrop
+         qEvent := QGraphicsSceneDragDropEventFromPointer( p1 )
          qMime := qEvent:mimeData()
          IF qMime:hasFormat( "application/x-qabstractitemmodeldatalist" )
             IF p2[ 1 ] == "DataTree"
@@ -507,7 +506,7 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
       EXIT
 
    CASE "treeObjects_clicked"
-      qItem := HB_QTreeWidgetItem():from( p )
+      qItem := QTreeWidgetItemFromPointer( p )
       IF hb_hHasKey( ::hItems, qItem:text( 0 ) )
          ::qScene:clearSelection()
          //::hItems[ qItem:text( 0 ) ]:setSelected( .t. )
@@ -532,7 +531,7 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
          EXIT
       ENDIF
 
-      qEvent := HB_QMouseEvent():from( p )
+      qEvent := QMouseEventFromPointer( p )
       qRC := QRect( ::qPos:x() - 5, ::qPos:y() - 5, 10, 10 ):normalized()
 
       IF qRC:contains( qEvent:pos() )
@@ -561,10 +560,10 @@ METHOD HbqReportsManager:execEvent( cEvent, p, p1, p2 )
    CASE "QEvent_MouseReleaseMenu"
       ::qDrag := NIL
       ::qPos  := NIL
-      ::pAct  := NIL
+      ::qAct  := NIL
       EXIT
    CASE "QEvent_MousePressMenu"
-      qEvent := HB_QMouseEvent():from( p )
+      qEvent := QMouseEventFromPointer( p )
       ::qPos := qEvent:pos()
       ::qAct := ::qShapesMenu:actionAt( qEvent:pos() )
       EXIT
@@ -1065,7 +1064,7 @@ METHOD HbqReportsManager:zoom( nMode )
 METHOD HbqReportsManager:contextMenuScene( p1 )
    LOCAL qMenu, qEvent, qAct
 
-   qEvent := HB_QGraphicsSceneContextMenuEvent():from( p1 )
+   qEvent := QGraphicsSceneContextMenuEventFromPointer( p1 )
 
    qMenu := QMenu( ::qView )
    qMenu:addAction( "Refresh"  )
@@ -1089,7 +1088,7 @@ METHOD HbqReportsManager:contextMenuItem( p1, p2 )
 
    HB_SYMBOL_UNUSED( p2 )
 
-   qEvent := HB_QGraphicsSceneContextMenuEvent():from( p1 )
+   qEvent := QGraphicsSceneContextMenuEventFromPointer( p1 )
 
    qMenu := QMenu()
    qMenu:addAction( "Cut"  )
@@ -1531,7 +1530,7 @@ METHOD HbqReportsManager:printPreview( qPrinter )
 /*----------------------------------------------------------------------*/
 
 METHOD HbqReportsManager:paintRequested( pPrinter )
-   LOCAL qPrinter := HB_QPrinter():from( pPrinter )
+   LOCAL qPrinter := QPrinterFromPointer( pPrinter )
 
    ::printReport( qPrinter )
 
@@ -1799,9 +1798,8 @@ METHOD HqrGraphicsItem:execEvent( cEvent, p, p1, p2 )
          ::oRM:objectSelected( Self )
 
       CASE p == 21017
-         //qPainter := HB_QPainter():from( p1 )
-         qPainter := HB_QPainter():from( p1 )
-         qRect    := HB_QRectF():from( p2 )
+         qPainter := QPainterFromPointer( p1 )
+         qRect    := QRectFFromPointer( p2 )
          ::draw( qPainter, qRect )
 
       CASE p == QEvent_GraphicsSceneContextMenu
@@ -1819,7 +1817,7 @@ METHOD HqrGraphicsItem:contextMenu( p1, p2 )
 
    HB_SYMBOL_UNUSED( p2 )
 
-   qEvent := HB_QGraphicsSceneContextMenuEvent():from( p1 )
+   qEvent := QGraphicsSceneContextMenuEventFromPointer( p1 )
 
    qMenu := QMenu()
    qMenu:addAction( "Cut"  )

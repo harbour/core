@@ -98,6 +98,12 @@
 FUNCTION QPaintDevice( ... )
    RETURN HB_QPaintDevice():new( ... )
 
+FUNCTION QPaintDeviceFrom( ... )
+   RETURN HB_QPaintDevice():from( ... )
+
+FUNCTION QPaintDeviceFromPointer( ... )
+   RETURN HB_QPaintDevice():fromPointer( ... )
+
 
 CREATE CLASS QPaintDevice INHERIT HbQtObjectHandler FUNCTION HB_QPaintDevice
 
@@ -179,7 +185,7 @@ METHOD QPaintDevice:numColors( ... )
 METHOD QPaintDevice:paintEngine( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPaintEngine():from( Qt_QPaintDevice_paintEngine( ::pPtr, ... ) )
+      RETURN QPaintEngineFromPointer( Qt_QPaintDevice_paintEngine( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

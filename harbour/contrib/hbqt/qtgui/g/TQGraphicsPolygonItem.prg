@@ -98,6 +98,12 @@
 FUNCTION QGraphicsPolygonItem( ... )
    RETURN HB_QGraphicsPolygonItem():new( ... )
 
+FUNCTION QGraphicsPolygonItemFrom( ... )
+   RETURN HB_QGraphicsPolygonItem():from( ... )
+
+FUNCTION QGraphicsPolygonItemFromPointer( ... )
+   RETURN HB_QGraphicsPolygonItem():fromPointer( ... )
+
 
 CREATE CLASS QGraphicsPolygonItem INHERIT HbQtObjectHandler, HB_QAbstractGraphicsShapeItem FUNCTION HB_QGraphicsPolygonItem
 
@@ -131,7 +137,7 @@ METHOD QGraphicsPolygonItem:fillRule( ... )
 METHOD QGraphicsPolygonItem:polygon( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPolygonF():from( Qt_QGraphicsPolygonItem_polygon( ::pPtr, ... ) )
+      RETURN QPolygonFFromPointer( Qt_QGraphicsPolygonItem_polygon( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

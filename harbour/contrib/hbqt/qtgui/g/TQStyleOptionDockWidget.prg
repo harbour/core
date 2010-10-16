@@ -98,6 +98,12 @@
 FUNCTION QStyleOptionDockWidget( ... )
    RETURN HB_QStyleOptionDockWidget():new( ... )
 
+FUNCTION QStyleOptionDockWidgetFrom( ... )
+   RETURN HB_QStyleOptionDockWidget():from( ... )
+
+FUNCTION QStyleOptionDockWidgetFromPointer( ... )
+   RETURN HB_QStyleOptionDockWidget():fromPointer( ... )
+
 
 CREATE CLASS QStyleOptionDockWidget INHERIT HbQtObjectHandler, HB_QStyleOption FUNCTION HB_QStyleOptionDockWidget
 

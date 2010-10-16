@@ -98,6 +98,12 @@
 FUNCTION QStyleOptionTabWidgetFrame( ... )
    RETURN HB_QStyleOptionTabWidgetFrame():new( ... )
 
+FUNCTION QStyleOptionTabWidgetFrameFrom( ... )
+   RETURN HB_QStyleOptionTabWidgetFrame():from( ... )
+
+FUNCTION QStyleOptionTabWidgetFrameFromPointer( ... )
+   RETURN HB_QStyleOptionTabWidgetFrame():fromPointer( ... )
+
 
 CREATE CLASS QStyleOptionTabWidgetFrame INHERIT HbQtObjectHandler, HB_QStyleOption FUNCTION HB_QStyleOptionTabWidgetFrame
 
@@ -125,7 +131,7 @@ METHOD QStyleOptionTabWidgetFrame:new( ... )
 METHOD QStyleOptionTabWidgetFrame:leftCornerWidgetSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QStyleOptionTabWidgetFrame_leftCornerWidgetSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QStyleOptionTabWidgetFrame_leftCornerWidgetSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -149,7 +155,7 @@ METHOD QStyleOptionTabWidgetFrame:midLineWidth( ... )
 METHOD QStyleOptionTabWidgetFrame:rightCornerWidgetSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QStyleOptionTabWidgetFrame_rightCornerWidgetSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QStyleOptionTabWidgetFrame_rightCornerWidgetSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -165,7 +171,7 @@ METHOD QStyleOptionTabWidgetFrame:shape( ... )
 METHOD QStyleOptionTabWidgetFrame:tabBarSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QStyleOptionTabWidgetFrame_tabBarSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QStyleOptionTabWidgetFrame_tabBarSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

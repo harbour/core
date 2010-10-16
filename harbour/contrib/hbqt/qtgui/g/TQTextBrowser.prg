@@ -98,6 +98,12 @@
 FUNCTION QTextBrowser( ... )
    RETURN HB_QTextBrowser():new( ... )
 
+FUNCTION QTextBrowserFrom( ... )
+   RETURN HB_QTextBrowser():from( ... )
+
+FUNCTION QTextBrowserFromPointer( ... )
+   RETURN HB_QTextBrowser():fromPointer( ... )
+
 
 CREATE CLASS QTextBrowser INHERIT HbQtObjectHandler, HB_QTextEdit FUNCTION HB_QTextBrowser
 
@@ -177,7 +183,7 @@ METHOD QTextBrowser:historyUrl( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QUrl():from( Qt_QTextBrowser_historyUrl( ::pPtr, ... ) )
+         RETURN QUrlFromPointer( Qt_QTextBrowser_historyUrl( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -205,7 +211,7 @@ METHOD QTextBrowser:loadResource( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QVariant():from( Qt_QTextBrowser_loadResource( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QTextBrowser_loadResource( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -231,7 +237,7 @@ METHOD QTextBrowser:openLinks( ... )
 METHOD QTextBrowser:searchPaths( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QTextBrowser_searchPaths( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QTextBrowser_searchPaths( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -275,7 +281,7 @@ METHOD QTextBrowser:setSearchPaths( ... )
 METHOD QTextBrowser:source( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QUrl():from( Qt_QTextBrowser_source( ::pPtr, ... ) )
+      RETURN QUrlFromPointer( Qt_QTextBrowser_source( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

@@ -98,6 +98,12 @@
 FUNCTION QGraphicsItemAnimation( ... )
    RETURN HB_QGraphicsItemAnimation():new( ... )
 
+FUNCTION QGraphicsItemAnimationFrom( ... )
+   RETURN HB_QGraphicsItemAnimation():from( ... )
+
+FUNCTION QGraphicsItemAnimationFromPointer( ... )
+   RETURN HB_QGraphicsItemAnimation():fromPointer( ... )
+
 
 CREATE CLASS QGraphicsItemAnimation INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QGraphicsItemAnimation
 
@@ -171,7 +177,7 @@ METHOD QGraphicsItemAnimation:horizontalShearAt( ... )
 METHOD QGraphicsItemAnimation:item( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QGraphicsItem():from( Qt_QGraphicsItemAnimation_item( ::pPtr, ... ) )
+      RETURN QGraphicsItemFromPointer( Qt_QGraphicsItemAnimation_item( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -181,7 +187,7 @@ METHOD QGraphicsItemAnimation:matrixAt( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QMatrix():from( Qt_QGraphicsItemAnimation_matrixAt( ::pPtr, ... ) )
+         RETURN QMatrixFromPointer( Qt_QGraphicsItemAnimation_matrixAt( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -193,7 +199,7 @@ METHOD QGraphicsItemAnimation:posAt( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QPointF():from( Qt_QGraphicsItemAnimation_posAt( ::pPtr, ... ) )
+         RETURN QPointFFromPointer( Qt_QGraphicsItemAnimation_posAt( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -299,7 +305,7 @@ METHOD QGraphicsItemAnimation:setTranslationAt( ... )
 METHOD QGraphicsItemAnimation:timeLine( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTimeLine():from( Qt_QGraphicsItemAnimation_timeLine( ::pPtr, ... ) )
+      RETURN QTimeLineFromPointer( Qt_QGraphicsItemAnimation_timeLine( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

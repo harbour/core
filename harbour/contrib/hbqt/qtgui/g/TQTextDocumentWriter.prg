@@ -98,6 +98,12 @@
 FUNCTION QTextDocumentWriter( ... )
    RETURN HB_QTextDocumentWriter():new( ... )
 
+FUNCTION QTextDocumentWriterFrom( ... )
+   RETURN HB_QTextDocumentWriter():from( ... )
+
+FUNCTION QTextDocumentWriterFromPointer( ... )
+   RETURN HB_QTextDocumentWriter():fromPointer( ... )
+
 
 CREATE CLASS QTextDocumentWriter INHERIT HbQtObjectHandler FUNCTION HB_QTextDocumentWriter
 
@@ -129,7 +135,7 @@ METHOD QTextDocumentWriter:new( ... )
 METHOD QTextDocumentWriter:codec( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextCodec():from( Qt_QTextDocumentWriter_codec( ::pPtr, ... ) )
+      RETURN QTextCodecFromPointer( Qt_QTextDocumentWriter_codec( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -137,7 +143,7 @@ METHOD QTextDocumentWriter:codec( ... )
 METHOD QTextDocumentWriter:device( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QIODevice():from( Qt_QTextDocumentWriter_device( ::pPtr, ... ) )
+      RETURN QIODeviceFromPointer( Qt_QTextDocumentWriter_device( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -153,7 +159,7 @@ METHOD QTextDocumentWriter:fileName( ... )
 METHOD QTextDocumentWriter:format( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QByteArray():from( Qt_QTextDocumentWriter_format( ::pPtr, ... ) )
+      RETURN QByteArrayFromPointer( Qt_QTextDocumentWriter_format( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

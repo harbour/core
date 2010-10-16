@@ -98,6 +98,12 @@
 FUNCTION QBuffer( ... )
    RETURN HB_QBuffer():new( ... )
 
+FUNCTION QBufferFrom( ... )
+   RETURN HB_QBuffer():from( ... )
+
+FUNCTION QBufferFromPointer( ... )
+   RETURN HB_QBuffer():fromPointer( ... )
+
 
 CREATE CLASS QBuffer INHERIT HbQtObjectHandler, HB_QIODevice FUNCTION HB_QBuffer
 
@@ -124,7 +130,7 @@ METHOD QBuffer:new( ... )
 METHOD QBuffer:buffer( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QByteArray():from( Qt_QBuffer_buffer( ::pPtr, ... ) )
+      RETURN QByteArrayFromPointer( Qt_QBuffer_buffer( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -132,7 +138,7 @@ METHOD QBuffer:buffer( ... )
 METHOD QBuffer:data( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QByteArray():from( Qt_QBuffer_data( ::pPtr, ... ) )
+      RETURN QByteArrayFromPointer( Qt_QBuffer_data( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

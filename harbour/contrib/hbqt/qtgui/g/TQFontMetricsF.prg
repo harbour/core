@@ -98,6 +98,12 @@
 FUNCTION QFontMetricsF( ... )
    RETURN HB_QFontMetricsF():new( ... )
 
+FUNCTION QFontMetricsFFrom( ... )
+   RETURN HB_QFontMetricsF():from( ... )
+
+FUNCTION QFontMetricsFFromPointer( ... )
+   RETURN HB_QFontMetricsF():fromPointer( ... )
+
 
 CREATE CLASS QFontMetricsF INHERIT HbQtObjectHandler FUNCTION HB_QFontMetricsF
 
@@ -162,27 +168,27 @@ METHOD QFontMetricsF:boundingRect( ... )
    CASE 5
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
-         RETURN HB_QRectF():from( Qt_QFontMetricsF_boundingRect_2( ::pPtr, ... ) )
+         RETURN QRectFFromPointer( Qt_QFontMetricsF_boundingRect_2( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 4
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
-         RETURN HB_QRectF():from( Qt_QFontMetricsF_boundingRect_2( ::pPtr, ... ) )
+         RETURN QRectFFromPointer( Qt_QFontMetricsF_boundingRect_2( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 3
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
-         RETURN HB_QRectF():from( Qt_QFontMetricsF_boundingRect_2( ::pPtr, ... ) )
+         RETURN QRectFFromPointer( Qt_QFontMetricsF_boundingRect_2( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QRectF():from( Qt_QFontMetricsF_boundingRect( ::pPtr, ... ) )
+         RETURN QRectFFromPointer( Qt_QFontMetricsF_boundingRect( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QRectF():from( Qt_QFontMetricsF_boundingRect_1( ::pPtr, ... ) )
+         RETURN QRectFFromPointer( Qt_QFontMetricsF_boundingRect_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -320,19 +326,19 @@ METHOD QFontMetricsF:size( ... )
    CASE 4
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
-         RETURN HB_QSizeF():from( Qt_QFontMetricsF_size( ::pPtr, ... ) )
+         RETURN QSizeFFromPointer( Qt_QFontMetricsF_size( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 3
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
-         RETURN HB_QSizeF():from( Qt_QFontMetricsF_size( ::pPtr, ... ) )
+         RETURN QSizeFFromPointer( Qt_QFontMetricsF_size( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
-         RETURN HB_QSizeF():from( Qt_QFontMetricsF_size( ::pPtr, ... ) )
+         RETURN QSizeFFromPointer( Qt_QFontMetricsF_size( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -352,7 +358,7 @@ METHOD QFontMetricsF:tightBoundingRect( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QRectF():from( Qt_QFontMetricsF_tightBoundingRect( ::pPtr, ... ) )
+         RETURN QRectFFromPointer( Qt_QFontMetricsF_tightBoundingRect( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

@@ -98,6 +98,12 @@
 FUNCTION QMatrix( ... )
    RETURN HB_QMatrix():new( ... )
 
+FUNCTION QMatrixFrom( ... )
+   RETURN HB_QMatrix():from( ... )
+
+FUNCTION QMatrixFromPointer( ... )
+   RETURN HB_QMatrix():fromPointer( ... )
+
 
 CREATE CLASS QMatrix INHERIT HbQtObjectHandler FUNCTION HB_QMatrix
 
@@ -206,11 +212,11 @@ METHOD QMatrix:inverted( ... )
    CASE 1
       DO CASE
       CASE hb_isLogical( hb_pvalue( 1 ) )
-         RETURN HB_QMatrix():from( Qt_QMatrix_inverted( ::pPtr, ... ) )
+         RETURN QMatrixFromPointer( Qt_QMatrix_inverted( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QMatrix():from( Qt_QMatrix_inverted( ::pPtr, ... ) )
+      RETURN QMatrixFromPointer( Qt_QMatrix_inverted( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -245,21 +251,21 @@ METHOD QMatrix:map( ... )
       CASE hb_isObject( hb_pvalue( 1 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) )
          CASE "QPOLYGON"
-            RETURN HB_QPolygon():from( Qt_QMatrix_map_7( ::pPtr, ... ) )
+            RETURN QPolygonFromPointer( Qt_QMatrix_map_7( ::pPtr, ... ) )
          CASE "QLINE"
-            RETURN HB_QLine():from( Qt_QMatrix_map_5( ::pPtr, ... ) )
+            RETURN QLineFromPointer( Qt_QMatrix_map_5( ::pPtr, ... ) )
          CASE "QPOINT"
-            RETURN HB_QPoint():from( Qt_QMatrix_map_3( ::pPtr, ... ) )
+            RETURN QPointFromPointer( Qt_QMatrix_map_3( ::pPtr, ... ) )
          CASE "QREGION"
-            RETURN HB_QRegion():from( Qt_QMatrix_map_8( ::pPtr, ... ) )
+            RETURN QRegionFromPointer( Qt_QMatrix_map_8( ::pPtr, ... ) )
          CASE "QPOINTF"
-            RETURN HB_QPointF():from( Qt_QMatrix_map_2( ::pPtr, ... ) )
+            RETURN QPointFFromPointer( Qt_QMatrix_map_2( ::pPtr, ... ) )
          CASE "QPOLYGONF"
-            RETURN HB_QPolygonF():from( Qt_QMatrix_map_6( ::pPtr, ... ) )
+            RETURN QPolygonFFromPointer( Qt_QMatrix_map_6( ::pPtr, ... ) )
          CASE "QLINEF"
-            RETURN HB_QLineF():from( Qt_QMatrix_map_4( ::pPtr, ... ) )
+            RETURN QLineFFromPointer( Qt_QMatrix_map_4( ::pPtr, ... ) )
          CASE "QPAINTERPATH"
-            RETURN HB_QPainterPath():from( Qt_QMatrix_map_9( ::pPtr, ... ) )
+            RETURN QPainterPathFromPointer( Qt_QMatrix_map_9( ::pPtr, ... ) )
          ENDSWITCH
       ENDCASE
       EXIT
@@ -274,9 +280,9 @@ METHOD QMatrix:mapRect( ... )
       CASE hb_isObject( hb_pvalue( 1 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) )
          CASE "QRECTF"
-            RETURN HB_QRectF():from( Qt_QMatrix_mapRect( ::pPtr, ... ) )
+            RETURN QRectFFromPointer( Qt_QMatrix_mapRect( ::pPtr, ... ) )
          CASE "QRECT"
-            RETURN HB_QRect():from( Qt_QMatrix_mapRect_1( ::pPtr, ... ) )
+            RETURN QRectFromPointer( Qt_QMatrix_mapRect_1( ::pPtr, ... ) )
          ENDSWITCH
       ENDCASE
       EXIT
@@ -289,7 +295,7 @@ METHOD QMatrix:mapToPolygon( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QPolygon():from( Qt_QMatrix_mapToPolygon( ::pPtr, ... ) )
+         RETURN QPolygonFromPointer( Qt_QMatrix_mapToPolygon( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -309,7 +315,7 @@ METHOD QMatrix:rotate( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QMatrix():from( Qt_QMatrix_rotate( ::pPtr, ... ) )
+         RETURN QMatrixFromPointer( Qt_QMatrix_rotate( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -321,7 +327,7 @@ METHOD QMatrix:scale( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QMatrix():from( Qt_QMatrix_scale( ::pPtr, ... ) )
+         RETURN QMatrixFromPointer( Qt_QMatrix_scale( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -345,7 +351,7 @@ METHOD QMatrix:shear( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QMatrix():from( Qt_QMatrix_shear( ::pPtr, ... ) )
+         RETURN QMatrixFromPointer( Qt_QMatrix_shear( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -357,7 +363,7 @@ METHOD QMatrix:translate( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QMatrix():from( Qt_QMatrix_translate( ::pPtr, ... ) )
+         RETURN QMatrixFromPointer( Qt_QMatrix_translate( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

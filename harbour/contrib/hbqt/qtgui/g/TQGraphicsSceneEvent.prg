@@ -98,6 +98,12 @@
 FUNCTION QGraphicsSceneEvent( ... )
    RETURN HB_QGraphicsSceneEvent():new( ... )
 
+FUNCTION QGraphicsSceneEventFrom( ... )
+   RETURN HB_QGraphicsSceneEvent():from( ... )
+
+FUNCTION QGraphicsSceneEventFromPointer( ... )
+   RETURN HB_QGraphicsSceneEvent():fromPointer( ... )
+
 
 CREATE CLASS QGraphicsSceneEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_QGraphicsSceneEvent
 
@@ -120,7 +126,7 @@ METHOD QGraphicsSceneEvent:new( ... )
 METHOD QGraphicsSceneEvent:widget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QGraphicsSceneEvent_widget( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QGraphicsSceneEvent_widget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

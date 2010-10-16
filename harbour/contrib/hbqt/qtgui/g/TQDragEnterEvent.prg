@@ -98,6 +98,12 @@
 FUNCTION QDragEnterEvent( ... )
    RETURN HB_QDragEnterEvent():new( ... )
 
+FUNCTION QDragEnterEventFrom( ... )
+   RETURN HB_QDragEnterEvent():from( ... )
+
+FUNCTION QDragEnterEventFromPointer( ... )
+   RETURN HB_QDragEnterEvent():fromPointer( ... )
+
 
 CREATE CLASS QDragEnterEvent INHERIT HbQtObjectHandler, HB_QDragMoveEvent FUNCTION HB_QDragEnterEvent
 

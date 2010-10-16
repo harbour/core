@@ -98,6 +98,12 @@
 FUNCTION QLCDNumber( ... )
    RETURN HB_QLCDNumber():new( ... )
 
+FUNCTION QLCDNumberFrom( ... )
+   RETURN HB_QLCDNumber():from( ... )
+
+FUNCTION QLCDNumberFromPointer( ... )
+   RETURN HB_QLCDNumber():fromPointer( ... )
+
 
 CREATE CLASS QLCDNumber INHERIT HbQtObjectHandler, HB_QFrame FUNCTION HB_QLCDNumber
 

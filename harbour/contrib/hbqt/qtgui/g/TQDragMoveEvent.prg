@@ -98,6 +98,12 @@
 FUNCTION QDragMoveEvent( ... )
    RETURN HB_QDragMoveEvent():new( ... )
 
+FUNCTION QDragMoveEventFrom( ... )
+   RETURN HB_QDragMoveEvent():from( ... )
+
+FUNCTION QDragMoveEventFromPointer( ... )
+   RETURN HB_QDragMoveEvent():fromPointer( ... )
+
 
 CREATE CLASS QDragMoveEvent INHERIT HbQtObjectHandler, HB_QDropEvent FUNCTION HB_QDragMoveEvent
 
@@ -138,7 +144,7 @@ METHOD QDragMoveEvent:accept( ... )
 METHOD QDragMoveEvent:answerRect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QDragMoveEvent_answerRect( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QDragMoveEvent_answerRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

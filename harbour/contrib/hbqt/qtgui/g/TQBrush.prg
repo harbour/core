@@ -98,6 +98,12 @@
 FUNCTION QBrush( ... )
    RETURN HB_QBrush():new( ... )
 
+FUNCTION QBrushFrom( ... )
+   RETURN HB_QBrush():from( ... )
+
+FUNCTION QBrushFromPointer( ... )
+   RETURN HB_QBrush():fromPointer( ... )
+
 
 CREATE CLASS QBrush INHERIT HbQtObjectHandler FUNCTION HB_QBrush
 
@@ -134,7 +140,7 @@ METHOD QBrush:new( ... )
 METHOD QBrush:color( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QColor():from( Qt_QBrush_color( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_QBrush_color( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -142,7 +148,7 @@ METHOD QBrush:color( ... )
 METHOD QBrush:gradient( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QGradient():from( Qt_QBrush_gradient( ::pPtr, ... ) )
+      RETURN QGradientFromPointer( Qt_QBrush_gradient( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -158,7 +164,7 @@ METHOD QBrush:isOpaque( ... )
 METHOD QBrush:matrix( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMatrix():from( Qt_QBrush_matrix( ::pPtr, ... ) )
+      RETURN QMatrixFromPointer( Qt_QBrush_matrix( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -248,7 +254,7 @@ METHOD QBrush:style( ... )
 METHOD QBrush:texture( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPixmap():from( Qt_QBrush_texture( ::pPtr, ... ) )
+      RETURN QPixmapFromPointer( Qt_QBrush_texture( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -256,7 +262,7 @@ METHOD QBrush:texture( ... )
 METHOD QBrush:textureImage( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QImage():from( Qt_QBrush_textureImage( ::pPtr, ... ) )
+      RETURN QImageFromPointer( Qt_QBrush_textureImage( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -264,7 +270,7 @@ METHOD QBrush:textureImage( ... )
 METHOD QBrush:transform( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTransform():from( Qt_QBrush_transform( ::pPtr, ... ) )
+      RETURN QTransformFromPointer( Qt_QBrush_transform( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

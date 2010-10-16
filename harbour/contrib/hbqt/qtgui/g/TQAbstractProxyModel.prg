@@ -98,6 +98,12 @@
 FUNCTION QAbstractProxyModel( ... )
    RETURN HB_QAbstractProxyModel():new( ... )
 
+FUNCTION QAbstractProxyModelFrom( ... )
+   RETURN HB_QAbstractProxyModel():from( ... )
+
+FUNCTION QAbstractProxyModelFromPointer( ... )
+   RETURN HB_QAbstractProxyModel():fromPointer( ... )
+
 
 CREATE CLASS QAbstractProxyModel INHERIT HbQtObjectHandler, HB_QAbstractItemModel FUNCTION HB_QAbstractProxyModel
 
@@ -127,7 +133,7 @@ METHOD QAbstractProxyModel:mapFromSource( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QModelIndex():from( Qt_QAbstractProxyModel_mapFromSource( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_QAbstractProxyModel_mapFromSource( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -139,7 +145,7 @@ METHOD QAbstractProxyModel:mapSelectionFromSource( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QItemSelection():from( Qt_QAbstractProxyModel_mapSelectionFromSource( ::pPtr, ... ) )
+         RETURN QItemSelectionFromPointer( Qt_QAbstractProxyModel_mapSelectionFromSource( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -151,7 +157,7 @@ METHOD QAbstractProxyModel:mapSelectionToSource( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QItemSelection():from( Qt_QAbstractProxyModel_mapSelectionToSource( ::pPtr, ... ) )
+         RETURN QItemSelectionFromPointer( Qt_QAbstractProxyModel_mapSelectionToSource( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -163,7 +169,7 @@ METHOD QAbstractProxyModel:mapToSource( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QModelIndex():from( Qt_QAbstractProxyModel_mapToSource( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_QAbstractProxyModel_mapToSource( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -185,7 +191,7 @@ METHOD QAbstractProxyModel:setSourceModel( ... )
 METHOD QAbstractProxyModel:sourceModel( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAbstractItemModel():from( Qt_QAbstractProxyModel_sourceModel( ::pPtr, ... ) )
+      RETURN QAbstractItemModelFromPointer( Qt_QAbstractProxyModel_sourceModel( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

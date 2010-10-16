@@ -98,6 +98,12 @@
 FUNCTION QTextEdit( ... )
    RETURN HB_QTextEdit():new( ... )
 
+FUNCTION QTextEditFrom( ... )
+   RETURN HB_QTextEdit():from( ... )
+
+FUNCTION QTextEditFromPointer( ... )
+   RETURN HB_QTextEdit():fromPointer( ... )
+
 
 CREATE CLASS QTextEdit INHERIT HbQtObjectHandler, HB_QAbstractScrollArea FUNCTION HB_QTextEdit
 
@@ -246,11 +252,11 @@ METHOD QTextEdit:createStandardContextMenu( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QMenu():from( Qt_QTextEdit_createStandardContextMenu_1( ::pPtr, ... ) )
+         RETURN QMenuFromPointer( Qt_QTextEdit_createStandardContextMenu_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QMenu():from( Qt_QTextEdit_createStandardContextMenu( ::pPtr, ... ) )
+      RETURN QMenuFromPointer( Qt_QTextEdit_createStandardContextMenu( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -258,7 +264,7 @@ METHOD QTextEdit:createStandardContextMenu( ... )
 METHOD QTextEdit:currentCharFormat( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextCharFormat():from( Qt_QTextEdit_currentCharFormat( ::pPtr, ... ) )
+      RETURN QTextCharFormatFromPointer( Qt_QTextEdit_currentCharFormat( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -266,7 +272,7 @@ METHOD QTextEdit:currentCharFormat( ... )
 METHOD QTextEdit:currentFont( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFont():from( Qt_QTextEdit_currentFont( ::pPtr, ... ) )
+      RETURN QFontFromPointer( Qt_QTextEdit_currentFont( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -276,7 +282,7 @@ METHOD QTextEdit:cursorForPosition( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QTextCursor():from( Qt_QTextEdit_cursorForPosition( ::pPtr, ... ) )
+         RETURN QTextCursorFromPointer( Qt_QTextEdit_cursorForPosition( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -288,11 +294,11 @@ METHOD QTextEdit:cursorRect( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QRect():from( Qt_QTextEdit_cursorRect( ::pPtr, ... ) )
+         RETURN QRectFromPointer( Qt_QTextEdit_cursorRect( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QRect():from( Qt_QTextEdit_cursorRect_1( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QTextEdit_cursorRect_1( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -308,7 +314,7 @@ METHOD QTextEdit:cursorWidth( ... )
 METHOD QTextEdit:document( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextDocument():from( Qt_QTextEdit_document( ::pPtr, ... ) )
+      RETURN QTextDocumentFromPointer( Qt_QTextEdit_document( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -424,7 +430,7 @@ METHOD QTextEdit:loadResource( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QVariant():from( Qt_QTextEdit_loadResource( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QTextEdit_loadResource( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -692,7 +698,7 @@ METHOD QTextEdit:tabStopWidth( ... )
 METHOD QTextEdit:textBackgroundColor( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QColor():from( Qt_QTextEdit_textBackgroundColor( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_QTextEdit_textBackgroundColor( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -700,7 +706,7 @@ METHOD QTextEdit:textBackgroundColor( ... )
 METHOD QTextEdit:textColor( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QColor():from( Qt_QTextEdit_textColor( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_QTextEdit_textColor( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -708,7 +714,7 @@ METHOD QTextEdit:textColor( ... )
 METHOD QTextEdit:textCursor( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextCursor():from( Qt_QTextEdit_textCursor( ::pPtr, ... ) )
+      RETURN QTextCursorFromPointer( Qt_QTextEdit_textCursor( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

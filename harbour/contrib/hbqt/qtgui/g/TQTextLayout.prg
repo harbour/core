@@ -98,6 +98,12 @@
 FUNCTION QTextLayout( ... )
    RETURN HB_QTextLayout():new( ... )
 
+FUNCTION QTextLayoutFrom( ... )
+   RETURN HB_QTextLayout():from( ... )
+
+FUNCTION QTextLayoutFromPointer( ... )
+   RETURN HB_QTextLayout():fromPointer( ... )
+
 
 CREATE CLASS QTextLayout INHERIT HbQtObjectHandler FUNCTION HB_QTextLayout
 
@@ -156,7 +162,7 @@ METHOD QTextLayout:beginLayout( ... )
 METHOD QTextLayout:boundingRect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRectF():from( Qt_QTextLayout_boundingRect( ::pPtr, ... ) )
+      RETURN QRectFFromPointer( Qt_QTextLayout_boundingRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -188,7 +194,7 @@ METHOD QTextLayout:clearLayout( ... )
 METHOD QTextLayout:createLine( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextLine():from( Qt_QTextLayout_createLine( ::pPtr, ... ) )
+      RETURN QTextLineFromPointer( Qt_QTextLayout_createLine( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -222,7 +228,7 @@ METHOD QTextLayout:endLayout( ... )
 METHOD QTextLayout:font( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFont():from( Qt_QTextLayout_font( ::pPtr, ... ) )
+      RETURN QFontFromPointer( Qt_QTextLayout_font( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -244,7 +250,7 @@ METHOD QTextLayout:lineAt( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QTextLine():from( Qt_QTextLayout_lineAt( ::pPtr, ... ) )
+         RETURN QTextLineFromPointer( Qt_QTextLayout_lineAt( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -264,7 +270,7 @@ METHOD QTextLayout:lineForTextPosition( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QTextLine():from( Qt_QTextLayout_lineForTextPosition( ::pPtr, ... ) )
+         RETURN QTextLineFromPointer( Qt_QTextLayout_lineForTextPosition( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -308,7 +314,7 @@ METHOD QTextLayout:nextCursorPosition( ... )
 METHOD QTextLayout:position( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPointF():from( Qt_QTextLayout_position( ::pPtr, ... ) )
+      RETURN QPointFFromPointer( Qt_QTextLayout_position( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -430,7 +436,7 @@ METHOD QTextLayout:text( ... )
 METHOD QTextLayout:textOption( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextOption():from( Qt_QTextLayout_textOption( ::pPtr, ... ) )
+      RETURN QTextOptionFromPointer( Qt_QTextLayout_textOption( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

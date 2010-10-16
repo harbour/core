@@ -98,6 +98,12 @@
 FUNCTION QTextFragment( ... )
    RETURN HB_QTextFragment():new( ... )
 
+FUNCTION QTextFragmentFrom( ... )
+   RETURN HB_QTextFragment():from( ... )
+
+FUNCTION QTextFragmentFromPointer( ... )
+   RETURN HB_QTextFragment():fromPointer( ... )
+
 
 CREATE CLASS QTextFragment INHERIT HbQtObjectHandler FUNCTION HB_QTextFragment
 
@@ -126,7 +132,7 @@ METHOD QTextFragment:new( ... )
 METHOD QTextFragment:charFormat( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextCharFormat():from( Qt_QTextFragment_charFormat( ::pPtr, ... ) )
+      RETURN QTextCharFormatFromPointer( Qt_QTextFragment_charFormat( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

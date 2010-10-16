@@ -98,6 +98,12 @@
 FUNCTION QPaintEngine( ... )
    RETURN HB_QPaintEngine():new( ... )
 
+FUNCTION QPaintEngineFrom( ... )
+   RETURN HB_QPaintEngine():from( ... )
+
+FUNCTION QPaintEngineFromPointer( ... )
+   RETURN HB_QPaintEngine():fromPointer( ... )
+
 
 CREATE CLASS QPaintEngine INHERIT HbQtObjectHandler FUNCTION HB_QPaintEngine
 
@@ -333,7 +339,7 @@ METHOD QPaintEngine:isActive( ... )
 METHOD QPaintEngine:paintDevice( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPaintDevice():from( Qt_QPaintEngine_paintDevice( ::pPtr, ... ) )
+      RETURN QPaintDeviceFromPointer( Qt_QPaintEngine_paintDevice( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -341,7 +347,7 @@ METHOD QPaintEngine:paintDevice( ... )
 METHOD QPaintEngine:painter( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPainter():from( Qt_QPaintEngine_painter( ::pPtr, ... ) )
+      RETURN QPainterFromPointer( Qt_QPaintEngine_painter( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

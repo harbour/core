@@ -98,6 +98,12 @@
 FUNCTION QLatin1Char( ... )
    RETURN HB_QLatin1Char():new( ... )
 
+FUNCTION QLatin1CharFrom( ... )
+   RETURN HB_QLatin1Char():from( ... )
+
+FUNCTION QLatin1CharFromPointer( ... )
+   RETURN HB_QLatin1Char():fromPointer( ... )
+
 
 CREATE CLASS QLatin1Char INHERIT HbQtObjectHandler FUNCTION HB_QLatin1Char
 

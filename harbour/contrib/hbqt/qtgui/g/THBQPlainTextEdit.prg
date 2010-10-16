@@ -98,6 +98,12 @@
 FUNCTION HBQPlainTextEdit( ... )
    RETURN HB_HBQPlainTextEdit():new( ... )
 
+FUNCTION HBQPlainTextEditFrom( ... )
+   RETURN HB_HBQPlainTextEdit():from( ... )
+
+FUNCTION HBQPlainTextEditFromPointer( ... )
+   RETURN HB_HBQPlainTextEdit():fromPointer( ... )
+
 
 CREATE CLASS HBQPlainTextEdit INHERIT HbQtObjectHandler, HB_QPlainTextEdit FUNCTION HB_HBQPlainTextEdit
 

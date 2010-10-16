@@ -98,6 +98,12 @@
 FUNCTION QDateTime( ... )
    RETURN HB_QDateTime():new( ... )
 
+FUNCTION QDateTimeFrom( ... )
+   RETURN HB_QDateTime():from( ... )
+
+FUNCTION QDateTimeFromPointer( ... )
+   RETURN HB_QDateTime():fromPointer( ... )
+
 
 CREATE CLASS QDateTime INHERIT HbQtObjectHandler FUNCTION HB_QDateTime
 
@@ -147,7 +153,7 @@ METHOD QDateTime:addDays( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QDateTime():from( Qt_QDateTime_addDays( ::pPtr, ... ) )
+         RETURN QDateTimeFromPointer( Qt_QDateTime_addDays( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -159,7 +165,7 @@ METHOD QDateTime:addMSecs( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QDateTime():from( Qt_QDateTime_addMSecs( ::pPtr, ... ) )
+         RETURN QDateTimeFromPointer( Qt_QDateTime_addMSecs( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -171,7 +177,7 @@ METHOD QDateTime:addMonths( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QDateTime():from( Qt_QDateTime_addMonths( ::pPtr, ... ) )
+         RETURN QDateTimeFromPointer( Qt_QDateTime_addMonths( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -183,7 +189,7 @@ METHOD QDateTime:addSecs( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QDateTime():from( Qt_QDateTime_addSecs( ::pPtr, ... ) )
+         RETURN QDateTimeFromPointer( Qt_QDateTime_addSecs( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -195,7 +201,7 @@ METHOD QDateTime:addYears( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QDateTime():from( Qt_QDateTime_addYears( ::pPtr, ... ) )
+         RETURN QDateTimeFromPointer( Qt_QDateTime_addYears( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -205,7 +211,7 @@ METHOD QDateTime:addYears( ... )
 METHOD QDateTime:date( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDate():from( Qt_QDateTime_date( ::pPtr, ... ) )
+      RETURN QDateFromPointer( Qt_QDateTime_date( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -301,7 +307,7 @@ METHOD QDateTime:setTime_t( ... )
 METHOD QDateTime:time( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTime():from( Qt_QDateTime_time( ::pPtr, ... ) )
+      RETURN QTimeFromPointer( Qt_QDateTime_time( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -317,7 +323,7 @@ METHOD QDateTime:timeSpec( ... )
 METHOD QDateTime:toLocalTime( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDateTime():from( Qt_QDateTime_toLocalTime( ::pPtr, ... ) )
+      RETURN QDateTimeFromPointer( Qt_QDateTime_toLocalTime( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -343,7 +349,7 @@ METHOD QDateTime:toTimeSpec( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QDateTime():from( Qt_QDateTime_toTimeSpec( ::pPtr, ... ) )
+         RETURN QDateTimeFromPointer( Qt_QDateTime_toTimeSpec( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -361,7 +367,7 @@ METHOD QDateTime:toTime_t( ... )
 METHOD QDateTime:toUTC( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDateTime():from( Qt_QDateTime_toUTC( ::pPtr, ... ) )
+      RETURN QDateTimeFromPointer( Qt_QDateTime_toUTC( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -369,7 +375,7 @@ METHOD QDateTime:toUTC( ... )
 METHOD QDateTime:currentDateTime( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDateTime():from( Qt_QDateTime_currentDateTime( ::pPtr, ... ) )
+      RETURN QDateTimeFromPointer( Qt_QDateTime_currentDateTime( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -379,15 +385,15 @@ METHOD QDateTime:fromString( ... )
    CASE 2
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
-         RETURN HB_QDateTime():from( Qt_QDateTime_fromString_1( ::pPtr, ... ) )
+         RETURN QDateTimeFromPointer( Qt_QDateTime_fromString_1( ::pPtr, ... ) )
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QDateTime():from( Qt_QDateTime_fromString( ::pPtr, ... ) )
+         RETURN QDateTimeFromPointer( Qt_QDateTime_fromString( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QDateTime():from( Qt_QDateTime_fromString( ::pPtr, ... ) )
+         RETURN QDateTimeFromPointer( Qt_QDateTime_fromString( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -399,7 +405,7 @@ METHOD QDateTime:fromTime_t( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QDateTime():from( Qt_QDateTime_fromTime_t( ::pPtr, ... ) )
+         RETURN QDateTimeFromPointer( Qt_QDateTime_fromTime_t( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

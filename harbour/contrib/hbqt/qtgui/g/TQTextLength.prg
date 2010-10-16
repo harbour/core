@@ -98,6 +98,12 @@
 FUNCTION QTextLength( ... )
    RETURN HB_QTextLength():new( ... )
 
+FUNCTION QTextLengthFrom( ... )
+   RETURN HB_QTextLength():from( ... )
+
+FUNCTION QTextLengthFromPointer( ... )
+   RETURN HB_QTextLength():fromPointer( ... )
+
 
 CREATE CLASS QTextLength INHERIT HbQtObjectHandler FUNCTION HB_QTextLength
 

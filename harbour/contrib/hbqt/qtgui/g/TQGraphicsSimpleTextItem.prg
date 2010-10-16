@@ -98,6 +98,12 @@
 FUNCTION QGraphicsSimpleTextItem( ... )
    RETURN HB_QGraphicsSimpleTextItem():new( ... )
 
+FUNCTION QGraphicsSimpleTextItemFrom( ... )
+   RETURN HB_QGraphicsSimpleTextItem():from( ... )
+
+FUNCTION QGraphicsSimpleTextItemFromPointer( ... )
+   RETURN HB_QGraphicsSimpleTextItem():fromPointer( ... )
+
 
 CREATE CLASS QGraphicsSimpleTextItem INHERIT HbQtObjectHandler, HB_QAbstractGraphicsShapeItem FUNCTION HB_QGraphicsSimpleTextItem
 
@@ -123,7 +129,7 @@ METHOD QGraphicsSimpleTextItem:new( ... )
 METHOD QGraphicsSimpleTextItem:font( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFont():from( Qt_QGraphicsSimpleTextItem_font( ::pPtr, ... ) )
+      RETURN QFontFromPointer( Qt_QGraphicsSimpleTextItem_font( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

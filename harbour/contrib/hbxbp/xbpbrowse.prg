@@ -566,8 +566,8 @@ METHOD XbpBrowse:connect()
 
    ::oWidget          : connect( QEvent_Resize                       , {|       | ::execSlot( __ev_frame_resized__                   ) } )
 
-HB_TRACE( HB_TR_ALWAYS,    ::qDelegate        : connect( "closeEditor(QWidget,int)"          , {|p,p1   | ::execSlot( __editor_closeEditor__, p, p1          ) } ))
-HB_TRACE( HB_TR_ALWAYS,    ::qDelegate        : connect( "commitData(QWidget)"               , {|p      | ::execSlot( __editor_commitData__ , p              ) } ))
+   ::qDelegate        : connect( "closeEditor(QWidget,int)"          , {|p,p1   | ::execSlot( __editor_closeEditor__, p, p1          ) } )
+   ::qDelegate        : connect( "commitData(QWidget)"               , {|p      | ::execSlot( __editor_commitData__ , p              ) } )
 
    RETURN Self
 
@@ -971,7 +971,7 @@ METHOD XbpBrowse:manageFrameResized()
 /*----------------------------------------------------------------------*/
 
 METHOD XbpBrowse:manageCommitData( pWidget )
-   LOCAL qWidget := HB_QLineEdit():from( pWidget )
+   LOCAL qWidget := QLineEditFromPointer( pWidget )
    LOCAL cTxt    := qWidget:text()
    LOCAL oCol    := ::columns[ ::colPos ]
    LOCAL cTyp    := valtype( eval( oCol:block ) )
@@ -994,8 +994,8 @@ METHOD XbpBrowse:manageCommitData( pWidget )
 
 METHOD XbpBrowse:manageEditorClosed( pWidget, nHint )
 
-   HB_QLineEdit():from( pWidget ):close()
-HB_TRACE( HB_TR_ALWAYS, nHint, QAbstractItemDelegate_NoHint, QAbstractItemDelegate_SubmitModelCache )
+   QLineEditFromPointer( pWidget ):close()
+//HB_TRACE( HB_TR_ALWAYS, nHint, QAbstractItemDelegate_NoHint, QAbstractItemDelegate_SubmitModelCache )
    DO CASE
    CASE nHint == QAbstractItemDelegate_NoHint                 /* 0  RETURN is presses    */
 
@@ -1033,7 +1033,7 @@ METHOD XbpBrowse:manageScrollContents( nX, nY )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpBrowse:manageMouseDblClick( pEvent )
-   LOCAL oMouseEvent := HB_QMouseEvent():from( pEvent )
+   LOCAL oMouseEvent := QMouseEventFromPointer( pEvent )
 
    IF oMouseEvent:button() == Qt_LeftButton
       SetAppEvent( xbeBRW_ItemSelected, NIL, NIL, Self )
@@ -1044,7 +1044,7 @@ METHOD XbpBrowse:manageMouseDblClick( pEvent )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpBrowse:manageMouseWheel( pEvent )
-   LOCAL oWheelEvent := HB_QWheelEvent():from( pEvent )
+   LOCAL oWheelEvent := QWheelEventFromPointer( pEvent )
 
    IF oWheelEvent:orientation() == Qt_Vertical
       IF oWheelEvent:delta() > 0
@@ -1065,7 +1065,7 @@ METHOD XbpBrowse:manageMouseWheel( pEvent )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpBrowse:manageMousePress( pEvent )
-   LOCAL oMouseEvent := HB_QMouseEvent():from( pEvent )
+   LOCAL oMouseEvent := QMouseEventFromPointer( pEvent )
 
    ::oModelIndex := ::oTableView:indexAt( oMouseEvent:pos() )
    IF ::oModelIndex:isValid()      /* Reposition the record pointer */

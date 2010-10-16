@@ -98,6 +98,12 @@
 FUNCTION HBQAbstractItemModel( ... )
    RETURN HB_HBQAbstractItemModel():new( ... )
 
+FUNCTION HBQAbstractItemModelFrom( ... )
+   RETURN HB_HBQAbstractItemModel():from( ... )
+
+FUNCTION HBQAbstractItemModelFromPointer( ... )
+   RETURN HB_HBQAbstractItemModel():fromPointer( ... )
+
 
 CREATE CLASS HBQAbstractItemModel INHERIT HbQtObjectHandler, HB_QAbstractItemModel FUNCTION HB_HBQAbstractItemModel
 
@@ -131,13 +137,13 @@ METHOD HBQAbstractItemModel:index( ... )
    CASE 3
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
-         RETURN HB_QModelIndex():from( Qt_HBQAbstractItemModel_index( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_HBQAbstractItemModel_index( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QModelIndex():from( Qt_HBQAbstractItemModel_index( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_HBQAbstractItemModel_index( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

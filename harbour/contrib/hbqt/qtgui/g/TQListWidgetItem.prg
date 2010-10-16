@@ -98,6 +98,12 @@
 FUNCTION QListWidgetItem( ... )
    RETURN HB_QListWidgetItem():new( ... )
 
+FUNCTION QListWidgetItemFrom( ... )
+   RETURN HB_QListWidgetItem():from( ... )
+
+FUNCTION QListWidgetItemFromPointer( ... )
+   RETURN HB_QListWidgetItem():fromPointer( ... )
+
 
 CREATE CLASS QListWidgetItem INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QListWidgetItem
 
@@ -154,7 +160,7 @@ METHOD QListWidgetItem:new( ... )
 METHOD QListWidgetItem:background( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QListWidgetItem_background( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QListWidgetItem_background( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -170,7 +176,7 @@ METHOD QListWidgetItem:checkState( ... )
 METHOD QListWidgetItem:clone( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QListWidgetItem():from( Qt_QListWidgetItem_clone( ::pPtr, ... ) )
+      RETURN QListWidgetItemFromPointer( Qt_QListWidgetItem_clone( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -180,7 +186,7 @@ METHOD QListWidgetItem:data( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QVariant():from( Qt_QListWidgetItem_data( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QListWidgetItem_data( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -198,7 +204,7 @@ METHOD QListWidgetItem:flags( ... )
 METHOD QListWidgetItem:font( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFont():from( Qt_QListWidgetItem_font( ::pPtr, ... ) )
+      RETURN QFontFromPointer( Qt_QListWidgetItem_font( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -206,7 +212,7 @@ METHOD QListWidgetItem:font( ... )
 METHOD QListWidgetItem:foreground( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QListWidgetItem_foreground( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QListWidgetItem_foreground( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -214,7 +220,7 @@ METHOD QListWidgetItem:foreground( ... )
 METHOD QListWidgetItem:icon( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QIcon():from( Qt_QListWidgetItem_icon( ::pPtr, ... ) )
+      RETURN QIconFromPointer( Qt_QListWidgetItem_icon( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -238,7 +244,7 @@ METHOD QListWidgetItem:isSelected( ... )
 METHOD QListWidgetItem:listWidget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QListWidget():from( Qt_QListWidgetItem_listWidget( ::pPtr, ... ) )
+      RETURN QListWidgetFromPointer( Qt_QListWidgetItem_listWidget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -438,7 +444,7 @@ METHOD QListWidgetItem:setWhatsThis( ... )
 METHOD QListWidgetItem:sizeHint( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QListWidgetItem_sizeHint( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QListWidgetItem_sizeHint( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

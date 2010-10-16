@@ -98,6 +98,12 @@
 FUNCTION QTime( ... )
    RETURN HB_QTime():new( ... )
 
+FUNCTION QTimeFrom( ... )
+   RETURN HB_QTime():from( ... )
+
+FUNCTION QTimeFromPointer( ... )
+   RETURN HB_QTime():fromPointer( ... )
+
 
 CREATE CLASS QTime INHERIT HbQtObjectHandler FUNCTION HB_QTime
 
@@ -141,7 +147,7 @@ METHOD QTime:addMSecs( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QTime():from( Qt_QTime_addMSecs( ::pPtr, ... ) )
+         RETURN QTimeFromPointer( Qt_QTime_addMSecs( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -153,7 +159,7 @@ METHOD QTime:addSecs( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QTime():from( Qt_QTime_addSecs( ::pPtr, ... ) )
+         RETURN QTimeFromPointer( Qt_QTime_addSecs( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -305,7 +311,7 @@ METHOD QTime:toString( ... )
 METHOD QTime:currentTime( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTime():from( Qt_QTime_currentTime( ::pPtr, ... ) )
+      RETURN QTimeFromPointer( Qt_QTime_currentTime( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -315,15 +321,15 @@ METHOD QTime:fromString( ... )
    CASE 2
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
-         RETURN HB_QTime():from( Qt_QTime_fromString_1( ::pPtr, ... ) )
+         RETURN QTimeFromPointer( Qt_QTime_fromString_1( ::pPtr, ... ) )
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QTime():from( Qt_QTime_fromString( ::pPtr, ... ) )
+         RETURN QTimeFromPointer( Qt_QTime_fromString( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QTime():from( Qt_QTime_fromString( ::pPtr, ... ) )
+         RETURN QTimeFromPointer( Qt_QTime_fromString( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

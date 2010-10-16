@@ -98,6 +98,12 @@
 FUNCTION QStyleOption( ... )
    RETURN HB_QStyleOption():new( ... )
 
+FUNCTION QStyleOptionFrom( ... )
+   RETURN HB_QStyleOption():from( ... )
+
+FUNCTION QStyleOptionFromPointer( ... )
+   RETURN HB_QStyleOption():fromPointer( ... )
+
 
 CREATE CLASS QStyleOption INHERIT HbQtObjectHandler FUNCTION HB_QStyleOption
 
@@ -147,7 +153,7 @@ METHOD QStyleOption:direction( ... )
 METHOD QStyleOption:fontMetrics( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFontMetrics():from( Qt_QStyleOption_fontMetrics( ::pPtr, ... ) )
+      RETURN QFontMetricsFromPointer( Qt_QStyleOption_fontMetrics( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -155,7 +161,7 @@ METHOD QStyleOption:fontMetrics( ... )
 METHOD QStyleOption:palette( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPalette():from( Qt_QStyleOption_palette( ::pPtr, ... ) )
+      RETURN QPaletteFromPointer( Qt_QStyleOption_palette( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -163,7 +169,7 @@ METHOD QStyleOption:palette( ... )
 METHOD QStyleOption:rect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QStyleOption_rect( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QStyleOption_rect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

@@ -98,6 +98,12 @@
 FUNCTION QWidgetAction( ... )
    RETURN HB_QWidgetAction():new( ... )
 
+FUNCTION QWidgetActionFrom( ... )
+   RETURN HB_QWidgetAction():from( ... )
+
+FUNCTION QWidgetActionFromPointer( ... )
+   RETURN HB_QWidgetAction():fromPointer( ... )
+
 
 CREATE CLASS QWidgetAction INHERIT HbQtObjectHandler, HB_QAction FUNCTION HB_QWidgetAction
 
@@ -123,7 +129,7 @@ METHOD QWidgetAction:new( ... )
 METHOD QWidgetAction:defaultWidget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QWidgetAction_defaultWidget( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QWidgetAction_defaultWidget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -145,7 +151,7 @@ METHOD QWidgetAction:requestWidget( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QWidget():from( Qt_QWidgetAction_requestWidget( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QWidgetAction_requestWidget( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

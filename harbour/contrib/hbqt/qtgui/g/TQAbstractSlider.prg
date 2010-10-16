@@ -98,6 +98,12 @@
 FUNCTION QAbstractSlider( ... )
    RETURN HB_QAbstractSlider():new( ... )
 
+FUNCTION QAbstractSliderFrom( ... )
+   RETURN HB_QAbstractSlider():from( ... )
+
+FUNCTION QAbstractSliderFromPointer( ... )
+   RETURN HB_QAbstractSlider():fromPointer( ... )
+
 
 CREATE CLASS QAbstractSlider INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QAbstractSlider
 

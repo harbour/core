@@ -98,6 +98,12 @@
 FUNCTION QMdiArea( ... )
    RETURN HB_QMdiArea():new( ... )
 
+FUNCTION QMdiAreaFrom( ... )
+   RETURN HB_QMdiArea():from( ... )
+
+FUNCTION QMdiAreaFromPointer( ... )
+   RETURN HB_QMdiArea():fromPointer( ... )
+
 
 CREATE CLASS QMdiArea INHERIT HbQtObjectHandler, HB_QAbstractScrollArea FUNCTION HB_QMdiArea
 
@@ -153,7 +159,7 @@ METHOD QMdiArea:activationOrder( ... )
 METHOD QMdiArea:activeSubWindow( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMdiSubWindow():from( Qt_QMdiArea_activeSubWindow( ::pPtr, ... ) )
+      RETURN QMdiSubWindowFromPointer( Qt_QMdiArea_activeSubWindow( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -163,13 +169,13 @@ METHOD QMdiArea:addSubWindow( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QMdiSubWindow():from( Qt_QMdiArea_addSubWindow( ::pPtr, ... ) )
+         RETURN QMdiSubWindowFromPointer( Qt_QMdiArea_addSubWindow( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QMdiSubWindow():from( Qt_QMdiArea_addSubWindow( ::pPtr, ... ) )
+         RETURN QMdiSubWindowFromPointer( Qt_QMdiArea_addSubWindow( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -179,7 +185,7 @@ METHOD QMdiArea:addSubWindow( ... )
 METHOD QMdiArea:background( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QMdiArea_background( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QMdiArea_background( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -187,7 +193,7 @@ METHOD QMdiArea:background( ... )
 METHOD QMdiArea:currentSubWindow( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMdiSubWindow():from( Qt_QMdiArea_currentSubWindow( ::pPtr, ... ) )
+      RETURN QMdiSubWindowFromPointer( Qt_QMdiArea_currentSubWindow( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -307,11 +313,11 @@ METHOD QMdiArea:subWindowList( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QList():from( Qt_QMdiArea_subWindowList( ::pPtr, ... ) )
+         RETURN QListFromPointer( Qt_QMdiArea_subWindowList( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QList():from( Qt_QMdiArea_subWindowList( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QMdiArea_subWindowList( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

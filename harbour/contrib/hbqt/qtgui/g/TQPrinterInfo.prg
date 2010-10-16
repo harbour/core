@@ -98,6 +98,12 @@
 FUNCTION QPrinterInfo( ... )
    RETURN HB_QPrinterInfo():new( ... )
 
+FUNCTION QPrinterInfoFrom( ... )
+   RETURN HB_QPrinterInfo():from( ... )
+
+FUNCTION QPrinterInfoFromPointer( ... )
+   RETURN HB_QPrinterInfo():fromPointer( ... )
+
 
 CREATE CLASS QPrinterInfo INHERIT HbQtObjectHandler FUNCTION HB_QPrinterInfo
 
@@ -148,7 +154,7 @@ METHOD QPrinterInfo:printerName( ... )
 METHOD QPrinterInfo:availablePrinters( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QPrinterInfo_availablePrinters( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QPrinterInfo_availablePrinters( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -156,7 +162,7 @@ METHOD QPrinterInfo:availablePrinters( ... )
 METHOD QPrinterInfo:defaultPrinter( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPrinterInfo():from( Qt_QPrinterInfo_defaultPrinter( ::pPtr, ... ) )
+      RETURN QPrinterInfoFromPointer( Qt_QPrinterInfo_defaultPrinter( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

@@ -98,6 +98,12 @@
 FUNCTION QStyleOptionGroupBox( ... )
    RETURN HB_QStyleOptionGroupBox():new( ... )
 
+FUNCTION QStyleOptionGroupBoxFrom( ... )
+   RETURN HB_QStyleOptionGroupBox():from( ... )
+
+FUNCTION QStyleOptionGroupBoxFromPointer( ... )
+   RETURN HB_QStyleOptionGroupBox():fromPointer( ... )
+
 
 CREATE CLASS QStyleOptionGroupBox INHERIT HbQtObjectHandler, HB_QStyleOptionComplex FUNCTION HB_QStyleOptionGroupBox
 
@@ -165,7 +171,7 @@ METHOD QStyleOptionGroupBox:textAlignment( ... )
 METHOD QStyleOptionGroupBox:textColor( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QColor():from( Qt_QStyleOptionGroupBox_textColor( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_QStyleOptionGroupBox_textColor( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

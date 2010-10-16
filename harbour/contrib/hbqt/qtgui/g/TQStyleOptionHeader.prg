@@ -98,6 +98,12 @@
 FUNCTION QStyleOptionHeader( ... )
    RETURN HB_QStyleOptionHeader():new( ... )
 
+FUNCTION QStyleOptionHeaderFrom( ... )
+   RETURN HB_QStyleOptionHeader():from( ... )
+
+FUNCTION QStyleOptionHeaderFromPointer( ... )
+   RETURN HB_QStyleOptionHeader():fromPointer( ... )
+
 
 CREATE CLASS QStyleOptionHeader INHERIT HbQtObjectHandler, HB_QStyleOption FUNCTION HB_QStyleOptionHeader
 
@@ -128,7 +134,7 @@ METHOD QStyleOptionHeader:new( ... )
 METHOD QStyleOptionHeader:icon( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QIcon():from( Qt_QStyleOptionHeader_icon( ::pPtr, ... ) )
+      RETURN QIconFromPointer( Qt_QStyleOptionHeader_icon( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

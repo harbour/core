@@ -98,6 +98,12 @@
 FUNCTION QFileDialog( ... )
    RETURN HB_QFileDialog():new( ... )
 
+FUNCTION QFileDialogFrom( ... )
+   RETURN HB_QFileDialog():from( ... )
+
+FUNCTION QFileDialogFromPointer( ... )
+   RETURN HB_QFileDialog():fromPointer( ... )
+
 
 CREATE CLASS QFileDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QFileDialog
 
@@ -189,7 +195,7 @@ METHOD QFileDialog:defaultSuffix( ... )
 METHOD QFileDialog:directory( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDir():from( Qt_QFileDialog_directory( ::pPtr, ... ) )
+      RETURN QDirFromPointer( Qt_QFileDialog_directory( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -213,7 +219,7 @@ METHOD QFileDialog:filter( ... )
 METHOD QFileDialog:history( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QFileDialog_history( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QFileDialog_history( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -221,7 +227,7 @@ METHOD QFileDialog:history( ... )
 METHOD QFileDialog:iconProvider( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFileIconProvider():from( Qt_QFileDialog_iconProvider( ::pPtr, ... ) )
+      RETURN QFileIconProviderFromPointer( Qt_QFileDialog_iconProvider( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -245,7 +251,7 @@ METHOD QFileDialog:isReadOnly( ... )
 METHOD QFileDialog:itemDelegate( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAbstractItemDelegate():from( Qt_QFileDialog_itemDelegate( ::pPtr, ... ) )
+      RETURN QAbstractItemDelegateFromPointer( Qt_QFileDialog_itemDelegate( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -265,7 +271,7 @@ METHOD QFileDialog:labelText( ... )
 METHOD QFileDialog:nameFilters( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QFileDialog_nameFilters( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QFileDialog_nameFilters( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -281,7 +287,7 @@ METHOD QFileDialog:options( ... )
 METHOD QFileDialog:proxyModel( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAbstractProxyModel():from( Qt_QFileDialog_proxyModel( ::pPtr, ... ) )
+      RETURN QAbstractProxyModelFromPointer( Qt_QFileDialog_proxyModel( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -309,7 +315,7 @@ METHOD QFileDialog:restoreState( ... )
 METHOD QFileDialog:saveState( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QByteArray():from( Qt_QFileDialog_saveState( ::pPtr, ... ) )
+      RETURN QByteArrayFromPointer( Qt_QFileDialog_saveState( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -341,7 +347,7 @@ METHOD QFileDialog:selectNameFilter( ... )
 METHOD QFileDialog:selectedFiles( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QFileDialog_selectedFiles( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QFileDialog_selectedFiles( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -593,7 +599,7 @@ METHOD QFileDialog:setViewMode( ... )
 METHOD QFileDialog:sidebarUrls( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QFileDialog_sidebarUrls( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QFileDialog_sidebarUrls( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

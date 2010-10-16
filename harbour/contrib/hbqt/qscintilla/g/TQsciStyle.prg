@@ -98,6 +98,12 @@
 FUNCTION QsciStyle( ... )
    RETURN HB_QsciStyle():new( ... )
 
+FUNCTION QsciStyleFrom( ... )
+   RETURN HB_QsciStyle():from( ... )
+
+FUNCTION QsciStyleFromPointer( ... )
+   RETURN HB_QsciStyle():fromPointer( ... )
+
 
 CREATE CLASS QsciStyle INHERIT HbQtObjectHandler FUNCTION HB_QsciStyle
 
@@ -179,7 +185,7 @@ METHOD QsciStyle:setColor( ... )
 METHOD QsciStyle:color( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QColor():from( Qt_QsciStyle_color( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_QsciStyle_color( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -199,7 +205,7 @@ METHOD QsciStyle:setPaper( ... )
 METHOD QsciStyle:paper( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QColor():from( Qt_QsciStyle_paper( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_QsciStyle_paper( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -219,7 +225,7 @@ METHOD QsciStyle:setFont( ... )
 METHOD QsciStyle:font( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFont():from( Qt_QsciStyle_font( ::pPtr, ... ) )
+      RETURN QFontFromPointer( Qt_QsciStyle_font( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

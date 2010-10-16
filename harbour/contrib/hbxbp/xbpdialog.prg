@@ -150,8 +150,8 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
          ::isViaQtObject := .t.
          ::oWidget       := ::qtObject:oWidget
          ::qtObject      := NIL
-      ELSE
-         ::oWidget := HB_QMainWindow():from( ::qtObject:oWidget )
+      ELSEIF hb_isPointer( ::qtObject )
+         ::oWidget := QMainWindowFromPointer( ::qtObject )
       ENDIF
       ::oWidget:setMouseTracking( .t. )
    ELSE
@@ -421,7 +421,7 @@ METHOD XbpDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, .T. )
 
    IF !empty( ::qtObject )
-      ::oWidget := HB_QWidget():from( ::qtObject )
+      ::oWidget := QWidgetFromPointer( ::qtObject )
    ELSE
       ::oWidget := QWidget()
    ENDIF

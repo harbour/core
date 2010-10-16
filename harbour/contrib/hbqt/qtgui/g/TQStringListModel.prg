@@ -98,6 +98,12 @@
 FUNCTION QStringListModel( ... )
    RETURN HB_QStringListModel():new( ... )
 
+FUNCTION QStringListModelFrom( ... )
+   RETURN HB_QStringListModel():from( ... )
+
+FUNCTION QStringListModelFromPointer( ... )
+   RETURN HB_QStringListModel():fromPointer( ... )
+
 
 CREATE CLASS QStringListModel INHERIT HbQtObjectHandler, HB_QAbstractListModel FUNCTION HB_QStringListModel
 
@@ -129,7 +135,7 @@ METHOD QStringListModel:data( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QVariant():from( Qt_QStringListModel_data( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QStringListModel_data( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -231,7 +237,7 @@ METHOD QStringListModel:setStringList( ... )
 METHOD QStringListModel:stringList( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QStringListModel_stringList( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QStringListModel_stringList( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

@@ -98,6 +98,12 @@
 FUNCTION QMenu( ... )
    RETURN HB_QMenu():new( ... )
 
+FUNCTION QMenuFrom( ... )
+   RETURN HB_QMenu():from( ... )
+
+FUNCTION QMenuFromPointer( ... )
+   RETURN HB_QMenu():fromPointer( ... )
+
 
 CREATE CLASS QMenu INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QMenu
 
@@ -154,7 +160,7 @@ METHOD QMenu:actionAt( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QAction():from( Qt_QMenu_actionAt( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QMenu_actionAt( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -166,7 +172,7 @@ METHOD QMenu:actionGeometry( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QRect():from( Qt_QMenu_actionGeometry( ::pPtr, ... ) )
+         RETURN QRectFromPointer( Qt_QMenu_actionGeometry( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -176,7 +182,7 @@ METHOD QMenu:actionGeometry( ... )
 METHOD QMenu:activeAction( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QMenu_activeAction( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QMenu_activeAction( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -186,33 +192,33 @@ METHOD QMenu:addAction( ... )
    CASE 5
       DO CASE
       CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isChar( hb_pvalue( 4 ) ) .AND. hb_isObject( hb_pvalue( 5 ) )
-         RETURN HB_QAction():from( Qt_QMenu_addAction_3( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QMenu_addAction_3( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 4
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
-         RETURN HB_QAction():from( Qt_QMenu_addAction_2( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QMenu_addAction_2( ::pPtr, ... ) )
       CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isChar( hb_pvalue( 4 ) )
-         RETURN HB_QAction():from( Qt_QMenu_addAction_3( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QMenu_addAction_3( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 3
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
-         RETURN HB_QAction():from( Qt_QMenu_addAction_2( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QMenu_addAction_2( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
       CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
-         RETURN HB_QAction():from( Qt_QMenu_addAction_1( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QMenu_addAction_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QAction():from( Qt_QMenu_addAction( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QMenu_addAction( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QMenu_addAction_4( ::pPtr, ... )
       ENDCASE
@@ -226,15 +232,15 @@ METHOD QMenu:addMenu( ... )
    CASE 2
       DO CASE
       CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
-         RETURN HB_QMenu():from( Qt_QMenu_addMenu_2( ::pPtr, ... ) )
+         RETURN QMenuFromPointer( Qt_QMenu_addMenu_2( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QMenu():from( Qt_QMenu_addMenu_1( ::pPtr, ... ) )
+         RETURN QMenuFromPointer( Qt_QMenu_addMenu_1( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QAction():from( Qt_QMenu_addMenu( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QMenu_addMenu( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -244,7 +250,7 @@ METHOD QMenu:addMenu( ... )
 METHOD QMenu:addSeparator( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QMenu_addSeparator( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QMenu_addSeparator( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -260,7 +266,7 @@ METHOD QMenu:clear( ... )
 METHOD QMenu:defaultAction( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QMenu_defaultAction( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QMenu_defaultAction( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -270,17 +276,17 @@ METHOD QMenu:exec( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QAction():from( Qt_QMenu_exec_1( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QMenu_exec_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QAction():from( Qt_QMenu_exec_1( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QMenu_exec_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QAction():from( Qt_QMenu_exec( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QMenu_exec( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -296,7 +302,7 @@ METHOD QMenu:hideTearOffMenu( ... )
 METHOD QMenu:icon( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QIcon():from( Qt_QMenu_icon( ::pPtr, ... ) )
+      RETURN QIconFromPointer( Qt_QMenu_icon( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -306,7 +312,7 @@ METHOD QMenu:insertMenu( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QAction():from( Qt_QMenu_insertMenu( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QMenu_insertMenu( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -318,7 +324,7 @@ METHOD QMenu:insertSeparator( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QAction():from( Qt_QMenu_insertSeparator( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QMenu_insertSeparator( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -352,7 +358,7 @@ METHOD QMenu:isTearOffMenuVisible( ... )
 METHOD QMenu:menuAction( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QMenu_menuAction( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QMenu_menuAction( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

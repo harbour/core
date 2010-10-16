@@ -98,6 +98,12 @@
 FUNCTION QSettings( ... )
    RETURN HB_QSettings():new( ... )
 
+FUNCTION QSettingsFrom( ... )
+   RETURN HB_QSettings():from( ... )
+
+FUNCTION QSettingsFromPointer( ... )
+   RETURN HB_QSettings():fromPointer( ... )
+
 
 CREATE CLASS QSettings INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QSettings
 
@@ -150,7 +156,7 @@ METHOD QSettings:new( ... )
 METHOD QSettings:allKeys( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QSettings_allKeys( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QSettings_allKeys( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -208,7 +214,7 @@ METHOD QSettings:beginWriteArray( ... )
 METHOD QSettings:childGroups( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QSettings_childGroups( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QSettings_childGroups( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -216,7 +222,7 @@ METHOD QSettings:childGroups( ... )
 METHOD QSettings:childKeys( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QSettings_childKeys( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QSettings_childKeys( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -292,7 +298,7 @@ METHOD QSettings:group( ... )
 METHOD QSettings:iniCodec( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextCodec():from( Qt_QSettings_iniCodec( ::pPtr, ... ) )
+      RETURN QTextCodecFromPointer( Qt_QSettings_iniCodec( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -404,13 +410,13 @@ METHOD QSettings:value( ... )
    CASE 2
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QVariant():from( Qt_QSettings_value( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QSettings_value( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QVariant():from( Qt_QSettings_value( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QSettings_value( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

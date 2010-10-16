@@ -98,6 +98,12 @@
 FUNCTION QWidget( ... )
    RETURN HB_QWidget():new( ... )
 
+FUNCTION QWidgetFrom( ... )
+   RETURN HB_QWidget():from( ... )
+
+FUNCTION QWidgetFromPointer( ... )
+   RETURN HB_QWidget():fromPointer( ... )
+
 
 CREATE CLASS QWidget INHERIT HbQtObjectHandler, HB_QObject, HB_QPaintDevice FUNCTION HB_QWidget
 
@@ -333,7 +339,7 @@ METHOD QWidget:acceptDrops( ... )
 METHOD QWidget:actions( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QWidget_actions( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QWidget_actions( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -385,7 +391,7 @@ METHOD QWidget:backgroundRole( ... )
 METHOD QWidget:baseSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QWidget_baseSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QWidget_baseSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -395,13 +401,13 @@ METHOD QWidget:childAt( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QWidget():from( Qt_QWidget_childAt( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QWidget_childAt( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QWidget():from( Qt_QWidget_childAt_1( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QWidget_childAt_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -411,7 +417,7 @@ METHOD QWidget:childAt( ... )
 METHOD QWidget:childrenRect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QWidget_childrenRect( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QWidget_childrenRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -419,7 +425,7 @@ METHOD QWidget:childrenRect( ... )
 METHOD QWidget:childrenRegion( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRegion():from( Qt_QWidget_childrenRegion( ::pPtr, ... ) )
+      RETURN QRegionFromPointer( Qt_QWidget_childrenRegion( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -443,7 +449,7 @@ METHOD QWidget:clearMask( ... )
 METHOD QWidget:contentsRect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QWidget_contentsRect( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QWidget_contentsRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -459,7 +465,7 @@ METHOD QWidget:contextMenuPolicy( ... )
 METHOD QWidget:cursor( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QCursor():from( Qt_QWidget_cursor( ::pPtr, ... ) )
+      RETURN QCursorFromPointer( Qt_QWidget_cursor( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -483,7 +489,7 @@ METHOD QWidget:focusPolicy( ... )
 METHOD QWidget:focusProxy( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QWidget_focusProxy( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QWidget_focusProxy( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -491,7 +497,7 @@ METHOD QWidget:focusProxy( ... )
 METHOD QWidget:focusWidget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QWidget_focusWidget( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QWidget_focusWidget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -499,7 +505,7 @@ METHOD QWidget:focusWidget( ... )
 METHOD QWidget:font( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFont():from( Qt_QWidget_font( ::pPtr, ... ) )
+      RETURN QFontFromPointer( Qt_QWidget_font( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -507,7 +513,7 @@ METHOD QWidget:font( ... )
 METHOD QWidget:fontInfo( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFontInfo():from( Qt_QWidget_fontInfo( ::pPtr, ... ) )
+      RETURN QFontInfoFromPointer( Qt_QWidget_fontInfo( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -515,7 +521,7 @@ METHOD QWidget:fontInfo( ... )
 METHOD QWidget:fontMetrics( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFontMetrics():from( Qt_QWidget_fontMetrics( ::pPtr, ... ) )
+      RETURN QFontMetricsFromPointer( Qt_QWidget_fontMetrics( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -531,7 +537,7 @@ METHOD QWidget:foregroundRole( ... )
 METHOD QWidget:frameGeometry( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QWidget_frameGeometry( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QWidget_frameGeometry( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -539,7 +545,7 @@ METHOD QWidget:frameGeometry( ... )
 METHOD QWidget:frameSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QWidget_frameSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QWidget_frameSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -547,7 +553,7 @@ METHOD QWidget:frameSize( ... )
 METHOD QWidget:geometry( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QWidget_geometry( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QWidget_geometry( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -645,7 +651,7 @@ METHOD QWidget:inputMethodQuery( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QVariant():from( Qt_QWidget_inputMethodQuery( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QWidget_inputMethodQuery( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -783,7 +789,7 @@ METHOD QWidget:isWindowModified( ... )
 METHOD QWidget:layout( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QLayout():from( Qt_QWidget_layout( ::pPtr, ... ) )
+      RETURN QLayoutFromPointer( Qt_QWidget_layout( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -799,7 +805,7 @@ METHOD QWidget:layoutDirection( ... )
 METHOD QWidget:locale( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QLocale():from( Qt_QWidget_locale( ::pPtr, ... ) )
+      RETURN QLocaleFromPointer( Qt_QWidget_locale( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -809,7 +815,7 @@ METHOD QWidget:mapFrom( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QPoint():from( Qt_QWidget_mapFrom( ::pPtr, ... ) )
+         RETURN QPointFromPointer( Qt_QWidget_mapFrom( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -821,7 +827,7 @@ METHOD QWidget:mapFromGlobal( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QPoint():from( Qt_QWidget_mapFromGlobal( ::pPtr, ... ) )
+         RETURN QPointFromPointer( Qt_QWidget_mapFromGlobal( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -833,7 +839,7 @@ METHOD QWidget:mapFromParent( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QPoint():from( Qt_QWidget_mapFromParent( ::pPtr, ... ) )
+         RETURN QPointFromPointer( Qt_QWidget_mapFromParent( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -845,7 +851,7 @@ METHOD QWidget:mapTo( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QPoint():from( Qt_QWidget_mapTo( ::pPtr, ... ) )
+         RETURN QPointFromPointer( Qt_QWidget_mapTo( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -857,7 +863,7 @@ METHOD QWidget:mapToGlobal( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QPoint():from( Qt_QWidget_mapToGlobal( ::pPtr, ... ) )
+         RETURN QPointFromPointer( Qt_QWidget_mapToGlobal( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -869,7 +875,7 @@ METHOD QWidget:mapToParent( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QPoint():from( Qt_QWidget_mapToParent( ::pPtr, ... ) )
+         RETURN QPointFromPointer( Qt_QWidget_mapToParent( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -879,7 +885,7 @@ METHOD QWidget:mapToParent( ... )
 METHOD QWidget:mask( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRegion():from( Qt_QWidget_mask( ::pPtr, ... ) )
+      RETURN QRegionFromPointer( Qt_QWidget_mask( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -895,7 +901,7 @@ METHOD QWidget:maximumHeight( ... )
 METHOD QWidget:maximumSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QWidget_maximumSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QWidget_maximumSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -919,7 +925,7 @@ METHOD QWidget:minimumHeight( ... )
 METHOD QWidget:minimumSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QWidget_minimumSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QWidget_minimumSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -927,7 +933,7 @@ METHOD QWidget:minimumSize( ... )
 METHOD QWidget:minimumSizeHint( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QWidget_minimumSizeHint( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QWidget_minimumSizeHint( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -961,7 +967,7 @@ METHOD QWidget:move( ... )
 METHOD QWidget:nativeParentWidget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QWidget_nativeParentWidget( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QWidget_nativeParentWidget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -969,7 +975,7 @@ METHOD QWidget:nativeParentWidget( ... )
 METHOD QWidget:nextInFocusChain( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QWidget_nextInFocusChain( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QWidget_nextInFocusChain( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -977,7 +983,7 @@ METHOD QWidget:nextInFocusChain( ... )
 METHOD QWidget:normalGeometry( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QWidget_normalGeometry( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QWidget_normalGeometry( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -997,7 +1003,7 @@ METHOD QWidget:overrideWindowFlags( ... )
 METHOD QWidget:paintEngine( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPaintEngine():from( Qt_QWidget_paintEngine( ::pPtr, ... ) )
+      RETURN QPaintEngineFromPointer( Qt_QWidget_paintEngine( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -1005,7 +1011,7 @@ METHOD QWidget:paintEngine( ... )
 METHOD QWidget:palette( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPalette():from( Qt_QWidget_palette( ::pPtr, ... ) )
+      RETURN QPaletteFromPointer( Qt_QWidget_palette( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -1013,7 +1019,7 @@ METHOD QWidget:palette( ... )
 METHOD QWidget:parentWidget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QWidget_parentWidget( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QWidget_parentWidget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -1021,7 +1027,7 @@ METHOD QWidget:parentWidget( ... )
 METHOD QWidget:pos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QWidget_pos( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QWidget_pos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -1029,7 +1035,7 @@ METHOD QWidget:pos( ... )
 METHOD QWidget:rect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QWidget_rect( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QWidget_rect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -1132,7 +1138,7 @@ METHOD QWidget:restoreGeometry( ... )
 METHOD QWidget:saveGeometry( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QByteArray():from( Qt_QWidget_saveGeometry( ::pPtr, ... ) )
+      RETURN QByteArrayFromPointer( Qt_QWidget_saveGeometry( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -1795,7 +1801,7 @@ METHOD QWidget:setWindowState( ... )
 METHOD QWidget:size( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QWidget_size( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QWidget_size( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -1803,7 +1809,7 @@ METHOD QWidget:size( ... )
 METHOD QWidget:sizeHint( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QWidget_sizeHint( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QWidget_sizeHint( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -1811,7 +1817,7 @@ METHOD QWidget:sizeHint( ... )
 METHOD QWidget:sizeIncrement( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QWidget_sizeIncrement( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QWidget_sizeIncrement( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -1819,7 +1825,7 @@ METHOD QWidget:sizeIncrement( ... )
 METHOD QWidget:sizePolicy( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSizePolicy():from( Qt_QWidget_sizePolicy( ::pPtr, ... ) )
+      RETURN QSizePolicyFromPointer( Qt_QWidget_sizePolicy( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -1847,7 +1853,7 @@ METHOD QWidget:statusTip( ... )
 METHOD QWidget:style( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStyle():from( Qt_QWidget_style( ::pPtr, ... ) )
+      RETURN QStyleFromPointer( Qt_QWidget_style( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -1956,7 +1962,7 @@ METHOD QWidget:updatesEnabled( ... )
 METHOD QWidget:visibleRegion( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRegion():from( Qt_QWidget_visibleRegion( ::pPtr, ... ) )
+      RETURN QRegionFromPointer( Qt_QWidget_visibleRegion( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -1980,7 +1986,7 @@ METHOD QWidget:width( ... )
 METHOD QWidget:window( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QWidget_window( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QWidget_window( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -2004,7 +2010,7 @@ METHOD QWidget:windowFlags( ... )
 METHOD QWidget:windowIcon( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QIcon():from( Qt_QWidget_windowIcon( ::pPtr, ... ) )
+      RETURN QIconFromPointer( Qt_QWidget_windowIcon( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -2084,7 +2090,7 @@ METHOD QWidget:y( ... )
 METHOD QWidget:keyboardGrabber( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QWidget_keyboardGrabber( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QWidget_keyboardGrabber( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -2092,7 +2098,7 @@ METHOD QWidget:keyboardGrabber( ... )
 METHOD QWidget:mouseGrabber( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QWidget_mouseGrabber( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QWidget_mouseGrabber( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

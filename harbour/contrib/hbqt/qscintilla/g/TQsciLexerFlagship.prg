@@ -98,6 +98,12 @@
 FUNCTION QsciLexerFlagship( ... )
    RETURN HB_QsciLexerFlagship():new( ... )
 
+FUNCTION QsciLexerFlagshipFrom( ... )
+   RETURN HB_QsciLexerFlagship():from( ... )
+
+FUNCTION QsciLexerFlagshipFromPointer( ... )
+   RETURN HB_QsciLexerFlagship():fromPointer( ... )
+
 
 CREATE CLASS QsciLexerFlagship INHERIT HbQtObjectHandler, HB_QsciLexer FUNCTION HB_QsciLexerFlagship
 
@@ -162,7 +168,7 @@ METHOD QsciLexerFlagship:lexer( ... )
 METHOD QsciLexerFlagship:autoCompletionWordSeparators( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QsciLexerFlagship_autoCompletionWordSeparators( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QsciLexerFlagship_autoCompletionWordSeparators( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -230,7 +236,7 @@ METHOD QsciLexerFlagship:defaultColor( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QColor():from( Qt_QsciLexerFlagship_defaultColor( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QsciLexerFlagship_defaultColor( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -254,7 +260,7 @@ METHOD QsciLexerFlagship:defaultFont( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QFont():from( Qt_QsciLexerFlagship_defaultFont( ::pPtr, ... ) )
+         RETURN QFontFromPointer( Qt_QsciLexerFlagship_defaultFont( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -266,7 +272,7 @@ METHOD QsciLexerFlagship:defaultPaper( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QColor():from( Qt_QsciLexerFlagship_defaultPaper( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QsciLexerFlagship_defaultPaper( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

@@ -98,6 +98,12 @@
 FUNCTION QFile( ... )
    RETURN HB_QFile():new( ... )
 
+FUNCTION QFileFrom( ... )
+   RETURN HB_QFile():from( ... )
+
+FUNCTION QFileFromPointer( ... )
+   RETURN HB_QFile():fromPointer( ... )
+
 
 CREATE CLASS QFile INHERIT HbQtObjectHandler, HB_QIODevice FUNCTION HB_QFile
 
@@ -432,7 +438,7 @@ METHOD QFile:encodeName( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QByteArray():from( Qt_QFile_encodeName( ::pPtr, ... ) )
+         RETURN QByteArrayFromPointer( Qt_QFile_encodeName( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

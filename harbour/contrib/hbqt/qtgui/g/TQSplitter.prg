@@ -98,6 +98,12 @@
 FUNCTION QSplitter( ... )
    RETURN HB_QSplitter():new( ... )
 
+FUNCTION QSplitterFrom( ... )
+   RETURN HB_QSplitter():from( ... )
+
+FUNCTION QSplitterFromPointer( ... )
+   RETURN HB_QSplitter():fromPointer( ... )
+
 
 CREATE CLASS QSplitter INHERIT HbQtObjectHandler, HB_QFrame FUNCTION HB_QSplitter
 
@@ -260,7 +266,7 @@ METHOD QSplitter:restoreState( ... )
 METHOD QSplitter:saveState( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QByteArray():from( Qt_QSplitter_saveState( ::pPtr, ... ) )
+      RETURN QByteArrayFromPointer( Qt_QSplitter_saveState( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -342,7 +348,7 @@ METHOD QSplitter:setStretchFactor( ... )
 METHOD QSplitter:sizes( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QSplitter_sizes( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QSplitter_sizes( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -352,7 +358,7 @@ METHOD QSplitter:widget( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QWidget():from( Qt_QSplitter_widget( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QSplitter_widget( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

@@ -98,6 +98,12 @@
 FUNCTION QTextList( ... )
    RETURN HB_QTextList():new( ... )
 
+FUNCTION QTextListFrom( ... )
+   RETURN HB_QTextList():from( ... )
+
+FUNCTION QTextListFromPointer( ... )
+   RETURN HB_QTextList():fromPointer( ... )
+
 
 CREATE CLASS QTextList INHERIT HbQtObjectHandler, HB_QTextBlockGroup FUNCTION HB_QTextList
 
@@ -148,7 +154,7 @@ METHOD QTextList:count( ... )
 METHOD QTextList:format( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextListFormat():from( Qt_QTextList_format( ::pPtr, ... ) )
+      RETURN QTextListFormatFromPointer( Qt_QTextList_format( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -158,7 +164,7 @@ METHOD QTextList:item( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QTextBlock():from( Qt_QTextList_item( ::pPtr, ... ) )
+         RETURN QTextBlockFromPointer( Qt_QTextList_item( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

@@ -98,6 +98,12 @@
 FUNCTION QStyleOptionViewItem( ... )
    RETURN HB_QStyleOptionViewItem():new( ... )
 
+FUNCTION QStyleOptionViewItemFrom( ... )
+   RETURN HB_QStyleOptionViewItem():from( ... )
+
+FUNCTION QStyleOptionViewItemFromPointer( ... )
+   RETURN HB_QStyleOptionViewItem():fromPointer( ... )
+
 
 CREATE CLASS QStyleOptionViewItem INHERIT HbQtObjectHandler, HB_QStyleOption FUNCTION HB_QStyleOptionViewItem
 
@@ -142,7 +148,7 @@ METHOD QStyleOptionViewItem:decorationPosition( ... )
 METHOD QStyleOptionViewItem:decorationSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QStyleOptionViewItem_decorationSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QStyleOptionViewItem_decorationSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -158,7 +164,7 @@ METHOD QStyleOptionViewItem:displayAlignment( ... )
 METHOD QStyleOptionViewItem:font( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFont():from( Qt_QStyleOptionViewItem_font( ::pPtr, ... ) )
+      RETURN QFontFromPointer( Qt_QStyleOptionViewItem_font( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

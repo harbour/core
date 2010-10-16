@@ -98,6 +98,12 @@
 FUNCTION QFileInfo( ... )
    RETURN HB_QFileInfo():new( ... )
 
+FUNCTION QFileInfoFrom( ... )
+   RETURN HB_QFileInfo():from( ... )
+
+FUNCTION QFileInfoFromPointer( ... )
+   RETURN HB_QFileInfo():fromPointer( ... )
+
 
 CREATE CLASS QFileInfo INHERIT HbQtObjectHandler FUNCTION HB_QFileInfo
 
@@ -163,7 +169,7 @@ METHOD QFileInfo:new( ... )
 METHOD QFileInfo:absoluteDir( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDir():from( Qt_QFileInfo_absoluteDir( ::pPtr, ... ) )
+      RETURN QDirFromPointer( Qt_QFileInfo_absoluteDir( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -243,7 +249,7 @@ METHOD QFileInfo:completeSuffix( ... )
 METHOD QFileInfo:created( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDateTime():from( Qt_QFileInfo_created( ::pPtr, ... ) )
+      RETURN QDateTimeFromPointer( Qt_QFileInfo_created( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -251,7 +257,7 @@ METHOD QFileInfo:created( ... )
 METHOD QFileInfo:dir( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDir():from( Qt_QFileInfo_dir( ::pPtr, ... ) )
+      RETURN QDirFromPointer( Qt_QFileInfo_dir( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -387,7 +393,7 @@ METHOD QFileInfo:isWritable( ... )
 METHOD QFileInfo:lastModified( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDateTime():from( Qt_QFileInfo_lastModified( ::pPtr, ... ) )
+      RETURN QDateTimeFromPointer( Qt_QFileInfo_lastModified( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -395,7 +401,7 @@ METHOD QFileInfo:lastModified( ... )
 METHOD QFileInfo:lastRead( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDateTime():from( Qt_QFileInfo_lastRead( ::pPtr, ... ) )
+      RETURN QDateTimeFromPointer( Qt_QFileInfo_lastRead( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

@@ -98,6 +98,12 @@
 FUNCTION QToolButton( ... )
    RETURN HB_QToolButton():new( ... )
 
+FUNCTION QToolButtonFrom( ... )
+   RETURN HB_QToolButton():from( ... )
+
+FUNCTION QToolButtonFromPointer( ... )
+   RETURN HB_QToolButton():fromPointer( ... )
+
 
 CREATE CLASS QToolButton INHERIT HbQtObjectHandler, HB_QAbstractButton FUNCTION HB_QToolButton
 
@@ -148,7 +154,7 @@ METHOD QToolButton:autoRaise( ... )
 METHOD QToolButton:defaultAction( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QToolButton_defaultAction( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QToolButton_defaultAction( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -156,7 +162,7 @@ METHOD QToolButton:defaultAction( ... )
 METHOD QToolButton:menu( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMenu():from( Qt_QToolButton_menu( ::pPtr, ... ) )
+      RETURN QMenuFromPointer( Qt_QToolButton_menu( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

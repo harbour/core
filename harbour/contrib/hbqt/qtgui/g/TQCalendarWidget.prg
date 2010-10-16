@@ -98,6 +98,12 @@
 FUNCTION QCalendarWidget( ... )
    RETURN HB_QCalendarWidget():new( ... )
 
+FUNCTION QCalendarWidgetFrom( ... )
+   RETURN HB_QCalendarWidget():from( ... )
+
+FUNCTION QCalendarWidgetFromPointer( ... )
+   RETURN HB_QCalendarWidget():fromPointer( ... )
+
 
 CREATE CLASS QCalendarWidget INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QCalendarWidget
 
@@ -167,7 +173,7 @@ METHOD QCalendarWidget:dateTextFormat( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QTextCharFormat():from( Qt_QCalendarWidget_dateTextFormat( ::pPtr, ... ) )
+         RETURN QTextCharFormatFromPointer( Qt_QCalendarWidget_dateTextFormat( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -185,7 +191,7 @@ METHOD QCalendarWidget:firstDayOfWeek( ... )
 METHOD QCalendarWidget:headerTextFormat( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextCharFormat():from( Qt_QCalendarWidget_headerTextFormat( ::pPtr, ... ) )
+      RETURN QTextCharFormatFromPointer( Qt_QCalendarWidget_headerTextFormat( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -225,7 +231,7 @@ METHOD QCalendarWidget:isNavigationBarVisible( ... )
 METHOD QCalendarWidget:maximumDate( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDate():from( Qt_QCalendarWidget_maximumDate( ::pPtr, ... ) )
+      RETURN QDateFromPointer( Qt_QCalendarWidget_maximumDate( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -233,7 +239,7 @@ METHOD QCalendarWidget:maximumDate( ... )
 METHOD QCalendarWidget:minimumDate( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDate():from( Qt_QCalendarWidget_minimumDate( ::pPtr, ... ) )
+      RETURN QDateFromPointer( Qt_QCalendarWidget_minimumDate( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -249,7 +255,7 @@ METHOD QCalendarWidget:monthShown( ... )
 METHOD QCalendarWidget:selectedDate( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDate():from( Qt_QCalendarWidget_selectedDate( ::pPtr, ... ) )
+      RETURN QDateFromPointer( Qt_QCalendarWidget_selectedDate( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -407,7 +413,7 @@ METHOD QCalendarWidget:weekdayTextFormat( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QTextCharFormat():from( Qt_QCalendarWidget_weekdayTextFormat( ::pPtr, ... ) )
+         RETURN QTextCharFormatFromPointer( Qt_QCalendarWidget_weekdayTextFormat( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

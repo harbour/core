@@ -98,6 +98,12 @@
 FUNCTION QTreeWidget( ... )
    RETURN HB_QTreeWidget():new( ... )
 
+FUNCTION QTreeWidgetFrom( ... )
+   RETURN HB_QTreeWidget():from( ... )
+
+FUNCTION QTreeWidgetFromPointer( ... )
+   RETURN HB_QTreeWidget():fromPointer( ... )
+
 
 CREATE CLASS QTreeWidget INHERIT HbQtObjectHandler, HB_QTreeView FUNCTION HB_QTreeWidget
 
@@ -204,7 +210,7 @@ METHOD QTreeWidget:currentColumn( ... )
 METHOD QTreeWidget:currentItem( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_currentItem( ::pPtr, ... ) )
+      RETURN QTreeWidgetItemFromPointer( Qt_QTreeWidget_currentItem( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -232,13 +238,13 @@ METHOD QTreeWidget:findItems( ... )
    CASE 3
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
-         RETURN HB_QList():from( Qt_QTreeWidget_findItems( ::pPtr, ... ) )
+         RETURN QListFromPointer( Qt_QTreeWidget_findItems( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QList():from( Qt_QTreeWidget_findItems( ::pPtr, ... ) )
+         RETURN QListFromPointer( Qt_QTreeWidget_findItems( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -248,7 +254,7 @@ METHOD QTreeWidget:findItems( ... )
 METHOD QTreeWidget:headerItem( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_headerItem( ::pPtr, ... ) )
+      RETURN QTreeWidgetItemFromPointer( Qt_QTreeWidget_headerItem( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -280,7 +286,7 @@ METHOD QTreeWidget:insertTopLevelItem( ... )
 METHOD QTreeWidget:invisibleRootItem( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_invisibleRootItem( ::pPtr, ... ) )
+      RETURN QTreeWidgetItemFromPointer( Qt_QTreeWidget_invisibleRootItem( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -302,7 +308,7 @@ METHOD QTreeWidget:itemAbove( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_itemAbove( ::pPtr, ... ) )
+         RETURN QTreeWidgetItemFromPointer( Qt_QTreeWidget_itemAbove( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -314,13 +320,13 @@ METHOD QTreeWidget:itemAt( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_itemAt_1( ::pPtr, ... ) )
+         RETURN QTreeWidgetItemFromPointer( Qt_QTreeWidget_itemAt_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_itemAt( ::pPtr, ... ) )
+         RETURN QTreeWidgetItemFromPointer( Qt_QTreeWidget_itemAt( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -332,7 +338,7 @@ METHOD QTreeWidget:itemBelow( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_itemBelow( ::pPtr, ... ) )
+         RETURN QTreeWidgetItemFromPointer( Qt_QTreeWidget_itemBelow( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -344,7 +350,7 @@ METHOD QTreeWidget:itemWidget( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QWidget():from( Qt_QTreeWidget_itemWidget( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QTreeWidget_itemWidget( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -384,7 +390,7 @@ METHOD QTreeWidget:removeItemWidget( ... )
 METHOD QTreeWidget:selectedItems( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QTreeWidget_selectedItems( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QTreeWidget_selectedItems( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -510,7 +516,7 @@ METHOD QTreeWidget:takeTopLevelItem( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_takeTopLevelItem( ::pPtr, ... ) )
+         RETURN QTreeWidgetItemFromPointer( Qt_QTreeWidget_takeTopLevelItem( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -522,7 +528,7 @@ METHOD QTreeWidget:topLevelItem( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidget_topLevelItem( ::pPtr, ... ) )
+         RETURN QTreeWidgetItemFromPointer( Qt_QTreeWidget_topLevelItem( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -542,7 +548,7 @@ METHOD QTreeWidget:visualItemRect( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QRect():from( Qt_QTreeWidget_visualItemRect( ::pPtr, ... ) )
+         RETURN QRectFromPointer( Qt_QTreeWidget_visualItemRect( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

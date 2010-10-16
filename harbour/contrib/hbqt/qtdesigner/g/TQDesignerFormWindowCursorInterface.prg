@@ -98,6 +98,12 @@
 FUNCTION QDesignerFormWindowCursorInterface( ... )
    RETURN HB_QDesignerFormWindowCursorInterface():new( ... )
 
+FUNCTION QDesignerFormWindowCursorInterfaceFrom( ... )
+   RETURN HB_QDesignerFormWindowCursorInterface():from( ... )
+
+FUNCTION QDesignerFormWindowCursorInterfaceFromPointer( ... )
+   RETURN HB_QDesignerFormWindowCursorInterface():fromPointer( ... )
+
 
 CREATE CLASS QDesignerFormWindowCursorInterface INHERIT HbQtObjectHandler FUNCTION HB_QDesignerFormWindowCursorInterface
 
@@ -133,7 +139,7 @@ METHOD QDesignerFormWindowCursorInterface:new( ... )
 METHOD QDesignerFormWindowCursorInterface:current( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QDesignerFormWindowCursorInterface_current( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QDesignerFormWindowCursorInterface_current( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -141,7 +147,7 @@ METHOD QDesignerFormWindowCursorInterface:current( ... )
 METHOD QDesignerFormWindowCursorInterface:formWindow( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDesignerFormWindowInterface():from( Qt_QDesignerFormWindowCursorInterface_formWindow( ::pPtr, ... ) )
+      RETURN QDesignerFormWindowInterfaceFromPointer( Qt_QDesignerFormWindowCursorInterface_formWindow( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -209,7 +215,7 @@ METHOD QDesignerFormWindowCursorInterface:selectedWidget( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QWidget():from( Qt_QDesignerFormWindowCursorInterface_selectedWidget( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QDesignerFormWindowCursorInterface_selectedWidget( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -271,7 +277,7 @@ METHOD QDesignerFormWindowCursorInterface:widget( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QWidget():from( Qt_QDesignerFormWindowCursorInterface_widget( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QDesignerFormWindowCursorInterface_widget( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

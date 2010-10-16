@@ -98,6 +98,12 @@
 FUNCTION QTimer( ... )
    RETURN HB_QTimer():new( ... )
 
+FUNCTION QTimerFrom( ... )
+   RETURN HB_QTimer():from( ... )
+
+FUNCTION QTimerFromPointer( ... )
+   RETURN HB_QTimer():fromPointer( ... )
+
 
 CREATE CLASS QTimer INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QTimer
 

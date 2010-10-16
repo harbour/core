@@ -98,6 +98,12 @@
 FUNCTION QDockWidget( ... )
    RETURN HB_QDockWidget():new( ... )
 
+FUNCTION QDockWidgetFrom( ... )
+   RETURN HB_QDockWidget():from( ... )
+
+FUNCTION QDockWidgetFromPointer( ... )
+   RETURN HB_QDockWidget():fromPointer( ... )
+
 
 CREATE CLASS QDockWidget INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QDockWidget
 
@@ -227,7 +233,7 @@ METHOD QDockWidget:setWidget( ... )
 METHOD QDockWidget:titleBarWidget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QDockWidget_titleBarWidget( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QDockWidget_titleBarWidget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -235,7 +241,7 @@ METHOD QDockWidget:titleBarWidget( ... )
 METHOD QDockWidget:toggleViewAction( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QDockWidget_toggleViewAction( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QDockWidget_toggleViewAction( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -243,7 +249,7 @@ METHOD QDockWidget:toggleViewAction( ... )
 METHOD QDockWidget:widget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QDockWidget_widget( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QDockWidget_widget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

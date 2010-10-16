@@ -98,6 +98,12 @@
 FUNCTION QAbstractItemModel( ... )
    RETURN HB_QAbstractItemModel():new( ... )
 
+FUNCTION QAbstractItemModelFrom( ... )
+   RETURN HB_QAbstractItemModel():from( ... )
+
+FUNCTION QAbstractItemModelFromPointer( ... )
+   RETURN HB_QAbstractItemModel():fromPointer( ... )
+
 
 CREATE CLASS QAbstractItemModel INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QAbstractItemModel
 
@@ -153,7 +159,7 @@ METHOD QAbstractItemModel:buddy( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QModelIndex():from( Qt_QAbstractItemModel_buddy( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_QAbstractItemModel_buddy( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -191,13 +197,13 @@ METHOD QAbstractItemModel:data( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QVariant():from( Qt_QAbstractItemModel_data( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QAbstractItemModel_data( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QVariant():from( Qt_QAbstractItemModel_data( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QAbstractItemModel_data( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -277,13 +283,13 @@ METHOD QAbstractItemModel:headerData( ... )
    CASE 3
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
-         RETURN HB_QVariant():from( Qt_QAbstractItemModel_headerData( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QAbstractItemModel_headerData( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QVariant():from( Qt_QAbstractItemModel_headerData( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QAbstractItemModel_headerData( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -295,13 +301,13 @@ METHOD QAbstractItemModel:index( ... )
    CASE 3
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
-         RETURN HB_QModelIndex():from( Qt_QAbstractItemModel_index( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_QAbstractItemModel_index( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QModelIndex():from( Qt_QAbstractItemModel_index( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_QAbstractItemModel_index( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -383,7 +389,7 @@ METHOD QAbstractItemModel:insertRows( ... )
 METHOD QAbstractItemModel:mimeTypes( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QAbstractItemModel_mimeTypes( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QAbstractItemModel_mimeTypes( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -393,7 +399,7 @@ METHOD QAbstractItemModel:parent( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QModelIndex():from( Qt_QAbstractItemModel_parent( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_QAbstractItemModel_parent( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -539,7 +545,7 @@ METHOD QAbstractItemModel:sibling( ... )
    CASE 3
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
-         RETURN HB_QModelIndex():from( Qt_QAbstractItemModel_sibling( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_QAbstractItemModel_sibling( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -569,7 +575,7 @@ METHOD QAbstractItemModel:span( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QSize():from( Qt_QAbstractItemModel_span( ::pPtr, ... ) )
+         RETURN QSizeFromPointer( Qt_QAbstractItemModel_span( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

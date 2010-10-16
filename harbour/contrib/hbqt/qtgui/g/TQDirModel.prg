@@ -98,6 +98,12 @@
 FUNCTION QDirModel( ... )
    RETURN HB_QDirModel():new( ... )
 
+FUNCTION QDirModelFrom( ... )
+   RETURN HB_QDirModel():from( ... )
+
+FUNCTION QDirModelFromPointer( ... )
+   RETURN HB_QDirModel():fromPointer( ... )
+
 
 CREATE CLASS QDirModel INHERIT HbQtObjectHandler, HB_QAbstractItemModel FUNCTION HB_QDirModel
 
@@ -172,13 +178,13 @@ METHOD QDirModel:data( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QVariant():from( Qt_QDirModel_data( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QDirModel_data( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QVariant():from( Qt_QDirModel_data( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QDirModel_data( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -202,7 +208,7 @@ METHOD QDirModel:fileIcon( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QIcon():from( Qt_QDirModel_fileIcon( ::pPtr, ... ) )
+         RETURN QIconFromPointer( Qt_QDirModel_fileIcon( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -214,7 +220,7 @@ METHOD QDirModel:fileInfo( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QFileInfo():from( Qt_QDirModel_fileInfo( ::pPtr, ... ) )
+         RETURN QFileInfoFromPointer( Qt_QDirModel_fileInfo( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -284,13 +290,13 @@ METHOD QDirModel:headerData( ... )
    CASE 3
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
-         RETURN HB_QVariant():from( Qt_QDirModel_headerData( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QDirModel_headerData( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QVariant():from( Qt_QDirModel_headerData( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QDirModel_headerData( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -300,7 +306,7 @@ METHOD QDirModel:headerData( ... )
 METHOD QDirModel:iconProvider( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFileIconProvider():from( Qt_QDirModel_iconProvider( ::pPtr, ... ) )
+      RETURN QFileIconProviderFromPointer( Qt_QDirModel_iconProvider( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -310,21 +316,21 @@ METHOD QDirModel:index( ... )
    CASE 3
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
-         RETURN HB_QModelIndex():from( Qt_QDirModel_index( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_QDirModel_index( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QModelIndex():from( Qt_QDirModel_index_1( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_QDirModel_index_1( ::pPtr, ... ) )
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QModelIndex():from( Qt_QDirModel_index( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_QDirModel_index( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QModelIndex():from( Qt_QDirModel_index_1( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_QDirModel_index_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -362,7 +368,7 @@ METHOD QDirModel:lazyChildCount( ... )
 METHOD QDirModel:mimeTypes( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QDirModel_mimeTypes( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QDirModel_mimeTypes( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -372,7 +378,7 @@ METHOD QDirModel:mkdir( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
-         RETURN HB_QModelIndex():from( Qt_QDirModel_mkdir( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_QDirModel_mkdir( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -382,7 +388,7 @@ METHOD QDirModel:mkdir( ... )
 METHOD QDirModel:nameFilters( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QDirModel_nameFilters( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QDirModel_nameFilters( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -392,7 +398,7 @@ METHOD QDirModel:parent( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QModelIndex():from( Qt_QDirModel_parent( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_QDirModel_parent( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

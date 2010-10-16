@@ -98,6 +98,12 @@
 FUNCTION QTimeEdit( ... )
    RETURN HB_QTimeEdit():new( ... )
 
+FUNCTION QTimeEditFrom( ... )
+   RETURN HB_QTimeEdit():from( ... )
+
+FUNCTION QTimeEditFromPointer( ... )
+   RETURN HB_QTimeEdit():fromPointer( ... )
+
 
 CREATE CLASS QTimeEdit INHERIT HbQtObjectHandler, HB_QDateTimeEdit FUNCTION HB_QTimeEdit
 

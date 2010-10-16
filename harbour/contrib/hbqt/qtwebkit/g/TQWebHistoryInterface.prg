@@ -98,6 +98,12 @@
 FUNCTION QWebHistoryInterface( ... )
    RETURN HB_QWebHistoryInterface():new( ... )
 
+FUNCTION QWebHistoryInterfaceFrom( ... )
+   RETURN HB_QWebHistoryInterface():from( ... )
+
+FUNCTION QWebHistoryInterfaceFromPointer( ... )
+   RETURN HB_QWebHistoryInterface():fromPointer( ... )
+
 
 CREATE CLASS QWebHistoryInterface INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QWebHistoryInterface
 
@@ -147,7 +153,7 @@ METHOD QWebHistoryInterface:historyContains( ... )
 METHOD QWebHistoryInterface:defaultInterface( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWebHistoryInterface():from( Qt_QWebHistoryInterface_defaultInterface( ::pPtr, ... ) )
+      RETURN QWebHistoryInterfaceFromPointer( Qt_QWebHistoryInterface_defaultInterface( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

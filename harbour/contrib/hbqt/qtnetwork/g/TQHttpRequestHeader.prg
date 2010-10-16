@@ -98,6 +98,12 @@
 FUNCTION QHttpRequestHeader( ... )
    RETURN HB_QHttpRequestHeader():new( ... )
 
+FUNCTION QHttpRequestHeaderFrom( ... )
+   RETURN HB_QHttpRequestHeader():from( ... )
+
+FUNCTION QHttpRequestHeaderFromPointer( ... )
+   RETURN HB_QHttpRequestHeader():fromPointer( ... )
+
 
 CREATE CLASS QHttpRequestHeader INHERIT HbQtObjectHandler, HB_QHttpHeader FUNCTION HB_QHttpRequestHeader
 

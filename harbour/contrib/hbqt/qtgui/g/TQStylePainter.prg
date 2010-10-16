@@ -98,6 +98,12 @@
 FUNCTION QStylePainter( ... )
    RETURN HB_QStylePainter():new( ... )
 
+FUNCTION QStylePainterFrom( ... )
+   RETURN HB_QStylePainter():from( ... )
+
+FUNCTION QStylePainterFromPointer( ... )
+   RETURN HB_QStylePainter():fromPointer( ... )
+
 
 CREATE CLASS QStylePainter INHERIT HbQtObjectHandler, HB_QPainter FUNCTION HB_QStylePainter
 
@@ -211,7 +217,7 @@ METHOD QStylePainter:drawPrimitive( ... )
 METHOD QStylePainter:style( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStyle():from( Qt_QStylePainter_style( ::pPtr, ... ) )
+      RETURN QStyleFromPointer( Qt_QStylePainter_style( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

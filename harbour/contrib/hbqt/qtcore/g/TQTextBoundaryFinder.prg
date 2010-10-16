@@ -98,6 +98,12 @@
 FUNCTION QTextBoundaryFinder( ... )
    RETURN HB_QTextBoundaryFinder():new( ... )
 
+FUNCTION QTextBoundaryFinderFrom( ... )
+   RETURN HB_QTextBoundaryFinder():from( ... )
+
+FUNCTION QTextBoundaryFinderFromPointer( ... )
+   RETURN HB_QTextBoundaryFinder():fromPointer( ... )
+
 
 CREATE CLASS QTextBoundaryFinder INHERIT HbQtObjectHandler FUNCTION HB_QTextBoundaryFinder
 

@@ -98,6 +98,12 @@
 FUNCTION QWebSecurityOrigin( ... )
    RETURN HB_QWebSecurityOrigin():new( ... )
 
+FUNCTION QWebSecurityOriginFrom( ... )
+   RETURN HB_QWebSecurityOrigin():from( ... )
+
+FUNCTION QWebSecurityOriginFromPointer( ... )
+   RETURN HB_QWebSecurityOrigin():fromPointer( ... )
+
 
 CREATE CLASS QWebSecurityOrigin INHERIT HbQtObjectHandler FUNCTION HB_QWebSecurityOrigin
 
@@ -178,7 +184,7 @@ METHOD QWebSecurityOrigin:setDatabaseQuota( ... )
 METHOD QWebSecurityOrigin:allOrigins( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QWebSecurityOrigin_allOrigins( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QWebSecurityOrigin_allOrigins( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

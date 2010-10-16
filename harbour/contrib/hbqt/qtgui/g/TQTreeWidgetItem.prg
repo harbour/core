@@ -98,6 +98,12 @@
 FUNCTION QTreeWidgetItem( ... )
    RETURN HB_QTreeWidgetItem():new( ... )
 
+FUNCTION QTreeWidgetItemFrom( ... )
+   RETURN HB_QTreeWidgetItem():from( ... )
+
+FUNCTION QTreeWidgetItemFromPointer( ... )
+   RETURN HB_QTreeWidgetItem():fromPointer( ... )
+
 
 CREATE CLASS QTreeWidgetItem INHERIT HbQtObjectHandler FUNCTION HB_QTreeWidgetItem
 
@@ -186,7 +192,7 @@ METHOD QTreeWidgetItem:background( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QBrush():from( Qt_QTreeWidgetItem_background( ::pPtr, ... ) )
+         RETURN QBrushFromPointer( Qt_QTreeWidgetItem_background( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -210,7 +216,7 @@ METHOD QTreeWidgetItem:child( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidgetItem_child( ::pPtr, ... ) )
+         RETURN QTreeWidgetItemFromPointer( Qt_QTreeWidgetItem_child( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -236,7 +242,7 @@ METHOD QTreeWidgetItem:childIndicatorPolicy( ... )
 METHOD QTreeWidgetItem:clone( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidgetItem_clone( ::pPtr, ... ) )
+      RETURN QTreeWidgetItemFromPointer( Qt_QTreeWidgetItem_clone( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -254,7 +260,7 @@ METHOD QTreeWidgetItem:data( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QVariant():from( Qt_QTreeWidgetItem_data( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QTreeWidgetItem_data( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -274,7 +280,7 @@ METHOD QTreeWidgetItem:font( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QFont():from( Qt_QTreeWidgetItem_font( ::pPtr, ... ) )
+         RETURN QFontFromPointer( Qt_QTreeWidgetItem_font( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -286,7 +292,7 @@ METHOD QTreeWidgetItem:foreground( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QBrush():from( Qt_QTreeWidgetItem_foreground( ::pPtr, ... ) )
+         RETURN QBrushFromPointer( Qt_QTreeWidgetItem_foreground( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -298,7 +304,7 @@ METHOD QTreeWidgetItem:icon( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QIcon():from( Qt_QTreeWidgetItem_icon( ::pPtr, ... ) )
+         RETURN QIconFromPointer( Qt_QTreeWidgetItem_icon( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -372,7 +378,7 @@ METHOD QTreeWidgetItem:isSelected( ... )
 METHOD QTreeWidgetItem:parent( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidgetItem_parent( ::pPtr, ... ) )
+      RETURN QTreeWidgetItemFromPointer( Qt_QTreeWidgetItem_parent( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -634,7 +640,7 @@ METHOD QTreeWidgetItem:sizeHint( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QSize():from( Qt_QTreeWidgetItem_sizeHint( ::pPtr, ... ) )
+         RETURN QSizeFromPointer( Qt_QTreeWidgetItem_sizeHint( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -670,7 +676,7 @@ METHOD QTreeWidgetItem:takeChild( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QTreeWidgetItem():from( Qt_QTreeWidgetItem_takeChild( ::pPtr, ... ) )
+         RETURN QTreeWidgetItemFromPointer( Qt_QTreeWidgetItem_takeChild( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -680,7 +686,7 @@ METHOD QTreeWidgetItem:takeChild( ... )
 METHOD QTreeWidgetItem:takeChildren( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QTreeWidgetItem_takeChildren( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QTreeWidgetItem_takeChildren( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -724,7 +730,7 @@ METHOD QTreeWidgetItem:toolTip( ... )
 METHOD QTreeWidgetItem:treeWidget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTreeWidget():from( Qt_QTreeWidgetItem_treeWidget( ::pPtr, ... ) )
+      RETURN QTreeWidgetFromPointer( Qt_QTreeWidgetItem_treeWidget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

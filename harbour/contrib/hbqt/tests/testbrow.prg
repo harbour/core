@@ -99,8 +99,8 @@ PROCEDURE Main()
 
    RETURN
 
-STATIC PROCEDURE my_save( oWidget, nArea, aStru, nCX, nCY )
-   LOCAL cData := QLineEdit():from( oWidget ):text()
+STATIC PROCEDURE my_save( pWidget, nArea, aStru, nCX, nCY )
+   LOCAL cData := QLineEditFromPointer( pWidget ):text()
 
    DBSelectArea( nArea )
    DBGoto( nCY + 1 )
@@ -121,11 +121,11 @@ STATIC PROCEDURE my_save( oWidget, nArea, aStru, nCX, nCY )
    ENDSWITCH
    RETURN
 
-STATIC PROCEDURE my_select( n, nCX, nCY  )
-   LOCAL i := QModelIndex():from( n )
+STATIC PROCEDURE my_select( pModelIndex, nCX, nCY  )
+   LOCAL qModelIndex := QModelIndexFromPointer( pModelIndex )
 
-   nCX := i:column()
-   nCY := i:row()
+   nCX := qModelIndex:column()
+   nCY := qModelIndex:row()
    RETURN
 
 STATIC FUNCTION my_browse( nArea, aStru, t, role, x, y )

@@ -98,6 +98,12 @@
 FUNCTION QDesignerFormWindowInterface( ... )
    RETURN HB_QDesignerFormWindowInterface():new( ... )
 
+FUNCTION QDesignerFormWindowInterfaceFrom( ... )
+   RETURN HB_QDesignerFormWindowInterface():from( ... )
+
+FUNCTION QDesignerFormWindowInterfaceFromPointer( ... )
+   RETURN HB_QDesignerFormWindowInterface():fromPointer( ... )
+
 
 CREATE CLASS QDesignerFormWindowInterface INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QDesignerFormWindowInterface
 
@@ -194,7 +200,7 @@ METHOD QDesignerFormWindowInterface:contents( ... )
 METHOD QDesignerFormWindowInterface:core( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDesignerFormEditorInterface():from( Qt_QDesignerFormWindowInterface_core( ::pPtr, ... ) )
+      RETURN QDesignerFormEditorInterfaceFromPointer( Qt_QDesignerFormWindowInterface_core( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -202,7 +208,7 @@ METHOD QDesignerFormWindowInterface:core( ... )
 METHOD QDesignerFormWindowInterface:cursor( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDesignerFormWindowCursorInterface():from( Qt_QDesignerFormWindowInterface_cursor( ::pPtr, ... ) )
+      RETURN QDesignerFormWindowCursorInterfaceFromPointer( Qt_QDesignerFormWindowInterface_cursor( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -242,7 +248,7 @@ METHOD QDesignerFormWindowInterface:fileName( ... )
 METHOD QDesignerFormWindowInterface:grid( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QDesignerFormWindowInterface_grid( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QDesignerFormWindowInterface_grid( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -262,7 +268,7 @@ METHOD QDesignerFormWindowInterface:hasFeature( ... )
 METHOD QDesignerFormWindowInterface:includeHints( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QDesignerFormWindowInterface_includeHints( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QDesignerFormWindowInterface_includeHints( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -302,7 +308,7 @@ METHOD QDesignerFormWindowInterface:layoutDefault( ... )
 METHOD QDesignerFormWindowInterface:mainContainer( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QDesignerFormWindowInterface_mainContainer( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QDesignerFormWindowInterface_mainContainer( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -330,7 +336,7 @@ METHOD QDesignerFormWindowInterface:removeResourceFile( ... )
 METHOD QDesignerFormWindowInterface:resourceFiles( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QDesignerFormWindowInterface_resourceFiles( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QDesignerFormWindowInterface_resourceFiles( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -440,9 +446,9 @@ METHOD QDesignerFormWindowInterface:findFormWindow( ... )
       CASE hb_isObject( hb_pvalue( 1 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) )
          CASE "QWIDGET"
-            RETURN HB_QDesignerFormWindowInterface():from( Qt_QDesignerFormWindowInterface_findFormWindow( ::pPtr, ... ) )
+            RETURN QDesignerFormWindowInterfaceFromPointer( Qt_QDesignerFormWindowInterface_findFormWindow( ::pPtr, ... ) )
          CASE "QOBJECT"
-            RETURN HB_QDesignerFormWindowInterface():from( Qt_QDesignerFormWindowInterface_findFormWindow_1( ::pPtr, ... ) )
+            RETURN QDesignerFormWindowInterfaceFromPointer( Qt_QDesignerFormWindowInterface_findFormWindow_1( ::pPtr, ... ) )
          ENDSWITCH
       ENDCASE
       EXIT

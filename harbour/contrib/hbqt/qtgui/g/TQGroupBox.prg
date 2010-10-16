@@ -98,6 +98,12 @@
 FUNCTION QGroupBox( ... )
    RETURN HB_QGroupBox():new( ... )
 
+FUNCTION QGroupBoxFrom( ... )
+   RETURN HB_QGroupBox():from( ... )
+
+FUNCTION QGroupBoxFromPointer( ... )
+   RETURN HB_QGroupBox():fromPointer( ... )
+
 
 CREATE CLASS QGroupBox INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QGroupBox
 

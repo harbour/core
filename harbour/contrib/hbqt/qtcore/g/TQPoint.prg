@@ -98,6 +98,12 @@
 FUNCTION QPoint( ... )
    RETURN HB_QPoint():new( ... )
 
+FUNCTION QPointFrom( ... )
+   RETURN HB_QPoint():from( ... )
+
+FUNCTION QPointFromPointer( ... )
+   RETURN HB_QPoint():fromPointer( ... )
+
 
 CREATE CLASS QPoint INHERIT HbQtObjectHandler FUNCTION HB_QPoint
 

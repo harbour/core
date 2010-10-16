@@ -98,6 +98,12 @@
 FUNCTION QToolBar( ... )
    RETURN HB_QToolBar():new( ... )
 
+FUNCTION QToolBarFrom( ... )
+   RETURN HB_QToolBar():from( ... )
+
+FUNCTION QToolBarFromPointer( ... )
+   RETURN HB_QToolBar():fromPointer( ... )
+
 
 CREATE CLASS QToolBar INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QToolBar
 
@@ -149,13 +155,13 @@ METHOD QToolBar:actionAt( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QAction():from( Qt_QToolBar_actionAt_1( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QToolBar_actionAt_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QAction():from( Qt_QToolBar_actionAt( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QToolBar_actionAt( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -167,25 +173,25 @@ METHOD QToolBar:addAction( ... )
    CASE 4
       DO CASE
       CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isChar( hb_pvalue( 4 ) )
-         RETURN HB_QAction():from( Qt_QToolBar_addAction_4( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QToolBar_addAction_4( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 3
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
-         RETURN HB_QAction():from( Qt_QToolBar_addAction_3( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QToolBar_addAction_3( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
       CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
-         RETURN HB_QAction():from( Qt_QToolBar_addAction_2( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QToolBar_addAction_2( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QAction():from( Qt_QToolBar_addAction_1( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QToolBar_addAction_1( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QToolBar_addAction( ::pPtr, ... )
       ENDCASE
@@ -197,7 +203,7 @@ METHOD QToolBar:addAction( ... )
 METHOD QToolBar:addSeparator( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QToolBar_addSeparator( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QToolBar_addSeparator( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -207,7 +213,7 @@ METHOD QToolBar:addWidget( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QAction():from( Qt_QToolBar_addWidget( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QToolBar_addWidget( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -233,7 +239,7 @@ METHOD QToolBar:clear( ... )
 METHOD QToolBar:iconSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QToolBar_iconSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QToolBar_iconSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -243,7 +249,7 @@ METHOD QToolBar:insertSeparator( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QAction():from( Qt_QToolBar_insertSeparator( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QToolBar_insertSeparator( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -255,7 +261,7 @@ METHOD QToolBar:insertWidget( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QAction():from( Qt_QToolBar_insertWidget( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QToolBar_insertWidget( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -357,7 +363,7 @@ METHOD QToolBar:setOrientation( ... )
 METHOD QToolBar:toggleViewAction( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QToolBar_toggleViewAction( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QToolBar_toggleViewAction( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -375,7 +381,7 @@ METHOD QToolBar:widgetForAction( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QWidget():from( Qt_QToolBar_widgetForAction( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QToolBar_widgetForAction( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

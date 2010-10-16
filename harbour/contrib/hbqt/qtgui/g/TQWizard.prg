@@ -98,6 +98,12 @@
 FUNCTION QWizard( ... )
    RETURN HB_QWizard():new( ... )
 
+FUNCTION QWizardFrom( ... )
+   RETURN HB_QWizard():from( ... )
+
+FUNCTION QWizardFromPointer( ... )
+   RETURN HB_QWizard():fromPointer( ... )
+
 
 CREATE CLASS QWizard INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QWizard
 
@@ -168,7 +174,7 @@ METHOD QWizard:button( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QAbstractButton():from( Qt_QWizard_button( ::pPtr, ... ) )
+         RETURN QAbstractButtonFromPointer( Qt_QWizard_button( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -198,7 +204,7 @@ METHOD QWizard:currentId( ... )
 METHOD QWizard:currentPage( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWizardPage():from( Qt_QWizard_currentPage( ::pPtr, ... ) )
+      RETURN QWizardPageFromPointer( Qt_QWizard_currentPage( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -208,7 +214,7 @@ METHOD QWizard:field( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QVariant():from( Qt_QWizard_field( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QWizard_field( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -248,7 +254,7 @@ METHOD QWizard:page( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QWizardPage():from( Qt_QWizard_page( ::pPtr, ... ) )
+         RETURN QWizardPageFromPointer( Qt_QWizard_page( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -258,7 +264,7 @@ METHOD QWizard:page( ... )
 METHOD QWizard:pageIds( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QWizard_pageIds( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QWizard_pageIds( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -268,7 +274,7 @@ METHOD QWizard:pixmap( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QPixmap():from( Qt_QWizard_pixmap( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QWizard_pixmap( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -484,7 +490,7 @@ METHOD QWizard:validateCurrentPage( ... )
 METHOD QWizard:visitedPages( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QWizard_visitedPages( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QWizard_visitedPages( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

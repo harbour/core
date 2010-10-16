@@ -98,6 +98,12 @@
 FUNCTION QRegExpValidator( ... )
    RETURN HB_QRegExpValidator():new( ... )
 
+FUNCTION QRegExpValidatorFrom( ... )
+   RETURN HB_QRegExpValidator():from( ... )
+
+FUNCTION QRegExpValidatorFromPointer( ... )
+   RETURN HB_QRegExpValidator():fromPointer( ... )
+
 
 CREATE CLASS QRegExpValidator INHERIT HbQtObjectHandler, HB_QValidator FUNCTION HB_QRegExpValidator
 
@@ -121,7 +127,7 @@ METHOD QRegExpValidator:new( ... )
 METHOD QRegExpValidator:regExp( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRegExp():from( Qt_QRegExpValidator_regExp( ::pPtr, ... ) )
+      RETURN QRegExpFromPointer( Qt_QRegExpValidator_regExp( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

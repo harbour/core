@@ -98,6 +98,12 @@
 FUNCTION QLine( ... )
    RETURN HB_QLine():new( ... )
 
+FUNCTION QLineFrom( ... )
+   RETURN HB_QLine():from( ... )
+
+FUNCTION QLineFromPointer( ... )
+   RETURN HB_QLine():fromPointer( ... )
+
 
 CREATE CLASS QLine INHERIT HbQtObjectHandler FUNCTION HB_QLine
 
@@ -136,7 +142,7 @@ METHOD QLine:new( ... )
 METHOD QLine:p1( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QLine_p1( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QLine_p1( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -144,7 +150,7 @@ METHOD QLine:p1( ... )
 METHOD QLine:p2( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QLine_p2( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QLine_p2( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -276,13 +282,13 @@ METHOD QLine:translated( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QLine():from( Qt_QLine_translated_1( ::pPtr, ... ) )
+         RETURN QLineFromPointer( Qt_QLine_translated_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QLine():from( Qt_QLine_translated( ::pPtr, ... ) )
+         RETURN QLineFromPointer( Qt_QLine_translated( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

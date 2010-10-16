@@ -98,6 +98,12 @@
 FUNCTION QDataStream( ... )
    RETURN HB_QDataStream():new( ... )
 
+FUNCTION QDataStreamFrom( ... )
+   RETURN HB_QDataStream():from( ... )
+
+FUNCTION QDataStreamFromPointer( ... )
+   RETURN HB_QDataStream():fromPointer( ... )
+
 
 CREATE CLASS QDataStream INHERIT HbQtObjectHandler FUNCTION HB_QDataStream
 
@@ -148,7 +154,7 @@ METHOD QDataStream:byteOrder( ... )
 METHOD QDataStream:device( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QIODevice():from( Qt_QDataStream_device( ::pPtr, ... ) )
+      RETURN QIODeviceFromPointer( Qt_QDataStream_device( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

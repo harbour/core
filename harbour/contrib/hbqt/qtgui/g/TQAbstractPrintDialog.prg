@@ -98,6 +98,12 @@
 FUNCTION QAbstractPrintDialog( ... )
    RETURN HB_QAbstractPrintDialog():new( ... )
 
+FUNCTION QAbstractPrintDialogFrom( ... )
+   RETURN HB_QAbstractPrintDialog():from( ... )
+
+FUNCTION QAbstractPrintDialogFromPointer( ... )
+   RETURN HB_QAbstractPrintDialog():fromPointer( ... )
+
 
 CREATE CLASS QAbstractPrintDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QAbstractPrintDialog
 
@@ -169,7 +175,7 @@ METHOD QAbstractPrintDialog:printRange( ... )
 METHOD QAbstractPrintDialog:printer( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPrinter():from( Qt_QAbstractPrintDialog_printer( ::pPtr, ... ) )
+      RETURN QPrinterFromPointer( Qt_QAbstractPrintDialog_printer( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

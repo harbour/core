@@ -98,6 +98,12 @@
 FUNCTION QKeySequence( ... )
    RETURN HB_QKeySequence():new( ... )
 
+FUNCTION QKeySequenceFrom( ... )
+   RETURN HB_QKeySequence():from( ... )
+
+FUNCTION QKeySequenceFromPointer( ... )
+   RETURN HB_QKeySequence():fromPointer( ... )
+
 
 CREATE CLASS QKeySequence INHERIT HbQtObjectHandler FUNCTION HB_QKeySequence
 
@@ -170,13 +176,13 @@ METHOD QKeySequence:fromString( ... )
    CASE 2
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QKeySequence():from( Qt_QKeySequence_fromString( ::pPtr, ... ) )
+         RETURN QKeySequenceFromPointer( Qt_QKeySequence_fromString( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QKeySequence():from( Qt_QKeySequence_fromString( ::pPtr, ... ) )
+         RETURN QKeySequenceFromPointer( Qt_QKeySequence_fromString( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -188,7 +194,7 @@ METHOD QKeySequence:keyBindings( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QList():from( Qt_QKeySequence_keyBindings( ::pPtr, ... ) )
+         RETURN QListFromPointer( Qt_QKeySequence_keyBindings( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -200,7 +206,7 @@ METHOD QKeySequence:mnemonic( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QKeySequence():from( Qt_QKeySequence_mnemonic( ::pPtr, ... ) )
+         RETURN QKeySequenceFromPointer( Qt_QKeySequence_mnemonic( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

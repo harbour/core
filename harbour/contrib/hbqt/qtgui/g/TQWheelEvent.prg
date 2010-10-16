@@ -98,6 +98,12 @@
 FUNCTION QWheelEvent( ... )
    RETURN HB_QWheelEvent():new( ... )
 
+FUNCTION QWheelEventFrom( ... )
+   RETURN HB_QWheelEvent():from( ... )
+
+FUNCTION QWheelEventFromPointer( ... )
+   RETURN HB_QWheelEvent():fromPointer( ... )
+
 
 CREATE CLASS QWheelEvent INHERIT HbQtObjectHandler, HB_QInputEvent FUNCTION HB_QWheelEvent
 
@@ -144,7 +150,7 @@ METHOD QWheelEvent:delta( ... )
 METHOD QWheelEvent:globalPos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QWheelEvent_globalPos( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QWheelEvent_globalPos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -176,7 +182,7 @@ METHOD QWheelEvent:orientation( ... )
 METHOD QWheelEvent:pos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QWheelEvent_pos( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QWheelEvent_pos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

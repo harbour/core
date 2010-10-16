@@ -98,6 +98,12 @@
 FUNCTION QConicalGradient( ... )
    RETURN HB_QConicalGradient():new( ... )
 
+FUNCTION QConicalGradientFrom( ... )
+   RETURN HB_QConicalGradient():from( ... )
+
+FUNCTION QConicalGradientFromPointer( ... )
+   RETURN HB_QConicalGradient():fromPointer( ... )
+
 
 CREATE CLASS QConicalGradient INHERIT HbQtObjectHandler, HB_QGradient FUNCTION HB_QConicalGradient
 
@@ -132,7 +138,7 @@ METHOD QConicalGradient:angle( ... )
 METHOD QConicalGradient:center( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPointF():from( Qt_QConicalGradient_center( ::pPtr, ... ) )
+      RETURN QPointFFromPointer( Qt_QConicalGradient_center( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

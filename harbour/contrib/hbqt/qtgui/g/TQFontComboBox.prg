@@ -98,6 +98,12 @@
 FUNCTION QFontComboBox( ... )
    RETURN HB_QFontComboBox():new( ... )
 
+FUNCTION QFontComboBoxFrom( ... )
+   RETURN HB_QFontComboBox():from( ... )
+
+FUNCTION QFontComboBoxFromPointer( ... )
+   RETURN HB_QFontComboBox():fromPointer( ... )
+
 
 CREATE CLASS QFontComboBox INHERIT HbQtObjectHandler, HB_QComboBox FUNCTION HB_QFontComboBox
 
@@ -125,7 +131,7 @@ METHOD QFontComboBox:new( ... )
 METHOD QFontComboBox:currentFont( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFont():from( Qt_QFontComboBox_currentFont( ::pPtr, ... ) )
+      RETURN QFontFromPointer( Qt_QFontComboBox_currentFont( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

@@ -98,6 +98,12 @@
 FUNCTION QHBoxLayout( ... )
    RETURN HB_QHBoxLayout():new( ... )
 
+FUNCTION QHBoxLayoutFrom( ... )
+   RETURN HB_QHBoxLayout():from( ... )
+
+FUNCTION QHBoxLayoutFromPointer( ... )
+   RETURN HB_QHBoxLayout():fromPointer( ... )
+
 
 CREATE CLASS QHBoxLayout INHERIT HbQtObjectHandler, HB_QBoxLayout FUNCTION HB_QHBoxLayout
 

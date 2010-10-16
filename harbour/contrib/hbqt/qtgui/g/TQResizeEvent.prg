@@ -98,6 +98,12 @@
 FUNCTION QResizeEvent( ... )
    RETURN HB_QResizeEvent():new( ... )
 
+FUNCTION QResizeEventFrom( ... )
+   RETURN HB_QResizeEvent():from( ... )
+
+FUNCTION QResizeEventFromPointer( ... )
+   RETURN HB_QResizeEvent():fromPointer( ... )
+
 
 CREATE CLASS QResizeEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_QResizeEvent
 
@@ -121,7 +127,7 @@ METHOD QResizeEvent:new( ... )
 METHOD QResizeEvent:oldSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QResizeEvent_oldSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QResizeEvent_oldSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -129,7 +135,7 @@ METHOD QResizeEvent:oldSize( ... )
 METHOD QResizeEvent:size( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QResizeEvent_size( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QResizeEvent_size( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

@@ -98,6 +98,12 @@
 FUNCTION QDropEvent( ... )
    RETURN HB_QDropEvent():new( ... )
 
+FUNCTION QDropEventFrom( ... )
+   RETURN HB_QDropEvent():from( ... )
+
+FUNCTION QDropEventFromPointer( ... )
+   RETURN HB_QDropEvent():fromPointer( ... )
+
 
 CREATE CLASS QDropEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_QDropEvent
 
@@ -153,7 +159,7 @@ METHOD QDropEvent:keyboardModifiers( ... )
 METHOD QDropEvent:mimeData( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMimeData():from( Qt_QDropEvent_mimeData( ::pPtr, ... ) )
+      RETURN QMimeDataFromPointer( Qt_QDropEvent_mimeData( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -169,7 +175,7 @@ METHOD QDropEvent:mouseButtons( ... )
 METHOD QDropEvent:pos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QDropEvent_pos( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QDropEvent_pos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -205,7 +211,7 @@ METHOD QDropEvent:setDropAction( ... )
 METHOD QDropEvent:source( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QDropEvent_source( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QDropEvent_source( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

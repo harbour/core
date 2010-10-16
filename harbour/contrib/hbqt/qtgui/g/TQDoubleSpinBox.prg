@@ -98,6 +98,12 @@
 FUNCTION QDoubleSpinBox( ... )
    RETURN HB_QDoubleSpinBox():new( ... )
 
+FUNCTION QDoubleSpinBoxFrom( ... )
+   RETURN HB_QDoubleSpinBox():from( ... )
+
+FUNCTION QDoubleSpinBoxFromPointer( ... )
+   RETURN HB_QDoubleSpinBox():fromPointer( ... )
+
 
 CREATE CLASS QDoubleSpinBox INHERIT HbQtObjectHandler, HB_QAbstractSpinBox FUNCTION HB_QDoubleSpinBox
 

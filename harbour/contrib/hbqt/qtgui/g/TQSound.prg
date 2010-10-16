@@ -98,6 +98,12 @@
 FUNCTION QSound( ... )
    RETURN HB_QSound():new( ... )
 
+FUNCTION QSoundFrom( ... )
+   RETURN HB_QSound():from( ... )
+
+FUNCTION QSoundFromPointer( ... )
+   RETURN HB_QSound():fromPointer( ... )
+
 
 CREATE CLASS QSound INHERIT HbQtObjectHandler FUNCTION HB_QSound
 

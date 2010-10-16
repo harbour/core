@@ -98,6 +98,12 @@
 FUNCTION QErrorMessage( ... )
    RETURN HB_QErrorMessage():new( ... )
 
+FUNCTION QErrorMessageFrom( ... )
+   RETURN HB_QErrorMessage():from( ... )
+
+FUNCTION QErrorMessageFromPointer( ... )
+   RETURN HB_QErrorMessage():fromPointer( ... )
+
 
 CREATE CLASS QErrorMessage INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QErrorMessage
 

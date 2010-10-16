@@ -98,6 +98,12 @@
 FUNCTION QByteArray( ... )
    RETURN HB_QByteArray():new( ... )
 
+FUNCTION QByteArrayFrom( ... )
+   RETURN HB_QByteArray():from( ... )
+
+FUNCTION QByteArrayFromPointer( ... )
+   RETURN HB_QByteArray():fromPointer( ... )
+
 
 CREATE CLASS QByteArray INHERIT HbQtObjectHandler FUNCTION HB_QByteArray
 
@@ -215,23 +221,23 @@ METHOD QByteArray:new( ... )
 
 
 METHOD QByteArray:append( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_append( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_append( ::pPtr, ... ) )
 
 
 METHOD QByteArray:append_1( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_append_1( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_append_1( ::pPtr, ... ) )
 
 
 METHOD QByteArray:append_2( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_append_2( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_append_2( ::pPtr, ... ) )
 
 
 METHOD QByteArray:append_3( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_append_3( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_append_3( ::pPtr, ... ) )
 
 
 METHOD QByteArray:append_4( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_append_4( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_append_4( ::pPtr, ... ) )
 
 
 METHOD QByteArray:at( ... )
@@ -291,7 +297,7 @@ METHOD QByteArray:endsWith_2( ... )
 
 
 METHOD QByteArray:fill( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_fill( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_fill( ::pPtr, ... ) )
 
 
 METHOD QByteArray:indexOf( ... )
@@ -311,19 +317,19 @@ METHOD QByteArray:indexOf_3( ... )
 
 
 METHOD QByteArray:insert( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_insert( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_insert( ::pPtr, ... ) )
 
 
 METHOD QByteArray:insert_1( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_insert_1( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_insert_1( ::pPtr, ... ) )
 
 
 METHOD QByteArray:insert_2( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_insert_2( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_insert_2( ::pPtr, ... ) )
 
 
 METHOD QByteArray:insert_3( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_insert_3( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_insert_3( ::pPtr, ... ) )
 
 
 METHOD QByteArray:isEmpty( ... )
@@ -351,11 +357,11 @@ METHOD QByteArray:lastIndexOf_3( ... )
 
 
 METHOD QByteArray:left( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_left( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_left( ::pPtr, ... ) )
 
 
 METHOD QByteArray:leftJustified( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_leftJustified( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_leftJustified( ::pPtr, ... ) )
 
 
 METHOD QByteArray:length( ... )
@@ -363,19 +369,19 @@ METHOD QByteArray:length( ... )
 
 
 METHOD QByteArray:mid( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_mid( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_mid( ::pPtr, ... ) )
 
 
 METHOD QByteArray:prepend( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_prepend( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_prepend( ::pPtr, ... ) )
 
 
 METHOD QByteArray:prepend_1( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_prepend_1( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_prepend_1( ::pPtr, ... ) )
 
 
 METHOD QByteArray:prepend_2( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_prepend_2( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_prepend_2( ::pPtr, ... ) )
 
 
 METHOD QByteArray:push_back( ... )
@@ -403,63 +409,63 @@ METHOD QByteArray:push_front_2( ... )
 
 
 METHOD QByteArray:remove( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_remove( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_remove( ::pPtr, ... ) )
 
 
 METHOD QByteArray:repeated( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_repeated( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_repeated( ::pPtr, ... ) )
 
 
 METHOD QByteArray:replace( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_replace( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_replace( ::pPtr, ... ) )
 
 
 METHOD QByteArray:replace_1( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_replace_1( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_replace_1( ::pPtr, ... ) )
 
 
 METHOD QByteArray:replace_2( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_replace_2( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_replace_2( ::pPtr, ... ) )
 
 
 METHOD QByteArray:replace_3( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_replace_3( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_replace_3( ::pPtr, ... ) )
 
 
 METHOD QByteArray:replace_4( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_replace_4( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_replace_4( ::pPtr, ... ) )
 
 
 METHOD QByteArray:replace_5( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_replace_5( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_replace_5( ::pPtr, ... ) )
 
 
 METHOD QByteArray:replace_6( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_replace_6( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_replace_6( ::pPtr, ... ) )
 
 
 METHOD QByteArray:replace_7( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_replace_7( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_replace_7( ::pPtr, ... ) )
 
 
 METHOD QByteArray:replace_8( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_replace_8( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_replace_8( ::pPtr, ... ) )
 
 
 METHOD QByteArray:replace_9( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_replace_9( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_replace_9( ::pPtr, ... ) )
 
 
 METHOD QByteArray:replace_10( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_replace_10( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_replace_10( ::pPtr, ... ) )
 
 
 METHOD QByteArray:replace_11( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_replace_11( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_replace_11( ::pPtr, ... ) )
 
 
 METHOD QByteArray:replace_12( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_replace_12( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_replace_12( ::pPtr, ... ) )
 
 
 METHOD QByteArray:reserve( ... )
@@ -471,47 +477,47 @@ METHOD QByteArray:resize( ... )
 
 
 METHOD QByteArray:right( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_right( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_right( ::pPtr, ... ) )
 
 
 METHOD QByteArray:rightJustified( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_rightJustified( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_rightJustified( ::pPtr, ... ) )
 
 
 METHOD QByteArray:setNum( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_setNum( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_setNum( ::pPtr, ... ) )
 
 
 METHOD QByteArray:setNum_1( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_setNum_1( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_setNum_1( ::pPtr, ... ) )
 
 
 METHOD QByteArray:setNum_2( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_setNum_2( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_setNum_2( ::pPtr, ... ) )
 
 
 METHOD QByteArray:setNum_3( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_setNum_3( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_setNum_3( ::pPtr, ... ) )
 
 
 METHOD QByteArray:setNum_4( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_setNum_4( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_setNum_4( ::pPtr, ... ) )
 
 
 METHOD QByteArray:setNum_5( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_setNum_5( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_setNum_5( ::pPtr, ... ) )
 
 
 METHOD QByteArray:setNum_6( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_setNum_6( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_setNum_6( ::pPtr, ... ) )
 
 
 METHOD QByteArray:setNum_7( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_setNum_7( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_setNum_7( ::pPtr, ... ) )
 
 
 METHOD QByteArray:simplified( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_simplified( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_simplified( ::pPtr, ... ) )
 
 
 METHOD QByteArray:size( ... )
@@ -519,7 +525,7 @@ METHOD QByteArray:size( ... )
 
 
 METHOD QByteArray:split( ... )
-   RETURN HB_QList():from( Qt_QByteArray_split( ::pPtr, ... ) )
+   RETURN QListFromPointer( Qt_QByteArray_split( ::pPtr, ... ) )
 
 
 METHOD QByteArray:squeeze( ... )
@@ -539,7 +545,7 @@ METHOD QByteArray:startsWith_2( ... )
 
 
 METHOD QByteArray:toBase64( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_toBase64( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_toBase64( ::pPtr, ... ) )
 
 
 METHOD QByteArray:toDouble( ... )
@@ -551,7 +557,7 @@ METHOD QByteArray:toFloat( ... )
 
 
 METHOD QByteArray:toHex( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_toHex( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_toHex( ::pPtr, ... ) )
 
 
 METHOD QByteArray:toInt( ... )
@@ -567,11 +573,11 @@ METHOD QByteArray:toLongLong( ... )
 
 
 METHOD QByteArray:toLower( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_toLower( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_toLower( ::pPtr, ... ) )
 
 
 METHOD QByteArray:toPercentEncoding( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_toPercentEncoding( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_toPercentEncoding( ::pPtr, ... ) )
 
 
 METHOD QByteArray:toShort( ... )
@@ -595,11 +601,11 @@ METHOD QByteArray:toUShort( ... )
 
 
 METHOD QByteArray:toUpper( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_toUpper( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_toUpper( ::pPtr, ... ) )
 
 
 METHOD QByteArray:trimmed( ... )
-   RETURN HB_QByteArray():from( Qt_QByteArray_trimmed( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_QByteArray_trimmed( ::pPtr, ... ) )
 
 
 METHOD QByteArray:truncate( ... )

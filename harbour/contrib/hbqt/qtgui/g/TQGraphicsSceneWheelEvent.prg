@@ -98,6 +98,12 @@
 FUNCTION QGraphicsSceneWheelEvent( ... )
    RETURN HB_QGraphicsSceneWheelEvent():new( ... )
 
+FUNCTION QGraphicsSceneWheelEventFrom( ... )
+   RETURN HB_QGraphicsSceneWheelEvent():from( ... )
+
+FUNCTION QGraphicsSceneWheelEventFromPointer( ... )
+   RETURN HB_QGraphicsSceneWheelEvent():fromPointer( ... )
+
 
 CREATE CLASS QGraphicsSceneWheelEvent INHERIT HbQtObjectHandler, HB_QGraphicsSceneEvent FUNCTION HB_QGraphicsSceneWheelEvent
 
@@ -158,7 +164,7 @@ METHOD QGraphicsSceneWheelEvent:orientation( ... )
 METHOD QGraphicsSceneWheelEvent:pos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPointF():from( Qt_QGraphicsSceneWheelEvent_pos( ::pPtr, ... ) )
+      RETURN QPointFFromPointer( Qt_QGraphicsSceneWheelEvent_pos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -166,7 +172,7 @@ METHOD QGraphicsSceneWheelEvent:pos( ... )
 METHOD QGraphicsSceneWheelEvent:scenePos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPointF():from( Qt_QGraphicsSceneWheelEvent_scenePos( ::pPtr, ... ) )
+      RETURN QPointFFromPointer( Qt_QGraphicsSceneWheelEvent_scenePos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -174,7 +180,7 @@ METHOD QGraphicsSceneWheelEvent:scenePos( ... )
 METHOD QGraphicsSceneWheelEvent:screenPos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QGraphicsSceneWheelEvent_screenPos( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QGraphicsSceneWheelEvent_screenPos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

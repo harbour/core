@@ -98,6 +98,12 @@
 FUNCTION QPageSetupDialog( ... )
    RETURN HB_QPageSetupDialog():new( ... )
 
+FUNCTION QPageSetupDialogFrom( ... )
+   RETURN HB_QPageSetupDialog():from( ... )
+
+FUNCTION QPageSetupDialogFromPointer( ... )
+   RETURN HB_QPageSetupDialog():fromPointer( ... )
+
 
 CREATE CLASS QPageSetupDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QPageSetupDialog
 
@@ -155,7 +161,7 @@ METHOD QPageSetupDialog:options( ... )
 METHOD QPageSetupDialog:printer( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPrinter():from( Qt_QPageSetupDialog_printer( ::pPtr, ... ) )
+      RETURN QPrinterFromPointer( Qt_QPageSetupDialog_printer( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

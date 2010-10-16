@@ -98,6 +98,12 @@
 FUNCTION QStyleHintReturnMask( ... )
    RETURN HB_QStyleHintReturnMask():new( ... )
 
+FUNCTION QStyleHintReturnMaskFrom( ... )
+   RETURN HB_QStyleHintReturnMask():from( ... )
+
+FUNCTION QStyleHintReturnMaskFromPointer( ... )
+   RETURN HB_QStyleHintReturnMask():fromPointer( ... )
+
 
 CREATE CLASS QStyleHintReturnMask INHERIT HbQtObjectHandler, HB_QStyleHintReturn FUNCTION HB_QStyleHintReturnMask
 

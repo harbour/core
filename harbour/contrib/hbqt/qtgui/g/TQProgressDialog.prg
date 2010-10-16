@@ -98,6 +98,12 @@
 FUNCTION QProgressDialog( ... )
    RETURN HB_QProgressDialog():new( ... )
 
+FUNCTION QProgressDialogFrom( ... )
+   RETURN HB_QProgressDialog():from( ... )
+
+FUNCTION QProgressDialogFromPointer( ... )
+   RETURN HB_QProgressDialog():fromPointer( ... )
+
 
 CREATE CLASS QProgressDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QProgressDialog
 
@@ -263,7 +269,7 @@ METHOD QProgressDialog:setLabel( ... )
 METHOD QProgressDialog:sizeHint( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QProgressDialog_sizeHint( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QProgressDialog_sizeHint( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

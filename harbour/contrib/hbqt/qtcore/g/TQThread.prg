@@ -98,6 +98,12 @@
 FUNCTION QThread( ... )
    RETURN HB_QThread():new( ... )
 
+FUNCTION QThreadFrom( ... )
+   RETURN HB_QThread():from( ... )
+
+FUNCTION QThreadFromPointer( ... )
+   RETURN HB_QThread():fromPointer( ... )
+
 
 CREATE CLASS QThread INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QThread
 
@@ -217,7 +223,7 @@ METHOD QThread:wait( ... )
 METHOD QThread:currentThread( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QThread():from( Qt_QThread_currentThread( ::pPtr, ... ) )
+      RETURN QThreadFromPointer( Qt_QThread_currentThread( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

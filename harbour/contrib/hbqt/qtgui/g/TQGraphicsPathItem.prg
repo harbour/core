@@ -98,6 +98,12 @@
 FUNCTION QGraphicsPathItem( ... )
    RETURN HB_QGraphicsPathItem():new( ... )
 
+FUNCTION QGraphicsPathItemFrom( ... )
+   RETURN HB_QGraphicsPathItem():from( ... )
+
+FUNCTION QGraphicsPathItemFromPointer( ... )
+   RETURN HB_QGraphicsPathItem():fromPointer( ... )
+
 
 CREATE CLASS QGraphicsPathItem INHERIT HbQtObjectHandler, HB_QAbstractGraphicsShapeItem FUNCTION HB_QGraphicsPathItem
 
@@ -121,7 +127,7 @@ METHOD QGraphicsPathItem:new( ... )
 METHOD QGraphicsPathItem:path( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPainterPath():from( Qt_QGraphicsPathItem_path( ::pPtr, ... ) )
+      RETURN QPainterPathFromPointer( Qt_QGraphicsPathItem_path( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

@@ -98,6 +98,12 @@
 FUNCTION QSpacerItem( ... )
    RETURN HB_QSpacerItem():new( ... )
 
+FUNCTION QSpacerItemFrom( ... )
+   RETURN HB_QSpacerItem():from( ... )
+
+FUNCTION QSpacerItemFromPointer( ... )
+   RETURN HB_QSpacerItem():fromPointer( ... )
+
 
 CREATE CLASS QSpacerItem INHERIT HbQtObjectHandler, HB_QLayoutItem FUNCTION HB_QSpacerItem
 
@@ -154,7 +160,7 @@ METHOD QSpacerItem:isEmpty( ... )
 METHOD QSpacerItem:spacerItem( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSpacerItem():from( Qt_QSpacerItem_spacerItem( ::pPtr, ... ) )
+      RETURN QSpacerItemFromPointer( Qt_QSpacerItem_spacerItem( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

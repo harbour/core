@@ -98,6 +98,12 @@
 FUNCTION QWebHistory( ... )
    RETURN HB_QWebHistory():new( ... )
 
+FUNCTION QWebHistoryFrom( ... )
+   RETURN HB_QWebHistory():from( ... )
+
+FUNCTION QWebHistoryFromPointer( ... )
+   RETURN HB_QWebHistory():fromPointer( ... )
+
 
 CREATE CLASS QWebHistory INHERIT HbQtObjectHandler FUNCTION HB_QWebHistory
 
@@ -144,7 +150,7 @@ METHOD QWebHistory:back( ... )
 METHOD QWebHistory:backItem( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWebHistoryItem():from( Qt_QWebHistory_backItem( ::pPtr, ... ) )
+      RETURN QWebHistoryItemFromPointer( Qt_QWebHistory_backItem( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -154,7 +160,7 @@ METHOD QWebHistory:backItems( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QList():from( Qt_QWebHistory_backItems( ::pPtr, ... ) )
+         RETURN QListFromPointer( Qt_QWebHistory_backItems( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -196,7 +202,7 @@ METHOD QWebHistory:count( ... )
 METHOD QWebHistory:currentItem( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWebHistoryItem():from( Qt_QWebHistory_currentItem( ::pPtr, ... ) )
+      RETURN QWebHistoryItemFromPointer( Qt_QWebHistory_currentItem( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -220,7 +226,7 @@ METHOD QWebHistory:forward( ... )
 METHOD QWebHistory:forwardItem( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWebHistoryItem():from( Qt_QWebHistory_forwardItem( ::pPtr, ... ) )
+      RETURN QWebHistoryItemFromPointer( Qt_QWebHistory_forwardItem( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -230,7 +236,7 @@ METHOD QWebHistory:forwardItems( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QList():from( Qt_QWebHistory_forwardItems( ::pPtr, ... ) )
+         RETURN QListFromPointer( Qt_QWebHistory_forwardItems( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -254,7 +260,7 @@ METHOD QWebHistory:itemAt( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QWebHistoryItem():from( Qt_QWebHistory_itemAt( ::pPtr, ... ) )
+         RETURN QWebHistoryItemFromPointer( Qt_QWebHistory_itemAt( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -264,7 +270,7 @@ METHOD QWebHistory:itemAt( ... )
 METHOD QWebHistory:items( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QWebHistory_items( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QWebHistory_items( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

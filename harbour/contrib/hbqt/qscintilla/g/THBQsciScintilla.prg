@@ -98,6 +98,12 @@
 FUNCTION HBQsciScintilla( ... )
    RETURN HB_HBQsciScintilla():new( ... )
 
+FUNCTION HBQsciScintillaFrom( ... )
+   RETURN HB_HBQsciScintilla():from( ... )
+
+FUNCTION HBQsciScintillaFromPointer( ... )
+   RETURN HB_HBQsciScintilla():fromPointer( ... )
+
 
 CREATE CLASS HBQsciScintilla INHERIT HbQtObjectHandler, HB_QsciScintilla FUNCTION HB_HBQsciScintilla
 

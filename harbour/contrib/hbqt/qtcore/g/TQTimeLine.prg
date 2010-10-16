@@ -98,6 +98,12 @@
 FUNCTION QTimeLine( ... )
    RETURN HB_QTimeLine():new( ... )
 
+FUNCTION QTimeLineFrom( ... )
+   RETURN HB_QTimeLine():from( ... )
+
+FUNCTION QTimeLineFromPointer( ... )
+   RETURN HB_QTimeLine():fromPointer( ... )
+
 
 CREATE CLASS QTimeLine INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QTimeLine
 

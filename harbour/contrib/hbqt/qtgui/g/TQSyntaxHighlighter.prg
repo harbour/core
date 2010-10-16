@@ -98,6 +98,12 @@
 FUNCTION QSyntaxHighlighter( ... )
    RETURN HB_QSyntaxHighlighter():new( ... )
 
+FUNCTION QSyntaxHighlighterFrom( ... )
+   RETURN HB_QSyntaxHighlighter():from( ... )
+
+FUNCTION QSyntaxHighlighterFromPointer( ... )
+   RETURN HB_QSyntaxHighlighter():fromPointer( ... )
+
 
 CREATE CLASS QSyntaxHighlighter INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QSyntaxHighlighter
 
@@ -122,7 +128,7 @@ METHOD QSyntaxHighlighter:new( ... )
 METHOD QSyntaxHighlighter:document( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextDocument():from( Qt_QSyntaxHighlighter_document( ::pPtr, ... ) )
+      RETURN QTextDocumentFromPointer( Qt_QSyntaxHighlighter_document( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

@@ -98,6 +98,12 @@
 FUNCTION QActionGroup( ... )
    RETURN HB_QActionGroup():new( ... )
 
+FUNCTION QActionGroupFrom( ... )
+   RETURN HB_QActionGroup():from( ... )
+
+FUNCTION QActionGroupFromPointer( ... )
+   RETURN HB_QActionGroup():fromPointer( ... )
+
 
 CREATE CLASS QActionGroup INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QActionGroup
 
@@ -132,7 +138,7 @@ METHOD QActionGroup:new( ... )
 METHOD QActionGroup:actions( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QActionGroup_actions( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QActionGroup_actions( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -142,15 +148,15 @@ METHOD QActionGroup:addAction( ... )
    CASE 2
       DO CASE
       CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
-         RETURN HB_QAction():from( Qt_QActionGroup_addAction_2( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QActionGroup_addAction_2( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QAction():from( Qt_QActionGroup_addAction_1( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QActionGroup_addAction_1( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QAction():from( Qt_QActionGroup_addAction( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QActionGroup_addAction( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -160,7 +166,7 @@ METHOD QActionGroup:addAction( ... )
 METHOD QActionGroup:checkedAction( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QActionGroup_checkedAction( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QActionGroup_checkedAction( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

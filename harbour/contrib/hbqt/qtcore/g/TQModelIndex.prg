@@ -98,6 +98,12 @@
 FUNCTION QModelIndex( ... )
    RETURN HB_QModelIndex():new( ... )
 
+FUNCTION QModelIndexFrom( ... )
+   RETURN HB_QModelIndex():from( ... )
+
+FUNCTION QModelIndexFromPointer( ... )
+   RETURN HB_QModelIndex():fromPointer( ... )
+
 
 CREATE CLASS QModelIndex INHERIT HbQtObjectHandler FUNCTION HB_QModelIndex
 
@@ -132,7 +138,7 @@ METHOD QModelIndex:child( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QModelIndex():from( Qt_QModelIndex_child( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_QModelIndex_child( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -152,11 +158,11 @@ METHOD QModelIndex:data( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QVariant():from( Qt_QModelIndex_data( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QModelIndex_data( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QVariant():from( Qt_QModelIndex_data( ::pPtr, ... ) )
+      RETURN QVariantFromPointer( Qt_QModelIndex_data( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -196,7 +202,7 @@ METHOD QModelIndex:isValid( ... )
 METHOD QModelIndex:model( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAbstractItemModel():from( Qt_QModelIndex_model( ::pPtr, ... ) )
+      RETURN QAbstractItemModelFromPointer( Qt_QModelIndex_model( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -204,7 +210,7 @@ METHOD QModelIndex:model( ... )
 METHOD QModelIndex:parent( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QModelIndex():from( Qt_QModelIndex_parent( ::pPtr, ... ) )
+      RETURN QModelIndexFromPointer( Qt_QModelIndex_parent( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -222,7 +228,7 @@ METHOD QModelIndex:sibling( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QModelIndex():from( Qt_QModelIndex_sibling( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_QModelIndex_sibling( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

@@ -98,6 +98,12 @@
 FUNCTION QShowEvent( ... )
    RETURN HB_QShowEvent():new( ... )
 
+FUNCTION QShowEventFrom( ... )
+   RETURN HB_QShowEvent():from( ... )
+
+FUNCTION QShowEventFromPointer( ... )
+   RETURN HB_QShowEvent():fromPointer( ... )
+
 
 CREATE CLASS QShowEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_QShowEvent
 

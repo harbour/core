@@ -98,6 +98,12 @@
 FUNCTION QMessageBox( ... )
    RETURN HB_QMessageBox():new( ... )
 
+FUNCTION QMessageBoxFrom( ... )
+   RETURN HB_QMessageBox():from( ... )
+
+FUNCTION QMessageBoxFromPointer( ... )
+   RETURN HB_QMessageBox():fromPointer( ... )
+
 
 CREATE CLASS QMessageBox INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QMessageBox
 
@@ -160,7 +166,7 @@ METHOD QMessageBox:addButton( ... )
    CASE 2
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QPushButton():from( Qt_QMessageBox_addButton_1( ::pPtr, ... ) )
+         RETURN QPushButtonFromPointer( Qt_QMessageBox_addButton_1( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          RETURN Qt_QMessageBox_addButton( ::pPtr, ... )
       ENDCASE
@@ -168,7 +174,7 @@ METHOD QMessageBox:addButton( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QPushButton():from( Qt_QMessageBox_addButton_2( ::pPtr, ... ) )
+         RETURN QPushButtonFromPointer( Qt_QMessageBox_addButton_2( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -180,7 +186,7 @@ METHOD QMessageBox:button( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QAbstractButton():from( Qt_QMessageBox_button( ::pPtr, ... ) )
+         RETURN QAbstractButtonFromPointer( Qt_QMessageBox_button( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -202,7 +208,7 @@ METHOD QMessageBox:buttonRole( ... )
 METHOD QMessageBox:buttons( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QMessageBox_buttons( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QMessageBox_buttons( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -210,7 +216,7 @@ METHOD QMessageBox:buttons( ... )
 METHOD QMessageBox:clickedButton( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAbstractButton():from( Qt_QMessageBox_clickedButton( ::pPtr, ... ) )
+      RETURN QAbstractButtonFromPointer( Qt_QMessageBox_clickedButton( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -218,7 +224,7 @@ METHOD QMessageBox:clickedButton( ... )
 METHOD QMessageBox:defaultButton( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPushButton():from( Qt_QMessageBox_defaultButton( ::pPtr, ... ) )
+      RETURN QPushButtonFromPointer( Qt_QMessageBox_defaultButton( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -234,7 +240,7 @@ METHOD QMessageBox:detailedText( ... )
 METHOD QMessageBox:escapeButton( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAbstractButton():from( Qt_QMessageBox_escapeButton( ::pPtr, ... ) )
+      RETURN QAbstractButtonFromPointer( Qt_QMessageBox_escapeButton( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -250,7 +256,7 @@ METHOD QMessageBox:icon( ... )
 METHOD QMessageBox:iconPixmap( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPixmap():from( Qt_QMessageBox_iconPixmap( ::pPtr, ... ) )
+      RETURN QPixmapFromPointer( Qt_QMessageBox_iconPixmap( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

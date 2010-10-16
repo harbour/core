@@ -98,6 +98,12 @@
 FUNCTION QStyleOptionToolBar( ... )
    RETURN HB_QStyleOptionToolBar():new( ... )
 
+FUNCTION QStyleOptionToolBarFrom( ... )
+   RETURN HB_QStyleOptionToolBar():from( ... )
+
+FUNCTION QStyleOptionToolBarFromPointer( ... )
+   RETURN HB_QStyleOptionToolBar():fromPointer( ... )
+
 
 CREATE CLASS QStyleOptionToolBar INHERIT HbQtObjectHandler, HB_QStyleOption FUNCTION HB_QStyleOptionToolBar
 

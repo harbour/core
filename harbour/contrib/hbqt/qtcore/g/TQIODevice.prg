@@ -98,6 +98,12 @@
 FUNCTION QIODevice( ... )
    RETURN HB_QIODevice():new( ... )
 
+FUNCTION QIODeviceFrom( ... )
+   RETURN HB_QIODevice():from( ... )
+
+FUNCTION QIODeviceFromPointer( ... )
+   RETURN HB_QIODevice():fromPointer( ... )
+
 
 CREATE CLASS QIODevice INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QIODevice
 
@@ -280,7 +286,7 @@ METHOD QIODevice:peek( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QByteArray():from( Qt_QIODevice_peek_1( ::pPtr, ... ) )
+         RETURN QByteArrayFromPointer( Qt_QIODevice_peek_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -318,7 +324,7 @@ METHOD QIODevice:read( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QByteArray():from( Qt_QIODevice_read_1( ::pPtr, ... ) )
+         RETURN QByteArrayFromPointer( Qt_QIODevice_read_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -328,7 +334,7 @@ METHOD QIODevice:read( ... )
 METHOD QIODevice:readAll( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QByteArray():from( Qt_QIODevice_readAll( ::pPtr, ... ) )
+      RETURN QByteArrayFromPointer( Qt_QIODevice_readAll( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -344,11 +350,11 @@ METHOD QIODevice:readLine( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QByteArray():from( Qt_QIODevice_readLine_1( ::pPtr, ... ) )
+         RETURN QByteArrayFromPointer( Qt_QIODevice_readLine_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QByteArray():from( Qt_QIODevice_readLine_1( ::pPtr, ... ) )
+      RETURN QByteArrayFromPointer( Qt_QIODevice_readLine_1( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

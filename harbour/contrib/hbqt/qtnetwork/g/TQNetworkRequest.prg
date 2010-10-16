@@ -98,6 +98,12 @@
 FUNCTION QNetworkRequest( ... )
    RETURN HB_QNetworkRequest():new( ... )
 
+FUNCTION QNetworkRequestFrom( ... )
+   RETURN HB_QNetworkRequest():from( ... )
+
+FUNCTION QNetworkRequestFromPointer( ... )
+   RETURN HB_QNetworkRequest():fromPointer( ... )
+
 
 CREATE CLASS QNetworkRequest INHERIT HbQtObjectHandler FUNCTION HB_QNetworkRequest
 
@@ -131,13 +137,13 @@ METHOD QNetworkRequest:attribute( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QVariant():from( Qt_QNetworkRequest_attribute( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QNetworkRequest_attribute( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QVariant():from( Qt_QNetworkRequest_attribute( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QNetworkRequest_attribute( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -161,7 +167,7 @@ METHOD QNetworkRequest:header( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QVariant():from( Qt_QNetworkRequest_header( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QNetworkRequest_header( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -173,7 +179,7 @@ METHOD QNetworkRequest:rawHeader( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QByteArray():from( Qt_QNetworkRequest_rawHeader( ::pPtr, ... ) )
+         RETURN QByteArrayFromPointer( Qt_QNetworkRequest_rawHeader( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -183,7 +189,7 @@ METHOD QNetworkRequest:rawHeader( ... )
 METHOD QNetworkRequest:rawHeaderList( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QNetworkRequest_rawHeaderList( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QNetworkRequest_rawHeaderList( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -239,7 +245,7 @@ METHOD QNetworkRequest:setUrl( ... )
 METHOD QNetworkRequest:url( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QUrl():from( Qt_QNetworkRequest_url( ::pPtr, ... ) )
+      RETURN QUrlFromPointer( Qt_QNetworkRequest_url( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

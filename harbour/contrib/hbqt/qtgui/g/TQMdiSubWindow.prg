@@ -98,6 +98,12 @@
 FUNCTION QMdiSubWindow( ... )
    RETURN HB_QMdiSubWindow():new( ... )
 
+FUNCTION QMdiSubWindowFrom( ... )
+   RETURN HB_QMdiSubWindow():from( ... )
+
+FUNCTION QMdiSubWindowFromPointer( ... )
+   RETURN HB_QMdiSubWindow():fromPointer( ... )
+
 
 CREATE CLASS QMdiSubWindow INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QMdiSubWindow
 
@@ -157,7 +163,7 @@ METHOD QMdiSubWindow:keyboardSingleStep( ... )
 METHOD QMdiSubWindow:mdiArea( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMdiArea():from( Qt_QMdiSubWindow_mdiArea( ::pPtr, ... ) )
+      RETURN QMdiAreaFromPointer( Qt_QMdiSubWindow_mdiArea( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -231,7 +237,7 @@ METHOD QMdiSubWindow:setWidget( ... )
 METHOD QMdiSubWindow:systemMenu( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMenu():from( Qt_QMdiSubWindow_systemMenu( ::pPtr, ... ) )
+      RETURN QMenuFromPointer( Qt_QMdiSubWindow_systemMenu( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -251,7 +257,7 @@ METHOD QMdiSubWindow:testOption( ... )
 METHOD QMdiSubWindow:widget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QMdiSubWindow_widget( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QMdiSubWindow_widget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

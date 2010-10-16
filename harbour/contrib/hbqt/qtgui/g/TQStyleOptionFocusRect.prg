@@ -98,6 +98,12 @@
 FUNCTION QStyleOptionFocusRect( ... )
    RETURN HB_QStyleOptionFocusRect():new( ... )
 
+FUNCTION QStyleOptionFocusRectFrom( ... )
+   RETURN HB_QStyleOptionFocusRect():from( ... )
+
+FUNCTION QStyleOptionFocusRectFromPointer( ... )
+   RETURN HB_QStyleOptionFocusRect():fromPointer( ... )
+
 
 CREATE CLASS QStyleOptionFocusRect INHERIT HbQtObjectHandler, HB_QStyleOption FUNCTION HB_QStyleOptionFocusRect
 
@@ -120,7 +126,7 @@ METHOD QStyleOptionFocusRect:new( ... )
 METHOD QStyleOptionFocusRect:backgroundColor( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QColor():from( Qt_QStyleOptionFocusRect_backgroundColor( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_QStyleOptionFocusRect_backgroundColor( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

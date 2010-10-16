@@ -98,6 +98,12 @@
 FUNCTION QGraphicsWidget( ... )
    RETURN HB_QGraphicsWidget():new( ... )
 
+FUNCTION QGraphicsWidgetFrom( ... )
+   RETURN HB_QGraphicsWidget():from( ... )
+
+FUNCTION QGraphicsWidgetFromPointer( ... )
+   RETURN HB_QGraphicsWidget():fromPointer( ... )
+
 
 CREATE CLASS QGraphicsWidget INHERIT HbQtObjectHandler, HB_QObject, HB_QGraphicsItem, HB_QGraphicsLayoutItem FUNCTION HB_QGraphicsWidget
 
@@ -165,7 +171,7 @@ METHOD QGraphicsWidget:new( ... )
 METHOD QGraphicsWidget:actions( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QGraphicsWidget_actions( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QGraphicsWidget_actions( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -201,7 +207,7 @@ METHOD QGraphicsWidget:focusPolicy( ... )
 METHOD QGraphicsWidget:focusWidget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QGraphicsWidget():from( Qt_QGraphicsWidget_focusWidget( ::pPtr, ... ) )
+      RETURN QGraphicsWidgetFromPointer( Qt_QGraphicsWidget_focusWidget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -209,7 +215,7 @@ METHOD QGraphicsWidget:focusWidget( ... )
 METHOD QGraphicsWidget:font( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFont():from( Qt_QGraphicsWidget_font( ::pPtr, ... ) )
+      RETURN QFontFromPointer( Qt_QGraphicsWidget_font( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -279,7 +285,7 @@ METHOD QGraphicsWidget:isActiveWindow( ... )
 METHOD QGraphicsWidget:layout( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QGraphicsLayout():from( Qt_QGraphicsWidget_layout( ::pPtr, ... ) )
+      RETURN QGraphicsLayoutFromPointer( Qt_QGraphicsWidget_layout( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -295,7 +301,7 @@ METHOD QGraphicsWidget:layoutDirection( ... )
 METHOD QGraphicsWidget:palette( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPalette():from( Qt_QGraphicsWidget_palette( ::pPtr, ... ) )
+      RETURN QPaletteFromPointer( Qt_QGraphicsWidget_palette( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -303,7 +309,7 @@ METHOD QGraphicsWidget:palette( ... )
 METHOD QGraphicsWidget:rect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRectF():from( Qt_QGraphicsWidget_rect( ::pPtr, ... ) )
+      RETURN QRectFFromPointer( Qt_QGraphicsWidget_rect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -545,7 +551,7 @@ METHOD QGraphicsWidget:setWindowTitle( ... )
 METHOD QGraphicsWidget:size( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSizeF():from( Qt_QGraphicsWidget_size( ::pPtr, ... ) )
+      RETURN QSizeFFromPointer( Qt_QGraphicsWidget_size( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -553,7 +559,7 @@ METHOD QGraphicsWidget:size( ... )
 METHOD QGraphicsWidget:style( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStyle():from( Qt_QGraphicsWidget_style( ::pPtr, ... ) )
+      RETURN QStyleFromPointer( Qt_QGraphicsWidget_style( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -597,7 +603,7 @@ METHOD QGraphicsWidget:windowFlags( ... )
 METHOD QGraphicsWidget:windowFrameGeometry( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRectF():from( Qt_QGraphicsWidget_windowFrameGeometry( ::pPtr, ... ) )
+      RETURN QRectFFromPointer( Qt_QGraphicsWidget_windowFrameGeometry( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -605,7 +611,7 @@ METHOD QGraphicsWidget:windowFrameGeometry( ... )
 METHOD QGraphicsWidget:windowFrameRect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRectF():from( Qt_QGraphicsWidget_windowFrameRect( ::pPtr, ... ) )
+      RETURN QRectFFromPointer( Qt_QGraphicsWidget_windowFrameRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

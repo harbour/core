@@ -98,6 +98,12 @@
 FUNCTION QGraphicsSceneResizeEvent( ... )
    RETURN HB_QGraphicsSceneResizeEvent():new( ... )
 
+FUNCTION QGraphicsSceneResizeEventFrom( ... )
+   RETURN HB_QGraphicsSceneResizeEvent():from( ... )
+
+FUNCTION QGraphicsSceneResizeEventFromPointer( ... )
+   RETURN HB_QGraphicsSceneResizeEvent():fromPointer( ... )
+
 
 CREATE CLASS QGraphicsSceneResizeEvent INHERIT HbQtObjectHandler, HB_QGraphicsSceneEvent FUNCTION HB_QGraphicsSceneResizeEvent
 
@@ -121,7 +127,7 @@ METHOD QGraphicsSceneResizeEvent:new( ... )
 METHOD QGraphicsSceneResizeEvent:newSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSizeF():from( Qt_QGraphicsSceneResizeEvent_newSize( ::pPtr, ... ) )
+      RETURN QSizeFFromPointer( Qt_QGraphicsSceneResizeEvent_newSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -129,7 +135,7 @@ METHOD QGraphicsSceneResizeEvent:newSize( ... )
 METHOD QGraphicsSceneResizeEvent:oldSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSizeF():from( Qt_QGraphicsSceneResizeEvent_oldSize( ::pPtr, ... ) )
+      RETURN QSizeFFromPointer( Qt_QGraphicsSceneResizeEvent_oldSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

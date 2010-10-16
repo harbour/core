@@ -98,6 +98,12 @@
 FUNCTION QDir( ... )
    RETURN HB_QDir():new( ... )
 
+FUNCTION QDirFrom( ... )
+   RETURN HB_QDir():from( ... )
+
+FUNCTION QDirFromPointer( ... )
+   RETURN HB_QDir():fromPointer( ... )
+
 
 CREATE CLASS QDir INHERIT HbQtObjectHandler FUNCTION HB_QDir
 
@@ -238,27 +244,27 @@ METHOD QDir:entryList( ... )
    CASE 3
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
-         RETURN HB_QStringList():from( Qt_QDir_entryList( ::pPtr, ... ) )
+         RETURN QStringListFromPointer( Qt_QDir_entryList( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QStringList():from( Qt_QDir_entryList_1( ::pPtr, ... ) )
+         RETURN QStringListFromPointer( Qt_QDir_entryList_1( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QStringList():from( Qt_QDir_entryList( ::pPtr, ... ) )
+         RETURN QStringListFromPointer( Qt_QDir_entryList( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QStringList():from( Qt_QDir_entryList_1( ::pPtr, ... ) )
+         RETURN QStringListFromPointer( Qt_QDir_entryList_1( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QStringList():from( Qt_QDir_entryList( ::pPtr, ... ) )
+         RETURN QStringListFromPointer( Qt_QDir_entryList( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QStringList():from( Qt_QDir_entryList_1( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QDir_entryList_1( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -364,7 +370,7 @@ METHOD QDir:mkpath( ... )
 METHOD QDir:nameFilters( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QDir_nameFilters( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QDir_nameFilters( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -528,7 +534,7 @@ METHOD QDir:cleanPath( ... )
 METHOD QDir:current( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDir():from( Qt_QDir_current( ::pPtr, ... ) )
+      RETURN QDirFromPointer( Qt_QDir_current( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -556,7 +562,7 @@ METHOD QDir:fromNativeSeparators( ... )
 METHOD QDir:home( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDir():from( Qt_QDir_home( ::pPtr, ... ) )
+      RETURN QDirFromPointer( Qt_QDir_home( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -610,7 +616,7 @@ METHOD QDir:match( ... )
 METHOD QDir:root( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDir():from( Qt_QDir_root( ::pPtr, ... ) )
+      RETURN QDirFromPointer( Qt_QDir_root( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -628,7 +634,7 @@ METHOD QDir:searchPaths( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QStringList():from( Qt_QDir_searchPaths( ::pPtr, ... ) )
+         RETURN QStringListFromPointer( Qt_QDir_searchPaths( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -638,7 +644,7 @@ METHOD QDir:searchPaths( ... )
 METHOD QDir:separator( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QChar():from( Qt_QDir_separator( ::pPtr, ... ) )
+      RETURN QCharFromPointer( Qt_QDir_separator( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -670,7 +676,7 @@ METHOD QDir:setSearchPaths( ... )
 METHOD QDir:temp( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDir():from( Qt_QDir_temp( ::pPtr, ... ) )
+      RETURN QDirFromPointer( Qt_QDir_temp( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

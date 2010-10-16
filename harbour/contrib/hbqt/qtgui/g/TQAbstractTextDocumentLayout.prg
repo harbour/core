@@ -98,6 +98,12 @@
 FUNCTION QAbstractTextDocumentLayout( ... )
    RETURN HB_QAbstractTextDocumentLayout():new( ... )
 
+FUNCTION QAbstractTextDocumentLayoutFrom( ... )
+   RETURN HB_QAbstractTextDocumentLayout():from( ... )
+
+FUNCTION QAbstractTextDocumentLayoutFromPointer( ... )
+   RETURN HB_QAbstractTextDocumentLayout():fromPointer( ... )
+
 
 CREATE CLASS QAbstractTextDocumentLayout INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QAbstractTextDocumentLayout
 
@@ -143,7 +149,7 @@ METHOD QAbstractTextDocumentLayout:blockBoundingRect( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QRectF():from( Qt_QAbstractTextDocumentLayout_blockBoundingRect( ::pPtr, ... ) )
+         RETURN QRectFFromPointer( Qt_QAbstractTextDocumentLayout_blockBoundingRect( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -153,7 +159,7 @@ METHOD QAbstractTextDocumentLayout:blockBoundingRect( ... )
 METHOD QAbstractTextDocumentLayout:document( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextDocument():from( Qt_QAbstractTextDocumentLayout_document( ::pPtr, ... ) )
+      RETURN QTextDocumentFromPointer( Qt_QAbstractTextDocumentLayout_document( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -161,7 +167,7 @@ METHOD QAbstractTextDocumentLayout:document( ... )
 METHOD QAbstractTextDocumentLayout:documentSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSizeF():from( Qt_QAbstractTextDocumentLayout_documentSize( ::pPtr, ... ) )
+      RETURN QSizeFFromPointer( Qt_QAbstractTextDocumentLayout_documentSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -171,7 +177,7 @@ METHOD QAbstractTextDocumentLayout:frameBoundingRect( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QRectF():from( Qt_QAbstractTextDocumentLayout_frameBoundingRect( ::pPtr, ... ) )
+         RETURN QRectFFromPointer( Qt_QAbstractTextDocumentLayout_frameBoundingRect( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -201,7 +207,7 @@ METHOD QAbstractTextDocumentLayout:pageCount( ... )
 METHOD QAbstractTextDocumentLayout:paintDevice( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPaintDevice():from( Qt_QAbstractTextDocumentLayout_paintDevice( ::pPtr, ... ) )
+      RETURN QPaintDeviceFromPointer( Qt_QAbstractTextDocumentLayout_paintDevice( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

@@ -98,6 +98,12 @@
 FUNCTION QPixmap( ... )
    RETURN HB_QPixmap():new( ... )
 
+FUNCTION QPixmapFrom( ... )
+   RETURN HB_QPixmap():from( ... )
+
+FUNCTION QPixmapFromPointer( ... )
+   RETURN HB_QPixmap():fromPointer( ... )
+
 
 CREATE CLASS QPixmap INHERIT HbQtObjectHandler, HB_QPaintDevice FUNCTION HB_QPixmap
 
@@ -159,7 +165,7 @@ METHOD QPixmap:new( ... )
 METHOD QPixmap:alphaChannel( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPixmap():from( Qt_QPixmap_alphaChannel( ::pPtr, ... ) )
+      RETURN QPixmapFromPointer( Qt_QPixmap_alphaChannel( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -177,17 +183,17 @@ METHOD QPixmap:copy( ... )
    CASE 4
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
-         RETURN HB_QPixmap():from( Qt_QPixmap_copy_1( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QPixmap_copy_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QPixmap():from( Qt_QPixmap_copy( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QPixmap_copy( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QPixmap():from( Qt_QPixmap_copy( ::pPtr, ... ) )
+      RETURN QPixmapFromPointer( Qt_QPixmap_copy( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -197,11 +203,11 @@ METHOD QPixmap:createHeuristicMask( ... )
    CASE 1
       DO CASE
       CASE hb_isLogical( hb_pvalue( 1 ) )
-         RETURN HB_QBitmap():from( Qt_QPixmap_createHeuristicMask( ::pPtr, ... ) )
+         RETURN QBitmapFromPointer( Qt_QPixmap_createHeuristicMask( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QBitmap():from( Qt_QPixmap_createHeuristicMask( ::pPtr, ... ) )
+      RETURN QBitmapFromPointer( Qt_QPixmap_createHeuristicMask( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -211,13 +217,13 @@ METHOD QPixmap:createMaskFromColor( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QBitmap():from( Qt_QPixmap_createMaskFromColor( ::pPtr, ... ) )
+         RETURN QBitmapFromPointer( Qt_QPixmap_createMaskFromColor( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QBitmap():from( Qt_QPixmap_createMaskFromColor_1( ::pPtr, ... ) )
+         RETURN QBitmapFromPointer( Qt_QPixmap_createMaskFromColor_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -357,7 +363,7 @@ METHOD QPixmap:loadFromData( ... )
 METHOD QPixmap:mask( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBitmap():from( Qt_QPixmap_mask( ::pPtr, ... ) )
+      RETURN QBitmapFromPointer( Qt_QPixmap_mask( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -365,7 +371,7 @@ METHOD QPixmap:mask( ... )
 METHOD QPixmap:rect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QPixmap_rect( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QPixmap_rect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -405,29 +411,29 @@ METHOD QPixmap:scaled( ... )
    CASE 4
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
-         RETURN HB_QPixmap():from( Qt_QPixmap_scaled( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QPixmap_scaled( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 3
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
-         RETURN HB_QPixmap():from( Qt_QPixmap_scaled( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QPixmap_scaled( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
-         RETURN HB_QPixmap():from( Qt_QPixmap_scaled_1( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QPixmap_scaled_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QPixmap():from( Qt_QPixmap_scaled( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QPixmap_scaled( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QPixmap():from( Qt_QPixmap_scaled_1( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QPixmap_scaled_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QPixmap():from( Qt_QPixmap_scaled_1( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QPixmap_scaled_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -439,13 +445,13 @@ METHOD QPixmap:scaledToHeight( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QPixmap():from( Qt_QPixmap_scaledToHeight( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QPixmap_scaledToHeight( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QPixmap():from( Qt_QPixmap_scaledToHeight( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QPixmap_scaledToHeight( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -457,13 +463,13 @@ METHOD QPixmap:scaledToWidth( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QPixmap():from( Qt_QPixmap_scaledToWidth( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QPixmap_scaledToWidth( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QPixmap():from( Qt_QPixmap_scaledToWidth( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QPixmap_scaledToWidth( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -497,7 +503,7 @@ METHOD QPixmap:setMask( ... )
 METHOD QPixmap:size( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QPixmap_size( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QPixmap_size( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -505,7 +511,7 @@ METHOD QPixmap:size( ... )
 METHOD QPixmap:toImage( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QImage():from( Qt_QPixmap_toImage( ::pPtr, ... ) )
+      RETURN QImageFromPointer( Qt_QPixmap_toImage( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -517,9 +523,9 @@ METHOD QPixmap:transformed( ... )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) )
          CASE "QTRANSFORM"
-            RETURN HB_QPixmap():from( Qt_QPixmap_transformed( ::pPtr, ... ) )
+            RETURN QPixmapFromPointer( Qt_QPixmap_transformed( ::pPtr, ... ) )
          CASE "QMATRIX"
-            RETURN HB_QPixmap():from( Qt_QPixmap_transformed_1( ::pPtr, ... ) )
+            RETURN QPixmapFromPointer( Qt_QPixmap_transformed_1( ::pPtr, ... ) )
          ENDSWITCH
       ENDCASE
       EXIT
@@ -528,9 +534,9 @@ METHOD QPixmap:transformed( ... )
       CASE hb_isObject( hb_pvalue( 1 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) )
          CASE "QTRANSFORM"
-            RETURN HB_QPixmap():from( Qt_QPixmap_transformed( ::pPtr, ... ) )
+            RETURN QPixmapFromPointer( Qt_QPixmap_transformed( ::pPtr, ... ) )
          CASE "QMATRIX"
-            RETURN HB_QPixmap():from( Qt_QPixmap_transformed_1( ::pPtr, ... ) )
+            RETURN QPixmapFromPointer( Qt_QPixmap_transformed_1( ::pPtr, ... ) )
          ENDSWITCH
       ENDCASE
       EXIT
@@ -559,13 +565,13 @@ METHOD QPixmap:fromImage( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QPixmap():from( Qt_QPixmap_fromImage( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QPixmap_fromImage( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QPixmap():from( Qt_QPixmap_fromImage( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QPixmap_fromImage( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -577,33 +583,33 @@ METHOD QPixmap:grabWidget( ... )
    CASE 5
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
-         RETURN HB_QPixmap():from( Qt_QPixmap_grabWidget_1( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QPixmap_grabWidget_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 4
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
-         RETURN HB_QPixmap():from( Qt_QPixmap_grabWidget_1( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QPixmap_grabWidget_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 3
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
-         RETURN HB_QPixmap():from( Qt_QPixmap_grabWidget_1( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QPixmap_grabWidget_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QPixmap():from( Qt_QPixmap_grabWidget_1( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QPixmap_grabWidget_1( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QPixmap():from( Qt_QPixmap_grabWidget( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QPixmap_grabWidget( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QPixmap():from( Qt_QPixmap_grabWidget_1( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QPixmap_grabWidget_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -617,9 +623,9 @@ METHOD QPixmap:trueMatrix( ... )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) )
          CASE "QTRANSFORM"
-            RETURN HB_QTransform():from( Qt_QPixmap_trueMatrix( ::pPtr, ... ) )
+            RETURN QTransformFromPointer( Qt_QPixmap_trueMatrix( ::pPtr, ... ) )
          CASE "QMATRIX"
-            RETURN HB_QMatrix():from( Qt_QPixmap_trueMatrix_1( ::pPtr, ... ) )
+            RETURN QMatrixFromPointer( Qt_QPixmap_trueMatrix_1( ::pPtr, ... ) )
          ENDSWITCH
       ENDCASE
       EXIT

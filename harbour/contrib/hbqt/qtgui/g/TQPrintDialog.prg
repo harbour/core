@@ -98,6 +98,12 @@
 FUNCTION QPrintDialog( ... )
    RETURN HB_QPrintDialog():new( ... )
 
+FUNCTION QPrintDialogFrom( ... )
+   RETURN HB_QPrintDialog():from( ... )
+
+FUNCTION QPrintDialogFromPointer( ... )
+   RETURN HB_QPrintDialog():fromPointer( ... )
+
 
 CREATE CLASS QPrintDialog INHERIT HbQtObjectHandler, HB_QAbstractPrintDialog FUNCTION HB_QPrintDialog
 
@@ -159,7 +165,7 @@ METHOD QPrintDialog:options( ... )
 METHOD QPrintDialog:printer( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPrinter():from( Qt_QPrintDialog_printer( ::pPtr, ... ) )
+      RETURN QPrinterFromPointer( Qt_QPrintDialog_printer( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

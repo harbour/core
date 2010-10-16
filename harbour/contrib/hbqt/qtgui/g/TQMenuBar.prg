@@ -98,6 +98,12 @@
 FUNCTION QMenuBar( ... )
    RETURN HB_QMenuBar():new( ... )
 
+FUNCTION QMenuBarFrom( ... )
+   RETURN HB_QMenuBar():from( ... )
+
+FUNCTION QMenuBarFromPointer( ... )
+   RETURN HB_QMenuBar():fromPointer( ... )
+
 
 CREATE CLASS QMenuBar INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QMenuBar
 
@@ -133,7 +139,7 @@ METHOD QMenuBar:new( ... )
 METHOD QMenuBar:activeAction( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QMenuBar_activeAction( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QMenuBar_activeAction( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -143,13 +149,13 @@ METHOD QMenuBar:addAction( ... )
    CASE 3
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
-         RETURN HB_QAction():from( Qt_QMenuBar_addAction_1( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QMenuBar_addAction_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QAction():from( Qt_QMenuBar_addAction( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QMenuBar_addAction( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QMenuBar_addAction_2( ::pPtr, ... )
       ENDCASE
@@ -163,15 +169,15 @@ METHOD QMenuBar:addMenu( ... )
    CASE 2
       DO CASE
       CASE ( hb_isObject( hb_pvalue( 1 ) ) .OR. hb_isChar( hb_pvalue( 1 ) ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
-         RETURN HB_QMenu():from( Qt_QMenuBar_addMenu_2( ::pPtr, ... ) )
+         RETURN QMenuFromPointer( Qt_QMenuBar_addMenu_2( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QMenu():from( Qt_QMenuBar_addMenu_1( ::pPtr, ... ) )
+         RETURN QMenuFromPointer( Qt_QMenuBar_addMenu_1( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QAction():from( Qt_QMenuBar_addMenu( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QMenuBar_addMenu( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -181,7 +187,7 @@ METHOD QMenuBar:addMenu( ... )
 METHOD QMenuBar:addSeparator( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QMenuBar_addSeparator( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QMenuBar_addSeparator( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -199,7 +205,7 @@ METHOD QMenuBar:insertMenu( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QAction():from( Qt_QMenuBar_insertMenu( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QMenuBar_insertMenu( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -211,7 +217,7 @@ METHOD QMenuBar:insertSeparator( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QAction():from( Qt_QMenuBar_insertSeparator( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QMenuBar_insertSeparator( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

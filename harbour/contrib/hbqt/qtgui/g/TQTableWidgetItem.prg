@@ -98,6 +98,12 @@
 FUNCTION QTableWidgetItem( ... )
    RETURN HB_QTableWidgetItem():new( ... )
 
+FUNCTION QTableWidgetItemFrom( ... )
+   RETURN HB_QTableWidgetItem():from( ... )
+
+FUNCTION QTableWidgetItemFromPointer( ... )
+   RETURN HB_QTableWidgetItem():fromPointer( ... )
+
 
 CREATE CLASS QTableWidgetItem INHERIT HbQtObjectHandler FUNCTION HB_QTableWidgetItem
 
@@ -154,7 +160,7 @@ METHOD QTableWidgetItem:new( ... )
 METHOD QTableWidgetItem:background( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QTableWidgetItem_background( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QTableWidgetItem_background( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -170,7 +176,7 @@ METHOD QTableWidgetItem:checkState( ... )
 METHOD QTableWidgetItem:clone( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTableWidgetItem():from( Qt_QTableWidgetItem_clone( ::pPtr, ... ) )
+      RETURN QTableWidgetItemFromPointer( Qt_QTableWidgetItem_clone( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -188,7 +194,7 @@ METHOD QTableWidgetItem:data( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QVariant():from( Qt_QTableWidgetItem_data( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QTableWidgetItem_data( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -206,7 +212,7 @@ METHOD QTableWidgetItem:flags( ... )
 METHOD QTableWidgetItem:font( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFont():from( Qt_QTableWidgetItem_font( ::pPtr, ... ) )
+      RETURN QFontFromPointer( Qt_QTableWidgetItem_font( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -214,7 +220,7 @@ METHOD QTableWidgetItem:font( ... )
 METHOD QTableWidgetItem:foreground( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QTableWidgetItem_foreground( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QTableWidgetItem_foreground( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -222,7 +228,7 @@ METHOD QTableWidgetItem:foreground( ... )
 METHOD QTableWidgetItem:icon( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QIcon():from( Qt_QTableWidgetItem_icon( ::pPtr, ... ) )
+      RETURN QIconFromPointer( Qt_QTableWidgetItem_icon( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -426,7 +432,7 @@ METHOD QTableWidgetItem:setWhatsThis( ... )
 METHOD QTableWidgetItem:sizeHint( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QTableWidgetItem_sizeHint( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QTableWidgetItem_sizeHint( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -442,7 +448,7 @@ METHOD QTableWidgetItem:statusTip( ... )
 METHOD QTableWidgetItem:tableWidget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTableWidget():from( Qt_QTableWidgetItem_tableWidget( ::pPtr, ... ) )
+      RETURN QTableWidgetFromPointer( Qt_QTableWidgetItem_tableWidget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

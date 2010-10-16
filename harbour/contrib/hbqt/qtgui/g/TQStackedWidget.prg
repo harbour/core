@@ -98,6 +98,12 @@
 FUNCTION QStackedWidget( ... )
    RETURN HB_QStackedWidget():new( ... )
 
+FUNCTION QStackedWidgetFrom( ... )
+   RETURN HB_QStackedWidget():from( ... )
+
+FUNCTION QStackedWidgetFromPointer( ... )
+   RETURN HB_QStackedWidget():fromPointer( ... )
+
 
 CREATE CLASS QStackedWidget INHERIT HbQtObjectHandler, HB_QFrame FUNCTION HB_QStackedWidget
 
@@ -157,7 +163,7 @@ METHOD QStackedWidget:currentIndex( ... )
 METHOD QStackedWidget:currentWidget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QStackedWidget_currentWidget( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QStackedWidget_currentWidget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -203,7 +209,7 @@ METHOD QStackedWidget:widget( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QWidget():from( Qt_QStackedWidget_widget( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QStackedWidget_widget( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

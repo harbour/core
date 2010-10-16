@@ -98,6 +98,12 @@
 FUNCTION QChar( ... )
    RETURN HB_QChar():new( ... )
 
+FUNCTION QCharFrom( ... )
+   RETURN HB_QChar():from( ... )
+
+FUNCTION QCharFromPointer( ... )
+   RETURN HB_QChar():fromPointer( ... )
+
 
 CREATE CLASS QChar INHERIT HbQtObjectHandler FUNCTION HB_QChar
 
@@ -335,7 +341,7 @@ METHOD QChar:joining( ... )
 METHOD QChar:mirroredChar( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QChar():from( Qt_QChar_mirroredChar( ::pPtr, ... ) )
+      RETURN QCharFromPointer( Qt_QChar_mirroredChar( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -351,7 +357,7 @@ METHOD QChar:toAscii( ... )
 METHOD QChar:toCaseFolded( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QChar():from( Qt_QChar_toCaseFolded( ::pPtr, ... ) )
+      RETURN QCharFromPointer( Qt_QChar_toCaseFolded( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -367,7 +373,7 @@ METHOD QChar:toLatin1( ... )
 METHOD QChar:toLower( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QChar():from( Qt_QChar_toLower( ::pPtr, ... ) )
+      RETURN QCharFromPointer( Qt_QChar_toLower( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -375,7 +381,7 @@ METHOD QChar:toLower( ... )
 METHOD QChar:toTitleCase( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QChar():from( Qt_QChar_toTitleCase( ::pPtr, ... ) )
+      RETURN QCharFromPointer( Qt_QChar_toTitleCase( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -383,7 +389,7 @@ METHOD QChar:toTitleCase( ... )
 METHOD QChar:toUpper( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QChar():from( Qt_QChar_toUpper( ::pPtr, ... ) )
+      RETURN QCharFromPointer( Qt_QChar_toUpper( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

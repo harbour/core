@@ -98,6 +98,12 @@
 FUNCTION QSignalMapper( ... )
    RETURN HB_QSignalMapper():new( ... )
 
+FUNCTION QSignalMapperFrom( ... )
+   RETURN HB_QSignalMapper():from( ... )
+
+FUNCTION QSignalMapperFromPointer( ... )
+   RETURN HB_QSignalMapper():fromPointer( ... )
+
 
 CREATE CLASS QSignalMapper INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QSignalMapper
 
@@ -130,11 +136,11 @@ METHOD QSignalMapper:mapping( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QObject():from( Qt_QSignalMapper_mapping_1( ::pPtr, ... ) )
+         RETURN QObjectFromPointer( Qt_QSignalMapper_mapping_1( ::pPtr, ... ) )
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QObject():from( Qt_QSignalMapper_mapping( ::pPtr, ... ) )
+         RETURN QObjectFromPointer( Qt_QSignalMapper_mapping( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QObject():from( Qt_QSignalMapper_mapping_2( ::pPtr, ... ) )
+         RETURN QObjectFromPointer( Qt_QSignalMapper_mapping_2( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

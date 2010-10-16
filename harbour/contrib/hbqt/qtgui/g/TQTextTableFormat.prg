@@ -98,6 +98,12 @@
 FUNCTION QTextTableFormat( ... )
    RETURN HB_QTextTableFormat():new( ... )
 
+FUNCTION QTextTableFormatFrom( ... )
+   RETURN HB_QTextTableFormat():from( ... )
+
+FUNCTION QTextTableFormatFromPointer( ... )
+   RETURN HB_QTextTableFormat():fromPointer( ... )
+
 
 CREATE CLASS QTextTableFormat INHERIT HbQtObjectHandler, HB_QTextFrameFormat FUNCTION HB_QTextTableFormat
 

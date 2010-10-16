@@ -98,6 +98,12 @@
 FUNCTION HBQEvents( ... )
    RETURN HB_HBQEvents():new( ... )
 
+FUNCTION HBQEventsFrom( ... )
+   RETURN HB_HBQEvents():from( ... )
+
+FUNCTION HBQEventsFromPointer( ... )
+   RETURN HB_HBQEvents():fromPointer( ... )
+
 
 CREATE CLASS HBQEvents INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_HBQEvents
 

@@ -98,6 +98,12 @@
 FUNCTION QFontDialog( ... )
    RETURN HB_QFontDialog():new( ... )
 
+FUNCTION QFontDialogFrom( ... )
+   RETURN HB_QFontDialog():from( ... )
+
+FUNCTION QFontDialogFromPointer( ... )
+   RETURN HB_QFontDialog():fromPointer( ... )
+
 
 CREATE CLASS QFontDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QFontDialog
 
@@ -131,7 +137,7 @@ METHOD QFontDialog:new( ... )
 METHOD QFontDialog:currentFont( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFont():from( Qt_QFontDialog_currentFont( ::pPtr, ... ) )
+      RETURN QFontFromPointer( Qt_QFontDialog_currentFont( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -147,7 +153,7 @@ METHOD QFontDialog:options( ... )
 METHOD QFontDialog:selectedFont( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFont():from( Qt_QFontDialog_selectedFont( ::pPtr, ... ) )
+      RETURN QFontFromPointer( Qt_QFontDialog_selectedFont( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -211,7 +217,7 @@ METHOD QFontDialog:getFont( ... )
    CASE 5
       DO CASE
       CASE hb_isLogical( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isChar( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
-         RETURN HB_QFont():from( Qt_QFontDialog_getFont( ::pPtr, ... ) )
+         RETURN QFontFromPointer( Qt_QFontDialog_getFont( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 4
@@ -219,16 +225,16 @@ METHOD QFontDialog:getFont( ... )
       CASE hb_isLogical( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isChar( hb_pvalue( 4 ) )
          SWITCH __objGetClsName( hb_pvalue( 2 ) ) + __objGetClsName( hb_pvalue( 3 ) )
          CASE "QFONTQWIDGET"
-            RETURN HB_QFont():from( Qt_QFontDialog_getFont_1( ::pPtr, ... ) )
+            RETURN QFontFromPointer( Qt_QFontDialog_getFont_1( ::pPtr, ... ) )
          CASE "QFONTQWIDGET"
-            RETURN HB_QFont():from( Qt_QFontDialog_getFont_2( ::pPtr, ... ) )
+            RETURN QFontFromPointer( Qt_QFontDialog_getFont_2( ::pPtr, ... ) )
          ENDSWITCH
       ENDCASE
       EXIT
    CASE 3
       DO CASE
       CASE hb_isLogical( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
-         RETURN HB_QFont():from( Qt_QFontDialog_getFont_3( ::pPtr, ... ) )
+         RETURN QFontFromPointer( Qt_QFontDialog_getFont_3( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 2
@@ -236,16 +242,16 @@ METHOD QFontDialog:getFont( ... )
       CASE hb_isLogical( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
          SWITCH __objGetClsName( hb_pvalue( 2 ) )
          CASE "QWIDGET"
-            RETURN HB_QFont():from( Qt_QFontDialog_getFont_4( ::pPtr, ... ) )
+            RETURN QFontFromPointer( Qt_QFontDialog_getFont_4( ::pPtr, ... ) )
          CASE "QFONT"
-            RETURN HB_QFont():from( Qt_QFontDialog_getFont_3( ::pPtr, ... ) )
+            RETURN QFontFromPointer( Qt_QFontDialog_getFont_3( ::pPtr, ... ) )
          ENDSWITCH
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isLogical( hb_pvalue( 1 ) )
-         RETURN HB_QFont():from( Qt_QFontDialog_getFont_4( ::pPtr, ... ) )
+         RETURN QFontFromPointer( Qt_QFontDialog_getFont_4( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

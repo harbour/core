@@ -98,6 +98,12 @@
 FUNCTION QStyleOptionSpinBox( ... )
    RETURN HB_QStyleOptionSpinBox():new( ... )
 
+FUNCTION QStyleOptionSpinBoxFrom( ... )
+   RETURN HB_QStyleOptionSpinBox():from( ... )
+
+FUNCTION QStyleOptionSpinBoxFromPointer( ... )
+   RETURN HB_QStyleOptionSpinBox():fromPointer( ... )
+
 
 CREATE CLASS QStyleOptionSpinBox INHERIT HbQtObjectHandler, HB_QStyleOptionComplex FUNCTION HB_QStyleOptionSpinBox
 

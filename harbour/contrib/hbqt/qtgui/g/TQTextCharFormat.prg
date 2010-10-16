@@ -98,6 +98,12 @@
 FUNCTION QTextCharFormat( ... )
    RETURN HB_QTextCharFormat():new( ... )
 
+FUNCTION QTextCharFormatFrom( ... )
+   RETURN HB_QTextCharFormat():from( ... )
+
+FUNCTION QTextCharFormatFromPointer( ... )
+   RETURN HB_QTextCharFormat():fromPointer( ... )
+
 
 CREATE CLASS QTextCharFormat INHERIT HbQtObjectHandler, HB_QTextFormat FUNCTION HB_QTextCharFormat
 
@@ -174,7 +180,7 @@ METHOD QTextCharFormat:anchorHref( ... )
 METHOD QTextCharFormat:anchorNames( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QTextCharFormat_anchorNames( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QTextCharFormat_anchorNames( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -182,7 +188,7 @@ METHOD QTextCharFormat:anchorNames( ... )
 METHOD QTextCharFormat:font( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFont():from( Qt_QTextCharFormat_font( ::pPtr, ... ) )
+      RETURN QFontFromPointer( Qt_QTextCharFormat_font( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -600,7 +606,7 @@ METHOD QTextCharFormat:setVerticalAlignment( ... )
 METHOD QTextCharFormat:textOutline( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPen():from( Qt_QTextCharFormat_textOutline( ::pPtr, ... ) )
+      RETURN QPenFromPointer( Qt_QTextCharFormat_textOutline( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -616,7 +622,7 @@ METHOD QTextCharFormat:toolTip( ... )
 METHOD QTextCharFormat:underlineColor( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QColor():from( Qt_QTextCharFormat_underlineColor( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_QTextCharFormat_underlineColor( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

@@ -98,6 +98,12 @@
 FUNCTION QWebHitTestResult( ... )
    RETURN HB_QWebHitTestResult():new( ... )
 
+FUNCTION QWebHitTestResultFrom( ... )
+   RETURN HB_QWebHitTestResult():from( ... )
+
+FUNCTION QWebHitTestResultFromPointer( ... )
+   RETURN HB_QWebHitTestResult():fromPointer( ... )
+
 
 CREATE CLASS QWebHitTestResult INHERIT HbQtObjectHandler FUNCTION HB_QWebHitTestResult
 
@@ -141,7 +147,7 @@ METHOD QWebHitTestResult:alternateText( ... )
 METHOD QWebHitTestResult:boundingRect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QWebHitTestResult_boundingRect( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QWebHitTestResult_boundingRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -149,7 +155,7 @@ METHOD QWebHitTestResult:boundingRect( ... )
 METHOD QWebHitTestResult:frame( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWebFrame():from( Qt_QWebHitTestResult_frame( ::pPtr, ... ) )
+      RETURN QWebFrameFromPointer( Qt_QWebHitTestResult_frame( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -157,7 +163,7 @@ METHOD QWebHitTestResult:frame( ... )
 METHOD QWebHitTestResult:imageUrl( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QUrl():from( Qt_QWebHitTestResult_imageUrl( ::pPtr, ... ) )
+      RETURN QUrlFromPointer( Qt_QWebHitTestResult_imageUrl( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -189,7 +195,7 @@ METHOD QWebHitTestResult:isNull( ... )
 METHOD QWebHitTestResult:linkTargetFrame( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWebFrame():from( Qt_QWebHitTestResult_linkTargetFrame( ::pPtr, ... ) )
+      RETURN QWebFrameFromPointer( Qt_QWebHitTestResult_linkTargetFrame( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -205,7 +211,7 @@ METHOD QWebHitTestResult:linkText( ... )
 METHOD QWebHitTestResult:linkTitle( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QUrl():from( Qt_QWebHitTestResult_linkTitle( ::pPtr, ... ) )
+      RETURN QUrlFromPointer( Qt_QWebHitTestResult_linkTitle( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -213,7 +219,7 @@ METHOD QWebHitTestResult:linkTitle( ... )
 METHOD QWebHitTestResult:linkUrl( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QUrl():from( Qt_QWebHitTestResult_linkUrl( ::pPtr, ... ) )
+      RETURN QUrlFromPointer( Qt_QWebHitTestResult_linkUrl( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -221,7 +227,7 @@ METHOD QWebHitTestResult:linkUrl( ... )
 METHOD QWebHitTestResult:pixmap( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPixmap():from( Qt_QWebHitTestResult_pixmap( ::pPtr, ... ) )
+      RETURN QPixmapFromPointer( Qt_QWebHitTestResult_pixmap( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -229,7 +235,7 @@ METHOD QWebHitTestResult:pixmap( ... )
 METHOD QWebHitTestResult:pos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QWebHitTestResult_pos( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QWebHitTestResult_pos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

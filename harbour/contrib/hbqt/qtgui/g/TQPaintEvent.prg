@@ -98,6 +98,12 @@
 FUNCTION QPaintEvent( ... )
    RETURN HB_QPaintEvent():new( ... )
 
+FUNCTION QPaintEventFrom( ... )
+   RETURN HB_QPaintEvent():from( ... )
+
+FUNCTION QPaintEventFromPointer( ... )
+   RETURN HB_QPaintEvent():fromPointer( ... )
+
 
 CREATE CLASS QPaintEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_QPaintEvent
 
@@ -121,7 +127,7 @@ METHOD QPaintEvent:new( ... )
 METHOD QPaintEvent:rect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QPaintEvent_rect( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QPaintEvent_rect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -129,7 +135,7 @@ METHOD QPaintEvent:rect( ... )
 METHOD QPaintEvent:region( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRegion():from( Qt_QPaintEvent_region( ::pPtr, ... ) )
+      RETURN QRegionFromPointer( Qt_QPaintEvent_region( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

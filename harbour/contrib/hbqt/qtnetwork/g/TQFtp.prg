@@ -98,6 +98,12 @@
 FUNCTION QFtp( ... )
    RETURN HB_QFtp():new( ... )
 
+FUNCTION QFtpFrom( ... )
+   RETURN HB_QFtp():from( ... )
+
+FUNCTION QFtpFromPointer( ... )
+   RETURN HB_QFtp():fromPointer( ... )
+
 
 CREATE CLASS QFtp INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QFtp
 
@@ -207,7 +213,7 @@ METHOD QFtp:currentCommand( ... )
 METHOD QFtp:currentDevice( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QIODevice():from( Qt_QFtp_currentDevice( ::pPtr, ... ) )
+      RETURN QIODeviceFromPointer( Qt_QFtp_currentDevice( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -357,7 +363,7 @@ METHOD QFtp:rawCommand( ... )
 METHOD QFtp:readAll( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QByteArray():from( Qt_QFtp_readAll( ::pPtr, ... ) )
+      RETURN QByteArrayFromPointer( Qt_QFtp_readAll( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

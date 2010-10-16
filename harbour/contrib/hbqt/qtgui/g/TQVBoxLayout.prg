@@ -98,6 +98,12 @@
 FUNCTION QVBoxLayout( ... )
    RETURN HB_QVBoxLayout():new( ... )
 
+FUNCTION QVBoxLayoutFrom( ... )
+   RETURN HB_QVBoxLayout():from( ... )
+
+FUNCTION QVBoxLayoutFromPointer( ... )
+   RETURN HB_QVBoxLayout():fromPointer( ... )
+
 
 CREATE CLASS QVBoxLayout INHERIT HbQtObjectHandler, HB_QBoxLayout FUNCTION HB_QVBoxLayout
 

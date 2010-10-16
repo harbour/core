@@ -98,6 +98,12 @@
 FUNCTION QTreeView( ... )
    RETURN HB_QTreeView():new( ... )
 
+FUNCTION QTreeViewFrom( ... )
+   RETURN HB_QTreeView():from( ... )
+
+FUNCTION QTreeViewFromPointer( ... )
+   RETURN HB_QTreeView():fromPointer( ... )
+
 
 CREATE CLASS QTreeView INHERIT HbQtObjectHandler, HB_QAbstractItemView FUNCTION HB_QTreeView
 
@@ -228,7 +234,7 @@ METHOD QTreeView:expandsOnDoubleClick( ... )
 METHOD QTreeView:header( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QHeaderView():from( Qt_QTreeView_header( ::pPtr, ... ) )
+      RETURN QHeaderViewFromPointer( Qt_QTreeView_header( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -246,7 +252,7 @@ METHOD QTreeView:indexAbove( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QModelIndex():from( Qt_QTreeView_indexAbove( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_QTreeView_indexAbove( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -258,7 +264,7 @@ METHOD QTreeView:indexBelow( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QModelIndex():from( Qt_QTreeView_indexBelow( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_QTreeView_indexBelow( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -600,7 +606,7 @@ METHOD QTreeView:visualRect( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QRect():from( Qt_QTreeView_visualRect( ::pPtr, ... ) )
+         RETURN QRectFromPointer( Qt_QTreeView_visualRect( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

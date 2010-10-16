@@ -98,6 +98,12 @@
 FUNCTION QGraphicsView( ... )
    RETURN HB_QGraphicsView():new( ... )
 
+FUNCTION QGraphicsViewFrom( ... )
+   RETURN HB_QGraphicsView():from( ... )
+
+FUNCTION QGraphicsViewFromPointer( ... )
+   RETURN HB_QGraphicsView():fromPointer( ... )
+
 
 CREATE CLASS QGraphicsView INHERIT HbQtObjectHandler, HB_QAbstractScrollArea FUNCTION HB_QGraphicsView
 
@@ -203,7 +209,7 @@ METHOD QGraphicsView:alignment( ... )
 METHOD QGraphicsView:backgroundBrush( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QGraphicsView_backgroundBrush( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QGraphicsView_backgroundBrush( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -347,7 +353,7 @@ METHOD QGraphicsView:fitInView( ... )
 METHOD QGraphicsView:foregroundBrush( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QGraphicsView_foregroundBrush( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QGraphicsView_foregroundBrush( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -365,13 +371,13 @@ METHOD QGraphicsView:itemAt( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QGraphicsItem():from( Qt_QGraphicsView_itemAt_1( ::pPtr, ... ) )
+         RETURN QGraphicsItemFromPointer( Qt_QGraphicsView_itemAt_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QGraphicsItem():from( Qt_QGraphicsView_itemAt( ::pPtr, ... ) )
+         RETURN QGraphicsItemFromPointer( Qt_QGraphicsView_itemAt( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -383,27 +389,27 @@ METHOD QGraphicsView:items( ... )
    CASE 5
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
-         RETURN HB_QList():from( Qt_QGraphicsView_items_3( ::pPtr, ... ) )
+         RETURN QListFromPointer( Qt_QGraphicsView_items_3( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 4
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
-         RETURN HB_QList():from( Qt_QGraphicsView_items_3( ::pPtr, ... ) )
+         RETURN QListFromPointer( Qt_QGraphicsView_items_3( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QList():from( Qt_QGraphicsView_items_2( ::pPtr, ... ) )
+         RETURN QListFromPointer( Qt_QGraphicsView_items_2( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) )
          CASE "QPOLYGON"
-            RETURN HB_QList():from( Qt_QGraphicsView_items_5( ::pPtr, ... ) )
+            RETURN QListFromPointer( Qt_QGraphicsView_items_5( ::pPtr, ... ) )
          CASE "QPAINTERPATH"
-            RETURN HB_QList():from( Qt_QGraphicsView_items_6( ::pPtr, ... ) )
+            RETURN QListFromPointer( Qt_QGraphicsView_items_6( ::pPtr, ... ) )
          CASE "QRECT"
-            RETURN HB_QList():from( Qt_QGraphicsView_items_4( ::pPtr, ... ) )
+            RETURN QListFromPointer( Qt_QGraphicsView_items_4( ::pPtr, ... ) )
          ENDSWITCH
       ENDCASE
       EXIT
@@ -412,18 +418,18 @@ METHOD QGraphicsView:items( ... )
       CASE hb_isObject( hb_pvalue( 1 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) )
          CASE "QPOLYGON"
-            RETURN HB_QList():from( Qt_QGraphicsView_items_5( ::pPtr, ... ) )
+            RETURN QListFromPointer( Qt_QGraphicsView_items_5( ::pPtr, ... ) )
          CASE "QRECT"
-            RETURN HB_QList():from( Qt_QGraphicsView_items_4( ::pPtr, ... ) )
+            RETURN QListFromPointer( Qt_QGraphicsView_items_4( ::pPtr, ... ) )
          CASE "QPOINT"
-            RETURN HB_QList():from( Qt_QGraphicsView_items_1( ::pPtr, ... ) )
+            RETURN QListFromPointer( Qt_QGraphicsView_items_1( ::pPtr, ... ) )
          CASE "QPAINTERPATH"
-            RETURN HB_QList():from( Qt_QGraphicsView_items_6( ::pPtr, ... ) )
+            RETURN QListFromPointer( Qt_QGraphicsView_items_6( ::pPtr, ... ) )
          ENDSWITCH
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QList():from( Qt_QGraphicsView_items( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QGraphicsView_items( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -433,13 +439,13 @@ METHOD QGraphicsView:mapFromScene( ... )
    CASE 4
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
-         RETURN HB_QPolygon():from( Qt_QGraphicsView_mapFromScene_5( ::pPtr, ... ) )
+         RETURN QPolygonFromPointer( Qt_QGraphicsView_mapFromScene_5( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QPoint():from( Qt_QGraphicsView_mapFromScene_4( ::pPtr, ... ) )
+         RETURN QPointFromPointer( Qt_QGraphicsView_mapFromScene_4( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
@@ -447,13 +453,13 @@ METHOD QGraphicsView:mapFromScene( ... )
       CASE hb_isObject( hb_pvalue( 1 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) )
          CASE "QPAINTERPATH"
-            RETURN HB_QPainterPath():from( Qt_QGraphicsView_mapFromScene_3( ::pPtr, ... ) )
+            RETURN QPainterPathFromPointer( Qt_QGraphicsView_mapFromScene_3( ::pPtr, ... ) )
          CASE "QPOINTF"
-            RETURN HB_QPoint():from( Qt_QGraphicsView_mapFromScene( ::pPtr, ... ) )
+            RETURN QPointFromPointer( Qt_QGraphicsView_mapFromScene( ::pPtr, ... ) )
          CASE "QRECTF"
-            RETURN HB_QPolygon():from( Qt_QGraphicsView_mapFromScene_1( ::pPtr, ... ) )
+            RETURN QPolygonFromPointer( Qt_QGraphicsView_mapFromScene_1( ::pPtr, ... ) )
          CASE "QPOLYGONF"
-            RETURN HB_QPolygon():from( Qt_QGraphicsView_mapFromScene_2( ::pPtr, ... ) )
+            RETURN QPolygonFromPointer( Qt_QGraphicsView_mapFromScene_2( ::pPtr, ... ) )
          ENDSWITCH
       ENDCASE
       EXIT
@@ -466,13 +472,13 @@ METHOD QGraphicsView:mapToScene( ... )
    CASE 4
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
-         RETURN HB_QPolygonF():from( Qt_QGraphicsView_mapToScene_5( ::pPtr, ... ) )
+         RETURN QPolygonFFromPointer( Qt_QGraphicsView_mapToScene_5( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QPointF():from( Qt_QGraphicsView_mapToScene_4( ::pPtr, ... ) )
+         RETURN QPointFFromPointer( Qt_QGraphicsView_mapToScene_4( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
@@ -480,13 +486,13 @@ METHOD QGraphicsView:mapToScene( ... )
       CASE hb_isObject( hb_pvalue( 1 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) )
          CASE "QPAINTERPATH"
-            RETURN HB_QPainterPath():from( Qt_QGraphicsView_mapToScene_3( ::pPtr, ... ) )
+            RETURN QPainterPathFromPointer( Qt_QGraphicsView_mapToScene_3( ::pPtr, ... ) )
          CASE "QPOINT"
-            RETURN HB_QPointF():from( Qt_QGraphicsView_mapToScene( ::pPtr, ... ) )
+            RETURN QPointFFromPointer( Qt_QGraphicsView_mapToScene( ::pPtr, ... ) )
          CASE "QRECT"
-            RETURN HB_QPolygonF():from( Qt_QGraphicsView_mapToScene_1( ::pPtr, ... ) )
+            RETURN QPolygonFFromPointer( Qt_QGraphicsView_mapToScene_1( ::pPtr, ... ) )
          CASE "QPOLYGON"
-            RETURN HB_QPolygonF():from( Qt_QGraphicsView_mapToScene_2( ::pPtr, ... ) )
+            RETURN QPolygonFFromPointer( Qt_QGraphicsView_mapToScene_2( ::pPtr, ... ) )
          ENDSWITCH
       ENDCASE
       EXIT
@@ -497,7 +503,7 @@ METHOD QGraphicsView:mapToScene( ... )
 METHOD QGraphicsView:matrix( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMatrix():from( Qt_QGraphicsView_matrix( ::pPtr, ... ) )
+      RETURN QMatrixFromPointer( Qt_QGraphicsView_matrix( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -615,7 +621,7 @@ METHOD QGraphicsView:scale( ... )
 METHOD QGraphicsView:scene( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QGraphicsScene():from( Qt_QGraphicsView_scene( ::pPtr, ... ) )
+      RETURN QGraphicsSceneFromPointer( Qt_QGraphicsView_scene( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -623,7 +629,7 @@ METHOD QGraphicsView:scene( ... )
 METHOD QGraphicsView:sceneRect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRectF():from( Qt_QGraphicsView_sceneRect( ::pPtr, ... ) )
+      RETURN QRectFFromPointer( Qt_QGraphicsView_sceneRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -889,7 +895,7 @@ METHOD QGraphicsView:shear( ... )
 METHOD QGraphicsView:transform( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTransform():from( Qt_QGraphicsView_transform( ::pPtr, ... ) )
+      RETURN QTransformFromPointer( Qt_QGraphicsView_transform( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -917,7 +923,7 @@ METHOD QGraphicsView:translate( ... )
 METHOD QGraphicsView:viewportTransform( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTransform():from( Qt_QGraphicsView_viewportTransform( ::pPtr, ... ) )
+      RETURN QTransformFromPointer( Qt_QGraphicsView_viewportTransform( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

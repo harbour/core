@@ -258,10 +258,10 @@ METHOD XbpStatic:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, l
       CASE XBPSTATIC_TYPE_SYSICON
       CASE XBPSTATIC_TYPE_BITMAP
       CASE XBPSTATIC_TYPE_TEXT
-         ::oWidget := HB_QLabel():from( pQtObject )
+         ::oWidget := QLabelFromPointer( pQtObject )
          EXIT
       CASE XBPSTATIC_TYPE_GROUPBOX
-         ::oWidget := HB_QGroupBox():from( pQtObject )
+         ::oWidget := QGroupBoxFromPointer( pQtObject )
          EXIT
       CASE XBPSTATIC_TYPE_RAISEDBOX
       CASE XBPSTATIC_TYPE_RECESSEDBOX
@@ -275,10 +275,10 @@ METHOD XbpStatic:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, l
       CASE XBPSTATIC_TYPE_HALFTONEFRAME
       CASE XBPSTATIC_TYPE_RAISEDLINE
       CASE XBPSTATIC_TYPE_RECESSEDLINE
-         ::oWidget := HB_QFrame():from( pQtObject )
+         ::oWidget := QFrameFromPointer( pQtObject )
          EXIT
       OTHERWISE
-         ::oWidget := HB_QFrame():from( pQtObject )
+         ::oWidget := QFrameFromPointer( pQtObject )
          EXIT
       ENDSWITCH
    ENDIF

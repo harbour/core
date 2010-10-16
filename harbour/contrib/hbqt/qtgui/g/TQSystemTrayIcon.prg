@@ -98,6 +98,12 @@
 FUNCTION QSystemTrayIcon( ... )
    RETURN HB_QSystemTrayIcon():new( ... )
 
+FUNCTION QSystemTrayIconFrom( ... )
+   RETURN HB_QSystemTrayIcon():from( ... )
+
+FUNCTION QSystemTrayIconFromPointer( ... )
+   RETURN HB_QSystemTrayIcon():fromPointer( ... )
+
 
 CREATE CLASS QSystemTrayIcon INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QSystemTrayIcon
 
@@ -133,7 +139,7 @@ METHOD QSystemTrayIcon:new( ... )
 METHOD QSystemTrayIcon:contextMenu( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMenu():from( Qt_QSystemTrayIcon_contextMenu( ::pPtr, ... ) )
+      RETURN QMenuFromPointer( Qt_QSystemTrayIcon_contextMenu( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -141,7 +147,7 @@ METHOD QSystemTrayIcon:contextMenu( ... )
 METHOD QSystemTrayIcon:geometry( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QSystemTrayIcon_geometry( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QSystemTrayIcon_geometry( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -149,7 +155,7 @@ METHOD QSystemTrayIcon:geometry( ... )
 METHOD QSystemTrayIcon:icon( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QIcon():from( Qt_QSystemTrayIcon_icon( ::pPtr, ... ) )
+      RETURN QIconFromPointer( Qt_QSystemTrayIcon_icon( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

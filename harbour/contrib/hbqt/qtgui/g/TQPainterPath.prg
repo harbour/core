@@ -98,6 +98,12 @@
 FUNCTION QPainterPath( ... )
    RETURN HB_QPainterPath():new( ... )
 
+FUNCTION QPainterPathFrom( ... )
+   RETURN HB_QPainterPath():from( ... )
+
+FUNCTION QPainterPathFromPointer( ... )
+   RETURN HB_QPainterPath():fromPointer( ... )
+
 
 CREATE CLASS QPainterPath INHERIT HbQtObjectHandler FUNCTION HB_QPainterPath
 
@@ -348,7 +354,7 @@ METHOD QPainterPath:arcTo( ... )
 METHOD QPainterPath:boundingRect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRectF():from( Qt_QPainterPath_boundingRect( ::pPtr, ... ) )
+      RETURN QRectFFromPointer( Qt_QPainterPath_boundingRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -395,7 +401,7 @@ METHOD QPainterPath:contains( ... )
 METHOD QPainterPath:controlPointRect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRectF():from( Qt_QPainterPath_controlPointRect( ::pPtr, ... ) )
+      RETURN QRectFFromPointer( Qt_QPainterPath_controlPointRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -421,7 +427,7 @@ METHOD QPainterPath:cubicTo( ... )
 METHOD QPainterPath:currentPosition( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPointF():from( Qt_QPainterPath_currentPosition( ::pPtr, ... ) )
+      RETURN QPointFFromPointer( Qt_QPainterPath_currentPosition( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -447,7 +453,7 @@ METHOD QPainterPath:intersected( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QPainterPath():from( Qt_QPainterPath_intersected( ::pPtr, ... ) )
+         RETURN QPainterPathFromPointer( Qt_QPainterPath_intersected( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -540,7 +546,7 @@ METHOD QPainterPath:pointAtPercent( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QPointF():from( Qt_QPainterPath_pointAtPercent( ::pPtr, ... ) )
+         RETURN QPointFFromPointer( Qt_QPainterPath_pointAtPercent( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -592,7 +598,7 @@ METHOD QPainterPath:setFillRule( ... )
 METHOD QPainterPath:simplified( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPainterPath():from( Qt_QPainterPath_simplified( ::pPtr, ... ) )
+      RETURN QPainterPathFromPointer( Qt_QPainterPath_simplified( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -614,7 +620,7 @@ METHOD QPainterPath:subtracted( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QPainterPath():from( Qt_QPainterPath_subtracted( ::pPtr, ... ) )
+         RETURN QPainterPathFromPointer( Qt_QPainterPath_subtracted( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -628,14 +634,14 @@ METHOD QPainterPath:toFillPolygon( ... )
       CASE hb_isObject( hb_pvalue( 1 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) )
          CASE "QTRANSFORM"
-            RETURN HB_QPolygonF():from( Qt_QPainterPath_toFillPolygon( ::pPtr, ... ) )
+            RETURN QPolygonFFromPointer( Qt_QPainterPath_toFillPolygon( ::pPtr, ... ) )
          CASE "QMATRIX"
-            RETURN HB_QPolygonF():from( Qt_QPainterPath_toFillPolygon_1( ::pPtr, ... ) )
+            RETURN QPolygonFFromPointer( Qt_QPainterPath_toFillPolygon_1( ::pPtr, ... ) )
          ENDSWITCH
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QPolygonF():from( Qt_QPainterPath_toFillPolygon_1( ::pPtr, ... ) )
+      RETURN QPolygonFFromPointer( Qt_QPainterPath_toFillPolygon_1( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -647,14 +653,14 @@ METHOD QPainterPath:toFillPolygons( ... )
       CASE hb_isObject( hb_pvalue( 1 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) )
          CASE "QTRANSFORM"
-            RETURN HB_QList():from( Qt_QPainterPath_toFillPolygons( ::pPtr, ... ) )
+            RETURN QListFromPointer( Qt_QPainterPath_toFillPolygons( ::pPtr, ... ) )
          CASE "QMATRIX"
-            RETURN HB_QList():from( Qt_QPainterPath_toFillPolygons_1( ::pPtr, ... ) )
+            RETURN QListFromPointer( Qt_QPainterPath_toFillPolygons_1( ::pPtr, ... ) )
          ENDSWITCH
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QList():from( Qt_QPainterPath_toFillPolygons_1( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QPainterPath_toFillPolygons_1( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -662,7 +668,7 @@ METHOD QPainterPath:toFillPolygons( ... )
 METHOD QPainterPath:toReversed( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPainterPath():from( Qt_QPainterPath_toReversed( ::pPtr, ... ) )
+      RETURN QPainterPathFromPointer( Qt_QPainterPath_toReversed( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -674,14 +680,14 @@ METHOD QPainterPath:toSubpathPolygons( ... )
       CASE hb_isObject( hb_pvalue( 1 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) )
          CASE "QTRANSFORM"
-            RETURN HB_QList():from( Qt_QPainterPath_toSubpathPolygons( ::pPtr, ... ) )
+            RETURN QListFromPointer( Qt_QPainterPath_toSubpathPolygons( ::pPtr, ... ) )
          CASE "QMATRIX"
-            RETURN HB_QList():from( Qt_QPainterPath_toSubpathPolygons_1( ::pPtr, ... ) )
+            RETURN QListFromPointer( Qt_QPainterPath_toSubpathPolygons_1( ::pPtr, ... ) )
          ENDSWITCH
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QList():from( Qt_QPainterPath_toSubpathPolygons_1( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QPainterPath_toSubpathPolygons_1( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -691,7 +697,7 @@ METHOD QPainterPath:united( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QPainterPath():from( Qt_QPainterPath_united( ::pPtr, ... ) )
+         RETURN QPainterPathFromPointer( Qt_QPainterPath_united( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

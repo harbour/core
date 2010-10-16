@@ -98,6 +98,12 @@
 FUNCTION QImageWriter( ... )
    RETURN HB_QImageWriter():new( ... )
 
+FUNCTION QImageWriterFrom( ... )
+   RETURN HB_QImageWriter():from( ... )
+
+FUNCTION QImageWriterFromPointer( ... )
+   RETURN HB_QImageWriter():fromPointer( ... )
+
 
 CREATE CLASS QImageWriter INHERIT HbQtObjectHandler FUNCTION HB_QImageWriter
 
@@ -154,7 +160,7 @@ METHOD QImageWriter:compression( ... )
 METHOD QImageWriter:device( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QIODevice():from( Qt_QImageWriter_device( ::pPtr, ... ) )
+      RETURN QIODeviceFromPointer( Qt_QImageWriter_device( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -186,7 +192,7 @@ METHOD QImageWriter:fileName( ... )
 METHOD QImageWriter:format( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QByteArray():from( Qt_QImageWriter_format( ::pPtr, ... ) )
+      RETURN QByteArrayFromPointer( Qt_QImageWriter_format( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -318,7 +324,7 @@ METHOD QImageWriter:write( ... )
 METHOD QImageWriter:supportedImageFormats( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QImageWriter_supportedImageFormats( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QImageWriter_supportedImageFormats( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

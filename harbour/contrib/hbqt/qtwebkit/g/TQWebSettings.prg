@@ -98,6 +98,12 @@
 FUNCTION QWebSettings( ... )
    RETURN HB_QWebSettings():new( ... )
 
+FUNCTION QWebSettingsFrom( ... )
+   RETURN HB_QWebSettings():from( ... )
+
+FUNCTION QWebSettingsFromPointer( ... )
+   RETURN HB_QWebSettings():fromPointer( ... )
+
 
 CREATE CLASS QWebSettings INHERIT HbQtObjectHandler FUNCTION HB_QWebSettings
 
@@ -264,7 +270,7 @@ METHOD QWebSettings:testAttribute( ... )
 METHOD QWebSettings:userStyleSheetUrl( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QUrl():from( Qt_QWebSettings_userStyleSheetUrl( ::pPtr, ... ) )
+      RETURN QUrlFromPointer( Qt_QWebSettings_userStyleSheetUrl( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -280,7 +286,7 @@ METHOD QWebSettings:clearIconDatabase( ... )
 METHOD QWebSettings:globalSettings( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWebSettings():from( Qt_QWebSettings_globalSettings( ::pPtr, ... ) )
+      RETURN QWebSettingsFromPointer( Qt_QWebSettings_globalSettings( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -298,7 +304,7 @@ METHOD QWebSettings:iconForUrl( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QIcon():from( Qt_QWebSettings_iconForUrl( ::pPtr, ... ) )
+         RETURN QIconFromPointer( Qt_QWebSettings_iconForUrl( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -406,7 +412,7 @@ METHOD QWebSettings:webGraphic( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QPixmap():from( Qt_QWebSettings_webGraphic( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QWebSettings_webGraphic( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

@@ -98,6 +98,12 @@
 FUNCTION QHelpEvent( ... )
    RETURN HB_QHelpEvent():new( ... )
 
+FUNCTION QHelpEventFrom( ... )
+   RETURN HB_QHelpEvent():from( ... )
+
+FUNCTION QHelpEventFromPointer( ... )
+   RETURN HB_QHelpEvent():fromPointer( ... )
+
 
 CREATE CLASS QHelpEvent INHERIT HbQtObjectHandler FUNCTION HB_QHelpEvent
 
@@ -125,7 +131,7 @@ METHOD QHelpEvent:new( ... )
 METHOD QHelpEvent:globalPos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QHelpEvent_globalPos( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QHelpEvent_globalPos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -149,7 +155,7 @@ METHOD QHelpEvent:globalY( ... )
 METHOD QHelpEvent:pos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QHelpEvent_pos( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QHelpEvent_pos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

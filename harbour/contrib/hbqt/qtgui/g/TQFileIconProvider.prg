@@ -98,6 +98,12 @@
 FUNCTION QFileIconProvider( ... )
    RETURN HB_QFileIconProvider():new( ... )
 
+FUNCTION QFileIconProviderFrom( ... )
+   RETURN HB_QFileIconProvider():from( ... )
+
+FUNCTION QFileIconProviderFromPointer( ... )
+   RETURN HB_QFileIconProvider():fromPointer( ... )
+
 
 CREATE CLASS QFileIconProvider INHERIT HbQtObjectHandler FUNCTION HB_QFileIconProvider
 
@@ -124,9 +130,9 @@ METHOD QFileIconProvider:icon( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QIcon():from( Qt_QFileIconProvider_icon( ::pPtr, ... ) )
+         RETURN QIconFromPointer( Qt_QFileIconProvider_icon( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QIcon():from( Qt_QFileIconProvider_icon_1( ::pPtr, ... ) )
+         RETURN QIconFromPointer( Qt_QFileIconProvider_icon_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

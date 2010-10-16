@@ -98,6 +98,12 @@
 FUNCTION QMouseEvent( ... )
    RETURN HB_QMouseEvent():new( ... )
 
+FUNCTION QMouseEventFrom( ... )
+   RETURN HB_QMouseEvent():from( ... )
+
+FUNCTION QMouseEventFromPointer( ... )
+   RETURN HB_QMouseEvent():fromPointer( ... )
+
 
 CREATE CLASS QMouseEvent INHERIT HbQtObjectHandler, HB_QInputEvent FUNCTION HB_QMouseEvent
 
@@ -144,7 +150,7 @@ METHOD QMouseEvent:buttons( ... )
 METHOD QMouseEvent:globalPos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QMouseEvent_globalPos( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QMouseEvent_globalPos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -168,7 +174,7 @@ METHOD QMouseEvent:globalY( ... )
 METHOD QMouseEvent:pos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QMouseEvent_pos( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QMouseEvent_pos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -176,7 +182,7 @@ METHOD QMouseEvent:pos( ... )
 METHOD QMouseEvent:posF( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPointF():from( Qt_QMouseEvent_posF( ::pPtr, ... ) )
+      RETURN QPointFFromPointer( Qt_QMouseEvent_posF( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

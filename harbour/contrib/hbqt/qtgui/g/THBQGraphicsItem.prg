@@ -98,6 +98,12 @@
 FUNCTION HBQGraphicsItem( ... )
    RETURN HB_HBQGraphicsItem():new( ... )
 
+FUNCTION HBQGraphicsItemFrom( ... )
+   RETURN HB_HBQGraphicsItem():from( ... )
+
+FUNCTION HBQGraphicsItemFromPointer( ... )
+   RETURN HB_HBQGraphicsItem():fromPointer( ... )
+
 
 CREATE CLASS HBQGraphicsItem INHERIT HbQtObjectHandler, HB_QGraphicsItem FUNCTION HB_HBQGraphicsItem
 
@@ -199,7 +205,7 @@ METHOD HBQGraphicsItem:hbSetBlock( ... )
 METHOD HBQGraphicsItem:boundingRect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRectF():from( Qt_HBQGraphicsItem_boundingRect( ::pPtr, ... ) )
+      RETURN QRectFFromPointer( Qt_HBQGraphicsItem_boundingRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -239,7 +245,7 @@ METHOD HBQGraphicsItem:adjustRect( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QRectF():from( Qt_HBQGraphicsItem_adjustRect( ::pPtr, ... ) )
+         RETURN QRectFFromPointer( Qt_HBQGraphicsItem_adjustRect( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -261,7 +267,7 @@ METHOD HBQGraphicsItem:prepare( ... )
 METHOD HBQGraphicsItem:pen( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPen():from( Qt_HBQGraphicsItem_pen( ::pPtr, ... ) )
+      RETURN QPenFromPointer( Qt_HBQGraphicsItem_pen( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -281,7 +287,7 @@ METHOD HBQGraphicsItem:setPen( ... )
 METHOD HBQGraphicsItem:brush( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_HBQGraphicsItem_brush( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_HBQGraphicsItem_brush( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -301,7 +307,7 @@ METHOD HBQGraphicsItem:setBrush( ... )
 METHOD HBQGraphicsItem:backgroundBrush( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_HBQGraphicsItem_backgroundBrush( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_HBQGraphicsItem_backgroundBrush( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -321,7 +327,7 @@ METHOD HBQGraphicsItem:setBackgroundBrush( ... )
 METHOD HBQGraphicsItem:font( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFont():from( Qt_HBQGraphicsItem_font( ::pPtr, ... ) )
+      RETURN QFontFromPointer( Qt_HBQGraphicsItem_font( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -461,7 +467,7 @@ METHOD HBQGraphicsItem:setOpacity( ... )
 METHOD HBQGraphicsItem:geometry( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRectF():from( Qt_HBQGraphicsItem_geometry( ::pPtr, ... ) )
+      RETURN QRectFFromPointer( Qt_HBQGraphicsItem_geometry( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -601,7 +607,7 @@ METHOD HBQGraphicsItem:setDrawTextType( ... )
 METHOD HBQGraphicsItem:pixmap( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPixmap():from( Qt_HBQGraphicsItem_pixmap( ::pPtr, ... ) )
+      RETURN QPixmapFromPointer( Qt_HBQGraphicsItem_pixmap( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -621,7 +627,7 @@ METHOD HBQGraphicsItem:setPixmap( ... )
 METHOD HBQGraphicsItem:textColor( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QColor():from( Qt_HBQGraphicsItem_textColor( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_HBQGraphicsItem_textColor( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -661,7 +667,7 @@ METHOD HBQGraphicsItem:setBorderWidth( ... )
 METHOD HBQGraphicsItem:borderColor( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QColor():from( Qt_HBQGraphicsItem_borderColor( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_HBQGraphicsItem_borderColor( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

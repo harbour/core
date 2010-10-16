@@ -98,6 +98,12 @@
 FUNCTION QWizardPage( ... )
    RETURN HB_QWizardPage():new( ... )
 
+FUNCTION QWizardPageFrom( ... )
+   RETURN HB_QWizardPage():from( ... )
+
+FUNCTION QWizardPageFromPointer( ... )
+   RETURN HB_QWizardPage():fromPointer( ... )
+
 
 CREATE CLASS QWizardPage INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QWizardPage
 
@@ -198,7 +204,7 @@ METHOD QWizardPage:pixmap( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QPixmap():from( Qt_QWizardPage_pixmap( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QWizardPage_pixmap( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

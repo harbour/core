@@ -98,6 +98,12 @@
 FUNCTION QPolygonF( ... )
    RETURN HB_QPolygonF():new( ... )
 
+FUNCTION QPolygonFFrom( ... )
+   RETURN HB_QPolygonF():from( ... )
+
+FUNCTION QPolygonFFromPointer( ... )
+   RETURN HB_QPolygonF():fromPointer( ... )
+
 
 CREATE CLASS QPolygonF INHERIT HbQtObjectHandler FUNCTION HB_QPolygonF
 
@@ -128,7 +134,7 @@ METHOD QPolygonF:new( ... )
 METHOD QPolygonF:boundingRect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRectF():from( Qt_QPolygonF_boundingRect( ::pPtr, ... ) )
+      RETURN QRectFFromPointer( Qt_QPolygonF_boundingRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -150,7 +156,7 @@ METHOD QPolygonF:intersected( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QPolygonF():from( Qt_QPolygonF_intersected( ::pPtr, ... ) )
+         RETURN QPolygonFFromPointer( Qt_QPolygonF_intersected( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -170,7 +176,7 @@ METHOD QPolygonF:subtracted( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QPolygonF():from( Qt_QPolygonF_subtracted( ::pPtr, ... ) )
+         RETURN QPolygonFFromPointer( Qt_QPolygonF_subtracted( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -180,7 +186,7 @@ METHOD QPolygonF:subtracted( ... )
 METHOD QPolygonF:toPolygon( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPolygon():from( Qt_QPolygonF_toPolygon( ::pPtr, ... ) )
+      RETURN QPolygonFromPointer( Qt_QPolygonF_toPolygon( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -208,7 +214,7 @@ METHOD QPolygonF:united( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QPolygonF():from( Qt_QPolygonF_united( ::pPtr, ... ) )
+         RETURN QPolygonFFromPointer( Qt_QPolygonF_united( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

@@ -98,6 +98,12 @@
 FUNCTION QFontDatabase( ... )
    RETURN HB_QFontDatabase():new( ... )
 
+FUNCTION QFontDatabaseFrom( ... )
+   RETURN HB_QFontDatabase():from( ... )
+
+FUNCTION QFontDatabaseFromPointer( ... )
+   RETURN HB_QFontDatabase():fromPointer( ... )
+
 
 CREATE CLASS QFontDatabase INHERIT HbQtObjectHandler FUNCTION HB_QFontDatabase
 
@@ -156,11 +162,11 @@ METHOD QFontDatabase:families( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QStringList():from( Qt_QFontDatabase_families( ::pPtr, ... ) )
+         RETURN QStringListFromPointer( Qt_QFontDatabase_families( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QStringList():from( Qt_QFontDatabase_families( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QFontDatabase_families( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -170,7 +176,7 @@ METHOD QFontDatabase:font( ... )
    CASE 3
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
-         RETURN HB_QFont():from( Qt_QFontDatabase_font( ::pPtr, ... ) )
+         RETURN QFontFromPointer( Qt_QFontDatabase_font( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -266,13 +272,13 @@ METHOD QFontDatabase:pointSizes( ... )
    CASE 2
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
-         RETURN HB_QList():from( Qt_QFontDatabase_pointSizes( ::pPtr, ... ) )
+         RETURN QListFromPointer( Qt_QFontDatabase_pointSizes( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QList():from( Qt_QFontDatabase_pointSizes( ::pPtr, ... ) )
+         RETURN QListFromPointer( Qt_QFontDatabase_pointSizes( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -284,7 +290,7 @@ METHOD QFontDatabase:smoothSizes( ... )
    CASE 2
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
-         RETURN HB_QList():from( Qt_QFontDatabase_smoothSizes( ::pPtr, ... ) )
+         RETURN QListFromPointer( Qt_QFontDatabase_smoothSizes( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -313,7 +319,7 @@ METHOD QFontDatabase:styles( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QStringList():from( Qt_QFontDatabase_styles( ::pPtr, ... ) )
+         RETURN QStringListFromPointer( Qt_QFontDatabase_styles( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -361,7 +367,7 @@ METHOD QFontDatabase:applicationFontFamilies( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QStringList():from( Qt_QFontDatabase_applicationFontFamilies( ::pPtr, ... ) )
+         RETURN QStringListFromPointer( Qt_QFontDatabase_applicationFontFamilies( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -391,7 +397,7 @@ METHOD QFontDatabase:removeApplicationFont( ... )
 METHOD QFontDatabase:standardSizes( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QFontDatabase_standardSizes( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QFontDatabase_standardSizes( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

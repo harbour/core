@@ -98,6 +98,12 @@
 FUNCTION HBQString( ... )
    RETURN HB_HBQString():new( ... )
 
+FUNCTION HBQStringFrom( ... )
+   RETURN HB_HBQString():from( ... )
+
+FUNCTION HBQStringFromPointer( ... )
+   RETURN HB_HBQString():fromPointer( ... )
+
 
 CREATE CLASS HBQString INHERIT HbQtObjectHandler FUNCTION HB_HBQString
 
@@ -388,7 +394,7 @@ METHOD HBQString:arg_19( ... )
 
 
 METHOD HBQString:at( ... )
-   RETURN HB_QChar():from( Qt_HBQString_at( ::pPtr, ... ) )
+   RETURN QCharFromPointer( Qt_HBQString_at( ::pPtr, ... ) )
 
 
 METHOD HBQString:capacity( ... )
@@ -420,7 +426,7 @@ METHOD HBQString:compare_3( ... )
 
 
 METHOD HBQString:constData( ... )
-   RETURN HB_QChar():from( Qt_HBQString_constData( ::pPtr, ... ) )
+   RETURN QCharFromPointer( Qt_HBQString_constData( ::pPtr, ... ) )
 
 
 METHOD HBQString:count( ... )
@@ -440,11 +446,11 @@ METHOD HBQString:count_3( ... )
 
 
 METHOD HBQString:data( ... )
-   RETURN HB_QChar():from( Qt_HBQString_data( ::pPtr, ... ) )
+   RETURN QCharFromPointer( Qt_HBQString_data( ::pPtr, ... ) )
 
 
 METHOD HBQString:data_1( ... )
-   RETURN HB_QChar():from( Qt_HBQString_data_1( ::pPtr, ... ) )
+   RETURN QCharFromPointer( Qt_HBQString_data_1( ::pPtr, ... ) )
 
 
 METHOD HBQString:endsWith( ... )
@@ -536,7 +542,7 @@ METHOD HBQString:leftJustified( ... )
 
 
 METHOD HBQString:leftRef( ... )
-   RETURN HB_QStringRef():from( Qt_HBQString_leftRef( ::pPtr, ... ) )
+   RETURN QStringRefFromPointer( Qt_HBQString_leftRef( ::pPtr, ... ) )
 
 
 METHOD HBQString:length( ... )
@@ -556,7 +562,7 @@ METHOD HBQString:mid( ... )
 
 
 METHOD HBQString:midRef( ... )
-   RETURN HB_QStringRef():from( Qt_HBQString_midRef( ::pPtr, ... ) )
+   RETURN QStringRefFromPointer( Qt_HBQString_midRef( ::pPtr, ... ) )
 
 
 METHOD HBQString:normalized( ... )
@@ -688,7 +694,7 @@ METHOD HBQString:rightJustified( ... )
 
 
 METHOD HBQString:rightRef( ... )
-   RETURN HB_QStringRef():from( Qt_HBQString_rightRef( ::pPtr, ... ) )
+   RETURN QStringRefFromPointer( Qt_HBQString_rightRef( ::pPtr, ... ) )
 
 
 METHOD HBQString:section( ... )
@@ -760,15 +766,15 @@ METHOD HBQString:size( ... )
 
 
 METHOD HBQString:split( ... )
-   RETURN HB_QStringList():from( Qt_HBQString_split( ::pPtr, ... ) )
+   RETURN QStringListFromPointer( Qt_HBQString_split( ::pPtr, ... ) )
 
 
 METHOD HBQString:split_1( ... )
-   RETURN HB_QStringList():from( Qt_HBQString_split_1( ::pPtr, ... ) )
+   RETURN QStringListFromPointer( Qt_HBQString_split_1( ::pPtr, ... ) )
 
 
 METHOD HBQString:split_2( ... )
-   RETURN HB_QStringList():from( Qt_HBQString_split_2( ::pPtr, ... ) )
+   RETURN QStringListFromPointer( Qt_HBQString_split_2( ::pPtr, ... ) )
 
 
 METHOD HBQString:squeeze( ... )
@@ -788,7 +794,7 @@ METHOD HBQString:startsWith_2( ... )
 
 
 METHOD HBQString:toAscii( ... )
-   RETURN HB_QByteArray():from( Qt_HBQString_toAscii( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_HBQString_toAscii( ::pPtr, ... ) )
 
 
 METHOD HBQString:toCaseFolded( ... )
@@ -808,11 +814,11 @@ METHOD HBQString:toInt( ... )
 
 
 METHOD HBQString:toLatin1( ... )
-   RETURN HB_QByteArray():from( Qt_HBQString_toLatin1( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_HBQString_toLatin1( ::pPtr, ... ) )
 
 
 METHOD HBQString:toLocal8Bit( ... )
-   RETURN HB_QByteArray():from( Qt_HBQString_toLocal8Bit( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_HBQString_toLocal8Bit( ::pPtr, ... ) )
 
 
 METHOD HBQString:toLong( ... )
@@ -852,7 +858,7 @@ METHOD HBQString:toUpper( ... )
 
 
 METHOD HBQString:toUtf8( ... )
-   RETURN HB_QByteArray():from( Qt_HBQString_toUtf8( ::pPtr, ... ) )
+   RETURN QByteArrayFromPointer( Qt_HBQString_toUtf8( ::pPtr, ... ) )
 
 
 METHOD HBQString:trimmed( ... )
@@ -864,7 +870,7 @@ METHOD HBQString:truncate( ... )
 
 
 METHOD HBQString:unicode( ... )
-   RETURN HB_QChar():from( Qt_HBQString_unicode( ::pPtr, ... ) )
+   RETURN QCharFromPointer( Qt_HBQString_unicode( ::pPtr, ... ) )
 
 
 METHOD HBQString:compare_4( ... )

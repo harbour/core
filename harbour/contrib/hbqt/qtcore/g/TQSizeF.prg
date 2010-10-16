@@ -98,6 +98,12 @@
 FUNCTION QSizeF( ... )
    RETURN HB_QSizeF():new( ... )
 
+FUNCTION QSizeFFrom( ... )
+   RETURN HB_QSizeF():from( ... )
+
+FUNCTION QSizeFFromPointer( ... )
+   RETURN HB_QSizeF():fromPointer( ... )
+
 
 CREATE CLASS QSizeF INHERIT HbQtObjectHandler FUNCTION HB_QSizeF
 
@@ -136,7 +142,7 @@ METHOD QSizeF:boundedTo( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QSizeF():from( Qt_QSizeF_boundedTo( ::pPtr, ... ) )
+         RETURN QSizeFFromPointer( Qt_QSizeF_boundedTo( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -148,7 +154,7 @@ METHOD QSizeF:expandedTo( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QSizeF():from( Qt_QSizeF_expandedTo( ::pPtr, ... ) )
+         RETURN QSizeFFromPointer( Qt_QSizeF_expandedTo( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -248,7 +254,7 @@ METHOD QSizeF:setWidth( ... )
 METHOD QSizeF:toSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QSizeF_toSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QSizeF_toSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

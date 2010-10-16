@@ -98,6 +98,12 @@
 FUNCTION QRadialGradient( ... )
    RETURN HB_QRadialGradient():new( ... )
 
+FUNCTION QRadialGradientFrom( ... )
+   RETURN HB_QRadialGradient():from( ... )
+
+FUNCTION QRadialGradientFromPointer( ... )
+   RETURN HB_QRadialGradient():fromPointer( ... )
+
 
 CREATE CLASS QRadialGradient INHERIT HbQtObjectHandler, HB_QGradient FUNCTION HB_QRadialGradient
 
@@ -127,7 +133,7 @@ METHOD QRadialGradient:new( ... )
 METHOD QRadialGradient:center( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPointF():from( Qt_QRadialGradient_center( ::pPtr, ... ) )
+      RETURN QPointFFromPointer( Qt_QRadialGradient_center( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -135,7 +141,7 @@ METHOD QRadialGradient:center( ... )
 METHOD QRadialGradient:focalPoint( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPointF():from( Qt_QRadialGradient_focalPoint( ::pPtr, ... ) )
+      RETURN QPointFFromPointer( Qt_QRadialGradient_focalPoint( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

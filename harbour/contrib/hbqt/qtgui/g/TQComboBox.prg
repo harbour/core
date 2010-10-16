@@ -98,6 +98,12 @@
 FUNCTION QComboBox( ... )
    RETURN HB_QComboBox():new( ... )
 
+FUNCTION QComboBoxFrom( ... )
+   RETURN HB_QComboBox():from( ... )
+
+FUNCTION QComboBoxFromPointer( ... )
+   RETURN HB_QComboBox():fromPointer( ... )
+
 
 CREATE CLASS QComboBox INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QComboBox
 
@@ -181,11 +187,11 @@ METHOD QComboBox:QComboBox( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QComboBox():from( Qt_QComboBox_QComboBox( ::pPtr, ... ) )
+         RETURN QComboBoxFromPointer( Qt_QComboBox_QComboBox( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QComboBox():from( Qt_QComboBox_QComboBox( ::pPtr, ... ) )
+      RETURN QComboBoxFromPointer( Qt_QComboBox_QComboBox( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -231,7 +237,7 @@ METHOD QComboBox:addItems( ... )
 METHOD QComboBox:completer( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QCompleter():from( Qt_QComboBox_completer( ::pPtr, ... ) )
+      RETURN QCompleterFromPointer( Qt_QComboBox_completer( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -329,7 +335,7 @@ METHOD QComboBox:hidePopup( ... )
 METHOD QComboBox:iconSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QComboBox_iconSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QComboBox_iconSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -405,13 +411,13 @@ METHOD QComboBox:itemData( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QVariant():from( Qt_QComboBox_itemData( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QComboBox_itemData( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QVariant():from( Qt_QComboBox_itemData( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QComboBox_itemData( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -421,7 +427,7 @@ METHOD QComboBox:itemData( ... )
 METHOD QComboBox:itemDelegate( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAbstractItemDelegate():from( Qt_QComboBox_itemDelegate( ::pPtr, ... ) )
+      RETURN QAbstractItemDelegateFromPointer( Qt_QComboBox_itemDelegate( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -431,7 +437,7 @@ METHOD QComboBox:itemIcon( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QIcon():from( Qt_QComboBox_itemIcon( ::pPtr, ... ) )
+         RETURN QIconFromPointer( Qt_QComboBox_itemIcon( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -453,7 +459,7 @@ METHOD QComboBox:itemText( ... )
 METHOD QComboBox:lineEdit( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QLineEdit():from( Qt_QComboBox_lineEdit( ::pPtr, ... ) )
+      RETURN QLineEditFromPointer( Qt_QComboBox_lineEdit( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -485,7 +491,7 @@ METHOD QComboBox:minimumContentsLength( ... )
 METHOD QComboBox:model( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAbstractItemModel():from( Qt_QComboBox_model( ::pPtr, ... ) )
+      RETURN QAbstractItemModelFromPointer( Qt_QComboBox_model( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -513,7 +519,7 @@ METHOD QComboBox:removeItem( ... )
 METHOD QComboBox:rootModelIndex( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QModelIndex():from( Qt_QComboBox_rootModelIndex( ::pPtr, ... ) )
+      RETURN QModelIndexFromPointer( Qt_QComboBox_rootModelIndex( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -783,7 +789,7 @@ METHOD QComboBox:sizeAdjustPolicy( ... )
 METHOD QComboBox:validator( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QValidator():from( Qt_QComboBox_validator( ::pPtr, ... ) )
+      RETURN QValidatorFromPointer( Qt_QComboBox_validator( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -791,7 +797,7 @@ METHOD QComboBox:validator( ... )
 METHOD QComboBox:view( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAbstractItemView():from( Qt_QComboBox_view( ::pPtr, ... ) )
+      RETURN QAbstractItemViewFromPointer( Qt_QComboBox_view( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

@@ -98,6 +98,12 @@
 FUNCTION QStyleOptionMenuItem( ... )
    RETURN HB_QStyleOptionMenuItem():new( ... )
 
+FUNCTION QStyleOptionMenuItemFrom( ... )
+   RETURN HB_QStyleOptionMenuItem():from( ... )
+
+FUNCTION QStyleOptionMenuItemFromPointer( ... )
+   RETURN HB_QStyleOptionMenuItem():fromPointer( ... )
+
 
 CREATE CLASS QStyleOptionMenuItem INHERIT HbQtObjectHandler, HB_QStyleOption FUNCTION HB_QStyleOptionMenuItem
 
@@ -145,7 +151,7 @@ METHOD QStyleOptionMenuItem:checked( ... )
 METHOD QStyleOptionMenuItem:font( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFont():from( Qt_QStyleOptionMenuItem_font( ::pPtr, ... ) )
+      RETURN QFontFromPointer( Qt_QStyleOptionMenuItem_font( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -153,7 +159,7 @@ METHOD QStyleOptionMenuItem:font( ... )
 METHOD QStyleOptionMenuItem:icon( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QIcon():from( Qt_QStyleOptionMenuItem_icon( ::pPtr, ... ) )
+      RETURN QIconFromPointer( Qt_QStyleOptionMenuItem_icon( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -185,7 +191,7 @@ METHOD QStyleOptionMenuItem:menuItemType( ... )
 METHOD QStyleOptionMenuItem:menuRect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QStyleOptionMenuItem_menuRect( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QStyleOptionMenuItem_menuRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

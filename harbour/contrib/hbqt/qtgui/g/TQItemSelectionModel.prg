@@ -98,6 +98,12 @@
 FUNCTION QItemSelectionModel( ... )
    RETURN HB_QItemSelectionModel():new( ... )
 
+FUNCTION QItemSelectionModelFrom( ... )
+   RETURN HB_QItemSelectionModel():from( ... )
+
+FUNCTION QItemSelectionModelFromPointer( ... )
+   RETURN HB_QItemSelectionModel():fromPointer( ... )
+
 
 CREATE CLASS QItemSelectionModel INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QItemSelectionModel
 
@@ -146,7 +152,7 @@ METHOD QItemSelectionModel:columnIntersectsSelection( ... )
 METHOD QItemSelectionModel:currentIndex( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QModelIndex():from( Qt_QItemSelectionModel_currentIndex( ::pPtr, ... ) )
+      RETURN QModelIndexFromPointer( Qt_QItemSelectionModel_currentIndex( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -198,7 +204,7 @@ METHOD QItemSelectionModel:isSelected( ... )
 METHOD QItemSelectionModel:model( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAbstractItemModel():from( Qt_QItemSelectionModel_model( ::pPtr, ... ) )
+      RETURN QAbstractItemModelFromPointer( Qt_QItemSelectionModel_model( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -218,7 +224,7 @@ METHOD QItemSelectionModel:rowIntersectsSelection( ... )
 METHOD QItemSelectionModel:selection( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QItemSelection():from( Qt_QItemSelectionModel_selection( ::pPtr, ... ) )
+      RETURN QItemSelectionFromPointer( Qt_QItemSelectionModel_selection( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

@@ -98,6 +98,12 @@
 FUNCTION QStyle( ... )
    RETURN HB_QStyle():new( ... )
 
+FUNCTION QStyleFrom( ... )
+   RETURN HB_QStyle():from( ... )
+
+FUNCTION QStyleFromPointer( ... )
+   RETURN HB_QStyle():fromPointer( ... )
+
 
 CREATE CLASS QStyle INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QStyle
 
@@ -258,7 +264,7 @@ METHOD QStyle:generatedIconPixmap( ... )
    CASE 3
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
-         RETURN HB_QPixmap():from( Qt_QStyle_generatedIconPixmap( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QStyle_generatedIconPixmap( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -288,7 +294,7 @@ METHOD QStyle:itemPixmapRect( ... )
    CASE 3
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
-         RETURN HB_QRect():from( Qt_QStyle_itemPixmapRect( ::pPtr, ... ) )
+         RETURN QRectFromPointer( Qt_QStyle_itemPixmapRect( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -300,7 +306,7 @@ METHOD QStyle:itemTextRect( ... )
    CASE 5
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isLogical( hb_pvalue( 4 ) ) .AND. hb_isChar( hb_pvalue( 5 ) )
-         RETURN HB_QRect():from( Qt_QStyle_itemTextRect( ::pPtr, ... ) )
+         RETURN QRectFromPointer( Qt_QStyle_itemTextRect( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -379,13 +385,13 @@ METHOD QStyle:sizeFromContents( ... )
    CASE 4
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
-         RETURN HB_QSize():from( Qt_QStyle_sizeFromContents( ::pPtr, ... ) )
+         RETURN QSizeFromPointer( Qt_QStyle_sizeFromContents( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 3
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
-         RETURN HB_QSize():from( Qt_QStyle_sizeFromContents( ::pPtr, ... ) )
+         RETURN QSizeFromPointer( Qt_QStyle_sizeFromContents( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -397,19 +403,19 @@ METHOD QStyle:standardIcon( ... )
    CASE 3
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
-         RETURN HB_QIcon():from( Qt_QStyle_standardIcon( ::pPtr, ... ) )
+         RETURN QIconFromPointer( Qt_QStyle_standardIcon( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QIcon():from( Qt_QStyle_standardIcon( ::pPtr, ... ) )
+         RETURN QIconFromPointer( Qt_QStyle_standardIcon( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QIcon():from( Qt_QStyle_standardIcon( ::pPtr, ... ) )
+         RETURN QIconFromPointer( Qt_QStyle_standardIcon( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -419,7 +425,7 @@ METHOD QStyle:standardIcon( ... )
 METHOD QStyle:standardPalette( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPalette():from( Qt_QStyle_standardPalette( ::pPtr, ... ) )
+      RETURN QPaletteFromPointer( Qt_QStyle_standardPalette( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -459,13 +465,13 @@ METHOD QStyle:subControlRect( ... )
    CASE 4
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
-         RETURN HB_QRect():from( Qt_QStyle_subControlRect( ::pPtr, ... ) )
+         RETURN QRectFromPointer( Qt_QStyle_subControlRect( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 3
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
-         RETURN HB_QRect():from( Qt_QStyle_subControlRect( ::pPtr, ... ) )
+         RETURN QRectFromPointer( Qt_QStyle_subControlRect( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -477,13 +483,13 @@ METHOD QStyle:subElementRect( ... )
    CASE 3
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
-         RETURN HB_QRect():from( Qt_QStyle_subElementRect( ::pPtr, ... ) )
+         RETURN QRectFromPointer( Qt_QStyle_subElementRect( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QRect():from( Qt_QStyle_subElementRect( ::pPtr, ... ) )
+         RETURN QRectFromPointer( Qt_QStyle_subElementRect( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -512,7 +518,7 @@ METHOD QStyle:alignedRect( ... )
    CASE 4
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
-         RETURN HB_QRect():from( Qt_QStyle_alignedRect( ::pPtr, ... ) )
+         RETURN QRectFromPointer( Qt_QStyle_alignedRect( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -572,7 +578,7 @@ METHOD QStyle:visualPos( ... )
    CASE 3
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
-         RETURN HB_QPoint():from( Qt_QStyle_visualPos( ::pPtr, ... ) )
+         RETURN QPointFromPointer( Qt_QStyle_visualPos( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -584,7 +590,7 @@ METHOD QStyle:visualRect( ... )
    CASE 3
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
-         RETURN HB_QRect():from( Qt_QStyle_visualRect( ::pPtr, ... ) )
+         RETURN QRectFromPointer( Qt_QStyle_visualRect( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

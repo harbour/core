@@ -98,6 +98,12 @@
 FUNCTION QTextOption( ... )
    RETURN HB_QTextOption():new( ... )
 
+FUNCTION QTextOptionFrom( ... )
+   RETURN HB_QTextOption():from( ... )
+
+FUNCTION QTextOptionFromPointer( ... )
+   RETURN HB_QTextOption():fromPointer( ... )
+
 
 CREATE CLASS QTextOption INHERIT HbQtObjectHandler FUNCTION HB_QTextOption
 
@@ -220,7 +226,7 @@ METHOD QTextOption:setWrapMode( ... )
 METHOD QTextOption:tabArray( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QTextOption_tabArray( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QTextOption_tabArray( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

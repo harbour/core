@@ -98,6 +98,12 @@
 FUNCTION QLocale( ... )
    RETURN HB_QLocale():new( ... )
 
+FUNCTION QLocaleFrom( ... )
+   RETURN HB_QLocale():from( ... )
+
+FUNCTION QLocaleFromPointer( ... )
+   RETURN HB_QLocale():fromPointer( ... )
+
 
 CREATE CLASS QLocale INHERIT HbQtObjectHandler FUNCTION HB_QLocale
 
@@ -236,7 +242,7 @@ METHOD QLocale:dayName( ... )
 METHOD QLocale:decimalPoint( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QChar():from( Qt_QLocale_decimalPoint( ::pPtr, ... ) )
+      RETURN QCharFromPointer( Qt_QLocale_decimalPoint( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -244,7 +250,7 @@ METHOD QLocale:decimalPoint( ... )
 METHOD QLocale:exponential( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QChar():from( Qt_QLocale_exponential( ::pPtr, ... ) )
+      RETURN QCharFromPointer( Qt_QLocale_exponential( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -252,7 +258,7 @@ METHOD QLocale:exponential( ... )
 METHOD QLocale:groupSeparator( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QChar():from( Qt_QLocale_groupSeparator( ::pPtr, ... ) )
+      RETURN QCharFromPointer( Qt_QLocale_groupSeparator( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -302,7 +308,7 @@ METHOD QLocale:name( ... )
 METHOD QLocale:negativeSign( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QChar():from( Qt_QLocale_negativeSign( ::pPtr, ... ) )
+      RETURN QCharFromPointer( Qt_QLocale_negativeSign( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -318,7 +324,7 @@ METHOD QLocale:numberOptions( ... )
 METHOD QLocale:percent( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QChar():from( Qt_QLocale_percent( ::pPtr, ... ) )
+      RETURN QCharFromPointer( Qt_QLocale_percent( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -334,7 +340,7 @@ METHOD QLocale:pmText( ... )
 METHOD QLocale:positiveSign( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QChar():from( Qt_QLocale_positiveSign( ::pPtr, ... ) )
+      RETURN QCharFromPointer( Qt_QLocale_positiveSign( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -406,15 +412,15 @@ METHOD QLocale:toDate( ... )
    CASE 2
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
-         RETURN HB_QDate():from( Qt_QLocale_toDate_1( ::pPtr, ... ) )
+         RETURN QDateFromPointer( Qt_QLocale_toDate_1( ::pPtr, ... ) )
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QDate():from( Qt_QLocale_toDate( ::pPtr, ... ) )
+         RETURN QDateFromPointer( Qt_QLocale_toDate( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QDate():from( Qt_QLocale_toDate( ::pPtr, ... ) )
+         RETURN QDateFromPointer( Qt_QLocale_toDate( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -426,15 +432,15 @@ METHOD QLocale:toDateTime( ... )
    CASE 2
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
-         RETURN HB_QDateTime():from( Qt_QLocale_toDateTime_1( ::pPtr, ... ) )
+         RETURN QDateTimeFromPointer( Qt_QLocale_toDateTime_1( ::pPtr, ... ) )
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QDateTime():from( Qt_QLocale_toDateTime( ::pPtr, ... ) )
+         RETURN QDateTimeFromPointer( Qt_QLocale_toDateTime( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QDateTime():from( Qt_QLocale_toDateTime( ::pPtr, ... ) )
+         RETURN QDateTimeFromPointer( Qt_QLocale_toDateTime( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -614,15 +620,15 @@ METHOD QLocale:toTime( ... )
    CASE 2
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
-         RETURN HB_QTime():from( Qt_QLocale_toTime_1( ::pPtr, ... ) )
+         RETURN QTimeFromPointer( Qt_QLocale_toTime_1( ::pPtr, ... ) )
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QTime():from( Qt_QLocale_toTime( ::pPtr, ... ) )
+         RETURN QTimeFromPointer( Qt_QLocale_toTime( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QTime():from( Qt_QLocale_toTime( ::pPtr, ... ) )
+         RETURN QTimeFromPointer( Qt_QLocale_toTime( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -704,7 +710,7 @@ METHOD QLocale:toUShort( ... )
 METHOD QLocale:zeroDigit( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QChar():from( Qt_QLocale_zeroDigit( ::pPtr, ... ) )
+      RETURN QCharFromPointer( Qt_QLocale_zeroDigit( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -712,7 +718,7 @@ METHOD QLocale:zeroDigit( ... )
 METHOD QLocale:c( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QLocale():from( Qt_QLocale_c( ::pPtr, ... ) )
+      RETURN QLocaleFromPointer( Qt_QLocale_c( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -756,7 +762,7 @@ METHOD QLocale:setDefault( ... )
 METHOD QLocale:system( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QLocale():from( Qt_QLocale_system( ::pPtr, ... ) )
+      RETURN QLocaleFromPointer( Qt_QLocale_system( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

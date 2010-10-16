@@ -98,6 +98,12 @@
 FUNCTION QStyleOptionProgressBar( ... )
    RETURN HB_QStyleOptionProgressBar():new( ... )
 
+FUNCTION QStyleOptionProgressBarFrom( ... )
+   RETURN HB_QStyleOptionProgressBar():from( ... )
+
+FUNCTION QStyleOptionProgressBarFromPointer( ... )
+   RETURN HB_QStyleOptionProgressBar():fromPointer( ... )
+
 
 CREATE CLASS QStyleOptionProgressBar INHERIT HbQtObjectHandler, HB_QStyleOption FUNCTION HB_QStyleOptionProgressBar
 

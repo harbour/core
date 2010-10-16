@@ -98,6 +98,12 @@
 FUNCTION QRegExp( ... )
    RETURN HB_QRegExp():new( ... )
 
+FUNCTION QRegExpFrom( ... )
+   RETURN HB_QRegExp():from( ... )
+
+FUNCTION QRegExpFromPointer( ... )
+   RETURN HB_QRegExp():fromPointer( ... )
+
 
 CREATE CLASS QRegExp INHERIT HbQtObjectHandler FUNCTION HB_QRegExp
 
@@ -152,7 +158,7 @@ METHOD QRegExp:cap( ... )
 METHOD QRegExp:capturedTexts( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QRegExp_capturedTexts( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QRegExp_capturedTexts( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

@@ -98,6 +98,12 @@
 FUNCTION QCompleter( ... )
    RETURN HB_QCompleter():new( ... )
 
+FUNCTION QCompleterFrom( ... )
+   RETURN HB_QCompleter():from( ... )
+
+FUNCTION QCompleterFromPointer( ... )
+   RETURN HB_QCompleter():fromPointer( ... )
+
 
 CREATE CLASS QCompleter INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QCompleter
 
@@ -180,7 +186,7 @@ METHOD QCompleter:completionMode( ... )
 METHOD QCompleter:completionModel( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAbstractItemModel():from( Qt_QCompleter_completionModel( ::pPtr, ... ) )
+      RETURN QAbstractItemModelFromPointer( Qt_QCompleter_completionModel( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -212,7 +218,7 @@ METHOD QCompleter:currentCompletion( ... )
 METHOD QCompleter:currentIndex( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QModelIndex():from( Qt_QCompleter_currentIndex( ::pPtr, ... ) )
+      RETURN QModelIndexFromPointer( Qt_QCompleter_currentIndex( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -228,7 +234,7 @@ METHOD QCompleter:currentRow( ... )
 METHOD QCompleter:model( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAbstractItemModel():from( Qt_QCompleter_model( ::pPtr, ... ) )
+      RETURN QAbstractItemModelFromPointer( Qt_QCompleter_model( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -256,7 +262,7 @@ METHOD QCompleter:pathFromIndex( ... )
 METHOD QCompleter:popup( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAbstractItemView():from( Qt_QCompleter_popup( ::pPtr, ... ) )
+      RETURN QAbstractItemViewFromPointer( Qt_QCompleter_popup( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -374,7 +380,7 @@ METHOD QCompleter:splitPath( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QStringList():from( Qt_QCompleter_splitPath( ::pPtr, ... ) )
+         RETURN QStringListFromPointer( Qt_QCompleter_splitPath( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -384,7 +390,7 @@ METHOD QCompleter:splitPath( ... )
 METHOD QCompleter:widget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QCompleter_widget( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QCompleter_widget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

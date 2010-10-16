@@ -98,6 +98,12 @@
 FUNCTION QMoveEvent( ... )
    RETURN HB_QMoveEvent():new( ... )
 
+FUNCTION QMoveEventFrom( ... )
+   RETURN HB_QMoveEvent():from( ... )
+
+FUNCTION QMoveEventFromPointer( ... )
+   RETURN HB_QMoveEvent():fromPointer( ... )
+
 
 CREATE CLASS QMoveEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_QMoveEvent
 
@@ -121,7 +127,7 @@ METHOD QMoveEvent:new( ... )
 METHOD QMoveEvent:oldPos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QMoveEvent_oldPos( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QMoveEvent_oldPos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -129,7 +135,7 @@ METHOD QMoveEvent:oldPos( ... )
 METHOD QMoveEvent:pos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QMoveEvent_pos( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QMoveEvent_pos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

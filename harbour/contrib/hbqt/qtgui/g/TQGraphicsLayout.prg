@@ -98,6 +98,12 @@
 FUNCTION QGraphicsLayout( ... )
    RETURN HB_QGraphicsLayout():new( ... )
 
+FUNCTION QGraphicsLayoutFrom( ... )
+   RETURN HB_QGraphicsLayout():from( ... )
+
+FUNCTION QGraphicsLayoutFromPointer( ... )
+   RETURN HB_QGraphicsLayout():fromPointer( ... )
+
 
 CREATE CLASS QGraphicsLayout INHERIT HbQtObjectHandler, HB_QGraphicsLayoutItem FUNCTION HB_QGraphicsLayout
 
@@ -161,7 +167,7 @@ METHOD QGraphicsLayout:itemAt( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QGraphicsLayoutItem():from( Qt_QGraphicsLayout_itemAt( ::pPtr, ... ) )
+         RETURN QGraphicsLayoutItemFromPointer( Qt_QGraphicsLayout_itemAt( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

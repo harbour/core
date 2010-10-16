@@ -98,6 +98,12 @@
 FUNCTION QTextStream( ... )
    RETURN HB_QTextStream():new( ... )
 
+FUNCTION QTextStreamFrom( ... )
+   RETURN HB_QTextStream():from( ... )
+
+FUNCTION QTextStreamFromPointer( ... )
+   RETURN HB_QTextStream():fromPointer( ... )
+
 
 CREATE CLASS QTextStream INHERIT HbQtObjectHandler FUNCTION HB_QTextStream
 
@@ -156,7 +162,7 @@ METHOD QTextStream:new( ... )
 METHOD QTextStream:padChar( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QChar():from( Qt_QTextStream_padChar( ::pPtr, ... ) )
+      RETURN QCharFromPointer( Qt_QTextStream_padChar( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -180,7 +186,7 @@ METHOD QTextStream:autoDetectUnicode( ... )
 METHOD QTextStream:codec( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextCodec():from( Qt_QTextStream_codec( ::pPtr, ... ) )
+      RETURN QTextCodecFromPointer( Qt_QTextStream_codec( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -188,7 +194,7 @@ METHOD QTextStream:codec( ... )
 METHOD QTextStream:device( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QIODevice():from( Qt_QTextStream_device( ::pPtr, ... ) )
+      RETURN QIODeviceFromPointer( Qt_QTextStream_device( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -236,7 +242,7 @@ METHOD QTextStream:integerBase( ... )
 METHOD QTextStream:locale( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QLocale():from( Qt_QTextStream_locale( ::pPtr, ... ) )
+      RETURN QLocaleFromPointer( Qt_QTextStream_locale( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

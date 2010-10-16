@@ -98,6 +98,12 @@
 FUNCTION QResource( ... )
    RETURN HB_QResource():new( ... )
 
+FUNCTION QResourceFrom( ... )
+   RETURN HB_QResource():from( ... )
+
+FUNCTION QResourceFromPointer( ... )
+   RETURN HB_QResource():fromPointer( ... )
+
 
 CREATE CLASS QResource INHERIT HbQtObjectHandler FUNCTION HB_QResource
 
@@ -151,7 +157,7 @@ METHOD QResource:isValid( ... )
 
 
 METHOD QResource:locale( ... )
-   RETURN HB_QLocale():from( Qt_QResource_locale( ::pPtr, ... ) )
+   RETURN QLocaleFromPointer( Qt_QResource_locale( ::pPtr, ... ) )
 
 
 METHOD QResource:setFileName( ... )
@@ -175,7 +181,7 @@ METHOD QResource:registerResource_1( ... )
 
 
 METHOD QResource:searchPaths( ... )
-   RETURN HB_QStringList():from( Qt_QResource_searchPaths( ::pPtr, ... ) )
+   RETURN QStringListFromPointer( Qt_QResource_searchPaths( ::pPtr, ... ) )
 
 
 METHOD QResource:unregisterResource( ... )

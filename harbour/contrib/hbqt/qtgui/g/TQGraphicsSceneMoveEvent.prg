@@ -98,6 +98,12 @@
 FUNCTION QGraphicsSceneMoveEvent( ... )
    RETURN HB_QGraphicsSceneMoveEvent():new( ... )
 
+FUNCTION QGraphicsSceneMoveEventFrom( ... )
+   RETURN HB_QGraphicsSceneMoveEvent():from( ... )
+
+FUNCTION QGraphicsSceneMoveEventFromPointer( ... )
+   RETURN HB_QGraphicsSceneMoveEvent():fromPointer( ... )
+
 
 CREATE CLASS QGraphicsSceneMoveEvent INHERIT HbQtObjectHandler, HB_QGraphicsSceneEvent FUNCTION HB_QGraphicsSceneMoveEvent
 
@@ -121,7 +127,7 @@ METHOD QGraphicsSceneMoveEvent:new( ... )
 METHOD QGraphicsSceneMoveEvent:newPos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPointF():from( Qt_QGraphicsSceneMoveEvent_newPos( ::pPtr, ... ) )
+      RETURN QPointFFromPointer( Qt_QGraphicsSceneMoveEvent_newPos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -129,7 +135,7 @@ METHOD QGraphicsSceneMoveEvent:newPos( ... )
 METHOD QGraphicsSceneMoveEvent:oldPos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPointF():from( Qt_QGraphicsSceneMoveEvent_oldPos( ::pPtr, ... ) )
+      RETURN QPointFFromPointer( Qt_QGraphicsSceneMoveEvent_oldPos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

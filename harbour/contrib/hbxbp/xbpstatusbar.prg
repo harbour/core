@@ -144,7 +144,7 @@ METHOD XbpStatusBar:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF hb_isPointer( pQtObject )
-      ::oWidget := HB_QStatusBar():from( pQtObject )
+      ::oWidget := QStatusBarFromPointer( pQtObject )
    ENDIF
 
    RETURN Self

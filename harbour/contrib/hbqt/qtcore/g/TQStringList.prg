@@ -98,6 +98,12 @@
 FUNCTION QStringList( ... )
    RETURN HB_QStringList():new( ... )
 
+FUNCTION QStringListFrom( ... )
+   RETURN HB_QStringList():from( ... )
+
+FUNCTION QStringListFromPointer( ... )
+   RETURN HB_QStringList():fromPointer( ... )
+
 
 CREATE CLASS QStringList INHERIT HbQtObjectHandler, HB_QList FUNCTION HB_QStringList
 
@@ -166,15 +172,15 @@ METHOD QStringList:filter( ... )
    CASE 2
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QStringList():from( Qt_QStringList_filter( ::pPtr, ... ) )
+         RETURN QStringListFromPointer( Qt_QStringList_filter( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QStringList():from( Qt_QStringList_filter( ::pPtr, ... ) )
+         RETURN QStringListFromPointer( Qt_QStringList_filter( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QStringList():from( Qt_QStringList_filter_1( ::pPtr, ... ) )
+         RETURN QStringListFromPointer( Qt_QStringList_filter_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -358,13 +364,13 @@ METHOD QStringList:mid( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QList():from( Qt_QStringList_mid( ::pPtr, ... ) )
+         RETURN QListFromPointer( Qt_QStringList_mid( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QList():from( Qt_QStringList_mid( ::pPtr, ... ) )
+         RETURN QListFromPointer( Qt_QStringList_mid( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

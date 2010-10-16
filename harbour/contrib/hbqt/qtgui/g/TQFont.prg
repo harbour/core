@@ -98,6 +98,12 @@
 FUNCTION QFont( ... )
    RETURN HB_QFont():new( ... )
 
+FUNCTION QFontFrom( ... )
+   RETURN HB_QFont():from( ... )
+
+FUNCTION QFontFromPointer( ... )
+   RETURN HB_QFont():fromPointer( ... )
+
 
 CREATE CLASS QFont INHERIT HbQtObjectHandler FUNCTION HB_QFont
 
@@ -737,7 +743,7 @@ METHOD QFont:substitutes( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QStringList():from( Qt_QFont_substitutes( ::pPtr, ... ) )
+         RETURN QStringListFromPointer( Qt_QFont_substitutes( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -747,7 +753,7 @@ METHOD QFont:substitutes( ... )
 METHOD QFont:substitutions( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QFont_substitutions( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QFont_substitutions( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

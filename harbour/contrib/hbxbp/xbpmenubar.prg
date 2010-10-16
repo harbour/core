@@ -184,7 +184,7 @@ METHOD xbpMenuBar:hbCreateFromQtPtr( oParent, aPresParams, lVisible, pQtObject )
    ::xbpWindow:create( oParent, , , , aPresParams, lVisible )
 
    IF hb_isPointer( pQtObject )
-      ::oWidget := HB_QMenuBar():from( pQtObject )
+      ::oWidget := QMenuBarFromPointer( pQtObject )
    ENDIF
 
    RETURN Self

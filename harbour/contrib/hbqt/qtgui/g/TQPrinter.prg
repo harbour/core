@@ -98,6 +98,12 @@
 FUNCTION QPrinter( ... )
    RETURN HB_QPrinter():new( ... )
 
+FUNCTION QPrinterFrom( ... )
+   RETURN HB_QPrinter():from( ... )
+
+FUNCTION QPrinterFromPointer( ... )
+   RETURN HB_QPrinter():fromPointer( ... )
+
 
 CREATE CLASS QPrinter INHERIT HbQtObjectHandler, HB_QPaintDevice FUNCTION HB_QPrinter
 
@@ -325,11 +331,11 @@ METHOD QPrinter:pageRect( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QRectF():from( Qt_QPrinter_pageRect_1( ::pPtr, ... ) )
+         RETURN QRectFFromPointer( Qt_QPrinter_pageRect_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QRect():from( Qt_QPrinter_pageRect( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QPrinter_pageRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -337,7 +343,7 @@ METHOD QPrinter:pageRect( ... )
 METHOD QPrinter:paintEngine( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPaintEngine():from( Qt_QPrinter_paintEngine( ::pPtr, ... ) )
+      RETURN QPaintEngineFromPointer( Qt_QPrinter_paintEngine( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -347,11 +353,11 @@ METHOD QPrinter:paperRect( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QRectF():from( Qt_QPrinter_paperRect_1( ::pPtr, ... ) )
+         RETURN QRectFFromPointer( Qt_QPrinter_paperRect_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QRect():from( Qt_QPrinter_paperRect( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QPrinter_paperRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -361,7 +367,7 @@ METHOD QPrinter:paperSize( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QSizeF():from( Qt_QPrinter_paperSize_1( ::pPtr, ... ) )
+         RETURN QSizeFFromPointer( Qt_QPrinter_paperSize_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
@@ -381,7 +387,7 @@ METHOD QPrinter:paperSource( ... )
 METHOD QPrinter:printEngine( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPrintEngine():from( Qt_QPrinter_printEngine( ::pPtr, ... ) )
+      RETURN QPrintEngineFromPointer( Qt_QPrinter_printEngine( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -687,7 +693,7 @@ METHOD QPrinter:setResolution( ... )
 METHOD QPrinter:supportedResolutions( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QPrinter_supportedResolutions( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QPrinter_supportedResolutions( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

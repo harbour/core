@@ -98,6 +98,12 @@
 FUNCTION QStyleOptionButton( ... )
    RETURN HB_QStyleOptionButton():new( ... )
 
+FUNCTION QStyleOptionButtonFrom( ... )
+   RETURN HB_QStyleOptionButton():from( ... )
+
+FUNCTION QStyleOptionButtonFromPointer( ... )
+   RETURN HB_QStyleOptionButton():fromPointer( ... )
+
 
 CREATE CLASS QStyleOptionButton INHERIT HbQtObjectHandler, HB_QStyleOption FUNCTION HB_QStyleOptionButton
 
@@ -131,7 +137,7 @@ METHOD QStyleOptionButton:features( ... )
 METHOD QStyleOptionButton:icon( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QIcon():from( Qt_QStyleOptionButton_icon( ::pPtr, ... ) )
+      RETURN QIconFromPointer( Qt_QStyleOptionButton_icon( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -139,7 +145,7 @@ METHOD QStyleOptionButton:icon( ... )
 METHOD QStyleOptionButton:iconSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QStyleOptionButton_iconSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QStyleOptionButton_iconSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

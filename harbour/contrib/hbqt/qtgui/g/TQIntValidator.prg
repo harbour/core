@@ -98,6 +98,12 @@
 FUNCTION QIntValidator( ... )
    RETURN HB_QIntValidator():new( ... )
 
+FUNCTION QIntValidatorFrom( ... )
+   RETURN HB_QIntValidator():from( ... )
+
+FUNCTION QIntValidatorFromPointer( ... )
+   RETURN HB_QIntValidator():fromPointer( ... )
+
 
 CREATE CLASS QIntValidator INHERIT HbQtObjectHandler, HB_QValidator FUNCTION HB_QIntValidator
 

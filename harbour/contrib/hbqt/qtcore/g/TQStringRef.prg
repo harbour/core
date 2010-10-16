@@ -98,6 +98,12 @@
 FUNCTION QStringRef( ... )
    RETURN HB_QStringRef():new( ... )
 
+FUNCTION QStringRefFrom( ... )
+   RETURN HB_QStringRef():from( ... )
+
+FUNCTION QStringRefFromPointer( ... )
+   RETURN HB_QStringRef():fromPointer( ... )
+
 
 CREATE CLASS QStringRef INHERIT HbQtObjectHandler FUNCTION HB_QStringRef
 
@@ -140,7 +146,7 @@ METHOD QStringRef:at( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QChar():from( Qt_QStringRef_at( ::pPtr, ... ) )
+         RETURN QCharFromPointer( Qt_QStringRef_at( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -192,7 +198,7 @@ METHOD QStringRef:compare( ... )
 METHOD QStringRef:constData( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QChar():from( Qt_QStringRef_constData( ::pPtr, ... ) )
+      RETURN QCharFromPointer( Qt_QStringRef_constData( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -208,7 +214,7 @@ METHOD QStringRef:count( ... )
 METHOD QStringRef:data( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QChar():from( Qt_QStringRef_data( ::pPtr, ... ) )
+      RETURN QCharFromPointer( Qt_QStringRef_data( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -278,7 +284,7 @@ METHOD QStringRef:size( ... )
 METHOD QStringRef:unicode( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QChar():from( Qt_QStringRef_unicode( ::pPtr, ... ) )
+      RETURN QCharFromPointer( Qt_QStringRef_unicode( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

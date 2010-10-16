@@ -98,6 +98,12 @@
 FUNCTION QTextFrameFormat( ... )
    RETURN HB_QTextFrameFormat():new( ... )
 
+FUNCTION QTextFrameFormatFrom( ... )
+   RETURN HB_QTextFrameFormat():from( ... )
+
+FUNCTION QTextFrameFormatFromPointer( ... )
+   RETURN HB_QTextFrameFormat():fromPointer( ... )
+
 
 CREATE CLASS QTextFrameFormat INHERIT HbQtObjectHandler, HB_QTextFormat FUNCTION HB_QTextFrameFormat
 
@@ -156,7 +162,7 @@ METHOD QTextFrameFormat:border( ... )
 METHOD QTextFrameFormat:borderBrush( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QTextFrameFormat_borderBrush( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QTextFrameFormat_borderBrush( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -180,7 +186,7 @@ METHOD QTextFrameFormat:bottomMargin( ... )
 METHOD QTextFrameFormat:height( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextLength():from( Qt_QTextFrameFormat_height( ::pPtr, ... ) )
+      RETURN QTextLengthFromPointer( Qt_QTextFrameFormat_height( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -412,7 +418,7 @@ METHOD QTextFrameFormat:topMargin( ... )
 METHOD QTextFrameFormat:width( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextLength():from( Qt_QTextFrameFormat_width( ::pPtr, ... ) )
+      RETURN QTextLengthFromPointer( Qt_QTextFrameFormat_width( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

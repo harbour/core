@@ -98,6 +98,12 @@
 FUNCTION QStyleOptionTabBarBase( ... )
    RETURN HB_QStyleOptionTabBarBase():new( ... )
 
+FUNCTION QStyleOptionTabBarBaseFrom( ... )
+   RETURN HB_QStyleOptionTabBarBase():from( ... )
+
+FUNCTION QStyleOptionTabBarBaseFromPointer( ... )
+   RETURN HB_QStyleOptionTabBarBase():fromPointer( ... )
+
 
 CREATE CLASS QStyleOptionTabBarBase INHERIT HbQtObjectHandler, HB_QStyleOption FUNCTION HB_QStyleOptionTabBarBase
 
@@ -122,7 +128,7 @@ METHOD QStyleOptionTabBarBase:new( ... )
 METHOD QStyleOptionTabBarBase:selectedTabRect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QStyleOptionTabBarBase_selectedTabRect( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QStyleOptionTabBarBase_selectedTabRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -138,7 +144,7 @@ METHOD QStyleOptionTabBarBase:shape( ... )
 METHOD QStyleOptionTabBarBase:tabBarRect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QStyleOptionTabBarBase_tabBarRect( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QStyleOptionTabBarBase_tabBarRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

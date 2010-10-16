@@ -98,6 +98,12 @@
 FUNCTION QTextListFormat( ... )
    RETURN HB_QTextListFormat():new( ... )
 
+FUNCTION QTextListFormatFrom( ... )
+   RETURN HB_QTextListFormat():from( ... )
+
+FUNCTION QTextListFormatFromPointer( ... )
+   RETURN HB_QTextListFormat():fromPointer( ... )
+
 
 CREATE CLASS QTextListFormat INHERIT HbQtObjectHandler, HB_QTextFormat FUNCTION HB_QTextListFormat
 

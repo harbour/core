@@ -98,6 +98,12 @@
 FUNCTION QAbstractGraphicsShapeItem( ... )
    RETURN HB_QAbstractGraphicsShapeItem():new( ... )
 
+FUNCTION QAbstractGraphicsShapeItemFrom( ... )
+   RETURN HB_QAbstractGraphicsShapeItem():from( ... )
+
+FUNCTION QAbstractGraphicsShapeItemFromPointer( ... )
+   RETURN HB_QAbstractGraphicsShapeItem():fromPointer( ... )
+
 
 CREATE CLASS QAbstractGraphicsShapeItem INHERIT HbQtObjectHandler, HB_QGraphicsItem FUNCTION HB_QAbstractGraphicsShapeItem
 
@@ -123,7 +129,7 @@ METHOD QAbstractGraphicsShapeItem:new( ... )
 METHOD QAbstractGraphicsShapeItem:brush( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QAbstractGraphicsShapeItem_brush( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QAbstractGraphicsShapeItem_brush( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -131,7 +137,7 @@ METHOD QAbstractGraphicsShapeItem:brush( ... )
 METHOD QAbstractGraphicsShapeItem:pen( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPen():from( Qt_QAbstractGraphicsShapeItem_pen( ::pPtr, ... ) )
+      RETURN QPenFromPointer( Qt_QAbstractGraphicsShapeItem_pen( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

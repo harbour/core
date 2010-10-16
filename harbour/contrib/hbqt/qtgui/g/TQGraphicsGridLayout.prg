@@ -98,6 +98,12 @@
 FUNCTION QGraphicsGridLayout( ... )
    RETURN HB_QGraphicsGridLayout():new( ... )
 
+FUNCTION QGraphicsGridLayoutFrom( ... )
+   RETURN HB_QGraphicsGridLayout():from( ... )
+
+FUNCTION QGraphicsGridLayoutFromPointer( ... )
+   RETURN HB_QGraphicsGridLayout():fromPointer( ... )
+
 
 CREATE CLASS QGraphicsGridLayout INHERIT HbQtObjectHandler, HB_QGraphicsLayout FUNCTION HB_QGraphicsGridLayout
 
@@ -301,13 +307,13 @@ METHOD QGraphicsGridLayout:itemAt( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QGraphicsLayoutItem():from( Qt_QGraphicsGridLayout_itemAt( ::pPtr, ... ) )
+         RETURN QGraphicsLayoutItemFromPointer( Qt_QGraphicsGridLayout_itemAt( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QGraphicsLayoutItem():from( Qt_QGraphicsGridLayout_itemAt_1( ::pPtr, ... ) )
+         RETURN QGraphicsLayoutItemFromPointer( Qt_QGraphicsGridLayout_itemAt_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

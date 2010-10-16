@@ -98,6 +98,12 @@
 FUNCTION QMimeData( ... )
    RETURN HB_QMimeData():new( ... )
 
+FUNCTION QMimeDataFrom( ... )
+   RETURN HB_QMimeData():from( ... )
+
+FUNCTION QMimeDataFromPointer( ... )
+   RETURN HB_QMimeData():fromPointer( ... )
+
 
 CREATE CLASS QMimeData INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QMimeData
 
@@ -148,7 +154,7 @@ METHOD QMimeData:clear( ... )
 METHOD QMimeData:colorData( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QVariant():from( Qt_QMimeData_colorData( ::pPtr, ... ) )
+      RETURN QVariantFromPointer( Qt_QMimeData_colorData( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -158,7 +164,7 @@ METHOD QMimeData:data( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QByteArray():from( Qt_QMimeData_data( ::pPtr, ... ) )
+         RETURN QByteArrayFromPointer( Qt_QMimeData_data( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -168,7 +174,7 @@ METHOD QMimeData:data( ... )
 METHOD QMimeData:formats( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QMimeData_formats( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QMimeData_formats( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -236,7 +242,7 @@ METHOD QMimeData:html( ... )
 METHOD QMimeData:imageData( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QVariant():from( Qt_QMimeData_imageData( ::pPtr, ... ) )
+      RETURN QVariantFromPointer( Qt_QMimeData_imageData( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -324,7 +330,7 @@ METHOD QMimeData:text( ... )
 METHOD QMimeData:urls( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QMimeData_urls( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QMimeData_urls( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -332,7 +338,7 @@ METHOD QMimeData:urls( ... )
 METHOD QMimeData:hbUrlList( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QMimeData_hbUrlList( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QMimeData_hbUrlList( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

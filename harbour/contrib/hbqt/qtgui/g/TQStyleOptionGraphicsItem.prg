@@ -98,6 +98,12 @@
 FUNCTION QStyleOptionGraphicsItem( ... )
    RETURN HB_QStyleOptionGraphicsItem():new( ... )
 
+FUNCTION QStyleOptionGraphicsItemFrom( ... )
+   RETURN HB_QStyleOptionGraphicsItem():from( ... )
+
+FUNCTION QStyleOptionGraphicsItemFromPointer( ... )
+   RETURN HB_QStyleOptionGraphicsItem():fromPointer( ... )
+
 
 CREATE CLASS QStyleOptionGraphicsItem INHERIT HbQtObjectHandler, HB_QStyleOption FUNCTION HB_QStyleOptionGraphicsItem
 
@@ -122,7 +128,7 @@ METHOD QStyleOptionGraphicsItem:new( ... )
 METHOD QStyleOptionGraphicsItem:exposedRect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRectF():from( Qt_QStyleOptionGraphicsItem_exposedRect( ::pPtr, ... ) )
+      RETURN QRectFFromPointer( Qt_QStyleOptionGraphicsItem_exposedRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -138,7 +144,7 @@ METHOD QStyleOptionGraphicsItem:levelOfDetail( ... )
 METHOD QStyleOptionGraphicsItem:matrix( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMatrix():from( Qt_QStyleOptionGraphicsItem_matrix( ::pPtr, ... ) )
+      RETURN QMatrixFromPointer( Qt_QStyleOptionGraphicsItem_matrix( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

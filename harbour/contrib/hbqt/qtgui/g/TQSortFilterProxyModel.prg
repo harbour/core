@@ -98,6 +98,12 @@
 FUNCTION QSortFilterProxyModel( ... )
    RETURN HB_QSortFilterProxyModel():new( ... )
 
+FUNCTION QSortFilterProxyModelFrom( ... )
+   RETURN HB_QSortFilterProxyModel():from( ... )
+
+FUNCTION QSortFilterProxyModelFromPointer( ... )
+   RETURN HB_QSortFilterProxyModel():fromPointer( ... )
+
 
 CREATE CLASS QSortFilterProxyModel INHERIT HbQtObjectHandler, HB_QAbstractProxyModel FUNCTION HB_QSortFilterProxyModel
 
@@ -167,7 +173,7 @@ METHOD QSortFilterProxyModel:filterKeyColumn( ... )
 METHOD QSortFilterProxyModel:filterRegExp( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRegExp():from( Qt_QSortFilterProxyModel_filterRegExp( ::pPtr, ... ) )
+      RETURN QRegExpFromPointer( Qt_QSortFilterProxyModel_filterRegExp( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -193,7 +199,7 @@ METHOD QSortFilterProxyModel:mapFromSource( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QModelIndex():from( Qt_QSortFilterProxyModel_mapFromSource( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_QSortFilterProxyModel_mapFromSource( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -205,7 +211,7 @@ METHOD QSortFilterProxyModel:mapToSource( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QModelIndex():from( Qt_QSortFilterProxyModel_mapToSource( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_QSortFilterProxyModel_mapToSource( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

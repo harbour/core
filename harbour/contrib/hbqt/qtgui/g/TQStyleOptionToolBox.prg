@@ -98,6 +98,12 @@
 FUNCTION QStyleOptionToolBox( ... )
    RETURN HB_QStyleOptionToolBox():new( ... )
 
+FUNCTION QStyleOptionToolBoxFrom( ... )
+   RETURN HB_QStyleOptionToolBox():from( ... )
+
+FUNCTION QStyleOptionToolBoxFromPointer( ... )
+   RETURN HB_QStyleOptionToolBox():fromPointer( ... )
+
 
 CREATE CLASS QStyleOptionToolBox INHERIT HbQtObjectHandler, HB_QStyleOption FUNCTION HB_QStyleOptionToolBox
 
@@ -121,7 +127,7 @@ METHOD QStyleOptionToolBox:new( ... )
 METHOD QStyleOptionToolBox:icon( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QIcon():from( Qt_QStyleOptionToolBox_icon( ::pPtr, ... ) )
+      RETURN QIconFromPointer( Qt_QStyleOptionToolBox_icon( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

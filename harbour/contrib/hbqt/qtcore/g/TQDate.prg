@@ -98,6 +98,12 @@
 FUNCTION QDate( ... )
    RETURN HB_QDate():new( ... )
 
+FUNCTION QDateFrom( ... )
+   RETURN HB_QDate():from( ... )
+
+FUNCTION QDateFromPointer( ... )
+   RETURN HB_QDate():fromPointer( ... )
+
 
 CREATE CLASS QDate INHERIT HbQtObjectHandler FUNCTION HB_QDate
 
@@ -140,7 +146,7 @@ METHOD QDate:addDays( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QDate():from( Qt_QDate_addDays( ::pPtr, ... ) )
+         RETURN QDateFromPointer( Qt_QDate_addDays( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -152,7 +158,7 @@ METHOD QDate:addMonths( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QDate():from( Qt_QDate_addMonths( ::pPtr, ... ) )
+         RETURN QDateFromPointer( Qt_QDate_addMonths( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -164,7 +170,7 @@ METHOD QDate:addYears( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QDate():from( Qt_QDate_addYears( ::pPtr, ... ) )
+         RETURN QDateFromPointer( Qt_QDate_addYears( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

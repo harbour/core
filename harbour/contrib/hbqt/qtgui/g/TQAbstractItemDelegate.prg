@@ -98,6 +98,12 @@
 FUNCTION QAbstractItemDelegate( ... )
    RETURN HB_QAbstractItemDelegate():new( ... )
 
+FUNCTION QAbstractItemDelegateFrom( ... )
+   RETURN HB_QAbstractItemDelegate():from( ... )
+
+FUNCTION QAbstractItemDelegateFromPointer( ... )
+   RETURN HB_QAbstractItemDelegate():fromPointer( ... )
+
 
 CREATE CLASS QAbstractItemDelegate INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QAbstractItemDelegate
 
@@ -128,7 +134,7 @@ METHOD QAbstractItemDelegate:createEditor( ... )
    CASE 3
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
-         RETURN HB_QWidget():from( Qt_QAbstractItemDelegate_createEditor( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QAbstractItemDelegate_createEditor( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -188,7 +194,7 @@ METHOD QAbstractItemDelegate:sizeHint( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QSize():from( Qt_QAbstractItemDelegate_sizeHint( ::pPtr, ... ) )
+         RETURN QSizeFromPointer( Qt_QAbstractItemDelegate_sizeHint( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

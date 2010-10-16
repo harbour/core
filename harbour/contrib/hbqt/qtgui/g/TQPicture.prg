@@ -98,6 +98,12 @@
 FUNCTION QPicture( ... )
    RETURN HB_QPicture():new( ... )
 
+FUNCTION QPictureFrom( ... )
+   RETURN HB_QPicture():from( ... )
+
+FUNCTION QPictureFromPointer( ... )
+   RETURN HB_QPicture():fromPointer( ... )
+
 
 CREATE CLASS QPicture INHERIT HbQtObjectHandler, HB_QPaintDevice FUNCTION HB_QPicture
 
@@ -130,7 +136,7 @@ METHOD QPicture:new( ... )
 METHOD QPicture:boundingRect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QPicture_boundingRect( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QPicture_boundingRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

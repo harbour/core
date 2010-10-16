@@ -98,6 +98,12 @@
 FUNCTION QFrame( ... )
    RETURN HB_QFrame():new( ... )
 
+FUNCTION QFrameFrom( ... )
+   RETURN HB_QFrame():from( ... )
+
+FUNCTION QFrameFromPointer( ... )
+   RETURN HB_QFrame():fromPointer( ... )
+
 
 CREATE CLASS QFrame INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QFrame
 
@@ -132,7 +138,7 @@ METHOD QFrame:new( ... )
 METHOD QFrame:frameRect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QFrame_frameRect( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QFrame_frameRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

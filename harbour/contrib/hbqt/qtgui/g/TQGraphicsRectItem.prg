@@ -98,6 +98,12 @@
 FUNCTION QGraphicsRectItem( ... )
    RETURN HB_QGraphicsRectItem():new( ... )
 
+FUNCTION QGraphicsRectItemFrom( ... )
+   RETURN HB_QGraphicsRectItem():from( ... )
+
+FUNCTION QGraphicsRectItemFromPointer( ... )
+   RETURN HB_QGraphicsRectItem():fromPointer( ... )
+
 
 CREATE CLASS QGraphicsRectItem INHERIT HbQtObjectHandler, HB_QAbstractGraphicsShapeItem FUNCTION HB_QGraphicsRectItem
 
@@ -122,7 +128,7 @@ METHOD QGraphicsRectItem:new( ... )
 METHOD QGraphicsRectItem:rect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRectF():from( Qt_QGraphicsRectItem_rect( ::pPtr, ... ) )
+      RETURN QRectFFromPointer( Qt_QGraphicsRectItem_rect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

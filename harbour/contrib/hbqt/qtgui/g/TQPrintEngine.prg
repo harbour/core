@@ -98,6 +98,12 @@
 FUNCTION QPrintEngine( ... )
    RETURN HB_QPrintEngine():new( ... )
 
+FUNCTION QPrintEngineFrom( ... )
+   RETURN HB_QPrintEngine():from( ... )
+
+FUNCTION QPrintEngineFromPointer( ... )
+   RETURN HB_QPrintEngine():fromPointer( ... )
+
 
 CREATE CLASS QPrintEngine INHERIT HbQtObjectHandler FUNCTION HB_QPrintEngine
 
@@ -163,7 +169,7 @@ METHOD QPrintEngine:property( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QVariant():from( Qt_QPrintEngine_property( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QPrintEngine_property( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

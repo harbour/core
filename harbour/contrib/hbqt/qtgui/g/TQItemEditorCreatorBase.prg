@@ -98,6 +98,12 @@
 FUNCTION QItemEditorCreatorBase( ... )
    RETURN HB_QItemEditorCreatorBase():new( ... )
 
+FUNCTION QItemEditorCreatorBaseFrom( ... )
+   RETURN HB_QItemEditorCreatorBase():from( ... )
+
+FUNCTION QItemEditorCreatorBaseFromPointer( ... )
+   RETURN HB_QItemEditorCreatorBase():fromPointer( ... )
+
 
 CREATE CLASS QItemEditorCreatorBase INHERIT HbQtObjectHandler FUNCTION HB_QItemEditorCreatorBase
 
@@ -123,7 +129,7 @@ METHOD QItemEditorCreatorBase:createWidget( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QWidget():from( Qt_QItemEditorCreatorBase_createWidget( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QItemEditorCreatorBase_createWidget( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -133,7 +139,7 @@ METHOD QItemEditorCreatorBase:createWidget( ... )
 METHOD QItemEditorCreatorBase:valuePropertyName( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QByteArray():from( Qt_QItemEditorCreatorBase_valuePropertyName( ::pPtr, ... ) )
+      RETURN QByteArrayFromPointer( Qt_QItemEditorCreatorBase_valuePropertyName( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

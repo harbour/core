@@ -98,6 +98,12 @@
 FUNCTION QDrag( ... )
    RETURN HB_QDrag():new( ... )
 
+FUNCTION QDragFrom( ... )
+   RETURN HB_QDrag():from( ... )
+
+FUNCTION QDragFromPointer( ... )
+   RETURN HB_QDrag():fromPointer( ... )
+
 
 CREATE CLASS QDrag INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QDrag
 
@@ -150,7 +156,7 @@ METHOD QDrag:exec( ... )
 METHOD QDrag:hotSpot( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QDrag_hotSpot( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QDrag_hotSpot( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -158,7 +164,7 @@ METHOD QDrag:hotSpot( ... )
 METHOD QDrag:mimeData( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMimeData():from( Qt_QDrag_mimeData( ::pPtr, ... ) )
+      RETURN QMimeDataFromPointer( Qt_QDrag_mimeData( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -166,7 +172,7 @@ METHOD QDrag:mimeData( ... )
 METHOD QDrag:pixmap( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPixmap():from( Qt_QDrag_pixmap( ::pPtr, ... ) )
+      RETURN QPixmapFromPointer( Qt_QDrag_pixmap( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -222,7 +228,7 @@ METHOD QDrag:setPixmap( ... )
 METHOD QDrag:source( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QDrag_source( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QDrag_source( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -230,7 +236,7 @@ METHOD QDrag:source( ... )
 METHOD QDrag:target( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QDrag_target( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QDrag_target( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

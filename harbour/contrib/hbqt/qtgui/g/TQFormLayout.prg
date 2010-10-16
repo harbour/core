@@ -98,6 +98,12 @@
 FUNCTION QFormLayout( ... )
    RETURN HB_QFormLayout():new( ... )
 
+FUNCTION QFormLayoutFrom( ... )
+   RETURN HB_QFormLayout():from( ... )
+
+FUNCTION QFormLayoutFromPointer( ... )
+   RETURN HB_QFormLayout():fromPointer( ... )
+
 
 CREATE CLASS QFormLayout INHERIT HbQtObjectHandler, HB_QLayout FUNCTION HB_QFormLayout
 
@@ -269,7 +275,7 @@ METHOD QFormLayout:itemAt( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QLayoutItem():from( Qt_QFormLayout_itemAt( ::pPtr, ... ) )
+         RETURN QLayoutItemFromPointer( Qt_QFormLayout_itemAt( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -291,9 +297,9 @@ METHOD QFormLayout:labelForField( ... )
       CASE hb_isObject( hb_pvalue( 1 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) )
          CASE "QWIDGET"
-            RETURN HB_QWidget():from( Qt_QFormLayout_labelForField( ::pPtr, ... ) )
+            RETURN QWidgetFromPointer( Qt_QFormLayout_labelForField( ::pPtr, ... ) )
          CASE "QLAYOUT"
-            RETURN HB_QWidget():from( Qt_QFormLayout_labelForField_1( ::pPtr, ... ) )
+            RETURN QWidgetFromPointer( Qt_QFormLayout_labelForField_1( ::pPtr, ... ) )
          ENDSWITCH
       ENDCASE
       EXIT

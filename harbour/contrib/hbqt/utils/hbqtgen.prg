@@ -1056,16 +1056,18 @@ METHOD HbQtSource:buildClass()
    aadd( txt_, "FUNCTION " + ::cWidget + "( ... )" )
    aadd( txt_, "   RETURN HB_" + ::cWidget + "():new( ... )" )
    aadd( txt_, "" )
+   #if 1
    aadd( txt_, "FUNCTION " + ::cWidget + "From( ... )" )
    aadd( txt_, "   RETURN HB_" + ::cWidget + "():from( ... )" )
    aadd( txt_, "" )
+   #endif
    aadd( txt_, "FUNCTION " + ::cWidget + "FromPointer( ... )" )
    aadd( txt_, "   RETURN HB_" + ::cWidget + "():fromPointer( ... )" )
    aadd( txt_, "" )
    aadd( txt_, "" )
 
    n := ascan( ::cls_, {|e_| left( lower( e_[ 1 ] ), 7 ) == "inherit" .and. !empty( e_[ 2 ] ) } )
-   s := "CREATE CLASS " + ::cWidget + " INHERIT HbQtObjectHandler" + iif( n > 0, ", " + strtran( ::cls_[ n, 2 ], "Q", "HB_Q" ), "" ) + " STATIC FUNCTION HB_" + ::cWidget
+   s := "CREATE CLASS " + ::cWidget + " INHERIT HbQtObjectHandler" + iif( n > 0, ", " + strtran( ::cls_[ n, 2 ], "Q", "HB_Q" ), "" ) + " FUNCTION HB_" + ::cWidget
 
    aadd( txt_, s                                            )
    aadd( txt_, "   "                                        )
@@ -1284,10 +1286,12 @@ STATIC FUNCTION hbide_addReturnMethod( txt_, oM, cWidget, nInd, nCount, lClubbed
          ! ( cRetCast $ "QString,QRgb" ) .AND. ;
          ( left( cRetCast, 1 ) == "Q" .OR. left( cRetCast, 3 ) == "HBQ" )
 
-      cFun := "HB_" + cRetCast + "():from( " + "Qt_" + cWidget + "_" + oM:cHBFunc + "( ::pPtr, ... )" + " )"
+      //cFun := "HB_" + cRetCast + "():from( " + "Qt_" + cWidget + "_" + oM:cHBFunc + "( ::pPtr, ... )" + " )"
+      cFun := cRetCast + "FromPointer( " + "Qt_" + cWidget + "_" + oM:cHBFunc + "( ::pPtr, ... )" + " )"
 
    ELSEIF ( "<" $ cRetCast )
-      cFun := "HB_" + "QList" + "():from( " + "Qt_" + cWidget + "_" + oM:cHBFunc + "( ::pPtr, ... )" + " )"
+      //cFun := "HB_" + "QList" + "():from( " + "Qt_" + cWidget + "_" + oM:cHBFunc + "( ::pPtr, ... )" + " )"
+      cFun := "QList" + "FromPointer( " + "Qt_" + cWidget + "_" + oM:cHBFunc + "( ::pPtr, ... )" + " )"
 
    ELSE
       cFun := "Qt_" + cWidget + "_" + oM:cHBFunc + "( ::pPtr, ... )"

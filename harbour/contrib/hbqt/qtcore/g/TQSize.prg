@@ -98,6 +98,12 @@
 FUNCTION QSize( ... )
    RETURN HB_QSize():new( ... )
 
+FUNCTION QSizeFrom( ... )
+   RETURN HB_QSize():from( ... )
+
+FUNCTION QSizeFromPointer( ... )
+   RETURN HB_QSize():fromPointer( ... )
+
 
 CREATE CLASS QSize INHERIT HbQtObjectHandler FUNCTION HB_QSize
 
@@ -241,7 +247,7 @@ METHOD QSize:boundedTo( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QSize():from( Qt_QSize_boundedTo( ::pPtr, ... ) )
+         RETURN QSizeFromPointer( Qt_QSize_boundedTo( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -253,7 +259,7 @@ METHOD QSize:expandedTo( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QSize():from( Qt_QSize_expandedTo( ::pPtr, ... ) )
+         RETURN QSizeFromPointer( Qt_QSize_expandedTo( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

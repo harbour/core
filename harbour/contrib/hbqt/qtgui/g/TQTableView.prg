@@ -98,6 +98,12 @@
 FUNCTION QTableView( ... )
    RETURN HB_QTableView():new( ... )
 
+FUNCTION QTableViewFrom( ... )
+   RETURN HB_QTableView():from( ... )
+
+FUNCTION QTableViewFromPointer( ... )
+   RETURN HB_QTableView():fromPointer( ... )
+
 
 CREATE CLASS QTableView INHERIT HbQtObjectHandler, HB_QAbstractItemView FUNCTION HB_QTableView
 
@@ -225,7 +231,7 @@ METHOD QTableView:gridStyle( ... )
 METHOD QTableView:horizontalHeader( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QHeaderView():from( Qt_QTableView_horizontalHeader( ::pPtr, ... ) )
+      RETURN QHeaderViewFromPointer( Qt_QTableView_horizontalHeader( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -235,7 +241,7 @@ METHOD QTableView:indexAt( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QModelIndex():from( Qt_QTableView_indexAt( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_QTableView_indexAt( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -485,7 +491,7 @@ METHOD QTableView:sortByColumn( ... )
 METHOD QTableView:verticalHeader( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QHeaderView():from( Qt_QTableView_verticalHeader( ::pPtr, ... ) )
+      RETURN QHeaderViewFromPointer( Qt_QTableView_verticalHeader( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

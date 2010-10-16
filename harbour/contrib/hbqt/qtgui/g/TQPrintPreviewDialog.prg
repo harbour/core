@@ -98,6 +98,12 @@
 FUNCTION QPrintPreviewDialog( ... )
    RETURN HB_QPrintPreviewDialog():new( ... )
 
+FUNCTION QPrintPreviewDialogFrom( ... )
+   RETURN HB_QPrintPreviewDialog():from( ... )
+
+FUNCTION QPrintPreviewDialogFromPointer( ... )
+   RETURN HB_QPrintPreviewDialog():fromPointer( ... )
+
 
 CREATE CLASS QPrintPreviewDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QPrintPreviewDialog
 
@@ -133,7 +139,7 @@ METHOD QPrintPreviewDialog:open( ... )
 METHOD QPrintPreviewDialog:printer( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPrinter():from( Qt_QPrintPreviewDialog_printer( ::pPtr, ... ) )
+      RETURN QPrinterFromPointer( Qt_QPrintPreviewDialog_printer( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

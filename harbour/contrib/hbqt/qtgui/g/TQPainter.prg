@@ -98,6 +98,12 @@
 FUNCTION QPainter( ... )
    RETURN HB_QPainter():new( ... )
 
+FUNCTION QPainterFrom( ... )
+   RETURN HB_QPainter():from( ... )
+
+FUNCTION QPainterFromPointer( ... )
+   RETURN HB_QPainter():fromPointer( ... )
+
 
 CREATE CLASS QPainter INHERIT HbQtObjectHandler FUNCTION HB_QPainter
 
@@ -298,7 +304,7 @@ METHOD QPainter:new( ... )
 METHOD QPainter:background( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QPainter_background( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QPainter_background( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -328,26 +334,26 @@ METHOD QPainter:boundingRect( ... )
    CASE 6
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) ) .AND. hb_isChar( hb_pvalue( 6 ) )
-         RETURN HB_QRect():from( Qt_QPainter_boundingRect_2( ::pPtr, ... ) )
+         RETURN QRectFromPointer( Qt_QPainter_boundingRect_2( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 3
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
-         RETURN HB_QRectF():from( Qt_QPainter_boundingRect_3( ::pPtr, ... ) )
+         RETURN QRectFFromPointer( Qt_QPainter_boundingRect_3( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) )
          CASE "QRECTF"
-            RETURN HB_QRectF():from( Qt_QPainter_boundingRect( ::pPtr, ... ) )
+            RETURN QRectFFromPointer( Qt_QPainter_boundingRect( ::pPtr, ... ) )
          CASE "QRECT"
-            RETURN HB_QRect():from( Qt_QPainter_boundingRect_1( ::pPtr, ... ) )
+            RETURN QRectFromPointer( Qt_QPainter_boundingRect_1( ::pPtr, ... ) )
          ENDSWITCH
       ENDCASE
       EXIT
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
-         RETURN HB_QRectF():from( Qt_QPainter_boundingRect_3( ::pPtr, ... ) )
+         RETURN QRectFFromPointer( Qt_QPainter_boundingRect_3( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -357,7 +363,7 @@ METHOD QPainter:boundingRect( ... )
 METHOD QPainter:brush( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QPainter_brush( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QPainter_brush( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -365,7 +371,7 @@ METHOD QPainter:brush( ... )
 METHOD QPainter:brushOrigin( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QPainter_brushOrigin( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QPainter_brushOrigin( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -373,7 +379,7 @@ METHOD QPainter:brushOrigin( ... )
 METHOD QPainter:clipPath( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPainterPath():from( Qt_QPainter_clipPath( ::pPtr, ... ) )
+      RETURN QPainterPathFromPointer( Qt_QPainter_clipPath( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -381,7 +387,7 @@ METHOD QPainter:clipPath( ... )
 METHOD QPainter:clipRegion( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRegion():from( Qt_QPainter_clipRegion( ::pPtr, ... ) )
+      RETURN QRegionFromPointer( Qt_QPainter_clipRegion( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -389,7 +395,7 @@ METHOD QPainter:clipRegion( ... )
 METHOD QPainter:combinedMatrix( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMatrix():from( Qt_QPainter_combinedMatrix( ::pPtr, ... ) )
+      RETURN QMatrixFromPointer( Qt_QPainter_combinedMatrix( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -397,7 +403,7 @@ METHOD QPainter:combinedMatrix( ... )
 METHOD QPainter:combinedTransform( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTransform():from( Qt_QPainter_combinedTransform( ::pPtr, ... ) )
+      RETURN QTransformFromPointer( Qt_QPainter_combinedTransform( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -413,7 +419,7 @@ METHOD QPainter:compositionMode( ... )
 METHOD QPainter:device( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPaintDevice():from( Qt_QPainter_device( ::pPtr, ... ) )
+      RETURN QPaintDeviceFromPointer( Qt_QPainter_device( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -421,7 +427,7 @@ METHOD QPainter:device( ... )
 METHOD QPainter:deviceMatrix( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMatrix():from( Qt_QPainter_deviceMatrix( ::pPtr, ... ) )
+      RETURN QMatrixFromPointer( Qt_QPainter_deviceMatrix( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -429,7 +435,7 @@ METHOD QPainter:deviceMatrix( ... )
 METHOD QPainter:deviceTransform( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTransform():from( Qt_QPainter_deviceTransform( ::pPtr, ... ) )
+      RETURN QTransformFromPointer( Qt_QPainter_deviceTransform( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -1180,7 +1186,7 @@ METHOD QPainter:fillRect( ... )
 METHOD QPainter:font( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFont():from( Qt_QPainter_font( ::pPtr, ... ) )
+      RETURN QFontFromPointer( Qt_QPainter_font( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -1188,7 +1194,7 @@ METHOD QPainter:font( ... )
 METHOD QPainter:fontInfo( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFontInfo():from( Qt_QPainter_fontInfo( ::pPtr, ... ) )
+      RETURN QFontInfoFromPointer( Qt_QPainter_fontInfo( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -1196,7 +1202,7 @@ METHOD QPainter:fontInfo( ... )
 METHOD QPainter:fontMetrics( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFontMetrics():from( Qt_QPainter_fontMetrics( ::pPtr, ... ) )
+      RETURN QFontMetricsFromPointer( Qt_QPainter_fontMetrics( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -1248,7 +1254,7 @@ METHOD QPainter:opacity( ... )
 METHOD QPainter:paintEngine( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPaintEngine():from( Qt_QPainter_paintEngine( ::pPtr, ... ) )
+      RETURN QPaintEngineFromPointer( Qt_QPainter_paintEngine( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -1256,7 +1262,7 @@ METHOD QPainter:paintEngine( ... )
 METHOD QPainter:pen( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPen():from( Qt_QPainter_pen( ::pPtr, ... ) )
+      RETURN QPenFromPointer( Qt_QPainter_pen( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -1730,7 +1736,7 @@ METHOD QPainter:testRenderHint( ... )
 METHOD QPainter:transform( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTransform():from( Qt_QPainter_transform( ::pPtr, ... ) )
+      RETURN QTransformFromPointer( Qt_QPainter_transform( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -1769,7 +1775,7 @@ METHOD QPainter:viewTransformEnabled( ... )
 METHOD QPainter:viewport( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QPainter_viewport( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QPainter_viewport( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -1777,7 +1783,7 @@ METHOD QPainter:viewport( ... )
 METHOD QPainter:window( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QPainter_window( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QPainter_window( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -1785,7 +1791,7 @@ METHOD QPainter:window( ... )
 METHOD QPainter:worldMatrix( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMatrix():from( Qt_QPainter_worldMatrix( ::pPtr, ... ) )
+      RETURN QMatrixFromPointer( Qt_QPainter_worldMatrix( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -1801,7 +1807,7 @@ METHOD QPainter:worldMatrixEnabled( ... )
 METHOD QPainter:worldTransform( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTransform():from( Qt_QPainter_worldTransform( ::pPtr, ... ) )
+      RETURN QTransformFromPointer( Qt_QPainter_worldTransform( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -1811,13 +1817,13 @@ METHOD QPainter:redirected( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QPaintDevice():from( Qt_QPainter_redirected( ::pPtr, ... ) )
+         RETURN QPaintDeviceFromPointer( Qt_QPainter_redirected( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QPaintDevice():from( Qt_QPainter_redirected( ::pPtr, ... ) )
+         RETURN QPaintDeviceFromPointer( Qt_QPainter_redirected( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

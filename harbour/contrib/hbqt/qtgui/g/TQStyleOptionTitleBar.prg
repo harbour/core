@@ -98,6 +98,12 @@
 FUNCTION QStyleOptionTitleBar( ... )
    RETURN HB_QStyleOptionTitleBar():new( ... )
 
+FUNCTION QStyleOptionTitleBarFrom( ... )
+   RETURN HB_QStyleOptionTitleBar():from( ... )
+
+FUNCTION QStyleOptionTitleBarFromPointer( ... )
+   RETURN HB_QStyleOptionTitleBar():fromPointer( ... )
+
 
 CREATE CLASS QStyleOptionTitleBar INHERIT HbQtObjectHandler, HB_QStyleOptionComplex FUNCTION HB_QStyleOptionTitleBar
 
@@ -123,7 +129,7 @@ METHOD QStyleOptionTitleBar:new( ... )
 METHOD QStyleOptionTitleBar:icon( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QIcon():from( Qt_QStyleOptionTitleBar_icon( ::pPtr, ... ) )
+      RETURN QIconFromPointer( Qt_QStyleOptionTitleBar_icon( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

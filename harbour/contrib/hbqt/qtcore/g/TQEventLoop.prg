@@ -98,6 +98,12 @@
 FUNCTION QEventLoop( ... )
    RETURN HB_QEventLoop():new( ... )
 
+FUNCTION QEventLoopFrom( ... )
+   RETURN HB_QEventLoop():from( ... )
+
+FUNCTION QEventLoopFromPointer( ... )
+   RETURN HB_QEventLoop():fromPointer( ... )
+
 
 CREATE CLASS QEventLoop INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QEventLoop
 

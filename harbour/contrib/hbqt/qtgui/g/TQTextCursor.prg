@@ -98,6 +98,12 @@
 FUNCTION QTextCursor( ... )
    RETURN HB_QTextCursor():new( ... )
 
+FUNCTION QTextCursorFrom( ... )
+   RETURN HB_QTextCursor():from( ... )
+
+FUNCTION QTextCursorFromPointer( ... )
+   RETURN HB_QTextCursor():fromPointer( ... )
+
 
 CREATE CLASS QTextCursor INHERIT HbQtObjectHandler FUNCTION HB_QTextCursor
 
@@ -225,7 +231,7 @@ METHOD QTextCursor:beginEditBlock( ... )
 METHOD QTextCursor:block( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextBlock():from( Qt_QTextCursor_block( ::pPtr, ... ) )
+      RETURN QTextBlockFromPointer( Qt_QTextCursor_block( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -233,7 +239,7 @@ METHOD QTextCursor:block( ... )
 METHOD QTextCursor:blockCharFormat( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextCharFormat():from( Qt_QTextCursor_blockCharFormat( ::pPtr, ... ) )
+      RETURN QTextCharFormatFromPointer( Qt_QTextCursor_blockCharFormat( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -241,7 +247,7 @@ METHOD QTextCursor:blockCharFormat( ... )
 METHOD QTextCursor:blockFormat( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextBlockFormat():from( Qt_QTextCursor_blockFormat( ::pPtr, ... ) )
+      RETURN QTextBlockFormatFromPointer( Qt_QTextCursor_blockFormat( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -257,7 +263,7 @@ METHOD QTextCursor:blockNumber( ... )
 METHOD QTextCursor:charFormat( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextCharFormat():from( Qt_QTextCursor_charFormat( ::pPtr, ... ) )
+      RETURN QTextCharFormatFromPointer( Qt_QTextCursor_charFormat( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -283,9 +289,9 @@ METHOD QTextCursor:createList( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QTextList():from( Qt_QTextCursor_createList_1( ::pPtr, ... ) )
+         RETURN QTextListFromPointer( Qt_QTextCursor_createList_1( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QTextList():from( Qt_QTextCursor_createList( ::pPtr, ... ) )
+         RETURN QTextListFromPointer( Qt_QTextCursor_createList( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -295,7 +301,7 @@ METHOD QTextCursor:createList( ... )
 METHOD QTextCursor:currentFrame( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextFrame():from( Qt_QTextCursor_currentFrame( ::pPtr, ... ) )
+      RETURN QTextFrameFromPointer( Qt_QTextCursor_currentFrame( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -303,7 +309,7 @@ METHOD QTextCursor:currentFrame( ... )
 METHOD QTextCursor:currentList( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextList():from( Qt_QTextCursor_currentList( ::pPtr, ... ) )
+      RETURN QTextListFromPointer( Qt_QTextCursor_currentList( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -327,7 +333,7 @@ METHOD QTextCursor:deletePreviousChar( ... )
 METHOD QTextCursor:document( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextDocument():from( Qt_QTextCursor_document( ::pPtr, ... ) )
+      RETURN QTextDocumentFromPointer( Qt_QTextCursor_document( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -393,7 +399,7 @@ METHOD QTextCursor:insertFrame( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QTextFrame():from( Qt_QTextCursor_insertFrame( ::pPtr, ... ) )
+         RETURN QTextFrameFromPointer( Qt_QTextCursor_insertFrame( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -444,9 +450,9 @@ METHOD QTextCursor:insertList( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QTextList():from( Qt_QTextCursor_insertList_1( ::pPtr, ... ) )
+         RETURN QTextListFromPointer( Qt_QTextCursor_insertList_1( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QTextList():from( Qt_QTextCursor_insertList( ::pPtr, ... ) )
+         RETURN QTextListFromPointer( Qt_QTextCursor_insertList( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -610,7 +616,7 @@ METHOD QTextCursor:selectedText( ... )
 METHOD QTextCursor:selection( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextDocumentFragment():from( Qt_QTextCursor_selection( ::pPtr, ... ) )
+      RETURN QTextDocumentFragmentFromPointer( Qt_QTextCursor_selection( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

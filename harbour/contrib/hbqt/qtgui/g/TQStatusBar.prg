@@ -98,6 +98,12 @@
 FUNCTION QStatusBar( ... )
    RETURN HB_QStatusBar():new( ... )
 
+FUNCTION QStatusBarFrom( ... )
+   RETURN HB_QStatusBar():from( ... )
+
+FUNCTION QStatusBarFromPointer( ... )
+   RETURN HB_QStatusBar():fromPointer( ... )
+
 
 CREATE CLASS QStatusBar INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QStatusBar
 

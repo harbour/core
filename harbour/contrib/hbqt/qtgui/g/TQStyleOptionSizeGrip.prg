@@ -98,6 +98,12 @@
 FUNCTION QStyleOptionSizeGrip( ... )
    RETURN HB_QStyleOptionSizeGrip():new( ... )
 
+FUNCTION QStyleOptionSizeGripFrom( ... )
+   RETURN HB_QStyleOptionSizeGrip():from( ... )
+
+FUNCTION QStyleOptionSizeGripFromPointer( ... )
+   RETURN HB_QStyleOptionSizeGrip():fromPointer( ... )
+
 
 CREATE CLASS QStyleOptionSizeGrip INHERIT HbQtObjectHandler, HB_QStyleOptionComplex FUNCTION HB_QStyleOptionSizeGrip
 

@@ -98,6 +98,12 @@
 FUNCTION QTableWidgetSelectionRange( ... )
    RETURN HB_QTableWidgetSelectionRange():new( ... )
 
+FUNCTION QTableWidgetSelectionRangeFrom( ... )
+   RETURN HB_QTableWidgetSelectionRange():from( ... )
+
+FUNCTION QTableWidgetSelectionRangeFromPointer( ... )
+   RETURN HB_QTableWidgetSelectionRange():fromPointer( ... )
+
 
 CREATE CLASS QTableWidgetSelectionRange INHERIT HbQtObjectHandler FUNCTION HB_QTableWidgetSelectionRange
 

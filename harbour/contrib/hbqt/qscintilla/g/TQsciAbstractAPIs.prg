@@ -98,6 +98,12 @@
 FUNCTION QsciAbstractAPIs( ... )
    RETURN HB_QsciAbstractAPIs():new( ... )
 
+FUNCTION QsciAbstractAPIsFrom( ... )
+   RETURN HB_QsciAbstractAPIs():from( ... )
+
+FUNCTION QsciAbstractAPIsFromPointer( ... )
+   RETURN HB_QsciAbstractAPIs():fromPointer( ... )
+
 
 CREATE CLASS QsciAbstractAPIs INHERIT HbQtObjectHandler FUNCTION HB_QsciAbstractAPIs
 
@@ -122,7 +128,7 @@ METHOD QsciAbstractAPIs:new( ... )
 METHOD QsciAbstractAPIs:lexer( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QsciLexer():from( Qt_QsciAbstractAPIs_lexer( ::pPtr, ... ) )
+      RETURN QsciLexerFromPointer( Qt_QsciAbstractAPIs_lexer( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

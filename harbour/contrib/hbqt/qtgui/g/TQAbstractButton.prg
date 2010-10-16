@@ -98,6 +98,12 @@
 FUNCTION QAbstractButton( ... )
    RETURN HB_QAbstractButton():new( ... )
 
+FUNCTION QAbstractButtonFrom( ... )
+   RETURN HB_QAbstractButton():from( ... )
+
+FUNCTION QAbstractButtonFromPointer( ... )
+   RETURN HB_QAbstractButton():fromPointer( ... )
+
 
 CREATE CLASS QAbstractButton INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QAbstractButton
 
@@ -177,7 +183,7 @@ METHOD QAbstractButton:autoRepeatInterval( ... )
 METHOD QAbstractButton:group( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QButtonGroup():from( Qt_QAbstractButton_group( ::pPtr, ... ) )
+      RETURN QButtonGroupFromPointer( Qt_QAbstractButton_group( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -185,7 +191,7 @@ METHOD QAbstractButton:group( ... )
 METHOD QAbstractButton:icon( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QIcon():from( Qt_QAbstractButton_icon( ::pPtr, ... ) )
+      RETURN QIconFromPointer( Qt_QAbstractButton_icon( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -193,7 +199,7 @@ METHOD QAbstractButton:icon( ... )
 METHOD QAbstractButton:iconSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QAbstractButton_iconSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QAbstractButton_iconSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -333,7 +339,7 @@ METHOD QAbstractButton:setText( ... )
 METHOD QAbstractButton:shortcut( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QKeySequence():from( Qt_QAbstractButton_shortcut( ::pPtr, ... ) )
+      RETURN QKeySequenceFromPointer( Qt_QAbstractButton_shortcut( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

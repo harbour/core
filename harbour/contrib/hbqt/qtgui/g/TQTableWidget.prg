@@ -98,6 +98,12 @@
 FUNCTION QTableWidget( ... )
    RETURN HB_QTableWidget():new( ... )
 
+FUNCTION QTableWidgetFrom( ... )
+   RETURN HB_QTableWidget():from( ... )
+
+FUNCTION QTableWidgetFromPointer( ... )
+   RETURN HB_QTableWidget():fromPointer( ... )
+
 
 CREATE CLASS QTableWidget INHERIT HbQtObjectHandler, HB_QTableView FUNCTION HB_QTableWidget
 
@@ -170,7 +176,7 @@ METHOD QTableWidget:cellWidget( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QWidget():from( Qt_QTableWidget_cellWidget( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QTableWidget_cellWidget( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -220,7 +226,7 @@ METHOD QTableWidget:currentColumn( ... )
 METHOD QTableWidget:currentItem( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTableWidgetItem():from( Qt_QTableWidget_currentItem( ::pPtr, ... ) )
+      RETURN QTableWidgetItemFromPointer( Qt_QTableWidget_currentItem( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -250,7 +256,7 @@ METHOD QTableWidget:findItems( ... )
    CASE 2
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QList():from( Qt_QTableWidget_findItems( ::pPtr, ... ) )
+         RETURN QListFromPointer( Qt_QTableWidget_findItems( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -262,7 +268,7 @@ METHOD QTableWidget:horizontalHeaderItem( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QTableWidgetItem():from( Qt_QTableWidget_horizontalHeaderItem( ::pPtr, ... ) )
+         RETURN QTableWidgetItemFromPointer( Qt_QTableWidget_horizontalHeaderItem( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -274,7 +280,7 @@ METHOD QTableWidget:item( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QTableWidgetItem():from( Qt_QTableWidget_item( ::pPtr, ... ) )
+         RETURN QTableWidgetItemFromPointer( Qt_QTableWidget_item( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -286,13 +292,13 @@ METHOD QTableWidget:itemAt( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QTableWidgetItem():from( Qt_QTableWidget_itemAt_1( ::pPtr, ... ) )
+         RETURN QTableWidgetItemFromPointer( Qt_QTableWidget_itemAt_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QTableWidgetItem():from( Qt_QTableWidget_itemAt( ::pPtr, ... ) )
+         RETURN QTableWidgetItemFromPointer( Qt_QTableWidget_itemAt( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -302,7 +308,7 @@ METHOD QTableWidget:itemAt( ... )
 METHOD QTableWidget:itemPrototype( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTableWidgetItem():from( Qt_QTableWidget_itemPrototype( ::pPtr, ... ) )
+      RETURN QTableWidgetItemFromPointer( Qt_QTableWidget_itemPrototype( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -354,7 +360,7 @@ METHOD QTableWidget:rowCount( ... )
 METHOD QTableWidget:selectedItems( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QTableWidget_selectedItems( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QTableWidget_selectedItems( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -362,7 +368,7 @@ METHOD QTableWidget:selectedItems( ... )
 METHOD QTableWidget:selectedRanges( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QTableWidget_selectedRanges( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QTableWidget_selectedRanges( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -546,7 +552,7 @@ METHOD QTableWidget:takeHorizontalHeaderItem( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QTableWidgetItem():from( Qt_QTableWidget_takeHorizontalHeaderItem( ::pPtr, ... ) )
+         RETURN QTableWidgetItemFromPointer( Qt_QTableWidget_takeHorizontalHeaderItem( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -558,7 +564,7 @@ METHOD QTableWidget:takeItem( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QTableWidgetItem():from( Qt_QTableWidget_takeItem( ::pPtr, ... ) )
+         RETURN QTableWidgetItemFromPointer( Qt_QTableWidget_takeItem( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -570,7 +576,7 @@ METHOD QTableWidget:takeVerticalHeaderItem( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QTableWidgetItem():from( Qt_QTableWidget_takeVerticalHeaderItem( ::pPtr, ... ) )
+         RETURN QTableWidgetItemFromPointer( Qt_QTableWidget_takeVerticalHeaderItem( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -582,7 +588,7 @@ METHOD QTableWidget:verticalHeaderItem( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QTableWidgetItem():from( Qt_QTableWidget_verticalHeaderItem( ::pPtr, ... ) )
+         RETURN QTableWidgetItemFromPointer( Qt_QTableWidget_verticalHeaderItem( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -606,7 +612,7 @@ METHOD QTableWidget:visualItemRect( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QRect():from( Qt_QTableWidget_visualItemRect( ::pPtr, ... ) )
+         RETURN QRectFromPointer( Qt_QTableWidget_visualItemRect( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

@@ -98,6 +98,12 @@
 FUNCTION QButtonGroup( ... )
    RETURN HB_QButtonGroup():new( ... )
 
+FUNCTION QButtonGroupFrom( ... )
+   RETURN HB_QButtonGroup():from( ... )
+
+FUNCTION QButtonGroupFromPointer( ... )
+   RETURN HB_QButtonGroup():fromPointer( ... )
+
 
 CREATE CLASS QButtonGroup INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QButtonGroup
 
@@ -150,7 +156,7 @@ METHOD QButtonGroup:button( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QAbstractButton():from( Qt_QButtonGroup_button( ::pPtr, ... ) )
+         RETURN QAbstractButtonFromPointer( Qt_QButtonGroup_button( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -160,7 +166,7 @@ METHOD QButtonGroup:button( ... )
 METHOD QButtonGroup:buttons( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QButtonGroup_buttons( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QButtonGroup_buttons( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -168,7 +174,7 @@ METHOD QButtonGroup:buttons( ... )
 METHOD QButtonGroup:checkedButton( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAbstractButton():from( Qt_QButtonGroup_checkedButton( ::pPtr, ... ) )
+      RETURN QAbstractButtonFromPointer( Qt_QButtonGroup_checkedButton( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

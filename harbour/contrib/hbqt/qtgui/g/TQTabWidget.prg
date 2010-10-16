@@ -98,6 +98,12 @@
 FUNCTION QTabWidget( ... )
    RETURN HB_QTabWidget():new( ... )
 
+FUNCTION QTabWidgetFrom( ... )
+   RETURN HB_QTabWidget():from( ... )
+
+FUNCTION QTabWidgetFromPointer( ... )
+   RETURN HB_QTabWidget():fromPointer( ... )
+
 
 CREATE CLASS QTabWidget INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QTabWidget
 
@@ -188,11 +194,11 @@ METHOD QTabWidget:cornerWidget( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QWidget():from( Qt_QTabWidget_cornerWidget( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QTabWidget_cornerWidget( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QWidget():from( Qt_QTabWidget_cornerWidget( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QTabWidget_cornerWidget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -216,7 +222,7 @@ METHOD QTabWidget:currentIndex( ... )
 METHOD QTabWidget:currentWidget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QTabWidget_currentWidget( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QTabWidget_currentWidget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -240,7 +246,7 @@ METHOD QTabWidget:elideMode( ... )
 METHOD QTabWidget:iconSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QTabWidget_iconSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QTabWidget_iconSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -486,7 +492,7 @@ METHOD QTabWidget:tabIcon( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QIcon():from( Qt_QTabWidget_tabIcon( ::pPtr, ... ) )
+         RETURN QIconFromPointer( Qt_QTabWidget_tabIcon( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -566,7 +572,7 @@ METHOD QTabWidget:widget( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QWidget():from( Qt_QTabWidget_widget( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QTabWidget_widget( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

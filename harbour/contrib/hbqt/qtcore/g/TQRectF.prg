@@ -98,6 +98,12 @@
 FUNCTION QRectF( ... )
    RETURN HB_QRectF():new( ... )
 
+FUNCTION QRectFFrom( ... )
+   RETURN HB_QRectF():from( ... )
+
+FUNCTION QRectFFromPointer( ... )
+   RETURN HB_QRectF():fromPointer( ... )
+
 
 CREATE CLASS QRectF INHERIT HbQtObjectHandler FUNCTION HB_QRectF
 
@@ -193,7 +199,7 @@ METHOD QRectF:adjusted( ... )
    CASE 4
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
-         RETURN HB_QRectF():from( Qt_QRectF_adjusted( ::pPtr, ... ) )
+         RETURN QRectFFromPointer( Qt_QRectF_adjusted( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -211,7 +217,7 @@ METHOD QRectF:bottom( ... )
 METHOD QRectF:bottomLeft( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPointF():from( Qt_QRectF_bottomLeft( ::pPtr, ... ) )
+      RETURN QPointFFromPointer( Qt_QRectF_bottomLeft( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -219,7 +225,7 @@ METHOD QRectF:bottomLeft( ... )
 METHOD QRectF:bottomRight( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPointF():from( Qt_QRectF_bottomRight( ::pPtr, ... ) )
+      RETURN QPointFFromPointer( Qt_QRectF_bottomRight( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -227,7 +233,7 @@ METHOD QRectF:bottomRight( ... )
 METHOD QRectF:center( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPointF():from( Qt_QRectF_center( ::pPtr, ... ) )
+      RETURN QPointFFromPointer( Qt_QRectF_center( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -292,7 +298,7 @@ METHOD QRectF:intersected( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QRectF():from( Qt_QRectF_intersected( ::pPtr, ... ) )
+         RETURN QRectFFromPointer( Qt_QRectF_intersected( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -472,7 +478,7 @@ METHOD QRectF:moveTopRight( ... )
 METHOD QRectF:normalized( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRectF():from( Qt_QRectF_normalized( ::pPtr, ... ) )
+      RETURN QRectFFromPointer( Qt_QRectF_normalized( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -668,7 +674,7 @@ METHOD QRectF:setY( ... )
 METHOD QRectF:size( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSizeF():from( Qt_QRectF_size( ::pPtr, ... ) )
+      RETURN QSizeFFromPointer( Qt_QRectF_size( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -676,7 +682,7 @@ METHOD QRectF:size( ... )
 METHOD QRectF:toAlignedRect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QRectF_toAlignedRect( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QRectF_toAlignedRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -684,7 +690,7 @@ METHOD QRectF:toAlignedRect( ... )
 METHOD QRectF:toRect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QRectF_toRect( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QRectF_toRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -700,7 +706,7 @@ METHOD QRectF:top( ... )
 METHOD QRectF:topLeft( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPointF():from( Qt_QRectF_topLeft( ::pPtr, ... ) )
+      RETURN QPointFFromPointer( Qt_QRectF_topLeft( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -708,7 +714,7 @@ METHOD QRectF:topLeft( ... )
 METHOD QRectF:topRight( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPointF():from( Qt_QRectF_topRight( ::pPtr, ... ) )
+      RETURN QPointFFromPointer( Qt_QRectF_topRight( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -736,13 +742,13 @@ METHOD QRectF:translated( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QRectF():from( Qt_QRectF_translated( ::pPtr, ... ) )
+         RETURN QRectFFromPointer( Qt_QRectF_translated( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QRectF():from( Qt_QRectF_translated_1( ::pPtr, ... ) )
+         RETURN QRectFFromPointer( Qt_QRectF_translated_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -754,7 +760,7 @@ METHOD QRectF:united( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QRectF():from( Qt_QRectF_united( ::pPtr, ... ) )
+         RETURN QRectFFromPointer( Qt_QRectF_united( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

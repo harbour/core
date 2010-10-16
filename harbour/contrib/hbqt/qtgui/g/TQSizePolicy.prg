@@ -98,6 +98,12 @@
 FUNCTION QSizePolicy( ... )
    RETURN HB_QSizePolicy():new( ... )
 
+FUNCTION QSizePolicyFrom( ... )
+   RETURN HB_QSizePolicy():from( ... )
+
+FUNCTION QSizePolicyFromPointer( ... )
+   RETURN HB_QSizePolicy():fromPointer( ... )
+
 
 CREATE CLASS QSizePolicy INHERIT HbQtObjectHandler FUNCTION HB_QSizePolicy
 

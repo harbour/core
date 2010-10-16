@@ -98,6 +98,12 @@
 FUNCTION QPlainTextDocumentLayout( ... )
    RETURN HB_QPlainTextDocumentLayout():new( ... )
 
+FUNCTION QPlainTextDocumentLayoutFrom( ... )
+   RETURN HB_QPlainTextDocumentLayout():from( ... )
+
+FUNCTION QPlainTextDocumentLayoutFromPointer( ... )
+   RETURN HB_QPlainTextDocumentLayout():fromPointer( ... )
+
 
 CREATE CLASS QPlainTextDocumentLayout INHERIT HbQtObjectHandler, HB_QAbstractTextDocumentLayout FUNCTION HB_QPlainTextDocumentLayout
 

@@ -98,6 +98,12 @@
 FUNCTION QTextEncoder( ... )
    RETURN HB_QTextEncoder():new( ... )
 
+FUNCTION QTextEncoderFrom( ... )
+   RETURN HB_QTextEncoder():from( ... )
+
+FUNCTION QTextEncoderFromPointer( ... )
+   RETURN HB_QTextEncoder():fromPointer( ... )
+
 
 CREATE CLASS QTextEncoder INHERIT HbQtObjectHandler FUNCTION HB_QTextEncoder
 
@@ -123,13 +129,13 @@ METHOD QTextEncoder:fromUnicode( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QByteArray():from( Qt_QTextEncoder_fromUnicode_1( ::pPtr, ... ) )
+         RETURN QByteArrayFromPointer( Qt_QTextEncoder_fromUnicode_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QByteArray():from( Qt_QTextEncoder_fromUnicode( ::pPtr, ... ) )
+         RETURN QByteArrayFromPointer( Qt_QTextEncoder_fromUnicode( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

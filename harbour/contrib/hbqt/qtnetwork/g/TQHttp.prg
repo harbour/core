@@ -98,6 +98,12 @@
 FUNCTION QHttp( ... )
    RETURN HB_QHttp():new( ... )
 
+FUNCTION QHttpFrom( ... )
+   RETURN HB_QHttp():from( ... )
+
+FUNCTION QHttpFromPointer( ... )
+   RETURN HB_QHttp():fromPointer( ... )
+
 
 CREATE CLASS QHttp INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QHttp
 
@@ -167,7 +173,7 @@ METHOD QHttp:close( ... )
 METHOD QHttp:currentDestinationDevice( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QIODevice():from( Qt_QHttp_currentDestinationDevice( ::pPtr, ... ) )
+      RETURN QIODeviceFromPointer( Qt_QHttp_currentDestinationDevice( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -183,7 +189,7 @@ METHOD QHttp:currentId( ... )
 METHOD QHttp:currentRequest( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QHttpRequestHeader():from( Qt_QHttp_currentRequest( ::pPtr, ... ) )
+      RETURN QHttpRequestHeaderFromPointer( Qt_QHttp_currentRequest( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -191,7 +197,7 @@ METHOD QHttp:currentRequest( ... )
 METHOD QHttp:currentSourceDevice( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QIODevice():from( Qt_QHttp_currentSourceDevice( ::pPtr, ... ) )
+      RETURN QIODeviceFromPointer( Qt_QHttp_currentSourceDevice( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -253,7 +259,7 @@ METHOD QHttp:head( ... )
 METHOD QHttp:lastResponse( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QHttpResponseHeader():from( Qt_QHttp_lastResponse( ::pPtr, ... ) )
+      RETURN QHttpResponseHeaderFromPointer( Qt_QHttp_lastResponse( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -289,7 +295,7 @@ METHOD QHttp:post( ... )
 METHOD QHttp:readAll( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QByteArray():from( Qt_QHttp_readAll( ::pPtr, ... ) )
+      RETURN QByteArrayFromPointer( Qt_QHttp_readAll( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

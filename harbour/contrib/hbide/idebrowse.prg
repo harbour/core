@@ -493,12 +493,12 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
 
    SWITCH cEvent
    CASE "dockDbu_dragEnterEvent"
-      qEvent := HB_QDragEnterEvent():from( p )
+      qEvent := QDragEnterEventFromPointer( p )
       qEvent:acceptProposedAction()
       EXIT
 
    CASE "dockDbu_dropEvent"
-      qEvent := HB_QDropEvent():from( p )
+      qEvent := QDropEventFromPointer( p )
       qMime := qEvent:mimeData()
       IF qMime:hasUrls()
          qList := qMime:hbUrlList()
@@ -1964,6 +1964,8 @@ METHOD IdeBrowse:execEvent( cEvent, p, p1 )
 METHOD IdeBrowse:buildContextMenu()
    LOCAL a_, cPmt, nZeros, cIndex
 
+   ::qMdi:setFocus( 0 )
+
    IF len( ::aIndex ) > 0
       aadd( ::aMenu, { "Set to Natural Order", {|| ::setOrder( 0 ) } } )
       aadd( ::aMenu, { "" } )
@@ -1986,31 +1988,31 @@ METHOD IdeBrowse:buildContextMenu()
       aadd( ::aFlds, hbide_fieldsArray( Self, cPmt, a_:__enumIndex() ) )
    NEXT
    aadd( ::aMenu, { ::aFlds, "Scroll to Column" } )
-   aadd( ::aMenu, { "Scroll to ...", {|v| v := ( QInputDialog() ):getText( , "Field Name" ), ::toColumn( v ) } } )
+   aadd( ::aMenu, { "Scroll to ..."  , {|v| v := QInputDialog():getText( ::qMdi, "Field Name", "" ), ::toColumn( v ) } } )
    aadd( ::aMenu, { "" } )
 
    /* Seeks */
-   aadd( ::aSeek, { "Seek"       , {|| ::seekAsk( 0 ) } } )
-   aadd( ::aSeek, { "Seek Soft"  , {|| ::seekAsk( 1 ) } } )
-   aadd( ::aSeek, { "Seek Last"  , {|| ::seekAsk( 2 ) } } )
-   aadd( ::aMenu, { ::aSeek, "Seek..." } )
+   aadd( ::aSeek, { "Seek"           , {|| ::seekAsk( 0 )   } } )
+   aadd( ::aSeek, { "Seek Soft"      , {|| ::seekAsk( 1 )   } } )
+   aadd( ::aSeek, { "Seek Last"      , {|| ::seekAsk( 2 )   } } )
+   aadd( ::aMenu, { ::aSeek          , "Seek..." } )
    aadd( ::aMenu, { "Search in Field", {|| ::searchAsk( 1 ) } } )
    aadd( ::aMenu, { "" } )
 
    /* Navigation */
-   aadd( ::aMenu, { "Go Top"     , {|| ::goTop()      } } )
-   aadd( ::aMenu, { "Go Bottom"  , {|| ::goBottom()   } } )
-   aadd( ::aMenu, { "Goto Record", {|| ::gotoAsk()    } } )
+   aadd( ::aMenu, { "Go Top"         , {|| ::goTop()        } } )
+   aadd( ::aMenu, { "Go Bottom"      , {|| ::goBottom()     } } )
+   aadd( ::aMenu, { "Goto Record"    , {|| ::gotoAsk()      } } )
    aadd( ::aMenu, { "" } )
 
    /* Manipulation */
-   aadd( ::aMenu, { "Append Blank"  , {|| ::append()  } } )
-   aadd( ::aMenu, { "Delete Record" , {|| ::delete( .t. ) } } )
-   aadd( ::aMenu, { "Recall Deleted", {|| ::recall()  } } )
+   aadd( ::aMenu, { "Append Blank"   , {|| ::append()       } } )
+   aadd( ::aMenu, { "Delete Record"  , {|| ::delete( .t. )  } } )
+   aadd( ::aMenu, { "Recall Deleted" , {|| ::recall()       } } )
    aadd( ::aMenu, { "" } )
 
    /* Miscellaneous */
-   aadd( ::aMenu, { "Form View", {|| ::oManager:execEvent( "buttonShowForm_clicked"  ) } } )
+   aadd( ::aMenu, { "Form View"      , {|| ::oManager:execEvent( "buttonShowForm_clicked"  ) } } )
 
 
    RETURN Self
@@ -2202,15 +2204,17 @@ METHOD IdeBrowse:previous()
 
 METHOD IdeBrowse:getSome( cType, cFor )
    LOCAL nOrd := ::indexOrd()
+   LOCAL qWidget := QApplication():focusWidget() // ::oWnd:oWidget
 
    SWITCH cType
    CASE "N"
-      RETURN ( QInputDialog() ):getDouble( ::oWnd:oWidget, "Search for?", cFor, ;
+      RETURN QInputDialog():getDouble( qWidget, "Search for?", cFor, ;
                          0, -2147483647, 2147483647, iif( nOrd > 0, 3, ::aStruct[ ::oBrw:colPos, 4 ] ) )
    CASE "D"
-      RETURN hbide_fetchADate( ::oWnd:oWidget, "Search for?", cFor )
+      RETURN hbide_fetchADate( qWidget, "Search for?", cFor )
    CASE "C"
-      RETURN ( QInputDialog() ):getText( ::oWnd:oWidget, "Search for?", cFor )
+      DEFAULT cFor TO ""
+      RETURN QInputDialog():getText( qWidget, "Search for?", cFor )
    ENDSWITCH
 
    RETURN ""

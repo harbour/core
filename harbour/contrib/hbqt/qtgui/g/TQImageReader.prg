@@ -98,6 +98,12 @@
 FUNCTION QImageReader( ... )
    RETURN HB_QImageReader():new( ... )
 
+FUNCTION QImageReaderFrom( ... )
+   RETURN HB_QImageReader():from( ... )
+
+FUNCTION QImageReaderFromPointer( ... )
+   RETURN HB_QImageReader():fromPointer( ... )
+
 
 CREATE CLASS QImageReader INHERIT HbQtObjectHandler FUNCTION HB_QImageReader
 
@@ -166,7 +172,7 @@ METHOD QImageReader:autoDetectImageFormat( ... )
 METHOD QImageReader:backgroundColor( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QColor():from( Qt_QImageReader_backgroundColor( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_QImageReader_backgroundColor( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -182,7 +188,7 @@ METHOD QImageReader:canRead( ... )
 METHOD QImageReader:clipRect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QImageReader_clipRect( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QImageReader_clipRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -198,7 +204,7 @@ METHOD QImageReader:currentImageNumber( ... )
 METHOD QImageReader:currentImageRect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QImageReader_currentImageRect( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QImageReader_currentImageRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -206,7 +212,7 @@ METHOD QImageReader:currentImageRect( ... )
 METHOD QImageReader:device( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QIODevice():from( Qt_QImageReader_device( ::pPtr, ... ) )
+      RETURN QIODeviceFromPointer( Qt_QImageReader_device( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -238,7 +244,7 @@ METHOD QImageReader:fileName( ... )
 METHOD QImageReader:format( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QByteArray():from( Qt_QImageReader_format( ::pPtr, ... ) )
+      RETURN QByteArrayFromPointer( Qt_QImageReader_format( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -256,9 +262,9 @@ METHOD QImageReader:imageFormat( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QByteArray():from( Qt_QImageReader_imageFormat_1( ::pPtr, ... ) )
+         RETURN QByteArrayFromPointer( Qt_QImageReader_imageFormat_1( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QByteArray():from( Qt_QImageReader_imageFormat_2( ::pPtr, ... ) )
+         RETURN QByteArrayFromPointer( Qt_QImageReader_imageFormat_2( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
@@ -320,7 +326,7 @@ METHOD QImageReader:read( ... )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QImage():from( Qt_QImageReader_read( ::pPtr, ... ) )
+      RETURN QImageFromPointer( Qt_QImageReader_read( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -328,7 +334,7 @@ METHOD QImageReader:read( ... )
 METHOD QImageReader:scaledClipRect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QImageReader_scaledClipRect( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QImageReader_scaledClipRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -336,7 +342,7 @@ METHOD QImageReader:scaledClipRect( ... )
 METHOD QImageReader:scaledSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QImageReader_scaledSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QImageReader_scaledSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -452,7 +458,7 @@ METHOD QImageReader:setScaledSize( ... )
 METHOD QImageReader:size( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QImageReader_size( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QImageReader_size( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -492,7 +498,7 @@ METHOD QImageReader:text( ... )
 METHOD QImageReader:textKeys( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QImageReader_textKeys( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QImageReader_textKeys( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -500,7 +506,7 @@ METHOD QImageReader:textKeys( ... )
 METHOD QImageReader:supportedImageFormats( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QImageReader_supportedImageFormats( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QImageReader_supportedImageFormats( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

@@ -98,6 +98,12 @@
 FUNCTION QHideEvent( ... )
    RETURN HB_QHideEvent():new( ... )
 
+FUNCTION QHideEventFrom( ... )
+   RETURN HB_QHideEvent():from( ... )
+
+FUNCTION QHideEventFromPointer( ... )
+   RETURN HB_QHideEvent():fromPointer( ... )
+
 
 CREATE CLASS QHideEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_QHideEvent
 

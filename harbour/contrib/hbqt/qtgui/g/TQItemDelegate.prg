@@ -98,6 +98,12 @@
 FUNCTION QItemDelegate( ... )
    RETURN HB_QItemDelegate():new( ... )
 
+FUNCTION QItemDelegateFrom( ... )
+   RETURN HB_QItemDelegate():from( ... )
+
+FUNCTION QItemDelegateFromPointer( ... )
+   RETURN HB_QItemDelegate():fromPointer( ... )
+
 
 CREATE CLASS QItemDelegate INHERIT HbQtObjectHandler, HB_QAbstractItemDelegate FUNCTION HB_QItemDelegate
 
@@ -137,7 +143,7 @@ METHOD QItemDelegate:hasClipping( ... )
 METHOD QItemDelegate:itemEditorFactory( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QItemEditorFactory():from( Qt_QItemDelegate_itemEditorFactory( ::pPtr, ... ) )
+      RETURN QItemEditorFactoryFromPointer( Qt_QItemDelegate_itemEditorFactory( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -171,7 +177,7 @@ METHOD QItemDelegate:createEditor( ... )
    CASE 3
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
-         RETURN HB_QWidget():from( Qt_QItemDelegate_createEditor( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QItemDelegate_createEditor( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -219,7 +225,7 @@ METHOD QItemDelegate:sizeHint( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QSize():from( Qt_QItemDelegate_sizeHint( ::pPtr, ... ) )
+         RETURN QSizeFromPointer( Qt_QItemDelegate_sizeHint( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

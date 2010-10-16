@@ -98,6 +98,12 @@
 FUNCTION QTextFormat( ... )
    RETURN HB_QTextFormat():new( ... )
 
+FUNCTION QTextFormatFrom( ... )
+   RETURN HB_QTextFormat():from( ... )
+
+FUNCTION QTextFormatFromPointer( ... )
+   RETURN HB_QTextFormat():fromPointer( ... )
+
 
 CREATE CLASS QTextFormat INHERIT HbQtObjectHandler FUNCTION HB_QTextFormat
 
@@ -160,7 +166,7 @@ METHOD QTextFormat:new( ... )
 METHOD QTextFormat:background( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QTextFormat_background( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QTextFormat_background( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -182,7 +188,7 @@ METHOD QTextFormat:brushProperty( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QBrush():from( Qt_QTextFormat_brushProperty( ::pPtr, ... ) )
+         RETURN QBrushFromPointer( Qt_QTextFormat_brushProperty( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -222,7 +228,7 @@ METHOD QTextFormat:colorProperty( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QColor():from( Qt_QTextFormat_colorProperty( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QTextFormat_colorProperty( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -244,7 +250,7 @@ METHOD QTextFormat:doubleProperty( ... )
 METHOD QTextFormat:foreground( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QTextFormat_foreground( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QTextFormat_foreground( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -350,7 +356,7 @@ METHOD QTextFormat:lengthProperty( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QTextLength():from( Qt_QTextFormat_lengthProperty( ::pPtr, ... ) )
+         RETURN QTextLengthFromPointer( Qt_QTextFormat_lengthProperty( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -390,7 +396,7 @@ METHOD QTextFormat:penProperty( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QPen():from( Qt_QTextFormat_penProperty( ::pPtr, ... ) )
+         RETURN QPenFromPointer( Qt_QTextFormat_penProperty( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -402,7 +408,7 @@ METHOD QTextFormat:property( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QVariant():from( Qt_QTextFormat_property( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QTextFormat_property( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -504,7 +510,7 @@ METHOD QTextFormat:stringProperty( ... )
 METHOD QTextFormat:toBlockFormat( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextBlockFormat():from( Qt_QTextFormat_toBlockFormat( ::pPtr, ... ) )
+      RETURN QTextBlockFormatFromPointer( Qt_QTextFormat_toBlockFormat( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -512,7 +518,7 @@ METHOD QTextFormat:toBlockFormat( ... )
 METHOD QTextFormat:toCharFormat( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextCharFormat():from( Qt_QTextFormat_toCharFormat( ::pPtr, ... ) )
+      RETURN QTextCharFormatFromPointer( Qt_QTextFormat_toCharFormat( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -520,7 +526,7 @@ METHOD QTextFormat:toCharFormat( ... )
 METHOD QTextFormat:toFrameFormat( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextFrameFormat():from( Qt_QTextFormat_toFrameFormat( ::pPtr, ... ) )
+      RETURN QTextFrameFormatFromPointer( Qt_QTextFormat_toFrameFormat( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -528,7 +534,7 @@ METHOD QTextFormat:toFrameFormat( ... )
 METHOD QTextFormat:toImageFormat( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextImageFormat():from( Qt_QTextFormat_toImageFormat( ::pPtr, ... ) )
+      RETURN QTextImageFormatFromPointer( Qt_QTextFormat_toImageFormat( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -536,7 +542,7 @@ METHOD QTextFormat:toImageFormat( ... )
 METHOD QTextFormat:toListFormat( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextListFormat():from( Qt_QTextFormat_toListFormat( ::pPtr, ... ) )
+      RETURN QTextListFormatFromPointer( Qt_QTextFormat_toListFormat( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -544,7 +550,7 @@ METHOD QTextFormat:toListFormat( ... )
 METHOD QTextFormat:toTableFormat( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextTableFormat():from( Qt_QTextFormat_toTableFormat( ::pPtr, ... ) )
+      RETURN QTextTableFormatFromPointer( Qt_QTextFormat_toTableFormat( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

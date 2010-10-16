@@ -98,6 +98,12 @@
 FUNCTION QImage( ... )
    RETURN HB_QImage():new( ... )
 
+FUNCTION QImageFrom( ... )
+   RETURN HB_QImage():from( ... )
+
+FUNCTION QImageFromPointer( ... )
+   RETURN HB_QImage():fromPointer( ... )
+
 
 CREATE CLASS QImage INHERIT HbQtObjectHandler FUNCTION HB_QImage
 
@@ -185,7 +191,7 @@ METHOD QImage:allGray( ... )
 METHOD QImage:alphaChannel( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QImage():from( Qt_QImage_alphaChannel( ::pPtr, ... ) )
+      RETURN QImageFromPointer( Qt_QImage_alphaChannel( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -231,13 +237,13 @@ METHOD QImage:convertToFormat( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QImage():from( Qt_QImage_convertToFormat( ::pPtr, ... ) )
+         RETURN QImageFromPointer( Qt_QImage_convertToFormat( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QImage():from( Qt_QImage_convertToFormat( ::pPtr, ... ) )
+         RETURN QImageFromPointer( Qt_QImage_convertToFormat( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -249,17 +255,17 @@ METHOD QImage:copy( ... )
    CASE 4
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
-         RETURN HB_QImage():from( Qt_QImage_copy_1( ::pPtr, ... ) )
+         RETURN QImageFromPointer( Qt_QImage_copy_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QImage():from( Qt_QImage_copy( ::pPtr, ... ) )
+         RETURN QImageFromPointer( Qt_QImage_copy( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QImage():from( Qt_QImage_copy( ::pPtr, ... ) )
+      RETURN QImageFromPointer( Qt_QImage_copy( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -269,11 +275,11 @@ METHOD QImage:createAlphaMask( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QImage():from( Qt_QImage_createAlphaMask( ::pPtr, ... ) )
+         RETURN QImageFromPointer( Qt_QImage_createAlphaMask( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QImage():from( Qt_QImage_createAlphaMask( ::pPtr, ... ) )
+      RETURN QImageFromPointer( Qt_QImage_createAlphaMask( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -283,11 +289,11 @@ METHOD QImage:createHeuristicMask( ... )
    CASE 1
       DO CASE
       CASE hb_isLogical( hb_pvalue( 1 ) )
-         RETURN HB_QImage():from( Qt_QImage_createHeuristicMask( ::pPtr, ... ) )
+         RETURN QImageFromPointer( Qt_QImage_createHeuristicMask( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QImage():from( Qt_QImage_createHeuristicMask( ::pPtr, ... ) )
+      RETURN QImageFromPointer( Qt_QImage_createHeuristicMask( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -297,13 +303,13 @@ METHOD QImage:createMaskFromColor( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QImage():from( Qt_QImage_createMaskFromColor( ::pPtr, ... ) )
+         RETURN QImageFromPointer( Qt_QImage_createMaskFromColor( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QImage():from( Qt_QImage_createMaskFromColor( ::pPtr, ... ) )
+         RETURN QImageFromPointer( Qt_QImage_createMaskFromColor( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -443,17 +449,17 @@ METHOD QImage:mirrored( ... )
    CASE 2
       DO CASE
       CASE hb_isLogical( hb_pvalue( 1 ) ) .AND. hb_isLogical( hb_pvalue( 2 ) )
-         RETURN HB_QImage():from( Qt_QImage_mirrored( ::pPtr, ... ) )
+         RETURN QImageFromPointer( Qt_QImage_mirrored( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isLogical( hb_pvalue( 1 ) )
-         RETURN HB_QImage():from( Qt_QImage_mirrored( ::pPtr, ... ) )
+         RETURN QImageFromPointer( Qt_QImage_mirrored( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QImage():from( Qt_QImage_mirrored( ::pPtr, ... ) )
+      RETURN QImageFromPointer( Qt_QImage_mirrored( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -477,7 +483,7 @@ METHOD QImage:numColors( ... )
 METHOD QImage:offset( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QImage_offset( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QImage_offset( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -521,7 +527,7 @@ METHOD QImage:pixelIndex( ... )
 METHOD QImage:rect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QImage_rect( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QImage_rect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -529,7 +535,7 @@ METHOD QImage:rect( ... )
 METHOD QImage:rgbSwapped( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QImage():from( Qt_QImage_rgbSwapped( ::pPtr, ... ) )
+      RETURN QImageFromPointer( Qt_QImage_rgbSwapped( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -569,29 +575,29 @@ METHOD QImage:scaled( ... )
    CASE 4
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
-         RETURN HB_QImage():from( Qt_QImage_scaled_1( ::pPtr, ... ) )
+         RETURN QImageFromPointer( Qt_QImage_scaled_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 3
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
-         RETURN HB_QImage():from( Qt_QImage_scaled_1( ::pPtr, ... ) )
+         RETURN QImageFromPointer( Qt_QImage_scaled_1( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
-         RETURN HB_QImage():from( Qt_QImage_scaled( ::pPtr, ... ) )
+         RETURN QImageFromPointer( Qt_QImage_scaled( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QImage():from( Qt_QImage_scaled_1( ::pPtr, ... ) )
+         RETURN QImageFromPointer( Qt_QImage_scaled_1( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QImage():from( Qt_QImage_scaled( ::pPtr, ... ) )
+         RETURN QImageFromPointer( Qt_QImage_scaled( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QImage():from( Qt_QImage_scaled( ::pPtr, ... ) )
+         RETURN QImageFromPointer( Qt_QImage_scaled( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -603,13 +609,13 @@ METHOD QImage:scaledToHeight( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QImage():from( Qt_QImage_scaledToHeight( ::pPtr, ... ) )
+         RETURN QImageFromPointer( Qt_QImage_scaledToHeight( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QImage():from( Qt_QImage_scaledToHeight( ::pPtr, ... ) )
+         RETURN QImageFromPointer( Qt_QImage_scaledToHeight( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -621,13 +627,13 @@ METHOD QImage:scaledToWidth( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QImage():from( Qt_QImage_scaledToWidth( ::pPtr, ... ) )
+         RETURN QImageFromPointer( Qt_QImage_scaledToWidth( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QImage():from( Qt_QImage_scaledToWidth( ::pPtr, ... ) )
+         RETURN QImageFromPointer( Qt_QImage_scaledToWidth( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -739,7 +745,7 @@ METHOD QImage:setText( ... )
 METHOD QImage:size( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QImage_size( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QImage_size( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -761,7 +767,7 @@ METHOD QImage:text( ... )
 METHOD QImage:textKeys( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QImage_textKeys( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QImage_textKeys( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -773,9 +779,9 @@ METHOD QImage:transformed( ... )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) )
          CASE "QMATRIX"
-            RETURN HB_QImage():from( Qt_QImage_transformed( ::pPtr, ... ) )
+            RETURN QImageFromPointer( Qt_QImage_transformed( ::pPtr, ... ) )
          CASE "QTRANSFORM"
-            RETURN HB_QImage():from( Qt_QImage_transformed_1( ::pPtr, ... ) )
+            RETURN QImageFromPointer( Qt_QImage_transformed_1( ::pPtr, ... ) )
          ENDSWITCH
       ENDCASE
       EXIT
@@ -784,9 +790,9 @@ METHOD QImage:transformed( ... )
       CASE hb_isObject( hb_pvalue( 1 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) )
          CASE "QMATRIX"
-            RETURN HB_QImage():from( Qt_QImage_transformed( ::pPtr, ... ) )
+            RETURN QImageFromPointer( Qt_QImage_transformed( ::pPtr, ... ) )
          CASE "QTRANSFORM"
-            RETURN HB_QImage():from( Qt_QImage_transformed_1( ::pPtr, ... ) )
+            RETURN QImageFromPointer( Qt_QImage_transformed_1( ::pPtr, ... ) )
          ENDSWITCH
       ENDCASE
       EXIT

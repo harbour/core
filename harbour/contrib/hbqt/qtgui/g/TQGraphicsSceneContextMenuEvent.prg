@@ -98,6 +98,12 @@
 FUNCTION QGraphicsSceneContextMenuEvent( ... )
    RETURN HB_QGraphicsSceneContextMenuEvent():new( ... )
 
+FUNCTION QGraphicsSceneContextMenuEventFrom( ... )
+   RETURN HB_QGraphicsSceneContextMenuEvent():from( ... )
+
+FUNCTION QGraphicsSceneContextMenuEventFromPointer( ... )
+   RETURN HB_QGraphicsSceneContextMenuEvent():fromPointer( ... )
+
 
 CREATE CLASS QGraphicsSceneContextMenuEvent INHERIT HbQtObjectHandler, HB_QGraphicsSceneEvent FUNCTION HB_QGraphicsSceneContextMenuEvent
 
@@ -132,7 +138,7 @@ METHOD QGraphicsSceneContextMenuEvent:modifiers( ... )
 METHOD QGraphicsSceneContextMenuEvent:pos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPointF():from( Qt_QGraphicsSceneContextMenuEvent_pos( ::pPtr, ... ) )
+      RETURN QPointFFromPointer( Qt_QGraphicsSceneContextMenuEvent_pos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -148,7 +154,7 @@ METHOD QGraphicsSceneContextMenuEvent:reason( ... )
 METHOD QGraphicsSceneContextMenuEvent:scenePos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPointF():from( Qt_QGraphicsSceneContextMenuEvent_scenePos( ::pPtr, ... ) )
+      RETURN QPointFFromPointer( Qt_QGraphicsSceneContextMenuEvent_scenePos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -156,7 +162,7 @@ METHOD QGraphicsSceneContextMenuEvent:scenePos( ... )
 METHOD QGraphicsSceneContextMenuEvent:screenPos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QGraphicsSceneContextMenuEvent_screenPos( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QGraphicsSceneContextMenuEvent_screenPos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

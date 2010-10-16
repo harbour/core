@@ -98,6 +98,12 @@
 FUNCTION QCoreApplication( ... )
    RETURN HB_QCoreApplication():new( ... )
 
+FUNCTION QCoreApplicationFrom( ... )
+   RETURN HB_QCoreApplication():from( ... )
+
+FUNCTION QCoreApplicationFromPointer( ... )
+   RETURN HB_QCoreApplication():fromPointer( ... )
+
 
 CREATE CLASS QCoreApplication INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QCoreApplication
 
@@ -223,7 +229,7 @@ METHOD QCoreApplication:applicationVersion( ... )
 METHOD QCoreApplication:arguments( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QCoreApplication_arguments( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QCoreApplication_arguments( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -289,7 +295,7 @@ METHOD QCoreApplication:installTranslator( ... )
 METHOD QCoreApplication:instance( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QCoreApplication():from( Qt_QCoreApplication_instance( ::pPtr, ... ) )
+      RETURN QCoreApplicationFromPointer( Qt_QCoreApplication_instance( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -297,7 +303,7 @@ METHOD QCoreApplication:instance( ... )
 METHOD QCoreApplication:libraryPaths( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QCoreApplication_libraryPaths( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QCoreApplication_libraryPaths( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

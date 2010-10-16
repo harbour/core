@@ -98,6 +98,12 @@
 FUNCTION QGraphicsSceneDragDropEvent( ... )
    RETURN HB_QGraphicsSceneDragDropEvent():new( ... )
 
+FUNCTION QGraphicsSceneDragDropEventFrom( ... )
+   RETURN HB_QGraphicsSceneDragDropEvent():from( ... )
+
+FUNCTION QGraphicsSceneDragDropEventFromPointer( ... )
+   RETURN HB_QGraphicsSceneDragDropEvent():fromPointer( ... )
+
 
 CREATE CLASS QGraphicsSceneDragDropEvent INHERIT HbQtObjectHandler, HB_QGraphicsSceneEvent FUNCTION HB_QGraphicsSceneDragDropEvent
 
@@ -155,7 +161,7 @@ METHOD QGraphicsSceneDragDropEvent:dropAction( ... )
 METHOD QGraphicsSceneDragDropEvent:mimeData( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMimeData():from( Qt_QGraphicsSceneDragDropEvent_mimeData( ::pPtr, ... ) )
+      RETURN QMimeDataFromPointer( Qt_QGraphicsSceneDragDropEvent_mimeData( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -171,7 +177,7 @@ METHOD QGraphicsSceneDragDropEvent:modifiers( ... )
 METHOD QGraphicsSceneDragDropEvent:pos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPointF():from( Qt_QGraphicsSceneDragDropEvent_pos( ::pPtr, ... ) )
+      RETURN QPointFFromPointer( Qt_QGraphicsSceneDragDropEvent_pos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -195,7 +201,7 @@ METHOD QGraphicsSceneDragDropEvent:proposedAction( ... )
 METHOD QGraphicsSceneDragDropEvent:scenePos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPointF():from( Qt_QGraphicsSceneDragDropEvent_scenePos( ::pPtr, ... ) )
+      RETURN QPointFFromPointer( Qt_QGraphicsSceneDragDropEvent_scenePos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -203,7 +209,7 @@ METHOD QGraphicsSceneDragDropEvent:scenePos( ... )
 METHOD QGraphicsSceneDragDropEvent:screenPos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QGraphicsSceneDragDropEvent_screenPos( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QGraphicsSceneDragDropEvent_screenPos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -223,7 +229,7 @@ METHOD QGraphicsSceneDragDropEvent:setDropAction( ... )
 METHOD QGraphicsSceneDragDropEvent:source( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QGraphicsSceneDragDropEvent_source( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QGraphicsSceneDragDropEvent_source( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

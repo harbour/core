@@ -98,6 +98,12 @@
 FUNCTION QGraphicsEllipseItem( ... )
    RETURN HB_QGraphicsEllipseItem():new( ... )
 
+FUNCTION QGraphicsEllipseItemFrom( ... )
+   RETURN HB_QGraphicsEllipseItem():from( ... )
+
+FUNCTION QGraphicsEllipseItemFromPointer( ... )
+   RETURN HB_QGraphicsEllipseItem():fromPointer( ... )
+
 
 CREATE CLASS QGraphicsEllipseItem INHERIT HbQtObjectHandler, HB_QAbstractGraphicsShapeItem FUNCTION HB_QGraphicsEllipseItem
 
@@ -126,7 +132,7 @@ METHOD QGraphicsEllipseItem:new( ... )
 METHOD QGraphicsEllipseItem:rect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRectF():from( Qt_QGraphicsEllipseItem_rect( ::pPtr, ... ) )
+      RETURN QRectFFromPointer( Qt_QGraphicsEllipseItem_rect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

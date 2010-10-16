@@ -98,6 +98,12 @@
 FUNCTION QDesignerPropertyEditorInterface( ... )
    RETURN HB_QDesignerPropertyEditorInterface():new( ... )
 
+FUNCTION QDesignerPropertyEditorInterfaceFrom( ... )
+   RETURN HB_QDesignerPropertyEditorInterface():from( ... )
+
+FUNCTION QDesignerPropertyEditorInterfaceFromPointer( ... )
+   RETURN HB_QDesignerPropertyEditorInterface():fromPointer( ... )
+
 
 CREATE CLASS QDesignerPropertyEditorInterface INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QDesignerPropertyEditorInterface
 
@@ -126,7 +132,7 @@ METHOD QDesignerPropertyEditorInterface:new( ... )
 METHOD QDesignerPropertyEditorInterface:core( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDesignerFormEditorInterface():from( Qt_QDesignerPropertyEditorInterface_core( ::pPtr, ... ) )
+      RETURN QDesignerFormEditorInterfaceFromPointer( Qt_QDesignerPropertyEditorInterface_core( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -150,7 +156,7 @@ METHOD QDesignerPropertyEditorInterface:isReadOnly( ... )
 METHOD QDesignerPropertyEditorInterface:object( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QObject():from( Qt_QDesignerPropertyEditorInterface_object( ::pPtr, ... ) )
+      RETURN QObjectFromPointer( Qt_QDesignerPropertyEditorInterface_object( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

@@ -98,6 +98,12 @@
 FUNCTION QTextInlineObject( ... )
    RETURN HB_QTextInlineObject():new( ... )
 
+FUNCTION QTextInlineObjectFrom( ... )
+   RETURN HB_QTextInlineObject():from( ... )
+
+FUNCTION QTextInlineObjectFromPointer( ... )
+   RETURN HB_QTextInlineObject():fromPointer( ... )
+
 
 CREATE CLASS QTextInlineObject INHERIT HbQtObjectHandler FUNCTION HB_QTextInlineObject
 
@@ -148,7 +154,7 @@ METHOD QTextInlineObject:descent( ... )
 METHOD QTextInlineObject:format( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextFormat():from( Qt_QTextInlineObject_format( ::pPtr, ... ) )
+      RETURN QTextFormatFromPointer( Qt_QTextInlineObject_format( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -180,7 +186,7 @@ METHOD QTextInlineObject:isValid( ... )
 METHOD QTextInlineObject:rect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRectF():from( Qt_QTextInlineObject_rect( ::pPtr, ... ) )
+      RETURN QRectFFromPointer( Qt_QTextInlineObject_rect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

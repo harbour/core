@@ -98,6 +98,12 @@
 FUNCTION QItemEditorFactory( ... )
    RETURN HB_QItemEditorFactory():new( ... )
 
+FUNCTION QItemEditorFactoryFrom( ... )
+   RETURN HB_QItemEditorFactory():from( ... )
+
+FUNCTION QItemEditorFactoryFromPointer( ... )
+   RETURN HB_QItemEditorFactory():fromPointer( ... )
+
 
 CREATE CLASS QItemEditorFactory INHERIT HbQtObjectHandler FUNCTION HB_QItemEditorFactory
 
@@ -125,7 +131,7 @@ METHOD QItemEditorFactory:createEditor( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QWidget():from( Qt_QItemEditorFactory_createEditor( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QItemEditorFactory_createEditor( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -149,7 +155,7 @@ METHOD QItemEditorFactory:valuePropertyName( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QByteArray():from( Qt_QItemEditorFactory_valuePropertyName( ::pPtr, ... ) )
+         RETURN QByteArrayFromPointer( Qt_QItemEditorFactory_valuePropertyName( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

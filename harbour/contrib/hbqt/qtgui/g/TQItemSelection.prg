@@ -98,6 +98,12 @@
 FUNCTION QItemSelection( ... )
    RETURN HB_QItemSelection():new( ... )
 
+FUNCTION QItemSelectionFrom( ... )
+   RETURN HB_QItemSelection():from( ... )
+
+FUNCTION QItemSelectionFromPointer( ... )
+   RETURN HB_QItemSelection():fromPointer( ... )
+
 
 CREATE CLASS QItemSelection INHERIT HbQtObjectHandler, HB_QList FUNCTION HB_QItemSelection
 

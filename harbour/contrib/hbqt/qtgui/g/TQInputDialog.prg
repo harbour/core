@@ -98,6 +98,12 @@
 FUNCTION QInputDialog( ... )
    RETURN HB_QInputDialog():new( ... )
 
+FUNCTION QInputDialogFrom( ... )
+   RETURN HB_QInputDialog():from( ... )
+
+FUNCTION QInputDialogFromPointer( ... )
+   RETURN HB_QInputDialog():fromPointer( ... )
+
 
 CREATE CLASS QInputDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QInputDialog
 
@@ -171,7 +177,7 @@ METHOD QInputDialog:cancelButtonText( ... )
 METHOD QInputDialog:comboBoxItems( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QInputDialog_comboBoxItems( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QInputDialog_comboBoxItems( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

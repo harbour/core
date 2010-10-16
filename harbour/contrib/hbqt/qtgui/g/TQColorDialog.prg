@@ -98,6 +98,12 @@
 FUNCTION QColorDialog( ... )
    RETURN HB_QColorDialog():new( ... )
 
+FUNCTION QColorDialogFrom( ... )
+   RETURN HB_QColorDialog():from( ... )
+
+FUNCTION QColorDialogFromPointer( ... )
+   RETURN HB_QColorDialog():fromPointer( ... )
+
 
 CREATE CLASS QColorDialog INHERIT HbQtObjectHandler, HB_QDialog FUNCTION HB_QColorDialog
 
@@ -134,7 +140,7 @@ METHOD QColorDialog:new( ... )
 METHOD QColorDialog:currentColor( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QColor():from( Qt_QColorDialog_currentColor( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_QColorDialog_currentColor( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -158,7 +164,7 @@ METHOD QColorDialog:options( ... )
 METHOD QColorDialog:selectedColor( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QColor():from( Qt_QColorDialog_selectedColor( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_QColorDialog_selectedColor( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -254,29 +260,29 @@ METHOD QColorDialog:getColor( ... )
    CASE 4
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
-         RETURN HB_QColor():from( Qt_QColorDialog_getColor( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QColorDialog_getColor( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 3
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
-         RETURN HB_QColor():from( Qt_QColorDialog_getColor( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QColorDialog_getColor( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QColor():from( Qt_QColorDialog_getColor_1( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QColorDialog_getColor_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QColor():from( Qt_QColorDialog_getColor_1( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QColorDialog_getColor_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QColor():from( Qt_QColorDialog_getColor_1( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_QColorDialog_getColor_1( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

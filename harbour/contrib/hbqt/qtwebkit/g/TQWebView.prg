@@ -98,6 +98,12 @@
 FUNCTION QWebView( ... )
    RETURN HB_QWebView():new( ... )
 
+FUNCTION QWebViewFrom( ... )
+   RETURN HB_QWebView():from( ... )
+
+FUNCTION QWebViewFromPointer( ... )
+   RETURN HB_QWebView():fromPointer( ... )
+
 
 CREATE CLASS QWebView INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QWebView
 
@@ -163,7 +169,7 @@ METHOD QWebView:findText( ... )
 METHOD QWebView:history( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWebHistory():from( Qt_QWebView_history( ::pPtr, ... ) )
+      RETURN QWebHistoryFromPointer( Qt_QWebView_history( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -171,7 +177,7 @@ METHOD QWebView:history( ... )
 METHOD QWebView:icon( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QIcon():from( Qt_QWebView_icon( ::pPtr, ... ) )
+      RETURN QIconFromPointer( Qt_QWebView_icon( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -216,7 +222,7 @@ METHOD QWebView:load( ... )
 METHOD QWebView:page( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWebPage():from( Qt_QWebView_page( ::pPtr, ... ) )
+      RETURN QWebPageFromPointer( Qt_QWebView_page( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -226,7 +232,7 @@ METHOD QWebView:pageAction( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QAction():from( Qt_QWebView_pageAction( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QWebView_pageAction( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -334,7 +340,7 @@ METHOD QWebView:setZoomFactor( ... )
 METHOD QWebView:settings( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWebSettings():from( Qt_QWebView_settings( ::pPtr, ... ) )
+      RETURN QWebSettingsFromPointer( Qt_QWebView_settings( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -376,7 +382,7 @@ METHOD QWebView:triggerPageAction( ... )
 METHOD QWebView:url( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QUrl():from( Qt_QWebView_url( ::pPtr, ... ) )
+      RETURN QUrlFromPointer( Qt_QWebView_url( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

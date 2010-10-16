@@ -98,6 +98,12 @@
 FUNCTION QWebFrame( ... )
    RETURN HB_QWebFrame():new( ... )
 
+FUNCTION QWebFrameFrom( ... )
+   RETURN HB_QWebFrame():from( ... )
+
+FUNCTION QWebFrameFromPointer( ... )
+   RETURN HB_QWebFrame():fromPointer( ... )
+
 
 CREATE CLASS QWebFrame INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QWebFrame
 
@@ -175,7 +181,7 @@ METHOD QWebFrame:addToJavaScriptWindowObject( ... )
 METHOD QWebFrame:childFrames( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QWebFrame_childFrames( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QWebFrame_childFrames( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -183,7 +189,7 @@ METHOD QWebFrame:childFrames( ... )
 METHOD QWebFrame:contentsSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QWebFrame_contentsSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QWebFrame_contentsSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -199,7 +205,7 @@ METHOD QWebFrame:frameName( ... )
 METHOD QWebFrame:geometry( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QWebFrame_geometry( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QWebFrame_geometry( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -209,7 +215,7 @@ METHOD QWebFrame:hitTestContent( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QWebHitTestResult():from( Qt_QWebFrame_hitTestContent( ::pPtr, ... ) )
+         RETURN QWebHitTestResultFromPointer( Qt_QWebFrame_hitTestContent( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -219,7 +225,7 @@ METHOD QWebFrame:hitTestContent( ... )
 METHOD QWebFrame:icon( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QIcon():from( Qt_QWebFrame_icon( ::pPtr, ... ) )
+      RETURN QIconFromPointer( Qt_QWebFrame_icon( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -239,7 +245,7 @@ METHOD QWebFrame:load( ... )
 METHOD QWebFrame:page( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWebPage():from( Qt_QWebFrame_page( ::pPtr, ... ) )
+      RETURN QWebPageFromPointer( Qt_QWebFrame_page( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -247,7 +253,7 @@ METHOD QWebFrame:page( ... )
 METHOD QWebFrame:parentFrame( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWebFrame():from( Qt_QWebFrame_parentFrame( ::pPtr, ... ) )
+      RETURN QWebFrameFromPointer( Qt_QWebFrame_parentFrame( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -255,7 +261,7 @@ METHOD QWebFrame:parentFrame( ... )
 METHOD QWebFrame:pos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QWebFrame_pos( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QWebFrame_pos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -349,7 +355,7 @@ METHOD QWebFrame:scrollBarValue( ... )
 METHOD QWebFrame:scrollPosition( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QWebFrame_scrollPosition( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QWebFrame_scrollPosition( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -357,7 +363,7 @@ METHOD QWebFrame:scrollPosition( ... )
 METHOD QWebFrame:securityOrigin( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWebSecurityOrigin():from( Qt_QWebFrame_securityOrigin( ::pPtr, ... ) )
+      RETURN QWebSecurityOriginFromPointer( Qt_QWebFrame_securityOrigin( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -511,7 +517,7 @@ METHOD QWebFrame:toPlainText( ... )
 METHOD QWebFrame:url( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QUrl():from( Qt_QWebFrame_url( ::pPtr, ... ) )
+      RETURN QUrlFromPointer( Qt_QWebFrame_url( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -529,7 +535,7 @@ METHOD QWebFrame:evaluateJavaScript( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QVariant():from( Qt_QWebFrame_evaluateJavaScript( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QWebFrame_evaluateJavaScript( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

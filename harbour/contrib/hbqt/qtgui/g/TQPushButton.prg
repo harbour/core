@@ -98,6 +98,12 @@
 FUNCTION QPushButton( ... )
    RETURN HB_QPushButton():new( ... )
 
+FUNCTION QPushButtonFrom( ... )
+   RETURN HB_QPushButton():from( ... )
+
+FUNCTION QPushButtonFromPointer( ... )
+   RETURN HB_QPushButton():fromPointer( ... )
+
 
 CREATE CLASS QPushButton INHERIT HbQtObjectHandler, HB_QAbstractButton FUNCTION HB_QPushButton
 
@@ -152,7 +158,7 @@ METHOD QPushButton:isFlat( ... )
 METHOD QPushButton:menu( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMenu():from( Qt_QPushButton_menu( ::pPtr, ... ) )
+      RETURN QMenuFromPointer( Qt_QPushButton_menu( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

@@ -98,6 +98,12 @@
 FUNCTION QStyleOptionTab( ... )
    RETURN HB_QStyleOptionTab():new( ... )
 
+FUNCTION QStyleOptionTabFrom( ... )
+   RETURN HB_QStyleOptionTab():from( ... )
+
+FUNCTION QStyleOptionTabFromPointer( ... )
+   RETURN HB_QStyleOptionTab():fromPointer( ... )
+
 
 CREATE CLASS QStyleOptionTab INHERIT HbQtObjectHandler, HB_QStyleOption FUNCTION HB_QStyleOptionTab
 
@@ -134,7 +140,7 @@ METHOD QStyleOptionTab:cornerWidgets( ... )
 METHOD QStyleOptionTab:icon( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QIcon():from( Qt_QStyleOptionTab_icon( ::pPtr, ... ) )
+      RETURN QIconFromPointer( Qt_QStyleOptionTab_icon( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

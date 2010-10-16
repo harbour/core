@@ -98,6 +98,12 @@
 FUNCTION QDesignerActionEditorInterface( ... )
    RETURN HB_QDesignerActionEditorInterface():new( ... )
 
+FUNCTION QDesignerActionEditorInterfaceFrom( ... )
+   RETURN HB_QDesignerActionEditorInterface():from( ... )
+
+FUNCTION QDesignerActionEditorInterfaceFromPointer( ... )
+   RETURN HB_QDesignerActionEditorInterface():fromPointer( ... )
+
 
 CREATE CLASS QDesignerActionEditorInterface INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QDesignerActionEditorInterface
 
@@ -123,7 +129,7 @@ METHOD QDesignerActionEditorInterface:new( ... )
 METHOD QDesignerActionEditorInterface:core( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDesignerFormEditorInterface():from( Qt_QDesignerActionEditorInterface_core( ::pPtr, ... ) )
+      RETURN QDesignerFormEditorInterfaceFromPointer( Qt_QDesignerActionEditorInterface_core( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

@@ -98,6 +98,12 @@
 FUNCTION QWindowStateChangeEvent( ... )
    RETURN HB_QWindowStateChangeEvent():new( ... )
 
+FUNCTION QWindowStateChangeEventFrom( ... )
+   RETURN HB_QWindowStateChangeEvent():from( ... )
+
+FUNCTION QWindowStateChangeEventFromPointer( ... )
+   RETURN HB_QWindowStateChangeEvent():fromPointer( ... )
+
 
 CREATE CLASS QWindowStateChangeEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_QWindowStateChangeEvent
 

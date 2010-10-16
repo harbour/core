@@ -98,6 +98,12 @@
 FUNCTION QList( ... )
    RETURN HB_QList():new( ... )
 
+FUNCTION QListFrom( ... )
+   RETURN HB_QList():from( ... )
+
+FUNCTION QListFromPointer( ... )
+   RETURN HB_QList():fromPointer( ... )
+
 
 CREATE CLASS QList INHERIT HbQtObjectHandler FUNCTION HB_QList
 

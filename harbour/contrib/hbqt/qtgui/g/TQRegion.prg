@@ -98,6 +98,12 @@
 FUNCTION QRegion( ... )
    RETURN HB_QRegion():new( ... )
 
+FUNCTION QRegionFrom( ... )
+   RETURN HB_QRegion():from( ... )
+
+FUNCTION QRegionFromPointer( ... )
+   RETURN HB_QRegion():fromPointer( ... )
+
 
 CREATE CLASS QRegion INHERIT HbQtObjectHandler FUNCTION HB_QRegion
 
@@ -137,7 +143,7 @@ METHOD QRegion:new( ... )
 METHOD QRegion:boundingRect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QRegion_boundingRect( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QRegion_boundingRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -166,9 +172,9 @@ METHOD QRegion:intersected( ... )
       CASE hb_isObject( hb_pvalue( 1 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) )
          CASE "QREGION"
-            RETURN HB_QRegion():from( Qt_QRegion_intersected( ::pPtr, ... ) )
+            RETURN QRegionFromPointer( Qt_QRegion_intersected( ::pPtr, ... ) )
          CASE "QRECT"
-            RETURN HB_QRegion():from( Qt_QRegion_intersected_1( ::pPtr, ... ) )
+            RETURN QRegionFromPointer( Qt_QRegion_intersected_1( ::pPtr, ... ) )
          ENDSWITCH
       ENDCASE
       EXIT
@@ -226,7 +232,7 @@ METHOD QRegion:subtracted( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QRegion():from( Qt_QRegion_subtracted( ::pPtr, ... ) )
+         RETURN QRegionFromPointer( Qt_QRegion_subtracted( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -256,13 +262,13 @@ METHOD QRegion:translated( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QRegion():from( Qt_QRegion_translated( ::pPtr, ... ) )
+         RETURN QRegionFromPointer( Qt_QRegion_translated( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QRegion():from( Qt_QRegion_translated_1( ::pPtr, ... ) )
+         RETURN QRegionFromPointer( Qt_QRegion_translated_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -276,9 +282,9 @@ METHOD QRegion:united( ... )
       CASE hb_isObject( hb_pvalue( 1 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) )
          CASE "QREGION"
-            RETURN HB_QRegion():from( Qt_QRegion_united( ::pPtr, ... ) )
+            RETURN QRegionFromPointer( Qt_QRegion_united( ::pPtr, ... ) )
          CASE "QRECT"
-            RETURN HB_QRegion():from( Qt_QRegion_united_1( ::pPtr, ... ) )
+            RETURN QRegionFromPointer( Qt_QRegion_united_1( ::pPtr, ... ) )
          ENDSWITCH
       ENDCASE
       EXIT
@@ -291,7 +297,7 @@ METHOD QRegion:xored( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QRegion():from( Qt_QRegion_xored( ::pPtr, ... ) )
+         RETURN QRegionFromPointer( Qt_QRegion_xored( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

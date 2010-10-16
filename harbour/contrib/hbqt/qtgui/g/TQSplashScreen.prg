@@ -98,6 +98,12 @@
 FUNCTION QSplashScreen( ... )
    RETURN HB_QSplashScreen():new( ... )
 
+FUNCTION QSplashScreenFrom( ... )
+   RETURN HB_QSplashScreen():from( ... )
+
+FUNCTION QSplashScreenFromPointer( ... )
+   RETURN HB_QSplashScreen():fromPointer( ... )
+
 
 CREATE CLASS QSplashScreen INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QSplashScreen
 
@@ -137,7 +143,7 @@ METHOD QSplashScreen:finish( ... )
 METHOD QSplashScreen:pixmap( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPixmap():from( Qt_QSplashScreen_pixmap( ::pPtr, ... ) )
+      RETURN QPixmapFromPointer( Qt_QSplashScreen_pixmap( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

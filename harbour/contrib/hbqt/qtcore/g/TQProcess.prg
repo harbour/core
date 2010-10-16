@@ -98,6 +98,12 @@
 FUNCTION QProcess( ... )
    RETURN HB_QProcess():new( ... )
 
+FUNCTION QProcessFrom( ... )
+   RETURN HB_QProcess():from( ... )
+
+FUNCTION QProcessFromPointer( ... )
+   RETURN HB_QProcess():fromPointer( ... )
+
 
 CREATE CLASS QProcess INHERIT HbQtObjectHandler, HB_QIODevice FUNCTION HB_QProcess
 
@@ -180,7 +186,7 @@ METHOD QProcess:closeWriteChannel( ... )
 METHOD QProcess:environment( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QProcess_environment( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QProcess_environment( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -220,7 +226,7 @@ METHOD QProcess:processChannelMode( ... )
 METHOD QProcess:readAllStandardError( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QByteArray():from( Qt_QProcess_readAllStandardError( ::pPtr, ... ) )
+      RETURN QByteArrayFromPointer( Qt_QProcess_readAllStandardError( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -228,7 +234,7 @@ METHOD QProcess:readAllStandardError( ... )
 METHOD QProcess:readAllStandardOutput( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QByteArray():from( Qt_QProcess_readAllStandardOutput( ::pPtr, ... ) )
+      RETURN QByteArrayFromPointer( Qt_QProcess_readAllStandardOutput( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -470,7 +476,7 @@ METHOD QProcess:startDetached( ... )
 METHOD QProcess:systemEnvironment( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QProcess_systemEnvironment( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QProcess_systemEnvironment( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

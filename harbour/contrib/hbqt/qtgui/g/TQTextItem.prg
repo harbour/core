@@ -98,6 +98,12 @@
 FUNCTION QTextItem( ... )
    RETURN HB_QTextItem():new( ... )
 
+FUNCTION QTextItemFrom( ... )
+   RETURN HB_QTextItem():from( ... )
+
+FUNCTION QTextItemFromPointer( ... )
+   RETURN HB_QTextItem():fromPointer( ... )
+
 
 CREATE CLASS QTextItem INHERIT HbQtObjectHandler FUNCTION HB_QTextItem
 
@@ -141,7 +147,7 @@ METHOD QTextItem:descent( ... )
 METHOD QTextItem:font( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFont():from( Qt_QTextItem_font( ::pPtr, ... ) )
+      RETURN QFontFromPointer( Qt_QTextItem_font( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

@@ -98,6 +98,12 @@
 FUNCTION QGraphicsTextItem( ... )
    RETURN HB_QGraphicsTextItem():new( ... )
 
+FUNCTION QGraphicsTextItemFrom( ... )
+   RETURN HB_QGraphicsTextItem():from( ... )
+
+FUNCTION QGraphicsTextItemFromPointer( ... )
+   RETURN HB_QGraphicsTextItem():fromPointer( ... )
+
 
 CREATE CLASS QGraphicsTextItem INHERIT HbQtObjectHandler, HB_QObject, HB_QGraphicsItem FUNCTION HB_QGraphicsTextItem
 
@@ -148,7 +154,7 @@ METHOD QGraphicsTextItem:adjustSize( ... )
 METHOD QGraphicsTextItem:defaultTextColor( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QColor():from( Qt_QGraphicsTextItem_defaultTextColor( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_QGraphicsTextItem_defaultTextColor( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -156,7 +162,7 @@ METHOD QGraphicsTextItem:defaultTextColor( ... )
 METHOD QGraphicsTextItem:document( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextDocument():from( Qt_QGraphicsTextItem_document( ::pPtr, ... ) )
+      RETURN QTextDocumentFromPointer( Qt_QGraphicsTextItem_document( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -164,7 +170,7 @@ METHOD QGraphicsTextItem:document( ... )
 METHOD QGraphicsTextItem:font( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFont():from( Qt_QGraphicsTextItem_font( ::pPtr, ... ) )
+      RETURN QFontFromPointer( Qt_QGraphicsTextItem_font( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -308,7 +314,7 @@ METHOD QGraphicsTextItem:tabChangesFocus( ... )
 METHOD QGraphicsTextItem:textCursor( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextCursor():from( Qt_QGraphicsTextItem_textCursor( ::pPtr, ... ) )
+      RETURN QTextCursorFromPointer( Qt_QGraphicsTextItem_textCursor( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

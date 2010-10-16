@@ -98,6 +98,12 @@
 FUNCTION QDesktopWidget( ... )
    RETURN HB_QDesktopWidget():new( ... )
 
+FUNCTION QDesktopWidgetFrom( ... )
+   RETURN HB_QDesktopWidget():from( ... )
+
+FUNCTION QDesktopWidgetFromPointer( ... )
+   RETURN HB_QDesktopWidget():fromPointer( ... )
+
 
 CREATE CLASS QDesktopWidget INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QDesktopWidget
 
@@ -133,18 +139,18 @@ METHOD QDesktopWidget:availableGeometry( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QRect():from( Qt_QDesktopWidget_availableGeometry( ::pPtr, ... ) )
+         RETURN QRectFromPointer( Qt_QDesktopWidget_availableGeometry( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) )
          CASE "QWIDGET"
-            RETURN HB_QRect():from( Qt_QDesktopWidget_availableGeometry_1( ::pPtr, ... ) )
+            RETURN QRectFromPointer( Qt_QDesktopWidget_availableGeometry_1( ::pPtr, ... ) )
          CASE "QPOINT"
-            RETURN HB_QRect():from( Qt_QDesktopWidget_availableGeometry_2( ::pPtr, ... ) )
+            RETURN QRectFromPointer( Qt_QDesktopWidget_availableGeometry_2( ::pPtr, ... ) )
          ENDSWITCH
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QRect():from( Qt_QDesktopWidget_availableGeometry( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QDesktopWidget_availableGeometry( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -178,11 +184,11 @@ METHOD QDesktopWidget:screen( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QWidget():from( Qt_QDesktopWidget_screen( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QDesktopWidget_screen( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QWidget():from( Qt_QDesktopWidget_screen( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QDesktopWidget_screen( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -192,18 +198,18 @@ METHOD QDesktopWidget:screenGeometry( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QRect():from( Qt_QDesktopWidget_screenGeometry( ::pPtr, ... ) )
+         RETURN QRectFromPointer( Qt_QDesktopWidget_screenGeometry( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) )
          SWITCH __objGetClsName( hb_pvalue( 1 ) )
          CASE "QWIDGET"
-            RETURN HB_QRect():from( Qt_QDesktopWidget_screenGeometry_1( ::pPtr, ... ) )
+            RETURN QRectFromPointer( Qt_QDesktopWidget_screenGeometry_1( ::pPtr, ... ) )
          CASE "QPOINT"
-            RETURN HB_QRect():from( Qt_QDesktopWidget_screenGeometry_2( ::pPtr, ... ) )
+            RETURN QRectFromPointer( Qt_QDesktopWidget_screenGeometry_2( ::pPtr, ... ) )
          ENDSWITCH
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QRect():from( Qt_QDesktopWidget_screenGeometry( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QDesktopWidget_screenGeometry( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

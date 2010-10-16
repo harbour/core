@@ -98,6 +98,12 @@
 FUNCTION QWidgetItem( ... )
    RETURN HB_QWidgetItem():new( ... )
 
+FUNCTION QWidgetItemFrom( ... )
+   RETURN HB_QWidgetItem():from( ... )
+
+FUNCTION QWidgetItemFromPointer( ... )
+   RETURN HB_QWidgetItem():fromPointer( ... )
+
 
 CREATE CLASS QWidgetItem INHERIT HbQtObjectHandler, HB_QLayoutItem FUNCTION HB_QWidgetItem
 
@@ -129,7 +135,7 @@ METHOD QWidgetItem:isEmpty( ... )
 METHOD QWidgetItem:widget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QWidgetItem_widget( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QWidgetItem_widget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

@@ -98,6 +98,12 @@
 FUNCTION QGraphicsPixmapItem( ... )
    RETURN HB_QGraphicsPixmapItem():new( ... )
 
+FUNCTION QGraphicsPixmapItemFrom( ... )
+   RETURN HB_QGraphicsPixmapItem():from( ... )
+
+FUNCTION QGraphicsPixmapItemFromPointer( ... )
+   RETURN HB_QGraphicsPixmapItem():fromPointer( ... )
+
 
 CREATE CLASS QGraphicsPixmapItem INHERIT HbQtObjectHandler, HB_QGraphicsItem FUNCTION HB_QGraphicsPixmapItem
 
@@ -128,7 +134,7 @@ METHOD QGraphicsPixmapItem:new( ... )
 METHOD QGraphicsPixmapItem:offset( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPointF():from( Qt_QGraphicsPixmapItem_offset( ::pPtr, ... ) )
+      RETURN QPointFFromPointer( Qt_QGraphicsPixmapItem_offset( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -136,7 +142,7 @@ METHOD QGraphicsPixmapItem:offset( ... )
 METHOD QGraphicsPixmapItem:pixmap( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPixmap():from( Qt_QGraphicsPixmapItem_pixmap( ::pPtr, ... ) )
+      RETURN QPixmapFromPointer( Qt_QGraphicsPixmapItem_pixmap( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

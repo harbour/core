@@ -98,6 +98,12 @@
 FUNCTION QDesignerFormWindowManagerInterface( ... )
    RETURN HB_QDesignerFormWindowManagerInterface():new( ... )
 
+FUNCTION QDesignerFormWindowManagerInterfaceFrom( ... )
+   RETURN HB_QDesignerFormWindowManagerInterface():from( ... )
+
+FUNCTION QDesignerFormWindowManagerInterfaceFromPointer( ... )
+   RETURN HB_QDesignerFormWindowManagerInterface():fromPointer( ... )
+
 
 CREATE CLASS QDesignerFormWindowManagerInterface INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QDesignerFormWindowManagerInterface
 
@@ -145,7 +151,7 @@ METHOD QDesignerFormWindowManagerInterface:new( ... )
 METHOD QDesignerFormWindowManagerInterface:actionAdjustSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionAdjustSize( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QDesignerFormWindowManagerInterface_actionAdjustSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -153,7 +159,7 @@ METHOD QDesignerFormWindowManagerInterface:actionAdjustSize( ... )
 METHOD QDesignerFormWindowManagerInterface:actionBreakLayout( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionBreakLayout( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QDesignerFormWindowManagerInterface_actionBreakLayout( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -161,7 +167,7 @@ METHOD QDesignerFormWindowManagerInterface:actionBreakLayout( ... )
 METHOD QDesignerFormWindowManagerInterface:actionCopy( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionCopy( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QDesignerFormWindowManagerInterface_actionCopy( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -169,7 +175,7 @@ METHOD QDesignerFormWindowManagerInterface:actionCopy( ... )
 METHOD QDesignerFormWindowManagerInterface:actionCut( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionCut( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QDesignerFormWindowManagerInterface_actionCut( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -177,7 +183,7 @@ METHOD QDesignerFormWindowManagerInterface:actionCut( ... )
 METHOD QDesignerFormWindowManagerInterface:actionDelete( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionDelete( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QDesignerFormWindowManagerInterface_actionDelete( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -185,7 +191,7 @@ METHOD QDesignerFormWindowManagerInterface:actionDelete( ... )
 METHOD QDesignerFormWindowManagerInterface:actionFormLayout( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionFormLayout( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QDesignerFormWindowManagerInterface_actionFormLayout( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -193,7 +199,7 @@ METHOD QDesignerFormWindowManagerInterface:actionFormLayout( ... )
 METHOD QDesignerFormWindowManagerInterface:actionGridLayout( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionGridLayout( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QDesignerFormWindowManagerInterface_actionGridLayout( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -201,7 +207,7 @@ METHOD QDesignerFormWindowManagerInterface:actionGridLayout( ... )
 METHOD QDesignerFormWindowManagerInterface:actionHorizontalLayout( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionHorizontalLayout( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QDesignerFormWindowManagerInterface_actionHorizontalLayout( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -209,7 +215,7 @@ METHOD QDesignerFormWindowManagerInterface:actionHorizontalLayout( ... )
 METHOD QDesignerFormWindowManagerInterface:actionLower( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionLower( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QDesignerFormWindowManagerInterface_actionLower( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -217,7 +223,7 @@ METHOD QDesignerFormWindowManagerInterface:actionLower( ... )
 METHOD QDesignerFormWindowManagerInterface:actionPaste( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionPaste( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QDesignerFormWindowManagerInterface_actionPaste( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -225,7 +231,7 @@ METHOD QDesignerFormWindowManagerInterface:actionPaste( ... )
 METHOD QDesignerFormWindowManagerInterface:actionRaise( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionRaise( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QDesignerFormWindowManagerInterface_actionRaise( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -233,7 +239,7 @@ METHOD QDesignerFormWindowManagerInterface:actionRaise( ... )
 METHOD QDesignerFormWindowManagerInterface:actionRedo( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionRedo( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QDesignerFormWindowManagerInterface_actionRedo( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -241,7 +247,7 @@ METHOD QDesignerFormWindowManagerInterface:actionRedo( ... )
 METHOD QDesignerFormWindowManagerInterface:actionSelectAll( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionSelectAll( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QDesignerFormWindowManagerInterface_actionSelectAll( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -249,7 +255,7 @@ METHOD QDesignerFormWindowManagerInterface:actionSelectAll( ... )
 METHOD QDesignerFormWindowManagerInterface:actionSimplifyLayout( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionSimplifyLayout( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QDesignerFormWindowManagerInterface_actionSimplifyLayout( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -257,7 +263,7 @@ METHOD QDesignerFormWindowManagerInterface:actionSimplifyLayout( ... )
 METHOD QDesignerFormWindowManagerInterface:actionSplitHorizontal( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionSplitHorizontal( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QDesignerFormWindowManagerInterface_actionSplitHorizontal( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -265,7 +271,7 @@ METHOD QDesignerFormWindowManagerInterface:actionSplitHorizontal( ... )
 METHOD QDesignerFormWindowManagerInterface:actionSplitVertical( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionSplitVertical( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QDesignerFormWindowManagerInterface_actionSplitVertical( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -273,7 +279,7 @@ METHOD QDesignerFormWindowManagerInterface:actionSplitVertical( ... )
 METHOD QDesignerFormWindowManagerInterface:actionUndo( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionUndo( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QDesignerFormWindowManagerInterface_actionUndo( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -281,7 +287,7 @@ METHOD QDesignerFormWindowManagerInterface:actionUndo( ... )
 METHOD QDesignerFormWindowManagerInterface:actionVerticalLayout( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAction():from( Qt_QDesignerFormWindowManagerInterface_actionVerticalLayout( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QDesignerFormWindowManagerInterface_actionVerticalLayout( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -289,7 +295,7 @@ METHOD QDesignerFormWindowManagerInterface:actionVerticalLayout( ... )
 METHOD QDesignerFormWindowManagerInterface:activeFormWindow( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDesignerFormWindowInterface():from( Qt_QDesignerFormWindowManagerInterface_activeFormWindow( ::pPtr, ... ) )
+      RETURN QDesignerFormWindowInterfaceFromPointer( Qt_QDesignerFormWindowManagerInterface_activeFormWindow( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -297,7 +303,7 @@ METHOD QDesignerFormWindowManagerInterface:activeFormWindow( ... )
 METHOD QDesignerFormWindowManagerInterface:core( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDesignerFormEditorInterface():from( Qt_QDesignerFormWindowManagerInterface_core( ::pPtr, ... ) )
+      RETURN QDesignerFormEditorInterfaceFromPointer( Qt_QDesignerFormWindowManagerInterface_core( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -307,17 +313,17 @@ METHOD QDesignerFormWindowManagerInterface:createFormWindow( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QDesignerFormWindowInterface():from( Qt_QDesignerFormWindowManagerInterface_createFormWindow( ::pPtr, ... ) )
+         RETURN QDesignerFormWindowInterfaceFromPointer( Qt_QDesignerFormWindowManagerInterface_createFormWindow( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QDesignerFormWindowInterface():from( Qt_QDesignerFormWindowManagerInterface_createFormWindow( ::pPtr, ... ) )
+         RETURN QDesignerFormWindowInterfaceFromPointer( Qt_QDesignerFormWindowManagerInterface_createFormWindow( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QDesignerFormWindowInterface():from( Qt_QDesignerFormWindowManagerInterface_createFormWindow( ::pPtr, ... ) )
+      RETURN QDesignerFormWindowInterfaceFromPointer( Qt_QDesignerFormWindowManagerInterface_createFormWindow( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -327,7 +333,7 @@ METHOD QDesignerFormWindowManagerInterface:formWindow( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QDesignerFormWindowInterface():from( Qt_QDesignerFormWindowManagerInterface_formWindow( ::pPtr, ... ) )
+         RETURN QDesignerFormWindowInterfaceFromPointer( Qt_QDesignerFormWindowManagerInterface_formWindow( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

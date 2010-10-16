@@ -98,6 +98,12 @@
 FUNCTION QStandardItem( ... )
    RETURN HB_QStandardItem():new( ... )
 
+FUNCTION QStandardItemFrom( ... )
+   RETURN HB_QStandardItem():from( ... )
+
+FUNCTION QStandardItemFromPointer( ... )
+   RETURN HB_QStandardItem():fromPointer( ... )
+
 
 CREATE CLASS QStandardItem INHERIT HbQtObjectHandler FUNCTION HB_QStandardItem
 
@@ -220,7 +226,7 @@ METHOD QStandardItem:appendRow( ... )
 METHOD QStandardItem:background( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QStandardItem_background( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QStandardItem_background( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -238,13 +244,13 @@ METHOD QStandardItem:child( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QStandardItem():from( Qt_QStandardItem_child( ::pPtr, ... ) )
+         RETURN QStandardItemFromPointer( Qt_QStandardItem_child( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QStandardItem():from( Qt_QStandardItem_child( ::pPtr, ... ) )
+         RETURN QStandardItemFromPointer( Qt_QStandardItem_child( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -254,7 +260,7 @@ METHOD QStandardItem:child( ... )
 METHOD QStandardItem:clone( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStandardItem():from( Qt_QStandardItem_clone( ::pPtr, ... ) )
+      RETURN QStandardItemFromPointer( Qt_QStandardItem_clone( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -280,11 +286,11 @@ METHOD QStandardItem:data( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QVariant():from( Qt_QStandardItem_data( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QStandardItem_data( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QVariant():from( Qt_QStandardItem_data( ::pPtr, ... ) )
+      RETURN QVariantFromPointer( Qt_QStandardItem_data( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -300,7 +306,7 @@ METHOD QStandardItem:flags( ... )
 METHOD QStandardItem:font( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFont():from( Qt_QStandardItem_font( ::pPtr, ... ) )
+      RETURN QFontFromPointer( Qt_QStandardItem_font( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -308,7 +314,7 @@ METHOD QStandardItem:font( ... )
 METHOD QStandardItem:foreground( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QStandardItem_foreground( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QStandardItem_foreground( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -324,7 +330,7 @@ METHOD QStandardItem:hasChildren( ... )
 METHOD QStandardItem:icon( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QIcon():from( Qt_QStandardItem_icon( ::pPtr, ... ) )
+      RETURN QIconFromPointer( Qt_QStandardItem_icon( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -332,7 +338,7 @@ METHOD QStandardItem:icon( ... )
 METHOD QStandardItem:index( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QModelIndex():from( Qt_QStandardItem_index( ::pPtr, ... ) )
+      RETURN QModelIndexFromPointer( Qt_QStandardItem_index( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -432,7 +438,7 @@ METHOD QStandardItem:isTristate( ... )
 METHOD QStandardItem:model( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStandardItemModel():from( Qt_QStandardItem_model( ::pPtr, ... ) )
+      RETURN QStandardItemModelFromPointer( Qt_QStandardItem_model( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -440,7 +446,7 @@ METHOD QStandardItem:model( ... )
 METHOD QStandardItem:parent( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStandardItem():from( Qt_QStandardItem_parent( ::pPtr, ... ) )
+      RETURN QStandardItemFromPointer( Qt_QStandardItem_parent( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -836,7 +842,7 @@ METHOD QStandardItem:setWhatsThis( ... )
 METHOD QStandardItem:sizeHint( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QStandardItem_sizeHint( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QStandardItem_sizeHint( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -872,13 +878,13 @@ METHOD QStandardItem:takeChild( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QStandardItem():from( Qt_QStandardItem_takeChild( ::pPtr, ... ) )
+         RETURN QStandardItemFromPointer( Qt_QStandardItem_takeChild( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QStandardItem():from( Qt_QStandardItem_takeChild( ::pPtr, ... ) )
+         RETURN QStandardItemFromPointer( Qt_QStandardItem_takeChild( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -890,7 +896,7 @@ METHOD QStandardItem:takeColumn( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QList():from( Qt_QStandardItem_takeColumn( ::pPtr, ... ) )
+         RETURN QListFromPointer( Qt_QStandardItem_takeColumn( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -902,7 +908,7 @@ METHOD QStandardItem:takeRow( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QList():from( Qt_QStandardItem_takeRow( ::pPtr, ... ) )
+         RETURN QListFromPointer( Qt_QStandardItem_takeRow( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

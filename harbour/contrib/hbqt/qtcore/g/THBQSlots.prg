@@ -98,6 +98,12 @@
 FUNCTION HBQSlots( ... )
    RETURN HB_HBQSlots():new( ... )
 
+FUNCTION HBQSlotsFrom( ... )
+   RETURN HB_HBQSlots():from( ... )
+
+FUNCTION HBQSlotsFromPointer( ... )
+   RETURN HB_HBQSlots():fromPointer( ... )
+
 
 CREATE CLASS HBQSlots INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_HBQSlots
 

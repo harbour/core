@@ -1012,7 +1012,7 @@ METHOD IdeEditsManager:printPreview()
 
 METHOD IdeEditsManager:paintRequested( pPrinter )
    LOCAL qPrinter
-   qPrinter := HB_QPrinter():from( pPrinter )
+   qPrinter := QPrinterFromPointer( pPrinter )
    ::qCurEdit:print( qPrinter )
    RETURN Self
 

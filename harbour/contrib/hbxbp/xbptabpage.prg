@@ -158,7 +158,7 @@ METHOD XbpTabPage:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresParams, 
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF hb_isPointer( pQtObject )
-      ::oWidget := HB_QWidget():from( pQtObject )
+      ::oWidget := QWidgetFromPointer( pQtObject )
 
    ENDIF
 

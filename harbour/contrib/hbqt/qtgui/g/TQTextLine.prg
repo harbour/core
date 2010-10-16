@@ -98,6 +98,12 @@
 FUNCTION QTextLine( ... )
    RETURN HB_QTextLine():new( ... )
 
+FUNCTION QTextLineFrom( ... )
+   RETURN HB_QTextLine():from( ... )
+
+FUNCTION QTextLineFromPointer( ... )
+   RETURN HB_QTextLine():fromPointer( ... )
+
 
 CREATE CLASS QTextLine INHERIT HbQtObjectHandler FUNCTION HB_QTextLine
 
@@ -200,7 +206,7 @@ METHOD QTextLine:lineNumber( ... )
 METHOD QTextLine:naturalTextRect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRectF():from( Qt_QTextLine_naturalTextRect( ::pPtr, ... ) )
+      RETURN QRectFFromPointer( Qt_QTextLine_naturalTextRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -216,7 +222,7 @@ METHOD QTextLine:naturalTextWidth( ... )
 METHOD QTextLine:position( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPointF():from( Qt_QTextLine_position( ::pPtr, ... ) )
+      RETURN QPointFFromPointer( Qt_QTextLine_position( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -224,7 +230,7 @@ METHOD QTextLine:position( ... )
 METHOD QTextLine:rect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRectF():from( Qt_QTextLine_rect( ::pPtr, ... ) )
+      RETURN QRectFFromPointer( Qt_QTextLine_rect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

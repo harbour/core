@@ -98,6 +98,12 @@
 FUNCTION QTextCodec( ... )
    RETURN HB_QTextCodec():new( ... )
 
+FUNCTION QTextCodecFrom( ... )
+   RETURN HB_QTextCodec():from( ... )
+
+FUNCTION QTextCodecFromPointer( ... )
+   RETURN HB_QTextCodec():fromPointer( ... )
+
 
 CREATE CLASS QTextCodec INHERIT HbQtObjectHandler FUNCTION HB_QTextCodec
 
@@ -140,7 +146,7 @@ METHOD QTextCodec:new( ... )
 METHOD QTextCodec:aliases( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QTextCodec_aliases( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QTextCodec_aliases( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -164,7 +170,7 @@ METHOD QTextCodec:fromUnicode( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QByteArray():from( Qt_QTextCodec_fromUnicode( ::pPtr, ... ) )
+         RETURN QByteArrayFromPointer( Qt_QTextCodec_fromUnicode( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -174,7 +180,7 @@ METHOD QTextCodec:fromUnicode( ... )
 METHOD QTextCodec:makeDecoder( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextDecoder():from( Qt_QTextCodec_makeDecoder( ::pPtr, ... ) )
+      RETURN QTextDecoderFromPointer( Qt_QTextCodec_makeDecoder( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -182,7 +188,7 @@ METHOD QTextCodec:makeDecoder( ... )
 METHOD QTextCodec:makeEncoder( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextEncoder():from( Qt_QTextCodec_makeEncoder( ::pPtr, ... ) )
+      RETURN QTextEncoderFromPointer( Qt_QTextCodec_makeEncoder( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -198,7 +204,7 @@ METHOD QTextCodec:mibEnum( ... )
 METHOD QTextCodec:name( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QByteArray():from( Qt_QTextCodec_name( ::pPtr, ... ) )
+      RETURN QByteArrayFromPointer( Qt_QTextCodec_name( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -220,7 +226,7 @@ METHOD QTextCodec:toUnicode( ... )
 METHOD QTextCodec:codecForCStrings( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForCStrings( ::pPtr, ... ) )
+      RETURN QTextCodecFromPointer( Qt_QTextCodec_codecForCStrings( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -230,13 +236,13 @@ METHOD QTextCodec:codecForHtml( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForHtml( ::pPtr, ... ) )
+         RETURN QTextCodecFromPointer( Qt_QTextCodec_codecForHtml( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForHtml_1( ::pPtr, ... ) )
+         RETURN QTextCodecFromPointer( Qt_QTextCodec_codecForHtml_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -246,7 +252,7 @@ METHOD QTextCodec:codecForHtml( ... )
 METHOD QTextCodec:codecForLocale( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForLocale( ::pPtr, ... ) )
+      RETURN QTextCodecFromPointer( Qt_QTextCodec_codecForLocale( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -256,7 +262,7 @@ METHOD QTextCodec:codecForMib( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForMib( ::pPtr, ... ) )
+         RETURN QTextCodecFromPointer( Qt_QTextCodec_codecForMib( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -268,9 +274,9 @@ METHOD QTextCodec:codecForName( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForName_1( ::pPtr, ... ) )
+         RETURN QTextCodecFromPointer( Qt_QTextCodec_codecForName_1( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForName( ::pPtr, ... ) )
+         RETURN QTextCodecFromPointer( Qt_QTextCodec_codecForName( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -280,7 +286,7 @@ METHOD QTextCodec:codecForName( ... )
 METHOD QTextCodec:codecForTr( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextCodec():from( Qt_QTextCodec_codecForTr( ::pPtr, ... ) )
+      RETURN QTextCodecFromPointer( Qt_QTextCodec_codecForTr( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

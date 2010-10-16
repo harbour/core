@@ -98,6 +98,12 @@
 FUNCTION QAbstractItemView( ... )
    RETURN HB_QAbstractItemView():new( ... )
 
+FUNCTION QAbstractItemViewFrom( ... )
+   RETURN HB_QAbstractItemView():from( ... )
+
+FUNCTION QAbstractItemViewFromPointer( ... )
+   RETURN HB_QAbstractItemView():fromPointer( ... )
+
 
 CREATE CLASS QAbstractItemView INHERIT HbQtObjectHandler, HB_QAbstractScrollArea FUNCTION HB_QAbstractItemView
 
@@ -210,7 +216,7 @@ METHOD QAbstractItemView:closePersistentEditor( ... )
 METHOD QAbstractItemView:currentIndex( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QModelIndex():from( Qt_QAbstractItemView_currentIndex( ::pPtr, ... ) )
+      RETURN QModelIndexFromPointer( Qt_QAbstractItemView_currentIndex( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -266,7 +272,7 @@ METHOD QAbstractItemView:horizontalScrollMode( ... )
 METHOD QAbstractItemView:iconSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QAbstractItemView_iconSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QAbstractItemView_iconSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -276,7 +282,7 @@ METHOD QAbstractItemView:indexAt( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QModelIndex():from( Qt_QAbstractItemView_indexAt( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_QAbstractItemView_indexAt( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -288,7 +294,7 @@ METHOD QAbstractItemView:indexWidget( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QWidget():from( Qt_QAbstractItemView_indexWidget( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QAbstractItemView_indexWidget( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -300,11 +306,11 @@ METHOD QAbstractItemView:itemDelegate( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QAbstractItemDelegate():from( Qt_QAbstractItemView_itemDelegate_1( ::pPtr, ... ) )
+         RETURN QAbstractItemDelegateFromPointer( Qt_QAbstractItemView_itemDelegate_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QAbstractItemDelegate():from( Qt_QAbstractItemView_itemDelegate( ::pPtr, ... ) )
+      RETURN QAbstractItemDelegateFromPointer( Qt_QAbstractItemView_itemDelegate( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -314,7 +320,7 @@ METHOD QAbstractItemView:itemDelegateForColumn( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QAbstractItemDelegate():from( Qt_QAbstractItemView_itemDelegateForColumn( ::pPtr, ... ) )
+         RETURN QAbstractItemDelegateFromPointer( Qt_QAbstractItemView_itemDelegateForColumn( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -326,7 +332,7 @@ METHOD QAbstractItemView:itemDelegateForRow( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QAbstractItemDelegate():from( Qt_QAbstractItemView_itemDelegateForRow( ::pPtr, ... ) )
+         RETURN QAbstractItemDelegateFromPointer( Qt_QAbstractItemView_itemDelegateForRow( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -348,7 +354,7 @@ METHOD QAbstractItemView:keyboardSearch( ... )
 METHOD QAbstractItemView:model( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAbstractItemModel():from( Qt_QAbstractItemView_model( ::pPtr, ... ) )
+      RETURN QAbstractItemModelFromPointer( Qt_QAbstractItemView_model( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -368,7 +374,7 @@ METHOD QAbstractItemView:openPersistentEditor( ... )
 METHOD QAbstractItemView:rootIndex( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QModelIndex():from( Qt_QAbstractItemView_rootIndex( ::pPtr, ... ) )
+      RETURN QModelIndexFromPointer( Qt_QAbstractItemView_rootIndex( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -410,7 +416,7 @@ METHOD QAbstractItemView:selectionMode( ... )
 METHOD QAbstractItemView:selectionModel( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QItemSelectionModel():from( Qt_QAbstractItemView_selectionModel( ::pPtr, ... ) )
+      RETURN QItemSelectionModelFromPointer( Qt_QAbstractItemView_selectionModel( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -692,7 +698,7 @@ METHOD QAbstractItemView:sizeHintForIndex( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QSize():from( Qt_QAbstractItemView_sizeHintForIndex( ::pPtr, ... ) )
+         RETURN QSizeFromPointer( Qt_QAbstractItemView_sizeHintForIndex( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -740,7 +746,7 @@ METHOD QAbstractItemView:visualRect( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QRect():from( Qt_QAbstractItemView_visualRect( ::pPtr, ... ) )
+         RETURN QRectFromPointer( Qt_QAbstractItemView_visualRect( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

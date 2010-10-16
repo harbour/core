@@ -98,6 +98,12 @@
 FUNCTION QCursor( ... )
    RETURN HB_QCursor():new( ... )
 
+FUNCTION QCursorFrom( ... )
+   RETURN HB_QCursor():from( ... )
+
+FUNCTION QCursorFromPointer( ... )
+   RETURN HB_QCursor():fromPointer( ... )
+
 
 CREATE CLASS QCursor INHERIT HbQtObjectHandler FUNCTION HB_QCursor
 
@@ -128,7 +134,7 @@ METHOD QCursor:new( ... )
 METHOD QCursor:bitmap( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBitmap():from( Qt_QCursor_bitmap( ::pPtr, ... ) )
+      RETURN QBitmapFromPointer( Qt_QCursor_bitmap( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -136,7 +142,7 @@ METHOD QCursor:bitmap( ... )
 METHOD QCursor:hotSpot( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QCursor_hotSpot( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QCursor_hotSpot( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -144,7 +150,7 @@ METHOD QCursor:hotSpot( ... )
 METHOD QCursor:mask( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBitmap():from( Qt_QCursor_mask( ::pPtr, ... ) )
+      RETURN QBitmapFromPointer( Qt_QCursor_mask( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -152,7 +158,7 @@ METHOD QCursor:mask( ... )
 METHOD QCursor:pixmap( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPixmap():from( Qt_QCursor_pixmap( ::pPtr, ... ) )
+      RETURN QPixmapFromPointer( Qt_QCursor_pixmap( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -180,7 +186,7 @@ METHOD QCursor:shape( ... )
 METHOD QCursor:pos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QCursor_pos( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QCursor_pos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

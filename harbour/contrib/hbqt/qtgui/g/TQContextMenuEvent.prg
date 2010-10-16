@@ -98,6 +98,12 @@
 FUNCTION QContextMenuEvent( ... )
    RETURN HB_QContextMenuEvent():new( ... )
 
+FUNCTION QContextMenuEventFrom( ... )
+   RETURN HB_QContextMenuEvent():from( ... )
+
+FUNCTION QContextMenuEventFromPointer( ... )
+   RETURN HB_QContextMenuEvent():fromPointer( ... )
+
 
 CREATE CLASS QContextMenuEvent INHERIT HbQtObjectHandler, HB_QInputEvent FUNCTION HB_QContextMenuEvent
 
@@ -126,7 +132,7 @@ METHOD QContextMenuEvent:new( ... )
 METHOD QContextMenuEvent:globalPos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QContextMenuEvent_globalPos( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QContextMenuEvent_globalPos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -150,7 +156,7 @@ METHOD QContextMenuEvent:globalY( ... )
 METHOD QContextMenuEvent:pos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QContextMenuEvent_pos( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QContextMenuEvent_pos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

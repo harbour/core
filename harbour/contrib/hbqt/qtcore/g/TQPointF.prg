@@ -98,6 +98,12 @@
 FUNCTION QPointF( ... )
    RETURN HB_QPointF():new( ... )
 
+FUNCTION QPointFFrom( ... )
+   RETURN HB_QPointF():from( ... )
+
+FUNCTION QPointFFromPointer( ... )
+   RETURN HB_QPointF():fromPointer( ... )
+
 
 CREATE CLASS QPointF INHERIT HbQtObjectHandler FUNCTION HB_QPointF
 
@@ -175,7 +181,7 @@ METHOD QPointF:setY( ... )
 METHOD QPointF:toPoint( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QPointF_toPoint( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QPointF_toPoint( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

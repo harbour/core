@@ -98,6 +98,12 @@
 FUNCTION QAction( ... )
    RETURN HB_QAction():new( ... )
 
+FUNCTION QActionFrom( ... )
+   RETURN HB_QAction():from( ... )
+
+FUNCTION QActionFromPointer( ... )
+   RETURN HB_QAction():fromPointer( ... )
+
 
 CREATE CLASS QAction INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QAction
 
@@ -169,7 +175,7 @@ METHOD QAction:new( ... )
 METHOD QAction:actionGroup( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QActionGroup():from( Qt_QAction_actionGroup( ::pPtr, ... ) )
+      RETURN QActionGroupFromPointer( Qt_QAction_actionGroup( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -189,7 +195,7 @@ METHOD QAction:activate( ... )
 METHOD QAction:associatedWidgets( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QAction_associatedWidgets( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QAction_associatedWidgets( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -205,7 +211,7 @@ METHOD QAction:autoRepeat( ... )
 METHOD QAction:data( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QVariant():from( Qt_QAction_data( ::pPtr, ... ) )
+      RETURN QVariantFromPointer( Qt_QAction_data( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -213,7 +219,7 @@ METHOD QAction:data( ... )
 METHOD QAction:font( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFont():from( Qt_QAction_font( ::pPtr, ... ) )
+      RETURN QFontFromPointer( Qt_QAction_font( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -221,7 +227,7 @@ METHOD QAction:font( ... )
 METHOD QAction:icon( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QIcon():from( Qt_QAction_icon( ::pPtr, ... ) )
+      RETURN QIconFromPointer( Qt_QAction_icon( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -285,7 +291,7 @@ METHOD QAction:isVisible( ... )
 METHOD QAction:menu( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMenu():from( Qt_QAction_menu( ::pPtr, ... ) )
+      RETURN QMenuFromPointer( Qt_QAction_menu( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -301,7 +307,7 @@ METHOD QAction:menuRole( ... )
 METHOD QAction:parentWidget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QAction_parentWidget( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QAction_parentWidget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -525,7 +531,7 @@ METHOD QAction:setWhatsThis( ... )
 METHOD QAction:shortcut( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QKeySequence():from( Qt_QAction_shortcut( ::pPtr, ... ) )
+      RETURN QKeySequenceFromPointer( Qt_QAction_shortcut( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -541,7 +547,7 @@ METHOD QAction:shortcutContext( ... )
 METHOD QAction:shortcuts( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QAction_shortcuts( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QAction_shortcuts( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

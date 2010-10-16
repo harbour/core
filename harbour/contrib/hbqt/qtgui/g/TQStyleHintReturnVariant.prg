@@ -98,6 +98,12 @@
 FUNCTION QStyleHintReturnVariant( ... )
    RETURN HB_QStyleHintReturnVariant():new( ... )
 
+FUNCTION QStyleHintReturnVariantFrom( ... )
+   RETURN HB_QStyleHintReturnVariant():from( ... )
+
+FUNCTION QStyleHintReturnVariantFromPointer( ... )
+   RETURN HB_QStyleHintReturnVariant():fromPointer( ... )
+
 
 CREATE CLASS QStyleHintReturnVariant INHERIT HbQtObjectHandler, HB_QStyleHintReturn FUNCTION HB_QStyleHintReturnVariant
 

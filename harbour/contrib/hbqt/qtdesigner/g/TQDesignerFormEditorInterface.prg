@@ -98,6 +98,12 @@
 FUNCTION QDesignerFormEditorInterface( ... )
    RETURN HB_QDesignerFormEditorInterface():new( ... )
 
+FUNCTION QDesignerFormEditorInterfaceFrom( ... )
+   RETURN HB_QDesignerFormEditorInterface():from( ... )
+
+FUNCTION QDesignerFormEditorInterfaceFromPointer( ... )
+   RETURN HB_QDesignerFormEditorInterface():fromPointer( ... )
+
 
 CREATE CLASS QDesignerFormEditorInterface INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QDesignerFormEditorInterface
 
@@ -129,7 +135,7 @@ METHOD QDesignerFormEditorInterface:new( ... )
 METHOD QDesignerFormEditorInterface:actionEditor( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDesignerActionEditorInterface():from( Qt_QDesignerFormEditorInterface_actionEditor( ::pPtr, ... ) )
+      RETURN QDesignerActionEditorInterfaceFromPointer( Qt_QDesignerFormEditorInterface_actionEditor( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -137,7 +143,7 @@ METHOD QDesignerFormEditorInterface:actionEditor( ... )
 METHOD QDesignerFormEditorInterface:formWindowManager( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDesignerFormWindowManagerInterface():from( Qt_QDesignerFormEditorInterface_formWindowManager( ::pPtr, ... ) )
+      RETURN QDesignerFormWindowManagerInterfaceFromPointer( Qt_QDesignerFormEditorInterface_formWindowManager( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -145,7 +151,7 @@ METHOD QDesignerFormEditorInterface:formWindowManager( ... )
 METHOD QDesignerFormEditorInterface:objectInspector( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDesignerObjectInspectorInterface():from( Qt_QDesignerFormEditorInterface_objectInspector( ::pPtr, ... ) )
+      RETURN QDesignerObjectInspectorInterfaceFromPointer( Qt_QDesignerFormEditorInterface_objectInspector( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -153,7 +159,7 @@ METHOD QDesignerFormEditorInterface:objectInspector( ... )
 METHOD QDesignerFormEditorInterface:propertyEditor( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDesignerPropertyEditorInterface():from( Qt_QDesignerFormEditorInterface_propertyEditor( ::pPtr, ... ) )
+      RETURN QDesignerPropertyEditorInterfaceFromPointer( Qt_QDesignerFormEditorInterface_propertyEditor( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -209,7 +215,7 @@ METHOD QDesignerFormEditorInterface:setWidgetBox( ... )
 METHOD QDesignerFormEditorInterface:topLevel( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QDesignerFormEditorInterface_topLevel( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QDesignerFormEditorInterface_topLevel( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -217,7 +223,7 @@ METHOD QDesignerFormEditorInterface:topLevel( ... )
 METHOD QDesignerFormEditorInterface:widgetBox( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDesignerWidgetBoxInterface():from( Qt_QDesignerFormEditorInterface_widgetBox( ::pPtr, ... ) )
+      RETURN QDesignerWidgetBoxInterfaceFromPointer( Qt_QDesignerFormEditorInterface_widgetBox( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

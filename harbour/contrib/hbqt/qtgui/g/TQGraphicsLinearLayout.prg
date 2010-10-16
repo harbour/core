@@ -98,6 +98,12 @@
 FUNCTION QGraphicsLinearLayout( ... )
    RETURN HB_QGraphicsLinearLayout():new( ... )
 
+FUNCTION QGraphicsLinearLayoutFrom( ... )
+   RETURN HB_QGraphicsLinearLayout():from( ... )
+
+FUNCTION QGraphicsLinearLayoutFromPointer( ... )
+   RETURN HB_QGraphicsLinearLayout():fromPointer( ... )
+
 
 CREATE CLASS QGraphicsLinearLayout INHERIT HbQtObjectHandler, HB_QGraphicsLayout FUNCTION HB_QGraphicsLinearLayout
 

@@ -98,6 +98,12 @@
 FUNCTION QRadioButton( ... )
    RETURN HB_QRadioButton():new( ... )
 
+FUNCTION QRadioButtonFrom( ... )
+   RETURN HB_QRadioButton():from( ... )
+
+FUNCTION QRadioButtonFromPointer( ... )
+   RETURN HB_QRadioButton():fromPointer( ... )
+
 
 CREATE CLASS QRadioButton INHERIT HbQtObjectHandler, HB_QAbstractButton FUNCTION HB_QRadioButton
 

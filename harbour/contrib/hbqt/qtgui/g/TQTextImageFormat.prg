@@ -98,6 +98,12 @@
 FUNCTION QTextImageFormat( ... )
    RETURN HB_QTextImageFormat():new( ... )
 
+FUNCTION QTextImageFormatFrom( ... )
+   RETURN HB_QTextImageFormat():from( ... )
+
+FUNCTION QTextImageFormatFromPointer( ... )
+   RETURN HB_QTextImageFormat():fromPointer( ... )
+
 
 CREATE CLASS QTextImageFormat INHERIT HbQtObjectHandler, HB_QTextCharFormat FUNCTION HB_QTextImageFormat
 

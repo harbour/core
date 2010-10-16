@@ -98,6 +98,12 @@
 FUNCTION QPlainTextEdit( ... )
    RETURN HB_QPlainTextEdit():new( ... )
 
+FUNCTION QPlainTextEditFrom( ... )
+   RETURN HB_QPlainTextEdit():from( ... )
+
+FUNCTION QPlainTextEditFromPointer( ... )
+   RETURN HB_QPlainTextEdit():fromPointer( ... )
+
 
 CREATE CLASS QPlainTextEdit INHERIT HbQtObjectHandler, HB_QAbstractScrollArea FUNCTION HB_QPlainTextEdit
 
@@ -208,7 +214,7 @@ METHOD QPlainTextEdit:centerOnScroll( ... )
 METHOD QPlainTextEdit:createStandardContextMenu( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMenu():from( Qt_QPlainTextEdit_createStandardContextMenu( ::pPtr, ... ) )
+      RETURN QMenuFromPointer( Qt_QPlainTextEdit_createStandardContextMenu( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -216,7 +222,7 @@ METHOD QPlainTextEdit:createStandardContextMenu( ... )
 METHOD QPlainTextEdit:currentCharFormat( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextCharFormat():from( Qt_QPlainTextEdit_currentCharFormat( ::pPtr, ... ) )
+      RETURN QTextCharFormatFromPointer( Qt_QPlainTextEdit_currentCharFormat( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -226,7 +232,7 @@ METHOD QPlainTextEdit:cursorForPosition( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QTextCursor():from( Qt_QPlainTextEdit_cursorForPosition( ::pPtr, ... ) )
+         RETURN QTextCursorFromPointer( Qt_QPlainTextEdit_cursorForPosition( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -238,11 +244,11 @@ METHOD QPlainTextEdit:cursorRect( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QRect():from( Qt_QPlainTextEdit_cursorRect( ::pPtr, ... ) )
+         RETURN QRectFromPointer( Qt_QPlainTextEdit_cursorRect( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QRect():from( Qt_QPlainTextEdit_cursorRect_1( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QPlainTextEdit_cursorRect_1( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -258,7 +264,7 @@ METHOD QPlainTextEdit:cursorWidth( ... )
 METHOD QPlainTextEdit:document( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextDocument():from( Qt_QPlainTextEdit_document( ::pPtr, ... ) )
+      RETURN QTextDocumentFromPointer( Qt_QPlainTextEdit_document( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -326,7 +332,7 @@ METHOD QPlainTextEdit:loadResource( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QVariant():from( Qt_QPlainTextEdit_loadResource( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QPlainTextEdit_loadResource( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -602,7 +608,7 @@ METHOD QPlainTextEdit:tabStopWidth( ... )
 METHOD QPlainTextEdit:textCursor( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextCursor():from( Qt_QPlainTextEdit_textCursor( ::pPtr, ... ) )
+      RETURN QTextCursorFromPointer( Qt_QPlainTextEdit_textCursor( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

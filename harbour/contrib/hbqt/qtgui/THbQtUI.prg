@@ -246,13 +246,13 @@ METHOD HbQtUI:loadUI( cUiFull, qParent )
       pWidget    := qUiLoader:load( qFile, qParent )
       DO CASE
       CASE ::widgets[ 1,1 ] == "QWidget"
-         oWidget    := HB_QWidget():from( pWidget )
+         oWidget    := QWidgetFromPointer( pWidget )
       CASE ::widgets[ 1,1 ] == "QDialog"
-         oWidget    := HB_QDialog():from( pWidget )
+         oWidget    := QDialogFromPointer( pWidget )
       CASE ::widgets[ 1,1 ] == "QMainWindow"
-         oWidget    := HB_QMainWindow():from( pWidget )
+         oWidget    := QMainWindowFromPointer( pWidget )
       OTHERWISE
-         oWidget    := HB_QWidget():from( pWidget )
+         oWidget    := QWidgetFromPointer( pWidget )
       ENDCASE
       #endif
       qFile:close()
@@ -602,7 +602,8 @@ METHOD HbQtUI:formatCommand( cCmd, lText )
          n1   := at( ".", cCmd )
          cCmd1 := hbq_setObjects( substr( cCmd, n + 1, n1 - n - 1 ), ::widgets )
          cCmd1 := strtran( cCmd1, "->", ":" )
-         aadd( ::widgets, { "QSizePolicy", cNam, "QSizePolicy()", "QSizePolicy():from(" + cCmd1 + ")" } )
+         // aadd( ::widgets, { "QSizePolicy", cNam, "QSizePolicy()", "QSizePolicy():from(" + cCmd1 + ")" } )
+         aadd( ::widgets, { "QSizePolicy", cNam, "QSizePolicy()", "QSizePolicy(" + cCmd1 + ")" } )
          cCmd := 'setHeightForWidth(o[ "' + cNam + '" ]:' + substr( cCmd, n1 + 1 )
 
       ELSE

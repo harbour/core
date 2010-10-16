@@ -98,6 +98,12 @@
 FUNCTION QDateTimeEdit( ... )
    RETURN HB_QDateTimeEdit():new( ... )
 
+FUNCTION QDateTimeEditFrom( ... )
+   RETURN HB_QDateTimeEdit():from( ... )
+
+FUNCTION QDateTimeEditFromPointer( ... )
+   RETURN HB_QDateTimeEdit():fromPointer( ... )
+
 
 CREATE CLASS QDateTimeEdit INHERIT HbQtObjectHandler, HB_QAbstractSpinBox FUNCTION HB_QDateTimeEdit
 
@@ -171,7 +177,7 @@ METHOD QDateTimeEdit:calendarPopup( ... )
 METHOD QDateTimeEdit:calendarWidget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QCalendarWidget():from( Qt_QDateTimeEdit_calendarWidget( ::pPtr, ... ) )
+      RETURN QCalendarWidgetFromPointer( Qt_QDateTimeEdit_calendarWidget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -243,7 +249,7 @@ METHOD QDateTimeEdit:currentSectionIndex( ... )
 METHOD QDateTimeEdit:date( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDate():from( Qt_QDateTimeEdit_date( ::pPtr, ... ) )
+      RETURN QDateFromPointer( Qt_QDateTimeEdit_date( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -251,7 +257,7 @@ METHOD QDateTimeEdit:date( ... )
 METHOD QDateTimeEdit:dateTime( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDateTime():from( Qt_QDateTimeEdit_dateTime( ::pPtr, ... ) )
+      RETURN QDateTimeFromPointer( Qt_QDateTimeEdit_dateTime( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -275,7 +281,7 @@ METHOD QDateTimeEdit:displayedSections( ... )
 METHOD QDateTimeEdit:maximumDate( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDate():from( Qt_QDateTimeEdit_maximumDate( ::pPtr, ... ) )
+      RETURN QDateFromPointer( Qt_QDateTimeEdit_maximumDate( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -283,7 +289,7 @@ METHOD QDateTimeEdit:maximumDate( ... )
 METHOD QDateTimeEdit:maximumDateTime( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDateTime():from( Qt_QDateTimeEdit_maximumDateTime( ::pPtr, ... ) )
+      RETURN QDateTimeFromPointer( Qt_QDateTimeEdit_maximumDateTime( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -291,7 +297,7 @@ METHOD QDateTimeEdit:maximumDateTime( ... )
 METHOD QDateTimeEdit:maximumTime( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTime():from( Qt_QDateTimeEdit_maximumTime( ::pPtr, ... ) )
+      RETURN QTimeFromPointer( Qt_QDateTimeEdit_maximumTime( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -299,7 +305,7 @@ METHOD QDateTimeEdit:maximumTime( ... )
 METHOD QDateTimeEdit:minimumDate( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDate():from( Qt_QDateTimeEdit_minimumDate( ::pPtr, ... ) )
+      RETURN QDateFromPointer( Qt_QDateTimeEdit_minimumDate( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -307,7 +313,7 @@ METHOD QDateTimeEdit:minimumDate( ... )
 METHOD QDateTimeEdit:minimumDateTime( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDateTime():from( Qt_QDateTimeEdit_minimumDateTime( ::pPtr, ... ) )
+      RETURN QDateTimeFromPointer( Qt_QDateTimeEdit_minimumDateTime( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -315,7 +321,7 @@ METHOD QDateTimeEdit:minimumDateTime( ... )
 METHOD QDateTimeEdit:minimumTime( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTime():from( Qt_QDateTimeEdit_minimumTime( ::pPtr, ... ) )
+      RETURN QTimeFromPointer( Qt_QDateTimeEdit_minimumTime( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -547,7 +553,7 @@ METHOD QDateTimeEdit:setTimeSpec( ... )
 METHOD QDateTimeEdit:time( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTime():from( Qt_QDateTimeEdit_time( ::pPtr, ... ) )
+      RETURN QTimeFromPointer( Qt_QDateTimeEdit_time( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

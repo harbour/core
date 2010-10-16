@@ -98,6 +98,12 @@
 FUNCTION QTextObject( ... )
    RETURN HB_QTextObject():new( ... )
 
+FUNCTION QTextObjectFrom( ... )
+   RETURN HB_QTextObject():from( ... )
+
+FUNCTION QTextObjectFromPointer( ... )
+   RETURN HB_QTextObject():fromPointer( ... )
+
 
 CREATE CLASS QTextObject INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QTextObject
 
@@ -123,7 +129,7 @@ METHOD QTextObject:new( ... )
 METHOD QTextObject:document( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextDocument():from( Qt_QTextObject_document( ::pPtr, ... ) )
+      RETURN QTextDocumentFromPointer( Qt_QTextObject_document( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -131,7 +137,7 @@ METHOD QTextObject:document( ... )
 METHOD QTextObject:format( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextFormat():from( Qt_QTextObject_format( ::pPtr, ... ) )
+      RETURN QTextFormatFromPointer( Qt_QTextObject_format( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

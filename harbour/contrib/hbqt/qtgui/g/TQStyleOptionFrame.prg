@@ -98,6 +98,12 @@
 FUNCTION QStyleOptionFrame( ... )
    RETURN HB_QStyleOptionFrame():new( ... )
 
+FUNCTION QStyleOptionFrameFrom( ... )
+   RETURN HB_QStyleOptionFrame():from( ... )
+
+FUNCTION QStyleOptionFrameFromPointer( ... )
+   RETURN HB_QStyleOptionFrame():fromPointer( ... )
+
 
 CREATE CLASS QStyleOptionFrame INHERIT HbQtObjectHandler, qStyleOption FUNCTION HB_QStyleOptionFrame
 

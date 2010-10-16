@@ -98,6 +98,12 @@
 FUNCTION QTextDocumentFragment( ... )
    RETURN HB_QTextDocumentFragment():new( ... )
 
+FUNCTION QTextDocumentFragmentFrom( ... )
+   RETURN HB_QTextDocumentFragment():from( ... )
+
+FUNCTION QTextDocumentFragmentFromPointer( ... )
+   RETURN HB_QTextDocumentFragment():fromPointer( ... )
+
 
 CREATE CLASS QTextDocumentFragment INHERIT HbQtObjectHandler FUNCTION HB_QTextDocumentFragment
 
@@ -158,13 +164,13 @@ METHOD QTextDocumentFragment:fromHtml( ... )
    CASE 2
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QTextDocumentFragment():from( Qt_QTextDocumentFragment_fromHtml_1( ::pPtr, ... ) )
+         RETURN QTextDocumentFragmentFromPointer( Qt_QTextDocumentFragment_fromHtml_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QTextDocumentFragment():from( Qt_QTextDocumentFragment_fromHtml( ::pPtr, ... ) )
+         RETURN QTextDocumentFragmentFromPointer( Qt_QTextDocumentFragment_fromHtml( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -176,7 +182,7 @@ METHOD QTextDocumentFragment:fromPlainText( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QTextDocumentFragment():from( Qt_QTextDocumentFragment_fromPlainText( ::pPtr, ... ) )
+         RETURN QTextDocumentFragmentFromPointer( Qt_QTextDocumentFragment_fromPlainText( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

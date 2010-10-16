@@ -98,6 +98,12 @@
 FUNCTION QPalette( ... )
    RETURN HB_QPalette():new( ... )
 
+FUNCTION QPaletteFrom( ... )
+   RETURN HB_QPalette():from( ... )
+
+FUNCTION QPaletteFromPointer( ... )
+   RETURN HB_QPalette():fromPointer( ... )
+
 
 CREATE CLASS QPalette INHERIT HbQtObjectHandler FUNCTION HB_QPalette
 
@@ -154,7 +160,7 @@ METHOD QPalette:new( ... )
 METHOD QPalette:alternateBase( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QPalette_alternateBase( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QPalette_alternateBase( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -162,7 +168,7 @@ METHOD QPalette:alternateBase( ... )
 METHOD QPalette:base( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QPalette_base( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QPalette_base( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -170,7 +176,7 @@ METHOD QPalette:base( ... )
 METHOD QPalette:brightText( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QPalette_brightText( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QPalette_brightText( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -180,13 +186,13 @@ METHOD QPalette:brush( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QBrush():from( Qt_QPalette_brush( ::pPtr, ... ) )
+         RETURN QBrushFromPointer( Qt_QPalette_brush( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QBrush():from( Qt_QPalette_brush_1( ::pPtr, ... ) )
+         RETURN QBrushFromPointer( Qt_QPalette_brush_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -196,7 +202,7 @@ METHOD QPalette:brush( ... )
 METHOD QPalette:button( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QPalette_button( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QPalette_button( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -204,7 +210,7 @@ METHOD QPalette:button( ... )
 METHOD QPalette:buttonText( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QPalette_buttonText( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QPalette_buttonText( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -222,13 +228,13 @@ METHOD QPalette:color( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QColor():from( Qt_QPalette_color( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QPalette_color( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QColor():from( Qt_QPalette_color_1( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QPalette_color_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -246,7 +252,7 @@ METHOD QPalette:currentColorGroup( ... )
 METHOD QPalette:dark( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QPalette_dark( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QPalette_dark( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -254,7 +260,7 @@ METHOD QPalette:dark( ... )
 METHOD QPalette:highlight( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QPalette_highlight( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QPalette_highlight( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -262,7 +268,7 @@ METHOD QPalette:highlight( ... )
 METHOD QPalette:highlightedText( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QPalette_highlightedText( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QPalette_highlightedText( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -306,7 +312,7 @@ METHOD QPalette:isEqual( ... )
 METHOD QPalette:light( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QPalette_light( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QPalette_light( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -314,7 +320,7 @@ METHOD QPalette:light( ... )
 METHOD QPalette:link( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QPalette_link( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QPalette_link( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -322,7 +328,7 @@ METHOD QPalette:link( ... )
 METHOD QPalette:linkVisited( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QPalette_linkVisited( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QPalette_linkVisited( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -330,7 +336,7 @@ METHOD QPalette:linkVisited( ... )
 METHOD QPalette:mid( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QPalette_mid( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QPalette_mid( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -338,7 +344,7 @@ METHOD QPalette:mid( ... )
 METHOD QPalette:midlight( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QPalette_midlight( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QPalette_midlight( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -348,7 +354,7 @@ METHOD QPalette:resolve( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QPalette():from( Qt_QPalette_resolve( ::pPtr, ... ) )
+         RETURN QPaletteFromPointer( Qt_QPalette_resolve( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -418,7 +424,7 @@ METHOD QPalette:setCurrentColorGroup( ... )
 METHOD QPalette:shadow( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QPalette_shadow( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QPalette_shadow( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -426,7 +432,7 @@ METHOD QPalette:shadow( ... )
 METHOD QPalette:text( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QPalette_text( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QPalette_text( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -434,7 +440,7 @@ METHOD QPalette:text( ... )
 METHOD QPalette:toolTipBase( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QPalette_toolTipBase( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QPalette_toolTipBase( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -442,7 +448,7 @@ METHOD QPalette:toolTipBase( ... )
 METHOD QPalette:toolTipText( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QPalette_toolTipText( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QPalette_toolTipText( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -450,7 +456,7 @@ METHOD QPalette:toolTipText( ... )
 METHOD QPalette:window( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QPalette_window( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QPalette_window( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -458,7 +464,7 @@ METHOD QPalette:window( ... )
 METHOD QPalette:windowText( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QPalette_windowText( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QPalette_windowText( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

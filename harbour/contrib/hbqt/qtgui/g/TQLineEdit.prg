@@ -98,6 +98,12 @@
 FUNCTION QLineEdit( ... )
    RETURN HB_QLineEdit():new( ... )
 
+FUNCTION QLineEditFrom( ... )
+   RETURN HB_QLineEdit():from( ... )
+
+FUNCTION QLineEditFromPointer( ... )
+   RETURN HB_QLineEdit():fromPointer( ... )
+
 
 CREATE CLASS QLineEdit INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QLineEdit
 
@@ -190,7 +196,7 @@ METHOD QLineEdit:backspace( ... )
 METHOD QLineEdit:completer( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QCompleter():from( Qt_QLineEdit_completer( ::pPtr, ... ) )
+      RETURN QCompleterFromPointer( Qt_QLineEdit_completer( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -198,7 +204,7 @@ METHOD QLineEdit:completer( ... )
 METHOD QLineEdit:createStandardContextMenu( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMenu():from( Qt_QLineEdit_createStandardContextMenu( ::pPtr, ... ) )
+      RETURN QMenuFromPointer( Qt_QLineEdit_createStandardContextMenu( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -446,7 +452,7 @@ METHOD QLineEdit:maxLength( ... )
 METHOD QLineEdit:minimumSizeHint( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QLineEdit_minimumSizeHint( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QLineEdit_minimumSizeHint( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -626,7 +632,7 @@ METHOD QLineEdit:setValidator( ... )
 METHOD QLineEdit:sizeHint( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QLineEdit_sizeHint( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QLineEdit_sizeHint( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -642,7 +648,7 @@ METHOD QLineEdit:text( ... )
 METHOD QLineEdit:validator( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QValidator():from( Qt_QLineEdit_validator( ::pPtr, ... ) )
+      RETURN QValidatorFromPointer( Qt_QLineEdit_validator( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

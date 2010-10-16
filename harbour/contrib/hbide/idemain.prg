@@ -1444,7 +1444,7 @@ METHOD HbIde:setCodec( cCodec )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:testPainter( qPainter )
-   LOCAL qP := HB_QPainter():from( qPainter )
+   LOCAL qP := QPainterFromPointer( qPainter )
 
    HB_TRACE( HB_TR_DEBUG, "qPainter:isActive()", qP:isActive() )
 

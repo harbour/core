@@ -98,6 +98,12 @@
 FUNCTION QIcon( ... )
    RETURN HB_QIcon():new( ... )
 
+FUNCTION QIconFrom( ... )
+   RETURN HB_QIcon():from( ... )
+
+FUNCTION QIconFromPointer( ... )
+   RETURN HB_QIcon():fromPointer( ... )
+
 
 CREATE CLASS QIcon INHERIT HbQtObjectHandler FUNCTION HB_QIcon
 
@@ -131,19 +137,19 @@ METHOD QIcon:actualSize( ... )
    CASE 3
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
-         RETURN HB_QSize():from( Qt_QIcon_actualSize( ::pPtr, ... ) )
+         RETURN QSizeFromPointer( Qt_QIcon_actualSize( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QSize():from( Qt_QIcon_actualSize( ::pPtr, ... ) )
+         RETURN QSizeFromPointer( Qt_QIcon_actualSize( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QSize():from( Qt_QIcon_actualSize( ::pPtr, ... ) )
+         RETURN QSizeFromPointer( Qt_QIcon_actualSize( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -209,17 +215,17 @@ METHOD QIcon:availableSizes( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QList():from( Qt_QIcon_availableSizes( ::pPtr, ... ) )
+         RETURN QListFromPointer( Qt_QIcon_availableSizes( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QList():from( Qt_QIcon_availableSizes( ::pPtr, ... ) )
+         RETURN QListFromPointer( Qt_QIcon_availableSizes( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QList():from( Qt_QIcon_availableSizes( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QIcon_availableSizes( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -295,29 +301,29 @@ METHOD QIcon:pixmap( ... )
    CASE 4
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
-         RETURN HB_QPixmap():from( Qt_QIcon_pixmap_1( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QIcon_pixmap_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 3
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
-         RETURN HB_QPixmap():from( Qt_QIcon_pixmap_1( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QIcon_pixmap_1( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
-         RETURN HB_QPixmap():from( Qt_QIcon_pixmap( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QIcon_pixmap( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QPixmap():from( Qt_QIcon_pixmap_1( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QIcon_pixmap_1( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QPixmap():from( Qt_QIcon_pixmap( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QIcon_pixmap( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QPixmap():from( Qt_QIcon_pixmap( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QIcon_pixmap( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

@@ -98,6 +98,12 @@
 FUNCTION QWebPage( ... )
    RETURN HB_QWebPage():new( ... )
 
+FUNCTION QWebPageFrom( ... )
+   RETURN HB_QWebPage():from( ... )
+
+FUNCTION QWebPageFromPointer( ... )
+   RETURN HB_QWebPage():fromPointer( ... )
+
 
 CREATE CLASS QWebPage INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QWebPage
 
@@ -152,7 +158,7 @@ METHOD QWebPage:action( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QAction():from( Qt_QWebPage_action( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QWebPage_action( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -170,7 +176,7 @@ METHOD QWebPage:bytesReceived( ... )
 METHOD QWebPage:createStandardContextMenu( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMenu():from( Qt_QWebPage_createStandardContextMenu( ::pPtr, ... ) )
+      RETURN QMenuFromPointer( Qt_QWebPage_createStandardContextMenu( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -178,7 +184,7 @@ METHOD QWebPage:createStandardContextMenu( ... )
 METHOD QWebPage:currentFrame( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWebFrame():from( Qt_QWebPage_currentFrame( ::pPtr, ... ) )
+      RETURN QWebFrameFromPointer( Qt_QWebPage_currentFrame( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -224,7 +230,7 @@ METHOD QWebPage:forwardUnsupportedContent( ... )
 METHOD QWebPage:history( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWebHistory():from( Qt_QWebPage_history( ::pPtr, ... ) )
+      RETURN QWebHistoryFromPointer( Qt_QWebPage_history( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -234,7 +240,7 @@ METHOD QWebPage:inputMethodQuery( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QVariant():from( Qt_QWebPage_inputMethodQuery( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QWebPage_inputMethodQuery( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -268,7 +274,7 @@ METHOD QWebPage:linkDelegationPolicy( ... )
 METHOD QWebPage:mainFrame( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWebFrame():from( Qt_QWebPage_mainFrame( ::pPtr, ... ) )
+      RETURN QWebFrameFromPointer( Qt_QWebPage_mainFrame( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -276,7 +282,7 @@ METHOD QWebPage:mainFrame( ... )
 METHOD QWebPage:palette( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPalette():from( Qt_QWebPage_palette( ::pPtr, ... ) )
+      RETURN QPaletteFromPointer( Qt_QWebPage_palette( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -284,7 +290,7 @@ METHOD QWebPage:palette( ... )
 METHOD QWebPage:pluginFactory( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWebPluginFactory():from( Qt_QWebPage_pluginFactory( ::pPtr, ... ) )
+      RETURN QWebPluginFactoryFromPointer( Qt_QWebPage_pluginFactory( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -384,7 +390,7 @@ METHOD QWebPage:setViewportSize( ... )
 METHOD QWebPage:settings( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWebSettings():from( Qt_QWebPage_settings( ::pPtr, ... ) )
+      RETURN QWebSettingsFromPointer( Qt_QWebPage_settings( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -454,7 +460,7 @@ METHOD QWebPage:updatePositionDependentActions( ... )
 METHOD QWebPage:view( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QWebPage_view( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QWebPage_view( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -462,7 +468,7 @@ METHOD QWebPage:view( ... )
 METHOD QWebPage:viewportSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QWebPage_viewportSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QWebPage_viewportSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

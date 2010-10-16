@@ -98,6 +98,12 @@
 FUNCTION QLayout( ... )
    RETURN HB_QLayout():new( ... )
 
+FUNCTION QLayoutFrom( ... )
+   RETURN HB_QLayout():from( ... )
+
+FUNCTION QLayoutFromPointer( ... )
+   RETURN HB_QLayout():fromPointer( ... )
+
 
 CREATE CLASS QLayout INHERIT HbQtObjectHandler, HB_QObject, HB_QLayoutItem FUNCTION HB_QLayout
 
@@ -180,7 +186,7 @@ METHOD QLayout:addWidget( ... )
 METHOD QLayout:contentsRect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QLayout_contentsRect( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QLayout_contentsRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -238,7 +244,7 @@ METHOD QLayout:itemAt( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QLayoutItem():from( Qt_QLayout_itemAt( ::pPtr, ... ) )
+         RETURN QLayoutItemFromPointer( Qt_QLayout_itemAt( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -248,7 +254,7 @@ METHOD QLayout:itemAt( ... )
 METHOD QLayout:maximumSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QLayout_maximumSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QLayout_maximumSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -256,7 +262,7 @@ METHOD QLayout:maximumSize( ... )
 METHOD QLayout:menuBar( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QLayout_menuBar( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QLayout_menuBar( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -264,7 +270,7 @@ METHOD QLayout:menuBar( ... )
 METHOD QLayout:minimumSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QLayout_minimumSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QLayout_minimumSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -272,7 +278,7 @@ METHOD QLayout:minimumSize( ... )
 METHOD QLayout:parentWidget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QLayout_parentWidget( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QLayout_parentWidget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -405,7 +411,7 @@ METHOD QLayout:takeAt( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QLayoutItem():from( Qt_QLayout_takeAt( ::pPtr, ... ) )
+         RETURN QLayoutItemFromPointer( Qt_QLayout_takeAt( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -425,7 +431,7 @@ METHOD QLayout:closestAcceptableSize( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QSize():from( Qt_QLayout_closestAcceptableSize( ::pPtr, ... ) )
+         RETURN QSizeFromPointer( Qt_QLayout_closestAcceptableSize( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

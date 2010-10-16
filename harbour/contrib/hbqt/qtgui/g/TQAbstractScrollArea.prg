@@ -98,6 +98,12 @@
 FUNCTION QAbstractScrollArea( ... )
    RETURN HB_QAbstractScrollArea():new( ... )
 
+FUNCTION QAbstractScrollAreaFrom( ... )
+   RETURN HB_QAbstractScrollArea():from( ... )
+
+FUNCTION QAbstractScrollAreaFromPointer( ... )
+   RETURN HB_QAbstractScrollArea():fromPointer( ... )
+
 
 CREATE CLASS QAbstractScrollArea INHERIT HbQtObjectHandler, HB_QFrame FUNCTION HB_QAbstractScrollArea
 
@@ -145,7 +151,7 @@ METHOD QAbstractScrollArea:addScrollBarWidget( ... )
 METHOD QAbstractScrollArea:cornerWidget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QAbstractScrollArea_cornerWidget( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QAbstractScrollArea_cornerWidget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -153,7 +159,7 @@ METHOD QAbstractScrollArea:cornerWidget( ... )
 METHOD QAbstractScrollArea:horizontalScrollBar( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QScrollBar():from( Qt_QAbstractScrollArea_horizontalScrollBar( ::pPtr, ... ) )
+      RETURN QScrollBarFromPointer( Qt_QAbstractScrollArea_horizontalScrollBar( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -169,7 +175,7 @@ METHOD QAbstractScrollArea:horizontalScrollBarPolicy( ... )
 METHOD QAbstractScrollArea:maximumViewportSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QAbstractScrollArea_maximumViewportSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QAbstractScrollArea_maximumViewportSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -249,7 +255,7 @@ METHOD QAbstractScrollArea:setViewport( ... )
 METHOD QAbstractScrollArea:verticalScrollBar( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QScrollBar():from( Qt_QAbstractScrollArea_verticalScrollBar( ::pPtr, ... ) )
+      RETURN QScrollBarFromPointer( Qt_QAbstractScrollArea_verticalScrollBar( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -265,7 +271,7 @@ METHOD QAbstractScrollArea:verticalScrollBarPolicy( ... )
 METHOD QAbstractScrollArea:viewport( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QAbstractScrollArea_viewport( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QAbstractScrollArea_viewport( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

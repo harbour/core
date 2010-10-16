@@ -98,6 +98,12 @@
 FUNCTION QProgressBar( ... )
    RETURN HB_QProgressBar():new( ... )
 
+FUNCTION QProgressBarFrom( ... )
+   RETURN HB_QProgressBar():from( ... )
+
+FUNCTION QProgressBarFromPointer( ... )
+   RETURN HB_QProgressBar():fromPointer( ... )
+
 
 CREATE CLASS QProgressBar INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QProgressBar
 

@@ -98,6 +98,12 @@
 FUNCTION QDesignerWidgetBoxInterface( ... )
    RETURN HB_QDesignerWidgetBoxInterface():new( ... )
 
+FUNCTION QDesignerWidgetBoxInterfaceFrom( ... )
+   RETURN HB_QDesignerWidgetBoxInterface():from( ... )
+
+FUNCTION QDesignerWidgetBoxInterfaceFromPointer( ... )
+   RETURN HB_QDesignerWidgetBoxInterface():fromPointer( ... )
+
 
 CREATE CLASS QDesignerWidgetBoxInterface INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QDesignerWidgetBoxInterface
 

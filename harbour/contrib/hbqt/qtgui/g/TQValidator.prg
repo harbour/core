@@ -98,6 +98,12 @@
 FUNCTION QValidator( ... )
    RETURN HB_QValidator():new( ... )
 
+FUNCTION QValidatorFrom( ... )
+   RETURN HB_QValidator():from( ... )
+
+FUNCTION QValidatorFromPointer( ... )
+   RETURN HB_QValidator():fromPointer( ... )
+
 
 CREATE CLASS QValidator INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QValidator
 
@@ -121,7 +127,7 @@ METHOD QValidator:new( ... )
 METHOD QValidator:locale( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QLocale():from( Qt_QValidator_locale( ::pPtr, ... ) )
+      RETURN QLocaleFromPointer( Qt_QValidator_locale( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

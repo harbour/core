@@ -133,7 +133,7 @@ METHOD XbpRadioButton:hbCreateFromQtPtr( oParent, oOwner, aPos, aSize, aPresPara
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF hb_isPointer( pQtObject )
-      ::oWidget := HB_QRadioButton():from( pQtObject )
+      ::oWidget := QRadioButtonFromPointer( pQtObject )
    ENDIF
 
    RETURN Self

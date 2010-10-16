@@ -98,6 +98,12 @@
 FUNCTION QCommonStyle( ... )
    RETURN HB_QCommonStyle():new( ... )
 
+FUNCTION QCommonStyleFrom( ... )
+   RETURN HB_QCommonStyle():from( ... )
+
+FUNCTION QCommonStyleFromPointer( ... )
+   RETURN HB_QCommonStyle():fromPointer( ... )
+
 
 CREATE CLASS QCommonStyle INHERIT HbQtObjectHandler, HB_QStyle FUNCTION HB_QCommonStyle
 

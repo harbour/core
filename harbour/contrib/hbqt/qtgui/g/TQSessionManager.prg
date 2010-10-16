@@ -98,6 +98,12 @@
 FUNCTION QSessionManager( ... )
    RETURN HB_QSessionManager():new( ... )
 
+FUNCTION QSessionManagerFrom( ... )
+   RETURN HB_QSessionManager():from( ... )
+
+FUNCTION QSessionManagerFromPointer( ... )
+   RETURN HB_QSessionManager():fromPointer( ... )
+
 
 CREATE CLASS QSessionManager INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QSessionManager
 
@@ -159,7 +165,7 @@ METHOD QSessionManager:cancel( ... )
 METHOD QSessionManager:discardCommand( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QSessionManager_discardCommand( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QSessionManager_discardCommand( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -191,7 +197,7 @@ METHOD QSessionManager:requestPhase2( ... )
 METHOD QSessionManager:restartCommand( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QSessionManager_restartCommand( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QSessionManager_restartCommand( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

@@ -98,6 +98,12 @@
 FUNCTION HBQGraphicsScene( ... )
    RETURN HB_HBQGraphicsScene():new( ... )
 
+FUNCTION HBQGraphicsSceneFrom( ... )
+   RETURN HB_HBQGraphicsScene():from( ... )
+
+FUNCTION HBQGraphicsSceneFromPointer( ... )
+   RETURN HB_HBQGraphicsScene():fromPointer( ... )
+
 
 CREATE CLASS HBQGraphicsScene INHERIT HbQtObjectHandler, HB_QGraphicsScene FUNCTION HB_HBQGraphicsScene
 
@@ -170,7 +176,7 @@ METHOD HBQGraphicsScene:setPageSize( ... )
 METHOD HBQGraphicsScene:paperRect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRectF():from( Qt_HBQGraphicsScene_paperRect( ::pPtr, ... ) )
+      RETURN QRectFFromPointer( Qt_HBQGraphicsScene_paperRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -210,7 +216,7 @@ METHOD HBQGraphicsScene:setOrientation( ... )
 METHOD HBQGraphicsScene:geometry( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRectF():from( Qt_HBQGraphicsScene_geometry( ::pPtr, ... ) )
+      RETURN QRectFFromPointer( Qt_HBQGraphicsScene_geometry( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

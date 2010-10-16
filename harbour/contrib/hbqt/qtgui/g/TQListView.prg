@@ -98,6 +98,12 @@
 FUNCTION QListView( ... )
    RETURN HB_QListView():new( ... )
 
+FUNCTION QListViewFrom( ... )
+   RETURN HB_QListView():from( ... )
+
+FUNCTION QListViewFromPointer( ... )
+   RETURN HB_QListView():fromPointer( ... )
+
 
 CREATE CLASS QListView INHERIT HbQtObjectHandler, HB_QAbstractItemView FUNCTION HB_QListView
 
@@ -172,7 +178,7 @@ METHOD QListView:flow( ... )
 METHOD QListView:gridSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QListView_gridSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QListView_gridSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

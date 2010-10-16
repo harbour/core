@@ -98,6 +98,12 @@
 FUNCTION HBQTextBlockUserData( ... )
    RETURN HB_HBQTextBlockUserData():new( ... )
 
+FUNCTION HBQTextBlockUserDataFrom( ... )
+   RETURN HB_HBQTextBlockUserData():from( ... )
+
+FUNCTION HBQTextBlockUserDataFromPointer( ... )
+   RETURN HB_HBQTextBlockUserData():fromPointer( ... )
+
 
 CREATE CLASS HBQTextBlockUserData INHERIT HbQtObjectHandler FUNCTION HB_HBQTextBlockUserData
 

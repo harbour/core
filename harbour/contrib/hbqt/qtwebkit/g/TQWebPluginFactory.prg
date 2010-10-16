@@ -98,6 +98,12 @@
 FUNCTION QWebPluginFactory( ... )
    RETURN HB_QWebPluginFactory():new( ... )
 
+FUNCTION QWebPluginFactoryFrom( ... )
+   RETURN HB_QWebPluginFactory():from( ... )
+
+FUNCTION QWebPluginFactoryFromPointer( ... )
+   RETURN HB_QWebPluginFactory():fromPointer( ... )
+
 
 CREATE CLASS QWebPluginFactory INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QWebPluginFactory
 
@@ -124,7 +130,7 @@ METHOD QWebPluginFactory:create( ... )
    CASE 4
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) ) .AND. hb_isObject( hb_pvalue( 4 ) )
-         RETURN HB_QObject():from( Qt_QWebPluginFactory_create( ::pPtr, ... ) )
+         RETURN QObjectFromPointer( Qt_QWebPluginFactory_create( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

@@ -98,6 +98,12 @@
 FUNCTION QHttpHeader( ... )
    RETURN HB_QHttpHeader():new( ... )
 
+FUNCTION QHttpHeaderFrom( ... )
+   RETURN HB_QHttpHeader():from( ... )
+
+FUNCTION QHttpHeaderFromPointer( ... )
+   RETURN HB_QHttpHeader():fromPointer( ... )
+
 
 CREATE CLASS QHttpHeader INHERIT HbQtObjectHandler FUNCTION HB_QHttpHeader
 
@@ -151,7 +157,7 @@ METHOD QHttpHeader:allValues( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QStringList():from( Qt_QHttpHeader_allValues( ::pPtr, ... ) )
+         RETURN QStringListFromPointer( Qt_QHttpHeader_allValues( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -213,7 +219,7 @@ METHOD QHttpHeader:isValid( ... )
 METHOD QHttpHeader:keys( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QHttpHeader_keys( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QHttpHeader_keys( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

@@ -98,6 +98,12 @@
 FUNCTION QColor( ... )
    RETURN HB_QColor():new( ... )
 
+FUNCTION QColorFrom( ... )
+   RETURN HB_QColor():from( ... )
+
+FUNCTION QColorFromPointer( ... )
+   RETURN HB_QColor():fromPointer( ... )
+
 
 CREATE CLASS QColor INHERIT HbQtObjectHandler FUNCTION HB_QColor
 
@@ -192,28 +198,28 @@ METHOD QColor:QColor( ... )
    CASE 4
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
-         RETURN HB_QColor():from( Qt_QColor_QColor_1( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QColor_QColor_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 3
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
-         RETURN HB_QColor():from( Qt_QColor_QColor_1( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QColor_QColor_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QColor():from( Qt_QColor_QColor_4( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QColor_QColor_4( ::pPtr, ... ) )
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QColor():from( Qt_QColor_QColor_2( ::pPtr, ... ) )
-         // RETURN HB_QColor():from( Qt_QColor_QColor_3( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QColor_QColor_2( ::pPtr, ... ) )
+         // RETURN QColorFromPointer( Qt_QColor_QColor_3( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QColor():from( Qt_QColor_QColor_5( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QColor_QColor_5( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QColor():from( Qt_QColor_QColor( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_QColor_QColor( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -271,7 +277,7 @@ METHOD QColor:convertTo( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QColor():from( Qt_QColor_convertTo( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QColor_convertTo( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -299,11 +305,11 @@ METHOD QColor:darker( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QColor():from( Qt_QColor_darker( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QColor_darker( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QColor():from( Qt_QColor_darker( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_QColor_darker( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -461,11 +467,11 @@ METHOD QColor:lighter( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QColor():from( Qt_QColor_lighter( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QColor_lighter( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QColor():from( Qt_QColor_lighter( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_QColor_lighter( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -787,7 +793,7 @@ METHOD QColor:spec( ... )
 METHOD QColor:toCmyk( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QColor():from( Qt_QColor_toCmyk( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_QColor_toCmyk( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -795,7 +801,7 @@ METHOD QColor:toCmyk( ... )
 METHOD QColor:toHsv( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QColor():from( Qt_QColor_toHsv( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_QColor_toHsv( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -803,7 +809,7 @@ METHOD QColor:toHsv( ... )
 METHOD QColor:toRgb( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QColor():from( Qt_QColor_toRgb( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_QColor_toRgb( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -843,7 +849,7 @@ METHOD QColor:yellowF( ... )
 METHOD QColor:colorNames( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QColor_colorNames( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QColor_colorNames( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -853,13 +859,13 @@ METHOD QColor:fromCmyk( ... )
    CASE 5
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
-         RETURN HB_QColor():from( Qt_QColor_fromCmyk( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QColor_fromCmyk( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 4
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
-         RETURN HB_QColor():from( Qt_QColor_fromCmyk( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QColor_fromCmyk( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -871,13 +877,13 @@ METHOD QColor:fromCmykF( ... )
    CASE 5
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) ) .AND. hb_isNumeric( hb_pvalue( 5 ) )
-         RETURN HB_QColor():from( Qt_QColor_fromCmykF( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QColor_fromCmykF( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 4
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
-         RETURN HB_QColor():from( Qt_QColor_fromCmykF( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QColor_fromCmykF( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -889,13 +895,13 @@ METHOD QColor:fromHsv( ... )
    CASE 4
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
-         RETURN HB_QColor():from( Qt_QColor_fromHsv( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QColor_fromHsv( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 3
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
-         RETURN HB_QColor():from( Qt_QColor_fromHsv( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QColor_fromHsv( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -907,13 +913,13 @@ METHOD QColor:fromHsvF( ... )
    CASE 4
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
-         RETURN HB_QColor():from( Qt_QColor_fromHsvF( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QColor_fromHsvF( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 3
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
-         RETURN HB_QColor():from( Qt_QColor_fromHsvF( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QColor_fromHsvF( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -925,19 +931,19 @@ METHOD QColor:fromRgb( ... )
    CASE 4
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
-         RETURN HB_QColor():from( Qt_QColor_fromRgb_1( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QColor_fromRgb_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 3
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
-         RETURN HB_QColor():from( Qt_QColor_fromRgb_1( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QColor_fromRgb_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QColor():from( Qt_QColor_fromRgb( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QColor_fromRgb( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -949,13 +955,13 @@ METHOD QColor:fromRgbF( ... )
    CASE 4
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) ) .AND. hb_isNumeric( hb_pvalue( 4 ) )
-         RETURN HB_QColor():from( Qt_QColor_fromRgbF( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QColor_fromRgbF( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 3
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
-         RETURN HB_QColor():from( Qt_QColor_fromRgbF( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QColor_fromRgbF( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -967,7 +973,7 @@ METHOD QColor:fromRgba( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QColor():from( Qt_QColor_fromRgba( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QColor_fromRgba( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

@@ -98,6 +98,12 @@
 FUNCTION QLabel( ... )
    RETURN HB_QLabel():new( ... )
 
+FUNCTION QLabelFrom( ... )
+   RETURN HB_QLabel():from( ... )
+
+FUNCTION QLabelFromPointer( ... )
+   RETURN HB_QLabel():fromPointer( ... )
+
 
 CREATE CLASS QLabel INHERIT HbQtObjectHandler, HB_QFrame FUNCTION HB_QLabel
 
@@ -156,7 +162,7 @@ METHOD QLabel:alignment( ... )
 METHOD QLabel:buddy( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QLabel_buddy( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QLabel_buddy( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -188,7 +194,7 @@ METHOD QLabel:margin( ... )
 METHOD QLabel:movie( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMovie():from( Qt_QLabel_movie( ::pPtr, ... ) )
+      RETURN QMovieFromPointer( Qt_QLabel_movie( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -204,7 +210,7 @@ METHOD QLabel:openExternalLinks( ... )
 METHOD QLabel:picture( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPicture():from( Qt_QLabel_picture( ::pPtr, ... ) )
+      RETURN QPictureFromPointer( Qt_QLabel_picture( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -212,7 +218,7 @@ METHOD QLabel:picture( ... )
 METHOD QLabel:pixmap( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPixmap():from( Qt_QLabel_pixmap( ::pPtr, ... ) )
+      RETURN QPixmapFromPointer( Qt_QLabel_pixmap( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

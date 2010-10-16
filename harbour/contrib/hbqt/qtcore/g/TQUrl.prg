@@ -98,6 +98,12 @@
 FUNCTION QUrl( ... )
    RETURN HB_QUrl():new( ... )
 
+FUNCTION QUrlFrom( ... )
+   RETURN HB_QUrl():from( ... )
+
+FUNCTION QUrlFromPointer( ... )
+   RETURN HB_QUrl():fromPointer( ... )
+
 
 CREATE CLASS QUrl INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QUrl
 
@@ -215,7 +221,7 @@ METHOD QUrl:allEncodedQueryItemValues( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QList():from( Qt_QUrl_allEncodedQueryItemValues( ::pPtr, ... ) )
+         RETURN QListFromPointer( Qt_QUrl_allEncodedQueryItemValues( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -227,7 +233,7 @@ METHOD QUrl:allQueryItemValues( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QStringList():from( Qt_QUrl_allQueryItemValues( ::pPtr, ... ) )
+         RETURN QStringListFromPointer( Qt_QUrl_allQueryItemValues( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -253,7 +259,7 @@ METHOD QUrl:clear( ... )
 METHOD QUrl:encodedFragment( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QByteArray():from( Qt_QUrl_encodedFragment( ::pPtr, ... ) )
+      RETURN QByteArrayFromPointer( Qt_QUrl_encodedFragment( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -261,7 +267,7 @@ METHOD QUrl:encodedFragment( ... )
 METHOD QUrl:encodedHost( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QByteArray():from( Qt_QUrl_encodedHost( ::pPtr, ... ) )
+      RETURN QByteArrayFromPointer( Qt_QUrl_encodedHost( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -269,7 +275,7 @@ METHOD QUrl:encodedHost( ... )
 METHOD QUrl:encodedPassword( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QByteArray():from( Qt_QUrl_encodedPassword( ::pPtr, ... ) )
+      RETURN QByteArrayFromPointer( Qt_QUrl_encodedPassword( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -277,7 +283,7 @@ METHOD QUrl:encodedPassword( ... )
 METHOD QUrl:encodedPath( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QByteArray():from( Qt_QUrl_encodedPath( ::pPtr, ... ) )
+      RETURN QByteArrayFromPointer( Qt_QUrl_encodedPath( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -285,7 +291,7 @@ METHOD QUrl:encodedPath( ... )
 METHOD QUrl:encodedQuery( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QByteArray():from( Qt_QUrl_encodedQuery( ::pPtr, ... ) )
+      RETURN QByteArrayFromPointer( Qt_QUrl_encodedQuery( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -295,7 +301,7 @@ METHOD QUrl:encodedQueryItemValue( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QByteArray():from( Qt_QUrl_encodedQueryItemValue( ::pPtr, ... ) )
+         RETURN QByteArrayFromPointer( Qt_QUrl_encodedQueryItemValue( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -305,7 +311,7 @@ METHOD QUrl:encodedQueryItemValue( ... )
 METHOD QUrl:encodedUserName( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QByteArray():from( Qt_QUrl_encodedUserName( ::pPtr, ... ) )
+      RETURN QByteArrayFromPointer( Qt_QUrl_encodedUserName( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -521,7 +527,7 @@ METHOD QUrl:resolved( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QUrl():from( Qt_QUrl_resolved( ::pPtr, ... ) )
+         RETURN QUrlFromPointer( Qt_QUrl_resolved( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -757,11 +763,11 @@ METHOD QUrl:toEncoded( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QByteArray():from( Qt_QUrl_toEncoded( ::pPtr, ... ) )
+         RETURN QByteArrayFromPointer( Qt_QUrl_toEncoded( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QByteArray():from( Qt_QUrl_toEncoded( ::pPtr, ... ) )
+      RETURN QByteArrayFromPointer( Qt_QUrl_toEncoded( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -821,13 +827,13 @@ METHOD QUrl:fromEncoded( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QUrl():from( Qt_QUrl_fromEncoded_1( ::pPtr, ... ) )
+         RETURN QUrlFromPointer( Qt_QUrl_fromEncoded_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QUrl():from( Qt_QUrl_fromEncoded( ::pPtr, ... ) )
+         RETURN QUrlFromPointer( Qt_QUrl_fromEncoded( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -839,7 +845,7 @@ METHOD QUrl:fromLocalFile( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QUrl():from( Qt_QUrl_fromLocalFile( ::pPtr, ... ) )
+         RETURN QUrlFromPointer( Qt_QUrl_fromLocalFile( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -861,7 +867,7 @@ METHOD QUrl:fromPercentEncoding( ... )
 METHOD QUrl:idnWhitelist( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QUrl_idnWhitelist( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QUrl_idnWhitelist( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -883,7 +889,7 @@ METHOD QUrl:toAce( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QByteArray():from( Qt_QUrl_toAce( ::pPtr, ... ) )
+         RETURN QByteArrayFromPointer( Qt_QUrl_toAce( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -895,19 +901,19 @@ METHOD QUrl:toPercentEncoding( ... )
    CASE 3
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
-         RETURN HB_QByteArray():from( Qt_QUrl_toPercentEncoding( ::pPtr, ... ) )
+         RETURN QByteArrayFromPointer( Qt_QUrl_toPercentEncoding( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QByteArray():from( Qt_QUrl_toPercentEncoding( ::pPtr, ... ) )
+         RETURN QByteArrayFromPointer( Qt_QUrl_toPercentEncoding( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QByteArray():from( Qt_QUrl_toPercentEncoding( ::pPtr, ... ) )
+         RETURN QByteArrayFromPointer( Qt_QUrl_toPercentEncoding( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

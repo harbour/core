@@ -98,6 +98,12 @@
 FUNCTION QStyleFactory( ... )
    RETURN HB_QStyleFactory():new( ... )
 
+FUNCTION QStyleFactoryFrom( ... )
+   RETURN HB_QStyleFactory():from( ... )
+
+FUNCTION QStyleFactoryFromPointer( ... )
+   RETURN HB_QStyleFactory():fromPointer( ... )
+
 
 CREATE CLASS QStyleFactory INHERIT HbQtObjectHandler FUNCTION HB_QStyleFactory
 
@@ -123,7 +129,7 @@ METHOD QStyleFactory:create( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QStyle():from( Qt_QStyleFactory_create( ::pPtr, ... ) )
+         RETURN QStyleFromPointer( Qt_QStyleFactory_create( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -133,7 +139,7 @@ METHOD QStyleFactory:create( ... )
 METHOD QStyleFactory:keys( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QStyleFactory_keys( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QStyleFactory_keys( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

@@ -98,6 +98,12 @@
 FUNCTION QPen( ... )
    RETURN HB_QPen():new( ... )
 
+FUNCTION QPenFrom( ... )
+   RETURN HB_QPen():from( ... )
+
+FUNCTION QPenFromPointer( ... )
+   RETURN HB_QPen():fromPointer( ... )
+
 
 CREATE CLASS QPen INHERIT HbQtObjectHandler FUNCTION HB_QPen
 
@@ -140,7 +146,7 @@ METHOD QPen:new( ... )
 METHOD QPen:brush( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QBrush():from( Qt_QPen_brush( ::pPtr, ... ) )
+      RETURN QBrushFromPointer( Qt_QPen_brush( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -156,7 +162,7 @@ METHOD QPen:capStyle( ... )
 METHOD QPen:color( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QColor():from( Qt_QPen_color( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_QPen_color( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

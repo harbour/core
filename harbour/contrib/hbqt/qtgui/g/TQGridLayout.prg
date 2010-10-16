@@ -98,6 +98,12 @@
 FUNCTION QGridLayout( ... )
    RETURN HB_QGridLayout():new( ... )
 
+FUNCTION QGridLayoutFrom( ... )
+   RETURN HB_QGridLayout():from( ... )
+
+FUNCTION QGridLayoutFromPointer( ... )
+   RETURN HB_QGridLayout():fromPointer( ... )
+
 
 CREATE CLASS QGridLayout INHERIT HbQtObjectHandler, HB_QLayout FUNCTION HB_QGridLayout
 
@@ -237,7 +243,7 @@ METHOD QGridLayout:cellRect( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QRect():from( Qt_QGridLayout_cellRect( ::pPtr, ... ) )
+         RETURN QRectFromPointer( Qt_QGridLayout_cellRect( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -301,7 +307,7 @@ METHOD QGridLayout:itemAtPosition( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QLayoutItem():from( Qt_QGridLayout_itemAtPosition( ::pPtr, ... ) )
+         RETURN QLayoutItemFromPointer( Qt_QGridLayout_itemAtPosition( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

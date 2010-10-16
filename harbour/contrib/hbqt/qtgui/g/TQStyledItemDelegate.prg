@@ -98,6 +98,12 @@
 FUNCTION QStyledItemDelegate( ... )
    RETURN HB_QStyledItemDelegate():new( ... )
 
+FUNCTION QStyledItemDelegateFrom( ... )
+   RETURN HB_QStyledItemDelegate():from( ... )
+
+FUNCTION QStyledItemDelegateFromPointer( ... )
+   RETURN HB_QStyledItemDelegate():fromPointer( ... )
+
 
 CREATE CLASS QStyledItemDelegate INHERIT HbQtObjectHandler FUNCTION HB_QStyledItemDelegate
 
@@ -128,7 +134,7 @@ METHOD QStyledItemDelegate:createEditor( ... )
    CASE 3
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isObject( hb_pvalue( 3 ) )
-         RETURN HB_QWidget():from( Qt_QStyledItemDelegate_createEditor( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QStyledItemDelegate_createEditor( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -188,7 +194,7 @@ METHOD QStyledItemDelegate:sizeHint( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QSize():from( Qt_QStyledItemDelegate_sizeHint( ::pPtr, ... ) )
+         RETURN QSizeFromPointer( Qt_QStyledItemDelegate_sizeHint( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

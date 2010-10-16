@@ -98,6 +98,12 @@
 FUNCTION QsciCommandSet( ... )
    RETURN HB_QsciCommandSet():new( ... )
 
+FUNCTION QsciCommandSetFrom( ... )
+   RETURN HB_QsciCommandSet():from( ... )
+
+FUNCTION QsciCommandSetFromPointer( ... )
+   RETURN HB_QsciCommandSet():fromPointer( ... )
+
 
 CREATE CLASS QsciCommandSet INHERIT HbQtObjectHandler FUNCTION HB_QsciCommandSet
 
@@ -160,7 +166,7 @@ METHOD QsciCommandSet:writeSettings( ... )
 METHOD QsciCommandSet:commands( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QsciCommandSet_commands( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QsciCommandSet_commands( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

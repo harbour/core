@@ -541,13 +541,13 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
       EXIT
 
    CASE "QEvent_WindowStateChange"
-      qEvent := HB_QWindowStateChangeEvent():from( p )
+      qEvent := QWindowStateChangeEventFromPointer( p )
       ::nPrevWindowState := qEvent:oldState()
       EXIT
 
    CASE "QEvent_Hide"
       IF ::lSystemTrayAvailable .AND. ::lMinimizeInSystemTray
-         qEvent := HB_QHideEvent():from( p )
+         qEvent := QHideEventFromPointer( p )
          IF ! ::lChanging
             ::lChanging := .t.
             IF qEvent:spontaneous()
@@ -590,12 +590,12 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
       EXIT
 
    CASE "editWidget_dragEnterEvent"
-      qEvent := HB_QDragEnterEvent():from( p )
+      qEvent := QDragEnterEventFromPointer( p )
       qEvent:acceptProposedAction()
       EXIT
 
    CASE "editWidget_dropEvent"
-      qEvent := HB_QDropEvent():from( p )
+      qEvent := QDropEventFromPointer( p )
       qMime := qEvent:mimeData()
       IF qMime:hasUrls()
          qList := qMime:hbUrlList()
@@ -610,12 +610,12 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
 
    CASE "projectTree_dragEnterEvent"
 HB_TRACE( HB_TR_DEBUG, "projectTree_dragEnterEvent" )
-      HB_QDragEnterEvent():from( p ):acceptProposedAction()
+      QDragEnterEventFromPointer( p ):acceptProposedAction()
       EXIT
 
    CASE "projectTree_dropEvent"
 HB_TRACE( HB_TR_DEBUG, "projectTree_dropEvent" )
-      qEvent := HB_QDropEvent():from( p )
+      qEvent := QDropEventFromPointer( p )
       qMime := qEvent:mimeData()
       IF qMime:hasUrls()
          qList := qMime:hbUrlList()

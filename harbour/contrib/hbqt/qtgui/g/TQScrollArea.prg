@@ -98,6 +98,12 @@
 FUNCTION QScrollArea( ... )
    RETURN HB_QScrollArea():new( ... )
 
+FUNCTION QScrollAreaFrom( ... )
+   RETURN HB_QScrollArea():from( ... )
+
+FUNCTION QScrollAreaFromPointer( ... )
+   RETURN HB_QScrollArea():fromPointer( ... )
+
 
 CREATE CLASS QScrollArea INHERIT HbQtObjectHandler, HB_QAbstractScrollArea FUNCTION HB_QScrollArea
 
@@ -220,7 +226,7 @@ METHOD QScrollArea:setWidgetResizable( ... )
 METHOD QScrollArea:takeWidget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QScrollArea_takeWidget( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QScrollArea_takeWidget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -228,7 +234,7 @@ METHOD QScrollArea:takeWidget( ... )
 METHOD QScrollArea:widget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QScrollArea_widget( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QScrollArea_widget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

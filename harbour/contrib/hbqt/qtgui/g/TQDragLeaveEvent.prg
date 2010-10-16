@@ -98,6 +98,12 @@
 FUNCTION QDragLeaveEvent( ... )
    RETURN HB_QDragLeaveEvent():new( ... )
 
+FUNCTION QDragLeaveEventFrom( ... )
+   RETURN HB_QDragLeaveEvent():from( ... )
+
+FUNCTION QDragLeaveEventFromPointer( ... )
+   RETURN HB_QDragLeaveEvent():fromPointer( ... )
+
 
 CREATE CLASS QDragLeaveEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_QDragLeaveEvent
 

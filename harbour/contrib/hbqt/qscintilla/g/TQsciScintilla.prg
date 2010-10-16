@@ -98,6 +98,12 @@
 FUNCTION QsciScintilla( ... )
    RETURN HB_QsciScintilla():new( ... )
 
+FUNCTION QsciScintillaFrom( ... )
+   RETURN HB_QsciScintilla():from( ... )
+
+FUNCTION QsciScintillaFromPointer( ... )
+   RETURN HB_QsciScintilla():fromPointer( ... )
+
 
 CREATE CLASS QsciScintilla INHERIT HbQtObjectHandler FUNCTION HB_QsciScintilla
 
@@ -496,7 +502,7 @@ METHOD QsciScintilla:clearRegisteredImages( ... )
 METHOD QsciScintilla:color( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QColor():from( Qt_QsciScintilla_color( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_QsciScintilla_color( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -516,7 +522,7 @@ METHOD QsciScintilla:convertEols( ... )
 METHOD QsciScintilla:document( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QsciDocument():from( Qt_QsciScintilla_document( ::pPtr, ... ) )
+      RETURN QsciDocumentFromPointer( Qt_QsciScintilla_document( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -532,7 +538,7 @@ METHOD QsciScintilla:endUndoAction( ... )
 METHOD QsciScintilla:edgeColor( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QColor():from( Qt_QsciScintilla_edgeColor( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_QsciScintilla_edgeColor( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -832,7 +838,7 @@ METHOD QsciScintilla:length( ... )
 METHOD QsciScintilla:lexer( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QsciLexer():from( Qt_QsciScintilla_lexer( ::pPtr, ... ) )
+      RETURN QsciLexerFromPointer( Qt_QsciScintilla_lexer( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -1028,7 +1034,7 @@ METHOD QsciScintilla:markerFindPrevious( ... )
 METHOD QsciScintilla:paper( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QColor():from( Qt_QsciScintilla_paper( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_QsciScintilla_paper( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -1474,7 +1480,7 @@ METHOD QsciScintilla:showUserList( ... )
 METHOD QsciScintilla:standardCommands( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QsciCommandSet():from( Qt_QsciScintilla_standardCommands( ::pPtr, ... ) )
+      RETURN QsciCommandSetFromPointer( Qt_QsciScintilla_standardCommands( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

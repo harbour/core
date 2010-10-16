@@ -98,6 +98,12 @@
 FUNCTION QMovie( ... )
    RETURN HB_QMovie():new( ... )
 
+FUNCTION QMovieFrom( ... )
+   RETURN HB_QMovie():from( ... )
+
+FUNCTION QMovieFromPointer( ... )
+   RETURN HB_QMovie():fromPointer( ... )
+
 
 CREATE CLASS QMovie INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QMovie
 
@@ -147,7 +153,7 @@ METHOD QMovie:new( ... )
 METHOD QMovie:backgroundColor( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QColor():from( Qt_QMovie_backgroundColor( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_QMovie_backgroundColor( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -171,7 +177,7 @@ METHOD QMovie:currentFrameNumber( ... )
 METHOD QMovie:currentImage( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QImage():from( Qt_QMovie_currentImage( ::pPtr, ... ) )
+      RETURN QImageFromPointer( Qt_QMovie_currentImage( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -179,7 +185,7 @@ METHOD QMovie:currentImage( ... )
 METHOD QMovie:currentPixmap( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPixmap():from( Qt_QMovie_currentPixmap( ::pPtr, ... ) )
+      RETURN QPixmapFromPointer( Qt_QMovie_currentPixmap( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -187,7 +193,7 @@ METHOD QMovie:currentPixmap( ... )
 METHOD QMovie:device( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QIODevice():from( Qt_QMovie_device( ::pPtr, ... ) )
+      RETURN QIODeviceFromPointer( Qt_QMovie_device( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -203,7 +209,7 @@ METHOD QMovie:fileName( ... )
 METHOD QMovie:format( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QByteArray():from( Qt_QMovie_format( ::pPtr, ... ) )
+      RETURN QByteArrayFromPointer( Qt_QMovie_format( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -219,7 +225,7 @@ METHOD QMovie:frameCount( ... )
 METHOD QMovie:frameRect( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QMovie_frameRect( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QMovie_frameRect( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -263,7 +269,7 @@ METHOD QMovie:nextFrameDelay( ... )
 METHOD QMovie:scaledSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QMovie_scaledSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QMovie_scaledSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

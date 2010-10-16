@@ -98,6 +98,12 @@
 FUNCTION QInputEvent( ... )
    RETURN HB_QInputEvent():new( ... )
 
+FUNCTION QInputEventFrom( ... )
+   RETURN HB_QInputEvent():from( ... )
+
+FUNCTION QInputEventFromPointer( ... )
+   RETURN HB_QInputEvent():fromPointer( ... )
+
 
 CREATE CLASS QInputEvent INHERIT HbQtObjectHandler, HB_QEvent FUNCTION HB_QInputEvent
 

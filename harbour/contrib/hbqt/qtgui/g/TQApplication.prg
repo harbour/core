@@ -98,6 +98,12 @@
 FUNCTION QApplication( ... )
    RETURN HB_QApplication():new( ... )
 
+FUNCTION QApplicationFrom( ... )
+   RETURN HB_QApplication():from( ... )
+
+FUNCTION QApplicationFromPointer( ... )
+   RETURN HB_QApplication():fromPointer( ... )
+
 
 CREATE CLASS QApplication INHERIT HbQtObjectHandler, HB_QCoreApplication FUNCTION HB_QApplication
 
@@ -249,7 +255,7 @@ METHOD QApplication:styleSheet( ... )
 METHOD QApplication:activeModalWidget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QApplication_activeModalWidget( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QApplication_activeModalWidget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -257,7 +263,7 @@ METHOD QApplication:activeModalWidget( ... )
 METHOD QApplication:activePopupWidget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QApplication_activePopupWidget( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QApplication_activePopupWidget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -265,7 +271,7 @@ METHOD QApplication:activePopupWidget( ... )
 METHOD QApplication:activeWindow( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QApplication_activeWindow( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QApplication_activeWindow( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -311,7 +317,7 @@ METHOD QApplication:changeOverrideCursor( ... )
 METHOD QApplication:clipboard( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QClipboard():from( Qt_QApplication_clipboard( ::pPtr, ... ) )
+      RETURN QClipboardFromPointer( Qt_QApplication_clipboard( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -335,7 +341,7 @@ METHOD QApplication:cursorFlashTime( ... )
 METHOD QApplication:desktop( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDesktopWidget():from( Qt_QApplication_desktop( ::pPtr, ... ) )
+      RETURN QDesktopWidgetFromPointer( Qt_QApplication_desktop( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -367,7 +373,7 @@ METHOD QApplication:exec( ... )
 METHOD QApplication:focusWidget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QApplication_focusWidget( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QApplication_focusWidget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -377,13 +383,13 @@ METHOD QApplication:font( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QFont():from( Qt_QApplication_font_2( ::pPtr, ... ) )
+         RETURN QFontFromPointer( Qt_QApplication_font_2( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QFont():from( Qt_QApplication_font_1( ::pPtr, ... ) )
+         RETURN QFontFromPointer( Qt_QApplication_font_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QFont():from( Qt_QApplication_font( ::pPtr, ... ) )
+      RETURN QFontFromPointer( Qt_QApplication_font( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -391,7 +397,7 @@ METHOD QApplication:font( ... )
 METHOD QApplication:fontMetrics( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFontMetrics():from( Qt_QApplication_fontMetrics( ::pPtr, ... ) )
+      RETURN QFontMetricsFromPointer( Qt_QApplication_fontMetrics( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -399,7 +405,7 @@ METHOD QApplication:fontMetrics( ... )
 METHOD QApplication:globalStrut( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QApplication_globalStrut( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QApplication_globalStrut( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -451,7 +457,7 @@ METHOD QApplication:keyboardInputInterval( ... )
 METHOD QApplication:keyboardInputLocale( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QLocale():from( Qt_QApplication_keyboardInputLocale( ::pPtr, ... ) )
+      RETURN QLocaleFromPointer( Qt_QApplication_keyboardInputLocale( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -483,7 +489,7 @@ METHOD QApplication:mouseButtons( ... )
 METHOD QApplication:overrideCursor( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QCursor():from( Qt_QApplication_overrideCursor( ::pPtr, ... ) )
+      RETURN QCursorFromPointer( Qt_QApplication_overrideCursor( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -493,13 +499,13 @@ METHOD QApplication:palette( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QPalette():from( Qt_QApplication_palette_2( ::pPtr, ... ) )
+         RETURN QPaletteFromPointer( Qt_QApplication_palette_2( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QPalette():from( Qt_QApplication_palette_1( ::pPtr, ... ) )
+         RETURN QPaletteFromPointer( Qt_QApplication_palette_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QPalette():from( Qt_QApplication_palette( ::pPtr, ... ) )
+      RETURN QPaletteFromPointer( Qt_QApplication_palette( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -735,7 +741,7 @@ METHOD QApplication:setStyle( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QStyle():from( Qt_QApplication_setStyle_1( ::pPtr, ... ) )
+         RETURN QStyleFromPointer( Qt_QApplication_setStyle_1( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QApplication_setStyle( ::pPtr, ... )
       ENDCASE
@@ -787,7 +793,7 @@ METHOD QApplication:startDragTime( ... )
 METHOD QApplication:style( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStyle():from( Qt_QApplication_style( ::pPtr, ... ) )
+      RETURN QStyleFromPointer( Qt_QApplication_style( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -805,13 +811,13 @@ METHOD QApplication:topLevelAt( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QWidget():from( Qt_QApplication_topLevelAt_1( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QApplication_topLevelAt_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QWidget():from( Qt_QApplication_topLevelAt( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QApplication_topLevelAt( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -839,13 +845,13 @@ METHOD QApplication:widgetAt( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QWidget():from( Qt_QApplication_widgetAt_1( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QApplication_widgetAt_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QWidget():from( Qt_QApplication_widgetAt( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QApplication_widgetAt( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -855,7 +861,7 @@ METHOD QApplication:widgetAt( ... )
 METHOD QApplication:windowIcon( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QIcon():from( Qt_QApplication_windowIcon( ::pPtr, ... ) )
+      RETURN QIconFromPointer( Qt_QApplication_windowIcon( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

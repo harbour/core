@@ -98,6 +98,12 @@
 FUNCTION QTabBar( ... )
    RETURN HB_QTabBar():new( ... )
 
+FUNCTION QTabBarFrom( ... )
+   RETURN HB_QTabBar():from( ... )
+
+FUNCTION QTabBarFromPointer( ... )
+   RETURN HB_QTabBar():fromPointer( ... )
+
 
 CREATE CLASS QTabBar INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QTabBar
 
@@ -223,7 +229,7 @@ METHOD QTabBar:expanding( ... )
 METHOD QTabBar:iconSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QTabBar_iconSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QTabBar_iconSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -521,7 +527,7 @@ METHOD QTabBar:tabButton( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QWidget():from( Qt_QTabBar_tabButton( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QTabBar_tabButton( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -533,7 +539,7 @@ METHOD QTabBar:tabData( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QVariant():from( Qt_QTabBar_tabData( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QTabBar_tabData( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -545,7 +551,7 @@ METHOD QTabBar:tabIcon( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QIcon():from( Qt_QTabBar_tabIcon( ::pPtr, ... ) )
+         RETURN QIconFromPointer( Qt_QTabBar_tabIcon( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -557,7 +563,7 @@ METHOD QTabBar:tabRect( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QRect():from( Qt_QTabBar_tabRect( ::pPtr, ... ) )
+         RETURN QRectFromPointer( Qt_QTabBar_tabRect( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -581,7 +587,7 @@ METHOD QTabBar:tabTextColor( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QColor():from( Qt_QTabBar_tabTextColor( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QTabBar_tabTextColor( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

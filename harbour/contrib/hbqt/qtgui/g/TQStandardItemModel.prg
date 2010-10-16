@@ -98,6 +98,12 @@
 FUNCTION QStandardItemModel( ... )
    RETURN HB_QStandardItemModel():new( ... )
 
+FUNCTION QStandardItemModelFrom( ... )
+   RETURN HB_QStandardItemModel():from( ... )
+
+FUNCTION QStandardItemModelFromPointer( ... )
+   RETURN HB_QStandardItemModel():fromPointer( ... )
+
 
 CREATE CLASS QStandardItemModel INHERIT HbQtObjectHandler, HB_QAbstractItemModeL FUNCTION HB_QStandardItemModel
 
@@ -169,19 +175,19 @@ METHOD QStandardItemModel:findItems( ... )
    CASE 3
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
-         RETURN HB_QList():from( Qt_QStandardItemModel_findItems( ::pPtr, ... ) )
+         RETURN QListFromPointer( Qt_QStandardItemModel_findItems( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QList():from( Qt_QStandardItemModel_findItems( ::pPtr, ... ) )
+         RETURN QListFromPointer( Qt_QStandardItemModel_findItems( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QList():from( Qt_QStandardItemModel_findItems( ::pPtr, ... ) )
+         RETURN QListFromPointer( Qt_QStandardItemModel_findItems( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -193,7 +199,7 @@ METHOD QStandardItemModel:horizontalHeaderItem( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QStandardItem():from( Qt_QStandardItemModel_horizontalHeaderItem( ::pPtr, ... ) )
+         RETURN QStandardItemFromPointer( Qt_QStandardItemModel_horizontalHeaderItem( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -205,7 +211,7 @@ METHOD QStandardItemModel:indexFromItem( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QModelIndex():from( Qt_QStandardItemModel_indexFromItem( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_QStandardItemModel_indexFromItem( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -256,7 +262,7 @@ METHOD QStandardItemModel:insertRow( ... )
 METHOD QStandardItemModel:invisibleRootItem( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStandardItem():from( Qt_QStandardItemModel_invisibleRootItem( ::pPtr, ... ) )
+      RETURN QStandardItemFromPointer( Qt_QStandardItemModel_invisibleRootItem( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -266,13 +272,13 @@ METHOD QStandardItemModel:item( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QStandardItem():from( Qt_QStandardItemModel_item( ::pPtr, ... ) )
+         RETURN QStandardItemFromPointer( Qt_QStandardItemModel_item( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QStandardItem():from( Qt_QStandardItemModel_item( ::pPtr, ... ) )
+         RETURN QStandardItemFromPointer( Qt_QStandardItemModel_item( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -284,7 +290,7 @@ METHOD QStandardItemModel:itemFromIndex( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QStandardItem():from( Qt_QStandardItemModel_itemFromIndex( ::pPtr, ... ) )
+         RETURN QStandardItemFromPointer( Qt_QStandardItemModel_itemFromIndex( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -418,7 +424,7 @@ METHOD QStandardItemModel:takeColumn( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QList():from( Qt_QStandardItemModel_takeColumn( ::pPtr, ... ) )
+         RETURN QListFromPointer( Qt_QStandardItemModel_takeColumn( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -430,7 +436,7 @@ METHOD QStandardItemModel:takeHorizontalHeaderItem( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QStandardItem():from( Qt_QStandardItemModel_takeHorizontalHeaderItem( ::pPtr, ... ) )
+         RETURN QStandardItemFromPointer( Qt_QStandardItemModel_takeHorizontalHeaderItem( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -442,13 +448,13 @@ METHOD QStandardItemModel:takeItem( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QStandardItem():from( Qt_QStandardItemModel_takeItem( ::pPtr, ... ) )
+         RETURN QStandardItemFromPointer( Qt_QStandardItemModel_takeItem( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QStandardItem():from( Qt_QStandardItemModel_takeItem( ::pPtr, ... ) )
+         RETURN QStandardItemFromPointer( Qt_QStandardItemModel_takeItem( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -460,7 +466,7 @@ METHOD QStandardItemModel:takeRow( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QList():from( Qt_QStandardItemModel_takeRow( ::pPtr, ... ) )
+         RETURN QListFromPointer( Qt_QStandardItemModel_takeRow( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -472,7 +478,7 @@ METHOD QStandardItemModel:takeVerticalHeaderItem( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QStandardItem():from( Qt_QStandardItemModel_takeVerticalHeaderItem( ::pPtr, ... ) )
+         RETURN QStandardItemFromPointer( Qt_QStandardItemModel_takeVerticalHeaderItem( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -484,7 +490,7 @@ METHOD QStandardItemModel:verticalHeaderItem( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QStandardItem():from( Qt_QStandardItemModel_verticalHeaderItem( ::pPtr, ... ) )
+         RETURN QStandardItemFromPointer( Qt_QStandardItemModel_verticalHeaderItem( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

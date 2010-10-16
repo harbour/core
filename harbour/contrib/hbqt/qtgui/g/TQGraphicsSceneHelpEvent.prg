@@ -98,6 +98,12 @@
 FUNCTION QGraphicsSceneHelpEvent( ... )
    RETURN HB_QGraphicsSceneHelpEvent():new( ... )
 
+FUNCTION QGraphicsSceneHelpEventFrom( ... )
+   RETURN HB_QGraphicsSceneHelpEvent():from( ... )
+
+FUNCTION QGraphicsSceneHelpEventFromPointer( ... )
+   RETURN HB_QGraphicsSceneHelpEvent():fromPointer( ... )
+
 
 CREATE CLASS QGraphicsSceneHelpEvent INHERIT HbQtObjectHandler, HB_QGraphicsSceneEvent FUNCTION HB_QGraphicsSceneHelpEvent
 
@@ -121,7 +127,7 @@ METHOD QGraphicsSceneHelpEvent:new( ... )
 METHOD QGraphicsSceneHelpEvent:scenePos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPointF():from( Qt_QGraphicsSceneHelpEvent_scenePos( ::pPtr, ... ) )
+      RETURN QPointFFromPointer( Qt_QGraphicsSceneHelpEvent_scenePos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -129,7 +135,7 @@ METHOD QGraphicsSceneHelpEvent:scenePos( ... )
 METHOD QGraphicsSceneHelpEvent:screenPos( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPoint():from( Qt_QGraphicsSceneHelpEvent_screenPos( ::pPtr, ... ) )
+      RETURN QPointFromPointer( Qt_QGraphicsSceneHelpEvent_screenPos( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

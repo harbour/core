@@ -98,6 +98,12 @@
 FUNCTION QDesignerObjectInspectorInterface( ... )
    RETURN HB_QDesignerObjectInspectorInterface():new( ... )
 
+FUNCTION QDesignerObjectInspectorInterfaceFrom( ... )
+   RETURN HB_QDesignerObjectInspectorInterface():from( ... )
+
+FUNCTION QDesignerObjectInspectorInterfaceFromPointer( ... )
+   RETURN HB_QDesignerObjectInspectorInterface():fromPointer( ... )
+
 
 CREATE CLASS QDesignerObjectInspectorInterface INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QDesignerObjectInspectorInterface
 
@@ -121,7 +127,7 @@ METHOD QDesignerObjectInspectorInterface:new( ... )
 METHOD QDesignerObjectInspectorInterface:core( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDesignerFormEditorInterface():from( Qt_QDesignerObjectInspectorInterface_core( ::pPtr, ... ) )
+      RETURN QDesignerFormEditorInterfaceFromPointer( Qt_QDesignerObjectInspectorInterface_core( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

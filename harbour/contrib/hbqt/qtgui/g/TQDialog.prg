@@ -98,6 +98,12 @@
 FUNCTION QDialog( ... )
    RETURN HB_QDialog():new( ... )
 
+FUNCTION QDialogFrom( ... )
+   RETURN HB_QDialog():from( ... )
+
+FUNCTION QDialogFromPointer( ... )
+   RETURN HB_QDialog():fromPointer( ... )
+
 
 CREATE CLASS QDialog INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QDialog
 

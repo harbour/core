@@ -98,6 +98,12 @@
 FUNCTION QFileSystemModel( ... )
    RETURN HB_QFileSystemModel():new( ... )
 
+FUNCTION QFileSystemModelFrom( ... )
+   RETURN HB_QFileSystemModel():from( ... )
+
+FUNCTION QFileSystemModelFromPointer( ... )
+   RETURN HB_QFileSystemModel():fromPointer( ... )
+
 
 CREATE CLASS QFileSystemModel INHERIT HbQtObjectHandler, HB_QAbstractItemModel FUNCTION HB_QFileSystemModel
 
@@ -162,7 +168,7 @@ METHOD QFileSystemModel:fileIcon( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QIcon():from( Qt_QFileSystemModel_fileIcon( ::pPtr, ... ) )
+         RETURN QIconFromPointer( Qt_QFileSystemModel_fileIcon( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -174,7 +180,7 @@ METHOD QFileSystemModel:fileInfo( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QFileInfo():from( Qt_QFileSystemModel_fileInfo( ::pPtr, ... ) )
+         RETURN QFileInfoFromPointer( Qt_QFileSystemModel_fileInfo( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -218,13 +224,13 @@ METHOD QFileSystemModel:index( ... )
    CASE 2
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QModelIndex():from( Qt_QFileSystemModel_index( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_QFileSystemModel_index( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QModelIndex():from( Qt_QFileSystemModel_index( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_QFileSystemModel_index( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -256,7 +262,7 @@ METHOD QFileSystemModel:lastModified( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QDateTime():from( Qt_QFileSystemModel_lastModified( ::pPtr, ... ) )
+         RETURN QDateTimeFromPointer( Qt_QFileSystemModel_lastModified( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -266,7 +272,7 @@ METHOD QFileSystemModel:lastModified( ... )
 METHOD QFileSystemModel:mimeTypes( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QFileSystemModel_mimeTypes( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QFileSystemModel_mimeTypes( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -276,7 +282,7 @@ METHOD QFileSystemModel:mkdir( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
-         RETURN HB_QModelIndex():from( Qt_QFileSystemModel_mkdir( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_QFileSystemModel_mkdir( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -288,11 +294,11 @@ METHOD QFileSystemModel:myComputer( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QVariant():from( Qt_QFileSystemModel_myComputer( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QFileSystemModel_myComputer( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QVariant():from( Qt_QFileSystemModel_myComputer( ::pPtr, ... ) )
+      RETURN QVariantFromPointer( Qt_QFileSystemModel_myComputer( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -308,7 +314,7 @@ METHOD QFileSystemModel:nameFilterDisables( ... )
 METHOD QFileSystemModel:nameFilters( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QFileSystemModel_nameFilters( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QFileSystemModel_nameFilters( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -360,7 +366,7 @@ METHOD QFileSystemModel:rmdir( ... )
 METHOD QFileSystemModel:rootDirectory( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDir():from( Qt_QFileSystemModel_rootDirectory( ::pPtr, ... ) )
+      RETURN QDirFromPointer( Qt_QFileSystemModel_rootDirectory( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -438,7 +444,7 @@ METHOD QFileSystemModel:setRootPath( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QModelIndex():from( Qt_QFileSystemModel_setRootPath( ::pPtr, ... ) )
+         RETURN QModelIndexFromPointer( Qt_QFileSystemModel_setRootPath( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

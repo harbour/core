@@ -299,7 +299,7 @@ HB_FUNC( QT_QSIZEPOLICY_SETHORIZONTALSTRETCH )
    QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
    if( p )
    {
-      ( p )->setHorizontalStretch( ( char ) hb_parni( 2 ) );
+      ( p )->setHorizontalStretch( ( uchar ) hb_parni( 2 ) );
    }
 }
 
@@ -323,7 +323,7 @@ HB_FUNC( QT_QSIZEPOLICY_SETVERTICALSTRETCH )
    QSizePolicy * p = hbqt_par_QSizePolicy( 1 );
    if( p )
    {
-      ( p )->setVerticalStretch( ( char ) hb_parni( 2 ) );
+      ( p )->setVerticalStretch( ( uchar ) hb_parni( 2 ) );
    }
 }
 

@@ -98,6 +98,12 @@
 FUNCTION QDoubleValidator( ... )
    RETURN HB_QDoubleValidator():new( ... )
 
+FUNCTION QDoubleValidatorFrom( ... )
+   RETURN HB_QDoubleValidator():from( ... )
+
+FUNCTION QDoubleValidatorFromPointer( ... )
+   RETURN HB_QDoubleValidator():fromPointer( ... )
+
 
 CREATE CLASS QDoubleValidator INHERIT HbQtObjectHandler, HB_QValidator FUNCTION HB_QDoubleValidator
 

@@ -98,6 +98,12 @@
 FUNCTION QsciAPIs( ... )
    RETURN HB_QsciAPIs():new( ... )
 
+FUNCTION QsciAPIsFrom( ... )
+   RETURN HB_QsciAPIs():from( ... )
+
+FUNCTION QsciAPIsFromPointer( ... )
+   RETURN HB_QsciAPIs():fromPointer( ... )
+
 
 CREATE CLASS QsciAPIs INHERIT HbQtObjectHandler, HB_QsciAbstractAPIs FUNCTION HB_QsciAPIs
 
@@ -279,7 +285,7 @@ METHOD QsciAPIs:event( ... )
 METHOD QsciAPIs:installedAPIFiles( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QsciAPIs_installedAPIFiles( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QsciAPIs_installedAPIFiles( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

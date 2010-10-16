@@ -98,6 +98,12 @@
 FUNCTION QUiLoader( ... )
    RETURN HB_QUiLoader():new( ... )
 
+FUNCTION QUiLoaderFrom( ... )
+   RETURN HB_QUiLoader():from( ... )
+
+FUNCTION QUiLoaderFromPointer( ... )
+   RETURN HB_QUiLoader():fromPointer( ... )
+
 
 CREATE CLASS QUiLoader INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QUiLoader
 
@@ -145,7 +151,7 @@ METHOD QUiLoader:addPluginPath( ... )
 METHOD QUiLoader:availableLayouts( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QUiLoader_availableLayouts( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QUiLoader_availableLayouts( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -153,7 +159,7 @@ METHOD QUiLoader:availableLayouts( ... )
 METHOD QUiLoader:availableWidgets( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QUiLoader_availableWidgets( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QUiLoader_availableWidgets( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -171,17 +177,17 @@ METHOD QUiLoader:createAction( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
-         RETURN HB_QAction():from( Qt_QUiLoader_createAction( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QUiLoader_createAction( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QAction():from( Qt_QUiLoader_createAction( ::pPtr, ... ) )
+         RETURN QActionFromPointer( Qt_QUiLoader_createAction( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QAction():from( Qt_QUiLoader_createAction( ::pPtr, ... ) )
+      RETURN QActionFromPointer( Qt_QUiLoader_createAction( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -191,17 +197,17 @@ METHOD QUiLoader:createActionGroup( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isChar( hb_pvalue( 2 ) )
-         RETURN HB_QActionGroup():from( Qt_QUiLoader_createActionGroup( ::pPtr, ... ) )
+         RETURN QActionGroupFromPointer( Qt_QUiLoader_createActionGroup( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QActionGroup():from( Qt_QUiLoader_createActionGroup( ::pPtr, ... ) )
+         RETURN QActionGroupFromPointer( Qt_QUiLoader_createActionGroup( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QActionGroup():from( Qt_QUiLoader_createActionGroup( ::pPtr, ... ) )
+      RETURN QActionGroupFromPointer( Qt_QUiLoader_createActionGroup( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -211,19 +217,19 @@ METHOD QUiLoader:createLayout( ... )
    CASE 3
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
-         RETURN HB_QLayout():from( Qt_QUiLoader_createLayout( ::pPtr, ... ) )
+         RETURN QLayoutFromPointer( Qt_QUiLoader_createLayout( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QLayout():from( Qt_QUiLoader_createLayout( ::pPtr, ... ) )
+         RETURN QLayoutFromPointer( Qt_QUiLoader_createLayout( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QLayout():from( Qt_QUiLoader_createLayout( ::pPtr, ... ) )
+         RETURN QLayoutFromPointer( Qt_QUiLoader_createLayout( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -235,19 +241,19 @@ METHOD QUiLoader:createWidget( ... )
    CASE 3
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isChar( hb_pvalue( 3 ) )
-         RETURN HB_QWidget():from( Qt_QUiLoader_createWidget( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QUiLoader_createWidget( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QWidget():from( Qt_QUiLoader_createWidget( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QUiLoader_createWidget( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QWidget():from( Qt_QUiLoader_createWidget( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QUiLoader_createWidget( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -267,13 +273,13 @@ METHOD QUiLoader:load( ... )
    CASE 2
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QWidget():from( Qt_QUiLoader_load( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QUiLoader_load( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QWidget():from( Qt_QUiLoader_load( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QUiLoader_load( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -283,7 +289,7 @@ METHOD QUiLoader:load( ... )
 METHOD QUiLoader:pluginPaths( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QUiLoader_pluginPaths( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QUiLoader_pluginPaths( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -315,7 +321,7 @@ METHOD QUiLoader:setWorkingDirectory( ... )
 METHOD QUiLoader:workingDirectory( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QDir():from( Qt_QUiLoader_workingDirectory( ::pPtr, ... ) )
+      RETURN QDirFromPointer( Qt_QUiLoader_workingDirectory( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

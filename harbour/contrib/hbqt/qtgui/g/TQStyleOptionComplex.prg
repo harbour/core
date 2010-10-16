@@ -98,6 +98,12 @@
 FUNCTION QStyleOptionComplex( ... )
    RETURN HB_QStyleOptionComplex():new( ... )
 
+FUNCTION QStyleOptionComplexFrom( ... )
+   RETURN HB_QStyleOptionComplex():from( ... )
+
+FUNCTION QStyleOptionComplexFromPointer( ... )
+   RETURN HB_QStyleOptionComplex():fromPointer( ... )
+
 
 CREATE CLASS QStyleOptionComplex INHERIT HbQtObjectHandler, HB_QStyleOption FUNCTION HB_QStyleOptionComplex
 

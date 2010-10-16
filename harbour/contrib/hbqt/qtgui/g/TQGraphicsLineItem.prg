@@ -98,6 +98,12 @@
 FUNCTION QGraphicsLineItem( ... )
    RETURN HB_QGraphicsLineItem():new( ... )
 
+FUNCTION QGraphicsLineItemFrom( ... )
+   RETURN HB_QGraphicsLineItem():from( ... )
+
+FUNCTION QGraphicsLineItemFromPointer( ... )
+   RETURN HB_QGraphicsLineItem():fromPointer( ... )
+
 
 CREATE CLASS QGraphicsLineItem INHERIT HbQtObjectHandler, HB_QGraphicsItem FUNCTION HB_QGraphicsLineItem
 
@@ -124,7 +130,7 @@ METHOD QGraphicsLineItem:new( ... )
 METHOD QGraphicsLineItem:line( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QLineF():from( Qt_QGraphicsLineItem_line( ::pPtr, ... ) )
+      RETURN QLineFFromPointer( Qt_QGraphicsLineItem_line( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -132,7 +138,7 @@ METHOD QGraphicsLineItem:line( ... )
 METHOD QGraphicsLineItem:pen( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPen():from( Qt_QGraphicsLineItem_pen( ::pPtr, ... ) )
+      RETURN QPenFromPointer( Qt_QGraphicsLineItem_pen( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

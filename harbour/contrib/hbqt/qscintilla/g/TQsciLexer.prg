@@ -98,6 +98,12 @@
 FUNCTION QsciLexer( ... )
    RETURN HB_QsciLexer():new( ... )
 
+FUNCTION QsciLexerFrom( ... )
+   RETURN HB_QsciLexer():from( ... )
+
+FUNCTION QsciLexerFromPointer( ... )
+   RETURN HB_QsciLexer():fromPointer( ... )
+
 
 CREATE CLASS QsciLexer INHERIT HbQtObjectHandler FUNCTION HB_QsciLexer
 
@@ -187,7 +193,7 @@ METHOD QsciLexer:lexerId( ... )
 METHOD QsciLexer:apis( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QsciAbstractAPIs():from( Qt_QsciLexer_apis( ::pPtr, ... ) )
+      RETURN QsciAbstractAPIsFromPointer( Qt_QsciLexer_apis( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -203,7 +209,7 @@ METHOD QsciLexer:autoCompletionFillups( ... )
 METHOD QsciLexer:autoCompletionWordSeparators( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStringList():from( Qt_QsciLexer_autoCompletionWordSeparators( ::pPtr, ... ) )
+      RETURN QStringListFromPointer( Qt_QsciLexer_autoCompletionWordSeparators( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -287,7 +293,7 @@ METHOD QsciLexer:color( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QColor():from( Qt_QsciLexer_color( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QsciLexer_color( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -311,7 +317,7 @@ METHOD QsciLexer:font( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QFont():from( Qt_QsciLexer_font( ::pPtr, ... ) )
+         RETURN QFontFromPointer( Qt_QsciLexer_font( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -363,7 +369,7 @@ METHOD QsciLexer:paper( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QColor():from( Qt_QsciLexer_paper( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QsciLexer_paper( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -375,11 +381,11 @@ METHOD QsciLexer:defaultColor( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QColor():from( Qt_QsciLexer_defaultColor_1( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QsciLexer_defaultColor_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QColor():from( Qt_QsciLexer_defaultColor( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_QsciLexer_defaultColor( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -401,11 +407,11 @@ METHOD QsciLexer:defaultFont( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QFont():from( Qt_QsciLexer_defaultFont_1( ::pPtr, ... ) )
+         RETURN QFontFromPointer( Qt_QsciLexer_defaultFont_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QFont():from( Qt_QsciLexer_defaultFont( ::pPtr, ... ) )
+      RETURN QFontFromPointer( Qt_QsciLexer_defaultFont( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -415,11 +421,11 @@ METHOD QsciLexer:defaultPaper( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QColor():from( Qt_QsciLexer_defaultPaper_1( ::pPtr, ... ) )
+         RETURN QColorFromPointer( Qt_QsciLexer_defaultPaper_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QColor():from( Qt_QsciLexer_defaultPaper( ::pPtr, ... ) )
+      RETURN QColorFromPointer( Qt_QsciLexer_defaultPaper( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -427,7 +433,7 @@ METHOD QsciLexer:defaultPaper( ... )
 METHOD QsciLexer:editor( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QsciScintilla():from( Qt_QsciLexer_editor( ::pPtr, ... ) )
+      RETURN QsciScintillaFromPointer( Qt_QsciLexer_editor( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

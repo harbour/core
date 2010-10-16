@@ -98,6 +98,12 @@
 FUNCTION QListWidget( ... )
    RETURN HB_QListWidget():new( ... )
 
+FUNCTION QListWidgetFrom( ... )
+   RETURN HB_QListWidget():from( ... )
+
+FUNCTION QListWidgetFromPointer( ... )
+   RETURN HB_QListWidget():fromPointer( ... )
+
 
 CREATE CLASS QListWidget INHERIT HbQtObjectHandler, HB_QListView FUNCTION HB_QListWidget
 
@@ -197,7 +203,7 @@ METHOD QListWidget:count( ... )
 METHOD QListWidget:currentItem( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QListWidgetItem():from( Qt_QListWidget_currentItem( ::pPtr, ... ) )
+      RETURN QListWidgetItemFromPointer( Qt_QListWidget_currentItem( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -227,7 +233,7 @@ METHOD QListWidget:findItems( ... )
    CASE 2
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QList():from( Qt_QListWidget_findItems( ::pPtr, ... ) )
+         RETURN QListFromPointer( Qt_QListWidget_findItems( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -273,7 +279,7 @@ METHOD QListWidget:item( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QListWidgetItem():from( Qt_QListWidget_item( ::pPtr, ... ) )
+         RETURN QListWidgetItemFromPointer( Qt_QListWidget_item( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -285,13 +291,13 @@ METHOD QListWidget:itemAt( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QListWidgetItem():from( Qt_QListWidget_itemAt_1( ::pPtr, ... ) )
+         RETURN QListWidgetItemFromPointer( Qt_QListWidget_itemAt_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QListWidgetItem():from( Qt_QListWidget_itemAt( ::pPtr, ... ) )
+         RETURN QListWidgetItemFromPointer( Qt_QListWidget_itemAt( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -303,7 +309,7 @@ METHOD QListWidget:itemWidget( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QWidget():from( Qt_QListWidget_itemWidget( ::pPtr, ... ) )
+         RETURN QWidgetFromPointer( Qt_QListWidget_itemWidget( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -349,7 +355,7 @@ METHOD QListWidget:row( ... )
 METHOD QListWidget:selectedItems( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QListWidget_selectedItems( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QListWidget_selectedItems( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -433,7 +439,7 @@ METHOD QListWidget:takeItem( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QListWidgetItem():from( Qt_QListWidget_takeItem( ::pPtr, ... ) )
+         RETURN QListWidgetItemFromPointer( Qt_QListWidget_takeItem( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -445,7 +451,7 @@ METHOD QListWidget:visualItemRect( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QRect():from( Qt_QListWidget_visualItemRect( ::pPtr, ... ) )
+         RETURN QRectFromPointer( Qt_QListWidget_visualItemRect( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

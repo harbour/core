@@ -98,6 +98,12 @@
 FUNCTION QClipboard( ... )
    RETURN HB_QClipboard():new( ... )
 
+FUNCTION QClipboardFrom( ... )
+   RETURN HB_QClipboard():from( ... )
+
+FUNCTION QClipboardFromPointer( ... )
+   RETURN HB_QClipboard():fromPointer( ... )
+
 
 CREATE CLASS QClipboard INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QClipboard
 
@@ -148,11 +154,11 @@ METHOD QClipboard:image( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QImage():from( Qt_QClipboard_image( ::pPtr, ... ) )
+         RETURN QImageFromPointer( Qt_QClipboard_image( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QImage():from( Qt_QClipboard_image( ::pPtr, ... ) )
+      RETURN QImageFromPointer( Qt_QClipboard_image( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -186,11 +192,11 @@ METHOD QClipboard:pixmap( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QPixmap():from( Qt_QClipboard_pixmap( ::pPtr, ... ) )
+         RETURN QPixmapFromPointer( Qt_QClipboard_pixmap( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QPixmap():from( Qt_QClipboard_pixmap( ::pPtr, ... ) )
+      RETURN QPixmapFromPointer( Qt_QClipboard_pixmap( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

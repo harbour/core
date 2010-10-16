@@ -98,6 +98,12 @@
 FUNCTION QMainWindow( ... )
    RETURN HB_QMainWindow():new( ... )
 
+FUNCTION QMainWindowFrom( ... )
+   RETURN HB_QMainWindow():from( ... )
+
+FUNCTION QMainWindowFromPointer( ... )
+   RETURN HB_QMainWindow():fromPointer( ... )
+
 
 CREATE CLASS QMainWindow INHERIT HbQtObjectHandler, HB_QWidget FUNCTION HB_QMainWindow
 
@@ -194,7 +200,7 @@ METHOD QMainWindow:addToolBar( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QToolBar():from( Qt_QMainWindow_addToolBar_2( ::pPtr, ... ) )
+         RETURN QToolBarFromPointer( Qt_QMainWindow_addToolBar_2( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) )
          RETURN Qt_QMainWindow_addToolBar_1( ::pPtr, ... )
       ENDCASE
@@ -220,7 +226,7 @@ METHOD QMainWindow:addToolBarBreak( ... )
 METHOD QMainWindow:centralWidget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QMainWindow_centralWidget( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QMainWindow_centralWidget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -240,7 +246,7 @@ METHOD QMainWindow:corner( ... )
 METHOD QMainWindow:createPopupMenu( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMenu():from( Qt_QMainWindow_createPopupMenu( ::pPtr, ... ) )
+      RETURN QMenuFromPointer( Qt_QMainWindow_createPopupMenu( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -276,7 +282,7 @@ METHOD QMainWindow:documentMode( ... )
 METHOD QMainWindow:iconSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QMainWindow_iconSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QMainWindow_iconSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -324,7 +330,7 @@ METHOD QMainWindow:isDockNestingEnabled( ... )
 METHOD QMainWindow:menuBar( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QMenuBar():from( Qt_QMainWindow_menuBar( ::pPtr, ... ) )
+      RETURN QMenuBarFromPointer( Qt_QMainWindow_menuBar( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -332,7 +338,7 @@ METHOD QMainWindow:menuBar( ... )
 METHOD QMainWindow:menuWidget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QMainWindow_menuWidget( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QMainWindow_menuWidget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -408,11 +414,11 @@ METHOD QMainWindow:saveState( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QByteArray():from( Qt_QMainWindow_saveState( ::pPtr, ... ) )
+         RETURN QByteArrayFromPointer( Qt_QMainWindow_saveState( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QByteArray():from( Qt_QMainWindow_saveState( ::pPtr, ... ) )
+      RETURN QByteArrayFromPointer( Qt_QMainWindow_saveState( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -576,7 +582,7 @@ METHOD QMainWindow:splitDockWidget( ... )
 METHOD QMainWindow:statusBar( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QStatusBar():from( Qt_QMainWindow_statusBar( ::pPtr, ... ) )
+      RETURN QStatusBarFromPointer( Qt_QMainWindow_statusBar( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -606,7 +612,7 @@ METHOD QMainWindow:tabifiedDockWidgets( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QList():from( Qt_QMainWindow_tabifiedDockWidgets( ::pPtr, ... ) )
+         RETURN QListFromPointer( Qt_QMainWindow_tabifiedDockWidgets( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH

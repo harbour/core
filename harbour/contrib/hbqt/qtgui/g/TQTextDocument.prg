@@ -98,6 +98,12 @@
 FUNCTION QTextDocument( ... )
    RETURN HB_QTextDocument():new( ... )
 
+FUNCTION QTextDocumentFrom( ... )
+   RETURN HB_QTextDocument():from( ... )
+
+FUNCTION QTextDocumentFromPointer( ... )
+   RETURN HB_QTextDocument():fromPointer( ... )
+
 
 CREATE CLASS QTextDocument INHERIT HbQtObjectHandler, HB_QObject FUNCTION HB_QTextDocument
 
@@ -206,7 +212,7 @@ METHOD QTextDocument:adjustSize( ... )
 METHOD QTextDocument:begin( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextBlock():from( Qt_QTextDocument_begin( ::pPtr, ... ) )
+      RETURN QTextBlockFromPointer( Qt_QTextDocument_begin( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -224,7 +230,7 @@ METHOD QTextDocument:characterAt( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QChar():from( Qt_QTextDocument_characterAt( ::pPtr, ... ) )
+         RETURN QCharFromPointer( Qt_QTextDocument_characterAt( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -252,11 +258,11 @@ METHOD QTextDocument:clone( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QTextDocument():from( Qt_QTextDocument_clone( ::pPtr, ... ) )
+         RETURN QTextDocumentFromPointer( Qt_QTextDocument_clone( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 0
-      RETURN HB_QTextDocument():from( Qt_QTextDocument_clone( ::pPtr, ... ) )
+      RETURN QTextDocumentFromPointer( Qt_QTextDocument_clone( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -264,7 +270,7 @@ METHOD QTextDocument:clone( ... )
 METHOD QTextDocument:defaultFont( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QFont():from( Qt_QTextDocument_defaultFont( ::pPtr, ... ) )
+      RETURN QFontFromPointer( Qt_QTextDocument_defaultFont( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -280,7 +286,7 @@ METHOD QTextDocument:defaultStyleSheet( ... )
 METHOD QTextDocument:defaultTextOption( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextOption():from( Qt_QTextDocument_defaultTextOption( ::pPtr, ... ) )
+      RETURN QTextOptionFromPointer( Qt_QTextDocument_defaultTextOption( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -288,7 +294,7 @@ METHOD QTextDocument:defaultTextOption( ... )
 METHOD QTextDocument:documentLayout( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QAbstractTextDocumentLayout():from( Qt_QTextDocument_documentLayout( ::pPtr, ... ) )
+      RETURN QAbstractTextDocumentLayoutFromPointer( Qt_QTextDocument_documentLayout( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -322,7 +328,7 @@ METHOD QTextDocument:drawContents( ... )
 METHOD QTextDocument:end( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextBlock():from( Qt_QTextDocument_end( ::pPtr, ... ) )
+      RETURN QTextBlockFromPointer( Qt_QTextDocument_end( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -332,33 +338,33 @@ METHOD QTextDocument:find( ... )
    CASE 3
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
-         RETURN HB_QTextCursor():from( Qt_QTextDocument_find_2( ::pPtr, ... ) )
+         RETURN QTextCursorFromPointer( Qt_QTextDocument_find_2( ::pPtr, ... ) )
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
-         RETURN HB_QTextCursor():from( Qt_QTextDocument_find( ::pPtr, ... ) )
+         RETURN QTextCursorFromPointer( Qt_QTextDocument_find( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
-         RETURN HB_QTextCursor():from( Qt_QTextDocument_find_3( ::pPtr, ... ) )
+         RETURN QTextCursorFromPointer( Qt_QTextDocument_find_3( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) ) .AND. hb_isNumeric( hb_pvalue( 3 ) )
-         RETURN HB_QTextCursor():from( Qt_QTextDocument_find_1( ::pPtr, ... ) )
+         RETURN QTextCursorFromPointer( Qt_QTextDocument_find_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 2
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QTextCursor():from( Qt_QTextDocument_find_2( ::pPtr, ... ) )
+         RETURN QTextCursorFromPointer( Qt_QTextDocument_find_2( ::pPtr, ... ) )
       CASE hb_isChar( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QTextCursor():from( Qt_QTextDocument_find( ::pPtr, ... ) )
+         RETURN QTextCursorFromPointer( Qt_QTextDocument_find( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isNumeric( hb_pvalue( 2 ) )
-         RETURN HB_QTextCursor():from( Qt_QTextDocument_find_3( ::pPtr, ... ) )
+         RETURN QTextCursorFromPointer( Qt_QTextDocument_find_3( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QTextCursor():from( Qt_QTextDocument_find_1( ::pPtr, ... ) )
+         RETURN QTextCursorFromPointer( Qt_QTextDocument_find_1( ::pPtr, ... ) )
       ENDCASE
       EXIT
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QTextCursor():from( Qt_QTextDocument_find_2( ::pPtr, ... ) )
+         RETURN QTextCursorFromPointer( Qt_QTextDocument_find_2( ::pPtr, ... ) )
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QTextCursor():from( Qt_QTextDocument_find_3( ::pPtr, ... ) )
+         RETURN QTextCursorFromPointer( Qt_QTextDocument_find_3( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -370,7 +376,7 @@ METHOD QTextDocument:findBlock( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QTextBlock():from( Qt_QTextDocument_findBlock( ::pPtr, ... ) )
+         RETURN QTextBlockFromPointer( Qt_QTextDocument_findBlock( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -382,7 +388,7 @@ METHOD QTextDocument:findBlockByLineNumber( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QTextBlock():from( Qt_QTextDocument_findBlockByLineNumber( ::pPtr, ... ) )
+         RETURN QTextBlockFromPointer( Qt_QTextDocument_findBlockByLineNumber( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -394,7 +400,7 @@ METHOD QTextDocument:findBlockByNumber( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QTextBlock():from( Qt_QTextDocument_findBlockByNumber( ::pPtr, ... ) )
+         RETURN QTextBlockFromPointer( Qt_QTextDocument_findBlockByNumber( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -404,7 +410,7 @@ METHOD QTextDocument:findBlockByNumber( ... )
 METHOD QTextDocument:firstBlock( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextBlock():from( Qt_QTextDocument_firstBlock( ::pPtr, ... ) )
+      RETURN QTextBlockFromPointer( Qt_QTextDocument_firstBlock( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -468,7 +474,7 @@ METHOD QTextDocument:isUndoRedoEnabled( ... )
 METHOD QTextDocument:lastBlock( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextBlock():from( Qt_QTextDocument_lastBlock( ::pPtr, ... ) )
+      RETURN QTextBlockFromPointer( Qt_QTextDocument_lastBlock( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -518,7 +524,7 @@ METHOD QTextDocument:object( ... )
    CASE 1
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) )
-         RETURN HB_QTextObject():from( Qt_QTextDocument_object( ::pPtr, ... ) )
+         RETURN QTextObjectFromPointer( Qt_QTextDocument_object( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -530,7 +536,7 @@ METHOD QTextDocument:objectForFormat( ... )
    CASE 1
       DO CASE
       CASE hb_isObject( hb_pvalue( 1 ) )
-         RETURN HB_QTextObject():from( Qt_QTextDocument_objectForFormat( ::pPtr, ... ) )
+         RETURN QTextObjectFromPointer( Qt_QTextDocument_objectForFormat( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -548,7 +554,7 @@ METHOD QTextDocument:pageCount( ... )
 METHOD QTextDocument:pageSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSizeF():from( Qt_QTextDocument_pageSize( ::pPtr, ... ) )
+      RETURN QSizeFFromPointer( Qt_QTextDocument_pageSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -584,7 +590,7 @@ METHOD QTextDocument:resource( ... )
    CASE 2
       DO CASE
       CASE hb_isNumeric( hb_pvalue( 1 ) ) .AND. hb_isObject( hb_pvalue( 2 ) )
-         RETURN HB_QVariant():from( Qt_QTextDocument_resource( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QTextDocument_resource( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -602,7 +608,7 @@ METHOD QTextDocument:revision( ... )
 METHOD QTextDocument:rootFrame( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QTextFrame():from( Qt_QTextDocument_rootFrame( ::pPtr, ... ) )
+      RETURN QTextFrameFromPointer( Qt_QTextDocument_rootFrame( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -778,7 +784,7 @@ METHOD QTextDocument:setUseDesignMetrics( ... )
 METHOD QTextDocument:size( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSizeF():from( Qt_QTextDocument_size( ::pPtr, ... ) )
+      RETURN QSizeFFromPointer( Qt_QTextDocument_size( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

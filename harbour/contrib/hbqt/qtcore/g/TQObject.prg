@@ -98,6 +98,12 @@
 FUNCTION QObject( ... )
    RETURN HB_QObject():new( ... )
 
+FUNCTION QObjectFrom( ... )
+   RETURN HB_QObject():from( ... )
+
+FUNCTION QObjectFromPointer( ... )
+   RETURN HB_QObject():fromPointer( ... )
+
 
 CREATE CLASS QObject INHERIT HbQtObjectHandler FUNCTION HB_QObject
 
@@ -171,7 +177,7 @@ METHOD QObject:dumpObjectTree( ... )
 METHOD QObject:dynamicPropertyNames( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QList():from( Qt_QObject_dynamicPropertyNames( ::pPtr, ... ) )
+      RETURN QListFromPointer( Qt_QObject_dynamicPropertyNames( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -267,7 +273,7 @@ METHOD QObject:objectName( ... )
 METHOD QObject:parent( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QObject():from( Qt_QObject_parent( ::pPtr, ... ) )
+      RETURN QObjectFromPointer( Qt_QObject_parent( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -277,7 +283,7 @@ METHOD QObject:property( ... )
    CASE 1
       DO CASE
       CASE hb_isChar( hb_pvalue( 1 ) )
-         RETURN HB_QVariant():from( Qt_QObject_property( ::pPtr, ... ) )
+         RETURN QVariantFromPointer( Qt_QObject_property( ::pPtr, ... ) )
       ENDCASE
       EXIT
    ENDSWITCH
@@ -355,7 +361,7 @@ METHOD QObject:startTimer( ... )
 METHOD QObject:thread( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QThread():from( Qt_QObject_thread( ::pPtr, ... ) )
+      RETURN QThreadFromPointer( Qt_QObject_thread( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

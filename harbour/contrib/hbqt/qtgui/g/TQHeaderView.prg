@@ -98,6 +98,12 @@
 FUNCTION QHeaderView( ... )
    RETURN HB_QHeaderView():new( ... )
 
+FUNCTION QHeaderViewFrom( ... )
+   RETURN HB_QHeaderView():from( ... )
+
+FUNCTION QHeaderViewFromPointer( ... )
+   RETURN HB_QHeaderView():fromPointer( ... )
+
 
 CREATE CLASS QHeaderView INHERIT HbQtObjectHandler, HB_QAbstractItemView FUNCTION HB_QHeaderView
 
@@ -396,7 +402,7 @@ METHOD QHeaderView:restoreState( ... )
 METHOD QHeaderView:saveState( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QByteArray():from( Qt_QHeaderView_saveState( ::pPtr, ... ) )
+      RETURN QByteArrayFromPointer( Qt_QHeaderView_saveState( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -630,7 +636,7 @@ METHOD QHeaderView:showSection( ... )
 METHOD QHeaderView:sizeHint( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QHeaderView_sizeHint( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QHeaderView_sizeHint( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

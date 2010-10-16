@@ -98,6 +98,12 @@
 FUNCTION QLinearGradient( ... )
    RETURN HB_QLinearGradient():new( ... )
 
+FUNCTION QLinearGradientFrom( ... )
+   RETURN HB_QLinearGradient():from( ... )
+
+FUNCTION QLinearGradientFromPointer( ... )
+   RETURN HB_QLinearGradient():fromPointer( ... )
+
 
 CREATE CLASS QLinearGradient INHERIT HbQtObjectHandler, HB_QGradient FUNCTION HB_QLinearGradient
 
@@ -125,7 +131,7 @@ METHOD QLinearGradient:new( ... )
 METHOD QLinearGradient:finalStop( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPointF():from( Qt_QLinearGradient_finalStop( ::pPtr, ... ) )
+      RETURN QPointFFromPointer( Qt_QLinearGradient_finalStop( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -169,7 +175,7 @@ METHOD QLinearGradient:setStart( ... )
 METHOD QLinearGradient:start( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QPointF():from( Qt_QLinearGradient_start( ::pPtr, ... ) )
+      RETURN QPointFFromPointer( Qt_QLinearGradient_start( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 

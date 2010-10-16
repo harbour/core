@@ -98,6 +98,12 @@
 FUNCTION QLayoutItem( ... )
    RETURN HB_QLayoutItem():new( ... )
 
+FUNCTION QLayoutItemFrom( ... )
+   RETURN HB_QLayoutItem():from( ... )
+
+FUNCTION QLayoutItemFromPointer( ... )
+   RETURN HB_QLayoutItem():fromPointer( ... )
+
 
 CREATE CLASS QLayoutItem INHERIT HbQtObjectHandler FUNCTION HB_QLayoutItem
 
@@ -160,7 +166,7 @@ METHOD QLayoutItem:expandingDirections( ... )
 METHOD QLayoutItem:geometry( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QRect():from( Qt_QLayoutItem_geometry( ::pPtr, ... ) )
+      RETURN QRectFromPointer( Qt_QLayoutItem_geometry( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -204,7 +210,7 @@ METHOD QLayoutItem:isEmpty( ... )
 METHOD QLayoutItem:layout( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QLayout():from( Qt_QLayoutItem_layout( ::pPtr, ... ) )
+      RETURN QLayoutFromPointer( Qt_QLayoutItem_layout( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -212,7 +218,7 @@ METHOD QLayoutItem:layout( ... )
 METHOD QLayoutItem:maximumSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QLayoutItem_maximumSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QLayoutItem_maximumSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -232,7 +238,7 @@ METHOD QLayoutItem:minimumHeightForWidth( ... )
 METHOD QLayoutItem:minimumSize( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QLayoutItem_minimumSize( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QLayoutItem_minimumSize( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -264,7 +270,7 @@ METHOD QLayoutItem:setGeometry( ... )
 METHOD QLayoutItem:sizeHint( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSize():from( Qt_QLayoutItem_sizeHint( ::pPtr, ... ) )
+      RETURN QSizeFromPointer( Qt_QLayoutItem_sizeHint( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -272,7 +278,7 @@ METHOD QLayoutItem:sizeHint( ... )
 METHOD QLayoutItem:spacerItem( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QSpacerItem():from( Qt_QLayoutItem_spacerItem( ::pPtr, ... ) )
+      RETURN QSpacerItemFromPointer( Qt_QLayoutItem_spacerItem( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
@@ -280,7 +286,7 @@ METHOD QLayoutItem:spacerItem( ... )
 METHOD QLayoutItem:widget( ... )
    SWITCH PCount()
    CASE 0
-      RETURN HB_QWidget():from( Qt_QLayoutItem_widget( ::pPtr, ... ) )
+      RETURN QWidgetFromPointer( Qt_QLayoutItem_widget( ::pPtr, ... ) )
    ENDSWITCH
    RETURN hbqt_error()
 
