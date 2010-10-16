@@ -1036,7 +1036,7 @@ METHOD HbQtSource:buildClass()
          FOR EACH oArg IN oMtd:hArgs
             cP := strtran( strtran( oArg:cDoc, "@", "" ), "::", "_" )
             cM += cP + ", "
-            cC += iif( left( cP, 1 ) == "p", "hbqt_ptr( " + cP + " )", cP ) + ", "
+            cC += iif( left( cP, 1 ) == "p", "__hbqt_ptr( " + cP + " )", cP ) + ", "
          NEXT
       ENDIF
       cM := alltrim( cM ) ; cM := iif( right( cM,1 ) == ",", substr( cM, 1, len( cM ) - 1 ), cM )
@@ -1102,7 +1102,7 @@ METHOD HbQtSource:buildClass()
    aadd( txt_, "METHOD " + ::cWidget + ":new( ... )"        )
    aadd( txt_, "   LOCAL p"                                 )
    aadd( txt_, "   FOR EACH p IN { ... }"                   )
-   aadd( txt_, "      hb_pvalue( p:__enumIndex(), hbqt_ptr( p ) )" )
+   aadd( txt_, "      hb_pvalue( p:__enumIndex(), __hbqt_ptr( p ) )" )
    aadd( txt_, "   NEXT"                                    )
    aadd( txt_, "   ::pPtr := Qt_" + ::cWidget + "( ... )"   )
    aadd( txt_, "   RETURN Self"                             )
@@ -1120,7 +1120,7 @@ METHOD HbQtSource:buildClass()
          aadd( txt_, "METHOD " + ::cWidget + ":" + oMtd:cHBFunc + "( ... )"  )
          a_:= hbide_pullSameMethods( oMtd:cFun, ::aMethods, ::cWidget )
          aeval( a_, {|e| aadd( txt_, e ) } )
-         aadd( txt_, "   RETURN hbqt_error()"        )
+         aadd( txt_, "   RETURN __hbqt_error()"        )
          aadd( txt_, ""                                           )
 
       ELSEIF  oMtd:areFuncClubbed .AND. oMtd:isSibling                /* is another call with same name handedlled previously - do nothing */
@@ -1132,7 +1132,7 @@ METHOD HbQtSource:buildClass()
             aadd( txt_, "METHOD " + ::cWidget + ":" + oMtd:cHBFunc + "( ... )"  )
             a_:= hbide_pullSameMethods( oMtd:cFun, ::aMethods, ::cWidget )
             aeval( a_, {|e| aadd( txt_, e ) } )
-            aadd( txt_, "   RETURN hbqt_error()"        )
+            aadd( txt_, "   RETURN __hbqt_error()"        )
             aadd( txt_, ""                                           )
          ELSE
             aadd( txt_, ""                                           )
@@ -2194,12 +2194,12 @@ STATIC FUNCTION ParsePtr( cParam )
             IF ( n := at( ",", cParam ) ) > 0
                s := substr( cParam, 1, n-1 )
                cParam := substr( cParam, n )
-               cPar += "hbqt_ptr( " + s + " )"
+               cPar += "__hbqt_ptr( " + s + " )"
 
             ELSEIF ( n := at( " ", cParam ) ) > 0
                s := substr( cParam, 1, n-1 )
                cParam := substr( cParam, n )
-               cPar += "hbqt_ptr( " + s + " )"
+               cPar += "__hbqt_ptr( " + s + " )"
                cPar += cParam
                EXIT
 

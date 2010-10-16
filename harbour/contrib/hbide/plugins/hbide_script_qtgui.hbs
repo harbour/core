@@ -55,8 +55,8 @@
 FUNCTION Main( oIde )
    LOCAL nRet, cText, lOtherLib, cOpt
    LOCAL qDlg, qLbl, qCheck, qEdit, qCombo, qBtnOk, qBtnCn
-   LOCAL pEvents := QT_EVENTS_NEW()
-   LOCAL pSlots  := QT_SLOTS_NEW()
+   LOCAL pEvents := HBQT_EVENTS_NEW()
+   LOCAL pSlots  := HBQT_SLOTS_NEW()
 
    IF ! hb_isObject( oIde )
       oIde := hbide_setIde()
@@ -97,8 +97,8 @@ FUNCTION Main( oIde )
 
    QT_EVENTS_CONNECT( pEvents, qDlg, 10, {|| qDlg:done( 0 ) } )
 
-   QT_SLOTS_CONNECT( pSlots, qBtnOk, "clicked()", {|| qDlg:done( 1 ) } )
-   QT_SLOTS_CONNECT( pSlots, qBtnCn, "clicked()", {|| qDlg:done( 2 ) } )
+   HBQT_SLOTS_CONNECT( pSlots, qBtnOk, "clicked()", {|| qDlg:done( 1 ) } )
+   HBQT_SLOTS_CONNECT( pSlots, qBtnCn, "clicked()", {|| qDlg:done( 2 ) } )
 
    nRet := qDlg:exec()
 

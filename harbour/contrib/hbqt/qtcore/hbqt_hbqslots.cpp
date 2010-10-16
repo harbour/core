@@ -1138,14 +1138,14 @@ void HBQSlots::lastWindowClosed()                                               
 /*
  * Harbour function to connect signals with slots
  */
-HB_FUNC( QT_SLOTS_CONNECT )
+HB_FUNC( __HBQT_SLOTS_CONNECT )
 {
    HB_BOOL   bRet    = HB_FALSE;
    HBQSlots * t_slots = hbqt_par_HBQSlots( 1 );
 
    if( t_slots )
    {
-HB_TRACE( HB_TR_DEBUG, ( "QT_SLOTS_CONNECT( %s )", hb_parcx( 3 ) ) );
+HB_TRACE( HB_TR_DEBUG, ( "__HBQT_SLOTS_CONNECT( %s )", hb_parcx( 3 ) ) );
       QObject * object = ( QObject * ) hbqt_pPtrFromObj( 2 );               /* get sender    */
       if( object )
       {
@@ -1162,7 +1162,7 @@ HB_TRACE( HB_TR_DEBUG, ( "QT_SLOTS_CONNECT( %s )", hb_parcx( 3 ) ) );
                bRet = HB_TRUE;
             }
          }
-HB_TRACE( HB_TR_DEBUG, ( "QT_SLOTS_CONNECT( %s ) %s", hb_parcx( 3 ), bRet ? "Connected" : "not-connected" ) );
+HB_TRACE( HB_TR_DEBUG, ( "__HBQT_SLOTS_CONNECT( %s ) %s", hb_parcx( 3 ), bRet ? "Connected" : "not-connected" ) );
       }
    }
    hb_retl( bRet );
@@ -1171,7 +1171,7 @@ HB_TRACE( HB_TR_DEBUG, ( "QT_SLOTS_CONNECT( %s ) %s", hb_parcx( 3 ), bRet ? "Con
 /*
  * Harbour function to disconnect signals
  */
-HB_FUNC( QT_SLOTS_DISCONNECT )
+HB_FUNC( __HBQT_SLOTS_DISCONNECT )
 {
    HB_BOOL   bRet    = HB_FALSE;
    HBQSlots * t_slots = hbqt_par_HBQSlots( 1 );
@@ -1203,7 +1203,7 @@ HB_TRACE( HB_TR_DEBUG, ( "QT_SLOTS_DISCONNECT( %s ) %s", hb_parcx( 3 ), bRet ? "
    hb_retl( bRet );
 }
 
-HB_FUNC( QT_SLOTS_NEW )
+HB_FUNC( __HBQT_SLOTS_NEW )
 {
    void * pObj = NULL;
 
@@ -1826,7 +1826,7 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void **arguments )
 /*
  * Harbour function to connect signals with slots
  */
-HB_FUNC( QT_SLOTS_CONNECT )
+HB_FUNC( __HBQT_SLOTS_CONNECT )
 {
    HB_BOOL   bRet    = HB_FALSE;
    HBQSlots * t_slots = hbqt_par_HBQSlots( 1 );
@@ -1864,7 +1864,7 @@ HB_FUNC( QT_SLOTS_CONNECT )
 /*
  * Harbour function to disconnect signals
  */
-HB_FUNC( QT_SLOTS_DISCONNECT )
+HB_FUNC( __HBQT_SLOTS_DISCONNECT )
 {
    HB_BOOL   bRet    = HB_FALSE;
    HBQSlots * t_slots = hbqt_par_HBQSlots( 1 );
@@ -1892,7 +1892,7 @@ HB_FUNC( QT_SLOTS_DISCONNECT )
    hb_retl( bRet );
 }
 
-HB_FUNC( QT_SLOTS_NEW )
+HB_FUNC( __HBQT_SLOTS_NEW )
 {
    void * pObj = NULL;
 

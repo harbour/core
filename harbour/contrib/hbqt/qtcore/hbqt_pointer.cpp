@@ -204,6 +204,26 @@ HB_FUNC( HBQT_ISOBJECT )
       hb_retl( HB_FALSE );
 }
 
+HB_FUNC( __HBQT_PTR )
+{
+   PHB_ITEM pParam = hb_param( 1, HB_IT_ANY );
+
+   if( hb_itemType( pParam ) & HB_IT_OBJECT )
+   {
+      PHB_ITEM pRetVal;
+
+      hb_vmPushSymbol( hb_dynsymSymbol( hb_dynsymFindName( "PPTR" ) ) );
+      hb_vmPush( pParam );
+      hb_vmSend( 0 );
+
+      if( ( pRetVal = hb_param( -1, HB_IT_POINTER ) ) != NULL )
+         return;
+   }
+
+   hb_itemReturn( pParam );
+}
+
+/* TODO: Delete this, once code has been converted to use __HBQT_PTR() */
 HB_FUNC( HBQT_PTR )
 {
    PHB_ITEM pParam = hb_param( 1, HB_IT_ANY );
@@ -271,7 +291,7 @@ HB_FUNC( HBQT_ISEQUALGCQTPOINTER )
    hb_retl( hbqt_pPtrFromObj( 1 ) == hbqt_pPtrFromObj( 2 ) );
 }
 
-HB_FUNC( HBQT_ERROR )
+HB_FUNC( __HBQT_ERROR )
 {
    PHB_ITEM pError = hb_errRT_New( ES_ERROR, "HBQT", EG_ARG, 1001, NULL, NULL, 0, EF_NONE );
    hb_errLaunch( pError );

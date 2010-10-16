@@ -55,7 +55,7 @@
 
 /*----------------------------------------------------------------------*/
 
-CLASS HbQtObjectHandler
+CREATE CLASS HbQtObjectHandler
 
    VAR    pPtr
    VAR    pSlots
@@ -89,17 +89,19 @@ METHOD HbQtObjectHandler:from( xObject )
 
 /* TODO: Drop this function when all raw QT pointers are fully eliminated from .prg level. */
 METHOD HbQtObjectHandler:fromPointer( pPtr )
+   /* NOTE: Non-GC collected pointers are allowed here. */
    IF hb_isPointer( pPtr )
       ::pPtr := pPtr
    ELSE
-      hbqt_Error()
+      __hbqt_Error()
    ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 /* TODO: Drop this function, as it's not desired to have invalid QT pointers wrapped
-         into valid .prg level QT objects. */
+         into valid .prg level QT objects.
+         Currently it will return .F. for objects created using :fromPointer() */
 METHOD HbQtObjectHandler:hasValidPointer()
    RETURN __hbqt_IsValidPointer( ::pPtr )
 
@@ -138,17 +140,17 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
    CASE "C"
 
       IF Empty( ::pSlots )
-         ::pSlots := Qt_Slots_New()
+         ::pSlots := __hbqt_slots_New()
       ENDIF
-      RETURN Qt_Slots_Connect( ::pSlots, ::pPtr, cnEvent, bBlock )
+      RETURN __hbqt_slots_Connect( ::pSlots, ::pPtr, cnEvent, bBlock )
 
    CASE "N"
 
       IF Empty( ::pEvents )
-         ::pEvents := Qt_Events_New()
+         ::pEvents := __hbqt_events_New()
          ::installEventFilter( HBQEventsFromPointer( ::pEvents ) )
       ENDIF
-      RETURN Qt_Events_Connect( ::pEvents, ::pPtr, cnEvent, bBlock )
+      RETURN __hbqt_events_Connect( ::pEvents, ::pPtr, cnEvent, bBlock )
 
    ENDSWITCH
 
@@ -162,14 +164,14 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
    CASE "C"
 
       IF ! Empty( ::pSlots )
-         RETURN Qt_Slots_DisConnect( ::pSlots, ::pPtr, cnEvent )
+         RETURN __hbqt_slots_Disconnect( ::pSlots, ::pPtr, cnEvent )
       ENDIF
       EXIT
 
    CASE "N"
 
       IF ! Empty( ::pEvents )
-         RETURN Qt_Events_DisConnect( ::pEvents, ::pPtr, cnEvent )
+         RETURN __hbqt_events_Disconnect( ::pEvents, ::pPtr, cnEvent )
       ENDIF
       EXIT
 

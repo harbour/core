@@ -183,7 +183,7 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
    return ret;
 }
 
-HB_FUNC( QT_EVENTS_CONNECT )
+HB_FUNC( __HBQT_EVENTS_CONNECT )
 {
    HB_BOOL  bRet       = HB_FALSE;
    HBQEvents * t_events = hbqt_par_HBQEvents( 1 );
@@ -215,7 +215,7 @@ HB_FUNC( QT_EVENTS_CONNECT )
    hb_retl( bRet );
 }
 
-HB_FUNC( QT_EVENTS_DISCONNECT )
+HB_FUNC( __HBQT_EVENTS_DISCONNECT )
 {
    HB_BOOL  bRet       = HB_FALSE;
    HBQEvents * t_events = hbqt_par_HBQEvents( 1 );
@@ -248,7 +248,7 @@ HB_FUNC( QT_EVENTS_DISCONNECT )
    hb_retl( bRet );
 }
 
-HB_FUNC( QT_EVENTS_NEW )
+HB_FUNC( __HBQT_EVENTS_NEW )
 {
    void * pObj = NULL;
 
